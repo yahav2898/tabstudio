@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 
@@ -10,8 +11,33 @@ namespace TabStudio.App.Input;
 /// </summary>
 public static class InputModality
 {
+    /// <summary>
+    /// Marks a view that is used with a keyboard whatever the last input was, such as the IDE on an external display
+    /// in desktop mode: the on-screen keyboard belongs to the tablet, so focusing an editor there never opens it.
+    /// Inherited by everything inside the view.
+    /// </summary>
+    public static readonly AttachedProperty<bool> PrefersKeyboardProperty =
+        AvaloniaProperty.RegisterAttached<InputElement, bool>("PrefersKeyboard", typeof(InputModality), inherits: true);
+
     /// <summary>Whether the last input came from a finger or a pen. Android starts out touch-first.</summary>
     public static bool IsTouch { get; private set; } = OperatingSystem.IsAndroid();
+
+    /// <summary>Gets whether a view is used with a keyboard whatever the last input was.</summary>
+    /// <param name="element">The view.</param>
+    public static bool GetPrefersKeyboard(InputElement element)
+    {
+        ArgumentNullException.ThrowIfNull(element);
+        return element.GetValue(PrefersKeyboardProperty);
+    }
+
+    /// <summary>Sets whether a view is used with a keyboard whatever the last input was.</summary>
+    /// <param name="element">The view.</param>
+    /// <param name="value">Whether it is.</param>
+    public static void SetPrefersKeyboard(InputElement element, bool value)
+    {
+        ArgumentNullException.ThrowIfNull(element);
+        element.SetValue(PrefersKeyboardProperty, value);
+    }
 
     /// <summary>Follows the input of a window or view.</summary>
     /// <param name="root">The top-level element.</param>
@@ -31,12 +57,12 @@ public static class InputModality
         root.RemoveHandler(InputElement.KeyDownEvent, OnKeyDown);
     }
 
-    /// <summary>Gives an element the keyboard focus, unless the user works by touch.</summary>
+    /// <summary>Gives an element the keyboard focus, unless the user works by touch and the element is not in a view that prefers the keyboard.</summary>
     /// <param name="element">The element, such as an editor's text area.</param>
     public static void FocusUnlessTouch(InputElement element)
     {
         ArgumentNullException.ThrowIfNull(element);
-        if (!IsTouch)
+        if (!IsTouch || element.GetValue(PrefersKeyboardProperty))
         {
             element.Focus();
         }

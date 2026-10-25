@@ -1,0 +1,102 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:conv="using:TabStudio.App.Converters"
+             xmlns:dm="using:TabStudio.App.ViewModels.DesktopMode"
+             x:Class="TabStudio.App.Views.DesktopMode.ToolboxView"
+             x:DataType="dm:ToolboxViewModel">
+
+  <!-- The Toolbox: a tap puts the control into the XAML at the caret on the big screen. -->
+  <DockPanel>
+    <Border DockPanel.Dock="Top" Height="44" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="14,0">
+      <Grid ColumnDefinitions="Auto,*">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <controls:StrokeIcon Data="{StaticResource Icon.Toolbox}" Size="16" Foreground="{DynamicResource Brush.AccentText}" />
+          <TextBlock Classes="header" Text="Toolbox" FontSize="14" />
+        </StackPanel>
+        <TextBlock Grid.Column="1" Classes="muted small" Text="{Binding Title}" HorizontalAlignment="Right" VerticalAlignment="Center"
+                   IsVisible="{Binding IsAvailable}" />
+      </Grid>
+    </Border>
+
+    <TextBox DockPanel.Dock="Top" Classes="large" Margin="12,10,12,6" Watermark="Search controls" Text="{Binding SearchText}"
+             IsVisible="{Binding IsAvailable}">
+      <TextBox.InnerLeftContent>
+        <controls:StrokeIcon Data="{StaticResource Icon.Search}" Size="15" Margin="12,0,0,0" Foreground="{DynamicResource Brush.TextMuted}" />
+      </TextBox.InnerLeftContent>
+    </TextBox>
+
+    <!-- What the last tap did. -->
+    <Border DockPanel.Dock="Bottom" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0" Padding="14,10"
+            IsVisible="{Binding Status, Converter={x:Static ObjectConverters.IsNotNull}}">
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <controls:StrokeIcon Data="{StaticResource Icon.Check}" Size="15" Foreground="{DynamicResource Brush.Success}" />
+        <TextBlock Classes="small" Text="{Binding Status}" TextWrapping="Wrap" VerticalAlignment="Center" />
+      </StackPanel>
+    </Border>
+
+    <Panel>
+      <ScrollViewer HorizontalScrollBarVisibility="Disabled" IsVisible="{Binding IsAvailable}">
+        <ItemsControl ItemsSource="{Binding Categories}" Margin="8,2,8,12">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="dm:ToolboxCategoryViewModel">
+              <StackPanel IsVisible="{Binding IsVisible}">
+                <Button Theme="{StaticResource ToolButton}" Focusable="False" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                        MinHeight="44" Padding="6,0" Command="{Binding ToggleExpandedCommand}">
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Panel Width="14">
+                      <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="14" IsVisible="{Binding IsExpanded}" />
+                      <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="14" IsVisible="{Binding !IsExpanded}" />
+                    </Panel>
+                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" />
+                    <Border Classes="pill">
+                      <TextBlock Text="{Binding Items.Count}" />
+                    </Border>
+                  </StackPanel>
+                </Button>
+                <ItemsControl ItemsSource="{Binding Items}" IsVisible="{Binding IsExpanded}" Margin="0,0,0,6">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <WrapPanel />
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="dm:ToolboxItemViewModel">
+                      <Button Theme="{StaticResource CardButton}" Focusable="False" Width="206" Height="62" MinHeight="62" Margin="4" Padding="10,0"
+                              Command="{Binding Insert}" ToolTip.Tip="{Binding Description}">
+                        <Grid ColumnDefinitions="Auto,*">
+                          <Border Width="38" Height="38" CornerRadius="9" Background="{DynamicResource Brush.Control}">
+                            <controls:StrokeIcon Data="{Binding Icon, Converter={x:Static conv:DesktopModeConverters.ToolboxIcon}}" Size="20"
+                                                 Foreground="{DynamicResource Brush.AccentText}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                          </Border>
+                          <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center" Spacing="2">
+                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Brush.TextBright}" />
+                            <TextBlock Text="{Binding Description}" FontSize="11.5" FontWeight="Normal" Foreground="{DynamicResource Brush.TextMuted}"
+                                       TextTrimming="CharacterEllipsis" />
+                          </StackPanel>
+                        </Grid>
+                      </Button>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+
+      <!-- No search match. -->
+      <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="8" Margin="24" IsVisible="{Binding ShowsNoMatches}">
+        <TextBlock Classes="muted" Text="No control matches the search" HorizontalAlignment="Center" />
+      </StackPanel>
+
+      <!-- Not a XAML file of a framework the Toolbox knows. -->
+      <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10" Margin="32" MaxWidth="380" IsVisible="{Binding !IsAvailable}">
+        <controls:StrokeIcon Data="{StaticResource Icon.Toolbox}" Size="40" Foreground="{DynamicResource Brush.TextDisabled}" HorizontalAlignment="Center" />
+        <TextBlock Classes="h2" Text="No controls for this file" HorizontalAlignment="Center" />
+        <TextBlock Classes="muted" TextWrapping="Wrap" TextAlignment="Center"
+                   Text="The Toolbox fills in when an Avalonia XAML file (.axaml) is the active document on the big screen. Tap a control to put it at the caret." />
+      </StackPanel>
+    </Panel>
+  </DockPanel>
+</UserControl>

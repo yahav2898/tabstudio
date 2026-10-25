@@ -2,7 +2,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using TabStudio.App.Platform;
 using TabStudio.App.Services;
+using TabStudio.App.Toolbox;
 using TabStudio.App.ViewModels;
+using TabStudio.App.ViewModels.DesktopMode;
 
 namespace TabStudio.App;
 
@@ -27,6 +29,7 @@ public static class AppServices
         services.AddSingleton<IWebViewFactory, NoWebViewFactory>();
         services.AddSingleton<INotifications, NoSystemNotifications>();
         services.AddSingleton<IAppActivity, AvaloniaAppActivity>();
+        services.AddSingleton<IExternalDisplayService, NoExternalDisplayService>();
         configurePlatform?.Invoke(services);
         services.AddSingleton(provider => DeviceProfile.For(provider.GetRequiredService<IDeviceStatus>().Device));
 
@@ -48,6 +51,9 @@ public static class AppServices
         services.TryAddSingleton<GitHubAccount>();
         services.AddSingleton<GitHubAccountViewModel>();
         services.AddSingleton<GitHubImporter>();
+        services.AddSingleton(_ => ToolboxCatalog.LoadEmbedded());
+        services.AddSingleton<DesktopModeSettingsStore>();
+        services.AddSingleton<DesktopModeViewModel>();
 
         // View models.
         services.AddSingleton<StartViewModel>();

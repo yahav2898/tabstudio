@@ -97,6 +97,8 @@
             <MenuItem Header="_Compatibility Doctor" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Compatibility}" />
             <MenuItem Header="Re_ferences" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.References}" />
             <MenuItem Header="_Bottom Panel" Command="{Binding ToggleBottomPanelCommand}" />
+            <MenuItem Header="Des_ktop Mode" ToggleType="CheckBox" IsChecked="{Binding DesktopMode.IsActive, Mode=TwoWay, FallbackValue=False}"
+                      IsEnabled="{Binding DesktopMode.HasDisplay, FallbackValue=False}" IsVisible="{Binding DesktopMode.IsSupported, FallbackValue=False}" />
             <Separator />
             <MenuItem Header="Navigate _Backward" InputGesture="Alt+Left" Command="{Binding NavigateBackCommand}" />
             <MenuItem Header="Navigate _Forward" InputGesture="Alt+Right" Command="{Binding NavigateForwardCommand}" />
@@ -713,6 +715,13 @@
                 <MenuItem Header="Test Explorer" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}" />
               </MenuFlyout>
             </Button.Flyout>
+          </Button>
+          <Button Theme="{StaticResource StatusBarButton}" Height="24" Command="{Binding DesktopMode.ToggleCommand, FallbackValue={x:Null}}"
+                  ToolTip.Tip="{Binding DesktopMode.StatusToolTip, FallbackValue={x:Null}}" IsVisible="{Binding DesktopMode.HasDisplay, FallbackValue=False}">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+              <controls:StrokeIcon Size="13" Data="{StaticResource Icon.Monitor}" />
+              <TextBlock Text="{Binding DesktopMode.StatusText, FallbackValue={x:Null}}" FontSize="12" VerticalAlignment="Center" />
+            </StackPanel>
           </Button>
         </StackPanel>
 
