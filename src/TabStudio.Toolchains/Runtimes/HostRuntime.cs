@@ -35,7 +35,9 @@ public sealed class HostRuntime : IToolchainRuntime
         {
             if (spec.Terminal is { } size)
             {
-                return new ToolchainProcess(WindowsPseudoConsole.Start(path, spec.Arguments, environment, workingDirectory, size), spec);
+                return OperatingSystem.IsWindowsVersionAtLeast(10, 0, 17763)
+                    ? new ToolchainProcess(WindowsPseudoConsole.Start(path, spec.Arguments, environment, workingDirectory, size), spec)
+                    : throw new ToolchainRuntimeException("The Terminal needs Windows 10 version 1809 or later.");
             }
 
             return new ToolchainProcess(DotNetProcessHandle.Start(path, spec.Arguments, environment, workingDirectory), spec);

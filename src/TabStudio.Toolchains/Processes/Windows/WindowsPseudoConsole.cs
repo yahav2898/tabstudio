@@ -62,11 +62,6 @@ internal sealed partial class WindowsPseudoConsole : IProcessHandle
     /// <exception cref="ToolchainRuntimeException">It could not be started.</exception>
     public static IProcessHandle Start(string path, IReadOnlyList<string> arguments, IReadOnlyDictionary<string, string> environment, string? workingDirectory, TerminalSize size)
     {
-        if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 17763))
-        {
-            throw new ToolchainRuntimeException("The Terminal needs Windows 10 version 1809 or later.");
-        }
-
         if (!CreatePipe(out var inputRead, out var inputWrite, 0, 0) || !CreatePipe(out var outputRead, out var outputWrite, 0, 0))
         {
             throw Failure("Could not create the console's pipes");

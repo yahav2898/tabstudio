@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using Microsoft.Win32.SafeHandles;
 
 namespace TabStudio.Toolchains.Processes.Unix;
 
@@ -7,29 +8,36 @@ namespace TabStudio.Toolchains.Processes.Unix;
 /// <c>read</c> and <c>write</c>.
 /// </summary>
 /// <remarks>
+/// <para>
 /// A pseudo terminal's master reports <c>EIO</c> once every process that had the terminal open has closed it;
 /// this stream reads that as the end of the stream, as it reads the end of a pipe.
+/// </para>
+/// <para>
+/// The descriptor is held by a <see cref="SafeFileHandle"/>, and every read and write holds a reference to it, so
+/// disposing the stream while another thread is blocked in a read closes the descriptor only after that read
+/// returns. Closing it at once would let the system give its number to the next file opened, which the blocked
+/// thread would then read from.
+/// </para>
 /// </remarks>
 internal sealed class FileDescriptorStream : Stream
 {
+    private readonly SafeFileHandle _handle;
     private readonly bool _canRead;
-    private readonly Lock _gate = new();
-    private int _fd;
 
     /// <summary>Takes ownership of a file descriptor.</summary>
     /// <param name="fd">The descriptor, closed when the stream is disposed.</param>
     /// <param name="canRead">Whether the stream reads (<see langword="true"/>) or writes.</param>
     public FileDescriptorStream(int fd, bool canRead)
     {
-        _fd = fd;
+        _handle = new SafeFileHandle(fd, ownsHandle: true);
         _canRead = canRead;
     }
 
     /// <inheritdoc />
-    public override bool CanRead => _canRead && _fd >= 0;
+    public override bool CanRead => _canRead && !_handle.IsClosed;
 
     /// <inheritdoc />
-    public override bool CanWrite => !_canRead && _fd >= 0;
+    public override bool CanWrite => !_canRead && !_handle.IsClosed;
 
     /// <inheritdoc />
     public override bool CanSeek => false;
@@ -55,40 +63,41 @@ internal sealed class FileDescriptorStream : Stream
             throw new NotSupportedException();
         }
 
-        if (buffer.IsEmpty)
+        if (buffer.IsEmpty || !TryAddReference())
         {
             return 0;
         }
 
-        while (true)
+        try
         {
-            var fd = Volatile.Read(ref _fd);
-            if (fd < 0)
+            while (true)
             {
-                return 0;
-            }
+                nint read;
+                fixed (byte* pointer = buffer)
+                {
+                    read = UnixNative.read((int)_handle.DangerousGetHandle(), pointer, (nuint)buffer.Length);
+                }
 
-            nint read;
-            fixed (byte* pointer = buffer)
-            {
-                read = UnixNative.read(fd, pointer, (nuint)buffer.Length);
-            }
+                if (read >= 0)
+                {
+                    return (int)read;
+                }
 
-            if (read >= 0)
-            {
-                return (int)read;
+                var error = Marshal.GetLastPInvokeError();
+                switch (error)
+                {
+                    case UnixConstants.ErrorInterrupted:
+                        continue;
+                    case UnixConstants.ErrorInputOutput:
+                        return 0;
+                    default:
+                        throw new IOException($"Reading from the program failed (errno {error}).", error);
+                }
             }
-
-            var error = Marshal.GetLastPInvokeError();
-            switch (error)
-            {
-                case UnixConstants.ErrorInterrupted:
-                    continue;
-                case UnixConstants.ErrorInputOutput:
-                    return 0;
-                default:
-                    throw new IOException($"Reading from the program failed (errno {error}).", error);
-            }
+        }
+        finally
+        {
+            _handle.DangerousRelease();
         }
     }
 
@@ -111,32 +120,34 @@ internal sealed class FileDescriptorStream : Stream
             throw new NotSupportedException();
         }
 
-        while (!buffer.IsEmpty)
+        ObjectDisposedException.ThrowIf(!TryAddReference(), this);
+        try
         {
-            var fd = Volatile.Read(ref _fd);
-            if (fd < 0)
+            while (!buffer.IsEmpty)
             {
-                throw new ObjectDisposedException(nameof(FileDescriptorStream));
-            }
-
-            nint written;
-            fixed (byte* pointer = buffer)
-            {
-                written = UnixNative.write(fd, pointer, (nuint)buffer.Length);
-            }
-
-            if (written < 0)
-            {
-                var error = Marshal.GetLastPInvokeError();
-                if (error == UnixConstants.ErrorInterrupted)
+                nint written;
+                fixed (byte* pointer = buffer)
                 {
-                    continue;
+                    written = UnixNative.write((int)_handle.DangerousGetHandle(), pointer, (nuint)buffer.Length);
                 }
 
-                throw new IOException($"Writing to the program failed (errno {error}): it may have exited.", error);
-            }
+                if (written < 0)
+                {
+                    var error = Marshal.GetLastPInvokeError();
+                    if (error == UnixConstants.ErrorInterrupted)
+                    {
+                        continue;
+                    }
 
-            buffer = buffer[(int)written..];
+                    throw new IOException($"Writing to the program failed (errno {error}): it may have exited.", error);
+                }
+
+                buffer = buffer[(int)written..];
+            }
+        }
+        finally
+        {
+            _handle.DangerousRelease();
         }
     }
 
@@ -163,16 +174,31 @@ internal sealed class FileDescriptorStream : Stream
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        lock (_gate)
+        if (disposing)
         {
-            var fd = _fd;
-            _fd = -1;
-            if (fd >= 0)
-            {
-                _ = UnixNative.close(fd);
-            }
+            _handle.Dispose();
         }
 
         base.Dispose(disposing);
+    }
+
+    private bool TryAddReference()
+    {
+        if (_handle.IsClosed)
+        {
+            return false;
+        }
+
+        var added = false;
+        try
+        {
+            _handle.DangerousAddRef(ref added);
+        }
+        catch (ObjectDisposedException)
+        {
+            return false;
+        }
+
+        return added;
     }
 }

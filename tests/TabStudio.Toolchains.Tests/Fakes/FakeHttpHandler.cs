@@ -104,19 +104,42 @@ internal sealed class FakeHttpHandler : HttpMessageHandler
     }
 
     /// <summary>A body that throws an <see cref="IOException"/> after some bytes, as a dropped connection does.</summary>
-    private sealed class BreakingStream(byte[] content, int? breakAfter) : MemoryStream(content, writable: false)
+    private sealed class BreakingStream(byte[] content, int? breakAfter) : Stream
     {
+        private int _position;
+
+        public override bool CanRead => true;
+
+        public override bool CanSeek => false;
+
+        public override bool CanWrite => false;
+
+        public override long Length => content.Length;
+
+        public override long Position
+        {
+            get => _position;
+            set => throw new NotSupportedException();
+        }
+
         public override int Read(byte[] buffer, int offset, int count) => Read(buffer.AsSpan(offset, count));
 
         public override int Read(Span<byte> buffer)
         {
-            if (breakAfter is { } limit && Position >= limit)
+            if (breakAfter is { } limit && _position >= limit)
             {
                 throw new IOException("The connection was reset.");
             }
 
-            var allowed = breakAfter is { } stop ? (int)Math.Min(buffer.Length, stop - Position) : buffer.Length;
-            return base.Read(buffer[..Math.Max(allowed, 0)]);
+            var count = Math.Min(buffer.Length, content.Length - _position);
+            if (breakAfter is { } stop)
+            {
+                count = Math.Min(count, stop - _position);
+            }
+
+            content.AsSpan(_position, count).CopyTo(buffer);
+            _position += count;
+            return count;
         }
 
         public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken) =>
@@ -124,5 +147,15 @@ internal sealed class FakeHttpHandler : HttpMessageHandler
 
         public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default) =>
             ValueTask.FromResult(Read(buffer.Span));
+
+        public override void Flush()
+        {
+        }
+
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+
+        public override void SetLength(long value) => throw new NotSupportedException();
+
+        public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
     }
 }

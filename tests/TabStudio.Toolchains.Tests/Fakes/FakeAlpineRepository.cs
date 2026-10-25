@@ -1,4 +1,6 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Formats.Tar;
+using System.Globalization;
 using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text;
@@ -72,7 +74,7 @@ internal sealed class FakeAlpineRepository : IDisposable
         package.Repository = repository;
         package.Address = Distribution.RepositoryAddress(repository, Architecture).AbsoluteUri.TrimEnd('/') + $"/{name}-{version}.apk";
         var entry = new StringBuilder()
-            .Append($"C:{checksum}\nP:{name}\nV:{version}\nA:{Architecture}\nS:{bytes.Length}\nI:{installedSize}\nT:The {name} package\nL:MIT\n")
+            .Append(CultureInfo.InvariantCulture, $"C:{checksum}\nP:{name}\nV:{version}\nA:{Architecture}\nS:{bytes.Length}\nI:{installedSize}\nT:The {name} package\nL:MIT\n")
             .Append(depends is { Length: > 0 } ? $"D:{string.Join(' ', depends)}\n" : string.Empty)
             .Append(provides is { Length: > 0 } ? $"p:{string.Join(' ', provides)}\n" : string.Empty)
             .ToString();
@@ -108,6 +110,7 @@ internal sealed class FakeAlpineRepository : IDisposable
         Server.Add(IndexAddress(repository), BuildIndex(text));
     }
 
+    [SuppressMessage("Security", "CA5350", Justification = "Alpine's format signs with SHA-1; the fake mirror writes it.")]
     private byte[] BuildIndex(string text)
     {
         var index = Gzip(Tar(complete: true, ("DESCRIPTION", Encoding.UTF8.GetBytes("v3.24.3-test")), ("APKINDEX", Encoding.UTF8.GetBytes(text))));
@@ -115,6 +118,7 @@ internal sealed class FakeAlpineRepository : IDisposable
         return [.. Gzip(Tar(complete: false, ($".SIGN.RSA.{KeyName}", signature))), .. index];
     }
 
+    [SuppressMessage("Security", "CA5350", Justification = "Alpine's format identifies control sections by SHA-1; the fake mirror writes it.")]
     private (byte[] Bytes, string Checksum, long InstalledSize) BuildPackage(FakePackage package)
     {
         var data = Gzip(Tar(complete: true, package.Files.Select(f => (f.Key, Encoding.UTF8.GetBytes(f.Value))).ToArray()));

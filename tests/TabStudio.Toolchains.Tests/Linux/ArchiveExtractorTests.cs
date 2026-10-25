@@ -30,7 +30,10 @@ public sealed class ArchiveExtractorTests : IDisposable
         Assert.Equal("3.24.3\n", await System.IO.File.ReadAllTextAsync(Path.Combine(root, "etc/alpine-release")));
         Assert.Equal("/bin/busybox", new FileInfo(Path.Combine(root, "bin/sh")).LinkTarget);
         Assert.Equal("#!/bin/sh\n", await System.IO.File.ReadAllTextAsync(Path.Combine(root, "bin/ash")));
-        Assert.True((System.IO.File.GetUnixFileMode(Path.Combine(root, "bin/busybox")) & UnixFileMode.UserExecute) != 0);
+        if (!OperatingSystem.IsWindows())
+        {
+            Assert.True((System.IO.File.GetUnixFileMode(Path.Combine(root, "bin/busybox")) & UnixFileMode.UserExecute) != 0);
+        }
     }
 
     [Theory]

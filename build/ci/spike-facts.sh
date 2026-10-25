@@ -27,3 +27,14 @@ for f in d['urls']:
   for p in typescript-language-server typescript pyright; do echo "$p $(curl -fsSL https://registry.npmjs.org/$p/latest | python3 -c 'import json,sys; print(json.load(sys.stdin)["version"])')"; done
 } > "$out" 2>&1
 cat "$out"
+{
+  echo "== kotlin-language-server"
+  rel="$(curl -fsSL https://api.github.com/repos/fwcd/kotlin-language-server/releases/latest)"
+  echo "$rel" | grep -E '"tag_name"|browser_download_url' | head -n 6
+  url="$(echo "$rel" | grep -oE 'https://[^"]*server\.zip' | head -n 1)"
+  curl -fsSL "$url" -o /tmp/kls.zip && sha256sum /tmp/kls.zip && stat -c %s /tmp/kls.zip && unzip -l /tmp/kls.zip | head -n 8
+  echo "== typescript 5.9.3"
+  curl -fsS -o /dev/null -w '%{http_code}\n' https://registry.npmjs.org/typescript/5.9.3
+  curl -fsS -o /dev/null -w '%{http_code}\n' https://registry.npmjs.org/typescript-language-server/6.0.2
+} >> "$out" 2>&1
+tail -n 20 "$out"
