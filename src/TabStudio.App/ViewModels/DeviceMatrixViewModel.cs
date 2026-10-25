@@ -150,7 +150,7 @@ public sealed partial class DeviceMatrixViewModel : ObservableObject, IDisposabl
 
     /// <summary>The layout finding whose element is outlined in its tiles, if one is.</summary>
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(HasShownFinding), nameof(ShownFindingText))]
+    [NotifyPropertyChangedFor(nameof(HasShownFinding), nameof(ShownFindingText), nameof(IsShownFindingError))]
     public partial LayoutFinding? ShownFinding { get; private set; }
 
     /// <summary>The width typed for a custom device.</summary>
@@ -180,6 +180,9 @@ public sealed partial class DeviceMatrixViewModel : ObservableObject, IDisposabl
 
     /// <summary>Whether a finding is outlined in its tiles.</summary>
     public bool HasShownFinding => ShownFinding is not null;
+
+    /// <summary>Whether the finding outlined is an error, rather than a warning, for the banner's color.</summary>
+    public bool IsShownFindingError => ShownFinding?.Severity == LayoutIssueSeverity.Error;
 
     /// <summary>The banner over the tiles while a finding is outlined.</summary>
     public string? ShownFindingText => ShownFinding is { } finding ? $"{finding.Code} · {finding.Message}" : null;

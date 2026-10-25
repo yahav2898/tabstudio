@@ -16,6 +16,12 @@
   -->
 
   <UserControl.Styles>
+    <Style Selector="Border.finding">
+      <Setter Property="Background" Value="{StaticResource Swarm.ErrorSoft}" />
+    </Style>
+    <Style Selector="Border.finding.warning">
+      <Setter Property="Background" Value="{StaticResource Swarm.WarningSoft}" />
+    </Style>
     <Style Selector="Border.tile">
       <Setter Property="Background" Value="{DynamicResource Brush.Panel}" />
       <Setter Property="BorderBrush" Value="{DynamicResource Brush.Border}" />
@@ -177,7 +183,7 @@
     </Border>
 
     <!-- The layout finding outlined in its tiles -->
-    <Border DockPanel.Dock="Top" IsVisible="{Binding HasShownFinding}" Padding="14,6,8,6" Background="{StaticResource Swarm.ErrorSoft}"
+    <Border DockPanel.Dock="Top" Classes="finding" Classes.warning="{Binding !IsShownFindingError}" IsVisible="{Binding HasShownFinding}" Padding="14,6,8,6"
             BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
       <Grid ColumnDefinitions="Auto,*,Auto">
         <Border Width="12" Height="12" CornerRadius="3" BorderThickness="2" BorderBrush="{StaticResource Swarm.Highlight}" VerticalAlignment="Center" />
