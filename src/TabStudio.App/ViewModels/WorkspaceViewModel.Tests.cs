@@ -54,8 +54,9 @@ public sealed partial class WorkspaceViewModel : ITestRunHost
 
         // Running tests brings the Test Explorer forward, as in Visual Studio.
         SelectSidePanel(SidePanel.TestExplorer);
-        _testRun = new CancellationTokenSource();
-        var cancellation = _testRun.Token;
+        using var run = new CancellationTokenSource();
+        _testRun = run;
+        var cancellation = run.Token;
         var running = false;
         try
         {
@@ -94,7 +95,6 @@ public sealed partial class WorkspaceViewModel : ITestRunHost
         }
         finally
         {
-            _testRun.Dispose();
             _testRun = null;
             if (running)
             {
