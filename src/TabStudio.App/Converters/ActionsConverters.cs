@@ -1,6 +1,6 @@
-using Avalonia;
 using Avalonia.Data.Converters;
 using Avalonia.Media;
+using TabStudio.App.Theming;
 using TabStudio.App.ViewModels.Actions;
 
 namespace TabStudio.App.Converters;
@@ -31,6 +31,18 @@ public static class ActionsConverters
         _ => "Brush.Run.Muted",
     }));
 
+    /// <summary>
+    /// The color of a state on the status bar's dark well: the same in both themes, as the status bar is teal in both.
+    /// </summary>
+    public static IValueConverter StatusBarStateBrush { get; } = new FuncValueConverter<RunVisual, IBrush?>(visual => Find<IBrush>(visual switch
+    {
+        RunVisual.Passed => "Brush.StatusBar.Passed",
+        RunVisual.Failed => "Brush.StatusBar.Failed",
+        RunVisual.Running => "Brush.StatusBar.Running",
+        RunVisual.Queued => "Brush.StatusBar.Queued",
+        _ => "Brush.StatusBar.Muted",
+    }));
+
     /// <summary>The soft background of a state, for pills and banners.</summary>
     public static IValueConverter StateSoftBrush { get; } = new FuncValueConverter<RunVisual, IBrush?>(visual => Find<IBrush>(visual switch
     {
@@ -45,5 +57,5 @@ public static class ActionsConverters
 
     private static T? Find<T>(string key)
         where T : class =>
-        Application.Current?.TryGetResource(key, Application.Current.ActualThemeVariant, out var value) == true ? value as T : null;
+        ThemeBrushes.Find<T>(key);
 }

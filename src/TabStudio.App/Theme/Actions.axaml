@@ -2,8 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
   <!--
-    GitHub Actions and CI: the status icons of runs, jobs, steps and checks, the window's icons, and the colors
-    of job logs. Icons are stroke paths on a 24×24 grid, like Icons.axaml.
+    GitHub Actions and CI: the status icons of runs, jobs, steps and checks, and the window's icons (the run and log colors
+    are in Colors.axaml, for both themes). Icons are stroke paths on a 24×24 grid, like Icons.axaml.
   -->
 
   <!-- Run, job, step and check states, as GitHub draws them -->
@@ -29,36 +29,5 @@
   <StreamGeometry x:Key="Icon.Timestamp">M3 12 A9 9 0 1 0 21 12 A9 9 0 1 0 3 12 M12 7 L12 12 L15.5 14</StreamGeometry>
   <StreamGeometry x:Key="Icon.GoToLine">M4 6 L20 6 M4 12 L14 12 M4 18 L20 18 M17 9 L20 12 L17 15</StreamGeometry>
   <StreamGeometry x:Key="Icon.Repository">M5 4 L17 4 A2 2 0 0 1 19 6 L19 18 L7 18 A2 2 0 0 0 5 20 Z M5 20 A2 2 0 0 0 7 22 L19 22 L19 18 M9 8 L15 8</StreamGeometry>
-
-  <!-- State colors -->
-  <SolidColorBrush x:Key="Brush.Run.Passed" Color="#6FD6A0" />
-  <SolidColorBrush x:Key="Brush.Run.Failed" Color="#F47067" />
-  <SolidColorBrush x:Key="Brush.Run.Running" Color="#E3B341" />
-  <SolidColorBrush x:Key="Brush.Run.Queued" Color="#C69026" />
-  <SolidColorBrush x:Key="Brush.Run.Muted" Color="#9AA1AE" />
-  <SolidColorBrush x:Key="Brush.Run.FailedSoft" Color="#3A2326" />
-  <SolidColorBrush x:Key="Brush.Run.PassedSoft" Color="#1C2E28" />
-  <SolidColorBrush x:Key="Brush.Run.RunningSoft" Color="#352E1C" />
-
-  <!-- Job logs: workflow commands, step headings and terminal colors, in GitHub's dark palette -->
-  <SolidColorBrush x:Key="Brush.Log.Error" Color="#F47067" />
-  <SolidColorBrush x:Key="Brush.Log.ErrorBackground" Color="#33F47067" />
-  <SolidColorBrush x:Key="Brush.Log.Warning" Color="#E3B341" />
-  <SolidColorBrush x:Key="Brush.Log.WarningBackground" Color="#26E3B341" />
-  <SolidColorBrush x:Key="Brush.Log.Notice" Color="#6CB6FF" />
-  <SolidColorBrush x:Key="Brush.Log.Debug" Color="#8B949E" />
-  <SolidColorBrush x:Key="Brush.Log.Command" Color="#8FB8FF" />
-  <SolidColorBrush x:Key="Brush.Log.Step" Color="#E8ECF2" />
-  <SolidColorBrush x:Key="Brush.Log.StepBackground" Color="#262A33" />
-  <SolidColorBrush x:Key="Brush.Log.Group" Color="#C5CAD3" />
-  <SolidColorBrush x:Key="Brush.Log.Omitted" Color="#9AA1AE" />
-  <SolidColorBrush x:Key="Brush.Ansi.Gray" Color="#8B949E" />
-  <SolidColorBrush x:Key="Brush.Ansi.Red" Color="#FF7B72" />
-  <SolidColorBrush x:Key="Brush.Ansi.Green" Color="#7EE787" />
-  <SolidColorBrush x:Key="Brush.Ansi.Yellow" Color="#E3B341" />
-  <SolidColorBrush x:Key="Brush.Ansi.Blue" Color="#79C0FF" />
-  <SolidColorBrush x:Key="Brush.Ansi.Magenta" Color="#D2A8FF" />
-  <SolidColorBrush x:Key="Brush.Ansi.Cyan" Color="#56D4DD" />
-  <SolidColorBrush x:Key="Brush.Ansi.White" Color="#F0F6FC" />
 
 </ResourceDictionary>

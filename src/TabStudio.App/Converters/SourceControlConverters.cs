@@ -1,6 +1,6 @@
-using Avalonia;
 using Avalonia.Data.Converters;
 using Avalonia.Media;
+using TabStudio.App.Theming;
 using TabStudio.App.ViewModels;
 
 namespace TabStudio.App.Converters;
@@ -24,6 +24,5 @@ public static class SourceControlConverters
         _ => "Brush.Warning",
     }));
 
-    private static IBrush? Find(string key) =>
-        Application.Current?.TryGetResource(key, Application.Current.ActualThemeVariant, out var value) == true ? value as IBrush : null;
+    private static IBrush? Find(string key) => ThemeBrushes.Find<IBrush>(key);
 }

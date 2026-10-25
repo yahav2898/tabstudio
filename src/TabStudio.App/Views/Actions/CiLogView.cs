@@ -4,13 +4,13 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
 using Avalonia.Threading;
 using AvaloniaEdit;
 using AvaloniaEdit.Folding;
 using AvaloniaEdit.Search;
 using TabStudio.App.Editing;
 using TabStudio.App.Services.Ci;
+using TabStudio.App.Theming;
 using TabStudio.App.ViewModels;
 using TabStudio.App.ViewModels.Actions;
 
@@ -24,9 +24,6 @@ namespace TabStudio.App.Views.Actions;
 /// </summary>
 public sealed class CiLogView : UserControl, IDisposable
 {
-    private static readonly IBrush CurrentLineBrush = new ImmutableSolidColorBrush(Color.Parse("#23262F"));
-    private static readonly IBrush FoldMarkerBrush = new ImmutableSolidColorBrush(Color.Parse("#9AA1AE"));
-    private static readonly IBrush FoldMarkerBackground = new ImmutableSolidColorBrush(Color.Parse("#1B1D23"));
 
     private readonly DocumentViewModel _document;
     private readonly CiLogViewModel _log;
@@ -61,12 +58,12 @@ public sealed class CiLogView : UserControl, IDisposable
         _editor.Options.EnableEmailHyperlinks = false;
         _editor.Options.HighlightCurrentLine = true;
         _editor.Options.AllowScrollBelowDocument = true;
-        _editor.TextArea.TextView.CurrentLineBackground = CurrentLineBrush;
+        _editor.TextArea.TextView.CurrentLineBackground = ThemeBrushes.Get("Brush.CurrentLine");
         _editor.TextArea.TextView.CurrentLineBorder = null;
-        _editor.SetValue(FoldingMargin.FoldingMarkerBrushProperty, FoldMarkerBrush);
-        _editor.SetValue(FoldingMargin.FoldingMarkerBackgroundBrushProperty, FoldMarkerBackground);
-        _editor.SetValue(FoldingMargin.SelectedFoldingMarkerBrushProperty, Brushes.White);
-        _editor.SetValue(FoldingMargin.SelectedFoldingMarkerBackgroundBrushProperty, FoldMarkerBackground);
+        _editor.SetValue(FoldingMargin.FoldingMarkerBrushProperty, ThemeBrushes.Get("Editor.FoldMarker"));
+        _editor.SetValue(FoldingMargin.FoldingMarkerBackgroundBrushProperty, ThemeBrushes.Get("Editor.FoldMarkerBackground"));
+        _editor.SetValue(FoldingMargin.SelectedFoldingMarkerBrushProperty, ThemeBrushes.Get("Editor.FoldMarkerSelected"));
+        _editor.SetValue(FoldingMargin.SelectedFoldingMarkerBackgroundBrushProperty, ThemeBrushes.Get("Editor.FoldMarkerBackground"));
 
         var brushes = new CiLogBrushes();
         _folding = FoldingManager.Install(_editor.TextArea);

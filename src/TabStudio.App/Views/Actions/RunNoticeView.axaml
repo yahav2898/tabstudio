@@ -9,7 +9,7 @@
 
   <!-- A run finished: a notice over the editor; tap it for the run's details. It goes away on its own. -->
   <Border Width="380" Padding="4" CornerRadius="12" Background="{DynamicResource Brush.Popup}"
-          BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1" BoxShadow="0 10 28 0 #66000000">
+          BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1" BoxShadow="{DynamicResource Shadow.Dialog}">
     <Grid ColumnDefinitions="*,Auto">
       <Button Theme="{StaticResource ToolButton}" MinHeight="54" Padding="10,6" CornerRadius="9"
               HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"

@@ -1,8 +1,8 @@
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
 using Avalonia.Media.TextFormatting;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.Rendering;
+using TabStudio.App.Theming;
 using TabStudio.LanguageServers.Features;
 
 namespace TabStudio.App.Editing;
@@ -14,7 +14,7 @@ namespace TabStudio.App.Editing;
 /// </summary>
 public sealed class InlayHintGenerator : VisualLineElementGenerator
 {
-    private static readonly IBrush HintBrush = new ImmutableSolidColorBrush(Color.Parse("#8B93A1"));
+    private static IBrush HintBrush => ThemeBrushes.Editor("Editor.InlayHint");
 
     private (int Offset, string Text)[] _hints = [];
 

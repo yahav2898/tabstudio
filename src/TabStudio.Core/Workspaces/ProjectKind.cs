@@ -47,6 +47,18 @@ public enum ProjectKind
 
     /// <summary>A native C or C++ project (<c>.vcxproj</c>).</summary>
     NativeCpp,
+
+    /// <summary>
+    /// An ASP.NET Core app with Razor components, such as one from the Blazor Web App template: Interactive Server,
+    /// WebAssembly or Auto components served by an ASP.NET Core host.
+    /// </summary>
+    BlazorWebApp,
+
+    /// <summary>A Python program: a folder with <c>pyproject.toml</c>, <c>requirements.txt</c> or <c>.py</c> files.</summary>
+    Python,
+
+    /// <summary>A Node.js program: a folder with <c>package.json</c>.</summary>
+    Node,
 }
 
 /// <summary>

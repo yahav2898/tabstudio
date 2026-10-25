@@ -20,7 +20,10 @@ else
   folder="branches/${branch//\//-}/$job"
 fi
 
-work="$(mktemp -d)"
+# A folder in the workspace, not mktemp: on Windows, mktemp gives an MSYS path (/tmp/...) that the native gh.exe cannot open.
+work=".ci-publish"
+rm -rf "$work"
+mkdir -p "$work"
 
 # Runs gh api; on failure, keeps why, which the script says as notices when it ends: they can be read through the API
 # even when the logs are not published.

@@ -129,6 +129,9 @@ public static class StackDetector
             case ".SOL":
                 yield return new StackComponent(StackKind.Solidity, "Solidity", relativePath);
                 break;
+            case ".PY":
+                yield return new StackComponent(StackKind.Python, "Python", relativePath);
+                break;
         }
     }
 
@@ -171,6 +174,7 @@ public static class StackDetector
     {
         ProjectKind.AspNetCore => new StackComponent(StackKind.AspNetCore, "ASP.NET Core", string.Empty),
         ProjectKind.BlazorWebAssembly => new StackComponent(StackKind.Blazor, "Blazor", string.Empty),
+        ProjectKind.BlazorWebApp => new StackComponent(StackKind.Blazor, "Blazor", string.Empty),
         ProjectKind.Wpf => new StackComponent(StackKind.Wpf, "WPF", string.Empty),
         ProjectKind.WinForms => new StackComponent(StackKind.WinForms, "Windows Forms", string.Empty),
         ProjectKind.WinUI => new StackComponent(StackKind.WinUI, "WinUI", string.Empty),

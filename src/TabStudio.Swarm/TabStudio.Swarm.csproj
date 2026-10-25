@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    TabStudio Swarm: phones and tablets running TabStudio join a tablet's swarm over TabStudio Link, and the tablet
+    runs the app being built on all of them at once. This library is the protocol and both of its roles, without UI:
+    the coordinator on the tablet (devices, deploying builds through a cache of files by hash, console output, remote
+    debugging, the devices' screens, the web tunnel) and the member on a device (joining, running what it is sent,
+    the debug agent, the loopback web gateway). The app hosts Avalonia apps and draws everything.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>TabStudio.Swarm</RootNamespace>
+    <Description>TabStudio Swarm: run, update and debug the app being built on every phone and tablet in the swarm at once.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TabStudio.Core\TabStudio.Core.csproj" />
+    <ProjectReference Include="..\TabStudio.Compilation\TabStudio.Compilation.csproj" />
+    <ProjectReference Include="..\TabStudio.Debugging\TabStudio.Debugging.csproj" />
+    <ProjectReference Include="..\TabStudio.Link\TabStudio.Link.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="TabStudio.Swarm.Tests" />
+  </ItemGroup>
+
+</Project>

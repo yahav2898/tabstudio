@@ -3,6 +3,7 @@ using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.Rendering;
+using TabStudio.App.Theming;
 using TabStudio.Core.Diagnostics;
 
 namespace TabStudio.App.Editing;
@@ -13,9 +14,9 @@ namespace TabStudio.App.Editing;
 /// </summary>
 public sealed class DiagnosticRenderer : IBackgroundRenderer
 {
-    private static readonly IPen ErrorPen = new ImmutablePen(new ImmutableSolidColorBrush(Color.Parse("#F47067")), 1.2);
-    private static readonly IPen WarningPen = new ImmutablePen(new ImmutableSolidColorBrush(Color.Parse("#E3B341")), 1.2);
-    private static readonly IPen MessagePen = new ImmutablePen(new ImmutableSolidColorBrush(Color.Parse("#6CB6FF")), 1.6, new ImmutableDashStyle([1, 2], 0));
+    private static readonly ThemedPen ErrorLine = ThemedPen.Editor("Editor.ErrorSquiggle", 1.2);
+    private static readonly ThemedPen WarningLine = ThemedPen.Editor("Editor.WarningSquiggle", 1.2);
+    private static readonly ThemedPen MessageLine = ThemedPen.Editor("Editor.MessageSquiggle", 1.6, dashStyle: new ImmutableDashStyle([1, 2], 0));
 
     private TrackedRange<BuildDiagnostic>[] _diagnostics = [];
 
@@ -77,9 +78,9 @@ public sealed class DiagnosticRenderer : IBackgroundRenderer
 
             var pen = diagnostic.Value.Severity switch
             {
-                DiagnosticSeverityLevel.Error => ErrorPen,
-                DiagnosticSeverityLevel.Warning => WarningPen,
-                _ => MessagePen,
+                DiagnosticSeverityLevel.Error => ErrorLine.Pen,
+                DiagnosticSeverityLevel.Warning => WarningLine.Pen,
+                _ => MessageLine.Pen,
             };
 
             foreach (var segmentRect in BackgroundGeometryBuilder.GetRectsForSegment(textView, segment))

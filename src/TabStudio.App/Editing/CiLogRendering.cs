@@ -1,38 +1,38 @@
 using Avalonia;
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.Rendering;
 using TabStudio.App.Services.Ci;
+using TabStudio.App.Theming;
 
 namespace TabStudio.App.Editing;
 
-/// <summary>The brushes of a job log, from the app's theme (Theme/Actions.axaml), with fallbacks for tests without it.</summary>
+/// <summary>The brushes of a job log, from the app's theme (the <c>Brush.Log.*</c> and <c>Brush.Ansi.*</c> tokens); they follow the theme.</summary>
 internal sealed class CiLogBrushes
 {
-    public IBrush Error { get; } = Find("Brush.Log.Error", "#F47067");
+    public IBrush Error { get; } = ThemeBrushes.Get("Brush.Log.Error");
 
-    public IBrush ErrorBackground { get; } = Find("Brush.Log.ErrorBackground", "#33F47067");
+    public IBrush ErrorBackground { get; } = ThemeBrushes.Get("Brush.Log.ErrorBackground");
 
-    public IBrush Warning { get; } = Find("Brush.Log.Warning", "#E3B341");
+    public IBrush Warning { get; } = ThemeBrushes.Get("Brush.Log.Warning");
 
-    public IBrush WarningBackground { get; } = Find("Brush.Log.WarningBackground", "#26E3B341");
+    public IBrush WarningBackground { get; } = ThemeBrushes.Get("Brush.Log.WarningBackground");
 
-    public IBrush Notice { get; } = Find("Brush.Log.Notice", "#6CB6FF");
+    public IBrush Notice { get; } = ThemeBrushes.Get("Brush.Log.Notice");
 
-    public IBrush Debug { get; } = Find("Brush.Log.Debug", "#8B949E");
+    public IBrush Debug { get; } = ThemeBrushes.Get("Brush.Log.Debug");
 
-    public IBrush Command { get; } = Find("Brush.Log.Command", "#8FB8FF");
+    public IBrush Command { get; } = ThemeBrushes.Get("Brush.Log.Command");
 
-    public IBrush Step { get; } = Find("Brush.Log.Step", "#E8ECF2");
+    public IBrush Step { get; } = ThemeBrushes.Get("Brush.Log.Step");
 
-    public IBrush StepBackground { get; } = Find("Brush.Log.StepBackground", "#262A33");
+    public IBrush StepBackground { get; } = ThemeBrushes.Get("Brush.Log.StepBackground");
 
-    public IBrush Group { get; } = Find("Brush.Log.Group", "#C5CAD3");
+    public IBrush Group { get; } = ThemeBrushes.Get("Brush.Log.Group");
 
-    public IBrush Omitted { get; } = Find("Brush.Log.Omitted", "#9AA1AE");
+    public IBrush Omitted { get; } = ThemeBrushes.Get("Brush.Log.Omitted");
 
-    public IBrush Timestamp { get; } = Find("Brush.LineNumber", "#858C99");
+    public IBrush Timestamp { get; } = ThemeBrushes.Get("Brush.LineNumber");
 
     public IBrush? Ansi(CiLogColor color) => color switch
     {
@@ -47,26 +47,22 @@ internal sealed class CiLogBrushes
         _ => null,
     };
 
-    private IBrush AnsiGray { get; } = Find("Brush.Ansi.Gray", "#8B949E");
+    private IBrush AnsiGray { get; } = ThemeBrushes.Get("Brush.Ansi.Gray");
 
-    private IBrush AnsiRed { get; } = Find("Brush.Ansi.Red", "#FF7B72");
+    private IBrush AnsiRed { get; } = ThemeBrushes.Get("Brush.Ansi.Red");
 
-    private IBrush AnsiGreen { get; } = Find("Brush.Ansi.Green", "#7EE787");
+    private IBrush AnsiGreen { get; } = ThemeBrushes.Get("Brush.Ansi.Green");
 
-    private IBrush AnsiYellow { get; } = Find("Brush.Ansi.Yellow", "#E3B341");
+    private IBrush AnsiYellow { get; } = ThemeBrushes.Get("Brush.Ansi.Yellow");
 
-    private IBrush AnsiBlue { get; } = Find("Brush.Ansi.Blue", "#79C0FF");
+    private IBrush AnsiBlue { get; } = ThemeBrushes.Get("Brush.Ansi.Blue");
 
-    private IBrush AnsiMagenta { get; } = Find("Brush.Ansi.Magenta", "#D2A8FF");
+    private IBrush AnsiMagenta { get; } = ThemeBrushes.Get("Brush.Ansi.Magenta");
 
-    private IBrush AnsiCyan { get; } = Find("Brush.Ansi.Cyan", "#56D4DD");
+    private IBrush AnsiCyan { get; } = ThemeBrushes.Get("Brush.Ansi.Cyan");
 
-    private IBrush AnsiWhite { get; } = Find("Brush.Ansi.White", "#F0F6FC");
+    private IBrush AnsiWhite { get; } = ThemeBrushes.Get("Brush.Ansi.White");
 
-    private static IBrush Find(string key, string fallback) =>
-        Application.Current?.TryGetResource(key, Application.Current.ActualThemeVariant, out var value) == true && value is IBrush brush
-            ? brush
-            : new ImmutableSolidColorBrush(Color.Parse(fallback));
 }
 
 /// <summary>

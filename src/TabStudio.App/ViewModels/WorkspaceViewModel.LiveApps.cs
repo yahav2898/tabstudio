@@ -6,8 +6,8 @@ using TabStudio.Core.Workspaces;
 namespace TabStudio.App.ViewModels;
 
 /// <summary>
-/// Live apps, shown beside the code while they run: web apps in the web preview and Avalonia apps in the app
-/// preview. Saving one of the app's files while it runs rebuilds it and starts it again, so the preview follows
+/// Live apps, shown beside the code while they run: web apps in the web preview, and Avalonia and Windows Forms
+/// apps in the app preview. Saving one of the app's files while it runs rebuilds it and starts it again, so the preview follows
 /// the code; for a web app, a file it serves as is, under <c>wwwroot</c>, only reloads the page.
 /// </summary>
 public sealed partial class WorkspaceViewModel
@@ -21,7 +21,8 @@ public sealed partial class WorkspaceViewModel
     private bool _restartLiveApp;
 
     /// <summary>Whether F5 shows a project beside the code rather than running it as a program.</summary>
-    private static bool IsLiveApp(ProjectInfo project) => IsWebApp(project) || IsAvaloniaApp(project);
+    private static bool IsLiveApp(ProjectInfo project) =>
+        IsWebApp(project) || IsAvaloniaApp(project) || IsWindowsFormsApp(project) || IsWebAssemblyApp(project) || ProjectClassifier.IsBlazorWebAppClient(project);
 
     /// <summary>
     /// Builds and runs a live app until it is stopped, starting it again whenever one of its files is saved.
@@ -31,7 +32,12 @@ public sealed partial class WorkspaceViewModel
     private async Task RunLiveProjectAsync(ProjectInfo project, bool fromDebugger)
     {
         // Starts a build of the app and shows it, returning when it stops.
-        Func<ProjectInfo, BuildResult, CompiledAssembly, bool, Task> start = IsWebApp(project) ? ServeWebAppAsync : ShowAvaloniaAppAsync;
+        project = AppToRun(project);
+        Func<ProjectInfo, BuildResult, CompiledAssembly, bool, Task> start =
+            IsWebApp(project) ? ServeWebAppAsync
+            : IsWebAssemblyApp(project) ? ServeWebAssemblyAppAsync
+            : IsWindowsFormsApp(project) ? ShowWindowsFormsAppAsync
+            : ShowAvaloniaAppAsync;
         var restarted = false;
         do
         {
@@ -43,15 +49,17 @@ public sealed partial class WorkspaceViewModel
             {
                 WebPreview.ShowStopped();
                 AppPreview.ShowStopped();
+                OnLiveRunEnded();
                 return;
             }
 
             if (fromDebugger && !restarted)
             {
                 Output.WriteLine(
-                    IsWebApp(project)
-                        ? "Started without the debugger: it pauses a program on its main thread, and a web app answers requests on others."
-                        : "Started without the debugger: an Avalonia app runs on TabStudio's own UI thread, which the debugger cannot pause.",
+                    IsWebApp(project) ? "Started without the debugger: it pauses a program on its main thread, and a web app answers requests on others."
+                    : IsWebAssemblyApp(project) ? "Started without the debugger: a WebAssembly app runs in the web preview's browser, out of the debugger's reach."
+                    : IsWindowsFormsApp(project) ? "Started without the debugger: a Windows Forms app runs its own message loop, which the debugger does not pause yet."
+                    : "Started without the debugger: an Avalonia app runs on TabStudio's own UI thread, which the debugger cannot pause.",
                     OutputKind.Info);
             }
 
@@ -59,6 +67,7 @@ public sealed partial class WorkspaceViewModel
             restarted = true;
         }
         while (_restartLiveApp && !_disposed);
+        OnLiveRunEnded();
     }
 
     /// <summary>Ends one run of a live app: either the line that says it restarts, or its exit line.</summary>
@@ -81,20 +90,25 @@ public sealed partial class WorkspaceViewModel
     /// </summary>
     private void OnDocumentSavedForLiveApp(DocumentViewModel document)
     {
+        if (OnDocumentSavedForRazorApp(document))
+        {
+            return;
+        }
+
         if (_liveProject is not { } project || _run is not { } run
             || !document.FilePath.StartsWith(project.DirectoryPath + Path.DirectorySeparatorChar, StringComparison.Ordinal))
         {
             return;
         }
 
-        // An Avalonia app's files are all compiled into it, its images and fonts included.
+        // An Avalonia or Windows Forms app's files are all compiled into it or read by it, its images included.
         var relative = Path.GetRelativePath(project.DirectoryPath, document.FilePath);
-        var restarts = IsAvaloniaApp(project)
+        var restarts = IsAvaloniaApp(project) || IsWindowsFormsApp(project)
             || (RestartingExtensions.Contains(Path.GetExtension(document.FilePath))
                 && !relative.StartsWith("wwwroot" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase));
         if (!restarts)
         {
-            if (IsWebApp(project))
+            if (IsWebApp(project) || IsWebAssemblyApp(project))
             {
                 WebPreview.ReloadCommand.Execute(null);
             }

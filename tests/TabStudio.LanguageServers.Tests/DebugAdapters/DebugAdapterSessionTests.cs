@@ -392,6 +392,64 @@ public sealed class DebugAdapterSessionTests
     }
 
     [Fact]
+    public async Task Run_in_terminal_requests_go_to_the_handler_and_launches_use_the_terminal_defaults()
+    {
+        var launcher = new FakeDebugAdapter.Launcher();
+        var definition = Adapter() with { TerminalDefaults = new JsonObject { ["console"] = "integratedTerminal", ["redirectOutput"] = false } };
+        await using var session = await DebugAdapterSession.StartAsync(definition, "/fake/bin/fake-adapter", "/work", launcher, new DebugAdapterSessionOptions { SupportsRunInTerminal = true })
+            .WaitAsync(TestTimeouts.Default);
+        var received = new TaskCompletionSource<DapRunInTerminalRequest>(TaskCreationOptions.RunContinuationsAsynchronously);
+        session.RunInTerminalHandler = (request, _) =>
+        {
+            received.TrySetResult(request);
+            return Task.FromResult<int?>(4242);
+        };
+
+        await LaunchAsync(session);
+        var body = await launcher.Started[0].Connection.SendRequestAsync(
+            "runInTerminal",
+            new JsonObject
+            {
+                ["kind"] = "integrated",
+                ["title"] = "Python Debug Console",
+                ["cwd"] = "/work",
+                ["args"] = new JsonArray("/usr/bin/python3", "/opt/debugpy/launcher", "--", "/work/program.py"),
+                ["env"] = new JsonObject { ["PYTHONUNBUFFERED"] = "1", ["PYTHONSTARTUP"] = null },
+            },
+            CancellationToken.None).WaitAsync(TestTimeouts.Default);
+        var request = await received.Task.WaitAsync(TestTimeouts.Default);
+
+        var adapter = launcher.Started[0];
+        Assert.True(adapter.Requests[0].Arguments.GetProperty("supportsRunInTerminalRequest").GetBoolean());
+        var launch = adapter.Requests.First(r => r.Command == "launch").Arguments;
+        Assert.Equal("integratedTerminal", launch.GetProperty("console").GetString());
+        Assert.False(launch.GetProperty("redirectOutput").GetBoolean());
+        Assert.True(launch.GetProperty("justMyCode").GetBoolean());
+        Assert.True(session.RunsInTerminal);
+        Assert.Equal(4242, body.GetProperty("processId").GetInt32());
+        Assert.Equal(["/usr/bin/python3", "/opt/debugpy/launcher", "--", "/work/program.py"], request.Arguments);
+        Assert.Equal("/work", request.WorkingDirectory);
+        Assert.Equal("Python Debug Console", request.Title);
+        Assert.False(request.IsExternal);
+        Assert.Equal("1", request.Environment["PYTHONUNBUFFERED"]);
+        Assert.True(request.Environment.ContainsKey("PYTHONSTARTUP"));
+        Assert.Null(request.Environment["PYTHONSTARTUP"]);
+    }
+
+    [Fact]
+    public async Task Without_a_terminal_launches_keep_the_adapters_console()
+    {
+        var launcher = new FakeDebugAdapter.Launcher();
+        var definition = Adapter() with { TerminalDefaults = new JsonObject { ["console"] = "integratedTerminal" } };
+        await using var session = await DebugAdapterSession.StartAsync(definition, "/fake/bin/fake-adapter", "/work", launcher).WaitAsync(TestTimeouts.Default);
+
+        await LaunchAsync(session);
+
+        Assert.False(session.RunsInTerminal);
+        Assert.Equal("internalConsole", launcher.Started[0].Requests.First(r => r.Command == "launch").Arguments.GetProperty("console").GetString());
+    }
+
+    [Fact]
     public async Task Adapters_that_listen_on_a_port_are_reached_over_tcp()
     {
         await using var launcher = new TcpLauncher();

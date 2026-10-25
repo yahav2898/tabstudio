@@ -1,0 +1,98 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:swarm="using:TabStudio.App.ViewModels.Swarm"
+             x:Class="TabStudio.App.Views.Swarm.UiTestRecorderView"
+             x:DataType="swarm:UiTestRecorderViewModel"
+             IsVisible="{Binding IsOpen, FallbackValue=False}">
+
+  <!-- The UI test recorder: the screen, the test's name, the steps as they are recorded, and Save. -->
+  <Border Padding="14,12" CornerRadius="10" Background="{DynamicResource Brush.Panel}" BorderThickness="1"
+          BorderBrush="{DynamicResource Brush.BorderStrong}">
+    <StackPanel Spacing="10">
+      <Grid ColumnDefinitions="Auto,*,Auto">
+        <Panel Width="12" Height="12" Margin="0,0,9,0" VerticalAlignment="Center">
+          <Ellipse Fill="{DynamicResource Brush.Error}" IsVisible="{Binding IsRecording}" />
+          <Ellipse Stroke="{DynamicResource Brush.TextMuted}" StrokeThickness="1.5" IsVisible="{Binding !IsRecording}" />
+        </Panel>
+        <TextBlock Grid.Column="1" Classes="h2" VerticalAlignment="Center" Text="Record a UI test" />
+        <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Width="32" Height="32" MinWidth="32" MinHeight="32" Padding="0"
+                ToolTip.Tip="Discard the recording" Command="{Binding DiscardCommand}">
+          <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="14" />
+        </Button>
+      </Grid>
+
+      <StackPanel Spacing="5">
+        <TextBlock Classes="label" Text="Screen" />
+        <ComboBox HorizontalAlignment="Stretch" MinHeight="38" ItemsSource="{Binding Screens}" SelectedItem="{Binding SelectedScreen}"
+                  IsEnabled="{Binding !IsRecording}" PlaceholderText="No screen runs the app">
+          <ComboBox.ItemTemplate>
+            <DataTemplate DataType="swarm:UiTestScreenOption">
+              <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
+      </StackPanel>
+
+      <StackPanel Spacing="5">
+        <TextBlock Classes="label" Text="Test name" />
+        <TextBox MinHeight="38" Text="{Binding TestName}" Watermark="What the test shows, such as Counting three taps" />
+      </StackPanel>
+
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <Button Theme="{StaticResource SecondaryButton}" Height="38" Padding="14,0" Command="{Binding StartCommand}" IsVisible="{Binding !IsRecording}">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <Ellipse Width="10" Height="10" Fill="{DynamicResource Brush.Error}" VerticalAlignment="Center" />
+            <TextBlock Text="Record" VerticalAlignment="Center" />
+          </StackPanel>
+        </Button>
+        <Button Theme="{StaticResource SecondaryButton}" Height="38" Padding="14,0" Command="{Binding StopCommand}" IsVisible="{Binding IsRecording}">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <controls:StrokeIcon Data="{StaticResource Icon.Stop}" IsFilled="True" Size="12" Foreground="{DynamicResource Brush.Error}" />
+            <TextBlock Text="Stop" VerticalAlignment="Center" />
+          </StackPanel>
+        </Button>
+      </StackPanel>
+
+      <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{Binding Status}"
+                 IsVisible="{Binding Status, Converter={x:Static ObjectConverters.IsNotNull}}" />
+
+      <!-- The steps -->
+      <Border CornerRadius="8" Background="{DynamicResource Brush.Window}" Padding="4" IsVisible="{Binding HasSteps}">
+        <ItemsControl ItemsSource="{Binding Steps}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="swarm:UiTestStepRow">
+              <Grid ColumnDefinitions="26,Auto,*,Auto" MinHeight="34" Margin="4,0">
+                <TextBlock Classes="muted small" Text="{Binding Number}" VerticalAlignment="Center" />
+                <Panel Grid.Column="1" Width="16" Margin="0,0,8,0" VerticalAlignment="Center">
+                  <controls:StrokeIcon Data="{StaticResource Icon.Check}" Size="13" Foreground="{DynamicResource Brush.Success}" IsVisible="{Binding IsCheck}" />
+                  <controls:StrokeIcon Data="{StaticResource Icon.ArrowRight}" Size="13" Foreground="{DynamicResource Brush.TextMuted}" IsVisible="{Binding !IsCheck}" />
+                </Panel>
+                <TextBlock Grid.Column="2" Classes="small" FontFamily="{DynamicResource CodeFont}" Text="{Binding Text}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                <Button Grid.Column="3" Theme="{StaticResource ToolButton}" Width="30" Height="30" MinWidth="30" MinHeight="30" Padding="0"
+                        ToolTip.Tip="Remove this step"
+                        Command="{Binding $parent[UserControl].((swarm:UiTestRecorderViewModel)DataContext).RemoveStepCommand, FallbackValue={x:Null}}"
+                        CommandParameter="{Binding}">
+                  <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="11" />
+                </Button>
+              </Grid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </Border>
+
+      <TextBlock Foreground="{DynamicResource Brush.Error}" TextWrapping="Wrap" Text="{Binding Error}"
+                 IsVisible="{Binding Error, Converter={x:Static ObjectConverters.IsNotNull}}" />
+
+      <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+        <Button Theme="{StaticResource SecondaryButton}" Height="38" Padding="16,0" Content="Discard" Command="{Binding DiscardCommand}" />
+        <Button Theme="{StaticResource AccentButton}" Height="38" Padding="16,0" Command="{Binding SaveCommand}">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <controls:StrokeIcon Data="{StaticResource Icon.Save}" Size="14" />
+            <TextBlock Text="Save test" VerticalAlignment="Center" />
+          </StackPanel>
+        </Button>
+      </StackPanel>
+    </StackPanel>
+  </Border>
+</UserControl>

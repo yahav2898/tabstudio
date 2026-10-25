@@ -51,7 +51,7 @@
                 IsVisible="{Binding PullRequest.IsOpen}" ToolTip.Tip="Comment, approve or request changes, sending your pending comments">
           <StackPanel Orientation="Horizontal" Spacing="7">
             <TextBlock Text="Finish Review" VerticalAlignment="Center" FontSize="12.5" />
-            <Border Classes="pill" Background="#33000000" IsVisible="{Binding PullRequest.HasPendingComments}">
+            <Border Classes="pill" Background="{DynamicResource Brush.OnAccent.Pill}" IsVisible="{Binding PullRequest.HasPendingComments}">
               <TextBlock Text="{Binding PullRequest.PendingCount}" Foreground="{DynamicResource Brush.OnAccent}" VerticalAlignment="Center" />
             </Border>
           </StackPanel>

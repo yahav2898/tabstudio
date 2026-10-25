@@ -21,8 +21,10 @@ public sealed class QrFrameDecoderTests
     [InlineData(270)]
     public void Reads_a_hosts_code_from_a_camera_frame(int degrees)
     {
-        using var identity = LinkIdentity.Create();
-        var invitation = new LinkInvitation("Pixel 9", ["192.168.1.23", "10.0.0.7"], 50517, identity.Fingerprint, LinkPairingCode.Create()).ToUri();
+        // A fixed key and pairing code, so every run draws the same code: the encoder picks its mask by the data.
+        Assert.True(LinkPairingCode.TryParse("7K3M-Q9TX", out var code));
+        var fingerprint = LinkFingerprint.FromPublicKey("TabStudio Link test host key"u8);
+        var invitation = new LinkInvitation("Pixel 9", ["192.168.1.23", "10.0.0.7"], 50517, fingerprint, code).ToUri();
         var frame = Frame(QrCode.Encode(invitation), degrees, seed: degrees);
 
         var text = QrFrameDecoder.Decode(frame, RowStride, Width, Height);
@@ -31,11 +33,52 @@ public sealed class QrFrameDecoderTests
     }
 
     [Fact]
+    public void Reads_the_codes_of_invitations_of_any_data()
+    {
+        // Random keys and pairing codes, from a fixed seed so that a failure names the same invitation every run.
+        var random = new Random(18004);
+        int[] rotations = [0, 90, 180, 270];
+        for (var i = 0; i < 100; i++)
+        {
+            var invitation = RandomInvitation(random).ToUri();
+            var code = QrCode.Encode(invitation);
+            foreach (var degrees in rotations)
+            {
+                Assert.Equal(invitation, QrFrameDecoder.Decode(Frame(code, degrees, seed: i + degrees), RowStride, Width, Height));
+            }
+        }
+    }
+
+    [Fact]
+    public void Reads_a_code_with_a_finder_like_run_in_its_data()
+    {
+        // ZXing's QR reader alone reads nothing from this frame: its search stops at a finder-like run in the data
+        // before it reaches the real bottom-left finder.
+        Assert.True(LinkPairingCode.TryParse("NRC2Y4QM", out var code));
+        var fingerprint = LinkFingerprint.Parse("X820S2Bb31ilLRlK-Tip3rX_7wgxm47LIeiY99M765s");
+        var invitation = new LinkInvitation("Pixel 9", ["192.168.1.23", "10.0.0.7"], 50517, fingerprint, code).ToUri();
+        var frame = Frame(QrCode.Encode(invitation), degrees: 0, seed: 0);
+
+        Assert.Equal(invitation, QrFrameDecoder.Decode(frame, RowStride, Width, Height));
+    }
+
+    [Fact]
     public void A_frame_without_a_code_reads_as_nothing()
     {
         var frame = Frame(code: null, degrees: 0, seed: 1);
 
         Assert.Null(QrFrameDecoder.Decode(frame, RowStride, Width, Height));
+    }
+
+    /// <summary>An invitation with a random key and pairing code.</summary>
+    private static LinkInvitation RandomInvitation(Random random)
+    {
+        const string alphabet = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
+        var key = new byte[91];
+        random.NextBytes(key);
+        var text = string.Concat(Enumerable.Range(0, LinkPairingCode.Length).Select(_ => alphabet[random.Next(alphabet.Length)]));
+        Assert.True(LinkPairingCode.TryParse(text, out var code));
+        return new LinkInvitation("Pixel 9", ["192.168.1.23", "10.0.0.7"], 50517, LinkFingerprint.FromPublicKey(key), code);
     }
 
     /// <summary>A Y plane: light falling off from left to right, noise, and the code turned and placed off center.</summary>

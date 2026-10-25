@@ -76,7 +76,8 @@ public static class ProjectClassifier
         if (sdk.Equals("Microsoft.NET.Sdk.Web", StringComparison.OrdinalIgnoreCase) ||
             (sdk.Equals("Microsoft.NET.Sdk.Razor", StringComparison.OrdinalIgnoreCase) && project.IsExecutable))
         {
-            return ProjectKind.AspNetCore;
+            // As the Web SDK decides whether an app needs Blazor's script: by its .razor files.
+            return project.HasRazorComponents && project.IsExecutable ? ProjectKind.BlazorWebApp : ProjectKind.AspNetCore;
         }
 
         if (sdk.Equals("Microsoft.NET.Sdk.Worker", StringComparison.OrdinalIgnoreCase))
@@ -96,6 +97,18 @@ public static class ProjectClassifier
 
         // SDK-style projects default to a library; a project with no SDK and no OutputType is unknown.
         return sdk.Length > 0 || project.OutputType is not null ? ProjectKind.ClassLibrary : ProjectKind.Unknown;
+    }
+
+    /// <summary>
+    /// Whether a Blazor WebAssembly project is the client of a Blazor Web App, which runs in the app that references it,
+    /// rather than an app of its own: the template marks it with <c>StaticWebAssetProjectMode</c> <c>Default</c>.
+    /// </summary>
+    /// <param name="project">The project.</param>
+    public static bool IsBlazorWebAppClient(ProjectInfo project)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+        return project.Kind == ProjectKind.BlazorWebAssembly
+            && string.Equals(project.GetProperty("StaticWebAssetProjectMode")?.Trim(), "Default", StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool IsTrue(string? value) =>

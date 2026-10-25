@@ -4,10 +4,10 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.TextMate;
 using TabStudio.App.Editing;
+using TabStudio.App.Theming;
 using TabStudio.App.ViewModels;
 
 namespace TabStudio.App.Views;
@@ -18,8 +18,6 @@ namespace TabStudio.App.Views;
 /// </summary>
 public sealed partial class PeekDefinitionView : UserControl
 {
-    private static readonly IBrush DefinitionLineBrush = new ImmutableSolidColorBrush(Color.Parse("#2B3346"));
-
     private readonly ClassificationColorizer _colorizer = new();
     private TextMate.Installation? _textMate;
     private PeekDefinitionViewModel? _peek;
@@ -30,7 +28,7 @@ public sealed partial class PeekDefinitionView : UserControl
         InitializeComponent();
         Editor.Options.HighlightCurrentLine = true;
         Editor.Options.EnableHyperlinks = false;
-        Editor.TextArea.TextView.CurrentLineBackground = DefinitionLineBrush;
+        Editor.TextArea.TextView.CurrentLineBackground = ThemeBrushes.Get("Editor.PeekDefinitionLine");
         Editor.TextArea.TextView.CurrentLineBorder = null;
         Editor.TextArea.TextView.LineTransformers.Add(_colorizer);
         TitleButton.Click += (_, _) => OpenRequested?.Invoke(this, EventArgs.Empty);

@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using TabStudio.App.Editing.Extensions.Svg;
+using TabStudio.App.Theming;
 using TabStudio.Extensions.Themes;
 
 namespace TabStudio.App.Editing.Extensions;
@@ -112,7 +113,7 @@ public static class FileIcons
     {
         if (Application.Current is not { } application
             || !application.TryFindResource(geometryKey, out var geometry) || geometry is not Geometry symbol
-            || !application.TryFindResource(brushKey, out var brush) || brush is not IBrush stroke)
+            || ThemeBrushes.Find<IBrush>(brushKey) is not { } stroke)
         {
             return null;
         }

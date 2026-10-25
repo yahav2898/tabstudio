@@ -55,7 +55,7 @@ public sealed class WorkspaceSnapshot : IBuildSource
 
         var compilation = await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false)
             ?? throw new InvalidOperationException($"Roslyn could not create a compilation for '{_projects[id].Name}'.");
-        return CSharpCompiler.Emit(compilation, checkInProcessSafety, stopwatch, _projects[id].Name, ManifestResources.For(_projects[id]), cancellationToken);
+        return await Razor.RazorCompilations.EmitAsync(project, _projects[id], compilation, checkInProcessSafety, stopwatch, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>The errors and warnings of every C# project, as the Error List would show them after a build.</summary>
@@ -70,7 +70,7 @@ public sealed class WorkspaceSnapshot : IBuildSource
                 continue;
             }
 
-            diagnostics.AddRange(DiagnosticMapper.Map(compilation.GetDiagnostics(cancellationToken), info.Name));
+            diagnostics.AddRange(await Razor.RazorCompilations.MapAsync(project, info, compilation.GetDiagnostics(cancellationToken), cancellationToken).ConfigureAwait(false));
             if (info.IsExecutable)
             {
                 diagnostics.AddRange(InProcessSafetyAnalyzer.Analyze(compilation, info.Name, cancellationToken));

@@ -7,7 +7,7 @@
   <!-- Quick Info: the signature colored like code, its documentation, then errors and warnings at the same place. -->
   <Border MaxWidth="560" Padding="12,10" CornerRadius="8"
           Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
-          BoxShadow="0 8 24 0 #59000000">
+          BoxShadow="{DynamicResource Shadow.Popup}">
     <StackPanel Spacing="8">
       <Grid ColumnDefinitions="Auto,*" IsVisible="{Binding HasSignature}">
         <controls:SymbolGlyphIcon Kind="{Binding Kind}" Size="16" Margin="0,1,8,0" VerticalAlignment="Top" />

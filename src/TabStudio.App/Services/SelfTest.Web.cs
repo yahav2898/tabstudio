@@ -45,6 +45,12 @@ public static partial class SelfTest
             var message = served
                 ? string.Create(CultureInfo.InvariantCulture, $"Web: served on {address.Authority} in {clock.Elapsed.TotalSeconds:0.0} s, the API said \"Hello, {Name}!\"")
                 : $"Web: unexpected answers: {api}";
+            if (served)
+            {
+                var screen = await CheckWebScreenAsync(workspace, cancellationToken);
+                return new SelfTestResult(screen.Success, $"{message} | {screen.Message}", clock.Elapsed);
+            }
+
             return new SelfTestResult(served, message, clock.Elapsed);
         }
         catch (HttpRequestException ex)

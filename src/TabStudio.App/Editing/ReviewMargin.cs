@@ -5,6 +5,7 @@ using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using AvaloniaEdit.Editing;
 using AvaloniaEdit.Rendering;
+using TabStudio.App.Theming;
 using TabStudio.App.ViewModels.PullRequests;
 
 namespace TabStudio.App.Editing;
@@ -22,7 +23,6 @@ public sealed class ReviewMargin : AbstractMargin
 
     private static readonly Geometry Bubble = Geometry.Parse("M4 5 L20 5 L20 16 L10 16 L5 20 L5 16 L4 16 Z");
     private static readonly Geometry Plus = Geometry.Parse("M12 6 L12 18 M6 12 L18 12");
-    private static readonly IBrush PlusBackground = new ImmutableSolidColorBrush(Color.Parse("#0F7A70"));
 
     private readonly IReviewAnchorSource _source;
     private int? _hoverLine;
@@ -46,15 +46,15 @@ public sealed class ReviewMargin : AbstractMargin
 
     /// <summary>The brush of a glyph, by what the line's items are.</summary>
     /// <param name="glyph">The glyph.</param>
-    public static ImmutableSolidColorBrush GlyphBrush(ReviewGlyph glyph) => glyph switch
+    public static ImmutableSolidColorBrush GlyphBrush(ReviewGlyph glyph) => Brush(glyph switch
     {
-        ReviewGlyph.Pending => Brush("#E3B341"),
-        ReviewGlyph.Draft => Brush("#C9B6FF"),
-        ReviewGlyph.NewComment => Brush("#6FD6C4"),
-        ReviewGlyph.Resolved => Brush("#6FD6A0"),
-        ReviewGlyph.Outdated => Brush("#858C99"),
-        _ => Brush("#6CB6FF"),
-    };
+        ReviewGlyph.Pending => "Brush.Review.Pending",
+        ReviewGlyph.Draft => "Brush.Review.Claude",
+        ReviewGlyph.NewComment => "Brush.AccentText",
+        ReviewGlyph.Resolved => "Brush.Success",
+        ReviewGlyph.Outdated => "Brush.LineNumber",
+        _ => "Brush.Review.Thread",
+    });
 
     /// <summary>The 1-based line under a point of the margin, or <see langword="null"/> below the last line.</summary>
     /// <param name="point">A point relative to the margin.</param>
@@ -97,8 +97,8 @@ public sealed class ReviewMargin : AbstractMargin
             }
             else if (number == _hoverLine && _source.CanCommentOn(number))
             {
-                context.DrawRectangle(PlusBackground, null, new Rect(origin, new Size(size, size)), 4, 4);
-                DrawIcon(context, Plus, origin, size, null, Brushes.White, 2.4);
+                context.DrawRectangle(ThemeBrushes.Editor("Editor.ReviewMarker"), null, new Rect(origin, new Size(size, size)), 4, 4);
+                DrawIcon(context, Plus, origin, size, null, Brush("Editor.ReviewMarkerGlyph"), 2.4);
             }
         }
     }
@@ -161,7 +161,8 @@ public sealed class ReviewMargin : AbstractMargin
         }
     }
 
-    private static ImmutableSolidColorBrush Brush(string color) => new(Color.Parse(color));
+    /// <summary>A token's color in the editors' theme, which the glyphs are drawn on.</summary>
+    private static ImmutableSolidColorBrush Brush(string token) => new(ThemeBrushes.ColorOf(token, ThemeBrushes.EditorVariant));
 
     private void SetHoverLine(int? line)
     {

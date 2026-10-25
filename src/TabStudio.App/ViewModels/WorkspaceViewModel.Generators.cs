@@ -71,7 +71,7 @@ public sealed partial class WorkspaceViewModel
             _frameworkGeneratorsRequested = problems.All(d => d.Severity != DiagnosticSeverityLevel.Error);
             foreach (var document in Documents)
             {
-                _ = document.AnalyzeNowAsync();
+                _ = document.AnalyzeAgainAsync();
             }
         }
         catch (OperationCanceledException)

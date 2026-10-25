@@ -190,6 +190,7 @@ public sealed partial class WorkspaceViewModel
 
         var startup = StartupProject?.FilePath;
         LoadStartupProjects(preview.Workspace, startup);
+        await LoadToolchainProjectsAsync(preview.Workspace, startup);
 
         if (_language is { } language)
         {
@@ -197,7 +198,7 @@ public sealed partial class WorkspaceViewModel
             await Task.Run(() => language.Reload(preview.Workspace, new OpenDocumentTextProvider(openTexts)));
             foreach (var document in Documents)
             {
-                _ = document.AnalyzeNowAsync();
+                _ = document.AnalyzeAgainAsync();
             }
         }
     }

@@ -1,4 +1,5 @@
 using TabStudio.App.Editing.Extensions;
+using TabStudio.App.Services.Appearance;
 using TabStudio.Extensions.Contributions;
 using TabStudio.Extensions.Installation;
 using TabStudio.Extensions.Manifests;
@@ -33,12 +34,14 @@ public sealed class ExtensionsService : IDisposable
     /// <summary>Opens the extensions folder and publishes what the installed extensions contribute.</summary>
     /// <param name="paths">Where the app keeps its data.</param>
     /// <param name="http">The HTTP client for the registry.</param>
-    public ExtensionsService(AppPaths paths, HttpClient http)
+    /// <param name="appearance">The IDE's theme, which follows the chosen color theme; <see langword="null"/> leaves it alone.</param>
+    public ExtensionsService(AppPaths paths, HttpClient http, AppearanceService? appearance = null)
     {
         ArgumentNullException.ThrowIfNull(paths);
         ArgumentNullException.ThrowIfNull(http);
         _paths = paths;
         _http = http;
+        Appearance = appearance;
         _settingsStore = new ExtensionSettingsStore(paths);
         Settings = _settingsStore.Load();
         Store = new ExtensionStore(Path.Combine(paths.Root, FolderName));
@@ -64,6 +67,9 @@ public sealed class ExtensionsService : IDisposable
 
     /// <summary>The color theme in use, or <see langword="null"/> for TabStudio's own.</summary>
     public EditorColorTheme? ColorTheme { get; private set; }
+
+    /// <summary>The IDE's theme, which the color themes set: a light one makes the whole IDE light, as in VS Code.</summary>
+    public AppearanceService? Appearance { get; }
 
     /// <summary>The file icon theme in use, or <see langword="null"/> for TabStudio's badges.</summary>
     public FileIconTheme? IconTheme { get; private set; }
@@ -140,6 +146,14 @@ public sealed class ExtensionsService : IDisposable
         Settings = Settings with { ColorTheme = key };
         _settingsStore.Save(Settings);
         Refresh();
+        if (ColorTheme is { } theme)
+        {
+            Appearance?.SetTheme(KindOf(theme));
+        }
+        else
+        {
+            Appearance?.Apply();
+        }
     }
 
     /// <summary>Shows a color theme in every editor without remembering it, as the theme picker does while browsing.</summary>
@@ -148,6 +162,40 @@ public sealed class ExtensionsService : IDisposable
     {
         ColorTheme = LoadColorTheme(key);
         EditorExtensions.Publish(this, Contributions, ColorTheme, IconTheme);
+        if (ColorTheme is { } theme)
+        {
+            AppearanceService.Preview(KindOf(theme));
+        }
+        else
+        {
+            Appearance?.Apply();
+        }
+    }
+
+    /// <summary>
+    /// Uses TabStudio's own colors in a theme of the IDE (Dark, Light or Follow the system), leaving any extension's
+    /// color theme, and remembers it.
+    /// </summary>
+    /// <param name="theme">The IDE's theme.</param>
+    public void UseTabStudioTheme(IdeTheme theme)
+    {
+        if (Settings.ColorTheme is not null)
+        {
+            Settings = Settings with { ColorTheme = null };
+            _settingsStore.Save(Settings);
+        }
+
+        Refresh();
+        Appearance?.SetTheme(theme);
+    }
+
+    /// <summary>Shows TabStudio's own colors in a theme of the IDE without remembering it, while the picker browses.</summary>
+    /// <param name="theme">The IDE's theme.</param>
+    public void PreviewTabStudioTheme(IdeTheme theme)
+    {
+        ColorTheme = null;
+        EditorExtensions.Publish(this, Contributions, null, IconTheme);
+        AppearanceService.Preview(theme);
     }
 
     /// <summary>Uses a file icon theme in the Solution Explorer and on tabs, and remembers the choice.</summary>
@@ -236,6 +284,9 @@ public sealed class ExtensionsService : IDisposable
         EditorExtensions.Publish(this, Contributions, ColorTheme, IconTheme);
         Changed?.Invoke(this, EventArgs.Empty);
     }
+
+    /// <summary>The IDE's theme that goes with a color theme: light for a light one, dark otherwise.</summary>
+    private static IdeTheme KindOf(EditorColorTheme theme) => theme.Source.IsDark ? IdeTheme.Dark : IdeTheme.Light;
 
     private EditorColorTheme? LoadColorTheme(string? key)
     {

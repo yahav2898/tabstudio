@@ -94,7 +94,7 @@ internal sealed class FakeBridgeDesktop : IBridgeDesktop, IBridgeDesktopFactory
     }
 
     /// <inheritdoc />
-    public IWindowCapture StartCapture(long windowId) => new Capture(Find(windowId));
+    public IWindowCapture StartCapture(long windowId) => new FakeCapture(Find(windowId));
 
     /// <inheritdoc />
     public void SendInput(long windowId, IReadOnlyList<BridgeInputEvent> events)
@@ -153,7 +153,7 @@ internal sealed class FakeBridgeDesktop : IBridgeDesktop, IBridgeDesktopFactory
         }
     }
 
-    private sealed class Capture(FakeBridgeWindow window) : IWindowCapture
+    private sealed class FakeCapture(FakeBridgeWindow window) : IWindowCapture
     {
         private int _version = -1;
 

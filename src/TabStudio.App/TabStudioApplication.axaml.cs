@@ -4,6 +4,8 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Platform;
 using Microsoft.Extensions.DependencyInjection;
 using TabStudio.App.Services;
+using TabStudio.App.Services.Appearance;
+using TabStudio.App.Theming;
 using TabStudio.App.ViewModels;
 using TabStudio.App.Views;
 
@@ -40,6 +42,14 @@ public sealed partial class TabStudioApplication : Application
     {
         var paths = _dataDirectory is null ? AppPaths.CreateDefault() : new AppPaths(_dataDirectory);
         Services = AppServices.Create(paths, _configurePlatform);
+
+        // The saved theme first, so the first frame is drawn in it; tests (no lifetime) start dark and choose their own.
+        ThemeSync.Start(this);
+        if (ApplicationLifetime is not null)
+        {
+            Services.GetRequiredService<AppearanceService>().Apply();
+        }
+
         Main = Services.GetRequiredService<MainViewModel>();
 
         switch (ApplicationLifetime)
