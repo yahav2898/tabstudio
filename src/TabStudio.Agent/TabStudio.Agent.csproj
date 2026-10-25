@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The agent: Claude working on the open solution through tools (reading, searching and editing files,
+    building, running tests) and Model Context Protocol servers. Every file change is held as a proposal
+    until the user approves it. Platform-neutral; the IDE supplies the workspace through IAgentWorkspace.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>TabStudio.Agent</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TabStudio.Core\TabStudio.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="TabStudio.Agent.Tests" />
+  </ItemGroup>
+
+</Project>
