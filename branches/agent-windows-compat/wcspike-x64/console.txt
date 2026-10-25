@@ -12,8 +12,8 @@ OK: 706.3 MiB in 104 packages
 Executing mkfontscale-1.2.4-r0.trigger
 OK: 750.5 MiB in 135 packages
 SPIKE apk_wine_download 234912KiB in 4s
-SPIKE apk_tools_download 19788KiB in 2s
-SPIKE rootfs_size 1036092KiB
+SPIKE apk_tools_download 19788KiB in 1s
+SPIKE rootfs_size 1036096KiB
 SPIKE arch x64 x86_64 6.17.0-1022-azure
 SPIKE page_size 4096
 SPIKE wine_files 406.8MiB
@@ -22,36 +22,76 @@ SPIKE xvfb_start_seconds 0.05
 SPIKE xvfb_running True
 SPIKE wine_binary /usr/bin/wine
 SPIKE wine_version wine-11.0 (0.0s)
-SPIKE wineboot_seconds 13.9 exit=0
+SPIKE wineboot_seconds 14.2 exit=0
 SPIKE prefix_size 420.0MiB
 SPIKE prefix_system32 199.3MiB
 SPIKE prefix_syswow64 178.0MiB
 SPIKE prefix_dedupe linked 1479 files, saved 363.7MiB, prefix now 56.4MiB
-SPIKE registry_seconds 4.0 exit=0
-SPIKE dotnet_info_seconds 3.9 exit=0
+SPIKE registry_seconds 4.1 exit=0
+SPIKE dotnet_info_seconds 4.1 exit=0
 SPIKE-NOTE dotnet --info:  / Host: / Version:      10.0.13 / Architecture: x64 / Commit:       4099f83977 / RID:          win-x64 /  / .NET SDKs installed: / No SDKs were found. /  / .NET runtimes installed: / Microsoft.NETCore.App 10.0.13 [C:\dotnet\shared\Microsoft.NETCore.App] / Microsoft.WindowsDesktop.App 10.0.13 [C:\dotnet\shared\Microsoft.WindowsDesktop.App] /  / Other architectures found: / None
-SPIKE forms_hello_seconds 300.0 exit=timeout hello=False
-SPIKE-NOTE hello output: 0024:err:module:fixup_imports_ilonly mscoree.dll not found, IL-only binary L"System.Runtime.dll" cannot be loaded
-0024:err:module:fixup_imports_ilonly mscoree.dll not found, IL-only binary L"System.Runtime.dll" cannot be loaded
-Unhandled exception. System.IO.FileNotFoundException: Could not load file or assembly 'C:\dotnet\shared\Microsoft.NETCore.App\10.0.13\System.Runtime.dll'. Module not found.
-File name: 'C:\dotnet\shared\Microsoft.NETCore.App\10.0.13\System.Runtime.dll'
-wine: Unhandled exception 0xe0434352 in thread 24 at address 00006FFFFFBFD887 (thread 0024), starting debugger...
-WineDbg attached to pid 0020
-0100:err:vulkan:vulkan_init_once Failed to load libvulkan.so.1
-
-SPIKE forms_hello_session_seconds 300.0 exit=timeout
+SPIKE forms_hello_seconds 4.9 exit=0 hello=True
+SPIKE forms_hello_session_seconds 0.2 exit=0
 SPIKE framebuffer 1280x800 bpp=32 stride=5120 order=0 masks=ff0000/ff00/ff
-  [forms] WineDbg attached to pid 0180
-SPIKE forms_shown no
-SPIKE-NOTE forms stderr: 0184:err:module:fixup_imports_ilonly mscoree.dll not found, IL-only binary L"System.Runtime.dll" cannot be loaded / 0184:err:module:fixup_imports_ilonly mscoree.dll not found, IL-only binary L"System.Runtime.dll" cannot be loaded / Unhandled exception. System.IO.FileNotFoundException: Could not load file or assembly 'C:\dotnet\shared\Microsoft.NETCore.App\10.0.13\System.Runtime.dll'. Module not found. / File name: 'C:\dotnet\shared\Microsoft.NETCore.App\10.0.13\System.Runtime.dll' / wine: Unhandled exception 0xe0434352 in thread 184 at address 00006FFFFFBFD887 (thread 0184), starting debugger...
-  [forms_animate] WineDbg attached to pid 01a8
-SPIKE forms_animate_shown no
-SPIKE-NOTE forms_animate stderr: 01ac:err:module:fixup_imports_ilonly mscoree.dll not found, IL-only binary L"System.Runtime.dll" cannot be loaded / 01ac:err:module:fixup_imports_ilonly mscoree.dll not found, IL-only binary L"System.Runtime.dll" cannot be loaded / Unhandled exception. System.IO.FileNotFoundException: Could not load file or assembly 'C:\dotnet\shared\Microsoft.NETCore.App\10.0.13\System.Runtime.dll'. Module not found. / File name: 'C:\dotnet\shared\Microsoft.NETCore.App\10.0.13\System.Runtime.dll' / wine: Unhandled exception 0xe0434352 in thread 1ac at address 00006FFFFFBFD887 (thread 01ac), starting debugger...
-  [wpf_hardware] WineDbg attached to pid 01d0
-SPIKE wpf_hardware_shown no
-SPIKE-NOTE wpf_hardware stderr: 01d4:err:module:fixup_imports_ilonly mscoree.dll not found, IL-only binary L"System.Runtime.dll" cannot be loaded / 01d4:err:module:fixup_imports_ilonly mscoree.dll not found, IL-only binary L"System.Runtime.dll" cannot be loaded / Unhandled exception. System.IO.FileNotFoundException: Could not load file or assembly 'C:\dotnet\shared\Microsoft.NETCore.App\10.0.13\System.Runtime.dll'. Module not found. / File name: 'C:\dotnet\shared\Microsoft.NETCore.App\10.0.13\System.Runtime.dll' / wine: Unhandled exception 0xe0434352 in thread 1d4 at address 00006FFFFFBFD887 (thread 01d4), starting debugger...
-  [wpf_software] WineDbg attached to pid 0208
-SPIKE wpf_software_shown no
-SPIKE-NOTE wpf_software stderr: 020c:err:module:fixup_imports_ilonly mscoree.dll not found, IL-only binary L"System.Runtime.dll" cannot be loaded / 020c:err:module:fixup_imports_ilonly mscoree.dll not found, IL-only binary L"System.Runtime.dll" cannot be loaded / Unhandled exception. System.IO.FileNotFoundException: Could not load file or assembly 'C:\dotnet\shared\Microsoft.NETCore.App\10.0.13\System.Runtime.dll'. Module not found. / File name: 'C:\dotnet\shared\Microsoft.NETCore.App\10.0.13\System.Runtime.dll' / wine: Unhandled exception 0xe0434352 in thread 20c at address 00006FFFFFBFD887 (thread 020c), starting debugger...
+  [forms] STARTED 106742 .NET 10.0.13 X64 Microsoft Windows 10.0.19045
+  [forms] SHOWN 106848 BUTTON 142 102 OPEN 342 102 SCREEN 1024x720SPIKE forms_startup_seconds 0.27
+
+SPIKE forms_shown_line SHOWN 106848 BUTTON 142 102 OPEN 342 102 SCREEN 1024x720
+  [forms] SCREEN 1024x720
+SPIKE forms_rss_wine 171.8MiB
+SPIKE forms_rss_xvfb 52.4MiB
+SPIKE forms_rss_detail dotnet.exe=66.7MiB winedevice.exe=25.0MiB explorer.exe=20.5MiB wineserver=14.4MiB plugplay.exe=12.7MiB start.exe=11.3MiB services.exe=7.9MiB rpcss.exe=6.9MiB
+  [forms] CLICKED 1
+SPIKE forms_click xdotool=0 (0.10s) app=yes frame_change=0.006s
+  [forms] OPENED second
+SPIKE forms_second_window yes
+SPIKE desktop_windows 4194308
+SPIKE resize_desktop_800x600 the app did not see it
+SPIKE resize_desktop_back yes
+  [forms_again] STARTED 128840 .NET 10.0.13 X64 Microsoft Windows 10.0.19045
+  [forms_again] SHOWN 128948 BUTTON 142 102 OPEN 342 102 SCREEN 1024x720SPIKE forms_again_startup_seconds 0.28
+SPIKE forms_again_shown_line SHOWN 128948 BUTTON 142 102 OPEN 342 102 SCREEN 1024x720
+
+  [forms_animate] STARTED 130123 .NET 10.0.13 X64 Microsoft Windows 10.0.19045
+  [forms_animate] SHOWN 130236 BUTTON 142 102 OPEN 342 102 SCREEN 1024x720SPIKE forms_animate_startup_seconds 0.28
+SPIKE forms_animate_shown_line SHOWN 130236 BUTTON 142 102 OPEN 342 102 SCREEN 1024x720
+
+  [forms_animate] SCREEN 1024x720
+SPIKE forms_fps 102.6 (sampled at 133/s)
+SPIKE forms_animate_rss_wine 177.9MiB
+  [wpf_hardware] STARTED 138592 .NET 10.0.13 X64
+  [wpf_hardware] SHOWN 139247 BUTTON 134 94 OPEN 330 94 TIER 2 SCREEN 1024x720SPIKE wpf_hardware_startup_seconds 0.95
+
+SPIKE wpf_hardware_shown_line SHOWN 139247 BUTTON 134 94 OPEN 330 94 TIER 2 SCREEN 1024x720
+SPIKE wpf_hardware_rss_wine 406.3MiB
+SPIKE wpf_hardware_rss_xvfb 52.6MiB
+SPIKE wpf_hardware_rss_detail dotnet.exe=301.3MiB winedevice.exe=25.0MiB explorer.exe=20.5MiB wineserver=14.4MiB plugplay.exe=12.7MiB start.exe=11.3MiB services.exe=7.9MiB rpcss.exe=6.9MiB
+  [wpf_hardware] CLICKED 1
+SPIKE wpf_hardware_click xdotool=0 (0.10s) app=yes frame_change=0.006s
+  [wpf_hardware] OPENED second
+SPIKE wpf_hardware_second_window yes
+  [wpf_hardware_animate] STARTED 145333 .NET 10.0.13 X64
+  [wpf_hardware_animate] SHOWN 145856 BUTTON 134 94 OPEN 330 94 TIER 2 SCREEN 1024x720
+SPIKE wpf_hardware_animate_startup_seconds 0.81
+SPIKE wpf_hardware_animate_shown_line SHOWN 145856 BUTTON 134 94 OPEN 330 94 TIER 2 SCREEN 1024x720
+SPIKE wpf_hardware_fps 57.0 (sampled at 133/s)
+SPIKE wpf_hardware_animate_rss_wine 407.6MiB
+  [wpf_software] STARTED 154298 .NET 10.0.13 X64
+  [wpf_software] SHOWN 154788 BUTTON 134 94 OPEN 330 94 TIER 2 SCREEN 1024x720SPIKE wpf_software_startup_seconds 0.77
+
+SPIKE wpf_software_shown_line SHOWN 154788 BUTTON 134 94 OPEN 330 94 TIER 2 SCREEN 1024x720
+SPIKE wpf_software_rss_wine 308.6MiB
+SPIKE wpf_software_rss_xvfb 52.8MiB
+SPIKE wpf_software_rss_detail dotnet.exe=203.5MiB winedevice.exe=25.0MiB explorer.exe=20.5MiB wineserver=14.4MiB plugplay.exe=12.7MiB start.exe=11.3MiB services.exe=7.9MiB rpcss.exe=6.9MiB
+  [wpf_software] CLICKED 1
+SPIKE wpf_software_click xdotool=0 (0.10s) app=yes frame_change=0.006s
+  [wpf_software] OPENED second
+SPIKE wpf_software_second_window yes
+  [wpf_software_animate] STARTED 160883 .NET 10.0.13 X64
+  [wpf_software_animate] SHOWN 161373 BUTTON 134 94 OPEN 330 94 TIER 2 SCREEN 1024x720SPIKE wpf_software_animate_startup_seconds 0.79
+SPIKE wpf_software_animate_shown_line SHOWN 161373 BUTTON 134 94 OPEN 330 94 TIER 2 SCREEN 1024x720
+
+SPIKE wpf_software_fps 61.8 (sampled at 134/s)
+SPIKE wpf_software_animate_rss_wine 311.3MiB
 SPIKE prefix_size_after 56.4MiB
 SPIKE-DONE
