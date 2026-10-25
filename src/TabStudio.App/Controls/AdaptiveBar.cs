@@ -246,6 +246,15 @@ public sealed class AdaptiveBar : Panel
                 entry.InputGesture = TryParse(gesture);
             }
 
+            // An item that opens a menu, such as the configuration, becomes a submenu.
+            if (item.Flyout is MenuFlyout { Items.Count: > 0 } flyout)
+            {
+                foreach (var choice in flyout.Items.OfType<MenuItem>())
+                {
+                    entry.Items.Add(new MenuItem { Header = choice.Header, Command = choice.Command, CommandParameter = choice.CommandParameter });
+                }
+            }
+
             menu.Items.Add(entry);
         }
     }

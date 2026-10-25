@@ -127,8 +127,8 @@ public sealed partial class UnifiedSearchViewModel : ObservableObject, IDisposab
     /// <summary>Searches again now, with the query and scope as they are.</summary>
     public Task RefreshAsync()
     {
+        // The previous search may still be using its token, so it is cancelled but not disposed.
         _search?.Cancel();
-        _search?.Dispose();
         _search = new CancellationTokenSource();
         Completion = SearchAsync(Query, Scope, _search.Token);
         return Completion;
