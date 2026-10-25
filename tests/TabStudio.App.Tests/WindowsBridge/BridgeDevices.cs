@@ -112,10 +112,13 @@ internal sealed class BridgeDevices : IAsyncDisposable
         return Folder.Resolve($"Tablet/Solution/{name}/{name}.csproj");
     }
 
-    /// <summary>Writes a WPF app, which runs only on Windows.</summary>
-    public string WriteWpfProject(string name)
+    /// <summary>Writes a WPF project in C#, for OpenSilver or the PC, or Visual Basic, for the PC.</summary>
+    /// <param name="name">The project's name.</param>
+    /// <param name="visualBasic">Whether the project uses Visual Basic, which needs the Windows Bridge.</param>
+    public string WriteWpfProject(string name, bool visualBasic = false)
     {
-        Folder.Write($"Tablet/Solution/{name}/{name}.csproj", """
+        var extension = visualBasic ? "vbproj" : "csproj";
+        Folder.Write($"Tablet/Solution/{name}/{name}.{extension}", """
             <Project Sdk="Microsoft.NET.Sdk">
               <PropertyGroup>
                 <OutputType>WinExe</OutputType>
@@ -136,21 +139,44 @@ internal sealed class BridgeDevices : IAsyncDisposable
                 </Grid>
             </Window>
             """);
-        Folder.Write($"Tablet/Solution/{name}/MainWindow.xaml.cs", $$"""
-            using System.Windows;
-            using System.Windows.Media;
+        if (visualBasic)
+        {
+            Folder.Write($"Tablet/Solution/{name}/MainWindow.xaml.vb", """
+                Imports System.Windows
+                Imports System.Windows.Media
 
-            namespace {{name}};
+                Partial Public Class MainWindow
+                    Inherits Window
 
-            public partial class MainWindow : Window
-            {
-                public MainWindow() => InitializeComponent();
+                    Public Sub New()
+                        InitializeComponent()
+                    End Sub
 
-                private void OnClick(object sender, RoutedEventArgs e) =>
-                    Root.Background = new SolidColorBrush(Color.FromRgb(0x20, 0xA0, 0x40));
-            }
-            """);
-        return Folder.Resolve($"Tablet/Solution/{name}/{name}.csproj");
+                    Private Sub OnClick(sender As Object, e As RoutedEventArgs)
+                        Root.Background = New SolidColorBrush(Color.FromRgb(&H20, &HA0, &H40))
+                    End Sub
+                End Class
+                """);
+        }
+        else
+        {
+            Folder.Write($"Tablet/Solution/{name}/MainWindow.xaml.cs", $$"""
+                using System.Windows;
+                using System.Windows.Media;
+
+                namespace {{name}};
+
+                public partial class MainWindow : Window
+                {
+                    public MainWindow() => InitializeComponent();
+
+                    private void OnClick(object sender, RoutedEventArgs e) =>
+                        Root.Background = new SolidColorBrush(Color.FromRgb(0x20, 0xA0, 0x40));
+                }
+                """);
+        }
+
+        return Folder.Resolve($"Tablet/Solution/{name}/{name}.{extension}");
     }
 
     /// <summary>The folder the projects are written to.</summary>
