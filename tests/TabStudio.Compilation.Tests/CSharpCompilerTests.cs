@@ -1,3 +1,4 @@
+using Microsoft.CodeAnalysis;
 using TabStudio.Core.Diagnostics;
 
 namespace TabStudio.Compilation.Tests;
@@ -50,6 +51,15 @@ public sealed class CSharpCompilerTests
 
         Assert.True(result.Success);
         Assert.Contains(result.Diagnostics, d => d.Id == "CS8602" && d.Severity == DiagnosticSeverityLevel.Warning);
+    }
+
+    [Fact]
+    public void Assembly_version_unification_is_not_a_warning_as_in_the_SDK()
+    {
+        var options = CSharpCompiler.CreateCompilationOptions(AssemblyKind.Library, nullable: true);
+
+        Assert.Equal(ReportDiagnostic.Suppress, options.SpecificDiagnosticOptions["CS1701"]);
+        Assert.Equal(ReportDiagnostic.Suppress, options.SpecificDiagnosticOptions["CS1702"]);
     }
 
     [Theory]

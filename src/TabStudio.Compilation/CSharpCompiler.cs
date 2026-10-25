@@ -54,6 +54,17 @@ public sealed class CSharpCompiler
 
     private static readonly EmitOptions EmitOptions = new(debugInformationFormat: DebugInformationFormat.PortablePdb);
 
+    /// <summary>
+    /// The warnings the SDK's default <c>NoWarn</c> turns off in every C# project: CS1701 and CS1702 report that a
+    /// reference to an older framework assembly, as packages built for .NET Standard have, was unified with the
+    /// version the project targets, which is expected.
+    /// </summary>
+    private static readonly Dictionary<string, ReportDiagnostic> SdkNoWarn = new(StringComparer.Ordinal)
+    {
+        ["CS1701"] = ReportDiagnostic.Suppress,
+        ["CS1702"] = ReportDiagnostic.Suppress,
+    };
+
     /// <summary>Parse options for a project.</summary>
     /// <param name="optimize">Whether this is a release build, which defines <c>RELEASE</c> instead of <c>DEBUG</c>.</param>
     public static CSharpParseOptions CreateParseOptions(bool optimize = false) => new(
@@ -79,7 +90,8 @@ public sealed class CSharpCompiler
         optimizationLevel: optimize ? OptimizationLevel.Release : OptimizationLevel.Debug,
         allowUnsafe: allowUnsafe,
         deterministic: true,
-        concurrentBuild: concurrentBuild);
+        concurrentBuild: concurrentBuild,
+        specificDiagnosticOptions: SdkNoWarn);
 
     /// <summary>The source of the implicit global usings file, as the SDK would generate it.</summary>
     public static string CreateGlobalUsingsSource()
