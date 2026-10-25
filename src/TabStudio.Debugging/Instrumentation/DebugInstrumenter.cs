@@ -9,7 +9,10 @@ namespace TabStudio.Debugging.Instrumentation;
 /// Turns a compilation into its debug build: every user syntax tree is rewritten by
 /// <see cref="InstrumentingRewriter"/>, and the debugger runtime is added as one more tree.
 /// </summary>
-/// <remarks>Generated trees, such as the SDK's implicit global usings, are left untouched.</remarks>
+/// <remarks>
+/// Generated trees, such as the SDK's implicit global usings, are left untouched, except that the interceptors among
+/// them are pointed at their calls in the rewritten trees (see <see cref="InterceptorRelocation"/>).
+/// </remarks>
 internal static class DebugInstrumenter
 {
     /// <summary>Instruments a compilation, registering its statements and methods in <paramref name="info"/>.</summary>
@@ -18,6 +21,8 @@ internal static class DebugInstrumenter
     /// <param name="cancellationToken">Cancels instrumentation.</param>
     public static CSharpCompilation Instrument(CSharpCompilation compilation, DebugInfoBuilder info, CancellationToken cancellationToken)
     {
+        // Calls that generated interceptors replace are marked, so the interceptors follow them through the rewrite.
+        compilation = InterceptorRelocation.MarkInterceptedCalls(compilation, cancellationToken);
         var result = compilation;
         foreach (var tree in compilation.SyntaxTrees)
         {
@@ -39,6 +44,6 @@ internal static class DebugInstrumenter
             DebugRuntimeSource.FilePath,
             Encoding.UTF8,
             cancellationToken: cancellationToken);
-        return result.AddSyntaxTrees(runtime);
+        return InterceptorRelocation.RelocateInterceptors(result.AddSyntaxTrees(runtime), cancellationToken);
     }
 }

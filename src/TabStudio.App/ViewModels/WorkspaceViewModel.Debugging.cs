@@ -411,7 +411,7 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
     {
         if (IsRunOnSwarm && StartupProject is { } swarmProject && _session is null && _swarmDebug is null)
         {
-            await RunOnSwarmAsync(swarmProject, debug: true, pauseAtStart: start == DebugStart.StepInto);
+            StartOnSwarm(swarmProject, debug: true, pauseAtStart: start == DebugStart.StepInto);
             return;
         }
 

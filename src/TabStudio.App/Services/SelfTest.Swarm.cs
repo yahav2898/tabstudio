@@ -82,7 +82,8 @@ public static partial class SelfTest
             var line = Array.FindIndex(await File.ReadAllLinesAsync(viewModel, cancellationToken), l => l.Contains("Clicks = next;", StringComparison.Ordinal)) + 1;
             workspace.Breakpoints.Add(viewModel, line);
             workspace.SelectSwarmTarget();
-            run = workspace.StartDebuggingCommand.ExecuteAsync(null);
+            await workspace.StartDebuggingCommand.ExecuteAsync(null);
+            run = workspace.SwarmRun;
             using (var starting = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
             {
                 starting.CancelAfter(SwarmStartTimeout);

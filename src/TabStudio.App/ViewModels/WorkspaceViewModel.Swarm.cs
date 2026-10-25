@@ -144,6 +144,35 @@ public sealed partial class WorkspaceViewModel
         select.Execute(null);
     });
 
+    /// <summary>The run on the swarm, until it stops: F5 returns at once, so it stays free to continue the paused app.</summary>
+    internal Task SwarmRun { get; private set; } = Task.CompletedTask;
+
+    /// <summary>F5 and Ctrl+F5 on the swarm: starts <see cref="RunOnSwarmAsync"/>, which goes on until the app stops.</summary>
+    /// <param name="project">The startup project.</param>
+    /// <param name="debug">Whether F5 asked for the debugger.</param>
+    /// <param name="pauseAtStart">Whether F10 or F11 started it, to pause at its first statement.</param>
+    private void StartOnSwarm(ProjectInfo project, bool debug, bool pauseAtStart)
+    {
+        if (SwarmRun.IsCompleted)
+        {
+            SwarmRun = RunOnSwarmReportingAsync(project, debug, pauseAtStart);
+        }
+    }
+
+    private async Task RunOnSwarmReportingAsync(ProjectInfo project, bool debug, bool pauseAtStart)
+    {
+        try
+        {
+            await RunOnSwarmAsync(project, debug, pauseAtStart);
+        }
+        catch (Exception ex) when (ex is not OutOfMemoryException)
+        {
+            // A device's failure never ends the run; this is TabStudio's own, reported rather than lost.
+            SwarmOutput.WriteLine($"The run on the swarm stopped: {ex.Message}", OutputKind.Failure);
+            StatusText = "The run on the swarm stopped";
+        }
+    }
+
     /// <summary>
     /// F5 and Ctrl+F5 on the swarm: builds the startup project once, for debugging with F5, and runs it on every device
     /// until it is stopped, building and updating every device again whenever one of its files is saved.
@@ -306,9 +335,13 @@ public sealed partial class WorkspaceViewModel
         }
     }
 
-    /// <summary>Restarts the swarm's app with the saved changes when one of its project's files is saved.</summary>
+    /// <summary>
+    /// Restarts the swarm's app with the saved changes when one of its project's files is saved, and reads recorded UI
+    /// tests again when a test project's file is.
+    /// </summary>
     private void OnDocumentSavedForSwarm(DocumentViewModel document)
     {
+        OnDocumentSavedForUiTests(document);
         if (_swarmProject is not { } project || _run is not { } run || Workspace is not { } workspace
             || workspace.FindProjectForFile(document.FilePath) is not { } owner
             || !DependsOn(workspace, project, owner))

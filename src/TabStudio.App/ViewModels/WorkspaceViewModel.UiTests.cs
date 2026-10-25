@@ -17,7 +17,7 @@ namespace TabStudio.App.ViewModels;
 /// </summary>
 public sealed partial class WorkspaceViewModel
 {
-    private readonly HashSet<IAppScreen> _uiTestScreens = [];
+    private readonly Dictionary<IAppScreen, ScreenProfile> _uiTestScreens = [];
     private CancellationTokenSource? _uiTestScan;
 
     /// <summary>
@@ -78,7 +78,7 @@ public sealed partial class WorkspaceViewModel
         }
 
         PropertyChanged -= OnPropertyChangedForUiTests;
-        foreach (var screen in _uiTestScreens)
+        foreach (var screen in _uiTestScreens.Keys)
         {
             screen.Changed -= OnScreenChangedForUiTests;
         }
@@ -105,26 +105,39 @@ public sealed partial class WorkspaceViewModel
 
     private void OnScreenChangedForUiTests(object? sender, EventArgs e)
     {
-        // A screen's name or size shows in its rows.
         if (!_ui.CheckAccess())
         {
-            _ui.Post(ScanUiTests);
+            _ui.Post(() => OnScreenChangedForUiTests(sender, e));
             return;
         }
 
-        ScanUiTests();
+        // A screen's name and size show in its rows; whether the app runs there does not.
+        if (sender is IAppScreen screen && _uiTestScreens.TryGetValue(screen, out var shown) && shown != screen.Profile)
+        {
+            _uiTestScreens[screen] = screen.Profile;
+            ScanUiTests();
+        }
+    }
+
+    /// <summary>A saved test file: its recorded tests are read again.</summary>
+    private void OnDocumentSavedForUiTests(DocumentViewModel document)
+    {
+        if (document.FileType.IsCSharp && Workspace?.FindProjectForFile(document.FilePath) is { IsTestProject: true })
+        {
+            ScanUiTests();
+        }
     }
 
     private void WatchUiTestScreens()
     {
         var screens = _swarmServices?.Registry.Screens.ToList() ?? [];
-        foreach (var gone in _uiTestScreens.Where(s => !screens.Contains(s)).ToList())
+        foreach (var gone in _uiTestScreens.Keys.Where(s => !screens.Contains(s)).ToList())
         {
             gone.Changed -= OnScreenChangedForUiTests;
             _uiTestScreens.Remove(gone);
         }
 
-        foreach (var screen in screens.Where(_uiTestScreens.Add))
+        foreach (var screen in screens.Where(s => _uiTestScreens.TryAdd(s, s.Profile)))
         {
             screen.Changed += OnScreenChangedForUiTests;
         }

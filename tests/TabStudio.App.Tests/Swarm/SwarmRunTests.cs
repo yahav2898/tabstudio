@@ -42,7 +42,8 @@ public sealed class SwarmRunTests
         workspace.RunTargets.First(t => t.Name == "Swarm").Select.Execute(null);
         Assert.True(workspace.IsRunOnSwarm);
         Assert.Equal("Swarm · 2 devices", workspace.RunHostText);
-        var run = workspace.StartDebuggingCommand.ExecuteAsync(null);
+        await workspace.StartDebuggingCommand.ExecuteAsync(null);
+        var run = workspace.SwarmRun;
         await UiTestHelpers.WaitUntilAsync(
             () => (pixel.Texts().Contains("Hello from Avalonia!") && galaxy.Texts().Contains("Hello from Avalonia!")) || run.IsCompleted,
             StartTimeout,
@@ -140,7 +141,7 @@ public sealed class SwarmRunTests
         Assert.Contains("shows \"Clicked 3 times\" on Pixel 7, not \"Clicked 4 times\"", failed.Result!.Message, StringComparison.Ordinal);
         Assert.True(File.Exists(failed.ScreenshotPath));
         workspace.SelectSideBarPanelCommand.Execute(SideBarPanel.TestExplorer);
-        workspace.Tests.SelectedNode = workspace.Tests.Rows.SelectMany(Flatten).First(n => ReferenceEquals(n.Entry, failed));
+        workspace.Tests.SelectedNode = workspace.Tests.Rows.SelectMany(Flatten).First(n => n.Entry?.Id == failed.Id);
         Assert.True(workspace.Tests.Details?.HasScreenshot);
         UiTestHelpers.SaveScreenshot(window, "swarm-05-recorded-test-failed-on-a-screen");
 

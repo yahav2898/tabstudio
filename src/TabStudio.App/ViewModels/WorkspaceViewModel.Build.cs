@@ -34,7 +34,7 @@ public sealed partial class WorkspaceViewModel
 
         if (IsRunOnSwarm)
         {
-            await RunOnSwarmAsync(project, debug: false, pauseAtStart: false);
+            StartOnSwarm(project, debug: false, pauseAtStart: false);
             return;
         }
 

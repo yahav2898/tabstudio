@@ -55,7 +55,8 @@ public sealed class SwarmDebuggingTests
 
         var breakpointLine = Array.FindIndex(File.ReadAllLines(viewModel), l => l.Contains("Clicks = next;", StringComparison.Ordinal)) + 1;
         workspace.Breakpoints.Add(viewModel, breakpointLine);
-        var run = workspace.StartDebuggingCommand.ExecuteAsync(null);
+        await workspace.StartDebuggingCommand.ExecuteAsync(null);
+        var run = workspace.SwarmRun;
         await UiTestHelpers.WaitUntilAsync(
             () => (pixel.Texts().Contains("Hello from Avalonia!") && galaxy.Texts().Contains("Hello from Avalonia!")) || run.IsCompleted,
             StartTimeout,
@@ -105,6 +106,8 @@ public sealed class SwarmDebuggingTests
         // Continue: both phones run on, together.
         workspace.DeleteAllBreakpointsCommand.Execute(null);
         await UiTestHelpers.WaitUntilAsync(() => fixture.Swarm.Coordinator!.Breakpoints.Count == 0, because: "the breakpoints to leave the phones");
+        Assert.True(workspace.StartDebuggingCommand.CanExecute(null), "F5 continues while the app is paused on the swarm.");
+        Assert.Equal("Continue", workspace.StartDebuggingLabel);
         await workspace.StartDebuggingCommand.ExecuteAsync(null);
         await UiTestHelpers.WaitUntilAsync(
             () => galaxy.Texts().Contains("Clicked 1 times") && pixel.Texts().Contains("Clicked 1 times") && workspace.State == IdeState.Debugging,

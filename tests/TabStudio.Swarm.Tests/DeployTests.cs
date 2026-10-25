@@ -78,6 +78,25 @@ public sealed class DeployTests : IDisposable
     }
 
     [Fact]
+    public async Task Restarting_on_one_device_starts_its_app_fresh_without_sending_files_or_touching_the_others()
+    {
+        await using var swarm = new SwarmLoopback();
+        var phone = await swarm.JoinAsync("Pixel 9");
+        var tablet = await swarm.JoinAsync("Galaxy Tab S9");
+        await swarm.Coordinator.RunAsync(Build("Clicked {0} times"), CancellationToken.None);
+        await SwarmLoopback.UntilAsync(() => swarm.Coordinator.Devices.All(d => d.State == SwarmDeviceState.Running), "both devices to run it");
+
+        var device = phone.OnCoordinator(swarm.Coordinator)!;
+        Assert.True(await swarm.Coordinator.RestartAsync(device, CancellationToken.None));
+
+        await SwarmLoopback.UntilAsync(() => phone.Host.Shown.Count == 2 && device.State == SwarmDeviceState.Running, "the phone to start the app again");
+        Assert.Single(tablet.Host.Shown);
+        var restart = swarm.Coordinator.CurrentRun!.Deployments[^1];
+        Assert.Same(device, restart.Device);
+        Assert.Equal(0, restart.FilesSent);
+    }
+
+    [Fact]
     public async Task Stopping_stops_the_app_on_every_device()
     {
         await using var swarm = new SwarmLoopback();
