@@ -89,6 +89,11 @@ public sealed class MainActivity : AvaloniaMainActivity<TabStudioApplication>
             return;
         }
 
+        foreach (var probe in await LinkTransportProbe.RunAsync())
+        {
+            AndroidLog.Info(LogTag, "TABSTUDIO_LINK_PROBE " + probe);
+        }
+
         using var timeout = new CancellationTokenSource(SelfTestTimeout);
         var result = await SelfTest.RunAsync(main, services.GetRequiredService<SampleLibrary>(), services.GetRequiredService<ProjectTemplates>(), timeout.Token);
         var seconds = result.Duration.TotalSeconds.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture);
