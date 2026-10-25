@@ -57,7 +57,7 @@ internal static class WpfDiagnostics
     /// <param name="project">The project.</param>
     /// <param name="cancellationToken">Cancels the work.</param>
     public static IReadOnlyList<BuildDiagnostic> Explain(IReadOnlyList<BuildDiagnostic> diagnostics, SemanticModel model, TsProject project, CancellationToken cancellationToken) =>
-        [.. diagnostics, .. NotImplementedUsages(model, project, cancellationToken)];
+        [.. WpfUnsupportedApi.Explain(diagnostics, model, cancellationToken), .. NotImplementedUsages(model, project, cancellationToken)];
 
     /// <summary>Adds the WPF explanations to the diagnostics of a whole project.</summary>
     /// <param name="diagnostics">The project's diagnostics.</param>
@@ -66,7 +66,7 @@ internal static class WpfDiagnostics
     /// <param name="cancellationToken">Cancels the work.</param>
     public static IReadOnlyList<BuildDiagnostic> Explain(IReadOnlyList<BuildDiagnostic> diagnostics, RoslynCompilation compilation, TsProject project, CancellationToken cancellationToken) =>
     [
-        .. diagnostics,
+        .. WpfUnsupportedApi.Explain(diagnostics, compilation, cancellationToken),
         .. compilation.SyntaxTrees
             .Where(tree => !tree.FilePath.Contains(nameof(WpfXamlGenerator), StringComparison.Ordinal) && WpfProject.SecondPassSource(project, tree.FilePath) is null)
             .SelectMany(tree => NotImplementedUsages(compilation.GetSemanticModel(tree), project, cancellationToken)),
@@ -98,7 +98,7 @@ internal static class WpfDiagnostics
                 symbol = constructor.ContainingType;
             }
 
-            if (symbol is null || !IsNotImplemented(symbol) || ProvidedByTabStudio.Contains(Qualified(symbol)) || !reported.Add(name.SpanStart))
+            if (symbol is null || !IsNotImplemented(symbol) || !reported.Add(name.SpanStart))
             {
                 continue;
             }
@@ -108,14 +108,21 @@ internal static class WpfDiagnostics
             yield return new BuildDiagnostic(
                 WpfDiagnosticIds.NotImplementedApi,
                 DiagnosticSeverityLevel.Warning,
-                $"{Display(symbol)} is in OpenSilver's WPF API but not implemented, so it does nothing in the web preview. To run this code on WPF itself, run the project on your PC through the Windows Bridge.",
+                NotImplementedMessage(Display(symbol)),
                 new DiagnosticLocation(model.SyntaxTree.FilePath, location.SourceSpan.Start, location.SourceSpan.Length, line.Line + 1, line.Character + 1),
                 project.Name);
         }
     }
 
-    /// <summary>Whether a symbol, its type or its assembly carries OpenSilver's <c>[NotImplemented]</c>.</summary>
-    private static bool IsNotImplemented(ISymbol symbol)
+    /// <summary>The message for API OpenSilver declares and does not implement.</summary>
+    /// <param name="api">The API, such as <c>Window.Show()</c>.</param>
+    public static string NotImplementedMessage(string api) =>
+        $"{api} is in OpenSilver's WPF API but not implemented, so it does nothing in the web preview. To run this code on WPF itself, run the project on your PC through the Windows Bridge.";
+
+    /// <summary>Whether a symbol, its type or its assembly carries OpenSilver's <c>[NotImplemented]</c>, unless TabStudio provides it.</summary>
+    public static bool IsNotImplemented(ISymbol symbol) => !ProvidedByTabStudio.Contains(Qualified(symbol)) && CarriesNotImplemented(symbol);
+
+    private static bool CarriesNotImplemented(ISymbol symbol)
     {
         for (var current = symbol; current is not null; current = current.ContainingType)
         {

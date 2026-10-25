@@ -161,7 +161,7 @@ public sealed partial class RoslynWorkspaceHost
         var first = CSharpCompiler.Emit(compilation, checkInProcessSafety: false, stopwatch, info.Name, resources, d => WpfDiagnostics.Map(d, info), cancellationToken);
         if (compiler is null || first.Assembly is not { } image)
         {
-            return first;
+            return first with { Diagnostics = WpfUnsupportedApi.Explain(first.Diagnostics, compilation, cancellationToken) };
         }
 
         var second = await compiler.CompileAsync(
@@ -175,7 +175,7 @@ public sealed partial class RoslynWorkspaceHost
 
         stopwatch.Start();
         var final = CSharpCompiler.Emit(completed, checkInProcessSafety: false, stopwatch, info.Name, ManifestResources.For(info), d => WpfDiagnostics.Map(d, info), cancellationToken);
-        return final with { Diagnostics = [.. second.Diagnostics, .. final.Diagnostics] };
+        return final with { Diagnostics = [.. second.Diagnostics, .. WpfUnsupportedApi.Explain(final.Diagnostics, completed, cancellationToken)] };
     }
 }
 
