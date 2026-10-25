@@ -146,10 +146,11 @@ public sealed class CoverageBuilder
 
         CompiledAssembly? assembly;
         CoverageModule? module = null;
+        var resources = ManifestResources.For(project);
         if (instrument)
         {
             var (instrumented, map) = CoverageInstrumenter.Instrument(compilation, project.FilePath, cancellationToken);
-            assembly = Emit(instrumented, project.Name, out var emitErrors, cancellationToken);
+            assembly = Emit(instrumented, project.Name, resources, out var emitErrors, cancellationToken);
             if (assembly is null)
             {
                 var failure = emitErrors.Count == 0
@@ -168,7 +169,7 @@ public sealed class CoverageBuilder
         }
         else
         {
-            assembly = Emit(compilation, project.Name, out var emitErrors, cancellationToken);
+            assembly = Emit(compilation, project.Name, resources, out var emitErrors, cancellationToken);
             if (assembly is null)
             {
                 diagnostics.AddRange(DiagnosticMapper.Map(emitErrors, project.Name));
@@ -185,16 +186,22 @@ public sealed class CoverageBuilder
         return built;
     }
 
-    /// <summary>Emits a compilation into memory, with its portable PDB.</summary>
+    /// <summary>Emits a compilation into memory, with its portable PDB and the project's resources.</summary>
     /// <param name="compilation">The compilation.</param>
     /// <param name="projectName">The assembly name to use when the compilation has none.</param>
+    /// <param name="resources">The project's embedded and Avalonia resources.</param>
     /// <param name="errors">The errors, when emitting failed.</param>
     /// <param name="cancellationToken">Cancels emitting.</param>
-    private static CompiledAssembly? Emit(CSharpCompilation compilation, string projectName, out List<Diagnostic> errors, CancellationToken cancellationToken)
+    private static CompiledAssembly? Emit(
+        CSharpCompilation compilation,
+        string projectName,
+        IReadOnlyList<ResourceDescription> resources,
+        out List<Diagnostic> errors,
+        CancellationToken cancellationToken)
     {
         using var image = new MemoryStream();
         using var symbols = new MemoryStream();
-        var emit = compilation.Emit(image, symbols, options: EmitOptions, cancellationToken: cancellationToken);
+        var emit = compilation.Emit(image, symbols, manifestResources: resources, options: EmitOptions, cancellationToken: cancellationToken);
         errors = emit.Diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error).ToList();
         return emit.Success ? new CompiledAssembly(compilation.AssemblyName ?? projectName, image.ToArray(), symbols.ToArray()) : null;
     }
