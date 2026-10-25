@@ -19,7 +19,7 @@ internal sealed class AndroidTouchSelfTestDevice(Func<Activity?> activity) : ITo
     private static readonly TimeSpan MoveInterval = TimeSpan.FromMilliseconds(8);
 
     /// <inheritdoc />
-    public async Task SwipeAsync(AvaloniaPixelPoint start, AvaloniaPixelPoint end, TimeSpan duration, CancellationToken cancellationToken)
+    public async Task SwipeAsync(AvaloniaPixelPoint origin, AvaloniaPixelPoint destination, TimeSpan duration, CancellationToken cancellationToken)
     {
         if (activity()?.Window?.DecorView is not { } decor || FindView(decor) is not { } view)
         {
@@ -29,8 +29,8 @@ internal sealed class AndroidTouchSelfTestDevice(Func<Activity?> activity) : ITo
         // The view's pixels are the screen's, offset by where the view is on the screen.
         var location = new int[2];
         view.GetLocationOnScreen(location);
-        var (x0, y0) = (start.X + location[0], start.Y + location[1]);
-        var (x1, y1) = (end.X + location[0], end.Y + location[1]);
+        var (x0, y0) = (origin.X + location[0], origin.Y + location[1]);
+        var (x1, y1) = (destination.X + location[0], destination.Y + location[1]);
 
         // Injecting waits for the window to take each event, so it runs off the UI thread, which handles them.
         await Task.Run(

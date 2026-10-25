@@ -13,11 +13,11 @@ public interface ITouchSelfTestDevice
     /// Puts a finger down, slides it in a straight line at a steady speed, and lifts it, as the touch screen reports a
     /// swipe: a move about every 8 ms. Returns once the finger has lifted.
     /// </summary>
-    /// <param name="start">Where the finger goes down, in pixels from the top left of TabStudio's view.</param>
-    /// <param name="end">Where it lifts.</param>
+    /// <param name="origin">Where the finger goes down, in pixels from the top left of TabStudio's view.</param>
+    /// <param name="destination">Where it lifts.</param>
     /// <param name="duration">How long the swipe takes.</param>
     /// <param name="cancellationToken">Gives up.</param>
-    Task SwipeAsync(PixelPoint start, PixelPoint end, TimeSpan duration, CancellationToken cancellationToken);
+    Task SwipeAsync(PixelPoint origin, PixelPoint destination, TimeSpan duration, CancellationToken cancellationToken);
 
     /// <summary>
     /// Calls back on the UI thread at the start of every frame of the display (its vsync), as the UI thread gets to it:

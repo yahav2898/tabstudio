@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls.Documents;
 using Avalonia.Media;
 using AvaloniaEdit;
