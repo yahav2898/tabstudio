@@ -35,6 +35,8 @@
     <PackageReference Include="AvaloniaEdit.TextMate" />
     <PackageReference Include="CommunityToolkit.Mvvm" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <!-- Reads the TabStudio Link host's QR code in camera frames. -->
+    <PackageReference Include="ZXing.Net" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,6 +49,7 @@
     <ProjectReference Include="..\TabStudio.TestRunner\TabStudio.TestRunner.csproj" />
     <ProjectReference Include="..\TabStudio.LiveTesting\TabStudio.LiveTesting.csproj" />
     <ProjectReference Include="..\TabStudio.Notebooks\TabStudio.Notebooks.csproj" />
+    <ProjectReference Include="..\TabStudio.Link\TabStudio.Link.csproj" />
   </ItemGroup>
 
   <ItemGroup>

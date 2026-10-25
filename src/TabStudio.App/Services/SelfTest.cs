@@ -11,8 +11,8 @@ public sealed record SelfTestResult(bool Success, string Message, TimeSpan Durat
 
 /// <summary>
 /// Does what a person does first: opens the sample solution, presses F5, types a name when the program asks,
-/// and reads the Output panel; then debugs it, serves a new web app and shows a new Avalonia app. CI runs it on an
-/// Android emulator to prove the whole IDE works on a device.
+/// and reads the Output panel; then debugs it, debugs it again with a TabStudio Link host compiling, serves a new web
+/// app and shows a new Avalonia app. CI runs it on an Android emulator to prove the whole IDE works on a device.
 /// </summary>
 public static partial class SelfTest
 {
@@ -79,6 +79,12 @@ public static partial class SelfTest
             }
 
             var debugged = await DebugSampleAsync(workspace, cancellationToken);
+            if (debugged.Success)
+            {
+                var linked = await LinkSampleAsync(main, workspace, cancellationToken);
+                debugged = new SelfTestResult(linked.Success, $"{debugged.Message} | {linked.Message}", debugged.Duration + linked.Duration);
+            }
+
             if (!debugged.Success || templates is null)
             {
                 return new SelfTestResult(debugged.Success, $"{summary} | {debugged.Message}", clock.Elapsed);

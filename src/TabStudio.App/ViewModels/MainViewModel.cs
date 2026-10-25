@@ -21,13 +21,15 @@ public sealed partial class MainViewModel : ObservableObject
     /// <param name="sessions">The saved session.</param>
     /// <param name="compiler">The shared compiler services, warmed up at startup.</param>
     /// <param name="gitHubAccount">The GitHub account dialog, shown over every page.</param>
-    public MainViewModel(StartViewModel start, Func<WorkspaceViewModel> createWorkspace, RecentWorkspaces recent, SessionStore sessions, CompilerServices compiler, GitHubAccountViewModel gitHubAccount)
+    /// <param name="link">The TabStudio Link dialog, shown over every page.</param>
+    public MainViewModel(StartViewModel start, Func<WorkspaceViewModel> createWorkspace, RecentWorkspaces recent, SessionStore sessions, CompilerServices compiler, GitHubAccountViewModel gitHubAccount, LinkViewModel link)
     {
         ArgumentNullException.ThrowIfNull(start);
         ArgumentNullException.ThrowIfNull(createWorkspace);
 
         Start = start;
         GitHubAccount = gitHubAccount;
+        Link = link;
         _createWorkspace = createWorkspace;
         _recent = recent;
         _sessions = sessions;
@@ -41,6 +43,9 @@ public sealed partial class MainViewModel : ObservableObject
 
     /// <summary>The GitHub account dialog, shared by the start screen and the IDE.</summary>
     public GitHubAccountViewModel GitHubAccount { get; }
+
+    /// <summary>The TabStudio Link dialog, shared by the start screen and the IDE.</summary>
+    public LinkViewModel Link { get; }
 
     /// <summary>The page shown: the start screen or a <see cref="WorkspaceViewModel"/>.</summary>
     [ObservableProperty]

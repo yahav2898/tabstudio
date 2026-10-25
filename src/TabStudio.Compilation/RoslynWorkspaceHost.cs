@@ -542,7 +542,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             project.GetProperty("AssemblyName") ?? project.Name,
             LanguageNames.CSharp,
             filePath: project.FilePath,
-            compilationOptions: CSharpCompiler.CreateCompilationOptions(kind, project.NullableEnabled, _optimize, allowUnsafe, _concurrentBuild),
+            compilationOptions: WithPathMap(CSharpCompiler.CreateCompilationOptions(kind, project.NullableEnabled, _optimize, allowUnsafe, _concurrentBuild), project),
             parseOptions: CSharpCompiler.CreateParseOptions(_optimize, SdkGenerators.InterceptorsNamespaces(project)),
             documents: documents,
             projectReferences: projectReferences,

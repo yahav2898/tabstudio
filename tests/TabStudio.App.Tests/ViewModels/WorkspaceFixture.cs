@@ -1,6 +1,8 @@
 using TabStudio.App.Platform;
 using TabStudio.App.Services;
+using TabStudio.App.Services.Link;
 using TabStudio.App.ViewModels;
+using TabStudio.Link.Networking;
 using TabStudio.Testing;
 
 namespace TabStudio.App.Tests.ViewModels;
@@ -10,16 +12,25 @@ internal sealed class WorkspaceFixture : IDisposable
 {
     private readonly TempDirectory _temp = new();
 
-    public WorkspaceFixture(DeviceInfo? device = null, HttpClient? agentHttp = null)
+    /// <param name="device">The device's memory and cores.</param>
+    /// <param name="agentHttp">The agent's HTTP client, for a fake Claude.</param>
+    /// <param name="link">Whether the workspace follows TabStudio Link, as in the app, from a tablet named <c>Test tablet</c>.</param>
+    public WorkspaceFixture(DeviceInfo? device = null, HttpClient? agentHttp = null, bool link = false)
     {
         Paths = new AppPaths(_temp.Path);
         DeviceStatus = new DefaultDeviceStatus(device ?? new DeviceInfo(8L * 1024 * 1024 * 1024, 8, IsLowRamDevice: false));
         Profile = DeviceProfile.For(DeviceStatus.Device);
         Compiler = new CompilerServices(Paths);
         Sessions = new SessionStore(Paths);
+        if (link)
+        {
+            Link = new LinkService(Paths, Compiler, DeviceStatus, Profile, new TestDeviceIdentity("Test tablet", LinkDeviceKinds.Tablet), new AvaloniaUiDispatcher());
+            LinkDialog = new LinkViewModel(Link, new NoQrScanner());
+        }
+
         Workspace = agentHttp is null
-            ? new WorkspaceViewModel(Compiler, DeviceStatus, Profile, new AvaloniaUiDispatcher(), Sessions, Paths)
-            : new WorkspaceViewModel(Compiler, DeviceStatus, Profile, new AvaloniaUiDispatcher(), Sessions, Paths) { AgentHttp = agentHttp };
+            ? new WorkspaceViewModel(Compiler, DeviceStatus, Profile, new AvaloniaUiDispatcher(), Sessions, Paths, link: Link, linkDialog: LinkDialog)
+            : new WorkspaceViewModel(Compiler, DeviceStatus, Profile, new AvaloniaUiDispatcher(), Sessions, Paths, link: Link, linkDialog: LinkDialog) { AgentHttp = agentHttp };
     }
 
     public AppPaths Paths { get; }
@@ -33,6 +44,12 @@ internal sealed class WorkspaceFixture : IDisposable
     public SessionStore Sessions { get; }
 
     public WorkspaceViewModel Workspace { get; }
+
+    /// <summary>The app's TabStudio Link, when the fixture was made with it.</summary>
+    public LinkService? Link { get; }
+
+    /// <summary>The TabStudio Link dialog, when the fixture was made with Link.</summary>
+    public LinkViewModel? LinkDialog { get; }
 
     /// <summary>Types a line into the program whenever it waits for input.</summary>
     public void AnswerInput(string line)
@@ -58,6 +75,8 @@ internal sealed class WorkspaceFixture : IDisposable
     public void Dispose()
     {
         Workspace.Dispose();
+        LinkDialog?.Dispose();
+        Link?.Dispose();
         _temp.Dispose();
     }
 }
