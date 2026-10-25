@@ -11,6 +11,7 @@ using TabStudio.Core.Workspaces;
 using TabStudio.Debugging.Instrumentation;
 using TabStudio.LiveTesting.Coverage;
 using TabStudio.LiveTesting.Instrumentation;
+using ProjectInfo = TabStudio.Core.Workspaces.ProjectInfo;
 
 namespace TabStudio.LiveTesting.Building;
 
