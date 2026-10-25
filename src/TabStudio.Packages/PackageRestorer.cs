@@ -29,7 +29,7 @@ namespace TabStudio.Packages;
 /// </para>
 /// <para>An instance is immutable and can restore several projects at once.</para>
 /// </remarks>
-public sealed class PackageRestorer
+public sealed partial class PackageRestorer
 {
     /// <summary>The name of the restore cache file in a project's <c>obj</c> folder.</summary>
     public const string CacheFileName = "tabstudio.restore.json";

@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using System.Threading.Channels;
 using Microsoft.Win32.SafeHandles;
 
 namespace TabStudio.Toolchains.Processes.Unix;
@@ -18,11 +19,19 @@ namespace TabStudio.Toolchains.Processes.Unix;
 /// returns. Closing it at once would let the system give its number to the next file opened, which the blocked
 /// thread would then read from.
 /// </para>
+/// <para>
+/// A read blocks until the program writes, which may be never while it waits, as a language server does between
+/// requests. Asynchronous reads therefore wait on a thread of the stream's own, started by the first one, rather
+/// than on one of the thread pool's: a program per thread pool thread would leave none for the rest of the IDE.
+/// </para>
 /// </remarks>
 internal sealed class FileDescriptorStream : Stream
 {
     private readonly SafeFileHandle _handle;
     private readonly bool _canRead;
+    private readonly Lock _gate = new();
+    private Channel<ReadRequest>? _reads;
+    private bool _disposed;
 
     /// <summary>Takes ownership of a file descriptor.</summary>
     /// <param name="fd">The descriptor, closed when the stream is disposed.</param>
@@ -103,11 +112,28 @@ internal sealed class FileDescriptorStream : Stream
 
     /// <inheritdoc />
     public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken) =>
-        Task.Factory.StartNew(() => Read(buffer, offset, count), cancellationToken, TaskCreationOptions.DenyChildAttach, TaskScheduler.Default);
+        ReadAsync(buffer.AsMemory(offset, count), cancellationToken).AsTask();
 
     /// <inheritdoc />
-    public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default) =>
-        new(Task.Factory.StartNew(() => Read(buffer.Span), cancellationToken, TaskCreationOptions.DenyChildAttach, TaskScheduler.Default));
+    /// <remarks>
+    /// The read waits on the stream's reading thread, after the reads asked for before it. Cancelling stops a read
+    /// that has not started waiting yet; one that waits ends when the program writes, or exits.
+    /// </remarks>
+    public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)
+    {
+        if (!_canRead)
+        {
+            throw new NotSupportedException();
+        }
+
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return ValueTask.FromCanceled<int>(cancellationToken);
+        }
+
+        var request = new ReadRequest(buffer, cancellationToken);
+        return Reads() is { } reads && reads.Writer.TryWrite(request) ? new ValueTask<int>(request.Result.Task) : ValueTask.FromResult(0);
+    }
 
     /// <inheritdoc />
     public override void Write(byte[] buffer, int offset, int count) => Write(buffer.AsSpan(offset, count));
@@ -176,10 +202,72 @@ internal sealed class FileDescriptorStream : Stream
     {
         if (disposing)
         {
+            lock (_gate)
+            {
+                _disposed = true;
+                _reads?.Writer.TryComplete();
+            }
+
             _handle.Dispose();
         }
 
         base.Dispose(disposing);
+    }
+
+    /// <summary>
+    /// The asynchronous reads waiting to be served, with the thread that serves them started on first use; or
+    /// <see langword="null"/> once the stream is disposed, when every read is at the end of the stream.
+    /// </summary>
+    private Channel<ReadRequest>? Reads()
+    {
+        lock (_gate)
+        {
+            if (_disposed)
+            {
+                return null;
+            }
+
+            if (_reads is null)
+            {
+                _reads = Channel.CreateUnbounded<ReadRequest>(new UnboundedChannelOptions { SingleReader = true });
+                new Thread(ServeReads) { IsBackground = true, Name = "TabStudio program output" }.Start(_reads.Reader);
+            }
+
+            return _reads;
+        }
+    }
+
+    /// <summary>The reading thread: serves the asynchronous reads one after another, until the stream is disposed.</summary>
+    private void ServeReads(object? state)
+    {
+        var reads = (ChannelReader<ReadRequest>)state!;
+        while (reads.WaitToReadAsync().AsTask().GetAwaiter().GetResult())
+        {
+            while (reads.TryRead(out var request))
+            {
+                if (request.CancellationToken.IsCancellationRequested)
+                {
+                    request.Result.TrySetCanceled(request.CancellationToken);
+                    continue;
+                }
+
+                try
+                {
+                    request.Result.TrySetResult(Read(request.Buffer.Span));
+                }
+                catch (Exception ex) when (ex is not OutOfMemoryException)
+                {
+                    // The read's caller gets the failure; the thread goes on serving the reads after it.
+                    request.Result.TrySetException(ex);
+                }
+            }
+        }
+
+        // Reads asked for as the stream was disposed see the end of the stream.
+        while (reads.TryRead(out var late))
+        {
+            late.Result.TrySetResult(0);
+        }
     }
 
     private bool TryAddReference()
@@ -200,5 +288,20 @@ internal sealed class FileDescriptorStream : Stream
         }
 
         return added;
+    }
+
+    /// <summary>An asynchronous read waiting for the reading thread.</summary>
+    /// <param name="buffer">Where the bytes go.</param>
+    /// <param name="cancellationToken">Cancels the read until it starts waiting.</param>
+    private sealed class ReadRequest(Memory<byte> buffer, CancellationToken cancellationToken)
+    {
+        /// <summary>Where the bytes go.</summary>
+        public Memory<byte> Buffer => buffer;
+
+        /// <summary>Cancels the read until it starts waiting.</summary>
+        public CancellationToken CancellationToken => cancellationToken;
+
+        /// <summary>Completes with the number of bytes read, 0 at the end of the stream.</summary>
+        public TaskCompletionSource<int> Result { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
     }
 }

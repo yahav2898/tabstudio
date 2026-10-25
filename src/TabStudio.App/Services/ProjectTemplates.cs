@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Text.RegularExpressions;
 using TabStudio.App.Notebooks;
+using TabStudio.Web.Templates;
 
 namespace TabStudio.App.Services;
 
@@ -56,8 +57,13 @@ public sealed partial class ProjectTemplates
         new(ConsoleWithLibraryId, "Console App and Class Library", "A program and a library it references, in one solution.", ["C#", "Console", "Library"]),
         new(WebId, "ASP.NET Core Web App", "A web page and an API, served on the tablet and previewed beside the code.", ["C#", "Web", "ASP.NET Core"]),
         new(AvaloniaId, "Avalonia App", "A cross-platform app with a view and a view model, rendered natively beside the code.", ["C#", "Avalonia", "MVVM"]),
+        WindowsFormsTemplate,
         new(LibraryId, "Class Library", "Reusable code for other projects to reference.", ["C#", "Library"]),
         new(NotebookId, "C# Notebook", "Cells of C# you run one at a time, with results, tables and errors right under each cell, like Polyglot Notebooks.", ["C#", "Notebook"]),
+        new(WebTemplates.BlazorWebAppId, "Blazor Web App", "Interactive Razor components with server rendering, served on the tablet and previewed beside the code.", ["C#", "Blazor", "Web"]),
+        new(WebTemplates.BlazorWebAssemblyId, "Blazor WebAssembly Standalone App", "A Blazor app that runs in the browser on .NET for WebAssembly, in the web preview beside the code.", ["C#", "Blazor", "WebAssembly"]),
+        new(WebTemplates.RazorPagesId, "ASP.NET Core Web App (Razor Pages)", "Pages with Razor Pages and Bootstrap, served on the tablet and previewed beside the code.", ["C#", "Web", "Razor Pages"]),
+        new(WebTemplates.MvcId, "ASP.NET Core Web App (Model-View-Controller)", "Controllers and views with ASP.NET Core MVC and Bootstrap, served on the tablet and previewed beside the code.", ["C#", "Web", "MVC"]),
         .. ToolchainTemplates,
     ];
 
@@ -114,6 +120,8 @@ public sealed partial class ProjectTemplates
             ConsoleWithLibraryId => [WriteConsole(root, name, reference: name + ".Core"), WriteLibrary(root, name + ".Core")],
             WebId => [WriteWeb(root, name)],
             AvaloniaId => [WriteAvalonia(root, name)],
+            _ when WebTemplates.IsTemplate(templateId) => [.. WebTemplates.Create(templateId, root, name)],
+            WindowsFormsId => [WriteWindowsForms(root, name)],
             _ => throw new ArgumentException($"Unknown template '{templateId}'.", nameof(templateId)),
         };
 

@@ -7,7 +7,7 @@
 # lib/<abi>/lib*.so entries. So the two programs are named libproot.so and libproot-loader.so, and
 # src/TabStudio.Android/Toolchains.targets adds them to the APK. Every program a toolchain runs is started through
 # PRoot, which hands each execve() to the loader; the loader maps the program itself (see
-# src/TabStudio.Toolchains/Runtime/ProotRuntime.cs).
+# src/TabStudio.Toolchains/Runtimes/ProotRuntime.cs).
 #
 # Sources are downloaded at pinned versions and checked against their SHA-256 hashes, the same ones Termux uses.
 # PRoot is GPL-2.0-or-later and talloc LGPL-3.0-or-later; both are separate programs inside the APK, built from

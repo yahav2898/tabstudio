@@ -73,6 +73,10 @@ their languages, and VS Code extensions from Open VSX. Opening a repository inst
   IDE while the stronger device compiles.
 - **Windows Bridge.** Pair a Windows PC you own; Windows-only projects build and run there, streamed to the
   tablet, while you edit on the tablet.
+- **Windows Compatibility.** Windows-only apps that TabStudio's own layers cannot run build on the tablet and run
+  there in Wine, inside the Toolchain Store's Linux environment, with the real .NET Windows Desktop runtime.
+- **Port to Avalonia.** One tap converts a WPF or Windows Forms project into an Avalonia project; a converter does
+  what maps exactly and Claude finishes the rest as proposals.
 
 ## 11. Agent
 

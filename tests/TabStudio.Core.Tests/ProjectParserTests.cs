@@ -179,6 +179,41 @@ public sealed class ProjectParserTests
     }
 
     [Fact]
+    public void Directory_build_targets_overrides_the_project_as_msbuild_imports_it_last()
+    {
+        // As Piranha CMS does: TargetFrameworks in Directory.Build.props and ImplicitUsings in Directory.Build.targets.
+        using var temp = new TempDirectory();
+        temp.Write("Directory.Build.props", """
+            <Project>
+              <PropertyGroup>
+                <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+              </PropertyGroup>
+            </Project>
+            """);
+        temp.Write("Directory.Build.targets", """
+            <Project>
+              <PropertyGroup>
+                <ImplicitUsings>true</ImplicitUsings>
+                <Nullable>enable</Nullable>
+              </PropertyGroup>
+            </Project>
+            """);
+        var path = temp.Write("core/Hosting/Hosting.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup>
+                <Nullable>disable</Nullable>
+              </PropertyGroup>
+            </Project>
+            """);
+
+        var project = ProjectParser.Load(path);
+
+        Assert.Equal(new[] { "net8.0", "net9.0" }, project.TargetFrameworks);
+        Assert.True(project.ImplicitUsings);
+        Assert.True(project.NullableEnabled);
+    }
+
+    [Fact]
     public void Reads_a_legacy_project_with_the_msbuild_namespace()
     {
         const string xml = """

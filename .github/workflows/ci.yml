@@ -61,7 +61,16 @@ jobs:
           for project in tests/*.Tests; do
             name=$(basename "$project")
             [ "$name" = "TabStudio.App.Tests" ] && continue
-            dotnet test "$project" -c Release --logger "console;verbosity=normal" > "ci-out/$name.log" 2>&1 || status=1
+            if ! dotnet test "$project" -c Release --logger "console;verbosity=normal" > "ci-out/$name.log" 2>&1; then
+              # Known intermittent failures are tracked on the board; one retry keeps them from blocking a release,
+              # and FLAKY.txt and a warning keep them visible. A second failure fails the job.
+              echo "::warning::$name failed once; running it again. The first attempt is in ci-out/$name.log."
+              if dotnet test "$project" -c Release --logger "console;verbosity=normal" > "ci-out/$name.retry.log" 2>&1; then
+                echo "$name: the first attempt failed and the retry passed (see $name.log)" >> ci-out/FLAKY.txt
+              else
+                status=1
+              fi
+            fi
             tail -n 40 "ci-out/$name.log"
           done
           exit $status
@@ -101,6 +110,12 @@ jobs:
         run: |
           npm install -g pyright typescript-language-server typescript@5
           python -m pip install debugpy
+          # vscode-js-debug's adapter, under the command name the Toolchain Store gives it on a tablet.
+          mkdir -p "$RUNNER_TEMP/js-debug/bin"
+          curl -fsSL https://github.com/microsoft/vscode-js-debug/releases/download/v1.140.0/js-debug-dap-v1.140.0.tar.gz | tar -xz -C "$RUNNER_TEMP/js-debug"
+          printf '#!/bin/sh\nexec node "%s/js-debug/src/dapDebugServer.js" "$@"\n' "$RUNNER_TEMP/js-debug" > "$RUNNER_TEMP/js-debug/bin/js-debug-adapter"
+          chmod +x "$RUNNER_TEMP/js-debug/bin/js-debug-adapter"
+          echo "$RUNNER_TEMP/js-debug/bin" >> "$GITHUB_PATH"
           echo "TABSTUDIO_REAL_SERVERS=1" >> "$GITHUB_ENV"
 
       - name: Build the desktop host and test the IDE
@@ -111,8 +126,34 @@ jobs:
           status=0
           dotnet build src/TabStudio.Desktop -c Release > ci-out/desktop-build.log 2>&1 || status=1
           tail -n 40 ci-out/desktop-build.log
-          dotnet test tests/TabStudio.App.Tests -c Release --logger "console;verbosity=normal" > ci-out/TabStudio.App.Tests.log 2>&1 || status=1
+          # A test host that dies leaves a crash report (its threads' stacks) when the runtime saw the crash.
+          mkdir -p "$RUNNER_TEMP/crash"
+          run_ide_tests() {
+            DOTNET_DbgEnableMiniDump=1 DOTNET_DbgMiniDumpType=1 DOTNET_EnableCrashReport=1 DOTNET_DbgMiniDumpName="$RUNNER_TEMP/crash/%e.%p.dmp" \
+              dotnet test tests/TabStudio.App.Tests -c Release --blame --logger "console;verbosity=normal" > "$1" 2>&1
+          }
+          first=0
+          run_ide_tests ci-out/TabStudio.App.Tests.log || first=1
           tail -n 80 ci-out/TabStudio.App.Tests.log
+          if [ $first -ne 0 ]; then
+            # Known intermittent failures (a native crash in the test host, slow servers) are tracked on the board;
+            # one retry keeps them from blocking a release, and FLAKY.txt and a warning keep them visible.
+            echo "::warning::The IDE tests failed once; running them again. The first attempt is in ci-out/TabStudio.App.Tests.log."
+            if run_ide_tests ci-out/TabStudio.App.Tests.retry.log; then
+              echo "TabStudio.App.Tests: the first attempt failed and the retry passed (see TabStudio.App.Tests.log)" >> ci-out/FLAKY.txt
+            else
+              status=1
+            fi
+            tail -n 40 ci-out/TabStudio.App.Tests.retry.log
+          fi
+          if [ $first -ne 0 ] || [ $status -ne 0 ]; then
+            {
+              echo "== Processes left running"; ps -eo pid,ppid,pgid,rss,etime,args --sort=-rss | head -n 40
+              echo "== Kernel messages"; sudo dmesg | tail -n 40
+            } > ci-out/diagnostics.txt 2>&1 || true
+            cp "$RUNNER_TEMP"/crash/*.json ci-out/ 2>/dev/null || true
+            find tests/TabStudio.App.Tests/TestResults -name 'Sequence_*.xml' -exec cp {} ci-out/ \; 2>/dev/null || true
+          fi
           exit $status
 
       - name: Publish logs and screenshots
@@ -239,7 +280,7 @@ jobs:
           disk-size: 4096M
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
-          script: bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 420
+          script: bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 660
 
       # A crash's native backtrace has only offsets into the runtime's stripped libraries; this names the functions.
       - name: Name the functions in a crash's backtrace

@@ -58,7 +58,12 @@
     <ProjectReference Include="..\TabStudio.LanguageServers\TabStudio.LanguageServers.csproj" />
     <ProjectReference Include="..\TabStudio.Extensions\TabStudio.Extensions.csproj" />
     <ProjectReference Include="..\TabStudio.Toolchains\TabStudio.Toolchains.csproj" />
+    <ProjectReference Include="..\TabStudio.Web\TabStudio.Web.csproj" />
+    <ProjectReference Include="..\TabStudio.Forms\TabStudio.Forms.csproj" />
+    <ProjectReference Include="..\TabStudio.Forms.Design\TabStudio.Forms.Design.csproj" />
   </ItemGroup>
+
+  <Import Project="TabStudio.App.WindowsForms.targets" />
 
   <ItemGroup>
     <InternalsVisibleTo Include="TabStudio.App.Tests" />

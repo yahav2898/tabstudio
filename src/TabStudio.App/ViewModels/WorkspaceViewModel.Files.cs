@@ -198,7 +198,7 @@ public sealed partial class WorkspaceViewModel
             await Task.Run(() => language.Reload(preview.Workspace, new OpenDocumentTextProvider(openTexts)));
             foreach (var document in Documents)
             {
-                _ = document.AnalyzeNowAsync();
+                _ = document.AnalyzeAgainAsync();
             }
         }
     }

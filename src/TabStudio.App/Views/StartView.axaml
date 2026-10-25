@@ -173,7 +173,7 @@
               <!-- New project -->
               <StackPanel Spacing="12" IsVisible="{Binding IsNewProjectSelected}">
                 <TextBlock Classes="h2" Text="Create a new project" />
-                <ListBox ItemsSource="{Binding Templates}" SelectedItem="{Binding SelectedTemplate}"
+                <ListBox x:Name="TemplateList" ItemsSource="{Binding Templates}" SelectedItem="{Binding SelectedTemplate}"
                          ItemContainerTheme="{StaticResource ListRow}">
                   <ListBox.ItemTemplate>
                     <DataTemplate DataType="services:ProjectTemplate">
@@ -202,14 +202,31 @@
                     </DataTemplate>
                   </ListBox.ItemTemplate>
                 </ListBox>
-                <TextBlock Classes="label" Text="Project name" />
-                <Grid ColumnDefinitions="*,Auto">
-                  <TextBox Classes="large mono" Text="{Binding ProjectName}" />
-                  <Button Grid.Column="1" Theme="{StaticResource AccentButton}" Height="44" Margin="10,0,0,0"
-                          Content="Create and open" Command="{Binding CreateProjectCommand}" />
-                </Grid>
-                <TextBlock Foreground="{DynamicResource Brush.Warning}" Text="{Binding ProjectNameError}"
-                           IsVisible="{Binding ProjectNameError, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                <!-- What a tap on a template scrolls into view: its options, the name and Create. -->
+                <StackPanel x:Name="CreateSection" Spacing="12">
+                  <StackPanel Spacing="8" IsVisible="{Binding IsBlazorWebAppSelected}">
+                    <TextBlock Classes="label" Text="Interactive render mode" />
+                    <ComboBox ItemsSource="{x:Static vm:BlazorRenderModeOption.All}" SelectedItem="{Binding SelectedBlazorRenderMode}"
+                              HorizontalAlignment="Stretch" MinHeight="44">
+                      <ComboBox.ItemTemplate>
+                        <DataTemplate DataType="vm:BlazorRenderModeOption">
+                          <StackPanel Spacing="2" Margin="0,4">
+                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                            <TextBlock Text="{Binding Description}" Classes="small" Opacity="0.8" TextWrapping="Wrap" />
+                          </StackPanel>
+                        </DataTemplate>
+                      </ComboBox.ItemTemplate>
+                    </ComboBox>
+                  </StackPanel>
+                  <TextBlock Classes="label" Text="Project name" />
+                  <Grid ColumnDefinitions="*,Auto">
+                    <TextBox Classes="large mono" Text="{Binding ProjectName}" />
+                    <Button Grid.Column="1" Theme="{StaticResource AccentButton}" Height="44" Margin="10,0,0,0"
+                            Content="Create and open" Command="{Binding CreateProjectCommand}" />
+                  </Grid>
+                  <TextBlock Foreground="{DynamicResource Brush.Warning}" Text="{Binding ProjectNameError}"
+                             IsVisible="{Binding ProjectNameError, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                </StackPanel>
               </StackPanel>
 
               <!-- Sample -->

@@ -45,6 +45,8 @@ public sealed record FileType(
 
     /// <summary>The language's icon from an installed extension, or <see langword="null"/> to show the badge.</summary>
     public string? IconPath { get; init; }
+    /// <summary>Whether this is a Razor component, page or view, which the Razor compiler turns into C#.</summary>
+    public bool IsRazor => DisplayName == "Razor";
 }
 
 /// <summary>Maps file names to <see cref="FileType"/>s.</summary>

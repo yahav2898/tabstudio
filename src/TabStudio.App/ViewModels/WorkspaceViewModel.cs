@@ -123,7 +123,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         Explorer = new SolutionExplorerViewModel(this);
         Output = new OutputViewModel(ui, profile.OutputCharacterLimit);
         Explorer.OpenFileRequested += async (_, path) => await OpenDocumentAsync(path);
-        Explorer.SelectionChanged += (_, node) => Properties.Show(node, Workspace);
+        Explorer.SelectionChanged += (_, node) => ShowProperties(node);
         ErrorList.NavigateRequested += async (_, diagnostic) => await NavigateToAsync(diagnostic.Location!.FilePath, diagnostic.Location.Line, diagnostic.Location.Column);
         _device.ThermalChanged += OnThermalChanged;
         _device.MemoryPressureRaised += OnMemoryPressure;
@@ -266,7 +266,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         var preview = await WorkspaceInspector.InspectAsync(notebook is null ? path : Path.GetDirectoryName(notebook)!);
         Workspace = preview.Workspace;
         Explorer.Load(preview.Workspace, preview.Reports);
-        Properties.Show(Explorer.SelectedItem?.Node, Workspace);
+        ShowProperties(Explorer.SelectedItem?.Node);
 
         Compatibility.Clear();
         foreach (var report in preview.Reports)
@@ -301,7 +301,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         StartIntelliSenseWarmUp();
         if (_profile.AnalyzeWholeSolution)
         {
-            _ = AnalyzeSolutionAsync(_background!.Token);
+            StartSolutionAnalysis();
         }
     }
 
@@ -334,7 +334,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         _language?.SetOptimization(configuration == "Release");
         foreach (var document in Documents)
         {
-            _ = document.AnalyzeNowAsync();
+            _ = document.AnalyzeAgainAsync();
         }
     }
 
@@ -375,6 +375,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         foreach (var document in Documents)
         {
             DetachXamlDesigner(document);
+            DetachFormsDesigner(document);
             document.Dispose();
         }
 
@@ -419,12 +420,13 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
                 }
 
                 var diagnostics = await language.GetProjectDiagnosticsAsync(project.FilePath, cancellationToken);
+                cancellationToken.ThrowIfCancellationRequested();
                 ApplyProjectDiagnostics(project, diagnostics);
             }
         }
         catch (OperationCanceledException)
         {
-            // The workspace closed.
+            // The workspace closed, or a newer analysis replaced this one.
         }
     }
 

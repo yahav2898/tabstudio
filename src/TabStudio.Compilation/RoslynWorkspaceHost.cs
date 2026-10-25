@@ -122,6 +122,8 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         _workspace.ClearSolution();
         _documents.Clear();
         _additionalDocuments.Clear();
+        _razorDocuments.Clear();
+        _razorFiles.Clear();
         _projectIds.Clear();
         _projects.Clear();
         _skeletons.Clear();
@@ -148,6 +150,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             _workspace.ClearSolution();
             _documents.Clear();
             _additionalDocuments.Clear();
+            _razorDocuments.Clear();
             AddSolution(workspace, csharpProjects, allProjectDirectories, texts);
         }
     }
@@ -165,13 +168,13 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             projectInfos));
     }
 
-    /// <summary>Whether a file is a source file of a loaded project.</summary>
+    /// <summary>Whether a file is a source file of a loaded project: a C# file, or a Razor component, view or page.</summary>
     /// <param name="filePath">Full path of the file.</param>
     public bool ContainsDocument(string filePath)
     {
         lock (_gate)
         {
-            return _documents.ContainsKey(filePath);
+            return _documents.ContainsKey(filePath) || _razorDocuments.Contains(filePath);
         }
     }
 
@@ -225,6 +228,12 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         ArgumentNullException.ThrowIfNull(filePath);
         ArgumentNullException.ThrowIfNull(text);
 
+        // A new Razor file is an additional file with its own configuration; it arrives with the next Load.
+        if (Razor.RazorProjects.IsRazorFile(filePath))
+        {
+            return false;
+        }
+
         lock (_gate)
         {
             if (_documents.TryGetValue(filePath, out var existing))
@@ -273,6 +282,11 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
     /// <param name="cancellationToken">Cancels the analysis, typically because the user typed again.</param>
     public async Task<IReadOnlyList<BuildDiagnostic>> GetDocumentDiagnosticsAsync(string filePath, CancellationToken cancellationToken = default)
     {
+        if (IsRazorDocument(filePath))
+        {
+            return await GetRazorDocumentDiagnosticsAsync(filePath, cancellationToken).ConfigureAwait(false);
+        }
+
         var (document, project) = Snapshot(filePath);
         if (document is null || project is null)
         {
@@ -342,7 +356,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             return [];
         }
 
-        var diagnostics = DiagnosticMapper.Map(compilation.GetDiagnostics(cancellationToken), info.Name).ToList();
+        var diagnostics = await Razor.RazorCompilations.MapAsync(project, info, compilation.GetDiagnostics(cancellationToken), cancellationToken).ConfigureAwait(false);
         if (info.IsExecutable)
         {
             diagnostics.AddRange(InProcessSafetyAnalyzer.Analyze(compilation, info.Name, cancellationToken));
@@ -410,8 +424,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             {
                 if (project.CompilationOptions is { } options)
                 {
-                    var parseOptions = CSharpCompiler.CreateParseOptions(
-                        optimize, _projects.TryGetValue(project.Id, out var known) ? SdkGenerators.InterceptorsNamespaces(known) : null);
+                    var parseOptions = Razor.RazorCompiler.ParseOptionsFor(_projects.GetValueOrDefault(project.Id), optimize);
                     solution = solution
                         .WithProjectCompilationOptions(project.Id, options.WithOptimizationLevel(level))
                         .WithProjectParseOptions(project.Id, parseOptions);
@@ -463,7 +476,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         var compilation = await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false)
             ?? throw new InvalidOperationException($"Roslyn could not create a compilation for '{info.Name}'.");
 
-        return CSharpCompiler.Emit(compilation, checkInProcessSafety, stopwatch, info.Name, ManifestResources.For(info), cancellationToken);
+        return await Razor.RazorCompilations.EmitAsync(project, info, compilation, checkInProcessSafety, stopwatch, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc />
@@ -522,11 +535,15 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             }
         }
 
+        AddRazorDocuments(project, id, allProjectDirectories, sources, documents, additionalDocuments);
+
         if (CSharpCompiler.CreateGlobalUsingsSource(project) is { } globalUsings)
         {
             var path = Path.Combine(project.DirectoryPath, "obj", $"{project.Name}.GlobalUsings.g.cs");
             documents.Add(CreateDocumentInfo(DocumentId.CreateNewId(id, path), path, globalUsings, isGenerated: true));
         }
+
+        documents.AddRange(WindowsFormsDocuments(id, project));
 
         var projectReferences = project.ProjectReferences
             .Where(reference => _projectIds.ContainsKey(reference) && !_skeletons.ContainsKey(reference))
@@ -543,13 +560,13 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             LanguageNames.CSharp,
             filePath: project.FilePath,
             compilationOptions: WithPathMap(CSharpCompiler.CreateCompilationOptions(kind, project.NullableEnabled, _optimize, allowUnsafe, _concurrentBuild), project),
-            parseOptions: CSharpCompiler.CreateParseOptions(_optimize, SdkGenerators.InterceptorsNamespaces(project)),
+            parseOptions: Razor.RazorCompiler.ParseOptionsFor(project, _optimize),
             documents: documents,
             projectReferences: projectReferences,
             metadataReferences: GetMetadataReferences(project),
             analyzerReferences: GetAnalyzerReferences(project),
             additionalDocuments: additionalDocuments)
-            .WithAnalyzerConfigDocuments([CreateAnalyzerConfig(id, project)]);
+            .WithAnalyzerConfigDocuments([CreateAnalyzerConfig(id, project, _razorFiles.GetValueOrDefault(id) ?? [])]);
     }
 
     /// <summary>The current text of every source and additional file, to load the solution again with. The caller holds the gate.</summary>

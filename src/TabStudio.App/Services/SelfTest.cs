@@ -12,7 +12,8 @@ public sealed record SelfTestResult(bool Success, string Message, TimeSpan Durat
 /// <summary>
 /// Does what a person does first: opens the sample solution, presses F5, types a name when the program asks,
 /// and reads the Output panel; then debugs it, debugs it again with a TabStudio Link host compiling, serves a new web
-/// app and shows a new Avalonia app. CI runs it on an Android emulator to prove the whole IDE works on a device.
+/// app and new Blazor apps, shows a new Avalonia app, installs an extension, installs and runs Python and Node.js, and
+/// runs and designs a new Windows Forms app. CI runs it on an Android emulator to prove the whole IDE works on a device.
 /// </summary>
 public static partial class SelfTest
 {
@@ -101,22 +102,38 @@ public static partial class SelfTest
                 return new SelfTestResult(false, $"{summary} | {debugged.Message} | {web.Message}", clock.Elapsed);
             }
 
+            var blazor = await ServeBlazorAppsAsync(main, templates, cancellationToken);
+            if (!blazor.Success)
+            {
+                return new SelfTestResult(false, $"{summary} | {debugged.Message} | {web.Message} | {blazor.Message}", clock.Elapsed);
+            }
+
+            // The Avalonia app goes last among the apps: desktop mode's step runs in the workspace it leaves open.
             var avalonia = await ShowAvaloniaAppAsync(main, templates, cancellationToken);
             if (!avalonia.Success || main.Workspace is not { } last)
             {
-                return new SelfTestResult(false, $"{summary} | {debugged.Message} | {web.Message} | {avalonia.Message}", clock.Elapsed);
+                return new SelfTestResult(false, $"{summary} | {debugged.Message} | {web.Message} | {blazor.Message} | {avalonia.Message}", clock.Elapsed);
             }
 
+            var avaloniaApp = last.Workspace is { } loaded ? loaded.Solution?.FilePath ?? loaded.RootDirectory : null;
             var extensions = await InstallGrammarExtensionAsync(last, FindEditor, cancellationToken);
             var toolchains = extensions.Success ? await RunToolchainsAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Toolchains: not run", TimeSpan.Zero);
+            var pythonTools = toolchains.Success ? await CheckPythonToolsAsync(main, cancellationToken) : new SelfTestResult(false, "Python tools: not run", TimeSpan.Zero);
+            var forms = pythonTools.Success ? await ShowWindowsFormsAppAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Windows Forms: not run", TimeSpan.Zero);
+            if (forms.Success && avaloniaApp is not null)
+            {
+                // The self test ends in the Avalonia app, which the desktop part continues with.
+                await main.OpenWorkspaceAsync(avaloniaApp);
+            }
+
             return new SelfTestResult(
-                extensions.Success && toolchains.Success,
-                $"{summary} | {debugged.Message} | {web.Message} | {avalonia.Message} | {extensions.Message} | {toolchains.Message}",
+                extensions.Success && toolchains.Success && pythonTools.Success && forms.Success,
+                $"{summary} | {debugged.Message} | {web.Message} | {blazor.Message} | {avalonia.Message} | {extensions.Message} | {toolchains.Message} | {pythonTools.Message} | {forms.Message}",
                 clock.Elapsed);
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)
         {
-            return new SelfTestResult(false, $"{ex.GetType().Name}: {ex.Message}".ReplaceLineEndings(" "), clock.Elapsed);
+            return new SelfTestResult(false, $"{ex.GetType().Name}: {ex.Message}{DescribeActivity(main)}".ReplaceLineEndings(" "), clock.Elapsed);
         }
     }
 }
