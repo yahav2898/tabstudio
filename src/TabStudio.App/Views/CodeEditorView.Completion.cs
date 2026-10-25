@@ -56,6 +56,7 @@ public sealed partial class CodeEditorView
 
         _completion.PropertyChanged -= OnCompletionPropertyChanged;
         _completion.Items.CollectionChanged -= OnCompletionItemsChanged;
+        TextView.VisualLinesChanged -= OnVisualLinesChangedForCompletion;
         _editor.TextArea.TextEntering -= OnCompletionTextEntering;
         _editor.TextArea.TextEntered -= OnCompletionTextEntered;
         if (_completionView is not null)
@@ -126,7 +127,8 @@ public sealed partial class CodeEditorView
             return;
         }
 
-        if (!completion.IsSoftSelection && completion.SelectedItem is not null && CompletionMatcher.IsCommitCharacter(typed))
+        if (!completion.IsSoftSelection && completion.SelectedItem is { } item
+            && (item.Entry.CommitCharacters?.Contains(typed) ?? CompletionMatcher.IsCommitCharacter(typed)))
         {
             e.Handled = true;
             _ = CommitCompletionAsync(null, typed);
@@ -224,6 +226,11 @@ public sealed partial class CodeEditorView
         if (outcome is not null)
         {
             _editor.CaretOffset = Math.Clamp(outcome.Caret, 0, _editor.Document.TextLength);
+            if (outcome.SelectionLength > 0 && _editor.CaretOffset + outcome.SelectionLength <= _editor.Document.TextLength)
+            {
+                // A snippet's first placeholder is selected, so typing replaces it.
+                _editor.Select(_editor.CaretOffset, outcome.SelectionLength);
+            }
         }
 
         if (commitCharacter is { } character && (outcome is null || outcome.TypeCommitCharacter))
@@ -291,6 +298,13 @@ public sealed partial class CodeEditorView
         if (LineRect(completion.SpanStart) is not { } anchor)
         {
             _completionPopup.IsOpen = false;
+            if (!TextView.VisualLinesValid)
+            {
+                // A list that arrives before the edit that asked for it is laid out is placed once it is.
+                TextView.VisualLinesChanged -= OnVisualLinesChangedForCompletion;
+                TextView.VisualLinesChanged += OnVisualLinesChangedForCompletion;
+            }
+
             return;
         }
 
@@ -305,6 +319,12 @@ public sealed partial class CodeEditorView
         _completionPopup.PlacementRect = anchor;
         _completionPopup.IsOpen = true;
         PlaceSignatureHelpPopup();
+    }
+
+    private void OnVisualLinesChangedForCompletion(object? sender, EventArgs e)
+    {
+        TextView.VisualLinesChanged -= OnVisualLinesChangedForCompletion;
+        PlaceCompletionPopup();
     }
 
     /// <summary>The height of the list as shown now.</summary>

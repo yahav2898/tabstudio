@@ -23,6 +23,13 @@ public sealed partial class ErrorListView : UserControl
     {
         if ((e.Source as Control)?.FindAncestorOfType<ListBoxItem>(includeSelf: true)?.DataContext is ErrorItemViewModel item)
         {
+            // A code with a page, as language servers give, opens the page; the rest of the row opens the file.
+            if (e.Source is TextBlock { Tag: "code" } && item.HasHelpLink)
+            {
+                ViewModel?.OpenHelpLinkCommand.Execute(item);
+                return;
+            }
+
             ViewModel?.NavigateCommand.Execute(item);
         }
     }

@@ -116,6 +116,12 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
     /// <inheritdoc />
     async Task IEditorDebugger.EditBreakpointConditionAsync(string filePath, int line)
     {
+        if (UsesAdapterBreakpoints(filePath))
+        {
+            await EditAdapterBreakpointAsync(filePath, line, BreakpointOption.Condition);
+            return;
+        }
+
         var breakpoint = Breakpoints.Find(filePath, line) ?? Breakpoints.Add(filePath, line);
         var condition = await Prompt.AskAsync(
             "Breakpoint Condition",
@@ -141,6 +147,11 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
     /// <inheritdoc />
     async Task<VariableTreeViewModel?> IEditorDebugger.EvaluateDataTipAsync(string expression)
     {
+        if (_adapter is not null)
+        {
+            return await EvaluateAdapterDataTipAsync(expression);
+        }
+
         if (_pause is not { } pause || string.IsNullOrWhiteSpace(expression))
         {
             return null;
@@ -161,6 +172,11 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
     [RelayCommand(CanExecute = nameof(CanStartDebugging))]
     private Task StartDebuggingAsync()
     {
+        if (_adapter is not null)
+        {
+            return ContinueAdapterAsync();
+        }
+
         if (IsPaused)
         {
             Resume(session => session.Continue());
@@ -174,21 +190,31 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
 
     /// <summary>F11: runs the current statement, stepping into the calls it makes; before debugging, starts at the first statement.</summary>
     [RelayCommand(CanExecute = nameof(CanStep))]
-    private Task StepIntoAsync() => StepOrStartAsync(session => session.StepInto());
+    private Task StepIntoAsync() => _adapter is not null ? StepAdapterAsync(AdapterStep.Into) : StepOrStartAsync(session => session.StepInto());
 
     /// <summary>F10: runs the current statement and the calls it makes; before debugging, starts at the first statement.</summary>
     [RelayCommand(CanExecute = nameof(CanStep))]
-    private Task StepOverAsync() => StepOrStartAsync(session => session.StepOver());
+    private Task StepOverAsync() => _adapter is not null ? StepAdapterAsync(AdapterStep.Over) : StepOrStartAsync(session => session.StepOver());
 
     /// <summary>Shift+F11: runs to the end of the current function and pauses in its caller.</summary>
     [RelayCommand(CanExecute = nameof(IsPaused))]
-    private void StepOut() => Resume(session => session.StepOut());
+    private void StepOut()
+    {
+        if (_adapter is not null)
+        {
+            _ = StepAdapterAsync(AdapterStep.Out);
+            return;
+        }
+
+        Resume(session => session.StepOut());
+    }
 
     /// <summary>Ctrl+Alt+Break: pauses the running program at the next statement of its own code.</summary>
     [RelayCommand(CanExecute = nameof(IsDebuggeeRunning))]
     private void BreakAll()
     {
         _session?.Pause();
+        _ = PauseAdapterAsync();
         StatusText = "Pausing at the next statement of the program's own code";
     }
 
@@ -203,6 +229,7 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
         else
         {
             _session?.Stop();
+            _ = StopAdapterAsync();
         }
     }
 
@@ -212,8 +239,9 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
     [RelayCommand(CanExecute = nameof(IsDebugging))]
     private void Restart()
     {
-        _restartRequested = true;
+        _restartRequested = _session is not null;
         _session?.Stop();
+        RestartAdapter();
     }
 
     /// <summary>Ctrl+F10: runs until the line with the caret, starting the program if it is not running.</summary>
@@ -228,6 +256,11 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
         if (!IsPaused)
         {
             return LaunchAsync(DebugStart.RunToCursor);
+        }
+
+        if (_adapter is not null)
+        {
+            return RunAdapterToCursorAsync(document);
         }
 
         if (!Resume(session => session.RunToLine(document.FilePath, document.CaretLine)))
@@ -316,6 +349,8 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
             session.Resumed -= OnSessionResumed;
             session.Dispose();
         }
+
+        DisposeAdapterSession();
     }
 
     partial void OnBreakOnUnhandledExceptionsChanged(bool value)
@@ -324,6 +359,8 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
         {
             session.BreakOnUnhandledExceptions = value;
         }
+
+        ApplyBreakOnUnhandledToAdapter(value);
     }
 
     private Task StepOrStartAsync(Func<DebugSession, bool> step)
@@ -343,6 +380,12 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
 
     private async Task LaunchAsync(DebugStart start)
     {
+        if (UsesLaunchTarget && CurrentLaunchTarget is { } target && _session is null)
+        {
+            await LaunchAdapterAsync(target, start, noDebug: false);
+            return;
+        }
+
         if (StartupProject is not { } project || _language is not { } language || _session is not null)
         {
             return;
@@ -530,6 +573,12 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
     /// <summary>Marks a frame's statement in the editor and opens its file, as choosing a frame in the Call Stack does.</summary>
     private async Task ShowFrameAsync(StackFrameViewModel? frame)
     {
+        if (_adapter is not null)
+        {
+            await ShowAdapterFrameAsync(frame);
+            return;
+        }
+
         ShowExecutionPoints();
         if (_pause is not { CallStack.Count: > 0 } pause || frame is null)
         {
@@ -554,7 +603,7 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
 
     private void ApplyExecutionPoints(DocumentViewModel document)
     {
-        var current = _pause is { CallStack.Count: > 0 } pause ? pause.CallStack[0].Location : null;
+        var current = _pause is { CallStack.Count: > 0 } pause ? pause.CallStack[0].Location : _adapterCurrent;
         var caller = CallStack.ActiveFrame is { IsTop: false } frame ? frame.Location : null;
         document.ShowExecutionPoints(PointIn(document, current), PointIn(document, caller), _exceptionHelper);
     }

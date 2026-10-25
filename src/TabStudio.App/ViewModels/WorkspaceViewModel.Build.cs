@@ -21,6 +21,12 @@ public sealed partial class WorkspaceViewModel
     [RelayCommand(CanExecute = nameof(CanRun))]
     private async Task RunAsync()
     {
+        if (UsesLaunchTarget && CurrentLaunchTarget is { } target)
+        {
+            await LaunchAdapterAsync(target, DebugStart.Run, noDebug: true);
+            return;
+        }
+
         if (StartupProject is not { } project || _language is null)
         {
             return;
@@ -101,7 +107,7 @@ public sealed partial class WorkspaceViewModel
         }
     }
 
-    private bool CanRun() => StartupProject is not null && State is IdeState.Ready or IdeState.Failed && !IsNotebookRunning;
+    private bool CanRun() => (StartupProject is not null || UsesLaunchTarget) && State is IdeState.Ready or IdeState.Failed && !IsNotebookRunning;
 
     private bool CanBuild() => State is IdeState.Ready or IdeState.Failed;
 

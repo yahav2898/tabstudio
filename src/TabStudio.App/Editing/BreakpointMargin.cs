@@ -143,6 +143,24 @@ public sealed class BreakpointMargin : AbstractMargin
             return;
         }
 
+        if (glyph == BreakpointGlyph.Logpoint)
+        {
+            // A diamond, as Visual Studio draws tracepoints: the program logs here and goes on.
+            var size = radius + 0.6;
+            var diamond = new StreamGeometry();
+            using (var figure = diamond.Open())
+            {
+                figure.BeginFigure(new Point(center.X, center.Y - size), isFilled: true);
+                figure.LineTo(new Point(center.X + size, center.Y));
+                figure.LineTo(new Point(center.X, center.Y + size));
+                figure.LineTo(new Point(center.X - size, center.Y));
+                figure.EndFigure(isClosed: true);
+            }
+
+            context.DrawGeometry(BreakpointBrush, null, diamond);
+            return;
+        }
+
         context.DrawEllipse(BreakpointBrush, null, center, radius, radius);
         if (glyph == BreakpointGlyph.Conditional)
         {

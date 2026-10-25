@@ -83,6 +83,11 @@ public static partial class SelfTest
             {
                 var linked = await LinkSampleAsync(main, workspace, cancellationToken);
                 debugged = new SelfTestResult(linked.Success, $"{debugged.Message} | {linked.Message}", debugged.Duration + linked.Duration);
+                if (debugged.Success)
+                {
+                    var servers = await CheckLanguageServersAsync(main, cancellationToken);
+                    debugged = debugged with { Success = servers.Success, Message = $"{debugged.Message} | {servers.Message}" };
+                }
             }
 
             if (!debugged.Success || templates is null)

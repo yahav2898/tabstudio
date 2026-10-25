@@ -9,7 +9,7 @@ namespace TabStudio.App.ViewModels;
 /// following edits in open documents, and handed to the debug session while one runs.
 /// </summary>
 /// <remarks>Use it on the UI thread.</remarks>
-public sealed class BreakpointsViewModel
+public sealed partial class BreakpointsViewModel
 {
     private readonly List<BreakpointViewModel> _breakpoints = [];
     private readonly Dictionary<TextDocument, DocumentViewModel> _documents = [];
@@ -203,7 +203,7 @@ public sealed class BreakpointsViewModel
 
     /// <summary>The breakpoints to save with the session.</summary>
     public IReadOnlyList<SessionBreakpoint> Save() =>
-        _breakpoints.Select(b => new SessionBreakpoint(b.FilePath, b.Line, b.Condition)).ToList();
+        _breakpoints.Select(b => new SessionBreakpoint(b.FilePath, b.Line, b.Condition) { HitCount = b.HitCount, LogMessage = b.LogMessage }).ToList();
 
     /// <summary>Replaces the breakpoints with those of a saved session, skipping files that no longer exist.</summary>
     /// <param name="saved">The saved breakpoints, or <see langword="null"/> for none.</param>
@@ -214,7 +214,7 @@ public sealed class BreakpointsViewModel
         {
             if (breakpoint.Line >= 1 && File.Exists(breakpoint.Path))
             {
-                Add(breakpoint.Path, breakpoint.Line, breakpoint.Condition);
+                Add(breakpoint.Path, breakpoint.Line, breakpoint.Condition).SetOptions(breakpoint.HitCount, breakpoint.LogMessage);
             }
         }
     }

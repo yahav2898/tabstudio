@@ -9,7 +9,8 @@ namespace TabStudio.App.ViewModels;
 /// <summary>Where the caret goes after a completion item is committed, and whether to type the commit character.</summary>
 /// <param name="Caret">The new caret offset.</param>
 /// <param name="TypeCommitCharacter">Whether the editor still has to type the character that committed the item.</param>
-public sealed record CompletionCommitOutcome(int Caret, bool TypeCommitCharacter);
+/// <param name="SelectionLength">How much text after the caret to select, such as a snippet's first placeholder.</param>
+public sealed record CompletionCommitOutcome(int Caret, bool TypeCommitCharacter, int SelectionLength = 0);
 
 /// <summary>
 /// The completion list of one editor, as in Visual Studio: it opens when a character such as <c>.</c> triggers it or
@@ -259,7 +260,7 @@ public sealed partial class CompletionListViewModel : ObservableObject, IDisposa
             _document.ApplyEdits(commit.Edits);
             Remember(item.Entry.DisplayText);
             var newCaret = commit.CaretPosition ?? EndOfInsertion(commit.Edits, caret);
-            return new CompletionCommitOutcome(newCaret, commitCharacter is not null && !commit.IncludesCommitCharacter);
+            return new CompletionCommitOutcome(newCaret, commitCharacter is not null && !commit.IncludesCommitCharacter, commit.SelectionLength);
         }
         finally
         {

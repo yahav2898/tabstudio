@@ -27,6 +27,7 @@ public sealed partial class CodeEditorView
             menu.Items.Add(MenuEntry("Go To Definition", new KeyGesture(Key.F12), null, () => _ = Workspace?.GoToDefinitionCommand.ExecuteAsync(null)));
             menu.Items.Add(MenuEntry("Peek Definition", new KeyGesture(Key.F12, KeyModifiers.Alt), null, () => _ = Workspace?.PeekDefinitionCommand.ExecuteAsync(null)));
             menu.Items.Add(MenuEntry("Go To Implementation", new KeyGesture(Key.F12, KeyModifiers.Control), null, () => _ = Workspace?.GoToImplementationCommand.ExecuteAsync(null)));
+            AddLanguageServerMenuItems(menu);
             menu.Items.Add(MenuEntry("Find All References", new KeyGesture(Key.F12, KeyModifiers.Shift), null, () => _ = Workspace?.FindAllReferencesCommand.ExecuteAsync(null)));
             menu.Items.Add(new Separator());
         }

@@ -31,4 +31,11 @@ public sealed record CompletionEntry(
     SymbolGlyph Kind,
     bool IsPreselected,
     int SpanStart,
-    int SpanLength);
+    int SpanLength)
+{
+    /// <summary>
+    /// The characters that commit this item when typed, as a language server gives them; <see langword="null"/> for
+    /// the C# characters Visual Studio commits with.
+    /// </summary>
+    public IReadOnlyList<char>? CommitCharacters { get; init; }
+}

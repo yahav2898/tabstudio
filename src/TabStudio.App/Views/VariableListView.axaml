@@ -44,6 +44,8 @@
               <MenuFlyout>
                 <MenuItem Header="Add Watch" IsVisible="{Binding !IsError}"
                           Command="{Binding Owner.AddWatchCommand, FallbackValue={x:Null}}" CommandParameter="{Binding}" />
+                <MenuItem Header="Edit Value..." IsVisible="{Binding IsEditable}"
+                          Command="{Binding Owner.EditValueCommand, FallbackValue={x:Null}}" CommandParameter="{Binding}" />
                 <MenuItem Header="Remove Watch" IsVisible="{Binding IsRemovable}"
                           Command="{Binding Owner.RemoveCommand, FallbackValue={x:Null}}" CommandParameter="{Binding}" />
               </MenuFlyout>

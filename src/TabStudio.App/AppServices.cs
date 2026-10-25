@@ -58,6 +58,8 @@ public static class AppServices
         services.AddSingleton(_ => ToolboxCatalog.LoadEmbedded());
         services.AddSingleton<DesktopModeSettingsStore>();
         services.AddSingleton<DesktopModeViewModel>();
+        // Language servers and debug adapters start through the platform's IServerProcessLauncher, if it registers one.
+        services.TryAddSingleton(provider => new Services.LanguageServers.LanguageServerServices(provider.GetService<TabStudio.LanguageServers.Hosting.IServerProcessLauncher>() ?? TabStudio.LanguageServers.Hosting.ProcessServerLauncher.Instance));
 
         // View models.
         services.AddSingleton<LinkViewModel>();

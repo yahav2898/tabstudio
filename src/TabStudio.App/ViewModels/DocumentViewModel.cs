@@ -251,7 +251,7 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
     {
         if (_language is null)
         {
-            return false;
+            return await FormatWithServerAsync(cancellationToken);
         }
 
         SyncText();
@@ -294,6 +294,7 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
         DisposeNotebook();
         DisposeCiLog();
         DisposePullRequestReview();
+        DisposeLanguageServer();
     }
 
     private void OnDocumentChanged(object? sender, DocumentChangeEventArgs e)

@@ -117,6 +117,7 @@ public static class FileTypes
         [".sql"] = new("SQL", "SQL", BadgeKind.Script, "--", null, ".sql"),
         [".sol"] = new("Solidity", "SOL", BadgeKind.Script, "//", null, null),
         [".move"] = new("Move", "MOVE", BadgeKind.Script, "//", null, null),
+        [".loopback"] = new("Loopback", "LB", BadgeKind.Script, "#", null, null),
         [".md"] = new("Markdown", "MD", BadgeKind.Text, null, XmlComment, ".md"),
         [".markdown"] = new("Markdown", "MD", BadgeKind.Text, null, XmlComment, ".md"),
         [".txt"] = new("Plain Text", "TXT", BadgeKind.Text, null, null, null),

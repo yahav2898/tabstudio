@@ -32,6 +32,27 @@ public sealed partial class ExceptionHelperViewModel : ObservableObject
         StopCommand = stopCommand;
     }
 
+    /// <summary>Creates the helper for an exception a debug adapter stopped at, as it describes it.</summary>
+    /// <param name="exceptionType">The exception's type, such as <c>ZeroDivisionError</c>.</param>
+    /// <param name="message">Its message.</param>
+    /// <param name="details">Its type, message and stack trace, for View Details and Copy Details.</param>
+    /// <param name="continueCommand">Continues the program.</param>
+    /// <param name="stopCommand">Stops debugging.</param>
+    public ExceptionHelperViewModel(string exceptionType, string message, string details, ICommand continueCommand, ICommand stopCommand)
+    {
+        ArgumentNullException.ThrowIfNull(exceptionType);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(details);
+        ArgumentNullException.ThrowIfNull(continueCommand);
+        ArgumentNullException.ThrowIfNull(stopCommand);
+
+        ExceptionType = exceptionType;
+        Message = message;
+        Details = details;
+        ContinueCommand = continueCommand;
+        StopCommand = stopCommand;
+    }
+
     /// <summary>The exception's full type name, such as <c>System.InvalidOperationException</c>.</summary>
     public string ExceptionType { get; }
 

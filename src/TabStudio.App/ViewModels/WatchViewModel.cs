@@ -100,6 +100,12 @@ public sealed partial class WatchViewModel : ObservableObject
 
     private async Task RefreshAsync()
     {
+        if (_evaluator is { } evaluator)
+        {
+            await RefreshWithEvaluatorAsync(evaluator);
+            return;
+        }
+
         var pause = _pause;
         var expressions = _expressions.ToList();
         if (pause is null)

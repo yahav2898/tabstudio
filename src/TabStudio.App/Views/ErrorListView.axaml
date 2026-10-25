@@ -4,6 +4,13 @@
              xmlns:vm="using:TabStudio.App.ViewModels"
              x:Class="TabStudio.App.Views.ErrorListView"
              x:DataType="vm:ErrorListViewModel">
+  <UserControl.Styles>
+    <!-- A code with a page that explains it, as language servers give: tapping it opens the page. -->
+    <Style Selector="TextBlock.helpLink">
+      <Setter Property="TextDecorations" Value="Underline" />
+      <Setter Property="Cursor" Value="Hand" />
+    </Style>
+  </UserControl.Styles>
   <DockPanel>
     <!-- Filters -->
     <Grid DockPanel.Dock="Top" Height="38" ColumnDefinitions="Auto,Auto,Auto,Auto,*,220" Margin="12,0">
@@ -53,7 +60,7 @@
 
     <!-- Column headers -->
     <Border DockPanel.Dock="Top" Height="26" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1">
-      <Grid ColumnDefinitions="34,80,*,130,160,50,40" Margin="12,0" VerticalAlignment="Center">
+      <Grid ColumnDefinitions="34,150,*,130,160,50,40" Margin="12,0" VerticalAlignment="Center">
         <TextBlock Grid.Column="1" Classes="muted small" Text="Code" />
         <TextBlock Grid.Column="2" Classes="muted small" Text="Description" />
         <TextBlock Grid.Column="3" Classes="muted small" Text="Project" />
@@ -70,14 +77,15 @@
                ScrollViewer.HorizontalScrollBarVisibility="Disabled">
         <ListBox.ItemTemplate>
           <DataTemplate DataType="vm:ErrorItemViewModel">
-            <Grid ColumnDefinitions="34,80,*,130,160,50,40" Height="28" Margin="12,0" Background="Transparent"
+            <Grid ColumnDefinitions="34,150,*,130,160,50,40" Height="28" Margin="12,0" Background="Transparent"
                   ToolTip.Tip="{Binding Description}">
               <Panel>
                 <controls:StrokeIcon Data="{StaticResource Icon.Error}" Size="14" Foreground="{DynamicResource Brush.Error}" IsVisible="{Binding IsError}" HorizontalAlignment="Left" />
                 <controls:StrokeIcon Data="{StaticResource Icon.Warning}" Size="14" Foreground="{DynamicResource Brush.Warning}" IsVisible="{Binding IsWarning}" HorizontalAlignment="Left" />
                 <controls:StrokeIcon Data="{StaticResource Icon.Info}" Size="14" Foreground="{DynamicResource Brush.Info}" IsVisible="{Binding IsMessage}" HorizontalAlignment="Left" />
               </Panel>
-              <TextBlock Grid.Column="1" Classes="link" FontSize="12.5" Text="{Binding Code}" VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Classes="link" Classes.helpLink="{Binding HasHelpLink}" FontSize="12.5" Text="{Binding Code}"
+                         VerticalAlignment="Center" Tag="code" ToolTip.Tip="{Binding HelpLinkToolTip}" TextTrimming="CharacterEllipsis" Margin="0,0,6,0" />
               <DockPanel Grid.Column="2" Margin="0,0,12,0">
                 <Border DockPanel.Dock="Left" Classes="ciBadge" IsVisible="{Binding IsFromCi}" ToolTip.Tip="{Binding CiToolTip}">
                   <StackPanel Orientation="Horizontal" Spacing="5">
