@@ -31,6 +31,12 @@
     <PackageVersion Include="Basic.Reference.Assemblies.Net100" Version="1.8.13" />
   </ItemGroup>
 
+  <ItemGroup Label="Packages">
+    <!-- NuGet's own version-range and target-framework logic, used by TabStudio.Packages to restore on the device. -->
+    <PackageVersion Include="NuGet.Frameworks" Version="6.14.0" />
+    <PackageVersion Include="NuGet.Versioning" Version="6.14.0" />
+  </ItemGroup>
+
   <ItemGroup Label="Infrastructure">
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
   </ItemGroup>

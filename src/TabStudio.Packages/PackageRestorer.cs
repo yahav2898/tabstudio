@@ -1,0 +1,278 @@
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using NuGet.Frameworks;
+using TabStudio.Core.Diagnostics;
+using TabStudio.Core.Workspaces;
+using TabStudio.Packages.Assets;
+using TabStudio.Packages.Caching;
+using TabStudio.Packages.Feeds;
+using TabStudio.Packages.Installation;
+using TabStudio.Packages.Resolution;
+
+namespace TabStudio.Packages;
+
+/// <summary>
+/// Restores the NuGet packages of a project on the device: resolves its package references to a dependency graph,
+/// downloads what is missing into the global packages folder and selects the assemblies to compile and run with.
+/// </summary>
+/// <remarks>
+/// <para>
+/// Everything happens in-process, without MSBuild or the .NET SDK, so it works on Android. Resolution follows
+/// NuGet's rules (lowest applicable version, direct and nearest wins, cousin dependencies) and reports problems
+/// with NuGet's diagnostic ids. Packages come from NuGet V3 feeds over HTTP and from local folders.
+/// </para>
+/// <para>
+/// A successful restore is remembered in the project's <c>obj/tabstudio.restore.json</c>. While the inputs stay
+/// the same, the next restore reads that file and returns at once, without touching the network. Packages that
+/// are already in the global packages folder are never downloaded again, and when the sources cannot be reached
+/// the installed versions are used, so a project restored once keeps working offline.
+/// </para>
+/// <para>An instance is immutable and can restore several projects at once.</para>
+/// </remarks>
+public sealed class PackageRestorer
+{
+    /// <summary>The name of the restore cache file in a project's <c>obj</c> folder.</summary>
+    public const string CacheFileName = "tabstudio.restore.json";
+
+    private readonly HttpClient _http;
+    private readonly NuGetFramework _framework;
+    private readonly List<NuGetFramework> _fallback;
+    private readonly FrameworkPackages _frameworkPackages;
+    private readonly GlobalPackagesFolder _packages;
+
+    /// <summary>Creates a restorer.</summary>
+    /// <param name="options">Where packages come from and go to, and what they are restored for.</param>
+    /// <param name="http">The client for web sources. The caller owns it and decides its timeout and proxy.</param>
+    /// <exception cref="ArgumentException">The options name no packages folder or an unknown target framework.</exception>
+    public PackageRestorer(PackageRestoreOptions options, HttpClient http)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(http);
+        if (string.IsNullOrWhiteSpace(options.GlobalPackagesFolder))
+        {
+            throw new ArgumentException("The options must name a global packages folder.", nameof(options));
+        }
+
+        var framework = NuGetFramework.Parse(options.TargetFramework);
+        if (framework.IsUnsupported || framework.IsAny)
+        {
+            throw new ArgumentException($"'{options.TargetFramework}' is not a target framework.", nameof(options));
+        }
+
+        Options = options;
+        _http = http;
+        _framework = framework;
+        _fallback = options.AssetTargetFallback
+            .Select(name => NuGetFramework.Parse(name))
+            .Where(f => !f.IsUnsupported)
+            .ToList();
+        _frameworkPackages = new FrameworkPackages(options.FrameworkAssemblyNames, framework);
+        _packages = new GlobalPackagesFolder(options.GlobalPackagesFolder);
+    }
+
+    /// <summary>The options the restorer was created with.</summary>
+    public PackageRestoreOptions Options { get; }
+
+    /// <summary>The restore cache file of a project: <c>obj/tabstudio.restore.json</c> next to the project file.</summary>
+    /// <param name="project">The project.</param>
+    public static string GetCacheFilePath(ProjectInfo project)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+        return Path.Combine(project.DirectoryPath, "obj", CacheFileName);
+    }
+
+    /// <summary>Restores the packages of a project.</summary>
+    /// <param name="project">The project whose <c>PackageReference</c> items to restore.</param>
+    /// <param name="progress">Receives progress for the status bar, or <see langword="null"/>.</param>
+    /// <param name="cancellationToken">Cancels the restore. Packages that finished downloading stay installed.</param>
+    /// <returns>
+    /// The packages and their assemblies, and every problem found. Problems never throw: a package that cannot be
+    /// restored is an error in <see cref="RestoreResult.Diagnostics"/>, and the others are still restored.
+    /// </returns>
+    public async Task<RestoreResult> RestoreAsync(ProjectInfo project, IProgress<RestoreProgress>? progress = null, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+
+        var stopwatch = Stopwatch.StartNew();
+        var diagnostics = new List<BuildDiagnostic>();
+        var dependencies = ProjectPackageReferences.Read(project, diagnostics);
+        var cachePath = GetCacheFilePath(project);
+        var inputsHash = RestoreCache.ComputeInputsHash(dependencies, Options);
+
+        // A reference that could not be read is not in the hash, so the cache cannot vouch for the project.
+        var referencesValid = diagnostics.All(d => d.Severity != DiagnosticSeverityLevel.Error);
+        if (Options.UseRestoreCache && referencesValid && RestoreCache.TryRead(cachePath, inputsHash, project.Name) is { } cached)
+        {
+            progress?.Report(new RestoreProgress(RestoreStage.Completed, $"The packages of {project.Name} are up to date", cached.Packages.Count, cached.Packages.Count));
+            return cached with { Duration = stopwatch.Elapsed };
+        }
+
+        diagnostics.AddRange(dependencies
+            .Where(d => _frameworkPackages.Provides(d.Id, d.Range))
+            .Select(d => PackageDiagnostics.Warning(
+                PackageDiagnosticIds.RedundantFrameworkPackage,
+                $"{d.Id} is part of {Options.TargetFramework}, so the reference to it is probably unnecessary. Its assemblies are not used.",
+                project.Name)));
+
+        IReadOnlyList<RestoredPackage> packages = [];
+        if (dependencies.Count > 0)
+        {
+            progress?.Report(new RestoreProgress(RestoreStage.Resolving, $"Resolving the packages of {project.Name}", 0, 0));
+            var finder = new PackageFinder(CreateFeeds(), _packages, _framework, _fallback, _frameworkPackages, progress);
+            var resolution = await new DependencyResolver(finder).ResolveAsync(project.Name, dependencies, cancellationToken).ConfigureAwait(false);
+            diagnostics.AddRange(resolution.Diagnostics);
+
+            foreach (var node in resolution.Unresolved)
+            {
+                if (await finder.DescribeUnresolvedAsync(node, project.Name, cancellationToken).ConfigureAwait(false) is { } unresolved)
+                {
+                    diagnostics.Add(unresolved);
+                }
+            }
+
+            diagnostics.AddRange(finder.Failures.Select(f => DescribeSourceFailure(f, project.Name, isError: resolution.Unresolved.Count > 0)));
+            packages = await InstallAsync(resolution.Packages, project.Name, diagnostics, progress, cancellationToken).ConfigureAwait(false);
+        }
+
+        var result = new RestoreResult
+        {
+            ProjectName = project.Name,
+            Packages = packages,
+            CompileAssemblies = Combine(packages, p => p.CompileAssemblies),
+            RuntimeAssemblies = Combine(packages, p => p.RuntimeAssemblies),
+            Diagnostics = PackageDiagnostics.Sort(diagnostics),
+            Duration = stopwatch.Elapsed,
+        };
+
+        if (Options.UseRestoreCache && result.Success)
+        {
+            RestoreCache.TryWrite(cachePath, inputsHash, result);
+        }
+
+        progress?.Report(new RestoreProgress(RestoreStage.Completed, $"Restored {packages.Count} packages for {project.Name}", packages.Count, packages.Count));
+        return result;
+    }
+
+    private List<IPackageFeed> CreateFeeds() =>
+        Options.Sources
+            .Select(source => source.IsLocal ? (IPackageFeed)new LocalFolderPackageFeed(source) : new HttpPackageFeed(source, _http))
+            .ToList();
+
+    /// <summary>Downloads the packages that are not installed yet and selects the assets of every package.</summary>
+    private async Task<IReadOnlyList<RestoredPackage>> InstallAsync(
+        IReadOnlyList<ResolvedPackage> resolved,
+        string projectName,
+        List<BuildDiagnostic> diagnostics,
+        IProgress<RestoreProgress>? progress,
+        CancellationToken cancellationToken)
+    {
+        var restored = new RestoredPackage?[resolved.Count];
+        var problems = new ConcurrentQueue<BuildDiagnostic>();
+        var completed = 0;
+        var parallel = new ParallelOptions { MaxDegreeOfParallelism = Math.Max(1, Options.MaxParallelDownloads), CancellationToken = cancellationToken };
+
+        await Parallel.ForEachAsync(Enumerable.Range(0, resolved.Count), parallel, async (index, token) =>
+        {
+            var package = resolved[index];
+            var match = package.Match;
+            var name = $"{match.Id} {match.Version.ToNormalizedString()}";
+            try
+            {
+                var directory = await InstallAsync(match, token).ConfigureAwait(false);
+                restored[index] = SelectAssets(package, directory, projectName, problems);
+            }
+            catch (PackageSourceException ex)
+            {
+                problems.Enqueue(DescribeSourceFailure(ex, projectName, isError: true));
+            }
+            catch (InvalidPackageException ex)
+            {
+                problems.Enqueue(PackageDiagnostics.Error(PackageDiagnosticIds.InvalidPackage, $"{name} could not be installed: {ex.Message}", projectName));
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                problems.Enqueue(PackageDiagnostics.Error(
+                    PackageDiagnosticIds.PackagesFolderFailed,
+                    $"{name} could not be written to the packages folder '{_packages.Root}': {ex.Message}",
+                    projectName));
+            }
+
+            var done = Interlocked.Increment(ref completed);
+            progress?.Report(new RestoreProgress(RestoreStage.Downloading, $"Restored {name}", done, resolved.Count));
+        }).ConfigureAwait(false);
+
+        diagnostics.AddRange(problems);
+        return restored.OfType<RestoredPackage>().ToList();
+    }
+
+    private async Task<string> InstallAsync(PackageMatch match, CancellationToken cancellationToken)
+    {
+        if (_packages.IsInstalled(match.Id, match.Version))
+        {
+            return _packages.GetPackageDirectory(match.Id, match.Version);
+        }
+
+        var feed = match.Feed ?? throw new InvalidPackageException(
+            $"The package was removed from the packages folder '{_packages.Root}' during the restore. Restore again to download it.");
+        return await _packages.InstallAsync(feed, match.Id, match.Version, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>Selects the assemblies of an installed package, leaving out those the framework provides.</summary>
+    private RestoredPackage SelectAssets(ResolvedPackage package, string directory, string projectName, ConcurrentQueue<BuildDiagnostic> problems)
+    {
+        var match = package.Match;
+        var name = $"{match.Id} {match.Version.ToNormalizedString()}";
+        var files = Directory.EnumerateFiles(directory, "*", SearchOption.AllDirectories)
+            .Select(file => Path.GetRelativePath(directory, file).Replace(Path.DirectorySeparatorChar, '/'));
+        var assets = AssetSelector.Select(files, _framework, _fallback);
+
+        if (!assets.IsCompatible)
+        {
+            var supported = string.Join(", ", assets.SupportedFrameworks.Select(f => f.GetShortFolderName()).Order(StringComparer.Ordinal));
+            problems.Enqueue(PackageDiagnostics.Error(
+                PackageDiagnosticIds.IncompatibleFramework,
+                $"Package {name} is not compatible with {Options.TargetFramework} ({_framework.DotNetFrameworkName}). It supports: {supported}.",
+                projectName));
+        }
+        else if (assets.FallbackFramework is { } fallback)
+        {
+            problems.Enqueue(PackageDiagnostics.Warning(
+                PackageDiagnosticIds.FallbackFramework,
+                $"Package {name} was restored using '{fallback.GetShortFolderName()}' instead of the target framework '{Options.TargetFramework}'. It may not be fully compatible.",
+                projectName));
+        }
+
+        var compile = ToFullPaths(directory, assets.CompileAssemblies);
+        var runtime = ToFullPaths(directory, assets.RuntimeAssemblies);
+        var providedByFramework = assets.CompileAssemblies.Count + assets.RuntimeAssemblies.Count > 0 && compile.Count + runtime.Count == 0;
+        return new RestoredPackage(match.Id, match.Version.ToNormalizedString(), directory, package.IsDirect, compile, runtime, providedByFramework);
+    }
+
+    /// <summary>Turns relative asset paths into full paths, without the assemblies the framework already has.</summary>
+    private List<string> ToFullPaths(string directory, IReadOnlyList<string> relativePaths) =>
+        relativePaths
+            .Where(path => !_frameworkPackages.IsFrameworkAssembly(Path.GetFileNameWithoutExtension(path)))
+            .Select(path => Path.Combine(directory, path.Replace('/', Path.DirectorySeparatorChar)))
+            .ToList();
+
+    /// <summary>The assemblies of every package, without two assemblies of the same name: the first package wins.</summary>
+    private static List<string> Combine(IReadOnlyList<RestoredPackage> packages, Func<RestoredPackage, IReadOnlyList<string>> select) =>
+        packages
+            .SelectMany(select)
+            .DistinctBy(path => Path.GetFileNameWithoutExtension(path), StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+    private static BuildDiagnostic DescribeSourceFailure(PackageSourceException failure, string projectName, bool isError)
+    {
+        var id = failure.IsUnreachable ? PackageDiagnosticIds.NetworkUnreachable : PackageDiagnosticIds.SourceFailed;
+        var message = failure.IsUnreachable
+            ? $"{failure.Message} Check the device's internet connection; packages restored before keep working offline."
+            : failure.Message;
+        if (!isError)
+        {
+            message += " Packages already on this device were used instead.";
+        }
+
+        return isError ? PackageDiagnostics.Error(id, message, projectName) : PackageDiagnostics.Warning(id, message, projectName);
+    }
+}

@@ -517,7 +517,7 @@ public sealed partial class RoslynWorkspaceHost : IDisposable
             parseOptions: CSharpCompiler.CreateParseOptions(_optimize),
             documents: documents,
             projectReferences: projectReferences,
-            metadataReferences: _frameworkReferences);
+            metadataReferences: GetMetadataReferences(project));
     }
 
     private static DocumentInfo CreateDocumentInfo(DocumentId id, string path, string text, bool isGenerated) =>

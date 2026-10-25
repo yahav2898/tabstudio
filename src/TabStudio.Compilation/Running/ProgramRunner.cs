@@ -66,9 +66,30 @@ public sealed class ProgramRunner
     /// <param name="console">Receives the program's output.</param>
     /// <param name="input">Standard input, or <see langword="null"/> for an empty input.</param>
     /// <param name="cancellationToken">Stops the program.</param>
+    public Task<RunResult> RunAsync(
+        CompiledAssembly entryAssembly,
+        IReadOnlyList<CompiledAssembly> dependencies,
+        IReadOnlyList<string> arguments,
+        IConsoleSink console,
+        ConsoleInput? input = null,
+        CancellationToken cancellationToken = default) =>
+        RunAsync(entryAssembly, dependencies, packageAssemblies: [], arguments, console, input, cancellationToken);
+
+    /// <summary>Runs a program that uses NuGet packages and waits for it to finish or be stopped.</summary>
+    /// <param name="entryAssembly">The program's assembly.</param>
+    /// <param name="dependencies">Assemblies of referenced projects, loaded on demand.</param>
+    /// <param name="packageAssemblies">
+    /// Full paths of the package assemblies the program may load, such as <c>RestoreResult.RuntimeAssemblies</c>.
+    /// They are found by simple name (the file name without <c>.dll</c>) and loaded from disk on demand.
+    /// </param>
+    /// <param name="arguments">Command-line arguments passed to <c>Main</c>.</param>
+    /// <param name="console">Receives the program's output.</param>
+    /// <param name="input">Standard input, or <see langword="null"/> for an empty input.</param>
+    /// <param name="cancellationToken">Stops the program.</param>
     public async Task<RunResult> RunAsync(
         CompiledAssembly entryAssembly,
         IReadOnlyList<CompiledAssembly> dependencies,
+        IReadOnlyList<string> packageAssemblies,
         IReadOnlyList<string> arguments,
         IConsoleSink console,
         ConsoleInput? input = null,
@@ -76,12 +97,13 @@ public sealed class ProgramRunner
     {
         ArgumentNullException.ThrowIfNull(entryAssembly);
         ArgumentNullException.ThrowIfNull(dependencies);
+        ArgumentNullException.ThrowIfNull(packageAssemblies);
         ArgumentNullException.ThrowIfNull(arguments);
         ArgumentNullException.ThrowIfNull(console);
 
         await ConsoleGate.WaitAsync(cancellationToken).ConfigureAwait(false);
 
-        var context = new ProgramLoadContext(entryAssembly.Name, dependencies);
+        var context = new ProgramLoadContext(entryAssembly.Name, dependencies, packageAssemblies);
         var output = new CallbackTextWriter(console.WriteOutput);
         var error = new CallbackTextWriter(console.WriteError);
         var (previousOut, previousError, previousIn) = (Console.Out, Console.Error, Console.In);
@@ -170,17 +192,23 @@ public sealed class ProgramRunner
     }
 
     /// <summary>
-    /// Loads a program and the projects it references from memory. Everything else, such as the .NET
-    /// libraries, comes from the default context, which is the runtime TabStudio itself runs on.
+    /// Loads a program and the projects it references from memory, and its NuGet packages from disk. Everything
+    /// else, such as the .NET libraries, comes from the default context, which is the runtime TabStudio itself runs on.
     /// </summary>
     private sealed class ProgramLoadContext : AssemblyLoadContext
     {
         private readonly Dictionary<string, CompiledAssembly> _dependencies;
+        private readonly Dictionary<string, string> _packageAssemblies = new(StringComparer.OrdinalIgnoreCase);
 
-        public ProgramLoadContext(string name, IReadOnlyList<CompiledAssembly> dependencies)
+        public ProgramLoadContext(string name, IReadOnlyList<CompiledAssembly> dependencies, IReadOnlyList<string> packageAssemblies)
             : base($"TabStudio program: {name}", isCollectible: SupportsUnloading)
         {
             _dependencies = dependencies.ToDictionary(d => d.Name, StringComparer.OrdinalIgnoreCase);
+            foreach (var path in packageAssemblies)
+            {
+                // The first assembly of a name wins, as in the restore's list.
+                _packageAssemblies.TryAdd(Path.GetFileNameWithoutExtension(path), path);
+            }
         }
 
         /// <summary>Mono, which runs .NET on Android, does not support unloading assemblies.</summary>
@@ -201,9 +229,19 @@ public sealed class ProgramRunner
             }
         }
 
-        protected override Assembly? Load(AssemblyName assemblyName) =>
-            assemblyName.Name is { } name && _dependencies.TryGetValue(name, out var compiled)
-                ? LoadFromImage(compiled)
-                : null;
+        protected override Assembly? Load(AssemblyName assemblyName)
+        {
+            if (assemblyName.Name is not { } name)
+            {
+                return null;
+            }
+
+            if (_dependencies.TryGetValue(name, out var compiled))
+            {
+                return LoadFromImage(compiled);
+            }
+
+            return _packageAssemblies.TryGetValue(name, out var path) ? LoadFromAssemblyPath(path) : null;
+        }
     }
 }

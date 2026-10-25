@@ -41,7 +41,10 @@ public sealed class ProjectBuilder
     /// <summary>Reported for a project in a language TabStudio cannot compile.</summary>
     public const string UnsupportedLanguageId = "TS2002";
 
-    /// <summary>Reported for a NuGet package that has not been restored.</summary>
+    /// <summary>
+    /// Reported for each package reference of a project whose packages have not been restored, that is, for which
+    /// <see cref="RoslynWorkspaceHost.SetPackageReferences"/> was never called.
+    /// </summary>
     public const string UnrestoredPackageId = "TS2003";
 
     private readonly RoslynWorkspaceHost _host;
@@ -81,12 +84,15 @@ public sealed class ProjectBuilder
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            diagnostics.AddRange(current.PackageReferences.Select(package => new BuildDiagnostic(
-                UnrestoredPackageId,
-                DiagnosticSeverityLevel.Warning,
-                $"NuGet package '{package.Name}' is not restored on this device, so code that uses it will not compile.",
-                null,
-                current.Name)));
+            if (!_host.ArePackagesRestored(current.FilePath))
+            {
+                diagnostics.AddRange(current.PackageReferences.Select(package => new BuildDiagnostic(
+                    UnrestoredPackageId,
+                    DiagnosticSeverityLevel.Warning,
+                    $"NuGet package '{package.Name}' is not restored on this device, so code that uses it will not compile.",
+                    null,
+                    current.Name)));
+            }
 
             var isEntry = string.Equals(current.FilePath, project.FilePath, StringComparison.Ordinal);
             var result = await _host.EmitAsync(current.FilePath, checkInProcessSafety: isEntry && current.IsExecutable, cancellationToken).ConfigureAwait(false);
