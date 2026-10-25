@@ -94,11 +94,13 @@ jobs:
           mkdir -p ci-out
           sed -i 's/private static byte\[\] Frame(/internal static byte[] Frame(/; s/private const int /internal const int /' tests/TabStudio.App.Tests/Platform/QrFrameDecoderTests.cs
           cat > tests/TabStudio.Link.Tests/QrRateProbe.cs <<'CS'
+          using System.Diagnostics;
           using System.Security.Cryptography;
           using TabStudio.Link.Qr;
           using TabStudio.Link.Security;
           using ZXing;
           using ZXing.Common;
+          using ZXing.Multi.QrCode;
           using ZXing.QrCode;
           using ZXing.QrCode.Internal;
 
@@ -110,67 +112,31 @@ jobs:
               public void Measure()
               {
                   const int count = 3000;
+                  int single = 0, singleHarder = 0, withFallback = 0, theirsSingle = 0, theirsFallback = 0;
                   var lines = new List<string>();
-                  var ours = new int[8];
-                  var oursFailed = new int[8];
-                  var oursFailedTotal = 0;
-                  var oursPure = 0;
-                  var oursWithZxingMask = 0;
-                  var theirs = new int[8];
-                  var theirsFailed = 0;
-                  var sameMask = 0;
                   for (var n = 0; n < count; n++)
                   {
                       var fingerprint = LinkFingerprint.FromPublicKey(RandomNumberGenerator.GetBytes(91));
                       var text = new LinkInvitation("Yahav's Pixel 9 Pro", ["192.168.1.23", "10.0.0.5"], 47811, fingerprint, LinkPairingCode.Create()).ToUri();
                       var code = QrCode.Encode(text);
-                      ours[code.Mask]++;
+                      Func<int, int, bool> ours = (x, y) => code[x, y];
                       var reference = Encoder.encode(text, ErrorCorrectionLevel.M);
-                      theirs[reference.MaskPattern]++;
-                      if (reference.MaskPattern == code.Mask)
-                      {
-                          sameMask++;
-                      }
-
-                      if (Decode((x, y) => reference.Matrix[x, y] == 1, reference.Matrix.Width, pure: false) != text)
-                      {
-                          theirsFailed++;
-                      }
-
-                      if (Decode((x, y) => code[x, y], code.Size, pure: false) != text)
-                      {
-                          oursFailed[code.Mask]++;
-                          oursFailedTotal++;
-                          var pure = Decode((x, y) => code[x, y], code.Size, pure: true) == text;
-                          if (pure)
-                          {
-                              oursPure++;
-                          }
-
-                          if (reference.MaskPattern != code.Mask)
-                          {
-                              oursWithZxingMask++;
-                          }
-
-                          if (lines.Count < 12)
-                          {
-                              lines.Add($"  ours mask {code.Mask}, ZXing's encoder chooses mask {reference.MaskPattern}; read without the finder search (PURE_BARCODE): {pure}; {text}");
-                          }
-                      }
+                      Func<int, int, bool> theirs = (x, y) => reference.Matrix[x, y] == 1;
+                      if (Decode(ours, code.Size, false, false) != text) single++;
+                      if (Decode(ours, code.Size, true, false) != text) singleHarder++;
+                      if (Decode(ours, code.Size, false, true) != text) { withFallback++; if (lines.Count < 10) lines.Add("  still fails: " + text); }
+                      if (Decode(theirs, reference.Matrix.Width, false, false) != text) theirsSingle++;
+                      if (Decode(theirs, reference.Matrix.Width, false, true) != text) theirsFallback++;
                   }
 
-                  var summary = new List<string>
-                  {
-                      $"TabStudio's codes, drawn cleanly at 4 px a module: {oursFailedTotal} of {count} not read by ZXing; {oursPure} of those read when ZXing is told the image is exactly the code (no finder search); ZXing's encoder chose another mask for {oursWithZxingMask} of them",
-                      $"ZXing's own codes for the same texts: {theirsFailed} of {count} not read; same mask as TabStudio for {sameMask} of {count}",
-                      $"Masks chosen by TabStudio 0-7: {string.Join(" ", ours)}; failures by mask: {string.Join(" ", oursFailed)}",
-                      $"Masks chosen by ZXing    0-7: {string.Join(" ", theirs)}",
-                      "First failures:",
-                  };
-                  File.WriteAllLines(Environment.GetEnvironmentVariable("QR_PROBE_OUT")!, [.. summary, .. lines]);
+                  File.WriteAllLines(Environment.GetEnvironmentVariable("QR_PROBE_OUT")!, [
+                      $"Clean codes at 4 px a module, {count} random invitations, not read:",
+                      $"  TabStudio's codes: QR reader {single}, with TRY_HARDER {singleHarder}, QR reader then multiple-code reader {withFallback}",
+                      $"  ZXing's own codes for the same texts: QR reader {theirsSingle}, then multiple-code reader {theirsFallback}",
+                      .. lines]);
               }
 
-              private static string? Decode(Func<int, int, bool> dark, int modules, bool pure)
+              private static string? Decode(Func<int, int, bool> dark, int modules, bool harder, bool fallback)
               {
                   const int scale = 4;
                   const int quiet = 4;
@@ -198,27 +164,26 @@ jobs:
 
                   var source = new RGBLuminanceSource(pixels, size, size, RGBLuminanceSource.BitmapFormat.Gray8);
                   var hints = new Dictionary<DecodeHintType, object> { [DecodeHintType.CHARACTER_SET] = "UTF-8" };
-                  if (pure)
+                  if (harder)
                   {
-                      hints[DecodeHintType.PURE_BARCODE] = true;
+                      hints[DecodeHintType.TRY_HARDER] = true;
                   }
 
-                  try
-                  {
-                      return new QRCodeReader().decode(new BinaryBitmap(new HybridBinarizer(source)), hints)?.Text;
-                  }
-                  catch (Exception)
-                  {
-                      return null;
-                  }
+                  var bitmap = new BinaryBitmap(new HybridBinarizer(source));
+                  return new QRCodeReader().decode(bitmap, hints)?.Text
+                      ?? (fallback ? new QRCodeMultiReader().decodeMultiple(bitmap, hints)?.FirstOrDefault()?.Text : null);
               }
           }
           CS
           cat > tests/TabStudio.App.Tests/Platform/QrRateProbe.cs <<'CS'
+          using System.Diagnostics;
           using System.Security.Cryptography;
           using TabStudio.App.Platform;
           using TabStudio.Link.Qr;
           using TabStudio.Link.Security;
+          using ZXing;
+          using ZXing.Common;
+          using ZXing.QrCode;
 
           namespace TabStudio.App.Tests.Platform;
 
@@ -227,51 +192,63 @@ jobs:
               [Fact]
               public void Measure()
               {
-                  var lines = new List<string>();
-                  var failedByRotation = new int[4];
-                  var failedData = 0;
-                  var failedEverySeed = 0;
                   const int count = 600;
+                  var before = new int[4];
+                  var after = new int[4];
+                  var lines = new List<string>();
                   for (var n = 0; n < count; n++)
                   {
                       var fingerprint = LinkFingerprint.FromPublicKey(RandomNumberGenerator.GetBytes(91));
                       var invitation = new LinkInvitation("Pixel 9", ["192.168.1.23", "10.0.0.7"], 50517, fingerprint, LinkPairingCode.Create()).ToUri();
                       var code = QrCode.Encode(invitation);
-                      var any = false;
                       for (var r = 0; r < 4; r++)
                       {
-                          var degrees = r * 90;
-                          var text = QrFrameDecoder.Decode(QrFrameDecoderTests.Frame(code, degrees, seed: degrees), QrFrameDecoderTests.RowStride, QrFrameDecoderTests.Width, QrFrameDecoderTests.Height);
-                          if (text != invitation)
+                          var frame = QrFrameDecoderTests.Frame(code, r * 90, seed: n + (r * 90));
+                          if (SingleReader(frame) != invitation)
                           {
-                              failedByRotation[r]++;
-                              any = true;
-                              // The same code with other noise: does the data or the noise decide?
-                              var seeds = Enumerable.Range(1, 6).Count(s => QrFrameDecoder.Decode(QrFrameDecoderTests.Frame(code, degrees, seed: 1000 + s), QrFrameDecoderTests.RowStride, QrFrameDecoderTests.Width, QrFrameDecoderTests.Height) != invitation);
-                              if (seeds == 6)
-                              {
-                                  failedEverySeed++;
-                              }
+                              before[r]++;
+                          }
 
-                              if (lines.Count < 15)
+                          if (QrFrameDecoder.Decode(frame, QrFrameDecoderTests.RowStride, QrFrameDecoderTests.Width, QrFrameDecoderTests.Height) != invitation)
+                          {
+                              after[r]++;
+                              if (lines.Count < 10)
                               {
-                                  lines.Add($"  {degrees} degrees, mask {code.Mask}, failed with {seeds} of 6 other noise seeds: {invitation}");
+                                  lines.Add($"  still fails at {r * 90} degrees, seed {n + (r * 90)}: {invitation}");
                               }
                           }
                       }
-
-                      if (any)
-                      {
-                          failedData++;
-                      }
                   }
 
-                  var summary = new List<string>
+                  // The cost on frames without a code, where both readers run.
+                  var empty = QrFrameDecoderTests.Frame(null, 0, seed: 7);
+                  var clock = Stopwatch.StartNew();
+                  for (var i = 0; i < 50; i++)
                   {
-                      $"Camera-frame decode (QrFrameDecoderTests frames): {failedData} of {count} invitations failed at some rotation; by rotation 0/90/180/270: {string.Join("/", failedByRotation)}; failed with every other noise seed: {failedEverySeed}",
-                      "First failures:",
-                  };
-                  File.WriteAllLines(Environment.GetEnvironmentVariable("QR_PROBE_OUT")!, [.. summary, .. lines]);
+                      _ = SingleReader(empty);
+                  }
+
+                  var singleMs = clock.Elapsed.TotalMilliseconds / 50;
+                  clock.Restart();
+                  for (var i = 0; i < 50; i++)
+                  {
+                      _ = QrFrameDecoder.Decode(empty, QrFrameDecoderTests.RowStride, QrFrameDecoderTests.Width, QrFrameDecoderTests.Height);
+                  }
+
+                  var bothMs = clock.Elapsed.TotalMilliseconds / 50;
+                  File.WriteAllLines(Environment.GetEnvironmentVariable("QR_PROBE_OUT")!, [
+                      $"Camera frames, {count} random invitations, not read at 0/90/180/270 degrees:",
+                      $"  QR reader alone: {string.Join("/", before)}",
+                      $"  QrFrameDecoder (QR reader, then the multiple-code reader): {string.Join("/", after)}",
+                      $"A frame without a code: {singleMs:0.0} ms with the QR reader alone, {bothMs:0.0} ms with both",
+                      .. lines]);
+              }
+
+              private static string? SingleReader(byte[] frame)
+              {
+                  var source = new PlanarYUVLuminanceSource(frame, QrFrameDecoderTests.RowStride, QrFrameDecoderTests.Height, 0, 0, QrFrameDecoderTests.Width, QrFrameDecoderTests.Height, false);
+                  var hints = new Dictionary<DecodeHintType, object> { [DecodeHintType.CHARACTER_SET] = "UTF-8", [DecodeHintType.TRY_HARDER] = true };
+                  return new QRCodeReader().decode(new BinaryBitmap(new HybridBinarizer(source)), hints)?.Text;
               }
           }
           CS
