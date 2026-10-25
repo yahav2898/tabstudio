@@ -231,6 +231,7 @@ public sealed partial class PullRequestViewModel : ObservableObject, IDisposable
             await LoadReviewAsync(client, token);
             IsLoaded = true;
             OnHeaderChanged();
+            await LoadChecksAsync(client, details.Result.Info.Head.Sha, token);
         }
         catch (OperationCanceledException)
         {

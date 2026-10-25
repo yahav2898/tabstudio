@@ -1,3 +1,4 @@
+using System.Globalization;
 using TabStudio.SourceControl.GitHub;
 
 namespace TabStudio.App.Services.Ci;
@@ -110,6 +111,27 @@ public sealed record CiSummary(string Sha, CiState State, IReadOnlyList<CiCheck>
 
     /// <summary>The first seven characters of the commit's hash.</summary>
     public string ShortSha => Sha.Length > 7 ? Sha[..7] : Sha;
+
+    /// <summary>"2 of 5 checks done · 1 failed", "All 5 checks passed", or that none has reported.</summary>
+    public string Description
+    {
+        get
+        {
+            var culture = CultureInfo.CurrentCulture;
+            var total = Total.ToString(culture);
+            return State switch
+            {
+                CiState.None => "No checks have reported on this commit yet.",
+                CiState.Pending => Total == 1 ? "1 check queued" : $"{total} checks queued",
+                CiState.Running => FailedCount > 0
+                    ? $"{Done.ToString(culture)} of {total} checks done · {FailedCount.ToString(culture)} failed"
+                    : $"{Done.ToString(culture)} of {total} checks done",
+                CiState.Passed => Total == 1 ? "The check passed" : $"All {total} checks passed",
+                CiState.Failed => $"{FailedCount.ToString(culture)} of {total} checks failed",
+                _ => $"Cancelled · {Done.ToString(culture)} of {total} checks done",
+            };
+        }
+    }
 
     /// <summary>A commit no check has reported on.</summary>
     /// <param name="sha">The commit.</param>

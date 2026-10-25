@@ -1,6 +1,7 @@
 using System.Text.Json.Nodes;
 using Avalonia.Headless.XUnit;
 using TabStudio.App.Services.Agent;
+using TabStudio.App.ViewModels.Actions;
 using TabStudio.App.ViewModels.PullRequests;
 using TabStudio.SourceControl.GitHub;
 
@@ -96,6 +97,32 @@ public sealed class PullRequestReviewTests
         await scenario.Workspace.ShowPullRequestAsync(1);
         Assert.Single(scenario.Workspace.Documents, d => d.IsPullRequest);
         Assert.Same(document, scenario.Workspace.ActiveDocument);
+    }
+
+    [AvaloniaFact]
+    public async Task The_header_shows_the_checks_of_the_head_commit()
+    {
+        using var scenario = new PullRequestScenario();
+        await scenario.OpenAsync();
+        var github = scenario.GitHub;
+        var workflow = github.AddWorkflow(PullRequestScenario.Repository, "CI", ".github/workflows/ci.yml");
+        github.AddRun(
+            PullRequestScenario.Repository, workflow, github.Head(PullRequestScenario.Repository, PullRequestScenario.Branch),
+            PullRequestScenario.Branch, "completed", "failure",
+            new FakeJob { Name = "Build" },
+            new FakeJob { Name = "Test", Conclusion = "failure" });
+
+        var pullRequest = await scenario.OpenPullRequestAsync(1);
+        await UiTestHelpers.WaitUntilAsync(() => pullRequest.Checks is not null, because: "the head commit's checks");
+
+        Assert.True(pullRequest.HasChecks);
+        Assert.Equal(RunVisual.Failed, pullRequest.ChecksVisual);
+        Assert.Equal("1 of 2 checks failed", pullRequest.ChecksText);
+
+        // The draft pull request's branch has no runs, so its header shows no checks.
+        var draft = await scenario.OpenPullRequestAsync(2);
+        await UiTestHelpers.WaitUntilAsync(() => draft.Checks is not null, because: "the draft's checks");
+        Assert.False(draft.HasChecks);
     }
 
     [AvaloniaFact]

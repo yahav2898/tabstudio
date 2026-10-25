@@ -73,30 +73,9 @@ public sealed partial class ActionsViewModel
         : string.Empty;
 
     /// <summary>"2 of 5 checks done · 1 failed", or that none has reported.</summary>
-    public string ChecksSummary
-    {
-        get
-        {
-            if (Monitor.Summary is not { } summary)
-            {
-                return IsLinked ? "Reading this commit's checks…" : string.Empty;
-            }
-
-            var culture = CultureInfo.CurrentCulture;
-            var total = summary.Total.ToString(culture);
-            return summary.State switch
-            {
-                CiState.None => "No checks have reported on this commit yet.",
-                CiState.Pending => summary.Total == 1 ? "1 check queued" : $"{total} checks queued",
-                CiState.Running => summary.FailedCount > 0
-                    ? $"{summary.Done.ToString(culture)} of {total} checks done · {summary.FailedCount.ToString(culture)} failed"
-                    : $"{summary.Done.ToString(culture)} of {total} checks done",
-                CiState.Passed => summary.Total == 1 ? "The check passed" : $"All {total} checks passed",
-                CiState.Failed => $"{summary.FailedCount.ToString(culture)} of {total} checks failed",
-                _ => $"Cancelled · {summary.Done.ToString(culture)} of {total} checks done",
-            };
-        }
-    }
+    public string ChecksSummary => Monitor.Summary is { } summary
+        ? summary.Description
+        : IsLinked ? "Reading this commit's checks…" : string.Empty;
 
     /// <summary>Called by the monitor after every poll: shows the state, and CI's diagnostics when something failed.</summary>
     private void OnMonitorChanged(object? sender, EventArgs e)
