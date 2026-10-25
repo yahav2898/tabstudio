@@ -112,7 +112,9 @@ build_abi() {
   export OBJCOPY="$toolchain/bin/llvm-objcopy"
   export OBJDUMP="$toolchain/bin/llvm-objdump"
 
-  # talloc, as a static library: configure with the answers a cross build cannot find out by running programs.
+  # talloc, as a static library: configure with the answers a cross build cannot find out by running programs,
+  # then compile talloc.c and the replacements it needs for functions the C library may lack (lib/replace) against
+  # the configuration that produced.
   tar -xzf "$downloads/talloc.tar.gz" -C "$dir"
   (
     cd "$dir/talloc-$TALLOC_VERSION"
@@ -146,8 +148,10 @@ EOF
     CFLAGS="-O2 -fPIC" ./configure --prefix="$dir/prefix" --disable-rpath --disable-python \
       --cross-compile --cross-answers=cross-answers.txt > "$dir/talloc-configure.log" 2>&1 \
       || { tail -n 40 "$dir/talloc-configure.log"; exit 1; }
-    make -j"$(nproc)" > "$dir/talloc-build.log" 2>&1 || { tail -n 40 "$dir/talloc-build.log"; exit 1; }
-    "$AR" rcs "$static/lib/libtalloc.a" bin/default/talloc*.o
+    local flags=(-O2 -fPIC -D_GNU_SOURCE=1 -D_XOPEN_SOURCE_EXTENDED=1 -D__STDC_WANT_LIB_EXT1__=1 -Ibin/default -I. -Ilib/replace)
+    "$CC" "${flags[@]}" -c talloc.c -o talloc.o
+    "$CC" "${flags[@]}" -c lib/replace/replace.c -o replace.o
+    "$AR" rcs "$static/lib/libtalloc.a" talloc.o replace.o
     cp talloc.h "$static/include/"
   )
 
