@@ -235,6 +235,54 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: bash build/ci/publish-logs.sh android-emulator ${{ job.status }}
 
+  # The Windows Bridge on real Windows: the desktop app builds for Windows, WPF, Windows Forms, Visual C++ and
+  # .NET Framework apps build and run through the bridge's service on loopback, their windows are captured and
+  # clicked through the input path, the WPF app is debugged with netcoredbg, and the bridge's own window and the
+  # tablet showing a WPF app are rendered for screenshots.
+  windows:
+    name: Windows Bridge on Windows
+    runs-on: windows-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - uses: actions/cache@v4
+        with:
+          path: .nuget/packages
+          key: nuget-windows-${{ hashFiles('Directory.Packages.props', '**/*.csproj') }}
+          restore-keys: nuget-windows-
+
+      - name: Build the desktop app and test the Windows Bridge
+        env:
+          TABSTUDIO_REAL_SERVERS: '1'
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+        run: |
+          mkdir -p ci-out/screenshots
+          status=0
+          dotnet build src/TabStudio.Desktop -c Release > ci-out/desktop-build.log 2>&1 || status=1
+          tail -n 30 ci-out/desktop-build.log
+          for project in tests/TabStudio.WindowsBridge.Tests tests/TabStudio.WindowsBridge.Windows.Tests; do
+            name=$(basename "$project")
+            dotnet test "$project" -c Release --logger "console;verbosity=normal" > "ci-out/$name.log" 2>&1 || status=1
+            tail -n 60 "ci-out/$name.log"
+          done
+          dotnet test tests/TabStudio.App.Tests -c Release --filter "FullyQualifiedName~WindowsBridge" --logger "console;verbosity=normal" > ci-out/TabStudio.App.Tests.log 2>&1 || status=1
+          tail -n 60 ci-out/TabStudio.App.Tests.log
+          exit $status
+
+      - name: Publish logs and screenshots
+        if: always() && github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs.sh windows ${{ job.status }}
+
   # Publishes a versioned release once every check has passed: for a v* tag, or on main when
   # Directory.Build.props has a version that has release notes in docs/releases and no release yet.
   release:
