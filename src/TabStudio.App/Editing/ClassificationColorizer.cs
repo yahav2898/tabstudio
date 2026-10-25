@@ -12,13 +12,19 @@ public sealed class ClassificationColorizer : DocumentColorizingTransformer
 {
     private TrackedRange<IBrush>[] _ranges = [];
 
+    /// <summary>
+    /// The colors of an installed color theme by classification, or <see langword="null"/> for TabStudio's own
+    /// (<see cref="SyntaxTheme"/>). Takes effect with the next <see cref="SetClassifications"/>.
+    /// </summary>
+    public Func<string, IBrush?>? Palette { get; set; }
+
     /// <summary>Replaces the colors with a new classification of the whole document.</summary>
     /// <param name="ranges">Classified spans in document order, with non-overlapping spans.</param>
     public void SetClassifications(IEnumerable<(int Start, int Length, string Classification)> ranges)
     {
         ArgumentNullException.ThrowIfNull(ranges);
         _ranges = ranges
-            .Select(r => (r.Start, r.Length, Brush: SyntaxTheme.For(r.Classification)))
+            .Select(r => (r.Start, r.Length, Brush: Palette is { } palette ? palette(r.Classification) : SyntaxTheme.For(r.Classification)))
             .Where(r => r.Brush is not null && r.Length > 0)
             .OrderBy(r => r.Start)
             .Select(r => new TrackedRange<IBrush>(r.Start, r.Length, r.Brush!))

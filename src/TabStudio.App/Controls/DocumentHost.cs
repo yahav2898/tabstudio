@@ -59,6 +59,29 @@ public sealed class DocumentHost : Panel
     /// <param name="document">The document.</param>
     public Control? ViewFor(object document) => _views.GetValueOrDefault(document);
 
+    /// <summary>
+    /// Builds a document's view again, in the same place, such as when what its editor is built with changed. The
+    /// document keeps its text, undo history and caret, which belong to it rather than to its view.
+    /// </summary>
+    /// <param name="document">The document.</param>
+    public void Rebuild(object document)
+    {
+        ArgumentNullException.ThrowIfNull(document);
+        if (ViewFactory is not { } factory || !_views.Remove(document, out var old))
+        {
+            return;
+        }
+
+        var index = Children.IndexOf(old);
+        Children.Remove(old);
+        (old as IDisposable)?.Dispose();
+        var view = factory(document);
+        view.IsVisible = false;
+        _views[document] = view;
+        Children.Insert(Math.Max(0, index), view);
+        UpdateVisibility();
+    }
+
     private void OnDocumentsChanged()
     {
         if (_subscribed is not null)

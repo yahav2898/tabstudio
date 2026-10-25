@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    VS Code extensions from Open VSX: the registry client, installing .vsix packages, and the declarative parts of
+    an extension that TabStudio runs itself: languages, TextMate grammars, language configuration, snippets, color
+    themes and file icon themes. No UI and no JavaScript; works anywhere .NET runs, including Android.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>TabStudio.Extensions</RootNamespace>
+    <!-- A library: its public surface is documented, and a missing XML comment is a warning. -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="TabStudio.Extensions.Tests" />
+  </ItemGroup>
+
+</Project>

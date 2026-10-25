@@ -145,7 +145,7 @@ public sealed partial class WorkspaceViewModel
     {
         if (ActiveDocument is { } document && !await document.FormatAsync())
         {
-            StatusText = document.HasLanguageService || document.LanguageServer?.Capabilities.Formatting == true
+            StatusText = document.UsesSemanticColoring || document.LanguageServer?.Capabilities.Formatting == true
                 ? "Already formatted"
                 : document.HasLanguageServer ? $"{document.LanguageServer!.ServerName} cannot format documents" : "Format Document is available for C# files and files with a language server";
         }
@@ -236,6 +236,7 @@ public sealed partial class WorkspaceViewModel
         AttachDebugging(document);
         AttachXamlDesigner(document);
         AttachLanguageServer(document);
+        AttachFormsDesigner(document);
     }
 
     private void Detach(DocumentViewModel document)
@@ -244,6 +245,7 @@ public sealed partial class WorkspaceViewModel
         document.PropertyChanged -= OnDocumentPropertyChanged;
         DetachDebugging(document);
         DetachXamlDesigner(document);
+        DetachFormsDesigner(document);
     }
 
     private void OnDocumentDiagnosticsChanged(object? sender, EventArgs e)

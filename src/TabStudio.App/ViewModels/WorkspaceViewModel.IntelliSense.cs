@@ -312,7 +312,7 @@ public sealed partial class WorkspaceViewModel
     /// <summary>A C# file to warm up with: an open one, or the first source file of a C# project.</summary>
     private string? FindWarmUpFile(ILanguageService language)
     {
-        if (Documents.FirstOrDefault(d => d.HasLanguageService) is { } open)
+        if (Documents.FirstOrDefault(d => d.HasLanguageService && d.FileType.IsCSharp) is { } open)
         {
             return open.FilePath;
         }

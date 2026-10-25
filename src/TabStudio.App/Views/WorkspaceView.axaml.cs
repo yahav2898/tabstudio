@@ -33,6 +33,7 @@ public sealed partial class WorkspaceView : UserControl
             DocumentViewModel { IsCiLog: true } log => new Actions.CiLogView(log),
             DocumentViewModel { DeviceMatrix: { } matrix } => new Swarm.DeviceMatrixView { DataContext = matrix },
             DocumentViewModel { Designer: { } designer } xaml => new XamlDesignerView(xaml, designer),
+            DocumentViewModel { FormsDesigner: { } forms } form => new FormsDesignerView(form, forms),
             _ => (Control)new CodeEditorView((DocumentViewModel)document),
         };
         QuickOpenBox.KeyDown += OnQuickOpenKeyDown;
@@ -41,6 +42,7 @@ public sealed partial class WorkspaceView : UserControl
         KeyBindings.Add(new KeyBinding { Gesture = new KeyGesture(Key.Q, KeyModifiers.Control), Command = new FocusCommand(() => QuickOpenBox.Focus()) });
         InitializeKeyChords();
         InitializeTestExplorer();
+        InitializeExtensions();
     }
 
     /// <inheritdoc />
@@ -51,6 +53,7 @@ public sealed partial class WorkspaceView : UserControl
         {
             _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
             _viewModel.Prompt.PropertyChanged -= OnPromptPropertyChanged;
+            _viewModel.EditorRebuildRequested -= OnEditorRebuildRequested;
         }
 
         _viewModel = DataContext as WorkspaceViewModel;
@@ -58,6 +61,7 @@ public sealed partial class WorkspaceView : UserControl
         {
             _viewModel.PropertyChanged += OnViewModelPropertyChanged;
             _viewModel.Prompt.PropertyChanged += OnPromptPropertyChanged;
+            _viewModel.EditorRebuildRequested += OnEditorRebuildRequested;
             UpdateSideBar();
             UpdateBottomPanel();
         }
@@ -77,6 +81,8 @@ public sealed partial class WorkspaceView : UserControl
             _viewModel.IsSideBarVisible = wide;
         }
     }
+
+    private void OnEditorRebuildRequested(object? sender, DocumentViewModel document) => Editors.Rebuild(document);
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {

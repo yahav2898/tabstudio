@@ -191,6 +191,36 @@ public sealed class LaunchConfigurationTests
     }
 
     [Fact]
+    public void Programs_TabStudio_runs_use_the_terminal_defaults_under_the_configuration()
+    {
+        var debugpy = LanguageServerRegistry.BuiltIn.FindAdapter("debugpy")!;
+        var jsDebug = LanguageServerRegistry.BuiltIn.FindAdapter("pwa-node")!;
+        var mine = LaunchConfiguration.ForCurrentFile(debugpy, "Python") with
+        {
+            Properties = new JsonObject { ["program"] = "/x.py", ["console"] = "internalConsole" },
+        };
+
+        var python = LaunchConfiguration.ForCurrentFile(debugpy, "Python").ToRequestArguments(debugpy, inTerminal: true);
+        var node = LaunchConfiguration.ForCurrentFile(jsDebug, "JavaScript").ToRequestArguments(jsDebug, inTerminal: true);
+
+        Assert.Equal("integratedTerminal", (string?)python["console"]);
+        Assert.False((bool?)python["redirectOutput"]);
+        Assert.True((bool?)python["justMyCode"]);
+        Assert.Equal("integratedTerminal", (string?)node["console"]);
+        Assert.True((bool?)node["sourceMaps"]);
+        Assert.Equal("internalConsole", (string?)mine.ToRequestArguments(debugpy, inTerminal: true)["console"]);
+    }
+
+    [Fact]
+    public void Delve_listens_on_a_port_it_is_given()
+    {
+        var delve = LanguageServerRegistry.BuiltIn.FindAdapter("go")!;
+
+        Assert.Equal(DebugAdapterTransport.Tcp, delve.Transport);
+        Assert.Equal(["dap", "--listen", "127.0.0.1:${port}"], delve.Arguments);
+    }
+
+    [Fact]
     public void The_current_file_configuration_debugs_the_active_file()
     {
         var adapter = LanguageServerRegistry.BuiltIn.FindAdapter("debugpy")!;
@@ -223,6 +253,33 @@ public sealed class InitializationOptionsTests
         Assert.Equal(tsserver, resolved?["tsserver"]?["path"]?.GetValue<string>());
         Assert.Equal(1, resolved?["other"]?.GetValue<int>());
         Assert.Equal("${packageFile:typescript/lib/tsserver.js}", options["tsserver"]?["path"]?.GetValue<string>());
+    }
+
+    [Fact]
+    public void A_package_file_of_a_server_in_another_environment_gets_the_path_the_server_sees()
+    {
+        // As in TabStudio's Linux environment on Android: the server sees /usr/local/..., which is under rootfs here.
+        using var temp = new TempDirectory();
+        var rootfs = temp.Resolve("rootfs");
+        temp.Write("rootfs/usr/local/lib/node_modules/typescript-language-server/lib/cli.mjs", "// server");
+        temp.Write("rootfs/usr/local/lib/node_modules/typescript/lib/tsserver.js", "// tsserver");
+        var link = temp.Resolve("rootfs/usr/local/bin/typescript-language-server");
+        Directory.CreateDirectory(Path.GetDirectoryName(link)!);
+        File.CreateSymbolicLink(link, "../lib/node_modules/typescript-language-server/lib/cli.mjs");
+        var checkedPaths = new List<string>();
+        string? ToLocalPath(string path)
+        {
+            checkedPaths.Add(path);
+            var local = Path.Combine(rootfs, path.TrimStart('/'));
+            return File.Exists(local) ? local : null;
+        }
+
+        var options = new JsonObject { ["tsserver"] = new JsonObject { ["path"] = "${packageFile:typescript/lib/tsserver.js}" } };
+
+        var resolved = InitializationOptions.Resolve(options, "/root/workspace", "/usr/local/bin/typescript-language-server", toLocalPath: ToLocalPath);
+
+        Assert.Equal("/usr/local/lib/node_modules/typescript/lib/tsserver.js", resolved?["tsserver"]?["path"]?.GetValue<string>());
+        Assert.Contains("/root/workspace/node_modules/typescript/lib/tsserver.js", checkedPaths);
     }
 
     [Fact]

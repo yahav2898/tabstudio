@@ -55,6 +55,15 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 - **Tests.** Test Explorer for xUnit, NUnit and MSTest, and Live Unit Testing: a green check, red cross or blue dash beside every line of the code under test, and the tests an edit affects run again by themselves a moment after you stop typing.
 - **NuGet on the device.** Packages restore on the tablet, so real projects build as they are.
 
+### Python, Node.js and a terminal
+
+- **The Toolchain Store.** **Tools > Toolchain Store** installs Python and Node.js on the tablet, in a Linux environment that lives inside the app: Alpine Linux, run with PRoot, with no root and no special permissions. Every package comes from Alpine's own mirror and is checked against Alpine's signatures before anything is installed.
+- **Projects that open as they are.** The start screen has a Python Application and a Node.js Console App. Open a folder with `pyproject.toml`, `requirements.txt` or `package.json`, and TabStudio offers to install its toolchain and packages. F5 runs it with its output and `input()` in the Output panel, its errors in the Error List, and every line of a traceback a link to its code.
+- **IntelliSense.** Pyright brings completion, squiggles and navigation to Python, and typescript-language-server does the same for JavaScript and TypeScript.
+- **A debugger.** F5 debugs with debugpy or vscode-js-debug, including Node's child processes: breakpoints, stepping, Locals, Watch, the Call Stack and exceptions. Ctrl+F5 runs without the debugger.
+- **One tap to install.** If a language server or debug adapter is missing, the status bar, the editor and F5 offer to install the toolchain that brings it, and the server starts as soon as the install finishes.
+- **A terminal.** Ctrl+` opens a shell in the Linux environment, drawn as xterm draws it.
+
 ### Every Visual Studio workload, on Android
 
 | Workload | How it runs on the tablet |
@@ -66,7 +75,9 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 | WPF | OpenSilver, in a WebView |
 | WinUI | Uno Platform, natively on Android |
 | C, C++, Rust, Go, Python, Node, Java | Native toolchains from the Toolchain Store |
-| Anything Windows-only | The Windows Bridge: builds and runs on your PC, streamed to the tablet |
+| Anything Windows-only | Windows Compatibility: the real app on the tablet itself through Wine; or the Windows Bridge, which builds and runs it on your PC and streams it to the tablet |
+
+**Windows Forms apps.** Create a Windows Forms App, or open one from Visual Studio, and press F5. It runs beside the code on TabStudio's own Windows Forms layer, in a Windows 10 window, with dialogs, menus, grids, data binding and message boxes, and saving a file restarts it. `Form1.cs` opens in a touch designer: tap a tool and then the form, drag controls on the grid, resize them by their handles, change them in the Properties panel, and double-tap a button to write its Click handler. The designer writes `Form1.Designer.cs` exactly as Visual Studio does, so the project still opens on a PC. Code that calls Windows itself, such as P/Invoke, COM or the registry, runs through Windows Compatibility or the Windows Bridge instead; [the Forms layer's README](src/TabStudio.Forms/README.md) lists what it supports.
 
 ### Every screen at once
 
@@ -99,6 +110,7 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 - **Claude, inside the IDE.** The agent sees your whole solution, builds it, runs the tests and fixes the errors it finds, and every change it makes arrives as a diff you approve.
 - **One tap from problem to fix.** When the Compatibility Doctor finds an API that does not run on the tablet, **Fix with Agent** rewrites that code and shows you the result.
 - **Sketch to XAML.** Draw a screen with the stylus and get XAML that runs.
+- **Port to cross-platform.** One tap converts a WPF or Windows Forms project into an Avalonia project that runs natively everywhere. A converter rewrites everything that maps exactly, Claude does the rest, and you review it all as a diff.
 - **Speaks MCP.** The agent connects to any Model Context Protocol server, so your own tools and services are one setting away.
 
 ### Built for the device in your hands
@@ -137,7 +149,7 @@ flowchart LR
 
 **The build engine** turns a project into something runnable. TabStudio has its own project system that reads SDK-style project files, `Directory.Build.props`, project references and NuGet packages, which are restored on the device. For C#, Roslyn compiles straight to memory against reference assemblies bundled with the app, so the edit-run loop never touches the disk. Other languages build with native toolchains from the Toolchain Store.
 
-**Run hosts** are where your program actually runs. F5 picks one per project type: console apps run in-process in an isolated load context, web apps run in a WebView next to the editor, and Windows-only apps can go to a PC you own through the optional Windows Bridge.
+**Run hosts** are where your program actually runs. F5 picks one per project type: console apps run in-process in an isolated load context, web apps run in a WebView next to the editor, and Windows-only apps run on the tablet itself through Windows Compatibility, or on a PC you own through the optional Windows Bridge.
 
 Android restricts what an app may execute, so every design decision here starts from the platform's rules rather than fighting them. The details, including why the app does not depend on Android's Linux VM, are in [the architecture document](docs/ARCHITECTURE.md).
 
@@ -203,6 +215,12 @@ src/
   TabStudio.SourceControl/ Git through GitHub: changes, commits, pulls and merges, branches, pull requests, Actions
   TabStudio.Agent/         Claude as a coding agent: tools over the workspace, MCP servers, sketch to XAML
   TabStudio.Link/          TabStudio Link: pairing, encrypted transport, QR codes and the remote language service
+  TabStudio.Forms/         Windows Forms on Avalonia: System.Windows.Forms and System.Drawing, drawn as on Windows 10
+  TabStudio.Forms.Design/  The touch designer's model: reads and writes InitializeComponent, the canvas and Toolbox
+  TabStudio.Web/           Web apps: static web assets, Blazor's scripts, a host for .NET apps on WebAssembly
+  TabStudio.Toolchains/    The Toolchain Store: Alpine Linux on PRoot, packages, processes and the terminal
+  TabStudio.LanguageServers/ Language Server and Debug Adapter Protocol clients for every non-C# language
+  TabStudio.Extensions/    VS Code extensions from Open VSX: grammars, language rules, snippets, themes
   TabStudio.App/           The IDE itself: views and view models, shared by every platform
   TabStudio.Desktop/       Desktop host for development
   TabStudio.Android/       The Android app
@@ -218,6 +236,6 @@ TabStudio is built in the open, and it is early enough that one contributor can 
 
 ## License and trademarks
 
-TabStudio is licensed under the [Apache License 2.0](LICENSE).
+TabStudio is licensed under the [Apache License 2.0](LICENSE). The third-party software it ships with or downloads, each under its own licence, is listed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 
 TabStudio is an independent project. It is not affiliated with, endorsed by or sponsored by Microsoft. Visual Studio is a trademark of Microsoft Corporation, used here only to describe the kind of experience TabStudio offers. TabStudio contains no Microsoft code beyond the open-source .NET components it builds on, under their own licenses.

@@ -1,0 +1,18 @@
+<Project>
+
+  <!--
+    Windows Forms projects compile against the reference assembly of TabStudio's Forms layer, and IntelliSense reads
+    its documentation. The app carries both as resources, because on Android its own assemblies are not files.
+  -->
+  <Target Name="EmbedWindowsFormsReferenceAssembly" AfterTargets="ResolveAssemblyReferences">
+    <ItemGroup>
+      <_TabStudioForms Include="@(ReferencePath)" Condition="'%(Filename)' == 'TabStudio.Forms'" />
+      <_TabStudioFormsReference Include="%(_TabStudioForms.ReferenceAssembly)" Condition="'%(_TabStudioForms.ReferenceAssembly)' != ''" />
+      <_TabStudioFormsReference Include="@(_TabStudioForms)" Condition="'@(_TabStudioFormsReference)' == ''" />
+      <_TabStudioFormsDocumentation Include="@(_TabStudioForms->'%(RootDir)%(Directory)%(Filename).xml')" />
+      <EmbeddedResource Include="@(_TabStudioFormsReference)" LogicalName="WindowsForms/TabStudio.Forms.dll" WithCulture="false" Type="Non-Resx" />
+      <EmbeddedResource Include="@(_TabStudioFormsDocumentation)" Condition="Exists('%(FullPath)')" LogicalName="WindowsForms/TabStudio.Forms.xml" WithCulture="false" Type="Non-Resx" />
+    </ItemGroup>
+  </Target>
+
+</Project>

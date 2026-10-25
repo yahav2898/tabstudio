@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using TabStudio.App.Platform;
 using TabStudio.App.Services;
 using TabStudio.App.Services.Link;
+using TabStudio.App.Services.Extensions;
 using TabStudio.Compilation;
 using TabStudio.Compilation.Running;
 using TabStudio.Core.Compatibility;
@@ -35,6 +36,9 @@ public enum BottomPanel
 
     /// <summary>The paused program's call stack.</summary>
     CallStack,
+
+    /// <summary>The Terminal: a shell in the workspace folder.</summary>
+    Terminal,
 }
 
 /// <summary>What the IDE is doing, for the status bar.</summary>
@@ -97,8 +101,10 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     /// <param name="link">The app's TabStudio Link; without it, this device always compiles on its own.</param>
     /// <param name="linkDialog">The TabStudio Link dialog, opened from the File menu and the status bar.</param>
     /// <param name="languageServers">Starts language servers and debug adapters; the desktop's launcher when <see langword="null"/>.</param>
+    /// <param name="extensions">The installed VS Code extensions and the Open VSX registry; without it the Extensions menu is unavailable.</param>
+    /// <param name="toolchains">The device's toolchains; the computer's own, found on its PATH, when <see langword="null"/>.</param>
     /// <param name="swarm">The swarm, which runs the app on phones and tablets; none when <see langword="null"/>.</param>
-    public WorkspaceViewModel(CompilerServices compiler, IDeviceStatus device, DeviceProfile profile, IUiDispatcher ui, SessionStore sessions, AppPaths paths, GitHubAccountViewModel? gitHubAccount = null, IStoragePicker? browser = null, IWebViewFactory? webViews = null, INotifications? notifications = null, IAppActivity? appActivity = null, LinkService? link = null, LinkViewModel? linkDialog = null, Services.LanguageServers.LanguageServerServices? languageServers = null, global::TabStudio.App.Swarm.SwarmServices? swarm = null)
+    public WorkspaceViewModel(CompilerServices compiler, IDeviceStatus device, DeviceProfile profile, IUiDispatcher ui, SessionStore sessions, AppPaths paths, GitHubAccountViewModel? gitHubAccount = null, IStoragePicker? browser = null, IWebViewFactory? webViews = null, INotifications? notifications = null, IAppActivity? appActivity = null, LinkService? link = null, LinkViewModel? linkDialog = null, Services.LanguageServers.LanguageServerServices? languageServers = null, ExtensionsService? extensions = null, Services.Toolchains.ToolchainServices? toolchains = null, global::TabStudio.App.Swarm.SwarmServices? swarm = null)
     {
         ArgumentNullException.ThrowIfNull(compiler);
         ArgumentNullException.ThrowIfNull(device);
@@ -118,7 +124,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         Explorer = new SolutionExplorerViewModel(this);
         Output = new OutputViewModel(ui, profile.OutputCharacterLimit);
         Explorer.OpenFileRequested += async (_, path) => await OpenDocumentAsync(path);
-        Explorer.SelectionChanged += (_, node) => Properties.Show(node, Workspace);
+        Explorer.SelectionChanged += (_, node) => ShowProperties(node);
         ErrorList.NavigateRequested += async (_, diagnostic) => await NavigateToAsync(diagnostic.Location!.FilePath, diagnostic.Location.Line, diagnostic.Location.Column);
         _device.ThermalChanged += OnThermalChanged;
         _device.MemoryPressureRaised += OnMemoryPressure;
@@ -135,6 +141,8 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         InitializePullRequests();
         InitializeLiveTesting();
         InitializeLanguageServers(languageServers, browser);
+        InitializeExtensions(extensions, browser);
+        InitializeToolchains(toolchains);
         InitializeSwarmScreens(swarm?.Registry);
         InitializeSwarm(swarm);
     }
@@ -261,7 +269,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         var preview = await WorkspaceInspector.InspectAsync(notebook is null ? path : Path.GetDirectoryName(notebook)!);
         Workspace = preview.Workspace;
         Explorer.Load(preview.Workspace, preview.Reports);
-        Properties.Show(Explorer.SelectedItem?.Node, Workspace);
+        ShowProperties(Explorer.SelectedItem?.Node);
 
         Compatibility.Clear();
         foreach (var report in preview.Reports)
@@ -276,6 +284,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         }
 
         LoadStartupProjects(preview.Workspace, session?.StartupProject);
+        await LoadToolchainProjectsAsync(preview.Workspace, session?.StartupProject, opening: true);
 
         StatusText = "Loading C#";
         _language = await CreateLanguageServiceAsync(preview.Workspace);
@@ -295,7 +304,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         StartIntelliSenseWarmUp();
         if (_profile.AnalyzeWholeSolution)
         {
-            _ = AnalyzeSolutionAsync(_background!.Token);
+            StartSolutionAnalysis();
         }
     }
 
@@ -328,7 +337,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         _language?.SetOptimization(configuration == "Release");
         foreach (var document in Documents)
         {
-            _ = document.AnalyzeNowAsync();
+            _ = document.AnalyzeAgainAsync();
         }
     }
 
@@ -370,6 +379,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         foreach (var document in Documents)
         {
             DetachXamlDesigner(document);
+            DetachFormsDesigner(document);
             document.Dispose();
         }
 
@@ -379,8 +389,10 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         _language = null;
         DisposeActions();
         DisposePullRequests();
+        DisposeToolchains();
         GitChanges.Dispose();
         DisposeLanguageServers();
+        DisposeExtensions();
         DisposeSwarmScreens();
     }
 
@@ -413,12 +425,13 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
                 }
 
                 var diagnostics = await language.GetProjectDiagnosticsAsync(project.FilePath, cancellationToken);
+                cancellationToken.ThrowIfCancellationRequested();
                 ApplyProjectDiagnostics(project, diagnostics);
             }
         }
         catch (OperationCanceledException)
         {
-            // The workspace closed.
+            // The workspace closed, or a newer analysis replaced this one.
         }
     }
 

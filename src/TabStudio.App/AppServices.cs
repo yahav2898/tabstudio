@@ -66,6 +66,13 @@ public static class AppServices
         // Language servers and debug adapters start through the platform's IServerProcessLauncher, if it registers one.
         services.TryAddSingleton(provider => new Services.LanguageServers.LanguageServerServices(provider.GetService<TabStudio.LanguageServers.Hosting.IServerProcessLauncher>() ?? TabStudio.LanguageServers.Hosting.ProcessServerLauncher.Instance));
 
+        // Installed VS Code extensions and the Open VSX registry.
+        services.TryAddSingleton<TabStudio.App.Services.Extensions.ExtensionsService>();
+        services.TryAddSingleton(provider => new Services.Toolchains.ToolchainServices(provider.GetRequiredService<AppPaths>(), provider.GetService<TabStudio.Toolchains.Linux.ToolchainPlatform>()));
+
+        // Language servers and debug adapters run where the toolchains do: the Store's Linux environment on Android, the PATH on a computer.
+        services.TryAddSingleton<TabStudio.LanguageServers.Hosting.IServerProcessLauncher>(provider => new Services.Toolchains.ToolchainServerLauncher(provider.GetRequiredService<Services.Toolchains.ToolchainServices>().Runtime));
+
         // View models.
         services.AddSingleton<LinkViewModel>();
         services.AddSingleton<StartViewModel>();

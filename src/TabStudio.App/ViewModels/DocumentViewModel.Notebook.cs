@@ -24,7 +24,8 @@ public sealed partial class DocumentViewModel
     /// Matrix has no code.
     /// </summary>
     public bool ShowsEditorActions =>
-        Notebook is null && CiLog is null && PullRequest is null && Review is null && Designer?.ShowsCode != false && DeviceMatrix is null;
+        Notebook is null && CiLog is null && PullRequest is null && Review is null && ExtensionsPage is null
+        && Designer?.ShowsCode != false && FormsDesigner?.ShowsCode != false && DeviceMatrix is null;
 
     /// <summary>The text the file would have if it were saved now, for restoring unsaved work.</summary>
     public string CurrentText => Notebook?.Serialize() ?? Document.Text;

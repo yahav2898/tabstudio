@@ -77,9 +77,25 @@ public static class CompatibilityDoctor
                 project, RunHost.WebView, CompatibilityStatus.Planned, "Local server + WebView",
                 $"Web apps are served on this device. The {LanguageName(project.Language)} compiler is not bundled yet."),
 
+            ProjectKind.BlazorWebApp when project.Language == ProjectLanguage.CSharp => Report(
+                project, RunHost.WebView, CompatibilityStatus.Ready, "Local server + WebView",
+                "Served on this device and shown in the web preview. Interactive Server components run here over a live circuit; WebAssembly components run in the preview on .NET for WebAssembly, without the debugger. Saving a file restarts it."),
+
+            ProjectKind.BlazorWebApp => Report(
+                project, RunHost.WebView, CompatibilityStatus.Planned, "Local server + WebView",
+                $"Blazor apps are served on this device. The {LanguageName(project.Language)} compiler is not bundled yet."),
+
+            ProjectKind.BlazorWebAssembly when project.Language == ProjectLanguage.CSharp && ProjectClassifier.IsBlazorWebAppClient(project) => Report(
+                project, RunHost.WebView, CompatibilityStatus.NotRunnable, "WebAssembly, in its web app",
+                "The WebAssembly part of a Blazor Web App: it is compiled for the browser and runs in the web preview when the app that references it runs."),
+
+            ProjectKind.BlazorWebAssembly when project.Language == ProjectLanguage.CSharp => Report(
+                project, RunHost.WebView, CompatibilityStatus.Ready, "WebAssembly in the WebView",
+                "Compiled for the browser and run on .NET for WebAssembly in the web preview, served from this device. It starts without the debugger: code running in the browser cannot be debugged here. Saving a file reloads it."),
+
             ProjectKind.BlazorWebAssembly => Report(
-                project, RunHost.WebView, CompatibilityStatus.Planned, "WebAssembly in a WebView",
-                "The app will be compiled to WebAssembly and shown in a WebView next to the code."),
+                project, RunHost.WebView, CompatibilityStatus.Planned, "WebAssembly in the WebView",
+                $"Blazor WebAssembly apps run in the web preview. The {LanguageName(project.Language)} compiler is not bundled yet."),
 
             ProjectKind.Worker => Report(
                 project, RunHost.InProcess, CompatibilityStatus.Planned, "In-process",
@@ -109,13 +125,25 @@ public static class CompatibilityDoctor
                 project, RunHost.WebView, CompatibilityStatus.NeedsChanges, "OpenSilver, or your PC",
                 "WPF is Windows-only. OpenSilver can run most WPF code in a WebView; the rest runs through the Windows Bridge."),
 
+            ProjectKind.WinForms when project.Language == ProjectLanguage.CSharp => Report(
+                project, RunHost.AndroidView, CompatibilityStatus.Ready, "Cross-platform Forms layer in the app preview",
+                "Runs beside the code on TabStudio's own Windows Forms layer, drawn as on Windows 10, and its forms open in the Forms designer. Saving a file restarts it. Code that calls Windows itself, such as P/Invoke, COM or the registry, does not run here."),
+
             ProjectKind.WinForms => Report(
-                project, RunHost.AndroidView, CompatibilityStatus.NeedsChanges, "Cross-platform WinForms, or your PC",
-                "Windows Forms is Windows-only. A cross-platform WinForms layer can render it on Android; otherwise it runs through the Windows Bridge."),
+                project, RunHost.AndroidView, CompatibilityStatus.Planned, "Cross-platform Forms layer in the app preview",
+                $"Windows Forms apps run on TabStudio's own Forms layer. The {LanguageName(project.Language)} compiler is not bundled yet."),
 
             ProjectKind.NativeCpp => Report(
                 project, RunHost.WindowsBridge, CompatibilityStatus.NeedsWindows, "Windows Bridge",
                 "Visual C++ projects need the MSVC toolchain. They build and run on your PC through the Windows Bridge."),
+
+            ProjectKind.Python => Report(
+                project, RunHost.Toolchain, CompatibilityStatus.NeedsToolchain, "Python toolchain",
+                "Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it."),
+
+            ProjectKind.Node => Report(
+                project, RunHost.Toolchain, CompatibilityStatus.NeedsToolchain, "Node.js toolchain",
+                "Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it."),
 
             _ => Report(
                 project, RunHost.None, CompatibilityStatus.Unsupported, "Unknown",

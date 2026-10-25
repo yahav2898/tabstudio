@@ -62,7 +62,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
         _editor.TextArea.Caret.CaretBrush = CaretBrush;
         _editor.TextArea.RightClickMovesCaret = true;
 
-        if (document.HasLanguageService)
+        if (document.UsesSemanticColoring)
         {
             _colorizer = new ClassificationColorizer();
             _diagnostics = new DiagnosticRenderer();
@@ -79,6 +79,13 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
         if (document.HasLanguageServer)
         {
             InstallLanguageServerRendering(out _colorizer, out _diagnostics);
+        }
+        else if (document.HasLanguageService && !document.UsesSemanticColoring)
+        {
+            // A Razor file: colored by its grammar, with Roslyn's squiggles.
+            _diagnostics = new DiagnosticRenderer();
+            _editor.TextArea.TextView.BackgroundRenderers.Add(_diagnostics);
+            ApplyDiagnostics();
         }
 
         _search = SearchPanel.Install(_editor);
@@ -99,6 +106,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
         InitializeReviewThreads();
         InitializeLiveTesting();
         InitializeLanguageServer();
+        InitializeExtensions();
     }
 
     /// <summary>The editor control, for tests and keyboard focus.</summary>
@@ -123,6 +131,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
         _textMate?.Dispose();
         DisposeDebugging();
         DisposeLanguageServer();
+        DisposeExtensions();
     }
 
     /// <inheritdoc />
