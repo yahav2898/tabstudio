@@ -230,10 +230,11 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
         {
             _session?.Stop();
             _ = StopAdapterAsync();
+            StopWindowsBridgeApp();
         }
     }
 
-    private bool CanStopDebugging() => IsDebugging || IsRunning;
+    private bool CanStopDebugging() => IsDebugging || IsRunning || HasWindowsBridgeApps;
 
     /// <summary>Ctrl+Shift+F5: stops debugging and starts again with a fresh build.</summary>
     [RelayCommand(CanExecute = nameof(IsDebugging))]
@@ -387,6 +388,11 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
         }
 
         if (StartupProject is not { } project || _language is not { } language || _session is not null)
+        {
+            return;
+        }
+
+        if (await TryDebugOnWindowsBridgeAsync(project, start))
         {
             return;
         }

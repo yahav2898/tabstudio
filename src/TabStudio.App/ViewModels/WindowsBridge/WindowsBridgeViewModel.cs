@@ -153,8 +153,8 @@ public sealed partial class WindowsBridgeViewModel : ObservableObject, IDisposab
         if (!BridgeInvitation.TryParse(scanned, out var invitation))
         {
             Error = BridgeInvitation.IsLinkHostCode(scanned)
-                ? "That is a TabStudio Link host's code. On the PC, open File > TabStudio Link > Windows Bridge, and scan the code it shows there."
-                : "That is not a Windows Bridge code. On the PC, open File > TabStudio Link > Windows Bridge, and scan the code it shows.";
+                ? "That is a TabStudio Link host's code. On the PC, open File > TabStudio Link > Be a Windows Bridge, and scan the code it shows there."
+                : "That is not a Windows Bridge code. On the PC, open File > TabStudio Link > Be a Windows Bridge, and scan the code it shows.";
             return;
         }
 

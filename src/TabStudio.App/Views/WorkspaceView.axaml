@@ -8,6 +8,7 @@
              xmlns:prv="using:TabStudio.App.Views.PullRequests"
              xmlns:extensionViews="using:TabStudio.App.Views.Extensions"
              xmlns:vm="using:TabStudio.App.ViewModels"
+             xmlns:bridgeViews="using:TabStudio.App.Views.WindowsBridge"
              xmlns:sys="using:System"
              x:Class="TabStudio.App.Views.WorkspaceView"
              x:DataType="vm:WorkspaceViewModel">
@@ -61,6 +62,7 @@
             <MenuItem Header="Save A_ll" InputGesture="Ctrl+Shift+S" Command="{Binding SaveAllCommand}" />
             <Separator />
             <MenuItem Header="TabStudio _Link..." Command="{Binding OpenLinkCommand}" IsVisible="{Binding IsLinkAvailable}" />
+            <MenuItem Header="{Binding WindowsBridgeMenuHeader}" Command="{Binding OpenWindowsBridgeCommand}" IsVisible="{Binding HasWindowsBridge}" />
             <Separator />
             <MenuItem Header="_Close Document" InputGesture="Ctrl+F4" Command="{Binding CloseDocumentCommand}" />
             <MenuItem Header="Close Sol_ution" Command="{Binding CloseWorkspaceCommand}" />
@@ -98,6 +100,7 @@
                       IsEnabled="{Binding WebPreview.HasApp}" />
             <MenuItem Header="_App Preview" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.AppPreview}"
                       IsEnabled="{Binding AppPreview.HasApp}" />
+            <MenuItem Header="Windows _Bridge" Command="{Binding ShowWindowsBridgePaneCommand}" IsVisible="{Binding HasWindowsBridge}" />
             <MenuItem Header="_Error List" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" />
             <MenuItem Header="_Output" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Output}" />
             <MenuItem Header="_Compatibility Doctor" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Compatibility}" />
@@ -645,6 +648,11 @@
           <views:AppPreviewView DataContext="{Binding AppPreview}" />
         </Panel>
 
+        <!-- The Windows Bridge: programs running on the paired Windows PC, streamed live. -->
+        <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsWindowsBridgeSelected}">
+          <bridgeViews:BridgePaneView DataContext="{Binding WindowsBridgePane}" />
+        </Panel>
+
         <!-- The web preview of the running web app. -->
         <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsWebPreviewSelected}">
           <views:WebPreviewView DataContext="{Binding WebPreview}" />
@@ -688,6 +696,13 @@
                 <TextBlock Text="App" VerticalAlignment="Center" />
               </StackPanel>
             </Button>
+            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsWindowsBridgeSelected}" IsVisible="{Binding WindowsBridgePane.IsAvailable, FallbackValue=False}"
+                    Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.WindowsBridge}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <controls:StrokeIcon Data="{StaticResource Icon.Computer}" Size="12" />
+                <TextBlock Text="Windows" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
             <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsWebPreviewSelected}" IsVisible="{Binding WebPreview.HasApp}"
                     Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.WebPreview}">
               <StackPanel Orientation="Horizontal" Spacing="6">
@@ -726,6 +741,15 @@
               <TextBlock Text="{Binding LinkStatusText}" FontSize="12" VerticalAlignment="Center" />
               <Ellipse Width="7" Height="7" Fill="{DynamicResource Brush.Success}" VerticalAlignment="Center" IsVisible="{Binding IsLinkedToHost}" />
               <Ellipse Width="7" Height="7" Fill="{DynamicResource Brush.Warning}" VerticalAlignment="Center" IsVisible="{Binding IsLinkReconnecting}" />
+            </StackPanel>
+          </Button>
+          <Button Theme="{StaticResource StatusBarButton}" Height="24" ToolTip.Tip="{Binding WindowsBridgeStatusTip}" Command="{Binding OpenWindowsBridgeCommand}"
+                  IsVisible="{Binding WindowsBridgeStatusText, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+              <controls:StrokeIcon Size="13" Data="{StaticResource Icon.Computer}" />
+              <TextBlock Text="{Binding WindowsBridgeStatusText}" FontSize="12" VerticalAlignment="Center" />
+              <Ellipse Width="7" Height="7" Fill="{DynamicResource Brush.Success}" VerticalAlignment="Center" IsVisible="{Binding IsWindowsBridgeConnected}" />
+              <Ellipse Width="7" Height="7" Fill="{DynamicResource Brush.Warning}" VerticalAlignment="Center" IsVisible="{Binding IsWindowsBridgeAway}" />
             </StackPanel>
           </Button>
           <Button Theme="{StaticResource StatusBarButton}" Height="24" ToolTip.Tip="Show the language servers' log" Command="{Binding ShowLanguageServerLogCommand}"

@@ -93,6 +93,12 @@
                     <TextBlock Text="{Binding Ci.CheckName}" MaxWidth="150" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Brush.TextSecondary}" />
                   </StackPanel>
                 </Border>
+                <Border DockPanel.Dock="Left" Classes="ciBadge" IsVisible="{Binding IsFromBridge}" ToolTip.Tip="{Binding BridgeToolTip}">
+                  <StackPanel Orientation="Horizontal" Spacing="5">
+                    <controls:StrokeIcon Data="{StaticResource Icon.Computer}" Size="11" Foreground="{DynamicResource Brush.AccentText}" VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding BridgePc}" MaxWidth="150" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Brush.TextSecondary}" />
+                  </StackPanel>
+                </Border>
                 <TextBlock FontSize="12.5" Text="{Binding Description}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
               </DockPanel>
               <TextBlock Grid.Column="3" FontSize="12.5" Text="{Binding Project}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />

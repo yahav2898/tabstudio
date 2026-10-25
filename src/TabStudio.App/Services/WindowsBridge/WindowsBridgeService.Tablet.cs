@@ -307,7 +307,7 @@ public sealed partial class WindowsBridgeService
             lock (_gate)
             {
                 _state = LinkClientState.Off;
-                _error = $"{session.Host.Name} is a TabStudio Link host, not a Windows Bridge. On the PC, open File > TabStudio Link > Windows Bridge, and pair with the code it shows there.";
+                _error = $"{session.Host.Name} is a TabStudio Link host, not a Windows Bridge. On the PC, open File > TabStudio Link > Be a Windows Bridge, and pair with the code it shows there.";
             }
 
             RaiseChanged();

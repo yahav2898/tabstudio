@@ -99,7 +99,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     /// <param name="linkDialog">The TabStudio Link dialog, opened from the File menu and the status bar.</param>
     /// <param name="languageServers">Starts language servers and debug adapters; the desktop's launcher when <see langword="null"/>.</param>
     /// <param name="extensions">The installed VS Code extensions and the Open VSX registry; without it the Extensions menu is unavailable.</param>
-    public WorkspaceViewModel(CompilerServices compiler, IDeviceStatus device, DeviceProfile profile, IUiDispatcher ui, SessionStore sessions, AppPaths paths, GitHubAccountViewModel? gitHubAccount = null, IStoragePicker? browser = null, IWebViewFactory? webViews = null, INotifications? notifications = null, IAppActivity? appActivity = null, LinkService? link = null, LinkViewModel? linkDialog = null, Services.LanguageServers.LanguageServerServices? languageServers = null, ExtensionsService? extensions = null)
+    public WorkspaceViewModel(CompilerServices compiler, IDeviceStatus device, DeviceProfile profile, IUiDispatcher ui, SessionStore sessions, AppPaths paths, GitHubAccountViewModel? gitHubAccount = null, IStoragePicker? browser = null, IWebViewFactory? webViews = null, INotifications? notifications = null, IAppActivity? appActivity = null, LinkService? link = null, LinkViewModel? linkDialog = null, Services.LanguageServers.LanguageServerServices? languageServers = null, ExtensionsService? extensions = null, Services.WindowsBridge.WindowsBridgeService? windowsBridge = null)
     {
         ArgumentNullException.ThrowIfNull(compiler);
         ArgumentNullException.ThrowIfNull(device);
@@ -137,6 +137,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         InitializeLiveTesting();
         InitializeLanguageServers(languageServers, browser);
         InitializeExtensions(extensions, browser);
+        InitializeWindowsBridge(windowsBridge);
     }
 
     /// <summary>Raised when the user closes the workspace to return to the start screen.</summary>
@@ -239,7 +240,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     public string RunLabel => StartupProject?.Name ?? LaunchTargetLabel ?? "Start";
 
     /// <summary>Where the startup project runs, such as "In-process".</summary>
-    public string RunHostText => StartupProject is { } project ? CompatibilityDoctor.Diagnose(project).RunsVia : LaunchTargetHost ?? "Nothing to run";
+    public string RunHostText => StartupProject is { } project ? RunsViaFor(project) : LaunchTargetHost ?? "Nothing to run";
 
     /// <summary>The build configuration, "Debug" or "Release".</summary>
     [ObservableProperty]
@@ -362,6 +363,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         DisposeTests();
         DisposeLiveTesting();
         DisposeLink();
+        DisposeWindowsBridge();
         _agent?.Dispose();
         _device.ThermalChanged -= OnThermalChanged;
         _device.MemoryPressureRaised -= OnMemoryPressure;
@@ -386,7 +388,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     private void LoadStartupProjects(Workspace workspace, string? preferred)
     {
         StartupProjects.Clear();
-        foreach (var project in workspace.Projects.Where(p => p.IsExecutable && !p.IsTestProject))
+        foreach (var project in workspace.Projects.Where(p => (p.IsExecutable || IsWindowsBridgeStartupProject(p)) && !p.IsTestProject))
         {
             StartupProjects.Add(new StartupProjectOption(project, new RelayCommand(() => SetStartupProject(project))));
         }

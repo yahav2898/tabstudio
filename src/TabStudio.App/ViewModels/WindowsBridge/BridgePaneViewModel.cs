@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using TabStudio.App.Platform;
+using TabStudio.App.Services;
 using TabStudio.App.Services.Link;
 using TabStudio.App.Services.WindowsBridge;
 using TabStudio.Link;
@@ -467,7 +467,7 @@ public sealed partial class BridgePaneViewModel : ObservableObject, IBridgeInput
         else if (!_bridge.HasPairedPc)
         {
             MessageTitle = "No Windows PC";
-            Message = "Pair a Windows PC you own in File > TabStudio Link > Windows Bridge. Windows-only projects then build and run on it, and show here.";
+            Message = "Pair a Windows PC you own in File > TabStudio Link > Windows PC. Windows-only projects then build and run on it, and show here.";
         }
         else if (SelectedApp is null)
         {

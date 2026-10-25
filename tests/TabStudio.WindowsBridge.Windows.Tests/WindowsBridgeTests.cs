@@ -189,7 +189,7 @@ public sealed class WindowsBridgeTests : IDisposable
 
         var after = await WindowsLoopback.WaitForFrameAsync(stream, frame => IsBackground(frame, TemplateApps.Green), "the green window after the tap");
         Assert.Equal(before.Width, after.Width);
-        Assert.NotNull(started.CaptureMethod);
+        Assert.NotEmpty(stream.CaptureMethod);
         if (policy == BridgeInputPolicy.Background)
         {
             Assert.Equal("window messages", bridge.Desktop.LastInputMode);

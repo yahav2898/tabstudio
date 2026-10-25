@@ -16,5 +16,6 @@ internal static class Program
         AppBuilder.Configure<TabStudioApplication>()
             .UsePlatformDetect()
             .WithInterFont()
-            .LogToTrace();
+            .LogToTrace()
+            .UseWindowsBridge();
 }

@@ -15,6 +15,7 @@ public sealed class BridgeStreamReceiver : IDisposable
     private readonly Channel<BridgeFrame> _frames = Channel.CreateUnbounded<BridgeFrame>(new UnboundedChannelOptions { SingleReader = true });
     private readonly Lock _gate = new();
     private long _decoded;
+    private int _waiting;
     private long _shown;
     private long _sequence;
     private int _disposed;
@@ -138,9 +139,16 @@ public sealed class BridgeStreamReceiver : IDisposable
 
     private void OnFrameReceived(object? sender, BridgeFrame frame)
     {
-        if (frame.Header.StreamId == StreamId)
+        if (frame.Header.StreamId != StreamId)
         {
-            _frames.Writer.TryWrite(frame);
+            return;
+        }
+
+        // Counted before it is queued, so the decoder never sees fewer frames waiting than there are.
+        Interlocked.Increment(ref _waiting);
+        if (!_frames.Writer.TryWrite(frame))
+        {
+            Interlocked.Decrement(ref _waiting);
         }
     }
 
@@ -162,6 +170,8 @@ public sealed class BridgeStreamReceiver : IDisposable
     {
         await foreach (var frame in _frames.Reader.ReadAllAsync().ConfigureAwait(false))
         {
+            // A single-reader channel cannot count what waits in it, so the receiver counts.
+            var waiting = Interlocked.Decrement(ref _waiting);
             try
             {
                 lock (_gate)
@@ -184,7 +194,7 @@ public sealed class BridgeStreamReceiver : IDisposable
             Interlocked.Increment(ref _decoded);
 
             // Only the newest picture is drawn: frames that are already waiting are applied first.
-            if (_frames.Reader.Count == 0)
+            if (waiting == 0)
             {
                 FrameReady?.Invoke(this, EventArgs.Empty);
             }
