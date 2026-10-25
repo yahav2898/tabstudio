@@ -1,16 +1,19 @@
 name: GC stress
 
-# Runs the emulator self test again and again on a build whose Mono garbage collector checks its own heap
-# (build/android/gc-stress.env), on Android 10 (API 29) and Android 15 (API 35) emulators, to catch the rare
-# garbage-collector aborts that a single CI run hits about once in a hundred. It takes about half an hour on seven
-# runners, too much for every push, so it runs:
+# Runs the emulator self test again and again on builds whose Mono garbage collector checks its own heap, to catch
+# the rare garbage-collector aborts that a single CI run hits about once in a hundred:
+# - concurrent: the collector release builds use (build/android/gc-stress/concurrent.env);
+# - serial: the collector without its concurrent mark, verifying every reference after each major collection
+#   (build/android/gc-stress/serial.env).
+# Each build runs on Android 10 (API 29) and Android 15 (API 35) emulators, two of each. It takes about half an hour
+# on ten runners, too much for every push, so it runs:
 # - every night on main;
 # - by hand: Actions > GC stress > Run workflow, or `gh workflow run gc-stress.yml --ref <branch> -f runs=4`;
 # - on a push to main or an agent branch whose commit message contains [gc-stress].
 #
-# Each emulator's results are in the ci-logs branch under gc-stress-<api>-<shard>/ (branches/<branch>/... for a
-# branch): summary.txt has a line per run, run-<n>/ the run's verdict, screenshots and GC log, and for a run that
-# crashed, crash.txt with Mono's message and the native backtrace.
+# Each emulator's results are in the ci-logs branch under gc-stress-<build>-<api>-<shard>/ (branches/<branch>/...
+# for a branch): summary.txt has a line per run; run-<n>/ has the run's verdict, screenshots and the collector's
+# log (gc.txt), and for a run that crashed, crash.txt with Mono's message and the native backtrace.
 
 on:
   schedule:
@@ -18,7 +21,7 @@ on:
   workflow_dispatch:
     inputs:
       runs:
-        description: Self-test runs on each of the six emulators
+        description: Self-test runs on each emulator
         default: '4'
   push:
     branches: [main, 'agent/**']
@@ -37,10 +40,14 @@ env:
 
 jobs:
   build:
-    name: Build the GC stress APK
+    name: Build the GC stress APK (${{ matrix.build }})
     if: github.event_name != 'push' || contains(github.event.head_commit.message, '[gc-stress]')
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        build: [concurrent, serial]
     steps:
       - uses: actions/checkout@v4
 
@@ -62,7 +69,7 @@ jobs:
           mkdir -p ci-out
           status=0
           dotnet publish src/TabStudio.Android -c Release -f net10.0-android -p:TabStudioRuntimeIdentifiers=android-x64 \
-            -p:TabStudioAndroidEnvironment=build/android/gc-stress.env \
+            -p:TabStudioAndroidEnvironment=build/android/gc-stress/${{ matrix.build }}.env \
             -p:TabStudioBuildNumber=$(( ($(date +%s) - 1767225600) / 60 )) \
             -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME" \
             > ci-out/android-x64-build.log 2>&1 || status=$?
@@ -70,34 +77,44 @@ jobs:
           [ "$status" -eq 0 ] || exit $status
           cp "$(find src/TabStudio.Android/bin/Release/net10.0-android/publish -name '*-Signed.apk' | head -n 1)" TabStudio-x64-gc-stress.apk
 
+      # Which Mono the APK carries and the environment its runtime starts with, so a crash can be matched to both.
+      - name: Show the runtime
+        run: |
+          mkdir -p runtime && unzip -o -q TabStudio-x64-gc-stress.apk 'lib/x86_64/libmonosgen-2.0.so' -d runtime
+          strings runtime/lib/x86_64/libmonosgen-2.0.so | grep -m 3 -E '^[0-9]+\.[0-9]+\.[0-9]+.*(\(|-)' | tee ci-out/runtime.txt || true
+          grep -v '^#' build/android/gc-stress/${{ matrix.build }}.env | grep . | tee -a ci-out/runtime.txt
+
       - uses: actions/upload-artifact@v4
         with:
-          name: gc-stress-apk
-          path: TabStudio-x64-gc-stress.apk
+          name: gc-stress-apk-${{ matrix.build }}
+          path: |
+            TabStudio-x64-gc-stress.apk
+            ci-out/runtime.txt
           retention-days: 3
 
       - name: Publish logs
         if: failure()
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: bash build/ci/publish-logs.sh gc-stress-build ${{ job.status }}
+        run: bash build/ci/publish-logs.sh gc-stress-build-${{ matrix.build }} ${{ job.status }}
 
   emulator:
-    name: Self test under GC checks (API ${{ matrix.api }}, ${{ matrix.shard }})
+    name: Self test under GC checks (${{ matrix.build }}, API ${{ matrix.api }}, ${{ matrix.shard }})
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 110
     strategy:
       fail-fast: false
       matrix:
+        build: [concurrent, serial]
         api: [29, 35]
-        shard: [1, 2, 3]
+        shard: [1, 2]
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/download-artifact@v4
         with:
-          name: gc-stress-apk
+          name: gc-stress-apk-${{ matrix.build }}
 
       - name: Enable KVM
         run: |
@@ -108,7 +125,7 @@ jobs:
       - name: Run the self test again and again
         uses: reactivecircus/android-emulator-runner@v2
         env:
-          GC_STRESS_TITLE: API ${{ matrix.api }}, shard ${{ matrix.shard }}
+          GC_STRESS_TITLE: ${{ matrix.build }}, API ${{ matrix.api }}, shard ${{ matrix.shard }}
         with:
           api-level: ${{ matrix.api }}
           target: google_apis
@@ -124,7 +141,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: gc-stress-${{ matrix.api }}-${{ matrix.shard }}
+          name: gc-stress-${{ matrix.build }}-${{ matrix.api }}-${{ matrix.shard }}
           path: ci-out/
           if-no-files-found: ignore
 
@@ -132,4 +149,4 @@ jobs:
         if: always()
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: bash build/ci/publish-logs.sh gc-stress-${{ matrix.api }}-${{ matrix.shard }} ${{ job.status }}
+        run: bash build/ci/publish-logs.sh gc-stress-${{ matrix.build }}-${{ matrix.api }}-${{ matrix.shard }} ${{ job.status }}

@@ -21,6 +21,11 @@ here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 mkdir -p "$out"
 : > "$out/summary.txt"
+
+# The collector's own log, one line per collection (GC_MINOR, GC_MAJOR_CONCURRENT_START, ...), under the Mono tag,
+# to see what it was doing when a check failed. The app's runtime reads this property at startup, in release
+# builds too; it overrides MONO_LOG_LEVEL and MONO_LOG_MASK from the environment.
+adb shell setprop debug.mono.log "gc,mono_log_level=debug,mono_log_mask=gc"
 passed=0
 failed=0
 crashed=0
