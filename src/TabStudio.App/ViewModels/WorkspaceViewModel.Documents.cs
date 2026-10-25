@@ -230,6 +230,7 @@ public sealed partial class WorkspaceViewModel
         document.PropertyChanged += OnDocumentPropertyChanged;
         AttachDebugging(document);
         AttachXamlDesigner(document);
+        AttachFormsDesigner(document);
     }
 
     private void Detach(DocumentViewModel document)
@@ -238,6 +239,7 @@ public sealed partial class WorkspaceViewModel
         document.PropertyChanged -= OnDocumentPropertyChanged;
         DetachDebugging(document);
         DetachXamlDesigner(document);
+        DetachFormsDesigner(document);
     }
 
     private void OnDocumentDiagnosticsChanged(object? sender, EventArgs e)

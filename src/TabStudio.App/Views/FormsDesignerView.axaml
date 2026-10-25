@@ -1,0 +1,323 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:vm="using:TabStudio.App.ViewModels"
+             x:Class="TabStudio.App.Views.FormsDesignerView"
+             x:DataType="vm:FormsDesignerViewModel">
+
+  <!--
+    A Windows Forms form's tab: the designer, with the Toolbox on the left and the Properties on the right, or the
+    form's code, as Visual Studio's Form1.cs [Design] and View Code show them. The canvas and the code editor are
+    placed by the code-behind.
+  -->
+
+  <UserControl.Resources>
+    <StreamGeometry x:Key="FormsIcon.Toolbox">M3 8 L21 8 L21 20 L3 20 Z M8 8 L8 5 L16 5 L16 8 M3 13 L21 13 M10 13 L10 15 L14 15 L14 13</StreamGeometry>
+    <StreamGeometry x:Key="FormsIcon.Properties">M4 5 L20 5 M4 12 L20 12 M4 19 L20 19 M8 3 L8 7 M15 10 L15 14 M10 17 L10 21</StreamGeometry>
+    <StreamGeometry x:Key="FormsIcon.Cut">M6 18 A3 3 0 1 0 6 18.01 M18 18 A3 3 0 1 0 18 18.01 M8 16 L17 4 M16 16 L7 4</StreamGeometry>
+    <StreamGeometry x:Key="FormsIcon.Copy">M8 8 L20 8 L20 20 L8 20 Z M16 8 L16 4 L4 4 L4 16 L8 16</StreamGeometry>
+    <StreamGeometry x:Key="FormsIcon.Paste">M7 5 L5 5 L5 21 L19 21 L19 5 L17 5 M8 3 L16 3 L16 7 L8 7 Z</StreamGeometry>
+    <StreamGeometry x:Key="FormsIcon.Delete">M4 6 L20 6 M9 6 L9 3 L15 3 L15 6 M6 6 L7 21 L17 21 L18 6 M10 10 L10 17 M14 10 L14 17</StreamGeometry>
+    <StreamGeometry x:Key="FormsIcon.Front">M3 3 L13 3 L13 13 L3 13 Z M10 10 L21 10 L21 21 L10 21 Z</StreamGeometry>
+    <StreamGeometry x:Key="FormsIcon.Back">M10 10 L21 10 L21 21 L10 21 Z M3 3 L13 3 L13 10 M3 3 L3 13 L10 13</StreamGeometry>
+    <StreamGeometry x:Key="FormsIcon.Events">M13 2 L5 13 L11 13 L10 22 L19 10 L13 10 Z</StreamGeometry>
+    <StreamGeometry x:Key="FormsIcon.Code">M8 7 L3 12 L8 17 M16 7 L21 12 L16 17 M14 4 L10 20</StreamGeometry>
+  </UserControl.Resources>
+
+  <DockPanel>
+    <Border DockPanel.Dock="Top" Padding="6,2" Background="{DynamicResource Brush.Toolbar}"
+            BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+      <Grid ColumnDefinitions="Auto,Auto,*,Auto">
+        <StackPanel Orientation="Horizontal" Spacing="2">
+          <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsDesign}" Command="{Binding ShowDesignCommand}" ToolTip.Tip="Design (Shift+F7)">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <controls:StrokeIcon Data="{StaticResource Icon.Window}" Size="13" />
+              <TextBlock Text="Design" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+          <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsCode}" Command="{Binding ShowCodeCommand}" ToolTip.Tip="View Code (F7)">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <controls:StrokeIcon Data="{StaticResource FormsIcon.Code}" Size="13" />
+              <TextBlock Text="Code" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="2" Margin="10,0,0,0" IsVisible="{Binding IsDesign}">
+          <Button Theme="{StaticResource ToolButton}" Classes.selected="{Binding IsToolboxOpen}" Command="{Binding ToggleToolboxCommand}" ToolTip.Tip="Toolbox">
+            <controls:StrokeIcon Data="{StaticResource FormsIcon.Toolbox}" Size="15" />
+          </Button>
+          <Border Width="1" Margin="4,10" Background="{DynamicResource Brush.Border}" />
+          <Button Theme="{StaticResource ToolButton}" Command="{Binding UndoCommand}" ToolTip.Tip="Undo (Ctrl+Z)">
+            <controls:StrokeIcon Data="{StaticResource Icon.Undo}" Size="15" />
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Command="{Binding RedoCommand}" ToolTip.Tip="Redo (Ctrl+Y)">
+            <controls:StrokeIcon Data="{StaticResource Icon.Redo}" Size="15" />
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Command="{Binding CutCommand}" ToolTip.Tip="Cut (Ctrl+X)">
+            <controls:StrokeIcon Data="{StaticResource FormsIcon.Cut}" Size="15" />
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Command="{Binding CopyCommand}" ToolTip.Tip="Copy (Ctrl+C)">
+            <controls:StrokeIcon Data="{StaticResource FormsIcon.Copy}" Size="15" />
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Command="{Binding PasteCommand}" ToolTip.Tip="Paste (Ctrl+V)">
+            <controls:StrokeIcon Data="{StaticResource FormsIcon.Paste}" Size="15" />
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Command="{Binding DeleteCommand}" ToolTip.Tip="Delete (Del)">
+            <controls:StrokeIcon Data="{StaticResource FormsIcon.Delete}" Size="15" />
+          </Button>
+          <Border Width="1" Margin="4,10" Background="{DynamicResource Brush.Border}" />
+          <Button Theme="{StaticResource ToolButton}" Command="{Binding BringToFrontCommand}" ToolTip.Tip="Bring to Front">
+            <controls:StrokeIcon Data="{StaticResource FormsIcon.Front}" Size="15" />
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Command="{Binding SendToBackCommand}" ToolTip.Tip="Send to Back">
+            <controls:StrokeIcon Data="{StaticResource FormsIcon.Back}" Size="15" />
+          </Button>
+          <Border Width="1" Margin="4,10" Background="{DynamicResource Brush.Border}" />
+          <Button Theme="{StaticResource ToolButton}" Classes.selected="{Binding IsPropertiesOpen}" Command="{Binding TogglePropertiesCommand}" ToolTip.Tip="Properties">
+            <controls:StrokeIcon Data="{StaticResource FormsIcon.Properties}" Size="15" />
+          </Button>
+        </StackPanel>
+
+        <TextBlock Grid.Column="3" Classes="small" Foreground="{DynamicResource Brush.TextMuted}" Text="{Binding Problems}" IsVisible="{Binding IsDesign}"
+                   ToolTip.Tip="{Binding Problems}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="8,0" MaxWidth="420" />
+      </Grid>
+    </Border>
+
+    <Panel>
+      <Grid x:Name="DesignArea" ColumnDefinitions="Auto,*,Auto" IsVisible="{Binding IsDesign}">
+
+        <!-- The Toolbox: tap a tool, then tap the form; or drag the tool onto the form. -->
+        <Border x:Name="ToolboxPane" Width="212" IsVisible="{Binding IsToolboxOpen}" Background="{DynamicResource Brush.Panel}"
+                BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,1,0">
+          <DockPanel>
+            <TextBlock DockPanel.Dock="Top" Classes="header" Text="Toolbox" Margin="14,10,14,4" />
+            <TextBlock DockPanel.Dock="Top" Classes="small muted" Text="Tap a tool, then tap the form. Or drag it there." TextWrapping="Wrap" Margin="14,0,14,8" />
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+              <ItemsControl x:Name="ToolboxList" ItemsSource="{Binding Toolbox}" Margin="6,0,6,12">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:ToolboxCategoryViewModel">
+                    <StackPanel>
+                      <TextBlock Classes="small" Foreground="{DynamicResource Brush.TextMuted}" Text="{Binding Name}" Margin="8,10,8,4" FontWeight="SemiBold" />
+                      <ItemsControl ItemsSource="{Binding Items}">
+                        <ItemsControl.ItemTemplate>
+                          <DataTemplate x:DataType="vm:ToolboxItemViewModel">
+                            <Button Classes="tool" Theme="{StaticResource ToolButton}" Classes.selected="{Binding IsArmed}" Command="{Binding ArmCommand}"
+                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" MinHeight="36" Padding="10,0">
+                              <StackPanel Orientation="Horizontal" Spacing="10">
+                                <controls:StrokeIcon Data="{Binding Icon}" Size="16" Foreground="{DynamicResource Brush.Accent}" />
+                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
+                              </StackPanel>
+                            </Button>
+                          </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                      </ItemsControl>
+                    </StackPanel>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </ScrollViewer>
+          </DockPanel>
+        </Border>
+
+        <!-- The form being designed, scaled down when it is wider than the room it has. -->
+        <Panel Grid.Column="1" Background="{DynamicResource Brush.Window}">
+          <ScrollViewer x:Name="CanvasScroller" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" />
+          <Border IsVisible="{Binding HasLoadError}" VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="460" Margin="24"
+                  Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.Error}" BorderThickness="1" CornerRadius="8" Padding="16,12">
+            <Grid ColumnDefinitions="Auto,*">
+              <controls:StrokeIcon Data="{StaticResource Icon.Error}" Size="16" Foreground="{DynamicResource Brush.Error}" VerticalAlignment="Top" Margin="0,1,10,0" />
+              <StackPanel Grid.Column="1" Spacing="6">
+                <TextBlock Classes="h2" Text="The form cannot be shown in the designer" />
+                <TextBlock Text="{Binding LoadError}" TextWrapping="Wrap" />
+                <TextBlock Classes="small muted" Text="Fix the designer file in the code, then come back to Design." TextWrapping="Wrap" />
+              </StackPanel>
+            </Grid>
+          </Border>
+        </Panel>
+
+        <!-- The Properties: the selected component's properties, or its events. -->
+        <Border x:Name="PropertiesPane" Grid.Column="2" Width="300" IsVisible="{Binding IsPropertiesOpen}" Background="{DynamicResource Brush.Panel}"
+                BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1,0,0,0">
+          <DockPanel>
+            <StackPanel DockPanel.Dock="Top" Margin="14,10,14,4" Spacing="2">
+              <TextBlock Classes="header" Text="Properties" />
+              <TextBlock Text="{Binding SelectionTitle}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
+              <TextBlock Classes="small muted" Text="{Binding SelectionType}" TextTrimming="CharacterEllipsis" />
+            </StackPanel>
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="6,0,6,4">
+              <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding !ShowsEvents}" Command="{Binding ShowPropertiesCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <controls:StrokeIcon Data="{StaticResource FormsIcon.Properties}" Size="12" />
+                  <TextBlock Text="Properties" VerticalAlignment="Center" />
+                </StackPanel>
+              </Button>
+              <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding ShowsEvents}" Command="{Binding ShowEventsCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <controls:StrokeIcon Data="{StaticResource FormsIcon.Events}" Size="12" />
+                  <TextBlock Text="Events" VerticalAlignment="Center" />
+                </StackPanel>
+              </Button>
+            </StackPanel>
+
+            <Panel>
+              <ScrollViewer HorizontalScrollBarVisibility="Disabled" IsVisible="{Binding !ShowsEvents}">
+                <ItemsControl ItemsSource="{Binding Properties}" Margin="12,0,12,16">
+                  <ItemsControl.DataTemplates>
+                    <DataTemplate x:DataType="vm:TextPropertyViewModel">
+                      <StackPanel>
+                        <TextBlock Classes="small" Text="{Binding Category}" IsVisible="{Binding StartsCategory}" Foreground="{DynamicResource Brush.TextMuted}" FontWeight="SemiBold" Margin="2,12,0,4" />
+                        <Grid ColumnDefinitions="96,*" Margin="0,2">
+                          <TextBlock Classes="label" Text="{Binding Label}" VerticalAlignment="Center" />
+                          <TextBox Grid.Column="1" Text="{Binding Text, UpdateSourceTrigger=LostFocus}" AcceptsReturn="{Binding IsMultiline}" NewLine="&#13;&#10;"
+                                   TextWrapping="Wrap" MaxHeight="96" />
+                        </Grid>
+                      </StackPanel>
+                    </DataTemplate>
+                    <DataTemplate x:DataType="vm:BooleanPropertyViewModel">
+                      <StackPanel>
+                        <TextBlock Classes="small" Text="{Binding Category}" IsVisible="{Binding StartsCategory}" Foreground="{DynamicResource Brush.TextMuted}" FontWeight="SemiBold" Margin="2,12,0,4" />
+                        <Grid ColumnDefinitions="96,*" Margin="0,2">
+                          <TextBlock Classes="label" Text="{Binding Label}" VerticalAlignment="Center" />
+                          <CheckBox Grid.Column="1" IsChecked="{Binding IsChecked}" Content="{Binding IsChecked}" />
+                        </Grid>
+                      </StackPanel>
+                    </DataTemplate>
+                    <DataTemplate x:DataType="vm:NumberPropertyViewModel">
+                      <StackPanel>
+                        <TextBlock Classes="small" Text="{Binding Category}" IsVisible="{Binding StartsCategory}" Foreground="{DynamicResource Brush.TextMuted}" FontWeight="SemiBold" Margin="2,12,0,4" />
+                        <Grid ColumnDefinitions="96,*" Margin="0,2">
+                          <TextBlock Classes="label" Text="{Binding Label}" VerticalAlignment="Center" />
+                          <NumericUpDown Grid.Column="1" Value="{Binding Value}" Minimum="{Binding Minimum}" Maximum="{Binding Maximum}"
+                                         Increment="{Binding Increment}" FormatString="{Binding Format}" />
+                        </Grid>
+                      </StackPanel>
+                    </DataTemplate>
+                    <DataTemplate x:DataType="vm:ChoicePropertyViewModel">
+                      <StackPanel>
+                        <TextBlock Classes="small" Text="{Binding Category}" IsVisible="{Binding StartsCategory}" Foreground="{DynamicResource Brush.TextMuted}" FontWeight="SemiBold" Margin="2,12,0,4" />
+                        <Grid ColumnDefinitions="96,*" Margin="0,2">
+                          <TextBlock Classes="label" Text="{Binding Label}" VerticalAlignment="Center" />
+                          <ComboBox Grid.Column="1" ItemsSource="{Binding Options}" SelectedItem="{Binding Selected}" HorizontalAlignment="Stretch" />
+                        </Grid>
+                      </StackPanel>
+                    </DataTemplate>
+                    <DataTemplate x:DataType="vm:FontFamilyPropertyViewModel">
+                      <StackPanel>
+                        <TextBlock Classes="small" Text="{Binding Category}" IsVisible="{Binding StartsCategory}" Foreground="{DynamicResource Brush.TextMuted}" FontWeight="SemiBold" Margin="2,12,0,4" />
+                        <Grid ColumnDefinitions="96,*" Margin="0,2">
+                          <TextBlock Classes="label" Text="{Binding Label}" VerticalAlignment="Center" />
+                          <ComboBox Grid.Column="1" ItemsSource="{Binding Options}" SelectedItem="{Binding Selected}" HorizontalAlignment="Stretch" />
+                        </Grid>
+                      </StackPanel>
+                    </DataTemplate>
+                    <DataTemplate x:DataType="vm:PairPropertyViewModel">
+                      <StackPanel>
+                        <TextBlock Classes="small" Text="{Binding Category}" IsVisible="{Binding StartsCategory}" Foreground="{DynamicResource Brush.TextMuted}" FontWeight="SemiBold" Margin="2,12,0,4" />
+                        <Grid ColumnDefinitions="96,Auto,*,8,Auto,*" Margin="0,2">
+                          <TextBlock Classes="label" Text="{Binding Label}" VerticalAlignment="Center" />
+                          <TextBlock Grid.Column="1" Classes="small muted" Text="{Binding FirstLabel}" VerticalAlignment="Center" Margin="0,0,4,0" />
+                          <NumericUpDown Grid.Column="2" Value="{Binding First}" Minimum="{Binding Minimum}" Maximum="10000" Increment="8" FormatString="0" ShowButtonSpinner="False" />
+                          <TextBlock Grid.Column="4" Classes="small muted" Text="{Binding SecondLabel}" VerticalAlignment="Center" Margin="0,0,4,0" />
+                          <NumericUpDown Grid.Column="5" Value="{Binding Second}" Minimum="{Binding Minimum}" Maximum="10000" Increment="8" FormatString="0" ShowButtonSpinner="False" />
+                        </Grid>
+                      </StackPanel>
+                    </DataTemplate>
+                    <DataTemplate x:DataType="vm:AnchorPropertyViewModel">
+                      <StackPanel>
+                        <TextBlock Classes="small" Text="{Binding Category}" IsVisible="{Binding StartsCategory}" Foreground="{DynamicResource Brush.TextMuted}" FontWeight="SemiBold" Margin="2,12,0,4" />
+                        <Grid ColumnDefinitions="96,*" Margin="0,2">
+                          <StackPanel VerticalAlignment="Center" Spacing="2">
+                            <TextBlock Classes="label" Text="{Binding Label}" />
+                            <TextBlock Classes="small muted" Text="{Binding Summary}" TextWrapping="Wrap" />
+                          </StackPanel>
+                          <Grid Grid.Column="1" HorizontalAlignment="Left" ColumnDefinitions="36,40,36" RowDefinitions="30,30,30">
+                            <ToggleButton Grid.Column="1" Grid.Row="0" IsChecked="{Binding Top}" ToolTip.Tip="Top" HorizontalAlignment="Stretch" MinHeight="0" Padding="0">
+                              <Border Width="4" Height="16" Background="{DynamicResource Brush.Text}" CornerRadius="2" />
+                            </ToggleButton>
+                            <ToggleButton Grid.Column="0" Grid.Row="1" IsChecked="{Binding Left}" ToolTip.Tip="Left" HorizontalAlignment="Stretch" MinHeight="0" Padding="0">
+                              <Border Width="16" Height="4" Background="{DynamicResource Brush.Text}" CornerRadius="2" />
+                            </ToggleButton>
+                            <Border Grid.Column="1" Grid.Row="1" Margin="4" BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1" CornerRadius="3" />
+                            <ToggleButton Grid.Column="2" Grid.Row="1" IsChecked="{Binding Right}" ToolTip.Tip="Right" HorizontalAlignment="Stretch" MinHeight="0" Padding="0">
+                              <Border Width="16" Height="4" Background="{DynamicResource Brush.Text}" CornerRadius="2" />
+                            </ToggleButton>
+                            <ToggleButton Grid.Column="1" Grid.Row="2" IsChecked="{Binding Bottom}" ToolTip.Tip="Bottom" HorizontalAlignment="Stretch" MinHeight="0" Padding="0">
+                              <Border Width="4" Height="16" Background="{DynamicResource Brush.Text}" CornerRadius="2" />
+                            </ToggleButton>
+                          </Grid>
+                        </Grid>
+                      </StackPanel>
+                    </DataTemplate>
+                    <DataTemplate x:DataType="vm:ColorPropertyViewModel">
+                      <StackPanel>
+                        <TextBlock Classes="small" Text="{Binding Category}" IsVisible="{Binding StartsCategory}" Foreground="{DynamicResource Brush.TextMuted}" FontWeight="SemiBold" Margin="2,12,0,4" />
+                        <Grid ColumnDefinitions="96,*" Margin="0,2">
+                          <TextBlock Classes="label" Text="{Binding Label}" VerticalAlignment="Center" />
+                          <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="8,0">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                              <Border Width="18" Height="18" CornerRadius="4" Background="{Binding Swatch}" BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1" />
+                              <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <Button.Flyout>
+                              <Flyout Placement="BottomEdgeAlignedLeft">
+                                <ItemsControl ItemsSource="{Binding Palette}" Width="248">
+                                  <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                      <WrapPanel />
+                                    </ItemsPanelTemplate>
+                                  </ItemsControl.ItemsPanel>
+                                  <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:ColorChoiceViewModel">
+                                      <Button Command="{Binding PickCommand}" ToolTip.Tip="{Binding Name}" Width="30" Height="30" MinWidth="0" MinHeight="0" Padding="0" Margin="1"
+                                              Background="Transparent" BorderThickness="0">
+                                        <Border Width="24" Height="24" CornerRadius="5" Background="{Binding Swatch}" BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1" />
+                                      </Button>
+                                    </DataTemplate>
+                                  </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                              </Flyout>
+                            </Button.Flyout>
+                          </Button>
+                        </Grid>
+                      </StackPanel>
+                    </DataTemplate>
+                  </ItemsControl.DataTemplates>
+                </ItemsControl>
+              </ScrollViewer>
+
+              <ScrollViewer HorizontalScrollBarVisibility="Disabled" IsVisible="{Binding ShowsEvents}">
+                <StackPanel Margin="12,0,12,16" Spacing="2">
+                  <TextBlock Classes="small muted" Text="Double-tap an event, or the control on the form, to write its handler." TextWrapping="Wrap" Margin="2,4,2,8" />
+                  <ItemsControl ItemsSource="{Binding Events}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate x:DataType="vm:FormsEventViewModel">
+                        <Grid ColumnDefinitions="110,*,Auto" Margin="0,2" Background="Transparent" DoubleTapped="OnEventDoubleTapped">
+                          <TextBlock Classes="label" Text="{Binding Name}" VerticalAlignment="Center" />
+                          <TextBox Grid.Column="1" Text="{Binding Handler, UpdateSourceTrigger=LostFocus}" Watermark="(none)" />
+                          <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Command="{Binding OpenCommand}" ToolTip.Tip="Write the handler, or go to it" MinWidth="36" Padding="6,0">
+                            <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="13" />
+                          </Button>
+                        </Grid>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </StackPanel>
+              </ScrollViewer>
+            </Panel>
+          </DockPanel>
+        </Border>
+      </Grid>
+
+      <ContentControl x:Name="CodeHost" IsVisible="{Binding IsCode}" />
+
+      <!-- A tool being dragged from the Toolbox. -->
+      <Canvas x:Name="DragLayer" IsHitTestVisible="False">
+        <Border x:Name="DragGhost" IsVisible="False" Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.Accent}"
+                BorderThickness="1" CornerRadius="6" Padding="10,6" Opacity="0.92">
+          <TextBlock x:Name="DragGhostText" />
+        </Border>
+      </Canvas>
+    </Panel>
+  </DockPanel>
+</UserControl>

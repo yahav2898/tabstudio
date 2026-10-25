@@ -201,7 +201,7 @@ public sealed class WindowsFormsAppTests
     }
 
     /// <summary>A form with a button that changes a label, as the designer writes it.</summary>
-    private static class HelloForm
+    internal static class HelloForm
     {
         public const string Designer = """
             namespace HelloForms

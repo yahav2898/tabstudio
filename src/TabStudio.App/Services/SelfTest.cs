@@ -11,8 +11,8 @@ public sealed record SelfTestResult(bool Success, string Message, TimeSpan Durat
 
 /// <summary>
 /// Does what a person does first: opens the sample solution, presses F5, types a name when the program asks,
-/// and reads the Output panel; then debugs it, serves a new web app and shows a new Avalonia app. CI runs it on an
-/// Android emulator to prove the whole IDE works on a device.
+/// and reads the Output panel; then debugs it, serves a new web app, shows a new Avalonia app, and runs and designs a
+/// new Windows Forms app. CI runs it on an Android emulator to prove the whole IDE works on a device.
 /// </summary>
 public static partial class SelfTest
 {
@@ -91,7 +91,13 @@ public static partial class SelfTest
             }
 
             var avalonia = await ShowAvaloniaAppAsync(main, templates, cancellationToken);
-            return new SelfTestResult(avalonia.Success, $"{summary} | {debugged.Message} | {web.Message} | {avalonia.Message}", clock.Elapsed);
+            if (!avalonia.Success)
+            {
+                return new SelfTestResult(false, $"{summary} | {debugged.Message} | {web.Message} | {avalonia.Message}", clock.Elapsed);
+            }
+
+            var forms = await ShowWindowsFormsAppAsync(main, templates, cancellationToken);
+            return new SelfTestResult(forms.Success, $"{summary} | {debugged.Message} | {web.Message} | {avalonia.Message} | {forms.Message}", clock.Elapsed);
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)
         {
