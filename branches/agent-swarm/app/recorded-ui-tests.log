@@ -1,6 +1,34 @@
   Determining projects to restore...
-  Restored /home/runner/work/_temp/recorded-ui-tests/HelloAvalonia/HelloAvalonia.csproj (in 783 ms).
-  Restored /home/runner/work/_temp/recorded-ui-tests/HelloAvalonia.UITests/HelloAvalonia.UITests.csproj (in 783 ms).
+  Restored /home/runner/work/_temp/recorded-ui-tests/HelloAvalonia.UITests/HelloAvalonia.UITests.csproj (in 775 ms).
+  Restored /home/runner/work/_temp/recorded-ui-tests/HelloAvalonia/HelloAvalonia.csproj (in 775 ms).
   HelloAvalonia -> /home/runner/work/_temp/recorded-ui-tests/HelloAvalonia/bin/Debug/net10.0/HelloAvalonia.dll
-/home/runner/work/_temp/recorded-ui-tests/HelloAvalonia.UITests/RecordedApp.cs(233,39): error CS0535: 'RecordedApp.SingleView' does not implement interface member 'ISingleViewApplicationLifetime.(This interface or abstract class is -not- implementable by user code !)()' [/home/runner/work/_temp/recorded-ui-tests/HelloAvalonia.UITests/HelloAvalonia.UITests.csproj]
-/home/runner/work/_temp/recorded-ui-tests/HelloAvalonia.UITests/RecordedApp.cs(233,39): error CS0535: 'RecordedApp.SingleView' does not implement interface member 'IApplicationLifetime.(This interface or abstract class is -not- implementable by user code !)()' [/home/runner/work/_temp/recorded-ui-tests/HelloAvalonia.UITests/HelloAvalonia.UITests.csproj]
+  HelloAvalonia.UITests -> /home/runner/work/_temp/recorded-ui-tests/HelloAvalonia.UITests/bin/Debug/net10.0/HelloAvalonia.UITests.dll
+Test run for /home/runner/work/_temp/recorded-ui-tests/HelloAvalonia.UITests/bin/Debug/net10.0/HelloAvalonia.UITests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.08]   Discovering: HelloAvalonia.UITests
+[xUnit.net 00:00:00.14]   Discovered:  HelloAvalonia.UITests
+[xUnit.net 00:00:00.16]   Starting:    HelloAvalonia.UITests
+[xUnit.net 00:00:00.34]     HelloAvalonia.UITests.Recorded.CountingThreeTapsTest.Counting_three_taps [FAIL]
+[xUnit.net 00:00:00.34]       System.InvalidOperationException : It's not possible to change ApplicationLifetime after Application was initialized.
+[xUnit.net 00:00:00.34]       Stack Trace:
+[xUnit.net 00:00:00.34]            at Avalonia.Application.set_ApplicationLifetime(IApplicationLifetime value)
+[xUnit.net 00:00:00.34]         /home/runner/work/_temp/recorded-ui-tests/HelloAvalonia.UITests/RecordedApp.cs(44,0): at HelloAvalonia.UITests.RecordedApp.Start(Double width, Double height)
+[xUnit.net 00:00:00.34]         /home/runner/work/_temp/recorded-ui-tests/HelloAvalonia.UITests/Recorded/CountingThreeTapsTest.cs(13,0): at HelloAvalonia.UITests.Recorded.CountingThreeTapsTest.Counting_three_taps()
+[xUnit.net 00:00:00.34]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:00.34]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:00.35]   Finished:    HelloAvalonia.UITests
+  Failed HelloAvalonia.UITests.Recorded.CountingThreeTapsTest.Counting_three_taps [6 ms]
+  Error Message:
+   System.InvalidOperationException : It's not possible to change ApplicationLifetime after Application was initialized.
+  Stack Trace:
+     at Avalonia.Application.set_ApplicationLifetime(IApplicationLifetime value)
+   at HelloAvalonia.UITests.RecordedApp.Start(Double width, Double height) in /home/runner/work/_temp/recorded-ui-tests/HelloAvalonia.UITests/RecordedApp.cs:line 44
+   at HelloAvalonia.UITests.Recorded.CountingThreeTapsTest.Counting_three_taps() in /home/runner/work/_temp/recorded-ui-tests/HelloAvalonia.UITests/Recorded/CountingThreeTapsTest.cs:line 13
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Test Run Failed.
+Total tests: 1
+     Failed: 1
+ Total time: 0.8900 Seconds
