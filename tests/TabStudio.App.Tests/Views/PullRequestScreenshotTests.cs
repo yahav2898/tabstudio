@@ -91,7 +91,7 @@ public sealed class PullRequestScreenshotTests
         await composer.SubmitCommand.ExecuteAsync(null);
         var pendingLine = scenario.DiffLineOf(Last);
         await UiTestHelpers.WaitUntilAsync(() => support.Adorner.Views.Count == 2 && CardHeight(diff, pendingLine) > 40, because: "the pending comment's card");
-        ScrollToTop(editor, threadLine - 2);
+        await ScrollToTopAsync(editor, threadLine - 2);
         UiTestHelpers.SaveScreenshot(window, "pr-03-diff-review");
 
         Assert.Equal(1, pullRequest.PendingCount);
@@ -157,7 +157,7 @@ public sealed class PullRequestScreenshotTests
         Assert.Empty(threads.Views);
         Assert.True(threads.Toggle(PullRequestScenario.ThreadLine));
         await UiTestHelpers.WaitUntilAsync(() => CardHeight(editor.Editor, PullRequestScenario.ThreadLine) > 40, because: "the conversation under its line");
-        ScrollToTop(editor.Editor, PullRequestScenario.ThreadLine - 5);
+        await ScrollToTopAsync(editor.Editor, PullRequestScenario.ThreadLine - 5);
         UiTestHelpers.SaveScreenshot(window, "pr-06-editor-comments");
 
         var card = threads.Views.Single();
@@ -205,7 +205,7 @@ public sealed class PullRequestScreenshotTests
         var farewell = scenario.DiffLineOf(PullRequestScenario.FarewellLine);
         var greeting = scenario.DiffLineOf(PullRequestScenario.GreetingLine);
         await UiTestHelpers.WaitUntilAsync(() => CardHeight(diff, greeting) > 40 && CardHeight(diff, farewell) > 40, because: "the drafts' cards");
-        ScrollToTop(diff.Editor, greeting - 2);
+        await ScrollToTopAsync(diff.Editor, greeting - 2);
         UiTestHelpers.SaveScreenshot(window, "pr-08-claude-drafts");
 
         var cards = diff.ReviewSupport!.Adorner.Views;
@@ -252,15 +252,28 @@ public sealed class PullRequestScreenshotTests
     }
 
     /// <summary>Scrolls an editor so a line is at its top.</summary>
-    private static void ScrollToTop(AvaloniaEdit.TextEditor editor, int line)
+    private static async Task ScrollToTopAsync(AvaloniaEdit.TextEditor editor, int line)
     {
-        // The caret goes there first: the editor keeps the caret in view.
+        // The caret goes there first, as the editor keeps the caret in view; the scroll is repeated until layout keeps it.
         var textView = editor.TextArea.TextView;
         editor.TextArea.ClearSelection();
         editor.TextArea.Caret.Line = line;
-        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
-        editor.ScrollToVerticalOffset(textView.GetOrConstructVisualLine(editor.Document.GetLineByNumber(line)).VisualTop);
-        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        var target = textView.GetOrConstructVisualLine(editor.Document.GetLineByNumber(line)).VisualTop;
+        var settled = 0;
+        await UiTestHelpers.WaitUntilAsync(
+            () =>
+            {
+                AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+                if (Math.Abs(textView.VerticalOffset - target) > 1)
+                {
+                    settled = 0;
+                    editor.ScrollToVerticalOffset(target);
+                    return false;
+                }
+
+                return ++settled > 2;
+            },
+            because: "the editor to scroll");
     }
 
     /// <summary>Taps the review margin beside a line, as a finger would.</summary>
