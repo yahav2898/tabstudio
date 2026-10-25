@@ -180,7 +180,7 @@ public sealed partial class WorkspaceViewModel
         {
             "python" => ProjectKind.Python,
             "node" => ProjectKind.Node,
-            "cpp" => ProjectKind.NativeCpp,
+            "cpp" => ProjectKind.Cpp,
             _ => ProjectKind.Unknown,
         },
         OutputType = "Exe",

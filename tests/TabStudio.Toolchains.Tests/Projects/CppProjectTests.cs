@@ -1,3 +1,5 @@
+using TabStudio.Core.Compatibility;
+using TabStudio.Core.Workspaces;
 using TabStudio.Testing;
 using TabStudio.Toolchains.Catalog;
 using TabStudio.Toolchains.Projects;
@@ -9,6 +11,21 @@ public sealed class CppProjectTests : IDisposable
 {
     private readonly TempDirectory _folder = new();
     private static ToolchainDefinition Cpp => ToolchainCatalog.Default.Find("cpp")!;
+
+    [Fact]
+    public void Portable_C_and_Cpp_projects_use_the_toolchain_while_Visual_Cpp_keeps_the_Windows_Bridge()
+    {
+        var portable = new ProjectInfo { Name = "Portable", FilePath = _folder.Resolve("CMakeLists.txt"), Kind = ProjectKind.Cpp, OutputType = "Exe" };
+        var visual = portable with { FilePath = _folder.Resolve("App.vcxproj"), Kind = ProjectKind.NativeCpp };
+        var report = CompatibilityDoctor.Diagnose(portable);
+
+        Assert.Equal(RunHost.Toolchain, report.Host);
+        Assert.Equal(CompatibilityStatus.NeedsToolchain, report.Status);
+        Assert.False(WindowsBridgeCompatibility.IsNativeApplication(portable));
+        Assert.False(WindowsBridgeCompatibility.IsWindowsOnly(portable));
+        Assert.True(WindowsBridgeCompatibility.IsNativeApplication(visual));
+        Assert.True(WindowsBridgeCompatibility.IsWindowsOnly(visual));
+    }
 
     [Theory]
     [InlineData("CMakeLists.txt")]

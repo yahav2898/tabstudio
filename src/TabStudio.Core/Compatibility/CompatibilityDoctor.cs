@@ -144,6 +144,10 @@ public static class CompatibilityDoctor
                 project, RunHost.WindowsBridge, CompatibilityStatus.NeedsWindows, "Windows Bridge",
                 "Visual C++ projects need the MSVC toolchain. They build and run on your PC through the Windows Bridge."),
 
+            ProjectKind.Cpp => Report(
+                project, RunHost.Toolchain, CompatibilityStatus.NeedsToolchain, "C and C++ toolchain",
+                "Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel."),
+
             ProjectKind.Python => Report(
                 project, RunHost.Toolchain, CompatibilityStatus.NeedsToolchain, "Python toolchain",
                 "Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it."),

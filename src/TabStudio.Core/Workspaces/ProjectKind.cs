@@ -59,6 +59,9 @@ public enum ProjectKind
 
     /// <summary>A Node.js program: a folder with <c>package.json</c>.</summary>
     Node,
+
+    /// <summary>A portable C or C++ project built with CMake, make or a compiler from the Toolchain Store.</summary>
+    Cpp,
 }
 
 /// <summary>
