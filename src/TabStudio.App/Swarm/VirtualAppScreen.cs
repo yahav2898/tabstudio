@@ -13,6 +13,7 @@ namespace TabStudio.App.Swarm;
 public sealed class VirtualAppScreen : LocalAppScreen
 {
     private ScreenProfile _profile;
+    private AvaloniaAppHost? _app;
     private AppViewInstance? _instance;
 
     /// <summary>Creates a virtual device that shows no app yet.</summary>
@@ -62,6 +63,7 @@ public sealed class VirtualAppScreen : LocalAppScreen
     {
         ArgumentNullException.ThrowIfNull(app);
         Stop();
+        _app = app;
         try
         {
             _instance = app.CreateView();
@@ -81,6 +83,19 @@ public sealed class VirtualAppScreen : LocalAppScreen
     }
 
     /// <inheritdoc />
+    /// <remarks>A new instance of the running app replaces the one shown, with a new view model.</remarks>
+    protected override bool Restart()
+    {
+        if (_app is not { } app)
+        {
+            return false;
+        }
+
+        Start(app);
+        return IsRunning;
+    }
+
+    /// <inheritdoc />
     /// <remarks>The frame waits on the stage of the IDE's window, still running, until a tile shows it.</remarks>
     protected override void HoldOutsideWindow(Control surface)
     {
@@ -95,6 +110,7 @@ public sealed class VirtualAppScreen : LocalAppScreen
     {
         Dispatcher.UIThread.VerifyAccess();
         HideApp();
+        _app = null;
         if (_instance is { } instance)
         {
             Frame.App = null;

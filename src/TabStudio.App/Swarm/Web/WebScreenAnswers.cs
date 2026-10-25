@@ -69,6 +69,7 @@ internal sealed record WebScreenIssue(string Kind, string Severity, string Path,
 [JsonSerializable(typeof(WebScreenState))]
 [JsonSerializable(typeof(WebScreenPoint))]
 [JsonSerializable(typeof(List<WebScreenIssue>))]
+[JsonSerializable(typeof(string))]
 internal sealed partial class WebScreenJson : JsonSerializerContext
 {
     /// <summary>An answer, or <see langword="null"/> when there is none or it is not what was asked for.</summary>

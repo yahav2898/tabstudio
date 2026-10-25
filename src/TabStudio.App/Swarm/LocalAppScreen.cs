@@ -11,10 +11,17 @@ namespace TabStudio.App.Swarm;
 /// replayed through <see cref="ScreenInput"/>, pictures are drawn by Avalonia, and the layout checks walk its view.
 /// </summary>
 /// <remarks>
+/// <para>
 /// Each call may come from any thread, such as a phone's request over TabStudio Link; the work happens on the UI
 /// thread. A screen nobody looks at is laid out on request, so its pictures and layout checks are current.
+/// </para>
+/// <para>
+/// Beyond the contract, it reads what its elements show (<see cref="IAppScreenElements"/>), for the checks of recorded
+/// tests; shows notices (<see cref="IAppScreenNotices"/>), which its tile and pane show; and starts the app again,
+/// fresh (<see cref="IAppScreenRestart"/>), as a recorded test starts it.
+/// </para>
 /// </remarks>
-public abstract class LocalAppScreen : IAppScreen, IDisposable
+public abstract class LocalAppScreen : IAppScreen, IAppScreenElements, IAppScreenNotices, IAppScreenRestart, ILocalScreenNotices, IDisposable
 {
     private readonly ILayoutInspector _inspector;
     private ScreenInput? _input;
@@ -38,6 +45,9 @@ public abstract class LocalAppScreen : IAppScreen, IDisposable
 
     /// <inheritdoc />
     public event EventHandler<AppInput>? InputCaptured;
+
+    /// <inheritdoc />
+    public event EventHandler<string>? NoticeShown;
 
     /// <inheritdoc />
     public string Id { get; }
@@ -115,6 +125,55 @@ public abstract class LocalAppScreen : IAppScreen, IDisposable
     });
 
     /// <inheritdoc />
+    public Task<string?> ReadTextAsync(string elementPath, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(elementPath);
+        return OnUiThreadAsync(() =>
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (AppRoot is not { } root)
+            {
+                return Task.FromResult<string?>(null);
+            }
+
+            EnsureLayout();
+            return Task.FromResult<string?>(ElementPaths.Resolve(root, elementPath) is { } element ? ElementPaths.TextOf(element) : null);
+        });
+    }
+
+    /// <inheritdoc />
+    public void ShowNotice(string text)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (!_disposed)
+            {
+                OnNoticeShown(text);
+                NoticeShown?.Invoke(this, text);
+            }
+        });
+    }
+
+    /// <inheritdoc />
+    public Task<bool> RestartAppAsync(CancellationToken cancellationToken) => OnUiThreadAsync(() =>
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        if (!IsRunning)
+        {
+            return Task.FromResult(false);
+        }
+
+        var restarted = Restart();
+        if (restarted)
+        {
+            EnsureLayout();
+        }
+
+        return Task.FromResult(restarted);
+    });
+
+    /// <inheritdoc />
     public void Dispose()
     {
         Dispose(disposing: true);
@@ -157,6 +216,19 @@ public abstract class LocalAppScreen : IAppScreen, IDisposable
     /// </summary>
     /// <param name="surface">The screen's surface.</param>
     protected virtual void HoldOutsideWindow(Control surface)
+    {
+    }
+
+    /// <summary>
+    /// Starts the app again on this screen, fresh, as a recorded test starts it: a new instance of its main view, with
+    /// a new view model. UI thread.
+    /// </summary>
+    /// <returns>Whether the app shows again.</returns>
+    protected abstract bool Restart();
+
+    /// <summary>A notice was shown on the screen, such as an input mirrored from another screen that it could not take. UI thread.</summary>
+    /// <param name="text">The notice.</param>
+    protected virtual void OnNoticeShown(string text)
     {
     }
 

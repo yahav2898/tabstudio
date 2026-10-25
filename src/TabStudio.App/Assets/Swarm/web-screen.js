@@ -432,6 +432,16 @@
     return false;
   }
 
+  // The text an element shows, for a recorded test's check: a field's value, or its text in one line.
+  function text(path) {
+    var el = resolve(path);
+    if (!el) {
+      return null;
+    }
+    var value = 'value' in el && typeof el.value === 'string' ? el.value : (el.innerText || el.textContent || '');
+    return value.replace(/\s+/g, ' ').trim();
+  }
+
   function scroll(path, dx, dy) {
     var el = path === 'body' ? null : resolve(path);
     if (path !== 'body' && !el) {
@@ -893,6 +903,7 @@
     state: state,
     point: point,
     type: type,
+    text: text,
     scroll: scroll,
     expect: expect,
     inspect: inspect

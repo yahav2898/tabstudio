@@ -45,6 +45,10 @@ internal static class WebScreenScript
     /// <param name="text">The text.</param>
     public static string Type(string text) => Call("type", Text(text));
 
+    /// <summary>The text the element at a path shows: a field's value, or its text in one line; <c>null</c> when there is none.</summary>
+    /// <param name="path">The element's path.</param>
+    public static string TextOf(string path) => Call("text", Text(path));
+
     /// <summary>Scrolls the element at a path, or the scrollable element around it; <c>body</c> scrolls the page.</summary>
     /// <param name="path">The element's path.</param>
     /// <param name="delta">How far, in the page's pixels.</param>

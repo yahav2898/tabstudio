@@ -116,7 +116,7 @@ public sealed class SwarmAppTests
         Assert.Equal(4, help.Layout!.Finding.Screens.Count);
 
         matrix.Zoom = 0.33;
-        UiTestHelpers.SaveScreenshot(window, "swarm-01-device-matrix");
+        UiTestHelpers.SaveScreenshot(window, "swarm-screens-01-device-matrix");
 
         // The foldable in dark, right to left, with its Hebrew text, at full size.
         var foldable = matrix.Tiles.Single(t => t.Virtual == devices[1]);
@@ -128,7 +128,7 @@ public sealed class SwarmAppTests
         Assert.Equal(Avalonia.Media.FlowDirection.RightToLeft, devices[1].AppRoot!.FlowDirection);
         matrix.ShowFullSize(foldable);
         await UiTestHelpers.WaitUntilAsync(() => workspace.LayoutChecks.Checking == 0, CheckTimeout, "the foldable's new checks");
-        UiTestHelpers.SaveScreenshot(window, "swarm-02-rtl-dark-hebrew");
+        UiTestHelpers.SaveScreenshot(window, "swarm-screens-02-rtl-dark-hebrew");
         matrix.CloseFullSizeCommand.Execute(null);
 
         // The screens button of the row outlines the element in the tiles that have it; the row opens its XAML.
@@ -138,7 +138,7 @@ public sealed class SwarmAppTests
         Assert.Same(clipped.Layout.Finding, matrix.ShownFinding);
         Assert.True(matrix.Tiles.Single(t => t.Virtual == devices[0]).HasHighlights);
         Assert.False(matrix.Tiles.Single(t => t.Virtual == devices[2]).HasHighlights);
-        UiTestHelpers.SaveScreenshot(window, "swarm-03-error-list-highlight");
+        UiTestHelpers.SaveScreenshot(window, "swarm-screens-03-error-list-highlight");
 
         workspace.ErrorList.NavigateCommand.Execute(clipped);
         await UiTestHelpers.WaitUntilAsync(() => workspace.ActiveDocument?.FilePath == viewPath && workspace.ActiveDocument.CaretLine == location.Line, because: "the XAML element in the editor");
@@ -240,7 +240,7 @@ public sealed class SwarmAppTests
         Dispatcher.UIThread.RunJobs();
         conversation.UpdateLayout();
         conversation.Offset = default;
-        UiTestHelpers.SaveScreenshot(window, "swarm-04-fix-with-agent");
+        UiTestHelpers.SaveScreenshot(window, "swarm-screens-04-fix-with-agent");
 
         workspace.StopCommand.Execute(null);
         await run.WaitAsync(TimeSpan.FromSeconds(30));

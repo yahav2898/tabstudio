@@ -89,9 +89,9 @@ public sealed partial class WorkspaceViewModel
         _avaloniaApp = app;
         _avaloniaProject = project;
         _xamlOfPaths.Clear();
-        if (app.MainView is { } mainView && _previewScreen is { } preview)
+        if (app.MainView is not null && _previewScreen is { } preview)
         {
-            preview.Show(app.View, mainView);
+            preview.Show(app);
             if (!_screens.Screens.Contains(preview))
             {
                 // The tablet's own preview comes first in every list of screens.

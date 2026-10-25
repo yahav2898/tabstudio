@@ -12,6 +12,17 @@
   <SolidColorBrush x:Key="Swarm.ErrorSoft" Color="#3A1F22" />
   <SolidColorBrush x:Key="Swarm.WarningSoft" Color="#3A321C" />
 
+  <!-- A short notice over a screen, such as a tap mirrored from another screen that found no element there. -->
+  <ControlTheme x:Key="SwarmNotice" TargetType="Border">
+    <Setter Property="Background" Value="#E61B1F24" />
+    <Setter Property="BorderBrush" Value="#33FFFFFF" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="10" />
+    <Setter Property="Padding" Value="14,10" />
+    <Setter Property="BoxShadow" Value="0 6 18 0 #66000000" />
+    <Setter Property="IsHitTestVisible" Value="False" />
+  </ControlTheme>
+
   <!-- Every screen at once: a grid of screens. -->
   <StreamGeometry x:Key="Icon.DeviceMatrix">M3 5 L10 5 L10 19 L3 19 Z M13 8 L21 8 L21 19 L13 19 Z M5.5 16.5 L7.5 16.5 M16 16.5 L18 16.5</StreamGeometry>
   <!-- Turn the device on its side. -->

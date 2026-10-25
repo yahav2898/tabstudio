@@ -1,11 +1,9 @@
 using System.Reflection;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using TabStudio.App.Platform;
 using TabStudio.App.Previews;
 using TabStudio.App.Services;
+using TabStudio.App.Swarm.LayoutChecks;
 using TabStudio.App.ViewModels;
 using TabStudio.Compilation.Running;
 using TabStudio.Swarm;
@@ -32,7 +30,7 @@ public enum SwarmDeviceMode
 /// <summary>
 /// The device's screen in a swarm: shows the Avalonia app the tablet sent in the device's own app preview, a web app in
 /// a web view, or a console app's output, and answers the tablet's requests about the screen through the app preview's
-/// screen in the <see cref="AppScreenRegistry"/>.
+/// screen, <see cref="PreviewScreen"/>.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -41,48 +39,49 @@ public enum SwarmDeviceMode
 /// platform allows it.
 /// </para>
 /// <para>
-/// Input, pictures, layout checks and texts go to the registry's screen of kind <see cref="AppScreenKind.Preview"/>,
-/// which the app preview registers. Without one, pictures are rendered from the app's view and texts read from its
-/// elements here, and replayed input is not delivered.
+/// While an Avalonia app shows, the app preview is a screen of kind <see cref="AppScreenKind.Preview"/>, which the
+/// tablet drives through its <see cref="DeviceAppScreen"/>: the tablet's input is replayed through it as a person's
+/// taps and keys, the person's own input here is captured by it and sent to the tablet, and pictures, layout checks
+/// and the texts of elements come from it, so every screen of the swarm names elements by the same
+/// <see cref="ElementPaths"/>. It is the host's own, kept out of this device's <see cref="AppScreenRegistry"/>: the
+/// IDE on this device, under the swarm's page, checks only the apps it runs itself.
 /// </para>
 /// <para>Properties change on the UI thread. The <see cref="ISwarmDeviceHost"/> members may be called from any thread.</para>
 /// </remarks>
-public sealed partial class SwarmDeviceHost : ObservableObject, ISwarmDeviceHost
+public sealed partial class SwarmDeviceHost : ObservableObject, ISwarmDeviceHost, IDisposable
 {
+    /// <summary>The id of the swarm's app preview as a screen, apart from the IDE's own preview.</summary>
+    public const string PreviewScreenId = "swarm-preview";
+
     /// <summary>How long a notice stays on the screen.</summary>
     private static readonly TimeSpan NoticeTime = TimeSpan.FromSeconds(3.5);
 
     private readonly IUiDispatcher _ui;
-    private readonly AppScreenRegistry _registry;
     private readonly IWebViewFactory _webViews;
     private readonly IStoragePicker _browser;
     private readonly Lock _gate = new();
     private SwarmScreenInfo _screen = SwarmScreenInfo.Unknown;
-    private IAppScreen? _previewScreen;
     private HostedRun? _current;
     private int _notices;
 
     /// <summary>Creates the device's screen.</summary>
     /// <param name="ui">Gets work onto the UI thread.</param>
-    /// <param name="registry">The screens of the app being built, where the app preview registers its screen.</param>
     /// <param name="webViews">Creates the web view for web apps.</param>
     /// <param name="browser">Opens pages a web app links to outside itself.</param>
     /// <param name="profile">The device profile, which limits the console's text.</param>
-    public SwarmDeviceHost(IUiDispatcher ui, AppScreenRegistry registry, IWebViewFactory webViews, IStoragePicker browser, DeviceProfile profile)
+    public SwarmDeviceHost(IUiDispatcher ui, IWebViewFactory webViews, IStoragePicker browser, DeviceProfile profile)
     {
         ArgumentNullException.ThrowIfNull(ui);
-        ArgumentNullException.ThrowIfNull(registry);
         ArgumentNullException.ThrowIfNull(webViews);
         ArgumentNullException.ThrowIfNull(browser);
         ArgumentNullException.ThrowIfNull(profile);
         _ui = ui;
-        _registry = registry;
         _webViews = webViews;
         _browser = browser;
         Console = new OutputViewModel(ui, profile.OutputCharacterLimit);
         Web = new WebPreviewViewModel(webViews, browser);
-        _registry.Screens.CollectionChanged += (_, _) => WatchPreviewScreen();
-        WatchPreviewScreen();
+        PreviewScreen = new PreviewAppScreen(Preview, new LayoutInspector(), PreviewScreenId);
+        PreviewScreen.InputCaptured += OnPreviewInput;
     }
 
     /// <summary>Raised on the UI thread for every input a person made on the app here, for the tablet's mirroring and recording.</summary>
@@ -93,6 +92,12 @@ public sealed partial class SwarmDeviceHost : ObservableObject, ISwarmDeviceHost
 
     /// <summary>The device's app preview, which shows the Avalonia app full screen.</summary>
     public AppPreviewViewModel Preview { get; } = new();
+
+    /// <summary>
+    /// The app preview as a screen, running while an Avalonia app shows: what the tablet's input, pictures, layout
+    /// checks and texts go through, and where the person's input here is captured.
+    /// </summary>
+    public PreviewAppScreen PreviewScreen { get; }
 
     /// <summary>The web view of a web app.</summary>
     [ObservableProperty]
@@ -162,35 +167,24 @@ public sealed partial class SwarmDeviceHost : ObservableObject, ISwarmDeviceHost
     }
 
     /// <inheritdoc />
-    public async Task<bool> SendInputAsync(SwarmInput input, CancellationToken cancellationToken)
+    public Task<bool> SendInputAsync(SwarmInput input, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(input);
-        var screen = await OnUiThreadAsync(() => _previewScreen);
-        return screen is not null && await screen.SendInputAsync(SwarmScreens.ToApp(input), cancellationToken);
+        return PreviewScreen.SendInputAsync(SwarmScreens.ToApp(input), cancellationToken);
     }
 
     /// <inheritdoc />
-    public async Task<byte[]?> CaptureAsync(CancellationToken cancellationToken)
-    {
-        var screen = await OnUiThreadAsync(() => _previewScreen);
-        return screen is not null ? await screen.CaptureAsync(cancellationToken) : await OnUiThreadAsync(RenderView);
-    }
+    public Task<byte[]?> CaptureAsync(CancellationToken cancellationToken) => PreviewScreen.CaptureAsync(cancellationToken);
 
     /// <inheritdoc />
-    public async Task<IReadOnlyList<SwarmLayoutIssue>> InspectLayoutAsync(CancellationToken cancellationToken)
-    {
-        var screen = await OnUiThreadAsync(() => _previewScreen);
-        return screen is null ? [] : [.. (await screen.InspectLayoutAsync(cancellationToken)).Select(SwarmScreens.ToSwarm)];
-    }
+    public async Task<IReadOnlyList<SwarmLayoutIssue>> InspectLayoutAsync(CancellationToken cancellationToken) =>
+        [.. (await PreviewScreen.InspectLayoutAsync(cancellationToken)).Select(SwarmScreens.ToSwarm)];
 
     /// <inheritdoc />
-    public async Task<string?> ReadTextAsync(string elementPath, CancellationToken cancellationToken)
+    public Task<string?> ReadTextAsync(string elementPath, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(elementPath);
-        var screen = await OnUiThreadAsync(() => _previewScreen);
-        return screen is IAppScreenElements elements
-            ? await elements.ReadTextAsync(elementPath, cancellationToken)
-            : await OnUiThreadAsync(() => Preview.View is { } view && ElementPaths.Resolve(view, elementPath) is { } element ? ElementPaths.TextOf(element) : null);
+        return PreviewScreen.ReadTextAsync(elementPath, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -223,6 +217,13 @@ public sealed partial class SwarmDeviceHost : ObservableObject, ISwarmDeviceHost
     {
         Mode = SwarmDeviceMode.Waiting;
         AppName = null;
+    }
+
+    /// <summary>Lets go of the app preview's screen.</summary>
+    public void Dispose()
+    {
+        PreviewScreen.InputCaptured -= OnPreviewInput;
+        PreviewScreen.Dispose();
     }
 
     private async Task ClearNoticeLaterAsync(int shown)
@@ -265,6 +266,9 @@ public sealed partial class SwarmDeviceHost : ObservableObject, ISwarmDeviceHost
         var run = new HostedRun(this, app.Name, host);
         host.Crashed += (_, exception) => _ui.Post(() => run.End(new RunResult(RunOutcome.Crashed, -1, TimeSpan.Zero, exception)));
         Preview.Show(app.Name, host.View, host.Note);
+
+        // The preview becomes the screen the tablet drives, for as long as the app shows.
+        PreviewScreen.Show(host);
         Present(run, SwarmDeviceMode.App, app.Name);
         return run;
     }
@@ -285,56 +289,13 @@ public sealed partial class SwarmDeviceHost : ObservableObject, ISwarmDeviceHost
         }
 
         _current = null;
+        PreviewScreen.Hide();
         Preview.ShowStopped();
         Web.ShowStopped();
         ShowWaiting();
     }
 
-    /// <summary>Follows the app preview's screen in the registry, whose inputs go to the tablet. UI thread.</summary>
-    private void WatchPreviewScreen()
-    {
-        var screen = _registry.Screens.FirstOrDefault(s => s.Kind == AppScreenKind.Preview);
-        if (ReferenceEquals(screen, _previewScreen))
-        {
-            return;
-        }
-
-        if (_previewScreen is not null)
-        {
-            _previewScreen.InputCaptured -= OnPreviewInput;
-        }
-
-        _previewScreen = screen;
-        if (screen is not null)
-        {
-            screen.InputCaptured += OnPreviewInput;
-        }
-    }
-
     private void OnPreviewInput(object? sender, AppInput input) => InputCaptured?.Invoke(this, input);
-
-    /// <summary>A picture of the app's view, when no screen of the app preview takes pictures. UI thread.</summary>
-    private byte[]? RenderView()
-    {
-        if (Preview.View is not { Bounds: { Width: >= 1, Height: >= 1 } bounds } view)
-        {
-            return null;
-        }
-
-        var scale = TopLevel.GetTopLevel(view)?.RenderScaling ?? 1;
-        using var bitmap = new RenderTargetBitmap(new PixelSize((int)(bounds.Width * scale), (int)(bounds.Height * scale)), new Vector(96 * scale, 96 * scale));
-        bitmap.Render(view);
-        using var stream = new MemoryStream();
-        bitmap.Save(stream);
-        return stream.ToArray();
-    }
-
-    private async Task<T> OnUiThreadAsync<T>(Func<T> read)
-    {
-        var value = default(T);
-        await _ui.InvokeAsync(() => value = read());
-        return value!;
-    }
 
     /// <summary>An app the device shows, until the swarm stops it or it crashes.</summary>
     private sealed class HostedRun(SwarmDeviceHost owner, string appName, AvaloniaAppHost? appHost) : ISwarmAppRun

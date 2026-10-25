@@ -148,8 +148,8 @@ internal static class UiTestDriverSource
 
             /// <summary>
             /// A bare name is looked for anywhere. A path is followed from the root through logical children, each segment
-            /// being Type#Name or Type[index among children of that type]; when that fails, the last segment's name is
-            /// looked for anywhere.
+            /// being Type#Name or Type[index among children of exactly that type, or among a list's items]; when that
+            /// fails, an element with the last segment's name is looked for anywhere, if there is only one.
             /// </summary>
             private static Control? FindIn(Control root, string path)
             {
@@ -184,12 +184,12 @@ internal static class UiTestDriverSource
                     var children = current.GetLogicalChildren().OfType<Control>().ToList();
                     if (name is not null)
                     {
-                        current = children.FirstOrDefault(c => c.Name == name && IsType(c, type));
+                        current = children.FirstOrDefault(c => c.Name == name);
                     }
                     else
                     {
-                        var ofType = children.Where(c => IsType(c, type)).ToList();
-                        current = index < ofType.Count ? ofType[index] : index < children.Count ? children[index] : null;
+                        var ofType = children.Where(c => TypeName(c.GetType()) == type).ToList();
+                        current = Item(current, type, index) ?? (index < ofType.Count ? ofType[index] : null);
                     }
                 }
 
@@ -199,7 +199,37 @@ internal static class UiTestDriverSource
                 }
 
                 var last = Parse(segments[^1]);
-                return last.Name is { } lastName && Named(root, lastName) is { } named && IsType(named, last.Type) ? named : null;
+                if (last.Name is not { } lastName)
+                {
+                    return null;
+                }
+
+                var named = root.GetLogicalDescendants().OfType<Control>().Where(c => c.Name == lastName && IsType(c, last.Type)).Take(2).ToList();
+                return named.Count == 1 ? named[0] : null;
+            }
+
+            /// <summary>An item of a list by its index among the list's items, scrolled into view when it is not shown yet.</summary>
+            private static Control? Item(Control parent, string? type, int index)
+            {
+                if (parent is not ItemsControl items || index >= items.ItemCount)
+                {
+                    return null;
+                }
+
+                if (items.ContainerFromIndex(index) is null)
+                {
+                    items.ScrollIntoView(index);
+                    items.UpdateLayout();
+                }
+
+                return items.ContainerFromIndex(index) is { } container && TypeName(container.GetType()) == type ? container : null;
+            }
+
+            /// <summary>A type's name without its generic arity, as paths write it.</summary>
+            private static string TypeName(Type type)
+            {
+                var tick = type.Name.IndexOf('`');
+                return tick < 0 ? type.Name : type.Name[..tick];
             }
 
             private static Control? Named(Control root, string name) =>
@@ -214,7 +244,7 @@ internal static class UiTestDriverSource
 
                 for (var current = control.GetType(); current is not null && current != typeof(StyledElement); current = current.BaseType)
                 {
-                    if (current.Name == type)
+                    if (TypeName(current) == type)
                     {
                         return true;
                     }

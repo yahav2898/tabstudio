@@ -25,10 +25,14 @@ public sealed partial class ScreenTileViewModel : ObservableObject, IDisposable
     /// <summary>How often the web preview's picture is taken: it is on this tablet, so more often than a phone's.</summary>
     private static readonly TimeSpan LocalSnapshotInterval = TimeSpan.FromSeconds(1.5);
 
+    /// <summary>How long a notice stays on the tile.</summary>
+    private static readonly TimeSpan NoticeTime = TimeSpan.FromSeconds(3.5);
+
     private readonly DeviceMatrixViewModel _matrix;
     private readonly DispatcherTimer? _snapshots;
     private bool _capturing;
     private bool _disposed;
+    private int _notices;
 
     /// <summary>Creates the tile of a screen.</summary>
     /// <param name="screen">The screen.</param>
@@ -42,6 +46,10 @@ public sealed partial class ScreenTileViewModel : ObservableObject, IDisposable
         Profile = screen.Profile;
         IsRunning = screen.IsRunning;
         screen.Changed += OnScreenChanged;
+        if (screen is ILocalScreenNotices notices)
+        {
+            notices.NoticeShown += OnNoticeShown;
+        }
         if (IsPictured)
         {
             _snapshots = new DispatcherTimer { Interval = screen.Kind == AppScreenKind.Device ? SnapshotInterval : LocalSnapshotInterval };
@@ -138,6 +146,14 @@ public sealed partial class ScreenTileViewModel : ObservableObject, IDisposable
     /// <summary>Whether its fonts are scaled up.</summary>
     public bool HasLargeText => Profile.FontScale > 1.01;
 
+    /// <summary>A short message shown over the screen for a moment, such as a mirrored tap that found no element here.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasNotice))]
+    public partial string? Notice { get; private set; }
+
+    /// <summary>Whether a notice is shown.</summary>
+    public bool HasNotice => Notice is not null;
+
     /// <summary>Whether there is a status to show instead of the app.</summary>
     public bool HasStatus => StatusText is not null;
 
@@ -222,6 +238,11 @@ public sealed partial class ScreenTileViewModel : ObservableObject, IDisposable
 
         _disposed = true;
         Screen.Changed -= OnScreenChanged;
+        if (Screen is ILocalScreenNotices notices)
+        {
+            notices.NoticeShown -= OnNoticeShown;
+        }
+
         _snapshots?.Stop();
     }
 
@@ -271,6 +292,21 @@ public sealed partial class ScreenTileViewModel : ObservableObject, IDisposable
         }
     });
 
+    private void OnNoticeShown(object? sender, string text)
+    {
+        Notice = text;
+        _ = ClearNoticeLaterAsync(++_notices);
+    }
+
+    private async Task ClearNoticeLaterAsync(int shown)
+    {
+        await Task.Delay(NoticeTime);
+        if (shown == _notices)
+        {
+            Notice = null;
+        }
+    }
+
     /// <summary>The status follows the matrix's apps: a web app runs in the web preview, not on virtual devices.</summary>
     internal void RefreshStatus() => UpdateStatus();
 
@@ -280,6 +316,7 @@ public sealed partial class ScreenTileViewModel : ObservableObject, IDisposable
         : Screen is WebAppScreen ? "Loading the page"
         : Virtual is not null && _matrix.HasWebApp && !_matrix.HasApp ? "Virtual devices run Avalonia apps"
         : _matrix.HasApp ? "Starting the app"
+        : Virtual is not null ? "Shows the app while it runs in this tablet's App Preview"
         : "Not running";
 
     private async Task RefreshSnapshotAsync()

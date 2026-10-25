@@ -28,8 +28,9 @@ public sealed record LayoutFinding(LayoutIssueKind Kind, LayoutIssueSeverity Sev
 
 /// <summary>
 /// Keeps the layout checks of every screen in the <see cref="AppScreenRegistry"/> current. A screen is checked a
-/// moment after the app starts or restarts on it, once its views have settled, and again when it changes size,
-/// theme, direction or font scale; its findings are merged with the other screens', one per element and problem.
+/// moment after the app starts or restarts on it, once its views have settled, and again whenever it says it changed,
+/// such as in size, theme, direction or font scale; its findings are merged with the other screens', one per element
+/// and problem.
 /// </summary>
 /// <remarks>
 /// Phones in the swarm check themselves and answer over TabStudio Link; a screen that does not answer in time keeps
@@ -156,7 +157,10 @@ public sealed class ScreenLayoutChecks : IDisposable
         OnScreenChanged(screen, state);
     }
 
-    /// <summary>A screen started the app, or changed what it looks like: it is checked once it settles.</summary>
+    /// <summary>
+    /// A screen started the app or started it again, changed what it looks like, or shows something new, such as a
+    /// phone that got a new build: it is checked once it settles.
+    /// </summary>
     private void OnScreenChanged(IAppScreen screen, ScreenState state)
     {
         if (_disposed || !_states.ContainsKey(screen))
@@ -164,13 +168,7 @@ public sealed class ScreenLayoutChecks : IDisposable
             return;
         }
 
-        var running = screen.IsRunning;
-        var profile = screen.Profile;
-        var started = running && !state.WasRunning;
-        var changed = running && state.Profile is not null && state.Profile != profile;
-        state.WasRunning = running;
-        state.Profile = profile;
-        if (started || changed)
+        if (screen.IsRunning)
         {
             Schedule(screen, state, SettleDelay);
         }
@@ -262,10 +260,6 @@ public sealed class ScreenLayoutChecks : IDisposable
     private sealed class ScreenState
     {
         public EventHandler OnChanged { get; set; } = (_, _) => { };
-
-        public bool WasRunning { get; set; }
-
-        public ScreenProfile? Profile { get; set; }
 
         public ScreenProfile? CheckedProfile { get; set; }
 

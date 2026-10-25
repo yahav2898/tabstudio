@@ -252,6 +252,14 @@
                         <TextBlock Classes="muted" Text="{Binding StatusText}" TextWrapping="Wrap" TextAlignment="Center"
                                    HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12" />
                       </Border>
+                      <!-- A short notice, such as a tap mirrored from another screen that found no element here. -->
+                      <Border Theme="{StaticResource SwarmNotice}" Margin="8,0,8,10" Padding="10,7" HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                              IsVisible="{Binding HasNotice}">
+                        <Grid ColumnDefinitions="Auto,*">
+                          <controls:StrokeIcon Data="{StaticResource Icon.Info}" Size="13" Margin="0,1,7,0" Foreground="{DynamicResource Brush.Info}" VerticalAlignment="Top" />
+                          <TextBlock Grid.Column="1" Classes="small" Foreground="White" TextWrapping="Wrap" Text="{Binding Notice}" />
+                        </Grid>
+                      </Border>
                     </Panel>
                   </Border>
                 </StackPanel>

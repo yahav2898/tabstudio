@@ -82,12 +82,12 @@ public sealed class SwarmRunTests
 
         // Mirrored input: a tap on one phone happens on the other.
         fixture.SwarmWindow.MirrorInput = true;
-        pixel.Preview.PersonTaps("CountButton");
+        pixel.PersonTaps("CountButton");
         await UiTestHelpers.WaitUntilAsync(() => galaxy.Texts().Contains("Clicked 1 times"), because: "the tap mirrored to the Galaxy");
         Assert.Contains("Clicked 1 times", pixel.Texts());
 
-        // A tap that the other screen cannot take says so there, and in the Swarm window.
-        pixel.Preview.PersonTaps("MainView/StackPanel[0]/Button#OnlyOnThePixel");
+        // A tap that the other screen cannot take, on a button only the Pixel's layout has, says so there, and in the Swarm window.
+        pixel.Reports(new AppInput(AppInputKind.Tap, "MainView/StackPanel[0]/Button#OnlyOnThePixel", new Avalonia.Point(0.5, 0.5)));
         await UiTestHelpers.WaitUntilAsync(() => galaxy.Host.Notice is not null && fixture.SwarmWindow.Notice is not null, because: "the failed mirror's notices");
         Assert.Contains("from Pixel 7 did not arrive here", galaxy.Host.Notice, StringComparison.Ordinal);
         Assert.Contains("could not be delivered to Galaxy S24", fixture.SwarmWindow.Notice, StringComparison.Ordinal);
@@ -105,11 +105,11 @@ public sealed class SwarmRunTests
         await UiTestHelpers.WaitUntilAsync(() => pixel.Texts().Contains("Clicked 0 times"), because: "the app to start again for the recording");
         for (var i = 0; i < 3; i++)
         {
-            pixel.Preview.PersonTaps("MainView/StackPanel[0]/Button#CountButton");
+            pixel.PersonTaps("MainView/StackPanel[0]/Button#CountButton");
         }
 
         await UiTestHelpers.WaitUntilAsync(() => pixel.Texts().Contains("Clicked 3 times"), because: "three taps");
-        pixel.Preview.PersonLongPresses("MainView/StackPanel[0]/TextBlock[2]");
+        pixel.PersonLongPresses("MainView/StackPanel[0]/TextBlock[2]");
         await WaitQuietlyAsync(() => recorder.Steps.Count >= 4 || recorder.Error is not null);
         Assert.True(recorder.Error is null, recorder.Error);
         Assert.Equal(["Tap CountButton", "Tap CountButton", "Tap CountButton", "Check that MainView/StackPanel[0]/TextBlock[2] shows \"Clicked 3 times\""], recorder.Steps.Select(s => s.Text));

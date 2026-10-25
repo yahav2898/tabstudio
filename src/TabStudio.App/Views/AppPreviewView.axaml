@@ -43,6 +43,15 @@
         <TextBlock Classes="h2" Text="{Binding Title}" HorizontalAlignment="Center" />
         <TextBlock Classes="muted" Text="{Binding StatusText}" TextWrapping="Wrap" TextAlignment="Center" />
       </StackPanel>
+
+      <!-- A short notice, such as a tap mirrored from another screen that found no element here. -->
+      <Border Theme="{StaticResource SwarmNotice}" Margin="16,0,16,20" MaxWidth="420" HorizontalAlignment="Center" VerticalAlignment="Bottom"
+              IsVisible="{Binding HasNotice}">
+        <Grid ColumnDefinitions="Auto,*">
+          <controls:StrokeIcon Data="{StaticResource Icon.Info}" Size="15" Margin="0,1,9,0" Foreground="{DynamicResource Brush.Info}" VerticalAlignment="Top" />
+          <TextBlock Grid.Column="1" Classes="small" Foreground="White" TextWrapping="Wrap" Text="{Binding Notice}" />
+        </Grid>
+      </Border>
     </Panel>
   </DockPanel>
 </UserControl>

@@ -85,7 +85,7 @@ public sealed class SwarmDebuggingTests
         SwarmAppFixture.Progress("debugging: running on both");
 
         // A tap on the second phone runs into the breakpoint there.
-        Dispatcher.UIThread.Post(() => galaxy.Preview.PersonTaps("CountButton"));
+        Dispatcher.UIThread.Post(() => galaxy.PersonTaps("CountButton"));
         SwarmAppFixture.Progress("debugging: galaxy tapped");
         await UntilAsync(() => workspace.IsPaused && workspace.ShownSwarmPause?.Device.Name == "Galaxy S24", because: "the Galaxy to stop at the breakpoint");
         await workspace.PauseShown.WaitAsync(TimeSpan.FromSeconds(60));
@@ -111,7 +111,7 @@ public sealed class SwarmDebuggingTests
         // Pause all on a breakpoint: the Pixel pauses at its next statement, which a tap runs.
         var pixelOnTablet = fixture.Swarm.Devices.Single(d => d.Name == "Pixel 7");
         await UntilAsync(() => pixelOnTablet.State == SwarmDeviceState.Pausing, because: "the Pixel to pause with the Galaxy");
-        Dispatcher.UIThread.Post(() => pixel.Preview.PersonTaps("CountButton"));
+        Dispatcher.UIThread.Post(() => pixel.PersonTaps("CountButton"));
         SwarmAppFixture.Progress("debugging: pixel tapped");
         await UntilAsync(() => pixelOnTablet.State == SwarmDeviceState.Paused && workspace.CallStack.Threads.Count == 2, because: "the Pixel in the Call Stack's box");
         Assert.Equal(PauseReason.Pause, pixelOnTablet.Pause?.Reason);

@@ -19,18 +19,15 @@ public sealed record SwarmMirrorFailure(IAppScreen Screen, IAppScreen Source, Ap
 /// can be compared at every size. A screen that cannot take an input says so for a moment.
 /// </summary>
 /// <remarks>
-/// A replayed input goes through the screen's input like a person's, so the screen reports it too; those echoes are
-/// recognized and not mirrored again. UI thread only.
+/// A screen reports only what a person does on it (<see cref="IAppScreen.InputCaptured"/>): an input replayed on it
+/// reaches its app as a person's would, but is not reported again, so mirrored input never echoes between screens.
+/// UI thread only.
 /// </remarks>
 public sealed class SwarmInputMirror : IDisposable
 {
-    /// <summary>How long a replayed input's echo is expected.</summary>
-    private static readonly TimeSpan EchoTime = TimeSpan.FromSeconds(3);
-
     private readonly AppScreenRegistry _registry;
     private readonly IUiDispatcher _ui;
     private readonly HashSet<IAppScreen> _watched = [];
-    private readonly List<(IAppScreen Screen, AppInput Input, DateTime Until)> _echoes = [];
 
     /// <summary>Starts watching the registry; mirroring starts once <see cref="IsEnabled"/> is set.</summary>
     /// <param name="registry">Every screen of the app being built.</param>
@@ -66,10 +63,6 @@ public sealed class SwarmInputMirror : IDisposable
         _watched.Clear();
     }
 
-    /// <summary>Whether two inputs are the same as far as an echo goes: the same kind, element, text and key.</summary>
-    internal static bool IsSame(AppInput a, AppInput b) =>
-        a.Kind == b.Kind && a.ElementPath == b.ElementPath && a.Text == b.Text && a.Key == b.Key && a.Modifiers == b.Modifiers;
-
     private void OnScreensChanged(object? sender, NotifyCollectionChangedEventArgs e) => Watch();
 
     private void Watch()
@@ -103,7 +96,7 @@ public sealed class SwarmInputMirror : IDisposable
             return;
         }
 
-        if (TakeEcho(source, input) || !IsEnabled)
+        if (!IsEnabled)
         {
             return;
         }
@@ -115,10 +108,8 @@ public sealed class SwarmInputMirror : IDisposable
         }
 
         Mirrored?.Invoke(this, input);
-        var until = DateTime.UtcNow + EchoTime;
         foreach (var target in targets)
         {
-            _echoes.Add((target, input, until));
             _ = DeliverAsync(target, source, input);
         }
     }
@@ -143,25 +134,8 @@ public sealed class SwarmInputMirror : IDisposable
         var failure = new SwarmMirrorFailure(target, source, input);
         _ui.Post(() =>
         {
-            // No echo comes from a screen that did not take the input.
-            _echoes.RemoveAll(e => ReferenceEquals(e.Screen, target) && IsSame(e.Input, input));
             (target as IAppScreenNotices)?.ShowNotice($"{SwarmScreens.Describe(input)} from {source.Profile.Name} did not arrive here: there is no such element on this screen.");
             DeliveryFailed?.Invoke(this, failure);
         });
-    }
-
-    /// <summary>Whether an input is the echo of one this mirror replayed on the screen; forgets it then.</summary>
-    private bool TakeEcho(IAppScreen screen, AppInput input)
-    {
-        var now = DateTime.UtcNow;
-        _echoes.RemoveAll(e => e.Until < now);
-        var index = _echoes.FindIndex(e => ReferenceEquals(e.Screen, screen) && IsSame(e.Input, input));
-        if (index < 0)
-        {
-            return false;
-        }
-
-        _echoes.RemoveAt(index);
-        return true;
     }
 }

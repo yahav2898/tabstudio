@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Styling;
 using Avalonia.Threading;
+using TabStudio.App.Previews;
 using TabStudio.App.ViewModels;
 
 namespace TabStudio.App.Swarm;
@@ -13,8 +14,14 @@ namespace TabStudio.App.Swarm;
 /// phone that runs the app for the swarm, this is the screen that phone's TabStudio drives.
 /// </summary>
 /// <remarks>
+/// <para>
 /// The profile is worked out on the UI thread whenever the preview changes and kept, so any thread can read it.
 /// The preview takes replayed input while it is drawn, as a phone's screen does while it is on.
+/// </para>
+/// <para>
+/// Starting the app again, as a recorded test does, shows a new instance of its main view in the preview, with a new
+/// view model, without building it again. Notices show on the preview's pane.
+/// </para>
 /// </remarks>
 public sealed class PreviewAppScreen : LocalAppScreen
 {
@@ -31,12 +38,17 @@ public sealed class PreviewAppScreen : LocalAppScreen
     private readonly DispatcherTimer _resized = new() { Interval = ResizeSettle };
     private ScreenProfile _profile = new(PreviewName, FormFactor.Tablet, 0, 0);
     private Size _lastSize;
+    private AvaloniaAppHost? _app;
+    private AppViewInstance? _instance;
 
     /// <summary>Creates the preview's screen, which shows nothing until an app runs.</summary>
     /// <param name="preview">The app preview.</param>
     /// <param name="inspector">The layout checks.</param>
-    public PreviewAppScreen(AppPreviewViewModel preview, ILayoutInspector inspector)
-        : base(PreviewId, AppScreenKind.Preview, inspector)
+    /// <param name="id">
+    /// The screen's id: <see cref="PreviewId"/> for the IDE's preview, another for a preview that shows a swarm's app.
+    /// </param>
+    public PreviewAppScreen(AppPreviewViewModel preview, ILayoutInspector inspector, string id = PreviewId)
+        : base(id, AppScreenKind.Preview, inspector)
     {
         ArgumentNullException.ThrowIfNull(preview);
         _preview = preview;
@@ -50,21 +62,16 @@ public sealed class PreviewAppScreen : LocalAppScreen
     /// <inheritdoc />
     protected override Size LayoutSize => new(_profile.Width, _profile.Height);
 
-    /// <summary>Starts showing a running app, as the preview shows it.</summary>
-    /// <param name="surface">The app's view in its theme, as the preview holds it.</param>
-    /// <param name="mainView">The app's main view inside it.</param>
-    public void Show(Control surface, Control mainView)
+    /// <summary>Starts showing a running app, as the preview shows it: its main view, in its theme.</summary>
+    /// <param name="app">The running app, which the preview shows.</param>
+    /// <exception cref="InvalidOperationException">The app shows no main view.</exception>
+    public void Show(AvaloniaAppHost app)
     {
-        ArgumentNullException.ThrowIfNull(surface);
-        ArgumentNullException.ThrowIfNull(mainView);
-        if (Surface is { } previous)
-        {
-            previous.PropertyChanged -= OnSurfaceChanged;
-        }
-
-        surface.PropertyChanged += OnSurfaceChanged;
-        UpdateProfile(surface, mainView);
-        ShowApp(surface, mainView);
+        ArgumentNullException.ThrowIfNull(app);
+        var mainView = app.MainView ?? throw new InvalidOperationException("The app preview shows no main view of the app.");
+        ReleaseInstance();
+        _app = app;
+        ShowSurface(app.View, mainView);
     }
 
     /// <summary>Stops showing the app, once it stopped or before it restarts.</summary>
@@ -77,6 +84,56 @@ public sealed class PreviewAppScreen : LocalAppScreen
 
         _resized.Stop();
         HideApp();
+        ReleaseInstance();
+        _app = null;
+    }
+
+    /// <inheritdoc />
+    /// <remarks>A new instance of the app's main view replaces the one in the preview, with a new view model.</remarks>
+    protected override bool Restart()
+    {
+        if (_app is not { } app || _preview.AppName is not { } name)
+        {
+            return false;
+        }
+
+        AppViewInstance instance;
+        try
+        {
+            instance = app.CreateView();
+        }
+        catch (Exception ex) when (ex is not OutOfMemoryException)
+        {
+            // The app's own startup code threw: the instance shown stays.
+            return false;
+        }
+
+        var previous = _instance;
+        _instance = instance;
+        _preview.Show(name, instance.Root, _preview.Note);
+        ShowSurface(instance.Root, instance.MainView);
+        if (previous is not null)
+        {
+            AvaloniaAppHost.Release(previous);
+        }
+
+        return true;
+    }
+
+    /// <inheritdoc />
+    protected override void OnNoticeShown(string text) => _preview.ShowNotice(text);
+
+    /// <summary>Shows the app's view in its theme, as the preview holds it, with the app's main view inside.</summary>
+    private void ShowSurface(Control surface, Control mainView)
+    {
+        if (Surface is { } previous)
+        {
+            previous.PropertyChanged -= OnSurfaceChanged;
+        }
+
+        surface.PropertyChanged += OnSurfaceChanged;
+        UpdateProfile(surface, mainView);
+        ShowApp(surface, mainView);
     }
 
     /// <inheritdoc />
@@ -90,9 +147,24 @@ public sealed class PreviewAppScreen : LocalAppScreen
             {
                 surface.PropertyChanged -= OnSurfaceChanged;
             }
+
+            if (Dispatcher.UIThread.CheckAccess())
+            {
+                ReleaseInstance();
+            }
         }
 
         base.Dispose(disposing);
+    }
+
+    /// <summary>Lets go of the instance a restart showed, once the preview no longer shows it.</summary>
+    private void ReleaseInstance()
+    {
+        if (_instance is { } instance)
+        {
+            _instance = null;
+            AvaloniaAppHost.Release(instance);
+        }
     }
 
     private void OnPreviewChanged(object? sender, PropertyChangedEventArgs e)

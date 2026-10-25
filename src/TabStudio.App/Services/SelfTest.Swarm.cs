@@ -55,7 +55,7 @@ public static partial class SelfTest
         }
 
         using var identity = LinkIdentity.Create();
-        var host = new SwarmDeviceHost(new AvaloniaUiDispatcher(), new AppScreenRegistry(), new NoWebViewFactory(), new TopLevelStoragePicker(), DeviceProfile.For(new DeviceInfo(4L * 1024 * 1024 * 1024, 4, IsLowRamDevice: false)));
+        using var host = new SwarmDeviceHost(new AvaloniaUiDispatcher(), new NoWebViewFactory(), new TopLevelStoragePicker(), DeviceProfile.For(new DeviceInfo(4L * 1024 * 1024 * 1024, 4, IsLowRamDevice: false)));
         host.SetScreen(412, 915, 2.625, isDark: true);
         var phone = new SwarmMember(
             new SwarmMemberOptions

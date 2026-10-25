@@ -14,9 +14,10 @@ namespace TabStudio.App.Swarm.Web;
 /// <remarks>
 /// It needs a browser that runs script, <see cref="IScriptableWebView"/>: Android's system WebView. Desktops have no
 /// embedded browser, so there a web app has no screen. The screen reads the page a few times a second, which sets
-/// the page up again after every load, follows its size and theme, and collects what a person did on it.
+/// the page up again after every load, follows its size and theme, and collects what a person did on it. It reads
+/// what its elements show, for the checks of recorded tests, and its notices show on its tile in the Device Matrix.
 /// </remarks>
-public sealed class WebAppScreen : IAppScreen, IDisposable
+public sealed class WebAppScreen : IAppScreen, IAppScreenElements, IAppScreenNotices, ILocalScreenNotices, IDisposable
 {
     /// <summary>The web preview's screen id.</summary>
     public const string WebPreviewId = "web-preview";
@@ -58,6 +59,9 @@ public sealed class WebAppScreen : IAppScreen, IDisposable
 
     /// <inheritdoc />
     public event EventHandler<AppInput>? InputCaptured;
+
+    /// <inheritdoc />
+    public event EventHandler<string>? NoticeShown;
 
     /// <inheritdoc />
     public string Id => WebPreviewId;
@@ -126,6 +130,29 @@ public sealed class WebAppScreen : IAppScreen, IDisposable
         var issues = WebScreenJson.Read(answer, WebScreenJson.Default.ListWebScreenIssue) ?? [];
         return [.. issues.Select(ToLayoutIssue).OfType<LayoutIssue>()];
     });
+
+    /// <inheritdoc />
+    public Task<string?> ReadTextAsync(string elementPath, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(elementPath);
+        return OnUiThreadAsync<string?>(async () =>
+            _running && _view is { } view
+                ? WebScreenJson.Read(await view.EvaluateAsync(WebScreenScript.TextOf(elementPath), cancellationToken), WebScreenJson.Default.String)
+                : null);
+    }
+
+    /// <inheritdoc />
+    public void ShowNotice(string text)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (!_disposed)
+            {
+                NoticeShown?.Invoke(this, text);
+            }
+        });
+    }
 
     /// <inheritdoc />
     public void Dispose()

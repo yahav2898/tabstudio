@@ -1,4 +1,8 @@
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Headless;
+using Avalonia.Input;
+using Avalonia.Threading;
 using TabStudio.App.Platform;
 using TabStudio.App.Services;
 using TabStudio.App.Services.Link;
@@ -15,15 +19,20 @@ namespace TabStudio.App.Tests.Swarm;
 /// <summary>
 /// A swarm inside the test, made of the app's own pieces: the tablet, "Yahav's tablet", with a workspace and its swarm
 /// on the loopback address, and devices that join it over real TLS, each with its own identity, cache, screen and
-/// window, as separate phones would.
+/// window, as separate phones would. The windows draw frames on their own, as screens do, since Avalonia's controls
+/// take a tap by what was last drawn under it.
 /// </summary>
 internal sealed class SwarmAppFixture : IAsyncDisposable
 {
     /// <summary>The test collection of the tests that build and run apps on a swarm, which run one at a time.</summary>
     public const string Collection = "Swarm";
 
+    /// <summary>How often the headless windows draw a frame.</summary>
+    private static readonly TimeSpan FrameInterval = TimeSpan.FromMilliseconds(40);
+
     private readonly TempDirectory _temp = new();
     private readonly List<SwarmAppDevice> _devices = [];
+    private readonly DispatcherTimer _frames = new(DispatcherPriority.Background) { Interval = FrameInterval };
 
     public SwarmAppFixture()
     {
@@ -38,6 +47,8 @@ internal sealed class SwarmAppFixture : IAsyncDisposable
         Swarm = new SwarmCoordinatorService(Paths, Link, ui, Registry, new SwarmSettingsStore(Paths), Mirror);
         Services = new SwarmServices(Swarm, Registry, Mirror, Paths);
         Workspace = new WorkspaceViewModel(compiler, status, profile, ui, new SessionStore(Paths), Paths, link: Link, swarm: Services);
+        _frames.Tick += (_, _) => AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+        _frames.Start();
     }
 
     public AppPaths Paths { get; }
@@ -103,6 +114,7 @@ internal sealed class SwarmAppFixture : IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
+        _frames.Stop();
         foreach (var device in _devices)
         {
             await device.DisposeAsync();
@@ -116,7 +128,10 @@ internal sealed class SwarmAppFixture : IAsyncDisposable
     }
 }
 
-/// <summary>A phone of a <see cref="SwarmAppFixture"/>: its own data, Link identity, screen and window.</summary>
+/// <summary>
+/// A phone of a <see cref="SwarmAppFixture"/>: its own data, Link identity, screen and window. Its app preview is the
+/// app's own Preview screen, which a person's taps reach as real input on the phone's window.
+/// </summary>
 internal sealed class SwarmAppDevice : IAsyncDisposable
 {
     public SwarmAppDevice(string folder, string name)
@@ -127,10 +142,7 @@ internal sealed class SwarmAppDevice : IAsyncDisposable
         var profile = DeviceProfile.For(status.Device);
         var ui = new AvaloniaUiDispatcher();
         Link = new LinkService(Paths, new CompilerServices(Paths), status, profile, new TestDeviceIdentity(name, LinkDeviceKinds.Phone), ui);
-        Registry = new AppScreenRegistry();
-        Host = new SwarmDeviceHost(ui, Registry, new NoWebViewFactory(), new TopLevelStoragePicker(), profile);
-        Preview = new FakePreviewScreen(Host.Preview, name);
-        Registry.Add(Preview);
+        Host = new SwarmDeviceHost(ui, new NoWebViewFactory(), new TopLevelStoragePicker(), profile);
         Member = new SwarmMemberService(Paths, Link, ui, Host);
         Page = new SwarmDevicePageViewModel(Member);
         Window = new Window { Width = 412, Height = 915, Content = new SwarmDevicePageView { DataContext = Page } };
@@ -143,12 +155,10 @@ internal sealed class SwarmAppDevice : IAsyncDisposable
 
     public LinkService Link { get; }
 
-    public AppScreenRegistry Registry { get; }
-
     public SwarmDeviceHost Host { get; }
 
-    /// <summary>The device's app preview as a screen, as the Swarm screens feature provides it.</summary>
-    public FakePreviewScreen Preview { get; }
+    /// <summary>The device's app preview as a screen, which the tablet drives.</summary>
+    public PreviewAppScreen Preview => Host.PreviewScreen;
 
     public SwarmMemberService Member { get; }
 
@@ -162,11 +172,41 @@ internal sealed class SwarmAppDevice : IAsyncDisposable
             ? [.. Avalonia.VisualTree.VisualExtensions.GetVisualDescendants(view).OfType<TextBlock>().Select(t => t.Text ?? string.Empty)]
             : [];
 
+    /// <summary>A person taps an element of the app on this phone: a click on the phone's window, in the element's middle.</summary>
+    /// <param name="elementPath">The element, by its path or its name.</param>
+    public void PersonTaps(string elementPath) => PersonClicks(elementPath, MouseButton.Left);
+
+    /// <summary>A person long-presses an element, as a right click does with a mouse, as a recorder's check.</summary>
+    /// <param name="elementPath">The element, by its path or its name.</param>
+    public void PersonLongPresses(string elementPath) => PersonClicks(elementPath, MouseButton.Right);
+
+    /// <summary>
+    /// The phone reports an input on an element that only its own layout has, as a phone with another layout would,
+    /// straight to the tablet.
+    /// </summary>
+    /// <param name="input">The input.</param>
+    public void Reports(AppInput input) => Member.Member.ReportInput(SwarmScreens.ToSwarm(input));
+
     public async ValueTask DisposeAsync()
     {
         Window.Close();
         Page.Dispose();
         await Member.DisposeAsync();
+        Host.Dispose();
         Link.Dispose();
+    }
+
+    private void PersonClicks(string elementPath, MouseButton button)
+    {
+        var view = Host.Preview.View ?? throw new InvalidOperationException($"{Name} shows no app.");
+        var element = ElementPaths.Resolve(view, elementPath) ?? throw new InvalidOperationException($"{Name} shows no {elementPath}.");
+        var middle = element.TranslatePoint(new Point(element.Bounds.Width / 2, element.Bounds.Height / 2), Window)
+            ?? throw new InvalidOperationException($"{elementPath} is not in {Name}'s window.");
+
+        // A finger lands on what the screen shows: the latest layout is drawn first.
+        AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+        Window.MouseMove(middle);
+        Window.MouseDown(middle, button);
+        Window.MouseUp(middle, button);
     }
 }
