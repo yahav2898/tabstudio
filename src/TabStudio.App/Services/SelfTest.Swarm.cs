@@ -73,17 +73,18 @@ public static partial class SelfTest
 
             // A tap on the phone's count button, as a person's finger, through Avalonia's input.
             var (phone, tablet) = (devices[0], devices[1]);
-            var button = phone.AppRoot!.GetLogicalDescendants().OfType<Button>().Single(b => b.Name == "CountButton");
-            var path = ElementPaths.Describe(phone.AppRoot!, button)!;
+            var (phoneApp, tabletApp) = (phone.AppRoot!, tablet.AppRoot!);
+            var button = phoneApp.GetLogicalDescendants().OfType<Button>().Single(b => b.Name == "CountButton");
+            var path = ElementPaths.Describe(phoneApp, button)!;
             var tapped = await phone.SendInputAsync(new AppInput(AppInputKind.Tap, path), cancellationToken);
-            while (!Texts(phone.AppRoot).Contains("Clicked 1 times") && clock.Elapsed < deadline)
+            while (!Texts(phoneApp).Contains("Clicked 1 times") && clock.Elapsed < deadline)
             {
                 await Task.Delay(PollInterval, cancellationToken);
             }
 
-            if (!tapped || !Texts(phone.AppRoot).Contains("Clicked 1 times") || !Texts(tablet.AppRoot!).Contains("Clicked 0 times"))
+            if (!tapped || !Texts(phoneApp).Contains("Clicked 1 times") || !Texts(tabletApp).Contains("Clicked 0 times"))
             {
-                return new SelfTestResult(false, $"Swarm: the tap on {path} did not count on the phone alone: {DescribeTap(button, tapped)}; phone {string.Join(", ", Texts(phone.AppRoot))}", clock.Elapsed);
+                return new SelfTestResult(false, $"Swarm: the tap on {path} did not count on the phone alone: {DescribeTap(button, tapped)}; phone {string.Join(", ", Texts(phoneApp))}", clock.Elapsed);
             }
 
             // Every screen is checked a moment after the app starts on it.
