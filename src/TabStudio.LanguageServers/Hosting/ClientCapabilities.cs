@@ -57,7 +57,7 @@ internal static class ClientCapabilities
                     ["labelDetailsSupport"] = true,
                     ["resolveSupport"] = new JsonObject { ["properties"] = Strings("documentation", "detail", "additionalTextEdits") },
                 },
-                ["completionItemKind"] = new JsonObject { ["valueSet"] = ValueSet(1, 25) },
+                ["completionItemKind"] = ValueSet(1, 25),
                 ["completionList"] = new JsonObject { ["itemDefaults"] = Strings("commitCharacters", "editRange", "insertTextFormat", "data") },
             },
             ["hover"] = new JsonObject { ["contentFormat"] = Strings("markdown", "plaintext") },

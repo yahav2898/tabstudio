@@ -141,6 +141,10 @@ public static class CompatibilityDoctor
                 project, RunHost.Toolchain, CompatibilityStatus.NeedsToolchain, "Python toolchain",
                 "Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it."),
 
+            ProjectKind.Rust => Report(
+                project, RunHost.Toolchain, CompatibilityStatus.NeedsToolchain, "Rust toolchain",
+                "Runs with Rust from the Toolchain Store, with console input and output in the Output panel. Install Rust to run it."),
+
             ProjectKind.Node => Report(
                 project, RunHost.Toolchain, CompatibilityStatus.NeedsToolchain, "Node.js toolchain",
                 "Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it."),

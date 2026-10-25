@@ -62,6 +62,8 @@ jobs:
             name=$(basename "$project")
             [ "$name" = "TabStudio.App.Tests" ] && continue
             if ! dotnet test "$project" -c Release --logger "console;verbosity=normal" > "ci-out/$name.log" 2>&1; then
+              # A retry may not hide a flaky test for this language.
+              if grep -Eq 'RustProjectTests.*\[FAIL\]' "ci-out/$name.log"; then status=1; fi
               # Known intermittent failures are tracked on the board; one retry keeps them from blocking a release,
               # and FLAKY.txt and a warning keep them visible. A second failure fails the job.
               echo "::warning::$name failed once; running it again. The first attempt is in ci-out/$name.log."
@@ -106,6 +108,18 @@ jobs:
         with:
           python-version: '3.12'
 
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rust-analyzer, rust-src
+
+      - name: Install LLDB for Rust
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y lldb-19
+          mkdir -p "$RUNNER_TEMP/lldb-bin"
+          ln -s /usr/bin/lldb-dap-19 "$RUNNER_TEMP/lldb-bin/lldb-dap"
+          echo "$RUNNER_TEMP/lldb-bin" >> "$GITHUB_PATH"
+
       - name: Install language servers and debug adapters
         run: |
           npm install -g pyright typescript-language-server typescript@5
@@ -136,6 +150,7 @@ jobs:
           first=0
           run_ide_tests ci-out/TabStudio.App.Tests.log || first=1
           tail -n 80 ci-out/TabStudio.App.Tests.log
+          if grep -Eq 'A_Rust_template.*\[FAIL\]' ci-out/TabStudio.App.Tests.log; then status=1; fi
           if [ $first -ne 0 ]; then
             # Known intermittent failures (a native crash in the test host, slow servers) are tracked on the board;
             # one retry keeps them from blocking a release, and FLAKY.txt and a warning keep them visible.
@@ -157,6 +172,7 @@ jobs:
           light=0
           run_light_tests ci-out/TabStudio.App.Tests.Light.log || light=1
           tail -n 20 ci-out/TabStudio.App.Tests.Light.log
+          if grep -Eq 'A_Rust_template.*\[FAIL\]' ci-out/TabStudio.App.Tests.Light.log; then status=1; fi
           if [ $light -ne 0 ]; then
             echo "::warning::The IDE tests in the light theme failed once; running them again. The first attempt is in ci-out/TabStudio.App.Tests.Light.log."
             if run_light_tests ci-out/TabStudio.App.Tests.Light.retry.log; then
@@ -309,7 +325,7 @@ jobs:
           disk-size: 4096M
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
-          script: bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 660
+          script: bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 1500
 
       # A crash's native backtrace has only offsets into the runtime's stripped libraries; this names the functions.
       - name: Name the functions in a crash's backtrace

@@ -48,6 +48,9 @@ public sealed record DebugAdapterDefinition
     /// <summary>How to talk to it.</summary>
     public DebugAdapterTransport Transport { get; init; }
 
+    /// <summary>Whether a TCP adapter passes its process's standard input to the debugged program (Delve).</summary>
+    public bool UsesProcessInput { get; init; }
+
     /// <summary>Values every launch configuration of this type starts from, such as <c>"console": "internalConsole"</c>.</summary>
     public JsonObject? Defaults { get; init; }
 

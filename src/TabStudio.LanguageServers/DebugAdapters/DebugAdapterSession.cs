@@ -120,6 +120,24 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
     /// <summary>Whether the program runs in TabStudio's console, started through <see cref="RunInTerminalHandler"/>.</summary>
     public bool RunsInTerminal => _runsInTerminal && RunInTerminalHandler is not null;
 
+    /// <summary>Whether input can be sent to the debuggee through this TCP adapter's own standard input.</summary>
+    public bool AcceptsProgramInput => Adapter.UsesProcessInput && Adapter.Transport == DebugAdapterTransport.Tcp && _process is not null;
+
+    /// <summary>Sends a line typed in the Output panel to a TCP adapter whose child inherits standard input.</summary>
+    /// <param name="line">The line, without its newline.</param>
+    /// <param name="cancellationToken">Stops writing.</param>
+    /// <exception cref="InvalidOperationException">This adapter's standard input carries protocol messages.</exception>
+    public async Task WriteProgramInputAsync(string line, CancellationToken cancellationToken = default)
+    {
+        if (!AcceptsProgramInput)
+        {
+            throw new InvalidOperationException("This adapter does not accept program input on its standard input.");
+        }
+
+        await _process!.StandardInput.WriteAsync(System.Text.Encoding.UTF8.GetBytes(line + "\n"), cancellationToken).ConfigureAwait(false);
+        await _process.StandardInput.FlushAsync(cancellationToken).ConfigureAwait(false);
+    }
+
     /// <summary>Starts an adapter and initializes it.</summary>
     /// <param name="adapter">The adapter.</param>
     /// <param name="executable">The full path of its program, as the launcher resolved it.</param>

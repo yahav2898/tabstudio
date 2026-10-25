@@ -34,3 +34,10 @@ The following are not part of the APK. The Toolchain Store downloads them only w
 
 The web templates include Bootstrap, jQuery, jQuery Validation and jQuery Validation Unobtrusive, each with its licence
 file beside it under [src/TabStudio.Web/Templates/Content/lib](src/TabStudio.Web/Templates/Content/lib).
+
+## Rust language tools
+
+Rust, Cargo and rust-analyzer (MIT OR Apache-2.0), rust-src, and LLVM/LLDB (Apache-2.0 WITH LLVM-exception)
+are installed as signed Alpine Linux packages on Android. No additional binary archives are downloaded.
+Sources and licenses: https://github.com/rust-lang/rust, https://github.com/rust-lang/rust-analyzer,
+https://github.com/llvm/llvm-project.
