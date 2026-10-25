@@ -1,0 +1,82 @@
+== Processes left running
+    PID    PPID    PGID   RSS     ELAPSED COMMAND
+   2847       1    1953 1077468     01:03 /usr/share/dotnet/sdk/10.0.402/Roslyn/bincore/VBCSCompiler -pipename:7C1eK_URY58svpsGCXumqTPVB8OicXQVkdXAlCcu35A
+   2770       1    1953 549156      01:06 /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.402/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:true /low:false
+   2771       1    1953 189380      01:06 /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.402/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:true /low:false
+   2769       1    1953 167948      01:06 /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.402/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:true /low:false
+   1969    1966    1953 155288      01:38 /tmp/provjobd3974948310
+   2003    1982    1953 142788      01:36 /home/runner/actions-runner/cached/2.338.0/bin/Runner.Worker spawnclient 142 145
+   1982    1953    1953 98580       01:38 /home/runner/actions-runner/cached/2.338.0/bin/Runner.Listener run
+   1136       1    1136 71404       02:43 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+   2868    2771    1953 59980       01:03 dotnet exec --runtimeconfig /home/runner/work/tabstudio/tabstudio/.nuget/packages/avalonia.buildservices/11.3.2/tools/netstandard2.0/runtimeconfig.json /home/runner/work/tabstudio/tabstudio/.nuget/packages/avalonia.buildservices/11.3.2/tools/netstandard2.0/Avalonia.BuildServices.Collector.dll
+    807       1     807 51664       02:44 php-fpm: master process (/etc/php/8.3/fpm/php-fpm.conf)
+    881       1     881 47088       02:44 /usr/bin/containerd
+    218       1     218 43684       02:51 /sbin/multipathd -d -s
+   1598     842     842 38336       02:40 /usr/bin/python3 -u bin/WALinuxAgent-2.16.0.3-py3.12.egg -run-exthandlers
+    842       1     842 31936       02:44 /usr/bin/python3 -u /usr/sbin/waagent -daemon
+   1953       1    1953 21784       01:38 /opt/hca/hosted-compute-agent
+   1159     807     807 21488       02:43 php-fpm: pool www
+   1155     807     807 21484       02:43 php-fpm: pool www
+    803       1     803 20896       02:44 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
+    155       1     155 17780       02:52 /usr/lib/systemd/systemd-journald
+      1       0       1 14368       02:53 /sbin/init
+    841       1     841 13916       02:44 /usr/libexec/udisks2/udisksd
+    485       1     485 13348       02:50 /usr/lib/systemd/systemd-resolved
+    991       1     991 12992       02:44 /usr/sbin/ModemManager
+   1084       1    1084 11608       02:43 /usr/lib/systemd/systemd --user
+    835       1     835 10100       02:44 /usr/lib/systemd/systemd-logind
+    645       1     645  9812       02:48 /usr/lib/systemd/systemd-networkd
+    811       1     811  8288       02:44 /usr/lib/polkit-1/polkitd --no-debug
+    224       1     224  8032       02:51 /usr/lib/systemd/systemd-udevd
+   1966    1953    1953  7088       01:38 sudo -n PROVJOBD_E2E=1 /tmp/provjobd3974948310
+    504       1     504  6620       02:50 /usr/sbin/haveged --Foreground --verbose=1
+    943       1     943  6508       02:44 /usr/sbin/rsyslogd -n -iNONE
+    799       1     799  5548       02:44 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+   3186    2736    1953  4296       00:00 ps -eo pid,ppid,pgid,rss,etime,args --sort=-rss
+    933       1     932  3772       02:44 /usr/sbin/chronyd -F 1
+   2736    2003    1953  3640       01:07 /usr/bin/bash -e /home/runner/work/_temp/2643b878-18ad-43b2-8a25-dd6047c409a5.sh
+   1109    1084    1084  3636       02:43 (sd-pam)
+    322       1     322  2968       02:50 /usr/lib/linux-tools/6.17.0-1022-azure/hv_kvp_daemon -n
+    870       1     870  2880       02:44 /usr/sbin/cron -f -P
+    915       1     915  2212       02:44 /sbin/agetty -o -p -- \u --keep-baud 115200,57600,38400,9600 - vt220
+== Kernel messages
+[    3.554112] audit: type=1400 audit(1792939204.655:5): apparmor="STATUS" operation="profile_load" profile="unconfined" name="1password" pid=376 comm="apparmor_parser"
+[    3.554909] audit: type=1400 audit(1792939204.656:6): apparmor="STATUS" operation="profile_load" profile="unconfined" name="buildah" pid=384 comm="apparmor_parser"
+[    3.554914] audit: type=1400 audit(1792939204.656:7): apparmor="STATUS" operation="profile_load" profile="unconfined" name="balena-etcher" pid=382 comm="apparmor_parser"
+[    3.555421] audit: type=1400 audit(1792939204.657:8): apparmor="STATUS" operation="profile_load" profile="unconfined" name="brave" pid=383 comm="apparmor_parser"
+[    3.555773] audit: type=1400 audit(1792939204.657:9): apparmor="STATUS" operation="profile_load" profile="unconfined" name="cam" pid=385 comm="apparmor_parser"
+[    3.556990] audit: type=1400 audit(1792939204.659:10): apparmor="STATUS" operation="profile_load" profile="unconfined" name="ch-checkns" pid=386 comm="apparmor_parser"
+[    4.036419] /dev/sr0: Can't lookup blockdev
+[    4.120271] mlx5_core 2765:00:02.0 enP10085s1: Link up
+[    4.151621] hv_netvsc 7ced8d80-b35a-7ced-8d80-b35a7ced8d80 eth0: Data path switched to VF: enP10085s1
+[    4.151866] mlx5_core 2765:00:02.0 mlx5_0: Port: 1 Link ACTIVE
+[    4.164857] 8021q: 802.1Q VLAN Support v1.8
+[    4.926930] hv_netvsc 7ced8d80-b35a-7ced-8d80-b35a7ced8d80 eth0: Data path switched from VF: enP10085s1
+[    4.948643] mlx5_core 2765:00:02.0 mlx5_0: Port: 1 Link DOWN
+[    5.470206] mlx5_core 2765:00:02.0 enP10085s1: Link up
+[    5.486430] hv_netvsc 7ced8d80-b35a-7ced-8d80-b35a7ced8d80 eth0: Data path switched to VF: enP10085s1
+[    5.486991] mlx5_core 2765:00:02.0 mlx5_0: Port: 1 Link ACTIVE
+[    7.378999] EXT4-fs (nvme0n1p1): resizing filesystem from 19398395 to 39059195 blocks
+[    8.304761] EXT4-fs (nvme0n1p1): resized filesystem to 39059195
+[    8.371212] ephemeral0: Can't lookup blockdev
+[    8.412534] systemd-fstab-generator[760]: Checking was requested for "ephemeral0", but it is not a device.
+[    8.412544] systemd-fstab-generator[760]: x-systemd.device-timeout ignored for ephemeral0
+[    9.128395] block nvme0n1: No UUID available providing old NGUID
+[    9.295856] ephemeral0: Can't lookup blockdev
+[    9.311197] evm: overlay not supported
+[    9.413958] kauditd_printk_skb: 113 callbacks suppressed
+[    9.413962] audit: type=1400 audit(1792939210.516:124): apparmor="STATUS" operation="profile_replace" info="same as current profile, skipping" profile="unconfined" name="rsyslogd" pid=893 comm="apparmor_parser"
+[    9.660003] loop0: detected capacity change from 0 to 8
+[    9.844944] audit: type=1400 audit(1792939210.947:125): apparmor="STATUS" operation="profile_replace" info="same as current profile, skipping" profile="unconfined" name="/usr/lib/snapd/snap-confine" pid=1096 comm="apparmor_parser"
+[    9.951750] systemd-journald[155]: /var/log/journal/2d791d5cce6240faa3c626058b1ffc7d/user-1001.journal: Journal file uses a different sequence number ID, rotating.
+[   10.085579] audit: type=1400 audit(1792939211.187:126): apparmor="STATUS" operation="profile_load" profile="unconfined" name="docker-default" pid=1228 comm="apparmor_parser"
+[   10.515026] Initializing XFRM netlink socket
+[   10.633068] bridge: filtering via arp/ip/ip6tables is no longer available by default. Update your scripts to load br_netfilter if you need this.
+[   12.053046] systemd-fstab-generator[1554]: Checking was requested for "ephemeral0", but it is not a device.
+[   12.053057] systemd-fstab-generator[1554]: x-systemd.device-timeout ignored for ephemeral0
+[   49.058990] hv_balloon: Max. dynamic memory size: 16384 MB
+[   65.373435] Adding 3145724k swap on /swapfile.  Priority:-2 extents:37 across:26501116k SS
+[   74.473730] systemd-fstab-generator[1880]: Checking was requested for "ephemeral0", but it is not a device.
+[   74.473741] systemd-fstab-generator[1880]: x-systemd.device-timeout ignored for ephemeral0
+[   74.676192] systemd-fstab-generator[1934]: Checking was requested for "ephemeral0", but it is not a device.
+[   74.676203] systemd-fstab-generator[1934]: x-systemd.device-timeout ignored for ephemeral0
