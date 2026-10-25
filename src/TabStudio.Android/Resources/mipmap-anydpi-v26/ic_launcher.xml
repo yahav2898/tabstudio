@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The launcher icon. Every supported Android version (9+) draws adaptive icons, so no bitmaps are needed. -->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+  <background android:drawable="@color/ic_launcher_background" />
+  <foreground android:drawable="@drawable/ic_launcher_foreground" />
+  <!-- Themed icons on Android 13+ tint the glyph to match the wallpaper. -->
+  <monochrome android:drawable="@drawable/ic_launcher_foreground" />
+</adaptive-icon>

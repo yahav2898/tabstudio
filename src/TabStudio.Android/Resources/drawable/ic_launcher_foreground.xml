@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The foreground of the adaptive launcher icon: a white "S" stroked on the 24-unit logo grid. The launcher
+  masks the icon to its own shape (a rounded square on most tablets) over the brand-colored background.
+  Adaptive icons are 108dp with a 66dp safe zone; the group scales the 24-unit glyph 2.75x and centres it
+  (the glyph's centre is at 12,11), so its 40dp stroke box stays well inside the safe zone.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+  android:width="108dp"
+  android:height="108dp"
+  android:viewportWidth="108"
+  android:viewportHeight="108">
+  <group
+    android:scaleX="2.75"
+    android:scaleY="2.75"
+    android:translateX="21"
+    android:translateY="23.75">
+    <path
+      android:pathData="M17 5H9a3 3 0 0 0 0 6h6a3 3 0 0 1 0 6H6"
+      android:fillColor="#00000000"
+      android:strokeColor="#FFFFFF"
+      android:strokeWidth="2.6"
+      android:strokeLineCap="round"
+      android:strokeLineJoin="round" />
+  </group>
+</vector>

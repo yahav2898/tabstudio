@@ -106,7 +106,7 @@ public sealed class ProgramRunner
         var context = new ProgramLoadContext(entryAssembly.Name, dependencies, packageAssemblies);
         var output = new CallbackTextWriter(console.WriteOutput);
         var error = new CallbackTextWriter(console.WriteError);
-        var (previousOut, previousError, previousIn) = (Console.Out, Console.Error, Console.In);
+        var (previousOut, previousError, previousIn) = (Console.Out, Console.Error, CurrentInput());
 
         try
         {
@@ -149,6 +149,15 @@ public sealed class ProgramRunner
             ConsoleGate.Release();
         }
     }
+
+    /// <summary>
+    /// The console input to restore after a run. Android, iOS and the browser have no standard input: reading
+    /// <see cref="Console.In"/> there throws until something is set, so an empty input stands in for it.
+    /// </summary>
+    private static TextReader CurrentInput() =>
+        OperatingSystem.IsAndroid() || OperatingSystem.IsIOS() || OperatingSystem.IsTvOS() || OperatingSystem.IsBrowser()
+            ? TextReader.Null
+            : Console.In;
 
     private static RunResult Invoke(MethodInfo entryPoint, IReadOnlyList<string> arguments, TextWriter error)
     {
