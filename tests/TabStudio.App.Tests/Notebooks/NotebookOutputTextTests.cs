@@ -1,7 +1,9 @@
 using TabStudio.App.Notebooks;
 using TabStudio.App.Services;
+using TabStudio.App.ViewModels.Notebooks;
 using TabStudio.Notebooks;
 using TabStudio.Notebooks.Formats;
+using TabStudio.Notebooks.Outputs;
 using TabStudio.Testing;
 
 namespace TabStudio.App.Tests.Notebooks;
@@ -64,6 +66,36 @@ public sealed class NotebookOutputTextTests : IDisposable
         var text = HtmlText.ToPlainText("<style>p { color: red }</style><h1>Title</h1><p>One &amp; two<br/>three</p><ul><li>a</li><li>b</li></ul>");
 
         Assert.Equal("Title\nOne & two\nthree\na\nb", text);
+    }
+
+    [Fact]
+    public void Html_outputs_show_their_text_with_a_toggle_to_the_source()
+    {
+        var output = NotebookOutputViewModel.Create(new DisplayOutput(MimeBundle.Create([new(MimeTypes.Html, "<p>Hello <b>there</b></p>")])));
+
+        var html = Assert.IsType<HtmlOutputViewModel>(output);
+        Assert.Equal("Hello there", html.Text);
+        html.ToggleSourceCommand.Execute(null);
+        Assert.Equal("<p>Hello <b>there</b></p>", html.Text);
+        Assert.Equal("View text", html.ToggleText);
+    }
+
+    [Fact]
+    public void Saved_tables_and_errors_are_shown_natively()
+    {
+        var bundle = MimeBundle.Create([new(MimeTypes.PlainText, "a\n-\n1"), new(MimeTypes.Html, "<table><tr><th>a</th></tr><tr><td>1</td></tr></table>")]);
+        var table = Assert.IsType<TableOutputViewModel>(NotebookOutputViewModel.Create(new DisplayOutput(bundle)));
+        Assert.Equal("1 row", table.RowCountText);
+
+        var traceback = new List<string> { "\u001b[0;31mZeroDivisionError\u001b[0m: division by zero" };
+        traceback.AddRange(Enumerable.Range(1, 10).Select(i => $"line {i}"));
+        var error = Assert.IsType<ErrorOutputViewModel>(NotebookOutputViewModel.Create(new ErrorOutput("ZeroDivisionError", "division by zero", traceback)));
+        Assert.Equal("ZeroDivisionError: division by zero", error.Title);
+        Assert.True(error.CanExpand);
+        Assert.Equal(8, error.Details.Split('\n').Length);
+        error.ToggleCommand.Execute(null);
+        Assert.Equal(10, error.Details.Split('\n').Length);
+        Assert.Equal("Show less", error.ToggleText);
     }
 
     [Fact]

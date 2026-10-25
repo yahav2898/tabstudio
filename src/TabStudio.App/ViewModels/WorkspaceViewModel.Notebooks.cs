@@ -95,7 +95,12 @@ public sealed partial class WorkspaceViewModel : INotebookHost
         }
 
         await ReloadWorkspaceAsync();
-        await OpenDocumentAsync(path);
+        if (await OpenDocumentAsync(path) is { Notebook.Cells.Count: > 0 } document)
+        {
+            // Ready to type, as in Visual Studio Code.
+            document.Notebook.Cells[0].RequestFocus();
+        }
+
         Explorer.Reveal(path);
         StatusText = $"Created {Path.GetFileName(path)}";
     }

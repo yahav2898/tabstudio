@@ -110,7 +110,11 @@ public sealed partial class NotebookViewModel
     public Task RunCellsAsync(IReadOnlyList<NotebookCellViewModel> cells, bool stopOnFailure)
     {
         ArgumentNullException.ThrowIfNull(cells);
-        ObjectDisposedException.ThrowIf(_disposed, this);
+        if (_disposed)
+        {
+            return Task.CompletedTask;
+        }
+
         if (_host.CannotRunCellsReason is { } reason)
         {
             StatusMessage = reason;

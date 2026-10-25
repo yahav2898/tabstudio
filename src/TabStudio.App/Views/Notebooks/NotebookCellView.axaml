@@ -120,10 +120,10 @@
         </ItemsControl.ItemsPanel>
         <ItemsControl.DataTemplates>
           <DataTemplate DataType="vm:StreamOutputViewModel">
-            <SelectableTextBlock Classes="output" Classes.error="{Binding IsError}" Text="{Binding DisplayText}" />
+            <nb:OutputText Classes="output" Classes.error="{Binding IsError}" Text="{Binding DisplayText}" />
           </DataTemplate>
           <DataTemplate DataType="vm:TextOutputViewModel">
-            <SelectableTextBlock Classes="output" Text="{Binding Text}" />
+            <nb:OutputText Classes="output" Text="{Binding Text}" />
           </DataTemplate>
           <DataTemplate DataType="vm:TableOutputViewModel">
             <StackPanel Spacing="5">
@@ -135,9 +135,9 @@
             <Border Background="{DynamicResource Brush.Notebook.ErrorBackground}" BorderBrush="{DynamicResource Brush.Error}"
                     BorderThickness="3,0,0,0" CornerRadius="0,6,6,0" Padding="12,9">
               <StackPanel Spacing="6">
-                <SelectableTextBlock Text="{Binding Title}" FontWeight="SemiBold" FontSize="13" TextWrapping="Wrap"
+                <nb:OutputText Text="{Binding Title}" FontWeight="SemiBold" FontSize="13" TextWrapping="Wrap"
                                      Foreground="{DynamicResource Brush.Error}" />
-                <SelectableTextBlock Classes="output" FontSize="12" Foreground="{DynamicResource Brush.TextSecondary}"
+                <nb:OutputText Classes="output" FontSize="12" Foreground="{DynamicResource Brush.TextSecondary}"
                                      Text="{Binding Details}" IsVisible="{Binding HasDetails}" />
                 <Button Theme="{StaticResource ToolButton}" HorizontalAlignment="Left" MinHeight="30" Height="30" Padding="8,0"
                         FontSize="12" Content="{Binding ToggleText}" Command="{Binding ToggleCommand}" IsVisible="{Binding CanExpand}" />
@@ -153,7 +153,7 @@
                 <Button Theme="{StaticResource ToolButton}" MinHeight="28" Height="28" Padding="8,0" FontSize="12"
                         Content="{Binding ToggleText}" Command="{Binding ToggleSourceCommand}" />
               </StackPanel>
-              <SelectableTextBlock Classes="output" Text="{Binding Text}" />
+              <nb:OutputText Classes="output" Text="{Binding Text}" />
             </StackPanel>
           </DataTemplate>
           <DataTemplate DataType="vm:MarkdownOutputViewModel">

@@ -205,6 +205,20 @@ public sealed partial class NotebookViewModel
         UpdateUndoState();
     }
 
+    /// <summary>Forgets the cell changes Undo could take back, when the cells are replaced as a whole.</summary>
+    private void ForgetStructureChanges()
+    {
+        _structureUndo.Clear();
+        foreach (var cell in _removedCells)
+        {
+            cell.Dispose();
+        }
+
+        _removedCells.Clear();
+        _lastChangeWasStructural = false;
+        UpdateUndoState();
+    }
+
     private void UndoStructureChange()
     {
         var undo = _structureUndo.Pop();

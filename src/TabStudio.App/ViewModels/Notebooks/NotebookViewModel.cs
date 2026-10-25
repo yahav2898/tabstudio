@@ -138,6 +138,7 @@ public sealed partial class NotebookViewModel : ObservableObject, IDisposable
         }
 
         Cells.Clear();
+        ForgetStructureChanges();
         LoadCells(document);
         MarkChanged();
     }

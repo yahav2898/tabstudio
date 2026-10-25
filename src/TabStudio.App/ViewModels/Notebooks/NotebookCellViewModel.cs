@@ -1,15 +1,9 @@
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Globalization;
 using AvaloniaEdit.Document;
 using CommunityToolkit.Mvvm.ComponentModel;
 using TabStudio.App.Notebooks.Markdown;
 using TabStudio.Compilation;
-using TabStudio.Core.Diagnostics;
 using TabStudio.Notebooks;
-using TabStudio.Notebooks.Execution;
-using TabStudio.Notebooks.Outputs;
 
 namespace TabStudio.App.ViewModels.Notebooks;
 
@@ -49,8 +43,6 @@ public sealed partial class NotebookCellViewModel : ObservableObject, IDisposabl
     private static readonly TimeSpan ClassificationDelay = TimeSpan.FromMilliseconds(120);
 
     private NotebookCell _cell;
-    private IReadOnlyList<NotebookOutput> _outputs;
-    private CellRunState _stateBeforeQueue;
     private CancellationTokenSource? _classification;
     private int _version;
     private bool _disposed;
@@ -114,63 +106,8 @@ public sealed partial class NotebookCellViewModel : ObservableObject, IDisposabl
     /// <summary>The cell's text.</summary>
     public TextDocument Source { get; }
 
-    /// <summary>What the cell produced when it last ran.</summary>
-    public ObservableCollection<NotebookOutputViewModel> Outputs { get; } = [];
-
-    /// <summary>The compile errors and warnings of the last run, listed under the cell.</summary>
-    public ObservableCollection<CellDiagnosticViewModel> DiagnosticItems { get; } = [];
-
-    /// <summary>The diagnostics of the last run with a location, for squiggles. Positions are relative to the cell.</summary>
-    public IReadOnlyList<BuildDiagnostic> Diagnostics { get; private set; } = [];
-
     /// <summary>The syntax colors of a C# cell.</summary>
     public IReadOnlyList<ClassifiedRange> Classifications { get; private set; } = [];
-
-    /// <summary>Whether the cell has outputs.</summary>
-    public bool HasOutputs => Outputs.Count > 0;
-
-    /// <summary>Whether compile errors or warnings are listed under the cell.</summary>
-    public bool HasDiagnostics => DiagnosticItems.Count > 0;
-
-    /// <summary>The kernel's execution count when the cell last ran.</summary>
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(ExecutionLabel))]
-    public partial int? ExecutionCount { get; private set; }
-
-    /// <summary>How the last run went.</summary>
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(ExecutionLabel), nameof(IsRunning), nameof(IsQueued), nameof(IsWorking), nameof(HasSucceeded), nameof(HasFailed), nameof(WasInterrupted), nameof(HasRunStatus))]
-    public partial CellRunState RunState { get; private set; }
-
-    /// <summary>Whether the cell is running.</summary>
-    public bool IsRunning => RunState == CellRunState.Running;
-
-    /// <summary>Whether the cell waits for the cells before it.</summary>
-    public bool IsQueued => RunState == CellRunState.Queued;
-
-    /// <summary>Whether the cell is running or waiting to run.</summary>
-    public bool IsWorking => RunState is CellRunState.Running or CellRunState.Queued;
-
-    /// <summary>Whether the last run succeeded.</summary>
-    public bool HasSucceeded => RunState == CellRunState.Succeeded;
-
-    /// <summary>Whether the last run failed.</summary>
-    public bool HasFailed => RunState == CellRunState.Failed;
-
-    /// <summary>Whether the last run was interrupted.</summary>
-    public bool WasInterrupted => RunState == CellRunState.Interrupted;
-
-    /// <summary>Whether the cell ran in this session, so its outcome and time are shown.</summary>
-    public bool HasRunStatus => RunState is CellRunState.Succeeded or CellRunState.Failed or CellRunState.Interrupted;
-
-    /// <summary>The execution count in brackets, as Jupyter shows it: <c>[3]</c>, <c>[*]</c> while running, <c>[ ]</c> before.</summary>
-    public string ExecutionLabel => IsWorking
-        ? "[*]"
-        : ExecutionCount is { } count ? string.Create(CultureInfo.InvariantCulture, $"[{count}]") : "[ ]";
-
-    /// <summary>How long the last run took, such as "0.4s".</summary>
-    [ObservableProperty]
-    public partial string? DurationText { get; private set; }
 
     /// <summary>Whether the cell is the selected one, which shows its toolbar.</summary>
     [ObservableProperty]
@@ -209,9 +146,6 @@ public sealed partial class NotebookCellViewModel : ObservableObject, IDisposabl
 
     /// <summary>Raised on the UI thread when <see cref="Classifications"/> changes.</summary>
     public event EventHandler? ClassificationsChanged;
-
-    /// <summary>Raised when <see cref="Diagnostics"/> changes.</summary>
-    public event EventHandler? DiagnosticsChanged;
 
     /// <summary>Raised when the editor should take keyboard focus.</summary>
     public event EventHandler? FocusRequested;
@@ -299,103 +233,6 @@ public sealed partial class NotebookCellViewModel : ObservableObject, IDisposabl
     /// <summary>Marks the text as saved.</summary>
     internal void MarkSaved() => Source.UndoStack.MarkAsOriginalFile();
 
-    /// <summary>Shows that the cell waits for its turn.</summary>
-    internal void MarkQueued()
-    {
-        if (!IsWorking)
-        {
-            _stateBeforeQueue = RunState;
-        }
-
-        RunState = CellRunState.Queued;
-    }
-
-    /// <summary>Takes the cell out of the queue without running it.</summary>
-    internal void CancelQueued()
-    {
-        if (RunState == CellRunState.Queued)
-        {
-            RunState = _stateBeforeQueue;
-        }
-    }
-
-    /// <summary>Shows that the cell started running: its old outputs and errors go away.</summary>
-    internal void BeginRun()
-    {
-        RunState = CellRunState.Running;
-        DurationText = null;
-        Outputs.Clear();
-        SetDiagnostics([]);
-    }
-
-    /// <summary>Adds output that arrived while the cell runs. Console text joins the text before it.</summary>
-    /// <param name="output">The new output.</param>
-    internal void AppendLiveOutput(NotebookOutput output)
-    {
-        if (output is StreamOutput stream && Outputs.Count > 0 && Outputs[^1] is StreamOutputViewModel last && last.Stream == stream.Name)
-        {
-            last.Append(stream.Text);
-        }
-        else
-        {
-            Outputs.Add(NotebookOutputViewModel.Create(output));
-        }
-    }
-
-    /// <summary>Shows the outcome of a run: its outputs, errors, execution count and time.</summary>
-    /// <param name="result">What the kernel returned.</param>
-    internal void CompleteRun(CellExecutionResult result)
-    {
-        var didNotRun = result.Status == CellExecutionStatus.Skipped
-            || (result.Status == CellExecutionStatus.Interrupted && result.ExecutionCount is null);
-        if (didNotRun)
-        {
-            // Stopped before it started: it looks as it did before.
-            RunState = _stateBeforeQueue;
-            ShowOutputs(_outputs, hideCompilationErrors: false);
-            return;
-        }
-
-        _outputs = result.Outputs;
-        ExecutionCount = result.ExecutionCount ?? ExecutionCount;
-        var located = result.Diagnostics
-            .Where(d => d.Severity >= DiagnosticSeverityLevel.Warning && d.Location is not null)
-            .ToList();
-        SetDiagnostics(located);
-
-        // Compile errors are listed with their locations under the cell; the error output would repeat them.
-        var everyErrorListed = result.Diagnostics
-            .Where(d => d.Severity == DiagnosticSeverityLevel.Error)
-            .All(d => d.Location is not null);
-        ShowOutputs(result.Outputs, hideCompilationErrors: everyErrorListed && located.Count > 0);
-
-        RunState = result.Status switch
-        {
-            CellExecutionStatus.Succeeded => CellRunState.Succeeded,
-            CellExecutionStatus.Interrupted => CellRunState.Interrupted,
-            _ => CellRunState.Failed,
-        };
-        DurationText = FormatDuration(result.Duration);
-    }
-
-    /// <summary>Removes the outputs and the execution count, as if the cell had never run.</summary>
-    /// <returns>Whether there was anything to clear.</returns>
-    internal bool ClearOutputs()
-    {
-        var hadOutputs = _outputs.Count > 0 || ExecutionCount is not null || Outputs.Count > 0;
-        _outputs = [];
-        ExecutionCount = null;
-        Outputs.Clear();
-        SetDiagnostics([]);
-        if (!IsWorking)
-        {
-            RunState = CellRunState.Idle;
-        }
-
-        DurationText = null;
-        return hadOutputs;
-    }
-
     /// <summary>Turns the cell into a code or Markdown cell, keeping its text. Outputs are removed.</summary>
     /// <param name="kind">The new kind.</param>
     internal void ChangeKind(NotebookCellKind kind)
@@ -428,32 +265,6 @@ public sealed partial class NotebookCellViewModel : ObservableObject, IDisposabl
         }
     }
 
-    private void ShowOutputs(IReadOnlyList<NotebookOutput> outputs, bool hideCompilationErrors)
-    {
-        Outputs.Clear();
-        foreach (var output in outputs)
-        {
-            if (hideCompilationErrors && output is ErrorOutput { Name: ErrorOutputViewModel.CompilationErrorName })
-            {
-                continue;
-            }
-
-            Outputs.Add(NotebookOutputViewModel.Create(output));
-        }
-    }
-
-    private void SetDiagnostics(IReadOnlyList<BuildDiagnostic> diagnostics)
-    {
-        Diagnostics = diagnostics;
-        DiagnosticItems.Clear();
-        foreach (var diagnostic in diagnostics.OrderByDescending(d => d.Severity).ThenBy(d => d.Location?.Start ?? 0))
-        {
-            DiagnosticItems.Add(new CellDiagnosticViewModel(diagnostic, this));
-        }
-
-        DiagnosticsChanged?.Invoke(this, EventArgs.Empty);
-    }
-
     private void OnSourceChanged(object? sender, DocumentChangeEventArgs e)
     {
         _version++;
@@ -462,10 +273,6 @@ public sealed partial class NotebookCellViewModel : ObservableObject, IDisposabl
     }
 
     private void OnUndoStackChanged(object? sender, PropertyChangedEventArgs e) => Notebook.OnCellUndoStateChanged(this);
-
-    private void OnOutputsChanged(object? sender, NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(HasOutputs));
-
-    private void OnDiagnosticItemsChanged(object? sender, NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(HasDiagnostics));
 
     private void ScheduleClassification(TimeSpan delay)
     {
@@ -508,8 +315,4 @@ public sealed partial class NotebookCellViewModel : ObservableObject, IDisposabl
             // The user typed again; a newer classification is on its way.
         }
     }
-
-    private static string FormatDuration(TimeSpan duration) => duration.TotalSeconds < 60
-        ? string.Create(CultureInfo.CurrentCulture, $"{duration.TotalSeconds:0.0}s")
-        : string.Create(CultureInfo.CurrentCulture, $"{(int)duration.TotalMinutes}m {duration.Seconds}s");
 }

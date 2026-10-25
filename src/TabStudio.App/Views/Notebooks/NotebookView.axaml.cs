@@ -23,7 +23,7 @@ namespace TabStudio.App.Views.Notebooks;
 /// Ctrl+Enter, Shift+Enter and Alt+Enter run cells in both modes. Every action also has a button, for touch.
 /// </para>
 /// <para>
-/// The IDE's Undo, Redo and Toggle Comment act on the selected cell.
+/// The IDE's Undo, Redo and Toggle Comment act on the selected cell, and Find (Ctrl+F) searches every cell.
 /// </para>
 /// </remarks>
 public sealed partial class NotebookView : UserControl, IDisposable

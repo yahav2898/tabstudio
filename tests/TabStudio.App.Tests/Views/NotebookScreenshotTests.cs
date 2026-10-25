@@ -89,6 +89,24 @@ public sealed class NotebookScreenshotTests : IDisposable
     }
 
     [AvaloniaFact]
+    public async Task The_sample_tour_notebook_on_a_portrait_tablet()
+    {
+        var window = Show(800, 1280);
+        var workspace = await OpenSampleAsync();
+        workspace.IsBottomPanelVisible = false;
+        var document = await workspace.OpenDocumentAsync(Path.Combine(workspace.StartupProject!.DirectoryPath, "Tour.ipynb"));
+        var notebook = document!.Notebook!;
+
+        await notebook.RunAllAsync();
+        await UiTestHelpers.WaitUntilAsync(() => notebook.Cells.All(c => !c.IsCode || c.Classifications.Count > 0), because: "syntax colors");
+
+        UiTestHelpers.SaveScreenshot(window, "10-notebook-portrait");
+
+        Assert.False(workspace.IsSideBarVisible);
+        Assert.All(notebook.Cells.Where(c => c.IsCode), c => Assert.Equal(CellRunState.Succeeded, c.RunState));
+    }
+
+    [AvaloniaFact]
     public void The_start_screen_offers_a_notebook_template()
     {
         var window = Show(1280, 800);
