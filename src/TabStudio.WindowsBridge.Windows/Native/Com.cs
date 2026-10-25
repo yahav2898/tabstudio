@@ -1,5 +1,3 @@
-using System.Runtime.InteropServices;
-
 namespace TabStudio.WindowsBridge.Windows.Native;
 
 /// <summary>
@@ -56,11 +54,12 @@ internal static unsafe class Com
     }
 
     /// <summary>Throws for a failed HRESULT, with what was being done.</summary>
+    /// <exception cref="NativeCallException">The HRESULT is a failure.</exception>
     public static void Check(int hr, string what)
     {
         if (hr < 0)
         {
-            throw new COMException($"{what} failed (0x{hr:X8}).", hr);
+            throw new NativeCallException($"{what} failed (0x{hr:X8}).", hr);
         }
     }
 
@@ -82,5 +81,29 @@ internal static unsafe class Com
         {
             _ = NativeMethods.WindowsDeleteString(name);
         }
+    }
+}
+
+/// <summary>A call into Windows failed, with its HRESULT.</summary>
+internal sealed class NativeCallException : Exception
+{
+    public NativeCallException()
+    {
+    }
+
+    public NativeCallException(string message)
+        : base(message)
+    {
+    }
+
+    public NativeCallException(string message, Exception innerException)
+        : base(message, innerException)
+    {
+    }
+
+    public NativeCallException(string message, int hresult)
+        : base(message)
+    {
+        HResult = hresult;
     }
 }

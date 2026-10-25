@@ -88,7 +88,7 @@ internal sealed unsafe class GraphicsCapture : IWindowCapture
                 Com.Release(ref statics);
             }
         }
-        catch (Exception ex) when (ex is COMException or DllNotFoundException or EntryPointNotFoundException)
+        catch (Exception ex) when (ex is NativeCallException or COMException or DllNotFoundException or EntryPointNotFoundException)
         {
             return false;
         }
@@ -105,7 +105,7 @@ internal sealed unsafe class GraphicsCapture : IWindowCapture
             capture.Start();
             return capture;
         }
-        catch (Exception ex) when (ex is COMException or DllNotFoundException or EntryPointNotFoundException or InvalidOperationException)
+        catch (Exception ex) when (ex is NativeCallException or COMException or DllNotFoundException or EntryPointNotFoundException or InvalidOperationException)
         {
             capture.Dispose();
             return null;

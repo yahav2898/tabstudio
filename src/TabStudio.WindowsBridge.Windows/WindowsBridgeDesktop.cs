@@ -47,7 +47,7 @@ public sealed unsafe class WindowsBridgeDesktop : IBridgeDesktop
     /// <inheritdoc />
     public BridgePcState State => _events.State;
 
-    /// <summary>How the tablet's input is played: in front of the PC's user, or without disturbing them.</summary>
+    /// <inheritdoc />
     public BridgeInputPolicy InputPolicy
     {
         get => _input.Policy;

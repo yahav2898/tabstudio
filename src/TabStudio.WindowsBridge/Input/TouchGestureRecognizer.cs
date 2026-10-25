@@ -103,8 +103,8 @@ public sealed class TouchGestureRecognizer
                 var (sx, sy) = map.ToWindow(_start.X, _start.Y);
                 return
                 [
-                    BridgeInputEvent.Pointer(BridgeInputKind.PointerMove, sx, sy),
-                    BridgeInputEvent.Pointer(BridgeInputKind.PointerDown, sx, sy, BridgePointerButton.Left),
+                    BridgeInputEvent.Mouse(BridgeInputKind.PointerMove, sx, sy),
+                    BridgeInputEvent.Mouse(BridgeInputKind.PointerDown, sx, sy, BridgePointerButton.Left),
                     Move(map, (x, y), BridgePointerButton.Left),
                 ];
             case GestureState.Pending:
@@ -147,15 +147,15 @@ public sealed class TouchGestureRecognizer
                 var (tx, ty) = map.ToWindow(_start.X, _start.Y);
                 events =
                 [
-                    BridgeInputEvent.Pointer(BridgeInputKind.PointerMove, tx, ty),
-                    BridgeInputEvent.Pointer(BridgeInputKind.PointerDown, tx, ty, BridgePointerButton.Left),
-                    BridgeInputEvent.Pointer(BridgeInputKind.PointerUp, tx, ty, BridgePointerButton.Left),
+                    BridgeInputEvent.Mouse(BridgeInputKind.PointerMove, tx, ty),
+                    BridgeInputEvent.Mouse(BridgeInputKind.PointerDown, tx, ty, BridgePointerButton.Left),
+                    BridgeInputEvent.Mouse(BridgeInputKind.PointerUp, tx, ty, BridgePointerButton.Left),
                 ];
                 _state = GestureState.Finished;
                 break;
             case GestureState.Dragging:
                 var (ux, uy) = map.ToWindow(x, y);
-                events = [BridgeInputEvent.Pointer(BridgeInputKind.PointerUp, ux, uy, BridgePointerButton.Left)];
+                events = [BridgeInputEvent.Mouse(BridgeInputKind.PointerUp, ux, uy, BridgePointerButton.Left)];
                 _state = GestureState.Finished;
                 break;
             case GestureState.Scrolling when _fingers.Count < 2:
@@ -186,9 +186,9 @@ public sealed class TouchGestureRecognizer
         var (x, y) = map.ToWindow(_start.X, _start.Y);
         return
         [
-            BridgeInputEvent.Pointer(BridgeInputKind.PointerMove, x, y),
-            BridgeInputEvent.Pointer(BridgeInputKind.PointerDown, x, y, BridgePointerButton.Right),
-            BridgeInputEvent.Pointer(BridgeInputKind.PointerUp, x, y, BridgePointerButton.Right),
+            BridgeInputEvent.Mouse(BridgeInputKind.PointerMove, x, y),
+            BridgeInputEvent.Mouse(BridgeInputKind.PointerDown, x, y, BridgePointerButton.Right),
+            BridgeInputEvent.Mouse(BridgeInputKind.PointerUp, x, y, BridgePointerButton.Right),
         ];
     }
 
@@ -202,7 +202,7 @@ public sealed class TouchGestureRecognizer
         {
             var finger = _fingers.Values.First();
             var (x, y) = map.ToWindow(finger.X, finger.Y);
-            events = [BridgeInputEvent.Pointer(BridgeInputKind.PointerUp, x, y, BridgePointerButton.Left)];
+            events = [BridgeInputEvent.Mouse(BridgeInputKind.PointerUp, x, y, BridgePointerButton.Left)];
         }
 
         _fingers.Clear();
@@ -213,7 +213,7 @@ public sealed class TouchGestureRecognizer
     private static BridgeInputEvent Move(FrameMapping map, (double X, double Y) point, BridgePointerButton held = BridgePointerButton.None)
     {
         var (x, y) = map.ToWindow(point.X, point.Y);
-        return BridgeInputEvent.Pointer(BridgeInputKind.PointerMove, x, y, held);
+        return BridgeInputEvent.Mouse(BridgeInputKind.PointerMove, x, y, held);
     }
 
     private static double Distance((double X, double Y) a, (double X, double Y) b) => Math.Sqrt(((a.X - b.X) * (a.X - b.X)) + ((a.Y - b.Y) * (a.Y - b.Y)));

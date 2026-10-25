@@ -1,3 +1,4 @@
+using TabStudio.WindowsBridge.Hosting;
 using TabStudio.WindowsBridge.Input;
 using TabStudio.WindowsBridge.Windows.Capture;
 using TabStudio.WindowsBridge.Windows.Native;

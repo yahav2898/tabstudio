@@ -281,7 +281,7 @@ jobs:
         if: always() && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: bash build/ci/publish-logs.sh windows ${{ job.status }}
+        run: bash build/ci/publish-logs-sparse.sh windows ${{ job.status }}
 
   # Publishes a versioned release once every check has passed: for a v* tag, or on main when
   # Directory.Build.props has a version that has release notes in docs/releases and no release yet.

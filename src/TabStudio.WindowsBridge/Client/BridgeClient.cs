@@ -61,14 +61,29 @@ public sealed class BridgeClient : ILinkMessageHandler
     /// <summary>The connection to the bridge, once attached.</summary>
     public LinkConnection? Connection => Volatile.Read(ref _connection);
 
-    /// <summary>Starts using a connection that this client handles the notifications of.</summary>
+    /// <summary>Whether the bridge is connected now.</summary>
+    public bool IsConnected => Connection is { IsOpen: true };
+
+    /// <summary>
+    /// Starts using a connection that this client handles the notifications of. A client outlives its connections:
+    /// after a reconnection, the new one is attached and the events go on.
+    /// </summary>
     /// <param name="connection">The authenticated connection to the bridge.</param>
     public void Attach(LinkConnection connection)
     {
         ArgumentNullException.ThrowIfNull(connection);
-        Volatile.Write(ref _connection, connection);
-        Volatile.Write(ref _sender, new OrderedSender(connection));
-        connection.Closed += (_, e) => OnClosed(e.Error);
+        var previous = Interlocked.Exchange(ref _connection, connection);
+        Interlocked.Exchange(ref _sender, new OrderedSender(connection))?.Complete();
+        if (previous is not null)
+        {
+            CloseDebuggers("The Windows Bridge reconnected; the debug session ended.");
+        }
+
+        connection.Closed += (_, e) => OnClosed(connection, e.Error);
+        if (!connection.IsOpen)
+        {
+            OnClosed(connection, connection.CloseError);
+        }
     }
 
     /// <summary>What the PC is and what it can build.</summary>
@@ -303,14 +318,24 @@ public sealed class BridgeClient : ILinkMessageHandler
         return BridgeJson.Read<T>(payload);
     }
 
-    private void OnClosed(Exception? error)
+    private void OnClosed(LinkConnection connection, Exception? error)
     {
+        if (!ReferenceEquals(Volatile.Read(ref _connection), connection))
+        {
+            return;
+        }
+
         Volatile.Read(ref _sender)?.Complete();
+        CloseDebuggers(error is null ? "The Windows Bridge disconnected." : $"The Windows Bridge was lost: {error.Message}");
+    }
+
+    private void CloseDebuggers(string reason)
+    {
         foreach (var id in _debuggers.Keys)
         {
             if (_debuggers.TryRemove(id, out var debugger))
             {
-                debugger.OnClosed(error is null ? "The Windows Bridge disconnected." : $"The Windows Bridge was lost: {error.Message}");
+                debugger.OnClosed(reason);
             }
         }
     }

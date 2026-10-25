@@ -35,6 +35,8 @@ internal sealed class FakeDesktop : IBridgeDesktop
 
     public bool IsKeptAwake { get; private set; }
 
+    public BridgeInputPolicy InputPolicy { get; set; }
+
     /// <summary>Every input played so far, in order.</summary>
     public IReadOnlyList<(long Window, BridgeInputEvent Event)> Input
     {

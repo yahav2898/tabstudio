@@ -71,7 +71,7 @@ public sealed record BridgeInputEvent(
     /// <param name="x">The position from the window's left edge.</param>
     /// <param name="y">The position from the window's top edge.</param>
     /// <param name="button">The button.</param>
-    public static BridgeInputEvent Pointer(BridgeInputKind kind, int x, int y, BridgePointerButton button = BridgePointerButton.None) => new(kind, x, y, button);
+    public static BridgeInputEvent Mouse(BridgeInputKind kind, int x, int y, BridgePointerButton button = BridgePointerButton.None) => new(kind, x, y, button);
 
     /// <summary>A turn of the wheel at a position.</summary>
     /// <param name="x">The position from the window's left edge.</param>

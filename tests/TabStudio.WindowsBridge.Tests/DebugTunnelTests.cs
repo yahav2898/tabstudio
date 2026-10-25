@@ -43,11 +43,11 @@ public sealed class DebugTunnelTests : IDisposable
     public void Breakpoints_and_the_program_get_the_mirrors_paths()
     {
         var rewriter = Rewriter();
-        var request = $$"""
-            {"seq":3,"type":"request","command":"launch","arguments":{"program":"{{TabletRoot}}/App/bin/Debug/App.dll","cwd":"{{TabletRoot}}/App","args":["{{TabletRoot}}/data.txt"]}}
+        var request = $$$"""
+            {"seq":3,"type":"request","command":"launch","arguments":{"program":"{{{TabletRoot}}}/App/bin/Debug/App.dll","cwd":"{{{TabletRoot}}}/App","args":["{{{TabletRoot}}}/data.txt"]}}
             """;
-        var breakpoints = $$"""
-            {"seq":4,"type":"request","command":"setBreakpoints","arguments":{"source":{"path":"{{TabletRoot}}/App/MainWindow.xaml.cs"},"breakpoints":[{"line":12}]}}
+        var breakpoints = $$$"""
+            {"seq":4,"type":"request","command":"setBreakpoints","arguments":{"source":{"path":"{{{TabletRoot}}}/App/MainWindow.xaml.cs"},"breakpoints":[{"line":12}]}}
             """;
 
         var (launch, command) = rewriter.ToAdapter(Encoding.UTF8.GetBytes(request));

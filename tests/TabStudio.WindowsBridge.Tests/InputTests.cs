@@ -19,9 +19,9 @@ public sealed class InputTests
         Assert.Empty(down);
         Assert.Equal(
             [
-                BridgeInputEvent.Pointer(BridgeInputKind.PointerMove, 200, 100),
-                BridgeInputEvent.Pointer(BridgeInputKind.PointerDown, 200, 100, BridgePointerButton.Left),
-                BridgeInputEvent.Pointer(BridgeInputKind.PointerUp, 200, 100, BridgePointerButton.Left),
+                BridgeInputEvent.Mouse(BridgeInputKind.PointerMove, 200, 100),
+                BridgeInputEvent.Mouse(BridgeInputKind.PointerDown, 200, 100, BridgePointerButton.Left),
+                BridgeInputEvent.Mouse(BridgeInputKind.PointerUp, 200, 100, BridgePointerButton.Left),
             ],
             up);
         Assert.False(touch.IsActive);
@@ -55,8 +55,8 @@ public sealed class InputTests
 
         Assert.Equal(BridgeInputKind.PointerDown, start[1].Kind);
         Assert.Equal((160, 180), (start[1].X, start[1].Y));
-        Assert.Equal(BridgeInputEvent.Pointer(BridgeInputKind.PointerMove, 280, 200, BridgePointerButton.Left), middle[0]);
-        Assert.Equal(BridgeInputEvent.Pointer(BridgeInputKind.PointerUp, 300, 220, BridgePointerButton.Left), end[0]);
+        Assert.Equal(BridgeInputEvent.Mouse(BridgeInputKind.PointerMove, 280, 200, BridgePointerButton.Left), middle[0]);
+        Assert.Equal(BridgeInputEvent.Mouse(BridgeInputKind.PointerUp, 300, 220, BridgePointerButton.Left), end[0]);
     }
 
     [Fact]

@@ -1,4 +1,4 @@
-namespace TabStudio.WindowsBridge.Windows.Desktop;
+namespace TabStudio.WindowsBridge.Hosting;
 
 /// <summary>How the bridge plays the tablet's input into a program on the PC.</summary>
 public enum BridgeInputPolicy

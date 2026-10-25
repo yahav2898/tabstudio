@@ -21,6 +21,9 @@ public interface IBridgeDesktop : IDisposable
     /// <summary>Raised when <see cref="State"/> changes.</summary>
     event EventHandler? StateChanged;
 
+    /// <summary>How the tablet's input is played: in front of the PC's user, or without disturbing them.</summary>
+    BridgeInputPolicy InputPolicy { get; set; }
+
     /// <summary>A process and every process it started, and they started, as far as they still run.</summary>
     /// <param name="processId">The process.</param>
     IReadOnlyCollection<int> FindProcessTree(int processId);

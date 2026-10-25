@@ -10,7 +10,6 @@ using TabStudio.WindowsBridge.Frames;
 using TabStudio.WindowsBridge.Hosting;
 using TabStudio.WindowsBridge.Input;
 using TabStudio.WindowsBridge.Protocol;
-using TabStudio.WindowsBridge.Windows.Desktop;
 
 namespace TabStudio.WindowsBridge.Windows.Tests;
 
