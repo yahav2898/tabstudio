@@ -76,6 +76,7 @@ public sealed class WindowsBridgeOnWindowsTests
 
         await workspace.RunCommand.ExecuteAsync(null);
         await UiTestHelpers.WaitUntilAsync(() => workspace.ErrorList.Items.Any(i => i.IsFromBridge && i.Code.StartsWith("MC", StringComparison.Ordinal)), TimeSpan.FromMinutes(4), "MSBuild's XAML error");
+        workspace.ErrorList.SearchText = "MC3072"; // The tablet's own squiggle errors would fill the short list above MSBuild's row.
         UiTestHelpers.SaveScreenshot(devices.Window, "windows-bridge-09-msbuild-error");
 
         var error = workspace.ErrorList.Items.First(i => i.IsFromBridge && i.Code.StartsWith("MC", StringComparison.Ordinal));
