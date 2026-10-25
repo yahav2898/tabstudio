@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 
 namespace TabStudio.App.Swarm;
 
@@ -128,7 +129,7 @@ public abstract class LocalAppScreen : IAppScreen, IDisposable
             return;
         }
 
-        if (surface.IsEffectivelyVisible && surface.IsAttachedToVisualTree)
+        if (surface.IsEffectivelyVisible && surface.GetVisualRoot() is not null)
         {
             surface.UpdateLayout();
             return;

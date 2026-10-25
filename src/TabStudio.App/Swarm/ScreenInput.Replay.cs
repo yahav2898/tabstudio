@@ -124,7 +124,7 @@ internal sealed partial class ScreenInput
         var delta = new Vector(
             step.Width > 0 ? -input.ScrollDelta.X / step.Width : 0,
             step.Height > 0 ? -input.ScrollDelta.Y / step.Height : 0);
-        if (presenter.FlowDirection == FlowDirection.RightToLeft)
+        if (presenter.FlowDirection == Avalonia.Media.FlowDirection.RightToLeft)
         {
             // The presenter mirrors a wheel's horizontal direction for right-to-left content.
             delta = new Vector(-delta.X, delta.Y);
@@ -272,7 +272,7 @@ internal sealed partial class ScreenInput
     private void RestoreFocus(IInputElement? focusBefore)
     {
         var focusNow = TopLevel.GetTopLevel(_surface)?.FocusManager?.GetFocusedElement();
-        if (focusBefore is Visual before && !IsInApp(before) && before.IsAttachedToVisualTree
+        if (focusBefore is Visual before && !IsInApp(before) && before.GetVisualRoot() is not null
             && !ReferenceEquals(focusNow, focusBefore) && focusNow is Visual now && IsInApp(now))
         {
             focusBefore.Focus();

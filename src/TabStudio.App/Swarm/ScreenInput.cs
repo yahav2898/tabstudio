@@ -54,7 +54,7 @@ internal sealed partial class ScreenInput : IDisposable
     /// its own, so typing mirrored to several screens reaches the same field on each.
     /// </summary>
     public IInputElement? FocusedElement =>
-        _focused is not null && _focused.TryGetTarget(out var element) && element is Visual { IsAttachedToVisualTree: true } visual && IsInApp(visual)
+        _focused is not null && _focused.TryGetTarget(out var element) && element is Visual visual && visual.GetVisualRoot() is not null && IsInApp(visual)
             ? element
             : null;
 

@@ -45,7 +45,7 @@ public sealed class VirtualDeviceFrame : Decorator
         Width = profile.Width;
         Height = profile.Height;
         _system.RequestedThemeVariant = profile.IsDark ? ThemeVariant.Dark : ThemeVariant.Light;
-        _system.FlowDirection = profile.Direction == TextDirection.RightToLeft ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
+        _system.FlowDirection = profile.Direction == TextDirection.RightToLeft ? Avalonia.Media.FlowDirection.RightToLeft : Avalonia.Media.FlowDirection.LeftToRight;
         ScreenFontScale.SetScale(_system, profile.FontScale);
         TextElement.SetFontSize(_system, DefaultFontSize * profile.FontScale);
     }

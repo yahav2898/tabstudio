@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 
 namespace TabStudio.App.Swarm;
 
@@ -134,7 +135,7 @@ internal sealed partial class ScreenInput
         _pendingScrolls.Clear();
         foreach (var (viewer, delta) in scrolls)
         {
-            if (!viewer.IsAttachedToVisualTree || ElementPaths.Addressable(_root, viewer) is not { } target || ElementPaths.Describe(_root, target) is not { } path)
+            if (viewer.GetVisualRoot() is null || ElementPaths.Addressable(_root, viewer) is not { } target || ElementPaths.Describe(_root, target) is not { } path)
             {
                 continue;
             }

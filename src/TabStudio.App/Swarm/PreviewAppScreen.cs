@@ -152,7 +152,7 @@ public sealed class PreviewAppScreen : LocalAppScreen
             Math.Round(size.Height),
             topLevel?.RenderScaling ?? 1,
             IsDark: surface?.ActualThemeVariant == ThemeVariant.Dark,
-            Direction: (root ?? surface)?.FlowDirection == FlowDirection.RightToLeft ? TextDirection.RightToLeft : TextDirection.LeftToRight);
+            Direction: (root ?? surface)?.FlowDirection == Avalonia.Media.FlowDirection.RightToLeft ? TextDirection.RightToLeft : TextDirection.LeftToRight);
         if (profile == _profile)
         {
             return false;
