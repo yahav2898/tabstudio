@@ -68,6 +68,9 @@ public sealed partial class CodeEditorView
         // Snippets first: they rebuild the completion list, whose typing handlers must run before the language rules'.
         InitializeSnippets();
         InitializeLanguageRules();
+
+        // A script without an extension may be claimed by its first line, which only the open document has.
+        _document.RefreshFileType();
     }
 
     private void DisposeExtensions()

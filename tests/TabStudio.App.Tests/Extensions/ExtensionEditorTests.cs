@@ -119,6 +119,30 @@ public sealed class ExtensionEditorTests
     }
 
     [AvaloniaFact]
+    public async Task A_script_without_an_extension_is_recognized_by_its_first_line()
+    {
+        using var fixture = new ExtensionsFixture();
+        var package = LumenExtension.PackageJson().Replace(
+            "\"filenames\": [\"Lumenfile\"],",
+            "\"filenames\": [\"Lumenfile\"], \"firstLine\": \"^#!.*\\\\blumen\\\\b\",",
+            StringComparison.Ordinal);
+        await fixture.InstallLumenAsync(LumenExtension.Builder().Add("package.json", package).Build());
+        File.WriteAllText(Path.Combine(fixture.Folder, "deploy"), "#!/usr/bin/env lumen\nfn deploy() {\n    return 1\n}\n");
+        await fixture.OpenFolderAsync();
+        var window = fixture.Show();
+
+        var document = await fixture.OpenAsync("deploy");
+        var view = ActiveEditor(window);
+
+        Assert.Equal("Lumen", document.FileType.DisplayName);
+        var keyword = OffsetOf(view.Editor, "fn deploy");
+        await UiTestHelpers.WaitUntilAsync(() => view.ForegroundAt(keyword) is { } color && color != view.TextForeground, because: "the grammar's colors");
+        Assert.NotNull(view.LanguageRules);
+        Assert.Equal("#", document.FileType.LineComment);
+        window.Close();
+    }
+
+    [AvaloniaFact]
     public async Task Toggle_comment_uses_the_line_comment_of_the_language()
     {
         using var fixture = new ExtensionsFixture();

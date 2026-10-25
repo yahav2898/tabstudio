@@ -31,6 +31,21 @@ public sealed class ContributionSetTests : IDisposable
     }
 
     [Fact]
+    public async Task A_script_without_an_extension_is_recognized_by_its_first_line()
+    {
+        var package = LumenExtension.PackageJson().Replace(
+            "\"filenames\": [\"Lumenfile\"],",
+            "\"filenames\": [\"Lumenfile\"], \"firstLine\": \"^#!.*\\\\blumen\\\\b\",",
+            StringComparison.Ordinal);
+        var set = ContributionSet.From([await InstallAsync(LumenExtension.Builder().Add("package.json", package))]);
+
+        Assert.Equal("lumen", set.FindLanguageForFirstLine("#!/usr/bin/env lumen")?.Id);
+        Assert.Null(set.FindLanguageForFirstLine("#!/usr/bin/env python3"));
+        Assert.Null(set.FindLanguageForFirstLine("lumen"));
+        Assert.Null(ContributionSet.From([await InstallLumenAsync()]).FindLanguageForFirstLine("#!/usr/bin/env lumen"));
+    }
+
+    [Fact]
     public async Task Grammars_injections_configuration_and_snippets_are_found_by_language()
     {
         var set = ContributionSet.From([await InstallLumenAsync()]);

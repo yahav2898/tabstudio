@@ -27,6 +27,11 @@ internal sealed class ExtensionTextMate : ITextMateContributions
     /// <inheritdoc />
     public string? ScopeFor(string fileName)
     {
+        if (fileName.StartsWith(ContributedFileTypes.ScopePrefix, StringComparison.Ordinal))
+        {
+            return fileName[ContributedFileTypes.ScopePrefix.Length..];
+        }
+
         var contributions = EditorExtensions.Contributions;
         return contributions.FindLanguageForFile(fileName) is { } language
             ? contributions.FindGrammarForLanguage(language.Id)?.ScopeName

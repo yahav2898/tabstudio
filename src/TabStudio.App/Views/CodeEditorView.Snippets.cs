@@ -31,6 +31,9 @@ public sealed partial class CodeEditorView : ISnippetEditor
     /// <summary>The snippet being filled in, for tests; <see langword="null"/> when there is none.</summary>
     internal SnippetSession? Snippet => _snippet is { IsActive: true } snippet ? snippet : null;
 
+    /// <summary>Whether the completion list is on screen, for tests.</summary>
+    internal bool IsCompletionShown => _completionPopup?.IsOpen == true;
+
     /// <inheritdoc />
     IReadOnlyList<SnippetDefinition> ISnippetEditor.Snippets => EditorExtensions.SnippetsFor(_document.FileType, _document.FilePath);
 
@@ -97,6 +100,7 @@ public sealed partial class CodeEditorView : ISnippetEditor
         _snippetRenderer = new SnippetTabStopRenderer();
         _snippetRenderer.SetTheme(EditorExtensions.Theme);
         TextView.BackgroundRenderers.Add(_snippetRenderer);
+        TextView.VisualLinesChanged += OnCompletionVisualLinesChanged;
         _editor.TextArea.AddHandler(KeyDownEvent, OnSnippetKeyDown, RoutingStrategies.Tunnel);
         _editor.Document.Changed += OnSnippetDocumentChanged;
         _editor.Document.TextChanged += OnSnippetTextChanged;
@@ -114,6 +118,7 @@ public sealed partial class CodeEditorView : ISnippetEditor
             _editor.TextArea.LostFocus -= OnSnippetListLostFocus;
         }
 
+        TextView.VisualLinesChanged -= OnCompletionVisualLinesChanged;
         _editor.TextArea.RemoveHandler(KeyDownEvent, OnSnippetKeyDown);
         _editor.Document.Changed -= OnSnippetDocumentChanged;
         _editor.Document.TextChanged -= OnSnippetTextChanged;
@@ -358,6 +363,18 @@ public sealed partial class CodeEditorView : ISnippetEditor
         if (_snippetStart.IsDeleted || _snippetEnd.IsDeleted || caret < _snippetStart.Offset || caret > _snippetEnd.Offset)
         {
             EndSnippetSession();
+        }
+    }
+
+    /// <summary>
+    /// A list can open before the text just typed is laid out, when the editor cannot place it yet; once the text is
+    /// laid out, the list is placed under its word.
+    /// </summary>
+    private void OnCompletionVisualLinesChanged(object? sender, EventArgs e)
+    {
+        if (_completion is { IsOpen: true } && _completionPopup is { IsOpen: false })
+        {
+            PlaceCompletionPopup();
         }
     }
 

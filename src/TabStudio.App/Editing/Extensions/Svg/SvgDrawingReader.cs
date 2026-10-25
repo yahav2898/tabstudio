@@ -298,7 +298,7 @@ internal static partial class SvgDrawingReader
             };
         }
 
-        private static Geometry? Rectangle(XElement element)
+        private static RectangleGeometry? Rectangle(XElement element)
         {
             var width = Number(element, "width");
             var height = Number(element, "height");

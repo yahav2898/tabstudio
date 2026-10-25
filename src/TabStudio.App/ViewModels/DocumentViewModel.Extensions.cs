@@ -49,7 +49,9 @@ public sealed partial class DocumentViewModel
             if (!_fileIconRead)
             {
                 _fileIconRead = true;
-                _fileIcon = IsExtensionsPage || IsCiLog ? null : FileIcons.ForFile(Comparison?.FilePath ?? FilePath);
+                _fileIcon = IsExtensionsPage ? FileIcons.ExtensionsPage
+                    : IsCiLog ? null
+                    : FileIcons.ForFile(Comparison?.FilePath ?? FilePath);
             }
 
             return _fileIcon;
@@ -100,6 +102,12 @@ public sealed partial class DocumentViewModel
         }
 
         var type = FileTypes.For(FilePath);
+        if (ReferenceEquals(type, FileTypes.PlainText) && Document.LineCount > 0
+            && ContributedFileTypes.ForFirstLine(FilePath, Document.GetText(Document.GetLineByNumber(1))) is { } scripted)
+        {
+            type = scripted;
+        }
+
         if (type == FileType)
         {
             return;

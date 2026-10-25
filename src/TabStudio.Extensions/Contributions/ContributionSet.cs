@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using TabStudio.Extensions.Installation;
 using TabStudio.Extensions.Json;
 using TabStudio.Extensions.Languages;
@@ -21,6 +22,7 @@ public sealed class ContributionSet
 {
     private readonly Dictionary<string, ContributedLanguage> _languages;
     private readonly List<(ContributedLanguage Language, FileNameGlob Glob)> _patterns;
+    private readonly ConcurrentDictionary<string, Regex?> _firstLinePatterns = new(StringComparer.Ordinal);
     private readonly Dictionary<string, ContributedGrammar> _grammars;
     private readonly List<ContributedSnippets> _snippets;
     private readonly ConcurrentDictionary<string, LanguageConfiguration?> _configurations = new(StringComparer.Ordinal);
@@ -179,6 +181,25 @@ public sealed class ContributionSet
         return best;
     }
 
+    /// <summary>
+    /// The language whose <c>firstLine</c> pattern a file's first line matches, as VS Code recognizes scripts without an
+    /// extension by their <c>#!</c> line, or <see langword="null"/>.
+    /// </summary>
+    /// <param name="firstLine">The file's first line.</param>
+    public ContributedLanguage? FindLanguageForFirstLine(string firstLine)
+    {
+        ArgumentNullException.ThrowIfNull(firstLine);
+        foreach (var language in _languages.Values)
+        {
+            if (language.FirstLine is { } pattern && _firstLinePatterns.GetOrAdd(pattern, p => JsRegex.TryCreate(p)) is { } regex && IsMatch(regex, firstLine))
+            {
+                return language;
+            }
+        }
+
+        return null;
+    }
+
     /// <summary>A grammar by scope name, or <see langword="null"/>.</summary>
     /// <param name="scopeName">The scope, such as <c>source.perl</c>.</param>
     public ContributedGrammar? FindGrammar(string scopeName)
@@ -253,6 +274,18 @@ public sealed class ContributionSet
         }
     });
 
+    private static bool IsMatch(Regex regex, string text)
+    {
+        try
+        {
+            return regex.IsMatch(text);
+        }
+        catch (RegexMatchTimeoutException)
+        {
+            return false;
+        }
+    }
+
     /// <summary>Merges what several extensions contribute to one language.</summary>
     private sealed class LanguageBuilder(string id)
     {
@@ -263,9 +296,11 @@ public sealed class ContributionSet
         private readonly List<ExtensionIdentifier> _owners = [];
         private string? _configuration;
         private string? _icon;
+        private string? _firstLine;
 
         public void Add(InstalledExtension extension, LanguageContribution language)
         {
+            _firstLine = language.FirstLine ?? _firstLine;
             _aliases.AddRange(language.Aliases.Except(_aliases, StringComparer.Ordinal));
             _extensions.AddRange(language.Extensions.Except(_extensions, StringComparer.OrdinalIgnoreCase));
             _fileNames.AddRange(language.Filenames.Except(_fileNames, StringComparer.OrdinalIgnoreCase));
@@ -279,6 +314,6 @@ public sealed class ContributionSet
         }
 
         public ContributedLanguage Build() =>
-            new(id, _aliases.Count > 0 ? _aliases[0] : id, [.. _extensions], [.. _fileNames], [.. _patterns], _configuration, _icon, [.. _owners]);
+            new(id, _aliases.Count > 0 ? _aliases[0] : id, [.. _extensions], [.. _fileNames], [.. _patterns], _configuration, _icon, [.. _owners], _firstLine);
     }
 }

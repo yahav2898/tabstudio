@@ -27,9 +27,36 @@ internal static class ContributedFileTypes
             return builtIn with { HighlightingExtension = grammar ?? builtIn.HighlightingExtension, LanguageId = language.Id, IconPath = language.Icon };
         }
 
+        return Create(contributions, language, name, grammar);
+    }
+
+    /// <summary>
+    /// The type of a file that no name claims, by its first line, as VS Code recognizes scripts such as
+    /// <c>#!/usr/bin/env perl</c>; <see langword="null"/> when no installed language's <c>firstLine</c> matches.
+    /// </summary>
+    /// <param name="path">The file's path.</param>
+    /// <param name="firstLine">The file's first line.</param>
+    public static FileType? ForFirstLine(string path, string firstLine)
+    {
+        var contributions = EditorExtensions.Contributions;
+        if (contributions.FindLanguageForFirstLine(firstLine) is not { } language)
+        {
+            return null;
+        }
+
+        // The file's name does not lead to the grammar, so the type names the grammar's scope itself.
+        var grammar = contributions.FindGrammarForLanguage(language.Id) is { } found ? ScopePrefix + found.ScopeName : null;
+        return Create(contributions, language, Path.GetFileName(path), grammar);
+    }
+
+    /// <summary>The start of a <see cref="FileType.HighlightingExtension"/> that names a grammar's scope rather than a file.</summary>
+    internal const string ScopePrefix = "scope:";
+
+    private static FileType Create(ContributionSet contributions, ContributedLanguage language, string fileName, string? grammar)
+    {
         var configuration = contributions.FindConfiguration(language.Id);
         var block = configuration?.BlockComment is { } comment ? (comment.Open, comment.Close) : ((string, string)?)null;
-        return new FileType(language.DisplayName, Badge(language, name), BadgeKind.Script, configuration?.LineComment, block, grammar)
+        return new FileType(language.DisplayName, Badge(language, fileName), BadgeKind.Script, configuration?.LineComment, block, grammar)
         {
             LanguageId = language.Id,
             IconPath = language.Icon,

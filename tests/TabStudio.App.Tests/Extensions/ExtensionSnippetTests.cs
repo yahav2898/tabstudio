@@ -38,6 +38,13 @@ public sealed class ExtensionSnippetTests
         await UiTestHelpers.WaitUntilAsync(() => completion.IsOpen && completion.SelectedItem?.Entry.DisplayText == "fn", because: "the snippet in the completion list");
         Assert.Equal(SymbolGlyph.Snippet, completion.SelectedItem!.Entry.Kind);
         await UiTestHelpers.WaitUntilAsync(() => completion.HasDescription, because: "the snippet's description");
+        await UiTestHelpers.WaitUntilAsync(
+            () =>
+            {
+                AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+                return view.IsCompletionShown;
+            },
+            because: "the list under the word");
         UiTestHelpers.SaveScreenshot(window, "ext-06-snippet-completion");
 
         window.KeyPressQwerty(PhysicalKey.Tab, RawInputModifiers.None);

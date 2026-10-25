@@ -1,3 +1,5 @@
+using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using TabStudio.App.Editing.Extensions.Svg;
@@ -7,8 +9,8 @@ namespace TabStudio.App.Editing.Extensions;
 
 /// <summary>
 /// The icons the chosen file icon theme gives files and folders, for the Solution Explorer and the document tabs:
-/// SVG and PNG images, drawn once and kept. Without a theme, or for a theme whose icons are font characters, TabStudio
-/// shows its own badges.
+/// SVG and PNG images, drawn once and kept. Without a theme, a file of a language an extension contributes shows the
+/// language's own icon when it has one, and other files show TabStudio's badges.
 /// </summary>
 /// <remarks>Call on the UI thread: the images are drawn with brushes that belong to it.</remarks>
 public static class FileIcons
@@ -17,20 +19,27 @@ public static class FileIcons
 
     private static readonly Dictionary<string, IImage?> Images = new(StringComparer.Ordinal);
     private static FileIconTheme? _imagesTheme;
+    private static DrawingImage? _extensionsPage;
 
-    /// <summary>The icon of a file, or <see langword="null"/> for TabStudio's badge.</summary>
+    /// <summary>
+    /// The icon of a file: the icon theme's, or without one, the icon of the language an extension contributes for
+    /// it; <see langword="null"/> for TabStudio's badge.
+    /// </summary>
     /// <param name="fileName">The file's name or path.</param>
     public static IImage? ForFile(string fileName)
     {
         ArgumentNullException.ThrowIfNull(fileName);
-        if (Theme() is not { } theme)
+        var type = FileTypes.For(fileName);
+        if (Theme() is { } theme)
         {
-            return null;
+            return Image(theme.ForFile(Path.GetFileName(fileName), EditorExtensions.LanguageIdOf(type, fileName))?.ImagePath);
         }
 
-        var type = FileTypes.For(fileName);
-        return Image(theme.ForFile(Path.GetFileName(fileName), EditorExtensions.LanguageIdOf(type, fileName)));
+        return Image(type.IconPath);
     }
+
+    /// <summary>The icon of the Extensions tab: TabStudio's extensions symbol.</summary>
+    public static IImage? ExtensionsPage => _extensionsPage ??= SymbolImage("Icon.Extensions", "Brush.AccentText");
 
     /// <summary>The icon of a folder, or <see langword="null"/> for TabStudio's folder icon.</summary>
     /// <param name="folderName">The folder's name.</param>
@@ -38,7 +47,7 @@ public static class FileIcons
     public static IImage? ForFolder(string folderName, bool expanded)
     {
         ArgumentNullException.ThrowIfNull(folderName);
-        return Theme() is { } theme ? Image(theme.ForFolder(folderName, expanded)) : null;
+        return Theme() is { } theme ? Image(theme.ForFolder(folderName, expanded)?.ImagePath) : null;
     }
 
     /// <summary>Draws an icon image file: an SVG, or a bitmap such as a PNG.</summary>
@@ -77,9 +86,9 @@ public static class FileIcons
         return theme;
     }
 
-    private static IImage? Image(FileIcon? icon)
+    private static IImage? Image(string? path)
     {
-        if (icon?.ImagePath is not { } path)
+        if (path is null)
         {
             return null;
         }
@@ -96,5 +105,21 @@ public static class FileIcons
         }
 
         return image;
+    }
+
+    /// <summary>One of TabStudio's stroke icons (Icons.axaml) as an image, as <c>StrokeIcon</c> draws it.</summary>
+    private static DrawingImage? SymbolImage(string geometryKey, string brushKey)
+    {
+        if (Application.Current is not { } application
+            || !application.TryFindResource(geometryKey, out var geometry) || geometry is not Geometry symbol
+            || !application.TryFindResource(brushKey, out var brush) || brush is not IBrush stroke)
+        {
+            return null;
+        }
+
+        var group = new DrawingGroup();
+        group.Children.Add(new GeometryDrawing { Brush = Brushes.Transparent, Geometry = new RectangleGeometry(new Rect(0, 0, 24, 24)) });
+        group.Children.Add(new GeometryDrawing { Geometry = symbol, Pen = new Pen(stroke, 1.8, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round) });
+        return new DrawingImage(group);
     }
 }

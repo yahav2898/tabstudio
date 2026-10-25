@@ -36,6 +36,12 @@ public sealed partial class WorkspaceViewModel
     /// <summary>Whether extensions are available.</summary>
     public bool HasExtensions => _extensions is not null;
 
+    /// <summary>
+    /// Whether the status bar shows the caret, indentation, encoding and language: for a file, not for the
+    /// Extensions tab, which has none of them.
+    /// </summary>
+    public bool ShowsEditorStatus => HasDocuments && ActiveDocument?.IsExtensionsPage != true;
+
     /// <summary>Opens the Extensions window in its tab, or brings it to the front.</summary>
     /// <param name="tab">The list to show.</param>
     /// <returns>The window, or <see langword="null"/> when the app runs without extensions.</returns>
@@ -71,6 +77,13 @@ public sealed partial class WorkspaceViewModel
     {
         _extensions = extensions;
         _extensionsBrowser = browser ?? new TopLevelStoragePicker();
+        PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName is nameof(ActiveDocument) or nameof(HasDocuments))
+            {
+                OnPropertyChanged(nameof(ShowsEditorStatus));
+            }
+        };
         if (extensions is not null)
         {
             EditorExtensions.Changed += OnEditorExtensionsChanged;

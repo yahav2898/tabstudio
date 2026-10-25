@@ -694,7 +694,7 @@
                    Text="{Binding ActiveDocument.CaretMessage, FallbackValue={x:Null}}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
 
         <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="18" TextElement.Foreground="{DynamicResource Brush.OnAccent}" TextElement.FontSize="12"
-                    IsVisible="{Binding HasDocuments}">
+                    IsVisible="{Binding ShowsEditorStatus}">
           <TextBlock Text="{Binding CaretText}" VerticalAlignment="Center" />
           <TextBlock Text="Spaces: 4" VerticalAlignment="Center" />
           <TextBlock Text="{Binding ActiveDocument.EncodingLabel, FallbackValue={x:Null}}" VerticalAlignment="Center" />

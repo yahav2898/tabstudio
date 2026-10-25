@@ -3,6 +3,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using TabStudio.App.Editing.Extensions;
 using TabStudio.Core.Workspaces;
+using TabStudio.Testing.Extensions;
 
 namespace TabStudio.App.Tests.Extensions;
 
@@ -60,6 +61,37 @@ public sealed class FileIconThemeTests
         fixture.Service.SelectIconTheme(null);
         Assert.False(document.HasFileIcon);
         Assert.True(fixture.Workspace.Explorer.Rows.Single(r => r.Name == "hello.lumen").ShowsBadge);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public async Task Without_an_icon_theme_a_language_shows_its_own_icon_and_the_Extensions_tab_its_symbol()
+    {
+        using var fixture = new ExtensionsFixture();
+        var package = LumenExtension.PackageJson().Replace(
+            "\"configuration\": \"./language-configuration.json\"",
+            "\"configuration\": \"./language-configuration.json\", \"icon\": { \"light\": \"./images/icon.png\", \"dark\": \"./images/icon.png\" }",
+            StringComparison.Ordinal);
+        await fixture.InstallLumenAsync(LumenExtension.Builder().Add("package.json", package).Build());
+        await fixture.OpenFolderAsync();
+        var window = fixture.Show();
+
+        var document = await fixture.OpenAsync("hello.lumen");
+
+        Assert.IsAssignableFrom<Bitmap>(FileIcons.ForFile("hello.lumen"));
+        Assert.True(document.HasFileIcon);
+        Assert.Null(FileIcons.ForFile("notes.txt"));
+        Assert.True(fixture.Workspace.Explorer.Rows.Single(r => r.Name == "hello.lumen").HasThemeIcon);
+        Assert.True(fixture.Workspace.Explorer.Rows.Single(r => r.Name == "notes.txt").ShowsBadge);
+        Assert.True(fixture.Workspace.ShowsEditorStatus);
+
+        var page = fixture.Workspace.OpenExtensions()!;
+
+        Assert.True(fixture.Workspace.ActiveDocument!.HasFileIcon);
+        Assert.False(fixture.Workspace.ShowsEditorStatus);
+        Assert.False(fixture.Workspace.ShowsEditorTouchBar);
+        Assert.Empty(fixture.Workspace.Breadcrumb);
+        Assert.NotNull(page);
         window.Close();
     }
 }

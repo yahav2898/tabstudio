@@ -11,6 +11,7 @@ namespace TabStudio.Extensions.Contributions;
 /// <param name="Configuration">The full path of the language configuration file, or <see langword="null"/>.</param>
 /// <param name="Icon">The full path of the language's icon for dark backgrounds, or <see langword="null"/>.</param>
 /// <param name="Owners">The extensions that contribute to it.</param>
+/// <param name="FirstLine">A regular expression the first line of a file of the language matches, such as a <c>#!</c> line, or <see langword="null"/>.</param>
 public sealed record ContributedLanguage(
     string Id,
     string DisplayName,
@@ -19,7 +20,8 @@ public sealed record ContributedLanguage(
     IReadOnlyList<string> FileNamePatterns,
     string? Configuration,
     string? Icon,
-    IReadOnlyList<ExtensionIdentifier> Owners);
+    IReadOnlyList<ExtensionIdentifier> Owners,
+    string? FirstLine = null);
 
 /// <summary>A TextMate grammar of an enabled extension.</summary>
 /// <param name="ScopeName">The grammar's root scope, such as <c>source.perl</c>.</param>
