@@ -36,6 +36,7 @@ internal static class UiTestHelpers
         Directory.CreateDirectory(folder);
         var path = Path.Combine(folder, name + ".png");
         SaveFrame(window, path);
+        Design.StretchedText.Record(window, folder, name);
         return path;
     }
 

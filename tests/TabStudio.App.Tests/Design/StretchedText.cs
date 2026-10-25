@@ -17,14 +17,39 @@ internal static class StretchedText
     /// <summary>How much taller than its text a line may be before it shows.</summary>
     private const double Tolerance = 1.5;
 
+    /// <summary>The report every screenshot adds to, beside the screenshots.</summary>
+    private const string ReportName = "stretched-text.txt";
+
+    private static readonly Lock ReportGate = new();
+
     /// <summary>Each single line of text under <paramref name="root"/> that is taller than its text, described.</summary>
     /// <param name="root">The window or control to look through.</param>
     public static IReadOnlyList<string> In(Visual root) =>
         [.. root.GetVisualDescendants().OfType<TextBlock>()
             .Where(text => text.IsEffectivelyVisible && IsOneLine(text) && HasText(text))
             .Where(text => text.VerticalAlignment == VerticalAlignment.Stretch && Extra(text) > Tolerance)
-            .Where(text => !InPillOrChip(text))
             .Select(Describe)];
+
+    /// <summary>
+    /// Adds the stretched text of a screenshot to stretched-text.txt in its folder, so every screenshot test checks the
+    /// rule too; the design tests and <see cref="CenteredTextTests"/> fail on it instead.
+    /// </summary>
+    /// <param name="root">The window the screenshot is of.</param>
+    /// <param name="folder">The screenshots' folder.</param>
+    /// <param name="screenshot">The screenshot's name.</param>
+    public static void Record(Visual root, string folder, string screenshot)
+    {
+        var found = In(root).Distinct().Select(text => $"{screenshot}: {text}").ToList();
+        if (found.Count == 0)
+        {
+            return;
+        }
+
+        lock (ReportGate)
+        {
+            File.AppendAllLines(Path.Combine(folder, ReportName), found);
+        }
+    }
 
     /// <summary>Fails with each stretched line of text under <paramref name="root"/>, when there are any.</summary>
     /// <param name="root">The window or control to look through.</param>
@@ -45,14 +70,6 @@ internal static class StretchedText
     /// <summary>How much taller the text block is than its text.</summary>
     private static double Extra(TextBlock text) =>
         text.Bounds.Height - (text.DesiredSize.Height - text.Margin.Top - text.Margin.Bottom);
-
-    /// <summary>
-    /// Pills and chips center their content with a style of their own (Theme/Controls.axaml on main from 0.9), which this
-    /// branch does not have yet.
-    /// </summary>
-    private static bool InPillOrChip(TextBlock text) =>
-        text.GetVisualAncestors().OfType<Border>().FirstOrDefault() is { } border
-        && (border.Classes.Contains("pill") || border.Classes.Contains("chip"));
 
     private static string Describe(TextBlock text)
     {
