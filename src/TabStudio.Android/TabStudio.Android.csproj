@@ -32,8 +32,9 @@
     <!-- versionName follows the repository version in Directory.Build.props. -->
     <ApplicationDisplayVersion>$(Version)</ApplicationDisplayVersion>
     <!--
-      versionCode must never go down between builds a device should accept as updates. CI passes its run
-      number (-p:TabStudioBuildNumber=...), so every nightly is newer than the last one; local builds are 1.
+      versionCode must never go down between builds a device should accept as updates. CI passes the minutes
+      since 2026-01-01 (-p:TabStudioBuildNumber=...), so every nightly and release is newer than the builds
+      before it; local builds are 1.
     -->
     <TabStudioBuildNumber Condition="'$(TabStudioBuildNumber)' == ''">1</TabStudioBuildNumber>
     <ApplicationVersion>$(TabStudioBuildNumber)</ApplicationVersion>
