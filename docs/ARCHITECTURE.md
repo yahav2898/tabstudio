@@ -51,6 +51,7 @@ Dependencies point down only. Each layer has one job:
 | `TabStudio.Toolchains` | The Toolchain Store: the catalog, Alpine Linux on PRoot, verified Alpine packages, processes and pseudo terminals, toolchain projects and the terminal emulator. | `TabStudio.Core` |
 | `TabStudio.Forms` | Windows Forms on Avalonia: `System.Windows.Forms` and `System.Drawing`, run in the app preview. | Avalonia |
 | `TabStudio.Forms.Design` | The Windows Forms designer's model: reads and writes `InitializeComponent`, the Toolbox and properties. | `TabStudio.Forms`, Roslyn |
+| `TabStudio.Swarm` | Swarm: the coordinator and members, deployment with cached attachments, the web gateway, the debug agent. | `TabStudio.Link`, `TabStudio.Debugging`, `TabStudio.Compilation` |
 | `TabStudio.LanguageServers` | Language Server Protocol and Debug Adapter Protocol clients, server and adapter registry, launch configurations. | Nothing but the .NET base library |
 | `TabStudio.Extensions` | VS Code extensions from Open VSX: install and verify, and their grammars, language configurations, snippets and themes. | Nothing but the .NET base library |
 | `TabStudio.Agent` | Claude as a coding agent: the Messages API with streaming and prompt caching, tools over the workspace, Model Context Protocol servers, and sketch to XAML. | Core |
@@ -400,6 +401,30 @@ adapter it brings.
   environment and paths are translated between the device and the environment. A missing server or adapter offers
   to install the toolchain that brings it. For F5, a project's run plan becomes a DAP launch configuration, and the
   program starts through the adapter's `runInTerminal` request, so its input and output stay in the Output panel.
+
+## Swarm
+
+`TabStudio.Swarm` runs the app being built on every device that joins the tablet's swarm. Devices join through
+TabStudio Link's pairing (a `tabstudio-link://swarm?` invitation, TLS 1.3 with pinned certificates), as members of a
+host that accepts several clients. The tablet is the coordinator:
+
+- **Running.** F5 builds once and sends the build to every member; attachments are cached by hash, so later runs send
+  only what changed. Avalonia apps run full screen on each device, console apps stream their output back with stdin
+  from the tablet, and web apps are served once by the tablet. A failing device never stops the others.
+- **Web apps.** Each device's web view opens the app through a gateway on the device's own loopback address. Every
+  connection travels inside the swarm's Link connection, so nothing listens on the Wi-Fi. A per-run secret in the
+  first URL is swapped for an `HttpOnly`, `SameSite=Strict` cookie, and requests without it are refused.
+- **Debugging.** A debug agent on each device reports breakpoints and pauses to the tablet's debugger, which shows the
+  device's Locals and Call Stack and can pause every device at once.
+- **Screens.** Everything that shows the app is an `IAppScreen` (`TabStudio.App/Swarm/AppScreens.cs`): a device's
+  preview, the tablet's App Preview, virtual devices of any size, theme, direction and font scale, and the web
+  preview. Screens report a person's input, replay input as real taps and keys, take pictures, list their elements
+  (`ElementPaths` names them the same way for capture, replay, mirroring and findings) and check their own layout.
+- **Layout checks.** An `ILayoutInspector` looks for clipped text, off-screen and overlapping controls, small touch
+  targets and low contrast (SWRM001 to SWRM005, see [layout-checks.md](layout-checks.md)) whenever a screen changes,
+  and the findings go to the Error List with a picture of each screen.
+- **Recorded UI tests.** A recording becomes an xUnit test in an Avalonia.Headless project with a generated driver,
+  which replays per screen in Test Explorer and with `dotnet test`.
 
 ## Language servers and debug adapters
 

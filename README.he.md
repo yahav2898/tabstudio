@@ -83,10 +83,10 @@ TabStudio הופך טאבלט אנדרואיד למחשב פיתוח שבאמת 
 
 ### כל המסכים בבת אחת
 
-- **‏Run on Swarm.** טלפונים וטאבלטים שמריצים TabStudio מצטרפים ל-Swarm שלכם בסריקה אחת. לוחצים F5, והאפליקציה שאתם בונים עולה בכולם יחד, וכל שמירה מעדכנת את כולם. אפליקציות Avalonia רצות באופן טבעי, אתרים בדפדפן של כל מכשיר, ואפליקציות קונסול שולחות את הפלט שלהן חזרה.
+- **‏Run on Swarm.** טלפונים וטאבלטים שמריצים TabStudio מצטרפים ל-Swarm שלכם בסריקה אחת (**File > Join a Swarm** בטלפון). בוחרים Swarm בתפריט ההרצה, לוחצים F5, והאפליקציה שאתם בונים עולה בכולם יחד, וכל שמירה מעדכנת את כולם. אפליקציות Avalonia רצות באופן טבעי, אתרים בדפדפן של כל מכשיר, ואפליקציות קונסול שולחות את הפלט שלהן חזרה.
 - **דיבאג בכל מכשיר.** לוחצים על כפתור בטלפון, ונקודת העצירה שלו עוצרת בטאבלט עם ה-Locals וה-Call Stack של הטלפון. עוצרים את המכשיר הזה או את כולם.
 - **מגע משוכפל.** נגיעה, גלילה או הקלדה במכשיר אחד קורות בכל המכשירים, כך שמשווים את אותו מסך בכל הגדלים.
-- **מכשירים וירטואליים.** אין טלפונים נוספים? הטאבלט מציג את האפליקציה זה לצד זה כטלפון קטן, טלפון גדול וטאבלט, בבהיר ובכהה, משמאל לימין ומימין לשמאל, ועם גופנים גדולים.
+- **‏Device Matrix.** כל המסכים זה לצד זה: הטלפונים שלכם, ה-App Preview ומכשירים וירטואליים. אין טלפונים נוספים? הטאבלט מציג את האפליקציה זה לצד זה כטלפון קטן, טלפון גדול וטאבלט, בבהיר ובכהה, משמאל לימין ומימין לשמאל, ועם גופנים גדולים.
 - **בדיקות פריסה.** אחרי כל שינוי TabStudio בודק כל מסך: טקסט חתוך, פקדים שנדחפו מחוץ למסך, פקדים חופפים, מטרות מגע קטנות מ-44 פיקסלים וניגודיות נמוכה. כל ממצא מגיע ל-Error List עם המכשיר וצילום מסך, ו-**Fix with Agent** במרחק נגיעה.
 - **בדיקות E2E מוקלטות.** מקליטים כמה נגיעות ומקבלים בדיקת UI שמריצה אותן שוב בכל מכשיר וב-CI, עם תוצאה לכל מכשיר ב-Test Explorer.
 
@@ -207,6 +207,7 @@ src/
   TabStudio.SourceControl/ Git through GitHub: changes, commits, pulls and merges, branches, pull requests, Actions
   TabStudio.Agent/         Claude as a coding agent: tools over the workspace, MCP servers, sketch to XAML
   TabStudio.Link/          TabStudio Link: pairing, encrypted transport, QR codes and the remote language service
+  TabStudio.Swarm/         Swarm: running, updating, debugging and recording an app on every joined device
   TabStudio.Forms/         Windows Forms on Avalonia: System.Windows.Forms and System.Drawing, drawn as on Windows 10
   TabStudio.Forms.Design/  The touch designer's model: reads and writes InitializeComponent, the canvas and Toolbox
   TabStudio.Web/           Web apps: static web assets, Blazor's scripts, a host for .NET apps on WebAssembly
