@@ -95,4 +95,10 @@ internal static class LinkLanguageMethods
 
     /// <summary>Warms IntelliSense up.</summary>
     public const string WarmUp = "workspace/warmUp";
+
+    /// <summary>The errors of the workspace with changes not applied yet, for the agent.</summary>
+    public const string SnapshotDiagnostics = "snapshot/diagnostics";
+
+    /// <summary>Builds the test projects of the workspace with changes not applied yet, for the agent.</summary>
+    public const string SnapshotTestBuilds = "snapshot/buildTests";
 }

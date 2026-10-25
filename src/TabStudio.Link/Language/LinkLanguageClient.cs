@@ -227,6 +227,29 @@ public sealed class LinkLanguageClient
     public Task WarmUpAsync(string filePath, CancellationToken cancellationToken) =>
         _connection.RequestAsync(LinkLanguageMethods.WarmUp, LinkLanguageJson.ToJson(new FileRequest(filePath)), cancellationToken: cancellationToken);
 
+    /// <summary>The errors and warnings of the workspace with changes that are not applied yet, such as the agent's.</summary>
+    /// <param name="changes">Full path to new text, or <see langword="null"/> for a deleted file.</param>
+    /// <param name="cancellationToken">Cancels the analysis.</param>
+    public Task<IReadOnlyList<BuildDiagnostic>> GetSnapshotDiagnosticsAsync(IReadOnlyDictionary<string, string?> changes, CancellationToken cancellationToken) =>
+        RequestAsync<SnapshotRequest, IReadOnlyList<BuildDiagnostic>>(LinkLanguageMethods.SnapshotDiagnostics, Snapshot(changes), cancellationToken);
+
+    /// <summary>Builds every test project of the workspace with changes that are not applied yet, on the host.</summary>
+    /// <param name="changes">Full path to new text, or <see langword="null"/> for a deleted file.</param>
+    /// <param name="cancellationToken">Cancels the builds.</param>
+    /// <returns>Each test project, by its file on this device, and its build.</returns>
+    public async Task<IReadOnlyList<LinkProjectBuild>> BuildSnapshotTestProjectsAsync(IReadOnlyDictionary<string, string?> changes, CancellationToken cancellationToken)
+    {
+        var payload = await _connection.RequestAsync(LinkLanguageMethods.SnapshotTestBuilds, LinkLanguageJson.ToJson(Snapshot(changes)), cancellationToken: cancellationToken).ConfigureAwait(false);
+        var response = payload.Read(LinkLanguageJson.Info<SnapshotBuildsResponse>());
+        return [.. response.Builds.Select(b => new LinkProjectBuild(b.ProjectPath, DecodeBuild(b.Build, payload)))];
+    }
+
+    private static SnapshotRequest Snapshot(IReadOnlyDictionary<string, string?> changes)
+    {
+        ArgumentNullException.ThrowIfNull(changes);
+        return new SnapshotRequest([.. changes.Select(c => new PendingFile(c.Key, c.Value))]);
+    }
+
     private async Task<TResult> RequestAsync<TRequest, TResult>(string method, TRequest request, CancellationToken cancellationToken)
     {
         var payload = await _connection.RequestAsync(method, LinkLanguageJson.ToJson(request), cancellationToken: cancellationToken).ConfigureAwait(false);

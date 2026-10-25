@@ -95,6 +95,8 @@ internal static class LinkLanguageJson
 [JsonSerializable(typeof(IReadOnlyList<CodeActionItem>))]
 [JsonSerializable(typeof(IReadOnlyList<DocumentEdit>))]
 [JsonSerializable(typeof(IReadOnlyList<DocumentSymbol>))]
+[JsonSerializable(typeof(SnapshotRequest))]
+[JsonSerializable(typeof(SnapshotBuildsResponse))]
 internal sealed partial class LinkLanguageJsonContext : JsonSerializerContext
 {
 }

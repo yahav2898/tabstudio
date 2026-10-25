@@ -79,3 +79,15 @@ internal sealed record BuildResponse(
 
 /// <summary>A debug build: the build and the debugger's map of its statements and methods.</summary>
 internal sealed record DebugBuildResponse(BuildResponse Result, IReadOnlyList<DebugStatement> Statements, IReadOnlyList<DebugMethod> Methods);
+
+/// <summary>A change not applied yet: a file's new text, or null when it is deleted.</summary>
+internal sealed record PendingFile(string Path, string? Text);
+
+/// <summary>The changes a snapshot of the workspace has.</summary>
+internal sealed record SnapshotRequest(IReadOnlyList<PendingFile> Files);
+
+/// <summary>A project of a snapshot and its build; the assemblies are attachments.</summary>
+internal sealed record SnapshotBuild(string ProjectPath, BuildResponse Build);
+
+/// <summary>The builds of a snapshot's test projects.</summary>
+internal sealed record SnapshotBuildsResponse(IReadOnlyList<SnapshotBuild> Builds);

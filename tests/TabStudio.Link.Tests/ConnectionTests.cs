@@ -73,8 +73,13 @@ public sealed class ConnectionTests
     {
         var started = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var canceled = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-        var server = new TestHandler(async (_, _, cancellationToken) =>
+        var server = new TestHandler(async (method, _, cancellationToken) =>
         {
+            if (method != "build")
+            {
+                return LinkReply.Empty;
+            }
+
             started.SetResult();
             try
             {

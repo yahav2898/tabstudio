@@ -112,4 +112,14 @@ public interface ILinkLanguageBackend : IDisposable
 
     /// <summary>Prepares IntelliSense in the background.</summary>
     Task WarmUpAsync(string filePath, CancellationToken cancellationToken);
+
+    /// <summary>The errors and warnings of the workspace with changes that are not applied yet, such as the agent's.</summary>
+    /// <param name="changes">Full path to new text, or <see langword="null"/> for a deleted file.</param>
+    /// <param name="cancellationToken">Cancels the analysis.</param>
+    Task<IReadOnlyList<BuildDiagnostic>> GetSnapshotDiagnosticsAsync(IReadOnlyDictionary<string, string?> changes, CancellationToken cancellationToken);
+
+    /// <summary>Builds every test project of the workspace with changes that are not applied yet, such as the agent's.</summary>
+    /// <param name="changes">Full path to new text, or <see langword="null"/> for a deleted file.</param>
+    /// <param name="cancellationToken">Cancels the builds.</param>
+    Task<IReadOnlyList<LinkProjectBuild>> BuildSnapshotTestProjectsAsync(IReadOnlyDictionary<string, string?> changes, CancellationToken cancellationToken);
 }

@@ -174,6 +174,21 @@ public sealed class LanguageProtocolTests : IAsyncLifetime, IDisposable
     }
 
     [Fact]
+    public async Task The_agents_changes_are_checked_and_built_on_the_host()
+    {
+        await LoadAsync();
+        var greeter = _tablet.Resolve("HelloTablet/Greeter.cs");
+
+        var diagnostics = await Client.GetSnapshotDiagnosticsAsync(new Dictionary<string, string?> { [greeter] = "class Greeter" }, CancellationToken.None);
+        var builds = await Client.BuildSnapshotTestProjectsAsync(new Dictionary<string, string?> { [Program] = null }, CancellationToken.None);
+
+        Assert.Equal(greeter, Assert.Single(diagnostics).Location!.FilePath);
+        var build = Assert.Single(builds);
+        Assert.Equal(_workspace!.Projects[0].FilePath, build.ProjectFilePath);
+        Assert.Equal([1, 2, 3], build.Build.EntryAssembly!.Image);
+    }
+
+    [Fact]
     public async Task Requests_before_a_workspace_is_loaded_say_so()
     {
         var error = await Assert.ThrowsAsync<LinkRemoteException>(() => Client.GetDocumentDiagnosticsAsync(Program, CancellationToken.None));

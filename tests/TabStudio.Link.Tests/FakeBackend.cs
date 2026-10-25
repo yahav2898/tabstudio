@@ -133,6 +133,13 @@ internal sealed class FakeBackend : ILinkLanguageBackend
 
     public Task WarmUpAsync(string filePath, CancellationToken cancellationToken) => Task.CompletedTask;
 
+    public Task<IReadOnlyList<BuildDiagnostic>> GetSnapshotDiagnosticsAsync(IReadOnlyDictionary<string, string?> changes, CancellationToken cancellationToken) =>
+        Task.FromResult<IReadOnlyList<BuildDiagnostic>>(
+            [.. changes.Keys.Select(path => new BuildDiagnostic("CS1002", DiagnosticSeverityLevel.Error, "; expected", new DiagnosticLocation(path, 0, 1, 1, 1), "HelloTablet"))]);
+
+    public Task<IReadOnlyList<LinkProjectBuild>> BuildSnapshotTestProjectsAsync(IReadOnlyDictionary<string, string?> changes, CancellationToken cancellationToken) =>
+        Task.FromResult<IReadOnlyList<LinkProjectBuild>>([new LinkProjectBuild(Workspace!.Projects[0].FilePath, Build(Workspace.Projects[0]))]);
+
     public void Dispose() => IsDisposed = true;
 
     private static BuildResult Build(ProjectInfo project) =>

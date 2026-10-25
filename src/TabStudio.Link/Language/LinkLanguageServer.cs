@@ -142,6 +142,8 @@ public sealed class LinkLanguageServer : ILinkMessageHandler, IDisposable
             LinkLanguageMethods.DocumentSymbols => await FileQueryAsync(payload, (b, path, ct) => b.GetDocumentSymbolsAsync(path, ct), (_, r) => r, [], cancellationToken).ConfigureAwait(false),
             LinkLanguageMethods.SymbolPath => await PositionQueryAsync(payload, (b, path, position, ct) => b.GetSymbolPathAsync(path, position, ct), (_, r) => r, [], cancellationToken).ConfigureAwait(false),
             LinkLanguageMethods.WarmUp => await WarmUpAsync(payload, cancellationToken).ConfigureAwait(false),
+            LinkLanguageMethods.SnapshotDiagnostics => await SnapshotDiagnosticsAsync(payload, cancellationToken).ConfigureAwait(false),
+            LinkLanguageMethods.SnapshotTestBuilds => await SnapshotTestBuildsAsync(payload, cancellationToken).ConfigureAwait(false),
             _ => throw new LinkRemoteException(LinkErrorCodes.UnknownMethod, $"The host does not know '{method}'."),
         };
     }
@@ -536,6 +538,40 @@ public sealed class LinkLanguageServer : ILinkMessageHandler, IDisposable
         }
 
         return LinkReply.Empty;
+    }
+
+    private async Task<LinkReply> SnapshotDiagnosticsAsync(LinkPayload payload, CancellationToken cancellationToken)
+    {
+        var (backend, map) = Ready();
+        var changes = HostChanges(payload.Read(LinkLanguageJson.Info<SnapshotRequest>()), map);
+        using var activity = Begin("Checking Claude's changes");
+        return Reply(map.ToClient(await backend.GetSnapshotDiagnosticsAsync(changes, cancellationToken).ConfigureAwait(false)));
+    }
+
+    private async Task<LinkReply> SnapshotTestBuildsAsync(LinkPayload payload, CancellationToken cancellationToken)
+    {
+        var (backend, map) = Ready();
+        var changes = HostChanges(payload.Read(LinkLanguageJson.Info<SnapshotRequest>()), map);
+        using var activity = Begin("Building the tests of Claude's changes");
+        var builds = await backend.BuildSnapshotTestProjectsAsync(changes, cancellationToken).ConfigureAwait(false);
+        var attachments = new List<ReadOnlyMemory<byte>>();
+        var response = new SnapshotBuildsResponse([.. builds.Select(b => new SnapshotBuild(map.ToClient(b.ProjectFilePath), EncodeBuild(b.Build, map, attachments)))]);
+        return LinkReply.Of(response, LinkLanguageJson.Info<SnapshotBuildsResponse>(), attachments);
+    }
+
+    /// <summary>A snapshot's changes on the host's paths; changes outside the workspace are left out.</summary>
+    private static Dictionary<string, string?> HostChanges(SnapshotRequest request, LinkPathMap map)
+    {
+        var changes = new Dictionary<string, string?>(StringComparer.Ordinal);
+        foreach (var file in request.Files)
+        {
+            if (map.ToHost(file.Path) is { } path)
+            {
+                changes[path] = file.Text;
+            }
+        }
+
+        return changes;
     }
 
     private ActivityScope Begin(string activity)
