@@ -94,4 +94,13 @@
   <!-- PRoot and its loader, which run toolchains; see the file. -->
   <Import Project="Toolchains.targets" />
 
+  <!--
+    Extra environment variables for the runtime, for diagnostic builds only: the GC stress workflow
+    (.github/workflows/gc-stress.yml) builds with -p:TabStudioAndroidEnvironment=build/android/gc-stress.env so that
+    Mono checks its heap while the self test runs. Release builds pass nothing and get the runtime's defaults.
+  -->
+  <ItemGroup Condition="'$(TabStudioAndroidEnvironment)' != ''">
+    <AndroidEnvironment Include="$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)', '..', '..', '$(TabStudioAndroidEnvironment)'))" />
+  </ItemGroup>
+
 </Project>
