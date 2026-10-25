@@ -37,6 +37,15 @@
     <PackageVersion Include="NuGet.Versioning" Version="6.14.0" />
   </ItemGroup>
 
+  <ItemGroup Label="Android">
+    <!--
+      Avalonia 11 ships with SkiaSharp 2.88, whose native library is not aligned for Android devices with 16 KB
+      memory pages (Android 15 and later). The Android head references SkiaSharp 3, which is, as Avalonia
+      recommends; desktop and tests stay on Avalonia's own version.
+    -->
+    <PackageVersion Include="SkiaSharp" Version="3.119.0" />
+  </ItemGroup>
+
   <ItemGroup Label="Infrastructure">
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
   </ItemGroup>

@@ -48,6 +48,8 @@
     <PublishTrimmed>false</PublishTrimmed>
     <RunAOTCompilation>false</RunAOTCompilation>
     <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+    <!-- The IDE is in English; leaving out Roslyn's and the framework's translations saves megabytes. -->
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <!-- Android creates the activity through a Java callable wrapper, so the head's entry types stay public. -->
     <NoWarn>$(NoWarn);CA1515</NoWarn>
   </PropertyGroup>
@@ -80,6 +82,8 @@
   <ItemGroup>
     <PackageReference Include="Avalonia.Android" />
     <PackageReference Include="Xamarin.AndroidX.Core.SplashScreen" />
+    <!-- 16 KB page-aligned native Skia; see Directory.Packages.props. -->
+    <PackageReference Include="SkiaSharp" />
   </ItemGroup>
 
   <ItemGroup>
