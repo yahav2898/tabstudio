@@ -82,6 +82,23 @@ public sealed class DebugAdapterSessionTests
     }
 
     [Fact]
+    public async Task Adapter_startup_stderr_is_available_before_its_TCP_connection_opens()
+    {
+        var logged = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
+        await using var launcher = new TcpLauncher(logged.Task);
+        var adapter = new DebugAdapterDefinition
+        {
+            Id = "test", Name = "Test", Command = "test", Transport = DebugAdapterTransport.Tcp,
+            Arguments = ["--port", "${port}"],
+        };
+        var starting = DebugAdapterSession.StartAsync(adapter, "/fake/bin/test", "/work", launcher,
+            new DebugAdapterSessionOptions { StartupLog = line => logged.TrySetResult(line) });
+
+        Assert.Equal("waiting for debugger", await logged.Task.WaitAsync(TestTimeouts.Default));
+        await using var session = await starting;
+    }
+
+    [Fact]
     public async Task Breakpoint_settings_the_adapter_does_not_support_are_left_out()
     {
         var launcher = new FakeDebugAdapter.Launcher(adapter =>
@@ -555,7 +572,7 @@ public sealed class DebugAdapterSessionTests
     }
 
     /// <summary>Starts a fake adapter that listens on the port it is given, a little later, as a real one would.</summary>
-    private sealed class TcpLauncher : IServerProcessLauncher, IAsyncDisposable
+    private sealed class TcpLauncher(Task? allowListen = null) : IServerProcessLauncher, IAsyncDisposable
     {
         private readonly TaskCompletionSource<int> _exited = new(TaskCreationOptions.RunContinuationsAsynchronously);
         private TcpListener? _listener;
@@ -575,6 +592,11 @@ public sealed class DebugAdapterSessionTests
             _ = Task.Run(async () =>
             {
                 await Task.Delay(300);
+                if (allowListen is not null)
+                {
+                    await allowListen;
+                }
+
                 _listener = new TcpListener(IPAddress.Loopback, Port);
                 _listener.Start();
                 _client = await _listener.AcceptTcpClientAsync();
@@ -604,7 +626,7 @@ public sealed class DebugAdapterSessionTests
 
             public Stream StandardOutput { get; } = new MemoryStream();
 
-            public Stream StandardError { get; } = new MemoryStream();
+            public Stream StandardError { get; } = new MemoryStream(System.Text.Encoding.UTF8.GetBytes("waiting for debugger\n"));
 
             public Task<int> Exited => exited.Task;
 

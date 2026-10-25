@@ -125,7 +125,7 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
-        var withInput = await PrepareNativeDebugInputAsync(configuration);
+        var withInput = PrepareNativeDebugInput(configuration);
         if (withInput is null)
         {
             return;
