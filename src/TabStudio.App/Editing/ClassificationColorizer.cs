@@ -10,6 +10,8 @@ namespace TabStudio.App.Editing;
 /// </summary>
 public sealed class ClassificationColorizer : DocumentColorizingTransformer
 {
+    // One coloring action per brush, so building a line allocates no closure per colored span.
+    private readonly Dictionary<IBrush, Action<VisualLineElement>> _colorWith = new(ReferenceEqualityComparer.Instance);
     private TrackedRange<IBrush>[] _ranges = [];
 
     /// <summary>
@@ -52,9 +54,25 @@ public sealed class ClassificationColorizer : DocumentColorizingTransformer
             var end = Math.Min(ranges[i].End, lineEnd);
             if (end > start)
             {
-                var brush = ranges[i].Value;
-                ChangeLinePart(start, end, element => element.TextRunProperties.SetForegroundBrush(brush));
+                ChangeLinePart(start, end, ColorWith(ranges[i].Value));
             }
         }
+    }
+
+    private Action<VisualLineElement> ColorWith(IBrush brush)
+    {
+        if (!_colorWith.TryGetValue(brush, out var color))
+        {
+            // A theme has a few dozen colors; a palette that changed many times starts over.
+            if (_colorWith.Count > 512)
+            {
+                _colorWith.Clear();
+            }
+
+            color = element => element.TextRunProperties.SetForegroundBrush(brush);
+            _colorWith[brush] = color;
+        }
+
+        return color;
     }
 }

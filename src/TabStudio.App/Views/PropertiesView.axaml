@@ -1,34 +1,54 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
              xmlns:vm="using:TabStudio.App.ViewModels"
              x:Class="TabStudio.App.Views.PropertiesView"
              x:DataType="vm:PropertiesViewModel">
+
+  <!--
+    The Properties panel under the Solution Explorer: folded into its 40-pixel header, which names the selected item,
+    until a tap on the header opens it (docs/design/stage-2.md, 2.6). Paths stay on one line, trimmed in the middle,
+    with the whole path in the tooltip.
+  -->
   <DockPanel>
-    <Border DockPanel.Dock="Top" Height="34" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="12,0">
-      <TextBlock Classes="header" Text="Properties" />
-    </Border>
-    <Border DockPanel.Dock="Top" Height="30" Padding="12,0">
-      <TextBlock VerticalAlignment="Center" FontSize="12.5" TextTrimming="CharacterEllipsis">
-        <Run Text="{Binding Title}" FontWeight="SemiBold" />
-        <Run Text="  " />
-        <Run Text="{Binding Subtitle}" Foreground="{DynamicResource Brush.TextMuted}" />
-      </TextBlock>
-    </Border>
-    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
-      <ItemsControl ItemsSource="{Binding Rows}">
-        <ItemsControl.ItemTemplate>
-          <DataTemplate DataType="vm:PropertyRow">
-            <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0">
-              <Grid ColumnDefinitions="130,*" MinHeight="28">
-                <TextBlock Classes="label" FontSize="12.5" Text="{Binding Name}" Margin="12,0" VerticalAlignment="Center" />
-                <Border Grid.Column="1" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1,0,0,0" Padding="10,4">
-                  <SelectableTextBlock FontSize="12.5" Text="{Binding Value}" TextWrapping="Wrap" VerticalAlignment="Center" />
-                </Border>
-              </Grid>
-            </Border>
-          </DataTemplate>
-        </ItemsControl.ItemTemplate>
-      </ItemsControl>
+    <Button x:Name="HeaderButton" DockPanel.Dock="Top" Theme="{StaticResource ToolButton}" CornerRadius="0" Padding="0" MinHeight="40"
+            HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Command="{Binding ToggleExpandedCommand}"
+            ToolTip.Tip="Show or hide Properties">
+      <controls:PanelHeader Title="Properties" Subtitle="{Binding Title}" Icon="{StaticResource Icon.Properties}" BorderThickness="0,1,0,0">
+        <controls:PanelHeader.Actions>
+          <Panel Width="36" Height="36">
+            <controls:StrokeIcon Data="{StaticResource Icon.ChevronUp}" Size="16" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                 IsVisible="{Binding !IsExpanded}" />
+            <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="16" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                 IsVisible="{Binding IsExpanded}" />
+          </Panel>
+        </controls:PanelHeader.Actions>
+      </controls:PanelHeader>
+    </Button>
+
+    <ScrollViewer x:Name="Rows" HorizontalScrollBarVisibility="Disabled" IsVisible="{Binding IsExpanded}">
+      <StackPanel>
+        <TextBlock Classes="muted small" Text="{Binding Subtitle}" Margin="12,6,12,8" TextTrimming="CharacterEllipsis"
+                   IsVisible="{Binding Subtitle, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+        <ItemsControl ItemsSource="{Binding Rows}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="vm:PropertyRow">
+              <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0">
+                <Grid ColumnDefinitions="130,*" MinHeight="28">
+                  <TextBlock Classes="label" FontSize="12.5" Text="{Binding Name}" Margin="12,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                  <Border Grid.Column="1" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1,0,0,0" Padding="10,4">
+                    <Panel>
+                      <SelectableTextBlock FontSize="12.5" Text="{Binding Value}" TextWrapping="Wrap" VerticalAlignment="Center" IsVisible="{Binding IsText}" />
+                      <TextBlock FontSize="12.5" Text="{Binding Value}" TextTrimming="PathSegmentEllipsis" VerticalAlignment="Center"
+                                 ToolTip.Tip="{Binding Value}" IsVisible="{Binding IsPath}" />
+                    </Panel>
+                  </Border>
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
     </ScrollViewer>
   </DockPanel>
 </UserControl>

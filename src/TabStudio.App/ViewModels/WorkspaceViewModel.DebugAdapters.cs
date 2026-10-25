@@ -312,6 +312,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
 
     private void FailAdapterStart(DebugAdapterDefinition adapter, string reason)
     {
+        StopNativeDebugInput();
         Output.WriteLine($"{adapter.Name} did not start: {reason}", OutputKind.Failure);
         DebugAdapterOutput.WriteLine($"[{adapter.Name}] {reason}", OutputKind.Failure);
         State = IdeState.Failed;
@@ -420,7 +421,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
                 "console" or "important" => OutputKind.Info,
                 _ => OutputKind.Program,
             });
-            if (session.AcceptsProgramInput && e.Category == "stdout" && !e.Output.EndsWith('\n'))
+            if ((session.AcceptsProgramInput || _nativeDebugInput is not null) && e.Category == "stdout" && !e.Output.EndsWith('\n'))
             {
                 Output.ShowWaitingForInput();
             }
@@ -941,6 +942,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         }
 
         _adapterChildren.Clear();
+        StopNativeDebugInput();
         if (session.AcceptsProgramInput)
         {
             Output.EndInput();
