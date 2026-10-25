@@ -283,5 +283,8 @@ public sealed partial class TestExplorerViewModel : ObservableObject, ITestNodeA
 
     private ProjectTests? Find(string projectFilePath) => _projects.Find(p => p.FilePath == projectFilePath);
 
-    private TestEntry? Find(string projectFilePath, string id) => _byId.GetValueOrDefault(projectFilePath + "\n" + id);
+    private TestEntry? Find(string projectFilePath, string id) => _byId.GetValueOrDefault(EntryKey(projectFilePath, id));
+
+    /// <summary>Identifies a test across projects: ids are only unique within a project.</summary>
+    private static string EntryKey(string projectFilePath, string id) => projectFilePath + "\n" + id;
 }

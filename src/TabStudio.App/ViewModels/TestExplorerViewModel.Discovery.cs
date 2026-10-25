@@ -139,7 +139,7 @@ public sealed partial class TestExplorerViewModel
         _byId.Clear();
         foreach (var entry in merged)
         {
-            var key = entry.ProjectFilePath + "\n" + entry.Id;
+            var key = EntryKey(entry.ProjectFilePath, entry.Id);
             if (previous.TryGetValue(key, out var old) && !ReferenceEquals(old, entry))
             {
                 entry.CarryOver(old);
