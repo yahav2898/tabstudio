@@ -91,6 +91,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
         InitializeDebugging();
         InstallTestCommands();
         InitializePeek();
+        InitializeExtensions();
     }
 
     /// <summary>The editor control, for tests and keyboard focus.</summary>
@@ -112,6 +113,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
         _search.Uninstall();
         _textMate?.Dispose();
         DisposeDebugging();
+        DisposeExtensions();
     }
 
     /// <inheritdoc />

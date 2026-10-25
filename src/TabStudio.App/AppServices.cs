@@ -48,6 +48,7 @@ public static class AppServices
         services.TryAddSingleton<GitHubAccount>();
         services.AddSingleton<GitHubAccountViewModel>();
         services.AddSingleton<GitHubImporter>();
+        services.TryAddSingleton<TabStudio.App.Services.Extensions.ExtensionsService>();
 
         // View models.
         services.AddSingleton<StartViewModel>();

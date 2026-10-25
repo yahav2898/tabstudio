@@ -207,7 +207,7 @@ public sealed class OpenVsxClientTests : IDisposable
         var second = await client.GetTextAsync(perl.Files.Readme!);
 
         Assert.Equal(first, second);
-        Assert.Contains("Perl", first, StringComparison.Ordinal);
+        Assert.StartsWith("# Built-in extension: perl", first, StringComparison.Ordinal);
         Assert.Equal(1, _registry.Requests.Count(r => r.EndsWith("README.md", StringComparison.Ordinal)));
     }
 
