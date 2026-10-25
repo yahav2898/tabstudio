@@ -148,7 +148,7 @@ internal sealed class CodeActionProviderCatalog
         }
     }
 
-    private static IEnumerable<string> FixableIds(CodeFixProvider provider)
+    private static List<string> FixableIds(CodeFixProvider provider)
     {
         try
         {
