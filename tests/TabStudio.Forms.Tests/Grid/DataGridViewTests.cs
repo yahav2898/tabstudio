@@ -16,6 +16,10 @@ public sealed class DataGridViewTests
         grid.DataSource = People();
 
         Assert.Equal(["Name", "Age", "Active"], grid.Columns.Cast<DataGridViewColumn>().Select(column => column.HeaderText));
+
+        // The headers take the grid's header style, so their text is drawn in its color.
+        Assert.Same(grid, grid.Columns[0].HeaderCell.DataGridView);
+        Assert.Equal(SystemColors.WindowText, grid.Columns[0].HeaderCell.InheritedStyle.ForeColor);
         Assert.IsType<DataGridViewCheckBoxColumn>(grid.Columns["Active"]);
         Assert.Equal(4, grid.Rows.Count);
         Assert.True(grid.Rows[3].IsNewRow);

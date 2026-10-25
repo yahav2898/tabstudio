@@ -56,6 +56,9 @@ public class DataGridViewColumn : DataGridViewBand, IComponent
         {
             _headerCell = value ?? new DataGridViewColumnHeaderCell();
             _headerCell.OwningColumnInternal = this;
+
+            // The header takes its style from the grid it is in, like the column's cells.
+            _headerCell.DataGridView = DataGridView;
             DataGridView?.Invalidate();
         }
     }
@@ -542,6 +545,7 @@ public class DataGridViewColumnCollection : BaseCollection, IList
 
         _columns.Insert(Math.Clamp(columnIndex, 0, _columns.Count), dataGridViewColumn);
         dataGridViewColumn.DataGridView = DataGridView;
+        dataGridViewColumn.HeaderCell.DataGridView = DataGridView;
         Reindex();
         DataGridView.OnColumnAdded(dataGridViewColumn);
     }
@@ -577,6 +581,7 @@ public class DataGridViewColumnCollection : BaseCollection, IList
         Reindex();
         DataGridView.OnColumnRemoved(column, index);
         column.DataGridView = null;
+        column.HeaderCell.DataGridView = null;
         column.Index = -1;
     }
 
