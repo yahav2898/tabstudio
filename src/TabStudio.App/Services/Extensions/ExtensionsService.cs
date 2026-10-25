@@ -75,7 +75,7 @@ public sealed class ExtensionsService : IDisposable
     public IExtensionCodeHost? CodeHost { get; set; }
 
     /// <summary>Contributions that could not be read, such as a damaged theme, as messages for the user.</summary>
-    public IReadOnlyList<string> Problems => [.. _problems, .. Store.Problems, .. Contributions.Problems];
+    public IReadOnlyList<string> Problems => [.. _problems.Distinct(StringComparer.Ordinal), .. Store.Problems, .. Contributions.Problems];
 
     /// <summary>Downloads an extension from the registry, verifies it and installs it, replacing an installed version.</summary>
     /// <param name="extension">The version to install.</param>
@@ -224,6 +224,7 @@ public sealed class ExtensionsService : IDisposable
     /// <summary>Collects the contributions of the enabled extensions, loads the chosen themes and publishes them.</summary>
     private void Refresh()
     {
+        _problems.Clear();
         Contributions = ContributionSet.From(Store.Installed);
         foreach (var stale in _colorThemes.Keys.Where(key => Contributions.Themes.All(t => t.Key != key)).ToList())
         {

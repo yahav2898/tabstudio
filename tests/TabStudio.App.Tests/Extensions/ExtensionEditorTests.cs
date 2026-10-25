@@ -4,6 +4,7 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Media;
 using TabStudio.App.Editing;
+using TabStudio.App.Services;
 using TabStudio.App.Views;
 using TabStudio.Testing.Extensions;
 using static TabStudio.App.Tests.Views.EditorHarness;
@@ -51,6 +52,32 @@ public sealed class ExtensionEditorTests
 
         await UiTestHelpers.WaitUntilAsync(() => view.ForegroundAt(keyword) != Color.Parse(LumenExtension.NightKeyword), because: "TabStudio's own colors");
         Assert.NotEqual(Color.Parse(LumenExtension.NightBackground), (view.EditorBackground as ISolidColorBrush)?.Color);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public async Task A_color_theme_colors_CSharp_by_the_classifications_of_the_language_service()
+    {
+        using var fixture = new ExtensionsFixture();
+        await fixture.InstallLumenAsync();
+        await fixture.Workspace.LoadAsync(await new SampleLibrary(fixture.Paths).EnsureExtractedAsync());
+        var window = fixture.Show();
+        var view = ActiveEditor(window);
+        var keyword = OffsetOf(view.Editor, "foreach");
+        var record = OffsetOf(view.Editor, "Language(\"C#\"");
+        var method = OffsetOf(view.Editor, "WriteLine(greeter");
+        var text = OffsetOf(view.Editor, "\"What's") + 1;
+
+        fixture.Service.SelectColorTheme(fixture.NightThemeKey);
+
+        // The theme's semantic token colors apply to Roslyn's classifications, and its TextMate rules to the rest.
+        await UiTestHelpers.WaitUntilAsync(() => view.ForegroundAt(record) == Color.Parse("#FFD866"), because: "the record in the theme's class color");
+        Assert.Equal(Color.Parse("#7FD3FF"), view.ForegroundAt(method));
+        Assert.Equal(Color.Parse(LumenExtension.NightKeyword), view.ForegroundAt(keyword));
+        Assert.Equal(Color.Parse(LumenExtension.NightString), view.ForegroundAt(text));
+        Assert.Equal(Color.Parse(LumenExtension.NightBackground), Assert.IsAssignableFrom<ISolidColorBrush>(view.EditorBackground).Color);
+        view.Editor.CaretOffset = keyword;
+        UiTestHelpers.SaveScreenshot(window, "ext-14-csharp-lumen-night");
         window.Close();
     }
 

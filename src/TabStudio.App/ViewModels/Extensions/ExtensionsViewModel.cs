@@ -96,6 +96,17 @@ public sealed partial class ExtensionsViewModel : ObservableObject, IDisposable
     /// <summary>Whether <see cref="InstalledMessage"/> is shown.</summary>
     public bool HasInstalledMessage => InstalledMessage is not null;
 
+    /// <summary>
+    /// What installed extensions contain that cannot be used, such as a damaged package, grammar or theme, shown above
+    /// the Installed list.
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasProblems))]
+    public partial IReadOnlyList<string> Problems { get; private set; } = [];
+
+    /// <summary>Whether <see cref="Problems"/> are shown.</summary>
+    public bool HasProblems => Problems.Count > 0;
+
     /// <summary>How many updates are available, for the tab's badge.</summary>
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasUpdates))]
@@ -216,7 +227,16 @@ public sealed partial class ExtensionsViewModel : ObservableObject, IDisposable
         }
     }
 
-    partial void OnSelectedTabChanged(ExtensionsTab value) => FilterInstalled();
+    partial void OnSelectedTabChanged(ExtensionsTab value)
+    {
+        // Snippets and language configurations are read when first used, so what cannot be read may be known only now.
+        if (value == ExtensionsTab.Installed)
+        {
+            Problems = _service.Problems;
+        }
+
+        FilterInstalled();
+    }
 
     partial void OnSelectedItemChanged(ExtensionItemViewModel? value)
     {
@@ -287,6 +307,7 @@ public sealed partial class ExtensionsViewModel : ObservableObject, IDisposable
         var installed = _service.Store.Installed.OrderBy(e => e.Manifest.DisplayName, StringComparer.CurrentCultureIgnoreCase).ToList();
         _installed = installed;
         InstalledCount = installed.Count;
+        Problems = _service.Problems;
         foreach (var stale in _updates.Keys.Where(id => installed.All(e => e.Id != id) || !ExtensionVersions.IsNewer(_updates[id].Latest.Version, installed.First(e => e.Id == id).Version)).ToList())
         {
             _updates.Remove(stale);

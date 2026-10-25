@@ -127,6 +127,31 @@ public sealed class ExtensionsWindowTests
     }
 
     [AvaloniaFact]
+    public async Task Installed_reports_what_an_extension_contains_that_cannot_be_read()
+    {
+        using var fixture = new ExtensionsFixture();
+        await fixture.OpenFolderAsync();
+        await fixture.InstallLumenAsync(LumenExtension.Builder().Add("themes/lumen-night.json", "{ \"tokenColors\": [ ").Build());
+        var window = fixture.Show(bottomPanel: false);
+        var page = fixture.Workspace.OpenExtensions(ExtensionsTab.Installed)!;
+        Assert.False(page.HasProblems);
+
+        fixture.Service.SelectColorTheme(fixture.NightThemeKey);
+
+        Assert.Null(fixture.Service.ColorTheme);
+        var problem = Assert.Single(page.Problems);
+        Assert.Contains(LumenExtension.NightTheme, problem, StringComparison.Ordinal);
+        Assert.Contains("not valid JSON", problem, StringComparison.Ordinal);
+        Assert.True(page.HasProblems);
+        UiTestHelpers.SaveScreenshot(window, "ext-13-problems");
+
+        // Choosing another theme forgets the damaged one's problem.
+        fixture.Service.SelectColorTheme(null);
+        Assert.False(page.HasProblems);
+        window.Close();
+    }
+
+    [AvaloniaFact]
     public async Task Updates_lists_newer_versions_and_updates_them()
     {
         using var fixture = new ExtensionsFixture();

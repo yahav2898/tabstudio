@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:sys="using:System"
              xmlns:controls="using:TabStudio.App.Controls"
              xmlns:vm="using:TabStudio.App.ViewModels.Extensions"
              xmlns:views="using:TabStudio.App.Views.Extensions"
@@ -192,17 +193,31 @@
           </Panel>
         </DockPanel>
 
-        <!-- Installed -->
-        <Panel IsVisible="{Binding IsInstalledSelected}">
-          <ListBox x:Name="InstalledList" ItemsSource="{Binding InstalledItems}" SelectedItem="{Binding SelectedInstalledItem}"
-                   ItemContainerTheme="{StaticResource ListRow}" ItemTemplate="{StaticResource ExtensionRow}" />
-          <StackPanel Spacing="10" Margin="24,40" HorizontalAlignment="Center" VerticalAlignment="Top" IsVisible="{Binding HasInstalledMessage}">
-            <controls:StrokeIcon Data="{StaticResource Icon.Extensions}" Size="34" HorizontalAlignment="Center" Foreground="{DynamicResource Brush.TextDisabled}" />
-            <TextBlock Classes="muted" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="300" Text="{Binding InstalledMessage}" />
-            <Button Theme="{StaticResource SecondaryButton}" Height="36" Padding="16,0" HorizontalAlignment="Center" Content="Install from VSIX…"
-                    Command="{Binding InstallFromFileCommand}" IsVisible="{Binding !HasInstalled}" />
-          </StackPanel>
-        </Panel>
+        <!-- Installed, with what cannot be used -->
+        <DockPanel IsVisible="{Binding IsInstalledSelected}">
+          <Border DockPanel.Dock="Top" Classes="extensionWarning" Margin="10,0,10,8" IsVisible="{Binding HasProblems}">
+            <Grid ColumnDefinitions="Auto,*">
+              <controls:StrokeIcon Data="{StaticResource Icon.Warning}" Size="15" Margin="0,1,8,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush.Warning}" />
+              <ItemsControl Grid.Column="1" ItemsSource="{Binding Problems}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="sys:String">
+                    <TextBlock Classes="small" TextWrapping="Wrap" Margin="0,0,0,4" Foreground="{DynamicResource Brush.Text}" Text="{Binding}" />
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </Grid>
+          </Border>
+          <Panel>
+            <ListBox x:Name="InstalledList" ItemsSource="{Binding InstalledItems}" SelectedItem="{Binding SelectedInstalledItem}"
+                     ItemContainerTheme="{StaticResource ListRow}" ItemTemplate="{StaticResource ExtensionRow}" />
+            <StackPanel Spacing="10" Margin="24,40" HorizontalAlignment="Center" VerticalAlignment="Top" IsVisible="{Binding HasInstalledMessage}">
+              <controls:StrokeIcon Data="{StaticResource Icon.Extensions}" Size="34" HorizontalAlignment="Center" Foreground="{DynamicResource Brush.TextDisabled}" />
+              <TextBlock Classes="muted" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="300" Text="{Binding InstalledMessage}" />
+              <Button Theme="{StaticResource SecondaryButton}" Height="36" Padding="16,0" HorizontalAlignment="Center" Content="Install from VSIX…"
+                      Command="{Binding InstallFromFileCommand}" IsVisible="{Binding !HasInstalled}" />
+            </StackPanel>
+          </Panel>
+        </DockPanel>
 
         <!-- Updates -->
         <DockPanel IsVisible="{Binding IsUpdatesSelected}">
