@@ -67,7 +67,7 @@ public sealed class PythonScreenshotTests : IDisposable
         StartLineAfter(view.Editor, "print(greet(\"Ada\"))");
         Type(view.Editor, "os.pa");
         await UiTestHelpers.WaitUntilAsync(() => completion.IsOpen && completion.Items.Any(i => i.Entry.DisplayText == "path"), because: "the members of os");
-        await UiTestHelpers.WaitUntilAsync(() => completion.HasDescription, TimeSpan.FromSeconds(20), because: "the description");
+        await UiTestHelpers.WaitUntilAsync(() => completion.HasDescription && view.IsCompletionShown, TimeSpan.FromSeconds(20), because: "the description");
 
         UiTestHelpers.SaveScreenshot(window, "lsp-11-python-completion");
 

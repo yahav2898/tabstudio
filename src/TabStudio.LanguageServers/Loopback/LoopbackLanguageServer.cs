@@ -49,6 +49,15 @@ public sealed class LoopbackLanguageServer : IAsyncDisposable
                 ["documentHighlightProvider"] = true,
                 ["documentSymbolProvider"] = true,
                 ["workspaceSymbolProvider"] = true,
+                ["semanticTokensProvider"] = new JsonObject
+                {
+                    ["legend"] = new JsonObject
+                    {
+                        ["tokenTypes"] = new JsonArray("keyword", "variable", "string", "number", "comment"),
+                        ["tokenModifiers"] = new JsonArray("declaration"),
+                    },
+                    ["full"] = true,
+                },
                 ["renameProvider"] = new JsonObject { ["prepareProvider"] = false },
             },
             ["serverInfo"] = new JsonObject { ["name"] = "TabStudio loopback", ["version"] = "1.0" },
@@ -85,6 +94,7 @@ public sealed class LoopbackLanguageServer : IAsyncDisposable
         Answer("textDocument/documentSymbol", Symbols);
         Answer("textDocument/rename", Rename);
         Answer("workspace/symbol", WorkspaceSymbols);
+        Answer("textDocument/semanticTokens/full", SemanticTokens);
         _connection.Start();
     }
 
@@ -327,6 +337,66 @@ public sealed class LoopbackLanguageServer : IAsyncDisposable
         }
 
         return result;
+    }
+
+    /// <summary>The script's colors: keywords, names, strings, numbers and comments, in the protocol's relative encoding.</summary>
+    private JsonNode? SemanticTokens(JsonElement parameters)
+    {
+        var uri = parameters.GetProperty("textDocument").GetProperty("uri").GetString()!;
+        var tokens = new List<(int Line, int Start, int Length, int Type, int Modifiers)>();
+        foreach (var statement in Statements(uri))
+        {
+            var trimmed = statement.Text.Trim();
+            switch (statement.Kind)
+            {
+                case LoopbackStatementKind.None when trimmed.StartsWith('#'):
+                    tokens.Add((statement.Line, statement.Column, trimmed.Length, 4, 0));
+                    break;
+                case LoopbackStatementKind.Let:
+                    tokens.Add((statement.Line, statement.Column, 3, 0, 0));
+                    if (statement.Name.Length > 0)
+                    {
+                        tokens.Add((statement.Line, statement.NameColumn, statement.Name.Length, 1, 1));
+                    }
+
+                    AddValue(tokens, statement.Line, statement.ValueColumn, statement.Value);
+                    break;
+                case LoopbackStatementKind.Print:
+                    tokens.Add((statement.Line, statement.Column, 5, 0, 0));
+                    AddValue(tokens, statement.Line, statement.NameColumn, statement.Name);
+                    break;
+            }
+        }
+
+        var data = new JsonArray();
+        int line = 0, start = 0;
+        foreach (var token in tokens)
+        {
+            var deltaLine = token.Line - line;
+            data.Add(deltaLine);
+            data.Add(deltaLine == 0 ? token.Start - start : token.Start);
+            data.Add(token.Length);
+            data.Add(token.Type);
+            data.Add(token.Modifiers);
+            line = token.Line;
+            start = token.Start;
+        }
+
+        return new JsonObject { ["data"] = data };
+    }
+
+    private static void AddValue(List<(int Line, int Start, int Length, int Type, int Modifiers)> tokens, int line, int column, string value)
+    {
+        if (value.Length == 0)
+        {
+            return;
+        }
+
+        var type = value.StartsWith('"') ? 2 : double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out _) ? 3 : LoopbackScript.IsName(value) ? 1 : -1;
+        if (type >= 0)
+        {
+            tokens.Add((line, column, value.Length, type, 0));
+        }
     }
 
     private JsonNode? WorkspaceSymbols(JsonElement parameters)

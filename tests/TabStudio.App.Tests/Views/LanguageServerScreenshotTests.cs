@@ -66,7 +66,7 @@ public sealed class LanguageServerScreenshotTests : IDisposable
 
         StartLineAfter(view.Editor, "print name");
         Type(view.Editor, "print gre");
-        await UiTestHelpers.WaitUntilAsync(() => completion.IsOpen && completion.HasDescription, because: "the list and its description");
+        await UiTestHelpers.WaitUntilAsync(() => completion.IsOpen && completion.HasDescription && view.IsCompletionShown, because: "the list and its description");
 
         UiTestHelpers.SaveScreenshot(window, "lsp-02-completion");
 

@@ -68,7 +68,7 @@ internal sealed class LanguageServerFeatures : ILanguageFeatures, ICodeActionFol
 
         var entries = list.Items
             .Select((item, index) => ToEntry(item, new CompletionHandle(session, index)))
-            .OrderBy(e => e.SortText, StringComparer.Ordinal)
+            .OrderBy(e => e.SortText, StringComparer.OrdinalIgnoreCase)
             .ThenBy(e => e.DisplayText, StringComparer.OrdinalIgnoreCase)
             .ToList();
 

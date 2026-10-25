@@ -25,6 +25,9 @@ public sealed partial class CodeEditorView
     /// <summary>The folds, once the language server sent folding ranges; for tests.</summary>
     internal FoldingManager? Folding => _folding;
 
+    /// <summary>Whether the completion list's popup is shown, not only open in its view model; for tests.</summary>
+    internal bool IsCompletionShown => _completionPopup?.IsOpen == true;
+
     /// <summary>Colors and squiggles from the language server, over the TextMate colors. Called by the constructor.</summary>
     private void InstallLanguageServerRendering(out ClassificationColorizer colorizer, out DiagnosticRenderer diagnostics)
     {

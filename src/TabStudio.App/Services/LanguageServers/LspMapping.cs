@@ -68,7 +68,7 @@ internal static class LspMapping
 
     /// <summary>
     /// The Roslyn classification a semantic token is colored as, or <see langword="null"/> to leave its TextMate
-    /// color. Only what TextMate cannot know is colored: what a name refers to.
+    /// color, as VS Code layers semantic colors over TextMate's.
     /// </summary>
     /// <param name="token">The token.</param>
     public static string? Classification(LspSemanticToken token)
@@ -85,6 +85,10 @@ internal static class LspMapping
             "property" => "property name",
             "enumMember" => "enum member name",
             "event" => "event name",
+            "keyword" or "modifier" => "keyword",
+            "comment" => "comment",
+            "string" or "regexp" => "string",
+            "number" => "number",
             _ => null,
         };
     }

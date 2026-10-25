@@ -56,6 +56,7 @@ public sealed partial class CodeEditorView
 
         _completion.PropertyChanged -= OnCompletionPropertyChanged;
         _completion.Items.CollectionChanged -= OnCompletionItemsChanged;
+        TextView.VisualLinesChanged -= OnVisualLinesChangedForCompletion;
         _editor.TextArea.TextEntering -= OnCompletionTextEntering;
         _editor.TextArea.TextEntered -= OnCompletionTextEntered;
         if (_completionView is not null)
@@ -297,6 +298,13 @@ public sealed partial class CodeEditorView
         if (LineRect(completion.SpanStart) is not { } anchor)
         {
             _completionPopup.IsOpen = false;
+            if (!TextView.VisualLinesValid)
+            {
+                // A list that arrives before the edit that asked for it is laid out is placed once it is.
+                TextView.VisualLinesChanged -= OnVisualLinesChangedForCompletion;
+                TextView.VisualLinesChanged += OnVisualLinesChangedForCompletion;
+            }
+
             return;
         }
 
@@ -311,6 +319,12 @@ public sealed partial class CodeEditorView
         _completionPopup.PlacementRect = anchor;
         _completionPopup.IsOpen = true;
         PlaceSignatureHelpPopup();
+    }
+
+    private void OnVisualLinesChangedForCompletion(object? sender, EventArgs e)
+    {
+        TextView.VisualLinesChanged -= OnVisualLinesChangedForCompletion;
+        PlaceCompletionPopup();
     }
 
     /// <summary>The height of the list as shown now.</summary>
