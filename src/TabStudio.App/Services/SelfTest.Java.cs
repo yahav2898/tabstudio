@@ -25,18 +25,10 @@ public static partial class SelfTest
 
         var started = await OutputProcess.RunAsync(workspace.Toolchains.Runtime, new ProcessStartSpec
         {
-            Program = "java", Arguments = ["-Xlog:os=debug:stderr", "-version"],
+            Program = "java", Arguments = ["-version"],
         }, workspace.Output, null, cancellationToken);
         if (!started.Succeeded)
         {
-            await OutputProcess.RunAsync(workspace.Toolchains.Runtime, new ProcessStartSpec
-            {
-                Program = "apk", Arguments = ["add", "--no-cache", "strace"],
-            }, workspace.Output, null, cancellationToken);
-            await OutputProcess.RunAsync(workspace.Toolchains.Runtime, new ProcessStartSpec
-            {
-                Program = "strace", Arguments = ["-f", "-e", "trace=mmap,mprotect", "java", "-version"],
-            }, workspace.Output, null, cancellationToken);
             return new(false, $"Java VM startup: {LastLines(workspace)}", clock.Elapsed);
         }
 

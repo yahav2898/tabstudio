@@ -19,6 +19,9 @@ public enum LinkTab
 
     /// <summary>Joining a tablet's swarm, to run the app it builds.</summary>
     Swarm,
+
+    /// <summary>Building and running Windows-only projects on a Windows PC, or being that PC.</summary>
+    Bridge,
 }
 
 /// <summary>
@@ -37,13 +40,15 @@ public sealed partial class LinkViewModel : ObservableObject, IDisposable
     /// <param name="link">The app's TabStudio Link.</param>
     /// <param name="scanner">Scans QR codes with the camera, where there is one.</param>
     /// <param name="swarm">The Join a swarm half, where the app has a swarm.</param>
-    public LinkViewModel(LinkService link, IQrScanner scanner, Swarm.SwarmJoinViewModel? swarm = null)
+    /// <param name="bridge">The Windows Bridge tab, where the app has one.</param>
+    public LinkViewModel(LinkService link, IQrScanner scanner, Swarm.SwarmJoinViewModel? swarm = null, WindowsBridge.WindowsBridgeViewModel? bridge = null)
     {
         ArgumentNullException.ThrowIfNull(link);
         ArgumentNullException.ThrowIfNull(scanner);
         _link = link;
         _scanner = scanner;
         Swarm = swarm;
+        Bridge = bridge;
         if (swarm is not null)
         {
             // Once the device joins, it shows the swarm's app; the dialog is in the way.

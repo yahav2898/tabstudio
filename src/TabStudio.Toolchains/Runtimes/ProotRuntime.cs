@@ -52,7 +52,7 @@ public sealed record ProotRuntimeOptions
 /// expect of apps' child processes.
 /// </para>
 /// </remarks>
-public sealed class ProotRuntime : IToolchainRuntime
+public sealed partial class ProotRuntime : IToolchainRuntime
 {
     /// <summary>The environment's search path for programs.</summary>
     public const string SearchPath = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
@@ -160,6 +160,11 @@ public sealed class ProotRuntime : IToolchainRuntime
     /// <summary>The argument vector that starts a program through PRoot, PRoot's own path first.</summary>
     internal List<string> BuildArguments(ProcessStartSpec spec)
     {
+        if (JavaMappingShim(spec) is { } shim)
+        {
+            ShareFolder(Path.GetDirectoryName(shim)!);
+        }
+
         var arguments = new List<string>
         {
             _options.ProotPath,
@@ -227,6 +232,11 @@ public sealed class ProotRuntime : IToolchainRuntime
         if (spec.Terminal is not null)
         {
             environment["COLORTERM"] = "truecolor";
+        }
+
+        if (JavaMappingShim(spec) is { } shim)
+        {
+            environment["LD_PRELOAD"] = shim;
         }
 
         foreach (var (name, value) in spec.Environment)

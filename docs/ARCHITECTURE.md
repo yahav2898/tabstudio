@@ -391,7 +391,7 @@ adapter it brings.
   package against the index entry that lists it, before anything is unpacked.
 - **Processes.** Programs are children of TabStudio's process, started with pipes or a pseudo terminal, and are
   killed with their whole process tree when stopped, as Android 12 and later expect.
-- **Projects.** `ToolchainProjectDetector` finds Python and Node.js projects in a workspace from their project files.
+- **Projects.** `ToolchainProjectDetector` finds projects from the catalog's manifests and source-file rules.
   F5 and Ctrl+F5 run them with their console in the Output panel; problem matchers turn tracebacks and compiler
   output into Error List entries and links.
 - **The terminal.** `TerminalEmulator` turns what programs write to a pseudo terminal into styled character cells,
@@ -400,7 +400,26 @@ adapter it brings.
   toolchain runtime, so Pyright, typescript-language-server, debugpy and vscode-js-debug start inside the Linux
   environment and paths are translated between the device and the environment. A missing server or adapter offers
   to install the toolchain that brings it. For F5, a project's run plan becomes a DAP launch configuration, and the
-  program starts through the adapter's `runInTerminal` request, so its input and output stay in the Output panel.
+  program's input and output stay in the Output panel through its adapter's terminal or runtime streams.
+
+### Java
+
+Maven (`pom.xml`), both Gradle DSLs and standalone Java sources are startup projects. Alpine installs OpenJDK 21
+and JDT LS, adding Maven or Gradle only when the selected project needs that command; desktops use PATH. Maven
+copies runtime dependencies, Gradle records `sourceSets.main.runtimeClasspath` through an init script, and
+standalone sources compile with `javac -g`. The main class runs directly in Java with Output-panel input.
+javac and Maven locations populate the Error List. Choose a member manifest for a multi-module build; several
+main classes need explicit selection.
+
+On Android, JVM launchers preload the APK's small musl-compatible mapping shim. It separates an anonymous
+allocation from an adjacent thread-stack VMA before retrying an `EACCES` executable-memory request, leaving
+SELinux to authorize the actual protection change. It never retries a range containing the current stack pointer.
+
+JDT LS uses a per-project cache outside the imported source tree, shared into PRoot. Initialization loads the
+SHA-256-pinned java-debug extension bundle. F5 calls `vscode.java.startDebugSession` through LSP, connects DAP to
+its returned port and uses the run plan's main class and classpath. `runInTerminal` supplies console I/O. Real-tool
+IDE and emulator tests cover the Maven template, a breakpoint and Locals; additional IDE tests cover both Gradle
+DSLs and standalone sources.
 
 ## Swarm
 
@@ -575,22 +594,3 @@ design keeps the second part proportional to what you are actually editing:
 ## Code conventions
 
 See [CONTRIBUTING.md](../CONTRIBUTING.md) for code style, tests and how CI reports results.
-
-### Toolchains: Java
-
-Maven (`pom.xml`), Gradle (Groovy or Kotlin DSL) and standalone Java source projects are startup projects.
-Alpine 3.24 installs OpenJDK 21 and Eclipse JDT LS. Maven or Gradle is added only when the selected project needs
-that build command; desktop computers use PATH. Maven packages the app and copies its runtime dependencies.
-Gradle receives a small init script that resolves sourceSets.main.runtimeClasspath, so an application plugin
-and a special run task are not required. Standalone sources compile with javac -g into .tabstudio/java/classes.
-The selected main class runs directly in Java, so Scanner/System.in input reaches the Output panel. javac and
-Maven locations populate the Error List. Multiple main classes need explicit selection; multi-module builds
-can select their member manifest as the startup project.
-
-JDT LS uses a workspace-specific cache directory outside the source tree (shared into PRoot explicitly) and receives the pinned java-debug bundle in initializationOptions.
-The Java debugger extension archive is verified with SHA-256 before extraction. F5 calls
-vscode.java.startDebugSession through LSP, connects DAP to the returned port, and launches with the same main
-class and runtime classpath as Ctrl+F5. runInTerminal supplies console input. JDT supplies completion, squiggles,
-definition, references and rename. CI installs JDK 21, Maven, JDT LS and java-debug, and the emulator installs from
-Alpine's real mirror and builds and runs the Maven console template. Android JDT startup, memory use and the
-full Java debugger still require the requested CI/emulator validation before this work is considered complete.

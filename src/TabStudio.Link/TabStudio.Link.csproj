@@ -23,6 +23,8 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="TabStudio.Link.Tests" />
+    <!-- The Windows Bridge mirrors the tablet's workspace on the PC with the same files, hashes and mirror. -->
+    <InternalsVisibleTo Include="TabStudio.WindowsBridge" />
   </ItemGroup>
 
 </Project>

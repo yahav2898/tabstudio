@@ -28,7 +28,9 @@ TALLOC_URL="https://www.samba.org/ftp/talloc/talloc-${TALLOC_VERSION}.tar.gz"
 TALLOC_SHA256=912afa237510ae542a7733998eb18a12bcda35ab6729c8e2ddb43e8d0ebab007
 # TabStudio's minimum Android version (API 28, Android 9).
 API=28
-STAMP="proot ${PROOT_VERSION}, talloc ${TALLOC_VERSION}, API ${API}, 16 KB pages"
+native_sources="$(cd "$(dirname "$0")" && pwd)"
+shim_hash="$(sha256sum "$native_sources/jvm-mapping.c" | cut -d' ' -f1)"
+STAMP="proot ${PROOT_VERSION}, talloc ${TALLOC_VERSION}, API ${API}, 16 KB pages, JVM mapping ${shim_hash}"
 
 out="$(realpath -m "${1:?usage: build.sh <output-folder> <abi>...}")"
 shift
@@ -177,6 +179,13 @@ EOF
     "$STRIP" -o "$dest/libproot.so" proot
     "$STRIP" -o "$dest/libproot-loader.so" loader/loader
   )
+
+  # A freestanding musl preload library: no dependency on bionic, which cannot be loaded inside Alpine.
+  local shim_pages=""
+  case "$abi" in arm64-v8a|x86_64) shim_pages="-Wl,-z,max-page-size=16384" ;; esac
+  "$CC" -shared -nostdlib -fPIC -O2 -fno-stack-protector -fno-unwind-tables -fno-asynchronous-unwind-tables \
+    -Wall -Wextra -Werror $shim_pages -Wl,-soname,libtabstudio-jvm.so \
+    "$native_sources/jvm-mapping.c" -o "$dest/libtabstudio-jvm.so"
 
   echo "$STAMP" > "$dest/VERSION"
   file "$dest"/*.so 2> /dev/null || ls -l "$dest"

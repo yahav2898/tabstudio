@@ -32,6 +32,7 @@ public sealed partial class WorkspaceViewModel
         AddActivity(SideBarPanel.AppPreview, "App Preview", "Icon.Window");
         AddActivity(SideBarPanel.WebPreview, "Web Preview", "Icon.Globe");
         AddActivity(SideBarPanel.Swarm, "Swarm", "Icon.Swarm");
+        AddActivity(SideBarPanel.WindowsBridge, "Windows Bridge", "Icon.Computer");
         Activity.Add(new ActivityItem("Extensions", "Extensions", Icon("Icon.Extensions"), "Ctrl+Shift+X")
         {
             IsAtBottom = true,
@@ -51,6 +52,11 @@ public sealed partial class WorkspaceViewModel
         if (Swarm is { } swarm)
         {
             swarm.PropertyChanged += OnBadgeSourceChanged;
+        }
+
+        if (WindowsBridgePane is { } bridge)
+        {
+            bridge.PropertyChanged += OnBadgeSourceChanged;
         }
 
         UpdateActivityBadges();
@@ -170,6 +176,8 @@ public sealed partial class WorkspaceViewModel
 
         Item(SideBarPanel.AppPreview).IsAvailable = AppPreview.HasApp || IsAppPreviewSelected;
         Item(SideBarPanel.WebPreview).IsAvailable = WebPreview.HasApp || IsWebPreviewSelected;
+
+        Item(SideBarPanel.WindowsBridge).IsAvailable = WindowsBridgePane is { IsAvailable: true } || IsWindowsBridgeSelected;
 
         var swarm = Item(SideBarPanel.Swarm);
         swarm.IsAvailable = Swarm is not null;
