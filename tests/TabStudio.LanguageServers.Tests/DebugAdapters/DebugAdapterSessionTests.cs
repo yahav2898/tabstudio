@@ -295,7 +295,7 @@ public sealed class DebugAdapterSessionTests
         await events.Ended.WaitAsync(TestTimeouts.Default);
         var commands = launcher.Started[0].Requests.Select(r => r.Command).ToList();
         Assert.Equal(new[] { "terminate", "disconnect" }, commands.Skip(5));
-        Assert.True(launcher.Started[0].Requests.Last().Arguments.GetProperty("terminateDebuggee").GetBoolean());
+        Assert.True(launcher.Started[0].Requests[^1].Arguments.GetProperty("terminateDebuggee").GetBoolean());
     }
 
     [Fact]
@@ -310,7 +310,7 @@ public sealed class DebugAdapterSessionTests
         await session.DisposeAsync().AsTask().WaitAsync(TestTimeouts.Default);
 
         var adapter = launcher.Started[0];
-        Assert.Equal("disconnect", adapter.Requests.Last().Command);
+        Assert.Equal("disconnect", adapter.Requests[^1].Command);
         Assert.True(adapter.Exited.IsCompleted);
         Assert.True(session.HasEnded);
         var error = await Assert.ThrowsAsync<DebugAdapterException>(() => session.GetThreadsAsync(CancellationToken.None));

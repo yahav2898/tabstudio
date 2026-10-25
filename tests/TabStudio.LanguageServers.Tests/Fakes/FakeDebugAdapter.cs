@@ -103,7 +103,7 @@ internal sealed class FakeDebugAdapter : IAsyncDisposable
             return new JsonObject { ["breakpoints"] = breakpoints };
         });
         Handle("setExceptionBreakpoints", _ => null);
-        Connection.AddRequestHandler("configurationDone", (arguments, _) =>
+        Connection.AddRequestHandler("configurationDone", (arguments, cancellationToken) =>
         {
             Record("configurationDone", arguments);
             _configured.TrySetResult();
@@ -118,7 +118,7 @@ internal sealed class FakeDebugAdapter : IAsyncDisposable
                 {
                     await FinishAsync();
                 }
-            });
+            }, CancellationToken.None);
             return Task.FromResult<JsonNode?>(null);
         });
         Handle("threads", _ => new JsonObject { ["threads"] = new JsonArray(new JsonObject { ["id"] = 1, ["name"] = "MainThread" }) });
@@ -156,27 +156,27 @@ internal sealed class FakeDebugAdapter : IAsyncDisposable
             ["breakMode"] = "unhandled",
             ["details"] = new JsonObject { ["message"] = "division by zero", ["typeName"] = "builtins.ZeroDivisionError", ["stackTrace"] = "  File \"program.py\", line 3" },
         });
-        Handle("next", _ =>
+        Handle("next", arguments =>
         {
             _ = SendLaterAsync("stopped", new JsonObject { ["reason"] = "step", ["threadId"] = 1 });
             return null;
         });
-        Handle("stepIn", _ =>
+        Handle("stepIn", arguments =>
         {
             _ = SendLaterAsync("stopped", new JsonObject { ["reason"] = "step", ["threadId"] = 1 });
             return null;
         });
-        Handle("stepOut", _ =>
+        Handle("stepOut", arguments =>
         {
             _ = SendLaterAsync("stopped", new JsonObject { ["reason"] = "step", ["threadId"] = 1 });
             return null;
         });
-        Handle("pause", _ =>
+        Handle("pause", arguments =>
         {
             _ = SendLaterAsync("stopped", new JsonObject { ["reason"] = "pause", ["threadId"] = 1 });
             return null;
         });
-        Handle("continue", _ =>
+        Handle("continue", arguments =>
         {
             _ = Task.Run(async () =>
             {
@@ -185,12 +185,12 @@ internal sealed class FakeDebugAdapter : IAsyncDisposable
             });
             return new JsonObject { ["allThreadsContinued"] = true };
         });
-        Handle("terminate", _ =>
+        Handle("terminate", arguments =>
         {
             _ = SendLaterAsync("terminated", new JsonObject());
             return null;
         });
-        Handle("disconnect", _ =>
+        Handle("disconnect", arguments =>
         {
             _ = Task.Run(async () =>
             {

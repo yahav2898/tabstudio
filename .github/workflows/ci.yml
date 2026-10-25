@@ -36,6 +36,21 @@ jobs:
           key: nuget-libs-${{ hashFiles('Directory.Packages.props', '**/*.csproj') }}
           restore-keys: nuget-libs-
 
+      # Real language servers and a debug adapter, for the integration tests of TabStudio.LanguageServers.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install language servers and debug adapters
+        run: |
+          npm install -g pyright typescript-language-server typescript
+          python -m pip install debugpy
+          echo "TABSTUDIO_REAL_SERVERS=1" >> "$GITHUB_ENV"
+
       - name: Build and test
         run: |
           mkdir -p ci-out
@@ -70,6 +85,21 @@ jobs:
           path: .nuget/packages
           key: nuget-app-${{ hashFiles('Directory.Packages.props', '**/*.csproj') }}
           restore-keys: nuget-app-
+
+      # The editor and debugger tests for Python files use real Pyright and debugpy.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install language servers and debug adapters
+        run: |
+          npm install -g pyright typescript-language-server typescript
+          python -m pip install debugpy
+          echo "TABSTUDIO_REAL_SERVERS=1" >> "$GITHUB_ENV"
 
       - name: Build the desktop host and test the IDE
         env:

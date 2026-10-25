@@ -1,3 +1,4 @@
+using System.Text.Json;
 using TabStudio.LanguageServers.DebugAdapters.Protocol;
 
 namespace TabStudio.LanguageServers.DebugAdapters;
@@ -208,6 +209,6 @@ public sealed partial class DebugAdapterSession
         End();
     }
 
-    private Task ThreadRequestAsync(string command, int threadId, CancellationToken cancellationToken) =>
+    private Task<JsonElement> ThreadRequestAsync(string command, int threadId, CancellationToken cancellationToken) =>
         _connection.SendRequestAsync(command, new ThreadArgumentsDto(threadId), DapJsonContext.Default.ThreadArgumentsDto, cancellationToken);
 }
