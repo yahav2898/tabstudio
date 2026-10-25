@@ -9,6 +9,7 @@ using AvaloniaEdit.Document;
 using AvaloniaEdit.Search;
 using AvaloniaEdit.TextMate;
 using TabStudio.App.Editing;
+using TabStudio.App.Input;
 using TabStudio.App.ViewModels;
 using TabStudio.Core.Diagnostics;
 
@@ -124,7 +125,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
             {
                 RestoreCaretOnce();
                 ApplyPendingNavigation();
-                _editor.TextArea.Focus();
+                InputModality.FocusUnlessTouch(_editor.TextArea);
             }, DispatcherPriority.Background);
         }
     }
@@ -157,7 +158,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
         _editor.CaretOffset = documentLine.Offset + column - 1;
         _editor.ScrollTo(line, column);
         _editor.TextArea.Caret.BringCaretToView(40);
-        _editor.TextArea.Focus();
+        InputModality.FocusUnlessTouch(_editor.TextArea);
     }
 
     private void OnNavigationRequested(object? sender, EventArgs e) =>
@@ -253,7 +254,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
                 _editor.SelectAll();
                 break;
             case EditorAction.Focus:
-                _editor.TextArea.Focus();
+                InputModality.FocusUnlessTouch(_editor.TextArea);
                 break;
         }
     }

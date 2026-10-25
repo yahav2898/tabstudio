@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Platform;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using TabStudio.App.Input;
 
 namespace TabStudio.App.Views;
 
@@ -26,6 +27,11 @@ public sealed partial class MainView : UserControl
     {
         base.OnLoaded(e);
         var topLevel = TopLevel.GetTopLevel(this);
+        if (topLevel is not null)
+        {
+            InputModality.Track(topLevel);
+        }
+
         _insets = topLevel?.InsetsManager;
         _inputPane = topLevel?.InputPane;
         if (_insets is not null)
@@ -50,6 +56,11 @@ public sealed partial class MainView : UserControl
     /// <inheritdoc />
     protected override void OnUnloaded(RoutedEventArgs e)
     {
+        if (TopLevel.GetTopLevel(this) is { } topLevel)
+        {
+            InputModality.Untrack(topLevel);
+        }
+
         if (_insets is not null)
         {
             _insets.SafeAreaChanged -= OnInsetsChanged;
