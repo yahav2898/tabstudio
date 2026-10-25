@@ -1,9 +1,262 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Compilation.Tests/TabStudio.Compilation.Tests.csproj (in 1.37 sec).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj (in 1.37 sec).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Compilation.Tests/TabStudio.Compilation.Tests.csproj (in 1.86 sec).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj (in 1.86 sec).
   2 of 4 projects are up-to-date for restore.
   TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/InProcessSafetyAnalyzer.cs(27,58): error CS0118: 'Compilation' is a namespace but is used like a type [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/InProcessSafetyAnalyzer.cs(41,62): error CS0118: 'Compilation' is a namespace but is used like a type [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/CSharpCompiler.cs(118,9): error CS0118: 'Compilation' is a namespace but is used like a type [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/Running/ProgramRunner.cs(58,34): warning CA1822: Member 'RunAsync' does not access instance data and can be marked as static (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1822) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/CSharpCompiler.cs(77,30): warning CA1822: Member 'CreateCompilation' does not access instance data and can be marked as static (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1822) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj]
+  TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
+/home/runner/work/tabstudio/tabstudio/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs(148,24): warning CA2016: Forward the 'cancellationToken' parameter to the 'Compile' method or pass in 'CancellationToken.None' explicitly to indicate intentionally not propagating the token (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2016) [/home/runner/work/tabstudio/tabstudio/tests/TabStudio.Compilation.Tests/TabStudio.Compilation.Tests.csproj]
+  TabStudio.Compilation.Tests -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Compilation.Tests/bin/Release/net10.0/TabStudio.Compilation.Tests.dll
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Compilation.Tests/bin/Release/net10.0/TabStudio.Compilation.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.13]   Discovering: TabStudio.Compilation.Tests
+[xUnit.net 00:00:00.25]   Discovered:  TabStudio.Compilation.Tests
+[xUnit.net 00:00:00.30]   Starting:    TabStudio.Compilation.Tests
+[xUnit.net 00:00:01.77]     TabStudio.Compilation.Tests.ProgramRunnerTests.Restores_the_console_after_a_run [FAIL]
+[xUnit.net 00:00:01.77]       Program737aa255.GlobalUsings.g.cs(2,1): error CS8055: Cannot emit debug information for a source text without encoding.
+[xUnit.net 00:00:01.78]       Stack Trace:
+[xUnit.net 00:00:01.78]         /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs(153,0): at TabStudio.Compilation.Tests.ProgramRunnerTests.RunAsync(String source, CapturingConsole console, String[] arguments, ConsoleInput input, CancellationToken cancellationToken)
+[xUnit.net 00:00:01.78]         /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs(110,0): at TabStudio.Compilation.Tests.ProgramRunnerTests.Restores_the_console_after_a_run()
+[xUnit.net 00:00:01.78]         --- End of stack trace from previous location ---
+  Failed TabStudio.Compilation.Tests.ProgramRunnerTests.Restores_the_console_after_a_run [1 s]
+  Error Message:
+   Program737aa255.GlobalUsings.g.cs(2,1): error CS8055: Cannot emit debug information for a source text without encoding.
+  Stack Trace:
+     at TabStudio.Compilation.Tests.ProgramRunnerTests.RunAsync(String source, CapturingConsole console, String[] arguments, ConsoleInput input, CancellationToken cancellationToken) in /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs:line 153
+   at TabStudio.Compilation.Tests.ProgramRunnerTests.Restores_the_console_after_a_run() in /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs:line 110
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:01.93]     TabStudio.Compilation.Tests.ProgramRunnerTests.Loads_referenced_project_assemblies [FAIL]
+[xUnit.net 00:00:01.93]       Assert.True() Failure
+[xUnit.net 00:00:01.93]       Expected: True
+[xUnit.net 00:00:01.93]       Actual:   False
+[xUnit.net 00:00:01.93]       Stack Trace:
+[xUnit.net 00:00:01.93]         /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs(124,0): at TabStudio.Compilation.Tests.ProgramRunnerTests.Loads_referenced_project_assemblies()
+[xUnit.net 00:00:01.93]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:01.93]     TabStudio.Compilation.Tests.ProgramRunnerTests.Stopping_a_program_returns_without_waiting_for_it [FAIL]
+[xUnit.net 00:00:01.93]       Programf51b1e33.GlobalUsings.g.cs(2,1): error CS8055: Cannot emit debug information for a source text without encoding.
+[xUnit.net 00:00:01.93]       Stack Trace:
+[xUnit.net 00:00:01.93]         /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs(153,0): at TabStudio.Compilation.Tests.ProgramRunnerTests.RunAsync(String source, CapturingConsole console, String[] arguments, ConsoleInput input, CancellationToken cancellationToken)
+[xUnit.net 00:00:01.93]         /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs(100,0): at TabStudio.Compilation.Tests.ProgramRunnerTests.Stopping_a_program_returns_without_waiting_for_it()
+[xUnit.net 00:00:01.93]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:01.93]     TabStudio.Compilation.Tests.ProgramRunnerTests.Returns_the_exit_code_from_main [FAIL]
+[xUnit.net 00:00:01.93]       Program94f91063.GlobalUsings.g.cs(2,1): error CS8055: Cannot emit debug information for a source text without encoding.
+[xUnit.net 00:00:01.93]       Stack Trace:
+[xUnit.net 00:00:01.93]         /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs(153,0): at TabStudio.Compilation.Tests.ProgramRunnerTests.RunAsync(String source, CapturingConsole console, String[] arguments, ConsoleInput input, CancellationToken cancellationToken)
+[xUnit.net 00:00:01.93]         /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs(28,0): at TabStudio.Compilation.Tests.ProgramRunnerTests.Returns_the_exit_code_from_main()
+[xUnit.net 00:00:01.93]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:01.94]     TabStudio.Compilation.Tests.ProgramRunnerTests.Reports_an_unhandled_exception_as_a_crash_with_a_stack_trace [FAIL]
+[xUnit.net 00:00:01.94]       Program7e4a8c65.GlobalUsings.g.cs(2,1): error CS8055: Cannot emit debug information for a source text without encoding.
+[xUnit.net 00:00:01.94]       Stack Trace:
+[xUnit.net 00:00:01.94]         /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs(153,0): at TabStudio.Compilation.Tests.ProgramRunnerTests.RunAsync(String source, CapturingConsole console, String[] arguments, ConsoleInput input, CancellationToken cancellationToken)
+[xUnit.net 00:00:01.94]         /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs(64,0): at TabStudio.Compilation.Tests.ProgramRunnerTests.Reports_an_unhandled_exception_as_a_crash_with_a_stack_trace()
+[xUnit.net 00:00:01.94]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:01.95]     TabStudio.Compilation.Tests.ProgramRunnerTests.Captures_standard_output [FAIL]
+[xUnit.net 00:00:01.95]       Program1aed84cb.GlobalUsings.g.cs(2,1): error CS8055: Cannot emit debug information for a source text without encoding.
+[xUnit.net 00:00:01.95]       Stack Trace:
+[xUnit.net 00:00:01.95]         /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs(153,0): at TabStudio.Compilation.Tests.ProgramRunnerTests.RunAsync(String source, CapturingConsole console, String[] arguments, ConsoleInput input, CancellationToken cancellationToken)
+[xUnit.net 00:00:01.95]         /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs(15,0): at TabStudio.Compilation.Tests.ProgramRunnerTests.Captures_standard_output()
+[xUnit.net 00:00:01.95]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:01.96]     TabStudio.Compilation.Tests.ProgramRunnerTests.Passes_command_line_arguments [FAIL]
+[xUnit.net 00:00:01.96]       Programba8f7341.GlobalUsings.g.cs(2,1): error CS8055: Cannot emit debug information for a source text without encoding.
+[xUnit.net 00:00:01.96]       Stack Trace:
+[xUnit.net 00:00:01.96]         /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs(153,0): at TabStudio.Compilation.Tests.ProgramRunnerTests.RunAsync(String source, CapturingConsole console, String[] arguments, ConsoleInput input, CancellationToken cancellationToken)
+[xUnit.net 00:00:01.96]         /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs(54,0): at TabStudio.Compilation.Tests.ProgramRunnerTests.Passes_command_line_arguments()
+[xUnit.net 00:00:01.96]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:01.99]     TabStudio.Compilation.Tests.ProgramRunnerTests.Awaits_an_async_main [FAIL]
+[xUnit.net 00:00:01.99]       Programb6528366.GlobalUsings.g.cs(2,1): error CS8055: Cannot emit debug information for a source text without encoding.
+[xUnit.net 00:00:01.99]       Stack Trace:
+[xUnit.net 00:00:01.99]         /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs(153,0): at TabStudio.Compilation.Tests.ProgramRunnerTests.RunAsync(String source, CapturingConsole console, String[] arguments, ConsoleInput input, CancellationToken cancellationToken)
+[xUnit.net 00:00:01.99]         /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs(38,0): at TabStudio.Compilation.Tests.ProgramRunnerTests.Awaits_an_async_main()
+[xUnit.net 00:00:01.99]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:02.02]     TabStudio.Compilation.Tests.ProgramRunnerTests.Reads_lines_from_console_input [FAIL]
+[xUnit.net 00:00:02.02]       Program6fc2f9c6.GlobalUsings.g.cs(2,1): error CS8055: Cannot emit debug information for a source text without encoding.
+[xUnit.net 00:00:02.02]       Stack Trace:
+[xUnit.net 00:00:02.02]         /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs(153,0): at TabStudio.Compilation.Tests.ProgramRunnerTests.RunAsync(String source, CapturingConsole console, String[] arguments, ConsoleInput input, CancellationToken cancellationToken)
+[xUnit.net 00:00:02.02]         /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs(84,0): at TabStudio.Compilation.Tests.ProgramRunnerTests.Reads_lines_from_console_input()
+[xUnit.net 00:00:02.02]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:02.35]     TabStudio.Compilation.Tests.CSharpCompilerTests.A_method_named_exit_on_another_type_is_fine [FAIL]
+[xUnit.net 00:00:02.35]       Hello.GlobalUsings.g.cs(2,1): error CS8055: Cannot emit debug information for a source text without encoding.
+[xUnit.net 00:00:02.35]       Stack Trace:
+[xUnit.net 00:00:02.35]         /_/tests/TabStudio.Compilation.Tests/CSharpCompilerTests.cs(76,0): at TabStudio.Compilation.Tests.CSharpCompilerTests.A_method_named_exit_on_another_type_is_fine()
+[xUnit.net 00:00:02.35]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:02.35]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed TabStudio.Compilation.Tests.ProgramRunnerTests.Loads_referenced_project_assemblies [108 ms]
+  Error Message:
+   Assert.True() Failure
+Expected: True
+Actual:   False
+  Stack Trace:
+     at TabStudio.Compilation.Tests.ProgramRunnerTests.Loads_referenced_project_assemblies() in /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs:line 124
+--- End of stack trace from previous location ---
+  Failed TabStudio.Compilation.Tests.ProgramRunnerTests.Stopping_a_program_returns_without_waiting_for_it [8 ms]
+  Error Message:
+   Programf51b1e33.GlobalUsings.g.cs(2,1): error CS8055: Cannot emit debug information for a source text without encoding.
+  Stack Trace:
+     at TabStudio.Compilation.Tests.ProgramRunnerTests.RunAsync(String source, CapturingConsole console, String[] arguments, ConsoleInput input, CancellationToken cancellationToken) in /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs:line 153
+   at TabStudio.Compilation.Tests.ProgramRunnerTests.Stopping_a_program_returns_without_waiting_for_it() in /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs:line 100
+--- End of stack trace from previous location ---
+  Failed TabStudio.Compilation.Tests.ProgramRunnerTests.Returns_the_exit_code_from_main [9 ms]
+  Error Message:
+   Program94f91063.GlobalUsings.g.cs(2,1): error CS8055: Cannot emit debug information for a source text without encoding.
+  Stack Trace:
+     at TabStudio.Compilation.Tests.ProgramRunnerTests.RunAsync(String source, CapturingConsole console, String[] arguments, ConsoleInput input, CancellationToken cancellationToken) in /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs:line 153
+   at TabStudio.Compilation.Tests.ProgramRunnerTests.Returns_the_exit_code_from_main() in /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs:line 28
+--- End of stack trace from previous location ---
+  Failed TabStudio.Compilation.Tests.ProgramRunnerTests.Reports_an_unhandled_exception_as_a_crash_with_a_stack_trace [30 ms]
+  Error Message:
+   Program7e4a8c65.GlobalUsings.g.cs(2,1): error CS8055: Cannot emit debug information for a source text without encoding.
+  Stack Trace:
+     at TabStudio.Compilation.Tests.ProgramRunnerTests.RunAsync(String source, CapturingConsole console, String[] arguments, ConsoleInput input, CancellationToken cancellationToken) in /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs:line 153
+   at TabStudio.Compilation.Tests.ProgramRunnerTests.Reports_an_unhandled_exception_as_a_crash_with_a_stack_trace() in /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs:line 64
+--- End of stack trace from previous location ---
+  Failed TabStudio.Compilation.Tests.ProgramRunnerTests.Captures_standard_output [11 ms]
+  Error Message:
+   Program1aed84cb.GlobalUsings.g.cs(2,1): error CS8055: Cannot emit debug information for a source text without encoding.
+  Stack Trace:
+     at TabStudio.Compilation.Tests.ProgramRunnerTests.RunAsync(String source, CapturingConsole console, String[] arguments, ConsoleInput input, CancellationToken cancellationToken) in /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs:line 153
+   at TabStudio.Compilation.Tests.ProgramRunnerTests.Captures_standard_output() in /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs:line 15
+--- End of stack trace from previous location ---
+  Failed TabStudio.Compilation.Tests.ProgramRunnerTests.Passes_command_line_arguments [11 ms]
+  Error Message:
+   Programba8f7341.GlobalUsings.g.cs(2,1): error CS8055: Cannot emit debug information for a source text without encoding.
+  Stack Trace:
+     at TabStudio.Compilation.Tests.ProgramRunnerTests.RunAsync(String source, CapturingConsole console, String[] arguments, ConsoleInput input, CancellationToken cancellationToken) in /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs:line 153
+   at TabStudio.Compilation.Tests.ProgramRunnerTests.Passes_command_line_arguments() in /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs:line 54
+--- End of stack trace from previous location ---
+  Failed TabStudio.Compilation.Tests.ProgramRunnerTests.Awaits_an_async_main [23 ms]
+  Error Message:
+   Programb6528366.GlobalUsings.g.cs(2,1): error CS8055: Cannot emit debug information for a source text without encoding.
+  Stack Trace:
+     at TabStudio.Compilation.Tests.ProgramRunnerTests.RunAsync(String source, CapturingConsole console, String[] arguments, ConsoleInput input, CancellationToken cancellationToken) in /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs:line 153
+   at TabStudio.Compilation.Tests.ProgramRunnerTests.Awaits_an_async_main() in /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs:line 38
+--- End of stack trace from previous location ---
+  Failed TabStudio.Compilation.Tests.ProgramRunnerTests.Reads_lines_from_console_input [28 ms]
+  Error Message:
+   Program6fc2f9c6.GlobalUsings.g.cs(2,1): error CS8055: Cannot emit debug information for a source text without encoding.
+  Stack Trace:
+     at TabStudio.Compilation.Tests.ProgramRunnerTests.RunAsync(String source, CapturingConsole console, String[] arguments, ConsoleInput input, CancellationToken cancellationToken) in /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs:line 153
+   at TabStudio.Compilation.Tests.ProgramRunnerTests.Reads_lines_from_console_input() in /_/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs:line 84
+--- End of stack trace from previous location ---
+  Failed TabStudio.Compilation.Tests.CSharpCompilerTests.A_method_named_exit_on_another_type_is_fine [1 s]
+  Error Message:
+   Hello.GlobalUsings.g.cs(2,1): error CS8055: Cannot emit debug information for a source text without encoding.
+  Stack Trace:
+     at TabStudio.Compilation.Tests.CSharpCompilerTests.A_method_named_exit_on_another_type_is_fine() in /_/tests/TabStudio.Compilation.Tests/CSharpCompilerTests.cs:line 76
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:02.38]     TabStudio.Compilation.Tests.CSharpCompilerTests.Libraries_are_not_checked_for_in_process_safety [FAIL]
+[xUnit.net 00:00:02.38]       Assert.True() Failure
+[xUnit.net 00:00:02.38]       Expected: True
+[xUnit.net 00:00:02.39]       Actual:   False
+[xUnit.net 00:00:02.39]       Stack Trace:
+[xUnit.net 00:00:02.39]         /_/tests/TabStudio.Compilation.Tests/CSharpCompilerTests.cs(87,0): at TabStudio.Compilation.Tests.CSharpCompilerTests.Libraries_are_not_checked_for_in_process_safety()
+[xUnit.net 00:00:02.39]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:02.39]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:02.43]     TabStudio.Compilation.Tests.CSharpCompilerTests.Refuses_to_build_programs_that_would_close_the_ide(statement: "System.Environment.FailFast(\"bye\");", expectedId: "TS1002") [FAIL]
+[xUnit.net 00:00:02.43]       Assert.Single() Failure: The collection contained 2 items
+[xUnit.net 00:00:02.43]       Collection: [Hello.GlobalUsings.g.cs(2,1): error CS8055: Cannot emit debug information for a source text without encoding., Program.cs(1,1): error TS1002: Environment.FailFast would close TabStudio, because programs run inside the IDE. Throw an exception instead.]
+[xUnit.net 00:00:02.43]       Stack Trace:
+[xUnit.net 00:00:02.43]         /_/tests/TabStudio.Compilation.Tests/CSharpCompilerTests.cs(63,0): at TabStudio.Compilation.Tests.CSharpCompilerTests.Refuses_to_build_programs_that_would_close_the_ide(String statement, String expectedId)
+[xUnit.net 00:00:02.43]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:02.43]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:02.45]     TabStudio.Compilation.Tests.CSharpCompilerTests.Refuses_to_build_programs_that_would_close_the_ide(statement: "Environment.Exit(1);", expectedId: "TS1001") [FAIL]
+[xUnit.net 00:00:02.45]       Assert.Single() Failure: The collection contained 2 items
+[xUnit.net 00:00:02.45]       Collection: [Hello.GlobalUsings.g.cs(2,1): error CS8055: Cannot emit debug information for a source text without encoding., Program.cs(1,1): error TS1001: Environment.Exit would close TabStudio, because programs run inside the IDE. Return the exit code from Main instead.]
+[xUnit.net 00:00:02.45]       Stack Trace:
+[xUnit.net 00:00:02.45]         /_/tests/TabStudio.Compilation.Tests/CSharpCompilerTests.cs(63,0): at TabStudio.Compilation.Tests.CSharpCompilerTests.Refuses_to_build_programs_that_would_close_the_ide(String statement, String expectedId)
+[xUnit.net 00:00:02.45]            at InvokeStub_CSharpCompilerTests.Refuses_to_build_programs_that_would_close_the_ide(Object, Span`1)
+[xUnit.net 00:00:02.45]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.47]     TabStudio.Compilation.Tests.CSharpCompilerTests.Reports_errors_with_one_based_positions_in_the_right_file [FAIL]
+[xUnit.net 00:00:02.47]       Assert.Equal() Failure: Strings differ
+[xUnit.net 00:00:02.47]                    ↓ (pos 2)
+[xUnit.net 00:00:02.47]       Expected: "CS0103"
+[xUnit.net 00:00:02.47]       Actual:   "CS8055"
+[xUnit.net 00:00:02.47]                    ↑ (pos 2)
+[xUnit.net 00:00:02.47]       Stack Trace:
+[xUnit.net 00:00:02.47]         /_/tests/TabStudio.Compilation.Tests/CSharpCompilerTests.cs(36,0): at TabStudio.Compilation.Tests.CSharpCompilerTests.Reports_errors_with_one_based_positions_in_the_right_file()
+[xUnit.net 00:00:02.47]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:02.47]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:02.48]     TabStudio.Compilation.Tests.CSharpCompilerTests.Compiles_top_level_statements_with_implicit_usings [FAIL]
+[xUnit.net 00:00:02.48]       Hello.GlobalUsings.g.cs(2,1): error CS8055: Cannot emit debug information for a source text without encoding.
+[xUnit.net 00:00:02.48]       Stack Trace:
+[xUnit.net 00:00:02.48]         /_/tests/TabStudio.Compilation.Tests/CSharpCompilerTests.cs(19,0): at TabStudio.Compilation.Tests.CSharpCompilerTests.Compiles_top_level_statements_with_implicit_usings()
+[xUnit.net 00:00:02.48]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:02.48]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:02.48]     TabStudio.Compilation.Tests.CSharpCompilerTests.Warnings_do_not_stop_a_build [FAIL]
+[xUnit.net 00:00:02.48]       Assert.True() Failure
+[xUnit.net 00:00:02.48]       Expected: True
+[xUnit.net 00:00:02.48]       Actual:   False
+[xUnit.net 00:00:02.48]       Stack Trace:
+[xUnit.net 00:00:02.48]         /_/tests/TabStudio.Compilation.Tests/CSharpCompilerTests.cs(51,0): at TabStudio.Compilation.Tests.CSharpCompilerTests.Warnings_do_not_stop_a_build()
+[xUnit.net 00:00:02.48]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:02.48]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed TabStudio.Compilation.Tests.CSharpCompilerTests.Libraries_are_not_checked_for_in_process_safety [15 ms]
+  Error Message:
+   Assert.True() Failure
+Expected: True
+Actual:   False
+  Stack Trace:
+     at TabStudio.Compilation.Tests.CSharpCompilerTests.Libraries_are_not_checked_for_in_process_safety() in /_/tests/TabStudio.Compilation.Tests/CSharpCompilerTests.cs:line 87
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed TabStudio.Compilation.Tests.CSharpCompilerTests.Refuses_to_build_programs_that_would_close_the_ide(statement: "System.Environment.FailFast(\"bye\");", expectedId: "TS1002") [73 ms]
+  Error Message:
+   Assert.Single() Failure: The collection contained 2 items
+Collection: [Hello.GlobalUsings.g.cs(2,1): error CS8055: Cannot emit debug information for a source text without encoding., Program.cs(1,1): error TS1002: Environment.FailFast would close TabStudio, because programs run inside the IDE. Throw an exception instead.]
+  Stack Trace:
+     at TabStudio.Compilation.Tests.CSharpCompilerTests.Refuses_to_build_programs_that_would_close_the_ide(String statement, String expectedId) in /_/tests/TabStudio.Compilation.Tests/CSharpCompilerTests.cs:line 63
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed TabStudio.Compilation.Tests.CSharpCompilerTests.Refuses_to_build_programs_that_would_close_the_ide(statement: "Environment.Exit(1);", expectedId: "TS1001") [18 ms]
+  Error Message:
+   Assert.Single() Failure: The collection contained 2 items
+Collection: [Hello.GlobalUsings.g.cs(2,1): error CS8055: Cannot emit debug information for a source text without encoding., Program.cs(1,1): error TS1001: Environment.Exit would close TabStudio, because programs run inside the IDE. Return the exit code from Main instead.]
+  Stack Trace:
+     at TabStudio.Compilation.Tests.CSharpCompilerTests.Refuses_to_build_programs_that_would_close_the_ide(String statement, String expectedId) in /_/tests/TabStudio.Compilation.Tests/CSharpCompilerTests.cs:line 63
+   at InvokeStub_CSharpCompilerTests.Refuses_to_build_programs_that_would_close_the_ide(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed TabStudio.Compilation.Tests.CSharpCompilerTests.Reports_errors_with_one_based_positions_in_the_right_file [7 ms]
+  Error Message:
+   Assert.Equal() Failure: Strings differ
+             ↓ (pos 2)
+Expected: "CS0103"
+Actual:   "CS8055"
+             ↑ (pos 2)
+  Stack Trace:
+     at TabStudio.Compilation.Tests.CSharpCompilerTests.Reports_errors_with_one_based_positions_in_the_right_file() in /_/tests/TabStudio.Compilation.Tests/CSharpCompilerTests.cs:line 36
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed TabStudio.Compilation.Tests.CSharpCompilerTests.Compiles_top_level_statements_with_implicit_usings [13 ms]
+  Error Message:
+   Hello.GlobalUsings.g.cs(2,1): error CS8055: Cannot emit debug information for a source text without encoding.
+  Stack Trace:
+     at TabStudio.Compilation.Tests.CSharpCompilerTests.Compiles_top_level_statements_with_implicit_usings() in /_/tests/TabStudio.Compilation.Tests/CSharpCompilerTests.cs:line 19
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed TabStudio.Compilation.Tests.CSharpCompilerTests.Warnings_do_not_stop_a_build [4 ms]
+  Error Message:
+   Assert.True() Failure
+Expected: True
+Actual:   False
+  Stack Trace:
+     at TabStudio.Compilation.Tests.CSharpCompilerTests.Warnings_do_not_stop_a_build() in /_/tests/TabStudio.Compilation.Tests/CSharpCompilerTests.cs:line 51
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Edits_show_up_in_live_diagnostics [2 s]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Loads_every_csharp_source_file [5 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Builds_and_runs_a_project_with_a_project_reference [331 ms]
+[xUnit.net 00:00:03.42]   Finished:    TabStudio.Compilation.Tests
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Live_diagnostics_include_the_in_process_safety_check [13 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.A_new_file_joins_the_project_that_contains_it [23 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Classifies_keywords_types_and_strings [95 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Build_order_puts_dependencies_first [11 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.A_clean_file_has_no_errors [11 ms]
+
+Test Run Failed.
+Total tests: 24
+     Passed: 8
+     Failed: 16
+ Total time: 4.1394 Seconds
