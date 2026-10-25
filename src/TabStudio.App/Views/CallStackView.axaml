@@ -1,0 +1,51 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:vm="using:TabStudio.App.ViewModels"
+             x:Class="TabStudio.App.Views.CallStackView"
+             x:DataType="vm:CallStackViewModel">
+  <UserControl.Styles>
+    <Style Selector="TextBlock.method">
+      <Setter Property="FontFamily" Value="{DynamicResource CodeFont}" />
+      <Setter Property="FontSize" Value="12.5" />
+    </Style>
+    <!-- The frame the editor shows. -->
+    <Style Selector="TextBlock.method.active">
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Foreground" Value="{DynamicResource Brush.TextBright}" />
+    </Style>
+  </UserControl.Styles>
+
+  <DockPanel>
+    <Border DockPanel.Dock="Top" Height="26" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+      <Grid ColumnDefinitions="26,*,Auto" Margin="8,0,12,0" VerticalAlignment="Center">
+        <TextBlock Grid.Column="1" Classes="muted small" Text="Call Stack" />
+        <TextBlock Grid.Column="2" Classes="muted small" Text="Location" />
+      </Grid>
+    </Border>
+
+    <Panel>
+      <TextBlock Classes="muted" HorizontalAlignment="Center" VerticalAlignment="Center"
+                 Text="The call stack appears when the program pauses." IsVisible="{Binding !Frames.Count}" />
+      <ListBox x:Name="Frames" ItemsSource="{Binding Frames}" ItemContainerTheme="{StaticResource ListRow}"
+               ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+        <ListBox.ItemTemplate>
+          <DataTemplate DataType="vm:StackFrameViewModel">
+            <Grid ColumnDefinitions="26,*,Auto" Height="30" Margin="8,0,12,0" Background="Transparent" ToolTip.Tip="{Binding MethodName}">
+              <Panel>
+                <!-- The yellow arrow marks where the program is paused, the green one the caller shown in the editor. -->
+                <controls:StrokeIcon Data="{StaticResource Icon.NextStatement}" IsFilled="True" Size="15"
+                                     Foreground="{DynamicResource Brush.CurrentStatement}" IsVisible="{Binding IsTop}" />
+                <controls:StrokeIcon Data="{StaticResource Icon.NextStatement}" IsFilled="True" Size="15"
+                                     Foreground="{DynamicResource Brush.CallerStatement}" IsVisible="{Binding IsActiveCaller}" />
+              </Panel>
+              <TextBlock Grid.Column="1" Classes="method" Classes.active="{Binding IsActive}" Text="{Binding MethodName}"
+                         TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,12,0" />
+              <TextBlock Grid.Column="2" Classes="muted" FontSize="12.5" Text="{Binding LocationText}" VerticalAlignment="Center" />
+            </Grid>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+    </Panel>
+  </DockPanel>
+</UserControl>

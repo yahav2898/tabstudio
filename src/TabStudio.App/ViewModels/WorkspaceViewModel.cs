@@ -25,6 +25,15 @@ public enum BottomPanel
 
     /// <summary>Find All References and the other lists of symbol locations.</summary>
     References,
+
+    /// <summary>The paused program's local variables.</summary>
+    Locals,
+
+    /// <summary>Expressions evaluated every time the program pauses.</summary>
+    Watch,
+
+    /// <summary>The paused program's call stack.</summary>
+    CallStack,
 }
 
 /// <summary>What the IDE is doing, for the status bar.</summary>
@@ -41,6 +50,12 @@ public enum IdeState
 
     /// <summary>The last build failed.</summary>
     Failed,
+
+    /// <summary>A program runs under the debugger.</summary>
+    Debugging,
+
+    /// <summary>The debugged program is paused (break mode).</summary>
+    Paused,
 }
 
 /// <summary>A project that can be chosen as the startup project.</summary>
@@ -100,6 +115,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         _compiler.Warmed += OnCompilerWarmed;
         UpdateThermal();
         GitChanges = CreateGitChanges(gitHubAccount, browser);
+        InitializeDebugging();
     }
 
     /// <summary>Raised when the user closes the workspace to return to the start screen.</summary>
@@ -246,6 +262,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         _language.SetConcurrentBuild(_device.Thermal == ThermalState.Normal);
         LanguageServiceText = "Roslyn warm";
 
+        RestoreDebuggingState(session);
         await RestoreDocumentsAsync(preview.Workspace, session);
 
         State = IdeState.Ready;
@@ -314,6 +331,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         _background?.Dispose();
         _background = null;
         _run?.Cancel();
+        DisposeDebugging();
         _device.ThermalChanged -= OnThermalChanged;
         _device.MemoryPressureRaised -= OnMemoryPressure;
         _compiler.Warmed -= OnCompilerWarmed;

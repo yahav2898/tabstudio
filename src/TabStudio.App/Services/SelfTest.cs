@@ -13,7 +13,7 @@ public sealed record SelfTestResult(bool Success, string Message, TimeSpan Durat
 /// Does what a person does first: opens the sample solution, presses F5, types a name when the program asks,
 /// and reads the Output panel. CI runs it on an Android emulator to prove the whole IDE works on a device.
 /// </summary>
-public static class SelfTest
+public static partial class SelfTest
 {
     /// <summary>The name typed when the sample asks for one.</summary>
     public const string Name = "Tablet";
@@ -64,7 +64,13 @@ public static class SelfTest
             var exited = output.Contains("has exited with code 0", StringComparison.Ordinal);
             var greeted = output.Contains($", {Name}!", StringComparison.Ordinal);
             var summary = string.Join(" | ", output.Split('\n').Select(l => l.Trim()).Where(l => l.Length > 0).TakeLast(6));
-            return new SelfTestResult(exited && greeted, summary, clock.Elapsed);
+            if (!exited || !greeted)
+            {
+                return new SelfTestResult(false, summary, clock.Elapsed);
+            }
+
+            var debugged = await DebugSampleAsync(workspace, cancellationToken);
+            return new SelfTestResult(debugged.Success, $"{summary} | {debugged.Message}", clock.Elapsed);
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)
         {

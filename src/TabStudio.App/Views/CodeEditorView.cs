@@ -87,6 +87,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
         _editor.TextArea.TextView.PointerHover += OnPointerHover;
         _editor.TextArea.TextView.PointerHoverStopped += OnPointerHoverStopped;
         InitializeIntelliSense();
+        InitializeDebugging();
     }
 
     /// <summary>The editor control, for tests and keyboard focus.</summary>
@@ -106,6 +107,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
         _editor.TextArea.TextView.PointerHoverStopped -= OnPointerHoverStopped;
         _search.Uninstall();
         _textMate?.Dispose();
+        DisposeDebugging();
     }
 
     /// <inheritdoc />

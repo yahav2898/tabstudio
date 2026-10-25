@@ -2,6 +2,7 @@ using TabStudio.Compilation;
 using TabStudio.Compilation.Building;
 using TabStudio.Core.Diagnostics;
 using TabStudio.Core.Workspaces;
+using TabStudio.Debugging.Building;
 using TabStudio.Packages;
 
 namespace TabStudio.App.Services;
@@ -51,6 +52,12 @@ public interface ILanguageService : IDisposable
 
     /// <summary>Builds a project and the projects it references, in memory.</summary>
     Task<BuildResult> BuildAsync(ProjectInfo project, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Builds a project and the projects it references for the debugger: instrumented so it can be paused, stepped
+    /// and inspected, with a map from every statement back to the source.
+    /// </summary>
+    Task<DebugBuild> BuildForDebuggingAsync(ProjectInfo project, CancellationToken cancellationToken);
 
     /// <summary>Switches between the Debug and Release configurations.</summary>
     void SetOptimization(bool optimize);

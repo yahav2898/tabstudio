@@ -54,6 +54,8 @@ public static class AppConverters
         IdeState.Busy => "Icon.Build",
         IdeState.Running => "Icon.Play",
         IdeState.Failed => "Icon.Error",
+        IdeState.Debugging => "Icon.Bug",
+        IdeState.Paused => "Icon.Pause",
         _ => "Icon.Check",
     }));
 

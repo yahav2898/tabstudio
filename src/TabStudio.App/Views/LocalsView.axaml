@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:views="using:TabStudio.App.Views"
+             xmlns:vm="using:TabStudio.App.ViewModels"
+             x:Class="TabStudio.App.Views.LocalsView"
+             x:DataType="vm:LocalsViewModel">
+  <DockPanel>
+    <Border DockPanel.Dock="Top" Padding="12,6" Background="{DynamicResource Brush.Panel}"
+            BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1"
+            IsVisible="{Binding Note, Converter={x:Static ObjectConverters.IsNotNull}}">
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <controls:StrokeIcon Data="{StaticResource Icon.Info}" Size="14" Foreground="{DynamicResource Brush.Info}" />
+        <TextBlock Classes="muted small" Text="{Binding Note}" TextWrapping="Wrap" VerticalAlignment="Center" />
+      </StackPanel>
+    </Border>
+    <views:VariableListView DataContext="{Binding Tree}" />
+  </DockPanel>
+</UserControl>

@@ -136,7 +136,8 @@ public sealed partial class CodeEditorView
 
     private void OnQuickInfoPointerHover(object? sender, PointerEventArgs e)
     {
-        if (e.Pointer.Type == PointerType.Touch || _completion?.IsOpen == true || OffsetAt(e.GetPosition(TextView)) is not { } offset)
+        if (e.Pointer.Type == PointerType.Touch || _completion?.IsOpen == true || OffsetAt(e.GetPosition(TextView)) is not { } offset
+            || HasDataTipAt(offset))
         {
             return;
         }
@@ -205,7 +206,7 @@ public sealed partial class CodeEditorView
         }
 
         var point = (e.Source as Visual)?.TranslatePoint(e.Position, TextView) ?? e.Position;
-        if (OffsetAt(point) is { } offset)
+        if (OffsetAt(point) is { } offset && !HasDataTipAt(offset))
         {
             _ = ShowQuickInfoAsync(offset, above: true);
         }
