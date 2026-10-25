@@ -1,0 +1,1282 @@
+--------- beginning of main
+10-25 11:33:36.160  1944  1970 E memtrack: Couldn't load memtrack module
+10-25 11:33:36.160  1944  1970 W android.os.Debug: failed to get memory consumption info: -1
+10-25 11:33:37.446  1944  1970 E memtrack: Couldn't load memtrack module
+10-25 11:33:37.446  1944  1970 W android.os.Debug: failed to get memory consumption info: -1
+10-25 11:33:38.410  6526  6526 I dex2oat : Explicit concurrent copying GC freed 23338(4961KB) AllocSpace objects, 0(0B) LOS objects, 99% free, 424B/1536KB, paused 501us total 13.942ms
+10-25 11:33:38.617  6526  6526 I dex2oat : dex2oat took 8.118s (11.075s cpu) (threads: 3) arena alloc=2000B (2000B) java alloc=16KB (16808B) native alloc=8046KB (8239496B) free=725KB (743032B)
+10-25 11:33:38.621  1775  1775 V installd: DexInv: --- END '/data/app/com.tabstudio.ide-BQDIDVWr3JStd6gPhK0HEg==/base.apk' (success) ---
+--------- beginning of system
+10-25 11:33:38.629  1944  1984 W PackageManager: Cannot whitelist unknown permission: android.permission.POST_NOTIFICATIONS
+10-25 11:33:38.648  1775  1775 E         : Couldn't opendir /data/app/vmdl1434127915.tmp: No such file or directory
+10-25 11:33:38.648  1775  1775 E installd: Failed to delete /data/app/vmdl1434127915.tmp: No such file or directory
+10-25 11:33:38.648  1944  1984 I ActivityManager: Force stopping com.tabstudio.ide appid=10146 user=0: pkg removed
+10-25 11:33:38.703  1685  1913 I netd    : firewallSetUidRule(2, 10146, 2) <0.04ms>
+10-25 11:33:38.650  1944  1944 W Binder:1944_5: type=1400 audit(0.0:35): avc: denied { getopt } for scontext=u:r:system_server:s0 tcontext=u:r:shell:s0 tclass=unix_stream_socket permissive=0
+10-25 11:33:38.650  1944  1944 I chatty  : uid=1000 system_server identical 1 line
+10-25 11:33:38.650  1944  1944 W Binder:1944_5: type=1400 audit(0.0:37): avc: denied { getopt } for scontext=u:r:system_server:s0 tcontext=u:r:shell:s0 tclass=unix_stream_socket permissive=0
+10-25 11:33:38.762  1944  2034 I InputReader: Reconfiguring input devices.  changes=0x00000010
+10-25 11:33:38.804  2592  3570 E ActivityThread: Failed to find provider info for com.google.android.apps.wellbeing.api
+10-25 11:33:38.802  1686  1686 D Zygote  : Forked child process 6546
+10-25 11:33:38.818  6546  6546 W ndroid.keychai: Unexpected CPU variant for X86 using defaults: x86_64
+10-25 11:33:38.819  1944  1972 W ActivityManager: Slow operation: 75ms so far, now at startProcess: returned from zygote!
+10-25 11:33:38.680  1759  1759 W adbd    : type=1400 audit(0.0:38): avc: denied { shutdown } for scontext=u:r:adbd:s0 tcontext=u:r:shell:s0 tclass=unix_stream_socket permissive=0
+10-25 11:33:38.830  1944  1972 W ActivityManager: Slow operation: 86ms so far, now at startProcess: done updating battery stats
+10-25 11:33:38.845  1944  2942 I ActivityTaskManager: START u0 {flg=0x10000000 cmp=com.tabstudio.ide/.MainActivity (has extras)} from uid 2000
+10-25 11:33:38.848  1944  1972 W ActivityManager: Slow operation: 104ms so far, now at startProcess: building log message
+10-25 11:33:38.848  1944  1972 I ActivityManager: Start proc 6546:com.android.keychain/1000 for service {com.android.keychain/com.android.keychain.KeyChainService}
+10-25 11:33:38.848  1944  1972 W ActivityManager: Slow operation: 104ms so far, now at startProcess: starting to update pids map
+10-25 11:33:38.877  1944  1956 I system_server: Background young concurrent copying GC freed 107826(5164KB) AllocSpace objects, 19(828KB) LOS objects, 23% free, 13MB/17MB, paused 1.160ms total 220.493ms
+10-25 11:33:38.909  1944  1972 W ActivityManager: Slow operation: 165ms so far, now at startProcess: done updating pids map
+10-25 11:33:38.911  1944  2898 W InputReader: Device has associated, but no associated display id.
+10-25 11:33:38.912  1944  2898 I chatty  : uid=1000(system) Binder:1944_B identical 18 lines
+10-25 11:33:38.912  1944  2898 W InputReader: Device has associated, but no associated display id.
+10-25 11:33:38.929  1944  1966 E system_server: Invalid ID 0x00000000.
+10-25 11:33:38.951  1718  1844 D gralloc_ranchu: gralloc_alloc: Creating ashmem region of size 18436096
+10-25 11:33:38.968  3377  3583 W NamedFutures: Timeout future task has been cancelled: 9000 milliseconds
+10-25 11:33:38.969  3377  3377 E SearchServiceStarter: Task COMMON_BROADCAST_MESSAGE_RECEIVED failed or timed out. Client 14853995995929469 disconnecting from SearchService!
+10-25 11:33:38.969  3377  3377 E SearchServiceStarter: java.util.concurrent.CancellationException: Task was cancelled.
+10-25 11:33:38.969  3377  3377 E SearchServiceStarter: 	at com.google.common.s.a.c.b(SourceFile:103)
+10-25 11:33:38.969  3377  3377 E SearchServiceStarter: 	at com.google.common.s.a.c.get(SourceFile:81)
+10-25 11:33:38.969  3377  3377 E SearchServiceStarter: 	at com.google.common.s.a.da.a(SourceFile:1)
+10-25 11:33:38.969  3377  3377 E SearchServiceStarter: 	at com.google.common.s.a.bh.a(SourceFile:34)
+10-25 11:33:38.969  3377  3377 E SearchServiceStarter: 	at com.google.common.s.a.bj.run(SourceFile:4)
+10-25 11:33:38.969  3377  3377 E SearchServiceStarter: 	at com.google.android.apps.gsa.shared.util.c.b.be.run(SourceFile:2)
+10-25 11:33:38.969  3377  3377 E SearchServiceStarter: 	at android.os.Handler.handleCallback(Handler.java:883)
+10-25 11:33:38.969  3377  3377 E SearchServiceStarter: 	at android.os.Handler.dispatchMessage(Handler.java:100)
+10-25 11:33:38.969  3377  3377 E SearchServiceStarter: 	at android.os.Looper.loop(Looper.java:214)
+10-25 11:33:38.969  3377  3377 E SearchServiceStarter: 	at android.app.ActivityThread.main(ActivityThread.java:7356)
+10-25 11:33:38.969  3377  3377 E SearchServiceStarter: 	at java.lang.reflect.Method.invoke(Native Method)
+10-25 11:33:38.969  3377  3377 E SearchServiceStarter: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:492)
+10-25 11:33:38.969  3377  3377 E SearchServiceStarter: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:930)
+10-25 11:33:38.988  1944  1944 W Looper  : Slow dispatch took 203ms main h=android.app.ActivityThread$H c=android.app.-$$Lambda$LoadedApk$ReceiverDispatcher$Args$_BumDX2UKsnxLVrE6UJsJZkotuA@5183dec m=0
+10-25 11:33:39.000  1686  1686 D Zygote  : Forked child process 6584
+10-25 11:33:39.006  6546  6546 I ndroid.keychai: The ClassLoaderContext is a special shared library.
+10-25 11:33:39.063  1944  1972 W ActivityManager: Slow operation: 133ms so far, now at startProcess: returned from zygote!
+10-25 11:33:39.063  1944  1972 W ActivityManager: Slow operation: 133ms so far, now at startProcess: done updating battery stats
+10-25 11:33:39.063  1944  1972 W ActivityManager: Slow operation: 133ms so far, now at startProcess: building log message
+10-25 11:33:39.063  1944  1972 I ActivityManager: Start proc 6584:com.tabstudio.ide/u0a146 for activity {com.tabstudio.ide/com.tabstudio.ide.MainActivity}
+10-25 11:33:39.063  1944  1972 W ActivityManager: Slow operation: 133ms so far, now at startProcess: starting to update pids map
+10-25 11:33:39.063  1944  1972 W ActivityManager: Slow operation: 133ms so far, now at startProcess: done updating pids map
+10-25 11:33:39.093  6584  6584 W m.tabstudio.id: Unexpected CPU variant for X86 using defaults: x86_64
+10-25 11:33:39.111  1944  2077 W InputReader: Device has associated, but no associated display id.
+10-25 11:33:39.123  1944  2077 I chatty  : uid=1000(system) Binder:1944_3 identical 28 lines
+10-25 11:33:39.123  1944  2077 W InputReader: Device has associated, but no associated display id.
+10-25 11:33:39.163  2084  6595 I Fitness : FitCleanupIntentOperation received Intent android.intent.action.PACKAGE_REMOVED [CONTEXT service_id=17 ]
+10-25 11:33:39.189  1944  3358 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.packageinstaller/com.android.packageinstaller.PackageInstalledReceiver
+10-25 11:33:39.190  1944  1971 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.android.musicfx/.Compatibility$Receiver
+10-25 11:33:39.190  1944  1971 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.gms/.games.chimera.GamesSystemBroadcastReceiverProxy
+10-25 11:33:39.190  1944  1971 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.gms/.gass.chimera.PackageChangeBroadcastReceiver
+10-25 11:33:39.191  1944  1971 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.gms/.chimera.GmsIntentOperationService$PersistentTrustedReceiver
+10-25 11:33:39.191  1944  1971 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.ims/.receivers.RcsAutoStartReceiver
+10-25 11:33:39.202  1686  1686 D Zygote  : Forked child process 6612
+10-25 11:33:39.207  1944  1972 I ActivityManager: Start proc 6612:com.google.android.packageinstaller/u0a73 for broadcast {com.google.android.packageinstaller/com.android.packageinstaller.PackageInstalledReceiver}
+10-25 11:33:39.221  6546  6591 W KeyChain: Creating new DB.
+10-25 11:33:39.222  6546  6591 W KeyChain: Got Alias from KeyStore: WifiConfigStore.xml.encrypted-checksum.data-integrity-checker-key
+10-25 11:33:39.223  6546  6591 W KeyChain: Existing alias: WifiConfigStore.xml.encrypted-checksum.data-integrity-checker-key
+10-25 11:33:39.223  6546  6591 W KeyChain: Marking as selectable: WifiConfigStore.xml.encrypted-checksum.data-integrity-checker-key
+10-25 11:33:39.223  2428  2428 D CarrierSvcBindHelper: No carrier app for: 0
+10-25 11:33:39.226  2428  2428 D CarrierSvcBindHelper: No carrier app for: 0
+10-25 11:33:39.235  2084  6540 I Fitness : OnPackageChangedOperation got intent: Intent { act=android.intent.action.PACKAGE_CHANGED dat=package:com.google.android.videos flg=0x5000010 cmp=com.google.android.gms/.chimera.PersistentIntentOperationService (has extras) } [CONTEXT service_id=17 ]
+10-25 11:33:39.253  2084  6590 I Fitness : FitCleanupIntentOperation received Intent android.intent.action.PACKAGE_CHANGED [CONTEXT service_id=17 ]
+10-25 11:33:39.259  1944  1963 W Looper  : Slow dispatch took 326ms android.ui h=android.view.Choreographer$FrameHandler c=android.view.Choreographer$FrameDisplayEventReceiver@f194a9 m=0
+10-25 11:33:39.274  6612  6612 W ackageinstalle: Unexpected CPU variant for X86 using defaults: x86_64
+10-25 11:33:39.275  2344  6579 I Auth    : [SupervisedAccountIntentOperation] onHandleIntent(): android.intent.action.PACKAGE_ADDED
+10-25 11:33:39.282  2344  6572 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.tabstudio.ide flg=0x4000010 cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:39.293  1944  1966 W InputReader: Device has associated, but no associated display id.
+10-25 11:33:39.301  1944  1966 I chatty  : uid=1000(system) android.anim identical 18 lines
+10-25 11:33:39.301  1944  1966 W InputReader: Device has associated, but no associated display id.
+10-25 11:33:39.307  1718  1844 D gralloc_ranchu: gralloc_alloc: Creating ashmem region of size 18436096
+10-25 11:33:39.331  2428  2428 D CarrierConfigLoader: mHandler: 9 phoneId: 0
+10-25 11:33:39.448  3377  3566 D EGL_emulation: eglMakeCurrent: 0xe894d820: ver 3 0 (tinfo 0xc5884790)
+10-25 11:33:39.475  1944  1944 W system_server: Long monitor contention with owner android.bg (1970) at void android.content.res.AssetManager.nativeThemeApplyStyle(long, long, int, boolean)(AssetManager.java:-2) waiters=0 in boolean android.content.res.AssetManager.isUpToDate() for 475ms
+10-25 11:33:39.479  1944  1944 W Looper  : Slow delivery took 287ms main h=android.app.ActivityThread$H c=android.app.-$$Lambda$LoadedApk$ReceiverDispatcher$Args$_BumDX2UKsnxLVrE6UJsJZkotuA@75304dd m=0
+10-25 11:33:39.479  1944  1944 W Looper  : Slow dispatch took 490ms main h=android.app.ActivityThread$H c=android.app.-$$Lambda$LoadedApk$ReceiverDispatcher$Args$_BumDX2UKsnxLVrE6UJsJZkotuA@75304dd m=0
+10-25 11:33:39.499  1944  1944 I Telecom : DefaultDialerCache: Refreshing default dialer for user 0: now com.android.dialer: CM.CCCR->CM.UECNT->CM.CCCR->CM.UECNT@AEg
+10-25 11:33:39.510  1944  2223 W ActivityManager: Slow operation: 123ms so far, now at attachApplicationLocked: immediately before bindApplication
+10-25 11:33:39.511  1944  2223 W ActivityManager: Slow operation: 124ms so far, now at attachApplicationLocked: immediately after bindApplication
+10-25 11:33:39.511  1944  2223 W ActivityManager: Slow operation: 124ms so far, now at attachApplicationLocked: after updateLruProcessLocked
+10-25 11:33:39.511  1944  2223 W ActivityManager: Slow operation: 125ms so far, now at attachApplicationLocked: after mServices.attachApplicationLocked
+10-25 11:33:39.520  6584  6584 D DOTNET  : AndroidCryptoNative_InitLibraryOnLoad: jint AndroidCryptoNative_InitLibraryOnLoad(JavaVM *, void *) in /__w/1/s/src/runtime/src/native/libs/System.Security.Cryptography.Native.Android/pal_jni.c
+10-25 11:33:39.521  6584  6584 D DOTNET  : GetOptionalClassGRef: optional class com/android/org/conscrypt/OpenSSLEngineImpl was not found
+10-25 11:33:39.545  1944  1944 V BackupManagerConstants: getFullBackupIntervalMilliseconds(...) returns 86400000
+10-25 11:33:39.546  1944  1944 V BackupManagerConstants: getFullBackupRequiredNetworkType(...) returns 2
+10-25 11:33:39.546  1944  1944 V BackupManagerConstants: getFullBackupRequireCharging(...) returns true
+10-25 11:33:39.559  1944  2223 W ActivityManager: Slow operation: 173ms so far, now at attachApplicationLocked: after sendPendingBroadcastsLocked
+10-25 11:33:39.560  1944  2898 W system_server: Long monitor contention with owner Binder:1944_13 (2988) at void com.android.server.am.ActivityManagerService.serviceDoneExecuting(android.os.IBinder, int, int, int)(ActivityManagerService.java:14111) waiters=2 in java.lang.String com.android.server.am.ActivityManagerService.checkContentProviderAccess(java.lang.String, int) for 300ms
+10-25 11:33:39.560  2344  6579 I Auth    : [SupervisedAccountIntentOperation] This operation is disabled
+10-25 11:33:39.560  1944  3356 W system_server: Long monitor contention with owner Binder:1944_15 (2990) at android.content.ComponentName com.android.server.am.ActivityManagerService.startService(android.app.IApplicationThread, android.content.Intent, java.lang.String, boolean, java.lang.String, int)(ActivityManagerService.java:13909) waiters=4 in int com.android.server.am.ActivityManagerService.bindIsolatedService(android.app.IApplicationThread, android.os.IBinder, android.content.Intent, java.lang.String, android.app.IServiceConnection, int, java.lang.String, java.lang.String, int) for 285ms
+10-25 11:33:39.565  1944  2953 W system_server: Long monitor contention with owner Binder:1944_15 (2990) at android.content.ComponentName com.android.server.am.ActivityManagerService.startService(android.app.IApplicationThread, android.content.Intent, java.lang.String, boolean, java.lang.String, int)(ActivityManagerService.java:13909) waiters=5 in android.content.ComponentName com.android.server.am.ActivityManagerService.startService(android.app.IApplicationThread, android.content.Intent, java.lang.String, boolean, java.lang.String, int) for 277ms
+10-25 11:33:39.565  1944  2684 W system_server: Long monitor contention with owner Binder:1944_6 (2227) at android.content.ComponentName com.android.server.am.ActivityManagerService.startService(android.app.IApplicationThread, android.content.Intent, java.lang.String, boolean, java.lang.String, int)(ActivityManagerService.java:13909) waiters=5 in android.content.ComponentName com.android.server.am.ActivityManagerService.startService(android.app.IApplicationThread, android.content.Intent, java.lang.String, boolean, java.lang.String, int) for 273ms
+10-25 11:33:39.566  1944  2988 W system_server: Long monitor contention with owner Binder:1944_5 (2223) at void com.android.server.am.ActivityManagerService.attachApplication(android.app.IApplicationThread, long)(ActivityManagerService.java:5176) waiters=6 in int com.android.server.am.ActivityManagerService.stopService(android.app.IApplicationThread, android.content.Intent, java.lang.String, int) for 170ms
+10-25 11:33:39.567  1944  1963 W Looper  : Slow delivery took 321ms android.ui h=com.android.server.am.ActivityManagerService$UiHandler c=null m=53
+10-25 11:33:39.567  1944  1963 W Looper  : Slow dispatch took 308ms android.ui h=com.android.server.am.ActivityManagerService$UiHandler c=null m=53
+10-25 11:33:39.578  6612  6612 I ackageinstalle: The ClassLoaderContext is a special shared library.
+10-25 11:33:39.654  2344  6579 I FontLog : Package com.tabstudio.ide has no metadata [CONTEXT service_id=132 ]
+10-25 11:33:39.702  1944  2898 I ActivityManager: Killing 4043:com.android.providers.calendar/u0a60 (adj 975): empty #17
+10-25 11:33:39.741  2592  3230 D EGL_emulation: eglMakeCurrent: 0x7fa13f84ae00: ver 3 0 (tinfo 0x7fa13f90b120)
+10-25 11:33:39.749  1944  1973 I libprocessgroup: Successfully killed process cgroup uid 10060 pid 4043 in 43ms
+10-25 11:33:39.750  1686  1686 I Zygote  : Process 4043 exited due to signal 9 (Killed)
+10-25 11:33:39.929  2344  6645 I Authzen : [AuthZenEventHandler] Handling event: com.google.android.gms.gcm.REGISTERED
+10-25 11:33:39.934  2084  2084 I GCoreUlr: GCM registration ID changed: Intent { act=com.google.android.gms.gcm.REGISTERED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/com.google.android.location.reporting.service.GcmRegistrationReceiver }
+10-25 11:33:39.937  2344  6572 I ChromeSync: [Persistence,AffiliationManager] One of affiliation or grouping data for android://mkdwoQtQN7sPxkTarv_-v91Ov_3XZeQbSD0aJh1c2bTmOBWhZwDUEPwKRjeiPe7qOiAkxbXyarXRD6xfByJDXQ==@com.tabstudio.ide/ was not found. Marking affiliation data as stale...
+10-25 11:33:39.965  1944  1944 W system_server: Long monitor contention with owner NetworkPolicy.uid (2042) at boolean com.android.server.usage.AppStandbyController.isCarrierApp(java.lang.String)(AppStandbyController.java:1334) waiters=0 in int com.android.server.usage.AppStandbyController.getAppStandbyBucket(java.lang.String, int, long, boolean) for 331ms
+10-25 11:33:39.966  1685  1913 I netd    : firewallSetUidRule(2, 10146, 1) <0.02ms>
+10-25 11:33:39.974  2344  6571 E MDM     : [308] agll.a: No Google accounts; deferring server state update.
+10-25 11:33:39.978  1944  3361 W system_server: Long monitor contention with owner NetworkPolicy.uid (2042) at void com.android.server.net.NetworkPolicyManagerService.handleUidChanged(int, int, long)(NetworkPolicyManagerService.java:4600) waiters=0 in boolean com.android.server.net.NetworkPolicyManagerService$NetworkPolicyManagerInternalImpl.isUidNetworkingBlocked(int, java.lang.String) for 321ms
+10-25 11:33:39.979  1944  1944 W Looper  : Slow dispatch took 475ms main h=android.app.ActivityThread$H c=android.app.-$$Lambda$LoadedApk$ReceiverDispatcher$Args$_BumDX2UKsnxLVrE6UJsJZkotuA@d8f6547 m=0
+10-25 11:33:40.001  1944  1944 W Looper  : Drained
+10-25 11:33:40.011  6200  6220 I ConfigUpdater: Update started
+10-25 11:33:40.047  1944  1963 W Looper  : Slow dispatch took 445ms android.ui h=android.view.Choreographer$FrameHandler c=android.view.Choreographer$FrameDisplayEventReceiver@f194a9 m=0
+10-25 11:33:40.085  1944  1963 W Looper  : Drained
+10-25 11:33:40.128  2084  4119 I GCoreUlr: DispatchingService ignoring Intent { act=android.net.wifi.WIFI_STATE_CHANGED flg=0x4000010 (has extras) } because ULR inactive
+10-25 11:33:40.143  1944  1970 E memtrack: Couldn't load memtrack module
+10-25 11:33:40.143  1944  1970 W android.os.Debug: failed to get memory consumption info: -1
+10-25 11:33:40.155  2084  3344 W .gms.persisten: Long monitor contention with owner netscheduler-queue-handler (3961) at int aqtk.a(aqte, aauy)(:com.google.android.gms@202414023@20.24.14 (040800-319035315):88) waiters=0 in int aqtk.c(aqqo) for 131ms
+10-25 11:33:40.192  2084  2084 I GCoreUlr: Unbound from all signal providers.
+10-25 11:33:40.193  2084  2084 I GCoreUlr: Stopping handler for UlrDispSvcFast
+10-25 11:33:40.206  2344  3812 I Icing   : IndexChimeraService.getServiceInterface callingPackage=com.google.android.gms componentName=AppsCorpus serviceId=36
+10-25 11:33:40.229  1734  2687 E SurfaceFlinger: ro.sf.lcd_density must be defined as a build property
+10-25 11:33:40.229  1734  1823 E SurfaceFlinger: ro.sf.lcd_density must be defined as a build property
+10-25 11:33:40.262  6584  6653 D libEGL  : Emulator has host GPU support, qemu.gles is set to 1.
+10-25 11:33:40.262  6584  6653 W libc    : Unable to set property "qemu.gles" to "1": connection failed; errno=13 (Permission denied)
+10-25 11:33:40.293  3277  6654 D DownloadManager: [5] Starting
+10-25 11:33:40.299  6584  6653 D libEGL  : loaded /vendor/lib64/egl/libEGL_emulation.so
+10-25 11:33:40.315  6584  6653 D libEGL  : loaded /vendor/lib64/egl/libGLESv1_CM_emulation.so
+10-25 11:33:40.319  6584  6653 D libEGL  : loaded /vendor/lib64/egl/libGLESv2_emulation.so
+10-25 11:33:40.393  2344  6643 W Icing   : No valid account for uploading user actions
+10-25 11:33:40.409  3277  6654 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+10-25 11:33:40.426  3277  6654 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+10-25 11:33:40.430  6200  6220 I ConfigUpdater: Update started
+10-25 11:33:40.250  6584  6584 W RenderThread: type=1400 audit(0.0:39): avc: denied { write } for name="property_service" dev="tmpfs" ino=7424 scontext=u:r:untrusted_app:s0:c146,c256,c512,c768 tcontext=u:object_r:property_socket:s0 tclass=sock_file permissive=0 app=com.tabstudio.ide
+10-25 11:33:40.478  1944  1970 E memtrack: Couldn't load memtrack module
+10-25 11:33:40.478  1944  1970 W android.os.Debug: failed to get memory consumption info: -1
+10-25 11:33:40.521  2344  3812 I Icing   : IndexChimeraService.getServiceInterface callingPackage=com.google.android.gms componentName=null serviceId=30
+10-25 11:33:40.606  3277  3373 I d.process.medi: Waiting for a blocking GC ProfileSaver
+10-25 11:33:40.652  3277  3373 I d.process.medi: WaitForGcToComplete blocked ProfileSaver on HeapTrim for 45.677ms
+10-25 11:33:40.656  3277  6663 D DownloadManager: [6] Starting
+10-25 11:33:40.666  2344  2364 I gle.android.gm: Background concurrent copying GC freed 122274(5990KB) AllocSpace objects, 10(392KB) LOS objects, 34% free, 11MB/17MB, paused 516us total 244.763ms
+10-25 11:33:40.680  3277  6663 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+10-25 11:33:40.681  3277  6663 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+10-25 11:33:40.691  6584  6584 D AppCompatDelegate: Checking for metadata for AppLocalesMetadataHolderService : Service not found
+10-25 11:33:40.691  6200  6220 I ConfigUpdater: Update started
+10-25 11:33:40.786  3277  6654 D DownloadManager: [5] Finished with status SUCCESS
+10-25 11:33:40.810  2344  6643 I Icing   : Usage reports ok 1, Failed Usage reports 0, indexed 0, rejected 0
+10-25 11:33:40.827  3277  6663 D DownloadManager: [6] Finished with status SUCCESS
+10-25 11:33:40.867  2344  6643 W Icing   : No valid account for uploading user actions
+10-25 11:33:40.876  1944  3356 W ActivityManager: Background start not allowed: service Intent { cmp=com.google.android.apps.messaging/.shared.datamodel.action.execution.ActionExecutorImpl$EmptyService (has extras) } to com.google.android.apps.messaging/.shared.datamodel.action.execution.ActionExecutorImpl$EmptyService from pid=3526 uid=10132 pkg=com.google.android.apps.messaging startFg?=false
+10-25 11:33:40.885  2344  6643 I Icing   : Usage reports ok 0, Failed Usage reports 0, indexed 0, rejected 0
+10-25 11:33:40.902  3526  3820 I Bugle   : CountryCodeDetector: updateMainDeviceCountry from default subscription network country. detected country: us
+10-25 11:33:41.025  6200  6220 I ConfigUpdater: Update started
+10-25 11:33:41.041  3277  6673 D DownloadManager: [7] Starting
+10-25 11:33:41.114  3277  6673 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+10-25 11:33:41.131  3277  6673 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+10-25 11:33:41.202  1944  1970 E memtrack: Couldn't load memtrack module
+10-25 11:33:41.202  1944  1970 W android.os.Debug: failed to get memory consumption info: -1
+10-25 11:33:41.210  2344  2399 I Icing   : Indexing com.google.android.gms-internal.3p:MobileApplication from com.google.android.gms
+10-25 11:33:41.227  6200  6220 I ConfigUpdater: Update started
+10-25 11:33:41.281  3277  6675 D DownloadManager: [8] Starting
+10-25 11:33:41.355  3277  6675 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+10-25 11:33:41.360  3277  6675 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+10-25 11:33:41.392  2344  2399 I Icing   : Indexing done com.google.android.gms-internal.3p:MobileApplication
+10-25 11:33:41.522  3277  6673 D DownloadManager: [7] Finished with status SUCCESS
+10-25 11:33:41.609  3277  6679 D DownloadManager: [9] Starting
+10-25 11:33:41.610  3277  6675 D DownloadManager: [8] Finished with status SUCCESS
+10-25 11:33:41.619  1686  1686 D Zygote  : Forked child process 6680
+10-25 11:33:41.620  1944  1972 I ActivityManager: Start proc 6680:com.google.android.apps.maps/u0a139 for broadcast {com.google.android.apps.maps/com.google.android.gms.gcm.GcmReceiver}
+10-25 11:33:41.626  6680  6680 W droid.apps.map: Unexpected CPU variant for X86 using defaults: x86_64
+10-25 11:33:41.630  3277  6679 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+10-25 11:33:41.631  3277  6679 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+10-25 11:33:41.647  6680  6680 I droid.apps.map: The ClassLoaderContext is a special shared library.
+10-25 11:33:41.650  6680  6680 I droid.apps.map: The ClassLoaderContext is a special shared library.
+10-25 11:33:41.826  3277  6679 D DownloadManager: [9] Finished with status SUCCESS
+10-25 11:33:41.839  2344  2399 I Icing   : Indexing com.google.android.gms-apps from com.google.android.gms
+10-25 11:33:41.870  6680  6707 D libEGL  : Emulator has host GPU support, qemu.gles is set to 1.
+10-25 11:33:41.871  6680  6707 W libc    : Unable to set property "qemu.gles" to "1": connection failed; errno=13 (Permission denied)
+10-25 11:33:41.860  6680  6680 W DefaultPool4: type=1400 audit(0.0:40): avc: denied { write } for name="property_service" dev="tmpfs" ino=7424 scontext=u:r:untrusted_app:s0:c139,c256,c512,c768 tcontext=u:object_r:property_socket:s0 tclass=sock_file permissive=0 app=com.google.android.apps.maps
+10-25 11:33:41.954  1944  2990 W ActivityManager: Unable to start service Intent { act=com.google.android.c2dm.intent.REGISTRATION pkg=com.google.android.apps.maps } U=0: not found
+10-25 11:33:41.968  1944  2227 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.DROPBOX_ENTRY_ADDED flg=0x10 (has extras) } to com.google.android.gms/.stats.service.DropBoxEntryAddedReceiver
+10-25 11:33:41.970  1944  1971 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.DROPBOX_ENTRY_ADDED flg=0x10 (has extras) } to com.google.android.gms/.chimera.GmsIntentOperationService$PersistentTrustedReceiver
+10-25 11:33:41.970  1944  1971 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.DROPBOX_ENTRY_ADDED flg=0x10 (has extras) } to com.google.android.gms/.stats.service.DropBoxEntryAddedReceiver
+10-25 11:33:41.970  1944  1971 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.DROPBOX_ENTRY_ADDED flg=0x10 (has extras) } to com.google.android.gms/.chimera.GmsIntentOperationService$PersistentTrustedReceiver
+10-25 11:33:41.981  1944  2227 I ActivityManager: Killing 6285:com.google.android.apps.messaging:rcs/u0a132 (adj 975): empty #17
+10-25 11:33:41.999  2554  2554 I PhenotypeUpdate: onReceive() urgent = false
+10-25 11:33:42.076  2084  6540 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:42.076  2084  6540 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:42.077  2084  6540 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:42.080  1687  1687 I Zygote  : Process 6285 exited due to signal 9 (Killed)
+10-25 11:33:42.091  1944  1956 I system_server: Background concurrent copying GC freed 60887(4635KB) AllocSpace objects, 16(1172KB) LOS objects, 34% free, 11MB/17MB, paused 547us total 234.526ms
+10-25 11:33:42.099  1944  2030 W ActivityManager: Unable to start service Intent { act=com.google.android.gms.drive.ApiService.RESET_AFTER_BOOT flg=0x4 cmp=com.google.android.gms/.drive.api.ApiService (has extras) } U=0: not found
+10-25 11:33:42.101  1944  1973 I libprocessgroup: Successfully killed process cgroup uid 10132 pid 6285 in 119ms
+10-25 11:33:42.125  6584  6584 D HostConnection: HostConnection::get() New Host Connection established 0x7fa0e68e6aa0, tid 6584
+10-25 11:33:42.128  6584  6584 D HostConnection: HostComposition ext ANDROID_EMU_CHECKSUM_HELPER_v1 ANDROID_EMU_native_sync_v2 ANDROID_EMU_dma_v1 ANDROID_EMU_direct_mem ANDROID_EMU_host_composition_v1 ANDROID_EMU_host_composition_v2 ANDROID_EMU_vulkan ANDROID_EMU_deferred_vulkan_commands ANDROID_EMU_vulkan_null_optional_strings ANDROID_EMU_vulkan_create_resources_with_requirements ANDROID_EMU_YUV_Cache ANDROID_EMU_vulkan_ignored_handles ANDROID_EMU_vulkan_free_memory_sync ANDROID_EMU_vulkan_shader_float16_int8 ANDROID_EMU_vulkan_async_queue_submit ANDROID_EMU_sync_buffer_data ANDROID_EMU_vulkan_async_qsri ANDROID_EMU_hwc_color_transform GL_OES_EGL_image_external_essl3 GL_OES_vertex_array_object GL_KHR_texture_compression_astc_ldr ANDROID_EMU_host_side_tracing ANDROID_EMU_gles_max_version_3_0 
+10-25 11:33:42.294  2084  6540 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:42.294  2084  6540 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:42.298  2084  6540 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:42.432  2084  2084 I GeofencerStateMachine: sendQueryLocationOptIn
+10-25 11:33:42.434  2084  2084 I GeofencerStateMachine: sendQueryLocationOptIn
+10-25 11:33:42.467  2084  6540 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:42.467  2084  6540 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:42.468  2084  6540 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:42.477  2084  2084 I GeofencerStateMachine: sendQueryLocationOptIn
+10-25 11:33:42.542  2084  2084 I GeofencerStateMachine: sendQueryLocationOptIn
+10-25 11:33:42.558  6680  6707 D libEGL  : loaded /vendor/lib64/egl/libEGL_emulation.so
+10-25 11:33:42.560  6680  6707 D libEGL  : loaded /vendor/lib64/egl/libGLESv1_CM_emulation.so
+10-25 11:33:42.564  2084  2084 I GeofencerStateMachine: sendQueryLocationOptIn
+10-25 11:33:42.592  2084  2084 I GeofencerStateMachine: sendQueryLocationOptIn
+10-25 11:33:42.655  6680  6707 D libEGL  : loaded /vendor/lib64/egl/libGLESv2_emulation.so
+10-25 11:33:42.696  6584  6717 D HostConnection: HostConnection::get() New Host Connection established 0x7fa13f849960, tid 6717
+10-25 11:33:42.698  6584  6717 D HostConnection: HostComposition ext ANDROID_EMU_CHECKSUM_HELPER_v1 ANDROID_EMU_native_sync_v2 ANDROID_EMU_dma_v1 ANDROID_EMU_direct_mem ANDROID_EMU_host_composition_v1 ANDROID_EMU_host_composition_v2 ANDROID_EMU_vulkan ANDROID_EMU_deferred_vulkan_commands ANDROID_EMU_vulkan_null_optional_strings ANDROID_EMU_vulkan_create_resources_with_requirements ANDROID_EMU_YUV_Cache ANDROID_EMU_vulkan_ignored_handles ANDROID_EMU_vulkan_free_memory_sync ANDROID_EMU_vulkan_shader_float16_int8 ANDROID_EMU_vulkan_async_queue_submit ANDROID_EMU_sync_buffer_data ANDROID_EMU_vulkan_async_qsri ANDROID_EMU_hwc_color_transform GL_OES_EGL_image_external_essl3 GL_OES_vertex_array_object GL_KHR_texture_compression_astc_ldr ANDROID_EMU_host_side_tracing ANDROID_EMU_gles_max_version_3_0 
+10-25 11:33:42.703  6584  6717 D EGL_emulation: eglCreateContext: 0x7fa13f8498c0: maj 3 min 0 rcv 3
+10-25 11:33:42.772  6584  6717 D EGL_emulation: eglMakeCurrent: 0x7fa13f8498c0: ver 3 0 (tinfo 0x7fa13f8bec80)
+10-25 11:33:42.776  6680  6723 E BluetoothAdapter: Bluetooth binder is null
+10-25 11:33:42.790  6680  6707 D HostConnection: HostConnection::get() New Host Connection established 0x7fa13f438780, tid 6707
+10-25 11:33:42.791  6680  6707 D HostConnection: HostComposition ext ANDROID_EMU_CHECKSUM_HELPER_v1 ANDROID_EMU_native_sync_v2 ANDROID_EMU_dma_v1 ANDROID_EMU_direct_mem ANDROID_EMU_host_composition_v1 ANDROID_EMU_host_composition_v2 ANDROID_EMU_vulkan ANDROID_EMU_deferred_vulkan_commands ANDROID_EMU_vulkan_null_optional_strings ANDROID_EMU_vulkan_create_resources_with_requirements ANDROID_EMU_YUV_Cache ANDROID_EMU_vulkan_ignored_handles ANDROID_EMU_vulkan_free_memory_sync ANDROID_EMU_vulkan_shader_float16_int8 ANDROID_EMU_vulkan_async_queue_submit ANDROID_EMU_sync_buffer_data ANDROID_EMU_vulkan_async_qsri ANDROID_EMU_hwc_color_transform GL_OES_EGL_image_external_essl3 GL_OES_vertex_array_object GL_KHR_texture_compression_astc_ldr ANDROID_EMU_host_side_tracing ANDROID_EMU_gles_max_version_3_0 
+10-25 11:33:42.828  2806  2806 I Dialer  : VvmTaskReceiver - task received
+10-25 11:33:42.828  2806  2806 I Dialer  : VvmTaskReceiver - scheduling new job
+10-25 11:33:42.828  2806  2806 I Dialer  : TaskSchedulerJobService - scheduling job with 1 tasks
+10-25 11:33:42.829  2806  2806 I Dialer  : TaskSchedulerJobService - running job instantly.
+10-25 11:33:42.836  2806  2806 I Dialer  : TaskSchedulerJobService - job 1 scheduled
+10-25 11:33:42.838  2806  2806 I Dialer  : TaskSchedulerJobService - starting 1
+10-25 11:33:42.855  2806  2806 I Dialer  : VvmTaskExecutor - onStartJob
+10-25 11:33:42.855  2806  2806 I Dialer  : Task.createTask - create task:com.android.voicemail.impl.ActivationTask
+10-25 11:33:42.855  2806  2806 I Dialer  : RetryPolicy - retry #1 for com.android.voicemail.impl.ActivationTask@9c3d1f4 queued, executing in 5000
+10-25 11:33:42.856  2806  2806 I Dialer  : VvmTaskExecutor - minimal wait time:5000
+10-25 11:33:42.856  2806  2806 I Dialer  : VvmTaskExecutor - sleep for 5000 millis
+10-25 11:33:42.857  6680  6707 D EGL_emulation: eglCreateContext: 0x7fa13f438960: maj 3 min 0 rcv 3
+10-25 11:33:42.863  1944  1963 W Looper  : Slow dispatch took 366ms android.ui h=android.view.Choreographer$FrameHandler c=android.view.Choreographer$FrameDisplayEventReceiver@f194a9 m=0
+10-25 11:33:42.874  6680  6707 D EGL_emulation: eglMakeCurrent: 0x7fa13f438960: ver 3 0 (tinfo 0x7fa1cf80bec0)
+10-25 11:33:42.908  1944  1963 W Looper  : Slow delivery took 265ms android.ui h=com.android.server.am.ActivityManagerService$UiHandler c=null m=53
+10-25 11:33:42.925  1944  1963 W Looper  : Drained
+10-25 11:33:42.976  2084  6540 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:42.976  2084  6540 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:42.976  2084  6540 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:43.020  6584  6717 D EGL_emulation: eglMakeCurrent: 0x7fa13f8498c0: ver 3 0 (tinfo 0x7fa13f8bec80)
+10-25 11:33:43.172  2344  2399 I Icing   : Indexing done com.google.android.gms-apps
+10-25 11:33:43.238  2084  6540 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:43.238  2084  6540 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:43.242  2084  6540 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:43.270  2344  2399 I Icing   : Indexing com.google.android.gms-internal.3p:MobileApplication from com.google.android.gms
+10-25 11:33:43.347  2344  2399 I Icing   : Indexing done com.google.android.gms-internal.3p:MobileApplication
+10-25 11:33:43.423  2084  4496 I GeofencerStateMachine: removeGeofences: removeRequest=RemoveGeofencingRequest[REMOVE_BY_IDS Ids=[atn_geofence_request_id], packageName=com.google.android.apps.maps]
+10-25 11:33:43.493  2084  6540 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:43.493  2084  6540 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:43.493  2084  6540 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:43.629  2084  6540 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:43.629  2084  6540 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:43.633  2084  6540 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:43.639  2344  6506 I GCM-GMS : Registering GMS 745476177629
+10-25 11:33:43.639  2344  6506 I GCM-GMS : Got GMS registration
+10-25 11:33:43.693  1944  2977 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.DROPBOX_ENTRY_ADDED flg=0x10 (has extras) } to com.google.android.gms/.stats.service.DropBoxEntryAddedReceiver
+10-25 11:33:43.694  1944  1971 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.DROPBOX_ENTRY_ADDED flg=0x10 (has extras) } to com.google.android.gms/.chimera.GmsIntentOperationService$PersistentTrustedReceiver
+10-25 11:33:43.807  2084  6619 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:43.808  2084  6619 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:43.809  2084  6619 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:43.811  2592  3570 E ActivityThread: Failed to find provider info for com.google.android.apps.wellbeing.api
+10-25 11:33:43.894  2084  2096 I .gms.persisten: Background young concurrent copying GC freed 75358(4264KB) AllocSpace objects, 2(36KB) LOS objects, 26% free, 10MB/14MB, paused 1.133ms total 199.291ms
+10-25 11:33:43.994  2084  6619 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:43.994  2084  6619 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:43.994  2084  6619 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:44.140  2084  6619 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:44.140  2084  6619 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:44.140  2084  6619 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:44.153  1944  1970 E memtrack: Couldn't load memtrack module
+10-25 11:33:44.153  1944  1970 W android.os.Debug: failed to get memory consumption info: -1
+10-25 11:33:44.260  2084  6619 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:44.260  2084  6619 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:44.261  2084  6619 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:44.285  3526  6016 I Bugle   : BuglePhenotypeBroadcastReceiver.onReceive
+10-25 11:33:44.305  1687  1687 D Zygote  : Forked child process 6736
+10-25 11:33:44.305  1944  1972 I ActivityManager: Start proc 6736:com.google.android.apps.messaging:rcs/u0a132 for broadcast {com.google.android.apps.messaging/com.google.android.ims.library.phenotype.PhenotypeConfigurationReceiver}
+10-25 11:33:44.324  6736  6736 W s.messaging:rc: Unexpected CPU variant for X86 using defaults: x86_64
+10-25 11:33:44.339  2084  6619 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:44.339  2084  6619 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:44.340  2084  6619 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:44.359  6736  6736 D ApplicationLoaders: Returning zygote-cached class loader: /system/framework/android.hidl.base-V1.0-java.jar
+10-25 11:33:44.359  6736  6736 D ApplicationLoaders: Returning zygote-cached class loader: /system/framework/android.hidl.manager-V1.0-java.jar
+10-25 11:33:44.359  6736  6736 D ApplicationLoaders: Returning zygote-cached class loader: /system/framework/android.hidl.base-V1.0-java.jar
+10-25 11:33:44.360  6736  6736 I s.messaging:rc: The ClassLoaderContext is a special shared library.
+10-25 11:33:44.366  6736  6736 I s.messaging:rc: The ClassLoaderContext is a special shared library.
+10-25 11:33:44.412  6736  6736 I MultiDex: VM with version 2.1.0 has multidex support
+10-25 11:33:44.412  6736  6736 I MultiDex: install
+10-25 11:33:44.412  6736  6736 I MultiDex: VM has multidex support, MultiDex support library is disabled.
+10-25 11:33:44.423  2084  6619 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:44.423  2084  6619 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:44.423  2084  6619 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:44.530  3526  3526 I BugleRcs: RcsAvailability: updating
+10-25 11:33:44.534  2084  2096 I .gms.persisten: Background concurrent copying GC freed 118138(5127KB) AllocSpace objects, 11(712KB) LOS objects, 42% free, 8218KB/14MB, paused 650us total 109.431ms
+10-25 11:33:44.551  3526  6757 I BugleRcs: RcsAvailability: No minimum Cs.apk version is set, not checking Cs.apk version
+10-25 11:33:44.576  6736  6756 I Bugle   : GServicesValues:
+10-25 11:33:44.576  6736  6756 I Bugle   : bugle_enable_primes_crash_metrics: true
+10-25 11:33:44.576  6736  6756 I Bugle   : bugle_max_telemetry_upload_retries: 10
+10-25 11:33:44.576  6736  6756 I Bugle   : bugle_send_silent_crash_feedback: true
+10-25 11:33:44.576  6736  6756 I Bugle   : bugle_sticker_set_list_version: 3
+10-25 11:33:44.587  2084  6619 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:44.587  2084  6619 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:44.587  2084  6619 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:44.592  6736  6736 W BugleStartup: StartupHandler: ContentProvider startup tasks did not execute before Application onCreate(), executed in onApplicationCreated().
+10-25 11:33:44.593  6736  6736 I Bugle   : BugleApplicationBase: Bugle version: 4.1.067 (ettin_rc12_alldpi.x86.phone)
+10-25 11:33:44.615  3526  3783 I BugleRcs: MCCMNC is NOT RCS enabled
+10-25 11:33:44.615  3526  3783 I BugleRcs: Prod Fi device disabled - Not a Fi device
+10-25 11:33:44.618  2554  2554 I PhenotypeUpdate: onReceive() urgent = false
+10-25 11:33:44.619  3526  6757 I BugleRcs: RcsAvailability: config server url unavailable - Carrier is not RCS enabled
+10-25 11:33:44.707  1687  1687 D Zygote  : Forked child process 6766
+10-25 11:33:44.712  1944  1972 I ActivityManager: Start proc 6766:com.android.chrome/u0a134 for broadcast {com.android.chrome/org.chromium.chrome.browser.browserservices.ClientAppBroadcastReceiver}
+10-25 11:33:44.727  6766  6766 W .android.chrom: Unexpected CPU variant for X86 using defaults: x86_64
+10-25 11:33:44.791  2084  6619 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:44.791  2084  6619 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:44.791  2084  6619 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:44.800  6766  6766 I .android.chrom: The ClassLoaderContext is a special shared library.
+10-25 11:33:44.804  6766  6766 I .android.chrom: The ClassLoaderContext is a special shared library.
+10-25 11:33:44.828  6766  6766 I LoadedApk: No resource references to update in package com.google.android.trichromelibrary
+10-25 11:33:44.890  1944  3356 I ActivityManager: Killing 6320:com.google.android.apps.pixelmigrate/u0a116 (adj 975): empty #17
+10-25 11:33:44.895  1686  1686 D Zygote  : Forked child process 6791
+10-25 11:33:44.907  1944  1972 I ActivityManager: Start proc 6791:com.android.documentsui/u0a66 for broadcast {com.android.documentsui/com.android.documentsui.PackageReceiver}
+10-25 11:33:44.931  6791  6791 W oid.documentsu: Unexpected CPU variant for X86 using defaults: x86_64
+10-25 11:33:44.951  2084  6623 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:44.951  2084  6623 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:44.951  2084  6623 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:44.960  6736  6759 W native  : cpu_feature_guard.cc:35 The TensorFlow library was compiled to use SSE instructions, but these aren't available on your machine.
+10-25 11:33:44.960  6736  6759 W native  : cpu_feature_guard.cc:35 The TensorFlow library was compiled to use SSE2 instructions, but these aren't available on your machine.
+10-25 11:33:44.960  6736  6759 W native  : cpu_feature_guard.cc:35 The TensorFlow library was compiled to use SSE3 instructions, but these aren't available on your machine.
+10-25 11:33:44.960  6736  6759 W native  : commandlineflags.cc:976 Ignoring RegisterValidateFunction() for flag pointer 0xc7ef1c7c: no flag found at that address
+10-25 11:33:44.973  6791  6791 D ApplicationLoaders: Returning zygote-cached class loader: /system/framework/android.hidl.base-V1.0-java.jar
+10-25 11:33:44.973  6791  6791 D ApplicationLoaders: Returning zygote-cached class loader: /system/framework/android.hidl.manager-V1.0-java.jar
+10-25 11:33:44.973  6791  6791 D ApplicationLoaders: Returning zygote-cached class loader: /system/framework/android.hidl.base-V1.0-java.jar
+10-25 11:33:44.986  6791  6791 I oid.documentsu: The ClassLoaderContext is a special shared library.
+10-25 11:33:44.995  1686  1686 I Zygote  : Process 6320 exited due to signal 9 (Killed)
+10-25 11:33:45.012  1944  1973 I libprocessgroup: Successfully killed process cgroup uid 10116 pid 6320 in 121ms
+10-25 11:33:45.048  6736  6759 W native  : commandlineflags.cc:976 Ignoring RegisterValidateFunction() for flag pointer 0xc76ed9ec: no flag found at that address
+10-25 11:33:45.134  6736  6759 W native  : commandlineflags.cc:976 Ignoring RegisterValidateFunction() for flag pointer 0xc75e381c: no flag found at that address
+10-25 11:33:45.137  6791  6791 D DocumentsApplication: OverlayManager.setEnabled() result: true
+10-25 11:33:45.161  2084  6540 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:45.161  2084  6540 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:45.166  2084  6540 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:45.191  1687  1687 D Zygote  : Forked child process 6817
+10-25 11:33:45.192  3277  6816 I MediaProvider: Begin Intent { act=android.intent.action.PACKAGE_DATA_CLEARED dat=package:com.tabstudio.ide flg=0x1000010 cmp=com.android.providers.media/.MediaService (has extras) }
+10-25 11:33:45.192  1944  1972 I ActivityManager: Start proc 6817:com.google.android.apps.photos/u0a144 for broadcast {com.google.android.apps.photos/com.google.android.libraries.social.mediastoresync.reset.impl.MediaStoreClearedReceiver}
+10-25 11:33:45.193  3277  6816 I MediaProvider: End Intent { act=android.intent.action.PACKAGE_DATA_CLEARED dat=package:com.tabstudio.ide flg=0x1000010 cmp=com.android.providers.media/.MediaService (has extras) }
+10-25 11:33:45.198  1944  2898 I ActivityManager: Killing 5504:com.google.android.videos/u0a127 (adj 975): empty #17
+10-25 11:33:45.215  6736  6759 W native  : commandlineflags.cc:976 Ignoring RegisterValidateFunction() for flag pointer 0xc743085c: no flag found at that address
+10-25 11:33:45.215  6817  6817 W oid.apps.photo: Unexpected CPU variant for X86 using defaults: x86_64
+10-25 11:33:45.252  1687  1687 I Zygote  : Process 5504 exited due to signal 9 (Killed)
+10-25 11:33:45.290  1944  1973 I libprocessgroup: Successfully killed process cgroup uid 10127 pid 5504 in 81ms
+10-25 11:33:45.318  6736  6761 W s.messaging:rc: Long monitor contention with owner StartupThread#1 (6759) at boolean android.os.BinderProxy.transactNative(int, android.os.Parcel, android.os.Parcel, int)(BinderProxy.java:-2) waiters=0 in java.lang.Object vos.a() for 720ms
+10-25 11:33:45.319  6736  6760 W s.messaging:rc: Long monitor contention with owner StartupThread#1 (6759) at boolean android.os.BinderProxy.transactNative(int, android.os.Parcel, android.os.Parcel, int)(BinderProxy.java:-2) waiters=1 in java.lang.Object vos.a() for 700ms
+10-25 11:33:45.334  6817  6817 I oid.apps.photo: The ClassLoaderContext is a special shared library.
+10-25 11:33:45.360  2084  6590 I NetRec  : [358] alod.a: onConfigChanged()
+10-25 11:33:45.361  2084  6540 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:45.361  2084  6540 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:45.362  2084  6540 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:45.368  6791  6813 I ProvidersCache: Provider returned no roots. Possibly naughty: com.google.android.apps.docs.storage
+10-25 11:33:45.379  2084  6540 I NetRec  : [354] ClearDatabaseService.onHandleIntent: Clearing score cache
+10-25 11:33:45.386  2084  6590 I NetRec  : [358] alod.a: Cancelling all NetRec GCM tasks
+10-25 11:33:45.448  1944  2898 I ActivityManager: Killing 5397:com.google.android.gms:car/u0a118 (adj 975): empty #17
+10-25 11:33:45.470  5327  5422 I CAR.CLIENT: Remote exception from car service:ICar died
+10-25 11:33:45.470  5327  5422 D CAR.CLIENT: tearDown com.google.android.gms.car.CarClientImpl@7a03ede
+10-25 11:33:45.470  5327  5327 D CAR.CLIENT: disconnect com.google.android.gms.car.CarClientImpl@7a03ede
+10-25 11:33:45.470  5327  5327 D CAR.CLIENT: tearDown com.google.android.gms.car.CarClientImpl@7a03ede
+10-25 11:33:45.471  1944  3349 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/.car.CarService in 1000ms
+10-25 11:33:45.474  5327  5327 I GH.CarClientManager: connection suspended: service disconnected
+10-25 11:33:45.474  5327  5327 D GH.CarClientManager: calling onConnectionSuspended on dwx@5814430
+10-25 11:33:45.474  5327  5327 D GH.CarClientManager: calling onConnectionSuspended on bof@be717cb
+10-25 11:33:45.474  5327  5327 D CAR.CLIENT: onConnectionSuspended com.google.android.gms.car.CarClientImpl@7a03ede
+10-25 11:33:45.479  1686  1686 I Zygote  : Process 5397 exited due to signal 9 (Killed)
+10-25 11:33:45.495  1944  1973 I libprocessgroup: Successfully killed process cgroup uid 10118 pid 5397 in 41ms
+10-25 11:33:45.688  2084  6620 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:45.688  2084  6620 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:45.689  2084  6620 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:45.744  2344  6506 I Icing   : doRemovePackageData com.tabstudio.ide
+10-25 11:33:45.834  2084  6620 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:45.834  2084  6620 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:45.835  2084  6620 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:45.912  5585  5939 W YouTube : Could not register for notifications with InnerTube: 
+10-25 11:33:45.912  5585  5939 W YouTube : abwi: java.util.concurrent.ExecutionException: aacl: Precondition check failed.
+10-25 11:33:45.912  5585  5939 W YouTube : 	at abwa.b(PG:18)
+10-25 11:33:45.912  5585  5939 W YouTube : 	at aicr.f(PG:65)
+10-25 11:33:45.912  5585  5939 W YouTube : 	at aicr.g(PG:133)
+10-25 11:33:45.912  5585  5939 W YouTube : 	at aicr.b(PG:99)
+10-25 11:33:45.912  5585  5939 W YouTube : 	at ahyh.run(Unknown Source:1)
+10-25 11:33:45.912  5585  5939 W YouTube : 	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:462)
+10-25 11:33:45.912  5585  5939 W YouTube : 	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+10-25 11:33:45.912  5585  5939 W YouTube : 	at aosv.run(Unknown Source:1)
+10-25 11:33:45.912  5585  5939 W YouTube : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)
+10-25 11:33:45.912  5585  5939 W YouTube : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
+10-25 11:33:45.912  5585  5939 W YouTube : 	at zdm.run(PG:13)
+10-25 11:33:45.912  5585  5939 W YouTube : 	at java.lang.Thread.run(Thread.java:919)
+10-25 11:33:45.912  5585  5939 W YouTube : Caused by: java.util.concurrent.ExecutionException: aacl: Precondition check failed.
+10-25 11:33:45.912  5585  5939 W YouTube : 	at apmr.a(PG:135)
+10-25 11:33:45.912  5585  5939 W YouTube : 	at apmr.get(PG:89)
+10-25 11:33:45.912  5585  5939 W YouTube : 	at abwa.b(PG:17)
+10-25 11:33:45.912  5585  5939 W YouTube : 	... 11 more
+10-25 11:33:45.912  5585  5939 W YouTube : Caused by: aacl: Precondition check failed.
+10-25 11:33:45.912  5585  5939 W YouTube : 	at abuo.c(PG:106)
+10-25 11:33:45.912  5585  5939 W YouTube : 	at znq.a(PG:62)
+10-25 11:33:45.912  5585  5939 W YouTube : 	at zmp.run(Unknown Source:18)
+10-25 11:33:45.912  5585  5939 W YouTube : 	... 4 more
+10-25 11:33:45.912  5585  5939 W YouTube : Caused by: btc
+10-25 11:33:45.912  5585  5939 W YouTube : 	at zmp.run(Unknown Source:6)
+10-25 11:33:45.912  5585  5939 W YouTube : 	... 4 more
+10-25 11:33:46.243  2084  6619 I Fitness : FitCleanupIntentOperation received Intent android.intent.action.PACKAGE_DATA_CLEARED [CONTEXT service_id=17 ]
+10-25 11:33:46.245  2084  6623 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:46.245  2084  6623 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:46.246  2084  6623 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:46.372  1944  3358 I ActivityManager: Killing 5327:com.google.android.projection.gearhead:shared/u0a115 (adj 985): empty #17
+10-25 11:33:46.408  6584  6584 I m.tabstudio.id: Explicit concurrent copying GC freed 164(94KB) AllocSpace objects, 0(0B) LOS objects, 29% free, 1227KB/1739KB, paused 596us total 14.451ms
+10-25 11:33:46.410  2084  6623 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:46.410  2084  6623 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:46.411  2084  6623 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:46.439  2344  6571 I Vision  : Requesting optional module download of ocr.
+10-25 11:33:46.439  2344  6571 I Vision  : Checking for download completion for 137090 -- ocr
+10-25 11:33:46.440  1944  2898 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.DROPBOX_ENTRY_ADDED flg=0x10 (has extras) } to com.google.android.gms/.stats.service.DropBoxEntryAddedReceiver
+10-25 11:33:46.441  1944  1971 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.DROPBOX_ENTRY_ADDED flg=0x10 (has extras) } to com.google.android.gms/.chimera.GmsIntentOperationService$PersistentTrustedReceiver
+10-25 11:33:46.462  2344  6571 I Vision  : Requesting optional module download of ocr.
+10-25 11:33:46.462  2344  6571 I Vision  : Checking for download completion for 137113 -- ocr
+10-25 11:33:46.467  1944  2898 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.DROPBOX_ENTRY_ADDED flg=0x10 (has extras) } to com.google.android.gms/.stats.service.DropBoxEntryAddedReceiver
+10-25 11:33:46.470  1944  1971 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.DROPBOX_ENTRY_ADDED flg=0x10 (has extras) } to com.google.android.gms/.chimera.GmsIntentOperationService$PersistentTrustedReceiver
+10-25 11:33:46.471  1686  1686 I Zygote  : Process 5327 exited due to signal 9 (Killed)
+10-25 11:33:46.478  1686  1686 D Zygote  : Forked child process 6859
+10-25 11:33:46.483  2344  6571 I Vision  : Requesting optional module download of ocr.
+10-25 11:33:46.483  2344  6571 I Vision  : Exceeded maximum feature download tries for ocr
+10-25 11:33:46.483  2344  6571 W Vision  : Request of optional module download of ocr failed.
+10-25 11:33:46.483  2344  6571 I Vision  : Checking for download completion for 137134 -- ocr
+10-25 11:33:46.484  1944  1972 I ActivityManager: Start proc 6859:com.google.android.gms:car/u0a118 for service {com.google.android.gms/com.google.android.gms.car.CarService}
+10-25 11:33:46.485  1944  3349 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REMOVED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.android.musicfx/.Compatibility$Receiver
+10-25 11:33:46.486  1944  1971 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REMOVED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.gms/.games.chimera.GamesSystemBroadcastReceiverProxy
+10-25 11:33:46.486  1944  1971 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REMOVED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.gms/.chimera.GmsIntentOperationService$PersistentTrustedReceiver
+10-25 11:33:46.486  1944  1971 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.packageinstaller/com.android.packageinstaller.PackageInstalledReceiver
+10-25 11:33:46.486  1944  1971 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.android.musicfx/.Compatibility$Receiver
+10-25 11:33:46.487  1944  1971 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.gms/.games.chimera.GamesSystemBroadcastReceiverProxy
+10-25 11:33:46.487  1944  1971 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.gms/.gass.chimera.PackageChangeBroadcastReceiver
+10-25 11:33:46.487  1944  1971 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.gms/.chimera.GmsIntentOperationService$PersistentTrustedReceiver
+10-25 11:33:46.487  1944  1971 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.ims/.receivers.RcsAutoStartReceiver
+10-25 11:33:46.487  1944  1971 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REPLACED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.android.musicfx/.Compatibility$Receiver
+10-25 11:33:46.487  1944  1971 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REPLACED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.apps.photos/.account.full.FetchAccountPropertiesAppUpgradeBroadcastReceiver
+10-25 11:33:46.488  1944  1971 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REPLACED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.apps.photos/.account.full.SyncAccountsForLoginBroadcastReceiver
+10-25 11:33:46.488  1944  1971 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REPLACED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.apps.photos/.experiments.phenotype.full.PhenotypeAppUpgradeBroadcastReceiver
+10-25 11:33:46.488  1944  1971 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REPLACED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.apps.photos/.notificationchannels.AppUpdateBroadcastReceiver
+10-25 11:33:46.488  1944  1971 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REPLACED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.gms/.gass.chimera.PackageChangeBroadcastReceiver
+10-25 11:33:46.488  1944  1971 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REPLACED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.gms/.chimera.GmsIntentOperationService$PersistentTrustedReceiver
+10-25 11:33:46.488  1944  1971 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REPLACED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.ims/.receivers.RcsAutoStartReceiver
+10-25 11:33:46.491  6859  6859 W android.gms:ca: Unexpected CPU variant for X86 using defaults: x86_64
+10-25 11:33:46.499  1944  1973 I libprocessgroup: Successfully killed process cgroup uid 10115 pid 5327 in 121ms
+10-25 11:33:46.521  6859  6859 I android.gms:ca: The ClassLoaderContext is a special shared library.
+10-25 11:33:46.522  6859  6859 I chatty  : uid=10118 com.google.android.gms:car identical 2 lines
+10-25 11:33:46.525  6859  6859 I android.gms:ca: The ClassLoaderContext is a special shared library.
+10-25 11:33:46.595  2084  6623 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:46.595  2084  6623 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:46.595  2084  6623 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:46.626  6859  6859 W DynamiteModule: Local module descriptor class for providerinstaller not found.
+10-25 11:33:46.638  6859  6859 W ProviderHelper: Unknown dynamite feature providerinstaller
+10-25 11:33:46.640  6859  6859 I DynamiteModule: Considering local module providerinstaller:0 and remote module providerinstaller:0
+10-25 11:33:46.640  6859  6859 W ProviderInstaller: Failed to load providerinstaller module: No acceptable module found. Local version is 0 and remote version is 0.
+10-25 11:33:46.644  6859  6859 V NativeCrypto: Registering com/google/android/gms/org/conscrypt/NativeCrypto's 286 native methods...
+10-25 11:33:46.655  6859  6859 D NetworkSecurityConfig: Using Network Security Config from resource network_security_config debugBuild: false
+10-25 11:33:46.656  6859  6859 I ProviderInstaller: Installed default security provider GmsCore_OpenSSL
+10-25 11:33:46.695  6680  6699 I droid.apps.map: Waiting for a blocking GC ProfileSaver
+10-25 11:33:46.714  6859  6859 I Safeboot: Checking safeboot...
+10-25 11:33:46.718  6859  6859 I Safeboot: Not entering safeboot; wrong process.
+10-25 11:33:46.735  6680  6699 I droid.apps.map: WaitForGcToComplete blocked ProfileSaver on ClassLinker for 40.043ms
+10-25 11:33:46.748  2084  6624 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:46.748  2084  6624 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:46.748  2084  6624 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:46.754  3277  6882 D DownloadManager: [10] Starting
+10-25 11:33:46.900  3277  6882 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+10-25 11:33:46.931  6859  6859 I bezb    : Primes not initialized, returning default (no-op) Primes instance which will ignore all calls. Please call Primes.initialize(...) before using any Primes API.
+10-25 11:33:46.945  3277  6882 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+10-25 11:33:47.016  2084  6590 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:47.016  2084  6590 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:47.017  2084  6590 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:47.141  2084  6624 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:47.141  2084  6624 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:47.141  2084  6624 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:47.148  3277  6892 D DownloadManager: [11] Starting
+10-25 11:33:47.175  3277  6892 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+10-25 11:33:47.176  3277  6892 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+10-25 11:33:47.185  2084  6620 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:47.185  2084  6620 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:47.185  2084  6620 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:47.196  3277  6882 D DownloadManager: [10] Finished with status SUCCESS
+10-25 11:33:47.202  3377  3377 I BgTaskExecutorImpl: Starting EXCLUSIVE background task INTERNAL_PERIODIC_TASK_SYNC.
+10-25 11:33:47.211  1944  1963 W Looper  : Slow dispatch took 132ms android.ui h=android.view.Choreographer$FrameHandler c=android.view.Choreographer$FrameDisplayEventReceiver@f194a9 m=0
+10-25 11:33:47.229  3377  3377 I BgTaskExecutorImpl: Starting PERIODIC background task AWARE_TIP_WORKER_PROCESS_TIPS.
+10-25 11:33:47.253  3377  3377 I BgTaskExecutorImpl: Starting PERIODIC background task BACKGROUNDRETRY_CACHE_SWEEP.
+10-25 11:33:47.341  3377  3377 I BgTaskExecutorImpl: Starting PERIODIC background task CHROME_EXPERIMENT_SYNC.
+10-25 11:33:47.367  3377  3377 I BgTaskExecutorImpl: Starting PERIODIC background task CLEAR_DATA_DETECTOR.
+10-25 11:33:47.385  2084  6620 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:47.385  2084  6620 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:47.385  2084  6620 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:47.454  3377  3377 I BgTaskExecutorImpl: Starting PERIODIC background task FETCH_ADVERTISING_INFO.
+10-25 11:33:47.462  2084  6620 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:47.462  2084  6620 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:47.462  2084  6620 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:47.476  3377  3377 I BgTaskExecutorImpl: Starting PERIODIC background task FETCH_OPT_IN_STATUSES.
+10-25 11:33:47.479  3377  3551 I FirstRunClassifier: First run of com.google.android.googlequicksearchbox on this device detected
+10-25 11:33:47.479  1826  1826 E netmgr  : Failed to open QEMU pipe 'qemud:network': Invalid argument
+10-25 11:33:47.492  1944  3356 D PackageManager: Instant App installer not found with android.intent.action.INSTALL_INSTANT_APP_PACKAGE
+10-25 11:33:47.492  1944  3356 D PackageManager: Clear ephemeral installer activity
+10-25 11:33:47.521  3377  3377 I BgTaskExecutorImpl: Starting PERIODIC background task LOG_ATTEMPTED_SEARCHES_TO_KANSAS.
+10-25 11:33:47.544  1847  1847 E wifi_forwarder: RemoteConnection failed to initialize: RemoteConnection failed to open pipe
+10-25 11:33:47.570  3377  3377 I BgTaskExecutorImpl: Starting PERIODIC background task MDH_FORCED_SYNC.
+10-25 11:33:47.583  2084  2096 I .gms.persisten: Background young concurrent copying GC freed 100738(5400KB) AllocSpace objects, 0(0B) LOS objects, 33% free, 9512KB/14MB, paused 641us total 173.415ms
+10-25 11:33:47.626  3277  6895 D DownloadManager: [12] Starting
+10-25 11:33:47.639  2084  6620 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:47.639  2084  6620 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:47.639  2084  6620 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:47.646  3377  3377 I BgTaskExecutorImpl: Starting PERIODIC background task MDH_WIPEOUT.
+10-25 11:33:47.661  3277  6892 D DownloadManager: [11] Finished with status SUCCESS
+10-25 11:33:47.719  3277  6895 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+10-25 11:33:47.725  3277  6895 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+10-25 11:33:47.742  3377  3377 I BgTaskExecutorImpl: Starting PERIODIC background task REFRESH_AUTH_TOKENS.
+10-25 11:33:47.771  3377  3377 I BgTaskExecutorImpl: Starting PERIODIC background task REFRESH_NOW_CONFIGURATION.
+10-25 11:33:47.794  3277  3631 I d.process.medi: IncrementDisableThreadFlip blocked for 6.349ms
+10-25 11:33:47.804  2084  6623 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:47.804  2084  6623 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:47.805  2084  6623 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:47.840  3377  3584 I MDH     : [Storage] Creating database v2
+10-25 11:33:47.855  1944  2953 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.googlequicksearchbox/com.google.android.apps.gsa.googlequicksearchbox.GelStubAppWatcher
+10-25 11:33:47.879  3377  3377 I BgTaskExecutorImpl: Starting PERIODIC background task REFRESH_SEARCH_HISTORY.
+10-25 11:33:47.881  3377  3543 W earchbox:searc: Long monitor contention with owner NonUserFacing6 (3581) at void com.google.android.apps.gsa.h.b.a(com.google.android.apps.gsa.h.c)(SourceFile:17) waiters=2 in void com.google.android.apps.gsa.h.b.a(com.google.android.apps.gsa.h.c) for 155ms
+10-25 11:33:47.884  3377  3584 I MDH     : Creating MDH subscription table.
+10-25 11:33:47.885  3377  3584 I MDH     : Creating MDH wipeout table.
+10-25 11:33:47.895  2806  6728 I Dialer  : VvmTaskExecutor - executing task com.android.voicemail.impl.ActivationTask@9c3d1f4
+10-25 11:33:47.896  2806  6728 I Dialer  : PreOMigrationHandler - ComponentInfo{com.android.phone/com.android.services.telephony.TelephonyConnectionService}, ***, UserHandle{0} already migrated
+10-25 11:33:47.903  3377  4040 W earchbox:searc: Long monitor contention with owner NonUserFacing6 (3581) at void com.google.android.apps.gsa.h.b.a(com.google.android.apps.gsa.h.c)(SourceFile:17) waiters=3 in void com.google.android.apps.gsa.h.b.a(com.google.android.apps.gsa.h.c) for 176ms
+10-25 11:33:47.934  3377  6511 W earchbox:searc: Long monitor contention with owner NonUserFacing6 (3581) at void com.google.android.apps.gsa.h.b.a(com.google.android.apps.gsa.h.c)(SourceFile:17) waiters=5 in void com.google.android.apps.gsa.h.b.a(com.google.android.apps.gsa.h.c) for 202ms
+10-25 11:33:47.939  3377  3584 V MDH     : Opening MDH wipeout table.
+10-25 11:33:47.950  3377  3583 W earchbox:searc: Long monitor contention with owner NonUserFacing6 (3581) at void com.google.android.apps.gsa.h.b.a(com.google.android.apps.gsa.h.c)(SourceFile:17) waiters=6 in void com.google.android.apps.gsa.h.b.a(com.google.android.apps.gsa.h.c) for 195ms
+10-25 11:33:47.958  1686  1686 D Zygote  : Forked child process 6900
+10-25 11:33:47.959  1944  1972 I ActivityManager: Start proc 6900:android.process.acore/u0a54 for content provider {com.android.providers.contacts/com.android.providers.contacts.VoicemailContentProvider}
+10-25 11:33:47.964  3377  3537 W LocationOracle: getBestLocation(): no location is available
+10-25 11:33:47.971  3377  3377 I BgTaskExecutorImpl: Starting PERIODIC background task RESTORE_SPEAKER_MODEL.
+10-25 11:33:47.976  6900  6900 W d.process.acor: Unexpected CPU variant for X86 using defaults: x86_64
+10-25 11:33:47.994  6900  6900 I d.process.acor: The ClassLoaderContext is a special shared library.
+10-25 11:33:48.011  2084  6623 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:48.011  2084  6623 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:48.011  2084  6623 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:48.013  1944  3349 W ActivityManager: Unable to start service Intent { act=com.google.android.gms.auth.key.retrieval.service.START pkg=com.google.android.gms } U=0: not found
+10-25 11:33:48.024  2344  6848 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:48.031  2084  6619 I PTCommittedOperation: Receive new configuration for com.google.android.gms.people
+10-25 11:33:48.039  2344  6578 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:48.050  2344  6572 W ModuleInitIntentOp: Dropping unexpected action com.google.android.gms.phenotype.COMMITTED
+10-25 11:33:48.050  3377  3584 I RestoreSpeakerModelTask: Canceling restore - user account is null
+10-25 11:33:48.061  3377  3537 W LocationOracle: getBestLocation(): no location is available
+10-25 11:33:48.062  3377  3408 I earchbox:searc: Background young concurrent copying GC freed 69502(3167KB) AllocSpace objects, 2(40KB) LOS objects, 22% free, 9963KB/12MB, paused 1.334ms total 204.679ms
+10-25 11:33:48.064  6900  6900 I d.process.acor: The ClassLoaderContext is a special shared library.
+10-25 11:33:48.065  1944  2953 W ActivityManager: Unbind failed: could not find connection for android.os.BinderProxy@31e979c
+10-25 11:33:48.067  2344  3420 E GmsClient: unable to connect to service: com.google.android.gms.auth.key.retrieval.service.START on com.google.android.gms
+10-25 11:33:48.067  2344  6847 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:48.070  2344  6571 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:48.086  3377  3537 W CDHeaderDataHandler: Invalid integer value "" in experiments IDs.
+10-25 11:33:48.092  6900  6900 I d.process.acor: The ClassLoaderContext is a special shared library.
+10-25 11:33:48.101  3377  3584 I MdhYoutubeWorker: Reading YouTube deletion data
+10-25 11:33:48.101  3377  3584 I MdhYoutubeWorker: There is no logged in account in AGSA.
+10-25 11:33:48.115  2344  6923 W ModuleInitIntentOp: Dropping unexpected action com.google.android.gms.phenotype.COMMITTED
+10-25 11:33:48.142  1944  1970 E memtrack: Couldn't load memtrack module
+10-25 11:33:48.142  1944  1970 W android.os.Debug: failed to get memory consumption info: -1
+10-25 11:33:48.144  6900  6900 I ContactsPerf: VoicemailContentProvider.onCreate start
+10-25 11:33:48.150  6900  6900 I ContactsPerf: VoicemailContentProvider.onCreate finish
+10-25 11:33:48.174  6900  6927 D ActivityThread: Loading provider call_log_shadow: com.android.providers.contacts.ShadowCallLogProvider
+10-25 11:33:48.187  3377  3377 I BgTaskExecutorImpl: Starting PERIODIC background task UPDATE_GSERVICES_CONFIG.
+10-25 11:33:48.197  2344  6924 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:48.201  1944  2684 D CountryDetector: The first listener is added
+10-25 11:33:48.202  6900  6900 I ContactsDatabaseHelper: updateUseStrictPhoneNumberComparison: US
+10-25 11:33:48.203  6900  6900 D ActivityThread: Loading provider contacts;com.android.contacts: com.android.providers.contacts.ContactsProvider2
+10-25 11:33:48.205  2344  6848 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:48.216  2344  6924 W ModuleInitIntentOp: Dropping unexpected action com.google.android.gms.phenotype.COMMITTED
+10-25 11:33:48.216  3377  3584 I GservicesUpdateTask: Updating Gservices keys
+10-25 11:33:48.220  3377  3377 I BgTaskExecutorImpl: Starting PERIODIC background task UPDATE_LANGUAGE_PACKS.
+10-25 11:33:48.223  3377  6930 I WebViewFactory: Loading com.google.android.webview version 74.0.3729.185 (code 373018568)
+10-25 11:33:48.233  3377  6930 I earchbox:searc: The ClassLoaderContext is a special shared library.
+10-25 11:33:48.234  3377  6930 I earchbox:searc: The ClassLoaderContext is a special shared library.
+10-25 11:33:48.253  2344  6925 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:48.260  2344  6922 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:48.261  2344  6923 W ModuleInitIntentOp: Dropping unexpected action com.google.android.gms.phenotype.COMMITTED
+10-25 11:33:48.265  2344  6571 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:48.267  2344  6848 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:48.269  2344  6922 W ModuleInitIntentOp: Dropping unexpected action com.google.android.gms.phenotype.COMMITTED
+10-25 11:33:48.284  6900  6917 I VoicemailNotifier: receivers for android.intent.action.PROVIDER_CHANGED :[]
+10-25 11:33:48.285  2806  6728 I Dialer  : VvmActivationTask - VVM content provider configured - vvm_type_cvvm
+10-25 11:33:48.286  2806  6728 I Dialer  : OmtpVvmCarrierCfgHlpr - OmtpEvent:CONFIG_ACTIVATING
+10-25 11:33:48.294  6900  6917 I VoicemailNotifier: receivers for android.intent.action.PROVIDER_CHANGED :[]
+10-25 11:33:48.295  2084  6919 I PTCommittedOperation: Receive new configuration for com.google.android.gms.auth_api_phone
+10-25 11:33:48.299  6900  6932 D ContactsDatabaseHelper: WAL enabled for contacts2.db: true
+10-25 11:33:48.308  2084  6620 I PTCommittedOperation: Receive new configuration for com.google.android.gms.auth_api_proxy
+10-25 11:33:48.312  2428  2665 I LocationAccessPolicy: Allowing com.android.dialer fine because it doesn't target API 29 yet. Please fix this app. Called from getServiceStateForSubscriber
+10-25 11:33:48.314  2084  6919 I PTCommittedOperation: Receive new configuration for com.google.android.gms.reminders
+10-25 11:33:48.315  2428  2665 I LocationAccessPolicy: Allowing com.android.dialer coarse because it doesn't target API 29 yet. Please fix this app. Called from getServiceStateForSubscriber
+10-25 11:33:48.321  3377  6930 I cr_LibraryLoader: Time to load native libraries: 1 ms (timestamps 8971-8972)
+10-25 11:33:48.322  2084  6919 I PTCommittedOperation: Receive new configuration for com.google.android.client_error_logging
+10-25 11:33:48.378  3377  3377 I BgTaskExecutorImpl: Starting PERIODIC background task UPDATE_LAUNCHER_SHORTCUT.
+10-25 11:33:48.407  1687  1687 D Zygote  : Forked child process 6959
+10-25 11:33:48.414  6900  6932 I ContactLocale: AddressBook Labels [[en_US]]: […, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, Α, Β, Γ, Δ, Ε, Ζ, Η, Θ, Ι, Κ, Λ, Μ, Ν, Ξ, Ο, Π, Ρ, Σ, Τ, Υ, Φ, Χ, Ψ, Ω, …, А, Б, В, Г, Д, Ђ, Е, Є, Ж, З, И, І, Й, Ј, К, Л, Љ, М, Н, Њ, О, П, Р, С, Т, Ћ, У, Ф, Х, Ц, Ч, Џ, Ш, Щ, Ю, Я, …, א, ב, ג, ד, ה, ו, ז, ח, ט, י, כ, ל, מ, נ, ס, ע, פ, צ, ק, ר, ש, ת, …, ا, ب, ت, ث, ج, ح, خ, د, ذ, ر, ز, س, ش, ص, ض, ط, ظ, ع, غ, ف, ق, ك, ل, م, ن, ه, و, ي, …, ก, ข, ฃ, ค, ฅ, ฆ, ง, จ, ฉ, ช, ซ, ฌ, ญ, ฎ, ฏ, ฐ, ฑ, ฒ, ณ, ด, ต, ถ, ท, ธ, น, บ, ป, ผ, ฝ, พ, ฟ, ภ, ม, ย, ร, ฤ, ล, ฦ, ว, ศ, ษ, ส, ห, ฬ, อ, ฮ, …, ㄱ, ㄴ, ㄷ, ㄹ, ㅁ, ㅂ, ㅅ, ㅇ, ㅈ, ㅊ, ㅋ, ㅌ, ㅍ, ㅎ, …, あ, か, さ, た, な, は, ま, や, ら, わ, #, …]
+10-25 11:33:48.416  3277  3277 D DownloadManager: onStopJob id=12, reason=2
+10-25 11:33:48.416  1944  1972 I ActivityManager: Start proc 6959:com.google.android.webview:webview_service/u0a130 for service {com.google.android.webview/org.chromium.android_webview.services.VariationsSeedServer}
+10-25 11:33:48.420  6959  6959 W webview_servic: Unexpected CPU variant for X86 using defaults: x86_64
+10-25 11:33:48.427  3377  3377 I BgTaskExecutorImpl: Starting PERIODIC background task UPLOAD_AUDIO_LOGS.
+10-25 11:33:48.429  3377  3584 I S3UtteranceSender: send account: %s, modelType: %d[null, OK_HEY_GOOGLE]
+10-25 11:33:48.450  3377  3377 I BgTaskExecutorImpl: Starting PERIODIC background task UPLOAD_HOTWORD_SETTINGS.
+10-25 11:33:48.450  3377  6930 I chromium: [INFO:library_loader_hooks.cc(50)] Chromium logging enabled: level = 0, default verbosity = 0
+10-25 11:33:48.451  3377  6930 I cr_LibraryLoader: Expected native library version number "74.0.3729.185", actual native library version number "74.0.3729.185"
+10-25 11:33:48.456  6900  6933 D ContactsDatabaseHelper: WAL enabled for profile.db: false
+10-25 11:33:48.469  6959  6959 I webview_servic: The ClassLoaderContext is a special shared library.
+10-25 11:33:48.470  6959  6959 I webview_servic: The ClassLoaderContext is a special shared library.
+10-25 11:33:48.473  6959  6959 I LoadedApk: No resource references to update in package com.google.android.webview
+10-25 11:33:48.473  6959  6959 I LoadedApk: No resource references to update in package com.google.android.trichromelibrary
+10-25 11:33:48.540  3277  6982 D DownloadManager: [15] Starting
+10-25 11:33:48.551  3277  6983 D DownloadManager: [13] Starting
+10-25 11:33:48.551  1944  1944 I RoleManagerService: Granting default permissions...
+10-25 11:33:48.558  1944  2034 I InputReader: Reconfiguring input devices.  changes=0x00000010
+10-25 11:33:48.566  1944  1956 I system_server: ThreadFlipBegin blocked for 6.320ms
+10-25 11:33:48.572  1944  3356 I system_server: IncrementDisableThreadFlip blocked for 5.530ms
+10-25 11:33:48.598  2428  2428 D CarrierSvcBindHelper: No carrier app for: 0
+10-25 11:33:48.604  1944  1963 W Looper  : Slow dispatch took 502ms android.ui h=android.view.Choreographer$FrameHandler c=android.view.Choreographer$FrameDisplayEventReceiver@f194a9 m=0
+10-25 11:33:48.608  1944  1963 W Looper  : Slow delivery took 260ms android.ui h=com.android.server.am.ActivityManagerService$UiHandler c=null m=53
+10-25 11:33:48.615  1944  1944 I Telecom : DefaultDialerCache: Refreshing default dialer for user 0: now com.android.dialer: CM.CCCR->CM.UECNT->CM.CCCR->CM.UECNT@AEg
+10-25 11:33:48.621  3377  3491 I EngineIdGenerator: Refusing EXCLUSIVE task NOW_UPDATE_GCM_REGISTRATION, it is already pending. Try again in 7455 seconds.
+10-25 11:33:48.646  1686  1686 D Zygote  : Forked child process 6988
+10-25 11:33:48.647  3277  6895 W DownloadManager: [12] Stop requested with status HTTP_DATA_ERROR: Local halt requested; job probably timed out
+10-25 11:33:48.650  1944  1972 I ActivityManager: Start proc 6988:com.google.process.gapps/u0a129 for content provider {com.google.android.syncadapters.contacts/com.google.android.syncadapters.contacts.ProxyGalProvider}
+10-25 11:33:48.670  3277  6895 D DownloadManager: [12] Finished with status WAITING_TO_RETRY
+10-25 11:33:48.675  6988  6988 W e.process.gapp: Unexpected CPU variant for X86 using defaults: x86_64
+10-25 11:33:48.685  2592  3341 W QsbUiManager: Doodle is not valid.
+10-25 11:33:48.685  2592  3341 W QsbUiManager: Doodle bitmap is not valid.
+10-25 11:33:48.692  3277  6982 D NetworkSecurityConfig: Using Network Security Config from resource network_security_config debugBuild: false
+10-25 11:33:48.699  1944  1963 W Looper  : Drained
+10-25 11:33:48.721  3277  6983 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+10-25 11:33:48.744  3277  6982 D NetworkSecurityConfig: Using Network Security Config from resource network_security_config debugBuild: false
+10-25 11:33:48.758  3277  6983 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+10-25 11:33:48.762  6988  6988 D ApplicationLoaders: Returning zygote-cached class loader: /system/framework/android.hidl.base-V1.0-java.jar
+10-25 11:33:48.762  6988  6988 D ApplicationLoaders: Returning zygote-cached class loader: /system/framework/android.hidl.manager-V1.0-java.jar
+10-25 11:33:48.762  6988  6988 D ApplicationLoaders: Returning zygote-cached class loader: /system/framework/android.hidl.base-V1.0-java.jar
+10-25 11:33:48.763  6988  6988 I e.process.gapp: The ClassLoaderContext is a special shared library.
+10-25 11:33:48.765  6988  6988 I e.process.gapp: The ClassLoaderContext is a special shared library.
+10-25 11:33:48.784  6791  6813 I ProvidersCache: Provider returned no roots. Possibly naughty: com.google.android.apps.docs.storage
+10-25 11:33:48.786  3277  7006 D DownloadManager: [14] Starting
+10-25 11:33:48.843  1944  1956 I system_server: Background young concurrent copying GC freed 86594(4934KB) AllocSpace objects, 16(1124KB) LOS objects, 27% free, 12MB/17MB, paused 1.581ms total 292.517ms
+10-25 11:33:48.883  3277  3331 I d.process.medi: Background young concurrent copying GC freed 6043(441KB) AllocSpace objects, 0(0B) LOS objects, 0% free, 2298KB/2298KB, paused 528us total 111.363ms
+10-25 11:33:48.895  1944  1965 W ActivityTaskManager: Launch timeout has expired, giving up wake lock!
+10-25 11:33:48.986  6988  6988 I GoogleHttpClient: GMS http client unavailable, use old client
+10-25 11:33:48.996  2084  6623 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:48.996  2084  6623 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:48.998  2084  6623 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:49.033  2344  6924 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:49.035  2344  6848 W ModuleInitIntentOp: Dropping unexpected action com.google.android.gms.phenotype.COMMITTED
+10-25 11:33:49.046  2344  6935 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:49.048  6900  6932 W d.process.acor: Long monitor contention with owner Worker-1 (6933) at boolean android.os.BinderProxy.transactNative(int, android.os.Parcel, android.os.Parcel, int)(BinderProxy.java:-2) waiters=0 in android.content.IContentProvider android.app.ActivityThread.acquireProvider(android.content.Context, java.lang.String, int, boolean) for 386ms
+10-25 11:33:49.049  3277  7006 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+10-25 11:33:49.064  3277  7006 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+10-25 11:33:49.071  2084  6942 I PTCommittedOperation: Receive new configuration for com.google.android.gms.romanesco
+10-25 11:33:49.077  6988  7005 I ProxyGalProvider: QueryGalProvider delegation enabled
+10-25 11:33:49.087  6988  7004 I ProxyGalProvider: QueryGalProvider delegation enabled
+10-25 11:33:49.115  3377  3408 I earchbox:searc: Background young concurrent copying GC freed 62609(2745KB) AllocSpace objects, 9(244KB) LOS objects, 20% free, 10157KB/12MB, paused 1.006ms total 288.301ms
+10-25 11:33:49.133  6584  6584 I m.tabstudio.id: Explicit concurrent copying GC freed 139(26KB) AllocSpace objects, 0(0B) LOS objects, 29% free, 1232KB/1744KB, paused 519us total 3.620ms
+10-25 11:33:49.138  6584  6584 E         : All objects remaining in the nursery must be pinned
+10-25 11:33:49.138  6584  6584 F monodroid: All objects remaining in the nursery must be pinned
+10-25 11:33:49.139  6584  6584 F monodroid: Abort at mono-log-adapter.cc:46:3 ('static void xamarin::android::internal::MonodroidRuntime::mono_log_handler(const char *, const char *, const char *, mono_bool, void *)')
+--------- beginning of crash
+10-25 11:33:49.139  6584  6584 F libc    : Fatal signal 6 (SIGABRT), code -1 (SI_QUEUE) in tid 6584 (m.tabstudio.ide), pid 6584 (m.tabstudio.ide)
+10-25 11:33:49.151  1944  1970 E memtrack: Couldn't load memtrack module
+10-25 11:33:49.151  1944  1970 W android.os.Debug: failed to get memory consumption info: -1
+10-25 11:33:49.160  2344  3748 I PeopleChimeraService: onService. callbacks = aabq@6161626, request = com.google.android.gms.common.internal.GetServiceRequest@98b3267
+10-25 11:33:49.183  3377  3491 W SearchServiceCore: Abort, client detached.
+10-25 11:33:49.183  3377  3491 I chatty  : uid=10122(com.google.android.googlequicksearchbox) EventBus0 identical 1 line
+10-25 11:33:49.185  3377  3491 W SearchServiceCore: Abort, client detached.
+10-25 11:33:49.186  3377  6522 I PBSessionCacheImpl: Deleted sessionId[86648756069] from persistence.
+10-25 11:33:49.193  7020  7020 I crash_dump64: obtaining output fd from tombstoned, type: kDebuggerdTombstone
+10-25 11:33:49.193  1798  1798 I /system/bin/tombstoned: received crash request for pid 6584
+10-25 11:33:49.193  7020  7020 I crash_dump64: performing dump of process 6584 (target tid = 6584)
+10-25 11:33:49.196  7020  7020 F DEBUG   : *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+10-25 11:33:49.196  7020  7020 F DEBUG   : Build fingerprint: 'google/sdk_gphone_x86_64/generic_x86_64:10/QSR1.211112.011/13135432:userdebug/dev-keys'
+10-25 11:33:49.196  7020  7020 F DEBUG   : Revision: '0'
+10-25 11:33:49.196  7020  7020 F DEBUG   : ABI: 'x86_64'
+10-25 11:33:49.196  7020  7020 F DEBUG   : Timestamp: 2026-10-25 11:33:49+0000
+10-25 11:33:49.196  7020  7020 F DEBUG   : pid: 6584, tid: 6584, name: m.tabstudio.ide  >>> com.tabstudio.ide <<<
+10-25 11:33:49.196  7020  7020 F DEBUG   : uid: 10146
+10-25 11:33:49.196  7020  7020 F DEBUG   : signal 6 (SIGABRT), code -1 (SI_QUEUE), fault addr --------
+10-25 11:33:49.196  7020  7020 F DEBUG   : Abort message: 'All objects remaining in the nursery must be pinned'
+10-25 11:33:49.196  7020  7020 F DEBUG   :     rax 0000000000000000  rbx 00000000000019b8  rcx 00007fa1cdd5d3f8  rdx 0000000000000006
+10-25 11:33:49.196  7020  7020 F DEBUG   :     r8  00007fa0ec161179  r9  0000000000000000  r10 00007ffed29a1b90  r11 0000000000000246
+10-25 11:33:49.196  7020  7020 F DEBUG   :     r12 00007fa0ec161179  r13 00007fa0e3bd8a40  r14 00007ffed29a1c18  r15 00000000000019b8
+10-25 11:33:49.196  7020  7020 F DEBUG   :     rdi 00000000000019b8  rsi 00000000000019b8
+10-25 11:33:49.196  7020  7020 F DEBUG   :     rbp 00007ffed29a1e80  rsp 00007ffed29a1b88  rip 00007fa1cdd5d3f8
+10-25 11:33:49.197  7020  7020 F DEBUG   : 
+10-25 11:33:49.197  7020  7020 F DEBUG   : backtrace:
+10-25 11:33:49.197  7020  7020 F DEBUG   :       #00 pc 00000000000943f8  /apex/com.android.runtime/lib64/bionic/libc.so (syscall+24) (BuildId: b5c6019a3b4ea61b5e9a2f56319b584e)
+10-25 11:33:49.197  7020  7020 F DEBUG   :       #01 pc 0000000000097146  /apex/com.android.runtime/lib64/bionic/libc.so (abort+182) (BuildId: b5c6019a3b4ea61b5e9a2f56319b584e)
+10-25 11:33:49.197  7020  7020 F DEBUG   :       #02 pc 00000000000b30af  /data/app/com.tabstudio.ide-BQDIDVWr3JStd6gPhK0HEg==/lib/x86_64/libmonodroid.so (xamarin::android::Helpers::abort_application(_LogCategories, char const*, bool, std::__ndk1::source_location)+767) (BuildId: d3370263a3d5aba8cc143ea0be7afdd2a4ce251e)
+10-25 11:33:49.213  2344  2371 I PeopleChimeraService: onService. callbacks = aabq@bbd6eb2, request = com.google.android.gms.common.internal.GetServiceRequest@70e8e03
+10-25 11:33:49.274  6959  7023 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+10-25 11:33:49.317  3277  3331 I d.process.medi: Background concurrent copying GC freed 19427(935KB) AllocSpace objects, 0(0B) LOS objects, 49% free, 1764KB/3529KB, paused 593us total 366.959ms
+10-25 11:33:49.352  2344  3812 E PeopleGalProvider: Gal task threw exception.
+10-25 11:33:49.352  2344  3812 E PeopleGalProvider: java.lang.UnsupportedOperationException
+10-25 11:33:49.352  2344  3812 E PeopleGalProvider: 	at com.google.android.gms.people.service.galprovider.PeopleGalChimeraProvider.a(:com.google.android.gms@202414023@20.24.14 (040800-319035315):22)
+10-25 11:33:49.352  2344  3812 E PeopleGalProvider: 	at com.google.android.gms.people.service.galprovider.PeopleGalChimeraProvider.query(:com.google.android.gms@202414023@20.24.14 (040800-319035315):14)
+10-25 11:33:49.352  2344  3812 E PeopleGalProvider: 	at qlv.query(:com.google.android.gms@202414023@20.24.14 (040800-319035315):3)
+10-25 11:33:49.352  2344  3812 E PeopleGalProvider: 	at android.content.ContentProvider.query(ContentProvider.java:1214)
+10-25 11:33:49.352  2344  3812 E PeopleGalProvider: 	at ctk.superQuery(:com.google.android.gms@202414023@20.24.14 (040800-319035315):2)
+10-25 11:33:49.352  2344  3812 E PeopleGalProvider: 	at com.google.android.chimera.ContentProvider.query(:com.google.android.gms@202414023@20.24.14 (040800-319035315):2)
+10-25 11:33:49.352  2344  3812 E PeopleGalProvider: 	at qlv.query(:com.google.android.gms@202414023@20.24.14 (040800-319035315):8)
+10-25 11:33:49.352  2344  3812 E PeopleGalProvider: 	at android.content.ContentProvider.query(ContentProvider.java:1307)
+10-25 11:33:49.352  2344  3812 E PeopleGalProvider: 	at ctk.superQuery(:com.google.android.gms@202414023@20.24.14 (040800-319035315):1)
+10-25 11:33:49.352  2344  3812 E PeopleGalProvider: 	at com.google.android.chimera.ContentProvider.query(:com.google.android.gms@202414023@20.24.14 (040800-319035315):1)
+10-25 11:33:49.352  2344  3812 E PeopleGalProvider: 	at ctk.query(:com.google.android.gms@202414023@20.24.14 (040800-319035315):2)
+10-25 11:33:49.352  2344  3812 E PeopleGalProvider: 	at android.content.ContentProvider$Transport.query(ContentProvider.java:267)
+10-25 11:33:49.352  2344  3812 E PeopleGalProvider: 	at android.content.ContentResolver.query(ContentResolver.java:944)
+10-25 11:33:49.352  2344  3812 E PeopleGalProvider: 	at android.content.ContentResolver.query(ContentResolver.java:880)
+10-25 11:33:49.352  2344  3812 E PeopleGalProvider: 	at android.content.ContentResolver.query(ContentResolver.java:836)
+10-25 11:33:49.352  2344  3812 E PeopleGalProvider: 	at anvv.b(:com.google.android.gms@202414023@20.24.14 (040800-319035315):4)
+10-25 11:33:49.352  2344  3812 E PeopleGalProvider: 	at anuy.a(:com.google.android.gms@202414023@20.24.14 (040800-319035315):2)
+10-25 11:33:49.352  2344  3812 E PeopleGalProvider: 	at aabt.run(:com.google.android.gms@202414023@20.24.14 (040800-319035315):9)
+10-25 11:33:49.352  2344  3812 E PeopleGalProvider: 	at bnin.run(:com.google.android.gms@202414023@20.24.14 (040800-319035315):2)
+10-25 11:33:49.352  2344  3812 E PeopleGalProvider: 	at soy.b(:com.google.android.gms@202414023@20.24.14 (040800-319035315):12)
+10-25 11:33:49.352  2344  3812 E PeopleGalProvider: 	at soy.run(:com.google.android.gms@202414023@20.24.14 (040800-319035315):7)
+10-25 11:33:49.352  2344  3812 E PeopleGalProvider: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)
+10-25 11:33:49.352  2344  3812 E PeopleGalProvider: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
+10-25 11:33:49.352  2344  3812 E PeopleGalProvider: 	at sux.run(:com.google.android.gms@202414023@20.24.14 (040800-319035315):0)
+10-25 11:33:49.352  2344  3812 E PeopleGalProvider: 	at java.lang.Thread.run(Thread.java:919)
+10-25 11:33:49.358  6988  7004 E ProxyGalProvider: QueryGalProvider in GmsCore failed.
+10-25 11:33:49.358  6988  7004 E ProxyGalProvider: java.util.concurrent.ExecutionException: com.google.android.gms.common.api.ApiException: 102: 
+10-25 11:33:49.358  6988  7004 E ProxyGalProvider: 	at com.google.android.gms.tasks.Tasks.zza(Tasks.java:61)
+10-25 11:33:49.358  6988  7004 E ProxyGalProvider: 	at com.google.android.gms.tasks.Tasks.await(Tasks.java:33)
+10-25 11:33:49.358  6988  7004 E ProxyGalProvider: 	at com.google.android.syncadapters.contacts.ProxyGalProvider.query(ProxyGalProvider.java:84)
+10-25 11:33:49.358  6988  7004 E ProxyGalProvider: 	at android.content.ContentProvider.query(ContentProvider.java:1214)
+10-25 11:33:49.358  6988  7004 E ProxyGalProvider: 	at android.content.ContentProvider.query(ContentProvider.java:1307)
+10-25 11:33:49.358  6988  7004 E ProxyGalProvider: 	at android.content.ContentProvider$Transport.query(ContentProvider.java:267)
+10-25 11:33:49.358  6988  7004 E ProxyGalProvider: 	at android.content.ContentProviderNative.onTransact(ContentProviderNative.java:104)
+10-25 11:33:49.358  6988  7004 E ProxyGalProvider: 	at android.os.Binder.execTransactInternal(Binder.java:1021)
+10-25 11:33:49.358  6988  7004 E ProxyGalProvider: 	at android.os.Binder.execTransact(Binder.java:994)
+10-25 11:33:49.358  6988  7004 E ProxyGalProvider: Caused by: com.google.android.gms.common.api.ApiException: 102: 
+10-25 11:33:49.358  6988  7004 E ProxyGalProvider: 	at com.google.android.gms.common.api.internal.zzdm.zza(TaskUtil.java:3)
+10-25 11:33:49.358  6988  7004 E ProxyGalProvider: 	at com.google.android.gms.people.zzy.zza(GalProviderClient.java:2)
+10-25 11:33:49.358  6988  7004 E ProxyGalProvider: 	at com.google.android.gms.people.internal.zzf.onTransact(IPeopleCallbacks.java:77)
+10-25 11:33:49.358  6988  7004 E ProxyGalProvider: 	... 2 more
+10-25 11:33:49.358  6988  7004 W ProxyGalProvider: GalProvider in GmsCore is not ready, using legacy one
+10-25 11:33:49.358  6988  7004 W ProxyGalProvider: java.util.concurrent.ExecutionException: com.google.android.gms.common.api.ApiException: 102: 
+10-25 11:33:49.358  6988  7004 W ProxyGalProvider: 	at com.google.android.gms.tasks.Tasks.zza(Tasks.java:61)
+10-25 11:33:49.358  6988  7004 W ProxyGalProvider: 	at com.google.android.gms.tasks.Tasks.await(Tasks.java:33)
+10-25 11:33:49.358  6988  7004 W ProxyGalProvider: 	at com.google.android.syncadapters.contacts.ProxyGalProvider.query(ProxyGalProvider.java:84)
+10-25 11:33:49.358  6988  7004 W ProxyGalProvider: 	at android.content.ContentProvider.query(ContentProvider.java:1214)
+10-25 11:33:49.358  6988  7004 W ProxyGalProvider: 	at android.content.ContentProvider.query(ContentProvider.java:1307)
+10-25 11:33:49.358  6988  7004 W ProxyGalProvider: 	at android.content.ContentProvider$Transport.query(ContentProvider.java:267)
+10-25 11:33:49.358  6988  7004 W ProxyGalProvider: 	at android.content.ContentProviderNative.onTransact(ContentProviderNative.java:104)
+10-25 11:33:49.358  6988  7004 W ProxyGalProvider: 	at android.os.Binder.execTransactInternal(Binder.java:1021)
+10-25 11:33:49.358  6988  7004 W ProxyGalProvider: 	at android.os.Binder.execTransact(Binder.java:994)
+10-25 11:33:49.358  6988  7004 W ProxyGalProvider: Caused by: com.google.android.gms.common.api.ApiException: 102: 
+10-25 11:33:49.358  6988  7004 W ProxyGalProvider: 	at com.google.android.gms.common.api.internal.zzdm.zza(TaskUtil.java:3)
+10-25 11:33:49.358  6988  7004 W ProxyGalProvider: 	at com.google.android.gms.people.zzy.zza(GalProviderClient.java:2)
+10-25 11:33:49.358  6988  7004 W ProxyGalProvider: 	at com.google.android.gms.people.internal.zzf.onTransact(IPeopleCallbacks.java:77)
+10-25 11:33:49.358  6988  7004 W ProxyGalProvider: 	... 2 more
+10-25 11:33:49.358  6988  7004 I ProxyGalProvider: QueryGalProvider in Legacy provider.
+10-25 11:33:49.425  2344  2789 E PeopleGalProvider: Gal task threw exception.
+10-25 11:33:49.425  2344  2789 E PeopleGalProvider: java.lang.UnsupportedOperationException
+10-25 11:33:49.425  2344  2789 E PeopleGalProvider: 	at com.google.android.gms.people.service.galprovider.PeopleGalChimeraProvider.a(:com.google.android.gms@202414023@20.24.14 (040800-319035315):22)
+10-25 11:33:49.425  2344  2789 E PeopleGalProvider: 	at com.google.android.gms.people.service.galprovider.PeopleGalChimeraProvider.query(:com.google.android.gms@202414023@20.24.14 (040800-319035315):14)
+10-25 11:33:49.425  2344  2789 E PeopleGalProvider: 	at qlv.query(:com.google.android.gms@202414023@20.24.14 (040800-319035315):3)
+10-25 11:33:49.425  2344  2789 E PeopleGalProvider: 	at android.content.ContentProvider.query(ContentProvider.java:1214)
+10-25 11:33:49.425  2344  2789 E PeopleGalProvider: 	at ctk.superQuery(:com.google.android.gms@202414023@20.24.14 (040800-319035315):2)
+10-25 11:33:49.425  2344  2789 E PeopleGalProvider: 	at com.google.android.chimera.ContentProvider.query(:com.google.android.gms@202414023@20.24.14 (040800-319035315):2)
+10-25 11:33:49.425  2344  2789 E PeopleGalProvider: 	at qlv.query(:com.google.android.gms@202414023@20.24.14 (040800-319035315):8)
+10-25 11:33:49.425  2344  2789 E PeopleGalProvider: 	at android.content.ContentProvider.query(ContentProvider.java:1307)
+10-25 11:33:49.425  2344  2789 E PeopleGalProvider: 	at ctk.superQuery(:com.google.android.gms@202414023@20.24.14 (040800-319035315):1)
+10-25 11:33:49.425  2344  2789 E PeopleGalProvider: 	at com.google.android.chimera.ContentProvider.query(:com.google.android.gms@202414023@20.24.14 (040800-319035315):1)
+10-25 11:33:49.425  2344  2789 E PeopleGalProvider: 	at ctk.query(:com.google.android.gms@202414023@20.24.14 (040800-319035315):2)
+10-25 11:33:49.425  2344  2789 E PeopleGalProvider: 	at android.content.ContentProvider$Transport.query(ContentProvider.java:267)
+10-25 11:33:49.425  2344  2789 E PeopleGalProvider: 	at android.content.ContentResolver.query(ContentResolver.java:944)
+10-25 11:33:49.425  2344  2789 E PeopleGalProvider: 	at android.content.ContentResolver.query(ContentResolver.java:880)
+10-25 11:33:49.425  2344  2789 E PeopleGalProvider: 	at android.content.ContentResolver.query(ContentResolver.java:836)
+10-25 11:33:49.425  2344  2789 E PeopleGalProvider: 	at anvv.b(:com.google.android.gms@202414023@20.24.14 (040800-319035315):4)
+10-25 11:33:49.425  2344  2789 E PeopleGalProvider: 	at anuy.a(:com.google.android.gms@202414023@20.24.14 (040800-319035315):2)
+10-25 11:33:49.425  2344  2789 E PeopleGalProvider: 	at aabt.run(:com.google.android.gms@202414023@20.24.14 (040800-319035315):9)
+10-25 11:33:49.425  2344  2789 E PeopleGalProvider: 	at bnin.run(:com.google.android.gms@202414023@20.24.14 (040800-319035315):2)
+10-25 11:33:49.425  2344  2789 E PeopleGalProvider: 	at soy.b(:com.google.android.gms@202414023@20.24.14 (040800-319035315):12)
+10-25 11:33:49.425  2344  2789 E PeopleGalProvider: 	at soy.run(:com.google.android.gms@202414023@20.24.14 (040800-319035315):7)
+10-25 11:33:49.425  2344  2789 E PeopleGalProvider: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)
+10-25 11:33:49.425  2344  2789 E PeopleGalProvider: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
+10-25 11:33:49.425  2344  2789 E PeopleGalProvider: 	at sux.run(:com.google.android.gms@202414023@20.24.14 (040800-319035315):0)
+10-25 11:33:49.425  2344  2789 E PeopleGalProvider: 	at java.lang.Thread.run(Thread.java:919)
+10-25 11:33:49.432  6988  7005 E ProxyGalProvider: QueryGalProvider in GmsCore failed.
+10-25 11:33:49.432  6988  7005 E ProxyGalProvider: java.util.concurrent.ExecutionException: com.google.android.gms.common.api.ApiException: 102: 
+10-25 11:33:49.432  6988  7005 E ProxyGalProvider: 	at com.google.android.gms.tasks.Tasks.zza(Tasks.java:61)
+10-25 11:33:49.432  6988  7005 E ProxyGalProvider: 	at com.google.android.gms.tasks.Tasks.await(Tasks.java:33)
+10-25 11:33:49.432  6988  7005 E ProxyGalProvider: 	at com.google.android.syncadapters.contacts.ProxyGalProvider.query(ProxyGalProvider.java:84)
+10-25 11:33:49.432  6988  7005 E ProxyGalProvider: 	at android.content.ContentProvider.query(ContentProvider.java:1214)
+10-25 11:33:49.432  6988  7005 E ProxyGalProvider: 	at android.content.ContentProvider.query(ContentProvider.java:1307)
+10-25 11:33:49.432  6988  7005 E ProxyGalProvider: 	at android.content.ContentProvider$Transport.query(ContentProvider.java:267)
+10-25 11:33:49.432  6988  7005 E ProxyGalProvider: 	at android.content.ContentProviderNative.onTransact(ContentProviderNative.java:104)
+10-25 11:33:49.432  6988  7005 E ProxyGalProvider: 	at android.os.Binder.execTransactInternal(Binder.java:1021)
+10-25 11:33:49.432  6988  7005 E ProxyGalProvider: 	at android.os.Binder.execTransact(Binder.java:994)
+10-25 11:33:49.432  6988  7005 E ProxyGalProvider: Caused by: com.google.android.gms.common.api.ApiException: 102: 
+10-25 11:33:49.432  6988  7005 E ProxyGalProvider: 	at com.google.android.gms.common.api.internal.zzdm.zza(TaskUtil.java:3)
+10-25 11:33:49.432  6988  7005 E ProxyGalProvider: 	at com.google.android.gms.people.zzy.zza(GalProviderClient.java:2)
+10-25 11:33:49.432  6988  7005 E ProxyGalProvider: 	at com.google.android.gms.people.internal.zzf.onTransact(IPeopleCallbacks.java:77)
+10-25 11:33:49.432  6988  7005 E ProxyGalProvider: 	... 2 more
+10-25 11:33:49.432  6988  7005 W ProxyGalProvider: GalProvider in GmsCore is not ready, using legacy one
+10-25 11:33:49.432  6988  7005 W ProxyGalProvider: java.util.concurrent.ExecutionException: com.google.android.gms.common.api.ApiException: 102: 
+10-25 11:33:49.432  6988  7005 W ProxyGalProvider: 	at com.google.android.gms.tasks.Tasks.zza(Tasks.java:61)
+10-25 11:33:49.432  6988  7005 W ProxyGalProvider: 	at com.google.android.gms.tasks.Tasks.await(Tasks.java:33)
+10-25 11:33:49.432  6988  7005 W ProxyGalProvider: 	at com.google.android.syncadapters.contacts.ProxyGalProvider.query(ProxyGalProvider.java:84)
+10-25 11:33:49.432  6988  7005 W ProxyGalProvider: 	at android.content.ContentProvider.query(ContentProvider.java:1214)
+10-25 11:33:49.432  6988  7005 W ProxyGalProvider: 	at android.content.ContentProvider.query(ContentProvider.java:1307)
+10-25 11:33:49.432  6988  7005 W ProxyGalProvider: 	at android.content.ContentProvider$Transport.query(ContentProvider.java:267)
+10-25 11:33:49.432  6988  7005 W ProxyGalProvider: 	at android.content.ContentProviderNative.onTransact(ContentProviderNative.java:104)
+10-25 11:33:49.432  6988  7005 W ProxyGalProvider: 	at android.os.Binder.execTransactInternal(Binder.java:1021)
+10-25 11:33:49.432  6988  7005 W ProxyGalProvider: 	at android.os.Binder.execTransact(Binder.java:994)
+10-25 11:33:49.432  6988  7005 W ProxyGalProvider: Caused by: com.google.android.gms.common.api.ApiException: 102: 
+10-25 11:33:49.432  6988  7005 W ProxyGalProvider: 	at com.google.android.gms.common.api.internal.zzdm.zza(TaskUtil.java:3)
+10-25 11:33:49.432  6988  7005 W ProxyGalProvider: 	at com.google.android.gms.people.zzy.zza(GalProviderClient.java:2)
+10-25 11:33:49.432  6988  7005 W ProxyGalProvider: 	at com.google.android.gms.people.internal.zzf.onTransact(IPeopleCallbacks.java:77)
+10-25 11:33:49.432  6988  7005 W ProxyGalProvider: 	... 2 more
+10-25 11:33:49.432  6988  7005 I ProxyGalProvider: QueryGalProvider in Legacy provider.
+10-25 11:33:49.444  6736  6755 I s.messaging:rc: Waiting for a blocking GC ProfileSaver
+10-25 11:33:49.468  1944  1970 E memtrack: Couldn't load memtrack module
+10-25 11:33:49.468  1944  1970 W android.os.Debug: failed to get memory consumption info: -1
+10-25 11:33:49.483  6900  6933 I ContactDirectoryManager: deleted 0 stale rows which don't have any relevant directory
+10-25 11:33:49.483  6900  6933 I ContactDirectoryManager: Discovered 0 contact directories in 856ms
+10-25 11:33:49.493  6900  6932 I ContactDirectoryManager: deleted 0 stale rows which don't have any relevant directory
+10-25 11:33:49.493  6900  6932 I ContactDirectoryManager: Discovered 0 contact directories in 850ms
+10-25 11:33:49.519  2084  6955 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:49.519  2084  6955 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:49.519  2084  6955 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:49.654  2344  6924 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:49.656  2344  6923 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:49.676  1798  1798 E /system/bin/tombstoned: Tombstone written to: /data/tombstones/tombstone_01
+10-25 11:33:49.678  1944  1977 I BootReceiver: Copying /data/tombstones/tombstone_01 to DropBox (SYSTEM_TOMBSTONE)
+10-25 11:33:49.680  1944  1977 I DropBoxManagerService: add tag=SYSTEM_TOMBSTONE isTagEnabled=true flags=0x2
+10-25 11:33:49.710  1944  7031 W ActivityTaskManager:   Force finishing activity com.tabstudio.ide/.MainActivity
+10-25 11:33:49.713  1944  7031 W InputReader: Device has associated, but no associated display id.
+10-25 11:33:49.715  1944  7032 I DropBoxManagerService: add tag=data_app_native_crash isTagEnabled=true flags=0x2
+10-25 11:33:49.723  1944  1963 I ActivityManager: Showing crash dialog for package com.tabstudio.ide u0
+10-25 11:33:49.713  1944  7031 I chatty  : uid=1000(system) NativeCrashRepo identical 8 lines
+10-25 11:33:49.713  1944  7031 W InputReader: Device has associated, but no associated display id.
+10-25 11:33:49.723  1944  1963 E system_server: Invalid ID 0x00000000.
+10-25 11:33:49.750  1686  1686 I Zygote  : Process 6584 exited due to signal 6 (Aborted)
+10-25 11:33:49.765  1944  2942 I ActivityManager: Process com.tabstudio.ide (pid 6584) has died: vis+99 TOP 
+10-25 11:33:49.765  1944  1973 I libprocessgroup: Successfully killed process cgroup uid 10146 pid 6584 in 0ms
+10-25 11:33:49.784  1944  2942 W InputReader: Device has associated, but no associated display id.
+10-25 11:33:49.806  1944  2942 I chatty  : uid=1000(system) Binder:1944_C identical 38 lines
+10-25 11:33:49.806  1944  2942 W InputReader: Device has associated, but no associated display id.
+10-25 11:33:49.849  6766  6786 I .android.chrom: Waiting for a blocking GC ProfileSaver
+10-25 11:33:49.852  1944  1966 W WindowManager: Failed looking up window callers=com.android.server.wm.WindowManagerService.windowForClientLocked:5281 com.android.server.wm.WindowManagerService.removeWindow:1753 com.android.server.wm.Session.remove:176 
+10-25 11:33:49.863  3526  6757 D ExpressiveStickerClient: Clear metadata cache.
+10-25 11:33:49.873  6766  6786 I .android.chrom: WaitForGcToComplete blocked ProfileSaver on ClassLinker for 23.661ms
+10-25 11:33:49.874  1944  1963 W Looper  : Slow dispatch took 153ms android.ui h=com.android.server.am.ActivityManagerService$UiHandler c=null m=1
+10-25 11:33:49.884  1718  1844 D gralloc_ranchu: gralloc_alloc: Creating ashmem region of size 18436096
+10-25 11:33:49.886  1718  1718 D gralloc_ranchu: gralloc_alloc: Creating ashmem region of size 18436096
+10-25 11:33:49.888  1718  1718 D gralloc_ranchu: gralloc_alloc: Creating ashmem region of size 18436096
+10-25 11:33:49.889  3377  3566 D EGL_emulation: eglMakeCurrent: 0xe894d820: ver 3 0 (tinfo 0xc5884790)
+10-25 11:33:49.894  1718  1718 D gralloc_ranchu: gralloc_alloc: Creating ashmem region of size 18436096
+10-25 11:33:49.896  1944  2985 W system_server: Long monitor contention with owner NetworkPolicy.uid (2042) at void com.android.server.net.NetworkPolicyManagerService.handleUidChanged(int, int, long)(NetworkPolicyManagerService.java:4600) waiters=0 in boolean com.android.server.net.NetworkPolicyManagerService$NetworkPolicyManagerInternalImpl.isUidNetworkingBlocked(int, java.lang.String) for 445ms
+10-25 11:33:49.896  1944  2684 W system_server: Long monitor contention with owner NetworkPolicy.uid (2042) at void com.android.server.net.NetworkPolicyManagerService.handleUidChanged(int, int, long)(NetworkPolicyManagerService.java:4600) waiters=1 in boolean com.android.server.net.NetworkPolicyManagerService$NetworkPolicyManagerInternalImpl.isUidNetworkingBlocked(int, java.lang.String) for 443ms
+10-25 11:33:49.896  1944  3350 W system_server: Long monitor contention with owner NetworkPolicy.uid (2042) at void com.android.server.net.NetworkPolicyManagerService.handleUidChanged(int, int, long)(NetworkPolicyManagerService.java:4600) waiters=2 in boolean com.android.server.net.NetworkPolicyManagerService$NetworkPolicyManagerInternalImpl.isUidNetworkingBlocked(int, java.lang.String) for 402ms
+10-25 11:33:49.930  2592  3230 D EGL_emulation: eglMakeCurrent: 0x7fa13f84ae00: ver 3 0 (tinfo 0x7fa13f90b120)
+10-25 11:33:49.942  1718  1844 D gralloc_ranchu: gralloc_alloc: Creating ashmem region of size 18436096
+10-25 11:33:49.959  1718  1718 D gralloc_ranchu: gralloc_alloc: Creating ashmem region of size 18436096
+10-25 11:33:49.985  1718  1718 D gralloc_ranchu: gralloc_alloc: Creating ashmem region of size 2666496
+10-25 11:33:49.989  1944  1966 W InputReader: Device has associated, but no associated display id.
+10-25 11:33:49.989  1944  1966 I chatty  : uid=1000(system) android.anim identical 8 lines
+10-25 11:33:49.989  1944  1966 W InputReader: Device has associated, but no associated display id.
+10-25 11:33:49.993  1718  1718 D gralloc_ranchu: gralloc_alloc: Creating ashmem region of size 2666496
+10-25 11:33:49.994  1718  1718 D gralloc_ranchu: gralloc_alloc: Creating ashmem region of size 2666496
+10-25 11:33:50.006  1944  3191 D EGL_emulation: eglMakeCurrent: 0x7fa0e4bfc000: ver 3 0 (tinfo 0x7fa0e1d45ae0)
+10-25 11:33:50.014  1944  1944 W ActivityManager: Unable to start service Intent { act=android.service.appprediction.AppPredictionService cmp=com.google.android.as/com.google.android.apps.miphone.aiai.app.AiAiPredictionService } U=0: not found
+10-25 11:33:50.014  1944  1944 W RemoteAppPredictionService: could not bind to Intent { act=android.service.appprediction.AppPredictionService cmp=com.google.android.as/com.google.android.apps.miphone.aiai.app.AiAiPredictionService } using flags 67108865
+10-25 11:33:50.030  3377  3377 W ThreadPoolDumper: Queue length for executor EventBus is now 11. Perhaps some tasks are too long, or the pool is too small.
+10-25 11:33:50.034  3377  3491 W SessionLifecycleManager: Handover failed. Creating new session controller.
+10-25 11:33:50.040  6791  6811 I oid.documentsu: Waiting for a blocking GC ProfileSaver
+10-25 11:33:50.150  6791  6811 I oid.documentsu: WaitForGcToComplete blocked ProfileSaver on ClassLinker for 110.238ms
+10-25 11:33:50.164  3377  6511 E sb.v.u.LiteSuggestSourc: On-device lite suggest model loading error.
+10-25 11:33:50.168  3277  6982 W StorageManager: fallocate() not supported; falling back to ftruncate()
+10-25 11:33:50.214  1944  1965 W ActivityTaskManager: Activity top resumed state loss timeout for ActivityRecord{eca4753 u0 com.tabstudio.ide/.MainActivity t-1 f}
+10-25 11:33:50.225  6959  7023 W webview_servic: Verification of java.util.Set com.android.org.conscrypt.TrustedCertificateIndex.findAllByIssuerAndSignature(java.security.cert.X509Certificate) took 156.412ms
+10-25 11:33:50.333  2084  2096 I .gms.persisten: Background young concurrent copying GC freed 62152(4154KB) AllocSpace objects, 2(40KB) LOS objects, 31% free, 9897KB/14MB, paused 45.823ms total 333.351ms
+10-25 11:33:50.576  2084  6949 I Fitness : OnPackageChangedOperation got intent: Intent { act=android.intent.action.PACKAGE_CHANGED dat=package:com.google.android.googlequicksearchbox flg=0x45000010 cmp=com.google.android.gms/.chimera.PersistentIntentOperationService (has extras) } [CONTEXT service_id=17 ]
+10-25 11:33:50.614  2084  6949 I PTCommittedOperation: Receive new configuration for com.google.android.gms.platformconfigurator
+10-25 11:33:50.615  2344  6935 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:50.658  2344  6937 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:50.708  2344  6922 W ModuleInitIntentOp: Dropping unexpected action com.google.android.gms.phenotype.COMMITTED
+10-25 11:33:50.714  6959  7023 I cr_VariationsSeedFetch: Fetched first run seed in 1486 ms
+10-25 11:33:50.723  2084  6955 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:50.723  2084  6955 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:50.723  2084  6955 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:51.035  2084  6944 I Fitness : FitCleanupIntentOperation received Intent android.intent.action.PACKAGE_CHANGED [CONTEXT service_id=17 ]
+10-25 11:33:51.056  2084  6954 I PTCommittedOperation: Receive new configuration for com.google.android.gms.accountsettings
+10-25 11:33:51.071  2084  6955 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:51.071  2084  6955 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:51.074  2084  6955 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:51.133  1944  2420 I ActivityManager: Killing 6361:com.google.android.apps.docs/u0a133 (adj 985): empty #17
+10-25 11:33:51.171  3377  3377 I BgTaskExecutorImpl: Starting EXCLUSIVE background task FETCH_CONFIGS_FROM_PHENOTYPE.
+10-25 11:33:51.204  1944  1970 I RoleUserState: Wrote roles.xml successfully
+10-25 11:33:51.245  1686  1686 I Zygote  : Process 6361 exited due to signal 9 (Killed)
+10-25 11:33:51.279  2344  6571 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:51.282  1944  1973 I libprocessgroup: Successfully killed process cgroup uid 10133 pid 6361 in 148ms
+10-25 11:33:51.284  2344  6923 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:51.296  2344  6935 W ModuleInitIntentOp: Dropping unexpected action com.google.android.gms.phenotype.COMMITTED
+10-25 11:33:51.305  1944  3191 D EGL_emulation: eglMakeCurrent: 0x7fa0e4bfc000: ver 3 0 (tinfo 0x7fa0e1d45ae0)
+10-25 11:33:51.343  1944  1963 W Looper  : Slow dispatch took 1457ms android.ui h=android.view.Choreographer$FrameHandler c=android.view.Choreographer$FrameDisplayEventReceiver@f194a9 m=0
+10-25 11:33:51.344  1944  1963 W Looper  : Slow delivery took 1576ms android.ui h=com.android.server.wm.DisplayPolicy$PolicyHandler c=com.android.server.wm.-$$Lambda$DisplayPolicy$qQY9m_Itua9TDy-Nk3zzDxvjEwE@ce1bfbc m=0
+10-25 11:33:51.344  1944  1963 I Choreographer: Skipped 86 frames!  The application may be doing too much work on its main thread.
+10-25 11:33:51.420  2344  2399 I Icing   : Indexing com.google.android.gms-internal.3p:MobileApplication from com.google.android.gms
+10-25 11:33:51.431  3277  6983 D DownloadManager: [13] Finished with status SUCCESS
+10-25 11:33:51.488  1944  1956 I system_server: Background concurrent copying GC freed 63045(3843KB) AllocSpace objects, 23(1964KB) LOS objects, 34% free, 11MB/17MB, paused 1.170ms total 207.180ms
+10-25 11:33:51.507  1944  3349 I ActivityManager: Killing 5585:com.google.android.youtube/u0a145 (adj 985): empty #17
+10-25 11:33:51.512  1944  3191 I OpenGLRenderer: Davey! duration=1645ms; Flags=1, IntendedVsync=130412736861, Vsync=130529403523, OldestInputEvent=9223372036854775807, NewestInputEvent=0, HandleInputStart=130537824240, AnimationStart=130537866680, PerformTraversalsStart=130538296780, DrawStart=131889539660, SyncQueued=131889576790, SyncStart=131994378430, IssueDrawCommandsStart=131996153830, SwapBuffers=131999971340, FrameCompleted=132163452840, DequeueBufferDuration=250000, QueueBufferDuration=90008000, 
+10-25 11:33:51.553  1944  3191 D EGL_emulation: eglMakeCurrent: 0x7fa0e4bfc000: ver 3 0 (tinfo 0x7fa0e1d45ae0)
+10-25 11:33:51.554  1944  1963 W Looper  : Slow dispatch took 210ms android.ui h=android.view.Choreographer$FrameHandler c=android.view.Choreographer$FrameDisplayEventReceiver@f194a9 m=0
+10-25 11:33:51.563  6859  6877 I android.gms:ca: Waiting for a blocking GC ProfileSaver
+10-25 11:33:51.575  6859  6877 I android.gms:ca: WaitForGcToComplete blocked ProfileSaver on ClassLinker for 11.583ms
+10-25 11:33:51.641  2344  2399 I Icing   : Indexing done com.google.android.gms-internal.3p:MobileApplication
+10-25 11:33:51.673  1944  3349 D ConnectivityService: ConnectivityService NetworkRequestInfo binderDied(NetworkRequest [ LISTEN id=24, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&FOREGROUND Uid: 10145] ], android.os.BinderProxy@a190669)
+10-25 11:33:51.677  1686  1686 I Zygote  : Process 5585 exited due to signal 9 (Killed)
+10-25 11:33:51.689  1944  2420 D ConnectivityService: ConnectivityService NetworkRequestInfo binderDied(NetworkRequest [ TRACK_DEFAULT id=23, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10145] ], android.os.BinderProxy@11a90f0)
+10-25 11:33:51.690  1944  1973 I libprocessgroup: Successfully killed process cgroup uid 10145 pid 5585 in 180ms
+10-25 11:33:51.690  1944  2047 D ConnectivityService: releasing NetworkRequest [ TRACK_DEFAULT id=23, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10145] ] (release request)
+10-25 11:33:51.745  1944  2985 I ActivityManager: Killing 5731:com.google.android.calendar/u0a137 (adj 985): empty #17
+10-25 11:33:51.751  1944  3191 D EGL_emulation: eglMakeCurrent: 0x7fa0e4bfc000: ver 3 0 (tinfo 0x7fa0e1d45ae0)
+10-25 11:33:51.796  2084  2096 I .gms.persisten: Background concurrent copying GC freed 116109(5417KB) AllocSpace objects, 4(92KB) LOS objects, 33% free, 11MB/17MB, paused 7.114ms total 396.245ms
+10-25 11:33:51.832  2084  6942 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:51.832  2084  6942 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:51.832  2084  6942 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:51.852  1686  1686 I Zygote  : Process 5731 exited due to signal 9 (Killed)
+10-25 11:33:51.874  1944  1973 I libprocessgroup: Successfully killed process cgroup uid 10137 pid 5731 in 127ms
+10-25 11:33:51.874  2084  6950 I PTCommittedOperation: Receive new configuration for com.google.android.gms.backup
+10-25 11:33:51.896  2344  6924 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:51.906  1944  1963 W Looper  : Drained
+10-25 11:33:51.906  1944  1963 W Looper  : Slow dispatch took 339ms android.ui h=android.view.Choreographer$FrameHandler c=android.view.Choreographer$FrameDisplayEventReceiver@f194a9 m=0
+10-25 11:33:51.906  1944  1963 W Looper  : Slow delivery took 227ms android.ui h=com.android.server.am.ActivityManagerService$UiHandler c=null m=32
+10-25 11:33:51.917  2344  6937 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:51.927  2344  6924 W ModuleInitIntentOp: Dropping unexpected action com.google.android.gms.phenotype.COMMITTED
+10-25 11:33:51.956  2344  2399 I Icing   : Indexing com.google.android.gms-apps from com.google.android.gms
+10-25 11:33:51.956  1944  1963 W Looper  : Drained
+10-25 11:33:52.083  3277  3331 W d.process.medi: Suspending all threads took: 13.466ms
+10-25 11:33:52.335  3377  3597 W PhenotypeToGsaConfigs: Can't format flag AndroidGsaVelourJars__velour_birthdaydoodle_jar__name to integer.
+10-25 11:33:52.335  3377  3597 W PhenotypeToGsaConfigs: Can't format flag AndroidGsaVelourJars__velour_call_jar__name to integer.
+10-25 11:33:52.336  3377  3597 W PhenotypeToGsaConfigs: Can't format flag AndroidGsaVelourJars__velour_canvas_jar__name to integer.
+10-25 11:33:52.336  3377  3597 W PhenotypeToGsaConfigs: Can't format flag AndroidGsaVelourJars__velour_chkpkg_jar__name to integer.
+10-25 11:33:52.336  3377  3597 W PhenotypeToGsaConfigs: Can't format flag AndroidGsaVelourJars__velour_crashtest_jar__name to integer.
+10-25 11:33:52.336  3377  3597 W PhenotypeToGsaConfigs: Can't format flag AndroidGsaVelourJars__velour_dining_jar__name to integer.
+10-25 11:33:52.336  3377  3597 W PhenotypeToGsaConfigs: Can't format flag AndroidGsaVelourJars__velour_doodle_notifications_jar__name to integer.
+10-25 11:33:52.336  3377  3597 W PhenotypeToGsaConfigs: Can't format flag AndroidGsaVelourJars__velour_imageviewer_jar__name to integer.
+10-25 11:33:52.336  3377  3597 W PhenotypeToGsaConfigs: Can't format flag AndroidGsaVelourJars__velour_ipa_jar__name to integer.
+10-25 11:33:52.336  3377  3597 W PhenotypeToGsaConfigs: Can't format flag AndroidGsaVelourJars__velour_jslocation_jar__name to integer.
+10-25 11:33:52.336  3377  3597 W PhenotypeToGsaConfigs: Can't format flag AndroidGsaVelourJars__velour_localintent_jar__name to integer.
+10-25 11:33:52.336  3377  3597 W PhenotypeToGsaConfigs: Can't format flag AndroidGsaVelourJars__velour_messaging_jar__name to integer.
+10-25 11:33:52.336  3377  3597 W PhenotypeToGsaConfigs: Can't format flag AndroidGsaVelourJars__velour_nativesrp_activity_jar__name to integer.
+10-25 11:33:52.336  3377  3597 W PhenotypeToGsaConfigs: Can't format flag AndroidGsaVelourJars__velour_nativesrp_presenter_jar__name to integer.
+10-25 11:33:52.336  3377  3597 W PhenotypeToGsaConfigs: Can't format flag AndroidGsaVelourJars__velour_nowcontent_jar__name to integer.
+10-25 11:33:52.336  3377  3597 W PhenotypeToGsaConfigs: Can't format flag AndroidGsaVelourJars__velour_recents_activity_jar__name to integer.
+10-25 11:33:52.336  3377  3597 W PhenotypeToGsaConfigs: Can't format flag AndroidGsaVelourJars__velour_save_jar__name to integer.
+10-25 11:33:52.336  3377  3597 W PhenotypeToGsaConfigs: Can't format flag AndroidGsaVelourJars__velour_searchresults_activity_jar__name to integer.
+10-25 11:33:52.336  3377  3597 W PhenotypeToGsaConfigs: Can't format flag AndroidGsaVelourJars__velour_test_jar__name to integer.
+10-25 11:33:52.336  3377  3597 W PhenotypeToGsaConfigs: Can't format flag AndroidGsaVelourJars__velour_weather_jar__name to integer.
+10-25 11:33:52.336  3377  3597 W PhenotypeToGsaConfigs: Can't format flag bindle_flags__bloblobber_blob to integer.
+10-25 11:33:52.336  3377  3597 W PhenotypeToGsaConfigs: Can't format flag bindle_flags__velour_jar to integer.
+10-25 11:33:52.361  1944  1963 W Looper  : Slow dispatch took 234ms android.ui h=android.view.Choreographer$FrameHandler c=android.view.Choreographer$FrameDisplayEventReceiver@f194a9 m=0
+10-25 11:33:52.455  3377  3408 I earchbox:searc: Background young concurrent copying GC freed 33842(1602KB) AllocSpace objects, 8(212KB) LOS objects, 16% free, 10MB/12MB, paused 661us total 111.734ms
+10-25 11:33:52.720  3377  4040 I ModelDownloadListener: Schdedule model download
+10-25 11:33:52.728  3377  3377 I BgTaskExecutorImpl: Starting EXCLUSIVE background task UPDATE_HOTWORD_MODELS.
+10-25 11:33:52.731  3377  3584 I ModelDownloadController: requestHotwordModelUpdate modelType-OK_HEY_GOOGLE modelLocale-en-US
+10-25 11:33:52.732  3377  3584 I ModelDownloadController: We already downloaded model from given location.
+10-25 11:33:52.732  3377  3584 I ModelDownloadController: Model download failed
+10-25 11:33:52.742  3377  4040 I OpaEligibilityChecker: send OpaEligibilityChange broadcast to CommonBroadcastReceiver
+10-25 11:33:52.772  2344  2399 I Icing   : Indexing done com.google.android.gms-apps
+10-25 11:33:52.774  2084  6950 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:52.774  2084  6950 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:52.775  2084  6950 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:52.845  2344  2789 I Icing   : IndexChimeraService.getServiceInterface callingPackage=com.google.android.googlequicksearchbox componentName=agsa_icing_connection serviceId=32
+10-25 11:33:52.867  2084  6944 I PTCommittedOperation: Receive new configuration for com.google.android.gms.beacon
+10-25 11:33:52.877  2344  3812 I Icing   : IndexChimeraService.getServiceInterface callingPackage=com.google.android.googlequicksearchbox componentName=agsa_icing_connection serviceId=33
+10-25 11:33:52.892  2344  3748 I gle.android.gm: IncrementDisableThreadFlip blocked for 6.094ms
+10-25 11:33:52.909  2344  6571 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:52.919  2344  6578 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:52.921  2344  6571 W ModuleInitIntentOp: Dropping unexpected action com.google.android.gms.phenotype.COMMITTED
+10-25 11:33:52.950  2344  2399 W Icing   : No valid account for uploading user actions
+10-25 11:33:53.035  2084  6953 I PTCommittedOperation: Receive new configuration for com.google.android.gms.auth_account
+10-25 11:33:53.036  2344  2399 I Icing   : Usage reports ok 0, Failed Usage reports 0, indexed 0, rejected 0
+10-25 11:33:53.052  2344  2789 I Icing   : IndexChimeraService.getServiceInterface callingPackage=com.google.android.gms componentName=null serviceId=30
+10-25 11:33:53.057  2344  2364 I gle.android.gm: Background young concurrent copying GC freed 73149(4062KB) AllocSpace objects, 6(248KB) LOS objects, 20% free, 13MB/17MB, paused 6.309ms total 179.895ms
+10-25 11:33:53.133  2344  2399 W Icing   : No valid account for uploading user actions
+10-25 11:33:53.160  2344  2399 I Icing   : Usage reports ok 0, Failed Usage reports 0, indexed 0, rejected 0
+10-25 11:33:53.223  2344  2399 W Icing   : No valid account for uploading user actions
+10-25 11:33:53.339  2344  2399 I Icing   : Usage reports ok 0, Failed Usage reports 0, indexed 0, rejected 0
+10-25 11:33:53.611  2084  6950 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:53.622  2084  6950 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:53.622  2084  6950 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:53.737  2084  6953 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:53.737  2084  6953 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:53.737  2084  6953 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:53.894  2084  6953 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:53.894  2084  6953 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:53.894  2084  6953 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:53.989  2344  7047 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:54.004  2344  7047 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:54.010  2084  6950 I PTCommittedOperation: Receive new configuration for com.google.android.gms.family
+10-25 11:33:54.017  2344  7045 W ModuleInitIntentOp: Dropping unexpected action com.google.android.gms.phenotype.COMMITTED
+10-25 11:33:54.036  2344  6923 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:54.037  2344  6923 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:54.038  2344  7046 W ModuleInitIntentOp: Dropping unexpected action com.google.android.gms.phenotype.COMMITTED
+10-25 11:33:54.044  2344  6571 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:54.053  2344  6572 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:54.077  2344  6924 W ModuleInitIntentOp: Dropping unexpected action com.google.android.gms.phenotype.COMMITTED
+10-25 11:33:54.309  3277  7006 D DownloadManager: [14] Finished with status SUCCESS
+10-25 11:33:54.355  2084  6955 I PTCommittedOperation: Receive new configuration for com.google.android.gms.smart_profile
+10-25 11:33:54.361  2084  6953 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:54.361  2084  6953 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:54.361  2084  6953 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:54.370  2344  6578 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:54.381  1944  2684 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REMOVED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.googlequicksearchbox/com.google.android.apps.gsa.googlequicksearchbox.GelStubAppWatcher
+10-25 11:33:54.393  2084  6940 I PTCommittedOperation: Receive new configuration for com.google.android.location
+10-25 11:33:54.400  2344  6934 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:54.402  2344  7045 W ModuleInitIntentOp: Dropping unexpected action com.google.android.gms.phenotype.COMMITTED
+10-25 11:33:54.418  1944  1963 W Looper  : Slow dispatch took 139ms android.ui h=android.view.Choreographer$FrameHandler c=android.view.Choreographer$FrameDisplayEventReceiver@f194a9 m=0
+10-25 11:33:54.451  1944  1944 V SettingsProvider: Notifying for 0: content://settings/system/gearhead:driving_mode_settings_enabled
+10-25 11:33:54.545  2084  6950 I PTCommittedOperation: Receive new configuration for com.google.android.gms.growth
+10-25 11:33:54.557  2344  6924 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:54.563  2344  6935 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:54.570  2344  6847 W ModuleInitIntentOp: Dropping unexpected action com.google.android.gms.phenotype.COMMITTED
+10-25 11:33:54.633  2084  6953 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:54.633  2084  6953 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:54.633  2084  6953 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:54.802  2084  7053 I PTCommittedOperation: Receive new configuration for com.google.android.gms.notifications
+10-25 11:33:54.820  2344  7044 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:54.842  2344  6924 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:54.845  1944  2684 D PackageManager: Instant App installer not found with android.intent.action.INSTALL_INSTANT_APP_PACKAGE
+10-25 11:33:54.845  1944  2684 D PackageManager: Clear ephemeral installer activity
+10-25 11:33:54.846  1944  2684 D PackageManager: Instant App installer not found with android.intent.action.INSTALL_INSTANT_APP_PACKAGE
+10-25 11:33:54.846  1944  2684 D PackageManager: Clear ephemeral installer activity
+10-25 11:33:54.848  2344  6935 I NearbySharing: Runtime state initialization complete. Sharing is disabled. [CONTEXT service_id=194 ]
+10-25 11:33:54.853  2344  6925 W ModuleInitIntentOp: Dropping unexpected action com.google.android.gms.phenotype.COMMITTED
+10-25 11:33:54.860  2344  6847 I ExposureNotification: Phenotype config updated, isEnabled: true [CONTEXT service_id=236 ]
+10-25 11:33:54.952  2084  6950 I PTCommittedOperation: Receive new configuration for com.google.android.gms.nearby
+10-25 11:33:54.959  2344  6935 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:54.965  2344  6935 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:54.973  2344  6571 W ModuleInitIntentOp: Dropping unexpected action com.google.android.gms.phenotype.COMMITTED
+10-25 11:33:55.014  2084  6950 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:55.014  2084  6950 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:55.014  2084  6950 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:55.017  2084  2084 I NearbySharing: ReceiveSurfaceService created [CONTEXT service_id=194 ]
+10-25 11:33:55.026  2084  2084 I NearbySharing: ReceiveSurfaceService started [CONTEXT service_id=194 ]
+10-25 11:33:55.027  2084  2084 I ExposureNotification: ExposureNotificationInternalService.onCreate, com.google.android.gms.nearby.exposurenotification.service.ExposureNotificationInternalChimeraService@ff528d6 [CONTEXT service_id=236 ]
+10-25 11:33:55.028  2084  3688 E BluetoothAdapter: Bluetooth binder is null
+10-25 11:33:55.031  2084  2084 I ExposureNotification: ExposureServiceInternalService.onStartCommand, Intent { act=com.google.android.gms.nearby.exposurenotification.service.ACTION_CLIENT_CHANGE cmp=com.google.android.gms/.nearby.exposurenotification.service.ExposureNotificationInternalService } [CONTEXT service_id=236 ]
+10-25 11:33:55.032  2084  2084 I ExposureNotification: Utils#isSupported enabled=true, isDeviceSupported=true, isBluetoothSupported=false, BluetoothAdapter.isMultipleAdvertisementSupported=false [CONTEXT service_id=236 ]
+10-25 11:33:55.042  2084  2084 I ExposureNotification: Exposure notifications disabled. [CONTEXT service_id=236 ]
+10-25 11:33:55.042  2084  2084 I ExposureNotification: ExposureServiceInternalService.stopTracing [CONTEXT service_id=236 ]
+10-25 11:33:55.049  2084  2084 I ExposureNotification: AlarmManagerImpl.opportunisticSchedule called, delay=1800000ms [CONTEXT service_id=236 ]
+10-25 11:33:55.062  2084  2084 I ExposureNotification: User turn off scanning. [CONTEXT service_id=236 ]
+10-25 11:33:55.062  2084  2084 I ExposureNotification: Not scanning! [CONTEXT service_id=236 ]
+10-25 11:33:55.062  2084  2084 W ExposureNotification: stopTracing called but Scanner failed to stop! [CONTEXT service_id=236 ]
+10-25 11:33:55.115  2084  7052 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:55.115  2084  7052 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:55.116  2084  7052 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:55.170  2084  2084 I ExposureNotification: ThreadSafeLevelDbWrapper: do open LevelDb contact-tracing-self-tracing-key-db [CONTEXT service_id=236 ]
+10-25 11:33:55.170  2084  2084 I ExposureNotification: ThreadSafeLevelDbWrapper:contact-tracing-self-tracing-key-db instance ajdk@98d3d9d created [CONTEXT service_id=236 ]
+10-25 11:33:55.170  2084  2084 I ExposureNotification: ThreadSafeLevelDbWrapper:contact-tracing-self-tracing-key-db instance ajdk@98d3d9d closed [CONTEXT service_id=236 ]
+10-25 11:33:55.170  2084  2084 I ExposureNotification: ThreadSafeLevelDbWrapper: do close LevelDb contact-tracing-self-tracing-key-db [CONTEXT service_id=236 ]
+10-25 11:33:55.229  2084  7052 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:55.229  2084  7052 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:55.231  2084  7052 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:55.390  2084  2084 I NearbySharing: ReceiveSurfaceService destroyed [CONTEXT service_id=194 ]
+10-25 11:33:55.405  2084  2084 I ExposureNotification: ExposureServiceInternalService.onDestroy, com.google.android.gms.nearby.exposurenotification.service.ExposureNotificationInternalChimeraService@ff528d6 [CONTEXT service_id=236 ]
+10-25 11:33:55.405  2084  6941 I PTCommittedOperation: Receive new configuration for com.google.android.gms.netrec
+10-25 11:33:55.498  2084  6953 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:55.498  2084  6953 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:55.511  2084  6953 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:55.593  1944  2953 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.googlequicksearchbox/com.google.android.apps.gsa.googlequicksearchbox.GelStubAppWatcher
+10-25 11:33:55.600  2344  6935 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:55.629  2344  7045 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:55.631  2344  6935 W ModuleInitIntentOp: Dropping unexpected action com.google.android.gms.phenotype.COMMITTED
+10-25 11:33:55.696  1718  1718 D gralloc_ranchu: gralloc_alloc: Creating ashmem region of size 18436096
+10-25 11:33:55.735  1587  1587 I hwservicemanager: getTransport: Cannot find entry android.hardware.graphics.mapper@3.0::IMapper/default in either framework or device manifest.
+10-25 11:33:55.735  7057  7057 W Gralloc3: mapper 3.x is not supported
+10-25 11:33:55.761  7057  7057 D HostConnection: createUnique: call
+10-25 11:33:55.783  7057  7057 D HostConnection: HostConnection::get() New Host Connection established 0x7a748f59c5a0, tid 7057
+10-25 11:33:55.803  7057  7057 D HostConnection: HostComposition ext ANDROID_EMU_CHECKSUM_HELPER_v1 ANDROID_EMU_native_sync_v2 ANDROID_EMU_dma_v1 ANDROID_EMU_direct_mem ANDROID_EMU_host_composition_v1 ANDROID_EMU_host_composition_v2 ANDROID_EMU_vulkan ANDROID_EMU_deferred_vulkan_commands ANDROID_EMU_vulkan_null_optional_strings ANDROID_EMU_vulkan_create_resources_with_requirements ANDROID_EMU_YUV_Cache ANDROID_EMU_vulkan_ignored_handles ANDROID_EMU_vulkan_free_memory_sync ANDROID_EMU_vulkan_shader_float16_int8 ANDROID_EMU_vulkan_async_queue_submit ANDROID_EMU_sync_buffer_data ANDROID_EMU_vulkan_async_qsri ANDROID_EMU_hwc_color_transform GL_OES_EGL_image_external_essl3 GL_OES_vertex_array_object GL_KHR_texture_compression_astc_ldr ANDROID_EMU_host_side_tracing ANDROID_EMU_gles_max_version_3_0 
+10-25 11:33:55.803  7057  7057 D eglCodecCommon: allocate: Ask for block of size 0x1000
+10-25 11:33:55.803  7057  7057 D eglCodecCommon: allocate: ioctl allocate returned offset 0x3ffff6000 size 0x2000
+10-25 11:33:55.869  2084  6941 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:55.869  2084  6941 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:55.871  2084  6941 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:55.873  2084  7052 I PTCommittedOperation: Receive new configuration for com.google.android.gms.tapandpay
+10-25 11:33:55.889  2344  6922 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:55.899  2344  6847 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:55.904  2344  6922 W ModuleInitIntentOp: Dropping unexpected action com.google.android.gms.phenotype.COMMITTED
+10-25 11:33:55.943  1944  2034 I InputReader: Reconfiguring input devices.  changes=0x00000010
+10-25 11:33:55.960  7057  7057 D eglCodecCommon: allocate: Ask for block of size 0x1195000
+10-25 11:33:55.960  7057  7057 D eglCodecCommon: allocate: ioctl allocate returned offset 0x3fdcc6000 size 0x1196000
+10-25 11:33:56.039  1944  1962 W Looper  : Slow dispatch took 121ms android.fg h=android.os.Handler c=android.app.-$$Lambda$LoadedApk$ReceiverDispatcher$Args$_BumDX2UKsnxLVrE6UJsJZkotuA@ec8872f m=0
+10-25 11:33:56.092  1944  1962 W Looper  : Slow delivery took 200ms android.fg h=android.os.Handler c=android.app.-$$Lambda$LoadedApk$ReceiverDispatcher$Args$_BumDX2UKsnxLVrE6UJsJZkotuA@d13b872 m=0
+10-25 11:33:56.096  1944  1944 W Looper  : Slow dispatch took 153ms main h=android.app.ActivityThread$H c=android.app.-$$Lambda$LoadedApk$ReceiverDispatcher$Args$_BumDX2UKsnxLVrE6UJsJZkotuA@dc474c3 m=0
+10-25 11:33:56.100  1944  1962 W Looper  : Drained
+10-25 11:33:56.099  1944  1944 W Looper  : Slow delivery took 205ms main h=android.os.Handler c=android.app.-$$Lambda$LoadedApk$ReceiverDispatcher$Args$_BumDX2UKsnxLVrE6UJsJZkotuA@a0b5140 m=0
+10-25 11:33:56.152  2084  6941 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:56.152  2084  6941 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:56.153  2084  6941 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:56.158  1944  1944 I Telecom : DefaultDialerCache: Refreshing default dialer for user 0: now com.android.dialer: CM.CCCR->CM.UECNT->CM.CCCR->CM.UECNT@AEg
+10-25 11:33:56.162  1944  1944 W Looper  : Drained
+10-25 11:33:56.164  2084  7052 I PTCommittedOperation: Receive new configuration for com.google.android.gms.photos
+10-25 11:33:56.181  2344  7045 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:56.197  2428  2428 D CarrierSvcBindHelper: No carrier app for: 0
+10-25 11:33:56.204  1686  1686 D Zygote  : Forked child process 7059
+10-25 11:33:56.205  1944  1972 W ActivityManager: Slow operation: 53ms so far, now at startProcess: returned from zygote!
+10-25 11:33:56.209  1944  1972 W ActivityManager: Slow operation: 57ms so far, now at startProcess: done updating battery stats
+10-25 11:33:56.209  1944  1972 W ActivityManager: Slow operation: 57ms so far, now at startProcess: building log message
+10-25 11:33:56.209  1944  1972 I ActivityManager: Start proc 7059:com.google.android.apps.docs/u0a133 for content provider {com.google.android.apps.docs/com.google.android.apps.docs.storagebackend.StorageBackendContentProvider}
+10-25 11:33:56.209  1944  1972 W ActivityManager: Slow operation: 57ms so far, now at startProcess: starting to update pids map
+10-25 11:33:56.210  1944  1972 W ActivityManager: Slow operation: 57ms so far, now at startProcess: done updating pids map
+10-25 11:33:56.216  2344  6922 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:56.232  7059  7059 W droid.apps.doc: Unexpected CPU variant for X86 using defaults: x86_64
+10-25 11:33:56.247  2344  6937 W ModuleInitIntentOp: Dropping unexpected action com.google.android.gms.phenotype.COMMITTED
+10-25 11:33:56.287  1944  2989 I ActivityManager: Killing 4331:com.google.android.gms.unstable/u0a118 (adj 985): empty #17
+10-25 11:33:56.303  1944  2989 W ActivityManager: Slow operation: 56ms so far, now at attachApplicationLocked: after updateOomAdjLocked
+10-25 11:33:56.322  7059  7059 I droid.apps.doc: The ClassLoaderContext is a special shared library.
+10-25 11:33:56.341  7059  7059 I droid.apps.doc: The ClassLoaderContext is a special shared library.
+10-25 11:33:56.390  1686  1686 I Zygote  : Process 4331 exited due to signal 9 (Killed)
+10-25 11:33:56.403  1944  1970 W system_server: Long monitor contention with owner Binder:1944_14 (2989) at void com.android.server.am.ActivityManagerService.attachApplication(android.app.IApplicationThread, long)(ActivityManagerService.java:5176) waiters=3 in int com.android.server.am.ActivityManagerService.broadcastIntent(android.app.IApplicationThread, android.content.Intent, java.lang.String, android.content.IIntentReceiver, int, java.lang.String, android.os.Bundle, java.lang.String[], int, android.os.Bundle, boolean, boolean, int) for 119ms
+10-25 11:33:56.419  1944  1973 I libprocessgroup: Successfully killed process cgroup uid 10118 pid 4331 in 116ms
+10-25 11:33:56.649  2084  6941 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:56.649  2084  6941 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:56.649  2084  6941 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:56.693  1944  2989 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REPLACED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.googlequicksearchbox/com.google.android.apps.gsa.googlequicksearchbox.GelStubAppWatcher
+10-25 11:33:56.700  2084  6623 I PTCommittedOperation: Receive new configuration for com.google.android.gms.places
+10-25 11:33:56.712  2344  6847 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:56.717  1944  1963 W Looper  : Slow dispatch took 155ms android.ui h=android.view.Choreographer$FrameHandler c=android.view.Choreographer$FrameDisplayEventReceiver@f194a9 m=0
+10-25 11:33:56.739  2344  6936 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:56.750  2344  6922 W ModuleInitIntentOp: Dropping unexpected action com.google.android.gms.phenotype.COMMITTED
+10-25 11:33:56.813  7059  7082 I GAv4    : Google Analytics 17.7.78 is starting up. To enable debug logging on a device run:
+10-25 11:33:56.813  7059  7082 I GAv4    :   adb shell setprop log.tag.GAv4 DEBUG
+10-25 11:33:56.813  7059  7082 I GAv4    :   adb logcat -s GAv4
+10-25 11:33:56.893  7059  7085 W GAv4    : CampaignTrackingReceiver is not registered, not exported or is disabled. Installation campaign tracking is not possible. See http://goo.gl/8Rd3yj for instructions.
+10-25 11:33:56.955  2344  2399 I Icing   : updateResources: need to parse acek{com.google.android.gms}
+10-25 11:33:57.114  7059  7059 W PrimesInit: Primes instant initialization
+10-25 11:33:57.162  7059  7088 W Primes  : background initialization
+10-25 11:33:57.241  7059  7059 W FieldDefinition: [main] Ignoring isIndexed constraint as field also has uniqueness constraint (on just this field, and therefore SQLite will have to create an index on that. For field: czz$a@90141a4
+10-25 11:33:57.350  2084  6950 I PTCommittedOperation: Receive new configuration for com.google.android.gms.signin
+10-25 11:33:57.387  2084  6953 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:57.387  2084  6953 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:57.388  2084  6953 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:57.402  2344  6935 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:57.432  2344  7044 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:57.445  2344  6922 W ModuleInitIntentOp: Dropping unexpected action com.google.android.gms.phenotype.COMMITTED
+10-25 11:33:57.476  2344  2364 I gle.android.gm: Background concurrent copying GC freed 117134(4776KB) AllocSpace objects, 13(632KB) LOS objects, 32% free, 12MB/18MB, paused 1.149ms total 572.464ms
+10-25 11:33:57.483  1944  1963 W Looper  : Slow dispatch took 168ms android.ui h=android.view.Choreographer$FrameHandler c=android.view.Choreographer$FrameDisplayEventReceiver@f194a9 m=0
+10-25 11:33:57.507  2084  7052 I Fitness : OnPackageChangedOperation got intent: Intent { act=android.intent.action.PACKAGE_CHANGED dat=package:com.google.android.gms flg=0x45000010 cmp=com.google.android.gms/.chimera.PersistentIntentOperationService (has extras) } [CONTEXT service_id=17 ]
+10-25 11:33:57.534  2084  2096 I .gms.persisten: Background young concurrent copying GC freed 86351(5025KB) AllocSpace objects, 2(60KB) LOS objects, 28% free, 11MB/16MB, paused 3.740ms total 339.934ms
+10-25 11:33:57.709  7059  7059 E DocsApplication: [main] No default account found during application creation.
+10-25 11:33:57.720  7059  7059 W ComponentDiscovery: Application info not found.
+10-25 11:33:57.720  7059  7059 W ComponentDiscovery: Could not retrieve metadata, returning empty list of registrars.
+10-25 11:33:57.745  6791  6791 I ProvidersCache: Updating roots due to change at content://com.google.android.apps.docs.storage/root
+10-25 11:33:57.829  6791  6813 I ProvidersCache: Provider returned no roots. Possibly naughty: com.google.android.apps.docs.storage
+10-25 11:33:57.837  2084  6941 I PTCommittedOperation: Receive new configuration for com.google.android.gms.auth.proximity
+10-25 11:33:57.842  2084  6623 I Fitness : FitCleanupIntentOperation received Intent android.intent.action.PACKAGE_CHANGED [CONTEXT service_id=17 ]
+10-25 11:33:57.858  2344  6922 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:57.859  2344  6578 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:57.862  2344  6935 W ModuleInitIntentOp: Dropping unexpected action com.google.android.gms.phenotype.COMMITTED
+10-25 11:33:57.883  2344  6935 I SystemUpdate: [Installation,ReceiverIntentOperation] Received intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:57.907  1944  1963 W Looper  : Slow dispatch took 109ms android.ui h=android.view.Choreographer$FrameHandler c=android.view.Choreographer$FrameDisplayEventReceiver@f194a9 m=0
+10-25 11:33:57.980  2344  6922 I SystemUpdate: [Execution,InstallationEventIntentOperation] Handling event of type 2.
+10-25 11:33:57.987  6791  7105 I ProvidersCache: Provider returned no roots. Possibly naughty: com.google.android.apps.docs.storage
+10-25 11:33:57.998  2344  6922 I SystemUpdate: [Execution,InstallationIntentOperation] Received intent: Intent { act=com.google.android.gms.update.INSTALL_UPDATE cat=[targeted_intent_op_prefix:.update.execution.InstallationIntentOperation] cmp=com.google.android.gms/.chimera.GmsIntentOperationService }.
+10-25 11:33:57.999  2344  6922 I SystemUpdate: [Execution,ExecutionManager] Action finished-execution executed for 0.00 seconds.
+10-25 11:33:58.012  2084  3687 E aoob    : Phenotype API error. Event # ccoz@53089e78, EventCode: 32 [CONTEXT service_id=51 ]
+10-25 11:33:58.012  2084  3687 E aoob    : aonf: 29503
+10-25 11:33:58.012  2084  3687 E aoob    : 	at aopg.b(:com.google.android.gms@202414023@20.24.14 (040800-319035315):7)
+10-25 11:33:58.012  2084  3687 E aoob    : 	at aoob.a(:com.google.android.gms@202414023@20.24.14 (040800-319035315):91)
+10-25 11:33:58.012  2084  3687 E aoob    : 	at aoob.a(:com.google.android.gms@202414023@20.24.14 (040800-319035315):86)
+10-25 11:33:58.012  2084  3687 E aoob    : 	at aabt.run(:com.google.android.gms@202414023@20.24.14 (040800-319035315):9)
+10-25 11:33:58.012  2084  3687 E aoob    : 	at bnin.run(:com.google.android.gms@202414023@20.24.14 (040800-319035315):2)
+10-25 11:33:58.012  2084  3687 E aoob    : 	at soy.b(:com.google.android.gms@202414023@20.24.14 (040800-319035315):12)
+10-25 11:33:58.012  2084  3687 E aoob    : 	at soy.run(:com.google.android.gms@202414023@20.24.14 (040800-319035315):8)
+10-25 11:33:58.012  2084  3687 E aoob    : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)
+10-25 11:33:58.012  2084  3687 E aoob    : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
+10-25 11:33:58.012  2084  3687 E aoob    : 	at sux.run(:com.google.android.gms@202414023@20.24.14 (040800-319035315):0)
+10-25 11:33:58.012  2084  3687 E aoob    : 	at java.lang.Thread.run(Thread.java:919)
+10-25 11:33:58.044  2084  3687 E AsyncOperation: serviceID=51, operation=SetAppSpecificPropertiesOperationCall
+10-25 11:33:58.044  2084  3687 E AsyncOperation: OperationException[Status{statusCode=unknown status code: 29503, resolution=null}]
+10-25 11:33:58.044  2084  3687 E AsyncOperation: 	at aoob.a(:com.google.android.gms@202414023@20.24.14 (040800-319035315):93)
+10-25 11:33:58.044  2084  3687 E AsyncOperation: 	at aoob.a(:com.google.android.gms@202414023@20.24.14 (040800-319035315):86)
+10-25 11:33:58.044  2084  3687 E AsyncOperation: 	at aabt.run(:com.google.android.gms@202414023@20.24.14 (040800-319035315):9)
+10-25 11:33:58.044  2084  3687 E AsyncOperation: 	at bnin.run(:com.google.android.gms@202414023@20.24.14 (040800-319035315):2)
+10-25 11:33:58.044  2084  3687 E AsyncOperation: 	at soy.b(:com.google.android.gms@202414023@20.24.14 (040800-319035315):12)
+10-25 11:33:58.044  2084  3687 E AsyncOperation: 	at soy.run(:com.google.android.gms@202414023@20.24.14 (040800-319035315):8)
+10-25 11:33:58.044  2084  3687 E AsyncOperation: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)
+10-25 11:33:58.044  2084  3687 E AsyncOperation: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
+10-25 11:33:58.044  2084  3687 E AsyncOperation: 	at sux.run(:com.google.android.gms@202414023@20.24.14 (040800-319035315):0)
+10-25 11:33:58.044  2084  3687 E AsyncOperation: 	at java.lang.Thread.run(Thread.java:919)
+10-25 11:33:58.218  2084  6941 I PTCommittedOperation: Receive new configuration for com.google.android.gms.update
+10-25 11:33:58.247  2344  6922 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:58.250  2344  6936 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:58.258  2344  6937 W ModuleInitIntentOp: Dropping unexpected action com.google.android.gms.phenotype.COMMITTED
+10-25 11:33:58.261  2084  6953 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:58.261  2084  6953 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:58.262  2084  6953 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:58.292  2084  2084 W SystemServiceRegistry: No service published for: persistent_data_block
+10-25 11:33:58.455  2084  7109 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:58.455  2084  7109 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:58.456  2084  7109 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:58.478  2084  6954 I PTCommittedOperation: Receive new configuration for com.google.android.gms.auth_authzen
+10-25 11:33:58.528  2344  6935 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:58.535  2344  6937 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:58.579  2344  6578 W ModuleInitIntentOp: Dropping unexpected action com.google.android.gms.phenotype.COMMITTED
+10-25 11:33:58.684  2084  6954 I PTCommittedOperation: Receive new configuration for com.google.android.gms.vision
+10-25 11:33:58.740  2344  7045 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:58.745  2344  6509 I Icing   : Indexing com.google.android.gms-apps from com.google.android.gms
+10-25 11:33:58.747  2344  6509 I Icing   : Indexing done com.google.android.gms-apps
+10-25 11:33:58.778  2344  6934 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:58.781  2344  6571 W ModuleInitIntentOp: Dropping unexpected action com.google.android.gms.phenotype.COMMITTED
+10-25 11:33:58.809  1686  1686 D Zygote  : Forked child process 7114
+10-25 11:33:58.810  1944  1972 W ActivityManager: Slow operation: 56ms so far, now at startProcess: returned from zygote!
+10-25 11:33:58.810  1944  1972 W ActivityManager: Slow operation: 56ms so far, now at startProcess: done updating battery stats
+10-25 11:33:58.810  1944  1972 W ActivityManager: Slow operation: 56ms so far, now at startProcess: building log message
+10-25 11:33:58.810  1944  1972 I ActivityManager: Start proc 7114:com.google.android.apps.wallpaper/u0a105 for broadcast {com.google.android.apps.wallpaper/com.android.wallpaper.module.DailyLoggingAlarmReceiver}
+10-25 11:33:58.810  1944  1972 W ActivityManager: Slow operation: 56ms so far, now at startProcess: starting to update pids map
+10-25 11:33:58.822  7114  7114 W .apps.wallpape: Unexpected CPU variant for X86 using defaults: x86_64
+10-25 11:33:58.827  1944  1972 W ActivityManager: Slow operation: 73ms so far, now at startProcess: done updating pids map
+10-25 11:33:58.853  2592  3570 E ActivityThread: Failed to find provider info for com.google.android.apps.wellbeing.api
+10-25 11:33:58.895  7114  7114 D ApplicationLoaders: Returning zygote-cached class loader: /system/framework/android.hidl.base-V1.0-java.jar
+10-25 11:33:58.895  7114  7114 D ApplicationLoaders: Returning zygote-cached class loader: /system/framework/android.hidl.manager-V1.0-java.jar
+10-25 11:33:58.895  7114  7114 D ApplicationLoaders: Returning zygote-cached class loader: /system/framework/android.hidl.base-V1.0-java.jar
+10-25 11:33:58.898  7114  7114 I .apps.wallpape: The ClassLoaderContext is a special shared library.
+10-25 11:33:58.902  1944  1944 V SettingsProvider: Notifying for 0: content://settings/global/overlay_display_devices
+10-25 11:33:58.903  1944  1965 I OverlayDisplayAdapter: Dismissing all overlay display devices.
+10-25 11:33:58.903  1944  1965 W OverlayDisplayAdapter: Malformed overlay display devices setting: 
+10-25 11:33:58.906  7114  7114 I .apps.wallpape: The ClassLoaderContext is a special shared library.
+10-25 11:33:58.922  7114  7114 I MultiDex: VM with version 2.1.0 has multidex support
+10-25 11:33:58.922  7114  7114 I MultiDex: install
+10-25 11:33:58.922  7114  7114 I MultiDex: VM has multidex support, MultiDex support library is disabled.
+10-25 11:33:58.942  1944  3191 D EGL_emulation: eglMakeCurrent: 0x7fa0e4bfc000: ver 3 0 (tinfo 0x7fa0e1d45ae0)
+10-25 11:33:58.943  1944  1965 I DisplayManagerService: Display device removed: DisplayDeviceInfo{"Overlay #1": uniqueId="overlay:1", 1920 x 1080, modeId 3, defaultModeId 3, supportedModes [{id=3, width=1920, height=1080, fps=60.000004}], colorMode 0, supportedColorModes [0], HdrCapabilities null, density 240, 240.0 x 240.0 dpi, appVsyncOff 0, presDeadline 33333332, touch VIRTUAL, rotation 0, type OVERLAY, state ON, FLAG_PRESENTATION}
+10-25 11:33:58.967  1944  3349 E InputDispatcher: Window handle Window{ea6567e u0 Overlay #1: 1920x1080, 240 dpi} has no registered input channel
+10-25 11:33:58.988  1944  1965 I InputManager-JNI: Viewport [0] to add: local:0
+10-25 11:33:58.992  1944  2034 I InputReader: Reconfiguring input devices.  changes=0x00000004
+10-25 11:33:58.992  1944  2034 I InputReader: Touch device 'virtio_input_multi_touch_10' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+10-25 11:33:58.992  1944  2034 I InputReader: Touch device 'virtio_input_multi_touch_2' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+10-25 11:33:58.992  1944  2034 I InputReader: Touch device 'virtio_input_multi_touch_4' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+10-25 11:33:58.992  1944  2034 I InputReader: Touch device 'virtio_input_multi_touch_5' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+10-25 11:33:58.992  1944  2034 I InputReader: Touch device 'virtio_input_multi_touch_9' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+10-25 11:33:58.992  1944  2034 I InputReader: Touch device 'virtio_input_multi_touch_3' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+10-25 11:33:58.992  1944  2034 I InputReader: Touch device 'virtio_input_multi_touch_7' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+10-25 11:33:58.992  1944  2034 I InputReader: Touch device 'virtio_input_multi_touch_11' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+10-25 11:33:58.992  1944  2034 I InputReader: Touch device 'virtio_input_multi_touch_8' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+10-25 11:33:58.992  1944  2034 I InputReader: Touch device 'virtio_input_multi_touch_6' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+10-25 11:33:59.122  2084  6941 I PTCommittedOperation: Receive new configuration for com.google.android.gms.wallet
+10-25 11:33:59.127  2084  6953 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:59.127  2084  6953 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:59.127  2084  6953 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:59.188  7114  7144 W DiskBasedLogger: Disk-based log buffer doesn't exist, so there's nothing to clean up.
+10-25 11:33:59.188  1944  1956 I system_server: Background young concurrent copying GC freed 79114(4408KB) AllocSpace objects, 19(1312KB) LOS objects, 31% free, 11MB/17MB, paused 2.226ms total 236.125ms
+10-25 11:33:59.229  1944  3349 I ActivityManager: Killing 6546:com.android.keychain/1000 (adj 985): empty #17
+10-25 11:33:59.280  1686  1686 I Zygote  : Process 6546 exited due to signal 9 (Killed)
+10-25 11:33:59.296  2344  6935 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:59.306  2084  6941 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Updating password complexity components state.
+10-25 11:33:59.306  2084  6941 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.admin.DeviceAdminReceiver
+10-25 11:33:59.306  2084  6941 I Auth    : [AuthManaged,PasswordComplexityHelperImpl] Disabling com.google.android.gms.auth.managed.ui.SetNewPasswordActivity
+10-25 11:33:59.309  1944  1973 I libprocessgroup: Successfully killed process cgroup uid 1000 pid 6546 in 78ms
+10-25 11:33:59.309  2344  6934 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:59.322  2344  6922 W ModuleInitIntentOp: Dropping unexpected action com.google.android.gms.phenotype.COMMITTED
+10-25 11:33:59.425  2084  6944 I PTCommittedOperation: Receive new configuration for com.google.android.gms.tron.metrics
+10-25 11:33:59.430  2344  6922 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=com.google.android.gms.phenotype.COMMITTED flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:33:59.443  2344  6924 I MdiSyncModule: flag handling is skipping irrelevant intent.
+10-25 11:33:59.444  2344  6924 W ModuleInitIntentOp: Dropping unexpected action com.google.android.gms.phenotype.COMMITTED
+10-25 11:33:59.479  2084  6953 I PTCommittedOperation: Receive new configuration for com.google.android.gms.wearable
+10-25 11:33:59.494  6200  6220 I ConfigUpdater: Update downloaded, starting installation
