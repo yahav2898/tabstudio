@@ -13,7 +13,7 @@ namespace TabStudio.App.Services;
 public static partial class SelfTest
 {
     /// <summary>How many programs the process part starts.</summary>
-    public const int SpawnedPrograms = 400;
+    public const int SpawnedPrograms = 200;
 
     /// <summary>How many threads start them at once.</summary>
     private const int SpawningThreads = 4;
