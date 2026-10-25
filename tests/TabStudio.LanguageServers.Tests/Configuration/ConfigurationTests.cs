@@ -1,6 +1,7 @@
 using System.Text.Json.Nodes;
 using TabStudio.LanguageServers.Configuration;
 using TabStudio.Testing;
+using InitializationOptions = TabStudio.LanguageServers.Hosting.InitializationOptions;
 
 namespace TabStudio.LanguageServers.Tests.Configuration;
 
@@ -203,7 +204,7 @@ public sealed class InitializationOptionsTests
         File.CreateSymbolicLink(command, "../lib/node_modules/typescript-language-server/lib/cli.mjs");
         var options = new JsonObject { ["tsserver"] = new JsonObject { ["path"] = "${packageFile:typescript/lib/tsserver.js}" }, ["other"] = 1 };
 
-        var resolved = Hosting.InitializationOptions.Resolve(options, temp.Resolve("workspace"), command);
+        var resolved = InitializationOptions.Resolve(options, temp.Resolve("workspace"), command);
 
         Assert.True(File.Exists(cli));
         Assert.Equal(tsserver, resolved?["tsserver"]?["path"]?.GetValue<string>());
@@ -222,7 +223,7 @@ public sealed class InitializationOptionsTests
             ["missing"] = "${packageFile:nothing/here.js}",
         };
 
-        var resolved = Hosting.InitializationOptions.Resolve(options, temp.Resolve("workspace"), temp.Resolve("bin/server"));
+        var resolved = InitializationOptions.Resolve(options, temp.Resolve("workspace"), temp.Resolve("bin/server"));
 
         Assert.Equal(local, resolved?["tsserver"]?["path"]?.GetValue<string>());
         Assert.False(resolved?.AsObject().ContainsKey("missing"));
