@@ -28,7 +28,7 @@ internal sealed partial class DesignCanvas : Control
     public static readonly StyledProperty<Color> AccentProperty = AvaloniaProperty.Register<DesignCanvas, Color>(nameof(Accent), Color.FromRgb(0x00, 0x78, 0xD7));
 
     /// <summary>The space around the form.</summary>
-    private const double Margin = 28;
+    private const double FormMargin = 28;
 
     /// <summary>A handle's size on screen.</summary>
     private const double HandleSize = 8;
@@ -274,14 +274,14 @@ internal sealed partial class DesignCanvas : Control
         }
 
         var frameBottom = ToCanvas(new DrawingPoint(0, root.ClientSize.Height)).Y + (_surface.Frame(_content) is { } frame ? (frame.Frame.Bottom - root.ClientSize.Height) * _scale : 0);
-        var x = Margin;
+        var x = FormMargin;
         var y = frameBottom + 16;
         foreach (var component in document.Components.Where(c => c.Instance is not System.Windows.Forms.Control and not System.Windows.Forms.ToolStripItem))
         {
             var width = 40 + (component.Name.Length * 7.2);
-            if (x + width > Bounds.Width - Margin && x > Margin)
+            if (x + width > Bounds.Width - FormMargin && x > FormMargin)
             {
-                x = Margin;
+                x = FormMargin;
                 y += TrayHeight + 8;
             }
 
@@ -343,7 +343,7 @@ internal sealed partial class DesignCanvas : Control
         }
 
         var frame = _surface.Frame(_content)?.Frame ?? new DrawingRectangle(DrawingPoint.Empty, root.Size);
-        var available = Math.Max(1, Bounds.Width - (2 * Margin));
+        var available = Math.Max(1, Bounds.Width - (2 * FormMargin));
         _scale = Math.Clamp(Math.Floor(available / frame.Width * 100) / 100, 0.3, 1);
     }
 
@@ -351,7 +351,7 @@ internal sealed partial class DesignCanvas : Control
     private Point ClientOrigin()
     {
         var frame = _surface?.Frame(_content)?.Frame ?? DrawingRectangle.Empty;
-        return new Point(Margin - (frame.X * _scale), Margin - (frame.Y * _scale));
+        return new Point(FormMargin - (frame.X * _scale), FormMargin - (frame.Y * _scale));
     }
 
     /// <summary>The size the form needs on the canvas.</summary>
@@ -366,8 +366,8 @@ internal sealed partial class DesignCanvas : Control
         UpdateScale();
         var frame = _surface.Frame(_content)?.Frame ?? new DrawingRectangle(DrawingPoint.Empty, root.Size);
         var trayRows = TrayItems().Select(t => t.Bounds.Bottom).DefaultIfEmpty(0).Max();
-        var height = Math.Max((frame.Height * _scale) + (2 * Margin), trayRows + Margin);
-        return new Size(double.IsInfinity(availableSize.Width) ? (frame.Width * _scale) + (2 * Margin) : availableSize.Width, height);
+        var height = Math.Max((frame.Height * _scale) + (2 * FormMargin), trayRows + FormMargin);
+        return new Size(double.IsInfinity(availableSize.Width) ? (frame.Width * _scale) + (2 * FormMargin) : availableSize.Width, height);
     }
 
     private DrawingSize ClientSize => _surface?.Root?.ClientSize ?? DrawingSize.Empty;
