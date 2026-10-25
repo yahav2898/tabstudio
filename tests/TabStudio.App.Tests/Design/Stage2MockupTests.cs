@@ -92,6 +92,7 @@ public sealed class Stage2MockupTests : IDisposable
         }
 
         Dispatcher.UIThread.RunJobs();
+        StretchedText.AssertNone(window);
     }
 
     private async Task<Window> ShowSampleAsync(double width, double height)

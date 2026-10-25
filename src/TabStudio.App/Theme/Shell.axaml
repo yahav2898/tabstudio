@@ -11,8 +11,10 @@
   <StreamGeometry x:Key="Icon.Command">M4 6 L20 6 L20 18 L4 18 Z M7.5 10 L10 12.5 L7.5 15 M12 15 L16 15</StreamGeometry>
   <StreamGeometry x:Key="Icon.Theme">M12 3 A9 9 0 1 0 12 21 Z M12 3 A9 9 0 0 1 12 21</StreamGeometry>
   <StreamGeometry x:Key="Icon.Activity">M3 12 L7 12 L10 5 L14 19 L17 12 L21 12</StreamGeometry>
+  <!-- Filled, not stroked: three dots for a More button, big enough to see at 16 pixels. -->
+  <StreamGeometry x:Key="Icon.Overflow">M3.3 12 A1.7 1.7 0 1 0 6.7 12 A1.7 1.7 0 1 0 3.3 12 Z M10.3 12 A1.7 1.7 0 1 0 13.7 12 A1.7 1.7 0 1 0 10.3 12 Z M17.3 12 A1.7 1.7 0 1 0 20.7 12 A1.7 1.7 0 1 0 17.3 12 Z</StreamGeometry>
 
-  <!-- Spacing and radii (docs/design/README.md, "Scale"): steps of 4, and one radius per size of surface. -->
+  <!-- Spacing and radii (docs/design/README.md, "Foundations"): steps of 4, and one radius per size of surface. -->
   <x:Double x:Key="Space.1">4</x:Double>
   <x:Double x:Key="Space.2">8</x:Double>
   <x:Double x:Key="Space.3">12</x:Double>
@@ -26,7 +28,7 @@
   <x:Double x:Key="Touch.Minimum">40</x:Double>
   <x:Double x:Key="Touch.Comfortable">44</x:Double>
 
-  <!-- A tool window's header: title, context, actions; 40 pixels, with a divider under it. -->
+  <!-- A tool window's header: title, context, actions; 40 pixels, with a divider under it, its icon and text centered in it. -->
   <ControlTheme x:Key="{x:Type controls:PanelHeader}" TargetType="controls:PanelHeader">
     <Setter Property="MinHeight" Value="40" />
     <Setter Property="Padding" Value="12,0,4,0" />
@@ -38,7 +40,7 @@
         <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" MinHeight="{TemplateBinding MinHeight}">
           <DockPanel>
-            <controls:StrokeIcon DockPanel.Dock="Left" Data="{TemplateBinding Icon}" Size="16" Margin="0,0,8,0"
+            <controls:StrokeIcon DockPanel.Dock="Left" Data="{TemplateBinding Icon}" Size="16" Margin="0,0,8,0" VerticalAlignment="Center"
                                  Foreground="{DynamicResource Brush.TextSecondary}"
                                  IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}" />
             <ContentPresenter DockPanel.Dock="Right" Content="{TemplateBinding Actions}" VerticalAlignment="Center" Margin="8,0,0,0" />

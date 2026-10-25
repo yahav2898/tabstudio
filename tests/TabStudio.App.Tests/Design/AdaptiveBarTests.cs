@@ -17,13 +17,13 @@ public sealed class AdaptiveBarTests
         Dispatcher.UIThread.RunJobs();
         var save = bar.Children.OfType<AdaptiveBarItem>().Single(item => item.Label == "Run on In-process");
         Assert.Equal(AdaptiveMode.Full, bar.ModeOf(save));
-        Assert.Equal(0, bar.MoreButton.Bounds.Width);
+        Assert.False(bar.ShowsMore);
 
         window.Width = 520;
         Dispatcher.UIThread.RunJobs();
 
         Assert.NotEmpty(bar.Overflowed);
-        Assert.True(bar.MoreButton.Bounds.Width > 0);
+        Assert.True(bar.ShowsMore);
         Assert.True(bar.Bounds.Width <= 520);
         var overflowed = bar.Overflowed.OfType<AdaptiveBarItem>().ToList();
         Assert.DoesNotContain(overflowed, item => item.Label == "Save");

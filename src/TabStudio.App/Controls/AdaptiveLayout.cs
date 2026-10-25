@@ -1,3 +1,5 @@
+using Avalonia;
+
 namespace TabStudio.App.Controls;
 
 /// <summary>How an item of an <see cref="AdaptiveBar"/> is shown.</summary>
@@ -32,6 +34,12 @@ public readonly record struct AdaptiveSlot(double Full, double Compact, int Prio
 /// </summary>
 public static class AdaptiveLayout
 {
+    /// <summary>
+    /// Where a bar arranges what it does not show: far outside itself, so it can clip it. Arranging it in an empty
+    /// rectangle is not enough, because a button's minimum size would still draw it in the bar's corner.
+    /// </summary>
+    public static Rect Parked { get; } = new(-100_000, -100_000, 0, 0);
+
     /// <summary>How each item is shown.</summary>
     /// <param name="slots">The items, in the bar's order.</param>
     /// <param name="available">The bar's length.</param>

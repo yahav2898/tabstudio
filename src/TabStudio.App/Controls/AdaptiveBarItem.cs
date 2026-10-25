@@ -46,6 +46,8 @@ public class AdaptiveBarItem : Button
     public static readonly StyledProperty<bool> IsIconFilledProperty =
         AvaloniaProperty.Register<AdaptiveBarItem, bool>(nameof(IsIconFilled));
 
+    private const double BodyFontSize = 12.5;
+
     private readonly AdaptiveFace _face = new();
     private bool _heldOpen;
 
@@ -139,6 +141,11 @@ public class AdaptiveBarItem : Button
         {
             UpdateFace();
         }
+        else if (change.Property == FontSizeProperty)
+        {
+            // The label is body text unless the item or its theme sets a size, as the status bar's 12 does.
+            _face.Label.FontSize = IsSet(FontSizeProperty) ? FontSize : BodyFontSize;
+        }
     }
 
     /// <inheritdoc />
@@ -203,7 +210,7 @@ public class AdaptiveBarItem : Button
 
         public StrokeIcon Icon { get; } = new() { VerticalAlignment = VerticalAlignment.Center };
 
-        public TextBlock Label { get; } = new() { VerticalAlignment = VerticalAlignment.Center, FontSize = 12.5 };
+        public TextBlock Label { get; } = new() { VerticalAlignment = VerticalAlignment.Center, FontSize = BodyFontSize };
 
         public double FullWidth { get; private set; }
 

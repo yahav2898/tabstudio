@@ -49,7 +49,7 @@ public sealed class ActivityBar : Control
     public ActivityBar()
     {
         _more = new ActivityButton(null) { Name = "ActivityMore" };
-        _more.SetIcon(Resource<Geometry>("Icon.More"));
+        _more.SetIcon(Resource<Geometry>("Icon.Overflow"), filled: true);
         ToolTip.SetTip(_more, "More tool windows");
         var menu = new MenuFlyout { Placement = PlacementMode.LeftEdgeAlignedBottom };
         menu.Opening += (_, _) => FillMoreMenu();
@@ -78,6 +78,9 @@ public sealed class ActivityBar : Control
 
     /// <summary>The More button, shown when items overflow.</summary>
     public Button MoreButton => _more;
+
+    /// <summary>Whether the More button shows, because items did not fit.</summary>
+    public bool ShowsMore { get; private set; }
 
     /// <inheritdoc />
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -141,7 +144,7 @@ public sealed class ActivityBar : Control
             if (_modes[i] == AdaptiveMode.Overflow)
             {
                 overflows = true;
-                top[i].Arrange(default);
+                top[i].Arrange(AdaptiveLayout.Parked);
                 continue;
             }
 
@@ -149,7 +152,8 @@ public sealed class ActivityBar : Control
             y += ItemSize;
         }
 
-        _more.Arrange(overflows ? new Rect(0, y, ItemSize, ItemSize) : default);
+        ShowsMore = overflows;
+        _more.Arrange(overflows ? new Rect(0, y, ItemSize, ItemSize) : AdaptiveLayout.Parked);
 
         var bottomY = finalSize.Height - (bottom.Count * ItemSize);
         foreach (var button in bottom)
@@ -160,7 +164,7 @@ public sealed class ActivityBar : Control
 
         foreach (var hidden in _buttons.Where(button => !button.Item!.IsAvailable))
         {
-            hidden.Arrange(default);
+            hidden.Arrange(AdaptiveLayout.Parked);
         }
 
         return finalSize;
@@ -301,7 +305,11 @@ public sealed class ActivityBar : Control
 
         protected override Type StyleKeyOverride => typeof(Button);
 
-        public void SetIcon(Geometry? icon) => _icon.Data = icon;
+        public void SetIcon(Geometry? icon, bool filled = false)
+        {
+            _icon.Data = icon;
+            _icon.IsFilled = filled;
+        }
 
         public void Detach()
         {

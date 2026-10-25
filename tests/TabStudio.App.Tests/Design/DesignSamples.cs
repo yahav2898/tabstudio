@@ -38,7 +38,7 @@ internal static class DesignSamples
     {
         var bar = new ActivityBarViewModel();
         bar.Add(new ActivityItem("SolutionExplorer", "Solution Explorer", Icon("Icon.Solution"), "Ctrl+Alt+L"));
-        bar.Add(new ActivityItem("GitChanges", "Git Changes", Icon("Icon.Branch"), "Ctrl+0, Ctrl+G")).ShowCount(3, ActivityTone.Neutral, "3 changed files");
+        bar.Add(new ActivityItem("GitChanges", "Git Changes", Icon("Icon.Branch"))).ShowCount(3, ActivityTone.Neutral, "3 changed files");
         bar.Add(new ActivityItem("Actions", "GitHub Actions", Icon("Icon.Actions"))).ShowDot(ActivityTone.Error, "1 of 5 checks failed");
         bar.Add(new ActivityItem("PullRequests", "Pull Requests", Icon("Icon.PullRequest"))).ShowCount(2, ActivityTone.Accent, "2 reviews requested");
         bar.Add(new ActivityItem("TestExplorer", "Test Explorer", Icon("Icon.Flask"), "Ctrl+E, T")).ShowCount(1, ActivityTone.Error, "1 test failed");
@@ -89,26 +89,22 @@ internal static class DesignSamples
         return bar;
     }
 
-    /// <summary>The status bar's left side as an adaptive bar: the IDE's state first, the rest by importance.</summary>
+    /// <summary>
+    /// The status bar as one adaptive bar: the IDE's state on the left, a spacer, and the editor's on the right. The
+    /// status message and the caret stay; the rest shrinks to icons or folds into More by importance.
+    /// </summary>
     public static AdaptiveBar StatusBar()
     {
         var bar = new AdaptiveBar { Spacing = 6, ItemTheme = Theme("StatusBarButton"), VerticalAlignment = VerticalAlignment.Center };
-        bar.MorePlacement = Avalonia.Controls.PlacementMode.TopEdgeAlignedLeft;
-        bar.Children.Add(Status("Icon.Check", "Ready", 100, pinned: true));
+        bar.MorePlacement = Avalonia.Controls.PlacementMode.TopEdgeAlignedRight;
+        bar.Children.Add(Status(null, "Ready", 100, pinned: true));
         bar.Children.Add(Status("Icon.Branch", "main", 80));
         bar.Children.Add(Status("Icon.RunFailed", "1 check failed", 75));
         bar.Children.Add(Status("Icon.LiveTesting", "Live Unit Testing: 3 passed, 1 failed", 60));
         bar.Children.Add(Status("Icon.Link", "Pixel 9", 50));
-        bar.Children.Add(Status("Icon.Terminal", "Pyright ready", 30));
-        bar.Children.Add(Status("Icon.Thermometer", "Thermal OK", 10));
-        return bar;
-    }
-
-    /// <summary>The status bar's right side: where the caret is and how the file is written.</summary>
-    public static AdaptiveBar EditorStatus()
-    {
-        var bar = new AdaptiveBar { Spacing = 6, ItemTheme = Theme("StatusBarButton"), VerticalAlignment = VerticalAlignment.Center };
-        bar.MorePlacement = Avalonia.Controls.PlacementMode.TopEdgeAlignedRight;
+        bar.Children.Add(Status("Icon.Terminal", "Starting Pyright…", 30));
+        bar.Children.Add(Status("Icon.Thermometer", "Device is warm", 10));
+        bar.Children.Add(new AdaptiveBarSpacer());
         bar.Children.Add(Status(null, "Ln 16, Col 9", 90, pinned: true));
         bar.Children.Add(Status(null, "Spaces: 4", 20));
         bar.Children.Add(Status(null, "UTF-8", 30));

@@ -50,7 +50,7 @@ public sealed class ComponentScreenshotTests : IDisposable
 
         Assert.NotEmpty(activity.Overflowed);
         Assert.DoesNotContain(bar.Find("Agent")!, activity.Overflowed);
-        Assert.True(activity.MoreButton.Bounds.Height > 0);
+        Assert.True(activity.ShowsMore);
     }
 
     [AvaloniaFact]
@@ -124,25 +124,22 @@ public sealed class ComponentScreenshotTests : IDisposable
     {
         var widths = new[] { 1280.0, 800, 480 };
         var stack = new StackPanel { Spacing = 14, Margin = new Thickness(16) };
-        var lefts = new List<AdaptiveBar>();
+        var bars = new List<AdaptiveBar>();
         foreach (var width in widths)
         {
-            var left = DesignSamples.StatusBar();
-            lefts.Add(left);
-            var row = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto"), Margin = new Thickness(8, 0) };
-            row.Children.Add(left);
-            var right = DesignSamples.EditorStatus();
-            Grid.SetColumn(right, 1);
-            row.Children.Add(right);
-            stack.Children.Add(Labeled($"{width} pixels", Strip(row, width - 32, "Brush.Accent", 28)));
+            var bar = DesignSamples.StatusBar();
+            bars.Add(bar);
+            stack.Children.Add(Labeled($"{width} pixels", Strip(bar, width - 32, "Brush.Accent", 28)));
         }
 
         var window = Show(stack, 1280, 260);
         Shoot(window, "design-07-adaptive-status-bar");
 
-        Assert.Empty(lefts[0].Overflowed);
-        Assert.NotEmpty(lefts[2].Overflowed);
-        Assert.Equal(AdaptiveMode.Full, lefts[2].ModeOf(lefts[2].Children[0]));
+        Assert.Empty(bars[0].Overflowed);
+        Assert.NotEmpty(bars[2].Overflowed);
+        var caret = bars[2].Children.OfType<AdaptiveBarItem>().Single(item => item.Label == "Ln 16, Col 9");
+        Assert.Equal((AdaptiveMode.Full, AdaptiveMode.Full), (bars[2].ModeOf(bars[2].Children[0]), bars[2].ModeOf(caret)));
+        Assert.True(caret.Bounds.X > bars[2].Bounds.Width / 2, "The caret sits at the bar's end.");
     }
 
     [AvaloniaFact]
@@ -247,14 +244,14 @@ public sealed class ComponentScreenshotTests : IDisposable
     }
 
     /// <summary>A window's content with the search open over a quiet background.</summary>
-    private static Control SearchHost(UnifiedSearchViewModel search)
+    private static Panel SearchHost(UnifiedSearchViewModel search)
     {
         var host = new Panel();
         host.Children.Add(new UnifiedSearchView { DataContext = search });
         return host;
     }
 
-    private static Control Labeled(string label, Control content) => new StackPanel
+    private static StackPanel Labeled(string label, Control content) => new()
     {
         Spacing = 4,
         Children = { new TextBlock { Text = label, FontSize = 11.5, Classes = { "muted" } }, content },
@@ -291,7 +288,7 @@ public sealed class ComponentScreenshotTests : IDisposable
         return window;
     }
 
-    /// <summary>Saves the window in the dark theme and then the light one.</summary>
+    /// <summary>Saves the window in the dark theme and then the light one, and checks that its text is centered.</summary>
     private static void Shoot(Window window, string name)
     {
         UiTestHelpers.SaveScreenshot(window, name + "-dark");
@@ -301,5 +298,6 @@ public sealed class ComponentScreenshotTests : IDisposable
         }
 
         Dispatcher.UIThread.RunJobs();
+        StretchedText.AssertNone(window);
     }
 }

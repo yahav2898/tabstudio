@@ -13,7 +13,8 @@ namespace TabStudio.App.Controls;
 /// shrink to their icons, and then move, least important first, into a More menu at its end (see
 /// <see cref="AdaptiveLayout"/>). Children are <see cref="AdaptiveBarItem"/>s, <see cref="AdaptiveBarSeparator"/>s,
 /// or any other control, which keeps its size and sets its importance with the attached <see cref="PriorityProperty"/>
-/// and <see cref="IsPinnedProperty"/>.
+/// and <see cref="IsPinnedProperty"/>. An <see cref="AdaptiveBarSpacer"/> takes the room left, so the items after it sit
+/// at the bar's end, as a status bar's caret position does.
 /// </summary>
 public sealed class AdaptiveBar : Panel
 {
@@ -46,12 +47,15 @@ public sealed class AdaptiveBar : Panel
     /// <summary>Creates the bar, with its More button.</summary>
     public AdaptiveBar()
     {
-        _more = new AdaptiveBarItem { Icon = MoreIcon, Label = "More", ShowsLabel = false, Name = "MoreButton" };
+        _more = new AdaptiveBarItem { Icon = MoreIcon, IsIconFilled = true, Label = "More", ShowsLabel = false, Name = "MoreButton" };
         var menu = new MenuFlyout { Placement = PlacementMode.BottomEdgeAlignedRight };
         menu.Opening += (_, _) => FillMoreMenu();
         _more.Flyout = menu;
         VisualChildren.Add(_more);
         LogicalChildren.Add(_more);
+
+        // Items in More are parked outside the bar, which must not draw them.
+        ClipToBounds = true;
     }
 
     /// <inheritdoc cref="SpacingProperty"/>
@@ -77,6 +81,9 @@ public sealed class AdaptiveBar : Panel
 
     /// <summary>The More button, shown when something overflows.</summary>
     public Button MoreButton => _more;
+
+    /// <summary>Whether the More button shows, because something did not fit.</summary>
+    public bool ShowsMore { get; private set; }
 
     /// <summary>The children in the More menu now.</summary>
     public IReadOnlyList<Control> Overflowed =>
@@ -109,7 +116,7 @@ public sealed class AdaptiveBar : Panel
     public static void SetIsPinned(Control control, bool value) => control.SetValue(IsPinnedProperty, value);
 
     private static Geometry? MoreIcon =>
-        Application.Current?.TryGetResource("Icon.More", null, out var icon) == true ? icon as Geometry : null;
+        Application.Current?.TryGetResource("Icon.Overflow", null, out var icon) == true ? icon as Geometry : null;
 
     /// <inheritdoc />
     protected override void OnAttachedToLogicalTree(Avalonia.LogicalTree.LogicalTreeAttachmentEventArgs e)
@@ -180,30 +187,33 @@ public sealed class AdaptiveBar : Panel
     {
         var slots = _slotted.Select(SlotOf).ToList();
         _modes = AdaptiveLayout.Fit(slots, finalSize.Width, Spacing, _more.DesiredSize.Width);
+        var overflows = _slotted.Where((child, i) => _modes[i] == AdaptiveMode.Overflow && child is not AdaptiveBarSeparator).Any();
+        var spacers = _slotted.Count(child => child is AdaptiveBarSpacer);
+        var room = Math.Max(0, finalSize.Width - AdaptiveLayout.Length(slots, _modes, Spacing, _more.DesiredSize.Width));
         var x = 0.0;
-        var overflows = false;
         for (var i = 0; i < _slotted.Count; i++)
         {
             var child = _slotted[i];
             if (_modes[i] == AdaptiveMode.Overflow)
             {
-                overflows |= child is not AdaptiveBarSeparator;
-                child.Arrange(default);
+                child.Arrange(AdaptiveLayout.Parked);
                 continue;
             }
 
-            var width = _modes[i] == AdaptiveMode.Compact ? slots[i].Compact : slots[i].Full;
+            var width = child is AdaptiveBarSpacer ? room / spacers : _modes[i] == AdaptiveMode.Compact ? slots[i].Compact : slots[i].Full;
             child.Arrange(new Rect(x, 0, width, finalSize.Height));
             x += width + Spacing;
         }
 
-        _more.Arrange(overflows ? new Rect(x, 0, _more.DesiredSize.Width, finalSize.Height) : default);
+        ShowsMore = overflows;
+        _more.Arrange(overflows ? new Rect(x, 0, _more.DesiredSize.Width, finalSize.Height) : AdaptiveLayout.Parked);
         return finalSize;
     }
 
     private static AdaptiveSlot SlotOf(Control child) => child switch
     {
         AdaptiveBarSeparator separator => new AdaptiveSlot(separator.DesiredSize.Width, separator.DesiredSize.Width, int.MaxValue, IsSeparator: true),
+        AdaptiveBarSpacer => new AdaptiveSlot(0, 0, int.MaxValue, IsPinned: true),
         AdaptiveBarItem item => new AdaptiveSlot(item.DesiredSize.Width, item.CanCompact ? Math.Min(item.DesiredSize.Width, item.CompactWidth) : item.DesiredSize.Width, item.Priority, item.IsPinned),
         _ => new AdaptiveSlot(child.DesiredSize.Width, child.DesiredSize.Width, GetPriority(child), GetIsPinned(child)),
     };
@@ -311,4 +321,14 @@ public sealed class AdaptiveBarSeparator : Control
             context.FillRectangle(brush, new Rect(0, (Bounds.Height - 24) / 2, 1, 24));
         }
     }
+}
+
+/// <summary>
+/// Empty space in an <see cref="AdaptiveBar"/> that takes the room the items leave, so the items after it sit at the
+/// bar's end.
+/// </summary>
+public sealed class AdaptiveBarSpacer : Control
+{
+    /// <inheritdoc />
+    protected override Size MeasureOverride(Size availableSize) => default;
 }

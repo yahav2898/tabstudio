@@ -76,12 +76,12 @@ public sealed class ActivityBarTests
 
         // 300 pixels hold six 48-pixel buttons: two at the bottom, then three at the top and More; Claude stays.
         Assert.Equal(new[] { "Actions", "PullRequests", "TestExplorer", "AppPreview" }, activity.Overflowed.Select(item => item.Id));
-        Assert.True(activity.MoreButton.Bounds.Height > 0);
+        Assert.True(activity.ShowsMore);
 
         window.Height = 800;
         Dispatcher.UIThread.RunJobs();
         Assert.Empty(activity.Overflowed);
-        Assert.Equal(0, activity.MoreButton.Bounds.Height);
+        Assert.False(activity.ShowsMore);
         window.Close();
     }
 
@@ -93,13 +93,17 @@ public sealed class ActivityBarTests
         var window = new Window { Width = 48, Height = 800, Content = activity };
         window.Show();
         Dispatcher.UIThread.RunJobs();
-        var buttons = activity.GetVisualChildren().OfType<Button>().Count(button => button.Bounds.Height > 0);
+        var buttons = Shown(activity);
 
         bar.Find("WebPreview")!.IsAvailable = true;
         bar.Add(new ActivityItem("Swarm", "Swarm", null));
         Dispatcher.UIThread.RunJobs();
 
-        Assert.Equal(buttons + 2, activity.GetVisualChildren().OfType<Button>().Count(button => button.Bounds.Height > 0));
+        Assert.Equal(buttons + 2, Shown(activity));
         window.Close();
     }
+
+    /// <summary>How many buttons the bar shows: what it does not show is parked outside it.</summary>
+    private static int Shown(ActivityBar activity) =>
+        activity.GetVisualChildren().OfType<Button>().Count(button => button.Bounds.X >= 0 && button.Bounds.Y >= 0);
 }

@@ -76,9 +76,11 @@ internal sealed class Stage2Shell
             Width = 330,
             Margin = new Thickness(0, 0, 48, 0),
             HorizontalAlignment = HorizontalAlignment.Right,
+            BorderThickness = new Thickness(1, 0, 0, 0),
             Child = _sideBar,
         };
         drawer.Bind(Border.BoxShadowProperty, drawer.GetResourceObservable("Shadow.Dialog"));
+        drawer.Bind(Border.BorderBrushProperty, drawer.GetResourceObservable("Brush.Border"));
         _sideBar.IsVisible = true;
         Grid.SetRow(drawer, 2);
         _root.Children.Add(drawer);
@@ -179,7 +181,7 @@ internal sealed class Stage2Shell
     {
         _sideBar.RowDefinitions[2].Height = new GridLength(40);
         _sideBar.Children.OfType<PropertiesView>().Single().IsVisible = false;
-        var expand = new AdaptiveBarItem { Icon = DesignSamples.Icon("Icon.ChevronUp"), Label = "Show Properties", ShowsLabel = false, IconSize = 16, MinWidth = 36, MinHeight = 36, Command = DesignSamples.Nothing };
+        var expand = new AdaptiveBarItem { Theme = DesignSamples.Theme("ToolButton"), Icon = DesignSamples.Icon("Icon.ChevronUp"), Label = "Show Properties", ShowsLabel = false, IconSize = 16, MinWidth = 36, MinHeight = 36, Command = DesignSamples.Nothing };
         var header = new PanelHeader
         {
             Title = "Properties",
@@ -192,16 +194,13 @@ internal sealed class Stage2Shell
         _sideBar.Children.Add(header);
     }
 
-    /// <summary>The status bar's two sides become adaptive bars: the state stays, the rest folds into More.</summary>
+    /// <summary>The status bar becomes one adaptive bar: the state and the caret stay, the rest folds into More.</summary>
     private void ReplaceStatusBar()
     {
         var status = _root.Children.OfType<Border>().First(border => Grid.GetRow(border) == 3 && Grid.GetRowSpan(border) == 1);
-        var row = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto"), Margin = new Thickness(8, 0) };
-        row.Children.Add(DesignSamples.StatusBar());
-        var right = DesignSamples.EditorStatus();
-        Grid.SetColumn(right, 1);
-        row.Children.Add(right);
-        status.Child = row;
+        var bar = DesignSamples.StatusBar();
+        bar.Margin = new Thickness(6, 0);
+        status.Child = bar;
     }
 
     /// <summary>The floating touch buttons become an adaptive bar too: on a narrow editor the least used fold to icons.</summary>
