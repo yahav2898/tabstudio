@@ -99,15 +99,30 @@ internal sealed class DesktopTypingRelay(Func<InputElement?> target)
     }
 
     /// <summary>
-    /// Presses a key on an element. The editor's own key bindings only act for the element that last had the keyboard
-    /// focus, which is the tablet's field, so a key nothing else took runs the editor's action for it directly.
+    /// Presses a key on an element. The editor's own key bindings only act for the element that has the keyboard
+    /// focus, which is the tablet's field, and a key the editor leaves goes on to the display's window, which moves
+    /// the focus with Tab. So a key that the editor's own handlers, such as its completion list, leave unhandled runs
+    /// the editor's action directly, as it reaches the editor.
     /// </summary>
     private static KeyEventArgs Press(InputElement element, Key key, KeyModifiers modifiers)
     {
-        var down = Raise(element, InputElement.KeyDownEvent, key, modifiers);
-        if (!down.Handled && element is TextArea area && RunEditorKey(area, key, modifiers))
+        void RunInEditor(object? sender, KeyEventArgs e)
         {
-            down.Handled = true;
+            if (!e.Handled && sender is TextArea area && RunEditorKey(area, e.Key, e.KeyModifiers))
+            {
+                e.Handled = true;
+            }
+        }
+
+        element.AddHandler(InputElement.KeyDownEvent, RunInEditor, RoutingStrategies.Bubble);
+        KeyEventArgs down;
+        try
+        {
+            down = Raise(element, InputElement.KeyDownEvent, key, modifiers);
+        }
+        finally
+        {
+            element.RemoveHandler(InputElement.KeyDownEvent, RunInEditor);
         }
 
         Raise(element, InputElement.KeyUpEvent, key, modifiers);
