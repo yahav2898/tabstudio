@@ -1,113 +1,149 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj (in 1.36 sec).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj (in 1.48 sec).
   Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Forms.Tests/TabStudio.Forms.Tests.csproj (in 2.89 sec).
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/Forms/Strips/ToolStripDropDown.cs(83,17): warning CS0108: 'ToolStripDropDown.Show()' hides inherited member 'Control.Show()'. Use the new keyword if hiding was intended. [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/Forms/Dialogs/MessageBox.cs(232,26): warning CS0108: 'MessageBoxGlyph.Paint(Graphics, Rectangle, MessageBoxIcon)' hides inherited member 'Control.Paint'. Use the new keyword if hiding was intended. [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/Forms/Form.cs(9,16): warning CS1574: XML comment has cref attribute 'Show()' that could not be resolved [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/Rendering/ItemListView.cs(50,18): warning CA2245: The property Offset should not be assigned to itself (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2245) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/Rendering/ItemListView.cs(61,18): warning CA2245: The property Offset should not be assigned to itself (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2245) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/Forms/Controls/UpDown.cs(740,177): warning CA1309: Use ordinal string comparison (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1309) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/Forms/Controls/UpDown.cs(787,94): warning CA1309: Use ordinal string comparison (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1309) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/Forms/Controls/Lists/ListControl.cs(446,92): warning CA1309: Use ordinal string comparison (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1309) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/Forms/Controls/Lists/ListControl.cs(454,96): warning CA1309: Use ordinal string comparison (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1309) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/Forms/Controls/Lists/ListBox.cs(642,48): warning CA1309: Use ordinal string comparison (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1309) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/Forms/Controls/Lists/ComboBox.cs(752,48): warning CA1309: Use ordinal string comparison (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1309) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
   TabStudio.Forms -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/bin/Release/net10.0/TabStudio.Forms.dll
   TabStudio.Forms.Tests -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Forms.Tests/bin/Release/net10.0/TabStudio.Forms.Tests.dll
 Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Forms.Tests/bin/Release/net10.0/TabStudio.Forms.Tests.dll (.NETCoreApp,Version=v10.0)
 A total of 1 test files matched the specified pattern.
 [xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
-[xUnit.net 00:00:00.14]   Discovering: TabStudio.Forms.Tests
-[xUnit.net 00:00:00.23]   Discovered:  TabStudio.Forms.Tests
-[xUnit.net 00:00:00.28]   Starting:    TabStudio.Forms.Tests
-Stack overflow.
-Repeated 261956 times:
---------------------------------
-   at TabStudio.Forms.Tests.Infrastructure.FormsTestRun.Invoke[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]](System.Func`1<Int32>)
---------------------------------
-   at TabStudio.Forms.Tests.Runtime.StripAndListTests.A_tap_on_a_list_box_row_selects_it_and_the_arrow_keys_move_the_selection()
-   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(System.Object, IntPtr*)
-   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(System.Object, System.Reflection.BindingFlags)
-   at System.Reflection.RuntimeMethodInfo.Invoke(System.Object, System.Reflection.BindingFlags, System.Reflection.Binder, System.Object[], System.Globalization.CultureInfo)
-   at Xunit.Sdk.TestInvoker`1[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].CallTestMethod(System.Object)
-   at Xunit.Sdk.TestInvoker`1+<>c__DisplayClass47_0+<<InvokeTestMethodAsync>b__1>d[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].MoveNext()
-   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Xunit.Sdk.TestInvoker`1+<>c__DisplayClass47_0+<<InvokeTestMethodAsync>b__1>d[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<<InvokeTestMethodAsync>b__1>d<System.__Canon> ByRef)
-   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder.Start[[Xunit.Sdk.TestInvoker`1+<>c__DisplayClass47_0+<<InvokeTestMethodAsync>b__1>d[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<<InvokeTestMethodAsync>b__1>d<System.__Canon> ByRef)
-   at Xunit.Sdk.TestInvoker`1+<>c__DisplayClass47_0[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].<InvokeTestMethodAsync>b__1()
-   at Xunit.Sdk.ExecutionTimer+<AggregateAsync>d__4.MoveNext()
-   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Xunit.Sdk.ExecutionTimer+<AggregateAsync>d__4, xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<AggregateAsync>d__4 ByRef)
-   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder.Start[[Xunit.Sdk.ExecutionTimer+<AggregateAsync>d__4, xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<AggregateAsync>d__4 ByRef)
-   at Xunit.Sdk.ExecutionTimer.AggregateAsync(System.Func`1<System.Threading.Tasks.Task>)
-   at Xunit.Sdk.TestInvoker`1+<>c__DisplayClass47_0[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].<InvokeTestMethodAsync>b__0()
-   at Xunit.Sdk.ExceptionAggregator+<RunAsync>d__9.MoveNext()
-   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Xunit.Sdk.ExceptionAggregator+<RunAsync>d__9, xunit.core, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<RunAsync>d__9 ByRef)
-   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder.Start[[Xunit.Sdk.ExceptionAggregator+<RunAsync>d__9, xunit.core, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<RunAsync>d__9 ByRef)
-   at Xunit.Sdk.ExceptionAggregator.RunAsync(System.Func`1<System.Threading.Tasks.Task>)
-   at Xunit.Sdk.TestInvoker`1+<InvokeTestMethodAsync>d__47[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].MoveNext()
-   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Xunit.Sdk.TestInvoker`1+<InvokeTestMethodAsync>d__47[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<InvokeTestMethodAsync>d__47<System.__Canon> ByRef)
-   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].Start[[Xunit.Sdk.TestInvoker`1+<InvokeTestMethodAsync>d__47[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<InvokeTestMethodAsync>d__47<System.__Canon> ByRef)
-   at Xunit.Sdk.TestInvoker`1[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].InvokeTestMethodAsync(System.Object)
-   at Xunit.Sdk.XunitTestInvoker.InvokeTestMethodAsync(System.Object)
-   at Xunit.Sdk.TestInvoker`1+<<RunAsync>b__46_0>d[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].MoveNext()
-   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Xunit.Sdk.TestInvoker`1+<<RunAsync>b__46_0>d[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<<RunAsync>b__46_0>d<System.__Canon> ByRef)
-   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].Start[[Xunit.Sdk.TestInvoker`1+<<RunAsync>b__46_0>d[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<<RunAsync>b__46_0>d<System.__Canon> ByRef)
-   at Xunit.Sdk.TestInvoker`1[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].<RunAsync>b__46_0()
-   at Xunit.Sdk.ExceptionAggregator+<RunAsync>d__10`1[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].MoveNext()
-   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Xunit.Sdk.ExceptionAggregator+<RunAsync>d__10`1[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.core, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<RunAsync>d__10`1<System.Decimal> ByRef)
-   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].Start[[Xunit.Sdk.ExceptionAggregator+<RunAsync>d__10`1[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.core, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<RunAsync>d__10`1<System.Decimal> ByRef)
-   at Xunit.Sdk.ExceptionAggregator.RunAsync[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]](System.Func`1<System.Threading.Tasks.Task`1<System.Decimal>>)
-   at Xunit.Sdk.TestInvoker`1[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].RunAsync()
-   at Avalonia.Headless.XUnit.AvaloniaTestCaseRunner+AvaloniaTestRunner+<>c__DisplayClass3_0.<InvokeTestMethodAsync>b__0()
-   at Avalonia.Headless.HeadlessUnitTestSession+<>c__DisplayClass12_0`1[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].<DispatchCore>b__0()
-   at Avalonia.Headless.HeadlessUnitTestSession+<>c__DisplayClass17_0.<StartNew>b__0()
-   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(System.Threading.Thread, System.Threading.ExecutionContext, System.Threading.ContextCallback, System.Object)
-   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(System.Threading.Tasks.Task ByRef, System.Threading.Thread)
-   at System.Threading.ThreadPoolWorkQueue.Dispatch()
-   at System.Threading.PortableThreadPool+WorkerThread.WorkerThreadStart()
-   at System.Threading.Thread.StartCallback()
-The active test run was aborted. Reason: Test host process crashed : Stack overflow.
-Repeated 261956 times:
---------------------------------
-   at TabStudio.Forms.Tests.Infrastructure.FormsTestRun.Invoke[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]](System.Func`1<Int32>)
---------------------------------
-   at TabStudio.Forms.Tests.Runtime.StripAndListTests.A_tap_on_a_list_box_row_selects_it_and_the_arrow_keys_move_the_selection()
-   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(System.Object, IntPtr*)
-   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(System.Object, System.Reflection.BindingFlags)
-   at System.Reflection.RuntimeMethodInfo.Invoke(System.Object, System.Reflection.BindingFlags, System.Reflection.Binder, System.Object[], System.Globalization.CultureInfo)
-   at Xunit.Sdk.TestInvoker`1[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].CallTestMethod(System.Object)
-   at Xunit.Sdk.TestInvoker`1+<>c__DisplayClass47_0+<<InvokeTestMethodAsync>b__1>d[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].MoveNext()
-   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Xunit.Sdk.TestInvoker`1+<>c__DisplayClass47_0+<<InvokeTestMethodAsync>b__1>d[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<<InvokeTestMethodAsync>b__1>d<System.__Canon> ByRef)
-   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder.Start[[Xunit.Sdk.TestInvoker`1+<>c__DisplayClass47_0+<<InvokeTestMethodAsync>b__1>d[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<<InvokeTestMethodAsync>b__1>d<System.__Canon> ByRef)
-   at Xunit.Sdk.TestInvoker`1+<>c__DisplayClass47_0[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].<InvokeTestMethodAsync>b__1()
-   at Xunit.Sdk.ExecutionTimer+<AggregateAsync>d__4.MoveNext()
-   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Xunit.Sdk.ExecutionTimer+<AggregateAsync>d__4, xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<AggregateAsync>d__4 ByRef)
-   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder.Start[[Xunit.Sdk.ExecutionTimer+<AggregateAsync>d__4, xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<AggregateAsync>d__4 ByRef)
-   at Xunit.Sdk.ExecutionTimer.AggregateAsync(System.Func`1<System.Threading.Tasks.Task>)
-   at Xunit.Sdk.TestInvoker`1+<>c__DisplayClass47_0[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].<InvokeTestMethodAsync>b__0()
-   at Xunit.Sdk.ExceptionAggregator+<RunAsync>d__9.MoveNext()
-   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Xunit.Sdk.ExceptionAggregator+<RunAsync>d__9, xunit.core, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<RunAsync>d__9 ByRef)
-   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder.Start[[Xunit.Sdk.ExceptionAggregator+<RunAsync>d__9, xunit.core, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<RunAsync>d__9 ByRef)
-   at Xunit.Sdk.ExceptionAggregator.RunAsync(System.Func`1<System.Threading.Tasks.Task>)
-   at Xunit.Sdk.TestInvoker`1+<InvokeTestMethodAsync>d__47[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].MoveNext()
-   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Xunit.Sdk.TestInvoker`1+<InvokeTestMethodAsync>d__47[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<InvokeTestMethodAsync>d__47<System.__Canon> ByRef)
-   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].Start[[Xunit.Sdk.TestInvoker`1+<InvokeTestMethodAsync>d__47[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<InvokeTestMethodAsync>d__47<System.__Canon> ByRef)
-   at Xunit.Sdk.TestInvoker`1[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].InvokeTestMethodAsync(System.Object)
-   at Xunit.Sdk.XunitTestInvoker.InvokeTestMethodAsync(System.Object)
-   at Xunit.Sdk.TestInvoker`1+<<RunAsync>b__46_0>d[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].MoveNext()
-   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Xunit.Sdk.TestInvoker`1+<<RunAsync>b__46_0>d[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<<RunAsync>b__46_0>d<System.__Canon> ByRef)
-   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].Start[[Xunit.Sdk.TestInvoker`1+<<RunAsync>b__46_0>d[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<<RunAsync>b__46_0>d<System.__Canon> ByRef)
-   at Xunit.Sdk.TestInvoker`1[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].<RunAsync>b__46_0()
-   at Xunit.Sdk.ExceptionAggregator+<RunAsync>d__10`1[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].MoveNext()
-   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Xunit.Sdk.ExceptionAggregator+<RunAsync>d__10`1[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.core, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<RunAsync>d__10`1<System.Decimal> ByRef)
-   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].Start[[Xunit.Sdk.ExceptionAggregator+<RunAsync>d__10`1[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.core, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<RunAsync>d__10`1<System.Decimal> ByRef)
-   at Xunit.Sdk.ExceptionAggregator.RunAsync[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]](System.Func`1<System.Threading.Tasks.Task`1<System.Decimal>>)
-   at Xunit.Sdk.TestInvoker`1[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].RunAsync()
-   at Avalonia.Headless.XUnit.AvaloniaTestCaseRunner+AvaloniaTestRunner+<>c__DisplayClass3_0.<InvokeTestMethodAsync>b__0()
-   at Avalonia.Headless.HeadlessUnitTestSession+<>c__DisplayClass12_0`1[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].<DispatchCore>b__0()
-   at Avalonia.Headless.HeadlessUnitTestSession+<>c__DisplayClass17_0.<StartNew>b__0()
-   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(System.Threading.Thread, System.Threading.ExecutionContext, System.Threading.ContextCallback, System.Object)
-   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(System.Threading.Tasks.Task ByRef, System.Threading.Thread)
-   at System.Threading.ThreadPoolWorkQueue.Dispatch()
-   at System.Threading.PortableThreadPool+WorkerThread.Wor
+[xUnit.net 00:00:00.10]   Discovering: TabStudio.Forms.Tests
+[xUnit.net 00:00:00.16]   Discovered:  TabStudio.Forms.Tests
+[xUnit.net 00:00:00.19]   Starting:    TabStudio.Forms.Tests
+[xUnit.net 00:00:00.77]     TabStudio.Forms.Tests.Layout.PanelLayoutTests.A_table_gives_absolute_rows_their_size_and_shares_the_rest_by_percentage [FAIL]
+[xUnit.net 00:00:00.77]       Assert.Equal() Failure: Values differ
+[xUnit.net 00:00:00.77]       Expected: {X=3,Y=3,Width=94,Height=34}
+[xUnit.net 00:00:00.77]       Actual:   {X=3,Y=0,Width=94,Height=40}
+[xUnit.net 00:00:00.77]       Stack Trace:
+[xUnit.net 00:00:00.78]         /_/tests/TabStudio.Forms.Tests/Layout/PanelLayoutTests.cs(28,0): at TabStudio.Forms.Tests.Layout.PanelLayoutTests.A_table_gives_absolute_rows_their_size_and_shares_the_rest_by_percentage()
+[xUnit.net 00:00:00.78]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:00.78]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Passed TabStudio.Forms.Tests.Runtime.EventTests.A_form_raises_Load_then_Activated_then_Shown [40 ms]
+  Failed TabStudio.Forms.Tests.Layout.PanelLayoutTests.A_table_gives_absolute_rows_their_size_and_shares_the_rest_by_percentage [97 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: {X=3,Y=3,Width=94,Height=34}
+Actual:   {X=3,Y=0,Width=94,Height=40}
+  Stack Trace:
+     at TabStudio.Forms.Tests.Layout.PanelLayoutTests.A_table_gives_absolute_rows_their_size_and_shares_the_rest_by_percentage() in /_/tests/TabStudio.Forms.Tests/Layout/PanelLayoutTests.cs:line 28
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Passed TabStudio.Forms.Tests.Runtime.StripAndListTests.A_tap_on_a_list_box_row_selects_it_and_the_arrow_keys_move_the_selection [30 ms]
+  Passed TabStudio.Forms.Tests.Layout.DockAndAnchorTests.Docking_respects_the_parents_padding [< 1 ms]
+  Passed TabStudio.Forms.Tests.Runtime.EventTests.Enter_clicks_the_accept_button_and_Escape_the_cancel_button [5 ms]
+  Passed TabStudio.Forms.Tests.Layout.PanelLayoutTests.A_flow_break_starts_a_new_row [5 ms]
+  Passed TabStudio.Forms.Tests.Runtime.StripAndListTests.A_tap_on_a_menu_opens_it_and_a_tap_on_an_item_clicks_it_and_closes_the_menu [29 ms]
+  Passed TabStudio.Forms.Tests.Layout.DockAndAnchorTests.Docked_children_take_the_edges_in_reverse_z_order_and_fill_takes_the_rest [< 1 ms]
+  Passed TabStudio.Forms.Tests.Runtime.EventTests.A_timer_ticks_on_the_forms_thread [62 ms]
+  Passed TabStudio.Forms.Tests.Layout.PanelLayoutTests.A_top_down_flow_stacks_its_controls [< 1 ms]
+  Passed TabStudio.Forms.Tests.Runtime.StripAndListTests.A_tool_bar_button_raises_Click_and_ItemClicked [9 ms]
+  Passed TabStudio.Forms.Tests.Layout.DockAndAnchorTests.An_automatically_sized_label_grows_with_its_text [2 ms]
+[xUnit.net 00:00:00.98]     TabStudio.Forms.Tests.Layout.DockAndAnchorTests.A_menu_bar_and_a_status_bar_dock_to_the_top_and_the_bottom [FAIL]
+[xUnit.net 00:00:00.98]       Assert.Equal() Failure: Values differ
+[xUnit.net 00:00:00.98]       Expected: 22
+[xUnit.net 00:00:00.98]       Actual:   25
+[xUnit.net 00:00:00.98]       Stack Trace:
+[xUnit.net 00:00:00.98]         /_/tests/TabStudio.Forms.Tests/Layout/DockAndAnchorTests.cs(137,0): at TabStudio.Forms.Tests.Layout.DockAndAnchorTests.A_menu_bar_and_a_status_bar_dock_to_the_top_and_the_bottom()
+[xUnit.net 00:00:00.98]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:00.98]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Passed TabStudio.Forms.Tests.Runtime.EventTests.MessageBox_Show_returns_the_button_the_user_tapped [20 ms]
+  Passed TabStudio.Forms.Tests.Layout.PanelLayoutTests.A_flow_panel_wraps_its_controls_when_they_do_not_fit [1 ms]
+  Passed TabStudio.Forms.Tests.Runtime.StripAndListTests.A_combo_box_opens_its_list_and_a_tap_picks_an_item [8 ms]
+  Failed TabStudio.Forms.Tests.Layout.DockAndAnchorTests.A_menu_bar_and_a_status_bar_dock_to_the_top_and_the_bottom [3 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: 22
+Actual:   25
+  Stack Trace:
+     at TabStudio.Forms.Tests.Layout.DockAndAnchorTests.A_menu_bar_and_a_status_bar_dock_to_the_top_and_the_bottom() in /_/tests/TabStudio.Forms.Tests/Layout/DockAndAnchorTests.cs:line 137
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Passed TabStudio.Forms.Tests.Runtime.EventTests.Typing_in_a_text_box_raises_TextChanged [2 ms]
+  Passed TabStudio.Forms.Tests.Layout.PanelLayoutTests.Automatic_columns_take_the_width_of_their_widest_control [< 1 ms]
+[xUnit.net 00:00:01.02]     TabStudio.Forms.Tests.Runtime.EventTests.Application_ThreadException_handles_exceptions_and_the_app_keeps_running [FAIL]
+[xUnit.net 00:00:01.02]       System.InvalidOperationException : The work failed on the Forms thread.
+[xUnit.net 00:00:01.02]       ---- System.InvalidOperationException : Handled
+[xUnit.net 00:00:01.02]       Stack Trace:
+[xUnit.net 00:00:01.02]         /_/tests/TabStudio.Forms.Tests/Infrastructure/FormsTestRun.cs(72,0): at TabStudio.Forms.Tests.Infrastructure.FormsTestRun.Invoke(Action action)
+[xUnit.net 00:00:01.02]         /_/tests/TabStudio.Forms.Tests/Infrastructure/FormsTestRun.cs(96,0): at TabStudio.Forms.Tests.Infrastructure.FormsTestRun.Tap(Control control, Nullable`1 at)
+[xUnit.net 00:00:01.02]         /_/tests/TabStudio.Forms.Tests/Runtime/EventTests.cs(145,0): at TabStudio.Forms.Tests.Runtime.EventTests.Application_ThreadException_handles_exceptions_and_the_app_keeps_running()
+[xUnit.net 00:00:01.02]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:01.02]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:01.02]         ----- Inner Stack Trace -----
+[xUnit.net 00:00:01.02]         /_/tests/TabStudio.Forms.Tests/Runtime/EventTests.cs(138,0): at TabStudio.Forms.Tests.Runtime.EventTests.<>c.<Application_ThreadException_handles_exceptions_and_the_app_keeps_running>b__5_4(Object _, EventArgs _)
+[xUnit.net 00:00:01.02]         /_/src/TabStudio.Forms/Forms/Core/Control.Events.cs(447,0): at System.Windows.Forms.Control.OnClick(EventArgs e)
+[xUnit.net 00:00:01.02]         /_/src/TabStudio.Forms/Forms/Controls/Button.cs(42,0): at System.Windows.Forms.Button.OnClick(EventArgs e)
+[xUnit.net 00:00:01.02]         /_/src/TabStudio.Forms/Forms/Controls/ButtonBase.cs(175,0): at System.Windows.Forms.ButtonBase.OnMouseUp(MouseEventArgs e)
+[xUnit.net 00:00:01.02]         /_/src/TabStudio.Forms/Forms/Core/Control.Input.cs(112,0): at System.Windows.Forms.Control.DispatchMouseUp(MouseEventArgs e)
+[xUnit.net 00:00:01.02]         /_/src/TabStudio.Forms/Runtime/FormWindow.Input.cs(213,0): at TabStudio.Forms.Runtime.FormWindow.PointerReleased(Point point, MouseButtons button, Boolean touch)
+[xUnit.net 00:00:01.02]         /_/tests/TabStudio.Forms.Tests/Infrastructure/FormsTestRun.cs(101,0): at TabStudio.Forms.Tests.Infrastructure.FormsTestRun.<>c__DisplayClass18_0.<Tap>b__0()
+[xUnit.net 00:00:01.02]         /_/tests/TabStudio.Forms.Tests/Infrastructure/FormsTestRun.cs(63,0): at TabStudio.Forms.Tests.Infrastructure.FormsTestRun.<>c__DisplayClass13_0.<Invoke>b__0()
+[xUnit.net 00:00:01.04]     TabStudio.Forms.Tests.Layout.DockAndAnchorTests.A_one_line_text_box_keeps_the_height_of_its_font [FAIL]
+[xUnit.net 00:00:01.04]       Assert.Equal() Failure: Values differ
+[xUnit.net 00:00:01.04]       Expected: 23
+[xUnit.net 00:00:01.04]       Actual:   22
+[xUnit.net 00:00:01.04]       Stack Trace:
+[xUnit.net 00:00:01.04]         /_/tests/TabStudio.Forms.Tests/Layout/DockAndAnchorTests.cs(118,0): at TabStudio.Forms.Tests.Layout.DockAndAnchorTests.A_one_line_text_box_keeps_the_height_of_its_font()
+[xUnit.net 00:00:01.04]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:01.04]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Passed TabStudio.Forms.Tests.Runtime.StripAndListTests.A_shortcut_key_clicks_its_menu_item [4 ms]
+  Passed TabStudio.Forms.Tests.Layout.DockAndAnchorTests.A_control_anchored_left_and_right_stretches [< 1 ms]
+  Passed TabStudio.Forms.Tests.Runtime.EventTests.An_unhandled_exception_in_a_handler_ends_the_app_with_it [1 ms]
+  Passed TabStudio.Forms.Tests.Layout.PanelLayoutTests.Controls_without_a_cell_flow_into_the_free_cells_row_by_row [3 ms]
+  Passed TabStudio.Forms.Tests.Runtime.StripAndListTests.A_list_box_bound_to_a_list_shows_the_display_member_and_selects_by_value [5 ms]
+  Passed TabStudio.Forms.Tests.Layout.DockAndAnchorTests.A_control_anchored_to_no_edge_keeps_its_relative_position [< 1 ms]
+  Failed TabStudio.Forms.Tests.Runtime.EventTests.Application_ThreadException_handles_exceptions_and_the_app_keeps_running [1 ms]
+  Error Message:
+   System.InvalidOperationException : The work failed on the Forms thread.
+---- System.InvalidOperationException : Handled
+  Stack Trace:
+     at TabStudio.Forms.Tests.Infrastructure.FormsTestRun.Invoke(Action action) in /_/tests/TabStudio.Forms.Tests/Infrastructure/FormsTestRun.cs:line 72
+   at TabStudio.Forms.Tests.Infrastructure.FormsTestRun.Tap(Control control, Nullable`1 at) in /_/tests/TabStudio.Forms.Tests/Infrastructure/FormsTestRun.cs:line 96
+   at TabStudio.Forms.Tests.Runtime.EventTests.Application_ThreadException_handles_exceptions_and_the_app_keeps_running() in /_/tests/TabStudio.Forms.Tests/Runtime/EventTests.cs:line 145
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+----- Inner Stack Trace -----
+   at TabStudio.Forms.Tests.Runtime.EventTests.<>c.<Application_ThreadException_handles_exceptions_and_the_app_keeps_running>b__5_4(Object _, EventArgs _) in /_/tests/TabStudio.Forms.Tests/Runtime/EventTests.cs:line 138
+   at System.Windows.Forms.Control.OnClick(EventArgs e) in /_/src/TabStudio.Forms/Forms/Core/Control.Events.cs:line 447
+   at System.Windows.Forms.Button.OnClick(EventArgs e) in /_/src/TabStudio.Forms/Forms/Controls/Button.cs:line 42
+   at System.Windows.Forms.ButtonBase.OnMouseUp(MouseEventArgs e) in /_/src/TabStudio.Forms/Forms/Controls/ButtonBase.cs:line 175
+   at System.Windows.Forms.Control.DispatchMouseUp(MouseEventArgs e) in /_/src/TabStudio.Forms/Forms/Core/Control.Input.cs:line 112
+   at TabStudio.Forms.Runtime.FormWindow.PointerReleased(Point point, MouseButtons button, Boolean touch) in /_/src/TabStudio.Forms/Runtime/FormWindow.Input.cs:line 213
+   at TabStudio.Forms.Tests.Infrastructure.FormsTestRun.<>c__DisplayClass18_0.<Tap>b__0() in /_/tests/TabStudio.Forms.Tests/Infrastructure/FormsTestRun.cs:line 101
+   at TabStudio.Forms.Tests.Infrastructure.FormsTestRun.<>c__DisplayClass13_0.<Invoke>b__0() in /_/tests/TabStudio.Forms.Tests/Infrastructure/FormsTestRun.cs:line 63
+  Failed TabStudio.Forms.Tests.Layout.DockAndAnchorTests.A_one_line_text_box_keeps_the_height_of_its_font [< 1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: 23
+Actual:   22
+  Stack Trace:
+     at TabStudio.Forms.Tests.Layout.DockAndAnchorTests.A_one_line_text_box_keeps_the_height_of_its_font() in /_/tests/TabStudio.Forms.Tests/Layout/DockAndAnchorTests.cs:line 118
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Passed TabStudio.Forms.Tests.Runtime.EventTests.A_tap_on_a_button_raises_Click_and_its_handler_changes_a_label [4 ms]
+  Passed TabStudio.Forms.Tests.Layout.DockAndAnchorTests.Designer_code_measures_anchors_against_the_designed_client_size [< 1 ms]
+  Passed TabStudio.Forms.Tests.Runtime.EventTests.A_KeyPress_handler_can_reject_characters [1 ms]
+  Passed TabStudio.Forms.Tests.Layout.DockAndAnchorTests.A_control_anchored_bottom_right_keeps_its_distance_from_those_edges [< 1 ms]
+[xUnit.net 00:00:11.06]     TabStudio.Forms.Tests.Runtime.EventTests.FormClosing_can_cancel_closing_and_the_run_ends_when_the_main_form_closes [FAIL]
+[xUnit.net 00:00:11.06]       The Forms thread is busy.
+[xUnit.net 00:00:11.06]       Stack Trace:
+[xUnit.net 00:00:11.06]         /_/tests/TabStudio.Forms.Tests/Infrastructure/FormsTestRun.cs(90,0): at TabStudio.Forms.Tests.Infrastructure.FormsTestRun.Settle()
+[xUnit.net 00:00:11.06]         /_/tests/TabStudio.Forms.Tests/Infrastructure/FormsTestRun.cs(75,0): at TabStudio.Forms.Tests.Infrastructure.FormsTestRun.Invoke(Action action)
+[xUnit.net 00:00:11.06]         /_/tests/TabStudio.Forms.Tests/Runtime/EventTests.cs(66,0): at TabStudio.Forms.Tests.Runtime.EventTests.FormClosing_can_cancel_closing_and_the_run_ends_when_the_main_form_closes()
+[xUnit.net 00:00:11.06]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:11.06]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:11.07]   Finished:    TabStudio.Forms.Tests
+  Failed TabStudio.Forms.Tests.Runtime.EventTests.FormClosing_can_cancel_closing_and_the_run_ends_when_the_main_form_closes [10 s]
+  Error Message:
+   The Forms thread is busy.
+  Stack Trace:
+     at TabStudio.Forms.Tests.Infrastructure.FormsTestRun.Settle() in /_/tests/TabStudio.Forms.Tests/Infrastructure/FormsTestRun.cs:line 90
+   at TabStudio.Forms.Tests.Infrastructure.FormsTestRun.Invoke(Action action) in /_/tests/TabStudio.Forms.Tests/Infrastructure/FormsTestRun.cs:line 75
+   at TabStudio.Forms.Tests.Runtime.EventTests.FormClosing_can_cancel_closing_and_the_run_ends_when_the_main_form_closes() in /_/tests/TabStudio.Forms.Tests/Runtime/EventTests.cs:line 66
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
 
-Test Run Aborted.
+Test Run Failed.
+Total tests: 31
+     Passed: 26
+     Failed: 5
+ Total time: 11.5255 Seconds
