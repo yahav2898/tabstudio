@@ -48,6 +48,7 @@ public sealed class LoopbackLanguageServer : IAsyncDisposable
                 ["referencesProvider"] = true,
                 ["documentHighlightProvider"] = true,
                 ["documentSymbolProvider"] = true,
+                ["workspaceSymbolProvider"] = true,
                 ["renameProvider"] = new JsonObject { ["prepareProvider"] = false },
             },
             ["serverInfo"] = new JsonObject { ["name"] = "TabStudio loopback", ["version"] = "1.0" },
@@ -83,6 +84,7 @@ public sealed class LoopbackLanguageServer : IAsyncDisposable
         Answer("textDocument/documentHighlight", Highlights);
         Answer("textDocument/documentSymbol", Symbols);
         Answer("textDocument/rename", Rename);
+        Answer("workspace/symbol", WorkspaceSymbols);
         _connection.Start();
     }
 
@@ -322,6 +324,26 @@ public sealed class LoopbackLanguageServer : IAsyncDisposable
                 ["range"] = Range(statement.Line, statement.Column, statement.Text.TrimEnd().Length),
                 ["selectionRange"] = Range(statement.Line, statement.NameColumn, statement.NameColumn + statement.Name.Length),
             });
+        }
+
+        return result;
+    }
+
+    private JsonNode? WorkspaceSymbols(JsonElement parameters)
+    {
+        var query = parameters.TryGetProperty("query", out var value) ? value.GetString() ?? string.Empty : string.Empty;
+        var result = new JsonArray();
+        foreach (var (uri, text) in _documents)
+        {
+            foreach (var statement in LoopbackScript.Parse(text).Where(s => s.Kind == LoopbackStatementKind.Let && s.Name.Contains(query, StringComparison.OrdinalIgnoreCase)))
+            {
+                result.Add(new JsonObject
+                {
+                    ["name"] = statement.Name,
+                    ["kind"] = 13,
+                    ["location"] = new JsonObject { ["uri"] = uri, ["range"] = Range(statement.Line, statement.NameColumn, statement.NameColumn + statement.Name.Length) },
+                });
+            }
         }
 
         return result;

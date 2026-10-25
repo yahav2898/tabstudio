@@ -28,7 +28,10 @@ public static partial class SelfTest
     private static async Task<SelfTestResult> CheckLanguageServersAsync(MainViewModel main, CancellationToken cancellationToken)
     {
         var clock = Stopwatch.StartNew();
-        var folder = Path.Combine(Path.GetTempPath(), "tabstudio-self-test", "loopback");
+
+        // Beside the sample, in the app's own storage, which is writable on every platform.
+        var sample = main.Workspace?.Workspace?.RootDirectory ?? Path.GetTempPath();
+        var folder = Path.Combine(Path.GetDirectoryName(sample.TrimEnd(Path.DirectorySeparatorChar)) ?? sample, "SelfTest.Loopback");
         Directory.CreateDirectory(Path.Combine(folder, ".tabstudio"));
         await File.WriteAllTextAsync(Path.Combine(folder, ".tabstudio", "settings.json"), LoopbackLauncher.Settings, cancellationToken);
         var path = Path.Combine(folder, "greet" + LoopbackScript.Extension);
