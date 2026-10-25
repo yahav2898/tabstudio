@@ -179,6 +179,7 @@ public sealed class ProjectSetupTests
         await workspace.LoadAsync(repo.Path);
         try
         {
+            Assert.Contains(workspace.Workspace!.Tree.DescendantsAndSelf(), node => node.FullPath == repo.Resolve("packages/app/package.json"));
             await UiTestHelpers.WaitUntilAsync(() => File.Exists(repo.Resolve("installs.txt")), SetupTimeout, "npm's preinstall to start");
             var manifest = (await workspace.OpenDocumentAsync(repo.Resolve("packages/app/package.json")))!;
             var at = manifest.Document.Text.IndexOf("1.0.0", StringComparison.Ordinal);

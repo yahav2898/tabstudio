@@ -172,6 +172,11 @@ public static class StackDetector
         try
         {
             using var document = JsonDocument.Parse(File.ReadAllText(fullPath), JsonOptions);
+            if (document.RootElement.ValueKind != JsonValueKind.Object)
+            {
+                return result;
+            }
+
             var dependencies = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
             foreach (var section in new[] { "dependencies", "devDependencies", "peerDependencies" })
             {
