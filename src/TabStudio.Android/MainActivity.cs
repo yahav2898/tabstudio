@@ -142,7 +142,7 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
         }
 
         using var timeout = new CancellationTokenSource(SelfTestTimeout);
-        var result = await SelfTest.RunAsync(main, services.GetRequiredService<SampleLibrary>(), services.GetRequiredService<ProjectTemplates>(), timeout.Token);
+        var result = await SelfTest.RunAsync(main, services.GetRequiredService<SampleLibrary>(), services.GetRequiredService<ProjectTemplates>(), screenshots, timeout.Token);
         if (result.Success && desktop)
         {
             var tablet = (app.ApplicationLifetime as ISingleViewApplicationLifetime)?.MainView as TabStudio.App.Views.MainView;
