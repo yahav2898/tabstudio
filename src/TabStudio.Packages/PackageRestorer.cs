@@ -176,6 +176,23 @@ public sealed class PackageRestorer
         return (framework?.Analyzers ?? [], diagnostics);
     }
 
+    /// <summary>
+    /// Restores one shared framework from NuGet, such as Microsoft.WindowsDesktop.App.WPF for a WPF app built to run
+    /// on Windows' own runtime: its targeting pack, and its runtime pack where this device runs it.
+    /// </summary>
+    /// <param name="name">The framework, as a <c>FrameworkReference</c> names it.</param>
+    /// <param name="projectName">The project it is for, for diagnostics.</param>
+    /// <param name="cancellationToken">Cancels the download.</param>
+    /// <returns>The framework's assemblies, or <see langword="null"/> with the reason in the diagnostics.</returns>
+    public async Task<(SharedFrameworkAssets? Framework, IReadOnlyList<BuildDiagnostic> Diagnostics)> RestoreSharedFrameworkAsync(string name, string projectName, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(name);
+        ArgumentNullException.ThrowIfNull(projectName);
+        var diagnostics = new List<BuildDiagnostic>();
+        var framework = await _sharedFrameworks.RestoreAsync(name, projectName, diagnostics, cancellationToken).ConfigureAwait(false);
+        return (framework, diagnostics);
+    }
+
     /// <summary>Restores the shared frameworks a project uses, such as ASP.NET Core.</summary>
     private async Task<List<SharedFrameworkAssets>> RestoreFrameworksAsync(ProjectInfo project, List<BuildDiagnostic> diagnostics, CancellationToken cancellationToken)
     {

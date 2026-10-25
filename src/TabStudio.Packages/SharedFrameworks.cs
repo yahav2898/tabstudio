@@ -37,6 +37,9 @@ internal sealed class SharedFrameworks(GlobalPackagesFolder packages, Func<IRead
     {
         ["Microsoft.AspNetCore.App"] = "Microsoft.AspNetCore.App",
         [NetCoreFramework] = "Microsoft.NETCore.App",
+        [WindowsDesktopProfiles.Framework] = WindowsDesktopProfiles.Framework,
+        [WindowsDesktopProfiles.WpfFramework] = WindowsDesktopProfiles.Framework,
+        [WindowsDesktopProfiles.WindowsFormsFramework] = WindowsDesktopProfiles.Framework,
     };
 
     /// <summary>The runtime identifier whose runtime packs this device uses, such as <c>linux-arm64</c>.</summary>
@@ -68,7 +71,7 @@ internal sealed class SharedFrameworks(GlobalPackagesFolder packages, Func<IRead
         {
             diagnostics.Add(PackageDiagnostics.Error(
                 PackageDiagnosticIds.UnsupportedFramework,
-                $"The shared framework {name} does not run on this device; ASP.NET Core (Microsoft.AspNetCore.App) is the one a project can add here.",
+                $"The shared framework {name} does not run on this device; ASP.NET Core (Microsoft.AspNetCore.App) and Windows Desktop (Microsoft.WindowsDesktop.App) are the ones a project can add here.",
                 projectName));
             return null;
         }
@@ -76,7 +79,9 @@ internal sealed class SharedFrameworks(GlobalPackagesFolder packages, Func<IRead
         var referencePack = $"{prefix}.Ref";
 
         // .NET's own runtime is the one TabStudio runs on, so only its targeting pack is needed, for the generators.
-        var runtimePack = string.Equals(name, NetCoreFramework, StringComparison.OrdinalIgnoreCase) ? referencePack : $"{prefix}.Runtime.{RuntimeIdentifier}";
+        // Windows Desktop apps run on the real Windows runtime under Wine, which brings its own assemblies: its targeting pack is all they need here.
+        var referenceOnly = string.Equals(name, NetCoreFramework, StringComparison.OrdinalIgnoreCase) || WindowsDesktopProfiles.IsWindowsDesktop(name);
+        var runtimePack = referenceOnly ? referencePack : $"{prefix}.Runtime.{RuntimeIdentifier}";
         var major = MajorVersion(targetFramework);
 
         NuGetVersion? version;
@@ -115,8 +120,8 @@ internal sealed class SharedFrameworks(GlobalPackagesFolder packages, Func<IRead
             return new SharedFrameworkAssets(
                 name,
                 version.ToNormalizedString(),
-                isNetCore ? [] : Assemblies(Path.Combine(reference, "ref", targetFramework)),
-                isNetCore ? [] : Assemblies(Path.Combine(runtime, "runtimes", RuntimeIdentifier, "lib", targetFramework)))
+                isNetCore ? [] : WindowsDesktopProfiles.IsWindowsDesktop(name) ? WindowsDesktopProfiles.Assemblies(reference, targetFramework, name) : Assemblies(Path.Combine(reference, "ref", targetFramework)),
+                referenceOnly ? [] : Assemblies(Path.Combine(runtime, "runtimes", RuntimeIdentifier, "lib", targetFramework)))
             {
                 Analyzers = Analyzers(reference),
             };

@@ -528,6 +528,8 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             documents.Add(CreateDocumentInfo(DocumentId.CreateNewId(id, path), path, globalUsings, isGenerated: true));
         }
 
+        documents.AddRange(GeneratedSourceDocuments(id, project));
+
         var projectReferences = project.ProjectReferences
             .Where(reference => _projectIds.ContainsKey(reference) && !_skeletons.ContainsKey(reference))
             .Select(reference => new ProjectReference(_projectIds[reference]));

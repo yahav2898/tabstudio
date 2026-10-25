@@ -61,7 +61,7 @@ ENV = dict(os.environ)
 ENV.update({
     "WINEPREFIX": PREFIX,
     "WINEDEBUG": "-all,err+module,err+seh",
-    "WINEDLLOVERRIDES": "mscoree=;mshtml=;winemenubuilder.exe=",
+    "WINEDLLOVERRIDES": "winemenubuilder.exe=;winedbg.exe=",
     "DISPLAY": f":{DISPLAY_NUMBER}",
     "DOTNET_EnableWriteXorExecute": "0",
     "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
@@ -349,7 +349,7 @@ def dotnet_command(dll, *extra):
 
 def show_app(fb, label, command, extra_env=None, timeout=240):
     program = Program(label, command, extra_env)
-    at, shown = program.wait_for("SHOWN", timeout)
+    at, shown = program.wait_for("SHOWN", min(timeout, 150))
     if shown is None:
         log(f"{label}_shown", "no")
         note(f"{label} stderr: {tail(label)}")
@@ -418,6 +418,42 @@ def resize(fb, program):
     log("resize_desktop_back", "yes" if line else "no")
 
 
+def diagnose():
+    """When Wine does not start: what it loaded, and what its Unix libraries miss."""
+    lib = os.path.join(os.path.dirname(os.path.dirname(WINE)), "lib", "wine")
+    env = dict(ENV)
+    env["WINEDEBUG"] = "+loaddll,+module,+seh,warn+all"
+    code, output, _ = run([WINE, "wineboot", "-i"], timeout=300, env=env)
+    with open(os.path.join(OUT, "wineboot-debug.txt"), "w") as f:
+        f.write(output)
+    note("wineboot +module tail: " + " / ".join(output.splitlines()[-40:]))
+    env["WINEDEBUG"] = "+all"
+    code, output, _ = run([WINE, "wineboot", "-i"], timeout=300, env=env)
+    with open(os.path.join(OUT, "wineboot-all.txt"), "w") as f:
+        f.write(output[:400000])
+    note("wineboot +all head: " + " / ".join(output.splitlines()[:25]))
+    note("wineboot +all tail: " + " / ".join(output.splitlines()[-30:]))
+    env = dict(ENV)
+    env["WINELOADERNOEXEC"] = "1"
+    env["WINEDEBUG"] = "err+all"
+    code, output, _ = run([WINE, "wineboot", "-i"], timeout=300, env=env)
+    note(f"wineboot without the preloader: exit {code}: " + " / ".join(output.splitlines()[-15:]))
+    server = subprocess.Popen([WINESERVER, "-f", "-d1"], env=ENV, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+    time.sleep(4)
+    server.kill()
+    note("wineserver -f -d1: " + " / ".join((server.communicate()[0] or "").splitlines()[-15:]))
+    for arch_dir in sorted(os.listdir(lib)) if os.path.isdir(lib) else []:
+        note(f"{arch_dir}: {len(os.listdir(os.path.join(lib, arch_dir)))} files")
+    unix = os.path.join(lib, "aarch64-unix") if ARCH == "arm64" else os.path.join(lib, "x86_64-unix")
+    for name in ("ws2_32.so", "ntdll.so", "win32u.so"):
+        path = os.path.join(unix, name)
+        if os.path.exists(path):
+            code, output, _ = run(["ldd", path], timeout=30)
+            note(f"ldd {name}: " + " / ".join(l.strip() for l in output.splitlines() if "not found" in l or "Error" in l) or "ok")
+        else:
+            note(f"{name}: missing")
+
+
 def main():
     log("arch", f"{ARCH} {os.uname().machine} {os.uname().release}")
     log("page_size", os.sysconf("SC_PAGE_SIZE"))
@@ -434,17 +470,21 @@ def main():
     log("wine_version", f"{output.strip()} ({elapsed:.1f}s)")
     if os.path.isdir(PREFIX):
         shutil.rmtree(PREFIX)
-    code, output, elapsed = run([WINE, "wineboot", "-i"], timeout=600)
+    boot_env = dict(ENV)
+    boot_env["WINEDLLOVERRIDES"] = "mscoree=;mshtml=;winemenubuilder.exe=;winedbg.exe="
+    code, output, elapsed = run([WINE, "wineboot", "-i"], timeout=600, env=boot_env)
     _, _, waited = run([WINESERVER, "-w"], timeout=300)
     log("wineboot_seconds", f"{elapsed + waited:.1f} exit={code}")
     if code != 0:
         note("wineboot output: " + output[-2000:])
+        diagnose()
     log("prefix_size", mb(du(PREFIX)))
     dedupe_prefix()
     os.symlink(dotnet, os.path.join(PREFIX, "drive_c", "dotnet"))
     code, elapsed = registry(
         "[HKEY_CURRENT_USER\\Software\\Wine\\Explorer]\n\"Desktop\"=\"Default\"\n\n"
-        f"[HKEY_CURRENT_USER\\Software\\Wine\\Explorer\\Desktops]\n\"Default\"=\"{DESKTOP[0]}x{DESKTOP[1]}\"\n\n")
+        f"[HKEY_CURRENT_USER\\Software\\Wine\\Explorer\\Desktops]\n\"Default\"=\"{DESKTOP[0]}x{DESKTOP[1]}\"\n\n"
+        "[HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AeDebug]\n\"Debugger\"=\"\"\n\"Auto\"=\"0\"\n\n")
     log("registry_seconds", f"{elapsed:.1f} exit={code}")
 
     forms = os.path.join(SPIKE, "apps", "SpikeForms", "SpikeForms.dll")
@@ -452,7 +492,7 @@ def main():
     code, output, elapsed = run([WINE, "C:\\dotnet\\dotnet.exe", "--info"], timeout=300)
     log("dotnet_info_seconds", f"{elapsed:.1f} exit={code}")
     note("dotnet --info: " + " / ".join(l.strip() for l in output.splitlines()[:16]))
-    code, output, elapsed = run(dotnet_command(forms, "--hello"), timeout=300)
+    code, output, elapsed = run(dotnet_command(forms, "--hello"), timeout=120)
     log("forms_hello_seconds", f"{elapsed:.1f} exit={code} hello={'HELLO' in output}")
     if "HELLO" not in output:
         note("hello output: " + output[-2000:])
@@ -462,7 +502,7 @@ def main():
     session = subprocess.Popen([WINE, "explorer", f"/desktop=Default,{DESKTOP[0]}x{DESKTOP[1]}"], env=ENV,
                                stdout=open(os.path.join(OUT, "explorer.txt"), "w"), stderr=subprocess.STDOUT)
     time.sleep(3)
-    code, output, elapsed = run(dotnet_command(forms, "--hello"), timeout=300)
+    code, output, elapsed = run(dotnet_command(forms, "--hello"), timeout=120)
     log("forms_hello_session_seconds", f"{elapsed:.1f} exit={code}")
 
     fb = Framebuffer(FB)

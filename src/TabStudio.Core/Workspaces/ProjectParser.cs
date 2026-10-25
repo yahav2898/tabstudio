@@ -106,7 +106,7 @@ public static partial class ProjectParser
             Properties = properties,
             PackageReferences = packages,
             ProjectReferences = projectReferences,
-            FrameworkReferences = ReadFrameworkReferences(root, sdk),
+            FrameworkReferences = WithWindowsDesktopFramework(ReadFrameworkReferences(root, sdk), properties),
             CompileIncludes = ReadItemPatterns(root, "Compile", "Include"),
             CompileRemoves = ReadItemPatterns(root, "Compile", "Remove"),
             EmbeddedResourceIncludes = ReadItemPatterns(root, "EmbeddedResource", "Include"),

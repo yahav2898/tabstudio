@@ -29,4 +29,12 @@ mkdir -p "$logs/wpf-obj" "$logs/pbt"
 cp -r "$work/SpikeWpf/obj/Release/net10.0-windows/." "$logs/wpf-obj/" || true
 find "$sdk/sdk" -path '*Microsoft.NET.Sdk.WindowsDesktop/tools*' -type f \( -name '*.dll' -o -name '*.targets' -o -name '*.props' -o -name '*.json' \) -exec cp --parents {} "$logs/pbt/" \; 2> /dev/null || true
 find "$sdk/sdk" -path '*Microsoft.NET.Sdk.WindowsDesktop/targets*' -type f -exec cp --parents {} "$logs/pbt/" \; 2> /dev/null || true
+pack="$(find ~/.nuget/packages/microsoft.windowsdesktop.app.ref -mindepth 1 -maxdepth 1 -type d | sort -V | tail -n 1)"
+if [ -n "$pack" ]; then
+  cp "$pack/data/FrameworkList.xml" "$logs/FrameworkList.xml" || true
+  (cd "$pack" && find . -type f | sort) > "$logs/windowsdesktop-ref-files.txt"
+fi
+for id in microsoft.build.framework microsoft.build.utilities.core system.reflection.metadataloadcontext system.codedom system.resources.extensions microsoft.windowsdesktop.app.ref; do
+  echo "$id: $(curl -fsSL "https://api.nuget.org/v3-flatcontainer/$id/index.json" | jq -r '.versions | map(select(test("-") | not)) | .[-6:] | join(" ")')"
+done > "$logs/nuget-versions.txt" 2>&1 || true
 ls -la "$apps"/*

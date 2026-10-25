@@ -1,0 +1,47 @@
+The WPF build tasks inside TabStudio
+====================================
+
+This folder holds PresentationBuildTasks.dll, the WPF markup compiler of the .NET SDK, unchanged. TabStudio runs
+its MarkupCompilePass1, MarkupCompilePass2, FileClassifier and ResourcesGenerator tasks the way the SDK's
+Microsoft.WinFX.targets does, so XAML pages compile to BAML and their partial classes on the tablet.
+
+Origin
+------
+The file comes from the .NET SDK 10.0.402 (sdk/10.0.402/Sdks/Microsoft.NET.Sdk.WindowsDesktop/tools/net10.0/),
+built from the dotnet/dotnet repository (src/wpf) at commit 4099f83977f4d29604a9aeb971fb0a7bc1d5f699, product
+version 10.0.13-servicing.26504.104, file version 10.0.1326.50504. No NuGet package carries the build tasks, so the
+SDK's own build is used, as for the Razor compiler in TabStudio.Compilation.
+
+  PresentationBuildTasks.dll   10.0.13   sha256 583319632ddc39e805aa0c0b8485002860e21d1ef8fff9e67194dec8557dec6f
+
+It references MSBuild's task interfaces (Microsoft.Build.Framework, Microsoft.Build.Utilities.Core),
+System.Reflection.MetadataLoadContext and System.CodeDom, which TabStudio takes from NuGet. Update it with
+build/wpf/update-wpf-build-tasks.sh, which prints the new hash for this file.
+
+License
+-------
+The WPF build tasks are licensed by the .NET Foundation under the MIT license:
+
+  The MIT License (MIT)
+
+  Copyright (c) .NET Foundation and Contributors
+
+  All rights reserved.
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.

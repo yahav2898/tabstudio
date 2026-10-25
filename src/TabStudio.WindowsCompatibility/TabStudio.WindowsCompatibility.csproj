@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Windows Compatibility: Windows desktop apps (Windows Forms and WPF) built on the tablet and run there, with
+    the real .NET Windows Desktop runtime inside Wine, in the Linux environment of the Toolchain Store. It builds
+    the projects (the WPF markup compiler included), runs the X server Wine draws into, reads its frames and sends
+    touch, mouse and keyboard input back, and says which run hosts a Windows-only project can use. No UI.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>TabStudio.WindowsCompatibility</RootNamespace>
+    <Description>Windows desktop apps on the tablet: Windows Forms and WPF built in TabStudio and run under Wine.</Description>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TabStudio.Core\TabStudio.Core.csproj" />
+    <ProjectReference Include="..\TabStudio.Compilation\TabStudio.Compilation.csproj" />
+    <ProjectReference Include="..\TabStudio.Packages\TabStudio.Packages.csproj" />
+    <ProjectReference Include="..\TabStudio.Toolchains\TabStudio.Toolchains.csproj" />
+  </ItemGroup>
+
+  <!--
+    The WPF markup compiler of the .NET SDK, which no NuGet package carries, and what it runs on; see
+    Building/Wpf/BuildTasks/NOTICE.txt for its origin and license.
+  -->
+  <ItemGroup>
+    <Reference Include="PresentationBuildTasks" HintPath="Building\Wpf\BuildTasks\PresentationBuildTasks.dll" />
+    <PackageReference Include="Microsoft.Build.Framework" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" />
+    <PackageReference Include="System.Reflection.MetadataLoadContext" />
+    <PackageReference Include="System.CodeDom" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="TabStudio.WindowsCompatibility.Tests" />
+    <InternalsVisibleTo Include="TabStudio.App.Tests" />
+  </ItemGroup>
+
+</Project>
