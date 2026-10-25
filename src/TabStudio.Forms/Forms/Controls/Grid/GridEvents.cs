@@ -267,6 +267,7 @@ public class DataGridViewCellPaintingEventArgs : HandledEventArgs
     private Action<DataGridViewPaintParts> PaintAction { get; }
 
     /// <summary>Draws the parts of the cell the grid would.</summary>
+    /// <param name="clipBounds">The area being drawn.</param>
     /// <param name="paintParts">The parts.</param>
     public void Paint(Rectangle clipBounds, DataGridViewPaintParts paintParts) => PaintAction(paintParts);
 

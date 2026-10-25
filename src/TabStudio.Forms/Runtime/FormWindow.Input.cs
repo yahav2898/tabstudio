@@ -424,6 +424,20 @@ internal sealed partial class FormWindow
     /// <summary>The user asked to close the window.</summary>
     public void CloseRequested() => Form.CloseFromWindow(CloseReason.UserClosing);
 
+    /// <summary>The user minimized the window.</summary>
+    public void Minimize() => Form.WindowState = FormWindowState.Minimized;
+
+    /// <summary>The user restored the minimized window, from its button at the bottom of the desktop.</summary>
+    public void Restore()
+    {
+        if (Form.WindowState == FormWindowState.Minimized)
+        {
+            Form.WindowState = FormWindowState.Normal;
+        }
+
+        Runtime.Activate(this);
+    }
+
     /// <summary>The user maximized or restored the window.</summary>
     public void ToggleMaximize() =>
         Form.WindowState = Form.WindowState == FormWindowState.Maximized ? FormWindowState.Normal : FormWindowState.Maximized;

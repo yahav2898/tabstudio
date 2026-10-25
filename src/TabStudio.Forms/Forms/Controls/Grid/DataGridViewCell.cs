@@ -818,8 +818,6 @@ public class DataGridViewComboBoxCell : DataGridViewCell
 /// <summary>A cell with a button, which raises CellContentClick when tapped.</summary>
 public class DataGridViewButtonCell : DataGridViewCell
 {
-    private bool _pressed;
-
     /// <summary>Creates a button cell.</summary>
     public DataGridViewButtonCell()
     {
@@ -844,7 +842,7 @@ public class DataGridViewButtonCell : DataGridViewCell
     internal override void PaintContent(Graphics g, Rectangle bounds, DataGridViewCellStyle style, object? formatted, bool selected)
     {
         var face = Rectangle.Inflate(bounds, -2, -2);
-        ThemePainter.DrawButton(g, face, _pressed ? PushState.Pressed : PushState.Normal, emphasized: false);
+        ThemePainter.DrawButton(g, face, PushState.Normal, emphasized: false);
         var font = style.Font ?? DataGridView?.Font ?? Control.DefaultFont;
         ThemePainter.DrawText(g, formatted as string ?? string.Empty, font, style.ForeColor, face, ToContentAlignment(style.Alignment == DataGridViewContentAlignment.NotSet ? DataGridViewContentAlignment.MiddleCenter : style.Alignment), ellipsis: true, mnemonics: false);
     }

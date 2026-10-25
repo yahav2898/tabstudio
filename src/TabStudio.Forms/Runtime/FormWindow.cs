@@ -98,6 +98,7 @@ internal sealed partial class FormWindow : IDisposable
             new Rectangle(Form.ClientOriginOnScreen, client),
             Form.Chrome,
             Form.WindowState == FormWindowState.Maximized,
+            Form.WindowState == FormWindowState.Minimized,
             IsModal,
             Runtime.ActiveWindow == this,
             blocked,
@@ -233,6 +234,16 @@ internal sealed partial class FormWindow : IDisposable
     {
         Form.DispatchActivated();
         Invalidate();
+    }
+
+    /// <summary>Called when the form is minimized: another window becomes the active one.</summary>
+    public void OnMinimized()
+    {
+        CloseAllPopups();
+        if (Runtime.ActiveWindow == this && Runtime.Windows.LastOrDefault(w => w != this && w.Form.WindowState != FormWindowState.Minimized) is { } next)
+        {
+            Runtime.Activate(next);
+        }
     }
 
     /// <summary>Called when another window becomes the active one.</summary>

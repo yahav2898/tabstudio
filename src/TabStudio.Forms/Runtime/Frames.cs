@@ -31,6 +31,7 @@ internal sealed record WindowChrome(FormBorderStyle Border, bool ControlBox, boo
 /// <param name="Client">The client area on the desktop, which <see cref="Content"/> fills.</param>
 /// <param name="Chrome">The window's frame.</param>
 /// <param name="IsMaximized">Whether the window fills the desktop.</param>
+/// <param name="IsMinimized">Whether the window is minimized to a button at the bottom of the desktop.</param>
 /// <param name="IsModal">Whether the window is a modal dialog, which blocks the windows below it.</param>
 /// <param name="IsActive">Whether the window is the active one.</param>
 /// <param name="IsBlocked">Whether a modal dialog above it blocks its input.</param>
@@ -45,6 +46,7 @@ internal sealed record WindowFrame(
     Rectangle Client,
     WindowChrome Chrome,
     bool IsMaximized,
+    bool IsMinimized,
     bool IsModal,
     bool IsActive,
     bool IsBlocked,
@@ -117,7 +119,9 @@ internal sealed record EditorFrame(
 /// <param name="FilterIndex">The filter selected first, from 1.</param>
 /// <param name="FileName">The suggested file name.</param>
 /// <param name="Multiselect">Whether several files can be opened.</param>
-internal sealed record FileRequest(bool Save, string Title, string Filter, int FilterIndex, string FileName, bool Multiselect);
+/// <param name="Folder">Whether a folder is picked rather than files.</param>
+/// <param name="InitialDirectory">The folder the dialog starts in, if any.</param>
+internal sealed record FileRequest(bool Save, string Title, string Filter, int FilterIndex, string FileName, bool Multiselect, bool Folder = false, string InitialDirectory = "");
 
 /// <summary>
 /// Shows a running app's windows: the app preview implements it with Avalonia, tests with a recorder. The Forms

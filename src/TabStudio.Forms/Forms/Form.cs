@@ -33,6 +33,7 @@ public partial class Form : ContainerControl
     private bool _maximizeBox = true;
     private bool _minimizeBox = true;
     private FormWindowState _windowState = FormWindowState.Normal;
+    private FormWindowState _stateBeforeMinimized = FormWindowState.Normal;
     private Rectangle _restoreBounds;
     private Form? _owner;
     private DialogResult _dialogResult;
@@ -182,16 +183,41 @@ public partial class Form : ContainerControl
     [DefaultValue(FormStartPosition.WindowsDefaultLocation)]
     public FormStartPosition StartPosition { get; set; } = FormStartPosition.WindowsDefaultLocation;
 
-    /// <summary>Whether the form is normal or maximized; minimized forms stay normal in the app preview.</summary>
+    /// <summary>Whether the form is normal, maximized, or minimized to a button at the bottom of the app preview.</summary>
     [DefaultValue(FormWindowState.Normal)]
     public FormWindowState WindowState
     {
         get => _windowState;
         set
         {
-            if (_windowState == value || value == FormWindowState.Minimized)
+            if (_windowState == value)
             {
                 return;
+            }
+
+            if (value == FormWindowState.Minimized)
+            {
+                _stateBeforeMinimized = _windowState;
+                _windowState = value;
+                if (WindowInternal is { } window)
+                {
+                    window.OnMinimized();
+                }
+
+                InvalidateWindow();
+                OnResize(EventArgs.Empty);
+                return;
+            }
+
+            if (_windowState == FormWindowState.Minimized)
+            {
+                _windowState = _stateBeforeMinimized;
+                if (_windowState == value)
+                {
+                    InvalidateWindow();
+                    OnResize(EventArgs.Empty);
+                    return;
+                }
             }
 
             if (value == FormWindowState.Maximized)

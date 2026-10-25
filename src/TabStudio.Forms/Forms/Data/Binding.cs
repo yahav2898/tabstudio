@@ -143,11 +143,6 @@ public class BindingContext : ICollection
 /// <summary>Keeps the current item of a data source for the controls bound to it.</summary>
 public abstract class BindingManagerBase
 {
-    private static readonly object EventPositionChanged = new();
-    private static readonly object EventCurrentChanged = new();
-    private static readonly object EventCurrentItemChanged = new();
-    private readonly EventHandlerList _events = new();
-
     /// <summary>Creates a binding manager.</summary>
     protected BindingManagerBase()
     {
@@ -155,25 +150,13 @@ public abstract class BindingManagerBase
     }
 
     /// <summary>Occurs when the position changes.</summary>
-    public event EventHandler? PositionChanged
-    {
-        add => _events.AddHandler(EventPositionChanged, value);
-        remove => _events.RemoveHandler(EventPositionChanged, value);
-    }
+    public event EventHandler? PositionChanged;
 
     /// <summary>Occurs when the current item changes to another item.</summary>
-    public event EventHandler? CurrentChanged
-    {
-        add => _events.AddHandler(EventCurrentChanged, value);
-        remove => _events.RemoveHandler(EventCurrentChanged, value);
-    }
+    public event EventHandler? CurrentChanged;
 
     /// <summary>Occurs when the current item or one of its values changes.</summary>
-    public event EventHandler? CurrentItemChanged
-    {
-        add => _events.AddHandler(EventCurrentItemChanged, value);
-        remove => _events.RemoveHandler(EventCurrentItemChanged, value);
-    }
+    public event EventHandler? CurrentItemChanged;
 
     /// <summary>The bindings the manager serves.</summary>
     public BindingsCollection Bindings { get; }
@@ -231,7 +214,7 @@ public abstract class BindingManagerBase
 
     /// <summary>Raises PositionChanged.</summary>
     /// <param name="e">The event data.</param>
-    protected void OnPositionChanged(EventArgs e) => ((EventHandler?)_events[EventPositionChanged])?.Invoke(this, e);
+    protected void OnPositionChanged(EventArgs e) => PositionChanged?.Invoke(this, e);
 
     /// <summary>Raises CurrentChanged and CurrentItemChanged.</summary>
     /// <param name="e">The event data.</param>
@@ -242,7 +225,7 @@ public abstract class BindingManagerBase
             return;
         }
 
-        ((EventHandler?)_events[EventCurrentChanged])?.Invoke(this, e);
+        CurrentChanged?.Invoke(this, e);
         OnCurrentItemChanged(e);
     }
 
@@ -252,7 +235,7 @@ public abstract class BindingManagerBase
     {
         if (!IsBindingSuspended)
         {
-            ((EventHandler?)_events[EventCurrentItemChanged])?.Invoke(this, e);
+            CurrentItemChanged?.Invoke(this, e);
         }
     }
 }
@@ -260,9 +243,6 @@ public abstract class BindingManagerBase
 /// <summary>The binding manager of a list: the list's current item, which follows the list's changes.</summary>
 public class CurrencyManager : BindingManagerBase
 {
-    private static readonly object EventListChanged = new();
-    private static readonly object EventItemChanged = new();
-    private readonly EventHandlerList _listEvents = new();
     private int _position;
 
     internal CurrencyManager(IList list)
@@ -282,18 +262,10 @@ public class CurrencyManager : BindingManagerBase
     }
 
     /// <summary>Occurs when the list changes.</summary>
-    public event ListChangedEventHandler? ListChanged
-    {
-        add => _listEvents.AddHandler(EventListChanged, value);
-        remove => _listEvents.RemoveHandler(EventListChanged, value);
-    }
+    public event ListChangedEventHandler? ListChanged;
 
     /// <summary>Occurs when an item changes.</summary>
-    public event ItemChangedEventHandler? ItemChanged
-    {
-        add => _listEvents.AddHandler(EventItemChanged, value);
-        remove => _listEvents.RemoveHandler(EventItemChanged, value);
-    }
+    public event ItemChangedEventHandler? ItemChanged;
 
     /// <summary>The list.</summary>
     public IList List { get; }
@@ -342,7 +314,7 @@ public class CurrencyManager : BindingManagerBase
     public void Refresh()
     {
         _position = List.Count == 0 ? -1 : Math.Clamp(_position, 0, List.Count - 1);
-        ((ListChangedEventHandler?)_listEvents[EventListChanged])?.Invoke(this, new ListChangedEventArgs(ListChangedType.Reset, -1));
+        ListChanged?.Invoke(this, new ListChangedEventArgs(ListChangedType.Reset, -1));
         OnCurrentChanged(EventArgs.Empty);
     }
 
@@ -377,10 +349,10 @@ public class CurrencyManager : BindingManagerBase
             _position = Math.Clamp(_position, 0, List.Count - 1);
         }
 
-        ((ListChangedEventHandler?)_listEvents[EventListChanged])?.Invoke(this, e);
+        ListChanged?.Invoke(this, e);
         if (e.ListChangedType == ListChangedType.ItemChanged)
         {
-            ((ItemChangedEventHandler?)_listEvents[EventItemChanged])?.Invoke(this, new ItemChangedEventArgs(e.NewIndex));
+            ItemChanged?.Invoke(this, new ItemChangedEventArgs(e.NewIndex));
             if (e.NewIndex == _position)
             {
                 OnCurrentItemChanged(EventArgs.Empty);
@@ -597,9 +569,6 @@ public class ControlBindingsCollection : BindingsCollection
 /// </summary>
 public class Binding
 {
-    private static readonly object EventFormat = new();
-    private static readonly object EventParse = new();
-    private readonly EventHandlerList _events = new();
     private IBindableComponent? _component;
     private BindingManagerBase? _manager;
     private PropertyDescriptor? _controlProperty;
@@ -684,18 +653,10 @@ public class Binding
     }
 
     /// <summary>Occurs when a value is formatted for the control.</summary>
-    public event ConvertEventHandler? Format
-    {
-        add => _events.AddHandler(EventFormat, value);
-        remove => _events.RemoveHandler(EventFormat, value);
-    }
+    public event ConvertEventHandler? Format;
 
     /// <summary>Occurs when the control's value is parsed for the data source.</summary>
-    public event ConvertEventHandler? Parse
-    {
-        add => _events.AddHandler(EventParse, value);
-        remove => _events.RemoveHandler(EventParse, value);
-    }
+    public event ConvertEventHandler? Parse;
 
     /// <summary>The control's property.</summary>
     public string PropertyName { get; }
@@ -794,11 +755,11 @@ public class Binding
 
     /// <summary>Raises Format.</summary>
     /// <param name="cevent">The event data.</param>
-    protected virtual void OnFormat(ConvertEventArgs cevent) => ((ConvertEventHandler?)_events[EventFormat])?.Invoke(this, cevent);
+    protected virtual void OnFormat(ConvertEventArgs cevent) => Format?.Invoke(this, cevent);
 
     /// <summary>Raises Parse.</summary>
     /// <param name="cevent">The event data.</param>
-    protected virtual void OnParse(ConvertEventArgs cevent) => ((ConvertEventHandler?)_events[EventParse])?.Invoke(this, cevent);
+    protected virtual void OnParse(ConvertEventArgs cevent) => Parse?.Invoke(this, cevent);
 
     /// <summary>Connects the binding to a component and, through its binding context, to the data source.</summary>
     internal void Attach(IBindableComponent component)

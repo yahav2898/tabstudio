@@ -51,10 +51,10 @@ public sealed class BindingTests
     {
         using var source = new BindingSource { DataSource = typeof(DataGridViewTests.Person) };
 
-        Assert.Equal(0, source.Count);
+        Assert.Empty(source);
         Assert.True(source.AllowNew);
         Assert.IsType<DataGridViewTests.Person>(source.AddNew());
-        Assert.Equal(1, source.Count);
+        Assert.Single(source);
         Assert.Equal(0, source.Position);
         Assert.Contains("Age", source.GetItemProperties(null).Cast<PropertyDescriptor>().Select(p => p.Name));
     }

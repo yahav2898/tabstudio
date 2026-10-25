@@ -13,7 +13,7 @@ namespace System.Drawing;
 /// Drawing is recorded and shown when the window is next drawn, which follows each event the app handles. Shapes
 /// are drawn without antialiasing unless <see cref="SmoothingMode"/> asks for it, as in GDI+.
 /// </remarks>
-public sealed partial class Graphics : MarshalByRefObject, IDisposable
+public sealed partial class Graphics : MarshalByRefObject, IDeviceContext
 {
     private readonly DisplayListBuilder _builder;
     private readonly Matrix3x2 _origin;
@@ -363,6 +363,11 @@ public sealed partial class Graphics : MarshalByRefObject, IDisposable
     /// <param name="hdc">The device context.</param>
     /// <exception cref="NotSupportedException">Always.</exception>
     public void ReleaseHdc(IntPtr hdc) =>
+        throw new NotSupportedException("Graphics.ReleaseHdc is not supported by TabStudio's Forms layer: there is no GDI device context on this device.");
+
+    /// <summary>Releases the GDI device context. Not available on this device.</summary>
+    /// <exception cref="NotSupportedException">Always.</exception>
+    public void ReleaseHdc() =>
         throw new NotSupportedException("Graphics.ReleaseHdc is not supported by TabStudio's Forms layer: there is no GDI device context on this device.");
 
     /// <inheritdoc />
