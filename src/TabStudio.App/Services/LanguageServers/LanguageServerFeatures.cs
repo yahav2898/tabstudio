@@ -337,7 +337,8 @@ internal sealed class LanguageServerFeatures : ILanguageFeatures, ICodeActionFol
                 var id = "lsp:" + (++_lastAction).ToString(System.Globalization.CultureInfo.InvariantCulture);
                 _actions[id] = action;
                 var kind = action.IsQuickFix ? CodeActionKind.QuickFix : CodeActionKind.Refactoring;
-                items.Add((new CodeActionItem(id, action.Title, null, kind, action.DiagnosticCodes.FirstOrDefault()), action.IsPreferred));
+                var code = action.DiagnosticCodes.Count > 0 ? action.DiagnosticCodes[0] : null;
+                items.Add((new CodeActionItem(id, action.Title, null, kind, code), action.IsPreferred));
             }
         }
 

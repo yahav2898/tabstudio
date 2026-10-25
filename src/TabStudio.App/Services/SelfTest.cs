@@ -79,6 +79,12 @@ public static partial class SelfTest
             }
 
             var debugged = await DebugSampleAsync(workspace, cancellationToken);
+            if (debugged.Success)
+            {
+                var servers = await CheckLanguageServersAsync(main, cancellationToken);
+                debugged = debugged with { Success = servers.Success, Message = $"{debugged.Message} | {servers.Message}" };
+            }
+
             if (!debugged.Success || templates is null)
             {
                 return new SelfTestResult(debugged.Success, $"{summary} | {debugged.Message}", clock.Elapsed);

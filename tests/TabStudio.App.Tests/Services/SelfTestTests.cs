@@ -27,6 +27,8 @@ public sealed class SelfTestTests : IDisposable
         Assert.True(result.Success, result.Message);
         Assert.Contains($", {SelfTest.Name}!", result.Message, StringComparison.Ordinal);
         Assert.Contains("has exited with code 0", result.Message, StringComparison.Ordinal);
+        Assert.Contains("Language servers: Loopback Server ready", result.Message, StringComparison.Ordinal);
+        Assert.Contains("Debug adapters: Paused at a breakpoint", result.Message, StringComparison.Ordinal);
     }
 
     public void Dispose()

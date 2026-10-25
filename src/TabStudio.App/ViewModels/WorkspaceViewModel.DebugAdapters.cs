@@ -432,7 +432,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
             return;
         }
 
-        var thread = stop.ThreadId ?? threads.FirstOrDefault()?.Id ?? 1;
+        var thread = stop.ThreadId ?? (threads.Count > 0 ? threads[0].Id : 1);
         _adapterThread = thread;
         State = IdeState.Paused;
         _exceptionHelper = null;
@@ -578,7 +578,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
             return;
         }
 
-        var locals = scopes.FirstOrDefault(s => s.IsLocals) ?? scopes.FirstOrDefault();
+        var locals = scopes.FirstOrDefault(s => s.IsLocals) ?? (scopes.Count > 0 ? scopes[0] : null);
         var sources = new List<VariableSource>();
         if (locals is not null)
         {
@@ -735,7 +735,8 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
 
         try
         {
-            var thread = _adapterThread ?? (await session.GetThreadsAsync(CancellationToken.None)).FirstOrDefault()?.Id ?? 1;
+            IReadOnlyList<DapThread> threads = _adapterThread is null ? await session.GetThreadsAsync(CancellationToken.None) : [];
+            var thread = _adapterThread ?? (threads.Count > 0 ? threads[0].Id : 1);
             await session.PauseAsync(thread, CancellationToken.None);
             StatusText = "Pausing";
         }

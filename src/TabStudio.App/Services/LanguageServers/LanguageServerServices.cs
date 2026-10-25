@@ -1,4 +1,5 @@
 using TabStudio.LanguageServers.Hosting;
+using TabStudio.LanguageServers.Loopback;
 
 namespace TabStudio.App.Services.LanguageServers;
 
@@ -10,8 +11,11 @@ namespace TabStudio.App.Services.LanguageServers;
 /// <param name="launcher">Starts the servers' and adapters' programs and finds where they are installed.</param>
 public sealed class LanguageServerServices(IServerProcessLauncher launcher)
 {
-    /// <summary>Starts the servers' and adapters' programs and finds where they are installed.</summary>
-    public IServerProcessLauncher Launcher { get; } = launcher ?? throw new ArgumentNullException(nameof(launcher));
+    /// <summary>
+    /// Starts the servers' and adapters' programs and finds where they are installed; the built-in loopback server
+    /// and adapter, which the self test uses, start in-process.
+    /// </summary>
+    public IServerProcessLauncher Launcher { get; } = new LoopbackLauncher(launcher ?? throw new ArgumentNullException(nameof(launcher)));
 
     /// <summary>TabStudio's version, as servers are told in <c>initialize</c>.</summary>
     public string ClientVersion { get; } = typeof(LanguageServerServices).Assembly.GetName().Version?.ToString(3) ?? "0.0.0";
