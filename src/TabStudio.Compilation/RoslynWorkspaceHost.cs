@@ -503,10 +503,10 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             _documents[path] = documentId;
         }
 
-        if (project.ImplicitUsings)
+        if (CSharpCompiler.CreateGlobalUsingsSource(project) is { } globalUsings)
         {
             var path = Path.Combine(project.DirectoryPath, "obj", $"{project.Name}.GlobalUsings.g.cs");
-            documents.Add(CreateDocumentInfo(DocumentId.CreateNewId(id, path), path, CSharpCompiler.CreateGlobalUsingsSource(), isGenerated: true));
+            documents.Add(CreateDocumentInfo(DocumentId.CreateNewId(id, path), path, globalUsings, isGenerated: true));
         }
 
         var projectReferences = project.ProjectReferences

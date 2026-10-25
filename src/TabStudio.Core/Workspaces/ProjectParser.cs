@@ -17,7 +17,7 @@ namespace TabStudio.Core.Workspaces;
 ///   <item>The nearest <c>Directory.Build.props</c>, whose properties the project can override.</item>
 ///   <item>Simple <c>$(Property)</c> references between those properties.</item>
 ///   <item>The SDK, from the <c>Sdk</c> attribute, an <c>&lt;Sdk&gt;</c> element or an SDK import.</item>
-///   <item><c>PackageReference</c> and <c>ProjectReference</c> items.</item>
+///   <item><c>PackageReference</c>, <c>ProjectReference</c> and <c>Using</c> items.</item>
 /// </list>
 /// <para>
 /// It does not run targets, evaluate conditions or follow arbitrary imports. When an exact answer is
@@ -105,6 +105,8 @@ public static partial class ProjectParser
             ProjectReferences = projectReferences,
             CompileIncludes = ReadItemPatterns(root, "Compile", "Include"),
             CompileRemoves = ReadItemPatterns(root, "Compile", "Remove"),
+            Usings = ReadUsings(root),
+            RemovedUsings = ReadItemPatterns(root, "Using", "Remove"),
         };
 
         var (kind, isTest) = ProjectClassifier.Classify(info);
@@ -290,6 +292,24 @@ public static partial class ProjectParser
             .Select(include => PathUtilities.ResolveRelative(projectDirectory, include!))
             .Distinct(StringComparer.Ordinal)
             .ToList();
+
+    /// <summary>Reads the <c>Using</c> items that add global usings, with their <c>Alias</c> and <c>Static</c> metadata.</summary>
+    private static List<UsingInfo> ReadUsings(XElement root) =>
+        root.Descendants()
+            .Where(e => e.Name.LocalName == "Using")
+            .SelectMany(item => (item.Attribute("Include")?.Value ?? string.Empty)
+                .Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Where(name => !name.Contains("$(", StringComparison.Ordinal))
+                .Select(name => new UsingInfo(
+                    name,
+                    Metadata(item, "Alias") is { Length: > 0 } alias ? alias.Trim() : null,
+                    string.Equals(Metadata(item, "Static")?.Trim(), "true", StringComparison.OrdinalIgnoreCase))))
+            .Distinct()
+            .ToList();
+
+    /// <summary>An item's metadata, written as an attribute or as a child element.</summary>
+    private static string? Metadata(XElement item, string name) =>
+        item.Attribute(name)?.Value ?? item.Elements().FirstOrDefault(c => c.Name.LocalName == name)?.Value;
 
     /// <summary>Reads the patterns of one attribute (such as <c>Include</c>) on one item type, split on semicolons.</summary>
     private static List<string> ReadItemPatterns(XElement root, string itemType, string attribute) =>
