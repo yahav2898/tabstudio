@@ -23,6 +23,7 @@ internal sealed class DesktopScreenPresenter : IDisposable
     private readonly DesktopModeViewModel _desktop;
     private readonly DesktopScreenView _screen = new();
     private TopLevel? _tabletTopLevel;
+    private TopLevel? _displayTopLevel;
     private double _presentedScale;
     private bool _presented;
     private bool _disposed;
@@ -94,11 +95,10 @@ internal sealed class DesktopScreenPresenter : IDisposable
         // The IDE keeps the tablet's data context on the display, the same object, so its bindings never see it go.
         _ide.DataContext = _tablet.DataContext;
 
-        // Taken out of the tablet and put on the display in one go, with no layout in between, so nothing is rebuilt.
-        // The tablet first lays out what it still owes the IDE: a window's layout queue cannot reach views that moved
-        // to another window.
-        _tablet.UpdateLayout();
+        // Taken out of the tablet and put on the display in one go, so nothing is rebuilt; in between, the tablet
+        // finishes its layout without it.
         _tablet.Children.Remove(_ide);
+        FinishLayoutWithout(_tabletTopLevel);
         _screen.Show(_ide);
         var scale = _desktop.EffectiveScale;
         if (!_desktop.Displays.Present(_screen, scale))
@@ -112,6 +112,7 @@ internal sealed class DesktopScreenPresenter : IDisposable
 
         _presented = true;
         _presentedScale = scale;
+        _displayTopLevel = TopLevel.GetTopLevel(_screen);
         _tabletTopLevel?.AddHandler(InputElement.KeyDownEvent, OnTabletKeyDown, RoutingStrategies.Bubble);
         Dispatcher.UIThread.Post(_screen.RestoreKeyboardFocus, DispatcherPriority.Background);
     }
@@ -121,10 +122,11 @@ internal sealed class DesktopScreenPresenter : IDisposable
         _presented = false;
         _tabletTopLevel?.RemoveHandler(InputElement.KeyDownEvent, OnTabletKeyDown);
 
-        // The display lays out what it still owes the IDE before the IDE leaves it, as the tablet does in Present.
-        _screen.UpdateLayout();
-        _desktop.Displays.Dismiss();
+        // Taken off the display and put back on the tablet; in between, the display finishes its layout without it.
         _screen.Show(null);
+        FinishLayoutWithout(_displayTopLevel);
+        _desktop.Displays.Dismiss();
+        _displayTopLevel = null;
         _tablet.Children.Insert(0, _ide);
 
         // Back on the tablet, the IDE takes its data context from the tablet again: the same object it had.
@@ -135,12 +137,14 @@ internal sealed class DesktopScreenPresenter : IDisposable
     /// <summary>Shows the IDE on the display again, in a new presentation: at a new size, or after the system ended the old one.</summary>
     private void PresentAgain()
     {
-        _screen.UpdateLayout();
         _desktop.Displays.Dismiss();
+        FinishLayoutWithout(_displayTopLevel);
+        _displayTopLevel = null;
         var scale = _desktop.EffectiveScale;
         if (_desktop.Displays.Present(_screen, scale))
         {
             _presentedScale = scale;
+            _displayTopLevel = TopLevel.GetTopLevel(_screen);
             Dispatcher.UIThread.Post(_screen.RestoreKeyboardFocus, DispatcherPriority.Background);
         }
         else
@@ -149,6 +153,14 @@ internal sealed class DesktopScreenPresenter : IDisposable
             _desktop.OnPresentationFailed();
         }
     }
+
+    /// <summary>
+    /// Lets the window the IDE just left finish its layout while the IDE is in no window. A window's layout queue
+    /// keeps the views it was asked to lay out; once they are in another window, its next pass would lay them out
+    /// there before that window has, and fail. Views that are in no window are dropped from the queue instead.
+    /// </summary>
+    /// <param name="window">The window the IDE left, if any.</param>
+    private static void FinishLayoutWithout(TopLevel? window) => window?.UpdateLayout();
 
     private void OnDesktopPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
