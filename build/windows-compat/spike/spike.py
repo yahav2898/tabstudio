@@ -262,17 +262,53 @@ def ensure_dotnet():
         return folder
     start = time.monotonic()
     index = json.load(urllib.request.urlopen("https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json", timeout=60))
-    release = next(r for r in index["releases"] if r.get("windowsdesktop", {}).get("files"))
-    file = next(f for f in release["windowsdesktop"]["files"] if f["rid"] == f"win-{ARCH}" and f["name"].endswith(".zip"))
-    zip_path = os.path.join(SPIKE, os.path.basename(file["url"]))
-    urllib.request.urlretrieve(file["url"], zip_path)
-    log("dotnet_download_seconds", f"{time.monotonic() - start:.1f}")
-    log("dotnet_zip", f"{os.path.basename(file['url'])} {mb(os.path.getsize(zip_path))}")
-    start = time.monotonic()
-    shutil.unpack_archive(zip_path, folder)
-    log("dotnet_unzip_seconds", f"{time.monotonic() - start:.1f}")
-    os.remove(zip_path)
+    release = index["releases"][0]
+    total = 0
+    for part in ("runtime", "windowsdesktop"):
+        file = next(f for f in release[part]["files"] if f["rid"] == f"win-{ARCH}" and f["name"].endswith(".zip"))
+        zip_path = os.path.join(SPIKE, os.path.basename(file["url"]))
+        urllib.request.urlretrieve(file["url"], zip_path)
+        total += os.path.getsize(zip_path)
+        shutil.unpack_archive(zip_path, folder)
+        os.remove(zip_path)
+    log("dotnet_download_and_unzip_seconds", f"{time.monotonic() - start:.1f}")
+    log("dotnet_zips", mb(total))
     return folder
+
+
+def dedupe_prefix():
+    """Replaces the prefix's copies of Wine's own DLLs with links to them, and reports what that saved."""
+    lib = os.path.join(os.path.dirname(os.path.dirname(WINE)), "lib", "wine")
+    sizes = {}
+    for sub in ("system32", "syswow64"):
+        sizes[sub] = du(os.path.join(PREFIX, "drive_c", "windows", sub))
+    log("prefix_system32", mb(sizes["system32"]))
+    log("prefix_syswow64", mb(sizes["syswow64"]))
+    builtin = {}
+    for arch_dir in os.listdir(lib) if os.path.isdir(lib) else []:
+        if arch_dir.endswith("-windows"):
+            for name in os.listdir(os.path.join(lib, arch_dir)):
+                path = os.path.join(lib, arch_dir, name)
+                builtin.setdefault((name.lower(), os.path.getsize(path)), []).append(path)
+    saved = 0
+    linked = 0
+    for sub in ("system32", "syswow64"):
+        folder = os.path.join(PREFIX, "drive_c", "windows", sub)
+        for root, _, files in os.walk(folder):
+            for name in files:
+                path = os.path.join(root, name)
+                if os.path.islink(path):
+                    continue
+                size = os.path.getsize(path)
+                for candidate in builtin.get((name.lower(), size), []):
+                    with open(path, "rb") as a, open(candidate, "rb") as b:
+                        if a.read() == b.read():
+                            os.remove(path)
+                            os.symlink(candidate, path)
+                            saved += size
+                            linked += 1
+                            break
+    log("prefix_dedupe", f"linked {linked} files, saved {mb(saved)}, prefix now {mb(du(PREFIX))}")
 
 
 def registry(entries):
@@ -403,6 +439,7 @@ def main():
     if code != 0:
         note("wineboot output: " + output[-2000:])
     log("prefix_size", mb(du(PREFIX)))
+    dedupe_prefix()
     os.symlink(dotnet, os.path.join(PREFIX, "drive_c", "dotnet"))
     code, elapsed = registry(
         "[HKEY_CURRENT_USER\\Software\\Wine\\Explorer]\n\"Desktop\"=\"Default\"\n\n"
