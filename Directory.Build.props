@@ -33,7 +33,10 @@
   </PropertyGroup>
 
   <!-- Libraries document their public surface; a missing XML comment is a warning there. -->
-  <PropertyGroup Condition="'$(IsTestProject)' != 'true' AND ('$(MSBuildProjectName)' == 'TabStudio.Core' OR '$(MSBuildProjectName)' == 'TabStudio.Compilation' OR '$(MSBuildProjectName)' == 'TabStudio.Packages')">
+  <PropertyGroup>
+    <TabStudioDocumentedLibraries>TabStudio.Core;TabStudio.Compilation;TabStudio.Packages;TabStudio.TestRunner;TabStudio.SourceControl</TabStudioDocumentedLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(IsTestProject)' != 'true' AND $([System.String]::Copy(';$(TabStudioDocumentedLibraries);').Contains(';$(MSBuildProjectName);'))">
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
