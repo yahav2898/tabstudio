@@ -60,5 +60,5 @@ public sealed class SolidBrush : Brush
     /// <inheritdoc />
     public override object Clone() => new SolidBrush(_color);
 
-    internal override BrushSpec ToSpec() => new SolidBrushSpec((uint)_color.ToArgb());
+    internal override BrushSpec ToSpec() => new SolidBrushSpec(SystemColorValues.Argb(_color));
 }

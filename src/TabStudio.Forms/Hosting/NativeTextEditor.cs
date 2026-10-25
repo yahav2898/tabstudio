@@ -184,7 +184,7 @@ internal sealed class NativeTextEditor : AvaloniaTextBox
         return background;
     }
 
-    private static ImmutableSolidColorBrush Brush(DrawingColor color) => new(Color.FromArgb(color.A, color.R, color.G, color.B));
+    private static ImmutableSolidColorBrush Brush(DrawingColor color) => new(Color.FromUInt32(SystemColorValues.Argb(color)));
 
     private void ApplyLook(EditorFrame field)
     {

@@ -158,7 +158,7 @@ public sealed partial class Graphics
     {
         if (text.Length > 0)
         {
-            Record(new TextCommand(text, font.Spec, (uint)color.ToArgb(), bounds, options));
+            Record(new TextCommand(text, font.Spec, SystemColorValues.Argb(color), bounds, options));
         }
     }
 

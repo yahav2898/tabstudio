@@ -139,7 +139,7 @@ public sealed partial class Graphics : MarshalByRefObject, IDeviceContext
     public void Clear(Color color)
     {
         var clip = EffectiveClip;
-        _builder.Add(Matrix3x2.Identity, clip, antialias: false, new RectangleCommand(clip, new SolidBrushSpec((uint)color.ToArgb()), null));
+        _builder.Add(Matrix3x2.Identity, clip, antialias: false, new RectangleCommand(clip, new SolidBrushSpec(SystemColorValues.Argb(color)), null));
         _onRecord?.Invoke();
     }
 

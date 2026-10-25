@@ -210,8 +210,8 @@ internal static class ChromePainter
             layout.Draw(context, new Point(rect.X + 32, rect.Y + Math.Round((rect.Height - layout.Height) / 2)));
         }
 
-        // The restore button shows a window being restored: the maximize glyph of a window that is not maximized.
-        var restoreFrame = frame with { IsMaximized = false, Chrome = frame.Chrome with { MaximizeBox = true } };
+        // The restore button has the restore glyph, two windows, as a minimized window's button does in Windows.
+        var restoreFrame = frame with { IsMaximized = true, Chrome = frame.Chrome with { MaximizeBox = true } };
         using (context.PushClip(new RoundedRect(rect, 6)))
         {
             DrawButton(context, restoreFrame, WindowPart.Maximize, ToRect(restore), true, hot == WindowPart.Maximize ? state : ButtonState.Normal);

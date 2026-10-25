@@ -141,5 +141,5 @@ public sealed class LinearGradientBrush : Brush
     public override object Clone() => new LinearGradientBrush(_start, _end, LinearColors[0], LinearColors[^1]) { WrapMode = WrapMode };
 
     internal override BrushSpec ToSpec() =>
-        new LinearGradientBrushSpec(_start, _end, (uint)LinearColors[0].ToArgb(), (uint)LinearColors[^1].ToArgb());
+        new LinearGradientBrushSpec(_start, _end, SystemColorValues.Argb(LinearColors[0]), SystemColorValues.Argb(LinearColors[^1]));
 }
