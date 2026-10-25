@@ -6,10 +6,10 @@
 # a self test that failed without crashing is reported as a warning, since the emulator job in ci.yml checks that.
 #
 # For each run, <output-folder>/run-<n>/ keeps what android-smoke-test.sh leaves (verdict, screenshots, filtered
-# log) plus gc.txt, the collector's own lines (one per collection, and any check that failed); a run that did not
-# pass also keeps logcat-full.txt and, when the app aborted, crash.txt with Mono's message and the native
-# backtrace, and the full tombstone (every thread's backtrace, the memory map and the memory around the registers)
-# when the emulator lets adb run as root. summary.txt has one line per run.
+# log) plus gc.txt, the collector's own lines (one per collection, and any check that failed); a run that crashed
+# also keeps logcat-full.txt, crash.txt with Mono's message and the native backtrace, and the full tombstone (every
+# thread's backtrace, the memory map and the memory around the registers) when the emulator lets adb run as root.
+# summary.txt has one line per run.
 #
 # Usage: build/ci/android-gc-stress.sh <apk> <output-folder> <runs> [timeout-seconds-per-run]
 set -uo pipefail
@@ -48,8 +48,10 @@ for run in $(seq 1 "$runs"); do
 
   # android-smoke-test.sh cleared the log before starting the app, so this is this run's log only.
   adb logcat -d -v threadtime > "$dir/logcat-all.txt" 2> /dev/null || true
-  # Mono's GC trace (tag Mono) and SGen's checks (tag mono-gc), plus the runtime's fatal messages.
-  grep -E ' (Mono|mono-gc|monodroid) *:|SGen|sgen' "$dir/logcat-all.txt" > "$dir/gc.txt" || true
+  # Mono's GC trace (tag Mono) and SGen's checks (tag mono-gc), plus the runtime's fatal messages; without the
+  # bridge's lines for collections that had nothing to bridge, most of the trace.
+  grep -E ' (Mono|mono-gc|monodroid) *:|SGen|sgen' "$dir/logcat-all.txt" \
+    | grep -vE 'GC_TAR_BRIDGE bridges 0 objects 0 |GC_BRIDGE: Complete|GC_BRIDGE waiting' > "$dir/gc.txt" || true
 
   verdict="$(head -n 1 "$dir/verdict.txt" 2> /dev/null || echo "no verdict")"
   # The app's own aborts only: a toolchain's program crashing in its own process is not the IDE crashing.
@@ -74,10 +76,11 @@ for run in $(seq 1 "$runs"); do
     outcome="FAILED: ${verdict:0:300}"
   fi
 
-  if [ "$status" -eq 0 ] && [ -z "$abort" ]; then
-    rm -f "$dir/logcat-all.txt"
-  else
+  # The whole log only for a crash: a self test that failed without crashing has its own job in ci.yml.
+  if [ -n "$abort" ]; then
     mv "$dir/logcat-all.txt" "$dir/logcat-full.txt"
+  else
+    rm -f "$dir/logcat-all.txt" "$dir/logcat-full.txt"
   fi
   rm -f "$dir"/*.apk
   adb shell rm -f '/data/tombstones/*' > /dev/null 2>&1 || true

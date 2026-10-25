@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    A minimal reproduction of a race in Mono's concurrent garbage collector (SGen) on .NET for Android: the
+    concurrent major mark reads object headers that the Tarjan GC bridge has tagged during a minor collection.
+    Run it on an emulator or device and watch logcat (tag GcBridgeRace, and the SGen abort or SIGSEGV):
+
+      dotnet publish -c Release -f net10.0-android -p:RuntimeIdentifiers=android-x64
+      adb install -r bin/Release/net10.0-android/publish/*-Signed.apk
+      adb shell am start -n com.example.gcbridgerace/com.example.gcbridgerace.MainActivity
+
+    -p:AndroidEnableSGenConcurrent=false (the serial collector) makes it stop crashing. -p:GcBridgeRaceChecks=true
+    adds Mono's mod-union consistency check, which names the object whose reference was lost.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0-android</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <SupportedOSPlatformVersion>24</SupportedOSPlatformVersion>
+    <ApplicationId>com.example.gcbridgerace</ApplicationId>
+    <ApplicationTitle>GcBridgeRace</ApplicationTitle>
+    <ApplicationVersion>1</ApplicationVersion>
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AndroidPackageFormat>apk</AndroidPackageFormat>
+    <RunAOTCompilation>false</RunAOTCompilation>
+    <PublishTrimmed>false</PublishTrimmed>
+    <!-- The default; named so the control experiment (false) is one switch away. -->
+    <AndroidEnableSGenConcurrent Condition="'$(AndroidEnableSGenConcurrent)' == ''">true</AndroidEnableSGenConcurrent>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(GcBridgeRaceChecks)' == 'true'">
+    <AndroidEnvironment Include="checks.env" />
+  </ItemGroup>
+
+</Project>

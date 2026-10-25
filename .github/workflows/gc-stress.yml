@@ -39,8 +39,9 @@ on:
 permissions:
   contents: write
 
+# A push without [gc-stress] starts this workflow only to skip it; its own group keeps it from cancelling a run.
 concurrency:
-  group: gc-stress-${{ github.ref }}
+  group: gc-stress-${{ github.ref }}-${{ (github.event_name == 'push' && !contains(github.event.head_commit.message, '[gc-stress]')) && github.sha || 'run' }}
   cancel-in-progress: true
 
 env:
@@ -57,7 +58,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        build: ${{ fromJSON(inputs.builds || '["release","checked","concurrent"]') }}
+        build: ${{ fromJSON(inputs.builds || '["release","checked"]') }}
     steps:
       - uses: actions/checkout@v4
 
@@ -92,24 +93,16 @@ jobs:
       # Which Mono the APK carries and the environment its runtime starts with, so a crash can be matched to both.
       - name: Show the runtime
         run: |
-          mkdir -p runtime && unzip -o -q TabStudio-x64-gc-stress.apk 'lib/x86_64/libmonosgen-2.0.so' -d runtime
+          mkdir -p runtime && unzip -o -q TabStudio-x64-gc-stress.apk 'lib/x86_64/libmonosgen-2.0.so' 'lib/x86_64/libxamarin-app.so' -d runtime
           strings runtime/lib/x86_64/libmonosgen-2.0.so | grep -m 1 '@Commit' | sed 's/^/Mono /' | tee ci-out/runtime.txt || true
           readelf -n runtime/lib/x86_64/libmonosgen-2.0.so | grep 'Build ID' | sed 's/^ */libmonosgen-2.0.so /' | tee -a ci-out/runtime.txt
+          # The collector the build configured: the app's environment is compiled into libxamarin-app.so.
+          strings runtime/lib/x86_64/libxamarin-app.so | grep -m 1 -E '^major=marksweep' | sed 's/^/MONO_GC_PARAMS in the APK: /' | tee -a ci-out/runtime.txt || true
           if [ "${{ matrix.build }}" = release ]; then
             echo "No extra environment: the collector as shipped." | tee -a ci-out/runtime.txt
           else
             grep -v '^#' build/android/gc-stress/${{ matrix.build }}.env | grep . | tee -a ci-out/runtime.txt
           fi
-
-      # INVESTIGATION, to be removed: the SGen worker's crash in the regular emulator job on aa280c05.
-      - name: Name the functions of an earlier crash
-        if: matrix.build == 'release'
-        run: |
-          for pc in 2f0fb2 302066 2e90b0 2de1f6 31244f; do
-            echo "      #0$((n++)) pc 0000000000$pc  /data/app/x/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)"
-          done > earlier-crash.txt
-          bash build/ci/android-symbolize.sh TabStudio-x64-gc-stress.apk x86_64 ci-out/earlier earlier-crash.txt
-          mkdir -p runtime && objdump -d --start-address=0x2f0f40 --stop-address=0x2f0fd0 runtime/lib/x86_64/libmonosgen-2.0.so | tail -n 40 > ci-out/earlier/disassembly.txt || true
 
       - uses: actions/upload-artifact@v4
         with:
@@ -117,7 +110,6 @@ jobs:
           path: |
             TabStudio-x64-gc-stress.apk
             ci-out/runtime.txt
-            ci-out/earlier/
           retention-days: 3
 
       - name: Publish logs
@@ -134,7 +126,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        build: ${{ fromJSON(inputs.builds || '["release","checked","concurrent"]') }}
+        build: ${{ fromJSON(inputs.builds || '["release","checked"]') }}
         api: [29, 35]
         shard: [1, 2]
     steps:

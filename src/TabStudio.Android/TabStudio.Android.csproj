@@ -110,9 +110,8 @@
 
   <!--
     Extra environment variables for the runtime, for diagnostic builds only: the GC stress workflow
-    (.github/workflows/gc-stress.yml) builds with -p:TabStudioAndroidEnvironment=build/android/gc-stress/concurrent.env
-    (or serial.env) so that Mono checks its heap while the self test runs. Release builds pass nothing and get the
-    runtime's defaults.
+    (.github/workflows/gc-stress.yml) builds with -p:TabStudioAndroidEnvironment=build/android/gc-stress/checked.env
+    (or concurrent.env) so that Mono checks its heap while the self test runs. Release builds pass nothing.
   -->
   <ItemGroup Condition="'$(TabStudioAndroidEnvironment)' != ''">
     <AndroidEnvironment Include="$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)', '..', '..', '$(TabStudioAndroidEnvironment)'))" />
