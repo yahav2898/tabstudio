@@ -1,21 +1,27 @@
 using Avalonia;
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.Rendering;
+using TabStudio.App.Theming;
 
 namespace TabStudio.App.Editing;
 
 /// <summary>The colors of an inline diff, shared by its renderers and margin.</summary>
 internal static class DiffColors
 {
-    public static readonly IBrush AddedBackground = new ImmutableSolidColorBrush(Color.Parse("#1E3A2B"));
-    public static readonly IBrush RemovedBackground = new ImmutableSolidColorBrush(Color.Parse("#45242A"));
-    public static readonly IBrush CollapsedBackground = new ImmutableSolidColorBrush(Color.Parse("#23262F"));
-    public static readonly IBrush AddedText = new ImmutableSolidColorBrush(Color.Parse("#6FD6A0"));
-    public static readonly IBrush RemovedText = new ImmutableSolidColorBrush(Color.Parse("#F47067"));
-    public static readonly IBrush LineNumber = new ImmutableSolidColorBrush(Color.Parse("#858C99"));
-    public static readonly IBrush CollapsedText = new ImmutableSolidColorBrush(Color.Parse("#8FB8FF"));
+    public static IBrush AddedBackground => ThemeBrushes.Editor("Editor.DiffAddedLine");
+
+    public static IBrush RemovedBackground => ThemeBrushes.Editor("Editor.DiffRemovedLine");
+
+    public static IBrush CollapsedBackground => ThemeBrushes.Editor("Editor.DiffCollapsedLine");
+
+    public static IBrush AddedText => ThemeBrushes.Editor("Editor.DiffAddedText");
+
+    public static IBrush RemovedText => ThemeBrushes.Editor("Editor.DiffRemovedText");
+
+    public static IBrush LineNumber => ThemeBrushes.Editor("Editor.DiffLineNumber");
+
+    public static IBrush CollapsedText => ThemeBrushes.Editor("Editor.DiffCollapsedText");
 
     /// <summary>The line a document line shows, or <see langword="null"/> past the end.</summary>
     public static DiffLine? LineAt(IReadOnlyList<DiffLine>? lines, int lineNumber) =>

@@ -1,7 +1,7 @@
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.Rendering;
+using TabStudio.App.Theming;
 using TabStudio.Compilation.Features;
 
 namespace TabStudio.App.Editing;
@@ -12,8 +12,9 @@ namespace TabStudio.App.Editing;
 /// </summary>
 public sealed class ReferenceHighlightRenderer : IBackgroundRenderer
 {
-    private static readonly IBrush ReferenceBrush = new ImmutableSolidColorBrush(Color.Parse("#8C34496B"));
-    private static readonly IBrush DefinitionBrush = new ImmutableSolidColorBrush(Color.Parse("#8C3D5A48"));
+    private static IBrush ReferenceBrush => ThemeBrushes.Editor("Editor.ReferenceHighlight");
+
+    private static IBrush DefinitionBrush => ThemeBrushes.Editor("Editor.DefinitionHighlight");
 
     private TrackedRange<HighlightKind>[] _highlights = [];
 

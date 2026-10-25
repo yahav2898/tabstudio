@@ -1,8 +1,8 @@
 using System.Globalization;
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using TabStudio.App.Theming;
 using TabStudio.Toolchains.Catalog;
 using TabStudio.Toolchains.Installation;
 using TabStudio.Toolchains.Linux;
@@ -67,17 +67,17 @@ public sealed partial class ToolchainItemViewModel : ObservableObject
     };
 
     /// <summary>The tile's color, close to the language's own.</summary>
-    public IBrush BadgeBrush => new ImmutableSolidColorBrush(Color.Parse(Toolchain.Id switch
+    public IBrush BadgeBrush => ThemeBrushes.Get(Toolchain.Id switch
     {
-        "python" => "#3D7AB8",
-        "node" => "#3E8A3A",
-        "cpp" => "#5B6FB5",
-        "rust" => "#B7593A",
-        "go" => "#2A8EA8",
-        "java" => "#B5612C",
-        "kotlin" => "#7F52D9",
-        _ => "#4A5263",
-    }));
+        "python" => "Brush.Toolchain.Python",
+        "node" => "Brush.Toolchain.Node",
+        "cpp" => "Brush.Toolchain.Cpp",
+        "rust" => "Brush.Toolchain.Rust",
+        "go" => "Brush.Toolchain.Go",
+        "java" => "Brush.Toolchain.Java",
+        "kotlin" => "Brush.Toolchain.Kotlin",
+        _ => "Brush.Toolchain.Other",
+    });
 
     /// <summary>The version: installed, or what installing gets.</summary>
     public string VersionText => Status switch

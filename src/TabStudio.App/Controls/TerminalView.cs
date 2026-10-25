@@ -8,6 +8,7 @@ using Avalonia.Input.TextInput;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
+using Avalonia.Styling;
 using Avalonia.Threading;
 using TabStudio.App.ViewModels;
 using TabStudio.Toolchains.Terminals;
@@ -40,12 +41,9 @@ public sealed class TerminalView : Control
         AvaloniaProperty.Register<TerminalView, double>(nameof(FontSize), 13);
 
     private static readonly TimeSpan LongPress = TimeSpan.FromMilliseconds(550);
-    private const uint DefaultForeground = 0xD7DAE0;
-    private const uint DefaultBackground = 0x16181D;
-    private const uint CursorColor = 0x6FD6C4;
-    private static readonly IPen CursorPen = new ImmutablePen(new ImmutableSolidColorBrush(Color.FromRgb(0x6F, 0xD6, 0xC4)), 1);
 
     private readonly Dictionary<uint, IBrush> _brushes = [];
+    private TerminalPalette _palette = TerminalPalette.For(ThemeVariant.Dark);
     private readonly InputClient _client;
     private readonly DispatcherTimer _longPress;
     private Typeface _regular;
@@ -74,6 +72,7 @@ public sealed class TerminalView : Control
     {
         _client = new InputClient(this);
         _longPress = new DispatcherTimer { Interval = LongPress };
+        ActualThemeVariantChanged += (_, _) => InvalidateVisual();
         _longPress.Tick += OnLongPress;
 
         // The on-screen keyboard: no suggestions or corrections, which would rewrite what was typed, and an Enter
@@ -196,7 +195,8 @@ public sealed class TerminalView : Control
     public override void Render(DrawingContext context)
     {
         var bounds = new Rect(Bounds.Size);
-        context.FillRectangle(Brush(DefaultBackground), bounds);
+        _palette = TerminalPalette.For(ActualThemeVariant);
+        context.FillRectangle(Brush(_palette.Background), bounds);
         if (Terminal is not { } terminal)
         {
             return;
@@ -500,7 +500,7 @@ public sealed class TerminalView : Control
         _regular = new Typeface(family);
         _bold = new Typeface(family, FontStyle.Normal, FontWeight.Bold);
         _glyphs = _regular.GlyphTypeface;
-        var sample = new FormattedText("MMMMMMMMMM", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, _regular, FontSize, Brushes.White);
+        var sample = new FormattedText("MMMMMMMMMM", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, _regular, FontSize, Brush(_palette.Foreground));
         _cellWidth = Math.Max(1, sample.WidthIncludingTrailingWhitespace / 10);
         _cellHeight = Math.Max(1, Math.Ceiling(sample.Height));
         InvalidateVisual();
@@ -604,12 +604,12 @@ public sealed class TerminalView : Control
             var color = column < columns ? Colors(line[column]).Background : uint.MaxValue;
             if (column < columns && IsSelected(index, column))
             {
-                color = 0x2B4A6F;
+                color = _palette.Selection;
             }
 
             if (color != runColor || column == columns)
             {
-                if (runColor != uint.MaxValue && runColor != DefaultBackground)
+                if (runColor != uint.MaxValue && runColor != _palette.Background)
                 {
                     context.FillRectangle(Brush(runColor), new Rect(runStart * _cellWidth, y, (column - runStart) * _cellWidth, _cellHeight));
                 }
@@ -715,17 +715,17 @@ public sealed class TerminalView : Control
         var rect = new Rect(emulator.CursorColumn * _cellWidth, emulator.CursorRow * _cellHeight, _cellWidth, _cellHeight);
         if (IsFocused)
         {
-            context.FillRectangle(Brush(CursorColor), rect);
+            context.FillRectangle(Brush(_palette.Cursor), rect);
             var cell = emulator.ScreenLine(emulator.CursorRow)[Math.Min(emulator.CursorColumn, emulator.Columns - 1)];
             if (!cell.IsEmpty && !cell.IsContinuation)
             {
-                var formatted = new FormattedText(cell.Text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, cell.Style.Has(TerminalAttributes.Bold) ? _bold : _regular, FontSize, Brush(DefaultBackground));
+                var formatted = new FormattedText(cell.Text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, cell.Style.Has(TerminalAttributes.Bold) ? _bold : _regular, FontSize, Brush(_palette.Background));
                 context.DrawText(formatted, rect.TopLeft);
             }
         }
         else
         {
-            context.DrawRectangle(null, CursorPen, rect.Deflate(0.5));
+            context.DrawRectangle(null, new ImmutablePen(0xFF000000u | _palette.Cursor, 1), rect.Deflate(0.5));
         }
     }
 
@@ -739,14 +739,14 @@ public sealed class TerminalView : Control
         var total = (double)emulator.TotalLines;
         var height = Math.Max(24, bounds.Height * emulator.Rows / total);
         var top = (bounds.Height - height) * (emulator.ScrollbackCount - _scrollBack) / emulator.ScrollbackCount;
-        context.FillRectangle(Brush(0x4A5263), new Rect(bounds.Width - 5, top, 3, height), 1.5f);
+        context.FillRectangle(Brush(_palette.ScrollThumb), new Rect(bounds.Width - 5, top, 3, height), 1.5f);
     }
 
     /// <summary>A cell's colors as drawn: inverse swaps them, and the defaults are the Terminal's own.</summary>
-    private static (uint Foreground, uint Background) Colors(TerminalCell cell)
+    private (uint Foreground, uint Background) Colors(TerminalCell cell)
     {
-        var foreground = cell.Style.Foreground.ToRgb(DefaultForeground);
-        var background = cell.Style.Background.ToRgb(DefaultBackground);
+        var foreground = _palette.Resolve(cell.Style.Foreground, _palette.Foreground);
+        var background = _palette.Resolve(cell.Style.Background, _palette.Background);
         return cell.Style.Has(TerminalAttributes.Inverse) ? (background, foreground) : (foreground, background);
     }
 

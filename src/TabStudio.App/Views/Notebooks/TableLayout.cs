@@ -40,9 +40,9 @@ internal static class TableLayout
         grid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
         var columns = grid.ColumnDefinitions.Count;
         var background = isHeader
-            ? ThemeResources.Brush("Brush.Notebook.TableHeader", "#262A33")
-            : isStriped ? ThemeResources.Brush("Brush.Notebook.TableStripe", "#1F2128") : null;
-        var line = ThemeResources.Brush("Brush.Border", "#2A2E37");
+            ? ThemeResources.Brush("Brush.Notebook.TableHeader")
+            : isStriped ? ThemeResources.Brush("Brush.Notebook.TableStripe") : null;
+        var line = ThemeResources.Brush("Brush.Border");
 
         for (var column = 0; column < columns; column++)
         {

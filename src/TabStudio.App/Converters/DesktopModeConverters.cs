@@ -1,6 +1,6 @@
-using Avalonia;
 using Avalonia.Data.Converters;
 using Avalonia.Media;
+using TabStudio.App.Theming;
 
 namespace TabStudio.App.Converters;
 
@@ -30,6 +30,5 @@ public static class DesktopModeConverters
     /// <param name="icon">The icon's name.</param>
     public static bool HasToolboxIcon(string icon) => Find("Icon.Toolbox." + icon) is not null;
 
-    private static Geometry? Find(string key) =>
-        Application.Current?.TryGetResource(key, Application.Current.ActualThemeVariant, out var value) == true ? value as Geometry : null;
+    private static Geometry? Find(string key) => ThemeBrushes.Find<Geometry>(key);
 }

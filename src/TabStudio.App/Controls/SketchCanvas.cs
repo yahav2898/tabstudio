@@ -2,8 +2,8 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
 using Avalonia.Media.Imaging;
+using TabStudio.App.Theming;
 
 namespace TabStudio.App.Controls;
 
@@ -15,7 +15,7 @@ public sealed class SketchCanvas : Control
 {
     private const double InkThickness = 3;
 
-    private static readonly IPen Ink = new ImmutablePen(Brushes.Black, InkThickness, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
+    private static readonly ThemedPen Ink = ThemedPen.App("Brush.Sketch.Ink", InkThickness, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
 
     private readonly List<List<Point>> _strokes = [];
     private List<Point>? _current;
@@ -133,12 +133,12 @@ public sealed class SketchCanvas : Control
 
     private void Draw(DrawingContext context, Rect area)
     {
-        context.FillRectangle(Brushes.White, area);
+        context.FillRectangle(ThemeBrushes.Get("Brush.Sketch.Paper"), area);
         foreach (var stroke in _strokes)
         {
             if (stroke.Count == 1)
             {
-                context.DrawEllipse(Brushes.Black, null, stroke[0], InkThickness / 2, InkThickness / 2);
+                context.DrawEllipse(ThemeBrushes.Get("Brush.Sketch.Ink"), null, stroke[0], InkThickness / 2, InkThickness / 2);
                 continue;
             }
 
@@ -154,7 +154,7 @@ public sealed class SketchCanvas : Control
                 figure.EndFigure(isClosed: false);
             }
 
-            context.DrawGeometry(null, Ink, geometry);
+            context.DrawGeometry(null, Ink.Pen, geometry);
         }
     }
 }
