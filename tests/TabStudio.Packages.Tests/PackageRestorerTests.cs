@@ -24,6 +24,29 @@ public sealed class PackageRestorerTests : IDisposable
     }
 
     [Fact]
+    public async Task Restores_the_analyzers_of_packages_and_keeps_them_in_the_restore_cache()
+    {
+        _fixture.Add(new TestPackage("Generators", "1.0.0")
+            .WithAssembly("lib/net8.0")
+            .WithFile("analyzers/dotnet/roslyn4.12/cs/Generators.SourceGenerators.dll", TestPackage.CompileLibrary("Generators.SourceGenerators", "public static class G {}"))
+            .WithFile("analyzers/dotnet/roslyn9.0/cs/Generators.SourceGenerators.dll", TestPackage.CompileLibrary("Generators.SourceGenerators", "public static class G {}"))
+            .WithFile("analyzers/dotnet/vb/Generators.VisualBasic.dll", TestPackage.CompileLibrary("Generators.VisualBasic", "public static class V {}")));
+        var project = _fixture.Project(("Generators", "1.0.0"));
+        var restorer = _fixture.CreateRestorer();
+
+        var result = await restorer.RestoreAsync(project);
+        var cached = await restorer.RestoreAsync(project);
+
+        var folder = Path.Combine(_fixture.PackagesDirectory, "generators", "1.0.0");
+        var expected = new[] { Path.Combine(folder, "analyzers", "dotnet", "roslyn4.12", "cs", "Generators.SourceGenerators.dll") };
+        Assert.True(result.Success, Describe(result));
+        Assert.Equal(expected, result.Analyzers);
+        Assert.Equal(expected, Assert.Single(result.Packages).Analyzers);
+        Assert.True(cached.FromCache);
+        Assert.Equal(expected, cached.Analyzers);
+    }
+
+    [Fact]
     public async Task A_package_folder_without_a_completion_marker_is_installed_again()
     {
         _fixture.Add(new TestPackage("A", "1.0.0").WithAssembly("lib/net8.0"));

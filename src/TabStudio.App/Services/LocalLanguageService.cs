@@ -92,10 +92,34 @@ public sealed class LocalLanguageService : ILanguageService
         if (result.Success)
         {
             _host.SetPackageReferences(project.FilePath, result.CompileAssemblies);
+            _host.SetAnalyzers(project.FilePath, result.Analyzers);
             _runtimeAssemblies[project.FilePath] = result.RuntimeAssemblies;
         }
 
         return result;
+    }
+
+    /// <inheritdoc />
+    public void UseSkeletonReferences(string cacheDirectory) => _host.UseSkeletonReferences(cacheDirectory);
+
+    /// <inheritdoc />
+    public void SetActiveProjects(IEnumerable<string> projectFilePaths) => _host.SetActiveProjects(projectFilePaths);
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<BuildDiagnostic>> AddFrameworkGeneratorsAsync(CancellationToken cancellationToken)
+    {
+        if (_restorer is null)
+        {
+            return [];
+        }
+
+        var (analyzers, diagnostics) = await Task.Run(() => _restorer.RestoreFrameworkAnalyzersAsync(cancellationToken), cancellationToken).ConfigureAwait(false);
+        if (analyzers.Count > 0)
+        {
+            _host.SetFrameworkAnalyzers(analyzers);
+        }
+
+        return diagnostics;
     }
 
     /// <inheritdoc />

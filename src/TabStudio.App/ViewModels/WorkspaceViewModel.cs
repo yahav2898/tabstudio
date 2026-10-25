@@ -120,6 +120,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         InitializeDebugging();
         InitializeTests();
         InitializeAgent();
+        Documents.CollectionChanged += (_, _) => UpdateActiveProjects();
     }
 
     /// <summary>Raised when the user closes the workspace to return to the start screen.</summary>
@@ -262,8 +263,13 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
 
         StatusText = "Loading C#";
         var host = await _compiler.CreateHostAsync();
-        await Task.Run(() => host.Load(preview.Workspace, FileSystemTextProvider.Instance));
         _language = new LocalLanguageService(host, _compiler.Packages);
+        if (_profile.UseSkeletonReferences)
+        {
+            _language.UseSkeletonReferences(Path.Combine(_paths.Cache, "Skeletons"));
+        }
+
+        await Task.Run(() => host.Load(preview.Workspace, FileSystemTextProvider.Instance));
         _language.SetConcurrentBuild(_device.Thermal == ThermalState.Normal);
         LanguageServiceText = "Roslyn warm";
 
@@ -276,6 +282,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
 
         State = IdeState.Ready;
         StatusText = "Ready";
+        UpdateActiveProjects();
         StartPackageRestore(preview.Workspace);
         StartIntelliSenseWarmUp();
         if (_profile.AnalyzeWholeSolution)

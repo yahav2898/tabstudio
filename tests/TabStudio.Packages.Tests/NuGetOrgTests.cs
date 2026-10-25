@@ -110,11 +110,112 @@ public sealed class NuGetOrgTests : IDisposable
         Assert.DoesNotContain(restore.Packages, p => p.Id.StartsWith("System.", StringComparison.Ordinal));
     }
 
+    [Fact]
+    public async Task Runs_the_source_generators_of_CommunityToolkit_Mvvm()
+    {
+        var projectPath = _temp.Write("Mvvm/Mvvm.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup>
+                <OutputType>Exe</OutputType>
+                <TargetFramework>net10.0</TargetFramework>
+                <ImplicitUsings>enable</ImplicitUsings>
+              </PropertyGroup>
+              <ItemGroup>
+                <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+              </ItemGroup>
+            </Project>
+            """);
+        _temp.Write("Mvvm/Program.cs", """
+            using CommunityToolkit.Mvvm.ComponentModel;
+
+            var counter = new Counter();
+            counter.PropertyChanged += (_, e) => Console.WriteLine($"{e.PropertyName} changed");
+            counter.Count = 3;
+            Console.WriteLine(counter.Count);
+
+            public partial class Counter : ObservableObject
+            {
+                [ObservableProperty]
+                private int _count;
+            }
+            """);
+
+        var workspace = WorkspaceLoader.Load(projectPath);
+        var project = Assert.Single(workspace.Projects);
+        var restore = await CreateRestorer().RestoreAsync(project);
+        AssertNuGetOrgReachable(restore);
+        Assert.True(restore.Success, string.Join('\n', restore.Diagnostics));
+        Assert.Contains(restore.Analyzers, path => Path.GetFileName(path) == "CommunityToolkit.Mvvm.SourceGenerators.dll");
+
+        using var host = new RoslynWorkspaceHost();
+        host.Load(workspace, FileSystemTextProvider.Instance);
+        host.SetPackageReferences(project.FilePath, restore.CompileAssemblies);
+        host.SetAnalyzers(project.FilePath, restore.Analyzers);
+        var build = await new ProjectBuilder(host).BuildAsync(project);
+        Assert.True(build.Success, string.Join('\n', build.Diagnostics));
+
+        var console = new CapturingConsole();
+        var run = await new ProgramRunner().RunAsync(build.EntryAssembly!, build.Dependencies, restore.RuntimeAssemblies, [], console);
+        Assert.Equal(RunOutcome.Completed, run.Outcome);
+        Assert.Equal("Count changed\n3\n", console.Output);
+    }
+
+    [Fact]
+    public async Task Runs_the_regular_expression_generator_of_dotnet_itself()
+    {
+        var projectPath = _temp.Write("Regex/Regex.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup>
+                <OutputType>Exe</OutputType>
+                <TargetFramework>net10.0</TargetFramework>
+                <ImplicitUsings>enable</ImplicitUsings>
+              </PropertyGroup>
+            </Project>
+            """);
+        _temp.Write("Regex/Program.cs", """
+            using System.Text.RegularExpressions;
+
+            Console.WriteLine(Patterns.Digits().Match("tablet 2026").Value);
+
+            static partial class Patterns
+            {
+                [GeneratedRegex(@"\d+")]
+                public static partial Regex Digits();
+            }
+            """);
+
+        var restorer = CreateRestorer();
+        var (analyzers, problems) = await restorer.RestoreFrameworkAnalyzersAsync();
+        Assert.DoesNotContain(problems, d => d.Severity == Core.Diagnostics.DiagnosticSeverityLevel.Error);
+        Assert.Contains(analyzers, path => Path.GetFileName(path) == "System.Text.RegularExpressions.Generator.dll");
+
+        var workspace = WorkspaceLoader.Load(projectPath);
+        var project = Assert.Single(workspace.Projects);
+        using var host = new RoslynWorkspaceHost();
+        host.SetFrameworkAnalyzers(analyzers);
+        host.Load(workspace, FileSystemTextProvider.Instance);
+        var build = await new ProjectBuilder(host).BuildAsync(project);
+        Assert.True(build.Success, string.Join('\n', build.Diagnostics));
+
+        var console = new CapturingConsole();
+        var run = await new ProgramRunner().RunAsync(build.EntryAssembly!, build.Dependencies, [], [], console);
+        Assert.Equal(RunOutcome.Completed, run.Outcome);
+        Assert.Equal("2026\n", console.Output);
+    }
+
     public void Dispose()
     {
         _http.Dispose();
         _temp.Dispose();
     }
+
+    private PackageRestorer CreateRestorer() => new(
+        new PackageRestoreOptions
+        {
+            GlobalPackagesFolder = _temp.Resolve("packages"),
+            FrameworkAssemblyNames = ReferenceAssemblyNames.Net100,
+        },
+        _http);
 
     internal static void AssertNuGetOrgReachable(RestoreResult restore)
     {

@@ -34,6 +34,12 @@ public sealed record DeviceProfile(
 {
     private const long Gigabyte = 1024L * 1024 * 1024;
 
+    /// <summary>
+    /// Whether only the projects being edited keep a full compiler model, and the projects they reference are
+    /// seen through compact metadata images: on compact devices, where memory is what limits the solution size.
+    /// </summary>
+    public bool UseSkeletonReferences => Class == DeviceClass.Compact;
+
     /// <summary>Picks the profile for a device.</summary>
     /// <param name="device">The device's hardware.</param>
     public static DeviceProfile For(DeviceInfo device)

@@ -25,6 +25,7 @@ public sealed partial class WorkspaceViewModel
         var projects = workspace.Projects.Where(p => NeedsRestore(workspace, p)).ToList();
         var previous = _restore;
         _restore = projects.Count == 0 ? previous : RestoreAfterAsync(previous, projects, _background?.Token ?? CancellationToken.None);
+        StartFrameworkGenerators(workspace);
     }
 
     /// <summary>Waits for the restore in progress, if any, so a build sees its packages.</summary>
