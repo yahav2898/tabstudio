@@ -56,6 +56,7 @@
           </MenuItem>
           <MenuItem Header="_View">
             <MenuItem Header="_Solution Explorer" InputGesture="Ctrl+Alt+L" Command="{Binding ToggleSideBarCommand}" />
+            <MenuItem Header="_Test Explorer (Ctrl+E, T)" Command="{Binding SelectSidePanelCommand}" CommandParameter="{x:Static vm:SidePanel.TestExplorer}" />
             <MenuItem Header="_Error List" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" />
             <MenuItem Header="_Output" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Output}" />
             <MenuItem Header="_Compatibility Doctor" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Compatibility}" />
@@ -74,6 +75,15 @@
           <MenuItem Header="_Debug">
             <MenuItem Header="_Start" InputGesture="F5" Command="{Binding RunCommand}" />
             <MenuItem Header="Stop _Running" InputGesture="Shift+F5" Command="{Binding StopCommand}" />
+          </MenuItem>
+          <MenuItem Header="_Test">
+            <MenuItem Header="Run _All Tests (Ctrl+R, A)" Command="{Binding Tests.RunAllCommand}" />
+            <MenuItem Header="Run _Failed Tests (Ctrl+R, F)" Command="{Binding Tests.RunFailedCommand}" />
+            <MenuItem Header="Run Tests in _Context (Ctrl+R, T)" Command="{Binding RunTestsInContextCommand}" />
+            <MenuItem Header="_Repeat Last Run (Ctrl+R, L)" Command="{Binding Tests.RepeatLastRunCommand}" />
+            <MenuItem Header="_Cancel Test Run" Command="{Binding Tests.CancelCommand}" />
+            <Separator />
+            <MenuItem Header="Test E_xplorer (Ctrl+E, T)" Command="{Binding SelectSidePanelCommand}" CommandParameter="{x:Static vm:SidePanel.TestExplorer}" />
           </MenuItem>
           <MenuItem Header="_Window">
             <MenuItem Header="_Next Document" InputGesture="Ctrl+Tab" Command="{Binding NextDocumentCommand}" />
@@ -373,8 +383,8 @@
         </GridSplitter.Template>
       </GridSplitter>
 
-      <!-- Solution Explorer and Properties -->
-      <Grid Grid.Column="2" x:Name="SideBar" RowDefinitions="*,Auto,214" Background="{DynamicResource Brush.Panel}">
+      <!-- Solution Explorer and Properties, or the Test Explorer, chosen with the tabs at the bottom -->
+      <Grid Grid.Column="2" x:Name="SideBar" RowDefinitions="*,Auto,214,Auto" Background="{DynamicResource Brush.Panel}">
         <views:SolutionExplorerView DataContext="{Binding Explorer}" />
         <GridSplitter Grid.Row="1" Height="6" ResizeDirection="Rows" Background="Transparent">
           <GridSplitter.Template>
@@ -386,6 +396,28 @@
           </GridSplitter.Template>
         </GridSplitter>
         <views:PropertiesView Grid.Row="2" DataContext="{Binding Properties}" />
+
+        <!-- The Test Explorer covers the Solution Explorer and Properties while its tab is selected. -->
+        <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsTestExplorerSelected}">
+          <views:TestExplorerView x:Name="TestExplorer" DataContext="{Binding Tests}" />
+        </Panel>
+
+        <!-- Tool window tabs, at the bottom of the dock as in Visual Studio -->
+        <Border Grid.Row="3" Height="34" Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0">
+          <StackPanel Orientation="Horizontal" Margin="4,0">
+            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsSolutionExplorerSelected}"
+                    Command="{Binding SelectSidePanelCommand}" CommandParameter="{x:Static vm:SidePanel.SolutionExplorer}" Content="Solution Explorer" />
+            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsTestExplorerSelected}"
+                    Command="{Binding SelectSidePanelCommand}" CommandParameter="{x:Static vm:SidePanel.TestExplorer}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <TextBlock Text="Test Explorer" VerticalAlignment="Center" />
+                <Border Classes="pill" Background="{DynamicResource Brush.Error}" IsVisible="{Binding Tests.HasFailures}">
+                  <TextBlock Text="{Binding Tests.FailedCount}" Foreground="{DynamicResource Brush.Window}" VerticalAlignment="Center" />
+                </Border>
+              </StackPanel>
+            </Button>
+          </StackPanel>
+        </Border>
       </Grid>
     </Grid>
 

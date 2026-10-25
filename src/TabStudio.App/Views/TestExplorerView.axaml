@@ -1,0 +1,283 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:conv="using:TabStudio.App.Converters"
+             xmlns:vm="using:TabStudio.App.ViewModels"
+             x:Class="TabStudio.App.Views.TestExplorerView"
+             x:DataType="vm:TestExplorerViewModel">
+
+  <UserControl.Styles>
+    <!-- Colored icons fade with their disabled button. -->
+    <Style Selector="Button:disabled controls|StrokeIcon">
+      <Setter Property="Opacity" Value="0.35" />
+    </Style>
+    <!-- Toolbar buttons: compact, but still a comfortable touch target. -->
+    <Style Selector="Button.tool">
+      <Setter Property="Width" Value="36" />
+      <Setter Property="MinWidth" Value="36" />
+      <Setter Property="Height" Value="34" />
+      <Setter Property="MinHeight" Value="34" />
+      <Setter Property="Padding" Value="0" />
+    </Style>
+    <Style Selector="Button.count">
+      <Setter Property="Height" Value="32" />
+      <Setter Property="MinHeight" Value="32" />
+      <Setter Property="MinWidth" Value="34" />
+      <Setter Property="Padding" Value="7,0" />
+      <Setter Property="FontSize" Value="12.5" />
+    </Style>
+    <Style Selector="TextBlock.section">
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Foreground" Value="{DynamicResource Brush.TextLabel}" />
+      <Setter Property="Margin" Value="0,8,0,2" />
+    </Style>
+  </UserControl.Styles>
+
+  <DockPanel>
+    <!-- Title and run commands -->
+    <Border DockPanel.Dock="Top" Height="36" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+      <Grid ColumnDefinitions="*,Auto" Margin="12,0,2,0">
+        <TextBlock Classes="header" Text="Test Explorer" TextTrimming="CharacterEllipsis" />
+        <StackPanel Grid.Column="1" Orientation="Horizontal">
+          <Button Theme="{StaticResource ToolButton}" Classes="tool" ToolTip.Tip="Run All Tests (Ctrl+R, A)" Command="{Binding RunAllCommand}">
+            <controls:StrokeIcon Data="{StaticResource Icon.RunAll}" IsFilled="True" Size="15" Foreground="{DynamicResource Brush.Success}" />
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Classes="tool" ToolTip.Tip="Run Selected Tests (Ctrl+R, T)" Command="{Binding RunSelectedCommand}">
+            <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="14" Foreground="{DynamicResource Brush.Success}" />
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Classes="tool" ToolTip.Tip="Run Failed Tests (Ctrl+R, F)" Command="{Binding RunFailedCommand}">
+            <Panel Width="18" Height="18">
+              <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="14" Foreground="{DynamicResource Brush.Success}"
+                                   HorizontalAlignment="Left" VerticalAlignment="Top" />
+              <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="10" StrokeThickness="3.4" Foreground="{DynamicResource Brush.Error}"
+                                   HorizontalAlignment="Right" VerticalAlignment="Bottom" />
+            </Panel>
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Classes="tool" ToolTip.Tip="Repeat Last Run (Ctrl+R, L)" Command="{Binding RepeatLastRunCommand}">
+            <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="15" />
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Classes="tool" ToolTip.Tip="Cancel" Command="{Binding CancelCommand}">
+            <controls:StrokeIcon Data="{StaticResource Icon.Stop}" IsFilled="True" Size="12" Foreground="{DynamicResource Brush.Error}" />
+          </Button>
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <!-- Counts, which double as outcome filters, and Group By -->
+    <Border DockPanel.Dock="Top" Height="40" Padding="6,0,2,0" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+      <Grid ColumnDefinitions="*,Auto">
+        <StackPanel Orientation="Horizontal" Spacing="1">
+          <Button Theme="{StaticResource ToolButton}" Classes="count" Classes.selected="{Binding IsShowingAll}"
+                  ToolTip.Tip="All tests" Command="{Binding ClearFilterCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+              <controls:StrokeIcon Data="{StaticResource Icon.Flask}" Size="14" />
+              <TextBlock Text="{Binding TotalCount}" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Classes="count" Classes.selected="{Binding IsShowingPassed}"
+                  ToolTip.Tip="Passed tests" Command="{Binding FilterCommand}" CommandParameter="{x:Static vm:TestState.Passed}">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+              <controls:StrokeIcon Data="{StaticResource Icon.TestPassed}" Size="14" Foreground="{DynamicResource Brush.Success}" />
+              <TextBlock Text="{Binding PassedCount}" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Classes="count" Classes.selected="{Binding IsShowingFailed}"
+                  ToolTip.Tip="Failed tests" Command="{Binding FilterCommand}" CommandParameter="{x:Static vm:TestState.Failed}">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+              <controls:StrokeIcon Data="{StaticResource Icon.Error}" Size="14" Foreground="{DynamicResource Brush.Error}" />
+              <TextBlock Text="{Binding FailedCount}" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Classes="count" Classes.selected="{Binding IsShowingSkipped}"
+                  ToolTip.Tip="Skipped tests" Command="{Binding FilterCommand}" CommandParameter="{x:Static vm:TestState.Skipped}">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+              <controls:StrokeIcon Data="{StaticResource Icon.Warning}" Size="14" Foreground="{DynamicResource Brush.Warning}" />
+              <TextBlock Text="{Binding SkippedCount}" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Classes="count" Classes.selected="{Binding IsShowingNotRun}"
+                  ToolTip.Tip="Tests not run" Command="{Binding FilterCommand}" CommandParameter="{x:Static vm:TestState.NotRun}">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+              <controls:StrokeIcon Data="{StaticResource Icon.TestNotRun}" Size="14" Foreground="{DynamicResource Brush.Info}" />
+              <TextBlock Text="{Binding NotRunCount}" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+        </StackPanel>
+
+        <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Classes="tool" ToolTip.Tip="{Binding GroupByToolTip}">
+          <controls:StrokeIcon Data="{StaticResource Icon.GroupBy}" Size="16" />
+          <Button.Flyout>
+            <MenuFlyout Placement="BottomEdgeAlignedRight" ItemsSource="{Binding GroupByOptions}">
+              <MenuFlyout.ItemContainerTheme>
+                <ControlTheme TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}" x:DataType="vm:TestGroupByOption">
+                  <Setter Property="Header" Value="{Binding Name}" />
+                  <Setter Property="Command" Value="{Binding Select}" />
+                  <Setter Property="ToggleType" Value="Radio" />
+                  <Setter Property="GroupName" Value="TestGroupBy" />
+                  <Setter Property="IsChecked" Value="{Binding IsSelected, Mode=OneWay}" />
+                </ControlTheme>
+              </MenuFlyout.ItemContainerTheme>
+            </MenuFlyout>
+          </Button.Flyout>
+        </Button>
+      </Grid>
+    </Border>
+
+    <!-- Search -->
+    <Border DockPanel.Dock="Top" Padding="8,6,8,4">
+      <TextBox Watermark="Search Test Explorer" Text="{Binding SearchText}">
+        <TextBox.InnerLeftContent>
+          <controls:StrokeIcon Data="{StaticResource Icon.Search}" Size="13" Margin="8,0,0,0" Foreground="{DynamicResource Brush.TextMuted}" />
+        </TextBox.InnerLeftContent>
+      </TextBox>
+    </Border>
+
+    <!-- What the run is doing, and how far it got -->
+    <ProgressBar DockPanel.Dock="Top" Height="3" MinHeight="3" Margin="8,2,8,0" Minimum="0" Maximum="1"
+                 Value="{Binding Progress, Mode=OneWay}" IsIndeterminate="{Binding IsProgressIndeterminate}" IsVisible="{Binding IsRunning}"
+                 Foreground="{DynamicResource Brush.Accent}" Background="{DynamicResource Brush.Control}" />
+    <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto,*" Margin="12,4,10,4"
+          IsVisible="{Binding RunStatusText, Converter={x:Static ObjectConverters.IsNotNull}}">
+      <controls:StrokeIcon Size="13" VerticalAlignment="Top" Margin="0,2,7,0"
+                           Data="{Binding RunStatusState, Converter={x:Static conv:TestConverters.StateIcon}}"
+                           Foreground="{Binding RunStatusState, Converter={x:Static conv:TestConverters.StateBrush}}" />
+      <TextBlock Grid.Column="1" Classes="muted" FontSize="12" TextWrapping="Wrap" Text="{Binding RunStatusText}" />
+    </Grid>
+
+    <!-- The tree and the details pane -->
+    <Grid RowDefinitions="*,Auto,230">
+      <Panel>
+        <TextBlock Classes="muted" FontSize="12.5" TextWrapping="Wrap" TextAlignment="Center" Margin="24,0"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding EmptyText}"
+                   IsVisible="{Binding EmptyText, Converter={x:Static ObjectConverters.IsNotNull}}" />
+        <ListBox x:Name="Tree" ItemsSource="{Binding Rows}" SelectedItem="{Binding SelectedNode}"
+                 ItemContainerTheme="{StaticResource ListRow}" SelectionMode="Single"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+          <ListBox.ItemTemplate>
+            <DataTemplate DataType="vm:TestNodeViewModel">
+              <Grid ColumnDefinitions="Auto,24,Auto,*,Auto" Height="32" Background="Transparent" ToolTip.Tip="{Binding Description}">
+                <!-- Long-press on touch, right-click with a mouse. -->
+                <Grid.ContextFlyout>
+                  <MenuFlyout>
+                    <MenuItem Header="Run" Command="{Binding RunCommand}" />
+                    <MenuItem Header="Go To Test" Command="{Binding GoToTestCommand}" IsVisible="{Binding HasLocation}" />
+                  </MenuFlyout>
+                </Grid.ContextFlyout>
+                <Border Width="{Binding IndentWidth}" />
+
+                <!-- Expand chevron: tapping it expands or collapses the row. -->
+                <Panel Grid.Column="1" Classes="chevron" Background="Transparent" IsVisible="{Binding IsExpandable}">
+                  <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="14"
+                                       Foreground="{DynamicResource Brush.TextMuted}" IsVisible="{Binding !IsExpanded}" />
+                  <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="14"
+                                       Foreground="{DynamicResource Brush.TextMuted}" IsVisible="{Binding IsExpanded}" />
+                </Panel>
+
+                <controls:StrokeIcon Grid.Column="2" Size="15" Margin="2,0,8,0" Opacity="{Binding IconOpacity}"
+                                     Data="{Binding State, Converter={x:Static conv:TestConverters.StateIcon}}"
+                                     Foreground="{Binding State, Converter={x:Static conv:TestConverters.StateBrush}}" />
+
+                <TextBlock Grid.Column="3" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" FontSize="13">
+                  <Run Text="{Binding Name}" />
+                  <Run Text="{Binding CountText}" Foreground="{DynamicResource Brush.TextMuted}" />
+                </TextBlock>
+
+                <TextBlock Grid.Column="4" Classes="muted" FontSize="11.5" Margin="8,0,10,0" VerticalAlignment="Center"
+                           Text="{Binding DurationText}" />
+              </Grid>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </Panel>
+
+      <GridSplitter Grid.Row="1" Height="6" ResizeDirection="Rows" Background="Transparent">
+        <GridSplitter.Template>
+          <ControlTemplate>
+            <Border Background="Transparent">
+              <Border Height="1" VerticalAlignment="Center" Background="{DynamicResource Brush.Divider}" />
+            </Border>
+          </ControlTemplate>
+        </GridSplitter.Template>
+      </GridSplitter>
+
+      <!-- Details of the selected test or group -->
+      <Panel Grid.Row="2">
+        <TextBlock Classes="muted" FontSize="12.5" HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Text="Select a test to see its details."
+                   IsVisible="{Binding Details, Converter={x:Static ObjectConverters.IsNull}}" />
+        <ContentControl Content="{Binding Details}">
+          <ContentControl.ContentTemplate>
+            <DataTemplate DataType="vm:TestDetailsViewModel">
+              <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+                <StackPanel Margin="12,8,12,14" Spacing="4">
+                  <Grid ColumnDefinitions="Auto,*">
+                    <controls:StrokeIcon Size="16" VerticalAlignment="Top" Margin="0,1,8,0"
+                                         Data="{Binding State, Converter={x:Static conv:TestConverters.StateIcon}}"
+                                         Foreground="{Binding State, Converter={x:Static conv:TestConverters.StateBrush}}" />
+                    <SelectableTextBlock Grid.Column="1" Text="{Binding Title}" FontWeight="SemiBold" FontSize="13"
+                                         TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextBright}" />
+                  </Grid>
+                  <TextBlock Classes="muted" FontSize="12" TextWrapping="Wrap" Text="{Binding Summary}" />
+
+                  <Border IsVisible="{Binding IsStale}" CornerRadius="6" Padding="8,5" Margin="0,4,0,0" Background="{DynamicResource Brush.Pill}">
+                    <TextBlock FontSize="12" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Warning}"
+                               Text="The code changed after this run. Run the tests again to update the result." />
+                  </Border>
+
+                  <Button Theme="{StaticResource ToolButton}" MinHeight="32" Height="32" Padding="6,0" Margin="-6,0,0,0"
+                          HorizontalAlignment="Left" Command="{Binding GoToSourceCommand}"
+                          IsVisible="{Binding SourceText, Converter={x:Static ObjectConverters.IsNotNull}}">
+                    <TextBlock FontSize="12.5">
+                      <Run Text="Source: " Foreground="{DynamicResource Brush.TextMuted}" />
+                      <Run Text="{Binding SourceText}" Foreground="{DynamicResource Brush.Link}" />
+                    </TextBlock>
+                  </Button>
+
+                  <ItemsControl ItemsSource="{Binding Outcomes}" IsVisible="{Binding IsGroup}" Margin="0,4,0,0">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate DataType="vm:TestOutcomeCountViewModel">
+                        <StackPanel Orientation="Horizontal" Spacing="7" Height="24">
+                          <controls:StrokeIcon Size="14"
+                                               Data="{Binding State, Converter={x:Static conv:TestConverters.StateIcon}}"
+                                               Foreground="{Binding State, Converter={x:Static conv:TestConverters.StateBrush}}" />
+                          <TextBlock FontSize="12.5" Text="{Binding Text}" VerticalAlignment="Center" />
+                        </StackPanel>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+
+                  <TextBlock Classes="section" Text="Message" IsVisible="{Binding HasMessage}" />
+                  <SelectableTextBlock FontFamily="{DynamicResource CodeFont}" FontSize="12" TextWrapping="Wrap"
+                                       Foreground="{DynamicResource Brush.Text}" Text="{Binding Message}" IsVisible="{Binding HasMessage}" />
+
+                  <TextBlock Classes="section" Text="Stack Trace" IsVisible="{Binding HasStackFrames}" />
+                  <ItemsControl ItemsSource="{Binding StackFrames}" IsVisible="{Binding HasStackFrames}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate DataType="vm:TestStackFrameViewModel">
+                        <Button Theme="{StaticResource ToolButton}" MinHeight="32" Padding="6,3" Margin="-6,0,0,0" CornerRadius="6"
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                                Opacity="{Binding Opacity}" Command="{Binding OpenCommand}" IsEnabled="{Binding CanOpen}">
+                          <StackPanel>
+                            <TextBlock FontFamily="{DynamicResource CodeFont}" FontSize="11.5" TextWrapping="Wrap" Text="{Binding Method}" />
+                            <TextBlock FontSize="11.5" Text="{Binding Location}" Foreground="{DynamicResource Brush.Link}"
+                                       IsVisible="{Binding Location, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                          </StackPanel>
+                        </Button>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+
+                  <TextBlock Classes="section" Text="Standard Output" IsVisible="{Binding HasOutput}" />
+                  <Border CornerRadius="6" Padding="8,6" Background="{DynamicResource Brush.Window}" IsVisible="{Binding HasOutput}">
+                    <SelectableTextBlock FontFamily="{DynamicResource CodeFont}" FontSize="12" TextWrapping="Wrap" Text="{Binding Output}" />
+                  </Border>
+                </StackPanel>
+              </ScrollViewer>
+            </DataTemplate>
+          </ContentControl.ContentTemplate>
+        </ContentControl>
+      </Panel>
+    </Grid>
+  </DockPanel>
+</UserControl>
