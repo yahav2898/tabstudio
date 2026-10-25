@@ -1,15 +1,16 @@
 using System.Globalization;
 using System.Text;
 
-namespace TabStudio.App.Tests.Views.Scrolling;
+namespace TabStudio.App.Services;
 
 /// <summary>
-/// Long source files of everyday application code for the scrolling benchmarks: C# that compiles against the base
-/// library, with XML comments, regions, LINQ, async methods, switch expressions and interpolated strings, and Python with
-/// type hints, dataclasses, comprehensions, f-strings and docstrings. A few lines carry the warnings real files carry,
-/// so the editor draws squiggles. The same text is generated every time.
+/// Long source files of everyday application code, for the self test's scrolling part and the editor's scrolling
+/// benchmarks: C# that compiles against the base library, with XML comments, regions, LINQ, async methods, switch
+/// expressions and interpolated strings, and Python with type hints, dataclasses, comprehensions, f-strings and
+/// docstrings. A few lines carry the warnings real files carry, so the editor draws squiggles. The same text is
+/// generated every time.
 /// </summary>
-internal static class CodeCorpus
+internal static class LongSampleCode
 {
     private static readonly string[] Domains =
     [

@@ -270,7 +270,7 @@ public sealed class EditorTouchScrollingTests
     {
         var solution = await new SampleLibrary(fixture.Paths).EnsureExtractedAsync();
         var path = Path.Combine(Path.GetDirectoryName(solution)!, "src", "Greetings", "Operations.cs");
-        await File.WriteAllTextAsync(path, CodeCorpus.CSharp());
+        await File.WriteAllTextAsync(path, LongSampleCode.CSharp());
         await fixture.Workspace.LoadAsync(solution);
         fixture.Workspace.IsBottomPanelVisible = false;
         var window = new Window { Width = 1280, Height = 800, Content = new WorkspaceView { DataContext = fixture.Workspace } };

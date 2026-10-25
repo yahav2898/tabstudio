@@ -46,7 +46,7 @@ public sealed class EditorScrollingBenchmarkTests
 
         var solution = await new SampleLibrary(fixture.Paths).EnsureExtractedAsync();
         var path = Path.Combine(Path.GetDirectoryName(solution)!, "src", "Greetings", "Operations.cs");
-        await File.WriteAllTextAsync(path, CodeCorpus.CSharp());
+        await File.WriteAllTextAsync(path, LongSampleCode.CSharp());
         await fixture.Workspace.LoadAsync(solution);
         var window = fixture.Show(bottomPanel: false);
         var document = await fixture.Workspace.OpenDocumentAsync(path) ?? throw new InvalidOperationException("The file did not open.");
@@ -98,7 +98,7 @@ public sealed class EditorScrollingBenchmarkTests
         }
 
         var folder = temp.Resolve("python");
-        var path = temp.Write("python/shop.py", CodeCorpus.Python());
+        var path = temp.Write("python/shop.py", LongSampleCode.Python());
         await main.OpenWorkspaceAsync(folder);
         var workspace = main.Workspace!;
         workspace.IsBottomPanelVisible = false;

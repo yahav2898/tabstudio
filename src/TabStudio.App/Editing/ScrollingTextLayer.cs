@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
@@ -162,7 +163,7 @@ public sealed class ScrollingTextLayer : Control
         }
     }
 
-    private static bool Contains(IReadOnlyList<VisualLine> lines, VisualLine line)
+    private static bool Contains(ReadOnlyCollection<VisualLine> lines, VisualLine line)
     {
         for (var i = 0; i < lines.Count; i++)
         {
@@ -185,7 +186,6 @@ public sealed class ScrollingTextLayer : Control
         {
             _line = line;
             _textView = textView;
-            IsHitTestVisible = false;
 
             // Lines sit at fractional positions, as the caret and the selection expect; rounding would shift them.
             UseLayoutRounding = false;
