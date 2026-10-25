@@ -95,6 +95,9 @@ internal sealed class DesktopScreenPresenter : IDisposable
         _ide.DataContext = _tablet.DataContext;
 
         // Taken out of the tablet and put on the display in one go, with no layout in between, so nothing is rebuilt.
+        // The tablet first lays out what it still owes the IDE: a window's layout queue cannot reach views that moved
+        // to another window.
+        _tablet.UpdateLayout();
         _tablet.Children.Remove(_ide);
         _screen.Show(_ide);
         var scale = _desktop.EffectiveScale;
@@ -117,6 +120,9 @@ internal sealed class DesktopScreenPresenter : IDisposable
     {
         _presented = false;
         _tabletTopLevel?.RemoveHandler(InputElement.KeyDownEvent, OnTabletKeyDown);
+
+        // The display lays out what it still owes the IDE before the IDE leaves it, as the tablet does in Present.
+        _screen.UpdateLayout();
         _desktop.Displays.Dismiss();
         _screen.Show(null);
         _tablet.Children.Insert(0, _ide);
@@ -129,6 +135,7 @@ internal sealed class DesktopScreenPresenter : IDisposable
     /// <summary>Shows the IDE on the display again, in a new presentation: at a new size, or after the system ended the old one.</summary>
     private void PresentAgain()
     {
+        _screen.UpdateLayout();
         _desktop.Displays.Dismiss();
         var scale = _desktop.EffectiveScale;
         if (_desktop.Displays.Present(_screen, scale))

@@ -100,14 +100,13 @@ internal sealed class DesktopTypingRelay(Func<InputElement?> target)
 
     /// <summary>
     /// Presses a key on an element. The editor's own key bindings only act for the element that last had the keyboard
-    /// focus, which is the tablet's field, so a key nothing else took runs the editor's command for it directly.
+    /// focus, which is the tablet's field, so a key nothing else took runs the editor's action for it directly.
     /// </summary>
     private static KeyEventArgs Press(InputElement element, Key key, KeyModifiers modifiers)
     {
         var down = Raise(element, InputElement.KeyDownEvent, key, modifiers);
-        if (!down.Handled && element is TextArea area && EditorCommand(key, modifiers) is { } command)
+        if (!down.Handled && element is TextArea area && RunEditorKey(area, key, modifiers))
         {
-            command.Execute(null, area);
             down.Handled = true;
         }
 
@@ -115,12 +114,33 @@ internal sealed class DesktopTypingRelay(Func<InputElement?> target)
         return down;
     }
 
+    /// <summary>
+    /// Runs the editor's own action for a key a touch keyboard sends. Enter is typed as a line break, with the
+    /// editor's indentation, because the editor's Enter command acts only while the editor has the keyboard focus.
+    /// </summary>
+    /// <returns>Whether the key has an action in the editor.</returns>
+    private static bool RunEditorKey(TextArea area, Key key, KeyModifiers modifiers)
+    {
+        if (key == Key.Enter && modifiers == KeyModifiers.None)
+        {
+            area.PerformTextInput("\n");
+            return true;
+        }
+
+        if (EditorCommand(key, modifiers) is not { } command)
+        {
+            return false;
+        }
+
+        command.Execute(null, area);
+        return true;
+    }
+
     /// <summary>The editor's command for a key a touch keyboard sends: editing keys and the arrows.</summary>
     private static RoutedCommand? EditorCommand(Key key, KeyModifiers modifiers) => (key, modifiers) switch
     {
         (Key.Back, KeyModifiers.None) => EditingCommands.Backspace,
         (Key.Delete, KeyModifiers.None) => EditingCommands.Delete,
-        (Key.Enter, KeyModifiers.None) => EditingCommands.EnterParagraphBreak,
         (Key.Tab, KeyModifiers.None) => EditingCommands.TabForward,
         (Key.Tab, KeyModifiers.Shift) => EditingCommands.TabBackward,
         (Key.Left, KeyModifiers.None) => EditingCommands.MoveLeftByCharacter,
