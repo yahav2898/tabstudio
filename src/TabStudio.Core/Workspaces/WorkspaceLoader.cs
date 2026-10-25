@@ -72,25 +72,50 @@ public static class WorkspaceLoader
             : LoadFolder(name, fullPath, options);
     }
 
-    /// <summary>Finds the solution file at the top level of a folder, preferring <c>.slnx</c> over <c>.sln</c>.</summary>
+    /// <summary>
+    /// Finds the solution file at the top level of a folder, preferring <c>.slnx</c> over <c>.sln</c>. When a folder has
+    /// several, as repositories with a main solution and smaller ones for tools often do, it picks the main one: the
+    /// solution named after the folder, otherwise the one with the most projects, otherwise the first by name.
+    /// </summary>
     /// <param name="directory">The folder to look in.</param>
     /// <returns>The solution path, or <see langword="null"/> when there is none.</returns>
     public static string? FindSolution(string directory)
     {
         foreach (var extension in SolutionParser.SolutionExtensions)
         {
-            var match = Directory.EnumerateFiles(directory, "*" + extension, SearchOption.TopDirectoryOnly)
+            var candidates = Directory.EnumerateFiles(directory, "*" + extension, SearchOption.TopDirectoryOnly)
                 .Where(f => string.Equals(Path.GetExtension(f), extension, StringComparison.OrdinalIgnoreCase))
                 .Order(StringComparer.OrdinalIgnoreCase)
-                .FirstOrDefault();
-
-            if (match is not null)
+                .ToList();
+            if (candidates.Count <= 1)
             {
-                return match;
+                if (candidates.Count == 1)
+                {
+                    return candidates[0];
+                }
+
+                continue;
             }
+
+            var folderName = new DirectoryInfo(directory).Name;
+            return candidates.FirstOrDefault(f => string.Equals(Path.GetFileNameWithoutExtension(f), folderName, StringComparison.OrdinalIgnoreCase))
+                ?? candidates.OrderByDescending(CountProjects).First();
         }
 
         return null;
+    }
+
+    /// <summary>The number of projects in a solution, or 0 when it cannot be read.</summary>
+    private static int CountProjects(string solutionPath)
+    {
+        try
+        {
+            return SolutionParser.Load(solutionPath).Projects.Count;
+        }
+        catch (Exception ex) when (ex is ProjectLoadException or IOException or UnauthorizedAccessException)
+        {
+            return 0;
+        }
     }
 
     private static Workspace LoadSolution(SolutionInfo solution, WorkspaceLoaderOptions options)
