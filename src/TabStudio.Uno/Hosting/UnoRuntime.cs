@@ -129,6 +129,8 @@ public sealed class UnoRuntime
             var runtime = new UnoRuntime(version, Path.Combine(options.CacheDirectory, "preview"));
             runtime.Add(assets);
             await Task.Run(() => runtime.Load(cancellationToken), cancellationToken).ConfigureAwait(false);
+            // Once the process-wide host is installed, finish initializing and publish it even if Stop
+            // arrives. Its callbacks must keep pointing to this runtime on the next launch.
             await runtime._host!.Start(
                 runtime.ContentDirectory,
                 options.DarkTheme,
@@ -137,7 +139,7 @@ public sealed class UnoRuntime
                 (float)options.Scale,
                 runtime.OnFrameReady,
                 runtime.OnLogged,
-                runtime.OnUnhandled).WaitAsync(cancellationToken).ConfigureAwait(false);
+                runtime.OnUnhandled).ConfigureAwait(false);
             _current = runtime;
             return runtime;
         }

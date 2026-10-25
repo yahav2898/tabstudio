@@ -6,7 +6,7 @@ using TabStudio.Core.Workspaces;
 namespace TabStudio.App.ViewModels;
 
 /// <summary>
-/// Live apps, shown beside the code while they run: web apps in the web preview, and Avalonia and Windows Forms
+/// Live apps, shown beside the code while they run: web apps in the web preview, and Avalonia, Windows Forms and Uno
 /// apps in the app preview. Saving one of the app's files while it runs rebuilds it and starts it again, so the preview follows
 /// the code; for a web app, a file it serves as is, under <c>wwwroot</c>, only reloads the page.
 /// </summary>
@@ -103,7 +103,7 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
-        // An Avalonia or Windows Forms app's files are all compiled into it or read by it, its images included.
+        // An Avalonia, Windows Forms or Uno app's files are all compiled into it or read by it, its images included.
         var relative = Path.GetRelativePath(project.DirectoryPath, document.FilePath);
         var restarts = IsAvaloniaApp(project) || IsWindowsFormsApp(project) || IsUnoApp(project)
             || (RestartingExtensions.Contains(Path.GetExtension(document.FilePath))

@@ -30,7 +30,9 @@ public sealed class CompatibilityDoctorTests
     [InlineData(ProjectKind.BlazorWebApp)]
     [InlineData(ProjectKind.BlazorWebAssembly)]
     [InlineData(ProjectKind.WinForms)]
-    public void Tests_and_web_apps_in_another_language_are_planned_not_ready(ProjectKind kind)
+    [InlineData(ProjectKind.Uno)]
+    [InlineData(ProjectKind.WinUI)]
+    public void Tests_and_apps_in_another_language_are_planned_not_ready(ProjectKind kind)
     {
         var report = CompatibilityDoctor.Diagnose(Project(kind, ProjectLanguage.VisualBasic));
 

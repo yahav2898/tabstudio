@@ -14,9 +14,9 @@ public sealed class UnoAppTests
     private static readonly TimeSpan StartTimeout = TimeSpan.FromMinutes(4);
 
     [AvaloniaTheory]
-    [InlineData(UnoTemplates.WinUIAppId, "HelloWinUI")]
-    [InlineData(UnoTemplates.UnoAppId, "HelloUno")]
-    public async Task F5_shows_the_template_and_saving_XAML_and_CSharp_restarts_it(string template, string name)
+    [InlineData(UnoTemplates.WinUIAppId, "HelloWinUI", true)]
+    [InlineData(UnoTemplates.UnoAppId, "HelloUno", false)]
+    public async Task F5_and_CtrlF5_show_the_template_and_saving_XAML_and_CSharp_restarts_it(string template, string name, bool debug)
     {
         using var fixture = new WorkspaceFixture();
         Assert.Contains(ProjectTemplates.All, t => t.Id == template);
@@ -37,7 +37,7 @@ public sealed class UnoAppTests
         var document = await workspace.OpenDocumentAsync(page);
         var window = new Window { Width = 1440, Height = 900, Content = new WorkspaceView { DataContext = workspace } };
         window.Show();
-        var run = workspace.StartDebuggingCommand.ExecuteAsync(null);
+        var run = debug ? workspace.StartDebuggingCommand.ExecuteAsync(null) : workspace.RunCommand.ExecuteAsync(null);
         try
         {
             await UiTestHelpers.WaitUntilAsync(() => workspace.AppPreview.IsRunning || run.IsCompleted, StartTimeout, "Uno's preview");
@@ -46,7 +46,10 @@ public sealed class UnoAppTests
             Assert.NotNull(preview.App);
             Assert.True(Core.Compatibility.CompatibilityDoctor.Diagnose(workspace.StartupProject!).CanRunToday);
             Assert.Contains("Hello from WinUI", await preview.App.GetTextsAsync());
-            Assert.Contains("without the debugger", workspace.Output.Text, StringComparison.Ordinal);
+            if (debug)
+            {
+                Assert.Contains("without the debugger", workspace.Output.Text, StringComparison.Ordinal);
+            }
             UiTestHelpers.SaveScreenshot(window, "winui-01-" + template + "-preview");
 
             var previous = preview.App.Assembly;
