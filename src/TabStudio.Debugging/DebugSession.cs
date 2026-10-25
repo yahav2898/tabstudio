@@ -242,6 +242,19 @@ public sealed class DebugSession : IDisposable
     /// <returns><see langword="false"/> when the program was not paused.</returns>
     public bool StepOut() => _engine.Resume(StepMode.Out);
 
+    /// <summary>
+    /// Run to Cursor: runs until the statement a breakpoint on this line would bind to. Resumes a paused program, or
+    /// arms the target for a running one or one that has not started yet.
+    /// </summary>
+    /// <param name="filePath">Full path of the source file.</param>
+    /// <param name="line">One-based line number.</param>
+    /// <returns><see langword="false"/> when no statement starts on or after the line, or the session has stopped.</returns>
+    public bool RunToLine(string filePath, int line)
+    {
+        ArgumentNullException.ThrowIfNull(filePath);
+        return DebugInfo.FindStatement(filePath, line) is { } statement && _engine.RunTo(statement.Id);
+    }
+
     /// <summary>Pauses the running program at the next statement any of its threads runs (Break All).</summary>
     /// <remarks>A program that is waiting outside its own code, for example for console input, pauses when it returns to it.</remarks>
     public void Pause() => _engine.Pause();

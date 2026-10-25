@@ -41,6 +41,7 @@ internal sealed class DebugEngine
     private volatile bool _paused;
     private volatile bool _stopped;
     private volatile bool _breakOnUnhandledExceptions = true;
+    private volatile int _runToStatement;
     private int _mainThreadId;
 
     // Guarded by _gate.
@@ -153,6 +154,28 @@ internal sealed class DebugEngine
         return true;
     }
 
+    /// <summary>
+    /// Runs until a statement (Run to Cursor): resumes the program when it is paused, or arms the target when it is
+    /// running or has not started. A breakpoint or exception on the way pauses first and cancels the target.
+    /// </summary>
+    /// <param name="statementId">The statement to stop at.</param>
+    /// <returns><see langword="false"/> when the session has stopped.</returns>
+    public bool RunTo(int statementId)
+    {
+        if (_stopped)
+        {
+            return false;
+        }
+
+        _runToStatement = statementId;
+        if (_paused)
+        {
+            Resume(StepMode.Run);
+        }
+
+        return true;
+    }
+
     /// <summary>Releases every waiting thread and turns the hooks off.</summary>
     public void Stop()
     {
@@ -250,7 +273,7 @@ internal sealed class DebugEngine
         }
 
         var mode = _mode;
-        return (mode != StepMode.Run && IsStepComplete(mode, frame)) || _breakpoints.Contains(statementId);
+        return (mode != StepMode.Run && IsStepComplete(mode, frame)) || _breakpoints.Contains(statementId) || statementId == _runToStatement;
     }
 
     private void OnBreak(object? token, int statementId, object?[]? locals)
@@ -358,7 +381,12 @@ internal sealed class DebugEngine
             return PauseReason.Step;
         }
 
-        return _breakpoints.Contains(statementId) ? PauseReason.Breakpoint : null;
+        if (_breakpoints.Contains(statementId))
+        {
+            return PauseReason.Breakpoint;
+        }
+
+        return statementId == _runToStatement ? PauseReason.RunToCursor : null;
     }
 
     private bool IsStepComplete(StepMode mode, DebugFrame? frame)
@@ -378,6 +406,7 @@ internal sealed class DebugEngine
     private DebugPausedEventArgs BeginPause(PauseReason reason, DebugFrame? frame, IReadOnlyList<DebugValue> locals, Breakpoint? breakpoint, Exception? exception)
     {
         _pauseGeneration++;
+        _runToStatement = 0;
         _mode = StepMode.Run;
         _stepFrame = null;
         _pausedFrame = frame;

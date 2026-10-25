@@ -49,4 +49,18 @@ public sealed class DebugPausedEventArgs : EventArgs
 
     /// <summary>Identifies this pause, so a late resume cannot release a newer one.</summary>
     internal long Generation { get; }
+
+    /// <summary>
+    /// Finds a value by a simple path, for DataTips and the Watch window: a local, then member names and indexes as
+    /// <see cref="DebugValue.Expand"/> names them, such as <c>order.Customer.Name</c>, <c>items[0]</c> or
+    /// <c>prices["tea"]</c>. The first part may also be a field or property of <c>this</c>.
+    /// </summary>
+    /// <remarks>This is not a C# evaluator: method calls and operators are not supported.</remarks>
+    /// <param name="path">The path.</param>
+    /// <returns>The value, or <see langword="null"/> when a part of the path does not exist.</returns>
+    public DebugValue? FindValue(string path)
+    {
+        ArgumentNullException.ThrowIfNull(path);
+        return Inspection.ValuePath.Find(Locals, path);
+    }
 }

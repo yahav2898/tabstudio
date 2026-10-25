@@ -14,4 +14,7 @@ public enum PauseReason
 
     /// <summary>An exception is about to leave the program unhandled.</summary>
     Exception,
+
+    /// <summary>It reached the statement of a Run to Cursor.</summary>
+    RunToCursor,
 }

@@ -105,7 +105,27 @@ public sealed class DebugValueTests
         Assert.Equal("{Pair { Left = 1, Right = 2 }}", Value(new Pair(1, 2)).Value);
     }
 
+    [Fact]
+    public void Finds_values_by_path_for_data_tips_and_watches()
+    {
+        var order = new DebugValue("order", null, new Order("Ada", ["coffee", "tea"]), _inspector);
+        var prices = new DebugValue("prices", null, new Dictionary<string, int> { ["tea"] = 3 }, _inspector);
+        var self = new DebugValue("this", null, new Sample(), _inspector);
+        var pause = new DebugPausedEventArgs(PauseReason.Pause, [], [order, prices, self], null, null, 1, 1);
+
+        Assert.Equal("\"Ada\"", pause.FindValue("order.Customer")?.Value);
+        Assert.Equal("\"tea\"", pause.FindValue("order.Items[1]")?.Value);
+        Assert.Equal("3", pause.FindValue("prices[\"tea\"]")?.Value);
+        Assert.Equal("4", pause.FindValue("Number")?.Value);
+        Assert.Equal("4", pause.FindValue(" this . Number ")?.Value);
+        Assert.Null(pause.FindValue("order.Missing"));
+        Assert.Null(pause.FindValue("nothing"));
+        Assert.Null(pause.FindValue(string.Empty));
+    }
+
     private DebugValue Value(object? value, string? declaredType = null) => new("x", declaredType, value, _inspector);
+
+    private sealed record Order(string Customer, List<string> Items);
 
     private sealed record Pair(int Left, int Right);
 

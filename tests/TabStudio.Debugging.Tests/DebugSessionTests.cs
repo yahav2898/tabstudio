@@ -115,6 +115,28 @@ public sealed class DebugSessionTests
     }
 
     [Fact]
+    public async Task Run_to_cursor_pauses_at_the_line_once()
+    {
+        using var program = new DebuggedProgram(Calculator);
+        Assert.True(program.Session.RunToLine(DebuggedProgram.FilePath, 3));
+        program.Start();
+
+        var atStart = await program.NextPauseAsync();
+        Assert.Equal(PauseReason.RunToCursor, atStart.Reason);
+        Assert.Equal(3, atStart.Location?.Line);
+
+        Assert.False(program.Session.RunToLine(DebuggedProgram.FilePath, 400));
+        Assert.True(program.Session.RunToLine(DebuggedProgram.FilePath, 4));
+        var next = await program.NextPauseAsync();
+        Assert.Equal(PauseReason.RunToCursor, next.Reason);
+        Assert.Equal(4, next.Location?.Line);
+
+        program.Session.Continue();
+        var result = await program.FinishAsync();
+        Assert.Equal(RunOutcome.Completed, result.Outcome);
+    }
+
+    [Fact]
     public async Task Shows_the_call_stack_across_methods()
     {
         using var program = new DebuggedProgram(Calculator, 16);
