@@ -1,17 +1,3 @@
-TabStudio's codes, drawn cleanly at 4 px a module: 51 of 3000 not read by ZXing; 51 of those read when ZXing is told the image is exactly the code (no finder search); ZXing's encoder chose another mask for 1 of them
-ZXing's own codes for the same texts: 50 of 3000 not read; same mask as TabStudio for 2914 of 3000
-Masks chosen by TabStudio 0-7: 1 2 1530 994 238 115 120 0; failures by mask: 0 0 5 40 5 1 0 0
-Masks chosen by ZXing    0-7: 1 2 1588 969 223 103 114 0
-First failures:
-  ours mask 3, ZXing's encoder chooses mask 3; read without the finder search (PURE_BARCODE): True; tabstudio-link://pair?v=1&n=Yahav%27s%20Pixel%209%20Pro&a=192.168.1.23,10.0.0.5&p=47811&f=_RSz6IyzsqImujU0x5ta8tO8LgN63sRt9HqNyi0e-98&c=8B9X636V
-  ours mask 3, ZXing's encoder chooses mask 3; read without the finder search (PURE_BARCODE): True; tabstudio-link://pair?v=1&n=Yahav%27s%20Pixel%209%20Pro&a=192.168.1.23,10.0.0.5&p=47811&f=4plPji7v8tvnJYGtMeU6z8vyXQgLMFasiX4TStl4RA0&c=9KP0PH1Q
-  ours mask 3, ZXing's encoder chooses mask 3; read without the finder search (PURE_BARCODE): True; tabstudio-link://pair?v=1&n=Yahav%27s%20Pixel%209%20Pro&a=192.168.1.23,10.0.0.5&p=47811&f=VmVTEsAjVc9ClXGaeYZGQyi1k_aLBvDp411R5vnaIRs&c=7YNP07AZ
-  ours mask 3, ZXing's encoder chooses mask 3; read without the finder search (PURE_BARCODE): True; tabstudio-link://pair?v=1&n=Yahav%27s%20Pixel%209%20Pro&a=192.168.1.23,10.0.0.5&p=47811&f=lpsaU6OGkoKjfGom6tOYV3AupydZaAqgfGRGcam-Dmw&c=2T94B5AZ
-  ours mask 3, ZXing's encoder chooses mask 3; read without the finder search (PURE_BARCODE): True; tabstudio-link://pair?v=1&n=Yahav%27s%20Pixel%209%20Pro&a=192.168.1.23,10.0.0.5&p=47811&f=l9lhKBX6Bzb-8ueShvD_IKPYms2agTfOEd0fFUjhH6E&c=H0F0V73M
-  ours mask 3, ZXing's encoder chooses mask 3; read without the finder search (PURE_BARCODE): True; tabstudio-link://pair?v=1&n=Yahav%27s%20Pixel%209%20Pro&a=192.168.1.23,10.0.0.5&p=47811&f=uYx5xJF1w1K83bWYiLN-vc4IV5sEe2WNMAOOwiYdg9M&c=NAW0QMP9
-  ours mask 4, ZXing's encoder chooses mask 4; read without the finder search (PURE_BARCODE): True; tabstudio-link://pair?v=1&n=Yahav%27s%20Pixel%209%20Pro&a=192.168.1.23,10.0.0.5&p=47811&f=k-Dii7PcXzDuE4jh3ZB1BRjWMViLlPIEd7UtzOLC8Ec&c=BCVCWMC4
-  ours mask 3, ZXing's encoder chooses mask 3; read without the finder search (PURE_BARCODE): True; tabstudio-link://pair?v=1&n=Yahav%27s%20Pixel%209%20Pro&a=192.168.1.23,10.0.0.5&p=47811&f=AKD7lQJRCL8ly_QWkxTHNso2ovG2AfbkhBdri7s1peQ&c=5YTG8ZNZ
-  ours mask 2, ZXing's encoder chooses mask 2; read without the finder search (PURE_BARCODE): True; tabstudio-link://pair?v=1&n=Yahav%27s%20Pixel%209%20Pro&a=192.168.1.23,10.0.0.5&p=47811&f=9mcYQRyi0h8EQ2DkhgBQy85EazHfpXVz0IW0jfTRISk&c=SD6RS261
-  ours mask 3, ZXing's encoder chooses mask 3; read without the finder search (PURE_BARCODE): True; tabstudio-link://pair?v=1&n=Yahav%27s%20Pixel%209%20Pro&a=192.168.1.23,10.0.0.5&p=47811&f=f_tBEu11Gjg2_KqkudEMk-HDta6AsKLRlK-75LC4xfw&c=EAFFMWG9
-  ours mask 3, ZXing's encoder chooses mask 3; read without the finder search (PURE_BARCODE): True; tabstudio-link://pair?v=1&n=Yahav%27s%20Pixel%209%20Pro&a=192.168.1.23,10.0.0.5&p=47811&f=obRNhXGhJlKXjk5BEObHBrLuNBSR2N6r-LK7jdV7lMA&c=WFJY3A54
-  ours mask 5, ZXing's encoder chooses mask 5; read without the finder search (PURE_BARCODE): True; tabstudio-link://pair?v=1&n=Yahav%27s%20Pixel%209%20Pro&a=192.168.1.23,10.0.0.5&p=47811&f=nMo3dJljXawIKYBZp_7noTfdBEgWGlo-SnwI4DUzaZI&c=1VGSB9A3
+Clean codes at 4 px a module, 3000 random invitations, not read:
+  TabStudio's codes: QR reader 40, with TRY_HARDER 40, QR reader then multiple-code reader 0
+  ZXing's own codes for the same texts: QR reader 36, then multiple-code reader 0

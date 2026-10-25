@@ -1,17 +1,4 @@
-Camera-frame decode (QrFrameDecoderTests frames): 39 of 600 invitations failed at some rotation; by rotation 0/90/180/270: 39/0/0/0; failed with every other noise seed: 0
-First failures:
-  0 degrees, mask 2, failed with 2 of 6 other noise seeds: tabstudio-link://pair?v=1&n=Pixel%209&a=192.168.1.23,10.0.0.7&p=50517&f=X820S2Bb31ilLRlK-Tip3rX_7wgxm47LIeiY99M765s&c=NRC2Y4QM
-  0 degrees, mask 2, failed with 2 of 6 other noise seeds: tabstudio-link://pair?v=1&n=Pixel%209&a=192.168.1.23,10.0.0.7&p=50517&f=SWW8kHZa2tLIU9IxS2sMgt4ABl_EZbDrnnd81N4sAIw&c=YTEZFK63
-  0 degrees, mask 2, failed with 2 of 6 other noise seeds: tabstudio-link://pair?v=1&n=Pixel%209&a=192.168.1.23,10.0.0.7&p=50517&f=989anXBkw1lRVcRFztGEuRvOzOiuGlITyg8GmfY25LU&c=90KD9ASQ
-  0 degrees, mask 2, failed with 2 of 6 other noise seeds: tabstudio-link://pair?v=1&n=Pixel%209&a=192.168.1.23,10.0.0.7&p=50517&f=d0mMCJbaKPBAgFMSPaSqWoA9FHZEv52ln7k19fBAccY&c=HJTVNB9K
-  0 degrees, mask 2, failed with 2 of 6 other noise seeds: tabstudio-link://pair?v=1&n=Pixel%209&a=192.168.1.23,10.0.0.7&p=50517&f=UpCWZEbECFVgYm1g1LtLKOLz58xkyj-iGDpZZsIdZGc&c=CZE0WTAA
-  0 degrees, mask 2, failed with 2 of 6 other noise seeds: tabstudio-link://pair?v=1&n=Pixel%209&a=192.168.1.23,10.0.0.7&p=50517&f=LBwxVnzhjbtjGXAcIfifJoudTX-FnlbQSACcz8GUBo8&c=JTABS2BS
-  0 degrees, mask 2, failed with 2 of 6 other noise seeds: tabstudio-link://pair?v=1&n=Pixel%209&a=192.168.1.23,10.0.0.7&p=50517&f=p5_HIjZLquPILOUidnG1TkyqILQwL0fuVCV04oIptXc&c=93KKGSB3
-  0 degrees, mask 2, failed with 2 of 6 other noise seeds: tabstudio-link://pair?v=1&n=Pixel%209&a=192.168.1.23,10.0.0.7&p=50517&f=DP0XB0ZDigPdSurb3NZh55PdBAyOhsd7W8eORYBG73M&c=MAJGNR8D
-  0 degrees, mask 3, failed with 2 of 6 other noise seeds: tabstudio-link://pair?v=1&n=Pixel%209&a=192.168.1.23,10.0.0.7&p=50517&f=bqHGhWj1fmb9ftsoidx_rqlnWt5G5tIuMeG1MT008Qo&c=6KJZF2FK
-  0 degrees, mask 3, failed with 2 of 6 other noise seeds: tabstudio-link://pair?v=1&n=Pixel%209&a=192.168.1.23,10.0.0.7&p=50517&f=MXEQ6JMmLw1eqogCmjc1z5KX1QwJmYVAIiqPBm1-JdM&c=KA3ZNNNK
-  0 degrees, mask 2, failed with 2 of 6 other noise seeds: tabstudio-link://pair?v=1&n=Pixel%209&a=192.168.1.23,10.0.0.7&p=50517&f=Wyy2QZbHvADO6IwxJXKnOKNNxlzlqRtPASU8nLKnXtk&c=V8Q68GBE
-  0 degrees, mask 2, failed with 2 of 6 other noise seeds: tabstudio-link://pair?v=1&n=Pixel%209&a=192.168.1.23,10.0.0.7&p=50517&f=HaaijZbj07jmLlnDth2--9hQLtt-AJwFYyz95qDp3A8&c=1R0N9KB3
-  0 degrees, mask 2, failed with 2 of 6 other noise seeds: tabstudio-link://pair?v=1&n=Pixel%209&a=192.168.1.23,10.0.0.7&p=50517&f=0NsgbNBIUqfusXsXChAGNRzbzXeGjy5zFS5i_CJTsuI&c=6PNP2FP4
-  0 degrees, mask 3, failed with 2 of 6 other noise seeds: tabstudio-link://pair?v=1&n=Pixel%209&a=192.168.1.23,10.0.0.7&p=50517&f=xz4Uo5KiYMIog-lPysMzZpD8GF--cOBFdYL7L2gt9Ts&c=SWP4FP4S
-  0 degrees, mask 2, failed with 2 of 6 other noise seeds: tabstudio-link://pair?v=1&n=Pixel%209&a=192.168.1.23,10.0.0.7&p=50517&f=Ad4s5qROcDFKwfnQ53lnI6vy-giGcDEQv3aciSrkxe4&c=KYJWTFZK
+Camera frames, 600 random invitations, not read at 0/90/180/270 degrees:
+  QR reader alone: 23/3/1/4
+  QrFrameDecoder (QR reader, then the multiple-code reader): 0/0/0/0
+A frame without a code: 1.5 ms with the QR reader alone, 1.7 ms with both
