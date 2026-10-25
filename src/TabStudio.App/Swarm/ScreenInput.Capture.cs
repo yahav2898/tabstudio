@@ -61,7 +61,7 @@ internal sealed partial class ScreenInput
             return;
         }
 
-        if (e.Source is Visual source && ElementPaths.Addressable(_root, source) is { } target)
+        if (e.Source is Visual source && AimedAt(source) is { } target)
         {
             CaptureAt(AppInputKind.Tap, target, e.GetPosition(target));
         }
@@ -74,7 +74,7 @@ internal sealed partial class ScreenInput
             return;
         }
 
-        if (e.Source is Visual source && ElementPaths.Addressable(_root, source) is { } target)
+        if (e.Source is Visual source && AimedAt(source) is { } target)
         {
             CaptureAt(AppInputKind.LongPress, target, e.GetPosition(target));
         }
@@ -89,7 +89,7 @@ internal sealed partial class ScreenInput
             return;
         }
 
-        if (e.HoldingState == HoldingState.Started && e.Source is Visual source && ElementPaths.Addressable(_root, source) is { } target)
+        if (e.HoldingState == HoldingState.Started && e.Source is Visual source && AimedAt(source) is { } target)
         {
             CaptureAt(AppInputKind.LongPress, target, source.TranslatePoint(e.Position, target) ?? default);
         }
@@ -192,6 +192,24 @@ internal sealed partial class ScreenInput
         }
 
         return e.KeySymbol is not { Length: > 0 } symbol || char.IsControl(symbol[0]);
+    }
+
+    /// <summary>
+    /// The element a tap was meant for: the control that takes it, such as the button around the text a finger
+    /// landed on, so the tap replays on that control at every size; otherwise the element under the finger.
+    /// </summary>
+    private Control? AimedAt(Visual source)
+    {
+        var target = ElementPaths.Addressable(_root, source);
+        for (var element = target; element is not null && !ReferenceEquals(element, _root); element = element.Parent as Control)
+        {
+            if (LayoutChecks.LayoutScan.IsInteractive(element))
+            {
+                return element;
+            }
+        }
+
+        return target;
     }
 
     /// <summary>A tap, long press or right click on an element, at a point inside it.</summary>

@@ -5,6 +5,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TabStudio.App.Swarm;
+using TabStudio.App.Swarm.Web;
 
 namespace TabStudio.App.ViewModels;
 
@@ -20,6 +21,9 @@ public sealed partial class ScreenTileViewModel : ObservableObject, IDisposable
 {
     /// <summary>How often a phone's picture is refreshed while the matrix is on view.</summary>
     private static readonly TimeSpan SnapshotInterval = TimeSpan.FromSeconds(3);
+
+    /// <summary>How often the web preview's picture is taken: it is on this tablet, so more often than a phone's.</summary>
+    private static readonly TimeSpan LocalSnapshotInterval = TimeSpan.FromSeconds(1.5);
 
     private readonly DeviceMatrixViewModel _matrix;
     private readonly DispatcherTimer? _snapshots;
@@ -38,9 +42,9 @@ public sealed partial class ScreenTileViewModel : ObservableObject, IDisposable
         Profile = screen.Profile;
         IsRunning = screen.IsRunning;
         screen.Changed += OnScreenChanged;
-        if (screen.Kind == AppScreenKind.Device)
+        if (IsPictured)
         {
-            _snapshots = new DispatcherTimer { Interval = SnapshotInterval };
+            _snapshots = new DispatcherTimer { Interval = screen.Kind == AppScreenKind.Device ? SnapshotInterval : LocalSnapshotInterval };
             _snapshots.Tick += (_, _) => _ = RefreshSnapshotAsync();
         }
 
@@ -55,6 +59,12 @@ public sealed partial class ScreenTileViewModel : ObservableObject, IDisposable
 
     /// <summary>The app preview's screen, for its tile.</summary>
     public PreviewAppScreen? Preview => Screen as PreviewAppScreen;
+
+    /// <summary>
+    /// Whether the tile shows pictures the screen takes, refreshed every few seconds, rather than drawing the app live:
+    /// a phone in the swarm, or the web preview, whose browser Avalonia cannot draw.
+    /// </summary>
+    public bool IsPictured => Screen is not LocalAppScreen;
 
     /// <summary>Whether this is a virtual device, which the tile's actions change.</summary>
     public bool IsVirtual => Screen.Kind == AppScreenKind.Virtual;
@@ -255,15 +265,20 @@ public sealed partial class ScreenTileViewModel : ObservableObject, IDisposable
         Profile = Screen.Profile;
         IsRunning = Screen.IsRunning;
         UpdateStatus();
-        if (IsDevice && _snapshots?.IsEnabled == true)
+        if (_snapshots?.IsEnabled == true)
         {
             _ = RefreshSnapshotAsync();
         }
     });
 
+    /// <summary>The status follows the matrix's apps: a web app runs in the web preview, not on virtual devices.</summary>
+    internal void RefreshStatus() => UpdateStatus();
+
     private void UpdateStatus() => StatusText =
         Virtual?.Error is { } error ? error
         : Screen.IsRunning ? null
+        : Screen is WebAppScreen ? "Loading the page"
+        : Virtual is not null && _matrix.HasWebApp && !_matrix.HasApp ? "Virtual devices run Avalonia apps"
         : _matrix.HasApp ? "Starting the app"
         : "Not running";
 

@@ -42,4 +42,29 @@ internal static class ScreenCapture
         bitmap.Save(png);
         return png.ToArray();
     }
+
+    /// <summary>Outlines an area in a picture another screen took, such as the web preview's browser.</summary>
+    /// <param name="picture">The picture, as PNG.</param>
+    /// <param name="screenWidth">The screen's width in device-independent pixels, which the area is measured in.</param>
+    /// <param name="area">The area to outline.</param>
+    /// <returns>The picture with the outline, as PNG.</returns>
+    public static byte[] Outlined(byte[] picture, double screenWidth, Rect area)
+    {
+        ArgumentNullException.ThrowIfNull(picture);
+        using var stream = new MemoryStream(picture);
+        using var source = new Bitmap(stream);
+        var pixels = source.PixelSize;
+        var scale = screenWidth > 0 ? pixels.Width / screenWidth : 1;
+        using var bitmap = new RenderTargetBitmap(pixels);
+        using (var context = bitmap.CreateDrawingContext())
+        {
+            context.DrawImage(source, new Rect(0, 0, pixels.Width, pixels.Height));
+            var outlined = new Rect(area.X * scale, area.Y * scale, area.Width * scale, area.Height * scale);
+            context.DrawRectangle(null, Outline, outlined.Inflate(2), 4, 4);
+        }
+
+        using var png = new MemoryStream();
+        bitmap.Save(png);
+        return png.ToArray();
+    }
 }

@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 using TabStudio.App.Previews;
 using TabStudio.App.Swarm;
 using TabStudio.App.Swarm.LayoutChecks;
+using TabStudio.App.Swarm.Web;
 using TabStudio.App.ViewModels.Agent;
 using TabStudio.Core.Diagnostics;
 using TabStudio.Core.Workspaces;
@@ -78,6 +79,7 @@ public sealed partial class WorkspaceViewModel
             preview.Dispose();
         }
 
+        DisposeWebScreen();
         ErrorList.SetLayoutFindings([]);
     }
 
@@ -174,10 +176,16 @@ public sealed partial class WorkspaceViewModel
             var xaml = XamlOf(finding.ElementPath);
             var file = xaml is null ? null : FileOf(xaml);
             var location = xaml is not null && file is not null ? new DiagnosticLocation(file, xaml.Start, xaml.Length, xaml.Line, xaml.Column) : null;
+            var web = xaml is null ? WebSourceOf(finding) : null;
+            if (web is not null)
+            {
+                location = new DiagnosticLocation(web.FilePath, web.Start, web.Length, web.Line, web.Column);
+            }
+
             var severity = finding.Severity == LayoutIssueSeverity.Error ? DiagnosticSeverityLevel.Error : DiagnosticSeverityLevel.Warning;
-            var project = (xaml is null ? null : ProjectOfAssembly(xaml.AssemblyName))?.Name ?? _avaloniaProject?.Name;
+            var project = (xaml is null ? null : ProjectOfAssembly(xaml.AssemblyName))?.Name ?? (IsOnWebPreview(finding) ? _webProject?.Name : null) ?? _avaloniaProject?.Name;
             var diagnostic = new BuildDiagnostic(finding.Code, severity, finding.Message, location, project) { HelpLink = LayoutRules.HelpLink(finding.Kind) };
-            rows.Add(new LayoutFindingRow(finding, diagnostic, xaml));
+            rows.Add(new LayoutFindingRow(finding, diagnostic, xaml) { WebSource = web });
         }
 
         ErrorList.SetLayoutFindings(rows);
@@ -244,6 +252,11 @@ public sealed partial class WorkspaceViewModel
         {
             picture = await local.CaptureAsync(first.Issue.Bounds, CancellationToken.None);
         }
+        else if (first.Screenshot is { } taken)
+        {
+            // A picture another screen took: the element is outlined on it here.
+            picture = ScreenCapture.Outlined(taken, first.Profile.Width, first.Issue.Bounds);
+        }
 
         picture ??= first.Screenshot;
         var prompt = DescribeLayoutForAgent(row);
@@ -263,7 +276,9 @@ public sealed partial class WorkspaceViewModel
     {
         var finding = row.Finding;
         var text = new StringBuilder();
-        var app = (row.Diagnostic.ProjectName ?? _avaloniaProject?.Name) is { } name ? $"the Avalonia app {name}" : "the Avalonia app";
+        var web = IsOnWebPreview(finding);
+        var kind = web ? "web app" : "Avalonia app";
+        var app = (row.Diagnostic.ProjectName ?? (web ? _webProject?.Name : _avaloniaProject?.Name)) is { } name ? $"the {kind} {name}" : $"the {kind}";
         text.Append(CultureInfo.InvariantCulture, $"Fix this layout problem in {app}, so the view works on every screen below, then check that the project builds.\n");
         text.Append(CultureInfo.InvariantCulture, $"{finding.Code} {LayoutRules.Title(finding.Kind)}: {finding.Message}\n");
         text.Append("It shows on:\n");
@@ -281,11 +296,33 @@ public sealed partial class WorkspaceViewModel
                 : location.FilePath;
             text.Append(CultureInfo.InvariantCulture, $"It is written in {file}, line {location.Line}, column {location.Column}:\n```xml\n{xaml.Snippet}\n```\n");
         }
+        else if (row.WebSource is { } page)
+        {
+            var root = Workspace?.RootDirectory;
+            var file = root is not null && page.FilePath.StartsWith(root, StringComparison.Ordinal)
+                ? Path.GetRelativePath(root, page.FilePath).Replace('\\', '/')
+                : page.FilePath;
+            text.Append(CultureInfo.InvariantCulture, $"It is written in {file}, line {page.Line}, column {page.Column}:\n```html\n{page.Snippet}\n```\n");
+        }
 
         text.Append(CultureInfo.InvariantCulture, $"The picture shows {finding.Screens[0].Profile.Name} with the element outlined in red.\n");
-        text.Append(LayoutHint(finding.Kind));
+        text.Append(web ? WebLayoutHint(finding.Kind) : LayoutHint(finding.Kind));
         return text.ToString().TrimEnd();
     }
+
+    /// <summary>Whether a finding is on the web preview, so its element is in a page rather than in XAML.</summary>
+    private static bool IsOnWebPreview(LayoutFinding finding) => finding.Screens.Any(s => s.ScreenId == WebAppScreen.WebPreviewId);
+
+    /// <summary>What a good fix looks like in a web page, for each kind of problem.</summary>
+    private static string WebLayoutHint(LayoutIssueKind kind) => kind switch
+    {
+        LayoutIssueKind.ClippedText => "Keep the design: let the text wrap, give it the room it needs with flexible widths, or shorten it, rather than shrinking its font.",
+        LayoutIssueKind.OffScreen => "Keep the design: make the layout adapt to narrow screens with flexible widths, max-width: 100%, flex-wrap or a media query, rather than fixed widths and offsets.",
+        LayoutIssueKind.Overlap => "Keep the design: give each control its own space with flex or grid layout, rather than negative margins or positioning that push one over the other.",
+        LayoutIssueKind.SmallTouchTarget => "Keep the look: make the control at least 44 × 44 CSS pixels with min-width and min-height or padding, so a finger hits it reliably.",
+        LayoutIssueKind.LowContrast => "Keep the design: use text and background colors with at least 4.5:1 contrast (3:1 for large text).",
+        _ => string.Empty,
+    };
 
     /// <summary>What a good fix looks like, for each kind of problem.</summary>
     private static string LayoutHint(LayoutIssueKind kind) => kind switch

@@ -20,6 +20,12 @@ scrolls into view.
 
 Sizes are in device-independent pixels (dips), the unit Avalonia lays views out in.
 
+**Web apps.** On Android, a web app's page in the web preview is a screen too: the same five checks run on the page
+as the browser laid it out, sizes are in CSS pixels, and a row opens the element's tag in the page's HTML, found by
+its `id`. Elements are named by their path from `body`, such as `body/main[0]/form#form/button[0]`. A page wider than
+the screen counts as off screen even though it scrolls sideways, since on a phone that is a page that does not fit.
+Desktops have no embedded browser, so there a web page is not checked.
+
 ## SWRM001
 
 **Clipped text.** Text that does not fit the room its layout gives it:

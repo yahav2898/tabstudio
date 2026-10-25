@@ -21,7 +21,7 @@ internal sealed class AndroidWebViewFactory(Func<Context> context) : IWebViewFac
 /// Android's system WebView inside the Avalonia layout, through a native control host. Links stay inside the
 /// preview, and JavaScript and local storage are on, as in a browser.
 /// </summary>
-internal sealed class AndroidWebView(Func<Context> context) : NativeControlHost, IWebView, IDisposable
+internal sealed partial class AndroidWebView(Func<Context> context) : NativeControlHost, IWebView, IDisposable
 {
     private AndroidWebKitView? _view;
     private Uri? _page;

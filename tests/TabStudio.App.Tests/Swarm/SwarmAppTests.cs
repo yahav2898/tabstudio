@@ -106,8 +106,9 @@ public sealed class SwarmAppTests
         var foldable = matrix.Tiles.Single(t => t.Virtual == devices[1]);
         foldable.ToggleThemeCommand.Execute(null);
         foldable.ToggleDirectionCommand.Execute(null);
-        Assert.True(foldable.Profile.IsDark);
-        Assert.Equal(TextDirection.RightToLeft, foldable.Profile.Direction);
+        Assert.True(devices[1].Profile.IsDark);
+        Assert.Equal(TextDirection.RightToLeft, devices[1].Profile.Direction);
+        await UiTestHelpers.WaitUntilAsync(() => foldable.Profile == devices[1].Profile, because: "the tile's header");
         Assert.Equal(Avalonia.Media.FlowDirection.RightToLeft, devices[1].AppRoot!.FlowDirection);
         matrix.ShowFullSize(foldable);
         await UiTestHelpers.WaitUntilAsync(() => workspace.LayoutChecks.Checking == 0, CheckTimeout, "the foldable's new checks");
@@ -155,7 +156,7 @@ public sealed class SwarmAppTests
 
         // A replayed tap counts, through the button's own input handling, and is not captured as a person's.
         var button = preview.AppRoot!.GetLogicalDescendants().OfType<Button>().Single(b => b.Name == "CountButton");
-        var path = ElementPaths.Describe(preview.AppRoot, button)!;
+        var path = ElementPaths.Describe(preview.AppRoot!, button)!;
         Assert.Equal("MainView/StackPanel[0]/Button#CountButton", path);
         Assert.True(await SwarmTestHelpers.WithFramesAsync(preview.SendInputAsync(new AppInput(AppInputKind.Tap, path), CancellationToken.None)));
         await UiTestHelpers.WaitUntilAsync(() => Texts(preview.AppRoot).Contains("Clicked 1 times"), because: "the replayed tap");

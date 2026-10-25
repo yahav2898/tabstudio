@@ -22,6 +22,9 @@ public sealed class LayoutFindingRow(LayoutFinding finding, BuildDiagnostic diag
     /// <summary>Where the element is written, if its XAML was found.</summary>
     public XamlSourceLocation? Xaml { get; } = xaml;
 
+    /// <summary>Where the element is written in a web app's page, for a finding on the web preview.</summary>
+    public Swarm.Web.WebSourceLocation? WebSource { get; init; }
+
     /// <summary>The pictures of the screens it shows on, made the first time they are shown.</summary>
     public IReadOnlyList<LayoutScreenshotViewModel> Screenshots => field ??= [.. Finding.Screens.Select(s => new LayoutScreenshotViewModel(s))];
 }

@@ -158,8 +158,8 @@ public sealed class ScreenTileContent : Decorator
     {
         UpdateSize();
         _snapshot.Source = _tile?.Snapshot;
-        _snapshot.IsVisible = _tile?.IsDevice == true;
-        _mirror.IsVisible = _tile?.IsPreview == true;
+        _snapshot.IsVisible = _tile?.IsPictured == true;
+        _mirror.IsVisible = _tile?.Preview is not null;
         _frameHost.IsVisible = _tile?.IsVirtual == true;
         UpdateClaim();
         UpdateMirror();

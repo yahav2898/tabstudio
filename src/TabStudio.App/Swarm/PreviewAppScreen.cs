@@ -163,7 +163,7 @@ public sealed class PreviewAppScreen : LocalAppScreen
     }
 
     /// <summary>The kind of device TabStudio runs on, from its window's narrower side.</summary>
-    private static FormFactor FormFactorOf(TopLevel? topLevel)
+    internal static FormFactor FormFactorOf(TopLevel? topLevel)
     {
         var narrower = topLevel is null ? double.MaxValue : Math.Min(topLevel.ClientSize.Width, topLevel.ClientSize.Height);
         return narrower switch

@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 using TabStudio.App.Previews;
 using TabStudio.App.Swarm;
 using TabStudio.App.Swarm.LayoutChecks;
+using TabStudio.App.Swarm.Web;
 
 namespace TabStudio.App.ViewModels;
 
@@ -183,6 +184,9 @@ public sealed partial class DeviceMatrixViewModel : ObservableObject, IDisposabl
     /// <summary>The banner over the tiles while a finding is outlined.</summary>
     public string? ShownFindingText => ShownFinding is { } finding ? $"{finding.Code} · {finding.Message}" : null;
 
+    /// <summary>Whether a web app runs, in the web preview's tile.</summary>
+    public bool HasWebApp => Tiles.Any(t => t.Screen is WebAppScreen);
+
     /// <summary>The toolbar's summary, such as "4 screens · 3 layout issues".</summary>
     public string SummaryText
     {
@@ -191,7 +195,7 @@ public sealed partial class DeviceMatrixViewModel : ObservableObject, IDisposabl
             var screens = Tiles.Count == 1 ? "1 screen" : string.Create(CultureInfo.CurrentCulture, $"{Tiles.Count} screens");
             var issues = IssueCount switch
             {
-                0 => HasApp ? "no layout issues" : "the app is not running",
+                0 => HasApp || HasWebApp ? "no layout issues" : "the app is not running",
                 1 => "1 layout issue",
                 _ => string.Create(CultureInfo.CurrentCulture, $"{IssueCount} layout issues"),
             };
@@ -437,6 +441,11 @@ public sealed partial class DeviceMatrixViewModel : ObservableObject, IDisposabl
             {
                 Tiles.Move(Tiles.IndexOf(existing), i);
             }
+        }
+
+        foreach (var tile in Tiles)
+        {
+            tile.RefreshStatus();
         }
 
         OnPropertyChanged(nameof(SummaryText));
