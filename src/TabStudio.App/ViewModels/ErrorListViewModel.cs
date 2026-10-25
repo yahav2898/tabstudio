@@ -50,6 +50,7 @@ public sealed partial class ErrorListViewModel : ObservableObject
     private readonly Dictionary<string, IReadOnlyList<BuildDiagnostic>> _byFile = new(StringComparer.Ordinal);
     private IReadOnlyList<BuildDiagnostic> _withoutLocation = [];
     private readonly Dictionary<string, IReadOnlyList<BuildDiagnostic>> _restore = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, HashSet<string>> _reportedByProject = new(StringComparer.Ordinal);
 
     /// <summary>The rows that pass the current filters, most severe first.</summary>
     public ObservableCollection<ErrorItemViewModel> Items { get; } = [];
@@ -150,17 +151,22 @@ public sealed partial class ErrorListViewModel : ObservableObject
         ArgumentNullException.ThrowIfNull(projectDirectory);
         ArgumentNullException.ThrowIfNull(diagnostics);
 
+        // The project's files, and those its previous analysis reported outside its folder, such as generated code.
         var prefix = projectDirectory.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
-        foreach (var file in _byFile.Keys.Where(k => k.StartsWith(prefix, StringComparison.Ordinal)).ToList())
+        var reportedBefore = _reportedByProject.GetValueOrDefault(projectDirectory) ?? [];
+        foreach (var file in _byFile.Keys.Where(k => k.StartsWith(prefix, StringComparison.Ordinal) || reportedBefore.Contains(k)).ToList())
         {
             _byFile.Remove(file);
         }
 
+        var reported = new HashSet<string>(StringComparer.Ordinal);
         foreach (var group in diagnostics.Where(d => d.Location is not null).GroupBy(d => d.Location!.FilePath, StringComparer.Ordinal))
         {
             _byFile[group.Key] = group.ToList();
+            reported.Add(group.Key);
         }
 
+        _reportedByProject[projectDirectory] = reported;
         Refresh();
     }
 
@@ -195,6 +201,7 @@ public sealed partial class ErrorListViewModel : ObservableObject
         _byFile.Clear();
         _withoutLocation = [];
         _restore.Clear();
+        _reportedByProject.Clear();
         Refresh();
     }
 
