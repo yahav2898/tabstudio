@@ -93,6 +93,12 @@ public sealed class MainActivity : AvaloniaMainActivity<TabStudioApplication>
     /// <inheritdoc />
     protected override void OnDestroy()
     {
+        // TabStudio is closing: desktop mode ends, so the display shows again what it showed before.
+        if (IsFinishing && (Avalonia.Application.Current as TabStudioApplication)?.Main?.DesktopMode is { IsActive: true } desktop)
+        {
+            desktop.ExitCommand.Execute(null);
+        }
+
         if (ReferenceEquals(_current, this))
         {
             _current = null;

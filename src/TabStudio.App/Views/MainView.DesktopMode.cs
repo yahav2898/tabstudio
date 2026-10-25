@@ -15,9 +15,6 @@ public sealed partial class MainView
     protected override void OnDataContextChanged(EventArgs e)
     {
         base.OnDataContextChanged(e);
-
-        // The IDE keeps its data context when it moves to the display, rather than taking it from where it is.
-        Ide.DataContext = DataContext;
         _desktop?.Dispose();
         _desktop = (DataContext as MainViewModel)?.DesktopMode is { } desktop
             ? new DesktopScreenPresenter(Root, Ide, desktop)

@@ -40,7 +40,9 @@ internal sealed class DesktopScreenPresenter : IDisposable
         _desktop.KeyboardFocusRequested += OnKeyboardFocusRequested;
         _desktop.Displays.PresentationEnded += OnPresentationEnded;
         _tablet.AttachedToVisualTree += OnTabletAttached;
-        Apply();
+
+        // Not while the tablet's data context is still changing, which is when the presenter is made.
+        Dispatcher.UIThread.Post(Apply);
     }
 
     /// <summary>The display's view while it shows the IDE, otherwise <see langword="null"/>.</summary>
@@ -88,6 +90,9 @@ internal sealed class DesktopScreenPresenter : IDisposable
     {
         _tabletTopLevel = TopLevel.GetTopLevel(_tablet);
 
+        // The IDE keeps the tablet's data context on the display, the same object, so its bindings never see it go.
+        _ide.DataContext = _tablet.DataContext;
+
         // Taken out of the tablet and put on the display in one go, with no layout in between, so nothing is rebuilt.
         _tablet.Children.Remove(_ide);
         _screen.Show(_ide);
@@ -96,6 +101,7 @@ internal sealed class DesktopScreenPresenter : IDisposable
         {
             _screen.Show(null);
             _tablet.Children.Insert(0, _ide);
+            _ide.ClearValue(StyledElement.DataContextProperty);
             _desktop.OnPresentationFailed();
             return;
         }
@@ -113,6 +119,9 @@ internal sealed class DesktopScreenPresenter : IDisposable
         _desktop.Displays.Dismiss();
         _screen.Show(null);
         _tablet.Children.Insert(0, _ide);
+
+        // Back on the tablet, the IDE takes its data context from the tablet again: the same object it had.
+        _ide.ClearValue(StyledElement.DataContextProperty);
         Dispatcher.UIThread.Post(FocusEditorOnTablet, DispatcherPriority.Background);
     }
 
