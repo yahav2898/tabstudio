@@ -1,0 +1,82 @@
+== Processes left running
+    PID    PPID    PGID   RSS     ELAPSED COMMAND
+   2769    2691    1837 554896      03:39 /usr/share/dotnet/sdk/10.0.402/Roslyn/bincore/VBCSCompiler -pipename:7C1eK_URY58svpsGCXumqTPVB8OicXQVkdXAlCcu35A
+   2689       1    1837 548492      03:41 /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.402/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:true /low:false
+   2691       1    1837 188544      03:41 /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.402/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:true /low:false
+   2690       1    1837 176568      03:41 /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.402/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:true /low:false
+   1852    1850    1837 155384      04:18 /tmp/provjobd2719792789
+   1918    1889    1837 143176      04:16 /home/runner/actions-runner/cached/2.338.0/bin/Runner.Worker spawnclient 142 145
+   1889    1837    1837 99876       04:17 /home/runner/actions-runner/cached/2.338.0/bin/Runner.Listener run
+   1064       1    1064 71248       04:27 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+    814       1     814 52220       04:27 php-fpm: master process (/etc/php/8.3/fpm/php-fpm.conf)
+    910       1     910 46640       04:27 /usr/bin/containerd
+    220       1     220 43684       04:34 /sbin/multipathd -d -s
+   1277     847     847 38356       04:26 /usr/bin/python3 -u bin/WALinuxAgent-2.16.0.2-py3.12.egg -run-exthandlers
+   6905       1    6905 35564       00:00 /usr/bin/python3 /usr/share/apport/apport --from-systemd-coredump 0-6893-0
+    847       1     847 31976       04:27 /usr/bin/python3 -u /usr/sbin/waagent -daemon
+   1143     814     814 21596       04:27 php-fpm: pool www
+   1141     814     814 21592       04:27 php-fpm: pool www
+    812       1     812 20924       04:27 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
+   1837       1    1837 18948       04:18 /opt/hca/hosted-compute-agent
+    158       1     158 18148       04:34 /usr/lib/systemd/systemd-journald
+      1       0       1 14416       04:36 /sbin/init
+    846       1     846 13896       04:27 /usr/libexec/udisks2/udisksd
+    474       1     474 13300       04:34 /usr/lib/systemd/systemd-resolved
+   1060       1    1060 13072       04:27 /usr/sbin/ModemManager
+   1006       1    1006 11460       04:27 /usr/lib/systemd/systemd --user
+    819       1     819 10144       04:27 /usr/lib/polkit-1/polkitd --no-debug
+    641       1     641  9808       04:31 /usr/lib/systemd/systemd-networkd
+    844       1     844  9616       04:27 /usr/lib/systemd/systemd-logind
+    226       1     226  8048       04:34 /usr/lib/systemd/systemd-udevd
+   1850    1837    1837  7072       04:18 sudo -n PROVJOBD_E2E=1 /tmp/provjobd2719792789
+    488       1     488  6656       04:34 /usr/sbin/haveged --Foreground --verbose=1
+    952       1     952  6424       04:27 /usr/sbin/rsyslogd -n -iNONE
+    807       1     807  5572       04:27 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+   6946    2656    1837  4276       00:00 ps -eo pid,ppid,pgid,rss,etime,args --sort=-rss
+    935       1     934  3772       04:27 /usr/sbin/chronyd -F 1
+   1070    1006    1006  3636       04:27 (sd-pam)
+   2656    1918    1837  3596       03:42 /usr/bin/bash -e /home/runner/work/_temp/18aaaf7e-c1a3-4c86-9006-556f652968ba.sh
+    298       1     298  2960       04:34 /usr/lib/linux-tools/6.17.0-1022-azure/hv_kvp_daemon -n
+    872       1     872  2880       04:27 /usr/sbin/cron -f -P
+   6950    6905    6905  2328       00:00 grep -F -lxm 1 -- /usr/share/dotnet/dotnet /var/lib/dpkg/info/python3-pyparsing.list /var/lib/dpkg/info/libxmu6:amd64.list /var/lib/dpkg/info/sosreport.list /var/lib/dpkg/info/libsensors5:amd64.list /var/lib/dpkg/info/wget.list /var/lib/dpkg/info/libwayland-client0:amd64.list /var/lib/dpkg/info/php8.3-apcu.list /var/lib/dpkg/info/linux-headers-6.17.0-1022-azure.list /var/lib/dpkg/info/ruby-dev:amd64.list /var/lib/dpkg/info/libp11-kit0:amd64.list /var/lib/dpkg/info/upx-ucl.list /var/lib/dpkg/info/python3-babel.list /var/lib/dpkg/info/linux-libc-dev:amd64.list /var/lib/dpkg/info/libxcursor1:amd64.list /var/lib/dpkg/info/python3-incremental.list /var/lib/dpkg/info/python3-apt.list /var/lib/dpkg/info/libunistring5:amd64.list /var/lib/dpkg/info/python3-colorama.list /var/lib/dpkg/info/p11-kit.list /var/lib/dpkg/info/libcom-err2:amd64.list /var/lib/dpkg/info/libpython3.12-dev:amd64.list /var/lib/dpkg/info/libsqlite3-0:amd64.list /var/lib/dpkg/info/pkgconf:amd64.list /var/lib/dpkg/info/libxml-sax-perl.list /var/lib/dpkg/info/libxml-libxml-perl.list /var/lib/dpkg/info/ruby-net-telnet.list /var/lib/dpkg/info/microsoft-edge-stable.list /var/lib/dpkg/info/libpackagekit-glib2-18:amd64.list /var/lib/dpkg/info/apt.list /var/lib/dpkg/info/liblttng-ust-ctl5t64:amd64.list /var/lib/dpkg/info/gpg-wks-client.list /var/lib/dpkg/info/libnfnetlink0:amd64.list /var/lib/dpkg/info/libc-bin.list /var/lib/dpkg/info/linux-tools-6.17.0-1022-azure.list /var/lib/dpkg/info/python3-mdurl.list /var/lib/dpkg/info/libquadmath0:amd64.list /var/lib/dpkg/info/llvm-16-dev.list /var/lib/dpkg/info/libgdk-pixbuf-2.0-0:amd64.list /var/lib/dpkg/info/libcolord2:amd64.list /var/lib/dpkg/info/apparmor.list /var/lib/dpkg/info/libstdc++-14-dev:amd64.list /var/lib/dpkg/info/lsof.list /var/lib/dpkg/info/debconf-i18n.list /var/lib/dpkg/info/libxcomposite1:amd64.list /var/lib/dpkg/info/rsync.list /var/lib/dpkg/info/clang-tools-18.list /var/lib/dpkg/info/linux-azure-6.17-headers-6.17.0-1022.list /var/lib/dpkg/info/gfortran.list /var/lib/dpkg/info/libhwasan0:amd64.list /var/lib/dpkg/info/temurin-17-jdk.list /var/lib/dpkg/info/locales.list /var/lib/dpkg/info/libsybdb5:amd64.list /var/lib/dpkg/info/gzip.list /var/lib/dpkg/info/libodbc2:amd64.list /var/lib/dpkg/info/libexpat1-dev:amd64.list /var/lib/dpkg/info/g++-13-x86-64-linux-gnu.list /var/lib/dpkg/info/libgpm2:amd64.list /var/lib/dpkg/info/libxmuu1:amd64.list /var/lib/dpkg/info/krb5-locales.list /var/lib/dpkg/info/liblzma5:amd64.list /var/lib/dpkg/info/autotools-dev.list /var/lib/dpkg/info/mysql-server-core-8.0.list /var/lib/dpkg/info/libtidy5deb1:amd64.list /var/lib/dpkg/info/tnftp.list /var/lib/dpkg/info/libdatrie1:amd64.list /var/lib/dpkg/info/appstream.list /var/lib/dpkg/info/libjson-c5:amd64.list /var/lib/dpkg/info/libpciaccess0:amd64.list /var/lib/dpkg/info/pkgconf-bin.list /var/lib/dpkg/info/sudo.list /var/lib/dpkg/info/libnftnl11:amd64.list /var/lib/dpkg/info/passwd.list /var/lib/dpkg/info/python3-lazr.uri.list /var/lib/dpkg/info/libsubid4:amd64.list /var/lib/dpkg/info/packagekit.list /var/lib/dpkg/info/skopeo.list /var/lib/dpkg/info/libfido2-1:amd64.list /var/lib/dpkg/info/efibootmgr.list /var/lib/dpkg/info/kmod.list /var/lib/dpkg/info/modemmanager.list /var/lib/dpkg/info/cryptsetup.list /var/lib/dpkg/info/libpam-cap:amd64.list /var/lib/dpkg/info/walinuxagent.list /var/lib/dpkg/info/gawk.list /var/lib/dpkg/info/libmaxminddb0:amd64.list /var/lib/dpkg/info/linux-azure.list /var/lib/dpkg/info/php8.3-opcache.list /var/lib/dpkg/info/usb-modeswitch-data.list /var/lib/dpkg/info/libgstreamer1.0-0:amd64.list /var/lib/dpkg/info/libmbim-glib4:amd64.list /var/lib/dpkg/info/imagemagick-6-common.list /var/lib/dpkg/info/libicu-dev:amd64.list /var/lib/dpkg/info/findutils.list /var/lib/dpkg/info/librtmp1:amd64.list /var/lib/dpkg/info/python3-wadllib.list /var/lib/dpkg/info/libgtk-3-0t64:amd64.list /var/lib/dpkg/info/mlock.list /var/lib/dpkg/info/snmp.list /var/lib/dpkg/info/libmd0:amd64.list /var/lib/dpkg/info/php8.3-cgi.list
+== Kernel messages
+[    3.511025] mana 7870:00:00.0: enabling device (0000 -> 0002)
+[    3.522337] mana 7870:00:00.0: Microsoft Azure Network Adapter protocol version: 0.1.1
+[    3.523693] hv_netvsc f8615163-0000-1000-2000-e4fade426361 eth0: VF registering: eth1
+[    3.523747] mana 7870:00:00.0 eth1: joined to eth0
+[    3.526526] mana 7870:00:00.0 ens1: renamed from eth1
+[    3.626946] mana 7870:00:00.0 ens1: Configured vPort 0 PD 18 DB 16
+[    3.631199] mana 7870:00:00.0 ens1: Configured steering vPort 0 entries 64
+[    3.631854] hv_netvsc f8615163-0000-1000-2000-e4fade426361 eth0: Data path switched to VF: ens1
+[    4.404691] hv_netvsc f8615163-0000-1000-2000-e4fade426361 eth0: Data path switched from VF: ens1
+[    4.404923] mana 7870:00:00.0 ens1: Configured steering vPort 0 entries 64
+[    4.812331] mana 7870:00:00.0 ens1: Configured vPort 0 PD 18 DB 16
+[    4.816342] mana 7870:00:00.0 ens1: Configured steering vPort 0 entries 64
+[    4.816834] hv_netvsc f8615163-0000-1000-2000-e4fade426361 eth0: Data path switched to VF: ens1
+[    4.816991] mana 7870:00:00.0 mana_0: Port: 1 Link ACTIVE
+[    7.064449] EXT4-fs (nvme0n1p1): resizing filesystem from 19398395 to 39059195 blocks
+[    7.988336] EXT4-fs (nvme0n1p1): resized filesystem to 39059195
+[    8.043968] ephemeral0: Can't lookup blockdev
+[    8.080673] systemd-fstab-generator[776]: Checking was requested for "ephemeral0", but it is not a device.
+[    8.080683] systemd-fstab-generator[776]: x-systemd.device-timeout ignored for ephemeral0
+[    8.802329] block nvme0n1: No UUID available providing old NGUID
+[    8.900672] ephemeral0: Can't lookup blockdev
+[    9.035290] kauditd_printk_skb: 113 callbacks suppressed
+[    9.035294] audit: type=1400 audit(1792943212.155:124): apparmor="STATUS" operation="profile_replace" info="same as current profile, skipping" profile="unconfined" name="rsyslogd" pid=854 comm="apparmor_parser"
+[    9.066931] evm: overlay not supported
+[    9.287288] loop0: detected capacity change from 0 to 8
+[    9.513011] systemd-journald[158]: /var/log/journal/2d791d5cce6240faa3c626058b1ffc7d/user-1001.journal: Journal file uses a different sequence number ID, rotating.
+[    9.528366] audit: type=1400 audit(1792943212.649:125): apparmor="STATUS" operation="profile_replace" info="same as current profile, skipping" profile="unconfined" name="/usr/lib/snapd/snap-confine" pid=1083 comm="apparmor_parser"
+[    9.626503] audit: type=1400 audit(1792943212.747:126): apparmor="STATUS" operation="profile_load" profile="unconfined" name="docker-default" pid=1200 comm="apparmor_parser"
+[    9.730042] Adding 3145724k swap on /swapfile.  Priority:-2 extents:38 across:61005820k SS
+[   10.240087] Initializing XFRM netlink socket
+[   10.361034] bridge: filtering via arp/ip/ip6tables is no longer available by default. Update your scripts to load br_netfilter if you need this.
+[   10.540558] systemd-fstab-generator[1583]: Checking was requested for "ephemeral0", but it is not a device.
+[   10.540571] systemd-fstab-generator[1583]: x-systemd.device-timeout ignored for ephemeral0
+[   17.948943] systemd-fstab-generator[1757]: Checking was requested for "ephemeral0", but it is not a device.
+[   17.948954] systemd-fstab-generator[1757]: x-systemd.device-timeout ignored for ephemeral0
+[   18.129225] systemd-fstab-generator[1821]: Checking was requested for "ephemeral0", but it is not a device.
+[   18.129237] systemd-fstab-generator[1821]: x-systemd.device-timeout ignored for ephemeral0
+[   49.494846] hv_balloon: Max. dynamic memory size: 16384 MB
+[  270.914636] .NET TP Worker[3152]: segfault at 7fa7a8f50800 ip 00007fa7d8d450a0 sp 00007fa7dbffcfc0 error 4 in libSkiaSharp.so[3450a0,7fa7d8a00000+89e000] likely on CPU 1 (core 0, socket 0)
+[  270.914657] Code: c0 01 c4 e3 65 38 d2 01 c4 e3 55 38 dc 01 62 f3 e5 48 3a d2 01 c4 e3 45 38 de 01 62 f2 7d 48 18 25 79 f3 3c 00 e9 1f 03 00 00 <62> b1 fe 48 6f 04 8a 62 f2 7d 48 58 0d b3 2d 3f 00 62 f1 fd 48 db
