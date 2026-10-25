@@ -134,11 +134,11 @@ public sealed class BlazorAppTests : IClassFixture<SharedToolchain>, IDisposable
     public async Task Typing_a_tag_in_a_Razor_file_offers_the_components_it_can_use()
     {
         var (workspace, _) = await CreateWorkspaceAsync(withBrowser: false);
-        var solution = new ProjectTemplates(_toolchain.Paths).Create(WebTemplates.BlazorWebAppId, "Bookshelf");
+        var solution = new ProjectTemplates(_toolchain.Paths).Create(WebTemplates.BlazorWebAppId, "Books");
         await workspace.LoadAsync(solution);
         var window = Show(workspace);
         await workspace.BuildCommand.ExecuteAsync(null);
-        await workspace.OpenDocumentAsync(Path.Combine(Path.GetDirectoryName(solution)!, "Bookshelf", "Components", "Pages", "Home.razor"));
+        await workspace.OpenDocumentAsync(Path.Combine(Path.GetDirectoryName(solution)!, "Books", "Components", "Pages", "Home.razor"));
         var view = Views.EditorHarness.ActiveEditor(window);
         var completion = view.Completion!;
 
@@ -148,7 +148,7 @@ public sealed class BlazorAppTests : IClassFixture<SharedToolchain>, IDisposable
 
         UiTestHelpers.SaveScreenshot(window, "blazor-05-razor-completion");
 
-        Assert.Equal("Bookshelf.Components.Pages", completion.SelectedItem!.Entry.InlineDescription);
+        Assert.Equal("Books.Components.Pages", completion.SelectedItem!.Entry.InlineDescription);
         window.Close();
     }
 
