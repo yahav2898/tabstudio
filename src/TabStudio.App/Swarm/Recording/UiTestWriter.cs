@@ -83,6 +83,7 @@ public static class UiTestWriter
                     using var app = RecordedApp.Start(width: {{Number(profile.Width)}}, height: {{Number(profile.Height)}});
 
             """);
+        code.Append('\n');
         foreach (var step in recording.Steps)
         {
             code.Append("        ").Append(Statement(step)).Append('\n');
