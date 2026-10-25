@@ -1,5 +1,6 @@
 using System.Globalization;
 using AvaloniaEdit.Document;
+using Microsoft.CodeAnalysis.Text;
 using TabStudio.LiveTesting.Results;
 
 namespace TabStudio.App.Editing;
@@ -38,6 +39,10 @@ public sealed record LiveTestMarker(LineCoverageState State, bool IsStale, IRead
 public sealed class LiveTestMarkers
 {
     private TrackedRange<LiveTestMarker>[] _ranges = [];
+    private SourceText? _mappedText;
+    private int _mappedEdits = -1;
+    private MappedLine[] _map = [];
+    private int _edits;
 
     /// <summary>The number of lines with a marker.</summary>
     public int Count => _ranges.Length;
@@ -54,9 +59,17 @@ public sealed class LiveTestMarkers
         ArgumentNullException.ThrowIfNull(document);
         ArgumentNullException.ThrowIfNull(coverage);
 
-        var before = coverage.Text.Lines.Select(l => l.ToString()).ToList();
-        var after = document.Lines.Select(l => document.GetText(l.Offset, l.Length)).ToList();
-        var map = LineMapper.Map(before, after);
+        // Results arrive many times during a run, for the same build text: the line map is kept until either side changes.
+        if (!ReferenceEquals(coverage.Text, _mappedText) || _mappedEdits != _edits)
+        {
+            var before = coverage.Text.Lines.Select(l => l.ToString()).ToList();
+            var after = document.Lines.Select(l => document.GetText(l.Offset, l.Length)).ToList();
+            _map = LineMapper.Map(before, after);
+            _mappedText = coverage.Text;
+            _mappedEdits = _edits;
+        }
+
+        var map = _map;
         var ranges = new List<TrackedRange<LiveTestMarker>>(coverage.Lines.Count);
         foreach (var line in coverage.Lines)
         {
@@ -100,6 +113,7 @@ public sealed class LiveTestMarkers
     public void Apply(DocumentChangeEventArgs change)
     {
         ArgumentNullException.ThrowIfNull(change);
+        _edits++;
         if (_ranges.Length == 0)
         {
             return;

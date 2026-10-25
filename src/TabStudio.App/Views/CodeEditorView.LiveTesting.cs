@@ -102,13 +102,10 @@ public sealed partial class CodeEditorView
 
         margin.IsVisible = _document.LiveTestMarkers is not null;
         margin.InvalidateVisual();
-        if (_document.LiveTestMarkers is null)
+
+        // An open popup keeps what it showed, so a tap on it is never lost to an update; it closes when its marker goes.
+        if (_document.LiveTestMarkers is null || (LiveTestPopup is { } open && margin.MarkerOn(open.Line) is null))
         {
-            _liveTestPopup.IsOpen = false;
-        }
-        else if (LiveTestPopup is { } open && !ShowLiveTestPopup(open.Line))
-        {
-            // The line's marker went away, for example because the line was deleted.
             _liveTestPopup.IsOpen = false;
         }
     }

@@ -234,6 +234,12 @@ public sealed partial class LiveTestingViewModel
 
         if (!IsActive || !ReferenceEquals(_engine, engine))
         {
+            // Stopped, or stopped and started again: a new engine runs once this loop is over.
+            if (_runWanted && IsActive)
+            {
+                _ui.Post(TryStartRun);
+            }
+
             return;
         }
 
