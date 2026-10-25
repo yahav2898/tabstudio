@@ -1,0 +1,51 @@
+  Determining projects to restore...
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/TabStudio.Testing.csproj (in 377 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/TabStudio.App.Tests.csproj (in 436 ms).
+  20 of 22 projects are up-to-date for restore.
+  TabStudio.Extensions -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Extensions/bin/Release/net10.0/TabStudio.Extensions.dll
+  TabStudio.LanguageServers -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.LanguageServers/bin/Release/net10.0/TabStudio.LanguageServers.dll
+  TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
+  TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
+  TabStudio.SourceControl -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/bin/Release/net10.0/TabStudio.SourceControl.dll
+  TabStudio.Toolchains -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Toolchains/bin/Release/net10.0/TabStudio.Toolchains.dll
+  TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
+  TabStudio.Agent -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Agent/bin/Release/net10.0/TabStudio.Agent.dll
+  TabStudio.Notebooks -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/bin/Release/net10.0/TabStudio.Notebooks.dll
+  TabStudio.TestRunner -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/bin/Release/net10.0/TabStudio.TestRunner.dll
+  TabStudio.Debugging -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/bin/Release/net10.0/TabStudio.Debugging.dll
+  TabStudio.Forms -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/bin/Release/net10.0/TabStudio.Forms.dll
+  TabStudio.Packages -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/bin/Release/net10.0/TabStudio.Packages.dll
+  TabStudio.LiveTesting -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.LiveTesting/bin/Release/net10.0/TabStudio.LiveTesting.dll
+  TabStudio.Web -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Web/bin/Release/net10.0/TabStudio.Web.dll
+  TabStudio.Link -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Link/bin/Release/net10.0/TabStudio.Link.dll
+  TabStudio.Forms.Design -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms.Design/bin/Release/net10.0/TabStudio.Forms.Design.dll
+  TabStudio.Swarm -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Swarm/bin/Release/net10.0/TabStudio.Swarm.dll
+  TabStudio.WindowsBridge -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.WindowsBridge/bin/Release/net10.0/TabStudio.WindowsBridge.dll
+  TabStudio.WindowsBridge.Windows -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.WindowsBridge.Windows/bin/Release/net10.0/TabStudio.WindowsBridge.Windows.dll
+  TabStudio.App -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.App/bin/Release/net10.0/TabStudio.App.dll
+/home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/Design/DesignSamples.cs(212,28): warning CA1859: Change return type of method 'RunButton' from 'Avalonia.Controls.Control' to 'Avalonia.Controls.StackPanel' for improved performance (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1859) [/home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/TabStudio.App.Tests.csproj]
+  TabStudio.App.Tests -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
+[xUnit.net 00:00:00.18]   Discovering: TabStudio.App.Tests
+[xUnit.net 00:00:00.39]   Discovered:  TabStudio.App.Tests
+[xUnit.net 00:00:00.56]   Starting:    TabStudio.App.Tests
+  Passed TabStudio.App.Tests.Toolchains.ToolchainServerLauncherTests.Finds_programs_and_their_files_through_the_runtime [6 ms]
+  Passed TabStudio.App.Tests.Toolchains.ToolchainServerLauncherTests.Passes_the_streams_the_exit_code_and_killing_through [51 ms]
+  Passed TabStudio.App.Tests.Design.SearchMatcherTests.A_match_scores_by_where_the_letters_are(query: "gdf", text: "Go To Definition", band: 300) [12 ms]
+  Passed TabStudio.App.Tests.Design.SearchMatcherTests.A_match_scores_by_where_the_letters_are(query: "gtd", text: "Go To Definition", band: 700) [< 1 ms]
+  Passed TabStudio.App.Tests.Design.SearchMatcherTests.A_match_scores_by_where_the_letters_are(query: "save all", text: "Save All", band: 1000) [1 ms]
+  Passed TabStudio.App.Tests.Design.SearchMatcherTests.A_match_scores_by_where_the_letters_are(query: "TeEx", text: "TestExplorer.cs", band: 700) [< 1 ms]
+  Passed TabStudio.App.Tests.Design.SearchMatcherTests.A_match_scores_by_where_the_letters_are(query: "plor", text: "Explorer", band: 600) [< 1 ms]
+  Passed TabStudio.App.Tests.Design.SearchMatcherTests.A_match_scores_by_where_the_letters_are(query: "sa", text: "Save All", band: 900) [< 1 ms]
+  Passed TabStudio.App.Tests.Design.SearchMatcherTests.A_match_scores_by_where_the_letters_are(query: "all", text: "Save All", band: 800) [< 1 ms]
+  Passed TabStudio.App.Tests.Design.SearchMatcherTests.A_match_scores_by_where_the_letters_are(query: "save", text: "Save All", band: 900) [< 1 ms]
+  Passed TabStudio.App.Tests.Toolchains.ToolchainServerLauncherTests.A_program_the_runtime_cannot_start_fails_to_start_with_the_runtimes_reason [4 ms]
+  Passed TabStudio.App.Tests.Design.SearchMatcherTests.What_was_opened_before_ranks_higher [16 ms]
+  Passed TabStudio.App.Tests.Design.SearchMatcherTests.Better_matches_rank_first_and_disabled_or_unknown_items_last [3 ms]
+  Passed TabStudio.App.Tests.Design.SearchMatcherTests.Each_word_of_the_query_must_match [5 ms]
+  Passed TabStudio.App.Tests.Design.SearchMatcherTests.The_matched_letters_are_the_ones_to_highlight [5 ms]
+  Passed TabStudio.App.Tests.Toolchains.ToolchainServerLauncherTests.Runs_a_program_of_this_computer_with_its_three_streams [54 ms]
+  Passed TabStudio.App.Tests.Toolchains.ToolchainServerLauncherTests.Starts_a_server_in_its_shared_folder_with_its_arguments_and_environment [4 ms]
+  Passed TabStudio.App.Tests.Services.NotebookPackageResolverTests.A_nuget_reference_restores_the_package_for_the_cells_that_follow [1 s]
