@@ -7,4 +7,12 @@
     <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
+  <ItemGroup>
+    <!--
+      Answers recorded from open-vsx.org for the fake registry, and the real package of vscode.perl (VS Code's built-in
+      Perl grammar, MIT licensed, see its LICENSE-vscode.txt) with its Open VSX signature.
+    -->
+    <EmbeddedResource Include="Extensions\Recorded\*" LogicalName="Recorded/%(Filename)%(Extension)" />
+  </ItemGroup>
+
 </Project>

@@ -61,7 +61,7 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
     public string FileName => Path.GetFileName(FilePath);
 
     /// <summary>What kind of file this is.</summary>
-    public FileType FileType { get; }
+    public FileType FileType { get; private set; }
 
     /// <summary>Whether Roslyn analyzes this document.</summary>
     public bool HasLanguageService => _language is not null;
@@ -191,6 +191,11 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
     /// <param name="cancellationToken">Cancels the save.</param>
     public async Task SaveAsync(CancellationToken cancellationToken = default)
     {
+        if (IsExtensionsPage)
+        {
+            return;
+        }
+
         if (Notebook is { } notebook)
         {
             await SaveNotebookAsync(notebook, cancellationToken);

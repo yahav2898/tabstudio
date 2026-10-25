@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using TabStudio.App.Platform;
 using TabStudio.App.Services;
 using TabStudio.App.Services.Link;
+using TabStudio.App.Services.Extensions;
 using TabStudio.Compilation;
 using TabStudio.Compilation.Running;
 using TabStudio.Core.Compatibility;
@@ -97,7 +98,8 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     /// <param name="link">The app's TabStudio Link; without it, this device always compiles on its own.</param>
     /// <param name="linkDialog">The TabStudio Link dialog, opened from the File menu and the status bar.</param>
     /// <param name="languageServers">Starts language servers and debug adapters; the desktop's launcher when <see langword="null"/>.</param>
-    public WorkspaceViewModel(CompilerServices compiler, IDeviceStatus device, DeviceProfile profile, IUiDispatcher ui, SessionStore sessions, AppPaths paths, GitHubAccountViewModel? gitHubAccount = null, IStoragePicker? browser = null, IWebViewFactory? webViews = null, INotifications? notifications = null, IAppActivity? appActivity = null, LinkService? link = null, LinkViewModel? linkDialog = null, Services.LanguageServers.LanguageServerServices? languageServers = null)
+    /// <param name="extensions">The installed VS Code extensions and the Open VSX registry; without it the Extensions menu is unavailable.</param>
+    public WorkspaceViewModel(CompilerServices compiler, IDeviceStatus device, DeviceProfile profile, IUiDispatcher ui, SessionStore sessions, AppPaths paths, GitHubAccountViewModel? gitHubAccount = null, IStoragePicker? browser = null, IWebViewFactory? webViews = null, INotifications? notifications = null, IAppActivity? appActivity = null, LinkService? link = null, LinkViewModel? linkDialog = null, Services.LanguageServers.LanguageServerServices? languageServers = null, ExtensionsService? extensions = null)
     {
         ArgumentNullException.ThrowIfNull(compiler);
         ArgumentNullException.ThrowIfNull(device);
@@ -134,6 +136,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         InitializePullRequests();
         InitializeLiveTesting();
         InitializeLanguageServers(languageServers, browser);
+        InitializeExtensions(extensions, browser);
     }
 
     /// <summary>Raised when the user closes the workspace to return to the start screen.</summary>
@@ -377,6 +380,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         DisposePullRequests();
         GitChanges.Dispose();
         DisposeLanguageServers();
+        DisposeExtensions();
     }
 
     private void LoadStartupProjects(Workspace workspace, string? preferred)

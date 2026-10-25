@@ -65,6 +65,9 @@ public static class AppServices
         // Language servers and debug adapters start through the platform's IServerProcessLauncher, if it registers one.
         services.TryAddSingleton(provider => new Services.LanguageServers.LanguageServerServices(provider.GetService<TabStudio.LanguageServers.Hosting.IServerProcessLauncher>() ?? TabStudio.LanguageServers.Hosting.ProcessServerLauncher.Instance));
 
+        // Installed VS Code extensions and the Open VSX registry.
+        services.TryAddSingleton<TabStudio.App.Services.Extensions.ExtensionsService>();
+
         // View models.
         services.AddSingleton<LinkViewModel>();
         services.AddSingleton<StartViewModel>();

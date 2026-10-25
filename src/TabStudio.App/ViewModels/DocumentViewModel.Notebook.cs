@@ -23,7 +23,7 @@ public sealed partial class DocumentViewModel
     /// have their own review actions; a XAML file's designer hides them while the code is not shown.
     /// </summary>
     public bool ShowsEditorActions =>
-        Notebook is null && CiLog is null && PullRequest is null && Review is null && Designer?.ShowsCode != false;
+        Notebook is null && CiLog is null && PullRequest is null && Review is null && ExtensionsPage is null && Designer?.ShowsCode != false;
 
     /// <summary>The text the file would have if it were saved now, for restoring unsaved work.</summary>
     public string CurrentText => Notebook?.Serialize() ?? Document.Text;

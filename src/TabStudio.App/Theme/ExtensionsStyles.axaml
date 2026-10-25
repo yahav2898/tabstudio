@@ -1,0 +1,114 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!--
+    Styles of the Extensions window and the quick pick.
+  -->
+
+  <!-- An extension's icon: its picture, or its initials on a color of its own while there is none. -->
+  <Style Selector="Border.extensionIcon">
+    <Setter Property="CornerRadius" Value="8" />
+    <Setter Property="ClipToBounds" Value="True" />
+  </Style>
+  <Style Selector="Border.extensionIcon TextBlock">
+    <Setter Property="HorizontalAlignment" Value="Center" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="FontWeight" Value="Bold" />
+    <Setter Property="Foreground" Value="#F2F4F8" />
+  </Style>
+
+  <!-- A category chip of Browse, filled when selected. -->
+  <Style Selector="Button.categoryChip">
+    <Setter Property="MinHeight" Value="34" />
+    <Setter Property="Height" Value="34" />
+    <Setter Property="Padding" Value="14,0" />
+    <Setter Property="CornerRadius" Value="17" />
+    <Setter Property="FontSize" Value="12.5" />
+    <Setter Property="Background" Value="{DynamicResource Brush.Pill}" />
+  </Style>
+  <Style Selector="Button.categoryChip.selected /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource Brush.AccentSoft}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource Brush.Accent}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style Selector="Button.categoryChip.selected">
+    <Setter Property="Foreground" Value="{DynamicResource Brush.AccentText}" />
+  </Style>
+
+  <!-- The Install button of a list row: smaller than the page's, still a comfortable touch target. -->
+  <Style Selector="Button.rowAction">
+    <Setter Property="MinHeight" Value="34" />
+    <Setter Property="Height" Value="34" />
+    <Setter Property="Padding" Value="12,0" />
+    <Setter Property="FontSize" Value="12.5" />
+    <Setter Property="CornerRadius" Value="7" />
+  </Style>
+
+  <!-- The page's action buttons. -->
+  <Style Selector="Button.pageAction">
+    <Setter Property="MinHeight" Value="38" />
+    <Setter Property="Height" Value="38" />
+    <Setter Property="Padding" Value="16,0" />
+    <Setter Property="FontSize" Value="13" />
+  </Style>
+
+  <!-- The "Installed", "Disabled" or "Update" state of a list row. -->
+  <Style Selector="Border.extensionState">
+    <Setter Property="Height" Value="22" />
+    <Setter Property="Padding" Value="8,0" />
+    <Setter Property="CornerRadius" Value="11" />
+    <Setter Property="Background" Value="{DynamicResource Brush.Pill}" />
+    <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.TextSecondary}" />
+    <Setter Property="TextElement.FontSize" Value="11" />
+    <Setter Property="TextElement.FontWeight" Value="SemiBold" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="HorizontalAlignment" Value="Right" />
+  </Style>
+  <Style Selector="Border.extensionState.update">
+    <Setter Property="Background" Value="{DynamicResource Brush.AccentSoft}" />
+    <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.AccentText}" />
+  </Style>
+
+  <!-- A notice bar: what the last action did, or what went wrong. -->
+  <Style Selector="Border.extensionNotice">
+    <Setter Property="Padding" Value="12,4,4,4" />
+    <Setter Property="CornerRadius" Value="8" />
+    <Setter Property="Background" Value="{DynamicResource Brush.SuccessSoft}" />
+    <Setter Property="BorderBrush" Value="#2D4A3E" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style Selector="Border.extensionNotice.error">
+    <Setter Property="Background" Value="#3A2224" />
+    <Setter Property="BorderBrush" Value="#5A3134" />
+  </Style>
+  <Style Selector="Border.extensionWarning">
+    <Setter Property="Padding" Value="12,8" />
+    <Setter Property="CornerRadius" Value="8" />
+    <Setter Property="Background" Value="#33291A" />
+    <Setter Property="BorderBrush" Value="#5A4520" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+
+  <!-- The "More information" card of the details page. -->
+  <Style Selector="Border.extensionInfo">
+    <Setter Property="Padding" Value="14,12" />
+    <Setter Property="CornerRadius" Value="10" />
+    <Setter Property="Background" Value="{DynamicResource Brush.Extensions.Card}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource Brush.Border}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+
+  <!-- Whether a feature of an extension works: green when it does. -->
+  <Style Selector="TextBlock.featureState">
+    <Setter Property="Foreground" Value="{DynamicResource Brush.TextMuted}" />
+  </Style>
+  <Style Selector="TextBlock.featureState.active">
+    <Setter Property="Foreground" Value="{DynamicResource Brush.Success}" />
+  </Style>
+
+  <!-- A row of the quick pick. -->
+  <Style Selector="ListBox.quickPick ListBoxItem">
+    <Setter Property="MinHeight" Value="40" />
+  </Style>
+
+</Styles>

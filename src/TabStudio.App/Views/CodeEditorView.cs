@@ -99,6 +99,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
         InitializeReviewThreads();
         InitializeLiveTesting();
         InitializeLanguageServer();
+        InitializeExtensions();
     }
 
     /// <summary>The editor control, for tests and keyboard focus.</summary>
@@ -123,6 +124,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
         _textMate?.Dispose();
         DisposeDebugging();
         DisposeLanguageServer();
+        DisposeExtensions();
     }
 
     /// <inheritdoc />

@@ -6,6 +6,7 @@
              xmlns:views="using:TabStudio.App.Views"
              xmlns:actionViews="using:TabStudio.App.Views.Actions"
              xmlns:prv="using:TabStudio.App.Views.PullRequests"
+             xmlns:extensionViews="using:TabStudio.App.Views.Extensions"
              xmlns:vm="using:TabStudio.App.ViewModels"
              xmlns:sys="using:System"
              x:Class="TabStudio.App.Views.WorkspaceView"
@@ -38,6 +39,7 @@
     <KeyBinding Gesture="Alt+Left" Command="{Binding NavigateBackCommand}" />
     <KeyBinding Gesture="Alt+Right" Command="{Binding NavigateForwardCommand}" />
     <KeyBinding Gesture="Ctrl+Alt+L" Command="{Binding ToggleSideBarCommand}" />
+    <KeyBinding Gesture="Ctrl+Shift+X" Command="{Binding ShowExtensionsCommand}" />
   </UserControl.KeyBindings>
 
   <Grid RowDefinitions="40,46,*,28">
@@ -78,6 +80,7 @@
               <MenuItem Header="_Parameter Info" InputGesture="Ctrl+Shift+Space" Command="{Binding ParameterInfoCommand}" />
               <MenuItem Header="_Quick Info (Ctrl+K, Ctrl+I)" Command="{Binding QuickInfoCommand}" />
               <MenuItem Header="Complete _Word" InputGesture="Ctrl+Space" Command="{Binding CompleteWordCommand}" />
+              <MenuItem Header="Insert _Snippet... (Ctrl+K, Ctrl+X)" Command="{Binding InsertSnippetCommand}" />
             </MenuItem>
             <MenuItem Header="Re_factor">
               <MenuItem Header="_Rename... (Ctrl+R, Ctrl+R)" InputGesture="F2" Command="{Binding RenameSymbolCommand}" />
@@ -192,6 +195,15 @@
             </MenuItem>
             <Separator />
             <MenuItem Header="Test E_xplorer (Ctrl+E, T)" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}" />
+          </MenuItem>
+          <MenuItem Header="E_xtensions">
+            <MenuItem Header="_Manage Extensions" InputGesture="Ctrl+Shift+X" Command="{Binding ShowExtensionsCommand}" IsEnabled="{Binding HasExtensions}" />
+            <MenuItem Header="_Install from VSIX..." Command="{Binding InstallFromVsixCommand}" IsEnabled="{Binding HasExtensions}" />
+            <Separator />
+            <MenuItem Header="_Color Theme..." Command="{Binding SelectColorThemeCommand}" IsEnabled="{Binding HasExtensions}" />
+            <MenuItem Header="_File Icon Theme..." Command="{Binding SelectFileIconThemeCommand}" IsEnabled="{Binding HasExtensions}" />
+            <Separator />
+            <MenuItem Header="Check for _Updates" Command="{Binding CheckForExtensionUpdatesCommand}" IsEnabled="{Binding HasExtensions}" />
           </MenuItem>
           <MenuItem Header="_Window">
             <MenuItem Header="_Next Document" InputGesture="Ctrl+Tab" Command="{Binding NextDocumentCommand}" />
@@ -364,9 +376,10 @@
             <ListBox.ItemTemplate>
               <DataTemplate DataType="vm:DocumentViewModel">
                 <StackPanel Orientation="Horizontal" Spacing="8" Height="36">
-                  <Border Classes="badge" Background="{Binding FileType.BadgeKind, Converter={x:Static conv:AppConverters.BadgeBackground}}">
+                  <Border Classes="badge" Background="{Binding FileType.BadgeKind, Converter={x:Static conv:AppConverters.BadgeBackground}}" IsVisible="{Binding !HasFileIcon}">
                     <TextBlock Text="{Binding FileType.Badge}" Foreground="{Binding FileType.BadgeKind, Converter={x:Static conv:AppConverters.BadgeForeground}}" />
                   </Border>
+                  <Image Source="{Binding FileIcon}" Width="16" Height="16" VerticalAlignment="Center" IsVisible="{Binding HasFileIcon}" />
                   <TextBlock Text="{Binding Title}" VerticalAlignment="Center" />
                   <Button Theme="{StaticResource ToolButton}" Width="26" Height="26" MinWidth="26" MinHeight="26" Padding="0" CornerRadius="5"
                           ToolTip.Tip="Close (Ctrl+F4)"
@@ -767,7 +780,7 @@
                    Text="{Binding ActiveDocument.CaretMessage, FallbackValue={x:Null}}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
 
         <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="18" TextElement.Foreground="{DynamicResource Brush.OnAccent}" TextElement.FontSize="12"
-                    IsVisible="{Binding HasDocuments}">
+                    IsVisible="{Binding ShowsEditorStatus}">
           <TextBlock Text="{Binding CaretText}" VerticalAlignment="Center" />
           <TextBlock Text="Spaces: 4" VerticalAlignment="Center" />
           <TextBlock Text="{Binding ActiveDocument.EncodingLabel, FallbackValue={x:Null}}" VerticalAlignment="Center" />
@@ -782,6 +795,9 @@
 
     <!-- GitHub Actions' dialog: Run workflow. -->
     <actionViews:ActionsDialogsView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding Actions}" />
+
+    <!-- The quick pick: color themes, file icon themes and snippets. -->
+    <extensionViews:QuickPickView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding QuickPick}" />
 
     <!-- The in-app dialog that asks for names and confirmations. -->
     <Panel Grid.Row="0" Grid.RowSpan="4" Background="#99000000" IsVisible="{Binding Prompt.IsOpen}">

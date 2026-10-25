@@ -40,6 +40,7 @@ public sealed partial class WorkspaceView : UserControl
         KeyBindings.Add(new KeyBinding { Gesture = new KeyGesture(Key.Q, KeyModifiers.Control), Command = new FocusCommand(() => QuickOpenBox.Focus()) });
         InitializeKeyChords();
         InitializeTestExplorer();
+        InitializeExtensions();
     }
 
     /// <inheritdoc />

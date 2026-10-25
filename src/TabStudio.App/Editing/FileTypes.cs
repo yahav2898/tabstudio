@@ -39,6 +39,12 @@ public sealed record FileType(
 {
     /// <summary>Whether Roslyn provides the language service for this file.</summary>
     public bool IsCSharp => BadgeKind == BadgeKind.CSharp && DisplayName == "C#";
+
+    /// <summary>The VS Code language identifier, such as <c>perl</c>, when an installed extension contributes the language.</summary>
+    public string? LanguageId { get; init; }
+
+    /// <summary>The language's icon from an installed extension, or <see langword="null"/> to show the badge.</summary>
+    public string? IconPath { get; init; }
 }
 
 /// <summary>Maps file names to <see cref="FileType"/>s.</summary>
@@ -49,6 +55,13 @@ public static class FileTypes
 
     /// <summary>A file TabStudio has no special support for.</summary>
     public static FileType PlainText { get; } = new("Plain Text", "TXT", BadgeKind.Text, null, null, null);
+
+    /// <summary>
+    /// The file types installed extensions contribute: given a path and TabStudio's own type for it (or
+    /// <see langword="null"/>), returns the type to use, or <see langword="null"/> when no extension claims the file.
+    /// C# files and notebooks keep their own type.
+    /// </summary>
+    public static Func<string, FileType?, FileType?>? Contributed { get; set; }
 
     private static readonly Dictionary<string, FileType> ByExtension = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -146,13 +159,19 @@ public static class FileTypes
     {
         ArgumentNullException.ThrowIfNull(path);
         var name = Path.GetFileName(path);
-        if (ByFileName.TryGetValue(name, out var byName))
+        var builtIn = ByFileName.GetValueOrDefault(name);
+        if (builtIn is null)
         {
-            return byName;
+            // Dot files such as ".gitignore" have no name before the extension.
+            var extension = name.StartsWith('.') && name.IndexOf('.', 1) < 0 ? name : Path.GetExtension(name);
+            builtIn = ByExtension.GetValueOrDefault(extension);
         }
 
-        // Dot files such as ".gitignore" have no name before the extension.
-        var extension = name.StartsWith('.') && name.IndexOf('.', 1) < 0 ? name : Path.GetExtension(name);
-        return ByExtension.TryGetValue(extension, out var type) ? type : PlainText;
+        if (builtIn is { IsCSharp: true } or { BadgeKind: BadgeKind.Notebook })
+        {
+            return builtIn;
+        }
+
+        return Contributed?.Invoke(path, builtIn) ?? builtIn ?? PlainText;
     }
 }

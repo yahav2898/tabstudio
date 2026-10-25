@@ -1,0 +1,196 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:vm="using:TabStudio.App.ViewModels.Extensions"
+             xmlns:nb="using:TabStudio.App.Views.Notebooks"
+             x:Class="TabStudio.App.Views.Extensions.ExtensionDetailsView"
+             x:DataType="vm:ExtensionDetailsViewModel">
+
+  <UserControl.DataTemplates>
+    <!-- A README's text, rendered as Markdown. -->
+    <DataTemplate DataType="vm:ReadmeTextViewModel">
+      <nb:MarkdownView Blocks="{Binding Blocks}" Margin="0,0,0,10" />
+    </DataTemplate>
+    <!-- A README's image; its description while it loads or when it cannot be drawn. -->
+    <DataTemplate DataType="vm:ReadmeImageViewModel">
+      <Panel Margin="0,2,0,12" HorizontalAlignment="Left">
+        <Image Source="{Binding Image}" IsVisible="{Binding HasImage}" Stretch="Uniform" StretchDirection="DownOnly" HorizontalAlignment="Left" />
+        <Border IsVisible="{Binding IsUnavailable}" Padding="10,8" CornerRadius="6" Background="{DynamicResource Brush.Extensions.Card}"
+                BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" HorizontalAlignment="Left">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <controls:StrokeIcon Data="{StaticResource Icon.Window}" Size="14" Foreground="{DynamicResource Brush.TextMuted}" />
+            <TextBlock Classes="muted small" FontStyle="Italic" TextWrapping="Wrap" MaxWidth="560"
+                       Text="{Binding AltText, TargetNullValue=Image, FallbackValue=Image}" />
+          </StackPanel>
+        </Border>
+      </Panel>
+    </DataTemplate>
+  </UserControl.DataTemplates>
+
+  <ScrollViewer x:Name="Scroller" HorizontalScrollBarVisibility="Disabled">
+    <StackPanel x:Name="Page" Margin="24,20,24,32" Spacing="16">
+
+      <!-- Header: icon, name, publisher, version, statistics, description and actions -->
+      <Grid ColumnDefinitions="Auto,*">
+        <Panel Width="84" Height="84" VerticalAlignment="Top" Margin="0,2,18,0">
+          <Border Classes="extensionIcon" CornerRadius="14" Background="{Binding Item.IconTint}" IsVisible="{Binding !Item.HasIcon}">
+            <TextBlock Text="{Binding Item.Initials}" FontSize="28" />
+          </Border>
+          <Image Source="{Binding Item.Icon}" IsVisible="{Binding Item.HasIcon}" Stretch="Uniform" />
+        </Panel>
+        <StackPanel Grid.Column="1" Spacing="7">
+          <TextBlock Text="{Binding Item.DisplayName}" FontSize="21" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" />
+          <WrapPanel ItemSpacing="12" LineSpacing="4">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+              <TextBlock Text="{Binding Publisher}" Foreground="{DynamicResource Brush.Link}" FontSize="13" VerticalAlignment="Center" />
+              <controls:StrokeIcon Data="{StaticResource Icon.Verified}" Size="14" StrokeThickness="1.6" Foreground="{DynamicResource Brush.Extensions.Verified}"
+                                   IsVisible="{Binding Item.IsVerified}" ToolTip.Tip="The registry verified this publisher" />
+            </StackPanel>
+            <TextBlock Text="{Binding VersionText}" Classes="muted" FontSize="13" VerticalAlignment="Center" />
+            <StackPanel Orientation="Horizontal" Spacing="4" IsVisible="{Binding Item.DownloadsText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+              <controls:StrokeIcon Data="{StaticResource Icon.Download}" Size="13" Foreground="{DynamicResource Brush.TextMuted}" />
+              <TextBlock Text="{Binding Item.DownloadsText}" Classes="muted" FontSize="13" VerticalAlignment="Center" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="4" IsVisible="{Binding Item.HasRating}">
+              <controls:StrokeIcon Data="{StaticResource Icon.Star}" Size="13" IsFilled="True" Foreground="{DynamicResource Brush.Extensions.Star}" />
+              <TextBlock Text="{Binding Item.RatingText}" Classes="muted" FontSize="13" VerticalAlignment="Center" />
+            </StackPanel>
+          </WrapPanel>
+          <TextBlock Text="{Binding Item.Description}" Foreground="{DynamicResource Brush.TextSecondary}" FontSize="13.5" TextWrapping="Wrap" />
+          <WrapPanel ItemSpacing="8" LineSpacing="8" Margin="0,6,0,0">
+            <Button x:Name="InstallButton" Theme="{StaticResource AccentButton}" Classes="pageAction" Content="Install"
+                    Command="{Binding InstallCommand}" IsVisible="{Binding CanInstall}" />
+            <Button Theme="{StaticResource AccentButton}" Classes="pageAction" Content="Update"
+                    Command="{Binding UpdateCommand}" IsVisible="{Binding CanUpdate}" />
+            <Button Theme="{StaticResource AccentButton}" Classes="pageAction" Command="{Binding UseColorThemeCommand}" IsVisible="{Binding CanUseColorTheme}">
+              <StackPanel Orientation="Horizontal" Spacing="7">
+                <controls:StrokeIcon Data="{StaticResource Icon.Palette}" Size="15" />
+                <TextBlock Text="Set Color Theme" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+            <Button Theme="{StaticResource SecondaryButton}" Classes="pageAction" Content="Set File Icon Theme"
+                    Command="{Binding UseIconThemeCommand}" IsVisible="{Binding CanUseIconTheme}" />
+            <Button Theme="{StaticResource SecondaryButton}" Classes="pageAction" Content="Enable"
+                    Command="{Binding EnableCommand}" IsVisible="{Binding CanEnable}" />
+            <Button Theme="{StaticResource SecondaryButton}" Classes="pageAction" Command="{Binding DisableCommand}" IsVisible="{Binding CanDisable}">
+              <StackPanel Orientation="Horizontal" Spacing="7">
+                <controls:StrokeIcon Data="{StaticResource Icon.Disable}" Size="15" />
+                <TextBlock Text="Disable" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+            <Button Theme="{StaticResource SecondaryButton}" Classes="pageAction" Command="{Binding UninstallCommand}" IsVisible="{Binding CanUninstall}">
+              <StackPanel Orientation="Horizontal" Spacing="7">
+                <controls:StrokeIcon Data="{StaticResource Icon.Trash}" Size="15" />
+                <TextBlock Text="Uninstall" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+            <StackPanel Orientation="Horizontal" Spacing="10" IsVisible="{Binding Item.IsBusy}" VerticalAlignment="Center" Height="38">
+              <ProgressBar Width="160" Height="6" MinHeight="6" Minimum="0" Maximum="1" Value="{Binding Item.Progress}" VerticalAlignment="Center" />
+              <TextBlock Classes="muted small" Text="Installing…" VerticalAlignment="Center" />
+            </StackPanel>
+          </WrapPanel>
+        </StackPanel>
+      </Grid>
+
+      <!-- Deprecation, or code that TabStudio does not run -->
+      <Border Classes="extensionWarning" IsVisible="{Binding HasWarning}">
+        <Grid ColumnDefinitions="Auto,*">
+          <controls:StrokeIcon Data="{StaticResource Icon.Warning}" Size="16" Margin="0,0,10,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush.Warning}" />
+          <TextBlock Grid.Column="1" Classes="small" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Text}" Text="{Binding Warning}" />
+        </Grid>
+      </Border>
+
+      <!-- Details, Features, Changelog -->
+      <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+        <StackPanel Orientation="Horizontal">
+          <Button Theme="{StaticResource PanelTabButton}" MinHeight="40" Content="Details" Classes.selected="{Binding IsReadmeSelected}"
+                  Command="{Binding SelectTabCommand}" CommandParameter="{x:Static vm:ExtensionDetailsTab.Details}" />
+          <Button x:Name="FeaturesTab" Theme="{StaticResource PanelTabButton}" MinHeight="40" Content="Features" Classes.selected="{Binding IsFeaturesSelected}"
+                  Command="{Binding SelectTabCommand}" CommandParameter="{x:Static vm:ExtensionDetailsTab.Features}" />
+          <Button Theme="{StaticResource PanelTabButton}" MinHeight="40" Content="Changelog" Classes.selected="{Binding IsChangelogSelected}"
+                  Command="{Binding SelectTabCommand}" CommandParameter="{x:Static vm:ExtensionDetailsTab.Changelog}" IsVisible="{Binding HasChangelog}" />
+        </StackPanel>
+      </Border>
+
+      <Grid x:Name="Body" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+        <Panel>
+          <!-- The README -->
+          <StackPanel IsVisible="{Binding IsReadmeSelected}" Spacing="6">
+            <ProgressBar IsIndeterminate="True" Height="2" MinHeight="2" IsVisible="{Binding IsLoading}" />
+            <TextBlock Classes="muted" TextWrapping="Wrap" Text="{Binding ReadmeMessage}" IsVisible="{Binding HasReadmeMessage}" />
+            <ItemsControl ItemsSource="{Binding Readme}" />
+          </StackPanel>
+
+          <!-- What the extension adds, and whether each part works here -->
+          <StackPanel IsVisible="{Binding IsFeaturesSelected}" Spacing="12">
+            <TextBlock Text="{Binding FeaturesSummary}" TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextSecondary}" />
+            <ItemsControl ItemsSource="{Binding Features}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:ExtensionFeatureViewModel">
+                  <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="2,10">
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                      <Panel Width="22" Margin="0,1,10,0" VerticalAlignment="Top">
+                        <controls:StrokeIcon Data="{StaticResource Icon.Feature}" Size="17" StrokeThickness="2" Foreground="{DynamicResource Brush.Success}" IsVisible="{Binding IsActive}" />
+                        <controls:StrokeIcon Data="{StaticResource Icon.Feature}" Size="17" StrokeThickness="2" Foreground="{DynamicResource Brush.TextDisabled}" IsVisible="{Binding IsInactive}" />
+                        <controls:StrokeIcon Data="{StaticResource Icon.FeatureOff}" Size="17" StrokeThickness="2" Foreground="{DynamicResource Brush.TextDisabled}" IsVisible="{Binding IsUnavailable}" />
+                      </Panel>
+                      <StackPanel Grid.Column="1" Spacing="2">
+                        <TextBlock Text="{Binding Title}" FontWeight="Medium" Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" />
+                        <TextBlock Text="{Binding Detail}" Classes="muted small" TextWrapping="Wrap" />
+                      </StackPanel>
+                      <TextBlock Grid.Column="2" Text="{Binding StateText}" Classes="small featureState" Margin="12,1,0,0" MaxWidth="220" TextWrapping="Wrap"
+                                 TextAlignment="Right" VerticalAlignment="Top" Classes.active="{Binding IsActive}" />
+                    </Grid>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+
+          <!-- The change log -->
+          <ItemsControl ItemsSource="{Binding Changelog}" IsVisible="{Binding IsChangelogSelected}" />
+        </Panel>
+
+        <!-- More information -->
+        <Border x:Name="InfoCard" Grid.Column="1" Classes="extensionInfo" Width="270" Margin="22,0,0,0" VerticalAlignment="Top">
+          <StackPanel Spacing="10">
+            <TextBlock Classes="h2" Text="More Information" />
+            <ItemsControl ItemsSource="{Binding Info}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:ExtensionInfoRow">
+                  <StackPanel Spacing="1" Margin="0,0,0,9">
+                    <TextBlock Text="{Binding Label}" Classes="muted" FontSize="11.5" />
+                    <TextBlock Text="{Binding Value}" Classes="small" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Text}" />
+                  </StackPanel>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <StackPanel Spacing="2">
+              <Button Theme="{StaticResource ToolButton}" Height="34" MinHeight="34" Padding="0" HorizontalAlignment="Left"
+                      Command="{Binding OpenLinkCommand}" CommandParameter="{Binding Repository}" IsVisible="{Binding HasRepository}">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <controls:StrokeIcon Data="{StaticResource Icon.External}" Size="13" Foreground="{DynamicResource Brush.Link}" />
+                  <TextBlock Text="Repository" Classes="link small" VerticalAlignment="Center" />
+                </StackPanel>
+              </Button>
+              <Button Theme="{StaticResource ToolButton}" Height="34" MinHeight="34" Padding="0" HorizontalAlignment="Left"
+                      Command="{Binding OpenLinkCommand}" CommandParameter="{Binding Homepage}" IsVisible="{Binding HasHomepage}">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <controls:StrokeIcon Data="{StaticResource Icon.External}" Size="13" Foreground="{DynamicResource Brush.Link}" />
+                  <TextBlock Text="Home page" Classes="link small" VerticalAlignment="Center" />
+                </StackPanel>
+              </Button>
+              <Button Theme="{StaticResource ToolButton}" Height="34" MinHeight="34" Padding="0" HorizontalAlignment="Left"
+                      Command="{Binding OpenLinkCommand}" CommandParameter="{Binding RegistryPage}" IsVisible="{Binding HasRegistryPage}">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <controls:StrokeIcon Data="{StaticResource Icon.External}" Size="13" Foreground="{DynamicResource Brush.Link}" />
+                  <TextBlock Text="Open VSX page" Classes="link small" VerticalAlignment="Center" />
+                </StackPanel>
+              </Button>
+            </StackPanel>
+          </StackPanel>
+        </Border>
+      </Grid>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>
