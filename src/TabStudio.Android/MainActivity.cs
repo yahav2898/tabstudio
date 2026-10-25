@@ -5,6 +5,7 @@ using Android.OS;
 using Android.Views;
 using Avalonia;
 using Avalonia.Android;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using TabStudio.App;
@@ -32,7 +33,8 @@ namespace TabStudio.Android;
 /// <para>
 /// Started with the boolean extra <c>tabstudio.selftest</c>, it opens the sample, presses F5, debugs it, serves
 /// a new web app, shows a new Avalonia app, and logs the outcome under the <c>TabStudio</c> tag as a <c>TABSTUDIO_SELFTEST_OK</c> or
-/// <c>TABSTUDIO_SELFTEST_FAIL</c> line. CI runs this on an emulator.
+/// <c>TABSTUDIO_SELFTEST_FAIL</c> line. CI runs this on an emulator. With <c>tabstudio.selftest.desktop</c> as well, it then runs
+/// desktop mode on the emulator's simulated second display, asking the CI script to type and click in its log.
 /// </para>
 /// </remarks>
 [Activity(
@@ -48,6 +50,9 @@ public sealed class MainActivity : AvaloniaMainActivity<TabStudioApplication>
 {
     /// <summary>The intent extra that runs the self test.</summary>
     public const string SelfTestExtra = "tabstudio.selftest";
+
+    /// <summary>The intent extra that adds desktop mode to the self test, on a device with a second display.</summary>
+    public const string DesktopSelfTestExtra = "tabstudio.selftest.desktop";
 
     private const string LogTag = "TabStudio";
     private static readonly TimeSpan SelfTestTimeout = TimeSpan.FromMinutes(6);
@@ -67,7 +72,9 @@ public sealed class MainActivity : AvaloniaMainActivity<TabStudioApplication>
 
         if (Intent?.GetBooleanExtra(SelfTestExtra, false) == true)
         {
-            Dispatcher.UIThread.Post(() => _ = RunSelfTestAsync());
+            var desktop = Intent.GetBooleanExtra(DesktopSelfTestExtra, false);
+            var screenshots = GetExternalFilesDir(null) is { } files ? Path.Combine(files.AbsolutePath, "selftest") : null;
+            Dispatcher.UIThread.Post(() => _ = RunSelfTestAsync(desktop, screenshots));
         }
 
         // Started from a tapped notification: open the run it is about.
@@ -108,10 +115,13 @@ public sealed class MainActivity : AvaloniaMainActivity<TabStudioApplication>
                 services.AddSingleton<IDeviceStatus>(_ => new AndroidDeviceStatus(context));
                 services.AddSingleton<IWebViewFactory>(_ => new AndroidWebViewFactory(() => this));
                 services.AddSingleton<INotifications>(notifications);
+
+                // Presentations on external displays belong to the current activity.
+                services.AddSingleton<IExternalDisplayService>(_ => new AndroidExternalDisplays(context, () => _current));
             });
     }
 
-    private static async Task RunSelfTestAsync()
+    private static async Task RunSelfTestAsync(bool desktop, string? screenshots)
     {
         AndroidLog.Info(LogTag, "TABSTUDIO_SELFTEST_START");
         var app = Avalonia.Application.Current as TabStudioApplication;
@@ -123,6 +133,16 @@ public sealed class MainActivity : AvaloniaMainActivity<TabStudioApplication>
 
         using var timeout = new CancellationTokenSource(SelfTestTimeout);
         var result = await SelfTest.RunAsync(main, services.GetRequiredService<SampleLibrary>(), services.GetRequiredService<ProjectTemplates>(), timeout.Token);
+        if (result.Success && desktop)
+        {
+            var tablet = (app.ApplicationLifetime as ISingleViewApplicationLifetime)?.MainView as TabStudio.App.Views.MainView;
+            var input = new AndroidDesktopSelfTestInput(line => AndroidLog.Info(LogTag, line));
+            var part = tablet is null
+                ? new SelfTestResult(false, "Desktop: the tablet's view is missing.", TimeSpan.Zero)
+                : await SelfTest.RunDesktopModeAsync(main, tablet, input, screenshots, timeout.Token);
+            result = new SelfTestResult(part.Success, $"{result.Message} | {part.Message}", result.Duration + part.Duration);
+        }
+
         var seconds = result.Duration.TotalSeconds.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture);
         var line = $"{(result.Success ? "TABSTUDIO_SELFTEST_OK" : "TABSTUDIO_SELFTEST_FAIL")} {seconds} s: {result.Message}";
         if (result.Success)
