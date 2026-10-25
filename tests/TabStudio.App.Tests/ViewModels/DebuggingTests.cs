@@ -116,6 +116,7 @@ public sealed class DebuggingTests
         var workspace = fixture.Workspace;
         workspace.ActiveDocument!.Document.Text = """
             var counter = 0;
+            Console.WriteLine("Counting");
             while (true)
             {
                 counter++;
@@ -124,6 +125,9 @@ public sealed class DebuggingTests
 
         await workspace.StartDebuggingCommand.ExecuteAsync(null);
         Assert.True(workspace.IsDebuggeeRunning);
+
+        // Once it has printed, the program is in its loop, where counter is assigned.
+        await UiTestHelpers.WaitUntilAsync(() => workspace.Output.Text.Contains("Counting", StringComparison.Ordinal), because: "the loop to start");
         workspace.BreakAllCommand.Execute(null);
         await UiTestHelpers.WaitUntilAsync(() => workspace.IsPaused, because: "Break All");
         await workspace.PauseShown;
