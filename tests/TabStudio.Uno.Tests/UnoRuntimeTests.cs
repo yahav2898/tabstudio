@@ -62,7 +62,7 @@ public sealed class UnoRuntimeTests(NuGetFixture nuget) : IDisposable
     }
 
     [Fact]
-    public async Task An_exception_in_the_apps_code_reaches_TabStudio_with_its_stack_and_the_app_keeps_running()
+    public async Task An_exception_in_an_input_handler_reaches_the_log_with_its_stack_and_the_app_keeps_running()
     {
         using var app = await UnoAppWorkspace.CreateAsync(nuget, _temp, UnoTemplates.UnoAppId, "HelloUno");
         app.Save("MainPage.xaml", UnoXamlBuildTests.ClickingPage);
@@ -73,16 +73,32 @@ public sealed class UnoRuntimeTests(NuGetFixture nuget) : IDisposable
         var runtime = await StartAsync(app);
         var build = await app.BuildAsync();
         await using var running = await runtime.LaunchAsync(app.Project, build.EntryAssembly!, build.Dependencies, app.Assets);
-        var thrown = new TaskCompletionSource<Exception>(TaskCreationOptions.RunContinuationsAsynchronously);
-        running.UnhandledException += (_, e) => thrown.TrySetResult((Exception)e.ExceptionObject);
+        var logged = new TaskCompletionSource<UnoLogEventArgs>(TaskCreationOptions.RunContinuationsAsynchronously);
+        void OnLogged(object? sender, UnoLogEventArgs message)
+        {
+            if (message.Level == UnoLogLevel.Error && message.Message.Contains("The button broke.", StringComparison.Ordinal))
+            {
+                logged.TrySetResult(message);
+            }
+        }
 
-        await PreviewFrames.WaitForTextAsync(running, "Hello Uno Platform!");
-        await ClickAsync(runtime, running, "SayHello");
+        runtime.Logged += OnLogged;
+        try
+        {
+            await PreviewFrames.WaitForTextAsync(running, "Hello Uno Platform!");
+            await ClickAsync(runtime, running, "SayHello");
 
-        var exception = await thrown.Task.WaitAsync(TimeSpan.FromSeconds(30));
-        Assert.IsType<InvalidOperationException>(exception);
-        Assert.Equal("The button broke.", exception.Message);
-        Assert.Contains("OnSayHello", exception.StackTrace, StringComparison.Ordinal);
+            // Uno's routed input catches and formats the exception itself, including its original stack.
+            // The IDE forwards this exact error log to Output, and the app remains interactive.
+            var message = await logged.Task.WaitAsync(TimeSpan.FromSeconds(30));
+            Assert.Contains("InvalidOperationException", message.Message, StringComparison.Ordinal);
+            Assert.Contains("OnSayHello", message.Message, StringComparison.Ordinal);
+        }
+        finally
+        {
+            runtime.Logged -= OnLogged;
+        }
+
         Assert.Contains("Hello Uno Platform!", await running.GetTextsAsync());
     }
 

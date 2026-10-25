@@ -100,9 +100,9 @@ internal sealed class PreviewLoggerFactory : IExternalLoggerFactory
                 return;
             }
 
-            // Uno catches dispatcher and routed-input exceptions; both must reach the running app.
-            if (exception is not null && (_category.EndsWith("NativeDispatcher", StringComparison.Ordinal)
-                || (_category.EndsWith("UIElement", StringComparison.Ordinal) && message?.StartsWith("Failed to raise '", StringComparison.Ordinal) == true)))
+            // Dispatcher failures retain an exception object. Routed input errors are already formatted
+            // with their original type and stack by Uno and follow the normal Output logging path below.
+            if (exception is not null && _category.EndsWith("NativeDispatcher", StringComparison.Ordinal))
             {
                 PreviewHost.ReportUnhandled(exception);
                 return;
