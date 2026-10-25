@@ -126,11 +126,25 @@ public sealed class WindowsFormsAppTests
         var form = app.Desktop.Windows[0];
         Assert.Equal("Orders", form.Title);
         await UiTestHelpers.WaitUntilAsync(() => app.Read(w => w.Form.Controls.Find("customersGrid", true)[0] is System.Windows.Forms.DataGridView { RowCount: > 2 }), because: "the grid's rows");
+
+        // Widen the side bar by its splitter, as a user does to see a big form at its own size.
+        var splitter = window.GetVisualDescendants().OfType<GridSplitter>().Single(s => s.Name == "SideSplitter");
+        var grip = splitter.TranslatePoint(new AvaloniaPoint(splitter.Bounds.Width / 2, splitter.Bounds.Height / 2), window)!.Value;
+        window.MouseMove(grip);
+        window.MouseDown(grip, MouseButton.Left);
+        for (var step = 1; step <= 6; step++)
+        {
+            window.MouseMove(new AvaloniaPoint(grip.X - (100 * step), grip.Y), RawInputModifiers.LeftMouseButton);
+        }
+
+        window.MouseUp(new AvaloniaPoint(grip.X - 600, grip.Y), MouseButton.Left);
+        await UiTestHelpers.WaitUntilAsync(() => app.Desktop.Scale > 0.9, because: "the form at its own size in the wider app preview");
         UiTestHelpers.SaveScreenshot(window, "winforms-02-business-app");
 
         // The Save button asks before saving, in a message box over the form.
         var save = app.BoundsOf("saveButton");
-        app.Click(new DrawingPoint(form.Client.X + save.X + (save.Width / 2), form.Client.Y + save.Y + (save.Height / 2)));
+        var client = app.Desktop.Windows[0].Client;
+        app.Click(new DrawingPoint(client.X + save.X + (save.Width / 2), client.Y + save.Y + (save.Height / 2)));
         await UiTestHelpers.WaitUntilAsync(() => app.Desktop.Windows.Count == 2, because: "the message box");
         Assert.True(app.Desktop.Windows[1].IsModal);
         UiTestHelpers.SaveScreenshot(window, "winforms-03-message-box");
