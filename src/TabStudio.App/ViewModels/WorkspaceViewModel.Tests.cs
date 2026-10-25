@@ -359,9 +359,9 @@ public sealed partial class WorkspaceViewModel : ITestRunHost
             string.Create(CultureInfo.InvariantCulture, $"========== Test run {(cancelled ? "cancelled" : "finished")}: {total} Tests ({passed} Passed, {failed} Failed, {skipped} Skipped) run in {duration} =========="),
             failed > 0 || cancelled ? OutputKind.Failure : OutputKind.Success);
 
-        StatusText = cancelled ? "Test run cancelled"
-            : failed > 0 ? string.Create(CultureInfo.InvariantCulture, $"{failed} of {total} tests failed")
-            : string.Create(CultureInfo.InvariantCulture, $"{passed} of {total} tests passed");
+        StatusText = cancelled
+            ? "Test run cancelled"
+            : string.Create(CultureInfo.InvariantCulture, $"Test run finished: {passed} passed, {failed} failed, {skipped} skipped");
     }
 
     /// <summary>A loaded test session and the build it was loaded from.</summary>

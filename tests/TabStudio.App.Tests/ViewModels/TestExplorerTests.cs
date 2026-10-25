@@ -112,7 +112,7 @@ public sealed class TestExplorerTests : IClassFixture<SharedToolchain>, IDisposa
 
         Assert.Equal(IdeState.Failed, workspace.State);
         Assert.Equal(BottomPanel.ErrorList, workspace.SelectedPanel);
-        Assert.True(workspace.ErrorList.ErrorCount > 0);
+        await UiTestHelpers.WaitUntilAsync(() => workspace.ErrorList.ErrorCount > 0, because: "the build errors");
         Assert.All(workspace.Tests.Entries, e => Assert.Equal(TestState.NotRun, e.State));
         Assert.StartsWith("The build failed", workspace.Tests.RunStatusText, StringComparison.Ordinal);
     }
