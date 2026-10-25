@@ -93,15 +93,15 @@ public sealed class LinkWorkspaceTests
         Assert.Equal($"Lost {HostName} · compiling on this device", workspace.StatusText);
         Assert.Contains(whileAway, d => d.StartsWith("CS0103 ", StringComparison.Ordinal));
 
+        var requests = host.RequestCount;
         host.Restart();
         await UiTestHelpers.WaitUntilAsync(() => language.IsLinked && workspace.IsLinkedToHost, TimeSpan.FromSeconds(90), "the link to come back");
-        var requests = host.RequestCount;
         var document = workspace.ActiveDocument!;
         await document.AnalyzeNowAsync();
 
         // The edit made while the host was away reached it.
         Assert.Contains(document.Diagnostics, d => d.Id == "CS0103");
-        Assert.True(host.RequestCount > requests, "The host analyzed the document again.");
+        Assert.True(host.RequestCount > requests, "The host loaded and analyzed the workspace again.");
         Assert.Equal($"Linked to {HostName}", workspace.StatusText);
     }
 

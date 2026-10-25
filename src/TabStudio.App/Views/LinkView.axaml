@@ -131,12 +131,13 @@
                   </Button>
                   <TextBlock Classes="muted small" Text="Or type the address and the code it shows under the QR code:" IsVisible="{Binding CanScan}" />
                   <TextBlock Classes="muted small" Text="Type the address and the code it shows under its QR code:" IsVisible="{Binding !CanScan}" />
-                  <Grid ColumnDefinitions="*,12,190,12,Auto" RowDefinitions="Auto,Auto">
+                  <!-- In one row on a tablet, the address above the code on a phone's narrow screen (see the code-behind). -->
+                  <Grid x:Name="PairGrid" ColumnDefinitions="*,12,190,12,Auto" RowDefinitions="Auto,Auto,Auto,Auto">
                     <TextBlock Classes="label" Text="Address" Margin="2,0,0,5" />
-                    <TextBlock Grid.Column="2" Classes="label" Text="Code" Margin="2,0,0,5" />
+                    <TextBlock x:Name="CodeLabel" Grid.Column="2" Classes="label" Text="Code" Margin="2,0,0,5" />
                     <TextBox Grid.Row="1" x:Name="AddressBox" Classes="large mono" Watermark="192.168.1.23" Text="{Binding AddressText}" />
                     <TextBox Grid.Row="1" Grid.Column="2" x:Name="CodeBox" Classes="large mono" Watermark="XXXX-XXXX" MaxLength="10" Text="{Binding CodeText}" />
-                    <Button Grid.Row="1" Grid.Column="4" Theme="{StaticResource AccentButton}" Height="44" Padding="22,0" Content="Pair" Command="{Binding PairCommand}" />
+                    <Button Grid.Row="1" Grid.Column="4" x:Name="PairButton" Theme="{StaticResource AccentButton}" Height="44" Padding="22,0" Content="Pair" Command="{Binding PairCommand}" />
                   </Grid>
                   <StackPanel Orientation="Horizontal" Spacing="10" IsVisible="{Binding IsBusy}">
                     <ProgressBar IsIndeterminate="True" Width="120" VerticalAlignment="Center" />
@@ -183,11 +184,12 @@
 
               <!-- Hosting -->
               <StackPanel Spacing="14" IsVisible="{Binding IsHosting}">
-                <Grid ColumnDefinitions="Auto,22,*" IsVisible="{Binding HasNetwork}">
+                <!-- The QR code beside its instructions, or above them on a phone's narrow screen (see the code-behind). -->
+                <Grid x:Name="HostCodeGrid" ColumnDefinitions="Auto,22,*" RowDefinitions="Auto,Auto" IsVisible="{Binding HasNetwork}">
                   <Border Width="236" Height="236" CornerRadius="10" Background="White" VerticalAlignment="Top">
                     <controls:QrCodeView Code="{Binding HostQrCode}" />
                   </Border>
-                  <StackPanel Grid.Column="2" Spacing="10" VerticalAlignment="Center">
+                  <StackPanel x:Name="HostCodeText" Grid.Column="2" Spacing="10" VerticalAlignment="Center">
                     <TextBlock Classes="h2" Text="Scan this with TabStudio on the tablet" TextWrapping="Wrap" />
                     <TextBlock Classes="muted" TextWrapping="Wrap"
                                Text="On the tablet: File > TabStudio Link > Scan its QR code. Without a camera, type these instead:" />

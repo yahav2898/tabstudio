@@ -1,5 +1,7 @@
 using System.Globalization;
+using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
+using Avalonia.VisualTree;
 using Microsoft.Extensions.DependencyInjection;
 using TabStudio.App.Platform;
 using TabStudio.App.Services;
@@ -78,17 +80,22 @@ public sealed class LinkScreenshotTests : IDisposable
     }
 
     [AvaloniaFact]
-    public async Task A_phone_hosting_in_portrait()
+    public async Task On_a_phone_the_QR_code_and_the_pairing_fields_are_stacked()
     {
-        var (main, window, _) = Start("Pixel 9", LinkDeviceKinds.Phone, 412, 915);
+        var (main, _, _) = Start("Pixel 9", LinkDeviceKinds.Phone, 1280, 800);
         var link = main.Link;
+        var phone = new Window { Width = 412, Height = 915, Content = new LinkView { DataContext = link } };
+        phone.Show();
         Assert.True(await link.Service.StartHostingAsync(port: 0, loopbackOnly: true), link.Service.HostError);
         link.Open(LinkTab.Host);
         await UiTestHelpers.WaitUntilAsync(() => link.HostQrCode is not null, because: "the QR code");
+        UiTestHelpers.SaveScreenshot(phone, "link-07-host-phone");
 
-        UiTestHelpers.SaveScreenshot(window, "link-07-host-phone");
+        Assert.Equal(1, Grid.GetRow(Named<StackPanel>(phone, "HostCodeText")));
 
-        Assert.True(link.IsHosting);
+        link.SelectTabCommand.Execute(LinkTab.Connect);
+        await UiTestHelpers.WaitUntilAsync(() => Grid.GetRow(Named<TextBox>(phone, "CodeBox")) == 3, because: "the code under the address");
+        UiTestHelpers.SaveScreenshot(phone, "link-08-connect-phone");
     }
 
     [AvaloniaFact]
@@ -101,12 +108,12 @@ public sealed class LinkScreenshotTests : IDisposable
         Assert.True(await main.Link.Service.PairAsync(host.Invitation), main.Link.Service.ClientError);
         await UiTestHelpers.WaitUntilAsync(() => workspace.IsLinkedToHost && workspace.LinkStatusText.EndsWith(" ms", StringComparison.Ordinal), because: "the link and its first ping");
         await workspace.ActiveDocument!.AnalyzeNowAsync();
-        UiTestHelpers.SaveScreenshot(window, "link-08-ide-linked");
+        UiTestHelpers.SaveScreenshot(window, "link-09-ide-linked");
         Assert.StartsWith("Pixel 9 · ", workspace.LinkStatusText, StringComparison.Ordinal);
 
         await host.StopAsync();
         await UiTestHelpers.WaitUntilAsync(() => workspace.IsLinkReconnecting, because: "the fallback");
-        UiTestHelpers.SaveScreenshot(window, "link-09-ide-reconnecting");
+        UiTestHelpers.SaveScreenshot(window, "link-10-ide-reconnecting");
 
         Assert.Equal("Reconnecting to Pixel 9", workspace.LinkStatusText);
         Assert.Equal("Lost Pixel 9 · compiling on this device", workspace.StatusText);
@@ -119,6 +126,10 @@ public sealed class LinkScreenshotTests : IDisposable
             _disposables[i].Dispose();
         }
     }
+
+    private static T Named<T>(Window window, string name)
+        where T : Control =>
+        window.GetVisualDescendants().OfType<T>().Single(c => c.Name == name);
 
     private static async Task<WorkspaceViewModel> OpenSampleAsync(MainViewModel main, ServiceProvider services)
     {

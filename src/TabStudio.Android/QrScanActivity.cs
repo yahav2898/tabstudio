@@ -233,7 +233,8 @@ public sealed class QrScanActivity : Activity, TextureView.ISurfaceTextureListen
         var density = Resources?.DisplayMetrics?.Density ?? 1f;
         int Dp(int value) => (int)((value * density) + 0.5f);
 
-        var root = new FrameLayout(this) { FitsSystemWindows = true };
+        var root = new FrameLayout(this);
+        root.SetFitsSystemWindows(true);
         root.SetBackgroundColor(Color.Black);
 
         _preview = new TextureView(this) { SurfaceTextureListener = this };
