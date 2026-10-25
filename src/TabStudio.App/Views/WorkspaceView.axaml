@@ -618,7 +618,8 @@
                          Fill="{Binding Actions.CiVisual, Converter={x:Static conv:ActionsConverters.StateBrush}}" />
               </StackPanel>
             </Button>
-    [NotifyPropertyChangedFor(nameof(IsPullRequestsSelected))]
+            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsPullRequestsSelected}" Content="Pull Requests"
+                    Command="{Binding ShowPullRequestsCommand}" />
             <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsTestExplorerSelected}"
                     Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}">
               <StackPanel Orientation="Horizontal" Spacing="6">
