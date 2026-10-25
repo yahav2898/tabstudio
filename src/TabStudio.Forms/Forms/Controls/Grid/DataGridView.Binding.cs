@@ -382,7 +382,22 @@ public partial class DataGridView
 
         if (e.ListChangedType is ListChangedType.PropertyDescriptorAdded or ListChangedType.PropertyDescriptorDeleted or ListChangedType.PropertyDescriptorChanged)
         {
+            // The items are of another type, as when a binding source gets its data source after the grid bound to it.
             _boundProperties = _boundList is null ? null : PropertiesOf(_boundList);
+            if (AutoGenerateColumns)
+            {
+                foreach (var column in _columns.Items.Where(c => c.IsGenerated).ToList())
+                {
+                    _columns.Remove(column);
+                }
+
+                GenerateColumns();
+            }
+        }
+        else if (e.ListChangedType == ListChangedType.Reset && AutoGenerateColumns && _columns.Count == 0 && _boundList is not null)
+        {
+            _boundProperties = PropertiesOf(_boundList);
+            GenerateColumns();
         }
 
         Rebind();

@@ -47,6 +47,27 @@ public sealed class BindingTests
     }
 
     [AvaloniaFact]
+    public void A_grid_bound_to_an_empty_binding_source_shows_the_list_the_source_gets_later()
+    {
+        // As designer code does: the grid binds to the binding source in InitializeComponent, and the form's
+        // constructor gives the binding source its list afterwards.
+        DataGridView grid = null!;
+        using var run = FormsTestRun.Start(() =>
+        {
+            var form = new Form { ClientSize = new Size(500, 300) };
+            var source = new BindingSource();
+            grid = new DataGridView { Dock = DockStyle.Fill, DataSource = source };
+            form.Controls.Add(grid);
+            source.DataSource = new BindingList<DataGridViewTests.Person> { new() { Name = "Alice", Age = 34 }, new() { Name = "Bob", Age = 41 } };
+            return form;
+        });
+
+        Assert.Equal(["Name", "Age", "Active"], run.Invoke(() => grid.Columns.Cast<DataGridViewColumn>().Select(c => c.DataPropertyName).ToArray()));
+        Assert.Equal(3, run.Invoke(() => grid.RowCount));
+        Assert.Equal("Bob", run.Invoke(() => grid.Rows[1].Cells[0].Value));
+    }
+
+    [AvaloniaFact]
     public void A_binding_source_of_a_type_starts_as_an_empty_list_of_that_type()
     {
         using var source = new BindingSource { DataSource = typeof(DataGridViewTests.Person) };

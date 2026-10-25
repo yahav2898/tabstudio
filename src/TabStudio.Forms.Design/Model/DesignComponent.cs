@@ -32,8 +32,8 @@ internal sealed class DesignComponent
     /// <summary>The arguments it is created with, as C#, such as <c>components</c> for a timer.</summary>
     public string ConstructorArguments { get; set; } = string.Empty;
 
-    /// <summary>The field declaration as the file had it, such as <c>private Button button1;</c>, kept for its modifiers.</summary>
-    public string? FieldDeclaration { get; set; }
+    /// <summary>The modifiers of the component's field, such as <c>private</c>, kept as the file had them.</summary>
+    public string FieldModifiers { get; set; } = "private";
 
     /// <summary>The properties set, by property path, such as <c>Location</c> or <c>FlatAppearance.BorderSize</c>, with their values as C#.</summary>
     public List<DesignAssignment> Properties { get; } = [];
