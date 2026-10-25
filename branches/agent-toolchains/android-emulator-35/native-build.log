@@ -1,62 +1,62 @@
 NDK: /usr/local/lib/android/sdk/ndk/27.3.13750724
 == x86_64: building proot 5.1.107.101, talloc 2.5.0, API 28, 16 KB pages
-  ^~~~~~~
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termbits.h:39:1: error: invalid instruction mnemonic '}'
-};
-^
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:11:17: error: invalid register name
-struct winsize {
-                ^
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:11:17: error: Expected an op-mask register at this point
-struct winsize {
-                ^
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:12:18: error: unexpected token in argument list
-  unsigned short ws_row;
-                 ^
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:13:18: error: unexpected token in argument list
-  unsigned short ws_col;
-                 ^
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:14:18: error: unexpected token in argument list
-  unsigned short ws_xpixel;
-                 ^
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:15:18: error: unexpected token in argument list
-  unsigned short ws_ypixel;
-                 ^
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:16:1: error: invalid instruction mnemonic '}'
-};
-^
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:18:16: error: invalid register name
-struct termio {
-               ^
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:18:16: error: Expected an op-mask register at this point
-struct termio {
-               ^
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:19:18: error: unexpected token in argument list
-  unsigned short c_iflag;
-                 ^
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:20:18: error: unexpected token in argument list
-  unsigned short c_oflag;
-                 ^
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:21:18: error: unexpected token in argument list
-  unsigned short c_cflag;
-                 ^
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:22:18: error: unexpected token in argument list
-  unsigned short c_lflag;
-                 ^
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:23:17: error: unexpected token in argument list
-  unsigned char c_line;
-                ^
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:24:17: error: unexpected token in argument list
-  unsigned char c_cc[8];
-                ^
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:25:1: error: invalid instruction mnemonic '}'
-};
-^
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/bits/ioctl.h:43:11: error: expected register here
-int ioctl(int __fd, int __op, ...);
-          ^
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/bits/ioctl.h:60:11: error: expected register here
-int ioctl(int __fd, unsigned __op, ...) __attribute__((__overloadable__)) __attribute__((__enable_if__(1, ""))) __asm__("ioctl");
-          ^
-make: *** [GNUmakefile:240: loader/assembly.o] Error 1
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.1shss1U5Uu/x86_64/static/include -O2 -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./tracee/event.c -o tracee/event.o
+./tracee/reg.c:291:45: warning: unused parameter 'including_sysnum' [-Wunused-parameter]
+  291 | int push_specific_regs(Tracee *tracee, bool including_sysnum)
+      |                                             ^
+1 warning generated.
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.1shss1U5Uu/x86_64/static/include -O2 -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./tracee/seccomp.c -o tracee/seccomp.o
+./tracee/seccomp.c:326:7: warning: variable 'status' set but not used [-Wunused-but-set-variable]
+  326 |                 int status;
+      |                     ^
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.1shss1U5Uu/x86_64/static/include -O2 -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./tracee/statx.c -o tracee/statx.o
+./tracee/seccomp.c:638:29: warning: comparison of integers of different signs: 'gid_t' (aka 'unsigned int') and 'int' [-Wsign-compare]
+  638 |                 if (rxid != rxid_ && rxid != -1)
+      |                                      ~~~~ ^  ~~
+./tracee/seccomp.c:640:29: warning: comparison of integers of different signs: 'gid_t' (aka 'unsigned int') and 'int' [-Wsign-compare]
+  640 |                 if (exid != exid_ && exid != -1)
+      |                                      ~~~~ ^  ~~
+./tracee/seccomp.c:642:29: warning: comparison of integers of different signs: 'gid_t' (aka 'unsigned int') and 'int' [-Wsign-compare]
+  642 |                 if (sxid != sxid_ && sxid != -1)
+      |                                      ~~~~ ^  ~~
+./tracee/seccomp.c:631:12: warning: variable 'ret' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+  631 |                 else if (sysnum == PR_setresgid)
+      |                          ^~~~~~~~~~~~~~~~~~~~~~
+./tracee/seccomp.c:633:7: note: uninitialized use occurs here
+  633 |                 if (ret) {  // EFAULT = address outside address space
+      |                     ^~~
+./tracee/seccomp.c:631:8: note: remove the 'if' if its condition is always true
+  631 |                 else if (sysnum == PR_setresgid)
+      |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+  632 |                         ret = getresgid(&rxid_, &exid_, &sxid_);
+./tracee/seccomp.c:150:9: note: initialize the variable 'ret' to silence this warning
+  150 |         int ret;
+      |                ^
+      |                 = 0
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.1shss1U5Uu/x86_64/static/include -O2 -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./ptrace/ptrace.c -o ptrace/ptrace.o
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.1shss1U5Uu/x86_64/static/include -O2 -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./ptrace/user.c -o ptrace/user.o
+5 warnings generated.
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.1shss1U5Uu/x86_64/static/include -O2 -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./ptrace/wait.c -o ptrace/wait.o
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.1shss1U5Uu/x86_64/static/include -O2 -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./extension/ashmem_memfd/ashmem_memfd.c -o extension/ashmem_memfd/ashmem_memfd.o
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.1shss1U5Uu/x86_64/static/include -O2 -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./extension/kompat/kompat.c -o extension/kompat/kompat.o
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.1shss1U5Uu/x86_64/static/include -O2 -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./extension/fake_id0/chown.c -o extension/fake_id0/chown.o
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.1shss1U5Uu/x86_64/static/include -O2 -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./extension/fake_id0/chroot.c -o extension/fake_id0/chroot.o
+./extension/ashmem_memfd/ashmem_memfd.c:42:12: error: call to undeclared library function 'strcmp' with type 'int (const char *, const char *)'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+   42 |                 if (0 == strcmp(assume_unsupported, "1")) {
+      |                          ^
+./extension/ashmem_memfd/ashmem_memfd.c:42:12: note: include the header <string.h> or explicitly provide a declaration for 'strcmp'
+./extension/ashmem_memfd/ashmem_memfd.c:179:3: error: call to undeclared library function 'memset' with type 'void *(void *, int, unsigned long)'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+  179 |                 memset(state, 0, sizeof(*state));
+      |                 ^
+./extension/ashmem_memfd/ashmem_memfd.c:179:3: note: include the header <string.h> or explicitly provide a declaration for 'memset'
+./extension/ashmem_memfd/ashmem_memfd.c:172:96: warning: unused parameter 'data2' [-Wunused-parameter]
+  172 | int ashmem_memfd_callback(Extension *extension, ExtensionEvent event, intptr_t data1, intptr_t data2)
+      |                                                                                                ^
+1 warning and 2 errors generated.
+make: *** [GNUmakefile:202: extension/ashmem_memfd/ashmem_memfd.o] Error 1
+make: *** Waiting for unfinished jobs....
+./extension/fake_id0/chroot.c:54:2: warning: ignoring return value of function declared with 'warn_unused_result' attribute [-Wunused-result]
+   54 |         realpath(path, path_host_absolute);
+      |         ^~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~
+1 warning generated.
 rm .check_seccomp_filter.o .check_process_vm.o
