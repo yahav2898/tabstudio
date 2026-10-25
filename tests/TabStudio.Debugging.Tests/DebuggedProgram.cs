@@ -84,6 +84,21 @@ internal sealed class DebuggedProgram : IDisposable
             $"The program ended ({result.Outcome}) without pausing.\nOutput: {Console.Output}\nError: {Console.Error}\n{result.Exception}");
     }
 
+    /// <summary>Waits for the next pause, or returns <see langword="null"/> when the program ends first.</summary>
+    public async Task<DebugPausedEventArgs?> TryNextPauseAsync()
+    {
+        using var cancel = new CancellationTokenSource(Timeout);
+        var read = _pauses.Reader.ReadAsync(cancel.Token).AsTask();
+        await Task.WhenAny(read, Run).WaitAsync(Timeout);
+        if (read.IsCompletedSuccessfully)
+        {
+            return await read;
+        }
+
+        await cancel.CancelAsync();
+        return _pauses.Reader.TryRead(out var late) ? late : null;
+    }
+
     /// <summary>Waits until the program has written some text.</summary>
     public async Task WaitForOutputAsync(string text)
     {

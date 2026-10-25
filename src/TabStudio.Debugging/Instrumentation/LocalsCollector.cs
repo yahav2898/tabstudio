@@ -23,7 +23,9 @@ internal sealed record CollectedLocal(string Expression, DebugLocalSlot Slot);
 /// </remarks>
 internal static class LocalsCollector
 {
-    private static readonly SymbolDisplayFormat TypeFormat = SymbolDisplayFormat.MinimallyQualifiedFormat;
+    /// <summary>Types as the Locals panel shows them: <c>string</c>, not <c>string?</c>, as nullability does not exist at run time.</summary>
+    private static readonly SymbolDisplayFormat TypeFormat = SymbolDisplayFormat.MinimallyQualifiedFormat
+        .RemoveMiscellaneousOptions(SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier);
 
     /// <summary>The variables a hook before <paramref name="node"/> (a statement or an expression body) reports.</summary>
     public static IReadOnlyList<CollectedLocal> Collect(SemanticModel model, SyntaxNode node, FunctionContext context, CancellationToken cancellationToken)

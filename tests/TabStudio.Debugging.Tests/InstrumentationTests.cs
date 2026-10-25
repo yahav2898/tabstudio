@@ -153,6 +153,145 @@ public sealed partial class InstrumentationTests
 
         """;
 
+    /// <summary>More constructs, stepped through one statement at a time.</summary>
+    private const string MoreConstructs = """
+        using System.Collections;
+
+        var dictionary = new Dictionary<string, int> { ["a"] = 1, ["b"] = 2 };
+        foreach (var (key, value) in dictionary)
+        {
+            Console.WriteLine($"{key}={value}");
+        }
+
+        using var stream = new MemoryStream();
+        stream.WriteByte(1);
+        Console.WriteLine(stream.Length);
+
+        object boxed = 42;
+        switch (boxed)
+        {
+            case int n when n > 40:
+                Console.WriteLine("big " + n);
+                break;
+            case int n:
+                Console.WriteLine("small " + n);
+                break;
+            default:
+                break;
+        }
+
+        var (left, right) = (3, 4);
+        switch (left, right)
+        {
+            case (3, 4): Console.WriteLine("tuple"); break;
+        }
+
+        var queue = new Queue<int>(new[] { 1, 2, 3 });
+        while (queue.TryDequeue(out var item))
+            if (item % 2 == 1) Console.Write(item);
+            else if (item == 2) Console.Write("-");
+        Console.WriteLine();
+
+        int captured;
+        void Show() => Console.WriteLine(captured);
+        captured = 5;
+        Show();
+
+        Console.WriteLine(Echo<string>("echo"));
+        dynamic dyn = 7;
+        Console.WriteLine(dyn + 1);
+
+        Action<int, int> discard = (_, _) => { Console.WriteLine("discards"); };
+        discard(1, 2);
+        var total = await Task.Run(async () => { await Task.Delay(1); return 10; });
+        Console.WriteLine(total);
+        checked { Console.WriteLine(int.MaxValue - 1); }
+        { Console.WriteLine("nested block"); }
+        var seeded = new Seeded(9);
+        Console.WriteLine(seeded.Next());
+        IGreeter greeter = new Greeter();
+        Console.WriteLine(greeter.Greet());
+        var events = new Events();
+        events.Changed += () => Console.WriteLine("changed");
+        events.Raise();
+        var wrapper = new Wrapper { Value = 3 };
+        Console.WriteLine(wrapper.Value);
+        Console.WriteLine(new Money(5) + new Money(6));
+        Console.WriteLine(Sum(1, 2, 3));
+        Console.WriteLine(new Bag().Count());
+
+        static T Echo<T>(T value) => value;
+        static int Sum(params int[] values) { var sum = 0; foreach (var v in values) sum += v; return sum; }
+
+        sealed class Seeded(int seed)
+        {
+            public int Next() { return seed + 1; }
+        }
+
+        interface IGreeter
+        {
+            string Greet() { return "default greeting"; }
+        }
+
+        sealed class Greeter : IGreeter;
+
+        sealed class Events
+        {
+            private Action? _changed;
+            public event Action Changed { add => _changed += value; remove => _changed -= value; }
+            public void Raise() => _changed?.Invoke();
+        }
+
+        sealed class Wrapper
+        {
+            private int _value;
+            public int Value { get => _value; init => _value = value; }
+        }
+
+        readonly record struct Money(int Cents)
+        {
+            public static Money operator +(Money a, Money b) => new(a.Cents + b.Cents);
+        }
+
+        struct Bag : IEnumerable<int>
+        {
+            public int Size => 2;
+            public IEnumerator<int> GetEnumerator() { for (var i = 0; i < Size; i++) yield return i; }
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+            public int Count() { var n = 0; foreach (var _ in this) n++; return n; }
+        }
+        """;
+
+    [Fact]
+    public async Task Stepping_through_every_statement_keeps_the_program_behavior()
+    {
+        var expected = await RunUninstrumentedAsync(MoreConstructs);
+        using var program = new DebuggedProgram(MoreConstructs, 3);
+        program.Start();
+
+        var steps = 0;
+        var lines = new HashSet<int>();
+        while (await program.TryNextPauseAsync() is { } pause)
+        {
+            // Reading every value runs each hook's locals through the inspector.
+            foreach (var local in pause.Locals)
+            {
+                Assert.NotNull(local.Value);
+                Assert.NotNull(local.Type);
+            }
+
+            lines.Add(pause.Location?.Line ?? 0);
+            Assert.True(++steps < 5000, "Stepping did not reach the end of the program.");
+            program.Session.StepInto();
+        }
+
+        var result = await program.FinishAsync();
+        Assert.True(result.Outcome == RunOutcome.Completed, program.Console.Error + result.Exception);
+        Assert.Equal(expected, program.Console.Output);
+        Assert.Contains("Money { Cents = 11 }", expected, StringComparison.Ordinal);
+        Assert.True(lines.Count > 40, $"Only {lines.Count} distinct lines were stepped through.");
+    }
+
     [Fact]
     public async Task Instrumentation_keeps_the_line_numbers_of_exception_stack_traces()
     {
@@ -308,6 +447,20 @@ public sealed partial class InstrumentationTests
         Assert.Equal("if (x > 0)".Length, statements[1].Location.Length);
         Assert.Equal(5, statements[2].Location.Column);
         Assert.Contains(statements[2].Locals, l => l.Name == "x" && l.Type == "int");
+    }
+
+    private static async Task<string> RunUninstrumentedAsync(string source)
+    {
+        var plain = new CSharpCompiler().Compile(new CompilationRequest
+        {
+            AssemblyName = "Plain" + Guid.NewGuid().ToString("N")[..8],
+            Documents = [new SourceDocument(DebuggedProgram.FilePath, source)],
+        });
+        Assert.True(plain.Success, string.Join('\n', plain.Diagnostics));
+        var console = new CapturingConsole();
+        var result = await new ProgramRunner().RunAsync(plain.Assembly!, [], [], console);
+        Assert.True(result.Outcome == RunOutcome.Completed, console.Error);
+        return console.Output;
     }
 
     private static int LineOf(string source, string marker) =>

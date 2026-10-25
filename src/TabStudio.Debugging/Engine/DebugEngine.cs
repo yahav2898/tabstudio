@@ -168,7 +168,7 @@ internal sealed class DebugEngine
 
     // ---- Hooks, called by the program ----
 
-    private object? OnEnter(int methodId)
+    private DebugFrame? OnEnter(int methodId)
     {
         if (Evaluator.IsEvaluating || _stopped)
         {

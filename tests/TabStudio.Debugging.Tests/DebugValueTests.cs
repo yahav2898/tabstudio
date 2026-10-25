@@ -113,9 +113,9 @@ public sealed class DebugValueTests
     {
         public string Text = "t";
 
-        public int Number => 4;
+        public int Number => Text.Length + 3;
 
-        public int Throws => throw new InvalidOperationException("no");
+        public int Throws => throw new InvalidOperationException(Text);
 
         public int this[int index] => index;
     }

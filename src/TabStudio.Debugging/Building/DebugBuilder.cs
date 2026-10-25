@@ -96,7 +96,7 @@ public sealed class DebugBuilder
         return Finish(project.Name, diagnostics, entry, dependencies, stopwatch, info);
     }
 
-    /// <summary>Instruments and emits one compilation, such as a program compiled with <see cref="CSharpCompiler"/>.</summary>
+    /// <summary>Instruments and emits one compilation, such as a program compiled with <see cref="TabStudio.Compilation.CSharpCompiler"/>.</summary>
     /// <param name="compilation">The compilation to debug.</param>
     /// <param name="cancellationToken">Cancels the build.</param>
     public static DebugBuild Build(CSharpCompilation compilation, CancellationToken cancellationToken = default)
