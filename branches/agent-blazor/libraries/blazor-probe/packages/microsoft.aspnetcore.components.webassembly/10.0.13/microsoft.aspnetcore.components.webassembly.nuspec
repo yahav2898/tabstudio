@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Microsoft.AspNetCore.Components.WebAssembly</id>
+    <version>10.0.13</version>
+    <authors>Microsoft</authors>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <icon>Icon.png</icon>
+    <readme>PACKAGE.md</readme>
+    <projectUrl>https://asp.net/</projectUrl>
+    <description>Build client-side single-page applications (SPAs) with Blazor running under WebAssembly.
+
+This package was built from the source code at https://github.com/dotnet/dotnet/tree/4099f83977f4d29604a9aeb971fb0a7bc1d5f699</description>
+    <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+    <tags>aspnetcore components</tags>
+    <serviceable>true</serviceable>
+    <repository type="git" url="https://github.com/dotnet/dotnet" commit="4099f83977f4d29604a9aeb971fb0a7bc1d5f699" />
+    <dependencies>
+      <group targetFramework="net10.0">
+        <dependency id="Microsoft.JSInterop.WebAssembly" version="10.0.13" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore.Components.Web" version="10.0.13" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Configuration.Binder" version="10.0.13" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Configuration.Json" version="10.0.13" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Logging" version="10.0.13" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>
