@@ -71,6 +71,7 @@ internal sealed partial class AndroidDesktopMouse : Java.Lang.Object, View.IOnCa
     {
         _display?.SetOnHoverListener(null);
         _display = null;
+        _touchpad = null;
         Release();
         _cursor.Hide();
     }
