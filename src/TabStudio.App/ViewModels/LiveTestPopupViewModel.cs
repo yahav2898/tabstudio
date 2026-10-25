@@ -9,6 +9,7 @@ namespace TabStudio.App.ViewModels;
 /// <summary>A test in a Live Unit Testing marker's popup: its outcome and duration, with Run and Go To.</summary>
 public sealed partial class CoveringTestViewModel
 {
+    private static readonly char[] Spaces = [' ', '\t', '\r'];
     private readonly ILiveTestingEditor? _editor;
 
     /// <summary>Creates the row.</summary>
@@ -35,7 +36,7 @@ public sealed partial class CoveringTestViewModel
 
     /// <summary>Why the test failed, on one line, or <see langword="null"/> when it did not fail.</summary>
     public string? Failure => Test.Message is { } message && Test.IsFailing
-        ? string.Join(" · ", message.Split('\n').Select(l => l.Trim()).Where(l => l.Length > 0))
+        ? string.Join(" · ", message.Split('\n').Select(l => string.Join(' ', l.Split(Spaces, StringSplitOptions.RemoveEmptyEntries))).Where(l => l.Length > 0))
         : null;
 
     /// <summary>Whether <see cref="Failure"/> is shown.</summary>

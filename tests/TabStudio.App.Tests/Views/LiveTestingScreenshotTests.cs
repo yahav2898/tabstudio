@@ -43,12 +43,18 @@ public sealed class LiveTestingScreenshotTests : IClassFixture<SharedToolchain>,
         var (window, workspace, editor, pricing) = await OpenAsync();
         await StartAsync(workspace, pricing);
 
+        // A breakpoint too: the markers have a margin of their own, between the breakpoints and the code.
+        var breakpointLine = PricingSolution.LineOf("return price * quantity;");
+        pricing.Debugger!.ToggleBreakpoint(pricing.FilePath, breakpointLine);
+        Dispatcher.UIThread.RunJobs();
         UiTestHelpers.SaveScreenshot(window, "live-01-markers");
 
         var margin = editor.LiveTestingMargin!;
         Assert.True(margin.IsVisible);
         Assert.Equal(LiveTestingMargin.MarginWidth, margin.Bounds.Width);
         Assert.True(workspace.IsTestExplorerSelected);
+        Assert.Equal(LineCoverageState.Covered, MarkerOn(pricing, breakpointLine).State);
+        pricing.Debugger.ToggleBreakpoint(pricing.FilePath, breakpointLine);
 
         pricing.Document.Replace(pricing.Document.Text.IndexOf("20;", StringComparison.Ordinal), 2, "17");
         Dispatcher.UIThread.RunJobs();
@@ -111,6 +117,17 @@ public sealed class LiveTestingScreenshotTests : IClassFixture<SharedToolchain>,
         testMenu.Close();
         await StartedAsync(workspace, pricing);
         Assert.True(workspace.LiveTesting.IsActive);
+
+        // Excluding the failing test from the Test Explorer: its row shows the struck-out flask, and the lines only
+        // it ran are no longer covered.
+        workspace.Tests.Rows.Single(r => r.Name == "Tax_is_seventeen_percent").ExcludeFromLiveTestingCommand.Execute(null);
+        var rateLine = PricingSolution.LineOf("var rate = 20;");
+        await UiTestHelpers.WaitUntilAsync(
+            () => MarkerOn(pricing, rateLine).State == LineCoverageState.NotCovered
+                && workspace.Tests.Rows.Single(r => r.Name == "Tax_is_seventeen_percent").IsExcludedFromLiveTesting,
+            RunTimeout,
+            "the excluded test's lines to lose it");
+        UiTestHelpers.SaveScreenshot(window, "live-06-excluded");
     }
 
     public void Dispose()
