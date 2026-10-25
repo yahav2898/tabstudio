@@ -68,6 +68,15 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 | C, C++, Rust, Go, Python, Node, Java | Native toolchains from the Toolchain Store |
 | Anything Windows-only | The Windows Bridge: builds and runs on your PC, streamed to the tablet |
 
+### Every screen at once
+
+- **Run on Swarm.** Phones and tablets running TabStudio join your swarm with one scan. Press F5 and the app you are building starts on all of them together, and every save updates them all. Avalonia apps run natively, web apps in each device's browser view, and console apps stream their output back.
+- **Debug on any device.** Tap a button on the phone, and its breakpoint stops on your tablet with the phone's Locals and Call Stack. Pause that device or all of them.
+- **Mirror input.** A tap, scroll or keystroke on one device happens on every device, so you compare the same screen at every size.
+- **Virtual devices.** No spare phones? The tablet shows your app side by side as a small phone, a large phone and a tablet, in light and dark, left to right and right to left, and with large fonts.
+- **Layout checks.** After every change, TabStudio inspects each screen for clipped text, controls pushed off screen, overlapping controls, touch targets under 44 pixels and low contrast. Each finding lands in the Error List with its device and a screenshot, and **Fix with Agent** is one tap away.
+- **Recorded end-to-end tests.** Record a few taps and get a UI test that replays them on every device and in CI, with results per device in Test Explorer.
+
 ### Open any repository
 
 - **Paste a GitHub link and press F5.** TabStudio reads `global.json`, `package.json`, `Cargo.toml`, `go.mod`, `CMakeLists.txt` and friends, installs the toolchains it needs and sets up build, run and debug.

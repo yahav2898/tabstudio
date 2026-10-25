@@ -91,6 +91,14 @@ Alongside the milestones, the GitHub work a developer would otherwise do in a br
 - CI's errors in the Error List with **Fix with Agent**, watched repositories, and a notification when a
   run finishes.
 
+## Swarm
+
+Every screen at once, built on TabStudio Link: run the app on every paired phone and tablet together and update them
+on every save; breakpoints from any device stop on the tablet; input mirrored across devices; virtual devices of
+every size, theme, direction and font scale on the tablet itself; layout checks for clipped text, off-screen and
+overlapping controls, small touch targets and low contrast; and end-to-end tests recorded from taps that replay on
+every device and in CI.
+
 ## Desktop mode
 
 Across every milestone: when a monitor is connected, the full layout moves to the big screen, where the tablet's
