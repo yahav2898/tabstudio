@@ -156,31 +156,31 @@ internal sealed class NativeTextEditor : AvaloniaTextBox
     private static Border BuildTemplate(AvaloniaTextBox box, INameScope scope)
     {
         var presenter = new TextPresenter { Name = "PART_TextPresenter" };
-        presenter.Bind(TextPresenter.TextProperty, new TemplateBinding(TextProperty) { Mode = BindingMode.TwoWay });
-        presenter.Bind(TextPresenter.CaretIndexProperty, new TemplateBinding(CaretIndexProperty));
-        presenter.Bind(TextPresenter.SelectionStartProperty, new TemplateBinding(SelectionStartProperty));
-        presenter.Bind(TextPresenter.SelectionEndProperty, new TemplateBinding(SelectionEndProperty));
-        presenter.Bind(TextPresenter.TextAlignmentProperty, new TemplateBinding(TextAlignmentProperty));
-        presenter.Bind(TextPresenter.TextWrappingProperty, new TemplateBinding(TextWrappingProperty));
-        presenter.Bind(TextPresenter.LineHeightProperty, new TemplateBinding(LineHeightProperty));
-        presenter.Bind(TextPresenter.PasswordCharProperty, new TemplateBinding(PasswordCharProperty));
-        presenter.Bind(TextPresenter.RevealPasswordProperty, new TemplateBinding(RevealPasswordProperty));
-        presenter.Bind(TextPresenter.SelectionBrushProperty, new TemplateBinding(SelectionBrushProperty));
-        presenter.Bind(TextPresenter.SelectionForegroundBrushProperty, new TemplateBinding(SelectionForegroundBrushProperty));
-        presenter.Bind(TextPresenter.CaretBrushProperty, new TemplateBinding(CaretBrushProperty));
-        presenter.Bind(TextPresenter.CaretBlinkIntervalProperty, new TemplateBinding(CaretBlinkIntervalProperty));
-        presenter.Bind(HorizontalAlignmentProperty, new TemplateBinding(HorizontalContentAlignmentProperty));
-        presenter.Bind(VerticalAlignmentProperty, new TemplateBinding(VerticalContentAlignmentProperty));
+        presenter[~TextPresenter.TextProperty] = new TemplateBinding(TextProperty) { Mode = BindingMode.TwoWay };
+        presenter[~TextPresenter.CaretIndexProperty] = new TemplateBinding(CaretIndexProperty);
+        presenter[~TextPresenter.SelectionStartProperty] = new TemplateBinding(SelectionStartProperty);
+        presenter[~TextPresenter.SelectionEndProperty] = new TemplateBinding(SelectionEndProperty);
+        presenter[~TextPresenter.TextAlignmentProperty] = new TemplateBinding(TextAlignmentProperty);
+        presenter[~TextPresenter.TextWrappingProperty] = new TemplateBinding(TextWrappingProperty);
+        presenter[~TextPresenter.LineHeightProperty] = new TemplateBinding(LineHeightProperty);
+        presenter[~TextPresenter.PasswordCharProperty] = new TemplateBinding(PasswordCharProperty);
+        presenter[~TextPresenter.RevealPasswordProperty] = new TemplateBinding(RevealPasswordProperty);
+        presenter[~TextPresenter.SelectionBrushProperty] = new TemplateBinding(SelectionBrushProperty);
+        presenter[~TextPresenter.SelectionForegroundBrushProperty] = new TemplateBinding(SelectionForegroundBrushProperty);
+        presenter[~TextPresenter.CaretBrushProperty] = new TemplateBinding(CaretBrushProperty);
+        presenter[~TextPresenter.CaretBlinkIntervalProperty] = new TemplateBinding(CaretBlinkIntervalProperty);
+        presenter[~HorizontalAlignmentProperty] = new TemplateBinding(HorizontalContentAlignmentProperty);
+        presenter[~VerticalAlignmentProperty] = new TemplateBinding(VerticalContentAlignmentProperty);
         scope.Register(presenter.Name, presenter);
 
         var scroller = new ScrollViewer { Name = "PART_ScrollViewer", Content = presenter, AllowAutoHide = false };
-        scroller.Bind(ScrollViewer.HorizontalScrollBarVisibilityProperty, new TemplateBinding(ScrollViewer.HorizontalScrollBarVisibilityProperty));
-        scroller.Bind(ScrollViewer.VerticalScrollBarVisibilityProperty, new TemplateBinding(ScrollViewer.VerticalScrollBarVisibilityProperty));
+        scroller[~ScrollViewer.HorizontalScrollBarVisibilityProperty] = new TemplateBinding(ScrollViewer.HorizontalScrollBarVisibilityProperty);
+        scroller[~ScrollViewer.VerticalScrollBarVisibilityProperty] = new TemplateBinding(ScrollViewer.VerticalScrollBarVisibilityProperty);
         scope.Register(scroller.Name, scroller);
 
         var background = new Border { Child = scroller };
-        background.Bind(Border.BackgroundProperty, new TemplateBinding(BackgroundProperty));
-        background.Bind(Decorator.PaddingProperty, new TemplateBinding(PaddingProperty));
+        background[~Border.BackgroundProperty] = new TemplateBinding(BackgroundProperty);
+        background[~Decorator.PaddingProperty] = new TemplateBinding(PaddingProperty);
         return background;
     }
 

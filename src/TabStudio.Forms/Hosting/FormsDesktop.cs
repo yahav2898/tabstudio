@@ -25,8 +25,11 @@ namespace TabStudio.Forms.Hosting;
 /// </remarks>
 internal sealed partial class FormsDesktop : Control, IFormsPresenter
 {
-    /// <summary>The space kept around the largest window when the desktop is scaled to fit it.</summary>
-    private const int FitMargin = 16;
+    /// <summary>
+    /// The space kept around the largest window when the desktop is scaled to fit it: room for the margin a centered
+    /// window keeps from the desktop's edges, and for its invisible resize borders.
+    /// </summary>
+    private const int FitMargin = 24;
 
     /// <summary>The smallest scale the desktop is drawn at, so text stays readable.</summary>
     private const double MinimumScale = 0.35;

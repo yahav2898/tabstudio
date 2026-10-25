@@ -32,7 +32,9 @@ public sealed class DesktopTests
         Assert.Equal(1.0, app.Desktop.Scale);
         var desktop = app.Desktop.DesktopSize;
         Assert.InRange(frame.Frame.Left + (frame.Frame.Width / 2) - (desktop.Width / 2), -2, 2);
-        Assert.InRange(frame.Frame.Top + (frame.Frame.Height / 2) - (desktop.Height / 2), -2, 2);
+        // As on Windows, the form's bounds are centered, invisible resize borders included, which puts the visible
+        // window a few pixels above the middle.
+        Assert.InRange(frame.Frame.Top + (frame.Frame.Height / 2) - (desktop.Height / 2), -5, 0);
 
         app.Click(new Point(frame.Client.X + 70, frame.Client.Y + 74));
         app.WaitFor(() => app.Read(() => label!.Text) == "Clicked", "The click never reached the button.");
