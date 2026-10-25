@@ -26,7 +26,10 @@ public static partial class SelfTest
     public static Task<SelfTestResult> RunAsync(MainViewModel main, SampleLibrary samples, CancellationToken cancellationToken = default) =>
         RunAsync(main, samples, templates: null, cancellationToken);
 
-    /// <summary>Runs the self test in the running app, then a web app and an Avalonia app when <paramref name="templates"/> is given.</summary>
+    /// <summary>
+    /// Runs the self test in the running app, then a web app, an Avalonia app and the Avalonia app on a phone of the
+    /// swarm when <paramref name="templates"/> is given.
+    /// </summary>
     /// <param name="main">The app's root view model.</param>
     /// <param name="samples">The sample library.</param>
     /// <param name="templates">Creates the web and Avalonia apps; without it, those parts are skipped.</param>
@@ -102,7 +105,13 @@ public static partial class SelfTest
             }
 
             var avalonia = await ShowAvaloniaAppAsync(main, templates, cancellationToken);
-            return new SelfTestResult(avalonia.Success, $"{summary} | {debugged.Message} | {web.Message} | {avalonia.Message}", clock.Elapsed);
+            if (!avalonia.Success)
+            {
+                return new SelfTestResult(false, $"{summary} | {debugged.Message} | {web.Message} | {avalonia.Message}", clock.Elapsed);
+            }
+
+            var swarm = await RunOnSwarmAsync(main, templates, cancellationToken);
+            return new SelfTestResult(swarm.Success, $"{summary} | {debugged.Message} | {web.Message} | {avalonia.Message} | {swarm.Message}", clock.Elapsed);
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)
         {

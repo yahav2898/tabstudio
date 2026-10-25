@@ -38,14 +38,14 @@ internal sealed class FakePreviewScreen(AppPreviewViewModel preview, string name
     public Task<bool> SendInputAsync(AppInput input, CancellationToken cancellationToken)
     {
         Replayed.Add(input);
-        return Dispatcher.UIThread.InvokeAsync(() => Apply(input));
+        return Dispatcher.UIThread.InvokeAsync(() => Apply(input)).GetTask();
     }
 
-    public Task<byte[]?> CaptureAsync(CancellationToken cancellationToken) => Dispatcher.UIThread.InvokeAsync(() =>
+    public Task<byte[]?> CaptureAsync(CancellationToken cancellationToken) => Dispatcher.UIThread.InvokeAsync<byte[]?>(() =>
     {
         if (preview.View is not { Bounds: { Width: >= 1, Height: >= 1 } bounds } view)
         {
-            return (byte[]?)null;
+            return null;
         }
 
         using var bitmap = new RenderTargetBitmap(new PixelSize((int)bounds.Width, (int)bounds.Height));
@@ -53,12 +53,12 @@ internal sealed class FakePreviewScreen(AppPreviewViewModel preview, string name
         using var stream = new MemoryStream();
         bitmap.Save(stream);
         return stream.ToArray();
-    });
+    }).GetTask();
 
     public Task<IReadOnlyList<LayoutIssue>> InspectLayoutAsync(CancellationToken cancellationToken) => Task.FromResult<IReadOnlyList<LayoutIssue>>([]);
 
-    public Task<string?> ReadTextAsync(string elementPath, CancellationToken cancellationToken) => Dispatcher.UIThread.InvokeAsync(() =>
-        preview.View is { } view && ElementPaths.Find(view, elementPath) is { } element ? ElementPaths.TextOf(element) : null);
+    public Task<string?> ReadTextAsync(string elementPath, CancellationToken cancellationToken) => Dispatcher.UIThread.InvokeAsync<string?>(() =>
+        preview.View is { } view && ElementPaths.Find(view, elementPath) is { } element ? ElementPaths.TextOf(element) : null).GetTask();
 
     public void RaiseChanged() => Changed?.Invoke(this, EventArgs.Empty);
 
