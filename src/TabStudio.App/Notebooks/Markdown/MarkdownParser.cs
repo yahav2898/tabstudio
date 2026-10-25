@@ -115,6 +115,7 @@ public static partial class MarkdownParser
         var items = new List<(string Marker, int Depth, StringBuilder Text)>();
         var indents = new Stack<int>();
         var baseIndent = IndentOf(lines[start]);
+        var ordered = IsOrdered(ListItem().Match(lines[start]));
         var i = start;
         while (i < lines.Length)
         {
@@ -140,7 +141,9 @@ public static partial class MarkdownParser
             if (ListItem().Match(line) is { Success: true } item && !Rule().IsMatch(line))
             {
                 var indent = IndentOf(line);
-                if (indent < baseIndent)
+
+                // An outer item of the other kind, numbered or bulleted, starts a new list.
+                if (indent < baseIndent || (indent == baseIndent && IsOrdered(item) != ordered))
                 {
                     break;
                 }
@@ -195,6 +198,8 @@ public static partial class MarkdownParser
 
         return ((depth % 3) switch { 0 => "•", 1 => "◦", _ => "▪" }, text);
     }
+
+    private static bool IsOrdered(Match item) => char.IsAsciiDigit(item.Groups["marker"].Value[0]);
 
     private static bool IsTableStart(string[] lines, int i) =>
         i + 1 < lines.Length
