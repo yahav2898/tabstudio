@@ -1,32 +1,34 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Agent/TabStudio.Agent.csproj (in 75 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/TabStudio.Core.csproj (in 72 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/TabStudio.Debugging.csproj (in 1.9 sec).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj (in 1.6 sec).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj (in 1.6 sec).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Android/TabStudio.Android.csproj (in 1.93 sec).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/TabStudio.SourceControl.csproj (in 1 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/TabStudio.Packages.csproj (in 2 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/TabStudio.TestRunner.csproj (in 3 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/TabStudio.Notebooks.csproj (in 3 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/TabStudio.SourceControl.csproj (in 82 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/TabStudio.Packages.csproj (in 348 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/TabStudio.Notebooks.csproj (in 371 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/TabStudio.TestRunner.csproj (in 371 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Agent/TabStudio.Agent.csproj (in 1 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Android/TabStudio.Android.csproj (in 103 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/TabStudio.Core.csproj (in 1 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj (in 4 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj (in 6 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/TabStudio.Debugging.csproj (in 22 ms).
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/RoslynWorkspaceHost.Analyzers.cs(113,41): warning CA1826: Do not use Enumerable methods on indexable collections. Instead use the collection directly. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1826) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj]
-  TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
-  TabStudio.SourceControl -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/bin/Release/net10.0/TabStudio.SourceControl.dll
-  TabStudio.Agent -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Agent/bin/Release/net10.0/TabStudio.Agent.dll
   TabStudio.Packages -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/bin/Release/net10.0/TabStudio.Packages.dll
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/Xaml/AvaloniaXamlGenerator.cs(30,2): warning RS1038: This compiler extension should not be implemented in an assembly containing a reference to Microsoft.CodeAnalysis.Workspaces. The Microsoft.CodeAnalysis.Workspaces assembly is not provided during command line compilation scenarios, so references to it could cause the compiler extension to behave unpredictably. (https://github.com/dotnet/roslyn-analyzers/blob/main/docs/rules/RS1038.md) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/Xaml/AvaloniaXamlGenerator.cs(30,2): warning RS1041: This compiler extension should not be implemented in an assembly with target framework '.NET 10.0'. References to other target frameworks will cause the compiler to behave unpredictably. (https://github.com/dotnet/roslyn-analyzers/blob/main/docs/rules/RS1041.md) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/Xaml/AvaloniaXamlGenerator.cs(31,21): warning RS1036: 'TabStudio.Compilation.Xaml.AvaloniaXamlGenerator': A project containing analyzers or source generators should specify the property '<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>' [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/Xaml/AvaloniaXamlGenerator.cs(311,37): warning CA1859: Change return type of method 'ClrNamespaces' from 'System.Collections.Generic.IEnumerable<string>' to 'System.Collections.Generic.List<string>' for improved performance (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1859) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj]
+  TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
+  TabStudio.Agent -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Agent/bin/Release/net10.0/TabStudio.Agent.dll
+  TabStudio.SourceControl -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/bin/Release/net10.0/TabStudio.SourceControl.dll
   TabStudio.Notebooks -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/bin/Release/net10.0/TabStudio.Notebooks.dll
   TabStudio.TestRunner -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/bin/Release/net10.0/TabStudio.TestRunner.dll
   TabStudio.Debugging -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/bin/Release/net10.0/TabStudio.Debugging.dll
   TabStudio.App -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.App/bin/Release/net10.0/TabStudio.App.dll
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Android/AndroidWebView.cs(24,23): warning CA1001: Type 'AndroidWebView' owns disposable field(s) '_view' but is not disposable (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1001) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Android/TabStudio.Android.csproj]
   TabStudio.Android -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Android/bin/Release/net10.0-android/TabStudio.Android.dll
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
   TabStudio.Packages -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/bin/Release/net10.0/TabStudio.Packages.dll
-  TabStudio.Agent -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Agent/bin/Release/net10.0/TabStudio.Agent.dll
   TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
+  TabStudio.Agent -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Agent/bin/Release/net10.0/TabStudio.Agent.dll
   TabStudio.SourceControl -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/bin/Release/net10.0/TabStudio.SourceControl.dll
   TabStudio.Debugging -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/bin/Release/net10.0/TabStudio.Debugging.dll
-  TabStudio.Notebooks -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/bin/Release/net10.0/TabStudio.Notebooks.dll
   TabStudio.TestRunner -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/bin/Release/net10.0/TabStudio.TestRunner.dll
+  TabStudio.Notebooks -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/bin/Release/net10.0/TabStudio.Notebooks.dll
   TabStudio.App -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.App/bin/Release/net10.0/TabStudio.App.dll
