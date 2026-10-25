@@ -1,0 +1,146 @@
+using System.Collections.ObjectModel;
+using System.Globalization;
+using CommunityToolkit.Mvvm.ComponentModel;
+using TabStudio.App.Editing;
+using TabStudio.Core.Compatibility;
+using TabStudio.Core.Workspaces;
+
+namespace TabStudio.App.ViewModels;
+
+/// <summary>One row of the Properties panel.</summary>
+/// <param name="Name">The property name.</param>
+/// <param name="Value">Its value, as text.</param>
+public sealed record PropertyRow(string Name, string Value);
+
+/// <summary>The Properties panel: facts about whatever is selected in the Solution Explorer.</summary>
+public sealed partial class PropertiesViewModel : ObservableObject
+{
+    /// <summary>The selected item's name.</summary>
+    [ObservableProperty]
+    public partial string Title { get; private set; } = string.Empty;
+
+    /// <summary>What kind of item it is, such as "File Properties".</summary>
+    [ObservableProperty]
+    public partial string Subtitle { get; private set; } = string.Empty;
+
+    /// <summary>The rows.</summary>
+    public ObservableCollection<PropertyRow> Rows { get; } = [];
+
+    /// <summary>Shows the properties of a Solution Explorer node.</summary>
+    /// <param name="node">The node, or <see langword="null"/> to clear the panel.</param>
+    /// <param name="workspace">The workspace the node belongs to.</param>
+    public void Show(WorkspaceNode? node, Workspace? workspace)
+    {
+        Rows.Clear();
+        if (node is null)
+        {
+            Title = string.Empty;
+            Subtitle = string.Empty;
+            return;
+        }
+
+        Title = node.Name;
+        switch (node.Kind)
+        {
+            case WorkspaceNodeKind.File when node.FullPath is { } path:
+                Subtitle = "File Properties";
+                var project = workspace?.FindProjectForFile(path);
+                Add("Build Action", BuildActionFor(path, project));
+                Add("File Type", FileTypes.For(path).DisplayName);
+                Add("File Name", Path.GetFileName(path));
+                if (TryGetFile(path) is { } info)
+                {
+                    Add("Size", FormatSize(info.Length));
+                    Add("Modified", info.LastWriteTime.ToString("g", CultureInfo.CurrentCulture));
+                }
+
+                Add("Project", project?.Name ?? "None");
+                Add("Full Path", path);
+                break;
+
+            case WorkspaceNodeKind.Project when node.Project is { } projectInfo:
+                Subtitle = "Project Properties";
+                var report = CompatibilityDoctor.Diagnose(projectInfo);
+                Add("Project Type", ProjectKindNames.For(projectInfo.Kind));
+                Add("Target Framework", string.Join(", ", projectInfo.TargetFrameworks));
+                Add("Output Type", projectInfo.OutputType ?? "Library");
+                Add("Runs Via", report.RunsVia);
+                Add("Packages", projectInfo.PackageReferences.Count.ToString(CultureInfo.InvariantCulture));
+                Add("Project References", projectInfo.ProjectReferences.Count.ToString(CultureInfo.InvariantCulture));
+                Add("Nullable", projectInfo.NullableEnabled ? "Enabled" : "Disabled");
+                Add("Implicit Usings", projectInfo.ImplicitUsings ? "Enabled" : "Disabled");
+                Add("Project File", projectInfo.FilePath);
+                break;
+
+            case WorkspaceNodeKind.Solution or WorkspaceNodeKind.Root:
+                Subtitle = node.Kind == WorkspaceNodeKind.Solution ? "Solution Properties" : "Folder Properties";
+                Add("Projects", (workspace?.Projects.Count ?? 0).ToString(CultureInfo.InvariantCulture));
+                Add("Startup Project", workspace?.DefaultStartupProject?.Name ?? "None");
+                Add("Path", node.FullPath ?? workspace?.RootDirectory ?? string.Empty);
+                break;
+
+            case WorkspaceNodeKind.Folder or WorkspaceNodeKind.SolutionFolder:
+                Subtitle = "Folder Properties";
+                Add("Folder Name", node.Name);
+                if (node.FullPath is { } folder)
+                {
+                    Add("Full Path", folder);
+                }
+
+                break;
+
+            case WorkspaceNodeKind.Package:
+                Subtitle = "Package Properties";
+                Add("Package", node.Name);
+                break;
+
+            case WorkspaceNodeKind.ProjectReference:
+                Subtitle = "Reference Properties";
+                Add("Project", node.Name);
+                Add("Path", node.FullPath ?? string.Empty);
+                break;
+
+            default:
+                Subtitle = string.Empty;
+                break;
+        }
+    }
+
+    private void Add(string name, string value) => Rows.Add(new PropertyRow(name, value));
+
+    private static string BuildActionFor(string path, ProjectInfo? project)
+    {
+        if (project is null)
+        {
+            return "None";
+        }
+
+        var extension = Path.GetExtension(path);
+        if (string.Equals(extension, ".cs", StringComparison.OrdinalIgnoreCase) && project.Language == ProjectLanguage.CSharp)
+        {
+            return "C# compiler";
+        }
+
+        return ProjectParser.IsProjectFile(path) ? "Project file" : "None";
+    }
+
+    private static FileInfo? TryGetFile(string path)
+    {
+        try
+        {
+            var info = new FileInfo(path);
+            return info.Exists ? info : null;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return null;
+        }
+    }
+
+    private static string FormatSize(long bytes) => bytes switch
+    {
+        < 1024 => $"{bytes.ToString(CultureInfo.InvariantCulture)} bytes",
+        < 1024 * 1024 => $"{(bytes / 1024.0).ToString("0.#", CultureInfo.InvariantCulture)} KB",
+        _ => $"{(bytes / (1024.0 * 1024)).ToString("0.#", CultureInfo.InvariantCulture)} MB",
+    };
+}

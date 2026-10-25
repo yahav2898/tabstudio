@@ -1,0 +1,167 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:TabStudio.App.Controls"
+        xmlns:ae="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
+        xmlns:aee="clr-namespace:AvaloniaEdit.Editing;assembly=AvaloniaEdit">
+
+  <!--
+    TabStudio's style classes for text, pills, badges and built-in controls.
+    Button and list item looks are control themes, in ControlThemes.axaml.
+  -->
+
+
+  <!-- Text -->
+  <Style Selector="TextBlock.h1">
+    <Setter Property="FontSize" Value="18" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Foreground" Value="{DynamicResource Brush.TextBright}" />
+  </Style>
+  <Style Selector="TextBlock.h2">
+    <Setter Property="FontSize" Value="13" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Foreground" Value="{DynamicResource Brush.TextBright}" />
+  </Style>
+  <Style Selector="TextBlock.header">
+    <Setter Property="FontSize" Value="12.5" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Foreground" Value="{DynamicResource Brush.TextBright}" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+  <Style Selector="TextBlock.muted">
+    <Setter Property="Foreground" Value="{DynamicResource Brush.TextMuted}" />
+  </Style>
+  <Style Selector="TextBlock.label">
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="Foreground" Value="{DynamicResource Brush.TextLabel}" />
+  </Style>
+  <Style Selector="TextBlock.small">
+    <Setter Property="FontSize" Value="12" />
+  </Style>
+  <Style Selector="TextBlock.mono">
+    <Setter Property="FontFamily" Value="{DynamicResource CodeFont}" />
+  </Style>
+  <Style Selector="TextBlock.link">
+    <Setter Property="Foreground" Value="{DynamicResource Brush.Link}" />
+  </Style>
+
+  <!-- Pills and badges -->
+  <Style Selector="Border.pill">
+    <Setter Property="Height" Value="20" />
+    <Setter Property="Padding" Value="7,0" />
+    <Setter Property="CornerRadius" Value="10" />
+    <Setter Property="Background" Value="{DynamicResource Brush.Pill}" />
+    <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.TextSecondary}" />
+    <Setter Property="TextElement.FontSize" Value="11" />
+    <Setter Property="TextElement.FontWeight" Value="SemiBold" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+  <Style Selector="Border.pill.ready">
+    <Setter Property="Background" Value="{DynamicResource Brush.AccentSoft}" />
+    <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.AccentText}" />
+  </Style>
+  <Style Selector="Border.pill.success">
+    <Setter Property="Background" Value="{DynamicResource Brush.SuccessSoft}" />
+    <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.Success}" />
+  </Style>
+  <Style Selector="Border.chip">
+    <Setter Property="Height" Value="28" />
+    <Setter Property="Padding" Value="10,0" />
+    <Setter Property="CornerRadius" Value="14" />
+    <Setter Property="Background" Value="{DynamicResource Brush.Pill}" />
+    <Setter Property="TextElement.FontSize" Value="12" />
+  </Style>
+  <Style Selector="Border.badge">
+    <Setter Property="CornerRadius" Value="4" />
+    <Setter Property="Padding" Value="4,1" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="TextElement.FontSize" Value="9.5" />
+    <Setter Property="TextElement.FontWeight" Value="Bold" />
+    <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.Badge.Text}" />
+  </Style>
+  <Style Selector="Border.badge.csharp">
+    <Setter Property="Background" Value="{DynamicResource Brush.Badge.CSharpBackground}" />
+    <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.Badge.CSharp}" />
+  </Style>
+  <Style Selector="Border.badge.data">
+    <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.Badge.Data}" />
+  </Style>
+  <Style Selector="Border.badge.markup">
+    <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.Badge.Markup}" />
+  </Style>
+  <Style Selector="Border.badge.script">
+    <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.Badge.Script}" />
+  </Style>
+
+  <!-- Separators -->
+  <Style Selector="Border.toolbarSeparator">
+    <Setter Property="Width" Value="1" />
+    <Setter Property="Height" Value="24" />
+    <Setter Property="Margin" Value="6,0" />
+    <Setter Property="Background" Value="{DynamicResource Brush.BorderStrong}" />
+  </Style>
+
+  <!-- Text boxes: compact, with an optional search icon on the left. -->
+  <Style Selector="TextBox">
+    <Setter Property="MinHeight" Value="30" />
+    <Setter Property="CornerRadius" Value="6" />
+    <Setter Property="FontSize" Value="12.5" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+  <Style Selector="TextBox.large">
+    <Setter Property="MinHeight" Value="44" />
+    <Setter Property="CornerRadius" Value="8" />
+    <Setter Property="FontSize" Value="13" />
+    <Setter Property="Padding" Value="12,0" />
+  </Style>
+  <Style Selector="TextBox.mono">
+    <Setter Property="FontFamily" Value="{DynamicResource CodeFont}" />
+  </Style>
+
+  <!-- Menus -->
+  <Style Selector="Menu">
+    <Setter Property="Height" Value="40" />
+  </Style>
+  <Style Selector="Menu > MenuItem">
+    <Setter Property="Height" Value="34" />
+    <Setter Property="Padding" Value="8,0" />
+    <Setter Property="CornerRadius" Value="6" />
+    <Setter Property="FontSize" Value="13" />
+  </Style>
+  <Style Selector="MenuItem">
+    <Setter Property="MinHeight" Value="36" />
+  </Style>
+
+  <!-- Splitters are thin lines with a wider touch area. -->
+  <Style Selector="GridSplitter">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="MinWidth" Value="6" />
+    <Setter Property="MinHeight" Value="6" />
+  </Style>
+
+  <!-- Lists -->
+  <Style Selector="ListBox">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Padding" Value="0" />
+  </Style>
+
+  <!-- The code editor -->
+  <Style Selector="ae|TextEditor">
+    <Setter Property="Background" Value="{DynamicResource Brush.Window}" />
+    <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+    <Setter Property="FontFamily" Value="{DynamicResource CodeFont}" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="LineNumbersForeground" Value="{DynamicResource Brush.LineNumber}" />
+    <Setter Property="ShowLineNumbers" Value="True" />
+  </Style>
+  <Style Selector="ae|TextEditor aee|TextArea">
+    <Setter Property="SelectionBrush" Value="#552B4F86" />
+    <Setter Property="SelectionCornerRadius" Value="2" />
+  </Style>
+
+  <!-- Icons -->
+  <Style Selector="controls|StrokeIcon">
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+
+</Styles>

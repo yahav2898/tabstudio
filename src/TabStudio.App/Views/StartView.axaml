@@ -1,0 +1,297 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:services="using:TabStudio.App.Services"
+             xmlns:sys="using:System"
+             xmlns:vm="using:TabStudio.App.ViewModels"
+             x:Class="TabStudio.App.Views.StartView"
+             x:DataType="vm:StartViewModel">
+
+  <DockPanel>
+
+    <!-- Header -->
+    <Border DockPanel.Dock="Top" Height="48" Background="{DynamicResource Brush.MenuBar}"
+            BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+      <StackPanel Orientation="Horizontal" Spacing="10" Margin="16,0" VerticalAlignment="Center">
+        <Border Width="28" Height="28" CornerRadius="8" Background="{DynamicResource Brush.Accent}">
+          <controls:StrokeIcon Data="{StaticResource Icon.Logo}" Size="16" StrokeThickness="2.6"
+                               Foreground="{DynamicResource Brush.OnAccent}" HorizontalAlignment="Center" />
+        </Border>
+        <TextBlock Text="TabStudio" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" />
+      </StackPanel>
+    </Border>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+      <Grid ColumnDefinitions="360,40,*" Margin="40,28,40,28">
+
+        <!-- Open recent -->
+        <StackPanel Grid.Column="0" Spacing="6">
+          <TextBlock Classes="h1" Text="Open recent" Margin="0,0,0,8" />
+          <TextBox Classes="large" Watermark="Search recent" Text="{Binding RecentSearch}">
+            <TextBox.InnerLeftContent>
+              <controls:StrokeIcon Data="{StaticResource Icon.Search}" Size="15" Margin="12,0,0,0"
+                                   Foreground="{DynamicResource Brush.TextMuted}" />
+            </TextBox.InnerLeftContent>
+          </TextBox>
+
+          <TextBlock Classes="muted small" Margin="2,18,0,0" TextWrapping="Wrap"
+                     IsVisible="{Binding !HasRecent}"
+                     Text="Solutions and folders you open appear here." />
+
+          <ItemsControl ItemsSource="{Binding RecentGroups}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate DataType="vm:RecentGroupViewModel">
+                <StackPanel Spacing="2" Margin="0,14,0,0">
+                  <TextBlock Classes="muted" FontSize="12" FontWeight="SemiBold" Text="{Binding Title}" Margin="2,0,0,4" />
+                  <ItemsControl ItemsSource="{Binding Items}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate DataType="vm:RecentItemViewModel">
+                        <Button Theme="{StaticResource ToolButton}" HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Left" Height="56" Padding="10,0"
+                                Command="{Binding $parent[UserControl].((vm:StartViewModel)DataContext).OpenRecentCommand}"
+                                CommandParameter="{Binding}">
+                          <Grid ColumnDefinitions="Auto,*">
+                            <controls:StrokeIcon Data="{StaticResource Icon.Solution}" Size="20" Margin="0,0,12,0"
+                                                 Foreground="{DynamicResource Brush.Solution}" />
+                            <StackPanel Grid.Column="1" Spacing="3" VerticalAlignment="Center">
+                              <TextBlock FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis">
+                                <Run Text="{Binding Name}" />
+                                <Run Text=" · " Foreground="{DynamicResource Brush.TextMuted}" FontWeight="Normal" />
+                                <Run Text="{Binding Description}" Foreground="{DynamicResource Brush.TextMuted}" FontWeight="Normal" />
+                              </TextBlock>
+                              <TextBlock Classes="muted small" Text="{Binding Location}" TextTrimming="PathSegmentEllipsis" />
+                            </StackPanel>
+                          </Grid>
+                        </Button>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </StackPanel>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+
+        <!-- Get started -->
+        <StackPanel Grid.Column="2" Spacing="16">
+          <TextBlock Classes="h1" Text="Get started" />
+
+          <UniformGrid Rows="1" Columns="4">
+            <Button Theme="{StaticResource CardButton}" Margin="0,0,10,0" HorizontalAlignment="Stretch"
+                    Classes.selected="{Binding IsGitHubSelected}"
+                    Command="{Binding SelectCommand}" CommandParameter="{x:Static vm:StartAction.GitHub}">
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <controls:StrokeIcon Data="{StaticResource Icon.Download}" Size="20" />
+                <TextBlock Text="Open from GitHub" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+            <Button Theme="{StaticResource CardButton}" Margin="0,0,10,0" HorizontalAlignment="Stretch"
+                    Classes.selected="{Binding IsFolderSelected}"
+                    Command="{Binding SelectCommand}" CommandParameter="{x:Static vm:StartAction.Folder}">
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <controls:StrokeIcon Data="{StaticResource Icon.Folder}" Size="20" />
+                <TextBlock Text="Open a folder" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+            <Button Theme="{StaticResource CardButton}" Margin="0,0,10,0" HorizontalAlignment="Stretch"
+                    Classes.selected="{Binding IsNewProjectSelected}"
+                    Command="{Binding SelectCommand}" CommandParameter="{x:Static vm:StartAction.NewProject}">
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <controls:StrokeIcon Data="{StaticResource Icon.NewFile}" Size="20" />
+                <TextBlock Text="New project" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+            <Button Theme="{StaticResource CardButton}" HorizontalAlignment="Stretch"
+                    Classes.selected="{Binding IsSampleSelected}"
+                    Command="{Binding SelectCommand}" CommandParameter="{x:Static vm:StartAction.Sample}">
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="16" />
+                <TextBlock Text="Open the sample" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+          </UniformGrid>
+
+          <!-- The form for the selected action, or the preview of what was imported. -->
+          <Border Padding="20" CornerRadius="12" Background="{DynamicResource Brush.Panel}"
+                  BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1">
+            <StackPanel Spacing="16">
+
+              <!-- Download from GitHub -->
+              <StackPanel Spacing="12" IsVisible="{Binding IsGitHubFormVisible}">
+                <TextBlock Classes="h2" Text="Download a repository from GitHub" />
+                <TextBlock Classes="muted" TextWrapping="Wrap"
+                           Text="Paste the address of a public repository. TabStudio downloads it, detects what it is built with and shows where each project runs on this tablet." />
+                <Grid ColumnDefinitions="*,Auto">
+                  <TextBox Classes="large mono" Watermark="github.com/owner/repository"
+                           Text="{Binding RepositoryText}" />
+                  <Button Grid.Column="1" Theme="{StaticResource AccentButton}" Height="44" Margin="10,0,0,0"
+                          Command="{Binding DownloadCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                      <controls:StrokeIcon Data="{StaticResource Icon.Download}" Size="16" />
+                      <TextBlock Text="Download" VerticalAlignment="Center" />
+                    </StackPanel>
+                  </Button>
+                </Grid>
+              </StackPanel>
+
+              <!-- Open a folder -->
+              <StackPanel Spacing="12" IsVisible="{Binding IsFolderFormVisible}">
+                <TextBlock Classes="h2" Text="Open a folder from this device" />
+                <TextBlock Classes="muted" TextWrapping="Wrap"
+                           Text="Pick a folder with a solution, a project or any code. TabStudio brings it into its projects folder, so the compiler can read it, and leaves build output such as bin and obj behind." />
+                <Button Theme="{StaticResource AccentButton}" Height="44" HorizontalAlignment="Left"
+                        Command="{Binding PickFolderCommand}">
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <controls:StrokeIcon Data="{StaticResource Icon.Folder}" Size="16" />
+                    <TextBlock Text="Choose a folder" VerticalAlignment="Center" />
+                  </StackPanel>
+                </Button>
+              </StackPanel>
+
+              <!-- New project -->
+              <StackPanel Spacing="12" IsVisible="{Binding IsNewProjectSelected}">
+                <TextBlock Classes="h2" Text="Create a new project" />
+                <ListBox ItemsSource="{Binding Templates}" SelectedItem="{Binding SelectedTemplate}"
+                         ItemContainerTheme="{StaticResource ListRow}">
+                  <ListBox.ItemTemplate>
+                    <DataTemplate DataType="services:ProjectTemplate">
+                      <Grid ColumnDefinitions="Auto,*" Margin="10,10">
+                        <controls:StrokeIcon Data="{StaticResource Icon.Terminal}" Size="22" Margin="0,0,14,0"
+                                             Foreground="{DynamicResource Brush.ProjectApp}" VerticalAlignment="Top" />
+                        <StackPanel Grid.Column="1" Spacing="4">
+                          <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                          <TextBlock Text="{Binding Description}" Classes="small" Opacity="0.8" TextWrapping="Wrap" />
+                          <ItemsControl ItemsSource="{Binding Tags}">
+                            <ItemsControl.ItemsPanel>
+                              <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" Spacing="6" />
+                              </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                              <DataTemplate DataType="sys:String">
+                                <Border Classes="pill">
+                                  <TextBlock Text="{Binding}" />
+                                </Border>
+                              </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                          </ItemsControl>
+                        </StackPanel>
+                      </Grid>
+                    </DataTemplate>
+                  </ListBox.ItemTemplate>
+                </ListBox>
+                <TextBlock Classes="label" Text="Project name" />
+                <Grid ColumnDefinitions="*,Auto">
+                  <TextBox Classes="large mono" Text="{Binding ProjectName}" />
+                  <Button Grid.Column="1" Theme="{StaticResource AccentButton}" Height="44" Margin="10,0,0,0"
+                          Content="Create and open" Command="{Binding CreateProjectCommand}" />
+                </Grid>
+                <TextBlock Foreground="{DynamicResource Brush.Warning}" Text="{Binding ProjectNameError}"
+                           IsVisible="{Binding ProjectNameError, Converter={x:Static ObjectConverters.IsNotNull}}" />
+              </StackPanel>
+
+              <!-- Sample -->
+              <StackPanel Spacing="12" IsVisible="{Binding IsSampleSelected}">
+                <TextBlock Classes="h2" Text="HelloTablet, the sample solution" />
+                <TextBlock Classes="muted" TextWrapping="Wrap"
+                           Text="A console app and a class library it references. Press F5 to build both and run the app right here: it asks for your name in the Output panel. Then misspell something and watch the Error List update as you type." />
+                <Button Theme="{StaticResource AccentButton}" Height="44" HorizontalAlignment="Left"
+                        Command="{Binding OpenSampleCommand}">
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="14" />
+                    <TextBlock Text="Open the sample" VerticalAlignment="Center" />
+                  </StackPanel>
+                </Button>
+              </StackPanel>
+
+              <!-- What was imported -->
+              <StackPanel Spacing="16" IsVisible="{Binding Preview, Converter={x:Static ObjectConverters.IsNotNull}}">
+                <StackPanel Spacing="4">
+                  <TextBlock Classes="h2" Text="{Binding Preview.Name}" />
+                  <TextBlock Classes="muted small" Text="{Binding Preview.Source}" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <TextBlock Classes="label" FontWeight="SemiBold" Text="Detected" VerticalAlignment="Center" Margin="0,0,4,0" />
+                  <ItemsControl ItemsSource="{Binding Preview.Stacks}">
+                    <ItemsControl.ItemsPanel>
+                      <ItemsPanelTemplate>
+                        <WrapPanel />
+                      </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate DataType="vm:StackChipViewModel">
+                        <Border Classes="chip" Margin="0,0,8,6">
+                          <TextBlock VerticalAlignment="Center">
+                            <Run Text="{Binding Name}" FontWeight="SemiBold" />
+                            <Run Text="  " />
+                            <Run Text="{Binding Evidence}" Foreground="{DynamicResource Brush.TextMuted}" />
+                          </TextBlock>
+                        </Border>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </StackPanel>
+
+                <StackPanel Spacing="0" IsVisible="{Binding Preview.HasProjects}">
+                  <TextBlock Margin="0,0,0,8">
+                    <Run Text="Compatibility Doctor" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" />
+                    <Run Text=" · where each project runs on this tablet" Foreground="{DynamicResource Brush.TextMuted}" />
+                  </TextBlock>
+                  <Border Height="30" BorderBrush="{DynamicResource Brush.Divider}" BorderThickness="0,0,0,1">
+                    <Grid ColumnDefinitions="170,130,*,170" Margin="12,0" VerticalAlignment="Center">
+                      <TextBlock Classes="muted small" Text="Project" />
+                      <TextBlock Grid.Column="1" Classes="muted small" Text="Type" />
+                      <TextBlock Grid.Column="2" Classes="muted small" Text="Runs via" />
+                      <TextBlock Grid.Column="3" Classes="muted small" Text="Status" />
+                    </Grid>
+                  </Border>
+                  <ItemsControl ItemsSource="{Binding Preview.Projects}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate DataType="vm:CompatibilityRowViewModel">
+                        <Border MinHeight="46" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1"
+                                ToolTip.Tip="{Binding Explanation}">
+                          <Grid ColumnDefinitions="170,130,*,170" Margin="12,8" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding Project}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                            <TextBlock Grid.Column="1" Classes="label" Text="{Binding Type}" />
+                            <TextBlock Grid.Column="2" Text="{Binding RunsVia}" TextTrimming="CharacterEllipsis" />
+                            <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="6">
+                              <controls:StrokeIcon Size="14" Data="{StaticResource Icon.Check}" Foreground="{DynamicResource Brush.Success}" IsVisible="{Binding IsReady}" />
+                              <controls:StrokeIcon Size="14" Data="{StaticResource Icon.Info}" Foreground="{DynamicResource Brush.Info}" IsVisible="{Binding IsBlocked}" />
+                              <TextBlock Text="{Binding Status}" Classes.muted="{Binding IsLibrary}" VerticalAlignment="Center" />
+                            </StackPanel>
+                          </Grid>
+                        </Border>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right">
+                  <Button Theme="{StaticResource SecondaryButton}" Height="44" Padding="18,0" Content="Cancel"
+                          Command="{Binding DismissPreviewCommand}" />
+                  <Button Theme="{StaticResource AccentButton}" Height="44" Padding="20,0"
+                          Command="{Binding OpenPreviewCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                      <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="14" />
+                      <TextBlock Text="Open" VerticalAlignment="Center" />
+                    </StackPanel>
+                  </Button>
+                </StackPanel>
+              </StackPanel>
+
+              <!-- Progress and errors -->
+              <StackPanel Orientation="Horizontal" Spacing="10" IsVisible="{Binding IsBusy}">
+                <ProgressBar IsIndeterminate="True" Width="120" VerticalAlignment="Center" />
+                <TextBlock Classes="muted" Text="{Binding ProgressText}" VerticalAlignment="Center" />
+                <Button Theme="{StaticResource ToolButton}" Content="Cancel" Command="{Binding CancelCommand}" />
+              </StackPanel>
+              <TextBlock Foreground="{DynamicResource Brush.Error}" TextWrapping="Wrap" Text="{Binding ErrorText}"
+                         IsVisible="{Binding ErrorText, Converter={x:Static ObjectConverters.IsNotNull}}" />
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </Grid>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>
