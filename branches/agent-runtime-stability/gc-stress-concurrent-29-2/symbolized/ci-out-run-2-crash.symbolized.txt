@@ -1,0 +1,14 @@
+10-25 12:33:54.493  7898  7924 F libc    : Fatal signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x4 in tid 7924 (SGen worker), pid 7898 (m.tabstudio.ide)
+10-25 12:33:54.787  8199  8199 F DEBUG   : pid: 7898, tid: 7924, name: SGen worker  >>> com.tabstudio.ide <<<
+10-25 12:33:54.787  8199  8199 F DEBUG   : signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x4
+10-25 12:33:54.928  8199  8199 F DEBUG   :       #00 pc 00000000002f4471  /data/app/com.tabstudio.ide-A5aZEfL4Bd4J88_KNKOfXw==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> major_copy_or_mark_object_concurrent_no_evacuation	/__w/1/s/src/runtime/src/mono/mono/sgen/sgen-marksweep-drain-gray-stack.h:137
+        -> major_scan_object_concurrent_no_evacuation	/__w/1/s/src/runtime/src/mono/mono/sgen/sgen-scan-object.h:59
+        -> drain_gray_stack_concurrent_no_evacuation	/__w/1/s/src/runtime/src/mono/mono/sgen/sgen-marksweep-drain-gray-stack.h:347
+        -> drain_gray_stack_concurrent	/__w/1/s/src/runtime/src/mono/mono/sgen/sgen-marksweep.c:1312
+10-25 12:33:54.929  8199  8199 F DEBUG   :       #01 pc 0000000000313537  /data/app/com.tabstudio.ide-A5aZEfL4Bd4J88_KNKOfXw==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> marker_idle_func	/__w/1/s/src/runtime/src/mono/mono/sgen/sgen-workers.c:363
+10-25 12:33:54.929  8199  8199 F DEBUG   :       #02 pc 0000000000312521  /data/app/com.tabstudio.ide-A5aZEfL4Bd4J88_KNKOfXw==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> thread_func	/__w/1/s/src/runtime/src/mono/mono/sgen/sgen-thread-pool.c:219
+10-25 12:33:54.929  8199  8199 F DEBUG   :       #03 pc 0000000000100fce  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+30) (BuildId: b5c6019a3b4ea61b5e9a2f56319b584e)
+10-25 12:33:54.929  8199  8199 F DEBUG   :       #04 pc 0000000000098fe7  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+55) (BuildId: b5c6019a3b4ea61b5e9a2f56319b584e)
