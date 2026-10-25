@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Globalization;
+using TabStudio.Compilation.Running;
 
 namespace TabStudio.TestRunner.Execution;
 
@@ -37,59 +38,54 @@ internal sealed class TestExecutor
         var results = new List<TestResult>();
         var messages = new List<string>();
 
+        ConsoleLease console;
         try
         {
-            await ConsoleCapture.Gate.WaitAsync(cancellationToken).ConfigureAwait(false);
+            console = await ProcessConsole.AcquireAsync(cancellationToken).ConfigureAwait(false);
         }
         catch (OperationCanceledException)
         {
             return Summary(tests.Count, results, messages, stopwatch, cancelled: true);
         }
 
-        try
+        using (console)
         {
-            using (ConsoleCapture.Redirect())
+            ConsoleCapture.Redirect(console);
+            var scope = new RunScope(_options);
+            var batches = Batch(tests);
+            if (_options.MaxParallelClasses <= 1 || batches.Count == 1)
             {
-                var scope = new RunScope(_options);
-                var batches = Batch(tests);
-                if (_options.MaxParallelClasses <= 1 || batches.Count == 1)
+                foreach (var batch in batches)
                 {
-                    foreach (var batch in batches)
+                    await RunBatchAsync(batch, scope, results, messages, cancellationToken).ConfigureAwait(false);
+                }
+            }
+            else
+            {
+                using var throttle = new SemaphoreSlim(_options.MaxParallelClasses);
+                await Task.WhenAll(batches.Select(async batch =>
+                {
+                    await throttle.WaitAsync(CancellationToken.None).ConfigureAwait(false);
+                    try
                     {
                         await RunBatchAsync(batch, scope, results, messages, cancellationToken).ConfigureAwait(false);
                     }
-                }
-                else
-                {
-                    using var throttle = new SemaphoreSlim(_options.MaxParallelClasses);
-                    await Task.WhenAll(batches.Select(async batch =>
+                    finally
                     {
-                        await throttle.WaitAsync(CancellationToken.None).ConfigureAwait(false);
-                        try
-                        {
-                            await RunBatchAsync(batch, scope, results, messages, cancellationToken).ConfigureAwait(false);
-                        }
-                        finally
-                        {
-                            throttle.Release();
-                        }
-                    })).ConfigureAwait(false);
-                }
-
-                var finish = await TestThread.RunAsync(scope.Finish, "TabStudio test cleanup", _options.StackSize, null, _options.DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
-                lock (_gate)
-                {
-                    messages.AddRange(finish.Value ?? []);
-                    if (finish.Status == ThreadRunStatus.TimedOut)
-                    {
-                        messages.Add("The run's final cleanup did not finish within the timeout.");
+                        throttle.Release();
                     }
+                })).ConfigureAwait(false);
+            }
+
+            var finish = await TestThread.RunAsync(scope.Finish, "TabStudio test cleanup", _options.StackSize, null, _options.DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
+            lock (_gate)
+            {
+                messages.AddRange(finish.Value ?? []);
+                if (finish.Status == ThreadRunStatus.TimedOut)
+                {
+                    messages.Add("The run's final cleanup did not finish within the timeout.");
                 }
             }
-        }
-        finally
-        {
-            ConsoleCapture.Gate.Release();
         }
 
         return Summary(tests.Count, results, messages, stopwatch, cancellationToken.IsCancellationRequested);

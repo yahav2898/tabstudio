@@ -48,7 +48,6 @@ public sealed class ProgramRunner
     /// <summary>The stack size of the program's main thread: 16 MB, generous for deeply recursive code.</summary>
     public const int DefaultStackSize = 16 * 1024 * 1024;
 
-    private static readonly SemaphoreSlim ConsoleGate = new(1, 1);
     private readonly int _stackSize;
 
     /// <summary>Creates a runner.</summary>
@@ -101,12 +100,12 @@ public sealed class ProgramRunner
         ArgumentNullException.ThrowIfNull(arguments);
         ArgumentNullException.ThrowIfNull(console);
 
-        await ConsoleGate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        // The console is process-wide: wait until no other program, test run or notebook cell owns it.
+        using var lease = await ProcessConsole.AcquireAsync(cancellationToken).ConfigureAwait(false);
 
         var context = new ProgramLoadContext(entryAssembly.Name, dependencies, packageAssemblies);
         var output = new CallbackTextWriter(console.WriteOutput);
         var error = new CallbackTextWriter(console.WriteError);
-        var (previousOut, previousError, previousIn) = (Console.Out, Console.Error, CurrentInput());
 
         try
         {
@@ -116,9 +115,7 @@ public sealed class ProgramRunner
                 return new RunResult(RunOutcome.NoEntryPoint, -1, TimeSpan.Zero);
             }
 
-            Console.SetOut(output);
-            Console.SetError(error);
-            Console.SetIn(input ?? TextReader.Null);
+            lease.Redirect(output, error, input ?? TextReader.Null);
 
             var completion = new TaskCompletionSource<RunResult>(TaskCreationOptions.RunContinuationsAsynchronously);
             var thread = new Thread(() => completion.TrySetResult(Invoke(entryPoint, arguments, error)), _stackSize)
@@ -142,22 +139,10 @@ public sealed class ProgramRunner
         {
             output.Detach();
             error.Detach();
-            Console.SetOut(previousOut);
-            Console.SetError(previousError);
-            Console.SetIn(previousIn);
+            lease.Dispose();
             context.UnloadIfSupported();
-            ConsoleGate.Release();
         }
     }
-
-    /// <summary>
-    /// The console input to restore after a run. Android, iOS and the browser have no standard input: reading
-    /// <see cref="Console.In"/> there throws until something is set, so an empty input stands in for it.
-    /// </summary>
-    private static TextReader CurrentInput() =>
-        OperatingSystem.IsAndroid() || OperatingSystem.IsIOS() || OperatingSystem.IsTvOS() || OperatingSystem.IsBrowser()
-            ? TextReader.Null
-            : Console.In;
 
     private static RunResult Invoke(MethodInfo entryPoint, IReadOnlyList<string> arguments, TextWriter error)
     {

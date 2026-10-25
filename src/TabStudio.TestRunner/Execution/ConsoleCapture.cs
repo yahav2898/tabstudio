@@ -1,4 +1,5 @@
 using System.Text;
+using TabStudio.Compilation.Running;
 
 namespace TabStudio.TestRunner.Execution;
 
@@ -13,15 +14,13 @@ namespace TabStudio.TestRunner.Execution;
 /// the right test even when several classes run in parallel. Output from code that belongs to no test is dropped.
 /// </para>
 /// <para>
-/// Only one run redirects the console at a time: <see cref="Gate"/> serializes runs across every session.
+/// The console is shared with programs started with F5 and with notebook cells: a run owns it through a
+/// <see cref="ProcessConsole"/> lease for its whole duration.
 /// </para>
 /// </remarks>
 internal static class ConsoleCapture
 {
     private static readonly AsyncLocal<TestOutputSink?> CurrentSink = new();
-
-    /// <summary>Held by the run that currently owns the console.</summary>
-    public static SemaphoreSlim Gate { get; } = new(1, 1);
 
     /// <summary>The sink of the test running on this logical thread of execution, if any.</summary>
     public static TestOutputSink? Current
@@ -30,30 +29,10 @@ internal static class ConsoleCapture
         set => CurrentSink.Value = value;
     }
 
-    /// <summary>Redirects the console until the returned object is disposed. The caller holds <see cref="Gate"/>.</summary>
-    public static IDisposable Redirect() => new Redirection();
-
-    /// <summary>Restores the console that was in place before a run.</summary>
-    private sealed class Redirection : IDisposable
-    {
-        private readonly TextWriter _previousOut = Console.Out;
-        private readonly TextWriter _previousError = Console.Error;
-        private readonly TextReader _previousIn = Console.In;
-
-        public Redirection()
-        {
-            Console.SetOut(new RoutingWriter());
-            Console.SetError(new RoutingWriter());
-            Console.SetIn(TextReader.Null);
-        }
-
-        public void Dispose()
-        {
-            Console.SetOut(_previousOut);
-            Console.SetError(_previousError);
-            Console.SetIn(_previousIn);
-        }
-    }
+    /// <summary>Points a console lease at the current test's sink for the rest of the lease.</summary>
+    /// <param name="lease">The run's ownership of the console.</param>
+    public static void Redirect(ConsoleLease lease) =>
+        lease.Redirect(new RoutingWriter(), new RoutingWriter(), TextReader.Null);
 
     /// <summary>A writer that forwards to the current test's sink.</summary>
     private sealed class RoutingWriter : TextWriter
