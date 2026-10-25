@@ -44,9 +44,9 @@ public sealed class FormsDesignerTests
         // A drag moves it on the 8-pixel grid.
         var scale = designer.Canvas.Scale;
         var start = designed.CenterOf("button1") + new Point(10, 0);
-        designed.Drag(start, start + new Point(48, 32));
-        var x = DesignSurface.Snap(24 + (int)Math.Round(48 / scale));
-        var y = DesignSurface.Snap(24 + (int)Math.Round(32 / scale));
+        designed.Drag(start, start + new Point(144, 8));
+        var x = DesignSurface.Snap(24 + (int)Math.Round(144 / scale));
+        var y = DesignSurface.Snap(24 + (int)Math.Round(8 / scale));
         Assert.Contains($"button1.Location = new Point({x}, {y});", designed.DesignerText, StringComparison.Ordinal);
         Assert.Equal(new DrawingPoint(x, y), designed.ControlNamed("button1").Location);
 
