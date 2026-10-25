@@ -165,6 +165,13 @@ public static class UnoCompatibility
 
         if (symbol is INamedTypeSymbol type)
         {
+            // Generated parameter and backing-property types repeat the element's type without a source
+            // location. Its constructor is the actual XAML use and is mapped to the element precisely.
+            if (model.SyntaxTree.FilePath.Contains("XamlCodeGenerator", StringComparison.Ordinal))
+            {
+                return null;
+            }
+
             return IsNotImplemented(type, attribute) ? type : null;
         }
 

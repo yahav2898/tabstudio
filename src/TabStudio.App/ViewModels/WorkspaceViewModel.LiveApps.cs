@@ -22,7 +22,7 @@ public sealed partial class WorkspaceViewModel
 
     /// <summary>Whether F5 shows a project beside the code rather than running it as a program.</summary>
     private static bool IsLiveApp(ProjectInfo project) =>
-        IsWebApp(project) || IsAvaloniaApp(project) || IsWindowsFormsApp(project) || IsWebAssemblyApp(project) || ProjectClassifier.IsBlazorWebAppClient(project);
+        IsWebApp(project) || IsAvaloniaApp(project) || IsWindowsFormsApp(project) || IsUnoApp(project) || IsWebAssemblyApp(project) || ProjectClassifier.IsBlazorWebAppClient(project);
 
     /// <summary>
     /// Builds and runs a live app until it is stopped, starting it again whenever one of its files is saved.
@@ -37,6 +37,7 @@ public sealed partial class WorkspaceViewModel
             IsWebApp(project) ? ServeWebAppAsync
             : IsWebAssemblyApp(project) ? ServeWebAssemblyAppAsync
             : IsWindowsFormsApp(project) ? ShowWindowsFormsAppAsync
+            : IsUnoApp(project) ? ShowUnoAppAsync
             : ShowAvaloniaAppAsync;
         var restarted = false;
         do
@@ -59,6 +60,7 @@ public sealed partial class WorkspaceViewModel
                     IsWebApp(project) ? "Started without the debugger: it pauses a program on its main thread, and a web app answers requests on others."
                     : IsWebAssemblyApp(project) ? "Started without the debugger: a WebAssembly app runs in the web preview's browser, out of the debugger's reach."
                     : IsWindowsFormsApp(project) ? "Started without the debugger: a Windows Forms app runs its own message loop, which the debugger does not pause yet."
+                    : IsUnoApp(project) ? "Started without the debugger: an Uno app has its own UI dispatcher, which the debugger cannot pause yet."
                     : "Started without the debugger: an Avalonia app runs on TabStudio's own UI thread, which the debugger cannot pause.",
                     OutputKind.Info);
             }
@@ -103,7 +105,7 @@ public sealed partial class WorkspaceViewModel
 
         // An Avalonia or Windows Forms app's files are all compiled into it or read by it, its images included.
         var relative = Path.GetRelativePath(project.DirectoryPath, document.FilePath);
-        var restarts = IsAvaloniaApp(project) || IsWindowsFormsApp(project)
+        var restarts = IsAvaloniaApp(project) || IsWindowsFormsApp(project) || IsUnoApp(project)
             || (RestartingExtensions.Contains(Path.GetExtension(document.FilePath))
                 && !relative.StartsWith("wwwroot" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase));
         if (!restarts)

@@ -61,11 +61,17 @@ jobs:
           for project in tests/*.Tests; do
             name=$(basename "$project")
             [ "$name" = "TabStudio.App.Tests" ] && continue
-            if ! dotnet test "$project" -c Release --logger "console;verbosity=normal" > "ci-out/$name.log" 2>&1; then
+            if ! dotnet test "$project" -c Release -p:TreatWarningsAsErrors=true --logger "console;verbosity=normal" > "ci-out/$name.log" 2>&1; then
+              # WinUI must pass on its first attempt; never mask a failure with a retry.
+              if [ "$name" = "TabStudio.Uno.Tests" ]; then
+                tail -n 80 "ci-out/$name.log"
+                status=1
+                continue
+              fi
               # Known intermittent failures are tracked on the board; one retry keeps them from blocking a release,
               # and FLAKY.txt and a warning keep them visible. A second failure fails the job.
               echo "::warning::$name failed once; running it again. The first attempt is in ci-out/$name.log."
-              if dotnet test "$project" -c Release --logger "console;verbosity=normal" > "ci-out/$name.retry.log" 2>&1; then
+              if dotnet test "$project" -c Release -p:TreatWarningsAsErrors=true --logger "console;verbosity=normal" > "ci-out/$name.retry.log" 2>&1; then
                 echo "$name: the first attempt failed and the retry passed (see $name.log)" >> ci-out/FLAKY.txt
               else
                 status=1
@@ -125,13 +131,13 @@ jobs:
         run: |
           mkdir -p ci-out/screenshots
           status=0
-          dotnet build src/TabStudio.Desktop -c Release > ci-out/desktop-build.log 2>&1 || status=1
+          dotnet build src/TabStudio.Desktop -c Release -p:TreatWarningsAsErrors=true > ci-out/desktop-build.log 2>&1 || status=1
           tail -n 40 ci-out/desktop-build.log
           # A test host that dies leaves a crash report (its threads' stacks) when the runtime saw the crash.
           mkdir -p "$RUNNER_TEMP/crash"
           run_ide_tests() {
             DOTNET_DbgEnableMiniDump=1 DOTNET_DbgMiniDumpType=1 DOTNET_EnableCrashReport=1 DOTNET_DbgMiniDumpName="$RUNNER_TEMP/crash/%e.%p.dmp" \
-              dotnet test tests/TabStudio.App.Tests -c Release --blame --blame-hang-timeout 12m --blame-hang-dump-type none --logger "console;verbosity=normal" > "$1" 2>&1
+              dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --blame --blame-hang-timeout 12m --blame-hang-dump-type none --logger "console;verbosity=normal" > "$1" 2>&1
           }
           first=0
           run_ide_tests ci-out/TabStudio.App.Tests.log || first=1
@@ -140,7 +146,9 @@ jobs:
             # Known intermittent failures (a native crash in the test host, slow servers) are tracked on the board;
             # one retry keeps them from blocking a release, and FLAKY.txt and a warning keep them visible.
             echo "::warning::The IDE tests failed once; running them again. The first attempt is in ci-out/TabStudio.App.Tests.log."
-            if run_ide_tests ci-out/TabStudio.App.Tests.retry.log; then
+            if grep -Eq 'UnoAppTests.*\[FAIL\]' ci-out/TabStudio.App.Tests.log; then
+              status=1
+            elif run_ide_tests ci-out/TabStudio.App.Tests.retry.log; then
               echo "TabStudio.App.Tests: the first attempt failed and the retry passed (see TabStudio.App.Tests.log)" >> ci-out/FLAKY.txt
             else
               status=1
@@ -151,7 +159,7 @@ jobs:
           mkdir -p ci-out/screenshots/light
           run_light_tests() {
             TABSTUDIO_THEME=Light TABSTUDIO_SCREENSHOTS="$TABSTUDIO_SCREENSHOTS/light" \
-              dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter "FullyQualifiedName!~TabStudio.App.Tests.Theming&FullyQualifiedName!~TabStudio.App.Tests.Design" \
+              dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --no-build --filter "FullyQualifiedName!~TabStudio.App.Tests.Theming&FullyQualifiedName!~TabStudio.App.Tests.Design" \
               --logger "console;verbosity=normal" > "$1" 2>&1
           }
           light=0
@@ -159,7 +167,9 @@ jobs:
           tail -n 20 ci-out/TabStudio.App.Tests.Light.log
           if [ $light -ne 0 ]; then
             echo "::warning::The IDE tests in the light theme failed once; running them again. The first attempt is in ci-out/TabStudio.App.Tests.Light.log."
-            if run_light_tests ci-out/TabStudio.App.Tests.Light.retry.log; then
+            if grep -Eq 'UnoAppTests.*\[FAIL\]' ci-out/TabStudio.App.Tests.Light.log; then
+              status=1
+            elif run_light_tests ci-out/TabStudio.App.Tests.Light.retry.log; then
               echo "TabStudio.App.Tests (light theme): the first attempt failed and the retry passed (see TabStudio.App.Tests.Light.log)" >> ci-out/FLAKY.txt
             else
               status=1
@@ -216,7 +226,7 @@ jobs:
         run: |
           mkdir -p ci-out
           status=0
-          dotnet publish src/TabStudio.Android -c Release -f net10.0-android \
+          dotnet publish src/TabStudio.Android -c Release -p:TreatWarningsAsErrors=true -f net10.0-android \
             -p:TabStudioBuildNumber=$(( ($(date +%s) - 1767225600) / 60 )) \
             -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME" \
             > ci-out/android-build.log 2>&1 || status=$?
@@ -283,7 +293,7 @@ jobs:
         run: |
           mkdir -p ci-out
           status=0
-          dotnet publish src/TabStudio.Android -c Release -f net10.0-android -p:TabStudioRuntimeIdentifiers=android-x64 \
+          dotnet publish src/TabStudio.Android -c Release -p:TreatWarningsAsErrors=true -f net10.0-android -p:TabStudioRuntimeIdentifiers=android-x64 \
             -p:TabStudioBuildNumber=$(( ($(date +%s) - 1767225600) / 60 )) \
             -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME" \
             > ci-out/android-x64-build.log 2>&1 || status=$?

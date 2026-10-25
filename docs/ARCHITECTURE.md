@@ -55,6 +55,7 @@ Dependencies point down only. Each layer has one job:
 | `TabStudio.LanguageServers` | Language Server Protocol and Debug Adapter Protocol clients, server and adapter registry, launch configurations. | Nothing but the .NET base library |
 | `TabStudio.Extensions` | VS Code extensions from Open VSX: install and verify, and their grammars, language configurations, snippets and themes. | Nothing but the .NET base library |
 | `TabStudio.Agent` | Claude as a coding agent: the Messages API with streaming and prompt caching, tools over the workspace, Model Context Protocol servers, and sketch to XAML. | Core |
+| `TabStudio.Uno` | Uno and WinUI XAML templates and in-process Skia preview host. | Core, Compilation |
 | `TabStudio.App` | The IDE: Avalonia views, view models, editor integration and app services. Platform-neutral. | Core and every engine, Avalonia |
 | `TabStudio.Android` | The Android entry point: activity, manifest, icons, platform services such as thermal status. | App |
 | `TabStudio.Desktop` | A desktop window around the same app, so contributors can work from any computer. | App |
@@ -218,6 +219,26 @@ line they are on. The project is built again only when one of its files is saved
 image (`SketchToXaml` in the agent engine, with the user's own API key), and `XamlContentEdit` puts the answer in
 as the root element's content, keeping its property elements and every other character of the file, as one edit
 that Undo takes back.
+
+## WinUI and Uno apps
+
+`TabStudio.Uno` hosts Uno Platform's native Skia renderer in-process. Uno.Sdk projects restore their implicit
+packages; WinUI 3 projects restore against Uno instead of the Windows App SDK (TS7001). Uno's XAML generator
+runs in the Roslyn workspace with its additional files and SDK properties. Generator errors and C# errors in
+its output map back to the originating XAML element in the Error List.
+
+F5 and Ctrl+F5 show the app beside the editor without the debugger. Saving XAML or C# rebuilds and restarts it.
+Uno runs once per session on its own dispatcher and renderer threads; each app build has its own load context.
+The generated host is compiled against the restored runtime as `Uno.UI.Runtime.Skia.Headless`, Uno's declared
+friend assembly. Frames cross into Avalonia as premultiplied BGRA pixels, and input travels back to Uno.
+Android and the desktop IDE share SkiaSharp 3.119 with Avalonia 11, including matching native assets; they do
+not load competing Skia ABIs. The emulator self test creates the WinUI template and reads its Uno window title.
+
+Windows-only APIs still need Windows Bridge, and Uno reports unsupported WinUI APIs in the Error List. A
+session supports one Uno version and one running Uno preview. Swarm screens, layout inspection and recorded UI
+tests are not implemented for Uno: the existing inspectors require an Avalonia visual tree, while this preview
+is a bitmap of Uno's tree. Changing Uno versions requires restarting TabStudio. App assemblies remain loaded
+on Android, whose runtime cannot unload them.
 
 ## Windows Forms apps
 

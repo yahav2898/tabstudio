@@ -137,7 +137,7 @@ public sealed class UnoRuntime
                 (float)options.Scale,
                 runtime.OnFrameReady,
                 runtime.OnLogged,
-                runtime.OnUnhandled).ConfigureAwait(false);
+                runtime.OnUnhandled).WaitAsync(cancellationToken).ConfigureAwait(false);
             _current = runtime;
             return runtime;
         }
@@ -192,7 +192,7 @@ public sealed class UnoRuntime
 
         try
         {
-            await host.Launch(program.EntryAssembly).ConfigureAwait(false);
+            await host.Launch(program.EntryAssembly).WaitAsync(cancellationToken).ConfigureAwait(false);
         }
         catch
         {
@@ -214,22 +214,22 @@ public sealed class UnoRuntime
     public bool CopyFrame(IntPtr pixels, int width, int height, int rowBytes) => _host?.CopyFrame(pixels, width, height, rowBytes) == true;
 
     /// <summary>Sends a pointer event to the app. Any thread.</summary>
-    public void SendPointer(UnoPointerEvent pointer)
+    public void SendPointer(UnoPointerEvent input)
     {
-        ArgumentNullException.ThrowIfNull(pointer);
+        ArgumentNullException.ThrowIfNull(input);
         _host?.Pointer(
-            (int)pointer.Action,
-            pointer.PointerId,
-            (int)pointer.Device,
-            pointer.X,
-            pointer.Y,
-            pointer.IsLeftPressed,
-            pointer.IsRightPressed,
-            pointer.IsMiddlePressed,
-            pointer.WheelDelta,
-            pointer.IsHorizontalWheel,
-            (int)pointer.Modifiers,
-            pointer.Timestamp);
+            (int)input.Action,
+            input.PointerId,
+            (int)input.Device,
+            input.X,
+            input.Y,
+            input.IsLeftPressed,
+            input.IsRightPressed,
+            input.IsMiddlePressed,
+            input.WheelDelta,
+            input.IsHorizontalWheel,
+            (int)input.Modifiers,
+            input.Timestamp);
     }
 
     /// <summary>Sends a key press or release to the app. Any thread.</summary>

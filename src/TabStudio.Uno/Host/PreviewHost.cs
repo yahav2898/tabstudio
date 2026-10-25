@@ -292,9 +292,9 @@ public static class PreviewHost
         ApiExtensibility.Register(typeof(IClipboardExtension), _ => _platform);
         ApiExtensibility.Register<DisplayInformation>(typeof(IDisplayInformationExtension), _ => display);
         ApiExtensibility.Register<IXamlRootHost>(typeof(IUnoCorePointerInputSource), host =>
-            ReferenceEquals(host, _windows.Preview) ? _pointer ??= new PreviewPointerInput(host) : new DetachedPointerInput());
+            host is PreviewWindow { IsPreview: true } ? _pointer ??= new PreviewPointerInput(host) : new DetachedPointerInput());
         ApiExtensibility.Register<IXamlRootHost>(typeof(IUnoKeyboardInputSource), host =>
-            ReferenceEquals(host, _windows.Preview) ? _keyboard ??= new PreviewKeyboardInput(host) : new DetachedKeyboardInput());
+            host is PreviewWindow { IsPreview: true } ? _keyboard ??= new PreviewKeyboardInput(host) : new DetachedKeyboardInput());
 
         var dispatcher = _dispatcher!;
         CoreDispatcher.DispatchOverride = (work, _) => dispatcher.Post(work);
@@ -424,7 +424,7 @@ internal sealed class PreviewHostApplication : Application
 {
     public PreviewHostApplication() => Resources.MergedDictionaries.Add(new XamlControlsResources());
 
-    protected override void OnLaunched(LaunchActivatedEventArgs args) => PreviewHost.OnHostLaunched(this);
+    protected internal override void OnLaunched(LaunchActivatedEventArgs args) => PreviewHost.OnHostLaunched(this);
 }
 
 /// <summary>The display the preview's window is on: the size and density TabStudio gives it.</summary>

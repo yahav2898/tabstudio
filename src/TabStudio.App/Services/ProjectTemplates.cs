@@ -2,6 +2,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using TabStudio.App.Notebooks;
 using TabStudio.Web.Templates;
+using TabStudio.Uno.Templates;
 
 namespace TabStudio.App.Services;
 
@@ -58,6 +59,8 @@ public sealed partial class ProjectTemplates
         new(WebId, "ASP.NET Core Web App", "A web page and an API, served on the tablet and previewed beside the code.", ["C#", "Web", "ASP.NET Core"]),
         new(AvaloniaId, "Avalonia App", "A cross-platform app with a view and a view model, rendered natively beside the code.", ["C#", "Avalonia", "MVVM"]),
         WindowsFormsTemplate,
+        new(UnoTemplates.UnoAppId, "Uno Platform App", "A cross-platform WinUI app, rendered natively beside the code by Uno Platform.", ["C#", "Uno", "WinUI"]),
+        new(UnoTemplates.WinUIAppId, "WinUI 3 Blank App", "A WinUI 3 app built on the tablet and run in the app preview through Uno Platform.", ["C#", "WinUI", "XAML"]),
         new(LibraryId, "Class Library", "Reusable code for other projects to reference.", ["C#", "Library"]),
         new(NotebookId, "C# Notebook", "Cells of C# you run one at a time, with results, tables and errors right under each cell, like Polyglot Notebooks.", ["C#", "Notebook"]),
         new(WebTemplates.BlazorWebAppId, "Blazor Web App", "Interactive Razor components with server rendering, served on the tablet and previewed beside the code.", ["C#", "Blazor", "Web"]),
@@ -121,6 +124,7 @@ public sealed partial class ProjectTemplates
             WebId => [WriteWeb(root, name)],
             AvaloniaId => [WriteAvalonia(root, name)],
             _ when WebTemplates.IsTemplate(templateId) => [.. WebTemplates.Create(templateId, root, name)],
+            _ when UnoTemplates.IsTemplate(templateId) => [UnoTemplates.Create(templateId, root, name)],
             WindowsFormsId => [WriteWindowsForms(root, name)],
             _ => throw new ArgumentException($"Unknown template '{templateId}'.", nameof(templateId)),
         };

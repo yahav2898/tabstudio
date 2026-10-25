@@ -69,7 +69,7 @@ public sealed class UnoTemplateTests : IDisposable
         Assert.Contains("EntryPoint=\"Notes.App\"", File.ReadAllText(_temp.Resolve("Notes/Package.appxmanifest")), StringComparison.Ordinal);
         Assert.DoesNotContain(
             Directory.EnumerateFiles(_temp.Path, "*", SearchOption.AllDirectories).Where(p => !p.EndsWith(".png", StringComparison.Ordinal) && !p.EndsWith(".ico", StringComparison.Ordinal)),
-            path => File.ReadAllText(path).Contains('$'));
+            path => System.Text.RegularExpressions.Regex.IsMatch(File.ReadAllText(path), @"\$[A-Za-z][A-Za-z0-9]*\$"));
         Assert.Equal(new byte[] { 0x89, 0x50, 0x4E, 0x47 }, File.ReadAllBytes(_temp.Resolve("Notes/Assets/StoreLogo.png"))[..4]);
 
         var loaded = ProjectParser.Load(project);

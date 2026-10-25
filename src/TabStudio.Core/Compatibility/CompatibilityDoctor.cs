@@ -109,17 +109,17 @@ public static class CompatibilityDoctor
                 project, RunHost.AndroidView, CompatibilityStatus.Planned, "Native view in the app preview",
                 $"Avalonia apps render beside the code. The {LanguageName(project.Language)} compiler is not bundled yet."),
 
-            ProjectKind.Uno => Report(
-                project, RunHost.AndroidView, CompatibilityStatus.Planned, "Native Android view",
-                "Uno Platform runs on Android, so the app will render natively beside the editor."),
+            ProjectKind.Uno or ProjectKind.WinUI when project.Language == ProjectLanguage.CSharp => Report(
+                project, RunHost.AndroidView, CompatibilityStatus.Ready, "Uno Platform in the app preview",
+                "Compiled on this device and drawn natively beside the code by Uno Platform's Skia renderer. Saving a XAML or C# file restarts it. Windows-only APIs require the Windows Bridge."),
+
+            ProjectKind.Uno or ProjectKind.WinUI => Report(
+                project, RunHost.AndroidView, CompatibilityStatus.Planned, "Uno Platform in the app preview",
+                $"Uno and WinUI apps render beside the code. The {LanguageName(project.Language)} compiler is not bundled yet."),
 
             ProjectKind.Maui => Report(
                 project, RunHost.AndroidView, CompatibilityStatus.Planned, "Android app",
                 "MAUI targets Android directly; the app will be packaged and installed on this tablet."),
-
-            ProjectKind.WinUI => Report(
-                project, RunHost.AndroidView, CompatibilityStatus.NeedsChanges, "Uno Platform",
-                "WinUI is Windows-only. Uno Platform implements the WinUI API on Android, so the app can run here with an Uno head."),
 
             ProjectKind.Wpf => Report(
                 project, RunHost.WebView, CompatibilityStatus.NeedsChanges, "OpenSilver, or your PC",

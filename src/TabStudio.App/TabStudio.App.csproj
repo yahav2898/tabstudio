@@ -33,6 +33,9 @@
 
   <ItemGroup>
     <PackageReference Include="Avalonia" />
+    <!-- Uno and Avalonia share one compatible SkiaSharp runtime, as on Android. -->
+    <PackageReference Include="SkiaSharp" />
+    <PackageReference Include="HarfBuzzSharp" />
     <PackageReference Include="Avalonia.Themes.Fluent" />
     <PackageReference Include="Avalonia.Fonts.Inter" />
     <PackageReference Include="Avalonia.AvaloniaEdit" />
@@ -60,6 +63,7 @@
     <ProjectReference Include="..\TabStudio.Extensions\TabStudio.Extensions.csproj" />
     <ProjectReference Include="..\TabStudio.Toolchains\TabStudio.Toolchains.csproj" />
     <ProjectReference Include="..\TabStudio.Web\TabStudio.Web.csproj" />
+    <ProjectReference Include="..\TabStudio.Uno\TabStudio.Uno.csproj" />
     <ProjectReference Include="..\TabStudio.Forms\TabStudio.Forms.csproj" />
     <ProjectReference Include="..\TabStudio.Forms.Design\TabStudio.Forms.Design.csproj" />
   </ItemGroup>

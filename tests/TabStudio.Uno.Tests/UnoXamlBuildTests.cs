@@ -35,8 +35,8 @@ public sealed class UnoXamlBuildTests(NuGetFixture nuget) : IDisposable
         Assert.Contains(generated, source => source.Contains("partial class MainPage", StringComparison.Ordinal) && source.Contains("InitializeComponent", StringComparison.Ordinal));
         Assert.Contains(generated, source => source.Contains("partial class App", StringComparison.Ordinal));
 
-        // Strings/en/Resources.resw becomes the app's resources, as Uno.Sdk's PRIResource items do.
-        Assert.Contains(generated, source => source.Contains("Resources.resw", StringComparison.Ordinal) || source.Contains("Resources.upri", StringComparison.Ordinal) || source.Contains("Strings/en", StringComparison.Ordinal));
+        // Uno's XAML generator sees PRIResource items and marks the assembly for localization.
+        Assert.Contains(generated, source => source.Contains("AssemblyMetadata(\"UnoHasLocalizationResources\", \"True\")", StringComparison.Ordinal));
 
         // The other platforms' heads are not compiled, and Uno.Sdk's global usings are.
         Assert.DoesNotContain(compilation.SyntaxTrees, t => t.FilePath.Contains("Platforms", StringComparison.Ordinal));

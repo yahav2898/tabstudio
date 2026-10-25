@@ -59,7 +59,7 @@ public sealed partial class WorkspaceViewModel
                 continue;
             }
 
-            if (next.PackageReferences.Count > 0 || next.FrameworkReferences.Count > 0)
+            if (next.PackageReferences.Count > 0 || next.FrameworkReferences.Count > 0 || UnoProjects.UsesUno(next))
             {
                 return true;
             }

@@ -30,8 +30,8 @@ namespace TabStudio.Uno.Hosting;
 /// </remarks>
 public static class UnoHostCompiler
 {
-    /// <summary>The host assembly's name.</summary>
-    public const string AssemblyName = "TabStudio.UnoHost";
+    /// <summary>The host assembly's name, one of Uno's declared friend assemblies for its internal hosting API.</summary>
+    public const string AssemblyName = "Uno.UI.Runtime.Skia.Headless";
 
     /// <summary>The host's entry type, whose static members TabStudio calls.</summary>
     public const string HostTypeName = "TabStudio.UnoHost.PreviewHost";
@@ -46,7 +46,7 @@ public static class UnoHostCompiler
 
     /// <summary>Compiles the host into a folder, unless the one there was compiled from the same sources against the same assemblies.</summary>
     /// <param name="unoAssemblies">The Uno Platform assemblies the app runs with, Skia's implementations.</param>
-    /// <param name="outputDirectory">The folder to put <c>TabStudio.UnoHost.dll</c> in.</param>
+    /// <param name="outputDirectory">The folder to put <c>Uno.UI.Runtime.Skia.Headless.dll</c> in.</param>
     /// <param name="cancellationToken">Cancels the compilation.</param>
     /// <returns>The path of the host assembly.</returns>
     /// <exception cref="UnoHostException">The host does not compile against these assemblies, as for an Uno version whose hosting API changed.</exception>

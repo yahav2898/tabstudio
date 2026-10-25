@@ -20,13 +20,14 @@ namespace TabStudio.App.Previews;
 /// Uno draws on threads of its own, so a frame is copied into this control's bitmap on the UI thread when Uno says
 /// one is ready, at most once per frame TabStudio draws. The pane's size goes to Uno as the window's size.
 /// </remarks>
-public sealed class UnoPreviewControl : Control
+public sealed class UnoPreviewControl : Control, IDisposable
 {
     private readonly UnoRuntime _runtime;
     private readonly UnoTextInputClient _textInput;
     private WriteableBitmap? _frame;
     private int _framePending;
     private bool _editingText;
+    private bool _disposed;
 
     /// <summary>Creates the preview of the apps a runtime runs.</summary>
     /// <param name="runtime">Uno Platform, running in TabStudio.</param>
@@ -42,6 +43,16 @@ public sealed class UnoPreviewControl : Control
 
     /// <summary>The app whose input this preview forwards, while it runs.</summary>
     public UnoApp? App { get; set; }
+
+    /// <summary>Releases the preview bitmap after the app stops.</summary>
+    public void Dispose()
+    {
+        _disposed = true;
+        _runtime.FrameReady -= OnFrameReady;
+        _frame?.Dispose();
+        _frame = null;
+        App = null;
+    }
 
     /// <inheritdoc/>
     public override void Render(DrawingContext context)
@@ -192,7 +203,7 @@ public sealed class UnoPreviewControl : Control
         | (modifiers.HasFlag(KeyModifiers.Shift) ? UnoKeyModifiers.Shift : UnoKeyModifiers.None)
         | (modifiers.HasFlag(KeyModifiers.Meta) ? UnoKeyModifiers.Windows : UnoKeyModifiers.None);
 
-    private UnoPointerEvent PointerOf(UnoPointerAction action, PointerEventArgs e, PointerPoint point) => new()
+    private static UnoPointerEvent PointerOf(UnoPointerAction action, PointerEventArgs e, PointerPoint point) => new()
     {
         Action = action,
         PointerId = (uint)e.Pointer.Id,
@@ -223,7 +234,7 @@ public sealed class UnoPreviewControl : Control
     /// <summary>Called on Uno's renderer thread: copies the frame on the UI thread, once per frame TabStudio draws.</summary>
     private void OnFrameReady(object? sender, EventArgs e)
     {
-        if (Interlocked.Exchange(ref _framePending, 1) == 0)
+        if (!_disposed && Interlocked.Exchange(ref _framePending, 1) == 0)
         {
             Dispatcher.UIThread.Post(UpdateFrame, DispatcherPriority.Render);
         }
@@ -232,6 +243,11 @@ public sealed class UnoPreviewControl : Control
     private void UpdateFrame()
     {
         Volatile.Write(ref _framePending, 0);
+        if (_disposed)
+        {
+            return;
+        }
+
         var (width, height) = _runtime.FrameSize;
         if (width <= 0 || height <= 0)
         {
@@ -289,10 +305,6 @@ public sealed class UnoPreviewControl : Control
             Focus();
         }
 
-        if (editing)
-        {
-            _textInput.ShowInputPanel();
-        }
     }
 
     private void OnTextInputMethodClientRequested(object? sender, TextInputMethodClientRequestedEventArgs e)

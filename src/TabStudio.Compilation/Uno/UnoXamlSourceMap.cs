@@ -69,6 +69,15 @@ internal sealed partial class UnoXamlSourceMap
     {
         var root = tree.GetRoot();
         var node = root.FindNode(new TextSpan(Math.Clamp(position, 0, Math.Max(0, root.FullSpan.End - 1)), 0), getInnermostNodeForTie: true);
+        // Uno puts event callbacks in nested helper classes, away from the element's ApplyTo method.
+        // Follow the helper's construction back to that method, whose SetBaseUri names the original element.
+        if (node.AncestorsAndSelf().OfType<ClassDeclarationSyntax>().FirstOrDefault(c => c.Identifier.ValueText.EndsWith("_Handler", StringComparison.Ordinal)) is { } handler
+            && root.DescendantNodes().OfType<ObjectCreationExpressionSyntax>().FirstOrDefault(c =>
+                c.Type.ToString().EndsWith("." + handler.Identifier.ValueText, StringComparison.Ordinal)) is { } creation)
+        {
+            return Find(tree, creation.SpanStart);
+        }
+
         foreach (var ancestor in node.AncestorsAndSelf())
         {
             switch (ancestor)

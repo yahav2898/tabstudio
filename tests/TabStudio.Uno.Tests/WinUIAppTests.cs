@@ -61,7 +61,7 @@ public sealed class WinUIAppTests(NuGetFixture nuget) : IDisposable
         using var app = await UnoAppWorkspace.CreateAsync(nuget, _temp, UnoTemplates.WinUIAppId, Name);
         var code = app.Read("MainWindow.xaml.cs").Replace(
             "RootFrame.Navigate(typeof(MainPage));",
-            "RootFrame.Navigate(typeof(MainPage));\n        var handle = WinRT.Interop.WindowNative.GetWindowHandle(this);",
+            "RootFrame.Navigate(typeof(MainPage));\n        var manager = Microsoft.Windows.AppNotifications.AppNotificationManager.Default;",
             StringComparison.Ordinal);
         app.Save("MainWindow.xaml.cs", code);
 
@@ -69,7 +69,7 @@ public sealed class WinUIAppTests(NuGetFixture nuget) : IDisposable
 
         var error = Assert.Single(live, d => d.Severity == DiagnosticSeverityLevel.Error);
         Assert.Equal(UnoCompatibility.WindowsOnlyId, error.Id);
-        Assert.Contains("WinRT.Interop", error.Message, StringComparison.Ordinal);
+        Assert.Contains("Microsoft.Windows.AppNotifications", error.Message, StringComparison.Ordinal);
         Assert.Contains("Windows Bridge", error.Message, StringComparison.Ordinal);
     }
 

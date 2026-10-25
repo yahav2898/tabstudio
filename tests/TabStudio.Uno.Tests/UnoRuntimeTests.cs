@@ -58,6 +58,7 @@ public sealed class UnoRuntimeTests(NuGetFixture nuget) : IDisposable
         var texts = await restarted.GetTextsAsync();
         Assert.DoesNotContain("Hello from TabStudio!", texts);
         Assert.NotSame(first, restarted.Assembly);
+        Assert.NotEqual(System.Runtime.Loader.AssemblyLoadContext.GetLoadContext(first)!.Name, System.Runtime.Loader.AssemblyLoadContext.GetLoadContext(restarted.Assembly)!.Name);
     }
 
     [Fact]
@@ -152,10 +153,12 @@ public sealed class UnoRuntimeTests(NuGetFixture nuget) : IDisposable
     private static async Task ClickAsync(UnoRuntime runtime, UnoApp app, string name)
     {
         var (x, y) = (await WaitForElementAsync(app, name)).Center;
-        runtime.SendPointer(new UnoPointerEvent { Action = UnoPointerAction.Entered, Device = UnoPointerDevice.Mouse, X = x, Y = y });
-        runtime.SendPointer(new UnoPointerEvent { Action = UnoPointerAction.Moved, Device = UnoPointerDevice.Mouse, X = x, Y = y });
-        runtime.SendPointer(new UnoPointerEvent { Action = UnoPointerAction.Pressed, Device = UnoPointerDevice.Mouse, X = x, Y = y, IsLeftPressed = true, Timestamp = 1_000 });
+        // Native pointer frame ids and timestamps increase across app restarts, as Avalonia's do.
+        var timestamp = (ulong)(System.Diagnostics.Stopwatch.GetElapsedTime(0).Ticks / 10);
+        runtime.SendPointer(new UnoPointerEvent { Action = UnoPointerAction.Entered, Device = UnoPointerDevice.Mouse, X = x, Y = y, Timestamp = timestamp });
+        runtime.SendPointer(new UnoPointerEvent { Action = UnoPointerAction.Moved, Device = UnoPointerDevice.Mouse, X = x, Y = y, Timestamp = timestamp + 1 });
+        runtime.SendPointer(new UnoPointerEvent { Action = UnoPointerAction.Pressed, Device = UnoPointerDevice.Mouse, X = x, Y = y, IsLeftPressed = true, Timestamp = timestamp + 2 });
         await Task.Delay(50);
-        runtime.SendPointer(new UnoPointerEvent { Action = UnoPointerAction.Released, Device = UnoPointerDevice.Mouse, X = x, Y = y, Timestamp = 51_000 });
+        runtime.SendPointer(new UnoPointerEvent { Action = UnoPointerAction.Released, Device = UnoPointerDevice.Mouse, X = x, Y = y, Timestamp = timestamp + 50_000 });
     }
 }
