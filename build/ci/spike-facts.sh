@@ -22,6 +22,8 @@ d=json.load(sys.stdin); print('version', d['info']['version'])
 for f in d['urls']:
     if 'none-any' in f['filename']: print(f['filename'], f['size'], f['digests']['sha256'], f['url'])"
   echo "== npm"
+  for v in 5.9 5.8; do echo "typescript@$v $(curl -fsSL https://registry.npmjs.org/typescript | python3 -c "import json,sys; d=json.load(sys.stdin); print(sorted([x for x in d['versions'] if x.startswith('$v.')], key=lambda s: [int(p) for p in s.split('.')])[-1])")"; done
+  curl -fsSL https://registry.npmjs.org/typescript-language-server/6.0.2 | python3 -c "import json,sys; d=json.load(sys.stdin); print('tsls 6.0.2 peer/deps', d.get('peerDependencies'), d.get('engines'))"
   for p in typescript-language-server typescript pyright; do echo "$p $(curl -fsSL https://registry.npmjs.org/$p/latest | python3 -c 'import json,sys; print(json.load(sys.stdin)["version"])')"; done
 } > "$out" 2>&1
 cat "$out"

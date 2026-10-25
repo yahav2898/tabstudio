@@ -122,8 +122,8 @@ public static partial class SelfTest
             await SafeAsync("pty-slave-open", () => { Log("pty-slave-open", true, SpikePty.ProbeSlave()); return Task.CompletedTask; });
             var guest = _guestEnvironment.Select(e => $"{e.Key}={e.Value}").ToArray();
             await SafeAsync("pty-system-sh", () => Task.Run(() => RunPseudoTerminal("pty-system-sh", ["/system/bin/sh", "-c", "tty; stty size; echo done"], ["PATH=/system/bin", "TERM=xterm-256color"])).WaitAsync(TimeSpan.FromSeconds(60)));
-            string[] proot = [Path.Combine(_lib, "libproot.so"), "--kill-on-exit", "--link2symlink", "-0", "-r", _rootfs, "-b", "/dev", "-b", "/proc", "-b", "/sys", "-w", "/root"];
-            await SafeAsync("pty-proot", () => Task.Run(() => RunPseudoTerminal("pty-proot", [.. proot, "/bin/sh", "-c", "tty; stty size; echo TERM=$TERM; printf '\\033[31mred\\033[0m\\n'"], guest)).WaitAsync(TimeSpan.FromSeconds(60)));
+            string[] prootArguments = [Path.Combine(_lib, "libproot.so"), "--kill-on-exit", "--link2symlink", "-0", "-r", _rootfs, "-b", "/dev", "-b", "/proc", "-b", "/sys", "-w", "/root"];
+            await SafeAsync("pty-proot", () => Task.Run(() => RunPseudoTerminal("pty-proot", [.. prootArguments, "/bin/sh", "-c", "tty; stty size; echo TERM=$TERM; printf '\\033[31mred\\033[0m\\n'"], guest)).WaitAsync(TimeSpan.FromSeconds(60)));
             await SafeAsync("local-repository", LocalRepositoryAsync);
             await SafeAsync("fake-proc", FakeProcAsync);
             for (var i = 0; i < 3; i++)
