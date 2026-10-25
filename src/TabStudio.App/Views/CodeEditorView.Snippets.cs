@@ -31,9 +31,6 @@ public sealed partial class CodeEditorView : ISnippetEditor
     /// <summary>The snippet being filled in, for tests; <see langword="null"/> when there is none.</summary>
     internal SnippetSession? Snippet => _snippet is { IsActive: true } snippet ? snippet : null;
 
-    /// <summary>Whether the completion list is on screen, for tests.</summary>
-    internal bool IsCompletionShown => _completionPopup?.IsOpen == true;
-
     /// <inheritdoc />
     IReadOnlyList<SnippetDefinition> ISnippetEditor.Snippets => EditorExtensions.SnippetsFor(_document.FileType, _document.FilePath);
 

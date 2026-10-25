@@ -1,6 +1,4 @@
 using Avalonia.Input;
-using Avalonia.Media;
-using Avalonia.Media.Immutable;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.Folding;
 using TabStudio.App.Editing;
@@ -13,17 +11,10 @@ namespace TabStudio.App.Views;
 /// </summary>
 public sealed partial class CodeEditorView
 {
-    private static readonly IBrush FoldMarkerBrush = new ImmutableSolidColorBrush(Color.Parse("#9AA1AE"));
-    private static readonly IBrush FoldMarkerBackground = new ImmutableSolidColorBrush(Color.Parse("#1B1D23"));
-
     private InlayHintGenerator? _inlayHints;
-    private FoldingManager? _folding;
 
     /// <summary>The inlay hints shown, for tests; <see langword="null"/> without a language server.</summary>
     internal InlayHintGenerator? InlayHints => _inlayHints;
-
-    /// <summary>The folds, once the language server sent folding ranges; for tests.</summary>
-    internal FoldingManager? Folding => _folding;
 
     /// <summary>Whether the completion list's popup is shown, not only open in its view model; for tests.</summary>
     internal bool IsCompletionShown => _completionPopup?.IsOpen == true;
@@ -69,11 +60,7 @@ public sealed partial class CodeEditorView
         _document.Document.Changed -= OnDocumentChangedForServerDecorations;
         _editor.TextArea.TextEntered -= OnTextEnteredForServer;
         _editor.TextArea.TextView.ElementGenerators.Remove(_inlayHints);
-        if (_folding is not null)
-        {
-            FoldingManager.Uninstall(_folding);
-            _folding = null;
-        }
+        RemoveFolding();
     }
 
     /// <summary>The context menu's commands only language servers answer. Called while the menu is built.</summary>
@@ -128,17 +115,9 @@ public sealed partial class CodeEditorView
     private void ApplyServerDecorations()
     {
         _inlayHints?.SetHints(_document.InlayHints);
-        if (_document.FoldingRanges.Count > 0 && _folding is null)
+        if (HasServerFolds)
         {
-            _editor.SetValue(FoldingMargin.FoldingMarkerBrushProperty, FoldMarkerBrush);
-            _editor.SetValue(FoldingMargin.FoldingMarkerBackgroundBrushProperty, FoldMarkerBackground);
-            _editor.SetValue(FoldingMargin.SelectedFoldingMarkerBrushProperty, Brushes.White);
-            _editor.SetValue(FoldingMargin.SelectedFoldingMarkerBackgroundBrushProperty, FoldMarkerBackground);
-            _folding = FoldingManager.Install(_editor.TextArea);
-        }
-
-        if (_folding is not null)
-        {
+            var folding = EnsureFolding();
             var document = _editor.Document;
             var folds = _document.FoldingRanges
                 .Where(r => r.StartLine >= 0 && r.EndLine > r.StartLine && r.EndLine < document.LineCount)
@@ -156,7 +135,7 @@ public sealed partial class CodeEditorView
                 .Where(f => f.EndOffset > f.StartOffset)
                 .OrderBy(f => f.StartOffset)
                 .ToList();
-            _folding.UpdateFoldings(folds, -1);
+            folding.UpdateFoldings(folds, -1);
         }
 
         _editor.TextArea.TextView.Redraw();

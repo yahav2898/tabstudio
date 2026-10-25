@@ -1,7 +1,5 @@
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Media;
-using Avalonia.Media.Immutable;
 using Avalonia.Threading;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.Editing;
@@ -21,8 +19,6 @@ namespace TabStudio.App.Views;
 /// </summary>
 public sealed partial class CodeEditorView
 {
-    private static readonly IBrush FoldMarkerBrush = new ImmutableSolidColorBrush(Color.Parse("#9AA1AE"));
-    private static readonly IBrush FoldMarkerBackground = new ImmutableSolidColorBrush(Color.Parse("#1B1D23"));
     private static readonly TimeSpan FoldingDelay = TimeSpan.FromMilliseconds(400);
 
     // How far around the caret a matching bracket is looked for.
@@ -31,7 +27,6 @@ public sealed partial class CodeEditorView
     private readonly List<(TextAnchor Anchor, string Close)> _autoClosed = [];
     private LanguageConfiguration? _rules;
     private BracketHighlightRenderer? _brackets;
-    private FoldingManager? _folding;
     private DispatcherTimer? _foldingTimer;
     private AutoClosingPair? _pendingClose;
     private int _pendingCloseCaret = -1;
@@ -40,9 +35,6 @@ public sealed partial class CodeEditorView
 
     /// <summary>The language configuration the editor follows, for tests; <see langword="null"/> when no extension contributes one.</summary>
     internal LanguageConfiguration? LanguageRules => _rules;
-
-    /// <summary>The folds of the document, when its language configuration folds it; for tests.</summary>
-    internal FoldingManager? Folding => _folding;
 
     /// <summary>The bracket at the caret and its match, as outlined now; for tests.</summary>
     internal BracketMatch? MatchedBracket => _brackets?.Match;
@@ -67,11 +59,7 @@ public sealed partial class CodeEditorView
         textArea.Caret.PositionChanged -= OnRulesCaretMoved;
         _editor.Document.Changed -= OnRulesDocumentChanged;
         _foldingTimer?.Stop();
-        if (_folding is not null)
-        {
-            FoldingManager.Uninstall(_folding);
-            _folding = null;
-        }
+        RemoveFolding();
     }
 
     /// <summary>Follows the configuration for the file's language now, after the file's type or the extensions changed.</summary>
@@ -104,20 +92,14 @@ public sealed partial class CodeEditorView
         if (rules is null)
         {
             _foldingTimer?.Stop();
-            if (_folding is not null)
+            if (!HasServerFolds)
             {
-                FoldingManager.Uninstall(_folding);
-                _folding = null;
+                RemoveFolding();
             }
         }
-        else
+        else if (!HasServerFolds)
         {
-            _folding ??= FoldingManager.Install(_editor.TextArea);
-            if (EditorExtensions.Theme is null)
-            {
-                ClearFoldingColors();
-            }
-
+            EnsureFolding();
             UpdateFoldings();
         }
 
@@ -462,7 +444,8 @@ public sealed partial class CodeEditorView
 
     private void UpdateFoldings()
     {
-        if (_folding is null || _rules is not { } rules)
+        // The language server's folding ranges, when it sends them, know the file better than indentation does.
+        if (_folding is null || _rules is not { } rules || HasServerFolds)
         {
             return;
         }
