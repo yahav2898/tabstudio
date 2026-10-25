@@ -12,7 +12,7 @@ public sealed partial class WorkspaceViewModel
     private string? _nativeDebugDirectory;
 
     /// <summary>LLDB 22 launches inside its own PRoot trace tree; a FIFO supplies the Output panel's input.</summary>
-    private async Task<LaunchConfiguration?> PrepareNativeDebugInputAsync(LaunchConfiguration configuration)
+    private LaunchConfiguration? PrepareNativeDebugInput(LaunchConfiguration configuration)
     {
         if (configuration.Type != "lldb-dap" || _toolchains.Runtime.Kind != RuntimeKind.Linux)
         {
@@ -29,14 +29,7 @@ public sealed partial class WorkspaceViewModel
         var pipe = Path.Combine(folder, "stdin");
         try
         {
-            var made = await CommandRunner.RunAsync(_toolchains.Runtime, new ProcessStartSpec
-            {
-                Program = "mkfifo", Arguments = ["-m", "600", pipe],
-            }, null, CancellationToken.None);
-            if (!made.Succeeded)
-            {
-                throw new IOException("Could not create the debugger input pipe: " + made.Tail(3));
-            }
+            UnixNamedPipe.Create(pipe);
 
             // O_RDWR opens a FIFO without blocking before LLDB opens its reader. Keeping the writer open also
             // prevents EOF between answers. The adapter's stdin remains exclusively its DAP protocol stream.

@@ -34,7 +34,7 @@ public static partial class SelfTest
             await WaitForAsync(() => workspace.IsPaused || (!workspace.IsDebugging && workspace.State != IdeState.Busy), TimeSpan.FromMinutes(3), cancellationToken);
             if (!workspace.IsPaused)
             {
-                return new(false, $"{project.Toolchain.Name} debugging: no breakpoint: {LastLines(workspace)}", clock.Elapsed);
+                return new(false, $"{project.Toolchain.Name} debugging: no breakpoint: {CompiledDebugFailure(workspace)}", clock.Elapsed);
             }
 
             await workspace.PauseShown.WaitAsync(cancellationToken);
@@ -46,7 +46,7 @@ public static partial class SelfTest
                 && !workspace.IsDebugging && workspace.Output.Text.Contains($"Hello, {Name}!", StringComparison.Ordinal);
             return new(success, success
                 ? $"{project.Toolchain.Name} debugging: stopped at {line}, {localName} = {value}, console input and completed greeting"
-                : $"{project.Toolchain.Name} debugging: {localName} = {value ?? "missing"}; {LastLines(workspace)}", clock.Elapsed);
+                : $"{project.Toolchain.Name} debugging: {localName} = {value ?? "missing"}; {CompiledDebugFailure(workspace)}", clock.Elapsed);
         }
         finally
         {
@@ -54,4 +54,11 @@ public static partial class SelfTest
             workspace.Breakpoints.Remove(breakpoint);
         }
     }
+
+    private static string CompiledDebugFailure(WorkspaceViewModel workspace)
+    {
+        var lines = workspace.DebugAdapterOutput.Text.Split('\n').Where(l => !string.IsNullOrWhiteSpace(l)).ToList();
+        return LastLines(workspace) + " | Adapter: " + string.Join(" | ", lines.Take(20).Concat(lines.TakeLast(20)).Distinct());
+    }
+
 }

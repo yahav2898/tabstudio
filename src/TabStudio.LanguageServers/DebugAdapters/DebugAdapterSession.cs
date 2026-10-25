@@ -21,6 +21,9 @@ public sealed record DebugAdapterSessionOptions
     /// <summary>Whether every message is written to the log.</summary>
     public bool TraceMessages { get; init; }
 
+    /// <summary>Receives adapter stderr while it starts, before a session is available for event handlers.</summary>
+    public Action<string>? StartupLog { get; init; }
+
     /// <summary>
     /// Whether the adapter may ask for child sessions with <c>startDebugging</c>, as js-debug does for every Node
     /// process; <see cref="DebugAdapterSession.ChildSessionHandler"/> starts them.
@@ -163,6 +166,18 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
         var arguments = adapter.Arguments.Select(a => a.Replace("${port}", port.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal)).ToList();
         var process = launcher.Start(new ServerStartInfo(executable, arguments, workingDirectory, adapter.Environment));
         DebugAdapterSession? session = null;
+        var initializing = 1;
+        PumpStandardError(process, line =>
+        {
+            if (Volatile.Read(ref initializing) != 0)
+            {
+                options.StartupLog?.Invoke(line);
+            }
+            else
+            {
+                session?.AdapterLog?.Invoke(session, line);
+            }
+        });
         try
         {
             if (adapter.Transport == DebugAdapterTransport.Tcp)
@@ -175,8 +190,8 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
                 session = new DebugAdapterSession(adapter, new DebugAdapterConnection(process.StandardOutput, process.StandardInput), process, null);
             }
 
-            session.PumpStandardError(process);
             await session.InitializeAsync(options, cancellationToken).ConfigureAwait(false);
+            Interlocked.Exchange(ref initializing, 0);
             return session;
         }
         catch (DebugAdapterException)
@@ -507,7 +522,7 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
             arguments.TryGetProperty("kind", out var kind) && kind.ValueKind == JsonValueKind.String && kind.GetString() == "external");
     }
 
-    private void PumpStandardError(IServerProcess process) => _ = Task.Run(async () =>
+    private static void PumpStandardError(IServerProcess process, Action<string> log) => _ = Task.Run(async () =>
     {
         try
         {
@@ -516,7 +531,7 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
             {
                 if (line.Length > 0)
                 {
-                    AdapterLog?.Invoke(this, line);
+                    log(line);
                 }
             }
         }
