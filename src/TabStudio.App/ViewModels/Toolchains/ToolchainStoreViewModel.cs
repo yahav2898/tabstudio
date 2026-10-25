@@ -243,9 +243,25 @@ public sealed partial class ToolchainStoreViewModel : ObservableObject, IDisposa
     private void UpdateDiskUsage()
     {
         var usage = Manager.DiskUsage;
-        DiskUsageText = CanInstallHere
-            ? $"Toolchains {DiskSpace.Format(usage.Toolchains)} · Linux {DiskSpace.Format(usage.Base)} · Downloads {DiskSpace.Format(usage.Downloads)}"
-            : string.Empty;
+        if (!CanInstallHere)
+        {
+            DiskUsageText = string.Empty;
+        }
+        else if (usage.Total == 0)
+        {
+            DiskUsageText = "Nothing installed yet";
+        }
+        else
+        {
+            var parts = new List<string> { $"{DiskSpace.Format(usage.Total)} in all", $"toolchains {DiskSpace.Format(usage.Toolchains)}", $"Linux {DiskSpace.Format(usage.Base)}" };
+            if (usage.Downloads > 0)
+            {
+                parts.Add($"downloads {DiskSpace.Format(usage.Downloads)}");
+            }
+
+            DiskUsageText = string.Join(" · ", parts);
+        }
+
         FreeSpaceText = CanInstallHere && usage.Free > 0 ? $"{DiskSpace.Format(usage.Free)} free" : string.Empty;
     }
 }

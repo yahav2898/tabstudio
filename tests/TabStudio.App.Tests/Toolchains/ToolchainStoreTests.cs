@@ -52,7 +52,7 @@ public sealed class ToolchainStoreTests : IDisposable
         var python = store.Items[0];
         Assert.True(python.IsHighlighted);
         Assert.True(python.ShowsInstall);
-        Assert.Equal("Downloads about 25 MB · 88 MB installed", python.SizeText);
+        Assert.Equal("Downloads about 21 MB · 88 MB installed", python.SizeText);
         await UiTestHelpers.WaitUntilAsync(() => true);
         UiTestHelpers.SaveScreenshot(window, "30-toolchain-store");
 
@@ -72,7 +72,7 @@ public sealed class ToolchainStoreTests : IDisposable
         Assert.Equal("Uses 69 MB", python.SizeText);
         Assert.True(python.ShowsRemove);
         Assert.True(File.Exists(_device.Rootfs("/usr/bin/python3")));
-        Assert.StartsWith("Toolchains 69 MB · Linux", store.DiskUsageText, StringComparison.Ordinal);
+        Assert.Contains(" in all · toolchains 69 MB · Linux ", store.DiskUsageText, StringComparison.Ordinal);
         await UiTestHelpers.WaitUntilAsync(() => workspace.Compatibility.Any(r => r.ToolchainId == "python" && r.IsReady), because: "the doctor");
         Assert.Contains("Python 3.14.8 from the Toolchain Store", workspace.Compatibility.Single(r => r.ToolchainId == "python").Explanation, StringComparison.Ordinal);
         Assert.Null(workspace.ToolchainNotice);
@@ -97,7 +97,7 @@ public sealed class ToolchainStoreTests : IDisposable
         var run = workspace.RunCommand.ExecuteAsync(null);
         await UiTestHelpers.WaitUntilAsync(() => workspace.Prompt.IsOpen, because: "the question");
         Assert.Equal("Install Python?", workspace.Prompt.Title);
-        Assert.Contains("It downloads about 25 MB", workspace.Prompt.Message, StringComparison.Ordinal);
+        Assert.Contains("It downloads about 21 MB", workspace.Prompt.Message, StringComparison.Ordinal);
         workspace.Prompt.CancelCommand.Execute(null);
         await run;
 

@@ -60,7 +60,7 @@ public sealed class PythonRunTests
         Assert.Equal((main, 2), (link.FilePath, link.Line));
         workspace.Output.ActivateLink(link);
         await UiTestHelpers.WaitUntilAsync(() => workspace.ActiveDocument?.FilePath == main, because: "the link to open main.py");
-        Assert.Equal(2, workspace.ActiveDocument!.CaretLine);
+        Assert.Equal(2, workspace.ActiveDocument!.TakePendingNavigation()?.Line);
     }
 
     [AvaloniaFact]
