@@ -55,6 +55,8 @@
             <MenuItem Header="_Save" InputGesture="Ctrl+S" Command="{Binding SaveCommand}" />
             <MenuItem Header="Save A_ll" InputGesture="Ctrl+Shift+S" Command="{Binding SaveAllCommand}" />
             <Separator />
+            <MenuItem Header="TabStudio _Link..." Command="{Binding OpenLinkCommand}" IsVisible="{Binding IsLinkAvailable}" />
+            <Separator />
             <MenuItem Header="_Close Document" InputGesture="Ctrl+F4" Command="{Binding CloseDocumentCommand}" />
             <MenuItem Header="Close Sol_ution" Command="{Binding CloseWorkspaceCommand}" />
           </MenuItem>
@@ -620,6 +622,15 @@
             <TextBlock Text="{Binding StatusText}" VerticalAlignment="Center" />
           </StackPanel>
           <TextBlock Text="{Binding LanguageServiceText}" VerticalAlignment="Center" />
+          <Button Theme="{StaticResource StatusBarButton}" Height="24" ToolTip.Tip="{Binding LinkStatusTip}" Command="{Binding OpenLinkCommand}"
+                  IsVisible="{Binding IsLinkAvailable}">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+              <controls:StrokeIcon Size="13" Data="{StaticResource Icon.Link}" />
+              <TextBlock Text="{Binding LinkStatusText}" FontSize="12" VerticalAlignment="Center" />
+              <Ellipse Width="7" Height="7" Fill="{DynamicResource Brush.Success}" VerticalAlignment="Center" IsVisible="{Binding IsLinkedToHost}" />
+              <Ellipse Width="7" Height="7" Fill="{DynamicResource Brush.Warning}" VerticalAlignment="Center" IsVisible="{Binding IsLinkReconnecting}" />
+            </StackPanel>
+          </Button>
           <TextBlock Text="{Binding PackagesText}" VerticalAlignment="Center"
                      IsVisible="{Binding PackagesText, Converter={x:Static ObjectConverters.IsNotNull}}" />
           <StackPanel Orientation="Horizontal" Spacing="5">

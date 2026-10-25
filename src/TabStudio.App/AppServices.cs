@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using TabStudio.App.Platform;
 using TabStudio.App.Services;
+using TabStudio.App.Services.Link;
 using TabStudio.App.ViewModels;
 
 namespace TabStudio.App;
@@ -25,6 +26,8 @@ public static class AppServices
         services.AddSingleton<IDeviceStatus, DefaultDeviceStatus>();
         services.AddSingleton<IStoragePicker, TopLevelStoragePicker>();
         services.AddSingleton<IWebViewFactory, NoWebViewFactory>();
+        services.AddSingleton<IQrScanner, NoQrScanner>();
+        services.AddSingleton<IDeviceIdentity, DefaultDeviceIdentity>();
         configurePlatform?.Invoke(services);
         services.AddSingleton(provider => DeviceProfile.For(provider.GetRequiredService<IDeviceStatus>().Device));
 
@@ -46,8 +49,10 @@ public static class AppServices
         services.TryAddSingleton<GitHubAccount>();
         services.AddSingleton<GitHubAccountViewModel>();
         services.AddSingleton<GitHubImporter>();
+        services.AddSingleton<LinkService>();
 
         // View models.
+        services.AddSingleton<LinkViewModel>();
         services.AddSingleton<StartViewModel>();
         // Workspaces are created and disposed by MainViewModel. They are built with ActivatorUtilities rather
         // than registered as transient, because the container would keep every disposable transient alive.

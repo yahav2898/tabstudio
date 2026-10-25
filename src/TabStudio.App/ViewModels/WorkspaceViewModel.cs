@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TabStudio.App.Platform;
 using TabStudio.App.Services;
+using TabStudio.App.Services.Link;
 using TabStudio.Compilation;
 using TabStudio.Compilation.Running;
 using TabStudio.Core.Compatibility;
@@ -91,7 +92,9 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     /// <param name="gitHubAccount">The app's GitHub account; without it, the Git Changes window starts signed out.</param>
     /// <param name="browser">Opens web pages, such as GitHub's; the system browser when <see langword="null"/>.</param>
     /// <param name="webViews">Creates the web preview's embedded browser; none when <see langword="null"/>.</param>
-    public WorkspaceViewModel(CompilerServices compiler, IDeviceStatus device, DeviceProfile profile, IUiDispatcher ui, SessionStore sessions, AppPaths paths, GitHubAccountViewModel? gitHubAccount = null, IStoragePicker? browser = null, IWebViewFactory? webViews = null)
+    /// <param name="link">The app's TabStudio Link; without it, this device always compiles on its own.</param>
+    /// <param name="linkDialog">The TabStudio Link dialog, opened from the File menu and the status bar.</param>
+    public WorkspaceViewModel(CompilerServices compiler, IDeviceStatus device, DeviceProfile profile, IUiDispatcher ui, SessionStore sessions, AppPaths paths, GitHubAccountViewModel? gitHubAccount = null, IStoragePicker? browser = null, IWebViewFactory? webViews = null, LinkService? link = null, LinkViewModel? linkDialog = null)
     {
         ArgumentNullException.ThrowIfNull(compiler);
         ArgumentNullException.ThrowIfNull(device);
@@ -105,6 +108,8 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         _ui = ui;
         _sessions = sessions;
         _paths = paths;
+        _link = link;
+        _linkDialog = linkDialog;
 
         Explorer = new SolutionExplorerViewModel(this);
         Output = new OutputViewModel(ui, profile.OutputCharacterLimit);
@@ -120,6 +125,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         InitializeDebugging();
         InitializeTests();
         InitializeAgent();
+        InitializeLink();
         Documents.CollectionChanged += (_, _) => UpdateActiveProjects();
     }
 
@@ -262,15 +268,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         LoadStartupProjects(preview.Workspace, session?.StartupProject);
 
         StatusText = "Loading C#";
-        var host = await _compiler.CreateHostAsync();
-        _language = new LocalLanguageService(host, _compiler.Packages);
-        if (_profile.UseSkeletonReferences)
-        {
-            _language.UseSkeletonReferences(Path.Combine(_paths.Cache, "Skeletons"));
-        }
-
-        await Task.Run(() => host.Load(preview.Workspace, FileSystemTextProvider.Instance));
-        _language.SetConcurrentBuild(_device.Thermal == ThermalState.Normal);
+        _language = await CreateLanguageServiceAsync(preview.Workspace);
         LanguageServiceText = "Roslyn warm";
 
         RestoreDebuggingState(session);
@@ -349,6 +347,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         _run?.Cancel();
         DisposeDebugging();
         DisposeTests();
+        DisposeLink();
         _agent?.Dispose();
         _device.ThermalChanged -= OnThermalChanged;
         _device.MemoryPressureRaised -= OnMemoryPressure;

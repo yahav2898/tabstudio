@@ -1,8 +1,7 @@
 using System.Globalization;
 using System.Text;
 using TabStudio.Agent;
-using TabStudio.Compilation;
-using TabStudio.Compilation.Building;
+using TabStudio.App.Services.Link;
 using TabStudio.Core.Diagnostics;
 using TabStudio.Core.Workspaces;
 using TabStudio.SourceControl;
@@ -62,28 +61,42 @@ internal sealed class IdeAgentWorkspace(IAgentWorkspaceHost host, IUiDispatcher 
     }
 
     public Task<IReadOnlyList<BuildDiagnostic>> GetDiagnosticsAsync(IReadOnlyDictionary<string, string?> pendingFiles, CancellationToken cancellationToken) =>
-        Snapshot(pendingFiles) is { } snapshot
-            ? snapshot.GetDiagnosticsAsync(cancellationToken)
-            : Task.FromResult<IReadOnlyList<BuildDiagnostic>>([]);
+        host.Language switch
+        {
+            // With TabStudio Link, wherever the workspace is: the linked host, or this device.
+            LinkedLanguageService linked => linked.GetSnapshotDiagnosticsAsync(pendingFiles, cancellationToken),
+            LocalLanguageService local => local.Host.CreateSnapshot(pendingFiles).GetDiagnosticsAsync(cancellationToken),
+            _ => Task.FromResult<IReadOnlyList<BuildDiagnostic>>([]),
+        };
 
     public async Task<string> RunTestsAsync(string? filter, IReadOnlyDictionary<string, string?> pendingFiles, CancellationToken cancellationToken)
     {
-        if (Snapshot(pendingFiles) is not { } snapshot || host.Language is not { } language)
+        var builds = host.Language switch
+        {
+            LinkedLanguageService linked => await linked.BuildSnapshotTestProjectsAsync(pendingFiles, cancellationToken),
+            LocalLanguageService local => await SnapshotBuilds.BuildTestProjectsAsync(local.Host, pendingFiles, cancellationToken),
+            _ => null,
+        };
+        if (builds is null || host.Language is not { } language)
         {
             return "The workspace is still loading.";
         }
 
-        var projects = snapshot.Projects.Where(p => p.IsTestProject).ToList();
-        if (projects.Count == 0)
+        if (builds.Count == 0)
         {
             return "The solution has no test projects.";
         }
 
         var report = new StringBuilder();
         int passed = 0, failed = 0, skipped = 0;
-        foreach (var project in projects)
+        foreach (var (projectFilePath, build) in builds)
         {
-            var build = await new ProjectBuilder(snapshot).BuildAsync(project, cancellationToken);
+            var project = host.Workspace?.Projects.FirstOrDefault(p => string.Equals(p.FilePath, projectFilePath, StringComparison.Ordinal));
+            if (project is null)
+            {
+                continue;
+            }
+
             if (!build.Success)
             {
                 report.Append(CultureInfo.InvariantCulture, $"{project.Name} does not build:\n");
@@ -130,7 +143,4 @@ internal sealed class IdeAgentWorkspace(IAgentWorkspaceHost host, IUiDispatcher 
         });
         return done.Task;
     }
-
-    private WorkspaceSnapshot? Snapshot(IReadOnlyDictionary<string, string?> pendingFiles) =>
-        (host.Language as LocalLanguageService)?.Host.CreateSnapshot(pendingFiles);
 }

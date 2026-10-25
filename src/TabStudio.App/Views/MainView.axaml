@@ -21,5 +21,8 @@
 
     <!-- Signing in to GitHub, from the start screen or the IDE. -->
     <views:GitHubSignInView DataContext="{Binding GitHubAccount}" />
+
+    <!-- TabStudio Link, from the start screen, the File menu or the status bar. -->
+    <views:LinkView DataContext="{Binding Link}" />
   </Panel>
 </UserControl>

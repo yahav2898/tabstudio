@@ -65,7 +65,8 @@ public sealed partial class StartViewModel : ObservableObject, IDisposable
         GitHubImporter gitHub,
         FolderImporter folders,
         IStoragePicker picker,
-        GitHubAccountViewModel gitHubAccount)
+        GitHubAccountViewModel gitHubAccount,
+        LinkViewModel link)
     {
         _recent = recent;
         _samples = samples;
@@ -74,12 +75,16 @@ public sealed partial class StartViewModel : ObservableObject, IDisposable
         _folders = folders;
         _picker = picker;
         GitHubAccount = gitHubAccount;
+        Link = link;
         SelectedTemplate = Templates[0];
         RefreshRecent();
     }
 
     /// <summary>The GitHub account, for opening private repositories.</summary>
     public GitHubAccountViewModel GitHubAccount { get; }
+
+    /// <summary>TabStudio Link, for linking this device to a host or hosting one from the start screen.</summary>
+    public LinkViewModel Link { get; }
 
     /// <summary>Raised when the user chooses a workspace to open, with its path.</summary>
     public event EventHandler<string>? OpenRequested;
