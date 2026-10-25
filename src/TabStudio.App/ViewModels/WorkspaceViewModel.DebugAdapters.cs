@@ -106,6 +106,8 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
     [ObservableProperty]
     public partial LaunchTarget? SelectedLaunchTarget { get; private set; }
 
+    private Task _adapterBreakpointUpdate = Task.CompletedTask;
+
     /// <summary>The exception filters of the debug adapter's session, for the Debug menu.</summary>
     public ObservableCollection<ExceptionFilterOption> ExceptionFilters { get; } = [];
 
@@ -171,7 +173,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
     /// <summary>Sets up debug adapters. Called once, when language servers are set up.</summary>
     private void InitializeDebugAdapters()
     {
-        Breakpoints.Changed += (_, _) => _ = SyncAdapterBreakpointsAsync();
+        Breakpoints.Changed += (_, _) => _adapterBreakpointUpdate = UpdateAdapterBreakpointsAfterAsync(_adapterBreakpointUpdate);
         Locals.Tree.EditValueRequested += async (_, row) => await EditVariableAsync(row);
         Watch.Tree.EditValueRequested += async (_, row) => await EditVariableAsync(row);
         CallStack.ThreadChosen += async (_, thread) => await ShowAdapterThreadAsync(thread.Id);
@@ -475,6 +477,12 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
 
         return session.Adapter.Languages.Count == 0
             || (_languageServers?.Configuration.Registry.FindLanguage(file) is { } language && session.Adapter.Languages.Contains(language.Id, StringComparer.Ordinal));
+    }
+
+    private async Task UpdateAdapterBreakpointsAfterAsync(Task previous)
+    {
+        await previous;
+        await SyncAdapterBreakpointsAsync();
     }
 
     /// <summary>Sends the breakpoints of files that changed to the adapter's session, as the user sets and clears them.</summary>
@@ -822,6 +830,12 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
     private async Task ResumeAdapterAsync(Func<DebugAdapterSession, int, Task> command)
     {
         if (_adapter is not { } session || !IsPaused || _adapterThread is not { } thread)
+        {
+            return;
+        }
+
+        await _adapterBreakpointUpdate;
+        if (!ReferenceEquals(session, _adapter) || !IsPaused)
         {
             return;
         }

@@ -41,7 +41,7 @@ public sealed partial class ToolchainLanguageToolsTests
         Assert.Contains("has exited with code 0", workspace.Output.Text, StringComparison.Ordinal);
         Assert.Contains(workspace.Compatibility, r => r.ToolchainId == "rust" && r.IsReady);
 
-        var line = LineOf(document, "return message");
+        var line = LineOf(document, "let message = format!");
         workspace.Breakpoints.Toggle(document.FilePath, line);
         AnswerInput(workspace, "Ada");
         await workspace.StartDebuggingCommand.ExecuteAsync(null);
@@ -54,6 +54,7 @@ public sealed partial class ToolchainLanguageToolsTests
         await workspace.Watch.AddAsync("answer");
         Assert.Contains(workspace.Watch.Tree.Rows, r => r.Value.Contains("42", StringComparison.Ordinal));
         UiTestHelpers.SaveScreenshot(window, "toolchains-rust-breakpoint");
+        workspace.Breakpoints.Toggle(document.FilePath, line);
         workspace.StartDebuggingCommand.Execute(null);
         await UiTestHelpers.WaitUntilAsync(() => !workspace.IsDebugging, TimeSpan.FromSeconds(60), because: "Rust exit");
         Assert.Contains("Hello, Ada! This is Rust", workspace.Output.Text, StringComparison.Ordinal);

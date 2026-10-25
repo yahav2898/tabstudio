@@ -40,6 +40,7 @@ public static partial class SelfTest
             await workspace.PauseShown.WaitAsync(cancellationToken);
             await WaitForAsync(() => workspace.Locals.Tree.Rows.Any(r => r.Name == localName), TimeSpan.FromMinutes(2), cancellationToken);
             var value = workspace.Locals.Tree.Rows.FirstOrDefault(r => r.Name == localName)?.Value;
+            workspace.Breakpoints.Remove(breakpoint);
             workspace.StartDebuggingCommand.Execute(null);
             await WaitForAsync(() => !workspace.IsDebugging, TimeSpan.FromMinutes(2), cancellationToken);
             var success = value?.Contains(expected, StringComparison.Ordinal) == true
@@ -58,7 +59,7 @@ public static partial class SelfTest
     private static string CompiledDebugFailure(WorkspaceViewModel workspace)
     {
         var lines = workspace.DebugAdapterOutput.Text.Split('\n').Where(l => !string.IsNullOrWhiteSpace(l)).ToList();
-        return LastLines(workspace) + " | Adapter: " + string.Join(" | ", lines.Take(20).Concat(lines.TakeLast(20)).Distinct());
+        return LastLines(workspace) + " | " + workspace.StatusText + " | Locals: " + string.Join(", ", workspace.Locals.Tree.Rows.Select(r => r.Name + "=" + r.Value)) + " | Adapter: " + string.Join(" | ", lines.Take(20).Concat(lines.TakeLast(20)).Distinct());
     }
 
 }
