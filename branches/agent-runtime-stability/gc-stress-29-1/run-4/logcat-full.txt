@@ -1,0 +1,310 @@
+--------- beginning of main
+10-25 11:34:57.995  1936  1966 E memtrack: Couldn't load memtrack module
+10-25 11:34:57.995  1936  1966 W android.os.Debug: failed to get memory consumption info: -1
+10-25 11:35:00.003  2093  2093 D KeyguardClockSwitch: Updating clock: 1135
+10-25 11:35:00.010  7712  7712 I dex2oat : Explicit concurrent copying GC freed 23346(4954KB) AllocSpace objects, 0(0B) LOS objects, 99% free, 424B/1536KB, paused 446us total 15.563ms
+--------- beginning of system
+10-25 11:35:00.207  1936  1957 W Looper  : Slow dispatch took 113ms android.ui h=android.view.Choreographer$FrameHandler c=android.view.Choreographer$FrameDisplayEventReceiver@afb6d3c m=0
+10-25 11:35:00.262  7712  7712 I dex2oat : dex2oat took 5.833s (9.709s cpu) (threads: 3) arena alloc=2000B (2000B) java alloc=16KB (16808B) native alloc=8176KB (8372232B) free=747KB (765944B)
+10-25 11:35:00.266  1761  2749 V installd: DexInv: --- END '/data/app/com.tabstudio.ide-184PXm9mLy9fB3iMmOlYPA==/base.apk' (success) ---
+10-25 11:35:00.268  1936  1981 W PackageManager: Cannot whitelist unknown permission: android.permission.POST_NOTIFICATIONS
+10-25 11:35:00.278  1761  2749 E         : Couldn't opendir /data/app/vmdl1479013088.tmp: No such file or directory
+10-25 11:35:00.278  1761  2749 E installd: Failed to delete /data/app/vmdl1479013088.tmp: No such file or directory
+10-25 11:35:00.270  1936  1936 W Binder:1936_14: type=1400 audit(0.0:58): avc: denied { getopt } for scontext=u:r:system_server:s0 tcontext=u:r:shell:s0 tclass=unix_stream_socket permissive=0
+10-25 11:35:00.281  1936  1981 I ActivityManager: Force stopping com.tabstudio.ide appid=10146 user=0: pkg removed
+10-25 11:35:00.270  1936  1936 I chatty  : uid=1000 system_server identical 1 line
+10-25 11:35:00.270  1936  1936 W Binder:1936_14: type=1400 audit(0.0:60): avc: denied { getopt } for scontext=u:r:system_server:s0 tcontext=u:r:shell:s0 tclass=unix_stream_socket permissive=0
+10-25 11:35:00.293  1936  1966 E memtrack: Couldn't load memtrack module
+10-25 11:35:00.293  1936  1966 W android.os.Debug: failed to get memory consumption info: -1
+10-25 11:35:00.393  1936  2028 I InputReader: Reconfiguring input devices.  changes=0x00000010
+10-25 11:35:00.270  1742  1742 W adbd    : type=1400 audit(0.0:61): avc: denied { shutdown } for scontext=u:r:adbd:s0 tcontext=u:r:shell:s0 tclass=unix_stream_socket permissive=0
+10-25 11:35:00.402  1936  1967 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REMOVED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.android.musicfx/.Compatibility$Receiver
+10-25 11:35:00.403  1936  1967 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REMOVED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.gms/.games.chimera.GamesSystemBroadcastReceiverProxy
+10-25 11:35:00.403  1936  1967 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REMOVED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.gms/.chimera.GmsIntentOperationService$PersistentTrustedReceiver
+10-25 11:35:00.403  1936  1967 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REMOVED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.googlequicksearchbox/com.google.android.apps.gsa.googlequicksearchbox.GelStubAppWatcher
+10-25 11:35:00.403  1936  1967 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.packageinstaller/com.android.packageinstaller.PackageInstalledReceiver
+10-25 11:35:00.403  1936  1967 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.android.musicfx/.Compatibility$Receiver
+10-25 11:35:00.403  1936  1967 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.gms/.games.chimera.GamesSystemBroadcastReceiverProxy
+10-25 11:35:00.404  1936  1966 W system_server: Long monitor contention with owner PackageManager (1981) at int com.android.server.am.ActivityManagerService.broadcastIntent(android.app.IApplicationThread, android.content.Intent, java.lang.String, android.content.IIntentReceiver, int, java.lang.String, android.os.Bundle, java.lang.String[], int, android.os.Bundle, boolean, boolean, int)(ActivityManagerService.java:15557) waiters=1 in void com.android.server.am.ActivityManagerService$5.handleMessage(android.os.Message) for 107ms
+10-25 11:35:00.404  1936  1967 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.gms/.gass.chimera.PackageChangeBroadcastReceiver
+10-25 11:35:00.404  1936  1967 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.gms/.chimera.GmsIntentOperationService$PersistentTrustedReceiver
+10-25 11:35:00.404  1936  1967 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.googlequicksearchbox/com.google.android.apps.gsa.googlequicksearchbox.GelStubAppWatcher
+10-25 11:35:00.404  1936  1967 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.ims/.receivers.RcsAutoStartReceiver
+10-25 11:35:00.404  1936  1967 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REPLACED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.android.musicfx/.Compatibility$Receiver
+10-25 11:35:00.404  1936  1967 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REPLACED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.apps.photos/.account.full.FetchAccountPropertiesAppUpgradeBroadcastReceiver
+10-25 11:35:00.405  1936  1967 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REPLACED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.apps.photos/.account.full.SyncAccountsForLoginBroadcastReceiver
+10-25 11:35:00.405  1936  1967 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REPLACED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.apps.photos/.experiments.phenotype.full.PhenotypeAppUpgradeBroadcastReceiver
+10-25 11:35:00.405  1936  1967 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REPLACED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.apps.photos/.notificationchannels.AppUpdateBroadcastReceiver
+10-25 11:35:00.405  1936  1967 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REPLACED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.gms/.gass.chimera.PackageChangeBroadcastReceiver
+10-25 11:35:00.409  1936  1967 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REPLACED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.gms/.chimera.GmsIntentOperationService$PersistentTrustedReceiver
+10-25 11:35:00.412  2631  3479 E ActivityThread: Failed to find provider info for com.google.android.apps.wellbeing.api
+10-25 11:35:00.428  1936  1967 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REPLACED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.googlequicksearchbox/com.google.android.apps.gsa.googlequicksearchbox.GelStubAppWatcher
+10-25 11:35:00.429  1936  1966 E memtrack: Couldn't load memtrack module
+10-25 11:35:00.429  1936  1966 W android.os.Debug: failed to get memory consumption info: -1
+10-25 11:35:00.430  1936  1967 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_REPLACED dat=package:com.tabstudio.ide flg=0x4000010 (has extras) } to com.google.android.ims/.receivers.RcsAutoStartReceiver
+10-25 11:35:00.514  1936  3040 I ActivityTaskManager: START u0 {flg=0x10000000 cmp=com.tabstudio.ide/.MainActivity (has extras)} from uid 2000
+10-25 11:35:00.545  1936  2036 W InputReader: Device has associated, but no associated display id.
+10-25 11:35:00.551  1936  2036 I chatty  : uid=1000(system) Binder:1936_4 identical 18 lines
+10-25 11:35:00.551  1936  2036 W InputReader: Device has associated, but no associated display id.
+10-25 11:35:00.552  1936  1960 E system_server: Invalid ID 0x00000000.
+10-25 11:35:00.608  1703  1781 D gralloc_ranchu: gralloc_alloc: Creating ashmem region of size 18436096
+10-25 11:35:00.649  1685  1685 D Zygote  : Forked child process 7731
+10-25 11:35:00.652  1936  1968 W ActivityManager: Slow operation: 62ms so far, now at startProcess: returned from zygote!
+10-25 11:35:00.676  1936  1968 W ActivityManager: Slow operation: 86ms so far, now at startProcess: done updating battery stats
+10-25 11:35:00.676  1936  1968 W ActivityManager: Slow operation: 86ms so far, now at startProcess: building log message
+10-25 11:35:00.676  1936  1968 I ActivityManager: Start proc 7731:com.tabstudio.ide/u0a146 for activity {com.tabstudio.ide/com.tabstudio.ide.MainActivity}
+10-25 11:35:00.676  1936  1968 W ActivityManager: Slow operation: 86ms so far, now at startProcess: starting to update pids map
+10-25 11:35:00.676  1936  1968 W ActivityManager: Slow operation: 86ms so far, now at startProcess: done updating pids map
+10-25 11:35:00.676  2963  3302 I MicroDetector: Keeping mic open: false
+10-25 11:35:00.677  2963  3354 I MicroRecognitionRunner: Stopping hotword detection.
+10-25 11:35:00.679  2963  6310 I AudioController: internalShutdown
+10-25 11:35:00.687  2963  7295 I DeviceStateChecker: DeviceStateChecker cancelled
+10-25 11:35:00.694  1936  1958 I DropBoxManagerService: add tag=system_server_strictmode isTagEnabled=true flags=0x2
+10-25 11:35:00.721  2963  6310 I MicrophoneInputStream: mic_close  SR : 16000 CC : 16 SO : 1999
+10-25 11:35:00.729  2963  6310 E AudioSource: Stop listening is called on already closed AudioSource
+10-25 11:35:00.754  2963  7290 I MicroRecognitionRunner: Detection finished
+10-25 11:35:00.769  7731  7731 W m.tabstudio.id: Unexpected CPU variant for X86 using defaults: x86_64
+10-25 11:35:00.709  1936  1958 I chatty  : uid=1000(system) android.io identical 6 lines
+10-25 11:35:00.710  1936  1958 I DropBoxManagerService: add tag=system_server_strictmode isTagEnabled=true flags=0x2
+10-25 11:35:00.811  1936  1936 W Looper  : Slow dispatch took 379ms main h=android.app.ActivityThread$H c=android.app.-$$Lambda$LoadedApk$ReceiverDispatcher$Args$_BumDX2UKsnxLVrE6UJsJZkotuA@99b765 m=0
+10-25 11:35:00.842  2082  7729 I Fitness : FitCleanupIntentOperation received Intent android.intent.action.PACKAGE_REMOVED [CONTEXT service_id=17 ]
+10-25 11:35:00.877  2283  7739 I Auth    : [SupervisedAccountIntentOperation] onHandleIntent(): android.intent.action.PACKAGE_ADDED
+10-25 11:35:00.877  2283  7739 I Auth    : [SupervisedAccountIntentOperation] This operation is disabled
+10-25 11:35:00.925  2283  7760 I ChromeSync: [Sync,SyncIntentOperation] Handling the intent: Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.tabstudio.ide flg=0x4000010 cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+10-25 11:35:00.960  1936  1936 W Looper  : Slow delivery took 513ms main h=android.app.ActivityThread$H c=android.app.-$$Lambda$LoadedApk$ReceiverDispatcher$Args$_BumDX2UKsnxLVrE6UJsJZkotuA@b64b206 m=0
+10-25 11:35:00.961  1936  1936 W Looper  : Slow dispatch took 104ms main h=android.app.ActivityThread$H c=android.app.-$$Lambda$LoadedApk$ReceiverDispatcher$Args$_BumDX2UKsnxLVrE6UJsJZkotuA@b64b206 m=0
+10-25 11:35:00.969  1936  3161 W system_server: Long monitor contention with owner Binder:1936_4 (2036) at android.content.ComponentName com.android.server.am.ActivityManagerService.startService(android.app.IApplicationThread, android.content.Intent, java.lang.String, boolean, java.lang.String, int)(ActivityManagerService.java:13909) waiters=3 in android.content.ComponentName com.android.server.am.ActivityManagerService.startService(android.app.IApplicationThread, android.content.Intent, java.lang.String, boolean, java.lang.String, int) for 118ms
+10-25 11:35:00.987  6862  7719 I ProvidersCache: Provider returned no roots. Possibly naughty: com.google.android.apps.docs.storage
+10-25 11:35:01.002  2082  2102 I .gms.persisten: Background young concurrent copying GC freed 73884(4320KB) AllocSpace objects, 14(436KB) LOS objects, 31% free, 9972KB/14MB, paused 50.863ms total 514.083ms
+10-25 11:35:01.051  1936  1957 W Looper  : Slow dispatch took 506ms android.ui h=android.view.Choreographer$FrameHandler c=android.view.Choreographer$FrameDisplayEventReceiver@afb6d3c m=0
+10-25 11:35:01.064  1936  1957 W Looper  : Slow delivery took 507ms android.ui h=com.android.server.wm.BarController$BarHandler c=com.android.server.wm.-$$Lambda$StatusBarController$1$x4q7e0Eysf0ynMSdT1A-JN_ucuI@d0db458 m=0
+10-25 11:35:01.075  1936  1936 W Looper  : Slow dispatch took 114ms main h=android.app.ActivityThread$H c=android.app.-$$Lambda$LoadedApk$ReceiverDispatcher$Args$_BumDX2UKsnxLVrE6UJsJZkotuA@ee5ab66 m=0
+10-25 11:35:01.075  1936  1936 I Telecom : DefaultDialerCache: Refreshing default dialer for user 0: now com.android.dialer: CM.CCCR->CM.UECNT->CM.CCCR->CM.UECNT@AEI
+10-25 11:35:01.081  1936  1948 I system_server: Background young concurrent copying GC freed 67273(4111KB) AllocSpace objects, 27(1648KB) LOS objects, 27% free, 12MB/16MB, paused 6.634ms total 506.520ms
+10-25 11:35:01.083  2423  2423 D CarrierSvcBindHelper: No carrier app for: 0
+10-25 11:35:01.116  1936  1936 V BackupManagerConstants: getFullBackupIntervalMilliseconds(...) returns 86400000
+10-25 11:35:01.116  1936  1936 V BackupManagerConstants: getFullBackupRequiredNetworkType(...) returns 2
+10-25 11:35:01.116  1936  1936 V BackupManagerConstants: getFullBackupRequireCharging(...) returns true
+10-25 11:35:01.118  1936  3362 W ActivityManager: Unable to start service Intent { act=com.google.android.gms.auth.key.retrieval.service.START pkg=com.google.android.gms } U=0: not found
+10-25 11:35:01.126  2423  2423 D CarrierSvcBindHelper: No carrier app for: 0
+10-25 11:35:01.136  1936  2808 W InputReader: Device has associated, but no associated display id.
+10-25 11:35:01.172  1936  2808 W ActivityManager: Slow operation: 53ms so far, now at attachApplicationLocked: after mServices.attachApplicationLocked
+10-25 11:35:01.164  1936  2808 I chatty  : uid=1000(system) Binder:1936_D identical 28 lines
+10-25 11:35:01.164  1936  2808 W InputReader: Device has associated, but no associated display id.
+10-25 11:35:01.182  1936  1960 W InputReader: Device has associated, but no associated display id.
+10-25 11:35:01.196  1936  1957 W Looper  : Slow dispatch took 129ms android.ui h=com.android.server.am.ActivityManagerService$UiHandler c=null m=53
+10-25 11:35:01.196  1936  1957 W Looper  : Drained
+10-25 11:35:01.205  1936  6132 W ActivityManager: Unbind failed: could not find connection for android.os.BinderProxy@a14c13e
+10-25 11:35:01.206  1936  1936 W Looper  : Slow dispatch took 123ms main h=android.app.ActivityThread$H c=android.app.-$$Lambda$LoadedApk$ReceiverDispatcher$Args$_BumDX2UKsnxLVrE6UJsJZkotuA@917b34a m=0
+10-25 11:35:01.208  1936  1936 W Looper  : Drained
+10-25 11:35:01.184  1936  1960 I chatty  : uid=1000(system) android.anim identical 18 lines
+10-25 11:35:01.184  1936  1960 W InputReader: Device has associated, but no associated display id.
+10-25 11:35:01.209  2283  3238 E GmsClient: unable to connect to service: com.google.android.gms.auth.key.retrieval.service.START on com.google.android.gms
+10-25 11:35:01.227  2423  2423 D CarrierConfigLoader: mHandler: 9 phoneId: 0
+10-25 11:35:01.232  2963  3420 D EGL_emulation: eglMakeCurrent: 0xe2f1b3e0: ver 3 0 (tinfo 0xe2f0fb60)
+10-25 11:35:01.256  2631  3177 D EGL_emulation: eglMakeCurrent: 0x76421f023e80: ver 3 0 (tinfo 0x76421ef7b3c0)
+10-25 11:35:01.379  6862  7690 I ProvidersCache: Provider returned no roots. Possibly naughty: com.google.android.apps.docs.storage
+10-25 11:35:01.387  1936  1957 W Looper  : Slow dispatch took 125ms android.ui h=android.view.Choreographer$FrameHandler c=android.view.Choreographer$FrameDisplayEventReceiver@afb6d3c m=0
+10-25 11:35:01.459  1936  2036 W system_server: Long monitor contention with owner Binder:1936_1D (3362) at android.content.ComponentName com.android.server.am.ActivityManagerService.startService(android.app.IApplicationThread, android.content.Intent, java.lang.String, boolean, java.lang.String, int)(ActivityManagerService.java:13909) waiters=2 in void com.android.server.am.ActivityManagerService.serviceDoneExecuting(android.os.IBinder, int, int, int) for 115ms
+10-25 11:35:01.464  7731  7731 D DOTNET  : AndroidCryptoNative_InitLibraryOnLoad: jint AndroidCryptoNative_InitLibraryOnLoad(JavaVM *, void *) in /__w/1/s/src/runtime/src/native/libs/System.Security.Cryptography.Native.Android/pal_jni.c
+10-25 11:35:01.464  7731  7731 D DOTNET  : GetOptionalClassGRef: optional class com/android/org/conscrypt/OpenSSLEngineImpl was not found
+10-25 11:35:01.622  2283  7743 I FontLog : Package com.tabstudio.ide has no metadata [CONTEXT service_id=132 ]
+10-25 11:35:01.676  1936  1966 E memtrack: Couldn't load memtrack module
+10-25 11:35:01.676  1936  1966 W android.os.Debug: failed to get memory consumption info: -1
+10-25 11:35:01.689  2283  7760 I ChromeSync: [Persistence,AffiliationManager] One of affiliation or grouping data for android://mkdwoQtQN7sPxkTarv_-v91Ov_3XZeQbSD0aJh1c2bTmOBWhZwDUEPwKRjeiPe7qOiAkxbXyarXRD6xfByJDXQ==@com.tabstudio.ide/ was not found. Marking affiliation data as stale...
+10-25 11:35:01.701  1936  1957 W Looper  : Slow dispatch took 189ms android.ui h=android.view.Choreographer$FrameHandler c=android.view.Choreographer$FrameDisplayEventReceiver@afb6d3c m=0
+10-25 11:35:01.973  1936  1953 W system_server: Long monitor contention with owner NetworkPolicy.uid (2040) at void com.android.server.net.NetworkPolicyManagerService.handleUidChanged(int, int, long)(NetworkPolicyManagerService.java:4600) waiters=0 in boolean com.android.server.net.NetworkPolicyManagerService$NetworkPolicyManagerInternalImpl.isUidNetworkingBlocked(int, java.lang.String) for 658ms
+10-25 11:35:02.087  2283  5619 I Icing   : IndexChimeraService.getServiceInterface callingPackage=com.google.android.gms componentName=AppsCorpus serviceId=36
+10-25 11:35:02.138  1732  2026 E SurfaceFlinger: ro.sf.lcd_density must be defined as a build property
+10-25 11:35:02.138  1732  2026 E SurfaceFlinger: ro.sf.lcd_density must be defined as a build property
+10-25 11:35:02.140  7731  7779 D libEGL  : Emulator has host GPU support, qemu.gles is set to 1.
+10-25 11:35:02.140  7731  7779 W libc    : Unable to set property "qemu.gles" to "1": connection failed; errno=13 (Permission denied)
+10-25 11:35:02.154  7731  7779 D libEGL  : loaded /vendor/lib64/egl/libEGL_emulation.so
+10-25 11:35:02.158  7731  7779 D libEGL  : loaded /vendor/lib64/egl/libGLESv1_CM_emulation.so
+10-25 11:35:02.160  7731  7779 D libEGL  : loaded /vendor/lib64/egl/libGLESv2_emulation.so
+10-25 11:35:02.188  2283  7775 W Icing   : No valid account for uploading user actions
+10-25 11:35:02.130  7731  7731 W RenderThread: type=1400 audit(0.0:62): avc: denied { write } for name="property_service" dev="tmpfs" ino=7425 scontext=u:r:untrusted_app:s0:c146,c256,c512,c768 tcontext=u:object_r:property_socket:s0 tclass=sock_file permissive=0 app=com.tabstudio.ide
+10-25 11:35:02.216  2283  2737 I Icing   : IndexChimeraService.getServiceInterface callingPackage=com.google.android.gms componentName=null serviceId=30
+10-25 11:35:02.415  2283  7775 I Icing   : Usage reports ok 1, Failed Usage reports 0, indexed 0, rejected 0
+10-25 11:35:02.435  2283  7775 W Icing   : No valid account for uploading user actions
+10-25 11:35:02.464  2283  7775 I Icing   : Usage reports ok 0, Failed Usage reports 0, indexed 0, rejected 0
+10-25 11:35:02.692  7731  7731 D AppCompatDelegate: Checking for metadata for AppLocalesMetadataHolderService : Service not found
+10-25 11:35:02.710  1936  1967 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.DROPBOX_ENTRY_ADDED flg=0x10 (has extras) } to com.google.android.gms/.stats.service.DropBoxEntryAddedReceiver
+10-25 11:35:02.710  1936  1967 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.DROPBOX_ENTRY_ADDED flg=0x10 (has extras) } to com.google.android.gms/.chimera.GmsIntentOperationService$PersistentTrustedReceiver
+10-25 11:35:03.381  1936  1966 E memtrack: Couldn't load memtrack module
+10-25 11:35:03.381  1936  1966 W android.os.Debug: failed to get memory consumption info: -1
+10-25 11:35:03.433  2283  7775 I Icing   : Indexing com.google.android.gms-apps from com.google.android.gms
+10-25 11:35:03.459  2283  7760 I Vision  : Requesting optional module download of ocr.
+10-25 11:35:03.459  2283  7760 I Vision  : Checking for download completion for 178932 -- ocr
+10-25 11:35:03.751  2283  7775 I Icing   : Indexing done com.google.android.gms-apps
+10-25 11:35:03.751  2283  7775 I Icing   : Indexing com.google.android.gms-internal.3p:MobileApplication from com.google.android.gms
+10-25 11:35:03.758  2283  7775 I Icing   : Indexing done com.google.android.gms-internal.3p:MobileApplication
+10-25 11:35:03.832  7731  7731 D HostConnection: HostConnection::get() New Host Connection established 0x76426a05d9c0, tid 7731
+10-25 11:35:03.837  7731  7731 D HostConnection: HostComposition ext ANDROID_EMU_CHECKSUM_HELPER_v1 ANDROID_EMU_native_sync_v2 ANDROID_EMU_dma_v1 ANDROID_EMU_direct_mem ANDROID_EMU_host_composition_v1 ANDROID_EMU_host_composition_v2 ANDROID_EMU_vulkan ANDROID_EMU_deferred_vulkan_commands ANDROID_EMU_vulkan_null_optional_strings ANDROID_EMU_vulkan_create_resources_with_requirements ANDROID_EMU_YUV_Cache ANDROID_EMU_vulkan_ignored_handles ANDROID_EMU_vulkan_free_memory_sync ANDROID_EMU_vulkan_shader_float16_int8 ANDROID_EMU_vulkan_async_queue_submit ANDROID_EMU_sync_buffer_data ANDROID_EMU_vulkan_async_qsri ANDROID_EMU_hwc_color_transform GL_OES_EGL_image_external_essl3 GL_OES_vertex_array_object GL_KHR_texture_compression_astc_ldr ANDROID_EMU_host_side_tracing ANDROID_EMU_gles_max_version_3_0 
+10-25 11:35:04.619  7731  7782 D HostConnection: HostConnection::get() New Host Connection established 0x76421190c640, tid 7782
+10-25 11:35:04.620  7731  7782 D HostConnection: HostComposition ext ANDROID_EMU_CHECKSUM_HELPER_v1 ANDROID_EMU_native_sync_v2 ANDROID_EMU_dma_v1 ANDROID_EMU_direct_mem ANDROID_EMU_host_composition_v1 ANDROID_EMU_host_composition_v2 ANDROID_EMU_vulkan ANDROID_EMU_deferred_vulkan_commands ANDROID_EMU_vulkan_null_optional_strings ANDROID_EMU_vulkan_create_resources_with_requirements ANDROID_EMU_YUV_Cache ANDROID_EMU_vulkan_ignored_handles ANDROID_EMU_vulkan_free_memory_sync ANDROID_EMU_vulkan_shader_float16_int8 ANDROID_EMU_vulkan_async_queue_submit ANDROID_EMU_sync_buffer_data ANDROID_EMU_vulkan_async_qsri ANDROID_EMU_hwc_color_transform GL_OES_EGL_image_external_essl3 GL_OES_vertex_array_object GL_KHR_texture_compression_astc_ldr ANDROID_EMU_host_side_tracing ANDROID_EMU_gles_max_version_3_0 
+10-25 11:35:04.627  7731  7782 D EGL_emulation: eglCreateContext: 0x76421190c5a0: maj 3 min 0 rcv 3
+10-25 11:35:04.639  7731  7782 D EGL_emulation: eglMakeCurrent: 0x76421190c5a0: ver 3 0 (tinfo 0x7642116cbca0)
+10-25 11:35:05.418  2631  3479 E ActivityThread: Failed to find provider info for com.google.android.apps.wellbeing.api
+10-25 11:35:04.776  7731  7782 D EGL_emulation: eglMakeCurrent: 0x76421190c5a0: ver 3 0 (tinfo 0x7642116cbca0)
+10-25 11:35:08.505  7731  7731 I m.tabstudio.id: Explicit concurrent copying GC freed 169(94KB) AllocSpace objects, 0(0B) LOS objects, 29% free, 1226KB/1738KB, paused 406us total 3.326ms
+10-25 11:35:10.437  2283  7226 W ChimeraConfigurator: Error syncing flags: qoq: COMMIT_TIMEOUT
+10-25 11:35:10.437  2283  7226 I ChmraDebugLogger: [79] COMMIT_TIMEOUT
+10-25 11:35:10.461  2283  7226 I ChmraDebugLogger: [52] null
+10-25 11:35:10.491  2283  7226 I ChimeraConfigService: Scheduling checkin for one-off execution between [3300,43200] seconds from now (1792928110491)
+10-25 11:35:10.540  1936  1959 W ActivityTaskManager: Launch timeout has expired, giving up wake lock!
+10-25 11:35:10.565  2283  7072 W gle.android.gm: Long monitor contention with owner [com.google.android.gms.chimera.GmsIntentOperationService$ChimeraService-Executor] processing qlx for action com.google.android.chimera.container.REQUESTED_FEATURES_CHANGED (7226) at void java.lang.Thread.sleep(java.lang.Object, long, int)(Thread.java:-2) waiters=0 in boolean qmo.a(int, qmh, java.util.List, qmn) for 25.590s
+10-25 11:35:10.565  2283  7072 I ChimeraConfigurator: Starting update, reason: 1 urgentFeatures: 
+10-25 11:35:10.615  2283  7072 I ChmraDebugLogger: [52] null
+10-25 11:35:10.623  2283  7072 W ChimeraConfigService: Retry attempt was throttled.
+10-25 11:35:10.649  2283  7072 I ChimeraConfigService: Scheduling checkin every 43200 seconds, with flex of 1800 seconds
+10-25 11:35:11.090  1936  1966 E memtrack: Couldn't load memtrack module
+10-25 11:35:11.090  1936  1966 W android.os.Debug: failed to get memory consumption info: -1
+10-25 11:35:11.193  1936  1966 E memtrack: Couldn't load memtrack module
+10-25 11:35:11.193  1936  1966 W android.os.Debug: failed to get memory consumption info: -1
+10-25 11:35:11.238  2963  6310 I PBSessionCacheImpl: Deleted sessionId[86648756563] from persistence.
+10-25 11:35:11.292  2963  3302 W SearchServiceCore: Abort, client detached.
+10-25 11:35:11.343  1936  1957 W Looper  : Slow dispatch took 169ms android.ui h=android.view.Choreographer$FrameHandler c=android.view.Choreographer$FrameDisplayEventReceiver@afb6d3c m=0
+10-25 11:35:11.478  2283  7775 I TelephonySpam: TelephonySpamChimeraService - Running Telephony Spam Chimera Service
+10-25 11:35:11.500  2082  6655 W .gms.persisten: Long monitor contention with owner netscheduler-queue-handler (4158) at int aqtk.a(aqte, aauy)(:com.google.android.gms@202414023@20.24.14 (040800-319035315):88) waiters=0 in int aqtk.c(aqqo) for 388ms
+10-25 11:35:11.636  2082  2102 I .gms.persisten: Background concurrent copying GC freed 110952(5181KB) AllocSpace objects, 16(476KB) LOS objects, 41% free, 8633KB/14MB, paused 565us total 131.516ms
+10-25 11:35:12.243  7731  7731 I m.tabstudio.id: Explicit concurrent copying GC freed 139(26KB) AllocSpace objects, 0(0B) LOS objects, 29% free, 1231KB/1743KB, paused 1.569ms total 8.136ms
+10-25 11:35:12.268  7731  7731 E         : All objects remaining in the nursery must be pinned
+10-25 11:35:12.268  7731  7731 F monodroid: All objects remaining in the nursery must be pinned
+10-25 11:35:12.269  7731  7731 F monodroid: Abort at mono-log-adapter.cc:46:3 ('static void xamarin::android::internal::MonodroidRuntime::mono_log_handler(const char *, const char *, const char *, mono_bool, void *)')
+--------- beginning of crash
+10-25 11:35:12.269  7731  7731 F libc    : Fatal signal 6 (SIGABRT), code -1 (SI_QUEUE) in tid 7731 (m.tabstudio.ide), pid 7731 (m.tabstudio.ide)
+10-25 11:35:12.312  7791  7791 I crash_dump64: obtaining output fd from tombstoned, type: kDebuggerdTombstone
+10-25 11:35:12.313  1794  1794 I /system/bin/tombstoned: received crash request for pid 7731
+10-25 11:35:12.313  7791  7791 I crash_dump64: performing dump of process 7731 (target tid = 7731)
+10-25 11:35:12.320  7791  7791 F DEBUG   : *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+10-25 11:35:12.320  7791  7791 F DEBUG   : Build fingerprint: 'google/sdk_gphone_x86_64/generic_x86_64:10/QSR1.211112.011/13135432:userdebug/dev-keys'
+10-25 11:35:12.320  7791  7791 F DEBUG   : Revision: '0'
+10-25 11:35:12.323  7791  7791 F DEBUG   : ABI: 'x86_64'
+10-25 11:35:12.324  7791  7791 F DEBUG   : Timestamp: 2026-10-25 11:35:12+0000
+10-25 11:35:12.324  7791  7791 F DEBUG   : pid: 7731, tid: 7731, name: m.tabstudio.ide  >>> com.tabstudio.ide <<<
+10-25 11:35:12.324  7791  7791 F DEBUG   : uid: 10146
+10-25 11:35:12.324  7791  7791 F DEBUG   : signal 6 (SIGABRT), code -1 (SI_QUEUE), fault addr --------
+10-25 11:35:12.324  7791  7791 F DEBUG   : Abort message: 'All objects remaining in the nursery must be pinned'
+10-25 11:35:12.324  7791  7791 F DEBUG   :     rax 0000000000000000  rbx 0000000000001e33  rcx 00007642f785f3f8  rdx 0000000000000006
+10-25 11:35:12.324  7791  7791 F DEBUG   :     r8  0000764216f23179  r9  0000000000000000  r10 00007fffb5f7ed40  r11 0000000000000246
+10-25 11:35:12.324  7791  7791 F DEBUG   :     r12 0000764216f23179  r13 000076420e9b1340  r14 00007fffb5f7edc8  r15 0000000000001e33
+10-25 11:35:12.324  7791  7791 F DEBUG   :     rdi 0000000000001e33  rsi 0000000000001e33
+10-25 11:35:12.324  7791  7791 F DEBUG   :     rbp 00007fffb5f7f030  rsp 00007fffb5f7ed38  rip 00007642f785f3f8
+10-25 11:35:12.324  7791  7791 F DEBUG   : 
+10-25 11:35:12.324  7791  7791 F DEBUG   : backtrace:
+10-25 11:35:12.324  7791  7791 F DEBUG   :       #00 pc 00000000000943f8  /apex/com.android.runtime/lib64/bionic/libc.so (syscall+24) (BuildId: b5c6019a3b4ea61b5e9a2f56319b584e)
+10-25 11:35:12.324  7791  7791 F DEBUG   :       #01 pc 0000000000097146  /apex/com.android.runtime/lib64/bionic/libc.so (abort+182) (BuildId: b5c6019a3b4ea61b5e9a2f56319b584e)
+10-25 11:35:12.324  7791  7791 F DEBUG   :       #02 pc 00000000000b30af  /data/app/com.tabstudio.ide-184PXm9mLy9fB3iMmOlYPA==/lib/x86_64/libmonodroid.so (xamarin::android::Helpers::abort_application(_LogCategories, char const*, bool, std::__ndk1::source_location)+767) (BuildId: d3370263a3d5aba8cc143ea0be7afdd2a4ce251e)
+10-25 11:35:12.762  1794  1794 E /system/bin/tombstoned: Tombstone written to: /data/tombstones/tombstone_03
+10-25 11:35:12.779  1936  1975 I BootReceiver: Copying /data/tombstones/tombstone_03 to DropBox (SYSTEM_TOMBSTONE)
+10-25 11:35:12.788  1936  1975 I DropBoxManagerService: add tag=SYSTEM_TOMBSTONE isTagEnabled=true flags=0x2
+10-25 11:35:12.789  1936  7798 W ActivityTaskManager:   Force finishing activity com.tabstudio.ide/.MainActivity
+10-25 11:35:12.789  1936  7799 I DropBoxManagerService: add tag=data_app_native_crash isTagEnabled=true flags=0x2
+10-25 11:35:12.790  1936  7798 W InputReader: Device has associated, but no associated display id.
+10-25 11:35:12.801  1936  1967 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.DROPBOX_ENTRY_ADDED flg=0x10 (has extras) } to com.google.android.gms/.stats.service.DropBoxEntryAddedReceiver
+10-25 11:35:12.801  1936  1967 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.DROPBOX_ENTRY_ADDED flg=0x10 (has extras) } to com.google.android.gms/.chimera.GmsIntentOperationService$PersistentTrustedReceiver
+10-25 11:35:12.790  1936  7798 I chatty  : uid=1000(system) NativeCrashRepo identical 8 lines
+10-25 11:35:12.790  1936  7798 W InputReader: Device has associated, but no associated display id.
+10-25 11:35:12.813  1936  1966 E memtrack: Couldn't load memtrack module
+10-25 11:35:12.813  1936  1966 W android.os.Debug: failed to get memory consumption info: -1
+10-25 11:35:12.859  1936  1967 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.DROPBOX_ENTRY_ADDED flg=0x10 (has extras) } to com.google.android.gms/.stats.service.DropBoxEntryAddedReceiver
+10-25 11:35:12.859  1936  1967 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.DROPBOX_ENTRY_ADDED flg=0x10 (has extras) } to com.google.android.gms/.chimera.GmsIntentOperationService$PersistentTrustedReceiver
+10-25 11:35:12.864  1936  2398 I ActivityManager: Process com.tabstudio.ide (pid 7731) has died: vis+99 TOP 
+10-25 11:35:12.864  1685  1685 I Zygote  : Process 7731 exited due to signal 6 (Aborted)
+10-25 11:35:12.864  1936  1969 I libprocessgroup: Successfully killed process cgroup uid 10146 pid 7731 in 0ms
+10-25 11:35:12.869  1936  2398 W InputReader: Device has associated, but no associated display id.
+10-25 11:35:12.879  1936  1957 W Looper  : Slow dispatch took 124ms android.ui h=android.view.Choreographer$FrameHandler c=android.view.Choreographer$FrameDisplayEventReceiver@afb6d3c m=0
+10-25 11:35:12.898  1936  1957 I ActivityManager: Showing crash dialog for package com.tabstudio.ide u0
+10-25 11:35:12.908  1936  1960 W WindowManager: Failed looking up window callers=com.android.server.wm.WindowManagerService.windowForClientLocked:5281 com.android.server.wm.WindowManagerService.removeWindow:1753 com.android.server.wm.Session.remove:176 
+10-25 11:35:12.873  1936  2398 I chatty  : uid=1000(system) Binder:1936_9 identical 38 lines
+10-25 11:35:12.873  1936  2398 W InputReader: Device has associated, but no associated display id.
+10-25 11:35:12.908  1703  1781 D gralloc_ranchu: gralloc_alloc: Creating ashmem region of size 18436096
+10-25 11:35:12.921  1703  1774 D gralloc_ranchu: gralloc_alloc: Creating ashmem region of size 18436096
+10-25 11:35:12.926  2963  3420 D EGL_emulation: eglMakeCurrent: 0xe2f1b3e0: ver 3 0 (tinfo 0xe2f0fb60)
+10-25 11:35:12.942  1703  1703 D gralloc_ranchu: gralloc_alloc: Creating ashmem region of size 18436096
+10-25 11:35:12.979  1703  1703 I chatty  : uid=1000(system) allocator@2.0-s identical 2 lines
+10-25 11:35:12.980  1703  1703 D gralloc_ranchu: gralloc_alloc: Creating ashmem region of size 18436096
+10-25 11:35:12.981  2631  3177 D EGL_emulation: eglMakeCurrent: 0x76421f023e80: ver 3 0 (tinfo 0x76421ef7b3c0)
+10-25 11:35:13.029  1936  1957 W Looper  : Slow dispatch took 147ms android.ui h=com.android.server.am.ActivityManagerService$UiHandler c=null m=1
+10-25 11:35:13.029  1936  1957 W Looper  : Slow delivery took 224ms android.ui h=android.graphics.SurfaceTexture$1 c=null m=0
+10-25 11:35:13.053  2963  2963 W ThreadPoolDumper: Queue length for executor EventBus is now 11. Perhaps some tasks are too long, or the pool is too small.
+10-25 11:35:13.054  2963  3302 W SessionLifecycleManager: Handover failed. Creating new session controller.
+10-25 11:35:13.061  1936  1960 W InputReader: Device has associated, but no associated display id.
+10-25 11:35:13.076  1936  1936 W ActivityManager: Unable to start service Intent { act=android.service.appprediction.AppPredictionService cmp=com.google.android.as/com.google.android.apps.miphone.aiai.app.AiAiPredictionService } U=0: not found
+10-25 11:35:13.076  1936  1936 W RemoteAppPredictionService: could not bind to Intent { act=android.service.appprediction.AppPredictionService cmp=com.google.android.as/com.google.android.apps.miphone.aiai.app.AiAiPredictionService } using flags 67108865
+10-25 11:35:13.061  1936  1960 I chatty  : uid=1000(system) android.anim identical 8 lines
+10-25 11:35:13.061  1936  1960 W InputReader: Device has associated, but no associated display id.
+10-25 11:35:13.095  1703  1703 D gralloc_ranchu: gralloc_alloc: Creating ashmem region of size 2666496
+10-25 11:35:13.102  1703  1703 D gralloc_ranchu: gralloc_alloc: Creating ashmem region of size 2666496
+10-25 11:35:13.106  1703  1781 D gralloc_ranchu: gralloc_alloc: Creating ashmem region of size 2666496
+10-25 11:35:13.107  1936  3462 D EGL_emulation: eglMakeCurrent: 0x76420ad6c020: ver 3 0 (tinfo 0x76420ad92640)
+10-25 11:35:13.135  1936  3462 D EGL_emulation: eglMakeCurrent: 0x76420ad6c020: ver 3 0 (tinfo 0x76420ad92640)
+10-25 11:35:13.237  2963  3302 I MicroDetectionWorker: #startMicroDetector [speakerMode: 0]
+10-25 11:35:13.246  2963  3302 I AudioController: Created new AudioSource
+10-25 11:35:13.248  2963  3302 I MicroDetectionWorker: onReady
+10-25 11:35:13.293  1936  1959 W ActivityTaskManager: Activity top resumed state loss timeout for ActivityRecord{29a7df7 u0 com.tabstudio.ide/.MainActivity t-1 f}
+10-25 11:35:13.298  2963  3412 I MicroRecognitionRunner: Starting detection.
+10-25 11:35:13.299  2963  3412 I MultipleReaderAudioSrc: Using micInputStream
+10-25 11:35:13.300  2963  6310 I MicrophoneInputStream: mic_starting  SR : 16000 CC : 16 SO : 1999
+10-25 11:35:13.363  1729  7806 I AudioFlinger: AudioFlinger's thread 0x7f144f5b6980 tid=7806 ready to run
+10-25 11:35:13.386  1936  3462 D EGL_emulation: eglMakeCurrent: 0x76420ad6c020: ver 3 0 (tinfo 0x76420ad92640)
+10-25 11:35:13.387  1936  1957 W Looper  : Slow dispatch took 240ms android.ui h=android.view.Choreographer$FrameHandler c=android.view.Choreographer$FrameDisplayEventReceiver@afb6d3c m=0
+10-25 11:35:13.416  1936  3462 D EGL_emulation: eglMakeCurrent: 0x76420ad6c020: ver 3 0 (tinfo 0x76420ad92640)
+10-25 11:35:13.434  2963  6310 I MicrophoneInputStream: mic_started  SR : 16000 CC : 16 SO : 1999
+10-25 11:35:13.446  1936  3357 I AudioService.RecordingActivityMonitor: rec update riid:63 uid:10122 session:41 src:HOTWORD pack:com.google.android.googlequicksearchbox
+10-25 11:35:13.467  2963  3302 I MicroDetectionWorker: onReady
+10-25 11:35:13.468  1936  1967 I ActivityManager: Killing 5318:com.google.android.gm/u0a139 (adj 985): empty #17
+10-25 11:35:13.481  2283  7226 I Vision  : Requesting optional module download of ocr.
+10-25 11:35:13.484  2283  7226 I Vision  : Checking for download completion for 188957 -- ocr
+10-25 11:35:13.528  1685  1685 I Zygote  : Process 5318 exited due to signal 9 (Killed)
+10-25 11:35:13.533  1936  1957 W Looper  : Slow dispatch took 133ms android.ui h=android.view.Choreographer$FrameHandler c=android.view.Choreographer$FrameDisplayEventReceiver@afb6d3c m=0
+10-25 11:35:13.572  1936  1969 I libprocessgroup: Successfully killed process cgroup uid 10139 pid 5318 in 94ms
+10-25 11:35:13.846  1936  1957 W Looper  : Slow dispatch took 301ms android.ui h=android.view.Choreographer$FrameHandler c=android.view.Choreographer$FrameDisplayEventReceiver@afb6d3c m=0
+10-25 11:35:13.885  1936  1957 W Looper  : Drained
+10-25 11:35:14.484  1936  1957 W Looper  : Slow dispatch took 301ms android.ui h=android.view.Choreographer$FrameHandler c=android.view.Choreographer$FrameDisplayEventReceiver@afb6d3c m=0
+10-25 11:35:14.706  1936  1957 W Looper  : Slow dispatch took 206ms android.ui h=android.view.Choreographer$FrameHandler c=android.view.Choreographer$FrameDisplayEventReceiver@afb6d3c m=0
+10-25 11:35:14.913  2963  3420 I OpenGLRenderer: Davey! duration=934ms; Flags=0, IntendedVsync=179297401442, Vsync=179364068106, OldestInputEvent=9223372036854775807, NewestInputEvent=0, HandleInputStart=179372244070, AnimationStart=179372283590, PerformTraversalsStart=179372468240, DrawStart=179372563630, SyncQueued=179372591550, SyncStart=179525864940, IssueDrawCommandsStart=179625267280, SwapBuffers=180314044500, FrameCompleted=180385424440, DequeueBufferDuration=42000, QueueBufferDuration=288000, 
+10-25 11:35:14.919  2963  2963 I Choreographer: Skipped 44 frames!  The application may be doing too much work on its main thread.
+10-25 11:35:15.102  1936  1957 W Looper  : Slow dispatch took 110ms android.ui h=android.view.Choreographer$FrameHandler c=android.view.Choreographer$FrameDisplayEventReceiver@afb6d3c m=0
+10-25 11:35:15.190  3641  7118 I Dialer  : OmtpVvmCarrierCfgHlpr - OmtpEvent:CONFIG_STATUS_SMS_TIME_OUT
+10-25 11:35:15.190  3641  3641 I Dialer  : RetryPolicy - discarding deferred status: configuration_state=4
+10-25 11:35:15.200  3641  3641 I Dialer  : VvmTaskExecutor - no more tasks, stopping service if no task are added in 5000 millis
+10-25 11:35:15.202  3641  3641 I Dialer  : VvmTaskReceiver - task received
+10-25 11:35:15.202  3641  3641 I Dialer  : VvmTaskReceiver - TaskExecutor already running
+10-25 11:35:15.203  3641  3641 I Dialer  : Task.createTask - create task:com.android.voicemail.impl.ActivationTask
+10-25 11:35:15.203  3641  3641 I Dialer  : RetryPolicy - retry #2 for com.android.voicemail.impl.ActivationTask@c53d0dd queued, executing in 5000
+10-25 11:35:15.203  3641  3641 I Dialer  : VvmTaskExecutor - com.android.voicemail.impl.ActivationTask@c53d0dd added
+10-25 11:35:15.203  3641  3641 I Dialer  : VvmTaskExecutor - minimal wait time:5000
+10-25 11:35:15.203  3641  3641 I Dialer  : VvmTaskExecutor - sleep for 5000 millis
+10-25 11:35:15.505  1936  1957 W Looper  : Slow dispatch took 101ms android.ui h=android.view.Choreographer$FrameHandler c=android.view.Choreographer$FrameDisplayEventReceiver@afb6d3c m=0
+10-25 11:35:15.776  1936  1957 W Looper  : Slow dispatch took 111ms android.ui h=android.view.Choreographer$FrameHandler c=android.view.Choreographer$FrameDisplayEventReceiver@afb6d3c m=0
+10-25 11:35:16.036  1936  1957 W Looper  : Slow dispatch took 113ms android.ui h=android.view.Choreographer$FrameHandler c=android.view.Choreographer$FrameDisplayEventReceiver@afb6d3c m=0
+10-25 11:35:17.503  1703  1781 D gralloc_ranchu: gralloc_alloc: Creating ashmem region of size 18436096
+10-25 11:35:17.640  1587  1587 I hwservicemanager: getTransport: Cannot find entry android.hardware.graphics.mapper@3.0::IMapper/default in either framework or device manifest.
+10-25 11:35:17.641  7815  7815 W Gralloc3: mapper 3.x is not supported
+10-25 11:35:17.653  7815  7815 D HostConnection: createUnique: call
+10-25 11:35:17.658  7815  7815 D HostConnection: HostConnection::get() New Host Connection established 0x7e32661ea5a0, tid 7815
+10-25 11:35:17.721  7815  7815 D HostConnection: HostComposition ext ANDROID_EMU_CHECKSUM_HELPER_v1 ANDROID_EMU_native_sync_v2 ANDROID_EMU_dma_v1 ANDROID_EMU_direct_mem ANDROID_EMU_host_composition_v1 ANDROID_EMU_host_composition_v2 ANDROID_EMU_vulkan ANDROID_EMU_deferred_vulkan_commands ANDROID_EMU_vulkan_null_optional_strings ANDROID_EMU_vulkan_create_resources_with_requirements ANDROID_EMU_YUV_Cache ANDROID_EMU_vulkan_ignored_handles ANDROID_EMU_vulkan_free_memory_sync ANDROID_EMU_vulkan_shader_float16_int8 ANDROID_EMU_vulkan_async_queue_submit ANDROID_EMU_sync_buffer_data ANDROID_EMU_vulkan_async_qsri ANDROID_EMU_hwc_color_transform GL_OES_EGL_image_external_essl3 GL_OES_vertex_array_object GL_KHR_texture_compression_astc_ldr ANDROID_EMU_host_side_tracing ANDROID_EMU_gles_max_version_3_0 
+10-25 11:35:17.721  7815  7815 D eglCodecCommon: allocate: Ask for block of size 0x1000
+10-25 11:35:17.721  7815  7815 D eglCodecCommon: allocate: ioctl allocate returned offset 0x3ffff6000 size 0x2000
+10-25 11:35:17.767  7815  7815 D eglCodecCommon: allocate: Ask for block of size 0x1195000
+10-25 11:35:17.767  7815  7815 D eglCodecCommon: allocate: ioctl allocate returned offset 0x3fdcc6000 size 0x1196000
+10-25 11:35:18.947  1936  1959 I OverlayDisplayAdapter: Dismissing all overlay display devices.
+10-25 11:35:18.947  1936  1936 V SettingsProvider: Notifying for 0: content://settings/global/overlay_display_devices
+10-25 11:35:18.947  1936  1959 W OverlayDisplayAdapter: Malformed overlay display devices setting: 
+10-25 11:35:18.954  1936  3462 D EGL_emulation: eglMakeCurrent: 0x76420ad6c020: ver 3 0 (tinfo 0x76420ad92640)
+10-25 11:35:18.978  1936  1959 I DisplayManagerService: Display device removed: DisplayDeviceInfo{"Overlay #1": uniqueId="overlay:1", 1920 x 1080, modeId 5, defaultModeId 5, supportedModes [{id=5, width=1920, height=1080, fps=60.000004}], colorMode 0, supportedColorModes [0], HdrCapabilities null, density 240, 240.0 x 240.0 dpi, appVsyncOff 0, presDeadline 33333332, touch VIRTUAL, rotation 0, type OVERLAY, state ON, FLAG_PRESENTATION}
+10-25 11:35:18.995  1936  1959 I InputManager-JNI: Viewport [0] to add: local:0
+10-25 11:35:19.071  1936  2028 I InputReader: Reconfiguring input devices.  changes=0x00000004
+10-25 11:35:19.072  1936  2028 I InputReader: Touch device 'virtio_input_multi_touch_10' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+10-25 11:35:19.072  1936  2028 I InputReader: Touch device 'virtio_input_multi_touch_2' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+10-25 11:35:19.072  1936  2028 I InputReader: Touch device 'virtio_input_multi_touch_7' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+10-25 11:35:19.072  1936  2028 I InputReader: Touch device 'virtio_input_multi_touch_11' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+10-25 11:35:19.072  1936  2028 I InputReader: Touch device 'virtio_input_multi_touch_8' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+10-25 11:35:19.072  1936  2028 I InputReader: Touch device 'virtio_input_multi_touch_6' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+10-25 11:35:19.072  1936  2028 I InputReader: Touch device 'virtio_input_multi_touch_4' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+10-25 11:35:19.072  1936  2028 I InputReader: Touch device 'virtio_input_multi_touch_5' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+10-25 11:35:19.072  1936  2028 I InputReader: Touch device 'virtio_input_multi_touch_9' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+10-25 11:35:19.072  1936  2028 I InputReader: Touch device 'virtio_input_multi_touch_3' could not query the properties of its associated display.  The device will be inoperable until the display size becomes available.
+10-25 11:35:19.109  1936  1948 I system_server: Background concurrent copying GC freed 51954(3399KB) AllocSpace objects, 25(2116KB) LOS objects, 35% free, 10MB/16MB, paused 753us total 161.689ms

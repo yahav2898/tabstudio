@@ -1,0 +1,25 @@
+10-25 11:35:00.278  1761  2749 E         : Couldn't opendir /data/app/vmdl1479013088.tmp: No such file or directory
+10-25 11:35:12.268  7731  7731 E         : All objects remaining in the nursery must be pinned
+10-25 11:35:12.268  7731  7731 F monodroid: All objects remaining in the nursery must be pinned
+10-25 11:35:12.269  7731  7731 F monodroid: Abort at mono-log-adapter.cc:46:3 ('static void xamarin::android::internal::MonodroidRuntime::mono_log_handler(const char *, const char *, const char *, mono_bool, void *)')
+10-25 11:35:12.269  7731  7731 F libc    : Fatal signal 6 (SIGABRT), code -1 (SI_QUEUE) in tid 7731 (m.tabstudio.ide), pid 7731 (m.tabstudio.ide)
+
+10-25 11:35:12.320  7791  7791 F DEBUG   : *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+10-25 11:35:12.320  7791  7791 F DEBUG   : Build fingerprint: 'google/sdk_gphone_x86_64/generic_x86_64:10/QSR1.211112.011/13135432:userdebug/dev-keys'
+10-25 11:35:12.320  7791  7791 F DEBUG   : Revision: '0'
+10-25 11:35:12.323  7791  7791 F DEBUG   : ABI: 'x86_64'
+10-25 11:35:12.324  7791  7791 F DEBUG   : Timestamp: 2026-10-25 11:35:12+0000
+10-25 11:35:12.324  7791  7791 F DEBUG   : pid: 7731, tid: 7731, name: m.tabstudio.ide  >>> com.tabstudio.ide <<<
+10-25 11:35:12.324  7791  7791 F DEBUG   : uid: 10146
+10-25 11:35:12.324  7791  7791 F DEBUG   : signal 6 (SIGABRT), code -1 (SI_QUEUE), fault addr --------
+10-25 11:35:12.324  7791  7791 F DEBUG   : Abort message: 'All objects remaining in the nursery must be pinned'
+10-25 11:35:12.324  7791  7791 F DEBUG   :     rax 0000000000000000  rbx 0000000000001e33  rcx 00007642f785f3f8  rdx 0000000000000006
+10-25 11:35:12.324  7791  7791 F DEBUG   :     r8  0000764216f23179  r9  0000000000000000  r10 00007fffb5f7ed40  r11 0000000000000246
+10-25 11:35:12.324  7791  7791 F DEBUG   :     r12 0000764216f23179  r13 000076420e9b1340  r14 00007fffb5f7edc8  r15 0000000000001e33
+10-25 11:35:12.324  7791  7791 F DEBUG   :     rdi 0000000000001e33  rsi 0000000000001e33
+10-25 11:35:12.324  7791  7791 F DEBUG   :     rbp 00007fffb5f7f030  rsp 00007fffb5f7ed38  rip 00007642f785f3f8
+10-25 11:35:12.324  7791  7791 F DEBUG   : 
+10-25 11:35:12.324  7791  7791 F DEBUG   : backtrace:
+10-25 11:35:12.324  7791  7791 F DEBUG   :       #00 pc 00000000000943f8  /apex/com.android.runtime/lib64/bionic/libc.so (syscall+24) (BuildId: b5c6019a3b4ea61b5e9a2f56319b584e)
+10-25 11:35:12.324  7791  7791 F DEBUG   :       #01 pc 0000000000097146  /apex/com.android.runtime/lib64/bionic/libc.so (abort+182) (BuildId: b5c6019a3b4ea61b5e9a2f56319b584e)
+10-25 11:35:12.324  7791  7791 F DEBUG   :       #02 pc 00000000000b30af  /data/app/com.tabstudio.ide-184PXm9mLy9fB3iMmOlYPA==/lib/x86_64/libmonodroid.so (xamarin::android::Helpers::abort_application(_LogCategories, char const*, bool, std::__ndk1::source_location)+767) (BuildId: d3370263a3d5aba8cc143ea0be7afdd2a4ce251e)
