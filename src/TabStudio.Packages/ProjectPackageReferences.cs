@@ -75,6 +75,52 @@ internal static class ProjectPackageReferences
         return new ProjectDependencyGraph(Collect(project), projects);
     }
 
+    /// <summary>
+    /// The shared frameworks a project compiles against: its own <c>FrameworkReference</c> items and, as in the .NET SDK,
+    /// those of every project it references, directly or not, read from disk. A console tool that references a web
+    /// project gets ASP.NET Core this way.
+    /// </summary>
+    /// <param name="project">The project.</param>
+    public static IReadOnlyList<string> FrameworkReferencesWithReferencedProjects(ProjectInfo project)
+    {
+        var frameworks = new List<string>(project.FrameworkReferences);
+        var seen = new HashSet<string>(StringComparer.Ordinal) { project.FilePath };
+        var pending = new Stack<string>(project.ProjectReferences);
+        while (pending.TryPop(out var path))
+        {
+            if (!seen.Add(path))
+            {
+                continue;
+            }
+
+            ProjectInfo referenced;
+            try
+            {
+                referenced = ProjectParser.Load(path);
+            }
+            catch (Exception ex) when (ex is ProjectLoadException or IOException or UnauthorizedAccessException)
+            {
+                // The workspace already reports projects it cannot read.
+                continue;
+            }
+
+            foreach (var framework in referenced.FrameworkReferences)
+            {
+                if (!frameworks.Contains(framework, StringComparer.OrdinalIgnoreCase))
+                {
+                    frameworks.Add(framework);
+                }
+            }
+
+            foreach (var next in referenced.ProjectReferences)
+            {
+                pending.Push(next);
+            }
+        }
+
+        return frameworks;
+    }
+
     /// <summary>Reads the package references of one project.</summary>
     /// <param name="project">The project.</param>
     /// <param name="diagnostics">Receives problems with the references, such as a version that does not parse.</param>
