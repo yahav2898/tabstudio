@@ -1,735 +1,252 @@
-10-25 12:36:23.114  8873  8873 W monodroid: Creating public update directory: `/data/user/0/com.tabstudio.ide/files/.__override__/x86_64`
-10-25 12:36:40.366  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 37 objects 3215 opaque 2809 colors 37 colors-bridged 37 colors-visible 37 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 3.75ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.07ms
-10-25 12:36:40.366  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 12.32ms
-10-25 12:36:40.366  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 26.52ms, stw 32.49ms promoted 2476K major size: 3776K in use: 3122K empty reserved: 320K los size: 8192K in use: 7355K
-10-25 12:36:47.472  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 6 objects 6 opaque 0 colors 6 colors-bridged 6 colors-visible 6 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 0.01ms scc-setup 0.01ms gather-xref 0.01ms xref-setup 0.02ms cleanup 0.05ms
-10-25 12:36:47.472  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 4.15ms
-10-25 12:36:47.472  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 13.06ms, stw 15.69ms promoted 2579K major size: 6560K in use: 5934K empty reserved: 96K los size: 8192K in use: 7371K
-10-25 12:36:49.228  8873  8929 D Mono    : GC_TAR_BRIDGE bridges 21 objects 21 opaque 0 colors 21 colors-bridged 21 colors-visible 21 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 0.01ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:36:49.228  8873  8929 D Mono    : GC_BRIDGE: Complete, was running for 6.12ms
-10-25 12:36:49.228  8873  8929 D Mono    : GC_MINOR: (Nursery full) time 5.54ms, stw 6.18ms promoted 2014K major size: 8912K in use: 8187K empty reserved: 304K los size: 8192K in use: 7728K
-10-25 12:36:49.354  8873  8929 D Mono    : GC_TAR_BRIDGE bridges 33 objects 35 opaque 0 colors 33 colors-bridged 33 colors-visible 33 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.03ms
-10-25 12:36:49.354  8873  8929 D Mono    : GC_BRIDGE: Complete, was running for 8.49ms
-10-25 12:36:49.354  8873  8929 D Mono    : GC_MAJOR_SWEEP: major size: 9232K in use: 16122K empty reserved: 0K
-10-25 12:36:49.354  8873  8929 D Mono    : GC_MAJOR: (LOS overflow) time 10.98ms, stw 12.32ms los size: 8192K in use: 7627K
-10-25 12:36:49.850  8873  8929 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 33 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:36:49.850  8873  8929 D Mono    : GC_BRIDGE: Complete, was running for 0.12ms
-10-25 12:36:49.850  8873  8929 D Mono    : GC_MINOR: (Nursery full) time 6.13ms, stw 10.02ms promoted 1042K major size: 10512K in use: 8939K empty reserved: 240K los size: 9216K in use: 7780K
-10-25 12:36:51.633  8873  8929 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 33 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:36:51.633  8873  8929 D Mono    : GC_BRIDGE: Complete, was running for 0.21ms
-10-25 12:36:51.633  8873  8929 D Mono    : GC_MINOR: (Nursery full) time 11.02ms, stw 25.04ms promoted 1131K major size: 11776K in use: 10136K empty reserved: 0K los size: 9216K in use: 7793K
-10-25 12:36:52.729  8873  8929 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 33 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:36:52.729  8873  8929 D Mono    : GC_BRIDGE: Complete, was running for 0.12ms
-10-25 12:36:52.729  8873  8929 D Mono    : GC_MINOR: (Nursery full) time 3.92ms, stw 4.92ms promoted 1363K major size: 13232K in use: 11573K empty reserved: 80K los size: 9216K in use: 7814K
-10-25 12:37:03.440  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:37:03.442  8873  8929 D Mono    : GC_TAR_BRIDGE bridges 17 objects 17 opaque 0 colors 17 colors-bridged 17 colors-visible 17 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.06ms tarjan 0.02ms scc-setup 0.01ms gather-xref 0.01ms xref-setup 0.02ms cleanup 0.03ms
-10-25 12:37:03.442  8873  8929 D Mono    : GC_BRIDGE: Complete, was running for 10.78ms
-10-25 12:37:03.442  8873  8929 D Mono    : GC_MINOR: (Nursery full) time 9.20ms, stw 10.28ms promoted 2840K major size: 16672K in use: 14941K empty reserved: 224K los size: 11272K in use: 10433K
-10-25 12:37:06.527  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:37:06.533  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 1 objects 53631 opaque 20162 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 41.16ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.02ms cleanup 1.28ms
-10-25 12:37:06.533  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 6.42ms
-10-25 12:37:06.533  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 57.91ms, stw 64.54ms promoted 2203K major size: 19120K in use: 17356K empty reserved: 336K los size: 12296K in use: 10883K
-10-25 12:37:10.483  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:37:10.485  8873  8873 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:37:10.486  8873  8993 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 41.16ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:37:10.486  8873  8993 D Mono    : GC_BRIDGE: Complete, was running for 0.10ms
-10-25 12:37:10.486  8873  8993 D Mono    : GC_MINOR: (Nursery full) time 16.78ms, stw 27.50ms promoted 2453K major size: 21824K in use: 20004K empty reserved: 192K los size: 12296K in use: 10883K
-10-25 12:37:12.145  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:37:12.149  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 41.16ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:37:12.149  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 0.09ms
-10-25 12:37:12.149  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 8.09ms, stw 20.09ms promoted 2235K major size: 24288K in use: 22418K empty reserved: 288K los size: 12296K in use: 10893K
-10-25 12:37:12.814  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:37:12.907  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 37 objects 39 opaque 0 colors 37 colors-bridged 37 colors-visible 37 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.03ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.12ms
-10-25 12:37:12.907  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 85.02ms
-10-25 12:37:12.907  8873  8873 D Mono    : GC_MAJOR_SWEEP: major size: 24768K in use: 36424K empty reserved: 0K
-10-25 12:37:12.907  8873  8873 D Mono    : GC_MAJOR: (LOS overflow) time 35.93ms, stw 56.33ms los size: 12296K in use: 10541K
-10-25 12:37:13.121  8873  8993 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 37 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.03ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:37:13.121  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:37:13.121  8873  8993 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:37:13.121  8873  8993 D Mono    : GC_MINOR: (Nursery full) time 9.32ms, stw 10.66ms promoted 764K major size: 24992K in use: 22010K empty reserved: 96K los size: 12296K in use: 10558K
-10-25 12:37:14.850  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:37:14.850  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 37 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.03ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:37:14.850  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:37:14.850  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 11.25ms, stw 17.39ms promoted 2103K major size: 26912K in use: 24229K empty reserved: 224K los size: 12296K in use: 10558K
-10-25 12:37:15.287  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:37:15.289  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 37 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.03ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:37:15.289  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:37:15.289  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 16.97ms, stw 25.43ms promoted 2938K major size: 30080K in use: 27313K empty reserved: 128K los size: 12296K in use: 10686K
-10-25 12:37:15.825  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:37:15.825  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 37 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.03ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:37:15.827  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:37:15.827  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 11.70ms, stw 18.20ms promoted 2933K major size: 33216K in use: 30410K empty reserved: 64K los size: 12296K in use: 10708K
-10-25 12:37:17.419  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:37:17.451  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 1 objects 182126 opaque 64466 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 70.51ms scc-setup 0.05ms gather-xref 0.02ms xref-setup 0.03ms cleanup 5.45ms
-10-25 12:37:17.451  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 24.91ms
-10-25 12:37:17.451  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 81.51ms, stw 89.50ms promoted 2676K major size: 36144K in use: 33273K empty reserved: 208K los size: 12296K in use: 10847K
-10-25 12:37:19.688  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:37:19.744  8873  8958 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 70.51ms scc-setup 0.05ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:37:19.744  8873  8958 D Mono    : GC_BRIDGE: Complete, was running for 0.20ms
-10-25 12:37:19.745  8873  8958 D Mono    : GC_MINOR: (Nursery full) time 9.31ms, stw 74.53ms promoted 2683K major size: 39088K in use: 36154K empty reserved: 336K los size: 12296K in use: 11012K
-10-25 12:37:24.886  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:37:24.900  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 1 objects 212947 opaque 88306 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 79.87ms scc-setup 0.17ms gather-xref 0.02ms xref-setup 0.03ms cleanup 2.20ms
-10-25 12:37:24.900  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 12.20ms
-10-25 12:37:24.900  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 97.99ms, stw 100.68ms promoted 1172K major size: 40400K in use: 37439K empty reserved: 48K los size: 12296K in use: 11051K
-10-25 12:37:26.359  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:37:26.384  8873  8958 D Mono    : GC_TAR_BRIDGE bridges 37 objects 39 opaque 0 colors 37 colors-bridged 37 colors-visible 37 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.03ms
-10-25 12:37:26.384  8873  8958 D Mono    : GC_BRIDGE: Complete, was running for 25.06ms
-10-25 12:37:26.384  8873  8958 D Mono    : GC_MAJOR: (LOS overflow) time 51.65ms, stw 54.39ms los size: 13324K in use: 11639K
-10-25 12:37:26.384  8873  8958 D Mono    : GC_MAJOR_SWEEP: major size: 39552K in use: 33066K empty reserved: 0K
-10-25 12:37:29.006  8873  8993 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 37 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:37:29.006  8873  8993 D Mono    : GC_BRIDGE: Complete, was running for 0.13ms
-10-25 12:37:29.006  8873  8993 D Mono    : GC_MINOR: (Nursery full) time 22.62ms, stw 43.02ms promoted 2430K major size: 39872K in use: 35663K empty reserved: 1088K los size: 13324K in use: 12276K
-10-25 12:37:31.408  8873  9035 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 37 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.03ms
-10-25 12:37:31.408  8873  9035 D Mono    : GC_BRIDGE: Complete, was running for 0.12ms
-10-25 12:37:31.408  8873  9035 D Mono    : GC_MINOR: (Nursery full) time 4.33ms, stw 5.95ms promoted 2524K major size: 41920K in use: 38486K empty reserved: 64K los size: 13324K in use: 12582K
-10-25 12:37:31.967  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:37:31.967  8873  9014 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 37 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:37:31.967  8873  9014 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:37:31.967  8873  9014 D Mono    : GC_MINOR: (Nursery full) time 7.18ms, stw 20.07ms promoted 945K major size: 42800K in use: 39515K empty reserved: 208K los size: 13324K in use: 12582K
-10-25 12:37:33.650  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:37:33.650  8873  8993 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 37 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:37:33.651  8873  8993 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:37:33.651  8873  8993 D Mono    : GC_MINOR: (Nursery full) time 8.81ms, stw 12.63ms promoted 1404K major size: 44448K in use: 41189K empty reserved: 96K los size: 14348K in use: 12695K
-10-25 12:37:39.060  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:37:39.088  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 1 objects 292588 opaque 127697 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 113.09ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.02ms cleanup 9.99ms
-10-25 12:37:39.088  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 28.28ms
-10-25 12:37:39.088  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 132.42ms, stw 137.08ms promoted 1016K major size: 45648K in use: 42398K empty reserved: 432K los size: 14348K in use: 13024K
-10-25 12:37:44.786  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:37:44.836  8873  8927 D Mono    : GC_TAR_BRIDGE bridges 73 objects 300013 opaque 130377 colors 73 colors-bridged 73 colors-visible 73 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 121.87ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.03ms cleanup 35.68ms
-10-25 12:37:44.836  8873  8927 D Mono    : GC_BRIDGE: Complete, was running for 50.03ms
-10-25 12:37:44.836  8873  8927 D Mono    : GC_MINOR: (Nursery full) time 140.23ms, stw 143.29ms promoted 1664K major size: 47616K in use: 44255K empty reserved: 0K los size: 14348K in use: 13109K
-10-25 12:37:46.393  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:37:46.406  8873  8993 D Mono    : GC_TAR_BRIDGE bridges 1 objects 302433 opaque 131535 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 166.89ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 4.93ms
-10-25 12:37:46.406  8873  8993 D Mono    : GC_BRIDGE: Complete, was running for 12.03ms
-10-25 12:37:46.406  8873  8993 D Mono    : GC_MINOR: (Nursery full) time 178.96ms, stw 184.03ms promoted 820K major size: 48464K in use: 45120K empty reserved: 176K los size: 14348K in use: 13456K
-10-25 12:37:49.429  8873  9035 D Mono    : GC_TAR_BRIDGE bridges 7 objects 311913 opaque 134454 colors 7 colors-bridged 7 colors-visible 7 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 111.80ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 93.05ms
-10-25 12:37:49.429  8873  9035 D Mono    : GC_BRIDGE: Complete, was running for 109.14ms
-10-25 12:37:49.429  8873  9035 D Mono    : GC_MINOR: (Nursery full) time 123.19ms, stw 128.47ms promoted 1264K major size: 49952K in use: 46495K empty reserved: 224K los size: 14348K in use: 13495K
-10-25 12:37:54.147  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:37:54.198  8873  9014 D Mono    : GC_TAR_BRIDGE bridges 63 objects 63 opaque 0 colors 63 colors-bridged 63 colors-visible 63 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.01ms xref-setup 0.02ms cleanup 0.09ms
-10-25 12:37:54.198  8873  9014 D Mono    : GC_BRIDGE: Complete, was running for 54.04ms
-10-25 12:37:54.198  8873  9014 D Mono    : GC_MINOR: (Nursery full) time 6.71ms, stw 9.03ms promoted 1775K major size: 51888K in use: 48468K empty reserved: 336K los size: 16396K in use: 14840K
-10-25 12:37:54.329  8873  9014 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 63 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.01ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:37:54.329  8873  9014 D Mono    : GC_BRIDGE: Complete, was running for 0.12ms
-10-25 12:37:54.329  8873  9014 D Mono    : GC_MINOR: (Nursery full) time 8.41ms, stw 13.41ms promoted 2615K major size: 54768K in use: 51247K empty reserved: 16K los size: 16396K in use: 14894K
-10-25 12:37:54.811  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:37:55.199  8873  9014 D Mono    : GC_TAR_BRIDGE bridges 43 objects 44 opaque 0 colors 43 colors-bridged 43 colors-visible 43 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.06ms tarjan 0.03ms scc-setup 21.54ms gather-xref 0.02ms xref-setup 14.48ms cleanup 0.15ms
-10-25 12:37:55.199  8873  9014 D Mono    : GC_BRIDGE: Complete, was running for 387.89ms
-10-25 12:37:55.199  8873  9014 D Mono    : GC_MAJOR: (LOS overflow) time 145.04ms, stw 161.58ms los size: 16396K in use: 13471K
-10-25 12:37:55.199  8873  9014 D Mono    : GC_MAJOR_SWEEP: major size: 55376K in use: 48399K empty reserved: 0K
-10-25 12:37:59.929  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:37:59.962  8873  9036 D Mono    : GC_TAR_BRIDGE bridges 1 objects 1 opaque 0 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.05ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:37:59.962  8873  9036 D Mono    : GC_BRIDGE: Complete, was running for 101.93ms
-10-25 12:37:59.962  8873  9036 D Mono    : GC_MINOR: (Nursery full) time 7.47ms, stw 25.18ms promoted 1202K major size: 55568K in use: 49787K empty reserved: 240K los size: 16396K in use: 14205K
-10-25 12:38:01.071  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:38:01.400  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 1 objects 251735 opaque 100982 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.93ms tarjan 308.49ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.02ms cleanup 195.81ms
-10-25 12:38:01.400  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 325.36ms
-10-25 12:38:01.400  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 336.48ms, stw 349.36ms promoted 991K major size: 55856K in use: 50854K empty reserved: 464K los size: 16396K in use: 14618K
-10-25 12:38:02.863  8873  8993 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.93ms tarjan 308.49ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:38:02.863  8873  8993 D Mono    : GC_BRIDGE: Complete, was running for 0.29ms
-10-25 12:38:02.863  8873  8993 D Mono    : GC_MINOR: (Nursery full) time 26.84ms, stw 32.37ms promoted 818K major size: 56352K in use: 51755K empty reserved: 480K los size: 16396K in use: 15203K
-10-25 12:38:03.006  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:38:03.009  8873  8993 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.93ms tarjan 308.49ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:38:03.009  8873  8993 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:38:03.009  8873  8993 D Mono    : GC_MINOR: (Nursery full) time 12.10ms, stw 19.42ms promoted 703K major size: 56928K in use: 52526K empty reserved: 416K los size: 17420K in use: 15647K
-10-25 12:38:04.587  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:38:04.614  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 1 objects 228207 opaque 90904 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 90.19ms scc-setup 0.03ms gather-xref 0.04ms xref-setup 0.02ms cleanup 7.69ms
-10-25 12:38:04.614  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 25.63ms
-10-25 12:38:04.614  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 120.22ms, stw 127.90ms promoted 2022K major size: 59008K in use: 54668K empty reserved: 384K los size: 17420K in use: 15787K
-10-25 12:38:10.117  8873  8873 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:38:10.288  8873  8958 D Mono    : GC_TAR_BRIDGE bridges 1 objects 267426 opaque 106212 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 128.91ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.02ms cleanup 88.34ms
-10-25 12:38:10.288  8873  8958 D Mono    : GC_BRIDGE: Complete, was running for 180.52ms
-10-25 12:38:10.288  8873  8958 D Mono    : GC_MINOR: (Nursery full) time 158.85ms, stw 169.42ms promoted 1740K major size: 60864K in use: 56579K empty reserved: 64K los size: 17420K in use: 15843K
-10-25 12:38:11.632  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 1 objects 236916 opaque 93947 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 112.20ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.04ms cleanup 5.24ms
-10-25 12:38:11.632  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 51.74ms
-10-25 12:38:11.632  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 150.75ms, stw 171.60ms promoted 1672K major size: 62624K in use: 58340K empty reserved: 352K los size: 17420K in use: 15899K
-10-25 12:38:12.086  8873  8993 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:38:12.088  8873  8927 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:38:12.133  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:38:12.150  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 1 objects 251295 opaque 99504 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.02ms tarjan 64.48ms scc-setup 0.05ms gather-xref 0.02ms xref-setup 0.02ms cleanup 6.37ms
-10-25 12:38:12.150  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 58.96ms
-10-25 12:38:12.150  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 85.27ms, stw 101.61ms promoted 2427K major size: 65312K in use: 60903K empty reserved: 224K los size: 17420K in use: 15899K
-10-25 12:38:13.338  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:38:13.357  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 2 objects 374935 opaque 163659 colors 2 colors-bridged 2 colors-visible 2 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 183.12ms scc-setup 0.10ms gather-xref 0.01ms xref-setup 0.03ms cleanup 11.61ms
-10-25 12:38:13.357  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 43.72ms
-10-25 12:38:13.357  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 225.90ms, stw 243.23ms promoted 2240K major size: 67744K in use: 63290K empty reserved: 352K los size: 17420K in use: 15956K
-10-25 12:38:20.022  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:38:20.053  8873  9036 D Mono    : GC_TAR_BRIDGE bridges 133 objects 133 opaque 0 colors 133 colors-bridged 133 colors-visible 133 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 0.03ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 1.59ms cleanup 0.03ms
-10-25 12:38:20.053  8873  9036 D Mono    : GC_BRIDGE: Complete, was running for 28.85ms
-10-25 12:38:20.053  8873  9036 D Mono    : GC_MINOR: (Nursery full) time 15.05ms, stw 30.62ms promoted 1696K major size: 69648K in use: 65126K empty reserved: 496K los size: 19468K in use: 17871K
-10-25 12:38:28.236  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:38:28.238  8873  8929 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 133 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 0.03ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 1.59ms cleanup 1.49ms
-10-25 12:38:28.238  8873  8929 D Mono    : GC_BRIDGE: Complete, was running for 1.64ms
-10-25 12:38:28.238  8873  8929 D Mono    : GC_MINOR: (Nursery full) time 7.81ms, stw 17.54ms promoted 1206K major size: 71024K in use: 66511K empty reserved: 144K los size: 20492K in use: 18256K
-10-25 12:38:31.435  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:38:31.436  8873  8929 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 133 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 0.03ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 1.59ms cleanup 0.02ms
-10-25 12:38:31.436  8873  8929 D Mono    : GC_BRIDGE: Complete, was running for 0.17ms
-10-25 12:38:31.436  8873  8929 D Mono    : GC_MINOR: (Nursery full) time 8.74ms, stw 14.41ms promoted 2454K major size: 73712K in use: 69192K empty reserved: 16K los size: 20492K in use: 18315K
-10-25 12:38:31.604  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:38:31.628  8873  8929 D Mono    : GC_TAR_BRIDGE bridges 40 objects 41 opaque 0 colors 40 colors-bridged 40 colors-visible 40 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.06ms tarjan 0.03ms scc-setup 0.31ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.03ms
-10-25 12:38:31.628  8873  8929 D Mono    : GC_BRIDGE: Complete, was running for 24.49ms
-10-25 12:38:31.628  8873  8929 D Mono    : GC_MAJOR: (LOS overflow) time 139.11ms, stw 159.54ms los size: 19468K in use: 14382K
-10-25 12:38:31.628  8873  8929 D Mono    : GC_MAJOR_SWEEP: major size: 70624K in use: 56092K empty reserved: 0K
-10-25 12:38:34.087  8873  9059 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:38:34.090  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 40 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.06ms tarjan 0.03ms scc-setup 0.31ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.03ms
-10-25 12:38:34.090  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 1.28ms
-10-25 12:38:34.090  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 11.26ms, stw 17.79ms promoted 1463K major size: 70672K in use: 57698K empty reserved: 3568K los size: 19468K in use: 14620K
-10-25 12:38:42.352  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:38:42.470  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 7 objects 401864 opaque 191613 colors 7 colors-bridged 7 colors-visible 7 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 183.26ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.03ms cleanup 94.83ms
-10-25 12:38:42.470  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 117.19ms
-10-25 12:38:42.470  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 225.07ms, stw 237.53ms promoted 1368K major size: 70880K in use: 59319K empty reserved: 3360K los size: 19468K in use: 14738K
-10-25 12:38:45.021  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:38:45.024  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 31 objects 248449 opaque 98092 colors 31 colors-bridged 31 colors-visible 31 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 24.54ms tarjan 177.85ms scc-setup 0.05ms gather-xref 0.02ms xref-setup 0.04ms cleanup 38.95ms
-10-25 12:38:45.024  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 78.70ms
-10-25 12:38:45.024  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 243.02ms, stw 255.05ms promoted 2194K major size: 71040K in use: 61657K empty reserved: 3200K los size: 19468K in use: 14954K
-10-25 12:38:45.753  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 1 objects 292750 opaque 115858 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 125.93ms scc-setup 9.35ms gather-xref 0.04ms xref-setup 0.02ms cleanup 4.56ms
-10-25 12:38:45.753  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 50.72ms
-10-25 12:38:45.753  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 153.64ms, stw 162.05ms promoted 2514K major size: 71248K in use: 64307K empty reserved: 2992K los size: 19468K in use: 15034K
-10-25 12:38:49.335  8873  9106 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:38:49.488  8873  8993 D Mono    : GC_TAR_BRIDGE bridges 513 objects 513 opaque 0 colors 513 colors-bridged 513 colors-visible 513 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.08ms tarjan 0.08ms scc-setup 0.07ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.09ms
-10-25 12:38:49.488  8873  8993 D Mono    : GC_BRIDGE: Complete, was running for 145.60ms
-10-25 12:38:49.488  8873  8993 D Mono    : GC_MINOR: (Nursery full) time 33.69ms, stw 42.26ms promoted 1207K major size: 71648K in use: 65618K empty reserved: 2592K los size: 19468K in use: 16400K
-10-25 12:38:51.305  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:38:51.306  8873  8929 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 513 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.08ms tarjan 0.08ms scc-setup 0.07ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:38:51.306  8873  8929 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:38:51.306  8873  8929 D Mono    : GC_MINOR: (Nursery full) time 12.35ms, stw 22.17ms promoted 1741K major size: 72944K in use: 67478K empty reserved: 1296K los size: 19468K in use: 16659K
-10-25 12:38:55.715  8873  9241 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 513 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.08ms tarjan 0.08ms scc-setup 0.07ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:38:55.715  8873  9241 D Mono    : GC_BRIDGE: Complete, was running for 0.16ms
-10-25 12:38:55.715  8873  9241 D Mono    : GC_MINOR: (Nursery full) time 20.25ms, stw 24.95ms promoted 1418K major size: 74112K in use: 68979K empty reserved: 128K los size: 20492K in use: 18288K
-10-25 12:38:59.262  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:38:59.266  8873  9228 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 513 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.08ms tarjan 0.08ms scc-setup 0.07ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:38:59.266  8873  9228 D Mono    : GC_BRIDGE: Complete, was running for 0.10ms
-10-25 12:38:59.266  8873  9228 D Mono    : GC_MINOR: (Nursery full) time 10.85ms, stw 15.41ms promoted 1983K major size: 76016K in use: 71110K empty reserved: 272K los size: 20492K in use: 18503K
-10-25 12:39:03.678  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:03.698  8873  8958 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:03.706  8873  9240 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 513 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.08ms tarjan 0.08ms scc-setup 0.07ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:39:03.706  8873  9240 D Mono    : GC_BRIDGE: Complete, was running for 0.10ms
-10-25 12:39:03.706  8873  9240 D Mono    : GC_MINOR: (Nursery full) time 22.62ms, stw 59.17ms promoted 1403K major size: 77616K in use: 72701K empty reserved: 208K los size: 20492K in use: 18537K
-10-25 12:39:05.198  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:05.243  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 1 objects 421127 opaque 195431 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 2.33ms tarjan 123.73ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 17.98ms
-10-25 12:39:05.243  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 44.65ms
-10-25 12:39:05.243  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 158.05ms, stw 162.77ms promoted 2235K major size: 80816K in use: 75785K empty reserved: 80K los size: 22540K in use: 20065K
-10-25 12:39:05.380  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:05.380  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 2.33ms tarjan 123.73ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:39:05.380  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:39:05.380  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 8.52ms, stw 17.37ms promoted 3255K major size: 84592K in use: 79483K empty reserved: 400K los size: 23564K in use: 21196K
-10-25 12:39:05.947  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 2.33ms tarjan 123.73ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:39:05.947  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 0.10ms
-10-25 12:39:05.947  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 33.62ms, stw 35.96ms promoted 3221K major size: 88640K in use: 83440K empty reserved: 448K los size: 25612K in use: 22704K
-10-25 12:39:06.583  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:06.607  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 47 objects 49 opaque 0 colors 47 colors-bridged 47 colors-visible 47 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.06ms tarjan 0.03ms scc-setup 0.16ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.03ms
-10-25 12:39:06.607  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 23.96ms
-10-25 12:39:06.607  8873  8873 D Mono    : GC_MAJOR: (LOS overflow) time 186.46ms, stw 195.99ms los size: 27380K in use: 19154K
-10-25 12:39:06.607  8873  8873 D Mono    : GC_MAJOR_SWEEP: major size: 87008K in use: 71354K empty reserved: 0K
-10-25 12:39:07.123  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:07.123  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 47 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.06ms tarjan 0.03ms scc-setup 0.16ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:07.123  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 0.10ms
-10-25 12:39:07.123  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 13.18ms, stw 18.50ms promoted 2473K major size: 87776K in use: 74196K empty reserved: 4896K los size: 27380K in use: 19501K
-10-25 12:39:07.680  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 47 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.06ms tarjan 0.03ms scc-setup 0.16ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:07.680  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:07.680  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:39:07.680  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 19.32ms, stw 23.94ms promoted 1604K major size: 88704K in use: 75873K empty reserved: 3968K los size: 27380K in use: 19501K
-10-25 12:39:10.277  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:10.279  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 47 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.06ms tarjan 0.03ms scc-setup 0.16ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:10.279  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:39:10.279  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 17.07ms, stw 20.40ms promoted 676K major size: 89072K in use: 76603K empty reserved: 3600K los size: 27380K in use: 19553K
-10-25 12:39:11.663  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:11.664  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 47 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.06ms tarjan 0.03ms scc-setup 0.16ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:11.664  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 0.14ms
-10-25 12:39:11.664  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 7.13ms, stw 31.64ms promoted 1253K major size: 89472K in use: 77927K empty reserved: 3200K los size: 27380K in use: 19739K
-10-25 12:39:13.456  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:13.466  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 47 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.06ms tarjan 0.03ms scc-setup 0.16ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:13.466  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 0.12ms
-10-25 12:39:13.466  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 27.64ms, stw 48.48ms promoted 2125K major size: 90288K in use: 80200K empty reserved: 2384K los size: 27380K in use: 19759K
-10-25 12:39:13.983  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 47 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.06ms tarjan 0.03ms scc-setup 0.16ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:13.983  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 0.12ms
-10-25 12:39:13.983  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 15.33ms, stw 27.07ms promoted 1930K major size: 91312K in use: 82259K empty reserved: 1360K los size: 27380K in use: 19804K
-10-25 12:39:14.178  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 47 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.06ms tarjan 0.03ms scc-setup 0.16ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:14.178  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 0.26ms
-10-25 12:39:14.178  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 3.49ms, stw 4.46ms promoted 257K major size: 91504K in use: 82530K empty reserved: 1168K los size: 27380K in use: 19864K
-10-25 12:39:15.699  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:15.723  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 2 objects 2 opaque 0 colors 2 colors-bridged 2 colors-visible 2 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:15.723  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 22.24ms
-10-25 12:39:15.723  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 28.02ms, stw 37.88ms promoted 2535K major size: 93568K in use: 85216K empty reserved: 128K los size: 27380K in use: 19864K
-10-25 12:39:18.195  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:18.273  8873  8958 D Mono    : GC_TAR_BRIDGE bridges 312 objects 312 opaque 3 colors 312 colors-bridged 312 colors-visible 312 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 0.03ms scc-setup 0.04ms gather-xref 0.01ms xref-setup 0.01ms cleanup 0.04ms
-10-25 12:39:18.273  8873  8958 D Mono    : GC_BRIDGE: Complete, was running for 79.95ms
-10-25 12:39:18.273  8873  8958 D Mono    : GC_MINOR: (Nursery full) time 42.58ms, stw 55.74ms promoted 2279K major size: 95824K in use: 87624K empty reserved: 432K los size: 27380K in use: 20261K
-10-25 12:39:20.126  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:20.144  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 1 objects 508230 opaque 236074 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 175.01ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.02ms cleanup 6.97ms
-10-25 12:39:20.145  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 18.06ms
-10-25 12:39:20.145  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 198.76ms, stw 200.84ms promoted 1390K major size: 97120K in use: 89103K empty reserved: 160K los size: 27380K in use: 20429K
-10-25 12:39:20.566  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 175.01ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.04ms
-10-25 12:39:20.566  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 0.20ms
-10-25 12:39:20.566  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 17.99ms, stw 27.82ms promoted 2384K major size: 99504K in use: 91645K empty reserved: 336K los size: 27380K in use: 20838K
-10-25 12:39:20.603  8873  8958 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 175.01ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:39:20.603  8873  8958 D Mono    : GC_BRIDGE: Complete, was running for 0.12ms
-10-25 12:39:20.603  8873  8958 D Mono    : GC_MINOR: (Nursery full) time 7.20ms, stw 9.04ms promoted 2362K major size: 102016K in use: 94222K empty reserved: 384K los size: 27380K in use: 21333K
-10-25 12:39:21.018  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:21.024  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 175.01ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:39:21.024  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 0.12ms
-10-25 12:39:21.024  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 13.55ms, stw 29.62ms promoted 1670K major size: 103760K in use: 95996K empty reserved: 176K los size: 27380K in use: 21465K
-10-25 12:39:22.012  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:22.101  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 27 objects 27 opaque 0 colors 27 colors-bridged 27 colors-visible 27 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:22.101  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 88.63ms
-10-25 12:39:22.101  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 31.20ms, stw 44.26ms promoted 2093K major size: 105904K in use: 98190K empty reserved: 80K los size: 27380K in use: 21772K
-10-25 12:39:22.210  8873  9241 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 27 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.27ms
-10-25 12:39:22.210  8873  9241 D Mono    : GC_BRIDGE: Complete, was running for 0.96ms
-10-25 12:39:22.210  8873  9241 D Mono    : GC_MINOR: (Nursery full) time 12.31ms, stw 34.43ms promoted 2413K major size: 108544K in use: 100776K empty reserved: 0K los size: 27380K in use: 21832K
-10-25 12:39:24.574  8873  8958 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:24.574  8873  9240 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 27 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:24.575  8873  9240 D Mono    : GC_BRIDGE: Complete, was running for 0.10ms
-10-25 12:39:24.575  8873  9240 D Mono    : GC_MINOR: (Nursery full) time 7.68ms, stw 13.86ms promoted 512K major size: 109072K in use: 101319K empty reserved: 496K los size: 27380K in use: 25201K
-10-25 12:39:25.760  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:25.815  8873  9240 D Mono    : GC_TAR_BRIDGE bridges 75 objects 76 opaque 3 colors 75 colors-bridged 75 colors-visible 75 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.09ms tarjan 0.03ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.55ms
-10-25 12:39:25.815  8873  9240 D Mono    : GC_BRIDGE: Complete, was running for 50.95ms
-10-25 12:39:25.815  8873  9240 D Mono    : GC_MAJOR: (LOS overflow) time 187.19ms, stw 193.78ms los size: 30920K in use: 20764K
-10-25 12:39:25.815  8873  9240 D Mono    : GC_MAJOR_SWEEP: major size: 106384K in use: 88191K empty reserved: 0K
-10-25 12:39:25.996  8873  8958 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:25.996  8873  9240 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 75 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.09ms tarjan 0.03ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:39:25.996  8873  9240 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:39:25.996  8873  9240 D Mono    : GC_MINOR: (Nursery full) time 6.02ms, stw 9.42ms promoted 1539K major size: 106896K in use: 89776K empty reserved: 2672K los size: 40852K in use: 30761K
-10-25 12:39:26.042  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:26.045  8873  9240 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 75 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.09ms tarjan 0.03ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.03ms
-10-25 12:39:26.045  8873  9240 D Mono    : GC_BRIDGE: Complete, was running for 0.26ms
-10-25 12:39:26.045  8873  9240 D Mono    : GC_MINOR: (Nursery full) time 18.87ms, stw 33.95ms promoted 1549K major size: 107728K in use: 91370K empty reserved: 1840K los size: 40852K in use: 30793K
-10-25 12:39:26.064  8873  9240 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 75 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.09ms tarjan 0.03ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.03ms
-10-25 12:39:26.064  8873  9240 D Mono    : GC_BRIDGE: Complete, was running for 0.17ms
-10-25 12:39:26.064  8873  9240 D Mono    : GC_MINOR: (Nursery full) time 5.54ms, stw 6.75ms promoted 1517K major size: 108768K in use: 92929K empty reserved: 800K los size: 40852K in use: 30793K
-10-25 12:39:26.104  8873  8958 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:26.108  8873  9240 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 75 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.09ms tarjan 0.03ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:39:26.108  8873  9240 D Mono    : GC_BRIDGE: Complete, was running for 0.09ms
-10-25 12:39:26.108  8873  9240 D Mono    : GC_MINOR: (Nursery full) time 13.52ms, stw 19.77ms promoted 1475K major size: 109856K in use: 94448K empty reserved: 224K los size: 40852K in use: 30857K
-10-25 12:39:26.144  8873  8958 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:26.146  8873  9240 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 75 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.09ms tarjan 0.03ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.03ms
-10-25 12:39:26.146  8873  9240 D Mono    : GC_BRIDGE: Complete, was running for 0.27ms
-10-25 12:39:26.148  8873  9240 D Mono    : GC_MINOR: (Nursery full) time 16.22ms, stw 28.38ms promoted 1554K major size: 111056K in use: 96044K empty reserved: 48K los size: 40852K in use: 30857K
-10-25 12:39:27.601  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:27.625  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 68 objects 69 opaque 0 colors 68 colors-bridged 68 colors-visible 68 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.03ms
-10-25 12:39:27.625  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 17.91ms
-10-25 12:39:27.625  8873  9082 D Mono    : GC_MAJOR_SWEEP: major size: 111072K in use: 104092K empty reserved: 0K
-10-25 12:39:27.625  8873  9082 D Mono    : GC_MAJOR: (LOS overflow) time 133.26ms, stw 145.09ms los size: 46968K in use: 37369K
-10-25 12:39:27.971  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:27.976  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 68 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:27.976  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:39:27.976  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 37.86ms, stw 47.40ms promoted 1597K major size: 112320K in use: 97723K empty reserved: 320K los size: 78268K in use: 68795K
-10-25 12:39:28.022  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 68 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:28.023  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.31ms
-10-25 12:39:28.023  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 16.63ms, stw 30.28ms promoted 1623K major size: 113808K in use: 99395K empty reserved: 368K los size: 78268K in use: 68885K
-10-25 12:39:28.071  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:28.072  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 68 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:28.072  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.09ms
-10-25 12:39:28.072  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 8.90ms, stw 10.68ms promoted 1608K major size: 115264K in use: 101049K empty reserved: 448K los size: 78268K in use: 68938K
-10-25 12:39:28.119  8873  9240 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:28.140  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 68 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:28.142  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:39:28.142  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 26.54ms, stw 49.14ms promoted 1547K major size: 116720K in use: 102641K empty reserved: 16K los size: 78268K in use: 69002K
-10-25 12:39:28.193  8873  9240 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:28.194  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 68 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:28.194  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.29ms
-10-25 12:39:28.194  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 31.84ms, stw 41.58ms promoted 1607K major size: 118176K in use: 104297K empty reserved: 96K los size: 78268K in use: 69002K
-10-25 12:39:28.227  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:28.229  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 68 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:28.229  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:39:28.229  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 12.87ms, stw 18.41ms promoted 1749K major size: 119952K in use: 106123K empty reserved: 368K los size: 78268K in use: 69186K
-10-25 12:39:28.295  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:28.297  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 68 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.04ms
-10-25 12:39:28.297  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.13ms
-10-25 12:39:28.297  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 11.47ms, stw 18.73ms promoted 1565K major size: 121440K in use: 107734K empty reserved: 416K los size: 78268K in use: 69186K
-10-25 12:39:28.329  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:28.330  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 68 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:28.330  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:39:28.330  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 8.09ms, stw 12.06ms promoted 1649K major size: 122928K in use: 109432K empty reserved: 464K los size: 78268K in use: 69186K
-10-25 12:39:28.355  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:28.356  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 68 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:28.356  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:39:28.356  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 11.87ms, stw 14.71ms promoted 1593K major size: 124448K in use: 111070K empty reserved: 480K los size: 78268K in use: 69341K
-10-25 12:39:28.386  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:28.386  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 68 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:28.386  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:39:28.386  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 6.43ms, stw 14.20ms promoted 1581K major size: 125856K in use: 112695K empty reserved: 96K los size: 78268K in use: 69391K
-10-25 12:39:28.412  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:28.413  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 68 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:28.415  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.13ms
-10-25 12:39:28.415  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 10.53ms, stw 15.17ms promoted 1663K major size: 127408K in use: 114408K empty reserved: 80K los size: 78268K in use: 69539K
-10-25 12:39:28.696  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:28.712  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 41 objects 42 opaque 0 colors 41 colors-bridged 41 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.04ms
-10-25 12:39:28.712  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 12.04ms
-10-25 12:39:28.712  8873  9082 D Mono    : GC_MAJOR: (LOS overflow) time 258.23ms, stw 272.68ms los size: 51732K in use: 42341K
-10-25 12:39:28.713  8873  9082 D Mono    : GC_MAJOR_SWEEP: major size: 128736K in use: 115712K empty reserved: 0K
-10-25 12:39:28.741  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:28.741  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:28.741  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:39:28.741  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 15.53ms, stw 20.53ms promoted 2088K major size: 130864K in use: 117930K empty reserved: 208K los size: 51732K in use: 43565K
-10-25 12:39:28.785  8873  9240 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:28.785  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.04ms
-10-25 12:39:28.785  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.13ms
-10-25 12:39:28.785  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 12.19ms, stw 18.39ms promoted 1795K major size: 132768K in use: 119804K empty reserved: 352K los size: 51732K in use: 44028K
-10-25 12:39:28.816  8873  9240 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:28.816  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.01ms
-10-25 12:39:28.817  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.09ms
-10-25 12:39:28.817  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 7.65ms, stw 11.64ms promoted 1453K major size: 134288K in use: 121303K empty reserved: 368K los size: 51732K in use: 44028K
-10-25 12:39:28.881  8873  9240 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:28.883  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:28.883  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.13ms
-10-25 12:39:28.883  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 16.85ms, stw 25.47ms promoted 1575K major size: 135856K in use: 122922K empty reserved: 336K los size: 51732K in use: 44028K
-10-25 12:39:28.925  8873  9240 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:28.927  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:28.927  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.10ms
-10-25 12:39:28.928  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 14.41ms, stw 22.42ms promoted 1505K major size: 137440K in use: 124466K empty reserved: 288K los size: 51732K in use: 44028K
-10-25 12:39:28.973  8873  9240 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:28.980  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.03ms
-10-25 12:39:28.980  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.15ms
-10-25 12:39:28.980  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 11.70ms, stw 31.31ms promoted 1519K major size: 138992K in use: 126023K empty reserved: 272K los size: 51732K in use: 44284K
-10-25 12:39:29.004  8873  9240 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:29.004  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.03ms
-10-25 12:39:29.004  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.24ms
-10-25 12:39:29.004  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 9.71ms, stw 12.04ms promoted 1588K major size: 140640K in use: 127658K empty reserved: 160K los size: 51732K in use: 44284K
-10-25 12:39:29.037  8873  9240 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:29.038  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:29.038  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.10ms
-10-25 12:39:29.038  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 12.77ms, stw 14.62ms promoted 1876K major size: 142592K in use: 129606K empty reserved: 256K los size: 51732K in use: 44710K
-10-25 12:39:29.089  8873  9240 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:29.095  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.04ms
-10-25 12:39:29.095  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.14ms
-10-25 12:39:29.095  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 25.37ms, stw 47.54ms promoted 1580K major size: 144208K in use: 131232K empty reserved: 176K los size: 51732K in use: 44733K
-10-25 12:39:29.113  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.04ms
-10-25 12:39:29.113  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.16ms
-10-25 12:39:29.113  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 5.20ms, stw 7.29ms promoted 1581K major size: 145792K in use: 132856K empty reserved: 128K los size: 51732K in use: 44753K
-10-25 12:39:29.190  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:29.194  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.03ms
-10-25 12:39:29.194  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.16ms
-10-25 12:39:29.194  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 24.01ms, stw 29.39ms promoted 2059K major size: 147904K in use: 134949K empty reserved: 64K los size: 51732K in use: 45583K
-10-25 12:39:29.257  8873  9240 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:29.259  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:29.259  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:39:29.259  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 23.70ms, stw 29.45ms promoted 3765K major size: 151744K in use: 138714K empty reserved: 320K los size: 51732K in use: 48759K
-10-25 12:39:29.527  8873  9240 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:29.529  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:29.529  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:39:29.529  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 11.55ms, stw 16.58ms promoted 1987K major size: 153792K in use: 140705K empty reserved: 320K los size: 53500K in use: 50822K
-10-25 12:39:29.589  8873  9240 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:29.591  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:29.591  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:39:29.591  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 5.74ms, stw 9.71ms promoted 2K major size: 153792K in use: 140708K empty reserved: 320K los size: 53500K in use: 50822K
-10-25 12:39:29.621  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:29.621  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.14ms
-10-25 12:39:29.621  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 4.39ms, stw 6.25ms promoted 2K major size: 153792K in use: 140710K empty reserved: 320K los size: 53500K in use: 50822K
-10-25 12:39:29.675  8873  9240 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:29.683  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:29.683  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:39:29.683  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 13.71ms, stw 26.25ms promoted 2K major size: 153792K in use: 140712K empty reserved: 320K los size: 53500K in use: 50822K
-10-25 12:39:29.719  8873  9240 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:29.720  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:29.720  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.13ms
-10-25 12:39:29.720  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 5.71ms, stw 11.64ms promoted 2K major size: 153792K in use: 140715K empty reserved: 320K los size: 53500K in use: 50822K
-10-25 12:39:29.763  8873  9240 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:29.764  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:29.764  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:39:29.764  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 2.85ms, stw 4.80ms promoted 2K major size: 153792K in use: 140717K empty reserved: 320K los size: 53500K in use: 50822K
-10-25 12:39:29.813  8873  9240 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:29.813  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:29.813  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:39:29.813  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 3.56ms, stw 10.82ms promoted 2K major size: 153792K in use: 140719K empty reserved: 320K los size: 53500K in use: 50822K
-10-25 12:39:29.860  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:29.863  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:29.863  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:39:29.863  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 11.78ms, stw 15.44ms promoted 1K major size: 153792K in use: 140721K empty reserved: 320K los size: 53500K in use: 50822K
-10-25 12:39:29.934  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:29.939  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:29.939  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:39:29.939  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 4.90ms, stw 13.50ms promoted 2K major size: 153792K in use: 140724K empty reserved: 320K los size: 53500K in use: 50822K
-10-25 12:39:30.007  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:30.007  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.12ms
-10-25 12:39:30.007  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 8.99ms, stw 25.00ms promoted 1K major size: 153792K in use: 140726K empty reserved: 320K los size: 53500K in use: 50822K
-10-25 12:39:30.038  8873  9240 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:30.044  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:30.044  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:39:30.044  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 6.98ms, stw 15.90ms promoted 2K major size: 153808K in use: 140728K empty reserved: 304K los size: 53500K in use: 50822K
-10-25 12:39:30.097  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:30.100  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:30.100  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.28ms
-10-25 12:39:30.100  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 3.11ms, stw 24.59ms promoted 1K major size: 153808K in use: 140730K empty reserved: 304K los size: 53500K in use: 50822K
-10-25 12:39:30.131  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:30.131  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:30.132  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:39:30.132  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 3.63ms, stw 6.66ms promoted 1K major size: 153808K in use: 140731K empty reserved: 304K los size: 53500K in use: 50822K
-10-25 12:39:30.180  8873  9240 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:30.180  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:30.180  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.10ms
-10-25 12:39:30.180  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 6.21ms, stw 13.46ms promoted 2K major size: 153808K in use: 140734K empty reserved: 304K los size: 53500K in use: 50822K
-10-25 12:39:30.216  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:30.216  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:30.216  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.16ms
-10-25 12:39:30.216  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 2.69ms, stw 11.21ms promoted 1K major size: 153808K in use: 140736K empty reserved: 304K los size: 53500K in use: 50822K
-10-25 12:39:30.245  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:30.245  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.13ms
-10-25 12:39:30.245  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 3.91ms, stw 10.68ms promoted 2K major size: 153808K in use: 140738K empty reserved: 304K los size: 53500K in use: 50822K
-10-25 12:39:31.579  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:31.637  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 28 objects 883078 opaque 794127 colors 28 colors-bridged 28 colors-visible 28 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 296.24ms scc-setup 0.18ms gather-xref 0.04ms xref-setup 0.32ms cleanup 20.39ms
-10-25 12:39:31.637  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 45.78ms
-10-25 12:39:31.637  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 321.80ms, stw 338.19ms promoted 34K major size: 153872K in use: 140773K empty reserved: 240K los size: 53500K in use: 50982K
-10-25 12:39:35.103  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:35.129  8873  9240 D Mono    : GC_TAR_BRIDGE bridges 27 objects 27 opaque 0 colors 27 colors-bridged 27 colors-visible 27 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.03ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:39:35.129  8873  9240 D Mono    : GC_BRIDGE: Complete, was running for 25.00ms
-10-25 12:39:35.129  8873  9240 D Mono    : GC_MINOR: (Nursery full) time 8.49ms, stw 12.10ms promoted 85K major size: 153920K in use: 140861K empty reserved: 192K los size: 54528K in use: 52166K
-10-25 12:39:38.466  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:38.483  8873  8958 D Mono    : GC_TAR_BRIDGE bridges 27 objects 27 opaque 0 colors 27 colors-bridged 27 colors-visible 27 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.07ms tarjan 0.02ms scc-setup 0.01ms gather-xref 0.01ms xref-setup 0.02ms cleanup 0.04ms
-10-25 12:39:38.484  8873  8958 D Mono    : GC_BRIDGE: Complete, was running for 17.67ms
-10-25 12:39:38.486  8873  8958 D Mono    : GC_MINOR: (Nursery full) time 4.20ms, stw 8.12ms promoted 77K major size: 153968K in use: 140939K empty reserved: 144K los size: 55556K in use: 53350K
-10-25 12:39:41.498  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:41.500  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 27 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.07ms tarjan 0.02ms scc-setup 0.01ms gather-xref 0.01ms xref-setup 0.02ms cleanup 0.03ms
-10-25 12:39:41.500  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 1.56ms
-10-25 12:39:41.500  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 3.61ms, stw 6.87ms promoted 71K major size: 154016K in use: 141011K empty reserved: 96K los size: 55556K in use: 53350K
-10-25 12:39:45.797  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:45.840  8873  9240 D Mono    : GC_TAR_BRIDGE bridges 28 objects 883056 opaque 794128 colors 28 colors-bridged 28 colors-visible 28 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 487.80ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.03ms cleanup 10.88ms
-10-25 12:39:45.840  8873  9240 D Mono    : GC_BRIDGE: Complete, was running for 37.15ms
-10-25 12:39:45.840  8873  9240 D Mono    : GC_MINOR: (Nursery full) time 523.18ms, stw 534.92ms promoted 89K major size: 154064K in use: 141101K empty reserved: 48K los size: 56584K in use: 54534K
-10-25 12:39:48.472  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:48.487  8873  9240 D Mono    : GC_TAR_BRIDGE bridges 432 objects 432 opaque 0 colors 432 colors-bridged 432 colors-visible 432 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.08ms scc-setup 0.08ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.05ms
-10-25 12:39:48.487  8873  9240 D Mono    : GC_BRIDGE: Complete, was running for 11.69ms
-10-25 12:39:48.487  8873  9240 D Mono    : GC_MINOR: (Nursery full) time 10.32ms, stw 22.86ms promoted 104K major size: 154160K in use: 141206K empty reserved: 464K los size: 63756K in use: 60546K
-10-25 12:39:51.628  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:51.725  8873  9239 D Mono    : GC_TAR_BRIDGE bridges 243 objects 243 opaque 0 colors 243 colors-bridged 243 colors-visible 243 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.04ms scc-setup 0.04ms gather-xref 0.01ms xref-setup 0.02ms cleanup 0.04ms
-10-25 12:39:51.725  8873  9239 D Mono    : GC_BRIDGE: Complete, was running for 95.06ms
-10-25 12:39:51.725  8873  9239 D Mono    : GC_MINOR: (Nursery full) time 8.56ms, stw 41.40ms promoted 94K major size: 154224K in use: 141301K empty reserved: 400K los size: 68880K in use: 65727K
-10-25 12:39:55.489  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:39:55.710  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 94 objects 883123 opaque 794125 colors 94 colors-bridged 94 colors-visible 94 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 280.55ms scc-setup 0.07ms gather-xref 0.02ms xref-setup 0.02ms cleanup 149.41ms
-10-25 12:39:55.710  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 213.30ms
-10-25 12:39:55.710  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 305.29ms, stw 317.43ms promoted 94K major size: 154288K in use: 141397K empty reserved: 336K los size: 70936K in use: 68300K
-10-25 12:40:05.525  8873  9240 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:40:05.526  8873  8993 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 94 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 280.55ms scc-setup 0.07ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.03ms
-10-25 12:40:05.528  8873  8993 D Mono    : GC_BRIDGE: Complete, was running for 0.15ms
-10-25 12:40:05.528  8873  8993 D Mono    : GC_MINOR: (Nursery full) time 16.47ms, stw 27.25ms promoted 239K major size: 154416K in use: 141661K empty reserved: 208K los size: 70936K in use: 68423K
-10-25 12:40:17.328  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:40:17.330  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 94 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 280.55ms scc-setup 0.07ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:40:17.330  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:40:17.330  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 7.33ms, stw 12.97ms promoted 155K major size: 154496K in use: 141821K empty reserved: 128K los size: 75032K in use: 71709K
-10-25 12:40:33.326  8873  9239 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:40:33.326  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 94 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 280.55ms scc-setup 0.07ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:40:33.326  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 0.12ms
-10-25 12:40:33.326  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 16.35ms, stw 33.71ms promoted 181K major size: 154624K in use: 142003K empty reserved: 0K los size: 75032K in use: 71709K
-10-25 12:40:50.501  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:40:50.556  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 1 objects 883022 opaque 794137 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 389.95ms scc-setup 0.07ms gather-xref 0.02ms xref-setup 0.02ms cleanup 20.95ms
-10-25 12:40:50.556  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 54.45ms
-10-25 12:40:50.556  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 441.86ms, stw 443.96ms promoted 182K major size: 154752K in use: 142186K empty reserved: 384K los size: 75032K in use: 71709K
-10-25 12:41:06.602  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 389.95ms scc-setup 0.07ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:41:06.602  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.12ms
-10-25 12:41:06.602  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 9.98ms, stw 12.10ms promoted 180K major size: 154896K in use: 142366K empty reserved: 240K los size: 75032K in use: 71709K
-10-25 12:41:23.524  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:41:23.566  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 1 objects 64 opaque 9 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.04ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:41:23.566  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 36.21ms
-10-25 12:41:23.566  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 8.33ms, stw 21.57ms promoted 180K major size: 155008K in use: 142546K empty reserved: 128K los size: 75032K in use: 71709K
-10-25 12:41:40.190  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:41:40.193  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.04ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:41:40.193  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:41:40.193  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 22.19ms, stw 35.74ms promoted 181K major size: 155120K in use: 142728K empty reserved: 16K los size: 75032K in use: 71709K
-10-25 12:41:54.526  8873  9240 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:41:54.526  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.04ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:41:54.526  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.12ms
-10-25 12:41:54.530  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 7.39ms, stw 9.65ms promoted 216K major size: 155280K in use: 142947K empty reserved: 368K los size: 75032K in use: 71709K
-10-25 12:41:54.746  8873  9240 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:41:54.746  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.04ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:41:54.746  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.09ms
-10-25 12:41:54.746  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 4.90ms, stw 7.79ms promoted 127K major size: 155440K in use: 143084K empty reserved: 208K los size: 75032K in use: 71709K
-10-25 12:41:54.911  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:41:54.915  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.04ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:41:54.915  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.13ms
-10-25 12:41:54.915  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 10.20ms, stw 24.56ms promoted 89K major size: 155536K in use: 143187K empty reserved: 112K los size: 75032K in use: 71717K
-10-25 12:41:54.961  8873  8958 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:41:54.963  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.04ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:41:54.963  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:41:54.963  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 4.22ms, stw 8.93ms promoted 3K major size: 155536K in use: 143190K empty reserved: 112K los size: 75032K in use: 71717K
-10-25 12:41:55.041  8873  8958 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:41:55.041  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.04ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:41:55.042  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:41:55.042  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 8.74ms, stw 17.36ms promoted 2K major size: 155536K in use: 143193K empty reserved: 112K los size: 75032K in use: 71717K
-10-25 12:41:55.107  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:41:55.107  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.04ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:41:55.107  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:41:55.107  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 11.33ms, stw 27.88ms promoted 2K major size: 155552K in use: 143195K empty reserved: 96K los size: 75032K in use: 71717K
-10-25 12:41:55.168  8873  8958 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:41:55.169  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.04ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:41:55.169  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:41:55.169  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 24.67ms, stw 26.80ms promoted 2K major size: 155552K in use: 143198K empty reserved: 96K los size: 75032K in use: 71717K
-10-25 12:41:55.243  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:41:55.243  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.04ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.05ms
-10-25 12:41:55.243  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.15ms
-10-25 12:41:55.243  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 4.99ms, stw 13.31ms promoted 52K major size: 155568K in use: 143253K empty reserved: 80K los size: 75032K in use: 71717K
-10-25 12:41:55.371  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:41:55.371  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.04ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:41:55.371  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.14ms
-10-25 12:41:55.371  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 7.13ms, stw 12.30ms promoted 45K major size: 155616K in use: 143304K empty reserved: 32K los size: 75032K in use: 71725K
-10-25 12:41:55.554  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:41:55.555  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.04ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:41:55.555  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.10ms
-10-25 12:41:55.555  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 4.69ms, stw 7.77ms promoted 68K major size: 155680K in use: 143379K empty reserved: 480K los size: 75032K in use: 71733K
-10-25 12:41:58.474  8873  8873 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:41:58.490  8873  8993 D Mono    : GC_TAR_BRIDGE bridges 107 objects 114 opaque 1 colors 107 colors-bridged 107 colors-visible 107 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.07ms tarjan 0.04ms scc-setup 0.05ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.05ms
-10-25 12:41:58.490  8873  8993 D Mono    : GC_BRIDGE: Complete, was running for 14.31ms
-10-25 12:41:58.490  8873  8993 D Mono    : GC_MAJOR: (LOS overflow) time 210.29ms, stw 355.56ms los size: 34268K in use: 22434K
-10-25 12:41:58.490  8873  8993 D Mono    : GC_MAJOR_SWEEP: major size: 155376K in use: 142135K empty reserved: 0K
-10-25 12:41:58.596  8873  8993 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 107 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.07ms tarjan 0.04ms scc-setup 0.05ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:41:58.596  8873  8993 D Mono    : GC_BRIDGE: Complete, was running for 0.17ms
-10-25 12:41:58.596  8873  8993 D Mono    : GC_MINOR: (Nursery full) time 7.59ms, stw 9.01ms promoted 1551K major size: 156528K in use: 143732K empty reserved: 144K los size: 45692K in use: 35374K
-10-25 12:41:58.632  8873  8993 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 107 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.07ms tarjan 0.04ms scc-setup 0.05ms gather-xref 0.02ms xref-setup 0.02ms cleanup 1.33ms
-10-25 12:41:58.632  8873  8993 D Mono    : GC_BRIDGE: Complete, was running for 1.50ms
-10-25 12:41:58.632  8873  8993 D Mono    : GC_MINOR: (Nursery full) time 16.75ms, stw 21.79ms promoted 1548K major size: 158048K in use: 145325K empty reserved: 160K los size: 45692K in use: 35406K
-10-25 12:41:58.683  8873  8993 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 107 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.07ms tarjan 0.04ms scc-setup 0.05ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:41:58.683  8873  8993 D Mono    : GC_BRIDGE: Complete, was running for 0.24ms
-10-25 12:41:58.683  8873  8993 D Mono    : GC_MINOR: (Nursery full) time 21.56ms, stw 29.76ms promoted 1515K major size: 159616K in use: 146882K empty reserved: 128K los size: 45692K in use: 35406K
-10-25 12:41:58.736  8873  8993 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 107 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.07ms tarjan 0.04ms scc-setup 0.05ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.03ms
-10-25 12:41:58.736  8873  8993 D Mono    : GC_BRIDGE: Complete, was running for 0.14ms
-10-25 12:41:58.736  8873  8993 D Mono    : GC_MINOR: (Nursery full) time 11.19ms, stw 19.96ms promoted 1474K major size: 161136K in use: 148399K empty reserved: 144K los size: 45692K in use: 35470K
-10-25 12:41:58.773  8873  8993 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 107 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.07ms tarjan 0.04ms scc-setup 0.05ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:41:58.773  8873  8993 D Mono    : GC_BRIDGE: Complete, was running for 0.12ms
-10-25 12:41:58.773  8873  8993 D Mono    : GC_MINOR: (Nursery full) time 13.87ms, stw 21.85ms promoted 1557K major size: 162736K in use: 149999K empty reserved: 80K los size: 45692K in use: 35470K
-10-25 12:41:59.313  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:41:59.354  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 59 objects 61 opaque 0 colors 59 colors-bridged 59 colors-visible 59 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.04ms gather-xref 0.03ms xref-setup 0.03ms cleanup 0.03ms
-10-25 12:41:59.354  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 41.15ms
-10-25 12:41:59.354  8873  9082 D Mono    : GC_MAJOR_SWEEP: major size: 162064K in use: 156114K empty reserved: 0K
-10-25 12:41:59.354  8873  9082 D Mono    : GC_MAJOR: (LOS overflow) time 320.15ms, stw 323.16ms los size: 62244K in use: 50130K
-10-25 12:42:00.057  8873  9240 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:42:00.058  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:42:00.115  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 1 objects 880658 opaque 793277 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 370.13ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.02ms cleanup 37.28ms
-10-25 12:42:00.115  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 57.62ms
-10-25 12:42:00.115  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 398.67ms, stw 403.48ms promoted 1599K major size: 163376K in use: 149768K empty reserved: 464K los size: 83108K in use: 71123K
-10-25 12:42:00.411  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:42:00.424  8873  8873 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:42:00.490  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 1 objects 880657 opaque 793277 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.02ms tarjan 241.12ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.02ms cleanup 62.51ms
-10-25 12:42:00.490  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 78.08ms
-10-25 12:42:00.490  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 257.57ms, stw 271.99ms promoted 1621K major size: 164864K in use: 151439K empty reserved: 0K los size: 83108K in use: 71213K
-10-25 12:42:00.527  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:42:00.548  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 9 objects 9 opaque 0 colors 9 colors-bridged 9 colors-visible 9 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.03ms
-10-25 12:42:00.548  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 20.29ms
-10-25 12:42:00.548  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 20.87ms, stw 23.32ms promoted 1640K major size: 166304K in use: 153135K empty reserved: 96K los size: 83108K in use: 71266K
-10-25 12:42:00.578  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:42:00.579  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 9 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.15ms
-10-25 12:42:00.579  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.30ms
-10-25 12:42:00.579  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 10.15ms, stw 13.45ms promoted 1589K major size: 167920K in use: 154770K empty reserved: 16K los size: 83108K in use: 71330K
-10-25 12:42:00.633  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 9 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:42:00.633  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.35ms
-10-25 12:42:00.633  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 13.24ms, stw 31.16ms promoted 1593K major size: 169568K in use: 156408K empty reserved: 416K los size: 83108K in use: 71330K
-10-25 12:42:00.682  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 9 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:42:00.682  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.08ms
-10-25 12:42:00.682  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 9.84ms, stw 24.62ms promoted 1755K major size: 171392K in use: 158244K empty reserved: 128K los size: 83108K in use: 71514K
-10-25 12:42:00.720  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 9 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:42:00.720  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:42:00.720  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 10.92ms, stw 21.76ms promoted 1577K major size: 173008K in use: 159866K empty reserved: 48K los size: 83108K in use: 71514K
-10-25 12:42:00.764  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 9 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:42:00.770  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.14ms
-10-25 12:42:00.770  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 9.02ms, stw 11.57ms promoted 1652K major size: 174720K in use: 161568K empty reserved: 384K los size: 83108K in use: 71514K
-10-25 12:42:00.829  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 9 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.04ms
-10-25 12:42:00.829  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.20ms
-10-25 12:42:00.829  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 9.55ms, stw 18.63ms promoted 1589K major size: 176336K in use: 163201K empty reserved: 304K los size: 83108K in use: 71669K
-10-25 12:42:00.853  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 9 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:42:00.853  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.14ms
-10-25 12:42:00.853  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 5.80ms, stw 12.50ms promoted 1586K major size: 177984K in use: 164831K empty reserved: 192K los size: 83108K in use: 71719K
-10-25 12:42:00.892  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 9 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:42:00.892  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.12ms
-10-25 12:42:00.892  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 23.59ms, stw 28.52ms promoted 1655K major size: 179664K in use: 166535K empty reserved: 48K los size: 83108K in use: 71867K
-10-25 12:42:00.936  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:42:00.936  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 9 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:42:00.936  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.13ms
-10-25 12:42:00.936  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 9.40ms, stw 12.30ms promoted 1925K major size: 181648K in use: 168549K empty reserved: 112K los size: 83108K in use: 72765K
-10-25 12:42:00.958  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 9 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:42:00.958  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.17ms
-10-25 12:42:00.958  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 9.68ms, stw 10.91ms promoted 2052K major size: 183888K in use: 170734K empty reserved: 432K los size: 83108K in use: 73879K
-10-25 12:42:01.010  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 9 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:42:01.010  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.27ms
-10-25 12:42:01.010  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 13.74ms, stw 25.21ms promoted 1652K major size: 185568K in use: 172445K empty reserved: 288K los size: 83108K in use: 74097K
-10-25 12:42:01.052  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 9 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:42:01.052  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.12ms
-10-25 12:42:01.052  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 19.54ms, stw 30.38ms promoted 1483K major size: 187136K in use: 173973K empty reserved: 256K los size: 83108K in use: 74097K
-10-25 12:42:01.101  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 9 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:42:01.102  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.60ms
-10-25 12:42:01.102  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 9.78ms, stw 15.69ms promoted 1569K major size: 188736K in use: 175587K empty reserved: 192K los size: 83108K in use: 74097K
-10-25 12:42:01.121  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 9 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:42:01.121  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.14ms
-10-25 12:42:01.124  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 5.32ms, stw 6.55ms promoted 1506K major size: 190288K in use: 177130K empty reserved: 176K los size: 83108K in use: 74354K
-10-25 12:42:01.148  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:42:01.151  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 9 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.03ms
-10-25 12:42:01.151  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.16ms
-10-25 12:42:01.152  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 5.82ms, stw 13.14ms promoted 1520K major size: 191856K in use: 178689K empty reserved: 144K los size: 83108K in use: 74354K
-10-25 12:42:01.192  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 9 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:42:01.192  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.12ms
-10-25 12:42:01.192  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 14.68ms, stw 25.23ms promoted 1619K major size: 193552K in use: 180358K empty reserved: 496K los size: 83108K in use: 74400K
-10-25 12:42:01.243  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 9 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:42:01.243  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:42:01.243  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 21.85ms, stw 26.54ms promoted 1854K major size: 195456K in use: 182282K empty reserved: 128K los size: 83108K in use: 74771K
-10-25 12:42:01.280  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:42:01.280  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 9 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:42:01.280  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:42:01.280  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 9.08ms, stw 12.16ms promoted 1581K major size: 197104K in use: 183909K empty reserved: 16K los size: 83108K in use: 74794K
-10-25 12:42:01.626  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:42:01.680  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 12 objects 882993 opaque 794217 colors 12 colors-bridged 12 colors-visible 12 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 265.58ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.02ms cleanup 21.80ms
-10-25 12:42:01.680  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 52.91ms
-10-25 12:42:01.680  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 317.60ms, stw 329.34ms promoted 1579K major size: 198768K in use: 185530K empty reserved: 400K los size: 83108K in use: 74814K
-10-25 12:42:02.123  8873  8993 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:42:02.246  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:42:02.256  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 17 objects 882988 opaque 794214 colors 17 colors-bridged 17 colors-visible 17 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.08ms tarjan 330.73ms scc-setup 0.04ms gather-xref 0.05ms xref-setup 0.03ms cleanup 48.80ms
-10-25 12:42:02.256  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 132.75ms
-10-25 12:42:02.256  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 378.16ms, stw 393.37ms promoted 2494K major size: 201280K in use: 188050K empty reserved: 448K los size: 83108K in use: 76353K
-10-25 12:42:02.335  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 17 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.08ms tarjan 330.73ms scc-setup 0.04ms gather-xref 0.05ms xref-setup 0.03ms cleanup 1.59ms
-10-25 12:42:02.335  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 1.98ms
-10-25 12:42:02.335  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 26.74ms, stw 31.10ms promoted 3756K major size: 205104K in use: 191807K empty reserved: 208K los size: 83108K in use: 78820K
-10-25 12:42:02.657  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 46 objects 48 opaque 0 colors 46 colors-bridged 46 colors-visible 46 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.08ms gather-xref 0.04ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:42:02.657  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 52.33ms
-10-25 12:42:02.657  8873  9082 D Mono    : GC_MAJOR_SWEEP: major size: 205312K in use: 235902K empty reserved: 0K
-10-25 12:42:02.657  8873  9082 D Mono    : GC_MAJOR: (LOS overflow) time 234.33ms, stw 267.48ms los size: 35708K in use: 26054K
-10-25 12:42:02.755  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 46 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.08ms gather-xref 0.04ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:42:02.755  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.12ms
-10-25 12:42:02.755  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 33.76ms, stw 43.93ms promoted 929K major size: 206208K in use: 192794K empty reserved: 128K los size: 37476K in use: 28117K
-10-25 12:42:02.815  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 46 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.08ms gather-xref 0.04ms xref-setup 0.03ms cleanup 2.06ms
-10-25 12:42:02.815  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 2.19ms
-10-25 12:42:02.815  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 16.19ms, stw 27.28ms promoted 0K major size: 206208K in use: 192794K empty reserved: 128K los size: 37476K in use: 28117K
-10-25 12:42:02.875  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 46 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.08ms gather-xref 0.04ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:42:02.875  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.25ms
-10-25 12:42:02.875  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 3.12ms, stw 11.89ms promoted 0K major size: 206208K in use: 192794K empty reserved: 128K los size: 37476K in use: 28117K
-10-25 12:42:02.907  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 46 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.08ms gather-xref 0.04ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:42:02.907  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.12ms
-10-25 12:42:02.907  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 8.36ms, stw 13.06ms promoted 0K major size: 206208K in use: 192795K empty reserved: 128K los size: 37476K in use: 28117K
-10-25 12:42:02.935  8873  9082 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 46 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.08ms gather-xref 0.04ms xref-setup 0.03ms cleanup 0.02ms
-10-25 12:42:02.935  8873  9082 D Mono    : GC_BRIDGE: Complete, was running for 0.13ms
-10-25 12:42:02.935  8873  9082 D Mono    : GC_MINOR: (Nursery full) time 3.21ms, stw 4.36ms promoted 0K major size: 206208K in use: 192795K empty reserved: 128K los size: 37476K in use: 28117K
-10-25 12:42:03.527  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:42:03.552  8873  8993 D Mono    : GC_TAR_BRIDGE bridges 56 objects 56 opaque 0 colors 56 colors-bridged 56 colors-visible 56 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:42:03.552  8873  8993 D Mono    : GC_BRIDGE: Complete, was running for 21.89ms
-10-25 12:42:03.552  8873  8993 D Mono    : GC_MINOR: (Nursery full) time 10.69ms, stw 27.24ms promoted 29K major size: 206224K in use: 192826K empty reserved: 112K los size: 37476K in use: 28277K
-10-25 12:42:15.662  8873  9240 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:42:15.663  8873  8993 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 56 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:42:15.663  8873  8993 D Mono    : GC_BRIDGE: Complete, was running for 0.10ms
-10-25 12:42:15.663  8873  8993 D Mono    : GC_MINOR: (Nursery full) time 5.89ms, stw 13.21ms promoted 191K major size: 206320K in use: 193021K empty reserved: 16K los size: 37476K in use: 33247K
-10-25 12:42:15.713  8873  8993 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 56 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:42:15.713  8873  8993 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:42:15.713  8873  8993 D Mono    : GC_MINOR: (Nursery full) time 8.97ms, stw 17.43ms promoted 72K major size: 206432K in use: 193097K empty reserved: 416K los size: 37476K in use: 33263K
-10-25 12:42:15.764  8873  8993 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 56 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:42:15.764  8873  8925 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:42:15.764  8873  8993 D Mono    : GC_BRIDGE: Complete, was running for 0.10ms
-10-25 12:42:15.764  8873  8993 D Mono    : GC_MINOR: (Nursery full) time 3.43ms, stw 6.03ms promoted 2K major size: 206432K in use: 193100K empty reserved: 416K los size: 37476K in use: 33263K
-10-25 12:42:15.792  8873  9240 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:42:15.792  8873  8993 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 56 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:42:15.792  8873  8993 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:42:15.792  8873  8993 D Mono    : GC_MINOR: (Nursery full) time 6.42ms, stw 11.34ms promoted 2K major size: 206432K in use: 193102K empty reserved: 416K los size: 37476K in use: 33263K
-10-25 12:42:15.845  8873  9082 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:42:15.846  8873  8993 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 56 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:42:15.846  8873  8993 D Mono    : GC_BRIDGE: Complete, was running for 0.10ms
-10-25 12:42:15.846  8873  8993 D Mono    : GC_MINOR: (Nursery full) time 3.04ms, stw 12.86ms promoted 1K major size: 206432K in use: 193104K empty reserved: 416K los size: 37476K in use: 33263K
-10-25 12:42:15.881  8873  9082 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:42:15.884  8873  8993 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 56 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:42:15.884  8873  8993 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:42:15.884  8873  8993 D Mono    : GC_MINOR: (Nursery full) time 5.43ms, stw 10.06ms promoted 2K major size: 206448K in use: 193106K empty reserved: 400K los size: 37476K in use: 33263K
-10-25 12:42:15.948  8873  8993 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 56 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:42:15.948  8873  8993 D Mono    : GC_BRIDGE: Complete, was running for 0.13ms
-10-25 12:42:15.948  8873  8993 D Mono    : GC_MINOR: (Nursery full) time 3.85ms, stw 13.87ms promoted 53K major size: 206480K in use: 193164K empty reserved: 368K los size: 37476K in use: 33263K
-10-25 12:42:16.117  8873  9240 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:42:16.120  8873  8993 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 56 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:42:16.120  8873  8993 D Mono    : GC_BRIDGE: Complete, was running for 0.11ms
-10-25 12:42:16.120  8873  8993 D Mono    : GC_MINOR: (Nursery full) time 3.58ms, stw 9.74ms promoted 67K major size: 206544K in use: 193239K empty reserved: 304K los size: 37476K in use: 33271K
-10-25 12:42:16.282  8873  8993 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 56 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:42:16.282  8873  8993 D Mono    : GC_BRIDGE: Complete, was running for 0.14ms
-10-25 12:42:16.282  8873  8993 D Mono    : GC_MINOR: (Nursery full) time 3.43ms, stw 5.62ms promoted 85K major size: 206624K in use: 193331K empty reserved: 224K los size: 37476K in use: 33279K
-10-25 12:42:20.668  8873  9082 D Mono    : GC_BRIDGE waiting for bridge processing to finish
-10-25 12:42:20.668  8873  8873 D Mono    : GC_TAR_BRIDGE bridges 0 objects 0 opaque 0 colors 0 colors-bridged 0 colors-visible 56 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
-10-25 12:42:20.668  8873  8873 D Mono    : GC_BRIDGE: Complete, was running for 0.12ms
-10-25 12:42:20.668  8873  8873 D Mono    : GC_MINOR: (Nursery full) time 9.35ms, stw 31.82ms promoted 75K major size: 206656K in use: 193413K empty reserved: 192K los size: 37476K in use: 33279K
+10-25 12:56:02.248  8893  8893 W monodroid: Creating public update directory: `/data/user/0/com.tabstudio.ide/files/.__override__/x86_64`
+10-25 12:56:21.215  8893  8893 D Mono    : GC_TAR_BRIDGE bridges 37 objects 3215 opaque 2809 colors 37 colors-bridged 37 colors-visible 37 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.02ms tarjan 0.97ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.08ms
+10-25 12:56:21.215  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 9.23ms, stw 13.57ms promoted 2476K major size: 3776K in use: 3122K empty reserved: 320K los size: 8192K in use: 7355K
+10-25 12:56:27.713  8893  8893 D Mono    : GC_TAR_BRIDGE bridges 6 objects 6 opaque 0 colors 6 colors-bridged 6 colors-visible 6 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.03ms
+10-25 12:56:27.713  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 16.33ms, stw 22.93ms promoted 2579K major size: 6560K in use: 5935K empty reserved: 96K los size: 8192K in use: 7371K
+10-25 12:56:29.743  8893  8950 D Mono    : GC_TAR_BRIDGE bridges 21 objects 21 opaque 0 colors 21 colors-bridged 21 colors-visible 21 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.02ms cleanup 1.87ms
+10-25 12:56:29.743  8893  8950 D Mono    : GC_MINOR: (Nursery full) time 22.07ms, stw 36.60ms promoted 2018K major size: 8928K in use: 8191K empty reserved: 288K los size: 8192K in use: 7728K
+10-25 12:56:29.908  8893  8950 D Mono    : GC_TAR_BRIDGE bridges 33 objects 35 opaque 0 colors 33 colors-bridged 33 colors-visible 33 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.02ms
+10-25 12:56:29.908  8893  8950 D Mono    : GC_MAJOR: (LOS overflow) time 15.94ms, stw 16.59ms los size: 8192K in use: 7627K
+10-25 12:56:29.908  8893  8950 D Mono    : GC_MAJOR_SWEEP: major size: 9248K in use: 7635K empty reserved: 0K
+10-25 12:56:30.468  8893  8950 D Mono    : GC_MINOR: (Nursery full) time 4.67ms, stw 6.11ms promoted 1055K major size: 10528K in use: 8958K empty reserved: 224K los size: 9216K in use: 7780K
+10-25 12:56:31.938  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 5.13ms, stw 5.76ms promoted 1114K major size: 11696K in use: 10129K empty reserved: 80K los size: 9216K in use: 7793K
+10-25 12:56:33.300  8893  8950 D Mono    : GC_MINOR: (Nursery full) time 7.05ms, stw 14.55ms promoted 1331K major size: 13200K in use: 11538K empty reserved: 112K los size: 9216K in use: 7814K
+10-25 12:56:43.932  8893  8893 D Mono    : GC_TAR_BRIDGE bridges 17 objects 17 opaque 0 colors 17 colors-bridged 17 colors-visible 17 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 0.02ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.05ms cleanup 0.03ms
+10-25 12:56:43.933  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 13.98ms, stw 45.04ms promoted 2772K major size: 16576K in use: 14836K empty reserved: 320K los size: 11272K in use: 10433K
+10-25 12:56:47.053  8893  8893 D Mono    : GC_TAR_BRIDGE bridges 1 objects 53636 opaque 20162 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.91ms tarjan 29.90ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.68ms
+10-25 12:56:47.053  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 42.96ms, stw 64.83ms promoted 2216K major size: 19040K in use: 17265K empty reserved: 416K los size: 12296K in use: 10883K
+10-25 12:56:51.172  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 17.54ms, stw 35.36ms promoted 2517K major size: 21824K in use: 19977K empty reserved: 192K los size: 12296K in use: 10883K
+10-25 12:56:52.793  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 7.36ms, stw 27.03ms promoted 2168K major size: 24192K in use: 22321K empty reserved: 384K los size: 12296K in use: 10893K
+10-25 12:56:53.482  8893  8893 D Mono    : GC_TAR_BRIDGE bridges 37 objects 39 opaque 0 colors 37 colors-bridged 37 colors-visible 37 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.07ms tarjan 0.03ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.04ms
+10-25 12:56:53.482  8893  8893 D Mono    : GC_MAJOR: (LOS overflow) time 44.00ms, stw 53.63ms los size: 12296K in use: 10541K
+10-25 12:56:53.482  8893  8893 D Mono    : GC_MAJOR_SWEEP: major size: 24336K in use: 20863K empty reserved: 0K
+10-25 12:56:53.852  8893  8950 D Mono    : GC_MINOR: (Nursery full) time 15.49ms, stw 27.98ms promoted 890K major size: 24720K in use: 21818K empty reserved: 368K los size: 12296K in use: 10558K
+10-25 12:56:55.140  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 20.69ms, stw 36.56ms promoted 1474K major size: 26064K in use: 23384K empty reserved: 48K los size: 12296K in use: 10558K
+10-25 12:56:55.641  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 13.65ms, stw 21.78ms promoted 2924K major size: 29184K in use: 26452K empty reserved: 0K los size: 12296K in use: 10686K
+10-25 12:56:56.343  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 29.59ms, stw 71.97ms promoted 2980K major size: 32368K in use: 29592K empty reserved: 400K los size: 12296K in use: 10694K
+10-25 12:56:56.657  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 15.49ms, stw 19.47ms promoted 2728K major size: 35280K in use: 32475K empty reserved: 48K los size: 12296K in use: 10761K
+10-25 12:56:59.007  8893  8893 D Mono    : GC_TAR_BRIDGE bridges 2 objects 202313 opaque 72796 colors 2 colors-bridged 2 colors-visible 2 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 74.48ms scc-setup 0.04ms gather-xref 0.03ms xref-setup 0.04ms cleanup 2.49ms
+10-25 12:56:59.007  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 86.92ms, stw 131.25ms promoted 2714K major size: 38240K in use: 35374K empty reserved: 160K los size: 12296K in use: 10847K
+10-25 12:57:04.412  8893  8950 D Mono    : GC_MINOR: (Nursery full) time 20.51ms, stw 37.55ms promoted 1270K major size: 39776K in use: 36788K empty reserved: 160K los size: 12296K in use: 11020K
+10-25 12:57:08.331  8893  8948 D Mono    : GC_TAR_BRIDGE bridges 37 objects 39 opaque 0 colors 37 colors-bridged 37 colors-visible 37 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.03ms
+10-25 12:57:08.331  8893  8948 D Mono    : GC_MAJOR: (LOS overflow) time 86.47ms, stw 91.12ms los size: 13324K in use: 11647K
+10-25 12:57:11.650  8893  8950 D Mono    : GC_MAJOR_SWEEP: major size: 39440K in use: 33057K empty reserved: 0K
+10-25 12:57:11.650  8893  8950 D Mono    : GC_MINOR: (Nursery full) time 7.86ms, stw 32.60ms promoted 2305K major size: 39792K in use: 35527K empty reserved: 1168K los size: 13324K in use: 12284K
+10-25 12:57:14.112  8893  8948 D Mono    : GC_MINOR: (Nursery full) time 3.92ms, stw 5.57ms promoted 2517K major size: 41744K in use: 38316K empty reserved: 240K los size: 13324K in use: 12580K
+10-25 12:57:14.925  8893  9017 D Mono    : GC_MINOR: (Nursery full) time 3.73ms, stw 5.16ms promoted 934K major size: 42576K in use: 39338K empty reserved: 432K los size: 13324K in use: 12580K
+10-25 12:57:17.484  8893  9056 D Mono    : GC_MINOR: (Nursery full) time 8.25ms, stw 16.39ms promoted 1299K major size: 44128K in use: 40813K empty reserved: 416K los size: 14348K in use: 12679K
+10-25 12:57:23.921  8893  8950 D Mono    : GC_MINOR: (Nursery full) time 7.22ms, stw 19.43ms promoted 1293K major size: 45744K in use: 42427K empty reserved: 336K los size: 14348K in use: 12959K
+10-25 12:57:32.236  8893  9017 D Mono    : GC_TAR_BRIDGE bridges 73 objects 299917 opaque 130124 colors 73 colors-bridged 73 colors-visible 73 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 145.92ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.03ms cleanup 5.18ms
+10-25 12:57:32.237  8893  9017 D Mono    : GC_MINOR: (Nursery full) time 179.64ms, stw 199.17ms promoted 1586K major size: 47536K in use: 44215K empty reserved: 80K los size: 14348K in use: 13093K
+10-25 12:57:33.858  8893  8950 D Mono    : GC_MINOR: (Nursery full) time 8.18ms, stw 12.27ms promoted 983K major size: 48656K in use: 45263K empty reserved: 496K los size: 14348K in use: 13378K
+10-25 12:57:36.901  8893  8979 D Mono    : GC_TAR_BRIDGE bridges 7 objects 314845 opaque 135202 colors 7 colors-bridged 7 colors-visible 7 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 1.38ms tarjan 78.90ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.02ms cleanup 40.84ms
+10-25 12:57:36.901  8893  8979 D Mono    : GC_MINOR: (Nursery full) time 107.74ms, stw 124.02ms promoted 1641K major size: 50464K in use: 47034K empty reserved: 224K los size: 14348K in use: 13521K
+10-25 12:57:43.307  8893  9056 D Mono    : GC_TAR_BRIDGE bridges 64 objects 326444 opaque 144242 colors 64 colors-bridged 64 colors-visible 64 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.02ms tarjan 121.22ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.04ms cleanup 6.14ms
+10-25 12:57:43.307  8893  9056 D Mono    : GC_MINOR: (Nursery full) time 150.83ms, stw 207.83ms promoted 2027K major size: 52736K in use: 49262K empty reserved: 0K los size: 15372K in use: 13656K
+10-25 12:57:43.491  8893  9056 D Mono    : GC_MINOR: (Nursery full) time 16.70ms, stw 20.53ms promoted 2570K major size: 55568K in use: 51996K empty reserved: 240K los size: 15372K in use: 13718K
+10-25 12:57:44.279  8893  9056 D Mono    : GC_TAR_BRIDGE bridges 43 objects 44 opaque 0 colors 43 colors-bridged 43 colors-visible 43 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.02ms scc-setup 0.96ms gather-xref 0.02ms xref-setup 0.42ms cleanup 0.02ms
+10-25 12:57:44.279  8893  9056 D Mono    : GC_MAJOR_SWEEP: major size: 55456K in use: 67511K empty reserved: 0K
+10-25 12:57:44.280  8893  9056 D Mono    : GC_MAJOR: (LOS overflow) time 121.07ms, stw 170.55ms los size: 15372K in use: 12328K
+10-25 12:57:53.254  8893  9056 D Mono    : GC_TAR_BRIDGE bridges 3 objects 274900 opaque 111263 colors 3 colors-bridged 3 colors-visible 3 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 86.70ms scc-setup 0.04ms gather-xref 0.01ms xref-setup 0.03ms cleanup 30.34ms
+10-25 12:57:53.254  8893  9056 D Mono    : GC_MINOR: (Nursery full) time 101.32ms, stw 123.17ms promoted 1453K major size: 55840K in use: 49794K empty reserved: 480K los size: 15372K in use: 14065K
+10-25 12:57:53.571  8893  8948 D Mono    : GC_MINOR: (Nursery full) time 13.93ms, stw 20.05ms promoted 814K major size: 56016K in use: 50666K empty reserved: 304K los size: 16396K in use: 14517K
+10-25 12:57:55.459  8893  8948 D Mono    : GC_MINOR: (Nursery full) time 9.42ms, stw 19.12ms promoted 824K major size: 56352K in use: 51569K empty reserved: 480K los size: 16396K in use: 15008K
+10-25 12:57:55.894  8893  8893 D Mono    : GC_TAR_BRIDGE bridges 1 objects 351430 opaque 157335 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 114.97ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.02ms cleanup 13.95ms
+10-25 12:57:55.894  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 125.04ms, stw 163.52ms promoted 712K major size: 56816K in use: 52342K empty reserved: 16K los size: 17420K in use: 15428K
+10-25 12:57:57.310  8893  8893 D Mono    : GC_TAR_BRIDGE bridges 1 objects 228103 opaque 90874 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 117.97ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.02ms cleanup 72.58ms
+10-25 12:57:57.311  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 128.93ms, stw 179.23ms promoted 1624K major size: 58320K in use: 54053K empty reserved: 48K los size: 17420K in use: 15637K
+10-25 12:58:02.456  8893  8893 D Mono    : GC_TAR_BRIDGE bridges 1 objects 266601 opaque 106356 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 104.18ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.02ms cleanup 3.25ms
+10-25 12:58:02.456  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 138.96ms, stw 169.73ms promoted 1901K major size: 60448K in use: 56129K empty reserved: 480K los size: 17420K in use: 15717K
+10-25 12:58:04.536  8893  8893 D Mono    : GC_TAR_BRIDGE bridges 1 objects 234564 opaque 93009 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 111.09ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 2.79ms
+10-25 12:58:04.536  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 127.90ms, stw 136.76ms promoted 1442K major size: 61968K in use: 57661K empty reserved: 496K los size: 17420K in use: 15781K
+10-25 12:58:05.087  8893  8950 D Mono    : GC_MINOR: (Nursery full) time 15.23ms, stw 35.06ms promoted 2474K major size: 64640K in use: 60278K empty reserved: 384K los size: 17420K in use: 15781K
+10-25 12:58:06.108  8893  8893 D Mono    : GC_TAR_BRIDGE bridges 1 objects 372279 opaque 162895 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 119.12ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.02ms cleanup 10.09ms
+10-25 12:58:06.108  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 153.38ms, stw 182.52ms promoted 2166K major size: 67008K in use: 62582K empty reserved: 64K los size: 17420K in use: 15822K
+10-25 12:58:11.837  8893  9039 D Mono    : GC_TAR_BRIDGE bridges 107 objects 107 opaque 0 colors 107 colors-bridged 107 colors-visible 107 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 0.02ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.05ms
+10-25 12:58:11.837  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 15.98ms, stw 23.11ms promoted 1936K major size: 69152K in use: 64667K empty reserved: 480K los size: 18444K in use: 16390K
+10-25 12:58:22.183  8893  8950 D Mono    : GC_TAR_BRIDGE bridges 28 objects 28 opaque 0 colors 28 colors-bridged 28 colors-visible 28 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.03ms
+10-25 12:58:22.183  8893  8950 D Mono    : GC_MINOR: (Nursery full) time 4.17ms, stw 10.80ms promoted 699K major size: 69936K in use: 65462K empty reserved: 208K los size: 20492K in use: 18202K
+10-25 12:58:25.063  8893  8950 D Mono    : GC_MINOR: (Nursery full) time 15.61ms, stw 20.21ms promoted 2647K major size: 72928K in use: 68402K empty reserved: 288K los size: 20492K in use: 18262K
+10-25 12:58:25.208  8893  8950 D Mono    : GC_TAR_BRIDGE bridges 40 objects 41 opaque 0 colors 40 colors-bridged 40 colors-visible 40 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.03ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.03ms
+10-25 12:58:25.208  8893  8950 D Mono    : GC_MAJOR_SWEEP: major size: 70864K in use: 77033K empty reserved: 0K
+10-25 12:58:25.208  8893  8950 D Mono    : GC_MAJOR: (LOS overflow) time 93.43ms, stw 116.19ms los size: 19468K in use: 14232K
+10-25 12:58:27.554  8893  9056 D Mono    : GC_MINOR: (Nursery full) time 9.60ms, stw 39.37ms promoted 1617K major size: 70928K in use: 58024K empty reserved: 2800K los size: 19468K in use: 14430K
+10-25 12:58:34.380  8893  8893 D Mono    : GC_TAR_BRIDGE bridges 3 objects 405206 opaque 193865 colors 3 colors-bridged 3 colors-visible 3 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 263.64ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.02ms cleanup 19.92ms
+10-25 12:58:34.380  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 381.87ms, stw 391.68ms promoted 997K major size: 71040K in use: 59211K empty reserved: 2688K los size: 19468K in use: 14638K
+10-25 12:58:39.474  8893  8893 D Mono    : GC_TAR_BRIDGE bridges 34 objects 257753 opaque 100379 colors 34 colors-bridged 34 colors-visible 34 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 147.28ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 10.63ms cleanup 3.15ms
+10-25 12:58:39.474  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 175.97ms, stw 180.56ms promoted 2079K major size: 71216K in use: 61466K empty reserved: 2512K los size: 19468K in use: 14726K
+10-25 12:58:40.263  8893  8893 D Mono    : GC_TAR_BRIDGE bridges 5 objects 289106 opaque 114804 colors 5 colors-bridged 5 colors-visible 5 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 185.82ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.04ms cleanup 4.43ms
+10-25 12:58:40.263  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 210.88ms, stw 246.76ms promoted 2494K major size: 71328K in use: 64087K empty reserved: 2400K los size: 19468K in use: 14726K
+10-25 12:58:44.393  8893  9039 D Mono    : GC_TAR_BRIDGE bridges 512 objects 512 opaque 0 colors 512 colors-bridged 512 colors-visible 512 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.06ms tarjan 0.09ms scc-setup 0.05ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.08ms
+10-25 12:58:44.393  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 26.92ms, stw 60.80ms promoted 1306K major size: 71776K in use: 65503K empty reserved: 1952K los size: 19468K in use: 16004K
+10-25 12:58:46.217  8893  8950 D Mono    : GC_MINOR: (Nursery full) time 15.85ms, stw 29.12ms promoted 1719K major size: 73008K in use: 67336K empty reserved: 720K los size: 19468K in use: 16343K
+10-25 12:58:52.612  8893  9062 D Mono    : GC_MINOR: (Nursery full) time 12.13ms, stw 17.17ms promoted 1353K major size: 73952K in use: 68775K empty reserved: 288K los size: 20492K in use: 17972K
+10-25 12:58:54.841  8893  9062 D Mono    : GC_MINOR: (Nursery full) time 15.32ms, stw 17.82ms promoted 2062K major size: 75888K in use: 70979K empty reserved: 400K los size: 20492K in use: 18178K
+10-25 12:59:00.625  8893  8950 D Mono    : GC_MINOR: (Nursery full) time 9.89ms, stw 16.36ms promoted 1427K major size: 77584K in use: 72602K empty reserved: 240K los size: 20492K in use: 18221K
+10-25 12:59:02.633  8893  8893 D Mono    : GC_TAR_BRIDGE bridges 1 objects 421123 opaque 195431 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 239.85ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 22.79ms
+10-25 12:59:02.633  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 279.06ms, stw 283.83ms promoted 2104K major size: 80624K in use: 75539K empty reserved: 272K los size: 22540K in use: 19741K
+10-25 12:59:02.784  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 16.88ms, stw 18.09ms promoted 3323K major size: 84432K in use: 79314K empty reserved: 48K los size: 23564K in use: 20850K
+10-25 12:59:03.392  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 21.20ms, stw 41.28ms promoted 3203K major size: 88416K in use: 83246K empty reserved: 160K los size: 24588K in use: 22370K
+10-25 12:59:03.961  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 7.08ms, stw 15.68ms promoted 3097K major size: 92192K in use: 86900K empty reserved: 480K los size: 25612K in use: 22979K
+10-25 12:59:04.194  8893  8893 D Mono    : GC_TAR_BRIDGE bridges 44 objects 46 opaque 0 colors 44 colors-bridged 44 colors-visible 44 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.07ms tarjan 0.03ms scc-setup 0.05ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.04ms
+10-25 12:59:04.194  8893  8893 D Mono    : GC_MAJOR_SWEEP: major size: 86832K in use: 102033K empty reserved: 0K
+10-25 12:59:04.194  8893  8893 D Mono    : GC_MAJOR: (LOS overflow) time 167.14ms, stw 200.66ms los size: 25612K in use: 17227K
+10-25 12:59:04.785  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 12.18ms, stw 18.63ms promoted 2477K major size: 87664K in use: 74170K empty reserved: 5008K los size: 27380K in use: 19342K
+10-25 12:59:05.373  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 7.63ms, stw 13.22ms promoted 1600K major size: 88640K in use: 75842K empty reserved: 4032K los size: 27380K in use: 19342K
+10-25 12:59:07.772  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 5.05ms, stw 47.99ms promoted 683K major size: 89072K in use: 76579K empty reserved: 3600K los size: 27380K in use: 19394K
+10-25 12:59:09.181  8893  9167 D Mono    : GC_TAR_BRIDGE bridges 1 objects 417402 opaque 196768 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 247.58ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.02ms cleanup 35.99ms
+10-25 12:59:09.181  8893  9167 D Mono    : GC_MINOR: (Nursery full) time 316.66ms, stw 339.44ms promoted 1381K major size: 89392K in use: 78049K empty reserved: 3280K los size: 27380K in use: 19505K
+10-25 12:59:11.141  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 22.44ms, stw 57.13ms promoted 2108K major size: 90368K in use: 80307K empty reserved: 2304K los size: 27380K in use: 19616K
+10-25 12:59:11.976  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 20.01ms, stw 29.88ms promoted 1927K major size: 91392K in use: 82361K empty reserved: 1280K los size: 27380K in use: 19661K
+10-25 12:59:12.170  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 9.87ms, stw 17.44ms promoted 265K major size: 91600K in use: 82640K empty reserved: 1072K los size: 27380K in use: 19721K
+10-25 12:59:13.692  8893  8893 D Mono    : GC_TAR_BRIDGE bridges 4 objects 4 opaque 3 colors 4 colors-bridged 4 colors-visible 4 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.03ms
+10-25 12:59:13.693  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 17.11ms, stw 20.94ms promoted 2530K major size: 93680K in use: 85323K empty reserved: 16K los size: 27380K in use: 19721K
+10-25 12:59:16.541  8893  9056 D Mono    : GC_TAR_BRIDGE bridges 311 objects 311 opaque 0 colors 311 colors-bridged 311 colors-visible 311 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.06ms scc-setup 0.06ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.04ms
+10-25 12:59:16.541  8893  9056 D Mono    : GC_MINOR: (Nursery full) time 7.70ms, stw 28.43ms promoted 2274K major size: 96016K in use: 87724K empty reserved: 240K los size: 27380K in use: 19958K
+10-25 12:59:18.436  8893  8893 D Mono    : GC_TAR_BRIDGE bridges 1 objects 508227 opaque 236073 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 172.18ms scc-setup 0.03ms gather-xref 0.01ms xref-setup 0.01ms cleanup 12.06ms
+10-25 12:59:18.436  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 185.56ms, stw 195.13ms promoted 1411K major size: 97312K in use: 89225K empty reserved: 480K los size: 27380K in use: 20126K
+10-25 12:59:18.807  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 8.25ms, stw 16.89ms promoted 2369K major size: 99744K in use: 91752K empty reserved: 96K los size: 27380K in use: 20535K
+10-25 12:59:18.886  8893  9056 D Mono    : GC_MINOR: (Nursery full) time 23.78ms, stw 29.35ms promoted 2403K major size: 102288K in use: 94371K empty reserved: 112K los size: 27380K in use: 21029K
+10-25 12:59:19.326  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 9.46ms, stw 23.87ms promoted 1638K major size: 104000K in use: 96111K empty reserved: 448K los size: 27380K in use: 21170K
+10-25 12:59:19.891  8893  8893 D Mono    : GC_TAR_BRIDGE bridges 1 objects 348464 opaque 180424 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 89.10ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.02ms cleanup 12.29ms
+10-25 12:59:19.891  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 103.44ms, stw 104.50ms promoted 2231K major size: 106256K in use: 98457K empty reserved: 240K los size: 27380K in use: 21300K
+10-25 12:59:20.327  8893  8893 D Mono    : GC_TAR_BRIDGE bridges 1 objects 1 opaque 0 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 0.02ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.03ms
+10-25 12:59:20.327  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 27.46ms, stw 39.24ms promoted 2325K major size: 108736K in use: 100943K empty reserved: 320K los size: 27380K in use: 21352K
+10-25 12:59:23.292  8893  8950 D Mono    : GC_TAR_BRIDGE bridges 26 objects 26 opaque 0 colors 26 colors-bridged 26 colors-visible 26 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.03ms
+10-25 12:59:23.292  8893  8950 D Mono    : GC_MINOR: (Nursery full) time 6.24ms, stw 17.12ms promoted 511K major size: 109312K in use: 101488K empty reserved: 256K los size: 27380K in use: 24562K
+10-25 12:59:24.749  8893  9056 D Mono    : GC_TAR_BRIDGE bridges 75 objects 76 opaque 3 colors 75 colors-bridged 75 colors-visible 75 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.07ms tarjan 0.04ms scc-setup 0.03ms gather-xref 0.01ms xref-setup 0.02ms cleanup 0.04ms
+10-25 12:59:24.749  8893  9056 D Mono    : GC_MAJOR: (LOS overflow) time 226.54ms, stw 231.48ms los size: 28404K in use: 19009K
+10-25 12:59:24.749  8893  9056 D Mono    : GC_MAJOR_SWEEP: major size: 106448K in use: 87999K empty reserved: 0K
+10-25 12:59:24.940  8893  9056 D Mono    : GC_MINOR: (Nursery full) time 10.28ms, stw 22.06ms promoted 1545K major size: 106960K in use: 89590K empty reserved: 2608K los size: 39828K in use: 31942K
+10-25 12:59:25.019  8893  9056 D Mono    : GC_MINOR: (Nursery full) time 34.61ms, stw 44.57ms promoted 1550K major size: 107776K in use: 91185K empty reserved: 1792K los size: 39828K in use: 31974K
+10-25 12:59:25.074  8893  9056 D Mono    : GC_MINOR: (Nursery full) time 12.82ms, stw 24.13ms promoted 1517K major size: 108816K in use: 92743K empty reserved: 752K los size: 39828K in use: 31974K
+10-25 12:59:25.162  8893  9056 D Mono    : GC_MINOR: (Nursery full) time 7.50ms, stw 10.75ms promoted 1475K major size: 109888K in use: 94261K empty reserved: 192K los size: 39828K in use: 32038K
+10-25 12:59:25.244  8893  9056 D Mono    : GC_MINOR: (Nursery full) time 9.49ms, stw 10.72ms promoted 1559K major size: 111120K in use: 95863K empty reserved: 496K los size: 39828K in use: 32038K
+10-25 12:59:27.644  8893  9039 D Mono    : GC_TAR_BRIDGE bridges 68 objects 69 opaque 0 colors 68 colors-bridged 68 colors-visible 68 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.06ms tarjan 0.03ms scc-setup 0.08ms gather-xref 0.03ms xref-setup 0.07ms cleanup 0.04ms
+10-25 12:59:27.644  8893  9039 D Mono    : GC_MAJOR_SWEEP: major size: 111120K in use: 103875K empty reserved: 0K
+10-25 12:59:27.644  8893  9039 D Mono    : GC_MAJOR: (LOS overflow) time 306.12ms, stw 372.13ms los size: 45944K in use: 37097K
+10-25 12:59:28.027  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 74.87ms, stw 83.13ms promoted 1595K major size: 112416K in use: 97497K empty reserved: 224K los size: 77244K in use: 68523K
+10-25 12:59:28.050  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 6.16ms, stw 8.95ms promoted 1624K major size: 113872K in use: 99171K empty reserved: 304K los size: 77244K in use: 68614K
+10-25 12:59:28.130  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 6.21ms, stw 51.88ms promoted 1613K major size: 115376K in use: 100829K empty reserved: 336K los size: 77244K in use: 68666K
+10-25 12:59:28.164  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 6.44ms, stw 11.85ms promoted 1566K major size: 116832K in use: 102440K empty reserved: 416K los size: 77244K in use: 68730K
+10-25 12:59:28.204  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 6.54ms, stw 8.22ms promoted 1606K major size: 118304K in use: 104097K empty reserved: 480K los size: 77244K in use: 68730K
+10-25 12:59:28.238  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 14.41ms, stw 19.58ms promoted 1750K major size: 120048K in use: 105922K empty reserved: 272K los size: 77244K in use: 68914K
+10-25 12:59:28.286  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 15.60ms, stw 21.43ms promoted 1584K major size: 121536K in use: 107552K empty reserved: 320K los size: 77244K in use: 68914K
+10-25 12:59:28.320  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 5.87ms, stw 11.24ms promoted 1648K major size: 123056K in use: 109250K empty reserved: 336K los size: 77244K in use: 68914K
+10-25 12:59:28.407  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 15.17ms, stw 65.31ms promoted 1580K major size: 124528K in use: 110875K empty reserved: 400K los size: 77244K in use: 69069K
+10-25 12:59:28.422  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 4.58ms, stw 6.76ms promoted 1579K major size: 126032K in use: 112497K empty reserved: 432K los size: 77244K in use: 69120K
+10-25 12:59:28.498  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 15.57ms, stw 53.18ms promoted 1685K major size: 127568K in use: 114233K empty reserved: 432K los size: 77244K in use: 69304K
+10-25 12:59:28.761  8893  9039 D Mono    : GC_TAR_BRIDGE bridges 41 objects 42 opaque 0 colors 41 colors-bridged 41 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.07ms tarjan 0.04ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.04ms cleanup 0.04ms
+10-25 12:59:28.761  8893  9039 D Mono    : GC_MAJOR: (LOS overflow) time 223.63ms, stw 241.59ms los size: 50708K in use: 41999K
+10-25 12:59:28.761  8893  9039 D Mono    : GC_MAJOR_SWEEP: major size: 128560K in use: 115179K empty reserved: 0K
+10-25 12:59:28.806  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 24.78ms, stw 27.14ms promoted 2065K major size: 130624K in use: 117372K empty reserved: 448K los size: 50708K in use: 43239K
+10-25 12:59:28.863  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 12.78ms, stw 23.54ms promoted 1893K major size: 132592K in use: 119357K empty reserved: 16K los size: 50708K in use: 43931K
+10-25 12:59:28.910  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 19.66ms, stw 22.74ms promoted 1478K major size: 134160K in use: 120882K empty reserved: 496K los size: 50708K in use: 43931K
+10-25 12:59:28.949  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 13.20ms, stw 15.71ms promoted 1574K major size: 135728K in use: 122500K empty reserved: 464K los size: 50708K in use: 43931K
+10-25 12:59:28.983  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 7.97ms, stw 14.72ms promoted 1515K major size: 137312K in use: 124054K empty reserved: 416K los size: 50708K in use: 43931K
+10-25 12:59:29.050  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 16.75ms, stw 26.34ms promoted 1517K major size: 138848K in use: 125609K empty reserved: 416K los size: 50708K in use: 44187K
+10-25 12:59:29.112  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 13.18ms, stw 23.99ms promoted 1586K major size: 140496K in use: 127241K empty reserved: 304K los size: 50708K in use: 44187K
+10-25 12:59:29.151  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 13.48ms, stw 23.92ms promoted 1878K major size: 142464K in use: 129192K empty reserved: 384K los size: 50708K in use: 44612K
+10-25 12:59:29.175  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 5.97ms, stw 7.63ms promoted 1583K major size: 144064K in use: 130819K empty reserved: 320K los size: 50708K in use: 44635K
+10-25 12:59:29.196  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 6.73ms, stw 8.95ms promoted 1578K major size: 145680K in use: 132442K empty reserved: 240K los size: 50708K in use: 44655K
+10-25 12:59:29.245  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 21.04ms, stw 32.04ms promoted 1840K major size: 147584K in use: 134321K empty reserved: 384K los size: 50708K in use: 45144K
+10-25 12:59:29.297  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 10.57ms, stw 13.49ms promoted 3747K major size: 151408K in use: 138069K empty reserved: 144K los size: 51732K in use: 48662K
+10-25 12:59:29.512  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 12.79ms, stw 14.44ms promoted 2412K major size: 153872K in use: 140484K empty reserved: 240K los size: 53500K in use: 50724K
+10-25 12:59:29.557  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 3.96ms, stw 7.08ms promoted 2K major size: 153872K in use: 140487K empty reserved: 240K los size: 53500K in use: 50724K
+10-25 12:59:29.583  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 4.13ms, stw 5.65ms promoted 1K major size: 153872K in use: 140489K empty reserved: 240K los size: 53500K in use: 50724K
+10-25 12:59:29.651  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 5.53ms, stw 17.27ms promoted 2K major size: 153872K in use: 140492K empty reserved: 240K los size: 53500K in use: 50724K
+10-25 12:59:29.691  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 5.92ms, stw 18.95ms promoted 1K major size: 153872K in use: 140493K empty reserved: 240K los size: 53500K in use: 50724K
+10-25 12:59:29.730  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 7.85ms, stw 11.42ms promoted 2K major size: 153872K in use: 140496K empty reserved: 240K los size: 53500K in use: 50724K
+10-25 12:59:29.770  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 2.74ms, stw 4.67ms promoted 1K major size: 153872K in use: 140497K empty reserved: 240K los size: 53500K in use: 50724K
+10-25 12:59:29.796  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 3.70ms, stw 6.02ms promoted 2K major size: 153872K in use: 140500K empty reserved: 240K los size: 53500K in use: 50724K
+10-25 12:59:29.845  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 2.94ms, stw 7.30ms promoted 2K major size: 153872K in use: 140502K empty reserved: 240K los size: 53500K in use: 50724K
+10-25 12:59:29.875  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 3.56ms, stw 4.59ms promoted 2K major size: 153888K in use: 140505K empty reserved: 224K los size: 53500K in use: 50724K
+10-25 12:59:29.906  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 6.45ms, stw 7.33ms promoted 1K major size: 153888K in use: 140507K empty reserved: 224K los size: 53500K in use: 50724K
+10-25 12:59:29.939  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 3.77ms, stw 5.09ms promoted 2K major size: 153888K in use: 140509K empty reserved: 224K los size: 53500K in use: 50724K
+10-25 12:59:30.002  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 3.46ms, stw 6.82ms promoted 2K major size: 153888K in use: 140511K empty reserved: 224K los size: 53500K in use: 50724K
+10-25 12:59:30.046  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 13.82ms, stw 21.54ms promoted 2K major size: 153888K in use: 140513K empty reserved: 224K los size: 53500K in use: 50724K
+10-25 12:59:30.131  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 14.01ms, stw 20.26ms promoted 2K major size: 153888K in use: 140516K empty reserved: 224K los size: 53500K in use: 50724K
+10-25 12:59:30.220  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 3.11ms, stw 6.64ms promoted 2K major size: 153888K in use: 140518K empty reserved: 224K los size: 53500K in use: 50724K
+10-25 12:59:31.326  8893  9166 D Mono    : GC_TAR_BRIDGE bridges 27 objects 27 opaque 0 colors 27 colors-bridged 27 colors-visible 27 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 0.02ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.03ms
+10-25 12:59:31.326  8893  9166 D Mono    : GC_MINOR: (Nursery full) time 3.76ms, stw 5.37ms promoted 31K major size: 153936K in use: 140550K empty reserved: 176K los size: 53500K in use: 50884K
+10-25 12:59:35.596  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 9.21ms, stw 16.54ms promoted 81K major size: 154000K in use: 140632K empty reserved: 112K los size: 53500K in use: 50884K
+10-25 12:59:40.739  8893  8893 D Mono    : GC_TAR_BRIDGE bridges 54 objects 54 opaque 0 colors 54 colors-bridged 54 colors-visible 54 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 0.02ms scc-setup 0.04ms gather-xref 0.01ms xref-setup 0.02ms cleanup 0.03ms
+10-25 12:59:40.740  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 10.29ms, stw 53.07ms promoted 87K major size: 154032K in use: 140720K empty reserved: 80K los size: 55556K in use: 53253K
+10-25 12:59:45.136  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 70.79ms, stw 110.14ms promoted 78K major size: 154096K in use: 140799K empty reserved: 16K los size: 55556K in use: 53253K
+10-25 12:59:49.417  8893  8950 D Mono    : GC_MINOR: (Nursery full) time 5.81ms, stw 35.66ms promoted 83K major size: 154144K in use: 140883K empty reserved: 480K los size: 55556K in use: 53253K
+10-25 12:59:53.323  8893  8893 D Mono    : GC_TAR_BRIDGE bridges 379 objects 431 opaque 8 colors 379 colors-bridged 379 colors-visible 379 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.09ms scc-setup 0.12ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.06ms
+10-25 12:59:53.323  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 49.14ms, stw 95.83ms promoted 99K major size: 154224K in use: 140983K empty reserved: 400K los size: 61708K in use: 59360K
+10-25 12:59:58.080  8893  8893 D Mono    : GC_TAR_BRIDGE bridges 325 objects 883342 opaque 794118 colors 325 colors-bridged 325 colors-visible 325 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 304.95ms scc-setup 0.08ms gather-xref 0.06ms xref-setup 0.04ms cleanup 150.69ms
+10-25 12:59:58.081  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 330.66ms, stw 335.22ms promoted 102K major size: 154288K in use: 141086K empty reserved: 336K los size: 68880K in use: 65637K
+10-25 13:00:02.460  8893  8893 D Mono    : GC_TAR_BRIDGE bridges 56 objects 883079 opaque 794132 colors 56 colors-bridged 56 colors-visible 56 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 215.46ms scc-setup 1.37ms gather-xref 0.02ms xref-setup 0.04ms cleanup 29.63ms
+10-25 13:00:02.460  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 233.97ms, stw 241.59ms promoted 80K major size: 154352K in use: 141167K empty reserved: 272K los size: 70936K in use: 68005K
+10-25 13:00:09.021  8893  8893 D Mono    : GC_TAR_BRIDGE bridges 38 objects 38 opaque 0 colors 38 colors-bridged 38 colors-visible 38 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.05ms tarjan 0.04ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.03ms cleanup 0.29ms
+10-25 13:00:09.021  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 11.67ms, stw 27.34ms promoted 119K major size: 154416K in use: 141292K empty reserved: 208K los size: 70936K in use: 68291K
+10-25 13:00:21.191  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 13.13ms, stw 17.33ms promoted 263K major size: 154544K in use: 141581K empty reserved: 80K los size: 75032K in use: 71627K
+10-25 13:00:39.862  8893  9056 D Mono    : GC_MINOR: (Nursery full) time 4.83ms, stw 28.43ms promoted 179K major size: 154672K in use: 141760K empty reserved: 464K los size: 75032K in use: 71627K
+10-25 13:00:59.677  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 24.85ms, stw 63.99ms promoted 178K major size: 154800K in use: 141939K empty reserved: 336K los size: 75032K in use: 71627K
+10-25 13:01:18.845  8893  8893 D Mono    : GC_TAR_BRIDGE bridges 1 objects 53 opaque 8 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 0.04ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.05ms cleanup 0.02ms
+10-25 13:01:18.845  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 6.99ms, stw 10.88ms promoted 180K major size: 154912K in use: 142120K empty reserved: 224K los size: 75032K in use: 71627K
+10-25 13:01:41.365  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 10.24ms, stw 74.92ms promoted 177K major size: 155056K in use: 142298K empty reserved: 80K los size: 75032K in use: 71627K
+10-25 13:02:01.368  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 10.45ms, stw 51.71ms promoted 179K major size: 155168K in use: 142477K empty reserved: 480K los size: 75032K in use: 71627K
+10-25 13:02:19.890  8893  8893 D Mono    : GC_TAR_BRIDGE bridges 1 objects 53 opaque 8 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 2.37ms tarjan 0.04ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.13ms cleanup 0.03ms
+10-25 13:02:19.890  8893  8893 D Mono    : GC_MINOR: (Nursery full) time 11.28ms, stw 23.91ms promoted 180K major size: 155280K in use: 142657K empty reserved: 368K los size: 75032K in use: 71627K
+10-25 13:02:34.002  8893  9062 D Mono    : GC_TAR_BRIDGE bridges 41 objects 42 opaque 0 colors 41 colors-bridged 41 colors-visible 41 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.08ms tarjan 0.04ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.05ms cleanup 0.03ms
+10-25 13:02:34.002  8893  9062 D Mono    : GC_MAJOR_SWEEP: major size: 151056K in use: 161125K empty reserved: 0K
+10-25 13:02:34.002  8893  9062 D Mono    : GC_MAJOR: (Minor allowance) time 403.74ms, stw 436.30ms los size: 32220K in use: 21459K
+10-25 13:02:34.348  8893  9062 D Mono    : GC_MINOR: (Nursery full) time 22.36ms, stw 31.82ms promoted 143K major size: 151152K in use: 133625K empty reserved: 4496K los size: 32220K in use: 21467K
+10-25 13:02:34.434  8893  9062 D Mono    : GC_MINOR: (Nursery full) time 5.19ms, stw 9.56ms promoted 4K major size: 151152K in use: 133630K empty reserved: 4496K los size: 32220K in use: 21467K
+10-25 13:02:34.495  8893  9062 D Mono    : GC_MINOR: (Nursery full) time 5.37ms, stw 13.90ms promoted 2K major size: 151152K in use: 133633K empty reserved: 4496K los size: 32220K in use: 21467K
+10-25 13:02:34.537  8893  9062 D Mono    : GC_MINOR: (Nursery full) time 4.53ms, stw 20.69ms promoted 1K major size: 151152K in use: 133635K empty reserved: 4496K los size: 32220K in use: 21467K
+10-25 13:02:34.575  8893  9062 D Mono    : GC_MINOR: (Nursery full) time 3.41ms, stw 4.48ms promoted 1K major size: 151152K in use: 133637K empty reserved: 4496K los size: 32220K in use: 21467K
+10-25 13:02:34.602  8893  9062 D Mono    : GC_MINOR: (Nursery full) time 9.58ms, stw 12.00ms promoted 0K major size: 151152K in use: 133637K empty reserved: 4496K los size: 32220K in use: 21467K
+10-25 13:02:34.671  8893  8950 D Mono    : GC_MINOR: (Nursery full) time 8.21ms, stw 17.58ms promoted 11K major size: 151152K in use: 133650K empty reserved: 4496K los size: 32220K in use: 21467K
+10-25 13:02:34.853  8893  8950 D Mono    : GC_MINOR: (Nursery full) time 4.84ms, stw 10.28ms promoted 21K major size: 151152K in use: 133673K empty reserved: 4496K los size: 32220K in use: 21475K
+10-25 13:02:35.119  8893  8950 D Mono    : GC_MINOR: (Nursery full) time 10.74ms, stw 23.46ms promoted 103K major size: 151248K in use: 133790K empty reserved: 4400K los size: 32220K in use: 21483K
+10-25 13:02:37.924  8893  8950 D Mono    : GC_TAR_BRIDGE bridges 65 objects 880721 opaque 793268 colors 65 colors-bridged 65 colors-visible 65 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 333.70ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.04ms cleanup 18.51ms
+10-25 13:02:37.924  8893  8950 D Mono    : GC_MINOR: (Nursery full) time 365.92ms, stw 437.32ms promoted 882K major size: 151408K in use: 134711K empty reserved: 4240K los size: 43644K in use: 34971K
+10-25 13:02:37.970  8893  8950 D Mono    : GC_MINOR: (Nursery full) time 8.86ms, stw 15.64ms promoted 1552K major size: 152464K in use: 136306K empty reserved: 3184K los size: 43644K in use: 34995K
+10-25 13:02:38.008  8893  8950 D Mono    : GC_MINOR: (Nursery full) time 16.07ms, stw 22.26ms promoted 1521K major size: 153744K in use: 137871K empty reserved: 1904K los size: 43644K in use: 35028K
+10-25 13:02:38.074  8893  8950 D Mono    : GC_MINOR: (Nursery full) time 19.70ms, stw 26.48ms promoted 1513K major size: 155120K in use: 139427K empty reserved: 528K los size: 43644K in use: 35028K
+10-25 13:02:38.127  8893  8950 D Mono    : GC_MINOR: (Nursery full) time 26.31ms, stw 32.61ms promoted 1513K major size: 156496K in use: 140983K empty reserved: 176K los size: 43644K in use: 35092K
+10-25 13:02:38.704  8893  9039 D Mono    : GC_TAR_BRIDGE bridges 61 objects 62 opaque 0 colors 61 colors-bridged 61 colors-visible 61 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.08ms tarjan 0.03ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.03ms
+10-25 13:02:38.706  8893  9039 D Mono    : GC_MAJOR: (LOS overflow) time 277.29ms, stw 307.69ms los size: 61220K in use: 49855K
+10-25 13:02:38.706  8893  9039 D Mono    : GC_MAJOR_SWEEP: major size: 155904K in use: 139238K empty reserved: 0K
+10-25 13:02:39.541  8893  9039 D Mono    : GC_TAR_BRIDGE bridges 10 objects 882982 opaque 794210 colors 10 colors-bridged 10 colors-visible 10 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 372.48ms scc-setup 0.02ms gather-xref 0.02ms xref-setup 0.04ms cleanup 52.99ms
+10-25 13:02:39.548  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 431.11ms, stw 451.74ms promoted 1675K major size: 156848K in use: 140976K empty reserved: 848K los size: 82084K in use: 70848K
+10-25 13:02:39.603  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 19.17ms, stw 22.30ms promoted 1607K major size: 158160K in use: 142634K empty reserved: 48K los size: 82084K in use: 70939K
+10-25 13:02:39.639  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 12.85ms, stw 14.17ms promoted 1598K major size: 159728K in use: 144277K empty reserved: 16K los size: 82084K in use: 70991K
+10-25 13:02:39.685  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 7.12ms, stw 14.37ms promoted 1590K major size: 161264K in use: 145913K empty reserved: 16K los size: 82084K in use: 71055K
+10-25 13:02:40.184  8893  9039 D Mono    : GC_TAR_BRIDGE bridges 16 objects 882999 opaque 794217 colors 16 colors-bridged 16 colors-visible 16 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 383.49ms scc-setup 0.04ms gather-xref 0.02ms xref-setup 0.04ms cleanup 41.44ms
+10-25 13:02:40.186  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 416.63ms, stw 418.12ms promoted 1598K major size: 162896K in use: 147556K empty reserved: 432K los size: 82084K in use: 71055K
+10-25 13:02:40.304  8893  9039 D Mono    : GC_TAR_BRIDGE bridges 12 objects 12 opaque 0 colors 12 colors-bridged 12 colors-visible 12 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 0.02ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.03ms
+10-25 13:02:40.305  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 30.50ms, stw 78.81ms promoted 1769K major size: 164640K in use: 149405K empty reserved: 224K los size: 82084K in use: 71239K
+10-25 13:02:40.723  8893  9039 D Mono    : GC_TAR_BRIDGE bridges 1 objects 882977 opaque 794214 colors 1 colors-bridged 1 colors-visible 1 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.04ms tarjan 290.44ms scc-setup 0.03ms gather-xref 0.02ms xref-setup 0.02ms cleanup 31.97ms
+10-25 13:02:40.723  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 321.30ms, stw 339.84ms promoted 1577K major size: 166272K in use: 151028K empty reserved: 128K los size: 82084K in use: 71239K
+10-25 13:02:40.776  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 12.59ms, stw 19.17ms promoted 1653K major size: 167904K in use: 152731K empty reserved: 32K los size: 82084K in use: 71239K
+10-25 13:02:40.829  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 11.40ms, stw 24.27ms promoted 1594K major size: 169568K in use: 154370K empty reserved: 416K los size: 82084K in use: 71394K
+10-25 13:02:40.855  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 5.48ms, stw 16.07ms promoted 1589K major size: 171216K in use: 156003K empty reserved: 304K los size: 82084K in use: 71444K
+10-25 13:02:40.918  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 33.59ms, stw 44.59ms promoted 1658K major size: 172832K in use: 157711K empty reserved: 224K los size: 82084K in use: 71592K
+10-25 13:02:40.947  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 5.28ms, stw 8.96ms promoted 1943K major size: 174864K in use: 159745K empty reserved: 240K los size: 82084K in use: 72490K
+10-25 13:02:40.962  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 5.29ms, stw 6.45ms promoted 2069K major size: 177088K in use: 161949K empty reserved: 64K los size: 82084K in use: 73620K
+10-25 13:02:41.014  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 17.25ms, stw 30.54ms promoted 1644K major size: 178768K in use: 163650K empty reserved: 432K los size: 82084K in use: 73823K
+10-25 13:02:41.053  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 11.28ms, stw 18.77ms promoted 1477K major size: 180320K in use: 165171K empty reserved: 416K los size: 82084K in use: 73823K
+10-25 13:02:41.167  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 82.17ms, stw 84.92ms promoted 1570K major size: 181920K in use: 166786K empty reserved: 352K los size: 82084K in use: 73823K
+10-25 13:02:41.221  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 14.03ms, stw 15.83ms promoted 1507K major size: 183488K in use: 168332K empty reserved: 320K los size: 82084K in use: 74079K
+10-25 13:02:41.264  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 13.16ms, stw 26.03ms promoted 1522K major size: 185072K in use: 169893K empty reserved: 272K los size: 82084K in use: 74079K
+10-25 13:02:41.311  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 15.62ms, stw 17.11ms promoted 1626K major size: 186704K in use: 171569K empty reserved: 176K los size: 82084K in use: 74125K
+10-25 13:02:41.344  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 14.31ms, stw 18.36ms promoted 1860K major size: 188688K in use: 173499K empty reserved: 240K los size: 82084K in use: 74496K
+10-25 13:02:41.398  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 15.96ms, stw 21.93ms promoted 1571K major size: 190288K in use: 175115K empty reserved: 176K los size: 82084K in use: 74519K
+10-25 13:02:41.422  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 6.51ms, stw 7.72ms promoted 1585K major size: 191936K in use: 176744K empty reserved: 64K los size: 82084K in use: 74539K
+10-25 13:02:41.478  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 16.73ms, stw 33.64ms promoted 2606K major size: 194608K in use: 179373K empty reserved: 464K los size: 82084K in use: 76078K
+10-25 13:02:41.564  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 42.64ms, stw 46.43ms promoted 3751K major size: 198432K in use: 183125K empty reserved: 224K los size: 82084K in use: 78545K
+10-25 13:02:41.931  8893  9039 D Mono    : GC_TAR_BRIDGE bridges 44 objects 45 opaque 0 colors 44 colors-bridged 44 colors-visible 44 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.09ms tarjan 0.03ms scc-setup 0.04ms gather-xref 0.04ms xref-setup 0.03ms cleanup 0.03ms
+10-25 13:02:41.931  8893  9039 D Mono    : GC_MAJOR: (LOS overflow) time 275.91ms, stw 344.72ms los size: 34684K in use: 25756K
+10-25 13:02:41.931  8893  9039 D Mono    : GC_MAJOR_SWEEP: major size: 198112K in use: 181519K empty reserved: 0K
+10-25 13:02:41.985  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 10.78ms, stw 17.39ms promoted 931K major size: 198864K in use: 182452K empty reserved: 304K los size: 36452K in use: 27818K
+10-25 13:02:42.031  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 6.78ms, stw 16.35ms promoted 2K major size: 198864K in use: 182454K empty reserved: 304K los size: 36452K in use: 27818K
+10-25 13:02:42.050  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 2.40ms, stw 3.57ms promoted 1K major size: 198864K in use: 182456K empty reserved: 304K los size: 36452K in use: 27818K
+10-25 13:02:42.098  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 8.14ms, stw 29.98ms promoted 2K major size: 198864K in use: 182459K empty reserved: 304K los size: 36452K in use: 27818K
+10-25 13:02:42.142  8893  9039 D Mono    : GC_MINOR: (Nursery full) time 6.79ms, stw 10.87ms promoted 2K major size: 198864K in use: 182461K empty reserved: 304K los size: 36452K in use: 27818K
+10-25 13:02:42.808  8893  9062 D Mono    : GC_TAR_BRIDGE bridges 56 objects 56 opaque 0 colors 56 colors-bridged 56 colors-visible 56 xref 0 cache-hit 0 cache-semihit 0 cache-miss 0 setup 0.03ms tarjan 0.02ms scc-setup 0.07ms gather-xref 0.02ms xref-setup 0.02ms cleanup 0.03ms
+10-25 13:02:42.808  8893  9062 D Mono    : GC_MINOR: (Nursery full) time 6.40ms, stw 7.84ms promoted 28K major size: 198880K in use: 182490K empty reserved: 288K los size: 36452K in use: 27979K
