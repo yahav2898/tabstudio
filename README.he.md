@@ -54,7 +54,7 @@ TabStudio הופך טאבלט אנדרואיד למחשב פיתוח שבאמת 
 - **F5 בפחות משנייה.** הפרויקטים מתקמפלים ישר לזיכרון ורצים ליד הקוד. קלט ופלט של הקונסולה נמצאים בחלון ה-Output.
 - **IntelliSense.** השלמה אוטומטית, עזרה בחתימות, Quick Info, ‏Go to Definition, ‏Find All References, ‏Rename ותיקונים מהירים.
 - **דיבאגר.** נקודות עצירה, Step Into, ‏Over ו-Out, ‏Locals, ‏Watch, ‏Call Stack, ‏DataTips ועצירה על חריגות.
-- **בדיקות.** Test Explorer ל-xUnit, ‏NUnit ו-MSTest, וסימוני Live Unit Testing ליד כל שורה.
+- **בדיקות.** Test Explorer ל-xUnit, ‏NUnit ו-MSTest, ו-Live Unit Testing: וי ירוק, איקס אדום או קו כחול ליד כל שורה בקוד הנבדק, והבדיקות שעריכה משפיעה עליהן רצות שוב מעצמן רגע אחרי שמפסיקים להקליד.
 - **NuGet על המכשיר.** החבילות משוחזרות על הטאבלט, כך שפרויקטים אמיתיים נבנים כמו שהם.
 
 ### כל עומסי העבודה של Visual Studio, על אנדרואיד

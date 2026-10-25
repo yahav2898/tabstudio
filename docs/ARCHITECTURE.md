@@ -223,6 +223,22 @@ runs them through the normal build, and loads one `TestSession` per changed buil
 assemblies. Results stream into the tree as each test finishes, and saving a file marks the results it may
 have changed as stale.
 
+### Live Unit Testing
+
+`TabStudio.LiveTesting` needs no profiler, which Android does not offer:
+
+- **Instrumentation.** A syntax rewriter adds a hit to each statement of the product projects a test project
+  references, keeping line numbers identical to the source, with a small hit table per assembly. Test projects
+  are never instrumented.
+- **Attribution.** `ITestThreadHook` in TestRunner tells the hit tables which test is running, through an
+  `AsyncLocal`, so coverage follows async code. Coverage is kept per member, so it survives lines moving.
+- **Impact.** `ImpactAnalyzer` compares an edit's members with the last build's: only the tests that ran an edited
+  member run again, with new and changed tests; a change outside members, or unknown coverage, runs them all.
+- **Running.** `CoverageBuilder` rebuilds only changed projects; `LiveTestEngine` runs one build and test run at a
+  time, gives way to builds, debugging and Test Explorer, and waits while the device is hot.
+- **In the IDE**, a margin beside the breakpoints draws each line's state from `CoverageIndex`, and markers follow
+  the text as you type and dim until their tests run again.
+
 ## Notebooks
 
 The C# kernel compiles each cell as a Roslyn script submission chained to the previous cell, emits it to

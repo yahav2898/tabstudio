@@ -52,7 +52,7 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 - **F5 in under a second.** Projects compile straight to memory and run next to the code. Console input and output live in the Output panel.
 - **IntelliSense.** Completion, signature help, Quick Info, Go to Definition, Find All References, Rename and quick fixes.
 - **A debugger.** Breakpoints, Step Into, Over and Out, Locals, Watch, Call Stack, DataTips and break on exceptions.
-- **Tests.** Test Explorer for xUnit, NUnit and MSTest, and Live Unit Testing markers beside every line.
+- **Tests.** Test Explorer for xUnit, NUnit and MSTest, and Live Unit Testing: a green check, red cross or blue dash beside every line of the code under test, and the tests an edit affects run again by themselves a moment after you stop typing.
 - **NuGet on the device.** Packages restore on the tablet, so real projects build as they are.
 
 ### Every Visual Studio workload, on Android
