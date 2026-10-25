@@ -114,14 +114,21 @@ public sealed class CodeActionTests
     public async Task Refactorings_are_offered_without_a_diagnostic()
     {
         using var workspace = FeatureWorkspace.WithProgram("""
-            var ready = args.Length > 0;
-            i$$f (ready)
+            namespace Demo;
+
+            public static class Status
             {
-                Console.WriteLine("ready");
-            }
-            else
-            {
-                Console.WriteLine("waiting");
+                public static void Print(bool ready)
+                {
+                    i$$f (ready)
+                    {
+                        Console.WriteLine("ready");
+                    }
+                    else
+                    {
+                        Console.WriteLine("waiting");
+                    }
+                }
             }
             """);
 

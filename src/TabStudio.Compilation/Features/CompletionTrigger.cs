@@ -1,18 +1,5 @@
 namespace TabStudio.Compilation.Features;
 
-/// <summary>Why a completion list is requested.</summary>
-public enum CompletionTriggerKind
-{
-    /// <summary>The user asked for it, with Ctrl+Space or a tap on the completion button.</summary>
-    Invoke,
-
-    /// <summary>The user typed <see cref="CompletionTrigger.Character"/>, such as a letter or a dot.</summary>
-    Insertion,
-
-    /// <summary>The user deleted <see cref="CompletionTrigger.Character"/> with Backspace.</summary>
-    Deletion,
-}
-
 /// <summary>What made the editor ask for completion.</summary>
 /// <param name="Kind">Why completion is requested.</param>
 /// <param name="Character">The typed or deleted character, for <see cref="CompletionTriggerKind.Insertion"/> and <see cref="CompletionTriggerKind.Deletion"/>.</param>
