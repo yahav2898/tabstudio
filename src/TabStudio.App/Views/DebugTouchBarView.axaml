@@ -8,6 +8,10 @@
   <Border Padding="4" CornerRadius="14" Background="{DynamicResource Brush.Hover}"
           BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1" BoxShadow="0 8 24 0 #59000000">
     <StackPanel Orientation="Horizontal" Spacing="2">
+      <Button Theme="{StaticResource ToolButton}" Width="32" Height="44" CornerRadius="10" Padding="0"
+              Command="{Binding ToggleTouchBarCommand}" ToolTip.Tip="Fold the touch buttons away">
+        <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="16" Foreground="{DynamicResource Brush.TextSecondary}" />
+      </Button>
       <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" ToolTip.Tip="Continue (F5)"
               Command="{Binding StartDebuggingCommand}" IsVisible="{Binding IsPaused}"
               Background="{DynamicResource Brush.Pressed}" Foreground="{DynamicResource Brush.OnAccent}">

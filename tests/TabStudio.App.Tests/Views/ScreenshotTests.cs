@@ -111,6 +111,34 @@ public sealed class ScreenshotTests : IDisposable
     }
 
     [AvaloniaFact]
+    public async Task The_touch_buttons_fold_away_from_the_code()
+    {
+        var window = Show(1280, 800);
+        var workspace = await OpenSampleAsync();
+        var fold = Button(window, "FoldTouchBarButton");
+        Assert.True(fold.IsEffectivelyVisible);
+
+        fold.Command!.Execute(null);
+        await UiTestHelpers.WaitUntilAsync(() => true);
+
+        UiTestHelpers.SaveScreenshot(window, "02-touch-buttons-folded");
+
+        Assert.True(workspace.IsTouchBarCollapsed);
+        Assert.False(fold.IsEffectivelyVisible);
+        var unfold = Button(window, "UnfoldTouchBarButton");
+        Assert.True(unfold.IsEffectivelyVisible);
+
+        unfold.Command!.Execute(null);
+        await UiTestHelpers.WaitUntilAsync(() => true);
+
+        Assert.True(fold.IsEffectivelyVisible);
+        Assert.False(unfold.IsEffectivelyVisible);
+
+        static Button Button(Window window, string name) =>
+            window.GetVisualDescendants().OfType<Button>().Single(b => b.Name == name);
+    }
+
+    [AvaloniaFact]
     public async Task Test_Explorer_with_passed_failed_and_skipped_tests()
     {
         var window = Show(1280, 800);

@@ -89,6 +89,13 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
     /// </summary>
     public bool ShowsEditorTouchBar => HasDocuments && !IsDebugging && ActiveDocument?.ShowsEditorActions != false;
 
+    /// <summary>
+    /// Whether the floating editing and debug buttons are folded into one small button at the edge of the editor, so
+    /// they cover no code. One tap folds or unfolds them.
+    /// </summary>
+    [ObservableProperty]
+    public partial bool IsTouchBarCollapsed { get; set; }
+
     /// <summary>Whether to pause when an exception is about to go unhandled. On by default, as in Visual Studio.</summary>
     [ObservableProperty]
     public partial bool BreakOnUnhandledExceptions { get; set; } = true;
@@ -101,6 +108,10 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
 
     /// <inheritdoc />
     void IEditorDebugger.ToggleBreakpoint(string filePath, int line) => Breakpoints.Toggle(filePath, line);
+
+    /// <summary>Folds the floating touch buttons away, or brings them back.</summary>
+    [RelayCommand]
+    private void ToggleTouchBar() => IsTouchBarCollapsed = !IsTouchBarCollapsed;
 
     /// <inheritdoc />
     async Task IEditorDebugger.EditBreakpointConditionAsync(string filePath, int line)

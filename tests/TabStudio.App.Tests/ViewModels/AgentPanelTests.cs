@@ -178,6 +178,11 @@ public sealed class AgentPanelTests
 
         Assert.True(fixture.Workspace.IsAgentSelected);
         Assert.Single(agent.Changes);
+
+        // Each answer streams in two pieces, and shows as one message however the UI thread interleaves them.
+        Assert.Equal(
+            ["I'll look at how the greeting is built.", "I shortened the greeting in Greeter.cs. The solution still builds without errors. Keep the change to apply it."],
+            agent.Items.OfType<AssistantMessageViewModel>().Select(m => m.Text));
         window.Close();
     }
 

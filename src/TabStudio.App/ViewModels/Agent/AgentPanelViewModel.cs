@@ -24,7 +24,6 @@ public sealed partial class AgentPanelViewModel : ObservableObject, IDisposable
     private AgentSettings _settings;
     private AgentSession? _session;
     private CancellationTokenSource? _turn;
-    private AssistantMessageViewModel? _streaming;
 
     /// <summary>Creates the panel.</summary>
     /// <param name="settingsStore">Where the settings are kept.</param>
@@ -173,6 +172,7 @@ public sealed partial class AgentPanelViewModel : ObservableObject, IDisposable
         {
             var session = _session ??= await CreateSessionAsync(_turn.Token);
             var result = await session.SendAsync(text, _turn.Token);
+            await ShowQueuedEventsAsync();
             var notice = result.End switch
             {
                 AgentTurnEnd.RoundLimit => "The agent paused after many steps. Send a message to let it continue.",
@@ -202,7 +202,6 @@ public sealed partial class AgentPanelViewModel : ObservableObject, IDisposable
         }
         finally
         {
-            _streaming = null;
             _turn?.Dispose();
             _turn = null;
             IsBusy = false;
@@ -364,16 +363,16 @@ public sealed partial class AgentPanelViewModel : ObservableObject, IDisposable
         switch (agentEvent)
         {
             case AgentTextDelta delta:
-                if (_streaming is null)
+                // Text continues the answer being streamed, until a tool call or the next question comes between.
+                if (Items.Count == 0 || Items[^1] is not AssistantMessageViewModel streaming)
                 {
-                    _streaming = new AssistantMessageViewModel();
-                    Items.Add(_streaming);
+                    streaming = new AssistantMessageViewModel();
+                    Items.Add(streaming);
                 }
 
-                _streaming.Append(delta.Text);
+                streaming.Append(delta.Text);
                 break;
             case AgentToolStarted started:
-                _streaming = null;
                 Items.Add(new ToolCallViewModel(started.CallId, started.Description));
                 break;
             case AgentToolFinished finished:
@@ -386,6 +385,17 @@ public sealed partial class AgentPanelViewModel : ObservableObject, IDisposable
         }
 
         ContentGrew?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>
+    /// Waits until the UI thread has shown the events the turn raised. They are queued with <see cref="IUiDispatcher.Post"/>
+    /// in order, so a marker queued after them runs last, and the turn's closing notice comes after its text.
+    /// </summary>
+    private Task ShowQueuedEventsAsync()
+    {
+        var shown = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        _ui.Post(shown.SetResult);
+        return shown.Task;
     }
 
     private void SyncChanges()

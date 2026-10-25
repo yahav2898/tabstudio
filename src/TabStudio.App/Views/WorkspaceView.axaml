@@ -413,51 +413,71 @@
             <TextBlock Classes="muted" Text="Open a file from the Solution Explorer" HorizontalAlignment="Center" />
           </StackPanel>
 
-          <!-- Touch actions: what a keyboard user reaches with F2, Ctrl+/, Shift+Alt+F, Alt+F12, Ctrl+F10 and F5. -->
-          <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="16,12" Padding="4" CornerRadius="14"
-                  Background="{DynamicResource Brush.Hover}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
-                  BoxShadow="0 8 24 0 #59000000" IsVisible="{Binding ShowsEditorTouchBar}">
-            <StackPanel Orientation="Horizontal" Spacing="2">
-              <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding RenameSymbolCommand}" ToolTip.Tip="Rename (F2)">
-                <StackPanel Orientation="Horizontal" Spacing="7">
-                  <controls:StrokeIcon Data="{StaticResource Icon.Rename}" Size="16" />
-                  <TextBlock Text="Rename" VerticalAlignment="Center" FontSize="12.5" />
+          <!-- The floating touch buttons, editing or debugging; folded into one small button they cover no code. -->
+          <Panel HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="16,12">
+            <Panel.IsVisible>
+              <MultiBinding Converter="{x:Static BoolConverters.Or}">
+                <Binding Path="ShowsEditorTouchBar" />
+                <Binding Path="IsDebugging" />
+              </MultiBinding>
+            </Panel.IsVisible>
+            <Button x:Name="UnfoldTouchBarButton" Theme="{StaticResource ToolButton}" Width="44" Height="44" CornerRadius="14" Padding="0"
+                    Background="{DynamicResource Brush.Hover}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
+                    Command="{Binding ToggleTouchBarCommand}" IsVisible="{Binding IsTouchBarCollapsed}" ToolTip.Tip="Show the touch buttons">
+              <controls:StrokeIcon Data="{StaticResource Icon.ChevronLeft}" Size="18" />
+            </Button>
+            <Panel IsVisible="{Binding !IsTouchBarCollapsed}">
+              <!-- Touch actions: what a keyboard user reaches with F2, Ctrl+/, Shift+Alt+F, Alt+F12, Ctrl+F10 and F5. -->
+              <Border Padding="4" CornerRadius="14"
+                      Background="{DynamicResource Brush.Hover}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
+                      BoxShadow="0 8 24 0 #59000000" IsVisible="{Binding ShowsEditorTouchBar}">
+                <StackPanel Orientation="Horizontal" Spacing="2">
+                  <Button x:Name="FoldTouchBarButton" Theme="{StaticResource ToolButton}" Width="32" Height="44" CornerRadius="10" Padding="0"
+                          Command="{Binding ToggleTouchBarCommand}" ToolTip.Tip="Fold the touch buttons away">
+                    <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="16" Foreground="{DynamicResource Brush.TextSecondary}" />
+                  </Button>
+                  <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding RenameSymbolCommand}" ToolTip.Tip="Rename (F2)">
+                    <StackPanel Orientation="Horizontal" Spacing="7">
+                      <controls:StrokeIcon Data="{StaticResource Icon.Rename}" Size="16" />
+                      <TextBlock Text="Rename" VerticalAlignment="Center" FontSize="12.5" />
+                    </StackPanel>
+                  </Button>
+                  <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding ToggleCommentCommand}" ToolTip.Tip="Toggle Line Comment (Ctrl+/)">
+                    <StackPanel Orientation="Horizontal" Spacing="7">
+                      <controls:StrokeIcon Data="{StaticResource Icon.Comment}" Size="16" />
+                      <TextBlock Text="Comment" VerticalAlignment="Center" FontSize="12.5" />
+                    </StackPanel>
+                  </Button>
+                  <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding FormatDocumentCommand}" ToolTip.Tip="Format Document (Shift+Alt+F)">
+                    <StackPanel Orientation="Horizontal" Spacing="7">
+                      <controls:StrokeIcon Data="{StaticResource Icon.Format}" Size="16" />
+                      <TextBlock Text="Format" VerticalAlignment="Center" FontSize="12.5" />
+                    </StackPanel>
+                  </Button>
+                  <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding PeekDefinitionCommand}" ToolTip.Tip="Peek Definition (Alt+F12)">
+                    <StackPanel Orientation="Horizontal" Spacing="7">
+                      <controls:StrokeIcon Data="{StaticResource Icon.Search}" Size="16" />
+                      <TextBlock Text="Peek" VerticalAlignment="Center" FontSize="12.5" />
+                    </StackPanel>
+                  </Button>
+                  <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding RunToCursorCommand}" ToolTip.Tip="Run to Cursor (Ctrl+F10)">
+                    <StackPanel Orientation="Horizontal" Spacing="7">
+                      <controls:StrokeIcon Data="{StaticResource Icon.Forward}" Size="16" />
+                      <TextBlock Text="To Cursor" VerticalAlignment="Center" FontSize="12.5" />
+                    </StackPanel>
+                  </Button>
+                  <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding StartDebuggingCommand}"
+                          Background="{DynamicResource Brush.Pressed}" Foreground="{DynamicResource Brush.OnAccent}" ToolTip.Tip="Start Debugging (F5)">
+                    <StackPanel Orientation="Horizontal" Spacing="7">
+                      <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="14" />
+                      <TextBlock Text="Run" VerticalAlignment="Center" FontSize="12.5" />
+                    </StackPanel>
+                  </Button>
                 </StackPanel>
-              </Button>
-              <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding ToggleCommentCommand}" ToolTip.Tip="Toggle Line Comment (Ctrl+/)">
-                <StackPanel Orientation="Horizontal" Spacing="7">
-                  <controls:StrokeIcon Data="{StaticResource Icon.Comment}" Size="16" />
-                  <TextBlock Text="Comment" VerticalAlignment="Center" FontSize="12.5" />
-                </StackPanel>
-              </Button>
-              <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding FormatDocumentCommand}" ToolTip.Tip="Format Document (Shift+Alt+F)">
-                <StackPanel Orientation="Horizontal" Spacing="7">
-                  <controls:StrokeIcon Data="{StaticResource Icon.Format}" Size="16" />
-                  <TextBlock Text="Format" VerticalAlignment="Center" FontSize="12.5" />
-                </StackPanel>
-              </Button>
-              <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding PeekDefinitionCommand}" ToolTip.Tip="Peek Definition (Alt+F12)">
-                <StackPanel Orientation="Horizontal" Spacing="7">
-                  <controls:StrokeIcon Data="{StaticResource Icon.Search}" Size="16" />
-                  <TextBlock Text="Peek" VerticalAlignment="Center" FontSize="12.5" />
-                </StackPanel>
-              </Button>
-              <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding RunToCursorCommand}" ToolTip.Tip="Run to Cursor (Ctrl+F10)">
-                <StackPanel Orientation="Horizontal" Spacing="7">
-                  <controls:StrokeIcon Data="{StaticResource Icon.Forward}" Size="16" />
-                  <TextBlock Text="To Cursor" VerticalAlignment="Center" FontSize="12.5" />
-                </StackPanel>
-              </Button>
-              <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding StartDebuggingCommand}"
-                      Background="{DynamicResource Brush.Pressed}" Foreground="{DynamicResource Brush.OnAccent}" ToolTip.Tip="Start Debugging (F5)">
-                <StackPanel Orientation="Horizontal" Spacing="7">
-                  <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="14" />
-                  <TextBlock Text="Run" VerticalAlignment="Center" FontSize="12.5" />
-                </StackPanel>
-              </Button>
-            </StackPanel>
-          </Border>
-          <views:DebugTouchBarView HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="16,12" IsVisible="{Binding IsDebugging}" />
+              </Border>
+              <views:DebugTouchBarView IsVisible="{Binding IsDebugging}" />
+            </Panel>
+          </Panel>
         </Panel>
 
         <GridSplitter Grid.Row="3" x:Name="BottomSplitter" Height="6" ResizeDirection="Rows" Background="Transparent">
