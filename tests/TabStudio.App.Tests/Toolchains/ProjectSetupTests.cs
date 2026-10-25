@@ -7,8 +7,10 @@ using Avalonia.Threading;
 using Avalonia.VisualTree;
 using TabStudio.App.Services;
 using TabStudio.App.Services.Toolchains;
+using TabStudio.App.Services.Search;
 using TabStudio.App.Tests.ViewModels;
 using TabStudio.App.ViewModels;
+using TabStudio.App.ViewModels.Search;
 using TabStudio.App.Views;
 using TabStudio.Testing;
 
@@ -121,7 +123,7 @@ public sealed class ProjectSetupTests
         var tools = window.GetVisualDescendants().OfType<MenuItem>().Single(m => m.Header as string == "T_ools");
         tools.IsSubMenuOpen = true;
         Dispatcher.UIThread.RunJobs();
-        var setting = tools.Items.OfType<MenuItem>().Single(m => m.Header as string == "Set Up Projects When They _Open");
+        var setting = tools.Items.OfType<MenuItem>().Single(m => m.Header as string == "Set Projects Up When They _Open");
 
         Assert.True(setting.IsChecked);
         SaveWithPopups(window, "open-any-repo-01-setting", setting);
@@ -133,6 +135,74 @@ public sealed class ProjectSetupTests
         using var next = new WorkspaceViewModel(fixture.Compiler, fixture.DeviceStatus, fixture.Profile, new AvaloniaUiDispatcher(), fixture.Sessions, fixture.Paths);
         Assert.False(next.SetUpProjectsWhenTheyOpen);
         window.Close();
+    }
+
+    [AvaloniaFact]
+    public async Task Ctrl_Q_finds_both_setup_settings_and_changes_the_persisted_value()
+    {
+        using var fixture = new WorkspaceFixture();
+        var workspace = fixture.Workspace;
+        workspace.Search.OpenCommand.Execute(null);
+        workspace.Search.Query = "install packages";
+        workspace.Search.ChooseScopeCommand.Execute(workspace.Search.Scopes.Single(s => s.Kind == SearchKind.Setting));
+        await workspace.Search.Completion;
+        var off = workspace.Search.Rows.OfType<SearchResultRow>().Single(r => r.Title == "Set projects up when they open: Off");
+        await workspace.Search.AcceptCommand.ExecuteAsync(off);
+        Assert.False(workspace.SetUpProjectsWhenTheyOpen);
+        Assert.False(new ProjectSetupStore(fixture.Paths).Load().SetUpProjectsWhenTheyOpen);
+        workspace.Search.OpenCommand.Execute(null);
+        workspace.Search.Query = "setup";
+        await workspace.Search.Completion;
+        var on = workspace.Search.Rows.OfType<SearchResultRow>().Single(r => r.Title == "Set projects up when they open: On");
+        await workspace.Search.AcceptCommand.ExecuteAsync(on);
+        Assert.True(workspace.SetUpProjectsWhenTheyOpen);
+    }
+
+    [AvaloniaFact]
+    public async Task Workspace_members_share_one_install_and_a_manifest_saved_during_it_is_not_lost()
+    {
+        using var fixture = new WorkspaceFixture();
+        using var repo = new TempDirectory();
+        repo.Write("package.json", """{ "name": "mono", "private": true, "workspaces": ["packages/*"], "scripts": { "preinstall": "node setup.js" } }""");
+        repo.Write("packages/app/package.json", """{ "name": "app", "version": "1.0.0", "main": "index.js" }""");
+        repo.Write("packages/app/index.js", "console.log('workspace app ran');");
+        repo.Write("setup.js", """
+            const fs = require('node:fs');
+            fs.appendFileSync('installs.txt', 'run\n');
+            if (!fs.existsSync('release.txt')) {
+              const timer = setInterval(() => {
+                if (fs.existsSync('release.txt')) clearInterval(timer);
+              }, 25);
+            }
+            """);
+        var workspace = fixture.Workspace;
+        await workspace.LoadAsync(repo.Path);
+        try
+        {
+            await UiTestHelpers.WaitUntilAsync(() => File.Exists(repo.Resolve("installs.txt")), SetupTimeout, "npm's preinstall to start");
+            var manifest = (await workspace.OpenDocumentAsync(repo.Resolve("packages/app/package.json")))!;
+            var at = manifest.Document.Text.IndexOf("1.0.0", StringComparison.Ordinal);
+            manifest.Document.Replace(at, 5, "1.0.1");
+            await workspace.SaveCommand.ExecuteAsync(null);
+        }
+        finally
+        {
+            repo.Write("release.txt");
+        }
+
+        await UiTestHelpers.WaitUntilAsync(() => workspace.ProjectSetupTask.IsCompleted, SetupTimeout, "both setup passes");
+        Assert.Equal(2, File.ReadAllLines(repo.Resolve("installs.txt")).Length);
+        Assert.Equal(2, Occurrences(workspace.Output.Text, "------ Setting up mono:"));
+        Assert.DoesNotContain("------ Setting up app:", workspace.Output.Text, StringComparison.Ordinal);
+        var member = workspace.StartupProjects.Single(p => p.Project.Name == "app");
+        workspace.SetStartupProject(member.Project);
+        await workspace.RunCommand.ExecuteAsync(null);
+        Assert.Contains("workspace app ran", workspace.Output.Text, StringComparison.Ordinal);
+
+        using var again = new WorkspaceViewModel(fixture.Compiler, fixture.DeviceStatus, fixture.Profile, new AvaloniaUiDispatcher(), fixture.Sessions, fixture.Paths);
+        await again.LoadAsync(repo.Path);
+        await UiTestHelpers.WaitUntilAsync(() => again.ProjectSetupTask.IsCompleted, SetupTimeout, "unchanged workspace setup");
+        Assert.Equal(2, File.ReadAllLines(repo.Resolve("installs.txt")).Length);
     }
 
     private static Window Show(WorkspaceViewModel workspace)

@@ -42,6 +42,7 @@ public sealed class StaticSiteServer : IAsyncDisposable
 
           window.__tabStudioLiveReload = true;
           const events = new EventSource('/__tabstudio/live-reload');
+          events.addEventListener('open', () => { window.__tabStudioLiveReloadReady = true; });
           events.addEventListener('reload', () => location.reload());
           events.addEventListener('css', event => {
             const changed = new URL(event.data, location.href).pathname;
@@ -269,6 +270,12 @@ public sealed class StaticSiteServer : IAsyncDisposable
                 await WriteAsync(response, 200, "text/javascript; charset=utf-8", Script, isHead).ConfigureAwait(false);
                 return 200;
             case EventsPath:
+                if (isHead)
+                {
+                    response.ContentType = "text/event-stream; charset=utf-8";
+                    return 200;
+                }
+
                 await StreamChangesAsync(response).ConfigureAwait(false);
                 return 200;
         }
@@ -328,9 +335,23 @@ public sealed class StaticSiteServer : IAsyncDisposable
             return null;
         }
 
+        var current = _root;
+        foreach (var segment in segments)
+        {
+            current = Path.Combine(current, segment);
+            if (Path.Exists(current) && (File.GetAttributes(current) & FileAttributes.ReparsePoint) != 0)
+            {
+                return null;
+            }
+        }
+
         if (path.Length == 0 || path.EndsWith('/'))
         {
             full = Path.Combine(full, DefaultDocument);
+            if (File.Exists(full) && (File.GetAttributes(full) & FileAttributes.ReparsePoint) != 0)
+            {
+                return null;
+            }
         }
 
         return File.Exists(full) || (Directory.Exists(full) && full != _root) ? full : null;

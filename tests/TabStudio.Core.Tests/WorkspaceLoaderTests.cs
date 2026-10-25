@@ -154,4 +154,25 @@ public sealed class WorkspaceLoaderTests
         temp.Write("README.md", "# Shop");
         return temp;
     }
+
+    [Fact]
+    public void A_folder_with_several_solutions_opens_the_main_one()
+    {
+        // As in a product repository: a small solution for tools beside the main one, which sorts after it by name.
+        using var temp = new TempDirectory();
+        var root = temp.Resolve("platform");
+        temp.Write("platform/BetaHardening.slnx", """<Solution><Project Path="tools/Beta/Beta.csproj" /></Solution>""");
+        temp.Write("platform/JustKeto.slnx", """
+            <Solution>
+              <Project Path="src/Api/Api.csproj" />
+              <Project Path="src/Data/Data.csproj" />
+              <Project Path="tests/Api.Tests/Api.Tests.csproj" />
+            </Solution>
+            """);
+
+        Assert.Equal("JustKeto.slnx", Path.GetFileName(WorkspaceLoader.FindSolution(root)));
+
+        temp.Write("platform/platform.slnx", """<Solution><Project Path="src/Api/Api.csproj" /></Solution>""");
+        Assert.Equal("platform.slnx", Path.GetFileName(WorkspaceLoader.FindSolution(root)));
+    }
 }

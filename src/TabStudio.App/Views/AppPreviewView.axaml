@@ -49,7 +49,7 @@
               IsVisible="{Binding HasNotice}">
         <Grid ColumnDefinitions="Auto,*">
           <controls:StrokeIcon Data="{StaticResource Icon.Info}" Size="15" Margin="0,1,9,0" Foreground="{DynamicResource Brush.Info}" VerticalAlignment="Top" />
-          <TextBlock Grid.Column="1" Classes="small" Foreground="White" TextWrapping="Wrap" Text="{Binding Notice}" />
+          <TextBlock Grid.Column="1" Classes="small" Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" Text="{Binding Notice}" />
         </Grid>
       </Border>
     </Panel>

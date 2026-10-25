@@ -127,7 +127,7 @@ public static partial class ProjectParser
             Properties = properties,
             PackageReferences = packages,
             ProjectReferences = projectReferences,
-            FrameworkReferences = ReadFrameworkReferences(root, sdk),
+            FrameworkReferences = ReadFrameworkReferences(root, sdk, properties),
             CompileIncludes = ReadItemPatterns(root, "Compile", "Include"),
             CompileRemoves = ReadItemPatterns(root, "Compile", "Remove"),
             EmbeddedResourceIncludes = ReadItemPatterns(root, "EmbeddedResource", "Include"),
@@ -327,10 +327,19 @@ public static partial class ProjectParser
     /// The shared frameworks a project uses: <c>FrameworkReference</c> items, plus ASP.NET Core for projects on the
     /// Web SDK, which adds it implicitly.
     /// </summary>
-    private static List<string> ReadFrameworkReferences(XElement root, string? sdk)
+    /// <summary>
+    /// The project's shared frameworks: its own <c>FrameworkReference</c> items, plus ASP.NET Core where the SDK adds it
+    /// implicitly: the Web SDK always, and the Razor SDK when <c>AddRazorSupportForMvc</c> is on (a Razor class library
+    /// with MVC views or Razor Pages).
+    /// </summary>
+    private static List<string> ReadFrameworkReferences(XElement root, string? sdk, Dictionary<string, string> properties)
     {
         var frameworks = ReadItemPatterns(root, "FrameworkReference", "Include");
-        if (string.Equals(sdk, "Microsoft.NET.Sdk.Web", StringComparison.OrdinalIgnoreCase)
+        var addsAspNetCore =
+            string.Equals(sdk, "Microsoft.NET.Sdk.Web", StringComparison.OrdinalIgnoreCase)
+            || (string.Equals(sdk, "Microsoft.NET.Sdk.Razor", StringComparison.OrdinalIgnoreCase)
+                && string.Equals(properties.GetValueOrDefault("AddRazorSupportForMvc"), "true", StringComparison.OrdinalIgnoreCase));
+        if (addsAspNetCore
             && !frameworks.Contains(AspNetCoreFramework, StringComparer.OrdinalIgnoreCase))
         {
             frameworks.Insert(0, AspNetCoreFramework);

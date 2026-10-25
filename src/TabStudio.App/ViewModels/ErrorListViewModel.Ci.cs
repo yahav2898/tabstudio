@@ -84,5 +84,5 @@ public sealed partial class ErrorListViewModel
     }
 
     private ErrorItemViewModel CreateItem(BuildDiagnostic diagnostic) =>
-        new(diagnostic) { Ci = _ciByDiagnostic.TryGetValue(diagnostic, out var ci) ? ci : null, Layout = LayoutFindingOf(diagnostic) };
+        new(diagnostic) { Ci = _ciByDiagnostic.TryGetValue(diagnostic, out var ci) ? ci : null, Layout = LayoutFindingOf(diagnostic), BridgePc = BridgePcOf(diagnostic) };
 }

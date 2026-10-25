@@ -1,7 +1,8 @@
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
 using AvaloniaEdit.Folding;
+using TabStudio.App.Editing;
 using TabStudio.App.Editing.Extensions;
+using TabStudio.App.Theming;
 
 namespace TabStudio.App.Views;
 
@@ -11,10 +12,11 @@ namespace TabStudio.App.Views;
 /// </summary>
 public sealed partial class CodeEditorView
 {
-    private static readonly IBrush FoldMarkerBrush = new ImmutableSolidColorBrush(Color.Parse("#9AA1AE"));
-    private static readonly IBrush FoldMarkerBackground = new ImmutableSolidColorBrush(Color.Parse("#1B1D23"));
+    private static readonly IBrush FoldMarkerBrush = ThemeBrushes.Editor("Editor.FoldMarker");
+    private static readonly IBrush FoldMarkerBackground = ThemeBrushes.Editor("Editor.FoldMarkerBackground");
 
     private FoldingManager? _folding;
+    private DrawnFoldingMargin? _foldingMargin;
 
     /// <summary>The folds of the document, while something folds it; for tests.</summary>
     internal FoldingManager? Folding => _folding;
@@ -28,6 +30,9 @@ public sealed partial class CodeEditorView
         if (_folding is null)
         {
             _folding = FoldingManager.Install(_editor.TextArea);
+
+            // AvaloniaEdit's margin makes a control per marker again on every frame of a scroll; this one draws them.
+            _foldingMargin = DrawnFoldingMargin.ReplaceIn(_editor.TextArea, _folding);
             if (EditorExtensions.Theme is { } theme)
             {
                 SetFoldingColors(theme);
@@ -48,6 +53,11 @@ public sealed partial class CodeEditorView
         {
             FoldingManager.Uninstall(_folding);
             _folding = null;
+            if (_foldingMargin is not null)
+            {
+                _editor.TextArea.LeftMargins.Remove(_foldingMargin);
+                _foldingMargin = null;
+            }
         }
     }
 }

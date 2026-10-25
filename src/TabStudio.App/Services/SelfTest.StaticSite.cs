@@ -28,19 +28,19 @@ public static partial class SelfTest
             return new SelfTestResult(false, "Static site: the template did not open as a static web site.", clock.Elapsed);
         }
 
-        var run = workspace.RunCommand.ExecuteAsync(null);
-        while (!workspace.WebPreview.IsRunning && !run.IsCompleted)
-        {
-            await Task.Delay(PollInterval, cancellationToken);
-        }
-
-        if (workspace.WebPreview.AppAddress is not { } address || !workspace.WebPreview.IsRunning)
-        {
-            return new SelfTestResult(false, $"Static site: it was not served: {LastLines(workspace)}", clock.Elapsed);
-        }
-
+        var run = workspace.StartDebuggingCommand.ExecuteAsync(null);
         try
         {
+            while (!workspace.WebPreview.IsRunning && !run.IsCompleted && clock.Elapsed < StaticSiteTimeout)
+            {
+                await Task.Delay(PollInterval, cancellationToken);
+            }
+
+            if (workspace.WebPreview.AppAddress is not { } address || !workspace.WebPreview.IsRunning)
+            {
+                return new SelfTestResult(false, $"Static site: it was not served: {LastLines(workspace)}", clock.Elapsed);
+            }
+
             using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(30) };
             var page = await http.GetStringAsync(address, cancellationToken);
             if (!page.Contains($"<h1>{StaticSiteName}</h1>", StringComparison.Ordinal) || !page.Contains(StaticSiteServer.ScriptPath, StringComparison.Ordinal))
@@ -76,7 +76,7 @@ public static partial class SelfTest
         while (clock.Elapsed < StaticSiteTimeout)
         {
             if (workspace.WebPreview.WebView is IScriptableWebView view
-                && (await view.EvaluateAsync("document.querySelector('h1') ? document.querySelector('h1').textContent : ''", cancellationToken))?.Contains(StaticSiteName, StringComparison.Ordinal) == true)
+                && (await view.EvaluateAsync("window.__tabStudioLiveReloadReady && document.querySelector('h1') ? document.querySelector('h1').textContent : ''", cancellationToken))?.Contains(StaticSiteName, StringComparison.Ordinal) == true)
             {
                 browser = view;
                 break;
@@ -121,9 +121,35 @@ public static partial class SelfTest
             return new SelfTestResult(false, $"Static site preview: the saved style did not apply in place ({state}).", clock.Elapsed);
         }
 
+        var index = await workspace.OpenDocumentAsync(Path.Combine(Path.GetDirectoryName(styles)!, "index.html"));
+        if (index is null)
+        {
+            return new SelfTestResult(false, "Static site preview: index.html could not be opened.", clock.Elapsed);
+        }
+
+        var heading = $"<h1>{StaticSiteName}</h1>";
+        index.Document.Replace(index.Document.Text.IndexOf(heading, StringComparison.Ordinal), heading.Length, $"<h1>{StaticSiteName} reloaded</h1>");
+        await workspace.SaveCommand.ExecuteAsync(null);
+        var reload = Stopwatch.StartNew();
+        while (reload.Elapsed < StaticSiteTimeout)
+        {
+            state = await browser.EvaluateAsync("document.querySelector('h1').textContent + ' ' + typeof window.__tabStudioSelfTest", cancellationToken);
+            if (state?.Contains($"{StaticSiteName} reloaded undefined", StringComparison.Ordinal) == true)
+            {
+                break;
+            }
+
+            await Task.Delay(PollInterval, cancellationToken);
+        }
+
+        if (state?.Contains($"{StaticSiteName} reloaded undefined", StringComparison.Ordinal) != true)
+        {
+            return new SelfTestResult(false, $"Static site preview: saved HTML did not reload ({state}).", clock.Elapsed);
+        }
+
         return new SelfTestResult(
             true,
-            string.Create(CultureInfo.InvariantCulture, $"Static site preview: the page showed in {shown.TotalSeconds:0.0} s, and the saved style applied without a reload in {(clock.Elapsed - saved).TotalSeconds:0.0} s"),
+            string.Create(CultureInfo.InvariantCulture, $"Static site preview: the page showed in {shown.TotalSeconds:0.0} s, CSS applied without a reload and saved HTML reloaded in {(clock.Elapsed - saved).TotalSeconds:0.0} s"),
             clock.Elapsed);
     }
 }

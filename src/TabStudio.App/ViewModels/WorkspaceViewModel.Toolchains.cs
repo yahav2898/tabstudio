@@ -569,6 +569,8 @@ public sealed partial class WorkspaceViewModel
     /// <summary>Installs a project's packages, such as <c>npm install</c>, with the output in the Output panel.</summary>
     private async Task InstallDependenciesAsync(ToolchainProject project, DependencyInstallDefinition dependency)
     {
+        project = NodeWorkspaces.DependencyOwner(project, _toolchainProjects.Select(p => p.Project));
+        dependency = RunPlanner.DependenciesOf(project) ?? dependency;
         if (!await EnsureToolchainReadyAsync(project.Toolchain, $"Installing {project.Name}'s packages needs {project.Toolchain.Name}, which is not installed yet."))
         {
             return;
@@ -605,6 +607,7 @@ public sealed partial class WorkspaceViewModel
 
         if (failed is null)
         {
+            RememberSetUp(Path.Combine(project.Directory, dependency.Manifest), RunPlanner.FingerprintOf(project, dependency, _toolchainProjects.Select(p => p.Project)));
             Output.WriteLine($"========== {dependency.Name}: succeeded ==========", OutputKind.Success);
             State = IdeState.Ready;
             StatusText = "Packages installed";
@@ -641,7 +644,7 @@ public sealed partial class WorkspaceViewModel
             return null;
         }
 
-        var project = item.Project;
+        var project = NodeWorkspaces.DependencyOwner(item.Project, _toolchainProjects.Select(p => p.Project));
         var toolchain = item.Toolchain;
         var manager = _toolchains.Manager;
         var status = manager.Status(toolchain.Id);

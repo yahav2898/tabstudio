@@ -79,6 +79,28 @@ public sealed class StaticSiteServerTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task Symlinks_cannot_serve_files_outside_the_site_or_a_hidden_folder()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            return; // Windows developer mode or administrator rights are needed to create symlinks.
+        }
+
+        using var outside = new TempDirectory();
+        var secret = outside.Write("private.txt", "private content");
+        File.CreateSymbolicLink(_site.Resolve("leak.txt"), secret);
+        Directory.CreateSymbolicLink(_site.Resolve("linked"), outside.Path);
+        Directory.CreateSymbolicLink(_site.Resolve("git"), _site.Resolve(".git"));
+        Directory.CreateDirectory(_site.Resolve("folder"));
+        File.CreateSymbolicLink(_site.Resolve("folder/index.html"), secret);
+        foreach (var path in new[] { "leak.txt", "linked/private.txt", "git/config", "folder/" })
+        {
+            using var response = await _http.GetAsync(new Uri(_server.Address, path));
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+    }
+
+    [Fact]
     public async Task A_saved_style_sheet_is_swapped_and_any_other_file_reloads_the_page()
     {
         using var events = await _http.GetAsync(new Uri(_server.Address, StaticSiteServer.EventsPath), HttpCompletionOption.ResponseHeadersRead);

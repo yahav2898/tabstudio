@@ -213,6 +213,24 @@ public sealed class ProjectParserTests
         Assert.True(project.NullableEnabled);
     }
 
+    [Theory]
+    [InlineData("true", true)]
+    [InlineData("false", false)]
+    public void A_razor_class_library_with_mvc_support_gets_aspnet_core(string addRazorSupportForMvc, bool expected)
+    {
+        // As Piranha.Manager is: Razor Pages in a Razor class library, with no FrameworkReference of its own.
+        var project = ProjectParser.Parse("/src/Manager/Manager.csproj", $"""
+            <Project Sdk="Microsoft.NET.Sdk.Razor">
+              <PropertyGroup>
+                <TargetFramework>net10.0</TargetFramework>
+                <AddRazorSupportForMvc>{addRazorSupportForMvc}</AddRazorSupportForMvc>
+              </PropertyGroup>
+            </Project>
+            """);
+
+        Assert.Equal(expected, project.FrameworkReferences.Contains(ProjectParser.AspNetCoreFramework));
+    }
+
     [Fact]
     public void Reads_a_legacy_project_with_the_msbuild_namespace()
     {

@@ -126,7 +126,7 @@ public sealed partial class WorkspaceViewModel
             .Select(d => new SessionDocument(d.FilePath, d.CaretOffset, d.IsDirty ? d.CurrentText : null))
             .ToList();
         var path = workspace.Solution?.FilePath ?? workspace.RootDirectory;
-        _sessions.Save(WithDebuggingState(new SessionState(path, documents, ActiveDocument?.FilePath, StartupProject?.FilePath)));
+        _sessions.Save(WithShellState(WithDebuggingState(new SessionState(path, documents, ActiveDocument?.FilePath, StartupProject?.FilePath))));
     }
 
     [RelayCommand]
@@ -220,6 +220,7 @@ public sealed partial class WorkspaceViewModel
     partial void OnActiveDocumentChanged(DocumentViewModel? oldValue, DocumentViewModel? newValue)
     {
         ErrorList.CurrentDocumentPath = newValue?.FilePath;
+        OnPropertyChanged(nameof(ShowsSideBarProperties));
         if (newValue is not null && !_navigatingHistory)
         {
             RecordHistory(newValue.FilePath);
@@ -249,6 +250,7 @@ public sealed partial class WorkspaceViewModel
             OnDocumentSavedForLanguageServer(document);
             OnDocumentSavedForStaticSite(document);
             OnDocumentSavedForProjectSetup(document);
+            OnDocumentSavedForWindowsBridge(document);
             await OnProjectFileSavedAsync(document);
             GitChanges.ScheduleRefresh();
             return true;

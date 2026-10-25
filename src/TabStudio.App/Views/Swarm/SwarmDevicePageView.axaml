@@ -10,10 +10,10 @@
 
   <UserControl.Styles>
     <Style Selector="Border.overlay">
-      <Setter Property="Background" Value="#E61B1F24" />
-      <Setter Property="BorderBrush" Value="#33FFFFFF" />
+      <Setter Property="Background" Value="{DynamicResource Brush.Overlay}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource Brush.Overlay.Border}" />
       <Setter Property="BorderThickness" Value="1" />
-      <Setter Property="BoxShadow" Value="0 6 18 0 #66000000" />
+      <Setter Property="BoxShadow" Value="{DynamicResource Shadow.Popup}" />
     </Style>
   </UserControl.Styles>
 
@@ -44,7 +44,7 @@
     </StackPanel>
 
     <!-- Paused in the tablet's debugger: the app takes no input until it continues. -->
-    <Border Background="#8C000000" IsVisible="{Binding IsPaused}">
+    <Border Background="{DynamicResource Brush.Scrim}" IsVisible="{Binding IsPaused}">
       <Border Classes="overlay" CornerRadius="14" Padding="22,18" MaxWidth="360" Margin="24" HorizontalAlignment="Center" VerticalAlignment="Center">
         <StackPanel Spacing="10">
           <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
@@ -62,7 +62,7 @@
             HorizontalAlignment="Center" VerticalAlignment="Bottom" IsVisible="{Binding HasNotice}" IsHitTestVisible="False">
       <Grid ColumnDefinitions="Auto,*">
         <controls:StrokeIcon Data="{StaticResource Icon.Info}" Size="15" Margin="0,1,9,0" Foreground="{DynamicResource Brush.Info}" VerticalAlignment="Top" />
-        <TextBlock Grid.Column="1" Classes="small" Foreground="White" TextWrapping="Wrap" Text="{Binding Notice}" />
+        <TextBlock Grid.Column="1" Classes="small" Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" Text="{Binding Notice}" />
       </Grid>
     </Border>
 
@@ -79,10 +79,10 @@
               <Ellipse Fill="{DynamicResource Brush.Error}" IsVisible="{Binding IsFailed}" />
               <Ellipse Fill="{DynamicResource Brush.Info}" IsVisible="{Binding IsWaiting}" />
             </Panel>
-            <controls:StrokeIcon Data="{StaticResource Icon.Swarm}" Size="13" Foreground="White" />
-            <TextBlock Text="{Binding CoordinatorName}" FontSize="12" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" MaxWidth="180" TextTrimming="CharacterEllipsis" />
-            <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="11" Foreground="#B3FFFFFF" IsVisible="{Binding !IsExpanded}" />
-            <controls:StrokeIcon Data="{StaticResource Icon.ChevronUp}" Size="11" Foreground="#B3FFFFFF" IsVisible="{Binding IsExpanded}" />
+            <controls:StrokeIcon Data="{StaticResource Icon.Swarm}" Size="13" Foreground="{DynamicResource Brush.TextBright}" />
+            <TextBlock Text="{Binding CoordinatorName}" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" MaxWidth="180" TextTrimming="CharacterEllipsis" />
+            <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="11" Foreground="{DynamicResource Brush.TextMuted}" IsVisible="{Binding !IsExpanded}" />
+            <controls:StrokeIcon Data="{StaticResource Icon.ChevronUp}" Size="11" Foreground="{DynamicResource Brush.TextMuted}" IsVisible="{Binding IsExpanded}" />
           </StackPanel>
         </Border>
       </Button>
@@ -90,8 +90,8 @@
       <Border Classes="overlay" CornerRadius="12" Padding="14,12" Width="280" IsVisible="{Binding IsExpanded}">
         <StackPanel Spacing="10">
           <StackPanel Spacing="3">
-            <TextBlock Text="{Binding StateText}" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" />
-            <TextBlock FontSize="12" Foreground="#B3FFFFFF" TextWrapping="Wrap" Text="{Binding DetailText}" />
+            <TextBlock Text="{Binding StateText}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" />
+            <TextBlock FontSize="12" Foreground="{DynamicResource Brush.TextMuted}" TextWrapping="Wrap" Text="{Binding DetailText}" />
           </StackPanel>
           <Button Theme="{StaticResource SecondaryButton}" Height="38" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
                   Command="{Binding LeaveCommand}">

@@ -72,13 +72,20 @@ public static class InputModality
     private static void OnPointerPressed(object? sender, PointerPressedEventArgs e) =>
         IsTouch = OperatingSystem.IsAndroid() && (e.Pointer.Type is PointerType.Touch or PointerType.Pen);
 
+    /// <summary>
+    /// Whether a key press came from a hardware keyboard. On-screen keyboards type text rather than keys, apart from a
+    /// few such as Enter and Backspace; letters, digits, function keys, arrows and shortcuts come from a hardware keyboard.
+    /// </summary>
+    /// <param name="key">The key.</param>
+    /// <param name="modifiers">The modifiers held with it.</param>
+    public static bool IsHardwareKey(Key key, KeyModifiers modifiers) =>
+        modifiers is not (KeyModifiers.None or KeyModifiers.Shift)
+        || key is (>= Key.A and <= Key.Z) or (>= Key.D0 and <= Key.D9) or (>= Key.F1 and <= Key.F24)
+            or Key.Up or Key.Down or Key.Left or Key.Right or Key.Tab;
+
     private static void OnKeyDown(object? sender, KeyEventArgs e)
     {
-        // On-screen keyboards type text rather than keys, apart from a few such as Enter and Backspace; letters,
-        // digits, function keys and shortcuts come from a hardware keyboard.
-        if (e.KeyModifiers is not (KeyModifiers.None or KeyModifiers.Shift)
-            || e.Key is (>= Key.A and <= Key.Z) or (>= Key.D0 and <= Key.D9) or (>= Key.F1 and <= Key.F24)
-                or Key.Up or Key.Down or Key.Left or Key.Right or Key.Tab)
+        if (IsHardwareKey(e.Key, e.KeyModifiers))
         {
             IsTouch = false;
         }

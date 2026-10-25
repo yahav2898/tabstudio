@@ -118,6 +118,8 @@
         "file": [ "node", "{file}" ],
         "entries": [
           { "file": "package.json", "json": "scripts.start", "command": [ "npm", "start" ] },
+          { "file": "package.json", "json": "scripts.dev", "command": [ "npm", "run", "dev" ] },
+          { "file": "package.json", "json": "scripts.serve", "command": [ "npm", "run", "serve" ] },
           { "file": "package.json", "json": "main", "command": [ "node", "{json}" ] },
           { "file": "index.js", "command": [ "node", "index.js" ] },
           { "file": "index.ts", "command": [ "node", "index.ts" ] },

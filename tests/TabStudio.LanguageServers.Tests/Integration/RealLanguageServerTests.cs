@@ -149,15 +149,53 @@ public sealed class RealLanguageServerTests(ITestOutputHelper output)
         Assert.All(change.Edits, e => Assert.Equal("greet", TypeScriptProgram.Substring(e.Span.Start, e.Span.Length)));
     }
 
+    [RealServerFact("vscode-html-language-server", "vscode-css-language-server")]
+    public async Task HTML_and_CSS_complete_tags_and_properties()
+    {
+        await using var workspace = new RealWorkspace(output);
+        var html = await workspace.OpenAsync("index.html", "<di");
+        var tags = await html.GetCompletionsAsync(3, LspCompletionTriggerKind.Invoked, null, CancellationToken.None).WaitAsync(TestTimeouts.RealServer);
+        Assert.NotNull(tags);
+        Assert.Contains(tags.Items, item => item.Label == "div");
+        const string style = "h1 { col";
+        var css = await workspace.OpenAsync("site.css", style);
+        var properties = await css.GetCompletionsAsync(style.Length, LspCompletionTriggerKind.Invoked, null, CancellationToken.None).WaitAsync(TestTimeouts.RealServer);
+        Assert.NotNull(properties);
+        Assert.Contains(properties.Items, item => item.Label == "color");
+    }
+
+    [RealServerFact("vscode-json-language-server")]
+    public async Task JSON_completes_schema_properties_and_reports_invalid_syntax()
+    {
+        const string settings = """
+            { "json.schemas": [{ "fileMatch": ["*.json"], "url": "urn:tabstudio:test",
+              "schema": { "type": "object", "properties": { "enabled": { "type": "boolean" } } } }] }
+            """;
+        await using var workspace = new RealWorkspace(output, settings);
+        const string text = "{ \"enab\": true }";
+        var json = await workspace.OpenAsync("config.json", text);
+        var completions = await json.GetCompletionsAsync(text.IndexOf("enab", StringComparison.Ordinal) + 4, LspCompletionTriggerKind.Invoked, null, CancellationToken.None).WaitAsync(TestTimeouts.RealServer);
+        Assert.NotNull(completions);
+        Assert.Contains(completions.Items, item => item.Label.Contains("enabled", StringComparison.Ordinal));
+        var invalid = await workspace.OpenAsync("invalid.json", "{ \"enabled\": }");
+        var diagnostic = await RealWorkspace.WaitForDiagnosticAsync(invalid, d => d.Severity == LspDiagnosticSeverity.Error);
+        Assert.Contains("expected", diagnostic.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
     /// <summary>A temporary workspace with a host that starts the real servers, logging what they say to the test's output.</summary>
     private sealed class RealWorkspace : IAsyncDisposable
     {
         private readonly TempDirectory _temp = new();
         private readonly ITestOutputHelper _output;
 
-        public RealWorkspace(ITestOutputHelper output)
+        public RealWorkspace(ITestOutputHelper output, string? settings = null)
         {
             _output = output;
+            if (settings is not null)
+            {
+                _temp.Write(".tabstudio/settings.json", settings);
+            }
+
             Host = new LanguageServerHost(WorkspaceConfiguration.Load(_temp.Path), ProcessServerLauncher.Instance, new LanguageServerHostOptions
             {
                 InitializeTimeout = TestTimeouts.RealServer,

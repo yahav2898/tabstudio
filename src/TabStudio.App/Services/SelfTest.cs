@@ -126,11 +126,10 @@ public static partial class SelfTest
             var toolchains = extensions.Success ? await RunToolchainsAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Toolchains: not run", TimeSpan.Zero);
             var processes = toolchains.Success ? await StartProgramsWhileCollectingAsync(cancellationToken) : new SelfTestResult(false, "Processes: not run", TimeSpan.Zero);
             var pythonTools = processes.Success ? await CheckPythonToolsAsync(main, cancellationToken) : new SelfTestResult(false, "Python tools: not run", TimeSpan.Zero);
-            var forms = pythonTools.Success ? await ShowWindowsFormsAppAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Windows Forms: not run", TimeSpan.Zero);
+            var site = pythonTools.Success ? await ShowStaticSiteAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Static site: not run", TimeSpan.Zero);
+            var forms = site.Success ? await ShowWindowsFormsAppAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Windows Forms: not run", TimeSpan.Zero);
 
-            var site = forms.Success ? await ShowStaticSiteAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Static site: not run", TimeSpan.Zero);
-
-            var design = site.Success ? await CheckDesignAsync(main, screenshots, cancellationToken) : new SelfTestResult(false, "Design: not run", TimeSpan.Zero);
+            var design = forms.Success ? await CheckDesignAsync(main, screenshots, cancellationToken) : new SelfTestResult(false, "Design: not run", TimeSpan.Zero);
 
             // Swarm, on copies of the Avalonia template: its screens in the Device Matrix, then a phone in the swarm.
             var screens = design.Success ? await CheckSwarmScreensAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Swarm screens: not run", TimeSpan.Zero);

@@ -44,6 +44,11 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
+        if (await TryRunOnWindowsBridgeAsync(project))
+        {
+            return;
+        }
+
         if (IsToolchainProject(project))
         {
             await RunToolchainProjectAsync(project);

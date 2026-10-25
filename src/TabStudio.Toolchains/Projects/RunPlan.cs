@@ -107,19 +107,20 @@ public static class RunPlanner
     /// </summary>
     /// <param name="project">The project.</param>
     /// <param name="dependency">Its dependency install, from <see cref="DependenciesOf"/>.</param>
+    /// <param name="projects">All detected projects, to include npm workspace member manifests.</param>
+    /// <param name="includeLocks">Whether to include lock files.</param>
     /// <returns>A hexadecimal SHA-256 hash.</returns>
-    public static string FingerprintOf(ToolchainProject project, DependencyInstallDefinition dependency)
+    public static string FingerprintOf(ToolchainProject project, DependencyInstallDefinition dependency, IEnumerable<ToolchainProject>? projects = null, bool includeLocks = true)
     {
         ArgumentNullException.ThrowIfNull(project);
         ArgumentNullException.ThrowIfNull(dependency);
         using var hash = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
-        foreach (var name in (IEnumerable<string>)[dependency.Manifest, .. dependency.Locked?.Files ?? []])
+        foreach (var file in DependencyInputs(project, dependency, projects, includeLocks))
         {
-            hash.AppendData(Encoding.UTF8.GetBytes(name));
+            hash.AppendData(Encoding.UTF8.GetBytes(Path.GetRelativePath(project.Directory, file)));
             hash.AppendData("\n"u8);
             try
             {
-                var file = Path.Combine(project.Directory, name);
                 if (File.Exists(file))
                 {
                     hash.AppendData(File.ReadAllBytes(file));
@@ -135,6 +136,23 @@ public static class RunPlanner
 
         return Convert.ToHexStringLower(hash.GetHashAndReset());
     }
+
+    /// <summary>The manifests and lock files read by an install, including npm workspace members.</summary>
+    /// <param name="project">The install's root project.</param>
+    /// <param name="dependency">The install.</param>
+    /// <param name="projects">All detected projects, to include workspace member manifests.</param>
+    /// <param name="includeLocks">Whether to include lock files as well as manifests.</param>
+    public static IEnumerable<string> DependencyInputs(ToolchainProject project, DependencyInstallDefinition dependency, IEnumerable<ToolchainProject>? projects = null, bool includeLocks = true) =>
+        new[] { Path.Combine(project.Directory, dependency.Manifest) }
+            .Concat(includeLocks ? (dependency.Locked?.Files ?? []).Select(f => Path.Combine(project.Directory, f)) : [])
+            .Concat((projects ?? []).Where(p => NodeWorkspaces.Contains(project, p)).Select(p => Path.Combine(p.Directory, "package.json")))
+            .Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal);
+
+    /// <summary>Whether the manifest declares packages or npm workspaces that need installing.</summary>
+    /// <param name="project">The project.</param>
+    /// <param name="dependency">The install.</param>
+    public static bool RequiresPackages(ToolchainProject project, DependencyInstallDefinition dependency) =>
+        ListsPackages(Path.Combine(project.Directory, dependency.Manifest), dependency);
 
     /// <summary>
     /// Finds an entry rule's file in a project folder. A <c>*</c> folder in the rule, as in <c>src/*/__main__.py</c>,
@@ -190,8 +208,8 @@ public static class RunPlanner
         ArgumentNullException.ThrowIfNull(project);
         ArgumentNullException.ThrowIfNull(dependency);
         return dependency.Installed is { } installed
-            && !Path.Exists(Path.Combine(project.Directory, installed))
-            && ListsPackages(Path.Combine(project.Directory, dependency.Manifest), dependency);
+            && (!Path.Exists(Path.Combine(project.Directory, installed)) || NeedsEnvironment(project, dependency))
+            && RequiresPackages(project, dependency);
     }
 
     /// <summary>Whether a manifest lists any package: a JSON one in its <see cref="DependencyInstallDefinition.Declares"/>, a text one on any line.</summary>
@@ -202,6 +220,12 @@ public static class RunPlanner
             if (dependency.Declares.Count > 0)
             {
                 using var document = JsonDocument.Parse(File.ReadAllText(manifest), new JsonDocumentOptions { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip });
+                if (document.RootElement.ValueKind == JsonValueKind.Object && document.RootElement.TryGetProperty("workspaces", out var workspaces)
+                    && workspaces.ValueKind is JsonValueKind.Array or JsonValueKind.Object)
+                {
+                    return true;
+                }
+
                 return dependency.Declares.Any(name =>
                     document.RootElement.ValueKind == JsonValueKind.Object
                     && document.RootElement.TryGetProperty(name, out var packages)
@@ -231,9 +255,7 @@ public static class RunPlanner
         ArgumentNullException.ThrowIfNull(dependency);
         var steps = new List<ProcessStartSpec>();
         var variables = Variables(project, file: null, json: null);
-        if (project.Toolchain.ProjectEnvironment is { } environment
-            && !Directory.Exists(Path.Combine(project.Directory, environment.Directory))
-            && dependency.Command.Count > 0 && dependency.Command[0].StartsWith(environment.Directory + "/", StringComparison.Ordinal))
+        if (project.Toolchain.ProjectEnvironment is { } environment && NeedsEnvironment(project, dependency))
         {
             steps.Add(Spec(project, environment.Create, variables));
         }
@@ -241,6 +263,11 @@ public static class RunPlanner
         steps.Add(Spec(project, dependency.Command, variables));
         return steps;
     }
+
+    private static bool NeedsEnvironment(ToolchainProject project, DependencyInstallDefinition dependency) =>
+        project.Toolchain.ProjectEnvironment is { } environment && dependency.Command.Count > 0
+        && dependency.Command[0].StartsWith(environment.Directory + "/", StringComparison.Ordinal)
+        && !File.Exists(Path.Combine(project.Directory, dependency.Command[0]));
 
     /// <summary>The placeholders' values: the file, the JSON value, and the project environment's variables.</summary>
     private static Dictionary<string, string> Variables(ToolchainProject project, string? file, string? json)

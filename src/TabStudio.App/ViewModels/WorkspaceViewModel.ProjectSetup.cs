@@ -23,6 +23,7 @@ public sealed partial class WorkspaceViewModel
     private CancellationTokenSource? _setup;
     private Task _setupTask = Task.CompletedTask;
     private string? _setupToolchain;
+    private bool _setupRequested;
 
     /// <summary>
     /// Whether opening a repository or folder sets its projects up without asking (Tools &gt; Set Up Projects When
@@ -41,6 +42,15 @@ public sealed partial class WorkspaceViewModel
             _setupSettings = SetupSettings with { SetUpProjectsWhenTheyOpen = value };
             SetupStore.Save(_setupSettings);
             OnPropertyChanged();
+            if (value)
+            {
+                StartProjectSetup();
+            }
+            else
+            {
+                CancelProjectSetup();
+            }
+
             UpdateToolchainNotice();
         }
     }
@@ -67,6 +77,7 @@ public sealed partial class WorkspaceViewModel
     [RelayCommand]
     private void CancelProjectSetup()
     {
+        _setupRequested = false;
         _setup?.Cancel();
         if (_setupToolchain is { } id)
         {
@@ -77,10 +88,26 @@ public sealed partial class WorkspaceViewModel
     /// <summary>Sets the workspace's projects up in the background, when the setting is on.</summary>
     private void StartProjectSetup()
     {
-        if (SetUpProjectsWhenTheyOpen && _setupTask.IsCompleted && !_disposed)
+        if (!SetUpProjectsWhenTheyOpen || _disposed || Workspace is null)
         {
-            _setupTask = SetUpProjectsAsync();
+            return;
         }
+
+        _setupRequested = true;
+        if (_setupTask.IsCompleted)
+        {
+            _setupTask = RunProjectSetupQueueAsync();
+        }
+    }
+
+    private async Task RunProjectSetupQueueAsync()
+    {
+        do
+        {
+            _setupRequested = false;
+            await SetUpProjectsAsync();
+        }
+        while (_setupRequested && SetUpProjectsWhenTheyOpen && !_disposed);
     }
 
     /// <summary>Waits for setting the projects up to finish, so that F5 runs what it installed.</summary>
@@ -92,7 +119,7 @@ public sealed partial class WorkspaceViewModel
         }
 
         StatusText = "Waiting for the project setup to finish";
-        await Task.WhenAny(_setupTask);
+        await _setupTask;
     }
 
     /// <summary>A saved manifest or lock file sets its project up again, as opening the workspace would.</summary>
@@ -101,8 +128,8 @@ public sealed partial class WorkspaceViewModel
     {
         var file = document.FilePath;
         if (_toolchainProjects.Any(item => RunPlanner.DependenciesOf(item.Project) is { } dependency
-            && ((IEnumerable<string>)[dependency.Manifest, .. dependency.Locked?.Files ?? []])
-                .Any(name => string.Equals(Path.Combine(item.Project.Directory, name), file, StringComparison.Ordinal))))
+            && RunPlanner.DependencyInputs(item.Project, dependency, _toolchainProjects.Select(p => p.Project))
+                .Contains(file, StringComparer.Ordinal)))
         {
             StartProjectSetup();
         }
@@ -130,7 +157,7 @@ public sealed partial class WorkspaceViewModel
                 }
             }
 
-            foreach (var project in projects)
+            foreach (var project in projects.Select(p => NodeWorkspaces.DependencyOwner(p, projects)).DistinctBy(p => (p.Toolchain.Id, p.Directory)))
             {
                 token.ThrowIfCancellationRequested();
                 if (RunPlanner.DependenciesOf(project) is not { } dependency || !_toolchains.Manager.IsReady(project.Toolchain.Id))
@@ -139,10 +166,10 @@ public sealed partial class WorkspaceViewModel
                 }
 
                 var manifest = Path.Combine(project.Directory, dependency.Manifest);
-                var fingerprint = RunPlanner.FingerprintOf(project, dependency);
+                var fingerprint = RunPlanner.FingerprintOf(project, dependency, projects);
                 var recorded = SetupSettings.Projects?.GetValueOrDefault(manifest);
                 var pending = RunPlanner.IsPending(project, dependency);
-                if (!pending && (recorded is null || recorded == fingerprint))
+                if ((!pending && recorded == fingerprint) || !RunPlanner.RequiresPackages(project, dependency))
                 {
                     // Installed already, or nothing to install: set up until the manifest changes.
                     RememberSetUp(manifest, fingerprint);
@@ -150,9 +177,19 @@ public sealed partial class WorkspaceViewModel
                 }
 
                 // A fresh clone installs what its lock file records; a changed manifest updates the install and the lock.
-                if (await InstallPackagesForSetupAsync(project, RunPlanner.DependenciesOf(project, useLockFile: pending) ?? dependency, token))
+                var manifests = RunPlanner.FingerprintOf(project, dependency, projects, includeLocks: false);
+                if (await InstallPackagesForSetupAsync(project, RunPlanner.DependenciesOf(project, useLockFile: pending || recorded is null) ?? dependency, token))
                 {
-                    RememberSetUp(manifest, RunPlanner.FingerprintOf(project, dependency));
+                    if (manifests == RunPlanner.FingerprintOf(project, dependency, projects, includeLocks: false))
+                    {
+                        RememberSetUp(manifest, RunPlanner.FingerprintOf(project, dependency, projects));
+                    }
+                    else
+                    {
+                        // A save during the install must not mark packages from the old manifest as current.
+                        _setupRequested = true;
+                    }
+
                     installed.Add(project.Name);
                 }
             }
@@ -164,11 +201,16 @@ public sealed partial class WorkspaceViewModel
         }
         catch (OperationCanceledException)
         {
+            _setupRequested = false;
             Output.WriteLine("The project setup was cancelled. Tools > Install Project Packages and the Toolchain Store install what is left.", OutputKind.Info);
             if (State is IdeState.Ready or IdeState.Failed)
             {
                 StatusText = "Project setup cancelled";
             }
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException)
+        {
+            Output.WriteLine($"Project setup failed: {ex.Message}. Use Tools > Install Project Packages to retry.", OutputKind.Failure);
         }
         finally
         {
@@ -196,7 +238,8 @@ public sealed partial class WorkspaceViewModel
         }
 
         return manager.CanInstall
-            ? [.. toolchains.DistinctBy(t => t.Id).Where(t => manager.Status(t.Id) is { IsReady: false } status && status.State != ToolchainState.Unavailable)]
+            ? [.. toolchains.DistinctBy(t => t.Id).Where(t => manager.Status(t.Id) is { } status && status.State != ToolchainState.Unavailable
+                && (!status.IsReady || (status.State == ToolchainState.UpdateAvailable && t.AdditionalLanguageServers.Any(s => s.Command.Count > 0 && _toolchains.Runtime.Resolve(s.Command[0]) is null))))]
             : [];
     }
 
@@ -228,7 +271,9 @@ public sealed partial class WorkspaceViewModel
         manager.StatusChanged += OnProgress;
         try
         {
-            await ToolchainStore.InstallAsync(toolchain.Id).WaitAsync(cancellationToken);
+            await (manager.Status(toolchain.Id).State == ToolchainState.UpdateAvailable
+                ? ToolchainStore.UpdateAsync(toolchain.Id)
+                : ToolchainStore.InstallAsync(toolchain.Id));
         }
         finally
         {

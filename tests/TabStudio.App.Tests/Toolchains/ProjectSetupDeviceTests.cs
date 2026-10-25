@@ -75,6 +75,24 @@ public sealed class ProjectSetupDeviceTests : IDisposable
         Assert.Equal("Install Python", workspace.ToolchainNotice!.ActionText);
     }
 
+    [AvaloniaFact]
+    public async Task Turning_the_setting_off_cancels_setup_and_turning_it_on_retries()
+    {
+        _device.Mirror.Server.Latency = TimeSpan.FromMilliseconds(500);
+        await _main.OpenWorkspaceAsync(new ProjectTemplates(_paths).Create(ProjectTemplates.PythonId, "Weather"));
+        var workspace = _main.Workspace!;
+        await UiTestHelpers.WaitUntilAsync(() => workspace.IsSettingUpProjects, because: "the install to start");
+        workspace.SetUpProjectsWhenTheyOpen = false;
+        await UiTestHelpers.WaitUntilAsync(() => workspace.ProjectSetupTask.IsCompleted, because: "setup to stop");
+        Assert.False(_device.Manager.IsReady("python"));
+        Assert.False(workspace.IsSettingUpProjects);
+
+        _device.Mirror.Server.Latency = TimeSpan.Zero;
+        workspace.SetUpProjectsWhenTheyOpen = true;
+        await UiTestHelpers.WaitUntilAsync(() => workspace.ProjectSetupTask.IsCompleted, TimeSpan.FromMinutes(1), "setup to retry");
+        Assert.True(_device.Manager.IsReady("python"), workspace.Output.Text);
+    }
+
     public void Dispose()
     {
         _main.Workspace?.Dispose();

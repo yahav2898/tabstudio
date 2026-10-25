@@ -7,8 +7,9 @@ namespace TabStudio.Toolchains.Projects;
 /// toolchain whose programs are single files (Python), a folder with its source files at the top.
 /// </summary>
 /// <remarks>
-/// Only the Store's listed toolchains count, since only they run. A project's own subfolders are not projects
-/// of the same toolchain (a Python package inside a Python app, say), and dependency and build folders
+/// Only the Store's listed toolchains count, since only they run. Explicit manifests identify separate projects,
+/// including nested packages in a monorepo. Source folders inside a project (a Python package, say) belong to it,
+/// and dependency and build folders
 /// (<c>node_modules</c>, <c>.venv</c>, <c>bin</c>, <c>obj</c>, dot folders) are never searched.
 /// </remarks>
 public static class ToolchainProjectDetector
@@ -55,12 +56,12 @@ public static class ToolchainProjectDetector
 
             foreach (var toolchain in toolchains)
             {
-                if (result.Any(p => p.Toolchain.Id == toolchain.Id && IsInside(folder, p.Directory)))
+                var marker = toolchain.ProjectFiles.FirstOrDefault(f => files.Contains(f, StringComparer.OrdinalIgnoreCase));
+                if (marker is null && result.Any(p => p.Toolchain.Id == toolchain.Id && IsInside(folder, p.Directory)))
                 {
                     continue;
                 }
 
-                var marker = toolchain.ProjectFiles.FirstOrDefault(f => files.Contains(f, StringComparer.OrdinalIgnoreCase));
                 var isSourceFolder = marker is null && toolchain.SourceFolderIsProject && files.Any(toolchain.RunsFile);
                 if (marker is not null || isSourceFolder)
                 {
@@ -76,7 +77,7 @@ public static class ToolchainProjectDetector
             foreach (var child in folders)
             {
                 var name = Path.GetFileName(child);
-                if (!name.StartsWith('.') && !IgnoredFolders.Contains(name))
+                if (!name.StartsWith('.') && !IgnoredFolders.Contains(name) && (File.GetAttributes(child) & FileAttributes.ReparsePoint) == 0)
                 {
                     queue.Enqueue((child, depth + 1));
                 }

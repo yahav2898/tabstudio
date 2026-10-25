@@ -62,7 +62,7 @@ public sealed class ProjectSetupPlanTests : IDisposable
     }
 
     [Fact]
-    public void A_monorepo_with_a_root_package_is_one_Node_project_and_separate_packages_are_one_each()
+    public void A_monorepo_keeps_each_Node_package_runnable_and_shares_its_root_install()
     {
         _repo.Write("package.json", """{ "name": "mono", "private": true, "workspaces": [ "packages/*" ] }""");
         _repo.Write("packages/web/package.json", """{ "name": "web", "scripts": { "dev": "vite" } }""");
@@ -71,12 +71,38 @@ public sealed class ProjectSetupPlanTests : IDisposable
         apart.Write("frontend/package.json", """{ "name": "frontend", "dependencies": { "left-pad": "1.3.0" } }""");
         apart.Write("backend/package.json", """{ "name": "backend", "main": "server.js" }""");
 
-        var mono = Assert.Single(ToolchainProjectDetector.Detect(_repo.Path, ToolchainCatalog.Default));
+        var members = ToolchainProjectDetector.Detect(_repo.Path, ToolchainCatalog.Default);
+        var mono = members.Single(p => p.Directory == _repo.Path);
         var projects = ToolchainProjectDetector.Detect(apart.Path, ToolchainCatalog.Default);
 
         Assert.Equal(_repo.Path, mono.Directory);
+        Assert.Equal(3, members.Count);
+        Assert.All(members, p => Assert.Same(mono, NodeWorkspaces.DependencyOwner(p, members)));
+        Assert.True(RunPlanner.IsPending(mono, RunPlanner.DependenciesOf(mono)!));
+        var web = members.Single(p => p.Name == "web");
+        Assert.Equal(["run", "dev"], RunPlanner.PlanProject(web)!.Run.Arguments);
+        var dependency = RunPlanner.DependenciesOf(mono)!;
+        var before = RunPlanner.FingerprintOf(mono, dependency, members);
+        _repo.Write("packages/web/package.json", """{ "name": "web", "version": "2.0.0" }""");
+        Assert.NotEqual(before, RunPlanner.FingerprintOf(mono, dependency, members));
         Assert.Equal([apart.Resolve("backend"), apart.Resolve("frontend")], projects.Select(p => p.Directory).Order(StringComparer.Ordinal));
         Assert.All(projects, p => Assert.Equal("node", p.Toolchain.Id));
+    }
+
+    [Fact]
+    public void A_nested_package_outside_the_declared_workspaces_has_its_own_install()
+    {
+        _repo.Write("package.json", """{ "workspaces": [ "packages/*" ] }""");
+        _repo.Write("packages/member/package.json", "{}");
+        _repo.Write("tools/independent/package.json", "{}");
+        _repo.Write("build.py");
+        _repo.Write("services/api/pyproject.toml", "[project]\nname = 'api'\n");
+        _repo.Write("services/api/src/api/__main__.py");
+        var projects = ToolchainProjectDetector.Detect(_repo.Path, ToolchainCatalog.Default);
+        var independent = projects.Single(p => p.Directory == _repo.Resolve("tools/independent"));
+        Assert.Same(independent, NodeWorkspaces.DependencyOwner(independent, projects));
+        var python = projects.Single(p => p.Directory == _repo.Resolve("services/api"));
+        Assert.Equal("src/api/__main__.py", RunPlanner.PlanProject(python)!.EntryPoint);
     }
 
     [Fact]

@@ -47,6 +47,13 @@ public static class CompatibilityDoctor
     {
         ArgumentNullException.ThrowIfNull(project);
 
+        if (WindowsBridgeCompatibility.IsNetFramework(project) && project.IsExecutable && !project.IsTestProject)
+        {
+            return Report(
+                project, RunHost.WindowsBridge, CompatibilityStatus.NeedsWindows, "Windows Bridge",
+                ".NET Framework apps run on Windows only. They build and run on your PC through the Windows Bridge.");
+        }
+
         return project.Kind switch
         {
             ProjectKind.ConsoleApp when project.Language == ProjectLanguage.CSharp => Report(

@@ -176,11 +176,14 @@ public sealed partial class PackageRestorer
         return (framework?.Analyzers ?? [], diagnostics);
     }
 
-    /// <summary>Restores the shared frameworks a project uses, such as ASP.NET Core.</summary>
+    /// <summary>
+    /// Restores the shared frameworks a project uses, such as ASP.NET Core: its own, and, as in the .NET SDK, those of
+    /// the projects it references, which flow to it.
+    /// </summary>
     private async Task<List<SharedFrameworkAssets>> RestoreFrameworksAsync(ProjectInfo project, List<BuildDiagnostic> diagnostics, CancellationToken cancellationToken)
     {
         var frameworks = new List<SharedFrameworkAssets>();
-        foreach (var name in project.FrameworkReferences)
+        foreach (var name in ProjectPackageReferences.FrameworkReferencesWithReferencedProjects(project))
         {
             if (await _sharedFrameworks.RestoreAsync(name, project.Name, diagnostics, cancellationToken).ConfigureAwait(false) is { } framework)
             {

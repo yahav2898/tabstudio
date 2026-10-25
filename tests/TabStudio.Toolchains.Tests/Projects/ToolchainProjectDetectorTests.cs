@@ -52,7 +52,7 @@ public sealed class ToolchainProjectDetectorTests : IDisposable
         var projects = ToolchainProjectDetector.Detect(_workspace.Path, Catalog);
 
         Assert.Equal(
-            [("node", _workspace.Resolve("web")), ("python", _workspace.Resolve("scripts"))],
+            [("node", _workspace.Resolve("web")), ("node", _workspace.Resolve("web/lib/util")), ("python", _workspace.Resolve("scripts"))],
             projects.Select(p => (p.Toolchain.Id, p.Directory)).OrderBy(p => p.Id, StringComparer.Ordinal));
     }
 

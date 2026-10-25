@@ -65,7 +65,7 @@ public sealed class StaticSiteTests
         if (webViews?.WebView is { } webView)
         {
             await WaitForAsync(webView.Rendering);
-            await chrome!.WaitUntilAsync("document.querySelector('h1') !== null && window.__tabStudioLiveReload === true", PageTimeout);
+            await chrome!.WaitUntilAsync("document.querySelector('h1') !== null && window.__tabStudioLiveReloadReady === true", PageTimeout);
             await chrome.EvaluateAsync("window.__kept = 'yes'");
         }
 
@@ -128,6 +128,25 @@ public sealed class StaticSiteTests
         Assert.Equal(LanguageServerState.Running, css.LanguageServer!.ServerState);
         css.Document.Insert(css.Document.TextLength, "footer { margin: 0\n");
         await UiTestHelpers.WaitUntilAsync(() => css.Diagnostics.Any(d => d.Message.Contains("expected", StringComparison.OrdinalIgnoreCase)), TimeSpan.FromSeconds(60), "the CSS server's squiggle");
+        Assert.Null(workspace.ServerInstallOffer);
+        workspace.Dispose();
+    }
+
+    [RealServerAvaloniaFact("vscode-json-language-server")]
+    public async Task JSON_gets_squiggles_through_the_Toolchain_Store_launcher()
+    {
+        using var temp = new TempDirectory();
+        using var services = AppServices.Create(new AppPaths(temp.Resolve("app")), services =>
+            services.AddSingleton(new LanguageServerServices(new ToolchainServerLauncher(new HostRuntime()))));
+        var main = services.GetRequiredService<MainViewModel>();
+        var folder = services.GetRequiredService<ProjectTemplates>().Create(ProjectTemplates.StaticSiteId, "Portfolio");
+        var path = Path.Combine(folder, "config.json");
+        File.WriteAllText(path, "{ \"enabled\": }");
+        await main.OpenWorkspaceAsync(folder);
+        var workspace = main.Workspace!;
+        var json = (await workspace.OpenDocumentAsync(path))!;
+        await UiTestHelpers.WaitUntilAsync(() => json.Diagnostics.Any(d => d.Message.Contains("expected", StringComparison.OrdinalIgnoreCase)), PageTimeout, "the JSON syntax squiggle");
+        Assert.Equal(LanguageServerState.Running, json.LanguageServer?.ServerState);
         Assert.Null(workspace.ServerInstallOffer);
         workspace.Dispose();
     }
