@@ -1,7 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="using:TabStudio.App.Controls"
-             xmlns:views="using:TabStudio.App.Views"
              xmlns:desktop="using:TabStudio.App.Views.DesktopMode"
              xmlns:dm="using:TabStudio.App.ViewModels.DesktopMode"
              x:Class="TabStudio.App.Views.DesktopMode.DesktopCompanionView"
@@ -14,6 +13,13 @@
     the big screen, side by side on a landscape tablet and as two tabs in portrait, under big buttons for Run, Stop,
     Build and the debugger. Its buttons never take the keyboard focus, which stays with the IDE on the display.
   -->
+  <UserControl.Styles>
+    <!-- Under the narrow layout's tabs, the panes' own headers would repeat the tabs. -->
+    <Style Selector="Grid#Panes.tabbed Border.paneHeader">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+  </UserControl.Styles>
+
   <DockPanel>
     <!-- Header: where the IDE is, its size there, and the way back. -->
     <Border DockPanel.Dock="Top" Background="{DynamicResource Brush.MenuBar}" BorderBrush="{DynamicResource Brush.Border}"
@@ -93,7 +99,7 @@
             <desktop:XamlPropertiesView DataContext="{Binding Companion.Element}" />
           </Panel>
           <Panel IsVisible="{Binding Companion.ShowsSelection}">
-            <views:PropertiesView DataContext="{Binding Companion.Selection}" />
+            <desktop:CompanionPropertiesView DataContext="{Binding Companion.Selection}" />
           </Panel>
         </Panel>
       </Grid>

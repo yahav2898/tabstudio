@@ -26,6 +26,9 @@ public sealed partial class XamlPropertyRowViewModel : ObservableObject
     /// <summary>Its type, such as <c>Thickness</c>.</summary>
     public string TypeName { get; }
 
+    /// <summary>Whether the type says more than the name, which it does not for <c>HorizontalAlignment</c>.</summary>
+    public bool ShowsTypeName => !string.Equals(Name, TypeName, StringComparison.Ordinal);
+
     /// <summary>The values it can take, for enums and booleans.</summary>
     public IReadOnlyList<string>? Choices { get; }
 

@@ -1,0 +1,64 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:vm="using:TabStudio.App.ViewModels"
+             x:Class="TabStudio.App.Views.DesktopMode.CompanionPropertiesView"
+             x:DataType="vm:PropertiesViewModel">
+
+  <!--
+    The companion's Properties panel for what is selected in Solution Explorer on the big screen, when the caret is
+    not in a XAML element: the IDE's Properties, at the tablet's touch size and in the companion's look.
+  -->
+  <DockPanel>
+    <Border DockPanel.Dock="Top" Classes="paneHeader" Height="44" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="14,0">
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <controls:StrokeIcon Data="{StaticResource Icon.Properties}" Size="16" Foreground="{DynamicResource Brush.AccentText}" />
+        <TextBlock Classes="header" Text="Properties" FontSize="14" />
+      </StackPanel>
+    </Border>
+
+    <!-- What is selected -->
+    <Border DockPanel.Dock="Top" Padding="14,10,14,8" IsVisible="{Binding Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+      <StackPanel Spacing="3">
+        <TextBlock Text="{Binding Title}" FontSize="17" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
+        <TextBlock Classes="small muted" Text="{Binding Subtitle}" />
+      </StackPanel>
+    </Border>
+
+    <!-- Where XAML properties come from -->
+    <Border DockPanel.Dock="Bottom" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0" Padding="14,12">
+      <Grid ColumnDefinitions="Auto,*">
+        <controls:StrokeIcon Data="{StaticResource Icon.Info}" Size="15" Foreground="{DynamicResource Brush.TextMuted}" VerticalAlignment="Top" Margin="0,2,0,0" />
+        <TextBlock Grid.Column="1" Classes="small muted" Margin="10,0,0,0" TextWrapping="Wrap"
+                   Text="Put the caret in an element of an Avalonia XAML file on the big screen to edit its properties here." />
+      </Grid>
+    </Border>
+
+    <Panel>
+      <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <ItemsControl ItemsSource="{Binding Rows}" Margin="0,0,0,8">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="vm:PropertyRow">
+              <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="14,10" MinHeight="48">
+                <Grid ColumnDefinitions="2*,3*">
+                  <TextBlock Text="{Binding Name}" FontSize="14" Foreground="{DynamicResource Brush.TextSecondary}" VerticalAlignment="Center"
+                             TextWrapping="Wrap" Margin="0,0,12,0" />
+                  <SelectableTextBlock Grid.Column="1" Text="{Binding Value}" FontSize="14" TextWrapping="Wrap" VerticalAlignment="Center" />
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+
+      <!-- Nothing selected -->
+      <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10" Margin="32" MaxWidth="380"
+                  IsVisible="{Binding Title, Converter={x:Static StringConverters.IsNullOrEmpty}}">
+        <controls:StrokeIcon Data="{StaticResource Icon.Properties}" Size="40" Foreground="{DynamicResource Brush.TextDisabled}" HorizontalAlignment="Center" />
+        <TextBlock Classes="h2" Text="Nothing selected" HorizontalAlignment="Center" />
+        <TextBlock Classes="muted" TextWrapping="Wrap" TextAlignment="Center"
+                   Text="Select a file, project or package in Solution Explorer on the big screen to see its properties." />
+      </StackPanel>
+    </Panel>
+  </DockPanel>
+</UserControl>

@@ -64,6 +64,7 @@ public sealed partial class DesktopCompanionView : UserControl
     private void ArrangePanes()
     {
         PaneTabs.IsVisible = !_wide;
+        Panes.Classes.Set("tabbed", !_wide);
         PaneDivider.IsVisible = _wide;
         Grid.SetColumn(PropertiesPane, _wide ? 2 : 0);
         Grid.SetColumnSpan(ToolboxPane, _wide ? 1 : 3);
