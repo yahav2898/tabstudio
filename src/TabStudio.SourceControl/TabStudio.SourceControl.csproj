@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Source control without a Git installation: changes are found by comparing files with the last synced
+    commit, and commits, branches, pulls and pull requests go through GitHub's REST API. Works anywhere .NET
+    runs, including Android.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>TabStudio.SourceControl</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TabStudio.Core\TabStudio.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="TabStudio.SourceControl.Tests" />
+  </ItemGroup>
+
+</Project>
