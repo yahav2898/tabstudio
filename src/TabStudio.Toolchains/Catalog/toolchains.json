@@ -183,7 +183,7 @@
       "name": "C and C++",
       "description": "GCC and Clang, CMake and make, the clangd language server and the GDB and LLDB debuggers.",
       "languages": [ "C", "C++" ],
-      "listed": false,
+      "listed": true,
       "homepage": "https://clang.llvm.org",
       "license": "GPL-3.0-or-later AND Apache-2.0 WITH LLVM-exception",
       "packages": [ "build-base", "clang22", "clang22-extra-tools", "cmake", "samurai", "gdb", "lldb" ],
@@ -191,19 +191,20 @@
       "estimatedDownloadSize": 190000000,
       "estimatedInstalledSize": 780000000,
       "host": { "commands": [ "cc", "gcc", "clang" ], "versionArguments": [ "--version" ], "versionPattern": "(?<version>\\d+\\.\\d+(?:\\.\\d+)?)" },
-      "fileExtensions": [ ".c", ".h", ".cpp", ".cc", ".cxx", ".hpp", ".hh", ".hxx" ],
-      "projectFiles": [ "CMakeLists.txt", "Makefile", "meson.build" ],
+      "fileExtensions": [ ".c", ".cpp", ".cc", ".cxx" ],
+      "projectFiles": [ "CMakeLists.txt", "Makefile", "makefile", "GNUmakefile" ],
+      "sourceFolderIsProject": true,
       "run": {
         "file": [ "sh", "-c", "c++ -std=c++20 -g -O0 -o /tmp/tabstudio-run \"$0\" && exec /tmp/tabstudio-run", "{file}" ],
         "entries": [
-          { "file": "CMakeLists.txt", "build": [ "sh", "-c", "cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug && cmake --build build" ], "command": [ "sh", "-c", "exec \"$(find build -maxdepth 1 -type f -perm -u+x | head -n 1)\"" ] },
+          { "file": "CMakeLists.txt", "build": [ "cmake", "--build", ".tabstudio/cmake", "--config", "Debug" ], "command": [ ".tabstudio/bin/app" ] },
           { "file": "Makefile", "build": [ "make" ], "command": [ "make", "run" ] }
         ]
       },
       "languageServer": { "id": "clangd", "command": [ "clangd", "--background-index" ], "languages": [ "c", "cpp" ] },
       "debugAdapter": { "id": "lldb-dap", "command": [ "lldb-dap" ], "type": "lldb-dap", "languages": [ "c", "cpp" ] },
       "problemPatterns": [
-        { "pattern": "^(?<file>[^:\\s][^:]*):(?<line>\\d+):(?<column>\\d+): (?<severity>error|warning|note): (?<message>.*)$" }
+        { "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+): (?<severity>fatal error|error|warning|note): (?<message>.*)$" }
       ]
     },
     {

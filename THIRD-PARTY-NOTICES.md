@@ -34,3 +34,10 @@ The following are not part of the APK. The Toolchain Store downloads them only w
 
 The web templates include Bootstrap, jQuery, jQuery Validation and jQuery Validation Unobtrusive, each with its licence
 file beside it under [src/TabStudio.Web/Templates/Content/lib](src/TabStudio.Web/Templates/Content/lib).
+
+## C and C++ language tools
+
+Clang, clangd and LLDB (Apache-2.0 WITH LLVM-exception), CMake (BSD-3-Clause), GNU make (GPL-3.0-or-later)
+and GCC/build-base (GPL-3.0-or-later with runtime exceptions) come from signed Alpine Linux packages.
+No extra executable archives are downloaded. Sources: https://github.com/llvm/llvm-project,
+https://gitlab.kitware.com/cmake/cmake, https://www.gnu.org/software/make/ and https://gcc.gnu.org/.

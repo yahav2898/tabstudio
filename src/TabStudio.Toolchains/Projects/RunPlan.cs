@@ -7,20 +7,26 @@ namespace TabStudio.Toolchains.Projects;
 /// <summary>How F5 runs a toolchain project or file: an optional build, then the program.</summary>
 /// <param name="Build">A command to run first, such as <c>cargo build</c>, or <see langword="null"/>.</param>
 /// <param name="Run">The program.</param>
+/// <param name="Preparation">Commands that configure a build before it starts, such as CMake.</param>
 /// <param name="EntryPoint">What runs, for the Output panel, such as <c>main.py</c> or <c>npm start</c>.</param>
-public sealed record RunPlan(ProcessStartSpec? Build, ProcessStartSpec Run, string EntryPoint);
+public sealed record RunPlan(ProcessStartSpec? Build, ProcessStartSpec Run, string EntryPoint, IReadOnlyList<ProcessStartSpec>? Preparation = null);
 
 /// <summary>
 /// Works out how to run a project or a file from its toolchain's catalog entry: the entry rules in order, the
 /// project's environment (Python's <c>.venv</c>), and the toolchain's run environment.
 /// </summary>
-public static class RunPlanner
+public static partial class RunPlanner
 {
     /// <summary>Plans running a project's entry point, or <see langword="null"/> when none of its rules applies.</summary>
     /// <param name="project">The project.</param>
     public static RunPlan? PlanProject(ToolchainProject project)
     {
         ArgumentNullException.ThrowIfNull(project);
+        if (project.Toolchain.Id == "cpp")
+        {
+            return PlanCppProject(project);
+        }
+
         var run = project.Toolchain.Run;
         if (run is null)
         {
@@ -63,6 +69,11 @@ public static class RunPlanner
         if (!project.Toolchain.RunsFile(file) || project.Toolchain.Run is not { } run)
         {
             throw new ArgumentException($"{project.Toolchain.Name} does not run {Path.GetFileName(file)}.", nameof(file));
+        }
+
+        if (project.Toolchain.Id == "cpp")
+        {
+            return PlanCppFile(project, file);
         }
 
         var relative = Path.GetRelativePath(project.Directory, file).Replace('\\', '/');

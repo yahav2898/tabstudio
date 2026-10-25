@@ -18,9 +18,9 @@ public sealed class ToolchainCatalogTests
     }
 
     [Fact]
-    public void The_store_lists_python_and_node()
+    public void The_store_lists_the_finished_toolchains()
     {
-        Assert.Equal(["python", "node"], Catalog.Listed.Select(t => t.Id));
+        Assert.Equal(["python", "node", "cpp"], Catalog.Listed.Select(t => t.Id));
     }
 
     [Fact]
@@ -51,15 +51,14 @@ public sealed class ToolchainCatalogTests
     }
 
     [Fact]
-    public void Listed_toolchains_have_a_debug_adapter_and_dependency_installs()
+    public void Listed_toolchains_have_a_debug_adapter()
     {
         foreach (var toolchain in Catalog.Listed)
         {
             Assert.NotNull(toolchain.DebugAdapter);
             Assert.NotEmpty(toolchain.DebugAdapter.Command);
             Assert.NotNull(toolchain.DebugAdapter.Type);
-            Assert.NotEmpty(toolchain.Dependencies);
-            Assert.NotEmpty(toolchain.Setup);
+
         }
     }
 

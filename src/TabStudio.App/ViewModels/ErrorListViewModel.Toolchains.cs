@@ -9,10 +9,16 @@ public sealed partial class ErrorListViewModel
     /// <param name="projectDirectory">The project's folder.</param>
     /// <param name="error">The error, or <see langword="null"/> after a run that ended well.</param>
     public void SetRunError(string projectDirectory, BuildDiagnostic? error)
+        => SetRunErrors(projectDirectory, error is null ? [] : [error]);
+
+    /// <summary>Replaces all errors from the previous build or run of a toolchain project.</summary>
+    /// <param name="projectDirectory">The project's folder.</param>
+    /// <param name="errors">The errors, or an empty list after success.</param>
+    public void SetRunErrors(string projectDirectory, IReadOnlyList<BuildDiagnostic> errors)
     {
         ArgumentNullException.ThrowIfNull(projectDirectory);
 
         // Kept apart from the project's analysis and build results, which replace theirs by file.
-        SetRestoreDiagnostics("run:" + projectDirectory, error is null ? [] : [error]);
+        SetRestoreDiagnostics("run:" + projectDirectory, errors);
     }
 }

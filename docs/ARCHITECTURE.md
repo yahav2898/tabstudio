@@ -575,3 +575,17 @@ design keeps the second part proportional to what you are actually editing:
 ## Code conventions
 
 See [CONTRIBUTING.md](../CONTRIBUTING.md) for code style, tests and how CI reports results.
+
+### Toolchains: C and C++
+
+CMake projects, Makefiles and folders containing a `.c` or `.cpp` program are startup projects. Headers and
+build output do not create runnable source projects. Alpine installs Clang, build-base, CMake, make, clangd and
+LLDB with lldb-dap; desktops use PATH. Standalone C and C++ files use their respective compiler and debug symbols.
+CMake configures a Debug build, exports compile_commands.json for clangd, and answers a codemodel file API query.
+The IDE runs the actual executable artifact, including targets in subdirectories. With several executable targets,
+open a source file of the desired target. Makefile builds need no special run target; a unique executable in the
+project, bin, build or out runs. Ambiguous outputs require an explicit launch configuration. Ctrl+F5 uses the
+Output panel console; F5 uses LLDB DAP with runInTerminal. Compiler errors link into the Error List. The IDE
+job verifies clangd completion, diagnostics and navigation, console I/O, a breakpoint, locals and a watch. The
+emulator installs from the real Alpine mirror and builds and runs the CMake template. PRoot native debugging
+needs validation on device kernels; host debugger results do not establish Android ptrace compatibility.

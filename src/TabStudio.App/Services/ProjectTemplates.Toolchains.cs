@@ -9,11 +9,15 @@ public sealed partial class ProjectTemplates
     /// <summary>A Node.js console program.</summary>
     public const string NodeId = "node";
 
+    /// <summary>A CMake C++ console program.</summary>
+    public const string CppId = "cpp";
+
     /// <summary>The Python and Node.js templates, for the start screen.</summary>
     private static ProjectTemplate[] ToolchainTemplates =>
     [
         new(PythonId, "Python Application", "A Python program that reads input and prints in the Output panel, run with Python from the Toolchain Store.", ["Python", "Console"]),
         new(NodeId, "Node.js Console App", "A JavaScript program for Node.js that reads input and prints in the Output panel, run with Node.js from the Toolchain Store.", ["JavaScript", "Node.js", "Console"]),
+        new(CppId, "C++ Console App (CMake)", "A C++ console app with CMake, clangd IntelliSense and LLDB debugging.", ["C++", "CMake", "Console"]),
     ];
 
     /// <summary>Writes a toolchain project into a new folder, which is the workspace: there is no solution file.</summary>
@@ -80,6 +84,9 @@ public sealed partial class ProjectTemplates
                     """);
                 File.WriteAllText(Path.Combine(root, ".gitignore"), "node_modules/\n");
                 return root;
+
+            case CppId:
+                return CreateCppProject(root);
 
             default:
                 return null;
