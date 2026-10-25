@@ -1,24 +1,42 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/TabStudio.Core.csproj (in 107 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/TabStudio.Packages.csproj (in 328 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Agent/TabStudio.Agent.csproj (in 2 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/TabStudio.TestRunner.csproj (in 21 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/TabStudio.Debugging.csproj (in 359 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/TabStudio.Notebooks.csproj (in 359 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/TabStudio.SourceControl.csproj (in 3 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj (in 9 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj (in 22 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Android/TabStudio.Android.csproj (in 330 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Agent/TabStudio.Agent.csproj (in 221 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/TabStudio.Core.csproj (in 215 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Toolchains/TabStudio.Toolchains.csproj (in 2 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/TabStudio.SourceControl.csproj (in 70 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/TabStudio.Packages.csproj (in 5 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/TabStudio.Debugging.csproj (in 39 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/TabStudio.Notebooks.csproj (in 522 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/TabStudio.TestRunner.csproj (in 126 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj (in 6 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj (in 20 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Android/TabStudio.Android.csproj (in 625 ms).
+  TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.Toolchains/Runtimes/HostRuntime.cs(38,45): warning CA1416: This call site is reachable on: 'Windows' all versions. 'WindowsPseudoConsole.Start(string, IReadOnlyList<string>, IReadOnlyDictionary<string, string>, string?, TerminalSize)' is only supported on: 'windows' 10.0.17763 and later. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Toolchains/TabStudio.Toolchains.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.Toolchains/Processes/Unix/FileDescriptorStream.cs(117,13): warning CA1513: Use 'ObjectDisposedException.ThrowIf' instead of explicitly throwing a new exception instance (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1513) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Toolchains/TabStudio.Toolchains.csproj]
+  TabStudio.SourceControl -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/bin/Release/net10.0/TabStudio.SourceControl.dll
+  TabStudio.Agent -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Agent/bin/Release/net10.0/TabStudio.Agent.dll
+  TabStudio.Packages -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/bin/Release/net10.0/TabStudio.Packages.dll
+  TabStudio.Toolchains -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Toolchains/bin/Release/net10.0/TabStudio.Toolchains.dll
+  TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
+  TabStudio.Debugging -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/bin/Release/net10.0/TabStudio.Debugging.dll
+  TabStudio.Notebooks -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/bin/Release/net10.0/TabStudio.Notebooks.dll
+  TabStudio.TestRunner -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/bin/Release/net10.0/TabStudio.TestRunner.dll
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Services/SelfTest.ToolchainSpike.cs(805,41): warning CA2101: Specify marshaling for P/Invoke string arguments (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2101) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Services/SelfTest.ToolchainSpike.cs(82,13): warning CA1416: This call site is reachable on all platforms. 'File.SetUnixFileMode(string, UnixFileMode)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Services/SelfTest.ToolchainSpike.cs(307,25): warning CA1416: This call site is reachable on all platforms. 'File.SetUnixFileMode(string, UnixFileMode)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Services/SelfTest.ToolchainSpike.cs(301,25): warning CA1416: This call site is reachable on all platforms. 'File.SetUnixFileMode(string, UnixFileMode)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Services/SelfTest.ToolchainSpike.cs(472,94): warning CA1859: Change type of parameter 'runtime' from 'TabStudio.Toolchains.Runtimes.IToolchainRuntime' to 'TabStudio.Toolchains.Runtimes.ProotRuntime' for improved performance (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1859) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Views/XamlDesignerView.axaml : Avalonia warning AVLN3001: XAML resource "avares://TabStudio.App/Views/XamlDesignerView.axaml" won't be reachable via runtime loader, as no public constructor was found [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+  TabStudio.App -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.App/bin/Release/net10.0/TabStudio.App.dll
+  TabStudio.Android -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Android/bin/Release/net10.0-android/TabStudio.Android.dll
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
   TabStudio.Packages -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/bin/Release/net10.0/TabStudio.Packages.dll
-  TabStudio.Agent -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Agent/bin/Release/net10.0/TabStudio.Agent.dll
   TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
   TabStudio.SourceControl -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/bin/Release/net10.0/TabStudio.SourceControl.dll
-  TabStudio.Debugging -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/bin/Release/net10.0/TabStudio.Debugging.dll
+  TabStudio.Toolchains -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Toolchains/bin/Release/net10.0/TabStudio.Toolchains.dll
   TabStudio.TestRunner -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/bin/Release/net10.0/TabStudio.TestRunner.dll
+  TabStudio.Debugging -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/bin/Release/net10.0/TabStudio.Debugging.dll
+  TabStudio.Agent -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Agent/bin/Release/net10.0/TabStudio.Agent.dll
   TabStudio.Notebooks -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/bin/Release/net10.0/TabStudio.Notebooks.dll
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Services/SelfTest.ToolchainSpike.cs(125,22): error CS0128: A local variable or function named 'proot' is already defined in this scope [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Services/SelfTest.ToolchainSpike.cs(126,98): error CS0029: Cannot implicitly convert type 'char' to 'string' [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Services/SelfTest.ToolchainSpike.cs(752,41): warning CA2101: Specify marshaling for P/Invoke string arguments (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2101) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Services/SelfTest.ToolchainSpike.cs(288,25): warning CA1416: This call site is reachable on all platforms. 'File.SetUnixFileMode(string, UnixFileMode)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Services/SelfTest.ToolchainSpike.cs(294,25): warning CA1416: This call site is reachable on all platforms. 'File.SetUnixFileMode(string, UnixFileMode)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+  TabStudio.App -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.App/bin/Release/net10.0/TabStudio.App.dll
+  Toolchain runtime: arm64-v8a/libproot-loader.so, arm64-v8a/libproot.so, armeabi-v7a/libproot-loader.so, armeabi-v7a/libproot.so
