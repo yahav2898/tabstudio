@@ -375,6 +375,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         foreach (var document in Documents)
         {
             DetachXamlDesigner(document);
+            DetachFormsDesigner(document);
             document.Dispose();
         }
 

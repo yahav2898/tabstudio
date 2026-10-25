@@ -32,6 +32,7 @@ public sealed partial class WorkspaceView : UserControl
             DocumentViewModel { IsNotebook: true } notebook => new Notebooks.NotebookView(notebook),
             DocumentViewModel { IsCiLog: true } log => new Actions.CiLogView(log),
             DocumentViewModel { Designer: { } designer } xaml => new XamlDesignerView(xaml, designer),
+            DocumentViewModel { FormsDesigner: { } forms } form => new FormsDesignerView(form, forms),
             _ => (Control)new CodeEditorView((DocumentViewModel)document),
         };
         QuickOpenBox.KeyDown += OnQuickOpenKeyDown;
