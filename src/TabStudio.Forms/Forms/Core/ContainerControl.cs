@@ -161,6 +161,51 @@ public class ContainerControl : ScrollableControl, IContainerControl
         return base.ProcessDialogKey(keyData);
     }
 
+    /// <summary>Gives a character the controls do not take to the mnemonics of the controls inside.</summary>
+    /// <param name="charCode">The character.</param>
+    protected override bool ProcessDialogChar(char charCode) =>
+        (charCode != ' ' && ProcessMnemonic(charCode)) || base.ProcessDialogChar(charCode);
+
+    /// <summary>
+    /// Offers a mnemonic to the controls inside in tab order, from the one after the active control, as Windows does,
+    /// so pressing a button's mnemonic again moves on to the next control that has it.
+    /// </summary>
+    /// <param name="charCode">The character.</param>
+    protected internal override bool ProcessMnemonic(char charCode)
+    {
+        var controls = new List<Control>();
+        CollectInTabOrder(this, controls);
+        if (controls.Count == 0)
+        {
+            return false;
+        }
+
+        var start = Window?.FocusedControl is { } focused ? controls.IndexOf(focused) + 1 : 0;
+        for (var i = 0; i < controls.Count; i++)
+        {
+            var control = controls[(start + i) % controls.Count];
+            if (control.CanProcessMnemonic() && control.ProcessMnemonic(charCode))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>The controls inside a control in tab order; a container control inside offers its own controls.</summary>
+    private static void CollectInTabOrder(Control parent, List<Control> controls)
+    {
+        foreach (var child in parent.Controls.Cast<Control>().Select((c, i) => (Control: c, Index: i)).OrderBy(c => c.Control.TabIndex).ThenBy(c => c.Index).Select(c => c.Control))
+        {
+            controls.Add(child);
+            if (child is not ContainerControl)
+            {
+                CollectInTabOrder(child, controls);
+            }
+        }
+    }
+
     private static IEnumerable<Control> Descendants(Control control)
     {
         foreach (var child in control.Controls.ToArray())

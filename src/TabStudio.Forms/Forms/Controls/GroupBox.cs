@@ -41,6 +41,19 @@ public class GroupBox : Control
     /// <inheritdoc />
     protected override Size DefaultSize => new(200, 100);
 
+    /// <summary>The group's mnemonic moves focus to its first control.</summary>
+    /// <param name="charCode">The character.</param>
+    protected internal override bool ProcessMnemonic(char charCode)
+    {
+        if (CanProcessMnemonic() && IsMnemonic(charCode, Text))
+        {
+            SelectNextControl(null, forward: true, tabStopOnly: true, nested: true, wrap: false);
+            return true;
+        }
+
+        return base.ProcessMnemonic(charCode);
+    }
+
     /// <inheritdoc />
     protected override Padding DefaultPadding => new(3);
 

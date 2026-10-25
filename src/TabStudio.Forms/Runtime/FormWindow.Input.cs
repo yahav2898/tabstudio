@@ -266,6 +266,23 @@ internal sealed partial class FormWindow
     {
         _pendingTouch = null;
         _touchScroller = null;
+        _pressedPopup = null;
+        if (_pressed is { } pressed)
+        {
+            // The finger that asked for the menu does not click what it pressed when it lifts.
+            _pressed = null;
+            _pressedNonClient = false;
+            Runtime.MouseButtons = MouseButtons.None;
+            var local = ToClient(pressed, point);
+            pressed.DispatchMouseUp(new MouseEventArgs(_pressButton, 0, local.X, local.Y, 0));
+            SetCapture(null);
+        }
+
+        if (_popups.Count > 0)
+        {
+            return;
+        }
+
         var target = HitTest(point, out _);
         if (target.Enabled)
         {
@@ -301,6 +318,13 @@ internal sealed partial class FormWindow
 
         var isInput = preview.IsInputKey || target.DispatchIsInputKey(keyData);
         if (!isInput && target.DispatchProcessDialogKey(keyData))
+        {
+            return true;
+        }
+
+        // Alt with a letter or digit is a mnemonic, as Windows sends it with WM_SYSCHAR.
+        if ((keyData & (Keys.Alt | Keys.Control)) == Keys.Alt && code is >= Keys.A and <= Keys.Z or >= Keys.D0 and <= Keys.D9
+            && target.DispatchProcessDialogChar((char)code))
         {
             return true;
         }
@@ -366,6 +390,12 @@ internal sealed partial class FormWindow
         var accepted = new StringBuilder(text.Length);
         foreach (var character in text)
         {
+            // A character the focused control does not take is a mnemonic first, as Windows' dialog manager has it.
+            if (!target.DispatchIsInputChar(character) && target.DispatchProcessDialogChar(character))
+            {
+                continue;
+            }
+
             var e = new KeyPressEventArgs(character);
             if (target != Form && Form.KeyPreview)
             {
@@ -409,6 +439,32 @@ internal sealed partial class FormWindow
         if (FocusedControl is INativeTextEditor editor && FocusedControl.Handle == controlId)
         {
             editor.ApplyEditorSelection(selectionStart, selectionLength);
+        }
+    }
+
+    /// <summary>The pointer left the window: nothing is hovered any more.</summary>
+    public void PointerLeft()
+    {
+        if (_pressed is null && _pressedPopup is null)
+        {
+            UpdateHover(null);
+        }
+    }
+
+    /// <summary>The user dragged an edge or corner of the window.</summary>
+    /// <param name="client">The client area the drag asks for, on the desktop.</param>
+    /// <param name="keepRight">Whether the right edge stays put, as when the left edge is dragged.</param>
+    /// <param name="keepBottom">Whether the bottom edge stays put, as when the top edge is dragged.</param>
+    public void ResizedTo(Rectangle client, bool keepRight, bool keepBottom)
+    {
+        Form.SetClientSizeFromWindow(client.Size);
+        var size = Form.ClientSize;
+        var origin = Form.ClientOriginOnScreen;
+        var x = keepRight ? client.Right - size.Width : client.X;
+        var y = keepBottom ? client.Bottom - size.Height : client.Y;
+        if (x != origin.X || y != origin.Y)
+        {
+            Form.MoveFromWindow(x - origin.X, y - origin.Y);
         }
     }
 
@@ -524,6 +580,12 @@ internal sealed partial class FormWindow
                 menu.ShowAt(owner, this, point);
                 return;
             }
+        }
+
+        // A text box without a menu of its own has Windows' editing menu.
+        if (control is TextBoxBase { ShortcutsEnabled: true } box)
+        {
+            TextEditMenu.Show(box, this, point);
         }
     }
 

@@ -37,6 +37,7 @@ internal sealed partial class FormsRuntime : IDisposable
     private readonly object _gate = new();
     private readonly List<FormWindow> _windows = [];
     private readonly List<int> _closedWindows = [];
+    private List<int> _presentedOrder = [];
     private Thread? _thread;
     private volatile bool _stopping;
     private volatile bool _paintRequested;
@@ -464,12 +465,23 @@ internal sealed partial class FormsRuntime : IDisposable
 
         var closed = _closedWindows.ToList();
         _closedWindows.Clear();
-        if (frames.Count > 0 || closed.Count > 0)
+        var order = _windows.ConvertAll(w => w.Id);
+        if (frames.Count > 0 || closed.Count > 0 || !order.SequenceEqual(_presentedOrder))
         {
-            Presenter.Present(frames, closed);
+            _presentedOrder = order;
+            Presenter.Present(frames, closed, order);
         }
     }
 
     /// <summary>The desktop's size, for centering and maximizing windows.</summary>
     public Size DesktopSize => Presenter.DesktopSize;
+
+    /// <summary>The desktop changed size: the windows move to stay on it. UI thread only.</summary>
+    public void OnDesktopResized()
+    {
+        foreach (var window in _windows.ToList())
+        {
+            Execute(window.Form.OnDesktopResized);
+        }
+    }
 }

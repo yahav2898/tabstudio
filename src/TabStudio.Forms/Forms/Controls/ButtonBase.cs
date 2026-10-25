@@ -179,6 +179,10 @@ public abstract class ButtonBase : Control
         base.OnMouseUp(e);
     }
 
+    /// <summary>A button takes no characters, so one typed on it is a mnemonic, as N picks No in a message box.</summary>
+    /// <param name="charCode">The character.</param>
+    protected override bool IsInputChar(char charCode) => false;
+
     /// <inheritdoc />
     protected override void OnKeyDown(KeyEventArgs e)
     {

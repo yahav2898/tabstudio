@@ -9,7 +9,8 @@ namespace TabStudio.Forms.Runtime;
 /// <param name="ControlBox">Whether the title bar has its buttons.</param>
 /// <param name="MaximizeBox">Whether it has a maximize button.</param>
 /// <param name="MinimizeBox">Whether it has a minimize button.</param>
-internal sealed record WindowChrome(FormBorderStyle Border, bool ControlBox, bool MaximizeBox, bool MinimizeBox)
+/// <param name="ShowIcon">Whether the title bar shows the form's icon.</param>
+internal sealed record WindowChrome(FormBorderStyle Border, bool ControlBox, bool MaximizeBox, bool MinimizeBox, bool ShowIcon = true)
 {
     /// <summary>Whether the window has a title bar and border.</summary>
     public bool HasFrame => Border != FormBorderStyle.None;
@@ -19,6 +20,12 @@ internal sealed record WindowChrome(FormBorderStyle Border, bool ControlBox, boo
 
     /// <summary>Whether it is a tool window, with a smaller title bar.</summary>
     public bool IsToolWindow => Border is FormBorderStyle.FixedToolWindow or FormBorderStyle.SizableToolWindow;
+
+    /// <summary>Whether the title bar has minimize and maximize buttons, either of which may be disabled.</summary>
+    public bool HasSizeButtons => ControlBox && !IsToolWindow && (MinimizeBox || MaximizeBox);
+
+    /// <summary>Whether the title bar has the icon: dialog frames and tool windows have none, as in Windows.</summary>
+    public bool HasIcon => ControlBox && ShowIcon && !IsToolWindow && Border != FormBorderStyle.FixedDialog;
 }
 
 /// <summary>
@@ -133,9 +140,10 @@ internal interface IFormsPresenter
     Size DesktopSize { get; }
 
     /// <summary>Shows windows as they look now, and removes closed ones.</summary>
-    /// <param name="frames">The windows that changed, in z-order from the bottom.</param>
+    /// <param name="frames">The windows that changed.</param>
     /// <param name="closed">The windows that closed.</param>
-    void Present(IReadOnlyList<WindowFrame> frames, IReadOnlyList<int> closed);
+    /// <param name="order">Every open window's identifier, in z-order from the bottom.</param>
+    void Present(IReadOnlyList<WindowFrame> frames, IReadOnlyList<int> closed, IReadOnlyList<int> order);
 
     /// <summary>Asks the user for files to open or a file to save.</summary>
     /// <param name="request">What to ask.</param>

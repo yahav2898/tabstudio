@@ -8,6 +8,7 @@ internal sealed class RecordingPresenter : IFormsPresenter
 {
     private readonly object _gate = new();
     private readonly Dictionary<int, WindowFrame> _frames = [];
+    private IReadOnlyList<int> _order = [];
     private string? _clipboard;
 
     /// <inheritdoc />
@@ -29,16 +30,17 @@ internal sealed class RecordingPresenter : IFormsPresenter
         {
             lock (_gate)
             {
-                return [.. _frames.Values];
+                return [.. _order.Where(_frames.ContainsKey).Select(id => _frames[id])];
             }
         }
     }
 
     /// <inheritdoc />
-    public void Present(IReadOnlyList<WindowFrame> frames, IReadOnlyList<int> closed)
+    public void Present(IReadOnlyList<WindowFrame> frames, IReadOnlyList<int> closed, IReadOnlyList<int> order)
     {
         lock (_gate)
         {
+            _order = order;
             foreach (var id in closed)
             {
                 _frames.Remove(id);

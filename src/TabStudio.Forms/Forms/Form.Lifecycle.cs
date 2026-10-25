@@ -363,10 +363,17 @@ public partial class Form
             PerformAutoScale();
             PerformLayout();
             Place(runtime);
+            var placed = Bounds;
             OnLoad(EventArgs.Empty);
             if (IsDisposed)
             {
                 return;
+            }
+
+            // A Load handler that resizes a centered form without moving it gets it centered at its new size.
+            if (Location == placed.Location && Size != placed.Size && _centeredAt == placed.Location)
+            {
+                Place(runtime);
             }
         }
 
@@ -407,13 +414,16 @@ public partial class Form
             position = FormStartPosition.CenterScreen;
         }
 
+        _centeredAt = null;
         switch (position)
         {
             case FormStartPosition.CenterScreen:
                 CenterToScreen();
+                _centeredAt = Location;
                 break;
             case FormStartPosition.CenterParent:
                 CenterToParent();
+                _centeredAt = Location;
                 break;
             case FormStartPosition.WindowsDefaultLocation or FormStartPosition.WindowsDefaultBounds:
                 var top = runtime.Windows[^1].Form;
@@ -429,6 +439,50 @@ public partial class Form
         if (Top < 0)
         {
             Top = 0;
+        }
+    }
+
+    /// <summary>
+    /// Keeps the window where it belongs after the desktop changed size, as the app preview's pane does when it is
+    /// resized: a maximized window fills the desktop again, a window the app opened centered and nobody moved is
+    /// centered again, and any other window keeps its title bar on the desktop.
+    /// </summary>
+    internal void OnDesktopResized()
+    {
+        if (WindowInternal is null || _windowState == FormWindowState.Minimized)
+        {
+            return;
+        }
+
+        if (_windowState == FormWindowState.Maximized)
+        {
+            ApplyMaximized();
+            return;
+        }
+
+        var desktop = WindowInternal.Runtime.DesktopSize;
+        if (_centeredAt == Location)
+        {
+            if (StartPosition == FormStartPosition.CenterParent && _owner is not null)
+            {
+                CenterToParent();
+            }
+            else
+            {
+                CenterToScreen();
+            }
+
+            _centeredAt = Location;
+            return;
+        }
+
+        // Some of the title bar stays on the desktop, to drag the window back by.
+        const int Reachable = 80;
+        var left = Math.Clamp(Left, Reachable - Width, Math.Max(0, desktop.Width - Reachable));
+        var top = Math.Clamp(Top, 0, Math.Max(0, desktop.Height - FrameTitle));
+        if (left != Left || top != Top)
+        {
+            Location = new Point(left, top);
         }
     }
 

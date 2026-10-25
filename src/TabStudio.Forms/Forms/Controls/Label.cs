@@ -104,6 +104,19 @@ public class Label : Control
     /// <inheritdoc />
     protected override Size DefaultSize => new(100, 23);
 
+    /// <summary>The label's mnemonic moves focus to the control after it in the tab order, such as its text box.</summary>
+    /// <param name="charCode">The character.</param>
+    protected internal override bool ProcessMnemonic(char charCode)
+    {
+        if (UseMnemonic && CanProcessMnemonic() && IsMnemonic(charCode, Text) && Parent is { } parent)
+        {
+            parent.SelectNextControl(this, forward: true, tabStopOnly: false, nested: true, wrap: false);
+            return true;
+        }
+
+        return base.ProcessMnemonic(charCode);
+    }
+
     /// <inheritdoc />
     protected override Padding DefaultMargin => new(3, 0, 3, 0);
 

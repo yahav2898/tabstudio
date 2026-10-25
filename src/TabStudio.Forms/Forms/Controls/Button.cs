@@ -42,6 +42,19 @@ public class Button : ButtonBase, IButtonControl
         base.OnClick(e);
     }
 
+    /// <summary>The button's mnemonic clicks it.</summary>
+    /// <param name="charCode">The character.</param>
+    protected internal override bool ProcessMnemonic(char charCode)
+    {
+        if (UseMnemonic && CanProcessMnemonic() && IsMnemonic(charCode, Text))
+        {
+            PerformClick();
+            return true;
+        }
+
+        return base.ProcessMnemonic(charCode);
+    }
+
     /// <summary>Enter clicks the focused button.</summary>
     /// <param name="keyData">The key.</param>
     protected override bool ProcessDialogKey(Keys keyData)
@@ -223,6 +236,23 @@ public class CheckBox : ButtonBase
     /// <param name="e">The event data.</param>
     protected virtual void OnCheckStateChanged(EventArgs e) => ((EventHandler?)Events[EventCheckStateChanged])?.Invoke(this, e);
 
+    /// <summary>The box's mnemonic focuses it and checks or unchecks it.</summary>
+    /// <param name="charCode">The character.</param>
+    protected internal override bool ProcessMnemonic(char charCode)
+    {
+        if (UseMnemonic && CanSelect && IsMnemonic(charCode, Text))
+        {
+            if (Focus())
+            {
+                OnClick(EventArgs.Empty);
+            }
+
+            return true;
+        }
+
+        return base.ProcessMnemonic(charCode);
+    }
+
     /// <summary>Checks or unchecks the box, then raises Click.</summary>
     /// <param name="e">The event data.</param>
     protected override void OnClick(EventArgs e)
@@ -379,6 +409,23 @@ public class RadioButton : ButtonBase
     /// <summary>Raises CheckedChanged.</summary>
     /// <param name="e">The event data.</param>
     protected virtual void OnCheckedChanged(EventArgs e) => ((EventHandler?)Events[EventCheckedChanged])?.Invoke(this, e);
+
+    /// <summary>The button's mnemonic focuses and checks it.</summary>
+    /// <param name="charCode">The character.</param>
+    protected internal override bool ProcessMnemonic(char charCode)
+    {
+        if (UseMnemonic && CanSelect && IsMnemonic(charCode, Text))
+        {
+            if (Focus())
+            {
+                PerformClick();
+            }
+
+            return true;
+        }
+
+        return base.ProcessMnemonic(charCode);
+    }
 
     /// <summary>Checks the button, then raises Click.</summary>
     /// <param name="e">The event data.</param>

@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Globalization;
 
 namespace System.Windows.Forms;
 
@@ -100,6 +101,46 @@ public partial class Control
     /// <returns>Whether it was handled.</returns>
     protected virtual bool ProcessDialogChar(char charCode) => _parent?.ProcessDialogChar(charCode) ?? false;
 
+    /// <summary>
+    /// Whether a character is the mnemonic of a text: the character after a single ampersand, as <c>N</c> is in
+    /// <c>&amp;No</c>, matched without regard to case.
+    /// </summary>
+    /// <param name="charCode">The character.</param>
+    /// <param name="text">The text.</param>
+    public static bool IsMnemonic(char charCode, string? text)
+    {
+        if (charCode == '&' || string.IsNullOrEmpty(text))
+        {
+            return false;
+        }
+
+        for (var i = 0; i < text.Length - 1; i++)
+        {
+            if (text[i] != '&')
+            {
+                continue;
+            }
+
+            if (text[i + 1] == '&')
+            {
+                i++;
+                continue;
+            }
+
+            return char.ToUpper(text[i + 1], CultureInfo.CurrentCulture) == char.ToUpper(charCode, CultureInfo.CurrentCulture);
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Processes a mnemonic: a control whose text has it acts, as a button clicks or a label moves focus to the
+    /// control after it. Typed with Alt, or alone where the focused control does not take characters.
+    /// </summary>
+    /// <param name="charCode">The character.</param>
+    /// <returns>Whether a control took it.</returns>
+    protected internal virtual bool ProcessMnemonic(char charCode) => false;
+
     /// <summary>Lets a container see a key before the focused control, as a form with KeyPreview does.</summary>
     /// <param name="m">The key's message.</param>
     /// <returns>Whether it was handled.</returns>
@@ -138,6 +179,24 @@ public partial class Control
     }
 
     internal bool DispatchProcessDialogKey(Keys keyData) => ProcessDialogKey(keyData);
+
+    internal bool DispatchIsInputChar(char charCode) => IsInputChar(charCode);
+
+    internal bool DispatchProcessDialogChar(char charCode) => ProcessDialogChar(charCode);
+
+    /// <summary>Whether the control can take a mnemonic: it and its parents are enabled and visible.</summary>
+    internal bool CanProcessMnemonic()
+    {
+        for (Control? control = this; control is not null; control = control._parent)
+        {
+            if (!control.Enabled || !control.VisibleSelf)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     internal bool DispatchProcessKeyPreview(Keys keyData)
     {

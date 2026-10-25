@@ -35,6 +35,7 @@ public partial class Form : ContainerControl
     private FormWindowState _windowState = FormWindowState.Normal;
     private FormWindowState _stateBeforeMinimized = FormWindowState.Normal;
     private Rectangle _restoreBounds;
+    private Point? _centeredAt;
     private Form? _owner;
     private DialogResult _dialogResult;
     private bool _modal;
@@ -393,7 +394,7 @@ public partial class Form : ContainerControl
     internal bool IsShown => WindowInternal is not null;
 
     /// <summary>The frame of the window, as the app preview draws it.</summary>
-    internal WindowChrome Chrome => new(_formBorderStyle, _controlBox, _maximizeBox && _formBorderStyle is FormBorderStyle.Sizable or FormBorderStyle.SizableToolWindow, _minimizeBox);
+    internal WindowChrome Chrome => new(_formBorderStyle, _controlBox, _maximizeBox, _minimizeBox, ShowIcon);
 
     /// <summary>The client area's top-left corner on the desktop.</summary>
     internal Point ClientOriginOnScreen

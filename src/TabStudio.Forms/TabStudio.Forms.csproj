@@ -20,8 +20,11 @@
     <PackageReference Include="Avalonia" />
   </ItemGroup>
 
+  <!-- The IDE hosts the runtime and the designer through the layer's internals, which apps never see. -->
   <ItemGroup>
     <InternalsVisibleTo Include="TabStudio.Forms.Tests" />
+    <InternalsVisibleTo Include="TabStudio.App" />
+    <InternalsVisibleTo Include="TabStudio.App.Tests" />
   </ItemGroup>
 
 </Project>
