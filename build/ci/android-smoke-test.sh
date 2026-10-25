@@ -16,7 +16,6 @@ apk="${1:?apk}"
 out="${2:?output folder}"
 timeout="${3:-300}"
 package="com.tabstudio.ide"
-activity="com.tabstudio.ide.MainActivity"
 
 mkdir -p "$out"
 adb wait-for-device
@@ -69,7 +68,9 @@ desktop_step() {
 adb install -r "$apk"
 adb logcat -c
 started=$(date +%s)
-adb shell am start -W -n "$package/$activity" --ez tabstudio.selftest true --ez tabstudio.selftest.desktop true
+# The shell's instrumentation source permits the existing desktop checks to inject real Android input events.
+# Keep instrumentation active until the emulator is stopped, so the IDE is still present in the screenshots.
+adb shell am instrument "$package/com.tabstudio.ide.SelfTestInstrumentation"
 
 verdict=""
 handled=0

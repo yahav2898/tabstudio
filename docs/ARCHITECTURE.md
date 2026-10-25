@@ -246,6 +246,8 @@ An unhandled input exception releases stranded mouse capture so later clicks sti
 Android installs a `WebChromeClient`, so OpenSilver's `MessageBox` alert/confirm calls show the native browser dialogs.
 The .NET 10 preview needs an up-to-date Android System WebView. CI uses Android 15 (API 35) to exercise the
 rendered WPF page; the API 29 image's Chrome 74 cannot run this browser runtime.
+The device self test starts through `SelfTestInstrumentation`, so its existing desktop mouse checks retain
+Android's input injection permission through their adb instrumentation source.
 
 `Wpf/Editing` in Compilation reads the project's actual types and current additional-document text for completion,
 Quick Info, definitions, live XAML errors and missing-handler fixes. `DocumentViewModel.Xaml.cs` attaches it through
