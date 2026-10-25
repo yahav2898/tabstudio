@@ -43,7 +43,8 @@ public sealed class WindowsBridgeOnWindowsTests
 
         var view = devices.Window.GetVisualDescendants().OfType<BridgeFrameView>().Single(v => v.IsEffectivelyVisible);
         var map = view.Mapping;
-        var button = view.TranslatePoint(new Point(map.Left + (map.DrawnWidth / 2), map.Top + (map.DrawnHeight / 2)), devices.Window)!.Value;
+        // The button sits a little below the middle of the window, under the greeting.
+        var button = view.TranslatePoint(new Point(map.Left + (map.DrawnWidth / 2), map.Top + (map.DrawnHeight / 2) + (map.DrawnHeight / 20)), devices.Window)!.Value;
         devices.Window.MouseDown(button, MouseButton.Left);
         devices.Window.MouseUp(button, MouseButton.Left);
         await UiTestHelpers.WaitUntilAsync(() => Corner(pane.Stream!) == 0xFF20A040, TimeSpan.FromMinutes(1), "the green window after the click");

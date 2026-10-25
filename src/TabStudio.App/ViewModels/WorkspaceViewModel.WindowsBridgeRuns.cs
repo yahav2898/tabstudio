@@ -97,17 +97,20 @@ public sealed partial class WorkspaceViewModel
     /// <summary>Builds a project on the PC and starts it there, in place of the run it replaces, if any.</summary>
     private async Task RunOnWindowsBridgeAsync(ProjectInfo project, bool showOutput, bool skipReferences, BridgeRun? replacing)
     {
+        if (replacing is not null)
+        {
+            // Windows does not let a build overwrite the files of a program that runs, so the run it replaces ends before
+            // the build starts, as it does in Visual Studio.
+            await StopBridgeRunAsync(replacing, restarting: true);
+            await WaitForBridgeRunToEndAsync(replacing);
+        }
+
         if (await BuildOnWindowsBridgeAsync(project, showOutput, skipReferences) is not { Success: true, Program: { } program } || _windowsBridge is not { } bridge)
         {
             return;
         }
 
         var pc = bridge.PcName ?? "the PC";
-        if (replacing is not null)
-        {
-            await StopBridgeRunAsync(replacing, restarting: true);
-        }
-
         try
         {
             var started = await bridge.Client.RunAsync(project.FilePath, program);
@@ -296,6 +299,15 @@ public sealed partial class WorkspaceViewModel
         var shown = WindowsBridgePane?.SelectedApp?.AppId;
         var run = shown is { } id && _bridgeRuns.TryGetValue(id, out var selected) ? selected : _bridgeRuns.Values.Last();
         _ = StopBridgeRunAsync(run, restarting: false);
+    }
+
+    /// <summary>Waits, for a few seconds at most, until the PC has reported that a stopped program ended and let go of its files.</summary>
+    private async Task WaitForBridgeRunToEndAsync(BridgeRun run)
+    {
+        for (var i = 0; i < 100 && !_disposed && _bridgeRuns.ContainsKey(run.AppId); i++)
+        {
+            await Task.Delay(50);
+        }
     }
 
     private async Task StopBridgeRunAsync(BridgeRun run, bool restarting)

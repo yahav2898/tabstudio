@@ -31,9 +31,10 @@ public sealed class TempDirectory : IDisposable
         {
             Directory.Delete(Path, recursive: true);
         }
-        catch (IOException)
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
         {
-            // Best effort: the OS cleans the temp folder eventually.
+            // Best effort: the OS cleans the temp folder eventually. Windows refuses to delete a file a process that
+            // is still ending holds open.
         }
     }
 }
