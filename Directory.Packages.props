@@ -74,4 +74,12 @@
     <PackageVersion Include="MSTest.TestFramework" Version="3.8.3" />
   </ItemGroup>
 
+  <ItemGroup Label="Uno Platform">
+    <!--
+      Uno Platform 6 draws with SkiaSharp 3 and shapes text with HarfBuzz, from the process that runs it: TabStudio
+      runs Uno apps in its own process, so the projects that run them reference SkiaSharp 3 (above) and HarfBuzz.
+    -->
+    <PackageVersion Include="HarfBuzzSharp" Version="8.3.1.1" />
+  </ItemGroup>
+
 </Project>
