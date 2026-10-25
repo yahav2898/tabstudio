@@ -436,6 +436,7 @@ public partial class Control
     {
         add => Events.AddHandler(EventVisibleChanged, value);
         remove => Events.RemoveHandler(EventVisibleChanged, value);
+    }
 
     /// <summary>Raises the <see cref="CausesValidationChanged"/> event.</summary>
     /// <param name="e">The event data.</param>
