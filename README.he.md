@@ -57,6 +57,15 @@ TabStudio הופך טאבלט אנדרואיד למחשב פיתוח שבאמת 
 - **בדיקות.** Test Explorer ל-xUnit, ‏NUnit ו-MSTest, ו-Live Unit Testing: וי ירוק, איקס אדום או קו כחול ליד כל שורה בקוד הנבדק, והבדיקות שעריכה משפיעה עליהן רצות שוב מעצמן רגע אחרי שמפסיקים להקליד.
 - **NuGet על המכשיר.** החבילות משוחזרות על הטאבלט, כך שפרויקטים אמיתיים נבנים כמו שהם.
 
+### ‏Python, ‏Node.js וטרמינל
+
+- **ה-Toolchain Store.** ‏**Tools > Toolchain Store** מתקין Python ו-Node.js על הטאבלט, בסביבת לינוקס שחיה בתוך האפליקציה: Alpine Linux שרץ עם PRoot, בלי root ובלי הרשאות מיוחדות. כל חבילה מגיעה מהשרתים של Alpine עצמה ונבדקת מול החתימות של Alpine לפני שמשהו מותקן.
+- **פרויקטים שנפתחים כמו שהם.** במסך הפתיחה יש Python Application ו-Node.js Console App. פותחים תיקייה עם `pyproject.toml`, ‏`requirements.txt` או `package.json`, ו-TabStudio מציע להתקין את כלי הפיתוח ואת החבילות של הפרויקט. F5 מריץ אותו, עם הפלט ו-`input()` בחלון ה-Output, השגיאות ב-Error List, וכל שורה ב-traceback היא קישור לקוד שלה.
+- **IntelliSense.** ‏Pyright מביא השלמה אוטומטית, קווים אדומים וניווט ל-Python, ו-typescript-language-server עושה את אותו הדבר ל-JavaScript ול-TypeScript.
+- **דיבאגר.** F5 מדבג עם debugpy או vscode-js-debug, כולל תהליכי הבן של Node: נקודות עצירה, צעדים, Locals, ‏Watch, ‏Call Stack וחריגות. Ctrl+F5 מריץ בלי הדיבאגר.
+- **התקנה בנגיעה אחת.** כשחסר שרת שפה או מתאם דיבאג, שורת המצב, העורך ו-F5 מציעים להתקין את כלי הפיתוח שמביא אותו, והשרת עולה ברגע שההתקנה מסתיימת.
+- **טרמינל.** Ctrl+` פותח shell בסביבת הלינוקס, מצויר כמו ש-xterm מצייר.
+
 ### כל עומסי העבודה של Visual Studio, על אנדרואיד
 
 | עומס עבודה | איך הוא רץ על הטאבלט |
@@ -197,6 +206,7 @@ src/
   TabStudio.Agent/         Claude as a coding agent: tools over the workspace, MCP servers, sketch to XAML
   TabStudio.Link/          TabStudio Link: pairing, encrypted transport, QR codes and the remote language service
   TabStudio.Web/           Web apps: static web assets, Blazor's scripts, a host for .NET apps on WebAssembly
+  TabStudio.Toolchains/    The Toolchain Store: Alpine Linux on PRoot, packages, processes and the terminal
   TabStudio.LanguageServers/ Language Server and Debug Adapter Protocol clients for every non-C# language
   TabStudio.Extensions/    VS Code extensions from Open VSX: grammars, language rules, snippets, themes
   TabStudio.App/           The IDE itself: views and view models, shared by every platform
@@ -216,7 +226,7 @@ build/                     CI scripts
 
 ## רישיון וסימנים מסחריים
 
-‏TabStudio מופץ תחת [רישיון Apache 2.0](LICENSE).
+‏TabStudio מופץ תחת [רישיון Apache 2.0](LICENSE). התוכנות של צד שלישי שהוא כולל או מוריד, כל אחת תחת הרישיון שלה, מפורטות ב-[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 
 ‏TabStudio הוא פרויקט עצמאי. הוא לא קשור ל-Microsoft, לא מאושר על ידה ולא ממומן על ידה. ‏Visual Studio הוא סימן מסחרי של Microsoft Corporation, ומוזכר כאן רק כדי לתאר את סוג החוויה ש-TabStudio מציע. ‏TabStudio לא מכיל קוד של Microsoft מלבד רכיבי ה-.NET בקוד פתוח שעליהם הוא בנוי, תחת הרישיונות שלהם.
 

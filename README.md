@@ -55,6 +55,15 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 - **Tests.** Test Explorer for xUnit, NUnit and MSTest, and Live Unit Testing: a green check, red cross or blue dash beside every line of the code under test, and the tests an edit affects run again by themselves a moment after you stop typing.
 - **NuGet on the device.** Packages restore on the tablet, so real projects build as they are.
 
+### Python, Node.js and a terminal
+
+- **The Toolchain Store.** **Tools > Toolchain Store** installs Python and Node.js on the tablet, in a Linux environment that lives inside the app: Alpine Linux, run with PRoot, with no root and no special permissions. Every package comes from Alpine's own mirror and is checked against Alpine's signatures before anything is installed.
+- **Projects that open as they are.** The start screen has a Python Application and a Node.js Console App. Open a folder with `pyproject.toml`, `requirements.txt` or `package.json`, and TabStudio offers to install its toolchain and packages. F5 runs it with its output and `input()` in the Output panel, its errors in the Error List, and every line of a traceback a link to its code.
+- **IntelliSense.** Pyright brings completion, squiggles and navigation to Python, and typescript-language-server does the same for JavaScript and TypeScript.
+- **A debugger.** F5 debugs with debugpy or vscode-js-debug, including Node's child processes: breakpoints, stepping, Locals, Watch, the Call Stack and exceptions. Ctrl+F5 runs without the debugger.
+- **One tap to install.** If a language server or debug adapter is missing, the status bar, the editor and F5 offer to install the toolchain that brings it, and the server starts as soon as the install finishes.
+- **A terminal.** Ctrl+` opens a shell in the Linux environment, drawn as xterm draws it.
+
 ### Every Visual Studio workload, on Android
 
 | Workload | How it runs on the tablet |
@@ -205,6 +214,7 @@ src/
   TabStudio.Agent/         Claude as a coding agent: tools over the workspace, MCP servers, sketch to XAML
   TabStudio.Link/          TabStudio Link: pairing, encrypted transport, QR codes and the remote language service
   TabStudio.Web/           Web apps: static web assets, Blazor's scripts, a host for .NET apps on WebAssembly
+  TabStudio.Toolchains/    The Toolchain Store: Alpine Linux on PRoot, packages, processes and the terminal
   TabStudio.LanguageServers/ Language Server and Debug Adapter Protocol clients for every non-C# language
   TabStudio.Extensions/    VS Code extensions from Open VSX: grammars, language rules, snippets, themes
   TabStudio.App/           The IDE itself: views and view models, shared by every platform
@@ -222,6 +232,6 @@ TabStudio is built in the open, and it is early enough that one contributor can 
 
 ## License and trademarks
 
-TabStudio is licensed under the [Apache License 2.0](LICENSE).
+TabStudio is licensed under the [Apache License 2.0](LICENSE). The third-party software it ships with or downloads, each under its own licence, is listed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 
 TabStudio is an independent project. It is not affiliated with, endorsed by or sponsored by Microsoft. Visual Studio is a trademark of Microsoft Corporation, used here only to describe the kind of experience TabStudio offers. TabStudio contains no Microsoft code beyond the open-source .NET components it builds on, under their own licenses.

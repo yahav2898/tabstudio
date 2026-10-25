@@ -21,6 +21,7 @@ flowchart TB
         LiveTesting["TabStudio.LiveTesting"]
         Link["TabStudio.Link"]
         Web["TabStudio.Web"]
+        Toolchains["TabStudio.Toolchains"]
         LanguageServers["TabStudio.LanguageServers"]
         Extensions["TabStudio.Extensions"]
     end
@@ -47,6 +48,7 @@ Dependencies point down only. Each layer has one job:
 | `TabStudio.LiveTesting` | Live Unit Testing: coverage instrumentation, per-test attribution, coverage builds, impact analysis and the live test engine. | Compilation, Debugging, TestRunner |
 | `TabStudio.Link` | TabStudio Link: pairing, the TLS transport, QR codes, discovery, and the language protocol a host answers for a tablet. | Compilation, Debugging, LiveTesting |
 | `TabStudio.Web` | What a web app serves beyond its code: static web assets, scoped CSS, Blazor's scripts, and a host for .NET apps on WebAssembly. | Compilation, Packages |
+| `TabStudio.Toolchains` | The Toolchain Store: the catalog, Alpine Linux on PRoot, verified Alpine packages, processes and pseudo terminals, toolchain projects and the terminal emulator. | `TabStudio.Core` |
 | `TabStudio.LanguageServers` | Language Server Protocol and Debug Adapter Protocol clients, server and adapter registry, launch configurations. | Nothing but the .NET base library |
 | `TabStudio.Extensions` | VS Code extensions from Open VSX: install and verify, and their grammars, language configurations, snippets and themes. | Nothing but the .NET base library |
 | `TabStudio.Agent` | Claude as a coding agent: the Messages API with streaming and prompt caching, tools over the workspace, Model Context Protocol servers, and sketch to XAML. | Core |
@@ -351,6 +353,37 @@ tablet or a PC. Programs, tests and the debugger still run on the tablet; the ho
   gives the tablet code execution on the host; the host's Link window says so, and asks to pair only tablets you own. Mirror paths
   are validated, so a tablet cannot write outside its own mirror folder.
 
+## Toolchains
+
+`TabStudio.Toolchains` runs languages other than C# from the Toolchain Store. Its catalog (`toolchains.json`)
+describes each toolchain: the Alpine packages it needs, its setup steps (an archive such as a debug adapter, or a
+command such as `npm install --global`), its project files, how F5 runs a project, and the language server and debug
+adapter it brings.
+
+- **The Linux environment.** On Android, the first install unpacks Alpine Linux's minimal root file system into the
+  app's storage. `ProotRuntime` runs its programs with PRoot, which Termux also ships: Android lets an app execute
+  files only from its native library folder, so PRoot and its loader ship there as `libproot.so` and
+  `libproot-loader.so`, and the loader maps each program into memory itself. Nothing from the app's writable
+  storage is ever executed by the system, and children and grandchildren of a program work the same way. Programs
+  see Alpine as `/`, run as a simulated root user, and see TabStudio's projects folder and each open workspace at
+  their own paths, so paths in their output are files the IDE opens. On a computer, `HostRuntime` runs the
+  computer's own programs from the PATH.
+- **Packages.** `AlpinePackageManager` downloads, resolves and installs Alpine packages itself, so downloads show
+  progress and survive a dropped connection. The repository index is verified against Alpine's keys, and each
+  package against the index entry that lists it, before anything is unpacked.
+- **Processes.** Programs are children of TabStudio's process, started with pipes or a pseudo terminal, and are
+  killed with their whole process tree when stopped, as Android 12 and later expect.
+- **Projects.** `ToolchainProjectDetector` finds Python and Node.js projects in a workspace from their project files.
+  F5 and Ctrl+F5 run them with their console in the Output panel; problem matchers turn tracebacks and compiler
+  output into Error List entries and links.
+- **The terminal.** `TerminalEmulator` turns what programs write to a pseudo terminal into styled character cells,
+  as xterm does, for the Terminal panel to draw.
+- **Language servers and debug adapters.** `ToolchainServerLauncher` implements `IServerProcessLauncher` over the
+  toolchain runtime, so Pyright, typescript-language-server, debugpy and vscode-js-debug start inside the Linux
+  environment and paths are translated between the device and the environment. A missing server or adapter offers
+  to install the toolchain that brings it. For F5, a project's run plan becomes a DAP launch configuration, and the
+  program starts through the adapter's `runInTerminal` request, so its input and output stay in the Output panel.
+
 ## Language servers and debug adapters
 
 `TabStudio.LanguageServers` speaks the Language Server Protocol (3.17) and the Debug Adapter Protocol, so every
@@ -451,12 +484,14 @@ working around them, so it runs on stock Android with no root and no special per
 
 - **No executing downloaded files.** Since Android 10, an app may not `exec()` files in its own writable
   storage (the W^X rule). TabStudio never does: C# compiles to managed assemblies that the .NET runtime in the
-  app loads directly, and native toolchains run only from locations Android permits, such as the app's
-  native library directory or loaded in-process as shared libraries.
+  app loads directly, and the toolchains' programs are mapped into memory by PRoot's loader, which runs from the
+  app's native library directory.
 - **No Linux VM.** Android's Virtualization Framework is reserved for system and privileged apps, so
-  TabStudio does not rely on a virtual machine or on a Linux user space such as proot.
-- **One process, one console.** Programs share TabStudio's process. The console is redirected for one
-  program at a time, and programs are isolated in their own load contexts.
+  toolchains run in a Linux user space instead: Alpine Linux under PRoot, which needs no root and no special
+  permissions (see [Toolchains](#toolchains)).
+- **One process, one console.** .NET programs share TabStudio's process. The console is redirected for one
+  program at a time, and programs are isolated in their own load contexts. Toolchain programs run as child
+  processes in the Linux environment.
 - **Thermal limits.** Tablets throttle when hot. TabStudio reads Android's thermal status and compiles on
   fewer threads while the device is warm, so the UI stays responsive.
 
