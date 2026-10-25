@@ -137,6 +137,22 @@ public sealed class DebugSessionTests
     }
 
     [Fact]
+    public async Task Pausing_before_the_start_stops_at_the_first_statement()
+    {
+        using var program = new DebuggedProgram(Calculator);
+        program.Session.Pause();
+        program.Start();
+
+        var pause = await program.NextPauseAsync();
+
+        Assert.Equal(PauseReason.Pause, pause.Reason);
+        Assert.Equal(1, pause.Location?.Line);
+        Assert.Equal("<top-level statements>", Assert.Single(pause.CallStack).MethodName);
+        program.Session.Continue();
+        await program.FinishAsync();
+    }
+
+    [Fact]
     public async Task Shows_the_call_stack_across_methods()
     {
         using var program = new DebuggedProgram(Calculator, 16);

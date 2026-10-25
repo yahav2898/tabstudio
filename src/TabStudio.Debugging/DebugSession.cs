@@ -256,7 +256,11 @@ public sealed class DebugSession : IDisposable
     }
 
     /// <summary>Pauses the running program at the next statement any of its threads runs (Break All).</summary>
-    /// <remarks>A program that is waiting outside its own code, for example for console input, pauses when it returns to it.</remarks>
+    /// <remarks>
+    /// A program that is waiting outside its own code, for example for console input, pauses when it returns to it.
+    /// Called before <see cref="RunAsync"/>, the program pauses at its first statement, which is how F11 starts
+    /// debugging with Step Into.
+    /// </remarks>
     public void Pause() => _engine.Pause();
 
     /// <summary>
