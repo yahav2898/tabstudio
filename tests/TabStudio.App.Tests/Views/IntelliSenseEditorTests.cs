@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
@@ -125,6 +126,23 @@ public sealed class IntelliSenseEditorTests
         Assert.Contains("class Greetings.Greeter", string.Concat(info.Signature.Select(r => r.Text)), StringComparison.Ordinal);
         Assert.Contains(info.Signature, r => r.Text == "Greeter" && r.Classification == "class name");
         Assert.Contains(info.Sections, s => string.Concat(s.Runs.Select(r => r.Text)).Contains("friendly greeting", StringComparison.Ordinal));
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public async Task Resting_the_pointer_on_a_symbol_shows_quick_info()
+    {
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var window = Show(fixture);
+        var view = ActiveEditor(window);
+        var point = PointOf(window, view.Editor, OffsetOf(view.Editor, "new Greeter(") + "new Gre".Length);
+
+        window.MouseMove(point - new Vector(12, 0));
+        window.MouseMove(point);
+
+        await UiTestHelpers.WaitUntilAsync(() => view.QuickInfo is not null, because: "Quick Info under the pointer");
+        Assert.Contains("Greeter(string? name)", string.Concat(view.QuickInfo!.Signature.Select(r => r.Text)), StringComparison.Ordinal);
         window.Close();
     }
 
