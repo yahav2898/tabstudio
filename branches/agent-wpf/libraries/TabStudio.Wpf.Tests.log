@@ -1,24 +1,337 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Wpf/TabStudio.Wpf.csproj (in 787 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Wpf.Tests/TabStudio.Wpf.Tests.csproj (in 828 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Wpf.Tests/TabStudio.Wpf.Tests.csproj (in 833 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Wpf/TabStudio.Wpf.csproj (in 793 ms).
   5 of 7 projects are up-to-date for restore.
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
   TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
-  TabStudio.Packages -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/bin/Release/net10.0/TabStudio.Packages.dll
   TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
+  TabStudio.Packages -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/bin/Release/net10.0/TabStudio.Packages.dll
   TabStudio.Web -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Web/bin/Release/net10.0/TabStudio.Web.dll
   TabStudio.Wpf -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Wpf/bin/Release/net10.0/TabStudio.Wpf.dll
+/home/runner/work/tabstudio/tabstudio/tests/TabStudio.Wpf.Tests/WpfTemplateTests.cs(59,9): warning xUnit2029: Do not use Assert.Empty to check if a value does not exist in a collection. Use Assert.DoesNotContain instead. (https://xunit.net/xunit.analyzers/rules/xUnit2029) [/home/runner/work/tabstudio/tabstudio/tests/TabStudio.Wpf.Tests/TabStudio.Wpf.Tests.csproj]
   TabStudio.Wpf.Tests -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Wpf.Tests/bin/Release/net10.0/TabStudio.Wpf.Tests.dll
 Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Wpf.Tests/bin/Release/net10.0/TabStudio.Wpf.Tests.dll (.NETCoreApp,Version=v10.0)
 A total of 1 test files matched the specified pattern.
 [xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
 [xUnit.net 00:00:00.14]   Discovering: TabStudio.Wpf.Tests
-[xUnit.net 00:00:00.23]   Discovered:  TabStudio.Wpf.Tests
-[xUnit.net 00:00:00.29]   Starting:    TabStudio.Wpf.Tests
-[xUnit.net 00:00:05.15]   Finished:    TabStudio.Wpf.Tests
-  Passed TabStudio.Wpf.Tests.OpenSilverExperiment.Records_how_OpenSilver_builds_a_WPF_template [4 s]
+[xUnit.net 00:00:00.20]   Discovered:  TabStudio.Wpf.Tests
+[xUnit.net 00:00:00.24]   Starting:    TabStudio.Wpf.Tests
+  Passed TabStudio.Wpf.Tests.WpfProjectTests.WPF_takes_System_IO_and_System_Net_Http_out_of_the_implicit_usings [30 ms]
+  Passed TabStudio.Wpf.Tests.WpfProjectTests.App_xaml_is_the_application_definition_and_every_other_xaml_file_is_a_page [33 ms]
+  Passed TabStudio.Wpf.Tests.WpfProjectTests.The_project_file_adds_and_removes_xaml_items [8 ms]
+  Passed TabStudio.Wpf.Tests.WpfProjectTests.Second_pass_files_lead_back_to_their_xaml [2 ms]
+  Passed TabStudio.Wpf.Tests.WpfProjectTests.WPF_projects_get_the_symbol_OpenSilver_defines [15 ms]
+  Passed TabStudio.Wpf.Tests.WpfTemplateTests.An_event_handler_the_class_does_not_have_is_reported_at_its_attribute [4 s]
+  Passed TabStudio.Wpf.Tests.WpfTemplateTests.Code_that_uses_what_OpenSilver_does_not_implement_gets_a_warning [384 ms]
+  Passed TabStudio.Wpf.Tests.WpfTemplateTests.The_Visual_Studio_template_builds_on_OpenSilver [228 ms]
+  Passed TabStudio.Wpf.Tests.WpfTemplateTests.Window_settings_without_effect_in_the_web_preview_are_reported_and_left_out [158 ms]
+  Passed TabStudio.Wpf.Tests.WpfTemplateTests.Named_elements_are_fields_of_their_types_in_the_code_behind [230 ms]
+  Passed TabStudio.Wpf.Tests.WpfTemplateTests.A_xaml_error_is_reported_in_its_file [145 ms]
+  Passed TabStudio.Wpf.Tests.WpfBrowserTests.A_new_build_is_served_at_the_same_address [5 s]
+[xUnit.net 00:00:23.60]     TabStudio.Wpf.Tests.WpfBrowserTests.Reports_an_exception_in_a_handler_with_its_stack [FAIL]
+[xUnit.net 00:00:23.60]       System.TimeoutException : After 10 s, still not true: document.body.innerText.includes('Clicked 1 time')
+[xUnit.net 00:00:23.60]       The console:
+[xUnit.net 00:00:23.60]       error: Failed to load resource: the server responded with a status of 404 (Not Found) http://127.0.0.1:36125/favicon.ico
+[xUnit.net 00:00:23.60]       console.info: Debugging hotkey: Shift+Alt+D (when application has focus)
+[xUnit.net 00:00:23.60]       console.log: The window is up
+[xUnit.net 00:00:23.60]       console.error: Unhandled exception in WpfApp1: System.Reflection.TargetInvocationException: Arg_TargetInvocationException
+[xUnit.net 00:00:23.60]       console.error:  ---> System.InvalidOperationException: Boom
+[xUnit.net 00:00:23.60]       console.error:    at WpfApp1.MainWindow.Fail_Click(Object sender, RoutedEventArgs e)
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.RoutedEventHandlerInfo.InvokeHandler(Object target, RoutedEventArgs routedEventArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RoutedEventHandlerInfo.cs:line 55
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.RouteItem.InvokeHandler(RoutedEventArgs routedEventArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RouteItem.cs:line 28
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.EventRoute.InvokeHandlers(RoutedEventArgs args) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\EventRoute.cs:line 124
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.UIElement.RaiseEventImpl(UIElement sender, RoutedEventArgs args) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 523
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.UIElement.RaiseEvent(RoutedEventArgs e) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 374
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.Controls.Primitives.ButtonBase.OnClick() in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Controls.Primitives\ButtonBase.cs:line 251
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.Controls.Primitives.ButtonBase.OnMouseLeftButtonUp(MouseButtonEventArgs e) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Controls.Primitives\ButtonBase.cs:line 553
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.UIElement.OnMouseLeftButtonUpThunk(Object sender, MouseButtonEventArgs e) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 153
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.Input.MouseButtonEventArgs.InvokeEventHandler(Delegate genericHandler, Object genericTarget) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Input\MouseButtonEventArgs.cs:line 55
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RoutedEventArgs.cs:line 255
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.RoutedEventHandlerInfo.InvokeHandler(Object target, RoutedEventArgs routedEventArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RoutedEventHandlerInfo.cs:line 60
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.RouteItem.InvokeHandler(RoutedEventArgs routedEventArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RouteItem.cs:line 28
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.EventRoute.InvokeHandlers(RoutedEventArgs args) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\EventRoute.cs:line 124
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.UIElement.ReRaiseEventAs(UIElement uie, RoutedEventArgs args, RoutedEvent newEvent) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 502
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.UIElement.CrackMouseButtonEventAndReRaiseEvent(UIElement uie, MouseButtonEventArgs e) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 468
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.UIElement.OnMouseUpThunk(Object sender, MouseButtonEventArgs e) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 122
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.Input.MouseButtonEventArgs.InvokeEventHandler(Delegate genericHandler, Object genericTarget) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Input\MouseButtonEventArgs.cs:line 55
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RoutedEventArgs.cs:line 255
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.RoutedEventHandlerInfo.InvokeHandler(Object target, RoutedEventArgs routedEventArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RoutedEventHandlerInfo.cs:line 60
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.RouteItem.InvokeHandler(RoutedEventArgs routedEventArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RouteItem.cs:line 28
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.EventRoute.InvokeHandlers(RoutedEventArgs args) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\EventRoute.cs:line 124
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.UIElement.RaiseEventImpl(UIElement sender, RoutedEventArgs args) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 523
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 406
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.Input.InputManager.ProcessMouseUpEvent(UIElement uie, PointerCallbackParameters parameters, MouseButton button) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Input\InputManager.cs:line 962
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.Input.InputManager.ProcessOnMouseLeftButtonUp(UIElement uie, PointerCallbackParameters parameters) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Input\InputManager.cs:line 550
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.Input.InputManager.DispatchEventPointerEvent(UIElement uie, EVENTS eventType, PointerCallbackParameters parameters) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Input\InputManager.cs:line 380
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.Input.InputManager.ProcessPointerInput(String id, Int32 eventId, Object jsEventArg, Boolean isTouchEvent, Double pageX, Double pageY, Int32 keyModifiers) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Input\InputManager.cs:line 335
+[xUnit.net 00:00:23.60]       console.error:    at System.Object.InvokeStub_InputManager.ProcessPointerInput(Object , Span`1 )
+[xUnit.net 00:00:23.60]       console.error:    at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:23.60]       console.error:    Exception_EndOfInnerExceptionStack
+[xUnit.net 00:00:23.60]       console.error:    at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:23.60]       console.error:    at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:23.60]       console.error:    at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+[xUnit.net 00:00:23.60]       console.error:    at System.Delegate.DynamicInvokeImpl(Object[] args)
+[xUnit.net 00:00:23.60]       console.error:    at System.MulticastDelegate.DynamicInvokeImpl(Object[] args)
+[xUnit.net 00:00:23.60]       console.error:    at System.Delegate.DynamicInvoke(Object[] args)
+[xUnit.net 00:00:23.60]       console.error:    at CSHTML5.Internal.OnCallBackImpl.DelegateDynamicInvoke(Delegate d, Object[] args) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\PublicAPI\Interop\OnCallBackImpl.cs:line 90
+[xUnit.net 00:00:23.60]       console.error:    at CSHTML5.Internal.OnCallBackImpl.CallMethod(Delegate callback, String idWhereCallbackArgsAreStored, Object callbackArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\PublicAPI\Interop\OnCallBackImpl.cs:line 154
+[xUnit.net 00:00:23.60]       console.error:    at CSHTML5.Internal.OnCallBackImpl.OnCallbackFromJavaScript(Delegate callback, String idWhereCallbackArgsAreStored, Object callbackArgsObject) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\PublicAPI\Interop\OnCallBackImpl.cs:line 85
+[xUnit.net 00:00:23.60]       console.error:    at CSHTML5.Internal.JavaScriptCallback.InvokeImpl(String idWhereCallbackArgsAreStored, Object callbackArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\PublicAPI\Interop\JavaScriptCallback.cs:line 96
+[xUnit.net 00:00:23.60]       console.error:    at CSHTML5.Internal.JavaScriptCallback.InvokeWithExceptionHandling(String idWhereCallbackArgsAreStored, Object callbackArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\PublicAPI\Interop\JavaScriptCallback.cs:line 76
+[xUnit.net 00:00:23.60]       console.error: Unhandled exception in WpfApp1: System.Reflection.TargetInvocationException: Arg_TargetInvocationException
+[xUnit.net 00:00:23.60]       console.error:  ---> System.InvalidOperationException: Boom
+[xUnit.net 00:00:23.60]       console.error:    at WpfApp1.MainWindow.Fail_Click(Object sender, RoutedEventArgs e)
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.RoutedEventHandlerInfo.InvokeHandler(Object target, RoutedEventArgs routedEventArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RoutedEventHandlerInfo.cs:line 55
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.RouteItem.InvokeHandler(RoutedEventArgs routedEventArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RouteItem.cs:line 28
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.EventRoute.InvokeHandlers(RoutedEventArgs args) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\EventRoute.cs:line 124
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.UIElement.RaiseEventImpl(UIElement sender, RoutedEventArgs args) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 523
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.UIElement.RaiseEvent(RoutedEventArgs e) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 374
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.Controls.Primitives.ButtonBase.OnClick() in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Controls.Primitives\ButtonBase.cs:line 251
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.Controls.Primitives.ButtonBase.OnMouseLeftButtonUp(MouseButtonEventArgs e) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Controls.Primitives\ButtonBase.cs:line 553
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.UIElement.OnMouseLeftButtonUpThunk(Object sender, MouseButtonEventArgs e) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 153
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.Input.MouseButtonEventArgs.InvokeEventHandler(Delegate genericHandler, Object genericTarget) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Input\MouseButtonEventArgs.cs:line 55
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RoutedEventArgs.cs:line 255
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.RoutedEventHandlerInfo.InvokeHandler(Object target, RoutedEventArgs routedEventArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RoutedEventHandlerInfo.cs:line 60
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.RouteItem.InvokeHandler(RoutedEventArgs routedEventArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RouteItem.cs:line 28
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.EventRoute.InvokeHandlers(RoutedEventArgs args) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\EventRoute.cs:line 124
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.UIElement.ReRaiseEventAs(UIElement uie, RoutedEventArgs args, RoutedEvent newEvent) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 502
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.UIElement.CrackMouseButtonEventAndReRaiseEvent(UIElement uie, MouseButtonEventArgs e) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 468
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.UIElement.OnMouseUpThunk(Object sender, MouseButtonEventArgs e) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 122
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.Input.MouseButtonEventArgs.InvokeEventHandler(Delegate genericHandler, Object genericTarget) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Input\MouseButtonEventArgs.cs:line 55
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RoutedEventArgs.cs:line 255
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.RoutedEventHandlerInfo.InvokeHandler(Object target, RoutedEventArgs routedEventArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RoutedEventHandlerInfo.cs:line 60
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.RouteItem.InvokeHandler(RoutedEventArgs routedEventArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RouteItem.cs:line 28
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.EventRoute.InvokeHandlers(RoutedEventArgs args) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\EventRoute.cs:line 124
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.UIElement.RaiseEventImpl(UIElement sender, RoutedEventArgs args) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 523
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 406
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.Input.InputManager.ProcessMouseUpEvent(UIElement uie, PointerCallbackParameters parameters, MouseButton button) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Input\InputManager.cs:line 962
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.Input.InputManager.ProcessOnMouseLeftButtonUp(UIElement uie, PointerCallbackParameters parameters) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Input\InputManager.cs:line 550
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.Input.InputManager.DispatchEventPointerEvent(UIElement uie, EVENTS eventType, PointerCallbackParameters parameters) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Input\InputManager.cs:line 380
+[xUnit.net 00:00:23.60]       console.error:    at System.Windows.Input.InputManager.ProcessPointerInput(String id, Int32 eventId, Object jsEventArg, Boolean isTouchEvent, Double pageX, Double pageY, Int32 keyModifiers) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Input\InputManager.cs:line 335
+[xUnit.net 00:00:23.60]       console.error:    at System.Object.InvokeStub_InputManager.ProcessPointerInput(Object , Span`1 )
+[xUnit.net 00:00:23.60]       console.error:    at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:23.60]       console.error:    Exception_EndOfInnerExceptionStack
+[xUnit.net 00:00:23.60]       console.error:    at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:23.60]       console.error:    at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:23.60]       console.error:    at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+[xUnit.net 00:00:23.60]       console.error:    at System.Delegate.DynamicInvokeImpl(Object[] args)
+[xUnit.net 00:00:23.60]       console.error:    at System.MulticastDelegate.DynamicInvokeImpl(Object[] args)
+[xUnit.net 00:00:23.60]       console.error:    at System.Delegate.DynamicInvoke(Object[] args)
+[xUnit.net 00:00:23.60]       console.error:    at CSHTML5.Internal.OnCallBackImpl.DelegateDynamicInvoke(Delegate d, Object[] args) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\PublicAPI\Interop\OnCallBackImpl.cs:line 90
+[xUnit.net 00:00:23.60]       console.error:    at CSHTML5.Internal.OnCallBackImpl.CallMethod(Delegate callback, String idWhereCallbackArgsAreStored, Object callbackArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\PublicAPI\Interop\OnCallBackImpl.cs:line 154
+[xUnit.net 00:00:23.60]       console.error:    at CSHTML5.Internal.OnCallBackImpl.OnCallbackFromJavaScript(Delegate callback, String idWhereCallbackArgsAreStored, Object callbackArgsObject) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\PublicAPI\Interop\OnCallBackImpl.cs:line 85
+[xUnit.net 00:00:23.60]       console.error:    at CSHTML5.Internal.JavaScriptCallback.InvokeImpl(String idWhereCallbackArgsAreStored, Object callbackArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\PublicAPI\Interop\JavaScriptCallback.cs:line 96
+[xUnit.net 00:00:23.60]       console.error:    at CSHTML5.Internal.JavaScriptCallback.InvokeWithExceptionHandling(String idWhereCallbackArgsAreStored, Object callbackArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\PublicAPI\Interop\JavaScriptCallback.cs:line 76
+[xUnit.net 00:00:23.60]       The page:
+[xUnit.net 00:00:23.60]       <html lang="en" style="--blazor-load-percentage: 100%; --blazor-load-percentage-text: &quot;100%&quot;;"><head>
+[xUnit.net 00:00:23.60]           <meta charset="utf-8">
+[xUnit.net 00:00:23.60]           <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+[xUnit.net 00:00:23.60]           <title>Greetings</title>
+[xUnit.net 00:00:23.60]           <base href="/">
+[xUnit.net 00:00:23.60]           <link href="_framework/dotnet.js" rel="preload" as="script" fetchpriority="high" crossorigin="anonymous" integrity="sha256-G4E2g5LMLx5H0CbIwB3qN8oJnqHPDdXVjLvEbLStdz4=">
+[xUnit.net 00:00:23.60]           <link rel="stylesheet" href="_tabstudio/wpf.css">
+[xUnit.net 00:00:23.60]           <script type="importmap">{ "imports": {} }</script>
+[xUnit.net 00:00:23.60]           <script src="_tabstudio/wpf.js"></script>
+[xUnit.net 00:00:23.60]       <link rel="stylesheet" type="text/css" href="libs/cshtml5.css?date=2026-10-25T14:28:50.688Z"><link rel="stylesheet" type="text/css" href="libs/quill.core.css?date=2026-10-25T14:28:50.688Z"><script type="application/javascript" src="libs/cshtml5.js?date=2026-10-25T14:28:50.688Z"></script><script type="application/javascript" src="libs/quill.min.js?date=2026-10-25T14:28:50.688Z"></script><script type="application/javascript" src="libs/htmlToImage.js?date=2026-10-25T14:28:50.688Z"></script><script type="application/javascript" src="libs/FileSaver.min.js?date=2026-10-25T14:28:50.688Z"></script></head>
+[xUnit.net 00:00:23.60]       
+[xUnit.net 00:00:23.60]       <body class="opensilver-pointer-captured">
+[xUnit.net 00:00:23.60]           <div id="tabstudio-wpf-window" class="tabstudio-wpf-window">
+[xUnit.net 00:00:23.60]               <div class="tabstudio-wpf-titlebar">
+[xUnit.net 00:00:23.60]                   <svg class="tabstudio-wpf-icon" viewBox="0 0 16 16" aria-hidden="true">
+[xUnit.net 00:00:23.60]                       <rect x="1.5" y="2.5" width="13" height="11" rx="1.5" fill="none" stroke="currentColor"></rect>
+[xUnit.net 00:00:23.60]                       <path d="M1.5 5.5h13" stroke="currentColor"></path>
+[xUnit.net 00:00:23.60]                   </svg>
+[xUnit.net 00:00:23.60]                   <span id="tabstudio-wpf-title" class="tabstudio-wpf-title">Greetings</span>
+[xUnit.net 00:00:23.60]                   <button id="tabstudio-wpf-close" class="tabstudio-wpf-close" type="button" title="Close WpfApp1" aria-label="Close">
+[xUnit.net 00:00:23.60]                       <svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1 1l8 8M9 1l-8 8" stroke="currentColor" stroke-width="1.1"></path></svg>
+[xUnit.net 00:00:23.60]                   </button>
+[xUnit.net 00:00:23.60]               </div>
+[xUnit.net 00:00:23.60]               <div id="tabstudio-wpf-client" class="tabstudio-wpf-client opensilver-root-element" tabindex="0" style="display: grid; overflow: clip;">
+[xUnit.net 00:00:23.60]                   <div id="tabstudio-wpf-starting" class="tabstudio-wpf-starting">Starting WpfApp1…</div>
+[xUnit.net 00:00:23.60]               <div id="id2" class="opensilver-window"><div style="position: absolute; visibility: hidden; box-sizing: border-box; white-space: pre; left: -100000px; top: -100000px; text-align: left;"></div><div id="id3" class="opensilver-uielement opensilver-border System.Windows.Controls.StackPanel" style="left: 24px; top: 24px; width: 1232px; height: 719px;"><div id="id4" class="opensilver-uielement opensilver-textblock System.Windows.Controls.TextBlock" dataid="Greeting" style="pointer-events: auto; left: 0px; top: 0px; width: 1232px; height: 28px;"><span id="id5" class="opensilver-inline System.Windows.Documents.Run" style="font-size: 24px;">Hello from WPF</span></div><div id="id6" class="opensilver-uielement System.Windows.Controls.Button" style="left: 0px; top: 40px; width: 72px; height: 25px;"><div id="id8" class="opensilver-uielement opensilver-border System.Windows.Controls.Grid" style="left: 0px; top: 0px; width: 72px; height: 25px;"><div id="id9" class="opensilver-uielement opensilver-border System.Windows.Controls.Border" dataid="Background" style="border-radius: 3px; background: rgb(255, 255, 255); border-width: 1px; border-color: rgb(113, 133, 151); pointer-events: auto; left: 0px; top: 0px; width: 72px; height: 25px;"><div id="id10" class="opensilver-uielement opensilver-border System.Windows.Controls.Grid" style="background: rgb(31, 59, 83); pointer-events: auto; left: 1px; top: 1px; width: 68px; height: 21px;"><div id="id11" class="opensilver-uielement opensilver-border System.Windows.Controls.Border" dataid="BackgroundAnimation" style="opacity: 0; background: rgb(68, 141, 202); pointer-events: auto; left: 0px; top: 0px; width: 68px; height: 21px;"></div><div id="id12" class="opensilver-uielement opensilver-border System.Windows.Controls.Border" dataid="BackgroundGradient" style="background: linear-gradient(540deg, rgb(255, 255, 255) 0%, rgba(255, 255, 255, 0.98) 37.5%, rgba(255, 255, 255, 0.9) 62.5%, rgba(255, 255, 255, 0.78) 100%); pointer-events: auto; left: 0px; top: 0px; width: 68px; height: 21px;"></div></div></div><div id="id13" class="opensilver-uielement System.Windows.Controls.ContentPresenter" dataid="contentPresenter" style="left: 12px; top: 6px; width: 48px; height: 13px;"><div id="id16" class="opensilver-uielement opensilver-textblock System.Windows.Controls.TextBlock" style="pointer-events: auto; left: 0px; top: 0px; width: 48px; height: 13px;"><span id="id17" class="opensilver-inline System.Windows.Documents.Run">Click me</span></div></div><div id="id14" class="opensilver-uielement opensilver-border System.Windows.Controls.Border" dataid="DisabledVisualElement" style="border-radius: 3px; opacity: 0; background: rgb(255, 255, 255); left: 0px; top: 0px; width: 72px; height: 25px;"></div><div id="id15" class="opensilver-uielement opensilver-border System.Windows.Controls.Border" dataid="FocusVisualElement" style="border-radius: 2px; border-color: rgb(109, 189, 209); border-width: 1px; opacity: 0; left: 1px; top: 1px; width: 70px; height: 23px;"></div></div></div><div id="id7" class="opensilver-uielement System.Windows.Controls.Button" tabindex="0" style="left: 0px; top: 77px; width: 43px; height: 25px;"><div id="id18" class="opensilver-uielement opensilver-border System.Windows.Controls.Grid" style="left: 0px; top: 0px; width: 43px; height: 25px;"><div id="id19" class="opensilver-uielement opensilver-border System.Windows.Controls.Border" dataid="Background" style="border-radius: 3px; background: rgb(109, 189, 209); border-width: 1px; border-color: rgb(113, 133, 151); pointer-events: auto; left: 0px; top: 0px; width: 43px; height: 25px;"><div id="id20" class="opensilver-uielement opensilver-border System.Windows.Controls.Grid" style="background: rgb(31, 59, 83); pointer-events: auto; left: 1px; top: 1px; width: 39px; height: 21px;"><div id="id21" class="opensilver-uielement opensilver-border System.Windows.Controls.Border" dataid="BackgroundAnimation" style="opacity: 1; background: rgb(68, 141, 202); pointer-events: auto; left: 0px; top: 0px; width: 39px; height: 21px;"></div><div id="id22" class="opensilver-uielement opensilver-border System.Windows.Controls.Border" dataid="BackgroundGradient" style="background: linear-gradient(540deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.78) 37.5%, rgba(255, 255, 255, 0.55) 62.5%, rgba(255, 255, 255, 0.25) 100%); pointer-events: auto; left: 0px; top: 0px; width: 39px; height: 21px;"></div></div></div><div id="id23" class="opensilver-uielement System.Windows.Controls.ContentPresenter" dataid="contentPresenter" style="left: 12px; top: 6px; width: 19px; height: 13px;"><div id="id26" class="opensilver-uielement opensilver-textblock System.Windows.Controls.TextBlock" style="pointer-events: auto; left: 0px; top: 0px; width: 19px; height: 13px;"><span id="id27" class="opensilver-inline System.Windows.Documents.Run">Fail</span></div></div><div id="id24" class="opensilver-uielement opensilver-border System.Windows.Controls.Border" dataid="DisabledVisualElement" style="border-radius: 3px; opacity: 0; background: rgb(255, 255, 255); left: 0px; top: 0px; width: 43px; height: 25px;"></div><div id="id25" class="opensilver-uielement opensilver-border System.Windows.Controls.Border" dataid="FocusVisualElement" style="border-radius: 2px; border-color: rgb(109, 189, 209); border-width: 1px; opacity: 1; left: 1px; top: 1px; width: 41px; height: 23px;"></div></div></div></div></div></div>
+[xUnit.net 00:00:23.60]           </div>
+[xUnit.net 00:00:23.60]           <div id="app"></div>
+[xUnit.net 00:00:23.60]           <div id="opensilver-root" class="tabstudio-wpf-offscreen opensilver-root-element" tabindex="0" style="display: grid; overflow: clip;"><div id="id1" class="opensilver-window"><div style="position: absolute; visibility: hidden; box-sizing: border-box; white-space: pre; left: -100000px; top: -100000px; text-align: left;"></div></div></div>
+[xUnit.net 00:00:23.60]       
+[xUnit.net 00:00:23.60]           <script>
+[xUnit.net 00:00:23.60]               (function () {
+[xUnit.net 00:00:23.60]                   var script = document.createElement('script');
+[xUnit.net 00:00:23.60]                   script.setAttribute('src', 'libs/opensilver.js');
+[xUnit.net 00:00:23.60]                   script.addEventListener('load', function () {
+[xUnit.net 00:00:23.60]                       var blazor = document.createElement('script');
+[xUnit.net 00:00:23.60]                       blazor.setAttribute('src', '_framework/blazor.webassembly.js');
+[xUnit.net 00:00:23.60]                       document.body.appendChild(blazor);
+[xUnit.net 00:00:23.60]                   });
+[xUnit.net 00:00:23.60]                   document.body.appendChild(script);
+[xUnit.net 00:00:23.60]               })();
+[xUnit.net 00:00:23.60]           </script><script src="libs/opensilver.js"></script>
+[xUnit.net 00:00:23.60]       
+[xUnit.net 00:00:23.60]       
+[xUnit.net 00:00:23.60]       
+[xUnit.net 00:00:23.60]       <script src="_framework/blazor.webassembly.js"></script></body></html>
+[xUnit.net 00:00:23.60]       Stack Trace:
+[xUnit.net 00:00:23.60]         /_/tests/TabStudio.Testing/HeadlessChrome.cs(181,0): at TabStudio.Testing.HeadlessChrome.WaitUntilAsync(String condition, TimeSpan timeout)
+[xUnit.net 00:00:23.60]         /_/tests/TabStudio.Wpf.Tests/WpfBrowserTests.cs(107,0): at TabStudio.Wpf.Tests.WpfBrowserTests.Reports_an_exception_in_a_handler_with_its_stack()
+[xUnit.net 00:00:23.60]         /_/tests/TabStudio.Wpf.Tests/WpfBrowserTests.cs(107,0): at TabStudio.Wpf.Tests.WpfBrowserTests.Reports_an_exception_in_a_handler_with_its_stack()
+[xUnit.net 00:00:23.60]         /_/tests/TabStudio.Wpf.Tests/WpfBrowserTests.cs(107,0): at TabStudio.Wpf.Tests.WpfBrowserTests.Reports_an_exception_in_a_handler_with_its_stack()
+[xUnit.net 00:00:23.60]         --- End of stack trace from previous location ---
+  Failed TabStudio.Wpf.Tests.WpfBrowserTests.Reports_an_exception_in_a_handler_with_its_stack [12 s]
+  Error Message:
+   System.TimeoutException : After 10 s, still not true: document.body.innerText.includes('Clicked 1 time')
+The console:
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://127.0.0.1:36125/favicon.ico
+console.info: Debugging hotkey: Shift+Alt+D (when application has focus)
+console.log: The window is up
+console.error: Unhandled exception in WpfApp1: System.Reflection.TargetInvocationException: Arg_TargetInvocationException
+console.error:  ---> System.InvalidOperationException: Boom
+console.error:    at WpfApp1.MainWindow.Fail_Click(Object sender, RoutedEventArgs e)
+console.error:    at System.Windows.RoutedEventHandlerInfo.InvokeHandler(Object target, RoutedEventArgs routedEventArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RoutedEventHandlerInfo.cs:line 55
+console.error:    at System.Windows.RouteItem.InvokeHandler(RoutedEventArgs routedEventArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RouteItem.cs:line 28
+console.error:    at System.Windows.EventRoute.InvokeHandlers(RoutedEventArgs args) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\EventRoute.cs:line 124
+console.error:    at System.Windows.UIElement.RaiseEventImpl(UIElement sender, RoutedEventArgs args) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 523
+console.error:    at System.Windows.UIElement.RaiseEvent(RoutedEventArgs e) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 374
+console.error:    at System.Windows.Controls.Primitives.ButtonBase.OnClick() in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Controls.Primitives\ButtonBase.cs:line 251
+console.error:    at System.Windows.Controls.Primitives.ButtonBase.OnMouseLeftButtonUp(MouseButtonEventArgs e) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Controls.Primitives\ButtonBase.cs:line 553
+console.error:    at System.Windows.UIElement.OnMouseLeftButtonUpThunk(Object sender, MouseButtonEventArgs e) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 153
+console.error:    at System.Windows.Input.MouseButtonEventArgs.InvokeEventHandler(Delegate genericHandler, Object genericTarget) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Input\MouseButtonEventArgs.cs:line 55
+console.error:    at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RoutedEventArgs.cs:line 255
+console.error:    at System.Windows.RoutedEventHandlerInfo.InvokeHandler(Object target, RoutedEventArgs routedEventArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RoutedEventHandlerInfo.cs:line 60
+console.error:    at System.Windows.RouteItem.InvokeHandler(RoutedEventArgs routedEventArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RouteItem.cs:line 28
+console.error:    at System.Windows.EventRoute.InvokeHandlers(RoutedEventArgs args) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\EventRoute.cs:line 124
+console.error:    at System.Windows.UIElement.ReRaiseEventAs(UIElement uie, RoutedEventArgs args, RoutedEvent newEvent) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 502
+console.error:    at System.Windows.UIElement.CrackMouseButtonEventAndReRaiseEvent(UIElement uie, MouseButtonEventArgs e) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 468
+console.error:    at System.Windows.UIElement.OnMouseUpThunk(Object sender, MouseButtonEventArgs e) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 122
+console.error:    at System.Windows.Input.MouseButtonEventArgs.InvokeEventHandler(Delegate genericHandler, Object genericTarget) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Input\MouseButtonEventArgs.cs:line 55
+console.error:    at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RoutedEventArgs.cs:line 255
+console.error:    at System.Windows.RoutedEventHandlerInfo.InvokeHandler(Object target, RoutedEventArgs routedEventArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RoutedEventHandlerInfo.cs:line 60
+console.error:    at System.Windows.RouteItem.InvokeHandler(RoutedEventArgs routedEventArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RouteItem.cs:line 28
+console.error:    at System.Windows.EventRoute.InvokeHandlers(RoutedEventArgs args) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\EventRoute.cs:line 124
+console.error:    at System.Windows.UIElement.RaiseEventImpl(UIElement sender, RoutedEventArgs args) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 523
+console.error:    at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 406
+console.error:    at System.Windows.Input.InputManager.ProcessMouseUpEvent(UIElement uie, PointerCallbackParameters parameters, MouseButton button) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Input\InputManager.cs:line 962
+console.error:    at System.Windows.Input.InputManager.ProcessOnMouseLeftButtonUp(UIElement uie, PointerCallbackParameters parameters) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Input\InputManager.cs:line 550
+console.error:    at System.Windows.Input.InputManager.DispatchEventPointerEvent(UIElement uie, EVENTS eventType, PointerCallbackParameters parameters) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Input\InputManager.cs:line 380
+console.error:    at System.Windows.Input.InputManager.ProcessPointerInput(String id, Int32 eventId, Object jsEventArg, Boolean isTouchEvent, Double pageX, Double pageY, Int32 keyModifiers) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Input\InputManager.cs:line 335
+console.error:    at System.Object.InvokeStub_InputManager.ProcessPointerInput(Object , Span`1 )
+console.error:    at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+console.error:    Exception_EndOfInnerExceptionStack
+console.error:    at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+console.error:    at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+console.error:    at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+console.error:    at System.Delegate.DynamicInvokeImpl(Object[] args)
+console.error:    at System.MulticastDelegate.DynamicInvokeImpl(Object[] args)
+console.error:    at System.Delegate.DynamicInvoke(Object[] args)
+console.error:    at CSHTML5.Internal.OnCallBackImpl.DelegateDynamicInvoke(Delegate d, Object[] args) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\PublicAPI\Interop\OnCallBackImpl.cs:line 90
+console.error:    at CSHTML5.Internal.OnCallBackImpl.CallMethod(Delegate callback, String idWhereCallbackArgsAreStored, Object callbackArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\PublicAPI\Interop\OnCallBackImpl.cs:line 154
+console.error:    at CSHTML5.Internal.OnCallBackImpl.OnCallbackFromJavaScript(Delegate callback, String idWhereCallbackArgsAreStored, Object callbackArgsObject) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\PublicAPI\Interop\OnCallBackImpl.cs:line 85
+console.error:    at CSHTML5.Internal.JavaScriptCallback.InvokeImpl(String idWhereCallbackArgsAreStored, Object callbackArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\PublicAPI\Interop\JavaScriptCallback.cs:line 96
+console.error:    at CSHTML5.Internal.JavaScriptCallback.InvokeWithExceptionHandling(String idWhereCallbackArgsAreStored, Object callbackArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\PublicAPI\Interop\JavaScriptCallback.cs:line 76
+console.error: Unhandled exception in WpfApp1: System.Reflection.TargetInvocationException: Arg_TargetInvocationException
+console.error:  ---> System.InvalidOperationException: Boom
+console.error:    at WpfApp1.MainWindow.Fail_Click(Object sender, RoutedEventArgs e)
+console.error:    at System.Windows.RoutedEventHandlerInfo.InvokeHandler(Object target, RoutedEventArgs routedEventArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RoutedEventHandlerInfo.cs:line 55
+console.error:    at System.Windows.RouteItem.InvokeHandler(RoutedEventArgs routedEventArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RouteItem.cs:line 28
+console.error:    at System.Windows.EventRoute.InvokeHandlers(RoutedEventArgs args) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\EventRoute.cs:line 124
+console.error:    at System.Windows.UIElement.RaiseEventImpl(UIElement sender, RoutedEventArgs args) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 523
+console.error:    at System.Windows.UIElement.RaiseEvent(RoutedEventArgs e) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 374
+console.error:    at System.Windows.Controls.Primitives.ButtonBase.OnClick() in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Controls.Primitives\ButtonBase.cs:line 251
+console.error:    at System.Windows.Controls.Primitives.ButtonBase.OnMouseLeftButtonUp(MouseButtonEventArgs e) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Controls.Primitives\ButtonBase.cs:line 553
+console.error:    at System.Windows.UIElement.OnMouseLeftButtonUpThunk(Object sender, MouseButtonEventArgs e) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 153
+console.error:    at System.Windows.Input.MouseButtonEventArgs.InvokeEventHandler(Delegate genericHandler, Object genericTarget) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Input\MouseButtonEventArgs.cs:line 55
+console.error:    at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RoutedEventArgs.cs:line 255
+console.error:    at System.Windows.RoutedEventHandlerInfo.InvokeHandler(Object target, RoutedEventArgs routedEventArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RoutedEventHandlerInfo.cs:line 60
+console.error:    at System.Windows.RouteItem.InvokeHandler(RoutedEventArgs routedEventArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RouteItem.cs:line 28
+console.error:    at System.Windows.EventRoute.InvokeHandlers(RoutedEventArgs args) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\EventRoute.cs:line 124
+console.error:    at System.Windows.UIElement.ReRaiseEventAs(UIElement uie, RoutedEventArgs args, RoutedEvent newEvent) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 502
+console.error:    at System.Windows.UIElement.CrackMouseButtonEventAndReRaiseEvent(UIElement uie, MouseButtonEventArgs e) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 468
+console.error:    at System.Windows.UIElement.OnMouseUpThunk(Object sender, MouseButtonEventArgs e) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 122
+console.error:    at System.Windows.Input.MouseButtonEventArgs.InvokeEventHandler(Delegate genericHandler, Object genericTarget) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Input\MouseButtonEventArgs.cs:line 55
+console.error:    at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RoutedEventArgs.cs:line 255
+console.error:    at System.Windows.RoutedEventHandlerInfo.InvokeHandler(Object target, RoutedEventArgs routedEventArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RoutedEventHandlerInfo.cs:line 60
+console.error:    at System.Windows.RouteItem.InvokeHandler(RoutedEventArgs routedEventArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\RouteItem.cs:line 28
+console.error:    at System.Windows.EventRoute.InvokeHandlers(RoutedEventArgs args) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\EventRoute.cs:line 124
+console.error:    at System.Windows.UIElement.RaiseEventImpl(UIElement sender, RoutedEventArgs args) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 523
+console.error:    at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows\UIElement.Events.cs:line 406
+console.error:    at System.Windows.Input.InputManager.ProcessMouseUpEvent(UIElement uie, PointerCallbackParameters parameters, MouseButton button) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Input\InputManager.cs:line 962
+console.error:    at System.Windows.Input.InputManager.ProcessOnMouseLeftButtonUp(UIElement uie, PointerCallbackParameters parameters) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Input\InputManager.cs:line 550
+console.error:    at System.Windows.Input.InputManager.DispatchEventPointerEvent(UIElement uie, EVENTS eventType, PointerCallbackParameters parameters) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Input\InputManager.cs:line 380
+console.error:    at System.Windows.Input.InputManager.ProcessPointerInput(String id, Int32 eventId, Object jsEventArg, Boolean isTouchEvent, Double pageX, Double pageY, Int32 keyModifiers) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\System.Windows.Input\InputManager.cs:line 335
+console.error:    at System.Object.InvokeStub_InputManager.ProcessPointerInput(Object , Span`1 )
+console.error:    at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+console.error:    Exception_EndOfInnerExceptionStack
+console.error:    at System.Reflection.MethodBaseInvoker.InvokeWithManyArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+console.error:    at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+console.error:    at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+console.error:    at System.Delegate.DynamicInvokeImpl(Object[] args)
+console.error:    at System.MulticastDelegate.DynamicInvokeImpl(Object[] args)
+console.error:    at System.Delegate.DynamicInvoke(Object[] args)
+console.error:    at CSHTML5.Internal.OnCallBackImpl.DelegateDynamicInvoke(Delegate d, Object[] args) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\PublicAPI\Interop\OnCallBackImpl.cs:line 90
+console.error:    at CSHTML5.Internal.OnCallBackImpl.CallMethod(Delegate callback, String idWhereCallbackArgsAreStored, Object callbackArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\PublicAPI\Interop\OnCallBackImpl.cs:line 154
+console.error:    at CSHTML5.Internal.OnCallBackImpl.OnCallbackFromJavaScript(Delegate callback, String idWhereCallbackArgsAreStored, Object callbackArgsObject) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\PublicAPI\Interop\OnCallBackImpl.cs:line 85
+console.error:    at CSHTML5.Internal.JavaScriptCallback.InvokeImpl(String idWhereCallbackArgsAreStored, Object callbackArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\PublicAPI\Interop\JavaScriptCallback.cs:line 96
+console.error:    at CSHTML5.Internal.JavaScriptCallback.InvokeWithExceptionHandling(String idWhereCallbackArgsAreStored, Object callbackArgs) in E:\Travail\USERWARE\opensilver\src\Runtime\Runtime\PublicAPI\Interop\JavaScriptCallback.cs:line 76
+The page:
+<html lang="en" style="--blazor-load-percentage: 100%; --blazor-load-percentage-text: &quot;100%&quot;;"><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Greetings</title>
+    <base href="/">
+    <link href="_framework/dotnet.js" rel="preload" as="script" fetchpriority="high" crossorigin="anonymous" integrity="sha256-G4E2g5LMLx5H0CbIwB3qN8oJnqHPDdXVjLvEbLStdz4=">
+    <link rel="stylesheet" href="_tabstudio/wpf.css">
+    <script type="importmap">{ "imports": {} }</script>
+    <script src="_tabstudio/wpf.js"></script>
+<link rel="stylesheet" type="text/css" href="libs/cshtml5.css?date=2026-10-25T14:28:50.688Z"><link rel="stylesheet" type="text/css" href="libs/quill.core.css?date=2026-10-25T14:28:50.688Z"><script type="application/javascript" src="libs/cshtml5.js?date=2026-10-25T14:28:50.688Z"></script><script type="application/javascript" src="libs/quill.min.js?date=2026-10-25T14:28:50.688Z"></script><script type="application/javascript" src="libs/htmlToImage.js?date=2026-10-25T14:28:50.688Z"></script><script type="application/javascript" src="libs/FileSaver.min.js?date=2026-10-25T14:28:50.688Z"></script></head>
 
-Test Run Successful.
-Total tests: 1
-     Passed: 1
- Total time: 6.1030 Seconds
+<body class="opensilver-pointer-captured">
+    <div id="tabstudio-wpf-window" class="tabstudio-wpf-window">
+        <div class="tabstudio-wpf-titlebar">
+            <svg class="tabstudio-wpf-icon" viewBox="0 0 16 16" aria-hidden="true">
+                <rect x="1.5" y="2.5" width="13" height="11" rx="1.5" fill="none" stroke="currentColor"></rect>
+                <path d="M1.5 5.5h13" stroke="currentColor"></path>
+            </svg>
+            <span id="tabstudio-wpf-title" class="tabstudio-wpf-title">Greetings</span>
+            <button id="tabstudio-wpf-close" class="tabstudio-wpf-close" type="button" title="Close WpfApp1" aria-label="Close">
+                <svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1 1l8 8M9 1l-8 8" stroke="currentColor" stroke-width="1.1"></path></svg>
+            </button>
+        </div>
+        <div id="tabstudio-wpf-client" class="tabstudio-wpf-client opensilver-root-element" tabindex="0" style="display: grid; overflow: clip;">
+            <div id="tabstudio-wpf-starting" class="tabstudio-wpf-starting">Starting WpfApp1…</div>
+        <div id="id2" class="opensilver-window"><div style="position: absolute; visibility: hidden; box-sizing: border-box; white-space: pre; left: -100000px; top: -100000px; text-align: left;"></div><div id="id3" class="opensilver-uielement opensilver-border System.Windows.Controls.StackPanel" style="left: 24px; top: 24px; width: 1232px; height: 719px;"><div id="id4" class="opensilver-uielement opensilver-textblock System.Windows.Controls.TextBlock" dataid="Greeting" style="pointer-events: auto; left: 0px; top: 0px; width: 1232px; height: 28px;"><span id="id5" class="opensilver-inline System.Windows.Documents.Run" style="font-size: 24px;">Hello from WPF</span></div><div id="id6" class="opensilver-uielement System.Windows.Controls.Button" style="left: 0px; top: 40px; width: 72px; height: 25px;"><div id="id8" class="opensilver-uielement opensilver-border System.Windows.Controls.Grid" style="left: 0px; top: 0px; width: 72px; height: 25px;"><div id="id9" class="opensilver-uielement opensilver-border System.Windows.Controls.Border" dataid="Background" style="border-radius: 3px; background: rgb(255, 255, 255); border-width: 1px; border-color: rgb(113, 133, 151); pointer-events: auto; left: 0px; top: 0px; width: 72px; height: 25px;"><div id="id10" class="opensilver-uielement opensilver-border System.Windows.Controls.Grid" style="background: rgb(31, 59, 83); pointer-events: auto; left: 1px; top: 1px; width: 68px; height: 21px;"><div id="id11" class="opensilver-uielement opensilver-border System.Windows.Controls.Border" dataid="BackgroundAnimation" style="opacity: 0; background: rgb(68, 141, 202); pointer-events: auto; left: 0px; top: 0px; width: 68px; height: 21px;"></div><div id="id12" class="opensilver-uielement opensilver-border System.Windows.Controls.Border" dataid="BackgroundGradient" style="background: linear-gradient(540deg, rgb(255, 255, 255) 0%, rgba(255, 255, 255, 0.98) 37.5%, rgba(255, 255, 255, 0.9) 62.5%, rgba(255, 255, 255, 0.78) 100%); pointer-events: auto; left: 0px; top: 0px; width: 68px; height: 21px;"></div></div></div><div id="id13" class="opensilver-uielement System.Windows.Controls.ContentPresenter" dataid="contentPresenter" style="left: 12px; top: 6px; width: 48px; height: 13px;"><div id="id16" class="opensilver-uielement opensilver-textblock System.Windows.Controls.TextBlock" style="pointer-events: auto; left: 0px; top: 0px; width: 48px; height: 13px;"><span id="id17" class="opensilver-inline System.Windows.Documents.Run">Click me</span></div></div><div id="id14" class="opensilver-uielement opensilver-border System.Windows.Controls.Border" dataid="DisabledVisualElement" style="border-radius: 3px; opacity: 0; background: rgb(255, 255, 255); left: 0px; top: 0px; width: 72px; height: 25px;"></div><div id="id15" class="opensilver-uielement opensilver-border System.Windows.Controls.Border" dataid="FocusVisualElement" style="border-radius: 2px; border-color: rgb(109, 189, 209); border-width: 1px; opacity: 0; left: 1px; top: 1px; width: 70px; height: 23px;"></div></div></div><div id="id7" class="opensilver-uielement System.Windows.Controls.Button" tabindex="0" style="left: 0px; top: 77px; width: 43px; height: 25px;"><div id="id18" class="opensilver-uielement opensilver-border System.Windows.Controls.Grid" style="left: 0px; top: 0px; width: 43px; height: 25px;"><div id="id19" class="opensilver-uielement opensilver-border System.Windows.Controls.Border" dataid="Background" style="border-radius: 3px; background: rgb(109, 189, 209); border-width: 1px; border-color: rgb(113, 133, 151); pointer-events: auto; left: 0px; top: 0px; width: 43px; height: 25px;"><div id="id20" class="opensilver-uielement opensilver-border System.Windows.Controls.Grid" style="background: rgb(31, 59, 83); pointer-events: auto; left: 1px; top: 1px; width: 39px; height: 21px;"><div id="id21" class="opensilver-uielement opensilver-border System.Windows.Controls.Border" dataid="BackgroundAnimation" style="opacity: 1; background: rgb(68, 141, 202); pointer-events: auto; left: 0px; top: 0px; width: 39px; height: 21px;"></div><div id="id22" class="opensilver-uielement opensilver-border System.Windows.Controls.Border" dataid="BackgroundGradient" style="background: linear-gradient(540deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.78) 37.5%, rgba(255, 255, 255, 0.55) 62.5%, rgba(255, 255, 255, 0.25) 100%); pointer-events: auto; left: 0px; top: 0px; width: 39px; height: 21px;"></div></div></div><div id="id23" class="opensilver-uielement System.Windows.Controls.ContentPresenter" dataid="contentPresenter" style="left: 12px; top: 6px; width: 19px; height: 13px;"><div id="id26" class="opensilver-uielement opensilver-textblock System.Windows.Controls.TextBlock" style="pointer-events: auto; left: 0px; top: 0px; width: 19px; height: 13px;"><span id="id27" class="opensilver-inline System.Windows.Documents.Run">Fail</span></div></div><div id="id24" class="opensilver-uielement opensilver-border System.Windows.Controls.Border" dataid="DisabledVisualElement" style="border-radius: 3px; opacity: 0; background: rgb(255, 255, 255); left: 0px; top: 0px; width: 43px; height: 25px;"></div><div id="id25" class="opensilver-uielement opensilver-border System.Windows.Controls.Border" dataid="FocusVisualElement" style="border-radius: 2px; border-color: rgb(109, 189, 209); border-width: 1px; opacity: 1; left: 1px; top: 1px; width: 41px; height: 23px;"></div></div></div></div></div></div>
+    </div>
+    <div id="app"></div>
+    <div id="opensilver-root" class="tabstudio-wpf-offscreen opensilver-root-element" tabindex="0" style="display: grid; overflow: clip;"><div id="id1" class="opensilver-window"><div style="position: absolute; visibility: hidden; box-sizing: border-box; white-space: pre; left: -100000px; top: -100000px; text-align: left;"></div></div></div>
+
+    <script>
+        (function () {
+            var script = document.createElement('script');
+            script.setAttribute('src', 'libs/opensilver.js');
+            script.addEventListener('load', function () {
+                var blazor = document.createElement('script');
+                blazor.setAttribute('src', '_framework/blazor.webassembly.js');
+                document.body.appendChild(blazor);
+            });
+            document.body.appendChild(script);
+        })();
+    </script><script src="libs/opensilver.js"></script>
+
+
+
+<script src="_framework/blazor.webassembly.js"></script></body></html>
+  Stack Trace:
+     at TabStudio.Testing.HeadlessChrome.WaitUntilAsync(String condition, TimeSpan timeout) in /_/tests/TabStudio.Testing/HeadlessChrome.cs:line 181
+   at TabStudio.Wpf.Tests.WpfBrowserTests.Reports_an_exception_in_a_handler_with_its_stack() in /_/tests/TabStudio.Wpf.Tests/WpfBrowserTests.cs:line 107
+   at TabStudio.Wpf.Tests.WpfBrowserTests.Reports_an_exception_in_a_handler_with_its_stack() in /_/tests/TabStudio.Wpf.Tests/WpfBrowserTests.cs:line 107
+   at TabStudio.Wpf.Tests.WpfBrowserTests.Reports_an_exception_in_a_handler_with_its_stack() in /_/tests/TabStudio.Wpf.Tests/WpfBrowserTests.cs:line 107
+--- End of stack trace from previous location ---
+  Passed TabStudio.Wpf.Tests.WpfBrowserTests.Shows_the_window_full_size_under_its_title_and_handles_clicks [2 s]
+  Passed TabStudio.Wpf.Tests.WpfBrowserTests.Serves_the_app_with_OpenSilver_and_Blazor [217 ms]
+  Passed TabStudio.Wpf.Tests.WpfApiCatalogTests.The_shipped_catalog_is_what_WPF_has_and_OpenSilver_does_not [1 s]
+  Passed TabStudio.Wpf.Tests.BusinessAppTests.The_business_app_builds_on_OpenSilver [477 ms]
+[xUnit.net 00:00:30.90]   Finished:    TabStudio.Wpf.Tests
+  Passed TabStudio.Wpf.Tests.BusinessAppTests.Lists_the_contacts_in_a_data_grid_and_adds_one_with_a_command [3 s]
+
+Test Run Failed.
+Total tests: 18
+     Passed: 17
+     Failed: 1
+ Total time: 31.6974 Seconds
