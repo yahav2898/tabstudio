@@ -48,6 +48,7 @@ public sealed class WindowsFormsAppTests
         Assert.Equal(new System.Drawing.Size(400, 200), form.Client.Size);
         app.Click(new DrawingPoint(form.Client.X + 84, form.Client.Y + 40));
         await UiTestHelpers.WaitUntilAsync(() => app.TextOf("label1") == "Hello from Windows Forms!", because: "the click to change the label");
+        await UiTestHelpers.WaitUntilAsync(() => app.Desktop.Windows[0].Content.Texts.Contains("Hello from Windows Forms!"), because: "the new label on the screen");
         UiTestHelpers.SaveScreenshot(window, "winforms-01-running-app");
 
         // The project builds without warnings, its designer file included.
