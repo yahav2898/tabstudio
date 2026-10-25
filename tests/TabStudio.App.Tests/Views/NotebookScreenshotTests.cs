@@ -7,6 +7,7 @@ using TabStudio.App.ViewModels;
 using TabStudio.App.ViewModels.Notebooks;
 using TabStudio.App.Views;
 using TabStudio.App.Views.Notebooks;
+using TabStudio.Compilation;
 using TabStudio.Notebooks;
 using TabStudio.Notebooks.Formats;
 using TabStudio.Testing;
@@ -67,7 +68,7 @@ public sealed class NotebookScreenshotTests : IDisposable
         await notebook.RunAllAsync();
         await notebook.RunCellAsync(notebook.Cells[4]);
         notebook.SelectedCell = notebook.Cells[2];
-        await UiTestHelpers.WaitUntilAsync(() => notebook.Cells.All(c => !c.IsCode || c.Classifications.Count > 0), because: "syntax colors");
+        await UiTestHelpers.WaitUntilAsync(() => notebook.Cells.All(IsColored), because: "syntax colors");
 
         UiTestHelpers.SaveScreenshot(window, "07-notebook");
 
@@ -98,7 +99,7 @@ public sealed class NotebookScreenshotTests : IDisposable
         var notebook = document!.Notebook!;
 
         await notebook.RunAllAsync();
-        await UiTestHelpers.WaitUntilAsync(() => notebook.Cells.All(c => !c.IsCode || c.Classifications.Count > 0), because: "syntax colors");
+        await UiTestHelpers.WaitUntilAsync(() => notebook.Cells.All(IsColored), because: "syntax colors");
 
         UiTestHelpers.SaveScreenshot(window, "10-notebook-portrait");
 
@@ -125,6 +126,10 @@ public sealed class NotebookScreenshotTests : IDisposable
         _services.Dispose();
         _temp.Dispose();
     }
+
+    /// <summary>Whether a cell shows its syntax colors: C# cells with anything to color have been classified.</summary>
+    private static bool IsColored(NotebookCellViewModel cell) =>
+        !cell.IsCSharp || cell.Classifications.Count > 0 || SyntaxClassifier.Classify(cell.Source.Text).Count == 0;
 
     private MainWindow Show(double width, double height)
     {
