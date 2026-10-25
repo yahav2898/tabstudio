@@ -220,6 +220,7 @@
           <MenuItem Header="T_ools">
             <MenuItem Header="Toolchain _Store" Command="{Binding ShowToolchainStoreCommand}" />
             <MenuItem Header="Install Project _Packages" Command="{Binding InstallProjectPackagesCommand}" />
+            <MenuItem Header="Set Up Projects When They _Open" ToggleType="CheckBox" IsChecked="{Binding SetUpProjectsWhenTheyOpen, Mode=TwoWay}" />
           </MenuItem>
           <MenuItem Header="_Window">
             <MenuItem Header="_Next Document" InputGesture="Ctrl+Tab" Command="{Binding NextDocumentCommand}" />
@@ -783,6 +784,15 @@
           </Button>
           <TextBlock Text="{Binding PackagesText}" VerticalAlignment="Center"
                      IsVisible="{Binding PackagesText, Converter={x:Static ObjectConverters.IsNotNull}}" />
+          <!-- Setting the projects up as they open: what it installs now; tap to cancel. -->
+          <Button Theme="{StaticResource StatusBarButton}" Height="24" Command="{Binding CancelProjectSetupCommand}"
+                  ToolTip.Tip="Setting up the projects as they open. Tap to cancel." IsVisible="{Binding IsSettingUpProjects}">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+              <controls:StrokeIcon Size="13" Data="{StaticResource Icon.Download}" />
+              <TextBlock Text="{Binding ProjectSetupText}" FontSize="12" VerticalAlignment="Center" />
+              <controls:StrokeIcon Size="11" Data="{StaticResource Icon.Close}" Opacity="0.85" />
+            </StackPanel>
+          </Button>
           <StackPanel Orientation="Horizontal" Spacing="5">
             <controls:StrokeIcon Size="13" Data="{StaticResource Icon.Thermometer}" />
             <TextBlock Text="{Binding ThermalText}" VerticalAlignment="Center" />

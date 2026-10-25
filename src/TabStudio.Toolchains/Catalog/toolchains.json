@@ -35,7 +35,8 @@
         "entries": [
           { "file": "__main__.py", "command": [ "{python}", "-u", "__main__.py" ] },
           { "file": "main.py", "command": [ "{python}", "-u", "main.py" ] },
-          { "file": "app.py", "command": [ "{python}", "-u", "app.py" ] }
+          { "file": "app.py", "command": [ "{python}", "-u", "app.py" ] },
+          { "file": "src/*/__main__.py", "command": [ "{python}", "-u", "-m", "{match}" ], "environment": { "PYTHONPATH": "src" } }
         ],
         "environment": { "PYTHONUNBUFFERED": "1", "PYTHONIOENCODING": "utf-8", "PIP_ROOT_USER_ACTION": "ignore" }
       },
@@ -101,7 +102,7 @@
     {
       "id": "node",
       "name": "Node.js",
-      "description": "Node.js with npm, the TypeScript language server for JavaScript and TypeScript, and the JavaScript debugger.",
+      "description": "Node.js with npm, the TypeScript language server for JavaScript and TypeScript, the HTML, CSS and JSON language servers, and the JavaScript debugger.",
       "languages": [ "JavaScript", "TypeScript" ],
       "listed": true,
       "homepage": "https://nodejs.org",
@@ -133,7 +134,13 @@
           "description": "Installs the packages package.json lists into node_modules.",
           "command": [ "npm", "install", "--no-fund", "--no-audit" ],
           "installed": "node_modules",
-          "declares": [ "dependencies", "devDependencies", "optionalDependencies" ]
+          "declares": [ "dependencies", "devDependencies", "optionalDependencies" ],
+          "locked": {
+            "files": [ "package-lock.json", "npm-shrinkwrap.json" ],
+            "name": "npm ci",
+            "description": "Installs the exact packages package-lock.json records into node_modules.",
+            "command": [ "npm", "ci", "--no-fund", "--no-audit" ]
+          }
         }
       ],
       "setup": [
@@ -142,6 +149,12 @@
           "description": "The language server for JavaScript and TypeScript, with TypeScript itself.",
           "command": [ "npm", "install", "--global", "--no-fund", "--no-audit", "typescript-language-server@6.0.2", "typescript@5.9.3" ],
           "removes": [ "/usr/local/lib/node_modules/typescript-language-server", "/usr/local/lib/node_modules/typescript", "/usr/local/bin/typescript-language-server", "/usr/local/bin/tsc", "/usr/local/bin/tsserver" ]
+        },
+        {
+          "name": "HTML, CSS and JSON language servers",
+          "description": "The language servers of VS Code's HTML, CSS and JSON support, from vscode-langservers-extracted.",
+          "command": [ "npm", "install", "--global", "--no-fund", "--no-audit", "vscode-langservers-extracted@4.10.0" ],
+          "removes": [ "/usr/local/lib/node_modules/vscode-langservers-extracted", "/usr/local/bin/vscode-html-language-server", "/usr/local/bin/vscode-css-language-server", "/usr/local/bin/vscode-json-language-server", "/usr/local/bin/vscode-eslint-language-server", "/usr/local/bin/vscode-markdown-language-server" ]
         },
         {
           "name": "JavaScript debugger",
@@ -164,6 +177,11 @@
         }
       ],
       "languageServer": { "id": "typescript-language-server", "command": [ "typescript-language-server", "--stdio" ], "languages": [ "javascript", "typescript", "javascriptreact", "typescriptreact" ] },
+      "additionalLanguageServers": [
+        { "id": "vscode-html-language-server", "command": [ "vscode-html-language-server", "--stdio" ], "languages": [ "html" ] },
+        { "id": "vscode-css-language-server", "command": [ "vscode-css-language-server", "--stdio" ], "languages": [ "css", "scss", "less" ] },
+        { "id": "vscode-json-language-server", "command": [ "vscode-json-language-server", "--stdio" ], "languages": [ "jsonc" ] }
+      ],
       "debugAdapter": {
         "id": "js-debug",
         "command": [ "js-debug-adapter", "{port}", "127.0.0.1" ],

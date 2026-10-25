@@ -47,7 +47,7 @@ jobs:
 
       - name: Install language servers and debug adapters
         run: |
-          npm install -g pyright typescript-language-server typescript@5
+          npm install -g pyright typescript-language-server typescript@5 vscode-langservers-extracted@4.10.0
           python -m pip install debugpy
           echo "TABSTUDIO_REAL_SERVERS=1" >> "$GITHUB_ENV"
           mkdir -p ci-out
@@ -108,7 +108,7 @@ jobs:
 
       - name: Install language servers and debug adapters
         run: |
-          npm install -g pyright typescript-language-server typescript@5
+          npm install -g pyright typescript-language-server typescript@5 vscode-langservers-extracted@4.10.0
           python -m pip install debugpy
           # vscode-js-debug's adapter, under the command name the Toolchain Store gives it on a tablet.
           mkdir -p "$RUNNER_TEMP/js-debug/bin"

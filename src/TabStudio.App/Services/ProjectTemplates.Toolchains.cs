@@ -9,11 +9,15 @@ public sealed partial class ProjectTemplates
     /// <summary>A Node.js console program.</summary>
     public const string NodeId = "node";
 
-    /// <summary>The Python and Node.js templates, for the start screen.</summary>
+    /// <summary>A static web site: an HTML page with a style sheet and a script, served on the tablet.</summary>
+    public const string StaticSiteId = "static-site";
+
+    /// <summary>The Python, Node.js and static web site templates, for the start screen.</summary>
     private static ProjectTemplate[] ToolchainTemplates =>
     [
         new(PythonId, "Python Application", "A Python program that reads input and prints in the Output panel, run with Python from the Toolchain Store.", ["Python", "Console"]),
         new(NodeId, "Node.js Console App", "A JavaScript program for Node.js that reads input and prints in the Output panel, run with Node.js from the Toolchain Store.", ["JavaScript", "Node.js", "Console"]),
+        new(StaticSiteId, "Static Web Site", "An HTML page with a style sheet and a script, served on the tablet and previewed beside the code, reloading as you save.", ["HTML", "CSS", "JavaScript", "Web"]),
     ];
 
     /// <summary>Writes a toolchain project into a new folder, which is the workspace: there is no solution file.</summary>
@@ -79,6 +83,10 @@ public sealed partial class ProjectTemplates
 
                     """);
                 File.WriteAllText(Path.Combine(root, ".gitignore"), "node_modules/\n");
+                return root;
+
+            case StaticSiteId:
+                WriteStaticSite(root, name);
                 return root;
 
             default:

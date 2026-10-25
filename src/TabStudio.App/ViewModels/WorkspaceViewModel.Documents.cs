@@ -247,6 +247,8 @@ public sealed partial class WorkspaceViewModel
             OnDocumentSavedForGenerators(document);
             OnDocumentSavedForLiveTesting(document);
             OnDocumentSavedForLanguageServer(document);
+            OnDocumentSavedForStaticSite(document);
+            OnDocumentSavedForProjectSetup(document);
             await OnProjectFileSavedAsync(document);
             GitChanges.ScheduleRefresh();
             return true;

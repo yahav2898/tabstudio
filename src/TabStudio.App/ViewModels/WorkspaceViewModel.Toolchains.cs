@@ -104,6 +104,8 @@ public sealed partial class WorkspaceViewModel
 
     private void DisposeToolchains()
     {
+        DisposeProjectSetup();
+        DisposeStaticSite();
         DisposeToolchainServers();
         PropertyChanged -= OnToolchainPropertyChanged;
         ToolchainStore.PropertyChanged -= OnToolchainStorePropertyChanged;
@@ -160,6 +162,14 @@ public sealed partial class WorkspaceViewModel
         else
         {
             ToolchainNotice = null;
+        }
+
+        LoadStaticSite(workspace, preferred);
+        if (opening)
+        {
+            // A static web site shows its index.html once the workspace is open.
+            _openToolchainEntry |= StaticSite is not null;
+            StartProjectSetup();
         }
     }
 
@@ -273,7 +283,9 @@ public sealed partial class WorkspaceViewModel
                 if (e.PropertyName == nameof(State) && _openToolchainEntry && State == IdeState.Ready)
                 {
                     _openToolchainEntry = false;
-                    if (!HasDocuments && CurrentToolchainProject() is { } item && EntryFileOf(item.Project) is { } entry)
+                    var entry = StartupProject is { } startup && IsStaticSite(startup) ? startup.FilePath
+                        : CurrentToolchainProject() is { } item ? EntryFileOf(item.Project) : null;
+                    if (!HasDocuments && entry is not null)
                     {
                         _ = OpenDocumentAsync(entry);
                     }
@@ -370,8 +382,7 @@ public sealed partial class WorkspaceViewModel
         var toolchain = project.Toolchain;
         foreach (var rule in toolchain.Run?.Entries ?? [])
         {
-            var file = Path.Combine(project.Directory, rule.File);
-            if (!File.Exists(file))
+            if (RunPlanner.FindEntry(project.Directory, rule.File) is not { FullPath: var file })
             {
                 continue;
             }
@@ -508,6 +519,7 @@ public sealed partial class WorkspaceViewModel
     /// <returns>Whether it is ready.</returns>
     private async Task<bool> EnsureToolchainReadyAsync(ToolchainDefinition toolchain, string reason)
     {
+        await WaitForProjectSetupAsync();
         await _toolchains.EnsureStatusAsync();
         var manager = _toolchains.Manager;
         var status = manager.Status(toolchain.Id);
@@ -623,7 +635,8 @@ public sealed partial class WorkspaceViewModel
 
     private ToolchainNoticeViewModel? NextNotice()
     {
-        if (CurrentToolchainProject() is not { } item)
+        // While the projects are set up by themselves, there is nothing to offer.
+        if (CurrentToolchainProject() is not { } item || !_setupTask.IsCompleted)
         {
             return null;
         }

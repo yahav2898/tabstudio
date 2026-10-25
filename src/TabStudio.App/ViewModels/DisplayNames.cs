@@ -26,6 +26,7 @@ public static class ProjectKindNames
         ProjectKind.BlazorWebApp => "Blazor Web App",
         ProjectKind.Python => "Python",
         ProjectKind.Node => "Node.js",
+        ProjectKind.StaticWebSite => "Static web site",
         _ => "Project",
     };
 }

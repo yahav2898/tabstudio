@@ -28,6 +28,9 @@ public sealed class ToolchainStoreTests : IDisposable
     {
         _toolchains = new ToolchainServices(_device.Manager, _device.Platform, _device.Environment);
         _paths = new AppPaths(_temp.Path);
+
+        // These tests are about the offers, which opening a project makes when it does not set itself up.
+        new ProjectSetupStore(_paths).Save(ProjectSetupSettings.Default with { SetUpProjectsWhenTheyOpen = false });
         _services = AppServices.Create(_paths, services => services.AddSingleton(_toolchains));
         _main = _services.GetRequiredService<MainViewModel>();
     }

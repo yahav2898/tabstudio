@@ -81,6 +81,12 @@ public sealed record ToolchainDefinition
     /// <summary>The debug adapter, for the debugger.</summary>
     public ToolCommandDefinition? DebugAdapter { get; init; }
 
+    /// <summary>
+    /// Other language servers the toolchain brings, for languages beside its own, such as Node.js's servers for
+    /// HTML, CSS and JSON.
+    /// </summary>
+    public IReadOnlyList<ToolCommandDefinition> AdditionalLanguageServers { get; init; } = [];
+
     /// <summary>Patterns that find file locations in the toolchain's output, such as a stack trace's lines.</summary>
     public IReadOnlyList<ProblemPatternDefinition> ProblemPatterns { get; init; } = [];
 
@@ -128,7 +134,11 @@ public sealed record RunDefinition
 /// </summary>
 public sealed record EntryRule
 {
-    /// <summary>The file that must exist, relative to the project folder.</summary>
+    /// <summary>
+    /// The file that must exist, relative to the project folder. One folder of the path may be <c>*</c>, such as
+    /// <c>src/*/__main__.py</c>: the first folder there, in name order, with the file, and its name is the
+    /// <c>{match}</c> placeholder.
+    /// </summary>
     public required string File { get; init; }
 
     /// <summary>
@@ -142,6 +152,12 @@ public sealed record EntryRule
 
     /// <summary>The command that runs the project.</summary>
     public IReadOnlyList<string> Command { get; init; } = [];
+
+    /// <summary>
+    /// Environment variables for this entry's commands, on top of the toolchain's, such as <c>PYTHONPATH=src</c> for
+    /// a package in a <c>src</c> folder, so that it runs before it is installed.
+    /// </summary>
+    public IReadOnlyDictionary<string, string> Environment { get; init; } = new Dictionary<string, string>();
 }
 
 /// <summary>A per-project environment, such as Python's <c>.venv</c>.</summary>
@@ -187,6 +203,28 @@ public sealed record DependencyInstallDefinition
     /// when it has a line that is not blank or a comment.
     /// </summary>
     public IReadOnlyList<string> Declares { get; init; } = [];
+
+    /// <summary>
+    /// How to install the packages when a lock file records their exact versions, such as <c>npm ci</c> for
+    /// <c>package-lock.json</c>; <see langword="null"/> when the manifest is the only record.
+    /// </summary>
+    public LockedInstallDefinition? Locked { get; init; }
+}
+
+/// <summary>How to install the exact packages a lock file records, in place of a manifest's install.</summary>
+public sealed record LockedInstallDefinition
+{
+    /// <summary>The lock files, relative to the project folder; the first one there applies, such as <c>package-lock.json</c>.</summary>
+    public IReadOnlyList<string> Files { get; init; } = [];
+
+    /// <summary>A short name for the action, such as <c>npm ci</c>.</summary>
+    public required string Name { get; init; }
+
+    /// <summary>One sentence about what it does.</summary>
+    public string? Description { get; init; }
+
+    /// <summary>The command, run in the project folder.</summary>
+    public IReadOnlyList<string> Command { get; init; } = [];
 }
 
 /// <summary>A step that runs after a toolchain's packages are installed: a command, or an archive to unpack.</summary>

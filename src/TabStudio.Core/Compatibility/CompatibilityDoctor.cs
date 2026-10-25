@@ -145,6 +145,10 @@ public static class CompatibilityDoctor
                 project, RunHost.Toolchain, CompatibilityStatus.NeedsToolchain, "Node.js toolchain",
                 "Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it."),
 
+            ProjectKind.StaticWebSite => Report(
+                project, RunHost.WebView, CompatibilityStatus.Ready, "Web preview",
+                "Served from the tablet and shown in the web preview beside the code. Saving a file reloads the page, and saved CSS applies without a reload."),
+
             _ => Report(
                 project, RunHost.None, CompatibilityStatus.Unsupported, "Unknown",
                 "TabStudio does not recognize this project type yet."),
