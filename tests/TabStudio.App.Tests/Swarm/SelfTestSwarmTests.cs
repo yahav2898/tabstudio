@@ -7,6 +7,7 @@ using TabStudio.Testing;
 namespace TabStudio.App.Tests.Swarm;
 
 /// <summary>The Swarm part of the self test CI runs on an Android emulator, run here against the same app services.</summary>
+[Collection(SwarmAppFixture.Collection)]
 public sealed class SelfTestSwarmTests : IDisposable
 {
     private readonly TempDirectory _temp = new();

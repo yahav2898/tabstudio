@@ -13,6 +13,7 @@ namespace TabStudio.App.Tests.Swarm;
 /// input taps on both; three taps recorded on one phone become a UI test in a new test project, which compiles and
 /// passes on every screen, with a picture of the screen when it fails.
 /// </summary>
+[Collection(SwarmAppFixture.Collection)]
 public sealed class SwarmRunTests
 {
     private static readonly TimeSpan StartTimeout = TimeSpan.FromMinutes(4);
@@ -30,6 +31,7 @@ public sealed class SwarmRunTests
         await fixture.StartAsync();
         var pixel = await fixture.JoinAsync("Pixel 7");
         var galaxy = await fixture.JoinAsync("Galaxy S24");
+        SwarmAppFixture.Progress("run: joined");
         Assert.True(pixel.Member.IsInSwarm);
         Assert.True(pixel.Page.IsVisible);
         Assert.Equal("Yahav's tablet", pixel.Page.CoordinatorName);
@@ -44,6 +46,7 @@ public sealed class SwarmRunTests
         Assert.Equal("Swarm · 2 devices", workspace.RunHostText);
         await workspace.StartDebuggingCommand.ExecuteAsync(null);
         var run = workspace.SwarmRun;
+        SwarmAppFixture.Progress("run: F5 started");
         await UiTestHelpers.WaitUntilAsync(
             () => (pixel.Texts().Contains("Hello from Avalonia!") && galaxy.Texts().Contains("Hello from Avalonia!")) || run.IsCompleted,
             StartTimeout,
@@ -56,6 +59,7 @@ public sealed class SwarmRunTests
         Assert.Contains("[Galaxy S24] received", workspace.SwarmOutput.Text, StringComparison.Ordinal);
         await UiTestHelpers.WaitUntilAsync(() => fixture.SwarmWindow.Devices.All(d => d.IsRunning), because: "both rows to say Running");
         UiTestHelpers.SaveScreenshot(window, "swarm-01-window-with-devices");
+        SwarmAppFixture.Progress("run: running on both");
         UiTestHelpers.SaveScreenshot(pixel.Window, "swarm-02-device-app-full-screen");
         pixel.Page.ToggleExpandedCommand.Execute(null);
         UiTestHelpers.SaveScreenshot(pixel.Window, "swarm-03-device-overlay");
@@ -73,6 +77,7 @@ public sealed class SwarmRunTests
             "both phones to show the change");
         Assert.True(Shows(galaxy, "Changed on a tablet"), workspace.SwarmOutput.Text);
         Assert.Contains("Updating every device with the saved changes to HelloAvalonia.", workspace.SwarmOutput.Text, StringComparison.Ordinal);
+        SwarmAppFixture.Progress("run: updated by a save");
 
         // Mirrored input: a tap on one phone happens on the other.
         fixture.SwarmWindow.MirrorInput = true;
@@ -86,6 +91,7 @@ public sealed class SwarmRunTests
         Assert.Contains("from Pixel 7 did not arrive here", galaxy.Host.Notice, StringComparison.Ordinal);
         Assert.Contains("could not be delivered to Galaxy S24", fixture.SwarmWindow.Notice, StringComparison.Ordinal);
         fixture.SwarmWindow.MirrorInput = false;
+        SwarmAppFixture.Progress("run: mirrored");
 
         // Record three taps on the Pixel, and a long press that checks what the count shows.
         var recorder = fixture.SwarmWindow.Recorder;
@@ -94,6 +100,7 @@ public sealed class SwarmRunTests
         recorder.TestName = "Counting three taps";
         await recorder.StartCommand.ExecuteAsync(null).WaitAsync(TimeSpan.FromSeconds(60));
         Assert.True(recorder.IsRecording, recorder.Error);
+        SwarmAppFixture.Progress("run: recording");
         await UiTestHelpers.WaitUntilAsync(() => pixel.Texts().Contains("Clicked 0 times"), because: "the app to start again for the recording");
         for (var i = 0; i < 3; i++)
         {
@@ -102,9 +109,11 @@ public sealed class SwarmRunTests
 
         await UiTestHelpers.WaitUntilAsync(() => pixel.Texts().Contains("Clicked 3 times"), because: "three taps");
         pixel.Preview.PersonLongPresses("MainView/StackPanel[0]/TextBlock[2]");
-        await UiTestHelpers.WaitUntilAsync(() => recorder.Steps.Count == 4, because: "three taps and a check");
+        await WaitQuietlyAsync(() => recorder.Steps.Count >= 4 || recorder.Error is not null);
+        Assert.True(recorder.Error is null, recorder.Error);
         Assert.Equal(["Tap CountButton", "Tap CountButton", "Tap CountButton", "Check that MainView/StackPanel[0]/TextBlock[2] shows \"Clicked 3 times\""], recorder.Steps.Select(s => s.Text));
         UiTestHelpers.SaveScreenshot(window, "swarm-04-recorder");
+        SwarmAppFixture.Progress("run: recorded");
 
         // Saving writes the test into a new test project, added to the solution.
         await recorder.SaveCommand.ExecuteAsync(null).WaitAsync(TimeSpan.FromMinutes(2));
@@ -122,12 +131,14 @@ public sealed class SwarmRunTests
         Assert.Contains("app.ShouldShow(\"MainView/StackPanel[0]/TextBlock[2]\", \"Clicked 3 times\");", test, StringComparison.Ordinal);
         Assert.Contains(workspace.Workspace!.Projects, p => p.Name == "HelloAvalonia.UITests" && p.IsTestProject);
         RecordedTestCompilation.AssertCompiles(testsFolder, fixture.Swarm.Coordinator!.CurrentRun!.Build);
+        SwarmAppFixture.Progress("run: saved and compiled");
 
         // In the Test Explorer, the test is a row per phone, and passes on both.
         await UiTestHelpers.WaitUntilAsync(() => ScreenRows(workspace).Count == 2, because: "a row of the test for each phone");
         await workspace.Tests.RunAsync(new TestRunRequest("recorded UI tests", workspace.Tests.ScreenTestSelections())).WaitAsync(TimeSpan.FromMinutes(3));
         Assert.All(ScreenRows(workspace), row => Assert.Equal(TestState.Passed, row.State));
         Assert.Contains(ScreenRows(workspace), row => row.DisplayName.StartsWith("on Galaxy S24", StringComparison.Ordinal));
+        SwarmAppFixture.Progress("run: replayed");
 
         // A check that does not hold fails with a picture of the screen it failed on.
         document = await workspace.OpenDocumentAsync(testFile);
@@ -144,6 +155,7 @@ public sealed class SwarmRunTests
         workspace.Tests.SelectedNode = workspace.Tests.Rows.SelectMany(Flatten).First(n => n.Entry?.Id == failed.Id);
         Assert.True(workspace.Tests.Details?.HasScreenshot);
         UiTestHelpers.SaveScreenshot(window, "swarm-05-recorded-test-failed-on-a-screen");
+        SwarmAppFixture.Progress("run: failure shown");
 
         // The generated project also runs with dotnet test, in CI.
         CopyForDotnetTest(Path.GetDirectoryName(solution)!);
@@ -153,6 +165,17 @@ public sealed class SwarmRunTests
         await UiTestHelpers.WaitUntilAsync(() => pixel.Page.ShowsWaiting && galaxy.Page.ShowsWaiting, because: "both phones to wait for the next app");
         Assert.Contains("HelloAvalonia was stopped on every device.", workspace.SwarmOutput.Text, StringComparison.Ordinal);
         window.Close();
+    }
+
+    /// <summary>Waits for a condition without failing, so the assertion after it shows what happened instead.</summary>
+    private static async Task WaitQuietlyAsync(Func<bool> condition)
+    {
+        var deadline = DateTime.UtcNow + TimeSpan.FromSeconds(30);
+        while (!condition() && DateTime.UtcNow < deadline)
+        {
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            await Task.Delay(25);
+        }
     }
 
     private static bool Shows(SwarmAppDevice device, string text) =>

@@ -19,6 +19,9 @@ namespace TabStudio.App.Tests.Swarm;
 /// </summary>
 internal sealed class SwarmAppFixture : IAsyncDisposable
 {
+    /// <summary>The test collection of the tests that build and run apps on a swarm, which run one at a time.</summary>
+    public const string Collection = "Swarm";
+
     private readonly TempDirectory _temp = new();
     private readonly List<SwarmAppDevice> _devices = [];
 
@@ -53,6 +56,19 @@ internal sealed class SwarmAppFixture : IAsyncDisposable
 
     /// <summary>The Swarm window.</summary>
     public SwarmViewModel SwarmWindow => Workspace.Swarm ?? throw new InvalidOperationException("The workspace has no swarm.");
+
+    /// <summary>
+    /// Notes how far a swarm test got, with the time, in <c>swarm-tests.log</c> beside the screenshots CI publishes, so a
+    /// test that hangs says where.
+    /// </summary>
+    public static void Progress(string step)
+    {
+        if (Environment.GetEnvironmentVariable("TABSTUDIO_SCREENSHOTS") is { Length: > 0 } folder)
+        {
+            Directory.CreateDirectory(folder);
+            File.AppendAllText(Path.Combine(folder, "swarm-tests.log"), string.Create(System.Globalization.CultureInfo.InvariantCulture, $"{DateTime.UtcNow:HH:mm:ss.fff} {step}\n"));
+        }
+    }
 
     /// <summary>Shows the IDE in a tablet-sized window.</summary>
     public Window ShowIde()

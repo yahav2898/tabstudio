@@ -16,6 +16,7 @@ namespace TabStudio.App.Tests.Swarm;
 /// phone that joins by typing the tablet's address and code, the phone waiting full screen for the tablet's app, and
 /// the tablet's Swarm window and status bar with the phone in it.
 /// </summary>
+[Collection(SwarmAppFixture.Collection)]
 public sealed class SwarmScreenshotTests : IDisposable
 {
     private readonly List<IDisposable> _disposables = [];
