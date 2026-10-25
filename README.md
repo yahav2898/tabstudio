@@ -5,7 +5,7 @@
 **A real IDE for Android tablets. Open a `.sln`, press F5, watch it run.**
 
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-![Status: pre-alpha](https://img.shields.io/badge/status-pre--alpha-orange.svg)
+[![CI](https://github.com/yahav2898/tabstudio/actions/workflows/ci.yml/badge.svg)](https://github.com/yahav2898/tabstudio/actions/workflows/ci.yml)
 ![Platform: Android 10+](https://img.shields.io/badge/platform-Android%2010%2B%20·%20arm64-3DDC84.svg)
 ![Built with .NET 10](https://img.shields.io/badge/.NET-10-512BD4.svg)
 
@@ -15,7 +15,7 @@
 
 ---
 
-## The short version
+## At a glance
 
 TabStudio turns an Android tablet into a development machine you would actually choose to use.
 
@@ -77,15 +77,32 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 
 ### An AI pair programmer
 
-- **The agent knows your solution.** It builds, runs the tests and fixes the errors it finds.
+- **Claude, inside the IDE.** The agent sees your whole solution, builds it, runs the tests and fixes the errors it finds, and every change it makes arrives as a diff you approve.
+- **One tap from problem to fix.** When the Compatibility Doctor finds an API that does not run on the tablet, **Fix with Agent** rewrites that code and shows you the result.
 - **Sketch to XAML.** Draw a screen with the stylus and get XAML that runs.
+- **Speaks MCP.** The agent connects to any Model Context Protocol server, so your own tools and services are one setting away.
 
-### Smart contracts and dApps
+### Smart contracts and dApps, with Supra built in
 
-- **Solidity and Move**, with templates for Supra's native oracle, verifiable randomness and automation.
-- **Migration Doctor** for bringing an existing Solidity dApp to SupraEVM, and one-tap testnet deploys.
+TabStudio is the fastest way to go from an idea to a working [Supra](https://supra.com) dApp, on any device.
 
-The order in which all of this lands is in the [roadmap](docs/ROADMAP.md).
+- **Solidity and Move.** Completion and live errors from their language servers, Foundry for building and testing Solidity, and the Move compiler for Supra Move packages.
+- **The Supra panel.** Switch between mainnet, testnet and devnet, create an account and fund it from the faucet in one tap, browse an account's resources, modules and events, watch any oracle price live, and follow your automation tasks.
+- **Templates that work on the first tap.** A price-triggered vault that uses Supra's oracle and automation, a fair raffle on Supra dVRF, a cross-VM payment between SupraEVM and SupraMVM, a SupraFX market maker and a C# on-chain dashboard. Each one opens with its tests passing and deploys to devnet with one tap.
+- **The Supra SDK for .NET.** Accounts, transactions, events, oracle prices, SupraEVM and SupraFX from C#, open source and usable in any .NET app.
+- **Migration Doctor.** Open a Solidity dApp built on Chainlink price feeds, VRF or Automation, and TabStudio shows the Supra equivalent of each call and applies the change in a branch for you to review.
+- **Supra for AI agents.** The agent connects to SupraFX through its MCP server, so you can ask about balances, the order book or prices in plain words. TabStudio also ships an MCP server for *building* on Supra, which works with Claude Code, Cursor and any other MCP client.
+- **Safe by default.** Every template deploys to testnet first, master keys are never requested or stored, trading agents use SupraFX delegate keys with spending caps, and every transaction is shown in full and confirmed by you.
+
+The full design, with links to Supra's documentation, is in [docs/design/web3-supra.md](docs/design/web3-supra.md).
+
+### Built for the device in your hands
+
+- **Thermal-aware builds.** When the tablet runs hot, TabStudio compiles on fewer cores instead of letting Android throttle everything, and the status bar tells you why.
+- **Works offline.** Everything except downloads, Git remotes and the agent runs without a connection.
+- **Git built in.** Clone, branch, commit, pull and push, and open pull requests on GitHub without leaving the IDE.
+
+The order in which all of this ships is in the [roadmap](docs/ROADMAP.md).
 
 ## How it works
 
@@ -109,9 +126,9 @@ flowchart LR
 
 **The shell** is the part you see: a docked, Visual Studio-style layout scaled for touch, with 44-pixel tap targets and a floating action bar for the things you would otherwise reach for with a keyboard.
 
-**The language service** runs [Roslyn](https://github.com/dotnet/roslyn), the real C# compiler, inside the app. That is what makes errors appear as you type, and it is what will power completion and refactoring.
+**The language service** runs [Roslyn](https://github.com/dotnet/roslyn), the real C# compiler, inside the app. It keeps a live model of every project in the solution, which is what makes errors appear as you type and what powers semantic highlighting, completion and refactoring. Other languages get the same features from their own language servers.
 
-**The build engine** turns a project into something runnable. For C#, Roslyn compiles straight to memory against reference assemblies bundled with the app, so the edit-run loop never touches the disk. Larger builds go through MSBuild, and later through native toolchains from the Toolchain Store.
+**The build engine** turns a project into something runnable. TabStudio has its own project system that reads SDK-style project files, `Directory.Build.props`, project references and NuGet packages, which are restored on the device. For C#, Roslyn compiles straight to memory against reference assemblies bundled with the app, so the edit-run loop never touches the disk. Other languages build with native toolchains from the Toolchain Store.
 
 **Run hosts** are where your program actually runs. F5 picks one per project type: console apps run in-process in an isolated load context, web apps run in a WebView next to the editor, and Windows-only apps can go to a PC you own through the optional Windows Bridge.
 
@@ -134,7 +151,7 @@ A keyboard is optional. Everything in TabStudio can be reached by touch, and eve
 ### To build TabStudio from source
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download) with the Android workload: `dotnet workload install android`
-- JDK 17 and the Android SDK (API 35), which the Android workload uses
+- JDK 17 or newer and the Android SDK (API 36), which the Android workload uses
 - Any OS: Windows, macOS or Linux
 
 ## Getting started
@@ -143,7 +160,7 @@ A keyboard is optional. Everything in TabStudio can be reached by touch, and eve
 
 1. Open the [latest release](https://github.com/yahav2898/tabstudio/releases) on the tablet.
 2. Download `TabStudio.apk` and open it. Android will ask you to allow installs from your browser once.
-3. Launch TabStudio, tap **Open sample solution** and press **F5**.
+3. Launch TabStudio, tap **Open the sample** and press **F5**.
 
 ### Build and run from source
 
@@ -175,6 +192,7 @@ src/
 tests/                     Unit tests for every library, plus shared test helpers
 samples/                   The sample solution bundled with the app
 docs/                      Architecture, roadmap and design notes
+build/                     CI scripts
 ```
 
 ## Contributing
