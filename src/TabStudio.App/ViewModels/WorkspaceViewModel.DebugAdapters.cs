@@ -250,7 +250,11 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         DebugAdapterSession session;
         try
         {
-            var options = new DebugAdapterSessionOptions { TraceMessages = _languageServerServices.TraceMessages, SupportsChildSessions = true, SupportsRunInTerminal = true };
+            var options = new DebugAdapterSessionOptions
+            {
+                TraceMessages = _languageServerServices.TraceMessages, SupportsChildSessions = true, SupportsRunInTerminal = true,
+                StartupLog = line => DebugAdapterOutput.WriteLine($"[{adapter.Name}] {line}", OutputKind.Info),
+            };
             session = configuration.DebugServerPort is { } port
                 ? await DebugAdapterSession.ConnectAsync(adapter, port, options)
                 : await DebugAdapterSession.StartAsync(adapter, executable, workspace.RootDirectory, _languageServerServices.Launcher, options);
