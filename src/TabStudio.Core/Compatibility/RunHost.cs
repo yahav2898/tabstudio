@@ -19,6 +19,9 @@ public enum RunHost
 
     /// <summary>Run on the user's own Windows PC and streamed back to the tablet.</summary>
     WindowsBridge,
+
+    /// <summary>Run by a toolchain from the Toolchain Store, such as Python, with its output in the Output panel.</summary>
+    Toolchain,
 }
 
 /// <summary>
@@ -43,4 +46,7 @@ public enum CompatibilityStatus
 
     /// <summary>TabStudio does not know how to run this project.</summary>
     Unsupported,
+
+    /// <summary>Runs on the tablet once its toolchain is installed from the Toolchain Store.</summary>
+    NeedsToolchain,
 }

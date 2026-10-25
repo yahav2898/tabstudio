@@ -22,7 +22,7 @@ namespace TabStudio.Toolchains.Alpine;
 /// network instead.
 /// </para>
 /// </remarks>
-public sealed class AlpinePackageManager
+public sealed class AlpinePackageManager : IDisposable
 {
     /// <summary>The local repository's folder inside the environment.</summary>
     public const string LocalRepository = "/var/cache/tabstudio/repo";
@@ -221,6 +221,9 @@ public sealed class AlpinePackageManager
             Directory.Delete(folder, recursive: true);
         }
     }
+
+    /// <inheritdoc />
+    public void Dispose() => _indexGate.Dispose();
 
     /// <summary>The bytes downloads take: packages waiting to be installed.</summary>
     public long DownloadsSize => DiskSpace.Size(Path.Combine(_environment.Rootfs, LocalRepository.TrimStart('/')));

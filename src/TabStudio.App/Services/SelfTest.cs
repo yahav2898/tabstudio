@@ -38,7 +38,6 @@ public static partial class SelfTest
         var clock = Stopwatch.StartNew();
         try
         {
-            await RunToolchainSpikeAsync();
             var solution = await samples.EnsureExtractedAsync(cancellationToken);
             await main.OpenWorkspaceAsync(solution);
             if (main.Workspace is not { } workspace)
@@ -92,7 +91,8 @@ public static partial class SelfTest
             }
 
             var avalonia = await ShowAvaloniaAppAsync(main, templates, cancellationToken);
-            return new SelfTestResult(avalonia.Success, $"{summary} | {debugged.Message} | {web.Message} | {avalonia.Message}", clock.Elapsed);
+            var toolchains = avalonia.Success ? await RunToolchainsAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Toolchains: not run", TimeSpan.Zero);
+            return new SelfTestResult(avalonia.Success && toolchains.Success, $"{summary} | {debugged.Message} | {web.Message} | {avalonia.Message} | {toolchains.Message}", clock.Elapsed);
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)
         {

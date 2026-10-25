@@ -26,6 +26,7 @@ public sealed partial class OutputView : UserControl
         // document would leave only the empty last line in view.
         Editor.Options.AllowScrollBelowDocument = false;
         Editor.TextArea.Caret.CaretBrush = Avalonia.Media.Brushes.Transparent;
+        Editor.TextArea.TextView.ElementGenerators.Add(new OutputLinkGenerator(() => _viewModel, () => this.FindResource("Brush.Link") as Avalonia.Media.IBrush ?? Avalonia.Media.Brushes.LightSkyBlue));
         Input.KeyDown += OnInputKeyDown;
     }
 

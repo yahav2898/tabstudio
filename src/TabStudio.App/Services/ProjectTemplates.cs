@@ -58,6 +58,7 @@ public sealed partial class ProjectTemplates
         new(AvaloniaId, "Avalonia App", "A cross-platform app with a view and a view model, rendered natively beside the code.", ["C#", "Avalonia", "MVVM"]),
         new(LibraryId, "Class Library", "Reusable code for other projects to reference.", ["C#", "Library"]),
         new(NotebookId, "C# Notebook", "Cells of C# you run one at a time, with results, tables and errors right under each cell, like Polyglot Notebooks.", ["C#", "Notebook"]),
+        .. ToolchainTemplates,
     ];
 
     /// <summary>Checks a project name. Names become namespaces, so they follow C# identifier rules.</summary>
@@ -83,7 +84,7 @@ public sealed partial class ProjectTemplates
     /// <summary>Creates a new solution, or a notebook, from a template.</summary>
     /// <param name="templateId">One of the template identifiers.</param>
     /// <param name="name">The solution and project name. Must pass <see cref="Validate"/>.</param>
-    /// <returns>The path of the new solution file, or of the notebook file for <see cref="NotebookId"/>.</returns>
+    /// <returns>The path of the new solution file, of the notebook file for <see cref="NotebookId"/>, or of the folder for <see cref="PythonId"/> and <see cref="NodeId"/>.</returns>
     /// <exception cref="ArgumentException">The name is invalid or the template is unknown.</exception>
     public string Create(string templateId, string name)
     {
@@ -99,6 +100,11 @@ public sealed partial class ProjectTemplates
             var notebook = Path.Combine(root, name + NotebookFiles.DefaultExtension);
             File.WriteAllText(notebook, NotebookFiles.ContentFor(notebook, title: name));
             return notebook;
+        }
+
+        if (CreateToolchainProject(templateId, root, name) is { } folder)
+        {
+            return folder;
         }
 
         string[] projects = templateId switch

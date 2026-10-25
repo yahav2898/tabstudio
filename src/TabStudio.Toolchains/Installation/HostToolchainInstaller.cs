@@ -31,6 +31,12 @@ public sealed class HostToolchainInstaller : IToolchainInstaller
     public string? Problem => null;
 
     /// <inheritdoc />
+    public bool IsRuntimeReady => true;
+
+    /// <inheritdoc />
+    public Task PrepareRuntimeAsync(IProgress<InstallProgress>? progress, CancellationToken cancellationToken) => Task.CompletedTask;
+
+    /// <inheritdoc />
     public async Task<IReadOnlyList<ToolchainStatus>> ReadStatusAsync(IReadOnlyList<ToolchainDefinition> toolchains, bool checkForUpdates, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(toolchains);

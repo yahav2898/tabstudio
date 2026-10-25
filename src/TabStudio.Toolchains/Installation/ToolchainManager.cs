@@ -66,6 +66,9 @@ public sealed class ToolchainManager : IDisposable
     /// <summary>Why toolchains cannot be installed or run here, or <see langword="null"/>.</summary>
     public string? Problem => _installer.Problem;
 
+    /// <summary>Whether <see cref="Runtime"/> can run programs now: on Android, once the Linux environment is set up.</summary>
+    public bool IsRuntimeReady => _installer.IsRuntimeReady;
+
     /// <summary>The space toolchains take, as of the last refresh.</summary>
     public DiskUsage DiskUsage
     {
@@ -153,6 +156,33 @@ public sealed class ToolchainManager : IDisposable
             ToolchainState.Removing,
             (toolchain, progress) => _installer.RemoveAsync(toolchain, [.. Statuses.Where(s => s.IsReady).Select(s => s.Toolchain)], progress, cancellationToken),
             cancellationToken);
+
+    /// <summary>
+    /// Sets up what <see cref="Runtime"/> needs to run programs, such as the Linux environment the Terminal runs
+    /// in, after any operation in progress; does nothing when it is ready.
+    /// </summary>
+    /// <param name="progress">Receives progress.</param>
+    /// <param name="cancellationToken">Stops the setup; the download continues next time.</param>
+    /// <exception cref="ToolchainInstallException">It failed.</exception>
+    public async Task PrepareRuntimeAsync(IProgress<InstallProgress>? progress = null, CancellationToken cancellationToken = default)
+    {
+        if (IsRuntimeReady)
+        {
+            return;
+        }
+
+        await _operations.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            await _installer.PrepareRuntimeAsync(progress, cancellationToken).ConfigureAwait(false);
+        }
+        finally
+        {
+            _operations.Release();
+        }
+
+        Changed?.Invoke(this, EventArgs.Empty);
+    }
 
     /// <inheritdoc />
     public void Dispose() => _operations.Dispose();

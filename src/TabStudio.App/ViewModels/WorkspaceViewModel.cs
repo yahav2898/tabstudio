@@ -34,6 +34,9 @@ public enum BottomPanel
 
     /// <summary>The paused program's call stack.</summary>
     CallStack,
+
+    /// <summary>The Terminal: a shell in the workspace folder.</summary>
+    Terminal,
 }
 
 /// <summary>What the IDE is doing, for the status bar.</summary>
@@ -93,7 +96,8 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     /// <param name="webViews">Creates the web preview's embedded browser; none when <see langword="null"/>.</param>
     /// <param name="notifications">The system's notifications, for finished CI runs; none when <see langword="null"/>.</param>
     /// <param name="appActivity">Whether the app is in the background, so CI polling rests; Avalonia's lifetime when <see langword="null"/>.</param>
-    public WorkspaceViewModel(CompilerServices compiler, IDeviceStatus device, DeviceProfile profile, IUiDispatcher ui, SessionStore sessions, AppPaths paths, GitHubAccountViewModel? gitHubAccount = null, IStoragePicker? browser = null, IWebViewFactory? webViews = null, INotifications? notifications = null, IAppActivity? appActivity = null)
+    /// <param name="toolchains">The device's toolchains; the computer's own, found on its PATH, when <see langword="null"/>.</param>
+    public WorkspaceViewModel(CompilerServices compiler, IDeviceStatus device, DeviceProfile profile, IUiDispatcher ui, SessionStore sessions, AppPaths paths, GitHubAccountViewModel? gitHubAccount = null, IStoragePicker? browser = null, IWebViewFactory? webViews = null, INotifications? notifications = null, IAppActivity? appActivity = null, Services.Toolchains.ToolchainServices? toolchains = null)
     {
         ArgumentNullException.ThrowIfNull(compiler);
         ArgumentNullException.ThrowIfNull(device);
@@ -124,6 +128,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         InitializeAgent();
         Documents.CollectionChanged += (_, _) => UpdateActiveProjects();
         InitializeActions(browser, notifications, appActivity);
+        InitializeToolchains(toolchains);
     }
 
     /// <summary>Raised when the user closes the workspace to return to the start screen.</summary>
@@ -263,6 +268,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         }
 
         LoadStartupProjects(preview.Workspace, session?.StartupProject);
+        await LoadToolchainProjectsAsync(preview.Workspace, session?.StartupProject);
 
         StatusText = "Loading C#";
         var host = await _compiler.CreateHostAsync();
@@ -367,6 +373,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         _language?.Dispose();
         _language = null;
         DisposeActions();
+        DisposeToolchains();
         GitChanges.Dispose();
     }
 

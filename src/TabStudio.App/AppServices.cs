@@ -48,6 +48,7 @@ public static class AppServices
         services.TryAddSingleton<GitHubAccount>();
         services.AddSingleton<GitHubAccountViewModel>();
         services.AddSingleton<GitHubImporter>();
+        services.AddSingleton(provider => new Services.Toolchains.ToolchainServices(provider.GetRequiredService<AppPaths>(), provider.GetService<TabStudio.Toolchains.Linux.ToolchainPlatform>()));
 
         // View models.
         services.AddSingleton<StartViewModel>();

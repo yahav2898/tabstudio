@@ -108,6 +108,7 @@ public sealed class MainActivity : AvaloniaMainActivity<TabStudioApplication>
                 services.AddSingleton<IDeviceStatus>(_ => new AndroidDeviceStatus(context));
                 services.AddSingleton<IWebViewFactory>(_ => new AndroidWebViewFactory(() => this));
                 services.AddSingleton<INotifications>(notifications);
+                services.AddSingleton(AndroidToolchainPlatform.Create(context));
             });
     }
 

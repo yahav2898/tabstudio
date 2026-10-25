@@ -59,6 +59,24 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
     public AlpineEnvironment Environment => _environment;
 
     /// <inheritdoc />
+    public bool IsRuntimeReady => Problem is null && _environment.IsSetUp;
+
+    /// <inheritdoc />
+    public async Task PrepareRuntimeAsync(IProgress<InstallProgress>? progress, CancellationToken cancellationToken)
+    {
+        var firstSetup = !_environment.IsSetUp;
+        await _environment.SetUpAsync(progress, cancellationToken).ConfigureAwait(false);
+        var records = InstalledToolchains.Load(_recordsFile);
+        if (firstSetup || records.BasePackages.Count == 0)
+        {
+            // What the environment has before any toolchain: the base, which no toolchain's size counts.
+            records.BasePackages.Clear();
+            records.BasePackages.AddRange(_packages.Installed.Packages.Select(p => p.Name));
+            records.Save(_recordsFile);
+        }
+    }
+
+    /// <inheritdoc />
     public async Task<IReadOnlyList<ToolchainStatus>> ReadStatusAsync(IReadOnlyList<ToolchainDefinition> toolchains, bool checkForUpdates, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(toolchains);
@@ -106,15 +124,7 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
     {
         ArgumentNullException.ThrowIfNull(toolchain);
         progress?.Report(new InstallProgress(InstallStage.Preparing, $"Preparing to install {toolchain.Name}", 0));
-        var firstSetup = !_environment.IsSetUp;
-        await _environment.SetUpAsync(new InlineProgress<InstallProgress>(p => progress?.Report(p with { Fraction = p.Fraction * 0.1 })), cancellationToken).ConfigureAwait(false);
-        var records = InstalledToolchains.Load(_recordsFile);
-        if (firstSetup || records.BasePackages.Count == 0)
-        {
-            records.BasePackages.Clear();
-            records.BasePackages.AddRange(_packages.Installed.Packages.Select(p => p.Name));
-            records.Save(_recordsFile);
-        }
+        await PrepareRuntimeAsync(new InlineProgress<InstallProgress>(p => progress?.Report(p with { Fraction = p.Fraction * 0.1 })), cancellationToken).ConfigureAwait(false);
 
         progress?.Report(new InstallProgress(InstallStage.Resolving, $"Reading the {_environment.Distribution.Name} package index", 0.1));
         var plan = await PlanAsync(() => _packages.PlanInstallAsync(toolchain.Packages, cancellationToken), toolchain).ConfigureAwait(false);
@@ -126,7 +136,7 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
         await InstallPackagesAsync(toolchain, upgrade: false, progress, cancellationToken).ConfigureAwait(false);
         var setup = await RunSetupAsync(toolchain, toolchain.Setup, progress, cancellationToken).ConfigureAwait(false);
 
-        records = InstalledToolchains.Load(_recordsFile);
+        var records = InstalledToolchains.Load(_recordsFile);
         records.Toolchains[toolchain.Id] = new InstalledToolchain
         {
             Version = VersionOf(toolchain, _packages.Installed),

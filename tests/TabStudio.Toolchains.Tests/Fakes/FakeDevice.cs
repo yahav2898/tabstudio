@@ -109,6 +109,7 @@ internal sealed class FakeDevice : IDisposable
     public void Dispose()
     {
         Manager.Dispose();
+        Packages.Dispose();
         _http.Dispose();
         Mirror.Dispose();
         _temp.Dispose();

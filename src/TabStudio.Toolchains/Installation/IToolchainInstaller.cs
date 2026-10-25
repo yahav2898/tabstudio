@@ -19,6 +19,18 @@ public interface IToolchainInstaller
     /// <summary>Why toolchains cannot be installed or run here, or <see langword="null"/>.</summary>
     string? Problem { get; }
 
+    /// <summary>Whether <see cref="Runtime"/> can run programs now: on Android, once the Linux environment is set up.</summary>
+    bool IsRuntimeReady { get; }
+
+    /// <summary>
+    /// Sets up what <see cref="Runtime"/> needs to run programs, such as the Linux environment for the Terminal;
+    /// does nothing when it is ready. Installing a toolchain does this too.
+    /// </summary>
+    /// <param name="progress">Receives progress.</param>
+    /// <param name="cancellationToken">Stops the setup; the download continues next time.</param>
+    /// <exception cref="ToolchainInstallException">It failed.</exception>
+    Task PrepareRuntimeAsync(IProgress<InstallProgress>? progress, CancellationToken cancellationToken);
+
     /// <summary>Reads every toolchain's state.</summary>
     /// <param name="toolchains">The toolchains.</param>
     /// <param name="checkForUpdates">Whether to ask the mirror for newer versions, which needs the network.</param>

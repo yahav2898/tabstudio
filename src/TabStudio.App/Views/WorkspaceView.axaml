@@ -4,6 +4,7 @@
              xmlns:conv="using:TabStudio.App.Converters"
              xmlns:views="using:TabStudio.App.Views"
              xmlns:actionViews="using:TabStudio.App.Views.Actions"
+             xmlns:toolchainViews="using:TabStudio.App.Views.Toolchains"
              xmlns:vm="using:TabStudio.App.ViewModels"
              xmlns:sys="using:System"
              x:Class="TabStudio.App.Views.WorkspaceView"
@@ -36,6 +37,7 @@
     <KeyBinding Gesture="Alt+Left" Command="{Binding NavigateBackCommand}" />
     <KeyBinding Gesture="Alt+Right" Command="{Binding NavigateForwardCommand}" />
     <KeyBinding Gesture="Ctrl+Alt+L" Command="{Binding ToggleSideBarCommand}" />
+    <KeyBinding Gesture="Ctrl+OemTilde" Command="{Binding ShowTerminalCommand}" />
   </UserControl.KeyBindings>
 
   <Grid RowDefinitions="40,46,*,28">
@@ -92,6 +94,7 @@
                       IsEnabled="{Binding AppPreview.HasApp}" />
             <MenuItem Header="_Error List" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" />
             <MenuItem Header="_Output" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Output}" />
+            <MenuItem Header="Ter_minal (Ctrl+`)" Command="{Binding ShowTerminalCommand}" />
             <MenuItem Header="_Compatibility Doctor" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Compatibility}" />
             <MenuItem Header="Re_ferences" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.References}" />
             <MenuItem Header="_Bottom Panel" Command="{Binding ToggleBottomPanelCommand}" />
@@ -139,6 +142,7 @@
             <Separator />
             <MenuItem Header="{Binding StartDebuggingMenuHeader}" InputGesture="F5" Command="{Binding StartDebuggingCommand}" />
             <MenuItem Header="Start Wit_hout Debugging" InputGesture="Ctrl+F5" Command="{Binding RunCommand}" />
+            <MenuItem Header="Run C_urrent File" Command="{Binding RunCurrentFileCommand}" />
             <MenuItem Header="Brea_k All (Ctrl+Alt+Break)" Command="{Binding BreakAllCommand}" />
             <MenuItem Header="Stop D_ebugging" InputGesture="Shift+F5" Command="{Binding StopDebuggingCommand}" />
             <MenuItem Header="_Restart" InputGesture="Ctrl+Shift+F5" Command="{Binding RestartCommand}" />
@@ -161,6 +165,10 @@
             <MenuItem Header="_Cancel Test Run" Command="{Binding Tests.CancelCommand}" />
             <Separator />
             <MenuItem Header="Test E_xplorer (Ctrl+E, T)" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}" />
+          </MenuItem>
+          <MenuItem Header="T_ools">
+            <MenuItem Header="Toolchain _Store" Command="{Binding ShowToolchainStoreCommand}" />
+            <MenuItem Header="Install Project _Packages" Command="{Binding InstallProjectPackagesCommand}" />
           </MenuItem>
           <MenuItem Header="_Window">
             <MenuItem Header="_Next Document" InputGesture="Ctrl+Tab" Command="{Binding NextDocumentCommand}" />
@@ -514,10 +522,16 @@
                         Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Watch}" Content="Watch" />
                 <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsCallStackSelected}" IsVisible="{Binding ShowsDebugPanels}"
                         Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.CallStack}" Content="Call Stack" />
+                <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsTerminalSelected}"
+                        Command="{Binding ShowTerminalCommand}" Content="Terminal" />
               </StackPanel>
               <StackPanel Grid.Column="1" Orientation="Horizontal">
                 <Button Theme="{StaticResource ToolButton}" MinHeight="30" Height="30" FontSize="12.5" Content="Clear"
                         Command="{Binding Output.ClearCommand}" IsVisible="{Binding IsOutputSelected}" />
+                <Button Theme="{StaticResource ToolButton}" MinHeight="30" Height="30" FontSize="12.5" Content="Clear"
+                        Command="{Binding Terminal.ClearCommand}" IsVisible="{Binding IsTerminalSelected}" />
+                <Button Theme="{StaticResource ToolButton}" MinHeight="30" Height="30" FontSize="12.5" Content="Restart"
+                        Command="{Binding Terminal.RestartCommand}" IsVisible="{Binding IsTerminalSelected}" />
                 <Button Theme="{StaticResource ToolButton}" Width="30" Height="30" MinWidth="30" MinHeight="30" Padding="0"
                         ToolTip.Tip="Hide" Command="{Binding ToggleBottomPanelCommand}">
                   <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="14" />
@@ -539,6 +553,7 @@
               <views:LocalsView DataContext="{Binding Locals}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsLocalsSelected}" />
               <views:WatchView DataContext="{Binding Watch}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsWatchSelected}" />
               <views:CallStackView DataContext="{Binding CallStack}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsCallStackSelected}" />
+              <toolchainViews:TerminalPanelView DataContext="{Binding Terminal}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsTerminalSelected}" />
             </Panel>
           </DockPanel>
         </Border>
@@ -696,6 +711,9 @@
 
     <!-- GitHub Actions' dialog: Run workflow. -->
     <actionViews:ActionsDialogsView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding Actions}" />
+
+    <!-- The Toolchain Store, and offers to install a project's toolchain or packages. -->
+    <toolchainViews:ToolchainOverlaysView Grid.Row="0" Grid.RowSpan="4" />
 
     <!-- The in-app dialog that asks for names and confirmations. -->
     <Panel Grid.Row="0" Grid.RowSpan="4" Background="#99000000" IsVisible="{Binding Prompt.IsOpen}">

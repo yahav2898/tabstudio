@@ -354,6 +354,13 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
             return;
         }
 
+        // Python and Node.js run with their toolchain; their debug adapters attach here once connected.
+        if (IsToolchainProject(project))
+        {
+            await RunToolchainProjectAsync(project);
+            return;
+        }
+
         var cursorFile = ActiveDocument?.FilePath;
         var cursorLine = ActiveDocument?.CaretLine ?? 1;
 
