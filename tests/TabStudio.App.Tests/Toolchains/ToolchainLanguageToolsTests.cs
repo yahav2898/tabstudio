@@ -175,8 +175,23 @@ public sealed class ToolchainLanguageToolsTests : IDisposable
             if (Environment.GetEnvironmentVariable("TABSTUDIO_SCREENSHOTS") is { Length: > 0 } folder)
             {
                 Directory.CreateDirectory(folder);
-                File.WriteAllText(Path.Combine(folder, name + ".txt"), $"== Output\n{workspace.Output.Text}\n== Debug Adapters\n{workspace.DebugAdapterOutput.Text}");
+                File.WriteAllText(Path.Combine(folder, name + ".txt"), $"== Output\n{workspace.Output.Text}\n== Debug Adapters\n{workspace.DebugAdapterOutput.Text}\n== Processes\n{Processes()}");
             }
+        }
+    }
+
+    private static string Processes()
+    {
+        try
+        {
+            using var ps = System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("ps", ["-eo", "pid,ppid,pgid,stat,etime,args", "--forest"]) { RedirectStandardOutput = true })!;
+            var text = ps.StandardOutput.ReadToEnd();
+            ps.WaitForExit();
+            return text;
+        }
+        catch (System.ComponentModel.Win32Exception ex)
+        {
+            return ex.Message;
         }
     }
 

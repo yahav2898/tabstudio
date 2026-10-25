@@ -406,16 +406,19 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         session.Continued += (_, _) => _ui.Post(() => ShowAdapterRunning(session));
         session.OutputReceived += (_, e) =>
         {
-            // A program in the Output panel's console writes there itself; the adapter's copies would repeat it.
-            if (!IsProgramInConsole || e.Category is not ("stdout" or "stderr"))
+            // A program in the Output panel's console writes there itself; the adapter's copies go to its own log.
+            if (IsProgramInConsole && e.Category is "stdout" or "stderr")
             {
-                Output.Write(e.Output, e.Category switch
-                {
-                    "stderr" => OutputKind.Error,
-                    "console" or "important" => OutputKind.Info,
-                    _ => OutputKind.Program,
-                });
+                DebugAdapterOutput.Write($"[{session.Adapter.Name}] ({e.Category}) {e.Output}", OutputKind.Info);
+                return;
             }
+
+            Output.Write(e.Output, e.Category switch
+            {
+                "stderr" => OutputKind.Error,
+                "console" or "important" => OutputKind.Info,
+                _ => OutputKind.Program,
+            });
         };
         session.BreakpointChanged += (_, e) => _ui.Post(() => OnAdapterBreakpointChanged(e));
         session.AdapterLog += (_, line) => DebugAdapterOutput.WriteLine($"[{session.Adapter.Name}] {line}", OutputKind.Info);
