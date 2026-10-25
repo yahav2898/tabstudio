@@ -35,4 +35,10 @@ public sealed record TestRunOptions
     /// cannot exhaust the device's memory.
     /// </summary>
     public int MaxOutputLength { get; init; } = 256 * 1024;
+
+    /// <summary>
+    /// Code to run on the test threads around each test and each class's setup and cleanup, or
+    /// <see langword="null"/> for none. Live Unit Testing collects coverage this way.
+    /// </summary>
+    public ITestThreadHook? ThreadHook { get; init; }
 }

@@ -129,11 +129,12 @@ internal sealed class TestExecutor
         var lifecycle = first.Adapter.CreateLifecycle(testClass, scope);
 
         var runnable = tests.Where(t => t.Case.SkipReason is null && t.DiscoveryError is null).ToList();
+        var cases = runnable.Select(t => t.Case).ToList();
         StageFailure? setUpFailure = null;
         var setUpRan = false;
         if (runnable.Count > 0)
         {
-            var setUp = await TestThread.RunAsync(lifecycle.SetUpClass, $"TabStudio: {className} setup", _options.StackSize, null, _options.DefaultTimeout, cancellationToken).ConfigureAwait(false);
+            var setUp = await TestThread.RunAsync(() => InClassStage(cases, lifecycle.SetUpClass), $"TabStudio: {className} setup", _options.StackSize, null, _options.DefaultTimeout, cancellationToken).ConfigureAwait(false);
             setUpRan = true;
             setUpFailure = setUp.Status switch
             {
@@ -173,7 +174,7 @@ internal sealed class TestExecutor
 
         if (setUpRan)
         {
-            var tearDown = await TestThread.RunAsync(lifecycle.TearDownClass, $"TabStudio: {className} cleanup", _options.StackSize, null, _options.DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
+            var tearDown = await TestThread.RunAsync(() => InClassStage(cases, lifecycle.TearDownClass), $"TabStudio: {className} cleanup", _options.StackSize, null, _options.DefaultTimeout, CancellationToken.None).ConfigureAwait(false);
             var failure = tearDown.Status switch
             {
                 ThreadRunStatus.Completed => tearDown.Value,
@@ -198,7 +199,7 @@ internal sealed class TestExecutor
         var sink = new TestOutputSink(_options.MaxOutputLength);
         var timeout = test.Case.Timeout ?? _options.DefaultTimeout;
         var stopwatch = Stopwatch.StartNew();
-        var run = await TestThread.RunAsync(() => lifecycle.RunTest(test, sink), $"TabStudio: {test.Case.DisplayName}", _options.StackSize, sink, timeout, cancellationToken).ConfigureAwait(false);
+        var run = await TestThread.RunAsync(() => InTest(test.Case, () => lifecycle.RunTest(test, sink)), $"TabStudio: {test.Case.DisplayName}", _options.StackSize, sink, timeout, cancellationToken).ConfigureAwait(false);
         stopwatch.Stop();
 
         var outcome = run.Status switch
@@ -210,6 +211,20 @@ internal sealed class TestExecutor
         };
 
         Report(results, test.Case, outcome, stopwatch.Elapsed, sink.Close(), announce: false);
+    }
+
+    /// <summary>Runs a test on its thread inside the run's <see cref="TestRunOptions.ThreadHook"/>, if any.</summary>
+    private T InTest<T>(TestCase test, Func<T> work)
+    {
+        using var scope = _options.ThreadHook?.EnterTest(test);
+        return work();
+    }
+
+    /// <summary>Runs a class's setup or cleanup on its thread inside the run's <see cref="TestRunOptions.ThreadHook"/>, if any.</summary>
+    private T InClassStage<T>(IReadOnlyList<TestCase> tests, Func<T> work)
+    {
+        using var scope = _options.ThreadHook?.EnterClassStage(tests);
+        return work();
     }
 
     private static TestStepOutcome Faulted(Exception exception)

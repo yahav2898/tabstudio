@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>TabStudio.LiveTesting</RootNamespace>
+    <Description>Live Unit Testing: coverage from TabStudio's own instrumentation, attributed to each test, and the impacted tests run again as the code changes.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TabStudio.Core\TabStudio.Core.csproj" />
+    <ProjectReference Include="..\TabStudio.Compilation\TabStudio.Compilation.csproj" />
+    <ProjectReference Include="..\TabStudio.Debugging\TabStudio.Debugging.csproj" />
+    <ProjectReference Include="..\TabStudio.TestRunner\TabStudio.TestRunner.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="TabStudio.LiveTesting.Tests" />
+  </ItemGroup>
+
+</Project>
