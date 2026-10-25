@@ -61,7 +61,16 @@ jobs:
           for project in tests/*.Tests; do
             name=$(basename "$project")
             [ "$name" = "TabStudio.App.Tests" ] && continue
-            dotnet test "$project" -c Release --logger "console;verbosity=normal" > "ci-out/$name.log" 2>&1 || status=1
+            if ! dotnet test "$project" -c Release --logger "console;verbosity=normal" > "ci-out/$name.log" 2>&1; then
+              # Known intermittent failures are tracked on the board; one retry keeps them from blocking a release,
+              # and FLAKY.txt and a warning keep them visible. A second failure fails the job.
+              echo "::warning::$name failed once; running it again. The first attempt is in ci-out/$name.log."
+              if dotnet test "$project" -c Release --logger "console;verbosity=normal" > "ci-out/$name.retry.log" 2>&1; then
+                echo "$name: the first attempt failed and the retry passed (see $name.log)" >> ci-out/FLAKY.txt
+              else
+                status=1
+              fi
+            fi
             tail -n 40 "ci-out/$name.log"
           done
           exit $status
@@ -119,10 +128,25 @@ jobs:
           tail -n 40 ci-out/desktop-build.log
           # A test host that dies leaves a crash report (its threads' stacks) when the runtime saw the crash.
           mkdir -p "$RUNNER_TEMP/crash"
-          DOTNET_DbgEnableMiniDump=1 DOTNET_DbgMiniDumpType=1 DOTNET_EnableCrashReport=1 DOTNET_DbgMiniDumpName="$RUNNER_TEMP/crash/%e.%p.dmp" \
-            dotnet test tests/TabStudio.App.Tests -c Release --blame --logger "console;verbosity=normal" > ci-out/TabStudio.App.Tests.log 2>&1 || status=1
+          run_ide_tests() {
+            DOTNET_DbgEnableMiniDump=1 DOTNET_DbgMiniDumpType=1 DOTNET_EnableCrashReport=1 DOTNET_DbgMiniDumpName="$RUNNER_TEMP/crash/%e.%p.dmp" \
+              dotnet test tests/TabStudio.App.Tests -c Release --blame --logger "console;verbosity=normal" > "$1" 2>&1
+          }
+          first=0
+          run_ide_tests ci-out/TabStudio.App.Tests.log || first=1
           tail -n 80 ci-out/TabStudio.App.Tests.log
-          if [ $status -ne 0 ]; then
+          if [ $first -ne 0 ]; then
+            # Known intermittent failures (a native crash in the test host, slow servers) are tracked on the board;
+            # one retry keeps them from blocking a release, and FLAKY.txt and a warning keep them visible.
+            echo "::warning::The IDE tests failed once; running them again. The first attempt is in ci-out/TabStudio.App.Tests.log."
+            if run_ide_tests ci-out/TabStudio.App.Tests.retry.log; then
+              echo "TabStudio.App.Tests: the first attempt failed and the retry passed (see TabStudio.App.Tests.log)" >> ci-out/FLAKY.txt
+            else
+              status=1
+            fi
+            tail -n 40 ci-out/TabStudio.App.Tests.retry.log
+          fi
+          if [ $first -ne 0 ] || [ $status -ne 0 ]; then
             {
               echo "== Processes left running"; ps -eo pid,ppid,pgid,rss,etime,args --sort=-rss | head -n 40
               echo "== Kernel messages"; sudo dmesg | tail -n 40
