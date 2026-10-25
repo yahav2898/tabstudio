@@ -71,7 +71,7 @@ internal static class LinkTransportProbe
                     RemoteCertificateValidationCallback = (_, certificate, _, _) =>
                     {
                         serverSaw = certificate is null ? "no client certificate" : "client certificate";
-                        return true;
+                        return !clientCertificate || certificate is not null;
                     },
                 });
                 var buffer = new byte[5];
@@ -148,15 +148,17 @@ internal static class LinkTransportProbe
         var hashed2 = bob.DeriveKeyFromHash(alice.PublicKey, HashAlgorithmName.SHA256);
         results.Add($"hashAgreement={hashed1.AsSpan().SequenceEqual(hashed2)}");
 
-        var key = HKDF.DeriveKey(HashAlgorithmName.SHA256, hashed1, 32, salt: [1, 2, 3], info: "probe"u8.ToArray());
+        byte[] salt = [1, 2, 3];
+        var key = HKDF.DeriveKey(HashAlgorithmName.SHA256, hashed1, 32, salt, "probe"u8.ToArray());
         using var gcm = new AesGcm(key, 16);
         var nonce = new byte[12];
         var plain = "hello"u8.ToArray();
         var cipher = new byte[plain.Length];
         var tag = new byte[16];
-        gcm.Encrypt(nonce, plain, cipher, tag, associatedData: [7]);
+        byte[] associated = [7];
+        gcm.Encrypt(nonce, plain, cipher, tag, associated);
         var back = new byte[plain.Length];
-        gcm.Decrypt(nonce, cipher, tag, back, associatedData: [7]);
+        gcm.Decrypt(nonce, cipher, tag, back, associated);
         results.Add($"aesgcm={back.AsSpan().SequenceEqual(plain)}");
 
         using var signer = ECDsa.Create(ECCurve.NamedCurves.nistP256);
