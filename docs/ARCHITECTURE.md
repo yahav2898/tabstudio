@@ -244,6 +244,8 @@ serves a .NET WebAssembly browser host in the web preview. The window attaches b
 saving rebuilds and reloads the page, and the host forwards console output, uncaught exceptions and window closure.
 An unhandled input exception releases stranded mouse capture so later clicks still reach the app.
 Android installs a `WebChromeClient`, so OpenSilver's `MessageBox` alert/confirm calls show the native browser dialogs.
+The .NET 10 preview needs an up-to-date Android System WebView. CI uses Android 15 (API 35) to exercise the
+rendered WPF page; the API 29 image's Chrome 74 cannot run this browser runtime.
 
 `Wpf/Editing` in Compilation reads the project's actual types and current additional-document text for completion,
 Quick Info, definitions, live XAML errors and missing-handler fixes. `DocumentViewModel.Xaml.cs` attaches it through
