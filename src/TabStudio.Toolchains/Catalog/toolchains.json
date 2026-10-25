@@ -293,7 +293,7 @@
           { "file": "build.gradle", "build": [ "gradle", "--console=plain", "build" ], "command": [ "gradle", "--console=plain", "--quiet", "run" ] },
           { "file": "settings.gradle", "build": [ "gradle", "--console=plain", "build" ], "command": [ "gradle", "--console=plain", "--quiet", "run" ] }
         ],
-        "environment": { "JAVA_HOME": "/usr/lib/jvm/java-21-openjdk" }
+        "environment": { "NO_COLOR": "1" }
       },
       "setup": [
         {

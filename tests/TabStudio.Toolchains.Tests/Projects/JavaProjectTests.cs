@@ -35,6 +35,7 @@ public sealed class JavaProjectTests : IDisposable
         Assert.Contains("package", plan.Build.Arguments);
         Assert.Contains("org.apache.maven.plugins:maven-dependency-plugin:3.8.1:copy-dependencies", plan.Build.Arguments);
         Assert.Equal("java", plan.Run.Program);
+        Assert.False(plan.Run.Environment.ContainsKey("JAVA_HOME"));
         Assert.Equal("com.example.App", plan.Run.Arguments[^1]);
         Assert.Contains("target/dependency/*", plan.Run.Arguments[1], StringComparison.Ordinal);
         Assert.Equal(["openjdk21-jdk", "jdtls"], Java.Packages);
