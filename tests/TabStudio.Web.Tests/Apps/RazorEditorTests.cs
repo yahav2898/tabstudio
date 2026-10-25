@@ -78,16 +78,27 @@ public sealed class RazorEditorTests(NuGetFixture nuget) : IDisposable
     {
         using var workspace = await WebAppWorkspace.LoadAsync(nuget, CountersApp.Write(_temp));
         var features = new LanguageFeatures(workspace.Host);
-        var text = CountersApp.Home.Replace("Total: @clicks", "Total: @cli", StringComparison.Ordinal);
-        workspace.Host.UpdateText(HomePath, text);
-        var caret = text.IndexOf("@cli", StringComparison.Ordinal) + "@cli".Length;
+        // Typing the first letter of an expression opens the list, as in a C# file.
+        var typed = CountersApp.Home.Replace("Total: @clicks", "Total: @c", StringComparison.Ordinal);
+        workspace.Host.UpdateText(HomePath, typed);
+        var caret = typed.IndexOf("@c", StringComparison.Ordinal) + "@c".Length;
 
-        var list = await features.Completion.GetCompletionsAsync(HomePath, caret, CompletionTrigger.Insertion('i'));
+        Assert.True(features.Completion.ShouldTriggerCompletion(HomePath, caret, 'c'));
+        var list = await features.Completion.GetCompletionsAsync(HomePath, caret, CompletionTrigger.Insertion('c'));
 
         var clicks = Assert.Single(list.Items, i => i.DisplayText == "clicks");
-        Assert.Equal(caret - 3, clicks.SpanStart);
+        Assert.Equal(caret - 1, clicks.SpanStart);
         Assert.Contains(list.Items, i => i.DisplayText == "string");
         Assert.NotEmpty(await features.Completion.GetCompletionDescriptionAsync(clicks));
+
+        // Ctrl+Space in the middle of a word lists the same, over the whole word.
+        var invoked = CountersApp.Home.Replace("Total: @clicks", "Total: @cli", StringComparison.Ordinal);
+        workspace.Host.UpdateText(HomePath, invoked);
+        caret = invoked.IndexOf("@cli", StringComparison.Ordinal) + "@cli".Length;
+
+        list = await features.Completion.GetCompletionsAsync(HomePath, caret, CompletionTrigger.Invoke);
+
+        Assert.Equal(caret - 3, Assert.Single(list.Items, i => i.DisplayText == "clicks").SpanStart);
     }
 
     [Fact]

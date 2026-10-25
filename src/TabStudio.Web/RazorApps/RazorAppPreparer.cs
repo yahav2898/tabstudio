@@ -109,6 +109,11 @@ public sealed class RazorAppPreparer(PackageRestorer restorer)
         var assets = await Task.Run(() => ServerAppAssets.Prepare(request), cancellationToken).ConfigureAwait(false);
         diagnostics.AddRange(assets.Diagnostics);
         RazorAppSwitches.Apply(project);
+        if (project.HasRazorComponents)
+        {
+            ServerComponentTypes.Install();
+        }
+
         return new PreparedServerApp(assets, diagnostics) { HasWebAssemblyClient = client is not null };
     }
 

@@ -66,6 +66,7 @@ public sealed class BlazorAppTests : IClassFixture<SharedToolchain>, IDisposable
             await WaitForAsync(webView.RefreshAsync());
         }
 
+        AssertNoErrors(workspace);
         UiTestHelpers.SaveScreenshot(window, "blazor-01-web-app-beside-code");
 
         // Saving a component rebuilds the app and starts it again, on the same page at the same address.
@@ -101,7 +102,7 @@ public sealed class BlazorAppTests : IClassFixture<SharedToolchain>, IDisposable
         await workspace.LoadAsync(solution);
         var window = Show(workspace);
         await workspace.BuildCommand.ExecuteAsync(null);
-        Assert.Equal(0, workspace.ErrorList.ErrorCount);
+        AssertNoErrors(workspace);
 
         var path = Path.Combine(Path.GetDirectoryName(solution)!, "Squiggles", "Components", "Pages", "Counter.razor");
         var counter = (await workspace.OpenDocumentAsync(path))!;
@@ -207,6 +208,13 @@ public sealed class BlazorAppTests : IClassFixture<SharedToolchain>, IDisposable
         window.Show();
         return window;
     }
+
+    /// <summary>Fails with the Error List's errors when it has any.</summary>
+    private static void AssertNoErrors(WorkspaceViewModel workspace) => Assert.True(
+        workspace.ErrorList.ErrorCount == 0,
+        string.Join('\n', workspace.ErrorList.AllDiagnostics
+            .Where(d => d.Severity == DiagnosticSeverityLevel.Error)
+            .Select(d => $"{d.Id} {d.Location?.FilePath}({d.Location?.Line}): {d.Message}")));
 
     private static void Replace(DocumentViewModel document, string oldText, string newText)
     {

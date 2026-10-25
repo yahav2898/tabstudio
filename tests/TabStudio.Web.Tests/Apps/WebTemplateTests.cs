@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Net;
 using System.Text.Json;
+using TabStudio.Core.Diagnostics;
 using TabStudio.Testing;
 using TabStudio.Web.Templates;
 
@@ -50,6 +51,26 @@ public sealed class WebTemplateTests(NuGetFixture nuget) : IDisposable
         using var launch = JsonDocument.Parse(File.ReadAllText(_temp.Resolve("Shop/Properties/launchSettings.json")));
         var url = launch.RootElement.GetProperty("profiles").GetProperty("http").GetProperty("applicationUrl").GetString();
         Assert.InRange(new Uri(url!).Port, 5000, 5299);
+    }
+
+    public static TheoryData<string> TemplateIds => [.. TemplateFiles.Select(row => (string)row[0])];
+
+    [Theory]
+    [MemberData(nameof(TemplateIds))]
+    public async Task Each_template_has_no_errors_or_warnings(string templateId)
+    {
+        using var workspace = await WebAppWorkspace.LoadAsync(nuget, CreateSolution(templateId));
+
+        var problems = new List<string>();
+        foreach (var project in workspace.Workspace.Projects)
+        {
+            var diagnostics = await workspace.Host.GetProjectDiagnosticsAsync(project.FilePath, CancellationToken.None);
+            problems.AddRange(diagnostics
+                .Where(d => d.Severity >= DiagnosticSeverityLevel.Warning)
+                .Select(d => $"{d.Severity} {d.Id} {d.Location?.FilePath}({d.Location?.Line},{d.Location?.Column}): {d.Message}"));
+        }
+
+        Assert.True(problems.Count == 0, string.Join('\n', problems));
     }
 
     [Fact]

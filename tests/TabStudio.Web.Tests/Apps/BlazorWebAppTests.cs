@@ -8,7 +8,7 @@ namespace TabStudio.Web.Tests.Apps;
 /// <summary>
 /// A Blazor Web App with Interactive Server components, end to end against nuget.org: its Razor components compile
 /// with the SDK's Razor compiler, Razor errors land on their line, and the app serves its pages, its scoped CSS and
-/// Blazor's script, and counts clicks over a live circuit.
+/// Blazor's script, and counts clicks over a live circuit, again after a restart.
 /// </summary>
 [Collection(NuGetTestGroup.Name)]
 public sealed class BlazorWebAppTests(NuGetFixture nuget) : IDisposable
@@ -41,20 +41,24 @@ public sealed class BlazorWebAppTests(NuGetFixture nuget) : IDisposable
     }
 
     [ChromeFact]
-    public async Task An_Interactive_Server_component_counts_over_its_circuit()
+    public async Task An_Interactive_Server_component_counts_over_its_circuit_and_again_after_a_restart()
     {
         using var workspace = await WebAppWorkspace.LoadAsync(nuget, CountersApp.Write(_temp));
-        await using var app = await workspace.StartServerAppAsync("Counters");
         await using var chrome = await HeadlessChrome.StartAsync();
 
-        await chrome.NavigateAsync(app.Address);
+        // A restart, like the live preview's after a save, loads new copies of the app's assemblies beside the first run's.
+        for (var run = 0; run < 2; run++)
+        {
+            await using var app = await workspace.StartServerAppAsync("Counters");
+            await chrome.NavigateAsync(app.Address);
 
-        // The prerendered button does nothing until the circuit connects; then each click counts once.
-        var total = await ClickUntilCountedAsync(chrome);
-        await chrome.ClickAsync("button.counter");
-        await chrome.ClickAsync("button.counter");
-        await chrome.WaitUntilAsync($"document.querySelector('p[role=status]').textContent === 'Total: {total + 2}'", TimeSpan.FromSeconds(10));
-        Assert.Equal($"Clicks: {total + 2}", await chrome.TextOfAsync("button.counter"));
+            // The prerendered button does nothing until the circuit connects; then each click counts once.
+            var total = await ClickUntilCountedAsync(chrome);
+            await chrome.ClickAsync("button.counter");
+            await chrome.ClickAsync("button.counter");
+            await chrome.WaitUntilAsync($"document.querySelector('p[role=status]').textContent === 'Total: {total + 2}'", TimeSpan.FromSeconds(10));
+            Assert.Equal($"Clicks: {total + 2}", await chrome.TextOfAsync("button.counter"));
+        }
     }
 
     [Fact]
