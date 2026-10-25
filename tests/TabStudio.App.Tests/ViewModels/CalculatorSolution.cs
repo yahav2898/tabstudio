@@ -14,10 +14,8 @@ internal static class CalculatorSolution
     /// <summary>The test file, relative to the temporary folder.</summary>
     public const string TestFile = Folder + "/Calculator.Tests/ArithmeticTests.cs";
 
-    /// <summary>The test file's source.</summary>
+    /// <summary>The test file's source. Like the xUnit template, the project imports Xunit with a Using item.</summary>
     public const string Tests = """
-        using Xunit;
-
         namespace Calculator.Tests;
 
         public class ArithmeticTests
@@ -78,6 +76,9 @@ internal static class CalculatorSolution
               </PropertyGroup>
               <ItemGroup>
                 <PackageReference Include="xunit" Version="2.9.3" />
+              </ItemGroup>
+              <ItemGroup>
+                <Using Include="Xunit" />
               </ItemGroup>
               <ItemGroup>
                 <ProjectReference Include="..\Calculator\Calculator.csproj" />

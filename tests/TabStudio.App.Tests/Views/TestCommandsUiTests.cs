@@ -59,20 +59,20 @@ public sealed class TestCommandsUiTests : IClassFixture<SharedToolchain>, IDispo
         workspace.SelectSidePanelCommand.Execute(SidePanel.SolutionExplorer);
         editor.Editor.TextArea.Focus();
 
-        window.KeyPress(Key.E, RawInputModifiers.Control);
-        window.KeyRelease(Key.E, RawInputModifiers.Control);
-        window.KeyPress(Key.T, RawInputModifiers.None);
-        window.KeyRelease(Key.T, RawInputModifiers.None);
+        window.KeyPressQwerty(PhysicalKey.E, RawInputModifiers.Control);
+        window.KeyReleaseQwerty(PhysicalKey.E, RawInputModifiers.Control);
+        window.KeyPressQwerty(PhysicalKey.T, RawInputModifiers.None);
+        window.KeyReleaseQwerty(PhysicalKey.T, RawInputModifiers.None);
 
         Assert.True(workspace.IsTestExplorerSelected);
 
-        window.KeyPress(Key.R, RawInputModifiers.Control);
-        window.KeyRelease(Key.R, RawInputModifiers.Control);
+        window.KeyPressQwerty(PhysicalKey.R, RawInputModifiers.Control);
+        window.KeyReleaseQwerty(PhysicalKey.R, RawInputModifiers.Control);
 
         Assert.StartsWith("(Ctrl+R) was pressed", workspace.StatusText, StringComparison.Ordinal);
 
-        window.KeyPress(Key.A, RawInputModifiers.None);
-        window.KeyRelease(Key.A, RawInputModifiers.None);
+        window.KeyPressQwerty(PhysicalKey.A, RawInputModifiers.None);
+        window.KeyReleaseQwerty(PhysicalKey.A, RawInputModifiers.None);
         await UiTestHelpers.WaitUntilAsync(() => workspace.Tests.PassedCount == 3 && !workspace.Tests.IsRunning, RunTimeout, "Run All");
 
         Assert.Equal((3, 1, 1), (workspace.Tests.PassedCount, workspace.Tests.FailedCount, workspace.Tests.SkippedCount));
