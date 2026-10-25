@@ -50,8 +50,9 @@ public sealed class QuickInfoViewModel
             .Select(runs => new QuickInfoSectionViewModel(runs))
             .ToList();
         Diagnostics = diagnostics.Select(d => new QuickInfoDiagnosticViewModel(d)).ToList();
-        SpanStart = info?.SpanStart ?? diagnostics.FirstOrDefault()?.Location?.Start ?? 0;
-        SpanLength = info?.SpanLength ?? diagnostics.FirstOrDefault()?.Location?.Length ?? 0;
+        var location = diagnostics.Count > 0 ? diagnostics[0].Location : null;
+        SpanStart = info?.SpanStart ?? location?.Start ?? 0;
+        SpanLength = info?.SpanLength ?? location?.Length ?? 0;
     }
 
     /// <summary>The icon of the symbol.</summary>
