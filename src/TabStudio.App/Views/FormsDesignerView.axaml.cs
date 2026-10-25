@@ -15,7 +15,7 @@ namespace TabStudio.App.Views;
 /// F7 and Shift+F7 switch between. A tool can be dragged from the Toolbox onto the form; a long press or a
 /// right-click on the form opens its menu; Enter commits a property's text and Shift+Enter starts a new line of it.
 /// </summary>
-public sealed partial class FormsDesignerView : UserControl, IDisposable
+internal sealed partial class FormsDesignerView : UserControl, IDisposable
 {
     /// <summary>How far a finger drags a tool before it leaves the Toolbox.</summary>
     private const double DragThreshold = 12;
