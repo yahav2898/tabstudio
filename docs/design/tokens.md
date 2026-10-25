@@ -142,7 +142,7 @@ Chrome: scrims, the status bar's controls, notices, the activity bar, badges and
 | `Brush.Scrim` | `#99000000` | `#66141A22` |
 | `Brush.StatusBar.Hover` | `#26FFFFFF` | `#26FFFFFF` |
 | `Brush.StatusBar.Pressed` | `#40FFFFFF` | `#40FFFFFF` |
-| `Brush.StatusBar.Well` | `#59000000` | `#40000000` |
+| `Brush.StatusBar.Well` | `#59000000` | `#59000000` |
 | `Brush.OnAccent.Divider` | `#59FFFFFF` | `#59FFFFFF` |
 | `Brush.OnAccent.Pill` | `#33000000` | `#33000000` |
 | `Brush.Notice.SuccessBorder` | `#2D4A3E` | `#A6D9B8` |
@@ -370,7 +370,8 @@ the light frames Windows gives apps that do not ask for dark title bars, and the
 ## The same in both themes
 
 Colors that are content rather than chrome: a QR code, the sketch pad's paper, the desktop pointer, avatars and the
-Toolchain Store's language tiles (white text on each).
+Toolchain Store's language tiles (white text on each). And the states the status bar shows on its dark wells, as the
+status bar is teal in both themes: on `Brush.StatusBar.Well` over `Brush.Accent` each has at least 3:1, as icons need.
 
 | Token | Color |
 |---|---|
@@ -397,3 +398,8 @@ Toolchain Store's language tiles (white text on each).
 | `Brush.Toolchain.Kotlin` | `#7F52D9` |
 | `Brush.Toolchain.Windows` | `#2B79C2` |
 | `Brush.Toolchain.Other` | `#4A5263` |
+| `Brush.StatusBar.Passed` | `#6FD6A0` |
+| `Brush.StatusBar.Failed` | `#F47067` |
+| `Brush.StatusBar.Running` | `#E3B341` |
+| `Brush.StatusBar.Queued` | `#C69026` |
+| `Brush.StatusBar.Muted` | `#AEB4BF` |

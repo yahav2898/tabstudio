@@ -15,7 +15,7 @@
       <Border Width="17" Height="17" CornerRadius="8.5" Background="{DynamicResource Brush.StatusBar.Well}" VerticalAlignment="Center">
         <controls:StrokeIcon Size="13" StrokeThickness="2.4" HorizontalAlignment="Center"
                              Data="{Binding CiVisual, Converter={x:Static conv:ActionsConverters.StateIcon}}"
-                             Foreground="{Binding CiVisual, Converter={x:Static conv:ActionsConverters.StateBrush}}"
+                             Foreground="{Binding CiVisual, Converter={x:Static conv:ActionsConverters.StatusBarStateBrush}}"
                              Classes.spinning="{Binding CiVisual, Converter={x:Static conv:ActionsConverters.IsSpinning}}" />
       </Border>
       <TextBlock x:Name="CiLabel" Text="{Binding CiText}" FontSize="12" VerticalAlignment="Center" />

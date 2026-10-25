@@ -36,6 +36,13 @@
   <SolidColorBrush x:Key="Brush.Toolchain.Windows" Color="#2B79C2" />
   <SolidColorBrush x:Key="Brush.Toolchain.Other" Color="#4A5263" />
 
+  <!-- The status bar is teal in both themes, so the states it shows on its dark wells (CI) keep their bright colors. -->
+  <SolidColorBrush x:Key="Brush.StatusBar.Passed" Color="#6FD6A0" />
+  <SolidColorBrush x:Key="Brush.StatusBar.Failed" Color="#F47067" />
+  <SolidColorBrush x:Key="Brush.StatusBar.Running" Color="#E3B341" />
+  <SolidColorBrush x:Key="Brush.StatusBar.Queued" Color="#C69026" />
+  <SolidColorBrush x:Key="Brush.StatusBar.Muted" Color="#AEB4BF" />
+
   <ResourceDictionary.ThemeDictionaries>
     <!-- Dark, TabStudio's own look, is also the fallback for lookups that name no theme (x:Key="Default"). -->
     <ResourceDictionary x:Key="Default">
@@ -402,7 +409,7 @@
       <SolidColorBrush x:Key="Brush.Scrim" Color="#66141A22" />
       <SolidColorBrush x:Key="Brush.StatusBar.Hover" Color="#26FFFFFF" />
       <SolidColorBrush x:Key="Brush.StatusBar.Pressed" Color="#40FFFFFF" />
-      <SolidColorBrush x:Key="Brush.StatusBar.Well" Color="#40000000" />
+      <SolidColorBrush x:Key="Brush.StatusBar.Well" Color="#59000000" />
       <SolidColorBrush x:Key="Brush.OnAccent.Divider" Color="#59FFFFFF" />
       <SolidColorBrush x:Key="Brush.OnAccent.Pill" Color="#33000000" />
       <SolidColorBrush x:Key="Brush.Notice.SuccessBorder" Color="#A6D9B8" />

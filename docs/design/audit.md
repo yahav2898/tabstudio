@@ -14,7 +14,7 @@ Severity: **High** hides or blocks something, **Medium** costs space or attentio
 |---|---|---|---|---|
 | S1 | The side bar's tool window tabs wrap to two rows (Solution Explorer, Git Changes, Actions / Pull Requests, Test Explorer, Claude) and three once App, Preview or Swarm join. They take 70 to 100 px of the side bar and move when a tab appears. | 02-ide, avalonia-01-app-preview, blazor-01-web-app-beside-code, web-01-preview; swarm-00-add-a-device, winforms-01-running-app (branches) | Medium | Activity bar (2.3) |
 | S2 | The floating touch bar covers code: lines 16 to 18 in 02-ide, the paused line's neighbors in debug-02-paused, the last lines in 06-portrait and 07-test-explorer. It collides with the light bulb (11-light-bulb), the coverage popup (live-02b-failing-popup) and the completion list (toolchains-lsp-01-python-pyright). It shows while typing on a hardware keyboard, when it is not needed. | 02-ide, debug-02-paused, 06-portrait, 07-test-explorer, 11-light-bulb, live-02b-failing-popup, toolchains-lsp-01-python-pyright | High | Touch bar (2.7) |
-| S3 | In the light theme the touch bar's Run button is white text on light gray (`Brush.Pressed`), about 1.3:1. | light/02-ide, light/03-run | High (light only) | Touch bar (2.7) |
+| S3 | In the light theme the touch bar's Run button, and the debug touch bar's Continue, were white text on light gray (`Brush.Pressed`), about 1.3:1. | light/02-ide, light/03-run, light/debug-02-paused | High (light only) | Done in stage 1: both are `AccentButton`, white on teal in both themes (the one edit stage 1 makes in `WorkspaceView.axaml`) |
 | S4 | Portrait clips the toolbar ("Run on In-pr…"), drops the solution chip off the menu bar, and gives no way to reach the side bar: Solution Explorer, Git Changes and Test Explorer are unreachable without a menu. | 06-portrait, 10-notebook-portrait, ext-09-portrait-details | High | Activity bar and drawer (2.3), adaptive toolbar (2.4) |
 | S5 | The toolbar is full at 1280 while debugging (about 4 px to spare), and any new button (Tools in toolchains-lsp-02) pushes the error counter against the search box. It scrolls sideways when too narrow, hiding Run. | debug-02-paused, debug-04-call-stack, toolchains-lsp-02-python-breakpoint | Medium | Adaptive toolbar (2.4) |
 | S6 | Properties takes 270 px under the Solution Explorer on every screen, mostly for a temp path wrapped over four lines, and for a folder shows rows with nothing in them ("Projects 0", "Startup Project None"). The Windows Forms designer shows its own Properties beside it: two at once. | 02-ide, lsp-10-python-squiggles, ext-01-browse, winforms-designer-02-toolbox-and-properties | Medium | Collapsible Properties (2.6) |
@@ -87,7 +87,10 @@ Kept as models for the rest:
 Every merged screen was rendered in the light theme (`screenshots/light/`, 129 screenshots on this branch's CI) and
 looked at. All text passes AA (see [tokens.md](tokens.md#contrast)); what is left:
 
-- The touch bar's Run button (S3): fixed in the shell, stage 2.
+- The touch bar's Run button (S3): fixed in stage 1.
+- The status bar's CI icon was the light theme's dark green, red or amber on the teal status bar's dark well, which is
+  the same in both themes: it now takes the status bar's own state colors (`Brush.StatusBar.Passed` …), 3.3:1 or more on
+  the well (actions-02-status-failed, actions-03-status-passed).
 - The editor's current line, caret and fold markers are literals in `CodeEditorView`, used only with the built-in dark
   editor theme: in the light theme they come from TabStudio Light, an editor color theme built from the tokens
   (light/02-ide), so they look right. Stage 2 still makes them tokens, so the palette is the one source.

@@ -199,8 +199,8 @@ The floating touch bar (lines 471 to 536, the comment and its `Panel`):
    light bulb or a coverage popup would be under it, it moves to the editor's top right instead.
 3. It becomes an `AdaptiveBar`: Rename (30), Peek (25), Comment (20), To Cursor (15), Format (10), Run pinned. In
    portrait the low ones fold to icons.
-4. The Run button is `AccentButton` (white on teal in both themes), not `Brush.Pressed` with white text, which fails in
-   the light theme (S3 in the audit).
+4. The Run button is already `AccentButton` (white on teal in both themes), since stage 1, as is the debug touch bar's
+   Continue: `Brush.Pressed` with white text failed in the light theme (S3 in the audit).
 
 ## 2.8 Tools > Theme
 
