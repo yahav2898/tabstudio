@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Avalonia.Media.Immutable;
 using AvaloniaPoint = Avalonia.Point;
 using AvaloniaSize = Avalonia.Size;
 using DashStyle = System.Drawing.Drawing2D.DashStyle;

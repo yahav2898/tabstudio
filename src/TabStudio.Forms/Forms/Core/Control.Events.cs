@@ -466,14 +466,6 @@ public partial class Control
     /// <param name="e">The event data.</param>
     protected virtual void OnEnter(EventArgs e) => ((EventHandler?)Events[EventEnter])?.Invoke(this, e);
 
-    /// <summary>Raises the <see cref="HandleCreated"/> event.</summary>
-    /// <param name="e">The event data.</param>
-    protected virtual void OnHandleCreated(EventArgs e) => ((EventHandler?)Events[EventHandleCreated])?.Invoke(this, e);
-
-    /// <summary>Raises the <see cref="HandleDestroyed"/> event.</summary>
-    /// <param name="e">The event data.</param>
-    protected virtual void OnHandleDestroyed(EventArgs e) => ((EventHandler?)Events[EventHandleDestroyed])?.Invoke(this, e);
-
     /// <summary>Raises the <see cref="KeyDown"/> event.</summary>
     /// <param name="e">The event data.</param>
     protected virtual void OnKeyDown(KeyEventArgs e) => ((KeyEventHandler?)Events[EventKeyDown])?.Invoke(this, e);
