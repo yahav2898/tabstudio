@@ -67,7 +67,7 @@ public sealed class AlpineEnvironment
     public LinuxDistribution Distribution => _distribution;
 
     /// <summary>Alpine's name for this device's architecture.</summary>
-    public string? Architecture => ToolchainPlatform.AlpineArchitecture;
+    public string? Architecture => _platform.Architecture;
 
     /// <summary>Whether the environment is set up.</summary>
     public bool IsSetUp => File.Exists(Path.Combine(Rootfs, ReadyMarker));
@@ -198,8 +198,8 @@ public sealed class AlpineEnvironment
         Directory.CreateDirectory(Path.Combine(Root, "tmp"));
     }
 
-    /// <summary>The bytes the environment takes, without what toolchains added: measured at setup.</summary>
-    public long Size => DiskSpace.Size(Rootfs);
+    /// <summary>The free space on the storage the environment is on, when the system says.</summary>
+    public long? FreeSpace => _platform.FreeSpace(Root);
 
     /// <summary>Throws when the storage has less than some bytes free.</summary>
     /// <param name="bytes">The bytes needed.</param>
@@ -208,7 +208,7 @@ public sealed class AlpineEnvironment
     internal void EnsureSpace(long bytes, string what)
     {
         const long Margin = 50_000_000;
-        if (DiskSpace.Free(Root) is { } free && free < bytes + Margin)
+        if (_platform.FreeSpace(Root) is { } free && free < bytes + Margin)
         {
             throw new ToolchainInstallException(
                 InstallFailure.NotEnoughSpace,

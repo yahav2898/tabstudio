@@ -57,6 +57,12 @@ public sealed record ToolchainDefinition
     /// <summary>The files that make a folder one of its projects, such as <c>package.json</c>.</summary>
     public IReadOnlyList<string> ProjectFiles { get; init; } = [];
 
+    /// <summary>
+    /// Whether a folder with the toolchain's source files at the top is a project even without a project file,
+    /// as a folder of Python scripts is.
+    /// </summary>
+    public bool SourceFolderIsProject { get; init; }
+
     /// <summary>How to run a file or a project.</summary>
     public RunDefinition? Run { get; init; }
 
@@ -190,6 +196,18 @@ public sealed record SetupStepDefinition
 
     /// <summary>An archive to download, verify and unpack, or <see langword="null"/>.</summary>
     public ArchiveDefinition? Archive { get; init; }
+
+    /// <summary>
+    /// What removing the toolchain deletes for this step, as paths in the environment, such as the folders a
+    /// command installed. An archive's destination is always deleted.
+    /// </summary>
+    public IReadOnlyList<string> Removes { get; init; } = [];
+
+    /// <summary>
+    /// What identifies this version of the step: the archive's hash, or the command. A step whose fingerprint
+    /// changed runs again on update.
+    /// </summary>
+    public string Fingerprint => Archive is { } archive ? $"sha256:{archive.Sha256}" : $"command:{string.Join('\u001f', Command)}";
 }
 
 /// <summary>A downloadable archive with a pinned hash.</summary>

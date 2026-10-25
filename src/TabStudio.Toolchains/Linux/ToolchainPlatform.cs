@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using ProcessorArchitecture = System.Runtime.InteropServices.Architecture;
 
 namespace TabStudio.Toolchains.Linux;
 
@@ -26,15 +27,24 @@ public sealed record ToolchainPlatform
     /// <summary>Folders on the device programs should see, besides TabStudio's projects folder, such as shared storage.</summary>
     public IReadOnlyList<string> SharedFolders { get; init; } = [];
 
+    /// <summary>Measures the free space on the storage a folder is on; <see cref="DiskSpace.Free"/> unless a test says otherwise.</summary>
+    public Func<string, long?> FreeSpace { get; init; } = DiskSpace.Free;
+
     /// <summary>Whether toolchains run in TabStudio's Linux environment rather than on the computer.</summary>
     public bool UsesLinuxEnvironment => NativeLibraryDirectory is not null;
 
+    /// <summary>
+    /// Alpine's name for the processor architecture programs run on: <see cref="CurrentArchitecture"/> unless a test
+    /// sets another.
+    /// </summary>
+    public string? Architecture { get; init; } = CurrentArchitecture;
+
     /// <summary>Alpine's name for the processor architecture TabStudio runs on, or <see langword="null"/> for one Alpine has no build for.</summary>
-    public static string? AlpineArchitecture => RuntimeInformation.ProcessArchitecture switch
+    public static string? CurrentArchitecture => RuntimeInformation.ProcessArchitecture switch
     {
-        Architecture.Arm64 => "aarch64",
-        Architecture.Arm => "armv7",
-        Architecture.X64 => "x86_64",
+        ProcessorArchitecture.Arm64 => "aarch64",
+        ProcessorArchitecture.Arm => "armv7",
+        ProcessorArchitecture.X64 => "x86_64",
         _ => null,
     };
 

@@ -74,7 +74,14 @@ public sealed class ApkTool(IToolchainRuntime runtime) : IApkTool
     public Task<ApkResult> AddOnlineAsync(IReadOnlyList<string> packages, bool upgrade, Action<string> line, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(packages);
-        return RunAsync(["add", "--no-progress", .. upgrade ? new[] { "--upgrade" } : [], .. packages], line, cancellationToken);
+        var arguments = new List<string> { "add", "--no-progress" };
+        if (upgrade)
+        {
+            arguments.Add("--upgrade");
+        }
+
+        arguments.AddRange(packages);
+        return RunAsync(arguments, line, cancellationToken);
     }
 
     /// <inheritdoc />

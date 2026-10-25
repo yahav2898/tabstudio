@@ -85,6 +85,9 @@ internal sealed class FakeAlpineRepository : IDisposable
         return package;
     }
 
+    /// <summary>The package of that name the mirror has now.</summary>
+    public FakePackage Package(string name) => _repositories.Values.SelectMany(r => r).Select(p => p.Package).Last(p => p.Name == name);
+
     /// <summary>Serves the root file system and every repository's index.</summary>
     public void Publish()
     {
@@ -123,7 +126,9 @@ internal sealed class FakeAlpineRepository : IDisposable
     {
         var data = Gzip(Tar(complete: true, package.Files.Select(f => (f.Key, Encoding.UTF8.GetBytes(f.Value))).ToArray()));
         var installedSize = package.Files.Sum(f => (long)Encoding.UTF8.GetByteCount(f.Value));
-        var info = $"pkgname = {package.Name}\npkgver = {package.Version}\narch = {Architecture}\nsize = {installedSize}\ndatahash = {Convert.ToHexStringLower(SHA256.HashData(data))}\n";
+        var info = string.Create(CultureInfo.InvariantCulture, $"pkgname = {package.Name}\npkgver = {package.Version}\narch = {Architecture}\nsize = {installedSize}\n")
+            + string.Concat(package.Depends.Select(d => $"depend = {d}\n"))
+            + $"datahash = {Convert.ToHexStringLower(SHA256.HashData(data))}\n";
         var control = Gzip(Tar(complete: false, (".PKGINFO", Encoding.UTF8.GetBytes(info))));
         var signature = Gzip(Tar(complete: false, ($".SIGN.RSA.{KeyName}", _key.SignData(control, HashAlgorithmName.SHA1, RSASignaturePadding.Pkcs1))));
         return ([.. signature, .. control, .. data], "Q1" + Convert.ToBase64String(SHA1.HashData(control)), installedSize);
