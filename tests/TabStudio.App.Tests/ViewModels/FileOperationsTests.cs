@@ -33,7 +33,8 @@ public sealed class FileOperationsTests
         await AnswerAsync(fixture, ((IExplorerActions)fixture.Workspace).NewFileAsync(greetings), "Farewell");
 
         var program = fixture.Workspace.Documents.Single(d => d.FileName == "Program.cs");
-        program.Document.Insert(0, "System.Console.WriteLine(new Greetings.Farewell());\n");
+        var afterUsings = program.Document.Text.IndexOf("using Greetings;", StringComparison.Ordinal) + "using Greetings;".Length;
+        program.Document.Insert(afterUsings, "\nSystem.Console.WriteLine(new Farewell());");
         await program.AnalyzeNowAsync();
 
         Assert.DoesNotContain(program.Diagnostics, d => d.Severity == TabStudio.Core.Diagnostics.DiagnosticSeverityLevel.Error);
