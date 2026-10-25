@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Threading;
 using TabStudio.App.Previews;
 
@@ -67,6 +68,7 @@ public sealed class VirtualAppScreen : LocalAppScreen
             Frame.App = _instance.Root;
             Error = null;
             ShowApp(Frame, _instance.MainView);
+            EnsureLayout();
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)
         {
@@ -75,6 +77,16 @@ public sealed class VirtualAppScreen : LocalAppScreen
             Frame.App = null;
             _instance = null;
             RaiseChanged();
+        }
+    }
+
+    /// <inheritdoc />
+    /// <remarks>The frame waits on the stage of the IDE's window, still running, until a tile shows it.</remarks>
+    protected override void HoldOutsideWindow(Control surface)
+    {
+        if (!Frame.IsRetired && Frame.Parent is null && ScreenStage.OfApplication() is { } stage)
+        {
+            stage.Hold(Frame);
         }
     }
 

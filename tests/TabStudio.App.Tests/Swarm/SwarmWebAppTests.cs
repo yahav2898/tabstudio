@@ -68,11 +68,13 @@ public sealed class SwarmWebAppTests
         // Fix with Agent sends the problem, the button's HTML and a picture of the page.
         await UiTestHelpers.WaitUntilAsync(() => Row(workspace) is not null && workspace.LayoutChecks.Checking == 0, CheckTimeout, "the row after the checks");
         await workspace.FixWithAgentAsync(row.Diagnostic);
-        var request = claude.Requests.Single().ToJsonString();
-        Assert.True(request.Contains("the web app Shop", StringComparison.Ordinal), request);
-        Assert.Contains("```html", request, StringComparison.Ordinal);
-        Assert.Contains("image/png", request, StringComparison.Ordinal);
-        Assert.Contains("min-width and min-height", request, StringComparison.Ordinal);
+        var content = claude.Requests.Single()["messages"]!.AsArray()[0]!["content"]!.AsArray();
+        Assert.Equal("image/png", content[0]!["source"]!["media_type"]!.GetValue<string>());
+        var text = content[^1]!["text"]!.GetValue<string>();
+        Assert.Contains("the web app Shop", text, StringComparison.Ordinal);
+        Assert.Contains("```html\n<button type=\"submit\">Greet</button>\n```", text, StringComparison.Ordinal);
+        Assert.Contains("wwwroot/index.html", text, StringComparison.Ordinal);
+        Assert.Contains("min-width and min-height", text, StringComparison.Ordinal);
 
         workspace.StopCommand.Execute(null);
         await run.WaitAsync(TimeSpan.FromSeconds(30));

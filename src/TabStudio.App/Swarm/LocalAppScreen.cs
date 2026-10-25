@@ -132,6 +132,11 @@ public abstract class LocalAppScreen : IAppScreen, IDisposable
             return;
         }
 
+        if (surface.GetVisualRoot() is null)
+        {
+            HoldOutsideWindow(surface);
+        }
+
         if (surface.IsEffectivelyVisible && surface.GetVisualRoot() is not null)
         {
             surface.UpdateLayout();
@@ -144,6 +149,15 @@ public abstract class LocalAppScreen : IAppScreen, IDisposable
             surface.Measure(size);
             surface.Arrange(new Rect(surface.Bounds.Position, size));
         }
+    }
+
+    /// <summary>
+    /// The screen is in no window, where its app is neither styled nor laid out: a screen that owns its surface puts
+    /// it where it can be, such as a virtual device on the window's stage until its tile takes it.
+    /// </summary>
+    /// <param name="surface">The screen's surface.</param>
+    protected virtual void HoldOutsideWindow(Control surface)
+    {
     }
 
     /// <summary>Starts showing a running app: its view on the screen, with its input followed.</summary>

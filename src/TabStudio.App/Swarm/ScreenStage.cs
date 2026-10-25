@@ -1,7 +1,9 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Primitives;
 using Avalonia.Media;
+using Avalonia.VisualTree;
 
 namespace TabStudio.App.Swarm;
 
@@ -24,6 +26,9 @@ internal sealed class ScreenStage : Canvas
     /// <summary>How small screens are on the stage, so a tablet's screen fits in a phone's window.</summary>
     private const double StageScale = 0.2;
 
+    /// <summary>The stage used last, for windows the application's lifetime does not name, as in tests.</summary>
+    private static WeakReference<ScreenStage>? _last;
+
     private ScreenStage()
     {
         Opacity = 0;
@@ -43,17 +48,33 @@ internal sealed class ScreenStage : Canvas
             return null;
         }
 
-        foreach (var child in layer.Children)
+        var stage = layer.Children.OfType<ScreenStage>().FirstOrDefault();
+        if (stage is null)
         {
-            if (child is ScreenStage existing)
-            {
-                return existing;
-            }
+            stage = new ScreenStage();
+            layer.Children.Add(stage);
         }
 
-        var stage = new ScreenStage();
-        layer.Children.Add(stage);
+        _last = new WeakReference<ScreenStage>(stage);
         return stage;
+    }
+
+    /// <summary>
+    /// The stage of the IDE's window, for a screen no tile has taken yet, such as a virtual device whose tile is still
+    /// being made: outside a window its app is neither styled nor laid out.
+    /// </summary>
+    /// <returns>The stage, or <see langword="null"/> before the IDE shows a window.</returns>
+    public static ScreenStage? OfApplication()
+    {
+        var window = Application.Current?.ApplicationLifetime switch
+        {
+            IClassicDesktopStyleApplicationLifetime { MainWindow: { } main } => main,
+            ISingleViewApplicationLifetime { MainView: { } view } => view,
+            _ => null,
+        };
+        return window is not null && Of(window) is { } stage ? stage
+            : _last is not null && _last.TryGetTarget(out var last) && last.GetVisualRoot() is not null ? last
+            : null;
     }
 
     /// <summary>Holds a screen's control, taking it from wherever it was shown.</summary>
