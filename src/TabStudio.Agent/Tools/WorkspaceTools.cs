@@ -264,7 +264,8 @@ public sealed class WorkspaceTools
         }
 
         var errors = relevant.Count(d => d.Severity == DiagnosticSeverityLevel.Error);
-        var builder = new StringBuilder(CultureInfo.InvariantCulture, $"{errors} errors, {relevant.Count - errors} warnings\n");
+        var builder = new StringBuilder();
+        builder.Append(CultureInfo.InvariantCulture, $"{errors} errors, {relevant.Count - errors} warnings\n");
         foreach (var diagnostic in relevant.Take(MaxDiagnostics))
         {
             var location = diagnostic.Location is { } at
