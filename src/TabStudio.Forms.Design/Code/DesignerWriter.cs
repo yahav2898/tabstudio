@@ -125,6 +125,13 @@ internal static class DesignerWriter
     /// <summary>A component's section: a comment with its name, then its properties and collections by name, then its events.</summary>
     private static void WriteSection(List<string> lines, DesignComponent component, CodeStyle style)
     {
+        // A component with nothing to set, such as a tooltip, has no section, as in Visual Studio.
+        if (!component.IsRoot && component.Properties.Count == 0 && component.Events.Count == 0 && component.OtherStatements.Count == 0
+            && component.Adds.All(a => a.Items.Count == 0))
+        {
+            return;
+        }
+
         lines.Add("// ");
         lines.Add("// " + component.Name);
         lines.Add("// ");

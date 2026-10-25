@@ -240,9 +240,19 @@ internal sealed class DesignerFile
             Keep(statement, null);
         }
 
-        /// <summary>Keeps a statement the designer does not read with the component it is about, or the form.</summary>
+        /// <summary>
+        /// Keeps a statement the designer does not read with the component it is about, or the form. An extender's
+        /// call, such as <c>toolTip1.SetToolTip(button1, "...")</c>, is about the control it extends, whose section
+        /// Visual Studio writes it in.
+        /// </summary>
         private void Keep(StatementSyntax statement, DesignComponent? about)
         {
+            if (about is null && statement is ExpressionStatementSyntax { Expression: InvocationExpressionSyntax { Expression: MemberAccessExpressionSyntax { Name.Identifier.ValueText: var method }, ArgumentList.Arguments: [var first, ..] } }
+                && method.StartsWith("Set", StringComparison.Ordinal) && Target(first.Expression) is (var extended, "") && !extended.IsRoot && Document.Components.Contains(extended))
+            {
+                about = extended;
+            }
+
             var component = about ?? statement.DescendantNodes().OfType<ExpressionSyntax>()
                 .Select(e => e switch
                 {
