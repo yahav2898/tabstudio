@@ -54,15 +54,16 @@
                     </Border>
                   </StackPanel>
                 </Button>
-                <ItemsControl ItemsSource="{Binding Items}" IsVisible="{Binding IsExpanded}" Margin="0,0,0,6">
+                <!-- As many columns as fit, each tile as wide as its column. -->
+                <ItemsControl ItemsSource="{Binding Items}" IsVisible="{Binding IsExpanded}" Margin="4,2,4,12">
                   <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                      <WrapPanel />
+                      <controls:FlowGrid MinColumnWidth="240" Spacing="8" />
                     </ItemsPanelTemplate>
                   </ItemsControl.ItemsPanel>
                   <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="dm:ToolboxItemViewModel">
-                      <Button Theme="{StaticResource CardButton}" Focusable="False" Width="206" Height="62" MinHeight="62" Margin="4" Padding="10,0"
+                      <Button Theme="{StaticResource CardButton}" Focusable="False" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Height="62" MinHeight="62" Padding="10,0"
                               Command="{Binding Insert}" ToolTip.Tip="{Binding Description}">
                         <Grid ColumnDefinitions="Auto,*">
                           <Border Width="38" Height="38" CornerRadius="9" Background="{DynamicResource Brush.Control}">
