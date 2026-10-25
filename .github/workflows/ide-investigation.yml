@@ -1,0 +1,221 @@
+name: IDE test investigation
+
+# INVESTIGATION, to be removed: checks the fixes for three intermittent IDE test failures against the code before
+# them. "unfixed" puts back the code before each fix (the screenshot helper that let the frame be collected while
+# Skia encoded it, and the document opening that a second request could race); "fixed" is the branch as it is.
+# The QR probes measure how often a random invitation fails to decode, which the fixed test data no longer shows.
+on:
+  push:
+    branches: ['agent/runtime-stability']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ide-investigation-${{ github.sha }}
+  cancel-in-progress: false
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+
+jobs:
+  before-after:
+    name: Before and after (${{ matrix.variant }})
+    if: contains(github.event.head_commit.message, '[ide]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        variant: [unfixed, fixed]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 20
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Put back the code before the fixes
+        if: matrix.variant == 'unfixed'
+        run: |
+          sed -i 's/using var frame = window.CaptureRenderedFrame()/var frame = window.CaptureRenderedFrame()/' tests/TabStudio.App.Tests/UiTestHelpers.cs
+          git show 0c5fff9655787421633d0410697458eecab54663:src/TabStudio.App/ViewModels/WorkspaceViewModel.Documents.cs > src/TabStudio.App/ViewModels/WorkspaceViewModel.Documents.cs
+          git diff --stat
+
+      - name: Build the IDE tests
+        run: |
+          mkdir -p ci-out
+          dotnet build tests/TabStudio.App.Tests -c Release > ci-out/build.log 2>&1 || { tail -n 40 ci-out/build.log; exit 1; }
+          grep -E ': warning ' ci-out/build.log | sort -u > ci-out/warnings.txt || true
+          echo "$(wc -l < ci-out/warnings.txt) distinct warnings"
+
+      - name: Run each test five times
+        run: |
+          for test in ScreenshotLifetimeTests A_file_opened_again_while_it_opens_gets_one_tab; do
+            for run in 1 2 3 4 5; do
+              dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter "FullyQualifiedName~$test" > "ci-out/$test-$run.log" 2>&1
+              status=$?
+              verdict=passed
+              grep -q 'Test host process crashed\|The active test run was aborted' "ci-out/$test-$run.log" && verdict="TEST HOST CRASHED"
+              [ "$status" -ne 0 ] && [ "$verdict" = passed ] && verdict="failed: $(grep -m 1 -A 2 'Error Message' "ci-out/$test-$run.log" | tail -n 1 | sed 's/^ *//')"
+              echo "$test run $run: $verdict" | tee -a ci-out/summary.txt
+            done
+          done
+          { echo "### ${{ matrix.variant }}"; echo '```'; cat ci-out/summary.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publish logs
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs.sh ide-investigation-${{ matrix.variant }} ${{ job.status }}
+
+  qr-probe:
+    name: QR codes of random invitations
+    if: contains(github.event.head_commit.message, '[ide]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Add the probes
+        run: |
+          mkdir -p ci-out
+          sed -i 's/private static string Decode(QrCode code)/internal static string Decode(QrCode code)/' tests/TabStudio.Link.Tests/QrCodeTests.cs
+          sed -i 's/private static byte\[\] Frame(/internal static byte[] Frame(/; s/private const int /internal const int /' tests/TabStudio.App.Tests/Platform/QrFrameDecoderTests.cs
+          cat > tests/TabStudio.Link.Tests/QrRateProbe.cs <<'CS'
+          using System.Security.Cryptography;
+          using TabStudio.Link.Qr;
+          using TabStudio.Link.Security;
+
+          namespace TabStudio.Link.Tests;
+
+          public sealed class QrRateProbe
+          {
+              [Fact]
+              public void Measure()
+              {
+                  var lines = new List<string>();
+                  var total = new int[8];
+                  var failed = new int[8];
+                  var versions = new HashSet<int>();
+                  for (var n = 0; n < 3000; n++)
+                  {
+                      var fingerprint = LinkFingerprint.FromPublicKey(RandomNumberGenerator.GetBytes(91));
+                      var invitation = new LinkInvitation("Yahav's Pixel 9 Pro", ["192.168.1.23", "10.0.0.5"], 47811, fingerprint, LinkPairingCode.Create()).ToUri();
+                      var code = QrCode.Encode(invitation);
+                      versions.Add(code.Version);
+                      total[code.Mask]++;
+                      string? text;
+                      try
+                      {
+                          text = QrCodeTests.Decode(code);
+                      }
+                      catch (Exception)
+                      {
+                          text = null;
+                      }
+
+                      if (text != invitation)
+                      {
+                          failed[code.Mask]++;
+                          if (lines.Count < 15)
+                          {
+                              lines.Add($"  mask {code.Mask}: {invitation}");
+                          }
+                      }
+                  }
+
+                  var summary = new List<string> { $"Link test decode (clean, 4 px a module): {failed.Sum()} of 3000 invitations failed; versions {string.Join(",", versions)}" };
+                  for (var m = 0; m < 8; m++)
+                  {
+                      summary.Add($"  mask {m}: {failed[m]} of {total[m]} failed");
+                  }
+
+                  summary.Add("First failures:");
+                  File.WriteAllLines(Environment.GetEnvironmentVariable("QR_PROBE_OUT")!, [.. summary, .. lines]);
+              }
+          }
+          CS
+          cat > tests/TabStudio.App.Tests/Platform/QrRateProbe.cs <<'CS'
+          using System.Security.Cryptography;
+          using TabStudio.App.Platform;
+          using TabStudio.Link.Qr;
+          using TabStudio.Link.Security;
+
+          namespace TabStudio.App.Tests.Platform;
+
+          public sealed class QrRateProbe
+          {
+              [Fact]
+              public void Measure()
+              {
+                  var lines = new List<string>();
+                  var failedByRotation = new int[4];
+                  var failedData = 0;
+                  var failedEverySeed = 0;
+                  const int count = 600;
+                  for (var n = 0; n < count; n++)
+                  {
+                      var fingerprint = LinkFingerprint.FromPublicKey(RandomNumberGenerator.GetBytes(91));
+                      var invitation = new LinkInvitation("Pixel 9", ["192.168.1.23", "10.0.0.7"], 50517, fingerprint, LinkPairingCode.Create()).ToUri();
+                      var code = QrCode.Encode(invitation);
+                      var any = false;
+                      for (var r = 0; r < 4; r++)
+                      {
+                          var degrees = r * 90;
+                          var text = QrFrameDecoder.Decode(QrFrameDecoderTests.Frame(code, degrees, seed: degrees), QrFrameDecoderTests.RowStride, QrFrameDecoderTests.Width, QrFrameDecoderTests.Height);
+                          if (text != invitation)
+                          {
+                              failedByRotation[r]++;
+                              any = true;
+                              // The same code with other noise: does the data or the noise decide?
+                              var seeds = Enumerable.Range(1, 6).Count(s => QrFrameDecoder.Decode(QrFrameDecoderTests.Frame(code, degrees, seed: 1000 + s), QrFrameDecoderTests.RowStride, QrFrameDecoderTests.Width, QrFrameDecoderTests.Height) != invitation);
+                              if (seeds == 6)
+                              {
+                                  failedEverySeed++;
+                              }
+
+                              if (lines.Count < 15)
+                              {
+                                  lines.Add($"  {degrees} degrees, mask {code.Mask}, failed with {seeds} of 6 other noise seeds: {invitation}");
+                              }
+                          }
+                      }
+
+                      if (any)
+                      {
+                          failedData++;
+                      }
+                  }
+
+                  var summary = new List<string>
+                  {
+                      $"Camera-frame decode (QrFrameDecoderTests frames): {failedData} of {count} invitations failed at some rotation; by rotation 0/90/180/270: {string.Join("/", failedByRotation)}; failed with every other noise seed: {failedEverySeed}",
+                      "First failures:",
+                  };
+                  File.WriteAllLines(Environment.GetEnvironmentVariable("QR_PROBE_OUT")!, [.. summary, .. lines]);
+              }
+          }
+          CS
+
+      - name: Measure
+        run: |
+          QR_PROBE_OUT="$PWD/ci-out/qr-link.txt" dotnet test tests/TabStudio.Link.Tests -c Release --filter "FullyQualifiedName~QrRateProbe|FullyQualifiedName~QrCodeTests" > ci-out/link.log 2>&1 || tail -n 30 ci-out/link.log
+          QR_PROBE_OUT="$PWD/ci-out/qr-app.txt" dotnet test tests/TabStudio.App.Tests -c Release --filter "FullyQualifiedName~QrRateProbe|FullyQualifiedName~QrFrameDecoderTests" > ci-out/app.log 2>&1 || tail -n 30 ci-out/app.log
+          grep -E 'Passed!|Failed!|Total tests' ci-out/link.log ci-out/app.log || true
+          { echo '```'; cat ci-out/qr-link.txt ci-out/qr-app.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          cat ci-out/qr-link.txt ci-out/qr-app.txt
+
+      - name: Publish logs
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs.sh ide-investigation-qr ${{ job.status }}

@@ -16,7 +16,7 @@ namespace GcBridgeRace;
 /// <item>A large, live object graph: about a million small objects, dictionaries whose entry arrays are large
 /// objects (over 8,000 bytes) and arrays over 1 MB, which Mono maps one by one.</item>
 /// <item>A Java peer that is dead on the managed side, waiting on the Java side, whose managed fields reach the
-/// graph. <see cref="Handler.Post(Action)"/> makes one per call: a <c>Java.Lang.Thread.RunnableImplementor</c>
+/// graph. <see cref="Handler.PostDelayed(Action, long)"/> makes one per call: a <c>Java.Lang.Thread.RunnableImplementor</c>
 /// that only a ConditionalWeakTable keyed on its own Action holds, which Avalonia's Android dispatcher does for
 /// every signal. In a minor collection every old object counts as dead to the bridge, so its pass walks the whole
 /// graph and tags each object's header for hundreds of milliseconds.</item>
@@ -48,8 +48,10 @@ public sealed class MainActivity : Activity
         {
             while (true)
             {
-                // The closure captures graph, so the waiting RunnableImplementor reaches all of it.
-                main.Post(() => graph.Touch());
+                // The closure captures graph, so a waiting RunnableImplementor reaches all of it. Run() disposes the
+                // implementor, so it is a dead bridge object only while it waits: delayed, about fifty wait at any
+                // time, and every minor collection finds some.
+                Post(main, graph);
                 Thread.Sleep(2);
             }
         });
@@ -72,6 +74,13 @@ public sealed class MainActivity : Activity
     }
 
     private static void Start(Action body) => new Thread(() => body()) { IsBackground = true }.Start();
+
+    /// <summary>
+    /// Posts a new closure, from a frame of its own so that no stale slot of the posting loop keeps the closure alive:
+    /// Mono scans thread stacks conservatively, and a live closure would end the bridge's walk at it.
+    /// </summary>
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    private static void Post(Handler main, Graph graph) => main.PostDelayed(() => graph.Touch(), 100);
 }
 
 /// <summary>A small object of the graph.</summary>
