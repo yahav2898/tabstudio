@@ -9,8 +9,11 @@ namespace TabStudio.App.ViewModels;
 /// <summary>Fetch, pull, sync, publishing a folder to GitHub, and opening the repository's page.</summary>
 public sealed partial class GitChangesViewModel
 {
-    /// <summary>What a published folder's <c>.gitignore</c> starts with when it has none: build output and IDE files.</summary>
-    internal const string DefaultGitIgnore = "bin/\nobj/\n.vs/\n*.user\n";
+    /// <summary>
+    /// What a published folder's <c>.gitignore</c> starts with when it has none: build output, IDE files, and
+    /// TabStudio's own sync folder, so Git on a computer leaves it alone too.
+    /// </summary>
+    internal const string DefaultGitIgnore = "bin/\nobj/\n.vs/\n*.user\n.tabstudio/\n";
 
     /// <summary>The name of the repository "Publish to GitHub" creates.</summary>
     [ObservableProperty]

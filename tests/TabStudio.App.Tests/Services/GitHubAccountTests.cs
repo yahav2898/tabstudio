@@ -1,4 +1,6 @@
 using TabStudio.App.Services;
+using TabStudio.App.Tests.ViewModels;
+using TabStudio.App.ViewModels;
 using TabStudio.SourceControl.GitHub;
 using TabStudio.Testing;
 
@@ -71,6 +73,31 @@ public sealed class GitHubAccountTests : IDisposable
         Assert.Null(account.User);
         Assert.False(account.CreateClient().IsSignedIn);
         Assert.False(_github.CreateAccount(_paths).IsSignedIn);
+    }
+
+    [Fact]
+    public async Task The_dialog_explains_a_refused_token_and_links_to_GitHub_s_token_page()
+    {
+        var browser = new FakeBrowser();
+        using var dialog = new GitHubAccountViewModel(_github.CreateAccount(_paths), browser);
+        dialog.Open();
+        Assert.False(dialog.SignInCommand.CanExecute(null));
+
+        dialog.Token = "wrong-token";
+        await dialog.SignInCommand.ExecuteAsync(null);
+        Assert.True(dialog.IsOpen);
+        Assert.False(dialog.IsSignedIn);
+        Assert.Contains("did not accept this token", dialog.ErrorText, StringComparison.Ordinal);
+
+        await dialog.CreateTokenCommand.ExecuteAsync(null);
+        Assert.Equal(GitHubAccount.NewTokenUri, Assert.Single(browser.Opened));
+
+        dialog.Token = FakeGitHub.Token;
+        await dialog.SignInCommand.ExecuteAsync(null);
+        Assert.False(dialog.IsOpen);
+        Assert.Equal("Signed in to GitHub as tester", dialog.StatusText);
+        Assert.Equal("tester", dialog.ButtonText);
+        Assert.Equal(string.Empty, dialog.Token);
     }
 
     public void Dispose()

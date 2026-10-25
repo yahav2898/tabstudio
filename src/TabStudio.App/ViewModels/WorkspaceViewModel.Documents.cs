@@ -199,6 +199,12 @@ public sealed partial class WorkspaceViewModel
 
     private async Task<bool> SaveDocumentAsync(DocumentViewModel document)
     {
+        if (document.IsComparison)
+        {
+            // A comparison tab is read-only and has no file of its own.
+            return true;
+        }
+
         try
         {
             await document.SaveAsync();

@@ -185,6 +185,10 @@ public sealed class GitChangesTests
         Assert.Equal(tab.Comparison.Diff.Text, tab.Document.Text);
         Assert.False(tab.IsDirty);
 
+        // Saving a comparison tab writes nothing: it has no file of its own.
+        await fixture.Workspace.SaveCommand.ExecuteAsync(null);
+        Assert.False(File.Exists(tab.FilePath));
+
         var count = fixture.Workspace.Documents.Count;
         await git.Changes.Single().CompareCommand.ExecuteAsync(null);
         Assert.Equal(count, fixture.Workspace.Documents.Count);
@@ -242,6 +246,31 @@ public sealed class GitChangesTests
         Assert.Equal("Pull request #1: Greet more warmly", git.PullRequestText);
         await git.OpenPullRequestCommand.ExecuteAsync(null);
         Assert.Equal("https://github.test/tester/hello/pull/1", Assert.Single(fixture.Browser.Opened).ToString());
+    }
+
+    [AvaloniaFact]
+    public async Task A_folder_on_a_commit_cannot_commit_until_it_is_on_a_new_branch()
+    {
+        using var fixture = new GitWorkspaceFixture();
+        await fixture.OpenLinkedSampleAsync(atCommit: true);
+        var git = fixture.Git;
+        Assert.True(git.IsDetached);
+        Assert.Equal(fixture.GitHub.Head(GitWorkspaceFixture.Repository, "main")[..7], git.BranchName);
+
+        await fixture.WriteAsync("NOTES.md", "# Notes\n");
+        git.CommitMessage = "Add notes";
+        Assert.False(git.CommitCommand.CanExecute(null));
+
+        var create = git.NewBranchCommand.ExecuteAsync(null);
+        fixture.Workspace.Prompt.Text = "notes";
+        fixture.Workspace.Prompt.ConfirmCommand.Execute(null);
+        await create;
+
+        Assert.False(git.IsDetached);
+        Assert.Equal("notes", git.BranchName);
+        Assert.True(git.CommitCommand.CanExecute(null));
+        await git.CommitCommand.ExecuteAsync(null);
+        Assert.Equal("Add notes", fixture.GitHub.HeadMessage(GitWorkspaceFixture.Repository, "notes"));
     }
 
     [AvaloniaFact]

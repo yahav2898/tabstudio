@@ -45,7 +45,9 @@ internal sealed class GitWorkspaceFixture : IDisposable
     public string Folder { get; private set; } = string.Empty;
 
     /// <summary>Puts the sample on the fake GitHub, downloads it like the start screen and opens it.</summary>
-    public async Task OpenLinkedSampleAsync(bool signIn = true)
+    /// <param name="signIn">Whether to sign in to the fake first.</param>
+    /// <param name="atCommit">Whether to download the commit rather than the branch, as a link to a commit does.</param>
+    public async Task OpenLinkedSampleAsync(bool signIn = true, bool atCommit = false)
     {
         if (signIn)
         {
@@ -53,7 +55,8 @@ internal sealed class GitWorkspaceFixture : IDisposable
         }
 
         GitHub.AddRepository(Repository, await SampleFilesAsync(Paths));
-        Folder = await new GitHubImporter(Account, Paths).ImportAsync(new GitHubRepository(FakeGitHub.Login, Repository, null));
+        var reference = atCommit ? GitHub.Head(Repository, "main")[..7] : null;
+        Folder = await new GitHubImporter(Account, Paths).ImportAsync(new GitHubRepository(FakeGitHub.Login, Repository, reference));
         await Workspace.LoadAsync(Path.Combine(Folder, "HelloTablet.slnx"));
         await UiTestHelpers.WaitUntilAsync(() => Git.IsLinked && Git.BranchName.Length > 0, because: "the Git Changes window to find the link");
     }

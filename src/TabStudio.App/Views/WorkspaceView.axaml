@@ -434,8 +434,7 @@
           </StackPanel>
           <TextBlock Text="{Binding DeviceText}" VerticalAlignment="Center"
                      IsVisible="{Binding DeviceText, Converter={x:Static ObjectConverters.IsNotNull}}" />
-          <Button Theme="{StaticResource ToolButton}" Height="24" MinHeight="24" MinWidth="0" Padding="6,0" CornerRadius="4"
-                  Foreground="{DynamicResource Brush.OnAccent}" ToolTip.Tip="Git Changes" Command="{Binding ShowGitChangesCommand}"
+          <Button Theme="{StaticResource StatusBarButton}" Height="24" ToolTip.Tip="Git Changes" Command="{Binding ShowGitChangesCommand}"
                   IsVisible="{Binding GitChanges.IsLinked}">
             <StackPanel Orientation="Horizontal" Spacing="5">
               <controls:StrokeIcon Size="13" Data="{StaticResource Icon.Branch}" />

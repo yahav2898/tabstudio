@@ -51,9 +51,11 @@ public sealed partial class WorkspaceViewModel : ISourceControlHost
         if (earlier is not null)
         {
             Documents.Remove(earlier);
+            Detach(earlier);
             earlier.Dispose();
         }
 
+        Attach(document);
         Documents.Insert(index, document);
         ActiveDocument = document;
     }

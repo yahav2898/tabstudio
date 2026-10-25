@@ -68,6 +68,7 @@ public sealed class DiffView : UserControl, IDisposable
         Content = new DockPanel { Children = { _header, _editor } };
 
         _header.MoveRequested += OnMoveRequested;
+        _editor.TextArea.Caret.PositionChanged += OnCaretPositionChanged;
         AddHandler(KeyDownEvent, OnKeyDown, RoutingStrategies.Tunnel);
         document.ActionRequested += OnActionRequested;
         document.ComparisonChanged += OnComparisonChanged;
@@ -82,6 +83,7 @@ public sealed class DiffView : UserControl, IDisposable
         _document.ActionRequested -= OnActionRequested;
         _document.ComparisonChanged -= OnComparisonChanged;
         _header.MoveRequested -= OnMoveRequested;
+        _editor.TextArea.Caret.PositionChanged -= OnCaretPositionChanged;
         _editor.TextArea.RemoveHandler(TappedEvent, OnTapped);
         RemoveHandler(KeyDownEvent, OnKeyDown);
         _search.Uninstall();
@@ -141,6 +143,15 @@ public sealed class DiffView : UserControl, IDisposable
         index >= 0 && index < lines.Count && lines[index].Kind is DiffLineKind.Added or DiffLineKind.Removed;
 
     private IReadOnlyList<DiffLine>? Lines() => _document.Comparison?.Diff.Lines;
+
+    /// <summary>The status bar shows the line in the file the caret is on: the working copy's, or the unmodified one's for a removed line.</summary>
+    private void OnCaretPositionChanged(object? sender, EventArgs e)
+    {
+        var caret = _editor.TextArea.Caret;
+        var line = DiffColors.LineAt(Lines(), caret.Line);
+        _document.CaretLine = line?.NewNumber ?? line?.OldNumber ?? caret.Line;
+        _document.CaretColumn = caret.Column;
+    }
 
     private void OnMoveRequested(object? sender, int direction)
     {

@@ -201,4 +201,19 @@
     </Style>
   </ControlTheme>
 
+  <!-- A flat button on the accent-colored status bar, such as the current branch. -->
+  <ControlTheme x:Key="StatusBarButton" TargetType="Button" BasedOn="{StaticResource ToolButton}">
+    <Setter Property="Foreground" Value="{DynamicResource Brush.OnAccent}" />
+    <Setter Property="MinHeight" Value="24" />
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="Padding" Value="6,0" />
+    <Setter Property="CornerRadius" Value="4" />
+    <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#26FFFFFF" />
+    </Style>
+    <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#40FFFFFF" />
+    </Style>
+  </ControlTheme>
+
 </ResourceDictionary>

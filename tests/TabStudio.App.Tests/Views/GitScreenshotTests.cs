@@ -80,6 +80,41 @@ public sealed class GitScreenshotTests : IDisposable
     }
 
     [AvaloniaFact]
+    public async Task Branches_pull_request_and_history_dialogs()
+    {
+        var window = Show(1280, 800);
+        var workspace = await OpenLinkedSampleAsync();
+        var git = workspace.GitChanges;
+        workspace.SelectSideBarPanelCommand.Execute(SideBarPanel.GitChanges);
+        var head = _github.Head(Repository, "main");
+        await _github.CreateClient().CreateBranchAsync(FakeGitHub.Login, Repository, "release/1.0", head);
+        await _github.CreateClient().CreateBranchAsync(FakeGitHub.Login, Repository, "feature/greetings", head);
+        _github.Push(Repository, "main", "Explain how to run the sample", new Dictionary<string, string?> { ["README.md"] = "# HelloTablet\n\nPress F5.\n" });
+        _github.Push(Repository, "main", "Greet in the evening too", new Dictionary<string, string?> { ["docs/NOTES.md"] = "# Notes\n" });
+
+        await git.OpenBranchPickerCommand.ExecuteAsync(null);
+        UiTestHelpers.SaveScreenshot(window, "11-git-branches");
+        Assert.Equal(3, git.Branches.Count);
+
+        await git.SwitchBranchCommand.ExecuteAsync(git.Branches.Single(b => b.Name == "feature/greetings"));
+        await WriteAsync(Greeter, (await File.ReadAllTextAsync(PathOf(Greeter))).Replace("\"developer\"", "\"friend\"", StringComparison.Ordinal));
+        git.CommitMessage = "Call people friends";
+        await git.CommitCommand.ExecuteAsync(null);
+        await git.OpenPullRequestFormCommand.ExecuteAsync(null);
+        git.PullRequestDescription = "Friendlier greetings for everyone who runs the sample.";
+        await UiTestHelpers.WaitUntilAsync(() => true);
+        UiTestHelpers.SaveScreenshot(window, "12-git-pull-request");
+        Assert.True(git.IsPullRequestFormOpen);
+
+        await git.CreatePullRequestCommand.ExecuteAsync(null);
+        await git.OpenHistoryCommand.ExecuteAsync(null);
+        await UiTestHelpers.WaitUntilAsync(() => true);
+        UiTestHelpers.SaveScreenshot(window, "13-git-history");
+        Assert.Equal(2, git.History.Count);
+        Assert.True(git.HasPullRequest);
+    }
+
+    [AvaloniaFact]
     public async Task Signing_in_to_GitHub()
     {
         var window = Show(1280, 800);

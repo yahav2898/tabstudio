@@ -94,6 +94,8 @@
               <TextBlock Text="{Binding CommitButtonText}" VerticalAlignment="Center" />
             </StackPanel>
           </Button>
+          <TextBlock Classes="muted small" TextWrapping="Wrap" Margin="0,8,0,0" IsVisible="{Binding IsDetached}"
+                     Text="This folder holds a tag or commit, not a branch. Create a branch from the branch button to commit." />
 
           <!-- After pushing a branch: its pull request, or a way to create one -->
           <Button Theme="{StaticResource ToolButton}" Height="36" MinHeight="36" Padding="6,0" Margin="0,6,0,0" HorizontalAlignment="Left"

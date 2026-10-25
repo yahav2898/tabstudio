@@ -41,7 +41,8 @@ public sealed partial class GitChangesViewModel
             }
 
             var label = $"{sync.Link.Branch ?? "commit"} @ {sync.Link.BaseCommit[..Math.Min(7, sync.Link.BaseCommit.Length)]}";
-            _host.ShowComparison(new FileComparison(item.FullPath, item.RelativePath, label, InlineDiff.Create(before, after)));
+            var diff = await Task.Run(() => InlineDiff.Create(before, after), _lifetime.Token);
+            _host.ShowComparison(new FileComparison(item.FullPath, item.RelativePath, label, diff));
         }
         catch (OperationCanceledException)
         {
