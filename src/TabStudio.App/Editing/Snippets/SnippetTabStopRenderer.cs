@@ -1,5 +1,6 @@
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
+using AvaloniaEdit;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.Rendering;
 using TabStudio.App.Editing.Extensions;

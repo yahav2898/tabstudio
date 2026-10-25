@@ -33,7 +33,7 @@ public sealed partial class ReadmeImageViewModel : ReadmeSegmentViewModel
     /// <param name="path">The file in an installed extension, or <see langword="null"/>.</param>
     public ReadmeImageViewModel(string altText, Uri? address, string? path)
     {
-        AltText = altText;
+        AltText = string.IsNullOrWhiteSpace(altText) ? "Image" : altText;
         _address = address;
         _path = path;
     }

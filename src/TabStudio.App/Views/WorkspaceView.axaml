@@ -4,6 +4,7 @@
              xmlns:conv="using:TabStudio.App.Converters"
              xmlns:views="using:TabStudio.App.Views"
              xmlns:actionViews="using:TabStudio.App.Views.Actions"
+             xmlns:extensionViews="using:TabStudio.App.Views.Extensions"
              xmlns:vm="using:TabStudio.App.ViewModels"
              xmlns:sys="using:System"
              x:Class="TabStudio.App.Views.WorkspaceView"
@@ -36,6 +37,7 @@
     <KeyBinding Gesture="Alt+Left" Command="{Binding NavigateBackCommand}" />
     <KeyBinding Gesture="Alt+Right" Command="{Binding NavigateForwardCommand}" />
     <KeyBinding Gesture="Ctrl+Alt+L" Command="{Binding ToggleSideBarCommand}" />
+    <KeyBinding Gesture="Ctrl+Shift+X" Command="{Binding ShowExtensionsCommand}" />
   </UserControl.KeyBindings>
 
   <Grid RowDefinitions="40,46,*,28">
@@ -74,6 +76,7 @@
               <MenuItem Header="_Parameter Info" InputGesture="Ctrl+Shift+Space" Command="{Binding ParameterInfoCommand}" />
               <MenuItem Header="_Quick Info (Ctrl+K, Ctrl+I)" Command="{Binding QuickInfoCommand}" />
               <MenuItem Header="Complete _Word" InputGesture="Ctrl+Space" Command="{Binding CompleteWordCommand}" />
+              <MenuItem Header="Insert _Snippet... (Ctrl+K, Ctrl+X)" Command="{Binding InsertSnippetCommand}" />
             </MenuItem>
             <MenuItem Header="Re_factor">
               <MenuItem Header="_Rename... (Ctrl+R, Ctrl+R)" InputGesture="F2" Command="{Binding RenameSymbolCommand}" />
@@ -161,6 +164,15 @@
             <MenuItem Header="_Cancel Test Run" Command="{Binding Tests.CancelCommand}" />
             <Separator />
             <MenuItem Header="Test E_xplorer (Ctrl+E, T)" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}" />
+          </MenuItem>
+          <MenuItem Header="E_xtensions">
+            <MenuItem Header="_Manage Extensions" InputGesture="Ctrl+Shift+X" Command="{Binding ShowExtensionsCommand}" IsEnabled="{Binding HasExtensions}" />
+            <MenuItem Header="_Install from VSIX..." Command="{Binding InstallFromVsixCommand}" IsEnabled="{Binding HasExtensions}" />
+            <Separator />
+            <MenuItem Header="_Color Theme..." Command="{Binding SelectColorThemeCommand}" IsEnabled="{Binding HasExtensions}" />
+            <MenuItem Header="_File Icon Theme..." Command="{Binding SelectFileIconThemeCommand}" IsEnabled="{Binding HasExtensions}" />
+            <Separator />
+            <MenuItem Header="Check for _Updates" Command="{Binding CheckForExtensionUpdatesCommand}" IsEnabled="{Binding HasExtensions}" />
           </MenuItem>
           <MenuItem Header="_Window">
             <MenuItem Header="_Next Document" InputGesture="Ctrl+Tab" Command="{Binding NextDocumentCommand}" />
@@ -696,6 +708,9 @@
 
     <!-- GitHub Actions' dialog: Run workflow. -->
     <actionViews:ActionsDialogsView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding Actions}" />
+
+    <!-- The quick pick: color themes, file icon themes and snippets. -->
+    <extensionViews:QuickPickView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding QuickPick}" />
 
     <!-- The in-app dialog that asks for names and confirmations. -->
     <Panel Grid.Row="0" Grid.RowSpan="4" Background="#99000000" IsVisible="{Binding Prompt.IsOpen}">

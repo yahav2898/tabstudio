@@ -22,6 +22,6 @@ public interface ISnippetEditor
     void InsertSnippet(SnippetDefinition snippet, int start, int length);
 
     /// <summary>Replaces the text of the current choice tab stop with one of its options.</summary>
-    /// <param name="option">The chosen option.</param>
-    void ChooseOption(string option);
+    /// <param name="choice">The chosen option.</param>
+    void ChooseOption(string choice);
 }

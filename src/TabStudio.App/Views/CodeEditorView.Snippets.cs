@@ -50,7 +50,7 @@ public sealed partial class CodeEditorView : ISnippetEditor
     void ISnippetEditor.InsertSnippet(SnippetDefinition snippet, int start, int length) => InsertSnippet(snippet, start, length);
 
     /// <inheritdoc />
-    void ISnippetEditor.ChooseOption(string option)
+    void ISnippetEditor.ChooseOption(string choice)
     {
         if (_snippet is not { IsActive: true } session)
         {
@@ -61,8 +61,8 @@ public sealed partial class CodeEditorView : ISnippetEditor
         {
             if (range.IsPrimary && range.Index == session.CurrentIndex)
             {
-                _editor.Document.Replace(range.Start, range.Length, option);
-                _editor.Select(range.Start, option.Length);
+                _editor.Document.Replace(range.Start, range.Length, choice);
+                _editor.Select(range.Start, choice.Length);
                 ShowTabStops();
                 return;
             }

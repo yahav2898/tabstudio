@@ -85,7 +85,7 @@ public sealed partial class ExtensionItemViewModel : ObservableObject
 
     /// <summary>The installed version, or <see langword="null"/> when it is not installed.</summary>
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsInstalled), nameof(CanInstall), nameof(StateText), nameof(HasState))]
+    [NotifyPropertyChangedFor(nameof(IsInstalled), nameof(CanInstall), nameof(CanUpdate), nameof(StateText), nameof(HasState))]
     public partial string? InstalledVersion { get; private set; }
 
     /// <summary>Whether the installed extension is enabled.</summary>
@@ -95,12 +95,12 @@ public sealed partial class ExtensionItemViewModel : ObservableObject
 
     /// <summary>The newer version on the registry, or <see langword="null"/>.</summary>
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(HasUpdate), nameof(StateText), nameof(HasState))]
+    [NotifyPropertyChangedFor(nameof(HasUpdate), nameof(CanUpdate), nameof(StateText), nameof(HasState))]
     public partial string? UpdateVersion { get; private set; }
 
     /// <summary>Whether it is being installed, updated or removed.</summary>
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(CanInstall), nameof(StateText), nameof(HasState))]
+    [NotifyPropertyChangedFor(nameof(CanInstall), nameof(CanUpdate), nameof(StateText), nameof(HasState))]
     public partial bool IsBusy { get; private set; }
 
     /// <summary>How much of the download is done, from 0 to 1, while installing.</summary>
@@ -116,11 +116,13 @@ public sealed partial class ExtensionItemViewModel : ObservableObject
     /// <summary>Whether the list shows an Install button for it.</summary>
     public bool CanInstall => !IsInstalled && !IsBusy;
 
-    /// <summary>A short state for the list, such as "Installed", "Disabled" or "Update to 1.2.0".</summary>
+    /// <summary>Whether the list shows an Update button for it.</summary>
+    public bool CanUpdate => IsInstalled && HasUpdate && !IsBusy;
+
+    /// <summary>A short state for the list: "Installing…", "Installed" or "Disabled"; empty when a button says it.</summary>
     public string StateText => IsBusy ? "Installing…"
-        : HasUpdate && IsInstalled ? $"Update to {UpdateVersion}"
         : IsInstalled && !IsEnabled ? "Disabled"
-        : IsInstalled ? "Installed"
+        : IsInstalled && !HasUpdate ? "Installed"
         : string.Empty;
 
     /// <summary>Whether the list shows <see cref="StateText"/>.</summary>

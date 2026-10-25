@@ -81,7 +81,19 @@ public sealed partial class ExtensionsViewModel : ObservableObject, IDisposable
 
     /// <summary>How many extensions are installed, for the tab's count.</summary>
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasInstalled))]
     public partial int InstalledCount { get; private set; }
+
+    /// <summary>Whether any extension is installed.</summary>
+    public bool HasInstalled => InstalledCount > 0;
+
+    /// <summary>What the Installed list says when it is empty, or <see langword="null"/> when it is not.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasInstalledMessage))]
+    public partial string? InstalledMessage { get; private set; }
+
+    /// <summary>Whether <see cref="InstalledMessage"/> is shown.</summary>
+    public bool HasInstalledMessage => InstalledMessage is not null;
 
     /// <summary>How many updates are available, for the tab's badge.</summary>
     [ObservableProperty]
@@ -253,6 +265,9 @@ public sealed partial class ExtensionsViewModel : ObservableObject, IDisposable
                 || e.Id.ToString().Contains(filter, StringComparison.OrdinalIgnoreCase)
                 || e.Manifest.Description.Contains(filter, StringComparison.CurrentCultureIgnoreCase))
             .Select(e => WithState(ExtensionItemViewModel.FromInstalled(this, e))));
+        InstalledMessage = InstalledItems.Count > 0 ? null
+            : _installed.Count == 0 ? "No extensions are installed yet. Browse Open VSX for languages, themes and snippets, or install a .vsix file."
+            : $"No installed extensions match “{filter}”.";
     }
 
     /// <summary>Shows whether an item is installed, has an update or is being installed.</summary>
