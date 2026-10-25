@@ -43,6 +43,17 @@ public static partial class SelfTest
 
         var success = workspace.Output.Text.Contains($"Hello, {Name}! This is Go", StringComparison.Ordinal)
             && workspace.Output.Text.Contains("has exited with code 0", StringComparison.Ordinal);
+        if (success)
+        {
+            var debugged = await DebugCompiledTemplateAsync(workspace, "main.go", "return message", "name", Name, cancellationToken);
+            if (!debugged.Success)
+            {
+                return debugged;
+            }
+
+            return new(true, debugged.Message, clock.Elapsed);
+        }
+
         return new(success, success ? "Go: installed from Alpine, template built and ran with console input" : $"Go: {LastLines(workspace)}", clock.Elapsed);
     }
 }

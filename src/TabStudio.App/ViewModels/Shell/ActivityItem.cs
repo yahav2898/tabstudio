@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Windows.Input;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -71,6 +72,12 @@ public sealed partial class ActivityItem : ObservableObject
 
     /// <summary>Its key gesture, or <see langword="null"/>.</summary>
     public string? Gesture { get; }
+
+    /// <summary>
+    /// What a tap runs instead of showing a tool window, such as Extensions, which opens a document; such an item is
+    /// never the selected one. <see langword="null"/> for a tool window.
+    /// </summary>
+    public ICommand? Command { get; init; }
 
     /// <summary>Its name.</summary>
     [ObservableProperty]

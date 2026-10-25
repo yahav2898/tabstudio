@@ -4,17 +4,21 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using TabStudio.App.Input;
 using TabStudio.App.ViewModels.Search;
 
 namespace TabStudio.App.Views.Search;
 
 /// <summary>
 /// The search over the shell: the query box has the keyboard with its text selected, the arrow keys move through the
-/// results, Tab and Shift+Tab change the scope, Enter or a tap opens, and Escape or a tap outside closes.
+/// results, Tab and Shift+Tab change the scope, Enter or a tap opens, and Escape or a tap outside closes. Closing gives
+/// the keyboard back to where it was, such as the editor; on a touch screen it lets go of it, so Android's on-screen
+/// keyboard goes away with the search.
 /// </summary>
 public sealed partial class UnifiedSearchView : UserControl
 {
     private UnifiedSearchViewModel? _viewModel;
+    private IInputElement? _returnFocus;
 
     /// <summary>Creates the view; its data context is the <see cref="UnifiedSearchViewModel"/>.</summary>
     public UnifiedSearchView()
@@ -50,6 +54,7 @@ public sealed partial class UnifiedSearchView : UserControl
         switch (e.PropertyName)
         {
             case nameof(UnifiedSearchViewModel.IsOpen) when _viewModel?.IsOpen == true:
+                _returnFocus = TopLevel.GetTopLevel(this)?.FocusManager?.GetFocusedElement();
                 Dispatcher.UIThread.Post(
                     () =>
                     {
@@ -57,6 +62,9 @@ public sealed partial class UnifiedSearchView : UserControl
                         QueryBox.SelectAll();
                     },
                     DispatcherPriority.Background);
+                break;
+            case nameof(UnifiedSearchViewModel.IsOpen):
+                ReturnFocus();
                 break;
             case nameof(UnifiedSearchViewModel.SelectedRow) when _viewModel?.SelectedRow is { } selected:
                 Dispatcher.UIThread.Post(() => ResultList.ScrollIntoView(selected), DispatcherPriority.Background);
@@ -99,6 +107,28 @@ public sealed partial class UnifiedSearchView : UserControl
         }
 
         e.Handled = true;
+    }
+
+    /// <summary>
+    /// Gives the keyboard focus back after the search closed, unless what the search opened, such as an editor, took it.
+    /// </summary>
+    private void ReturnFocus()
+    {
+        var previous = _returnFocus;
+        _returnFocus = null;
+        if (!IsKeyboardFocusWithin && !QueryBox.IsFocused)
+        {
+            return;
+        }
+
+        if (!InputModality.IsTouch && previous is InputElement { IsEffectivelyVisible: true } element && !this.IsVisualAncestorOf(element))
+        {
+            element.Focus();
+        }
+        else
+        {
+            TopLevel.GetTopLevel(this)?.FocusManager?.ClearFocus();
+        }
     }
 
     private static void MoveScope(UnifiedSearchViewModel viewModel, int delta)

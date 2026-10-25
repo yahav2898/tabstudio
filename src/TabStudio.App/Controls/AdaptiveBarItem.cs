@@ -46,6 +46,10 @@ public class AdaptiveBarItem : Button
     public static readonly StyledProperty<bool> IsIconFilledProperty =
         AvaloniaProperty.Register<AdaptiveBarItem, bool>(nameof(IsIconFilled));
 
+    /// <summary>The icon's color when it says something, as Stop's red does; the text's color when <see langword="null"/>.</summary>
+    public static readonly StyledProperty<IBrush?> IconBrushProperty =
+        AvaloniaProperty.Register<AdaptiveBarItem, IBrush?>(nameof(IconBrush));
+
     private const double BodyFontSize = 12.5;
 
     private readonly AdaptiveFace _face = new();
@@ -120,6 +124,13 @@ public class AdaptiveBarItem : Button
         set => SetValue(IsIconFilledProperty, value);
     }
 
+    /// <inheritdoc cref="IconBrushProperty"/>
+    public IBrush? IconBrush
+    {
+        get => GetValue(IconBrushProperty);
+        set => SetValue(IconBrushProperty, value);
+    }
+
     /// <summary>Whether the item can shrink to its icon: it has an icon and a label it shows.</summary>
     public bool CanCompact => Icon is not null && ShowsLabel && !string.IsNullOrEmpty(Label);
 
@@ -137,7 +148,8 @@ public class AdaptiveBarItem : Button
     {
         base.OnPropertyChanged(change);
         if (change.Property == IconProperty || change.Property == LabelProperty || change.Property == GestureProperty
-            || change.Property == ShowsLabelProperty || change.Property == IconSizeProperty || change.Property == IsIconFilledProperty)
+            || change.Property == ShowsLabelProperty || change.Property == IconSizeProperty || change.Property == IsIconFilledProperty
+            || change.Property == IconBrushProperty)
         {
             UpdateFace();
         }
@@ -188,6 +200,15 @@ public class AdaptiveBarItem : Button
         _face.Icon.Data = Icon;
         _face.Icon.Size = IconSize;
         _face.Icon.IsFilled = IsIconFilled;
+        if (IconBrush is { } brush)
+        {
+            _face.Icon.Foreground = brush;
+        }
+        else
+        {
+            _face.Icon.ClearValue(StrokeIcon.ForegroundProperty);
+        }
+
         _face.Icon.IsVisible = Icon is not null;
         _face.Label.Text = ShowsLabel ? Label : null;
         _face.Label.IsVisible = ShowsLabel && !string.IsNullOrEmpty(Label);

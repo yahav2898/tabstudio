@@ -105,10 +105,11 @@ internal sealed partial class FormsDesignerView : UserControl, IDisposable
         base.OnSizeChanged(e);
 
         // On a narrow screen, such as a tablet held upright, the form gets the width; the panels open from the toolbar.
+        // A landscape tablet's editor, beside the side bar and the activity bar, keeps them (896 pixels at 1280).
         if (!_sized && e.NewSize.Width > 0)
         {
             _sized = true;
-            if (e.NewSize.Width < 900)
+            if (e.NewSize.Width < 860)
             {
                 _designer.IsToolboxOpen = false;
                 _designer.IsPropertiesOpen = false;
