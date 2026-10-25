@@ -97,13 +97,10 @@ public sealed partial class WindowsBridgeViewModel
     [ObservableProperty]
     public partial string? DebuggerError { get; private set; }
 
-    /// <summary>The choices of how the tablet's input reaches programs.</summary>
-    public IReadOnlyList<BridgeInputPolicyOption> InputPolicies => BridgeInputPolicyOption.All;
-
     /// <summary>How the tablet's input reaches programs on this PC.</summary>
     public BridgeInputPolicyOption InputPolicy
     {
-        get => InputPolicies.First(o => o.Policy == _bridge.InputPolicy);
+        get => BridgeInputPolicyOption.All.First(o => o.Policy == _bridge.InputPolicy);
         set
         {
             if (value is not null && value.Policy != _bridge.InputPolicy)

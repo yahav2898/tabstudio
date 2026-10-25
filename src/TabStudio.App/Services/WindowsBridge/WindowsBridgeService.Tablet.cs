@@ -69,7 +69,7 @@ public sealed partial class WindowsBridgeService
     }
 
     /// <summary>The PC's name, such as <c>DESKTOP-7Q2M</c>, while a PC is paired.</summary>
-    public string? PcName => Pc?.Name ?? PairedPcs.Devices.FirstOrDefault()?.Name;
+    public string? PcName => Pc?.Name ?? FirstPairedPc()?.Name;
 
     /// <summary>Whether a PC is paired, so Windows-only projects can run.</summary>
     public bool HasPairedPc => PcName is not null;
@@ -189,7 +189,7 @@ public sealed partial class WindowsBridgeService
             return IsConnected ? Client : null;
         }
 
-        var pc = Pc ?? PairedPcs.Devices.FirstOrDefault();
+        var pc = Pc ?? FirstPairedPc();
         return pc is not null && await ConnectAsync(pc, cancellationToken).ConfigureAwait(false) ? Client : null;
     }
 
@@ -242,9 +242,11 @@ public sealed partial class WindowsBridgeService
         PairedPcs.Forget(pc.Fingerprint);
     }
 
+    private LinkPairedDevice? FirstPairedPc() => PairedPcs.Devices is { Count: > 0 } devices ? devices[0] : null;
+
     private void InitializeTablet()
     {
-        _pc = PairedPcs.Devices.FirstOrDefault();
+        _pc = FirstPairedPc();
         Client.StatusChanged += (_, status) =>
         {
             lock (_gate)

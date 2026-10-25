@@ -175,9 +175,9 @@ public sealed class WindowsBridgeTests : IDisposable
         Assert.Equal("dotnet build", build.Tool);
 
         var (app, window) = await bridge.RunAsync(project, build.Program!, title);
-        var started = await bridge.Client.StartStreamAsync(app.AppId, window.Id, 1920, 1200);
-        using var stream = new BridgeStreamReceiver(bridge.Client, started.StreamId, started.CaptureMethod);
+        using var stream = await BridgeStreamReceiver.StartAsync(bridge.Client, app.AppId, window.Id, 1920, 1200);
         stream.FrameReady += (_, _) => stream.Shown();
+        stream.Shown();
 
         // The window as it starts: the light background around its button.
         var before = await WindowsLoopback.WaitForFrameAsync(stream, frame => IsBackground(frame, 0xFFF3F3F3), "the window's light background");

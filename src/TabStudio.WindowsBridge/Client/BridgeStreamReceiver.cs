@@ -1,5 +1,6 @@
 using System.Threading.Channels;
 using TabStudio.WindowsBridge.Frames;
+using TabStudio.WindowsBridge.Protocol;
 
 namespace TabStudio.WindowsBridge.Client;
 
@@ -18,28 +19,26 @@ public sealed class BridgeStreamReceiver : IDisposable
     private long _sequence;
     private int _disposed;
 
-    /// <summary>Starts receiving a stream's frames.</summary>
-    /// <param name="client">The connected bridge.</param>
-    /// <param name="streamId">The stream.</param>
-    /// <param name="captureMethod">How the PC captures the window.</param>
-    public BridgeStreamReceiver(BridgeClient client, int streamId, string captureMethod)
+    private BridgeStreamReceiver(BridgeClient client, int streamId)
     {
-        ArgumentNullException.ThrowIfNull(client);
         _client = client;
         StreamId = streamId;
-        CaptureMethod = captureMethod;
         _client.FrameReceived += OnFrameReceived;
+        _client.StreamEnded += OnStreamEnded;
         _ = Task.Run(DecodeAsync);
     }
 
     /// <summary>Raised on the thread pool when a new picture is ready to draw.</summary>
     public event EventHandler? FrameReady;
 
+    /// <summary>Raised when the bridge ended the stream on its own, with why, if it was not that the window closed.</summary>
+    public event EventHandler<string?>? Ended;
+
     /// <summary>The stream.</summary>
     public int StreamId { get; }
 
     /// <summary>How the PC captures the window, such as <c>Windows.Graphics.Capture</c>.</summary>
-    public string CaptureMethod { get; }
+    public string CaptureMethod { get; private set; } = string.Empty;
 
     /// <summary>The window's width in the PC's pixels, from the newest frame.</summary>
     public int WindowWidth { get; private set; }
@@ -55,6 +54,35 @@ public sealed class BridgeStreamReceiver : IDisposable
 
     /// <summary>Why the stream broke, if a frame could not be decoded.</summary>
     public string? Error { get; private set; }
+
+    /// <summary>Starts streaming a window and receiving its frames, from the first one.</summary>
+    /// <param name="client">The connected bridge.</param>
+    /// <param name="appId">The program.</param>
+    /// <param name="windowId">The window.</param>
+    /// <param name="maxWidth">The most pixels wide to show it; a wider window is scaled down on the PC.</param>
+    /// <param name="maxHeight">The most pixels high to show it.</param>
+    /// <param name="cancellationToken">Gives up.</param>
+    /// <returns>The stream's receiver, which stops the stream when disposed.</returns>
+    /// <exception cref="TabStudio.Link.LinkRemoteException">The program or the window is gone.</exception>
+    /// <exception cref="TabStudio.Link.LinkConnectionLostException">The bridge is not connected.</exception>
+    public static async Task<BridgeStreamReceiver> StartAsync(BridgeClient client, int appId, long windowId, int maxWidth, int maxHeight, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(client);
+
+        // Listening before asking: the PC sends the first frame as soon as the stream starts, maybe before its answer.
+        var receiver = new BridgeStreamReceiver(client, client.NewStreamId());
+        try
+        {
+            var started = await client.StartStreamAsync(receiver.StreamId, appId, windowId, maxWidth, maxHeight, cancellationToken).ConfigureAwait(false);
+            receiver.CaptureMethod = started.CaptureMethod;
+            return receiver;
+        }
+        catch
+        {
+            receiver.Dispose();
+            throw;
+        }
+    }
 
     /// <summary>Reads the window's picture, under the lock that keeps the decoder from changing it meanwhile.</summary>
     /// <param name="read">Reads the picture, such as by copying it into a bitmap; called only once there is one.</param>
@@ -96,6 +124,7 @@ public sealed class BridgeStreamReceiver : IDisposable
         }
 
         _client.FrameReceived -= OnFrameReceived;
+        _client.StreamEnded -= OnStreamEnded;
         _frames.Writer.TryComplete();
         try
         {
@@ -115,6 +144,20 @@ public sealed class BridgeStreamReceiver : IDisposable
         }
     }
 
+    private void OnStreamEnded(object? sender, StreamEnded ended)
+    {
+        if (ended.StreamId == StreamId)
+        {
+            Ended?.Invoke(this, ended.Reason);
+        }
+    }
+
+    /// <summary>Describes the receiver's state, for diagnostics.</summary>
+    /// <returns>The frames decoded and drawn, and the newest frame's size and quality.</returns>
+    public override string ToString() =>
+        $"received {FrameCount} frames (shown {Interlocked.Read(ref _shown)}, newest {Volatile.Read(ref _sequence)}), " +
+        $"{WindowWidth}x{WindowHeight} at level {Level}{(Error is { } error ? $", error: {error}" : string.Empty)}";
+
     private async Task DecodeAsync()
     {
         await foreach (var frame in _frames.Reader.ReadAllAsync().ConfigureAwait(false))
@@ -126,7 +169,7 @@ public sealed class BridgeStreamReceiver : IDisposable
                     _decoder.Apply(frame.Data);
                 }
             }
-            catch (InvalidDataException ex)
+            catch (Exception ex) when (ex is InvalidDataException or ArgumentException or IndexOutOfRangeException)
             {
                 // The picture is out of step with the bridge: the pane starts the stream over.
                 Error = ex.Message;

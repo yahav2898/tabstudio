@@ -17,6 +17,8 @@ internal sealed class FakeDesktop : IBridgeDesktop
     private BridgePcState _state = BridgePcState.Awake;
     private string? _clipboard;
     private long _nextWindow = 0x1000;
+    private int _captures;
+    private CaptureStatus _lastCapture;
 
     public event EventHandler? StateChanged;
 
@@ -101,7 +103,10 @@ internal sealed class FakeDesktop : IBridgeDesktop
         }
     }
 
-    public IWindowCapture StartCapture(long windowId) => new FakeCapture(Find(windowId));
+    /// <summary>How many times windows were captured, and how the last capture went.</summary>
+    public string Captures => $"captured {Volatile.Read(ref _captures)} times (last {_lastCapture})";
+
+    public IWindowCapture StartCapture(long windowId) => new FakeCapture(this, Find(windowId));
 
     public void SendInput(long windowId, IReadOnlyList<BridgeInputEvent> events)
     {
@@ -137,13 +142,21 @@ internal sealed class FakeDesktop : IBridgeDesktop
         }
     }
 
-    private sealed class FakeCapture(FakeWindow window) : IWindowCapture
+    private sealed class FakeCapture(FakeDesktop desktop, FakeWindow window) : IWindowCapture
     {
         private int _version = -1;
 
         public string Method => "Fake capture";
 
         public CaptureResult Capture(FrameBitmap? reuse)
+        {
+            var result = CaptureCore(reuse);
+            Interlocked.Increment(ref desktop._captures);
+            desktop._lastCapture = result.Status;
+            return result;
+        }
+
+        private CaptureResult CaptureCore(FrameBitmap? reuse)
         {
             if (window.IsClosed)
             {

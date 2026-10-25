@@ -103,11 +103,12 @@ public sealed record BridgeWindowInfo(long Id, string Title, int Width, int Heig
 public sealed record AppExited(int AppId, int? ExitCode);
 
 /// <summary>Starts streaming a window to the tablet.</summary>
+/// <param name="StreamId">The tablet's number for the stream, which its frames carry, so the first frame finds its receiver.</param>
 /// <param name="AppId">The program.</param>
 /// <param name="WindowId">The window.</param>
 /// <param name="MaxWidth">The most pixels wide the tablet shows it; a wider window is scaled down before it is sent.</param>
 /// <param name="MaxHeight">The most pixels high the tablet shows it.</param>
-public sealed record StreamRequest(int AppId, long WindowId, int MaxWidth, int MaxHeight);
+public sealed record StreamRequest(int StreamId, int AppId, long WindowId, int MaxWidth, int MaxHeight);
 
 /// <summary>A stream that started.</summary>
 /// <param name="StreamId">The bridge's number for it, which its frames carry.</param>
@@ -117,6 +118,11 @@ public sealed record StreamStarted(int StreamId, string CaptureMethod);
 /// <summary>Names a stream.</summary>
 /// <param name="StreamId">The stream.</param>
 public sealed record StreamReference(int StreamId);
+
+/// <summary>A stream that ended on its own.</summary>
+/// <param name="StreamId">The stream.</param>
+/// <param name="Reason">Why the window could not be captured any more, or <see langword="null"/> when it closed.</param>
+public sealed record StreamEnded(int StreamId, string? Reason);
 
 /// <summary>A frame of a stream; the encoded frame is the notification's attachment.</summary>
 /// <param name="StreamId">The stream.</param>

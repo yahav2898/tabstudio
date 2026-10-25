@@ -1,0 +1,244 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:wb="using:TabStudio.App.ViewModels.WindowsBridge"
+             x:Class="TabStudio.App.Views.WindowsBridge.WindowsBridgeTabView"
+             x:DataType="wb:WindowsBridgeViewModel">
+
+  <!--
+    The Windows Bridge tab of the TabStudio Link dialog. A tablet pairs with a Windows PC here; TabStudio for Windows
+    becomes that PC here, showing its code, what it can build, the tablet it serves and the programs it runs.
+  -->
+
+  <UserControl.DataTemplates>
+    <DataTemplate DataType="wb:BridgeCapabilityRow">
+      <Grid ColumnDefinitions="Auto,*" Margin="0,0,0,6">
+        <Panel Width="18" Margin="0,1,10,0" VerticalAlignment="Top">
+          <controls:StrokeIcon Data="{StaticResource Icon.Check}" Size="15" Foreground="{DynamicResource Brush.Success}" IsVisible="{Binding IsAvailable}" />
+          <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="13" Foreground="{DynamicResource Brush.TextDisabled}" IsVisible="{Binding !IsAvailable}" />
+        </Panel>
+        <TextBlock Grid.Column="1" TextWrapping="Wrap"><Run Text="{Binding Name}" Foreground="{DynamicResource Brush.TextBright}" /><Run Text="  " /><Run Text="{Binding Detail}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="12" /></TextBlock>
+      </Grid>
+    </DataTemplate>
+    <DataTemplate DataType="wb:BridgeToolchainRow">
+      <Grid ColumnDefinitions="Auto,*" Margin="0,0,0,6">
+        <controls:StrokeIcon Data="{StaticResource Icon.Package}" Size="14" Foreground="{DynamicResource Brush.TextSecondary}" Margin="2,2,10,0" VerticalAlignment="Top" />
+        <StackPanel Grid.Column="1" Spacing="1">
+          <TextBlock Text="{Binding Name}" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
+          <TextBlock Classes="muted small" Text="{Binding Detail}" TextTrimming="CharacterEllipsis" />
+        </StackPanel>
+      </Grid>
+    </DataTemplate>
+    <DataTemplate DataType="wb:BridgeRunningAppRow">
+      <Border MinHeight="54" Padding="12,8" Margin="0,0,0,6" CornerRadius="8" Background="{DynamicResource Brush.Control}">
+        <Grid ColumnDefinitions="Auto,*,Auto">
+          <controls:StrokeIcon Data="{StaticResource Icon.Window}" Size="18" Foreground="{DynamicResource Brush.Accent}" Margin="2,0,12,0" VerticalAlignment="Center" />
+          <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+            <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
+            <TextBlock Classes="muted small" Text="{Binding Detail}" TextTrimming="CharacterEllipsis" />
+          </StackPanel>
+          <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Height="38" MinHeight="38" Padding="12,0" Content="Stop" Command="{Binding Stop}" />
+        </Grid>
+      </Border>
+    </DataTemplate>
+  </UserControl.DataTemplates>
+
+  <Panel>
+
+    <!-- On a tablet: a Windows PC to build and run on -->
+    <StackPanel Spacing="14" IsVisible="{Binding IsTablet}">
+      <Border Padding="16,14" CornerRadius="10" Background="{DynamicResource Brush.Panel}" BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1">
+        <Grid ColumnDefinitions="Auto,*,Auto">
+          <Panel Width="12" Height="12" Margin="2,4,14,0" VerticalAlignment="Top">
+            <Ellipse Fill="{DynamicResource Brush.Success}" IsVisible="{Binding IsConnected}" />
+            <Ellipse Fill="{DynamicResource Brush.Warning}" IsVisible="{Binding IsReconnecting}" />
+            <Ellipse Fill="{DynamicResource Brush.Info}" IsVisible="{Binding IsConnecting}" />
+            <Ellipse Fill="{DynamicResource Brush.TextDisabled}" IsVisible="{Binding IsOff}" />
+          </Panel>
+          <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
+            <TextBlock Text="{Binding Title}" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" />
+            <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{Binding Detail}" IsVisible="{Binding Detail, Converter={x:Static ObjectConverters.IsNotNull}}" />
+          </StackPanel>
+          <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Height="40" Padding="16,0" Margin="12,0,0,0" VerticalAlignment="Center"
+                  Content="Disconnect" Command="{Binding DisconnectCommand}" IsVisible="{Binding CanDisconnect}" />
+        </Grid>
+      </Border>
+
+      <TextBlock Foreground="{DynamicResource Brush.Error}" TextWrapping="Wrap" Text="{Binding Error}" IsVisible="{Binding Error, Converter={x:Static ObjectConverters.IsNotNull}}" />
+
+      <StackPanel Spacing="8" IsVisible="{Binding HasCapabilities}">
+        <TextBlock Classes="label" FontWeight="SemiBold" Text="What the PC builds and runs for this tablet" />
+        <ItemsControl ItemsSource="{Binding Capabilities}" />
+      </StackPanel>
+
+      <StackPanel Spacing="8" IsVisible="{Binding HasPairedPcs}">
+        <TextBlock Classes="label" FontWeight="SemiBold" Text="Paired PCs" />
+        <ItemsControl ItemsSource="{Binding PairedPcs}" />
+      </StackPanel>
+
+      <Border Padding="16,14" CornerRadius="10" BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1">
+        <StackPanel Spacing="12">
+          <TextBlock Classes="h2" Text="Pair a Windows PC" />
+          <TextBlock Classes="muted" TextWrapping="Wrap"
+                     Text="On the PC, open TabStudio for Windows, choose File > TabStudio Link > Windows Bridge, and start the bridge. Both devices must be on the same Wi-Fi." />
+          <Button Theme="{StaticResource AccentButton}" Height="44" Padding="18,0" HorizontalAlignment="Left" Command="{Binding ScanCommand}" IsVisible="{Binding CanScan}">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <controls:StrokeIcon Data="{StaticResource Icon.Camera}" Size="16" />
+              <TextBlock Text="Scan its QR code" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+          <TextBlock Classes="muted small" TextWrapping="Wrap" Text="Or type the address and the code the PC shows under its QR code:" />
+          <Grid ColumnDefinitions="*,12,190,12,Auto" RowDefinitions="Auto,Auto">
+            <TextBlock Classes="label" Text="Address" Margin="2,0,0,5" />
+            <TextBlock Grid.Column="2" Classes="label" Text="Code" Margin="2,0,0,5" />
+            <TextBox Grid.Row="1" x:Name="AddressBox" Classes="large mono" Watermark="192.168.1.40:47813" Text="{Binding AddressText}" />
+            <TextBox Grid.Row="1" Grid.Column="2" x:Name="CodeBox" Classes="large mono" Watermark="XXXX-XXXX" MaxLength="10" Text="{Binding CodeText}" />
+            <Button Grid.Row="1" Grid.Column="4" Theme="{StaticResource AccentButton}" Height="44" Padding="22,0" Content="Pair" Command="{Binding PairCommand}" />
+          </Grid>
+          <StackPanel Orientation="Horizontal" Spacing="10" IsVisible="{Binding IsBusy}">
+            <ProgressBar IsIndeterminate="True" Width="120" VerticalAlignment="Center" />
+            <TextBlock Classes="muted" Text="Connecting and checking that it is the right PC…" VerticalAlignment="Center" />
+          </StackPanel>
+        </StackPanel>
+      </Border>
+    </StackPanel>
+
+    <!-- On a Windows PC: being the tablet's Windows Bridge -->
+    <StackPanel Spacing="14" IsVisible="{Binding IsPc}">
+
+      <Border Padding="18,16" CornerRadius="10" Background="{DynamicResource Brush.Panel}" BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1"
+              IsVisible="{Binding IsNotBridging}">
+        <StackPanel Spacing="12">
+          <TextBlock Classes="h2" Text="Build and run a tablet's Windows-only projects here" />
+          <TextBlock Classes="muted" TextWrapping="Wrap"
+                     Text="A paired tablet sends its workspace to this PC, which builds it with this PC's own .NET SDK and Visual Studio, runs the program, and streams its windows to the tablet. Taps and keys on the tablet work the program here." />
+          <StackPanel Spacing="8" Margin="0,2,0,2">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <controls:StrokeIcon Data="{StaticResource Icon.Lock}" Size="15" Foreground="{DynamicResource Brush.AccentText}" />
+              <TextBlock Classes="small" TextWrapping="Wrap" Text="Only tablets that paired with the code shown here are served, over TLS with pinned certificates." VerticalAlignment="Center" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <controls:StrokeIcon Data="{StaticResource Icon.Folder}" Size="15" Foreground="{DynamicResource Brush.AccentText}" />
+              <TextBlock Classes="small" TextWrapping="Wrap" Text="The tablet's files stay on the tablet; this PC keeps a copy to build, in TabStudio's cache." VerticalAlignment="Center" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <controls:StrokeIcon Data="{StaticResource Icon.Warning}" Size="15" Foreground="{DynamicResource Brush.Warning}" />
+              <TextBlock Classes="small" TextWrapping="Wrap" VerticalAlignment="Center"
+                         Text="Building and running the tablet's code runs it on this PC, so pair only tablets you own." />
+            </StackPanel>
+          </StackPanel>
+          <Button Theme="{StaticResource AccentButton}" Height="44" Padding="20,0" HorizontalAlignment="Left" Command="{Binding StartBridgeCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="14" />
+              <TextBlock Text="Start the Windows Bridge" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+          <StackPanel Orientation="Horizontal" Spacing="10" IsVisible="{Binding IsStarting}">
+            <ProgressBar IsIndeterminate="True" Width="120" VerticalAlignment="Center" />
+            <TextBlock Classes="muted" Text="Looking for this PC's .NET SDKs and Visual Studio…" VerticalAlignment="Center" />
+          </StackPanel>
+          <TextBlock Foreground="{DynamicResource Brush.Error}" TextWrapping="Wrap" Text="{Binding BridgeError}" IsVisible="{Binding BridgeError, Converter={x:Static ObjectConverters.IsNotNull}}" />
+        </StackPanel>
+      </Border>
+
+      <StackPanel Spacing="14" IsVisible="{Binding IsBridging}">
+        <Grid ColumnDefinitions="Auto,22,*" IsVisible="{Binding HasNetwork}">
+          <Border Width="220" Height="220" CornerRadius="10" Background="White" VerticalAlignment="Top">
+            <controls:QrCodeView Code="{Binding BridgeQrCode}" />
+          </Border>
+          <StackPanel Grid.Column="2" Spacing="10" VerticalAlignment="Center">
+            <TextBlock Classes="h2" Text="Scan this with TabStudio on the tablet" TextWrapping="Wrap" />
+            <TextBlock Classes="muted" TextWrapping="Wrap" Text="On the tablet: File > TabStudio Link > Windows PC > Scan its QR code. Without a camera, type these instead:" />
+            <Grid ColumnDefinitions="Auto,16,*" RowDefinitions="Auto,6,Auto" Margin="0,4,0,0">
+              <TextBlock Classes="label" Text="Address" VerticalAlignment="Center" />
+              <SelectableTextBlock Grid.Column="2" FontFamily="{DynamicResource CodeFont}" FontSize="19" Foreground="{DynamicResource Brush.TextBright}" Text="{Binding BridgeAddressText}" VerticalAlignment="Center" />
+              <TextBlock Grid.Row="2" Classes="label" Text="Code" VerticalAlignment="Center" />
+              <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal" Spacing="10">
+                <SelectableTextBlock FontFamily="{DynamicResource CodeFont}" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource Brush.AccentText}" Text="{Binding BridgeCodeText}" VerticalAlignment="Center" />
+                <Button Theme="{StaticResource ToolButton}" Height="38" MinHeight="38" Padding="10,0" Command="{Binding NewBridgeCodeCommand}" ToolTip.Tip="Draw a new code; the shown one stops working">
+                  <StackPanel Orientation="Horizontal" Spacing="6">
+                    <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="14" />
+                    <TextBlock Text="New code" VerticalAlignment="Center" />
+                  </StackPanel>
+                </Button>
+              </StackPanel>
+            </Grid>
+            <TextBlock Classes="muted small" TextWrapping="Wrap" Text="The code works once, for ten minutes. A wrong guess replaces it." />
+          </StackPanel>
+        </Grid>
+
+        <Border Padding="14,12" CornerRadius="8" Background="{DynamicResource Brush.Control}" IsVisible="{Binding !HasNetwork}">
+          <StackPanel Orientation="Horizontal" Spacing="10">
+            <controls:StrokeIcon Data="{StaticResource Icon.Warning}" Size="16" Foreground="{DynamicResource Brush.Warning}" />
+            <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Text="This PC is not on a network a tablet can reach. Connect it to the same Wi-Fi as the tablet." />
+          </StackPanel>
+        </Border>
+
+        <Border Padding="16,14" CornerRadius="10" Background="{DynamicResource Brush.Panel}" BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1">
+          <Grid ColumnDefinitions="Auto,*,Auto">
+            <Panel Width="12" Height="12" Margin="2,4,14,0" VerticalAlignment="Top">
+              <Ellipse Fill="{DynamicResource Brush.Success}" IsVisible="{Binding IsServing}" />
+              <Ellipse Fill="{DynamicResource Brush.TextDisabled}" IsVisible="{Binding !IsServing}" />
+            </Panel>
+            <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
+              <TextBlock Text="{Binding BridgeTitle}" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" />
+              <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{Binding BridgeDetail}" IsVisible="{Binding BridgeDetail, Converter={x:Static ObjectConverters.IsNotNull}}" />
+            </StackPanel>
+            <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Height="40" Padding="16,0" Margin="12,0,0,0" VerticalAlignment="Center"
+                    Content="Disconnect" Command="{Binding DisconnectBridgeTabletCommand}" IsVisible="{Binding IsServing}" />
+          </Grid>
+        </Border>
+
+        <StackPanel Spacing="8" IsVisible="{Binding HasRunningApps}">
+          <TextBlock Classes="label" FontWeight="SemiBold" Text="Running for the tablet" />
+          <ItemsControl ItemsSource="{Binding RunningApps}" />
+        </StackPanel>
+
+        <Grid ColumnDefinitions="*,18,*">
+          <StackPanel Spacing="8">
+            <TextBlock Classes="label" FontWeight="SemiBold" Text="What this PC builds" />
+            <ItemsControl ItemsSource="{Binding PcCapabilities}" />
+            <StackPanel Orientation="Horizontal" Spacing="8" IsVisible="{Binding CanInstallDebugger}">
+              <Button Theme="{StaticResource SecondaryButton}" Height="38" Padding="14,0" Command="{Binding InstallDebuggerCommand}" Content="Install netcoredbg" />
+              <TextBlock Classes="muted small" Text="MIT licensed, from Samsung's GitHub" VerticalAlignment="Center" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="10" IsVisible="{Binding IsInstallingDebugger}">
+              <ProgressBar IsIndeterminate="True" Width="100" VerticalAlignment="Center" />
+              <TextBlock Classes="muted small" Text="Downloading netcoredbg…" VerticalAlignment="Center" />
+            </StackPanel>
+            <TextBlock Foreground="{DynamicResource Brush.Error}" TextWrapping="Wrap" Text="{Binding DebuggerError}" IsVisible="{Binding DebuggerError, Converter={x:Static ObjectConverters.IsNotNull}}" />
+          </StackPanel>
+          <StackPanel Grid.Column="2" Spacing="8">
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Classes="label" FontWeight="SemiBold" Text="Found on this PC" VerticalAlignment="Center" />
+              <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Height="32" MinHeight="32" Padding="8,0" Command="{Binding RefreshToolchainsCommand}" ToolTip.Tip="Look again, after installing tools">
+                <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="13" />
+              </Button>
+            </Grid>
+            <ItemsControl ItemsSource="{Binding Toolchains}" />
+          </StackPanel>
+        </Grid>
+
+        <StackPanel Spacing="8">
+          <TextBlock Classes="label" FontWeight="SemiBold" Text="The tablet's taps and keys" />
+          <ComboBox ItemsSource="{x:Static wb:BridgeInputPolicyOption.All}" SelectedItem="{Binding InputPolicy}" MinHeight="38" HorizontalAlignment="Left" MinWidth="360">
+            <ComboBox.ItemTemplate>
+              <DataTemplate x:DataType="wb:BridgeInputPolicyOption">
+                <TextBlock Text="{Binding Name}" />
+              </DataTemplate>
+            </ComboBox.ItemTemplate>
+          </ComboBox>
+          <TextBlock Classes="muted small" TextWrapping="Wrap"
+                     Text="While someone works at this PC, the tablet's input goes to the program's window without taking the mouse, keyboard or focus. Shortcuts with Ctrl, Alt or Windows bring the program to the front." />
+        </StackPanel>
+
+        <StackPanel Spacing="8" IsVisible="{Binding HasBridgeTablets}">
+          <TextBlock Classes="label" FontWeight="SemiBold" Text="Paired tablets" />
+          <ItemsControl ItemsSource="{Binding BridgeTablets}" />
+        </StackPanel>
+
+        <Button Theme="{StaticResource SecondaryButton}" Height="40" Padding="18,0" HorizontalAlignment="Left" Content="Stop the Windows Bridge" Command="{Binding StopBridgeCommand}" />
+      </StackPanel>
+    </StackPanel>
+  </Panel>
+</UserControl>

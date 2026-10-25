@@ -28,7 +28,6 @@ internal sealed class BridgeTablet : ILinkMessageHandler, IDisposable
     private BridgePathMapper? _paths;
     private string? _activity;
     private int _nextApp;
-    private int _nextStream;
     private int _disposed;
 
     /// <summary>Creates the tablet's state.</summary>
@@ -447,7 +446,7 @@ internal sealed class BridgeTablet : ILinkMessageHandler, IDisposable
             app = _apps.GetValueOrDefault(request.AppId)
                 ?? throw new LinkRemoteException(LinkErrorCodes.Failed, "The program is not running any more.");
             connection = _connection ?? throw new LinkConnectionLostException("The tablet is not connected.");
-            replaced = [.. _streams.Values.Where(s => s.WindowId == request.WindowId)];
+            replaced = [.. _streams.Values.Where(s => s.WindowId == request.WindowId || s.Id == request.StreamId)];
             foreach (var stream in replaced)
             {
                 _streams.Remove(stream.Id);
@@ -464,10 +463,15 @@ internal sealed class BridgeTablet : ILinkMessageHandler, IDisposable
             throw new LinkRemoteException(LinkErrorCodes.Failed, "That window is closed.");
         }
 
+        if (request.StreamId <= 0)
+        {
+            throw new LinkRemoteException(LinkErrorCodes.InvalidRequest, "A stream needs the tablet's number for it.");
+        }
+
         BridgeStream started;
         lock (_gate)
         {
-            var id = ++_nextStream;
+            var id = request.StreamId;
             started = new BridgeStream(
                 id,
                 app.Id,
@@ -485,6 +489,9 @@ internal sealed class BridgeTablet : ILinkMessageHandler, IDisposable
             {
                 _streams.Remove(started.Id);
             }
+
+            Post(BridgeMethods.StreamEnded, BridgeJson.ToJson(new StreamEnded(started.Id, started.Failure)));
+            started.Dispose();
         };
         return new StreamStarted(started.Id, started.CaptureMethod);
     }
@@ -500,6 +507,16 @@ internal sealed class BridgeTablet : ILinkMessageHandler, IDisposable
         if (stream is not null)
         {
             _ = Task.Run(stream.Dispose);
+        }
+    }
+
+    /// <summary>Describes the tablet's streams, for diagnostics.</summary>
+    /// <returns>One line per stream.</returns>
+    internal IReadOnlyList<string> DescribeStreams()
+    {
+        lock (_gate)
+        {
+            return [.. _streams.Values.Select(s => s.Describe())];
         }
     }
 

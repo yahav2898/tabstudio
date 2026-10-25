@@ -16,6 +16,9 @@ public enum LinkTab
 
     /// <summary>Being the host for another device.</summary>
     Host,
+
+    /// <summary>Building and running Windows-only projects on a Windows PC, or being that PC.</summary>
+    Bridge,
 }
 
 /// <summary>
@@ -33,12 +36,14 @@ public sealed partial class LinkViewModel : ObservableObject, IDisposable
     /// <summary>Creates the dialog's view model.</summary>
     /// <param name="link">The app's TabStudio Link.</param>
     /// <param name="scanner">Scans QR codes with the camera, where there is one.</param>
-    public LinkViewModel(LinkService link, IQrScanner scanner)
+    /// <param name="bridge">The Windows Bridge tab, where the app has one.</param>
+    public LinkViewModel(LinkService link, IQrScanner scanner, WindowsBridge.WindowsBridgeViewModel? bridge = null)
     {
         ArgumentNullException.ThrowIfNull(link);
         ArgumentNullException.ThrowIfNull(scanner);
         _link = link;
         _scanner = scanner;
+        Bridge = bridge;
         _link.Changed += OnLinkChanged;
         Refresh();
     }

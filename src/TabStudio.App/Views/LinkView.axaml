@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="using:TabStudio.App.Controls"
              xmlns:vm="using:TabStudio.App.ViewModels"
+             xmlns:wbv="using:TabStudio.App.Views.WindowsBridge"
              x:Class="TabStudio.App.Views.LinkView"
              x:DataType="vm:LinkViewModel">
 
@@ -70,6 +71,16 @@
                 <controls:StrokeIcon Data="{StaticResource Icon.Phone}" Size="14" />
                 <TextBlock Text="Be a host" VerticalAlignment="Center" />
                 <Border Classes="pill success" IsVisible="{Binding IsHosting}">
+                  <TextBlock Text="On" />
+                </Border>
+              </StackPanel>
+            </Button>
+            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsBridgeTab}" MinHeight="40" IsVisible="{Binding HasBridge}"
+                    Command="{Binding SelectTabCommand}" CommandParameter="{x:Static vm:LinkTab.Bridge}">
+              <StackPanel Orientation="Horizontal" Spacing="7">
+                <controls:StrokeIcon Data="{StaticResource Icon.Computer}" Size="14" />
+                <TextBlock Text="{Binding Bridge.TabTitle, FallbackValue={x:Null}}" VerticalAlignment="Center" />
+                <Border Classes="pill success" IsVisible="{Binding Bridge.IsOn, FallbackValue=False}">
                   <TextBlock Text="On" />
                 </Border>
               </StackPanel>
@@ -253,6 +264,11 @@
                         Content="Stop hosting" Command="{Binding StopHostingCommand}" />
               </StackPanel>
             </StackPanel>
+
+            <!-- Windows PC: build and run Windows-only projects on a PC, or be that PC -->
+            <Panel IsVisible="{Binding IsBridgeTab}">
+              <wbv:WindowsBridgeTabView DataContext="{Binding Bridge}" />
+            </Panel>
           </Panel>
         </ScrollViewer>
       </DockPanel>

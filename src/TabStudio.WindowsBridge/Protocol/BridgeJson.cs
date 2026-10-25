@@ -82,6 +82,7 @@ public static class BridgeJson
 [JsonSerializable(typeof(StreamRequest))]
 [JsonSerializable(typeof(StreamStarted))]
 [JsonSerializable(typeof(StreamReference))]
+[JsonSerializable(typeof(StreamEnded))]
 [JsonSerializable(typeof(FrameHeader))]
 [JsonSerializable(typeof(FrameShown))]
 [JsonSerializable(typeof(InputBatch))]

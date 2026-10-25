@@ -93,7 +93,9 @@ public sealed unsafe class WindowsBridgeDesktop : IBridgeDesktop
             _ = NativeMethods.ShowWindow(window, NativeMethods.SwShowNoActivate);
         }
 
-        return (_graphicsCapture.Value ? GraphicsCapture.TryStart(window) : null) as IWindowCapture ?? new PrintWindowCapture(window);
+        return (_graphicsCapture.Value ? GraphicsCapture.TryStart(window) : null) is { } graphicsCapture
+            ? new FallbackCapture(graphicsCapture, () => new PrintWindowCapture(window))
+            : new PrintWindowCapture(window);
     }
 
     /// <inheritdoc />

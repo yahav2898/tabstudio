@@ -9,14 +9,15 @@ internal static class Waits
     /// <summary>Waits until a condition holds.</summary>
     /// <param name="condition">The condition.</param>
     /// <param name="what">What is waited for, for the failure's message.</param>
-    public static async Task UntilAsync(Func<bool> condition, string what)
+    /// <param name="state">Describes the state at the time of a failure, for its message.</param>
+    public static async Task UntilAsync(Func<bool> condition, string what, Func<string>? state = null)
     {
         var deadline = DateTime.UtcNow + Patience;
         while (!condition())
         {
             if (DateTime.UtcNow > deadline)
             {
-                throw new TimeoutException($"Waited {Patience.TotalSeconds:0} seconds for {what}.");
+                throw new TimeoutException($"Waited {Patience.TotalSeconds:0} seconds for {what}.{(state is null ? string.Empty : $" {state()}")}");
             }
 
             await Task.Delay(25);

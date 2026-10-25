@@ -39,6 +39,7 @@ public sealed class BridgeClient : ILinkMessageHandler
     private OrderedSender? _sender;
     private int _nextBuild;
     private int _nextTunnel;
+    private int _nextStream;
 
     /// <summary>Raised when a program started on the PC, also when the debugger started it.</summary>
     public event EventHandler<AppStarted>? AppStarted;
@@ -54,6 +55,9 @@ public sealed class BridgeClient : ILinkMessageHandler
 
     /// <summary>Raised with each frame of a streamed window.</summary>
     public event EventHandler<BridgeFrame>? FrameReceived;
+
+    /// <summary>Raised when a stream ended on its own, as when its window could not be captured any more.</summary>
+    public event EventHandler<StreamEnded>? StreamEnded;
 
     /// <summary>Raised when the bridge's status changed: the PC's state, its work, its programs.</summary>
     public event EventHandler<BridgeStatus>? StatusChanged;
@@ -173,14 +177,22 @@ public sealed class BridgeClient : ILinkMessageHandler
     public Task StopAsync(int appId, CancellationToken cancellationToken = default) =>
         RequireConnection().RequestAsync(BridgeMethods.Stop, BridgeJson.ToJson(new AppReference(appId)), cancellationToken: cancellationToken);
 
-    /// <summary>Starts streaming a window; its frames arrive through <see cref="FrameReceived"/>.</summary>
+    /// <summary>
+    /// Starts streaming a window under a number from <see cref="NewStreamId"/>; its frames arrive through
+    /// <see cref="FrameReceived"/>, the first one possibly before this answer. <see cref="BridgeStreamReceiver.StartAsync"/>
+    /// receives them from the first.
+    /// </summary>
+    /// <param name="streamId">The number for the stream, from <see cref="NewStreamId"/>.</param>
     /// <param name="appId">The program.</param>
     /// <param name="windowId">The window.</param>
     /// <param name="maxWidth">The most pixels wide to show it.</param>
     /// <param name="maxHeight">The most pixels high to show it.</param>
     /// <param name="cancellationToken">Gives up.</param>
-    public Task<StreamStarted> StartStreamAsync(int appId, long windowId, int maxWidth, int maxHeight, CancellationToken cancellationToken = default) =>
-        RequestAsync<StreamStarted>(BridgeMethods.StartStream, BridgeJson.ToJson(new StreamRequest(appId, windowId, maxWidth, maxHeight)), cancellationToken);
+    public Task<StreamStarted> StartStreamAsync(int streamId, int appId, long windowId, int maxWidth, int maxHeight, CancellationToken cancellationToken = default) =>
+        RequestAsync<StreamStarted>(BridgeMethods.StartStream, BridgeJson.ToJson(new StreamRequest(streamId, appId, windowId, maxWidth, maxHeight)), cancellationToken);
+
+    /// <summary>A new number for a stream, unique for this tablet.</summary>
+    public int NewStreamId() => Interlocked.Increment(ref _nextStream);
 
     /// <summary>Stops streaming a window.</summary>
     /// <param name="streamId">The stream.</param>
@@ -259,6 +271,9 @@ public sealed class BridgeClient : ILinkMessageHandler
                 break;
             case BridgeMethods.Frame:
                 FrameReceived?.Invoke(this, new BridgeFrame(BridgeJson.Read<FrameHeader>(payload), payload.GetAttachment(0)));
+                break;
+            case BridgeMethods.StreamEnded:
+                StreamEnded?.Invoke(this, BridgeJson.Read<StreamEnded>(payload));
                 break;
             case BridgeMethods.AppStarted:
                 AppStarted?.Invoke(this, BridgeJson.Read<AppStarted>(payload));

@@ -105,14 +105,15 @@ public sealed class ProtocolTests : IDisposable
         var (app, window) = await StartWindowedAsync(bridge, desktop);
         using var stream = await OpenStreamAsync(bridge, app.AppId, window.Id);
 
-        await Waits.UntilAsync(() => stream.FrameCount > 0 && Color(stream, window.Button) == FakeWindow.Gray, "the window's first frame");
+        string State() => $"Tablet: {stream}. Window: {window.Clicks} clicks, {desktop.Input.Count} inputs, {desktop.Captures}. Bridge: {bridge.Server.DescribeStreams()}.";
+        await Waits.UntilAsync(() => stream.FrameCount > 0 && Color(stream, window.Button) == FakeWindow.Gray, "the window's first frame", State);
         var map = FrameMapping.Fit(640, 480, stream.WindowWidth, stream.WindowHeight);
         var touch = new TouchGestureRecognizer();
         var (x, y) = (map.Left + (map.DrawnWidth / 2), map.Top + (map.DrawnHeight / 2));
         touch.Down(1, x, y, TimeSpan.Zero, map);
         bridge.Client.SendInput(app.AppId, window.Id, touch.Up(1, x, y, TimeSpan.FromMilliseconds(90), map));
 
-        await Waits.UntilAsync(() => Color(stream, window.Button) == FakeWindow.Green, "the clicked button in a frame");
+        await Waits.UntilAsync(() => Color(stream, window.Button) == FakeWindow.Green, "the clicked button in a frame", State);
         Assert.Equal(1, window.Clicks);
         Assert.Equal(
             [BridgeInputKind.PointerMove, BridgeInputKind.PointerDown, BridgeInputKind.PointerUp],
@@ -127,10 +128,11 @@ public sealed class ProtocolTests : IDisposable
         await using var bridge = await BridgeLoopback.StartAsync(_folder, desktop);
         var (app, window) = await StartWindowedAsync(bridge, desktop);
         using var stream = await OpenStreamAsync(bridge, app.AppId, window.Id);
-        await Waits.UntilAsync(() => stream.FrameCount > 0, "the window's first frame");
+        string State() => $"Tablet: {stream}. Window: {desktop.Captures}. Bridge: {bridge.Server.DescribeStreams()}.";
+        await Waits.UntilAsync(() => stream.FrameCount > 0, "the window's first frame", State);
 
         await bridge.Client.ResizeAsync(app.AppId, window.Id, 500, 300);
-        await Waits.UntilAsync(() => stream.WindowWidth == 500 && stream.Read(f => f.Height) == 300, "a frame of the resized window");
+        await Waits.UntilAsync(() => stream.WindowWidth == 500 && stream.Read(f => f.Height) == 300, "a frame of the resized window", State);
         desktop.Clipboard = "from the PC";
         var fromPc = await bridge.Client.GetClipboardAsync();
         await bridge.Client.SetClipboardAsync("from the tablet");
@@ -206,9 +208,9 @@ public sealed class ProtocolTests : IDisposable
 
     private static async Task<BridgeStreamReceiver> OpenStreamAsync(BridgeLoopback bridge, int appId, long windowId)
     {
-        var started = await bridge.Client.StartStreamAsync(appId, windowId, 1920, 1200);
-        var receiver = new BridgeStreamReceiver(bridge.Client, started.StreamId, started.CaptureMethod);
+        var receiver = await BridgeStreamReceiver.StartAsync(bridge.Client, appId, windowId, 1920, 1200);
         receiver.FrameReady += (_, _) => receiver.Shown();
+        receiver.Shown();
         return receiver;
     }
 

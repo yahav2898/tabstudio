@@ -49,6 +49,9 @@ public static class BridgeMethods
     /// <summary>Notification: stops streaming a window.</summary>
     public const string StopStream = "bridge/stream/stop";
 
+    /// <summary>Notification, bridge to tablet: a stream ended on its own, as when its window closed or could not be captured.</summary>
+    public const string StreamEnded = "bridge/stream/ended";
+
     /// <summary>Notification, bridge to tablet: an encoded frame of a streamed window, as an attachment.</summary>
     public const string Frame = "bridge/stream/frame";
 

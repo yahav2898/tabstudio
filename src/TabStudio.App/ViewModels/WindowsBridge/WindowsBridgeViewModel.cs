@@ -45,6 +45,9 @@ public sealed partial class WindowsBridgeViewModel : ObservableObject, IDisposab
     /// <summary>The tab's name, for the dialog's tab strip.</summary>
     public string TabTitle => IsPc ? "Be a Windows Bridge" : "Windows PC";
 
+    /// <summary>Whether the bridge is on: this PC serves tablets, or this tablet is connected to its PC.</summary>
+    public bool IsOn => IsPc ? IsBridging : IsConnected;
+
     /// <summary>The short state for the status bar: <c>DESKTOP-7Q2M · 12 ms</c>, <c>DESKTOP-7Q2M is away</c>, or nothing without a PC.</summary>
     [ObservableProperty]
     public partial string? StatusText { get; private set; }
@@ -226,6 +229,7 @@ public sealed partial class WindowsBridgeViewModel : ObservableObject, IDisposab
     {
         RefreshTablet();
         RefreshPc();
+        OnPropertyChanged(nameof(IsOn));
     }
 
     private void RefreshTablet()

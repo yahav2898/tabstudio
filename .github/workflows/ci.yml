@@ -275,13 +275,18 @@ jobs:
           done
           dotnet test tests/TabStudio.App.Tests -c Release --filter "FullyQualifiedName~WindowsBridge" --logger "console;verbosity=normal" > ci-out/TabStudio.App.Tests.log 2>&1 || status=1
           tail -n 60 ci-out/TabStudio.App.Tests.log
+          # The errors and the failed tests, also as notices, which can be read even when the logs are not published.
+          for log in ci-out/*.log; do
+            summary=$( (grep -E -A1 "error [A-Z]+[0-9]+|^  Failed |Error Message:|Total tests:|Passed:|Failed:|Skipped:" "$log" | grep -v -E "^--$|^\[xUnit|^  Passed " | awk '!seen[$0]++' | head -c 3500 | sed -e 's/%/%25/g' | tr '\n' '\r' | sed -e 's/\r/%0A/g') || true)
+            if [ -n "$summary" ]; then echo "::notice title=$(basename "$log")::$summary"; fi
+          done
           exit $status
 
       - name: Publish logs and screenshots
         if: always() && github.event_name == 'push'
         env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: bash build/ci/publish-logs-sparse.sh windows ${{ job.status }}
+          GH_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs-api.sh windows ${{ job.status }}
 
   # Publishes a versioned release once every check has passed: for a v* tag, or on main when
   # Directory.Build.props has a version that has release notes in docs/releases and no release yet.

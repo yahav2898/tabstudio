@@ -30,7 +30,10 @@ internal sealed class BridgeStream : IDisposable
     private readonly Lock _gate = new();
     private readonly Task _loop;
     private long _sequence;
+    private long _captures;
+    private CaptureStatus _lastCapture;
     private TimeSpan _lastShown;
+    private string? _failure;
     private int _disposed;
 
     /// <summary>Starts streaming a window.</summary>
@@ -83,6 +86,21 @@ internal sealed class BridgeStream : IDisposable
             {
                 return _quality.Level;
             }
+        }
+    }
+
+    /// <summary>Why the stream ended on its own, if the window's capture failed.</summary>
+    public string? Failure => Volatile.Read(ref _failure);
+
+    /// <summary>Describes the stream's state, for diagnostics.</summary>
+    /// <returns>The frames sent and drawn, the quality and the last capture.</returns>
+    internal string Describe()
+    {
+        lock (_gate)
+        {
+            return $"stream {Id}: sent {Interlocked.Read(ref _sequence)}, in flight {_quality.InFlight}, level {_quality.Level}, " +
+                $"captures {Interlocked.Read(ref _captures)} (last {_lastCapture}), rough tiles {_encoder.HasRoughTiles}, " +
+                $"loop {_loop.Status}{(Failure is { } failure ? $", failed: {failure}" : string.Empty)}";
         }
     }
 
@@ -165,6 +183,8 @@ internal sealed class BridgeStream : IDisposable
                 }
 
                 var result = _capture.Capture(window);
+                Interlocked.Increment(ref _captures);
+                _lastCapture = result.Status;
                 if (result.Status == CaptureStatus.Closed)
                 {
                     break;
@@ -211,7 +231,7 @@ internal sealed class BridgeStream : IDisposable
                 }
 
                 idle = TimeSpan.Zero;
-                var sequence = ++_sequence;
+                var sequence = Interlocked.Increment(ref _sequence);
                 lock (_gate)
                 {
                     _quality.OnSent(sequence, encoded.Data.Length, _clock.Elapsed);
@@ -228,6 +248,11 @@ internal sealed class BridgeStream : IDisposable
         catch (Exception ex) when (ex is OperationCanceledException or ObjectDisposedException or TabStudio.Link.LinkConnectionLostException)
         {
             // Stopped, or the tablet left.
+        }
+        catch (Exception ex) when (ex is not OutOfMemoryException)
+        {
+            // The window's capture failed in a way it could not recover from: the stream ends, and says why.
+            Volatile.Write(ref _failure, ex.Message);
         }
 
         if (!token.IsCancellationRequested && Ended is { } ended)

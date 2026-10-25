@@ -252,6 +252,20 @@ public sealed class BridgeServer : IAsyncDisposable
         }
     }
 
+    /// <summary>Describes every tablet's streams, for diagnostics.</summary>
+    /// <returns>One line per stream, or a note that none runs.</returns>
+    internal string DescribeStreams()
+    {
+        List<BridgeTablet> tablets;
+        lock (_gate)
+        {
+            tablets = [.. _tablets.Values];
+        }
+
+        var lines = tablets.SelectMany(t => t.DescribeStreams()).ToList();
+        return lines.Count == 0 ? "no streams" : string.Join("; ", lines);
+    }
+
     private LinkHost? Host()
     {
         lock (_gate)
