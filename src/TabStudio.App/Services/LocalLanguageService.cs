@@ -4,6 +4,7 @@ using TabStudio.Core.Diagnostics;
 using System.Collections.Concurrent;
 using TabStudio.Core.Workspaces;
 using TabStudio.Debugging.Building;
+using TabStudio.LiveTesting.Building;
 using TabStudio.Packages;
 
 namespace TabStudio.App.Services;
@@ -15,6 +16,7 @@ public sealed class LocalLanguageService : ILanguageService
     private readonly ProjectBuilder _builder;
     private readonly PackageRestorer? _restorer;
     private readonly ConcurrentDictionary<string, IReadOnlyList<string>> _runtimeAssemblies = new(StringComparer.Ordinal);
+    private readonly Lazy<CoverageBuilder> _coverage;
 
     /// <summary>Creates the service over a host that has a workspace loaded.</summary>
     /// <param name="host">The language service host. Owned by this object from now on.</param>
@@ -25,6 +27,7 @@ public sealed class LocalLanguageService : ILanguageService
         _host = host;
         _builder = new ProjectBuilder(host);
         _restorer = restorer;
+        _coverage = new Lazy<CoverageBuilder>(() => new CoverageBuilder(host));
         Features = new LocalLanguageFeatures(host);
     }
 
@@ -71,13 +74,24 @@ public sealed class LocalLanguageService : ILanguageService
         Task.Run(() => new DebugBuilder(_host).BuildAsync(project, cancellationToken), cancellationToken);
 
     /// <inheritdoc />
+    public Task<CoverageBuild> BuildForCoverageAsync(ProjectInfo testProject, IReadOnlySet<string> uninstrumented, CancellationToken cancellationToken) =>
+        Task.Run(() => _coverage.Value.BuildAsync(testProject, uninstrumented, cancellationToken), cancellationToken);
+
+    /// <inheritdoc />
     public void SetOptimization(bool optimize) => _host.SetOptimization(optimize);
 
     /// <inheritdoc />
     public void SetConcurrentBuild(bool enabled) => _host.SetConcurrentBuild(enabled);
 
     /// <inheritdoc />
-    public void TrimMemory() => _host.TrimMemory();
+    public void TrimMemory()
+    {
+        _host.TrimMemory();
+        if (_coverage.IsValueCreated)
+        {
+            _coverage.Value.Clear();
+        }
+    }
 
     /// <inheritdoc />
     public async Task<RestoreResult> RestorePackagesAsync(ProjectInfo project, IProgress<RestoreProgress>? progress, CancellationToken cancellationToken)

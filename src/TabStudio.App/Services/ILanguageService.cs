@@ -3,6 +3,7 @@ using TabStudio.Compilation.Building;
 using TabStudio.Core.Diagnostics;
 using TabStudio.Core.Workspaces;
 using TabStudio.Debugging.Building;
+using TabStudio.LiveTesting.Building;
 using TabStudio.Packages;
 
 namespace TabStudio.App.Services;
@@ -58,6 +59,12 @@ public interface ILanguageService : IDisposable
     /// and inspected, with a map from every statement back to the source.
     /// </summary>
     Task<DebugBuild> BuildForDebuggingAsync(ProjectInfo project, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Builds a test project for Live Unit Testing: the projects it tests are instrumented to record which tests run
+    /// which lines, and only what changed since the previous build is compiled again.
+    /// </summary>
+    Task<CoverageBuild> BuildForCoverageAsync(ProjectInfo testProject, IReadOnlySet<string> uninstrumented, CancellationToken cancellationToken);
 
     /// <summary>Switches between the Debug and Release configurations.</summary>
     void SetOptimization(bool optimize);

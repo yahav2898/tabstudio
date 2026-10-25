@@ -40,6 +40,10 @@
                 <MenuItem Header="New File..." Command="{Binding NewFileCommand}" IsVisible="{Binding CanCreateChildren}" />
                 <MenuItem Header="New Folder..." Command="{Binding NewFolderCommand}" IsVisible="{Binding CanCreateChildren}" />
                 <MenuItem Header="Set as Startup Project" Command="{Binding SetAsStartupProjectCommand}" IsVisible="{Binding CanBeStartupProject}" />
+                <MenuItem Header="Live Unit Testing" IsVisible="{Binding CanSetLiveTesting}">
+                  <MenuItem Header="Include" Command="{Binding IncludeInLiveTestingCommand}" />
+                  <MenuItem Header="Exclude" Command="{Binding ExcludeFromLiveTestingCommand}" />
+                </MenuItem>
                 <MenuItem Header="Rename..." Command="{Binding RenameCommand}" IsVisible="{Binding CanModify}" />
                 <MenuItem Header="Delete" Command="{Binding DeleteCommand}" IsVisible="{Binding CanModify}" />
               </MenuFlyout>

@@ -1,0 +1,16 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!--
+    Live Unit Testing's icons, stroke paths on a 24×24 grid like Icons.axaml. The editor margin draws its markers
+    itself (Editing/LiveTestingMargin.cs) in the same colors: Brush.Success, Brush.Error and Brush.Info.
+  -->
+
+  <!-- A flask with a pulse in it: tests that run by themselves. -->
+  <StreamGeometry x:Key="Icon.LiveTesting">M9 3 L15 3 M10 3 L10 9 L5 18 A2 2 0 0 0 7 21 L17 21 A2 2 0 0 0 19 18 L14 9 L14 3 M7 16.5 L9.5 16.5 L11 13.5 L13 19 L14.5 16.5 L17 16.5</StreamGeometry>
+  <!-- The flask struck out: tests Live Unit Testing leaves out. -->
+  <StreamGeometry x:Key="Icon.LiveTestingExcluded">M9 3 L15 3 M10 3 L10 9 L5 18 A2 2 0 0 0 7 21 L17 21 A2 2 0 0 0 19 18 L14 9 L14 3 M3 4 L21 20</StreamGeometry>
+  <!-- A line no test runs: a dash in a circle. -->
+  <StreamGeometry x:Key="Icon.NotCovered">M3 12 A9 9 0 1 0 21 12 A9 9 0 1 0 3 12 M8 12 L16 12</StreamGeometry>
+
+</ResourceDictionary>

@@ -17,6 +17,8 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="TabStudio.Debugging.Tests" />
+    <!-- Live Unit Testing instruments for coverage in the same way, with its own hooks. -->
+    <InternalsVisibleTo Include="TabStudio.LiveTesting" />
   </ItemGroup>
 
 </Project>

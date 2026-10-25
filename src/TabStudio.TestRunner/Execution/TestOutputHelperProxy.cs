@@ -34,7 +34,7 @@ internal class TestOutputHelperProxy : DispatchProxy
     /// <param name="sink">The test's output.</param>
     public static object CreateFor(Type interfaceType, TestOutputSink sink)
     {
-        var proxy = DispatchProxy.Create(interfaceType, typeof(TestOutputHelperProxy));
+        var proxy = DispatchProxy.Create(interfaceType, TestOutputHelperBaseTypes.For(interfaceType));
         ((TestOutputHelperProxy)proxy)._sink = sink;
         return proxy;
     }

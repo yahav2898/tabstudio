@@ -125,6 +125,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         Documents.CollectionChanged += (_, _) => UpdateActiveProjects();
         InitializeActions(browser, notifications, appActivity);
         InitializePullRequests();
+        InitializeLiveTesting();
     }
 
     /// <summary>Raised when the user closes the workspace to return to the start screen.</summary>
@@ -356,6 +357,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         _sessionSave?.Cancel();
         DisposeDebugging();
         DisposeTests();
+        DisposeLiveTesting();
         _agent?.Dispose();
         _device.ThermalChanged -= OnThermalChanged;
         _device.MemoryPressureRaised -= OnMemoryPressure;
