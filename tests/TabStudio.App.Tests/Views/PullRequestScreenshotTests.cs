@@ -251,29 +251,26 @@ public sealed class PullRequestScreenshotTests
         return textView.VisualLinesValid ? textView.GetOrConstructVisualLine(editor.Document.GetLineByNumber(line)).Height - textView.DefaultLineHeight : 0;
     }
 
-    /// <summary>Scrolls an editor so a line is at its top.</summary>
+    /// <summary>Scrolls an editor so a line is at its top, for a screenshot: as near as layout allows within a few passes.</summary>
     private static async Task ScrollToTopAsync(AvaloniaEdit.TextEditor editor, int line)
     {
-        // The caret goes there first, as the editor keeps the caret in view; the scroll is repeated until layout keeps it.
+        // The caret goes there first, as the editor keeps the caret in view. Asking the text view to show a whole
+        // view's height from the line puts the line at the top.
         var textView = editor.TextArea.TextView;
         editor.TextArea.ClearSelection();
         editor.TextArea.Caret.Line = line;
-        var target = textView.GetOrConstructVisualLine(editor.Document.GetLineByNumber(line)).VisualTop;
-        var settled = 0;
-        await UiTestHelpers.WaitUntilAsync(
-            () =>
+        for (var attempt = 0; attempt < 20; attempt++)
+        {
+            await UiTestHelpers.WaitUntilAsync(() => true);
+            AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+            var top = textView.GetOrConstructVisualLine(editor.Document.GetLineByNumber(line)).VisualTop;
+            if (Math.Abs(textView.VerticalOffset - top) <= 2)
             {
-                AvaloniaHeadlessPlatform.ForceRenderTimerTick();
-                if (Math.Abs(textView.VerticalOffset - target) > 1)
-                {
-                    settled = 0;
-                    editor.ScrollToVerticalOffset(target);
-                    return false;
-                }
+                return;
+            }
 
-                return ++settled > 2;
-            },
-            because: "the editor to scroll");
+            textView.MakeVisible(new Rect(0, top, 1, Math.Max(1, textView.Bounds.Height - 2)));
+        }
     }
 
     /// <summary>Taps the review margin beside a line, as a finger would.</summary>
