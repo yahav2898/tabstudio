@@ -147,7 +147,7 @@ public sealed partial class GitHubClient
     /// GitHub refused: 405 when the pull request cannot be merged (conflicts, a draft, blocked by rules, or a method
     /// the repository does not allow), 409 when the head moved, 403 without permission.
     /// </exception>
-    public async Task<MergeResult> MergePullRequestAsync(
+    public async Task<PullRequestMergeResult> MergePullRequestAsync(
         string owner,
         string repository,
         int number,
@@ -164,7 +164,7 @@ public sealed partial class GitHubClient
             throw new GitHubApiException(HttpStatusCode.MethodNotAllowed, dto.Message ?? "GitHub did not merge the pull request.");
         }
 
-        return new MergeResult(dto.Sha, dto.Message ?? "Pull request merged.");
+        return new PullRequestMergeResult(dto.Sha, dto.Message ?? "Pull request merged.");
     }
 
     /// <summary>Deletes a branch, as GitHub's "Delete branch" button does after a merge.</summary>

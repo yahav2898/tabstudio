@@ -362,7 +362,7 @@ public sealed record RepositoryMergeSettings(
     }
 }
 
-/// <summary>The outcome of a merge.</summary>
+/// <summary>The outcome of merging a pull request.</summary>
 /// <param name="Sha">The commit the base branch moved to.</param>
 /// <param name="Message">GitHub's message, such as "Pull Request successfully merged".</param>
-public sealed record MergeResult(string Sha, string Message);
+public sealed record PullRequestMergeResult(string Sha, string Message);
