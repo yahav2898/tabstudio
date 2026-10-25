@@ -309,7 +309,7 @@ internal sealed partial class FakeGitHub
         _ => null,
     };
 
-    private HttpResponseMessage DeleteReview(Repo repo, PullRequest pull, long id)
+    private static HttpResponseMessage DeleteReview(Repo repo, PullRequest pull, long id)
     {
         if (pull.Reviews.FirstOrDefault(r => r.Id == id) is not { State: "PENDING" } review)
         {
@@ -347,7 +347,7 @@ internal sealed partial class FakeGitHub
         return Json(CommentJson(repo, pull, reply), HttpStatusCode.Created);
     }
 
-    private HttpResponseMessage EditComment(Repo repo, string method, long id, JsonNode? body)
+    private static HttpResponseMessage EditComment(Repo repo, string method, long id, JsonNode? body)
     {
         if (repo.PullRequests.FirstOrDefault(p => p.Comments.Any(c => c.Id == id)) is not { } pull)
         {
@@ -607,7 +607,7 @@ internal sealed partial class FakeGitHub
         };
     }
 
-    private bool InDiff(Repo repo, PullRequest pull, string path, int line, string side) =>
+    private static bool InDiff(Repo repo, PullRequest pull, string path, int line, string side) =>
         ChangedFiles(repo, pull).FirstOrDefault(f => f.Path == path) is { } file
         && DiffPatch.Parse(file.Patch).Contains(side == "LEFT" ? DiffSide.Left : DiffSide.Right, line);
 
