@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Windows.Forms;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using KeyEventArgs = Avalonia.Input.KeyEventArgs;
 
 namespace TabStudio.Forms.Hosting;
 

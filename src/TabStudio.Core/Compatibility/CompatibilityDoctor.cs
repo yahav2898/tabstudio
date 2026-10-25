@@ -109,9 +109,13 @@ public static class CompatibilityDoctor
                 project, RunHost.WebView, CompatibilityStatus.NeedsChanges, "OpenSilver, or your PC",
                 "WPF is Windows-only. OpenSilver can run most WPF code in a WebView; the rest runs through the Windows Bridge."),
 
+            ProjectKind.WinForms when project.Language == ProjectLanguage.CSharp => Report(
+                project, RunHost.AndroidView, CompatibilityStatus.Ready, "Cross-platform Forms layer in the app preview",
+                "Runs beside the code on TabStudio's own Windows Forms layer, drawn as on Windows 11, and its forms open in the Forms designer. Saving a file restarts it. Code that calls Windows itself, such as P/Invoke, COM or the registry, does not run here."),
+
             ProjectKind.WinForms => Report(
-                project, RunHost.AndroidView, CompatibilityStatus.NeedsChanges, "Cross-platform WinForms, or your PC",
-                "Windows Forms is Windows-only. A cross-platform WinForms layer can render it on Android; otherwise it runs through the Windows Bridge."),
+                project, RunHost.AndroidView, CompatibilityStatus.Planned, "Cross-platform Forms layer in the app preview",
+                $"Windows Forms apps run on TabStudio's own Forms layer. The {LanguageName(project.Language)} compiler is not bundled yet."),
 
             ProjectKind.NativeCpp => Report(
                 project, RunHost.WindowsBridge, CompatibilityStatus.NeedsWindows, "Windows Bridge",

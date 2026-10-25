@@ -10,6 +10,7 @@ using Avalonia.Media.Immutable;
 using Avalonia.Styling;
 using TabStudio.Forms.Rendering;
 using TabStudio.Forms.Runtime;
+using AvaloniaControl = Avalonia.Controls.Control;
 using AvaloniaTextBox = Avalonia.Controls.TextBox;
 using DrawingColor = System.Drawing.Color;
 
@@ -153,7 +154,7 @@ internal sealed class NativeTextEditor : AvaloniaTextBox
         }
     }
 
-    private static Control BuildTemplate(AvaloniaTextBox box, INameScope scope)
+    private static AvaloniaControl BuildTemplate(AvaloniaTextBox box, INameScope scope)
     {
         var presenter = new TextPresenter { Name = "PART_TextPresenter" };
         presenter.Bind(TextPresenter.TextProperty, new TemplateBinding(TextProperty) { Mode = BindingMode.TwoWay });
