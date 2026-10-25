@@ -290,10 +290,15 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         try
         {
             var results = await session.LaunchAsync(configuration, breakpoints, EnabledExceptionFilters(), CancellationToken.None);
-            _adapterLaunched = true;
-            foreach (var (file, set) in results)
+
+            // A short program can end before the launch's answer is handled: its breakpoints then stay unbound.
+            if (ReferenceEquals(session, _adapter))
             {
-                Breakpoints.ApplyAdapterResults(file, set);
+                _adapterLaunched = true;
+                foreach (var (file, set) in results)
+                {
+                    Breakpoints.ApplyAdapterResults(file, set);
+                }
             }
         }
         catch (Exception ex) when (ex is DebugAdapterException or TimeoutException or OperationCanceledException)
