@@ -137,7 +137,7 @@ public sealed class NotebookPackageResolver : INotebookReferenceResolver
         return new NotebookReferenceResolution { References = references, RuntimeAssemblyPaths = runtime };
     }
 
-    private ProjectInfo WriteProject()
+    private TabStudio.Core.Workspaces.ProjectInfo WriteProject()
     {
         Directory.CreateDirectory(_folder);
         var path = Path.Combine(_folder, "Notebook.csproj");

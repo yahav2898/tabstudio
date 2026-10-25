@@ -73,7 +73,8 @@ public sealed class NotebookScreenshotTests : IDisposable
 
         var view = window.GetVisualDescendants().OfType<NotebookView>().Single(v => v.IsEffectivelyVisible);
         view.FindControl<ScrollViewer>("Scroller")!.ScrollToEnd();
-        notebook.SelectedCell = notebook.Cells[4];
+        notebook.OpenFind();
+        notebook.FindText = "Totl";
         await UiTestHelpers.WaitUntilAsync(() => true);
 
         UiTestHelpers.SaveScreenshot(window, "08-notebook-compile-error");
@@ -82,6 +83,8 @@ public sealed class NotebookScreenshotTests : IDisposable
         Assert.IsType<TableOutputViewModel>(Assert.Single(notebook.Cells[2].Outputs));
         Assert.IsType<ErrorOutputViewModel>(Assert.Single(notebook.Cells[3].Outputs));
         Assert.Contains(notebook.Cells[4].DiagnosticItems, d => d.Code == "CS1061");
+        Assert.Equal("1 of 1", notebook.FindStatus);
+        Assert.Same(notebook.Cells[4], notebook.SelectedCell);
         Assert.NotNull(view.EditorFor(notebook.Cells[1]));
     }
 

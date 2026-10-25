@@ -156,10 +156,11 @@ public sealed class CellEditor : UserControl, IDisposable
         cell.DiagnosticsChanged += OnDiagnosticsChanged;
         cell.FocusRequested += OnFocusRequested;
         cell.NavigationRequested += OnNavigationRequested;
+        cell.SelectionRequested += OnNavigationRequested;
         ApplyClassifications();
         ApplyDiagnostics();
 
-        if (cell.HasPendingFocus || cell.PendingNavigation is not null)
+        if (cell.HasPendingFocus || cell.PendingNavigation is not null || cell.PendingSelection is not null)
         {
             Dispatcher.UIThread.Post(ApplyPendingRequests, DispatcherPriority.Background);
         }
@@ -178,6 +179,7 @@ public sealed class CellEditor : UserControl, IDisposable
         cell.DiagnosticsChanged -= OnDiagnosticsChanged;
         cell.FocusRequested -= OnFocusRequested;
         cell.NavigationRequested -= OnNavigationRequested;
+        cell.SelectionRequested -= OnNavigationRequested;
         _textMate?.Dispose();
         _textMate = null;
         _editor.Document = new TextDocument();
@@ -256,6 +258,17 @@ public sealed class CellEditor : UserControl, IDisposable
         if (_connected is not { } cell || !IsEffectivelyVisible)
         {
             return;
+        }
+
+        if (cell.TakePendingSelection() is { } selection)
+        {
+            // A match of Find: selected and shown, while the keyboard stays in the find bar.
+            var length = _editor.Document.TextLength;
+            var start = Math.Clamp(selection.Start, 0, length);
+            _editor.Select(start, Math.Clamp(selection.Length, 0, length - start));
+            var location = _editor.Document.GetLocation(start);
+            _editor.ScrollTo(location.Line, location.Column);
+            this.BringIntoView();
         }
 
         if (cell.TakePendingNavigation() is { } target)

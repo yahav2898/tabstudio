@@ -204,6 +204,9 @@ public sealed partial class NotebookCellViewModel : ObservableObject, IDisposabl
     /// <summary>A location the editor should move the caret to.</summary>
     public (int Line, int Column)? PendingNavigation { get; private set; }
 
+    /// <summary>A span of the text the editor should select, such as a match of Find.</summary>
+    public (int Start, int Length)? PendingSelection { get; private set; }
+
     /// <summary>Raised on the UI thread when <see cref="Classifications"/> changes.</summary>
     public event EventHandler? ClassificationsChanged;
 
@@ -215,6 +218,9 @@ public sealed partial class NotebookCellViewModel : ObservableObject, IDisposabl
 
     /// <summary>Raised when <see cref="PendingNavigation"/> is set.</summary>
     public event EventHandler? NavigationRequested;
+
+    /// <summary>Raised when <see cref="PendingSelection"/> is set.</summary>
+    public event EventHandler? SelectionRequested;
 
     /// <summary>The cell as it would be saved: its current text, last outputs and metadata.</summary>
     public NotebookCell ToCell() => _cell with
@@ -255,6 +261,23 @@ public sealed partial class NotebookCellViewModel : ObservableObject, IDisposabl
     {
         var pending = PendingNavigation;
         PendingNavigation = null;
+        return pending;
+    }
+
+    /// <summary>Selects a span of the text and scrolls to it, leaving the keyboard where it is.</summary>
+    /// <param name="start">Where the span starts.</param>
+    /// <param name="length">How long it is.</param>
+    public void Highlight(int start, int length)
+    {
+        PendingSelection = (start, length);
+        SelectionRequested?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>Takes the pending selection, so it happens once.</summary>
+    public (int Start, int Length)? TakePendingSelection()
+    {
+        var pending = PendingSelection;
+        PendingSelection = null;
         return pending;
     }
 

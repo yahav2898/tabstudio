@@ -133,6 +133,31 @@
       </Grid>
     </Border>
 
+    <!-- Find (Ctrl+F) -->
+    <Border DockPanel.Dock="Top" IsVisible="{Binding IsFindOpen}" Background="{DynamicResource Brush.Toolbar}"
+            BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="10,5">
+      <StackPanel Orientation="Horizontal" Spacing="6">
+        <TextBox x:Name="FindBox" Width="300" Watermark="Find in notebook" Text="{Binding FindText}">
+          <TextBox.InnerLeftContent>
+            <controls:StrokeIcon Data="{StaticResource Icon.Search}" Size="13" Margin="8,0,0,0" Foreground="{DynamicResource Brush.TextMuted}" />
+          </TextBox.InnerLeftContent>
+        </TextBox>
+        <TextBlock Text="{Binding FindStatus}" Classes="muted" FontSize="12" MinWidth="70" VerticalAlignment="Center" />
+        <Button Theme="{StaticResource ToolButton}" Width="34" Height="34" MinWidth="34" MinHeight="34" Padding="0"
+                ToolTip.Tip="Previous Match (Shift+Enter)" Command="{Binding FindPreviousCommand}">
+          <controls:StrokeIcon Data="{StaticResource Icon.ArrowUp}" Size="15" />
+        </Button>
+        <Button Theme="{StaticResource ToolButton}" Width="34" Height="34" MinWidth="34" MinHeight="34" Padding="0"
+                ToolTip.Tip="Next Match (Enter)" Command="{Binding FindNextCommand}">
+          <controls:StrokeIcon Data="{StaticResource Icon.ArrowDown}" Size="15" />
+        </Button>
+        <Button Theme="{StaticResource ToolButton}" Width="34" Height="34" MinWidth="34" MinHeight="34" Padding="0"
+                ToolTip.Tip="Close (Escape)" Command="{Binding CloseFindCommand}">
+          <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="13" />
+        </Button>
+      </StackPanel>
+    </Border>
+
     <!-- The cells -->
     <ScrollViewer x:Name="Scroller" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
       <StackPanel Margin="0,16,0,120">

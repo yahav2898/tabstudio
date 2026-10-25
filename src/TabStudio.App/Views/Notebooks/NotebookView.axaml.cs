@@ -29,6 +29,7 @@ namespace TabStudio.App.Views.Notebooks;
 public sealed partial class NotebookView : UserControl, IDisposable
 {
     private readonly DocumentViewModel? _document;
+    private NotebookViewModel? _notebook;
     private bool _deletePending;
 
     /// <summary>Creates the view. Set its data context to a <see cref="NotebookViewModel"/>.</summary>
@@ -37,6 +38,7 @@ public sealed partial class NotebookView : UserControl, IDisposable
         InitializeComponent();
         AddHandler(KeyDownEvent, OnKeyDown, RoutingStrategies.Bubble);
         Scroller.AddHandler(PointerPressedEvent, OnBackgroundPressed, RoutingStrategies.Bubble);
+        FindBox.KeyDown += OnFindKeyDown;
     }
 
     /// <summary>Creates the view of a notebook document.</summary>
@@ -65,9 +67,31 @@ public sealed partial class NotebookView : UserControl, IDisposable
             _document.ActionRequested -= OnActionRequested;
         }
 
+        if (_notebook is not null)
+        {
+            _notebook.FindRequested -= OnFindRequested;
+            _notebook = null;
+        }
+
         foreach (var editor in this.GetVisualDescendants().OfType<CellEditor>().ToList())
         {
             editor.Dispose();
+        }
+    }
+
+    /// <inheritdoc />
+    protected override void OnDataContextChanged(EventArgs e)
+    {
+        base.OnDataContextChanged(e);
+        if (_notebook is not null)
+        {
+            _notebook.FindRequested -= OnFindRequested;
+        }
+
+        _notebook = DataContext as NotebookViewModel;
+        if (_notebook is not null)
+        {
+            _notebook.FindRequested += OnFindRequested;
         }
     }
 
@@ -125,12 +149,58 @@ public sealed partial class NotebookView : UserControl, IDisposable
             case EditorAction.Focus:
                 Focus();
                 break;
+            case EditorAction.Find or EditorAction.Replace:
+                notebook.OpenFind();
+                break;
+        }
+    }
+
+    private void OnFindRequested(object? sender, EventArgs e) => Dispatcher.UIThread.Post(() =>
+    {
+        FindBox.Focus();
+        FindBox.SelectAll();
+    }, DispatcherPriority.Background);
+
+    private void OnFindKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (Notebook is not { } notebook)
+        {
+            return;
+        }
+
+        switch (e.Key, e.KeyModifiers)
+        {
+            case (Key.Enter, KeyModifiers.None):
+                notebook.FindNextCommand.Execute(null);
+                e.Handled = true;
+                break;
+            case (Key.Enter, KeyModifiers.Shift):
+                notebook.FindPreviousCommand.Execute(null);
+                e.Handled = true;
+                break;
+            case (Key.Escape, KeyModifiers.None):
+                notebook.CloseFindCommand.Execute(null);
+                Focus();
+                e.Handled = true;
+                break;
         }
     }
 
     private void OnKeyDown(object? sender, KeyEventArgs e)
     {
-        if (e.Handled || Notebook is not { } notebook || IsTyping(e.Source))
+        if (e.Handled || Notebook is not { } notebook)
+        {
+            return;
+        }
+
+        if (e.Key == Key.F && e.KeyModifiers == KeyModifiers.Control)
+        {
+            notebook.OpenFind();
+            e.Handled = true;
+            return;
+        }
+
+        if (IsTyping(e.Source))
         {
             return;
         }

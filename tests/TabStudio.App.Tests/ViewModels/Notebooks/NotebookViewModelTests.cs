@@ -232,6 +232,32 @@ public sealed class NotebookViewModelTests
     }
 
     [AvaloniaFact]
+    public void Find_moves_through_the_matches_in_every_cell()
+    {
+        var (notebook, _) = Create(NotebookCell.Code("var total = 1;"), NotebookCell.Markdown("The *total* so far"), NotebookCell.Code("total + Total"));
+
+        notebook.OpenFind();
+        notebook.FindText = "total";
+
+        Assert.True(notebook.IsFindOpen);
+        Assert.Equal("1 of 4", notebook.FindStatus);
+        Assert.Same(notebook.Cells[0], notebook.SelectedCell);
+        Assert.Equal((4, 5), notebook.Cells[0].TakePendingSelection());
+
+        notebook.FindNextCommand.Execute(null);
+        Assert.Same(notebook.Cells[1], notebook.SelectedCell);
+        Assert.True(notebook.Cells[1].IsEditing, "A match in Markdown shows the Markdown text.");
+
+        notebook.FindPreviousCommand.Execute(null);
+        notebook.FindPreviousCommand.Execute(null);
+        Assert.Equal("4 of 4", notebook.FindStatus);
+        Assert.Equal((8, 5), notebook.Cells[2].TakePendingSelection());
+
+        notebook.FindText = "nothing";
+        Assert.Equal("No results", notebook.FindStatus);
+    }
+
+    [AvaloniaFact]
     public void Unsaved_work_round_trips_through_the_session_text()
     {
         var (notebook, host) = Create(NotebookCell.Code("a"));
