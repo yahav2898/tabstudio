@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
+using Avalonia.VisualTree;
 using Microsoft.Extensions.DependencyInjection;
 using TabStudio.App.Services;
 using TabStudio.App.ViewModels;
@@ -21,24 +22,36 @@ public sealed class SelfTestScrollingTests
         var samples = services.GetRequiredService<SampleLibrary>();
         var window = new MainWindow { DataContext = main, Width = 1280, Height = 800 };
         window.Show();
-        var before = temp.Resolve("before");
-        Directory.CreateDirectory(before);
-        await File.WriteAllTextAsync(Path.Combine(before, "notes.txt"), "Notes.\n");
-        await main.OpenWorkspaceAsync(before);
-        var lines = new List<string>();
+        try
+        {
+            var before = temp.Resolve("before");
+            Directory.CreateDirectory(before);
+            await File.WriteAllTextAsync(Path.Combine(before, "notes.txt"), "Notes.\n");
+            await main.OpenWorkspaceAsync(before);
+            var lines = new List<string>();
 
-        var result = await SelfTest.ScrollEditorAsync(main, samples, new HeadlessTouchDevice(window), lines.Add, CancellationToken.None);
+            var result = await SelfTest.ScrollEditorAsync(
+                main,
+                samples,
+                document => window.GetVisualDescendants().OfType<CodeEditorView>().FirstOrDefault(v => ReferenceEquals(v.DataContext, document) && v.IsEffectivelyVisible),
+                new HeadlessTouchDevice(window),
+                lines.Add,
+                CancellationToken.None);
 
-        Assert.True(result.Success, result.Message);
-        Assert.Contains("a flick glided", result.Message, StringComparison.Ordinal);
-        Assert.Contains(lines, l => l.StartsWith("TabStudio editor scrolling:", StringComparison.Ordinal) && l.Contains("UI thread per frame", StringComparison.Ordinal));
+            Assert.True(result.Success, result.Message);
+            Assert.Contains("a flick glided", result.Message, StringComparison.Ordinal);
+            Assert.Contains(lines, l => l.StartsWith("TabStudio editor scrolling:", StringComparison.Ordinal) && l.Contains("UI thread per frame", StringComparison.Ordinal));
 
-        // The workspace that was open before is open again, and the long file is gone from the sample.
-        Assert.Equal(Path.TrimEndingDirectorySeparator(Path.GetFullPath(before)), Path.TrimEndingDirectorySeparator(Path.GetFullPath(main.Workspace!.Workspace!.RootDirectory)));
-        var solution = await samples.EnsureExtractedAsync();
-        Assert.False(File.Exists(Path.Combine(Path.GetDirectoryName(solution)!, "src", "Greetings", SelfTest.ScrollingFileName)));
-        window.Close();
-        main.Workspace?.Dispose();
+            // The workspace that was open before is open again, and the long file is gone from the sample.
+            Assert.Equal(Path.TrimEndingDirectorySeparator(Path.GetFullPath(before)), Path.TrimEndingDirectorySeparator(Path.GetFullPath(main.Workspace!.Workspace!.RootDirectory)));
+            var solution = await samples.EnsureExtractedAsync();
+            Assert.False(File.Exists(Path.Combine(Path.GetDirectoryName(solution)!, "src", "Greetings", SelfTest.ScrollingFileName)));
+        }
+        finally
+        {
+            window.Close();
+            main.Workspace?.Dispose();
+        }
     }
 
     /// <summary>Swipes through Avalonia's touch device, a move every 8 ms of real time, and counts the render loop's frames.</summary>

@@ -11,8 +11,8 @@ namespace TabStudio.App.Services;
 
 /// <summary>
 /// The self test's scrolling part, on the device: a long C# file in the sample, colored by Roslyn, scrolled with a
-/// finger through the platform's touch screen input (a slow drag, then a flick), with the display's frames and
-/// Avalonia's own frame times recorded while the text moves.
+/// finger through the platform's touch screen input (a slow drag, then a flick), with the display's frames and the UI
+/// thread's time for each frame recorded while the text moves.
 /// </summary>
 public static partial class SelfTest
 {
@@ -21,6 +21,7 @@ public static partial class SelfTest
 
     private static readonly TimeSpan ScrollingColorTimeout = TimeSpan.FromSeconds(90);
     private static readonly TimeSpan GlideTimeout = TimeSpan.FromSeconds(8);
+    private static readonly TimeSpan SettleTimeout = TimeSpan.FromSeconds(30);
 
     /// <summary>
     /// Opens a long C# file in the sample, drags it up slowly and flicks it with a finger, and reports how far the text
@@ -33,10 +34,27 @@ public static partial class SelfTest
     /// <param name="log">Writes a line of detail to the log.</param>
     /// <param name="cancellationToken">Gives up.</param>
     /// <returns>Whether the text followed the drag and glided after the flick, with a one-line summary.</returns>
-    public static async Task<SelfTestResult> ScrollEditorAsync(MainViewModel main, SampleLibrary samples, ITouchSelfTestDevice device, Action<string> log, CancellationToken cancellationToken)
+    public static Task<SelfTestResult> ScrollEditorAsync(MainViewModel main, SampleLibrary samples, ITouchSelfTestDevice device, Action<string> log, CancellationToken cancellationToken) =>
+        ScrollEditorAsync(main, samples, FindEditor, device, log, cancellationToken);
+
+    /// <summary>
+    /// Opens a long C# file in the sample, drags it up slowly and flicks it with a finger, and reports how far the text
+    /// followed and glided; finds the file's editor with <paramref name="findEditor"/>, as in a test's window.
+    /// </summary>
+    /// <param name="main">The app's root view model.</param>
+    /// <param name="samples">The sample library.</param>
+    /// <param name="findEditor">Finds the shown editor of a document, or <see langword="null"/> while it is not shown.</param>
+    /// <param name="device">The touch screen and the display's frames.</param>
+    /// <param name="log">Writes a line of detail to the log.</param>
+    /// <param name="cancellationToken">Gives up.</param>
+    /// <returns>Whether the text followed the drag and glided after the flick, with a one-line summary.</returns>
+    public static async Task<SelfTestResult> ScrollEditorAsync(
+        MainViewModel main, SampleLibrary samples, Func<DocumentViewModel, CodeEditorView?> findEditor, ITouchSelfTestDevice device,
+        Action<string> log, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(main);
         ArgumentNullException.ThrowIfNull(samples);
+        ArgumentNullException.ThrowIfNull(findEditor);
         ArgumentNullException.ThrowIfNull(device);
         ArgumentNullException.ThrowIfNull(log);
         var clock = Stopwatch.StartNew();
@@ -55,7 +73,7 @@ public static partial class SelfTest
             // Roslyn's colors first, as the user sees the file; on a slow device the scroll goes ahead without them.
             var deadline = clock.Elapsed + ScrollingColorTimeout;
             CodeEditorView? view = null;
-            while (clock.Elapsed < deadline && ((view = FindEditor(document)) is null || document.Classifications.Count < 1000))
+            while (clock.Elapsed < deadline && ((view = findEditor(document)) is null || document.Classifications.Count < 1000 || document.Diagnostics.Count == 0))
             {
                 await Task.Delay(PollInterval, cancellationToken);
             }
@@ -107,7 +125,10 @@ public static partial class SelfTest
             }
         }
 
-        using var metrics = new FrameMetricsRecorder();
+        // A finger that rests while the UI thread is stalled becomes a long press, as on any Android view: the drag waits
+        // until the display's frames come regularly after opening the file.
+        await SettleAsync(device, clock, cancellationToken);
+        using var uiFrames = new UiFrameTimer(topLevel);
         var collections = GC.CollectionCount(0);
         var allocated = GC.GetTotalAllocatedBytes();
         scroll.PropertyChanged += OnOffset;
@@ -129,7 +150,7 @@ public static partial class SelfTest
                 var flicked = scroll.Offset.Y - flickStart;
                 var stopped = moves.Count > 0 ? moves[^1].Time : released;
 
-                var report = ScrollReport.From(moves, frames, released, stopped, metrics, GC.CollectionCount(0) - collections, GC.GetTotalAllocatedBytes() - allocated);
+                var report = ScrollReport.From(moves, frames, released, stopped, uiFrames.Frames, GC.CollectionCount(0) - collections, GC.GetTotalAllocatedBytes() - allocated);
                 var summary = string.Create(
                     CultureInfo.InvariantCulture,
                     $"Scrolling: a {swipe:0} dip drag moved the text {dragged:0} dip; a flick glided {flicked:0} dip ({glide.Distance:0} dip in {glide.Duration.TotalMilliseconds:0} ms on Android's curve); {report.Summary}");
@@ -144,6 +165,25 @@ public static partial class SelfTest
         finally
         {
             scroll.PropertyChanged -= OnOffset;
+        }
+    }
+
+    /// <summary>Waits until the display's frames come regularly for a second: nothing stalls the UI thread any more.</summary>
+    private static async Task SettleAsync(ITouchSelfTestDevice device, Stopwatch clock, CancellationToken cancellationToken)
+    {
+        var frames = new List<TimeSpan>();
+        var deadline = clock.Elapsed + SettleTimeout;
+        using (device.RecordFrames(() => frames.Add(clock.Elapsed)))
+        {
+            while (clock.Elapsed < deadline)
+            {
+                await Task.Delay(250, cancellationToken);
+                var recent = frames.Where(f => f > clock.Elapsed - TimeSpan.FromSeconds(1)).ToList();
+                if (recent.Count >= 20 && recent.Zip(recent.Skip(1), (a, b) => b - a).All(gap => gap < TimeSpan.FromMilliseconds(100)))
+                {
+                    return;
+                }
+            }
         }
     }
 
@@ -166,7 +206,7 @@ public static partial class SelfTest
     {
         public static ScrollReport From(
             List<(TimeSpan Time, double Offset)> moves, List<TimeSpan> frames, TimeSpan released, TimeSpan stopped,
-            FrameMetricsRecorder metrics, int collections, long allocated)
+            IReadOnlyList<double> uiFrames, int collections, long allocated)
         {
             var culture = CultureInfo.InvariantCulture;
 
@@ -177,13 +217,12 @@ public static partial class SelfTest
             var movedFrames = moves.Where(m => m.Time > released && m.Time <= stopped).Select(m => (int)(m.Time.TotalMilliseconds / period)).Distinct().Count();
             var missed = intervals.Count(i => i > period * 1.5);
 
-            var ui = metrics.UiFrames.Order().ToList();
-            var compositor = metrics.CompositorFrames.Order().ToList();
+            var ui = uiFrames.Order().ToList();
             var summary = string.Create(culture, $"{1000 / period:0} Hz display: the text moved on {movedFrames} of the {glideFrames} frames of the glide, {missed} frame gaps on the UI thread");
-            var detail = metrics.IsAvailable && ui.Count > 0
-                ? string.Create(culture, $"UI thread per frame p50 {Percentile(ui, 0.5):0.0} ms, p95 {Percentile(ui, 0.95):0.0} ms, max {ui[^1]:0.0} ms over {ui.Count} frames; render thread p50 {Percentile(compositor, 0.5):0.0} ms, p95 {Percentile(compositor, 0.95):0.0} ms")
-                : "Avalonia frame metrics off";
-            detail += string.Create(culture, $"; {collections} garbage collections, {allocated / 1024.0 / 1024:0.0} MB allocated");
+            var detail = ui.Count > 0
+                ? string.Create(culture, $"UI thread per frame p50 {Percentile(ui, 0.5):0.0} ms, p95 {Percentile(ui, 0.95):0.0} ms, max {ui[^1]:0.0} ms over {ui.Count} frames")
+                : "no frames timed";
+            detail += string.Create(culture, $"; {collections} garbage collections, {allocated / 1024.0 / 1024:0.0} MB allocated in the process");
             return new ScrollReport(summary, detail);
         }
 

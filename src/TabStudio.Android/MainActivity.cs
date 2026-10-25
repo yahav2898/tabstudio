@@ -67,12 +67,6 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
     {
         _current = this;
 
-        // The self test reports Avalonia's own frame times, which it publishes only with its diagnostics on.
-        if (Intent?.GetBooleanExtra(SelfTestExtra, false) == true)
-        {
-            AppContext.SetSwitch("Avalonia.Diagnostics.Diagnostic.IsEnabled", true);
-        }
-
         // Before base.OnCreate: shows the splash screen, then switches to the app theme.
         AndroidXSplashScreen.InstallSplashScreen(this);
         base.OnCreate(savedInstanceState);
