@@ -43,17 +43,17 @@ public sealed class MarkdownView : StackPanel
         set => SetValue(BlocksProperty, value);
     }
 
-    private static IBrush TextBrush => ThemeResources.Brush("Brush.Text", "#D7DAE0");
+    private static IBrush TextBrush => ThemeResources.Brush("Brush.Text");
 
-    private static IBrush BrightBrush => ThemeResources.Brush("Brush.TextBright", "#E8ECF2");
+    private static IBrush BrightBrush => ThemeResources.Brush("Brush.TextBright");
 
-    private static IBrush MutedBrush => ThemeResources.Brush("Brush.TextMuted", "#9AA1AE");
+    private static IBrush MutedBrush => ThemeResources.Brush("Brush.TextMuted");
 
-    private static IBrush LinkBrush => ThemeResources.Brush("Brush.Link", "#8FB8FF");
+    private static IBrush LinkBrush => ThemeResources.Brush("Brush.Link");
 
-    private static IBrush DividerBrush => ThemeResources.Brush("Brush.Divider", "#2F333D");
+    private static IBrush DividerBrush => ThemeResources.Brush("Brush.Divider");
 
-    private static IBrush CodeBackground => ThemeResources.Brush("Brush.Notebook.CodeBlock", "#262A33");
+    private static IBrush CodeBackground => ThemeResources.Brush("Brush.Notebook.CodeBlock");
 
     private void Render()
     {
@@ -196,7 +196,7 @@ public sealed class MarkdownView : StackPanel
 
     private static Border CreateQuote(MarkdownQuote quote) => new Border
     {
-        BorderBrush = ThemeResources.Brush("Brush.BorderStrong", "#343844"),
+        BorderBrush = ThemeResources.Brush("Brush.BorderStrong"),
         BorderThickness = new Thickness(3, 0, 0, 0),
         Padding = new Thickness(12, 2, 0, 2),
         Child = new MarkdownView { Blocks = quote.Blocks, Opacity = 0.85 },
@@ -208,7 +208,7 @@ public sealed class MarkdownView : StackPanel
         var rows = table.Rows.Select(row => (IReadOnlyList<Control>)row.Select(cell => (Control)CreateText(cell, SmallSize, FontWeight.Normal, TextBrush)).ToList());
         return new Border
         {
-            BorderBrush = ThemeResources.Brush("Brush.Border", "#2A2E37"),
+            BorderBrush = ThemeResources.Brush("Brush.Border"),
             BorderThickness = new Thickness(1),
             CornerRadius = new CornerRadius(6),
             ClipToBounds = true,

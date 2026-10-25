@@ -9,10 +9,10 @@
   <Panel>
 
     <!-- Switch branch -->
-    <Panel Background="#99000000" IsVisible="{Binding IsBranchPickerOpen}">
+    <Panel Background="{DynamicResource Brush.Scrim}" IsVisible="{Binding IsBranchPickerOpen}">
       <Border Width="440" MaxHeight="560" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20" CornerRadius="12"
               Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
-              BoxShadow="0 12 32 0 #66000000">
+              BoxShadow="{DynamicResource Shadow.Dialog}">
         <DockPanel>
           <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,10">
             <TextBlock Classes="h2" FontSize="15" Text="Switch Branch" />
@@ -61,10 +61,10 @@
     </Panel>
 
     <!-- Create a pull request -->
-    <Panel Background="#99000000" IsVisible="{Binding IsPullRequestFormOpen}">
+    <Panel Background="{DynamicResource Brush.Scrim}" IsVisible="{Binding IsPullRequestFormOpen}">
       <Border Width="480" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="22" CornerRadius="12"
               Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
-              BoxShadow="0 12 32 0 #66000000">
+              BoxShadow="{DynamicResource Shadow.Dialog}">
         <StackPanel Spacing="10">
           <TextBlock Classes="h2" FontSize="15" Text="Create a Pull Request" />
           <TextBlock Classes="muted small" TextWrapping="Wrap"><Run
@@ -94,10 +94,10 @@
     </Panel>
 
     <!-- History -->
-    <Panel Background="#99000000" IsVisible="{Binding IsHistoryOpen}">
+    <Panel Background="{DynamicResource Brush.Scrim}" IsVisible="{Binding IsHistoryOpen}">
       <Border Width="560" MaxHeight="600" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20" CornerRadius="12"
               Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
-              BoxShadow="0 12 32 0 #66000000">
+              BoxShadow="{DynamicResource Shadow.Dialog}">
         <DockPanel>
           <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,10">
             <TextBlock Classes="h2" FontSize="15" Text="History" />

@@ -1,11 +1,11 @@
 using System.Collections.Concurrent;
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
 using AvaloniaEdit.Document;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TabStudio.App.Editing;
 using TabStudio.App.Services;
+using TabStudio.App.Theming;
 using TabStudio.Compilation.Running;
 
 namespace TabStudio.App.ViewModels;
@@ -42,10 +42,13 @@ public enum OutputKind
 /// </remarks>
 public sealed partial class OutputViewModel : ObservableObject, IConsoleSink
 {
-    private static readonly IBrush ErrorBrush = new ImmutableSolidColorBrush(Color.Parse("#F47067"));
-    private static readonly IBrush InputBrush = new ImmutableSolidColorBrush(Color.Parse("#6FD6C4"));
-    private static readonly IBrush InfoBrush = new ImmutableSolidColorBrush(Color.Parse("#9AA1AE"));
-    private static readonly IBrush SuccessBrush = new ImmutableSolidColorBrush(Color.Parse("#6FD6A0"));
+    private static IBrush ErrorBrush => ThemeBrushes.Get("Brush.Output.Error");
+
+    private static IBrush InputBrush => ThemeBrushes.Get("Brush.Output.Input");
+
+    private static IBrush InfoBrush => ThemeBrushes.Get("Brush.Output.Info");
+
+    private static IBrush SuccessBrush => ThemeBrushes.Get("Brush.Output.Success");
 
     private readonly IUiDispatcher _ui;
     private readonly int _characterLimit;

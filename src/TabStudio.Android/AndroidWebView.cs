@@ -76,11 +76,18 @@ internal sealed partial class AndroidWebView(Func<Context> context) : NativeCont
         return new AndroidViewControlHandle(_view);
     }
 
-    /// <summary>Destroys the Android web view, if one was created.</summary>
+    /// <summary>Destroys the Android web view, if one was created and is still alive.</summary>
     public void Dispose()
     {
-        _view?.Destroy();
-        _view?.Dispose();
+        // When the host takes the view out of the layout for good, Avalonia's attachment removes it and releases its
+        // managed peer before DestroyNativeControlCore runs; calling into a released peer throws, which on the UI thread
+        // ended the app (Close Solution after a web app had been previewed). Android collects the removed view then.
+        if (_view is { Handle: var handle } view && handle != IntPtr.Zero)
+        {
+            view.Destroy();
+            view.Dispose();
+        }
+
         _view = null;
     }
 

@@ -1,7 +1,9 @@
 using Avalonia.Controls;
 using TabStudio.App.Platform;
 using TabStudio.App.Services;
+using TabStudio.App.Services.Appearance;
 using TabStudio.App.Services.Extensions;
+using TabStudio.App.Tests.Theming;
 using TabStudio.App.ViewModels;
 using TabStudio.App.Views;
 using TabStudio.Extensions.Installation;
@@ -34,7 +36,13 @@ internal sealed class ExtensionsFixture : IDisposable
         Paths = new AppPaths(Path.Combine(_temp.Path, "app"));
         Registry = new FakeOpenVsx();
         _http = Registry.CreateClient();
-        Service = new ExtensionsService(Paths, _http);
+        Appearance = new AppearanceService(new AppearanceSettingsStore(Paths));
+        if (TestTheme.Baseline != IdeTheme.Dark)
+        {
+            Appearance.SetTheme(TestTheme.Baseline);
+        }
+
+        Service = new ExtensionsService(Paths, _http, Appearance);
         Service.SetRegistry(FakeOpenVsx.Address);
         var device = new DefaultDeviceStatus(new DeviceInfo(8L * 1024 * 1024 * 1024, 8, IsLowRamDevice: false));
         Workspace = new WorkspaceViewModel(
@@ -79,6 +87,9 @@ internal sealed class ExtensionsFixture : IDisposable
 
     public ExtensionsService Service { get; }
 
+    /// <summary>The IDE's theme, which a light color theme makes light; the fixture sets it back when disposed.</summary>
+    public AppearanceService Appearance { get; }
+
     public WorkspaceViewModel Workspace { get; }
 
     public FakeVsixPicker Picker { get; } = new();
@@ -118,6 +129,7 @@ internal sealed class ExtensionsFixture : IDisposable
     public void Dispose()
     {
         Workspace.Dispose();
+        AppearanceService.Preview(TestTheme.Baseline);
         Service.Dispose();
         _http.Dispose();
         Registry.Dispose();

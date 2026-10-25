@@ -12,8 +12,9 @@ public sealed record SelfTestResult(bool Success, string Message, TimeSpan Durat
 /// <summary>
 /// Does what a person does first: opens the sample solution, presses F5, types a name when the program asks,
 /// and reads the Output panel; then debugs it, debugs it again with a TabStudio Link host compiling, serves a new web
-/// app and new Blazor apps, shows a new Avalonia app, installs an extension, installs and runs Python and Node.js, and
-/// runs and designs a new Windows Forms app. CI runs it on an Android emulator to prove the whole IDE works on a device.
+/// app and new Blazor apps, shows a new Avalonia app, installs an extension, installs and runs Python and Node.js,
+/// runs and designs a new Windows Forms app, and looks at the IDE and the Start screen in both themes. CI runs it on an
+/// Android emulator to prove the whole IDE works on a device.
 /// </summary>
 public static partial class SelfTest
 {
@@ -25,7 +26,7 @@ public static partial class SelfTest
     /// <param name="samples">The sample library.</param>
     /// <param name="cancellationToken">Gives up, for example after a timeout.</param>
     public static Task<SelfTestResult> RunAsync(MainViewModel main, SampleLibrary samples, CancellationToken cancellationToken = default) =>
-        RunAsync(main, samples, templates: null, cancellationToken);
+        RunAsync(main, samples, templates: null, screenshots: null, cancellationToken);
 
     /// <summary>
     /// Runs the self test in the running app, then, when <paramref name="templates"/> is given, a web app, Blazor apps,
@@ -35,8 +36,9 @@ public static partial class SelfTest
     /// <param name="main">The app's root view model.</param>
     /// <param name="samples">The sample library.</param>
     /// <param name="templates">Creates the web and Avalonia apps; without it, those parts are skipped.</param>
+    /// <param name="screenshots">A folder for the design part's pictures, or <see langword="null"/> for none.</param>
     /// <param name="cancellationToken">Gives up, for example after a timeout.</param>
-    public static async Task<SelfTestResult> RunAsync(MainViewModel main, SampleLibrary samples, ProjectTemplates? templates, CancellationToken cancellationToken = default)
+    public static async Task<SelfTestResult> RunAsync(MainViewModel main, SampleLibrary samples, ProjectTemplates? templates, string? screenshots, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(main);
         ArgumentNullException.ThrowIfNull(samples);
@@ -125,8 +127,10 @@ public static partial class SelfTest
             var pythonTools = toolchains.Success ? await CheckPythonToolsAsync(main, cancellationToken) : new SelfTestResult(false, "Python tools: not run", TimeSpan.Zero);
             var forms = pythonTools.Success ? await ShowWindowsFormsAppAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Windows Forms: not run", TimeSpan.Zero);
 
+            var design = forms.Success ? await CheckDesignAsync(main, screenshots, cancellationToken) : new SelfTestResult(false, "Design: not run", TimeSpan.Zero);
+
             // Swarm, on copies of the Avalonia template: its screens in the Device Matrix, then a phone in the swarm.
-            var screens = forms.Success ? await CheckSwarmScreensAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Swarm screens: not run", TimeSpan.Zero);
+            var screens = design.Success ? await CheckSwarmScreensAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Swarm screens: not run", TimeSpan.Zero);
             var swarm = screens.Success ? await RunOnSwarmAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Swarm devices: not run", TimeSpan.Zero);
             if (swarm.Success && avaloniaApp is not null)
             {
@@ -135,8 +139,8 @@ public static partial class SelfTest
             }
 
             return new SelfTestResult(
-                extensions.Success && toolchains.Success && pythonTools.Success && forms.Success && screens.Success && swarm.Success,
-                $"{summary} | {debugged.Message} | {web.Message} | {blazor.Message} | {avalonia.Message} | {extensions.Message} | {toolchains.Message} | {pythonTools.Message} | {forms.Message} | {screens.Message} | {swarm.Message}",
+                extensions.Success && toolchains.Success && pythonTools.Success && forms.Success && design.Success && screens.Success && swarm.Success,
+                $"{summary} | {debugged.Message} | {web.Message} | {blazor.Message} | {avalonia.Message} | {extensions.Message} | {toolchains.Message} | {pythonTools.Message} | {forms.Message} | {design.Message} | {screens.Message} | {swarm.Message}",
                 clock.Elapsed);
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)

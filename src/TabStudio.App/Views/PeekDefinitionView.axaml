@@ -11,7 +11,7 @@
   -->
   <Border CornerRadius="8" ClipToBounds="True"
           Background="{DynamicResource Brush.Window}" BorderBrush="{DynamicResource Brush.Accent}" BorderThickness="1,2,1,1"
-          BoxShadow="0 8 24 0 #59000000">
+          BoxShadow="{DynamicResource Shadow.Popup}">
     <DockPanel>
       <Border DockPanel.Dock="Top" Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
         <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto" Margin="10,2,4,2" MinHeight="36">

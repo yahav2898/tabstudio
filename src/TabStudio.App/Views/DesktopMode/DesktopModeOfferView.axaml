@@ -9,7 +9,7 @@
   <!-- Offered on the tablet when a display is connected: move the IDE to it now, always, or not now. -->
   <Border HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="16,0,16,52" MaxWidth="700"
           Padding="18,16" CornerRadius="14" Background="{DynamicResource Brush.Popup}"
-          BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1" BoxShadow="0 12 32 0 #66000000">
+          BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1" BoxShadow="{DynamicResource Shadow.Dialog}">
     <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto">
       <Border Width="44" Height="44" CornerRadius="11" Background="{DynamicResource Brush.AccentSoft}" VerticalAlignment="Top">
         <controls:StrokeIcon Data="{StaticResource Icon.Monitor}" Size="22" Foreground="{DynamicResource Brush.AccentText}"

@@ -530,8 +530,8 @@
                       <TextBlock Text="To Cursor" VerticalAlignment="Center" FontSize="12.5" />
                     </StackPanel>
                   </Button>
-                  <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding StartDebuggingCommand}"
-                          Background="{DynamicResource Brush.Pressed}" Foreground="{DynamicResource Brush.OnAccent}" ToolTip.Tip="Start Debugging (F5)">
+                  <Button Theme="{StaticResource AccentButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding StartDebuggingCommand}"
+                          ToolTip.Tip="Start Debugging (F5)">
                     <StackPanel Orientation="Horizontal" Spacing="7">
                       <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="14" />
                       <TextBlock Text="Run" VerticalAlignment="Center" FontSize="12.5" />

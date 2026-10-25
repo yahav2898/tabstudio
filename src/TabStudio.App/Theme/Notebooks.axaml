@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
   <!--
-    The notebook editor's icons and colors. Icons follow Icons.axaml: stroke paths on a 24×24 grid.
+    The notebook editor's icons (its colors are in Colors.axaml, for both themes). Icons follow Icons.axaml: stroke paths on a 24×24 grid.
   -->
 
   <!-- Icons -->
@@ -18,16 +18,5 @@
   <StreamGeometry x:Key="Icon.Markdown">M3 6 L21 6 L21 18 L3 18 Z M6 15 L6 9 L8.5 12 L11 9 L11 15 M16 9 L16 15 M13.5 12.5 L16 15 L18.5 12.5</StreamGeometry>
   <StreamGeometry x:Key="Icon.Code">M8 7 L3 12 L8 17 M16 7 L21 12 L16 17 M14 5 L10 19</StreamGeometry>
   <StreamGeometry x:Key="Icon.Notebook">M6 3 L18 3 A1 1 0 0 1 19 4 L19 20 A1 1 0 0 1 18 21 L6 21 Z M9 3 L9 21 M12 8 L16 8 M12 12 L16 12</StreamGeometry>
-
-  <!-- Notebook file badges (.ipynb, .dib) -->
-  <SolidColorBrush x:Key="Brush.Badge.Notebook" Color="#F2A65A" />
-  <SolidColorBrush x:Key="Brush.Badge.NotebookBackground" Color="#3A2B1E" />
-
-  <!-- Cells and outputs -->
-  <SolidColorBrush x:Key="Brush.Notebook.Cell" Color="#22252C" />
-  <SolidColorBrush x:Key="Brush.Notebook.CodeBlock" Color="#262A33" />
-  <SolidColorBrush x:Key="Brush.Notebook.ErrorBackground" Color="#2B1F22" />
-  <SolidColorBrush x:Key="Brush.Notebook.TableHeader" Color="#262A33" />
-  <SolidColorBrush x:Key="Brush.Notebook.TableStripe" Color="#1F2128" />
 
 </ResourceDictionary>

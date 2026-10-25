@@ -2,8 +2,8 @@ using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
 using TabStudio.App.Platform;
+using TabStudio.App.Theming;
 
 namespace TabStudio.App.Views.DesktopMode;
 
@@ -16,7 +16,7 @@ internal sealed class DesktopPointerView : Control
     /// <summary>A classic arrow, its tip at the origin, in device-independent units.</summary>
     private static readonly Geometry Arrow = Geometry.Parse("M0.5,0.5 L0.5,17 L4.6,13.1 L7.3,19.4 L9.9,18.3 L7.3,12.2 L12.8,12.2 Z");
 
-    private static readonly ImmutablePen Outline = new(new ImmutableSolidColorBrush(Colors.Black), 1, lineJoin: PenLineJoin.Miter);
+    private static readonly ThemedPen Outline = ThemedPen.App("Brush.Pointer.Outline", 1, lineJoin: PenLineJoin.Miter);
 
     private DesktopCursor? _cursor;
 
@@ -52,7 +52,7 @@ internal sealed class DesktopPointerView : Control
     }
 
     /// <inheritdoc />
-    public override void Render(DrawingContext context) => context.DrawGeometry(Brushes.White, Outline, Arrow);
+    public override void Render(DrawingContext context) => context.DrawGeometry(ThemeBrushes.Get("Brush.Pointer.Fill"), Outline.Pen, Arrow);
 
     private void OnCursorChanged(object? sender, PropertyChangedEventArgs e) => Follow();
 

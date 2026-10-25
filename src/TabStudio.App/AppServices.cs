@@ -58,6 +58,7 @@ public static class AppServices
         services.AddSingleton(_ => ToolboxCatalog.LoadEmbedded());
         services.AddSingleton<DesktopModeSettingsStore>();
         services.AddSingleton<DesktopModeViewModel>();
+        services.AddSingleton(provider => new Services.Appearance.AppearanceService(new Services.Appearance.AppearanceSettingsStore(provider.GetRequiredService<AppPaths>())));
 
         // Every screen the app being built runs on: the preview, virtual devices and the swarm's phones.
         services.AddSingleton<Swarm.AppScreenRegistry>();

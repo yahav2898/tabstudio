@@ -147,7 +147,26 @@ jobs:
             fi
             tail -n 40 ci-out/TabStudio.App.Tests.retry.log
           fi
-          if [ $first -ne 0 ] || [ $status -ne 0 ]; then
+          # The same tests in the light theme, for light screenshots (screenshots/light); the palette and design tests ran above in both.
+          mkdir -p ci-out/screenshots/light
+          run_light_tests() {
+            TABSTUDIO_THEME=Light TABSTUDIO_SCREENSHOTS="$TABSTUDIO_SCREENSHOTS/light" \
+              dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter "FullyQualifiedName!~TabStudio.App.Tests.Theming&FullyQualifiedName!~TabStudio.App.Tests.Design" \
+              --logger "console;verbosity=normal" > "$1" 2>&1
+          }
+          light=0
+          run_light_tests ci-out/TabStudio.App.Tests.Light.log || light=1
+          tail -n 20 ci-out/TabStudio.App.Tests.Light.log
+          if [ $light -ne 0 ]; then
+            echo "::warning::The IDE tests in the light theme failed once; running them again. The first attempt is in ci-out/TabStudio.App.Tests.Light.log."
+            if run_light_tests ci-out/TabStudio.App.Tests.Light.retry.log; then
+              echo "TabStudio.App.Tests (light theme): the first attempt failed and the retry passed (see TabStudio.App.Tests.Light.log)" >> ci-out/FLAKY.txt
+            else
+              status=1
+            fi
+            tail -n 40 ci-out/TabStudio.App.Tests.Light.retry.log
+          fi
+          if [ $first -ne 0 ] || [ $light -ne 0 ] || [ $status -ne 0 ]; then
             {
               echo "== Processes left running"; ps -eo pid,ppid,pgid,rss,etime,args --sort=-rss | head -n 40
               echo "== Kernel messages"; sudo dmesg | tail -n 40
