@@ -112,7 +112,10 @@ public sealed class RemoteDebuggingTests
         var phone = await swarm.JoinAsync("Pixel 9");
         var pauses = Pauses(swarm.Coordinator);
         var exited = Exits(swarm.Coordinator);
+        var looping = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        swarm.Coordinator.OutputReceived += (_, e) => looping.TrySetResult();
         var build = TestPrograms.Debug("""
+            Console.WriteLine("Looping");
             for (var i = 0; i < 400; i++)
             {
                 Thread.Sleep(5);
@@ -120,13 +123,14 @@ public sealed class RemoteDebuggingTests
             """);
         await swarm.Coordinator.RunAsync(DebugBuild(build, SwarmAppKind.Console), CancellationToken.None);
         var device = phone.OnCoordinator(swarm.Coordinator)!;
-        await SwarmLoopback.UntilAsync(() => device.State == SwarmDeviceState.Running, "the app to run");
+        await looping.Task.WaitAsync(SwarmLoopback.Patience);
 
         await swarm.Coordinator.PauseAllAsync();
 
         var pause = await NextAsync(pauses);
         Assert.Equal(PauseReason.Pause, pause.Reason);
-        Assert.Contains(await pause.GetLocalsAsync(CancellationToken.None), v => v.Name == "i");
+        Assert.Contains(pause.Location!.Line, new[] { 2, 4 });
+        Assert.Equal(SwarmDeviceState.Paused, device.State);
         await swarm.Coordinator.ContinueAllAsync();
         await SwarmLoopback.UntilAsync(() => device.Pause is null, "the device to continue");
         Assert.Equal(RunOutcome.Completed, (await exited.Task.WaitAsync(SwarmLoopback.Patience)).Outcome);

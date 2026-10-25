@@ -148,7 +148,7 @@ public sealed partial class SwarmMember
             }
 
             SetAppState(request.Run, SwarmDeviceState.Starting, request.AppName, null, request.Kind);
-            _ = Task.Run(() => ShowAsync(local, request, entry, dependencies, packages, session));
+            _ = Task.Run(() => ShowAsync(local, request, entry, dependencies, packages, session), CancellationToken.None);
             _cache.Prune(InUse(request));
         }
         finally
