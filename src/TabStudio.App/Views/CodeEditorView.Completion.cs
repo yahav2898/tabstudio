@@ -118,6 +118,14 @@ public sealed partial class CodeEditorView
             return;
         }
 
+        // On-screen keyboards send Enter as a typed line break: it commits like the Enter key.
+        if (typed is '\n' or '\r' && !completion.IsSoftSelection && completion.SelectedItem is { } selected)
+        {
+            e.Handled = true;
+            _ = CommitCompletionAsync(null, commitCharacter: null, newLine: string.Equals(completion.FilterText, selected.Entry.DisplayText, StringComparison.Ordinal));
+            return;
+        }
+
         if (!completion.IsSoftSelection && completion.SelectedItem is not null && CompletionMatcher.IsCommitCharacter(typed))
         {
             e.Handled = true;

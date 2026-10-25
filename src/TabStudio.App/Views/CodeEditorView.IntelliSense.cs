@@ -111,7 +111,7 @@ public sealed partial class CodeEditorView
                 _ = OpenCompletionAsync(completeWord: true);
                 break;
             case EditorAction.ParameterInfo:
-                _ = RequestSignatureHelpAsync(explicitRequest: true);
+                _ = RequestSignatureHelpAsync();
                 break;
             case EditorAction.QuickInfo:
                 _ = ShowQuickInfoAtCaretAsync();
@@ -152,7 +152,7 @@ public sealed partial class CodeEditorView
                     _ = ShowQuickInfoAtCaretAsync();
                     return true;
                 case (Key.K, Key.P):
-                    _ = RequestSignatureHelpAsync(explicitRequest: true);
+                    _ = RequestSignatureHelpAsync();
                     return true;
                 case (Key.K, Key.L):
                     _ = OpenCompletionAsync(completeWord: false);
@@ -202,7 +202,7 @@ public sealed partial class CodeEditorView
                 _ = OpenCompletionAsync(completeWord: false);
                 return true;
             case Key.Space when e.KeyModifiers == (KeyModifiers.Control | KeyModifiers.Shift):
-                _ = RequestSignatureHelpAsync(explicitRequest: true);
+                _ = RequestSignatureHelpAsync();
                 return true;
             case Key.OemPeriod when e.KeyModifiers == KeyModifiers.Control:
             case Key.Enter when e.KeyModifiers == KeyModifiers.Alt:

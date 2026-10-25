@@ -70,6 +70,24 @@ public sealed class IntelliSenseEditorTests
     }
 
     [AvaloniaFact]
+    public async Task A_line_break_from_an_on_screen_keyboard_commits_like_Enter()
+    {
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var window = Show(fixture);
+        var view = ActiveEditor(window);
+        var editor = view.Editor;
+
+        StartLineAfter(editor, "Console.WriteLine();");
+        Type(editor, "Console.");
+        await UiTestHelpers.WaitUntilAsync(() => view.Completion!.IsOpen, because: "the completion list");
+        Type(editor, "WriteL\n");
+
+        await UiTestHelpers.WaitUntilAsync(() => CaretLine(editor) == "Console.WriteLine", because: "the committed item");
+        window.Close();
+    }
+
+    [AvaloniaFact]
     public async Task Escape_closes_the_list_without_changing_the_text()
     {
         using var fixture = new WorkspaceFixture();

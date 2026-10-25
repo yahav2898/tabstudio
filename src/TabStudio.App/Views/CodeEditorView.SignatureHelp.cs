@@ -41,7 +41,7 @@ public sealed partial class CodeEditorView
     {
         if (e.Text is { Length: 1 } text && text[0] is '(' or ',' or '<' or ')')
         {
-            _ = RequestSignatureHelpAsync(explicitRequest: false);
+            _ = RequestSignatureHelpAsync();
         }
     }
 
@@ -49,12 +49,12 @@ public sealed partial class CodeEditorView
     {
         if (_signatureHelp is { IsOpen: true } && _signatureHelpRequest is null)
         {
-            _ = RequestSignatureHelpAsync(explicitRequest: false, SignatureHelpUpdateDelay);
+            _ = RequestSignatureHelpAsync(SignatureHelpUpdateDelay);
         }
     }
 
     /// <summary>Asks for signature help at the caret and shows it, or closes it outside a call.</summary>
-    private async Task RequestSignatureHelpAsync(bool explicitRequest, TimeSpan delay = default)
+    private async Task RequestSignatureHelpAsync(TimeSpan delay = default)
     {
         if (_features is null || _signatureHelp is null)
         {
@@ -99,7 +99,7 @@ public sealed partial class CodeEditorView
         if (edits != _document.EditCount)
         {
             // The user typed on; ask again about the current text.
-            _ = RequestSignatureHelpAsync(explicitRequest);
+            _ = RequestSignatureHelpAsync();
             return;
         }
 
