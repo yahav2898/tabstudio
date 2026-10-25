@@ -47,7 +47,7 @@ internal sealed class ItemListView
         Bar.ContentLength = content;
         Bar.ViewLength = bounds.Height;
         Bar.SmallChange = ItemHeight;
-        Offset = Offset;
+        ClampOffset();
     }
 
     /// <summary>Lays out the rows in an area, for a control that places the scroll bar itself.</summary>
@@ -58,7 +58,7 @@ internal sealed class ItemListView
         Bar.ContentLength = Count * ItemHeight;
         Bar.ViewLength = area.Height;
         Bar.SmallChange = ItemHeight;
-        Offset = Offset;
+        ClampOffset();
     }
 
     /// <summary>The row at a point, or -1.</summary>
@@ -113,6 +113,9 @@ internal sealed class ItemListView
             yield return i;
         }
     }
+
+    /// <summary>Keeps the scroll offset within the content, after the content or the view changed size.</summary>
+    public void ClampOffset() => Bar.Value = Math.Clamp(Bar.Value, 0, Bar.MaximumValue);
 
     /// <summary>Draws the rows with their text, the selection and the focus rectangle; the caller draws the scroll bar.</summary>
     /// <param name="g">The surface.</param>

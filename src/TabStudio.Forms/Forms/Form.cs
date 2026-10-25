@@ -6,7 +6,7 @@ namespace System.Windows.Forms;
 
 /// <summary>
 /// A window of the app: the main window <see cref="Application.Run(Form)"/> shows, another window shown with
-/// <see cref="Show()"/>, or a dialog shown with <see cref="ShowDialog()"/>. In TabStudio, forms are windows inside the
+/// <see cref="Control.Show()"/>, or a dialog shown with <see cref="ShowDialog()"/>. In TabStudio, forms are windows inside the
 /// app preview, with a title bar to move them, a close button and, when sizable, a grip to resize them.
 /// </summary>
 [DefaultEvent(nameof(Load))]

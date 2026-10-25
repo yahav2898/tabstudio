@@ -443,15 +443,18 @@ internal sealed class ItemStore
     /// <summary>Sorts the items by their text.</summary>
     public void Sort()
     {
-        _items.Sort((a, b) => string.Compare(_owner.GetItemText(a), _owner.GetItemText(b), StringComparison.CurrentCultureIgnoreCase));
+        _items.Sort((a, b) => Compare(_owner.GetItemText(a), _owner.GetItemText(b)));
         _changed();
     }
+
+    /// <summary>Compares item texts as Windows sorts lists: by the culture's rules, ignoring case.</summary>
+    private static int Compare(string a, string b) => CultureInfo.CurrentCulture.CompareInfo.Compare(a, b, CompareOptions.IgnoreCase);
 
     private int SortedIndex(object item)
     {
         var text = _owner.GetItemText(item);
         var index = 0;
-        while (index < _items.Count && string.Compare(_owner.GetItemText(_items[index]), text, StringComparison.CurrentCultureIgnoreCase) <= 0)
+        while (index < _items.Count && Compare(_owner.GetItemText(_items[index]), text) <= 0)
         {
             index++;
         }

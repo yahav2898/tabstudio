@@ -749,7 +749,7 @@ public class ComboBox : ListControl, INativeTextEditor
         {
             var i = (startIndex + step + _items.Count) % _items.Count;
             var text = GetItemText(_items[i]);
-            if (exact ? string.Equals(text, s, StringComparison.CurrentCultureIgnoreCase) : text.StartsWith(s, StringComparison.CurrentCultureIgnoreCase))
+            if (exact ? string.Equals(text, s, StringComparison.OrdinalIgnoreCase) : text.StartsWith(s, StringComparison.CurrentCultureIgnoreCase))
             {
                 return i;
             }

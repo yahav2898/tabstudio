@@ -80,7 +80,7 @@ public class ToolStripDropDown : ToolStrip
     protected override Padding DefaultPadding => new(1, 2, 1, 2);
 
     /// <summary>Opens the drop-down at the pointer.</summary>
-    public void Show() => Show(Cursor.Position);
+    public new void Show() => Show(Cursor.Position);
 
     /// <summary>Opens the drop-down at a point of the screen.</summary>
     /// <param name="screenLocation">The point.</param>

@@ -79,7 +79,7 @@ internal sealed class FormsTestRun : IDisposable
     public T Invoke<T>(Func<T> func)
     {
         T result = default!;
-        Invoke(() => result = func());
+        Invoke(new Action(() => result = func()));
         return result;
     }
 

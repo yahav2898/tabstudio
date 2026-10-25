@@ -737,7 +737,7 @@ public class DomainUpDown : UpDownBase
             _sorted = value;
             if (value)
             {
-                _items.Sort(Comparer<object?>.Create((a, b) => string.Compare(Convert.ToString(a, CultureInfo.CurrentCulture), Convert.ToString(b, CultureInfo.CurrentCulture), StringComparison.CurrentCulture)));
+                _items.Sort(Comparer<object?>.Create((a, b) => CultureInfo.CurrentCulture.CompareInfo.Compare(Convert.ToString(a, CultureInfo.CurrentCulture), Convert.ToString(b, CultureInfo.CurrentCulture), CompareOptions.None)));
             }
         }
     }
@@ -784,7 +784,7 @@ public class DomainUpDown : UpDownBase
         UserEdit = false;
         for (var i = 0; i < _items.Count; i++)
         {
-            if (string.Equals(Convert.ToString(_items[i], CultureInfo.CurrentCulture), Text, StringComparison.CurrentCultureIgnoreCase))
+            if (string.Equals(Convert.ToString(_items[i], CultureInfo.CurrentCulture), Text, StringComparison.OrdinalIgnoreCase))
             {
                 SelectedIndex = i;
                 return;

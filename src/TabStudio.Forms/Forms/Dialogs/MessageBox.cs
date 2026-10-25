@@ -226,10 +226,10 @@ internal sealed class MessageBoxGlyph : Control
     }
 
     /// <inheritdoc />
-    internal override void PaintContent(Graphics g) => Paint(g, new Rectangle(Point.Empty, ClientSize), _icon);
+    internal override void PaintContent(Graphics g) => Draw(g, new Rectangle(Point.Empty, ClientSize), _icon);
 
     /// <summary>Draws a message box icon in a square.</summary>
-    internal static void Paint(Graphics g, Rectangle box, MessageBoxIcon icon)
+    internal static void Draw(Graphics g, Rectangle box, MessageBoxIcon icon)
     {
         g.SmoothingMode = SmoothingMode.AntiAlias;
         using var font = new Font("Segoe UI", box.Height * 0.42f, FontStyle.Bold, GraphicsUnit.Pixel);
