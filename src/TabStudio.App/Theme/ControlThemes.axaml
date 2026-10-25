@@ -77,10 +77,10 @@
       <Setter Property="Background" Value="{DynamicResource Brush.Control}" />
     </Style>
     <Style Selector="^.destructive /template/ ContentPresenter#PART_ContentPresenter">
-      <Setter Property="Background" Value="#C93C37" />
+      <Setter Property="Background" Value="{DynamicResource Brush.Destructive}" />
     </Style>
     <Style Selector="^.destructive:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-      <Setter Property="Background" Value="#DA4A44" />
+      <Setter Property="Background" Value="{DynamicResource Brush.DestructiveHover}" />
     </Style>
   </ControlTheme>
 
@@ -101,7 +101,7 @@
       <Setter Property="BorderThickness" Value="1.5" />
     </Style>
     <Style Selector="^.selected">
-      <Setter Property="Foreground" Value="{DynamicResource Brush.OnAccent}" />
+      <Setter Property="Foreground" Value="{DynamicResource Brush.TextBright}" />
     </Style>
   </ControlTheme>
 
@@ -164,7 +164,7 @@
       <Setter Property="Background" Value="{DynamicResource Brush.Selection}" />
     </Style>
     <Style Selector="^:selected">
-      <Setter Property="Foreground" Value="{DynamicResource Brush.OnAccent}" />
+      <Setter Property="Foreground" Value="{DynamicResource Brush.SelectionText}" />
     </Style>
   </ControlTheme>
 
@@ -209,10 +209,10 @@
     <Setter Property="Padding" Value="6,0" />
     <Setter Property="CornerRadius" Value="4" />
     <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-      <Setter Property="Background" Value="#26FFFFFF" />
+      <Setter Property="Background" Value="{DynamicResource Brush.StatusBar.Hover}" />
     </Style>
     <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
-      <Setter Property="Background" Value="#40FFFFFF" />
+      <Setter Property="Background" Value="{DynamicResource Brush.StatusBar.Pressed}" />
     </Style>
   </ControlTheme>
 
