@@ -66,10 +66,10 @@ public static partial class SelfTest
 
         minor = GC.CollectionCount(0) - minor;
         major = GC.CollectionCount(GC.MaxGeneration) - major;
-        var message = failures.Count == 0
+        var message = failures.IsEmpty
             ? string.Create(CultureInfo.InvariantCulture, $"Processes: started {SpawnedPrograms} programs in {clock.Elapsed.TotalSeconds:0.0} s while {minor} minor and {major} major collections ran")
             : $"Processes: {failures.Count} of {SpawnedPrograms} programs failed: {string.Join(", ", failures.Distinct().Take(3))}";
-        return new SelfTestResult(failures.Count == 0, message, clock.Elapsed);
+        return new SelfTestResult(failures.IsEmpty, message, clock.Elapsed);
     }
 
     /// <summary>
