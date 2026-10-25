@@ -30,10 +30,13 @@ for _ in $(seq 1 20); do
   [ "$(adb shell dumpsys display | grep -c 'mDisplayId=' || true)" -ge 2 ] && break
   sleep 1
 done
-# Each logical display's name and id, and its flags: the overlay display is a presentation display.
+# Each logical display's name and id, and its flags: the overlay display is a presentation display. Android 10
+# writes DisplayInfo{"Overlay #1, displayId 1", ...}, later versions DisplayInfo{"Overlay #1", displayId 2, ...}.
 adb shell dumpsys display | tr -d '\r' \
-  | awk 'match($0, /DisplayInfo\{"[^"]*", displayId [0-9]+/) {
-      print substr($0, RSTART + 12, RLENGTH - 12) (index($0, "FLAG_PRESENTATION") ? ": a presentation display" : "")
+  | awk 'match($0, /DisplayInfo\{"[^"]*"(, displayId [0-9]+)?/) {
+      name = substr($0, RSTART + 12, RLENGTH - 12)
+      gsub(/"/, "", name)
+      print name (index($0, "FLAG_PRESENTATION") ? ": a presentation display" : "")
     }' | sort -u > "$out/displays.txt" || true
 echo "Displays:"
 cat "$out/displays.txt"
