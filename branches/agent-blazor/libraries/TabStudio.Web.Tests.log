@@ -1,6 +1,6 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Web/TabStudio.Web.csproj (in 174 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Web.Tests/TabStudio.Web.Tests.csproj (in 174 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Web/TabStudio.Web.csproj (in 414 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Web.Tests/TabStudio.Web.Tests.csproj (in 414 ms).
   4 of 6 projects are up-to-date for restore.
   TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
@@ -11,11 +11,12 @@
   TabStudio.Web.Tests -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Web.Tests/bin/Release/net10.0/TabStudio.Web.Tests.dll
 Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Web.Tests/bin/Release/net10.0/TabStudio.Web.Tests.dll (.NETCoreApp,Version=v10.0)
 A total of 1 test files matched the specified pattern.
-[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
-[xUnit.net 00:00:00.08]   Discovering: TabStudio.Web.Tests
-[xUnit.net 00:00:00.21]   Discovered:  TabStudio.Web.Tests
-[xUnit.net 00:00:00.25]   Starting:    TabStudio.Web.Tests
-  Passed TabStudio.Web.Tests.StaticWebAssetsTests.Serves_each_file_with_its_media_type(route: "_framework/App.dll", expected: "application/octet-stream") [6 ms]
+[xUnit.net 00:00:00.01] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.23]   Discovering: TabStudio.Web.Tests
+[xUnit.net 00:00:00.43]   Discovered:  TabStudio.Web.Tests
+[xUnit.net 00:00:00.50]   Starting:    TabStudio.Web.Tests
+  Passed TabStudio.Web.Tests.ScopedCssTests.Computes_the_scope_the_SDK_computes(assemblyName: "BlazorApp1", relativePath: "Components/Layout/NavMenu.razor.css", expected: "b-zjo6z1fhij") [5 ms]
+  Passed TabStudio.Web.Tests.StaticWebAssetsTests.Serves_each_file_with_its_media_type(route: "_framework/App.dll", expected: "application/octet-stream") [5 ms]
   Passed TabStudio.Web.Tests.StaticWebAssetsTests.Serves_each_file_with_its_media_type(route: "_framework/icudt_EFIGS.dat", expected: "application/octet-stream") [< 1 ms]
   Passed TabStudio.Web.Tests.StaticWebAssetsTests.Serves_each_file_with_its_media_type(route: "favicon.png", expected: "image/png") [< 1 ms]
   Passed TabStudio.Web.Tests.StaticWebAssetsTests.Serves_each_file_with_its_media_type(route: "_framework/dotnet.js", expected: "text/javascript") [< 1 ms]
@@ -24,210 +25,195 @@ A total of 1 test files matched the specified pattern.
   Passed TabStudio.Web.Tests.StaticWebAssetsTests.Serves_each_file_with_its_media_type(route: "_framework/dotnet.native.wasm", expected: "application/wasm") [< 1 ms]
   Passed TabStudio.Web.Tests.StaticWebAssetsTests.Serves_each_file_with_its_media_type(route: "index.html", expected: "text/html") [< 1 ms]
   Passed TabStudio.Web.Tests.StaticWebAssetsTests.Serves_each_file_with_its_media_type(route: "fonts/x.woff2", expected: "font/woff2") [< 1 ms]
-  Passed TabStudio.Web.Tests.StaticWebAssetsTests.Collects_the_web_root_collocated_modules_and_the_bundle [108 ms]
-  Passed TabStudio.Web.Tests.StaticWebAssetsTests.A_scoped_CSS_file_with_an_import_is_reported_and_left_out [10 ms]
-  Passed TabStudio.Web.Tests.ScopedCssTests.Computes_the_scope_the_SDK_computes(assemblyName: "BlazorApp1", relativePath: "Components/Layout/NavMenu.razor.css", expected: "b-zjo6z1fhij") [< 1 ms]
-  Passed TabStudio.Web.Tests.ScopedCssTests.Computes_the_scope_the_SDK_computes(assemblyName: "BlazorApp1", relativePath: "Components/Layout/MainLayout.razor.css", expected: "b-nz1yiwl0um") [< 1 ms]
+  Passed TabStudio.Web.Tests.ScopedCssTests.Computes_the_scope_the_SDK_computes(assemblyName: "BlazorApp1", relativePath: "Components/Layout/MainLayout.razor.css", expected: "b-nz1yiwl0um") [5 ms]
   Passed TabStudio.Web.Tests.ScopedCssTests.Computes_the_scope_the_SDK_computes(assemblyName: "WebApplication1", relativePath: "Views/Shared/_Layout.cshtml.css", expected: "b-4ak7nacacg") [< 1 ms]
   Passed TabStudio.Web.Tests.ScopedCssTests.Computes_the_scope_the_SDK_computes(assemblyName: "RazorClassLibrary1", relativePath: "Component1.razor.css", expected: "b-9hms91upey") [< 1 ms]
-  Passed TabStudio.Web.Tests.ScopedCssTests.Scopes_every_selector(css: "a:after { }", expected: "a[b-test]:after { }") [< 1 ms]
-  Passed TabStudio.Web.Tests.ScopedCssTests.Scopes_every_selector(css: "@media (max-width: 600px) { .x { top: 0; } }", expected: "@media (max-width: 600px) { .x[b-test] { top: 0; }"···) [< 1 ms]
+  Passed TabStudio.Web.Tests.ScopedCssTests.Scopes_every_selector(css: "a:after { }", expected: "a[b-test]:after { }") [37 ms]
+  Passed TabStudio.Web.Tests.ScopedCssTests.Scopes_every_selector(css: "@media (max-width: 600px) { .x { top: 0; } }", expected: "@media (max-width: 600px) { .x[b-test] { top: 0; }"···) [1 ms]
   Passed TabStudio.Web.Tests.ScopedCssTests.Scopes_every_selector(css: "h1 { color: red; }", expected: "h1[b-test] { color: red; }") [< 1 ms]
   Passed TabStudio.Web.Tests.ScopedCssTests.Scopes_every_selector(css: "div > span + i ~ b { }", expected: "div > span + i ~ b[b-test] { }") [< 1 ms]
   Passed TabStudio.Web.Tests.ScopedCssTests.Scopes_every_selector(css: "a::before, p:hover { }", expected: "a[b-test]::before, p:hover[b-test] { }") [< 1 ms]
   Passed TabStudio.Web.Tests.ScopedCssTests.Scopes_every_selector(css: "::deep .x { }", expected: "[b-test] .x { }") [< 1 ms]
   Passed TabStudio.Web.Tests.ScopedCssTests.Scopes_every_selector(css: ".row ::deep a { }", expected: ".row[b-test]  a { }") [< 1 ms]
   Passed TabStudio.Web.Tests.ScopedCssTests.Scopes_every_selector(css: "@font-face { font-family: x; }", expected: "@font-face { font-family: x; }") [< 1 ms]
-  Passed TabStudio.Web.Tests.ScopedCssTests.Rewrites_the_templates_stylesheets_as_the_SDK_does(name: "BlazorWasm.MainLayout", assemblyName: "BlazorApp1", relativePath: "Layout/MainLayout.razor.css") [1 ms]
-  Passed TabStudio.Web.Tests.StaticWebAssetsTests.Bundles_the_scoped_CSS_of_the_Blazor_template_as_the_SDK_does [19 ms]
-  Passed TabStudio.Web.Tests.ScopedCssTests.Rewrites_the_templates_stylesheets_as_the_SDK_does(name: "BlazorApp1.MainLayout", assemblyName: "BlazorApp1", relativePath: "Components/Layout/MainLayout.razor.css") [6 ms]
-  Passed TabStudio.Web.Tests.ScopedCssTests.Rewrites_the_templates_stylesheets_as_the_SDK_does(name: "BlazorApp1.NavMenu", assemblyName: "BlazorApp1", relativePath: "Components/Layout/NavMenu.razor.css") [9 ms]
-  Passed TabStudio.Web.Tests.ScopedCssTests.Rewrites_the_templates_stylesheets_as_the_SDK_does(name: "BlazorApp1.ReconnectModal", assemblyName: "BlazorApp1", relativePath: "Components/Layout/ReconnectModal.razor.css") [< 1 ms]
+  Passed TabStudio.Web.Tests.ScopedCssTests.Rewrites_the_templates_stylesheets_as_the_SDK_does(name: "BlazorWasm.MainLayout", assemblyName: "BlazorApp1", relativePath: "Layout/MainLayout.razor.css") [3 ms]
+  Passed TabStudio.Web.Tests.ScopedCssTests.Rewrites_the_templates_stylesheets_as_the_SDK_does(name: "BlazorApp1.MainLayout", assemblyName: "BlazorApp1", relativePath: "Components/Layout/MainLayout.razor.css") [< 1 ms]
+  Passed TabStudio.Web.Tests.ScopedCssTests.Rewrites_the_templates_stylesheets_as_the_SDK_does(name: "BlazorApp1.NavMenu", assemblyName: "BlazorApp1", relativePath: "Components/Layout/NavMenu.razor.css") [< 1 ms]
+  Passed TabStudio.Web.Tests.ScopedCssTests.Rewrites_the_templates_stylesheets_as_the_SDK_does(name: "BlazorApp1.ReconnectModal", assemblyName: "BlazorApp1", relativePath: "Components/Layout/ReconnectModal.razor.css") [7 ms]
   Passed TabStudio.Web.Tests.ScopedCssTests.Rewrites_the_templates_stylesheets_as_the_SDK_does(name: "RazorClassLibrary1.Component1", assemblyName: "RazorClassLibrary1", relativePath: "Component1.razor.css") [< 1 ms]
   Passed TabStudio.Web.Tests.ScopedCssTests.Rewrites_the_templates_stylesheets_as_the_SDK_does(name: "WebApplication1._Layout", assemblyName: "WebApplication1", relativePath: "Views/Shared/_Layout.cshtml.css") [< 1 ms]
-  Passed TabStudio.Web.Tests.ScopedCssTests.Rewrites_the_templates_stylesheets_as_the_SDK_does(name: "BlazorWasm.NavMenu", assemblyName: "BlazorApp1", relativePath: "Layout/NavMenu.razor.css") [< 1 ms]
-  Passed TabStudio.Web.Tests.ScopedCssTests.An_import_is_an_error_on_its_line [< 1 ms]
+  Passed TabStudio.Web.Tests.ScopedCssTests.Rewrites_the_templates_stylesheets_as_the_SDK_does(name: "BlazorWasm.NavMenu", assemblyName: "BlazorApp1", relativePath: "Layout/NavMenu.razor.css") [2 ms]
+  Passed TabStudio.Web.Tests.ScopedCssTests.An_import_is_an_error_on_its_line [11 ms]
   Passed TabStudio.Web.Tests.ScopedCssTests.Renames_the_files_keyframes_and_the_animations_that_use_them [< 1 ms]
-  Passed TabStudio.Web.Tests.StaticWebAssetsTests.A_librarys_assets_are_served_under_its_content_path [18 ms]
-  Passed TabStudio.Web.Tests.StaticWebAssetsTests.Writes_an_endpoints_manifest_with_the_headers_MapStaticAssets_sends [17 ms]
-  Passed TabStudio.Web.Tests.StaticWebAssetsTests.Writes_a_runtime_manifest_with_a_tree_of_routes_and_the_web_root_pattern [15 ms]
-  Passed TabStudio.Web.Tests.StaticWebAssetsTests.An_apps_bundle_imports_its_libraries_bundles_first [11 ms]
-  Passed TabStudio.Web.Tests.StaticWebAssetsTests.The_client_of_a_Blazor_Web_App_is_served_from_the_root [9 ms]
-  Passed TabStudio.Web.Tests.WebAssemblyAppHostTests.Answers_304_when_the_browsers_copy_is_current_and_HEAD_without_a_body [284 ms]
-  Passed TabStudio.Web.Tests.WebAssemblyAppHostTests.A_dotnet_js_from_before_NET_10_is_refused [< 1 ms]
-  Passed TabStudio.Web.Tests.WebAssemblyAppHostTests.Prefers_the_port_it_is_given_and_stops_listening_when_disposed [31 ms]
+  Passed TabStudio.Web.Tests.StaticWebAssetsTests.Collects_the_web_root_collocated_modules_and_the_bundle [110 ms]
+  Passed TabStudio.Web.Tests.StaticWebAssetsTests.A_scoped_CSS_file_with_an_import_is_reported_and_left_out [8 ms]
+  Passed TabStudio.Web.Tests.StaticWebAssetsTests.Bundles_the_scoped_CSS_of_the_Blazor_template_as_the_SDK_does [24 ms]
+  Passed TabStudio.Web.Tests.StaticWebAssetsTests.A_librarys_assets_are_served_under_its_content_path [6 ms]
+  Passed TabStudio.Web.Tests.StaticWebAssetsTests.Lists_the_JavaScript_initializers_of_the_site_as_the_SDK_does [6 ms]
+  Passed TabStudio.Web.Tests.StaticWebAssetsTests.Writes_an_endpoints_manifest_with_the_headers_MapStaticAssets_sends [25 ms]
+  Passed TabStudio.Web.Tests.StaticWebAssetsTests.Writes_a_runtime_manifest_with_a_tree_of_routes_and_the_web_root_pattern [16 ms]
+  Passed TabStudio.Web.Tests.StaticWebAssetsTests.An_apps_bundle_imports_its_libraries_bundles_first [5 ms]
+  Passed TabStudio.Web.Tests.StaticWebAssetsTests.The_client_of_a_Blazor_Web_App_is_served_from_the_root [< 1 ms]
+  Passed TabStudio.Web.Tests.WebAssemblyAppHostTests.Answers_304_when_the_browsers_copy_is_current_and_HEAD_without_a_body [360 ms]
+  Passed TabStudio.Web.Tests.WebAssemblyAppHostTests.A_dotnet_js_from_before_NET_10_is_refused [1 ms]
+  Passed TabStudio.Web.Tests.Apps.WebTemplateTests.Creates_the_files_dotnet_new_creates(templateId: "webapp", expected: ["Shop/Shop.csproj", "Shop/Pages/Index.cshtml.cs", "Shop/Pages/Shared/_Layout.cshtml.css", "Shop/wwwroot/lib/jquery/dist/jquery.min.js", "Shop/wwwroot/lib/jquery-validation-unobtrusive/dis"···]) [81 ms]
+  Passed TabStudio.Web.Tests.WebAssemblyAppHostTests.Prefers_the_port_it_is_given_and_stops_listening_when_disposed [33 ms]
   Passed TabStudio.Web.Tests.WebAssemblyAppHostTests.Fills_in_the_start_pages_placeholders [< 1 ms]
-  Passed TabStudio.Web.Tests.WebAssemblyAppHostTests.Serves_the_app_with_the_right_media_types_and_no_stale_caching [31 ms]
-  Passed TabStudio.Web.Tests.WebAssemblyAppHostTests.Answers_the_apps_routes_with_the_start_page_and_missing_files_with_404 [33 ms]
-  Passed TabStudio.Web.Tests.WebAssemblyAppHostTests.An_app_without_culture_data_loads_no_ICU [17 ms]
-  Passed TabStudio.Web.Tests.WebAssemblyAppHostTests.Writes_the_boot_configuration_into_dotnet_js [11 ms]
+  Passed TabStudio.Web.Tests.Apps.WebTemplateTests.Creates_the_files_dotnet_new_creates(templateId: "blazor-none", expected: ["Shop/Shop.csproj", "Shop/Components/Pages/Weather.razor"]) [48 ms]
+  Passed TabStudio.Web.Tests.WebAssemblyAppHostTests.Serves_the_app_with_the_right_media_types_and_no_stale_caching [33 ms]
+  Passed TabStudio.Web.Tests.Apps.WebTemplateTests.Creates_the_files_dotnet_new_creates(templateId: "blazor-auto", expected: ["Shop/Shop.csproj", "Shop.Client/Shop.Client.csproj", "Shop.Client/wwwroot/appsettings.json"]) [47 ms]
+  Passed TabStudio.Web.Tests.WebAssemblyAppHostTests.Answers_the_apps_routes_with_the_start_page_and_missing_files_with_404 [31 ms]
+  Passed TabStudio.Web.Tests.WebAssemblyAppHostTests.An_app_without_culture_data_loads_no_ICU [13 ms]
+  Passed TabStudio.Web.Tests.WebAssemblyAppHostTests.Writes_the_boot_configuration_into_dotnet_js [22 ms]
+  Passed TabStudio.Web.Tests.Apps.WebTemplateTests.Creates_the_files_dotnet_new_creates(templateId: "blazorwasm", expected: ["Shop/Shop.csproj", "Shop/wwwroot/index.html", "Shop/wwwroot/sample-data/weather.json", "Shop/wwwroot/icon-192.png", "Shop/wwwroot/lib/bootstrap/dist/js/bootstrap.bundl"···]) [47 ms]
+  Passed TabStudio.Web.Tests.WebAssemblyAppHostTests.Lists_the_apps_JavaScript_initializers_for_Blazor_and_for_the_runtime [12 ms]
   Passed TabStudio.Web.Tests.WebAssemblyAppHostTests.A_new_build_is_served_at_the_same_address [43 ms]
-[xUnit.net 00:00:03.98]     TabStudio.Web.Tests.Apps.WebTemplateTests.The_Blazor_WebAssembly_app_runs_in_the_browser [FAIL]
-[xUnit.net 00:00:03.98]       App.razor(1,1): error CS1662: Cannot convert lambda expression to intended delegate type because some of the return types in the block are not implicitly convertible to the delegate return type
-[xUnit.net 00:00:03.99]       App.razor(3,66): error CS0246: The type or namespace name 'MainLayout' could not be found (are you missing a using directive or an assembly reference?)
-[xUnit.net 00:00:03.99]       NotFound.razor(2,9): error CS0246: The type or namespace name 'MainLayout' could not be found (are you missing a using directive or an assembly reference?)
-[xUnit.net 00:00:03.99]       Program.cs(6,28): error CS0118: 'App' is a namespace but is used like a type
-[xUnit.net 00:00:03.99]       _Imports.razor(9,8): error CS0138: A 'using namespace' directive can only be applied to namespaces; 'App' is a type not a namespace. Consider a 'using static' directive instead
-[xUnit.net 00:00:03.99]       _Imports.razor(10,12): error CS0426: The type name 'Layout' does not exist in the type 'App'
-[xUnit.net 00:00:03.99]       Stack Trace:
-[xUnit.net 00:00:03.99]         /_/tests/TabStudio.Web.Tests/Apps/WebAppWorkspace.cs(60,0): at TabStudio.Web.Tests.Apps.WebAppWorkspace.BuildAsync(String name)
-[xUnit.net 00:00:03.99]         /_/tests/TabStudio.Web.Tests/Apps/WebAppWorkspace.cs(95,0): at TabStudio.Web.Tests.Apps.WebAppWorkspace.StartWebAssemblyAppAsync(String name)
-[xUnit.net 00:00:03.99]         /_/tests/TabStudio.Web.Tests/Apps/WebTemplateTests.cs(109,0): at TabStudio.Web.Tests.Apps.WebTemplateTests.The_Blazor_WebAssembly_app_runs_in_the_browser()
-[xUnit.net 00:00:03.99]         --- End of stack trace from previous location ---
-  Failed TabStudio.Web.Tests.Apps.WebTemplateTests.The_Blazor_WebAssembly_app_runs_in_the_browser [3 s]
+  Passed TabStudio.Web.Tests.Apps.WebTemplateTests.Creates_the_files_dotnet_new_creates(templateId: "mvc", expected: ["Shop/Shop.csproj", "Shop/Controllers/HomeController.cs", "Shop/Views/Home/Index.cshtml", "Shop/wwwroot/lib/bootstrap/LICENSE"]) [53 ms]
+  Passed TabStudio.Web.Tests.Apps.WebTemplateTests.Creates_the_files_dotnet_new_creates(templateId: "blazor-webassembly", expected: ["Shop/Shop.csproj", "Shop.Client/Shop.Client.csproj", "Shop.Client/Pages/Counter.razor", "Shop/wwwroot/app.css"]) [81 ms]
+  Passed TabStudio.Web.Tests.Apps.WebTemplateTests.Creates_the_files_dotnet_new_creates(templateId: "blazor", expected: ["Shop/Shop.csproj", "Shop/Components/Pages/Counter.razor", "Shop/Components/Layout/ReconnectModal.razor.js", "Shop/wwwroot/lib/bootstrap/dist/css/bootstrap.min."···]) [65 ms]
+  Passed TabStudio.Web.Tests.Apps.WebTemplateTests.The_Blazor_WebAssembly_app_runs_in_the_browser [22 s]
+  Passed TabStudio.Web.Tests.Apps.WebTemplateTests.The_Razor_Pages_app_serves_its_pages_and_libraries [3 s]
+  Passed TabStudio.Web.Tests.Apps.WebTemplateTests.The_WebAssembly_Counter_counts_in_the_browser [5 s]
+[xUnit.net 00:02:06.44]     TabStudio.Web.Tests.Apps.WebTemplateTests.The_Auto_Counter_counts [FAIL]
+[xUnit.net 00:02:06.44]       The counter never counted.
+[xUnit.net 00:02:06.45]       The console:
+[xUnit.net 00:02:06.45]       console.info: [2026-10-25T10:11:22.036Z] Information: Normalizing '_blazor' to 'http://127.0.0.1:39321/_blazor'.
+[xUnit.net 00:02:06.45]       console.info: [2026-10-25T10:11:22.326Z] Information: WebSocket connected to ws://127.0.0.1:39321/_blazor?id=LhsbbJ4kcyO7PsgGgLO9Hw.
+[xUnit.net 00:02:06.45]       console.error: [2026-10-25T10:11:22.967Z] Error: Circuit has been shut down due to error.
+[xUnit.net 00:02:06.45]       console.info: [2026-10-25T10:11:22.969Z] Information: Connection disconnected.
+[xUnit.net 00:02:06.45]       The app:
+[xUnit.net 00:02:06.45]       info: Microsoft.Hosting.Lifetime[14]
+[xUnit.net 00:02:06.45]             Now listening on: http://127.0.0.1:39321
+[xUnit.net 00:02:06.45]       info: Microsoft.Hosting.Lifetime[0]
+[xUnit.net 00:02:06.45]             Application started. Press Ctrl+C to shut down.
+[xUnit.net 00:02:06.45]       info: Microsoft.Hosting.Lifetime[0]
+[xUnit.net 00:02:06.45]             Hosting environment: Development
+[xUnit.net 00:02:06.45]       info: Microsoft.Hosting.Lifetime[0]
+[xUnit.net 00:02:06.45]             Content root path: /tmp/tabstudio-tests/7f2534b17ff64fcc95821ab7bff8f51f/Shop
+[xUnit.net 00:02:06.45]       warn: Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware[3]
+[xUnit.net 00:02:06.45]             Failed to determine the https port for redirect.
+[xUnit.net 00:02:06.45]       
+[xUnit.net 00:02:06.45]       
+[xUnit.net 00:02:06.45]       Stack Trace:
+[xUnit.net 00:02:06.45]         /_/tests/TabStudio.Web.Tests/Apps/WebTemplateTests.cs(171,0): at TabStudio.Web.Tests.Apps.WebTemplateTests.AssertCounterCountsAsync(String templateId)
+[xUnit.net 00:02:06.45]         /_/tests/TabStudio.Web.Tests/Apps/WebTemplateTests.cs(176,0): at TabStudio.Web.Tests.Apps.WebTemplateTests.AssertCounterCountsAsync(String templateId)
+[xUnit.net 00:02:06.45]         /_/tests/TabStudio.Web.Tests/Apps/WebTemplateTests.cs(176,0): at TabStudio.Web.Tests.Apps.WebTemplateTests.AssertCounterCountsAsync(String templateId)
+[xUnit.net 00:02:06.45]         --- End of stack trace from previous location ---
+  Failed TabStudio.Web.Tests.Apps.WebTemplateTests.The_Auto_Counter_counts [1 m 33 s]
   Error Message:
-   App.razor(1,1): error CS1662: Cannot convert lambda expression to intended delegate type because some of the return types in the block are not implicitly convertible to the delegate return type
-App.razor(3,66): error CS0246: The type or namespace name 'MainLayout' could not be found (are you missing a using directive or an assembly reference?)
-NotFound.razor(2,9): error CS0246: The type or namespace name 'MainLayout' could not be found (are you missing a using directive or an assembly reference?)
-Program.cs(6,28): error CS0118: 'App' is a namespace but is used like a type
-_Imports.razor(9,8): error CS0138: A 'using namespace' directive can only be applied to namespaces; 'App' is a type not a namespace. Consider a 'using static' directive instead
-_Imports.razor(10,12): error CS0426: The type name 'Layout' does not exist in the type 'App'
+   The counter never counted.
+The console:
+console.info: [2026-10-25T10:11:22.036Z] Information: Normalizing '_blazor' to 'http://127.0.0.1:39321/_blazor'.
+console.info: [2026-10-25T10:11:22.326Z] Information: WebSocket connected to ws://127.0.0.1:39321/_blazor?id=LhsbbJ4kcyO7PsgGgLO9Hw.
+console.error: [2026-10-25T10:11:22.967Z] Error: Circuit has been shut down due to error.
+console.info: [2026-10-25T10:11:22.969Z] Information: Connection disconnected.
+The app:
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://127.0.0.1:39321
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: /tmp/tabstudio-tests/7f2534b17ff64fcc95821ab7bff8f51f/Shop
+warn: Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware[3]
+      Failed to determine the https port for redirect.
+
+
   Stack Trace:
-     at TabStudio.Web.Tests.Apps.WebAppWorkspace.BuildAsync(String name) in /_/tests/TabStudio.Web.Tests/Apps/WebAppWorkspace.cs:line 60
-   at TabStudio.Web.Tests.Apps.WebAppWorkspace.StartWebAssemblyAppAsync(String name) in /_/tests/TabStudio.Web.Tests/Apps/WebAppWorkspace.cs:line 95
-   at TabStudio.Web.Tests.Apps.WebTemplateTests.The_Blazor_WebAssembly_app_runs_in_the_browser() in /_/tests/TabStudio.Web.Tests/Apps/WebTemplateTests.cs:line 109
+     at TabStudio.Web.Tests.Apps.WebTemplateTests.AssertCounterCountsAsync(String templateId) in /_/tests/TabStudio.Web.Tests/Apps/WebTemplateTests.cs:line 171
+   at TabStudio.Web.Tests.Apps.WebTemplateTests.AssertCounterCountsAsync(String templateId) in /_/tests/TabStudio.Web.Tests/Apps/WebTemplateTests.cs:line 176
+   at TabStudio.Web.Tests.Apps.WebTemplateTests.AssertCounterCountsAsync(String templateId) in /_/tests/TabStudio.Web.Tests/Apps/WebTemplateTests.cs:line 176
 --- End of stack trace from previous location ---
-  Passed TabStudio.Web.Tests.Apps.WebTemplateTests.The_Razor_Pages_app_serves_its_pages_and_libraries [2 s]
-[xUnit.net 00:00:07.82]     TabStudio.Web.Tests.Apps.WebTemplateTests.The_WebAssembly_Counter_counts_in_the_browser [FAIL]
-[xUnit.net 00:00:07.82]       NotFound.razor(2,9): error CS0246: The type or namespace name 'MainLayout' could not be found (are you missing a using directive or an assembly reference?)
-[xUnit.net 00:00:07.82]       _Imports.razor(9,8): error CS0138: A 'using namespace' directive can only be applied to namespaces; 'App' is a type not a namespace. Consider a 'using static' directive instead
-[xUnit.net 00:00:07.82]       _Imports.razor(10,12): error CS0426: The type name 'Client' does not exist in the type 'App'
-[xUnit.net 00:00:07.82]       _Imports.razor(11,12): error CS0426: The type name 'Components' does not exist in the type 'App'
-[xUnit.net 00:00:07.82]       _Imports.razor(12,12): error CS0426: The type name 'Components' does not exist in the type 'App'
-[xUnit.net 00:00:07.82]       Program.cs(29,24): error CS0118: 'App' is a namespace but is used like a type
-[xUnit.net 00:00:07.82]       Stack Trace:
-[xUnit.net 00:00:07.82]         /_/tests/TabStudio.Web.Tests/Apps/WebAppWorkspace.cs(60,0): at TabStudio.Web.Tests.Apps.WebAppWorkspace.BuildAsync(String name)
-[xUnit.net 00:00:07.82]         /_/tests/TabStudio.Web.Tests/Apps/WebAppWorkspace.cs(76,0): at TabStudio.Web.Tests.Apps.WebAppWorkspace.StartServerAppAsync(String name)
-[xUnit.net 00:00:07.82]         /_/tests/TabStudio.Web.Tests/Apps/WebTemplateTests.cs(154,0): at TabStudio.Web.Tests.Apps.WebTemplateTests.AssertCounterCountsAsync(String templateId)
-[xUnit.net 00:00:07.82]         --- End of stack trace from previous location ---
-[xUnit.net 00:00:08.28]     TabStudio.Web.Tests.Apps.WebTemplateTests.The_Auto_Counter_counts [FAIL]
-[xUnit.net 00:00:08.28]       NotFound.razor(2,9): error CS0246: The type or namespace name 'MainLayout' could not be found (are you missing a using directive or an assembly reference?)
-[xUnit.net 00:00:08.28]       _Imports.razor(9,8): error CS0138: A 'using namespace' directive can only be applied to namespaces; 'App' is a type not a namespace. Consider a 'using static' directive instead
-[xUnit.net 00:00:08.28]       _Imports.razor(10,12): error CS0426: The type name 'Client' does not exist in the type 'App'
-[xUnit.net 00:00:08.28]       _Imports.razor(11,12): error CS0426: The type name 'Components' does not exist in the type 'App'
-[xUnit.net 00:00:08.28]       _Imports.razor(12,12): error CS0426: The type name 'Components' does not exist in the type 'App'
-[xUnit.net 00:00:08.28]       Program.cs(30,24): error CS0118: 'App' is a namespace but is used like a type
-[xUnit.net 00:00:08.28]       Stack Trace:
-[xUnit.net 00:00:08.28]         /_/tests/TabStudio.Web.Tests/Apps/WebAppWorkspace.cs(60,0): at TabStudio.Web.Tests.Apps.WebAppWorkspace.BuildAsync(String name)
-[xUnit.net 00:00:08.28]         /_/tests/TabStudio.Web.Tests/Apps/WebAppWorkspace.cs(76,0): at TabStudio.Web.Tests.Apps.WebAppWorkspace.StartServerAppAsync(String name)
-[xUnit.net 00:00:08.28]         /_/tests/TabStudio.Web.Tests/Apps/WebTemplateTests.cs(154,0): at TabStudio.Web.Tests.Apps.WebTemplateTests.AssertCounterCountsAsync(String templateId)
-[xUnit.net 00:00:08.28]         --- End of stack trace from previous location ---
-  Failed TabStudio.Web.Tests.Apps.WebTemplateTests.The_WebAssembly_Counter_counts_in_the_browser [864 ms]
+  Passed TabStudio.Web.Tests.Apps.WebTemplateTests.The_Blazor_Web_App_without_interactivity_serves_its_pages [2 s]
+  Passed TabStudio.Web.Tests.Apps.WebTemplateTests.The_MVC_app_serves_its_views [2 s]
+[xUnit.net 00:03:43.97]     TabStudio.Web.Tests.Apps.WebTemplateTests.The_Server_Counter_counts [FAIL]
+[xUnit.net 00:03:43.97]       The counter never counted.
+[xUnit.net 00:03:43.97]       The console:
+[xUnit.net 00:03:43.97]       console.info: [2026-10-25T10:12:59.660Z] Information: Normalizing '_blazor' to 'http://127.0.0.1:37447/_blazor'.
+[xUnit.net 00:03:43.97]       console.info: [2026-10-25T10:12:59.764Z] Information: WebSocket connected to ws://127.0.0.1:37447/_blazor?id=LT9yJeTTD-kvIsTG9TH6YA.
+[xUnit.net 00:03:43.97]       console.error: [2026-10-25T10:13:00.161Z] Error: The list of component operations is not valid.
+[xUnit.net 00:03:43.97]       console.info: [2026-10-25T10:13:00.163Z] Information: Connection disconnected.
+[xUnit.net 00:03:43.97]       The app:
+[xUnit.net 00:03:43.97]       info: Microsoft.Hosting.Lifetime[14]
+[xUnit.net 00:03:43.97]             Now listening on: http://127.0.0.1:37447
+[xUnit.net 00:03:43.97]       info: Microsoft.Hosting.Lifetime[0]
+[xUnit.net 00:03:43.97]             Application started. Press Ctrl+C to shut down.
+[xUnit.net 00:03:43.97]       info: Microsoft.Hosting.Lifetime[0]
+[xUnit.net 00:03:43.97]             Hosting environment: Development
+[xUnit.net 00:03:43.97]       info: Microsoft.Hosting.Lifetime[0]
+[xUnit.net 00:03:43.97]             Content root path: /tmp/tabstudio-tests/f61c33a813d44dd69b1b43013c793f2d/Shop
+[xUnit.net 00:03:43.97]       warn: Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware[3]
+[xUnit.net 00:03:43.97]             Failed to determine the https port for redirect.
+[xUnit.net 00:03:43.97]       
+[xUnit.net 00:03:43.97]       
+[xUnit.net 00:03:43.97]       Stack Trace:
+[xUnit.net 00:03:43.97]         /_/tests/TabStudio.Web.Tests/Apps/WebTemplateTests.cs(171,0): at TabStudio.Web.Tests.Apps.WebTemplateTests.AssertCounterCountsAsync(String templateId)
+[xUnit.net 00:03:43.97]         /_/tests/TabStudio.Web.Tests/Apps/WebTemplateTests.cs(176,0): at TabStudio.Web.Tests.Apps.WebTemplateTests.AssertCounterCountsAsync(String templateId)
+[xUnit.net 00:03:43.97]         /_/tests/TabStudio.Web.Tests/Apps/WebTemplateTests.cs(176,0): at TabStudio.Web.Tests.Apps.WebTemplateTests.AssertCounterCountsAsync(String templateId)
+[xUnit.net 00:03:43.97]         --- End of stack trace from previous location ---
+  Failed TabStudio.Web.Tests.Apps.WebTemplateTests.The_Server_Counter_counts [1 m 33 s]
   Error Message:
-   NotFound.razor(2,9): error CS0246: The type or namespace name 'MainLayout' could not be found (are you missing a using directive or an assembly reference?)
-_Imports.razor(9,8): error CS0138: A 'using namespace' directive can only be applied to namespaces; 'App' is a type not a namespace. Consider a 'using static' directive instead
-_Imports.razor(10,12): error CS0426: The type name 'Client' does not exist in the type 'App'
-_Imports.razor(11,12): error CS0426: The type name 'Components' does not exist in the type 'App'
-_Imports.razor(12,12): error CS0426: The type name 'Components' does not exist in the type 'App'
-Program.cs(29,24): error CS0118: 'App' is a namespace but is used like a type
+   The counter never counted.
+The console:
+console.info: [2026-10-25T10:12:59.660Z] Information: Normalizing '_blazor' to 'http://127.0.0.1:37447/_blazor'.
+console.info: [2026-10-25T10:12:59.764Z] Information: WebSocket connected to ws://127.0.0.1:37447/_blazor?id=LT9yJeTTD-kvIsTG9TH6YA.
+console.error: [2026-10-25T10:13:00.161Z] Error: The list of component operations is not valid.
+console.info: [2026-10-25T10:13:00.163Z] Information: Connection disconnected.
+The app:
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://127.0.0.1:37447
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: /tmp/tabstudio-tests/f61c33a813d44dd69b1b43013c793f2d/Shop
+warn: Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware[3]
+      Failed to determine the https port for redirect.
+
+
   Stack Trace:
-     at TabStudio.Web.Tests.Apps.WebAppWorkspace.BuildAsync(String name) in /_/tests/TabStudio.Web.Tests/Apps/WebAppWorkspace.cs:line 60
-   at TabStudio.Web.Tests.Apps.WebAppWorkspace.StartServerAppAsync(String name) in /_/tests/TabStudio.Web.Tests/Apps/WebAppWorkspace.cs:line 76
-   at TabStudio.Web.Tests.Apps.WebTemplateTests.AssertCounterCountsAsync(String templateId) in /_/tests/TabStudio.Web.Tests/Apps/WebTemplateTests.cs:line 154
+     at TabStudio.Web.Tests.Apps.WebTemplateTests.AssertCounterCountsAsync(String templateId) in /_/tests/TabStudio.Web.Tests/Apps/WebTemplateTests.cs:line 171
+   at TabStudio.Web.Tests.Apps.WebTemplateTests.AssertCounterCountsAsync(String templateId) in /_/tests/TabStudio.Web.Tests/Apps/WebTemplateTests.cs:line 176
+   at TabStudio.Web.Tests.Apps.WebTemplateTests.AssertCounterCountsAsync(String templateId) in /_/tests/TabStudio.Web.Tests/Apps/WebTemplateTests.cs:line 176
 --- End of stack trace from previous location ---
-  Failed TabStudio.Web.Tests.Apps.WebTemplateTests.The_Auto_Counter_counts [459 ms]
-  Error Message:
-   NotFound.razor(2,9): error CS0246: The type or namespace name 'MainLayout' could not be found (are you missing a using directive or an assembly reference?)
-_Imports.razor(9,8): error CS0138: A 'using namespace' directive can only be applied to namespaces; 'App' is a type not a namespace. Consider a 'using static' directive instead
-_Imports.razor(10,12): error CS0426: The type name 'Client' does not exist in the type 'App'
-_Imports.razor(11,12): error CS0426: The type name 'Components' does not exist in the type 'App'
-_Imports.razor(12,12): error CS0426: The type name 'Components' does not exist in the type 'App'
-Program.cs(30,24): error CS0118: 'App' is a namespace but is used like a type
-  Stack Trace:
-     at TabStudio.Web.Tests.Apps.WebAppWorkspace.BuildAsync(String name) in /_/tests/TabStudio.Web.Tests/Apps/WebAppWorkspace.cs:line 60
-   at TabStudio.Web.Tests.Apps.WebAppWorkspace.StartServerAppAsync(String name) in /_/tests/TabStudio.Web.Tests/Apps/WebAppWorkspace.cs:line 76
-   at TabStudio.Web.Tests.Apps.WebTemplateTests.AssertCounterCountsAsync(String templateId) in /_/tests/TabStudio.Web.Tests/Apps/WebTemplateTests.cs:line 154
---- End of stack trace from previous location ---
-  Passed TabStudio.Web.Tests.Apps.WebTemplateTests.Creates_the_files_dotnet_new_creates(templateId: "blazorwasm", expected: ["App/App.csproj", "App/wwwroot/index.html", "App/wwwroot/sample-data/weather.json", "App/wwwroot/icon-192.png", "App/wwwroot/lib/bootstrap/dist/js/bootstrap.bundle"···]) [50 ms]
-  Passed TabStudio.Web.Tests.Apps.WebTemplateTests.Creates_the_files_dotnet_new_creates(templateId: "webapp", expected: ["App/App.csproj", "App/Pages/Index.cshtml.cs", "App/Pages/Shared/_Layout.cshtml.css", "App/wwwroot/lib/jquery/dist/jquery.min.js", "App/wwwroot/lib/jquery-validation-unobtrusive/dist"···]) [44 ms]
-  Passed TabStudio.Web.Tests.Apps.WebTemplateTests.Creates_the_files_dotnet_new_creates(templateId: "blazor-auto", expected: ["App/App.csproj", "App.Client/App.Client.csproj", "App.Client/wwwroot/appsettings.json"]) [35 ms]
-  Passed TabStudio.Web.Tests.Apps.WebTemplateTests.Creates_the_files_dotnet_new_creates(templateId: "blazor-none", expected: ["App/App.csproj", "App/Components/Pages/Weather.razor"]) [26 ms]
-[xUnit.net 00:00:08.96]     TabStudio.Web.Tests.Apps.WebTemplateTests.The_Blazor_Web_App_without_interactivity_serves_its_pages [FAIL]
-[xUnit.net 00:00:08.96]       NotFound.razor(2,9): error CS0246: The type or namespace name 'MainLayout' could not be found (are you missing a using directive or an assembly reference?)
-[xUnit.net 00:00:08.96]       _Imports.razor(9,8): error CS0138: A 'using namespace' directive can only be applied to namespaces; 'App' is a type not a namespace. Consider a 'using static' directive instead
-[xUnit.net 00:00:08.96]       _Imports.razor(10,12): error CS0426: The type name 'Components' does not exist in the type 'App'
-[xUnit.net 00:00:08.96]       _Imports.razor(11,12): error CS0426: The type name 'Components' does not exist in the type 'App'
-[xUnit.net 00:00:08.96]       Program.cs(23,24): error CS0118: 'App' is a namespace but is used like a type
-[xUnit.net 00:00:08.96]       Stack Trace:
-[xUnit.net 00:00:08.96]         /_/tests/TabStudio.Web.Tests/Apps/WebAppWorkspace.cs(60,0): at TabStudio.Web.Tests.Apps.WebAppWorkspace.BuildAsync(String name)
-[xUnit.net 00:00:08.96]         /_/tests/TabStudio.Web.Tests/Apps/WebAppWorkspace.cs(76,0): at TabStudio.Web.Tests.Apps.WebAppWorkspace.StartServerAppAsync(String name)
-[xUnit.net 00:00:08.96]         /_/tests/TabStudio.Web.Tests/Apps/WebTemplateTests.cs(99,0): at TabStudio.Web.Tests.Apps.WebTemplateTests.The_Blazor_Web_App_without_interactivity_serves_its_pages()
-[xUnit.net 00:00:08.96]         --- End of stack trace from previous location ---
-  Passed TabStudio.Web.Tests.Apps.WebTemplateTests.Creates_the_files_dotnet_new_creates(templateId: "mvc", expected: ["App/App.csproj", "App/Controllers/HomeController.cs", "App/Views/Home/Index.cshtml", "App/wwwroot/lib/bootstrap/LICENSE"]) [59 ms]
-  Passed TabStudio.Web.Tests.Apps.WebTemplateTests.Creates_the_files_dotnet_new_creates(templateId: "blazor", expected: ["App/App.csproj", "App/Components/Pages/Counter.razor", "App/Components/Layout/ReconnectModal.razor.js", "App/wwwroot/lib/bootstrap/dist/css/bootstrap.min.c"···]) [30 ms]
-  Passed TabStudio.Web.Tests.Apps.WebTemplateTests.Creates_the_files_dotnet_new_creates(templateId: "blazor-webassembly", expected: ["App/App.csproj", "App.Client/App.Client.csproj", "App.Client/Pages/Counter.razor", "App/wwwroot/app.css"]) [66 ms]
-  Failed TabStudio.Web.Tests.Apps.WebTemplateTests.The_Blazor_Web_App_without_interactivity_serves_its_pages [364 ms]
-  Error Message:
-   NotFound.razor(2,9): error CS0246: The type or namespace name 'MainLayout' could not be found (are you missing a using directive or an assembly reference?)
-_Imports.razor(9,8): error CS0138: A 'using namespace' directive can only be applied to namespaces; 'App' is a type not a namespace. Consider a 'using static' directive instead
-_Imports.razor(10,12): error CS0426: The type name 'Components' does not exist in the type 'App'
-_Imports.razor(11,12): error CS0426: The type name 'Components' does not exist in the type 'App'
-Program.cs(23,24): error CS0118: 'App' is a namespace but is used like a type
-  Stack Trace:
-     at TabStudio.Web.Tests.Apps.WebAppWorkspace.BuildAsync(String name) in /_/tests/TabStudio.Web.Tests/Apps/WebAppWorkspace.cs:line 60
-   at TabStudio.Web.Tests.Apps.WebAppWorkspace.StartServerAppAsync(String name) in /_/tests/TabStudio.Web.Tests/Apps/WebAppWorkspace.cs:line 76
-   at TabStudio.Web.Tests.Apps.WebTemplateTests.The_Blazor_Web_App_without_interactivity_serves_its_pages() in /_/tests/TabStudio.Web.Tests/Apps/WebTemplateTests.cs:line 99
---- End of stack trace from previous location ---
-[xUnit.net 00:00:10.96]     TabStudio.Web.Tests.Apps.WebTemplateTests.The_Server_Counter_counts [FAIL]
-[xUnit.net 00:00:10.96]       NotFound.razor(2,9): error CS0246: The type or namespace name 'MainLayout' could not be found (are you missing a using directive or an assembly reference?)
-[xUnit.net 00:00:10.96]       _Imports.razor(9,8): error CS0138: A 'using namespace' directive can only be applied to namespaces; 'App' is a type not a namespace. Consider a 'using static' directive instead
-[xUnit.net 00:00:10.96]       _Imports.razor(10,12): error CS0426: The type name 'Components' does not exist in the type 'App'
-[xUnit.net 00:00:10.96]       _Imports.razor(11,12): error CS0426: The type name 'Components' does not exist in the type 'App'
-[xUnit.net 00:00:10.96]       Program.cs(24,24): error CS0118: 'App' is a namespace but is used like a type
-[xUnit.net 00:00:10.96]       Stack Trace:
-[xUnit.net 00:00:10.96]         /_/tests/TabStudio.Web.Tests/Apps/WebAppWorkspace.cs(60,0): at TabStudio.Web.Tests.Apps.WebAppWorkspace.BuildAsync(String name)
-[xUnit.net 00:00:10.96]         /_/tests/TabStudio.Web.Tests/Apps/WebAppWorkspace.cs(76,0): at TabStudio.Web.Tests.Apps.WebAppWorkspace.StartServerAppAsync(String name)
-[xUnit.net 00:00:10.96]         /_/tests/TabStudio.Web.Tests/Apps/WebTemplateTests.cs(154,0): at TabStudio.Web.Tests.Apps.WebTemplateTests.AssertCounterCountsAsync(String templateId)
-[xUnit.net 00:00:10.96]         --- End of stack trace from previous location ---
-[xUnit.net 00:00:11.32]     TabStudio.Web.Tests.Apps.WebTemplateTests.The_Blazor_Web_App_serves_its_pages_styles_and_scripts [FAIL]
-[xUnit.net 00:00:11.32]       NotFound.razor(2,9): error CS0246: The type or namespace name 'MainLayout' could not be found (are you missing a using directive or an assembly reference?)
-[xUnit.net 00:00:11.32]       _Imports.razor(9,8): error CS0138: A 'using namespace' directive can only be applied to namespaces; 'App' is a type not a namespace. Consider a 'using static' directive instead
-[xUnit.net 00:00:11.32]       _Imports.razor(10,12): error CS0426: The type name 'Components' does not exist in the type 'App'
-[xUnit.net 00:00:11.32]       _Imports.razor(11,12): error CS0426: The type name 'Components' does not exist in the type 'App'
-[xUnit.net 00:00:11.32]       Program.cs(24,24): error CS0118: 'App' is a namespace but is used like a type
-[xUnit.net 00:00:11.32]       Stack Trace:
-[xUnit.net 00:00:11.32]         /_/tests/TabStudio.Web.Tests/Apps/WebAppWorkspace.cs(60,0): at TabStudio.Web.Tests.Apps.WebAppWorkspace.BuildAsync(String name)
-[xUnit.net 00:00:11.32]         /_/tests/TabStudio.Web.Tests/Apps/WebAppWorkspace.cs(76,0): at TabStudio.Web.Tests.Apps.WebAppWorkspace.StartServerAppAsync(String name)
-[xUnit.net 00:00:11.32]         /_/tests/TabStudio.Web.Tests/Apps/WebTemplateTests.cs(71,0): at TabStudio.Web.Tests.Apps.WebTemplateTests.The_Blazor_Web_App_serves_its_pages_styles_and_scripts()
-[xUnit.net 00:00:11.32]         --- End of stack trace from previous location ---
-  Passed TabStudio.Web.Tests.Apps.WebTemplateTests.The_MVC_app_serves_its_views [1 s]
-  Failed TabStudio.Web.Tests.Apps.WebTemplateTests.The_Server_Counter_counts [366 ms]
-  Error Message:
-   NotFound.razor(2,9): error CS0246: The type or namespace name 'MainLayout' could not be found (are you missing a using directive or an assembly reference?)
-_Imports.razor(9,8): error CS0138: A 'using namespace' directive can only be applied to namespaces; 'App' is a type not a namespace. Consider a 'using static' directive instead
-_Imports.razor(10,12): error CS0426: The type name 'Components' does not exist in the type 'App'
-_Imports.razor(11,12): error CS0426: The type name 'Components' does not exist in the type 'App'
-Program.cs(24,24): error CS0118: 'App' is a namespace but is used like a type
-  Stack Trace:
-     at TabStudio.Web.Tests.Apps.WebAppWorkspace.BuildAsync(String name) in /_/tests/TabStudio.Web.Tests/Apps/WebAppWorkspace.cs:line 60
-   at TabStudio.Web.Tests.Apps.WebAppWorkspace.StartServerAppAsync(String name) in /_/tests/TabStudio.Web.Tests/Apps/WebAppWorkspace.cs:line 76
-   at TabStudio.Web.Tests.Apps.WebTemplateTests.AssertCounterCountsAsync(String templateId) in /_/tests/TabStudio.Web.Tests/Apps/WebTemplateTests.cs:line 154
---- End of stack trace from previous location ---
-  Failed TabStudio.Web.Tests.Apps.WebTemplateTests.The_Blazor_Web_App_serves_its_pages_styles_and_scripts [354 ms]
-  Error Message:
-   NotFound.razor(2,9): error CS0246: The type or namespace name 'MainLayout' could not be found (are you missing a using directive or an assembly reference?)
-_Imports.razor(9,8): error CS0138: A 'using namespace' directive can only be applied to namespaces; 'App' is a type not a namespace. Consider a 'using static' directive instead
-_Imports.razor(10,12): error CS0426: The type name 'Components' does not exist in the type 'App'
-_Imports.razor(11,12): error CS0426: The type name 'Components' does not exist in the type 'App'
-Program.cs(24,24): error CS0118: 'App' is a namespace but is used like a type
-  Stack Trace:
-     at TabStudio.Web.Tests.Apps.WebAppWorkspace.BuildAsync(String name) in /_/tests/TabStudio.Web.Tests/Apps/WebAppWorkspace.cs:line 60
-   at TabStudio.Web.Tests.Apps.WebAppWorkspace.StartServerAppAsync(String name) in /_/tests/TabStudio.Web.Tests/Apps/WebAppWorkspace.cs:line 76
-   at TabStudio.Web.Tests.Apps.WebTemplateTests.The_Blazor_Web_App_serves_its_pages_styles_and_scripts() in /_/tests/TabStudio.Web.Tests/Apps/WebTemplateTests.cs:line 71
---- End of stack trace from previous location ---
-  Passed TabStudio.Web.Tests.Apps.WebTemplateTests.Razor_Pages_and_MVC_get_jQuery_and_Blazor_only_Bootstrap [115 ms]
+  Passed TabStudio.Web.Tests.Apps.WebTemplateTests.The_Blazor_Web_App_serves_its_pages_styles_and_scripts [2 s]
+  Passed TabStudio.Web.Tests.Apps.WebTemplateTests.Razor_Pages_and_MVC_get_jQuery_and_Blazor_only_Bootstrap [56 ms]
   Passed TabStudio.Web.Tests.Apps.RazorPagesAndMvcTests.Serves_MVC_views_with_their_models_and_tag_helpers [1 s]
   Passed TabStudio.Web.Tests.Apps.RazorPagesAndMvcTests.Serves_Razor_Pages_with_their_models_tag_helpers_and_scoped_CSS [1 s]
-  Passed TabStudio.Web.Tests.Apps.BlazorWebAssemblyTests.Serves_the_boot_files_with_their_media_types [1 s]
-  Passed TabStudio.Web.Tests.Apps.BlazorWebAssemblyTests.Runs_in_a_browser_on_NET_for_WebAssembly [9 s]
-  Passed TabStudio.Web.Tests.Apps.BlazorWebAppTests.A_CSharp_error_in_a_component_is_on_its_line_of_the_razor_file [152 ms]
-  Passed TabStudio.Web.Tests.Apps.BlazorWebAppTests.Razor_errors_and_warnings_are_on_their_line [192 ms]
-  Passed TabStudio.Web.Tests.Apps.BlazorWebAppTests.An_Interactive_Server_component_counts_over_its_circuit [2 s]
+  Passed TabStudio.Web.Tests.Apps.RazorEditorTests.Goes_from_CSharp_to_a_component_in_its_Razor_file [208 ms]
+  Passed TabStudio.Web.Tests.Apps.RazorEditorTests.Completes_a_components_parameters_inside_its_tag [196 ms]
+[xUnit.net 00:03:51.84]     TabStudio.Web.Tests.Apps.RazorEditorTests.Completes_CSharp_in_a_Razor_file_from_the_generated_code [FAIL]
+[xUnit.net 00:03:51.84]       Assert.Single() Failure: The collection did not contain any matching items
+[xUnit.net 00:03:51.84]       Expected:   (predicate expression)
+[xUnit.net 00:03:51.84]       Collection: []
+[xUnit.net 00:03:51.84]       Stack Trace:
+[xUnit.net 00:03:51.84]         /_/tests/TabStudio.Web.Tests/Apps/RazorEditorTests.cs(87,0): at TabStudio.Web.Tests.Apps.RazorEditorTests.Completes_CSharp_in_a_Razor_file_from_the_generated_code()
+[xUnit.net 00:03:51.84]         --- End of stack trace from previous location ---
+  Passed TabStudio.Web.Tests.Apps.RazorEditorTests.Completes_the_components_a_file_can_use_after_a_tag_opens [162 ms]
+  Passed TabStudio.Web.Tests.Apps.RazorEditorTests.Completes_directives_at_the_start_of_a_line [165 ms]
+  Passed TabStudio.Web.Tests.Apps.RazorEditorTests.Goes_from_an_attribute_to_the_parameter_and_from_CSharp_to_its_declaration [166 ms]
+  Passed TabStudio.Web.Tests.Apps.RazorEditorTests.Goes_from_a_components_tag_to_the_component [131 ms]
+  Failed TabStudio.Web.Tests.Apps.RazorEditorTests.Completes_CSharp_in_a_Razor_file_from_the_generated_code [276 ms]
+  Error Message:
+   Assert.Single() Failure: The collection did not contain any matching items
+Expected:   (predicate expression)
+Collection: []
+  Stack Trace:
+     at TabStudio.Web.Tests.Apps.RazorEditorTests.Completes_CSharp_in_a_Razor_file_from_the_generated_code() in /_/tests/TabStudio.Web.Tests/Apps/RazorEditorTests.cs:line 87
+--- End of stack trace from previous location ---
+  Passed TabStudio.Web.Tests.Apps.RazorClassLibraryTests.A_Blazor_Web_App_uses_a_Razor_class_librarys_components_styles_and_files [3 s]
+  Passed TabStudio.Web.Tests.Apps.BlazorWebAssemblyTests.Serves_the_boot_files_with_their_media_types [920 ms]
+  Passed TabStudio.Web.Tests.Apps.BlazorWebAssemblyTests.Runs_in_a_browser_on_NET_for_WebAssembly [1 s]
+  Passed TabStudio.Web.Tests.Apps.BlazorWebAppTests.A_CSharp_error_in_a_component_is_on_its_line_of_the_razor_file [150 ms]
+  Passed TabStudio.Web.Tests.Apps.BlazorWebAppTests.Razor_errors_and_warnings_are_on_their_line [218 ms]
+  Passed TabStudio.Web.Tests.Apps.BlazorWebAppTests.An_Interactive_Server_component_counts_over_its_circuit [3 s]
+[xUnit.net 00:04:03.66]   Finished:    TabStudio.Web.Tests
   Passed TabStudio.Web.Tests.Apps.BlazorWebAppTests.Serves_its_pages_its_scoped_CSS_and_Blazors_script [1 s]
-[xUnit.net 00:00:30.44]   Finished:    TabStudio.Web.Tests
 
 Test Run Failed.
-Total tests: 71
-     Passed: 65
-     Failed: 6
- Total time: 31.1437 Seconds
+Total tests: 81
+     Passed: 78
+     Failed: 3
+ Total time: 4.0791 Minutes
