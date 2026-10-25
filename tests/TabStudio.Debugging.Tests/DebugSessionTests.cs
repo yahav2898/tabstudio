@@ -159,6 +159,64 @@ public sealed class DebugSessionTests
     }
 
     [Fact]
+    public async Task A_breakpoint_on_a_while_condition_hits_on_every_check()
+    {
+        using var program = new DebuggedProgram("""
+            var count = 0;
+            while (count < 3)
+            {
+                count++;
+            }
+            Console.WriteLine(count);
+            """, 2);
+        program.Start();
+
+        var seen = new List<string>();
+        for (var hit = 0; hit < 4; hit++)
+        {
+            var pause = await program.NextPauseAsync();
+            Assert.Equal(2, pause.Location?.Line);
+            seen.Add(DebuggedProgram.Local(pause, "count").Value);
+            program.Session.Continue();
+        }
+
+        await program.FinishAsync();
+        Assert.Equal(new[] { "0", "1", "2", "3" }, seen);
+        Assert.Equal("3\n", program.Console.Output);
+    }
+
+    [Fact]
+    public async Task Stepping_over_the_end_of_a_loop_body_returns_to_its_condition()
+    {
+        using var program = new DebuggedProgram("""
+            var total = 0;
+            for (var i = 0; i < 2; i++)
+            {
+                total += i;
+            }
+            Console.WriteLine(total);
+            """, 4);
+        program.Start();
+
+        var lines = new List<int>();
+        var pause = await program.NextPauseAsync();
+        lines.Add(pause.Location?.Line ?? 0);
+        for (var step = 0; step < 4; step++)
+        {
+            program.Session.StepOver();
+            pause = await program.NextPauseAsync();
+            lines.Add(pause.Location?.Line ?? 0);
+        }
+
+        Assert.Equal(new[] { 4, 2, 4, 2, 6 }, lines);
+        Assert.Equal("1", DebuggedProgram.Local(pause, "total").Value);
+        Assert.DoesNotContain(pause.Locals, local => local.Name == "i");
+        program.Session.Continue();
+        await program.FinishAsync();
+        Assert.Equal("1\n", program.Console.Output);
+    }
+
+    [Fact]
     public async Task Debugs_an_async_main_across_awaits()
     {
         using var program = new DebuggedProgram("""

@@ -26,6 +26,12 @@ namespace TabStudio.Debugging.Instrumentation;
 /// <c>yield return</c> that they suspend and resume.
 /// </para>
 /// <para>
+/// The condition of a <c>while</c> or <c>for</c> loop is a step of its own on every iteration, as in Visual Studio:
+/// <c>while (c) S</c> becomes <c>while (true) { hook; if (!(c)) break; S }</c>, which keeps definite assignment and
+/// <c>continue</c> exactly as they were. Constant-true conditions are left alone, and so is a <c>for</c> condition
+/// that declares variables, since its incrementor may use them. A <c>do</c> loop's condition is not a step.
+/// </para>
+/// <para>
 /// Expression-bodied members, accessors and local functions are converted to block bodies so that they get a
 /// frame and a statement. Lambdas with an expression body are left as they are: they appear neither on the call
 /// stack nor as a step. Destructors are not instrumented, so the finalizer thread never stops.
@@ -237,7 +243,18 @@ internal sealed class InstrumentingRewriter : CSharpSyntaxRewriter
     public override SyntaxNode? VisitWhileStatement(WhileStatementSyntax node)
     {
         var updated = (WhileStatementSyntax)base.VisitWhileStatement(node)!;
-        return updated.WithStatement(Embed(node.Statement, updated.Statement));
+        if (Current is not { } context || !HasConditionHook(node))
+        {
+            return updated.WithStatement(Embed(node.Statement, updated.Statement));
+        }
+
+        // while (c) S  becomes  while (true) { hook; if (!(c)) break; S }, so the condition is a step on every
+        // iteration. Definite assignment is unchanged: after the loop it is what holds when c is false.
+        var body = LoopBody(context, node.Condition, updated.Condition, updated.CloseParenToken, node.Statement, updated.Statement);
+        return updated
+            .WithCondition(SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression))
+            .WithCloseParenToken(updated.CloseParenToken.WithTrailingTrivia(HookSyntax.Space))
+            .WithStatement(body);
     }
 
     public override SyntaxNode? VisitDoStatement(DoStatementSyntax node)
@@ -249,7 +266,19 @@ internal sealed class InstrumentingRewriter : CSharpSyntaxRewriter
     public override SyntaxNode? VisitForStatement(ForStatementSyntax node)
     {
         var updated = (ForStatementSyntax)base.VisitForStatement(node)!;
-        return updated.WithStatement(Embed(node.Statement, updated.Statement));
+        if (Current is not { } context || node.Condition is null || updated.Condition is null || !IsSteppableCondition(node.Condition) ||
+            DeclaresVariables(node.Condition))
+        {
+            return updated.WithStatement(Embed(node.Statement, updated.Statement));
+        }
+
+        // for (i; c; n) S  becomes  for (i; ; n) { hook; if (!(c)) break; S }: continue still runs n, then c.
+        // A condition that declares variables stays, because the incrementor may use them.
+        var body = LoopBody(context, node.Condition, updated.Condition, updated.CloseParenToken, node.Statement, updated.Statement);
+        return updated
+            .WithCondition(null)
+            .WithCloseParenToken(updated.CloseParenToken.WithTrailingTrivia(HookSyntax.Space))
+            .WithStatement(body);
     }
 
     public override SyntaxNode? VisitForEachStatement(ForEachStatementSyntax node)
@@ -411,6 +440,13 @@ internal sealed class InstrumentingRewriter : CSharpSyntaxRewriter
             return;
         }
 
+        if (original is WhileStatementSyntax loop && HasConditionHook(loop))
+        {
+            // Its condition, evaluated first, is its step.
+            result.Add(updated);
+            return;
+        }
+
         var hook = CreateStepHook(context, original);
         result.Add(hook.WithLeadingTrivia(updated.GetLeadingTrivia()).WithTrailingTrivia(HookSyntax.Space));
 
@@ -437,6 +473,46 @@ internal sealed class InstrumentingRewriter : CSharpSyntaxRewriter
         var statements = new List<StatementSyntax>();
         AddInstrumented(context, statements, original, updated);
         return HookSyntax.Block(statements);
+    }
+
+    private bool HasConditionHook(WhileStatementSyntax loop) => Current is not null && IsSteppableCondition(loop.Condition);
+
+    /// <summary>A loop condition gets its own step unless it is the constant <c>true</c>, which marks an infinite loop.</summary>
+    private bool IsSteppableCondition(ExpressionSyntax condition) =>
+        _model.GetConstantValue(condition, _cancellationToken) is not { HasValue: true, Value: true };
+
+    private static bool DeclaresVariables(ExpressionSyntax condition) =>
+        condition.DescendantNodesAndSelf().Any(n => n is SingleVariableDesignationSyntax or DeclarationExpressionSyntax);
+
+    /// <summary>
+    /// The body of a rewritten loop: <c>{ hook; if (!(c)) break; S }</c>, with the hook and the check on the line of
+    /// the condition and <c>S</c> on its own lines.
+    /// </summary>
+    private BlockSyntax LoopBody(
+        FunctionContext context,
+        ExpressionSyntax originalCondition,
+        ExpressionSyntax updatedCondition,
+        SyntaxToken closeParen,
+        StatementSyntax originalBody,
+        StatementSyntax updatedBody)
+    {
+        var hook = CreateStepHook(context, originalCondition).WithTrailingTrivia(HookSyntax.Space);
+        var check = SyntaxFactory.IfStatement(
+                SyntaxFactory.PrefixUnaryExpression(
+                    SyntaxKind.LogicalNotExpression,
+                    SyntaxFactory.ParenthesizedExpression(updatedCondition.WithoutLeadingTrivia().WithoutTrailingTrivia())),
+                SyntaxFactory.BreakStatement())
+            .WithTrailingTrivia(closeParen.TrailingTrivia);
+
+        var statements = new List<StatementSyntax> { hook, check };
+        AddInstrumented(context, statements, originalBody, updatedBody);
+        var trailing = statements[^1].GetTrailingTrivia();
+        statements[^1] = statements[^1].WithoutTrailingTrivia();
+
+        return SyntaxFactory.Block(
+            SyntaxFactory.Token(SyntaxKind.OpenBraceToken).WithTrailingTrivia(HookSyntax.Space),
+            SyntaxFactory.List(statements),
+            SyntaxFactory.Token(SyntaxKind.CloseBraceToken).WithLeadingTrivia(HookSyntax.Space).WithTrailingTrivia(trailing));
     }
 
     private StatementSyntax CreateStepHook(FunctionContext context, SyntaxNode original)
