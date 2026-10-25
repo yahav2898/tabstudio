@@ -180,7 +180,7 @@ public sealed partial class TerminalViewModel : ObservableObject, IDisposable
     /// <param name="columns">Columns that fit.</param>
     public void Resize(int rows, int columns)
     {
-        var size = new TerminalSize(rows, columns).Clamped();
+        var size = new TerminalSize(rows, columns).Clamped;
         if (size == _size)
         {
             return;
@@ -310,7 +310,7 @@ public sealed partial class TerminalViewModel : ObservableObject, IDisposable
     private void OpenStore() => _openStore(null);
 
     private string SetupMessage =>
-        $"The Terminal runs in TabStudio's Linux environment, {_toolchains.Catalog.Linux.DisplayName}, with the toolchains you install. Set it up to start a shell; it downloads about {DiskSpace.Format(_toolchains.Catalog.Linux.Rootfs.Values.FirstOrDefault()?.Size ?? 0)}.";
+        $"The Terminal runs in TabStudio's Linux environment, {_toolchains.Catalog.Linux.DisplayName}, with the toolchains you install. Set it up to start a shell; it downloads about {DiskSpace.Format(_toolchains.Catalog.Linux.Rootfs.GetValueOrDefault(_toolchains.Platform.Architecture ?? string.Empty)?.Size ?? 0)}.";
 
     private void Start()
     {

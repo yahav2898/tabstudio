@@ -185,8 +185,12 @@ public static class RunPlanner
     }
 
     /// <summary>Reads a string at a dotted path in a JSON file, such as <c>scripts.start</c>; <see langword="null"/> when there is none.</summary>
-    internal static string? ReadJson(string file, string path)
+    /// <param name="file">The JSON file, such as <c>package.json</c>.</param>
+    /// <param name="path">The path, with dots between property names.</param>
+    public static string? ReadJson(string file, string path)
     {
+        ArgumentNullException.ThrowIfNull(file);
+        ArgumentNullException.ThrowIfNull(path);
         try
         {
             using var document = JsonDocument.Parse(File.ReadAllText(file), new JsonDocumentOptions { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip });

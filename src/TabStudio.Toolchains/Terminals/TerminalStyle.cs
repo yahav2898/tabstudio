@@ -69,7 +69,7 @@ public readonly record struct TerminalColor(TerminalColorKind Kind, uint Value)
 
 /// <summary>How a cell's text is drawn, besides its colors.</summary>
 [Flags]
-public enum TerminalTextFlags : ushort
+public enum TerminalAttributes : ushort
 {
     /// <summary>Plain text.</summary>
     None = 0,
@@ -102,13 +102,13 @@ public enum TerminalTextFlags : ushort
 /// <summary>A cell's colors and text flags.</summary>
 /// <param name="Foreground">The text color.</param>
 /// <param name="Background">The background color.</param>
-/// <param name="Flags">Bold, underline and the rest.</param>
-public readonly record struct TerminalStyle(TerminalColor Foreground, TerminalColor Background, TerminalTextFlags Flags)
+/// <param name="Attributes">Bold, underline and the rest.</param>
+public readonly record struct TerminalStyle(TerminalColor Foreground, TerminalColor Background, TerminalAttributes Attributes)
 {
     /// <summary>Default colors, plain text.</summary>
     public static TerminalStyle Default => default;
 
     /// <summary>Whether a flag is set.</summary>
     /// <param name="flag">The flag.</param>
-    public bool Has(TerminalTextFlags flag) => (Flags & flag) == flag;
+    public bool Has(TerminalAttributes flag) => (Attributes & flag) == flag;
 }

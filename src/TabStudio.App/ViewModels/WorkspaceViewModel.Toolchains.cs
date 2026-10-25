@@ -52,6 +52,7 @@ public sealed partial class WorkspaceViewModel
     private ToolchainServices _toolchains = null!;
     private bool _ownsToolchains;
     private string? _runDirectory;
+    private bool _openToolchainEntry;
 
     /// <summary>The device's toolchains.</summary>
     public ToolchainServices Toolchains => _toolchains;
@@ -110,7 +111,8 @@ public sealed partial class WorkspaceViewModel
     /// </summary>
     /// <param name="workspace">The workspace.</param>
     /// <param name="preferred">The startup project the session remembers.</param>
-    private async Task LoadToolchainProjectsAsync(Workspace workspace, string? preferred)
+    /// <param name="opening">Whether the workspace is opening, rather than reloading after a change.</param>
+    private async Task LoadToolchainProjectsAsync(Workspace workspace, string? preferred, bool opening = false)
     {
         var catalog = _toolchains.Catalog;
         var projects = await Task.Run(() => ToolchainProjectDetector.Detect(workspace.RootDirectory, catalog));
@@ -137,6 +139,8 @@ public sealed partial class WorkspaceViewModel
 
         if (_toolchainProjects.Count > 0)
         {
+            // Once the workspace is open, a toolchain project shows its entry point, as a C# one shows Program.cs.
+            _openToolchainEntry = opening;
             _toolchains.ShareFolder(workspace.RootDirectory);
             _ = RefreshToolchainProjectsAsync();
         }
@@ -247,6 +251,15 @@ public sealed partial class WorkspaceViewModel
                 UpdateToolchainNotice();
                 break;
             case nameof(ActiveDocument) or nameof(State):
+                if (e.PropertyName == nameof(State) && _openToolchainEntry && State == IdeState.Ready)
+                {
+                    _openToolchainEntry = false;
+                    if (!HasDocuments && CurrentToolchainProject() is { } item && EntryFileOf(item.Project) is { } entry)
+                    {
+                        _ = OpenDocumentAsync(entry);
+                    }
+                }
+
                 OnPropertyChanged(nameof(CanRunCurrentFile));
                 RunCurrentFileCommand.NotifyCanExecuteChanged();
                 InstallProjectPackagesCommand.NotifyCanExecuteChanged();
@@ -324,6 +337,32 @@ public sealed partial class WorkspaceViewModel
             ?? OnlyProgramOf(project));
     }
 
+    /// <summary>The file to show first: the entry point's source, or the project's first program, or its project file.</summary>
+    private static string? EntryFileOf(ToolchainProject project)
+    {
+        var toolchain = project.Toolchain;
+        foreach (var rule in toolchain.Run?.Entries ?? [])
+        {
+            var file = Path.Combine(project.Directory, rule.File);
+            if (!File.Exists(file))
+            {
+                continue;
+            }
+
+            if (toolchain.RunsFile(file))
+            {
+                return file;
+            }
+
+            if (rule.Json is { } json && RunPlanner.ReadJson(file, json) is { } main && toolchain.RunsFile(main) && File.Exists(Path.Combine(project.Directory, main)))
+            {
+                return Path.GetFullPath(Path.Combine(project.Directory, main));
+            }
+        }
+
+        return Directory.EnumerateFiles(project.Directory).Where(toolchain.RunsFile).Order(StringComparer.Ordinal).FirstOrDefault() ?? project.MarkerPath;
+    }
+
     /// <summary>For a folder with one program at its top and no entry point, that program.</summary>
     private static RunPlan? OnlyProgramOf(ToolchainProject project)
     {
@@ -346,7 +385,7 @@ public sealed partial class WorkspaceViewModel
         if (planner() is not { } plan)
         {
             var extensions = string.Join(" or ", toolchain.FileExtensions.Take(2));
-            Output.WriteLine($"{project.Name} has no entry point to run. Open a {extensions} file and press F5 to run it, or add {toolchain.Run?.Entries.FirstOrDefault()?.File ?? "one"}.", OutputKind.Failure);
+            Output.WriteLine($"{project.Name} has no entry point to run. Open a {extensions} file and press F5 to run it, or add {(toolchain.Run?.Entries is [var first, ..] ? first.File : "one")}.", OutputKind.Failure);
             StatusText = "Nothing to run";
             return;
         }
@@ -543,7 +582,7 @@ public sealed partial class WorkspaceViewModel
 
     /// <summary>The startup project when it is a toolchain project, or else the workspace's first one.</summary>
     private ToolchainStartupItem? CurrentToolchainProject() =>
-        (StartupProject is { } startup ? FindToolchainProject(startup) : null) ?? _toolchainProjects.FirstOrDefault();
+        (StartupProject is { } startup ? FindToolchainProject(startup) : null) ?? (_toolchainProjects.Count > 0 ? _toolchainProjects[0] : null);
 
     /// <summary>
     /// Offers what the startup project needs next: its toolchain, when the Store can install it, then its packages,
@@ -646,7 +685,7 @@ public sealed partial class WorkspaceViewModel
         && File.Exists(path);
 
     /// <summary>The Output panel's links: file locations the workspace's toolchains print, in files that exist.</summary>
-    private IReadOnlyList<OutputLink> FindOutputLinks(string line)
+    private List<OutputLink> FindOutputLinks(string line)
     {
         if (_toolchainProjects.Count == 0 && _runDirectory is null)
         {

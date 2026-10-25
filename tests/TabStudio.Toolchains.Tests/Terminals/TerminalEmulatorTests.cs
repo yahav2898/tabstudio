@@ -85,11 +85,11 @@ public sealed class TerminalEmulatorTests
         terminal.Feed($"{Esc}[1;31mR{Esc}[38;5;208mO{Esc}[38;2;10;20;30;48;5;4mX{Esc}[0;7mI{Esc}[mN");
 
         var line = terminal.ScreenLine(0);
-        Assert.Equal(new TerminalStyle(TerminalColor.Indexed(1), default, TerminalTextFlags.Bold), line[0].Style);
+        Assert.Equal(new TerminalStyle(TerminalColor.Indexed(1), default, TerminalAttributes.Bold), line[0].Style);
         Assert.Equal(TerminalColor.Indexed(208), line[1].Style.Foreground);
         Assert.Equal(TerminalColor.FromRgb(10, 20, 30), line[2].Style.Foreground);
         Assert.Equal(TerminalColor.Indexed(4), line[2].Style.Background);
-        Assert.Equal(TerminalStyle.Default with { Flags = TerminalTextFlags.Inverse }, line[3].Style);
+        Assert.Equal(TerminalStyle.Default with { Attributes = TerminalAttributes.Inverse }, line[3].Style);
         Assert.Equal(TerminalStyle.Default, line[4].Style);
         Assert.Equal(0x0A141Eu, line[2].Style.Foreground.ToRgb(0));
         Assert.Equal(0xFFFFFFu, TerminalColor.Indexed(231).ToRgb(0));
@@ -268,7 +268,7 @@ public sealed class TerminalEmulatorTests
 
         Assert.Equal("Mem: 812400K used", terminal.ScreenText);
         terminal.Feed($"\r\n\r\n{Esc}[7m  PID{Esc}[m");
-        Assert.True(terminal.ScreenLine(2)[2].Style.Has(TerminalTextFlags.Inverse));
+        Assert.True(terminal.ScreenLine(2)[2].Style.Has(TerminalAttributes.Inverse));
     }
 
     [Fact]

@@ -3,6 +3,7 @@ using System.Text;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Input.Platform;
 using Avalonia.Input.TextInput;
 using Avalonia.Interactivity;
 using Avalonia.Media;
@@ -139,7 +140,7 @@ public sealed class TerminalView : Control
     /// <summary>Pastes the clipboard's text into the shell.</summary>
     public async Task PasteAsync()
     {
-        if (Terminal is { } terminal && TopLevel.GetTopLevel(this)?.Clipboard is { } clipboard && await clipboard.GetTextAsync() is { Length: > 0 } text)
+        if (Terminal is { } terminal && TopLevel.GetTopLevel(this)?.Clipboard is { } clipboard && await clipboard.TryGetTextAsync() is { Length: > 0 } text)
         {
             terminal.Paste(text);
             ScrollToBottom();
@@ -639,7 +640,7 @@ public sealed class TerminalView : Control
                 continue;
             }
 
-            if (cell.IsEmpty || cell.Style.Has(TerminalTextFlags.Hidden))
+            if (cell.IsEmpty || cell.Style.Has(TerminalAttributes.Hidden))
             {
                 FlushText();
                 continue;
@@ -674,22 +675,22 @@ public sealed class TerminalView : Control
     {
         var foreground = Colors(new TerminalCell(' ', 1, style)).Foreground;
         var brush = Brush(foreground);
-        var typeface = style.Has(TerminalTextFlags.Bold) ? _bold : _regular;
-        if (style.Has(TerminalTextFlags.Italic))
+        var typeface = style.Has(TerminalAttributes.Bold) ? _bold : _regular;
+        if (style.Has(TerminalAttributes.Italic))
         {
             typeface = new Typeface(typeface.FontFamily, FontStyle.Italic, typeface.Weight);
         }
 
         var formatted = new FormattedText(text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, FontSize, brush);
-        if (style.Has(TerminalTextFlags.Underline) || style.Has(TerminalTextFlags.Strikethrough))
+        if (style.Has(TerminalAttributes.Underline) || style.Has(TerminalAttributes.Strikethrough))
         {
             var decorations = new TextDecorationCollection();
-            if (style.Has(TerminalTextFlags.Underline))
+            if (style.Has(TerminalAttributes.Underline))
             {
                 decorations.AddRange(TextDecorations.Underline);
             }
 
-            if (style.Has(TerminalTextFlags.Strikethrough))
+            if (style.Has(TerminalAttributes.Strikethrough))
             {
                 decorations.AddRange(TextDecorations.Strikethrough);
             }
@@ -697,7 +698,7 @@ public sealed class TerminalView : Control
             formatted.SetTextDecorations(decorations);
         }
 
-        using (context.PushOpacity(style.Has(TerminalTextFlags.Dim) ? 0.6 : 1))
+        using (context.PushOpacity(style.Has(TerminalAttributes.Dim) ? 0.6 : 1))
         {
             context.DrawText(formatted, new Point(column * _cellWidth, y + Math.Max(0, (_cellHeight - formatted.Height) / 2)));
         }
@@ -718,7 +719,7 @@ public sealed class TerminalView : Control
             var cell = emulator.ScreenLine(emulator.CursorRow)[Math.Min(emulator.CursorColumn, emulator.Columns - 1)];
             if (!cell.IsEmpty && !cell.IsContinuation)
             {
-                var formatted = new FormattedText(cell.Text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, cell.Style.Has(TerminalTextFlags.Bold) ? _bold : _regular, FontSize, Brush(DefaultBackground));
+                var formatted = new FormattedText(cell.Text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, cell.Style.Has(TerminalAttributes.Bold) ? _bold : _regular, FontSize, Brush(DefaultBackground));
                 context.DrawText(formatted, rect.TopLeft);
             }
         }
@@ -746,7 +747,7 @@ public sealed class TerminalView : Control
     {
         var foreground = cell.Style.Foreground.ToRgb(DefaultForeground);
         var background = cell.Style.Background.ToRgb(DefaultBackground);
-        return cell.Style.Has(TerminalTextFlags.Inverse) ? (background, foreground) : (foreground, background);
+        return cell.Style.Has(TerminalAttributes.Inverse) ? (background, foreground) : (foreground, background);
     }
 
     private IBrush Brush(uint rgb)

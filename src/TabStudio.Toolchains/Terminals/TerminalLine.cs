@@ -10,7 +10,7 @@ public readonly record struct TerminalCell(int Rune, byte Width, TerminalStyle S
 {
     /// <summary>An empty cell with a style's background, as erasing leaves it.</summary>
     /// <param name="style">The style whose background it keeps.</param>
-    public static TerminalCell Blank(TerminalStyle style) => new(0, 1, new TerminalStyle(TerminalColor.Default, style.Background, TerminalTextFlags.None));
+    public static TerminalCell Blank(TerminalStyle style) => new(0, 1, new TerminalStyle(TerminalColor.Default, style.Background, TerminalAttributes.None));
 
     /// <summary>Whether the cell shows nothing: empty, or a space.</summary>
     public bool IsEmpty => Rune is 0 or ' ';

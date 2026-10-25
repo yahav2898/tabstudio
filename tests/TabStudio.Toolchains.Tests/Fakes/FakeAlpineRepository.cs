@@ -66,9 +66,13 @@ internal sealed class FakeAlpineRepository : IDisposable
         new() { SchemaVersion = 1, Linux = Distribution, Toolchains = toolchains };
 
     /// <summary>Adds a package and publishes the repository's new index.</summary>
-    public FakePackage Add(string repository, string name, string version, IReadOnlyDictionary<string, string>? files = null, string[]? depends = null, string[]? provides = null)
+    /// <param name="installedSize">The size the package says it takes once installed; its files' size when <see langword="null"/>.</param>
+    public FakePackage Add(string repository, string name, string version, IReadOnlyDictionary<string, string>? files = null, string[]? depends = null, string[]? provides = null, long? installedSize = null)
     {
-        var package = new FakePackage(name, version, files ?? new Dictionary<string, string> { [$"usr/share/{name}/README"] = $"{name} {version}\n" }, depends ?? [], provides ?? []);
+        var package = new FakePackage(name, version, files ?? new Dictionary<string, string> { [$"usr/share/{name}/README"] = $"{name} {version}\n" }, depends ?? [], provides ?? [])
+        {
+            InstalledSize = installedSize,
+        };
         var (bytes, checksum, installedSize) = BuildPackage(package);
         package.Bytes = bytes;
         package.Repository = repository;
@@ -125,7 +129,7 @@ internal sealed class FakeAlpineRepository : IDisposable
     private (byte[] Bytes, string Checksum, long InstalledSize) BuildPackage(FakePackage package)
     {
         var data = Gzip(Tar(complete: true, package.Files.Select(f => (f.Key, Encoding.UTF8.GetBytes(f.Value))).ToArray()));
-        var installedSize = package.Files.Sum(f => (long)Encoding.UTF8.GetByteCount(f.Value));
+        var installedSize = package.InstalledSize ?? package.Files.Sum(f => (long)Encoding.UTF8.GetByteCount(f.Value));
         var info = string.Create(CultureInfo.InvariantCulture, $"pkgname = {package.Name}\npkgver = {package.Version}\narch = {Architecture}\nsize = {installedSize}\n")
             + string.Concat(package.Depends.Select(d => $"depend = {d}\n"))
             + $"datahash = {Convert.ToHexStringLower(SHA256.HashData(data))}\n";
@@ -196,4 +200,6 @@ internal sealed class FakePackage(string name, string version, IReadOnlyDictiona
     public string Repository { get; set; } = "main";
 
     public string Address { get; set; } = string.Empty;
+
+    public long? InstalledSize { get; init; }
 }

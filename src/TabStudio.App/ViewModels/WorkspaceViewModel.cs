@@ -268,7 +268,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         }
 
         LoadStartupProjects(preview.Workspace, session?.StartupProject);
-        await LoadToolchainProjectsAsync(preview.Workspace, session?.StartupProject);
+        await LoadToolchainProjectsAsync(preview.Workspace, session?.StartupProject, opening: true);
 
         StatusText = "Loading C#";
         var host = await _compiler.CreateHostAsync();

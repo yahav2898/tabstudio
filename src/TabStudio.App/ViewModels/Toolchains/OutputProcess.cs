@@ -56,7 +56,7 @@ internal static class OutputProcess
         {
             var lines = new LineCollector();
             var stdout = PumpAsync(process.Output, OutputKind.Program, output, lines, prompt);
-            var stderr = PumpAsync(process.Error, OutputKind.Error, output, lines, prompt);
+            var stderr = process.Error is { } error ? PumpAsync(error, OutputKind.Error, output, lines, prompt) : Task.CompletedTask;
             if (input is null)
             {
                 process.CloseInput();

@@ -747,49 +747,49 @@ public sealed partial class TerminalEmulator
                     _style = TerminalStyle.Default;
                     break;
                 case 1:
-                    SetFlag(TerminalTextFlags.Bold, true);
+                    SetFlag(TerminalAttributes.Bold, true);
                     break;
                 case 2:
-                    SetFlag(TerminalTextFlags.Dim, true);
+                    SetFlag(TerminalAttributes.Dim, true);
                     break;
                 case 3:
-                    SetFlag(TerminalTextFlags.Italic, true);
+                    SetFlag(TerminalAttributes.Italic, true);
                     break;
                 case 4 or 21:
-                    SetFlag(TerminalTextFlags.Underline, true);
+                    SetFlag(TerminalAttributes.Underline, true);
                     break;
                 case 5 or 6:
-                    SetFlag(TerminalTextFlags.Blink, true);
+                    SetFlag(TerminalAttributes.Blink, true);
                     break;
                 case 7:
-                    SetFlag(TerminalTextFlags.Inverse, true);
+                    SetFlag(TerminalAttributes.Inverse, true);
                     break;
                 case 8:
-                    SetFlag(TerminalTextFlags.Hidden, true);
+                    SetFlag(TerminalAttributes.Hidden, true);
                     break;
                 case 9:
-                    SetFlag(TerminalTextFlags.Strikethrough, true);
+                    SetFlag(TerminalAttributes.Strikethrough, true);
                     break;
                 case 22:
-                    SetFlag(TerminalTextFlags.Bold | TerminalTextFlags.Dim, false);
+                    SetFlag(TerminalAttributes.Bold | TerminalAttributes.Dim, false);
                     break;
                 case 23:
-                    SetFlag(TerminalTextFlags.Italic, false);
+                    SetFlag(TerminalAttributes.Italic, false);
                     break;
                 case 24:
-                    SetFlag(TerminalTextFlags.Underline, false);
+                    SetFlag(TerminalAttributes.Underline, false);
                     break;
                 case 25:
-                    SetFlag(TerminalTextFlags.Blink, false);
+                    SetFlag(TerminalAttributes.Blink, false);
                     break;
                 case 27:
-                    SetFlag(TerminalTextFlags.Inverse, false);
+                    SetFlag(TerminalAttributes.Inverse, false);
                     break;
                 case 28:
-                    SetFlag(TerminalTextFlags.Hidden, false);
+                    SetFlag(TerminalAttributes.Hidden, false);
                     break;
                 case 29:
-                    SetFlag(TerminalTextFlags.Strikethrough, false);
+                    SetFlag(TerminalAttributes.Strikethrough, false);
                     break;
                 case >= 30 and <= 37:
                     _style = _style with { Foreground = TerminalColor.Indexed(code - 30) };
@@ -844,6 +844,6 @@ public sealed partial class TerminalEmulator
         }
     }
 
-    private void SetFlag(TerminalTextFlags flag, bool on) =>
-        _style = _style with { Flags = on ? _style.Flags | flag : _style.Flags & ~flag };
+    private void SetFlag(TerminalAttributes flag, bool on) =>
+        _style = _style with { Attributes = on ? _style.Attributes | flag : _style.Attributes & ~flag };
 }

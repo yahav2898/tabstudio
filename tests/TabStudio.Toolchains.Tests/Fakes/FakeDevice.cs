@@ -14,8 +14,9 @@ namespace TabStudio.Toolchains.Tests.Fakes;
 /// <summary>
 /// A tablet for installer tests: its storage in a temporary folder, a native library folder with stand-ins for
 /// PRoot, a fake Alpine mirror and <see cref="FakeApkTool"/> playing apk, wired together as the app wires the
-/// real ones. Its catalog has one toolchain, Hello, whose package needs a library and whose setup unpacks an
-/// archive.
+/// real ones. Its catalog has two toolchains: Hello, whose package needs a library and whose setup unpacks an
+/// archive, and Shared, which needs one of Hello's packages; or, for the IDE's tests, the real catalog's Python
+/// and Node.js over fake packages of the same names.
 /// </summary>
 internal sealed class FakeDevice : IDisposable
 {
@@ -23,6 +24,11 @@ internal sealed class FakeDevice : IDisposable
     private readonly HttpClient _http;
 
     public FakeDevice(long freeSpace = 50_000_000_000)
+        : this(freeSpace, pythonAndNode: false)
+    {
+    }
+
+    private FakeDevice(long freeSpace, bool pythonAndNode)
     {
         FreeSpace = freeSpace;
         var native = Directory.CreateDirectory(Path.Combine(_temp.Path, "lib")).FullName;
@@ -64,7 +70,7 @@ internal sealed class FakeDevice : IDisposable
             ],
         };
         Shared = Hello with { Id = "shared", Name = "Shared", Packages = ["hello"], Setup = [] };
-        Catalog = Mirror.Catalog(Hello, Shared);
+        Catalog = pythonAndNode ? Mirror.Catalog(PythonAndNode()) : Mirror.Catalog(Hello, Shared);
 
         _http = Mirror.Server.CreateClient();
         Downloader = new Downloader(_http) { RetryDelay = TimeSpan.FromMilliseconds(5) };
@@ -76,6 +82,9 @@ internal sealed class FakeDevice : IDisposable
     }
 
     public static Uri ArchiveAddress { get; } = new("https://downloads.example.org/hello-debugger-1.0.tar.gz");
+
+    /// <summary>A device whose Store offers the real catalog's Python and Node.js, installed from fake packages.</summary>
+    public static FakeDevice WithPythonAndNode() => new(50_000_000_000, pythonAndNode: true);
 
     public long FreeSpace { get; set; }
 
@@ -102,6 +111,21 @@ internal sealed class FakeDevice : IDisposable
     public LinuxToolchainInstaller Installer { get; }
 
     public ToolchainManager Manager { get; }
+
+    /// <summary>
+    /// The real Python and Node.js, over packages of the same names on the fake mirror, sized like the real ones;
+    /// without their setup steps, which download from the internet and run programs.
+    /// </summary>
+    private ToolchainDefinition[] PythonAndNode()
+    {
+        Mirror.Add("main", "python3", "3.14.8-r0", new Dictionary<string, string> { ["usr/bin/python3"] = "#!/bin/sh\n" }, installedSize: 52_400_000);
+        Mirror.Add("community", "py3-pip", "25.3-r0", depends: ["python3"], installedSize: 14_200_000);
+        Mirror.Add("community", "py3-lsp-server", "1.13.1-r0", depends: ["python3"], installedSize: 2_100_000);
+        Mirror.Add("main", "nodejs", "24.11.1-r0", new Dictionary<string, string> { ["usr/bin/node"] = "#!/bin/sh\n" }, installedSize: 68_000_000);
+        Mirror.Add("community", "npm", "11.6.2-r0", depends: ["nodejs"], installedSize: 11_300_000);
+        var catalog = ToolchainCatalog.Default;
+        return [catalog.Find("python")! with { Setup = [] }, catalog.Find("node")! with { Setup = [] }];
+    }
 
     /// <summary>A path inside the environment's root file system.</summary>
     public string Rootfs(string guestPath) => Path.Combine(Environment.Rootfs, guestPath.TrimStart('/'));
