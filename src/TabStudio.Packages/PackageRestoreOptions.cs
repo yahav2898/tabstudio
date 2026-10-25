@@ -57,5 +57,5 @@ public sealed record PackageRestoreOptions
     /// The version of Roslyn that runs the packages' analyzers and source generators, which picks among a package's
     /// <c>analyzers/dotnet/roslyn{version}/</c> folders; <see langword="null"/> restores no analyzers.
     /// </summary>
-    public Version? CompilerVersion { get; init; } = new(4, 14);
+    public Version? CompilerVersion { get; init; } = new(5, 0);
 }

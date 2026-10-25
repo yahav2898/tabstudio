@@ -40,7 +40,7 @@ public sealed class CompilerServices
     /// <summary>The version of Roslyn inside TabStudio, which decides which analyzers of a package it can run.</summary>
     public static Version CompilerVersion { get; } = typeof(Microsoft.CodeAnalysis.Compilation).Assembly.GetName().Version is { } version
         ? new Version(version.Major, version.Minor)
-        : new Version(4, 14);
+        : new Version(5, 0);
 
     /// <summary>Raised on a background thread when Roslyn finishes warming up.</summary>
     public event EventHandler? Warmed;
