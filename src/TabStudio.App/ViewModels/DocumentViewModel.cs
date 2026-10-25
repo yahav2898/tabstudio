@@ -293,6 +293,7 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
         Document.UndoStack.PropertyChanged -= OnUndoStackChanged;
         DisposeNotebook();
         DisposeCiLog();
+        DisposePullRequestReview();
     }
 
     private void OnDocumentChanged(object? sender, DocumentChangeEventArgs e)

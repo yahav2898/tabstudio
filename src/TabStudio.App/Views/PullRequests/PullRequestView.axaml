@@ -1,0 +1,555 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:conv="using:TabStudio.App.Converters"
+             xmlns:gh="using:TabStudio.SourceControl.GitHub"
+             xmlns:nb="using:TabStudio.App.Views.Notebooks"
+             xmlns:pr="using:TabStudio.App.ViewModels.PullRequests"
+             x:Class="TabStudio.App.Views.PullRequests.PullRequestView"
+             x:DataType="pr:PullRequestViewModel"
+             Background="{DynamicResource Brush.Window}">
+
+  <!--
+    A pull request's document, like Visual Studio's pull request page: the header with where it stands and what
+    can be done, then Overview, Conversation, Files changed and Commits. Finish Review opens over the page.
+  -->
+
+  <UserControl.Styles>
+    <Style Selector="Border.card">
+      <Setter Property="Background" Value="{DynamicResource Brush.Panel}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource Brush.Border}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="10" />
+      <Setter Property="Padding" Value="16,14" />
+    </Style>
+    <Style Selector="Border.banner">
+      <Setter Property="CornerRadius" Value="8" />
+      <Setter Property="Padding" Value="12,8" />
+      <Setter Property="Background" Value="{DynamicResource Brush.Control}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource Brush.Border}" />
+      <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    <Style Selector="Border.banner.claude">
+      <Setter Property="Background" Value="{DynamicResource Brush.Review.ClaudeSoft}" />
+      <Setter Property="BorderBrush" Value="#4D3F6E" />
+    </Style>
+    <Style Selector="Border.state">
+      <Setter Property="Height" Value="28" />
+      <Setter Property="Padding" Value="10,0,12,0" />
+      <Setter Property="CornerRadius" Value="14" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Border.tag">
+      <Setter Property="Height" Value="20" />
+      <Setter Property="Padding" Value="7,0" />
+      <Setter Property="CornerRadius" Value="10" />
+      <Setter Property="Background" Value="{DynamicResource Brush.Pill}" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="TextElement.FontSize" Value="11" />
+      <Setter Property="TextElement.FontWeight" Value="SemiBold" />
+      <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.TextSecondary}" />
+    </Style>
+    <Style Selector="Border.tag.pending">
+      <Setter Property="Background" Value="{DynamicResource Brush.Review.PendingSoft}" />
+      <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.Review.Pending}" />
+    </Style>
+    <Style Selector="Border.tag.claude">
+      <Setter Property="Background" Value="{DynamicResource Brush.Review.ClaudeSoft}" />
+      <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.Review.Claude}" />
+    </Style>
+    <Style Selector="Border.avatar">
+      <Setter Property="Width" Value="28" />
+      <Setter Property="Height" Value="28" />
+      <Setter Property="CornerRadius" Value="14" />
+      <Setter Property="VerticalAlignment" Value="Top" />
+    </Style>
+    <Style Selector="Border.avatar > TextBlock">
+      <Setter Property="FontSize" Value="12.5" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Foreground" Value="White" />
+      <Setter Property="HorizontalAlignment" Value="Center" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Button.action">
+      <Setter Property="Height" Value="38" />
+      <Setter Property="MinHeight" Value="38" />
+      <Setter Property="Padding" Value="14,0" />
+      <Setter Property="Margin" Value="0,0,8,8" />
+      <Setter Property="FontSize" Value="13" />
+    </Style>
+    <Style Selector="Button.compact">
+      <Setter Property="Height" Value="36" />
+      <Setter Property="MinHeight" Value="36" />
+      <Setter Property="Padding" Value="14,0" />
+      <Setter Property="FontSize" Value="13" />
+    </Style>
+    <Style Selector="Button.tab">
+      <Setter Property="Height" Value="40" />
+      <Setter Property="Padding" Value="14,0" />
+      <Setter Property="FontSize" Value="13" />
+    </Style>
+  </UserControl.Styles>
+
+  <Panel>
+    <DockPanel>
+
+      <!-- Header -->
+      <Border DockPanel.Dock="Top" Background="{DynamicResource Brush.Panel}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1"
+              Padding="20,16,20,0">
+        <StackPanel Spacing="10" MaxWidth="1100" HorizontalAlignment="Stretch">
+          <TextBlock FontSize="20" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextBright}"><Run
+            Text="{Binding Title}" /><Run Text="  " /><Run Text="{Binding NumberText}" FontWeight="Normal" Foreground="{DynamicResource Brush.TextMuted}" /></TextBlock>
+
+          <WrapPanel IsVisible="{Binding IsLoaded}">
+            <Border Classes="state" Margin="0,0,10,6" Background="{Binding Badge, Converter={x:Static conv:ReviewConverters.BadgeBrush}}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <controls:StrokeIcon Data="{Binding Badge, Converter={x:Static conv:ReviewConverters.BadgeIcon}}" Size="14" Foreground="White" />
+                <TextBlock Text="{Binding BadgeText}" Foreground="White" FontWeight="SemiBold" FontSize="12.5" VerticalAlignment="Center" />
+              </StackPanel>
+            </Border>
+            <TextBlock Margin="0,0,12,6" VerticalAlignment="Center" TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextSecondary}" Text="{Binding SummaryText}" />
+            <TextBlock Classes="muted small" Margin="0,0,12,6" VerticalAlignment="Center" Text="{Binding OpenedText}" />
+            <TextBlock Classes="small mono" Margin="0,0,0,6" VerticalAlignment="Center" Foreground="{DynamicResource Brush.TextSecondary}" Text="{Binding ChangesText}" />
+          </WrapPanel>
+
+          <!-- Where the pull request stands for merging; the checks' summary joins this line. -->
+          <WrapPanel x:Name="StatusLine" IsVisible="{Binding IsLoaded}">
+            <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,18,4">
+              <controls:StrokeIcon Data="{Binding MergeabilityKind, Converter={x:Static conv:ReviewConverters.MergeabilityIcon}}" Size="16"
+                                   Foreground="{Binding MergeabilityKind, Converter={x:Static conv:ReviewConverters.MergeabilityBrush}}" />
+              <TextBlock Classes="small" VerticalAlignment="Center" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Text}" Text="{Binding MergeabilityText}" />
+            </StackPanel>
+          </WrapPanel>
+
+          <!-- Actions -->
+          <WrapPanel IsVisible="{Binding IsLoaded}">
+            <Button x:Name="CheckOutButton" Theme="{StaticResource SecondaryButton}" Classes="action" Command="{Binding CheckOutCommand}"
+                    ToolTip.Tip="{Binding CheckOutToolTip}" IsVisible="{Binding !IsCheckedOut}">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <controls:StrokeIcon Data="{StaticResource Icon.CheckOut}" Size="15" />
+                <TextBlock Text="Check Out" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+            <Button x:Name="ReviewWithClaudeButton" Theme="{StaticResource SecondaryButton}" Classes="action" Command="{Binding ReviewWithClaudeCommand}"
+                    ToolTip.Tip="Claude reads the changes with your API key and drafts comments. Nothing is posted unless you keep it.">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="15" Foreground="{DynamicResource Brush.Review.Claude}" />
+                <TextBlock Text="Review with Claude" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+            <Button x:Name="FinishReviewButton" Theme="{StaticResource AccentButton}" Classes="action" Command="{Binding OpenFinishReviewCommand}"
+                    IsVisible="{Binding IsOpen}" ToolTip.Tip="Comment, approve or request changes, sending your pending comments">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <controls:StrokeIcon Data="{StaticResource Icon.Eye}" Size="15" />
+                <TextBlock Text="Finish Review" VerticalAlignment="Center" />
+                <Border Classes="pill" Background="#33000000" IsVisible="{Binding HasPendingComments}">
+                  <TextBlock Text="{Binding PendingCount}" Foreground="{DynamicResource Brush.OnAccent}" VerticalAlignment="Center" />
+                </Border>
+              </StackPanel>
+            </Button>
+            <Button Theme="{StaticResource ToolButton}" Classes="action" Padding="10,0" Command="{Binding OpenOnGitHubCommand}" ToolTip.Tip="Open on GitHub">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <controls:StrokeIcon Data="{StaticResource Icon.External}" Size="15" />
+                <TextBlock Text="Open on GitHub" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+            <Button Theme="{StaticResource ToolButton}" Classes="action" Width="38" Padding="0" Command="{Binding RefreshCommand}" ToolTip.Tip="Refresh">
+              <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="15" />
+            </Button>
+          </WrapPanel>
+
+          <!-- What happened, and what to know -->
+          <StackPanel Spacing="8">
+            <Grid ColumnDefinitions="Auto,*" IsVisible="{Binding IsLoading}" Margin="0,2,0,0">
+              <ProgressBar IsIndeterminate="True" Width="56" MinWidth="56" Margin="0,0,10,0" VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Classes="muted small" VerticalAlignment="Center" Text="Reading the pull request from GitHub…" />
+            </Grid>
+            <Border Classes="banner" IsVisible="{Binding IsCheckedOut}">
+              <Grid ColumnDefinitions="Auto,*">
+                <controls:StrokeIcon Data="{StaticResource Icon.Branch}" Size="15" Margin="0,1,10,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush.Success}" />
+                <TextBlock Grid.Column="1" Classes="small" TextWrapping="Wrap" Text="{Binding CheckedOutText}" />
+              </Grid>
+            </Border>
+            <Grid ColumnDefinitions="Auto,*" IsVisible="{Binding InfoText, Converter={x:Static ObjectConverters.IsNotNull}}">
+              <controls:StrokeIcon Data="{StaticResource Icon.Check}" Size="15" Margin="0,1,8,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush.Success}" />
+              <TextBlock Grid.Column="1" Classes="small" TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextSecondary}" Text="{Binding InfoText}" />
+            </Grid>
+            <Grid ColumnDefinitions="Auto,*" IsVisible="{Binding ErrorText, Converter={x:Static ObjectConverters.IsNotNull}}">
+              <controls:StrokeIcon Data="{StaticResource Icon.Error}" Size="15" Margin="0,1,8,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush.Error}" />
+              <TextBlock Grid.Column="1" Classes="small" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Error}" Text="{Binding ErrorText}" />
+            </Grid>
+            <Border Classes="banner claude" IsVisible="{Binding IsClaudeReviewing}">
+              <Grid ColumnDefinitions="Auto,*">
+                <ProgressBar IsIndeterminate="True" Width="48" MinWidth="48" Margin="0,0,12,0" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" Classes="small" VerticalAlignment="Center" TextWrapping="Wrap" Text="{Binding ClaudeStatus}" />
+              </Grid>
+            </Border>
+            <Border x:Name="ClaudeKeyNotice" Classes="banner claude" IsVisible="{Binding NeedsClaudeKey}">
+              <Grid ColumnDefinitions="Auto,*,Auto">
+                <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="16" Margin="0,2,10,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush.Review.Claude}" />
+                <StackPanel Grid.Column="1" Spacing="4">
+                  <TextBlock Text="Claude needs your Anthropic API key" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" />
+                  <TextBlock Classes="small" TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextSecondary}"
+                             Text="Claude reviews with the key you add in the Claude window's settings (the gear in its title bar). Create a key at console.anthropic.com; it stays on this device." />
+                </StackPanel>
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6" Margin="12,0,0,0" VerticalAlignment="Center">
+                  <Button Theme="{StaticResource AccentButton}" Classes="compact" Content="Open Claude Settings" Command="{Binding OpenClaudeSettingsCommand}" />
+                  <Button Theme="{StaticResource ToolButton}" Width="36" Height="36" MinWidth="36" MinHeight="36" Padding="0" ToolTip.Tip="Close"
+                          Command="{Binding CloseClaudeNoticeCommand}">
+                    <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="12" />
+                  </Button>
+                </StackPanel>
+              </Grid>
+            </Border>
+          </StackPanel>
+
+          <!-- Sections -->
+          <StackPanel Orientation="Horizontal" IsVisible="{Binding IsLoaded}">
+            <Button x:Name="OverviewTab" Theme="{StaticResource PanelTabButton}" Classes="tab" Content="Overview"
+                    Classes.selected="{Binding Section, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static pr:PullRequestSection.Overview}}"
+                    Command="{Binding SelectSectionCommand}" CommandParameter="{x:Static pr:PullRequestSection.Overview}" />
+            <Button x:Name="ConversationTab" Theme="{StaticResource PanelTabButton}" Classes="tab" Content="{Binding ConversationTabText}"
+                    Classes.selected="{Binding Section, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static pr:PullRequestSection.Conversation}}"
+                    Command="{Binding SelectSectionCommand}" CommandParameter="{x:Static pr:PullRequestSection.Conversation}" />
+            <Button x:Name="FilesTab" Theme="{StaticResource PanelTabButton}" Classes="tab" Content="{Binding FilesTabText}"
+                    Classes.selected="{Binding Section, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static pr:PullRequestSection.Files}}"
+                    Command="{Binding SelectSectionCommand}" CommandParameter="{x:Static pr:PullRequestSection.Files}" />
+            <Button x:Name="CommitsTab" Theme="{StaticResource PanelTabButton}" Classes="tab" Content="{Binding CommitsTabText}"
+                    Classes.selected="{Binding Section, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static pr:PullRequestSection.Commits}}"
+                    Command="{Binding SelectSectionCommand}" CommandParameter="{x:Static pr:PullRequestSection.Commits}" />
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <ScrollViewer x:Name="SectionScroller" HorizontalScrollBarVisibility="Disabled">
+        <Panel Margin="20,18,20,28" MaxWidth="1100" IsVisible="{Binding IsLoaded}">
+
+          <!-- Overview: the description, the reviewers and merging -->
+          <StackPanel Spacing="14"
+                      IsVisible="{Binding Section, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static pr:PullRequestSection.Overview}}">
+            <Border Classes="card">
+              <StackPanel Spacing="10">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                  <Border Classes="avatar" Background="{Binding Author, Converter={x:Static conv:ReviewConverters.AvatarBrush}}">
+                    <TextBlock Text="{Binding Author, Converter={x:Static conv:ReviewConverters.Initial}}" />
+                  </Border>
+                  <TextBlock VerticalAlignment="Center"><Run Text="{Binding Author}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" /><Run
+                    Text=" " /><Run Text="{Binding OpenedText}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="12" /></TextBlock>
+                </StackPanel>
+                <nb:MarkdownView Blocks="{Binding Description}" IsVisible="{Binding HasDescription}" />
+                <TextBlock Classes="muted" FontStyle="Italic" Text="No description provided." IsVisible="{Binding !HasDescription}" />
+              </StackPanel>
+            </Border>
+
+            <Border Classes="card">
+              <StackPanel Spacing="10">
+                <Grid ColumnDefinitions="*,Auto">
+                  <TextBlock Classes="h2" Text="Reviewers" VerticalAlignment="Center" />
+                  <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Classes="compact" Command="{Binding RequestReviewCommand}" IsVisible="{Binding IsOpen}"
+                          Foreground="{DynamicResource Brush.Link}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                      <controls:StrokeIcon Data="{StaticResource Icon.Plus}" Size="13" />
+                      <TextBlock Text="Request a Review…" VerticalAlignment="Center" />
+                    </StackPanel>
+                  </Button>
+                </Grid>
+                <TextBlock Classes="muted small" Text="Nobody reviewed or was asked to review yet." IsVisible="{Binding !HasReviewers}" />
+                <ItemsControl ItemsSource="{Binding Reviewers}">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <WrapPanel />
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="pr:ReviewerViewModel">
+                      <Border Margin="0,0,10,8" Padding="6,5,12,5" CornerRadius="18" Background="{DynamicResource Brush.Control}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                          <Border Classes="avatar" Background="{Binding Login, Converter={x:Static conv:ReviewConverters.AvatarBrush}}">
+                            <TextBlock Text="{Binding Initial}" />
+                          </Border>
+                          <TextBlock Text="{Binding Login}" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource Brush.TextBright}" />
+                          <controls:StrokeIcon Data="{Binding State, Converter={x:Static conv:ReviewConverters.ReviewerIcon}}" Size="14"
+                                               Foreground="{Binding State, Converter={x:Static conv:ReviewConverters.ReviewerBrush}}" />
+                          <TextBlock Classes="muted small" Text="{Binding StateText}" VerticalAlignment="Center" />
+                        </StackPanel>
+                      </Border>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
+            </Border>
+
+            <!-- Merging, for open pull requests -->
+            <Border x:Name="MergePanel" Classes="card" IsVisible="{Binding ShowsMergePanel}">
+              <StackPanel Spacing="12">
+                <Grid ColumnDefinitions="Auto,*">
+                  <controls:StrokeIcon Data="{StaticResource Icon.Merge}" Size="18" Margin="0,0,10,0" Foreground="{DynamicResource Brush.PullRequest.MergedText}" />
+                  <TextBlock Grid.Column="1" Classes="h2" Text="Merge" VerticalAlignment="Center" />
+                </Grid>
+                <Grid ColumnDefinitions="Auto,*">
+                  <controls:StrokeIcon Data="{Binding MergeabilityKind, Converter={x:Static conv:ReviewConverters.MergeabilityIcon}}" Size="15" Margin="0,1,8,0" VerticalAlignment="Top"
+                                       Foreground="{Binding MergeabilityKind, Converter={x:Static conv:ReviewConverters.MergeabilityBrush}}" />
+                  <TextBlock Grid.Column="1" Classes="small" TextWrapping="Wrap" Text="{Binding MergeabilityText}" />
+                </Grid>
+
+                <!-- A draft is marked ready first. -->
+                <StackPanel Spacing="8" IsVisible="{Binding IsDraft}">
+                  <Button Theme="{StaticResource SecondaryButton}" Classes="compact" HorizontalAlignment="Left" Content="Ready for Review"
+                          ToolTip.Tip="Take the pull request out of draft, so it can be merged" Command="{Binding ReadyForReviewCommand}" />
+                </StackPanel>
+
+                <StackPanel Spacing="10" IsVisible="{Binding !IsDraft}">
+                  <StackPanel Spacing="4">
+                    <TextBlock Classes="label" Text="Merge method" />
+                    <ComboBox x:Name="MergeMethodBox" ItemsSource="{Binding MergeMethods}" SelectedItem="{Binding SelectedMergeMethod}" MinHeight="40"
+                              HorizontalAlignment="Stretch">
+                      <ComboBox.ItemTemplate>
+                        <DataTemplate DataType="pr:MergeMethodOption">
+                          <StackPanel Spacing="1" Margin="0,3">
+                            <TextBlock Text="{Binding Label}" FontWeight="SemiBold" />
+                            <TextBlock Classes="muted small" Text="{Binding Description}" TextWrapping="Wrap" />
+                          </StackPanel>
+                        </DataTemplate>
+                      </ComboBox.ItemTemplate>
+                    </ComboBox>
+                  </StackPanel>
+                  <StackPanel Spacing="4" IsVisible="{Binding HasCommitMessage}">
+                    <TextBlock Classes="label" Text="Commit title" />
+                    <TextBox x:Name="MergeTitleBox" Text="{Binding MergeTitle}" MinHeight="38" />
+                  </StackPanel>
+                  <StackPanel Spacing="4" IsVisible="{Binding HasCommitMessage}">
+                    <TextBlock Classes="label" Text="Commit message" />
+                    <TextBox Text="{Binding MergeMessage}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="70" MaxHeight="200" Padding="10,8"
+                             VerticalContentAlignment="Top" />
+                  </StackPanel>
+                  <CheckBox x:Name="DeleteBranchBox" IsChecked="{Binding DeleteBranchAfterMerge}" IsVisible="{Binding CanDeleteBranch}">
+                    <TextBlock><Run Text="Delete " /><Run Text="{Binding HeadBranch}" FontFamily="{DynamicResource CodeFont}" FontSize="12.5" /><Run
+                      Text=" after merging" /></TextBlock>
+                  </CheckBox>
+                  <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{Binding AutomaticDeleteNote}"
+                             IsVisible="{Binding AutomaticDeleteNote, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                  <TextBlock Classes="small" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Warning}" Text="{Binding MergeBlockedText}"
+                             IsVisible="{Binding MergeBlockedText, Converter={x:Static ObjectConverters.IsNotNull}}" />
+
+                  <Button x:Name="MergeButton" Theme="{StaticResource AccentButton}" Classes="compact" HorizontalAlignment="Left" Command="{Binding MergeCommand}"
+                          IsVisible="{Binding !IsConfirmingMerge}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                      <controls:StrokeIcon Data="{StaticResource Icon.Merge}" Size="15" />
+                      <TextBlock Text="{Binding MergeButtonText}" VerticalAlignment="Center" />
+                    </StackPanel>
+                  </Button>
+                  <Border Classes="banner" IsVisible="{Binding IsConfirmingMerge}">
+                    <Grid ColumnDefinitions="*,Auto">
+                      <TextBlock Classes="small" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,12,0"><Run Text="Merge " /><Run
+                        Text="{Binding NumberText}" FontWeight="SemiBold" /><Run Text=" into " /><Run Text="{Binding BaseBranch}" FontWeight="SemiBold" /><Run
+                        Text="? Everyone on " /><Run Text="{Binding BaseBranch}" /><Run Text=" gets these changes." /></TextBlock>
+                      <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                        <Button Theme="{StaticResource SecondaryButton}" Classes="compact" Content="Cancel" Command="{Binding CancelMergeCommand}" />
+                        <Button x:Name="ConfirmMergeButton" Theme="{StaticResource AccentButton}" Classes="compact" Content="Confirm Merge" Command="{Binding ConfirmMergeCommand}" />
+                      </StackPanel>
+                    </Grid>
+                  </Border>
+                </StackPanel>
+
+                <Grid ColumnDefinitions="Auto,*" IsVisible="{Binding IsMerging}">
+                  <ProgressBar IsIndeterminate="True" Width="56" MinWidth="56" Margin="0,0,10,0" VerticalAlignment="Center" />
+                  <TextBlock Grid.Column="1" Classes="muted small" VerticalAlignment="Center" Text="Asking GitHub…" />
+                </Grid>
+                <Grid ColumnDefinitions="Auto,*" IsVisible="{Binding MergeErrorText, Converter={x:Static ObjectConverters.IsNotNull}}">
+                  <controls:StrokeIcon Data="{StaticResource Icon.Error}" Size="15" Margin="0,1,8,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush.Error}" />
+                  <TextBlock Grid.Column="1" Classes="small" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Error}" Text="{Binding MergeErrorText}" />
+                </Grid>
+              </StackPanel>
+            </Border>
+
+            <!-- Once merged -->
+            <Border Classes="card" IsVisible="{Binding IsMerged}">
+              <Grid ColumnDefinitions="Auto,*">
+                <controls:StrokeIcon Data="{StaticResource Icon.Merge}" Size="18" Margin="0,0,10,0" Foreground="{DynamicResource Brush.PullRequest.MergedText}" />
+                <TextBlock Grid.Column="1" VerticalAlignment="Center" TextWrapping="Wrap" Text="{Binding MergedText}" />
+              </Grid>
+            </Border>
+          </StackPanel>
+
+          <!-- Conversation -->
+          <StackPanel Spacing="12"
+                      IsVisible="{Binding Section, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static pr:PullRequestSection.Conversation}}">
+            <ItemsControl ItemsSource="{Binding Timeline}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <StackPanel Spacing="12" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="pr:TimelineItemViewModel">
+                  <Grid ColumnDefinitions="Auto,*">
+                    <Border Classes="avatar" Background="{Binding Author, Converter={x:Static conv:ReviewConverters.AvatarBrush}}">
+                      <TextBlock Text="{Binding Initial}" />
+                    </Border>
+                    <Border Grid.Column="1" Margin="12,0,0,0" Classes="card" Padding="14,10">
+                      <StackPanel Spacing="8">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                          <controls:StrokeIcon Data="{Binding Kind, Converter={x:Static conv:ReviewConverters.TimelineIcon}}" Size="15"
+                                               Foreground="{Binding Kind, Converter={x:Static conv:ReviewConverters.TimelineBrush}}" />
+                          <TextBlock VerticalAlignment="Center" TextWrapping="Wrap"><Run Text="{Binding Author}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" /><Run
+                            Text=" " /><Run Text="{Binding Action}" Foreground="{DynamicResource Brush.TextSecondary}" /><Run Text=" · " Foreground="{DynamicResource Brush.TextMuted}" /><Run
+                            Text="{Binding When}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="12" /></TextBlock>
+                        </StackPanel>
+                        <nb:MarkdownView Blocks="{Binding Body}" IsVisible="{Binding HasBody}" />
+                        <TextBlock Classes="muted small" Text="{Binding Note}" IsVisible="{Binding HasNote}" />
+                      </StackPanel>
+                    </Border>
+                  </Grid>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <Grid ColumnDefinitions="Auto,*" Margin="0,6,0,0">
+              <Border Width="28" />
+              <StackPanel Grid.Column="1" Margin="12,0,0,0" Spacing="8">
+                <TextBox x:Name="NewCommentBox" Text="{Binding NewComment}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="90" MaxHeight="260" Padding="10,8"
+                         VerticalContentAlignment="Top" Watermark="Add a comment to the conversation. Markdown works here." />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+                  <ProgressBar IsIndeterminate="True" Width="48" MinWidth="48" VerticalAlignment="Center" IsVisible="{Binding IsSendingComment}" />
+                  <Button Theme="{StaticResource AccentButton}" Classes="compact" Content="Comment" Command="{Binding AddCommentCommand}" ToolTip.Tip="Ctrl+Enter" />
+                </StackPanel>
+              </StackPanel>
+            </Grid>
+          </StackPanel>
+
+          <!-- Files changed -->
+          <StackPanel Spacing="10"
+                      IsVisible="{Binding Section, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static pr:PullRequestSection.Files}}">
+            <Border x:Name="ClaudeSummary" Classes="banner claude" IsVisible="{Binding HasClaudeSummary}">
+              <Grid ColumnDefinitions="Auto,*,Auto">
+                <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="16" Margin="0,2,10,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush.Review.Claude}" />
+                <StackPanel Grid.Column="1" Spacing="4">
+                  <TextBlock FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}"><Run Text="Claude's review" /><Run
+                    Text=" · " Foreground="{DynamicResource Brush.TextMuted}" /><Run Text="{Binding DraftsText}" Foreground="{DynamicResource Brush.Review.Claude}" /></TextBlock>
+                  <TextBlock Classes="small" TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextSecondary}" Text="{Binding ClaudeSummary}" />
+                  <TextBlock Classes="muted small" TextWrapping="Wrap"
+                             Text="Open a file to keep, edit or dismiss each draft. Kept drafts join your pending review; nothing is posted until you finish it." />
+                </StackPanel>
+                <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Width="34" Height="34" MinWidth="34" MinHeight="34" Padding="0" Margin="8,0,0,0"
+                        VerticalAlignment="Top" ToolTip.Tip="Close" Command="{Binding DismissClaudeSummaryCommand}">
+                  <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="12" />
+                </Button>
+              </Grid>
+            </Border>
+
+            <Border Classes="card" Padding="6">
+              <ItemsControl x:Name="FileList" ItemsSource="{Binding Files}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate DataType="pr:PullRequestFileViewModel">
+                    <Button Theme="{StaticResource ToolButton}" Height="44" MinHeight="44" Padding="10,0" CornerRadius="6"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" ToolTip.Tip="{Binding Path}" Command="{Binding OpenCommand}">
+                      <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto">
+                        <Border Classes="badge" Margin="0,0,10,0" Background="{Binding BadgeKind, Converter={x:Static conv:AppConverters.BadgeBackground}}">
+                          <TextBlock Text="{Binding Badge}" Foreground="{Binding BadgeKind, Converter={x:Static conv:AppConverters.BadgeForeground}}" />
+                        </Border>
+                        <TextBlock Grid.Column="1" VerticalAlignment="Center" TextTrimming="CharacterEllipsis">
+                          <Run Text="{Binding Name}" Foreground="{DynamicResource Brush.TextBright}" />
+                          <Run Text=" " />
+                          <Run Text="{Binding Folder}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="11.5" />
+                        </TextBlock>
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6" Margin="8,0">
+                          <StackPanel Orientation="Horizontal" Spacing="4" IsVisible="{Binding HasThreads}" ToolTip.Tip="Conversations">
+                            <controls:StrokeIcon Data="{StaticResource Icon.Conversation}" Size="13" Foreground="{DynamicResource Brush.Review.Thread}" />
+                            <TextBlock Classes="small" VerticalAlignment="Center" Foreground="{DynamicResource Brush.TextSecondary}" Text="{Binding ThreadCount}" />
+                          </StackPanel>
+                          <Border Classes="tag pending" IsVisible="{Binding HasPending}" ToolTip.Tip="Your pending comments">
+                            <TextBlock VerticalAlignment="Center"><Run Text="{Binding PendingCount}" /><Run Text=" pending" /></TextBlock>
+                          </Border>
+                          <Border Classes="tag claude" IsVisible="{Binding HasDrafts}" ToolTip.Tip="Claude's draft comments">
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                              <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="11" Foreground="{DynamicResource Brush.Review.Claude}" />
+                              <TextBlock VerticalAlignment="Center"><Run Text="{Binding DraftCount}" /><Run Text=" Claude" /></TextBlock>
+                            </StackPanel>
+                          </Border>
+                        </StackPanel>
+                        <TextBlock Grid.Column="3" Classes="small mono" VerticalAlignment="Center" Margin="4,0,10,0"><Run
+                          Text="{Binding AdditionsText}" Foreground="{DynamicResource Brush.Success}" /><Run Text=" " /><Run
+                          Text="{Binding DeletionsText}" Foreground="{DynamicResource Brush.Error}" /></TextBlock>
+                        <TextBlock Grid.Column="4" Width="14" FontWeight="Bold" FontSize="12" VerticalAlignment="Center" TextAlignment="Center"
+                                   Text="{Binding StatusLetter}" Foreground="{Binding GitStatus, Converter={x:Static conv:SourceControlConverters.StatusBrush}}" />
+                      </Grid>
+                    </Button>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </Border>
+          </StackPanel>
+
+          <!-- Commits -->
+          <Border Classes="card" Padding="6"
+                  IsVisible="{Binding Section, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static pr:PullRequestSection.Commits}}">
+            <ItemsControl ItemsSource="{Binding Commits}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="pr:PullRequestCommitItemViewModel">
+                  <Button Theme="{StaticResource ToolButton}" Height="44" MinHeight="44" Padding="10,0" CornerRadius="6"
+                          HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" ToolTip.Tip="Open on GitHub"
+                          Command="{Binding Open}" CommandParameter="{Binding}">
+                    <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                      <controls:StrokeIcon Data="{StaticResource Icon.Commit}" Size="15" Margin="0,0,10,0" Foreground="{DynamicResource Brush.TextMuted}" />
+                      <TextBlock Grid.Column="1" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Brush.TextBright}" Text="{Binding Summary}" />
+                      <TextBlock Grid.Column="2" Classes="muted small" VerticalAlignment="Center" Margin="10,0"><Run Text="{Binding Author}" /><Run
+                        Text=" · " /><Run Text="{Binding When}" /></TextBlock>
+                      <TextBlock Grid.Column="3" Classes="mono small" VerticalAlignment="Center" Foreground="{DynamicResource Brush.Link}" Text="{Binding ShortSha}" />
+                    </Grid>
+                  </Button>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </Border>
+        </Panel>
+      </ScrollViewer>
+    </DockPanel>
+
+    <!-- Finish Review, over the page -->
+    <Border x:Name="FinishReviewPanel" Background="#99000000" IsVisible="{Binding IsFinishReviewOpen}">
+      <Border Classes="card" Width="600" MaxWidth="600" Margin="16" Padding="20,18" HorizontalAlignment="Center" VerticalAlignment="Center"
+              Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BoxShadow="0 12 32 0 #66000000">
+        <StackPanel Spacing="12">
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Classes="h1" Text="Finish Your Review" VerticalAlignment="Center" />
+            <Border Grid.Column="1" Classes="tag pending" IsVisible="{Binding HasPendingComments}">
+              <TextBlock Text="{Binding PendingText}" VerticalAlignment="Center" />
+            </Border>
+          </Grid>
+          <controls:AutoFocusTextBox x:Name="ReviewSummaryBox" Text="{Binding ReviewSummary}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="110" MaxHeight="280"
+                                     Padding="10,8" VerticalContentAlignment="Top" Watermark="Leave a summary of your review. Markdown works here." />
+          <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{Binding FinishReviewNote}" />
+          <Grid ColumnDefinitions="Auto,*" IsVisible="{Binding OwnPullRequestNote, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <controls:StrokeIcon Data="{StaticResource Icon.Info}" Size="14" Margin="0,1,8,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush.Warning}" />
+            <TextBlock Grid.Column="1" Classes="small" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Warning}" Text="{Binding OwnPullRequestNote}" />
+          </Grid>
+          <Grid ColumnDefinitions="Auto,*" IsVisible="{Binding ReviewErrorText, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <controls:StrokeIcon Data="{StaticResource Icon.Error}" Size="14" Margin="0,1,8,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush.Error}" />
+            <TextBlock Grid.Column="1" Classes="small" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Error}" Text="{Binding ReviewErrorText}" />
+          </Grid>
+          <Grid ColumnDefinitions="Auto,*,Auto" Margin="0,4,0,0">
+            <Button x:Name="DiscardReviewButton" Theme="{StaticResource ToolButton}" Classes="compact" Foreground="{DynamicResource Brush.Error}" Content="Discard Review"
+                    ToolTip.Tip="Delete your pending comments" Command="{Binding DiscardReviewCommand}" IsVisible="{Binding HasPendingReview}" />
+            <ProgressBar Grid.Column="1" IsIndeterminate="True" Width="48" MinWidth="48" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center"
+                         IsVisible="{Binding IsSubmittingReview}" />
+            <WrapPanel Grid.Column="2" HorizontalAlignment="Right">
+              <Button Theme="{StaticResource SecondaryButton}" Classes="compact" Margin="0,0,8,0" Content="Cancel" Command="{Binding CloseFinishReviewCommand}" ToolTip.Tip="Esc" />
+              <Button x:Name="SubmitCommentButton" Theme="{StaticResource SecondaryButton}" Classes="compact" Margin="0,0,8,0" Content="Comment"
+                      ToolTip.Tip="Send your feedback without approving" Command="{Binding SubmitReviewCommand}" CommandParameter="{x:Static gh:ReviewEvent.Comment}" />
+              <Button x:Name="RequestChangesButton" Theme="{StaticResource SecondaryButton}" Classes="compact" Margin="0,0,8,0" Content="Request Changes"
+                      ToolTip.Tip="Ask for changes before it is merged" IsEnabled="{Binding CanApprove}"
+                      Command="{Binding SubmitReviewCommand}" CommandParameter="{x:Static gh:ReviewEvent.RequestChanges}" />
+              <Button x:Name="ApproveButton" Theme="{StaticResource AccentButton}" Classes="compact" ToolTip.Tip="Approve the changes for merging"
+                      IsEnabled="{Binding CanApprove}" Command="{Binding SubmitReviewCommand}" CommandParameter="{x:Static gh:ReviewEvent.Approve}">
+                <StackPanel Orientation="Horizontal" Spacing="7">
+                  <controls:StrokeIcon Data="{StaticResource Icon.Check}" Size="14" />
+                  <TextBlock Text="Approve" VerticalAlignment="Center" />
+                </StackPanel>
+              </Button>
+            </WrapPanel>
+          </Grid>
+        </StackPanel>
+      </Border>
+    </Border>
+  </Panel>
+</UserControl>

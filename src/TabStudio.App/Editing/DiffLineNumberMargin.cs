@@ -57,6 +57,9 @@ public sealed class DiffLineNumberMargin : AbstractMargin
             }
 
             var top = visualLine.VisualTop - textView.VerticalOffset;
+
+            // A line with review comments under it is taller; the number stays beside its text.
+            var height = Math.Min(visualLine.Height, textView.DefaultLineHeight);
             var (background, foreground, sign) = line.Kind switch
             {
                 DiffLineKind.Added => (DiffColors.AddedBackground, DiffColors.AddedText, "+"),
@@ -66,10 +69,10 @@ public sealed class DiffLineNumberMargin : AbstractMargin
             };
             if (background is not null)
             {
-                context.FillRectangle(background, new Rect(0, top, Bounds.Width, visualLine.Height));
+                context.FillRectangle(background, new Rect(0, top, Bounds.Width, height));
             }
 
-            var textTop = top + ((visualLine.Height - Format("0", foreground).Height) / 2);
+            var textTop = top + ((height - Format("0", foreground).Height) / 2);
             DrawRightAligned(context, line.OldNumber, foreground, OuterPadding + _columnWidth, textTop);
             DrawRightAligned(context, line.NewNumber, foreground, OuterPadding + _columnWidth + ColumnGap + _columnWidth, textTop);
             if (sign.Length > 0)

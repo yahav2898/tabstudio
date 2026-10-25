@@ -1,0 +1,138 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:conv="using:TabStudio.App.Converters"
+             xmlns:pr="using:TabStudio.App.ViewModels.PullRequests"
+             x:Class="TabStudio.App.Views.PullRequests.PullRequestListView"
+             x:DataType="pr:PullRequestListViewModel"
+             Background="{DynamicResource Brush.Panel}">
+
+  <!-- The Pull Requests window, beside Git Changes as in Visual Studio. -->
+
+  <UserControl.Styles>
+    <Style Selector="Button.filter">
+      <Setter Property="Height" Value="32" />
+      <Setter Property="MinHeight" Value="32" />
+      <Setter Property="Padding" Value="9,0" />
+      <Setter Property="CornerRadius" Value="16" />
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="Margin" Value="0,0,4,6" />
+    </Style>
+    <Style Selector="Border.tag">
+      <Setter Property="Height" Value="19" />
+      <Setter Property="Padding" Value="6,0" />
+      <Setter Property="CornerRadius" Value="9.5" />
+      <Setter Property="Background" Value="{DynamicResource Brush.Pill}" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="TextElement.FontSize" Value="10.5" />
+      <Setter Property="TextElement.FontWeight" Value="SemiBold" />
+      <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.TextSecondary}" />
+    </Style>
+    <Style Selector="Border.tag.review">
+      <Setter Property="Background" Value="{DynamicResource Brush.Review.PendingSoft}" />
+      <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.Review.Pending}" />
+    </Style>
+  </UserControl.Styles>
+
+  <DockPanel>
+
+    <!-- Title, with the repository and Refresh -->
+    <Border DockPanel.Dock="Top" Height="36" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+      <Grid ColumnDefinitions="Auto,*,Auto" Margin="12,0,4,0">
+        <TextBlock Classes="header" Text="Pull Requests" />
+        <TextBlock Grid.Column="1" Classes="muted small" Margin="8,0,4,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
+                   Text="{Binding RepositoryName}" />
+        <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Width="34" Height="34" MinWidth="34" MinHeight="34" Padding="0"
+                ToolTip.Tip="Refresh" Command="{Binding RefreshCommand}" IsVisible="{Binding IsLinked}">
+          <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="15" />
+        </Button>
+      </Grid>
+    </Border>
+
+    <!-- Filters -->
+    <WrapPanel DockPanel.Dock="Top" Margin="10,10,4,4" IsVisible="{Binding IsLinked}">
+      <Button x:Name="OpenFilter" Theme="{StaticResource ToolButton}" Classes="filter" Content="Open"
+              Classes.selected="{Binding Filter, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static pr:PullRequestFilter.Open}}"
+              Command="{Binding SelectFilterCommand}" CommandParameter="{x:Static pr:PullRequestFilter.Open}" />
+      <Button x:Name="MineFilter" Theme="{StaticResource ToolButton}" Classes="filter" Content="Mine" ToolTip.Tip="Open pull requests you opened"
+              Classes.selected="{Binding Filter, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static pr:PullRequestFilter.Mine}}"
+              Command="{Binding SelectFilterCommand}" CommandParameter="{x:Static pr:PullRequestFilter.Mine}" />
+      <Button x:Name="ReviewRequestedFilter" Theme="{StaticResource ToolButton}" Classes="filter" Content="Review requested"
+              ToolTip.Tip="Open pull requests waiting for your review"
+              Classes.selected="{Binding Filter, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static pr:PullRequestFilter.ReviewRequested}}"
+              Command="{Binding SelectFilterCommand}" CommandParameter="{x:Static pr:PullRequestFilter.ReviewRequested}" />
+      <Button x:Name="ClosedFilter" Theme="{StaticResource ToolButton}" Classes="filter" Content="Closed" ToolTip.Tip="Merged and closed pull requests"
+              Classes.selected="{Binding Filter, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static pr:PullRequestFilter.Closed}}"
+              Command="{Binding SelectFilterCommand}" CommandParameter="{x:Static pr:PullRequestFilter.Closed}" />
+    </WrapPanel>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+      <StackPanel Margin="6,2,6,14">
+
+        <!-- Not on GitHub -->
+        <StackPanel Margin="6,10,6,0" Spacing="8" IsVisible="{Binding !IsLinked}">
+          <controls:StrokeIcon Data="{StaticResource Icon.PullRequest}" Size="22" HorizontalAlignment="Left" Foreground="{DynamicResource Brush.TextMuted}" />
+          <TextBlock Classes="muted" TextWrapping="Wrap"
+                     Text="This folder is not on GitHub. Publish it or clone a repository from Git Changes to see its pull requests here." />
+        </StackPanel>
+
+        <!-- Loading, errors, sign-in, nothing found -->
+        <Grid ColumnDefinitions="Auto,*" Margin="6,8,6,0" IsVisible="{Binding IsLoading}">
+          <ProgressBar IsIndeterminate="True" Width="56" MinWidth="56" Margin="0,0,10,0" VerticalAlignment="Center" />
+          <TextBlock Grid.Column="1" Classes="muted small" VerticalAlignment="Center" Text="Loading pull requests…" />
+        </Grid>
+        <Grid ColumnDefinitions="Auto,*" Margin="6,8,6,0" IsVisible="{Binding ErrorText, Converter={x:Static ObjectConverters.IsNotNull}}">
+          <controls:StrokeIcon Data="{StaticResource Icon.Error}" Size="15" Margin="0,1,8,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush.Error}" />
+          <TextBlock Grid.Column="1" Classes="small" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Error}" Text="{Binding ErrorText}" />
+        </Grid>
+        <StackPanel Margin="6,8,6,0" Spacing="10" IsVisible="{Binding NeedsSignIn}">
+          <TextBlock Classes="muted" TextWrapping="Wrap" Text="Sign in to GitHub to see the pull requests you opened or are asked to review." />
+          <Button Theme="{StaticResource AccentButton}" Height="38" HorizontalAlignment="Left" Padding="16,0" Content="Sign in to GitHub"
+                  Command="{Binding SignInCommand}" />
+        </StackPanel>
+        <TextBlock Classes="muted" Margin="6,8,6,0" TextWrapping="Wrap" Text="{Binding EmptyText}" IsVisible="{Binding IsEmpty}" />
+
+        <!-- The pull requests: tap one to open it. -->
+        <ItemsControl x:Name="PullRequestList" ItemsSource="{Binding Items}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="pr:PullRequestItemViewModel">
+              <Button Theme="{StaticResource ToolButton}" Padding="8,9" Margin="0,0,0,2" CornerRadius="8" MinHeight="58"
+                      HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top"
+                      ToolTip.Tip="{Binding Title}" Command="{Binding Open}" CommandParameter="{Binding}">
+                <Grid ColumnDefinitions="Auto,*">
+                  <controls:StrokeIcon Data="{StaticResource Icon.PullRequest}" Size="16" Margin="0,1,10,0" VerticalAlignment="Top"
+                                       Foreground="{Binding Converter={x:Static conv:ReviewConverters.ItemBrush}}" />
+                  <StackPanel Grid.Column="1" Spacing="4">
+                    <TextBlock Text="{Binding Title}" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource Brush.TextBright}"
+                               TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" />
+                    <Grid ColumnDefinitions="*,Auto">
+                      <TextBlock Classes="muted small" TextTrimming="CharacterEllipsis"><Run
+                        Text="{Binding NumberText}" /><Run Text=" · " /><Run Text="{Binding Author}" /><Run Text=" · " /><Run Text="{Binding Age}" /></TextBlock>
+                      <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" Margin="8,0,2,0" IsVisible="{Binding HasComments}"
+                                  ToolTip.Tip="Comments">
+                        <controls:StrokeIcon Data="{StaticResource Icon.Conversation}" Size="13" Foreground="{DynamicResource Brush.TextMuted}" />
+                        <TextBlock Classes="muted small" VerticalAlignment="Center" Text="{Binding CommentCount}" />
+                      </StackPanel>
+                    </Grid>
+                    <!-- The branch gives way to the tags when the window is narrow. -->
+                    <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                      <controls:StrokeIcon Data="{StaticResource Icon.Branch}" Size="12" Margin="0,0,6,0" Foreground="{DynamicResource Brush.TextMuted}" />
+                      <TextBlock Grid.Column="1" Classes="small mono" FontSize="11.5" Foreground="{DynamicResource Brush.TextSecondary}" VerticalAlignment="Center"
+                                 TextTrimming="CharacterEllipsis" Text="{Binding BranchText}" />
+                      <Border Grid.Column="2" Classes="tag" Margin="6,0,0,0" IsVisible="{Binding IsDraft}">
+                        <TextBlock Text="Draft" VerticalAlignment="Center" />
+                      </Border>
+                      <Border Grid.Column="3" Classes="tag review" Margin="6,0,0,0" IsVisible="{Binding IsReviewRequested}" ToolTip.Tip="You are asked to review it">
+                        <TextBlock Text="Review requested" VerticalAlignment="Center" />
+                      </Border>
+                    </Grid>
+                  </StackPanel>
+                </Grid>
+              </Button>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

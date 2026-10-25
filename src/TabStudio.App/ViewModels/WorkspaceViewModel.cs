@@ -124,6 +124,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         InitializeAgent();
         Documents.CollectionChanged += (_, _) => UpdateActiveProjects();
         InitializeActions(browser, notifications, appActivity);
+        InitializePullRequests();
     }
 
     /// <summary>Raised when the user closes the workspace to return to the start screen.</summary>
@@ -350,6 +351,9 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         _background?.Dispose();
         _background = null;
         _run?.Cancel();
+
+        // A session save still waiting would reach for the UI thread after the workspace is gone.
+        _sessionSave?.Cancel();
         DisposeDebugging();
         DisposeTests();
         _agent?.Dispose();
@@ -367,6 +371,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         _language?.Dispose();
         _language = null;
         DisposeActions();
+        DisposePullRequests();
         GitChanges.Dispose();
     }
 

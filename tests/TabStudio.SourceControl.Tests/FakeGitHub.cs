@@ -161,6 +161,11 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
             return Json(RepositoryJson(_repos[$"{Login}/{name}"]), HttpStatusCode.Created);
         }
 
+        if (HandleOutsideRepositories(method, path, query, body) is { } answer)
+        {
+            return answer;
+        }
+
         var parts = path.Split('/');
         if (parts.Length < 3 || parts[0] != "repos" || !_repos.TryGetValue($"{parts[1]}/{parts[2]}", out var repo))
         {
@@ -180,7 +185,7 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
 
         return (method, rest) switch
         {
-            ("GET", "") => Json(RepositoryJson(repo)),
+            ("GET", "") => Json(WithMergeSettings(repo, RepositoryJson(repo))),
             ("GET", "branches") => Json(new JsonArray([.. repo.Branches.OrderBy(b => b.Key, StringComparer.Ordinal).Select(b => (JsonNode)new JsonObject
             {
                 ["name"] = b.Key,
@@ -201,10 +206,8 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
             ("GET", _) when rest.StartsWith("compare/", StringComparison.Ordinal) => Compare(repo, rest["compare/".Length..]),
             ("GET", _) when rest.StartsWith("zipball/", StringComparison.Ordinal) => Archive(repo, rest["zipball/".Length..]),
             ("POST", "pulls") => CreatePullRequest(repo, body!),
-            ("GET", "pulls") => Json(new JsonArray([.. repo.PullRequests
-                .Where(p => !query.TryGetValue("head", out var head) || head == $"{repo.Owner}:{p.Head}")
-                .Select(p => PullRequestJson(repo, p))])),
-            _ => Error(HttpStatusCode.NotFound, "Not Found"),
+            ("GET", "pulls") => ListPullRequests(repo, query),
+            _ => HandlePullRequests(repo, method, rest, query, body) ?? Error(HttpStatusCode.NotFound, "Not Found"),
         };
     }
 
@@ -368,7 +371,7 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
             (0, _) => "behind",
             _ => "diverged",
         };
-        return Json(new JsonObject { ["status"] = status, ["ahead_by"] = ahead, ["behind_by"] = behind });
+        return Json(new JsonObject { ["status"] = status, ["ahead_by"] = ahead, ["behind_by"] = behind, ["merge_base_commit"] = new JsonObject { ["sha"] = MergeBase(repo, baseSha, headSha) } });
     }
 
     private HttpResponseMessage Archive(Repo repo, string reference)
@@ -398,18 +401,6 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
         }
 
         return new HttpResponseMessage(HttpStatusCode.OK) { Content = new ByteArrayContent(stream.ToArray()) };
-    }
-
-    private static HttpResponseMessage CreatePullRequest(Repo repo, JsonNode body)
-    {
-        var pull = new PullRequest(repo.PullRequests.Count + 1, body["title"]!.GetValue<string>(), body["head"]!.GetValue<string>(), body["base"]!.GetValue<string>(), body["draft"]?.GetValue<bool>() ?? false);
-        if (!repo.Branches.ContainsKey(pull.Head) || !repo.Branches.ContainsKey(pull.Base))
-        {
-            return Error(HttpStatusCode.UnprocessableEntity, "Validation Failed");
-        }
-
-        repo.PullRequests.Add(pull);
-        return Json(PullRequestJson(repo, pull), HttpStatusCode.Created);
     }
 
     private static string StoreBlob(Repo repo, byte[] content)
@@ -522,17 +513,6 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
         ["parents"] = new JsonArray([.. commit.Parents.Select(p => (JsonNode)new JsonObject { ["sha"] = p })]),
     };
 
-    private static JsonObject PullRequestJson(Repo repo, PullRequest pull) => new()
-    {
-        ["number"] = pull.Number,
-        ["title"] = pull.Title,
-        ["state"] = "open",
-        ["head"] = new JsonObject { ["ref"] = pull.Head },
-        ["base"] = new JsonObject { ["ref"] = pull.Base },
-        ["html_url"] = $"https://github.test/{repo.Owner}/{repo.Name}/pull/{pull.Number}",
-        ["draft"] = pull.Draft,
-    };
-
     private static Dictionary<string, string> Query(Uri uri) =>
         uri.Query.TrimStart('?').Split('&', StringSplitOptions.RemoveEmptyEntries)
             .Select(p => p.Split('=', 2))
@@ -547,8 +527,6 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
         Json(new JsonObject { ["message"] = message, ["documentation_url"] = "https://docs.github.com/rest" }, status);
 
     private sealed record Commit(string Sha, string Tree, string Message, IReadOnlyList<string> Parents);
-
-    private sealed record PullRequest(int Number, string Title, string Head, string Base, bool Draft);
 
     private sealed class Repo(string owner, string name, string defaultBranch, bool isPrivate)
     {
@@ -569,5 +547,7 @@ internal sealed partial class FakeGitHub : HttpMessageHandler
         public Dictionary<string, string> Branches { get; } = new(StringComparer.Ordinal);
 
         public List<PullRequest> PullRequests { get; } = [];
+
+        public MergeSettingsRecord Settings { get; set; } = new(AllowMerge: true, AllowSquash: true, AllowRebase: true, DeleteBranchOnMerge: false);
     }
 }

@@ -100,8 +100,8 @@ public sealed class BreakpointMargin : AbstractMargin
         foreach (var line in textView.VisualLines)
         {
             var number = line.FirstDocumentLine.LineNumber;
-            var top = line.GetTextLineVisualYPosition(line.TextLines[0], VisualYPosition.LineTop) - textView.VerticalOffset;
-            var bottom = line.GetTextLineVisualYPosition(line.TextLines[0], VisualYPosition.LineBottom) - textView.VerticalOffset;
+            var top = line.GetTextLineVisualYPosition(line.TextLines[0], VisualYPosition.TextTop) - textView.VerticalOffset;
+            var bottom = line.GetTextLineVisualYPosition(line.TextLines[0], VisualYPosition.TextBottom) - textView.VerticalOffset;
             var center = new Point(Bounds.Width / 2, (top + bottom) / 2);
             var radius = Math.Min(7, ((bottom - top) / 2) - 2);
 

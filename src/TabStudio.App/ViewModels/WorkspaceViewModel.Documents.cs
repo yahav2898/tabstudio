@@ -373,6 +373,11 @@ public sealed partial class WorkspaceViewModel
 
     private void ScheduleSessionSave()
     {
+        if (_disposed)
+        {
+            return;
+        }
+
         _sessionSave?.Cancel();
         _sessionSave?.Dispose();
         _sessionSave = new CancellationTokenSource();

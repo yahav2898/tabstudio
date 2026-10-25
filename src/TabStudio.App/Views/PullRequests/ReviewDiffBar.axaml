@@ -1,0 +1,62 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:pr="using:TabStudio.App.ViewModels.PullRequests"
+             x:Class="TabStudio.App.Views.PullRequests.ReviewDiffBar"
+             x:DataType="pr:FileReviewViewModel">
+
+  <!-- Under a pull request file's diff header: the pull request, the file's conversations and drafts, and the review's actions. -->
+  <Border MinHeight="42" Padding="6,4,8,4" Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+    <Grid ColumnDefinitions="Auto,*,Auto">
+      <StackPanel Orientation="Horizontal" Spacing="4">
+        <Button Theme="{StaticResource ToolButton}" Height="34" MinHeight="34" Padding="8,0" ToolTip.Tip="Show the pull request"
+                Command="{Binding ShowPullRequestCommand}">
+          <StackPanel Orientation="Horizontal" Spacing="7">
+            <controls:StrokeIcon Data="{StaticResource Icon.PullRequest}" Size="15" Foreground="{DynamicResource Brush.AccentText}" />
+            <TextBlock MaxWidth="300" TextTrimming="CharacterEllipsis" FontSize="12.5" VerticalAlignment="Center"><Run
+              Text="{Binding PullRequest.NumberText}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" /><Run
+              Text=" " /><Run Text="{Binding PullRequest.Title}" /></TextBlock>
+          </StackPanel>
+        </Button>
+        <Border Classes="toolbarSeparator" />
+        <StackPanel Orientation="Horizontal" Spacing="6" Margin="6,0" VerticalAlignment="Center">
+          <controls:StrokeIcon Data="{StaticResource Icon.Conversation}" Size="14" Foreground="{DynamicResource Brush.Review.Thread}" />
+          <TextBlock Classes="small" Text="{Binding ThreadsText}" Foreground="{DynamicResource Brush.TextSecondary}" VerticalAlignment="Center" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="6" Margin="6,0" VerticalAlignment="Center"
+                    IsVisible="{Binding DraftsText, Converter={x:Static ObjectConverters.IsNotNull}}">
+          <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="14" Foreground="{DynamicResource Brush.Review.Claude}" />
+          <TextBlock Classes="small" Text="{Binding DraftsText}" Foreground="{DynamicResource Brush.Review.Claude}" VerticalAlignment="Center" />
+        </StackPanel>
+      </StackPanel>
+
+      <Panel Grid.Column="1" Margin="12,0">
+        <TextBlock Classes="muted small" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Text="{Binding CommentHint}"
+                   IsVisible="{Binding !HasNotice}" />
+        <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center" IsVisible="{Binding HasNotice}">
+          <controls:StrokeIcon Data="{StaticResource Icon.Info}" Size="14" Foreground="{DynamicResource Brush.Warning}" />
+          <TextBlock Classes="small" Foreground="{DynamicResource Brush.Warning}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Text="{Binding NoticeText}" />
+        </StackPanel>
+      </Panel>
+
+      <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6">
+        <Button x:Name="AddCommentButton" Theme="{StaticResource SecondaryButton}" Height="34" Padding="10,0" IsVisible="{Binding CanComment}"
+                ToolTip.Tip="Comment on the line at the cursor, or the selected lines (Ctrl+Shift+Enter)">
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <controls:StrokeIcon Data="{StaticResource Icon.Plus}" Size="14" />
+            <TextBlock Text="Add Comment" VerticalAlignment="Center" FontSize="12.5" />
+          </StackPanel>
+        </Button>
+        <Button Theme="{StaticResource AccentButton}" Height="34" Padding="12,0" Command="{Binding FinishReviewCommand}"
+                IsVisible="{Binding PullRequest.IsOpen}" ToolTip.Tip="Comment, approve or request changes, sending your pending comments">
+          <StackPanel Orientation="Horizontal" Spacing="7">
+            <TextBlock Text="Finish Review" VerticalAlignment="Center" FontSize="12.5" />
+            <Border Classes="pill" Background="#33000000" IsVisible="{Binding PullRequest.HasPendingComments}">
+              <TextBlock Text="{Binding PullRequest.PendingCount}" Foreground="{DynamicResource Brush.OnAccent}" VerticalAlignment="Center" />
+            </Border>
+          </StackPanel>
+        </Button>
+      </StackPanel>
+    </Grid>
+  </Border>
+</UserControl>

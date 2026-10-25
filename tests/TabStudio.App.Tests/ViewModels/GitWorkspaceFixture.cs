@@ -30,6 +30,17 @@ internal sealed class GitWorkspaceFixture : IDisposable
             notifications: notifications, appActivity: appActivity);
     }
 
+    /// <summary>A fixture whose workspace sends its requests to Claude through the test's own client.</summary>
+    /// <param name="agentHttp">Where the workspace sends requests to Claude, such as <see cref="FakeClaude"/>.</param>
+    public GitWorkspaceFixture(HttpClient agentHttp)
+        : this()
+    {
+        Workspace.Dispose();
+        var device = new DefaultDeviceStatus(new DeviceInfo(8L * 1024 * 1024 * 1024, 8, IsLowRamDevice: false));
+        Workspace = new WorkspaceViewModel(
+            new CompilerServices(Paths), device, DeviceProfile.For(device.Device), new AvaloniaUiDispatcher(), new SessionStore(Paths), Paths, AccountView, Browser) { AgentHttp = agentHttp };
+    }
+
     public FakeGitHub GitHub { get; } = new();
 
     public FakeBrowser Browser { get; } = new();

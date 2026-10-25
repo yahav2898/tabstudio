@@ -22,7 +22,7 @@ public sealed partial class WorkspaceViewModel : ISourceControlHost
     {
         ArgumentNullException.ThrowIfNull(comparison);
         var document = DocumentViewModel.ForComparison(comparison, _profile);
-        var earlier = Documents.FirstOrDefault(d => d.Comparison?.FilePath == comparison.FilePath);
+        var earlier = Documents.FirstOrDefault(d => d.Comparison?.FilePath == comparison.FilePath && !d.IsReview);
         var index = earlier is not null ? Documents.IndexOf(earlier)
             : ActiveDocument is null ? Documents.Count
             : Documents.IndexOf(ActiveDocument) + 1;
