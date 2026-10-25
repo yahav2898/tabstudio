@@ -91,7 +91,9 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     /// <param name="gitHubAccount">The app's GitHub account; without it, the Git Changes window starts signed out.</param>
     /// <param name="browser">Opens web pages, such as GitHub's; the system browser when <see langword="null"/>.</param>
     /// <param name="webViews">Creates the web preview's embedded browser; none when <see langword="null"/>.</param>
-    public WorkspaceViewModel(CompilerServices compiler, IDeviceStatus device, DeviceProfile profile, IUiDispatcher ui, SessionStore sessions, AppPaths paths, GitHubAccountViewModel? gitHubAccount = null, IStoragePicker? browser = null, IWebViewFactory? webViews = null)
+    /// <param name="notifications">The system's notifications, for finished CI runs; none when <see langword="null"/>.</param>
+    /// <param name="appActivity">Whether the app is in the background, so CI polling rests; Avalonia's lifetime when <see langword="null"/>.</param>
+    public WorkspaceViewModel(CompilerServices compiler, IDeviceStatus device, DeviceProfile profile, IUiDispatcher ui, SessionStore sessions, AppPaths paths, GitHubAccountViewModel? gitHubAccount = null, IStoragePicker? browser = null, IWebViewFactory? webViews = null, INotifications? notifications = null, IAppActivity? appActivity = null)
     {
         ArgumentNullException.ThrowIfNull(compiler);
         ArgumentNullException.ThrowIfNull(device);
@@ -120,6 +122,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         InitializeDebugging();
         InitializeTests();
         InitializeAgent();
+        InitializeActions(browser, notifications, appActivity);
     }
 
     /// <summary>Raised when the user closes the workspace to return to the start screen.</summary>
@@ -355,6 +358,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         Output.EndInput();
         _language?.Dispose();
         _language = null;
+        DisposeActions();
         GitChanges.Dispose();
     }
 

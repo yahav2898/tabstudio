@@ -1,0 +1,142 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:conv="using:TabStudio.App.Converters"
+             xmlns:actions="using:TabStudio.App.ViewModels.Actions"
+             x:Class="TabStudio.App.Views.Actions.RunDetailsView"
+             x:DataType="actions:RunDetailsViewModel">
+
+  <UserControl.Styles>
+    <!-- The run's actions wrap two to a row in the narrow side bar. -->
+    <Style Selector="WrapPanel.runActions > Button">
+      <Setter Property="Height" Value="38" />
+      <Setter Property="MinHeight" Value="38" />
+      <Setter Property="Padding" Value="10,0" />
+      <Setter Property="Margin" Value="0,0,6,6" />
+      <Setter Property="FontSize" Value="12.5" />
+    </Style>
+  </UserControl.Styles>
+
+  <!-- A run's details: what ran, its jobs and steps, and re-run, cancel and Open on GitHub. -->
+  <DockPanel>
+    <Border DockPanel.Dock="Top" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="4,4,8,6">
+      <StackPanel Spacing="6">
+        <Button Theme="{StaticResource ToolButton}" Height="36" MinHeight="36" Padding="8,0" HorizontalAlignment="Left"
+                ToolTip.Tip="Back to the runs" Command="{Binding BackCommand}">
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <controls:StrokeIcon Data="{StaticResource Icon.Back}" Size="15" />
+            <TextBlock Text="Runs" VerticalAlignment="Center" FontSize="12.5" />
+          </StackPanel>
+        </Button>
+
+        <Grid ColumnDefinitions="Auto,*" Margin="8,0,0,0">
+          <controls:StrokeIcon Size="20" StrokeThickness="2" Margin="0,1,10,0" VerticalAlignment="Top"
+                               Data="{Binding Visual, Converter={x:Static conv:ActionsConverters.StateIcon}}"
+                               Foreground="{Binding Visual, Converter={x:Static conv:ActionsConverters.StateBrush}}"
+                               Classes.spinning="{Binding Visual, Converter={x:Static conv:ActionsConverters.IsSpinning}}" />
+          <StackPanel Grid.Column="1" Spacing="3">
+            <TextBlock Classes="h2" Text="{Binding Title}" TextWrapping="Wrap" MaxLines="3" TextTrimming="CharacterEllipsis" />
+            <TextBlock Classes="small" Foreground="{DynamicResource Brush.TextSecondary}" Text="{Binding Header}" TextTrimming="CharacterEllipsis" />
+            <TextBlock Classes="muted small" Text="{Binding Meta}" TextTrimming="CharacterEllipsis" />
+            <TextBlock Classes="muted small" Text="{Binding StateText}" TextTrimming="CharacterEllipsis" />
+          </StackPanel>
+        </Grid>
+
+        <WrapPanel Classes="runActions" Margin="8,4,0,0">
+          <Button Theme="{StaticResource SecondaryButton}" Command="{Binding RerunCommand}" ToolTip.Tip="Run every job again, as a new attempt">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <controls:StrokeIcon Data="{StaticResource Icon.Rerun}" Size="14" />
+              <TextBlock Text="Re-run all jobs" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+          <Button Theme="{StaticResource SecondaryButton}" Command="{Binding RerunFailedJobsCommand}" ToolTip.Tip="Run the failed jobs again, and the jobs that need them">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <controls:StrokeIcon Data="{StaticResource Icon.Rerun}" Size="14" Foreground="{DynamicResource Brush.Run.Failed}" />
+              <TextBlock Text="Re-run failed jobs" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+          <Button Theme="{StaticResource SecondaryButton}" Command="{Binding CancelCommand}" ToolTip.Tip="Stop the run">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <controls:StrokeIcon Data="{StaticResource Icon.CancelRun}" Size="14" />
+              <TextBlock Text="Cancel run" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+          <Button Theme="{StaticResource SecondaryButton}" Command="{Binding OpenOnGitHubCommand}" ToolTip.Tip="Open the run on GitHub">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <controls:StrokeIcon Data="{StaticResource Icon.External}" Size="13" />
+              <TextBlock Text="Open on GitHub" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+        </WrapPanel>
+      </StackPanel>
+    </Border>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+      <StackPanel Margin="8,8,10,14">
+        <!-- What happened, and what went wrong -->
+        <Grid ColumnDefinitions="Auto,*" Margin="4,0,0,8" IsVisible="{Binding InfoText, Converter={x:Static ObjectConverters.IsNotNull}}">
+          <controls:StrokeIcon Data="{StaticResource Icon.Check}" Size="15" Margin="0,1,8,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush.Success}" />
+          <TextBlock Grid.Column="1" Classes="small" TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextSecondary}" Text="{Binding InfoText}" />
+        </Grid>
+        <Grid ColumnDefinitions="Auto,*" Margin="4,0,0,8" IsVisible="{Binding ErrorText, Converter={x:Static ObjectConverters.IsNotNull}}">
+          <controls:StrokeIcon Data="{StaticResource Icon.Error}" Size="15" Margin="0,1,8,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush.Error}" />
+          <TextBlock Grid.Column="1" Classes="small" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Error}" Text="{Binding ErrorText}" />
+        </Grid>
+        <ProgressBar IsIndeterminate="True" Width="120" Margin="4,8" HorizontalAlignment="Left" IsVisible="{Binding IsLoading}" />
+
+        <TextBlock Classes="h2" Text="Jobs" Margin="4,0,0,4" />
+        <TextBlock Classes="muted small" Margin="4,0,0,6" TextWrapping="Wrap" Text="Tap a job or a step to open its log." />
+        <ItemsControl ItemsSource="{Binding Jobs}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="actions:JobItemViewModel">
+              <StackPanel Margin="0,0,0,2">
+                <Grid ColumnDefinitions="30,*">
+                  <Button Theme="{StaticResource ToolButton}" Width="30" MinWidth="30" Height="42" MinHeight="42" Padding="0"
+                          ToolTip.Tip="Show or hide the steps" Command="{Binding ToggleExpandedCommand}" IsVisible="{Binding HasSteps}">
+                    <Panel>
+                      <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="14" IsVisible="{Binding IsExpanded}" />
+                      <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="14" IsVisible="{Binding !IsExpanded}" />
+                    </Panel>
+                  </Button>
+                  <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Height="42" MinHeight="42" Padding="6,0"
+                          HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                          ToolTip.Tip="Open the job's log" Command="{Binding OpenLogCommand}">
+                    <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                      <controls:StrokeIcon Size="16" StrokeThickness="2" Margin="0,0,9,0"
+                                           Data="{Binding Visual, Converter={x:Static conv:ActionsConverters.StateIcon}}"
+                                           Foreground="{Binding Visual, Converter={x:Static conv:ActionsConverters.StateBrush}}"
+                                           Classes.spinning="{Binding Visual, Converter={x:Static conv:ActionsConverters.IsSpinning}}" />
+                      <TextBlock Grid.Column="1" Text="{Binding Name}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}"
+                                 VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                      <TextBlock Grid.Column="2" Classes="muted small" Text="{Binding DurationText}" Margin="8,0,6,0" VerticalAlignment="Center" />
+                      <controls:StrokeIcon Grid.Column="3" Data="{StaticResource Icon.Log}" Size="14" Foreground="{DynamicResource Brush.TextMuted}" />
+                    </Grid>
+                  </Button>
+                </Grid>
+                <ItemsControl ItemsSource="{Binding Steps}" Margin="30,0,0,4" IsVisible="{Binding IsExpanded}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="actions:StepItemViewModel">
+                      <Button Theme="{StaticResource ToolButton}" Height="34" MinHeight="34" Padding="6,0"
+                              HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                              ToolTip.Tip="Open the log at this step" Command="{Binding OpenLogCommand}">
+                        <Grid ColumnDefinitions="Auto,26,*,Auto">
+                          <controls:StrokeIcon Size="14" StrokeThickness="2" Margin="0,0,8,0"
+                                               Data="{Binding Visual, Converter={x:Static conv:ActionsConverters.StateIcon}}"
+                                               Foreground="{Binding Visual, Converter={x:Static conv:ActionsConverters.StateBrush}}"
+                                               Classes.spinning="{Binding Visual, Converter={x:Static conv:ActionsConverters.IsSpinning}}" />
+                          <TextBlock Grid.Column="1" Classes="muted small" Text="{Binding Number}" VerticalAlignment="Center" />
+                          <TextBlock Grid.Column="2" FontSize="12.5" Text="{Binding Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                          <TextBlock Grid.Column="3" Classes="muted small" Text="{Binding DurationText}" Margin="8,0,0,0" VerticalAlignment="Center" />
+                        </Grid>
+                      </Button>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

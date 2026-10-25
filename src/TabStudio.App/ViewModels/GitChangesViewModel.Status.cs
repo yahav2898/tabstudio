@@ -167,6 +167,7 @@ public sealed partial class GitChangesViewModel
     /// <summary>Shows a status: the branch, incoming commits, changes and conflicts, and the Solution Explorer's glyphs.</summary>
     private void Apply(SyncStatus? status)
     {
+        Link = status?.Link;
         var selected = Changes.Where(c => c.IsSelected).Select(c => c.RelativePath).ToHashSet(StringComparer.Ordinal);
         foreach (var change in Changes)
         {

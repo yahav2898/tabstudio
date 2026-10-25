@@ -130,6 +130,11 @@ public sealed partial class WorkspaceViewModel : IAgentWorkspaceHost
             text.Append(CultureInfo.InvariantCulture, $"Project: {project}.\n");
         }
 
+        if (ErrorList.CiSourceOf(diagnostic) is { } ci)
+        {
+            text.Append(CultureInfo.InvariantCulture, $"CI reported it: the check \"{ci.CheckName}\" on commit {ci.ShortSha}. The file may have changed since that commit.\n");
+        }
+
         return text.ToString().TrimEnd();
     }
 

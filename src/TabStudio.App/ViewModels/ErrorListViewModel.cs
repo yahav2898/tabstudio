@@ -8,7 +8,7 @@ namespace TabStudio.App.ViewModels;
 
 /// <summary>One row of the Error List.</summary>
 /// <param name="Diagnostic">The diagnostic the row shows.</param>
-public sealed record ErrorItemViewModel(BuildDiagnostic Diagnostic)
+public sealed partial record ErrorItemViewModel(BuildDiagnostic Diagnostic)
 {
     /// <summary>The diagnostic id, such as CS0103.</summary>
     public string Code => Diagnostic.Id;
@@ -247,7 +247,8 @@ public sealed partial class ErrorListViewModel : ObservableObject
 
     private void Refresh()
     {
-        var all = AllDiagnostics.DistinctBy(d => (d.Id, d.Location?.FilePath, d.Location?.Start, d.Message)).ToList();
+        var local = AllDiagnostics.ToList();
+        var all = local.Concat(VisibleCiDiagnostics(local)).DistinctBy(d => (d.Id, d.Location?.FilePath, d.Location?.Start, d.Message)).ToList();
         ErrorCount = all.Count(d => d.Severity == DiagnosticSeverityLevel.Error);
         WarningCount = all.Count(d => d.Severity == DiagnosticSeverityLevel.Warning);
         MessageCount = all.Count(d => d.Severity <= DiagnosticSeverityLevel.Info);
@@ -264,7 +265,7 @@ public sealed partial class ErrorListViewModel : ObservableObject
             .OrderByDescending(d => d.Severity)
             .ThenBy(d => d.Location?.FilePath, StringComparer.Ordinal)
             .ThenBy(d => d.Location?.Start ?? 0)
-            .Select(d => new ErrorItemViewModel(d))
+            .Select(CreateItem)
             .ToList();
 
         if (!visible.SequenceEqual(Items))

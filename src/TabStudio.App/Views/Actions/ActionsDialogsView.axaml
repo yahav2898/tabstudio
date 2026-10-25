@@ -1,0 +1,87 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:actions="using:TabStudio.App.ViewModels.Actions"
+             xmlns:sys="using:System"
+             x:Class="TabStudio.App.Views.Actions.ActionsDialogsView"
+             x:DataType="actions:ActionsViewModel">
+
+  <!-- The GitHub Actions window's dialog, drawn over the IDE: Run workflow, with a control for each input. -->
+  <Panel Background="#99000000" IsVisible="{Binding IsDispatchFormOpen}">
+    <Border Width="500" MaxHeight="660" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="22" CornerRadius="12"
+            Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
+            BoxShadow="0 12 32 0 #66000000">
+      <DockPanel DataContext="{Binding DispatchForm}" x:DataType="actions:DispatchFormViewModel">
+        <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,14">
+          <Grid ColumnDefinitions="Auto,*">
+            <controls:StrokeIcon Data="{StaticResource Icon.Workflow}" Size="18" Margin="0,0,10,0" Foreground="{DynamicResource Brush.AccentText}" />
+            <TextBlock Grid.Column="1" Classes="h2" FontSize="15" Text="{Binding Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+          </Grid>
+          <TextBlock Classes="muted small" Text="{Binding Subtitle}" TextTrimming="CharacterEllipsis" />
+        </StackPanel>
+
+        <StackPanel DockPanel.Dock="Bottom" Spacing="10" Margin="0,14,0,0">
+          <Grid ColumnDefinitions="Auto,*" IsVisible="{Binding ErrorText, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <controls:StrokeIcon Data="{StaticResource Icon.Error}" Size="15" Margin="0,1,8,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush.Error}" />
+            <TextBlock Grid.Column="1" Classes="small" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Error}" Text="{Binding ErrorText}" />
+          </Grid>
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+            <ProgressBar IsIndeterminate="True" Width="56" MinWidth="56" VerticalAlignment="Center" IsVisible="{Binding IsBusy}" />
+            <Button Theme="{StaticResource SecondaryButton}" Height="40" Padding="18,0" Content="Cancel"
+                    Command="{Binding $parent[UserControl].((actions:ActionsViewModel)DataContext).CloseDispatchFormCommand}" />
+            <Button x:Name="RunButton" Theme="{StaticResource AccentButton}" Height="40" Padding="18,0" Command="{Binding RunCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="12" />
+                <TextBlock Text="Run workflow" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+          </StackPanel>
+        </StackPanel>
+
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+          <StackPanel Spacing="14" Margin="0,0,6,0">
+            <StackPanel Spacing="6">
+              <TextBlock Classes="label" Text="Use workflow from" />
+              <ComboBox x:Name="BranchBox" HorizontalAlignment="Stretch" MinHeight="40" ItemsSource="{Binding Branches}" SelectedItem="{Binding Branch}">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate x:DataType="sys:String">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                      <controls:StrokeIcon Data="{StaticResource Icon.Branch}" Size="14" Foreground="{DynamicResource Brush.TextMuted}" />
+                      <TextBlock Text="{Binding}" VerticalAlignment="Center" />
+                    </StackPanel>
+                  </DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
+            </StackPanel>
+
+            <TextBlock Classes="muted small" TextWrapping="Wrap" IsVisible="{Binding !HasInputs}"
+                       Text="This workflow takes no inputs." />
+
+            <ItemsControl ItemsSource="{Binding Inputs}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <StackPanel Spacing="14" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="actions:DispatchInputViewModel">
+                  <StackPanel Spacing="5">
+                    <TextBlock Classes="label"><Run Text="{Binding Name}" FontFamily="{DynamicResource CodeFont}" /><Run
+                      Text="{Binding RequiredMark}" Foreground="{DynamicResource Brush.Error}" /></TextBlock>
+                    <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{Binding Description}" IsVisible="{Binding HasDescription}" />
+                    <TextBox MinHeight="38" Text="{Binding Text}" Watermark="{Binding Watermark}" IsVisible="{Binding IsText}" />
+                    <ToggleSwitch IsChecked="{Binding IsOn}" OnContent="true" OffContent="false" IsVisible="{Binding IsBoolean}" />
+                    <ComboBox HorizontalAlignment="Stretch" MinHeight="38" ItemsSource="{Binding Options}" SelectedItem="{Binding SelectedOption}"
+                              IsVisible="{Binding IsChoice}" />
+                    <TextBlock Classes="small" Foreground="{DynamicResource Brush.Error}" Text="{Binding ErrorText}"
+                               IsVisible="{Binding ErrorText, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                  </StackPanel>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </ScrollViewer>
+      </DockPanel>
+    </Border>
+  </Panel>
+</UserControl>

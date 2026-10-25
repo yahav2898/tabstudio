@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:conv="using:TabStudio.App.Converters"
+             xmlns:actions="using:TabStudio.App.ViewModels.Actions"
+             x:Class="TabStudio.App.Views.Actions.RunNoticeView"
+             x:DataType="actions:ActionsViewModel"
+             IsVisible="{Binding HasNotice}">
+
+  <!-- A run finished: a notice over the editor; tap it for the run's details. It goes away on its own. -->
+  <Border Width="380" Padding="4" CornerRadius="12" Background="{DynamicResource Brush.Popup}"
+          BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1" BoxShadow="0 10 28 0 #66000000">
+    <Grid ColumnDefinitions="*,Auto">
+      <Button Theme="{StaticResource ToolButton}" MinHeight="54" Padding="10,6" CornerRadius="9"
+              HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+              ToolTip.Tip="Show the run's jobs and steps" Command="{Binding OpenNoticeCommand}">
+        <Grid ColumnDefinitions="Auto,*" DataContext="{Binding Notice}" x:DataType="actions:RunNoticeViewModel">
+          <Border Width="30" Height="30" CornerRadius="15" Margin="0,0,10,0"
+                  Background="{Binding Visual, Converter={x:Static conv:ActionsConverters.StateSoftBrush}}">
+            <controls:StrokeIcon Size="18" StrokeThickness="2" HorizontalAlignment="Center"
+                                 Data="{Binding Visual, Converter={x:Static conv:ActionsConverters.StateIcon}}"
+                                 Foreground="{Binding Visual, Converter={x:Static conv:ActionsConverters.StateBrush}}" />
+          </Border>
+          <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+            <TextBlock Text="{Binding Title}" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
+            <TextBlock Classes="muted small" Text="{Binding Text}" TextTrimming="CharacterEllipsis" />
+          </StackPanel>
+        </Grid>
+      </Button>
+      <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Classes="iconButton" VerticalAlignment="Top" Margin="2,2,2,0"
+              ToolTip.Tip="Dismiss" Command="{Binding DismissNoticeCommand}">
+        <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="12" Foreground="{DynamicResource Brush.TextMuted}" />
+      </Button>
+    </Grid>
+  </Border>
+</UserControl>

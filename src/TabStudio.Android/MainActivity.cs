@@ -1,4 +1,5 @@
 using Android.App;
+using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Views;
@@ -51,9 +52,15 @@ public sealed class MainActivity : AvaloniaMainActivity<TabStudioApplication>
     private const string LogTag = "TabStudio";
     private static readonly TimeSpan SelfTestTimeout = TimeSpan.FromMinutes(6);
 
+    // The app outlives an activity that Android recreates: its notifications follow whichever activity is current.
+    private static MainActivity? _current;
+    private static AndroidNotifications? _notifications;
+
     /// <inheritdoc />
     protected override void OnCreate(Bundle? savedInstanceState)
     {
+        _current = this;
+
         // Before base.OnCreate: shows the splash screen, then switches to the app theme.
         AndroidXSplashScreen.InstallSplashScreen(this);
         base.OnCreate(savedInstanceState);
@@ -62,6 +69,29 @@ public sealed class MainActivity : AvaloniaMainActivity<TabStudioApplication>
         {
             Dispatcher.UIThread.Post(() => _ = RunSelfTestAsync());
         }
+
+        // Started from a tapped notification: open the run it is about.
+        _notifications?.HandleIntent(Intent);
+    }
+
+    /// <inheritdoc />
+    protected override void OnNewIntent(Intent? intent)
+    {
+        base.OnNewIntent(intent);
+
+        // A tapped notification brings the running activity back with the run it is about.
+        _notifications?.HandleIntent(intent);
+    }
+
+    /// <inheritdoc />
+    protected override void OnDestroy()
+    {
+        if (ReferenceEquals(_current, this))
+        {
+            _current = null;
+        }
+
+        base.OnDestroy();
     }
 
     /// <inheritdoc />
@@ -69,6 +99,7 @@ public sealed class MainActivity : AvaloniaMainActivity<TabStudioApplication>
     {
         var context = ApplicationContext!;
         var dataDirectory = Path.Combine(context.FilesDir!.AbsolutePath, "TabStudio");
+        var notifications = _notifications ??= new AndroidNotifications(context, () => _current);
         return base.CustomizeAppBuilder(builder)
             .WithInterFont()
             .AfterSetup(b => ((TabStudioApplication)b.Instance!).UseDataDirectory(dataDirectory))
@@ -76,6 +107,7 @@ public sealed class MainActivity : AvaloniaMainActivity<TabStudioApplication>
             {
                 services.AddSingleton<IDeviceStatus>(_ => new AndroidDeviceStatus(context));
                 services.AddSingleton<IWebViewFactory>(_ => new AndroidWebViewFactory(() => this));
+                services.AddSingleton<INotifications>(notifications);
             });
     }
 

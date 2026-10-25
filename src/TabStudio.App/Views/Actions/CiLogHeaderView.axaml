@@ -1,0 +1,104 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:conv="using:TabStudio.App.Converters"
+             xmlns:actions="using:TabStudio.App.ViewModels.Actions"
+             x:Class="TabStudio.App.Views.Actions.CiLogHeaderView"
+             x:DataType="actions:CiLogViewModel">
+
+  <!-- Above a job's log: the job, its run, and the log's tools. -->
+  <Border Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+    <StackPanel>
+      <Grid ColumnDefinitions="Auto,*,Auto" Height="46" Margin="12,0,4,0">
+        <controls:StrokeIcon Size="17" StrokeThickness="2" Margin="0,0,10,0"
+                             Data="{Binding Visual, Converter={x:Static conv:ActionsConverters.StateIcon}}"
+                             Foreground="{Binding Visual, Converter={x:Static conv:ActionsConverters.StateBrush}}"
+                             Classes.spinning="{Binding Visual, Converter={x:Static conv:ActionsConverters.IsSpinning}}" />
+        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1">
+          <TextBlock Text="{Binding JobName}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
+          <TextBlock Classes="muted small" TextTrimming="CharacterEllipsis"><Run
+            Text="{Binding RunText}" /><Run Text=" · " /><Run Text="{Binding StateText}" /></TextBlock>
+        </StackPanel>
+
+        <!-- On a narrow tab the tools scroll sideways rather than squeeze the job's name. -->
+        <ScrollViewer Grid.Column="2" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled" Margin="8,0,0,0">
+          <StackPanel Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
+            <Panel Margin="0,0,6,0" VerticalAlignment="Center" IsVisible="{Binding HasLog}">
+              <Border Classes="pill" Background="{DynamicResource Brush.Run.FailedSoft}" IsVisible="{Binding HasErrors}">
+                <TextBlock Text="{Binding ErrorCountText}" VerticalAlignment="Center" Foreground="{DynamicResource Brush.Run.Failed}" />
+              </Border>
+              <Border Classes="pill" IsVisible="{Binding !HasErrors}">
+                <TextBlock Text="{Binding ErrorCountText}" VerticalAlignment="Center" />
+              </Border>
+            </Panel>
+            <Button Classes="iconButton"Theme="{StaticResource ToolButton}" ToolTip.Tip="Previous Error (Shift+F8)"
+                    IsEnabled="{Binding HasErrors}" Click="OnPreviousErrorClick">
+              <controls:StrokeIcon Data="{StaticResource Icon.PreviousError}" Size="16" />
+            </Button>
+            <Button x:Name="NextErrorButton" Theme="{StaticResource ToolButton}" Height="36" MinHeight="36" Padding="10,0"
+                    ToolTip.Tip="Next Error (F8)" IsEnabled="{Binding HasErrors}" Click="OnNextErrorClick">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <controls:StrokeIcon Data="{StaticResource Icon.NextError}" Size="16" />
+                <TextBlock Text="Next error" VerticalAlignment="Center" FontSize="12.5" />
+              </StackPanel>
+            </Button>
+            <Border Classes="toolbarSeparator" />
+            <Button Classes="iconButton"Theme="{StaticResource ToolButton}" ToolTip.Tip="Show Timestamps"
+                    Classes.selected="{Binding ShowTimestamps}" Command="{Binding ToggleTimestampsCommand}" IsEnabled="{Binding HasLog}">
+              <controls:StrokeIcon Data="{StaticResource Icon.Timestamp}" Size="16" />
+            </Button>
+            <Button Classes="iconButton"Theme="{StaticResource ToolButton}" ToolTip.Tip="Collapse All Steps" Click="OnFoldAllClick" IsEnabled="{Binding HasLog}">
+              <controls:StrokeIcon Data="{StaticResource Icon.FoldAll}" Size="16" />
+            </Button>
+            <Button Classes="iconButton"Theme="{StaticResource ToolButton}" ToolTip.Tip="Expand All" Click="OnUnfoldAllClick" IsEnabled="{Binding HasLog}">
+              <controls:StrokeIcon Data="{StaticResource Icon.UnfoldAll}" Size="16" />
+            </Button>
+            <Button Classes="iconButton"Theme="{StaticResource ToolButton}" ToolTip.Tip="Go to Line (Ctrl+G)" Click="OnGoToLineClick" IsEnabled="{Binding HasLog}">
+              <controls:StrokeIcon Data="{StaticResource Icon.GoToLine}" Size="16" />
+            </Button>
+            <Border Classes="toolbarSeparator" />
+            <Button Classes="iconButton"Theme="{StaticResource ToolButton}" ToolTip.Tip="Download the Log Again" Command="{Binding ReloadCommand}">
+              <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="16" />
+            </Button>
+            <Button Classes="iconButton"Theme="{StaticResource ToolButton}" ToolTip.Tip="Open on GitHub" Command="{Binding OpenOnGitHubCommand}">
+              <controls:StrokeIcon Data="{StaticResource Icon.External}" Size="15" />
+            </Button>
+          </StackPanel>
+        </ScrollViewer>
+      </Grid>
+
+      <!-- Go to line -->
+      <Grid x:Name="GoToLineBar" ColumnDefinitions="Auto,160,Auto,Auto,*" Margin="12,0,12,8" IsVisible="False">
+        <TextBlock Classes="label" Text="Go to line" VerticalAlignment="Center" Margin="0,0,10,0" />
+        <TextBox Grid.Column="1" x:Name="GoToLineBox" Classes="mono" MinHeight="36" />
+        <Button Grid.Column="2" Theme="{StaticResource AccentButton}" Height="36" MinHeight="36" Padding="14,0" Margin="8,0,0,0" Content="Go" Click="OnGoClick" />
+        <Button Grid.Column="3" Theme="{StaticResource SecondaryButton}" Height="36" Padding="14,0" Margin="6,0,0,0" Content="Cancel" Click="OnGoToLineCancelClick" />
+        <TextBlock Grid.Column="4" x:Name="GoToLineHint" Classes="muted small" VerticalAlignment="Center" Margin="10,0,0,0" TextTrimming="CharacterEllipsis" />
+      </Grid>
+
+      <!-- Downloading -->
+      <Grid ColumnDefinitions="Auto,*" Margin="12,0,12,8" IsVisible="{Binding IsLoading}">
+        <ProgressBar IsIndeterminate="True" Width="56" MinWidth="56" Margin="0,0,10,0" VerticalAlignment="Center" />
+        <TextBlock Grid.Column="1" Classes="muted small" VerticalAlignment="Center" Text="Downloading the log from GitHub…" />
+      </Grid>
+
+      <!-- Why the log is not here -->
+      <Grid ColumnDefinitions="Auto,*,Auto" Margin="12,0,12,8" IsVisible="{Binding ErrorText, Converter={x:Static ObjectConverters.IsNotNull}}">
+        <controls:StrokeIcon Data="{StaticResource Icon.Info}" Size="15" Margin="0,0,8,0" Foreground="{DynamicResource Brush.Warning}" />
+        <TextBlock Grid.Column="1" Classes="small" TextWrapping="Wrap" VerticalAlignment="Center" Foreground="{DynamicResource Brush.TextSecondary}" Text="{Binding ErrorText}" />
+        <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Height="34" Padding="12,0" Margin="10,0,0,0" Content="Reload" Command="{Binding ReloadCommand}" />
+      </Grid>
+
+      <!-- A large log shows its start and end first -->
+      <Border Margin="12,0,12,8" Padding="10,6" CornerRadius="7" Background="{DynamicResource Brush.Control}"
+              BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1" IsVisible="{Binding IsTruncated}">
+        <Grid ColumnDefinitions="Auto,*,Auto">
+          <controls:StrokeIcon Data="{StaticResource Icon.Info}" Size="15" Margin="0,0,8,0" Foreground="{DynamicResource Brush.Info}" />
+          <TextBlock Grid.Column="1" Classes="small" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding TruncatedText}" />
+          <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Height="34" Padding="12,0" Margin="10,0,0,0"
+                  Content="Show the full log" Command="{Binding ShowFullLogCommand}" />
+        </Grid>
+      </Border>
+    </StackPanel>
+  </Border>
+</UserControl>

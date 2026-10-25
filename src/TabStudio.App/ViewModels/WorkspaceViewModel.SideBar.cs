@@ -20,6 +20,9 @@ public enum SideBarPanel
 
     /// <summary>The web preview of the running web app.</summary>
     WebPreview,
+
+    /// <summary>The GitHub Actions window: CI of the workspace's commit, runs, workflows and logs.</summary>
+    Actions,
 }
 
 /// <summary>The side bar's tool windows, docked together as Visual Studio docks Solution Explorer, Git Changes and Test Explorer, with the agent beside them.</summary>
@@ -28,6 +31,7 @@ public sealed partial class WorkspaceViewModel
     /// <summary>The tool window the side bar shows.</summary>
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsSolutionExplorerSelected), nameof(IsGitChangesSelected), nameof(IsTestExplorerSelected), nameof(IsAgentSelected), nameof(IsWebPreviewSelected))]
+    [NotifyPropertyChangedFor(nameof(IsActionsSelected))]
     public partial SideBarPanel SelectedSideBarPanel { get; set; } = SideBarPanel.SolutionExplorer;
 
     /// <summary>Whether the side bar shows the Solution Explorer and Properties.</summary>
