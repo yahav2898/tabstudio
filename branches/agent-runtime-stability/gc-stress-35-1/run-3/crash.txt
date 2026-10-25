@@ -1,0 +1,25 @@
+10-25 11:34:23.978  1121  1143 D ForcePeakRefreshRateCtr: DEFAULT_REFRESH_RATE : 60.0 mPeakRefreshRate : 60.000004
+10-25 11:34:28.125  4500  4500 F monodroid: All objects remaining in the nursery must be pinned
+10-25 11:34:28.125  4500  4500 F monodroid: Abort at mono-log-adapter.cc:46:3 ('static void xamarin::android::internal::MonodroidRuntime::mono_log_handler(const char *, const char *, const char *, mono_bool, void *)')
+10-25 11:34:28.125  4500  4500 F libc    : Fatal signal 6 (SIGABRT), code -1 (SI_QUEUE) in tid 4500 (m.tabstudio.ide), pid 4500 (m.tabstudio.ide)
+
+10-25 11:34:28.818  4552  4552 F DEBUG   : *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+10-25 11:34:28.819  4552  4552 F DEBUG   : Build fingerprint: 'google/sdk_gphone64_x86_64/emu64xa:15/AE3A.240806.043/12960925:userdebug/dev-keys'
+10-25 11:34:28.819  4552  4552 F DEBUG   : Revision: '0'
+10-25 11:34:28.819  4552  4552 F DEBUG   : ABI: 'x86_64'
+10-25 11:34:28.819  4552  4552 F DEBUG   : Timestamp: 2026-10-25 11:34:28.375336936+0000
+10-25 11:34:28.819  4552  4552 F DEBUG   : Process uptime: 6s
+10-25 11:34:28.819  4552  4552 F DEBUG   : Cmdline: com.tabstudio.ide
+10-25 11:34:28.819  4552  4552 F DEBUG   : pid: 4500, tid: 4500, name: m.tabstudio.ide  >>> com.tabstudio.ide <<<
+10-25 11:34:28.819  4552  4552 F DEBUG   : uid: 10209
+10-25 11:34:28.819  4552  4552 F DEBUG   : signal 6 (SIGABRT), code -1 (SI_QUEUE), fault addr --------
+10-25 11:34:28.819  4552  4552 F DEBUG   : Abort message: 'All objects remaining in the nursery must be pinned'
+10-25 11:34:28.819  4552  4552 F DEBUG   :     rax 0000000000000000  rbx 00007ffdab415ba8  rcx 00007b8533114b90  rdx 0000000000000006
+10-25 11:34:28.819  4552  4552 F DEBUG   :     r8  0000000000000000  r9  0000000000000000  r10 00007ffdab415bb0  r11 0000000000000203
+10-25 11:34:28.819  4552  4552 F DEBUG   :     r12 00007b81e6a5b179  r13 00007b845d804ca0  r14 0000000000001194  r15 0000000000001194
+10-25 11:34:28.819  4552  4552 F DEBUG   :     rdi 0000000000001194  rsi 0000000000001194
+10-25 11:34:28.819  4552  4552 F DEBUG   :     rbp 00007ffdab415e90  rsp 00007ffdab415ba0  rip 00007b8533114b90
+10-25 11:34:28.819  4552  4552 F DEBUG   : 2 total frames
+10-25 11:34:28.819  4552  4552 F DEBUG   : backtrace:
+10-25 11:34:28.819  4552  4552 F DEBUG   :       #00 pc 000000000005cb90  /apex/com.android.runtime/lib64/bionic/libc.so (abort+192) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+10-25 11:34:28.819  4552  4552 F DEBUG   :       #01 pc 00000000000b30af  /data/app/~~OSA2xpSzZFcQvko_3nQWuQ==/com.tabstudio.ide-0rjPqGXRZzWwBHtAyHHFUg==/lib/x86_64/libmonodroid.so (xamarin::android::Helpers::abort_application(_LogCategories, char const*, bool, std::__ndk1::source_location)+767) (BuildId: d3370263a3d5aba8cc143ea0be7afdd2a4ce251e)
