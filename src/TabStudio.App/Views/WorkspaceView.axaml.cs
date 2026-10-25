@@ -25,9 +25,12 @@ public sealed partial class WorkspaceView : UserControl
     public WorkspaceView()
     {
         InitializeComponent();
-        Editors.ViewFactory = document => document is DocumentViewModel { IsComparison: true } comparison
-            ? new DiffView(comparison)
-            : (Control)new CodeEditorView((DocumentViewModel)document);
+        Editors.ViewFactory = document => document switch
+        {
+            DocumentViewModel { IsComparison: true } comparison => new DiffView(comparison),
+            DocumentViewModel { IsNotebook: true } notebook => new Notebooks.NotebookView(notebook),
+            _ => (Control)new CodeEditorView((DocumentViewModel)document),
+        };
         QuickOpenBox.KeyDown += OnQuickOpenKeyDown;
         PromptBox.KeyDown += OnPromptKeyDown;
         QuickOpenList.AddHandler(TappedEvent, OnQuickOpenTapped, RoutingStrategies.Bubble, handledEventsToo: true);

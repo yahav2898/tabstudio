@@ -1,0 +1,185 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:nb="using:TabStudio.App.Views.Notebooks"
+             xmlns:vm="using:TabStudio.App.ViewModels.Notebooks"
+             x:Class="TabStudio.App.Views.Notebooks.NotebookCellView"
+             x:DataType="vm:NotebookCellViewModel">
+
+  <Grid ColumnDefinitions="60,*" Margin="0,14,0,0" Background="Transparent">
+
+    <!-- Gutter: run button and execution count -->
+    <StackPanel Spacing="3" Margin="0,4,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" IsVisible="{Binding IsCode}">
+      <Button Theme="{StaticResource ToolButton}" Width="36" Height="36" MinWidth="36" MinHeight="36" Padding="0" CornerRadius="18"
+              ToolTip.Tip="Run Cell (Ctrl+Enter)" Command="{Binding RunOrStopCommand}">
+        <Panel>
+          <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="14" IsVisible="{Binding !IsWorking}" />
+          <controls:StrokeIcon Classes="spinner" Data="{StaticResource Icon.Spinner}" Size="20" StrokeThickness="2.2"
+                               Foreground="{DynamicResource Brush.AccentText}" IsVisible="{Binding IsRunning}" />
+          <controls:StrokeIcon Data="{StaticResource Icon.Clock}" Size="17" IsVisible="{Binding IsQueued}" />
+        </Panel>
+      </Button>
+      <TextBlock Text="{Binding ExecutionLabel}" Classes="mono" FontSize="11.5" Foreground="{DynamicResource Brush.TextMuted}"
+                 HorizontalAlignment="Center" />
+    </StackPanel>
+
+    <StackPanel Grid.Column="1" Margin="0,0,20,0" Spacing="6">
+
+      <!-- The cell, with its toolbar on top when selected -->
+      <Panel>
+        <Border Classes="cellFrame" Classes.selected="{Binding IsSelected}" Classes.rendered="{Binding IsRendered}">
+          <StackPanel>
+            <nb:CellEditor Cell="{Binding}" Margin="12,10,12,8" IsVisible="{Binding ShowsEditor}" />
+            <nb:MarkdownView x:Name="Rendered" Blocks="{Binding MarkdownBlocks}" Margin="12,8,12,8" IsVisible="{Binding IsRendered}" />
+            <TextBlock Classes="muted" Margin="12,10" FontStyle="Italic" IsVisible="{Binding ShowsMarkdownPlaceholder}"
+                       Text="Empty Markdown cell. Double-tap to write." />
+
+            <!-- How the last run went, and the language -->
+            <Grid ColumnDefinitions="Auto,*,Auto" Margin="12,0,12,7" IsVisible="{Binding IsCode}">
+              <StackPanel Orientation="Horizontal" Spacing="5" IsVisible="{Binding HasRunStatus}">
+                <controls:StrokeIcon Data="{StaticResource Icon.Check}" Size="13" Foreground="{DynamicResource Brush.Success}" IsVisible="{Binding HasSucceeded}" />
+                <controls:StrokeIcon Data="{StaticResource Icon.Error}" Size="13" Foreground="{DynamicResource Brush.Error}" IsVisible="{Binding HasFailed}" />
+                <controls:StrokeIcon Data="{StaticResource Icon.Stop}" IsFilled="True" Size="10" Foreground="{DynamicResource Brush.Warning}" IsVisible="{Binding WasInterrupted}" />
+                <TextBlock Text="{Binding DurationText}" FontSize="11.5" Foreground="{DynamicResource Brush.TextMuted}" VerticalAlignment="Center" />
+              </StackPanel>
+              <TextBlock Grid.Column="2" Text="{Binding LanguageName}" FontSize="11.5" Foreground="{DynamicResource Brush.TextMuted}" VerticalAlignment="Center" />
+            </Grid>
+          </StackPanel>
+        </Border>
+
+        <Border Classes="cellToolbar" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-14,10,0" IsVisible="{Binding IsSelected}">
+          <StackPanel Orientation="Horizontal" Spacing="1">
+            <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Run Cell (Ctrl+Enter)" Command="{Binding RunCommand}" IsVisible="{Binding IsCode}">
+              <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="13" Foreground="{DynamicResource Brush.Success}" />
+            </Button>
+            <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Edit (Enter)" Command="{Binding EditCommand}" IsVisible="{Binding IsRendered}">
+              <controls:StrokeIcon Data="{StaticResource Icon.Rename}" Size="15" />
+            </Button>
+            <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Done (Ctrl+Enter)" Command="{Binding FinishEditingCommand}" IsVisible="{Binding IsEditing}">
+              <controls:StrokeIcon Data="{StaticResource Icon.Check}" Size="16" Foreground="{DynamicResource Brush.Success}" />
+            </Button>
+            <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Move Cell Up" Command="{Binding MoveUpCommand}">
+              <controls:StrokeIcon Data="{StaticResource Icon.ArrowUp}" Size="15" />
+            </Button>
+            <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Move Cell Down" Command="{Binding MoveDownCommand}">
+              <controls:StrokeIcon Data="{StaticResource Icon.ArrowDown}" Size="15" />
+            </Button>
+            <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Delete Cell" Command="{Binding DeleteCommand}">
+              <controls:StrokeIcon Data="{StaticResource Icon.Trash}" Size="15" />
+            </Button>
+            <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="More">
+              <controls:StrokeIcon Data="{StaticResource Icon.More}" Size="16" StrokeThickness="3" />
+              <Button.Flyout>
+                <MenuFlyout Placement="BottomEdgeAlignedRight">
+                  <MenuItem Header="Run Cells Above" Command="{Binding RunCellsAboveCommand}" IsVisible="{Binding IsCode}" />
+                  <MenuItem Header="Run Cell and Below" Command="{Binding RunCellAndBelowCommand}" IsVisible="{Binding IsCode}" />
+                  <MenuItem Header="Clear Output" Command="{Binding ClearCellOutputsCommand}" IsVisible="{Binding IsCode}" />
+                  <Separator IsVisible="{Binding IsCode}" />
+                  <MenuItem Header="Insert Code Cell Above" Command="{Binding InsertCodeAboveCommand}" />
+                  <MenuItem Header="Insert Code Cell Below" Command="{Binding InsertCodeBelowCommand}" />
+                  <MenuItem Header="Insert Markdown Cell Below" Command="{Binding InsertMarkdownBelowCommand}" />
+                  <Separator />
+                  <MenuItem Header="Change to Markdown (M)" Command="{Binding ConvertToMarkdownCommand}" IsVisible="{Binding IsCode}" />
+                  <MenuItem Header="Change to Code (Y)" Command="{Binding ConvertToCodeCommand}" IsVisible="{Binding !IsCode}" />
+                  <MenuItem Header="Delete Cell (D, D)" Command="{Binding DeleteCommand}" />
+                </MenuFlyout>
+              </Button.Flyout>
+            </Button>
+          </StackPanel>
+        </Border>
+      </Panel>
+
+      <!-- Compile errors and warnings: tap one to go to it -->
+      <ItemsControl ItemsSource="{Binding DiagnosticItems}" IsVisible="{Binding HasDiagnostics}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate DataType="vm:CellDiagnosticViewModel">
+            <Button Theme="{StaticResource ToolButton}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                    MinHeight="32" Padding="8,5" CornerRadius="6" Command="{Binding NavigateCommand}">
+              <Grid ColumnDefinitions="Auto,Auto,*,Auto">
+                <Panel Margin="0,1,8,0" VerticalAlignment="Top">
+                  <controls:StrokeIcon Data="{StaticResource Icon.Error}" Size="15" Foreground="{DynamicResource Brush.Error}" IsVisible="{Binding IsError}" />
+                  <controls:StrokeIcon Data="{StaticResource Icon.Warning}" Size="15" Foreground="{DynamicResource Brush.Warning}" IsVisible="{Binding IsWarning}" />
+                </Panel>
+                <TextBlock Grid.Column="1" Text="{Binding Code}" Classes="mono" FontSize="12" Foreground="{DynamicResource Brush.TextMuted}"
+                           Margin="0,1,10,0" VerticalAlignment="Top" />
+                <TextBlock Grid.Column="2" Text="{Binding Message}" FontSize="12.5" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Text}" />
+                <TextBlock Grid.Column="3" Text="{Binding LocationText}" FontSize="12" Foreground="{DynamicResource Brush.TextMuted}"
+                           Margin="12,1,0,0" VerticalAlignment="Top" />
+              </Grid>
+            </Button>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+
+      <!-- Outputs -->
+      <ItemsControl ItemsSource="{Binding Outputs}" IsVisible="{Binding HasOutputs}" Margin="12,0,0,0">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <StackPanel Spacing="8" />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.DataTemplates>
+          <DataTemplate DataType="vm:StreamOutputViewModel">
+            <nb:OutputText Classes="output" Classes.error="{Binding IsError}" Text="{Binding DisplayText}" />
+          </DataTemplate>
+          <DataTemplate DataType="vm:TextOutputViewModel">
+            <nb:OutputText Classes="output" Text="{Binding Text}" />
+          </DataTemplate>
+          <DataTemplate DataType="vm:TableOutputViewModel">
+            <StackPanel Spacing="5">
+              <nb:TableGrid Table="{Binding Table}" />
+              <TextBlock Text="{Binding RowCountText}" FontSize="11.5" Foreground="{DynamicResource Brush.TextMuted}" />
+            </StackPanel>
+          </DataTemplate>
+          <DataTemplate DataType="vm:ErrorOutputViewModel">
+            <Border Background="{DynamicResource Brush.Notebook.ErrorBackground}" BorderBrush="{DynamicResource Brush.Error}"
+                    BorderThickness="3,0,0,0" CornerRadius="0,6,6,0" Padding="12,9">
+              <StackPanel Spacing="6">
+                <nb:OutputText Text="{Binding Title}" FontWeight="SemiBold" FontSize="13" TextWrapping="Wrap"
+                                     Foreground="{DynamicResource Brush.Error}" />
+                <nb:OutputText Classes="output" FontSize="12" Foreground="{DynamicResource Brush.TextSecondary}"
+                                     Text="{Binding Details}" IsVisible="{Binding HasDetails}" />
+                <Button Theme="{StaticResource ToolButton}" HorizontalAlignment="Left" MinHeight="30" Height="30" Padding="8,0"
+                        FontSize="12" Content="{Binding ToggleText}" Command="{Binding ToggleCommand}" IsVisible="{Binding CanExpand}" />
+              </StackPanel>
+            </Border>
+          </DataTemplate>
+          <DataTemplate DataType="vm:HtmlOutputViewModel">
+            <StackPanel Spacing="4">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <Border Classes="pill">
+                  <TextBlock Text="HTML" />
+                </Border>
+                <Button Theme="{StaticResource ToolButton}" MinHeight="28" Height="28" Padding="8,0" FontSize="12"
+                        Content="{Binding ToggleText}" Command="{Binding ToggleSourceCommand}" />
+              </StackPanel>
+              <nb:OutputText Classes="output" Text="{Binding Text}" />
+            </StackPanel>
+          </DataTemplate>
+          <DataTemplate DataType="vm:MarkdownOutputViewModel">
+            <nb:MarkdownView Blocks="{Binding Blocks}" />
+          </DataTemplate>
+          <DataTemplate DataType="vm:ImageOutputViewModel">
+            <Image Source="{Binding Image}" MaxHeight="420" Stretch="Uniform" StretchDirection="DownOnly" HorizontalAlignment="Left" />
+          </DataTemplate>
+        </ItemsControl.DataTemplates>
+      </ItemsControl>
+
+      <!-- Insert a cell below the selected one -->
+      <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center" IsVisible="{Binding IsSelected}">
+        <Button Theme="{StaticResource ToolButton}" MinHeight="32" Height="32" Padding="10,0" Command="{Binding InsertCodeBelowCommand}">
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <controls:StrokeIcon Data="{StaticResource Icon.Plus}" Size="13" />
+            <TextBlock Text="Code" FontSize="12" VerticalAlignment="Center" />
+          </StackPanel>
+        </Button>
+        <Button Theme="{StaticResource ToolButton}" MinHeight="32" Height="32" Padding="10,0" Command="{Binding InsertMarkdownBelowCommand}">
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <controls:StrokeIcon Data="{StaticResource Icon.Plus}" Size="13" />
+            <TextBlock Text="Markdown" FontSize="12" VerticalAlignment="Center" />
+          </StackPanel>
+        </Button>
+      </StackPanel>
+    </StackPanel>
+  </Grid>
+</UserControl>

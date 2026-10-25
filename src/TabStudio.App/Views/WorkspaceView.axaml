@@ -48,6 +48,10 @@
 
         <Menu Grid.Column="1" VerticalAlignment="Center">
           <MenuItem Header="_File">
+            <MenuItem Header="_New">
+              <MenuItem Header="C# _Notebook" Command="{Binding NewNotebookCommand}" />
+            </MenuItem>
+            <Separator />
             <MenuItem Header="_Save" InputGesture="Ctrl+S" Command="{Binding SaveCommand}" />
             <MenuItem Header="Save A_ll" InputGesture="Ctrl+Shift+S" Command="{Binding SaveAllCommand}" />
             <Separator />

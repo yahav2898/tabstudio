@@ -83,8 +83,11 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
     /// <summary>Whether the Call Stack is shown beside Locals or Watch, so both are in view while debugging.</summary>
     public bool ShowsCallStackBeside => IsDebugging && SelectedPanel is BottomPanel.Locals or BottomPanel.Watch;
 
-    /// <summary>Whether the floating editing buttons are shown; while debugging, the debug buttons take their place.</summary>
-    public bool ShowsEditorTouchBar => HasDocuments && !IsDebugging;
+    /// <summary>
+    /// Whether the floating editing buttons are shown: over code, not over a notebook, which has buttons of its own;
+    /// while debugging, the debug buttons take their place.
+    /// </summary>
+    public bool ShowsEditorTouchBar => HasDocuments && !IsDebugging && ActiveDocument?.ShowsEditorActions != false;
 
     /// <summary>Whether to pause when an exception is about to go unhandled. On by default, as in Visual Studio.</summary>
     [ObservableProperty]
@@ -570,6 +573,9 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
             case nameof(HasDocuments):
                 OnPropertyChanged(nameof(ShowsEditorTouchBar));
                 NotifyDebugCommands();
+                break;
+            case nameof(ActiveDocument):
+                OnPropertyChanged(nameof(ShowsEditorTouchBar));
                 break;
             case nameof(SelectedPanel):
                 OnPropertyChanged(nameof(IsLocalsSelected));

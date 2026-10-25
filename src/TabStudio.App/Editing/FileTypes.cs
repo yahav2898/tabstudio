@@ -17,6 +17,9 @@ public enum BadgeKind
 
     /// <summary>Plain text and documentation.</summary>
     Text,
+
+    /// <summary>Notebooks (.ipynb, .dib), which open in the notebook editor.</summary>
+    Notebook,
 }
 
 /// <summary>What TabStudio knows about a kind of file: how to label it and how to edit it.</summary>
@@ -124,8 +127,8 @@ public static class FileTypes
         [".gitattributes"] = new("Git", "GIT", BadgeKind.Text, "#", null, null),
         [".dockerignore"] = new("Ignore", "DOCK", BadgeKind.Text, "#", null, null),
         [".sln"] = new("Solution", "SLN", BadgeKind.Text, "#", null, null),
-        [".dib"] = new("Notebook", "NB", BadgeKind.CSharp, "//", null, null),
-        [".ipynb"] = new("Notebook", "NB", BadgeKind.Data, null, null, ".json"),
+        [".dib"] = new("Polyglot Notebook", "NB", BadgeKind.Notebook, "//", null, null),
+        [".ipynb"] = new("Jupyter Notebook", "NB", BadgeKind.Notebook, null, null, ".json"),
     };
 
     private static readonly Dictionary<string, FileType> ByFileName = new(StringComparer.OrdinalIgnoreCase)
