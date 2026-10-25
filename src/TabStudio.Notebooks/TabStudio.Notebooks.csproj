@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>TabStudio.Notebooks</RootNamespace>
+    <Description>C# notebooks in TabStudio: .ipynb and .dib documents, and a kernel that runs cells in-process with state carried from one cell to the next.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TabStudio.Core\TabStudio.Core.csproj" />
+    <ProjectReference Include="..\TabStudio.Compilation\TabStudio.Compilation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="TabStudio.Notebooks.Tests" />
+  </ItemGroup>
+
+</Project>
