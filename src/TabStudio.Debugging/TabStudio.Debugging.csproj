@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>TabStudio.Debugging</RootNamespace>
+    <Description>The TabStudio debugger: instruments C# programs so they can be paused, stepped and inspected while they run inside the IDE.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TabStudio.Core\TabStudio.Core.csproj" />
+    <ProjectReference Include="..\TabStudio.Compilation\TabStudio.Compilation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="TabStudio.Debugging.Tests" />
+  </ItemGroup>
+
+</Project>
