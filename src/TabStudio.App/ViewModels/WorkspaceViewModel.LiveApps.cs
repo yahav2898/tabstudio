@@ -55,7 +55,7 @@ public sealed partial class WorkspaceViewModel
                     IsWebApp(project)
                         ? "Started without the debugger: it pauses a program on its main thread, and a web app answers requests on others."
                         : IsWebAssemblyApp(project)
-                            ? "Started without the debugger: a WebAssembly app runs in the web preview's browser, which the debugger cannot reach yet."
+                            ? "Started without the debugger: a WebAssembly app runs in the web preview's browser, out of the debugger's reach."
                             : "Started without the debugger: an Avalonia app runs on TabStudio's own UI thread, which the debugger cannot pause.",
                     OutputKind.Info);
             }

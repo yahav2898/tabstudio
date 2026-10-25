@@ -91,7 +91,7 @@ public static class CompatibilityDoctor
 
             ProjectKind.BlazorWebAssembly when project.Language == ProjectLanguage.CSharp => Report(
                 project, RunHost.WebView, CompatibilityStatus.Ready, "WebAssembly in the WebView",
-                "Compiled for the browser and run on .NET for WebAssembly in the web preview, served from this device. It starts without the debugger: WebAssembly code cannot be debugged here yet. Saving a file reloads it."),
+                "Compiled for the browser and run on .NET for WebAssembly in the web preview, served from this device. It starts without the debugger: code running in the browser cannot be debugged here. Saving a file reloads it."),
 
             ProjectKind.BlazorWebAssembly => Report(
                 project, RunHost.WebView, CompatibilityStatus.Planned, "WebAssembly in the WebView",

@@ -98,13 +98,13 @@ public sealed class BlazorAppTests : IClassFixture<SharedToolchain>, IDisposable
     public async Task A_Razor_error_is_in_the_Error_List_and_under_a_squiggle_on_its_line()
     {
         var (workspace, _) = await CreateWorkspaceAsync(withBrowser: false);
-        var solution = new ProjectTemplates(_toolchain.Paths).Create(WebTemplates.BlazorWebAppId, "Squiggles");
+        var solution = new ProjectTemplates(_toolchain.Paths).Create(WebTemplates.BlazorWebAppId, "Storefront");
         await workspace.LoadAsync(solution);
         var window = Show(workspace);
         await workspace.BuildCommand.ExecuteAsync(null);
         await AssertNoErrorsAsync(workspace);
 
-        var path = Path.Combine(Path.GetDirectoryName(solution)!, "Squiggles", "Components", "Pages", "Counter.razor");
+        var path = Path.Combine(Path.GetDirectoryName(solution)!, "Storefront", "Components", "Pages", "Counter.razor");
         var counter = (await workspace.OpenDocumentAsync(path))!;
         Assert.True(counter.HasLanguageService);
         Assert.False(counter.UsesSemanticColoring);
@@ -119,6 +119,13 @@ public sealed class BlazorAppTests : IClassFixture<SharedToolchain>, IDisposable
         var warning = Assert.Single(counter.Diagnostics, d => d.Id == "RZ10012");
         Assert.Equal(7, warning.Location!.Line);
         Assert.Contains(workspace.ErrorList.Items, i => i.Code == "CS0029" && i.Diagnostic.Location?.FilePath == path);
+
+        // The Error List under the component, which shows both squiggles: the warning's on line 7, the error's on line 18.
+        workspace.SelectPanelCommand.Execute(BottomPanel.ErrorList);
+        var editor = Views.EditorHarness.ActiveEditor(window).Editor;
+        await UiTestHelpers.WaitUntilAsync(() => true);
+        editor.ScrollTo(3, 1, AvaloniaEdit.Rendering.VisualYPosition.LineTop, 0, 0);
+        await UiTestHelpers.WaitUntilAsync(() => true);
         UiTestHelpers.SaveScreenshot(window, "blazor-02-razor-error");
         window.Close();
     }
@@ -127,11 +134,11 @@ public sealed class BlazorAppTests : IClassFixture<SharedToolchain>, IDisposable
     public async Task Typing_a_tag_in_a_Razor_file_offers_the_components_it_can_use()
     {
         var (workspace, _) = await CreateWorkspaceAsync(withBrowser: false);
-        var solution = new ProjectTemplates(_toolchain.Paths).Create(WebTemplates.BlazorWebAppId, "Typing");
+        var solution = new ProjectTemplates(_toolchain.Paths).Create(WebTemplates.BlazorWebAppId, "Bookshelf");
         await workspace.LoadAsync(solution);
         var window = Show(workspace);
         await workspace.BuildCommand.ExecuteAsync(null);
-        await workspace.OpenDocumentAsync(Path.Combine(Path.GetDirectoryName(solution)!, "Typing", "Components", "Pages", "Home.razor"));
+        await workspace.OpenDocumentAsync(Path.Combine(Path.GetDirectoryName(solution)!, "Bookshelf", "Components", "Pages", "Home.razor"));
         var view = Views.EditorHarness.ActiveEditor(window);
         var completion = view.Completion!;
 
@@ -141,7 +148,7 @@ public sealed class BlazorAppTests : IClassFixture<SharedToolchain>, IDisposable
 
         UiTestHelpers.SaveScreenshot(window, "blazor-05-razor-completion");
 
-        Assert.Equal("Typing.Components.Pages", completion.SelectedItem!.Entry.InlineDescription);
+        Assert.Equal("Bookshelf.Components.Pages", completion.SelectedItem!.Entry.InlineDescription);
         window.Close();
     }
 
