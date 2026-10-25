@@ -213,6 +213,7 @@ public sealed partial class WorkspaceViewModel
             OnDocumentSavedForLiveApp(document);
             OnDocumentSavedForXamlDesigner(document);
             OnDocumentSavedForGenerators(document);
+            OnDocumentSavedForLiveTesting(document);
             await OnProjectFileSavedAsync(document);
             GitChanges.ScheduleRefresh();
             return true;

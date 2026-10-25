@@ -1,0 +1,156 @@
+using System.Globalization;
+using AvaloniaEdit.Document;
+using TabStudio.LiveTesting.Results;
+
+namespace TabStudio.App.Editing;
+
+/// <summary>The Live Unit Testing marker of one line: how the tests that run it fare.</summary>
+/// <param name="State">Whether only passing tests, a failing test or no test runs the line.</param>
+/// <param name="IsStale">Whether the line or its tests changed since the results, which are then drawn hollow.</param>
+/// <param name="Tests">The tests that run the line, failing first.</param>
+public sealed record LiveTestMarker(LineCoverageState State, bool IsStale, IReadOnlyList<CoveringTest> Tests)
+{
+    /// <summary>What the marker means, in Visual Studio's words, such as "Covered by 3 tests, 1 failing".</summary>
+    public string Summary
+    {
+        get
+        {
+            var failing = Tests.Count(t => t.IsFailing);
+            var text = State switch
+            {
+                LineCoverageState.NotCovered => "Not covered by any test",
+                LineCoverageState.Failing => string.Create(CultureInfo.InvariantCulture, $"Covered by {Tests.Count} {Plural(Tests.Count, "test")}, {failing} failing"),
+                _ => string.Create(CultureInfo.InvariantCulture, $"Covered by {Tests.Count} passing {Plural(Tests.Count, "test")}"),
+            };
+            return IsStale ? text + " (out of date)" : text;
+        }
+    }
+
+    private static string Plural(int count, string word) => count == 1 ? word : word + "s";
+}
+
+/// <summary>
+/// The Live Unit Testing markers of an open document, one per line with code, kept on their lines while the user
+/// types: a marker moves with the text around it, and a line that is edited keeps its marker, drawn stale, until
+/// the tests run again.
+/// </summary>
+/// <remarks>Belongs to the UI thread, like the document.</remarks>
+public sealed class LiveTestMarkers
+{
+    private TrackedRange<LiveTestMarker>[] _ranges = [];
+
+    /// <summary>The number of lines with a marker.</summary>
+    public int Count => _ranges.Length;
+
+    /// <summary>Puts the markers of a file's coverage on the document's lines.</summary>
+    /// <param name="document">The open document.</param>
+    /// <param name="coverage">The coverage, for the text of the build it came from.</param>
+    /// <remarks>
+    /// The document may have changed since that build: lines are mapped onto its current text, and the lines that
+    /// changed are marked stale.
+    /// </remarks>
+    public void Update(TextDocument document, FileCoverage coverage)
+    {
+        ArgumentNullException.ThrowIfNull(document);
+        ArgumentNullException.ThrowIfNull(coverage);
+
+        var before = coverage.Text.Lines.Select(l => l.ToString()).ToList();
+        var after = document.Lines.Select(l => document.GetText(l.Offset, l.Length)).ToList();
+        var map = LineMapper.Map(before, after);
+        var ranges = new List<TrackedRange<LiveTestMarker>>(coverage.Lines.Count);
+        foreach (var line in coverage.Lines)
+        {
+            if (line.Line < 1 || line.Line > map.Length || map[line.Line - 1] is not { Line: > 0 } mapped || mapped.Line > document.LineCount)
+            {
+                continue;
+            }
+
+            var target = document.GetLineByNumber(mapped.Line);
+            var marker = new LiveTestMarker(line.State, line.IsStale || mapped.IsChanged, line.Tests);
+            ranges.Add(new TrackedRange<LiveTestMarker>(target.Offset, target.Length, marker));
+        }
+
+        _ranges = [.. ranges.OrderBy(r => r.Start)];
+    }
+
+    /// <summary>The marker of a line, if it has one.</summary>
+    /// <param name="line">A line of the document.</param>
+    public LiveTestMarker? At(DocumentLine line)
+    {
+        ArgumentNullException.ThrowIfNull(line);
+        var index = FirstStartingAtOrAfter(line.Offset);
+        return index < _ranges.Length && _ranges[index].Start <= line.EndOffset ? _ranges[index].Value : null;
+    }
+
+    /// <summary>The markers with their current lines, in order, for tests and screenshots.</summary>
+    /// <param name="document">The document.</param>
+    public IReadOnlyList<(int Line, LiveTestMarker Marker)> Lines(TextDocument document)
+    {
+        ArgumentNullException.ThrowIfNull(document);
+        return [.. _ranges
+            .Where(r => r.Start <= document.TextLength)
+            .Select(r => (document.GetLineByOffset(r.Start).LineNumber, r.Value))];
+    }
+
+    /// <summary>
+    /// Moves the markers through an edit: markers after it shift, the marker of an edited line stays and turns
+    /// stale, and markers of lines the edit removed are dropped.
+    /// </summary>
+    /// <param name="change">The change just applied to the document.</param>
+    public void Apply(DocumentChangeEventArgs change)
+    {
+        ArgumentNullException.ThrowIfNull(change);
+        if (_ranges.Length == 0)
+        {
+            return;
+        }
+
+        var offset = change.Offset;
+        var removedEnd = offset + change.RemovalLength;
+        var delta = change.InsertionLength - change.RemovalLength;
+        var result = new List<TrackedRange<LiveTestMarker>>(_ranges.Length);
+        foreach (var range in _ranges)
+        {
+            if (range.End < offset)
+            {
+                result.Add(range);
+            }
+            else if (range.Start > offset && range.Start >= removedEnd)
+            {
+                result.Add(range with { Start = range.Start + delta });
+            }
+            else if (range.Start == offset && change.RemovalLength == 0)
+            {
+                // Typing at the start of the line pushes its text, and its marker, along.
+                result.Add(range with { Start = range.Start + delta, Value = Stale(range.Value) });
+            }
+            else if (range.Start <= offset && range.End >= removedEnd)
+            {
+                result.Add(range with { Length = range.Length + delta, Value = Stale(range.Value) });
+            }
+        }
+
+        _ranges = [.. result];
+    }
+
+    private static LiveTestMarker Stale(LiveTestMarker marker) => marker.IsStale ? marker : marker with { IsStale = true };
+
+    private int FirstStartingAtOrAfter(int offset)
+    {
+        int low = 0, high = _ranges.Length;
+        while (low < high)
+        {
+            var mid = (low + high) / 2;
+            if (_ranges[mid].Start < offset)
+            {
+                low = mid + 1;
+            }
+            else
+            {
+                high = mid;
+            }
+        }
+
+        return low;
+    }
+}

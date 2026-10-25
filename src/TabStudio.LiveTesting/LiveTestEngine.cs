@@ -130,6 +130,11 @@ public sealed class LiveTestEngine : IDisposable
     /// <param name="testIds">The tests.</param>
     public void Invalidate(string projectFilePath, IEnumerable<string> testIds) => Index.MarkPending(projectFilePath, testIds);
 
+    /// <summary>Forgets the results and coverage of tests, for example after they were excluded, so no line counts them.</summary>
+    /// <param name="projectFilePath">The test project.</param>
+    /// <param name="testIds">The tests.</param>
+    public void Forget(string projectFilePath, IEnumerable<string> testIds) => Index.Forget(projectFilePath, testIds);
+
     /// <summary>Forgets what was built, so the next run of each test project builds and runs everything.</summary>
     public void Reset()
     {

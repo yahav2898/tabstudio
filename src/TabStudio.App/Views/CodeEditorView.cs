@@ -91,6 +91,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
         InitializeDebugging();
         InstallTestCommands();
         InitializePeek();
+        InitializeLiveTesting();
     }
 
     /// <summary>The editor control, for tests and keyboard focus.</summary>
@@ -100,6 +101,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
     public void Dispose()
     {
         DisposePeek();
+        DisposeLiveTesting();
         DisposeIntelliSense();
         _document.Document.Changed -= OnTextChanged;
         _document.ClassificationsChanged -= OnClassificationsChanged;

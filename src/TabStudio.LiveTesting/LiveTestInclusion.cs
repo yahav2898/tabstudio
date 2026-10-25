@@ -98,6 +98,20 @@ public sealed class LiveTestInclusion
         }
     }
 
+    /// <summary>Replaces every entry, for example with those saved for a solution that was just opened.</summary>
+    /// <param name="rules">The entries.</param>
+    public void Reset(IEnumerable<LiveTestRule> rules)
+    {
+        ArgumentNullException.ThrowIfNull(rules);
+        lock (_gate)
+        {
+            _rules.Clear();
+            _rules.AddRange(rules);
+        }
+
+        Changed?.Invoke(this, EventArgs.Empty);
+    }
+
     /// <summary>Includes or excludes a project, namespace, class, method or test, and everything in it.</summary>
     /// <param name="projectFilePath">The project.</param>
     /// <param name="name">What in the project, as for <see cref="IsIncluded(string, string)"/>; an empty string for the whole project.</param>
@@ -149,11 +163,17 @@ public sealed class LiveTestInclusion
         yield return string.Empty;
     }
 
-    /// <summary>Whether a rule's name is the name or something inside it.</summary>
-    private static bool IsWithin(string ruleName, string name) =>
-        name.Length == 0
-        || ruleName == name
-        || (ruleName.Length > name.Length && ruleName.StartsWith(name, StringComparison.Ordinal) && ruleName[name.Length] is '.' or '+' or '(');
+    /// <summary>Whether a name is a scope or something inside it: a test of a class, a class of a namespace, and so on.</summary>
+    /// <param name="name">A test id, a method's or class's full name, or a namespace.</param>
+    /// <param name="scope">A test id, a method's or class's full name, a namespace, or an empty string for the whole project.</param>
+    public static bool IsWithin(string name, string scope)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+        ArgumentNullException.ThrowIfNull(scope);
+        return scope.Length == 0
+            || name == scope
+            || (name.Length > scope.Length && name.StartsWith(scope, StringComparison.Ordinal) && name[scope.Length] is '.' or '+' or '(');
+    }
 
     /// <summary>The first of the names that has an entry decides; <see langword="null"/> when none has.</summary>
     private bool? Find(string projectFilePath, IEnumerable<string> names)

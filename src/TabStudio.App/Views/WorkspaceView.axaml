@@ -160,6 +160,18 @@
             <MenuItem Header="_Repeat Last Run (Ctrl+R, L)" Command="{Binding Tests.RepeatLastRunCommand}" />
             <MenuItem Header="_Cancel Test Run" Command="{Binding Tests.CancelCommand}" />
             <Separator />
+            <MenuItem Header="Live _Unit Testing">
+              <MenuItem Header="_Start" Command="{Binding LiveTesting.StartCommand}" />
+              <MenuItem Header="_Pause" Command="{Binding LiveTesting.PauseCommand}" IsVisible="{Binding !LiveTesting.IsPaused}" />
+              <MenuItem Header="_Continue" Command="{Binding LiveTesting.ContinueCommand}" IsVisible="{Binding LiveTesting.IsPaused}" />
+              <MenuItem Header="St_op" Command="{Binding LiveTesting.StopCommand}" />
+              <Separator />
+              <MenuItem Header="Run After _Typing Pauses" ToggleType="Radio" GroupName="LiveUnitTestingTrigger"
+                        IsChecked="{Binding LiveTesting.RunsAfterTyping, Mode=OneWay}" Command="{Binding LiveTesting.UseRunAfterTypingCommand}" />
+              <MenuItem Header="Run on _Save" ToggleType="Radio" GroupName="LiveUnitTestingTrigger"
+                        IsChecked="{Binding LiveTesting.RunsOnSave, Mode=OneWay}" Command="{Binding LiveTesting.UseRunOnSaveCommand}" />
+            </MenuItem>
+            <Separator />
             <MenuItem Header="Test E_xplorer (Ctrl+E, T)" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}" />
           </MenuItem>
           <MenuItem Header="_Window">
@@ -675,6 +687,23 @@
             </StackPanel>
           </Button>
           <actionViews:CiStatusBarItem DataContext="{Binding Actions}" />
+          <!-- Live Unit Testing, while it is on: what it does, or how the tests fare; tap for Pause and Stop. -->
+          <Button Theme="{StaticResource StatusBarButton}" Height="24" ToolTip.Tip="{Binding LiveTesting.DetailText}"
+                  IsVisible="{Binding LiveTesting.IsEnabled}">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+              <controls:StrokeIcon Size="13" Data="{Binding LiveTesting.State, Converter={x:Static conv:LiveTestingConverters.StateIcon}}" />
+              <TextBlock Text="{Binding LiveTesting.StatusText}" FontSize="12" VerticalAlignment="Center" />
+            </StackPanel>
+            <Button.Flyout>
+              <MenuFlyout Placement="TopEdgeAlignedLeft">
+                <MenuItem Header="Pause Live Unit Testing" Command="{Binding LiveTesting.PauseCommand}" IsVisible="{Binding !LiveTesting.IsPaused}" />
+                <MenuItem Header="Continue Live Unit Testing" Command="{Binding LiveTesting.ContinueCommand}" IsVisible="{Binding LiveTesting.IsPaused}" />
+                <MenuItem Header="Stop Live Unit Testing" Command="{Binding LiveTesting.StopCommand}" />
+                <Separator />
+                <MenuItem Header="Test Explorer" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}" />
+              </MenuFlyout>
+            </Button.Flyout>
+          </Button>
         </StackPanel>
 
         <TextBlock Grid.Column="1" Margin="18,0" Foreground="{DynamicResource Brush.OnAccent}" FontSize="12" Opacity="0.9"

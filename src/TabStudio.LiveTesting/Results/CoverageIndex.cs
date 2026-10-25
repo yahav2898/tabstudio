@@ -167,6 +167,30 @@ public sealed class CoverageIndex
         }
     }
 
+    /// <summary>Forgets the results and coverage of tests, which then count for no line until they run again.</summary>
+    /// <param name="projectFilePath">The test project.</param>
+    /// <param name="testIds">The tests.</param>
+    public void Forget(string projectFilePath, IEnumerable<string> testIds)
+    {
+        ArgumentNullException.ThrowIfNull(projectFilePath);
+        ArgumentNullException.ThrowIfNull(testIds);
+        lock (_gate)
+        {
+            foreach (var id in testIds)
+            {
+                var key = new TestKey(projectFilePath, id);
+                if (_tests.TryGetValue(key, out var entry))
+                {
+                    SetCoverage(key, null);
+                    entry.Result = null;
+                    entry.IsPending = false;
+                }
+            }
+        }
+
+        OnChanged();
+    }
+
     /// <summary>The tests of a test project that wait to run again, for example after a cancelled run.</summary>
     /// <param name="projectFilePath">The test project.</param>
     public IReadOnlyList<string> PendingTests(string projectFilePath)

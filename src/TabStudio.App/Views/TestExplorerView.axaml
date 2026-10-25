@@ -60,6 +60,11 @@
           <Button Theme="{StaticResource ToolButton}" Classes="tool" ToolTip.Tip="Cancel" Command="{Binding CancelCommand}">
             <controls:StrokeIcon Data="{StaticResource Icon.Stop}" IsFilled="True" Size="12" Foreground="{DynamicResource Brush.Error}" />
           </Button>
+          <Button Theme="{StaticResource ToolButton}" Classes="tool" Classes.selected="{Binding LiveTesting.IsEnabled, FallbackValue=False}"
+                  ToolTip.Tip="{Binding LiveTesting.ToggleToolTip, FallbackValue={x:Null}}" Command="{Binding LiveTesting.ToggleCommand, FallbackValue={x:Null}}"
+                  IsVisible="{Binding LiveTesting, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <controls:StrokeIcon Data="{StaticResource Icon.LiveTesting}" Size="16" Foreground="{DynamicResource Brush.AccentText}" />
+          </Button>
         </StackPanel>
       </Grid>
     </Border>
@@ -124,6 +129,37 @@
       </Grid>
     </Border>
 
+    <!-- Live Unit Testing, while it is on: what it is doing, with Pause and Continue -->
+    <Border DockPanel.Dock="Top" Padding="12,7,4,7" Background="{DynamicResource Brush.AccentSoft}"
+            BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1"
+            IsVisible="{Binding LiveTesting.IsEnabled, FallbackValue=False}">
+      <Grid ColumnDefinitions="Auto,*,Auto">
+        <controls:StrokeIcon Data="{StaticResource Icon.LiveTesting}" Size="15" VerticalAlignment="Top" Margin="0,1,9,0"
+                             Foreground="{DynamicResource Brush.AccentText}" />
+        <StackPanel Grid.Column="1" Spacing="1">
+          <TextBlock FontSize="12.5" FontWeight="SemiBold" Foreground="{DynamicResource Brush.AccentText}" Text="Live Unit Testing" />
+          <TextBlock FontSize="12" TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextSecondary}"
+                     Text="{Binding LiveTesting.DetailText, FallbackValue={x:Null}}" />
+        </StackPanel>
+        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Top">
+          <Button Theme="{StaticResource ToolButton}" Classes="tool" ToolTip.Tip="Pause Live Unit Testing"
+                  Command="{Binding LiveTesting.PauseCommand, FallbackValue={x:Null}}"
+                  IsVisible="{Binding !LiveTesting.IsPaused, FallbackValue=False}">
+            <controls:StrokeIcon Data="{StaticResource Icon.Pause}" Size="13" StrokeThickness="2.6" />
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Classes="tool" ToolTip.Tip="Continue Live Unit Testing"
+                  Command="{Binding LiveTesting.ContinueCommand, FallbackValue={x:Null}}"
+                  IsVisible="{Binding LiveTesting.IsPaused, FallbackValue=False}">
+            <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="13" Foreground="{DynamicResource Brush.Success}" />
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Classes="tool" ToolTip.Tip="Stop Live Unit Testing"
+                  Command="{Binding LiveTesting.StopCommand, FallbackValue={x:Null}}">
+            <controls:StrokeIcon Data="{StaticResource Icon.Stop}" IsFilled="True" Size="11" Foreground="{DynamicResource Brush.Error}" />
+          </Button>
+        </StackPanel>
+      </Grid>
+    </Border>
+
     <!-- Search -->
     <Border DockPanel.Dock="Top" Padding="8,6,8,4">
       <TextBox Watermark="Search Test Explorer" Text="{Binding SearchText}">
@@ -162,6 +198,11 @@
                   <MenuFlyout>
                     <MenuItem Header="Run" Command="{Binding RunCommand}" />
                     <MenuItem Header="Go To Test" Command="{Binding GoToTestCommand}" IsVisible="{Binding HasLocation}" />
+                    <Separator />
+                    <MenuItem Header="Live Unit Testing">
+                      <MenuItem Header="Include" Command="{Binding IncludeInLiveTestingCommand}" />
+                      <MenuItem Header="Exclude" Command="{Binding ExcludeFromLiveTestingCommand}" />
+                    </MenuItem>
                   </MenuFlyout>
                 </Grid.ContextFlyout>
                 <Border Width="{Binding IndentWidth}" />
