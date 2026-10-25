@@ -13,10 +13,10 @@
     <Style Selector="Button.filter">
       <Setter Property="Height" Value="32" />
       <Setter Property="MinHeight" Value="32" />
-      <Setter Property="Padding" Value="11,0" />
+      <Setter Property="Padding" Value="9,0" />
       <Setter Property="CornerRadius" Value="16" />
-      <Setter Property="FontSize" Value="12.5" />
-      <Setter Property="Margin" Value="0,0,6,6" />
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="Margin" Value="0,0,4,6" />
     </Style>
     <Style Selector="Border.tag">
       <Setter Property="Height" Value="19" />
@@ -105,25 +105,26 @@
                   <StackPanel Grid.Column="1" Spacing="4">
                     <TextBlock Text="{Binding Title}" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource Brush.TextBright}"
                                TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" />
-                    <TextBlock Classes="muted small" TextTrimming="CharacterEllipsis"><Run
-                      Text="{Binding NumberText}" /><Run Text=" · " /><Run Text="{Binding Author}" /><Run Text=" · " /><Run Text="{Binding Age}" /></TextBlock>
                     <Grid ColumnDefinitions="*,Auto">
-                      <StackPanel Orientation="Horizontal" Spacing="6">
-                        <controls:StrokeIcon Data="{StaticResource Icon.Branch}" Size="12" Foreground="{DynamicResource Brush.TextMuted}" />
-                        <TextBlock Classes="small mono" FontSize="11.5" Foreground="{DynamicResource Brush.TextSecondary}" VerticalAlignment="Center"
-                                   TextTrimming="CharacterEllipsis" MaxWidth="220" Text="{Binding BranchText}" />
-                        <Border Classes="tag" IsVisible="{Binding IsDraft}">
-                          <TextBlock Text="Draft" VerticalAlignment="Center" />
-                        </Border>
-                        <Border Classes="tag review" IsVisible="{Binding IsReviewRequested}" ToolTip.Tip="You are asked to review it">
-                          <TextBlock Text="Review requested" VerticalAlignment="Center" />
-                        </Border>
-                      </StackPanel>
+                      <TextBlock Classes="muted small" TextTrimming="CharacterEllipsis"><Run
+                        Text="{Binding NumberText}" /><Run Text=" · " /><Run Text="{Binding Author}" /><Run Text=" · " /><Run Text="{Binding Age}" /></TextBlock>
                       <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" Margin="8,0,2,0" IsVisible="{Binding HasComments}"
                                   ToolTip.Tip="Comments">
                         <controls:StrokeIcon Data="{StaticResource Icon.Conversation}" Size="13" Foreground="{DynamicResource Brush.TextMuted}" />
                         <TextBlock Classes="muted small" VerticalAlignment="Center" Text="{Binding CommentCount}" />
                       </StackPanel>
+                    </Grid>
+                    <!-- The branch gives way to the tags when the window is narrow. -->
+                    <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                      <controls:StrokeIcon Data="{StaticResource Icon.Branch}" Size="12" Margin="0,0,6,0" Foreground="{DynamicResource Brush.TextMuted}" />
+                      <TextBlock Grid.Column="1" Classes="small mono" FontSize="11.5" Foreground="{DynamicResource Brush.TextSecondary}" VerticalAlignment="Center"
+                                 TextTrimming="CharacterEllipsis" Text="{Binding BranchText}" />
+                      <Border Grid.Column="2" Classes="tag" Margin="6,0,0,0" IsVisible="{Binding IsDraft}">
+                        <TextBlock Text="Draft" VerticalAlignment="Center" />
+                      </Border>
+                      <Border Grid.Column="3" Classes="tag review" Margin="6,0,0,0" IsVisible="{Binding IsReviewRequested}" ToolTip.Tip="You are asked to review it">
+                        <TextBlock Text="Review requested" VerticalAlignment="Center" />
+                      </Border>
                     </Grid>
                   </StackPanel>
                 </Grid>

@@ -60,7 +60,9 @@ public sealed class PullRequestScreenshotTests
         var threadLine = scenario.DiffLineOf(PullRequestScenario.ThreadLine);
 
         // The conversation sits under its line, in room the line makes for it.
-        await UiTestHelpers.WaitUntilAsync(() => CardHeight(diff, threadLine) > 40, because: "room under the commented line");
+        await UiTestHelpers.WaitUntilAsync(
+            () => CardHeight(diff, threadLine) > 40 && Math.Abs(CardHeight(diff, threadLine) - support.Adorner.Views.Single().DesiredSize.Height) < 1,
+            because: "room under the commented line as tall as its card");
         var card = support.Adorner.Views.Single();
         Assert.True(card.IsEffectivelyVisible);
         Assert.Contains(card.GetVisualDescendants().OfType<TextBlock>(), t => t.Text == PullRequestScenario.Colleague);
@@ -72,30 +74,33 @@ public sealed class PullRequestScreenshotTests
         Assert.Equal(PullRequestScenario.GreetingLine, tapped.Line);
         tapped.CancelCommand.Execute(null);
 
-        // Selecting lines and pressing Ctrl+Shift+Enter comments on the range.
+        // Selecting lines and pressing Ctrl+Shift+Enter comments on the range: the unchanged lines after the change.
+        const int First = PullRequestScenario.ThreadLine + 2;
+        const int Last = PullRequestScenario.ThreadLine + 3;
         var editor = diff.Editor;
         var document = editor.Document;
-        var start = document.GetLineByNumber(scenario.DiffLineOf(PullRequestScenario.FarewellLine - 1));
-        var end = document.GetLineByNumber(scenario.DiffLineOf(PullRequestScenario.FarewellLine));
+        var start = document.GetLineByNumber(scenario.DiffLineOf(First));
+        var end = document.GetLineByNumber(scenario.DiffLineOf(Last));
         editor.Select(start.Offset, end.EndOffset - start.Offset);
         editor.TextArea.Focus();
         window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.Control | RawInputModifiers.Shift);
         var composer = Assert.Single(review.Anchors.SelectMany(a => a.Items).OfType<NewCommentViewModel>());
-        Assert.Equal(PullRequestScenario.FarewellLine, composer.Line);
-        Assert.Equal(PullRequestScenario.FarewellLine - 1, composer.StartLine);
-        composer.Text = "Could the farewell use the part of the day, like **Greet** does?";
+        Assert.Equal(Last, composer.Line);
+        Assert.Equal(First, composer.StartLine);
+        composer.Text = "Could `Greet` take the time as a parameter? Then a test can check the **evening** greeting.";
         await composer.SubmitCommand.ExecuteAsync(null);
-        await UiTestHelpers.WaitUntilAsync(() => support.Adorner.Views.Count == 2 && CardHeight(diff, scenario.DiffLineOf(PullRequestScenario.FarewellLine)) > 40, because: "the pending comment's card");
-        editor.ScrollToLine(threadLine);
+        var pendingLine = scenario.DiffLineOf(Last);
+        await UiTestHelpers.WaitUntilAsync(() => support.Adorner.Views.Count == 2 && CardHeight(diff, pendingLine) > 40, because: "the pending comment's card");
+        ScrollToTop(editor, threadLine - 1);
         UiTestHelpers.SaveScreenshot(window, "pr-03-diff-review");
 
         Assert.Equal(1, pullRequest.PendingCount);
-        Assert.Equal(PullRequestScenario.FarewellLine - 1, Assert.Single(scenario.GitHub.ReviewComments(PullRequestScenario.Repository, 1), c => c.Author == FakeGitHub.Login).StartLine);
+        Assert.Equal(First, Assert.Single(scenario.GitHub.ReviewComments(PullRequestScenario.Repository, 1), c => c.Author == FakeGitHub.Login).StartLine);
 
         // Finish Review, from the diff's bar.
         review.FinishReviewCommand.Execute(null);
         var page = await VisiblePageAsync(window);
-        pullRequest.ReviewSummary = "Thanks! One question on the farewell, otherwise good to go.";
+        pullRequest.ReviewSummary = "Thanks! One question on testing the greeting, otherwise good to go.";
         await UiTestHelpers.WaitUntilAsync(() => page.FindControl<Border>("FinishReviewPanel")!.IsEffectivelyVisible, because: "the Finish Review panel");
         UiTestHelpers.SaveScreenshot(window, "pr-04-finish-review");
 
@@ -121,8 +126,10 @@ public sealed class PullRequestScreenshotTests
         pullRequest.SelectedMergeMethod = pullRequest.MergeMethods.Single(m => m.Method == MergeMethod.Squash);
         pullRequest.MergeCommand.Execute(null);
         var panel = page.FindControl<Border>("MergePanel")!;
-        page.FindControl<ScrollViewer>("SectionScroller")!.Offset = new Vector(0, 10_000);
         await UiTestHelpers.WaitUntilAsync(() => page.FindControl<Button>("ConfirmMergeButton")!.IsEffectivelyVisible, because: "the confirmation");
+        var scroller = page.FindControl<ScrollViewer>("SectionScroller")!;
+        scroller.Offset = new Vector(0, panel.TranslatePoint(default, (Visual)scroller.Content!)!.Value.Y);
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
         UiTestHelpers.SaveScreenshot(window, "pr-05-merge");
 
         Assert.True(panel.IsEffectivelyVisible);
@@ -142,7 +149,7 @@ public sealed class PullRequestScreenshotTests
         var window = Show(scenario);
         var pullRequest = await scenario.OpenPullRequestAsync(1);
         await pullRequest.CheckOutCommand.ExecuteAsync(null);
-        var document = await scenario.Workspace.OpenDocumentAsync(scenario.Fixture.PathOf(Greeter));
+        var document = await scenario.Workspace.OpenDocumentAsync(scenario.Fixture.PathOf(Greeter)) ?? throw new InvalidOperationException("The greeter did not open.");
         await UiTestHelpers.WaitUntilAsync(() => document.EditorReview is { Anchors.Count: > 0 }, because: "the editor's conversations");
         var editor = await VisibleEditorAsync(window);
         await UiTestHelpers.WaitUntilAsync(() => editor.ReviewThreads is not null, because: "the review margin");
@@ -151,6 +158,7 @@ public sealed class PullRequestScreenshotTests
         Assert.Empty(threads.Views);
         Assert.True(threads.Toggle(PullRequestScenario.ThreadLine));
         await UiTestHelpers.WaitUntilAsync(() => CardHeight(editor.Editor, PullRequestScenario.ThreadLine) > 40, because: "the conversation under its line");
+        ScrollToTop(editor.Editor, PullRequestScenario.ThreadLine - 5);
         UiTestHelpers.SaveScreenshot(window, "pr-06-editor-comments");
 
         var card = threads.Views.Single();
@@ -196,8 +204,9 @@ public sealed class PullRequestScreenshotTests
         await scenario.OpenFileAsync(pullRequest, Greeter);
         var diff = await VisibleDiffAsync(window);
         var farewell = scenario.DiffLineOf(PullRequestScenario.FarewellLine);
-        await UiTestHelpers.WaitUntilAsync(() => CardHeight(diff, farewell) > 40, because: "the drafts' cards");
-        diff.Editor.ScrollToLine(scenario.DiffLineOf(PullRequestScenario.GreetingLine));
+        var greeting = scenario.DiffLineOf(PullRequestScenario.GreetingLine);
+        await UiTestHelpers.WaitUntilAsync(() => CardHeight(diff, greeting) > 40 && CardHeight(diff, farewell) > 40, because: "the drafts' cards");
+        ScrollToTop(diff.Editor, greeting - 2);
         UiTestHelpers.SaveScreenshot(window, "pr-08-claude-drafts");
 
         var cards = diff.ReviewSupport!.Adorner.Views;
@@ -209,8 +218,10 @@ public sealed class PullRequestScreenshotTests
         window.Close();
     }
 
+    /// <summary>Shows the workspace without the bottom panel, so the pages and diffs have room.</summary>
     private static Window Show(PullRequestScenario scenario)
     {
+        scenario.Workspace.IsBottomPanelVisible = false;
         var window = new Window { Width = 1280, Height = 800, Content = new WorkspaceView { DataContext = scenario.Workspace } };
         window.Show();
         Avalonia.Threading.Dispatcher.UIThread.RunJobs();
@@ -236,8 +247,17 @@ public sealed class PullRequestScreenshotTests
 
     private static double CardHeight(AvaloniaEdit.TextEditor editor, int line)
     {
+        // Lines scrolled out of view are laid out on demand, with the room they would have.
         var textView = editor.TextArea.TextView;
-        return textView.VisualLinesValid && textView.GetVisualLine(line) is { } visual ? visual.Height - textView.DefaultLineHeight : 0;
+        return textView.VisualLinesValid ? textView.GetOrConstructVisualLine(editor.Document.GetLineByNumber(line)).Height - textView.DefaultLineHeight : 0;
+    }
+
+    /// <summary>Scrolls an editor so a line is at its top.</summary>
+    private static void ScrollToTop(AvaloniaEdit.TextEditor editor, int line)
+    {
+        var textView = editor.TextArea.TextView;
+        editor.ScrollToVerticalOffset(textView.GetOrConstructVisualLine(editor.Document.GetLineByNumber(line)).VisualTop);
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
     }
 
     /// <summary>Taps the review margin beside a line, as a finger would.</summary>

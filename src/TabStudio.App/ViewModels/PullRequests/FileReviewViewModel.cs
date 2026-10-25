@@ -61,7 +61,7 @@ public sealed partial class FileReviewViewModel : ObservableObject, IReviewAncho
 
     /// <summary>The hint under the review bar on how to comment.</summary>
     public string CommentHint => CanComment
-        ? "Tap a line's margin, or select lines and press Ctrl+Shift+Enter, to comment."
+        ? "Tap the margin, or select lines and press Ctrl+Shift+Enter, to comment."
         : "This pull request is closed, so it takes no new comments.";
 
     /// <summary>Connects the review to its diff's document, whose lines it places items under.</summary>

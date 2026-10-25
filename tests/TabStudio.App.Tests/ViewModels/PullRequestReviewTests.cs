@@ -314,7 +314,7 @@ public sealed class PullRequestReviewTests
         var pullRequest = await scenario.OpenPullRequestAsync(1);
         await pullRequest.CheckOutCommand.ExecuteAsync(null);
 
-        var document = await scenario.Workspace.OpenDocumentAsync(scenario.Fixture.PathOf(Greeter));
+        var document = await scenario.Workspace.OpenDocumentAsync(scenario.Fixture.PathOf(Greeter)) ?? throw new InvalidOperationException("The greeter did not open.");
         await UiTestHelpers.WaitUntilAsync(() => document.EditorReview is { Anchors.Count: > 0 }, because: "the editor's conversations");
 
         var anchor = Assert.Single(document.EditorReview!.Anchors);

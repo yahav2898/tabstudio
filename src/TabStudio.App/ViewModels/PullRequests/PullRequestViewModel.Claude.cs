@@ -94,7 +94,7 @@ public sealed partial class PullRequestViewModel
                 : review.Summary;
             OnDraftsChanged();
             Section = PullRequestSection.Files;
-            _host.ReportStatus(review.Findings.Count == 0 ? "Claude has no comments." : $"Claude drafted {DraftsText}.");
+            _host.ReportStatus(review.Findings.Count == 0 ? "Claude has no comments." : $"Claude drafted {ReviewDisplay.Count(review.Findings.Count, "comment")}.");
         }
         catch (OperationCanceledException)
         {
