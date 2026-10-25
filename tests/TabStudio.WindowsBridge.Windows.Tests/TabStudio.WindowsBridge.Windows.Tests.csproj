@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The Windows Bridge on real Windows (the Windows CI job): WPF and Windows Forms template apps and a Visual C++
+    project build and run through the bridge on the loopback address, their windows are captured, a click through
+    the input path shows in the next frame, and the WPF app is debugged to a breakpoint with netcoredbg. Elsewhere
+    every test is skipped.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\TabStudio.WindowsBridge.Windows\TabStudio.WindowsBridge.Windows.csproj" />
+    <ProjectReference Include="..\TabStudio.Testing\TabStudio.Testing.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+</Project>

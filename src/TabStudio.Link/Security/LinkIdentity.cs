@@ -40,8 +40,9 @@ public sealed class LinkIdentity : IDisposable
             critical: false));
         using var certificate = request.CreateSelfSigned(DateTimeOffset.UtcNow.AddDays(-1), DateTimeOffset.UtcNow.AddYears(30));
 
-        // A certificate loaded from PKCS #12 has a key every platform's TLS can use, Windows' included.
-        return new LinkIdentity(X509CertificateLoader.LoadPkcs12(certificate.Export(X509ContentType.Pkcs12), password: null));
+        // A certificate loaded from PKCS #12 has a key every platform's TLS can use, Windows' included. The key stays
+        // exportable, because Windows would otherwise refuse to export it again when the identity is saved.
+        return new LinkIdentity(X509CertificateLoader.LoadPkcs12(certificate.Export(X509ContentType.Pkcs12), password: null, X509KeyStorageFlags.Exportable));
     }
 
     /// <summary>Loads the identity saved in a file, or makes and saves a new one when there is none or it is unreadable.</summary>
@@ -53,7 +54,7 @@ public sealed class LinkIdentity : IDisposable
         {
             try
             {
-                var certificate = X509CertificateLoader.LoadPkcs12(File.ReadAllBytes(path), password: null);
+                var certificate = X509CertificateLoader.LoadPkcs12(File.ReadAllBytes(path), password: null, X509KeyStorageFlags.Exportable);
                 if (certificate.HasPrivateKey)
                 {
                     return new LinkIdentity(certificate);

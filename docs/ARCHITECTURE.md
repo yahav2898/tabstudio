@@ -391,7 +391,7 @@ adapter it brings.
   package against the index entry that lists it, before anything is unpacked.
 - **Processes.** Programs are children of TabStudio's process, started with pipes or a pseudo terminal, and are
   killed with their whole process tree when stopped, as Android 12 and later expect.
-- **Projects.** `ToolchainProjectDetector` finds Python and Node.js projects in a workspace from their project files.
+- **Projects.** `ToolchainProjectDetector` finds projects from the catalog's manifests and source-file rules.
   F5 and Ctrl+F5 run them with their console in the Output panel; problem matchers turn tracebacks and compiler
   output into Error List entries and links.
 - **The terminal.** `TerminalEmulator` turns what programs write to a pseudo terminal into styled character cells,
@@ -400,7 +400,22 @@ adapter it brings.
   toolchain runtime, so Pyright, typescript-language-server, debugpy and vscode-js-debug start inside the Linux
   environment and paths are translated between the device and the environment. A missing server or adapter offers
   to install the toolchain that brings it. For F5, a project's run plan becomes a DAP launch configuration, and the
-  program starts through the adapter's `runInTerminal` request, so its input and output stay in the Output panel.
+  program's input and output stay in the Output panel through its adapter's terminal or runtime streams.
+
+### C and C++
+
+CMake projects, Makefiles and standalone `.c`/`.cpp` programs are startup projects; headers and build output are
+excluded. Alpine installs Clang, build-base (including make), CMake, clangd and LLDB with lldb-dap; desktops use
+PATH. CMake configures a Debug build, exports `compile_commands.json` for clangd and reports executable artifacts
+through its codemodel file API. An active source selects among several targets. Makefile projects need no special
+run target: the unique executable at the root or in `bin`, `build` or `out` runs. Ambiguous outputs need a launch
+configuration. Standalone files use their language's compiler with debug information. Compiler locations become
+Error List links.
+
+F5 uses LLDB DAP. Desktop programs use `runInTerminal`; on Android, LLDB launches within the same PRoot trace tree
+as its debuggee and reads Output-panel input from a private FIFO created through Android's C library. Program
+output arrives as DAP events. Real-tool IDE and emulator tests cover the CMake template, a breakpoint and Locals;
+the IDE test also checks clangd, Watch and Call Stack.
 
 ## Swarm
 
@@ -575,22 +590,3 @@ design keeps the second part proportional to what you are actually editing:
 ## Code conventions
 
 See [CONTRIBUTING.md](../CONTRIBUTING.md) for code style, tests and how CI reports results.
-
-### Toolchains: C and C++
-
-CMake projects, Makefiles and folders containing a `.c` or `.cpp` program are startup projects. Headers and
-build output do not create runnable source projects. Alpine installs Clang, build-base, CMake, make, clangd and
-LLDB with lldb-dap; desktops use PATH. Standalone C and C++ files use their respective compiler and debug symbols.
-CMake configures a Debug build, exports compile_commands.json for clangd, and answers a codemodel file API query.
-The IDE runs the actual executable artifact, including targets in subdirectories. With several executable targets,
-open a source file of the desired target. Makefile builds need no special run target; a unique executable in the
-project, bin, build or out runs. Ambiguous outputs require an explicit launch configuration. Ctrl+F5 uses the
-Output panel console; F5 uses LLDB DAP with runInTerminal. Compiler errors link into the Error List. The IDE
-job verifies clangd completion, diagnostics and navigation, console I/O, a breakpoint, locals and a watch. The
-emulator installs from the real Alpine mirror and builds and runs the CMake template. PRoot native debugging
-needs validation on device kernels; host debugger results do not establish Android ptrace compatibility.
-
-On Android, LLDB 22 launches the debuggee itself inside the same PRoot trace tree. Its `stdio` launch
-configuration reads stdin from a private FIFO shared from the app cache; the Output panel forwards answers
-there, while stdout and stderr arrive as DAP events. Desktop LLDB keeps using runInTerminal. This avoids
-attempting ptrace across two independent PRoot instances. The emulator also checks a breakpoint and a local.
