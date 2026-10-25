@@ -88,6 +88,17 @@ public abstract class ButtonBase : Control
     [DefaultValue(true)]
     public bool UseVisualStyleBackColor { get; set; } = true;
 
+    /// <summary>The background color. Setting it turns <see cref="UseVisualStyleBackColor"/> off, as on Windows.</summary>
+    public override Color BackColor
+    {
+        get => base.BackColor;
+        set
+        {
+            UseVisualStyleBackColor = false;
+            base.BackColor = value;
+        }
+    }
+
     /// <summary>Whether text is drawn with GDI+. Kept for compatibility.</summary>
     public bool UseCompatibleTextRendering { get; set; }
 

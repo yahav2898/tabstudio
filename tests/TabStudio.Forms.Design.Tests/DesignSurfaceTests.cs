@@ -119,6 +119,12 @@ public sealed class DesignSurfaceTests
         Assert.Contains("nameTextBox.Enabled = false;", text, StringComparison.Ordinal);
         Assert.DoesNotContain("saveButton.ForeColor", text, StringComparison.Ordinal);
 
+        // A button given a back color stops drawing the visual style's face, as Visual Studio writes it.
+        surface.SetProperty(surface.Document!.Find("saveButton")!, "BackColor", Color.LightYellow);
+        Assert.Contains("saveButton.BackColor = Color.LightYellow;", surface.Text, StringComparison.Ordinal);
+        Assert.Contains("saveButton.UseVisualStyleBackColor = false;", surface.Text, StringComparison.Ordinal);
+        Assert.False(((Button)surface.Root!.Controls.Find("saveButton", true)[0]).UseVisualStyleBackColor);
+
         // Back to the default, the property leaves the file.
         surface.SetProperty(surface.Document!.Find("nameTextBox")!, "Enabled", true);
         Assert.DoesNotContain("nameTextBox.Enabled", surface.Text, StringComparison.Ordinal);

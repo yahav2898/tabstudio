@@ -231,6 +231,12 @@ internal sealed partial class DesignSurface
             var target = doc.Find(component.Name)!;
             var type = target.Type ?? target.Instance?.GetType();
             target.SetCode(path, type is null || ComponentDefaults.IsWritten(type, path, value) ? code : null);
+
+            // As on Windows, a button given a back color stops drawing the visual style's face.
+            if (path == nameof(Control.BackColor) && value is Color { IsEmpty: false } && type is not null && typeof(ButtonBase).IsAssignableFrom(type))
+            {
+                target.SetCode(nameof(ButtonBase.UseVisualStyleBackColor), "false");
+            }
         });
     }
 
