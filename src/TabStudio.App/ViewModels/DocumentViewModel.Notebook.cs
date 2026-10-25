@@ -20,10 +20,11 @@ public sealed partial class DocumentViewModel
     /// <summary>
     /// Whether the floating editing actions (Comment, Format, Find, Run) apply to this document. A notebook has
     /// its own toolbar instead, and so does a CI job's log, which is read-only; a pull request's page and its diffs
-    /// have their own review actions; a XAML file's designer hides them while the code is not shown.
+    /// have their own review actions; a XAML file's designer hides them while the code is not shown; the Device
+    /// Matrix has no code.
     /// </summary>
     public bool ShowsEditorActions =>
-        Notebook is null && CiLog is null && PullRequest is null && Review is null && Designer?.ShowsCode != false;
+        Notebook is null && CiLog is null && PullRequest is null && Review is null && Designer?.ShowsCode != false && DeviceMatrix is null;
 
     /// <summary>The text the file would have if it were saved now, for restoring unsaved work.</summary>
     public string CurrentText => Notebook?.Serialize() ?? Document.Text;

@@ -116,8 +116,8 @@ public sealed class WebAppScreenTests
     {
         var browser = new ScriptedBrowser
         {
-            IssuesAnswer = $$"""
-                [{"kind":"SmallTouchTarget","severity":"Warning","path":"{{Button}}","message":"button \"Greet\" is 70 × 40 dips.","bounds":{"x":252.5,"y":169,"width":69.6,"height":40}},
+            IssuesAnswer = $$$"""
+                [{"kind":"SmallTouchTarget","severity":"Warning","path":"{{{Button}}}","message":"button \"Greet\" is 70 × 40 dips.","bounds":{"x":252.5,"y":169,"width":69.6,"height":40}},
                  {"kind":"Sparkle","severity":"Error","path":"body","message":"?","bounds":null}]
                 """,
         };

@@ -16,6 +16,14 @@ public static partial class SelfTest
     /// <summary>How long the page may take to load as a screen, and to answer.</summary>
     private static readonly TimeSpan WebScreenTimeout = TimeSpan.FromSeconds(60);
 
+    /// <summary>The pause between a person's steps, in which a soft keyboard can come up.</summary>
+    private static readonly TimeSpan StepPause = TimeSpan.FromSeconds(1);
+
+    /// <summary>The events the page saw lately, with where the browser's view was, for a failure's message.</summary>
+    private const string RecentEvents =
+        "JSON.stringify({ events: window.__tabStudioScreen.recent().map(function (e) { return e.type + ' ' + e.path + ' ' + e.x + ',' + e.y + (e.data ? ' ' + e.data : ''); }), "
+        + "view: [innerWidth, innerHeight, devicePixelRatio, visualViewport ? visualViewport.offsetTop : 0, scrollY], active: document.activeElement && document.activeElement.id })";
+
     /// <summary>
     /// With the web app running in the web preview: waits for its page as a screen, taps the name box, types the
     /// self test's name and taps Greet through <see cref="IAppScreen.SendInputAsync"/>, reads the API's answer on the
@@ -47,13 +55,16 @@ public static partial class SelfTest
         screen.InputCaptured += OnCaptured;
         try
         {
-            // A person's steps, aimed at elements: the name box, the name, and the Greet button.
+            // A person's steps, aimed at elements, at a person's pace: the name box, the name, and the Greet button.
             var tapped = await screen.SendInputAsync(new AppInput(AppInputKind.Tap, "body/main[0]/form#form/input#name"), cancellationToken);
-            await Task.Delay(TimeSpan.FromMilliseconds(600), cancellationToken);
+            await Task.Delay(StepPause, cancellationToken);
             var typed = await screen.SendInputAsync(new AppInput(AppInputKind.Text, string.Empty, Text: Name), cancellationToken);
+            await Task.Delay(StepPause, cancellationToken);
+            var value = await browser.EvaluateAsync("document.getElementById('name').value", cancellationToken);
             var greeted = await screen.SendInputAsync(new AppInput(AppInputKind.Tap, "body/main[0]/form#form/button[0]"), cancellationToken);
             string? answer = null;
-            while (clock.Elapsed < WebScreenTimeout)
+            var answerBy = clock.Elapsed + TimeSpan.FromSeconds(20);
+            while (clock.Elapsed < answerBy)
             {
                 answer = await browser.EvaluateAsync("document.getElementById('answer').textContent", cancellationToken);
                 if (answer?.Contains($"Hello, {Name}!", StringComparison.Ordinal) == true)
@@ -69,6 +80,7 @@ public static partial class SelfTest
             var picture = await screen.CaptureAsync(cancellationToken);
             var issues = await screen.InspectLayoutAsync(cancellationToken);
             var answered = answer?.Contains($"Hello, {Name}!", StringComparison.Ordinal) == true;
+            var seen = answered ? null : await browser.EvaluateAsync(RecentEvents, cancellationToken);
             var small = issues.Count(i => i.Kind == LayoutIssueKind.SmallTouchTarget);
             var success = tapped && typed && greeted && answered && echoed.Count == 0 && picture is { Length: > 0 } && small > 0;
             var message = success
@@ -77,7 +89,7 @@ public static partial class SelfTest
                     $"Web screen: typed \"{Name}\" and tapped Greet through the browser's input on a {screen.Profile.Width:0} × {screen.Profile.Height:0} page, {issues.Count} layout findings, in {clock.Elapsed.TotalSeconds:0.0} s")
                 : string.Create(
                     CultureInfo.InvariantCulture,
-                    $"Web screen: tap {tapped}, text {typed}, Greet {greeted}, answer {answer ?? "none"}, echoed {echoed.Count}, picture {picture?.Length ?? 0} bytes, {small} small targets");
+                    $"Web screen: tap {tapped}, text {typed} ({value}), Greet {greeted}, answer {answer ?? "none"}, echoed [{string.Join("; ", echoed.Select(e => $"{e.Kind} {e.ElementPath}{e.Text}{e.Key} {e.ScrollDelta}"))}], picture {picture?.Length ?? 0} bytes, {small} small targets, page saw {seen}");
             return new SelfTestResult(success, message, clock.Elapsed);
         }
         finally

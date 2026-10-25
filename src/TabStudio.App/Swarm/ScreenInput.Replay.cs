@@ -20,6 +20,9 @@ internal sealed partial class ScreenInput
     /// <summary>How long a frame may take before a replay goes on without it, such as on a screen that is not drawn.</summary>
     private static readonly TimeSpan FrameTimeout = TimeSpan.FromMilliseconds(250);
 
+    /// <summary>How long a replayed touch waits for its element to be drawn where it is laid out.</summary>
+    private static readonly TimeSpan DrawTimeout = TimeSpan.FromSeconds(2);
+
     /// <summary>How much longer than the platform's hold delay a replayed long press holds.</summary>
     private static readonly TimeSpan HoldMargin = TimeSpan.FromMilliseconds(150);
 
@@ -64,8 +67,10 @@ internal sealed partial class ScreenInput
             return false;
         }
 
-        // The finger lands on whatever is on top there, as a person's would.
+        // The finger lands on whatever is on top there, as a person's would, once it is drawn there.
         var touched = ScreenHitTest.ElementAt(_root, point) ?? target;
+        var drawn = ReferenceEquals(touched, target) || target.IsVisualAncestorOf(touched) ? target : touched;
+        await DrawnAsync(drawn, point, cancellationToken);
         var focusBefore = TopLevel.GetTopLevel(_surface)?.FocusManager?.GetFocusedElement();
         var pointer = new Pointer(Pointer.GetNextFreeId(), PointerType.Touch, isPrimary: true);
         _replayPointer = pointer;
@@ -79,6 +84,8 @@ internal sealed partial class ScreenInput
                 await Task.Delay(holdDelay + HoldMargin, cancellationToken);
             }
 
+            // A button clicks when the finger lifts over what was last drawn of it.
+            await DrawnAsync(drawn, point, cancellationToken);
             Lift();
         }
         finally
@@ -289,6 +296,31 @@ internal sealed partial class ScreenInput
         return fraction == default
             ? new Point(size.Width / 2, size.Height / 2)
             : new Point(Math.Clamp(fraction.X, 0, 1) * size.Width, Math.Clamp(fraction.Y, 0, 1) * size.Height);
+    }
+
+    /// <summary>
+    /// Waits until an element is drawn where it is laid out, at a point. Avalonia's controls check what was last
+    /// drawn, such as a button that a lifted finger must still be over, and a slow renderer, such as an emulator's,
+    /// can draw a frame or more behind the layout.
+    /// </summary>
+    /// <returns>Whether the element is drawn there; after a while the replay goes on without it.</returns>
+    internal async Task<bool> DrawnAsync(Visual element, Point point, CancellationToken cancellationToken)
+    {
+        var deadline = Environment.TickCount64 + (long)DrawTimeout.TotalMilliseconds;
+        while (true)
+        {
+            if (_root.TranslatePoint(point, element) is { } local && element.GetVisualsAt(local).Any())
+            {
+                return true;
+            }
+
+            if (Environment.TickCount64 > deadline || TopLevel.GetTopLevel(_surface) is null)
+            {
+                return false;
+            }
+
+            await NextFramesAsync(cancellationToken);
+        }
     }
 
     /// <summary>Waits until the next frame has been drawn, or a short while on a screen that is not drawn.</summary>

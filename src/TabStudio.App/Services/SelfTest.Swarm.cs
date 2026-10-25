@@ -1,7 +1,9 @@
 using System.Diagnostics;
 using System.Globalization;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.LogicalTree;
+using Avalonia.VisualTree;
 using TabStudio.App.Swarm;
 using TabStudio.App.ViewModels;
 
@@ -72,7 +74,7 @@ public static partial class SelfTest
             // A tap on the phone's count button, as a person's finger, through Avalonia's input.
             var (phone, tablet) = (devices[0], devices[1]);
             var button = phone.AppRoot!.GetLogicalDescendants().OfType<Button>().Single(b => b.Name == "CountButton");
-            var path = ElementPaths.Describe(phone.AppRoot, button)!;
+            var path = ElementPaths.Describe(phone.AppRoot!, button)!;
             var tapped = await phone.SendInputAsync(new AppInput(AppInputKind.Tap, path), cancellationToken);
             while (!Texts(phone.AppRoot).Contains("Clicked 1 times") && clock.Elapsed < deadline)
             {
@@ -81,7 +83,7 @@ public static partial class SelfTest
 
             if (!tapped || !Texts(phone.AppRoot).Contains("Clicked 1 times") || !Texts(tablet.AppRoot!).Contains("Clicked 0 times"))
             {
-                return new SelfTestResult(false, $"Swarm: the tap on {path} did not count on the phone alone: phone {string.Join(", ", Texts(phone.AppRoot))}", clock.Elapsed);
+                return new SelfTestResult(false, $"Swarm: the tap on {path} did not count on the phone alone: {DescribeTap(button, tapped)}; phone {string.Join(", ", Texts(phone.AppRoot))}", clock.Elapsed);
             }
 
             // Every screen is checked a moment after the app starts on it.
@@ -104,5 +106,15 @@ public static partial class SelfTest
             workspace.StopCommand.Execute(null);
             await run.WaitAsync(cancellationToken);
         }
+    }
+
+    /// <summary>Where a replayed tap went, for a failure's message: whether it was sent, drawn, and where the frame was.</summary>
+    private static string DescribeTap(Button button, bool tapped)
+    {
+        var center = new Point(button.Bounds.Width / 2, button.Bounds.Height / 2);
+        var drawn = button.GetVisualsAt(center).Count();
+        var host = button.FindAncestorOfType<VirtualDeviceFrame>()?.Parent?.GetType().Name ?? "no frame";
+        var window = TopLevel.GetTopLevel(button) is { } top ? button.TranslatePoint(center, top) : null;
+        return string.Create(CultureInfo.InvariantCulture, $"sent {tapped}, {drawn} drawn visuals at its center, frame in {host}, at {window} in the window, pressed {button.IsPressed}");
     }
 }

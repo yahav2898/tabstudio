@@ -26,10 +26,12 @@
   var EXPECT = 2500;
 
   var queue = [];
+  var recent = [];
   var expected = [];
   var scrolls = [];
   var positions = new WeakMap();
   var quietScrollUntil = 0;
+  var personUntil = 0;
 
   // ---- Element paths: tag#id where the id is unique, otherwise tag[index] among siblings of the same tag.
 
@@ -230,6 +232,21 @@
     positions.set(root, positionOf(root));
   }
 
+  // A touch, wheel or key: what scrolls in the next moments scrolls because of it. When it is a replayed input, or
+  // its consequence, such as the page scrolling a focused box above a soft keyboard, the scroll is not a person's.
+  function touched(target) {
+    var t = now();
+    var replaying = expected.some(function (e) { return e.until > t && e.kind !== 'Text'; });
+    if (replaying) {
+      quietScrollUntil = t + 1500;
+    } else {
+      personUntil = t + 900;
+    }
+    if (target) {
+      remember(target);
+    }
+  }
+
   function onScroll(e) {
     var el = scrollTargetOf(e.target);
     if (!el || el.nodeType !== 1) {
@@ -238,14 +255,15 @@
     var at = positionOf(el);
     var before = positions.get(el);
     positions.set(el, at);
-    if (!before || now() < quietScrollUntil) {
-      return;
-    }
     var pending = null;
     for (var i = 0; i < scrolls.length; i++) {
       if (scrolls[i].el === el) {
         pending = scrolls[i];
       }
+    }
+    // Only a scroll a person started, or the rest of one, such as a fling.
+    if (!before || now() < quietScrollUntil || (!pending && now() > personUntil)) {
+      return;
     }
     if (!pending) {
       pending = { el: el, dx: 0, dy: 0, timer: 0 };
@@ -264,11 +282,15 @@
   }
 
   function listen() {
-    document.addEventListener('pointerdown', function (e) { remember(e.target); }, true);
+    document.addEventListener('pointerdown', function (e) { touched(e.target); }, true);
+    ['touchstart', 'touchend', 'click', 'contextmenu', 'focusin', 'scroll', 'compositionend', 'input'].forEach(function (type) {
+      document.addEventListener(type, note, { capture: true, passive: true });
+    });
     // Not passive: the browser waits for these before it scrolls, so the positions are the ones before the scroll.
-    document.addEventListener('touchstart', function (e) { remember(e.target); }, { capture: true, passive: false });
-    document.addEventListener('wheel', function (e) { remember(e.target); }, { capture: true, passive: false });
-    document.addEventListener('keydown', function (e) { remember(document.activeElement); }, true);
+    document.addEventListener('touchstart', function (e) { touched(e.target); }, { capture: true, passive: false });
+    document.addEventListener('touchmove', function () { touched(null); }, { capture: true, passive: true });
+    document.addEventListener('wheel', function (e) { touched(e.target); }, { capture: true, passive: false });
+    document.addEventListener('keydown', function () { touched(document.activeElement); }, true);
     document.addEventListener('scroll', onScroll, true);
     document.addEventListener('click', function (e) {
       // A click from the keyboard comes with its key, which is captured itself.
@@ -308,6 +330,23 @@
       }
     }, true);
     remember(document.body);
+  }
+
+  // What the page saw lately, for finding out why a replayed input did not do what it should.
+  function note(e) {
+    var touch = e.changedTouches && e.changedTouches[0];
+    var target = e.target && e.target.nodeType === 1 ? e.target : null;
+    recent.push({
+      type: e.type,
+      path: target ? describe(target) : String(e.target && e.target.nodeName),
+      x: Math.round(touch ? touch.clientX : e.clientX || 0),
+      y: Math.round(touch ? touch.clientY : e.clientY || 0),
+      trusted: e.isTrusted,
+      data: e.data || null
+    });
+    if (recent.length > 24) {
+      recent.shift();
+    }
   }
 
   // ---- Replay: where to touch an element, text into the focused element, and scrolls.
@@ -807,6 +846,7 @@
   }
 
   window.__tabStudioScreen = {
+    recent: function () { return recent.slice(); },
     describe: describe,
     resolve: resolve,
     state: state,

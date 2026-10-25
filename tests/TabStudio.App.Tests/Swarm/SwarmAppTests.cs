@@ -5,6 +5,7 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.LogicalTree;
 using Avalonia.Media.Imaging;
+using Avalonia.VisualTree;
 using TabStudio.App.Services;
 using TabStudio.App.Services.Agent;
 using TabStudio.App.Swarm;
@@ -215,6 +216,11 @@ public sealed class SwarmAppTests
         Assert.True(asked.HasImage);
         Assert.False(workspace.Agent.HasAttachment);
         workspace.IsBottomPanelVisible = false;
+
+        // The request's top, with the picture Claude got.
+        var conversation = window.GetVisualDescendants().OfType<AgentPanelView>().Single().Messages;
+        conversation.UpdateLayout();
+        conversation.Offset = default;
         UiTestHelpers.SaveScreenshot(window, "swarm-04-fix-with-agent");
 
         workspace.StopCommand.Execute(null);

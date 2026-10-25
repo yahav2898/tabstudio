@@ -124,10 +124,10 @@ public sealed partial class DeviceMatrixViewModel : ObservableObject, IDisposabl
     public IReadOnlyList<LayoutRuleViewModel> Rules { get; }
 
     /// <summary>The devices to add, in portrait.</summary>
-    public IReadOnlyList<DevicePreset> PortraitPresets => DevicePresets.Portrait;
+    public IReadOnlyList<DevicePreset> PortraitPresets { get; } = DevicePresets.Portrait;
 
     /// <summary>The devices to add, in landscape.</summary>
-    public IReadOnlyList<DevicePreset> LandscapePresets => DevicePresets.Landscape;
+    public IReadOnlyList<DevicePreset> LandscapePresets { get; } = DevicePresets.Landscape;
 
     /// <summary>How large screens are drawn, 1 for their real size.</summary>
     [ObservableProperty]
