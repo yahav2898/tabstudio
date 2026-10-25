@@ -61,6 +61,17 @@ public sealed class WebAssemblyAppHostTests : IDisposable
     }
 
     [Fact]
+    public void Lists_the_apps_JavaScript_initializers_for_Blazor_and_for_the_runtime()
+    {
+        var bundle = WebAssemblyBundle.Create(App() with { LibraryInitializers = ["_content/Library/Library.lib.module.js"] });
+
+        using var config = BootConfig(Encoding.UTF8.GetString(bundle.Find("_framework/dotnet.js")!.Content.Span));
+        var resources = config.RootElement.GetProperty("resources");
+        Assert.Equal(new[] { "_content/Library/Library.lib.module.js" }, Names(resources, "libraryInitializers"));
+        Assert.Equal(new[] { "../_content/Library/Library.lib.module.js" }, Names(resources, "modulesAfterConfigLoaded"));
+    }
+
+    [Fact]
     public void An_app_without_culture_data_loads_no_ICU()
     {
         var bundle = WebAssemblyBundle.Create(App() with { InvariantGlobalization = true });

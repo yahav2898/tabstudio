@@ -50,6 +50,12 @@ public sealed record WebAssemblyApp
     /// <summary>The runtime configuration properties, such as feature switches, as the app's <c>runtimeconfig.json</c> would have them.</summary>
     public IReadOnlyDictionary<string, object> RuntimeProperties { get; init; } = new Dictionary<string, object>(StringComparer.Ordinal);
 
+    /// <summary>
+    /// The routes of the app's JavaScript initializers, such as <c>_content/Library/Library.lib.module.js</c>, which Blazor
+    /// and the runtime call while the app starts.
+    /// </summary>
+    public IReadOnlyList<string> LibraryInitializers { get; init; } = [];
+
     /// <summary>Where the runtime and the assemblies are served, <c>_framework</c> as everywhere in .NET.</summary>
     public string FrameworkPath { get; init; } = "_framework";
 }

@@ -88,6 +88,7 @@ public static class BlazorWebAssemblyApps
             AppSettings = appSettings,
             BootExtensions = ["blazor"],
             RuntimeProperties = RuntimeProperties(project),
+            LibraryInitializers = [.. content.Select(a => a.Route).Where(JavaScriptInitializers.IsInitializer).Distinct(StringComparer.Ordinal)],
         };
 
         return (app, diagnostics);

@@ -55,5 +55,38 @@ public sealed class RazorProjectKindTests : IDisposable
         Assert.True(wasm.IsExecutable);
     }
 
+    [Fact]
+    public void The_WebAssembly_client_of_a_Blazor_Web_App_is_not_the_default_startup_project()
+    {
+        _temp.Write("Shop.Client/Shop.Client.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+              <PropertyGroup>
+                <TargetFramework>net10.0</TargetFramework>
+                <StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode>
+              </PropertyGroup>
+            </Project>
+            """);
+        _temp.Write("Shop/Shop.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk.Web">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+              <ItemGroup><ProjectReference Include="..\Shop.Client\Shop.Client.csproj" /></ItemGroup>
+            </Project>
+            """);
+        _temp.Write("Shop/Components/App.razor", "<Routes />");
+        var solution = _temp.Write("Shop.slnx", """
+            <Solution>
+              <Project Path="Shop.Client/Shop.Client.csproj" />
+              <Project Path="Shop/Shop.csproj" />
+            </Solution>
+            """);
+
+        var workspace = WorkspaceLoader.Load(solution);
+
+        var client = workspace.Projects.Single(p => p.Name == "Shop.Client");
+        Assert.True(ProjectClassifier.IsBlazorWebAppClient(client));
+        Assert.Equal("Shop", workspace.DefaultStartupProject?.Name);
+        Assert.Equal(ProjectKind.BlazorWebApp, workspace.DefaultStartupProject?.Kind);
+    }
+
     public void Dispose() => _temp.Dispose();
 }

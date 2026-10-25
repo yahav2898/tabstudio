@@ -160,6 +160,11 @@ public sealed class ServerAppAssets : IDisposable
         }
 
         var name = request.ApplicationName ?? app.GetProperty("AssemblyName") ?? app.Name;
+        if (JavaScriptInitializers.Write(assets, Path.Combine(request.OutputDirectory, $"{name}.modules.json")) is { } modules)
+        {
+            assets.Add(StaticWebAsset.Create($"{name}.modules.json", modules));
+        }
+
         var runtimeManifest = Path.Combine(request.OutputDirectory, $"{name}.staticwebassets.runtime.json");
         var endpointsManifest = Path.Combine(request.ManifestDirectory, $"{name}.staticwebassets.endpoints.json");
         StaticAssetManifests.WriteRuntimeManifest(assets, patternRoots, runtimeManifest);

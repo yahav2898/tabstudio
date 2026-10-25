@@ -165,6 +165,24 @@ public sealed class StaticWebAssetsTests : IDisposable
         Assert.True(headers.ContainsKey("Last-Modified"));
     }
 
+    [Fact]
+    public void Lists_the_JavaScript_initializers_of_the_site_as_the_SDK_does()
+    {
+        var file = _temp.Resolve("obj/App.modules.json");
+
+        var written = JavaScriptInitializers.Write(
+            [
+                StaticWebAsset.Create("app.css", _temp.Write("a.css")),
+                StaticWebAsset.Create("_content/Library/Library.lib.module.js", _temp.Write("b.js")),
+                StaticWebAsset.Create("App.lib.module.js", _temp.Write("c.js")),
+            ],
+            file);
+
+        Assert.Equal(file, written);
+        Assert.Equal("""["_content/Library/Library.lib.module.js","App.lib.module.js"]""", File.ReadAllText(file));
+        Assert.Null(JavaScriptInitializers.Write([StaticWebAsset.Create("app.css", _temp.Write("a.css"))], _temp.Resolve("obj/None.modules.json")));
+    }
+
     [Theory]
     [InlineData("_framework/dotnet.native.wasm", "application/wasm")]
     [InlineData("_framework/dotnet.js", "text/javascript")]

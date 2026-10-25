@@ -127,6 +127,13 @@ internal static partial class WebAssemblyBootConfig
         WriteFiles(json, "coreAssembly", resources.CoreAssemblies, app.FrameworkPath, withVirtualPath: true);
         WriteFiles(json, "assembly", resources.Assemblies, app.FrameworkPath, withVirtualPath: true);
         WriteFiles(json, "pdb", resources.Symbols, app.FrameworkPath, withVirtualPath: true);
+        if (app.LibraryInitializers.Count > 0)
+        {
+            // Blazor reads the first list, relative to the page; the runtime the second, relative to dotnet.js.
+            WriteRoutes(json, "libraryInitializers", app.LibraryInitializers);
+            WriteRoutes(json, "modulesAfterConfigLoaded", [.. app.LibraryInitializers.Select(r => RelativeToFramework(app.FrameworkPath, r))]);
+        }
+
         json.WriteEndObject();
     }
 
@@ -137,6 +144,19 @@ internal static partial class WebAssemblyBootConfig
         {
             json.WriteStartObject();
             json.WriteString("name", NameUnder(frameworkPath, file.Route));
+            json.WriteEndObject();
+        }
+
+        json.WriteEndArray();
+    }
+
+    private static void WriteRoutes(Utf8JsonWriter json, string property, IReadOnlyList<string> routes)
+    {
+        json.WriteStartArray(property);
+        foreach (var route in routes)
+        {
+            json.WriteStartObject();
+            json.WriteString("name", route);
             json.WriteEndObject();
         }
 

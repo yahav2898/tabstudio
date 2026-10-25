@@ -192,9 +192,10 @@ public sealed class BlazorAppTests : IClassFixture<SharedToolchain>, IDisposable
             workspace.Dispose();
         }
 
+        // Off the UI thread, which this blocks: the browser's shutdown continues on the thread pool.
         foreach (var browser in _browsers)
         {
-            browser.DisposeAsync().AsTask().GetAwaiter().GetResult();
+            Task.Run(() => browser.DisposeAsync().AsTask()).GetAwaiter().GetResult();
         }
 
         _http.Dispose();
