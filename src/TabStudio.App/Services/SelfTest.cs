@@ -38,6 +38,11 @@ public static partial class SelfTest
         var clock = Stopwatch.StartNew();
         try
         {
+            if (SpikeFolder is { } spike)
+            {
+                return await RunWindowsSpikeAsync(main, samples, spike, cancellationToken);
+            }
+
             var solution = await samples.EnsureExtractedAsync(cancellationToken);
             await main.OpenWorkspaceAsync(solution);
             if (main.Workspace is not { } workspace)

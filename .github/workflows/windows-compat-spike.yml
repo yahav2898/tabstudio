@@ -1,0 +1,107 @@
+# Temporary: the Windows Compatibility spike (Wine, Xvfb and the .NET Windows Desktop runtime in Alpine Linux).
+name: Windows Compatibility spike
+
+on:
+  push:
+    branches: ['agent/windows-compat']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wcspike-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  apps:
+    name: Spike apps
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Build the spike apps
+        run: bash build/windows-compat/spike/build-apps.sh spike/apps ci-out
+      - name: Download the .NET Windows Desktop runtimes
+        run: |
+          curl -fsSL https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json -o releases.json
+          jq -r '.releases[0]."release-version", .releases[0].windowsdesktop.version' releases.json | tee ci-out/dotnet-version.txt
+          for rid in win-x64 win-arm64; do
+            url=$(jq -r --arg rid "$rid" '.releases[0].windowsdesktop.files[] | select(.rid == $rid and (.name | endswith(".zip"))) | .url' releases.json)
+            curl -fsSL "$url" -o "spike/$rid.zip"
+            echo "$rid $url $(stat -c %s "spike/$rid.zip") sha256=$(sha256sum "spike/$rid.zip" | cut -d' ' -f1)" | tee -a ci-out/dotnet-version.txt
+            mkdir -p "spike/dotnet-${rid#win-}"
+            unzip -q "spike/$rid.zip" -d "spike/dotnet-${rid#win-}"
+            rm "spike/$rid.zip"
+          done
+          cp spike/dotnet-x64/LICENSE.txt ci-out/dotnet-LICENSE.txt || true
+          ls spike/dotnet-x64 spike/dotnet-x64/shared spike/dotnet-x64/shared/* > ci-out/dotnet-layout.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: spike
+          path: spike/
+      - name: Publish logs
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs.sh wcspike-apps ${{ job.status }}
+
+  x64:
+    name: Spike on Alpine x86_64
+    needs: apps
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: spike
+          path: spike
+      - name: Run the spike
+        run: |
+          cp build/windows-compat/spike/spike.py spike/
+          mkdir -p ci-out
+          docker run --rm -v "$PWD:/w" -w /w alpine:3.24 sh build/windows-compat/spike/alpine-run.sh x64 /w/spike /w/ci-out 2>&1 | tee ci-out/console.txt
+          sudo chown -R "$(id -u)" ci-out
+      - name: Publish logs
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs.sh wcspike-x64 ${{ job.status }}
+
+  arm64:
+    name: Spike on Alpine aarch64
+    needs: apps
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 170
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: spike
+          path: spike
+      - uses: actions/cache@v4
+        with:
+          path: wine-build
+          key: wcspike-wine-11.0-alpine3.24-aarch64-${{ hashFiles('build/windows-compat/spike/build-wine.sh') }}
+      - name: Build Wine
+        run: |
+          mkdir -p ci-out wine-build
+          docker run --rm -v "$PWD:/w" -w /w alpine:3.24 sh build/windows-compat/spike/build-wine.sh /w/wine-build 2>&1 | tail -n 80
+          sudo chown -R "$(id -u)" wine-build
+          cp wine-build/*.txt ci-out/ 2> /dev/null || true
+      - name: Run the spike
+        run: |
+          cp build/windows-compat/spike/spike.py spike/
+          docker run --rm -v "$PWD:/w" -w /w alpine:3.24 sh build/windows-compat/spike/alpine-run.sh arm64 /w/spike /w/ci-out /w/wine-build/wine.tar.gz 2>&1 | tee ci-out/console.txt
+          sudo chown -R "$(id -u)" ci-out
+      - name: Publish logs
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs.sh wcspike-arm64 ${{ job.status }}

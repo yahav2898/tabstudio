@@ -343,6 +343,18 @@
       "problemPatterns": [
         { "pattern": "^(?<severity>e|w): (?:file://)?(?<file>/[^:\\s]+\\.kts?):(?<line>\\d+):(?<column>\\d+) (?<message>.*)$" }
       ]
+    },
+    {
+      "id": "windows-spike",
+      "name": "Windows Compatibility (spike)",
+      "description": "Temporary: Wine, Xvfb and the tools the Windows Compatibility spike measures with.",
+      "languages": [],
+      "listed": false,
+      "license": "LGPL-2.1-or-later",
+      "packages": [ "wine", "xvfb", "xkbcomp", "xkeyboard-config", "mesa-dri-gallium", "mesa-gl", "xdotool", "xwininfo", "python3" ],
+      "versionPackage": "wine",
+      "estimatedDownloadSize": 160000000,
+      "estimatedInstalledSize": 600000000
     }
   ]
 }
