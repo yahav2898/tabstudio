@@ -1,16 +1,113 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj (in 1.47 sec).
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Forms.Tests/TabStudio.Forms.Tests.csproj (in 2.53 sec).
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/Forms/Dialogs/MessageBox.cs(232,26): warning CS0108: 'MessageBoxGlyph.Paint(Graphics, Rectangle, MessageBoxIcon)' hides inherited member 'Control.Paint'. Use the new keyword if hiding was intended. [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj (in 1.36 sec).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Forms.Tests/TabStudio.Forms.Tests.csproj (in 2.89 sec).
 /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/Forms/Strips/ToolStripDropDown.cs(83,17): warning CS0108: 'ToolStripDropDown.Show()' hides inherited member 'Control.Show()'. Use the new keyword if hiding was intended. [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/Forms/Core/Control.LayoutPass.cs(75,76): error CS0176: Member 'Size.Empty' cannot be accessed with an instance reference; qualify it with a type name instead [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/Forms/Core/Control.LayoutPass.cs(87,67): error CS0176: Member 'Size.Empty' cannot be accessed with an instance reference; qualify it with a type name instead [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/Forms/Core/Control.Threading.cs(114,80): error CS0121: The call is ambiguous between the following methods or properties: 'System.Windows.Forms.Control.InvokeResult.Run(System.Action)' and 'System.Windows.Forms.Control.InvokeResult.Run(System.Windows.Forms.MethodInvoker)' [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/Rendering/ItemListView.cs(61,18): warning CA2245: The property Offset should not be assigned to itself (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2245) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/Forms/Dialogs/MessageBox.cs(232,26): warning CS0108: 'MessageBoxGlyph.Paint(Graphics, Rectangle, MessageBoxIcon)' hides inherited member 'Control.Paint'. Use the new keyword if hiding was intended. [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/Forms/Form.cs(9,16): warning CS1574: XML comment has cref attribute 'Show()' that could not be resolved [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
 /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/Rendering/ItemListView.cs(50,18): warning CA2245: The property Offset should not be assigned to itself (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2245) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/Rendering/ItemListView.cs(61,18): warning CA2245: The property Offset should not be assigned to itself (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2245) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
 /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/Forms/Controls/UpDown.cs(740,177): warning CA1309: Use ordinal string comparison (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1309) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
 /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/Forms/Controls/UpDown.cs(787,94): warning CA1309: Use ordinal string comparison (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1309) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
 /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/Forms/Controls/Lists/ListControl.cs(446,92): warning CA1309: Use ordinal string comparison (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1309) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
 /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/Forms/Controls/Lists/ListControl.cs(454,96): warning CA1309: Use ordinal string comparison (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1309) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
 /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/Forms/Controls/Lists/ListBox.cs(642,48): warning CA1309: Use ordinal string comparison (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1309) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
 /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/Forms/Controls/Lists/ComboBox.cs(752,48): warning CA1309: Use ordinal string comparison (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1309) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
+  TabStudio.Forms -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/bin/Release/net10.0/TabStudio.Forms.dll
+  TabStudio.Forms.Tests -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Forms.Tests/bin/Release/net10.0/TabStudio.Forms.Tests.dll
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Forms.Tests/bin/Release/net10.0/TabStudio.Forms.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.14]   Discovering: TabStudio.Forms.Tests
+[xUnit.net 00:00:00.23]   Discovered:  TabStudio.Forms.Tests
+[xUnit.net 00:00:00.28]   Starting:    TabStudio.Forms.Tests
+Stack overflow.
+Repeated 261956 times:
+--------------------------------
+   at TabStudio.Forms.Tests.Infrastructure.FormsTestRun.Invoke[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]](System.Func`1<Int32>)
+--------------------------------
+   at TabStudio.Forms.Tests.Runtime.StripAndListTests.A_tap_on_a_list_box_row_selects_it_and_the_arrow_keys_move_the_selection()
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(System.Object, IntPtr*)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(System.Object, System.Reflection.BindingFlags)
+   at System.Reflection.RuntimeMethodInfo.Invoke(System.Object, System.Reflection.BindingFlags, System.Reflection.Binder, System.Object[], System.Globalization.CultureInfo)
+   at Xunit.Sdk.TestInvoker`1[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].CallTestMethod(System.Object)
+   at Xunit.Sdk.TestInvoker`1+<>c__DisplayClass47_0+<<InvokeTestMethodAsync>b__1>d[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].MoveNext()
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Xunit.Sdk.TestInvoker`1+<>c__DisplayClass47_0+<<InvokeTestMethodAsync>b__1>d[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<<InvokeTestMethodAsync>b__1>d<System.__Canon> ByRef)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder.Start[[Xunit.Sdk.TestInvoker`1+<>c__DisplayClass47_0+<<InvokeTestMethodAsync>b__1>d[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<<InvokeTestMethodAsync>b__1>d<System.__Canon> ByRef)
+   at Xunit.Sdk.TestInvoker`1+<>c__DisplayClass47_0[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].<InvokeTestMethodAsync>b__1()
+   at Xunit.Sdk.ExecutionTimer+<AggregateAsync>d__4.MoveNext()
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Xunit.Sdk.ExecutionTimer+<AggregateAsync>d__4, xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<AggregateAsync>d__4 ByRef)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder.Start[[Xunit.Sdk.ExecutionTimer+<AggregateAsync>d__4, xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<AggregateAsync>d__4 ByRef)
+   at Xunit.Sdk.ExecutionTimer.AggregateAsync(System.Func`1<System.Threading.Tasks.Task>)
+   at Xunit.Sdk.TestInvoker`1+<>c__DisplayClass47_0[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].<InvokeTestMethodAsync>b__0()
+   at Xunit.Sdk.ExceptionAggregator+<RunAsync>d__9.MoveNext()
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Xunit.Sdk.ExceptionAggregator+<RunAsync>d__9, xunit.core, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<RunAsync>d__9 ByRef)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder.Start[[Xunit.Sdk.ExceptionAggregator+<RunAsync>d__9, xunit.core, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<RunAsync>d__9 ByRef)
+   at Xunit.Sdk.ExceptionAggregator.RunAsync(System.Func`1<System.Threading.Tasks.Task>)
+   at Xunit.Sdk.TestInvoker`1+<InvokeTestMethodAsync>d__47[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].MoveNext()
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Xunit.Sdk.TestInvoker`1+<InvokeTestMethodAsync>d__47[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<InvokeTestMethodAsync>d__47<System.__Canon> ByRef)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].Start[[Xunit.Sdk.TestInvoker`1+<InvokeTestMethodAsync>d__47[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<InvokeTestMethodAsync>d__47<System.__Canon> ByRef)
+   at Xunit.Sdk.TestInvoker`1[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].InvokeTestMethodAsync(System.Object)
+   at Xunit.Sdk.XunitTestInvoker.InvokeTestMethodAsync(System.Object)
+   at Xunit.Sdk.TestInvoker`1+<<RunAsync>b__46_0>d[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].MoveNext()
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Xunit.Sdk.TestInvoker`1+<<RunAsync>b__46_0>d[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<<RunAsync>b__46_0>d<System.__Canon> ByRef)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].Start[[Xunit.Sdk.TestInvoker`1+<<RunAsync>b__46_0>d[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<<RunAsync>b__46_0>d<System.__Canon> ByRef)
+   at Xunit.Sdk.TestInvoker`1[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].<RunAsync>b__46_0()
+   at Xunit.Sdk.ExceptionAggregator+<RunAsync>d__10`1[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].MoveNext()
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Xunit.Sdk.ExceptionAggregator+<RunAsync>d__10`1[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.core, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<RunAsync>d__10`1<System.Decimal> ByRef)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].Start[[Xunit.Sdk.ExceptionAggregator+<RunAsync>d__10`1[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.core, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<RunAsync>d__10`1<System.Decimal> ByRef)
+   at Xunit.Sdk.ExceptionAggregator.RunAsync[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]](System.Func`1<System.Threading.Tasks.Task`1<System.Decimal>>)
+   at Xunit.Sdk.TestInvoker`1[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].RunAsync()
+   at Avalonia.Headless.XUnit.AvaloniaTestCaseRunner+AvaloniaTestRunner+<>c__DisplayClass3_0.<InvokeTestMethodAsync>b__0()
+   at Avalonia.Headless.HeadlessUnitTestSession+<>c__DisplayClass12_0`1[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].<DispatchCore>b__0()
+   at Avalonia.Headless.HeadlessUnitTestSession+<>c__DisplayClass17_0.<StartNew>b__0()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(System.Threading.Thread, System.Threading.ExecutionContext, System.Threading.ContextCallback, System.Object)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(System.Threading.Tasks.Task ByRef, System.Threading.Thread)
+   at System.Threading.ThreadPoolWorkQueue.Dispatch()
+   at System.Threading.PortableThreadPool+WorkerThread.WorkerThreadStart()
+   at System.Threading.Thread.StartCallback()
+The active test run was aborted. Reason: Test host process crashed : Stack overflow.
+Repeated 261956 times:
+--------------------------------
+   at TabStudio.Forms.Tests.Infrastructure.FormsTestRun.Invoke[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]](System.Func`1<Int32>)
+--------------------------------
+   at TabStudio.Forms.Tests.Runtime.StripAndListTests.A_tap_on_a_list_box_row_selects_it_and_the_arrow_keys_move_the_selection()
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(System.Object, IntPtr*)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(System.Object, System.Reflection.BindingFlags)
+   at System.Reflection.RuntimeMethodInfo.Invoke(System.Object, System.Reflection.BindingFlags, System.Reflection.Binder, System.Object[], System.Globalization.CultureInfo)
+   at Xunit.Sdk.TestInvoker`1[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].CallTestMethod(System.Object)
+   at Xunit.Sdk.TestInvoker`1+<>c__DisplayClass47_0+<<InvokeTestMethodAsync>b__1>d[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].MoveNext()
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Xunit.Sdk.TestInvoker`1+<>c__DisplayClass47_0+<<InvokeTestMethodAsync>b__1>d[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<<InvokeTestMethodAsync>b__1>d<System.__Canon> ByRef)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder.Start[[Xunit.Sdk.TestInvoker`1+<>c__DisplayClass47_0+<<InvokeTestMethodAsync>b__1>d[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<<InvokeTestMethodAsync>b__1>d<System.__Canon> ByRef)
+   at Xunit.Sdk.TestInvoker`1+<>c__DisplayClass47_0[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].<InvokeTestMethodAsync>b__1()
+   at Xunit.Sdk.ExecutionTimer+<AggregateAsync>d__4.MoveNext()
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Xunit.Sdk.ExecutionTimer+<AggregateAsync>d__4, xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<AggregateAsync>d__4 ByRef)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder.Start[[Xunit.Sdk.ExecutionTimer+<AggregateAsync>d__4, xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<AggregateAsync>d__4 ByRef)
+   at Xunit.Sdk.ExecutionTimer.AggregateAsync(System.Func`1<System.Threading.Tasks.Task>)
+   at Xunit.Sdk.TestInvoker`1+<>c__DisplayClass47_0[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].<InvokeTestMethodAsync>b__0()
+   at Xunit.Sdk.ExceptionAggregator+<RunAsync>d__9.MoveNext()
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Xunit.Sdk.ExceptionAggregator+<RunAsync>d__9, xunit.core, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<RunAsync>d__9 ByRef)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder.Start[[Xunit.Sdk.ExceptionAggregator+<RunAsync>d__9, xunit.core, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<RunAsync>d__9 ByRef)
+   at Xunit.Sdk.ExceptionAggregator.RunAsync(System.Func`1<System.Threading.Tasks.Task>)
+   at Xunit.Sdk.TestInvoker`1+<InvokeTestMethodAsync>d__47[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].MoveNext()
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Xunit.Sdk.TestInvoker`1+<InvokeTestMethodAsync>d__47[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<InvokeTestMethodAsync>d__47<System.__Canon> ByRef)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].Start[[Xunit.Sdk.TestInvoker`1+<InvokeTestMethodAsync>d__47[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<InvokeTestMethodAsync>d__47<System.__Canon> ByRef)
+   at Xunit.Sdk.TestInvoker`1[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].InvokeTestMethodAsync(System.Object)
+   at Xunit.Sdk.XunitTestInvoker.InvokeTestMethodAsync(System.Object)
+   at Xunit.Sdk.TestInvoker`1+<<RunAsync>b__46_0>d[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].MoveNext()
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Xunit.Sdk.TestInvoker`1+<<RunAsync>b__46_0>d[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<<RunAsync>b__46_0>d<System.__Canon> ByRef)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].Start[[Xunit.Sdk.TestInvoker`1+<<RunAsync>b__46_0>d[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.execution.dotnet, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<<RunAsync>b__46_0>d<System.__Canon> ByRef)
+   at Xunit.Sdk.TestInvoker`1[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].<RunAsync>b__46_0()
+   at Xunit.Sdk.ExceptionAggregator+<RunAsync>d__10`1[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].MoveNext()
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Xunit.Sdk.ExceptionAggregator+<RunAsync>d__10`1[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.core, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<RunAsync>d__10`1<System.Decimal> ByRef)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].Start[[Xunit.Sdk.ExceptionAggregator+<RunAsync>d__10`1[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], xunit.core, Version=2.9.3.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c]](<RunAsync>d__10`1<System.Decimal> ByRef)
+   at Xunit.Sdk.ExceptionAggregator.RunAsync[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]](System.Func`1<System.Threading.Tasks.Task`1<System.Decimal>>)
+   at Xunit.Sdk.TestInvoker`1[[System.__Canon, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].RunAsync()
+   at Avalonia.Headless.XUnit.AvaloniaTestCaseRunner+AvaloniaTestRunner+<>c__DisplayClass3_0.<InvokeTestMethodAsync>b__0()
+   at Avalonia.Headless.HeadlessUnitTestSession+<>c__DisplayClass12_0`1[[System.Decimal, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].<DispatchCore>b__0()
+   at Avalonia.Headless.HeadlessUnitTestSession+<>c__DisplayClass17_0.<StartNew>b__0()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(System.Threading.Thread, System.Threading.ExecutionContext, System.Threading.ContextCallback, System.Object)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(System.Threading.Tasks.Task ByRef, System.Threading.Thread)
+   at System.Threading.ThreadPoolWorkQueue.Dispatch()
+   at System.Threading.PortableThreadPool+WorkerThread.Wor
+
+Test Run Aborted.
