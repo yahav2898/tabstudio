@@ -247,7 +247,7 @@ public sealed class XamlDocument
     {
         var nameEnd = ReadName(text, nameStart);
         var (prefix, localName) = Split(text[nameStart..nameEnd]);
-        var attribute = new XamlAttribute(prefix, localName, nameStart, nameEnd) { ValueStart = nameEnd, ValueEnd = nameEnd };
+        var attribute = new XamlAttributeNode(prefix, localName, nameStart, nameEnd) { ValueStart = nameEnd, ValueEnd = nameEnd };
         element.Add(attribute);
 
         var position = nameEnd;

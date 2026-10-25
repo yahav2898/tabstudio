@@ -76,9 +76,9 @@ internal static class XamlSanitizer
         return (inputs, diagnostics);
     }
 
-    private static List<XamlAttribute> Removals(XamlItem item, XamlElement root, XamlTypeSystem types, XamlDocument document, List<BuildDiagnostic> diagnostics, string projectName)
+    private static List<XamlAttributeNode> Removals(XamlItem item, XamlElement root, XamlTypeSystem types, XamlDocument document, List<BuildDiagnostic> diagnostics, string projectName)
     {
-        var removed = new List<XamlAttribute>();
+        var removed = new List<XamlAttributeNode>();
         var rootType = types.FindType(root.XmlNamespace, root.LocalName);
         if (item.Kind == XamlItemKind.ApplicationDefinition && root.Attribute("StartupUri") is { } startup
             && types.Application is { } application && types.FindMember(application, "StartupUri") is null)

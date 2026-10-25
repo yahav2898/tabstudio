@@ -3,6 +3,7 @@ using TabStudio.Compilation.Building;
 using TabStudio.Compilation.Wpf;
 using TabStudio.Core.Diagnostics;
 using TabStudio.Core.Workspaces;
+using ProjectInfo = TabStudio.Core.Workspaces.ProjectInfo;
 using TabStudio.Packages;
 using TabStudio.Web;
 using TabStudio.Web.WebAssembly;

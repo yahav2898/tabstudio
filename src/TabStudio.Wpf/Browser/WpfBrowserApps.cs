@@ -9,6 +9,7 @@ using TabStudio.Compilation;
 using TabStudio.Compilation.Wpf;
 using TabStudio.Core.Diagnostics;
 using TabStudio.Core.Workspaces;
+using ProjectInfo = TabStudio.Core.Workspaces.ProjectInfo;
 using TabStudio.Packages;
 using TabStudio.Web.RazorApps;
 using TabStudio.Web.StaticWebAssets;

@@ -1,9 +1,9 @@
 namespace TabStudio.Compilation.Wpf.Xaml;
 
 /// <summary>An attribute of a XAML element, with the offsets it is written at.</summary>
-public sealed class XamlAttribute
+public sealed class XamlAttributeNode
 {
-    internal XamlAttribute(string prefix, string localName, int nameStart, int nameEnd)
+    internal XamlAttributeNode(string prefix, string localName, int nameStart, int nameEnd)
     {
         Prefix = prefix;
         LocalName = localName;
@@ -54,7 +54,7 @@ public sealed class XamlAttribute
 /// <summary>A XAML element, with the offsets it is written at and the elements and attributes in it.</summary>
 public sealed class XamlElement
 {
-    private readonly List<XamlAttribute> _attributes = [];
+    private readonly List<XamlAttributeNode> _attributes = [];
     private readonly List<XamlElement> _children = [];
 
     internal XamlElement(XamlElement? parent, string prefix, string localName, int start, int nameStart, int nameEnd)
@@ -106,14 +106,14 @@ public sealed class XamlElement
     public int End { get; internal set; }
 
     /// <summary>Its attributes, in order.</summary>
-    public IReadOnlyList<XamlAttribute> Attributes => _attributes;
+    public IReadOnlyList<XamlAttributeNode> Attributes => _attributes;
 
     /// <summary>The elements directly in it, in order.</summary>
     public IReadOnlyList<XamlElement> Children => _children;
 
     /// <summary>The attribute with a name as written, such as <c>x:Name</c>, or <see langword="null"/>.</summary>
     /// <param name="name">The name.</param>
-    public XamlAttribute? Attribute(string name)
+    public XamlAttributeNode? Attribute(string name)
     {
         foreach (var attribute in _attributes)
         {
@@ -129,7 +129,7 @@ public sealed class XamlElement
     /// <summary>The attribute with a namespace and name, such as the XAML language namespace's <c>Name</c>.</summary>
     /// <param name="xmlNamespace">The namespace, empty for an attribute without a prefix.</param>
     /// <param name="localName">The name.</param>
-    public XamlAttribute? Attribute(string xmlNamespace, string localName)
+    public XamlAttributeNode? Attribute(string xmlNamespace, string localName)
     {
         foreach (var attribute in _attributes)
         {
@@ -203,7 +203,7 @@ public sealed class XamlElement
     /// <param name="offset">The offset.</param>
     public bool IsInStartTag(int offset) => offset > NameEnd - 1 && (StartTagEnd < 0 ? End < 0 || offset < End : offset < StartTagEnd);
 
-    internal void Add(XamlAttribute attribute) => _attributes.Add(attribute);
+    internal void Add(XamlAttributeNode attribute) => _attributes.Add(attribute);
 
     internal void Add(XamlElement child) => _children.Add(child);
 }

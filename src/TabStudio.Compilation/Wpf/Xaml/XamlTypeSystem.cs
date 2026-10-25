@@ -258,7 +258,7 @@ public sealed class XamlTypeSystem
 
     /// <summary>The property an element's content sets, from <c>[ContentProperty]</c> on the type or a base type.</summary>
     /// <param name="type">The type.</param>
-    public string? ContentProperty(INamedTypeSymbol type)
+    public static string? ContentProperty(INamedTypeSymbol type)
     {
         ArgumentNullException.ThrowIfNull(type);
         for (var current = type; current is not null; current = current.BaseType)

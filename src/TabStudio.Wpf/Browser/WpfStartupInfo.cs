@@ -2,6 +2,7 @@ using Microsoft.CodeAnalysis;
 using TabStudio.Compilation.Wpf;
 using TabStudio.Compilation.Wpf.Xaml;
 using TabStudio.Core.Workspaces;
+using ProjectInfo = TabStudio.Core.Workspaces.ProjectInfo;
 using TabStudio.Wpf.Building;
 using RoslynCompilation = Microsoft.CodeAnalysis.Compilation;
 
