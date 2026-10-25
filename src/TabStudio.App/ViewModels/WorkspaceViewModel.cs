@@ -105,7 +105,8 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     /// <param name="toolchains">The device's toolchains; the computer's own, found on its PATH, when <see langword="null"/>.</param>
     /// <param name="swarm">The swarm, which runs the app on phones and tablets; none when <see langword="null"/>.</param>
     /// <param name="recentWorkspaces">The solutions opened recently, which the search finds; none when <see langword="null"/>.</param>
-    public WorkspaceViewModel(CompilerServices compiler, IDeviceStatus device, DeviceProfile profile, IUiDispatcher ui, SessionStore sessions, AppPaths paths, GitHubAccountViewModel? gitHubAccount = null, IStoragePicker? browser = null, IWebViewFactory? webViews = null, INotifications? notifications = null, IAppActivity? appActivity = null, LinkService? link = null, LinkViewModel? linkDialog = null, Services.LanguageServers.LanguageServerServices? languageServers = null, ExtensionsService? extensions = null, Services.Toolchains.ToolchainServices? toolchains = null, global::TabStudio.App.Swarm.SwarmServices? swarm = null, RecentWorkspaces? recentWorkspaces = null)
+    /// <param name="windowsBridge">The Windows Bridge, which builds and runs Windows-only projects on a paired PC; none when <see langword="null"/>.</param>
+    public WorkspaceViewModel(CompilerServices compiler, IDeviceStatus device, DeviceProfile profile, IUiDispatcher ui, SessionStore sessions, AppPaths paths, GitHubAccountViewModel? gitHubAccount = null, IStoragePicker? browser = null, IWebViewFactory? webViews = null, INotifications? notifications = null, IAppActivity? appActivity = null, LinkService? link = null, LinkViewModel? linkDialog = null, Services.LanguageServers.LanguageServerServices? languageServers = null, ExtensionsService? extensions = null, Services.Toolchains.ToolchainServices? toolchains = null, global::TabStudio.App.Swarm.SwarmServices? swarm = null, RecentWorkspaces? recentWorkspaces = null, Services.WindowsBridge.WindowsBridgeService? windowsBridge = null)
     {
         ArgumentNullException.ThrowIfNull(compiler);
         ArgumentNullException.ThrowIfNull(device);
@@ -148,6 +149,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         InitializeSwarm(swarm);
         InitializeProperties();
         InitializeStatusBar();
+        InitializeWindowsBridge(windowsBridge);
         InitializeActivity();
         Search = CreateSearch(recentWorkspaces);
     }
@@ -252,7 +254,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     public string RunLabel => StartupProject?.Name ?? LaunchTargetLabel ?? "Start";
 
     /// <summary>Where the startup project runs, such as "In-process".</summary>
-    public string RunHostText => StartupProject is { } project ? IsRunOnSwarm ? SwarmRunHostText : CompatibilityDoctor.Diagnose(project).RunsVia : LaunchTargetHost ?? "Nothing to run";
+    public string RunHostText => StartupProject is { } project ? IsRunOnSwarm ? SwarmRunHostText : RunsViaFor(project) : LaunchTargetHost ?? "Nothing to run";
 
     /// <summary>The build configuration, "Debug" or "Release".</summary>
     [ObservableProperty]
@@ -378,6 +380,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         DisposeSwarm();
         DisposeLiveTesting();
         DisposeLink();
+        DisposeWindowsBridge();
         _agent?.Dispose();
         _device.ThermalChanged -= OnThermalChanged;
         _device.MemoryPressureRaised -= OnMemoryPressure;
@@ -406,7 +409,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     private void LoadStartupProjects(Workspace workspace, string? preferred)
     {
         StartupProjects.Clear();
-        foreach (var project in workspace.Projects.Where(p => p.IsExecutable && !p.IsTestProject))
+        foreach (var project in workspace.Projects.Where(p => (p.IsExecutable || IsWindowsBridgeStartupProject(p)) && !p.IsTestProject))
         {
             StartupProjects.Add(new StartupProjectOption(project, new RelayCommand(() => SetStartupProject(project))));
         }

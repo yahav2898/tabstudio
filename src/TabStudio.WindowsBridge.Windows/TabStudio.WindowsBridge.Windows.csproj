@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The Windows Bridge's desktop session on Windows: the windows of the programs the bridge runs, their pictures
+    (Windows.Graphics.Capture for each window, PrintWindow where that is not available), the mouse and keyboard
+    (SendInput, or window messages while someone works at the PC), the clipboard, and sleep and lock notifications.
+    Plain Win32, Direct3D 11 and WinRT interop, so it builds on any OS and loads only on Windows; only the desktop
+    build of TabStudio references it.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>TabStudio.WindowsBridge.Windows</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Description>The Windows Bridge's desktop session on Windows: window capture, input, clipboard and power.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TabStudio.WindowsBridge\TabStudio.WindowsBridge.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="TabStudio.WindowsBridge.Windows.Tests" />
+  </ItemGroup>
+
+</Project>

@@ -10,9 +10,10 @@ public sealed partial class ProjectTemplates
             // Ctrl+F5 runs; F5 debugs. Type your answer in the Output panel.
             use std::io::{self, Write};
 
-            fn greet(name: &str) {
+            fn greet(name: &str) -> String {
                 let answer: i32 = 42;
-                println!("Hello, {}! This is Rust on TabStudio. The answer is {}.", name, answer);
+                let message = format!("Hello, {}! This is Rust on TabStudio. The answer is {}.", name, answer);
+                return message;
             }
 
             fn main() {
@@ -21,7 +22,7 @@ public sealed partial class ProjectTemplates
                 let mut name = String::new();
                 io::stdin().read_line(&mut name).unwrap();
                 let name = name.trim();
-                greet(if name.is_empty() { "world" } else { name });
+                println!("{}", greet(if name.is_empty() { "world" } else { name }));
             }
 
             """);

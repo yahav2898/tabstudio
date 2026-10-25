@@ -12,6 +12,7 @@
              xmlns:searchViews="using:TabStudio.App.Views.Search"
              xmlns:appearance="using:TabStudio.App.Services.Appearance"
              xmlns:vm="using:TabStudio.App.ViewModels"
+             xmlns:bridgeViews="using:TabStudio.App.Views.WindowsBridge"
              xmlns:sys="using:System"
              x:Class="TabStudio.App.Views.WorkspaceView"
              x:DataType="vm:WorkspaceViewModel">
@@ -127,6 +128,7 @@
             <Separator />
             <MenuItem Header="TabStudio _Link..." Command="{Binding OpenLinkCommand}" IsVisible="{Binding IsLinkAvailable}" />
             <MenuItem Header="_Join a Swarm..." Command="{Binding JoinSwarmCommand}" IsVisible="{Binding CanJoinSwarm}" />
+            <MenuItem Header="{Binding WindowsBridgeMenuHeader}" Command="{Binding OpenWindowsBridgeCommand}" IsVisible="{Binding HasWindowsBridge}" />
             <Separator />
             <MenuItem Header="_Close Document" InputGesture="Ctrl+F4" Command="{Binding CloseDocumentCommand}" />
             <MenuItem Header="Close Sol_ution" Command="{Binding CloseWorkspaceCommand}" />
@@ -167,6 +169,7 @@
             <MenuItem Header="_App Preview" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.AppPreview}"
                       IsEnabled="{Binding AppPreview.HasApp}" />
             <MenuItem Header="Device _Matrix" Command="{Binding ShowDeviceMatrixCommand}" />
+            <MenuItem Header="Windows _Bridge" Command="{Binding ShowWindowsBridgePaneCommand}" IsVisible="{Binding HasWindowsBridge}" />
             <MenuItem Header="_Error List" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" />
             <MenuItem Header="_Output" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Output}" />
             <MenuItem Header="Ter_minal (Ctrl+`)" Command="{Binding ShowTerminalCommand}" />
@@ -740,6 +743,11 @@
             <views:AppPreviewView DataContext="{Binding AppPreview}" />
           </Panel>
 
+          <!-- The Windows Bridge: programs running on the paired Windows PC, streamed live. -->
+          <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsWindowsBridgeSelected}">
+            <bridgeViews:BridgePaneView DataContext="{Binding WindowsBridgePane}" />
+          </Panel>
+
           <!-- The web preview of the running web app. -->
           <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsWebPreviewSelected}">
             <views:WebPreviewView DataContext="{Binding WebPreview}" />
@@ -788,6 +796,12 @@
             </MultiBinding>
           </controls:AdaptiveBarItem.Label>
         </controls:AdaptiveBarItem>
+
+        <!-- The paired Windows PC: tap for the Windows Bridge pane. -->
+        <controls:AdaptiveBarItem Classes="status" Icon="{StaticResource Icon.Computer}" IconSize="13" Priority="60"
+                                  Label="{Binding WindowsBridgeStatusText}" ToolTip.Tip="{Binding WindowsBridgeStatusTip}"
+                                  Command="{Binding OpenWindowsBridgeCommand}"
+                                  IsVisible="{Binding WindowsBridgeStatusText, Converter={x:Static ObjectConverters.IsNotNull}}" />
 
         <!-- The commit's CI: tap for GitHub Actions on this commit. -->
         <Panel controls:AdaptiveBar.Priority="75" controls:AdaptiveBar.IsPinned="False" IsVisible="{Binding Actions.IsCiVisible}"

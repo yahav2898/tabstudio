@@ -28,7 +28,7 @@ public sealed partial class ToolchainLanguageToolsTests
         Assert.True((await server.FindReferencesAsync(call, true, deadline.Token)).Count >= 2);
         Assert.NotNull(await server.RenameAsync(call, "welcome", deadline.Token));
 
-        document.Document.Text = original.Replace("""greet(if name.is_empty() { "world" } else { name });""", "greet(undefined_name);", StringComparison.Ordinal);
+        document.Document.Text = original.Replace("""greet(if name.is_empty() { "world" } else { name })""", "greet(undefined_name)", StringComparison.Ordinal);
         await workspace.SaveCommand.ExecuteAsync(null);
         await UiTestHelpers.WaitUntilAsync(() => document.Diagnostics.Any(d => d.Message.Contains("undefined_name", StringComparison.Ordinal)), TimeSpan.FromSeconds(90), because: "Rust's squiggle");
         await workspace.RunCommand.ExecuteAsync(null);
@@ -41,7 +41,7 @@ public sealed partial class ToolchainLanguageToolsTests
         Assert.Contains("has exited with code 0", workspace.Output.Text, StringComparison.Ordinal);
         Assert.Contains(workspace.Compatibility, r => r.ToolchainId == "rust" && r.IsReady);
 
-        var line = LineOf(document, """println!("Hello,""");
+        var line = LineOf(document, "return message");
         workspace.Breakpoints.Toggle(document.FilePath, line);
         AnswerInput(workspace, "Ada");
         await workspace.StartDebuggingCommand.ExecuteAsync(null);

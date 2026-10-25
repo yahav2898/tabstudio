@@ -391,7 +391,7 @@ adapter it brings.
   package against the index entry that lists it, before anything is unpacked.
 - **Processes.** Programs are children of TabStudio's process, started with pipes or a pseudo terminal, and are
   killed with their whole process tree when stopped, as Android 12 and later expect.
-- **Projects.** `ToolchainProjectDetector` finds Python and Node.js projects in a workspace from their project files.
+- **Projects.** `ToolchainProjectDetector` finds projects from the catalog's manifests and source-file rules.
   F5 and Ctrl+F5 run them with their console in the Output panel; problem matchers turn tracebacks and compiler
   output into Error List entries and links.
 - **The terminal.** `TerminalEmulator` turns what programs write to a pseudo terminal into styled character cells,
@@ -400,7 +400,20 @@ adapter it brings.
   toolchain runtime, so Pyright, typescript-language-server, debugpy and vscode-js-debug start inside the Linux
   environment and paths are translated between the device and the environment. A missing server or adapter offers
   to install the toolchain that brings it. For F5, a project's run plan becomes a DAP launch configuration, and the
-  program starts through the adapter's `runInTerminal` request, so its input and output stay in the Output panel.
+  program's input and output stay in the Output panel through its adapter's terminal or runtime streams.
+
+### Rust
+
+Cargo packages, virtual workspaces and their members are startup projects. Alpine installs Rust, Cargo,
+rust-analyzer, Rust sources and LLDB with lldb-dap; desktops use PATH. Cargo builds with
+`--message-format=json-render-diagnostics`: structured primary spans populate the Error List, and reported
+executable artifacts determine the run path, including custom target directories. With several binaries, choose
+a member startup project or open the binary's main source. rust-analyzer supplies IntelliSense and navigation.
+
+F5 uses LLDB DAP. Desktop programs use `runInTerminal`; on Android, LLDB launches within its own PRoot trace tree
+so emulated ptrace can see the debuggee. A private FIFO created through Android's C library carries Output-panel
+input, while DAP events carry program output. Real-tool IDE and emulator tests cover the template, a breakpoint
+and Locals, with Watch and Call Stack checked in the IDE.
 
 ## Swarm
 
@@ -575,21 +588,3 @@ design keeps the second part proportional to what you are actually editing:
 ## Code conventions
 
 See [CONTRIBUTING.md](../CONTRIBUTING.md) for code style, tests and how CI reports results.
-
-### Toolchains: Rust
-
-Cargo packages and virtual workspaces (`Cargo.toml`) are startup projects, including workspace members. Build,
-cache and vendor folders are excluded. Alpine 3.24 supplies Rust, Cargo, rust-src, rust-analyzer and LLDB with
-lldb-dap; desktops use PATH. Cargo builds in its ordinary development profile and reports artifacts through
-`--message-format=json-render-diagnostics`. The IDE streams rendered messages, adds each primary compiler error
-to the Error List, and runs the reported binary. Custom target directories and target triples need no filename
-guesses. For multiple binaries, select a workspace member or open the binary's entry source. rust-analyzer
-provides completion, diagnostics, definition, references and rename. F5 uses LLDB DAP and runInTerminal for the
-Output panel's console; the IDE tests verify a breakpoint, locals and a watch. The emulator self test installs
-from the real Alpine mirror and builds and runs the template. Native debugging under PRoot still needs device
-validation, including its ptrace emulation and the device kernel.
-
-On Android, LLDB 22 launches the debuggee itself inside the same PRoot trace tree. Its `stdio` launch
-configuration reads stdin from a private FIFO shared from the app cache; the Output panel forwards answers
-there, while stdout and stderr arrive as DAP events. Desktop LLDB keeps using runInTerminal. This avoids
-attempting ptrace across two independent PRoot instances. The emulator also checks a breakpoint and a local.

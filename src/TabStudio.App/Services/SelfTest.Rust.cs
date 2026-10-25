@@ -45,7 +45,7 @@ public static partial class SelfTest
             && workspace.Output.Text.Contains("has exited with code 0", StringComparison.Ordinal);
         if (success)
         {
-            var debugged = await DebugCompiledTemplateAsync(workspace, "src/main.rs", "println!", "answer", "42", cancellationToken);
+            var debugged = await DebugCompiledTemplateAsync(workspace, "src/main.rs", "return message", "answer", "42", cancellationToken);
             if (!debugged.Success)
             {
                 return debugged;
