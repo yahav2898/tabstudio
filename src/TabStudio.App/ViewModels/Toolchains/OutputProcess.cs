@@ -37,7 +37,8 @@ internal static class OutputProcess
     /// <param name="output">The Output panel.</param>
     /// <param name="input">Lines for its standard input, from <see cref="OutputViewModel.BeginProcessInput"/>, or <see langword="null"/> for none.</param>
     /// <param name="cancellationToken">Stops the program and everything it started.</param>
-    public static async Task<OutputProcessResult> RunAsync(IToolchainRuntime runtime, ProcessStartSpec spec, OutputViewModel output, ConsoleInput? input, CancellationToken cancellationToken)
+    /// <param name="started">Told the program once it started, before its output is read, such as for its process id.</param>
+    public static async Task<OutputProcessResult> RunAsync(IToolchainRuntime runtime, ProcessStartSpec spec, OutputViewModel output, ConsoleInput? input, CancellationToken cancellationToken, Action<ToolchainProcess>? started = null)
     {
         ToolchainProcess process;
         try
@@ -49,6 +50,8 @@ internal static class OutputProcess
             output.WriteLine(ex.Message, OutputKind.Failure);
             return new OutputProcessResult(null, [], ex.Message);
         }
+
+        started?.Invoke(process);
 
         using (process)
         using (cancellationToken.Register(process.Stop))

@@ -51,6 +51,13 @@ public sealed record DebugAdapterDefinition
     /// <summary>Values every launch configuration of this type starts from, such as <c>"console": "internalConsole"</c>.</summary>
     public JsonObject? Defaults { get; init; }
 
+    /// <summary>
+    /// Values that run the program in TabStudio's console, through the adapter's <c>runInTerminal</c> request, so
+    /// it reads its input from the user, such as <c>"console": "integratedTerminal"</c>. They apply over
+    /// <see cref="Defaults"/> when the client runs programs for the adapter, and under the configuration's own values.
+    /// </summary>
+    public JsonObject? TerminalDefaults { get; init; }
+
     /// <summary>The Toolchain Store package that installs it, such as <c>debugpy</c>.</summary>
     public string? Package { get; init; }
 

@@ -397,10 +397,10 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
             return;
         }
 
-        // Python and Node.js run with their toolchain; their debug adapters attach here once connected.
+        // Python and Node.js debug with their toolchain's debug adapter.
         if (IsToolchainProject(project))
         {
-            await RunToolchainProjectAsync(project);
+            await DebugToolchainProjectAsync(project, start);
             return;
         }
 

@@ -40,8 +40,8 @@ public sealed record ToolchainNoticeViewModel(string Key, string Title, string M
 /// F5 runs the project's entry point (<c>main.py</c>, <c>__main__.py</c>, <c>package.json</c>'s <c>start</c>
 /// script or <c>main</c>), or, for a folder of scripts without one, the file being edited; Debug &gt; Run Current
 /// File runs the file being edited. A toolchain that is not installed is installed only after the user agrees.
-/// Debugging these languages comes from their debug adapters (the catalog's <c>debugAdapter</c>); until one is
-/// connected, F5 runs without the debugger.
+/// F5 debugs the same program with the toolchain's debug adapter (<c>WorkspaceViewModel.ToolchainDebugging.cs</c>);
+/// Ctrl+F5 runs it without the debugger, here.
 /// </remarks>
 public sealed partial class WorkspaceViewModel
 {
@@ -91,6 +91,7 @@ public sealed partial class WorkspaceViewModel
         Output.LinkActivated += OnOutputLinkActivated;
         PropertyChanged += OnToolchainPropertyChanged;
         ToolchainStore.PropertyChanged += OnToolchainStorePropertyChanged;
+        InitializeToolchainServers();
     }
 
     private void OnToolchainStorePropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -103,6 +104,7 @@ public sealed partial class WorkspaceViewModel
 
     private void DisposeToolchains()
     {
+        DisposeToolchainServers();
         PropertyChanged -= OnToolchainPropertyChanged;
         ToolchainStore.PropertyChanged -= OnToolchainStorePropertyChanged;
         Output.LinkActivated -= OnOutputLinkActivated;
@@ -341,11 +343,19 @@ public sealed partial class WorkspaceViewModel
 
         var project = item.Project;
         var file = ActiveDocument?.FilePath;
-        await RunToolchainPlanAsync(project, () =>
-            RunPlanner.PlanProject(project)
-            ?? (file is not null && project.Contains(file) && project.Toolchain.RunsFile(file) ? RunPlanner.PlanFile(project, file) : null)
-            ?? OnlyProgramOf(project));
+        await RunToolchainPlanAsync(project, () => PlanToolchainProject(project, file));
     }
+
+    /// <summary>
+    /// What F5 runs for a project: its entry point, else the file being edited when the project runs it, else the
+    /// project's only program; <see langword="null"/> when there is nothing to run.
+    /// </summary>
+    /// <param name="project">The project.</param>
+    /// <param name="activeFile">The file being edited, if any.</param>
+    private static RunPlan? PlanToolchainProject(ToolchainProject project, string? activeFile) =>
+        RunPlanner.PlanProject(project)
+        ?? (activeFile is not null && project.Contains(activeFile) && project.Toolchain.RunsFile(activeFile) ? RunPlanner.PlanFile(project, activeFile) : null)
+        ?? OnlyProgramOf(project);
 
     /// <summary>The file to show first: the entry point's source, or the project's first program, or its project file.</summary>
     private static string? EntryFileOf(ToolchainProject project)

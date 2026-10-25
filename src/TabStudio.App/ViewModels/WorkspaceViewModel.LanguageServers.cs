@@ -101,7 +101,7 @@ public sealed partial class WorkspaceViewModel
 
         if (host.FindMissingServers(document.FilePath) is [{ } missing, ..] && host.Configuration.Registry.FindLanguage(document.FilePath) is { } language)
         {
-            var install = missing.Package is { } package ? $" Install {package} from the Toolchain Store, or put {missing.Command} on the PATH." : string.Empty;
+            var install = MissingToolHint(missing.Name, missing.Command, missing.Package);
             StatusText = $"{language.Name} IntelliSense needs {missing.Name}, which is not installed.{install}";
             LanguageServerOutput.WriteLine($"[{missing.Name}] {missing.Command} was not found, so {document.FileName} has no IntelliSense.{install}", OutputKind.Info);
         }
@@ -149,7 +149,7 @@ public sealed partial class WorkspaceViewModel
     {
         if (_languageServers?.FindMissingServers(document.FilePath) is [{ } missing, ..])
         {
-            return $"This needs {missing.Name}, which is not installed.";
+            return OfferServerInstall(document, missing) ?? $"This needs {missing.Name}, which is not installed.";
         }
 
         return _languageServers?.Configuration.Registry.FindLanguage(document.FilePath) is { } language

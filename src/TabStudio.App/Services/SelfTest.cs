@@ -109,14 +109,15 @@ public static partial class SelfTest
 
             var extensions = await InstallGrammarExtensionAsync(last, FindEditor, cancellationToken);
             var toolchains = extensions.Success ? await RunToolchainsAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Toolchains: not run", TimeSpan.Zero);
+            var pythonTools = toolchains.Success ? await CheckPythonToolsAsync(main, cancellationToken) : new SelfTestResult(false, "Python tools: not run", TimeSpan.Zero);
             return new SelfTestResult(
-                extensions.Success && toolchains.Success,
-                $"{summary} | {debugged.Message} | {web.Message} | {avalonia.Message} | {extensions.Message} | {toolchains.Message}",
+                extensions.Success && toolchains.Success && pythonTools.Success,
+                $"{summary} | {debugged.Message} | {web.Message} | {avalonia.Message} | {extensions.Message} | {toolchains.Message} | {pythonTools.Message}",
                 clock.Elapsed);
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)
         {
-            return new SelfTestResult(false, $"{ex.GetType().Name}: {ex.Message}".ReplaceLineEndings(" "), clock.Elapsed);
+            return new SelfTestResult(false, $"{ex.GetType().Name}: {ex.Message}{DescribeActivity(main)}".ReplaceLineEndings(" "), clock.Elapsed);
         }
     }
 }

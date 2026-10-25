@@ -51,7 +51,9 @@ public sealed class PythonRunTests
         await workspace.RunCommand.ExecuteAsync(null);
 
         Assert.Equal(IdeState.Failed, workspace.State);
-        var error = Assert.Single(workspace.ErrorList.Items);
+
+        // Pyright, where it is installed, lists the same mistake as it reads the file; the run adds the traceback's.
+        var error = Assert.Single(workspace.ErrorList.Items, i => i.Code == "Python");
         Assert.StartsWith("NameError: name 'nme' is not defined", error.Description, StringComparison.Ordinal);
         Assert.Equal(("main.py", "2"), (error.File, error.Line));
 

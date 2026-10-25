@@ -747,6 +747,14 @@
                   IsVisible="{Binding LanguageServerText, Converter={x:Static ObjectConverters.IsNotNull}}">
             <TextBlock Text="{Binding LanguageServerText}" FontSize="12" VerticalAlignment="Center" />
           </Button>
+          <Button Theme="{StaticResource StatusBarButton}" Height="24" Command="{Binding InstallServerToolchainCommand}"
+                  ToolTip.Tip="{Binding ServerInstallOffer.ToolTip, FallbackValue={x:Null}}"
+                  IsVisible="{Binding ServerInstallOffer, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+              <controls:StrokeIcon Size="13" Data="{StaticResource Icon.Download}" />
+              <TextBlock Text="{Binding ServerInstallOffer.ActionText, FallbackValue={x:Null}}" FontSize="12" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
           <TextBlock Text="{Binding PackagesText}" VerticalAlignment="Center"
                      IsVisible="{Binding PackagesText, Converter={x:Static ObjectConverters.IsNotNull}}" />
           <StackPanel Orientation="Horizontal" Spacing="5">

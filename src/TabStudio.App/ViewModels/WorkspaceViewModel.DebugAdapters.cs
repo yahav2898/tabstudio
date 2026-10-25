@@ -211,9 +211,10 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         var executable = target.Configuration.DebugServerPort is not null
             ? string.Empty
             : _languageServerServices.Launcher.ResolveFirst(adapter.Commands);
+        executable ??= await InstallMissingAdapterAsync(adapter);
         if (executable is null)
         {
-            var install = adapter.Package is { } package ? $" Install {package} from the Toolchain Store, or put {adapter.Command} on the PATH." : string.Empty;
+            var install = MissingToolHint(adapter.Name, adapter.Command, adapter.Package);
             StatusText = $"{adapter.Name} is not installed.{install}";
             DebugAdapterOutput.WriteLine($"[{adapter.Name}] {adapter.Command} was not found.{install}", OutputKind.Failure);
             return;
@@ -249,7 +250,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         DebugAdapterSession session;
         try
         {
-            var options = new DebugAdapterSessionOptions { TraceMessages = _languageServerServices.TraceMessages, SupportsChildSessions = true };
+            var options = new DebugAdapterSessionOptions { TraceMessages = _languageServerServices.TraceMessages, SupportsChildSessions = true, SupportsRunInTerminal = true };
             session = configuration.DebugServerPort is { } port
                 ? await DebugAdapterSession.ConnectAsync(adapter, port, options)
                 : await DebugAdapterSession.StartAsync(adapter, executable, workspace.RootDirectory, _languageServerServices.Launcher, options);
@@ -331,7 +332,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         }
 
         DebugAdapterSession child;
-        var options = new DebugAdapterSessionOptions { TraceMessages = _languageServerServices.TraceMessages, SupportsChildSessions = true };
+        var options = new DebugAdapterSessionOptions { TraceMessages = _languageServerServices.TraceMessages, SupportsChildSessions = true, SupportsRunInTerminal = true };
         try
         {
             child = parent.Port is { } port
@@ -390,6 +391,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
 
     private void WireAdapterEvents(DebugAdapterSession session)
     {
+        session.RunInTerminalHandler = RunAdapterProgramAsync;
         session.Stopped += (_, e) => _ui.Post(() =>
         {
             // The session that stopped is the one the debugger shows, as when a child of js-debug hits a breakpoint.
@@ -402,15 +404,22 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         });
         session.Exited += (_, e) => _ui.Post(() => _adapterExitCode ??= e.ExitCode);
         session.Continued += (_, _) => _ui.Post(() => ShowAdapterRunning(session));
-        session.OutputReceived += (_, e) => Output.Write(e.Output, e.Category switch
+        session.OutputReceived += (_, e) =>
         {
-            "stderr" => OutputKind.Error,
-            "console" or "important" => OutputKind.Info,
-            _ => OutputKind.Program,
-        });
+            // A program in the Output panel's console writes there itself; the adapter's copies would repeat it.
+            if (!IsProgramInConsole || e.Category is not ("stdout" or "stderr"))
+            {
+                Output.Write(e.Output, e.Category switch
+                {
+                    "stderr" => OutputKind.Error,
+                    "console" or "important" => OutputKind.Info,
+                    _ => OutputKind.Program,
+                });
+            }
+        };
         session.BreakpointChanged += (_, e) => _ui.Post(() => OnAdapterBreakpointChanged(e));
         session.AdapterLog += (_, line) => DebugAdapterOutput.WriteLine($"[{session.Adapter.Name}] {line}", OutputKind.Info);
-        session.Ended += (_, _) => _ui.Post(() => EndAdapterSession(session));
+        session.Ended += (_, _) => _ui.Post(() => _ = EndAdapterSessionAfterProgramAsync(session));
     }
 
     /// <summary>The breakpoints to set at launch, by file: those of files in the adapter's languages, and Run to Cursor's.</summary>
@@ -978,7 +987,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         _adapter = _adapterChildren.LastOrDefault(c => !c.HasEnded) ?? _adapterRoot;
         if (_adapterRoot is { HasEnded: true } root)
         {
-            EndAdapterSession(root);
+            _ = EndAdapterSessionAfterProgramAsync(root);
         }
     }
 
@@ -1113,7 +1122,8 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         var targets = new List<RunTargetOption>();
         foreach (var project in StartupProjects)
         {
-            targets.Add(new RunTargetOption(project.Name, "C# project", project.Select));
+            var kind = FindToolchainProject(project.Project) is { } toolchainProject ? toolchainProject.Toolchain.Name : "C#";
+            targets.Add(new RunTargetOption(project.Name, $"{kind} project", project.Select));
         }
 
         if (_languageServers is { } host)
@@ -1163,7 +1173,9 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
     /// <summary>A frame of the adapter as the Call Stack shows it, with its statement as a span of the file.</summary>
     private DebugStackFrame ToStackFrame(DapStackFrame frame)
     {
-        if (frame.FilePath is not { } path || ReadText(path) is not { } text)
+        // A file only the adapter's environment has, such as Python's library on Android, is read where the device keeps it.
+        var path = frame.FilePath is { } reported && !File.Exists(reported) ? _languageServerServices.Launcher.ToLocalPath(reported) ?? reported : frame.FilePath;
+        if (path is null || ReadText(path) is not { } text)
         {
             return new DebugStackFrame(frame.Name, null);
         }

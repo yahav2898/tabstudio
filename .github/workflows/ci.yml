@@ -101,6 +101,12 @@ jobs:
         run: |
           npm install -g pyright typescript-language-server typescript@5
           python -m pip install debugpy
+          # vscode-js-debug's adapter, under the command name the Toolchain Store gives it on a tablet.
+          mkdir -p "$RUNNER_TEMP/js-debug/bin"
+          curl -fsSL https://github.com/microsoft/vscode-js-debug/releases/download/v1.140.0/js-debug-dap-v1.140.0.tar.gz | tar -xz -C "$RUNNER_TEMP/js-debug"
+          printf '#!/bin/sh\nexec node "%s/js-debug/src/dapDebugServer.js" "$@"\n' "$RUNNER_TEMP/js-debug" > "$RUNNER_TEMP/js-debug/bin/js-debug-adapter"
+          chmod +x "$RUNNER_TEMP/js-debug/bin/js-debug-adapter"
+          echo "$RUNNER_TEMP/js-debug/bin" >> "$GITHUB_PATH"
           echo "TABSTUDIO_REAL_SERVERS=1" >> "$GITHUB_ENV"
 
       - name: Build the desktop host and test the IDE
@@ -239,7 +245,7 @@ jobs:
           disk-size: 4096M
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
-          script: bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 420
+          script: bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 660
 
       - name: Keep the APK out of the published logs
         if: always()

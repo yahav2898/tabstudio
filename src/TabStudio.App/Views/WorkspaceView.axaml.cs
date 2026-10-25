@@ -51,6 +51,7 @@ public sealed partial class WorkspaceView : UserControl
         {
             _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
             _viewModel.Prompt.PropertyChanged -= OnPromptPropertyChanged;
+            _viewModel.EditorRebuildRequested -= OnEditorRebuildRequested;
         }
 
         _viewModel = DataContext as WorkspaceViewModel;
@@ -58,6 +59,7 @@ public sealed partial class WorkspaceView : UserControl
         {
             _viewModel.PropertyChanged += OnViewModelPropertyChanged;
             _viewModel.Prompt.PropertyChanged += OnPromptPropertyChanged;
+            _viewModel.EditorRebuildRequested += OnEditorRebuildRequested;
             UpdateSideBar();
             UpdateBottomPanel();
         }
@@ -77,6 +79,8 @@ public sealed partial class WorkspaceView : UserControl
             _viewModel.IsSideBarVisible = wide;
         }
     }
+
+    private void OnEditorRebuildRequested(object? sender, DocumentViewModel document) => Editors.Rebuild(document);
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
