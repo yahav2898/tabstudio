@@ -1,3 +1,4 @@
+using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -55,7 +56,7 @@ public sealed class InterceptorTests
                 }
             }
             """;
-        compilation = compilation.AddSyntaxTrees(CSharpSyntaxTree.ParseText(interceptor, (CSharpParseOptions)tree.Options, "Interceptors.g.cs"));
+        compilation = compilation.AddSyntaxTrees(CSharpSyntaxTree.ParseText(interceptor, (CSharpParseOptions)tree.Options, "Interceptors.g.cs", Encoding.UTF8));
         Assert.Empty(compilation.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error));
 
         var build = DebugBuilder.Build(compilation);

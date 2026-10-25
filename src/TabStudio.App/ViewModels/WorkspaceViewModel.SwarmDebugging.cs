@@ -22,6 +22,9 @@ namespace TabStudio.App.ViewModels;
 /// </remarks>
 public sealed partial class WorkspaceViewModel
 {
+    /// <summary>How long the debugger waits for a device to answer, so one that left never holds the panels.</summary>
+    private static readonly TimeSpan SwarmAnswerTimeout = TimeSpan.FromSeconds(15);
+
     private SwarmDebugState? _swarmDebug;
     private DebugSourceSpan? _swarmCurrent;
 
@@ -219,7 +222,8 @@ public sealed partial class WorkspaceViewModel
         List<VariableSource> sources = [];
         try
         {
-            foreach (var variable in await pause.GetLocalsAsync(CancellationToken.None))
+            using var timeout = new CancellationTokenSource(SwarmAnswerTimeout);
+            foreach (var variable in await pause.GetLocalsAsync(timeout.Token))
             {
                 sources.Add(new VariableSource(variable.Name, variable.Path, null) { Variable = new SwarmDebugVariable(pause, variable) });
             }
@@ -245,7 +249,8 @@ public sealed partial class WorkspaceViewModel
     {
         try
         {
-            var result = await pause.EvaluateAsync(expression, CancellationToken.None);
+            using var timeout = new CancellationTokenSource(SwarmAnswerTimeout);
+            var result = await pause.EvaluateAsync(expression, timeout.Token);
             return result.Value is { } value
                 ? new VariableSource(expression, expression, null) { Variable = new SwarmDebugVariable(pause, value) }
                 : new VariableSource(expression, expression, null, result.Error ?? "There is no such value.");
@@ -298,7 +303,17 @@ public sealed partial class WorkspaceViewModel
 
         debug.Stepping = pause.Device;
         ShowSwarmRunning();
-        await pause.ResumeAsync(mode, CancellationToken.None);
+        using var timeout = new CancellationTokenSource(SwarmAnswerTimeout);
+        try
+        {
+            await pause.ResumeAsync(mode, timeout.Token);
+        }
+        catch (Exception ex) when (ex is not OutOfMemoryException)
+        {
+            // The device left or did not answer: it shows as offline, and the others continue.
+            debug.Stepping = null;
+        }
+
         await coordinator.ContinueAllAsync(except: pause.Device);
     }
 

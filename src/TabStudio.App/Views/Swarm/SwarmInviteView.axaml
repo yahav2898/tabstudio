@@ -75,23 +75,17 @@
               </StackPanel>
             </Border>
 
-            <StackPanel Spacing="8">
-              <StackPanel Orientation="Horizontal" Spacing="10">
-                <controls:StrokeIcon Data="{StaticResource Icon.Lock}" Size="15" Foreground="{DynamicResource Brush.AccentText}" />
-                <TextBlock Classes="small" TextWrapping="Wrap" VerticalAlignment="Center"
-                           Text="Only devices that paired with this code join; each checks the other's certificate, and everything between them is encrypted with TLS." />
-              </StackPanel>
-              <StackPanel Orientation="Horizontal" Spacing="10">
-                <controls:StrokeIcon Data="{StaticResource Icon.Globe}" Size="15" Foreground="{DynamicResource Brush.AccentText}" />
-                <TextBlock Classes="small" TextWrapping="Wrap" VerticalAlignment="Center"
-                           Text="A web app is served by this tablet on its own loopback address; devices reach it only through the swarm, with a secret for each run." />
-              </StackPanel>
-              <StackPanel Orientation="Horizontal" Spacing="10">
-                <controls:StrokeIcon Data="{StaticResource Icon.Warning}" Size="15" Foreground="{DynamicResource Brush.Warning}" />
-                <TextBlock Classes="small" TextWrapping="Wrap" VerticalAlignment="Center"
-                           Text="The devices run the code this tablet builds, so add only devices you own." />
-              </StackPanel>
-            </StackPanel>
+            <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,8,Auto,8,Auto">
+              <controls:StrokeIcon Data="{StaticResource Icon.Lock}" Size="15" Margin="0,1,10,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush.AccentText}" />
+              <TextBlock Grid.Column="1" Classes="small" TextWrapping="Wrap"
+                         Text="Only devices that paired with this code join; each checks the other's certificate, and everything between them is encrypted with TLS." />
+              <controls:StrokeIcon Grid.Row="2" Data="{StaticResource Icon.Globe}" Size="15" Margin="0,1,10,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush.AccentText}" />
+              <TextBlock Grid.Row="2" Grid.Column="1" Classes="small" TextWrapping="Wrap"
+                         Text="A web app is served by this tablet on its own loopback address; devices reach it only through the swarm, with a secret for each run." />
+              <controls:StrokeIcon Grid.Row="4" Data="{StaticResource Icon.Warning}" Size="15" Margin="0,1,10,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush.Warning}" />
+              <TextBlock Grid.Row="4" Grid.Column="1" Classes="small" TextWrapping="Wrap"
+                         Text="The devices run the code this tablet builds, so add only devices you own." />
+            </Grid>
           </StackPanel>
         </ScrollViewer>
       </DockPanel>

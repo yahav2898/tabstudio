@@ -37,6 +37,12 @@ public sealed partial class WorkspaceViewModel
     /// <summary>Whether the side bar shows the Swarm window.</summary>
     public bool IsSwarmSelected => SelectedSideBarPanel == SideBarPanel.Swarm;
 
+    /// <summary>
+    /// Whether the side bar has the Swarm tab: while the swarm is on, or its window is shown. Otherwise View &gt; Swarm and
+    /// "Swarm" in the Run button's menu open it, so the tab takes no room from the others.
+    /// </summary>
+    public bool ShowsSwarmTab => Swarm is not null && (IsSwarmSelected || Swarm.IsOn);
+
     /// <summary>Whether F5 and Ctrl+F5 run the startup project on every device of the swarm, as "Swarm" in the Run button's menu chooses.</summary>
     [ObservableProperty]
     public partial bool IsRunOnSwarm { get; private set; }
@@ -368,6 +374,7 @@ public sealed partial class WorkspaceViewModel
 
     private void OnSwarmChanged(object? sender, EventArgs e)
     {
+        OnPropertyChanged(nameof(ShowsSwarmTab));
         if (IsRunOnSwarm)
         {
             OnPropertyChanged(nameof(RunHostText));

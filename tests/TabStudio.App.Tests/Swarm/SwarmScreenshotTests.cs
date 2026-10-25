@@ -60,7 +60,8 @@ public sealed class SwarmScreenshotTests : IDisposable
         await UiTestHelpers.WaitUntilAsync(() => swarmWindow.Invite.JoinedText == "1 device is in the swarm.", because: "the dialog to count the phone");
         Assert.NotEqual(invitation.Code.DisplayText, swarmWindow.Invite.CodeText);
         swarmWindow.Invite.CloseCommand.Execute(null);
-        await UiTestHelpers.WaitUntilAsync(() => swarmWindow.Devices.Count == 1 && swarmWindow.Devices[0].Detail.StartsWith("412 × 915", StringComparison.Ordinal), because: "the phone's screen in the Swarm window");
+        var size = string.Create(CultureInfo.InvariantCulture, $"{phoneWindow.ClientSize.Width:0} × {phoneWindow.ClientSize.Height:0}");
+        await UiTestHelpers.WaitUntilAsync(() => swarmWindow.Devices.Count == 1 && swarmWindow.Devices[0].Detail.StartsWith(size, StringComparison.Ordinal), because: "the phone's screen in the Swarm window");
         var row = swarmWindow.Devices[0];
         Assert.Equal("Pixel 7", row.Name);
         Assert.Equal("Ready", row.StateLabel);

@@ -68,7 +68,7 @@ public sealed class SwarmDebuggingTests
         // A tap on the second phone runs into the breakpoint there.
         Dispatcher.UIThread.Post(() => galaxy.Preview.PersonTaps("CountButton"));
         await UiTestHelpers.WaitUntilAsync(() => workspace.IsPaused && workspace.ShownSwarmPause?.Device.Name == "Galaxy S24", because: "the Galaxy to stop at the breakpoint");
-        await workspace.PauseShown;
+        await workspace.PauseShown.WaitAsync(TimeSpan.FromSeconds(60));
         Assert.Equal($"Paused at a breakpoint on Galaxy S24 · MainViewModel.cs, line {breakpointLine}", workspace.StatusText);
         Assert.StartsWith("Galaxy S24!", workspace.CallStack.Frames[0].MethodName, StringComparison.Ordinal);
         Assert.Contains("Count", workspace.CallStack.Frames[0].MethodName, StringComparison.Ordinal);
@@ -80,9 +80,9 @@ public sealed class SwarmDebuggingTests
         Assert.Equal("Paused in the tablet's debugger", galaxy.Page.StateText);
 
         // Watch and DataTips read the Galaxy's values.
-        await workspace.Watch.AddAsync("Clicks");
+        await workspace.Watch.AddAsync("Clicks").WaitAsync(TimeSpan.FromSeconds(60));
         await UiTestHelpers.WaitUntilAsync(() => workspace.Watch.Tree.Rows.Any(r => r.Name == "Clicks" && r.Value == "0"), because: "the Watch to read Clicks on the Galaxy");
-        var tip = await ((IEditorDebugger)workspace).EvaluateDataTipAsync("next");
+        var tip = await ((IEditorDebugger)workspace).EvaluateDataTipAsync("next").WaitAsync(TimeSpan.FromSeconds(60));
         Assert.Equal("1", tip?.Rows.Single().Value);
 
         // Pause all on a breakpoint: the Pixel pauses at its next statement, which a tap runs.
@@ -108,7 +108,7 @@ public sealed class SwarmDebuggingTests
         await UiTestHelpers.WaitUntilAsync(() => fixture.Swarm.Coordinator!.Breakpoints.Count == 0, because: "the breakpoints to leave the phones");
         Assert.True(workspace.StartDebuggingCommand.CanExecute(null), "F5 continues while the app is paused on the swarm.");
         Assert.Equal("Continue", workspace.StartDebuggingLabel);
-        await workspace.StartDebuggingCommand.ExecuteAsync(null);
+        await workspace.StartDebuggingCommand.ExecuteAsync(null).WaitAsync(TimeSpan.FromSeconds(60));
         await UiTestHelpers.WaitUntilAsync(
             () => galaxy.Texts().Contains("Clicked 1 times") && pixel.Texts().Contains("Clicked 1 times") && workspace.State == IdeState.Debugging,
             because: "both phones to finish counting");

@@ -42,7 +42,7 @@ public sealed partial class WorkspaceViewModel
     [NotifyPropertyChangedFor(nameof(IsSolutionExplorerSelected), nameof(IsGitChangesSelected), nameof(IsTestExplorerSelected), nameof(IsAgentSelected), nameof(IsWebPreviewSelected), nameof(IsAppPreviewSelected))]
     [NotifyPropertyChangedFor(nameof(IsActionsSelected))]
     [NotifyPropertyChangedFor(nameof(IsPullRequestsSelected))]
-    [NotifyPropertyChangedFor(nameof(IsSwarmSelected))]
+    [NotifyPropertyChangedFor(nameof(IsSwarmSelected), nameof(ShowsSwarmTab))]
     public partial SideBarPanel SelectedSideBarPanel { get; set; } = SideBarPanel.SolutionExplorer;
 
     /// <summary>Whether the side bar shows the Solution Explorer and Properties.</summary>

@@ -694,7 +694,7 @@
                 <TextBlock Text="Preview" VerticalAlignment="Center" />
               </StackPanel>
             </Button>
-            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsSwarmSelected}" IsVisible="{Binding IsSwarmAvailable}"
+            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsSwarmSelected}" IsVisible="{Binding ShowsSwarmTab}"
                     Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.Swarm}">
               <StackPanel Orientation="Horizontal" Spacing="6">
                 <controls:StrokeIcon Data="{StaticResource Icon.Swarm}" Size="12" />

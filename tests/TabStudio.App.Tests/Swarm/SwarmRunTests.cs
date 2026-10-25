@@ -66,7 +66,7 @@ public sealed class SwarmRunTests
         var document = await workspace.OpenDocumentAsync(xamlPath);
         var hint = document!.Document.Text.IndexOf("Edit Views/MainView.axaml", StringComparison.Ordinal);
         document.Document.Replace(hint, "Edit Views/MainView.axaml".Length, "Changed on a tablet");
-        await workspace.SaveCommand.ExecuteAsync(null);
+        await workspace.SaveCommand.ExecuteAsync(null).WaitAsync(TimeSpan.FromSeconds(60));
         await UiTestHelpers.WaitUntilAsync(
             () => (Shows(pixel, "Changed on a tablet") && Shows(galaxy, "Changed on a tablet")) || run.IsCompleted,
             StartTimeout,
@@ -92,7 +92,7 @@ public sealed class SwarmRunTests
         recorder.Open(start: false);
         recorder.SelectedScreen = recorder.Screens.First(s => s.Screen.Profile.Name == "Pixel 7");
         recorder.TestName = "Counting three taps";
-        await recorder.StartCommand.ExecuteAsync(null);
+        await recorder.StartCommand.ExecuteAsync(null).WaitAsync(TimeSpan.FromSeconds(60));
         Assert.True(recorder.IsRecording, recorder.Error);
         await UiTestHelpers.WaitUntilAsync(() => pixel.Texts().Contains("Clicked 0 times"), because: "the app to start again for the recording");
         for (var i = 0; i < 3; i++)
@@ -107,7 +107,7 @@ public sealed class SwarmRunTests
         UiTestHelpers.SaveScreenshot(window, "swarm-04-recorder");
 
         // Saving writes the test into a new test project, added to the solution.
-        await recorder.SaveCommand.ExecuteAsync(null);
+        await recorder.SaveCommand.ExecuteAsync(null).WaitAsync(TimeSpan.FromMinutes(2));
         Assert.Null(recorder.Error);
         var testsFolder = Path.Combine(Path.GetDirectoryName(solution)!, "HelloAvalonia.UITests");
         var testFile = Path.Combine(testsFolder, "Recorded", "CountingThreeTapsTest.cs");
@@ -125,7 +125,7 @@ public sealed class SwarmRunTests
 
         // In the Test Explorer, the test is a row per phone, and passes on both.
         await UiTestHelpers.WaitUntilAsync(() => ScreenRows(workspace).Count == 2, because: "a row of the test for each phone");
-        await workspace.Tests.RunAsync(new TestRunRequest("recorded UI tests", workspace.Tests.ScreenTestSelections()));
+        await workspace.Tests.RunAsync(new TestRunRequest("recorded UI tests", workspace.Tests.ScreenTestSelections())).WaitAsync(TimeSpan.FromMinutes(3));
         Assert.All(ScreenRows(workspace), row => Assert.Equal(TestState.Passed, row.State));
         Assert.Contains(ScreenRows(workspace), row => row.DisplayName.StartsWith("on Galaxy S24", StringComparison.Ordinal));
 
@@ -135,7 +135,7 @@ public sealed class SwarmRunTests
         document.Document.Replace(expected, "\"Clicked 3 times\"".Length, "\"Clicked 4 times\"");
         await workspace.SaveCommand.ExecuteAsync(null);
         await UiTestHelpers.WaitUntilAsync(() => fixture.Workspace.Tests.ScreenTestOf(ScreenRows(workspace)[0])?.Test.Steps[^1].Text == "Clicked 4 times", because: "the changed test to be read again");
-        await workspace.Tests.RunAsync(new TestRunRequest("recorded UI tests", workspace.Tests.ScreenTestSelections()));
+        await workspace.Tests.RunAsync(new TestRunRequest("recorded UI tests", workspace.Tests.ScreenTestSelections())).WaitAsync(TimeSpan.FromMinutes(3));
         var failed = ScreenRows(workspace).First(r => r.DisplayName.StartsWith("on Pixel 7", StringComparison.Ordinal));
         Assert.Equal(TestState.Failed, failed.State);
         Assert.Contains("shows \"Clicked 3 times\" on Pixel 7, not \"Clicked 4 times\"", failed.Result!.Message, StringComparison.Ordinal);
