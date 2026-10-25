@@ -140,12 +140,12 @@ public sealed partial class WorkspaceViewModel
         {
             foreach (var document in Documents)
             {
-                _ = document.AnalyzeNowAsync();
+                _ = document.AnalyzeAgainAsync();
             }
 
-            if (_profile.AnalyzeWholeSolution && _background is { } background)
+            if (_profile.AnalyzeWholeSolution)
             {
-                _ = AnalyzeSolutionAsync(background.Token);
+                StartSolutionAnalysis();
             }
         }
     }

@@ -43,7 +43,7 @@ public sealed class WebTemplateScreenshotTests : IDisposable
             new[] { "Blazor Web App", "Blazor WebAssembly Standalone App", "ASP.NET Core Web App (Razor Pages)", "ASP.NET Core Web App (Model-View-Controller)" },
             start.Templates.Where(t => WebTemplates.IsTemplate(t.Id)).Select(t => t.Name));
         Assert.True(start.IsBlazorWebAppSelected);
-        var renderModes = window.GetVisualDescendants().OfType<ComboBox>().Single(c => ReferenceEquals(c.ItemsSource, start.BlazorRenderModes));
+        var renderModes = window.GetVisualDescendants().OfType<ComboBox>().Single(c => ReferenceEquals(c.ItemsSource, BlazorRenderModeOption.All));
         Assert.True(renderModes.IsEffectivelyVisible);
         Assert.Equal(BlazorInteractivity.Server, start.SelectedBlazorRenderMode.Interactivity);
 
@@ -60,7 +60,7 @@ public sealed class WebTemplateScreenshotTests : IDisposable
         var start = _main.Start;
         start.SelectCommand.Execute(StartAction.NewProject);
         start.SelectedTemplate = start.Templates.Single(t => t.Id == WebTemplates.BlazorWebAppId);
-        start.SelectedBlazorRenderMode = start.BlazorRenderModes.Single(m => m.Interactivity == BlazorInteractivity.WebAssembly);
+        start.SelectedBlazorRenderMode = BlazorRenderModeOption.All.Single(m => m.Interactivity == BlazorInteractivity.WebAssembly);
         start.ProjectName = "Clicker";
 
         await start.CreateProjectCommand.ExecuteAsync(null);

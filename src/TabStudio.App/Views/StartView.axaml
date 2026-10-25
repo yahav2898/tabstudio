@@ -190,7 +190,7 @@
                 </ListBox>
                 <StackPanel Spacing="8" IsVisible="{Binding IsBlazorWebAppSelected}">
                   <TextBlock Classes="label" Text="Interactive render mode" />
-                  <ComboBox ItemsSource="{Binding BlazorRenderModes}" SelectedItem="{Binding SelectedBlazorRenderMode}"
+                  <ComboBox ItemsSource="{x:Static vm:BlazorRenderModeOption.All}" SelectedItem="{Binding SelectedBlazorRenderMode}"
                             HorizontalAlignment="Stretch" MinHeight="44">
                     <ComboBox.ItemTemplate>
                       <DataTemplate DataType="vm:BlazorRenderModeOption">

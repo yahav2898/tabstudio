@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using TabStudio.App.Platform;
 using TabStudio.App.ViewModels;
+using TabStudio.Core.Diagnostics;
 using TabStudio.Web.Serving;
 using TabStudio.Web.Templates;
 using TabStudio.Web.WebAssembly;
@@ -26,6 +27,9 @@ public static partial class SelfTest
 
     /// <summary>How long the preview's browser may take to download .NET for WebAssembly and start the app.</summary>
     private static readonly TimeSpan WebAssemblyBootTimeout = TimeSpan.FromSeconds(120);
+
+    /// <summary>How long the analysis of a new app may take to replace what it found before the app's packages were restored.</summary>
+    private static readonly TimeSpan AnalysisTimeout = TimeSpan.FromSeconds(60);
 
     /// <summary>Serves both Blazor apps; the Blazor Web App stays running when everything worked.</summary>
     private static async Task<SelfTestResult> ServeBlazorAppsAsync(MainViewModel main, ProjectTemplates templates, CancellationToken cancellationToken)
@@ -83,7 +87,12 @@ public static partial class SelfTest
                 return new SelfTestResult(false, $"WebAssembly: unexpected boot files: {runtime.Content.Headers.ContentType}, {assembly.StatusCode}", clock.Elapsed);
             }
 
-            var message = string.Create(CultureInfo.InvariantCulture, $"WebAssembly: served on {address.Authority} in {served.TotalSeconds:0.0} s with its boot files");
+            if (await ErrorsOfNewAppAsync(workspace, cancellationToken) is { } errors)
+            {
+                return new SelfTestResult(false, $"WebAssembly: the new app has errors: {errors}", clock.Elapsed);
+            }
+
+            var message = string.Create(CultureInfo.InvariantCulture, $"WebAssembly: served on {address.Authority} in {served.TotalSeconds:0.0} s with its boot files, no errors");
             var ran = await RunInPreviewAsync(workspace, host, cancellationToken);
             return new SelfTestResult(ran.Success, $"{message}{ran.Message}", clock.Elapsed);
         }
@@ -181,6 +190,11 @@ public static partial class SelfTest
                 return new SelfTestResult(false, $"Blazor: unexpected answers: {script.StatusCode} {scriptLength} bytes, {Excerpt(home)}", clock.Elapsed);
             }
 
+            if (await ErrorsOfNewAppAsync(workspace, cancellationToken) is { } errors)
+            {
+                return new SelfTestResult(false, $"Blazor: the new app has errors: {errors}", clock.Elapsed);
+            }
+
             // For the screenshot: the Counter page's code beside the running page.
             var project = Path.Combine(Path.GetDirectoryName(solution)!, BlazorWebAppName);
             await workspace.OpenDocumentAsync(Path.Combine(project, "Components", "Pages", "Counter.razor"));
@@ -189,7 +203,7 @@ public static partial class SelfTest
             keepRunning = true;
             return new SelfTestResult(
                 true,
-                string.Create(CultureInfo.InvariantCulture, $"Blazor: served on {address.Authority} in {started.TotalSeconds:0.0} s with blazor.web.js ({scriptLength / 1024} KB), left running"),
+                string.Create(CultureInfo.InvariantCulture, $"Blazor: served on {address.Authority} in {started.TotalSeconds:0.0} s with blazor.web.js ({scriptLength / 1024} KB), no errors, left running"),
                 clock.Elapsed);
         }
         catch (HttpRequestException ex)
@@ -204,6 +218,25 @@ public static partial class SelfTest
                 await run.WaitAsync(cancellationToken);
             }
         }
+    }
+
+    /// <summary>
+    /// Waits for the analysis of a new app to settle, and gives the errors its Error List still shows, as Visual Studio
+    /// would show them after a fresh template: none, or the first few of them.
+    /// </summary>
+    private static async Task<string?> ErrorsOfNewAppAsync(WorkspaceViewModel workspace, CancellationToken cancellationToken)
+    {
+        var clock = Stopwatch.StartNew();
+        while (workspace.ErrorList.ErrorCount > 0 && clock.Elapsed < AnalysisTimeout)
+        {
+            await Task.Delay(PollInterval, cancellationToken);
+        }
+
+        var errors = workspace.ErrorList.AllDiagnostics
+            .Where(d => d.Severity == DiagnosticSeverityLevel.Error)
+            .Select(d => string.Create(CultureInfo.InvariantCulture, $"{d.Id} {Path.GetFileName(d.Location?.FilePath)}({d.Location?.Line}): {d.Message}"))
+            .ToList();
+        return errors.Count == 0 ? null : string.Join("; ", errors.Take(3));
     }
 
     /// <summary>The major version of Chrome in a user agent, such as 74 in <c>Chrome/74.0.3729.186</c>.</summary>

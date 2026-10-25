@@ -23,9 +23,6 @@ public sealed record BlazorRenderModeOption(BlazorInteractivity Interactivity, s
 /// <summary>The start screen's option for the Blazor Web App template.</summary>
 public sealed partial class StartViewModel
 {
-    /// <summary>Where a new Blazor Web App's components can run.</summary>
-    public IReadOnlyList<BlazorRenderModeOption> BlazorRenderModes => BlazorRenderModeOption.All;
-
     /// <summary>Where a new Blazor Web App's components run, Server unless the user picks another.</summary>
     [ObservableProperty]
     public partial BlazorRenderModeOption SelectedBlazorRenderMode { get; set; } = BlazorRenderModeOption.All[0];

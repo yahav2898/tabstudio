@@ -66,7 +66,7 @@ public sealed class BlazorAppTests : IClassFixture<SharedToolchain>, IDisposable
             await WaitForAsync(webView.RefreshAsync());
         }
 
-        AssertNoErrors(workspace);
+        await AssertNoErrorsAsync(workspace);
         UiTestHelpers.SaveScreenshot(window, "blazor-01-web-app-beside-code");
 
         // Saving a component rebuilds the app and starts it again, on the same page at the same address.
@@ -102,7 +102,7 @@ public sealed class BlazorAppTests : IClassFixture<SharedToolchain>, IDisposable
         await workspace.LoadAsync(solution);
         var window = Show(workspace);
         await workspace.BuildCommand.ExecuteAsync(null);
-        AssertNoErrors(workspace);
+        await AssertNoErrorsAsync(workspace);
 
         var path = Path.Combine(Path.GetDirectoryName(solution)!, "Squiggles", "Components", "Pages", "Counter.razor");
         var counter = (await workspace.OpenDocumentAsync(path))!;
@@ -215,11 +215,25 @@ public sealed class BlazorAppTests : IClassFixture<SharedToolchain>, IDisposable
     }
 
     /// <summary>Fails with the Error List's errors when it has any.</summary>
-    private static void AssertNoErrors(WorkspaceViewModel workspace) => Assert.True(
-        workspace.ErrorList.ErrorCount == 0,
-        string.Join('\n', workspace.ErrorList.AllDiagnostics
-            .Where(d => d.Severity == DiagnosticSeverityLevel.Error)
-            .Select(d => $"{d.Id} {d.Location?.FilePath}({d.Location?.Line}): {d.Message}")));
+    /// <summary>
+    /// Asserts that the Error List of a new app settles at no errors: what its analysis found before the app's packages
+    /// were restored is replaced by what it finds after.
+    /// </summary>
+    private static async Task AssertNoErrorsAsync(WorkspaceViewModel workspace)
+    {
+        var deadline = DateTime.UtcNow + TimeSpan.FromSeconds(30);
+        while (workspace.ErrorList.ErrorCount > 0 && DateTime.UtcNow < deadline)
+        {
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            await Task.Delay(100);
+        }
+
+        Assert.True(
+            workspace.ErrorList.ErrorCount == 0,
+            string.Join('\n', workspace.ErrorList.AllDiagnostics
+                .Where(d => d.Severity == DiagnosticSeverityLevel.Error)
+                .Select(d => $"{d.Id} {d.Location?.FilePath}({d.Location?.Line}): {d.Message}")));
+    }
 
     private static void Replace(DocumentViewModel document, string oldText, string newText)
     {
