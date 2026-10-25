@@ -1,29 +1,32 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Agent/TabStudio.Agent.csproj (in 152 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/TabStudio.Debugging.csproj (in 196 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/TabStudio.TestRunner.csproj (in 379 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/TabStudio.Core.csproj (in 1 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj (in 8 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/TabStudio.Packages.csproj (in 2 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/TabStudio.Notebooks.csproj (in 3 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/TabStudio.SourceControl.csproj (in 478 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj (in 108 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Android/TabStudio.Android.csproj (in 582 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/TabStudio.Core.csproj (in 154 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj (in 486 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/TabStudio.Debugging.csproj (in 488 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/TabStudio.Notebooks.csproj (in 488 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/TabStudio.Packages.csproj (in 5 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/TabStudio.TestRunner.csproj (in 7 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Agent/TabStudio.Agent.csproj (in 2 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/TabStudio.SourceControl.csproj (in 64 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj (in 382 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Android/TabStudio.Android.csproj (in 156 ms).
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
   TabStudio.Agent -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Agent/bin/Release/net10.0/TabStudio.Agent.dll
   TabStudio.Packages -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/bin/Release/net10.0/TabStudio.Packages.dll
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/GitHub/WorkflowFile.cs(11,5): warning CA1720: Identifier 'String' contains type name (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1720) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/TabStudio.SourceControl.csproj]
   TabStudio.SourceControl -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/bin/Release/net10.0/TabStudio.SourceControl.dll
   TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
   TabStudio.Notebooks -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/bin/Release/net10.0/TabStudio.Notebooks.dll
   TabStudio.TestRunner -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/bin/Release/net10.0/TabStudio.TestRunner.dll
   TabStudio.Debugging -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/bin/Release/net10.0/TabStudio.Debugging.dll
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Views/Actions/CiLogHeaderView.axaml : Avalonia error AVLN1001: File doesn't contain valid XAML: System.Xml.XmlException: 'Theme' is an unexpected token. Expecting whitespace. Line 34, position 41. [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Views/Actions/CiLogHeaderView.axaml : Avalonia error AVLN1001:    at System.Xml.XmlTextReaderImpl.ParseAttributes() [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Views/Actions/CiLogHeaderView.axaml : Avalonia error AVLN1001:    at System.Xml.XmlTextReaderImpl.ParseElement() [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Views/Actions/CiLogHeaderView.axaml : Avalonia error AVLN1001:    at System.Xml.XmlTextReaderImpl.ParseElementContent() [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Views/Actions/CiLogHeaderView.axaml : Avalonia error AVLN1001:    at System.Xml.Linq.XContainer.ReadContentFrom(XmlReader r) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Views/Actions/CiLogHeaderView.axaml : Avalonia error AVLN1001:    at System.Xml.Linq.XDocument.Load(XmlReader reader, LoadOptions options) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Views/Actions/CiLogHeaderView.axaml : Avalonia error AVLN1001:    at System.Xml.Linq.XDocument.Parse(String text, LoadOptions options) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Views/Actions/CiLogHeaderView.axaml : Avalonia error AVLN1001:    at Avalonia.Build.Tasks.XamlFileInfo.Parse(String data) in /_/src/Avalonia.Build.Tasks/XamlFileInfo.cs:line 11 [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Views/Actions/CiLogHeaderView.axaml : Avalonia error AVLN1001:    at Avalonia.Build.Tasks.GenerateAvaloniaResourcesTask.PreProcessXamlFiles(List`1 sources) in /_/src/Avalonia.Build.Tasks/GenerateAvaloniaResourcesTask.cs:line 106 [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Services/Ci/CiLog.cs(390,116): warning CA1859: Change type of parameter 'spans' from 'System.Collections.Generic.IReadOnlyList<TabStudio.App.Services.Ci.CiLogSpan>' to 'System.Collections.Generic.List<TabStudio.App.Services.Ci.CiLogSpan>' for improved performance (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1859) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+  TabStudio.App -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.App/bin/Release/net10.0/TabStudio.App.dll
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.Android/AndroidWebView.cs(24,23): warning CA1001: Type 'AndroidWebView' owns disposable field(s) '_view' but is not disposable (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1001) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Android/TabStudio.Android.csproj]
+  TabStudio.Android -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Android/bin/Release/net10.0-android/TabStudio.Android.dll
+  TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
+  TabStudio.SourceControl -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/bin/Release/net10.0/TabStudio.SourceControl.dll
+  TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
+  TabStudio.Agent -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Agent/bin/Release/net10.0/TabStudio.Agent.dll
+  TabStudio.Packages -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/bin/Release/net10.0/TabStudio.Packages.dll
+  TabStudio.Debugging -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/bin/Release/net10.0/TabStudio.Debugging.dll
+  TabStudio.Notebooks -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/bin/Release/net10.0/TabStudio.Notebooks.dll
+  TabStudio.TestRunner -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/bin/Release/net10.0/TabStudio.TestRunner.dll
+  TabStudio.App -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.App/bin/Release/net10.0/TabStudio.App.dll
