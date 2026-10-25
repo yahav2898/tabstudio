@@ -93,5 +93,6 @@ Alongside the milestones, the GitHub work a developer would otherwise do in a br
 
 ## Desktop mode
 
-Across every milestone: when a monitor is connected, the full layout moves to the big screen and the tablet
-becomes a touch Toolbox and Properties panel.
+Across every milestone: when a monitor is connected, the full layout moves to the big screen, where the tablet's
+keyboard, mouse and touchpad work as on a PC, and the tablet becomes a touch companion with Run and debugger
+buttons, a Toolbox and a Properties panel for the XAML at the caret.

@@ -367,6 +367,30 @@ and is split into partial classes by concern (`.Build`, `.Debugging`, `.Tests`, 
 - **Tests of the UI.** The App's tests drive the real views on Avalonia's headless platform: typing into the
   editor, pressing chords, tapping and long-pressing, and saving screenshots that CI publishes.
 
+## Desktop mode
+
+When an external display connects, the IDE moves to it and the tablet becomes its touch companion.
+
+- **Displays.** `IExternalDisplayService` reports presentation displays. On Android, `AndroidExternalDisplays` uses
+  DisplayManager's presentation category and shows the IDE in an `android.app.Presentation` hosting a second
+  `AvaloniaView`, with a density context for the chosen size. Two Avalonia roots run side by side in one process.
+- **Moving, not rebuilding.** `PageHost` keeps the workspace's views alive, and `DesktopScreenPresenter` moves the
+  `Ide` panel between the two windows synchronously, so editors keep their caret, scroll, selection and undo. The
+  window the IDE leaves runs one layout pass while the IDE is in no window; otherwise its layout queue still holds the
+  moved controls and fails on its next pass.
+- **Input.** Android gives keys to the tablet's focused window, and Avalonia's single keyboard focus delivers them
+  to the editor on the display. The mouse uses pointer capture (`View.requestPointerCapture`): relative motion moves
+  `DesktopCursor`, TabStudio draws its own pointer in the display's overlay layer, and moves, buttons and the wheel
+  are sent to the display's view at that position. Touching the tablet releases capture. `DesktopTouchpad` turns a
+  touchpad's fingers into moves, scrolls and clicks. Where Android itself routes the pointer to the display, its
+  hover moves are passed on and TabStudio's pointer stays hidden.
+- **The companion.** `DesktopModeViewModel` drives the tablet's side: Run and debugger buttons, a Toolbox from
+  `Toolbox/<Framework>.json` that inserts at the caret, and a Properties panel that reads and edits the XAML element
+  at the caret (`XamlMarkup`, `XamlEdits`) as undoable edits. Without a hardware keyboard, `DesktopTypingRelay` turns
+  the on-screen keyboard's changes in a typing bar into keys for the editor on the display.
+- `InputModality.PrefersKeyboard` is inherited on the display, so keyboard-first behaviour applies there and the
+  floating touch buttons stay on the tablet.
+
 ## Run hosts
 
 The Compatibility Doctor gives every project a run host, and F5 uses it:
