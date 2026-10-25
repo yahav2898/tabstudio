@@ -111,6 +111,20 @@ public sealed class DrawnFoldingMargin : FoldingMargin
     protected override void OnTextViewVisualLinesChanged() => InvalidateVisual();
 
     /// <inheritdoc />
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        ArgumentNullException.ThrowIfNull(change);
+        base.OnPropertyChanged(change);
+
+        // A theme switch recolors the markers and lines without changing the visible lines.
+        if (change.Property == FoldingMarkerBrushProperty || change.Property == SelectedFoldingMarkerBrushProperty
+            || change.Property == FoldingMarkerBackgroundBrushProperty || change.Property == SelectedFoldingMarkerBackgroundBrushProperty)
+        {
+            InvalidateVisual();
+        }
+    }
+
+    /// <inheritdoc />
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
         ArgumentNullException.ThrowIfNull(e);
