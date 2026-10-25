@@ -355,6 +355,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         _compiler.Warmed -= OnCompilerWarmed;
         foreach (var document in Documents)
         {
+            DetachXamlDesigner(document);
             document.Dispose();
         }
 

@@ -275,9 +275,17 @@ public sealed partial class ProjectTemplates
         File.WriteAllText(Path.Combine(directory, "Views", "MainView.axaml"), $$"""
             <UserControl xmlns="https://github.com/avaloniaui"
                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                          xmlns:vm="using:{{name}}.ViewModels"
+                         mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="720"
                          x:Class="{{name}}.Views.MainView"
                          x:DataType="vm:MainViewModel">
+              <Design.DataContext>
+                <!-- The view model the XAML designer previews this view with. -->
+                <vm:MainViewModel />
+              </Design.DataContext>
+
               <StackPanel Margin="24" Spacing="16" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock Text="{Binding Greeting}" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Center" />
                 <TextBlock Text="Edit Views/MainView.axaml and save: the app restarts with your change." TextWrapping="Wrap" TextAlignment="Center" Opacity="0.7" />

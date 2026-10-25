@@ -53,7 +53,7 @@ Hot Reload.
 
 ## 7. Desktop frameworks
 
-- Avalonia apps rendered natively in a pane beside the editor.
+- Avalonia apps rendered natively in a pane beside the editor, and a live XAML designer for their views.
 - Windows Forms on a cross-platform Forms layer, with a touch drag-and-drop designer.
 - WPF through OpenSilver, and WinUI through the Uno Platform.
 

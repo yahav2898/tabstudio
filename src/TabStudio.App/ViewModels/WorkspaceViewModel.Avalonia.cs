@@ -69,7 +69,9 @@ public sealed partial class WorkspaceViewModel
         catch (Exception ex) when (ex is not OutOfMemoryException)
         {
             // XAML that does not load, or an exception in the app's startup code.
+            // The message first, then where it happened, as for a crash.
             Output.WriteLine($"{project.Name} could not start: {ex.Message}", OutputKind.Error);
+            Output.WriteLine(ex.ToString(), OutputKind.Error);
             result = new RunResult(RunOutcome.Crashed, -1, clock.Elapsed, ex);
         }
         finally

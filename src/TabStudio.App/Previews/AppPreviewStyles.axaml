@@ -1,0 +1,38 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!--
+    TabStudio sizes a few built-in controls for its own UI (Theme/Controls.axaml), and those styles reach every
+    control in its window, an app's views included. Inside the app preview and the XAML designer, these put
+    Fluent's own values back, so an app looks as it does on a device. The app's own styles come after these.
+  -->
+
+  <Style Selector="TextBox">
+    <Setter Property="MinHeight" Value="{DynamicResource TextControlThemeMinHeight}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />
+    <Setter Property="VerticalContentAlignment" Value="Top" />
+  </Style>
+
+  <Style Selector="Menu">
+    <Setter Property="Height" Value="{DynamicResource MenuBarHeight}" />
+  </Style>
+  <Style Selector="Menu > MenuItem">
+    <Setter Property="Height" Value="NaN" />
+    <Setter Property="Padding" Value="{DynamicResource MenuBarItemPadding}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />
+  </Style>
+  <Style Selector="MenuItem">
+    <Setter Property="MinHeight" Value="0" />
+  </Style>
+
+  <Style Selector="GridSplitter">
+    <Setter Property="Background" Value="{DynamicResource SystemAltMediumLowColor}" />
+  </Style>
+
+  <Style Selector="ListBox">
+    <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" />
+    <Setter Property="BorderThickness" Value="{DynamicResource ListBoxBorderThemeThickness}" />
+  </Style>
+</Styles>

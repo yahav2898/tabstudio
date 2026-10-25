@@ -38,12 +38,51 @@ internal static class RuntimeXamlTypes
     private static readonly FieldInfo? AssembliesField = TypeSystemType?.GetField("_assemblies", Instance);
     private static readonly MethodInfo? AddAssemblyMethod = TypeSystemType?.GetMethod("GetAssembly", Instance, [typeof(Assembly)]);
 
+    /// <summary>The fields of the dynamic assembly the compiler emits loaded XAML into, and what it put there first.</summary>
+    private static readonly FieldInfo?[] EmitterFields =
+    [
+        CompilerType?.GetField("_sreAsm", Static),
+        CompilerType?.GetField("_sreBuilder", Static),
+        CompilerType?.GetField("_sreContextType", Static),
+        CompilerType?.GetField("_ignoresAccessChecksFromAttribute", Static),
+    ];
+
+    /// <summary>How many XAML files may be compiled into one dynamic assembly before the next starts a new one.</summary>
+    private const int LoadsPerEmitter = 200;
+
     private static AssemblyLoadContext? _preparedFor;
     private static int _preparedAssemblyCount;
+    private static int _loadsSinceNewEmitter;
 
     /// <summary>Whether the compiler's fields were found, so that <see cref="Prepare"/> does its work.</summary>
     public static bool IsSupported =>
-        TypeSystemField is not null && XmlnsField is not null && AssembliesField is not null && AddAssemblyMethod is not null;
+        TypeSystemField is not null && XmlnsField is not null && AssembliesField is not null && AddAssemblyMethod is not null
+        && EmitterFields.All(emitterField => emitterField is not null);
+
+    /// <summary>
+    /// Counts one more XAML file compiled at run time. The compiler puts all of them into one dynamic assembly that
+    /// only grows; every so often, as the XAML designer renders on every pause in typing, the next file starts a new
+    /// one, and the old one is collected once no preview uses it.
+    /// </summary>
+    public static void CountLoad()
+    {
+        if (!IsSupported || ++_loadsSinceNewEmitter < LoadsPerEmitter)
+        {
+            return;
+        }
+
+        ResetEmitter();
+    }
+
+    /// <summary>Makes the compiler emit the next XAML into a new dynamic assembly, created as that XAML is loaded.</summary>
+    private static void ResetEmitter()
+    {
+        _loadsSinceNewEmitter = 0;
+        foreach (var field in EmitterFields)
+        {
+            field!.SetValue(null, null);
+        }
+    }
 
     /// <summary>
     /// Makes the compiler find types in the build an app assembly belongs to, and not in other programs' builds,
@@ -53,6 +92,11 @@ internal static class RuntimeXamlTypes
     public static void PrepareFor(Assembly assembly)
     {
         ArgumentNullException.ThrowIfNull(assembly);
+        if (!IsSupported)
+        {
+            return;
+        }
+
         var context = AssemblyLoadContext.GetLoadContext(assembly);
         var count = AppDomain.CurrentDomain.GetAssemblies().Length;
         if (ReferenceEquals(context, _preparedFor) && count == _preparedAssemblyCount)
@@ -61,6 +105,14 @@ internal static class RuntimeXamlTypes
         }
 
         Prepare(candidate => LoadedProgram.IsProgramAssembly(candidate) && AssemblyLoadContext.GetLoadContext(candidate) != context);
+
+        // The code the compiler emits finds the app's assemblies by name, in the load context its dynamic assembly was
+        // created in: another app, or another build of this one, needs a new dynamic assembly, created in its context.
+        if (!ReferenceEquals(context, _preparedFor))
+        {
+            ResetEmitter();
+        }
+
         _preparedFor = context;
         _preparedAssemblyCount = count;
     }
@@ -117,11 +169,13 @@ internal static class RuntimeXamlTypes
     {
         try
         {
+            // The compiler reads every assembly's attributes for XAML namespaces, and fails on one it cannot read.
+            _ = assembly.GetCustomAttributesData().Select(a => a.AttributeType).ToList();
             AddAssemblyMethod!.Invoke(typeSystem, [assembly]);
         }
-        catch (TargetInvocationException)
+        catch (Exception ex) when (ex is TargetInvocationException or TypeLoadException or FileNotFoundException or FileLoadException or BadImageFormatException)
         {
-            // An assembly whose types cannot all be loaded; the compiler skips those too.
+            // An assembly whose types or attributes cannot all be loaded; XAML cannot use it either way.
         }
     }
 

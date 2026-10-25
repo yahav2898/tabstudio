@@ -263,8 +263,12 @@ public sealed class AvaloniaXamlGenerator : IIncrementalGenerator
             namespace System.Runtime.CompilerServices
             {
                 [global::System.AttributeUsage(global::System.AttributeTargets.Method, AllowMultiple = true)]
-                file sealed class InterceptsLocationAttribute(int version, string data) : global::System.Attribute
+                file sealed class InterceptsLocationAttribute : global::System.Attribute
                 {
+                    // Only the compiler reads the arguments; a primary constructor would warn that they are unused.
+                    public InterceptsLocationAttribute(int version, string data)
+                    {
+                    }
                 }
             }
 

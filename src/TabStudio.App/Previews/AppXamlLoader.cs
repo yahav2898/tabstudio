@@ -37,6 +37,7 @@ internal static class AppXamlLoader
     public static object Load(string xaml, string path, Assembly assembly, object? root = null, bool designMode = false)
     {
         RuntimeXamlTypes.PrepareFor(assembly);
+        RuntimeXamlTypes.CountLoad();
         RuntimeAssets.UseFor(assembly);
         var address = new Uri($"avares://{assembly.GetName().Name}{path}");
         using var scope = AssemblyLoadContext.EnterContextualReflection(assembly);

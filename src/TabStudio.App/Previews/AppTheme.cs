@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
 
 namespace TabStudio.App.Previews;
@@ -10,10 +11,14 @@ namespace TabStudio.App.Previews;
 /// </summary>
 /// <remarks>
 /// They are moved from the app's <c>Application</c>, which TabStudio never makes current, into a
-/// <see cref="ThemeVariantScope"/>, so they apply to the app's views and never to the IDE around them.
+/// <see cref="ThemeVariantScope"/>, so they apply to the app's views and never to the IDE around them. The IDE's
+/// own styles of built-in controls are undone inside it first (<c>AppPreviewStyles.axaml</c>).
 /// </remarks>
 internal sealed class AppTheme
 {
+    /// <summary>Styles that undo TabStudio's own sizes of built-in controls inside an app's views.</summary>
+    private static readonly Uri PreviewStyles = new("avares://TabStudio.App/Previews/AppPreviewStyles.axaml");
+
     private readonly Border _background = new();
 
     /// <summary>Takes the theme of an app.</summary>
@@ -21,6 +26,7 @@ internal sealed class AppTheme
     public AppTheme(Application? app)
     {
         Root = new ThemeVariantScope { RequestedThemeVariant = app?.RequestedThemeVariant ?? ThemeVariant.Default };
+        Root.Styles.Add((IStyle)AvaloniaXamlLoader.Load(PreviewStyles));
         if (app is not null)
         {
             foreach (var style in app.Styles.ToList())

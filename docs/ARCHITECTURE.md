@@ -174,6 +174,20 @@ port, and the preview reloads where it was; a change under `wwwroot` only reload
 In the IDE, F5 on an Avalonia project shows it in the app preview in the side bar, filling the pane or in a
 phone or tablet frame. Saving one of its files rebuilds it and starts it again.
 
+**The XAML designer.** An `.axaml` file of an Avalonia app opens with its preview beside the code (Design,
+split or XAML, side by side or stacked), rendered a moment after typing stops. It does not run the app:
+`XamlDesignBuilds` builds the project in the background and loads that build, and `XamlPreviewRenderer` compiles
+the XAML being typed against it in Avalonia's design mode. The view's own class is created without loading the
+XAML compiled into it, so what appears is exactly the text in the editor; `Design.DataContext`, `d:DesignWidth`
+and `d:DesignHeight` apply, or a new instance of the `x:DataType` view model. A window shows its content, and
+styles and resource dictionaries show their `Design.PreviewWith`. Errors keep the last good preview, with the
+line they are on. The project is built again only when one of its files is saved.
+
+**Sketch to XAML.** The designer's Sketch pad turns a drawing into the view's XAML: the drawing goes to Claude as an
+image (`SketchToXaml` in the agent engine, with the user's own API key), and `XamlContentEdit` puts the answer in
+as the root element's content, keeping its property elements and every other character of the file, as one edit
+that Undo takes back.
+
 ## Debugging
 
 A debugger normally attaches to the runtime through a debugging API, which a .NET app on Android cannot do to
