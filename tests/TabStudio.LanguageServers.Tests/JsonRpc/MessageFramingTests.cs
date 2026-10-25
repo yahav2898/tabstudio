@@ -64,7 +64,8 @@ public sealed class MessageFramingTests
 
         await writer.WriteAsync(Encoding.UTF8.GetBytes("{\"x\":\"✓\"}"), CancellationToken.None);
 
-        Assert.Equal("Content-Length: 12\r\n\r\n{\"x\":\"✓\"}", Encoding.UTF8.GetString(stream.ToArray()));
+        // The check mark is three bytes in UTF-8, so these nine characters are eleven bytes.
+        Assert.Equal("Content-Length: 11\r\n\r\n{\"x\":\"✓\"}", Encoding.UTF8.GetString(stream.ToArray()));
     }
 
     private static string Frame(string body) => $"Content-Length: {Encoding.UTF8.GetByteCount(body)}\r\n\r\n{body}";

@@ -581,15 +581,8 @@ public sealed partial class LanguageServerDocument
         };
     }
 
-    private static IEnumerable<JsonElement> ItemsOf(JsonElement result)
-    {
-        if (result.ValueKind != JsonValueKind.Array)
-        {
-            return [];
-        }
-
-        return result.EnumerateArray();
-    }
+    private static List<JsonElement> ItemsOf(JsonElement result) =>
+        result.ValueKind == JsonValueKind.Array ? [.. result.EnumerateArray()] : [];
 
     private static LspRenameTarget? WordTarget(TextSnapshot snapshot, int offset)
     {
