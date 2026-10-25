@@ -1,0 +1,45 @@
+using Avalonia;
+using Avalonia.Media;
+using Avalonia.Media.Imaging;
+using Avalonia.Media.Immutable;
+
+namespace TabStudio.App.Swarm;
+
+/// <summary>Pictures of screens: a control drawn into a PNG, at the screen's density, optionally with an element outlined.</summary>
+internal static class ScreenCapture
+{
+    /// <summary>The longest side of a picture, in pixels: as much detail as Claude's vision uses, at a size phones can send.</summary>
+    public const int MaxPixels = 1568;
+
+    /// <summary>The outline drawn around an element in a picture, such as the one a layout issue is about.</summary>
+    private static readonly IPen Outline = new ImmutablePen(new ImmutableSolidColorBrush(Color.FromRgb(0xF4, 0x43, 0x36)), 3);
+
+    /// <summary>Draws a control as it is laid out now.</summary>
+    /// <param name="visual">The control.</param>
+    /// <param name="scale">Physical pixels per device-independent pixel; lowered when the picture would be too big.</param>
+    /// <param name="highlight">An area to outline, in the control's coordinates, if any.</param>
+    /// <returns>A PNG image, or <see langword="null"/> when the control has no size.</returns>
+    public static byte[]? Png(Visual visual, double scale, Rect? highlight = null)
+    {
+        ArgumentNullException.ThrowIfNull(visual);
+        var size = visual.Bounds.Size;
+        if (size.Width < 1 || size.Height < 1)
+        {
+            return null;
+        }
+
+        scale = Math.Clamp(Math.Min(scale, MaxPixels / Math.Max(size.Width, size.Height)), 0.1, 4);
+        var pixels = new PixelSize((int)Math.Ceiling(size.Width * scale), (int)Math.Ceiling(size.Height * scale));
+        using var bitmap = new RenderTargetBitmap(pixels, new Vector(96 * scale, 96 * scale));
+        bitmap.Render(visual);
+        if (highlight is { } area)
+        {
+            using var context = bitmap.CreateDrawingContext(clear: false);
+            context.DrawRectangle(null, Outline, area.Inflate(2), 4, 4);
+        }
+
+        using var png = new MemoryStream();
+        bitmap.Save(png);
+        return png.ToArray();
+    }
+}

@@ -29,7 +29,7 @@ namespace TabStudio.App.Previews;
 /// with a new instance of the view model named after the window.
 /// </para>
 /// </remarks>
-public sealed class AvaloniaAppHost : IDisposable
+public sealed partial class AvaloniaAppHost : IDisposable
 {
     /// <summary>The XAML namespace of Avalonia's controls.</summary>
     private const string AvaloniaNamespace = "https://github.com/avaloniaui";
