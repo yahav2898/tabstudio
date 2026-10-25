@@ -104,6 +104,28 @@ public sealed class TestExplorerViewModelTests
     }
 
     [Fact]
+    public async Task Cancel_stops_the_run_and_says_so()
+    {
+        var running = new TaskCompletionSource();
+        _host.OnRun = _ => running.Task;
+        Assert.False(_explorer.CancelCommand.CanExecute(null));
+
+        var run = _explorer.RunAllCommand.ExecuteAsync(null);
+
+        Assert.True(_explorer.IsRunning);
+        Assert.False(_explorer.RunAllCommand.CanExecute(null));
+        Assert.True(_explorer.CancelCommand.CanExecute(null));
+        _explorer.CancelCommand.Execute(null);
+        Assert.True(_host.Cancelled);
+        running.SetResult();
+        await run;
+
+        Assert.False(_explorer.IsRunning);
+        Assert.Equal("The run was cancelled before any test ran.", _explorer.RunStatusText);
+        Assert.True(_explorer.RepeatLastRunCommand.CanExecute(null));
+    }
+
+    [Fact]
     public async Task Each_row_runs_the_tests_under_it()
     {
         await RunAsync(_explorer.Rows.Single(r => r.Kind == TestNodeKind.Project));
@@ -229,9 +251,9 @@ public sealed class TestExplorerViewModelTests
             return OnRun?.Invoke(request) ?? Task.CompletedTask;
         }
 
-        public void CancelTestRun()
-        {
-        }
+        public bool Cancelled { get; private set; }
+
+        public void CancelTestRun() => Cancelled = true;
 
         public Task NavigateToAsync(string path, int line, int column)
         {
