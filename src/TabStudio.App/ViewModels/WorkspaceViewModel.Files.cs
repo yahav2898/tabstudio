@@ -229,7 +229,7 @@ public sealed partial class WorkspaceViewModel
         return affected.Select(d => d.FilePath).ToList();
     }
 
-    private string? DirectoryOf(WorkspaceNode node) => node.Kind switch
+    private static string? DirectoryOf(WorkspaceNode node) => node.Kind switch
     {
         WorkspaceNodeKind.Folder or WorkspaceNodeKind.Root => node.FullPath,
         WorkspaceNodeKind.Project or WorkspaceNodeKind.Solution => node.FullPath is { } file ? Path.GetDirectoryName(file) : null,
