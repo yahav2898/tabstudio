@@ -344,6 +344,17 @@ Pull requests and review cards
 | `Brush.Toolchains.Ready` | `#1A2B2A` | `#E0F2EF` |
 | `Brush.Toolchains.Attention` | `#2E2A1B` | `#FFF5D9` |
 
+## Windows Forms apps in the app preview
+
+The desktop a running Windows Forms app's windows sit on: Windows 11's dark wallpaper in the dark theme, its light one in
+the light theme, as Windows does in dark mode. A gradient from the top left to the bottom right. The windows on it keep
+the light frames Windows gives apps that do not ask for dark title bars, and the designer draws its selection in
+`Color.Accent` and its component tray in `Brush.Text` on `Brush.Pill`.
+
+| Token | Dark | Light |
+|---|---|---|
+| `Brush.FormsDesktop` | `#22324A` → `#18253A` → `#101A2B` | `#DCE8F6` → `#C2D5EE` → `#A8C3E6` |
+
 ## IntelliSense symbol icons
 
 | Token | Dark | Light |

@@ -104,7 +104,9 @@ Every color is a token: [tokens.md](tokens.md) lists them all with their dark an
 - **Use a token, never a color.** Views use `{DynamicResource Brush.…}` so they follow the theme; code uses
   `ThemeBrushes.Get("Brush.…")`, a brush that recolors itself when the theme changes, or `ThemedPen` for pens.
   `Brushes.Transparent` is the only built-in brush a view may use. A color that is content (a QR code, the sketch pad's
-  paper, an avatar) is a fixed token, the same in both themes.
+  paper, an avatar) is a fixed token, the same in both themes. What another platform draws is content too: a running
+  Windows Forms app keeps Windows' system colors and its light Windows 11 frames in both themes, in the app preview and
+  in the designer, while the desk around it follows the theme (`Brush.FormsDesktop`, `Brush.Window`).
 - **Surfaces** go from the window's edge inwards: `MenuBar`, `Toolbar`, `Panel`, `Window` (documents), `Popup`.
   `Hover`, `Pressed` and `Selection` are the states of anything tappable.
 - **Text** has five levels: `TextBright` (titles, the selected item), `Text` (body), `TextSecondary`, `TextLabel`
