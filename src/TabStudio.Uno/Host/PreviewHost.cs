@@ -10,6 +10,7 @@ using Microsoft.UI.Composition;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Automation;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Uno.ApplicationModel.Core;
 using Uno.ApplicationModel.DataTransfer;
@@ -232,6 +233,10 @@ public static class PreviewHost
 
         return (double[]?)null;
     });
+
+    /// <summary>Whether the app's focused element takes typed text, so the on-screen keyboard should show for it.</summary>
+    public static Task<bool> IsEditingTextAsync() => RunAsync(() =>
+        _contentHost?.XamlRoot is { } root && FocusManager.GetFocusedElement(root) is TextBox or PasswordBox);
 
     /// <summary>The title of the running app's newest window, such as a WinUI 3 app's <c>Title</c>.</summary>
     public static Task<string?> GetTitleAsync() => RunAsync(() => _windows?.AppWindows.LastOrDefault()?.Title);

@@ -47,6 +47,9 @@ public sealed class UnoApp : IAsyncDisposable
     /// <summary>The title of the app's newest window, such as a WinUI 3 window's <c>Title</c>.</summary>
     public Task<string?> GetTitleAsync() => _runtime.Host.GetTitle();
 
+    /// <summary>Whether the app's focused element takes typed text, such as a <c>TextBox</c>, so the on-screen keyboard should show.</summary>
+    public Task<bool> IsEditingTextAsync() => _runtime.Host.IsEditingText();
+
     /// <summary>Closes the app's windows and lets go of its assemblies.</summary>
     public async ValueTask DisposeAsync()
     {

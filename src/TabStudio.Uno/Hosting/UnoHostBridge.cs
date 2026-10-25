@@ -24,6 +24,7 @@ internal sealed class UnoHostBridge
         GetTexts = Bind<Func<Task<string[]>>>(host, "GetTextsAsync");
         FindElement = Bind<Func<string, Task<double[]?>>>(host, "FindElementAsync");
         GetTitle = Bind<Func<Task<string?>>>(host, "GetTitleAsync");
+        IsEditingText = Bind<Func<Task<bool>>>(host, "IsEditingTextAsync");
     }
 
     public Func<string, bool, double, double, float, Action, Action<int, string, Exception?>, Action<Exception>, Task> Start { get; }
@@ -53,6 +54,8 @@ internal sealed class UnoHostBridge
     public Func<string, Task<double[]?>> FindElement { get; }
 
     public Func<Task<string?>> GetTitle { get; }
+
+    public Func<Task<bool>> IsEditingText { get; }
 
     /// <summary>Binds the entry points of a loaded host assembly.</summary>
     /// <exception cref="UnoHostException">The assembly is not TabStudio's host, or not the version TabStudio expects.</exception>

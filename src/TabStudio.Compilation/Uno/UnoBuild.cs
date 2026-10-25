@@ -142,7 +142,7 @@ public static class UnoBuild
     public static CSharpParseOptions WithSymbols(TsProject? project, CSharpParseOptions options)
     {
         ArgumentNullException.ThrowIfNull(options);
-        return UsesUno(project) ? options.WithPreprocessorSymbols([.. options.PreprocessorSymbolNames, .. Symbols]) : options;
+        return UsesUno(project) ? options.WithPreprocessorSymbols(options.PreprocessorSymbolNames.Concat(Symbols).Distinct(StringComparer.Ordinal).ToArray()) : options;
     }
 
     /// <summary>
