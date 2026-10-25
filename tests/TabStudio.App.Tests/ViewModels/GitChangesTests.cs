@@ -49,6 +49,25 @@ public sealed class GitChangesTests
     }
 
     [AvaloniaFact]
+    public async Task Git_commit_shows_the_window_focuses_the_message_and_checks_GitHub()
+    {
+        using var fixture = new GitWorkspaceFixture();
+        await fixture.OpenLinkedSampleAsync();
+        var focused = false;
+        fixture.Git.CommitMessageFocusRequested += (_, _) => focused = true;
+        fixture.Workspace.IsSideBarVisible = false;
+        Assert.Null(fixture.Git.IncomingCommits);
+
+        fixture.Workspace.StartCommitCommand.Execute(null);
+
+        Assert.True(fixture.Workspace.IsSideBarVisible);
+        Assert.True(fixture.Workspace.IsGitChangesSelected);
+        Assert.True(focused);
+        await UiTestHelpers.WaitUntilAsync(() => fixture.Git.IncomingCommits is not null, because: "the window to ask GitHub when it shows");
+        Assert.Equal("0 incoming", fixture.Git.IncomingText);
+    }
+
+    [AvaloniaFact]
     public async Task Checked_files_are_committed_alone()
     {
         using var fixture = new GitWorkspaceFixture();

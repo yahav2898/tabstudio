@@ -117,15 +117,29 @@ public sealed class GitHubAccount
         var temporary = _file + ".tmp";
         using (var stream = File.Create(temporary))
         {
-            if (!OperatingSystem.IsWindows())
-            {
-                File.SetUnixFileMode(temporary, UnixFileMode.UserRead | UnixFileMode.UserWrite);
-            }
-
+            RestrictToUser(temporary);
             JsonSerializer.Serialize(stream, account, GitHubAccountJsonContext.Default.StoredGitHubAccount);
         }
 
         File.Move(temporary, _file, overwrite: true);
+    }
+
+    /// <summary>Makes the file readable by the user only, where the file system supports it.</summary>
+    private static void RestrictToUser(string path)
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            return;
+        }
+
+        try
+        {
+            File.SetUnixFileMode(path, UnixFileMode.UserRead | UnixFileMode.UserWrite);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or PlatformNotSupportedException)
+        {
+            // The State folder is private to the app on Android; elsewhere the file keeps the folder's permissions.
+        }
     }
 }
 

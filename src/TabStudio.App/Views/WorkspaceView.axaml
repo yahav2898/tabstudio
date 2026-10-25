@@ -67,7 +67,7 @@
             <MenuItem Header="Sync with _Active Document" Command="{Binding SyncWithActiveDocumentCommand}" />
           </MenuItem>
           <MenuItem Header="_Git">
-            <MenuItem Header="_Commit..." Command="{Binding ShowGitChangesCommand}" IsEnabled="{Binding GitChanges.IsLinked}" />
+            <MenuItem Header="_Commit..." Command="{Binding StartCommitCommand}" IsEnabled="{Binding GitChanges.IsLinked}" />
             <Separator />
             <MenuItem Header="_Fetch" Command="{Binding GitChanges.FetchCommand}" />
             <MenuItem Header="_Pull" Command="{Binding GitChanges.PullCommand}" />

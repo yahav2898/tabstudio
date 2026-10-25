@@ -1,4 +1,3 @@
-using System.Collections.ObjectModel;
 using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -7,12 +6,9 @@ using TabStudio.SourceControl.GitHub;
 
 namespace TabStudio.App.ViewModels;
 
-/// <summary>Pull requests from the folder's branch, and the branch's history.</summary>
+/// <summary>Pull requests from the folder's branch: the link after a push, and the form that creates one.</summary>
 public sealed partial class GitChangesViewModel
 {
-    /// <summary>The recent commits of the branch, in the history list.</summary>
-    public ObservableCollection<GitCommitItemViewModel> History { get; } = [];
-
     /// <summary>Whether to offer "Create a Pull Request": the branch was pushed and has none open.</summary>
     [ObservableProperty]
     public partial bool CanCreatePullRequest { get; private set; }
@@ -55,18 +51,6 @@ public sealed partial class GitChangesViewModel
     /// <summary>Why the pull request could not be created.</summary>
     [ObservableProperty]
     public partial string? PullRequestErrorText { get; private set; }
-
-    /// <summary>Whether the history list is shown.</summary>
-    [ObservableProperty]
-    public partial bool IsHistoryOpen { get; private set; }
-
-    /// <summary>Whether the history is loading.</summary>
-    [ObservableProperty]
-    public partial bool IsLoadingHistory { get; private set; }
-
-    /// <summary>Why the history could not be loaded.</summary>
-    [ObservableProperty]
-    public partial string? HistoryErrorText { get; private set; }
 
     [RelayCommand(CanExecute = nameof(CanOpenPullRequestForm))]
     private async Task OpenPullRequestFormAsync()
@@ -151,52 +135,6 @@ public sealed partial class GitChangesViewModel
         if (PullRequest is { } pull)
         {
             await _browser.OpenUriAsync(pull.WebUri);
-        }
-    }
-
-    [RelayCommand(CanExecute = nameof(IsLinked))]
-    private async Task OpenHistoryAsync()
-    {
-        if (_sync is not { } sync)
-        {
-            return;
-        }
-
-        History.Clear();
-        HistoryErrorText = null;
-        IsHistoryOpen = true;
-        IsLoadingHistory = true;
-        try
-        {
-            var now = DateTimeOffset.Now;
-            foreach (var commit in await sync.GetHistoryAsync(30, _lifetime.Token))
-            {
-                History.Add(new GitCommitItemViewModel(commit, now, OpenCommitCommand));
-            }
-        }
-        catch (OperationCanceledException)
-        {
-            // The workspace closed.
-        }
-        catch (Exception ex) when (IsExpected(ex))
-        {
-            HistoryErrorText = SyncErrors.Describe(ex);
-        }
-        finally
-        {
-            IsLoadingHistory = false;
-        }
-    }
-
-    [RelayCommand]
-    private void CloseHistory() => IsHistoryOpen = false;
-
-    [RelayCommand]
-    private async Task OpenCommitAsync(GitCommitItemViewModel? commit)
-    {
-        if (commit is not null && _sync?.Link is { } link)
-        {
-            await _browser.OpenUriAsync(new Uri($"{link.WebUri}/commit/{commit.Sha}"));
         }
     }
 

@@ -174,6 +174,16 @@
                   <StackPanel Spacing="4">
                     <Button Theme="{StaticResource ToolButton}" Height="34" MinHeight="34" Padding="6,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
                             ToolTip.Tip="Open the file" Command="{Binding OpenCommand}">
+                      <Button.ContextFlyout>
+                        <MenuFlyout>
+                          <MenuItem Header="Open" Command="{Binding OpenCommand}" IsVisible="{Binding CanOpen}" />
+                          <MenuItem Header="Compare with Unmodified" Command="{Binding CompareCommand}" />
+                          <Separator />
+                          <MenuItem Header="Keep Mine" Command="{Binding KeepMineCommand}" />
+                          <MenuItem Header="Take GitHub's" Command="{Binding TakeTheirsCommand}" />
+                          <MenuItem Header="Mark Resolved" Command="{Binding MarkResolvedCommand}" />
+                        </MenuFlyout>
+                      </Button.ContextFlyout>
                       <Grid ColumnDefinitions="Auto,*,Auto">
                         <Border Classes="badge" Margin="0,0,8,0" Background="{Binding BadgeKind, Converter={x:Static conv:AppConverters.BadgeBackground}}">
                           <TextBlock Text="{Binding Badge}" Foreground="{Binding BadgeKind, Converter={x:Static conv:AppConverters.BadgeForeground}}" />

@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using TabStudio.App.ViewModels;
 
 namespace TabStudio.App.Views;
@@ -11,6 +12,8 @@ namespace TabStudio.App.Views;
 /// </summary>
 public sealed partial class GitChangesView : UserControl
 {
+    private GitChangesViewModel? _viewModel;
+
     /// <summary>Creates the view.</summary>
     public GitChangesView()
     {
@@ -20,10 +23,29 @@ public sealed partial class GitChangesView : UserControl
         CommitMessageBox.AddHandler(KeyDownEvent, OnCommitMessageKeyDown, RoutingStrategies.Tunnel);
     }
 
+    /// <inheritdoc />
+    protected override void OnDataContextChanged(EventArgs e)
+    {
+        base.OnDataContextChanged(e);
+        if (_viewModel is not null)
+        {
+            _viewModel.CommitMessageFocusRequested -= OnCommitMessageFocusRequested;
+        }
+
+        _viewModel = DataContext as GitChangesViewModel;
+        if (_viewModel is not null)
+        {
+            _viewModel.CommitMessageFocusRequested += OnCommitMessageFocusRequested;
+        }
+    }
+
+    private void OnCommitMessageFocusRequested(object? sender, EventArgs e) =>
+        Dispatcher.UIThread.Post(() => CommitMessageBox.Focus(), DispatcherPriority.Background);
+
     private void OnCommitMessageKeyDown(object? sender, KeyEventArgs e)
     {
         if (e.Key == Key.Enter && e.KeyModifiers == KeyModifiers.Control
-            && DataContext is GitChangesViewModel viewModel && viewModel.CommitCommand.CanExecute(null))
+            && _viewModel is { } viewModel && viewModel.CommitCommand.CanExecute(null))
         {
             viewModel.CommitCommand.Execute(null);
             e.Handled = true;

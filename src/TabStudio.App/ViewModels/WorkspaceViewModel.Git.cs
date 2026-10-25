@@ -105,9 +105,17 @@ public sealed partial class WorkspaceViewModel : ISourceControlHost
         IsSideBarVisible = true;
     }
 
-    /// <summary>Shows the Git Changes window, as View > Git Changes and Git > Commit do.</summary>
+    /// <summary>Shows the Git Changes window, as View > Git Changes does.</summary>
     [RelayCommand]
     private void ShowGitChanges() => SelectSideBarPanel(SideBarPanel.GitChanges);
+
+    /// <summary>Shows the Git Changes window with the cursor in the commit message, as Git > Commit does.</summary>
+    [RelayCommand]
+    private void StartCommit()
+    {
+        ShowGitChanges();
+        GitChanges.FocusCommitMessage();
+    }
 
     partial void OnSelectedSideBarPanelChanged(SideBarPanel value)
     {

@@ -76,7 +76,7 @@ public sealed class GitHubImporter
             TryDelete(target);
             throw;
         }
-        catch (Exception ex) when (ex is GitHubApiException or SyncException or IOException or UnauthorizedAccessException)
+        catch (Exception ex) when (ex is GitHubApiException or SyncException or IOException or UnauthorizedAccessException or InvalidOperationException)
         {
             TryDelete(target);
             throw new ImportException(Describe(repository, ex), ex);
