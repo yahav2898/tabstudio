@@ -25,7 +25,7 @@ public sealed class BreakpointMargin : AbstractMargin
     /// <summary>The margin's width: a comfortable tap target beside the line numbers.</summary>
     public const double MarginWidth = 30;
 
-    private static readonly IBrush BreakpointBrush = new ImmutableSolidColorBrush(Color.Parse("#E5534B"));
+    private static readonly ImmutableSolidColorBrush BreakpointBrush = new(Color.Parse("#E5534B"));
     private static readonly IPen BreakpointPen = new ImmutablePen(BreakpointBrush, 1.6);
     private static readonly IBrush ConditionBrush = new ImmutableSolidColorBrush(Colors.White);
     private static readonly IBrush CurrentBrush = new ImmutableSolidColorBrush(Color.Parse("#F2CC4E"));

@@ -19,8 +19,8 @@ namespace TabStudio.Debugging;
 /// </para>
 /// <para>
 /// A session runs its program once: create a session from a <see cref="DebugBuild"/>, set breakpoints, then call
-/// <see cref="RunAsync"/>. Breakpoints can be added and removed at any time. Only one session runs at a time in the
-/// process; a second <see cref="RunAsync"/> waits for the first to finish.
+/// <see cref="RunAsync(IReadOnlyList{string}, IConsoleSink, ConsoleInput, CancellationToken)"/>. Breakpoints can be added and removed at any time. Only one session runs at a time in the
+/// process; a second <see cref="RunAsync(IReadOnlyList{string}, IConsoleSink, ConsoleInput, CancellationToken)"/> waits for the first to finish.
 /// </para>
 /// <para>
 /// Thread safety: every member can be called from any thread. <see cref="Paused"/> is raised on the program's thread
@@ -292,13 +292,13 @@ public sealed class DebugSession : IDisposable
     /// <summary>Pauses the running program at the next statement any of its threads runs (Break All).</summary>
     /// <remarks>
     /// A program that is waiting outside its own code, for example for console input, pauses when it returns to it.
-    /// Called before <see cref="RunAsync"/>, the program pauses at its first statement, which is how F11 starts
+    /// Called before <see cref="RunAsync(IReadOnlyList{string}, IConsoleSink, ConsoleInput, CancellationToken)"/>, the program pauses at its first statement, which is how F11 starts
     /// debugging with Step Into.
     /// </remarks>
     public void Pause() => _engine.Pause();
 
     /// <summary>
-    /// Stops debugging: releases the program if it is paused, ends <see cref="RunAsync"/> with
+    /// Stops debugging: releases the program if it is paused, ends <see cref="RunAsync(IReadOnlyList{string}, IConsoleSink, ConsoleInput, CancellationToken)"/> with
     /// <see cref="RunOutcome.Stopped"/> and makes the program's main thread unwind at its next statement.
     /// </summary>
     public void Stop()

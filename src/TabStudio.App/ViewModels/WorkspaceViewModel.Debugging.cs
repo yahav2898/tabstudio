@@ -22,6 +22,7 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
     private ProjectInfo? _debuggedProject;
     private DebugPausedEventArgs? _pause;
     private ExceptionHelperViewModel? _exceptionHelper;
+    private Task _pauseShown = Task.CompletedTask;
     private bool _restartRequested;
 
     /// <summary>How a debug session begins.</summary>
@@ -88,6 +89,9 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
     /// <summary>Whether to pause when an exception is about to go unhandled. On by default, as in Visual Studio.</summary>
     [ObservableProperty]
     public partial bool BreakOnUnhandledExceptions { get; set; } = true;
+
+    /// <summary>Completes when the latest pause is fully shown: the editor, Locals and Watch. For tests.</summary>
+    internal Task PauseShown => _pauseShown;
 
     /// <summary>Whether a step can run: the program is paused, or it is not running yet and F10 or F11 start it.</summary>
     private bool CanStep => IsPaused || CanRun();
@@ -436,7 +440,7 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
         // Raised on the program's thread just before it blocks: show the pause on the UI thread.
         if (sender is DebugSession session)
         {
-            _ui.Post(() => _ = ShowPauseAsync(session, e));
+            _ui.Post(() => _pauseShown = ShowPauseAsync(session, e));
         }
     }
 

@@ -5,6 +5,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
+using AvaloniaEdit;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.Rendering;
 using TabStudio.App.Editing;
@@ -41,6 +42,19 @@ public sealed partial class CodeEditorView
 
     /// <summary>Whether the exception helper is open, for tests.</summary>
     internal bool IsExceptionHelperOpen => _exceptionPopup.IsOpen;
+
+    /// <summary>Whether a DataTip is open, for tests.</summary>
+    internal bool IsDataTipOpen => _dataTip.IsOpen;
+
+    /// <summary>Shows the DataTip for the text at an offset, as hovering there does. For tests.</summary>
+    /// <param name="offset">A document offset on an identifier.</param>
+    internal Task ShowDataTipAtAsync(int offset)
+    {
+        var textView = _editor.TextArea.TextView;
+        var position = new TextViewPosition(_editor.Document.GetLocation(offset));
+        var visual = textView.GetVisualPosition(position, VisualYPosition.LineMiddle) - textView.ScrollOffset;
+        return ShowDataTipAsync(textView.TranslatePoint(visual, _editor) ?? visual);
+    }
 
     /// <summary>Adds the debugger's margin, highlights and popups to the editor. Called once, by the constructor.</summary>
     [MemberNotNull(nameof(_breakpointMargin), nameof(_debugLines))]
