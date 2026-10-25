@@ -1,0 +1,43 @@
+name: Microchip PIC
+
+on:
+  push:
+    branches: ['agent/pic']
+  pull_request:
+    paths:
+      - 'build/pic/**'
+      - 'samples/PIC/**'
+      - '.github/workflows/pic.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pic-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  spike:
+    name: ${{ matrix.compiler }} on ${{ matrix.runner }} (Alpine + PRoot)
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-24.04, ubuntu-24.04-arm]
+        compiler: [xc8, xc32]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install PRoot build dependencies
+        run: sudo apt-get update -qq && sudo apt-get install -y libtalloc-dev gawk build-essential
+      - name: Run the official installer and compile the template three times
+        run: |
+          python3 build/pic/spike.py --compiler '${{ matrix.compiler }}' \
+            --work "$RUNNER_TEMP/pic" --output ci-out/pic --accept-microchip-license
+      - name: Publish measurements and our firmware (no compilers or packs)
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pic-${{ matrix.compiler }}-${{ matrix.runner }}
+          path: ci-out/pic/
+          if-no-files-found: error
