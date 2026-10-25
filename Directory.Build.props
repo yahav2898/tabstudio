@@ -1,0 +1,40 @@
+<Project>
+
+  <!--
+    Settings shared by every project in the repository.
+    Package versions live in Directory.Packages.props (central package management).
+  -->
+
+  <PropertyGroup Label="Language">
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Quality">
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Product">
+    <Product>TabStudio</Product>
+    <Authors>TabStudio contributors</Authors>
+    <Copyright>Copyright © TabStudio contributors</Copyright>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/yahav2898/tabstudio</RepositoryUrl>
+    <Version>0.1.0</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Projects">
+    <IsTestProject Condition="$(MSBuildProjectName.EndsWith('.Tests'))">true</IsTestProject>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <!-- Libraries document their public surface; a missing XML comment is a warning there. -->
+  <PropertyGroup Condition="'$(IsTestProject)' != 'true' AND ('$(MSBuildProjectName)' == 'TabStudio.Core' OR '$(MSBuildProjectName)' == 'TabStudio.Compilation')">
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+</Project>
