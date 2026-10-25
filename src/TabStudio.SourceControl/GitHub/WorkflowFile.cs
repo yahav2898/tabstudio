@@ -8,7 +8,7 @@ namespace TabStudio.SourceControl.GitHub;
 public enum WorkflowInputType
 {
     /// <summary>Free text.</summary>
-    String,
+    Text,
 
     /// <summary>One of a list of options.</summary>
     Choice,
@@ -108,7 +108,7 @@ public static class WorkflowFile
                 "boolean" => WorkflowInputType.Boolean,
                 "number" => WorkflowInputType.Number,
                 "environment" => WorkflowInputType.Environment,
-                _ => WorkflowInputType.String,
+                _ => WorkflowInputType.Text,
             };
             IReadOnlyList<string> options = input is not null && Find(input, "options") is YamlSequenceNode list
                 ? [.. list.Children.Select(Scalar).OfType<string>()]

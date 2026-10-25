@@ -31,7 +31,7 @@
                 <TextBlock Text="{Binding ErrorCountText}" VerticalAlignment="Center" />
               </Border>
             </Panel>
-            <Button Classes="iconButton"Theme="{StaticResource ToolButton}" ToolTip.Tip="Previous Error (Shift+F8)"
+            <Button Classes="iconButton" Theme="{StaticResource ToolButton}" ToolTip.Tip="Previous Error (Shift+F8)"
                     IsEnabled="{Binding HasErrors}" Click="OnPreviousErrorClick">
               <controls:StrokeIcon Data="{StaticResource Icon.PreviousError}" Size="16" />
             </Button>
@@ -43,24 +43,24 @@
               </StackPanel>
             </Button>
             <Border Classes="toolbarSeparator" />
-            <Button Classes="iconButton"Theme="{StaticResource ToolButton}" ToolTip.Tip="Show Timestamps"
+            <Button Classes="iconButton" Theme="{StaticResource ToolButton}" ToolTip.Tip="Show Timestamps"
                     Classes.selected="{Binding ShowTimestamps}" Command="{Binding ToggleTimestampsCommand}" IsEnabled="{Binding HasLog}">
               <controls:StrokeIcon Data="{StaticResource Icon.Timestamp}" Size="16" />
             </Button>
-            <Button Classes="iconButton"Theme="{StaticResource ToolButton}" ToolTip.Tip="Collapse All Steps" Click="OnFoldAllClick" IsEnabled="{Binding HasLog}">
+            <Button Classes="iconButton" Theme="{StaticResource ToolButton}" ToolTip.Tip="Collapse All Steps" Click="OnFoldAllClick" IsEnabled="{Binding HasLog}">
               <controls:StrokeIcon Data="{StaticResource Icon.FoldAll}" Size="16" />
             </Button>
-            <Button Classes="iconButton"Theme="{StaticResource ToolButton}" ToolTip.Tip="Expand All" Click="OnUnfoldAllClick" IsEnabled="{Binding HasLog}">
+            <Button Classes="iconButton" Theme="{StaticResource ToolButton}" ToolTip.Tip="Expand All" Click="OnUnfoldAllClick" IsEnabled="{Binding HasLog}">
               <controls:StrokeIcon Data="{StaticResource Icon.UnfoldAll}" Size="16" />
             </Button>
-            <Button Classes="iconButton"Theme="{StaticResource ToolButton}" ToolTip.Tip="Go to Line (Ctrl+G)" Click="OnGoToLineClick" IsEnabled="{Binding HasLog}">
+            <Button Classes="iconButton" Theme="{StaticResource ToolButton}" ToolTip.Tip="Go to Line (Ctrl+G)" Click="OnGoToLineClick" IsEnabled="{Binding HasLog}">
               <controls:StrokeIcon Data="{StaticResource Icon.GoToLine}" Size="16" />
             </Button>
             <Border Classes="toolbarSeparator" />
-            <Button Classes="iconButton"Theme="{StaticResource ToolButton}" ToolTip.Tip="Download the Log Again" Command="{Binding ReloadCommand}">
+            <Button Classes="iconButton" Theme="{StaticResource ToolButton}" ToolTip.Tip="Download the Log Again" Command="{Binding ReloadCommand}">
               <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="16" />
             </Button>
-            <Button Classes="iconButton"Theme="{StaticResource ToolButton}" ToolTip.Tip="Open on GitHub" Command="{Binding OpenOnGitHubCommand}">
+            <Button Classes="iconButton" Theme="{StaticResource ToolButton}" ToolTip.Tip="Open on GitHub" Command="{Binding OpenOnGitHubCommand}">
               <controls:StrokeIcon Data="{StaticResource Icon.External}" Size="15" />
             </Button>
           </StackPanel>

@@ -36,6 +36,14 @@
           <TextBlock Text="{Binding MessagesLabel}" VerticalAlignment="Center" />
         </StackPanel>
       </Button>
+      <Button Grid.Column="4" x:Name="CiFilterButton" Theme="{StaticResource ToolButton}" Height="30" MinHeight="30" Margin="4,0,0,0" FontSize="12.5"
+              HorizontalAlignment="Left" ToolTip.Tip="Show the errors and warnings CI reported for this commit"
+              Classes.selected="{Binding ShowCi}" Command="{Binding ToggleCiCommand}" IsVisible="{Binding HasCiDiagnostics}">
+        <StackPanel Orientation="Horizontal" Spacing="6">
+          <controls:StrokeIcon Data="{StaticResource Icon.Actions}" Size="14" Foreground="{DynamicResource Brush.AccentText}" />
+          <TextBlock Text="{Binding CiLabel}" VerticalAlignment="Center" />
+        </StackPanel>
+      </Button>
       <TextBox Grid.Column="5" Watermark="Search Error List" Text="{Binding SearchText}" VerticalAlignment="Center">
         <TextBox.InnerLeftContent>
           <controls:StrokeIcon Data="{StaticResource Icon.Search}" Size="13" Margin="8,0,0,0" Foreground="{DynamicResource Brush.TextMuted}" />
@@ -70,7 +78,15 @@
                 <controls:StrokeIcon Data="{StaticResource Icon.Info}" Size="14" Foreground="{DynamicResource Brush.Info}" IsVisible="{Binding IsMessage}" HorizontalAlignment="Left" />
               </Panel>
               <TextBlock Grid.Column="1" Classes="link" FontSize="12.5" Text="{Binding Code}" VerticalAlignment="Center" />
-              <TextBlock Grid.Column="2" FontSize="12.5" Text="{Binding Description}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,12,0" />
+              <DockPanel Grid.Column="2" Margin="0,0,12,0">
+                <Border DockPanel.Dock="Left" Classes="ciBadge" IsVisible="{Binding IsFromCi}" ToolTip.Tip="{Binding CiToolTip}">
+                  <StackPanel Orientation="Horizontal" Spacing="5">
+                    <TextBlock Text="CI" FontWeight="Bold" Foreground="{DynamicResource Brush.AccentText}" />
+                    <TextBlock Text="{Binding Ci.CheckName}" MaxWidth="150" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Brush.TextSecondary}" />
+                  </StackPanel>
+                </Border>
+                <TextBlock FontSize="12.5" Text="{Binding Description}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+              </DockPanel>
               <TextBlock Grid.Column="3" FontSize="12.5" Text="{Binding Project}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
               <TextBlock Grid.Column="4" FontSize="12.5" Text="{Binding File}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
               <TextBlock Grid.Column="5" FontSize="12.5" Text="{Binding Line}" VerticalAlignment="Center" />

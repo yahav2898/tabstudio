@@ -42,7 +42,7 @@ public sealed partial class DispatchInputViewModel : ObservableObject
     public string RequiredMark => IsRequired ? " *" : string.Empty;
 
     /// <summary>Whether it is typed in: text, a number or an environment's name.</summary>
-    public bool IsText => Input.Type is WorkflowInputType.String or WorkflowInputType.Number or WorkflowInputType.Environment;
+    public bool IsText => Input.Type is WorkflowInputType.Text or WorkflowInputType.Number or WorkflowInputType.Environment;
 
     /// <summary>Whether it is a toggle.</summary>
     public bool IsBoolean => Input.Type == WorkflowInputType.Boolean;

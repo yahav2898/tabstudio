@@ -38,4 +38,17 @@
     <Setter Property="Padding" Value="0" />
   </Style>
 
+  <!-- An Error List row's "CI" badge with the name of the check that reported it. -->
+  <Style Selector="Border.ciBadge">
+    <Setter Property="Background" Value="{DynamicResource Brush.AccentSoft}" />
+    <Setter Property="CornerRadius" Value="4" />
+    <Setter Property="Padding" Value="6,1" />
+    <Setter Property="Margin" Value="0,0,8,0" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+  <Style Selector="Border.ciBadge TextBlock">
+    <Setter Property="FontSize" Value="11" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+
 </Styles>

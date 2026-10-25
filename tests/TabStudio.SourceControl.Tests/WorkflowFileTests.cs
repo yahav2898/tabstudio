@@ -63,14 +63,14 @@ public sealed class WorkflowFileTests
         Assert.Equal("Release", definition.Name);
         Assert.Equal(new[] { "version", "channel", "draft", "retries", "target", "notes" }, definition.Inputs.Select(i => i.Name));
         var version = definition.Inputs[0];
-        Assert.Equal(("The version to publish, such as 1.2.0", true, WorkflowInputType.String, (string?)null), (version.Description, version.IsRequired, version.Type, version.Default));
+        Assert.Equal(("The version to publish, such as 1.2.0", true, WorkflowInputType.Text, (string?)null), (version.Description, version.IsRequired, version.Type, version.Default));
         Assert.Equal(WorkflowInputType.Choice, definition.Inputs[1].Type);
         Assert.Equal(new[] { "stable", "beta" }, definition.Inputs[1].Options);
         Assert.Equal("beta", definition.Inputs[1].Default);
         Assert.Equal((WorkflowInputType.Boolean, "true"), (definition.Inputs[2].Type, definition.Inputs[2].Default));
         Assert.Equal((WorkflowInputType.Number, "3"), (definition.Inputs[3].Type, definition.Inputs[3].Default));
         Assert.Equal(WorkflowInputType.Environment, definition.Inputs[4].Type);
-        Assert.Equal((WorkflowInputType.String, false), (definition.Inputs[5].Type, definition.Inputs[5].IsRequired));
+        Assert.Equal((WorkflowInputType.Text, false), (definition.Inputs[5].Type, definition.Inputs[5].IsRequired));
     }
 
     [Fact]
