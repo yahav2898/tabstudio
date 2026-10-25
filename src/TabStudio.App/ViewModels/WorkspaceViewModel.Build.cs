@@ -32,6 +32,12 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
+        if (IsRunOnSwarm)
+        {
+            StartOnSwarm(project, debug: false, pauseAtStart: false);
+            return;
+        }
+
         if (IsToolchainProject(project))
         {
             await RunToolchainProjectAsync(project);

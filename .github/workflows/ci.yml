@@ -121,6 +121,7 @@ jobs:
       - name: Build the desktop host and test the IDE
         env:
           TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+          TABSTUDIO_RECORDED_UI_TESTS: ${{ runner.temp }}/recorded-ui-tests
         run: |
           mkdir -p ci-out/screenshots
           status=0
@@ -130,7 +131,7 @@ jobs:
           mkdir -p "$RUNNER_TEMP/crash"
           run_ide_tests() {
             DOTNET_DbgEnableMiniDump=1 DOTNET_DbgMiniDumpType=1 DOTNET_EnableCrashReport=1 DOTNET_DbgMiniDumpName="$RUNNER_TEMP/crash/%e.%p.dmp" \
-              dotnet test tests/TabStudio.App.Tests -c Release --blame --logger "console;verbosity=normal" > "$1" 2>&1
+              dotnet test tests/TabStudio.App.Tests -c Release --blame --blame-hang-timeout 12m --blame-hang-dump-type none --logger "console;verbosity=normal" > "$1" 2>&1
           }
           first=0
           run_ide_tests ci-out/TabStudio.App.Tests.log || first=1
@@ -146,13 +147,41 @@ jobs:
             fi
             tail -n 40 ci-out/TabStudio.App.Tests.retry.log
           fi
-          if [ $first -ne 0 ] || [ $status -ne 0 ]; then
+          # The same tests in the light theme, for light screenshots (screenshots/light); the palette and design tests ran above in both.
+          mkdir -p ci-out/screenshots/light
+          run_light_tests() {
+            TABSTUDIO_THEME=Light TABSTUDIO_SCREENSHOTS="$TABSTUDIO_SCREENSHOTS/light" \
+              dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter "FullyQualifiedName!~TabStudio.App.Tests.Theming&FullyQualifiedName!~TabStudio.App.Tests.Design" \
+              --logger "console;verbosity=normal" > "$1" 2>&1
+          }
+          light=0
+          run_light_tests ci-out/TabStudio.App.Tests.Light.log || light=1
+          tail -n 20 ci-out/TabStudio.App.Tests.Light.log
+          if [ $light -ne 0 ]; then
+            echo "::warning::The IDE tests in the light theme failed once; running them again. The first attempt is in ci-out/TabStudio.App.Tests.Light.log."
+            if run_light_tests ci-out/TabStudio.App.Tests.Light.retry.log; then
+              echo "TabStudio.App.Tests (light theme): the first attempt failed and the retry passed (see TabStudio.App.Tests.Light.log)" >> ci-out/FLAKY.txt
+            else
+              status=1
+            fi
+            tail -n 40 ci-out/TabStudio.App.Tests.Light.retry.log
+          fi
+          if [ $first -ne 0 ] || [ $light -ne 0 ] || [ $status -ne 0 ]; then
             {
               echo "== Processes left running"; ps -eo pid,ppid,pgid,rss,etime,args --sort=-rss | head -n 40
               echo "== Kernel messages"; sudo dmesg | tail -n 40
             } > ci-out/diagnostics.txt 2>&1 || true
             cp "$RUNNER_TEMP"/crash/*.json ci-out/ 2>/dev/null || true
             find tests/TabStudio.App.Tests/TestResults -name 'Sequence_*.xml' -exec cp {} ci-out/ \; 2>/dev/null || true
+          fi
+          # The UI test the swarm's test recorded on a phone runs as its users' CI runs it: dotnet test, headless.
+          recorded=$(find "$TABSTUDIO_RECORDED_UI_TESTS" -name '*.UITests.csproj' 2>/dev/null | head -n 1)
+          if [ -n "$recorded" ]; then
+            dotnet test "$recorded" --logger "console;verbosity=normal" > ci-out/recorded-ui-tests.log 2>&1 || status=1
+            tail -n 30 ci-out/recorded-ui-tests.log
+          else
+            echo "No recorded UI test project was written." | tee ci-out/recorded-ui-tests.log
+            status=1
           fi
           exit $status
 
@@ -281,6 +310,13 @@ jobs:
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
           script: bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 660
+
+      # A crash's native backtrace has only offsets into the runtime's stripped libraries; this names the functions.
+      - name: Name the functions in a crash's backtrace
+        if: failure()
+        run: |
+          grep -q 'F DEBUG' ci-out/logcat-full.txt 2> /dev/null || exit 0
+          bash build/ci/android-symbolize.sh ci-out/TabStudio-x64.apk x86_64 ci-out/symbolized ci-out/logcat-full.txt
 
       - name: Keep the APK out of the published logs
         if: always()

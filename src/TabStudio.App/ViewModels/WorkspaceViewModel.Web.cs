@@ -54,6 +54,7 @@ public sealed partial class WorkspaceViewModel
             _webApp = null;
             _liveProject = null;
             WebPreview.ShowStopped();
+            OnWebAppStopped();
             _run.Dispose();
             _run = null;
         }
@@ -79,6 +80,7 @@ public sealed partial class WorkspaceViewModel
         _webPort = web.Address.Port;
         Output.WriteLine($"{project.Name} is listening on {web.Address}", OutputKind.Info);
         WebPreview.Show(project.Name, web.Address, profile.LaunchUrl);
+        OnWebAppStarted(project);
         SelectSideBarPanel(SideBarPanel.WebPreview);
         StatusText = $"Running {project.Name} at {web.Address.GetLeftPart(UriPartial.Authority)}";
 

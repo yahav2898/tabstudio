@@ -2,17 +2,9 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
   <!--
-    The debugger's colors and icons. Icons are stroke paths on a 24×24 grid, like Icons.axaml; circles are written as
+    The debugger's icons (its colors are in Colors.axaml, for both themes). Icons are stroke paths on a 24×24 grid, like Icons.axaml; circles are written as
     two arcs: "M cx-r,cy a r,r 0 1 0 2r,0 a r,r 0 1 0 -2r,0".
   -->
-
-  <!-- The status bar while debugging, orange as in Visual Studio. -->
-  <SolidColorBrush x:Key="Brush.Debugging" Color="#B85212" />
-  <!-- The current statement (yellow arrow) and a caller chosen in the Call Stack (green arrow). -->
-  <SolidColorBrush x:Key="Brush.CurrentStatement" Color="#F2CC4E" />
-  <SolidColorBrush x:Key="Brush.CallerStatement" Color="#6FD6A0" />
-  <!-- The exception helper's header. -->
-  <SolidColorBrush x:Key="Brush.ExceptionHeader" Color="#3A2326" />
 
   <StreamGeometry x:Key="Icon.Bug">M8 9 A4 4 0 0 1 16 9 L16 15 A4 4 0 0 1 8 15 Z M12 9 L12 19 M8 12 L4 12 M16 12 L20 12 M8 16 L5 18 M16 16 L19 18 M9 6 L7 4 M15 6 L17 4</StreamGeometry>
   <StreamGeometry x:Key="Icon.PlayOutline">M7 4 L20 12 L7 20 Z</StreamGeometry>

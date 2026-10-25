@@ -45,6 +45,7 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 - **Sized for fingers.** Buttons, tabs and rows are fingertip-sized, 34 to 44 pixels tall. A floating action bar puts Rename, Comment, Format, Peek and Run to Cursor one tap away.
 - **Keyboard when you want it.** Attach a keyboard and every Visual Studio shortcut works: F5, Ctrl+Shift+B, F12, Ctrl+. and the rest.
 - **Desktop mode.** Plug in a monitor over USB-C or HDMI, or use a wireless display, and the full IDE moves to the big screen with your documents, caret and debugger exactly as they were. The tablet's keyboard types there and its mouse or touchpad drives a pointer there, while the tablet becomes a touch companion: Run and debugger buttons, a Toolbox that puts controls into your XAML at the caret, and a Properties panel for the element at the caret.
+- **Light, dark or the system's.** A light theme modeled on Visual Studio Light, the dark one, or follow the tablet's dark-mode setting. Switching recolors the whole IDE at once, the editor's syntax colors included, and every color passes WCAG AA. Choosing an extension's color theme sets the IDE's light or dark to match.
 
 ### C# that runs on the tablet
 
@@ -81,10 +82,10 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 
 ### Every screen at once
 
-- **Run on Swarm.** Phones and tablets running TabStudio join your swarm with one scan. Press F5 and the app you are building starts on all of them together, and every save updates them all. Avalonia apps run natively, web apps in each device's browser view, and console apps stream their output back.
+- **Run on Swarm.** Phones and tablets running TabStudio join your swarm with one scan (**File > Join a Swarm** on the phone). Choose Swarm in the Run menu, press F5, and the app you are building starts on all of them together, and every save updates them all. Avalonia apps run natively, web apps in each device's browser view, and console apps stream their output back.
 - **Debug on any device.** Tap a button on the phone, and its breakpoint stops on your tablet with the phone's Locals and Call Stack. Pause that device or all of them.
 - **Mirror input.** A tap, scroll or keystroke on one device happens on every device, so you compare the same screen at every size.
-- **Virtual devices.** No spare phones? The tablet shows your app side by side as a small phone, a large phone and a tablet, in light and dark, left to right and right to left, and with large fonts.
+- **Device Matrix.** Every screen side by side: your phones, the App Preview and virtual devices. No spare phones? The tablet shows your app as a small phone, a large phone and a tablet, in light and dark, left to right and right to left, and with large fonts.
 - **Layout checks.** After every change, TabStudio inspects each screen for clipped text, controls pushed off screen, overlapping controls, touch targets under 44 pixels and low contrast. Each finding lands in the Error List with its device and a screenshot, and **Fix with Agent** is one tap away.
 - **Recorded end-to-end tests.** Record a few taps and get a UI test that replays them on every device and in CI, with results per device in Test Explorer.
 
@@ -215,6 +216,7 @@ src/
   TabStudio.SourceControl/ Git through GitHub: changes, commits, pulls and merges, branches, pull requests, Actions
   TabStudio.Agent/         Claude as a coding agent: tools over the workspace, MCP servers, sketch to XAML
   TabStudio.Link/          TabStudio Link: pairing, encrypted transport, QR codes and the remote language service
+  TabStudio.Swarm/         Swarm: running, updating, debugging and recording an app on every joined device
   TabStudio.Forms/         Windows Forms on Avalonia: System.Windows.Forms and System.Drawing, drawn as on Windows 10
   TabStudio.Forms.Design/  The touch designer's model: reads and writes InitializeComponent, the canvas and Toolbox
   TabStudio.Web/           Web apps: static web assets, Blazor's scripts, a host for .NET apps on WebAssembly

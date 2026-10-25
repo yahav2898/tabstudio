@@ -1126,8 +1126,10 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         foreach (var project in StartupProjects)
         {
             var kind = FindToolchainProject(project.Project) is { } toolchainProject ? toolchainProject.Toolchain.Name : "C#";
-            targets.Add(new RunTargetOption(project.Name, $"{kind} project", project.Select));
+            targets.Add(new RunTargetOption(project.Name, $"{kind} project", WithoutSwarm(project.Select)));
         }
+
+        AddSwarmRunTarget(targets);
 
         if (_languageServers is { } host)
         {

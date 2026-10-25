@@ -33,6 +33,9 @@ public static class LinkErrorCodes
     /// <summary>A device tried to link to itself.</summary>
     public const string Self = "self";
 
+    /// <summary>The host offers something else than the device asked for: builds instead of a swarm, or the other way round.</summary>
+    public const string WrongRole = "wrong-role";
+
     /// <summary>The request needs a workspace and none is loaded.</summary>
     public const string NoWorkspace = "no-workspace";
 }

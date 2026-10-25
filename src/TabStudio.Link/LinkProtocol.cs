@@ -8,7 +8,7 @@ public static class LinkProtocol
     /// <summary>
     /// The protocol version. Both devices must speak the same one; it changes whenever a message changes shape.
     /// </summary>
-    public const int Version = 1;
+    public const int Version = 2;
 
     /// <summary>The TCP port a host listens on when it is free; otherwise the host takes any port and says which.</summary>
     public const int DefaultPort = 47811;

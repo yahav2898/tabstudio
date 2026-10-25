@@ -43,6 +43,7 @@ public sealed partial class WorkspaceViewModel
         new OutputSourceOption("Build and Run", Output),
         new OutputSourceOption("Language Servers", LanguageServerOutput),
         new OutputSourceOption("Debug Adapters", DebugAdapterOutput),
+        new OutputSourceOption("Swarm", SwarmOutput),
     ];
 
     /// <summary>The source the Output panel shows.</summary>

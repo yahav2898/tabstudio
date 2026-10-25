@@ -4,13 +4,13 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using AvaloniaEdit;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.TextMate;
 using TabStudio.App.Editing;
+using TabStudio.App.Theming;
 using TabStudio.App.ViewModels.Notebooks;
 using TabStudio.Notebooks;
 
@@ -30,7 +30,6 @@ public sealed class CellEditor : UserControl, IDisposable
     public static readonly StyledProperty<NotebookCellViewModel?> CellProperty =
         AvaloniaProperty.Register<CellEditor, NotebookCellViewModel?>(nameof(Cell));
 
-    private static readonly IBrush CaretBrush = new ImmutableSolidColorBrush(Color.Parse("#E8ECF2"));
 
     private readonly TextEditor _editor;
     private readonly ClassificationColorizer _colorizer = new();
@@ -63,7 +62,7 @@ public sealed class CellEditor : UserControl, IDisposable
         _editor.Options.EnableHyperlinks = false;
         _editor.Options.EnableEmailHyperlinks = false;
         _editor.Options.AllowScrollBelowDocument = false;
-        _editor.TextArea.Caret.CaretBrush = CaretBrush;
+        _editor.TextArea.Caret.CaretBrush = ThemeBrushes.Get("Editor.Caret");
         _editor.TextArea.TextView.LineTransformers.Add(_colorizer);
         _editor.TextArea.TextView.BackgroundRenderers.Add(_diagnostics);
 

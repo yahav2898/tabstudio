@@ -6,7 +6,7 @@
              x:DataType="vm:VariableTreeViewModel">
   <!-- A DataTip: the value under the pointer while the program is paused; tap a row to see its members. -->
   <Border Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
-          CornerRadius="6" Padding="2" BoxShadow="0 6 18 0 #59000000" MinWidth="160" MaxWidth="640">
+          CornerRadius="6" Padding="2" BoxShadow="{DynamicResource Shadow.Popup}" MinWidth="160" MaxWidth="640">
     <ListBox x:Name="Rows" ItemsSource="{Binding Rows}" ItemContainerTheme="{StaticResource ListRow}" MaxHeight="320"
              ScrollViewer.HorizontalScrollBarVisibility="Disabled">
       <ListBox.ItemTemplate>

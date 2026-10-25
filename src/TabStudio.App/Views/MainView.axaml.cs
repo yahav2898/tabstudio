@@ -37,12 +37,8 @@ public sealed partial class MainView : UserControl
         if (_insets is not null)
         {
             _insets.SafeAreaChanged += OnInsetsChanged;
-
-            // System bars in the window's color, so the IDE reaches the edges of the screen.
-            if (this.TryFindResource("Brush.Window", out var brush) && brush is ISolidColorBrush window)
-            {
-                _insets.SystemBarColor = window.Color;
-            }
+            ActualThemeVariantChanged += OnThemeChanged;
+            UpdateSystemBars();
         }
 
         if (_inputPane is not null)
@@ -64,6 +60,7 @@ public sealed partial class MainView : UserControl
         if (_insets is not null)
         {
             _insets.SafeAreaChanged -= OnInsetsChanged;
+            ActualThemeVariantChanged -= OnThemeChanged;
             _insets = null;
         }
 
@@ -77,6 +74,20 @@ public sealed partial class MainView : UserControl
     }
 
     private void OnInsetsChanged(object? sender, SafeAreaChangedArgs e) => UpdatePadding();
+
+    private void OnThemeChanged(object? sender, EventArgs e) => UpdateSystemBars();
+
+    /// <summary>
+    /// Gives the system bars the window's color in the current theme, so the IDE reaches the edges of the screen;
+    /// Avalonia makes their icons dark on the light theme.
+    /// </summary>
+    private void UpdateSystemBars()
+    {
+        if (_insets is not null && this.TryFindResource("Brush.Window", ActualThemeVariant, out var brush) && brush is ISolidColorBrush window)
+        {
+            _insets.SystemBarColor = window.Color;
+        }
+    }
 
     private void OnInputPaneChanged(object? sender, InputPaneStateEventArgs e) => UpdatePadding();
 

@@ -21,7 +21,7 @@ internal sealed class AndroidWebViewFactory(Func<Context> context) : IWebViewFac
 /// Android's system WebView inside the Avalonia layout, through a native control host. Links stay inside the
 /// preview, and JavaScript and local storage are on, as in a browser.
 /// </summary>
-internal sealed class AndroidWebView(Func<Context> context) : NativeControlHost, IWebView, IDisposable
+internal sealed partial class AndroidWebView(Func<Context> context) : NativeControlHost, IWebView, IDisposable
 {
     private AndroidWebKitView? _view;
     private Uri? _page;
@@ -76,11 +76,18 @@ internal sealed class AndroidWebView(Func<Context> context) : NativeControlHost,
         return new AndroidViewControlHandle(_view);
     }
 
-    /// <summary>Destroys the Android web view, if one was created.</summary>
+    /// <summary>Destroys the Android web view, if one was created and is still alive.</summary>
     public void Dispose()
     {
-        _view?.Destroy();
-        _view?.Dispose();
+        // When the host takes the view out of the layout for good, Avalonia's attachment removes it and releases its
+        // managed peer before DestroyNativeControlCore runs; calling into a released peer throws, which on the UI thread
+        // ended the app (Close Solution after a web app had been previewed). Android collects the removed view then.
+        if (_view is { Handle: var handle } view && handle != IntPtr.Zero)
+        {
+            view.Destroy();
+            view.Dispose();
+        }
+
         _view = null;
     }
 

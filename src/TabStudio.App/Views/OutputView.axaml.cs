@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using TabStudio.App.Editing;
+using TabStudio.App.Theming;
 using TabStudio.App.ViewModels;
 
 namespace TabStudio.App.Views;
@@ -26,7 +27,7 @@ public sealed partial class OutputView : UserControl
         // document would leave only the empty last line in view.
         Editor.Options.AllowScrollBelowDocument = false;
         Editor.TextArea.Caret.CaretBrush = Avalonia.Media.Brushes.Transparent;
-        Editor.TextArea.TextView.ElementGenerators.Add(new OutputLinkGenerator(() => _viewModel, () => this.FindResource("Brush.Link") as Avalonia.Media.IBrush ?? Avalonia.Media.Brushes.LightSkyBlue));
+        Editor.TextArea.TextView.ElementGenerators.Add(new OutputLinkGenerator(() => _viewModel, () => ThemeBrushes.Get("Brush.Link")));
         Input.KeyDown += OnInputKeyDown;
     }
 

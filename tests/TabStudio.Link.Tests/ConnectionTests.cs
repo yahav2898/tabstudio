@@ -3,6 +3,7 @@ using TabStudio.Link.Messaging;
 
 namespace TabStudio.Link.Tests;
 
+[Collection(TimingTestGroup.Name)]
 public sealed class ConnectionTests
 {
     private static readonly TimeSpan Patience = TimeSpan.FromSeconds(30);
@@ -182,14 +183,26 @@ public sealed class ConnectionTests
     [Fact]
     public async Task Regular_pings_keep_a_connection_alive_and_measure_the_latency()
     {
+        // The server drops a connection that is silent for two seconds; the client pings every 100 ms. Thirty pings take
+        // three seconds at least, however slowly a busy machine runs them, so the connection outlives the timeout only
+        // thanks to them.
+        var pings = 0;
+        var pinged = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         await using var pair = await ConnectionPair.CreateAsync(
             new TestHandler(),
             clientOptions: new LinkConnectionOptions { PingInterval = TimeSpan.FromMilliseconds(100) },
-            serverOptions: new LinkConnectionOptions { IdleTimeout = TimeSpan.FromMilliseconds(600) });
+            serverOptions: new LinkConnectionOptions { IdleTimeout = TimeSpan.FromSeconds(2) });
+        pair.Client.LatencyChanged += (_, _) =>
+        {
+            if (Interlocked.Increment(ref pings) >= 30)
+            {
+                pinged.TrySetResult();
+            }
+        };
 
-        await Task.Delay(TimeSpan.FromSeconds(1.5));
+        await Task.WhenAny(pinged.Task, pair.Server.Completion).WaitAsync(Patience);
 
-        Assert.True(pair.Server.IsOpen);
+        Assert.True(pair.Server.IsOpen, $"The server closed the connection: {pair.Server.CloseError?.Message}");
         Assert.True(pair.Client.Latency.HasValue);
     }
 

@@ -20,8 +20,8 @@ public sealed class ScreenshotLifetimeTests
         using var temp = new TempDirectory();
         var window = new Window
         {
-            Width = 1600,
-            Height = 1200,
+            Width = 1280,
+            Height = 800,
             // Pixels that differ from row to row, so the encode takes long enough for collections to happen during it.
             Background = new LinearGradientBrush
             {
@@ -50,7 +50,9 @@ public sealed class ScreenshotLifetimeTests
 
         try
         {
-            for (var i = 0; i < 30; i++)
+            // Enough saves for the helper and Avalonia's Save to be recompiled with optimizations, whose code no longer
+            // keeps a local alive after its last use, as in a full test run.
+            for (var i = 0; i < 100; i++)
             {
                 var path = Path.Combine(temp.Path, $"frame-{i}.png");
                 UiTestHelpers.SaveFrame(window, path);
