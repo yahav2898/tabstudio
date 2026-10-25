@@ -1,5 +1,5 @@
-run 1: FAILED: TABSTUDIO_SELFTEST_FAIL 186.8 s: What's your name? Tablet | Good morning, Tablet! This program was compiled and run on your tablet. | Statically typed languages, oldest first: | C#         since 2000 (26 years) | Rust       since 2015 (11 years) | The program 'HelloTablet' has exited with code 0 (0x
-run 2: FAILED: TABSTUDIO_SELFTEST_FAIL 178.8 s: What's your name? Tablet | Good morning, Tablet! This program was compiled and run on your tablet. | Statically typed languages, oldest first: | C#         since 2000 (26 years) | Rust       since 2015 (11 years) | The program 'HelloTablet' has exited with code 0 (0x
-run 3: FAILED: TABSTUDIO_SELFTEST_FAIL 186.2 s: What's your name? Tablet | Good morning, Tablet! This program was compiled and run on your tablet. | Statically typed languages, oldest first: | C#         since 2000 (26 years) | Rust       since 2015 (11 years) | The program 'HelloTablet' has exited with code 0 (0x
-run 4: FAILED: TABSTUDIO_SELFTEST_FAIL 182.0 s: What's your name? Tablet | Good morning, Tablet! This program was compiled and run on your tablet. | Statically typed languages, oldest first: | C#         since 2000 (26 years) | Rust       since 2015 (11 years) | The program 'HelloTablet' has exited with code 0 (0x
-Passed 0, failed 4, crashed 0 of 4 runs.
+run 1: CRASHED: * Assertion at /__w/1/s/src/runtime/src/mono/mono/sgen/sgen-debug.c:267, condition `!missing_remsets' not met
+run 2: CRASHED: Fatal signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x8000 in tid 4768 (.NET TP Worker), pid 4724 (m.tabstudio.ide)
+run 3: FAILED: TABSTUDIO_SELFTEST_FAIL 158.7 s: What's your name? Tablet | Good afternoon, Tablet! This program was compiled and run on your tablet. | Statically typed languages, oldest first: | C#         since 2000 (26 years) | Rust       since 2015 (11 years) | The program 'HelloTablet' has exited with code 0 (
+run 4: CRASHED: Fatal signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0xc in tid 6168 (m.tabstudio.ide), pid 6168 (m.tabstudio.ide)
+Passed 0, failed 1, crashed 3 of 4 runs.

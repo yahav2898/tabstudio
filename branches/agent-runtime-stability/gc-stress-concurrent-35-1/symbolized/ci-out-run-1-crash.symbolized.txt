@@ -1,0 +1,7 @@
+10-25 12:24:52.129  3396  4347 F libc    : Fatal signal 6 (SIGABRT), code -1 (SI_QUEUE) in tid 4347 (.NET TP Worker), pid 3396 (m.tabstudio.ide)
+10-25 12:24:54.082  4419  4419 F DEBUG   : Abort message: '* Assertion at /__w/1/s/src/runtime/src/mono/mono/sgen/sgen-debug.c:267, condition `!missing_remsets' not met'
+10-25 12:24:54.082  4419  4419 F DEBUG   : pid: 3396, tid: 4347, name: .NET TP Worker  >>> com.tabstudio.ide <<<
+10-25 12:24:54.082  4419  4419 F DEBUG   : signal 6 (SIGABRT), code -1 (SI_QUEUE), fault addr --------
+10-25 12:24:54.082  4419  4419 F DEBUG   : Abort message: '* Assertion at /__w/1/s/src/runtime/src/mono/mono/sgen/sgen-debug.c:267, condition `!missing_remsets' not met'
+10-25 12:24:54.082  4419  4419 F DEBUG   :       #00 pc 000000000005cb90  /apex/com.android.runtime/lib64/bionic/libc.so (abort+192) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+10-25 12:24:54.082  4419  4419 F DEBUG   :       #01 pc 00000000000b30af  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonodroid.so (xamarin::android::Helpers::abort_application(_LogCategories, char const*, bool, std::__ndk1::source_location)+767) (BuildId: d3370263a3d5aba8cc143ea0be7afdd2a4ce251e)

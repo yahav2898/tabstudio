@@ -1,0 +1,28 @@
+10-25 12:28:09.492  4724  4768 F libc    : Fatal signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x8000 in tid 4768 (.NET TP Worker), pid 4724 (m.tabstudio.ide)
+
+10-25 12:28:09.996  5324  5324 F DEBUG   : *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+10-25 12:28:09.996  5324  5324 F DEBUG   : Build fingerprint: 'google/sdk_gphone64_x86_64/emu64xa:15/AE3A.240806.043/12960925:userdebug/dev-keys'
+10-25 12:28:09.996  5324  5324 F DEBUG   : Revision: '0'
+10-25 12:28:09.996  5324  5324 F DEBUG   : ABI: 'x86_64'
+10-25 12:28:09.996  5324  5324 F DEBUG   : Timestamp: 2026-10-25 12:28:09.707102291+0000
+10-25 12:28:09.996  5324  5324 F DEBUG   : Process uptime: 172s
+10-25 12:28:09.996  5324  5324 F DEBUG   : Cmdline: com.tabstudio.ide
+10-25 12:28:09.996  5324  5324 F DEBUG   : pid: 4724, tid: 4768, name: .NET TP Worker  >>> com.tabstudio.ide <<<
+10-25 12:28:09.996  5324  5324 F DEBUG   : uid: 10209
+10-25 12:28:09.996  5324  5324 F DEBUG   : signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x0000000000008000
+10-25 12:28:09.996  5324  5324 F DEBUG   :     rax 0000000000000000  rbx 000076f6faef4100  rcx 000076f5ff7f2db0  rdx 0000000000000010
+10-25 12:28:09.996  5324  5324 F DEBUG   :     r8  000076f6e70e0000  r9  3ffffffffffffff0  r10 0000000000001000  r11 000000000000007d
+10-25 12:28:09.996  5324  5324 F DEBUG   :     r12 0000000000000ea8  r13 0000000000008000  r14 0000000000000001  r15 000000000002c085
+10-25 12:28:09.996  5324  5324 F DEBUG   :     rdi 000076f6faef3258  rsi 000076f6faef3258
+10-25 12:28:09.996  5324  5324 F DEBUG   :     rbp 000076f6faef4100  rsp 000076f6fbe71210  rip 000076f5ff794dad
+10-25 12:28:09.996  5324  5324 F DEBUG   : 9 total frames
+10-25 12:28:09.996  5324  5324 F DEBUG   : backtrace:
+10-25 12:28:09.996  5324  5324 F DEBUG   :       #00 pc 00000000002e0dad  /data/app/~~gzc_8OVN3IzO1yG5-_8Aug==/com.tabstudio.ide-dfadF_xue_8sBi0sIhT5tw==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+10-25 12:28:09.996  5324  5324 F DEBUG   :       #01 pc 00000000002e70cc  /data/app/~~gzc_8OVN3IzO1yG5-_8Aug==/com.tabstudio.ide-dfadF_xue_8sBi0sIhT5tw==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+10-25 12:28:09.996  5324  5324 F DEBUG   :       #02 pc 00000000002dfe32  /data/app/~~gzc_8OVN3IzO1yG5-_8Aug==/com.tabstudio.ide-dfadF_xue_8sBi0sIhT5tw==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+10-25 12:28:09.996  5324  5324 F DEBUG   :       #03 pc 00000000002d7dfa  /data/app/~~gzc_8OVN3IzO1yG5-_8Aug==/com.tabstudio.ide-dfadF_xue_8sBi0sIhT5tw==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+10-25 12:28:09.996  5324  5324 F DEBUG   :       #04 pc 00000000002d7cd2  /data/app/~~gzc_8OVN3IzO1yG5-_8Aug==/com.tabstudio.ide-dfadF_xue_8sBi0sIhT5tw==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+10-25 12:28:09.996  5324  5324 F DEBUG   :       #05 pc 00000000002e6789  /data/app/~~gzc_8OVN3IzO1yG5-_8Aug==/com.tabstudio.ide-dfadF_xue_8sBi0sIhT5tw==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+10-25 12:28:09.996  5324  5324 F DEBUG   :       #06 pc 00000000002d3da4  /data/app/~~gzc_8OVN3IzO1yG5-_8Aug==/com.tabstudio.ide-dfadF_xue_8sBi0sIhT5tw==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+10-25 12:28:09.996  5324  5324 F DEBUG   :       #07 pc 00000000002c69f4  /data/app/~~gzc_8OVN3IzO1yG5-_8Aug==/com.tabstudio.ide-dfadF_xue_8sBi0sIhT5tw==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+10-25 12:28:09.996  5324  5324 F DEBUG   :       #08 pc 000000000000400a  <anonymous:45449000>

@@ -1,0 +1,22 @@
+10-25 12:32:09.249  6168  6168 F libc    : Fatal signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0xc in tid 6168 (m.tabstudio.ide), pid 6168 (m.tabstudio.ide)
+
+10-25 12:32:09.626  6312  6312 F DEBUG   : *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+10-25 12:32:09.626  6312  6312 F DEBUG   : Build fingerprint: 'google/sdk_gphone64_x86_64/emu64xa:15/AE3A.240806.043/12960925:userdebug/dev-keys'
+10-25 12:32:09.626  6312  6312 F DEBUG   : Revision: '0'
+10-25 12:32:09.626  6312  6312 F DEBUG   : ABI: 'x86_64'
+10-25 12:32:09.626  6312  6312 F DEBUG   : Timestamp: 2026-10-25 12:32:09.456732927+0000
+10-25 12:32:09.626  6312  6312 F DEBUG   : Process uptime: 44s
+10-25 12:32:09.626  6312  6312 F DEBUG   : Cmdline: com.tabstudio.ide
+10-25 12:32:09.626  6312  6312 F DEBUG   : pid: 6168, tid: 6168, name: m.tabstudio.ide  >>> com.tabstudio.ide <<<
+10-25 12:32:09.626  6312  6312 F DEBUG   : uid: 10209
+10-25 12:32:09.626  6312  6312 F DEBUG   : signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x000000000000000c
+10-25 12:32:09.626  6312  6312 F DEBUG   : Cause: null pointer dereference
+10-25 12:32:09.626  6312  6312 F DEBUG   :     rax 0000000000000008  rbx 000076f7e879ad50  rcx 0000000000000000  rdx 0000000000000001
+10-25 12:32:09.626  6312  6312 F DEBUG   :     r8  0000000000001e2c  r9  0000000000000200  r10 000076f8b8c41468  r11 000076f681e6e9c0
+10-25 12:32:09.626  6312  6312 F DEBUG   :     r12 0000000000000000  r13 000076f6fae90018  r14 00007ffdbb5dcaa0  r15 000076f8f8814420
+10-25 12:32:09.626  6312  6312 F DEBUG   :     rdi 000000008000000f  rsi 00000000000000f0
+10-25 12:32:09.626  6312  6312 F DEBUG   :     rbp 0000000000000000  rsp 00007ffdbb5dc9c0  rip 000076f681ea2a97
+10-25 12:32:09.626  6312  6312 F DEBUG   : 2 total frames
+10-25 12:32:09.626  6312  6312 F DEBUG   : backtrace:
+10-25 12:32:09.626  6312  6312 F DEBUG   :       #00 pc 0000000000248a97  /data/app/~~lfwQ1k0HtWmI2ybCHekZRQ==/com.tabstudio.ide-3k_cFXfr0sbs6ITvSRNYdA==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+10-25 12:32:09.626  6312  6312 F DEBUG   :       #01 pc 0000000000038bc6  <anonymous:413e1000>

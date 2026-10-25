@@ -1,0 +1,25 @@
+10-25 12:28:09.492  4724  4768 F libc    : Fatal signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x8000 in tid 4768 (.NET TP Worker), pid 4724 (m.tabstudio.ide)
+10-25 12:28:09.996  5324  5324 F DEBUG   : pid: 4724, tid: 4768, name: .NET TP Worker  >>> com.tabstudio.ide <<<
+10-25 12:28:09.996  5324  5324 F DEBUG   : signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x0000000000008000
+10-25 12:28:09.996  5324  5324 F DEBUG   :       #00 pc 00000000002e0dad  /data/app/~~gzc_8OVN3IzO1yG5-_8Aug==/com.tabstudio.ide-dfadF_xue_8sBi0sIhT5tw==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> SGEN_LOAD_VTABLE_UNCHECKED	/__w/1/s/src/runtime/src/mono/mono/sgen/../metadata/sgen-client-mono.h:23
+        -> sgen_safe_object_get_size	/__w/1/s/src/runtime/src/mono/mono/sgen/../../mono/sgen/sgen-gc.h:812
+        -> is_major_or_los_object_marked	/__w/1/s/src/runtime/src/mono/mono/sgen/sgen-debug.c:217
+        -> check_mod_union_callback	/__w/1/s/src/runtime/src/mono/mono/sgen/sgen-scan-object.h:59
+10-25 12:28:09.996  5324  5324 F DEBUG   :       #01 pc 00000000002e70cc  /data/app/~~gzc_8OVN3IzO1yG5-_8Aug==/com.tabstudio.ide-dfadF_xue_8sBi0sIhT5tw==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> sgen_los_iterate_objects	/__w/1/s/src/runtime/src/mono/mono/sgen/sgen-los.c:653
+10-25 12:28:09.996  5324  5324 F DEBUG   :       #02 pc 00000000002dfe32  /data/app/~~gzc_8OVN3IzO1yG5-_8Aug==/com.tabstudio.ide-dfadF_xue_8sBi0sIhT5tw==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> sgen_check_mod_union_consistency	/__w/1/s/src/runtime/src/mono/mono/sgen/sgen-debug.c:264
+10-25 12:28:09.996  5324  5324 F DEBUG   :       #03 pc 00000000002d7dfa  /data/app/~~gzc_8OVN3IzO1yG5-_8Aug==/com.tabstudio.ide-dfadF_xue_8sBi0sIhT5tw==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> major_finish_concurrent_collection	/__w/1/s/src/runtime/src/mono/mono/sgen/sgen-gc.c:2561
+        -> sgen_perform_collection_inner	/__w/1/s/src/runtime/src/mono/mono/sgen/sgen-gc.c:2655
+        -> sgen_perform_collection	/__w/1/s/src/runtime/src/mono/mono/sgen/sgen-gc.c:2739
+10-25 12:28:09.996  5324  5324 F DEBUG   :       #04 pc 00000000002d7cd2  /data/app/~~gzc_8OVN3IzO1yG5-_8Aug==/com.tabstudio.ide-dfadF_xue_8sBi0sIhT5tw==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> sgen_ensure_free_space	/__w/1/s/src/runtime/src/mono/mono/sgen/sgen-gc.c:2616
+10-25 12:28:09.996  5324  5324 F DEBUG   :       #05 pc 00000000002e6789  /data/app/~~gzc_8OVN3IzO1yG5-_8Aug==/com.tabstudio.ide-dfadF_xue_8sBi0sIhT5tw==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> sgen_los_alloc_large_inner	/__w/1/s/src/runtime/src/mono/mono/sgen/sgen-los.c:461
+10-25 12:28:09.996  5324  5324 F DEBUG   :       #06 pc 00000000002d3da4  /data/app/~~gzc_8OVN3IzO1yG5-_8Aug==/com.tabstudio.ide-dfadF_xue_8sBi0sIhT5tw==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> sgen_alloc_obj_nolock	/__w/1/s/src/runtime/src/mono/mono/sgen/sgen-alloc.c:184
+10-25 12:28:09.996  5324  5324 F DEBUG   :       #07 pc 00000000002c69f4  /data/app/~~gzc_8OVN3IzO1yG5-_8Aug==/com.tabstudio.ide-dfadF_xue_8sBi0sIhT5tw==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> mono_gc_alloc_string	/__w/1/s/src/runtime/src/mono/mono/metadata/sgen-mono.c:1208
+10-25 12:28:09.996  5324  5324 F DEBUG   :       #08 pc 000000000000400a  <anonymous:45449000>

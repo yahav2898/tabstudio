@@ -1,0 +1,398 @@
+pid: 3396, tid: 4347, name: .NET TP Worker  >>> com.tabstudio.ide <<<
+signal 6 (SIGABRT), code -1 (SI_QUEUE), fault addr --------
+Abort message: '* Assertion at /__w/1/s/src/runtime/src/mono/mono/sgen/sgen-debug.c:267, condition `!missing_remsets' not met'
+      #00 pc 000000000005cb90  /apex/com.android.runtime/lib64/bionic/libc.so (abort+192) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 00000000000b30af  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonodroid.so (xamarin::android::Helpers::abort_application(_LogCategories, char const*, bool, std::__ndk1::source_location)+767) (BuildId: d3370263a3d5aba8cc143ea0be7afdd2a4ce251e)
+pid: 3396, tid: 3396, name: m.tabstudio.ide  >>> com.tabstudio.ide <<<
+      #00 pc 00000000000ce157  /apex/com.android.runtime/lib64/bionic/libc.so (__rt_sigsuspend+7) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 000000000007213c  /apex/com.android.runtime/lib64/bionic/libc.so (sigsuspend+76) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #02 pc 00000000002138df  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> suspend_signal_handler	/__w/1/s/src/runtime/src/mono/mono/utils/mono-threads-posix-signals.c:200
+      #03 pc 0000000000081d90  /apex/com.android.runtime/lib64/bionic/libc.so (__restore_rt+0) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #04 pc 00000000000ce759  /apex/com.android.runtime/lib64/bionic/libc.so (__epoll_pwait+9) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #05 pc 00000000000130c4  /system/lib64/libutils.so (android::Looper::pollOnce(int, int*, int*, void**)+308) (BuildId: f128755c26519c61f5cd218576eff285)
+      #06 pc 00000000001825e3  /system/lib64/libandroid_runtime.so (android::android_os_MessageQueue_nativePollOnce(_JNIEnv*, _jobject*, long, int)+35) (BuildId: 74e467b22a4c3107eac51948743c9977)
+      #07 pc 00000000001f99e3  /system/framework/x86_64/boot-framework.oat (art_jni_trampoline+131) (BuildId: bc047a67a4076b80992fbdfabdfba12acbd1924a)
+      #08 pc 000000000053127b  /system/framework/x86_64/boot-framework.oat (android.os.MessageQueue.next+283) (BuildId: bc047a67a4076b80992fbdfabdfba12acbd1924a)
+      #09 pc 000000000052ea7c  /system/framework/x86_64/boot-framework.oat (android.os.Looper.loopOnce+140) (BuildId: bc047a67a4076b80992fbdfabdfba12acbd1924a)
+      #10 pc 000000000052e93b  /system/framework/x86_64/boot-framework.oat (android.os.Looper.loop+235) (BuildId: bc047a67a4076b80992fbdfabdfba12acbd1924a)
+      #11 pc 000000000030a33c  /system/framework/x86_64/boot-framework.oat (android.app.ActivityThread.main+1500) (BuildId: bc047a67a4076b80992fbdfabdfba12acbd1924a)
+      #12 pc 00000000002124b6  /apex/com.android.art/lib64/libart.so (art_quick_invoke_static_stub+806) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #13 pc 0000000000474c24  /apex/com.android.art/lib64/libart.so (art::ArtMethod::Invoke(art::Thread*, unsigned int*, unsigned int, art::JValue*, char const*)+228) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #14 pc 00000000008745ea  /apex/com.android.art/lib64/libart.so (_jobject* art::InvokeMethod<(art::PointerSize)8>(art::ScopedObjectAccessAlreadyRunnable const&, _jobject*, _jobject*, _jobject*, unsigned long)+2218) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #15 pc 00000000007d00b7  /apex/com.android.art/lib64/libart.so (art::Method_invoke(_JNIEnv*, _jobject*, _jobject*, _jobjectArray*) (.__uniq.165753521025965369065708152063621506277)+39) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #16 pc 00000000000a672f  /system/framework/x86_64/boot.oat (art_jni_trampoline+127) (BuildId: 68b5d9df423be4ebd4a6c38087fc90e635afb135)
+      #17 pc 0000000000810405  /system/framework/x86_64/boot-framework.oat (com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run+117) (BuildId: bc047a67a4076b80992fbdfabdfba12acbd1924a)
+      #18 pc 00000000008196f0  /system/framework/x86_64/boot-framework.oat (com.android.internal.os.ZygoteInit.main+2704) (BuildId: bc047a67a4076b80992fbdfabdfba12acbd1924a)
+      #19 pc 00000000002124b6  /apex/com.android.art/lib64/libart.so (art_quick_invoke_static_stub+806) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #20 pc 0000000000474c24  /apex/com.android.art/lib64/libart.so (art::ArtMethod::Invoke(art::Thread*, unsigned int*, unsigned int, art::JValue*, char const*)+228) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #21 pc 0000000000875126  /apex/com.android.art/lib64/libart.so (art::JValue art::InvokeWithVarArgs<_jmethodID*>(art::ScopedObjectAccessAlreadyRunnable const&, _jobject*, _jmethodID*, __va_list_tag*)+518) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #22 pc 0000000000726e9a  /apex/com.android.art/lib64/libart.so (art::JNI<true>::CallStaticVoidMethodV(_JNIEnv*, _jclass*, _jmethodID*, __va_list_tag*)+586) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #23 pc 00000000000dcf68  /system/lib64/libandroid_runtime.so (_JNIEnv::CallStaticVoidMethod(_jclass*, _jmethodID*, ...)+136) (BuildId: 74e467b22a4c3107eac51948743c9977)
+      #24 pc 00000000000f2fb0  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::start(char const*, android::Vector<android::String8> const&, bool)+928) (BuildId: 74e467b22a4c3107eac51948743c9977)
+      #25 pc 0000000000004706  /system/bin/app_process64 (main+1638) (BuildId: 2919fb70658f9ff2e805cbbbdd33a33b)
+      #26 pc 0000000000057c82  /apex/com.android.runtime/lib64/bionic/libc.so (__libc_init+114) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+pid: 3396, tid: 3401, name: Signal Catcher  >>> com.tabstudio.ide <<<
+      #00 pc 00000000000ce17a  /apex/com.android.runtime/lib64/bionic/libc.so (__rt_sigtimedwait+10) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 000000000007235f  /apex/com.android.runtime/lib64/bionic/libc.so (sigwait64+111) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #02 pc 00000000008b4aba  /apex/com.android.art/lib64/libart.so (art::SignalCatcher::Run(void*)+714) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #03 pc 000000000006d62a  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+58) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #04 pc 0000000000060348  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+56) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+pid: 3396, tid: 3402, name: perfetto_hprof_  >>> com.tabstudio.ide <<<
+      #00 pc 00000000000cd477  /apex/com.android.runtime/lib64/bionic/libc.so (read+7) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 0000000000027ef0  /apex/com.android.art/lib64/libperfetto_hprof.so (void* std::__1::__thread_proxy[abi:nn180000]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, ArtPlugin_Initialize::$_7>>(void*)+336) (BuildId: 6e352e3de2cc4af9a8786f109a3b238e)
+      #02 pc 000000000006d62a  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+58) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #03 pc 0000000000060348  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+56) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+pid: 3396, tid: 3403, name: Jit thread pool  >>> com.tabstudio.ide <<<
+      #00 pc 0000000000081f58  /apex/com.android.runtime/lib64/bionic/libc.so (syscall+24) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 000000000047fd6b  /apex/com.android.art/lib64/libart.so (art::ConditionVariable::WaitHoldingLocks(art::Thread*)+107) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #02 pc 00000000008ef1ca  /apex/com.android.art/lib64/libart.so (art::ThreadPoolWorker::Run()+138) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #03 pc 00000000008eec58  /apex/com.android.art/lib64/libart.so (art::ThreadPoolWorker::Callback(void*)+152) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #04 pc 000000000006d62a  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+58) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #05 pc 0000000000060348  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+56) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+pid: 3396, tid: 3404, name: HeapTaskDaemon  >>> com.tabstudio.ide <<<
+      #00 pc 0000000000081f58  /apex/com.android.runtime/lib64/bionic/libc.so (syscall+24) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 0000000000480161  /apex/com.android.art/lib64/libart.so (art::ConditionVariable::TimedWait(art::Thread*, long, int)+145) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #02 pc 00000000005cf24a  /apex/com.android.art/lib64/libart.so (art::gc::TaskProcessor::RunAllTasks(art::Thread*)+938) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #03 pc 00000000000161d3  /system/framework/x86_64/boot-core-libart.oat (art_jni_trampoline+131) (BuildId: 2745a90d2047b0ef078df0f659dab52c701a4608)
+      #04 pc 0000000000048cbc  /system/framework/x86_64/boot-core-libart.oat (java.lang.Daemons$HeapTaskDaemon.runInternal+188) (BuildId: 2745a90d2047b0ef078df0f659dab52c701a4608)
+      #05 pc 0000000000023b58  /system/framework/x86_64/boot-core-libart.oat (java.lang.Daemons$Daemon.run+120) (BuildId: 2745a90d2047b0ef078df0f659dab52c701a4608)
+      #06 pc 000000000015c3ba  /system/framework/x86_64/boot.oat (java.lang.Thread.run+74) (BuildId: 68b5d9df423be4ebd4a6c38087fc90e635afb135)
+      #07 pc 0000000000212154  /apex/com.android.art/lib64/libart.so (art_quick_invoke_stub+756) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #08 pc 0000000000474bf5  /apex/com.android.art/lib64/libart.so (art::ArtMethod::Invoke(art::Thread*, unsigned int*, unsigned int, art::JValue*, char const*)+181) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #09 pc 00000000008c5cc3  /apex/com.android.art/lib64/libart.so (art::Thread::CreateCallback(void*)+1427) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #10 pc 00000000008c5725  /apex/com.android.art/lib64/libart.so (art::Thread::CreateCallbackWithUffdGc(void*)+5) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #11 pc 000000000006d62a  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+58) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #12 pc 0000000000060348  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+56) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+pid: 3396, tid: 3405, name: ReferenceQueueD  >>> com.tabstudio.ide <<<
+      #00 pc 0000000000081f58  /apex/com.android.runtime/lib64/bionic/libc.so (syscall+24) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 000000000047fd6b  /apex/com.android.art/lib64/libart.so (art::ConditionVariable::WaitHoldingLocks(art::Thread*)+107) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #02 pc 00000000007923be  /apex/com.android.art/lib64/libart.so (art::Monitor::Wait(art::Thread*, art::ObjPtr<art::mirror::Object>, long, int, bool, art::ThreadState)+1582) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #03 pc 00000000000a02bd  /system/framework/x86_64/boot.oat (art_jni_trampoline+93) (BuildId: 68b5d9df423be4ebd4a6c38087fc90e635afb135)
+      #04 pc 00000000000a7bb2  /system/framework/x86_64/boot.oat (java.lang.Object.wait+50) (BuildId: 68b5d9df423be4ebd4a6c38087fc90e635afb135)
+      #05 pc 0000000000048e49  /system/framework/x86_64/boot-core-libart.oat (java.lang.Daemons$ReferenceQueueDaemon.runInternal+329) (BuildId: 2745a90d2047b0ef078df0f659dab52c701a4608)
+      #06 pc 0000000000023b58  /system/framework/x86_64/boot-core-libart.oat (java.lang.Daemons$Daemon.run+120) (BuildId: 2745a90d2047b0ef078df0f659dab52c701a4608)
+      #07 pc 000000000015c3ba  /system/framework/x86_64/boot.oat (java.lang.Thread.run+74) (BuildId: 68b5d9df423be4ebd4a6c38087fc90e635afb135)
+      #08 pc 0000000000212154  /apex/com.android.art/lib64/libart.so (art_quick_invoke_stub+756) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #09 pc 0000000000474bf5  /apex/com.android.art/lib64/libart.so (art::ArtMethod::Invoke(art::Thread*, unsigned int*, unsigned int, art::JValue*, char const*)+181) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #10 pc 00000000008c5cc3  /apex/com.android.art/lib64/libart.so (art::Thread::CreateCallback(void*)+1427) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #11 pc 00000000008c5725  /apex/com.android.art/lib64/libart.so (art::Thread::CreateCallbackWithUffdGc(void*)+5) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #12 pc 000000000006d62a  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+58) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #13 pc 0000000000060348  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+56) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+pid: 3396, tid: 3406, name: FinalizerDaemon  >>> com.tabstudio.ide <<<
+      #00 pc 0000000000081f58  /apex/com.android.runtime/lib64/bionic/libc.so (syscall+24) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 000000000047fd6b  /apex/com.android.art/lib64/libart.so (art::ConditionVariable::WaitHoldingLocks(art::Thread*)+107) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #02 pc 00000000007923be  /apex/com.android.art/lib64/libart.so (art::Monitor::Wait(art::Thread*, art::ObjPtr<art::mirror::Object>, long, int, bool, art::ThreadState)+1582) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #03 pc 00000000000a02bd  /system/framework/x86_64/boot.oat (art_jni_trampoline+93) (BuildId: 68b5d9df423be4ebd4a6c38087fc90e635afb135)
+      #04 pc 00000000000b9d46  /system/framework/x86_64/boot.oat (java.lang.ref.ReferenceQueue.remove+326) (BuildId: 68b5d9df423be4ebd4a6c38087fc90e635afb135)
+      #05 pc 00000000000b9be3  /system/framework/x86_64/boot.oat (java.lang.ref.ReferenceQueue.remove+51) (BuildId: 68b5d9df423be4ebd4a6c38087fc90e635afb135)
+      #06 pc 00000000000479f0  /system/framework/x86_64/boot-core-libart.oat (java.lang.Daemons$FinalizerDaemon.runInternal+368) (BuildId: 2745a90d2047b0ef078df0f659dab52c701a4608)
+      #07 pc 0000000000023b58  /system/framework/x86_64/boot-core-libart.oat (java.lang.Daemons$Daemon.run+120) (BuildId: 2745a90d2047b0ef078df0f659dab52c701a4608)
+      #08 pc 000000000015c3ba  /system/framework/x86_64/boot.oat (java.lang.Thread.run+74) (BuildId: 68b5d9df423be4ebd4a6c38087fc90e635afb135)
+      #09 pc 0000000000212154  /apex/com.android.art/lib64/libart.so (art_quick_invoke_stub+756) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #10 pc 0000000000474bf5  /apex/com.android.art/lib64/libart.so (art::ArtMethod::Invoke(art::Thread*, unsigned int*, unsigned int, art::JValue*, char const*)+181) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #11 pc 00000000008c5cc3  /apex/com.android.art/lib64/libart.so (art::Thread::CreateCallback(void*)+1427) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #12 pc 00000000008c5725  /apex/com.android.art/lib64/libart.so (art::Thread::CreateCallbackWithUffdGc(void*)+5) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #13 pc 000000000006d62a  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+58) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #14 pc 0000000000060348  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+56) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+pid: 3396, tid: 3407, name: FinalizerWatchd  >>> com.tabstudio.ide <<<
+      #00 pc 0000000000081f58  /apex/com.android.runtime/lib64/bionic/libc.so (syscall+24) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 0000000000480161  /apex/com.android.art/lib64/libart.so (art::ConditionVariable::TimedWait(art::Thread*, long, int)+145) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #02 pc 00000000007923d1  /apex/com.android.art/lib64/libart.so (art::Monitor::Wait(art::Thread*, art::ObjPtr<art::mirror::Object>, long, int, bool, art::ThreadState)+1601) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #03 pc 00000000000a5a8d  /system/framework/x86_64/boot.oat (art_jni_trampoline+109) (BuildId: 68b5d9df423be4ebd4a6c38087fc90e635afb135)
+      #04 pc 000000000015bc2e  /system/framework/x86_64/boot.oat (java.lang.Thread.sleep+446) (BuildId: 68b5d9df423be4ebd4a6c38087fc90e635afb135)
+      #05 pc 000000000015ba5c  /system/framework/x86_64/boot.oat (java.lang.Thread.sleep+44) (BuildId: 68b5d9df423be4ebd4a6c38087fc90e635afb135)
+      #06 pc 0000000000047e7f  /system/framework/x86_64/boot-core-libart.oat (java.lang.Daemons$FinalizerWatchdogDaemon.sleepForNanos+207) (BuildId: 2745a90d2047b0ef078df0f659dab52c701a4608)
+      #07 pc 0000000000048325  /system/framework/x86_64/boot-core-libart.oat (java.lang.Daemons$FinalizerWatchdogDaemon.waitForProgress+661) (BuildId: 2745a90d2047b0ef078df0f659dab52c701a4608)
+      #08 pc 0000000000048aa5  /system/framework/x86_64/boot-core-libart.oat (java.lang.Daemons$FinalizerWatchdogDaemon.runInternal+261) (BuildId: 2745a90d2047b0ef078df0f659dab52c701a4608)
+      #09 pc 0000000000023b58  /system/framework/x86_64/boot-core-libart.oat (java.lang.Daemons$Daemon.run+120) (BuildId: 2745a90d2047b0ef078df0f659dab52c701a4608)
+      #10 pc 000000000015c3ba  /system/framework/x86_64/boot.oat (java.lang.Thread.run+74) (BuildId: 68b5d9df423be4ebd4a6c38087fc90e635afb135)
+      #11 pc 0000000000212154  /apex/com.android.art/lib64/libart.so (art_quick_invoke_stub+756) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #12 pc 0000000000474bf5  /apex/com.android.art/lib64/libart.so (art::ArtMethod::Invoke(art::Thread*, unsigned int*, unsigned int, art::JValue*, char const*)+181) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #13 pc 00000000008c5cc3  /apex/com.android.art/lib64/libart.so (art::Thread::CreateCallback(void*)+1427) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #14 pc 00000000008c5725  /apex/com.android.art/lib64/libart.so (art::Thread::CreateCallbackWithUffdGc(void*)+5) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #15 pc 000000000006d62a  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+58) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #16 pc 0000000000060348  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+56) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+pid: 3396, tid: 3408, name: binder:3396_1  >>> com.tabstudio.ide <<<
+      #00 pc 00000000000cd777  /apex/com.android.runtime/lib64/bionic/libc.so (__ioctl+7) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 0000000000068a48  /apex/com.android.runtime/lib64/bionic/libc.so (ioctl+216) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #02 pc 0000000000057f0c  /system/lib64/libbinder.so (android::IPCThreadState::joinThreadPool(bool)+380) (BuildId: 9787e923a8c93596d3c1f09a7fc9023a)
+      #03 pc 0000000000070437  /system/lib64/libbinder.so (android::PoolThread::threadLoop()+23) (BuildId: 9787e923a8c93596d3c1f09a7fc9023a)
+      #04 pc 0000000000016936  /system/lib64/libutils.so (android::Thread::_threadLoop(void*)+166) (BuildId: f128755c26519c61f5cd218576eff285)
+      #05 pc 00000000000f3352  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell(void*)+146) (BuildId: 74e467b22a4c3107eac51948743c9977)
+      #06 pc 000000000006d62a  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+58) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #07 pc 0000000000060348  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+56) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+pid: 3396, tid: 3410, name: binder:3396_2  >>> com.tabstudio.ide <<<
+      #00 pc 00000000000cd777  /apex/com.android.runtime/lib64/bionic/libc.so (__ioctl+7) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 0000000000068a48  /apex/com.android.runtime/lib64/bionic/libc.so (ioctl+216) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #02 pc 0000000000057f0c  /system/lib64/libbinder.so (android::IPCThreadState::joinThreadPool(bool)+380) (BuildId: 9787e923a8c93596d3c1f09a7fc9023a)
+      #03 pc 0000000000070437  /system/lib64/libbinder.so (android::PoolThread::threadLoop()+23) (BuildId: 9787e923a8c93596d3c1f09a7fc9023a)
+      #04 pc 0000000000016936  /system/lib64/libutils.so (android::Thread::_threadLoop(void*)+166) (BuildId: f128755c26519c61f5cd218576eff285)
+      #05 pc 00000000000f3352  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell(void*)+146) (BuildId: 74e467b22a4c3107eac51948743c9977)
+      #06 pc 000000000006d62a  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+58) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #07 pc 0000000000060348  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+56) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+pid: 3396, tid: 3411, name: binder:3396_3  >>> com.tabstudio.ide <<<
+      #00 pc 00000000000cd777  /apex/com.android.runtime/lib64/bionic/libc.so (__ioctl+7) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 0000000000068a48  /apex/com.android.runtime/lib64/bionic/libc.so (ioctl+216) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #02 pc 0000000000057f0c  /system/lib64/libbinder.so (android::IPCThreadState::joinThreadPool(bool)+380) (BuildId: 9787e923a8c93596d3c1f09a7fc9023a)
+      #03 pc 0000000000070437  /system/lib64/libbinder.so (android::PoolThread::threadLoop()+23) (BuildId: 9787e923a8c93596d3c1f09a7fc9023a)
+      #04 pc 0000000000016936  /system/lib64/libutils.so (android::Thread::_threadLoop(void*)+166) (BuildId: f128755c26519c61f5cd218576eff285)
+      #05 pc 00000000000f3352  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell(void*)+146) (BuildId: 74e467b22a4c3107eac51948743c9977)
+      #06 pc 000000000006d62a  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+58) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #07 pc 0000000000060348  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+56) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+pid: 3396, tid: 3422, name: Profile Saver  >>> com.tabstudio.ide <<<
+      #00 pc 0000000000081f58  /apex/com.android.runtime/lib64/bionic/libc.so (syscall+24) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 000000000047fd6b  /apex/com.android.art/lib64/libart.so (art::ConditionVariable::WaitHoldingLocks(art::Thread*)+107) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #02 pc 00000000006510aa  /apex/com.android.art/lib64/libart.so (art::ProfileSaver::RunProfileSaverThread(void*)+2730) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #03 pc 000000000006d62a  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+58) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #04 pc 0000000000060348  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+56) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+pid: 3396, tid: 3425, name: SGen worker  >>> com.tabstudio.ide <<<
+      #00 pc 0000000000081f58  /apex/com.android.runtime/lib64/bionic/libc.so (syscall+24) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 000000000005f07a  /apex/com.android.runtime/lib64/bionic/libc.so (__futex_wait_ex(void volatile*, bool, int, bool, timespec const*)+154) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #02 pc 000000000006c8a2  /apex/com.android.runtime/lib64/bionic/libc.so (pthread_cond_wait+50) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #03 pc 00000000003123d2  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> mono_os_cond_wait	/__w/1/s/src/runtime/src/mono/mono/sgen/../../mono/utils/mono-os-mutex.h:219
+        -> get_work	/__w/1/s/src/runtime/src/mono/mono/sgen/sgen-thread-pool.c:164
+        -> thread_func	/__w/1/s/src/runtime/src/mono/mono/sgen/sgen-thread-pool.c:195
+      #04 pc 000000000006d62a  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+58) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #05 pc 0000000000060348  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+56) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+pid: 3396, tid: 3426, name: Finalizer  >>> com.tabstudio.ide <<<
+      #00 pc 0000000000081f58  /apex/com.android.runtime/lib64/bionic/libc.so (syscall+24) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 000000000005f07a  /apex/com.android.runtime/lib64/bionic/libc.so (__futex_wait_ex(void volatile*, bool, int, bool, timespec const*)+154) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #02 pc 000000000007135f  /apex/com.android.runtime/lib64/bionic/libc.so (sem_wait+95) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #03 pc 00000000002bb594  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> mono_os_sem_wait	/__w/1/s/src/runtime/src/mono/mono/metadata/../../mono/utils/mono-os-semaphore.h:204
+        -> mono_coop_sem_wait	/__w/1/s/src/runtime/src/mono/mono/metadata/../../mono/utils/mono-coop-semaphore.h:41
+        -> finalizer_thread	/__w/1/s/src/runtime/src/mono/mono/metadata/gc.c:838
+      #04 pc 0000000000296a5d  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> start_wrapper_internal	/__w/1/s/src/runtime/src/mono/mono/metadata/threads.c:1208
+        -> start_wrapper	/__w/1/s/src/runtime/src/mono/mono/metadata/threads.c:1276
+      #05 pc 000000000006d62a  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+58) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #06 pc 0000000000060348  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+56) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+pid: 3396, tid: 3447, name: RenderThread  >>> com.tabstudio.ide <<<
+      #00 pc 00000000000ce75a  /apex/com.android.runtime/lib64/bionic/libc.so (__epoll_pwait+10) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 00000000000130c4  /system/lib64/libutils.so (android::Looper::pollOnce(int, int*, int*, void**)+308) (BuildId: f128755c26519c61f5cd218576eff285)
+      #02 pc 0000000000266268  /system/lib64/libhwui.so (android::uirenderer::ThreadBase::waitForWork()+152) (BuildId: 35d37af4b0a83cc5d3a054e91ea6e9af)
+      #03 pc 00000000002b43d3  /system/lib64/libhwui.so (android::uirenderer::renderthread::RenderThread::threadLoop()+467) (BuildId: 35d37af4b0a83cc5d3a054e91ea6e9af)
+      #04 pc 0000000000016936  /system/lib64/libutils.so (android::Thread::_threadLoop(void*)+166) (BuildId: f128755c26519c61f5cd218576eff285)
+      #05 pc 000000000006d62a  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+58) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #06 pc 0000000000060348  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+56) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+pid: 3396, tid: 3480, name: Thread-3  >>> com.tabstudio.ide <<<
+      #00 pc 00000000000ce157  /apex/com.android.runtime/lib64/bionic/libc.so (__rt_sigsuspend+7) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 000000000007213c  /apex/com.android.runtime/lib64/bionic/libc.so (sigsuspend+76) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #02 pc 00000000002138df  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> suspend_signal_handler	/__w/1/s/src/runtime/src/mono/mono/utils/mono-threads-posix-signals.c:200
+      #03 pc 0000000000081d90  /apex/com.android.runtime/lib64/bionic/libc.so (__restore_rt+0) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #04 pc 00000000000cd476  /apex/com.android.runtime/lib64/bionic/libc.so (read+6) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #05 pc 00000000000e9e6f  /vendor/lib64/libOpenglSystemCommon.so (qemu_pipe_read+15) (BuildId: eb699e20d301d300bc53e34a16755362)
+      #06 pc 00000000000e8a8e  /vendor/lib64/libOpenglSystemCommon.so (QemuPipeStream::commitBufferAndReadFully(unsigned long, void*, unsigned long)+366) (BuildId: eb699e20d301d300bc53e34a16755362)
+      #07 pc 0000000000071ce7  /vendor/lib64/libGLESv2_enc.so ((anonymous namespace)::glFinishRoundTrip_enc(void*)+279) (BuildId: cad4d9b6f0ed175f224d403d48dddb9b)
+      #08 pc 000000000001137f  /vendor/lib64/egl/libEGL_emulation.so (eglWaitGL+47) (BuildId: f8d403ca4d56b6982f0f589babfb21e5)
+      #09 pc 00000000000cedca  <anonymous:49543000>
+pid: 3396, tid: 3481, name: .NET Timer  >>> com.tabstudio.ide <<<
+      #00 pc 00000000000ce157  /apex/com.android.runtime/lib64/bionic/libc.so (__rt_sigsuspend+7) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 000000000007213c  /apex/com.android.runtime/lib64/bionic/libc.so (sigsuspend+76) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #02 pc 00000000002138df  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> suspend_signal_handler	/__w/1/s/src/runtime/src/mono/mono/utils/mono-threads-posix-signals.c:200
+      #03 pc 0000000000081d90  /apex/com.android.runtime/lib64/bionic/libc.so (__restore_rt+0) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #04 pc 0000000000081f57  /apex/com.android.runtime/lib64/bionic/libc.so (syscall+23) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #05 pc 000000000005f07a  /apex/com.android.runtime/lib64/bionic/libc.so (__futex_wait_ex(void volatile*, bool, int, bool, timespec const*)+154) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #06 pc 000000000006c92b  /apex/com.android.runtime/lib64/bionic/libc.so (pthread_cond_timedwait+91) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #07 pc 0000000000014aa7  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libSystem.Native.so (SystemNative_LowLevelMonitor_TimedWait+119) (BuildId: 3cfdfa06e630990e302938364c954a61d9f36424)
+        -> SystemNative_LowLevelMonitor_TimedWait	/__w/1/s/src/runtime/src/native/libs/System.Native/pal_threading.c:193
+      #08 pc 000000000000242e  <anonymous:45449000>
+pid: 3396, tid: 3487, name: .NET TP Worker  >>> com.tabstudio.ide <<<
+      #00 pc 00000000000ce157  /apex/com.android.runtime/lib64/bionic/libc.so (__rt_sigsuspend+7) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 000000000007213c  /apex/com.android.runtime/lib64/bionic/libc.so (sigsuspend+76) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #02 pc 00000000002138df  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> suspend_signal_handler	/__w/1/s/src/runtime/src/mono/mono/utils/mono-threads-posix-signals.c:200
+      #03 pc 0000000000081d90  /apex/com.android.runtime/lib64/bionic/libc.so (__restore_rt+0) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #04 pc 0000000000081f57  /apex/com.android.runtime/lib64/bionic/libc.so (syscall+23) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #05 pc 000000000005f07a  /apex/com.android.runtime/lib64/bionic/libc.so (__futex_wait_ex(void volatile*, bool, int, bool, timespec const*)+154) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #06 pc 000000000006c92b  /apex/com.android.runtime/lib64/bionic/libc.so (pthread_cond_timedwait+91) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #07 pc 00000000002090e2  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> mono_os_cond_timedwait	/__w/1/s/src/runtime/src/mono/mono/utils/mono-os-mutex.c:75
+      #08 pc 000000000020cd44  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> mono_coop_cond_timedwait	/__w/1/s/src/runtime/src/mono/mono/utils/../../mono/utils/mono-coop-mutex.h:103
+        -> mono_lifo_semaphore_timed_wait	/__w/1/s/src/runtime/src/mono/mono/utils/lifo-semaphore.c:55
+      #09 pc 0000000000011796  <anonymous:4087c000>
+pid: 3396, tid: 3489, name: .NET TP Gate  >>> com.tabstudio.ide <<<
+      #00 pc 00000000000ce157  /apex/com.android.runtime/lib64/bionic/libc.so (__rt_sigsuspend+7) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 000000000007213c  /apex/com.android.runtime/lib64/bionic/libc.so (sigsuspend+76) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #02 pc 00000000002138df  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> suspend_signal_handler	/__w/1/s/src/runtime/src/mono/mono/utils/mono-threads-posix-signals.c:200
+      #03 pc 0000000000081d90  /apex/com.android.runtime/lib64/bionic/libc.so (__restore_rt+0) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #04 pc 0000000000081f57  /apex/com.android.runtime/lib64/bionic/libc.so (syscall+23) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #05 pc 000000000005f07a  /apex/com.android.runtime/lib64/bionic/libc.so (__futex_wait_ex(void volatile*, bool, int, bool, timespec const*)+154) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #06 pc 000000000006c92b  /apex/com.android.runtime/lib64/bionic/libc.so (pthread_cond_timedwait+91) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #07 pc 0000000000014aa7  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libSystem.Native.so (SystemNative_LowLevelMonitor_TimedWait+119) (BuildId: 3cfdfa06e630990e302938364c954a61d9f36424)
+        -> SystemNative_LowLevelMonitor_TimedWait	/__w/1/s/src/runtime/src/native/libs/System.Native/pal_threading.c:193
+      #08 pc 000000000000242e  <anonymous:45449000>
+pid: 3396, tid: 3491, name: .NET TP Worker  >>> com.tabstudio.ide <<<
+      #00 pc 00000000000ce157  /apex/com.android.runtime/lib64/bionic/libc.so (__rt_sigsuspend+7) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 000000000007213c  /apex/com.android.runtime/lib64/bionic/libc.so (sigsuspend+76) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #02 pc 00000000002138df  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> suspend_signal_handler	/__w/1/s/src/runtime/src/mono/mono/utils/mono-threads-posix-signals.c:200
+      #03 pc 0000000000081d90  /apex/com.android.runtime/lib64/bionic/libc.so (__restore_rt+0) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #04 pc 0000000000081f57  /apex/com.android.runtime/lib64/bionic/libc.so (syscall+23) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #05 pc 000000000005f07a  /apex/com.android.runtime/lib64/bionic/libc.so (__futex_wait_ex(void volatile*, bool, int, bool, timespec const*)+154) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #06 pc 000000000006c92b  /apex/com.android.runtime/lib64/bionic/libc.so (pthread_cond_timedwait+91) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #07 pc 00000000002090e2  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> mono_os_cond_timedwait	/__w/1/s/src/runtime/src/mono/mono/utils/mono-os-mutex.c:75
+      #08 pc 000000000020cd44  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> mono_coop_cond_timedwait	/__w/1/s/src/runtime/src/mono/mono/utils/../../mono/utils/mono-coop-mutex.h:103
+        -> mono_lifo_semaphore_timed_wait	/__w/1/s/src/runtime/src/mono/mono/utils/lifo-semaphore.c:55
+      #09 pc 0000000000011796  <anonymous:4087c000>
+pid: 3396, tid: 3643, name: .NET TP Worker  >>> com.tabstudio.ide <<<
+      #00 pc 00000000000ce157  /apex/com.android.runtime/lib64/bionic/libc.so (__rt_sigsuspend+7) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 000000000007213c  /apex/com.android.runtime/lib64/bionic/libc.so (sigsuspend+76) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #02 pc 00000000002138df  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> suspend_signal_handler	/__w/1/s/src/runtime/src/mono/mono/utils/mono-threads-posix-signals.c:200
+      #03 pc 0000000000081d90  /apex/com.android.runtime/lib64/bionic/libc.so (__restore_rt+0) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #04 pc 0000000000081f57  /apex/com.android.runtime/lib64/bionic/libc.so (syscall+23) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #05 pc 000000000005f07a  /apex/com.android.runtime/lib64/bionic/libc.so (__futex_wait_ex(void volatile*, bool, int, bool, timespec const*)+154) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #06 pc 000000000006c92b  /apex/com.android.runtime/lib64/bionic/libc.so (pthread_cond_timedwait+91) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #07 pc 00000000002090e2  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> mono_os_cond_timedwait	/__w/1/s/src/runtime/src/mono/mono/utils/mono-os-mutex.c:75
+      #08 pc 000000000020cd44  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> mono_coop_cond_timedwait	/__w/1/s/src/runtime/src/mono/mono/utils/../../mono/utils/mono-coop-mutex.h:103
+        -> mono_lifo_semaphore_timed_wait	/__w/1/s/src/runtime/src/mono/mono/utils/lifo-semaphore.c:55
+      #09 pc 0000000000011796  <anonymous:4087c000>
+pid: 3396, tid: 3811, name: binder:3396_4  >>> com.tabstudio.ide <<<
+      #00 pc 00000000000cd777  /apex/com.android.runtime/lib64/bionic/libc.so (__ioctl+7) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 0000000000068a48  /apex/com.android.runtime/lib64/bionic/libc.so (ioctl+216) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #02 pc 0000000000057f0c  /system/lib64/libbinder.so (android::IPCThreadState::joinThreadPool(bool)+380) (BuildId: 9787e923a8c93596d3c1f09a7fc9023a)
+      #03 pc 0000000000070437  /system/lib64/libbinder.so (android::PoolThread::threadLoop()+23) (BuildId: 9787e923a8c93596d3c1f09a7fc9023a)
+      #04 pc 0000000000016936  /system/lib64/libutils.so (android::Thread::_threadLoop(void*)+166) (BuildId: f128755c26519c61f5cd218576eff285)
+      #05 pc 00000000000f3352  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell(void*)+146) (BuildId: 74e467b22a4c3107eac51948743c9977)
+      #06 pc 000000000006d62a  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+58) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #07 pc 0000000000060348  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+56) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+pid: 3396, tid: 3896, name: SurfaceSyncGrou  >>> com.tabstudio.ide <<<
+      #00 pc 00000000000ce75a  /apex/com.android.runtime/lib64/bionic/libc.so (__epoll_pwait+10) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 00000000000130c4  /system/lib64/libutils.so (android::Looper::pollOnce(int, int*, int*, void**)+308) (BuildId: f128755c26519c61f5cd218576eff285)
+      #02 pc 00000000001825e3  /system/lib64/libandroid_runtime.so (android::android_os_MessageQueue_nativePollOnce(_JNIEnv*, _jobject*, long, int)+35) (BuildId: 74e467b22a4c3107eac51948743c9977)
+      #03 pc 00000000001f99e3  /system/framework/x86_64/boot-framework.oat (art_jni_trampoline+131) (BuildId: bc047a67a4076b80992fbdfabdfba12acbd1924a)
+      #04 pc 000000000053127b  /system/framework/x86_64/boot-framework.oat (android.os.MessageQueue.next+283) (BuildId: bc047a67a4076b80992fbdfabdfba12acbd1924a)
+      #05 pc 000000000052ea7c  /system/framework/x86_64/boot-framework.oat (android.os.Looper.loopOnce+140) (BuildId: bc047a67a4076b80992fbdfabdfba12acbd1924a)
+      #06 pc 000000000052e93b  /system/framework/x86_64/boot-framework.oat (android.os.Looper.loop+235) (BuildId: bc047a67a4076b80992fbdfabdfba12acbd1924a)
+      #07 pc 000000000052dc37  /system/framework/x86_64/boot-framework.oat (android.os.HandlerThread.run+503) (BuildId: bc047a67a4076b80992fbdfabdfba12acbd1924a)
+      #08 pc 0000000000212154  /apex/com.android.art/lib64/libart.so (art_quick_invoke_stub+756) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #09 pc 0000000000474bf5  /apex/com.android.art/lib64/libart.so (art::ArtMethod::Invoke(art::Thread*, unsigned int*, unsigned int, art::JValue*, char const*)+181) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #10 pc 00000000008c5cc3  /apex/com.android.art/lib64/libart.so (art::Thread::CreateCallback(void*)+1427) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #11 pc 00000000008c5725  /apex/com.android.art/lib64/libart.so (art::Thread::CreateCallbackWithUffdGc(void*)+5) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #12 pc 000000000006d62a  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+58) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #13 pc 0000000000060348  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+56) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+pid: 3396, tid: 3897, name: binder:3396_3  >>> com.tabstudio.ide <<<
+      #00 pc 0000000000081f58  /apex/com.android.runtime/lib64/bionic/libc.so (syscall+24) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 000000000005f07a  /apex/com.android.runtime/lib64/bionic/libc.so (__futex_wait_ex(void volatile*, bool, int, bool, timespec const*)+154) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #02 pc 000000000006c8a2  /apex/com.android.runtime/lib64/bionic/libc.so (pthread_cond_wait+50) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #03 pc 00000000000acf6e  /system/lib64/libc++.so (std::__1::condition_variable::wait(std::__1::unique_lock<std::__1::mutex>&)+14) (BuildId: 756a4b12135b6afbd218ce56105fca791f3c52be)
+      #04 pc 00000000000f67fe  /system/lib64/libgui.so (android::AsyncWorker::run()+126) (BuildId: f7b12340ee108e614f6063a28a7d8e9b)
+      #05 pc 00000000000a475b  /system/lib64/libgui.so (void* std::__1::__thread_proxy[abi:nn180000]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (android::AsyncWorker::*)(), android::AsyncWorker*>>(void*)+43) (BuildId: f7b12340ee108e614f6063a28a7d8e9b)
+      #06 pc 000000000006d62a  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+58) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #07 pc 0000000000060348  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+56) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+pid: 3396, tid: 3898, name: hwuiTask0  >>> com.tabstudio.ide <<<
+      #00 pc 0000000000081f58  /apex/com.android.runtime/lib64/bionic/libc.so (syscall+24) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 000000000005f07a  /apex/com.android.runtime/lib64/bionic/libc.so (__futex_wait_ex(void volatile*, bool, int, bool, timespec const*)+154) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #02 pc 000000000006c8a2  /apex/com.android.runtime/lib64/bionic/libc.so (pthread_cond_wait+50) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #03 pc 00000000000acf6e  /system/lib64/libc++.so (std::__1::condition_variable::wait(std::__1::unique_lock<std::__1::mutex>&)+14) (BuildId: 756a4b12135b6afbd218ce56105fca791f3c52be)
+      #04 pc 000000000026e59e  /system/lib64/libhwui.so (void* std::__1::__thread_proxy[abi:nn180000]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, android::uirenderer::CommonPool::CommonPool()::$_0>>(void*) (.__uniq.99815402873434996937524029735804459536)+318) (BuildId: 35d37af4b0a83cc5d3a054e91ea6e9af)
+      #05 pc 000000000006d62a  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+58) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #06 pc 0000000000060348  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+56) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+pid: 3396, tid: 3899, name: hwuiTask1  >>> com.tabstudio.ide <<<
+      #00 pc 0000000000081f58  /apex/com.android.runtime/lib64/bionic/libc.so (syscall+24) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 000000000005f07a  /apex/com.android.runtime/lib64/bionic/libc.so (__futex_wait_ex(void volatile*, bool, int, bool, timespec const*)+154) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #02 pc 000000000006c8a2  /apex/com.android.runtime/lib64/bionic/libc.so (pthread_cond_wait+50) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #03 pc 00000000000acf6e  /system/lib64/libc++.so (std::__1::condition_variable::wait(std::__1::unique_lock<std::__1::mutex>&)+14) (BuildId: 756a4b12135b6afbd218ce56105fca791f3c52be)
+      #04 pc 000000000026e59e  /system/lib64/libhwui.so (void* std::__1::__thread_proxy[abi:nn180000]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, android::uirenderer::CommonPool::CommonPool()::$_0>>(void*) (.__uniq.99815402873434996937524029735804459536)+318) (BuildId: 35d37af4b0a83cc5d3a054e91ea6e9af)
+      #05 pc 000000000006d62a  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+58) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #06 pc 0000000000060348  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+56) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+pid: 3396, tid: 3938, name: .NET TP Worker  >>> com.tabstudio.ide <<<
+      #00 pc 00000000000ce157  /apex/com.android.runtime/lib64/bionic/libc.so (__rt_sigsuspend+7) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 000000000007213c  /apex/com.android.runtime/lib64/bionic/libc.so (sigsuspend+76) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #02 pc 00000000002138df  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> suspend_signal_handler	/__w/1/s/src/runtime/src/mono/mono/utils/mono-threads-posix-signals.c:200
+      #03 pc 0000000000081d90  /apex/com.android.runtime/lib64/bionic/libc.so (__restore_rt+0) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #04 pc 0000000000081f57  /apex/com.android.runtime/lib64/bionic/libc.so (syscall+23) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #05 pc 000000000005f07a  /apex/com.android.runtime/lib64/bionic/libc.so (__futex_wait_ex(void volatile*, bool, int, bool, timespec const*)+154) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #06 pc 000000000006c92b  /apex/com.android.runtime/lib64/bionic/libc.so (pthread_cond_timedwait+91) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #07 pc 00000000002090e2  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> mono_os_cond_timedwait	/__w/1/s/src/runtime/src/mono/mono/utils/mono-os-mutex.c:75
+      #08 pc 000000000020cd44  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> mono_coop_cond_timedwait	/__w/1/s/src/runtime/src/mono/mono/utils/../../mono/utils/mono-coop-mutex.h:103
+        -> mono_lifo_semaphore_timed_wait	/__w/1/s/src/runtime/src/mono/mono/utils/lifo-semaphore.c:55
+      #09 pc 0000000000011796  <anonymous:4087c000>
+pid: 3396, tid: 4043, name: binder:3396_5  >>> com.tabstudio.ide <<<
+      #00 pc 00000000000cd777  /apex/com.android.runtime/lib64/bionic/libc.so (__ioctl+7) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 0000000000068a48  /apex/com.android.runtime/lib64/bionic/libc.so (ioctl+216) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #02 pc 0000000000057f0c  /system/lib64/libbinder.so (android::IPCThreadState::joinThreadPool(bool)+380) (BuildId: 9787e923a8c93596d3c1f09a7fc9023a)
+      #03 pc 0000000000070437  /system/lib64/libbinder.so (android::PoolThread::threadLoop()+23) (BuildId: 9787e923a8c93596d3c1f09a7fc9023a)
+      #04 pc 0000000000016936  /system/lib64/libutils.so (android::Thread::_threadLoop(void*)+166) (BuildId: f128755c26519c61f5cd218576eff285)
+      #05 pc 00000000000f3352  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell(void*)+146) (BuildId: 74e467b22a4c3107eac51948743c9977)
+      #06 pc 000000000006d62a  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+58) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #07 pc 0000000000060348  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+56) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+pid: 3396, tid: 4186, name: .NET TP Worker  >>> com.tabstudio.ide <<<
+      #00 pc 00000000000ce157  /apex/com.android.runtime/lib64/bionic/libc.so (__rt_sigsuspend+7) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 000000000007213c  /apex/com.android.runtime/lib64/bionic/libc.so (sigsuspend+76) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #02 pc 00000000002138df  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> suspend_signal_handler	/__w/1/s/src/runtime/src/mono/mono/utils/mono-threads-posix-signals.c:200
+      #03 pc 0000000000081d90  /apex/com.android.runtime/lib64/bionic/libc.so (__restore_rt+0) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #04 pc 0000000000081f57  /apex/com.android.runtime/lib64/bionic/libc.so (syscall+23) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #05 pc 000000000005f07a  /apex/com.android.runtime/lib64/bionic/libc.so (__futex_wait_ex(void volatile*, bool, int, bool, timespec const*)+154) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #06 pc 000000000006c92b  /apex/com.android.runtime/lib64/bionic/libc.so (pthread_cond_timedwait+91) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #07 pc 00000000002090e2  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> mono_os_cond_timedwait	/__w/1/s/src/runtime/src/mono/mono/utils/mono-os-mutex.c:75
+      #08 pc 000000000020cd44  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> mono_coop_cond_timedwait	/__w/1/s/src/runtime/src/mono/mono/utils/../../mono/utils/mono-coop-mutex.h:103
+        -> mono_lifo_semaphore_timed_wait	/__w/1/s/src/runtime/src/mono/mono/utils/lifo-semaphore.c:55
+      #09 pc 0000000000011796  <anonymous:4087c000>
+pid: 3396, tid: 4205, name: .NET TP Worker  >>> com.tabstudio.ide <<<
+      #00 pc 00000000000ce157  /apex/com.android.runtime/lib64/bionic/libc.so (__rt_sigsuspend+7) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 000000000007213c  /apex/com.android.runtime/lib64/bionic/libc.so (sigsuspend+76) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #02 pc 00000000002138df  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> suspend_signal_handler	/__w/1/s/src/runtime/src/mono/mono/utils/mono-threads-posix-signals.c:200
+      #03 pc 0000000000081d90  /apex/com.android.runtime/lib64/bionic/libc.so (__restore_rt+0) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #04 pc 0000000000081f57  /apex/com.android.runtime/lib64/bionic/libc.so (syscall+23) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #05 pc 000000000005f07a  /apex/com.android.runtime/lib64/bionic/libc.so (__futex_wait_ex(void volatile*, bool, int, bool, timespec const*)+154) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #06 pc 000000000006c92b  /apex/com.android.runtime/lib64/bionic/libc.so (pthread_cond_timedwait+91) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #07 pc 00000000002090e2  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> mono_os_cond_timedwait	/__w/1/s/src/runtime/src/mono/mono/utils/mono-os-mutex.c:75
+      #08 pc 000000000020cd44  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> mono_coop_cond_timedwait	/__w/1/s/src/runtime/src/mono/mono/utils/../../mono/utils/mono-coop-mutex.h:103
+        -> mono_lifo_semaphore_timed_wait	/__w/1/s/src/runtime/src/mono/mono/utils/lifo-semaphore.c:55
+      #09 pc 0000000000011796  <anonymous:4087c000>
+pid: 3396, tid: 4339, name: .NET Sockets  >>> com.tabstudio.ide <<<
+      #00 pc 00000000000ce157  /apex/com.android.runtime/lib64/bionic/libc.so (__rt_sigsuspend+7) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 000000000007213c  /apex/com.android.runtime/lib64/bionic/libc.so (sigsuspend+76) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #02 pc 00000000002138df  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> suspend_signal_handler	/__w/1/s/src/runtime/src/mono/mono/utils/mono-threads-posix-signals.c:200
+      #03 pc 0000000000081d90  /apex/com.android.runtime/lib64/bionic/libc.so (__restore_rt+0) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #04 pc 00000000000ce759  /apex/com.android.runtime/lib64/bionic/libc.so (__epoll_pwait+9) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #05 pc 0000000000011cc1  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libSystem.Native.so (SystemNative_WaitForSocketEvents+81) (BuildId: 3cfdfa06e630990e302938364c954a61d9f36424)
+        -> WaitForSocketEventsInner	/__w/1/s/src/runtime/src/native/libs/System.Native/pal_networking.c:3197
+        -> SystemNative_WaitForSocketEvents	/__w/1/s/src/runtime/src/native/libs/System.Native/pal_networking.c:3523
+      #06 pc 0000000000ef9536  <anonymous:49543000>
+pid: 3396, tid: 4348, name: InteractionJank  >>> com.tabstudio.ide <<<
+      #00 pc 00000000000ce75a  /apex/com.android.runtime/lib64/bionic/libc.so (__epoll_pwait+10) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 00000000000130c4  /system/lib64/libutils.so (android::Looper::pollOnce(int, int*, int*, void**)+308) (BuildId: f128755c26519c61f5cd218576eff285)
+      #02 pc 00000000001825e3  /system/lib64/libandroid_runtime.so (android::android_os_MessageQueue_nativePollOnce(_JNIEnv*, _jobject*, long, int)+35) (BuildId: 74e467b22a4c3107eac51948743c9977)
+      #03 pc 00000000001f99e3  /system/framework/x86_64/boot-framework.oat (art_jni_trampoline+131) (BuildId: bc047a67a4076b80992fbdfabdfba12acbd1924a)
+      #04 pc 000000000053127b  /system/framework/x86_64/boot-framework.oat (android.os.MessageQueue.next+283) (BuildId: bc047a67a4076b80992fbdfabdfba12acbd1924a)
+      #05 pc 000000000052ea7c  /system/framework/x86_64/boot-framework.oat (android.os.Looper.loopOnce+140) (BuildId: bc047a67a4076b80992fbdfabdfba12acbd1924a)
+      #06 pc 000000000052e93b  /system/framework/x86_64/boot-framework.oat (android.os.Looper.loop+235) (BuildId: bc047a67a4076b80992fbdfabdfba12acbd1924a)
+      #07 pc 000000000052dc37  /system/framework/x86_64/boot-framework.oat (android.os.HandlerThread.run+503) (BuildId: bc047a67a4076b80992fbdfabdfba12acbd1924a)
+      #08 pc 0000000000212154  /apex/com.android.art/lib64/libart.so (art_quick_invoke_stub+756) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #09 pc 0000000000474bf5  /apex/com.android.art/lib64/libart.so (art::ArtMethod::Invoke(art::Thread*, unsigned int*, unsigned int, art::JValue*, char const*)+181) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #10 pc 00000000008c5cc3  /apex/com.android.art/lib64/libart.so (art::Thread::CreateCallback(void*)+1427) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #11 pc 00000000008c5725  /apex/com.android.art/lib64/libart.so (art::Thread::CreateCallbackWithUffdGc(void*)+5) (BuildId: 62338b1c62e3991543c9b8b8bae2b361)
+      #12 pc 000000000006d62a  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+58) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #13 pc 0000000000060348  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+56) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+pid: 3396, tid: 4361, name: binder:3396_6  >>> com.tabstudio.ide <<<
+      #00 pc 00000000000cd777  /apex/com.android.runtime/lib64/bionic/libc.so (__ioctl+7) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #01 pc 0000000000068a48  /apex/com.android.runtime/lib64/bionic/libc.so (ioctl+216) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #02 pc 0000000000057f0c  /system/lib64/libbinder.so (android::IPCThreadState::joinThreadPool(bool)+380) (BuildId: 9787e923a8c93596d3c1f09a7fc9023a)
+      #03 pc 0000000000070437  /system/lib64/libbinder.so (android::PoolThread::threadLoop()+23) (BuildId: 9787e923a8c93596d3c1f09a7fc9023a)
+      #04 pc 0000000000016936  /system/lib64/libutils.so (android::Thread::_threadLoop(void*)+166) (BuildId: f128755c26519c61f5cd218576eff285)
+      #05 pc 00000000000f3352  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::javaThreadShell(void*)+146) (BuildId: 74e467b22a4c3107eac51948743c9977)
+      #06 pc 000000000006d62a  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+58) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+      #07 pc 0000000000060348  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+56) (BuildId: eb58b4d427279994f00c0e1818477e4f)

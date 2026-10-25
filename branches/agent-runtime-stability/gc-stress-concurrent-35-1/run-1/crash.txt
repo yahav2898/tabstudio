@@ -1,0 +1,32 @@
+10-25 12:24:11.195  1126  3120 D ForcePeakRefreshRateCtr: DEFAULT_REFRESH_RATE : 60.0 mPeakRefreshRate : 60.000004
+10-25 12:24:11.233  1126  1196 D RefreshRatePrefCtr: DEFAULT_REFRESH_RATE : 60.0 mPeakRefreshRate : 60.0
+10-25 12:24:11.399  1126  3120 D RefreshRatePrefCtr: DEFAULT_REFRESH_RATE : 60.0 mPeakRefreshRate : 60.0
+10-25 12:24:11.736  1126  1255 D ForcePeakRefreshRateCtr: DEFAULT_REFRESH_RATE : 60.0 mPeakRefreshRate : 60.000004
+10-25 12:24:12.149  1126  1255 D RefreshRatePrefCtr: DEFAULT_REFRESH_RATE : 60.0 mPeakRefreshRate : 60.0
+10-25 12:24:21.863  1126  1255 D RefreshRatePrefCtr: DEFAULT_REFRESH_RATE : 60.0 mPeakRefreshRate : 60.0
+10-25 12:24:52.127  3396  4347 E m.tabstudio.ide: * Assertion at /__w/1/s/src/runtime/src/mono/mono/sgen/sgen-debug.c:267, condition `!missing_remsets' not met
+10-25 12:24:52.128  3396  4347 F monodroid: * Assertion at /__w/1/s/src/runtime/src/mono/mono/sgen/sgen-debug.c:267, condition `!missing_remsets' not met
+10-25 12:24:52.128  3396  4347 F monodroid: Abort at mono-log-adapter.cc:46:3 ('static void xamarin::android::internal::MonodroidRuntime::mono_log_handler(const char *, const char *, const char *, mono_bool, void *)')
+10-25 12:24:52.129  3396  4347 F libc    : Fatal signal 6 (SIGABRT), code -1 (SI_QUEUE) in tid 4347 (.NET TP Worker), pid 3396 (m.tabstudio.ide)
+10-25 12:24:54.082  4419  4419 F DEBUG   : Abort message: '* Assertion at /__w/1/s/src/runtime/src/mono/mono/sgen/sgen-debug.c:267, condition `!missing_remsets' not met'
+
+10-25 12:24:54.082  4419  4419 F DEBUG   : *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+10-25 12:24:54.082  4419  4419 F DEBUG   : Build fingerprint: 'google/sdk_gphone64_x86_64/emu64xa:15/AE3A.240806.043/12960925:userdebug/dev-keys'
+10-25 12:24:54.082  4419  4419 F DEBUG   : Revision: '0'
+10-25 12:24:54.082  4419  4419 F DEBUG   : ABI: 'x86_64'
+10-25 12:24:54.082  4419  4419 F DEBUG   : Timestamp: 2026-10-25 12:24:52.451692741+0000
+10-25 12:24:54.082  4419  4419 F DEBUG   : Process uptime: 47s
+10-25 12:24:54.082  4419  4419 F DEBUG   : Cmdline: com.tabstudio.ide
+10-25 12:24:54.082  4419  4419 F DEBUG   : pid: 3396, tid: 4347, name: .NET TP Worker  >>> com.tabstudio.ide <<<
+10-25 12:24:54.082  4419  4419 F DEBUG   : uid: 10209
+10-25 12:24:54.082  4419  4419 F DEBUG   : signal 6 (SIGABRT), code -1 (SI_QUEUE), fault addr --------
+10-25 12:24:54.082  4419  4419 F DEBUG   : Abort message: '* Assertion at /__w/1/s/src/runtime/src/mono/mono/sgen/sgen-debug.c:267, condition `!missing_remsets' not met'
+10-25 12:24:54.082  4419  4419 F DEBUG   :     rax 0000000000000000  rbx 000076f6f5549a78  rcx 000076f9be71cb90  rdx 0000000000000006
+10-25 12:24:54.082  4419  4419 F DEBUG   :     r8  0000000000000000  r9  0000000000000000  r10 000076f6f5549a80  r11 0000000000000203
+10-25 12:24:54.082  4419  4419 F DEBUG   :     r12 000076f5f1a5a179  r13 000076f90a0e8530  r14 0000000000000d44  r15 00000000000010fb
+10-25 12:24:54.082  4419  4419 F DEBUG   :     rdi 0000000000000d44  rsi 00000000000010fb
+10-25 12:24:54.082  4419  4419 F DEBUG   :     rbp 000076f6f5549d60  rsp 000076f6f5549a70  rip 000076f9be71cb90
+10-25 12:24:54.082  4419  4419 F DEBUG   : 2 total frames
+10-25 12:24:54.082  4419  4419 F DEBUG   : backtrace:
+10-25 12:24:54.082  4419  4419 F DEBUG   :       #00 pc 000000000005cb90  /apex/com.android.runtime/lib64/bionic/libc.so (abort+192) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+10-25 12:24:54.082  4419  4419 F DEBUG   :       #01 pc 00000000000b30af  /data/app/~~tqWv0n8G0K3bWmz5vLq1Xg==/com.tabstudio.ide-1w6P_UFkaUEY_a4PAdJfow==/lib/x86_64/libmonodroid.so (xamarin::android::Helpers::abort_application(_LogCategories, char const*, bool, std::__ndk1::source_location)+767) (BuildId: d3370263a3d5aba8cc143ea0be7afdd2a4ce251e)

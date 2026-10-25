@@ -1,0 +1,7 @@
+10-25 12:32:09.249  6168  6168 F libc    : Fatal signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0xc in tid 6168 (m.tabstudio.ide), pid 6168 (m.tabstudio.ide)
+10-25 12:32:09.626  6312  6312 F DEBUG   : pid: 6168, tid: 6168, name: m.tabstudio.ide  >>> com.tabstudio.ide <<<
+10-25 12:32:09.626  6312  6312 F DEBUG   : signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x000000000000000c
+10-25 12:32:09.626  6312  6312 F DEBUG   :       #00 pc 0000000000248a97  /data/app/~~lfwQ1k0HtWmI2ybCHekZRQ==/com.tabstudio.ide-3k_cFXfr0sbs6ITvSRNYdA==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+        -> ves_icall_System_Array_GetLowerBoundInternal	/__w/1/s/src/runtime/src/mono/mono/metadata/icall.c:825
+        -> ves_icall_System_Array_GetLowerBoundInternal_raw	/__w/1/s/src/runtime/src/mono/mono/metadata/icall-def.h:132
+10-25 12:32:09.626  6312  6312 F DEBUG   :       #01 pc 0000000000038bc6  <anonymous:413e1000>
