@@ -102,12 +102,23 @@ public sealed partial class WorkspaceViewModel
 
     private async Task RunProjectSetupQueueAsync()
     {
-        do
+        try
         {
-            _setupRequested = false;
-            await SetUpProjectsAsync();
+            do
+            {
+                _setupRequested = false;
+                await SetUpProjectsAsync();
+            }
+            while (_setupRequested && SetUpProjectsWhenTheyOpen && !_disposed);
         }
-        while (_setupRequested && SetUpProjectsWhenTheyOpen && !_disposed);
+        finally
+        {
+            _setupTask = Task.CompletedTask;
+            if (!_disposed)
+            {
+                UpdateToolchainNotice();
+            }
+        }
     }
 
     /// <summary>Waits for setting the projects up to finish, so that F5 runs what it installed.</summary>
@@ -143,9 +154,10 @@ public sealed partial class WorkspaceViewModel
         _setup = cancellation;
         var token = cancellation.Token;
         var installed = new List<string>();
+        ProjectSetupText = "Checking project setup";
         try
         {
-            await _toolchains.EnsureStatusAsync();
+            await _toolchains.EnsureStatusAsync().WaitAsync(token);
             var current = CurrentToolchainProject();
             var projects = _toolchainProjects.OrderBy(item => ReferenceEquals(item, current) ? 0 : 1).Select(item => item.Project).ToList();
             foreach (var toolchain in ToolchainsToInstall(projects))

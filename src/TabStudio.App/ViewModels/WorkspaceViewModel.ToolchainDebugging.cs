@@ -32,6 +32,11 @@ public sealed partial class WorkspaceViewModel
     /// <param name="start">How the program starts.</param>
     private async Task DebugToolchainProjectAsync(ProjectInfo info, DebugStart start)
     {
+        if (!await SaveAllCoreAsync())
+        {
+            return;
+        }
+
         if (FindToolchainProject(info) is not { } item)
         {
             return;

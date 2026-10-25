@@ -87,7 +87,7 @@ public sealed class ProjectSetupTests
         await workspace.LoadAsync(repo.Path);
         await UiTestHelpers.WaitUntilAsync(() => workspace.ProjectSetupTask.IsCompleted, SetupTimeout, "npm install");
 
-        Assert.Contains("------ Setting up local: npm install ------", workspace.Output.Text, StringComparison.Ordinal);
+        Assert.Contains($"------ Setting up {Path.GetFileName(repo.Path)}: npm install ------", workspace.Output.Text, StringComparison.Ordinal);
         Assert.Contains("npm install: succeeded", workspace.Output.Text, StringComparison.Ordinal);
         Assert.True(Directory.Exists(repo.Resolve("node_modules/greeting")));
         Assert.Null(workspace.ToolchainNotice);
@@ -109,7 +109,7 @@ public sealed class ProjectSetupTests
         manifest.Document.Insert(at + "\"file:./greeting\"".Length, ", \"shout\": \"file:./shout\"");
         await workspace.SaveCommand.ExecuteAsync(null);
         await UiTestHelpers.WaitUntilAsync(() => workspace.ProjectSetupTask.IsCompleted && Directory.Exists(repo.Resolve("node_modules/shout")), SetupTimeout, "npm install after the save");
-        Assert.Equal(1, Occurrences(workspace.Output.Text, "------ Setting up local: npm install ------"));
+        Assert.Equal(1, Occurrences(workspace.Output.Text, $"------ Setting up {Path.GetFileName(repo.Path)}: npm install ------"));
         Assert.Equal(1, Occurrences(workspace.Output.Text, "npm install: succeeded"));
     }
 
@@ -193,7 +193,7 @@ public sealed class ProjectSetupTests
 
         await UiTestHelpers.WaitUntilAsync(() => workspace.ProjectSetupTask.IsCompleted, SetupTimeout, "both setup passes");
         Assert.Equal(2, File.ReadAllLines(repo.Resolve("installs.txt")).Length);
-        Assert.Equal(2, Occurrences(workspace.Output.Text, "------ Setting up mono:"));
+        Assert.Equal(2, Occurrences(workspace.Output.Text, $"------ Setting up {Path.GetFileName(repo.Path)}:"));
         Assert.DoesNotContain("------ Setting up app:", workspace.Output.Text, StringComparison.Ordinal);
         var member = workspace.StartupProjects.Single(p => p.Project.Name == "app");
         workspace.SetStartupProject(member.Project);

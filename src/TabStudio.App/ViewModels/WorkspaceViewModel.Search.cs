@@ -75,7 +75,7 @@ public sealed partial class WorkspaceViewModel
             yield return new SettingEntry(
                 $"Set projects up when they open: {(enabled ? "On" : "Off")}",
                 enabled ? "Install toolchains and project packages when opening a folder or repository" : "Offer toolchain and package installs instead of starting them automatically",
-                ["setup", "automatic", "install", "packages", "npm", "pip", "toolchain", "repository"],
+                ["setup", "project setup", "set up projects", "automatic", "install packages", "install", "packages", "npm", "pip", "toolchain", "repository"],
                 () => SetUpProjectsWhenTheyOpen == enabled,
                 () =>
                 {

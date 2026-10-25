@@ -410,13 +410,17 @@ public sealed partial class WorkspaceViewModel
 
     private async Task RunToolchainPlanAsync(ToolchainProject project, Func<RunPlan?> planner)
     {
+        if (!await SaveAllCoreAsync())
+        {
+            return;
+        }
+
         var toolchain = project.Toolchain;
         if (!await EnsureToolchainReadyAsync(toolchain, $"{project.Name} runs with {toolchain.Name}, which is not installed yet."))
         {
             return;
         }
 
-        await SaveAllCoreAsync();
         Output.Clear();
         SelectedPanel = BottomPanel.Output;
         IsBottomPanelVisible = true;
