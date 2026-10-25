@@ -118,7 +118,8 @@ public sealed partial class WorkspaceViewModel
         UpdateLinkStatus();
         foreach (var document in Documents)
         {
-            _ = document.AnalyzeNowAsync();
+            AttachWpfXaml(document);
+            _ = document.AnalyzeAgainAsync();
         }
     });
 

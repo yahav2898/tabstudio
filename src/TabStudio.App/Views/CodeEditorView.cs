@@ -80,9 +80,9 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
         {
             InstallLanguageServerRendering(out _colorizer, out _diagnostics);
         }
-        else if (document.HasLanguageService && !document.UsesSemanticColoring)
+        else if ((document.HasLanguageService || document.HasXamlFeatures) && !document.UsesSemanticColoring)
         {
-            // A Razor file: colored by its grammar, with Roslyn's squiggles.
+            // Razor and WPF XAML keep their grammar's colors and add the language engine's squiggles.
             _diagnostics = new DiagnosticRenderer();
             _editor.TextArea.TextView.BackgroundRenderers.Add(_diagnostics);
             ApplyDiagnostics();

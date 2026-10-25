@@ -186,6 +186,7 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
     /// <summary>Sends the current text to the language service if it changed since the last time.</summary>
     public void SyncText()
     {
+        SyncXamlText();
         if (_language is not null && _syncedEdits != _edits)
         {
             _language.UpdateText(FilePath, Document.Text);
@@ -221,6 +222,7 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
     {
         if (_language is null)
         {
+            await AnalyzeNowAsync();
             return;
         }
 
@@ -312,12 +314,16 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
         DisposeCiLog();
         DisposePullRequestReview();
         DisposeLanguageServer();
+        _xamlHost = null;
+        _xamlEngine = null;
+        _xamlFeatures = null;
+        _synchronizeXamlWorkspace = null;
     }
 
     private void OnDocumentChanged(object? sender, DocumentChangeEventArgs e)
     {
         _edits++;
-        if (_language is not null)
+        if (_language is not null || HasXamlFeatures)
         {
             var token = RestartAnalysis();
             _analysisEdits = _edits;
@@ -344,6 +350,7 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
     {
         if (_language is null)
         {
+            await AnalyzeXamlAsync(delay, cancellationToken);
             return;
         }
 
