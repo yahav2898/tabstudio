@@ -12,8 +12,9 @@ namespace TabStudio.App.Swarm;
 /// <remarks>
 /// <para>
 /// A segment is <c>Type#Name</c> for a named element and <c>Type[index]</c> otherwise, the index counting the logical
-/// children of that type. A path is followed from the root through logical children; when that fails, an element
-/// named like the last segment is looked for anywhere, so a path survives a layout panel added around it. A bare name,
+/// children of that type. A path is followed from the app's root view, its first segment, through logical children; when
+/// that fails, an element named like the last segment is looked for anywhere, so a path survives a layout panel added
+/// around it. A bare name,
 /// such as <c>CountButton</c>, is the short form recorded tests use for named elements.
 /// </para>
 /// <para>The generated UI tests' driver follows the same rules (see <c>UiTestDriverSource</c>).</para>
@@ -74,10 +75,19 @@ public static class ElementPaths
 
     private static Control? Walk(Control root, string[] segments)
     {
+        // A path starts at the app's root view, such as MainView; a host may wrap that view, as the app preview wraps
+        // it in the app's theme, so the root view is looked for under the element given too.
         Control current = root;
         var start = 0;
-        if (Matches(root, Parse(segments[0]).Type, Parse(segments[0]).Name))
+        var (rootType, rootName, _) = Parse(segments[0]);
+        if (Matches(root, rootType, rootName))
         {
+            start = 1;
+        }
+        else if (!segments[0].Contains('[', StringComparison.Ordinal)
+            && root.GetLogicalDescendants().OfType<Control>().FirstOrDefault(c => Matches(c, rootType, rootName)) is { } view)
+        {
+            current = view;
             start = 1;
         }
 

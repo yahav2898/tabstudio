@@ -93,6 +93,9 @@ public sealed class UiTestCodeTests
         Assert.Same(count, ElementPaths.Find(root, "UserControl/StackPanel[0]/TextBlock[1]"));
         Assert.Same(button, ElementPaths.Find(root, "UserControl/Grid[0]/Button#CountButton"));
         Assert.Null(ElementPaths.Find(root, "UserControl/StackPanel[0]/Button#Missing"));
+        var host = new Border { Child = root };
+        Assert.Same(count, ElementPaths.Find(host, "UserControl/StackPanel[0]/TextBlock[1]"));
+        Assert.Same(button, ElementPaths.Find(host, "UserControl/StackPanel[0]/Button#CountButton"));
         Assert.Equal("Clicked 2 times", ElementPaths.TextOf(count));
         Assert.Equal("Count", ElementPaths.TextOf(button));
         Assert.Equal("Hello Clicked 2 times", ElementPaths.TextOf((Control)root.Content!));

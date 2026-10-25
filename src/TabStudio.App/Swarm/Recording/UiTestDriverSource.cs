@@ -167,8 +167,20 @@ internal static class UiTestDriverSource
                     return Named(root, segments[0]) ?? (IsType(root, segments[0]) ? root : null);
                 }
 
+                // The path starts at the app's root view, which is where the search starts, or under it.
                 Control? current = root;
-                var start = IsType(root, Parse(segments[0]).Type) ? 1 : 0;
+                var first = Parse(segments[0]);
+                var start = 0;
+                if (IsType(root, first.Type) && (first.Name is null || root.Name == first.Name))
+                {
+                    start = 1;
+                }
+                else if (!segments[0].Contains('[') && root.GetLogicalDescendants().OfType<Control>().FirstOrDefault(c => IsType(c, first.Type) && (first.Name is null || c.Name == first.Name)) is { } view)
+                {
+                    current = view;
+                    start = 1;
+                }
+
                 for (var i = start; i < segments.Length && current is not null; i++)
                 {
                     var (type, name, index) = Parse(segments[i]);
