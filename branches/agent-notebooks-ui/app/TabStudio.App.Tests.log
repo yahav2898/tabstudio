@@ -1,10 +1,10 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/TabStudio.Testing.csproj (in 88 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/TabStudio.App.Tests.csproj (in 280 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/TabStudio.Testing.csproj (in 66 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/TabStudio.App.Tests.csproj (in 380 ms).
   5 of 7 projects are up-to-date for restore.
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
-  TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
   TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
+  TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
   TabStudio.Packages -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/bin/Release/net10.0/TabStudio.Packages.dll
   TabStudio.Notebooks -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/bin/Release/net10.0/TabStudio.Notebooks.dll
   TabStudio.App -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.App/bin/Release/net10.0/TabStudio.App.dll
@@ -12,27 +12,39 @@
 Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll (.NETCoreApp,Version=v10.0)
 A total of 1 test files matched the specified pattern.
 [xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
-[xUnit.net 00:00:00.12]   Discovering: TabStudio.App.Tests
-[xUnit.net 00:00:00.21]   Discovered:  TabStudio.App.Tests
-[xUnit.net 00:00:00.28]   Starting:    TabStudio.App.Tests
-  Passed TabStudio.App.Tests.Editing.FileTypesTests.Recognizes_files_by_name_and_extension(name: "Program.cs", displayName: "C#", isCSharp: True) [23 ms]
-  Passed TabStudio.App.Tests.Editing.FileTypesTests.Recognizes_files_by_name_and_extension(name: "notes.unknown", displayName: "Plain Text", isCSharp: False) [< 1 ms]
-  Passed TabStudio.App.Tests.Editing.FileTypesTests.Recognizes_files_by_name_and_extension(name: "appsettings.json", displayName: "JSON", isCSharp: False) [< 1 ms]
-  Passed TabStudio.App.Tests.Editing.FileTypesTests.Recognizes_files_by_name_and_extension(name: ".gitignore", displayName: "Ignore", isCSharp: False) [< 1 ms]
-  Passed TabStudio.App.Tests.Editing.FileTypesTests.Recognizes_files_by_name_and_extension(name: "Dockerfile", displayName: "Dockerfile", isCSharp: False) [< 1 ms]
-  Passed TabStudio.App.Tests.Editing.FileTypesTests.Recognizes_files_by_name_and_extension(name: "App.csproj", displayName: "MSBuild", isCSharp: False) [< 1 ms]
-  Passed TabStudio.App.Tests.Services.ProjectTemplatesTests.Rejects_names_that_are_not_namespaces(name: "a-b") [13 ms]
-  Passed TabStudio.App.Tests.Services.ProjectTemplatesTests.Rejects_names_that_are_not_namespaces(name: "App.") [< 1 ms]
-  Passed TabStudio.App.Tests.Services.ProjectTemplatesTests.Rejects_names_that_are_not_namespaces(name: "2Fast") [< 1 ms]
-  Passed TabStudio.App.Tests.Services.ProjectTemplatesTests.Rejects_names_that_are_not_namespaces(name: "") [< 1 ms]
-  Passed TabStudio.App.Tests.Services.ProjectTemplatesTests.Rejects_names_that_are_not_namespaces(name: "My App") [< 1 ms]
-  Passed TabStudio.App.Tests.Editing.FileTypesTests.Device_profiles_follow_memory(gigabytes: 4, lowRam: True, expected: Compact) [9 ms]
-  Passed TabStudio.App.Tests.Editing.FileTypesTests.Device_profiles_follow_memory(gigabytes: 6, lowRam: False, expected: Standard) [5 ms]
-  Passed TabStudio.App.Tests.Editing.FileTypesTests.Device_profiles_follow_memory(gigabytes: 2, lowRam: False, expected: Compact) [< 1 ms]
-  Passed TabStudio.App.Tests.Editing.FileTypesTests.Device_profiles_follow_memory(gigabytes: 4, lowRam: False, expected: Standard) [< 1 ms]
-  Passed TabStudio.App.Tests.Editing.FileTypesTests.Device_profiles_follow_memory(gigabytes: 12, lowRam: False, expected: Large) [< 1 ms]
-  Passed TabStudio.App.Tests.Editing.FileTypesTests.Device_profiles_follow_memory(gigabytes: 8, lowRam: False, expected: Large) [< 1 ms]
-  Passed TabStudio.App.Tests.Services.GitHubRepositoryTests.Reads_the_forms_people_paste(text: "git@github.com:dotnet/roslyn.git", owner: "dotnet", name: "roslyn", reference: null) [12 ms]
+[xUnit.net 00:00:00.13]   Discovering: TabStudio.App.Tests
+[xUnit.net 00:00:00.26]   Discovered:  TabStudio.App.Tests
+[xUnit.net 00:00:00.36]   Starting:    TabStudio.App.Tests
+[xUnit.net 00:00:00.59]     TabStudio.App.Tests.Notebooks.NotebookOutputTextTests.New_notebook_files_get_a_free_name_and_a_code_cell [FAIL]
+[xUnit.net 00:00:00.60]       Assert.Contains() Failure: Sub-string not found
+[xUnit.net 00:00:00.60]       String:    "#!meta\n\n{"kernelInfo":{"defaultKernelName"···
+[xUnit.net 00:00:00.60]       Not found: "#!csharp"
+[xUnit.net 00:00:00.60]       Stack Trace:
+[xUnit.net 00:00:00.60]         /_/tests/TabStudio.App.Tests/Notebooks/NotebookOutputTextTests.cs(84,0): at TabStudio.App.Tests.Notebooks.NotebookOutputTextTests.New_notebook_files_get_a_free_name_and_a_code_cell()
+[xUnit.net 00:00:00.60]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:00.60]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Passed TabStudio.App.Tests.Services.StateStoreTests.Recent_workspaces_are_newest_first_and_survive_a_restart [64 ms]
+  Passed TabStudio.App.Tests.Services.StateStoreTests.A_cleared_session_is_gone [8 ms]
+  Passed TabStudio.App.Tests.Services.StateStoreTests.Recent_workspaces_whose_files_are_gone_are_hidden [1 ms]
+  Passed TabStudio.App.Tests.Services.StateStoreTests.A_damaged_recent_list_starts_empty_instead_of_failing [2 ms]
+  Passed TabStudio.App.Tests.Services.StateStoreTests.Sessions_round_trip_with_unsaved_text [19 ms]
+  Failed TabStudio.App.Tests.Notebooks.NotebookOutputTextTests.New_notebook_files_get_a_free_name_and_a_code_cell [35 ms]
+  Error Message:
+   Assert.Contains() Failure: Sub-string not found
+String:    "#!meta\n\n{"kernelInfo":{"defaultKernelName"···
+Not found: "#!csharp"
+  Stack Trace:
+     at TabStudio.App.Tests.Notebooks.NotebookOutputTextTests.New_notebook_files_get_a_free_name_and_a_code_cell() in /_/tests/TabStudio.App.Tests/Notebooks/NotebookOutputTextTests.cs:line 84
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Passed TabStudio.App.Tests.Notebooks.NotebookOutputTextTests.The_notebook_template_creates_a_titled_notebook_in_a_folder_of_its_own [16 ms]
+  Passed TabStudio.App.Tests.Notebooks.NotebookOutputTextTests.Reads_a_kernel_table_back_from_its_html [41 ms]
+  Passed TabStudio.App.Tests.Notebooks.NotebookOutputTextTests.Leaves_other_html_to_the_text_view(html: "<table><tr><td><table><tr><td>nested</td></tr></ta"···) [< 1 ms]
+  Passed TabStudio.App.Tests.Notebooks.NotebookOutputTextTests.Leaves_other_html_to_the_text_view(html: "<b>bold</b>") [< 1 ms]
+  Passed TabStudio.App.Tests.Notebooks.NotebookOutputTextTests.Removes_terminal_colors [1 ms]
+  Passed TabStudio.App.Tests.Notebooks.NotebookOutputTextTests.Turns_html_into_readable_text [< 1 ms]
+  Passed TabStudio.App.Tests.Notebooks.NotebookOutputTextTests.Reads_polyglot_tables_with_markup_in_cells [< 1 ms]
+  Passed TabStudio.App.Tests.Services.GitHubRepositoryTests.Reads_the_forms_people_paste(text: "git@github.com:dotnet/roslyn.git", owner: "dotnet", name: "roslyn", reference: null) [3 ms]
   Passed TabStudio.App.Tests.Services.GitHubRepositoryTests.Reads_the_forms_people_paste(text: "https://github.com/AvaloniaUI/Avalonia/releases/ta"···, owner: "AvaloniaUI", name: "Avalonia", reference: "11.3.0") [< 1 ms]
   Passed TabStudio.App.Tests.Services.GitHubRepositoryTests.Reads_the_forms_people_paste(text: "https://github.com/dotnet/runtime.git", owner: "dotnet", name: "runtime", reference: null) [< 1 ms]
   Passed TabStudio.App.Tests.Services.GitHubRepositoryTests.Reads_the_forms_people_paste(text: "yahav2898/tabstudio", owner: "yahav2898", name: "tabstudio", reference: null) [< 1 ms]
@@ -40,76 +52,122 @@ A total of 1 test files matched the specified pattern.
   Passed TabStudio.App.Tests.Services.GitHubRepositoryTests.Reads_the_forms_people_paste(text: "https://github.com/dotnet/aspnetcore/tree/release/"···, owner: "dotnet", name: "aspnetcore", reference: "release/9.0") [< 1 ms]
   Passed TabStudio.App.Tests.Services.GitHubRepositoryTests.Reads_the_forms_people_paste(text: "https://github.com/yahav2898/tabstudio", owner: "yahav2898", name: "tabstudio", reference: null) [< 1 ms]
   Passed TabStudio.App.Tests.Services.GitHubRepositoryTests.Reads_the_forms_people_paste(text: "github.com/yahav2898/tabstudio", owner: "yahav2898", name: "tabstudio", reference: null) [< 1 ms]
-  Passed TabStudio.App.Tests.Services.GitHubRepositoryTests.Archive_address_uses_the_default_branch_when_none_is_given [2 ms]
+  Passed TabStudio.App.Tests.Services.GitHubRepositoryTests.Archive_address_uses_the_default_branch_when_none_is_given [< 1 ms]
   Passed TabStudio.App.Tests.Services.GitHubRepositoryTests.Rejects_text_that_is_not_a_repository(text: "not a repository") [< 1 ms]
   Passed TabStudio.App.Tests.Services.GitHubRepositoryTests.Rejects_text_that_is_not_a_repository(text: "") [< 1 ms]
   Passed TabStudio.App.Tests.Services.GitHubRepositoryTests.Rejects_text_that_is_not_a_repository(text: "https://github.com/owner") [< 1 ms]
   Passed TabStudio.App.Tests.Services.GitHubRepositoryTests.Rejects_text_that_is_not_a_repository(text: "https://gitlab.com/owner/repo") [< 1 ms]
-  Passed TabStudio.App.Tests.Services.ArchiveExtractorTests.Keeps_the_layout_when_there_is_no_single_top_level_folder [18 ms]
   Passed TabStudio.App.Tests.Services.GitHubRepositoryTests.Archive_address_keeps_slashes_in_branch_names [< 1 ms]
-  Passed TabStudio.App.Tests.Services.ArchiveExtractorTests.Drops_the_top_level_folder_of_a_GitHub_archive [2 ms]
-  Passed TabStudio.App.Tests.Services.ArchiveExtractorTests.Refuses_entries_that_would_escape_the_target_folder [3 ms]
-  Passed TabStudio.App.Tests.Editing.TrackedRangesTests.Ranges_before_an_edit_stay [58 ms]
-  Passed TabStudio.App.Tests.Editing.TrackedRangesTests.Binary_search_finds_the_first_range_on_a_line [9 ms]
-  Passed TabStudio.App.Tests.Editing.TrackedRangesTests.Typing_right_after_a_range_does_not_extend_it [< 1 ms]
-  Passed TabStudio.App.Tests.Editing.TrackedRangesTests.Ranges_cut_by_a_deletion_are_dropped [8 ms]
-  Passed TabStudio.App.Tests.Editing.TrackedRangesTests.Ranges_after_an_insertion_move_right [< 1 ms]
-  Passed TabStudio.App.Tests.Editing.TrackedRangesTests.Typing_inside_a_range_grows_it [< 1 ms]
+  Passed TabStudio.App.Tests.Services.ProjectTemplatesTests.Rejects_names_that_are_not_namespaces(name: "a-b") [< 1 ms]
+  Passed TabStudio.App.Tests.Services.ProjectTemplatesTests.Rejects_names_that_are_not_namespaces(name: "App.") [< 1 ms]
+  Passed TabStudio.App.Tests.Services.ProjectTemplatesTests.Rejects_names_that_are_not_namespaces(name: "2Fast") [< 1 ms]
+  Passed TabStudio.App.Tests.Services.ProjectTemplatesTests.Rejects_names_that_are_not_namespaces(name: "") [< 1 ms]
+  Passed TabStudio.App.Tests.Services.ProjectTemplatesTests.Rejects_names_that_are_not_namespaces(name: "My App") [< 1 ms]
+  Passed TabStudio.App.Tests.Views.NotebookScreenshotTests.The_start_screen_offers_a_notebook_template [1 s]
   Passed TabStudio.App.Tests.Services.ProjectTemplatesTests.Every_template_creates_a_solution_that_builds(template: "console", projects: 1) [2 s]
-  Passed TabStudio.App.Tests.Services.StateStoreTests.Recent_workspaces_are_newest_first_and_survive_a_restart [41 ms]
-  Passed TabStudio.App.Tests.Services.StateStoreTests.A_cleared_session_is_gone [7 ms]
-  Passed TabStudio.App.Tests.Services.StateStoreTests.Recent_workspaces_whose_files_are_gone_are_hidden [1 ms]
-  Passed TabStudio.App.Tests.Services.StateStoreTests.A_damaged_recent_list_starts_empty_instead_of_failing [2 ms]
-  Passed TabStudio.App.Tests.Services.StateStoreTests.Sessions_round_trip_with_unsaved_text [3 ms]
-  Passed TabStudio.App.Tests.Editing.CommentTogglerTests.Xml_uses_block_comments_per_line [5 ms]
-  Passed TabStudio.App.Tests.Editing.CommentTogglerTests.Comments_lines_at_their_common_indentation [< 1 ms]
-  Passed TabStudio.App.Tests.Editing.CommentTogglerTests.Toggling_is_a_single_undo_step [2 ms]
-  Passed TabStudio.App.Tests.Editing.CommentTogglerTests.Blank_lines_are_left_alone [< 1 ms]
-  Passed TabStudio.App.Tests.Editing.CommentTogglerTests.Uncomments_when_every_line_is_commented [< 1 ms]
-  Passed TabStudio.App.Tests.Services.ProjectTemplatesTests.Every_template_creates_a_solution_that_builds(template: "console-with-library", projects: 2) [211 ms]
-  Passed TabStudio.App.Tests.Services.ProjectTemplatesTests.Every_template_creates_a_solution_that_builds(template: "classlib", projects: 1) [19 ms]
+  Passed TabStudio.App.Tests.Services.ProjectTemplatesTests.Every_template_creates_a_solution_that_builds(template: "console-with-library", projects: 2) [259 ms]
+  Passed TabStudio.App.Tests.Services.ProjectTemplatesTests.Every_template_creates_a_solution_that_builds(template: "classlib", projects: 1) [13 ms]
   Passed TabStudio.App.Tests.Services.ProjectTemplatesTests.Accepts_names_that_are_valid_namespaces(name: "MyApp") [< 1 ms]
   Passed TabStudio.App.Tests.Services.ProjectTemplatesTests.Accepts_names_that_are_valid_namespaces(name: "App_2") [< 1 ms]
   Passed TabStudio.App.Tests.Services.ProjectTemplatesTests.Accepts_names_that_are_valid_namespaces(name: "Contoso.Tools") [< 1 ms]
-  Passed TabStudio.App.Tests.Services.ProjectTemplatesTests.A_taken_name_gets_a_new_folder [59 ms]
-  Passed TabStudio.App.Tests.ViewModels.WorkspaceViewModelTests.A_build_error_stops_F5_and_shows_the_Error_List [1 s]
-  Passed TabStudio.App.Tests.ViewModels.FileOperationsTests.A_new_class_is_usable_from_other_files_right_away [498 ms]
-  Passed TabStudio.App.Tests.Views.ScreenshotTests.Ide_with_the_sample_open [1 s]
-  Passed TabStudio.App.Tests.Services.SelfTestTests.Opens_the_sample_runs_it_and_answers_its_question [337 ms]
+  Passed TabStudio.App.Tests.Services.ProjectTemplatesTests.A_taken_name_gets_a_new_folder [4 ms]
+  Passed TabStudio.App.Tests.Editing.TrackedRangesTests.Ranges_before_an_edit_stay [22 ms]
+  Passed TabStudio.App.Tests.Editing.TrackedRangesTests.Binary_search_finds_the_first_range_on_a_line [< 1 ms]
+  Passed TabStudio.App.Tests.Editing.TrackedRangesTests.Typing_right_after_a_range_does_not_extend_it [< 1 ms]
+  Passed TabStudio.App.Tests.Editing.TrackedRangesTests.Ranges_cut_by_a_deletion_are_dropped [2 ms]
+  Passed TabStudio.App.Tests.Editing.TrackedRangesTests.Ranges_after_an_insertion_move_right [< 1 ms]
+  Passed TabStudio.App.Tests.Editing.TrackedRangesTests.Typing_inside_a_range_grows_it [< 1 ms]
+  Passed TabStudio.App.Tests.Views.ScreenshotTests.Ide_with_the_sample_open [2 s]
+  Passed TabStudio.App.Tests.ViewModels.Notebooks.NotebookDocumentTests.Errors_show_under_the_cell_that_failed [443 ms]
+  Passed TabStudio.App.Tests.Views.NotebookScreenshotTests.Notebook_with_markdown_code_a_table_and_errors [1 s]
   Passed TabStudio.App.Tests.Services.SampleAndFilesTests.Imported_file_names_stay_as_close_as_possible(name: "a:b", expected: "a-b") [< 1 ms]
-  Passed TabStudio.App.Tests.Services.SampleAndFilesTests.Imported_file_names_stay_as_close_as_possible(name: ".gitignore", expected: ".gitignore") [2 ms]
+  Passed TabStudio.App.Tests.Services.SampleAndFilesTests.Imported_file_names_stay_as_close_as_possible(name: ".gitignore", expected: ".gitignore") [< 1 ms]
   Passed TabStudio.App.Tests.Services.SampleAndFilesTests.Imported_file_names_stay_as_close_as_possible(name: "..", expected: "_") [< 1 ms]
-  Passed TabStudio.App.Tests.Services.SampleAndFilesTests.Binary_files_are_not_opened_as_text [60 ms]
+  Passed TabStudio.App.Tests.Services.SampleAndFilesTests.Binary_files_are_not_opened_as_text [17 ms]
   Passed TabStudio.App.Tests.Services.SampleAndFilesTests.New_folder_names_are_safe(name: "a/b:c", expected: "a-b-c") [< 1 ms]
   Passed TabStudio.App.Tests.Services.SampleAndFilesTests.New_folder_names_are_safe(name: "my repo", expected: "my repo") [< 1 ms]
   Passed TabStudio.App.Tests.Services.SampleAndFilesTests.New_folder_names_are_safe(name: "...", expected: "Project") [< 1 ms]
   Passed TabStudio.App.Tests.Services.SampleAndFilesTests.New_folder_names_are_safe(name: "../escape", expected: "escape") [< 1 ms]
-  Passed TabStudio.App.Tests.Services.SampleAndFilesTests.Text_files_keep_their_encoding_when_saved(preamble: [239, 187, 191], label: "UTF-8 BOM") [12 ms]
+  Passed TabStudio.App.Tests.Services.SampleAndFilesTests.Text_files_keep_their_encoding_when_saved(preamble: [239, 187, 191], label: "UTF-8 BOM") [17 ms]
   Passed TabStudio.App.Tests.Services.SampleAndFilesTests.Text_files_keep_their_encoding_when_saved(preamble: [], label: "UTF-8") [2 ms]
-  Passed TabStudio.App.Tests.ViewModels.WorkspaceViewModelTests.The_session_restores_open_documents_and_unsaved_text [84 ms]
   Passed TabStudio.App.Tests.Services.SampleAndFilesTests.The_sample_extracts_into_a_loadable_solution [7 ms]
-  Passed TabStudio.App.Tests.Services.SampleAndFilesTests.The_sample_keeps_the_users_changes_when_opened_again [8 ms]
-  Passed TabStudio.App.Tests.ViewModels.FileOperationsTests.New_file_in_a_project_creates_a_class_in_the_right_namespace [73 ms]
-  Passed TabStudio.App.Tests.Views.ScreenshotTests.Portrait_tablet_hides_the_side_bar [544 ms]
-  Passed TabStudio.App.Tests.ViewModels.WorkspaceViewModelTests.Opening_the_sample_shows_its_projects_and_opens_Program_cs [81 ms]
-  Passed TabStudio.App.Tests.ViewModels.FileOperationsTests.Cancelling_the_dialog_changes_nothing [42 ms]
-  Passed TabStudio.App.Tests.Views.ScreenshotTests.Live_errors_while_typing [703 ms]
-  Passed TabStudio.App.Tests.ViewModels.WorkspaceViewModelTests.Format_document_fixes_the_layout_as_one_undo_step [346 ms]
-  Passed TabStudio.App.Tests.ViewModels.FileOperationsTests.Deleting_moves_the_file_to_the_trash [150 ms]
-  Passed TabStudio.App.Tests.Views.ScreenshotTests.Start_screen [61 ms]
-  Passed TabStudio.App.Tests.ViewModels.WorkspaceViewModelTests.Memory_pressure_keeps_the_workspace_working [264 ms]
-  Passed TabStudio.App.Tests.ViewModels.FileOperationsTests.Renaming_a_file_moves_it_and_reopens_its_tab [37 ms]
-  Passed TabStudio.App.Tests.Views.ScreenshotTests.Program_output_after_F5 [387 ms]
-  Passed TabStudio.App.Tests.ViewModels.WorkspaceViewModelTests.F5_builds_and_runs_the_program_with_console_input [231 ms]
-  Passed TabStudio.App.Tests.Views.ScreenshotTests.Compatibility_doctor_panel [335 ms]
-  Passed TabStudio.App.Tests.ViewModels.WorkspaceViewModelTests.Quick_open_finds_files_by_name [25 ms]
-  Passed TabStudio.App.Tests.ViewModels.WorkspaceViewModelTests.Typing_a_mistake_shows_an_error_in_the_editor_and_the_Error_List [329 ms]
-  Passed TabStudio.App.Tests.ViewModels.WorkspaceViewModelTests.Saving_writes_the_file_and_clears_the_asterisk [60 ms]
-[xUnit.net 00:00:10.15]   Finished:    TabStudio.App.Tests
-  Passed TabStudio.App.Tests.ViewModels.WorkspaceViewModelTests.The_sample_has_no_errors [267 ms]
-  Passed TabStudio.App.Tests.ViewModels.WorkspaceViewModelTests.A_warm_device_builds_on_one_thread_and_says_so [193 ms]
+  Passed TabStudio.App.Tests.Services.SampleAndFilesTests.The_sample_keeps_the_users_changes_when_opened_again [10 ms]
+  Passed TabStudio.App.Tests.ViewModels.FileOperationsTests.A_new_class_is_usable_from_other_files_right_away [386 ms]
+  Passed TabStudio.App.Tests.Views.ScreenshotTests.Portrait_tablet_hides_the_side_bar [453 ms]
+  Passed TabStudio.App.Tests.ViewModels.Notebooks.NotebookDocumentTests.Saving_writes_the_notebook_back_and_leaves_unchanged_cells_as_they_were [45 ms]
+  Passed TabStudio.App.Tests.ViewModels.WorkspaceViewModelTests.A_build_error_stops_F5_and_shows_the_Error_List [222 ms]
+  Passed TabStudio.App.Tests.ViewModels.FileOperationsTests.New_file_in_a_project_creates_a_class_in_the_right_namespace [163 ms]
+  Passed TabStudio.App.Tests.Views.ScreenshotTests.Live_errors_while_typing [772 ms]
+  Passed TabStudio.App.Tests.ViewModels.Notebooks.NotebookDocumentTests.F5_waits_while_cells_run [327 ms]
+  Passed TabStudio.App.Tests.ViewModels.WorkspaceViewModelTests.The_session_restores_open_documents_and_unsaved_text [36 ms]
+  Passed TabStudio.App.Tests.ViewModels.FileOperationsTests.Cancelling_the_dialog_changes_nothing [31 ms]
+  Passed TabStudio.App.Tests.Views.ScreenshotTests.Start_screen [67 ms]
+  Passed TabStudio.App.Tests.ViewModels.Notebooks.NotebookDocumentTests.A_notebook_opens_in_the_notebook_editor_and_runs_with_state_across_cells [309 ms]
+  Passed TabStudio.App.Tests.ViewModels.WorkspaceViewModelTests.Opening_the_sample_shows_its_projects_and_opens_Program_cs [30 ms]
+  Passed TabStudio.App.Tests.ViewModels.FileOperationsTests.Deleting_moves_the_file_to_the_trash [47 ms]
+  Passed TabStudio.App.Tests.Views.ScreenshotTests.Program_output_after_F5 [631 ms]
+  Passed TabStudio.App.Tests.ViewModels.Notebooks.NotebookDocumentTests.A_notebook_that_cannot_be_read_opens_as_text [34 ms]
+  Passed TabStudio.App.Tests.ViewModels.WorkspaceViewModelTests.Format_document_fixes_the_layout_as_one_undo_step [461 ms]
+  Passed TabStudio.App.Tests.ViewModels.FileOperationsTests.Renaming_a_file_moves_it_and_reopens_its_tab [68 ms]
+  Passed TabStudio.App.Tests.Views.ScreenshotTests.Compatibility_doctor_panel [512 ms]
+  Passed TabStudio.App.Tests.Services.ArchiveExtractorTests.Keeps_the_layout_when_there_is_no_single_top_level_folder [5 ms]
+  Passed TabStudio.App.Tests.Services.ArchiveExtractorTests.Drops_the_top_level_folder_of_a_GitHub_archive [1 ms]
+  Passed TabStudio.App.Tests.Services.ArchiveExtractorTests.Refuses_entries_that_would_escape_the_target_folder [< 1 ms]
+  Passed TabStudio.App.Tests.ViewModels.Notebooks.NotebookDocumentTests.Dib_notebooks_are_saved_as_dib [228 ms]
+  Passed TabStudio.App.Tests.ViewModels.WorkspaceViewModelTests.Memory_pressure_keeps_the_workspace_working [258 ms]
+  Passed TabStudio.App.Tests.Services.SelfTestTests.Opens_the_sample_runs_it_and_answers_its_question [246 ms]
+  Passed TabStudio.App.Tests.Editing.FileTypesTests.Recognizes_files_by_name_and_extension(name: "Program.cs", displayName: "C#", isCSharp: True) [3 ms]
+  Passed TabStudio.App.Tests.Editing.FileTypesTests.Recognizes_files_by_name_and_extension(name: "notes.unknown", displayName: "Plain Text", isCSharp: False) [< 1 ms]
+  Passed TabStudio.App.Tests.Editing.FileTypesTests.Recognizes_files_by_name_and_extension(name: "appsettings.json", displayName: "JSON", isCSharp: False) [< 1 ms]
+  Passed TabStudio.App.Tests.Editing.FileTypesTests.Recognizes_files_by_name_and_extension(name: ".gitignore", displayName: "Ignore", isCSharp: False) [< 1 ms]
+  Passed TabStudio.App.Tests.Editing.FileTypesTests.Recognizes_files_by_name_and_extension(name: "Dockerfile", displayName: "Dockerfile", isCSharp: False) [< 1 ms]
+  Passed TabStudio.App.Tests.Editing.FileTypesTests.Recognizes_files_by_name_and_extension(name: "App.csproj", displayName: "MSBuild", isCSharp: False) [< 1 ms]
+  Passed TabStudio.App.Tests.Editing.FileTypesTests.Device_profiles_follow_memory(gigabytes: 4, lowRam: True, expected: Compact) [< 1 ms]
+  Passed TabStudio.App.Tests.Editing.FileTypesTests.Device_profiles_follow_memory(gigabytes: 6, lowRam: False, expected: Standard) [< 1 ms]
+  Passed TabStudio.App.Tests.Editing.FileTypesTests.Device_profiles_follow_memory(gigabytes: 2, lowRam: False, expected: Compact) [< 1 ms]
+  Passed TabStudio.App.Tests.Editing.FileTypesTests.Device_profiles_follow_memory(gigabytes: 4, lowRam: False, expected: Standard) [< 1 ms]
+  Passed TabStudio.App.Tests.Editing.FileTypesTests.Device_profiles_follow_memory(gigabytes: 12, lowRam: False, expected: Large) [< 1 ms]
+  Passed TabStudio.App.Tests.Editing.FileTypesTests.Device_profiles_follow_memory(gigabytes: 8, lowRam: False, expected: Large) [< 1 ms]
+  Passed TabStudio.App.Tests.Editing.CommentTogglerTests.Xml_uses_block_comments_per_line [7 ms]
+  Passed TabStudio.App.Tests.Editing.CommentTogglerTests.Comments_lines_at_their_common_indentation [< 1 ms]
+  Passed TabStudio.App.Tests.Editing.CommentTogglerTests.Toggling_is_a_single_undo_step [< 1 ms]
+  Passed TabStudio.App.Tests.Editing.CommentTogglerTests.Blank_lines_are_left_alone [< 1 ms]
+  Passed TabStudio.App.Tests.Editing.CommentTogglerTests.Uncomments_when_every_line_is_commented [< 1 ms]
+  Passed TabStudio.App.Tests.ViewModels.Notebooks.NotebookViewModelTests.Cells_move_convert_and_insert [6 ms]
+  Passed TabStudio.App.Tests.Notebooks.MarkdownParserTests.Leaves_snake_case_math_and_unmatched_markers_alone [5 ms]
+  Passed TabStudio.App.Tests.Notebooks.MarkdownParserTests.Reads_fenced_and_indented_code_and_quotes [2 ms]
+  Passed TabStudio.App.Tests.Notebooks.MarkdownParserTests.Reads_pipe_tables [3 ms]
+  Passed TabStudio.App.Tests.Notebooks.MarkdownParserTests.Reads_headings_paragraphs_and_rules [27 ms]
+  Passed TabStudio.App.Tests.Notebooks.MarkdownParserTests.Reads_nested_bulleted_numbered_and_task_lists [3 ms]
+  Passed TabStudio.App.Tests.Notebooks.MarkdownParserTests.Reads_escapes_entities_html_breaks_and_bare_links [1 ms]
+  Passed TabStudio.App.Tests.Notebooks.MarkdownParserTests.Reads_emphasis_code_strikethrough_and_links [< 1 ms]
+  Passed TabStudio.App.Tests.ViewModels.Notebooks.NotebookDocumentTests.File_New_Notebook_creates_Untitled_ipynb_in_the_startup_project_and_opens_it [42 ms]
+  Passed TabStudio.App.Tests.ViewModels.WorkspaceViewModelTests.F5_builds_and_runs_the_program_with_console_input [276 ms]
+  Passed TabStudio.App.Tests.ViewModels.Notebooks.NotebookViewModelTests.Typing_makes_the_notebook_dirty_and_undoing_makes_it_clean_again [< 1 ms]
+  Passed TabStudio.App.Tests.ViewModels.Notebooks.NotebookDocumentTests.The_session_restores_an_open_notebook_with_its_unsaved_cells [64 ms]
+  Passed TabStudio.App.Tests.ViewModels.WorkspaceViewModelTests.Quick_open_finds_files_by_name [37 ms]
+  Passed TabStudio.App.Tests.ViewModels.Notebooks.NotebookViewModelTests.A_deleted_cell_comes_back_with_undo [1 ms]
+  Passed TabStudio.App.Tests.ViewModels.Notebooks.NotebookDocumentTests.Closing_a_notebook_saves_it_and_stops_its_kernel [306 ms]
+  Passed TabStudio.App.Tests.ViewModels.WorkspaceViewModelTests.Typing_a_mistake_shows_an_error_in_the_editor_and_the_Error_List [313 ms]
+  Passed TabStudio.App.Tests.ViewModels.Notebooks.NotebookViewModelTests.Interrupt_stops_the_running_cell_and_empties_the_queue [3 ms]
+  Passed TabStudio.App.Tests.ViewModels.Notebooks.NotebookDocumentTests.Opening_a_notebook_file_opens_its_folder_with_the_notebook [30 ms]
+  Passed TabStudio.App.Tests.ViewModels.WorkspaceViewModelTests.Saving_writes_the_file_and_clears_the_asterisk [37 ms]
+  Passed TabStudio.App.Tests.ViewModels.Notebooks.NotebookViewModelTests.Shift_Enter_on_the_last_cell_runs_it_and_adds_a_code_cell [2 ms]
+  Passed TabStudio.App.Tests.ViewModels.WorkspaceViewModelTests.The_sample_has_no_errors [250 ms]
+  Passed TabStudio.App.Tests.ViewModels.Notebooks.NotebookViewModelTests.Running_a_cell_shows_its_output_and_execution_count [1 ms]
+  Passed TabStudio.App.Tests.ViewModels.WorkspaceViewModelTests.A_warm_device_builds_on_one_thread_and_says_so [323 ms]
+  Passed TabStudio.App.Tests.ViewModels.Notebooks.NotebookViewModelTests.Run_all_stops_at_the_first_cell_that_fails [2 ms]
+  Passed TabStudio.App.Tests.ViewModels.Notebooks.NotebookViewModelTests.Markdown_cells_render_until_edited [< 1 ms]
+[xUnit.net 00:00:14.46]   Finished:    TabStudio.App.Tests
+  Passed TabStudio.App.Tests.ViewModels.Notebooks.NotebookViewModelTests.Cells_do_not_run_while_the_IDE_says_they_cannot [1 ms]
+  Passed TabStudio.App.Tests.ViewModels.Notebooks.NotebookViewModelTests.Cells_wait_their_turn_and_output_appears_while_a_cell_runs [27 ms]
+  Passed TabStudio.App.Tests.ViewModels.Notebooks.NotebookViewModelTests.Running_the_cells_of_a_dib_does_not_change_the_file [1 ms]
+  Passed TabStudio.App.Tests.ViewModels.Notebooks.NotebookViewModelTests.Compile_errors_are_listed_under_the_cell_instead_of_as_an_error_output [1 ms]
+  Passed TabStudio.App.Tests.ViewModels.Notebooks.NotebookViewModelTests.Restart_keeps_outputs_and_counts_from_one_again [2 ms]
+  Passed TabStudio.App.Tests.ViewModels.Notebooks.NotebookViewModelTests.Unsaved_work_round_trips_through_the_session_text [< 1 ms]
 
-Test Run Successful.
-Total tests: 92
-     Passed: 92
- Total time: 11.1135 Seconds
+Test Run Failed.
+Total tests: 133
+     Passed: 132
+     Failed: 1
+ Total time: 15.1451 Seconds
