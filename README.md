@@ -82,20 +82,6 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 - **Sketch to XAML.** Draw a screen with the stylus and get XAML that runs.
 - **Speaks MCP.** The agent connects to any Model Context Protocol server, so your own tools and services are one setting away.
 
-### Smart contracts and dApps, with Supra built in
-
-TabStudio is the fastest way to go from an idea to a working [Supra](https://supra.com) dApp, on any device.
-
-- **Solidity and Move.** Completion and live errors from their language servers, Foundry for building and testing Solidity, and the Move compiler for Supra Move packages.
-- **The Supra panel.** Switch between mainnet, testnet and devnet, create an account and fund it from the faucet in one tap, browse an account's resources, modules and events, watch any oracle price live, and follow your automation tasks.
-- **Templates that work on the first tap.** A price-triggered vault that uses Supra's oracle and automation, a fair raffle on Supra dVRF, a cross-VM payment between SupraEVM and SupraMVM, a SupraFX market maker and a C# on-chain dashboard. Each one opens with its tests passing and deploys to devnet with one tap.
-- **The Supra SDK for .NET.** Accounts, transactions, events, oracle prices, SupraEVM and SupraFX from C#, open source and usable in any .NET app.
-- **Migration Doctor.** Open a Solidity dApp built on Chainlink price feeds, VRF or Automation, and TabStudio shows the Supra equivalent of each call and applies the change in a branch for you to review.
-- **Supra for AI agents.** The agent connects to SupraFX through its MCP server, so you can ask about balances, the order book or prices in plain words. TabStudio also ships an MCP server for *building* on Supra, which works with Claude Code, Cursor and any other MCP client.
-- **Safe by default.** Every template deploys to testnet first, master keys are never requested or stored, trading agents use SupraFX delegate keys with spending caps, and every transaction is shown in full and confirmed by you.
-
-The full design, with links to Supra's documentation, is in [docs/design/web3-supra.md](docs/design/web3-supra.md).
-
 ### Built for the device in your hands
 
 - **Runs on modest tablets.** TabStudio measures the device it runs on and adapts. On a 3 GB tablet it keeps a full compiler model only of the projects you are editing, reads .NET's metadata straight from storage instead of holding it in memory, and gives memory back the moment Android asks for it.

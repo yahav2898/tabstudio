@@ -1,6 +1,6 @@
 # Roadmap
 
-TabStudio is built in twelve milestones. Each one ships as a release on the
+TabStudio is built in eleven milestones. Each one ships as a release on the
 [releases page](https://github.com/yahav2898/tabstudio/releases) with an installable `TabStudio.apk`, and
 each one leaves the app better for real work than the one before.
 
@@ -78,12 +78,6 @@ their languages, and VS Code extensions from Open VSX. Opening a repository inst
 
 Claude inside the IDE: an agent that builds, tests and fixes your solution through diffs you approve,
 **Fix with Agent** for every Compatibility Doctor finding, sketch to XAML, and MCP server support.
-
-## 12. Smart contracts, dApps and Supra
-
-Solidity and Move, the Supra panel, Supra templates, the Supra SDK for .NET, the Migration Doctor, SupraFX in
-the agent panel and an MCP server for building on Supra. The design is in
-[design/web3-supra.md](design/web3-supra.md).
 
 ## Desktop mode
 
