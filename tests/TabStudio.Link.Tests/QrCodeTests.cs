@@ -3,6 +3,7 @@ using TabStudio.Link.Qr;
 using TabStudio.Link.Security;
 using ZXing;
 using ZXing.Common;
+using ZXing.Multi.QrCode;
 using ZXing.QrCode;
 
 namespace TabStudio.Link.Tests;
@@ -39,6 +40,7 @@ public sealed class QrCodeTests
     public void An_invitation_fits_a_code_a_tablet_camera_reads_easily()
     {
         // A fixed key and pairing code, so every run checks the same code: the encoder picks its mask by the data.
+        // Invitations_of_any_data_decode checks many others.
         Assert.True(LinkPairingCode.TryParse("7K3M-Q9TX", out var pairingCode));
         var invitation = new LinkInvitation("Yahav's Pixel 9 Pro", ["192.168.1.23", "10.0.0.5"], 47811, LinkFingerprint.FromPublicKey("TabStudio Link test host key"u8), pairingCode);
 
@@ -50,6 +52,31 @@ public sealed class QrCodeTests
         Assert.Equal(invitation.Code, scanned.Code);
         Assert.Equal(invitation.DeviceName, scanned.DeviceName);
         Assert.Equal(invitation.Addresses, scanned.Addresses);
+    }
+
+    [Fact]
+    public void Invitations_of_any_data_decode()
+    {
+        // Random keys and pairing codes, from a fixed seed so that a failure names the same invitation every run.
+        var random = new Random(18004);
+        for (var i = 0; i < 1000; i++)
+        {
+            var invitation = RandomInvitation(random).ToUri();
+
+            Assert.Equal(invitation, Decode(QrCode.Encode(invitation)));
+        }
+    }
+
+    [Fact]
+    public void A_code_with_a_finder_like_run_in_its_data_decodes()
+    {
+        // ZXing's QR reader alone reads nothing from this invitation's code: its search stops at a finder-like run in
+        // the data before it reaches the real bottom-left finder. The camera decoder then looks at every candidate.
+        Assert.True(LinkPairingCode.TryParse("8B9X636V", out var pairingCode));
+        var invitation = new LinkInvitation(
+            "Yahav's Pixel 9 Pro", ["192.168.1.23", "10.0.0.5"], 47811, LinkFingerprint.Parse("_RSz6IyzsqImujU0x5ta8tO8LgN63sRt9HqNyi0e-98"), pairingCode).ToUri();
+
+        Assert.Equal(invitation, Decode(QrCode.Encode(invitation)));
     }
 
     [Fact]
@@ -88,7 +115,21 @@ public sealed class QrCodeTests
         return text.ToString();
     }
 
-    /// <summary>Draws a code with a quiet zone, four pixels a module, and reads it back.</summary>
+    /// <summary>An invitation with a random key and pairing code.</summary>
+    private static LinkInvitation RandomInvitation(Random random)
+    {
+        const string alphabet = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
+        var key = new byte[91];
+        random.NextBytes(key);
+        var text = string.Concat(Enumerable.Range(0, LinkPairingCode.Length).Select(_ => alphabet[random.Next(alphabet.Length)]));
+        Assert.True(LinkPairingCode.TryParse(text, out var pairingCode));
+        return new LinkInvitation("Yahav's Pixel 9 Pro", ["192.168.1.23", "10.0.0.5"], 47811, LinkFingerprint.FromPublicKey(key), pairingCode);
+    }
+
+    /// <summary>
+    /// Draws a code with a quiet zone, four pixels a module, and reads it back as the Android camera decoder
+    /// (TabStudio.App's QrFrameDecoder) does: with ZXing's QR reader, then its multiple-code reader.
+    /// </summary>
     private static string Decode(QrCode code)
     {
         const int scale = 4;
@@ -117,7 +158,8 @@ public sealed class QrCodeTests
 
         var source = new RGBLuminanceSource(pixels, size, size, RGBLuminanceSource.BitmapFormat.Gray8);
         var hints = new Dictionary<DecodeHintType, object> { [DecodeHintType.CHARACTER_SET] = "UTF-8" };
-        var result = new QRCodeReader().decode(new BinaryBitmap(new HybridBinarizer(source)), hints);
+        var bitmap = new BinaryBitmap(new HybridBinarizer(source));
+        var result = new QRCodeReader().decode(bitmap, hints) ?? new QRCodeMultiReader().decodeMultiple(bitmap, hints)?.FirstOrDefault();
         Assert.NotNull(result);
         return result.Text;
     }
