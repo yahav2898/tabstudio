@@ -73,12 +73,12 @@ internal sealed class FakeAlpineRepository : IDisposable
         {
             InstalledSize = installedSize,
         };
-        var (bytes, checksum, installedSize) = BuildPackage(package);
+        var (bytes, checksum, size) = BuildPackage(package);
         package.Bytes = bytes;
         package.Repository = repository;
         package.Address = Distribution.RepositoryAddress(repository, Architecture).AbsoluteUri.TrimEnd('/') + $"/{name}-{version}.apk";
         var entry = new StringBuilder()
-            .Append(CultureInfo.InvariantCulture, $"C:{checksum}\nP:{name}\nV:{version}\nA:{Architecture}\nS:{bytes.Length}\nI:{installedSize}\nT:The {name} package\nL:MIT\n")
+            .Append(CultureInfo.InvariantCulture, $"C:{checksum}\nP:{name}\nV:{version}\nA:{Architecture}\nS:{bytes.Length}\nI:{size}\nT:The {name} package\nL:MIT\n")
             .Append(depends is { Length: > 0 } ? $"D:{string.Join(' ', depends)}\n" : string.Empty)
             .Append(provides is { Length: > 0 } ? $"p:{string.Join(' ', provides)}\n" : string.Empty)
             .ToString();

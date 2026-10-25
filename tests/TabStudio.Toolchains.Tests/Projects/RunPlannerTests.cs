@@ -149,6 +149,21 @@ public sealed class RunPlannerTests : IDisposable
     }
 
     [Theory]
+    [InlineData("package.json", """{ "name": "plain", "scripts": { "start": "node index.js" } }""")]
+    [InlineData("package.json", """{ "dependencies": {} }""")]
+    [InlineData("requirements.txt", "# Nothing yet\n\n")]
+    public void A_manifest_that_lists_no_packages_needs_no_install(string manifest, string content)
+    {
+        _workspace.Write(manifest, content);
+        var toolchain = manifest == "package.json" ? Node : Python;
+        var project = new ToolchainProject(toolchain, _workspace.Path, manifest);
+
+        var dependency = RunPlanner.DependenciesOf(project)!;
+
+        Assert.False(RunPlanner.IsPending(project, dependency));
+    }
+
+    [Theory]
     [InlineData("""{ "scripts": { "start": "node ." } }""", "scripts.start", "node .")]
     [InlineData("""{ "scripts": { "start": "" } }""", "scripts.start", null)]
     [InlineData("""{ "scripts": [] }""", "scripts.start", null)]

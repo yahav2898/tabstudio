@@ -81,14 +81,44 @@ public static class RunPlanner
         return project.Toolchain.Dependencies.FirstOrDefault(d => File.Exists(Path.Combine(project.Directory, d.Manifest)));
     }
 
-    /// <summary>Whether a dependency install has not run yet: what it creates is missing.</summary>
+    /// <summary>
+    /// Whether a dependency install should run: the manifest lists packages, and what the install creates is
+    /// missing.
+    /// </summary>
     /// <param name="project">The project.</param>
     /// <param name="dependency">The install.</param>
     public static bool IsPending(ToolchainProject project, DependencyInstallDefinition dependency)
     {
         ArgumentNullException.ThrowIfNull(project);
         ArgumentNullException.ThrowIfNull(dependency);
-        return dependency.Installed is { } installed && !Path.Exists(Path.Combine(project.Directory, installed));
+        return dependency.Installed is { } installed
+            && !Path.Exists(Path.Combine(project.Directory, installed))
+            && ListsPackages(Path.Combine(project.Directory, dependency.Manifest), dependency);
+    }
+
+    /// <summary>Whether a manifest lists any package: a JSON one in its <see cref="DependencyInstallDefinition.Declares"/>, a text one on any line.</summary>
+    private static bool ListsPackages(string manifest, DependencyInstallDefinition dependency)
+    {
+        try
+        {
+            if (dependency.Declares.Count > 0)
+            {
+                using var document = JsonDocument.Parse(File.ReadAllText(manifest), new JsonDocumentOptions { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip });
+                return dependency.Declares.Any(name =>
+                    document.RootElement.ValueKind == JsonValueKind.Object
+                    && document.RootElement.TryGetProperty(name, out var packages)
+                    && packages.ValueKind == JsonValueKind.Object
+                    && packages.EnumerateObject().Any());
+            }
+
+            return !manifest.EndsWith(".txt", StringComparison.OrdinalIgnoreCase)
+                || File.ReadLines(manifest).Any(line => line.Trim() is { Length: > 0 } text && !text.StartsWith('#'));
+        }
+        catch (Exception ex) when (ex is JsonException or IOException or UnauthorizedAccessException)
+        {
+            // A manifest that cannot be read is offered: the install's own output says what is wrong with it.
+            return true;
+        }
     }
 
     /// <summary>

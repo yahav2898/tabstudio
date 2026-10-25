@@ -180,6 +180,13 @@ public sealed record DependencyInstallDefinition
 
     /// <summary>A file or folder that exists once the packages are installed, such as <c>node_modules</c>.</summary>
     public string? Installed { get; init; }
+
+    /// <summary>
+    /// For a JSON manifest, the properties that list packages, such as <c>dependencies</c>: the install is offered
+    /// only when one of them lists any. Empty for a text manifest, which lists packages one per line, and is offered
+    /// when it has a line that is not blank or a comment.
+    /// </summary>
+    public IReadOnlyList<string> Declares { get; init; } = [];
 }
 
 /// <summary>A step that runs after a toolchain's packages are installed: a command, or an archive to unpack.</summary>
@@ -246,6 +253,36 @@ public sealed record ToolCommandDefinition
 
     /// <summary>The Language Server Protocol language ids it serves, such as <c>python</c>.</summary>
     public IReadOnlyList<string> Languages { get; init; } = [];
+
+    /// <summary>Whether it talks over TCP on a port in its command, rather than over its standard streams.</summary>
+    public bool UsesTcp => string.Equals(Transport, "tcp", StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// The command as a process to start with <see cref="Runtimes.IToolchainRuntime.Start"/>, with <c>{port}</c>
+    /// filled in. The toolchain's runtime sees workspace folders at their own paths, so file paths and URIs mean
+    /// the same inside and outside it.
+    /// </summary>
+    /// <param name="workingDirectory">The folder to start it in, such as the workspace's.</param>
+    /// <param name="port">The port for a TCP adapter, which the caller picked free.</param>
+    /// <exception cref="InvalidOperationException">The command is empty, or needs a port and none was given.</exception>
+    public Processes.ProcessStartSpec ToStartSpec(string? workingDirectory = null, int? port = null)
+    {
+        if (Command.Count == 0)
+        {
+            throw new InvalidOperationException("The catalog gives no command.");
+        }
+
+        var arguments = Command.Select(a => a.Contains("{port}", StringComparison.Ordinal)
+            ? a.Replace("{port}", (port ?? throw new InvalidOperationException("The command needs a port.")).ToString(System.Globalization.CultureInfo.InvariantCulture), StringComparison.Ordinal)
+            : a).ToList();
+        return new Processes.ProcessStartSpec
+        {
+            Program = arguments[0],
+            Arguments = arguments[1..],
+            WorkingDirectory = workingDirectory,
+            Environment = Environment.ToDictionary(e => e.Key, e => (string?)e.Value, StringComparer.Ordinal),
+        };
+    }
 }
 
 /// <summary>A regular expression that finds a file location in output.</summary>

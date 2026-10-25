@@ -173,6 +173,22 @@ public sealed class ToolchainCatalogTests
     }
 
     [Fact]
+    public void Language_servers_and_debug_adapters_start_from_the_catalog()
+    {
+        var python = Catalog.Find("python")!;
+        var node = Catalog.Find("node")!;
+
+        var server = python.LanguageServer!.ToStartSpec("/projects/app");
+        var adapter = node.DebugAdapter!.ToStartSpec("/projects/web", port: 4711);
+
+        Assert.Equal(("pylsp", "/projects/app"), (server.Program, server.WorkingDirectory));
+        Assert.True(node.DebugAdapter.UsesTcp);
+        Assert.Equal(["/opt/tabstudio/node/js-debug/src/dapDebugServer.js", "4711", "127.0.0.1"], adapter.Arguments);
+        Assert.Equal("/opt/tabstudio/python/debugpy", python.DebugAdapter!.ToStartSpec().Environment["PYTHONPATH"]);
+        Assert.Throws<InvalidOperationException>(() => node.DebugAdapter.ToStartSpec());
+    }
+
+    [Fact]
     public void Refuses_json_that_is_not_a_catalog()
     {
         Assert.Throws<InvalidDataException>(() => ToolchainCatalog.Load(new MemoryStream("[1, 2"u8.ToArray())));

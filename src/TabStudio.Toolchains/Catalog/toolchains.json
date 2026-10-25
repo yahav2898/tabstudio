@@ -120,7 +120,8 @@
           "name": "npm install",
           "description": "Installs the packages package.json lists into node_modules.",
           "command": [ "npm", "install", "--no-fund", "--no-audit" ],
-          "installed": "node_modules"
+          "installed": "node_modules",
+          "declares": [ "dependencies", "devDependencies", "optionalDependencies" ]
         }
       ],
       "setup": [
