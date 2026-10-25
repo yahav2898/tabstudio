@@ -43,7 +43,17 @@ public sealed partial class LiveTestingViewModel
     public void OnDocumentEdited(DocumentViewModel document)
     {
         ArgumentNullException.ThrowIfNull(document);
-        if (IsActive && Trigger == LiveTestingTrigger.AfterTyping && document.HasLanguageService)
+        if (!IsActive || !document.HasLanguageService)
+        {
+            return;
+        }
+
+        if (State is LiveTestingState.UpToDate or LiveTestingState.BuildFailed)
+        {
+            State = LiveTestingState.Pending;
+        }
+
+        if (Trigger == LiveTestingTrigger.AfterTyping)
         {
             RunAfter(TypingDelay);
         }

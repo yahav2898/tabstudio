@@ -16,6 +16,9 @@ public enum LiveTestingState
     /// <summary>On, and every marker is up to date.</summary>
     UpToDate,
 
+    /// <summary>The code changed since the last run; the tests run after a pause in typing, or on save.</summary>
+    Pending,
+
     /// <summary>Building the test projects and the code they test.</summary>
     Building,
 
@@ -86,7 +89,7 @@ public sealed partial class LiveTestingViewModel : ObservableObject, ILiveTestin
 
     /// <summary>When tests run.</summary>
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(RunsAfterTyping), nameof(RunsOnSave), nameof(DetailText))]
+    [NotifyPropertyChangedFor(nameof(RunsAfterTyping), nameof(RunsOnSave), nameof(StatusText), nameof(DetailText))]
     public partial LiveTestingTrigger Trigger { get; private set; }
 
     /// <summary>The number of included tests whose latest live run passed.</summary>
@@ -142,6 +145,7 @@ public sealed partial class LiveTestingViewModel : ObservableObject, ILiveTestin
     public string StatusText => State switch
     {
         LiveTestingState.Off => string.Empty,
+        LiveTestingState.Pending => RunsOnSave ? "Live Unit Testing: save to run tests" : "Live Unit Testing: changes pending",
         LiveTestingState.Building => "Live Unit Testing: building",
         LiveTestingState.Running => "Live Unit Testing: running " + TestDisplay.Tests(RunningCount),
         LiveTestingState.BuildFailed => "Live Unit Testing: build failed",
@@ -160,6 +164,9 @@ public sealed partial class LiveTestingViewModel : ObservableObject, ILiveTestin
             return State switch
             {
                 LiveTestingState.Off => "Live Unit Testing is off.",
+                LiveTestingState.Pending => RunsOnSave
+                    ? "The code changed. Save to run the tests the changes affect."
+                    : "The code changed. The tests it affects run a moment after you stop typing.",
                 LiveTestingState.Building => "Building the changed code… " + when,
                 LiveTestingState.Running => "Running " + TestDisplay.Tests(RunningCount) + " affected by the latest changes… " + when,
                 LiveTestingState.BuildFailed => string.Create(CultureInfo.InvariantCulture, $"The code does not compile ({BuildErrorCount} {(BuildErrorCount == 1 ? "error" : "errors")}). The markers show the last results until it does."),

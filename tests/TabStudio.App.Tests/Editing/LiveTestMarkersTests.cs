@@ -1,3 +1,4 @@
+using Avalonia.Headless.XUnit;
 using AvaloniaEdit.Document;
 using Microsoft.CodeAnalysis.Text;
 using TabStudio.App.Editing;
@@ -32,7 +33,7 @@ public sealed class LiveTestMarkersTests
         Assert.Equal(new[] { new MappedLine(1, false), new MappedLine(2, true), new MappedLine(3, false) }, map);
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void Markers_go_on_the_lines_of_the_current_text()
     {
         var document = new TextDocument("// header\n" + Code);
@@ -46,7 +47,7 @@ public sealed class LiveTestMarkersTests
         Assert.Equal(LineCoverageState.Covered, markers.At(document.GetLineByNumber(4))?.State);
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void Typing_on_a_line_makes_its_marker_stale_and_new_lines_push_markers_down()
     {
         var document = new TextDocument(Code);
@@ -60,7 +61,7 @@ public sealed class LiveTestMarkersTests
         Assert.Equal(new[] { (3, true), (5, false) }, markers.Lines(document).Select(l => (l.Line, l.Marker.IsStale)));
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void Deleting_a_line_removes_its_marker()
     {
         var document = new TextDocument(Code);

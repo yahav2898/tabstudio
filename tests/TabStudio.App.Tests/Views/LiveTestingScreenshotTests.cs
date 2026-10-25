@@ -69,6 +69,8 @@ public sealed class LiveTestingScreenshotTests : IClassFixture<SharedToolchain>,
         var (window, workspace, editor, pricing) = await OpenAsync();
         await StartAsync(workspace, pricing);
         var line = PricingSolution.LineOf("return total * 9 / 10;");
+        editor.Editor.ScrollTo(line, 1);
+        Dispatcher.UIThread.RunJobs();
 
         var point = MarginPoint(editor, window, line);
         window.MouseDown(point, MouseButton.Left);
@@ -175,7 +177,8 @@ public sealed class LiveTestingScreenshotTests : IClassFixture<SharedToolchain>,
 
     private async Task<(Window Window, WorkspaceViewModel Workspace, CodeEditorView Editor, DocumentViewModel Pricing)> OpenAsync()
     {
-        var window = new MainWindow { DataContext = _main, Width = 1280, Height = 800 };
+        // Tall enough, with the bottom panel closed, to show the whole file under test.
+        var window = new MainWindow { DataContext = _main, Width = 1280, Height = 900 };
         window.Show();
         Dispatcher.UIThread.RunJobs();
 
@@ -183,6 +186,7 @@ public sealed class LiveTestingScreenshotTests : IClassFixture<SharedToolchain>,
         var workspace = _main.Workspace!;
         await UiTestHelpers.WaitUntilAsync(() => workspace.Tests.TotalCount == 4, because: "the tests found in source");
         workspace.SelectSideBarPanelCommand.Execute(SideBarPanel.TestExplorer);
+        workspace.IsBottomPanelVisible = false;
 
         var pricing = (await workspace.OpenDocumentAsync(_temp.Resolve(PricingSolution.LibraryFile)))!;
         await pricing.AnalyzeNowAsync();
