@@ -32,7 +32,7 @@
              ScrollViewer.HorizontalScrollBarVisibility="Disabled">
       <ListBox.ItemTemplate>
         <DataTemplate DataType="vm:ExplorerItemViewModel">
-          <Grid ColumnDefinitions="Auto,18,Auto,*,Auto" Height="30" Background="Transparent">
+          <Grid ColumnDefinitions="Auto,18,Auto,*,Auto,Auto" Height="30" Background="Transparent">
             <!-- Long-press on touch, right-click with a mouse. -->
             <Grid.ContextFlyout>
               <MenuFlyout>
@@ -77,6 +77,14 @@
                     IsVisible="{Binding Pill, Converter={x:Static ObjectConverters.IsNotNull}}">
               <TextBlock Text="{Binding Pill}" VerticalAlignment="Center" />
             </Border>
+
+            <!-- Source control: a colored letter on changed files, a dot on folders with changes inside. -->
+            <Panel Grid.Column="5" Width="14" Margin="0,0,12,0" ToolTip.Tip="{Binding GitGlyphTip}" IsVisible="{Binding HasGitGlyph}">
+              <TextBlock Text="{Binding GitGlyphText}" FontSize="12" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"
+                         Foreground="{Binding GitGlyph, Converter={x:Static conv:SourceControlConverters.GlyphBrush}}" IsVisible="{Binding HasGitLetter}" />
+              <Ellipse Width="6" Height="6" HorizontalAlignment="Center" VerticalAlignment="Center"
+                       Fill="{Binding GitGlyph, Converter={x:Static conv:SourceControlConverters.GlyphBrush}}" IsVisible="{Binding HasGitDot}" />
+            </Panel>
           </Grid>
         </DataTemplate>
       </ListBox.ItemTemplate>

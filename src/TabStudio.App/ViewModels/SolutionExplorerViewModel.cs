@@ -261,6 +261,7 @@ public sealed partial class SolutionExplorerViewModel : ObservableObject
     {
         // A reset clears the list's selection; put it back when the selected row is still shown.
         var selected = SelectedItem;
+        ApplySourceControlStatus(rows);
         Rows.ReplaceAll(rows);
         if (selected is not null && rows.Contains(selected))
         {

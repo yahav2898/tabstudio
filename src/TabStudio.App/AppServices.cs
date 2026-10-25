@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using TabStudio.App.Platform;
 using TabStudio.App.Services;
 using TabStudio.App.ViewModels;
@@ -40,6 +41,9 @@ public static class AppServices
             http.DefaultRequestHeaders.UserAgent.ParseAdd("TabStudio/0.1 (+https://github.com/yahav2898/tabstudio)");
             return http;
         });
+        // Tests register a GitHubAccount of their own first, talking to a fake GitHub.
+        services.TryAddSingleton<GitHubAccount>();
+        services.AddSingleton<GitHubAccountViewModel>();
         services.AddSingleton<GitHubImporter>();
 
         // View models.

@@ -1,0 +1,153 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:vm="using:TabStudio.App.ViewModels"
+             x:Class="TabStudio.App.Views.GitDialogsView"
+             x:DataType="vm:GitChangesViewModel">
+
+  <!-- The Git Changes window's dialogs, drawn over the IDE: switch branch, create a pull request, history. -->
+  <Panel>
+
+    <!-- Switch branch -->
+    <Panel Background="#99000000" IsVisible="{Binding IsBranchPickerOpen}">
+      <Border Width="440" MaxHeight="560" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20" CornerRadius="12"
+              Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
+              BoxShadow="0 12 32 0 #66000000">
+        <DockPanel>
+          <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,10">
+            <TextBlock Classes="h2" FontSize="15" Text="Switch Branch" />
+            <TextBlock Classes="muted small" TextTrimming="CharacterEllipsis">
+              <Run Text="{Binding RepositoryName}" />
+              <Run Text=" · on " />
+              <Run Text="{Binding BranchName}" FontWeight="SemiBold" />
+            </TextBlock>
+          </StackPanel>
+          <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
+            <Button Theme="{StaticResource SecondaryButton}" Height="40" Padding="18,0" Content="Cancel" Command="{Binding CloseBranchPickerCommand}" />
+          </StackPanel>
+          <Button DockPanel.Dock="Top" Theme="{StaticResource ToolButton}" Height="44" Padding="10,0"
+                  HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Command="{Binding NewBranchCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <controls:StrokeIcon Data="{StaticResource Icon.Plus}" Size="16" Foreground="{DynamicResource Brush.AccentText}" />
+              <TextBlock Text="New Branch..." VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+          <Border DockPanel.Dock="Top" Height="1" Margin="0,6" Background="{DynamicResource Brush.Divider}" />
+          <Panel>
+            <ProgressBar IsIndeterminate="True" Width="120" Margin="0,14" VerticalAlignment="Top" HorizontalAlignment="Left"
+                         IsVisible="{Binding IsLoadingBranches}" />
+            <TextBlock Margin="0,10" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Error}" Text="{Binding BranchesErrorText}"
+                       IsVisible="{Binding BranchesErrorText, Converter={x:Static ObjectConverters.IsNotNull}}" />
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+              <ItemsControl ItemsSource="{Binding Branches}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate DataType="vm:GitBranchItemViewModel">
+                    <Button Theme="{StaticResource ToolButton}" Height="44" Padding="10,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                            Classes.selected="{Binding IsCurrent}" Command="{Binding Select}" CommandParameter="{Binding}">
+                      <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                        <controls:StrokeIcon Data="{StaticResource Icon.Branch}" Size="15" Margin="0,0,10,0" />
+                        <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                        <Border Grid.Column="2" Classes="pill" Margin="8,0,0,0" IsVisible="{Binding Note, Converter={x:Static ObjectConverters.IsNotNull}}">
+                          <TextBlock Text="{Binding Note}" VerticalAlignment="Center" />
+                        </Border>
+                        <controls:StrokeIcon Grid.Column="3" Data="{StaticResource Icon.Check}" Size="15" Margin="8,0,0,0"
+                                             Foreground="{DynamicResource Brush.AccentText}" IsVisible="{Binding IsCurrent}" />
+                      </Grid>
+                    </Button>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </ScrollViewer>
+          </Panel>
+        </DockPanel>
+      </Border>
+    </Panel>
+
+    <!-- Create a pull request -->
+    <Panel Background="#99000000" IsVisible="{Binding IsPullRequestFormOpen}">
+      <Border Width="480" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="22" CornerRadius="12"
+              Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
+              BoxShadow="0 12 32 0 #66000000">
+        <StackPanel Spacing="10">
+          <TextBlock Classes="h2" FontSize="15" Text="Create a Pull Request" />
+          <TextBlock Classes="muted small" TextWrapping="Wrap">
+            <Run Text="Asks to merge " />
+            <Run Text="{Binding BranchName}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" />
+            <Run Text=" into the branch below. Reviewers see it on GitHub." />
+          </TextBlock>
+          <TextBlock Classes="label" Text="Into" />
+          <TextBox Classes="mono" MinHeight="38" Text="{Binding PullRequestBase}" />
+          <TextBlock Classes="label" Text="Title" />
+          <TextBox MinHeight="38" Text="{Binding PullRequestTitle}" Watermark="What the changes do" />
+          <TextBlock Classes="label" Text="Description" />
+          <TextBox Height="110" AcceptsReturn="True" TextWrapping="Wrap" VerticalContentAlignment="Top" Padding="10,8"
+                   Text="{Binding PullRequestDescription}" Watermark="Optional. Markdown works here." />
+          <CheckBox IsChecked="{Binding PullRequestDraft}" Content="Create it as a draft" />
+          <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource Brush.Error}" Text="{Binding PullRequestErrorText}"
+                     IsVisible="{Binding PullRequestErrorText, Converter={x:Static ObjectConverters.IsNotNull}}" />
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10" Margin="0,4,0,0">
+            <Button Theme="{StaticResource SecondaryButton}" Height="40" Padding="18,0" Content="Cancel" Command="{Binding ClosePullRequestFormCommand}" />
+            <Button Theme="{StaticResource AccentButton}" Height="40" Padding="18,0" Command="{Binding CreatePullRequestCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <controls:StrokeIcon Data="{StaticResource Icon.PullRequest}" Size="15" />
+                <TextBlock Text="Create" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+    </Panel>
+
+    <!-- History -->
+    <Panel Background="#99000000" IsVisible="{Binding IsHistoryOpen}">
+      <Border Width="560" MaxHeight="600" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20" CornerRadius="12"
+              Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
+              BoxShadow="0 12 32 0 #66000000">
+        <DockPanel>
+          <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,10">
+            <TextBlock Classes="h2" FontSize="15" Text="History" />
+            <TextBlock Classes="muted small" TextTrimming="CharacterEllipsis">
+              <Run Text="{Binding RepositoryName}" />
+              <Run Text=" · " />
+              <Run Text="{Binding BranchName}" FontWeight="SemiBold" />
+              <Run Text=" · newest first; tap a commit to see it on GitHub" />
+            </TextBlock>
+          </StackPanel>
+          <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
+            <Button Theme="{StaticResource SecondaryButton}" Height="40" Padding="18,0" Content="Close" Command="{Binding CloseHistoryCommand}" />
+          </StackPanel>
+          <Panel>
+            <ProgressBar IsIndeterminate="True" Width="120" Margin="0,14" VerticalAlignment="Top" HorizontalAlignment="Left"
+                         IsVisible="{Binding IsLoadingHistory}" />
+            <TextBlock Margin="0,10" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Error}" Text="{Binding HistoryErrorText}"
+                       IsVisible="{Binding HistoryErrorText, Converter={x:Static ObjectConverters.IsNotNull}}" />
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+              <ItemsControl ItemsSource="{Binding History}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate DataType="vm:GitCommitItemViewModel">
+                    <Button Theme="{StaticResource ToolButton}" MinHeight="52" Padding="10,6" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                            ToolTip.Tip="Open on GitHub" Command="{Binding Open}" CommandParameter="{Binding}">
+                      <Grid ColumnDefinitions="Auto,*">
+                        <controls:StrokeIcon Data="{StaticResource Icon.Commit}" Size="16" Margin="0,0,10,0" Foreground="{DynamicResource Brush.TextMuted}" />
+                        <StackPanel Grid.Column="1" Spacing="3">
+                          <TextBlock Text="{Binding Summary}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
+                          <TextBlock Classes="muted small" TextTrimming="CharacterEllipsis">
+                            <Run Text="{Binding ShortSha}" FontFamily="{DynamicResource CodeFont}" />
+                            <Run Text=" · " />
+                            <Run Text="{Binding Author}" />
+                            <Run Text=" · " />
+                            <Run Text="{Binding When}" />
+                          </TextBlock>
+                        </StackPanel>
+                      </Grid>
+                    </Button>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </ScrollViewer>
+          </Panel>
+        </DockPanel>
+      </Border>
+    </Panel>
+  </Panel>
+</UserControl>

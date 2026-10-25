@@ -70,7 +70,9 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     private bool _disposed;
 
     /// <summary>Creates the IDE. Call <see cref="LoadAsync"/> to open a workspace.</summary>
-    public WorkspaceViewModel(CompilerServices compiler, IDeviceStatus device, DeviceProfile profile, IUiDispatcher ui, SessionStore sessions, AppPaths paths)
+    /// <param name="gitHubAccount">The app's GitHub account; without it, the Git Changes window starts signed out.</param>
+    /// <param name="browser">Opens GitHub pages; the system browser when <see langword="null"/>.</param>
+    public WorkspaceViewModel(CompilerServices compiler, IDeviceStatus device, DeviceProfile profile, IUiDispatcher ui, SessionStore sessions, AppPaths paths, GitHubAccountViewModel? gitHubAccount = null, IStoragePicker? browser = null)
     {
         ArgumentNullException.ThrowIfNull(compiler);
         ArgumentNullException.ThrowIfNull(device);
@@ -94,6 +96,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         _device.MemoryPressureRaised += OnMemoryPressure;
         _compiler.Warmed += OnCompilerWarmed;
         UpdateThermal();
+        GitChanges = CreateGitChanges(gitHubAccount, browser);
     }
 
     /// <summary>Raised when the user closes the workspace to return to the start screen.</summary>
@@ -319,6 +322,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         Output.EndInput();
         _language?.Dispose();
         _language = null;
+        GitChanges.Dispose();
     }
 
     private void LoadStartupProjects(Workspace workspace, string? preferred)

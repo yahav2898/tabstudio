@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace TabStudio.App.Services;
 
-/// <summary>A public GitHub repository, and optionally a branch, tag or commit in it.</summary>
+/// <summary>A GitHub repository, and optionally a branch, tag or commit in it.</summary>
 /// <param name="Owner">The user or organization.</param>
 /// <param name="Name">The repository name.</param>
 /// <param name="Reference">A branch, tag or commit, or <see langword="null"/> for the default branch.</param>
@@ -11,12 +11,6 @@ public sealed partial record GitHubRepository(string Owner, string Name, string?
 {
     /// <summary>The repository's web address.</summary>
     public Uri WebUri => new($"https://github.com/{Owner}/{Name}");
-
-    /// <summary>The address of a zip archive of the repository at <see cref="Reference"/>.</summary>
-    public Uri ArchiveUri => new($"https://github.com/{Owner}/{Name}/archive/{EscapePath(Reference ?? "HEAD")}.zip");
-
-    /// <summary>Escapes each segment of a branch name such as <c>feature/login</c>, keeping the slashes.</summary>
-    private static string EscapePath(string reference) => string.Join('/', reference.Split('/').Select(Uri.EscapeDataString));
 
     /// <inheritdoc />
     public override string ToString() => Reference is null ? $"{Owner}/{Name}" : $"{Owner}/{Name}@{Reference}";

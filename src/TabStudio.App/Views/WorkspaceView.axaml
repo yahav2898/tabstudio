@@ -56,6 +56,7 @@
           </MenuItem>
           <MenuItem Header="_View">
             <MenuItem Header="_Solution Explorer" InputGesture="Ctrl+Alt+L" Command="{Binding ToggleSideBarCommand}" />
+            <MenuItem Header="_Git Changes" Command="{Binding ShowGitChangesCommand}" />
             <MenuItem Header="_Error List" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" />
             <MenuItem Header="_Output" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Output}" />
             <MenuItem Header="_Compatibility Doctor" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Compatibility}" />
@@ -64,6 +65,23 @@
             <MenuItem Header="Navigate _Backward" InputGesture="Alt+Left" Command="{Binding NavigateBackCommand}" />
             <MenuItem Header="Navigate _Forward" InputGesture="Alt+Right" Command="{Binding NavigateForwardCommand}" />
             <MenuItem Header="Sync with _Active Document" Command="{Binding SyncWithActiveDocumentCommand}" />
+          </MenuItem>
+          <MenuItem Header="_Git">
+            <MenuItem Header="_Commit..." Command="{Binding ShowGitChangesCommand}" IsEnabled="{Binding GitChanges.IsLinked}" />
+            <Separator />
+            <MenuItem Header="_Fetch" Command="{Binding GitChanges.FetchCommand}" />
+            <MenuItem Header="_Pull" Command="{Binding GitChanges.PullCommand}" />
+            <MenuItem Header="_Sync (Pull then Push)" Command="{Binding GitChanges.SyncCommand}" />
+            <Separator />
+            <MenuItem Header="_New Branch..." Command="{Binding GitChanges.NewBranchCommand}" />
+            <MenuItem Header="S_witch Branch..." Command="{Binding GitChanges.OpenBranchPickerCommand}" />
+            <MenuItem Header="Create Pull _Request..." Command="{Binding GitChanges.OpenPullRequestFormCommand}" />
+            <Separator />
+            <MenuItem Header="P_ublish to GitHub..." Command="{Binding ShowGitChangesCommand}" IsEnabled="{Binding GitChanges.IsPublishVisible}" />
+            <MenuItem Header="Open on _GitHub" Command="{Binding GitChanges.OpenOnGitHubCommand}" />
+            <MenuItem Header="View _History" Command="{Binding GitChanges.OpenHistoryCommand}" />
+            <Separator />
+            <MenuItem Header="GitHub _Account..." Command="{Binding GitChanges.Account.OpenCommand}" />
           </MenuItem>
           <MenuItem Header="_Build">
             <MenuItem Header="_Build Solution" InputGesture="Ctrl+Shift+B" Command="{Binding BuildCommand}" />
@@ -373,8 +391,8 @@
         </GridSplitter.Template>
       </GridSplitter>
 
-      <!-- Solution Explorer and Properties -->
-      <Grid Grid.Column="2" x:Name="SideBar" RowDefinitions="*,Auto,214" Background="{DynamicResource Brush.Panel}">
+      <!-- Solution Explorer and Properties, or Git Changes; tool window tabs at the bottom as in Visual Studio -->
+      <Grid Grid.Column="2" x:Name="SideBar" RowDefinitions="*,Auto,214,Auto" Background="{DynamicResource Brush.Panel}">
         <views:SolutionExplorerView DataContext="{Binding Explorer}" />
         <GridSplitter Grid.Row="1" Height="6" ResizeDirection="Rows" Background="Transparent">
           <GridSplitter.Template>
@@ -386,6 +404,16 @@
           </GridSplitter.Template>
         </GridSplitter>
         <views:PropertiesView Grid.Row="2" DataContext="{Binding Properties}" />
+        <views:GitChangesView Grid.Row="0" Grid.RowSpan="3" DataContext="{Binding GitChanges}"
+                              IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsGitChangesSelected}" />
+        <Border Grid.Row="3" Height="34" Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0">
+          <StackPanel Orientation="Horizontal" Margin="6,0">
+            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsSolutionExplorerSelected}" Content="Solution Explorer"
+                    Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.SolutionExplorer}" />
+            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsGitChangesSelected}" Content="Git Changes"
+                    Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.GitChanges}" />
+          </StackPanel>
+        </Border>
       </Grid>
     </Grid>
 
@@ -406,6 +434,16 @@
           </StackPanel>
           <TextBlock Text="{Binding DeviceText}" VerticalAlignment="Center"
                      IsVisible="{Binding DeviceText, Converter={x:Static ObjectConverters.IsNotNull}}" />
+          <Button Theme="{StaticResource ToolButton}" Height="24" MinHeight="24" MinWidth="0" Padding="6,0" CornerRadius="4"
+                  Foreground="{DynamicResource Brush.OnAccent}" ToolTip.Tip="Git Changes" Command="{Binding ShowGitChangesCommand}"
+                  IsVisible="{Binding GitChanges.IsLinked}">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+              <controls:StrokeIcon Size="13" Data="{StaticResource Icon.Branch}" />
+              <TextBlock Text="{Binding GitChanges.BranchName}" FontSize="12" VerticalAlignment="Center" />
+              <TextBlock Text="{Binding GitChanges.IncomingCommits, StringFormat='↓{0}'}" FontSize="12" VerticalAlignment="Center"
+                         IsVisible="{Binding GitChanges.HasIncoming}" />
+            </StackPanel>
+          </Button>
         </StackPanel>
 
         <TextBlock Grid.Column="1" Margin="18,0" Foreground="{DynamicResource Brush.OnAccent}" FontSize="12" Opacity="0.9"
@@ -421,6 +459,9 @@
         </StackPanel>
       </Grid>
     </Border>
+
+    <!-- Git's dialogs: switch branch, create a pull request, history. -->
+    <views:GitDialogsView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding GitChanges}" />
 
     <!-- The in-app dialog that asks for names and confirmations. -->
     <Panel Grid.Row="0" Grid.RowSpan="4" Background="#99000000" IsVisible="{Binding Prompt.IsOpen}">

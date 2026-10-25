@@ -30,16 +30,12 @@ public sealed class GitHubRepositoryTests
     }
 
     [Fact]
-    public void Archive_address_keeps_slashes_in_branch_names()
+    public void Web_address_and_display_name_leave_out_or_show_the_branch()
     {
         var repository = new GitHubRepository("dotnet", "aspnetcore", "release/9.0");
 
-        Assert.Equal("https://github.com/dotnet/aspnetcore/archive/release/9.0.zip", repository.ArchiveUri.ToString());
-    }
-
-    [Fact]
-    public void Archive_address_uses_the_default_branch_when_none_is_given()
-    {
-        Assert.Equal("https://github.com/o/r/archive/HEAD.zip", new GitHubRepository("o", "r", null).ArchiveUri.ToString());
+        Assert.Equal("https://github.com/dotnet/aspnetcore", repository.WebUri.ToString());
+        Assert.Equal("dotnet/aspnetcore@release/9.0", repository.ToString());
+        Assert.Equal("o/r", new GitHubRepository("o", "r", null).ToString());
     }
 }

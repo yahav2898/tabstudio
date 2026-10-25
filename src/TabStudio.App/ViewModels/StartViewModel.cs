@@ -64,7 +64,8 @@ public sealed partial class StartViewModel : ObservableObject, IDisposable
         ProjectTemplates templates,
         GitHubImporter gitHub,
         FolderImporter folders,
-        IStoragePicker picker)
+        IStoragePicker picker,
+        GitHubAccountViewModel gitHubAccount)
     {
         _recent = recent;
         _samples = samples;
@@ -72,9 +73,13 @@ public sealed partial class StartViewModel : ObservableObject, IDisposable
         _gitHub = gitHub;
         _folders = folders;
         _picker = picker;
+        GitHubAccount = gitHubAccount;
         SelectedTemplate = Templates[0];
         RefreshRecent();
     }
+
+    /// <summary>The GitHub account, for opening private repositories.</summary>
+    public GitHubAccountViewModel GitHubAccount { get; }
 
     /// <summary>Raised when the user chooses a workspace to open, with its path.</summary>
     public event EventHandler<string>? OpenRequested;

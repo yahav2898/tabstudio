@@ -1,0 +1,69 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:vm="using:TabStudio.App.ViewModels"
+             x:Class="TabStudio.App.Views.GitHubSignInView"
+             x:DataType="vm:GitHubAccountViewModel">
+
+  <!-- The GitHub account dialog, drawn over the start screen or the IDE. -->
+  <Panel Background="#99000000" IsVisible="{Binding IsOpen}">
+    <Border Width="500" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="22" CornerRadius="12"
+            Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
+            BoxShadow="0 12 32 0 #66000000">
+      <StackPanel Spacing="12">
+        <Grid ColumnDefinitions="Auto,*">
+          <controls:StrokeIcon Data="{StaticResource Icon.User}" Size="20" Margin="0,0,10,0" Foreground="{DynamicResource Brush.AccentText}" />
+          <TextBlock Grid.Column="1" Classes="h2" FontSize="15" Text="GitHub Account" VerticalAlignment="Center" />
+        </Grid>
+
+        <!-- Signed in -->
+        <StackPanel Spacing="12" IsVisible="{Binding IsSignedIn}">
+          <TextBlock TextWrapping="Wrap">
+            <Run Text="Signed in as " Foreground="{DynamicResource Brush.TextMuted}" />
+            <Run Text="{Binding Login}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" />
+            <Run Text=" " />
+            <Run Text="{Binding DisplayName}" Foreground="{DynamicResource Brush.TextMuted}" />
+          </TextBlock>
+          <TextBlock Classes="muted small" TextWrapping="Wrap"
+                     Text="TabStudio commits, pulls, creates branches and pull requests, and publishes repositories as this account. Signing out deletes the token from this device." />
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+            <Button Theme="{StaticResource SecondaryButton}" Height="40" Padding="18,0" Content="Sign Out" Command="{Binding SignOutCommand}" />
+            <Button Theme="{StaticResource AccentButton}" Height="40" Padding="18,0" Content="Done" Command="{Binding CloseCommand}" />
+          </StackPanel>
+        </StackPanel>
+
+        <!-- Signed out -->
+        <StackPanel Spacing="12" IsVisible="{Binding !IsSignedIn}">
+          <TextBlock Classes="muted" TextWrapping="Wrap"
+                     Text="Sign in with a personal access token to open private repositories, commit and push, create branches and pull requests, and publish new repositories." />
+          <Border Padding="12,10" CornerRadius="8" Background="{DynamicResource Brush.Control}">
+            <StackPanel Spacing="6">
+              <TextBlock Classes="small" FontWeight="SemiBold" Text="What the token needs" />
+              <TextBlock Classes="muted small" TextWrapping="Wrap"
+                         Text="Classic token: the repo scope. Fine-grained token: access to your repositories with Contents (read and write) and Pull requests (read and write); add Administration (read and write) to publish new repositories." />
+            </StackPanel>
+          </Border>
+          <Button Theme="{StaticResource ToolButton}" Height="36" MinHeight="36" Padding="6,0" HorizontalAlignment="Left"
+                  Foreground="{DynamicResource Brush.Link}" Command="{Binding CreateTokenCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="7">
+              <controls:StrokeIcon Data="{StaticResource Icon.External}" Size="14" />
+              <TextBlock Text="Create a token on GitHub" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+          <TextBox x:Name="TokenBox" Classes="large mono" PasswordChar="•" Text="{Binding Token}" Watermark="Paste the token: ghp_… or github_pat_…" />
+          <TextBlock Classes="muted small" TextWrapping="Wrap"
+                     Text="The token is kept in TabStudio's private storage on this device and is only ever sent to GitHub." />
+          <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource Brush.Error}" Text="{Binding ErrorText}"
+                     IsVisible="{Binding ErrorText, Converter={x:Static ObjectConverters.IsNotNull}}" />
+          <Grid ColumnDefinitions="*,Auto">
+            <ProgressBar IsIndeterminate="True" Width="100" HorizontalAlignment="Left" VerticalAlignment="Center" IsVisible="{Binding IsBusy}" />
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
+              <Button Theme="{StaticResource SecondaryButton}" Height="40" Padding="18,0" Content="Cancel" Command="{Binding CloseCommand}" />
+              <Button Theme="{StaticResource AccentButton}" Height="40" Padding="18,0" Content="Sign In" Command="{Binding SignInCommand}" />
+            </StackPanel>
+          </Grid>
+        </StackPanel>
+      </StackPanel>
+    </Border>
+  </Panel>
+</UserControl>

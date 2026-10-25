@@ -120,7 +120,16 @@
               <StackPanel Spacing="12" IsVisible="{Binding IsGitHubFormVisible}">
                 <TextBlock Classes="h2" Text="Download a repository from GitHub" />
                 <TextBlock Classes="muted" TextWrapping="Wrap"
-                           Text="Paste the address of a public repository. TabStudio downloads it, detects what it is built with and shows where each project runs on this tablet." />
+                           Text="Paste the address of a repository. TabStudio downloads it, detects what it is built with and shows where each project runs on this tablet. The folder stays linked to GitHub, so you can commit, pull and branch from the Git Changes window." />
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                  <controls:StrokeIcon Data="{StaticResource Icon.User}" Size="16" Margin="0,0,8,0" Foreground="{DynamicResource Brush.TextMuted}" />
+                  <TextBlock Grid.Column="1" Classes="muted small" VerticalAlignment="Center" TextWrapping="Wrap">
+                    <Run Text="{Binding GitHubAccount.StatusText}" />
+                    <Run Text=". Public repositories open without an account; private ones and committing need one." />
+                  </TextBlock>
+                  <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Height="36" Padding="12,0" Margin="10,0,0,0"
+                          Content="{Binding GitHubAccount.ButtonText}" Command="{Binding GitHubAccount.OpenCommand}" />
+                </Grid>
                 <Grid ColumnDefinitions="*,Auto">
                   <TextBox Classes="large mono" Watermark="github.com/owner/repository"
                            Text="{Binding RepositoryText}" />

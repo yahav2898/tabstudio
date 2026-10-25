@@ -7,14 +7,19 @@
              Background="{DynamicResource Brush.Window}"
              Foreground="{DynamicResource Brush.Text}"
              FontSize="13">
-  <ContentControl Content="{Binding CurrentPage}">
-    <ContentControl.DataTemplates>
-      <DataTemplate DataType="vm:StartViewModel">
-        <views:StartView />
-      </DataTemplate>
-      <DataTemplate DataType="vm:WorkspaceViewModel">
-        <views:WorkspaceView />
-      </DataTemplate>
-    </ContentControl.DataTemplates>
-  </ContentControl>
+  <Panel>
+    <ContentControl Content="{Binding CurrentPage}">
+      <ContentControl.DataTemplates>
+        <DataTemplate DataType="vm:StartViewModel">
+          <views:StartView />
+        </DataTemplate>
+        <DataTemplate DataType="vm:WorkspaceViewModel">
+          <views:WorkspaceView />
+        </DataTemplate>
+      </ContentControl.DataTemplates>
+    </ContentControl>
+
+    <!-- Signing in to GitHub, from the start screen or the IDE. -->
+    <views:GitHubSignInView DataContext="{Binding GitHubAccount}" />
+  </Panel>
 </UserControl>

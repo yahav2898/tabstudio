@@ -1,12 +1,12 @@
-using System.IO.Compression;
-using System.Net;
+using TabStudio.SourceControl;
+using TabStudio.SourceControl.GitHub;
 
 namespace TabStudio.App.Services;
 
 /// <summary>Progress of a download, for the start screen.</summary>
-/// <param name="BytesReceived">Bytes downloaded so far.</param>
-/// <param name="TotalBytes">The total size, when the server reports it.</param>
-/// <param name="Stage">What is happening now.</param>
+/// <param name="BytesReceived">Bytes downloaded so far, or steps done for a download counted in files.</param>
+/// <param name="TotalBytes">The total, when it is known.</param>
+/// <param name="Stage">What is happening now, such as "Downloading 12 files".</param>
 public sealed record ImportProgress(long BytesReceived, long? TotalBytes, string Stage);
 
 /// <summary>Raised when a repository cannot be downloaded, with a message for the user.</summary>
@@ -34,185 +34,87 @@ public sealed class ImportException : Exception
 }
 
 /// <summary>
-/// Downloads a public GitHub repository as a zip archive and unpacks it into the projects folder.
-/// No Git installation is needed, which is what lets this work on any tablet.
+/// Downloads a GitHub repository into the projects folder and links the folder to it, so the Git Changes
+/// window can commit, pull and switch branches there. No Git installation is needed, which is what lets this
+/// work on any tablet. Private repositories work when the user is signed in to GitHub.
 /// </summary>
 public sealed class GitHubImporter
 {
-    /// <summary>Archives larger than this are refused, to protect the tablet's storage.</summary>
-    public const long MaximumArchiveBytes = 1024L * 1024 * 1024;
-
-    private readonly HttpClient _http;
+    private readonly GitHubAccount _account;
     private readonly AppPaths _paths;
 
     /// <summary>Creates the importer.</summary>
-    /// <param name="http">The HTTP client to download with.</param>
+    /// <param name="account">The GitHub account to download as.</param>
     /// <param name="paths">Where projects are created.</param>
-    public GitHubImporter(HttpClient http, AppPaths paths)
+    public GitHubImporter(GitHubAccount account, AppPaths paths)
     {
-        ArgumentNullException.ThrowIfNull(http);
+        ArgumentNullException.ThrowIfNull(account);
         ArgumentNullException.ThrowIfNull(paths);
-        _http = http;
+        _account = account;
         _paths = paths;
     }
 
-    /// <summary>Downloads a repository and unpacks it into a new folder.</summary>
-    /// <param name="repository">The repository to download.</param>
+    /// <summary>Downloads a repository into a new folder linked to it.</summary>
+    /// <param name="repository">The repository, and optionally a branch, tag or commit.</param>
     /// <param name="progress">Receives download progress.</param>
-    /// <param name="cancellationToken">Cancels the download.</param>
-    /// <returns>The folder the repository was unpacked into.</returns>
-    /// <exception cref="ImportException">The repository could not be downloaded or unpacked.</exception>
+    /// <param name="cancellationToken">Cancels the download; the incomplete folder is removed.</param>
+    /// <returns>The folder the repository was downloaded into.</returns>
+    /// <exception cref="ImportException">The repository could not be downloaded.</exception>
     public async Task<string> ImportAsync(GitHubRepository repository, IProgress<ImportProgress>? progress = null, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(repository);
 
-        var archive = Path.Combine(_paths.Cache, $"download-{Guid.NewGuid():N}.zip");
+        var target = _paths.GetAvailableProjectDirectory(repository.Name);
+        var syncProgress = progress is null ? null : new ProgressAdapter(progress);
         try
         {
-            await DownloadAsync(repository, archive, progress, cancellationToken).ConfigureAwait(false);
-
-            progress?.Report(new ImportProgress(new FileInfo(archive).Length, null, "Unpacking"));
-            var target = _paths.GetAvailableProjectDirectory(repository.Name);
-            await Task.Run(() => ArchiveExtractor.ExtractStrippingRoot(archive, target), cancellationToken).ConfigureAwait(false);
+            await GitHubSync.CloneAsync(_account.CreateClient(), repository.Owner, repository.Name, repository.Reference, target, syncProgress, cancellationToken);
             return target;
         }
-        catch (InvalidDataException ex)
+        catch (OperationCanceledException)
         {
-            throw new ImportException("The download is not a valid zip archive.", ex);
+            TryDelete(target);
+            throw;
         }
-        catch (HttpRequestException ex)
+        catch (Exception ex) when (ex is GitHubApiException or SyncException or IOException or UnauthorizedAccessException)
         {
-            throw new ImportException($"Could not reach GitHub: {ex.Message}", ex);
-        }
-        finally
-        {
-            TryDelete(archive);
+            TryDelete(target);
+            throw new ImportException(Describe(repository, ex), ex);
         }
     }
 
-    private async Task DownloadAsync(GitHubRepository repository, string archive, IProgress<ImportProgress>? progress, CancellationToken cancellationToken)
+    private string Describe(GitHubRepository repository, Exception exception) => exception switch
     {
-        using var response = await _http.GetAsync(repository.ArchiveUri, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-        if (response.StatusCode == HttpStatusCode.NotFound)
-        {
-            throw new ImportException(repository.Reference is null
-                ? $"GitHub has no public repository '{repository.Owner}/{repository.Name}'."
-                : $"'{repository.Owner}/{repository.Name}' has no branch, tag or commit '{repository.Reference}'.");
-        }
+        GitHubApiException { IsNotFound: true } when _account.IsSignedIn => repository.Reference is null
+            ? $"GitHub has no repository '{repository.Owner}/{repository.Name}' that your account can see."
+            : $"'{repository.Owner}/{repository.Name}' has no branch, tag or commit '{repository.Reference}' that your account can see.",
+        GitHubApiException { IsNotFound: true } => repository.Reference is null
+            ? $"GitHub has no public repository '{repository.Owner}/{repository.Name}'. Sign in to GitHub to open a private one."
+            : $"'{repository.Owner}/{repository.Name}' has no branch, tag or commit '{repository.Reference}', or the repository is private. Sign in to GitHub to open a private one.",
+        GitHubApiException { IsRejected: true } when repository.Reference is not null =>
+            $"'{repository.Owner}/{repository.Name}' has no branch, tag or commit '{repository.Reference}'.",
+        _ => SyncErrors.Describe(exception),
+    };
 
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new ImportException($"GitHub answered {(int)response.StatusCode} {response.ReasonPhrase}.");
-        }
-
-        var total = response.Content.Headers.ContentLength;
-        if (total > MaximumArchiveBytes)
-        {
-            throw new ImportException("The repository is larger than 1 GB, which is more than TabStudio downloads.");
-        }
-
-        await using var source = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
-        await using var target = File.Create(archive);
-
-        var buffer = new byte[81920];
-        long received = 0;
-        int read;
-        while ((read = await source.ReadAsync(buffer, cancellationToken).ConfigureAwait(false)) > 0)
-        {
-            await target.WriteAsync(buffer.AsMemory(0, read), cancellationToken).ConfigureAwait(false);
-            received += read;
-            if (received > MaximumArchiveBytes)
-            {
-                throw new ImportException("The repository is larger than 1 GB, which is more than TabStudio downloads.");
-            }
-
-            progress?.Report(new ImportProgress(received, total, "Downloading"));
-        }
-    }
-
-    private static void TryDelete(string path)
+    private static void TryDelete(string folder)
     {
         try
         {
-            File.Delete(path);
+            if (Directory.Exists(folder))
+            {
+                Directory.Delete(folder, recursive: true);
+            }
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
-            // A leftover file in the cache folder is harmless.
-        }
-    }
-}
-
-/// <summary>Unpacks zip archives safely.</summary>
-internal static class ArchiveExtractor
-{
-    /// <summary>
-    /// Extracts an archive whose entries all live under one top-level folder (as GitHub archives do), dropping
-    /// that folder. Entries that would land outside the target are rejected.
-    /// </summary>
-    /// <param name="archivePath">The zip file.</param>
-    /// <param name="targetDirectory">The folder to extract into. Created if missing.</param>
-    public static void ExtractStrippingRoot(string archivePath, string targetDirectory)
-    {
-        using var zip = ZipFile.OpenRead(archivePath);
-        var root = CommonRoot(zip);
-        var fullTarget = Path.GetFullPath(targetDirectory) + Path.DirectorySeparatorChar;
-        Directory.CreateDirectory(fullTarget);
-
-        foreach (var entry in zip.Entries)
-        {
-            var relative = entry.FullName.Replace('\\', '/');
-            if (root is not null)
-            {
-                relative = relative.Length > root.Length ? relative[root.Length..] : string.Empty;
-            }
-
-            if (relative.Length == 0)
-            {
-                continue;
-            }
-
-            var destination = Path.GetFullPath(Path.Combine(fullTarget, relative.Replace('/', Path.DirectorySeparatorChar)));
-            if (!destination.StartsWith(fullTarget, StringComparison.Ordinal))
-            {
-                throw new ImportException($"The archive contains an unsafe path: '{entry.FullName}'.");
-            }
-
-            if (relative.EndsWith('/'))
-            {
-                Directory.CreateDirectory(destination);
-                continue;
-            }
-
-            Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
-            entry.ExtractToFile(destination, overwrite: true);
+            // A leftover folder is harmless: the next import picks another name.
         }
     }
 
-    /// <summary>The single top-level folder all entries share, including its trailing slash, if there is one.</summary>
-    private static string? CommonRoot(ZipArchive zip)
+    /// <summary>Passes the clone's progress on as the start screen's, as it happens.</summary>
+    private sealed class ProgressAdapter(IProgress<ImportProgress> progress) : IProgress<SyncProgress>
     {
-        string? root = null;
-        foreach (var entry in zip.Entries)
-        {
-            var name = entry.FullName.Replace('\\', '/');
-            var slash = name.IndexOf('/', StringComparison.Ordinal);
-            if (slash <= 0)
-            {
-                return null;
-            }
-
-            var first = name[..(slash + 1)];
-            if (root is null)
-            {
-                root = first;
-            }
-            else if (!string.Equals(root, first, StringComparison.Ordinal))
-            {
-                return null;
-            }
-        }
-
-        return root;
+        public void Report(SyncProgress value) =>
+            progress.Report(new ImportProgress(value.Completed, value.Total > 0 ? value.Total : (long?)null, value.Message));
     }
 }
