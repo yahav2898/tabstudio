@@ -76,7 +76,7 @@ public sealed class ExtensionEditorTests
         Assert.Equal(Color.Parse(LumenExtension.NightKeyword), view.ForegroundAt(keyword));
         Assert.Equal(Color.Parse(LumenExtension.NightString), view.ForegroundAt(text));
         Assert.Equal(Color.Parse(LumenExtension.NightBackground), Assert.IsAssignableFrom<ISolidColorBrush>(view.EditorBackground).Color);
-        view.Editor.CaretOffset = keyword;
+        view.Editor.CaretOffset = method;
         UiTestHelpers.SaveScreenshot(window, "ext-14-csharp-lumen-night");
         window.Close();
     }
@@ -263,6 +263,34 @@ public sealed class ExtensionEditorTests
         editor.CaretOffset = OffsetOf(editor, "Greets everyone") + "Greets".Length;
         Type(editor, "\n");
         Assert.Equal("# everyone. TODO: localize", CaretLine(editor));
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public async Task Double_clicking_selects_a_word_as_the_language_defines_words()
+    {
+        using var fixture = new ExtensionsFixture();
+        var configuration = LumenExtension.LanguageConfiguration.Replace("[A-Za-z_][A-Za-z0-9_]*", "[A-Za-z_][A-Za-z0-9_-]*", StringComparison.Ordinal);
+        await fixture.InstallLumenAsync(LumenExtension.Builder().Add("language-configuration.json", configuration).Build());
+        File.WriteAllText(Path.Combine(fixture.Folder, "page.lumen"), "let page-title = \"Home\"\n");
+        await fixture.OpenFolderAsync();
+        var window = fixture.Show();
+        await fixture.OpenAsync("page.lumen");
+        var view = ActiveEditor(window);
+        var editor = view.Editor;
+        var title = OffsetOf(editor, "title");
+
+        Assert.Equal<(int, int)?>((4, 14), view.WordAt(title));
+        Assert.Equal<(int, int)?>((4, 14), view.WordAt(14));
+        Assert.Null(view.WordAt(OffsetOf(editor, "= ") + 1));
+
+        var point = PointOf(window, editor, title + 1);
+        window.MouseDown(point, MouseButton.Left);
+        window.MouseUp(point, MouseButton.Left);
+        window.MouseDown(point, MouseButton.Left);
+        window.MouseUp(point, MouseButton.Left);
+
+        Assert.Equal("page-title", editor.SelectedText);
         window.Close();
     }
 

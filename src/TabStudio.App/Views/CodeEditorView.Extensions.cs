@@ -12,9 +12,9 @@ namespace TabStudio.App.Views;
 /// <summary>
 /// Installed VS Code extensions in the editor: the chosen color theme's editor colors (background, text, current line,
 /// selection, caret, line numbers and, for C#, the colors of Roslyn's classifications); highlighting that follows the
-/// file's type when an extension that claims the file is installed or removed; and the language rules and snippets in
-/// <c>CodeEditorView.LanguageRules.cs</c> and <c>CodeEditorView.Snippets.cs</c>. The IDE around the editor keeps
-/// TabStudio's own dark style.
+/// file's type when an extension that claims the file is installed or removed; and the language rules, snippets and
+/// word selection in <c>CodeEditorView.LanguageRules.cs</c>, <c>CodeEditorView.Snippets.cs</c> and
+/// <c>CodeEditorView.WordPattern.cs</c>. The IDE around the editor keeps TabStudio's own dark style.
 /// </summary>
 public sealed partial class CodeEditorView
 {
@@ -68,6 +68,7 @@ public sealed partial class CodeEditorView
         // Snippets first: they rebuild the completion list, whose typing handlers must run before the language rules'.
         InitializeSnippets();
         InitializeLanguageRules();
+        InitializeWordSelection();
 
         // A script without an extension may be claimed by its first line, which only the open document has.
         _document.RefreshFileType();
@@ -77,6 +78,7 @@ public sealed partial class CodeEditorView
     {
         EditorExtensions.Changed -= OnEditorExtensionsChanged;
         _document.FileTypeChanged -= OnFileTypeChanged;
+        DisposeWordSelection();
         DisposeLanguageRules();
         DisposeSnippets();
         _extensionTextMate?.Dispose();
