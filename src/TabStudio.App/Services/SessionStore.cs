@@ -8,6 +8,12 @@ namespace TabStudio.App.Services;
 /// <param name="UnsavedText">The editor's text when it had unsaved changes, otherwise <see langword="null"/>.</param>
 public sealed record SessionDocument(string Path, int CaretOffset, string? UnsavedText);
 
+/// <summary>A breakpoint in a saved session.</summary>
+/// <param name="Path">Full path of the file.</param>
+/// <param name="Line">One-based line.</param>
+/// <param name="Condition">When it stops, such as <c>count == 3</c>, or <see langword="null"/> to stop every time.</param>
+public sealed record SessionBreakpoint(string Path, int Line, string? Condition);
+
 /// <summary>Everything needed to reopen the IDE where the user left it.</summary>
 /// <param name="WorkspacePath">The solution, project or folder that was open.</param>
 /// <param name="Documents">The open documents, in tab order.</param>
@@ -17,7 +23,14 @@ public sealed record SessionState(
     string WorkspacePath,
     IReadOnlyList<SessionDocument> Documents,
     string? ActiveDocument,
-    string? StartupProject);
+    string? StartupProject)
+{
+    /// <summary>The breakpoints of every file, or <see langword="null"/> in sessions saved before there were any.</summary>
+    public IReadOnlyList<SessionBreakpoint>? Breakpoints { get; init; }
+
+    /// <summary>The expressions in the Watch panel.</summary>
+    public IReadOnlyList<string>? WatchExpressions { get; init; }
+}
 
 /// <summary>
 /// Saves and restores the IDE session, so TabStudio reopens exactly where the user left it even after

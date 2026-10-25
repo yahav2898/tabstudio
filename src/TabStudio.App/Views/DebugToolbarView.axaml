@@ -1,0 +1,43 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:vm="using:TabStudio.App.ViewModels"
+             x:Class="TabStudio.App.Views.DebugToolbarView"
+             x:DataType="vm:WorkspaceViewModel">
+  <!--
+    The toolbar's debugging buttons, as in Visual Studio: Start Without Debugging next to Start, and while debugging,
+    Break All, Stop, Restart, Show Next Statement and the steps.
+  -->
+  <StackPanel Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
+    <Button Theme="{StaticResource ToolButton}" Margin="4,0,0,0" ToolTip.Tip="Start Without Debugging (Ctrl+F5)"
+            Command="{Binding RunCommand}" IsVisible="{Binding !IsDebugging}">
+      <controls:StrokeIcon Data="{StaticResource Icon.PlayOutline}" Size="15" Foreground="{DynamicResource Brush.Success}" />
+    </Button>
+
+    <StackPanel Orientation="Horizontal" Spacing="2" Margin="4,0,0,0" IsVisible="{Binding IsDebugging}">
+      <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Break All (Ctrl+Alt+Break)" Command="{Binding BreakAllCommand}">
+        <controls:StrokeIcon Data="{StaticResource Icon.Pause}" StrokeThickness="2.4" />
+      </Button>
+      <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Stop Debugging (Shift+F5)" Command="{Binding StopDebuggingCommand}">
+        <controls:StrokeIcon Data="{StaticResource Icon.Stop}" IsFilled="True" Size="14" Foreground="{DynamicResource Brush.Error}" />
+      </Button>
+      <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Restart (Ctrl+Shift+F5)" Command="{Binding RestartCommand}">
+        <controls:StrokeIcon Data="{StaticResource Icon.Restart}" />
+      </Button>
+      <Border Classes="toolbarSeparator" />
+      <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Show Next Statement (Alt+Num *)" Command="{Binding ShowNextStatementCommand}">
+        <controls:StrokeIcon Data="{StaticResource Icon.NextStatement}" IsFilled="True" Size="16"
+                             Foreground="{DynamicResource Brush.CurrentStatement}" />
+      </Button>
+      <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Step Into (F11)" Command="{Binding StepIntoCommand}">
+        <controls:StrokeIcon Data="{StaticResource Icon.StepInto}" />
+      </Button>
+      <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Step Over (F10)" Command="{Binding StepOverCommand}">
+        <controls:StrokeIcon Data="{StaticResource Icon.StepOver}" />
+      </Button>
+      <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Step Out (Shift+F11)" Command="{Binding StepOutCommand}">
+        <controls:StrokeIcon Data="{StaticResource Icon.StepOut}" />
+      </Button>
+    </StackPanel>
+  </StackPanel>
+</UserControl>

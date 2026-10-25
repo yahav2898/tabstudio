@@ -9,9 +9,19 @@
              x:DataType="vm:WorkspaceViewModel">
 
   <UserControl.KeyBindings>
-    <KeyBinding Gesture="F5" Command="{Binding RunCommand}" />
+    <KeyBinding Gesture="F5" Command="{Binding StartDebuggingCommand}" />
     <KeyBinding Gesture="Ctrl+F5" Command="{Binding RunCommand}" />
-    <KeyBinding Gesture="Shift+F5" Command="{Binding StopCommand}" />
+    <KeyBinding Gesture="Shift+F5" Command="{Binding StopDebuggingCommand}" />
+    <KeyBinding Gesture="Ctrl+Shift+F5" Command="{Binding RestartCommand}" />
+    <KeyBinding Gesture="F9" Command="{Binding ToggleBreakpointCommand}" />
+    <KeyBinding Gesture="Ctrl+Shift+F9" Command="{Binding DeleteAllBreakpointsCommand}" />
+    <KeyBinding Gesture="F10" Command="{Binding StepOverCommand}" />
+    <KeyBinding Gesture="Ctrl+F10" Command="{Binding RunToCursorCommand}" />
+    <KeyBinding Gesture="F11" Command="{Binding StepIntoCommand}" />
+    <KeyBinding Gesture="Shift+F11" Command="{Binding StepOutCommand}" />
+    <KeyBinding Gesture="Ctrl+Alt+Pause" Command="{Binding BreakAllCommand}" />
+    <KeyBinding Gesture="Ctrl+Alt+Cancel" Command="{Binding BreakAllCommand}" />
+    <KeyBinding Gesture="Alt+Multiply" Command="{Binding ShowNextStatementCommand}" />
     <KeyBinding Gesture="Ctrl+Shift+B" Command="{Binding BuildCommand}" />
     <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveCommand}" />
     <KeyBinding Gesture="Ctrl+Shift+S" Command="{Binding SaveAllCommand}" />
@@ -72,8 +82,28 @@
             <MenuItem Header="_Release Configuration" Command="{Binding SetConfigurationCommand}" CommandParameter="Release" />
           </MenuItem>
           <MenuItem Header="_Debug">
-            <MenuItem Header="_Start" InputGesture="F5" Command="{Binding RunCommand}" />
-            <MenuItem Header="Stop _Running" InputGesture="Shift+F5" Command="{Binding StopCommand}" />
+            <MenuItem Header="_Windows">
+              <MenuItem Header="_Locals" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Locals}" />
+              <MenuItem Header="_Watch" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Watch}" />
+              <MenuItem Header="_Call Stack" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.CallStack}" />
+              <MenuItem Header="_Output" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Output}" />
+            </MenuItem>
+            <Separator />
+            <MenuItem Header="{Binding StartDebuggingMenuHeader}" InputGesture="F5" Command="{Binding StartDebuggingCommand}" />
+            <MenuItem Header="Start Wit_hout Debugging" InputGesture="Ctrl+F5" Command="{Binding RunCommand}" />
+            <MenuItem Header="Brea_k All (Ctrl+Alt+Break)" Command="{Binding BreakAllCommand}" />
+            <MenuItem Header="Stop D_ebugging" InputGesture="Shift+F5" Command="{Binding StopDebuggingCommand}" />
+            <MenuItem Header="_Restart" InputGesture="Ctrl+Shift+F5" Command="{Binding RestartCommand}" />
+            <Separator />
+            <MenuItem Header="Show _Next Statement (Alt+Num *)" Command="{Binding ShowNextStatementCommand}" />
+            <MenuItem Header="Step _Into" InputGesture="F11" Command="{Binding StepIntoCommand}" />
+            <MenuItem Header="Step _Over" InputGesture="F10" Command="{Binding StepOverCommand}" />
+            <MenuItem Header="Step O_ut" InputGesture="Shift+F11" Command="{Binding StepOutCommand}" />
+            <MenuItem Header="Run _To Cursor" InputGesture="Ctrl+F10" Command="{Binding RunToCursorCommand}" />
+            <Separator />
+            <MenuItem Header="Toggle _Breakpoint" InputGesture="F9" Command="{Binding ToggleBreakpointCommand}" />
+            <MenuItem Header="_Delete All Breakpoints" InputGesture="Ctrl+Shift+F9" Command="{Binding DeleteAllBreakpointsCommand}" />
+            <MenuItem Header="Break on Unhandled E_xceptions" ToggleType="CheckBox" IsChecked="{Binding BreakOnUnhandledExceptions}" />
           </MenuItem>
           <MenuItem Header="_Window">
             <MenuItem Header="_Next Document" InputGesture="Ctrl+Tab" Command="{Binding NextDocumentCommand}" />
@@ -163,10 +193,10 @@
           <!-- Run: the startup project, with a menu to choose another one. -->
           <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
             <Button Theme="{StaticResource AccentButton}" Height="36" MinHeight="36" CornerRadius="8,0,0,8" Padding="12,0"
-                    ToolTip.Tip="Start (F5)" Command="{Binding RunCommand}">
+                    ToolTip.Tip="{Binding StartDebuggingToolTip}" Command="{Binding StartDebuggingCommand}">
               <StackPanel Orientation="Horizontal" Spacing="8">
                 <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="14" />
-                <TextBlock Text="{Binding RunLabel}" VerticalAlignment="Center" />
+                <TextBlock Text="{Binding StartDebuggingLabel}" VerticalAlignment="Center" />
               </StackPanel>
             </Button>
             <Button Theme="{StaticResource AccentButton}" Height="36" MinHeight="36" Width="30" MinWidth="30" Padding="0"
@@ -189,6 +219,7 @@
                   IsVisible="{Binding IsRunning}">
             <controls:StrokeIcon Data="{StaticResource Icon.Stop}" IsFilled="True" Size="14" Foreground="{DynamicResource Brush.Error}" />
           </Button>
+          <views:DebugToolbarView />
 
           <Border Height="34" Padding="10,0" Margin="8,0,0,0" CornerRadius="7" Background="{DynamicResource Brush.Control}"
                   BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1">
@@ -292,7 +323,7 @@
           <!-- Touch actions -->
           <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="16,12" Padding="4" CornerRadius="14"
                   Background="{DynamicResource Brush.Hover}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
-                  BoxShadow="0 8 24 0 #59000000" IsVisible="{Binding HasDocuments}">
+                  BoxShadow="0 8 24 0 #59000000" IsVisible="{Binding ShowsEditorTouchBar}">
             <StackPanel Orientation="Horizontal" Spacing="2">
               <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding ToggleCommentCommand}">
                 <StackPanel Orientation="Horizontal" Spacing="7">
@@ -312,7 +343,7 @@
                   <TextBlock Text="Find" VerticalAlignment="Center" FontSize="12.5" />
                 </StackPanel>
               </Button>
-              <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding RunCommand}"
+              <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding StartDebuggingCommand}"
                       Background="{DynamicResource Brush.Pressed}" Foreground="{DynamicResource Brush.OnAccent}">
                 <StackPanel Orientation="Horizontal" Spacing="7">
                   <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="14" />
@@ -321,6 +352,7 @@
               </Button>
             </StackPanel>
           </Border>
+          <views:DebugTouchBarView HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="16,12" IsVisible="{Binding IsDebugging}" />
         </Panel>
 
         <GridSplitter Grid.Row="3" x:Name="BottomSplitter" Height="6" ResizeDirection="Rows" Background="Transparent">
@@ -344,6 +376,12 @@
                         Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Output}" Content="Output" />
                 <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsCompatibilitySelected}"
                         Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Compatibility}" Content="Compatibility Doctor" />
+                <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsLocalsSelected}" IsVisible="{Binding ShowsDebugPanels}"
+                        Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Locals}" Content="Locals" />
+                <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsWatchSelected}" IsVisible="{Binding ShowsDebugPanels}"
+                        Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Watch}" Content="Watch" />
+                <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsCallStackSelected}" IsVisible="{Binding ShowsDebugPanels}"
+                        Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.CallStack}" Content="Call Stack" />
               </StackPanel>
               <StackPanel Grid.Column="1" Orientation="Horizontal">
                 <Button Theme="{StaticResource ToolButton}" MinHeight="30" Height="30" FontSize="12.5" Content="Clear"
@@ -354,10 +392,18 @@
                 </Button>
               </StackPanel>
             </Grid>
+            <!-- While debugging, the Call Stack stays in view beside Locals and Watch, as in Visual Studio's debug layout. -->
+            <Border DockPanel.Dock="Right" Width="380" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1,0,0,0"
+                    IsVisible="{Binding ShowsCallStackBeside}">
+              <views:CallStackView DataContext="{Binding CallStack}" />
+            </Border>
             <Panel>
               <views:ErrorListView DataContext="{Binding ErrorList}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsErrorListSelected}" />
               <views:OutputView DataContext="{Binding Output}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsOutputSelected}" />
               <views:CompatibilityView IsVisible="{Binding IsCompatibilitySelected}" />
+              <views:LocalsView DataContext="{Binding Locals}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsLocalsSelected}" />
+              <views:WatchView DataContext="{Binding Watch}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsWatchSelected}" />
+              <views:CallStackView DataContext="{Binding CallStack}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsCallStackSelected}" />
             </Panel>
           </DockPanel>
         </Border>
@@ -390,7 +436,7 @@
     </Grid>
 
     <!-- Status bar -->
-    <Border Grid.Row="3" Background="{DynamicResource Brush.Accent}">
+    <Border Grid.Row="3" Background="{Binding IsDebugging, Converter={x:Static conv:DebugConverters.StatusBarBackground}}">
       <Grid ColumnDefinitions="Auto,*,Auto" Margin="12,0">
         <StackPanel Orientation="Horizontal" Spacing="18" TextElement.Foreground="{DynamicResource Brush.OnAccent}" TextElement.FontSize="12">
           <StackPanel Orientation="Horizontal" Spacing="6">

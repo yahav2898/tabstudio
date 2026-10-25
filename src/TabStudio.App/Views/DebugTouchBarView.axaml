@@ -1,0 +1,56 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:vm="using:TabStudio.App.ViewModels"
+             x:Class="TabStudio.App.Views.DebugTouchBarView"
+             x:DataType="vm:WorkspaceViewModel">
+  <!-- The floating debug buttons over the editor while debugging: a tablet has no F5, F10 or F11 keys. -->
+  <Border Padding="4" CornerRadius="14" Background="{DynamicResource Brush.Hover}"
+          BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1" BoxShadow="0 8 24 0 #59000000">
+    <StackPanel Orientation="Horizontal" Spacing="2">
+      <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" ToolTip.Tip="Continue (F5)"
+              Command="{Binding StartDebuggingCommand}" IsVisible="{Binding IsPaused}"
+              Background="{DynamicResource Brush.Pressed}" Foreground="{DynamicResource Brush.OnAccent}">
+        <StackPanel Orientation="Horizontal" Spacing="7">
+          <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="14" Foreground="{DynamicResource Brush.Success}" />
+          <TextBlock Text="Continue" VerticalAlignment="Center" FontSize="12.5" />
+        </StackPanel>
+      </Button>
+      <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" ToolTip.Tip="Break All (Ctrl+Alt+Break)"
+              Command="{Binding BreakAllCommand}" IsVisible="{Binding IsDebuggeeRunning}">
+        <StackPanel Orientation="Horizontal" Spacing="7">
+          <controls:StrokeIcon Data="{StaticResource Icon.Pause}" Size="16" StrokeThickness="2.4" />
+          <TextBlock Text="Break" VerticalAlignment="Center" FontSize="12.5" />
+        </StackPanel>
+      </Button>
+      <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" ToolTip.Tip="Step Over (F10)"
+              Command="{Binding StepOverCommand}">
+        <StackPanel Orientation="Horizontal" Spacing="7">
+          <controls:StrokeIcon Data="{StaticResource Icon.StepOver}" Size="16" />
+          <TextBlock Text="Over" VerticalAlignment="Center" FontSize="12.5" />
+        </StackPanel>
+      </Button>
+      <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" ToolTip.Tip="Step Into (F11)"
+              Command="{Binding StepIntoCommand}">
+        <StackPanel Orientation="Horizontal" Spacing="7">
+          <controls:StrokeIcon Data="{StaticResource Icon.StepInto}" Size="16" />
+          <TextBlock Text="Into" VerticalAlignment="Center" FontSize="12.5" />
+        </StackPanel>
+      </Button>
+      <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" ToolTip.Tip="Step Out (Shift+F11)"
+              Command="{Binding StepOutCommand}">
+        <StackPanel Orientation="Horizontal" Spacing="7">
+          <controls:StrokeIcon Data="{StaticResource Icon.StepOut}" Size="16" />
+          <TextBlock Text="Out" VerticalAlignment="Center" FontSize="12.5" />
+        </StackPanel>
+      </Button>
+      <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" ToolTip.Tip="Stop Debugging (Shift+F5)"
+              Command="{Binding StopDebuggingCommand}">
+        <StackPanel Orientation="Horizontal" Spacing="7">
+          <controls:StrokeIcon Data="{StaticResource Icon.Stop}" IsFilled="True" Size="13" Foreground="{DynamicResource Brush.Error}" />
+          <TextBlock Text="Stop" VerticalAlignment="Center" FontSize="12.5" />
+        </StackPanel>
+      </Button>
+    </StackPanel>
+  </Border>
+</UserControl>

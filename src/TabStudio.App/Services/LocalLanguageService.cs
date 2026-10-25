@@ -3,6 +3,7 @@ using TabStudio.Compilation.Building;
 using TabStudio.Core.Diagnostics;
 using System.Collections.Concurrent;
 using TabStudio.Core.Workspaces;
+using TabStudio.Debugging.Building;
 using TabStudio.Packages;
 
 namespace TabStudio.App.Services;
@@ -60,6 +61,10 @@ public sealed class LocalLanguageService : ILanguageService
     /// <inheritdoc />
     public Task<BuildResult> BuildAsync(ProjectInfo project, CancellationToken cancellationToken) =>
         Task.Run(() => _builder.BuildAsync(project, cancellationToken), cancellationToken);
+
+    /// <inheritdoc />
+    public Task<DebugBuild> BuildForDebuggingAsync(ProjectInfo project, CancellationToken cancellationToken) =>
+        Task.Run(() => new DebugBuilder(_host).BuildAsync(project, cancellationToken), cancellationToken);
 
     /// <inheritdoc />
     public void SetOptimization(bool optimize) => _host.SetOptimization(optimize);

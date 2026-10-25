@@ -97,7 +97,7 @@ public sealed partial class WorkspaceViewModel
             .Select(d => new SessionDocument(d.FilePath, d.CaretOffset, d.IsDirty ? d.Document.Text : null))
             .ToList();
         var path = workspace.Solution?.FilePath ?? workspace.RootDirectory;
-        _sessions.Save(new SessionState(path, documents, ActiveDocument?.FilePath, StartupProject?.FilePath));
+        _sessions.Save(WithDebuggingState(new SessionState(path, documents, ActiveDocument?.FilePath, StartupProject?.FilePath)));
     }
 
     [RelayCommand]
@@ -217,12 +217,14 @@ public sealed partial class WorkspaceViewModel
     {
         document.DiagnosticsChanged += OnDocumentDiagnosticsChanged;
         document.PropertyChanged += OnDocumentPropertyChanged;
+        AttachDebugging(document);
     }
 
     private void Detach(DocumentViewModel document)
     {
         document.DiagnosticsChanged -= OnDocumentDiagnosticsChanged;
         document.PropertyChanged -= OnDocumentPropertyChanged;
+        DetachDebugging(document);
     }
 
     private void OnDocumentDiagnosticsChanged(object? sender, EventArgs e)
