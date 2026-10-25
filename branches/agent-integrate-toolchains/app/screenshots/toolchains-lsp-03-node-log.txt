@@ -17,7 +17,6 @@ Hello, Ada!
 [Node.js (js-debug)] Received request 'runInTerminal'.
 [Node.js (js-debug)] Received response 'launch' (2).
 [Node.js (js-debug)] Received request 'startDebugging'.
-[Node.js (js-debug)] Received event 'initialized'.
 [Node.js (js-debug)] Sending request 'launch' (2).
 [Node.js (js-debug)] Sending request 'setBreakpoints' (3).
 [Node.js (js-debug)] Received response 'setBreakpoints' (3).
@@ -201,6 +200,188 @@ Hello, Ada!
 [Node.js (js-debug)] Received response 'continue' (10).
 [Node.js (js-debug)] Received event 'continued'.
 [Node.js (js-debug)] Received event 'output'.
+[Node.js (js-debug)] (stdout) Hello, Ada!
 [Node.js (js-debug)] Received event 'output'.
 [Node.js (js-debug)] Received event 'output'.
 [Node.js (js-debug)] Received event 'output'.
+
+== Processes
+    PID    PPID    PGID STAT     ELAPSED COMMAND
+      2       0       0 S          05:10 [kthreadd]
+      3       2       0 S          05:10  \_ [pool_workqueue_release]
+      4       2       0 I<         05:10  \_ [kworker/R-rcu_gp]
+      5       2       0 I<         05:10  \_ [kworker/R-sync_wq]
+      6       2       0 I<         05:10  \_ [kworker/R-kvfree_rcu_reclaim]
+      7       2       0 I<         05:10  \_ [kworker/R-slub_flushwq]
+      8       2       0 I<         05:10  \_ [kworker/R-netns]
+      9       2       0 I          05:10  \_ [kworker/0:0-hv_vmbus_con]
+     10       2       0 I<         05:10  \_ [kworker/0:0H-events_highpri]
+     11       2       0 I          05:10  \_ [kworker/0:1-events]
+     12       2       0 I          05:10  \_ [kworker/u16:0-flush-8:0]
+     13       2       0 I<         05:10  \_ [kworker/R-mm_percpu_wq]
+     14       2       0 S          05:10  \_ [ksoftirqd/0]
+     15       2       0 I          05:10  \_ [rcu_sched]
+     16       2       0 S          05:10  \_ [rcu_exp_par_gp_kthread_worker/0]
+     17       2       0 S          05:10  \_ [rcu_exp_gp_kthread_worker]
+     18       2       0 S          05:10  \_ [migration/0]
+     19       2       0 S          05:10  \_ [idle_inject/0]
+     20       2       0 S          05:10  \_ [cpuhp/0]
+     21       2       0 S          05:10  \_ [cpuhp/2]
+     22       2       0 S          05:10  \_ [idle_inject/2]
+     23       2       0 S          05:10  \_ [migration/2]
+     24       2       0 S          05:10  \_ [ksoftirqd/2]
+     25       2       0 I          05:10  \_ [kworker/2:0-events]
+     26       2       0 I<         05:10  \_ [kworker/2:0H-events_highpri]
+     27       2       0 S          05:10  \_ [cpuhp/1]
+     28       2       0 S          05:10  \_ [idle_inject/1]
+     29       2       0 S          05:10  \_ [migration/1]
+     30       2       0 S          05:10  \_ [ksoftirqd/1]
+     31       2       0 I          05:10  \_ [kworker/1:0-events]
+     32       2       0 I<         05:10  \_ [kworker/1:0H-events_highpri]
+     33       2       0 S          05:10  \_ [cpuhp/3]
+     34       2       0 S          05:10  \_ [idle_inject/3]
+     35       2       0 S          05:10  \_ [migration/3]
+     36       2       0 S          05:10  \_ [ksoftirqd/3]
+     37       2       0 I          05:10  \_ [kworker/3:0-events]
+     38       2       0 I<         05:10  \_ [kworker/3:0H-events_highpri]
+     39       2       0 S          05:10  \_ [kdevtmpfs]
+     40       2       0 I<         05:10  \_ [kworker/R-inet_frag_wq]
+     41       2       0 I          05:10  \_ [rcu_tasks_rude_kthread]
+     42       2       0 I          05:10  \_ [rcu_tasks_trace_kthread]
+     43       2       0 S          05:10  \_ [kauditd]
+     44       2       0 S          05:10  \_ [khungtaskd]
+     45       2       0 I          05:10  \_ [kworker/u16:1-events_power_efficient]
+     46       2       0 S          05:10  \_ [oom_reaper]
+     47       2       0 I          05:10  \_ [kworker/u16:2-events_power_efficient]
+     48       2       0 I<         05:10  \_ [kworker/R-writeback]
+     49       2       0 S          05:10  \_ [kcompactd0]
+     50       2       0 SN         05:10  \_ [ksmd]
+     51       2       0 SN         05:10  \_ [khugepaged]
+     52       2       0 I<         05:10  \_ [kworker/R-kblockd]
+     53       2       0 I<         05:10  \_ [kworker/R-blkcg_punt_bio]
+     54       2       0 I<         05:10  \_ [kworker/R-kintegrityd]
+     55       2       0 S          05:10  \_ [irq/9-acpi]
+     56       2       0 I          05:10  \_ [kworker/2:1-events]
+     57       2       0 I          05:10  \_ [kworker/1:1-mm_percpu_wq]
+     58       2       0 I          05:10  \_ [kworker/3:1-mm_percpu_wq]
+     59       2       0 I<         05:10  \_ [kworker/R-tpm_dev_wq]
+     60       2       0 I<         05:10  \_ [kworker/R-ata_sff]
+     61       2       0 I<         05:10  \_ [kworker/R-md]
+     62       2       0 I<         05:10  \_ [kworker/R-md_bitmap]
+     63       2       0 I<         05:10  \_ [kworker/R-edac-poller]
+     64       2       0 I<         05:10  \_ [kworker/R-hv_vmbus_con]
+     65       2       0 I<         05:10  \_ [kworker/R-hv_vmbus_rescind]
+     66       2       0 I<         05:10  \_ [kworker/R-hv_pri_chan]
+     67       2       0 I<         05:10  \_ [kworker/R-hv_sub_chan]
+     68       2       0 I<         05:10  \_ [kworker/R-devfreq_wq]
+     69       2       0 S          05:10  \_ [watchdogd]
+     70       2       0 I<         05:10  \_ [kworker/R-quota_events_unbound]
+     71       2       0 I<         05:10  \_ [kworker/2:1H-kblockd]
+     72       2       0 S          05:10  \_ [kswapd0]
+     73       2       0 S          05:10  \_ [ecryptfs-kthread]
+     74       2       0 I<         05:10  \_ [kworker/R-kthrotld]
+     75       2       0 I<         05:10  \_ [kworker/R-nfit]
+     76       2       0 S          05:10  \_ [scsi_eh_0]
+     77       2       0 S          05:10  \_ [scsi_eh_1]
+     78       2       0 I<         05:10  \_ [kworker/R-scsi_tmf_0]
+     79       2       0 I<         05:10  \_ [kworker/R-scsi_tmf_1]
+     80       2       0 I<         05:10  \_ [kworker/R-nvme-wq]
+     81       2       0 I<         05:10  \_ [kworker/R-nvme-reset-wq]
+     82       2       0 I<         05:10  \_ [kworker/R-nvme-delete-wq]
+     83       2       0 I<         05:10  \_ [kworker/R-nvme-auth-wq]
+     84       2       0 I          05:10  \_ [kworker/u16:3-iou_exit]
+     85       2       0 I          05:10  \_ [kworker/u16:4-iou_exit]
+     86       2       0 I          05:10  \_ [kworker/u16:5-mlx5_cmd_8763:00:02.0]
+     87       2       0 S          05:10  \_ [hv_balloon]
+     88       2       0 I<         05:10  \_ [kworker/R-mld]
+     89       2       0 I<         05:10  \_ [kworker/R-ipv6_addrconf]
+     90       2       0 I<         05:10  \_ [kworker/0:1H-kblockd]
+     91       2       0 I<         05:10  \_ [kworker/R-kstrp]
+     93       2       0 I<         05:10  \_ [kworker/u17:0]
+    104       2       0 S          05:10  \_ [jbd2/sda1-8]
+    105       2       0 I<         05:10  \_ [kworker/R-ext4-rsv-conversion]
+    106       2       0 I<         05:09  \_ [kworker/3:1H-kblockd]
+    107       2       0 I          05:09  \_ [kworker/3:2-cgroup_free]
+    140       2       0 I<         05:09  \_ [kworker/1:1H-kblockd]
+    173       2       0 I          05:09  \_ [kworker/1:2-events]
+    174       2       0 I          05:09  \_ [kworker/0:2-events]
+    180       2       0 I          05:09  \_ [kworker/2:2-events]
+    181       2       0 I<         05:09  \_ [kworker/R-kmpathd]
+    182       2       0 I<         05:09  \_ [kworker/R-kmpath_handlerd]
+    237       2       0 S          05:08  \_ [psimon]
+    299       2       0 I          05:08  \_ [kworker/0:3-events]
+    406       2       0 S          05:07  \_ [jbd2/sda16-8]
+    407       2       0 I<         05:07  \_ [kworker/R-ext4-rsv-conversion]
+    653       2       0 I<         05:04  \_ [kworker/R-tls-strp]
+    663       2       0 I<         05:03  \_ [kworker/R-mlx5_cmd_8763:00:02.0]
+    664       2       0 I<         05:03  \_ [kworker/R-mlx5_health8763:00:02.0]
+    665       2       0 I<         05:03  \_ [kworker/R-mlx5_page_allocator]
+    666       2       0 I<         05:03  \_ [kworker/R-mlx5_events]
+    676       2       0 S          05:03  \_ [ptp1]
+    677       2       0 I<         05:03  \_ [kworker/R-mlx5_fc]
+    678       2       0 I<         05:03  \_ [kworker/R-mlx5_hv_vhca]
+    679       2       0 I<         05:03  \_ [kworker/R-mlx5e]
+    714       2       0 I<         05:03  \_ [kworker/R-mlx5e_arfs]
+    735       2       0 I<         05:03  \_ [kworker/R-ib-comp-wq]
+    736       2       0 I<         05:03  \_ [kworker/R-ib-comp-unb-wq]
+    737       2       0 I<         05:03  \_ [kworker/R-ib_mcast]
+    738       2       0 I<         05:03  \_ [kworker/R-ib_nl_sa_wq]
+    739       2       0 I<         05:03  \_ [kworker/R-mkey_cache]
+    811       2       0 I          05:00  \_ [kworker/u16:6-ext4-rsv-conversion]
+   1132       2       0 I          04:57  \_ [kworker/2:3-events]
+   1133       2       0 I          04:57  \_ [kworker/2:4]
+   2063       2       0 S          04:44  \_ [psimon]
+   4502       2       0 I          01:08  \_ [kworker/u16:7]
+      1       0       1 Ss         05:10 /sbin/init
+    157       1     157 S<s        05:09 /usr/lib/systemd/systemd-journald
+    219       1     219 SLsl       05:08 /sbin/multipathd -d -s
+    225       1     225 Ss         05:08 /usr/lib/systemd/systemd-udevd
+    382       1     382 Ss         05:07 /usr/lib/linux-tools/6.17.0-1022-azure/hv_kvp_daemon -n
+    571       1     571 Ss         05:06 /usr/lib/systemd/systemd-resolved
+    578       1     578 Ss         05:06 /usr/sbin/haveged --Foreground --verbose=1
+    745       1     745 Ss         05:03 /usr/lib/systemd/systemd-networkd
+   1025       1    1025 Ss         04:57 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+   1030       1    1030 Ss         04:57 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
+   1032       1    1032 Ss         04:57 php-fpm: master process (/etc/php/8.3/fpm/php-fpm.conf)
+   1335    1032    1032 S          04:56  \_ php-fpm: pool www
+   1344    1032    1032 S          04:56  \_ php-fpm: pool www
+   1037       1    1037 Ssl        04:57 /usr/lib/polkit-1/polkitd --no-debug
+   1062       1    1062 Ss         04:57 /usr/lib/systemd/systemd-logind
+   1069       1    1069 Ssl        04:57 /usr/libexec/udisks2/udisksd
+   1071       1    1071 Ss         04:57 /usr/bin/python3 -u /usr/sbin/waagent -daemon
+   1444    1071    1071 Sl         04:56  \_ /usr/bin/python3 -u bin/WALinuxAgent-2.16.0.2-py3.12.egg -run-exthandlers
+   1097       1    1097 Ss         04:57 /usr/sbin/cron -f -P
+   1134       1    1134 Ssl        04:57 /usr/bin/containerd
+   1142       1    1142 Ss+        04:57 /sbin/agetty -o -p -- \u --keep-baud 115200,57600,38400,9600 - vt220
+   1152       1    1152 Ss+        04:57 /sbin/agetty -o -p -- \u --noclear - linux
+   1168       1    1168 Ssl        04:57 /usr/sbin/rsyslogd -n -iNONE
+   1172       1    1169 S          04:57 /usr/sbin/chronyd -F 1
+   1181    1172    1169 S          04:57  \_ /usr/sbin/chronyd -F 1
+   1221       1    1221 Ssl        04:57 /usr/sbin/ModemManager
+   1270       1    1270 Ssl        04:57 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+   1295       1    1295 Ss         04:57 /usr/lib/systemd/systemd --user
+   1298    1295    1295 S          04:56  \_ (sd-pam)
+   2065       1    2065 Ssl        04:44 /opt/hca/hosted-compute-agent
+   2082    2065    2065 S          04:44  \_ sudo -n PROVJOBD_E2E=1 /tmp/provjobd4031421416
+   2084    2082    2065 Sl         04:44  |   \_ /tmp/provjobd4031421416
+   2119    2065    2065 Sl         04:40  \_ /home/runner/actions-runner/cached/2.338.0/bin/Runner.Listener run
+   2138    2119    2065 Sl         04:39      \_ /home/runner/actions-runner/cached/2.338.0/bin/Runner.Worker spawnclient 142 145
+   2875    2138    2065 S          04:14          \_ /usr/bin/bash -e /home/runner/work/_temp/f3491d8a-cb70-4e12-97bf-3773d6bf527f.sh
+   3161    2875    2065 Sl         03:04              \_ dotnet test tests/TabStudio.App.Tests -c Release --logger console;verbosity=normal
+   3184    3161    2065 Sl         03:03                  \_ /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.402/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false
+   3200    3161    2065 Sl         03:03                  \_ /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.402/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false
+   3201    3161    2065 Sl         03:03                  \_ /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.402/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false
+   3317    3201    2065 Sl         02:52                      \_ /usr/share/dotnet/dotnet exec /usr/share/dotnet/sdk/10.0.402/vstest.console.dll --framework:.NETCoreApp,Version=v10.0 --logger:console;verbosity=normal /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll --nologo --artifactsProcessingMode-collect --testSessionCorrelationId:3161_e91c652b-39bd-46c7-a054-05021b4253d5
+   3331    3317    2065 Sl         02:52                          \_ /usr/share/dotnet/dotnet exec --runtimeconfig /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.runtimeconfig.json --depsfile /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.deps.json /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/testhost.dll --port 42789 --endpoint 127.0.0.1:042789 --role client --parentprocessid 3317 --telemetryoptedin false
+   4629    3331    4629 Sl         01:04                              \_ node /opt/hostedtoolcache/node/22.23.3/x64/bin/typescript-language-server --stdio
+   4675    4629    4629 Sl         01:04                              |   \_ /opt/hostedtoolcache/node/22.23.3/x64/bin/node /opt/hostedtoolcache/node/22.23.3/x64/lib/node_modules/typescript/lib/tsserver.js --serverMode partialSemantic --useInferredProjectPerProjectRoot --disableAutomaticTypingAcquisition --cancellationPipeName /tmp/44c46d00acd42a8e952c552940ac9317/tscancellation* --locale en --validateDefaultNpmLocation --useNodeIpc
+   4680    4629    4629 Sl         01:04                              |   \_ /opt/hostedtoolcache/node/22.23.3/x64/bin/node /opt/hostedtoolcache/node/22.23.3/x64/lib/node_modules/typescript/lib/tsserver.js --useInferredProjectPerProjectRoot --cancellationPipeName /tmp/cfa9e4b514ef48f023ed7dfbb698e74d/tscancellation* --locale en --validateDefaultNpmLocation --useNodeIpc
+   4719    4680    4629 Sl         01:04                              |       \_ /opt/hostedtoolcache/node/22.23.3/x64/bin/node /opt/hostedtoolcache/node/22.23.3/x64/lib/node_modules/typescript/lib/typingsInstaller.js --globalTypingsCacheLocation /home/runner/.cache/typescript/5.9 --typesMapLocation /opt/hostedtoolcache/node/22.23.3/x64/lib/node_modules/typescript/lib/typesMap.json --validateDefaultNpmLocation
+   4774    3331    4774 Sl         01:01                              \_ node /home/runner/work/_temp/js-debug/js-debug/src/dapDebugServer.js 43969 127.0.0.1
+   4792    3331    4792 Sl         01:01                              \_ /opt/hostedtoolcache/node/22.23.3/x64/bin/node --experimental-network-inspection ./app.js
+   4804    4792    4804 Ssl        01:01                              |   \_ /opt/hostedtoolcache/node/22.23.3/x64/bin/node /home/runner/work/_temp/js-debug/js-debug/src/watchdog.js
+   4835    3331    2065 R          00:00                              \_ ps -eo pid,ppid,pgid,stat,etime,args --forest
+   2908       1    2065 Sl         04:13 /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.402/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:true /low:false
+   2989    2908    2065 Sl         04:09  \_ /usr/share/dotnet/sdk/10.0.402/Roslyn/bincore/VBCSCompiler -pipename:7C1eK_URY58svpsGCXumqTPVB8OicXQVkdXAlCcu35A
+   2909       1    2065 Sl         04:13 /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.402/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:true /low:false
+   2914       1    2065 Sl         04:13 /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.402/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:true /low:false
