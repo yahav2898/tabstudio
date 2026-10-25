@@ -13,11 +13,27 @@ namespace TabStudio.Compilation;
 /// Compiles C# to an assembly in memory, with the same defaults the .NET SDK uses for a new project.
 /// </summary>
 /// <remarks>
-/// This class is stateless and safe to share. It is used directly for one-off compilations, and by
-/// <see cref="RoslynWorkspaceHost"/> for the options every project in a workspace is compiled with.
+/// An instance is immutable and safe to share. It is used directly for one-off compilations, and its static
+/// members give <see cref="RoslynWorkspaceHost"/> the options every project in a workspace is compiled with.
 /// </remarks>
 public sealed class CSharpCompiler
 {
+    private readonly IReadOnlyList<MetadataReference> _references;
+
+    /// <summary>Creates a compiler that references the .NET 10 libraries.</summary>
+    public CSharpCompiler()
+        : this(ReferenceAssemblies.Net100)
+    {
+    }
+
+    /// <summary>Creates a compiler with a custom set of framework references.</summary>
+    /// <param name="frameworkReferences">The reference assemblies every compilation sees.</param>
+    public CSharpCompiler(IReadOnlyList<MetadataReference> frameworkReferences)
+    {
+        ArgumentNullException.ThrowIfNull(frameworkReferences);
+        _references = frameworkReferences;
+    }
+
     /// <summary>The namespaces the SDK imports when <c>ImplicitUsings</c> is enabled for a console project.</summary>
     public static IReadOnlyList<string> ImplicitUsingNamespaces { get; } =
     [
@@ -51,13 +67,19 @@ public sealed class CSharpCompiler
     /// <param name="nullable">Whether nullable reference types are enabled.</param>
     /// <param name="optimize">Whether to optimize.</param>
     /// <param name="allowUnsafe">Whether <c>unsafe</c> code is allowed.</param>
-    public static CSharpCompilationOptions CreateCompilationOptions(AssemblyKind kind, bool nullable, bool optimize = false, bool allowUnsafe = false) => new(
+    /// <param name="concurrentBuild">Whether Roslyn may compile on several threads. Turned off while the device is hot.</param>
+    public static CSharpCompilationOptions CreateCompilationOptions(
+        AssemblyKind kind,
+        bool nullable,
+        bool optimize = false,
+        bool allowUnsafe = false,
+        bool concurrentBuild = true) => new(
         outputKind: kind == AssemblyKind.ConsoleApplication ? OutputKind.ConsoleApplication : OutputKind.DynamicallyLinkedLibrary,
         nullableContextOptions: nullable ? NullableContextOptions.Enable : NullableContextOptions.Disable,
         optimizationLevel: optimize ? OptimizationLevel.Release : OptimizationLevel.Debug,
         allowUnsafe: allowUnsafe,
         deterministic: true,
-        concurrentBuild: true);
+        concurrentBuild: concurrentBuild);
 
     /// <summary>The source of the implicit global usings file, as the SDK would generate it.</summary>
     public static string CreateGlobalUsingsSource()
@@ -92,7 +114,7 @@ public sealed class CSharpCompiler
         return CSharpCompilation.Create(
             request.AssemblyName,
             trees,
-            [.. ReferenceAssemblies.Net100, .. request.AdditionalReferences],
+            [.. _references, .. request.AdditionalReferences],
             options);
     }
 

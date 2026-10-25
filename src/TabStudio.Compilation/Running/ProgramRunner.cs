@@ -45,8 +45,19 @@ public sealed record RunResult(RunOutcome Outcome, int ExitCode, TimeSpan Durati
 /// </remarks>
 public sealed class ProgramRunner
 {
-    private const int ProgramStackSize = 16 * 1024 * 1024;
+    /// <summary>The stack size of the program's main thread: 16 MB, generous for deeply recursive code.</summary>
+    public const int DefaultStackSize = 16 * 1024 * 1024;
+
     private static readonly SemaphoreSlim ConsoleGate = new(1, 1);
+    private readonly int _stackSize;
+
+    /// <summary>Creates a runner.</summary>
+    /// <param name="stackSize">The stack size, in bytes, of the thread that runs <c>Main</c>.</param>
+    public ProgramRunner(int stackSize = DefaultStackSize)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThan(stackSize, 256 * 1024);
+        _stackSize = stackSize;
+    }
 
     /// <summary>Runs a program and waits for it to finish or be stopped.</summary>
     /// <param name="entryAssembly">The program's assembly.</param>
@@ -88,7 +99,7 @@ public sealed class ProgramRunner
             Console.SetIn(input ?? TextReader.Null);
 
             var completion = new TaskCompletionSource<RunResult>(TaskCreationOptions.RunContinuationsAsynchronously);
-            var thread = new Thread(() => completion.TrySetResult(Invoke(entryPoint, arguments, error)), ProgramStackSize)
+            var thread = new Thread(() => completion.TrySetResult(Invoke(entryPoint, arguments, error)), _stackSize)
             {
                 IsBackground = true,
                 Name = $"TabStudio: {entryAssembly.Name}",

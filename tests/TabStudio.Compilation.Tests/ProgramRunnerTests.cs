@@ -149,7 +149,7 @@ public sealed class ProgramRunnerTests
         {
             AssemblyName = "Program" + Guid.NewGuid().ToString("N")[..8],
             Documents = [new SourceDocument("Program.cs", source)],
-        });
+        }, CancellationToken.None);
         Assert.True(compiled.Success, string.Join('\n', compiled.Diagnostics));
 
         return await _runner.RunAsync(compiled.Assembly!, [], arguments ?? [], console, input, cancellationToken);
