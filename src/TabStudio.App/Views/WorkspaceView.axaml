@@ -103,7 +103,7 @@
             <Separator />
             <MenuItem Header="Toggle _Breakpoint" InputGesture="F9" Command="{Binding ToggleBreakpointCommand}" />
             <MenuItem Header="_Delete All Breakpoints" InputGesture="Ctrl+Shift+F9" Command="{Binding DeleteAllBreakpointsCommand}" />
-            <MenuItem Header="Break on Unhandled E_xceptions" ToggleType="CheckBox" IsChecked="{Binding BreakOnUnhandledExceptions}" />
+            <MenuItem Header="Break on Unhandled E_xceptions" ToggleType="CheckBox" IsChecked="{Binding BreakOnUnhandledExceptions, Mode=TwoWay}" />
           </MenuItem>
           <MenuItem Header="_Window">
             <MenuItem Header="_Next Document" InputGesture="Ctrl+Tab" Command="{Binding NextDocumentCommand}" />
