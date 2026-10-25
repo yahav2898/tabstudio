@@ -101,7 +101,7 @@ internal static class AsyncCalls
     }
 
     /// <summary>A call whose function cannot be async, and whose result is not used: it runs without being waited for.</summary>
-    private static SyntaxNode Discard(CodeFile file, AwaitExpressionSyntax awaited)
+    private static AssignmentExpressionSyntax Discard(CodeFile file, AwaitExpressionSyntax awaited)
     {
         var call = awaited.Expression;
         var discard = SyntaxFactory.AssignmentExpression(

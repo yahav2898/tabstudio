@@ -152,7 +152,7 @@ internal static class DependencyProperties
             : converted;
     }
 
-    private static MemberDeclarationSyntax ConvertRoutedEvent(CodeFile file, FieldDeclarationSyntax field, SeparatedSyntaxList<ArgumentSyntax> arguments, string className, HashSet<string> usings)
+    private static FieldDeclarationSyntax ConvertRoutedEvent(CodeFile file, FieldDeclarationSyntax field, SeparatedSyntaxList<ArgumentSyntax> arguments, string className, HashSet<string> usings)
     {
         if (arguments.Count < 4 || TypeOf(arguments[2].Expression) is not { } handler || TypeOf(arguments[3].Expression) is not { } owner)
         {

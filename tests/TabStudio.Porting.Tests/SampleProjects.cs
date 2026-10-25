@@ -31,7 +31,9 @@ internal static class SampleProjects
     public static PortSource Load(string sample)
     {
         var directory = InputDirectory(sample);
-        var project = TabStudio.Core.Workspaces.ProjectParser.Load(Directory.GetFiles(directory, "*.csproj").Single());
+        // The sample on its own, without the repository's Directory.Build.props above it.
+        var path = Directory.GetFiles(directory, "*.csproj").Single();
+        var project = TabStudio.Core.Workspaces.ProjectParser.Parse(path, File.ReadAllText(path));
         return PortSource.Load(project);
     }
 
