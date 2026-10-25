@@ -41,4 +41,14 @@ public sealed record TestRunOptions
     /// <see langword="null"/> for none. Live Unit Testing collects coverage this way.
     /// </summary>
     public ITestThreadHook? ThreadHook { get; init; }
+
+    /// <summary>
+    /// Whether the package assemblies, such as the test framework's, are loaded once and shared with every other
+    /// session that shares this option and the same packages, instead of once per session.
+    /// </summary>
+    /// <remarks>
+    /// Sessions cannot be unloaded, so a process that loads many, as Live Unit Testing does after every edit, saves
+    /// memory this way. The packages' static state then lives on from one session to the next.
+    /// </remarks>
+    public bool ShareRuntimeAssemblies { get; init; }
 }

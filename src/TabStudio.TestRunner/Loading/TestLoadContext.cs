@@ -27,14 +27,20 @@ internal sealed class TestLoadContext : AssemblyLoadContext
     private readonly List<string> _probingDirectories;
     private readonly Dictionary<string, Assembly> _loaded = new(StringComparer.OrdinalIgnoreCase);
     private readonly Lock _gate = new();
+    private readonly PackageLoadContext? _packages;
 
     /// <summary>Creates a context for a test project.</summary>
     /// <param name="name">A name for diagnostics, usually the test project's name.</param>
     /// <param name="compiled">The assemblies compiled in memory.</param>
     /// <param name="runtimeAssemblyPaths">The framework and package assemblies, as files.</param>
-    public TestLoadContext(string name, IReadOnlyList<CompiledAssembly> compiled, IReadOnlyList<string> runtimeAssemblyPaths)
+    /// <param name="packages">
+    /// Where the package assemblies come from when they are shared with other sessions, or <see langword="null"/> to
+    /// load them into this context.
+    /// </param>
+    public TestLoadContext(string name, IReadOnlyList<CompiledAssembly> compiled, IReadOnlyList<string> runtimeAssemblyPaths, PackageLoadContext? packages = null)
         : base($"TabStudio tests: {name}", isCollectible: false)
     {
+        _packages = packages;
         _compiled = new Dictionary<string, CompiledAssembly>(StringComparer.OrdinalIgnoreCase);
         foreach (var assembly in compiled)
         {
@@ -87,6 +93,11 @@ internal sealed class TestLoadContext : AssemblyLoadContext
         if (_compiled.TryGetValue(name, out var compiled))
         {
             return LoadCompiled(compiled);
+        }
+
+        if (_packages?.Find(assemblyName) is { } shared)
+        {
+            return shared;
         }
 
         if (_runtimePaths.TryGetValue(name, out var path))

@@ -262,7 +262,8 @@ public sealed class LiveTestEngine : IDisposable
 
         // Discovery can run the code under test, through data sources: the coverage runtime must find its link first.
         CoverageRecorder.EnsureRegistered();
-        var options = new TestRunOptions { ThreadHook = _hook, DefaultTimeout = _options.TestTimeout };
+        // A session is loaded after every edit that changes code, and none can be unloaded: they share the packages.
+        var options = new TestRunOptions { ThreadHook = _hook, DefaultTimeout = _options.TestTimeout, ShareRuntimeAssemblies = true };
         var session = await TestSession.LoadAsync(assemblies, packages, options, cancellationToken).ConfigureAwait(false);
         state.Session?.Dispose();
         state.Session = session;

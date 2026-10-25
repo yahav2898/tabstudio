@@ -112,7 +112,8 @@ public sealed class TestSession : IDisposable
         ArgumentOutOfRangeException.ThrowIfLessThan(options.StackSize, 256 * 1024, nameof(options));
 
         var name = assemblies.Count > 0 ? assemblies[0].Name : "tests";
-        var context = new TestLoadContext(name, assemblies, runtimeAssemblyPaths);
+        var packages = options.ShareRuntimeAssemblies ? PackageLoadContext.For(runtimeAssemblyPaths) : null;
+        var context = new TestLoadContext(name, assemblies, runtimeAssemblyPaths, packages);
         var problems = new List<string>();
         var loaded = new List<Assembly>();
         var locators = new Dictionary<Assembly, MethodLocator>();
