@@ -111,13 +111,25 @@ public sealed partial class WorkspaceViewModel
     private void OnDocumentSavedForLanguageServer(DocumentViewModel document)
     {
         document.NotifySavedToServer();
-        if (_languageServers is { } host && Workspace is { } workspace
-            && string.Equals(document.FilePath, WorkspaceConfiguration.SettingsPath(workspace.RootDirectory), StringComparison.Ordinal))
+        if (_languageServers is not { } host || Workspace is not { } workspace)
+        {
+            return;
+        }
+
+        var isSettings = string.Equals(document.FilePath, WorkspaceConfiguration.SettingsPath(workspace.RootDirectory), StringComparison.Ordinal);
+        var isLaunch = string.Equals(document.FilePath, WorkspaceConfiguration.LaunchPath(workspace.RootDirectory), StringComparison.Ordinal);
+        if (isSettings || isLaunch)
         {
             var configuration = WorkspaceConfiguration.Load(workspace.RootDirectory);
             ReportConfigurationProblems(configuration);
             _ = host.UpdateConfigurationAsync(configuration);
-            LanguageServerOutput.WriteLine("Settings reloaded from .tabstudio/settings.json.", OutputKind.Info);
+            LanguageServerOutput.WriteLine($"Reloaded .tabstudio/{Path.GetFileName(document.FilePath)}.", OutputKind.Info);
+            if (isLaunch)
+            {
+                SelectedLaunchTarget = null;
+            }
+
+            OnLaunchTargetChanged();
         }
     }
 
