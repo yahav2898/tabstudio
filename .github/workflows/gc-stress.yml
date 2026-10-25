@@ -9,11 +9,11 @@ name: GC stress
 #   (build/android/gc-stress/concurrent.env). It reproduces the runtime race that made TabStudio abort, so it is
 #   expected to fail until a .NET runtime fixes it; it runs only when asked for (builds input).
 # Each build runs on Android 10 (API 29) and Android 15 (API 35) emulators, two of each. That is about half an hour
-# on ten runners, too much for every push, so it runs:
-# - every night on main;
+# on ten runners, too much for every push, so it runs only when asked for:
 # - by hand: Actions > GC stress > Run workflow, or
 #   `gh workflow run gc-stress.yml --ref <branch> -f runs=4 -f builds='["release","checked","concurrent"]'`;
 # - on a push to main or an agent branch whose commit message contains [gc-stress].
+# The emulator job in ci.yml covers every push with one run of the build as shipped.
 # A run fails when the app crashes. The self test's own verdict is reported but does not fail it: the emulator job
 # in ci.yml checks that.
 #
@@ -23,8 +23,6 @@ name: GC stress
 # tombstone, and symbolized/ with the runtime's functions named.
 
 on:
-  schedule:
-    - cron: '41 2 * * *'
   workflow_dispatch:
     inputs:
       runs:
