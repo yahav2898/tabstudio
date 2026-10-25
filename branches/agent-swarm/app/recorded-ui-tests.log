@@ -1,40 +1,18 @@
   Determining projects to restore...
-  Restored /home/runner/work/_temp/recorded-ui-tests/HelloAvalonia/HelloAvalonia.csproj (in 754 ms).
-  Restored /home/runner/work/_temp/recorded-ui-tests/HelloAvalonia.UITests/HelloAvalonia.UITests.csproj (in 754 ms).
+  Restored /home/runner/work/_temp/recorded-ui-tests/HelloAvalonia.UITests/HelloAvalonia.UITests.csproj (in 788 ms).
+  Restored /home/runner/work/_temp/recorded-ui-tests/HelloAvalonia/HelloAvalonia.csproj (in 788 ms).
   HelloAvalonia -> /home/runner/work/_temp/recorded-ui-tests/HelloAvalonia/bin/Debug/net10.0/HelloAvalonia.dll
   HelloAvalonia.UITests -> /home/runner/work/_temp/recorded-ui-tests/HelloAvalonia.UITests/bin/Debug/net10.0/HelloAvalonia.UITests.dll
 Test run for /home/runner/work/_temp/recorded-ui-tests/HelloAvalonia.UITests/bin/Debug/net10.0/HelloAvalonia.UITests.dll (.NETCoreApp,Version=v10.0)
 A total of 1 test files matched the specified pattern.
 [xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
-[xUnit.net 00:00:00.08]   Discovering: HelloAvalonia.UITests
-[xUnit.net 00:00:00.14]   Discovered:  HelloAvalonia.UITests
-[xUnit.net 00:00:00.17]   Starting:    HelloAvalonia.UITests
-[xUnit.net 00:00:00.84]     HelloAvalonia.UITests.Recorded.CountingThreeTapsTest.Counting_three_taps [FAIL]
-[xUnit.net 00:00:00.84]       Assert.Equal() Failure: Strings differ
-[xUnit.net 00:00:00.84]                          ↓ (pos 8)
-[xUnit.net 00:00:00.84]       Expected: "Clicked 4 times"
-[xUnit.net 00:00:00.84]       Actual:   "Clicked 3 times"
-[xUnit.net 00:00:00.84]                          ↑ (pos 8)
-[xUnit.net 00:00:00.84]       Stack Trace:
-[xUnit.net 00:00:00.84]         /home/runner/work/_temp/recorded-ui-tests/HelloAvalonia.UITests/RecordedApp.cs(103,0): at HelloAvalonia.UITests.RecordedApp.ShouldShow(String element, String text)
-[xUnit.net 00:00:00.84]         /home/runner/work/_temp/recorded-ui-tests/HelloAvalonia.UITests/Recorded/CountingThreeTapsTest.cs(18,0): at HelloAvalonia.UITests.Recorded.CountingThreeTapsTest.Counting_three_taps()
-[xUnit.net 00:00:00.84]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
-[xUnit.net 00:00:00.84]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
-[xUnit.net 00:00:00.86]   Finished:    HelloAvalonia.UITests
-  Failed HelloAvalonia.UITests.Recorded.CountingThreeTapsTest.Counting_three_taps [481 ms]
-  Error Message:
-   Assert.Equal() Failure: Strings differ
-                   ↓ (pos 8)
-Expected: "Clicked 4 times"
-Actual:   "Clicked 3 times"
-                   ↑ (pos 8)
-  Stack Trace:
-     at HelloAvalonia.UITests.RecordedApp.ShouldShow(String element, String text) in /home/runner/work/_temp/recorded-ui-tests/HelloAvalonia.UITests/RecordedApp.cs:line 103
-   at HelloAvalonia.UITests.Recorded.CountingThreeTapsTest.Counting_three_taps() in /home/runner/work/_temp/recorded-ui-tests/HelloAvalonia.UITests/Recorded/CountingThreeTapsTest.cs:line 18
-   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
-   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:00.10]   Discovering: HelloAvalonia.UITests
+[xUnit.net 00:00:00.15]   Discovered:  HelloAvalonia.UITests
+[xUnit.net 00:00:00.18]   Starting:    HelloAvalonia.UITests
+[xUnit.net 00:00:00.89]   Finished:    HelloAvalonia.UITests
+  Passed HelloAvalonia.UITests.Recorded.CountingThreeTapsTest.Counting_three_taps [498 ms]
 
-Test Run Failed.
+Test Run Successful.
 Total tests: 1
-     Failed: 1
- Total time: 1.4317 Seconds
+     Passed: 1
+ Total time: 1.5283 Seconds
