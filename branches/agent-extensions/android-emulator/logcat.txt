@@ -1,13 +1,31 @@
-10-25 09:47:05.234  5772  5772 D DOTNET  : AndroidCryptoNative_InitLibraryOnLoad: jint AndroidCryptoNative_InitLibraryOnLoad(JavaVM *, void *) in /__w/1/s/src/runtime/src/native/libs/System.Security.Cryptography.Native.Android/pal_jni.c
-10-25 09:47:05.235  5772  5772 D DOTNET  : GetOptionalClassGRef: optional class com/android/org/conscrypt/OpenSSLEngineImpl was not found
-10-25 09:47:15.065  5772  5856 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Workspaces' (hash 1d9425b8bd762c1e) not found
-10-25 09:47:15.065  5772  5856 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Workspaces
-10-25 09:47:15.065  5772  5856 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Workspaces' (hash 1d9425b8bd762c1e) not found
-10-25 09:47:15.065  5772  5856 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Workspaces
-10-25 09:47:15.105  5772  5856 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Features' (hash ebd054ac833caaaa) not found
-10-25 09:47:15.105  5772  5856 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Features
-10-25 09:47:15.105  5772  5856 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Features' (hash ebd054ac833caaaa) not found
-10-25 09:47:15.105  5772  5856 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Features
-10-25 09:47:18.022  5772  5840 W monodroid-assembly: Shared library 'android' not loaded, p/invoke 'ANativeWindow_fromSurface' may fail
-10-25 09:47:20.293  5772  5772 I TabStudio: TABSTUDIO_SELFTEST_START
-10-25 09:48:09.648  5772  5772 I TabStudio: TABSTUDIO_SELFTEST_OK 49.3 s: What's your name? Tablet | Good morning, Tablet! This program was compiled and run on your tablet. | Statically typed languages, oldest first: | C#         since 2000 (26 years) | Rust       since 2015 (11 years) | The program 'HelloTablet' has exited with code 0 (0x0). | Debugger: Paused at a breakpoint · Program.cs, line 15, name = "Tablet" | Web: served on 127.0.0.1:33769 in 15.7 s, the API said "Hello, Tablet!" | Avalonia: shown in 11.3 s, the button counted 2 taps | Designer: previewed MainView.axaml in 1.2 s
+10-25 09:57:32.760  4302  4302 D DOTNET  : AndroidCryptoNative_InitLibraryOnLoad: jint AndroidCryptoNative_InitLibraryOnLoad(JavaVM *, void *) in /__w/1/s/src/runtime/src/native/libs/System.Security.Cryptography.Native.Android/pal_jni.c
+10-25 09:57:32.760  4302  4302 D DOTNET  : GetOptionalClassGRef: optional class com/android/org/conscrypt/OpenSSLEngineImpl was not found
+10-25 09:57:34.930  4302  4351 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Workspaces' (hash 1d9425b8bd762c1e) not found
+10-25 09:57:34.930  4302  4351 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Workspaces
+10-25 09:57:34.930  4302  4351 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Workspaces' (hash 1d9425b8bd762c1e) not found
+10-25 09:57:34.930  4302  4351 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Workspaces
+10-25 09:57:34.955  4302  4351 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Features' (hash ebd054ac833caaaa) not found
+10-25 09:57:34.955  4302  4351 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Features
+10-25 09:57:34.955  4302  4351 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Features' (hash ebd054ac833caaaa) not found
+10-25 09:57:34.955  4302  4351 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Features
+10-25 09:57:35.668  4302  4345 W monodroid-assembly: Shared library 'android' not loaded, p/invoke 'ANativeWindow_fromSurface' may fail
+10-25 09:57:36.793  4302  4302 I TabStudio: TABSTUDIO_SELFTEST_START
+10-25 09:57:53.233  4302  4669 W monodroid-assembly: Shared library 'liblog' not loaded, p/invoke '__android_log_print' may fail
+10-25 09:57:53.237  4302  4669 I monodroid-net: Exception caught while cancelling connection: Java.IO.IOException: Canceled
+10-25 09:57:53.237  4302  4669 I monodroid-net:    at Java.Interop.JniEnvironment.InstanceMethods.CallVoidMethod(JniObjectReference instance, JniMethodInfo method, JniArgumentValue* args)
+10-25 09:57:53.237  4302  4669 I monodroid-net:    at Java.Interop.JniPeerMembers.JniInstanceMethods.InvokeAbstractVoidMethod(String encodedMember, IJavaPeerable self, JniArgumentValue* parameters)
+10-25 09:57:53.237  4302  4669 I monodroid-net:    at Javax.Net.Ssl.HttpsURLConnectionInvoker.Connect()
+10-25 09:57:53.237  4302  4669 I monodroid-net:    at Xamarin.Android.Net.AndroidMessageHandler.<>c__DisplayClass137_0.<ConnectAsync>b__0()
+10-25 09:57:53.237  4302  4669 I monodroid-net:   --- End of managed Java.IO.IOException stack trace ---
+10-25 09:57:53.237  4302  4669 I monodroid-net: java.io.IOException: Canceled
+10-25 09:57:53.237  4302  4669 I monodroid-net: 	at com.android.okhttp.internal.http.StreamAllocation.findConnection(StreamAllocation.java:183)
+10-25 09:57:53.237  4302  4669 I monodroid-net: 	at com.android.okhttp.internal.http.StreamAllocation.findHealthyConnection(StreamAllocation.java:128)
+10-25 09:57:53.237  4302  4669 I monodroid-net: 	at com.android.okhttp.internal.http.StreamAllocation.newStream(StreamAllocation.java:97)
+10-25 09:57:53.237  4302  4669 I monodroid-net: 	at com.android.okhttp.internal.http.HttpEngine.connect(HttpEngine.java:289)
+10-25 09:57:53.237  4302  4669 I monodroid-net: 	at com.android.okhttp.internal.http.HttpEngine.sendRequest(HttpEngine.java:232)
+10-25 09:57:53.237  4302  4669 I monodroid-net: 	at com.android.okhttp.internal.huc.HttpURLConnectionImpl.execute(HttpURLConnectionImpl.java:465)
+10-25 09:57:53.237  4302  4669 I monodroid-net: 	at com.android.okhttp.internal.huc.HttpURLConnectionImpl.connect(HttpURLConnectionImpl.java:131)
+10-25 09:57:53.237  4302  4669 I monodroid-net: 	at com.android.okhttp.internal.huc.DelegatingHttpsURLConnection.connect(DelegatingHttpsURLConnection.java:90)
+10-25 09:57:53.237  4302  4669 I monodroid-net: 	at com.android.okhttp.internal.huc.HttpsURLConnectionImpl.connect(HttpsURLConnectionImpl.java:30)
+10-25 09:57:53.237  4302  4669 I monodroid-net: 
+10-25 09:57:56.009  4302  4302 I TabStudio: TABSTUDIO_SELFTEST_OK 19.2 s: What's your name? Tablet | Good morning, Tablet! This program was compiled and run on your tablet. | Statically typed languages, oldest first: | C#         since 2000 (26 years) | Rust       since 2015 (11 years) | The program 'HelloTablet' has exited with code 0 (0x0). | Debugger: Paused at a breakpoint · Program.cs, line 15, name = "Tablet" | Web: served on 127.0.0.1:42517 in 5.0 s, the API said "Hello, Tablet!" | Avalonia: shown in 4.6 s, the button counted 2 taps | Designer: previewed MainView.axaml in 0.6 s | Extensions: installed vscode.perl 1.95.3 from open-vsx.org (Signature) in 2.8 s; Perl colored, comment #ff8ca77a, string #ffe6a26b
