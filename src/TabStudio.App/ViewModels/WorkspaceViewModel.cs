@@ -62,6 +62,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IDisposable
     private readonly IUiDispatcher _ui;
     private readonly SessionStore _sessions;
     private readonly ProgramRunner _runner = new();
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1859", Justification = "TabStudio Link provides a remote implementation of the same interface.")]
     private ILanguageService? _language;
     private CancellationTokenSource? _run;
     private CancellationTokenSource? _background = new();

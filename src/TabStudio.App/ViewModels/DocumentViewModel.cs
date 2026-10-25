@@ -24,6 +24,9 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
     private readonly DeviceProfile _profile;
     private readonly TextFileContent _file;
     private CancellationTokenSource? _analysis;
+    private Task? _analysisTask;
+    private int _analysisEdits = -1;
+    private bool _hasSemanticClassification;
     private int _edits;
     private int _syncedEdits = -1;
     private bool _disposed;
@@ -198,23 +201,35 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
             return;
         }
 
+        // The semantic analysis starts at once; the syntax pass only fills the gap until it arrives.
+        var semantic = AnalyzeNowAsync();
         var text = Document.Text;
         var edits = _edits;
         var syntax = await Task.Run(() => SyntaxClassifier.Classify(text));
-        if (edits == _edits && !_disposed)
+        if (edits == _edits && !_disposed && !_hasSemanticClassification)
         {
             Classifications = syntax;
             ClassificationsChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        await AnalyzeNowAsync();
+        await semantic;
     }
 
-    /// <summary>Runs classification and diagnostics now, without waiting for the user to stop typing.</summary>
+    /// <summary>
+    /// Runs classification and diagnostics now, without waiting for the user to stop typing. If an analysis
+    /// of the current text is already running, returns that one.
+    /// </summary>
     public Task AnalyzeNowAsync()
     {
+        if (_analysisTask is { IsCompleted: false } running && _analysisEdits == _edits)
+        {
+            return running;
+        }
+
         var token = RestartAnalysis();
-        return AnalyzeAsync(TimeSpan.Zero, token);
+        _analysisEdits = _edits;
+        _analysisTask = AnalyzeAsync(TimeSpan.Zero, token);
+        return _analysisTask;
     }
 
     /// <summary>Applies Format Document as one undo step.</summary>
@@ -272,7 +287,8 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
         if (_language is not null)
         {
             var token = RestartAnalysis();
-            _ = AnalyzeAsync(_profile.AnalysisDelay, token);
+            _analysisEdits = _edits;
+            _analysisTask = AnalyzeAsync(_profile.AnalysisDelay, token);
         }
     }
 
@@ -313,6 +329,7 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
             var classified = await classifications;
             if (IsCurrent(edits, cancellationToken))
             {
+                _hasSemanticClassification = true;
                 Classifications = classified;
                 ClassificationsChanged?.Invoke(this, EventArgs.Empty);
             }

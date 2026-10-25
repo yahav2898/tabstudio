@@ -15,7 +15,7 @@ public sealed partial class SolutionExplorerViewModel : ObservableObject
     private const int MaximumSearchResults = 500;
 
     private Workspace? _workspace;
-    private IReadOnlyDictionary<string, CompatibilityReport> _reports = new Dictionary<string, CompatibilityReport>();
+    private Dictionary<string, CompatibilityReport> _reports = new(StringComparer.Ordinal);
     private List<ExplorerItemViewModel> _treeRows = [];
 
     /// <summary>The visible rows, in display order.</summary>
@@ -49,9 +49,14 @@ public sealed partial class SolutionExplorerViewModel : ObservableObject
         var root = CreateRow(workspace.Tree, 0);
         _treeRows = [root];
         Expand(root, _treeRows);
-        foreach (var project in _treeRows.Where(r => r.IsProject).ToList())
+
+        // Like Visual Studio: solution folders and projects start expanded, everything inside them collapsed.
+        for (var i = 0; i < _treeRows.Count; i++)
         {
-            Expand(project, _treeRows);
+            if (_treeRows[i].Node.Kind is WorkspaceNodeKind.SolutionFolder or WorkspaceNodeKind.Project)
+            {
+                Expand(_treeRows[i], _treeRows);
+            }
         }
 
         SearchText = string.Empty;

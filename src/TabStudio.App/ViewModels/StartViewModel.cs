@@ -47,7 +47,7 @@ public sealed record RecentGroupViewModel(string Title, IReadOnlyList<RecentItem
 /// open a folder, create a project or open the sample. Imported code is inspected first, so the user sees
 /// what it contains and where each project runs before opening it.
 /// </summary>
-public sealed partial class StartViewModel : ObservableObject
+public sealed partial class StartViewModel : ObservableObject, IDisposable
 {
     private readonly RecentWorkspaces _recent;
     private readonly SampleLibrary _samples;
@@ -152,6 +152,9 @@ public sealed partial class StartViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(IsGitHubFormVisible), nameof(IsFolderFormVisible))]
     public partial WorkspacePreviewViewModel? Preview { get; private set; }
 
+    /// <inheritdoc />
+    public void Dispose() => _import?.Dispose();
+
     /// <summary>Shows an error, for example when a workspace could not be opened.</summary>
     /// <param name="message">The message, in plain words.</param>
     public void ShowError(string message) => ErrorText = message;
@@ -207,10 +210,10 @@ public sealed partial class StartViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(CanStart))]
     private async Task OpenSampleAsync()
     {
-        await RunAsync(async _ =>
+        await RunAsync(async token =>
         {
             ProgressText = "Preparing the sample";
-            var path = await _samples.EnsureExtractedAsync();
+            var path = await _samples.EnsureExtractedAsync(token);
             OpenRequested?.Invoke(this, path);
         });
     }

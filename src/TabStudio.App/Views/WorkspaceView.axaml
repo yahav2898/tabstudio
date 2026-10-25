@@ -118,8 +118,10 @@
 
     <!-- Standard toolbar -->
     <Border Grid.Row="1" Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
-      <DockPanel Margin="8,0" LastChildFill="False">
-        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
+      <Grid Margin="8,0" ColumnDefinitions="*,Auto">
+        <!-- On a narrow screen the toolbar scrolls sideways instead of overlapping. -->
+        <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
+        <StackPanel Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
           <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Navigate Backward (Alt+Left)" Command="{Binding NavigateBackCommand}">
             <controls:StrokeIcon Data="{StaticResource Icon.Back}" />
           </Button>
@@ -207,9 +209,10 @@
             <controls:StrokeIcon Data="{StaticResource Icon.Search}" />
           </Button>
         </StackPanel>
+        </ScrollViewer>
 
         <!-- Problems at a glance -->
-        <Button DockPanel.Dock="Right" Theme="{StaticResource ToolButton}" VerticalAlignment="Center"
+        <Button Grid.Column="1" Margin="8,0,0,0" Theme="{StaticResource ToolButton}" VerticalAlignment="Center"
                 Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}">
           <StackPanel Orientation="Horizontal" Spacing="12">
             <StackPanel Orientation="Horizontal" Spacing="5">
@@ -222,7 +225,7 @@
             </StackPanel>
           </StackPanel>
         </Button>
-      </DockPanel>
+      </Grid>
     </Border>
 
     <!-- Main area: documents and bottom dock on the left, Solution Explorer and Properties on the right. -->

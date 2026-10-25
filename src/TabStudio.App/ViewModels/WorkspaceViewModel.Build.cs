@@ -94,7 +94,7 @@ public sealed partial class WorkspaceViewModel
 
     /// <summary>Builds projects one after another, reporting in the Output panel and the Error List.</summary>
     /// <returns>The result for the last project, or <see langword="null"/> when nothing was built.</returns>
-    private async Task<BuildResult?> BuildProjectsAsync(IReadOnlyList<ProjectInfo> projects, bool showOutput)
+    private async Task<BuildResult?> BuildProjectsAsync(List<ProjectInfo> projects, bool showOutput)
     {
         if (_language is not { } language || projects.Count == 0)
         {

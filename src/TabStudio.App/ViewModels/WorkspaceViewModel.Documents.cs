@@ -300,10 +300,10 @@ public sealed partial class WorkspaceViewModel
                 return program;
             }
 
-            var firstSource = ProjectSourceFiles.Enumerate(project, workspace.Projects.Select(p => p.DirectoryPath).ToList()).FirstOrDefault();
-            if (firstSource is not null)
+            var sources = ProjectSourceFiles.Enumerate(project, workspace.Projects.Select(p => p.DirectoryPath).ToList());
+            if (sources.Count > 0)
             {
-                return firstSource;
+                return sources[0];
             }
         }
 

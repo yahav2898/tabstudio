@@ -28,7 +28,7 @@ public static class SyntaxTheme
     public static IBrush Variable { get; } = Brush("#A9D4F5");
 
     /// <summary>String and character literals.</summary>
-    public static IBrush String { get; } = Brush("#E6A26B");
+    public static IBrush StringLiteral { get; } = Brush("#E6A26B");
 
     /// <summary>Escape sequences inside strings.</summary>
     public static IBrush StringEscape { get; } = Brush("#F0C674");
@@ -56,15 +56,15 @@ public static class SyntaxTheme
         "method name" or "extension method name" => Method,
         "local name" or "parameter name" or "field name" or "property name" or "event name"
             or "constant name" or "enum member name" or "label name" => Variable,
-        "string" or "string - verbatim" => String,
+        "string" or "string - verbatim" => StringLiteral,
         "string - escape character" => StringEscape,
         "number" => Number,
         "comment" => Comment,
         "excluded code" => Excluded,
         "preprocessor keyword" or "preprocessor text" => Muted,
         _ when classification.StartsWith("xml doc comment", StringComparison.Ordinal) => Comment,
-        _ when classification.StartsWith("regex", StringComparison.Ordinal) => String,
-        _ when classification.StartsWith("json", StringComparison.Ordinal) => String,
+        _ when classification.StartsWith("regex", StringComparison.Ordinal) => StringLiteral,
+        _ when classification.StartsWith("json", StringComparison.Ordinal) => StringLiteral,
         _ => null,
     };
 
