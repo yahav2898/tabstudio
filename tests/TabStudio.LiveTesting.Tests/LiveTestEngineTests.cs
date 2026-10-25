@@ -116,6 +116,24 @@ public sealed class LiveTestEngineTests : IDisposable
     }
 
     [Fact]
+    public async Task Code_a_class_fixture_runs_counts_for_every_test_of_the_class()
+    {
+        _solution.EditTests(LiveSolution.Tests.Replace(
+            "public class ArithmeticTests\n{\n",
+            "public class Fixture\n{\n    public Fixture() => Value = Arithmetic.Negate(1);\n\n    public int Value { get; }\n}\n\n" +
+            "public class ArithmeticTests : IClassFixture<Fixture>\n{\n    public ArithmeticTests(Fixture fixture) => _ = fixture;\n\n",
+            StringComparison.Ordinal));
+
+        await _solution.RunAsync();
+
+        // The fixture is created once, for the class: its code counts for each of the class's tests, the failing one too.
+        var negate = _solution.LibraryLine("return -value;");
+        Assert.Equal(4, negate.Tests.Count);
+        Assert.Equal(new[] { "Adds", "Adds_pairs", "Subtracts" }, negate.Tests.Select(t => t.Test.MethodName).Distinct().Order(StringComparer.Ordinal));
+        Assert.Equal(LineCoverageState.Failing, negate.State);
+    }
+
+    [Fact]
     public async Task Tests_asked_for_run_whatever_changed()
     {
         await _solution.RunAsync();
