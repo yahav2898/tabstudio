@@ -55,16 +55,19 @@ public static class SearchRanker
             return new RankedItem(item, title.Score, title.Indices);
         }
 
+        // A keyword or a detail counts only when it holds the query's letters together: letters scattered through a
+        // sentence, as "greeter" through "light colors for the whole IDE, after", match nearly anything.
         var keyword = item.Keywords
             .Select(word => SearchMatcher.Match(query, word))
             .OfType<SearchMatch>()
+            .Where(match => match.Score > SearchMatcher.Scattered)
             .MaxBy(match => match.Score);
         if (keyword is not null)
         {
             return new RankedItem(item, keyword.Score - KeywordPenalty, []);
         }
 
-        return item.Detail is { } detail && SearchMatcher.Match(query, detail) is { } inDetail
+        return item.Detail is { } detail && SearchMatcher.Match(query, detail) is { Score: > SearchMatcher.Scattered } inDetail
             ? new RankedItem(item, inDetail.Score - DetailPenalty, [])
             : null;
     }
