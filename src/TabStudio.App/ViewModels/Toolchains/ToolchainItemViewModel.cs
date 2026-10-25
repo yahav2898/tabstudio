@@ -151,7 +151,7 @@ public sealed partial class ToolchainItemViewModel : ObservableObject
     public string? Note => Status.Note;
 
     /// <summary>Whether there is a note.</summary>
-    public bool HasNote => !string.IsNullOrEmpty(Status.Note) && !HasError;
+    public bool HasNote => !string.IsNullOrEmpty(Status.Note) && !HasError && !Status.IsBusy;
 
     /// <summary>Whether the Install button is shown.</summary>
     public bool ShowsInstall => CanInstall();

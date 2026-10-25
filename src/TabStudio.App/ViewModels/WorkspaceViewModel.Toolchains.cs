@@ -71,8 +71,8 @@ public sealed partial class WorkspaceViewModel
     [NotifyPropertyChangedFor(nameof(HasToolchainNotice))]
     public partial ToolchainNoticeViewModel? ToolchainNotice { get; private set; }
 
-    /// <summary>Whether an offer is shown.</summary>
-    public bool HasToolchainNotice => ToolchainNotice is not null;
+    /// <summary>Whether an offer is shown: there is one, and the Store, which offers the same, is closed.</summary>
+    public bool HasToolchainNotice => ToolchainNotice is not null && !ToolchainStore.IsOpen;
 
     /// <summary>Whether the Terminal is the visible bottom panel.</summary>
     public bool IsTerminalSelected => SelectedPanel == BottomPanel.Terminal;
@@ -90,11 +90,21 @@ public sealed partial class WorkspaceViewModel
         Output.LinkFinder = FindOutputLinks;
         Output.LinkActivated += OnOutputLinkActivated;
         PropertyChanged += OnToolchainPropertyChanged;
+        ToolchainStore.PropertyChanged += OnToolchainStorePropertyChanged;
+    }
+
+    private void OnToolchainStorePropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(ToolchainStoreViewModel.IsOpen))
+        {
+            OnPropertyChanged(nameof(HasToolchainNotice));
+        }
     }
 
     private void DisposeToolchains()
     {
         PropertyChanged -= OnToolchainPropertyChanged;
+        ToolchainStore.PropertyChanged -= OnToolchainStorePropertyChanged;
         Output.LinkActivated -= OnOutputLinkActivated;
         _toolchains.Manager.StatusChanged -= OnToolchainStatusChanged;
         Terminal.Dispose();
