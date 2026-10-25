@@ -17,6 +17,9 @@ namespace TabStudio.Android;
 /// </summary>
 internal sealed partial class AndroidWebView : IScriptableWebView
 {
+    /// <summary>How long after a replayed touch the browser may still take the keyboard.</summary>
+    private static readonly TimeSpan FocusSettle = TimeSpan.FromMilliseconds(250);
+
     /// <inheritdoc />
     public Task<string?> EvaluateAsync(string script, CancellationToken cancellationToken)
     {
@@ -65,6 +68,7 @@ internal sealed partial class AndroidWebView : IScriptableWebView
             return false;
         }
 
+        var keyboard = KeyboardOutside(view);
         var (x, y) = ((float)pixel.X, (float)pixel.Y);
         var down = SystemClock.UptimeMillis();
         Touch(view, down, down, MotionEventActions.Down, x, y);
@@ -76,8 +80,12 @@ internal sealed partial class AndroidWebView : IScriptableWebView
         {
             // The finger always lifts, even when the touch is cut short.
             Touch(view, down, SystemClock.UptimeMillis(), MotionEventActions.Up, x, y);
+            GiveKeyboardBack(view, keyboard);
         }
 
+        // The browser can ask for the focus a moment after the finger lifted, once the page took the touch.
+        await Task.Delay(FocusSettle, CancellationToken.None);
+        GiveKeyboardBack(view, keyboard);
         return true;
     }
 
@@ -90,6 +98,7 @@ internal sealed partial class AndroidWebView : IScriptableWebView
             return Task.FromResult(false);
         }
 
+        var keyboard = KeyboardOutside(view);
         var meta = MetaOf(modifiers);
         var down = SystemClock.UptimeMillis();
         view.RequestFocus();
@@ -97,7 +106,28 @@ internal sealed partial class AndroidWebView : IScriptableWebView
         var taken = view.DispatchKeyEvent(press);
         using var release = new KeyEvent(down, SystemClock.UptimeMillis(), KeyEventActions.Up, code, 0, meta);
         view.DispatchKeyEvent(release);
+        GiveKeyboardBack(view, keyboard);
         return Task.FromResult(taken);
+    }
+
+    /// <summary>
+    /// The view of the window that has the keyboard, when it is not the browser: TabStudio's own, where a person may be
+    /// typing while an input is replayed on the page.
+    /// </summary>
+    private static View? KeyboardOutside(AndroidWebKitView view) =>
+        view.HasFocus ? null : view.RootView?.FindFocus();
+
+    /// <summary>
+    /// A replayed input on the page must not take the keyboard from where the person is typing, as on the screens
+    /// TabStudio draws itself: the view that had it gets it back. The page keeps its own focused element, where
+    /// replayed text goes.
+    /// </summary>
+    private static void GiveKeyboardBack(AndroidWebKitView view, View? keyboard)
+    {
+        if (keyboard is { IsAttachedToWindow: true } && view.HasFocus)
+        {
+            keyboard.RequestFocus();
+        }
     }
 
     /// <summary>One finger, as a touch screen reports it.</summary>

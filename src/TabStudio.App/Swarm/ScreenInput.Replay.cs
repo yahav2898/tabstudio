@@ -310,14 +310,10 @@ internal sealed partial class ScreenInput
             return;
         }
 
+        // Where nothing had the keyboard, the element the finger landed on keeps it, as after a person's tap.
         if (focusBefore is Visual before && !IsInApp(before) && before.GetVisualRoot() is not null)
         {
             focusBefore.Focus();
-        }
-        else if (focusBefore is null)
-        {
-            // Nothing had the keyboard: nothing keeps it.
-            focus.ClearFocus();
         }
     }
 
