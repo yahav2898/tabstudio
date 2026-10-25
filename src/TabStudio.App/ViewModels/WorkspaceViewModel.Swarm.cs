@@ -11,6 +11,7 @@ using TabStudio.Core.Workspaces;
 using TabStudio.Debugging.Building;
 using TabStudio.Swarm;
 using TabStudio.Swarm.Coordinator;
+using TabStudio.Web.RazorApps;
 
 namespace TabStudio.App.ViewModels;
 
@@ -135,7 +136,7 @@ public sealed partial class WorkspaceViewModel
     /// <summary>"Swarm" in the Run button's menu, after the startup projects, for apps the devices can run.</summary>
     private void AddSwarmRunTarget(List<RunTargetOption> targets)
     {
-        if (Swarm is not null && StartupProjects.Count > 0)
+        if (Swarm is not null && StartupProjects.Count > 0 && CanRunOnSwarm(StartupProject ?? StartupProjects[0].Project))
         {
             var project = StartupProject?.Name ?? StartupProjects[0].Name;
             targets.Add(new RunTargetOption("Swarm", $"{project} on every device", new RelayCommand(SelectSwarmTarget)));
@@ -159,6 +160,14 @@ public sealed partial class WorkspaceViewModel
     /// <param name="pauseAtStart">Whether F10 or F11 started it, to pause at its first statement.</param>
     private void StartOnSwarm(ProjectInfo project, bool debug, bool pauseAtStart)
     {
+        if (!CanRunOnSwarm(project))
+        {
+            Output.WriteLine($"{project.Name} runs on this tablet only: the devices of a swarm run Avalonia, ASP.NET Core and console apps. Choose {project.Name} in the Run button's menu to run it here.", OutputKind.Failure);
+            ShowOutputSource(Output);
+            StatusText = $"{project.Name} does not run on the swarm";
+            return;
+        }
+
         if (SwarmRun.IsCompleted)
         {
             SwarmRun = RunOnSwarmReportingAsync(project, debug, pauseAtStart);
@@ -249,6 +258,7 @@ public sealed partial class WorkspaceViewModel
         _swarmProject = project;
         var token = _run.Token;
         WebAppHost? web = null;
+        PreparedServerApp? prepared = null;
         ConsoleInput? input = null;
         try
         {
@@ -256,8 +266,11 @@ public sealed partial class WorkspaceViewModel
             if (kind == SwarmAppKind.Web)
             {
                 // The tablet serves the web app once, on its loopback address only; the devices reach it through the swarm.
+                // A Blazor Web App's static web assets and scripts are written first, as for the web preview.
                 var profile = LaunchSettings.Read(project.DirectoryPath);
-                web = await WebAppHost.StartAsync(entry, built.Dependencies, packages, project.DirectoryPath, SwarmOutput, new WebAppOptions { Environment = profile.Environment ?? "Development", Arguments = profile.CommandLineArgs }, token);
+                prepared = await PrepareWebAppAsync(project, built, profile, token);
+                var options = new WebAppOptions { Environment = profile.Environment ?? "Development", Arguments = [.. prepared?.Arguments ?? [], .. profile.CommandLineArgs] };
+                web = await WebAppHost.StartAsync(entry, built.Dependencies, packages, project.DirectoryPath, SwarmOutput, options, token);
                 if (!web.IsRunning)
                 {
                     SwarmOutput.WriteLine($"{project.Name} could not start on this tablet, so the devices have nothing to show.", OutputKind.Failure);
@@ -334,6 +347,8 @@ public sealed partial class WorkspaceViewModel
                 WebPreview.ShowStopped();
             }
 
+            prepared?.Dispose();
+
             EndSwarmDebugging();
             _swarmProject = null;
             _run.Dispose();
@@ -360,6 +375,15 @@ public sealed partial class WorkspaceViewModel
         _restartSwarm = true;
         run.Cancel();
     }
+
+    /// <summary>
+    /// Whether the devices of a swarm can run a project: an Avalonia app, an ASP.NET Core app or Blazor Web App the
+    /// tablet serves, or a console app. Windows Forms apps, Blazor WebAssembly apps and the Toolchain Store's languages
+    /// run on the tablet only.
+    /// </summary>
+    private bool CanRunOnSwarm(ProjectInfo project) =>
+        project.Language == ProjectLanguage.CSharp && !IsToolchainProject(project) && !IsWindowsFormsApp(project)
+        && !IsWebAssemblyApp(project) && !ProjectClassifier.IsBlazorWebAppClient(project);
 
     /// <summary>How the devices run a project: an Avalonia app full screen, a web app through the tablet, or a console app.</summary>
     private static SwarmAppKind SwarmKindOf(ProjectInfo project) =>
