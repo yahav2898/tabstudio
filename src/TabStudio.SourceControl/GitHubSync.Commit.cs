@@ -179,7 +179,7 @@ public sealed partial class GitHubSync
     private static SyncException BehindRemote(string branch) =>
         new(SyncFailure.BehindRemote, $"GitHub has new commits on '{branch}'. Pull them first, then commit again.");
 
-    private static string Describe(IReadOnlyList<string> paths) =>
+    private static string Describe(List<string> paths) =>
         paths.Count == 1 ? paths[0] : $"{paths.Count} files";
 }
 

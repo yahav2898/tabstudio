@@ -160,7 +160,7 @@ public sealed class GitHubSyncTests : IDisposable
         var error = await Assert.ThrowsAsync<SyncException>(() => sync.CommitAsync("Mine"));
 
         Assert.Equal(SyncFailure.BehindRemote, error.Failure);
-        Assert.Equal(2, (await sync.GetStatusAsync(checkGitHub: true)).IncomingCommits ?? 0, 1);
+        Assert.Equal(1, (await sync.GetStatusAsync(checkGitHub: true)).IncomingCommits);
     }
 
     [Fact]

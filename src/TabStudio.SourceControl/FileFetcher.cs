@@ -116,7 +116,7 @@ internal sealed class FileFetcher(GitHubClient client, string owner, string repo
 
     private async Task WriteBlobsAsync(
         string root,
-        IReadOnlyList<string> paths,
+        List<string> paths,
         IReadOnlyDictionary<string, TrackedFile> files,
         HashCache hashes,
         IProgress<SyncProgress>? progress,

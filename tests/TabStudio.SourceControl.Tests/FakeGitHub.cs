@@ -196,7 +196,7 @@ internal sealed class FakeGitHub : HttpMessageHandler
         };
     }
 
-    private HttpResponseMessage GetRef(Repo repo, string branch) =>
+    private static HttpResponseMessage GetRef(Repo repo, string branch) =>
         repo.Branches.TryGetValue(branch, out var sha)
             ? Json(RefJson(branch, sha))
             : Error(HttpStatusCode.NotFound, "Not Found");
@@ -221,7 +221,7 @@ internal sealed class FakeGitHub : HttpMessageHandler
         return Json(RefJson(branch, sha));
     }
 
-    private HttpResponseMessage CreateRef(Repo repo, JsonNode body)
+    private static HttpResponseMessage CreateRef(Repo repo, JsonNode body)
     {
         var name = body["ref"]!.GetValue<string>()["refs/heads/".Length..];
         if (repo.Branches.ContainsKey(name))
@@ -233,7 +233,7 @@ internal sealed class FakeGitHub : HttpMessageHandler
         return Json(RefJson(name, repo.Branches[name]), HttpStatusCode.Created);
     }
 
-    private HttpResponseMessage GitCommit(Repo repo, string sha) =>
+    private static HttpResponseMessage GitCommit(Repo repo, string sha) =>
         repo.Commits.TryGetValue(sha, out var commit) ? Json(GitCommitJson(commit)) : Error(HttpStatusCode.NotFound, "Not Found");
 
     private HttpResponseMessage CreateCommit(Repo repo, JsonNode body)
@@ -289,7 +289,7 @@ internal sealed class FakeGitHub : HttpMessageHandler
         return Json(new JsonObject { ["sha"] = sha, ["tree"] = entries, ["truncated"] = recursive && TruncateRecursiveTrees });
     }
 
-    private HttpResponseMessage CreateTree(Repo repo, JsonNode body)
+    private static HttpResponseMessage CreateTree(Repo repo, JsonNode body)
     {
         var baseTree = body["base_tree"]?.GetValue<string>();
         var files = baseTree is null
@@ -321,10 +321,10 @@ internal sealed class FakeGitHub : HttpMessageHandler
             ? Json(new JsonObject { ["sha"] = sha, ["content"] = Convert.ToBase64String(content), ["encoding"] = "base64", ["size"] = content.Length })
             : Error(HttpStatusCode.NotFound, "Not Found");
 
-    private HttpResponseMessage History(Repo repo, string reference, int count)
+    private static HttpResponseMessage History(Repo repo, string reference, int count)
     {
         var list = new JsonArray();
-        for (var sha = Resolve(repo, reference); sha is not null && list.Count < count; sha = repo.Commits[sha].Parents.FirstOrDefault())
+        for (var sha = Resolve(repo, reference); sha is not null && list.Count < count; sha = repo.Commits[sha].Parents is [var parent, ..] ? parent : null)
         {
             list.Add(RepositoryCommitJson(repo.Commits[sha]));
         }
@@ -332,10 +332,10 @@ internal sealed class FakeGitHub : HttpMessageHandler
         return Json(list);
     }
 
-    private HttpResponseMessage ResolveCommit(Repo repo, string reference) =>
+    private static HttpResponseMessage ResolveCommit(Repo repo, string reference) =>
         Resolve(repo, reference) is { } sha ? Json(RepositoryCommitJson(repo.Commits[sha])) : Error(HttpStatusCode.UnprocessableEntity, $"No commit found for SHA: {reference}");
 
-    private HttpResponseMessage Compare(Repo repo, string range)
+    private static HttpResponseMessage Compare(Repo repo, string range)
     {
         var ends = range.Split("...");
         var baseSha = Resolve(repo, ends[0]);
@@ -388,7 +388,7 @@ internal sealed class FakeGitHub : HttpMessageHandler
         return new HttpResponseMessage(HttpStatusCode.OK) { Content = new ByteArrayContent(stream.ToArray()) };
     }
 
-    private HttpResponseMessage CreatePullRequest(Repo repo, JsonNode body)
+    private static HttpResponseMessage CreatePullRequest(Repo repo, JsonNode body)
     {
         var pull = new PullRequest(repo.PullRequests.Count + 1, body["title"]!.GetValue<string>(), body["head"]!.GetValue<string>(), body["base"]!.GetValue<string>(), body["draft"]?.GetValue<bool>() ?? false);
         if (!repo.Branches.ContainsKey(pull.Head) || !repo.Branches.ContainsKey(pull.Base))
@@ -400,7 +400,7 @@ internal sealed class FakeGitHub : HttpMessageHandler
         return Json(PullRequestJson(repo, pull), HttpStatusCode.Created);
     }
 
-    private string StoreBlob(Repo repo, byte[] content)
+    private static string StoreBlob(Repo repo, byte[] content)
     {
         var sha = GitObjects.BlobHash(content);
         repo.Blobs[sha] = content;
@@ -526,7 +526,7 @@ internal sealed class FakeGitHub : HttpMessageHandler
             .Select(p => p.Split('=', 2))
             .ToDictionary(p => p[0], p => p.Length > 1 ? Uri.UnescapeDataString(p[1]) : string.Empty, StringComparer.Ordinal);
 
-    private static string Hash(string text) => Convert.ToHexStringLower(SHA1.HashData(Encoding.UTF8.GetBytes(text)));
+    private static string Hash(string text) => Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(text)))[..40];
 
     private static HttpResponseMessage Json(JsonNode node, HttpStatusCode status = HttpStatusCode.OK) =>
         new(status) { Content = new StringContent(node.ToJsonString(), Encoding.UTF8, "application/json") };

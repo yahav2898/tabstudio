@@ -119,7 +119,7 @@ public sealed class LineDiffTests
         return result;
     }
 
-    private static int LongestCommonSubsequence(IReadOnlyList<string> a, IReadOnlyList<string> b)
+    private static int LongestCommonSubsequence(List<string> a, List<string> b)
     {
         var table = new int[a.Count + 1, b.Count + 1];
         for (var i = a.Count - 1; i >= 0; i--)
