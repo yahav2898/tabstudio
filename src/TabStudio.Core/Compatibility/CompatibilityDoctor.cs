@@ -61,13 +61,21 @@ public static class CompatibilityDoctor
                 project, RunHost.None, CompatibilityStatus.NotRunnable, "Built with its users",
                 "A library is compiled together with the projects that reference it."),
 
+            ProjectKind.Test when project.Language == ProjectLanguage.CSharp => Report(
+                project, RunHost.InProcess, CompatibilityStatus.Ready, "Test Explorer",
+                "Its tests run in-process from the Test Explorer, with their results beside each test."),
+
             ProjectKind.Test => Report(
                 project, RunHost.InProcess, CompatibilityStatus.Planned, "Test Explorer",
-                "Tests will run in-process from the Test Explorer, which is on the roadmap."),
+                $"Tests run in-process from the Test Explorer. The {LanguageName(project.Language)} compiler is not bundled yet."),
+
+            ProjectKind.AspNetCore when project.Language == ProjectLanguage.CSharp => Report(
+                project, RunHost.WebView, CompatibilityStatus.Ready, "Local server + WebView",
+                "Served on this device and shown in the web preview beside the code. Saving a file restarts it."),
 
             ProjectKind.AspNetCore => Report(
                 project, RunHost.WebView, CompatibilityStatus.Planned, "Local server + WebView",
-                "The app will be served locally and shown in a WebView next to the code."),
+                $"Web apps are served on this device. The {LanguageName(project.Language)} compiler is not bundled yet."),
 
             ProjectKind.BlazorWebAssembly => Report(
                 project, RunHost.WebView, CompatibilityStatus.Planned, "WebAssembly in a WebView",

@@ -11,7 +11,8 @@ public sealed record SelfTestResult(bool Success, string Message, TimeSpan Durat
 
 /// <summary>
 /// Does what a person does first: opens the sample solution, presses F5, types a name when the program asks,
-/// and reads the Output panel. CI runs it on an Android emulator to prove the whole IDE works on a device.
+/// and reads the Output panel; then debugs it, and serves a new web app. CI runs it on an Android emulator to
+/// prove the whole IDE works on a device.
 /// </summary>
 public static partial class SelfTest
 {
@@ -22,7 +23,15 @@ public static partial class SelfTest
     /// <param name="main">The app's root view model.</param>
     /// <param name="samples">The sample library.</param>
     /// <param name="cancellationToken">Gives up, for example after a timeout.</param>
-    public static async Task<SelfTestResult> RunAsync(MainViewModel main, SampleLibrary samples, CancellationToken cancellationToken = default)
+    public static Task<SelfTestResult> RunAsync(MainViewModel main, SampleLibrary samples, CancellationToken cancellationToken = default) =>
+        RunAsync(main, samples, templates: null, cancellationToken);
+
+    /// <summary>Runs the self test in the running app, then serves a web app when <paramref name="templates"/> is given.</summary>
+    /// <param name="main">The app's root view model.</param>
+    /// <param name="samples">The sample library.</param>
+    /// <param name="templates">Creates the web app; without it, the web part is skipped.</param>
+    /// <param name="cancellationToken">Gives up, for example after a timeout.</param>
+    public static async Task<SelfTestResult> RunAsync(MainViewModel main, SampleLibrary samples, ProjectTemplates? templates, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(main);
         ArgumentNullException.ThrowIfNull(samples);
@@ -70,7 +79,13 @@ public static partial class SelfTest
             }
 
             var debugged = await DebugSampleAsync(workspace, cancellationToken);
-            return new SelfTestResult(debugged.Success, $"{summary} | {debugged.Message}", clock.Elapsed);
+            if (!debugged.Success || templates is null)
+            {
+                return new SelfTestResult(debugged.Success, $"{summary} | {debugged.Message}", clock.Elapsed);
+            }
+
+            var web = await ServeWebAppAsync(main, templates, cancellationToken);
+            return new SelfTestResult(web.Success, $"{summary} | {debugged.Message} | {web.Message}", clock.Elapsed);
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)
         {

@@ -124,6 +124,12 @@ To stop the app gracefully, the host it builds is captured the way `WebApplicati
 hosting library announces each host on the `Microsoft.Extensions.Hosting` diagnostic listener, and stopping
 calls that host's `StopAsync`. The server closes its port, the app's shutdown code runs and `Main` returns.
 
+In the IDE, F5 on a web project serves it and opens the web preview in the side bar: Android's system WebView
+inside the layout (a native control host), or the system browser where there is no embedded one. The first
+`Project` profile of `Properties/launchSettings.json` gives the first page, the environment and extra
+arguments. Saving one of the app's source files while it runs rebuilds it and starts it again on the same
+port, and the preview reloads where it was; a change under `wwwroot` only reloads the page.
+
 ## Debugging
 
 A debugger normally attaches to the runtime through a debugging API, which a .NET app on Android cannot do to

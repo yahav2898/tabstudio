@@ -83,7 +83,11 @@ public sealed partial class AgentPanelViewModel : ObservableObject, IDisposable
 
     /// <summary>Tokens used in this conversation.</summary>
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(UsageSuffix))]
     public partial string UsageText { get; private set; } = string.Empty;
+
+    /// <summary>The tokens used, as they follow the model's name in the header.</summary>
+    public string UsageSuffix => UsageText.Length == 0 ? string.Empty : $" · {UsageText}";
 
     /// <summary>Whether the settings are shown instead of the conversation.</summary>
     [ObservableProperty]

@@ -46,7 +46,7 @@ public sealed class WebAppHost : IAsyncDisposable
     /// <param name="frameworkAndPackageAssemblies">ASP.NET Core's runtime assemblies and the app's package assemblies.</param>
     /// <param name="contentRoot">The project folder, where <c>appsettings.json</c> and <c>wwwroot</c> are.</param>
     /// <param name="console">Receives the app's console output and logs.</param>
-    /// <param name="startupTimeout">How long to wait for the server to accept connections; a minute by default.</param>
+    /// <param name="options">The environment, extra arguments, port and startup timeout; the defaults when omitted.</param>
     /// <param name="cancellationToken">Gives up waiting, and stops the app.</param>
     /// <returns>
     /// The app, listening on <see cref="Address"/>. When it exits before it listens, such as when it crashes at
@@ -58,28 +58,37 @@ public sealed class WebAppHost : IAsyncDisposable
         IReadOnlyList<string> frameworkAndPackageAssemblies,
         string contentRoot,
         IConsoleSink console,
-        TimeSpan? startupTimeout = null,
+        WebAppOptions? options = null,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(entryAssembly);
         ArgumentNullException.ThrowIfNull(console);
+        options ??= new WebAppOptions();
 
-        var port = FindFreePort();
+        var port = options.Port is { } preferred && IsFree(preferred) ? preferred : FindFreePort();
         var host = new WebAppHost(new Uri($"http://127.0.0.1:{port}/"));
-        string[] arguments =
+        List<string> arguments =
         [
             "--urls", host.Address.GetLeftPart(UriPartial.Authority),
             "--contentRoot", contentRoot,
-            "--environment", "Development",
+            "--environment", options.Environment,
             "--applicationName", entryAssembly.Name,
         ];
+
+        // Watching configuration files costs battery on a tablet; the app restarts when they change anyway.
+        if (OperatingSystem.IsAndroid())
+        {
+            arguments.AddRange(["--hostBuilder:reloadConfigOnChange", "false"]);
+        }
+
+        arguments.AddRange(options.Arguments);
 
         try
         {
             host._capture.Start();
             host._completion = new ProgramRunner().RunAsync(
                 entryAssembly, dependencies, frameworkAndPackageAssemblies, arguments, console, input: null, host._run.Token);
-            await host.WaitUntilListeningAsync(port, startupTimeout ?? TimeSpan.FromMinutes(1), cancellationToken).ConfigureAwait(false);
+            await host.WaitUntilListeningAsync(port, options.StartupTimeout, cancellationToken).ConfigureAwait(false);
             return host;
         }
         catch
@@ -141,6 +150,21 @@ public sealed class WebAppHost : IAsyncDisposable
         using var listener = new TcpListener(IPAddress.Loopback, 0);
         listener.Start();
         return ((IPEndPoint)listener.LocalEndpoint).Port;
+    }
+
+    /// <summary>Whether nothing listens on a port, so an app restarted on it keeps its address.</summary>
+    private static bool IsFree(int port)
+    {
+        try
+        {
+            using var listener = new TcpListener(IPAddress.Loopback, port);
+            listener.Start();
+            return true;
+        }
+        catch (SocketException)
+        {
+            return false;
+        }
     }
 
     private async Task WaitUntilListeningAsync(int port, TimeSpan timeout, CancellationToken cancellationToken)

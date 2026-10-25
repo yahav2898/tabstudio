@@ -15,14 +15,20 @@ public sealed partial class WorkspaceViewModel
     private readonly Dictionary<string, CancellationTokenSource> _projectAnalysis = new(StringComparer.Ordinal);
 
     /// <summary>
-    /// F5: saves, builds the startup project and the projects it references, and runs it with its console in
-    /// the Output panel.
+    /// Ctrl+F5: saves, builds the startup project and the projects it references, and runs it with its console in
+    /// the Output panel. A web app is served on the device and shown in the web preview.
     /// </summary>
     [RelayCommand(CanExecute = nameof(CanRun))]
     private async Task RunAsync()
     {
         if (StartupProject is not { } project || _language is null)
         {
+            return;
+        }
+
+        if (IsWebApp(project))
+        {
+            await RunWebProjectAsync(project, fromDebugger: false);
             return;
         }
 
@@ -49,6 +55,12 @@ public sealed partial class WorkspaceViewModel
             _run = null;
         }
 
+        ReportRunResult(project, result);
+    }
+
+    /// <summary>Ends a run: the exit line in the Output panel, as Visual Studio writes it, and the status bar.</summary>
+    private void ReportRunResult(ProjectInfo project, RunResult result)
+    {
         Output.WriteLine();
         switch (result.Outcome)
         {

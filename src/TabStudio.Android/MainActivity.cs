@@ -29,9 +29,9 @@ namespace TabStudio.Android;
 /// on-screen keyboard; on Android 15 and later, where apps are drawn edge to edge, the IDE pads itself instead.
 /// </para>
 /// <para>
-/// Started with the boolean extra <c>tabstudio.selftest</c>, it opens the sample, presses F5 and logs the
-/// outcome under the <c>TabStudio</c> tag as a <c>TABSTUDIO_SELFTEST_OK</c> or <c>TABSTUDIO_SELFTEST_FAIL</c>
-/// line. CI runs this on an emulator.
+/// Started with the boolean extra <c>tabstudio.selftest</c>, it opens the sample, presses F5, debugs it, serves
+/// a new web app, and logs the outcome under the <c>TabStudio</c> tag as a <c>TABSTUDIO_SELFTEST_OK</c> or
+/// <c>TABSTUDIO_SELFTEST_FAIL</c> line. CI runs this on an emulator.
 /// </para>
 /// </remarks>
 [Activity(
@@ -49,7 +49,7 @@ public sealed class MainActivity : AvaloniaMainActivity<TabStudioApplication>
     public const string SelfTestExtra = "tabstudio.selftest";
 
     private const string LogTag = "TabStudio";
-    private static readonly TimeSpan SelfTestTimeout = TimeSpan.FromMinutes(4);
+    private static readonly TimeSpan SelfTestTimeout = TimeSpan.FromMinutes(6);
 
     /// <inheritdoc />
     protected override void OnCreate(Bundle? savedInstanceState)
@@ -72,7 +72,11 @@ public sealed class MainActivity : AvaloniaMainActivity<TabStudioApplication>
         return base.CustomizeAppBuilder(builder)
             .WithInterFont()
             .AfterSetup(b => ((TabStudioApplication)b.Instance!).UseDataDirectory(dataDirectory))
-            .UseTabStudioPlatform(services => services.AddSingleton<IDeviceStatus>(_ => new AndroidDeviceStatus(context)));
+            .UseTabStudioPlatform(services =>
+            {
+                services.AddSingleton<IDeviceStatus>(_ => new AndroidDeviceStatus(context));
+                services.AddSingleton<IWebViewFactory>(_ => new AndroidWebViewFactory(() => this));
+            });
     }
 
     private static async Task RunSelfTestAsync()
@@ -86,7 +90,7 @@ public sealed class MainActivity : AvaloniaMainActivity<TabStudioApplication>
         }
 
         using var timeout = new CancellationTokenSource(SelfTestTimeout);
-        var result = await SelfTest.RunAsync(main, services.GetRequiredService<SampleLibrary>(), timeout.Token);
+        var result = await SelfTest.RunAsync(main, services.GetRequiredService<SampleLibrary>(), services.GetRequiredService<ProjectTemplates>(), timeout.Token);
         var seconds = result.Duration.TotalSeconds.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture);
         var line = $"{(result.Success ? "TABSTUDIO_SELFTEST_OK" : "TABSTUDIO_SELFTEST_FAIL")} {seconds} s: {result.Message}";
         if (result.Success)

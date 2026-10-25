@@ -38,8 +38,9 @@ public sealed partial class WorkspaceViewModel
     }
 
     /// <summary>
-    /// Whether a project needs a restore: it is C# and it, or a project it references, uses packages. Projects
-    /// without any are never restored, so no restore files appear in their folders.
+    /// Whether a project needs a restore: it is C# and it, or a project it references, uses packages or a shared
+    /// framework such as ASP.NET Core. Projects without any are never restored, so no restore files appear in
+    /// their folders.
     /// </summary>
     private static bool NeedsRestore(Workspace workspace, ProjectInfo project)
     {
@@ -57,7 +58,7 @@ public sealed partial class WorkspaceViewModel
                 continue;
             }
 
-            if (next.PackageReferences.Count > 0)
+            if (next.PackageReferences.Count > 0 || next.FrameworkReferences.Count > 0)
             {
                 return true;
             }

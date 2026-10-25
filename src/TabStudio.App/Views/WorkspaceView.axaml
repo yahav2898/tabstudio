@@ -80,6 +80,8 @@
             <MenuItem Header="_Git Changes" Command="{Binding ShowGitChangesCommand}" />
             <MenuItem Header="_Test Explorer (Ctrl+E, T)" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}" />
             <MenuItem Header="Claude _Agent" Command="{Binding ShowAgentCommand}" />
+            <MenuItem Header="_Web Preview" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.WebPreview}"
+                      IsEnabled="{Binding WebPreview.HasApp}" />
             <MenuItem Header="_Error List" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" />
             <MenuItem Header="_Output" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Output}" />
             <MenuItem Header="_Compatibility Doctor" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Compatibility}" />
@@ -535,35 +537,45 @@
           <views:AgentPanelView DataContext="{Binding Agent}" />
         </Panel>
 
-        <!-- Tool window tabs, at the bottom of the dock as in Visual Studio; they scroll when the side bar is narrow. -->
-        <Border Grid.Row="3" Height="34" Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0">
-          <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
-            <StackPanel Orientation="Horizontal" Margin="4,0">
-              <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsSolutionExplorerSelected}"
-                      Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.SolutionExplorer}" Content="Solution Explorer" />
-              <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsGitChangesSelected}" Content="Git Changes"
-                      Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.GitChanges}" />
-              <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsTestExplorerSelected}"
-                      Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}">
-                <StackPanel Orientation="Horizontal" Spacing="6">
-                  <TextBlock Text="Test Explorer" VerticalAlignment="Center" />
-                  <Border Classes="pill" Background="{DynamicResource Brush.Error}" IsVisible="{Binding Tests.HasFailures}">
-                    <TextBlock Text="{Binding Tests.FailedCount}" Foreground="{DynamicResource Brush.Window}" VerticalAlignment="Center" />
-                  </Border>
-                </StackPanel>
-              </Button>
-              <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsAgentSelected}"
-                      Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.Agent}">
-                <StackPanel Orientation="Horizontal" Spacing="6">
-                  <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="12" />
-                  <TextBlock Text="Claude" VerticalAlignment="Center" />
-                  <Border Classes="pill" Background="{DynamicResource Brush.Accent}" IsVisible="{Binding Agent.HasChanges}">
-                    <TextBlock Text="{Binding Agent.Changes.Count}" Foreground="{DynamicResource Brush.OnAccent}" VerticalAlignment="Center" />
-                  </Border>
-                </StackPanel>
-              </Button>
-            </StackPanel>
-          </ScrollViewer>
+        <!-- The web preview of the running web app. -->
+        <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsWebPreviewSelected}">
+          <views:WebPreviewView DataContext="{Binding WebPreview}" />
+        </Panel>
+
+        <!-- Tool window tabs, at the bottom of the dock as in Visual Studio; they wrap when the side bar is narrow. -->
+        <Border Grid.Row="3" MinHeight="34" Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0">
+          <WrapPanel Orientation="Horizontal" Margin="4,0">
+            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsSolutionExplorerSelected}"
+                    Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.SolutionExplorer}" Content="Solution Explorer" />
+            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsGitChangesSelected}" Content="Git Changes"
+                    Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.GitChanges}" />
+            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsTestExplorerSelected}"
+                    Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <TextBlock Text="Test Explorer" VerticalAlignment="Center" />
+                <Border Classes="pill" Background="{DynamicResource Brush.Error}" IsVisible="{Binding Tests.HasFailures}">
+                  <TextBlock Text="{Binding Tests.FailedCount}" Foreground="{DynamicResource Brush.Window}" VerticalAlignment="Center" />
+                </Border>
+              </StackPanel>
+            </Button>
+            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsWebPreviewSelected}" IsVisible="{Binding WebPreview.HasApp}"
+                    Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.WebPreview}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <controls:StrokeIcon Data="{StaticResource Icon.Globe}" Size="12" />
+                <TextBlock Text="Preview" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsAgentSelected}"
+                    Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.Agent}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="12" />
+                <TextBlock Text="Claude" VerticalAlignment="Center" />
+                <Border Classes="pill" Background="{DynamicResource Brush.Accent}" IsVisible="{Binding Agent.HasChanges}">
+                  <TextBlock Text="{Binding Agent.Changes.Count}" Foreground="{DynamicResource Brush.OnAccent}" VerticalAlignment="Center" />
+                </Border>
+              </StackPanel>
+            </Button>
+          </WrapPanel>
         </Border>
       </Grid>
     </Grid>

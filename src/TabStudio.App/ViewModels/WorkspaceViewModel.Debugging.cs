@@ -334,6 +334,12 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
             return;
         }
 
+        if (IsWebApp(project))
+        {
+            await RunWebProjectAsync(project, fromDebugger: true);
+            return;
+        }
+
         var cursorFile = ActiveDocument?.FilePath;
         var cursorLine = ActiveDocument?.CaretLine ?? 1;
 

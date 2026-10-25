@@ -24,6 +24,7 @@ public static class AppServices
         services.AddSingleton<IUiDispatcher, AvaloniaUiDispatcher>();
         services.AddSingleton<IDeviceStatus, DefaultDeviceStatus>();
         services.AddSingleton<IStoragePicker, TopLevelStoragePicker>();
+        services.AddSingleton<IWebViewFactory, NoWebViewFactory>();
         configurePlatform?.Invoke(services);
         services.AddSingleton(provider => DeviceProfile.For(provider.GetRequiredService<IDeviceStatus>().Device));
 
