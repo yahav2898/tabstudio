@@ -265,7 +265,8 @@ def ensure_dotnet():
     release = index["releases"][0]
     total = 0
     for part in ("runtime", "windowsdesktop"):
-        file = next(f for f in release[part]["files"] if f["rid"] == f"win-{ARCH}" and f["name"].endswith(".zip"))
+        name = f"dotnet-runtime-win-{ARCH}.zip" if part == "runtime" else f"windowsdesktop-runtime-win-{ARCH}.zip"
+        file = next(f for f in release[part]["files"] if f["name"] == name)
         zip_path = os.path.join(SPIKE, os.path.basename(file["url"]))
         urllib.request.urlretrieve(file["url"], zip_path)
         total += os.path.getsize(zip_path)

@@ -35,7 +35,8 @@ jobs:
           for rid in win-x64 win-arm64; do
             mkdir -p "spike/dotnet-${rid#win-}"
             for part in runtime windowsdesktop; do
-              url=$(jq -r --arg rid "$rid" --arg part "$part" '.releases[0][$part].files[] | select(.rid == $rid and (.name | endswith(".zip"))) | .url' releases.json)
+              name=$([ "$part" = runtime ] && echo "dotnet-runtime-$rid.zip" || echo "windowsdesktop-runtime-$rid.zip")
+              url=$(jq -r --arg name "$name" --arg part "$part" '.releases[0][$part].files[] | select(.name == $name) | .url' releases.json | head -n 1)
               curl -fsSL "$url" -o "spike/$rid-$part.zip"
               echo "$rid $part $url $(stat -c %s "spike/$rid-$part.zip") sha256=$(sha256sum "spike/$rid-$part.zip" | cut -d' ' -f1)" | tee -a ci-out/dotnet-version.txt
               unzip -q -o "spike/$rid-$part.zip" -d "spike/dotnet-${rid#win-}"
