@@ -1,209 +1,24 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Wpf.Tests/TabStudio.Wpf.Tests.csproj (in 257 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Wpf/TabStudio.Wpf.csproj (in 223 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Wpf/TabStudio.Wpf.csproj (in 787 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Wpf.Tests/TabStudio.Wpf.Tests.csproj (in 828 ms).
   5 of 7 projects are up-to-date for restore.
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
   TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
-  TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
   TabStudio.Packages -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/bin/Release/net10.0/TabStudio.Packages.dll
+  TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
   TabStudio.Web -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Web/bin/Release/net10.0/TabStudio.Web.dll
   TabStudio.Wpf -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Wpf/bin/Release/net10.0/TabStudio.Wpf.dll
-/home/runner/work/tabstudio/tabstudio/tests/TabStudio.Wpf.Tests/WpfTemplateTests.cs(59,9): warning xUnit2029: Do not use Assert.Empty to check if a value does not exist in a collection. Use Assert.DoesNotContain instead. (https://xunit.net/xunit.analyzers/rules/xUnit2029) [/home/runner/work/tabstudio/tabstudio/tests/TabStudio.Wpf.Tests/TabStudio.Wpf.Tests.csproj]
   TabStudio.Wpf.Tests -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Wpf.Tests/bin/Release/net10.0/TabStudio.Wpf.Tests.dll
 Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Wpf.Tests/bin/Release/net10.0/TabStudio.Wpf.Tests.dll (.NETCoreApp,Version=v10.0)
 A total of 1 test files matched the specified pattern.
 [xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
-[xUnit.net 00:00:00.11]   Discovering: TabStudio.Wpf.Tests
-[xUnit.net 00:00:00.16]   Discovered:  TabStudio.Wpf.Tests
-[xUnit.net 00:00:00.19]   Starting:    TabStudio.Wpf.Tests
-  Passed TabStudio.Wpf.Tests.WpfProjectTests.WPF_takes_System_IO_and_System_Net_Http_out_of_the_implicit_usings [56 ms]
-  Passed TabStudio.Wpf.Tests.WpfProjectTests.App_xaml_is_the_application_definition_and_every_other_xaml_file_is_a_page [57 ms]
-  Passed TabStudio.Wpf.Tests.WpfProjectTests.The_project_file_adds_and_removes_xaml_items [14 ms]
-  Passed TabStudio.Wpf.Tests.WpfProjectTests.Second_pass_files_lead_back_to_their_xaml [3 ms]
-  Passed TabStudio.Wpf.Tests.WpfProjectTests.WPF_projects_get_the_symbol_OpenSilver_defines [24 ms]
-  Passed TabStudio.Wpf.Tests.WpfTemplateTests.An_event_handler_the_class_does_not_have_is_reported_at_its_attribute [3 s]
-  Passed TabStudio.Wpf.Tests.WpfTemplateTests.Code_that_uses_what_OpenSilver_does_not_implement_gets_a_warning [243 ms]
-  Passed TabStudio.Wpf.Tests.WpfTemplateTests.The_Visual_Studio_template_builds_on_OpenSilver [135 ms]
-  Passed TabStudio.Wpf.Tests.WpfTemplateTests.Window_settings_without_effect_in_the_web_preview_are_reported_and_left_out [157 ms]
-  Passed TabStudio.Wpf.Tests.WpfTemplateTests.Named_elements_are_fields_of_their_types_in_the_code_behind [148 ms]
-  Passed TabStudio.Wpf.Tests.WpfTemplateTests.A_xaml_error_is_reported_in_its_file [97 ms]
-  Passed TabStudio.Wpf.Tests.WpfBrowserTests.A_new_build_is_served_at_the_same_address [4 s]
-[xUnit.net 00:00:10.53]     TabStudio.Wpf.Tests.WpfBrowserTests.Reports_an_exception_in_a_handler_with_its_stack [FAIL]
-[xUnit.net 00:00:10.53]       System.InvalidOperationException : No element shows "Fail".
-[xUnit.net 00:00:10.53]       Stack Trace:
-[xUnit.net 00:00:10.54]         /_/tests/TabStudio.Testing/HeadlessChrome.cs(145,0): at TabStudio.Testing.HeadlessChrome.ClickTextAsync(String text)
-[xUnit.net 00:00:10.54]         /_/tests/TabStudio.Wpf.Tests/WpfBrowserTests.cs(98,0): at TabStudio.Wpf.Tests.WpfBrowserTests.Reports_an_exception_in_a_handler_with_its_stack()
-[xUnit.net 00:00:10.54]         /_/tests/TabStudio.Wpf.Tests/WpfBrowserTests.cs(107,0): at TabStudio.Wpf.Tests.WpfBrowserTests.Reports_an_exception_in_a_handler_with_its_stack()
-[xUnit.net 00:00:10.54]         /_/tests/TabStudio.Wpf.Tests/WpfBrowserTests.cs(107,0): at TabStudio.Wpf.Tests.WpfBrowserTests.Reports_an_exception_in_a_handler_with_its_stack()
-[xUnit.net 00:00:10.54]         --- End of stack trace from previous location ---
-  Failed TabStudio.Wpf.Tests.WpfBrowserTests.Reports_an_exception_in_a_handler_with_its_stack [1 s]
-  Error Message:
-   System.InvalidOperationException : No element shows "Fail".
-  Stack Trace:
-     at TabStudio.Testing.HeadlessChrome.ClickTextAsync(String text) in /_/tests/TabStudio.Testing/HeadlessChrome.cs:line 145
-   at TabStudio.Wpf.Tests.WpfBrowserTests.Reports_an_exception_in_a_handler_with_its_stack() in /_/tests/TabStudio.Wpf.Tests/WpfBrowserTests.cs:line 98
-   at TabStudio.Wpf.Tests.WpfBrowserTests.Reports_an_exception_in_a_handler_with_its_stack() in /_/tests/TabStudio.Wpf.Tests/WpfBrowserTests.cs:line 107
-   at TabStudio.Wpf.Tests.WpfBrowserTests.Reports_an_exception_in_a_handler_with_its_stack() in /_/tests/TabStudio.Wpf.Tests/WpfBrowserTests.cs:line 107
---- End of stack trace from previous location ---
-[xUnit.net 00:00:12.50]     TabStudio.Wpf.Tests.WpfBrowserTests.Shows_the_window_full_size_under_its_title_and_handles_clicks [FAIL]
-[xUnit.net 00:00:12.50]       System.InvalidOperationException : No element shows "Click me".
-[xUnit.net 00:00:12.50]       Stack Trace:
-[xUnit.net 00:00:12.50]         /_/tests/TabStudio.Testing/HeadlessChrome.cs(145,0): at TabStudio.Testing.HeadlessChrome.ClickTextAsync(String text)
-[xUnit.net 00:00:12.50]         /_/tests/TabStudio.Wpf.Tests/WpfBrowserTests.cs(75,0): at TabStudio.Wpf.Tests.WpfBrowserTests.Shows_the_window_full_size_under_its_title_and_handles_clicks()
-[xUnit.net 00:00:12.50]         /_/tests/TabStudio.Wpf.Tests/WpfBrowserTests.cs(83,0): at TabStudio.Wpf.Tests.WpfBrowserTests.Shows_the_window_full_size_under_its_title_and_handles_clicks()
-[xUnit.net 00:00:12.50]         /_/tests/TabStudio.Wpf.Tests/WpfBrowserTests.cs(83,0): at TabStudio.Wpf.Tests.WpfBrowserTests.Shows_the_window_full_size_under_its_title_and_handles_clicks()
-[xUnit.net 00:00:12.50]         --- End of stack trace from previous location ---
-  Failed TabStudio.Wpf.Tests.WpfBrowserTests.Shows_the_window_full_size_under_its_title_and_handles_clicks [1 s]
-  Error Message:
-   System.InvalidOperationException : No element shows "Click me".
-  Stack Trace:
-     at TabStudio.Testing.HeadlessChrome.ClickTextAsync(String text) in /_/tests/TabStudio.Testing/HeadlessChrome.cs:line 145
-   at TabStudio.Wpf.Tests.WpfBrowserTests.Shows_the_window_full_size_under_its_title_and_handles_clicks() in /_/tests/TabStudio.Wpf.Tests/WpfBrowserTests.cs:line 75
-   at TabStudio.Wpf.Tests.WpfBrowserTests.Shows_the_window_full_size_under_its_title_and_handles_clicks() in /_/tests/TabStudio.Wpf.Tests/WpfBrowserTests.cs:line 83
-   at TabStudio.Wpf.Tests.WpfBrowserTests.Shows_the_window_full_size_under_its_title_and_handles_clicks() in /_/tests/TabStudio.Wpf.Tests/WpfBrowserTests.cs:line 83
---- End of stack trace from previous location ---
-  Passed TabStudio.Wpf.Tests.WpfBrowserTests.Serves_the_app_with_OpenSilver_and_Blazor [239 ms]
-[xUnit.net 00:00:14.15]     TabStudio.Wpf.Tests.WpfApiCatalogTests.The_shipped_catalog_is_what_WPF_has_and_OpenSilver_does_not [FAIL]
-[xUnit.net 00:00:14.15]       Assert.True() Failure
-[xUnit.net 00:00:14.15]       Expected: True
-[xUnit.net 00:00:14.15]       Actual:   False
-[xUnit.net 00:00:14.15]       Stack Trace:
-[xUnit.net 00:00:14.15]         /_/tests/TabStudio.Wpf.Tests/WpfApiCatalogTests.cs(32,0): at TabStudio.Wpf.Tests.WpfApiCatalogTests.The_shipped_catalog_is_what_WPF_has_and_OpenSilver_does_not()
-[xUnit.net 00:00:14.15]         --- End of stack trace from previous location ---
-  Failed TabStudio.Wpf.Tests.WpfApiCatalogTests.The_shipped_catalog_is_what_WPF_has_and_OpenSilver_does_not [1 s]
-  Error Message:
-   Assert.True() Failure
-Expected: True
-Actual:   False
-  Stack Trace:
-     at TabStudio.Wpf.Tests.WpfApiCatalogTests.The_shipped_catalog_is_what_WPF_has_and_OpenSilver_does_not() in /_/tests/TabStudio.Wpf.Tests/WpfApiCatalogTests.cs:line 32
---- End of stack trace from previous location ---
-  Passed TabStudio.Wpf.Tests.BusinessAppTests.The_business_app_builds_on_OpenSilver [609 ms]
-[xUnit.net 00:02:16.06]     TabStudio.Wpf.Tests.BusinessAppTests.Lists_the_contacts_in_a_data_grid_and_adds_one_with_a_command [FAIL]
-[xUnit.net 00:02:16.06]       System.TimeoutException : After 120 s, still not true: document.body.innerText.includes('Grace Hopper') && document.body.innerText.includes('3 contacts')
-[xUnit.net 00:02:16.06]       The console:
-[xUnit.net 00:02:16.06]       error: Failed to load resource: the server responded with a status of 404 (Not Found) http://127.0.0.1:35963/favicon.ico
-[xUnit.net 00:02:16.06]       console.info: Debugging hotkey: Shift+Alt+D (when application has focus)
-[xUnit.net 00:02:16.06]       error: Failed to load resource: the server responded with a status of 404 (Not Found) http://127.0.0.1:35963/_tabstudio/console
-[xUnit.net 00:02:16.06]       error: Failed to load resource: the server responded with a status of 404 (Not Found) http://127.0.0.1:35963/_tabstudio/title
-[xUnit.net 00:02:16.06]       The page:
-[xUnit.net 00:02:16.06]       <html lang="en" style="--blazor-load-percentage: 100%; --blazor-load-percentage-text: &quot;100%&quot;;"><head>
-[xUnit.net 00:02:16.06]           <meta charset="utf-8">
-[xUnit.net 00:02:16.06]           <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-[xUnit.net 00:02:16.06]           <title>Contacts</title>
-[xUnit.net 00:02:16.06]           <base href="/">
-[xUnit.net 00:02:16.06]           <link href="_framework/dotnet.js" rel="preload" as="script" fetchpriority="high" crossorigin="anonymous" integrity="sha256-w6t6Kj82o1R68FqfuHL1j3yPjXuMfsDbMwHxLucGO2c=">
-[xUnit.net 00:02:16.06]           <link rel="stylesheet" href="_tabstudio/wpf.css">
-[xUnit.net 00:02:16.06]           <script type="importmap">{ "imports": {} }</script>
-[xUnit.net 00:02:16.06]           <script src="_tabstudio/wpf.js"></script>
-[xUnit.net 00:02:16.06]       <link rel="stylesheet" type="text/css" href="libs/cshtml5.css?date=2026-10-25T12:38:55.683Z"><link rel="stylesheet" type="text/css" href="libs/quill.core.css?date=2026-10-25T12:38:55.683Z"><script type="application/javascript" src="libs/cshtml5.js?date=2026-10-25T12:38:55.683Z"></script><script type="application/javascript" src="libs/quill.min.js?date=2026-10-25T12:38:55.683Z"></script><script type="application/javascript" src="libs/htmlToImage.js?date=2026-10-25T12:38:55.683Z"></script><script type="application/javascript" src="libs/FileSaver.min.js?date=2026-10-25T12:38:55.683Z"></script></head>
-[xUnit.net 00:02:16.06]       
-[xUnit.net 00:02:16.06]       <body>
-[xUnit.net 00:02:16.06]           <div id="tabstudio-wpf-window" class="tabstudio-wpf-window">
-[xUnit.net 00:02:16.06]               <div class="tabstudio-wpf-titlebar">
-[xUnit.net 00:02:16.06]                   <svg class="tabstudio-wpf-icon" viewBox="0 0 16 16" aria-hidden="true">
-[xUnit.net 00:02:16.06]                       <rect x="1.5" y="2.5" width="13" height="11" rx="1.5" fill="none" stroke="currentColor"></rect>
-[xUnit.net 00:02:16.06]                       <path d="M1.5 5.5h13" stroke="currentColor"></path>
-[xUnit.net 00:02:16.06]                   </svg>
-[xUnit.net 00:02:16.06]                   <span id="tabstudio-wpf-title" class="tabstudio-wpf-title">Contacts</span>
-[xUnit.net 00:02:16.06]                   <button id="tabstudio-wpf-close" class="tabstudio-wpf-close" type="button" title="Close Contacts" aria-label="Close">
-[xUnit.net 00:02:16.06]                       <svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1 1l8 8M9 1l-8 8" stroke="currentColor" stroke-width="1.1"></path></svg>
-[xUnit.net 00:02:16.06]                   </button>
-[xUnit.net 00:02:16.06]               </div>
-[xUnit.net 00:02:16.06]               <div id="tabstudio-wpf-client" class="tabstudio-wpf-client opensilver-root-element" tabindex="0" style="display: grid; overflow: clip;">
-[xUnit.net 00:02:16.06]                   <div id="tabstudio-wpf-starting" class="tabstudio-wpf-starting">Starting Contacts…</div>
-[xUnit.net 00:02:16.06]               <div id="id2" class="opensilver-window"><div style="position: absolute; visibility: hidden; box-sizing: border-box; white-space: pre; left: -100000px; top: -100000px; text-align: left;"></div><div id="id3" class="opensilver-uielement uielement-unarranged opensilver-border System.Windows.Controls.Grid"><div id="id4" class="opensilver-uielement uielement-unarranged opensilver-textblock System.Windows.Controls.TextBlock" style="color: rgb(0, 103, 192); pointer-events: auto;"><span id="id5" class="opensilver-inline System.Windows.Documents.Run" style="font-size: 22px; font-weight: 600; color: rgb(0, 103, 192);">Contacts</span></div><div id="id6" class="opensilver-uielement uielement-unarranged opensilver-border System.Windows.Controls.StackPanel"><div id="id7" class="opensilver-uielement uielement-unarranged System.Windows.Controls.TextBox" dataid="NameBox"></div><div id="id8" class="opensilver-uielement uielement-unarranged System.Windows.Controls.TextBox"></div><div id="id9" class="opensilver-uielement uielement-unarranged System.Windows.Controls.Button"></div><div id="id10" class="opensilver-uielement uielement-unarranged System.Windows.Controls.Button" disabled=""></div><div id="id11" class="opensilver-uielement uielement-unarranged System.Windows.Controls.Button"></div></div><div id="id12" class="opensilver-uielement uielement-unarranged System.Windows.Controls.DataGrid" dataid="People"></div><div id="id13" class="opensilver-uielement uielement-unarranged Contacts.ContactCard"></div><div id="id14" class="opensilver-uielement uielement-unarranged opensilver-textblock System.Windows.Controls.TextBlock" style="color: rgb(92, 92, 92); pointer-events: auto;"><span id="id15" class="opensilver-inline System.Windows.Documents.Run" style="color: rgb(92, 92, 92);">3 contacts</span></div></div></div></div>
-[xUnit.net 00:02:16.06]           </div>
-[xUnit.net 00:02:16.06]           <div id="app"></div>
-[xUnit.net 00:02:16.06]           <div id="opensilver-root" class="tabstudio-wpf-offscreen opensilver-root-element" tabindex="0" style="display: grid; overflow: clip;"><div id="id1" class="opensilver-window"><div style="position: absolute; visibility: hidden; box-sizing: border-box; white-space: pre; left: -100000px; top: -100000px; text-align: left;"></div></div></div>
-[xUnit.net 00:02:16.06]       
-[xUnit.net 00:02:16.06]           <script>
-[xUnit.net 00:02:16.06]               (function () {
-[xUnit.net 00:02:16.06]                   var script = document.createElement('script');
-[xUnit.net 00:02:16.06]                   script.setAttribute('src', 'libs/opensilver.js');
-[xUnit.net 00:02:16.06]                   script.addEventListener('load', function () {
-[xUnit.net 00:02:16.06]                       var blazor = document.createElement('script');
-[xUnit.net 00:02:16.06]                       blazor.setAttribute('src', '_framework/blazor.webassembly.js');
-[xUnit.net 00:02:16.06]                       document.body.appendChild(blazor);
-[xUnit.net 00:02:16.06]                   });
-[xUnit.net 00:02:16.06]                   document.body.appendChild(script);
-[xUnit.net 00:02:16.06]               })();
-[xUnit.net 00:02:16.06]           </script><script src="libs/opensilver.js"></script>
-[xUnit.net 00:02:16.06]       
-[xUnit.net 00:02:16.06]       
-[xUnit.net 00:02:16.06]       
-[xUnit.net 00:02:16.06]       <script src="_framework/blazor.webassembly.js"></script></body></html>
-[xUnit.net 00:02:16.06]       Stack Trace:
-[xUnit.net 00:02:16.06]         /_/tests/TabStudio.Testing/HeadlessChrome.cs(181,0): at TabStudio.Testing.HeadlessChrome.WaitUntilAsync(String condition, TimeSpan timeout)
-[xUnit.net 00:02:16.06]         /_/tests/TabStudio.Wpf.Tests/BusinessAppTests.cs(42,0): at TabStudio.Wpf.Tests.BusinessAppTests.Lists_the_contacts_in_a_data_grid_and_adds_one_with_a_command()
-[xUnit.net 00:02:16.06]         /_/tests/TabStudio.Wpf.Tests/BusinessAppTests.cs(50,0): at TabStudio.Wpf.Tests.BusinessAppTests.Lists_the_contacts_in_a_data_grid_and_adds_one_with_a_command()
-[xUnit.net 00:02:16.06]         /_/tests/TabStudio.Wpf.Tests/BusinessAppTests.cs(50,0): at TabStudio.Wpf.Tests.BusinessAppTests.Lists_the_contacts_in_a_data_grid_and_adds_one_with_a_command()
-[xUnit.net 00:02:16.06]         --- End of stack trace from previous location ---
-[xUnit.net 00:02:16.25]   Finished:    TabStudio.Wpf.Tests
-  Failed TabStudio.Wpf.Tests.BusinessAppTests.Lists_the_contacts_in_a_data_grid_and_adds_one_with_a_command [2 m 1 s]
-  Error Message:
-   System.TimeoutException : After 120 s, still not true: document.body.innerText.includes('Grace Hopper') && document.body.innerText.includes('3 contacts')
-The console:
-error: Failed to load resource: the server responded with a status of 404 (Not Found) http://127.0.0.1:35963/favicon.ico
-console.info: Debugging hotkey: Shift+Alt+D (when application has focus)
-error: Failed to load resource: the server responded with a status of 404 (Not Found) http://127.0.0.1:35963/_tabstudio/console
-error: Failed to load resource: the server responded with a status of 404 (Not Found) http://127.0.0.1:35963/_tabstudio/title
-The page:
-<html lang="en" style="--blazor-load-percentage: 100%; --blazor-load-percentage-text: &quot;100%&quot;;"><head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Contacts</title>
-    <base href="/">
-    <link href="_framework/dotnet.js" rel="preload" as="script" fetchpriority="high" crossorigin="anonymous" integrity="sha256-w6t6Kj82o1R68FqfuHL1j3yPjXuMfsDbMwHxLucGO2c=">
-    <link rel="stylesheet" href="_tabstudio/wpf.css">
-    <script type="importmap">{ "imports": {} }</script>
-    <script src="_tabstudio/wpf.js"></script>
-<link rel="stylesheet" type="text/css" href="libs/cshtml5.css?date=2026-10-25T12:38:55.683Z"><link rel="stylesheet" type="text/css" href="libs/quill.core.css?date=2026-10-25T12:38:55.683Z"><script type="application/javascript" src="libs/cshtml5.js?date=2026-10-25T12:38:55.683Z"></script><script type="application/javascript" src="libs/quill.min.js?date=2026-10-25T12:38:55.683Z"></script><script type="application/javascript" src="libs/htmlToImage.js?date=2026-10-25T12:38:55.683Z"></script><script type="application/javascript" src="libs/FileSaver.min.js?date=2026-10-25T12:38:55.683Z"></script></head>
+[xUnit.net 00:00:00.14]   Discovering: TabStudio.Wpf.Tests
+[xUnit.net 00:00:00.23]   Discovered:  TabStudio.Wpf.Tests
+[xUnit.net 00:00:00.29]   Starting:    TabStudio.Wpf.Tests
+[xUnit.net 00:00:05.15]   Finished:    TabStudio.Wpf.Tests
+  Passed TabStudio.Wpf.Tests.OpenSilverExperiment.Records_how_OpenSilver_builds_a_WPF_template [4 s]
 
-<body>
-    <div id="tabstudio-wpf-window" class="tabstudio-wpf-window">
-        <div class="tabstudio-wpf-titlebar">
-            <svg class="tabstudio-wpf-icon" viewBox="0 0 16 16" aria-hidden="true">
-                <rect x="1.5" y="2.5" width="13" height="11" rx="1.5" fill="none" stroke="currentColor"></rect>
-                <path d="M1.5 5.5h13" stroke="currentColor"></path>
-            </svg>
-            <span id="tabstudio-wpf-title" class="tabstudio-wpf-title">Contacts</span>
-            <button id="tabstudio-wpf-close" class="tabstudio-wpf-close" type="button" title="Close Contacts" aria-label="Close">
-                <svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1 1l8 8M9 1l-8 8" stroke="currentColor" stroke-width="1.1"></path></svg>
-            </button>
-        </div>
-        <div id="tabstudio-wpf-client" class="tabstudio-wpf-client opensilver-root-element" tabindex="0" style="display: grid; overflow: clip;">
-            <div id="tabstudio-wpf-starting" class="tabstudio-wpf-starting">Starting Contacts…</div>
-        <div id="id2" class="opensilver-window"><div style="position: absolute; visibility: hidden; box-sizing: border-box; white-space: pre; left: -100000px; top: -100000px; text-align: left;"></div><div id="id3" class="opensilver-uielement uielement-unarranged opensilver-border System.Windows.Controls.Grid"><div id="id4" class="opensilver-uielement uielement-unarranged opensilver-textblock System.Windows.Controls.TextBlock" style="color: rgb(0, 103, 192); pointer-events: auto;"><span id="id5" class="opensilver-inline System.Windows.Documents.Run" style="font-size: 22px; font-weight: 600; color: rgb(0, 103, 192);">Contacts</span></div><div id="id6" class="opensilver-uielement uielement-unarranged opensilver-border System.Windows.Controls.StackPanel"><div id="id7" class="opensilver-uielement uielement-unarranged System.Windows.Controls.TextBox" dataid="NameBox"></div><div id="id8" class="opensilver-uielement uielement-unarranged System.Windows.Controls.TextBox"></div><div id="id9" class="opensilver-uielement uielement-unarranged System.Windows.Controls.Button"></div><div id="id10" class="opensilver-uielement uielement-unarranged System.Windows.Controls.Button" disabled=""></div><div id="id11" class="opensilver-uielement uielement-unarranged System.Windows.Controls.Button"></div></div><div id="id12" class="opensilver-uielement uielement-unarranged System.Windows.Controls.DataGrid" dataid="People"></div><div id="id13" class="opensilver-uielement uielement-unarranged Contacts.ContactCard"></div><div id="id14" class="opensilver-uielement uielement-unarranged opensilver-textblock System.Windows.Controls.TextBlock" style="color: rgb(92, 92, 92); pointer-events: auto;"><span id="id15" class="opensilver-inline System.Windows.Documents.Run" style="color: rgb(92, 92, 92);">3 contacts</span></div></div></div></div>
-    </div>
-    <div id="app"></div>
-    <div id="opensilver-root" class="tabstudio-wpf-offscreen opensilver-root-element" tabindex="0" style="display: grid; overflow: clip;"><div id="id1" class="opensilver-window"><div style="position: absolute; visibility: hidden; box-sizing: border-box; white-space: pre; left: -100000px; top: -100000px; text-align: left;"></div></div></div>
-
-    <script>
-        (function () {
-            var script = document.createElement('script');
-            script.setAttribute('src', 'libs/opensilver.js');
-            script.addEventListener('load', function () {
-                var blazor = document.createElement('script');
-                blazor.setAttribute('src', '_framework/blazor.webassembly.js');
-                document.body.appendChild(blazor);
-            });
-            document.body.appendChild(script);
-        })();
-    </script><script src="libs/opensilver.js"></script>
-
-
-
-<script src="_framework/blazor.webassembly.js"></script></body></html>
-  Stack Trace:
-     at TabStudio.Testing.HeadlessChrome.WaitUntilAsync(String condition, TimeSpan timeout) in /_/tests/TabStudio.Testing/HeadlessChrome.cs:line 181
-   at TabStudio.Wpf.Tests.BusinessAppTests.Lists_the_contacts_in_a_data_grid_and_adds_one_with_a_command() in /_/tests/TabStudio.Wpf.Tests/BusinessAppTests.cs:line 42
-   at TabStudio.Wpf.Tests.BusinessAppTests.Lists_the_contacts_in_a_data_grid_and_adds_one_with_a_command() in /_/tests/TabStudio.Wpf.Tests/BusinessAppTests.cs:line 50
-   at TabStudio.Wpf.Tests.BusinessAppTests.Lists_the_contacts_in_a_data_grid_and_adds_one_with_a_command() in /_/tests/TabStudio.Wpf.Tests/BusinessAppTests.cs:line 50
---- End of stack trace from previous location ---
-
-Test Run Failed.
-Total tests: 18
-     Passed: 14
-     Failed: 4
- Total time: 2.2818 Minutes
+Test Run Successful.
+Total tests: 1
+     Passed: 1
+ Total time: 6.1030 Seconds
