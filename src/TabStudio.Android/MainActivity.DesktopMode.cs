@@ -20,9 +20,10 @@ public sealed partial class MainActivity
         (ev is not null && _displays?.Mouse.OnTabletEvent(ev) == true) || base.DispatchGenericMotionEvent(ev);
 
     /// <inheritdoc />
-    public override void OnPointerCaptureChanged(bool hasCapture)
+    /// <remarks>Android ends pointer capture when the window loses the focus, so the display's mouse hears of it.</remarks>
+    public override void OnWindowFocusChanged(bool hasFocus)
     {
-        base.OnPointerCaptureChanged(hasCapture);
-        _displays?.Mouse.OnCaptureChanged(hasCapture);
+        base.OnWindowFocusChanged(hasFocus);
+        _displays?.Mouse.OnWindowFocusChanged(hasFocus);
     }
 }

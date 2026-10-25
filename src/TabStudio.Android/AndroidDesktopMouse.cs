@@ -24,11 +24,19 @@ namespace TabStudio.Android;
 /// </remarks>
 internal sealed partial class AndroidDesktopMouse : Java.Lang.Object, View.IOnCapturedPointerListener, View.IOnHoverListener
 {
+    /// <summary>How long Android may take to give TabStudio the mouse it asked for, in milliseconds.</summary>
+    private const long CaptureAnswerMilliseconds = 1000;
+
     private readonly Func<Activity?> _activity;
     private readonly DesktopCursor _cursor;
     private View? _display;
     private View? _capturing;
     private bool _forwarding;
+
+    // When TabStudio last asked for the mouse without getting it yet (uptime milliseconds, 0 for no question), and
+    // whether Android refused it, so the mouse stays with the tablet rather than doing nothing anywhere.
+    private long _requestedAt;
+    private bool _refused;
 
     /// <summary>Creates the mouse for the activity's window and the pointer it moves.</summary>
     /// <param name="activity">The activity whose window captures the mouse, while there is one.</param>
@@ -53,6 +61,7 @@ internal sealed partial class AndroidDesktopMouse : Java.Lang.Object, View.IOnCa
     public void Attach(View display, int pixelWidth, int pixelHeight, double scale)
     {
         _display = display;
+        _refused = false;
         display.SetOnHoverListener(this);
         _cursor.Reset(pixelWidth, pixelHeight, scale);
     }
@@ -93,21 +102,26 @@ internal sealed partial class AndroidDesktopMouse : Java.Lang.Object, View.IOnCa
         return false;
     }
 
-    /// <summary>Hears that the tablet's window got or lost the mouse: the display's pointer shows only while it has it.</summary>
-    /// <param name="hasCapture">Whether the window has the mouse.</param>
-    public void OnCaptureChanged(bool hasCapture)
+    /// <summary>
+    /// Hears that the tablet's window got or lost the focus. Android ends pointer capture when the window loses the
+    /// focus, so the display's pointer hides until the mouse moves on the tablet again, and with the focus back,
+    /// TabStudio may ask for the mouse again.
+    /// </summary>
+    /// <remarks>
+    /// Android's own callback for capture changes is a default method of <c>Window.Callback</c>, which .NET for
+    /// Android does not let an activity override; the pointer shows instead when the first captured event arrives.
+    /// </remarks>
+    /// <param name="hasFocus">Whether the window has the focus.</param>
+    public void OnWindowFocusChanged(bool hasFocus)
     {
-        if (hasCapture && _display is not null)
+        _requestedAt = 0;
+        if (hasFocus)
         {
-            _cursor.Show();
+            _refused = false;
         }
         else
         {
             _cursor.Hide();
-            if (hasCapture)
-            {
-                Release();
-            }
         }
     }
 
@@ -128,6 +142,8 @@ internal sealed partial class AndroidDesktopMouse : Java.Lang.Object, View.IOnCa
             return false;
         }
 
+        // TabStudio has the mouse: its pointer shows on the display.
+        _requestedAt = 0;
         _cursor.Show();
         if (e.IsFromSource(InputSourceType.MouseRelative))
         {
@@ -229,9 +245,26 @@ internal sealed partial class AndroidDesktopMouse : Java.Lang.Object, View.IOnCa
     }
 
     /// <summary>Asks Android for the mouse, for the focused view of the tablet's window, which gets its events.</summary>
+    /// <returns>
+    /// Whether the mouse is about to be TabStudio's, so the tablet's views do not get its event; <see langword="false"/>
+    /// when the window has no focus, or Android did not give TabStudio the mouse it asked for: it stays with the tablet.
+    /// </returns>
     private bool Capture()
     {
-        if (_activity() is not { HasWindowFocus: true } activity || FocusedView(activity) is not { } view)
+        var now = SystemClock.UptimeMillis();
+        if (_requestedAt != 0)
+        {
+            // Android answers in a moment; a mouse still on the tablet a while after asking was refused to TabStudio.
+            if (now - _requestedAt < CaptureAnswerMilliseconds)
+            {
+                return true;
+            }
+
+            _requestedAt = 0;
+            _refused = true;
+        }
+
+        if (_refused || _activity() is not { HasWindowFocus: true } activity || FocusedView(activity) is not { } view)
         {
             return false;
         }
@@ -244,11 +277,13 @@ internal sealed partial class AndroidDesktopMouse : Java.Lang.Object, View.IOnCa
         }
 
         view.RequestPointerCapture();
+        _requestedAt = now;
         return true;
     }
 
     private void Release()
     {
+        _requestedAt = 0;
         if (_capturing is { HasPointerCapture: true } view)
         {
             view.ReleasePointerCapture();
