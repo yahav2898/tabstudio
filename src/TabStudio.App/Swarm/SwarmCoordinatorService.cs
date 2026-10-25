@@ -26,6 +26,7 @@ public sealed class SwarmCoordinatorService : IAsyncDisposable, IDisposable
     private readonly IUiDispatcher _ui;
     private readonly AppScreenRegistry _registry;
     private readonly SwarmSettingsStore _store;
+    private readonly SwarmInputMirror _mirror;
     private readonly LinkTrustStore _devices;
     private readonly Lock _gate = new();
     private readonly Dictionary<LinkFingerprint, DeviceAppScreen> _screens = [];
@@ -40,18 +41,22 @@ public sealed class SwarmCoordinatorService : IAsyncDisposable, IDisposable
     /// <param name="ui">Gets events back onto the UI thread.</param>
     /// <param name="registry">Every screen the app being built runs on, where the devices' screens go.</param>
     /// <param name="settings">The swarm's settings.</param>
-    public SwarmCoordinatorService(AppPaths paths, LinkService link, IUiDispatcher ui, AppScreenRegistry registry, SwarmSettingsStore settings)
+    /// <param name="mirror">Mirrored input, which the swarm's setting turns on and off.</param>
+    public SwarmCoordinatorService(AppPaths paths, LinkService link, IUiDispatcher ui, AppScreenRegistry registry, SwarmSettingsStore settings, SwarmInputMirror mirror)
     {
         ArgumentNullException.ThrowIfNull(paths);
         ArgumentNullException.ThrowIfNull(link);
         ArgumentNullException.ThrowIfNull(ui);
         ArgumentNullException.ThrowIfNull(registry);
         ArgumentNullException.ThrowIfNull(settings);
+        ArgumentNullException.ThrowIfNull(mirror);
         _link = link;
         _ui = ui;
         _registry = registry;
         _store = settings;
         _settings = settings.Load();
+        _mirror = mirror;
+        _mirror.IsEnabled = _settings.MirrorInput;
         _devices = new LinkTrustStore(Path.Combine(paths.State, "Link", "swarm-devices.json"));
     }
 
@@ -116,8 +121,15 @@ public sealed class SwarmCoordinatorService : IAsyncDisposable, IDisposable
     public bool MirrorInput
     {
         get => Settings.MirrorInput;
-        set => Save(Settings with { MirrorInput = value });
+        set
+        {
+            _mirror.IsEnabled = value;
+            Save(Settings with { MirrorInput = value });
+        }
     }
+
+    /// <summary>Mirrored input, for the screens' failures to take an input.</summary>
+    public SwarmInputMirror Mirror => _mirror;
 
     /// <summary>Whether a breakpoint on one device pauses every device until they continue together.</summary>
     public bool PauseAllOnBreakpoint
