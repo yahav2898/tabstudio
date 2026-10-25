@@ -59,7 +59,7 @@ public sealed class LocalWebServer : IAsyncDisposable
     /// <param name="resolve">Returns the file for a path, as for <see cref="Start(Func{string, ServedFile?}, int?)"/>.</param>
     /// <param name="receive">
     /// Takes a <c>POST</c>'s path (without the leading <c>/</c>) and its body as UTF-8 text, and returns whether it
-    /// was for it; the page gets 204, or 404 when it was not. Called on thread-pool threads, concurrently.
+    /// was for it; the page gets 204, or 405 when the route does not accept messages. Called on thread-pool threads, concurrently.
     /// <see langword="null"/> answers every <c>POST</c> with 405.
     /// </param>
     /// <param name="preferredPort">A port to listen on when it is free.</param>
@@ -200,7 +200,7 @@ public sealed class LocalWebServer : IAsyncDisposable
         return 200;
     }
 
-    /// <summary>Hands a posted message to the receiver: 204 when it took it, 404 when it was for nobody, 413 when too long.</summary>
+    /// <summary>Hands a posted message to the receiver: 204 when it took it, 405 when the route does not accept it, 413 when too long.</summary>
     private async Task<int> ReceiveAsync(HttpListenerRequest request, HttpListenerResponse response, string path, Func<string, string, bool> receive)
     {
         if (request.ContentLength64 > MaxPostLength)
@@ -223,8 +223,13 @@ public sealed class LocalWebServer : IAsyncDisposable
             body.Write(buffer, 0, read);
         }
 
-        var status = receive(path, Encoding.UTF8.GetString(body.GetBuffer(), 0, (int)body.Length)) ? 204 : 404;
+        var status = receive(path, Encoding.UTF8.GetString(body.GetBuffer(), 0, (int)body.Length)) ? 204 : 405;
         response.StatusCode = status;
+        if (status == 405)
+        {
+            response.Headers["Allow"] = "GET, HEAD";
+        }
+
         response.Headers["Cache-Control"] = "no-cache";
         return status;
     }
