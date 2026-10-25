@@ -1,0 +1,22 @@
+  Determining projects to restore...
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/TabStudio.Testing.csproj (in 57 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/TabStudio.App.Tests.csproj (in 330 ms).
+  9 of 11 projects are up-to-date for restore.
+  TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
+  TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
+  TabStudio.Packages -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/bin/Release/net10.0/TabStudio.Packages.dll
+  TabStudio.Agent -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Agent/bin/Release/net10.0/TabStudio.Agent.dll
+  TabStudio.SourceControl -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/bin/Release/net10.0/TabStudio.SourceControl.dll
+  TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
+  TabStudio.Debugging -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/bin/Release/net10.0/TabStudio.Debugging.dll
+  TabStudio.Notebooks -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/bin/Release/net10.0/TabStudio.Notebooks.dll
+  TabStudio.TestRunner -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/bin/Release/net10.0/TabStudio.TestRunner.dll
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Views/Actions/CiLogHeaderView.axaml : Avalonia error AVLN1001: File doesn't contain valid XAML: System.Xml.XmlException: 'Theme' is an unexpected token. Expecting whitespace. Line 34, position 41. [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Views/Actions/CiLogHeaderView.axaml : Avalonia error AVLN1001:    at System.Xml.XmlTextReaderImpl.ParseAttributes() [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Views/Actions/CiLogHeaderView.axaml : Avalonia error AVLN1001:    at System.Xml.XmlTextReaderImpl.ParseElement() [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Views/Actions/CiLogHeaderView.axaml : Avalonia error AVLN1001:    at System.Xml.XmlTextReaderImpl.ParseElementContent() [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Views/Actions/CiLogHeaderView.axaml : Avalonia error AVLN1001:    at System.Xml.Linq.XContainer.ReadContentFrom(XmlReader r) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Views/Actions/CiLogHeaderView.axaml : Avalonia error AVLN1001:    at System.Xml.Linq.XDocument.Load(XmlReader reader, LoadOptions options) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Views/Actions/CiLogHeaderView.axaml : Avalonia error AVLN1001:    at System.Xml.Linq.XDocument.Parse(String text, LoadOptions options) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Views/Actions/CiLogHeaderView.axaml : Avalonia error AVLN1001:    at Avalonia.Build.Tasks.XamlFileInfo.Parse(String data) in /_/src/Avalonia.Build.Tasks/XamlFileInfo.cs:line 11 [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Views/Actions/CiLogHeaderView.axaml : Avalonia error AVLN1001:    at Avalonia.Build.Tasks.GenerateAvaloniaResourcesTask.PreProcessXamlFiles(List`1 sources) in /_/src/Avalonia.Build.Tasks/GenerateAvaloniaResourcesTask.cs:line 106 [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
