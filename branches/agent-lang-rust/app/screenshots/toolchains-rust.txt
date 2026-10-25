@@ -3,273 +3,259 @@ Debugging greeter with LLDB...
 What is your name? Ada
 
 == Language Servers
-22:53:16 [rust-analyzer] Starting rust-analyzer for /tmp/tabstudio-tests/3ed75cc515984078a60c8be74073722d/app/Projects/Greeter: /home/runner/.cargo/bin/rust-analyzer 
-22:53:16 [rust-analyzer] Sending request 'initialize - (1)'.
-22:53:16 [rust-analyzer] Received response 'initialize - (1)' in 16ms.
-22:53:16 [rust-analyzer] Sending notification 'initialized'.
-22:53:16 [rust-analyzer] Sending notification 'workspace/didChangeConfiguration'.
-22:53:16 [rust-analyzer] Sending notification 'textDocument/didOpen'.
-22:53:16 [rust-analyzer] rust-analyzer is running (rust-analyzer 1.99.1 (58cf8f9 2026-10-13)).
-22:53:16 [rust-analyzer] Received request 'workspace/configuration - (0)'.
-22:53:16 [rust-analyzer] Received request 'window/workDoneProgress/create - (1)'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Sending request 'textDocument/semanticTokens/full - (2)'.
-22:53:16 [rust-analyzer] Received response 'textDocument/semanticTokens/full - (2)' in 5ms.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Sending request 'textDocument/inlayHint - (3)'.
-22:53:16 [rust-analyzer] Sending notification '$/cancelRequest'.
-22:53:16 [rust-analyzer] Sending request 'textDocument/semanticTokens/full - (4)'.
-22:53:16 [rust-analyzer] Sending request 'textDocument/completion - (5)'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] 2026-10-25T22:53:16.559066566Z  WARN notify error: No path was found.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received request 'window/workDoneProgress/create - (2)'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received request 'window/workDoneProgress/create - (3)'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received request 'window/workDoneProgress/create - (4)'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received request 'window/workDoneProgress/create - (5)'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received request 'window/workDoneProgress/create - (6)'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received request 'window/workDoneProgress/create - (7)'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received request 'window/workDoneProgress/create - (8)'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received notification '$/progress'.
-22:53:16 [rust-analyzer] Received response 'textDocument/semanticTokens/full - (4)' in 620ms.
-22:53:16 [rust-analyzer] Received response 'textDocument/completion - (5)' in 558ms.
-22:53:17 [rust-analyzer] 2026-10-25T22:53:16.901529241Z  WARN notify error: No path was found.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received request 'window/workDoneProgress/create - (9)'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received request 'workspace/semanticTokens/refresh - (10)'.
-22:53:17 [rust-analyzer] Received request 'workspace/inlayHint/refresh - (11)'.
-22:53:17 [rust-analyzer] Received request 'window/workDoneProgress/create - (12)'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received request 'workspace/semanticTokens/refresh - (13)'.
-22:53:17 [rust-analyzer] Received request 'workspace/inlayHint/refresh - (14)'.
-22:53:17 [rust-analyzer] Received notification 'textDocument/publishDiagnostics'.
-22:53:17 [rust-analyzer] Received request 'window/workDoneProgress/create - (15)'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Received notification '$/progress'.
-22:53:17 [rust-analyzer] Sending request 'textDocument/completion - (6)'.
-22:53:17 [rust-analyzer] Sending request 'textDocument/inlayHint - (7)'.
-22:53:17 [rust-analyzer] Sending notification '$/cancelRequest'.
-22:53:17 [rust-analyzer] Sending request 'textDocument/semanticTokens/full - (8)'.
-22:53:17 [rust-analyzer] Sending notification '$/cancelRequest'.
-22:53:17 [rust-analyzer] Sending request 'textDocument/semanticTokens/full - (9)'.
-22:53:17 [rust-analyzer] Sending notification '$/cancelRequest'.
-22:53:17 [rust-analyzer] Sending request 'textDocument/semanticTokens/full - (10)'.
-22:53:17 [rust-analyzer] Sending notification '$/cancelRequest'.
-22:53:17 [rust-analyzer] Sending request 'textDocument/semanticTokens/full - (11)'.
-22:53:19 [rust-analyzer] Received notification '$/progress'.
-22:53:19 [rust-analyzer] Received notification '$/progress'.
-22:53:19 [rust-analyzer] Received notification '$/progress'.
-22:53:19 [rust-analyzer] Received notification '$/progress'.
-22:53:19 [rust-analyzer] Received notification '$/progress'.
-22:53:19 [rust-analyzer] Received notification '$/progress'.
-22:53:19 [rust-analyzer] Received notification '$/progress'.
-22:53:19 [rust-analyzer] Received notification '$/progress'.
-22:53:19 [rust-analyzer] Received notification '$/progress'.
-22:53:19 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received request 'window/workDoneProgress/create - (16)'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received notification '$/progress'.
-22:53:20 [rust-analyzer] Received request 'workspace/diagnostic/refresh - (17)'.
-22:53:20 [rust-analyzer] Sending notification '$/cancelRequest'.
-22:53:20 [rust-analyzer] Sending request 'textDocument/semanticTokens/full - (12)'.
-22:53:20 [rust-analyzer] Received response 'textDocument/semanticTokens/full - (12)' in 320ms.
-22:53:20 [rust-analyzer] Sending request 'textDocument/inlayHint - (13)'.
-22:53:20 [rust-analyzer] Received response 'textDocument/inlayHint - (13)' in 2ms.
-22:53:20 [rust-analyzer] Sending request 'textDocument/foldingRange - (14)'.
-22:53:20 [rust-analyzer] Received response 'textDocument/foldingRange - (14)' in 1ms.
-22:53:20 [rust-analyzer] Received response 'textDocument/completion - (6)' in 3154ms.
-22:53:21 [rust-analyzer] Sending request 'textDocument/definition - (15)'.
-22:53:21 [rust-analyzer] Received response 'textDocument/definition - (15)' in 1ms.
-22:53:21 [rust-analyzer] Sending request 'textDocument/references - (16)'.
-22:53:21 [rust-analyzer] Received response 'textDocument/references - (16)' in 2ms.
-22:53:21 [rust-analyzer] Sending request 'textDocument/rename - (17)'.
-22:53:21 [rust-analyzer] Received response 'textDocument/rename - (17)' in 1ms.
-22:53:21 [rust-analyzer] Sending notification 'textDocument/didChange'.
-22:53:21 [rust-analyzer] Received request 'workspace/semanticTokens/refresh - (18)'.
-22:53:21 [rust-analyzer] Received request 'workspace/inlayHint/refresh - (19)'.
-22:53:21 [rust-analyzer] Sending notification 'textDocument/didSave'.
-22:53:21 [rust-analyzer] Sending request 'textDocument/semanticTokens/full - (18)'.
-22:53:21 [rust-analyzer] Sending notification '$/cancelRequest'.
-22:53:21 [rust-analyzer] Sending request 'textDocument/semanticTokens/full - (19)'.
-22:53:21 [rust-analyzer] Received request 'window/workDoneProgress/create - (20)'.
-22:53:21 [rust-analyzer] Received notification '$/progress'.
-22:53:21 [rust-analyzer] Received response 'textDocument/semanticTokens/full - (19)' in 67ms.
-22:53:21 [rust-analyzer] Sending request 'textDocument/inlayHint - (20)'.
-22:53:21 [rust-analyzer] Received response 'textDocument/inlayHint - (20)' in 9ms.
-22:53:21 [rust-analyzer] Sending request 'textDocument/foldingRange - (21)'.
-22:53:21 [rust-analyzer] Received response 'textDocument/foldingRange - (21)' in 1ms.
-22:53:21 [rust-analyzer] Received notification 'textDocument/publishDiagnostics'.
-22:53:21 [rust-analyzer] Received notification '$/progress'.
-22:53:21 [rust-analyzer] Received request 'workspace/diagnostic/refresh - (21)'.
-22:53:21 [rust-analyzer] Sending request 'textDocument/semanticTokens/full - (22)'.
-22:53:21 [rust-analyzer] Received response 'textDocument/semanticTokens/full - (22)' in 5ms.
-22:53:21 [rust-analyzer] Sending request 'textDocument/inlayHint - (23)'.
-22:53:21 [rust-analyzer] Received response 'textDocument/inlayHint - (23)' in 3ms.
-22:53:21 [rust-analyzer] Sending request 'textDocument/foldingRange - (24)'.
-22:53:21 [rust-analyzer] Received response 'textDocument/foldingRange - (24)' in 0ms.
-22:53:21 [rust-analyzer] Sending notification 'textDocument/didChange'.
-22:53:21 [rust-analyzer] Received request 'workspace/semanticTokens/refresh - (22)'.
-22:53:21 [rust-analyzer] Received request 'workspace/inlayHint/refresh - (23)'.
-22:53:21 [rust-analyzer] Sending notification 'textDocument/didSave'.
-22:53:21 [rust-analyzer] Sending request 'textDocument/semanticTokens/full - (25)'.
-22:53:21 [rust-analyzer] Sending notification '$/cancelRequest'.
-22:53:21 [rust-analyzer] Sending request 'textDocument/semanticTokens/full - (26)'.
-22:53:21 [rust-analyzer] Received request 'window/workDoneProgress/create - (24)'.
-22:53:21 [rust-analyzer] Received notification '$/progress'.
-22:53:21 [rust-analyzer] Received response 'textDocument/semanticTokens/full - (26)' in 39ms.
-22:53:21 [rust-analyzer] Sending request 'textDocument/inlayHint - (27)'.
-22:53:21 [rust-analyzer] Received response 'textDocument/inlayHint - (27)' in 6ms.
-22:53:21 [rust-analyzer] Sending request 'textDocument/foldingRange - (28)'.
-22:53:21 [rust-analyzer] Received response 'textDocument/foldingRange - (28)' in 4ms.
-22:53:21 [rust-analyzer] Received notification '$/progress'.
-22:53:21 [rust-analyzer] Received notification 'textDocument/publishDiagnostics'.
-22:53:21 [rust-analyzer] Received notification '$/progress'.
-22:53:21 [rust-analyzer] Received notification '$/progress'.
-22:53:21 [rust-analyzer] Received request 'workspace/diagnostic/refresh - (25)'.
-22:53:21 [rust-analyzer] Sending request 'textDocument/semanticTokens/full - (29)'.
-22:53:21 [rust-analyzer] Received response 'textDocument/semanticTokens/full - (29)' in 6ms.
-22:53:21 [rust-analyzer] Sending request 'textDocument/inlayHint - (30)'.
-22:53:21 [rust-analyzer] Received response 'textDocument/inlayHint - (30)' in 1ms.
-22:53:21 [rust-analyzer] Sending request 'textDocument/foldingRange - (31)'.
-22:53:21 [rust-analyzer] Received response 'textDocument/foldingRange - (31)' in 1ms.
-22:53:23 [rust-analyzer] Sending request 'textDocument/documentHighlight - (32)'.
-22:53:23 [rust-analyzer] Received response 'textDocument/documentHighlight - (32)' in 1ms.
-22:53:23 [rust-analyzer] Sending request 'textDocument/documentSymbol - (33)'.
-22:53:23 [rust-analyzer] Received response 'textDocument/documentSymbol - (33)' in 1ms.
-22:53:23 [rust-analyzer] Sending request 'textDocument/codeAction - (34)'.
-22:53:23 [rust-analyzer] Received response 'textDocument/codeAction - (34)' in 2ms.
+23:04:31 [rust-analyzer] Starting rust-analyzer for /tmp/tabstudio-tests/005d38c2e33b4a86944d26fcb0e1b527/app/Projects/Greeter: /home/runner/.cargo/bin/rust-analyzer 
+23:04:31 [rust-analyzer] Sending request 'initialize - (1)'.
+23:04:31 [rust-analyzer] Received response 'initialize - (1)' in 18ms.
+23:04:31 [rust-analyzer] Sending notification 'initialized'.
+23:04:31 [rust-analyzer] Sending notification 'workspace/didChangeConfiguration'.
+23:04:31 [rust-analyzer] Sending notification 'textDocument/didOpen'.
+23:04:31 [rust-analyzer] rust-analyzer is running (rust-analyzer 1.99.1 (58cf8f9 2026-10-13)).
+23:04:31 [rust-analyzer] Sending request 'textDocument/semanticTokens/full - (2)'.
+23:04:32 [rust-analyzer] 2026-10-25T23:04:32.22438746Z  WARN notify error: No path was found.
+23:04:32 [rust-analyzer] Received request 'workspace/configuration - (0)'.
+23:04:32 [rust-analyzer] Received request 'window/workDoneProgress/create - (1)'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received request 'window/workDoneProgress/create - (2)'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received request 'window/workDoneProgress/create - (3)'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received request 'window/workDoneProgress/create - (4)'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Sending request 'textDocument/completion - (3)'.
+23:04:32 [rust-analyzer] 2026-10-25T23:04:32.35072248Z  WARN notify error: No path was found.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received request 'window/workDoneProgress/create - (5)'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received request 'window/workDoneProgress/create - (6)'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received request 'window/workDoneProgress/create - (7)'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received request 'window/workDoneProgress/create - (8)'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received request 'window/workDoneProgress/create - (9)'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received request 'workspace/semanticTokens/refresh - (10)'.
+23:04:32 [rust-analyzer] Received request 'workspace/inlayHint/refresh - (11)'.
+23:04:32 [rust-analyzer] Received request 'window/workDoneProgress/create - (12)'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received request 'window/workDoneProgress/create - (13)'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received request 'workspace/semanticTokens/refresh - (14)'.
+23:04:32 [rust-analyzer] Received request 'workspace/inlayHint/refresh - (15)'.
+23:04:32 [rust-analyzer] Received request 'window/workDoneProgress/create - (16)'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Received notification '$/progress'.
+23:04:32 [rust-analyzer] Sending notification '$/cancelRequest'.
+23:04:32 [rust-analyzer] Sending request 'textDocument/semanticTokens/full - (4)'.
+23:04:32 [rust-analyzer] Sending notification '$/cancelRequest'.
+23:04:32 [rust-analyzer] Sending request 'textDocument/semanticTokens/full - (5)'.
+23:04:32 [rust-analyzer] Sending notification '$/cancelRequest'.
+23:04:32 [rust-analyzer] Sending request 'textDocument/semanticTokens/full - (6)'.
+23:04:32 [rust-analyzer] Sending notification '$/cancelRequest'.
+23:04:32 [rust-analyzer] Sending request 'textDocument/semanticTokens/full - (7)'.
+23:04:34 [rust-analyzer] Received notification '$/progress'.
+23:04:34 [rust-analyzer] Received notification '$/progress'.
+23:04:34 [rust-analyzer] Received notification '$/progress'.
+23:04:34 [rust-analyzer] Received notification '$/progress'.
+23:04:34 [rust-analyzer] Received notification '$/progress'.
+23:04:34 [rust-analyzer] Received notification '$/progress'.
+23:04:35 [rust-analyzer] Received notification '$/progress'.
+23:04:35 [rust-analyzer] Received notification '$/progress'.
+23:04:35 [rust-analyzer] Received notification '$/progress'.
+23:04:35 [rust-analyzer] Received notification '$/progress'.
+23:04:35 [rust-analyzer] Received notification '$/progress'.
+23:04:35 [rust-analyzer] Received notification '$/progress'.
+23:04:35 [rust-analyzer] Received notification '$/progress'.
+23:04:35 [rust-analyzer] Received notification '$/progress'.
+23:04:35 [rust-analyzer] Received notification '$/progress'.
+23:04:35 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification 'textDocument/publishDiagnostics'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received request 'window/workDoneProgress/create - (17)'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received notification '$/progress'.
+23:04:36 [rust-analyzer] Received request 'workspace/diagnostic/refresh - (18)'.
+23:04:36 [rust-analyzer] Sending notification '$/cancelRequest'.
+23:04:36 [rust-analyzer] Sending request 'textDocument/semanticTokens/full - (8)'.
+23:04:37 [rust-analyzer] Received response 'textDocument/semanticTokens/full - (8)' in 799ms.
+23:04:37 [rust-analyzer] Received response 'textDocument/completion - (3)' in 4490ms.
+23:04:37 [rust-analyzer] Sending request 'textDocument/inlayHint - (9)'.
+23:04:37 [rust-analyzer] Received response 'textDocument/inlayHint - (9)' in 8ms.
+23:04:37 [rust-analyzer] Sending request 'textDocument/definition - (10)'.
+23:04:37 [rust-analyzer] Received response 'textDocument/definition - (10)' in 1ms.
+23:04:37 [rust-analyzer] Sending request 'textDocument/foldingRange - (11)'.
+23:04:37 [rust-analyzer] Received response 'textDocument/foldingRange - (11)' in 0ms.
+23:04:37 [rust-analyzer] Sending request 'textDocument/references - (12)'.
+23:04:37 [rust-analyzer] Received response 'textDocument/references - (12)' in 1ms.
+23:04:37 [rust-analyzer] Sending request 'textDocument/rename - (13)'.
+23:04:37 [rust-analyzer] Received response 'textDocument/rename - (13)' in 1ms.
+23:04:37 [rust-analyzer] Sending notification 'textDocument/didChange'.
+23:04:37 [rust-analyzer] Received request 'workspace/semanticTokens/refresh - (19)'.
+23:04:37 [rust-analyzer] Received request 'workspace/inlayHint/refresh - (20)'.
+23:04:37 [rust-analyzer] Sending notification 'textDocument/didSave'.
+23:04:37 [rust-analyzer] Sending request 'textDocument/semanticTokens/full - (14)'.
+23:04:37 [rust-analyzer] Sending notification '$/cancelRequest'.
+23:04:37 [rust-analyzer] Sending request 'textDocument/semanticTokens/full - (15)'.
+23:04:37 [rust-analyzer] Received response 'textDocument/semanticTokens/full - (15)' in 8ms.
+23:04:37 [rust-analyzer] Sending request 'textDocument/inlayHint - (16)'.
+23:04:37 [rust-analyzer] Received response 'textDocument/inlayHint - (16)' in 2ms.
+23:04:37 [rust-analyzer] Sending request 'textDocument/foldingRange - (17)'.
+23:04:37 [rust-analyzer] Received response 'textDocument/foldingRange - (17)' in 1ms.
+23:04:37 [rust-analyzer] Received request 'window/workDoneProgress/create - (21)'.
+23:04:37 [rust-analyzer] Received notification '$/progress'.
+23:04:37 [rust-analyzer] Received notification 'textDocument/publishDiagnostics'.
+23:04:37 [rust-analyzer] Received notification '$/progress'.
+23:04:37 [rust-analyzer] Received request 'workspace/diagnostic/refresh - (22)'.
+23:04:37 [rust-analyzer] Sending request 'textDocument/semanticTokens/full - (18)'.
+23:04:37 [rust-analyzer] Received response 'textDocument/semanticTokens/full - (18)' in 2ms.
+23:04:37 [rust-analyzer] Sending request 'textDocument/inlayHint - (19)'.
+23:04:37 [rust-analyzer] Received response 'textDocument/inlayHint - (19)' in 1ms.
+23:04:37 [rust-analyzer] Sending request 'textDocument/foldingRange - (20)'.
+23:04:37 [rust-analyzer] Received response 'textDocument/foldingRange - (20)' in 2ms.
+23:04:41 [rust-analyzer] Sending notification 'textDocument/didChange'.
+23:04:41 [rust-analyzer] Sending notification 'textDocument/didSave'.
+23:04:41 [rust-analyzer] Received request 'workspace/semanticTokens/refresh - (23)'.
+23:04:41 [rust-analyzer] Received request 'workspace/inlayHint/refresh - (24)'.
+23:04:41 [rust-analyzer] Sending request 'textDocument/semanticTokens/full - (21)'.
+23:04:41 [rust-analyzer] Sending notification '$/cancelRequest'.
+23:04:41 [rust-analyzer] Sending request 'textDocument/semanticTokens/full - (22)'.
+23:04:41 [rust-analyzer] Received response 'textDocument/semanticTokens/full - (22)' in 5ms.
+23:04:41 [rust-analyzer] Sending request 'textDocument/inlayHint - (23)'.
+23:04:41 [rust-analyzer] Received response 'textDocument/inlayHint - (23)' in 1ms.
+23:04:41 [rust-analyzer] Sending request 'textDocument/foldingRange - (24)'.
+23:04:41 [rust-analyzer] Received response 'textDocument/foldingRange - (24)' in 0ms.
+23:04:41 [rust-analyzer] Received request 'window/workDoneProgress/create - (25)'.
+23:04:41 [rust-analyzer] Received notification '$/progress'.
+23:04:41 [rust-analyzer] Received notification '$/progress'.
+23:04:41 [rust-analyzer] Received notification 'textDocument/publishDiagnostics'.
+23:04:41 [rust-analyzer] Received notification '$/progress'.
+23:04:41 [rust-analyzer] Received notification '$/progress'.
+23:04:41 [rust-analyzer] Received request 'workspace/diagnostic/refresh - (26)'.
+23:04:41 [rust-analyzer] Sending request 'textDocument/semanticTokens/full - (25)'.
+23:04:41 [rust-analyzer] Received response 'textDocument/semanticTokens/full - (25)' in 2ms.
+23:04:41 [rust-analyzer] Sending request 'textDocument/inlayHint - (26)'.
+23:04:41 [rust-analyzer] Received response 'textDocument/inlayHint - (26)' in 1ms.
+23:04:41 [rust-analyzer] Sending request 'textDocument/foldingRange - (27)'.
+23:04:41 [rust-analyzer] Received response 'textDocument/foldingRange - (27)' in 0ms.
+23:04:54 [rust-analyzer] Sending request 'textDocument/documentHighlight - (28)'.
+23:04:54 [rust-analyzer] Received response 'textDocument/documentHighlight - (28)' in 2ms.
+23:04:54 [rust-analyzer] Sending request 'textDocument/documentSymbol - (29)'.
+23:04:54 [rust-analyzer] Received response 'textDocument/documentSymbol - (29)' in 0ms.
+23:04:54 [rust-analyzer] Sending request 'textDocument/codeAction - (30)'.
+23:04:54 [rust-analyzer] Received response 'textDocument/codeAction - (30)' in 2ms.
 
 == Debug Adapters
 [LLDB] Sending request 'launch' (2).
@@ -311,175 +297,181 @@ What is your name? Ada
 
 == Processes
     PID    PPID    PGID STAT     ELAPSED COMMAND
-      2       0       0 S          18:36 [kthreadd]
-      3       2       0 S          18:36  \_ [pool_workqueue_release]
-      4       2       0 I<         18:36  \_ [kworker/R-rcu_gp]
-      5       2       0 I<         18:36  \_ [kworker/R-sync_wq]
-      6       2       0 I<         18:36  \_ [kworker/R-kvfree_rcu_reclaim]
-      7       2       0 I<         18:36  \_ [kworker/R-slub_flushwq]
-      8       2       0 I<         18:36  \_ [kworker/R-netns]
-      9       2       0 I          18:36  \_ [kworker/0:0-events]
-     10       2       0 I<         18:36  \_ [kworker/0:0H-events_highpri]
-     13       2       0 I<         18:36  \_ [kworker/R-mm_percpu_wq]
-     14       2       0 S          18:36  \_ [ksoftirqd/0]
-     15       2       0 I          18:36  \_ [rcu_sched]
-     16       2       0 S          18:36  \_ [rcu_exp_par_gp_kthread_worker/0]
-     17       2       0 S          18:36  \_ [rcu_exp_gp_kthread_worker]
-     18       2       0 S          18:36  \_ [migration/0]
-     19       2       0 S          18:36  \_ [idle_inject/0]
-     20       2       0 S          18:36  \_ [cpuhp/0]
-     21       2       0 S          18:36  \_ [cpuhp/2]
-     22       2       0 S          18:36  \_ [idle_inject/2]
-     23       2       0 S          18:36  \_ [migration/2]
-     24       2       0 S          18:36  \_ [ksoftirqd/2]
-     26       2       0 I<         18:36  \_ [kworker/2:0H-events_highpri]
-     27       2       0 S          18:36  \_ [cpuhp/1]
-     28       2       0 S          18:36  \_ [idle_inject/1]
-     29       2       0 S          18:36  \_ [migration/1]
-     30       2       0 S          18:36  \_ [ksoftirqd/1]
-     32       2       0 I<         18:36  \_ [kworker/1:0H-events_highpri]
-     33       2       0 S          18:36  \_ [cpuhp/3]
-     34       2       0 S          18:36  \_ [idle_inject/3]
-     35       2       0 S          18:36  \_ [migration/3]
-     36       2       0 S          18:36  \_ [ksoftirqd/3]
-     38       2       0 I<         18:36  \_ [kworker/3:0H-events_highpri]
-     39       2       0 S          18:36  \_ [kdevtmpfs]
-     40       2       0 I<         18:36  \_ [kworker/R-inet_frag_wq]
-     41       2       0 I          18:36  \_ [rcu_tasks_rude_kthread]
-     42       2       0 I          18:36  \_ [rcu_tasks_trace_kthread]
-     43       2       0 S          18:36  \_ [kauditd]
-     44       2       0 S          18:36  \_ [khungtaskd]
-     45       2       0 I          18:36  \_ [kworker/u16:1-iou_exit]
-     46       2       0 S          18:36  \_ [oom_reaper]
-     47       2       0 I          18:36  \_ [kworker/u16:2-events_power_efficient]
-     48       2       0 I<         18:36  \_ [kworker/R-writeback]
-     49       2       0 S          18:36  \_ [kcompactd0]
-     50       2       0 SN         18:36  \_ [ksmd]
-     51       2       0 SN         18:36  \_ [khugepaged]
-     52       2       0 I<         18:36  \_ [kworker/R-kblockd]
-     53       2       0 I<         18:36  \_ [kworker/R-blkcg_punt_bio]
-     54       2       0 I<         18:36  \_ [kworker/R-kintegrityd]
-     55       2       0 S          18:36  \_ [irq/9-acpi]
-     57       2       0 I          18:36  \_ [kworker/1:1-events]
-     59       2       0 I<         18:36  \_ [kworker/R-tpm_dev_wq]
-     60       2       0 I<         18:36  \_ [kworker/R-ata_sff]
-     61       2       0 I<         18:36  \_ [kworker/R-md]
-     62       2       0 I<         18:36  \_ [kworker/R-md_bitmap]
-     63       2       0 I<         18:36  \_ [kworker/R-edac-poller]
-     64       2       0 I<         18:36  \_ [kworker/R-hv_vmbus_con]
-     65       2       0 I<         18:36  \_ [kworker/R-hv_vmbus_rescind]
-     66       2       0 I<         18:36  \_ [kworker/R-hv_pri_chan]
-     67       2       0 I<         18:36  \_ [kworker/R-hv_sub_chan]
-     68       2       0 I<         18:36  \_ [kworker/R-devfreq_wq]
-     69       2       0 S          18:36  \_ [watchdogd]
-     70       2       0 I<         18:36  \_ [kworker/R-quota_events_unbound]
-     71       2       0 I<         18:36  \_ [kworker/2:1H-kblockd]
-     72       2       0 S          18:36  \_ [kswapd0]
-     73       2       0 S          18:36  \_ [ecryptfs-kthread]
-     74       2       0 I<         18:36  \_ [kworker/R-kthrotld]
-     75       2       0 I<         18:36  \_ [kworker/R-nfit]
-     76       2       0 S          18:36  \_ [scsi_eh_0]
-     77       2       0 S          18:36  \_ [scsi_eh_1]
-     78       2       0 I<         18:36  \_ [kworker/R-scsi_tmf_0]
-     79       2       0 I<         18:36  \_ [kworker/R-scsi_tmf_1]
-     80       2       0 I<         18:36  \_ [kworker/R-nvme-wq]
-     81       2       0 I<         18:36  \_ [kworker/R-nvme-reset-wq]
-     82       2       0 I<         18:36  \_ [kworker/R-nvme-delete-wq]
-     83       2       0 I<         18:36  \_ [kworker/R-nvme-auth-wq]
-     85       2       0 I          18:36  \_ [kworker/u16:4-iou_exit]
-     86       2       0 I<         18:36  \_ [kworker/R-mld]
-     87       2       0 I<         18:36  \_ [kworker/R-ipv6_addrconf]
-     88       2       0 S          18:36  \_ [hv_balloon]
-     89       2       0 I<         18:36  \_ [kworker/R-kstrp]
-     91       2       0 I<         18:36  \_ [kworker/u17:0]
-    102       2       0 I<         18:35  \_ [kworker/0:1H-kblockd]
-    103       2       0 S          18:35  \_ [jbd2/sda1-8]
-    104       2       0 I<         18:35  \_ [kworker/R-ext4-rsv-conversion]
-    107       2       0 I<         18:35  \_ [kworker/3:1H-kblockd]
-    139       2       0 I<         18:35  \_ [kworker/1:1H-kblockd]
-    170       2       0 I          18:35  \_ [kworker/1:2-events]
-    178       2       0 I<         18:35  \_ [kworker/R-kmpathd]
-    179       2       0 I<         18:35  \_ [kworker/R-kmpath_handlerd]
-    198       2       0 I          18:34  \_ [kworker/0:4-mm_percpu_wq]
-    212       2       0 I          18:34  \_ [kworker/3:2-cgroup_free]
-    239       2       0 S          18:34  \_ [psimon]
-    404       2       0 S          18:32  \_ [jbd2/sda16-8]
-    406       2       0 I<         18:32  \_ [kworker/R-ext4-rsv-conversion]
-   1070       2       0 I          18:26  \_ [kworker/2:3-cgroup_release]
-   1265       2       0 I<         18:25  \_ [kworker/R-tls-strp]
-   1858       2       0 I<         18:17  \_ [kworker/R-mlx5_cmd_a3cb:00:02.0]
-   1861       2       0 I<         18:17  \_ [kworker/R-mlx5_healtha3cb:00:02.0]
-   1862       2       0 I<         18:17  \_ [kworker/R-mlx5_page_allocator]
-   1863       2       0 I<         18:17  \_ [kworker/R-mlx5_events]
-   1873       2       0 S          18:17  \_ [ptp1]
-   1874       2       0 I<         18:17  \_ [kworker/R-mlx5_fc]
-   1875       2       0 I<         18:17  \_ [kworker/R-mlx5_hv_vhca]
-   1876       2       0 I<         18:17  \_ [kworker/R-mlx5e]
-   1877       2       0 I<         18:17  \_ [kworker/R-mlx5e_arfs]
-   1889       2       0 I<         18:17  \_ [kworker/R-ib-comp-wq]
-   1890       2       0 I<         18:17  \_ [kworker/R-ib-comp-unb-wq]
-   1891       2       0 I<         18:17  \_ [kworker/R-ib_mcast]
-   1892       2       0 I<         18:17  \_ [kworker/R-ib_nl_sa_wq]
-   1893       2       0 I<         18:17  \_ [kworker/R-mkey_cache]
-   2070       2       0 S          18:10  \_ [psimon]
-   4412       2       0 I          09:27  \_ [kworker/2:0-cgroup_free]
-   5837       2       0 I          07:10  \_ [kworker/u16:0-mlx5_fc]
-   6959       2       0 I          05:45  \_ [kworker/3:1-mm_percpu_wq]
-   7030       2       0 I          05:41  \_ [kworker/u16:5-mlx5_fc]
-   7031       2       0 I          05:41  \_ [kworker/u16:6-iou_exit]
-   7032       2       0 I          05:41  \_ [kworker/u16:7-kvfree_rcu_reclaim]
-   7033       2       0 I          05:41  \_ [kworker/u16:8-iou_exit]
-   7602       2       0 I          05:14  \_ [kworker/1:0]
-   8859       2       0 I          04:15  \_ [kworker/2:1-events]
-      1       0       1 Ss         18:36 /sbin/init
-    156       1     156 S<s        18:35 /usr/lib/systemd/systemd-journald
-    222       1     222 SLsl       18:34 /sbin/multipathd -d -s
-    228       1     228 Ss         18:34 /usr/lib/systemd/systemd-udevd
-    392       1     392 Ss         18:32 /usr/lib/linux-tools/6.17.0-1022-azure/hv_kvp_daemon -n
-    527       1     527 Ss         18:32 /usr/lib/systemd/systemd-resolved
-    580       1     580 Ss         18:32 /usr/sbin/haveged --Foreground --verbose=1
-    719       1     719 Ss         18:30 /usr/lib/systemd/systemd-networkd
-   1003       1    1003 Ss         18:26 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
-   1008       1    1008 Ss         18:26 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
-   1010       1    1010 Ss         18:26 php-fpm: master process (/etc/php/8.3/fpm/php-fpm.conf)
-   1222    1010    1010 S          18:25  \_ php-fpm: pool www
-   1224    1010    1010 S          18:25  \_ php-fpm: pool www
-   1015       1    1015 Ssl        18:26 /usr/lib/polkit-1/polkitd --no-debug
-   1044       1    1044 Ss         18:26 /usr/lib/systemd/systemd-logind
-   1046       1    1046 Ssl        18:26 /usr/libexec/udisks2/udisksd
-   1047       1    1047 Ss         18:26 /usr/bin/python3 -u /usr/sbin/waagent -daemon
-   1378    1047    1047 Sl         18:25  \_ /usr/bin/python3 -u bin/WALinuxAgent-2.16.0.2-py3.12.egg -run-exthandlers
-   1074       1    1074 Ss         18:25 /usr/sbin/cron -f -P
-   1116       1    1116 Ssl        18:25 /usr/bin/containerd
-   1120       1    1120 Ss+        18:25 /sbin/agetty -o -p -- \u --keep-baud 115200,57600,38400,9600 - vt220
-   1131       1    1131 Ss+        18:25 /sbin/agetty -o -p -- \u --noclear - linux
-   1160       1    1160 Ssl        18:25 /usr/sbin/rsyslogd -n -iNONE
-   1168       1    1167 S          18:25 /usr/sbin/chronyd -F 1
-   1170    1168    1167 S          18:25  \_ /usr/sbin/chronyd -F 1
-   1191       1    1191 Ssl        18:25 /usr/sbin/ModemManager
-   1207       1    1207 Ssl        18:25 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
-   1312       1    1312 Ss         18:25 /usr/lib/systemd/systemd --user
-   1323    1312    1312 S          18:25  \_ (sd-pam)
-   2073       1    2073 Ssl        18:10 /opt/hca/hosted-compute-agent
-   2091    2073    2073 S          18:10  \_ sudo -n PROVJOBD_E2E=1 /tmp/provjobd3905394493
-   2094    2091    2073 Sl         18:10  |   \_ /tmp/provjobd3905394493
-   2191    2073    2073 Sl         15:08  \_ /home/runner/actions-runner/cached/2.338.0/bin/Runner.Listener run
-   2212    2191    2073 Sl         15:07      \_ /home/runner/actions-runner/cached/2.338.0/bin/Runner.Worker spawnclient 142 145
-   3543    2212    2073 S          14:20          \_ /usr/bin/bash -e /home/runner/work/_temp/1937c501-9831-46a9-9401-b9ed043e63d4.sh
-   9094    3543    2073 Sl         01:45              \_ dotnet test tests/TabStudio.App.Tests -c Release --blame --blame-hang-timeout 12m --blame-hang-dump-type none --logger console;verbosity=normal
-   9114    9094    2073 Sl         01:44                  \_ /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.403/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false
-   9129    9094    2073 Sl         01:43                  \_ /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.403/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false
-   9261    9129    2073 Sl         01:38                  |   \_ /usr/share/dotnet/dotnet exec /usr/share/dotnet/sdk/10.0.403/vstest.console.dll --framework:.NETCoreApp,Version=v10.0 --logger:console;verbosity=normal /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll --Blame:CollectHangDump;HangDumpType=none;TestTimeout=12m --nologo --artifactsProcessingMode-collect --testSessionCorrelationId:9094_e4acd187-e120-4741-adaf-f3c09f3d1017
-   9274    9261    2073 Sl         01:38                  |       \_ /usr/share/dotnet/dotnet exec --runtimeconfig /usr/share/dotnet/sdk/10.0.403/datacollector.runtimeconfig.json --depsfile /usr/share/dotnet/sdk/10.0.403/datacollector.deps.json /usr/share/dotnet/sdk/10.0.403/datacollector.dll --port 44423 --parentprocessid 9261
-   9290    9261    2073 Sl         01:37                  |       \_ /usr/share/dotnet/dotnet exec --runtimeconfig /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.runtimeconfig.json --depsfile /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.deps.json /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/testhost.dll --port 33577 --endpoint 127.0.0.1:033577 --role client --parentprocessid 9261 --datacollectionport 36011 --telemetryoptedin false
-  10349    9290   10349 Sl         01:07                  |           \_ /home/runner/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rust-analyzer
-  10538   10349   10349 S          01:06                  |           |   \_ /home/runner/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/libexec/rust-analyzer-proc-macro-srv
-  10539   10349   10349 S          01:06                  |           |   \_ /home/runner/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/libexec/rust-analyzer-proc-macro-srv
-  10864    9290   10864 Sl         01:01                  |           \_ /home/runner/work/_temp/lldb-bin/lldb-dap
-  10886   10864   10886 S          01:01                  |           |   \_ /usr/lib/llvm-19/bin/lldb-server-19.1.1 gdbserver --fd=9 --native-regs --setsid
-  10879    9290   10879 t          01:01                  |           \_ /tmp/tabstudio-tests/3ed75cc515984078a60c8be74073722d/app/Projects/Greeter/target/debug/greeter
-  10945    9290    2073 R          00:00                  |           \_ ps -eo pid,ppid,pgid,stat,etime,args --forest
-   9131    9094    2073 Sl         01:43                  \_ /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.403/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false
-   3576       1    2073 Sl         14:19 /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.403/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:true /low:false
-   3577       1    2073 Sl         14:19 /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.403/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:true /low:false
-   3578       1    2073 Sl         14:19 /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.403/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:true /low:false
+      2       0       0 S          04:33 [kthreadd]
+      3       2       0 S          04:33  \_ [pool_workqueue_release]
+      4       2       0 I<         04:33  \_ [kworker/R-rcu_gp]
+      5       2       0 I<         04:33  \_ [kworker/R-sync_wq]
+      6       2       0 I<         04:33  \_ [kworker/R-kvfree_rcu_reclaim]
+      7       2       0 I<         04:33  \_ [kworker/R-slub_flushwq]
+      8       2       0 I<         04:33  \_ [kworker/R-netns]
+      9       2       0 I          04:33  \_ [kworker/0:0-hv_vmbus_con]
+     10       2       0 I<         04:33  \_ [kworker/0:0H-events_highpri]
+     11       2       0 I          04:33  \_ [kworker/0:1-events]
+     12       2       0 I          04:33  \_ [kworker/u16:0-flush-8:0]
+     13       2       0 I<         04:33  \_ [kworker/R-mm_percpu_wq]
+     14       2       0 S          04:33  \_ [ksoftirqd/0]
+     15       2       0 I          04:33  \_ [rcu_sched]
+     16       2       0 S          04:33  \_ [rcu_exp_par_gp_kthread_worker/0]
+     17       2       0 S          04:33  \_ [rcu_exp_gp_kthread_worker]
+     18       2       0 S          04:33  \_ [migration/0]
+     19       2       0 S          04:33  \_ [idle_inject/0]
+     20       2       0 S          04:33  \_ [cpuhp/0]
+     21       2       0 S          04:33  \_ [cpuhp/2]
+     22       2       0 S          04:33  \_ [idle_inject/2]
+     23       2       0 S          04:33  \_ [migration/2]
+     24       2       0 S          04:33  \_ [ksoftirqd/2]
+     25       2       0 I          04:33  \_ [kworker/2:0-cgroup_free]
+     26       2       0 I<         04:33  \_ [kworker/2:0H-events_highpri]
+     27       2       0 S          04:33  \_ [cpuhp/1]
+     28       2       0 S          04:33  \_ [idle_inject/1]
+     29       2       0 S          04:33  \_ [migration/1]
+     30       2       0 S          04:33  \_ [ksoftirqd/1]
+     31       2       0 I          04:33  \_ [kworker/1:0-cgroup_free]
+     32       2       0 I<         04:33  \_ [kworker/1:0H-events_highpri]
+     33       2       0 S          04:33  \_ [cpuhp/3]
+     34       2       0 S          04:33  \_ [idle_inject/3]
+     35       2       0 S          04:33  \_ [migration/3]
+     36       2       0 S          04:33  \_ [ksoftirqd/3]
+     37       2       0 I          04:33  \_ [kworker/3:0-cgroup_release]
+     38       2       0 I<         04:33  \_ [kworker/3:0H-events_highpri]
+     39       2       0 S          04:33  \_ [kdevtmpfs]
+     40       2       0 I<         04:33  \_ [kworker/R-inet_frag_wq]
+     41       2       0 I          04:33  \_ [rcu_tasks_rude_kthread]
+     42       2       0 I          04:33  \_ [rcu_tasks_trace_kthread]
+     43       2       0 S          04:33  \_ [kauditd]
+     44       2       0 S          04:33  \_ [khungtaskd]
+     45       2       0 I          04:33  \_ [kworker/u16:1-kvfree_rcu_reclaim]
+     46       2       0 S          04:33  \_ [oom_reaper]
+     47       2       0 I          04:33  \_ [kworker/u16:2-ext4-rsv-conversion]
+     48       2       0 I<         04:33  \_ [kworker/R-writeback]
+     49       2       0 S          04:33  \_ [kcompactd0]
+     50       2       0 SN         04:33  \_ [ksmd]
+     51       2       0 SN         04:33  \_ [khugepaged]
+     52       2       0 I<         04:33  \_ [kworker/R-kblockd]
+     53       2       0 I<         04:33  \_ [kworker/R-blkcg_punt_bio]
+     54       2       0 I<         04:33  \_ [kworker/R-kintegrityd]
+     55       2       0 S          04:33  \_ [irq/9-acpi]
+     56       2       0 I          04:33  \_ [kworker/1:1-events]
+     57       2       0 I          04:33  \_ [kworker/3:1-cgroup_offline]
+     58       2       0 I          04:33  \_ [kworker/2:1-cgroup_free]
+     59       2       0 I<         04:33  \_ [kworker/R-tpm_dev_wq]
+     60       2       0 I<         04:33  \_ [kworker/R-ata_sff]
+     61       2       0 I<         04:33  \_ [kworker/R-md]
+     62       2       0 I<         04:33  \_ [kworker/R-md_bitmap]
+     63       2       0 I<         04:33  \_ [kworker/R-edac-poller]
+     64       2       0 I<         04:33  \_ [kworker/R-hv_vmbus_con]
+     65       2       0 I<         04:33  \_ [kworker/R-hv_vmbus_rescind]
+     66       2       0 I<         04:33  \_ [kworker/R-hv_pri_chan]
+     67       2       0 I<         04:33  \_ [kworker/R-hv_sub_chan]
+     68       2       0 I<         04:33  \_ [kworker/R-devfreq_wq]
+     69       2       0 S          04:33  \_ [watchdogd]
+     70       2       0 I<         04:33  \_ [kworker/R-quota_events_unbound]
+     71       2       0 I<         04:33  \_ [kworker/3:1H-kblockd]
+     72       2       0 S          04:33  \_ [kswapd0]
+     73       2       0 S          04:33  \_ [ecryptfs-kthread]
+     74       2       0 I<         04:33  \_ [kworker/R-kthrotld]
+     75       2       0 I<         04:32  \_ [kworker/R-nfit]
+     76       2       0 S          04:32  \_ [scsi_eh_0]
+     77       2       0 S          04:32  \_ [scsi_eh_1]
+     78       2       0 I<         04:32  \_ [kworker/R-scsi_tmf_0]
+     79       2       0 I<         04:32  \_ [kworker/R-scsi_tmf_1]
+     80       2       0 I<         04:32  \_ [kworker/R-nvme-wq]
+     81       2       0 I<         04:32  \_ [kworker/R-nvme-reset-wq]
+     82       2       0 I<         04:32  \_ [kworker/R-nvme-delete-wq]
+     83       2       0 I<         04:32  \_ [kworker/R-nvme-auth-wq]
+     84       2       0 I          04:32  \_ [kworker/u16:3-events_power_efficient]
+     85       2       0 I          04:32  \_ [kworker/u16:4-flush-8:0]
+     86       2       0 I<         04:32  \_ [kworker/R-mld]
+     87       2       0 I<         04:32  \_ [kworker/R-ipv6_addrconf]
+     88       2       0 S          04:32  \_ [hv_balloon]
+     89       2       0 I<         04:32  \_ [kworker/R-kstrp]
+     91       2       0 I<         04:32  \_ [kworker/u17:0]
+    102       2       0 I<         04:32  \_ [kworker/0:1H-kblockd]
+    103       2       0 S          04:32  \_ [jbd2/sda1-8]
+    104       2       0 I<         04:32  \_ [kworker/R-ext4-rsv-conversion]
+    105       2       0 I          04:32  \_ [kworker/3:2-cgroup_bpf_destroy]
+    106       2       0 I<         04:32  \_ [kworker/1:1H-kblockd]
+    108       2       0 I<         04:32  \_ [kworker/2:1H-kblockd]
+    171       2       0 I          04:31  \_ [kworker/0:2-cgroup_release]
+    179       2       0 I<         04:31  \_ [kworker/R-kmpathd]
+    180       2       0 I<         04:31  \_ [kworker/R-kmpath_handlerd]
+    198       2       0 I          04:31  \_ [kworker/0:3-events]
+    199       2       0 I          04:31  \_ [kworker/0:4-cgroup_free]
+    200       2       0 I          04:31  \_ [kworker/0:5-events]
+    216       2       0 I          04:31  \_ [kworker/2:2-events]
+    219       2       0 I          04:31  \_ [kworker/2:3-events]
+    220       2       0 I          04:31  \_ [kworker/3:3-mm_percpu_wq]
+    221       2       0 I          04:31  \_ [kworker/3:4-events]
+    242       2       0 I          04:31  \_ [kworker/1:2-cgroup_free]
+    243       2       0 S          04:31  \_ [psimon]
+    410       2       0 S          04:29  \_ [jbd2/sda16-8]
+    411       2       0 I<         04:29  \_ [kworker/R-ext4-rsv-conversion]
+   1318       2       0 I<         04:22  \_ [kworker/R-tls-strp]
+   1800       2       0 I          04:21  \_ [kworker/u16:5-ext4-rsv-conversion]
+   1801       2       0 I          04:21  \_ [kworker/u16:6-events_power_efficient]
+   2045       2       0 S          04:07  \_ [psimon]
+   2119       2       0 I<         04:05  \_ [kworker/R-mlx5_cmd_9568:00:02.0]
+   2120       2       0 I<         04:05  \_ [kworker/R-mlx5_health9568:00:02.0]
+   2121       2       0 I<         04:05  \_ [kworker/R-mlx5_page_allocator]
+   2122       2       0 I<         04:05  \_ [kworker/R-mlx5_events]
+   2123       2       0 S          04:05  \_ [ptp1]
+   2124       2       0 I<         04:05  \_ [kworker/R-mlx5_fc]
+   2125       2       0 I<         04:05  \_ [kworker/R-mlx5_hv_vhca]
+   2126       2       0 I<         04:05  \_ [kworker/R-mlx5e]
+   2128       2       0 I<         04:05  \_ [kworker/R-mlx5e_arfs]
+   2142       2       0 I<         04:05  \_ [kworker/R-ib-comp-wq]
+   2143       2       0 I<         04:05  \_ [kworker/R-ib-comp-unb-wq]
+   2144       2       0 I<         04:05  \_ [kworker/R-ib_mcast]
+   2145       2       0 I<         04:05  \_ [kworker/R-ib_nl_sa_wq]
+   2146       2       0 I<         04:05  \_ [kworker/R-mkey_cache]
+      1       0       1 Ss         04:33 /sbin/init
+    157       1     157 S<s        04:31 /usr/lib/systemd/systemd-journald
+    226       1     226 SLsl       04:31 /sbin/multipathd -d -s
+    231       1     231 Ss         04:31 /usr/lib/systemd/systemd-udevd
+    392       1     392 Ss         04:30 /usr/lib/linux-tools/6.17.0-1022-azure/hv_kvp_daemon -n
+    530       1     530 Ss         04:29 /usr/lib/systemd/systemd-resolved
+    585       1     585 Ss         04:29 /usr/sbin/haveged --Foreground --verbose=1
+    726       1     726 Ss         04:27 /usr/lib/systemd/systemd-networkd
+   1009       1    1009 Ss         04:23 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+   1014       1    1014 Ss         04:23 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
+   1016       1    1016 Ss         04:23 php-fpm: master process (/etc/php/8.3/fpm/php-fpm.conf)
+   1251    1016    1016 S          04:22  \_ php-fpm: pool www
+   1253    1016    1016 S          04:22  \_ php-fpm: pool www
+   1021       1    1021 Ssl        04:23 /usr/lib/polkit-1/polkitd --no-debug
+   1029       1    1029 Ss         04:23 /usr/lib/systemd/systemd-logind
+   1046       1    1046 Ssl        04:23 /usr/libexec/udisks2/udisksd
+   1050       1    1050 Ss         04:23 /usr/bin/python3 -u /usr/sbin/waagent -daemon
+   1402    1050    1050 Sl         04:22  \_ /usr/bin/python3 -u bin/WALinuxAgent-2.16.0.2-py3.12.egg -run-exthandlers
+   1077       1    1077 Ss         04:23 /usr/sbin/cron -f -P
+   1109       1    1109 Ssl        04:23 /usr/bin/containerd
+   1120       1    1120 Ss+        04:23 /sbin/agetty -o -p -- \u --keep-baud 115200,57600,38400,9600 - vt220
+   1137       1    1137 Ss+        04:23 /sbin/agetty -o -p -- \u --noclear - linux
+   1152       1    1150 S          04:23 /usr/sbin/chronyd -F 1
+   1154    1152    1150 S          04:23  \_ /usr/sbin/chronyd -F 1
+   1181       1    1181 Ssl        04:23 /usr/sbin/ModemManager
+   1211       1    1211 Ssl        04:22 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+   1220       1    1220 Ssl        04:22 /usr/sbin/rsyslogd -n -iNONE
+   1297       1    1297 Ss         04:22 /usr/lib/systemd/systemd --user
+   1306    1297    1297 S          04:22  \_ (sd-pam)
+   2047       1    2047 Ssl        04:07 /opt/hca/hosted-compute-agent
+   2063    2047    2047 S          04:07  \_ sudo -n PROVJOBD_E2E=1 /tmp/provjobd311445727
+   2065    2063    2047 Sl         04:07  |   \_ /tmp/provjobd311445727
+   2099    2047    2047 Sl         04:06  \_ /home/runner/actions-runner/cached/2.338.0/bin/Runner.Listener run
+   2148    2099    2047 Sl         04:04      \_ /home/runner/actions-runner/cached/2.338.0/bin/Runner.Worker spawnclient 142 145
+   3481    2148    2047 S          03:09          \_ /usr/bin/bash -e /home/runner/work/_temp/41e34253-4c5b-4d94-9f61-3dc4922f1488.sh
+   3483    3481    2047 Sl         03:09              \_ dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 5m --blame-hang-dump-type none --filter FullyQualifiedName~ToolchainLanguageToolsTests.A_Rust_template --logger console;verbosity=normal
+   3514    3483    2047 Sl         03:08                  \_ /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.403/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false
+   3527    3483    2047 Sl         03:08                  \_ /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.403/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false
+   3529    3483    2047 Sl         03:08                  \_ /usr/share/dotnet/dotnet /usr/share/dotnet/sdk/10.0.403/MSBuild.dll /noautoresponse /nologo /nodemode:1 /nodeReuse:false /low:false
+   3596    3529    2047 Sl         03:05                      \_ /usr/share/dotnet/sdk/10.0.403/Roslyn/bincore/VBCSCompiler -pipename:WAcWTViZvzcVAI0ZQWygl6OMzaUe49Dabl4RIF3MlGs
+   3802    3529    2047 Sl         01:30                      \_ /usr/share/dotnet/dotnet exec /usr/share/dotnet/sdk/10.0.403/vstest.console.dll --framework:.NETCoreApp,Version=v10.0 --testCaseFilter:FullyQualifiedName~ToolchainLanguageToolsTests.A_Rust_template --logger:console;verbosity=normal /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll --Blame:CollectHangDump;HangDumpType=none;TestTimeout=5m --nologo --artifactsProcessingMode-collect --testSessionCorrelationId:3483_f9cec556-85fc-4b5c-9600-6cec2158a847
+   3815    3802    2047 Sl         01:29                          \_ /usr/share/dotnet/dotnet exec --runtimeconfig /usr/share/dotnet/sdk/10.0.403/datacollector.runtimeconfig.json --depsfile /usr/share/dotnet/sdk/10.0.403/datacollector.deps.json /usr/share/dotnet/sdk/10.0.403/datacollector.dll --port 41629 --parentprocessid 3802
+   3831    3802    2047 Sl         01:29                          \_ /usr/share/dotnet/dotnet exec --runtimeconfig /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.runtimeconfig.json --depsfile /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.deps.json /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/testhost.dll --port 34123 --endpoint 127.0.0.1:034123 --role client --parentprocessid 3802 --datacollectionport 38569 --telemetryoptedin false
+   3884    3831    3884 Sl         01:22                              \_ /home/runner/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rust-analyzer
+   4008    3884    3884 S          01:22                              |   \_ /home/runner/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/libexec/rust-analyzer-proc-macro-srv
+   4009    3884    3884 S          01:22                              |   \_ /home/runner/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/libexec/rust-analyzer-proc-macro-srv
+   4309    3831    4309 Sl         01:12                              \_ /home/runner/work/_temp/lldb-bin/lldb-dap
+   4334    4309    4334 S          01:04                              |   \_ /usr/lib/llvm-19/bin/lldb-server-19.1.1 gdbserver --fd=9 --native-regs --setsid
+   4326    3831    4326 t          01:04                              \_ /tmp/tabstudio-tests/005d38c2e33b4a86944d26fcb0e1b527/app/Projects/Greeter/target/debug/greeter
+   4405    3831    2047 R          00:00                              \_ ps -eo pid,ppid,pgid,stat,etime,args --forest
+   3242       1    3242 Ssl        03:28 /usr/libexec/packagekitd
