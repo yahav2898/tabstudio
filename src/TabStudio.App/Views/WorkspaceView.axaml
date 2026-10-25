@@ -25,6 +25,10 @@
     <KeyBinding Gesture="Alt+Left" Command="{Binding NavigateBackCommand}" />
     <KeyBinding Gesture="Alt+Right" Command="{Binding NavigateForwardCommand}" />
     <KeyBinding Gesture="Ctrl+Alt+L" Command="{Binding ToggleSideBarCommand}" />
+    <KeyBinding Gesture="F12" Command="{Binding GoToDefinitionCommand}" />
+    <KeyBinding Gesture="Ctrl+F12" Command="{Binding GoToImplementationCommand}" />
+    <KeyBinding Gesture="Shift+F12" Command="{Binding FindAllReferencesCommand}" />
+    <KeyBinding Gesture="F2" Command="{Binding RenameSymbolCommand}" />
   </UserControl.KeyBindings>
 
   <Grid RowDefinitions="40,46,*,28">
@@ -53,17 +57,33 @@
             <Separator />
             <MenuItem Header="Toggle Line _Comment (Ctrl+/)" Command="{Binding ToggleCommentCommand}" />
             <MenuItem Header="F_ormat Document" InputGesture="Shift+Alt+F" Command="{Binding FormatDocumentCommand}" />
+            <Separator />
+            <MenuItem Header="_IntelliSense">
+              <MenuItem Header="_List Members" InputGesture="Ctrl+J" Command="{Binding ListMembersCommand}" />
+              <MenuItem Header="_Parameter Info" InputGesture="Ctrl+Shift+Space" Command="{Binding ParameterInfoCommand}" />
+              <MenuItem Header="_Quick Info (Ctrl+K, Ctrl+I)" Command="{Binding QuickInfoCommand}" />
+              <MenuItem Header="Complete _Word" InputGesture="Ctrl+Space" Command="{Binding CompleteWordCommand}" />
+            </MenuItem>
+            <MenuItem Header="Re_factor">
+              <MenuItem Header="_Rename... (Ctrl+R, Ctrl+R)" InputGesture="F2" Command="{Binding RenameSymbolCommand}" />
+            </MenuItem>
+            <MenuItem Header="_Quick Actions and Refactorings..." InputGesture="Ctrl+OemPeriod" Command="{Binding QuickActionsCommand}" />
           </MenuItem>
           <MenuItem Header="_View">
             <MenuItem Header="_Solution Explorer" InputGesture="Ctrl+Alt+L" Command="{Binding ToggleSideBarCommand}" />
             <MenuItem Header="_Error List" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" />
             <MenuItem Header="_Output" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Output}" />
             <MenuItem Header="_Compatibility Doctor" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Compatibility}" />
+            <MenuItem Header="Find _Symbol Results" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.References}" />
             <MenuItem Header="_Bottom Panel" Command="{Binding ToggleBottomPanelCommand}" />
             <Separator />
             <MenuItem Header="Navigate _Backward" InputGesture="Alt+Left" Command="{Binding NavigateBackCommand}" />
             <MenuItem Header="Navigate _Forward" InputGesture="Alt+Right" Command="{Binding NavigateForwardCommand}" />
             <MenuItem Header="Sync with _Active Document" Command="{Binding SyncWithActiveDocumentCommand}" />
+            <Separator />
+            <MenuItem Header="Go To _Definition" InputGesture="F12" Command="{Binding GoToDefinitionCommand}" />
+            <MenuItem Header="Go To _Implementation" InputGesture="Ctrl+F12" Command="{Binding GoToImplementationCommand}" />
+            <MenuItem Header="Find All _References" InputGesture="Shift+F12" Command="{Binding FindAllReferencesCommand}" />
           </MenuItem>
           <MenuItem Header="_Build">
             <MenuItem Header="_Build Solution" InputGesture="Ctrl+Shift+B" Command="{Binding BuildCommand}" />
@@ -263,21 +283,60 @@
 
         <!-- Breadcrumb -->
         <Border Grid.Row="1" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="12,0">
-          <ItemsControl ItemsSource="{Binding Breadcrumb}" VerticalAlignment="Center">
-            <ItemsControl.ItemsPanel>
-              <ItemsPanelTemplate>
-                <StackPanel Orientation="Horizontal" Spacing="6" />
-              </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-              <DataTemplate DataType="sys:String">
-                <StackPanel Orientation="Horizontal" Spacing="6">
-                  <TextBlock Text="{Binding}" Classes="muted" FontSize="12.5" VerticalAlignment="Center" />
-                  <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="12" Foreground="{DynamicResource Brush.TextDisabled}" />
-                </StackPanel>
-              </DataTemplate>
-            </ItemsControl.ItemTemplate>
-          </ItemsControl>
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <ItemsControl ItemsSource="{Binding Breadcrumb}" VerticalAlignment="Center">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <StackPanel Orientation="Horizontal" Spacing="6" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="sys:String">
+                  <StackPanel Orientation="Horizontal" Spacing="6">
+                    <TextBlock Text="{Binding}" Classes="muted" FontSize="12.5" VerticalAlignment="Center" />
+                    <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="12" Foreground="{DynamicResource Brush.TextDisabled}" />
+                  </StackPanel>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- The type and member at the caret: tap one to jump to a declaration next to it. -->
+            <ItemsControl ItemsSource="{Binding ActiveDocument.SymbolPath, FallbackValue={x:Null}}" VerticalAlignment="Center">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <StackPanel Orientation="Horizontal" Spacing="2" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="vm:SymbolCrumbViewModel">
+                  <StackPanel Orientation="Horizontal" Spacing="2">
+                    <Button Theme="{StaticResource ToolButton}" Height="28" MinHeight="28" MinWidth="0" Padding="6,0" CornerRadius="6">
+                      <StackPanel Orientation="Horizontal" Spacing="6">
+                        <controls:SymbolGlyphIcon Kind="{Binding Kind}" Size="14" />
+                        <TextBlock Text="{Binding Name}" FontSize="12.5" VerticalAlignment="Center" />
+                      </StackPanel>
+                      <Button.Flyout>
+                        <MenuFlyout Placement="BottomEdgeAlignedLeft" ItemsSource="{Binding Siblings}">
+                          <MenuFlyout.ItemContainerTheme>
+                            <ControlTheme TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}" x:DataType="vm:SymbolCrumbViewModel">
+                              <Setter Property="Header" Value="{Binding Name}" />
+                              <Setter Property="Command" Value="{Binding NavigateCommand}" />
+                              <Setter Property="Icon">
+                                <Template>
+                                  <controls:SymbolGlyphIcon Kind="{Binding Kind}" Size="14" />
+                                </Template>
+                              </Setter>
+                            </ControlTheme>
+                          </MenuFlyout.ItemContainerTheme>
+                        </MenuFlyout>
+                      </Button.Flyout>
+                    </Button>
+                    <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="12" Foreground="{DynamicResource Brush.TextDisabled}" />
+                  </StackPanel>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
         </Border>
 
         <!-- Editors -->
@@ -344,6 +403,9 @@
                         Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Output}" Content="Output" />
                 <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsCompatibilitySelected}"
                         Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Compatibility}" Content="Compatibility Doctor" />
+                <Button Theme="{StaticResource PanelTabButton}"
+                        Classes.selected="{Binding SelectedPanel, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static vm:BottomPanel.References}}"
+                        Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.References}" Content="References" />
               </StackPanel>
               <StackPanel Grid.Column="1" Orientation="Horizontal">
                 <Button Theme="{StaticResource ToolButton}" MinHeight="30" Height="30" FontSize="12.5" Content="Clear"
@@ -358,6 +420,9 @@
               <views:ErrorListView DataContext="{Binding ErrorList}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsErrorListSelected}" />
               <views:OutputView DataContext="{Binding Output}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsOutputSelected}" />
               <views:CompatibilityView IsVisible="{Binding IsCompatibilitySelected}" />
+              <Panel IsVisible="{Binding SelectedPanel, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static vm:BottomPanel.References}}">
+                <views:ReferencesView DataContext="{Binding References}" />
+              </Panel>
             </Panel>
           </DockPanel>
         </Border>

@@ -22,6 +22,9 @@ public enum BottomPanel
 
     /// <summary>The Compatibility Doctor.</summary>
     Compatibility,
+
+    /// <summary>Find All References and the other lists of symbol locations.</summary>
+    References,
 }
 
 /// <summary>What the IDE is doing, for the status bar.</summary>
@@ -245,6 +248,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         State = IdeState.Ready;
         StatusText = "Ready";
         StartPackageRestore(preview.Workspace);
+        StartIntelliSenseWarmUp();
         if (_profile.AnalyzeWholeSolution)
         {
             _ = AnalyzeSolutionAsync(_background!.Token);

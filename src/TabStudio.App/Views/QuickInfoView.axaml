@@ -1,0 +1,58 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:vm="using:TabStudio.App.ViewModels"
+             x:Class="TabStudio.App.Views.QuickInfoView"
+             x:DataType="vm:QuickInfoViewModel">
+  <!-- Quick Info: the signature colored like code, its documentation, then errors and warnings at the same place. -->
+  <Border MaxWidth="560" Padding="12,10" CornerRadius="8"
+          Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
+          BoxShadow="0 8 24 0 #59000000">
+    <StackPanel Spacing="8">
+      <Grid ColumnDefinitions="Auto,*" IsVisible="{Binding HasSignature}">
+        <controls:SymbolGlyphIcon Kind="{Binding Kind}" Size="16" Margin="0,1,8,0" VerticalAlignment="Top" />
+        <controls:StyledTextBlock Grid.Column="1" Runs="{Binding Signature}" TextWrapping="Wrap"
+                                  FontFamily="{DynamicResource CodeFont}" FontSize="12.5" Foreground="{DynamicResource Brush.Text}" />
+      </Grid>
+
+      <ItemsControl ItemsSource="{Binding Sections}">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <StackPanel Spacing="6" />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate DataType="vm:QuickInfoSectionViewModel">
+            <controls:StyledTextBlock Runs="{Binding Runs}" TextWrapping="Wrap" FontSize="12.5" Foreground="{DynamicResource Brush.TextSecondary}" />
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+
+      <Border Height="1" Background="{DynamicResource Brush.Divider}" IsVisible="{Binding HasDivider}" />
+
+      <ItemsControl ItemsSource="{Binding Diagnostics}" IsVisible="{Binding HasDiagnostics}">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <StackPanel Spacing="6" />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate DataType="vm:QuickInfoDiagnosticViewModel">
+            <Grid ColumnDefinitions="Auto,*">
+              <Panel Margin="0,1,8,0" VerticalAlignment="Top">
+                <controls:StrokeIcon Data="{StaticResource Icon.Error}" Size="15" Foreground="{DynamicResource Brush.Error}" IsVisible="{Binding IsError}" />
+                <controls:StrokeIcon Data="{StaticResource Icon.Warning}" Size="15" Foreground="{DynamicResource Brush.Warning}" IsVisible="{Binding IsWarning}" />
+                <controls:StrokeIcon Data="{StaticResource Icon.Info}" Size="15" Foreground="{DynamicResource Brush.Info}" IsVisible="{Binding IsMessage}" />
+              </Panel>
+              <TextBlock Grid.Column="1" TextWrapping="Wrap" FontSize="12.5" Foreground="{DynamicResource Brush.Text}">
+                <Run Text="{Binding Code}" Foreground="{DynamicResource Brush.Link}" />
+                <Run Text=": " />
+                <Run Text="{Binding Message}" />
+              </TextBlock>
+            </Grid>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </StackPanel>
+  </Border>
+</UserControl>

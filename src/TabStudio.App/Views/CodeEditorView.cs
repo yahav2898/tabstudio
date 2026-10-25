@@ -86,6 +86,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
         _editor.TextArea.Caret.PositionChanged += OnCaretPositionChanged;
         _editor.TextArea.TextView.PointerHover += OnPointerHover;
         _editor.TextArea.TextView.PointerHoverStopped += OnPointerHoverStopped;
+        InitializeIntelliSense();
     }
 
     /// <summary>The editor control, for tests and keyboard focus.</summary>
@@ -94,6 +95,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
     /// <inheritdoc />
     public void Dispose()
     {
+        DisposeIntelliSense();
         _document.Document.Changed -= OnTextChanged;
         _document.ClassificationsChanged -= OnClassificationsChanged;
         _document.DiagnosticsChanged -= OnDiagnosticsChanged;

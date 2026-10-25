@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:vm="using:TabStudio.App.ViewModels"
+             x:Class="TabStudio.App.Views.ReferencesView"
+             x:DataType="vm:ReferencesViewModel">
+  <DockPanel>
+    <!-- What was searched for -->
+    <Border DockPanel.Dock="Top" Height="34" Padding="12,0" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+      <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+        <controls:StrokeIcon Data="{StaticResource Icon.Search}" Size="14" Foreground="{DynamicResource Brush.TextMuted}" />
+        <TextBlock Text="{Binding Title}" FontSize="12.5" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" />
+        <TextBlock Text="{Binding Summary}" Classes="muted" FontSize="12.5" VerticalAlignment="Center" />
+      </StackPanel>
+    </Border>
+
+    <ListBox x:Name="Rows" ItemsSource="{Binding Rows}" ItemContainerTheme="{StaticResource ListRow}"
+             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+      <ListBox.DataTemplates>
+        <DataTemplate DataType="vm:ReferenceFileRow">
+          <StackPanel Orientation="Horizontal" Spacing="8" Height="30" Margin="12,0" Background="Transparent">
+            <Border Classes="badge csharp">
+              <TextBlock Text="C#" />
+            </Border>
+            <TextBlock Text="{Binding FileName}" FontSize="12.5" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding Folder}" Classes="muted" FontSize="12" VerticalAlignment="Center" />
+            <Border Classes="pill">
+              <TextBlock Text="{Binding CountText}" />
+            </Border>
+          </StackPanel>
+        </DataTemplate>
+        <DataTemplate DataType="vm:ReferenceLineRow">
+          <Grid ColumnDefinitions="56,*,Auto" Height="32" Margin="12,0" Background="Transparent">
+            <TextBlock Text="{Binding Line}" FontFamily="{DynamicResource CodeFont}" FontSize="12" HorizontalAlignment="Right"
+                       Foreground="{DynamicResource Brush.LineNumber}" VerticalAlignment="Center" Margin="0,0,14,0" />
+            <controls:StyledTextBlock Grid.Column="1" Runs="{Binding Text}" FontFamily="{DynamicResource CodeFont}" FontSize="12.5"
+                                      Foreground="{DynamicResource Brush.Text}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+            <Border Grid.Column="2" Classes="pill ready" Margin="10,0,0,0" IsVisible="{Binding IsDefinition}">
+              <TextBlock Text="definition" />
+            </Border>
+          </Grid>
+        </DataTemplate>
+      </ListBox.DataTemplates>
+    </ListBox>
+  </DockPanel>
+</UserControl>
