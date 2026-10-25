@@ -92,6 +92,22 @@ public sealed class ProblemMatcherTests
     }
 
     [Fact]
+    public void Compiler_errors_keep_every_location_and_leave_warnings_out()
+    {
+        var matcher = new ProblemMatcher(new ToolchainDefinition
+        {
+            Id = "compiler", Name = "Compiler", Description = "A compiler.",
+            ProblemPatterns = [new() { Pattern = @"^(?<file>.+):(?<line>\d+):(?<column>\d+): (?<severity>error|warning|note): (?<message>.+)$" }],
+        });
+
+        var errors = matcher.FindErrors(["main.c:3:2: error: unknown name", "main.c:5:1: error: expected ;", "main.c:6:1: warning: unused", "lib.c:1:1: error: outside"], file => file == "main.c");
+
+        Assert.Equal(["unknown name", "expected ;"], errors.Select(e => e.Message));
+        Assert.Equal([3, 5], errors.Select(e => e.Location!.Line));
+        Assert.Empty(matcher.FindErrors(["Hello, world!", "main.c:0:2: error: invalid line"], _ => true));
+    }
+
+    [Fact]
     public void Ordinary_output_is_neither_linked_nor_an_error()
     {
         string[] output = ["Hello, Ada!", "Total: 3 files, line 4 of 9", "Errors: none"];

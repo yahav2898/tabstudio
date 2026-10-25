@@ -180,6 +180,7 @@ public sealed partial class WorkspaceViewModel
         {
             "python" => ProjectKind.Python,
             "node" => ProjectKind.Node,
+            "go" => ProjectKind.Go,
             _ => ProjectKind.Unknown,
         },
         OutputType = "Exe",
@@ -490,10 +491,7 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
-        if (Matcher(project.Toolchain).FindError(result.Lines, IsWorkspaceFile) is { } error)
-        {
-            ErrorList.SetRunError(project.Directory, ToDiagnostic(project, error));
-        }
+        ErrorList.SetRunErrors(project.Directory, [.. Matcher(project.Toolchain).FindErrors(result.Lines, IsWorkspaceFile).Select(error => ToDiagnostic(project, error))]);
 
         if (RunPlanner.DependenciesOf(project) is { } dependency && RunPlanner.IsPending(project, dependency))
         {

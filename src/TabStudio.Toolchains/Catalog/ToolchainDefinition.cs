@@ -63,6 +63,9 @@ public sealed record ToolchainDefinition
     /// </summary>
     public bool SourceFolderIsProject { get; init; }
 
+    /// <summary>Whether explicit project markers inside a project define separate projects, as Go modules do.</summary>
+    public bool AllowNestedProjects { get; init; }
+
     /// <summary>How to run a file or a project.</summary>
     public RunDefinition? Run { get; init; }
 

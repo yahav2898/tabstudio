@@ -27,6 +27,31 @@ public sealed partial class WorkspaceViewModel
     /// <summary>Whether the debugged program runs in the Output panel's console, started for its debug adapter.</summary>
     private bool IsProgramInConsole => _adapterProgramRun is not null;
 
+    /// <summary>Feeds a TCP adapter's inherited console input, without ever writing text to DAP's protocol stream.</summary>
+    private void StartAdapterInput(DebugAdapterSession session)
+    {
+        if (!session.AcceptsProgramInput)
+        {
+            return;
+        }
+
+        var input = Output.BeginProcessInput();
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                while (input.ReadLine() is { } line)
+                {
+                    await session.WriteProgramInputAsync(line);
+                }
+            }
+            catch (Exception ex) when (ex is IOException or ObjectDisposedException or InvalidOperationException)
+            {
+                // The debuggee or adapter ended while the user was typing.
+            }
+        });
+    }
+
     /// <summary>F5, F10, F11 and Ctrl+F10 on a toolchain project: debugs what Ctrl+F5 runs, with the toolchain's adapter.</summary>
     /// <param name="info">The project.</param>
     /// <param name="start">How the program starts.</param>
@@ -51,7 +76,8 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
-        if (PlanToolchainProject(project, ActiveDocument?.FilePath) is not { Build: null } plan || ToolchainLaunch.Create(type, plan) is not { } configuration)
+        await SaveAllCoreAsync();
+        if (PlanToolchainProject(project, ActiveDocument?.FilePath) is not { } plan || ToolchainLaunch.Create(type, plan) is not { } configuration)
         {
             // Nothing to run, which the run explains, or a command the adapter cannot launch, which runs as it is.
             await RunToolchainProjectAsync(info);
@@ -60,6 +86,31 @@ public sealed partial class WorkspaceViewModel
 
         ErrorList.SetRunError(project.Directory, null);
         _runDirectory = plan.Run.WorkingDirectory ?? project.Directory;
+        if (plan.Build is { } build)
+        {
+            Output.Clear();
+            SelectedPanel = BottomPanel.Output;
+            IsBottomPanelVisible = true;
+            State = IdeState.Running;
+            StatusText = $"Building {project.Name}";
+            _run = new CancellationTokenSource();
+            try
+            {
+                Output.WriteLine("> " + build.CommandLine, OutputKind.Info);
+                var result = await OutputProcess.RunAsync(_toolchains.Runtime, build, Output, null, _run.Token);
+                if (!result.Succeeded)
+                {
+                    ReportToolchainRun(project, plan.EntryPoint, result);
+                    return;
+                }
+            }
+            finally
+            {
+                _run.Dispose();
+                _run = null;
+            }
+        }
+
         var target = new LaunchTarget(configuration.Name, configuration, IsCurrentFile: false);
         _programEnvironments.AddOrUpdate(target, plan.Run.Environment);
         await LaunchAdapterAsync(target, start, noDebug: false);

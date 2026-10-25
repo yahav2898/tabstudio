@@ -575,3 +575,16 @@ design keeps the second part proportional to what you are actually editing:
 ## Code conventions
 
 See [CONTRIBUTING.md](../CONTRIBUTING.md) for code style, tests and how CI reports results.
+
+### Toolchains: Go
+
+Go modules (`go.mod`) are startup projects, including nested modules in a multi-module repository; dependency,
+cache and vendor folders are excluded. A root `package main`, or the only `cmd/name` command, is built with
+`go build -gcflags=all=-N -l` into `.tabstudio/bin/app` before Ctrl+F5 or F5. With several commands, open a source
+file in the desired package. The complete package, including sibling files, is built. Compiler errors link into
+the Error List. Go, gopls and Delve come from Alpine 3.24 packages, and from PATH on a computer. gopls provides
+completion, diagnostics, definition, references and rename. Delve executes the same binary over TCP DAP; output
+uses DAP output events, while `/dev/stdin` carries the Output panel's input separately from protocol messages.
+The emulator self test installs the real packages and builds and runs the console template. Native debugging
+inside PRoot depends on its ptrace emulation and the device kernel; the emulator run verifies compilation and
+console I/O, while the IDE job verifies Delve breakpoints and locals on the host.

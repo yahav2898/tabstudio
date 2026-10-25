@@ -209,7 +209,7 @@ internal static class DesignSamples
         };
     }
 
-    private static Control RunButton(string label)
+    private static StackPanel RunButton(string label)
     {
         var run = new Button
         {
