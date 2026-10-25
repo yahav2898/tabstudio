@@ -192,7 +192,7 @@
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
           <ListBox.ItemTemplate>
             <DataTemplate DataType="vm:TestNodeViewModel">
-              <Grid ColumnDefinitions="Auto,24,Auto,*,Auto" Height="32" Background="Transparent" ToolTip.Tip="{Binding Description}">
+              <Grid ColumnDefinitions="Auto,24,Auto,*,Auto,Auto" Height="32" Background="Transparent" ToolTip.Tip="{Binding Description}">
                 <!-- Long-press on touch, right-click with a mouse. -->
                 <Grid.ContextFlyout>
                   <MenuFlyout>
@@ -224,7 +224,12 @@
                   <Run Text="{Binding CountText}" Foreground="{DynamicResource Brush.TextMuted}" />
                 </TextBlock>
 
-                <TextBlock Grid.Column="4" Classes="muted" FontSize="11.5" Margin="8,0,10,0" VerticalAlignment="Center"
+                <!-- Excluded from Live Unit Testing, while it is on -->
+                <controls:StrokeIcon Grid.Column="4" Size="14" Margin="6,0,0,0" Data="{StaticResource Icon.LiveTestingExcluded}"
+                                     Foreground="{DynamicResource Brush.TextMuted}" IsVisible="{Binding IsExcludedFromLiveTesting}"
+                                     ToolTip.Tip="Excluded from Live Unit Testing" />
+
+                <TextBlock Grid.Column="5" Classes="muted" FontSize="11.5" Margin="8,0,10,0" VerticalAlignment="Center"
                            Text="{Binding DurationText}" />
               </Grid>
             </DataTemplate>

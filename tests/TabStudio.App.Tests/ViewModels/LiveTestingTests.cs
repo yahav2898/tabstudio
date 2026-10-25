@@ -140,6 +140,9 @@ public sealed class LiveTestingTests : IClassFixture<SharedToolchain>, IDisposab
 
         taxNode.ExcludeFromLiveTestingCommand.Execute(null);
         await UiTestHelpers.WaitUntilAsync(() => MarkerOn(pricing, rateLine).State == LineCoverageState.NotCovered, RunTimeout, "the tax lines to lose their only test");
+        await UiTestHelpers.WaitUntilAsync(() => Row(workspace, "Tax_is_seventeen_percent").IsExcludedFromLiveTesting, because: "the row to show it is excluded");
+        Assert.False(Row(workspace, "Total_multiplies_price_and_quantity").IsExcludedFromLiveTesting);
+        Assert.False(Row(workspace, "PricingTests").IsExcludedFromLiveTesting);
 
         pricing.Document.Replace(pricing.Document.Text.IndexOf("20;", StringComparison.Ordinal), 2, "17");
         await UiTestHelpers.WaitUntilAsync(
@@ -269,6 +272,9 @@ public sealed class LiveTestingTests : IClassFixture<SharedToolchain>, IDisposab
 
     private static TestEntry Entry(WorkspaceViewModel workspace, string methodName) =>
         workspace.Tests.Entries.Single(e => e.MethodName == methodName);
+
+    private static TestNodeViewModel Row(WorkspaceViewModel workspace, string name) =>
+        workspace.Tests.Rows.Single(r => r.Name == name);
 
     private static IReadOnlyList<(int Line, LiveTestMarker Marker)> Markers(DocumentViewModel document) =>
         document.LiveTestMarkers?.Lines(document.Document) ?? [];

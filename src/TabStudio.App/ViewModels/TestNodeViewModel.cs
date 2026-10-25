@@ -196,6 +196,7 @@ public sealed partial class TestNodeViewModel : ObservableObject
         State = WorstState(counts);
         DurationText = ran ? TestDisplay.Duration(duration) : null;
         IsStale = stale;
+        RefreshLiveTesting();
     }
 
     /// <summary>Adds a row under this one, while the tree is built.</summary>

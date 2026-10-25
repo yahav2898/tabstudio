@@ -9,6 +9,10 @@ public interface ILiveTestingNodeActions
     /// <param name="node">The row.</param>
     /// <param name="include">Whether to include them.</param>
     void SetLiveTesting(TestNodeViewModel node, bool include);
+
+    /// <summary>Whether Live Unit Testing is on and excludes every test under a row.</summary>
+    /// <param name="node">The row.</param>
+    bool IsExcludedFromLiveTesting(TestNodeViewModel node);
 }
 
 /// <summary>Live Unit Testing in the Test Explorer: its toggle and status, live results, and including or excluding tests.</summary>
@@ -29,6 +33,21 @@ public sealed partial class TestExplorerViewModel : ILiveTestingNodeActions
         foreach (var (project, name) in LiveTestingScopes(node))
         {
             live.SetInclusion(project, name, include);
+        }
+    }
+
+    /// <inheritdoc />
+    bool ILiveTestingNodeActions.IsExcludedFromLiveTesting(TestNodeViewModel node) =>
+        LiveTesting is { IsEnabled: true } live
+        && node.Entries.Count > 0
+        && node.Entries.All(e => !live.IsIncluded(e.ProjectFilePath, e.Id));
+
+    /// <summary>Marks the rows Live Unit Testing excludes, after it started or stopped or the list changed.</summary>
+    public void RefreshLiveTestingInclusion()
+    {
+        foreach (var node in _roots.SelectMany(Descendants))
+        {
+            node.RefreshLiveTesting();
         }
     }
 

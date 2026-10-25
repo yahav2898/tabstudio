@@ -74,7 +74,7 @@ public sealed partial class LiveTestingViewModel : ObservableObject, ILiveTestin
         _host = host;
         _ui = ui;
         Inclusion = new LiveTestInclusion(settings?.Rules);
-        Inclusion.Changed += (_, _) => _ui.Post(SaveSettings);
+        Inclusion.Changed += (_, _) => _ui.Post(OnInclusionChanged);
         Trigger = settings?.Trigger ?? (host.Profile.Class == DeviceClass.Compact ? LiveTestingTrigger.OnSave : LiveTestingTrigger.AfterTyping);
     }
 
@@ -305,4 +305,19 @@ public sealed partial class LiveTestingViewModel : ObservableObject, ILiveTestin
     }
 
     private void SaveSettings() => _host.SaveLiveTestingSettings(new LiveTestingSettings(Trigger, Inclusion.Rules));
+
+    private void OnInclusionChanged()
+    {
+        SaveSettings();
+        _host.Tests.RefreshLiveTestingInclusion();
+    }
+
+    /// <summary>Starting and stopping shows and hides which Test Explorer rows are excluded.</summary>
+    partial void OnStateChanged(LiveTestingState oldValue, LiveTestingState newValue)
+    {
+        if ((oldValue == LiveTestingState.Off) != (newValue == LiveTestingState.Off))
+        {
+            _host.Tests.RefreshLiveTestingInclusion();
+        }
+    }
 }
