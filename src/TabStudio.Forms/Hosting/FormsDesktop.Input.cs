@@ -97,7 +97,9 @@ internal sealed partial class FormsDesktop
             _ => MouseButtons.Left,
         };
         var clicks = Math.Clamp(e.ClickCount, 1, 2);
-        if (!_editor.IsVisible)
+
+        // The desktop takes the keyboard; the native text box keeps it if it has it, and gets it once a field has focus.
+        if (!IsKeyboardFocusWithin)
         {
             Focus(NavigationMethod.Pointer);
         }
