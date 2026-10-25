@@ -360,11 +360,11 @@ public sealed class WpfXamlGenerator : IIncrementalGenerator
                 classModifier,
                 root.XmlNamespace,
                 root.LocalName,
-                NamedElements(document, root));
+                FindNamedElements(document, root));
         }
 
         /// <summary>The elements with an <c>x:Name</c> or <c>Name</c> that get a field: those outside templates, once each.</summary>
-        private static List<NamedElement> NamedElements(XamlDocument document, XamlElement root)
+        private static List<NamedElement> FindNamedElements(XamlDocument document, XamlElement root)
         {
             var ignorable = XamlNamespaces.IgnorablePrefixes(root);
             var named = new List<NamedElement>();

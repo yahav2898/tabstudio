@@ -1,6 +1,7 @@
 using Microsoft.CodeAnalysis;
 using TabStudio.Compilation;
 using TabStudio.Packages;
+using TabStudio.Wpf.Building;
 
 namespace TabStudio.App.Services;
 
@@ -55,8 +56,13 @@ public sealed class CompilerServices
     public async Task<RoslynWorkspaceHost> CreateHostAsync()
     {
         var references = await GetReferencesAsync().ConfigureAwait(false);
-        return new RoslynWorkspaceHost(references);
+        var host = new RoslynWorkspaceHost(references);
+        host.SetWpfXamlCompiler(WpfXamlCompiler);
+        return host;
     }
+
+    /// <summary>OpenSilver's XAML compiler for WPF projects, which reads .NET's reference assemblies from the cache folder.</summary>
+    private OpenSilverWpfCompiler WpfXamlCompiler => field ??= new OpenSilverWpfCompiler(ReferenceAssemblies.ExtractTo(Path.Combine(_paths.Cache, "ReferenceAssemblies")));
 
     /// <summary>
     /// Loads the reference assemblies, composes Roslyn's services and compiles a tiny program, so the code

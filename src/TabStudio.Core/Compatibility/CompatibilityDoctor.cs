@@ -121,9 +121,14 @@ public static class CompatibilityDoctor
                 project, RunHost.AndroidView, CompatibilityStatus.NeedsChanges, "Uno Platform",
                 "WinUI is Windows-only. Uno Platform implements the WinUI API on Android, so the app can run here with an Uno head."),
 
+            ProjectKind.Wpf when project.Language == ProjectLanguage.CSharp => Report(
+                project, RunHost.WebView, CompatibilityStatus.Ready, "OpenSilver in the web preview",
+                "Built on OpenSilver, which implements WPF's API, and run in the web preview. What OpenSilver lacks, such as 3D, "
+                + "Window.ShowDialog and some members, is named in the Error List; that code runs on your PC through the Windows Bridge."),
+
             ProjectKind.Wpf => Report(
-                project, RunHost.WebView, CompatibilityStatus.NeedsChanges, "OpenSilver, or your PC",
-                "WPF is Windows-only. OpenSilver can run most WPF code in a WebView; the rest runs through the Windows Bridge."),
+                project, RunHost.WindowsBridge, CompatibilityStatus.NeedsWindows, "Windows Bridge",
+                $"OpenSilver builds C# WPF projects. A WPF project in {LanguageName(project.Language)} builds and runs on your PC through the Windows Bridge."),
 
             ProjectKind.WinForms => Report(
                 project, RunHost.AndroidView, CompatibilityStatus.NeedsChanges, "Cross-platform WinForms, or your PC",

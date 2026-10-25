@@ -1,5 +1,6 @@
 using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
+using TabStudio.Compilation.Wpf;
 using TabStudio.Core.Diagnostics;
 using TabStudio.Core.Workspaces;
 using TabStudio.Packages;
@@ -59,7 +60,7 @@ public sealed partial class WorkspaceViewModel
                 continue;
             }
 
-            if (next.PackageReferences.Count > 0 || next.FrameworkReferences.Count > 0)
+            if (next.PackageReferences.Count > 0 || next.FrameworkReferences.Count > 0 || WpfProject.UsesWpf(next))
             {
                 return true;
             }
