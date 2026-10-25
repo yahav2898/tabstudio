@@ -129,11 +129,11 @@
                       <TextBlock Text="Scan its QR code" VerticalAlignment="Center" />
                     </StackPanel>
                   </Button>
-                  <TextBlock Classes="muted small" Text="Or type the address and the code it shows under the QR code:" IsVisible="{Binding CanScan}" />
-                  <TextBlock Classes="muted small" Text="Type the address and the code it shows under its QR code:" IsVisible="{Binding !CanScan}" />
+                  <TextBlock Classes="muted small" TextWrapping="Wrap" Text="Or type the address and the code it shows under the QR code:" IsVisible="{Binding CanScan}" />
+                  <TextBlock Classes="muted small" TextWrapping="Wrap" Text="Type the address and the code it shows under its QR code:" IsVisible="{Binding !CanScan}" />
                   <!-- In one row on a tablet, the address above the code on a phone's narrow screen (see the code-behind). -->
                   <Grid x:Name="PairGrid" ColumnDefinitions="*,12,190,12,Auto" RowDefinitions="Auto,Auto,Auto,Auto">
-                    <TextBlock Classes="label" Text="Address" Margin="2,0,0,5" />
+                    <TextBlock x:Name="AddressLabel" Classes="label" Text="Address" Margin="2,0,0,5" />
                     <TextBlock x:Name="CodeLabel" Grid.Column="2" Classes="label" Text="Code" Margin="2,0,0,5" />
                     <TextBox Grid.Row="1" x:Name="AddressBox" Classes="large mono" Watermark="192.168.1.23" Text="{Binding AddressText}" />
                     <TextBox Grid.Row="1" Grid.Column="2" x:Name="CodeBox" Classes="large mono" Watermark="XXXX-XXXX" MaxLength="10" Text="{Binding CodeText}" />

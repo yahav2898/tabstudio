@@ -96,6 +96,9 @@ public sealed class LinkScreenshotTests : IDisposable
         link.SelectTabCommand.Execute(LinkTab.Connect);
         await UiTestHelpers.WaitUntilAsync(() => Grid.GetRow(Named<TextBox>(phone, "CodeBox")) == 3, because: "the code under the address");
         UiTestHelpers.SaveScreenshot(phone, "link-08-connect-phone");
+
+        Assert.True(Named<TextBlock>(phone, "AddressLabel").Bounds.Width > 40, "The Address label is readable.");
+        Assert.True(Named<TextBlock>(phone, "CodeLabel").Bounds.Width > 30, "The Code label is readable.");
     }
 
     [AvaloniaFact]

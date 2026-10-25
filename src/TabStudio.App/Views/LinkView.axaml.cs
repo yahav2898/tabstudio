@@ -51,9 +51,11 @@ public sealed partial class LinkView : UserControl
         }
 
         _pairingNarrow = narrow;
+        Grid.SetColumnSpan(AddressLabel, narrow ? 5 : 1);
         Grid.SetColumnSpan(AddressBox, narrow ? 5 : 1);
         Grid.SetRow(CodeLabel, narrow ? 2 : 0);
         Grid.SetColumn(CodeLabel, narrow ? 0 : 2);
+        Grid.SetColumnSpan(CodeLabel, narrow ? 3 : 1);
         CodeLabel.Margin = narrow ? new Thickness(2, 12, 0, 5) : new Thickness(2, 0, 0, 5);
         Grid.SetRow(CodeBox, narrow ? 3 : 1);
         Grid.SetColumn(CodeBox, narrow ? 0 : 2);
