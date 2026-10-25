@@ -69,6 +69,10 @@ public sealed class SwarmAppTests
         workspace.ShowDeviceMatrixCommand.Execute(null);
         var matrix = workspace.DeviceMatrix!;
         Assert.True(workspace.ActiveDocument!.IsDeviceMatrix);
+
+        // The matrix's own devices come up and are drawn in their tiles before they make way for others.
+        await UiTestHelpers.WaitUntilAsync(() => matrix.Tiles.Where(t => t.IsVirtual).All(t => t.Virtual!.IsRunning), StartTimeout, "the matrix's devices");
+        await SwarmTestHelpers.WithFramesAsync(Task.Delay(300).ContinueWith(_ => true, TaskScheduler.Default));
         foreach (var tile in matrix.Tiles.Where(t => t.IsVirtual).ToList())
         {
             matrix.RemoveDevice(tile);
@@ -212,7 +216,10 @@ public sealed class SwarmAppTests
         new AgentSettingsStore(fixture.Paths).Save(AgentSettings.Default with { ApiKey = "sk-ant-test" });
         var (workspace, window, run, _) = await StartShopAsync(fixture);
         workspace.ShowDeviceMatrixCommand.Execute(null);
-        await UiTestHelpers.WaitUntilAsync(() => Row(workspace, "SWRM001", "TextBlock#Summary") is not null, CheckTimeout, "the clipped status");
+        await UiTestHelpers.WaitUntilAsync(
+            () => Row(workspace, "SWRM001", "TextBlock#Summary")?.Layout?.Finding.Screens.Any(s => s.Profile.Name == "Small phone") == true && workspace.LayoutChecks.Checking == 0,
+            CheckTimeout,
+            "the clipped status on the small phone");
         var clipped = Row(workspace, "SWRM001", "TextBlock#Summary")!;
 
         await workspace.FixWithAgentAsync(clipped.Diagnostic);

@@ -66,9 +66,10 @@ public sealed class SwarmWebAppTests
         await UiTestHelpers.WaitUntilAsync(() => tile.Snapshot is not null, CheckTimeout, "the page's picture");
 
         // Fix with Agent sends the problem, the button's HTML and a picture of the page.
+        await UiTestHelpers.WaitUntilAsync(() => Row(workspace) is not null && workspace.LayoutChecks.Checking == 0, CheckTimeout, "the row after the checks");
         await workspace.FixWithAgentAsync(row.Diagnostic);
         var request = claude.Requests.Single().ToJsonString();
-        Assert.Contains("the web app Shop", request, StringComparison.Ordinal);
+        Assert.True(request.Contains("the web app Shop", StringComparison.Ordinal), request);
         Assert.Contains("```html", request, StringComparison.Ordinal);
         Assert.Contains("image/png", request, StringComparison.Ordinal);
         Assert.Contains("min-width and min-height", request, StringComparison.Ordinal);

@@ -135,7 +135,9 @@ public sealed partial class ErrorListViewModel
     /// <summary>The layout finding behind a row's diagnostic, when the layout checks reported it.</summary>
     /// <param name="diagnostic">A diagnostic of a row.</param>
     public LayoutFindingRow? LayoutFindingOf(BuildDiagnostic diagnostic) =>
-        diagnostic is not null && _layoutByDiagnostic.TryGetValue(diagnostic, out var row) ? row : null;
+        diagnostic is null ? null
+        : _layoutByDiagnostic.TryGetValue(diagnostic, out var row) ? row
+        : _layout.FirstOrDefault(r => r.Diagnostic.Equals(diagnostic)); // A row from before the screens were checked again.
 
     /// <summary>The layout checks' diagnostics, listed with the others.</summary>
     private IEnumerable<BuildDiagnostic> LayoutDiagnostics => _layout.Select(r => r.Diagnostic);

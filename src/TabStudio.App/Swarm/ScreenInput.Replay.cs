@@ -4,6 +4,7 @@ using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 
@@ -267,7 +268,7 @@ internal sealed partial class ScreenInput
 
         if (target.Bounds.Width <= 0 || target.Bounds.Height <= 0)
         {
-            LastMiss = $"{target.GetType().Name} has no size";
+            LastMiss = $"{target.GetType().Name} has no size, in {LayoutChain(target)}";
             return null;
         }
 
@@ -289,6 +290,13 @@ internal sealed partial class ScreenInput
 
         return target;
     }
+
+    /// <summary>The sizes of an element and the elements around it, up to the window, for a message.</summary>
+    private static string LayoutChain(Visual element) => string.Join(
+        " < ",
+        element.GetSelfAndVisualAncestors().Take(16).Select(v => string.Create(
+            System.Globalization.CultureInfo.InvariantCulture,
+            $"{v.GetType().Name} {v.Bounds.Width:0}x{v.Bounds.Height:0}{(v is Layoutable { IsMeasureValid: false } ? " unmeasured" : string.Empty)}{(v.IsVisible ? string.Empty : " hidden")}")));
 
     /// <summary>
     /// A replayed input on a screen nobody looks at must not take the keyboard from where the person is typing: when
