@@ -76,6 +76,7 @@ public sealed partial class ToolchainItemViewModel : ObservableObject
         "go" => "Brush.Toolchain.Go",
         "java" => "Brush.Toolchain.Java",
         "kotlin" => "Brush.Toolchain.Kotlin",
+        "windows" => "Brush.Toolchain.Windows",
         _ => "Brush.Toolchain.Other",
     });
 
