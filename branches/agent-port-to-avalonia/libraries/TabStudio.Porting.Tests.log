@@ -1,15 +1,203 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Porting/TabStudio.Porting.csproj (in 267 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Porting.Tests/TabStudio.Porting.Tests.csproj (in 267 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Porting.Tests/TabStudio.Porting.Tests.csproj (in 169 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Porting/TabStudio.Porting.csproj (in 169 ms).
   2 of 4 projects are up-to-date for restore.
-  TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
   TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Porting/Forms/FormsXamlBuilder.Controls.cs(61,13): error CS0103: The name 'AddComponent' does not exist in the current context [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Porting/TabStudio.Porting.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Porting/Forms/FormsXamlBuilder.Controls.cs(107,9): error CS0103: The name 'AddEvents' does not exist in the current context [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Porting/TabStudio.Porting.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Porting/Forms/FormsXamlBuilder.Controls.cs(358,94): error CS8780: A variable may not be declared within a 'not' or 'or' pattern. [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Porting/TabStudio.Porting.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Porting/Forms/FormsXamlBuilder.Controls.cs(360,53): error CS0165: Use of unassigned local variable 'align' [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Porting/TabStudio.Porting.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Porting/Forms/DesignerReader.cs(260,63): error CS0136: A local or parameter named 'column' cannot be declared in this scope because that name is used in an enclosing local scope to define a local or parameter [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Porting/TabStudio.Porting.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Porting/Forms/FormsXamlBuilder.Controls.cs(708,13): error CS0103: The name 'AddEvents' does not exist in the current context [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Porting/TabStudio.Porting.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Porting/Forms/FormsXamlBuilder.Controls.cs(759,9): error CS0103: The name 'AddEvents' does not exist in the current context [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Porting/TabStudio.Porting.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Porting/Forms/FormsXamlBuilder.Controls.cs(822,13): error CS0103: The name 'AddEvents' does not exist in the current context [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Porting/TabStudio.Porting.csproj]
+  TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
 /home/runner/work/tabstudio/tabstudio/src/TabStudio.Porting/CSharp/DependencyProperties.cs(80,44): warning CA1859: Change return type of method 'ConvertField' from 'Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax' to 'Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax' for improved performance (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1859) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Porting/TabStudio.Porting.csproj]
+  TabStudio.Porting -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Porting/bin/Release/net10.0/TabStudio.Porting.dll
+  TabStudio.Porting.Tests -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Porting.Tests/bin/Release/net10.0/TabStudio.Porting.Tests.dll
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Porting.Tests/bin/Release/net10.0/TabStudio.Porting.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.09]   Discovering: TabStudio.Porting.Tests
+[xUnit.net 00:00:00.15]   Discovered:  TabStudio.Porting.Tests
+[xUnit.net 00:00:00.18]   Starting:    TabStudio.Porting.Tests
+[xUnit.net 00:00:00.50]     TabStudio.Porting.Tests.SampleBuildTests.The_ported_sample_builds_with_zero_errors(sample: "WinFormsTemplate") [FAIL]
+[xUnit.net 00:00:00.50]       System.NotSupportedException : Windows Forms is not ported yet: WinFormsApp1.
+[xUnit.net 00:00:00.50]       Stack Trace:
+[xUnit.net 00:00:00.50]         /_/src/TabStudio.Porting/Forms/FormsPorter.cs(11,0): at TabStudio.Porting.Forms.FormsPorter.Port(PortContext context)
+[xUnit.net 00:00:00.50]         /_/src/TabStudio.Porting/AvaloniaPorter.cs(81,0): at TabStudio.Porting.AvaloniaPorter.Port(PortSource source, PortOptions options)
+[xUnit.net 00:00:00.50]         /_/tests/TabStudio.Porting.Tests/SampleBuildTests.cs(28,0): at TabStudio.Porting.Tests.SampleBuildTests.The_ported_sample_builds_with_zero_errors(String sample)
+[xUnit.net 00:00:00.50]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:00.54]     TabStudio.Porting.Tests.SampleGoldenTests.The_sample_ports_to_the_expected_Avalonia_project(sample: "WpfContacts") [FAIL]
+[xUnit.net 00:00:00.54]       The port of WpfContacts differs from Samples/WpfContacts/Expected (the output is in ci-out/porting-actual/WpfContacts):
+[xUnit.net 00:00:00.54]       New file: App.axaml
+[xUnit.net 00:00:00.54]       New file: App.axaml.cs
+[xUnit.net 00:00:00.54]       New file: AppInfo.cs
+[xUnit.net 00:00:00.54]       New file: ContactBook.Avalonia.csproj
+[xUnit.net 00:00:00.54]       New file: ContactDialog.axaml
+[xUnit.net 00:00:00.54]       New file: ContactDialog.axaml.cs
+[xUnit.net 00:00:00.54]       New file: Controls/RatingBar.axaml
+[xUnit.net 00:00:00.54]       New file: Controls/RatingBar.axaml.cs
+[xUnit.net 00:00:00.54]       New file: Converters/InitialsConverter.cs
+[xUnit.net 00:00:00.54]       New file: MainWindow.axaml
+[xUnit.net 00:00:00.54]       New file: MainWindow.axaml.cs
+[xUnit.net 00:00:00.54]       New file: Models/Contact.cs
+[xUnit.net 00:00:00.54]       New file: Models/SampleData.cs
+[xUnit.net 00:00:00.54]       New file: NOTES.txt
+[xUnit.net 00:00:00.54]       New file: Porting/AppWindow.cs
+[xUnit.net 00:00:00.54]       New file: Porting/CommandManager.cs
+[xUnit.net 00:00:00.54]       New file: Porting/MessageBox.cs
+[xUnit.net 00:00:00.54]       New file: Porting/MessageDialog.cs
+[xUnit.net 00:00:00.54]       New file: Porting/PortingStyles.axaml
+[xUnit.net 00:00:00.54]       New file: Porting/ScreenHost.cs
+[xUnit.net 00:00:00.54]       New file: Porting/WindowView.cs
+[xUnit.net 00:00:00.54]       New file: Program.cs
+[xUnit.net 00:00:00.54]       New file: SUMMARY.txt
+[xUnit.net 00:00:00.54]       New file: Themes/Theme.axaml
+[xUnit.net 00:00:00.54]       New file: ViewModels/MainViewModel.cs
+[xUnit.net 00:00:00.54]       New file: ViewModels/RelayCommand.cs
+[xUnit.net 00:00:00.54]       New file: ViewModels/ViewModelBase.cs
+[xUnit.net 00:00:00.54]       
+[xUnit.net 00:00:00.54]       Stack Trace:
+[xUnit.net 00:00:00.54]         /_/tests/TabStudio.Porting.Tests/SampleGoldenTests.cs(56,0): at TabStudio.Porting.Tests.SampleGoldenTests.The_sample_ports_to_the_expected_Avalonia_project(String sample)
+[xUnit.net 00:00:00.54]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:00.54]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:00.54]     TabStudio.Porting.Tests.SampleGoldenTests.The_sample_ports_to_the_expected_Avalonia_project(sample: "WpfTemplate") [FAIL]
+[xUnit.net 00:00:00.54]       The port of WpfTemplate differs from Samples/WpfTemplate/Expected (the output is in ci-out/porting-actual/WpfTemplate):
+[xUnit.net 00:00:00.54]       New file: App.axaml
+[xUnit.net 00:00:00.54]       New file: App.axaml.cs
+[xUnit.net 00:00:00.54]       New file: MainWindow.axaml
+[xUnit.net 00:00:00.54]       New file: MainWindow.axaml.cs
+[xUnit.net 00:00:00.54]       New file: NOTES.txt
+[xUnit.net 00:00:00.54]       New file: Porting/AppWindow.cs
+[xUnit.net 00:00:00.54]       New file: Porting/ScreenHost.cs
+[xUnit.net 00:00:00.54]       New file: Porting/WindowView.cs
+[xUnit.net 00:00:00.54]       New file: Program.cs
+[xUnit.net 00:00:00.54]       New file: SUMMARY.txt
+[xUnit.net 00:00:00.54]       New file: WpfApp1.Avalonia.csproj
+[xUnit.net 00:00:00.54]       
+[xUnit.net 00:00:00.54]       Stack Trace:
+[xUnit.net 00:00:00.54]         /_/tests/TabStudio.Porting.Tests/SampleGoldenTests.cs(56,0): at TabStudio.Porting.Tests.SampleGoldenTests.The_sample_ports_to_the_expected_Avalonia_project(String sample)
+[xUnit.net 00:00:00.54]            at InvokeStub_SampleGoldenTests.The_sample_ports_to_the_expected_Avalonia_project(Object, Span`1)
+[xUnit.net 00:00:00.54]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed TabStudio.Porting.Tests.WpfTemplateTests.The_application_opens_the_StartupUri_window_as_the_main_window [253 ms]
+  Passed TabStudio.Porting.Tests.WpfTemplateTests.The_code_behind_derives_from_AppWindow_without_WPF_usings [3 ms]
+  Passed TabStudio.Porting.Tests.WpfTemplateTests.The_window_becomes_an_AppWindow_that_keeps_its_title_and_size [2 ms]
+  Passed TabStudio.Porting.Tests.WpfTemplateTests.The_template_ports_without_notes [5 ms]
+  Passed TabStudio.Porting.Tests.WpfTemplateTests.The_project_is_an_Avalonia_project_as_TabStudio_makes_one [4 ms]
+  Failed TabStudio.Porting.Tests.SampleBuildTests.The_ported_sample_builds_with_zero_errors(sample: "WinFormsTemplate") [2 ms]
+  Error Message:
+   System.NotSupportedException : Windows Forms is not ported yet: WinFormsApp1.
+  Stack Trace:
+     at TabStudio.Porting.Forms.FormsPorter.Port(PortContext context) in /_/src/TabStudio.Porting/Forms/FormsPorter.cs:line 11
+   at TabStudio.Porting.AvaloniaPorter.Port(PortSource source, PortOptions options) in /_/src/TabStudio.Porting/AvaloniaPorter.cs:line 81
+   at TabStudio.Porting.Tests.SampleBuildTests.The_ported_sample_builds_with_zero_errors(String sample) in /_/tests/TabStudio.Porting.Tests/SampleBuildTests.cs:line 28
+--- End of stack trace from previous location ---
+  Failed TabStudio.Porting.Tests.SampleGoldenTests.The_sample_ports_to_the_expected_Avalonia_project(sample: "WpfContacts") [324 ms]
+  Error Message:
+   The port of WpfContacts differs from Samples/WpfContacts/Expected (the output is in ci-out/porting-actual/WpfContacts):
+New file: App.axaml
+New file: App.axaml.cs
+New file: AppInfo.cs
+New file: ContactBook.Avalonia.csproj
+New file: ContactDialog.axaml
+New file: ContactDialog.axaml.cs
+New file: Controls/RatingBar.axaml
+New file: Controls/RatingBar.axaml.cs
+New file: Converters/InitialsConverter.cs
+New file: MainWindow.axaml
+New file: MainWindow.axaml.cs
+New file: Models/Contact.cs
+New file: Models/SampleData.cs
+New file: NOTES.txt
+New file: Porting/AppWindow.cs
+New file: Porting/CommandManager.cs
+New file: Porting/MessageBox.cs
+New file: Porting/MessageDialog.cs
+New file: Porting/PortingStyles.axaml
+New file: Porting/ScreenHost.cs
+New file: Porting/WindowView.cs
+New file: Program.cs
+New file: SUMMARY.txt
+New file: Themes/Theme.axaml
+New file: ViewModels/MainViewModel.cs
+New file: ViewModels/RelayCommand.cs
+New file: ViewModels/ViewModelBase.cs
+
+  Stack Trace:
+     at TabStudio.Porting.Tests.SampleGoldenTests.The_sample_ports_to_the_expected_Avalonia_project(String sample) in /_/tests/TabStudio.Porting.Tests/SampleGoldenTests.cs:line 56
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed TabStudio.Porting.Tests.SampleGoldenTests.The_sample_ports_to_the_expected_Avalonia_project(sample: "WpfTemplate") [4 ms]
+  Error Message:
+   The port of WpfTemplate differs from Samples/WpfTemplate/Expected (the output is in ci-out/porting-actual/WpfTemplate):
+New file: App.axaml
+New file: App.axaml.cs
+New file: MainWindow.axaml
+New file: MainWindow.axaml.cs
+New file: NOTES.txt
+New file: Porting/AppWindow.cs
+New file: Porting/ScreenHost.cs
+New file: Porting/WindowView.cs
+New file: Program.cs
+New file: SUMMARY.txt
+New file: WpfApp1.Avalonia.csproj
+
+  Stack Trace:
+     at TabStudio.Porting.Tests.SampleGoldenTests.The_sample_ports_to_the_expected_Avalonia_project(String sample) in /_/tests/TabStudio.Porting.Tests/SampleGoldenTests.cs:line 56
+   at InvokeStub_SampleGoldenTests.The_sample_ports_to_the_expected_Avalonia_project(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:00.58]     TabStudio.Porting.Tests.SampleGoldenTests.The_sample_ports_to_the_expected_Avalonia_project(sample: "WinFormsTemplate") [FAIL]
+[xUnit.net 00:00:00.58]       System.NotSupportedException : Windows Forms is not ported yet: WinFormsApp1.
+[xUnit.net 00:00:00.58]       Stack Trace:
+[xUnit.net 00:00:00.58]         /_/src/TabStudio.Porting/Forms/FormsPorter.cs(11,0): at TabStudio.Porting.Forms.FormsPorter.Port(PortContext context)
+[xUnit.net 00:00:00.58]         /_/src/TabStudio.Porting/AvaloniaPorter.cs(81,0): at TabStudio.Porting.AvaloniaPorter.Port(PortSource source, PortOptions options)
+[xUnit.net 00:00:00.58]         /_/tests/TabStudio.Porting.Tests/SampleProjects.cs(45,0): at TabStudio.Porting.Tests.SampleProjects.Port(String sample)
+[xUnit.net 00:00:00.58]         /_/tests/TabStudio.Porting.Tests/SampleGoldenTests.cs(16,0): at TabStudio.Porting.Tests.SampleGoldenTests.The_sample_ports_to_the_expected_Avalonia_project(String sample)
+[xUnit.net 00:00:00.58]            at InvokeStub_SampleGoldenTests.The_sample_ports_to_the_expected_Avalonia_project(Object, Span`1)
+[xUnit.net 00:00:00.58]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:00.58]     TabStudio.Porting.Tests.SampleGoldenTests.The_sample_ports_to_the_expected_Avalonia_project(sample: "WinFormsCustomers") [FAIL]
+[xUnit.net 00:00:00.58]       System.NotSupportedException : Windows Forms is not ported yet: CustomerEntry.
+[xUnit.net 00:00:00.58]       Stack Trace:
+[xUnit.net 00:00:00.58]         /_/src/TabStudio.Porting/Forms/FormsPorter.cs(11,0): at TabStudio.Porting.Forms.FormsPorter.Port(PortContext context)
+[xUnit.net 00:00:00.58]         /_/src/TabStudio.Porting/AvaloniaPorter.cs(81,0): at TabStudio.Porting.AvaloniaPorter.Port(PortSource source, PortOptions options)
+[xUnit.net 00:00:00.58]         /_/tests/TabStudio.Porting.Tests/SampleProjects.cs(45,0): at TabStudio.Porting.Tests.SampleProjects.Port(String sample)
+[xUnit.net 00:00:00.58]         /_/tests/TabStudio.Porting.Tests/SampleGoldenTests.cs(16,0): at TabStudio.Porting.Tests.SampleGoldenTests.The_sample_ports_to_the_expected_Avalonia_project(String sample)
+[xUnit.net 00:00:00.58]            at InvokeStub_SampleGoldenTests.The_sample_ports_to_the_expected_Avalonia_project(Object, Span`1)
+[xUnit.net 00:00:00.58]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed TabStudio.Porting.Tests.SampleGoldenTests.The_sample_ports_to_the_expected_Avalonia_project(sample: "WinFormsTemplate") [< 1 ms]
+  Error Message:
+   System.NotSupportedException : Windows Forms is not ported yet: WinFormsApp1.
+  Stack Trace:
+     at TabStudio.Porting.Forms.FormsPorter.Port(PortContext context) in /_/src/TabStudio.Porting/Forms/FormsPorter.cs:line 11
+   at TabStudio.Porting.AvaloniaPorter.Port(PortSource source, PortOptions options) in /_/src/TabStudio.Porting/AvaloniaPorter.cs:line 81
+   at TabStudio.Porting.Tests.SampleProjects.Port(String sample) in /_/tests/TabStudio.Porting.Tests/SampleProjects.cs:line 45
+   at TabStudio.Porting.Tests.SampleGoldenTests.The_sample_ports_to_the_expected_Avalonia_project(String sample) in /_/tests/TabStudio.Porting.Tests/SampleGoldenTests.cs:line 16
+   at InvokeStub_SampleGoldenTests.The_sample_ports_to_the_expected_Avalonia_project(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed TabStudio.Porting.Tests.SampleGoldenTests.The_sample_ports_to_the_expected_Avalonia_project(sample: "WinFormsCustomers") [< 1 ms]
+  Error Message:
+   System.NotSupportedException : Windows Forms is not ported yet: CustomerEntry.
+  Stack Trace:
+     at TabStudio.Porting.Forms.FormsPorter.Port(PortContext context) in /_/src/TabStudio.Porting/Forms/FormsPorter.cs:line 11
+   at TabStudio.Porting.AvaloniaPorter.Port(PortSource source, PortOptions options) in /_/src/TabStudio.Porting/AvaloniaPorter.cs:line 81
+   at TabStudio.Porting.Tests.SampleProjects.Port(String sample) in /_/tests/TabStudio.Porting.Tests/SampleProjects.cs:line 45
+   at TabStudio.Porting.Tests.SampleGoldenTests.The_sample_ports_to_the_expected_Avalonia_project(String sample) in /_/tests/TabStudio.Porting.Tests/SampleGoldenTests.cs:line 16
+   at InvokeStub_SampleGoldenTests.The_sample_ports_to_the_expected_Avalonia_project(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:03.12]     TabStudio.Porting.Tests.SampleBuildTests.The_ported_sample_builds_with_zero_errors(sample: "WinFormsCustomers") [FAIL]
+[xUnit.net 00:00:03.12]       System.NotSupportedException : Windows Forms is not ported yet: CustomerEntry.
+[xUnit.net 00:00:03.12]       Stack Trace:
+[xUnit.net 00:00:03.12]         /_/src/TabStudio.Porting/Forms/FormsPorter.cs(11,0): at TabStudio.Porting.Forms.FormsPorter.Port(PortContext context)
+[xUnit.net 00:00:03.12]         /_/src/TabStudio.Porting/AvaloniaPorter.cs(81,0): at TabStudio.Porting.AvaloniaPorter.Port(PortSource source, PortOptions options)
+[xUnit.net 00:00:03.12]         /_/tests/TabStudio.Porting.Tests/SampleBuildTests.cs(28,0): at TabStudio.Porting.Tests.SampleBuildTests.The_ported_sample_builds_with_zero_errors(String sample)
+[xUnit.net 00:00:03.12]         --- End of stack trace from previous location ---
+  Passed TabStudio.Porting.Tests.SampleBuildTests.The_ported_sample_builds_with_zero_errors(sample: "WpfContacts") [2 s]
+  Failed TabStudio.Porting.Tests.SampleBuildTests.The_ported_sample_builds_with_zero_errors(sample: "WinFormsCustomers") [< 1 ms]
+  Error Message:
+   System.NotSupportedException : Windows Forms is not ported yet: CustomerEntry.
+  Stack Trace:
+     at TabStudio.Porting.Forms.FormsPorter.Port(PortContext context) in /_/src/TabStudio.Porting/Forms/FormsPorter.cs:line 11
+   at TabStudio.Porting.AvaloniaPorter.Port(PortSource source, PortOptions options) in /_/src/TabStudio.Porting/AvaloniaPorter.cs:line 81
+   at TabStudio.Porting.Tests.SampleBuildTests.The_ported_sample_builds_with_zero_errors(String sample) in /_/tests/TabStudio.Porting.Tests/SampleBuildTests.cs:line 28
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:04.75]   Finished:    TabStudio.Porting.Tests
+  Passed TabStudio.Porting.Tests.SampleBuildTests.The_ported_sample_builds_with_zero_errors(sample: "WpfTemplate") [1 s]
+
+Test Run Failed.
+Total tests: 13
+     Passed: 7
+     Failed: 6
+ Total time: 5.2820 Seconds

@@ -1,0 +1,6 @@
+Controls/RatingBar.axaml.cs:60: MouseLeftButtonUp → PointerReleased. Avalonia raises it for every mouse button, the pen and touch; check e.InitialPressMouseButton == MouseButton.Left if only the left button counts
+MainWindow.axaml:81: DataTrigger Binding="{Binding IsFavorite}" Value="True". The control creates these containers, so they cannot bind a style class; bind the property in the container's style with a converter instead, such as <Setter Property="FontWeight" Value="{Binding IsFavorite, Converter=...}"/>
+ViewModels/MainViewModel.cs:11: ICollectionView. Avalonia has no collection views. Filter and sort a collection of the view model, or use DataGridCollectionView from Avalonia.Controls.DataGrid
+ViewModels/MainViewModel.cs:19: CollectionViewSource. Avalonia has no collection views. Filter and sort a collection of the view model, or use DataGridCollectionView from Avalonia.Controls.DataGrid
+ViewModels/MainViewModel.cs:21: Uses _view. _view is commented out above: ICollectionView
+ViewModels/MainViewModel.cs:54: Uses _view. _view is commented out above: ICollectionView
