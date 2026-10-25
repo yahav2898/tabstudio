@@ -50,6 +50,31 @@ public sealed class NotebookDocumentTests
     }
 
     [AvaloniaFact]
+    public async Task The_sample_tour_notebook_runs_from_top_to_bottom()
+    {
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var path = Path.Combine(fixture.Workspace.StartupProject!.DirectoryPath, "Tour.ipynb");
+        var notebook = (await fixture.Workspace.OpenDocumentAsync(path))!.Notebook!;
+
+        await notebook.RunAllAsync();
+
+        foreach (var cell in notebook.Cells.Where(c => c.IsCode))
+        {
+            Assert.True(cell.RunState == CellRunState.Succeeded, Describe(cell));
+        }
+
+        Assert.Equal("HELLO FROM A NOTEBOOK", Assert.IsType<TextOutputViewModel>(Assert.Single(notebook.Cells[1].Outputs)).Text);
+        Assert.Equal(3, Assert.IsType<TableOutputViewModel>(Assert.Single(notebook.Cells[2].Outputs)).Table.Rows.Count);
+        Assert.Collection(
+            notebook.Cells[4].Outputs,
+            o => Assert.IsType<TableOutputViewModel>(o),
+            o => Assert.IsType<TableOutputViewModel>(o),
+            o => Assert.Equal("98 moons in total", Assert.IsType<StreamOutputViewModel>(o).DisplayText));
+        Assert.Equal("Jupiter", Assert.IsType<TextOutputViewModel>(Assert.Single(notebook.Cells[6].Outputs)).Text);
+    }
+
+    [AvaloniaFact]
     public async Task Errors_show_under_the_cell_that_failed()
     {
         using var fixture = new WorkspaceFixture();
