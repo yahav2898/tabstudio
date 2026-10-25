@@ -18,7 +18,7 @@ public sealed partial class ErrorOutputViewModel : NotebookOutputViewModel
     /// <summary>The name the kernel gives the error output of a cell that did not compile.</summary>
     public const string CompilationErrorName = "CompilationError";
 
-    private readonly IReadOnlyList<string> _details;
+    private readonly List<string> _details;
 
     /// <summary>Creates the output.</summary>
     /// <param name="error">The error.</param>

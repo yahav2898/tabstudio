@@ -101,16 +101,14 @@ public sealed partial class WorkspaceViewModel : INotebookHost
     /// </summary>
     private string NewNotebookFolder(Workspace workspace)
     {
-        if (Explorer.SelectedItem?.Node is { } node && node.Kind != WorkspaceNodeKind.Solution)
+        if (Explorer.SelectedItem?.Node is { FullPath: { } path } node)
         {
-            if (DirectoryOf(node) is { } folder)
+            switch (node.Kind)
             {
-                return folder;
-            }
-
-            if (node.IsOpenableFile && Path.GetDirectoryName(node.FullPath) is { } parent)
-            {
-                return parent;
+                case WorkspaceNodeKind.Folder or WorkspaceNodeKind.Root:
+                    return path;
+                case WorkspaceNodeKind.Project or WorkspaceNodeKind.File when Path.GetDirectoryName(path) is { } folder:
+                    return folder;
             }
         }
 

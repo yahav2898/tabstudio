@@ -29,7 +29,7 @@ public static partial class HtmlTableReader
         var footer = Footer().Match(html);
         var body = footer.Success ? html.Remove(footer.Index, footer.Length) : html;
 
-        IReadOnlyList<string>? columns = null;
+        List<string>? columns = null;
         var rows = new List<IReadOnlyList<string>>();
         foreach (Match row in Row().Matches(body))
         {

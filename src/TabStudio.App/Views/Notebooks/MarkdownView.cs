@@ -103,7 +103,7 @@ public sealed class MarkdownView : StackPanel
         };
     }
 
-    private static Control CreateList(MarkdownList list)
+    private static StackPanel CreateList(MarkdownList list)
     {
         var panel = new StackPanel { Spacing = 4 };
         foreach (var item in list.Items)
@@ -130,7 +130,7 @@ public sealed class MarkdownView : StackPanel
         return panel;
     }
 
-    private static Control CreateCode(MarkdownCodeBlock code)
+    private static Border CreateCode(MarkdownCodeBlock code)
     {
         var text = new TextBlock
         {
@@ -194,7 +194,7 @@ public sealed class MarkdownView : StackPanel
         }
     }
 
-    private static Control CreateQuote(MarkdownQuote quote) => new Border
+    private static Border CreateQuote(MarkdownQuote quote) => new Border
     {
         BorderBrush = ThemeResources.Brush("Brush.BorderStrong", "#343844"),
         BorderThickness = new Thickness(3, 0, 0, 0),
@@ -202,7 +202,7 @@ public sealed class MarkdownView : StackPanel
         Child = new MarkdownView { Blocks = quote.Blocks, Opacity = 0.85 },
     };
 
-    private static Control CreateTable(MarkdownTable table)
+    private static Border CreateTable(MarkdownTable table)
     {
         var header = table.Header.Select(cell => (Control)CreateText(cell, SmallSize, FontWeight.SemiBold, BrightBrush)).ToList();
         var rows = table.Rows.Select(row => (IReadOnlyList<Control>)row.Select(cell => (Control)CreateText(cell, SmallSize, FontWeight.Normal, TextBrush)).ToList());

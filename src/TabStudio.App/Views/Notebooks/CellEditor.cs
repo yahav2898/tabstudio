@@ -89,7 +89,7 @@ public sealed class CellEditor : UserControl, IDisposable
     public void FocusEditor()
     {
         _editor.TextArea.Focus();
-        BringIntoView();
+        this.BringIntoView();
     }
 
     /// <summary>Toggles line comments on the selected lines of a code cell.</summary>
