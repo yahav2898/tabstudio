@@ -14,6 +14,7 @@ namespace TabStudio.App.Services;
 public sealed class LocalLanguageFeatures : ILanguageFeatures
 {
     private readonly LanguageFeatures _features;
+    private Task _codeActionWarmUp = Task.CompletedTask;
 
     /// <summary>Creates the features for a host.</summary>
     /// <param name="host">The host that holds the loaded projects.</param>
@@ -72,8 +73,15 @@ public sealed class LocalLanguageFeatures : ILanguageFeatures
         Task.Run(() => _features.Rename.GetRenameEditsAsync(filePath, position, newName, options, cancellationToken), cancellationToken);
 
     /// <inheritdoc />
-    public Task<IReadOnlyList<CodeActionItem>> GetCodeActionsAsync(string filePath, int start, int length, CancellationToken cancellationToken) =>
-        Task.Run(() => _features.CodeActions.GetCodeActionsAsync(filePath, start, length, cancellationToken), cancellationToken);
+    /// <remarks>
+    /// Waits for the warm-up's own list first: only the last list's actions can be applied, so the warm-up must
+    /// never replace a list the editor shows.
+    /// </remarks>
+    public async Task<IReadOnlyList<CodeActionItem>> GetCodeActionsAsync(string filePath, int start, int length, CancellationToken cancellationToken)
+    {
+        await Volatile.Read(ref _codeActionWarmUp).ContinueWith(static _ => { }, CancellationToken.None, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default).ConfigureAwait(false);
+        return await ListCodeActionsAsync(filePath, start, length, cancellationToken).ConfigureAwait(false);
+    }
 
     /// <inheritdoc />
     public Task<IReadOnlyList<DocumentEdit>> GetCodeActionEditsAsync(string id, CancellationToken cancellationToken) =>
@@ -96,7 +104,9 @@ public sealed class LocalLanguageFeatures : ILanguageFeatures
     public async Task WarmUpAsync(string filePath, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(filePath);
-        await GetCodeActionsAsync(filePath, 0, 0, cancellationToken).ConfigureAwait(false);
+        var codeActions = ListCodeActionsAsync(filePath, 0, 0, cancellationToken);
+        Volatile.Write(ref _codeActionWarmUp, codeActions);
+        await codeActions.ConfigureAwait(false);
 
         var symbols = await GetDocumentSymbolsAsync(filePath, cancellationToken).ConfigureAwait(false);
         if (FindMemberBody(symbols) is { } position)
@@ -104,6 +114,9 @@ public sealed class LocalLanguageFeatures : ILanguageFeatures
             await GetCompletionsAsync(filePath, position, CompletionTrigger.Invoke, cancellationToken).ConfigureAwait(false);
         }
     }
+
+    private Task<IReadOnlyList<CodeActionItem>> ListCodeActionsAsync(string filePath, int start, int length, CancellationToken cancellationToken) =>
+        Task.Run(() => _features.CodeActions.GetCodeActionsAsync(filePath, start, length, cancellationToken), cancellationToken);
 
     /// <summary>
     /// A position inside the body of the first method or property, where completion offers types: just before the

@@ -27,9 +27,9 @@
       <TextBlock Text="{Binding Documentation}" IsVisible="{Binding HasDocumentation}" TextWrapping="Wrap" Margin="6,0,0,0"
                  FontSize="12.5" Foreground="{DynamicResource Brush.TextSecondary}" />
       <TextBlock IsVisible="{Binding HasParameterDocumentation}" TextWrapping="Wrap" Margin="6,0,0,0" FontSize="12.5">
-        <Run Text="{Binding ParameterName}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" />
-        <Run Text=": " Foreground="{DynamicResource Brush.TextSecondary}" />
-        <Run Text="{Binding ParameterDocumentation}" Foreground="{DynamicResource Brush.TextSecondary}" />
+        <Run Text="{Binding ParameterName}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" /><Run
+             Text=": " Foreground="{DynamicResource Brush.TextSecondary}" /><Run
+             Text="{Binding ParameterDocumentation}" Foreground="{DynamicResource Brush.TextSecondary}" />
       </TextBlock>
     </StackPanel>
   </Border>

@@ -45,9 +45,7 @@
                 <controls:StrokeIcon Data="{StaticResource Icon.Info}" Size="15" Foreground="{DynamicResource Brush.Info}" IsVisible="{Binding IsMessage}" />
               </Panel>
               <TextBlock Grid.Column="1" TextWrapping="Wrap" FontSize="12.5" Foreground="{DynamicResource Brush.Text}">
-                <Run Text="{Binding Code}" Foreground="{DynamicResource Brush.Link}" />
-                <Run Text=": " />
-                <Run Text="{Binding Message}" />
+                <Run Text="{Binding Code}" Foreground="{DynamicResource Brush.Link}" /><Run Text=": " /><Run Text="{Binding Message}" />
               </TextBlock>
             </Grid>
           </DataTemplate>

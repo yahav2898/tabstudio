@@ -161,8 +161,9 @@ public sealed partial class CompletionListViewModel : ObservableObject, IDisposa
             return;
         }
 
+        // A number is not a name: typing one, or anything that cannot be in a name, closes the list.
         var typed = document.GetText(SpanStart, caret - SpanStart);
-        if (!typed.All(CompletionMatcher.IsIdentifierCharacter))
+        if (!typed.All(CompletionMatcher.IsIdentifierCharacter) || (typed.Length > 0 && char.IsDigit(typed[0])))
         {
             Close();
             return;

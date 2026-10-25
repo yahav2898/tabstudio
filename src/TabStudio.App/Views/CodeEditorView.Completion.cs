@@ -288,7 +288,7 @@ public sealed partial class CodeEditorView
 
         if (!_completionPopup.IsOpen)
         {
-            _completionAbove = !FitsBelow(anchor, (CompletionVisibleRows * CompletionRowHeight) + 10);
+            _completionAbove = !FitsBelow(anchor, CompletionHeight());
         }
 
         _completionPopup.PlacementAnchor = _completionAbove ? PopupAnchor.TopLeft : PopupAnchor.BottomLeft;

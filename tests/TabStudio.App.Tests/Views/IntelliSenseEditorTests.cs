@@ -190,6 +190,39 @@ public sealed class IntelliSenseEditorTests
     }
 
     [AvaloniaFact]
+    public async Task F12_in_the_editor_goes_to_the_definition()
+    {
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var window = Show(fixture);
+        var view = ActiveEditor(window);
+        view.Editor.CaretOffset = OffsetOf(view.Editor, "greeter.Greet()") + "greeter.Gr".Length;
+
+        window.KeyPressQwerty(PhysicalKey.F12, RawInputModifiers.None);
+
+        await UiTestHelpers.WaitUntilAsync(() => fixture.Workspace.ActiveDocument?.FileName == "Greeter.cs", because: "the definition");
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public async Task Ctrl_R_Ctrl_R_asks_for_the_new_name()
+    {
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var window = Show(fixture);
+        var view = ActiveEditor(window);
+        view.Editor.CaretOffset = OffsetOf(view.Editor, "var greeter") + "var gree".Length;
+
+        window.KeyPressQwerty(PhysicalKey.R, RawInputModifiers.Control);
+        window.KeyPressQwerty(PhysicalKey.R, RawInputModifiers.Control);
+
+        await UiTestHelpers.WaitUntilAsync(() => fixture.Workspace.Prompt.IsOpen, because: "the rename prompt");
+        Assert.Equal("greeter", fixture.Workspace.Prompt.Text);
+        fixture.Workspace.Prompt.CancelCommand.Execute(null);
+        window.Close();
+    }
+
+    [AvaloniaFact]
     public async Task The_context_menu_puts_IntelliSense_first_then_editing()
     {
         using var fixture = new WorkspaceFixture();

@@ -39,6 +39,26 @@ public sealed class IntelliSenseCommandTests
     }
 
     [AvaloniaFact]
+    public async Task Go_to_implementation_opens_the_class_that_implements_an_interface()
+    {
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var greetings = fixture.Workspace.Workspace!.Projects.Single(p => p.Name == "Greetings").DirectoryPath;
+        var greeterPath = Path.Combine(greetings, "Greeter.cs");
+        var interfacePath = Path.Combine(greetings, "IGreeter.cs");
+        await File.WriteAllTextAsync(interfacePath, "namespace Greetings;\n\npublic interface IGreeter\n{\n    string Greet();\n}\n");
+        var greeterText = await File.ReadAllTextAsync(greeterPath);
+        await File.WriteAllTextAsync(greeterPath, greeterText.Replace("public sealed class Greeter", "public sealed class Greeter : IGreeter", StringComparison.Ordinal));
+        await fixture.Workspace.ReloadWorkspaceAsync();
+        var contract = (await fixture.Workspace.OpenDocumentAsync(interfacePath))!;
+        contract.CaretOffset = OffsetOf(contract, "IGreeter", 2);
+
+        await fixture.Workspace.GoToImplementationCommand.ExecuteAsync(null);
+
+        Assert.Equal("Greeter.cs", fixture.Workspace.ActiveDocument?.FileName);
+    }
+
+    [AvaloniaFact]
     public async Task Find_all_references_lists_them_by_file_and_opens_the_one_tapped()
     {
         using var fixture = new WorkspaceFixture();
