@@ -1,5 +1,7 @@
 using System.Text;
+using Avalonia.Media;
 using TabStudio.App.Editing;
+using TabStudio.App.Editing.Extensions;
 using TabStudio.App.Platform;
 using TabStudio.App.Services;
 using TabStudio.App.ViewModels.Extensions;
@@ -9,11 +11,15 @@ namespace TabStudio.App.ViewModels;
 
 /// <summary>
 /// Extensions and documents: a file's type follows the installed extensions (a file an extension claims gets its
-/// language, grammar and icon as soon as the extension is installed), and the Extensions window opens as a tab.
+/// language, grammar and badge as soon as the extension is installed), its tab shows the file icon theme's icon, and
+/// the Extensions window opens as a tab.
 /// </summary>
 public sealed partial class DocumentViewModel
 {
     private static readonly FileType ExtensionsPageType = new("Extensions", "EXT", BadgeKind.Markup, null, null, null);
+
+    private IImage? _fileIcon;
+    private bool _fileIconRead;
 
     private DocumentViewModel(ExtensionsViewModel page, string tabPath, DeviceProfile profile)
         : this(tabPath, new TextFileContent(string.Empty, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false)), language: null, profile)
@@ -34,6 +40,24 @@ public sealed partial class DocumentViewModel
 
     /// <summary>Whether this is the Extensions tab rather than a file.</summary>
     public bool IsExtensionsPage => ExtensionsPage is not null;
+
+    /// <summary>The icon the chosen file icon theme gives the file, for its tab, or <see langword="null"/> for its badge.</summary>
+    public IImage? FileIcon
+    {
+        get
+        {
+            if (!_fileIconRead)
+            {
+                _fileIconRead = true;
+                _fileIcon = IsExtensionsPage || IsCiLog ? null : FileIcons.ForFile(Comparison?.FilePath ?? FilePath);
+            }
+
+            return _fileIcon;
+        }
+    }
+
+    /// <summary>Whether the tab shows <see cref="FileIcon"/> instead of the badge.</summary>
+    public bool HasFileIcon => FileIcon is not null;
 
     /// <summary>Creates the Extensions tab. Call on the UI thread.</summary>
     /// <param name="page">The Extensions window.</param>
@@ -61,7 +85,16 @@ public sealed partial class DocumentViewModel
     /// </summary>
     public void RefreshFileType()
     {
-        if (_disposed || IsExtensionsPage || IsCiLog || IsComparison || IsNotebook || FileType.IsCSharp)
+        if (_disposed)
+        {
+            return;
+        }
+
+        // The icon theme may have changed even when the type did not.
+        _fileIconRead = false;
+        OnPropertyChanged(nameof(FileIcon));
+        OnPropertyChanged(nameof(HasFileIcon));
+        if (IsExtensionsPage || IsCiLog || IsComparison || IsNotebook || FileType.IsCSharp)
         {
             return;
         }

@@ -24,7 +24,7 @@ public sealed class ExtensionsWindowTests
     {
         using var fixture = new ExtensionsFixture();
         await fixture.OpenFolderAsync();
-        var window = fixture.Show();
+        var window = fixture.Show(bottomPanel: false);
 
         var page = fixture.Workspace.OpenExtensions()!;
 
@@ -33,7 +33,7 @@ public sealed class ExtensionsWindowTests
         await UiTestHelpers.WaitUntilAsync(() => page.BrowseResults.Count > 0 && !page.IsSearching, because: "the popular extensions");
         Assert.Equal("Popular", page.ResultsHeading);
         Assert.True(page.CanLoadMore);
-        await UiTestHelpers.WaitUntilAsync(() => page.BrowseResults.Take(6).All(i => i.HasIcon), because: "the icons");
+        await UiTestHelpers.WaitUntilAsync(() => page.BrowseResults.Take(3).All(i => i.HasIcon), because: "the icons of the rows on screen");
         UiTestHelpers.SaveScreenshot(window, "ext-01-browse");
 
         page.SearchText = "perl";
@@ -55,7 +55,7 @@ public sealed class ExtensionsWindowTests
     {
         using var fixture = new ExtensionsFixture();
         await fixture.OpenFolderAsync();
-        var window = fixture.Show();
+        var window = fixture.Show(bottomPanel: false);
         var page = fixture.Workspace.OpenExtensions()!;
         page.SearchText = "perl";
         await UiTestHelpers.WaitUntilAsync(() => page.BrowseResults.Any(i => i.Id == Perl), because: "the search results");
@@ -92,7 +92,7 @@ public sealed class ExtensionsWindowTests
     {
         using var fixture = new ExtensionsFixture();
         await fixture.OpenFolderAsync();
-        var window = fixture.Show();
+        var window = fixture.Show(bottomPanel: false);
         var page = fixture.Workspace.OpenExtensions(ExtensionsTab.Installed)!;
         Assert.True(page.HasInstalledMessage);
 
@@ -132,7 +132,7 @@ public sealed class ExtensionsWindowTests
         using var fixture = new ExtensionsFixture();
         await fixture.InstallLumenAsync();
         await fixture.OpenFolderAsync();
-        var window = fixture.Show();
+        var window = fixture.Show(bottomPanel: false);
         fixture.Registry.LumenVersion = "1.1.0";
 
         var page = fixture.Workspace.OpenExtensions(ExtensionsTab.Updates)!;
@@ -158,7 +158,7 @@ public sealed class ExtensionsWindowTests
     {
         using var fixture = new ExtensionsFixture();
         await fixture.OpenFolderAsync();
-        var window = fixture.Show();
+        var window = fixture.Show(bottomPanel: false);
         var page = fixture.Workspace.OpenExtensions()!;
         page.SearchText = "lumen";
         await UiTestHelpers.WaitUntilAsync(() => page.BrowseResults.Any(i => i.Id == Lumen), because: "the search result");
@@ -215,7 +215,7 @@ public sealed class ExtensionsWindowTests
         using var fixture = new ExtensionsFixture();
         await fixture.InstallLumenAsync();
         await fixture.OpenFolderAsync();
-        var window = fixture.Show(800, 1280);
+        var window = fixture.Show(800, 1280, bottomPanel: false);
         var page = fixture.Workspace.OpenExtensions(ExtensionsTab.Installed)!;
         await UiTestHelpers.WaitUntilAsync(() => true);
         var view = Avalonia.VisualTree.VisualExtensions.GetVisualDescendants(window).OfType<ExtensionsView>().Single();

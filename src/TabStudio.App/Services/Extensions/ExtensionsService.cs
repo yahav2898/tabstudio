@@ -27,6 +27,7 @@ public sealed class ExtensionsService : IDisposable
     private readonly HttpClient _http;
     private readonly ExtensionSettingsStore _settingsStore;
     private readonly Dictionary<string, EditorColorTheme> _colorThemes = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, bool> _drawableIconThemes = new(StringComparer.Ordinal);
     private readonly List<string> _problems = [];
 
     /// <summary>Opens the extensions folder and publishes what the installed extensions contribute.</summary>
@@ -156,6 +157,31 @@ public sealed class ExtensionsService : IDisposable
         Settings = Settings with { IconTheme = key };
         _settingsStore.Save(Settings);
         Refresh();
+    }
+
+    /// <summary>
+    /// Whether TabStudio can draw a file icon theme: its icons are SVG or PNG images. Themes that draw their icons with
+    /// a font, such as Seti, cannot be shown.
+    /// </summary>
+    /// <param name="theme">The theme.</param>
+    public bool CanDraw(ContributedIconTheme theme)
+    {
+        ArgumentNullException.ThrowIfNull(theme);
+        if (!_drawableIconThemes.TryGetValue(theme.Path, out var drawable))
+        {
+            try
+            {
+                drawable = FileIconTheme.Read(theme.Path, theme.Label, theme.ExtensionFolder).UsesImages;
+            }
+            catch (Exception ex) when (ex is System.Text.Json.JsonException or IOException or UnauthorizedAccessException)
+            {
+                drawable = false;
+            }
+
+            _drawableIconThemes[theme.Path] = drawable;
+        }
+
+        return drawable;
     }
 
     /// <summary>Uses another Open VSX registry, such as a company's own.</summary>

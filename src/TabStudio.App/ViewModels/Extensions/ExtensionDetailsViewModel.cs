@@ -194,7 +194,7 @@ public sealed partial class ExtensionDetailsViewModel : ObservableObject, IDispo
         Publisher = Registry?.PublisherDisplayName ?? Item.Publisher;
         if (manifest is not null)
         {
-            var statuses = ContributionSupport.Describe(manifest, _owner.Service.CodeHost);
+            var statuses = WithIconThemeSupport(ContributionSupport.Describe(manifest, _owner.Service.CodeHost), installed);
             Features = ExtensionFeatureViewModel.From(statuses, installed is { IsEnabled: true });
             var working = statuses.Count(s => s.Support == ContributionSupportLevel.Supported);
             FeaturesSummary = statuses.Count == 0 ? "This extension adds nothing TabStudio can show."
@@ -267,6 +267,16 @@ public sealed partial class ExtensionDetailsViewModel : ObservableObject, IDispo
         OnPropertyChanged(nameof(CanUseColorTheme));
         OnPropertyChanged(nameof(CanUseIconTheme));
         OnPropertyChanged(nameof(VersionText));
+    }
+
+    /// <summary>File icon themes that draw their icons with a font cannot be shown: their features say so.</summary>
+    private List<ContributionStatus> WithIconThemeSupport(IReadOnlyList<ContributionStatus> statuses, InstalledExtension? installed)
+    {
+        List<ContributedIconTheme> themes = installed is null ? [] : [.. _owner.Service.Contributions.IconThemes.Where(t => t.Owner == installed.Id)];
+        return [.. statuses.Select(status =>
+            status.Point == "iconThemes" && themes.FirstOrDefault(t => status.Title.EndsWith(t.Label, StringComparison.Ordinal)) is { } theme && !_owner.Service.CanDraw(theme)
+                ? status with { Detail = "Draws its icons with a font, which TabStudio cannot show", Support = ContributionSupportLevel.NotSupported }
+                : status)];
     }
 
     /// <summary>Reads the registry's latest version and its package.json, so the Features page can list what it adds before it is installed.</summary>

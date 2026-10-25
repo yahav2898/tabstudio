@@ -80,6 +80,7 @@ public sealed class ExtensionSnippetTests
         Assert.Equal("let total = total + total", CaretLine(editor));
         window.KeyPressQwerty(PhysicalKey.Escape, RawInputModifiers.None);
         Assert.Null(view.Snippet);
+        editor.CaretOffset = editor.Document.TextLength;
 
         // TM_FILENAME_BASE, upper-cased by the snippet's transform.
         Type(editor, "\npfile");

@@ -54,6 +54,9 @@ public sealed class SnippetCompletionFeatures : ILanguageFeatures
     /// <inheritdoc />
     public async Task<CompletionResult> GetCompletionsAsync(string filePath, int position, CompletionTrigger trigger, CancellationToken cancellationToken)
     {
+        // The list opens once the typed character is laid out, as with a language service's answer, so the
+        // editor can place the list under the word.
+        await Task.Yield();
         if (_choices is { } choices)
         {
             _choices = null;

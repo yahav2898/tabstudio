@@ -56,14 +56,15 @@
 
             <!-- Icon, or a badge for files -->
             <Panel Grid.Column="2" Margin="4,0,8,0" MinWidth="16">
-              <controls:StrokeIcon Size="16" IsVisible="{Binding !IsFile}"
+              <controls:StrokeIcon Size="16" IsVisible="{Binding ShowsSymbol}"
                                    Data="{Binding Icon, Converter={x:Static conv:AppConverters.ExplorerIconGeometry}}"
                                    Foreground="{Binding Icon, Converter={x:Static conv:AppConverters.ExplorerIconBrush}}" />
-              <Border Classes="badge" IsVisible="{Binding IsFile}"
+              <Border Classes="badge" IsVisible="{Binding ShowsBadge}"
                       Background="{Binding BadgeKind, Converter={x:Static conv:AppConverters.BadgeBackground}}">
                 <TextBlock Text="{Binding Badge}"
                            Foreground="{Binding BadgeKind, Converter={x:Static conv:AppConverters.BadgeForeground}}" />
               </Border>
+              <Image Source="{Binding ThemeIcon}" Width="16" Height="16" VerticalAlignment="Center" IsVisible="{Binding HasThemeIcon}" />
             </Panel>
 
             <TextBlock Grid.Column="3" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" FontSize="13">

@@ -85,7 +85,13 @@ public static class ThemePickers
     {
         ArgumentNullException.ThrowIfNull(service);
         ArgumentNullException.ThrowIfNull(quickPick);
-        var themes = service.Contributions.IconThemes.Where(t => only is null || t.Owner == only.Value).ToList();
+        // Themes that draw their icons with a font cannot be shown, so they are not offered.
+        var themes = service.Contributions.IconThemes.Where(t => (only is null || t.Owner == only.Value) && service.CanDraw(t)).ToList();
+        if (only is not null && themes.Count == 0)
+        {
+            return;
+        }
+
         if (only is not null && themes.Count == 1)
         {
             service.SelectIconTheme(themes[0].Key);

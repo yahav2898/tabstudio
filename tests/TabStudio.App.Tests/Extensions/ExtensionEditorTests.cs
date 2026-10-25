@@ -167,6 +167,7 @@ public sealed class ExtensionEditorTests
         Assert.Equal("hi", editor.SelectedText);
 
         // Backspace between a pair that closed itself deletes both halves.
+        editor.TextArea.ClearSelection();
         editor.CaretOffset = editor.Document.GetLineByOffset(editor.CaretOffset).EndOffset;
         Type(editor, " (");
         Assert.Equal("print(\"[hi]\") ()", CaretLine(editor));

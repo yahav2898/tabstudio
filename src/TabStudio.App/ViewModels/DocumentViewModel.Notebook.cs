@@ -22,7 +22,7 @@ public sealed partial class DocumentViewModel
     /// its own toolbar instead, and so does a CI job's log, which is read-only; a XAML file's designer hides them
     /// while the code is not shown.
     /// </summary>
-    public bool ShowsEditorActions => Notebook is null && CiLog is null && Designer?.ShowsCode != false;
+    public bool ShowsEditorActions => Notebook is null && CiLog is null && ExtensionsPage is null && Designer?.ShowsCode != false;
 
     /// <summary>The text the file would have if it were saved now, for restoring unsaved work.</summary>
     public string CurrentText => Notebook?.Serialize() ?? Document.Text;

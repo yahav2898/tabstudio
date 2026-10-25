@@ -104,8 +104,12 @@ internal sealed class ExtensionsFixture : IDisposable
         await Workspace.OpenDocumentAsync(Path.Combine(Folder, name)) ?? throw new InvalidOperationException($"{name} did not open.");
 
     /// <summary>Shows the workspace in a window.</summary>
-    public Window Show(int width = 1280, int height = 800)
+    /// <param name="width">The window's width.</param>
+    /// <param name="height">The window's height.</param>
+    /// <param name="bottomPanel">Whether the bottom panel (Error List, Output) is open, as it is at first.</param>
+    public Window Show(int width = 1280, int height = 800, bool bottomPanel = true)
     {
+        Workspace.IsBottomPanelVisible = bottomPanel;
         var window = new Window { Width = width, Height = height, Content = new WorkspaceView { DataContext = Workspace } };
         window.Show();
         return window;

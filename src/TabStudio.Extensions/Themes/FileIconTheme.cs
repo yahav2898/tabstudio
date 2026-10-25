@@ -29,7 +29,7 @@ public sealed class FileIconTheme
     /// <summary>The theme's name.</summary>
     public string Name { get; }
 
-    /// <summary>Whether every icon is an image, which TabStudio can draw; font-based themes need a WOFF font.</summary>
+    /// <summary>Whether the theme's icons are images (SVG or PNG), rather than characters of an icon font.</summary>
     public bool UsesImages => _definitions.Values.Any(d => d.ImagePath is not null);
 
     /// <summary>Reads an icon theme file.</summary>

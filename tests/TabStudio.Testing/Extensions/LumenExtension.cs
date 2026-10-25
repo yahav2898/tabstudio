@@ -123,7 +123,7 @@ public static class LumenExtension
             "comments": {
               "patterns": [
                 { "name": "comment.block.lumen", "begin": "#\\[", "end": "\\]#" },
-                { "name": "comment.line.number-sign.lumen", "match": "#.*$" }
+                { "name": "comment.line.number-sign.lumen", "begin": "#", "end": "$" }
               ]
             },
             "embedded-json": {

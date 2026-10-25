@@ -50,7 +50,6 @@ public sealed partial class ExtensionsViewModel
         ("Languages", "Programming Languages"),
         ("Themes", "Themes"),
         ("Snippets", "Snippets"),
-        ("Formatters", "Formatters"),
     ];
 
     private CancellationTokenSource? _search;
@@ -180,6 +179,7 @@ public sealed partial class ExtensionsViewModel
                 if (!append)
                 {
                     BrowseResults.ReplaceAll([]);
+                    SyncListSelection();
                 }
 
                 BrowseMessage = ex.Message;
@@ -212,6 +212,8 @@ public sealed partial class ExtensionsViewModel
         {
             BrowseResults.ReplaceAll(items);
         }
+
+        SyncListSelection();
 
         CanLoadMore = result.Extensions.Count > 0 && result.Offset + result.Extensions.Count < result.TotalSize;
         ResultsHeading = text.Length > 0

@@ -21,6 +21,7 @@ public sealed partial class ExtensionsViewModel : ObservableObject, IDisposable
     private readonly IStoragePicker? _browser;
     private readonly Dictionary<ExtensionIdentifier, double> _busy = [];
     private List<InstalledExtension> _installed = [];
+    private bool _syncingSelection;
     private bool _disposed;
 
     /// <summary>Creates the Extensions window.</summary>
@@ -106,6 +107,18 @@ public sealed partial class ExtensionsViewModel : ObservableObject, IDisposable
     /// <summary>The extension whose details are shown.</summary>
     [ObservableProperty]
     public partial ExtensionItemViewModel? SelectedItem { get; set; }
+
+    /// <summary>The selected row of Browse; tapping a row shows its details.</summary>
+    [ObservableProperty]
+    public partial ExtensionItemViewModel? SelectedBrowseItem { get; set; }
+
+    /// <summary>The selected row of Installed.</summary>
+    [ObservableProperty]
+    public partial ExtensionItemViewModel? SelectedInstalledItem { get; set; }
+
+    /// <summary>The selected row of Updates.</summary>
+    [ObservableProperty]
+    public partial ExtensionItemViewModel? SelectedUpdateItem { get; set; }
 
     /// <summary>The details of <see cref="SelectedItem"/>.</summary>
     [ObservableProperty]
@@ -207,9 +220,47 @@ public sealed partial class ExtensionsViewModel : ObservableObject, IDisposable
 
     partial void OnSelectedItemChanged(ExtensionItemViewModel? value)
     {
-        Details?.Dispose();
-        Details = value is null ? null : new ExtensionDetailsViewModel(this, value);
-        _ = Details?.LoadAsync();
+        // The same extension from another list, or a list rebuilt around it, keeps its details.
+        if (value is null || Details?.Item.Id != value.Id)
+        {
+            Details?.Dispose();
+            Details = value is null ? null : new ExtensionDetailsViewModel(this, value);
+            _ = Details?.LoadAsync();
+        }
+
+        SyncListSelection();
+    }
+
+    partial void OnSelectedBrowseItemChanged(ExtensionItemViewModel? value) => ShowFromList(value);
+
+    partial void OnSelectedInstalledItemChanged(ExtensionItemViewModel? value) => ShowFromList(value);
+
+    partial void OnSelectedUpdateItemChanged(ExtensionItemViewModel? value) => ShowFromList(value);
+
+    /// <summary>A row tapped in a list shows its details; a list that loses its selection because it was rebuilt changes nothing.</summary>
+    private void ShowFromList(ExtensionItemViewModel? value)
+    {
+        if (value is not null && !_syncingSelection)
+        {
+            SelectedItem = value;
+        }
+    }
+
+    /// <summary>Selects the shown extension's row in every list that has it, so each list highlights it.</summary>
+    private void SyncListSelection()
+    {
+        _syncingSelection = true;
+        try
+        {
+            var id = SelectedItem?.Id;
+            SelectedBrowseItem = id is { } browse ? BrowseResults.FirstOrDefault(i => i.Id == browse) : null;
+            SelectedInstalledItem = id is { } installed ? InstalledItems.FirstOrDefault(i => i.Id == installed) : null;
+            SelectedUpdateItem = id is { } update ? UpdateItems.FirstOrDefault(i => i.Id == update) : null;
+        }
+        finally
+        {
+            _syncingSelection = false;
+        }
     }
 
     /// <summary>Shows a message about the last action.</summary>
@@ -254,6 +305,8 @@ public sealed partial class ExtensionsViewModel : ObservableObject, IDisposable
             WithState(details.Item);
             details.Refresh();
         }
+
+        SyncListSelection();
     }
 
     private void FilterInstalled()
@@ -268,6 +321,7 @@ public sealed partial class ExtensionsViewModel : ObservableObject, IDisposable
         InstalledMessage = InstalledItems.Count > 0 ? null
             : _installed.Count == 0 ? "No extensions are installed yet. Browse Open VSX for languages, themes and snippets, or install a .vsix file."
             : $"No installed extensions match “{filter}”.";
+        SyncListSelection();
     }
 
     /// <summary>Shows whether an item is installed, has an update or is being installed.</summary>

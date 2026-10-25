@@ -28,7 +28,7 @@ public sealed partial class WorkspaceViewModel
     public ObservableCollection<QuickOpenItem> QuickOpenResults { get; } = [];
 
     /// <summary>The path segments of the active document, for the breadcrumb under the tabs.</summary>
-    public IReadOnlyList<string> Breadcrumb => ActiveDocument is { } document && Workspace is { } workspace
+    public IReadOnlyList<string> Breadcrumb => ActiveDocument is { IsExtensionsPage: false } document && Workspace is { } workspace
         ? BuildBreadcrumb(workspace, document.FilePath)
         : [];
 
