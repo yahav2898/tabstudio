@@ -89,6 +89,27 @@ public sealed partial class CodeEditorView
         menu.Items.Add(typeDefinition);
     }
 
+    /// <summary>
+    /// The breakpoint menu's hit count and logpoint, for files a debug adapter runs; they go before Delete Breakpoint.
+    /// </summary>
+    private void AddAdapterBreakpointItems(Avalonia.Controls.MenuFlyout menu, string path, int line, ViewModels.BreakpointViewModel? breakpoint)
+    {
+        if (_document.Debugger is not ViewModels.IEditorBreakpointOptions options || !options.HasBreakpointOptions(path))
+        {
+            return;
+        }
+
+        if (breakpoint is null)
+        {
+            menu.Items.Add(CreateMenuItem("Insert Logpoint...", () => _ = options.EditLogMessageAsync(path, line)));
+            return;
+        }
+
+        var index = Math.Max(0, menu.Items.Count - 1);
+        menu.Items.Insert(index, CreateMenuItem("Hit Count...", () => _ = options.EditHitCountAsync(path, line)));
+        menu.Items.Insert(index + 1, CreateMenuItem(breakpoint.LogMessage is null ? "Log a Message..." : "Edit Log Message...", () => _ = options.EditLogMessageAsync(path, line)));
+    }
+
     private void OnServerDecorationsChanged(object? sender, EventArgs e) => ApplyServerDecorations();
 
     private void OnDocumentChangedForServerDecorations(object? sender, DocumentChangeEventArgs e) => _inlayHints?.OnDocumentChanged(e);

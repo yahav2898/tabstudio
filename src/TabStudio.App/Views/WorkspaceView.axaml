@@ -154,6 +154,15 @@
             <MenuItem Header="Toggle _Breakpoint" InputGesture="F9" Command="{Binding ToggleBreakpointCommand}" />
             <MenuItem Header="_Delete All Breakpoints" InputGesture="Ctrl+Shift+F9" Command="{Binding DeleteAllBreakpointsCommand}" />
             <MenuItem Header="Break on Unhandled E_xceptions" ToggleType="CheckBox" IsChecked="{Binding BreakOnUnhandledExceptions, Mode=TwoWay}" />
+            <MenuItem Header="Exception _Settings" ItemsSource="{Binding ExceptionFilters}" IsVisible="{Binding HasExceptionFilters}">
+              <MenuItem.ItemContainerTheme>
+                <ControlTheme TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}" x:DataType="vm:ExceptionFilterOption">
+                  <Setter Property="Header" Value="{Binding Label}" />
+                  <Setter Property="ToggleType" Value="CheckBox" />
+                  <Setter Property="IsChecked" Value="{Binding IsEnabled, Mode=TwoWay}" />
+                </ControlTheme>
+              </MenuItem.ItemContainerTheme>
+            </MenuItem>
           </MenuItem>
           <MenuItem Header="_Test">
             <MenuItem Header="Run _All Tests (Ctrl+R, A)" Command="{Binding Tests.RunAllCommand}" />
@@ -259,13 +268,13 @@
               </StackPanel>
             </Button>
             <Button Theme="{StaticResource AccentButton}" Height="36" MinHeight="36" Width="30" MinWidth="30" Padding="0"
-                    CornerRadius="0,8,8,0" BorderBrush="#59FFFFFF" BorderThickness="1,0,0,0" ToolTip.Tip="Choose Startup Project">
+                    CornerRadius="0,8,8,0" BorderBrush="#59FFFFFF" BorderThickness="1,0,0,0" ToolTip.Tip="Choose Startup Project or Launch Configuration">
               <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="14" />
               <Button.Flyout>
-                <MenuFlyout Placement="BottomEdgeAlignedLeft" ItemsSource="{Binding StartupProjects}">
+                <MenuFlyout Placement="BottomEdgeAlignedLeft" ItemsSource="{Binding RunTargets}">
                   <MenuFlyout.ItemContainerTheme>
-                    <ControlTheme TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}" x:DataType="vm:StartupProjectOption">
-                      <Setter Property="Header" Value="{Binding Name}" />
+                    <ControlTheme TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}" x:DataType="vm:RunTargetOption">
+                      <Setter Property="Header" Value="{Binding Header}" />
                       <Setter Property="Command" Value="{Binding Select}" />
                     </ControlTheme>
                   </MenuFlyout.ItemContainerTheme>

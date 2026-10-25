@@ -125,7 +125,9 @@ public sealed partial class VariableTreeViewModel : ObservableObject
     {
         if (source.Value is not { } value)
         {
-            return VariableViewModel.Failed(source.Name, source.Error ?? string.Empty, 0, source.IsRemovable);
+            return source.Variable is { } variable
+                ? VariableViewModel.Read(variable, source.Name, source.Path, 0, previous.GetValueOrDefault(source.Path), source.IsRemovable)
+                : VariableViewModel.Failed(source.Name, source.Error ?? string.Empty, 0, source.IsRemovable);
         }
 
         try
@@ -143,6 +145,17 @@ public sealed partial class VariableTreeViewModel : ObservableObject
         var depth = parent.Depth + 1;
         try
         {
+            if (parent.Variable is { } variable)
+            {
+                return variable.ReadChildren()
+                    .Select(child =>
+                    {
+                        var path = child.Value.EvaluateName ?? VariableViewModel.ChildPath(parent.Path, child.Name);
+                        return VariableViewModel.Read(child.Value, child.Name, path, depth, previous.GetValueOrDefault(path));
+                    })
+                    .ToList();
+            }
+
             return parent.Source!.Expand()
                 .Select(child =>
                 {

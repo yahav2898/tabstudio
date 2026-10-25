@@ -225,10 +225,10 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     public partial ProjectInfo? StartupProject { get; private set; }
 
     /// <summary>The Run button's label: the startup project's name.</summary>
-    public string RunLabel => StartupProject?.Name ?? "Start";
+    public string RunLabel => StartupProject?.Name ?? LaunchTargetLabel ?? "Start";
 
     /// <summary>Where the startup project runs, such as "In-process".</summary>
-    public string RunHostText => StartupProject is { } project ? CompatibilityDoctor.Diagnose(project).RunsVia : "Nothing to run";
+    public string RunHostText => StartupProject is { } project ? CompatibilityDoctor.Diagnose(project).RunsVia : LaunchTargetHost ?? "Nothing to run";
 
     /// <summary>The build configuration, "Debug" or "Release".</summary>
     [ObservableProperty]

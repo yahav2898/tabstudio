@@ -12,7 +12,14 @@ public sealed record SessionDocument(string Path, int CaretOffset, string? Unsav
 /// <param name="Path">Full path of the file.</param>
 /// <param name="Line">One-based line.</param>
 /// <param name="Condition">When it stops, such as <c>count == 3</c>, or <see langword="null"/> to stop every time.</param>
-public sealed record SessionBreakpoint(string Path, int Line, string? Condition);
+public sealed record SessionBreakpoint(string Path, int Line, string? Condition)
+{
+    /// <summary>After how many hits it stops, for debug adapters, such as <c>5</c>; <see langword="null"/> for every hit.</summary>
+    public string? HitCount { get; init; }
+
+    /// <summary>The message it logs instead of stopping, for debug adapters; <see langword="null"/> to stop.</summary>
+    public string? LogMessage { get; init; }
+}
 
 /// <summary>Everything needed to reopen the IDE where the user left it.</summary>
 /// <param name="WorkspacePath">The solution, project or folder that was open.</param>

@@ -9,14 +9,18 @@ namespace TabStudio.App.ViewModels;
 /// <param name="Value">The value, or <see langword="null"/> when it could not be found.</param>
 /// <param name="Error">Why there is no value, shown instead of it.</param>
 /// <param name="IsRemovable">Whether the row has a remove button, as watches do.</param>
-public sealed record VariableSource(string Name, string Path, DebugValue? Value, string? Error = null, bool IsRemovable = false);
+public sealed record VariableSource(string Name, string Path, DebugValue? Value, string? Error = null, bool IsRemovable = false)
+{
+    /// <summary>The value, when a debug adapter paused the program; used when <see cref="Value"/> is <see langword="null"/>.</summary>
+    public IDebugVariable? Variable { get; init; }
+}
 
 /// <summary>One row of the Locals, Watch or DataTip tree: a variable, member or item of the paused program.</summary>
 public sealed partial class VariableViewModel : ObservableObject
 {
     private const double IndentPerLevel = 16;
 
-    private VariableViewModel(string name, string value, string type, string path, int depth, DebugValue? source, bool hasChanged, bool isError, bool isRemovable)
+    private VariableViewModel(string name, string value, string type, string path, int depth, DebugValue? source, bool hasChanged, bool isError, bool isRemovable, IDebugVariable? variable = null)
     {
         Name = name;
         Value = value;
@@ -24,7 +28,8 @@ public sealed partial class VariableViewModel : ObservableObject
         Path = path;
         Depth = depth;
         Source = source;
-        IsExpandable = source?.HasChildren == true;
+        Variable = variable;
+        IsExpandable = source?.HasChildren == true || variable?.HasChildren == true;
         HasChanged = hasChanged;
         IsError = isError;
         IsRemovable = isRemovable;
@@ -70,6 +75,12 @@ public sealed partial class VariableViewModel : ObservableObject
     /// <summary>The value this row shows.</summary>
     internal DebugValue? Source { get; }
 
+    /// <summary>The value this row shows, when a debug adapter paused the program.</summary>
+    internal IDebugVariable? Variable { get; }
+
+    /// <summary>Whether Edit Value can change it: a debug adapter's value that the adapter can set.</summary>
+    public bool IsEditable => Variable?.CanSetValue == true;
+
     /// <summary>The children, once the row was first expanded.</summary>
     internal IReadOnlyList<VariableViewModel>? Children { get; set; }
 
@@ -89,6 +100,19 @@ public sealed partial class VariableViewModel : ObservableObject
         var type = value.Type;
         var changed = previousValue is not null && !string.Equals(previousValue, text, StringComparison.Ordinal);
         return new VariableViewModel(name, text, type, path, depth, value, changed, isError: false, isRemovable);
+    }
+
+    /// <summary>Reads a debug adapter's value into a row.</summary>
+    /// <param name="value">The value.</param>
+    /// <param name="name">The name to show.</param>
+    /// <param name="path">The path that finds it again.</param>
+    /// <param name="depth">How deep the row is.</param>
+    /// <param name="previousValue">Its value at the last pause, if it was shown then.</param>
+    /// <param name="isRemovable">Whether the row has a remove button.</param>
+    internal static VariableViewModel Read(IDebugVariable value, string name, string path, int depth, string? previousValue, bool isRemovable = false)
+    {
+        var changed = previousValue is not null && !string.Equals(previousValue, value.Value, StringComparison.Ordinal);
+        return new VariableViewModel(name, value.Value, value.Type, path, depth, null, changed, isError: false, isRemovable, value);
     }
 
     /// <summary>A row that says why there is no value.</summary>

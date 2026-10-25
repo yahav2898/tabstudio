@@ -95,6 +95,6 @@ public sealed class InlayHintGenerator : VisualLineElementGenerator
             return base.CreateTextRun(startVisualColumn, context);
         }
 
-        public override int GetNextCaretPosition(int visualColumn, LogicalDirection direction, CaretPositioningMode mode) => -1;
+        public override int GetNextCaretPosition(int visualColumn, AvaloniaEdit.Document.LogicalDirection direction, CaretPositioningMode mode) => -1;
     }
 }

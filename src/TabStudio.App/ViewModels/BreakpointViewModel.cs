@@ -14,6 +14,9 @@ public enum BreakpointGlyph
 
     /// <summary>A hollow dot: while debugging, no code follows the line in its file, so it never hits.</summary>
     Unbound,
+
+    /// <summary>A red diamond: the program logs a message here instead of stopping, as Visual Studio's tracepoints.</summary>
+    Logpoint,
 }
 
 /// <summary>
@@ -56,12 +59,25 @@ public sealed class BreakpointViewModel
     /// <summary>The engine's breakpoint while a debug session runs, otherwise <see langword="null"/>.</summary>
     public Breakpoint? Binding { get; private set; }
 
+    /// <summary>After how many hits it stops, as a debug adapter understands it, such as <c>5</c>; <see langword="null"/> for every hit.</summary>
+    public string? HitCount { get; private set; }
+
+    /// <summary>The message it logs instead of stopping, with expressions in braces; <see langword="null"/> to stop.</summary>
+    public string? LogMessage { get; private set; }
+
+    /// <summary>Whether a debug adapter's session could set it; <see langword="null"/> without one.</summary>
+    public bool? IsVerifiedByAdapter { get; private set; }
+
+    /// <summary>Why the debug adapter could not set it, or more about it, if it said.</summary>
+    public string? AdapterMessage { get; private set; }
+
     /// <summary>Whether a debug session runs and found no code at or after this line to stop at.</summary>
-    public bool IsUnbound => Binding is { IsBound: false };
+    public bool IsUnbound => Binding is { IsBound: false } || IsVerifiedByAdapter == false;
 
     /// <summary>How the margin draws it.</summary>
     public BreakpointGlyph Glyph => IsUnbound ? BreakpointGlyph.Unbound
-        : Condition is null ? BreakpointGlyph.Normal
+        : LogMessage is not null ? BreakpointGlyph.Logpoint
+        : Condition is null && HitCount is null ? BreakpointGlyph.Normal
         : BreakpointGlyph.Conditional;
 
     /// <summary>Starts following edits in the open document of its file.</summary>
@@ -115,6 +131,24 @@ public sealed class BreakpointViewModel
     /// <param name="condition">The condition, or <see langword="null"/> or blank to stop every time.</param>
     internal void SetCondition(string? condition) =>
         Condition = string.IsNullOrWhiteSpace(condition) ? null : condition.Trim();
+
+    /// <summary>Changes the hit count and the log message, which debug adapters support.</summary>
+    /// <param name="hitCount">After how many hits it stops; <see langword="null"/> or blank for every hit.</param>
+    /// <param name="logMessage">The message to log instead of stopping; <see langword="null"/> or blank to stop.</param>
+    internal void SetOptions(string? hitCount, string? logMessage)
+    {
+        HitCount = string.IsNullOrWhiteSpace(hitCount) ? null : hitCount.Trim();
+        LogMessage = string.IsNullOrWhiteSpace(logMessage) ? null : logMessage.Trim();
+    }
+
+    /// <summary>Remembers what the debug adapter said about it, or forgets it when the session ends.</summary>
+    /// <param name="verified">Whether the adapter could set it; <see langword="null"/> without a session.</param>
+    /// <param name="message">The adapter's message, if any.</param>
+    internal void BindToAdapter(bool? verified, string? message)
+    {
+        IsVerifiedByAdapter = verified;
+        AdapterMessage = message;
+    }
 
     /// <summary>Remembers the engine breakpoint of the running debug session, or forgets it when the session ends.</summary>
     /// <param name="binding">The engine breakpoint, or <see langword="null"/>.</param>

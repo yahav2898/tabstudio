@@ -82,6 +82,7 @@ public sealed partial class WorkspaceViewModel
         PropertyChanged += OnPropertyChangedForLanguageServers;
         var pages = browser ?? new TopLevelStoragePicker();
         ErrorList.HelpLinkRequested += async (_, link) => await pages.OpenUriAsync(link);
+        InitializeDebugAdapters();
     }
 
     /// <summary>Opens a document on its language server, before its editor is created. Called by <see cref="Attach"/>.</summary>

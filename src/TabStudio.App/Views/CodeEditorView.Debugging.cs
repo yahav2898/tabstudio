@@ -195,6 +195,7 @@ public sealed partial class CodeEditorView
             menu.Items.Add(CreateMenuItem("Delete Breakpoint", () => debugger.ToggleBreakpoint(path, line)));
         }
 
+        AddAdapterBreakpointItems(menu, path, line, breakpoint);
         menu.ShowAt(_breakpointMargin, showAtPointer: true);
     }
 
