@@ -43,7 +43,7 @@
 
     <!-- The program and its window or dialog, and what to do with the window. -->
     <Border DockPanel.Dock="Top" Padding="8,6" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" IsVisible="{Binding HasSelectedApp}">
-      <Grid ColumnDefinitions="*,6,*,Auto">
+      <Grid ColumnDefinitions="*,6,*" RowDefinitions="Auto,Auto" RowSpacing="4">
         <ComboBox ItemsSource="{Binding Apps}" SelectedItem="{Binding SelectedApp}" HorizontalAlignment="Stretch" MinHeight="36" ToolTip.Tip="Program on the PC">
           <ComboBox.ItemTemplate>
             <DataTemplate x:DataType="wb:BridgeAppViewModel">
@@ -59,7 +59,7 @@
             </DataTemplate>
           </ComboBox.ItemTemplate>
         </ComboBox>
-        <StackPanel Grid.Column="3" Orientation="Horizontal" Margin="6,0,0,0" Spacing="2">
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="2">
           <Button Theme="{StaticResource ToolButton}" Command="{Binding FitWindowCommand}" ToolTip.Tip="Resize the window to fill this pane">
             <controls:StrokeIcon Data="{StaticResource Icon.FitWindow}" Size="15" />
           </Button>

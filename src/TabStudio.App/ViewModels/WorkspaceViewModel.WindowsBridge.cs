@@ -154,6 +154,7 @@ public sealed partial class WorkspaceViewModel
         }
 
         var pc = _windowsBridge is { HasPairedPc: true } bridge ? bridge.PcName : null;
+        var changed = false;
         _applyingBridgeToDoctor = true;
         try
         {
@@ -181,11 +182,18 @@ public sealed partial class WorkspaceViewModel
                 }
 
                 Compatibility[i] = replacement;
+                changed = true;
             }
         }
         finally
         {
             _applyingBridgeToDoctor = false;
+        }
+
+        if (changed)
+        {
+            // The Solution Explorer's project badges say what the Doctor says.
+            Explorer.Load(workspace, [.. Compatibility.Select(c => c.Report)]);
         }
     }
 
