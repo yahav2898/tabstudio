@@ -1,11 +1,13 @@
 using System.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using TabStudio.App.Services;
+using TabStudio.App.Services.LanguageServers;
 using TabStudio.App.Services.Toolchains;
 using TabStudio.App.ViewModels;
 using TabStudio.App.Views;
 using TabStudio.LanguageServers.Hosting;
 using TabStudio.Testing;
+using TabStudio.Toolchains.Runtimes;
 using static TabStudio.App.Tests.Views.EditorHarness;
 
 namespace TabStudio.App.Tests.Toolchains;
@@ -38,7 +40,10 @@ public sealed class ToolchainLanguageToolsTests : IDisposable
 
     public ToolchainLanguageToolsTests()
     {
-        _services = AppServices.Create(new AppPaths(_temp.Resolve("app")));
+        // Every message to and from the servers and adapters goes to their logs, which a failing test saves.
+        _services = AppServices.Create(
+            new AppPaths(_temp.Resolve("app")),
+            services => services.AddSingleton(new LanguageServerServices(new ToolchainServerLauncher(new HostRuntime())) { TraceMessages = true }));
         _main = _services.GetRequiredService<MainViewModel>();
     }
 
@@ -132,6 +137,7 @@ public sealed class ToolchainLanguageToolsTests : IDisposable
         var document = await workspace.OpenDocumentAsync(path) ?? throw new InvalidOperationException("app.js did not open.");
         workspace.Breakpoints.Toggle(path, LineOf(document, "return message;"));
         AnswerInput(workspace, "Ada");
+        using var trace = new SavedLogs(workspace, "toolchains-lsp-03-node-log");
 
         await workspace.StartDebuggingCommand.ExecuteAsync(null);
         await UiTestHelpers.WaitUntilAsync(() => workspace.IsPaused, TimeSpan.FromSeconds(90), because: "js-debug to stop at the breakpoint");
@@ -159,6 +165,19 @@ public sealed class ToolchainLanguageToolsTests : IDisposable
         _main.Workspace?.Dispose();
         _services.Dispose();
         _temp.Dispose();
+    }
+
+    /// <summary>Saves the Output panel and the debug adapters' log beside the screenshots when a test ends.</summary>
+    private sealed class SavedLogs(WorkspaceViewModel workspace, string name) : IDisposable
+    {
+        public void Dispose()
+        {
+            if (Environment.GetEnvironmentVariable("TABSTUDIO_SCREENSHOTS") is { Length: > 0 } folder)
+            {
+                Directory.CreateDirectory(folder);
+                File.WriteAllText(Path.Combine(folder, name + ".txt"), $"== Output\n{workspace.Output.Text}\n== Debug Adapters\n{workspace.DebugAdapterOutput.Text}");
+            }
+        }
     }
 
     private static int LineOf(DocumentViewModel document, string text) =>
