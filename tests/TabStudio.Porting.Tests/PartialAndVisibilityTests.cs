@@ -18,6 +18,19 @@ public sealed class PartialAndVisibilityTests
         Assert.Equal(rootClass, xaml.Root!.Name.LocalName);
     }
 
+    [Fact]
+    public void A_user_controls_Load_handler_connects_to_Avalonia_Loaded()
+    {
+        var result = Port(PortSourceKind.WindowsForms, new Dictionary<string, string>
+        {
+            ["View.cs"] = "namespace Example; public partial class View : UserControl { public View() { InitializeComponent(); } private void OnLoad(object sender, EventArgs e) {} }",
+            ["View.Designer.cs"] = "namespace Example; partial class View { private void InitializeComponent() { Load += OnLoad; } }",
+        });
+        var events = result.Files.Single(f => f.Path == "View.Events.cs").Text!;
+        Assert.Contains("Loaded += OnLoad;", events, StringComparison.Ordinal);
+        Assert.DoesNotContain("Load += OnLoad;", events, StringComparison.Ordinal);
+    }
+
     [Theory]
     [InlineData("<TextBlock Visibility=\"Hidden\" />", "Visibility.Hidden")]
     [InlineData("<Window.Resources><Style TargetType=\"Button\"><Setter Property=\"Visibility\" Value=\"Hidden\" /></Style></Window.Resources><Button />", "Visibility.Hidden setter")]

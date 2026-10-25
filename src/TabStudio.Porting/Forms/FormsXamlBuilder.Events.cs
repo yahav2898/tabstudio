@@ -26,7 +26,8 @@ internal sealed partial class FormsXamlBuilder
                 "MouseEnter" => "PointerEntered",
                 "MouseLeave" => "PointerExited",
                 "KeyDown" or "KeyUp" => subscription.Event,
-                "Load" or "Shown" or "FormClosing" or "FormClosed" when control.Name == "this" => subscription.Event,
+                "Load" when control.Name == "this" && avaloniaType == "UserControl" => "Loaded",
+                "Load" or "Shown" or "FormClosing" or "FormClosed" when control.Name == "this" && avaloniaType == "AppForm" => subscription.Event,
                 _ => null,
             };
             if (mapped is null)
