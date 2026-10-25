@@ -1,4 +1,5 @@
 using System.Collections.Specialized;
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -25,6 +26,21 @@ public sealed class AdaptiveBar : Panel
     /// <summary>Whether a child that is not an <see cref="AdaptiveBarItem"/> always stays in the bar; such children are pinned unless they say otherwise.</summary>
     public static readonly AttachedProperty<bool> IsPinnedProperty =
         AvaloniaProperty.RegisterAttached<AdaptiveBar, Control, bool>("IsPinned", true);
+
+    /// <summary>
+    /// What the More menu calls a child: an <see cref="AdaptiveBarItem"/>'s label by default, and for any other child,
+    /// such as a status bar item of its own kind, the only way into the menu; a child without one is left out of it.
+    /// </summary>
+    public static readonly AttachedProperty<string?> MenuHeaderProperty =
+        AvaloniaProperty.RegisterAttached<AdaptiveBar, Control, string?>("MenuHeader");
+
+    /// <summary>What the More menu runs for a child that is not an <see cref="AdaptiveBarItem"/>.</summary>
+    public static readonly AttachedProperty<ICommand?> MenuCommandProperty =
+        AvaloniaProperty.RegisterAttached<AdaptiveBar, Control, ICommand?>("MenuCommand");
+
+    /// <summary>The More menu's icon for a child that is not an <see cref="AdaptiveBarItem"/>.</summary>
+    public static readonly AttachedProperty<Geometry?> MenuIconProperty =
+        AvaloniaProperty.RegisterAttached<AdaptiveBar, Control, Geometry?>("MenuIcon");
 
     /// <summary>The space between two items.</summary>
     public static readonly StyledProperty<double> SpacingProperty =
@@ -114,6 +130,33 @@ public sealed class AdaptiveBar : Panel
     /// <param name="control">The child.</param>
     /// <param name="value">Whether it does.</param>
     public static void SetIsPinned(Control control, bool value) => control.SetValue(IsPinnedProperty, value);
+
+    /// <summary>Gets what the More menu calls a child.</summary>
+    /// <param name="control">The child.</param>
+    public static string? GetMenuHeader(Control control) => control.GetValue(MenuHeaderProperty);
+
+    /// <summary>Sets what the More menu calls a child.</summary>
+    /// <param name="control">The child.</param>
+    /// <param name="value">The header, such as "CI: 1 failed".</param>
+    public static void SetMenuHeader(Control control, string? value) => control.SetValue(MenuHeaderProperty, value);
+
+    /// <summary>Gets what the More menu runs for a child.</summary>
+    /// <param name="control">The child.</param>
+    public static ICommand? GetMenuCommand(Control control) => control.GetValue(MenuCommandProperty);
+
+    /// <summary>Sets what the More menu runs for a child.</summary>
+    /// <param name="control">The child.</param>
+    /// <param name="value">The command.</param>
+    public static void SetMenuCommand(Control control, ICommand? value) => control.SetValue(MenuCommandProperty, value);
+
+    /// <summary>Gets the More menu's icon for a child.</summary>
+    /// <param name="control">The child.</param>
+    public static Geometry? GetMenuIcon(Control control) => control.GetValue(MenuIconProperty);
+
+    /// <summary>Sets the More menu's icon for a child.</summary>
+    /// <param name="control">The child.</param>
+    /// <param name="value">The icon.</param>
+    public static void SetMenuIcon(Control control, Geometry? value) => control.SetValue(MenuIconProperty, value);
 
     private static Geometry? MoreIcon =>
         Application.Current?.TryGetResource("Icon.Overflow", null, out var icon) == true ? icon as Geometry : null;
@@ -240,16 +283,27 @@ public sealed class AdaptiveBar : Panel
         {
             if (child is not AdaptiveBarItem item)
             {
+                // A child of its own kind is in the menu when it says what it is called there.
+                if (GetMenuHeader(child) is { Length: > 0 } header)
+                {
+                    menu.Items.Add(new MenuItem
+                    {
+                        Header = header,
+                        Command = GetMenuCommand(child),
+                        Icon = GetMenuIcon(child) is { } icon ? new StrokeIcon { Data = icon, Size = 16 } : null,
+                    });
+                }
+
                 continue;
             }
 
             var entry = new MenuItem
             {
-                Header = item.Label,
+                Header = GetMenuHeader(item) ?? item.Label,
                 Command = item.Command,
                 CommandParameter = item.CommandParameter,
                 IsEnabled = item.IsEffectivelyEnabled,
-                Icon = item.Icon is null ? null : new StrokeIcon { Data = item.Icon, Size = 16, IsFilled = item.IsIconFilled },
+                Icon = item.Icon is null ? null : MenuIcon(item),
             };
             if (item.Gesture is { } gesture)
             {
@@ -259,13 +313,57 @@ public sealed class AdaptiveBar : Panel
             // An item that opens a menu, such as the configuration, becomes a submenu.
             if (item.Flyout is MenuFlyout { Items.Count: > 0 } flyout)
             {
-                foreach (var choice in flyout.Items.OfType<MenuItem>())
-                {
-                    entry.Items.Add(new MenuItem { Header = choice.Header, Command = choice.Command, CommandParameter = choice.CommandParameter });
-                }
+                AddChoices(entry, flyout, item);
             }
 
             menu.Items.Add(entry);
+        }
+    }
+
+    /// <summary>An item's icon for its entry in the More menu, in the item's icon color when it has one.</summary>
+    private static StrokeIcon MenuIcon(AdaptiveBarItem item)
+    {
+        var icon = new StrokeIcon { Data = item.Icon, Size = 16, IsFilled = item.IsIconFilled };
+        if (item.IconBrush is { } brush)
+        {
+            icon.Foreground = brush;
+        }
+
+        return icon;
+    }
+
+    /// <summary>Copies the choices of an item's menu into its entry in the More menu, as they are now.</summary>
+    private static void AddChoices(MenuItem entry, MenuFlyout flyout, AdaptiveBarItem item)
+    {
+        foreach (var choice in flyout.Items)
+        {
+            switch (choice)
+            {
+                case MenuItem menuItem:
+                    // A menu that never opened has not given its items the item's data context, so their bindings
+                    // have nothing to read yet.
+                    menuItem.DataContext ??= item.DataContext;
+                    if (menuItem.IsVisible)
+                    {
+                        entry.Items.Add(new MenuItem
+                        {
+                            Header = menuItem.Header,
+                            Command = menuItem.Command,
+                            CommandParameter = menuItem.CommandParameter,
+                            InputGesture = menuItem.InputGesture,
+                        });
+                    }
+
+                    break;
+                case Separator when entry.Items.Count > 0 && entry.Items[^1] is not Separator:
+                    entry.Items.Add(new Separator());
+                    break;
+            }
+        }
+
+        if (entry.Items.Count > 0 && entry.Items[^1] is Separator)
+        {
+            entry.Items.RemoveAt(entry.Items.Count - 1);
         }
     }
 

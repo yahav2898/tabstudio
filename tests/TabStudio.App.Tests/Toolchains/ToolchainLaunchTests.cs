@@ -7,7 +7,7 @@ using TabStudio.Toolchains.Projects;
 namespace TabStudio.App.Tests.Toolchains;
 
 /// <summary>What F5 debugs for a Python or Node.js project: the run plan's program, in debugpy's and js-debug's terms.</summary>
-public sealed class ToolchainLaunchTests
+public sealed partial class ToolchainLaunchTests
 {
     [Fact]
     public void A_Python_script_is_debugged_with_its_interpreter_options_arguments_and_environment()

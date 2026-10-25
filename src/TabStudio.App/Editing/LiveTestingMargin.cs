@@ -58,6 +58,9 @@ public sealed class LiveTestingMargin : AbstractMargin
 
     private static IPen StaleNotCoveredPen => StaleNotCoveredLine.Pen;
 
+    // The check mark around its center, made once and moved to each line, rather than built again on every frame.
+    private static readonly Geometry CheckMark = CreateCheckMark();
+
     private readonly Func<LiveTestMarkers?> _markers;
     private int? _hoveredLine;
 
@@ -167,16 +170,11 @@ public sealed class LiveTestingMargin : AbstractMargin
         switch (marker.State)
         {
             case LineCoverageState.Covered:
-                var check = new StreamGeometry();
-                using (var figure = check.Open())
+                using (context.PushTransform(Matrix.CreateTranslation(x, y)))
                 {
-                    figure.BeginFigure(new Point(x - 4.2, y + 0.2), isFilled: false);
-                    figure.LineTo(new Point(x - 1.2, y + 3.2));
-                    figure.LineTo(new Point(x + 4.4, y - 3.4));
-                    figure.EndFigure(isClosed: false);
+                    context.DrawGeometry(null, marker.IsStale ? StaleCoveredPen : CoveredPen, CheckMark);
                 }
 
-                context.DrawGeometry(null, marker.IsStale ? StaleCoveredPen : CoveredPen, check);
                 break;
             case LineCoverageState.Failing:
                 var pen = marker.IsStale ? StaleFailingPen : FailingPen;
@@ -196,6 +194,20 @@ public sealed class LiveTestingMargin : AbstractMargin
 
                 break;
         }
+    }
+
+    private static StreamGeometry CreateCheckMark()
+    {
+        var check = new StreamGeometry();
+        using (var figure = check.Open())
+        {
+            figure.BeginFigure(new Point(-4.2, 0.2), isFilled: false);
+            figure.LineTo(new Point(-1.2, 3.2));
+            figure.LineTo(new Point(4.4, -3.4));
+            figure.EndFigure(isClosed: false);
+        }
+
+        return check;
     }
 
     private int? LineAt(Point point)

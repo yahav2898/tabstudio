@@ -20,9 +20,12 @@ public sealed partial class ToolchainLanguageToolsTests
         Assert.True(document.LanguageServer.ServerState == LanguageServerState.Running, workspace.LanguageServerOutput.Text);
         var server = document.LanguageServer!;
         var original = document.Document.Text;
-        var offset = original.IndexOf("name.isEmpty", StringComparison.Ordinal) + 5;
-        var completion = await AwaitCompletionsAsync(server, offset, i => i.Label.StartsWith("isEmpty", StringComparison.Ordinal), deadline.Token);
-        Assert.Contains(completion!.Items, i => i.Label.StartsWith("isEmpty", StringComparison.Ordinal));
+        var typed = original.Replace("System.out.println", "System.out.pr\n            System.out.println", StringComparison.Ordinal);
+        document.Document.Text = typed;
+        var offset = typed.IndexOf("System.out.pr\n", StringComparison.Ordinal) + "System.out.pr".Length;
+        var completion = await AwaitCompletionsAsync(server, offset, i => i.Label.StartsWith("println", StringComparison.Ordinal), deadline.Token);
+        Assert.Contains(completion.Items, i => i.Label.StartsWith("println", StringComparison.Ordinal));
+        document.Document.Text = original;
         var call = original.LastIndexOf("greet(name.isEmpty", StringComparison.Ordinal) + 1;
         Assert.NotEmpty(await server.GetDefinitionsAsync(call, deadline.Token));
         Assert.True((await server.FindReferencesAsync(call, true, deadline.Token)).Count >= 2);

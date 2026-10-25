@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using TabStudio.App.Editing;
 using TabStudio.Core.Compatibility;
 using TabStudio.Core.Workspaces;
@@ -10,11 +11,23 @@ namespace TabStudio.App.ViewModels;
 /// <summary>One row of the Properties panel.</summary>
 /// <param name="Name">The property name.</param>
 /// <param name="Value">Its value, as text.</param>
-public sealed record PropertyRow(string Name, string Value);
+/// <param name="IsPath">Whether the value is a path, which trims in the middle on one line, with the whole path in its tooltip.</param>
+public sealed record PropertyRow(string Name, string Value, bool IsPath = false)
+{
+    /// <summary>Whether the value wraps: anything but a path.</summary>
+    public bool IsText => !IsPath;
+}
 
-/// <summary>The Properties panel: facts about whatever is selected in the Solution Explorer.</summary>
+/// <summary>
+/// The Properties panel: facts about whatever is selected in the Solution Explorer. It folds into its header, which
+/// shows the selected item's name, and opens with a tap on it; rows with no value are left out.
+/// </summary>
 public sealed partial class PropertiesViewModel : ObservableObject
 {
+    /// <summary>Whether the panel is open; folded into its 40-pixel header by default, so the Solution Explorer has the room.</summary>
+    [ObservableProperty]
+    public partial bool IsExpanded { get; set; }
+
     /// <summary>The selected item's name.</summary>
     [ObservableProperty]
     public partial string Title { get; private set; } = string.Empty;
@@ -56,8 +69,8 @@ public sealed partial class PropertiesViewModel : ObservableObject
                     Add("Modified", info.LastWriteTime.ToString("g", CultureInfo.CurrentCulture));
                 }
 
-                Add("Project", project?.Name ?? "None");
-                Add("Full Path", path);
+                Add("Project", project?.Name);
+                AddPath("Full Path", path);
                 break;
 
             case WorkspaceNodeKind.Project when node.Project is { } projectInfo:
@@ -71,23 +84,21 @@ public sealed partial class PropertiesViewModel : ObservableObject
                 Add("Project References", projectInfo.ProjectReferences.Count.ToString(CultureInfo.InvariantCulture));
                 Add("Nullable", projectInfo.NullableEnabled ? "Enabled" : "Disabled");
                 Add("Implicit Usings", projectInfo.ImplicitUsings ? "Enabled" : "Disabled");
-                Add("Project File", projectInfo.FilePath);
+                AddPath("Project File", projectInfo.FilePath);
                 break;
 
             case WorkspaceNodeKind.Solution or WorkspaceNodeKind.Root:
                 Subtitle = node.Kind == WorkspaceNodeKind.Solution ? "Solution Properties" : "Folder Properties";
-                Add("Projects", ((workspace?.Projects.Count ?? 0) + (otherProjects?.Count ?? 0)).ToString(CultureInfo.InvariantCulture));
-                Add("Startup Project", startupProject?.Name ?? workspace?.DefaultStartupProject?.Name ?? "None");
-                Add("Path", node.FullPath ?? workspace?.RootDirectory ?? string.Empty);
+                var projects = (workspace?.Projects.Count ?? 0) + (otherProjects?.Count ?? 0);
+                Add("Projects", projects > 0 ? projects.ToString(CultureInfo.InvariantCulture) : null);
+                Add("Startup Project", startupProject?.Name ?? workspace?.DefaultStartupProject?.Name);
+                AddPath("Path", node.FullPath ?? workspace?.RootDirectory);
                 break;
 
             case WorkspaceNodeKind.Folder or WorkspaceNodeKind.SolutionFolder:
                 Subtitle = "Folder Properties";
                 Add("Folder Name", node.Name);
-                if (node.FullPath is { } folder)
-                {
-                    Add("Full Path", folder);
-                }
+                AddPath("Full Path", node.FullPath);
 
                 break;
 
@@ -99,7 +110,7 @@ public sealed partial class PropertiesViewModel : ObservableObject
             case WorkspaceNodeKind.ProjectReference:
                 Subtitle = "Reference Properties";
                 Add("Project", node.Name);
-                Add("Path", node.FullPath ?? string.Empty);
+                AddPath("Path", node.FullPath);
                 break;
 
             default:
@@ -108,7 +119,27 @@ public sealed partial class PropertiesViewModel : ObservableObject
         }
     }
 
-    private void Add(string name, string value) => Rows.Add(new PropertyRow(name, value));
+    /// <summary>Folds the panel into its header, or opens it.</summary>
+    [RelayCommand]
+    private void ToggleExpanded() => IsExpanded = !IsExpanded;
+
+    /// <summary>Adds a row, unless it has no value.</summary>
+    private void Add(string name, string? value)
+    {
+        if (!string.IsNullOrEmpty(value))
+        {
+            Rows.Add(new PropertyRow(name, value));
+        }
+    }
+
+    /// <summary>Adds a path's row, unless there is no path.</summary>
+    private void AddPath(string name, string? path)
+    {
+        if (!string.IsNullOrEmpty(path))
+        {
+            Rows.Add(new PropertyRow(name, path, IsPath: true));
+        }
+    }
 
     private static string BuildActionFor(string path, ProjectInfo? project)
     {

@@ -184,7 +184,7 @@ public sealed partial class ToolchainLanguageToolsTests : IDisposable
             if (!Passed && Environment.GetEnvironmentVariable("TABSTUDIO_SCREENSHOTS") is { Length: > 0 } folder)
             {
                 Directory.CreateDirectory(folder);
-                File.WriteAllText(Path.Combine(folder, name + ".txt"), $"== Output\n{workspace.Output.Text}\n== Language Servers\n{workspace.LanguageServerOutput.Text}\n== Debug Adapters\n{workspace.DebugAdapterOutput.Text}\n== Processes\n{Processes()}");
+                File.WriteAllText(Path.Combine(folder, name + ".txt"), $"== Output\n{workspace.Output.Text}\n== Diagnostics\n{string.Join("\n", workspace.ActiveDocument?.Diagnostics.Select(d => d.Message) ?? [])}\n== Language Servers\n{workspace.LanguageServerOutput.Text}\n== Debug Adapters\n{workspace.DebugAdapterOutput.Text}\n== Processes\n{Processes()}");
             }
         }
     }

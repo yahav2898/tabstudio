@@ -36,6 +36,10 @@
   <SolidColorBrush x:Key="Brush.Toolchain.Windows" Color="#2B79C2" />
   <SolidColorBrush x:Key="Brush.Toolchain.Other" Color="#4A5263" />
 
+  <!-- Swarm outlines an element on an app's screen, the content of the app rather than the IDE's chrome, in one red. -->
+  <SolidColorBrush x:Key="Brush.Swarm.Highlight" Color="#F44336" />
+  <SolidColorBrush x:Key="Brush.Swarm.HighlightFill" Color="#30F44336" />
+
   <!-- The status bar is teal in both themes, so the states it shows on its dark wells (CI) keep their bright colors. -->
   <SolidColorBrush x:Key="Brush.StatusBar.Passed" Color="#6FD6A0" />
   <SolidColorBrush x:Key="Brush.StatusBar.Failed" Color="#F47067" />
@@ -301,6 +305,14 @@
       <SolidColorBrush x:Key="Symbol.Silver" Color="#C5CAD3" />
       <SolidColorBrush x:Key="Symbol.Gray" Color="#9AA1AE" />
       <SolidColorBrush x:Key="Symbol.Ink" Color="#1B1D23" />
+
+      <!-- A short notice floating over an app's screen (Swarm, the app preview): dark glass here, white glass in the light theme. -->
+      <SolidColorBrush x:Key="Brush.Overlay" Color="#E61B1F24" />
+      <SolidColorBrush x:Key="Brush.Overlay.Border" Color="#33FFFFFF" />
+
+      <!-- Swarm's Device Matrix: the bezel of a device around its screen. -->
+      <SolidColorBrush x:Key="Brush.Swarm.Bezel" Color="#0C0D10" />
+      <SolidColorBrush x:Key="Brush.Swarm.BezelBorder" Color="#3A3F4B" />
 
       <!-- Elevation: popups and flyouts, then dialogs. Shadows are softer on light surfaces. -->
       <BoxShadows x:Key="Shadow.Popup">0 8 24 0 #59000000</BoxShadows>
@@ -591,6 +603,14 @@
       <SolidColorBrush x:Key="Symbol.Silver" Color="#59606C" />
       <SolidColorBrush x:Key="Symbol.Gray" Color="#6A7180" />
       <SolidColorBrush x:Key="Symbol.Ink" Color="#FFFFFF" />
+
+      <!-- A short notice floating over an app's screen (Swarm, the app preview): dark glass here, white glass in the light theme. -->
+      <SolidColorBrush x:Key="Brush.Overlay" Color="#F5FFFFFF" />
+      <SolidColorBrush x:Key="Brush.Overlay.Border" Color="#D9DDE4" />
+
+      <!-- Swarm's Device Matrix: the bezel of a device around its screen, dark as a device's in both themes. -->
+      <SolidColorBrush x:Key="Brush.Swarm.Bezel" Color="#2A2E37" />
+      <SolidColorBrush x:Key="Brush.Swarm.BezelBorder" Color="#1D2127" />
 
       <!-- Elevation: popups and flyouts, then dialogs. Shadows are softer on light surfaces. -->
       <BoxShadows x:Key="Shadow.Popup">0 6 20 0 #29101828</BoxShadows>
