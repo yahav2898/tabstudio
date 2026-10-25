@@ -9,6 +9,7 @@ internal static class UiTestDriverSource
 {
     /// <summary>The driver, with <c>$NAMESPACE$</c> for the test project's namespace and <c>$APP$</c> for the app's <c>Application</c> class.</summary>
     public const string Text = """
+        using System.Reflection;
         using Avalonia;
         using Avalonia.Controls;
         using Avalonia.Controls.ApplicationLifetimes;
@@ -42,7 +43,7 @@ internal static class UiTestDriverSource
             {
                 // TestAppBuilder starts Avalonia with the app itself; a test project that starts it with another
                 // Application gets a new one, which brings the app's styles to its window.
-                var lifetime = new SingleView();
+                var lifetime = PhoneLifetime.Create();
                 var app = Application.Current as global::$APP$;
                 var isOwn = app is null;
                 app ??= new global::$APP$();
@@ -239,11 +240,30 @@ internal static class UiTestDriverSource
                     ? (segment[..open], null, index)
                     : (segment, null, 0);
             }
+        }
 
-            /// <summary>The lifetime a phone gives an app: one view, without a window.</summary>
-            private sealed class SingleView : ISingleViewApplicationLifetime
+        /// <summary>
+        /// The lifetime a phone gives an app: one view, without a window. Avalonia's lifetime interfaces cannot be
+        /// implemented in code, so it is a proxy made at run time, where the interface has only MainView.
+        /// </summary>
+        internal class PhoneLifetime : DispatchProxy
+        {
+            public Control? MainView { get; private set; }
+
+            public static ISingleViewApplicationLifetime Create() => Create<ISingleViewApplicationLifetime, PhoneLifetime>();
+
+            protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
             {
-                public Control? MainView { get; set; }
+                switch (targetMethod?.Name)
+                {
+                    case "get_MainView":
+                        return MainView;
+                    case "set_MainView":
+                        MainView = args?[0] as Control;
+                        return null;
+                    default:
+                        throw new NotSupportedException($"A phone's lifetime has no {targetMethod?.Name}.");
+                }
             }
         }
 

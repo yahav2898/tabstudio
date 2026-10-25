@@ -221,7 +221,6 @@ public sealed partial class WorkspaceViewModel
                 break;
             }
 
-            ShowOutputSource(SwarmOutput);
             await RunBuildOnSwarmAsync(swarm, project, kind, built, entry, debugBuild, pauseAtStart && !restarted, restarted);
             restarted = true;
         }
@@ -242,6 +241,9 @@ public sealed partial class WorkspaceViewModel
         var coordinator = swarm.Coordinator!;
         var packages = _language!.GetPackageRuntimeAssemblies(project.FilePath);
         State = debugBuild is null ? IdeState.Running : IdeState.Debugging;
+
+        // After the state, which shows the build's own output: the devices' output is what matters now.
+        ShowOutputSource(SwarmOutput);
         StatusText = restarted ? $"Updating {project.Name} on the swarm" : $"Starting {project.Name} on the swarm";
         _run = new CancellationTokenSource();
         _swarmProject = project;
