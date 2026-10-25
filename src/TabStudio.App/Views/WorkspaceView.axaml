@@ -208,6 +208,7 @@
             <MenuItem Header="_File Icon Theme..." Command="{Binding SelectFileIconThemeCommand}" IsEnabled="{Binding HasExtensions}" />
             <Separator />
             <MenuItem Header="Check for _Updates" Command="{Binding CheckForExtensionUpdatesCommand}" IsEnabled="{Binding HasExtensions}" />
+          </MenuItem>
           <MenuItem Header="T_ools">
             <MenuItem Header="Toolchain _Store" Command="{Binding ShowToolchainStoreCommand}" />
             <MenuItem Header="Install Project _Packages" Command="{Binding InstallProjectPackagesCommand}" />
