@@ -55,6 +55,9 @@ public static class AppServices
         services.AddSingleton<GitHubAccountViewModel>();
         services.AddSingleton<GitHubImporter>();
         services.AddSingleton<LinkService>();
+        // The Windows Bridge; on Windows the desktop head registers an IBridgeDesktopFactory, so TabStudio can be the PC.
+        services.AddSingleton<Services.WindowsBridge.WindowsBridgeService>();
+        services.AddSingleton<ViewModels.WindowsBridge.WindowsBridgeViewModel>();
         services.AddSingleton(_ => ToolboxCatalog.LoadEmbedded());
         services.AddSingleton<DesktopModeSettingsStore>();
         services.AddSingleton<DesktopModeViewModel>();

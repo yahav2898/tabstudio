@@ -391,7 +391,7 @@ adapter it brings.
   package against the index entry that lists it, before anything is unpacked.
 - **Processes.** Programs are children of TabStudio's process, started with pipes or a pseudo terminal, and are
   killed with their whole process tree when stopped, as Android 12 and later expect.
-- **Projects.** `ToolchainProjectDetector` finds Python and Node.js projects in a workspace from their project files.
+- **Projects.** `ToolchainProjectDetector` finds projects from the catalog's manifests and source-file rules.
   F5 and Ctrl+F5 run them with their console in the Output panel; problem matchers turn tracebacks and compiler
   output into Error List entries and links.
 - **The terminal.** `TerminalEmulator` turns what programs write to a pseudo terminal into styled character cells,
@@ -400,7 +400,19 @@ adapter it brings.
   toolchain runtime, so Pyright, typescript-language-server, debugpy and vscode-js-debug start inside the Linux
   environment and paths are translated between the device and the environment. A missing server or adapter offers
   to install the toolchain that brings it. For F5, a project's run plan becomes a DAP launch configuration, and the
-  program starts through the adapter's `runInTerminal` request, so its input and output stay in the Output panel.
+  program's input and output stay in the Output panel through its adapter's terminal or runtime streams.
+
+### Go
+
+Every `go.mod`, including nested modules, is a startup project; vendor and cache folders are ignored. A root
+`package main` or a single `cmd/name` command builds with `go build -gcflags=all=-N -l` into `.tabstudio/bin/app`.
+With several commands, the active source selects the package. F5 and Ctrl+F5 build the whole package, including
+sibling files, and Go compiler locations become Error List links.
+
+Alpine installs Go, gopls and Delve from its verified package index; desktops use PATH. gopls supplies completion,
+diagnostics and navigation. Delve serves DAP over loopback TCP with `mode: exec`, remote output, and stdin inherited
+from its runtime process; user input never enters the DAP stream. Real-tool IDE and emulator tests cover the
+console template, compiler errors, a breakpoint and Locals.
 
 ## Swarm
 
@@ -575,16 +587,3 @@ design keeps the second part proportional to what you are actually editing:
 ## Code conventions
 
 See [CONTRIBUTING.md](../CONTRIBUTING.md) for code style, tests and how CI reports results.
-
-### Toolchains: Go
-
-Go modules (`go.mod`) are startup projects, including nested modules in a multi-module repository; dependency,
-cache and vendor folders are excluded. A root `package main`, or the only `cmd/name` command, is built with
-`go build -gcflags=all=-N -l` into `.tabstudio/bin/app` before Ctrl+F5 or F5. With several commands, open a source
-file in the desired package. The complete package, including sibling files, is built. Compiler errors link into
-the Error List. Go, gopls and Delve come from Alpine 3.24 packages, and from PATH on a computer. gopls provides
-completion, diagnostics, definition, references and rename. Delve executes the same binary over TCP DAP; output
-uses DAP output events, while `/dev/stdin` carries the Output panel's input separately from protocol messages.
-The emulator self test installs the real packages and builds and runs the console template. Native debugging
-inside PRoot depends on its ptrace emulation and the device kernel; the emulator run verifies compilation and
-console I/O, while the IDE job verifies Delve breakpoints and locals on the host.

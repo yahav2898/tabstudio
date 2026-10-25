@@ -38,7 +38,8 @@ public sealed record ProotRuntimeOptions
 /// paths, so programs see the Alpine root file system as <c>/</c>.
 /// </para>
 /// <para>
-/// Programs run as a simulated root user (<c>-0</c>), which <c>apk</c> needs; hard links, which Android does not
+/// Programs normally run as a simulated root user (<c>-0</c>), which <c>apk</c> needs. A process may preserve its
+/// real identity for socket authentication with <see cref="ProcessStartSpec.UseHostIdentity"/>. Hard links, which Android does not
 /// allow apps to create, become symbolic links (<c>--link2symlink</c>); and System V IPC is emulated
 /// (<c>--sysvipc</c>). The device's <c>/dev</c>, <c>/proc</c> and <c>/sys</c> are visible, and TabStudio's
 /// projects folder and each open workspace appear at their own paths, so paths in programs' output are the
@@ -167,7 +168,13 @@ public sealed class ProotRuntime : IToolchainRuntime
             "--link2symlink",
             "--sysvipc",
             "-L",
-            "-0",
+        };
+        if (!spec.UseHostIdentity)
+        {
+            arguments.Add("-0");
+        }
+
+        arguments.AddRange([
             "-r", _options.Rootfs,
             "-b", "/dev",
             "-b", "/proc",
@@ -179,7 +186,7 @@ public sealed class ProotRuntime : IToolchainRuntime
             "-b", "/proc/self/fd/2:/dev/stderr",
             // Android has no /dev/shm; POSIX shared memory and semaphores (Python's multiprocessing) need one.
             "-b", $"{Path.Combine(_options.Rootfs, "tmp")}:/dev/shm",
-        };
+        ]);
 
         foreach (var file in _procStandIns.Value)
         {

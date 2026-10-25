@@ -125,7 +125,7 @@ public sealed partial class ErrorListViewModel : ObservableObject
 
     /// <summary>All diagnostics with a location in a file, before filtering.</summary>
     public IEnumerable<BuildDiagnostic> AllDiagnostics =>
-        _byFile.Values.SelectMany(d => d).Concat(_withoutLocation).Concat(_restore.Values.SelectMany(d => d)).Concat(LayoutDiagnostics);
+        WindowsBridgeDiagnostics.Concat(_byFile.Values.SelectMany(d => d)).Concat(_withoutLocation).Concat(_restore.Values.SelectMany(d => d)).Concat(LayoutDiagnostics);
 
     /// <summary>The current diagnostics of one file.</summary>
     /// <param name="filePath">Full path of the file.</param>

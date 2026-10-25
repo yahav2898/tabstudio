@@ -41,6 +41,8 @@ public sealed class ToolchainServerLauncher(IToolchainRuntime runtime) : IServer
                 Arguments = startInfo.Arguments,
                 WorkingDirectory = startInfo.WorkingDirectory,
                 Environment = startInfo.Environment,
+                // Delve compares its UID with the socket owner's real UID; simulated root would reject the IDE.
+                UseHostIdentity = _runtime.Kind == RuntimeKind.Linux && Path.GetFileName(startInfo.FileName) == "dlv",
             });
             return new ToolchainServerProcess(process);
         }
