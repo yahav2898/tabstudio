@@ -68,7 +68,7 @@ public sealed class EditorScrollingBenchmarkTests
         var report = new StringBuilder();
         report.AppendLine("# Scrolling a long C# file").AppendLine();
         report.Append(Setup(view, document));
-        var (measured, runs) = MeasureAll(bench, view);
+        var (measured, runs, sample) = MeasureAll(bench, view);
         report.Append(measured);
 
         bench.ScrollViewer.Offset = new Avalonia.Vector(0, bench.MaxOffset / 2);
@@ -79,9 +79,13 @@ public sealed class EditorScrollingBenchmarkTests
         report.AppendLine("## Scrolling with a finger").AppendLine();
         report.AppendLine(ScrollRun.Header).AppendLine(touch.Drag.Row()).AppendLine();
         report.Append(touch.Report()).AppendLine();
+
+        var (comparison, ours, theirs) = BeforeAndAfter(bench, view, sample);
+        report.Append(comparison);
         Write("editor-scrolling-csharp.md", report.ToString());
 
         AssertWithinBudget(runs);
+        AssertBetterThanBefore(ours, theirs);
         Assert.True(touch.GlideDistance > 0, "the editor glides after a flick");
         window.Close();
     }
@@ -113,13 +117,16 @@ public sealed class EditorScrollingBenchmarkTests
             "Pyright to start");
         await UiTestHelpers.WaitUntilAsync(() => view.Folding?.AllFoldings.Any() == true, TimeSpan.FromSeconds(30), "the folds");
 
-        // Pyright takes a while over a long file, and longer on a busy machine; the frames are measured either way.
+        // Pyright takes a while over a long file, and longer on a busy machine; the frames are measured either way, once
+        // its squiggles and hints have stopped changing, so its work does not land in the middle of the frames.
         var deadline = DateTime.UtcNow + TimeSpan.FromSeconds(120);
         while (document.Diagnostics.Count == 0 && DateTime.UtcNow < deadline)
         {
             Dispatcher.UIThread.RunJobs();
             await Task.Delay(50);
         }
+
+        await AvaloniaEditParts.UntilSettledAsync(document, TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(60));
 
         foreach (var line in new[] { 50, 260, 520, 900, 1400, 1900 })
         {
@@ -131,20 +138,24 @@ public sealed class EditorScrollingBenchmarkTests
         var report = new StringBuilder();
         report.AppendLine("# Scrolling a long Python file").AppendLine();
         report.Append(Setup(view, document));
-        var (measured, runs) = MeasureAll(bench, view);
+        var (measured, runs, sample) = MeasureAll(bench, view);
         report.Append(measured);
 
         bench.ScrollViewer.Offset = new Avalonia.Vector(0, bench.MaxOffset / 3);
         bench.Settle();
         UiTestHelpers.SaveScreenshot(window, "perf-02-python-scrolled");
+
+        var (comparison, ours, theirs) = BeforeAndAfter(bench, view, sample);
+        report.Append(comparison);
         Write("editor-scrolling-python.md", report.ToString());
         AssertWithinBudget(runs);
+        AssertBetterThanBefore(ours, theirs);
         window.Close();
         main.Workspace?.Dispose();
     }
 
     /// <summary>The main runs, the runs with one part of the editor taken away at a time, and the layout profile.</summary>
-    private static (string Report, IReadOnlyList<ScrollRun> Runs) MeasureAll(EditorScrollBench bench, CodeEditorView view)
+    private static (string Report, IReadOnlyList<ScrollRun> Runs, List<double> Sample) MeasureAll(EditorScrollBench bench, CodeEditorView view)
     {
         var max = bench.MaxOffset;
         var drag = EditorScrollBench.Drag(0, Math.Min(max, 4500), 15);
@@ -215,7 +226,49 @@ public sealed class EditorScrollingBenchmarkTests
         text.AppendLine("## Where layout time goes").AppendLine();
         text.AppendLine("Exclusive time of Avalonia's layout and style activities by control type, while dragging (profiling slows everything down).").AppendLine();
         text.Append(bench.ProfileLines(drag.Take(200))).AppendLine();
-        return (text.ToString(), runs);
+        return (text.ToString(), runs, sample);
+    }
+
+    /// <summary>
+    /// The same scroll with the editor's parts and then with AvaloniaEdit's own, as before them, on the same machine in
+    /// the same run. AvaloniaEdit's parts stay in the editor afterwards.
+    /// </summary>
+    private static (string Report, ScrollRun Ours, ScrollRun Theirs) BeforeAndAfter(EditorScrollBench bench, CodeEditorView view, List<double> sample)
+    {
+        var warmUp = sample.Take(60).ToList();
+        bench.ScrollViewer.Offset = default;
+        bench.Settle();
+        var ours = bench.Run("this editor", sample);
+
+        var parts = AvaloniaEditParts.PutBack(view);
+        bench.ScrollViewer.Offset = default;
+        bench.Settle();
+        bench.Run("warm-up", warmUp);
+        bench.ScrollViewer.Offset = default;
+        bench.Settle();
+        var theirs = bench.Run("AvaloniaEdit's own parts (before)", sample);
+
+        var text = new StringBuilder();
+        text.AppendLine("## Before and after, in this run").AppendLine();
+        text.AppendLine(CultureInfo.InvariantCulture, $"The same drag and two 5000 dip/s flings with this editor, then with AvaloniaEdit's own {parts} put back, as before. The colorizer, squiggle, breakpoint and Live Unit Testing changes are in both.").AppendLine();
+        text.AppendLine(ScrollRun.Header);
+        text.AppendLine(ours.Row());
+        text.AppendLine(theirs.Row());
+        text.AppendLine();
+        return (text.ToString(), ours, theirs);
+    }
+
+    /// <summary>The editor allocates far less per frame than with AvaloniaEdit's own parts, and builds no more lines.</summary>
+    private static void AssertBetterThanBefore(ScrollRun ours, ScrollRun theirs)
+    {
+        var (oursFirst, oursSecond) = ours.AllocationsByHalf();
+        var (theirsFirst, theirsSecond) = theirs.AllocationsByHalf();
+        var oursPerFrame = (oursFirst + oursSecond) / 2;
+        var theirsPerFrame = (theirsFirst + theirsSecond) / 2;
+        Assert.True(oursPerFrame < theirsPerFrame * 0.75, $"{oursPerFrame / 1024:0.0} KB per frame against {theirsPerFrame / 1024:0.0} KB before");
+        var oursLines = ours.Frames.Average(f => f.LinesBuilt);
+        var theirsLines = theirs.Frames.Average(f => f.LinesBuilt);
+        Assert.True(oursLines <= theirsLines + 0.05, $"{oursLines:0.00} lines built per frame against {theirsLines:0.00} before");
     }
 
     /// <summary>

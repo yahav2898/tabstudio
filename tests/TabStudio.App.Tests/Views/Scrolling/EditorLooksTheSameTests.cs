@@ -1,19 +1,14 @@
 using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Documents;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using AvaloniaEdit;
-using AvaloniaEdit.Editing;
-using AvaloniaEdit.Folding;
 using TabStudio.App.Editing;
 using TabStudio.App.Services;
 using TabStudio.App.Tests.Extensions;
-using TabStudio.App.ViewModels;
-using TabStudio.App.Views;
 using static TabStudio.App.Tests.Views.EditorHarness;
 
 namespace TabStudio.App.Tests.Views.Scrolling;
@@ -46,7 +41,8 @@ public sealed class EditorLooksTheSameTests
             () => document.Diagnostics.Any(d => d.Id == "CS0219") && view.Folding?.AllFoldings.Any() == true,
             TimeSpan.FromMinutes(2),
             "the colors and the folds");
-        await UntilSettledAsync(document);
+        await AvaloniaEditParts.UntilSettledAsync(document, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(30));
+        Render();
         var editor = view.Editor;
         var scroll = editor.GetVisualDescendants().OfType<ScrollViewer>().First();
         scroll.Offset = new Vector(37, 1234.5);
@@ -64,23 +60,7 @@ public sealed class EditorLooksTheSameTests
         Render();
 
         // AvaloniaEdit's own parts back in place.
-        view.TextLayer!.Uninstall();
-        var margins = editor.TextArea.LeftMargins;
-        var numbers = margins.IndexOf(margins.OfType<CachedLineNumberMargin>().Single());
-        var stockNumbers = new LineNumberMargin();
-        stockNumbers.Bind(TextElement.ForegroundProperty, editor.GetBindingObservable(TextEditor.LineNumbersForegroundProperty));
-        margins[numbers] = stockNumbers;
-        margins[margins.IndexOf(folding)] = new FoldingMargin { FoldingManager = view.Folding };
-
-        // AvaloniaEdit's margin takes its line colors when the editor's folding brushes change, as when folding starts.
-        foreach (var brush in new[] { FoldingMargin.FoldingMarkerBrushProperty, FoldingMargin.SelectedFoldingMarkerBrushProperty })
-        {
-            var color = editor.GetValue(brush);
-            editor.SetValue(brush, Avalonia.Media.Brushes.Transparent);
-            editor.SetValue(brush, color);
-        }
-
-        editor.TextArea.TextView.Redraw();
+        Assert.Equal("text layer, line numbers, folding margin", AvaloniaEditParts.PutBack(view));
         Render();
 
         var theirs = Capture(window, area, "perf-05-avaloniaedit-parts");
@@ -91,23 +71,6 @@ public sealed class EditorLooksTheSameTests
         AssertSamePicture(theirs, ours, "the editor");
         AssertSamePicture(theirsHovered, oursHovered, "the editor with the mouse on a fold marker");
         window.Close();
-    }
-
-    /// <summary>Waits until the language service's colors and squiggles have not changed for a second, so both pictures get the same.</summary>
-    private static async Task UntilSettledAsync(DocumentViewModel document)
-    {
-        var clock = System.Diagnostics.Stopwatch.StartNew();
-        var (classifications, diagnostics, since) = (document.Classifications, document.Diagnostics, clock.Elapsed);
-        while (clock.Elapsed - since < TimeSpan.FromSeconds(1) && clock.Elapsed < TimeSpan.FromSeconds(30))
-        {
-            await Task.Delay(100);
-            if (!ReferenceEquals(classifications, document.Classifications) || !ReferenceEquals(diagnostics, document.Diagnostics))
-            {
-                (classifications, diagnostics, since) = (document.Classifications, document.Diagnostics, clock.Elapsed);
-            }
-        }
-
-        Render();
     }
 
     private static PixelRect AreaOf(Window window, TextEditor editor)
