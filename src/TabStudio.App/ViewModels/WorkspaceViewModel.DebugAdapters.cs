@@ -268,6 +268,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         _adapterLaunched = false;
         _sentBreakpoints.Clear();
         WireAdapterEvents(session);
+        StartAdapterInput(session);
         AcceptChildSessions(session, executable, workspace.RootDirectory, noDebug);
         if (session.HasEnded)
         {
@@ -419,6 +420,10 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
                 "console" or "important" => OutputKind.Info,
                 _ => OutputKind.Program,
             });
+            if (session.AcceptsProgramInput && e.Category == "stdout" && !e.Output.EndsWith('\n'))
+            {
+                Output.ShowWaitingForInput();
+            }
         };
         session.BreakpointChanged += (_, e) => _ui.Post(() => OnAdapterBreakpointChanged(e));
         session.AdapterLog += (_, line) => DebugAdapterOutput.WriteLine($"[{session.Adapter.Name}] {line}", OutputKind.Info);
@@ -936,6 +941,10 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         }
 
         _adapterChildren.Clear();
+        if (session.AcceptsProgramInput)
+        {
+            Output.EndInput();
+        }
         _adapterRoot = null;
         _adapter = null;
         _adapterPauses++;

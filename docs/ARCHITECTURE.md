@@ -575,3 +575,22 @@ design keeps the second part proportional to what you are actually editing:
 ## Code conventions
 
 See [CONTRIBUTING.md](../CONTRIBUTING.md) for code style, tests and how CI reports results.
+
+### Toolchains: Java
+
+Maven (`pom.xml`), Gradle (Groovy or Kotlin DSL) and standalone Java source projects are startup projects.
+Alpine 3.24 installs OpenJDK 21 and Eclipse JDT LS. Maven or Gradle is added only when the selected project needs
+that build command; desktop computers use PATH. Maven packages the app and copies its runtime dependencies.
+Gradle receives a small init script that resolves sourceSets.main.runtimeClasspath, so an application plugin
+and a special run task are not required. Standalone sources compile with javac -g into .tabstudio/java/classes.
+The selected main class runs directly in Java, so Scanner/System.in input reaches the Output panel. javac and
+Maven locations populate the Error List. Multiple main classes need explicit selection; multi-module builds
+can select their member manifest as the startup project.
+
+JDT LS uses a workspace-specific cache directory outside the source tree (shared into PRoot explicitly) and receives the pinned java-debug bundle in initializationOptions.
+The Java debugger extension archive is verified with SHA-256 before extraction. F5 calls
+vscode.java.startDebugSession through LSP, connects DAP to the returned port, and launches with the same main
+class and runtime classpath as Ctrl+F5. runInTerminal supplies console input. JDT supplies completion, squiggles,
+definition, references and rename. CI installs JDK 21, Maven, JDT LS and java-debug, and the emulator installs from
+Alpine's real mirror and builds and runs the Maven console template. Android JDT startup, memory use and the
+full Java debugger still require the requested CI/emulator validation before this work is considered complete.

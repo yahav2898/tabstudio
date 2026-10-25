@@ -59,6 +59,9 @@ public enum ProjectKind
 
     /// <summary>A Node.js program: a folder with <c>package.json</c>.</summary>
     Node,
+
+    /// <summary>A Java Maven, Gradle or source project.</summary>
+    Java,
 }
 
 /// <summary>

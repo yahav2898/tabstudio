@@ -62,6 +62,8 @@ jobs:
             name=$(basename "$project")
             [ "$name" = "TabStudio.App.Tests" ] && continue
             if ! dotnet test "$project" -c Release --logger "console;verbosity=normal" > "ci-out/$name.log" 2>&1; then
+              # A retry may not hide a flaky test for this language.
+              if grep -Eq 'JavaProjectTests.*\[FAIL\]' "ci-out/$name.log"; then status=1; fi
               # Known intermittent failures are tracked on the board; one retry keeps them from blocking a release,
               # and FLAKY.txt and a warning keep them visible. A second failure fails the job.
               echo "::warning::$name failed once; running it again. The first attempt is in ci-out/$name.log."
@@ -106,6 +108,29 @@ jobs:
         with:
           python-version: '3.12'
 
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Install Java tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y maven
+          curl -fsSL https://services.gradle.org/distributions/gradle-8.14.4-bin.zip -o "$RUNNER_TEMP/gradle.zip"
+          echo "f1771298a70f6db5a29daf62378c4e18a17fc33c9ba6b14362e0cdf40610380d  $RUNNER_TEMP/gradle.zip" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/gradle.zip" -d "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/gradle-8.14.4/bin" >> "$GITHUB_PATH"
+          mkdir -p "$RUNNER_TEMP/jdtls" "$RUNNER_TEMP/java-debug"
+          curl -fsSL https://download.eclipse.org/jdtls/milestones/1.58.0/jdt-language-server-1.58.0-202604151538.tar.gz -o "$RUNNER_TEMP/jdtls.tar.gz"
+          echo "2a5bbe55ec91b4325392050dc422cead3220a2459b3766be35e1fff45b4a50d9  $RUNNER_TEMP/jdtls.tar.gz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/jdtls.tar.gz" -C "$RUNNER_TEMP/jdtls"
+          curl -fsSL https://open-vsx.org/api/vscjava/vscode-java-debug/0.60.0/file/vscjava.vscode-java-debug-0.60.0.vsix -o "$RUNNER_TEMP/java-debug.vsix"
+          echo "f09ebe358a7b08b3c17b21b8d8207b0649acad120eb6f1604dc4f15379f59d66  $RUNNER_TEMP/java-debug.vsix" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/java-debug.vsix" -d "$RUNNER_TEMP/java-debug"
+          echo "$RUNNER_TEMP/jdtls/bin" >> "$GITHUB_PATH"
+          echo "TABSTUDIO_JAVA_DEBUG_BUNDLE=$RUNNER_TEMP/java-debug/extension/server/com.microsoft.java.debug.plugin-0.53.2.jar" >> "$GITHUB_ENV"
+
       - name: Install language servers and debug adapters
         run: |
           npm install -g pyright typescript-language-server typescript@5
@@ -136,6 +161,7 @@ jobs:
           first=0
           run_ide_tests ci-out/TabStudio.App.Tests.log || first=1
           tail -n 80 ci-out/TabStudio.App.Tests.log
+          if grep -Eq '(A_Java_template|Java_).*\[FAIL\]' ci-out/TabStudio.App.Tests.log; then status=1; fi
           if [ $first -ne 0 ]; then
             # Known intermittent failures (a native crash in the test host, slow servers) are tracked on the board;
             # one retry keeps them from blocking a release, and FLAKY.txt and a warning keep them visible.
@@ -157,6 +183,7 @@ jobs:
           light=0
           run_light_tests ci-out/TabStudio.App.Tests.Light.log || light=1
           tail -n 20 ci-out/TabStudio.App.Tests.Light.log
+          if grep -Eq '(A_Java_template|Java_).*\[FAIL\]' ci-out/TabStudio.App.Tests.Light.log; then status=1; fi
           if [ $light -ne 0 ]; then
             echo "::warning::The IDE tests in the light theme failed once; running them again. The first attempt is in ci-out/TabStudio.App.Tests.Light.log."
             if run_light_tests ci-out/TabStudio.App.Tests.Light.retry.log; then
@@ -309,7 +336,7 @@ jobs:
           disk-size: 4096M
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
-          script: bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 660
+          script: bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 1500
 
       # A crash's native backtrace has only offsets into the runtime's stripped libraries; this names the functions.
       - name: Name the functions in a crash's backtrace

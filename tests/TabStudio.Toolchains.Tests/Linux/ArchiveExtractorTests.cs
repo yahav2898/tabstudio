@@ -63,10 +63,12 @@ public sealed class ArchiveExtractorTests : IDisposable
         Assert.Empty(Directory.EnumerateFileSystemEntries(outside));
     }
 
-    [Fact]
-    public async Task Unpacks_a_wheel_as_a_zip()
+    [Theory]
+    [InlineData("debugpy-1.0-py2.py3-none-any.whl")]
+    [InlineData("java-debug.vsix")]
+    public async Task Unpacks_a_wheel_or_extension_as_a_zip(string name)
     {
-        var wheel = _temp.Resolve("debugpy-1.0-py2.py3-none-any.whl");
+        var wheel = _temp.Resolve(name);
         using (var zip = ZipFile.Open(wheel, ZipArchiveMode.Create))
         {
             var entry = zip.CreateEntry("debugpy/__init__.py");
