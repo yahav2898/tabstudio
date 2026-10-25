@@ -1,13 +1,14 @@
 using TabStudio.Compilation.Wpf.Xaml;
+using TabStudio.Core.Diagnostics;
 
-namespace TabStudio.Wpf.Building;
+namespace TabStudio.Compilation.Wpf;
 
 /// <summary>
 /// What a WPF window's XAML sets that OpenSilver's <c>Window</c> may not have, and what TabStudio does with it in the
 /// web preview, where the app's window fills the page: the background is painted behind the window's content, and
 /// the settings that place or size a desktop window have nothing to act on.
 /// </summary>
-internal static class WindowXamlSettings
+public static class WpfWindowSettings
 {
     /// <summary>The window's background, which TabStudio paints behind its content.</summary>
     public const string Background = "Background";
@@ -36,6 +37,33 @@ internal static class WindowXamlSettings
         "HorizontalContentAlignment", "VerticalContentAlignment",
     };
 
+    /// <summary>
+    /// What happens in the web preview to an attribute of a window's root element that OpenSilver's <c>Window</c> does
+    /// not have, as the Error List says it; <see langword="null"/> for one TabStudio does nothing about.
+    /// </summary>
+    /// <param name="attribute">The attribute's name, such as <c>WindowStartupLocation</c>.</param>
+    /// <param name="root">The window's root element, whose background TabStudio paints when it is a plain color.</param>
+    public static (DiagnosticSeverityLevel Severity, string Message)? Note(string attribute, XamlElement root)
+    {
+        ArgumentNullException.ThrowIfNull(attribute);
+        ArgumentNullException.ThrowIfNull(root);
+        if (attribute == Background)
+        {
+            return (DiagnosticSeverityLevel.Info, BackgroundColor(root) is not null
+                ? "OpenSilver's Window has no Background, so TabStudio paints it behind the window's content."
+                : "OpenSilver's Window has no Background, and TabStudio paints only a plain color behind the window's content: set the brush on the window's root panel instead.");
+        }
+
+        if (WithoutEffect.TryGetValue(attribute, out var why))
+        {
+            return (DiagnosticSeverityLevel.Info, $"{attribute} has no effect in the web preview: {why}.");
+        }
+
+        return OnContent.Contains(attribute)
+            ? (DiagnosticSeverityLevel.Warning, $"OpenSilver's Window has no {attribute}, so the window's content does not get it: set it on the controls, or on a style for them.")
+            : null;
+    }
+
     /// <summary>The background a window's XAML sets as a color the page can paint, such as <c>#FFF0F0F0</c> or <c>Beige</c>.</summary>
     /// <param name="root">The window's root element.</param>
     /// <returns>A CSS color, or <see langword="null"/> when there is none or it is not a plain color.</returns>
@@ -46,8 +74,11 @@ internal static class WindowXamlSettings
     }
 
     /// <summary>A XAML color as CSS: named colors as they are, <c>#AARRGGBB</c> as <c>rgba()</c>.</summary>
-    internal static string? CssColor(string value)
+    /// <param name="value">The color as XAML writes it.</param>
+    /// <returns>The CSS color, or <see langword="null"/> for a value that is not a plain color.</returns>
+    public static string? CssColor(string value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         if (value.StartsWith('{'))
         {
             return null;

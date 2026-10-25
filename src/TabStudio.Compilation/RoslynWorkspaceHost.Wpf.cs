@@ -77,7 +77,31 @@ public sealed partial class RoslynWorkspaceHost
         }
 
         var text = (await document.GetTextAsync(cancellationToken).ConfigureAwait(false)).ToString();
-        return new WpfXamlFile(filePath, text, info, compilation);
+        var projectXaml = new Dictionary<string, string>(StringComparer.Ordinal);
+        foreach (var other in project.AdditionalDocuments)
+        {
+            if (other.FilePath is { } path && path.EndsWith(".xaml", StringComparison.OrdinalIgnoreCase))
+            {
+                projectXaml[path] = (await other.GetTextAsync(cancellationToken).ConfigureAwait(false)).ToString();
+            }
+        }
+
+        return new WpfXamlFile(filePath, text, info, compilation, projectXaml);
+    }
+
+    /// <summary>The text of a XAML file of a loaded WPF project as the editor last sent it, when it is at hand without waiting.</summary>
+    /// <param name="filePath">Full path of the file.</param>
+    /// <returns>The text, or <see langword="null"/>.</returns>
+    public string? TryGetWpfXamlText(string filePath)
+    {
+        lock (_gate)
+        {
+            return _additionalDocuments.TryGetValue(filePath, out var id)
+                && _workspace.CurrentSolution.GetAdditionalDocument(id) is { } document
+                && document.TryGetText(out var text)
+                    ? text.ToString()
+                    : null;
+        }
     }
 
     /// <summary>The project's XAML files as additional documents, which the generator and the editor read. The caller holds the gate.</summary>
@@ -160,7 +184,8 @@ public sealed partial class RoslynWorkspaceHost
 /// <param name="Text">Its current text, as the editor has it.</param>
 /// <param name="Project">Its project.</param>
 /// <param name="Compilation">Its project's compilation, whose types its XAML names.</param>
-public sealed record WpfXamlFile(string FilePath, string Text, TsProject Project, RoslynCompilation Compilation)
+/// <param name="ProjectXaml">The text of every XAML file of the project, this one too, by path.</param>
+public sealed record WpfXamlFile(string FilePath, string Text, TsProject Project, RoslynCompilation Compilation, IReadOnlyDictionary<string, string> ProjectXaml)
 {
     /// <summary>The XAML type system of the compilation.</summary>
     public XamlTypeSystem Types => XamlTypeSystem.For(Compilation);

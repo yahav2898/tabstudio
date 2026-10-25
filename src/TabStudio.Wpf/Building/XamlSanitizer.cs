@@ -99,23 +99,7 @@ internal static class XamlSanitizer
                 continue;
             }
 
-            string? message = null;
-            if (attribute.LocalName == WindowXamlSettings.Background)
-            {
-                message = WindowXamlSettings.BackgroundColor(root) is not null
-                    ? "OpenSilver's Window has no Background, so TabStudio paints it behind the window's content."
-                    : "OpenSilver's Window has no Background, and TabStudio paints only a plain color behind the window's content: set the brush on the window's root panel instead.";
-            }
-            else if (WindowXamlSettings.WithoutEffect.TryGetValue(attribute.LocalName, out var why))
-            {
-                message = $"{attribute.LocalName} has no effect in the web preview: {why}.";
-            }
-            else if (WindowXamlSettings.OnContent.Contains(attribute.LocalName))
-            {
-                message = $"OpenSilver's Window has no {attribute.LocalName}, so the window's content does not get it: set it on the controls, or on a style for them.";
-            }
-
-            if (message is null)
+            if (WpfWindowSettings.Note(attribute.LocalName, root) is not { } note)
             {
                 continue;
             }
@@ -124,8 +108,8 @@ internal static class XamlSanitizer
             var (line, column) = document.LineAndColumn(attribute.NameStart);
             diagnostics.Add(new BuildDiagnostic(
                 WpfDiagnosticIds.WindowSettingIgnored,
-                attribute.LocalName == WindowXamlSettings.Background || WindowXamlSettings.WithoutEffect.ContainsKey(attribute.LocalName) ? DiagnosticSeverityLevel.Info : DiagnosticSeverityLevel.Warning,
-                message,
+                note.Severity,
+                note.Message,
                 new DiagnosticLocation(item.FilePath, attribute.NameStart, attribute.NameEnd - attribute.NameStart, line, column),
                 projectName));
         }

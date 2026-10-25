@@ -1,5 +1,3 @@
-using System.IO.Compression;
-
 namespace TabStudio.Compilation.Wpf;
 
 /// <summary>
@@ -14,7 +12,8 @@ public sealed class WpfApiCatalog
     /// <summary>The catalog's file name, as the tests write it.</summary>
     public const string FileName = "MissingInOpenSilver.txt";
 
-    private const string ResourceName = "Wpf/MissingInOpenSilver.txt.gz";
+    /// <summary>The name the catalog is embedded under.</summary>
+    public const string ResourceName = "Wpf/" + FileName;
 
     private static readonly Lazy<WpfApiCatalog> LazyShipped = new(LoadShipped);
 
@@ -133,8 +132,7 @@ public sealed class WpfApiCatalog
             return new WpfApiCatalog();
         }
 
-        using var gzip = new GZipStream(stream, CompressionMode.Decompress);
-        using var reader = new StreamReader(gzip);
+        using var reader = new StreamReader(stream);
         return Parse(reader.ReadToEnd());
     }
 }

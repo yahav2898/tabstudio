@@ -113,12 +113,13 @@ public sealed class WebAssemblyAppHost : IAsyncDisposable
 
     private bool Receive(string path, string body)
     {
-        if (!path.StartsWith(MessageRoute, StringComparison.Ordinal) || MessageReceived is not { } handler)
+        // A message nobody listens to is still taken, so the page's console does not fill with failed requests.
+        if (!path.StartsWith(MessageRoute, StringComparison.Ordinal))
         {
             return false;
         }
 
-        handler(this, new PostedMessage(path, body));
+        MessageReceived?.Invoke(this, new PostedMessage(path, body));
         return true;
     }
 

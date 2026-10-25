@@ -184,6 +184,14 @@ internal static class BrowserHostSource
                         window.AttachToDomElement(new global::CSHTML5.Internal.INTERNAL_HtmlDomElementReference("tabstudio-wpf-client"));
                         global::System.Windows.Window.Current = window;
                         BecomeMainWindow(window);
+
+                        // OpenSilver lays a window out when its content is set after it is in the page; this window's
+                        // content was set by InitializeComponent before, so it is laid out here, at the page's size.
+                        var bounds = window.Bounds;
+                        window.InvalidateMeasure();
+                        window.Measure(bounds.Size);
+                        window.Arrange(bounds);
+                        window.UpdateLayout();
                         UpdateTitle();
                         var timer = new global::System.Windows.Threading.DispatcherTimer { Interval = global::System.TimeSpan.FromMilliseconds(500) };
                         timer.Tick += (_, _) => UpdateTitle();

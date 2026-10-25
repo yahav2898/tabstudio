@@ -29,7 +29,22 @@ public sealed class WpfApiCatalogTests(NuGetFixture nuget) : IDisposable
         var catalog = WpfApiCatalog.Parse(computed);
         Assert.True(catalog.IsMissingType("System.Windows.Controls.DocumentViewer"));
         Assert.False(catalog.IsMissingType("System.Windows.Controls.Button"));
-        Assert.True(catalog.IsMissingNamespace("System.Windows.Media.Media3D"));
+        Assert.True(catalog.IsMissingNamespace("System.Windows.Xps"));
+        Assert.Equal(["System.Windows.Controls.GroupBox"], catalog.MissingTypesNamed("GroupBox"));
+        Assert.Equal("System.Windows.Controls.Button", catalog.FindMissingMember("System.Windows.Controls.Button", "IsDefault"));
+        Assert.Equal("System.Windows.UIElement", catalog.FindMissingMember("System.Windows.Controls.Button", "BitmapEffect"));
+        Assert.Null(catalog.FindMissingMember("System.Windows.Controls.Button", "Content"));
+
+        // The catalog TabStudio ships is this one: a new OpenSilver or WPF needs it made again.
+        using var stream = typeof(WpfApiCatalog).Assembly.GetManifestResourceStream(WpfApiCatalog.ResourceName)!;
+        using var reader = new StreamReader(stream);
+        var shipped = (await reader.ReadToEndAsync()).ReplaceLineEndings("\n");
+        var difference = shipped.Split('\n').Except(computed.Split('\n'), StringComparer.Ordinal)
+            .Concat(computed.Split('\n').Except(shipped.Split('\n'), StringComparer.Ordinal)).Take(10).ToList();
+        Assert.True(
+            shipped == computed,
+            $"src/TabStudio.Compilation/Wpf/{WpfApiCatalog.FileName} is not what WPF and OpenSilver have now: copy ci-out/wpf-api/{WpfApiCatalog.FileName} over it. Lines that differ:\n{string.Join('\n', difference)}");
+        Assert.False(WpfApiCatalog.Shipped.IsEmpty);
     }
 
     public void Dispose() => _temp.Dispose();

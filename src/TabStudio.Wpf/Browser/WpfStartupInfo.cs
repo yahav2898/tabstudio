@@ -3,7 +3,6 @@ using TabStudio.Compilation.Wpf;
 using TabStudio.Compilation.Wpf.Xaml;
 using TabStudio.Core.Workspaces;
 using ProjectInfo = TabStudio.Core.Workspaces.ProjectInfo;
-using TabStudio.Wpf.Building;
 using RoslynCompilation = Microsoft.CodeAnalysis.Compilation;
 
 namespace TabStudio.Wpf.Browser;
@@ -64,7 +63,7 @@ public sealed record WpfStartupInfo(string? ApplicationClass, string? StartupUri
             if (app?.GetTypeByMetadataName(className) is { } type && XamlTypeSystem.DerivesFrom(type, window))
             {
                 var canCreate = !type.IsAbstract && type.InstanceConstructors.Any(c => c.Parameters.Length == 0 && c.DeclaredAccessibility == Accessibility.Public);
-                windows.Add(new WpfWindowClass(item.RelativePath, className, canCreate, WindowXamlSettings.BackgroundColor(root)));
+                windows.Add(new WpfWindowClass(item.RelativePath, className, canCreate, WpfWindowSettings.BackgroundColor(root)));
             }
         }
 
