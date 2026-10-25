@@ -197,7 +197,7 @@ public static partial class SelfTest
             await Task.Delay(PollInterval, cancellationToken);
         }
 
-        await Dispatcher.UIThread.InvokeAsync(static () => { }, DispatcherPriority.Background);
+        await Dispatcher.UIThread.InvokeAsync(static () => { }, DispatcherPriority.Background, cancellationToken);
         await Task.Delay(200, cancellationToken);
     }
 

@@ -59,23 +59,23 @@ public sealed class SelfTestScrollingTests
     {
         private readonly HeadlessTouchScreen _touch = new(window);
 
-        public async Task SwipeAsync(PixelPoint from, PixelPoint to, TimeSpan duration, CancellationToken cancellationToken)
+        public async Task SwipeAsync(PixelPoint start, PixelPoint end, TimeSpan duration, CancellationToken cancellationToken)
         {
             var scaling = window.RenderScaling;
-            var start = from.ToPoint(scaling);
-            var end = to.ToPoint(scaling);
+            var first = start.ToPoint(scaling);
+            var last = end.ToPoint(scaling);
             var clock = System.Diagnostics.Stopwatch.StartNew();
-            _touch.Down(start);
+            _touch.Down(first);
             while (clock.Elapsed < duration)
             {
                 await Task.Delay(8, cancellationToken);
                 _touch.Wait(8);
                 var t = Math.Min(1, clock.Elapsed / duration);
-                _touch.Move(start + ((end - start) * t));
+                _touch.Move(first + ((last - first) * t));
             }
 
             _touch.Wait(4);
-            _touch.Up(end);
+            _touch.Up(last);
         }
 
         public IDisposable RecordFrames(Action frame)
