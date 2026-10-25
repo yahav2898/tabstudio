@@ -119,7 +119,18 @@ public static partial class SelfTest
             await TryGuestAsync("python-start-no-seccomp", ["/usr/bin/python3", "-c", "pass"], null, 60, r => r.Code == 0);
             _guestEnvironment.Remove("PROOT_NO_SECCOMP");
 
-            await SafeAsync("pty", () => Task.Run(RunPseudoTerminal).WaitAsync(TimeSpan.FromSeconds(60)));
+            await SafeAsync("pty-slave-open", () => { Log("pty-slave-open", true, SpikePty.ProbeSlave()); return Task.CompletedTask; });
+            var guest = _guestEnvironment.Select(e => $"{e.Key}={e.Value}").ToArray();
+            await SafeAsync("pty-system-sh", () => Task.Run(() => RunPseudoTerminal("pty-system-sh", ["/system/bin/sh", "-c", "tty; stty size; echo done"], ["PATH=/system/bin", "TERM=xterm-256color"])).WaitAsync(TimeSpan.FromSeconds(60)));
+            string[] proot = [Path.Combine(_lib, "libproot.so"), "--kill-on-exit", "--link2symlink", "-0", "-r", _rootfs, "-b", "/dev", "-b", "/proc", "-b", "/sys", "-w", "/root"];
+            await SafeAsync("pty-proot", () => Task.Run(() => RunPseudoTerminal("pty-proot", [.. proot, "/bin/sh", "-c", "tty; stty size; echo TERM=$TERM; printf '\\033[31mred\\033[0m\\n'"], guest)).WaitAsync(TimeSpan.FromSeconds(60)));
+            await SafeAsync("local-repository", LocalRepositoryAsync);
+            await SafeAsync("fake-proc", FakeProcAsync);
+            for (var i = 0; i < 3; i++)
+            {
+                await TryGuestAsync($"proot-true-{i}", ["/bin/true"], null, 60, r => r.Code == 0);
+            }
+
             await SafeAsync("kill-tree", KillTreeAsync);
             if (int.TryParse(api, CultureInfo.InvariantCulture, out var level) && level >= 31)
             {
@@ -371,52 +382,114 @@ public static partial class SelfTest
             }
         }
 
-        private void RunPseudoTerminal()
+        private void RunPseudoTerminal(string name, string[] arguments, string[] environment)
         {
-            try
+            var clock = Stopwatch.StartNew();
+            var (pid, master, diagnostics) = SpikePty.Spawn(arguments[0], arguments, environment, rows: 30, columns: 100);
+            var output = new StringBuilder();
+            var exit = "running";
+            using (master)
             {
-                string[] arguments =
-                [
-                    Path.Combine(_lib, "libproot.so"), "--kill-on-exit", "--link2symlink", "-0", "-r", _rootfs,
-                    "-b", "/dev", "-b", "/proc", "-b", "/sys", "-w", "/root",
-                    "/bin/sh", "-c", "tty; stty size; echo TERM=$TERM; printf '\\033[31mred\\033[0m\\n'",
-                ];
-                var environment = _guestEnvironment.Select(e => $"{e.Key}={e.Value}").ToArray();
-                var clock = Stopwatch.StartNew();
-                var (pid, master) = SpikePty.Spawn(arguments[0], arguments, environment, rows: 30, columns: 100);
-                var output = new StringBuilder();
-                using (var stream = new FileStream(master, FileAccess.Read, 1))
+                var fd = (int)master.DangerousGetHandle();
+                var buffer = new byte[4096];
+                while (clock.Elapsed < TimeSpan.FromSeconds(20))
                 {
-                    var buffer = new byte[4096];
-                    while (true)
+                    var ready = SpikePty.Poll(fd, 200);
+                    if (ready > 0)
                     {
-                        int read;
-                        try
-                        {
-                            read = stream.Read(buffer, 0, buffer.Length);
-                        }
-                        catch (IOException)
-                        {
-                            break; // EIO: the slave side closed.
-                        }
-
+                        var read = SpikePty.Read(fd, buffer);
                         if (read <= 0)
                         {
+                            diagnostics += $" read={read}";
                             break;
                         }
 
                         output.Append(Encoding.UTF8.GetString(buffer, 0, read));
                     }
-                }
+                    else if (ready < 0)
+                    {
+                        diagnostics += $" poll errno {Marshal.GetLastPInvokeError()}";
+                        break;
+                    }
 
-                var status = SpikePty.Wait(pid);
-                var text = output.ToString().Replace("\u001b", "\\e", StringComparison.Ordinal);
-                Log("pty", text.Contains("30 100", StringComparison.Ordinal) && text.Contains("/dev/pts/", StringComparison.Ordinal), $"pid {pid} status {status} in {clock.ElapsedMilliseconds} ms: {text}");
+                    if (exit == "running" && SpikePty.TryWait(pid) is { } status)
+                    {
+                        exit = status;
+                    }
+                }
             }
-            catch (Exception ex) when (ex is IOException or Win32Exception or DllNotFoundException or EntryPointNotFoundException)
+
+            if (exit == "running")
             {
-                Log("pty", false, $"{ex.GetType().Name}: {ex.Message}");
+                exit = SpikePty.TryWait(pid) ?? "still running";
             }
+
+            var text = output.ToString().Replace("\u001b", "\\e", StringComparison.Ordinal);
+            Log(name, text.Contains("30 100", StringComparison.Ordinal), $"pid {pid} exit {exit} in {clock.ElapsedMilliseconds} ms; {diagnostics}; output: {text}");
+        }
+
+        private async Task LocalRepositoryAsync()
+        {
+            // Downloads py3-six and its index into a local repository inside the root file system, then installs it without the network.
+            using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(60) };
+            var arch = AlpineArch();
+            string? file = null;
+            foreach (var repository in new[] { "main", "community" })
+            {
+                var folder = Path.Combine(_rootfs, "var", "cache", "tabstudio", "repo", repository, arch);
+                Directory.CreateDirectory(folder);
+                var index = await http.GetByteArrayAsync(new Uri($"https://dl-cdn.alpinelinux.org/alpine/{AlpineBranch}/{repository}/{arch}/APKINDEX.tar.gz"));
+                await File.WriteAllBytesAsync(Path.Combine(folder, "APKINDEX.tar.gz"), index);
+                await using var gzip = new GZipStream(new MemoryStream(index), CompressionMode.Decompress);
+                using var reader = new TarReader(gzip);
+                while (await reader.GetNextEntryAsync() is { } entry)
+                {
+                    if (entry.Name == "APKINDEX" && entry.DataStream is { } data)
+                    {
+                        using var text = new StreamReader(data);
+                        var all = await text.ReadToEndAsync();
+                        var start = all.IndexOf("\nP:py3-six\n", StringComparison.Ordinal);
+                        if (start >= 0)
+                        {
+                            var version = all.IndexOf("\nV:", start + 1, StringComparison.Ordinal);
+                            file = $"py3-six-{all[(version + 3)..all.IndexOf('\n', version + 1)]}.apk";
+                            var bytes = await http.GetByteArrayAsync(new Uri($"https://dl-cdn.alpinelinux.org/alpine/{AlpineBranch}/{repository}/{arch}/{file}"));
+                            await File.WriteAllBytesAsync(Path.Combine(folder, file), bytes);
+                        }
+                    }
+                }
+            }
+
+            await TryGuestAsync("apk-local-repository", ["/sbin/apk", "add", "--no-network", "--repositories-file", "/dev/null", "--repository", "/var/cache/tabstudio/repo/main", "--repository", "/var/cache/tabstudio/repo/community", "py3-six"], null, 120, r => r.Code == 0);
+            await TryGuestAsync("apk-local-import", ["/usr/bin/python3", "-c", "import six; print(six.__version__)"], null, 60, r => r.Code == 0);
+            await TryGuestAsync("apk-del", ["/sbin/apk", "del", "py3-six"], null, 120, r => r.Code == 0);
+            Log("local-repository-file", file is not null, file ?? "py3-six not found");
+        }
+
+        private async Task FakeProcAsync()
+        {
+            var folder = Path.Combine(_rootfs, ".tabstudio", "proc");
+            Directory.CreateDirectory(folder);
+            var cpus = Environment.ProcessorCount;
+            var stat = new StringBuilder("cpu  1000 0 1000 100000 0 0 0 0 0 0\n");
+            for (var i = 0; i < cpus; i++)
+            {
+                stat.Append(CultureInfo.InvariantCulture, $"cpu{i} 100 0 100 10000 0 0 0 0 0 0\n");
+            }
+
+            stat.Append("intr 0\nctxt 0\nbtime 0\nprocesses 1\nprocs_running 1\nprocs_blocked 0\nsoftirq 0 0 0 0 0 0 0 0 0 0 0\n");
+            await File.WriteAllTextAsync(Path.Combine(folder, "stat"), stat.ToString());
+            await File.WriteAllTextAsync(Path.Combine(folder, "loadavg"), "0.10 0.10 0.10 1/100 100\n");
+            await File.WriteAllTextAsync(Path.Combine(folder, "uptime"), "1000.00 1000.00\n");
+            await File.WriteAllTextAsync(Path.Combine(folder, "version"), "Linux version 6.1.0 (tabstudio) #1 SMP PREEMPT\n");
+            await File.WriteAllTextAsync(Path.Combine(folder, "vmstat"), "nr_free_pages 100000\n");
+            string[] binds = ["-b", $"{folder}/stat:/proc/stat", "-b", $"{folder}/loadavg:/proc/loadavg", "-b", $"{folder}/uptime:/proc/uptime", "-b", $"{folder}/version:/proc/version", "-b", $"{folder}/vmstat:/proc/vmstat"];
+            string[] arguments =
+            [
+                "--kill-on-exit", "--link2symlink", "-0", "-r", _rootfs, "-b", "/dev", "-b", "/proc", "-b", "/sys", .. binds, "-w", "/root",
+                "/bin/sh", "-c", "node -e \"console.log('cpus', require('os').cpus().length)\"; top -b -n 1 | head -n 6; cat /proc/loadavg; nproc",
+            ];
+            await TryAsync("fake-proc", Path.Combine(_lib, "libproot.so"), arguments, _guestEnvironment, null, r => r.Code == 0 && r.Out.Contains("cpus", StringComparison.Ordinal));
         }
 
         private async Task KillTreeAsync()
@@ -539,9 +612,11 @@ public static partial class SelfTest
         private const short SetSignalMask = 0x08;
         private const nuint SetWindowSize = 0x5414;
 
-        public static (int Pid, SafeFileHandle Master) Spawn(string path, string[] arguments, string[] environment, ushort rows, ushort columns)
+        public static (int Pid, SafeFileHandle Master, string Diagnostics) Spawn(string path, string[] arguments, string[] environment, ushort rows, ushort columns)
         {
+            var log = new StringBuilder();
             var master = posix_openpt(OpenReadWrite | NoControllingTerminal);
+            log.Append(CultureInfo.InvariantCulture, $"openpt={master} ");
             if (master < 0 || grantpt(master) != 0 || unlockpt(master) != 0)
             {
                 throw new Win32Exception(Marshal.GetLastPInvokeError(), "posix_openpt");
@@ -554,8 +629,9 @@ public static partial class SelfTest
             }
 
             var slave = Encoding.UTF8.GetString(name, 0, Array.IndexOf(name, (byte)0));
+            log.Append(CultureInfo.InvariantCulture, $"slave={slave} ");
             var size = new WindowSize { Rows = rows, Columns = columns };
-            _ = ioctl(master, SetWindowSize, ref size);
+            log.Append(CultureInfo.InvariantCulture, $"winsz={ioctl(master, SetWindowSize, ref size)} ");
 
             var actions = Marshal.AllocHGlobal(1024);
             var attributes = Marshal.AllocHGlobal(1024);
@@ -564,16 +640,16 @@ public static partial class SelfTest
             var strings = new List<IntPtr> { slavePath };
             try
             {
-                _ = posix_spawn_file_actions_init(actions);
-                _ = posix_spawn_file_actions_addopen(actions, 0, slavePath, OpenReadWrite, 0);
-                _ = posix_spawn_file_actions_adddup2(actions, 0, 1);
-                _ = posix_spawn_file_actions_adddup2(actions, 0, 2);
-                _ = posix_spawnattr_init(attributes);
-                _ = posix_spawnattr_setflags(attributes, SetSession | SetSignalDefaults | SetSignalMask);
+                log.Append(CultureInfo.InvariantCulture, $"fa_init={posix_spawn_file_actions_init(actions)} ");
+                log.Append(CultureInfo.InvariantCulture, $"addopen={posix_spawn_file_actions_addopen(actions, 0, slavePath, OpenReadWrite, 0)} ");
+                log.Append(CultureInfo.InvariantCulture, $"dup1={posix_spawn_file_actions_adddup2(actions, 0, 1)} ");
+                log.Append(CultureInfo.InvariantCulture, $"dup2={posix_spawn_file_actions_adddup2(actions, 0, 2)} ");
+                log.Append(CultureInfo.InvariantCulture, $"attr_init={posix_spawnattr_init(attributes)} ");
+                log.Append(CultureInfo.InvariantCulture, $"setflags={posix_spawnattr_setflags(attributes, SetSession | SetSignalDefaults | SetSignalMask)} ");
                 _ = sigfillset(signals);
-                _ = posix_spawnattr_setsigdefault(attributes, signals);
+                log.Append(CultureInfo.InvariantCulture, $"sigdef={posix_spawnattr_setsigdefault(attributes, signals)} ");
                 _ = sigemptyset(signals);
-                _ = posix_spawnattr_setsigmask(attributes, signals);
+                log.Append(CultureInfo.InvariantCulture, $"sigmask={posix_spawnattr_setsigmask(attributes, signals)} ");
 
                 var argv = new IntPtr[arguments.Length + 1];
                 for (var i = 0; i < arguments.Length; i++)
@@ -592,12 +668,13 @@ public static partial class SelfTest
                 var program = Marshal.StringToCoTaskMemUTF8(path);
                 strings.Add(program);
                 var result = posix_spawn(out var pid, program, actions, attributes, argv, envp);
+                log.Append(CultureInfo.InvariantCulture, $"spawn={result}");
                 if (result != 0)
                 {
-                    throw new Win32Exception(result, "posix_spawn");
+                    throw new Win32Exception(result, "posix_spawn " + log);
                 }
 
-                return (pid, new SafeFileHandle(master, ownsHandle: true));
+                return (pid, new SafeFileHandle(master, ownsHandle: true), log.ToString());
             }
             finally
             {
@@ -611,6 +688,71 @@ public static partial class SelfTest
                 Marshal.FreeHGlobal(signals);
             }
         }
+
+        public static string ProbeSlave()
+        {
+            var master = posix_openpt(OpenReadWrite | NoControllingTerminal);
+            _ = grantpt(master);
+            _ = unlockpt(master);
+            var name = new byte[128];
+            _ = ptsname_r(master, name, (nuint)name.Length);
+            var slave = Encoding.UTF8.GetString(name, 0, Array.IndexOf(name, (byte)0));
+            var fd = open(slave, OpenReadWrite | NoControllingTerminal);
+            var error = fd < 0 ? Marshal.GetLastPInvokeError() : 0;
+            var written = fd >= 0 ? write(fd, "hello\n"u8.ToArray(), 6) : -1;
+            var buffer = new byte[64];
+            var ready = Poll(master, 1000);
+            var read = ready > 0 ? Read(master, buffer) : -1;
+            if (fd >= 0)
+            {
+                _ = close(fd);
+            }
+
+            _ = close(master);
+            return $"master {master}, slave {slave}: open {fd} errno {error}, wrote {written}, poll {ready}, read {read} '{Encoding.UTF8.GetString(buffer, 0, Math.Max(0, (int)read)).Trim()}'";
+        }
+
+        public static int Poll(int fd, int milliseconds)
+        {
+            var poll = new PollFd { Fd = fd, Events = 1 };
+            return poll_(ref poll, 1, milliseconds);
+        }
+
+        public static int Read(int fd, byte[] buffer) => (int)read(fd, buffer, (nuint)buffer.Length);
+
+        public static string? TryWait(int pid)
+        {
+            var result = waitpid(pid, out var status, 1);
+            if (result == 0)
+            {
+                return null;
+            }
+
+            return result < 0 ? $"waitpid errno {Marshal.GetLastPInvokeError()}" : (status & 0x7f) == 0 ? $"exited {(status >> 8) & 0xff}" : $"signal {status & 0x7f}";
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct PollFd
+        {
+            public int Fd;
+            public short Events;
+            public short Revents;
+        }
+
+        [DllImport("libc", EntryPoint = "poll", SetLastError = true)]
+        private static extern int poll_(ref PollFd fds, nuint count, int timeout);
+
+        [DllImport("libc", SetLastError = true)]
+        private static extern nint read(int fd, byte[] buffer, nuint count);
+
+        [DllImport("libc", SetLastError = true)]
+        private static extern nint write(int fd, byte[] buffer, nuint count);
+
+        [DllImport("libc", SetLastError = true)]
+        private static extern int open([MarshalAs(UnmanagedType.LPUTF8Str)] string path, int flags);
+
+        [DllImport("libc", SetLastError = true)]
+        private static extern int close(int fd);
 
         public static string Wait(int pid)
         {

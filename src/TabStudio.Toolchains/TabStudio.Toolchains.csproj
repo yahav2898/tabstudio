@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Toolchains for every language TabStudio runs besides C#: the toolchain catalog, a Linux environment to run
+    them in (Alpine Linux through PRoot on Android, the computer itself on the desktop), installing, updating and
+    removing toolchains with verified, resumable downloads, running programs with pipes or a pseudo terminal, and
+    the terminal emulator behind the IDE's Terminal window. No UI.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>TabStudio.Toolchains</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- The C library's process and terminal functions are called through source-generated P/Invokes. -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TabStudio.Core\TabStudio.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Catalog\toolchains.json" LogicalName="TabStudio.Toolchains.Catalog.toolchains.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="TabStudio.Toolchains.Tests" />
+    <InternalsVisibleTo Include="TabStudio.App.Tests" />
+  </ItemGroup>
+
+</Project>

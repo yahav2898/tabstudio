@@ -1,0 +1,241 @@
+namespace TabStudio.Toolchains.Catalog;
+
+/// <summary>
+/// One toolchain in the catalog: what it is, what to install for it, how to run its programs, and the language
+/// server and debug adapter for its languages.
+/// </summary>
+/// <remarks>
+/// Commands are argument lists, never shell lines, and may contain placeholders that the IDE fills in when it
+/// runs them: <c>{file}</c> (the file to run, relative to the project folder), <c>{json}</c> (the value an entry
+/// rule read from a JSON file), <c>{port}</c> (a free TCP port, for adapters that listen on one), and the names of
+/// <see cref="ProjectEnvironmentDefinition.Variables"/>, such as <c>{python}</c>.
+/// </remarks>
+public sealed record ToolchainDefinition
+{
+    /// <summary>A stable identifier, such as <c>python</c>.</summary>
+    public required string Id { get; init; }
+
+    /// <summary>The display name, such as <c>Python</c>.</summary>
+    public required string Name { get; init; }
+
+    /// <summary>One sentence about what is installed.</summary>
+    public required string Description { get; init; }
+
+    /// <summary>The languages it is for, as display names.</summary>
+    public IReadOnlyList<string> Languages { get; init; } = [];
+
+    /// <summary>
+    /// Whether the Toolchain Store offers it. A toolchain is listed once everything about it works end to end; the
+    /// others are described so their projects are recognized, and are finished by listing them.
+    /// </summary>
+    public bool Listed { get; init; }
+
+    /// <summary>The project's home page.</summary>
+    public Uri? Homepage { get; init; }
+
+    /// <summary>The license, as an SPDX expression.</summary>
+    public string? License { get; init; }
+
+    /// <summary>The Alpine Linux packages to install. Their dependencies are installed with them.</summary>
+    public IReadOnlyList<string> Packages { get; init; } = [];
+
+    /// <summary>The package whose version is the toolchain's version, such as <c>python3</c>.</summary>
+    public string? VersionPackage { get; init; }
+
+    /// <summary>The download size before the package index has been read, in bytes.</summary>
+    public long EstimatedDownloadSize { get; init; }
+
+    /// <summary>The installed size before the package index has been read, in bytes.</summary>
+    public long EstimatedInstalledSize { get; init; }
+
+    /// <summary>How to find the toolchain on a desktop computer, which uses its own installation.</summary>
+    public HostDetection? Host { get; init; }
+
+    /// <summary>The extensions of the files it runs, with the dot, such as <c>.py</c>.</summary>
+    public IReadOnlyList<string> FileExtensions { get; init; } = [];
+
+    /// <summary>The files that make a folder one of its projects, such as <c>package.json</c>.</summary>
+    public IReadOnlyList<string> ProjectFiles { get; init; } = [];
+
+    /// <summary>How to run a file or a project.</summary>
+    public RunDefinition? Run { get; init; }
+
+    /// <summary>A per-project environment, such as Python's virtual environment, or <see langword="null"/>.</summary>
+    public ProjectEnvironmentDefinition? ProjectEnvironment { get; init; }
+
+    /// <summary>How to install the packages a project's manifest lists, such as <c>npm install</c>.</summary>
+    public IReadOnlyList<DependencyInstallDefinition> Dependencies { get; init; } = [];
+
+    /// <summary>What to install after the packages, such as tools from the language's own package registry.</summary>
+    public IReadOnlyList<SetupStepDefinition> Setup { get; init; } = [];
+
+    /// <summary>The language server, for the editor.</summary>
+    public ToolCommandDefinition? LanguageServer { get; init; }
+
+    /// <summary>The debug adapter, for the debugger.</summary>
+    public ToolCommandDefinition? DebugAdapter { get; init; }
+
+    /// <summary>Patterns that find file locations in the toolchain's output, such as a stack trace's lines.</summary>
+    public IReadOnlyList<ProblemPatternDefinition> ProblemPatterns { get; init; } = [];
+
+    /// <summary>
+    /// A pattern for the line that states an error that ended a program, such as Python's
+    /// <c>NameError: name 'x' is not defined</c>, with a <c>message</c> group.
+    /// </summary>
+    public string? ErrorPattern { get; init; }
+
+    /// <summary>Whether a file has one of <see cref="FileExtensions"/>.</summary>
+    /// <param name="path">The file.</param>
+    public bool RunsFile(string path) =>
+        FileExtensions.Contains(Path.GetExtension(path), StringComparer.OrdinalIgnoreCase);
+}
+
+/// <summary>How to find a toolchain installed on a desktop computer.</summary>
+public sealed record HostDetection
+{
+    /// <summary>The commands to look for on <c>PATH</c>, in order of preference.</summary>
+    public IReadOnlyList<string> Commands { get; init; } = [];
+
+    /// <summary>The arguments that make the command print its version.</summary>
+    public IReadOnlyList<string> VersionArguments { get; init; } = [];
+
+    /// <summary>A regular expression with a <c>version</c> group that finds the version in what it printed.</summary>
+    public string? VersionPattern { get; init; }
+}
+
+/// <summary>How to run a toolchain's programs.</summary>
+public sealed record RunDefinition
+{
+    /// <summary>The command that runs one file, with <c>{file}</c> for the file.</summary>
+    public IReadOnlyList<string> File { get; init; } = [];
+
+    /// <summary>How to find and run a project's entry point, tried in order.</summary>
+    public IReadOnlyList<EntryRule> Entries { get; init; } = [];
+
+    /// <summary>Environment variables for every run, such as <c>PYTHONUNBUFFERED</c>.</summary>
+    public IReadOnlyDictionary<string, string> Environment { get; init; } = new Dictionary<string, string>();
+}
+
+/// <summary>
+/// One way to run a project: it applies when <see cref="File"/> exists in the project folder and, when
+/// <see cref="Json"/> is set, that file has a value at that path.
+/// </summary>
+public sealed record EntryRule
+{
+    /// <summary>The file that must exist, relative to the project folder.</summary>
+    public required string File { get; init; }
+
+    /// <summary>
+    /// A dotted path into <see cref="File"/>, which must then be JSON, such as <c>scripts.start</c>; the value is the
+    /// <c>{json}</c> placeholder.
+    /// </summary>
+    public string? Json { get; init; }
+
+    /// <summary>A command to run first, such as a build, or empty.</summary>
+    public IReadOnlyList<string> Build { get; init; } = [];
+
+    /// <summary>The command that runs the project.</summary>
+    public IReadOnlyList<string> Command { get; init; } = [];
+}
+
+/// <summary>A per-project environment, such as Python's <c>.venv</c>.</summary>
+public sealed record ProjectEnvironmentDefinition
+{
+    /// <summary>The folder it lives in, relative to the project folder.</summary>
+    public required string Directory { get; init; }
+
+    /// <summary>The command that creates it.</summary>
+    public IReadOnlyList<string> Create { get; init; } = [];
+
+    /// <summary>Placeholders whose values come from the environment while it exists, such as <c>python</c>.</summary>
+    public IReadOnlyDictionary<string, string> Variables { get; init; } = new Dictionary<string, string>();
+
+    /// <summary>The values of <see cref="Variables"/> while it does not exist.</summary>
+    public IReadOnlyDictionary<string, string> Defaults { get; init; } = new Dictionary<string, string>();
+
+    /// <summary>A folder to put first on <c>PATH</c> while it exists, relative to the project folder.</summary>
+    public string? Path { get; init; }
+}
+
+/// <summary>How to install what a project's manifest lists.</summary>
+public sealed record DependencyInstallDefinition
+{
+    /// <summary>The manifest, relative to the project folder, such as <c>requirements.txt</c>.</summary>
+    public required string Manifest { get; init; }
+
+    /// <summary>A short name for the action, such as <c>npm install</c>.</summary>
+    public required string Name { get; init; }
+
+    /// <summary>One sentence about what it does.</summary>
+    public string? Description { get; init; }
+
+    /// <summary>The command, run in the project folder.</summary>
+    public IReadOnlyList<string> Command { get; init; } = [];
+
+    /// <summary>A file or folder that exists once the packages are installed, such as <c>node_modules</c>.</summary>
+    public string? Installed { get; init; }
+}
+
+/// <summary>A step that runs after a toolchain's packages are installed: a command, or an archive to unpack.</summary>
+public sealed record SetupStepDefinition
+{
+    /// <summary>What the step installs, such as <c>debugpy</c>.</summary>
+    public required string Name { get; init; }
+
+    /// <summary>One sentence about it.</summary>
+    public string? Description { get; init; }
+
+    /// <summary>A command to run in the toolchain's environment, or empty.</summary>
+    public IReadOnlyList<string> Command { get; init; } = [];
+
+    /// <summary>An archive to download, verify and unpack, or <see langword="null"/>.</summary>
+    public ArchiveDefinition? Archive { get; init; }
+}
+
+/// <summary>A downloadable archive with a pinned hash.</summary>
+public sealed record ArchiveDefinition
+{
+    /// <summary>Where to download it.</summary>
+    public required Uri Url { get; init; }
+
+    /// <summary>Its SHA-256, in hexadecimal.</summary>
+    public required string Sha256 { get; init; }
+
+    /// <summary>Its size in bytes, for progress before the server says.</summary>
+    public long Size { get; init; }
+
+    /// <summary>The folder to unpack it into, as programs in the environment see it.</summary>
+    public required string Destination { get; init; }
+}
+
+/// <summary>A program the IDE starts to serve an editor or a debugger, such as a language server.</summary>
+public sealed record ToolCommandDefinition
+{
+    /// <summary>The command.</summary>
+    public IReadOnlyList<string> Command { get; init; } = [];
+
+    /// <summary>Environment variables it needs.</summary>
+    public IReadOnlyDictionary<string, string> Environment { get; init; } = new Dictionary<string, string>();
+
+    /// <summary>
+    /// How to talk to it: <c>stdio</c> (the default) over its standard streams, or <c>tcp</c> on the
+    /// <c>{port}</c> in its command.
+    /// </summary>
+    public string Transport { get; init; } = "stdio";
+
+    /// <summary>For a debug adapter, the type its launch configurations name, such as <c>debugpy</c>.</summary>
+    public string? Type { get; init; }
+
+    /// <summary>The Language Server Protocol language ids it serves, such as <c>python</c>.</summary>
+    public IReadOnlyList<string> Languages { get; init; } = [];
+}
+
+/// <summary>A regular expression that finds a file location in output.</summary>
+public sealed record ProblemPatternDefinition
+{
+    /// <summary>
+    /// The pattern, with the groups <c>file</c> and <c>line</c>, and optionally <c>column</c>, <c>severity</c>
+    /// and <c>message</c>.
+    /// </summary>
+    public required string Pattern { get; init; }
+}

@@ -110,6 +110,9 @@ jobs:
           bash build/android/native/build.sh artifacts/native arm64-v8a armeabi-v7a 2>&1 | tee ci-out/native-build.log
           exit "${PIPESTATUS[0]}"
 
+      - name: Spike facts
+        run: bash build/ci/spike-facts.sh ci-out/spike-facts.txt || true
+
       - name: Build the APK
         run: |
           mkdir -p ci-out
