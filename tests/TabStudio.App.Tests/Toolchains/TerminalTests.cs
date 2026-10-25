@@ -74,6 +74,9 @@ public sealed class TerminalTests
         var workspace = main.Workspace!;
         await UiTestHelpers.WaitUntilAsync(() => workspace.ActiveDocument is not null, because: "main.py");
 
+        // A taller dock, as a user drags the splitter up to work in the Terminal.
+        var editorArea = window.GetVisualDescendants().OfType<Avalonia.Controls.Grid>().Single(g => g.Name == "EditorArea");
+        editorArea.RowDefinitions[4].Height = new Avalonia.Controls.GridLength(330);
         workspace.ShowTerminalCommand.Execute(null);
         var terminal = workspace.Terminal;
         await UiTestHelpers.WaitUntilAsync(() => terminal.IsRunning, because: "the shell");
@@ -83,7 +86,9 @@ public sealed class TerminalTests
         // A short prompt, then what a session looks like: colors, a listing, a program.
         terminal.SendText("PS1='\\[\\e[1;32m\\]\\W\\[\\e[0m\\] \\$ '; clear\r");
         await UiTestHelpers.WaitUntilAsync(() => terminal.Emulator.ScreenText.StartsWith("Greeter $", StringComparison.Ordinal), because: "the prompt");
-        terminal.SendText("printf '\\e[1;36mTabStudio\\e[0m terminal: \\e[33m256\\e[0m colors, \\e[4munderline\\e[0m, \\e[7minverse\\e[0m\\n'; ls -a; python3 main.py\r");
+        terminal.SendText("printf '\\e[1;36mTabStudio\\e[0m terminal: \\e[33m256\\e[0m colors, \\e[4munderline\\e[0m, \\e[7minverse\\e[0m\\n'\r");
+        terminal.SendText("ls -la\r");
+        terminal.SendText("python3 main.py\r");
         await UiTestHelpers.WaitUntilAsync(() => terminal.Emulator.ScreenText.Contains("What is your name?", StringComparison.Ordinal), because: "the program");
         view.Focus();
         window.KeyTextInput("Ada");
