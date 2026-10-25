@@ -1,7 +1,9 @@
 using System.Globalization;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using TabStudio.App.Theming;
 using TabStudio.Extensions.Installation;
 using TabStudio.Extensions.Manifests;
 using TabStudio.Extensions.OpenVsx;
@@ -14,7 +16,8 @@ namespace TabStudio.App.ViewModels.Extensions;
 /// </summary>
 public sealed partial class ExtensionItemViewModel : ObservableObject
 {
-    private static readonly string[] Tints = ["#3A5A8C", "#5B4A8C", "#2F6F62", "#7A4F2A", "#6E3B5C", "#3D6A2E", "#2E5E7A", "#7A3A3A"];
+    /// <summary>How many <c>Brush.Avatar.N</c> tokens the initials' tiles pick from (Theme/Colors.axaml).</summary>
+    private const int Tints = 8;
 
     private readonly ExtensionsViewModel _owner;
     private bool _iconRequested;
@@ -72,8 +75,8 @@ public sealed partial class ExtensionItemViewModel : ObservableObject
     /// <summary>The letters shown while the icon loads, or when there is none.</summary>
     public string Initials { get; }
 
-    /// <summary>The color behind the letters, always the same for an extension.</summary>
-    public string IconTint { get; }
+    /// <summary>The color behind the letters, always the same for an extension: one of the avatar tokens, which carry white text in both themes.</summary>
+    public IBrush IconTint { get; }
 
     /// <summary>The icon, once loaded; <see langword="null"/> shows the initials.</summary>
     [ObservableProperty]
@@ -235,7 +238,7 @@ public sealed partial class ExtensionItemViewModel : ObservableObject
         return initials.Length > 0 ? initials : "?";
     }
 
-    private static string Tint(ExtensionIdentifier id)
+    private static IBrush Tint(ExtensionIdentifier id)
     {
         var hash = 0;
         foreach (var c in id.ToString().ToUpperInvariant())
@@ -243,6 +246,6 @@ public sealed partial class ExtensionItemViewModel : ObservableObject
             hash = unchecked((hash * 31) + c);
         }
 
-        return Tints[(hash & int.MaxValue) % Tints.Length];
+        return ThemeBrushes.Get(string.Create(CultureInfo.InvariantCulture, $"Brush.Avatar.{((hash & int.MaxValue) % Tints) + 1}"));
     }
 }

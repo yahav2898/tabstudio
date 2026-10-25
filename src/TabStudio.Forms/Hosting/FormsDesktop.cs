@@ -26,6 +26,13 @@ namespace TabStudio.Forms.Hosting;
 internal sealed partial class FormsDesktop : Control, IFormsPresenter
 {
     /// <summary>
+    /// The wallpaper behind the windows; Windows 11's light one when the host sets none. The IDE gives it the dark one
+    /// in its dark theme, as Windows does in dark mode; the windows keep their light frames, as apps that do not ask for
+    /// dark title bars do.
+    /// </summary>
+    public static readonly StyledProperty<IBrush?> WallpaperProperty = AvaloniaProperty.Register<FormsDesktop, IBrush?>(nameof(Wallpaper));
+
+    /// <summary>
     /// The space kept around the largest window when the desktop is scaled to fit it: room for the margin a centered
     /// window keeps from the desktop's edges, and for its invisible resize borders.
     /// </summary>
@@ -34,7 +41,7 @@ internal sealed partial class FormsDesktop : Control, IFormsPresenter
     /// <summary>The smallest scale the desktop is drawn at, so text stays readable.</summary>
     private const double MinimumScale = 0.35;
 
-    private static readonly IBrush Wallpaper = new LinearGradientBrush
+    private static readonly IBrush LightWallpaper = new LinearGradientBrush
     {
         StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
         EndPoint = new RelativePoint(1, 1, RelativeUnit.Relative),
@@ -59,6 +66,11 @@ internal sealed partial class FormsDesktop : Control, IFormsPresenter
     private double _scale = 1;
     private Size _viewSize;
 
+    static FormsDesktop()
+    {
+        AffectsRender<FormsDesktop>(WallpaperProperty);
+    }
+
     /// <summary>Creates an empty desktop.</summary>
     public FormsDesktop()
     {
@@ -75,6 +87,13 @@ internal sealed partial class FormsDesktop : Control, IFormsPresenter
         InitializeInput();
         InitializeKeyboard();
         InitializeEditor();
+    }
+
+    /// <inheritdoc cref="WallpaperProperty"/>
+    public IBrush? Wallpaper
+    {
+        get => GetValue(WallpaperProperty);
+        set => SetValue(WallpaperProperty, value);
     }
 
     /// <summary>Raised on the UI thread the first time the desktop knows its size, which the app's first window is placed in.</summary>
@@ -113,7 +132,7 @@ internal sealed partial class FormsDesktop : Control, IFormsPresenter
     }
 
     /// <inheritdoc />
-    public override void Render(DrawingContext context) => context.FillRectangle(Wallpaper, new Rect(Bounds.Size));
+    public override void Render(DrawingContext context) => context.FillRectangle(Wallpaper ?? LightWallpaper, new Rect(Bounds.Size));
 
     /// <inheritdoc />
     protected override Size MeasureOverride(Size availableSize)

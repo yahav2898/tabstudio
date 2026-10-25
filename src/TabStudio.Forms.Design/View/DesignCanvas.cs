@@ -27,6 +27,12 @@ internal sealed partial class DesignCanvas : Control
     /// <summary>The color of selection outlines and handles.</summary>
     public static readonly StyledProperty<Color> AccentProperty = AvaloniaProperty.Register<DesignCanvas, Color>(nameof(Accent), Color.FromRgb(0x00, 0x78, 0xD7));
 
+    /// <summary>The text and icons of the component tray's chips, which are drawn on <see cref="Background"/>.</summary>
+    public static readonly StyledProperty<IBrush?> ForegroundProperty = AvaloniaProperty.Register<DesignCanvas, IBrush?>(nameof(Foreground));
+
+    /// <summary>The component tray's chips.</summary>
+    public static readonly StyledProperty<IBrush?> ChipBackgroundProperty = AvaloniaProperty.Register<DesignCanvas, IBrush?>(nameof(ChipBackground));
+
     /// <summary>The space around the form.</summary>
     private const double FormMargin = 28;
 
@@ -36,7 +42,8 @@ internal sealed partial class DesignCanvas : Control
     /// <summary>The height of the component tray's chips.</summary>
     private const double TrayHeight = 30;
 
-    private static readonly IBrush TrayBackground = new ImmutableSolidColorBrush(Color.FromArgb(0x14, 0x80, 0x80, 0x80));
+    /// <summary>The chips' color when the host sets none: a gray that shows on light and dark backgrounds.</summary>
+    private static readonly IBrush DefaultChipBackground = new ImmutableSolidColorBrush(Color.FromArgb(0x14, 0x80, 0x80, 0x80));
     private static readonly IPen ContainerOutline = new ImmutablePen(new ImmutableSolidColorBrush(Color.FromArgb(0x90, 0x80, 0x80, 0x80)), 1, new ImmutableDashStyle([3, 3], 0));
 
     private readonly DisplayListRenderer _renderer = new();
@@ -47,7 +54,7 @@ internal sealed partial class DesignCanvas : Control
 
     static DesignCanvas()
     {
-        AffectsRender<DesignCanvas>(BackgroundProperty, AccentProperty);
+        AffectsRender<DesignCanvas>(BackgroundProperty, AccentProperty, ForegroundProperty, ChipBackgroundProperty);
         FocusableProperty.OverrideDefaultValue<DesignCanvas>(true);
     }
 
@@ -82,6 +89,20 @@ internal sealed partial class DesignCanvas : Control
     {
         get => GetValue(AccentProperty);
         set => SetValue(AccentProperty, value);
+    }
+
+    /// <summary>The text and icons of the component tray's chips.</summary>
+    public IBrush? Foreground
+    {
+        get => GetValue(ForegroundProperty);
+        set => SetValue(ForegroundProperty, value);
+    }
+
+    /// <summary>The component tray's chips.</summary>
+    public IBrush? ChipBackground
+    {
+        get => GetValue(ChipBackgroundProperty);
+        set => SetValue(ChipBackgroundProperty, value);
     }
 
     /// <summary>The surface shown.</summary>
@@ -247,10 +268,11 @@ internal sealed partial class DesignCanvas : Control
             return;
         }
 
-        var foreground = this.FindResource("Brush.Foreground") as IBrush ?? Brushes.Gray;
+        var foreground = Foreground ?? Brushes.Gray;
+        var chip = ChipBackground ?? DefaultChipBackground;
         foreach (var (component, bounds) in items)
         {
-            context.DrawRectangle(TrayBackground, null, new RoundedRect(bounds, 6));
+            context.DrawRectangle(chip, null, new RoundedRect(bounds, 6));
             if (component.Type is { } type && Toolbox.Items.FirstOrDefault(t => t.Type.IsAssignableFrom(type)) is { } tool)
             {
                 using (context.PushTransform(Matrix.CreateScale(14 / 24.0, 14 / 24.0) * Matrix.CreateTranslation(bounds.X + 8, bounds.Y + 8)))

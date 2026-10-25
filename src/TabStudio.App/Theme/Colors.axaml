@@ -279,6 +279,13 @@
       <SolidColorBrush x:Key="Brush.Toolchains.Ready" Color="#1A2B2A" />
       <SolidColorBrush x:Key="Brush.Toolchains.Attention" Color="#2E2A1B" />
 
+      <!-- The desktop a running Windows Forms app's windows sit on, in the app preview: Windows 11's dark wallpaper. -->
+      <LinearGradientBrush x:Key="Brush.FormsDesktop" StartPoint="0%,0%" EndPoint="100%,100%">
+        <GradientStop Color="#22324A" Offset="0" />
+        <GradientStop Color="#18253A" Offset="0.55" />
+        <GradientStop Color="#101A2B" Offset="1" />
+      </LinearGradientBrush>
+
       <!-- IntelliSense symbol icons -->
       <SolidColorBrush x:Key="Symbol.Purple" Color="#B180D7" />
       <SolidColorBrush x:Key="Symbol.Blue" Color="#4DA3F2" />
@@ -561,6 +568,13 @@
       <!-- The Toolchain Store -->
       <SolidColorBrush x:Key="Brush.Toolchains.Ready" Color="#E0F2EF" />
       <SolidColorBrush x:Key="Brush.Toolchains.Attention" Color="#FFF5D9" />
+
+      <!-- The desktop a running Windows Forms app's windows sit on, in the app preview: Windows 11's light wallpaper. -->
+      <LinearGradientBrush x:Key="Brush.FormsDesktop" StartPoint="0%,0%" EndPoint="100%,100%">
+        <GradientStop Color="#DCE8F6" Offset="0" />
+        <GradientStop Color="#C2D5EE" Offset="0.55" />
+        <GradientStop Color="#A8C3E6" Offset="1" />
+      </LinearGradientBrush>
 
       <!-- IntelliSense symbol icons -->
       <SolidColorBrush x:Key="Symbol.Purple" Color="#6C3FB5" />

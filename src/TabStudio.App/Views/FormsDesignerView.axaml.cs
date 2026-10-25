@@ -42,6 +42,9 @@ internal sealed partial class FormsDesignerView : UserControl, IDisposable
         CodeHost.Content = _editor;
         var canvas = designer.Canvas;
         canvas.Bind(DesignCanvas.BackgroundProperty, this.GetResourceObservable("Brush.Window"));
+        canvas.Bind(DesignCanvas.ForegroundProperty, this.GetResourceObservable("Brush.Text"));
+        canvas.Bind(DesignCanvas.ChipBackgroundProperty, this.GetResourceObservable("Brush.Pill"));
+        canvas.Bind(DesignCanvas.AccentProperty, this.GetResourceObservable("Color.Accent"));
         CanvasScroller.Content = canvas;
         canvas.MenuRequested += OnMenuRequested;
         designer.PropertyChanged += OnDesignerPropertyChanged;

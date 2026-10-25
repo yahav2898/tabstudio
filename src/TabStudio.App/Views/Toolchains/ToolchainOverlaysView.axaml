@@ -59,7 +59,7 @@
     <!-- An offer about the startup project: install its toolchain, or its packages. -->
     <Border IsVisible="{Binding HasToolchainNotice}" Width="390" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,98,20,0"
             Padding="16,14" CornerRadius="10" Background="{DynamicResource Brush.Popup}"
-            BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1" BoxShadow="0 10 28 0 #59000000">
+            BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1" BoxShadow="{DynamicResource Shadow.Popup}">
       <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,*,Auto" DataContext="{Binding ToolchainNotice}" x:DataType="vm:ToolchainNoticeViewModel">
         <Border Width="30" Height="30" CornerRadius="8" Background="{DynamicResource Brush.AccentSoft}" Margin="0,0,12,0" VerticalAlignment="Top">
           <controls:StrokeIcon Data="{StaticResource Icon.Package}" Size="16" Foreground="{DynamicResource Brush.AccentText}" HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -82,7 +82,7 @@
     <Panel Background="{DynamicResource Brush.Scrim}" IsVisible="{Binding ToolchainStore.IsOpen}">
       <Border MaxWidth="860" MaxHeight="680" Margin="28" HorizontalAlignment="Stretch" VerticalAlignment="Center" CornerRadius="14"
               Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
-              BoxShadow="0 16 40 0 #73000000">
+              BoxShadow="{DynamicResource Shadow.Dialog}">
         <Grid RowDefinitions="Auto,Auto,*,Auto" DataContext="{Binding ToolchainStore}" x:DataType="vm:ToolchainStoreViewModel">
           <!-- Header -->
           <Grid ColumnDefinitions="Auto,*,Auto" Margin="22,20,16,14">
