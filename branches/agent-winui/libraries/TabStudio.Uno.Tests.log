@@ -1,22 +1,8 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Uno.Tests/TabStudio.Uno.Tests.csproj (in 274 ms).
-  4 of 5 projects are up-to-date for restore.
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Uno/TabStudio.Uno.csproj (in 314 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Uno.Tests/TabStudio.Uno.Tests.csproj (in 1.6 sec).
+  4 of 6 projects are up-to-date for restore.
   TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/Uno/UnoBuild.cs(145,43): error CS0121: The call is ambiguous between the following methods or properties: 'Microsoft.CodeAnalysis.CSharp.CSharpParseOptions.WithPreprocessorSymbols(params string[]?)' and 'Microsoft.CodeAnalysis.CSharp.CSharpParseOptions.WithPreprocessorSymbols(System.Collections.Immutable.ImmutableArray<string>)' [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj]
   TabStudio.Packages -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/bin/Release/net10.0/TabStudio.Packages.dll
-  TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
-  TabStudio.Uno.Tests -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Uno.Tests/bin/Release/net10.0/TabStudio.Uno.Tests.dll
-Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Uno.Tests/bin/Release/net10.0/TabStudio.Uno.Tests.dll (.NETCoreApp,Version=v10.0)
-A total of 1 test files matched the specified pattern.
-[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
-[xUnit.net 00:00:00.12]   Discovering: TabStudio.Uno.Tests
-[xUnit.net 00:00:00.19]   Discovered:  TabStudio.Uno.Tests
-[xUnit.net 00:00:00.22]   Starting:    TabStudio.Uno.Tests
-  Passed TabStudio.Uno.Tests.Spike.UnoSdkSpikeTests.MeasureTabStudioRestoreOfUno [11 s]
-[xUnit.net 00:00:40.98]   Finished:    TabStudio.Uno.Tests
-  Passed TabStudio.Uno.Tests.Spike.UnoSdkSpikeTests.CollectUnoSdkFacts [29 s]
-
-Test Run Successful.
-Total tests: 2
-     Passed: 2
- Total time: 41.6799 Seconds
