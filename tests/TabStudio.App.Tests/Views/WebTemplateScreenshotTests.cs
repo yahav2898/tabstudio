@@ -32,8 +32,9 @@ public sealed class WebTemplateScreenshotTests : IDisposable
         start.SelectCommand.Execute(StartAction.NewProject);
         start.SelectedTemplate = start.Templates.Single(t => t.Id == WebTemplates.BlazorWebAppId);
         Avalonia.Threading.Dispatcher.UIThread.RunJobs();
-        var templates = window.GetVisualDescendants().OfType<ListBox>().Single(l => ReferenceEquals(l.ItemsSource, start.Templates));
-        templates.ScrollIntoView(start.SelectedTemplate);
+        // Scrolled down to the web templates, the render mode choice and the Create button below them.
+        var create = window.GetVisualDescendants().OfType<Button>().Single(b => ReferenceEquals(b.Command, start.CreateProjectCommand));
+        create.BringIntoView();
         Avalonia.Threading.Dispatcher.UIThread.RunJobs();
 
         UiTestHelpers.SaveScreenshot(window, "blazor-03-templates");

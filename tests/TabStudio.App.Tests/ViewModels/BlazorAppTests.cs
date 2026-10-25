@@ -146,14 +146,13 @@ public sealed class BlazorAppTests : IClassFixture<SharedToolchain>, IDisposable
     }
 
     [AvaloniaTheory]
-    [InlineData(WebTemplates.RazorPagesId, "", "<h1 class=\"display-4\">Welcome</h1>")]
-    [InlineData(WebTemplates.MvcId, "Home/Privacy", "<h1>Privacy Policy</h1>")]
-    [InlineData("blazor-auto", "counter", "Current count: 0")]
-    [InlineData(WebTemplates.BlazorWebAssemblyId, "", "_framework/blazor.webassembly.js")]
-    public async Task F5_shows_each_web_template_in_the_preview(string templateId, string page, string expected)
+    [InlineData(WebTemplates.RazorPagesId, "HelloPages", "", "<h1 class=\"display-4\">Welcome</h1>")]
+    [InlineData(WebTemplates.MvcId, "HelloMvc", "Home/Privacy", "<h1>Privacy Policy</h1>")]
+    [InlineData("blazor-auto", "HelloAuto", "counter", "Current count: 0")]
+    [InlineData(WebTemplates.BlazorWebAssemblyId, "HelloWasm", "", "_framework/blazor.webassembly.js")]
+    public async Task F5_shows_each_web_template_in_the_preview(string templateId, string name, string page, string expected)
     {
         var (workspace, webViews) = await CreateWorkspaceAsync();
-        var name = "Web" + templateId.Replace("-", string.Empty, StringComparison.Ordinal);
         await workspace.LoadAsync(new ProjectTemplates(_toolchain.Paths).Create(templateId, name));
         var window = Show(workspace);
 
@@ -171,10 +170,16 @@ public sealed class BlazorAppTests : IClassFixture<SharedToolchain>, IDisposable
             Assert.Contains("a WebAssembly app runs in the web preview's browser", workspace.Output.Text, StringComparison.Ordinal);
             if (webViews?.WebView is { } webView)
             {
-                // .NET for WebAssembly boots in the browser and renders the app's home page.
+                // .NET for WebAssembly boots in the browser and renders the app's home page, and its Counter counts.
                 await WaitForAsync(webView.Rendering);
                 await webView.Chrome.WaitUntilAsync("document.querySelector('h1')?.textContent === 'Hello, world!'", TimeSpan.FromSeconds(90));
-                await (await workspace.OpenDocumentAsync(Path.Combine(Path.GetDirectoryName(workspace.Workspace!.Projects[0].FilePath)!, "Pages", "Home.razor")))!.AnalyzeNowAsync();
+                workspace.WebPreview.AddressText = "counter";
+                workspace.WebPreview.NavigateCommand.Execute(null);
+                await WaitForAsync(webView.Rendering);
+                var clicks = await ClickUntilCountedAsync(webView.Chrome);
+                await webView.Chrome.ClickAsync("button.btn-primary");
+                await webView.Chrome.WaitUntilAsync($"document.querySelector('p[role=status]').textContent === 'Current count: {clicks + 1}'", TimeSpan.FromSeconds(10));
+                await (await workspace.OpenDocumentAsync(Path.Combine(Path.GetDirectoryName(workspace.Workspace!.Projects[0].FilePath)!, "Pages", "Counter.razor")))!.AnalyzeNowAsync();
                 await WaitForAsync(webView.RefreshAsync());
                 UiTestHelpers.SaveScreenshot(window, "blazor-04-webassembly-app");
             }
@@ -249,7 +254,7 @@ public sealed class BlazorAppTests : IClassFixture<SharedToolchain>, IDisposable
             }
         }
 
-        throw new TimeoutException("The Counter never counted: its circuit did not connect.");
+        throw new TimeoutException("The Counter never counted: it never became interactive.");
     }
 
     private async Task<(WorkspaceViewModel Workspace, ChromeWebViewFactory? WebViews)> CreateWorkspaceAsync(bool withBrowser = true)
