@@ -22,7 +22,8 @@ namespace TabStudio.App.Editing;
 /// </para>
 /// <para>
 /// On a touch screen a touch on the numbers does not select at once, so a scroll can start there; a tap selects the
-/// line, as a click does.
+/// line, as a click does. The whole width of a line's row is the line's target, for a finger as for the mouse, rather
+/// than only the digits AvaloniaEdit's margin can be hit on.
 /// </para>
 /// </remarks>
 public sealed class CachedLineNumberMargin : LineNumberMargin
@@ -67,6 +68,9 @@ public sealed class CachedLineNumberMargin : LineNumberMargin
     public override void Render(DrawingContext drawingContext)
     {
         ArgumentNullException.ThrowIfNull(drawingContext);
+
+        // Invisible, but it makes every point of the margin hit it, not only the digits.
+        drawingContext.FillRectangle(Brushes.Transparent, new Rect(Bounds.Size));
         if (TextView is not { VisualLinesValid: true } textView || textView.VisualLines.Count == 0)
         {
             return;

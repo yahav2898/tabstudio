@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
+using Avalonia.Input;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using AvaloniaEdit.Editing;
@@ -248,17 +249,21 @@ public sealed class EditorTouchScrollingTests
         Assert.True(editor.TextArea.Selection.IsEmpty, "nor did it select lines");
         Assert.Equal(caret, editor.CaretOffset);
 
-        // A tap on a line's number (drawn at the margin's right edge) selects the line.
+        // A tap anywhere in a line's row of the numbers, even left of a short number, selects the line.
         var textView = editor.TextArea.TextView;
         var line = textView.VisualLines[3].FirstDocumentLine;
-        var tap = numbers.TranslatePoint(new Point(numbers.Bounds.Width - 3, textView.VisualLines[3].VisualTop - textView.VerticalOffset + 5), window)!.Value;
+        var tap = numbers.TranslatePoint(new Point(2, textView.VisualLines[3].VisualTop - textView.VerticalOffset + 5), window)!.Value;
+        var hit = window.InputHitTest(tap) as Visual;
+        var taps = 0;
+        numbers.AddHandler(Gestures.TappedEvent, (_, _) => taps++, handledEventsToo: true);
         touch.Down(tap);
         touch.Wait(60);
         touch.Up(tap);
         Dispatcher.UIThread.RunJobs();
 
-        Assert.Equal(line.Offset, editor.SelectionStart);
-        Assert.Equal(line.TotalLength, editor.SelectionLength);
+        var what = $"the tap hit {string.Join(" in ", (hit?.GetVisualAncestors().Prepend(hit) ?? []).Take(4).Select(v => v.GetType().Name))}, {taps} taps on the numbers";
+        Assert.True(line.Offset == editor.SelectionStart, $"the selection starts at line {line.LineNumber}: {what}");
+        Assert.True(line.TotalLength == editor.SelectionLength, $"the selection is line {line.LineNumber}: {what}");
 
         // Scrolled through a long file, the margin keeps only the numbers near the view.
         for (var offset = 0.0; offset < 20000; offset += 300)
