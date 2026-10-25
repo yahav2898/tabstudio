@@ -17,7 +17,7 @@ internal sealed class WorkspaceFixture : IDisposable
         Profile = DeviceProfile.For(DeviceStatus.Device);
         Compiler = new CompilerServices(Paths);
         Sessions = new SessionStore(Paths);
-        Workspace = new WorkspaceViewModel(Compiler, DeviceStatus, Profile, new AvaloniaUiDispatcher(), Sessions);
+        Workspace = new WorkspaceViewModel(Compiler, DeviceStatus, Profile, new AvaloniaUiDispatcher(), Sessions, Paths);
     }
 
     public AppPaths Paths { get; }

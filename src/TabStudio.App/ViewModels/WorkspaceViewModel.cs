@@ -54,13 +54,14 @@ public sealed record StartupProjectOption(ProjectInfo Project, IRelayCommand Sel
 /// and the status bar. This file holds its state and setup; the other parts of the class are in
 /// <c>WorkspaceViewModel.*.cs</c>.
 /// </summary>
-public sealed partial class WorkspaceViewModel : ObservableObject, IDisposable
+public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActions, IDisposable
 {
     private readonly CompilerServices _compiler;
     private readonly IDeviceStatus _device;
     private readonly DeviceProfile _profile;
     private readonly IUiDispatcher _ui;
     private readonly SessionStore _sessions;
+    private readonly AppPaths _paths;
     private readonly ProgramRunner _runner = new();
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1859", Justification = "TabStudio Link provides a remote implementation of the same interface.")]
     private ILanguageService? _language;
@@ -69,7 +70,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IDisposable
     private bool _disposed;
 
     /// <summary>Creates the IDE. Call <see cref="LoadAsync"/> to open a workspace.</summary>
-    public WorkspaceViewModel(CompilerServices compiler, IDeviceStatus device, DeviceProfile profile, IUiDispatcher ui, SessionStore sessions)
+    public WorkspaceViewModel(CompilerServices compiler, IDeviceStatus device, DeviceProfile profile, IUiDispatcher ui, SessionStore sessions, AppPaths paths)
     {
         ArgumentNullException.ThrowIfNull(compiler);
         ArgumentNullException.ThrowIfNull(device);
@@ -82,7 +83,9 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IDisposable
         _profile = profile;
         _ui = ui;
         _sessions = sessions;
+        _paths = paths;
 
+        Explorer = new SolutionExplorerViewModel(this);
         Output = new OutputViewModel(ui, profile.OutputCharacterLimit);
         Explorer.OpenFileRequested += async (_, path) => await OpenDocumentAsync(path);
         Explorer.SelectionChanged += (_, node) => Properties.Show(node, Workspace);
@@ -105,7 +108,10 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IDisposable
     public string Title => Workspace?.Name ?? "TabStudio";
 
     /// <summary>The Solution Explorer.</summary>
-    public SolutionExplorerViewModel Explorer { get; } = new();
+    public SolutionExplorerViewModel Explorer { get; }
+
+    /// <summary>The in-app dialog that asks for names.</summary>
+    public PromptViewModel Prompt { get; } = new();
 
     /// <summary>The Properties panel.</summary>
     public PropertiesViewModel Properties { get; } = new();

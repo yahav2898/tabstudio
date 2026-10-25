@@ -21,6 +21,9 @@ public sealed class LocalLanguageService : ILanguageService
     }
 
     /// <inheritdoc />
+    public void Reload(Workspace workspace, ISourceTextProvider sources) => _host.Load(workspace, sources);
+
+    /// <inheritdoc />
     public bool ContainsDocument(string filePath) => _host.ContainsDocument(filePath);
 
     /// <inheritdoc />

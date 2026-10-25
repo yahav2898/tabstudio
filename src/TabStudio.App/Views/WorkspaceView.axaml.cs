@@ -27,6 +27,7 @@ public sealed partial class WorkspaceView : UserControl
         InitializeComponent();
         Editors.ViewFactory = document => new CodeEditorView((DocumentViewModel)document);
         QuickOpenBox.KeyDown += OnQuickOpenKeyDown;
+        PromptBox.KeyDown += OnPromptKeyDown;
         QuickOpenList.AddHandler(TappedEvent, OnQuickOpenTapped, RoutingStrategies.Bubble, handledEventsToo: true);
         KeyBindings.Add(new KeyBinding { Gesture = new KeyGesture(Key.Q, KeyModifiers.Control), Command = new FocusCommand(() => QuickOpenBox.Focus()) });
     }
@@ -38,12 +39,14 @@ public sealed partial class WorkspaceView : UserControl
         if (_viewModel is not null)
         {
             _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
+            _viewModel.Prompt.PropertyChanged -= OnPromptPropertyChanged;
         }
 
         _viewModel = DataContext as WorkspaceViewModel;
         if (_viewModel is not null)
         {
             _viewModel.PropertyChanged += OnViewModelPropertyChanged;
+            _viewModel.Prompt.PropertyChanged += OnPromptPropertyChanged;
             UpdateSideBar();
             UpdateBottomPanel();
         }
@@ -103,6 +106,37 @@ public sealed partial class WorkspaceView : UserControl
         row.Height = visible ? _bottomPanelHeight : new GridLength(0);
         BottomDock.IsVisible = visible;
         BottomSplitter.IsVisible = visible;
+    }
+
+    private void OnPromptPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(PromptViewModel.IsOpen) && _viewModel?.Prompt.IsOpen == true && _viewModel.Prompt.HasInput)
+        {
+            Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+            {
+                PromptBox.Focus();
+                PromptBox.SelectAll();
+            }, Avalonia.Threading.DispatcherPriority.Background);
+        }
+    }
+
+    private void OnPromptKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (_viewModel?.Prompt is not { } prompt)
+        {
+            return;
+        }
+
+        if (e.Key == Key.Enter && prompt.ConfirmCommand.CanExecute(null))
+        {
+            prompt.ConfirmCommand.Execute(null);
+            e.Handled = true;
+        }
+        else if (e.Key == Key.Escape)
+        {
+            prompt.CancelCommand.Execute(null);
+            e.Handled = true;
+        }
     }
 
     private void OnQuickOpenKeyDown(object? sender, KeyEventArgs e)

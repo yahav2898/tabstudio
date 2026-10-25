@@ -19,6 +19,13 @@ public interface ILanguageService : IDisposable
     /// <param name="filePath">Full path of the file.</param>
     bool ContainsDocument(string filePath);
 
+    /// <summary>
+    /// Replaces the whole model with a workspace, for example after files were added, renamed or deleted.
+    /// </summary>
+    /// <param name="workspace">The reloaded workspace.</param>
+    /// <param name="sources">Supplies file text, including unsaved edits in open documents.</param>
+    void Reload(Workspace workspace, ISourceTextProvider sources);
+
     /// <summary>Replaces a file's text with the editor's current text.</summary>
     /// <param name="filePath">Full path of the file.</param>
     /// <param name="text">The text.</param>

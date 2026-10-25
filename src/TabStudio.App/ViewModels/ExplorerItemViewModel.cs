@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using TabStudio.App.Editing;
 using TabStudio.Core.Compatibility;
 using TabStudio.Core.Workspaces;
@@ -44,13 +45,17 @@ public sealed partial class ExplorerItemViewModel : ObservableObject
 {
     private const double IndentPerLevel = 16;
 
+    private readonly IExplorerActions? _actions;
+
     /// <summary>Creates a row for a node.</summary>
     /// <param name="node">The workspace node.</param>
     /// <param name="depth">How deep it is in the tree; the root is 0.</param>
     /// <param name="report">The Compatibility Doctor's verdict, for project rows.</param>
-    public ExplorerItemViewModel(WorkspaceNode node, int depth, CompatibilityReport? report = null)
+    /// <param name="actions">What the context menu does, or <see langword="null"/> for a read-only row.</param>
+    public ExplorerItemViewModel(WorkspaceNode node, int depth, CompatibilityReport? report = null, IExplorerActions? actions = null)
     {
         ArgumentNullException.ThrowIfNull(node);
+        _actions = actions;
         Node = node;
         Depth = depth;
         Report = report;
@@ -117,6 +122,34 @@ public sealed partial class ExplorerItemViewModel : ObservableObject
 
     /// <summary>Whether this row is a file.</summary>
     public bool IsFile => Node.IsOpenableFile;
+
+    /// <summary>Whether files and folders can be created under this row.</summary>
+    public bool CanCreateChildren => _actions is not null && Node.FullPath is not null
+        && Node.Kind is WorkspaceNodeKind.Folder or WorkspaceNodeKind.Project or WorkspaceNodeKind.Root or WorkspaceNodeKind.Solution;
+
+    /// <summary>Whether the row can be renamed or deleted.</summary>
+    public bool CanModify => _actions is not null && Node.FullPath is not null && Node.Kind is WorkspaceNodeKind.File or WorkspaceNodeKind.Folder;
+
+    /// <summary>Whether the row is a project that can be made the startup project.</summary>
+    public bool CanBeStartupProject => _actions is not null && Node.Project is { IsExecutable: true, IsTestProject: false };
+
+    [RelayCommand(CanExecute = nameof(IsFile))]
+    private Task OpenAsync() => _actions?.OpenAsync(Node) ?? Task.CompletedTask;
+
+    [RelayCommand(CanExecute = nameof(CanCreateChildren))]
+    private Task NewFileAsync() => _actions?.NewFileAsync(Node) ?? Task.CompletedTask;
+
+    [RelayCommand(CanExecute = nameof(CanCreateChildren))]
+    private Task NewFolderAsync() => _actions?.NewFolderAsync(Node) ?? Task.CompletedTask;
+
+    [RelayCommand(CanExecute = nameof(CanModify))]
+    private Task RenameAsync() => _actions?.RenameAsync(Node) ?? Task.CompletedTask;
+
+    [RelayCommand(CanExecute = nameof(CanModify))]
+    private Task DeleteAsync() => _actions?.DeleteAsync(Node) ?? Task.CompletedTask;
+
+    [RelayCommand(CanExecute = nameof(CanBeStartupProject))]
+    private void SetAsStartupProject() => _actions?.SetAsStartupProject(Node);
 
     private static ExplorerIcon IconFor(WorkspaceNode node) => node.Kind switch
     {

@@ -129,7 +129,7 @@ public sealed class WorkspaceViewModelTests
             first.Workspace.ActiveDocument!.Document.Insert(0, "// not saved yet\n");
             first.Workspace.SaveSessionNow();
 
-            using var second = new WorkspaceViewModel(first.Compiler, first.DeviceStatus, first.Profile, new AvaloniaUiDispatcher(), first.Sessions);
+            using var second = new WorkspaceViewModel(first.Compiler, first.DeviceStatus, first.Profile, new AvaloniaUiDispatcher(), first.Sessions, first.Paths);
             await second.LoadAsync(solution, first.Sessions.Load());
 
             Assert.Equal("Program.cs", second.ActiveDocument?.FileName);

@@ -14,9 +14,17 @@ public sealed partial class SolutionExplorerViewModel : ObservableObject
 {
     private const int MaximumSearchResults = 500;
 
+    private readonly IExplorerActions? _actions;
     private Workspace? _workspace;
     private Dictionary<string, CompatibilityReport> _reports = new(StringComparer.Ordinal);
     private List<ExplorerItemViewModel> _treeRows = [];
+
+    /// <summary>Creates the Solution Explorer.</summary>
+    /// <param name="actions">What the context menu does, or <see langword="null"/> for a read-only explorer.</param>
+    public SolutionExplorerViewModel(IExplorerActions? actions = null)
+    {
+        _actions = actions;
+    }
 
     /// <summary>The visible rows, in display order.</summary>
     public RangeObservableCollection<ExplorerItemViewModel> Rows { get; } = [];
@@ -43,6 +51,12 @@ public sealed partial class SolutionExplorerViewModel : ObservableObject
         ArgumentNullException.ThrowIfNull(workspace);
         ArgumentNullException.ThrowIfNull(reports);
 
+        // When the same workspace is reloaded after a file operation, keep what the user had expanded.
+        var keepExpanded = _workspace is not null && _workspace.RootDirectory == workspace.RootDirectory
+            ? _treeRows.Where(r => r.IsExpanded && r.Node.FullPath is not null).Select(r => r.Node.FullPath!).ToHashSet(StringComparer.Ordinal)
+            : null;
+        var selectedPath = SelectedItem?.Node.FullPath;
+
         _workspace = workspace;
         _reports = reports.GroupBy(r => r.ProjectName, StringComparer.Ordinal).ToDictionary(g => g.Key, g => g.First(), StringComparer.Ordinal);
 
@@ -53,7 +67,11 @@ public sealed partial class SolutionExplorerViewModel : ObservableObject
         // Like Visual Studio: solution folders and projects start expanded, everything inside them collapsed.
         for (var i = 0; i < _treeRows.Count; i++)
         {
-            if (_treeRows[i].Node.Kind is WorkspaceNodeKind.SolutionFolder or WorkspaceNodeKind.Project)
+            var node = _treeRows[i].Node;
+            var expand = keepExpanded is null
+                ? node.Kind is WorkspaceNodeKind.SolutionFolder or WorkspaceNodeKind.Project
+                : node.Kind == WorkspaceNodeKind.SolutionFolder || (node.FullPath is { } path && keepExpanded.Contains(path));
+            if (expand)
             {
                 Expand(_treeRows[i], _treeRows);
             }
@@ -61,7 +79,7 @@ public sealed partial class SolutionExplorerViewModel : ObservableObject
 
         SearchText = string.Empty;
         ShowRows(_treeRows);
-        SelectedItem = root;
+        SelectedItem = _treeRows.FirstOrDefault(r => selectedPath is not null && r.Node.FullPath == selectedPath) ?? root;
     }
 
     /// <summary>Removes everything, when the workspace closes.</summary>
@@ -188,7 +206,7 @@ public sealed partial class SolutionExplorerViewModel : ObservableObject
         var matches = _workspace.Tree.DescendantsAndSelf()
             .Where(n => n.IsOpenableFile && n.Name.Contains(text, StringComparison.OrdinalIgnoreCase))
             .Take(MaximumSearchResults)
-            .Select(n => new ExplorerItemViewModel(n, 0)
+            .Select(n => new ExplorerItemViewModel(n, 0, actions: _actions)
             {
                 Location = Path.GetRelativePath(root, Path.GetDirectoryName(n.FullPath!)!) is var folder && folder != "." ? folder : null,
             })
@@ -199,7 +217,7 @@ public sealed partial class SolutionExplorerViewModel : ObservableObject
     private ExplorerItemViewModel CreateRow(WorkspaceNode node, int depth)
     {
         var report = node.Project is { } project && _reports.TryGetValue(project.Name, out var found) ? found : null;
-        return new ExplorerItemViewModel(node, depth, report) { Detail = DetailFor(node) };
+        return new ExplorerItemViewModel(node, depth, report, _actions) { Detail = DetailFor(node) };
     }
 
     private string? DetailFor(WorkspaceNode node)

@@ -76,6 +76,12 @@
     <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
       <Setter Property="Background" Value="{DynamicResource Brush.Control}" />
     </Style>
+    <Style Selector="^.destructive /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#C93C37" />
+    </Style>
+    <Style Selector="^.destructive:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#DA4A44" />
+    </Style>
   </ControlTheme>
 
   <!-- A large card on the start screen. -->

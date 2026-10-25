@@ -419,5 +419,23 @@
         </StackPanel>
       </Grid>
     </Border>
+
+    <!-- The in-app dialog that asks for names and confirmations. -->
+    <Panel Grid.Row="0" Grid.RowSpan="4" Background="#99000000" IsVisible="{Binding Prompt.IsOpen}">
+      <Border Width="440" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="22" CornerRadius="12"
+              Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
+              BoxShadow="0 12 32 0 #66000000">
+        <StackPanel Spacing="14">
+          <TextBlock Classes="h2" FontSize="15" Text="{Binding Prompt.Title}" />
+          <TextBlock Classes="muted" TextWrapping="Wrap" Text="{Binding Prompt.Message}" />
+          <TextBox x:Name="PromptBox" Classes="large mono" Text="{Binding Prompt.Text}" IsVisible="{Binding Prompt.HasInput}" />
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+            <Button Theme="{StaticResource SecondaryButton}" Height="40" Padding="18,0" Content="Cancel" Command="{Binding Prompt.CancelCommand}" />
+            <Button Theme="{StaticResource AccentButton}" Height="40" Padding="18,0" Content="{Binding Prompt.ConfirmText}"
+                    Classes.destructive="{Binding Prompt.IsDestructive}" Command="{Binding Prompt.ConfirmCommand}" />
+          </StackPanel>
+        </StackPanel>
+      </Border>
+    </Panel>
   </Grid>
 </UserControl>

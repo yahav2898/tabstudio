@@ -16,6 +16,7 @@ public sealed class AppPaths
         Projects = Path.Combine(root, "Projects");
         Cache = Path.Combine(root, "Cache");
         State = Path.Combine(root, "State");
+        Trash = Path.Combine(root, "Trash");
 
         Directory.CreateDirectory(Projects);
         Directory.CreateDirectory(Cache);
@@ -33,6 +34,12 @@ public sealed class AppPaths
 
     /// <summary>Small files that remember the user's state: recent workspaces, the last session.</summary>
     public string State { get; }
+
+    /// <summary>
+    /// Where deleted files and folders go. A tablet has no recycle bin, so TabStudio keeps its own: deleting from
+    /// the Solution Explorer can always be undone by hand.
+    /// </summary>
+    public string Trash { get; }
 
     /// <summary>The list of recently opened workspaces.</summary>
     public string RecentWorkspacesFile => Path.Combine(State, "recent.json");
