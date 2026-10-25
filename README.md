@@ -37,30 +37,55 @@ The usual answer has been "use a cloud IDE". That works until the connection dro
 
 The missing piece is the IDE that puts it together. That is TabStudio.
 
-## What it does
+## What you get
 
-> **Status:** TabStudio is in early development. The table shows what works today and what is next, so you always know where things stand.
+### A real Visual Studio experience, built for touch
 
-| Capability | Status |
+- **The layout you already know.** Menu bar, toolbar, document tabs, Solution Explorer, Properties, Error List, Output and a status bar, docked exactly where your hands expect them.
+- **Sized for fingers.** Every target is at least 44 pixels. A floating action bar puts Rename, Comment, Format, Peek and Run to Cursor one tap away.
+- **Keyboard when you want it.** Attach a keyboard and every Visual Studio shortcut works: F5, Ctrl+Shift+B, F12, Ctrl+. and the rest.
+- **Desktop mode.** Plug in a monitor and the full layout moves to the big screen, while the tablet becomes a touch Toolbox and Properties panel.
+
+### C# that runs on the tablet
+
+- **Roslyn inside the app.** The real C# compiler powers semantic highlighting, live errors as you type, and the Error List.
+- **F5 in under a second.** Projects compile straight to memory and run next to the code. Console input and output live in the Output panel.
+- **IntelliSense.** Completion, signature help, Quick Info, Go to Definition, Find All References, Rename and quick fixes.
+- **A debugger.** Breakpoints, Step Into, Over and Out, Locals, Watch, Call Stack, DataTips and break on exceptions.
+- **Tests.** Test Explorer for xUnit, NUnit and MSTest, and Live Unit Testing markers beside every line.
+- **NuGet on the device.** Packages restore on the tablet, so real projects build as they are.
+
+### Every Visual Studio workload, on Android
+
+| Workload | How it runs on the tablet |
 | --- | --- |
-| Visual Studio-style shell: menus, toolbar, document tabs, docked panels, status bar | In progress |
-| Solution Explorer for real `.sln` and `.csproj` files | In progress |
-| C# editor with syntax highlighting and live errors (Roslyn, in-process) | In progress |
-| **F5 for C# console apps**, compiled in memory and run on the tablet | In progress |
-| Error List and Output panels | In progress |
-| Open any repo: detect the stack from `global.json`, `package.json`, `Cargo.toml` and friends | In progress |
-| Compatibility Doctor: shows where each project in a solution can run, and why | In progress |
-| IntelliSense completion, signature help, quick fixes | Planned |
-| Debugger: breakpoints, Locals, Watch, Call Stack | Planned |
-| ASP.NET Core and Blazor with a live WebView preview | Planned |
-| WinForms designer with touch drag-and-drop | Planned |
-| WPF (via OpenSilver) and WinUI (via Uno Platform) | Planned |
-| Toolchain Store: Rust, Go, Python, Node, C/C++ and more, built natively for Android | Planned |
-| VS Code extensions via Open VSX (any language with an LSP) | Planned |
-| Windows Bridge: run Windows-only apps on your own PC, streamed to the tablet | Planned |
-| Polyglot notebooks (C#, F#, Python, SQL) | Planned |
+| Console and class libraries | Compiled in memory, run in-process |
+| ASP.NET Core and Blazor | Served locally, previewed live in a WebView |
+| Avalonia | Rendered natively in a pane beside the editor |
+| Windows Forms | A cross-platform Forms layer, with a touch drag-and-drop designer |
+| WPF | OpenSilver, in a WebView |
+| WinUI | Uno Platform, natively on Android |
+| C, C++, Rust, Go, Python, Node, Java | Native toolchains from the Toolchain Store |
+| Anything Windows-only | The Windows Bridge: builds and runs on your PC, streamed to the tablet |
 
-The full plan, phase by phase, is in the [roadmap](docs/ROADMAP.md).
+### Open any repository
+
+- **Paste a GitHub link and press F5.** TabStudio reads `global.json`, `package.json`, `Cargo.toml`, `go.mod`, `CMakeLists.txt` and friends, installs the toolchains it needs and sets up build, run and debug.
+- **Compatibility Doctor.** For every project in a solution it shows where it runs on the tablet and why, and fixes what stands in the way.
+- **Extensions.** VS Code extensions from Open VSX, so any language with a language server works.
+- **Notebooks.** C# notebooks whose cells run as you write them.
+
+### An AI pair programmer
+
+- **The agent knows your solution.** It builds, runs the tests and fixes the errors it finds.
+- **Sketch to XAML.** Draw a screen with the stylus and get XAML that runs.
+
+### Smart contracts and dApps
+
+- **Solidity and Move**, with templates for Supra's native oracle, verifiable randomness and automation.
+- **Migration Doctor** for bringing an existing Solidity dApp to SupraEVM, and one-tap testnet deploys.
+
+The order in which all of this lands is in the [roadmap](docs/ROADMAP.md).
 
 ## How it works
 
@@ -147,7 +172,7 @@ src/
   TabStudio.App/           The IDE itself: views and view models, shared by every platform
   TabStudio.Desktop/       Desktop host for development
   TabStudio.Android/       The Android app
-tests/                     Unit tests for every library
+tests/                     Unit tests for every library, plus shared test helpers
 samples/                   The sample solution bundled with the app
 docs/                      Architecture, roadmap and design notes
 ```
