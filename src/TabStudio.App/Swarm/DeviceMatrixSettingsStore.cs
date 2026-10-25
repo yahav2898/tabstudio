@@ -44,49 +44,49 @@ public sealed record VirtualDeviceSettings(
 /// <param name="Devices">The virtual devices, in the order they were added; <see langword="null"/> before any were chosen.</param>
 /// <param name="Rules">Which layout checks run.</param>
 /// <param name="Zoom">How large the matrix draws screens, 1 for their real size.</param>
-public sealed record SwarmSettings(IReadOnlyList<VirtualDeviceSettings>? Devices, LayoutCheckSettings Rules, double Zoom = 0.5)
+public sealed record DeviceMatrixSettings(IReadOnlyList<VirtualDeviceSettings>? Devices, LayoutCheckSettings Rules, double Zoom = 0.5)
 {
     /// <summary>The settings before the user changed any.</summary>
-    public static SwarmSettings Default { get; } = new(null, LayoutCheckSettings.All);
+    public static DeviceMatrixSettings Default { get; } = new(null, LayoutCheckSettings.All);
 }
 
 /// <summary>
 /// Keeps the Device Matrix's settings in the app's state folder, so the virtual devices, their themes, directions and
 /// font scales, and the layout checks the user turned off, come back in every workspace.
 /// </summary>
-public sealed class SwarmSettingsStore
+public sealed class DeviceMatrixSettingsStore
 {
     private readonly string _file;
     private readonly Lock _gate = new();
 
     /// <summary>Creates the store over its file in the app's state folder.</summary>
     /// <param name="paths">Where the app keeps its state.</param>
-    public SwarmSettingsStore(AppPaths paths)
+    public DeviceMatrixSettingsStore(AppPaths paths)
     {
         ArgumentNullException.ThrowIfNull(paths);
-        _file = Path.Combine(paths.State, "swarm.json");
+        _file = Path.Combine(paths.State, "Swarm", "device-matrix.json");
     }
 
     /// <summary>The saved settings, or the defaults.</summary>
-    public SwarmSettings Load()
+    public DeviceMatrixSettings Load()
     {
         lock (_gate)
         {
             try
             {
                 using var stream = File.OpenRead(_file);
-                return JsonSerializer.Deserialize(stream, SwarmJsonContext.Default.SwarmSettings) ?? SwarmSettings.Default;
+                return JsonSerializer.Deserialize(stream, DeviceMatrixJsonContext.Default.DeviceMatrixSettings) ?? DeviceMatrixSettings.Default;
             }
             catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException or NotSupportedException)
             {
-                return SwarmSettings.Default;
+                return DeviceMatrixSettings.Default;
             }
         }
     }
 
     /// <summary>Saves the settings.</summary>
     /// <param name="settings">The settings.</param>
-    public void Save(SwarmSettings settings)
+    public void Save(DeviceMatrixSettings settings)
     {
         ArgumentNullException.ThrowIfNull(settings);
         lock (_gate)
@@ -97,7 +97,7 @@ public sealed class SwarmSettingsStore
                 var temporary = _file + ".tmp";
                 using (var stream = File.Create(temporary))
                 {
-                    JsonSerializer.Serialize(stream, settings, SwarmJsonContext.Default.SwarmSettings);
+                    JsonSerializer.Serialize(stream, settings, DeviceMatrixJsonContext.Default.DeviceMatrixSettings);
                 }
 
                 File.Move(temporary, _file, overwrite: true);
@@ -112,7 +112,7 @@ public sealed class SwarmSettingsStore
 
 /// <summary>The settings' JSON, generated at compile time so it works trimmed on Android.</summary>
 [JsonSourceGenerationOptions(WriteIndented = true, PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, UseStringEnumConverter = true)]
-[JsonSerializable(typeof(SwarmSettings))]
-internal sealed partial class SwarmJsonContext : JsonSerializerContext
+[JsonSerializable(typeof(DeviceMatrixSettings))]
+internal sealed partial class DeviceMatrixJsonContext : JsonSerializerContext
 {
 }

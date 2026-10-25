@@ -135,7 +135,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         InitializePullRequests();
         InitializeLiveTesting();
         InitializeLanguageServers(languageServers, browser);
-        InitializeSwarm(screens);
+        InitializeSwarmScreens(screens);
     }
 
     /// <summary>Raised when the user closes the workspace to return to the start screen.</summary>
@@ -379,7 +379,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         DisposePullRequests();
         GitChanges.Dispose();
         DisposeLanguageServers();
-        DisposeSwarm();
+        DisposeSwarmScreens();
     }
 
     private void LoadStartupProjects(Workspace workspace, string? preferred)

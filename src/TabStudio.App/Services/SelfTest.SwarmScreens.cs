@@ -15,11 +15,11 @@ namespace TabStudio.App.Services;
 /// </summary>
 public static partial class SelfTest
 {
-    /// <summary>The Avalonia project the Swarm part creates.</summary>
-    public const string SwarmAppName = "SelfTestSwarm";
+    /// <summary>The Avalonia project the Swarm screens part creates.</summary>
+    public const string SwarmScreensAppName = "SelfTestScreens";
 
     /// <summary>How long the virtual devices and the layout checks may take.</summary>
-    private static readonly TimeSpan SwarmTimeout = TimeSpan.FromSeconds(90);
+    private static readonly TimeSpan SwarmScreensTimeout = TimeSpan.FromSeconds(90);
 
     /// <summary>
     /// Runs the Avalonia template, opens the Device Matrix with a small phone and a tablet, taps the count button on
@@ -30,7 +30,7 @@ public static partial class SelfTest
     private static async Task<SelfTestResult> CheckSwarmScreensAsync(MainViewModel main, ProjectTemplates templates, CancellationToken cancellationToken)
     {
         var clock = Stopwatch.StartNew();
-        await main.OpenWorkspaceAsync(templates.Create(ProjectTemplates.AvaloniaId, SwarmAppName));
+        await main.OpenWorkspaceAsync(templates.Create(ProjectTemplates.AvaloniaId, SwarmScreensAppName));
         if (main.Workspace is not { } workspace || !workspace.RunCommand.CanExecute(null))
         {
             return new SelfTestResult(false, "Swarm: the app did not open.", clock.Elapsed);
@@ -60,7 +60,7 @@ public static partial class SelfTest
             matrix.AddDeviceCommand.Execute(DevicePresets.SmallPhone);
             matrix.AddDeviceCommand.Execute(DevicePresets.Tablet);
             var devices = matrix.Tiles.Where(t => t.IsVirtual).Select(t => t.Virtual!).ToList();
-            var deadline = clock.Elapsed + SwarmTimeout;
+            var deadline = clock.Elapsed + SwarmScreensTimeout;
             while (!devices.All(d => d.IsRunning && Texts(d.AppRoot!).Contains("Clicked 0 times")) && clock.Elapsed < deadline)
             {
                 await Task.Delay(PollInterval, cancellationToken);

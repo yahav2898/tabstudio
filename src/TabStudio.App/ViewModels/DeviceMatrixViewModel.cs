@@ -68,7 +68,7 @@ public sealed partial class DeviceMatrixViewModel : ObservableObject, IDisposabl
     private const double ZoomStep = 1.25;
 
     private readonly AppScreenRegistry _registry;
-    private readonly SwarmSettingsStore _store;
+    private readonly DeviceMatrixSettingsStore _store;
     private readonly ILayoutInspector _inspector;
     private readonly ScreenLayoutChecks _checks;
     private readonly Func<AvaloniaAppHost?> _runningApp;
@@ -83,7 +83,7 @@ public sealed partial class DeviceMatrixViewModel : ObservableObject, IDisposabl
     /// <param name="checks">The layout checks of every screen, for the tiles' badges.</param>
     /// <param name="runningApp">The Avalonia app running now, if any.</param>
     /// <param name="applyRules">Applies the layout checks the user turned on or off.</param>
-    public DeviceMatrixViewModel(AppScreenRegistry registry, SwarmSettingsStore store, ILayoutInspector inspector, ScreenLayoutChecks checks, Func<AvaloniaAppHost?> runningApp, Action<LayoutCheckSettings> applyRules)
+    public DeviceMatrixViewModel(AppScreenRegistry registry, DeviceMatrixSettingsStore store, ILayoutInspector inspector, ScreenLayoutChecks checks, Func<AvaloniaAppHost?> runningApp, Action<LayoutCheckSettings> applyRules)
     {
         ArgumentNullException.ThrowIfNull(registry);
         ArgumentNullException.ThrowIfNull(store);
@@ -502,7 +502,7 @@ public sealed partial class DeviceMatrixViewModel : ObservableObject, IDisposabl
             rules = rules.With(rule.Kind, rule.IsEnabled);
         }
 
-        _store.Save(new SwarmSettings([.. _devices.Select(d => VirtualDeviceSettings.From(d.Id, d.Profile))], rules, Zoom));
+        _store.Save(new DeviceMatrixSettings([.. _devices.Select(d => VirtualDeviceSettings.From(d.Id, d.Profile))], rules, Zoom));
     }
 
     private string UniqueName(string name)

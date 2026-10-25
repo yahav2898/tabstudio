@@ -23,7 +23,7 @@ public sealed partial class WorkspaceViewModel
     private const string DeviceMatrixTabName = "Device Matrix";
 
     private AppScreenRegistry _screens = new();
-    private SwarmSettingsStore? _swarmSettings;
+    private DeviceMatrixSettingsStore? _deviceMatrixSettings;
     private LayoutInspector _layoutInspector = new();
     private ScreenLayoutChecks? _layoutChecks;
     private PreviewAppScreen? _previewScreen;
@@ -48,11 +48,11 @@ public sealed partial class WorkspaceViewModel
     [RelayCommand]
     private void ShowDeviceMatrix() => OpenDeviceMatrix(activate: true);
 
-    private void InitializeSwarm(AppScreenRegistry? screens)
+    private void InitializeSwarmScreens(AppScreenRegistry? screens)
     {
         _screens = screens ?? new AppScreenRegistry();
-        _swarmSettings = new SwarmSettingsStore(_paths);
-        _layoutInspector = new LayoutInspector(_swarmSettings.Load().Rules);
+        _deviceMatrixSettings = new DeviceMatrixSettingsStore(_paths);
+        _layoutInspector = new LayoutInspector(_deviceMatrixSettings.Load().Rules);
         _layoutChecks = new ScreenLayoutChecks(_screens, () => _layoutInspector.Settings);
         _layoutChecks.FindingsChanged += OnLayoutFindingsChanged;
         _previewScreen = new PreviewAppScreen(AppPreview, _layoutInspector);
@@ -61,7 +61,7 @@ public sealed partial class WorkspaceViewModel
         Documents.CollectionChanged += OnDocumentsChangedForSwarm;
     }
 
-    private void DisposeSwarm()
+    private void DisposeSwarmScreens()
     {
         Documents.CollectionChanged -= OnDocumentsChangedForSwarm;
         ErrorList.LayoutFindingOpened -= OnLayoutFindingOpened;
@@ -135,7 +135,7 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
-        var matrix = new DeviceMatrixViewModel(_screens, _swarmSettings!, _layoutInspector, _layoutChecks!, () => _avaloniaApp, ApplyLayoutRules);
+        var matrix = new DeviceMatrixViewModel(_screens, _deviceMatrixSettings!, _layoutInspector, _layoutChecks!, () => _avaloniaApp, ApplyLayoutRules);
         if (_avaloniaApp is { } app)
         {
             matrix.OnAppStarted(app);
