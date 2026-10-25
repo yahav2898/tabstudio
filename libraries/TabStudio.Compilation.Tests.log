@@ -1,8 +1,8 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/TabStudio.Core.csproj (in 86 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/TabStudio.Testing.csproj (in 85 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj (in 417 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Compilation.Tests/TabStudio.Compilation.Tests.csproj (in 417 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/TabStudio.Testing.csproj (in 121 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/TabStudio.Core.csproj (in 122 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj (in 411 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Compilation.Tests/TabStudio.Compilation.Tests.csproj (in 412 ms).
   TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
   TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
@@ -10,48 +10,47 @@
 Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Compilation.Tests/bin/Release/net10.0/TabStudio.Compilation.Tests.dll (.NETCoreApp,Version=v10.0)
 A total of 1 test files matched the specified pattern.
 [xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
-[xUnit.net 00:00:00.09]   Discovering: TabStudio.Compilation.Tests
-[xUnit.net 00:00:00.15]   Discovered:  TabStudio.Compilation.Tests
-[xUnit.net 00:00:00.18]   Starting:    TabStudio.Compilation.Tests
-  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.A_method_named_exit_on_another_type_is_fine [1 s]
-  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Restores_the_console_after_a_run [1 s]
-  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Libraries_are_not_checked_for_in_process_safety [33 ms]
-  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Refuses_to_build_programs_that_would_close_the_ide(statement: "System.Environment.FailFast(\"bye\");", expectedId: "TS1002") [21 ms]
-  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Refuses_to_build_programs_that_would_close_the_ide(statement: "Environment.Exit(1);", expectedId: "TS1001") [6 ms]
-  Passed TabStudio.Compilation.Tests.SyntaxClassifierTests.Classifies_keywords_and_control_keywords [45 ms]
-  Passed TabStudio.Compilation.Tests.SyntaxClassifierTests.Ranges_are_in_document_order_and_do_not_overlap [< 1 ms]
-unreachable
+[xUnit.net 00:00:00.10]   Discovering: TabStudio.Compilation.Tests
+[xUnit.net 00:00:00.16]   Discovered:  TabStudio.Compilation.Tests
+[xUnit.net 00:00:00.19]   Starting:    TabStudio.Compilation.Tests
+  Passed TabStudio.Compilation.Tests.SyntaxClassifierTests.Classifies_keywords_and_control_keywords [123 ms]
+  Passed TabStudio.Compilation.Tests.SyntaxClassifierTests.Ranges_are_in_document_order_and_do_not_overlap [1 ms]
   Passed TabStudio.Compilation.Tests.SyntaxClassifierTests.Classifies_comments_and_directives [< 1 ms]
-  Passed TabStudio.Compilation.Tests.SyntaxClassifierTests.Leaves_identifiers_and_punctuation_for_the_semantic_pass [7 ms]
-  Passed TabStudio.Compilation.Tests.SyntaxClassifierTests.Classifies_literals_including_interpolated_strings [< 1 ms]
-  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Loads_referenced_project_assemblies [131 ms]
-  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Reports_errors_with_one_based_positions_in_the_right_file [78 ms]
-  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Stopping_a_program_returns_without_waiting_for_it [17 ms]
-  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Returns_the_exit_code_from_main [44 ms]
-  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Reports_an_unhandled_exception_as_a_crash_with_a_stack_trace [37 ms]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Edits_show_up_in_live_diagnostics [996 ms]
-  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Captures_standard_output [48 ms]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Project_diagnostics_cover_every_file [16 ms]
-  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Passes_command_line_arguments [23 ms]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Builds_still_work_with_concurrent_compilation_turned_off [25 ms]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Loads_every_csharp_source_file [3 ms]
-  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Compiles_top_level_statements_with_implicit_usings [250 ms]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Release_configuration_defines_the_release_symbol [79 ms]
-  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Warnings_do_not_stop_a_build [23 ms]
-  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Awaits_an_async_main [119 ms]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Builds_and_runs_a_project_with_a_project_reference [21 ms]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Live_diagnostics_include_the_in_process_safety_check [14 ms]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.A_new_file_joins_the_project_that_contains_it [22 ms]
-  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Reads_lines_from_console_input [74 ms]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Format_document_produces_edits_that_fix_the_layout [344 ms]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Classifies_keywords_types_and_strings [94 ms]
-[xUnit.net 00:00:02.71]   Finished:    TabStudio.Compilation.Tests
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Build_order_puts_dependencies_first [9 ms]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Memory_mapped_references_compile_the_same_code [134 ms]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.A_clean_file_has_no_errors [10 ms]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Trimming_memory_keeps_unsaved_edits [9 ms]
+  Passed TabStudio.Compilation.Tests.SyntaxClassifierTests.Leaves_identifiers_and_punctuation_for_the_semantic_pass [4 ms]
+  Passed TabStudio.Compilation.Tests.SyntaxClassifierTests.Classifies_literals_including_interpolated_strings [1 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Edits_show_up_in_live_diagnostics [1 s]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Project_diagnostics_cover_every_file [49 ms]
+  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Restores_the_console_after_a_run [808 ms]
+  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Loads_referenced_project_assemblies [37 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Builds_still_work_with_concurrent_compilation_turned_off [287 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Loads_every_csharp_source_file [7 ms]
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.A_method_named_exit_on_another_type_is_fine [1 s]
+  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Stopping_a_program_returns_without_waiting_for_it [18 ms]
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Libraries_are_not_checked_for_in_process_safety [16 ms]
+  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Returns_the_exit_code_from_main [24 ms]
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Refuses_to_build_programs_that_would_close_the_ide(statement: "System.Environment.FailFast(\"bye\");", expectedId: "TS1002") [17 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Release_configuration_defines_the_release_symbol [47 ms]
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Refuses_to_build_programs_that_would_close_the_ide(statement: "Environment.Exit(1);", expectedId: "TS1001") [34 ms]
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Reports_errors_with_one_based_positions_in_the_right_file [13 ms]
+  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Reports_an_unhandled_exception_as_a_crash_with_a_stack_trace [75 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Builds_and_runs_a_project_with_a_project_reference [64 ms]
+  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Captures_standard_output [18 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Live_diagnostics_include_the_in_process_safety_check [19 ms]
+  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Passes_command_line_arguments [37 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.A_new_file_joins_the_project_that_contains_it [55 ms]
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Compiles_top_level_statements_with_implicit_usings [358 ms]
+[xUnit.net 00:00:03.37]   Finished:    TabStudio.Compilation.Tests
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Warnings_do_not_stop_a_build [31 ms]
+  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Awaits_an_async_main [329 ms]
+  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Reads_lines_from_console_input [97 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Format_document_produces_edits_that_fix_the_layout [525 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Classifies_keywords_types_and_strings [112 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Build_order_puts_dependencies_first [14 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Memory_mapped_references_compile_the_same_code [278 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.A_clean_file_has_no_errors [12 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Trimming_memory_keeps_unsaved_edits [13 ms]
 
 Test Run Successful.
 Total tests: 35
      Passed: 35
- Total time: 3.2247 Seconds
+ Total time: 4.0894 Seconds
