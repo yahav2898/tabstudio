@@ -637,6 +637,7 @@ public partial class Control : Component, ISynchronizeInvoke, IWin32Window
         var oldBackColor = BackColor;
         _parent = parent;
         OnParentChanged(EventArgs.Empty);
+        OnParentChangedForBinding();
         if (oldEnabled != Enabled)
         {
             OnEnabledChanged(EventArgs.Empty);

@@ -55,7 +55,7 @@ public partial class DataGridView
                     if (EndEdit())
                     {
                         Focus();
-                        Move((keyData & Keys.Shift) != 0 ? -1 : 1, 0, keyData);
+                        MoveCurrent((keyData & Keys.Shift) != 0 ? -1 : 1, 0, keyData);
                     }
 
                     return true;
@@ -71,7 +71,7 @@ public partial class DataGridView
                     if (EndEdit())
                     {
                         Focus();
-                        Move(code is Keys.Up or Keys.PageUp ? -1 : 1, 0, keyData);
+                        MoveCurrent(code is Keys.Up or Keys.PageUp ? -1 : 1, 0, keyData);
                     }
 
                     return true;
@@ -95,22 +95,22 @@ public partial class DataGridView
         switch (code)
         {
             case Keys.Up:
-                Move(-1, 0, e.KeyData);
+                MoveCurrent(-1, 0, e.KeyData);
                 break;
             case Keys.Down:
-                Move(1, 0, e.KeyData);
+                MoveCurrent(1, 0, e.KeyData);
                 break;
             case Keys.Left:
-                Move(0, -1, e.KeyData);
+                MoveCurrent(0, -1, e.KeyData);
                 break;
             case Keys.Right:
-                Move(0, 1, e.KeyData);
+                MoveCurrent(0, 1, e.KeyData);
                 break;
             case Keys.PageUp:
-                Move(-page, 0, e.KeyData);
+                MoveCurrent(-page, 0, e.KeyData);
                 break;
             case Keys.PageDown:
-                Move(page, 0, e.KeyData);
+                MoveCurrent(page, 0, e.KeyData);
                 break;
             case Keys.Home:
                 MoveTo(e.Control ? FirstVisibleRow() : CurrentRowIndexOr(0), FirstVisibleColumn(), e.KeyData);
@@ -122,7 +122,7 @@ public partial class DataGridView
                 MoveByTab(!e.Shift);
                 break;
             case Keys.Enter:
-                Move(e.Shift ? -1 : 1, 0, e.KeyData);
+                MoveCurrent(e.Shift ? -1 : 1, 0, e.KeyData);
                 break;
             case Keys.F2:
                 BeginEdit(selectAll: false);
@@ -474,7 +474,7 @@ public partial class DataGridView
     private int LastVisibleColumn() => _columnOrder.FindLast(column => column.Visible)?.Index ?? -1;
 
     /// <summary>Moves the current cell by rows and columns, extending the selection with Shift.</summary>
-    private void Move(int rows, int columns, Keys keyData)
+    private void MoveCurrent(int rows, int columns, Keys keyData)
     {
         if (_currentCell is not { } current)
         {

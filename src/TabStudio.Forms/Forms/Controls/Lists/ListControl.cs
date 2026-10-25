@@ -21,6 +21,7 @@ public abstract class ListControl : Control
     private IList? _boundList;
     private string _displayMember = string.Empty;
     private string _valueMember = string.Empty;
+    private BindingManagerBase? _manager;
 
     /// <summary>Creates a list control.</summary>
     private protected ListControl()
@@ -99,6 +100,7 @@ public abstract class ListControl : Control
             }
 
             RefreshBoundItems();
+            ConnectManager();
             OnDataSourceChanged(EventArgs.Empty);
         }
     }
@@ -176,6 +178,9 @@ public abstract class ListControl : Control
     /// <summary>The culture or format provider of the items' text.</summary>
     public IFormatProvider? FormatInfo { get; set; }
 
+    /// <summary>The manager of the data source, which keeps its current item in step with the selection.</summary>
+    protected CurrencyManager? DataManager => _manager as CurrencyManager;
+
     /// <summary>Whether the items come from a data source.</summary>
     internal bool IsBound => _boundList is not null;
 
@@ -226,7 +231,22 @@ public abstract class ListControl : Control
 
     /// <summary>Raises SelectedIndexChanged and SelectedValueChanged, as the derived controls do when the selection changes.</summary>
     /// <param name="e">The event data.</param>
-    protected virtual void OnSelectedIndexChanged(EventArgs e) => OnSelectedValueChanged(e);
+    protected virtual void OnSelectedIndexChanged(EventArgs e)
+    {
+        if (_manager is { } manager && SelectedIndex >= 0 && manager.Position != SelectedIndex)
+        {
+            manager.Position = SelectedIndex;
+        }
+
+        OnSelectedValueChanged(e);
+    }
+
+    /// <inheritdoc />
+    protected override void OnBindingContextChanged(EventArgs e)
+    {
+        ConnectManager();
+        base.OnBindingContextChanged(e);
+    }
 
     /// <summary>Raises Format.</summary>
     /// <param name="e">The event data.</param>
@@ -264,6 +284,32 @@ public abstract class ListControl : Control
         var name = member[(member.LastIndexOf('.') + 1)..];
         var property = TypeDescriptor.GetProperties(item).Find(name, ignoreCase: true);
         return property is null ? item : property.GetValue(item);
+    }
+
+    private void ConnectManager()
+    {
+        if (_manager is not null)
+        {
+            _manager.PositionChanged -= OnManagerPositionChanged;
+            _manager = null;
+        }
+
+        if (_dataSource is null || BindingContext is not { } context)
+        {
+            return;
+        }
+
+        _manager = context[_dataSource];
+        _manager.PositionChanged += OnManagerPositionChanged;
+        OnManagerPositionChanged(_manager, EventArgs.Empty);
+    }
+
+    private void OnManagerPositionChanged(object? sender, EventArgs e)
+    {
+        if (_manager is { Position: var position } && position >= 0 && position < ItemCount && position != SelectedIndex)
+        {
+            SelectedIndex = position;
+        }
     }
 
     private void OnBoundListChanged(object? sender, ListChangedEventArgs e)

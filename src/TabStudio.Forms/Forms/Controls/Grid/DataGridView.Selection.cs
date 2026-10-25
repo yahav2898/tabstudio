@@ -269,6 +269,7 @@ public partial class DataGridView
         }
 
         OnCurrentCellChanged(EventArgs.Empty);
+        SyncManagerPosition();
         if (cell is not null && EditMode == DataGridViewEditMode.EditOnEnter && Focused)
         {
             BeginEdit(selectAll: true);

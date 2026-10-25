@@ -621,9 +621,6 @@ public partial class DataGridView : Control, ISupportInitialize
     internal IEnumerable<DataGridViewColumn> DisplayedColumns() =>
         _columns.Items.OrderBy(column => column.DisplayIndex).ThenBy(column => column.Index);
 
-    /// <summary>Draws a cell again.</summary>
-    internal void InvalidateCell(DataGridViewCell cell) => Invalidate();
-
     /// <summary>Adds or removes the row for new records, as the settings and the data source allow.</summary>
     private void UpdateNewRow()
     {

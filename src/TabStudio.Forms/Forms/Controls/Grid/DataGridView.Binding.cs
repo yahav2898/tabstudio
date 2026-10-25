@@ -16,6 +16,7 @@ public partial class DataGridView
     private IList? _boundList;
     private PropertyDescriptorCollection? _boundProperties;
     private bool _rebinding;
+    private BindingManagerBase? _manager;
 
     /// <summary>The data source: a list, an array, a binding list, a data table or set, or a binding source.</summary>
     public object? DataSource
@@ -226,11 +227,65 @@ public partial class DataGridView
         }
 
         Rebind();
+        ConnectManager();
         OnDataBindingComplete(new DataGridViewBindingCompleteEventArgs(ListChangedType.Reset));
+    }
+
+    /// <inheritdoc />
+    protected override void OnBindingContextChanged(EventArgs e)
+    {
+        ConnectManager();
+        base.OnBindingContextChanged(e);
+    }
+
+    /// <summary>Moves the data source's current item to the current row, so controls bound to the same source follow it.</summary>
+    private void SyncManagerPosition()
+    {
+        if (_manager is { } manager && _currentCell?.OwningRow is { IsNewRow: false, DataBoundItem: not null } row && manager.Position != row.Index)
+        {
+            manager.Position = row.Index;
+        }
+    }
+
+    private void ConnectManager()
+    {
+        if (_manager is not null)
+        {
+            _manager.PositionChanged -= OnManagerPositionChanged;
+            _manager = null;
+        }
+
+        if (_dataSource is null || _boundList is null || BindingContext is not { } context)
+        {
+            return;
+        }
+
+        _manager = context[_dataSource, _dataMember];
+        _manager.PositionChanged += OnManagerPositionChanged;
+    }
+
+    private void OnManagerPositionChanged(object? sender, EventArgs e)
+    {
+        if (_manager is not { Position: var position } || position < 0 || position >= _rows.Count || _currentCell?.RowIndex == position)
+        {
+            return;
+        }
+
+        var column = _currentCell?.ColumnIndex ?? FirstVisibleColumn();
+        if (column >= 0)
+        {
+            CurrentCell = _rows[position].Cells[column];
+        }
     }
 
     private void DetachDataSource()
     {
+        if (_manager is not null)
+        {
+            _manager.PositionChanged -= OnManagerPositionChanged;
+            _manager = null;
+        }
+
         if (_boundList is IBindingList bindingList)
         {
             bindingList.ListChanged -= OnBoundListChanged;
