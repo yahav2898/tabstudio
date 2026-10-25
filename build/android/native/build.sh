@@ -163,7 +163,9 @@ EOF
     local pages=""
     case "$abi" in arm64-v8a|x86_64) pages="-Wl,-z,max-page-size=16384" ;; esac
     export CPPFLAGS="-DARG_MAX=131072 -DVERSION=\\\"${PROOT_VERSION}\\\""
-    export CFLAGS="-I$static/include -O2 -Werror=implicit-function-declaration"
+    # Two headers some Android-only files use without including them: string.h (extension/ashmem_memfd.c) and
+    # sys/ioctl.h (extension/sysvipc/sysvipc_shm.c).
+    export CFLAGS="-I$static/include -O2 -include string.h -include sys/ioctl.h -Werror=implicit-function-declaration"
     export LDFLAGS="-L$static/lib $pages"
     export LOADER_LDFLAGS="$pages"
     export PROOT_UNBUNDLE_LOADER=.
