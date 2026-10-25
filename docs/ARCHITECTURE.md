@@ -17,6 +17,7 @@ flowchart TB
         Notebooks["TabStudio.Notebooks"]
         Packages["TabStudio.Packages"]
         SourceControl["TabStudio.SourceControl"]
+        Agent["TabStudio.Agent"]
     end
     Debugging --> Compilation
     TestRunner --> Compilation
@@ -38,6 +39,7 @@ Dependencies point down only. Each layer has one job:
 | `TabStudio.TestRunner` | Test discovery and execution for xUnit, NUnit and MSTest, in-process and without runner packages. | Compilation |
 | `TabStudio.Notebooks` | C# notebooks: the `.ipynb` and `.dib` formats, a C# kernel and rich value formatting. | Compilation |
 | `TabStudio.SourceControl` | Git without a Git installation: changes found by hashing, `.gitignore`, and commits, pulls, merges, branches and pull requests through GitHub's API. | Core |
+| `TabStudio.Agent` | Claude as a coding agent: the Messages API with streaming and prompt caching, tools over the workspace, Model Context Protocol servers, and sketch to XAML. | Core |
 | `TabStudio.App` | The IDE: Avalonia views, view models, editor integration and app services. Platform-neutral. | Core and every engine, Avalonia |
 | `TabStudio.Android` | The Android entry point: activity, manifest, icons, platform services such as thermal status. | App |
 | `TabStudio.Desktop` | A desktop window around the same app, so contributors can work from any computer. | App |
@@ -157,6 +159,20 @@ talks to GitHub instead:
   line merge (Myers' diff, as Git uses); conflicts get Git-style markers and can be settled by choosing a side.
 - **Branches, pull requests and publishing** a folder as a new repository are GitHub API calls.
 
+## The agent
+
+`AgentSession` runs Claude in a loop: Claude answers, asks for tools, gets their results and continues until
+it is done. Its tools list, read and search the workspace, edit, create and delete files, compile, and run
+tests. Tools from Model Context Protocol servers are added over the Streamable HTTP transport.
+
+- **Every change is a proposal.** Edits go into a `ChangeSet` overlay rather than onto disk. The agent reads
+  its own proposals back as if they were applied, and the IDE shows each one as a diff to keep or undo.
+- **Compiling proposals.** `RoslynWorkspaceHost.CreateSnapshot` forks the live Roslyn solution with the
+  proposed files: edited, new and deleted. The agent's diagnostics and test runs use the fork, so the agent
+  can check its work before the user has accepted any of it, and the editors are never touched.
+- **Costs.** The system prompt, the tool definitions and the conversation so far are marked for prompt
+  caching, so each step of a long session re-reads them from the cache.
+
 ## Run hosts
 
 The Compatibility Doctor gives every project a run host, and F5 uses it:
@@ -196,8 +212,9 @@ design keeps the second part proportional to what you are actually editing:
 - **Memory-mapped metadata.** The .NET reference assemblies are stored as files and memory-mapped, so their
   pages are clean, shared and evictable instead of living on the managed heap.
 - **Skeleton references.** Only projects with open documents keep a full Roslyn compilation. The projects
-  they depend on are referenced through compact metadata-only images, rebuilt in the background when their
-  code changes.
+  they depend on are referenced through compact metadata-only images, cached on disk by content and made
+  again when their code changes. Go to Definition still finds the source behind an image, and builds always
+  compile every project in full.
 - **Memory pressure.** When Android reports memory pressure (`onTrimMemory`), TabStudio drops caches it can
   rebuild: semantic models of closed files, syntax highlighting state and old output.
 - **Session restore.** The open documents, unsaved edits and layout are saved as you work, so if Android
