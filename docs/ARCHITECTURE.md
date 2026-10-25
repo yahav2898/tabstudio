@@ -99,6 +99,29 @@ working around them, so it runs on stock Android with no root and no special per
 - **Thermal limits.** Tablets throttle when hot. TabStudio reads Android's thermal status and compiles on
   fewer threads while the device is warm, so the UI stays responsive.
 
+## Memory and CPU budget
+
+TabStudio has to be useful on a 3 GB tablet, not only on a flagship. Most of its memory goes to the .NET
+runtime and UI (a fixed cost) and to Roslyn's model of the solution (which grows with the code), so the
+design keeps the second part proportional to what you are actually editing:
+
+- **Device profiles.** At startup TabStudio reads total memory, core count and Android's low-RAM flag and
+  picks a profile. The profile decides how much stays warm: live analysis for open files only or for the
+  whole solution, how many threads background work may use, and the size of render caches.
+- **Memory-mapped metadata.** The .NET reference assemblies are stored as files and memory-mapped, so their
+  pages are clean, shared and evictable instead of living on the managed heap.
+- **Skeleton references.** Only projects with open documents keep a full Roslyn compilation. The projects
+  they depend on are referenced through compact metadata-only images, rebuilt in the background when their
+  code changes.
+- **Memory pressure.** When Android reports memory pressure (`onTrimMemory`), TabStudio drops caches it can
+  rebuild: semantic models of closed files, syntax highlighting state and old output.
+- **Session restore.** The open documents, unsaved edits and layout are saved as you work, so if Android
+  closes TabStudio in the background, it reopens where you left it.
+- **TabStudio Link.** The language service and build engine sit behind one interface, so they can also run on
+  another device you own, with the tablet showing only the IDE.
+- **Background work stays in the background.** Analysis runs at below-normal priority and yields to typing,
+  and builds use fewer threads while the device is warm.
+
 ## Key decisions
 
 | Decision | Why |

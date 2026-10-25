@@ -18,10 +18,16 @@ The Visual Studio layout, sized for touch, with C# that builds and runs on the t
   from the tablet's storage, and repositories downloaded from GitHub.
 - Stack detection and the Compatibility Doctor, which shows where each project runs and why.
 - Thermal-aware builds and the device status in the status bar.
+- Device profiles: TabStudio measures memory and cores at startup and picks how much to keep warm.
+  Framework metadata is memory-mapped from storage, and memory is released when Android reports pressure.
+- Session restore: open documents, unsaved edits and layout come back after Android closes the app.
+- 32-bit ARM and Android 9 support, so entry-level and school tablets can run it.
 
 ## 2. Real projects
 
 - NuGet restore on the device, so projects with package references build as they are.
+- Skeleton references: projects without open files are kept as compact metadata images instead of full
+  compilations, so large solutions fit in the memory of a small tablet.
 - Add, rename and delete files and folders; add projects and project references.
 - Git: clone, branch, commit, pull and push, with GitHub sign-in and pull requests.
 
@@ -60,10 +66,13 @@ C# notebooks (`.dib` and `.ipynb`) whose cells run as you write them, with chart
 Native toolchains for C, C++, Rust, Go, Python, Node and Java, language servers and debug adapters for
 their languages, and VS Code extensions from Open VSX. Opening a repository installs what it needs.
 
-## 10. Windows Bridge
+## 10. TabStudio Link and the Windows Bridge
 
-Pair a Windows PC you own; Windows-only projects build and run there, streamed to the tablet, while you edit
-on the tablet.
+- **TabStudio Link.** Pair a phone, another tablet or a PC running TabStudio with a QR code, and it becomes a
+  build and language server for your tablet over local Wi-Fi, end-to-end encrypted. A 2 GB tablet shows the
+  IDE while the stronger device compiles.
+- **Windows Bridge.** Pair a Windows PC you own; Windows-only projects build and run there, streamed to the
+  tablet, while you edit on the tablet.
 
 ## 11. Agent
 

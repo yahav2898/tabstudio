@@ -6,7 +6,7 @@
 
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![CI](https://github.com/yahav2898/tabstudio/actions/workflows/ci.yml/badge.svg)](https://github.com/yahav2898/tabstudio/actions/workflows/ci.yml)
-![Platform: Android 10+](https://img.shields.io/badge/platform-Android%2010%2B%20·%20arm64-3DDC84.svg)
+![Platform: Android 9+](https://img.shields.io/badge/platform-Android%209%2B%20·%20ARM-3DDC84.svg)
 ![Built with .NET 10](https://img.shields.io/badge/.NET-10-512BD4.svg)
 
 [עברית](README.he.md) · [Architecture](docs/ARCHITECTURE.md) · [Roadmap](docs/ROADMAP.md) · [Contributing](CONTRIBUTING.md)
@@ -98,6 +98,9 @@ The full design, with links to Supra's documentation, is in [docs/design/web3-su
 
 ### Built for the device in your hands
 
+- **Runs on modest tablets.** TabStudio measures the device it runs on and adapts. On a 3 GB tablet it keeps a full compiler model only of the projects you are editing, reads .NET's metadata straight from storage instead of holding it in memory, and gives memory back the moment Android asks for it.
+- **Borrow your phone's power.** With TabStudio Link, the same app on your phone or PC becomes a build and language server for your tablet over local Wi-Fi. The tablet shows the IDE; the stronger device does the heavy lifting. No cloud and no account: pair once with a QR code, and the connection is end-to-end encrypted.
+- **Never loses your place.** Android closes background apps on small devices. TabStudio saves your session as you work, so it reopens exactly where you left it, unsaved edits included.
 - **Thermal-aware builds.** When the tablet runs hot, TabStudio compiles on fewer cores instead of letting Android throttle everything, and the status bar tells you why.
 - **Works offline.** Everything except downloads, Git remotes and the agent runs without a connection.
 - **Git built in.** Clone, branch, commit, pull and push, and open pull requests on GitHub without leaving the IDE.
@@ -140,13 +143,15 @@ Android restricts what an app may execute, so every design decision here starts 
 
 | | Minimum | Recommended |
 | --- | --- | --- |
-| Android | 10 (API 29) | 14 or newer |
-| CPU | 64-bit ARM (arm64-v8a) | Recent 8-core SoC |
-| Memory | 6 GB | 8 GB or more for large solutions |
+| Android | 9 (API 28) | 14 or newer |
+| CPU | 32-bit or 64-bit ARM (armeabi-v7a, arm64-v8a) | Recent 8-core ARM64 |
+| Memory | 3 GB on its own, 2 GB with TabStudio Link | 8 GB or more for large solutions |
 | Storage | 1 GB free | 4 GB free once you add toolchains |
 | Input | Touch | A keyboard and trackpad, for long sessions |
 
 A keyboard is optional. Everything in TabStudio can be reached by touch, and every Visual Studio shortcut works when a keyboard is attached.
+
+That covers most tablets sold in the last six years, including entry-level and school tablets that run a 32-bit Android on a 64-bit chip.
 
 ### To build TabStudio from source
 
