@@ -147,6 +147,9 @@ public sealed class SwarmRunTests
         Assert.Contains(ScreenRows(workspace), row => row.DisplayName.StartsWith("on Galaxy S24", StringComparison.Ordinal));
         SwarmAppFixture.Progress("run: replayed");
 
+        // The passing test also runs with dotnet test, in CI.
+        CopyForDotnetTest(Path.GetDirectoryName(solution)!);
+
         // A check that does not hold fails with a picture of the screen it failed on.
         document = await workspace.OpenDocumentAsync(testFile);
         var expected = document!.Document.Text.IndexOf("\"Clicked 3 times\"", StringComparison.Ordinal);
@@ -163,9 +166,6 @@ public sealed class SwarmRunTests
         Assert.True(workspace.Tests.Details?.HasScreenshot);
         UiTestHelpers.SaveScreenshot(window, "swarm-05-recorded-test-failed-on-a-screen");
         SwarmAppFixture.Progress("run: failure shown");
-
-        // The generated project also runs with dotnet test, in CI.
-        CopyForDotnetTest(Path.GetDirectoryName(solution)!);
 
         workspace.StopDebuggingCommand.Execute(null);
         await run.WaitAsync(TimeSpan.FromSeconds(60));

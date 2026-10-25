@@ -141,7 +141,7 @@ public sealed class UiTestCodeTests
         Assert.Contains("namespace Shop.Tests.Recorded;", File.ReadAllText(first.TestFilePath), StringComparison.Ordinal);
         Assert.Contains("public void Buying_a_cake_2()", File.ReadAllText(second.TestFilePath), StringComparison.Ordinal);
         var driver = File.ReadAllText(Path.Combine(temp.Path, "Shop.Tests", "RecordedApp.cs"));
-        Assert.Contains("var app = Application.Current as global::Shop.App;", driver, StringComparison.Ordinal);
+        Assert.Contains("var app = new global::Shop.App { ApplicationLifetime = lifetime };", driver, StringComparison.Ordinal);
         Assert.Contains("AppBuilder.Configure<global::Shop.App>()", File.ReadAllText(Path.Combine(temp.Path, "Shop.Tests", "TestAppBuilder.cs")), StringComparison.Ordinal);
         var project = File.ReadAllText(tests);
         Assert.Contains("Avalonia.Headless.XUnit", project, StringComparison.Ordinal);

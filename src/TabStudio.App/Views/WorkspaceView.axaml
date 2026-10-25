@@ -538,7 +538,7 @@
           <DockPanel>
             <Grid DockPanel.Dock="Top" Height="34" ColumnDefinitions="*,Auto" Margin="6,0">
               <!-- The tabs scroll sideways when the debugger's tabs leave too little room beside the Output's source. -->
-              <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
+              <ScrollViewer Margin="0,0,10,0" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
               <StackPanel Orientation="Horizontal">
                 <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsErrorListSelected}"
                         Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" Content="Error List" />
