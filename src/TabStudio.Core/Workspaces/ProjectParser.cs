@@ -15,6 +15,7 @@ namespace TabStudio.Core.Workspaces;
 /// <list type="bullet">
 ///   <item>Properties, where an unconditional value wins over a conditional one.</item>
 ///   <item>The nearest <c>Directory.Build.props</c>, whose properties the project can override.</item>
+///   <item>The nearest <c>Directory.Build.targets</c>, whose properties override the project's, as MSBuild imports it last.</item>
 ///   <item>Simple <c>$(Property)</c> references between those properties.</item>
 ///   <item>The SDK, from the <c>Sdk</c> attribute, an <c>&lt;Sdk&gt;</c> element or an SDK import.</item>
 ///   <item><c>PackageReference</c>, <c>ProjectReference</c> and <c>Using</c> items.</item>
@@ -52,20 +53,32 @@ public static partial class ProjectParser
             throw new ProjectLoadException(fullPath, "the file does not exist.", null);
         }
 
-        var directoryBuildProps = FindDirectoryBuildProps(Path.GetDirectoryName(fullPath));
+        var directory = Path.GetDirectoryName(fullPath);
+        var directoryBuildProps = FindDirectoryBuildProps(directory);
         var inherited = directoryBuildProps is null
             ? null
             : ReadPropertiesSafely(directoryBuildProps);
+        var directoryBuildTargets = FindDirectoryBuildTargets(directory);
+        var overriding = directoryBuildTargets is null
+            ? null
+            : ReadPropertiesSafely(directoryBuildTargets);
 
-        return WithRazorComponents(Parse(fullPath, File.ReadAllText(fullPath), inherited));
+        return WithRazorComponents(Parse(fullPath, File.ReadAllText(fullPath), inherited, overriding));
     }
 
     /// <summary>Parses project XML that has already been read.</summary>
     /// <param name="filePath">The path the XML came from. Used for the project name and to resolve relative paths.</param>
     /// <param name="projectXml">The contents of the project file.</param>
     /// <param name="inheritedProperties">Properties from <c>Directory.Build.props</c>, which the project may override.</param>
+    /// <param name="overridingProperties">
+    /// Properties from <c>Directory.Build.targets</c>, which MSBuild imports after the project, so they override its own.
+    /// </param>
     /// <exception cref="ProjectLoadException">The text is not valid XML.</exception>
-    public static ProjectInfo Parse(string filePath, string projectXml, IReadOnlyDictionary<string, string>? inheritedProperties = null)
+    public static ProjectInfo Parse(
+        string filePath,
+        string projectXml,
+        IReadOnlyDictionary<string, string>? inheritedProperties = null,
+        IReadOnlyDictionary<string, string>? overridingProperties = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(filePath);
         ArgumentNullException.ThrowIfNull(projectXml);
@@ -85,6 +98,14 @@ public static partial class ProjectParser
         foreach (var (key, value) in ReadProperties(root))
         {
             properties[key] = value;
+        }
+
+        if (overridingProperties is not null)
+        {
+            foreach (var (key, value) in overridingProperties)
+            {
+                properties[key] = value;
+            }
         }
 
         ExpandPropertyReferences(properties);
@@ -127,12 +148,22 @@ public static partial class ProjectParser
     /// </summary>
     /// <param name="startDirectory">The directory of the project file.</param>
     /// <returns>The full path, or <see langword="null"/> when there is none.</returns>
-    public static string? FindDirectoryBuildProps(string? startDirectory)
+    public static string? FindDirectoryBuildProps(string? startDirectory) => FindNearest(startDirectory, "Directory.Build.props");
+
+    /// <summary>
+    /// Finds the <c>Directory.Build.targets</c> that MSBuild would import for a project in <paramref name="startDirectory"/>:
+    /// the nearest one in that directory or any parent.
+    /// </summary>
+    /// <param name="startDirectory">The directory of the project file.</param>
+    /// <returns>The full path, or <see langword="null"/> when there is none.</returns>
+    public static string? FindDirectoryBuildTargets(string? startDirectory) => FindNearest(startDirectory, "Directory.Build.targets");
+
+    private static string? FindNearest(string? startDirectory, string fileName)
     {
         var current = string.IsNullOrEmpty(startDirectory) ? null : new DirectoryInfo(startDirectory);
         while (current is not null)
         {
-            var candidate = Path.Combine(current.FullName, "Directory.Build.props");
+            var candidate = Path.Combine(current.FullName, fileName);
             if (File.Exists(candidate))
             {
                 return candidate;
@@ -152,7 +183,7 @@ public static partial class ProjectParser
         }
         catch (ProjectLoadException)
         {
-            // A broken Directory.Build.props should not stop the project from opening.
+            // A broken Directory.Build.props or .targets should not stop the project from opening.
             return null;
         }
         catch (IOException)

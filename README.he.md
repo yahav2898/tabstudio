@@ -79,6 +79,8 @@ TabStudio הופך טאבלט אנדרואיד למחשב פיתוח שבאמת 
 | C, ‏C++, ‏Rust, ‏Go, ‏Python, ‏Node, ‏Java | כלי פיתוח טבעיים מה-Toolchain Store |
 | כל מה שדורש Windows | ‏Windows Compatibility: האפליקציה האמיתית רצה בטאבלט עצמו דרך Wine; או ה-Windows Bridge, שבונה ומריץ אותה על המחשב שלכם ומזרים אותה לטאבלט |
 
+**אפליקציות Windows Forms.** יוצרים Windows Forms App, או פותחים אחת מ-Visual Studio, ולוחצים F5. היא רצה ליד הקוד על שכבת ה-Windows Forms של TabStudio עצמו, בחלון של Windows 10, עם דיאלוגים, תפריטים, טבלאות, data binding ו-MessageBox, ושמירת קובץ מפעילה אותה מחדש. ‏`Form1.cs` נפתח במעצב מגע: נוגעים בכלי ואז בטופס, גוררים פקדים על הרשת, משנים את הגודל שלהם בידיות, עורכים אותם בחלון ה-Properties, ונגיעה כפולה בכפתור כותבת את ה-Click handler שלו. המעצב כותב את `Form1.Designer.cs` בדיוק כמו Visual Studio, כך שהפרויקט ממשיך להיפתח במחשב. קוד שקורא ל-Windows עצמו, כמו P/Invoke, ‏COM או ה-registry, רץ דרך Windows Compatibility או גשר Windows; [ה-README של שכבת ה-Forms](src/TabStudio.Forms/README.md) מפרט מה נתמך.
+
 ### כל המסכים בבת אחת
 
 - **‏Run on Swarm.** טלפונים וטאבלטים שמריצים TabStudio מצטרפים ל-Swarm שלכם בסריקה אחת. לוחצים F5, והאפליקציה שאתם בונים עולה בכולם יחד, וכל שמירה מעדכנת את כולם. אפליקציות Avalonia רצות באופן טבעי, אתרים בדפדפן של כל מכשיר, ואפליקציות קונסול שולחות את הפלט שלהן חזרה.
@@ -205,6 +207,8 @@ src/
   TabStudio.SourceControl/ Git through GitHub: changes, commits, pulls and merges, branches, pull requests, Actions
   TabStudio.Agent/         Claude as a coding agent: tools over the workspace, MCP servers, sketch to XAML
   TabStudio.Link/          TabStudio Link: pairing, encrypted transport, QR codes and the remote language service
+  TabStudio.Forms/         Windows Forms on Avalonia: System.Windows.Forms and System.Drawing, drawn as on Windows 10
+  TabStudio.Forms.Design/  The touch designer's model: reads and writes InitializeComponent, the canvas and Toolbox
   TabStudio.Web/           Web apps: static web assets, Blazor's scripts, a host for .NET apps on WebAssembly
   TabStudio.Toolchains/    The Toolchain Store: Alpine Linux on PRoot, packages, processes and the terminal
   TabStudio.LanguageServers/ Language Server and Debug Adapter Protocol clients for every non-C# language

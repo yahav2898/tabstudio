@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Tests of the Windows Forms designer: reading designer files, building forms from them without running the app's
+    code, the designer's edits written back as Visual Studio writes them, and the touch canvas, on Avalonia's
+    headless platform. The code the designer writes is compiled against the Forms layer to prove it builds.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="Avalonia.Headless.XUnit" />
+    <PackageReference Include="Avalonia.Skia" />
+    <PackageReference Include="Avalonia.Fonts.Inter" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\TabStudio.Forms.Design\TabStudio.Forms.Design.csproj" />
+    <ProjectReference Include="..\..\src\TabStudio.Compilation\TabStudio.Compilation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+</Project>
