@@ -1,0 +1,24 @@
+10-25 11:57:44.249  5957  5985 F libc    : Fatal signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x71bfe588c0a8 in tid 5985 (SGen worker), pid 5957 (m.tabstudio.ide)
+
+10-25 11:57:45.225  6683  6683 F DEBUG   : *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+10-25 11:57:45.225  6683  6683 F DEBUG   : Build fingerprint: 'google/sdk_gphone64_x86_64/emu64xa:15/AE3A.240806.043/12960925:userdebug/dev-keys'
+10-25 11:57:45.225  6683  6683 F DEBUG   : Revision: '0'
+10-25 11:57:45.225  6683  6683 F DEBUG   : ABI: 'x86_64'
+10-25 11:57:45.225  6683  6683 F DEBUG   : Timestamp: 2026-10-25 11:57:44.800661138+0000
+10-25 11:57:45.225  6683  6683 F DEBUG   : Process uptime: 232s
+10-25 11:57:45.225  6683  6683 F DEBUG   : Cmdline: com.tabstudio.ide
+10-25 11:57:45.225  6683  6683 F DEBUG   : pid: 5957, tid: 5985, name: SGen worker  >>> com.tabstudio.ide <<<
+10-25 11:57:45.225  6683  6683 F DEBUG   : uid: 10209
+10-25 11:57:45.225  6683  6683 F DEBUG   : signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x000071bfe588c0a8
+10-25 11:57:45.225  6683  6683 F DEBUG   :     rax 000071bfe588c000  rbx 000000000000000f  rcx 0000000000002003  rdx 0000000000000008
+10-25 11:57:45.225  6683  6683 F DEBUG   :     r8  000071bffba22010  r9  000071bffba20020  r10 0000000000000000  r11 0000000000000246
+10-25 11:57:45.225  6683  6683 F DEBUG   :     r12 0000000000000007  r13 000071bff96eb988  r14 000000000006c0c5  r15 000071bef99df438
+10-25 11:57:45.225  6683  6683 F DEBUG   :     rdi 000071c1277d51a8  rsi 0000000000000020
+10-25 11:57:45.225  6683  6683 F DEBUG   :     rbp 000071bfe588e018  rsp 000071bffbcf8750  rip 000071bef99915b4
+10-25 11:57:45.225  6683  6683 F DEBUG   : 5 total frames
+10-25 11:57:45.225  6683  6683 F DEBUG   : backtrace:
+10-25 11:57:45.225  6683  6683 F DEBUG   :       #00 pc 00000000002f35b4  /data/app/~~kl8c6IqJa9Zx_tVKU-6iXA==/com.tabstudio.ide-src4kzYGMPevm0a5wsYoCA==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+10-25 11:57:45.225  6683  6683 F DEBUG   :       #01 pc 0000000000313537  /data/app/~~kl8c6IqJa9Zx_tVKU-6iXA==/com.tabstudio.ide-src4kzYGMPevm0a5wsYoCA==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+10-25 11:57:45.225  6683  6683 F DEBUG   :       #02 pc 0000000000312521  /data/app/~~kl8c6IqJa9Zx_tVKU-6iXA==/com.tabstudio.ide-src4kzYGMPevm0a5wsYoCA==/lib/x86_64/libmonosgen-2.0.so (BuildId: 5da5c145fc7fa7ce8afbbdad2d3fa1638294a919)
+10-25 11:57:45.225  6683  6683 F DEBUG   :       #03 pc 000000000006d62a  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+58) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+10-25 11:57:45.225  6683  6683 F DEBUG   :       #04 pc 0000000000060348  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+56) (BuildId: eb58b4d427279994f00c0e1818477e4f)

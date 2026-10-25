@@ -1,0 +1,5 @@
+run 1: CRASHED: * Assertion at /__w/1/s/src/runtime/src/mono/mono/sgen/sgen-debug.c:267, condition `!missing_remsets' not met
+run 2: CRASHED: * Assertion at /__w/1/s/src/runtime/src/mono/mono/sgen/sgen-debug.c:267, condition `!missing_remsets' not met
+run 3: CRASHED: Fatal signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x71bfe588c0a8 in tid 5985 (SGen worker), pid 5957 (m.tabstudio.ide)
+run 4: FAILED: TABSTUDIO_SELFTEST_FAIL 233.5 s: What's your name? Tablet | Good morning, Tablet! This program was compiled and run on your tablet. | Statically typed languages, oldest first: | C#         since 2000 (26 years) | Rust       since 2015 (11 years) | The program 'HelloTablet' has exited with code 0 (0x
+Passed 0, failed 1, crashed 3 of 4 runs.
