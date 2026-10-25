@@ -6,8 +6,8 @@
 #
 # Desktop mode is tested too, on a simulated second display (Android's overlay display, a presentation display
 # like a monitor on USB-C or HDMI): the app moves the IDE there, uses the tablet's Toolbox and Properties panel,
-# and asks this script in its log (TABSTUDIO_DESKTOP_STEP lines) to type on the keyboard, click the display and
-# take screenshots, which it does with adb.
+# and asks this script in its log (TABSTUDIO_DESKTOP_STEP lines) to type on the keyboard and take screenshots,
+# which it does with adb. (The app clicks the display itself: adb's taps have no mouse button events.)
 #
 # Usage: build/ci/android-smoke-test.sh <apk> <output-folder> [timeout-seconds]
 set -euo pipefail
@@ -27,29 +27,35 @@ echo "Device: Android $(adb shell getprop ro.build.version.release | tr -d '\r')
 # The second display: 1920 × 1080 at 240 dpi.
 adb shell settings put global overlay_display_devices 1920x1080/240
 for _ in $(seq 1 20); do
-  adb shell dumpsys display | grep -q 'Overlay #1' && break
+  [ "$(adb shell dumpsys display | grep -c 'mDisplayId=' || true)" -ge 2 ] && break
   sleep 1
 done
-adb shell dumpsys display | tr -d '\r' | grep -E 'mDisplayId=|FLAG_PRESENTATION|Overlay #1' | sort -u > "$out/displays.txt" || true
+# Each logical display's name and id, and its flags: the overlay display is a presentation display.
+adb shell dumpsys display | tr -d '\r' \
+  | awk 'match($0, /DisplayInfo\{"[^"]*", displayId [0-9]+/) {
+      print substr($0, RSTART + 12, RLENGTH - 12) (index($0, "FLAG_PRESENTATION") ? ": a presentation display" : "")
+    }' | sort -u > "$out/displays.txt" || true
 echo "Displays:"
 cat "$out/displays.txt"
 
-# Does what a TABSTUDIO_DESKTOP_STEP line asks: type, click the second display, or take screenshots.
+# Does what a TABSTUDIO_DESKTOP_STEP line asks: type, or take screenshots.
 desktop_step() {
-  local action argument1 argument2 argument3
-  read -r _ action argument1 argument2 argument3 <<< "$1"
+  local action argument
+  read -r _ action argument <<< "$1"
   case "$action" in
     type)
-      echo "Typing on the tablet's keyboard: '${argument1//_/ }'"
-      adb shell input text "${argument1//_/%s}" || echo "Typing failed"
-      ;;
-    click)
-      echo "Clicking display $argument1 with a mouse at $argument2,$argument3"
-      adb shell input mouse -d "$argument1" tap "$argument2" "$argument3" || echo "Clicking failed"
+      echo "Typing on the tablet's keyboard: '${argument//_/ }'"
+      adb shell input text "${argument//_/%s}" || echo "Typing failed"
       ;;
     screenshot)
       echo "Taking screenshots of the device"
+      # The device's screen, with the overlay display's window drawn over it.
       adb exec-out screencap -p > "$out/desktop-device.png" || true
+      # Every other display SurfaceFlinger composes on its own, such as the emulator's -multidisplay displays.
+      for id in $(adb shell dumpsys SurfaceFlinger --display-id 2> /dev/null | tr -d '\r' | sed -n 's/^Display \([0-9]*\).*/\1/p' | tail -n +2); do
+        adb exec-out screencap -d "$id" -p > "$out/desktop-device-$id.png" 2> /dev/null || true
+        [ -s "$out/desktop-device-$id.png" ] || rm -f "$out/desktop-device-$id.png"
+      done
       ;;
     *)
       echo "Unknown desktop step: $1"

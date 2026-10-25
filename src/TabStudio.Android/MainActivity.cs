@@ -34,7 +34,7 @@ namespace TabStudio.Android;
 /// Started with the boolean extra <c>tabstudio.selftest</c>, it opens the sample, presses F5, debugs it, serves
 /// a new web app, shows a new Avalonia app, and logs the outcome under the <c>TabStudio</c> tag as a <c>TABSTUDIO_SELFTEST_OK</c> or
 /// <c>TABSTUDIO_SELFTEST_FAIL</c> line. CI runs this on an emulator. With <c>tabstudio.selftest.desktop</c> as well, it then runs
-/// desktop mode on the emulator's simulated second display, asking the CI script to type and click in its log.
+/// desktop mode on the emulator's simulated second display, asking the CI script in its log to type and take screenshots.
 /// </para>
 /// </remarks>
 [Activity(
@@ -142,7 +142,7 @@ public sealed class MainActivity : AvaloniaMainActivity<TabStudioApplication>
         if (result.Success && desktop)
         {
             var tablet = (app.ApplicationLifetime as ISingleViewApplicationLifetime)?.MainView as TabStudio.App.Views.MainView;
-            var input = new AndroidDesktopSelfTestInput(line => AndroidLog.Info(LogTag, line));
+            var input = new AndroidDesktopSelfTestInput(line => AndroidLog.Info(LogTag, line), services.GetService<IExternalDisplayService>() as AndroidExternalDisplays);
             var part = tablet is null
                 ? new SelfTestResult(false, "Desktop: the tablet's view is missing.", TimeSpan.Zero)
                 : await SelfTest.RunDesktopModeAsync(main, tablet, input, screenshots, timeout.Token);

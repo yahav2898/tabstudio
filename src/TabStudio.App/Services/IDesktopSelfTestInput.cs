@@ -2,8 +2,9 @@ namespace TabStudio.App.Services;
 
 /// <summary>
 /// What the desktop mode self test needs from outside the app: a keyboard connected to the tablet, a mouse on the
-/// external display, and screenshots of the device. On the emulator the CI script does these with adb when the app
-/// asks in its log; tests do them with Avalonia's headless input.
+/// external display, and screenshots of the device. On the emulator the CI script types and takes screenshots with
+/// adb when the app asks in its log, and the app gives the display's window a mouse's click; tests use Avalonia's
+/// headless input.
 /// </summary>
 public interface IDesktopSelfTestInput
 {

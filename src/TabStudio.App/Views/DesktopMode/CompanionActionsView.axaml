@@ -80,7 +80,10 @@
         </Button>
         <Button Theme="{StaticResource SecondaryButton}" Command="{Binding Workspace.RestartCommand, FallbackValue={x:Null}}"
                 IsVisible="{Binding ShowsSteps}" ToolTip.Tip="Restart (Ctrl+Shift+F5)">
-          <controls:StrokeIcon Data="{StaticResource Icon.Restart}" Size="19" />
+          <StackPanel Orientation="Horizontal" Spacing="10">
+            <controls:StrokeIcon Data="{StaticResource Icon.Restart}" Size="19" />
+            <TextBlock Text="Restart" VerticalAlignment="Center" />
+          </StackPanel>
         </Button>
 
         <!-- Stopping a program, debugged or not -->

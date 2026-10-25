@@ -30,7 +30,7 @@ namespace TabStudio.Android;
 /// one keyboard focus for the whole app, delivers them to the focused element of the IDE on the display.
 /// </para>
 /// </remarks>
-public sealed class AndroidExternalDisplays : Java.Lang.Object, IExternalDisplayService, DisplayManager.IDisplayListener
+public sealed partial class AndroidExternalDisplays : Java.Lang.Object, IExternalDisplayService, DisplayManager.IDisplayListener
 {
     private static readonly AndroidColor WindowColor = AndroidColor.ParseColor("#1B1D23");
 
@@ -200,7 +200,7 @@ public sealed class AndroidExternalDisplays : Java.Lang.Object, IExternalDisplay
     /// <summary>Reads a display's size and density from a context of that display.</summary>
     private ExternalDisplay Describe(Display display)
     {
-        var metrics = _context.CreateDisplayContext(display).Resources?.DisplayMetrics;
+        var metrics = _context.CreateDisplayContext(display)?.Resources?.DisplayMetrics;
         return new ExternalDisplay(
             display.DisplayId,
             string.IsNullOrWhiteSpace(display.Name) ? "External display" : display.Name,
