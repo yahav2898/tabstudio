@@ -1,6 +1,7 @@
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using AvaloniaEdit.Folding;
+using TabStudio.App.Editing.Extensions;
 
 namespace TabStudio.App.Views;
 
