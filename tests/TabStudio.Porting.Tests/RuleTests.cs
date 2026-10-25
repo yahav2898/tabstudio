@@ -76,6 +76,14 @@ public sealed class RuleTests
         }
     }
 
+    [Fact]
+    public void Unsupported_component_calls_remain_as_commented_code_with_a_note()
+    {
+        var result = Forms("AxHost", "", "void Update() { control.DoWindowsOnlyWork(); }");
+        Assert.Contains(result.Notes, n => n.File == "Form1.cs" && n.What == "control");
+        Assert.Contains("//", Text(result, "Form1.cs"), StringComparison.Ordinal);
+    }
+
     [Theory]
     [InlineData("DatePicker", "CalendarDatePicker")]
     [InlineData("ListViewItem", "ListBoxItem")]
@@ -95,6 +103,15 @@ public sealed class RuleTests
     {
         var result = Wpf($"<{control} />");
         Assert.Contains(result.Notes, n => n.What.Contains(control, StringComparison.Ordinal) && n.Why.Length > 0 && n.Line > 0);
+    }
+
+    [Fact]
+    public void Auto_grid_tracks_are_preserved_because_their_default_is_star_not_auto()
+    {
+        var result = Wpf("<Grid><Grid.RowDefinitions><RowDefinition Height=\"Auto\"/></Grid.RowDefinitions><Grid.ColumnDefinitions><ColumnDefinition Width=\"Auto\"/></Grid.ColumnDefinitions><TextBlock Text=\"Heading\"/></Grid>");
+        var root = XDocument.Parse(Text(result, "MainWindow.axaml"));
+        Assert.Equal("Auto", root.Descendants().Single(e => e.Name.LocalName == "RowDefinition").Attribute("Height")?.Value);
+        Assert.Equal("Auto", root.Descendants().Single(e => e.Name.LocalName == "ColumnDefinition").Attribute("Width")?.Value);
     }
 
     [Fact]

@@ -185,7 +185,7 @@ internal sealed partial class WpfXamlConverter
 
         switch (property)
         {
-            case "Width" or "Height" or "MinWidth" or "MinHeight" or "MaxWidth" or "MaxHeight" when value.Trim() == "Auto":
+            case "Width" or "Height" or "MinWidth" or "MinHeight" or "MaxWidth" or "MaxHeight" when value.Trim() == "Auto" && element.Name.LocalName is not ("RowDefinition" or "ColumnDefinition"):
                 _report.Converted("Size of Auto removed: it is the default");
                 return null;
             case "RenderTransformOrigin":

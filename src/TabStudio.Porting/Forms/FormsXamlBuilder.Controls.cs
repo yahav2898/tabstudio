@@ -943,6 +943,7 @@ internal sealed partial class FormsXamlBuilder
 
     private XElement Placeholder(FormsComponent control)
     {
+        Info.UnportedComponents.Add(control.Name);
         var placeholder = new XElement(XamlNamespaces.Avalonia + "Border");
         Note(placeholder, $"{control.Name}: {control.Type}", $"Avalonia has no {control.Type}, so a placeholder keeps its place; use an Avalonia control or package that does what it did");
         return placeholder;

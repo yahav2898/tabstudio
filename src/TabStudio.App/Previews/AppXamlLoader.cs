@@ -41,7 +41,7 @@ internal static class AppXamlLoader
         RuntimeAssets.UseFor(assembly);
         var address = new Uri($"avares://{assembly.GetName().Name}{path}");
         using var scope = AssemblyLoadContext.EnterContextualReflection(assembly);
-        return AvaloniaRuntimeXamlLoader.Load(xaml, assembly, root, address, designMode);
+        return AvaloniaRuntimeXamlLoader.Load(RuntimeXamlIncludes.Expand(xaml, address, uri => ReadXaml(assembly, uri)), assembly, root, address, designMode);
     }
 
     /// <summary>
@@ -61,6 +61,17 @@ internal static class AppXamlLoader
         {
             Load(xaml, path, root.GetType().Assembly, root);
         }
+    }
+
+    private static string? ReadXaml(Assembly assembly, Uri address)
+    {
+        if (!string.Equals(address.Host, assembly.GetName().Name, StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        var resources = assembly.GetType(AvaloniaXamlGenerator.GeneratedNamespace + ".TabStudioXamlResources");
+        return resources?.GetMethod("Get", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [Uri.UnescapeDataString(address.AbsolutePath)]) as string;
     }
 
     private sealed class Suppression : IDisposable

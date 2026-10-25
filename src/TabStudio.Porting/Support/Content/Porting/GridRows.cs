@@ -24,7 +24,7 @@ public sealed class GridRows : ObservableCollection<GridRow>
     /// <returns>The index of the new row.</returns>
     public int Add(params object?[] values)
     {
-        Add(new GridRow(this, values));
+        base.Add(new GridRow(this, values));
         return Count - 1;
     }
 

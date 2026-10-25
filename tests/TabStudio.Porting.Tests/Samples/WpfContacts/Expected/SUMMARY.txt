@@ -17,7 +17,6 @@ ContactDialog.axaml ← ContactDialog.xaml (Xaml)
   WPF xmlns → Avalonia xmlns · 1
   Window → AppWindow, a window on the desktop and the screen on phones · 1
   ResizeMode → CanResize · 1
-  Size of Auto removed: it is the default · 6
   Label Target binding → element name · 2
   UpdateSourceTrigger=PropertyChanged removed: it is Avalonia's default · 1
   Label of text → TextBlock · 2
@@ -54,7 +53,6 @@ MainWindow.axaml ← MainWindow.xaml (Xaml)
   Implicit DataTemplate in Resources → DataTemplates · 1
   StatusBar → Border and DockPanel (Avalonia has no status bar) · 1
   StatusBarItem → ContentControl · 2
-  Size of Auto removed: it is the default · 3
   Style="{StaticResource}" → Classes · 3
   UpdateSourceTrigger=PropertyChanged removed: it is Avalonia's default · 1
   ToolTip → ToolTip.Tip · 1
@@ -62,6 +60,7 @@ MainWindow.axaml ← MainWindow.xaml (Xaml)
   MouseDoubleClick → DoubleTapped · 1
   Style TargetType → selector · 1
   Item container style → style of the containers · 1
+  Size of Auto removed: it is the default · 1
   RelativeSource AncestorType → Avalonia type · 1
   BooleanToVisibilityConverter removed: IsVisible takes the boolean · 1
   Visibility → IsVisible · 1

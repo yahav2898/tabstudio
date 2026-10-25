@@ -67,8 +67,10 @@ internal static class FormsPorter
             var file = new CodeFile(text, context.Report(path));
             file.Root = (CompilationUnitSyntax)new FormsCodeRewriter(context, file, classes, types).Visit(file.Root);
             file.Root = AsyncCalls.MakeAsync(file, file.Root);
-            file.Root = UnsupportedCode.CommentOut(file, file.Root, n => n is IdentifierNameSyntax id && id.Identifier.ValueText is "Graphics" or "PaintEventArgs" or "OpenFileDialog" or "SaveFileDialog" or "Screen" or "ApplicationConfiguration"
-                ? new Unported(id.ToString(), "This Windows API needs a cross-platform implementation") : null);
+            file.Root = UnsupportedCode.CommentOut(file, file.Root, n => n is IdentifierNameSyntax id
+                && (id.Identifier.ValueText is "Graphics" or "PaintEventArgs" or "OpenFileDialog" or "SaveFileDialog" or "Screen" or "ApplicationConfiguration"
+                    || IsUnportedComponent(id, classes))
+                ? new Unported(id.ToString(), "This Windows API or placeholder component needs a cross-platform implementation") : null);
             file.Root = Usings.Update(file.Root, ns => ns.StartsWith("System.Windows.Forms", StringComparison.Ordinal) || ns == "System.Drawing",
                 new[] { "System", "System.Linq", "Avalonia.Controls", "Avalonia.Input", context.SupportNamespace }.Concat(classes.Values.SelectMany(c => c.Usings)), file.Newline);
             files.Add(new PortedFile(path, file.Finish(), null, path, PortedFileKind.Code, file.Report.Conversions()));
@@ -76,6 +78,14 @@ internal static class FormsPorter
 
         files.AddRange(Application(context, designs.Select(d => d.Design!).ToList()));
         return files;
+    }
+
+    private static bool IsUnportedComponent(IdentifierNameSyntax identifier, Dictionary<string, FormsClassInfo> classes)
+    {
+        var type = identifier.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+        var ns = type?.Ancestors().OfType<BaseNamespaceDeclarationSyntax>().FirstOrDefault()?.Name.ToString();
+        var name = ns is null ? type?.Identifier.ValueText : ns + "." + type?.Identifier.ValueText;
+        return name is not null && classes.TryGetValue(name, out var info) && info.UnportedComponents.Contains(identifier.Identifier.ValueText);
     }
 
     private static PortedFile Events(PortContext context, FormsDesign design, FormsClassInfo info, string path)

@@ -33,3 +33,17 @@ alone. The conversion summary and undo ownership last for the current workspace 
 
 Golden updates are deliberate: when a golden test fails, inspect the files in `ci-out/porting-actual/<sample>` before
 copying them into `tests/TabStudio.Porting.Tests/Samples/<sample>/Expected` and rerunning the complete suite.
+
+## Preview runtime
+
+The IDE bundles Avalonia's DataGrid so its deferred theme bindings resolve in the host as well as during XAML loading.
+Local style and resource includes expand from the current in-process build, with namespace prefixes reconciled at the
+root and cycles reported. External package themes retain their own compiled resources.
+
+## Screenshots
+
+![Port summary and linked note](porting/images/summary.png)
+
+![Converted Windows Forms customer entry after adding a row](porting/images/customers-running.png)
+
+![Converted WPF contacts app in the native preview](porting/images/contacts-running.png)

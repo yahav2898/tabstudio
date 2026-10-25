@@ -57,6 +57,7 @@ public sealed class PortingTests
         {
             workspace.ActiveDocument = workspace.Documents.Single(d => d.PortSummary == summary);
             UiTestHelpers.SaveScreenshot(window, "port-" + sample + "-summary");
+            workspace.AppPreview.Frame = AppPreviewFrame.Tablet;
             var run = workspace.StartDebuggingCommand.ExecuteAsync(null);
             try
             {

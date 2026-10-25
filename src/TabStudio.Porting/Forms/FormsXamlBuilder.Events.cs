@@ -93,6 +93,7 @@ internal sealed partial class FormsXamlBuilder
             case "ColumnHeader":
                 break;
             default:
+                Info.UnportedComponents.Add(component.Name);
                 Todo($"{component.Name}: {component.Type}", "This Windows Forms component has no exact Avalonia equivalent; recreate its behavior using a cross-platform service", null);
                 break;
         }
