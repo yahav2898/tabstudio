@@ -49,8 +49,10 @@ def run(command, log, *, env=None, timeout=900, check=True):
 def unpack_deb(package, root):
     member = next(name for name in subprocess.check_output(["ar", "t", package], text=True).splitlines()
                   if name.startswith("data.tar"))
+    compression = {".xz": "J", ".gz": "z", ".zst": "--zstd"}.get(Path(member).suffix, "")
+    flags = ["--zstd", "-xf"] if compression == "--zstd" else [f"-x{compression}f"]
     with subprocess.Popen(["ar", "p", package, member], stdout=subprocess.PIPE) as source:
-        subprocess.run(["tar", "--no-same-owner", "-xf", "-", "-C", root], stdin=source.stdout, check=True)
+        subprocess.run(["tar", "--no-same-owner", *flags, "-", "-C", root], stdin=source.stdout, check=True)
         source.stdout.close()
         if source.wait():
             raise RuntimeError(f"Cannot extract {package}")
@@ -90,6 +92,10 @@ def prepare(work, out, compiler):
     if not source.exists():
         with zipfile.ZipFile(fetch(LOCK["proot"], cache, "proot.zip")) as archive:
             archive.extractall(work)
+            for entry in archive.infolist():
+                mode = entry.external_attr >> 16
+                if mode and not entry.is_dir():
+                    (work / entry.filename).chmod(mode & 0o777)
     proot = source / "src/proot"
     if not proot.exists():
         env = {**os.environ, "PROOT_UNBUNDLE_LOADER": ".", "CFLAGS": "-O2",
