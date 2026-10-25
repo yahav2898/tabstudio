@@ -98,6 +98,15 @@ jobs:
 
       - uses: ./.github/actions/setup-android
 
+      # PRoot and its loader, which run toolchains on the device; cached until the build script changes.
+      - uses: actions/cache@v4
+        with:
+          path: artifacts/native
+          key: android-native-${{ hashFiles('build/android/native/build.sh') }}-arm
+
+      - name: Build the toolchain runtime
+        run: bash build/android/native/build.sh artifacts/native arm64-v8a armeabi-v7a
+
       - name: Build the APK
         run: |
           mkdir -p ci-out
@@ -147,11 +156,23 @@ jobs:
   android-emulator:
     name: Run on an Android emulator
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        api: [29, 35]
     steps:
       - uses: actions/checkout@v4
 
       - uses: ./.github/actions/setup-android
+
+      - uses: actions/cache@v4
+        with:
+          path: artifacts/native
+          key: android-native-${{ hashFiles('build/android/native/build.sh') }}-x64
+
+      - name: Build the toolchain runtime
+        run: bash build/android/native/build.sh artifacts/native x86_64
 
       # GitHub's runners are x86_64, so the emulator needs an x86_64 build of the same app.
       - name: Build an x86_64 APK
@@ -175,7 +196,7 @@ jobs:
       - name: Start TabStudio and run its self test
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
+          api-level: ${{ matrix.api }}
           target: google_apis
           arch: x86_64
           profile: pixel_c
@@ -184,7 +205,7 @@ jobs:
           disk-size: 4096M
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
-          script: bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 420
+          script: bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 1500
 
       - name: Keep the APK out of the published logs
         if: always()
@@ -193,7 +214,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: android-emulator
+          name: android-emulator-${{ matrix.api }}
           path: ci-out/
           if-no-files-found: ignore
 
@@ -201,7 +222,7 @@ jobs:
         if: always() && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: bash build/ci/publish-logs.sh android-emulator ${{ job.status }}
+        run: bash build/ci/publish-logs.sh android-emulator-${{ matrix.api }} ${{ job.status }}
 
   # Publishes a versioned release once every check has passed: for a v* tag, or on main when
   # Directory.Build.props has a version that has release notes in docs/releases and no release yet.

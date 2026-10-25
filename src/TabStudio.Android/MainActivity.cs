@@ -50,7 +50,7 @@ public sealed class MainActivity : AvaloniaMainActivity<TabStudioApplication>
     public const string SelfTestExtra = "tabstudio.selftest";
 
     private const string LogTag = "TabStudio";
-    private static readonly TimeSpan SelfTestTimeout = TimeSpan.FromMinutes(6);
+    private static readonly TimeSpan SelfTestTimeout = TimeSpan.FromMinutes(20);
 
     // The app outlives an activity that Android recreates: its notifications follow whichever activity is current.
     private static MainActivity? _current;

@@ -91,4 +91,7 @@
     <ProjectReference Include="..\TabStudio.App\TabStudio.App.csproj" />
   </ItemGroup>
 
+  <!-- PRoot and its loader, which run toolchains; see the file. -->
+  <Import Project="Toolchains.targets" />
+
 </Project>

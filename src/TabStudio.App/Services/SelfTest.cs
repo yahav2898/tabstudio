@@ -38,6 +38,7 @@ public static partial class SelfTest
         var clock = Stopwatch.StartNew();
         try
         {
+            await RunToolchainSpikeAsync();
             var solution = await samples.EnsureExtractedAsync(cancellationToken);
             await main.OpenWorkspaceAsync(solution);
             if (main.Workspace is not { } workspace)
