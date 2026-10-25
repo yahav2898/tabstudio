@@ -2,6 +2,7 @@
 #include <xc.h>
 #define _XTAL_FREQ 16000000UL
 #pragma config FOSC = INTIO67, WDTEN = OFF, LVP = OFF
+#pragma config PWRTEN = OFF, BOREN = SBORDIS, BORV = 190
 
 void main(void)
 {

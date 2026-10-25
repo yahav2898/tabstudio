@@ -2,7 +2,11 @@ name: Microchip PIC
 
 on:
   push:
-    branches: ['agent/pic']
+    branches: [main]
+    paths:
+      - 'build/pic/**'
+      - 'samples/PIC/**'
+      - '.github/workflows/pic.yml'
   pull_request:
     paths:
       - 'build/pic/**'
@@ -30,6 +34,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install PRoot build dependencies
         run: sudo apt-get update -qq && sudo apt-get install -y libtalloc-dev gawk build-essential
+      - name: Test the harness without proprietary downloads
+        run: python3 -m unittest discover -s build/pic -p 'test_*.py' -v
       - name: Run the official installer and compile the template three times
         run: |
           python3 build/pic/spike.py --compiler '${{ matrix.compiler }}' \

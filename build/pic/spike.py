@@ -100,7 +100,9 @@ def prepare(work, out, compiler):
     if not proot.exists():
         env = {**os.environ, "PROOT_UNBUNDLE_LOADER": ".", "CFLAGS": "-O2",
                "CPPFLAGS": '-DVERSION=\\\"5.1.107.101\\\"'}
-        run(["make", "-C", str(source / "src"), "-j2", "proot", "loader/loader"],
+        # This spike runs only 64-bit tools. PRoot also tries an optional -m32 loader,
+        # which GCC on ARM64 cannot build (the Android NDK build uses Clang).
+        run(["make", "-C", str(source / "src"), "-j2", "HAS_LOADER_32BIT=", "proot", "loader/loader"],
             out / "proot-build.log", env=env)
     env = {**os.environ, "PROOT_LOADER": str(source / "src/loader/loader"),
            "PROOT_TMP_DIR": str(work / "tmp"), "PROOT_NO_SECCOMP": "1"}
@@ -159,9 +161,9 @@ def spike(args):
         shutil.copy2(source, root / "work/main.c")
         pack = f"/opt/tabstudio/packs/{family}/xc8" if family == "pic18" else f"/opt/tabstudio/packs/{family}/xc32"
         device = "18F45K22" if family == "pic18" else "32MX250F128B"
-        options = [f"-mcpu={device}", f"-mdfp={pack}", "-O0", "-g", "-o", "/results/blink.elf", "main.c"]
+        options = [f"-mcpu={device}", f"-mdfp={pack}", "-O0", "-o", "/results/blink.elf", "main.c"]
         if family == "pic32":
-            options += ["-Wl,--defsym=_min_heap_size=0,--report-mem"]
+            options += ["-g", "-Wl,--defsym=_min_heap_size=0,--report-mem"]
         for i in range(3):
             _, elapsed, _ = run([*prefix, *translate, program, *options], out / f"compile-{i}.log", env=env, timeout=180)
             result["compileSeconds"].append(elapsed)
