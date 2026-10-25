@@ -46,8 +46,8 @@ public sealed class PackageVerifierTests
         var message = Encoding.UTF8.GetBytes("message");
         var signature = signer.Sign(message);
 
-        Assert.False(Ed25519.Verify(signer.PublicKey[..31], message, signature));
-        Assert.False(Ed25519.Verify(signer.PublicKey, message, signature[..63]));
+        Assert.False(Ed25519.Verify(signer.PublicKey.AsSpan(0, 31), message, signature));
+        Assert.False(Ed25519.Verify(signer.PublicKey, message, signature.AsSpan(0, 63)));
 
         // A signature whose S is not reduced below the group order is rejected.
         var unreduced = (byte[])signature.Clone();

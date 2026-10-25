@@ -94,7 +94,7 @@ public static class LanguageConfigurationReader
         {
             notIn |= context switch
             {
-                "string" => TokenContexts.String,
+                "string" => TokenContexts.StringLiteral,
                 "comment" => TokenContexts.Comment,
                 "regex" => TokenContexts.RegularExpression,
                 _ => TokenContexts.None,

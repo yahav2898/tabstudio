@@ -157,7 +157,7 @@ public sealed partial class OpenVsxClient
     {
         var bytes = await GetFileAsync(address, cancellationToken).ConfigureAwait(false);
         var text = Encoding.UTF8.GetString(bytes);
-        return text.StartsWith('﻿') ? text[1..] : text;
+        return text.StartsWith('\uFEFF') ? text[1..] : text;
     }
 
     /// <summary>Reads a file of an extension version, such as its icon, from the cache when it was read before.</summary>

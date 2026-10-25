@@ -15,7 +15,7 @@ public enum TokenContexts
     None = 0,
 
     /// <summary>Inside a string.</summary>
-    String = 1,
+    StringLiteral = 1,
 
     /// <summary>Inside a comment.</summary>
     Comment = 2,

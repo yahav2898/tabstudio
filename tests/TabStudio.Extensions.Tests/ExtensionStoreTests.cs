@@ -104,7 +104,7 @@ public sealed class ExtensionStoreTests : IDisposable
         Assert.Contains("not a zip archive", notZipError.Message, StringComparison.Ordinal);
         Assert.Contains("package.json", noManifestError.Message, StringComparison.Ordinal);
         Assert.Empty(store.Installed);
-        Assert.Empty(Directory.GetDirectories(store.Folder).Where(d => !Path.GetFileName(d).StartsWith('.')));
+        Assert.DoesNotContain(Directory.GetDirectories(store.Folder), d => !Path.GetFileName(d).StartsWith('.'));
     }
 
     [Fact]

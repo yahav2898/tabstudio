@@ -14,13 +14,13 @@ public sealed class LanguageConfigurationTests
         Assert.Equal(new BracketPair("#[", "]#"), Lumen.BlockComment);
         Assert.Equal(3, Lumen.Brackets.Count);
         Assert.Equal(4, Lumen.AutoClosingPairs.Count);
-        Assert.Equal(TokenContexts.String | TokenContexts.Comment, Lumen.AutoClosingPairs[3].NotIn);
+        Assert.Equal(TokenContexts.StringLiteral | TokenContexts.Comment, Lumen.AutoClosingPairs[3].NotIn);
         Assert.Equal(4, Lumen.SurroundingPairs.Count);
         Assert.Equal(LanguageConfiguration.DefaultAutoCloseBefore, Lumen.AutoCloseBefore);
         Assert.NotNull(Lumen.Folding?.MarkerStart);
         Assert.False(Lumen.Folding!.OffSide);
-        Assert.True(Lumen.WordPattern!.IsMatch("snake_case"));
-        Assert.True(Lumen.Indentation!.DecreaseIndent!.IsMatch("  }"));
+        Assert.Matches(Lumen.WordPattern!, "snake_case");
+        Assert.Matches(Lumen.Indentation!.DecreaseIndent!, "  }");
         Assert.Single(Lumen.OnEnterRules);
     }
 
@@ -58,7 +58,7 @@ public sealed class LanguageConfigurationTests
     [InlineData("[^]x", false, @"[\s\S]x")]
     [InlineData("a[]b", false, "a(?!)b")]
     [InlineData("[a-z-[]", false, @"[a-z-\[]")]
-    [InlineData(@"\u{1F600}", true, @"😀")]
+    [InlineData(@"\u{1F600}", true, @"\uD83D\uDE00")]
     [InlineData(@"^\s*\/\/\s*\d+\w", false, @"^\s*\/\/\s*\d+\w")]
     public void JavaScript_patterns_are_translated_to_dotnet(string pattern, bool unicode, string expected)
     {
@@ -70,7 +70,7 @@ public sealed class LanguageConfigurationTests
     {
         var regex = JsRegex.TryCreate("^a.b$", "ims")!;
 
-        Assert.True(regex.IsMatch("x\nA\nB"));
+        Assert.Matches(regex, "x\nA\nB");
         Assert.Null(JsRegex.TryCreate("(", null));
         Assert.Null(JsRegex.TryCreate(null));
     }
@@ -146,7 +146,7 @@ public sealed class LanguageConfigurationTests
     [Fact]
     public void Quotes_do_not_close_inside_strings_or_comments()
     {
-        Assert.Null(AutoClosingRules.FindPairToClose(Lumen, "print(\"a ", '"', ")", TokenContexts.String));
+        Assert.Null(AutoClosingRules.FindPairToClose(Lumen, "print(\"a ", '"', ")", TokenContexts.StringLiteral));
         Assert.Null(AutoClosingRules.FindPairToClose(Lumen, "# it ", '"', "", TokenContexts.Comment));
         Assert.Equal("(", AutoClosingRules.FindPairToClose(Lumen, "# it ", '(', "", TokenContexts.Comment)?.Open);
     }

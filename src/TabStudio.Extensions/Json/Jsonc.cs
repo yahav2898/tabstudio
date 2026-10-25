@@ -23,7 +23,7 @@ internal static class Jsonc
     public static JsonDocument Parse(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
-        return JsonDocument.Parse(text.AsMemory(text.StartsWith('﻿') ? 1 : 0), Options);
+        return JsonDocument.Parse(text.AsMemory(text.StartsWith('\uFEFF') ? 1 : 0), Options);
     }
 
     /// <summary>Reads a file as UTF-8 text, without its byte order mark.</summary>
@@ -31,7 +31,7 @@ internal static class Jsonc
     public static string ReadText(string path)
     {
         var text = File.ReadAllText(path, Encoding.UTF8);
-        return text.StartsWith('﻿') ? text[1..] : text;
+        return text.StartsWith('\uFEFF') ? text[1..] : text;
     }
 
     /// <summary>A string property, or <see langword="null"/> when it is missing or not a string.</summary>

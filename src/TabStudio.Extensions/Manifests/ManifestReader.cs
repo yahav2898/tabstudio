@@ -85,7 +85,7 @@ public static class ManifestReader
             ? localized
             : value;
 
-    private static IReadOnlyDictionary<string, string> ReadLocalizedStrings(string? nlsJson)
+    private static Dictionary<string, string> ReadLocalizedStrings(string? nlsJson)
     {
         var strings = new Dictionary<string, string>(StringComparer.Ordinal);
         if (string.IsNullOrWhiteSpace(nlsJson))
