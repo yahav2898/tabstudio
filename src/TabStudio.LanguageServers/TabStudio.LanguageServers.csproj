@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Language servers and debug adapters: a Language Server Protocol (LSP 3.17) client and a Debug Adapter
+    Protocol (DAP) client, the registry of servers and adapters per language, and the workspace's
+    .tabstudio/settings.json and .tabstudio/launch.json. Servers and adapters are started through
+    IServerProcessLauncher, so each platform decides how a process runs. No UI and no Roslyn: the IDE turns the
+    results into its editor features.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>TabStudio.LanguageServers</RootNamespace>
+    <Description>The TabStudio client for language servers (LSP) and debug adapters (DAP).</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The built-in languages, servers and adapters: data the workspace's settings can change. -->
+    <EmbeddedResource Include="Configuration\BuiltInLanguages.json" LogicalName="TabStudio.LanguageServers.BuiltInLanguages.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="TabStudio.LanguageServers.Tests" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,136 @@
+{
+  "languages": {
+    "python": { "name": "Python", "extensions": [ ".py", ".pyi", ".pyw" ] },
+    "typescript": { "name": "TypeScript", "extensions": [ ".ts", ".mts", ".cts" ] },
+    "typescriptreact": { "name": "TypeScript React", "extensions": [ ".tsx" ] },
+    "javascript": { "name": "JavaScript", "extensions": [ ".js", ".mjs", ".cjs" ] },
+    "javascriptreact": { "name": "JavaScript React", "extensions": [ ".jsx" ] },
+    "c": { "name": "C", "extensions": [ ".c", ".h" ] },
+    "cpp": { "name": "C++", "extensions": [ ".cpp", ".cc", ".cxx", ".c++", ".hpp", ".hh", ".hxx", ".h++", ".ipp", ".inl" ] },
+    "rust": { "name": "Rust", "extensions": [ ".rs" ] },
+    "go": { "name": "Go", "extensions": [ ".go" ] },
+    "java": { "name": "Java", "extensions": [ ".java" ] }
+  },
+  "languageServers": {
+    "pyright": {
+      "name": "Pyright",
+      "languages": [ "python" ],
+      "command": "pyright-langserver",
+      "args": [ "--stdio" ],
+      "package": "pyright",
+      "rootMarkers": [ "pyproject.toml", "pyrightconfig.json", "setup.py", "setup.cfg", "requirements.txt", "Pipfile" ],
+      "settings": {
+        "python": {
+          "analysis": {
+            "autoSearchPaths": true,
+            "useLibraryCodeForTypes": true,
+            "diagnosticMode": "openFilesOnly"
+          }
+        }
+      }
+    },
+    "typescript-language-server": {
+      "name": "TypeScript",
+      "languages": [ "typescript", "typescriptreact", "javascript", "javascriptreact" ],
+      "command": "typescript-language-server",
+      "args": [ "--stdio" ],
+      "package": "typescript-language-server",
+      "rootMarkers": [ "tsconfig.json", "jsconfig.json", "package.json" ],
+      "initializationOptions": {
+        "preferences": {
+          "includeInlayParameterNameHints": "literals",
+          "includeInlayFunctionLikeReturnTypeHints": true,
+          "includeInlayVariableTypeHints": false,
+          "includeCompletionsWithSnippetText": true,
+          "includeCompletionsForModuleExports": true
+        }
+      },
+      "settings": {
+        "typescript": {
+          "inlayHints": {
+            "includeInlayParameterNameHints": "literals",
+            "includeInlayFunctionLikeReturnTypeHints": true
+          }
+        },
+        "javascript": {
+          "inlayHints": {
+            "includeInlayParameterNameHints": "literals",
+            "includeInlayFunctionLikeReturnTypeHints": true
+          }
+        }
+      }
+    },
+    "clangd": {
+      "name": "clangd",
+      "languages": [ "c", "cpp" ],
+      "command": "clangd",
+      "args": [ "--background-index", "--header-insertion=never" ],
+      "package": "clangd",
+      "rootMarkers": [ "compile_commands.json", "compile_flags.txt", ".clangd", "CMakeLists.txt", "Makefile" ]
+    },
+    "rust-analyzer": {
+      "name": "rust-analyzer",
+      "languages": [ "rust" ],
+      "command": "rust-analyzer",
+      "package": "rust-analyzer",
+      "rootMarkers": [ "Cargo.toml" ]
+    },
+    "gopls": {
+      "name": "gopls",
+      "languages": [ "go" ],
+      "command": "gopls",
+      "package": "gopls",
+      "rootMarkers": [ "go.work", "go.mod" ]
+    },
+    "jdtls": {
+      "name": "Eclipse JDT",
+      "languages": [ "java" ],
+      "command": "jdtls",
+      "package": "jdtls",
+      "rootMarkers": [ "pom.xml", "build.gradle", "build.gradle.kts", "settings.gradle", ".project" ]
+    }
+  },
+  "debugAdapters": {
+    "debugpy": {
+      "name": "Python (debugpy)",
+      "aliases": [ "python" ],
+      "languages": [ "python" ],
+      "command": "python3",
+      "alternativeCommands": [ "python" ],
+      "args": [ "-m", "debugpy.adapter" ],
+      "package": "debugpy",
+      "defaults": {
+        "console": "internalConsole",
+        "justMyCode": true,
+        "redirectOutput": true,
+        "showReturnValue": true
+      }
+    },
+    "lldb-dap": {
+      "name": "LLDB",
+      "aliases": [ "lldb", "lldb-vscode" ],
+      "languages": [ "c", "cpp", "rust" ],
+      "command": "lldb-dap",
+      "alternativeCommands": [ "lldb-vscode" ],
+      "package": "lldb-dap"
+    },
+    "go": {
+      "name": "Delve",
+      "aliases": [ "dlv" ],
+      "languages": [ "go" ],
+      "command": "dlv",
+      "args": [ "dap" ],
+      "package": "delve"
+    },
+    "node": {
+      "name": "Node.js (js-debug)",
+      "aliases": [ "pwa-node" ],
+      "languages": [ "javascript", "typescript" ],
+      "command": "js-debug-adapter",
+      "package": "js-debug",
+      "defaults": {
+        "console": "internalConsole"
+      }
+    }
+  }
+}
