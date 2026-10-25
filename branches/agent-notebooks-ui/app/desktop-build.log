@@ -1,19 +1,20 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/TabStudio.Core.csproj (in 86 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj (in 482 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/TabStudio.Packages.csproj (in 454 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/TabStudio.Notebooks.csproj (in 104 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj (in 483 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Desktop/TabStudio.Desktop.csproj (in 17 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/TabStudio.Core.csproj (in 102 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/TabStudio.Packages.csproj (in 290 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj (in 331 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/TabStudio.Notebooks.csproj (in 198 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Desktop/TabStudio.Desktop.csproj (in 331 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj (in 34 ms).
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
   TabStudio.Packages -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/bin/Release/net10.0/TabStudio.Packages.dll
   TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
   TabStudio.Notebooks -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/bin/Release/net10.0/TabStudio.Notebooks.dll
-  TabStudio.App -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.App/bin/Release/net10.0/TabStudio.App.dll
-  TabStudio.Desktop -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Desktop/bin/Release/net10.0/TabStudio.Desktop.dll
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Services/NotebookPackageResolver.cs(140,13): error CS0104: 'ProjectInfo' is an ambiguous reference between 'Microsoft.CodeAnalysis.ProjectInfo' and 'TabStudio.Core.Workspaces.ProjectInfo' [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
 
-Build succeeded.
+Build FAILED.
+
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Services/NotebookPackageResolver.cs(140,13): error CS0104: 'ProjectInfo' is an ambiguous reference between 'Microsoft.CodeAnalysis.ProjectInfo' and 'TabStudio.Core.Workspaces.ProjectInfo' [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
     0 Warning(s)
-    0 Error(s)
+    1 Error(s)
 
-Time Elapsed 00:00:19.47
+Time Elapsed 00:00:15.40
