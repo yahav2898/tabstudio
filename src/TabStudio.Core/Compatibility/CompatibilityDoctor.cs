@@ -77,9 +77,25 @@ public static class CompatibilityDoctor
                 project, RunHost.WebView, CompatibilityStatus.Planned, "Local server + WebView",
                 $"Web apps are served on this device. The {LanguageName(project.Language)} compiler is not bundled yet."),
 
+            ProjectKind.BlazorWebApp when project.Language == ProjectLanguage.CSharp => Report(
+                project, RunHost.WebView, CompatibilityStatus.Ready, "Local server + WebView",
+                "Served on this device and shown in the web preview. Interactive Server components run here over a live circuit; WebAssembly components run in the preview on .NET for WebAssembly, without the debugger. Saving a file restarts it."),
+
+            ProjectKind.BlazorWebApp => Report(
+                project, RunHost.WebView, CompatibilityStatus.Planned, "Local server + WebView",
+                $"Blazor apps are served on this device. The {LanguageName(project.Language)} compiler is not bundled yet."),
+
+            ProjectKind.BlazorWebAssembly when project.Language == ProjectLanguage.CSharp && IsHostedWebAssembly(project) => Report(
+                project, RunHost.WebView, CompatibilityStatus.NotRunnable, "WebAssembly, in its web app",
+                "The WebAssembly part of a Blazor Web App: it is compiled for the browser and runs in the web preview when the app that references it runs."),
+
+            ProjectKind.BlazorWebAssembly when project.Language == ProjectLanguage.CSharp => Report(
+                project, RunHost.WebView, CompatibilityStatus.Ready, "WebAssembly in the WebView",
+                "Compiled for the browser and run on .NET for WebAssembly in the web preview, served from this device. It starts without the debugger: WebAssembly code cannot be debugged here yet. Saving a file reloads it."),
+
             ProjectKind.BlazorWebAssembly => Report(
-                project, RunHost.WebView, CompatibilityStatus.Planned, "WebAssembly in a WebView",
-                "The app will be compiled to WebAssembly and shown in a WebView next to the code."),
+                project, RunHost.WebView, CompatibilityStatus.Planned, "WebAssembly in the WebView",
+                $"Blazor WebAssembly apps run in the web preview. The {LanguageName(project.Language)} compiler is not bundled yet."),
 
             ProjectKind.Worker => Report(
                 project, RunHost.InProcess, CompatibilityStatus.Planned, "In-process",
@@ -122,6 +138,13 @@ public static class CompatibilityDoctor
                 "TabStudio does not recognize this project type yet."),
         };
     }
+
+    /// <summary>
+    /// Whether a Blazor WebAssembly project is the client of a Blazor Web App rather than an app of its own, as the
+    /// template marks it with <c>StaticWebAssetProjectMode</c> <c>Default</c>.
+    /// </summary>
+    private static bool IsHostedWebAssembly(ProjectInfo project) =>
+        string.Equals(project.GetProperty("StaticWebAssetProjectMode"), "Default", StringComparison.OrdinalIgnoreCase);
 
     private static CompatibilityReport Report(
         ProjectInfo project, RunHost host, CompatibilityStatus status, string runsVia, string explanation) =>

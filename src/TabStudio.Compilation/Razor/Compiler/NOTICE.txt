@@ -1,0 +1,52 @@
+The Razor compiler inside TabStudio
+===================================
+
+This folder holds the Razor source generator of the .NET SDK, unchanged. TabStudio runs it inside Roslyn the
+way the SDK does, so .razor and .cshtml files compile on the tablet.
+
+Origin
+------
+The files come from the .NET SDK 10.0.113 (sdk/10.0.113/Sdks/Microsoft.NET.Sdk.Razor/source-generators/), built
+from the dotnet/dotnet repository (src/razor) at commit 4099f83977f4d29604a9aeb971fb0a7bc1d5f699, informational
+version 10.0.0-preview.26504.104. No stable NuGet package carries this compiler, so the SDK's own build is used.
+
+  Microsoft.CodeAnalysis.Razor.Compiler.dll         10.0.0.0   sha256 40640637e2cb3ece116b9aef405c9c83dde01759a489dae3a2ce8afd4e4fa104
+  Microsoft.AspNetCore.Razor.Utilities.Shared.dll   10.0.0.0   sha256 3d5c83b7c09f84a6ffe39172e04fe82b7598e59970bb5e8f9d33a6943e9e41b8
+  Microsoft.Extensions.ObjectPool.dll               8.0.0.0    sha256 6a06631ff0962f03f142732c4735ee69f563deb7af8c55467c33c35663887b36
+
+Why this version
+----------------
+A source generator can only run inside a Roslyn at least as new as the one it was built against. The SDK's
+10.0.1xx feature band builds Razor against Microsoft.CodeAnalysis 5.0, the version TabStudio pins in
+Directory.Packages.props. Newer feature bands (10.0.2xx and later) build it against newer Roslyn versions and
+would not load. Update these files together with Microsoft.CodeAnalysis, from an SDK whose
+sdk/<version>/Roslyn/bincore/Microsoft.CodeAnalysis.dll has the same major and minor version, with
+build/razor/update-razor-compiler.sh.
+
+License
+-------
+The Razor compiler and Microsoft.Extensions.ObjectPool are licensed by the .NET Foundation under the MIT license:
+
+  The MIT License (MIT)
+
+  Copyright (c) .NET Foundation and Contributors
+
+  All rights reserved.
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.

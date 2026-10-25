@@ -47,6 +47,12 @@ public enum ProjectKind
 
     /// <summary>A native C or C++ project (<c>.vcxproj</c>).</summary>
     NativeCpp,
+
+    /// <summary>
+    /// An ASP.NET Core app with Razor components, such as one from the Blazor Web App template: Interactive Server,
+    /// WebAssembly or Auto components served by an ASP.NET Core host.
+    /// </summary>
+    BlazorWebApp,
 }
 
 /// <summary>

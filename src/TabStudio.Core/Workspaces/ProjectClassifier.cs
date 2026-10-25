@@ -76,7 +76,8 @@ public static class ProjectClassifier
         if (sdk.Equals("Microsoft.NET.Sdk.Web", StringComparison.OrdinalIgnoreCase) ||
             (sdk.Equals("Microsoft.NET.Sdk.Razor", StringComparison.OrdinalIgnoreCase) && project.IsExecutable))
         {
-            return ProjectKind.AspNetCore;
+            // As the Web SDK decides whether an app needs Blazor's script: by its .razor files.
+            return project.HasRazorComponents && project.IsExecutable ? ProjectKind.BlazorWebApp : ProjectKind.AspNetCore;
         }
 
         if (sdk.Equals("Microsoft.NET.Sdk.Worker", StringComparison.OrdinalIgnoreCase))
