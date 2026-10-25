@@ -537,6 +537,8 @@
         <Border Grid.Row="4" x:Name="BottomDock" Background="{DynamicResource Brush.Toolbar}">
           <DockPanel>
             <Grid DockPanel.Dock="Top" Height="34" ColumnDefinitions="*,Auto" Margin="6,0">
+              <!-- The tabs scroll sideways when the debugger's tabs leave too little room beside the Output's source. -->
+              <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
               <StackPanel Orientation="Horizontal">
                 <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsErrorListSelected}"
                         Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" Content="Error List" />
@@ -554,6 +556,7 @@
                 <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsCallStackSelected}" IsVisible="{Binding ShowsDebugPanels}"
                         Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.CallStack}" Content="Call Stack" />
               </StackPanel>
+              </ScrollViewer>
               <StackPanel Grid.Column="1" Orientation="Horizontal">
                 <TextBlock Classes="muted small" Text="Show output from:" VerticalAlignment="Center" Margin="0,0,8,0"
                            IsVisible="{Binding IsOutputSelected}" />

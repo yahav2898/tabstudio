@@ -66,6 +66,7 @@ public sealed class SwarmScreenshotTests : IDisposable
         var row = swarmWindow.Devices[0];
         Assert.Equal("Pixel 7", row.Name);
         Assert.Equal("Ready", row.StateLabel);
+        Assert.Contains("Large phone", row.Detail, StringComparison.Ordinal);
         Assert.Equal("Swarm: 1 device", swarmWindow.StatusText);
         Assert.Contains(workspace.RunTargets, t => t.Name == "Swarm");
         UiTestHelpers.SaveScreenshot(tabletWindow, "swarm-10-window-with-a-waiting-phone");
@@ -91,7 +92,8 @@ public sealed class SwarmScreenshotTests : IDisposable
         var services = Track(AppServices.Create(new AppPaths(temp.Path), s => s.AddSingleton<IDeviceIdentity>(new TestDeviceIdentity(name, kind))));
         var main = services.GetRequiredService<MainViewModel>();
         Track(new Closing(() => main.Workspace?.Dispose()));
-        var window = new MainWindow { DataContext = main, Width = width, Height = height };
+        // A phone's screen is narrower than the desktop window's least width.
+        var window = new MainWindow { DataContext = main, MinWidth = 0, Width = width, Height = height };
         window.Show();
         Avalonia.Threading.Dispatcher.UIThread.RunJobs();
         return (main, window, services);

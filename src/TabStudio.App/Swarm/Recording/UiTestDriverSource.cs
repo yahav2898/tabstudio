@@ -41,24 +41,20 @@ internal static class UiTestDriverSource
             /// <summary>Starts the app in a window of the given size, in device-independent pixels.</summary>
             public static RecordedApp Start(double width, double height)
             {
-                // TestAppBuilder starts Avalonia with the app itself; a test project that starts it with another
-                // Application gets a new one, which brings the app's styles to its window.
+                // Avalonia gives an app its lifetime only before it is set up, and the app TestAppBuilder set up has
+                // none; so each test starts a new instance of the app, which creates its main view for a phone's
+                // single-view lifetime, as in App.axaml.cs.
                 var lifetime = PhoneLifetime.Create();
-                var app = Application.Current as global::$APP$;
-                var isOwn = app is null;
-                app ??= new global::$APP$();
-                if (isOwn)
-                {
-                    app.Initialize();
-                }
-
-                app.ApplicationLifetime = lifetime;
+                var app = new global::$APP$ { ApplicationLifetime = lifetime };
+                app.Initialize();
                 app.OnFrameworkInitializationCompleted();
                 var view = lifetime.MainView
                     ?? throw new InvalidOperationException("The app sets no MainView for a single-view lifetime, as Avalonia's cross-platform template does in App.axaml.cs.");
 
+                // Avalonia applies the styles of the app it runs; when that is another Application, the window takes
+                // this app's styles, templates and resources.
                 var window = new Window { Width = width, Height = height, Content = view };
-                if (isOwn)
+                if (Application.Current is not global::$APP$)
                 {
                     window.RequestedThemeVariant = app.RequestedThemeVariant ?? ThemeVariant.Default;
                     foreach (var style in app.Styles.ToList())

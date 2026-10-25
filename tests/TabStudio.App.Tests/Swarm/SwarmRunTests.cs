@@ -3,6 +3,7 @@ using TabStudio.App.Services;
 using TabStudio.App.Swarm;
 using TabStudio.App.ViewModels;
 using TabStudio.App.ViewModels.Swarm;
+using TabStudio.Core.Diagnostics;
 using TabStudio.Swarm;
 
 namespace TabStudio.App.Tests.Swarm;
@@ -133,6 +134,12 @@ public sealed class SwarmRunTests
         RecordedTestCompilation.AssertCompiles(testsFolder, fixture.Swarm.Coordinator!.CurrentRun!.Build);
         SwarmAppFixture.Progress("run: saved and compiled");
 
+        // Its packages restore in the background, and then the editor finds nothing wrong with it.
+        await WaitQuietlyAsync(() => workspace.PackagesText is null && workspace.ErrorList.ErrorCount == 0, TimeSpan.FromMinutes(3));
+        await WaitQuietlyAsync(() => workspace.ErrorList.ErrorCount > 0, TimeSpan.FromSeconds(3)); // analysis still running may yet report
+        Assert.True(workspace.ErrorList.ErrorCount == 0, Errors(workspace));
+        SwarmAppFixture.Progress("run: restored");
+
         // In the Test Explorer, the test is a row per phone, and passes on both.
         await UiTestHelpers.WaitUntilAsync(() => ScreenRows(workspace).Count == 2, because: "a row of the test for each phone");
         await workspace.Tests.RunAsync(new TestRunRequest("recorded UI tests", workspace.Tests.ScreenTestSelections())).WaitAsync(TimeSpan.FromMinutes(3));
@@ -168,15 +175,25 @@ public sealed class SwarmRunTests
     }
 
     /// <summary>Waits for a condition without failing, so the assertion after it shows what happened instead.</summary>
-    private static async Task WaitQuietlyAsync(Func<bool> condition)
+    private static async Task WaitQuietlyAsync(Func<bool> condition, TimeSpan? timeout = null)
     {
-        var deadline = DateTime.UtcNow + TimeSpan.FromSeconds(30);
+        var deadline = DateTime.UtcNow + (timeout ?? TimeSpan.FromSeconds(30));
         while (!condition() && DateTime.UtcNow < deadline)
         {
             Avalonia.Threading.Dispatcher.UIThread.RunJobs();
             await Task.Delay(25);
         }
     }
+
+    /// <summary>The first errors in the Error List, and the end of the Output, for a failed assertion.</summary>
+    private static string Errors(WorkspaceViewModel workspace) =>
+        string.Join(
+            Environment.NewLine,
+            workspace.ErrorList.AllDiagnostics
+                .Where(d => d.Severity == DiagnosticSeverityLevel.Error)
+                .Take(8)
+                .Select(d => $"{Path.GetFileName(d.Location?.FilePath)}: {d.Id} {d.Message}")
+                .Append(workspace.Output.Text[Math.Max(0, workspace.Output.Text.Length - 1500)..]));
 
     private static bool Shows(SwarmAppDevice device, string text) =>
         device.Texts().Any(t => t.StartsWith(text, StringComparison.Ordinal));

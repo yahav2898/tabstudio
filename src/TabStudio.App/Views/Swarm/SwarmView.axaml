@@ -165,10 +165,10 @@
 
           <!-- A mirrored input that a screen could not take -->
           <Border Padding="12,9" CornerRadius="8" Background="#26E3B341" IsVisible="{Binding Notice, Converter={x:Static ObjectConverters.IsNotNull}}">
-            <StackPanel Orientation="Horizontal" Spacing="9">
-              <controls:StrokeIcon Data="{StaticResource Icon.Warning}" Size="15" Foreground="{DynamicResource Brush.Warning}" VerticalAlignment="Top" />
-              <TextBlock Classes="small" TextWrapping="Wrap" Text="{Binding Notice}" MaxWidth="320" />
-            </StackPanel>
+            <Grid ColumnDefinitions="Auto,*">
+              <controls:StrokeIcon Data="{StaticResource Icon.Warning}" Size="15" Margin="0,1,9,0" Foreground="{DynamicResource Brush.Warning}" VerticalAlignment="Top" />
+              <TextBlock Grid.Column="1" Classes="small" TextWrapping="Wrap" Text="{Binding Notice}" />
+            </Grid>
           </Border>
         </StackPanel>
 

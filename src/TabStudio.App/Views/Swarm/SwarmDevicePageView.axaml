@@ -48,7 +48,7 @@
       <Border Classes="overlay" CornerRadius="14" Padding="22,18" MaxWidth="360" Margin="24" HorizontalAlignment="Center" VerticalAlignment="Center">
         <StackPanel Spacing="10">
           <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
-            <controls:StrokeIcon Data="{StaticResource Icon.Pause}" IsFilled="True" Size="18" Foreground="{DynamicResource Brush.Warning}" />
+            <controls:StrokeIcon Data="{StaticResource Icon.Pause}" Size="18" StrokeThickness="2.6" Foreground="{DynamicResource Brush.Warning}" />
             <TextBlock Classes="h2" FontSize="15" Text="Paused in the tablet's debugger" VerticalAlignment="Center" />
           </StackPanel>
           <TextBlock Classes="muted" TextAlignment="Center" TextWrapping="Wrap"
@@ -60,10 +60,10 @@
     <!-- A short message, such as a mirrored input that found no element here. -->
     <Border Classes="overlay" CornerRadius="10" Padding="14,10" Margin="16,0,16,28" MaxWidth="460"
             HorizontalAlignment="Center" VerticalAlignment="Bottom" IsVisible="{Binding HasNotice}" IsHitTestVisible="False">
-      <StackPanel Orientation="Horizontal" Spacing="9">
-        <controls:StrokeIcon Data="{StaticResource Icon.Info}" Size="15" Foreground="{DynamicResource Brush.Info}" VerticalAlignment="Top" />
-        <TextBlock Classes="small" Foreground="White" TextWrapping="Wrap" Text="{Binding Notice}" MaxWidth="400" />
-      </StackPanel>
+      <Grid ColumnDefinitions="Auto,*">
+        <controls:StrokeIcon Data="{StaticResource Icon.Info}" Size="15" Margin="0,1,9,0" Foreground="{DynamicResource Brush.Info}" VerticalAlignment="Top" />
+        <TextBlock Grid.Column="1" Classes="small" Foreground="White" TextWrapping="Wrap" Text="{Binding Notice}" />
+      </Grid>
     </Border>
 
     <!-- The overlay: the tablet's name and what the app does; a tap shows Leave. -->

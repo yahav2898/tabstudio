@@ -73,22 +73,23 @@
         </Button>
         <TextBlock Classes="muted small" TextWrapping="Wrap" Text="Or type the address and the code it shows under the QR code:" IsVisible="{Binding CanScan}" />
         <TextBlock Classes="muted small" TextWrapping="Wrap" Text="Type the address and the code it shows under its QR code:" IsVisible="{Binding !CanScan}" />
-        <Grid ColumnDefinitions="*,12,190" RowDefinitions="Auto,Auto,12,Auto">
-          <TextBlock Classes="label" Text="Address" Margin="2,0,0,5" />
-          <TextBlock Grid.Column="2" Classes="label" Text="Code" Margin="2,0,0,5" />
-          <TextBox Grid.Row="1" Classes="large mono" Watermark="192.168.1.23" Text="{Binding AddressText}" />
-          <TextBox Grid.Row="1" Grid.Column="2" Classes="large mono" Watermark="XXXX-XXXX" MaxLength="10" Text="{Binding CodeText}" />
-          <Button Grid.Row="3" Theme="{StaticResource AccentButton}" Height="44" Padding="22,0" HorizontalAlignment="Left" Command="{Binding JoinCommand}">
+        <!-- The address and the code in one row on a tablet, the code under the address on a phone (see the code-behind). -->
+        <Grid x:Name="JoinGrid" ColumnDefinitions="*,12,190" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+          <TextBlock x:Name="AddressLabel" Classes="label" Text="Address" Margin="2,0,0,5" />
+          <TextBlock x:Name="CodeLabel" Grid.Column="2" Classes="label" Text="Code" Margin="2,0,0,5" />
+          <TextBox x:Name="AddressBox" Grid.Row="1" Classes="large mono" Watermark="192.168.1.23" Text="{Binding AddressText}" />
+          <TextBox x:Name="CodeBox" Grid.Row="1" Grid.Column="2" Classes="large mono" Watermark="XXXX-XXXX" MaxLength="10" Text="{Binding CodeText}" />
+          <Button x:Name="JoinButton" Grid.Row="2" Grid.ColumnSpan="3" Margin="0,12,0,0" Theme="{StaticResource AccentButton}" Height="44" Padding="22,0" HorizontalAlignment="Left" Command="{Binding JoinCommand}">
             <StackPanel Orientation="Horizontal" Spacing="8">
               <controls:StrokeIcon Data="{StaticResource Icon.Swarm}" Size="16" />
               <TextBlock Text="Join the swarm" VerticalAlignment="Center" />
             </StackPanel>
           </Button>
         </Grid>
-        <StackPanel Orientation="Horizontal" Spacing="10" IsVisible="{Binding IsBusy}">
-          <ProgressBar IsIndeterminate="True" Width="120" VerticalAlignment="Center" />
-          <TextBlock Classes="muted" Text="Joining and checking that it is the right tablet…" VerticalAlignment="Center" />
-        </StackPanel>
+        <Grid ColumnDefinitions="Auto,*" IsVisible="{Binding IsBusy}">
+          <ProgressBar IsIndeterminate="True" Width="96" Margin="0,0,10,0" VerticalAlignment="Center" />
+          <TextBlock Grid.Column="1" Classes="muted" TextWrapping="Wrap" Text="Joining and checking that it is the right tablet…" VerticalAlignment="Center" />
+        </Grid>
       </StackPanel>
     </Border>
 

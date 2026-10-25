@@ -210,7 +210,14 @@ public sealed partial class WorkspaceViewModel
                 ? $"Recorded \"{recording.Name}\" into {file}, in the new test project {Path.GetFileNameWithoutExtension(saved.ProjectFilePath)}, which is now part of the solution."
                 : $"Recorded \"{recording.Name}\" into {file}.",
             OutputKind.Success);
+        // The test project may have new packages (xUnit, Avalonia's headless platform): restore them as a saved
+        // project file would, so the editor and the Error List see them.
         await ReloadWorkspaceAsync();
+        if (Workspace is { } reloaded)
+        {
+            StartPackageRestore(reloaded);
+        }
+
         await OpenDocumentAsync(saved.TestFilePath);
         ScanUiTests();
         return null;
