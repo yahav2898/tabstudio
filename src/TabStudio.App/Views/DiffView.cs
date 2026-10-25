@@ -24,6 +24,8 @@ public sealed class DiffView : UserControl, IDisposable
     private readonly DiffLineNumberMargin _margin;
     private readonly TextMate.Installation? _textMate;
     private readonly SearchPanel _search;
+    private readonly DiffHeaderView _header;
+    private bool _shownFirstChange;
 
     /// <summary>Creates the view of a comparison tab.</summary>
     /// <param name="document">A document made by <see cref="DocumentViewModel.ForComparison"/>.</param>
@@ -61,10 +63,12 @@ public sealed class DiffView : UserControl, IDisposable
         _search = SearchPanel.Install(_editor);
         _editor.TextArea.AddHandler(TappedEvent, OnTapped, RoutingStrategies.Bubble, handledEventsToo: true);
 
-        var header = new DiffHeaderView { DataContext = comparison };
-        DockPanel.SetDock(header, Dock.Top);
-        Content = new DockPanel { Children = { header, _editor } };
+        _header = new DiffHeaderView { DataContext = comparison };
+        DockPanel.SetDock(_header, Dock.Top);
+        Content = new DockPanel { Children = { _header, _editor } };
 
+        _header.MoveRequested += OnMoveRequested;
+        AddHandler(KeyDownEvent, OnKeyDown, RoutingStrategies.Tunnel);
         document.ActionRequested += OnActionRequested;
         document.ComparisonChanged += OnComparisonChanged;
     }
@@ -77,9 +81,37 @@ public sealed class DiffView : UserControl, IDisposable
     {
         _document.ActionRequested -= OnActionRequested;
         _document.ComparisonChanged -= OnComparisonChanged;
+        _header.MoveRequested -= OnMoveRequested;
         _editor.TextArea.RemoveHandler(TappedEvent, OnTapped);
+        RemoveHandler(KeyDownEvent, OnKeyDown);
         _search.Uninstall();
         _textMate?.Dispose();
+    }
+
+    /// <summary>Moves the caret to the first line of the next or previous change and scrolls it into view.</summary>
+    /// <param name="direction">1 for the next change, -1 for the previous one.</param>
+    /// <returns><see langword="true"/> when there was a change to move to.</returns>
+    public bool MoveToChange(int direction)
+    {
+        var step = Math.Sign(direction);
+        if (step == 0 || Lines() is not { } lines)
+        {
+            return false;
+        }
+
+        var caret = _editor.TextArea.Caret;
+        for (var index = caret.Line - 1 + step; index >= 0 && index < lines.Count; index += step)
+        {
+            if (IsChange(lines, index) && !IsChange(lines, index - 1))
+            {
+                caret.Line = index + 1;
+                caret.Column = 1;
+                _editor.ScrollToLine(index + 1);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /// <inheritdoc />
@@ -88,11 +120,43 @@ public sealed class DiffView : UserControl, IDisposable
         base.OnPropertyChanged(change);
         if (change.Property == IsVisibleProperty && IsVisible)
         {
-            Dispatcher.UIThread.Post(() => _editor.TextArea.Focus(), DispatcherPriority.Background);
+            // The first time, go to the first change, as Visual Studio does; the editor needs its size for that.
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (!_shownFirstChange && Lines() is { Count: > 0 } lines)
+                {
+                    _shownFirstChange = true;
+                    if (!IsChange(lines, 0))
+                    {
+                        MoveToChange(1);
+                    }
+                }
+
+                _editor.TextArea.Focus();
+            }, DispatcherPriority.Background);
         }
     }
 
+    private static bool IsChange(IReadOnlyList<DiffLine> lines, int index) =>
+        index >= 0 && index < lines.Count && lines[index].Kind is DiffLineKind.Added or DiffLineKind.Removed;
+
     private IReadOnlyList<DiffLine>? Lines() => _document.Comparison?.Diff.Lines;
+
+    private void OnMoveRequested(object? sender, int direction)
+    {
+        MoveToChange(direction);
+        _editor.TextArea.Focus();
+    }
+
+    /// <summary>F8 and Shift+F8 go to the next and previous change, as in Visual Studio's diff.</summary>
+    private void OnKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.F8 && e.KeyModifiers is KeyModifiers.None or KeyModifiers.Shift)
+        {
+            MoveToChange(e.KeyModifiers == KeyModifiers.Shift ? -1 : 1);
+            e.Handled = true;
+        }
+    }
 
     /// <summary>A tap on a collapsed line shows the unchanged lines it stands for.</summary>
     private void OnTapped(object? sender, TappedEventArgs e)

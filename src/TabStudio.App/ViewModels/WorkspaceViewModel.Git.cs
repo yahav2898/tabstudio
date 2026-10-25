@@ -109,7 +109,15 @@ public sealed partial class WorkspaceViewModel : ISourceControlHost
 
     partial void OnSelectedSideBarPanelChanged(SideBarPanel value)
     {
-        if (value == SideBarPanel.GitChanges)
+        if (value == SideBarPanel.GitChanges && IsSideBarVisible)
+        {
+            GitChanges.OnShown();
+        }
+    }
+
+    partial void OnIsSideBarVisibleChanged(bool value)
+    {
+        if (value && IsGitChangesSelected)
         {
             GitChanges.OnShown();
         }

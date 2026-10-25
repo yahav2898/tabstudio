@@ -18,12 +18,10 @@
 
         <!-- Signed in -->
         <StackPanel Spacing="12" IsVisible="{Binding IsSignedIn}">
-          <TextBlock TextWrapping="Wrap">
-            <Run Text="Signed in as " Foreground="{DynamicResource Brush.TextMuted}" />
-            <Run Text="{Binding Login}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" />
-            <Run Text=" " />
-            <Run Text="{Binding DisplayName}" Foreground="{DynamicResource Brush.TextMuted}" />
-          </TextBlock>
+          <TextBlock TextWrapping="Wrap"><Run
+            Text="Signed in as " Foreground="{DynamicResource Brush.TextMuted}" /><Run
+            Text="{Binding Login}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" /><Run
+            Text="  " /><Run Text="{Binding DisplayName}" Foreground="{DynamicResource Brush.TextMuted}" /></TextBlock>
           <TextBlock Classes="muted small" TextWrapping="Wrap"
                      Text="TabStudio commits, pulls, creates branches and pull requests, and publishes repositories as this account. Signing out deletes the token from this device." />
           <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
