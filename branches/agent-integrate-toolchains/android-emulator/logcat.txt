@@ -1,57 +1,16 @@
-10-25 11:08:25.397  4076  4076 W dex2oat : Compilation of void mono.android.media.MediaScannerConnection_OnScanCompletedListenerImplementor.monodroidAddReference(java.lang.Object) took 142.779ms
-10-25 11:08:31.155  4646  4646 D DOTNET  : AndroidCryptoNative_InitLibraryOnLoad: jint AndroidCryptoNative_InitLibraryOnLoad(JavaVM *, void *) in /__w/1/s/src/runtime/src/native/libs/System.Security.Cryptography.Native.Android/pal_jni.c
-10-25 11:08:31.155  4646  4646 D DOTNET  : GetOptionalClassGRef: optional class com/android/org/conscrypt/OpenSSLEngineImpl was not found
-10-25 11:08:58.453  4646  4711 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Workspaces' (hash 1d9425b8bd762c1e) not found
-10-25 11:08:58.454  4646  4711 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Workspaces
-10-25 11:08:58.454  4646  4711 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Workspaces' (hash 1d9425b8bd762c1e) not found
-10-25 11:08:58.454  4646  4711 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Workspaces
-10-25 11:08:58.500  4646  4711 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Features' (hash ebd054ac833caaaa) not found
-10-25 11:08:58.500  4646  4711 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Features
-10-25 11:08:58.500  4646  4711 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Features' (hash ebd054ac833caaaa) not found
-10-25 11:08:58.500  4646  4711 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Features
-10-25 11:09:03.980  4646  4705 W monodroid-assembly: Shared library 'android' not loaded, p/invoke 'ANativeWindow_fromSurface' may fail
-10-25 11:09:09.938  4646  4646 I TabStudio: TABSTUDIO_SELFTEST_START
-10-25 11:10:00.432  4646  4947 W monodroid-assembly: Assembly 'SQLitePCLRaw.batteries_v2' (hash 3da7781d6333a8fe) not found
-10-25 11:10:00.432  4646  4947 W monodroid-assembly: open_from_bundles: failed to load bundled assembly SQLitePCLRaw.batteries_v2
-10-25 11:10:00.432  4646  4947 W monodroid-assembly: Assembly 'SQLitePCLRaw.batteries_v2' (hash 3da7781d6333a8fe) not found
-10-25 11:10:00.432  4646  4947 W monodroid-assembly: open_from_bundles: failed to load bundled assembly SQLitePCLRaw.batteries_v2
-10-25 11:11:24.840  4646  4987 W monodroid-assembly: Shared library 'liblog' not loaded, p/invoke '__android_log_print' may fail
-10-25 11:11:24.843  4646  4987 I monodroid-net: Exception caught while cancelling connection: Java.IO.IOException: Canceled
-10-25 11:11:24.843  4646  4987 I monodroid-net:    at Java.Interop.JniEnvironment.InstanceMethods.CallVoidMethod(JniObjectReference instance, JniMethodInfo method, JniArgumentValue* args)
-10-25 11:11:24.843  4646  4987 I monodroid-net:    at Java.Interop.JniPeerMembers.JniInstanceMethods.InvokeAbstractVoidMethod(String encodedMember, IJavaPeerable self, JniArgumentValue* parameters)
-10-25 11:11:24.843  4646  4987 I monodroid-net:    at Javax.Net.Ssl.HttpsURLConnectionInvoker.Connect()
-10-25 11:11:24.843  4646  4987 I monodroid-net:    at Xamarin.Android.Net.AndroidMessageHandler.<>c__DisplayClass137_0.<ConnectAsync>b__0()
-10-25 11:11:24.843  4646  4987 I monodroid-net:   --- End of managed Java.IO.IOException stack trace ---
-10-25 11:11:24.843  4646  4987 I monodroid-net: java.io.IOException: Canceled
-10-25 11:11:24.843  4646  4987 I monodroid-net: 	at com.android.okhttp.internal.http.StreamAllocation.findConnection(StreamAllocation.java:183)
-10-25 11:11:24.843  4646  4987 I monodroid-net: 	at com.android.okhttp.internal.http.StreamAllocation.findHealthyConnection(StreamAllocation.java:128)
-10-25 11:11:24.843  4646  4987 I monodroid-net: 	at com.android.okhttp.internal.http.StreamAllocation.newStream(StreamAllocation.java:97)
-10-25 11:11:24.843  4646  4987 I monodroid-net: 	at com.android.okhttp.internal.http.HttpEngine.connect(HttpEngine.java:289)
-10-25 11:11:24.843  4646  4987 I monodroid-net: 	at com.android.okhttp.internal.http.HttpEngine.sendRequest(HttpEngine.java:232)
-10-25 11:11:24.843  4646  4987 I monodroid-net: 	at com.android.okhttp.internal.huc.HttpURLConnectionImpl.execute(HttpURLConnectionImpl.java:465)
-10-25 11:11:24.843  4646  4987 I monodroid-net: 	at com.android.okhttp.internal.huc.HttpURLConnectionImpl.connect(HttpURLConnectionImpl.java:131)
-10-25 11:11:24.843  4646  4987 I monodroid-net: 	at com.android.okhttp.internal.huc.DelegatingHttpsURLConnection.connect(DelegatingHttpsURLConnection.java:90)
-10-25 11:11:24.843  4646  4987 I monodroid-net: 	at com.android.okhttp.internal.huc.HttpsURLConnectionImpl.connect(HttpsURLConnectionImpl.java:30)
-10-25 11:11:24.843  4646  4987 I monodroid-net: 
-10-25 11:12:11.606  4646  5735 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'pipe2' may fail
-10-25 11:12:11.632  4646  5735 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'fcntl' may fail
-10-25 11:12:11.664  4646  5735 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn_file_actions_init' may fail
-10-25 11:12:11.677  4646  5735 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_init' may fail
-10-25 11:12:11.682  4646  5735 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn_file_actions_adddup2' may fail
-10-25 11:12:11.686  4646  5735 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setflags' may fail
-10-25 11:12:11.694  4646  5735 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setpgroup' may fail
-10-25 11:12:11.696  4646  5735 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'sigemptyset' may fail
-10-25 11:12:11.697  4646  5735 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'sigaddset' may fail
-10-25 11:12:11.699  4646  5735 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setsigdefault' may fail
-10-25 11:12:11.700  4646  5735 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_setsigmask' may fail
-10-25 11:12:11.709  4646  5735 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn' may fail
-10-25 11:12:11.738  4646  5735 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawn_file_actions_destroy' may fail
-10-25 11:12:11.763  4646  5735 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'posix_spawnattr_destroy' may fail
-10-25 11:12:11.771  4646  5735 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'close' may fail
-10-25 11:12:11.320  4646  4646 W com.tabstudio.ide: type=1400 audit(0.0:39): avc: denied { ioctl } for comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/var/cache/tabstudio/repo/main/x86_64/APKINDEX.tar.gz" dev="vdc" ino=140355 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c146,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c146,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
-10-25 11:12:11.848  4646  7452 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'waitpid' may fail
-10-25 11:12:11.972  4646  5258 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'read' may fail
-10-25 11:12:11.972  4646  4711 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'read' may fail
-10-25 11:12:11.320  4646  4646 W com.tabstudio.ide: type=1400 audit(0.0:40): avc: denied { ioctl } for comm=2E4E455420545020576F726B6572 path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/var/cache/tabstudio/repo/community/x86_64/APKINDEX.tar.gz" dev="vdc" ino=140363 ioctlcmd=0x9409 scontext=u:r:untrusted_app:s0:c146,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c146,c256,c512,c768 tclass=file permissive=0 app=com.tabstudio.ide
-10-25 11:12:18.510  7481  7481 W libproot-loader: type=1400 audit(0.0:84): avc: granted { execute } for path="/data/data/com.tabstudio.ide/files/TabStudio/Toolchains/linux/rootfs/bin/busybox" dev="vdc" ino=140172 scontext=u:r:untrusted_app:s0:c146,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c146,c256,c512,c768 tclass=file
-10-25 11:15:09.966  4646  4646 E TabStudio: TABSTUDIO_SELFTEST_FAIL 360.0 s: TaskCanceledException: A task was canceled.
+10-25 11:40:04.585  5958  5958 D DOTNET  : AndroidCryptoNative_InitLibraryOnLoad: jint AndroidCryptoNative_InitLibraryOnLoad(JavaVM *, void *) in /__w/1/s/src/runtime/src/native/libs/System.Security.Cryptography.Native.Android/pal_jni.c
+10-25 11:40:04.585  5958  5958 D DOTNET  : GetOptionalClassGRef: optional class com/android/org/conscrypt/OpenSSLEngineImpl was not found
+10-25 11:40:22.545  5958  6044 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Workspaces' (hash 1d9425b8bd762c1e) not found
+10-25 11:40:22.545  5958  6044 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Workspaces
+10-25 11:40:22.545  5958  6044 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Workspaces' (hash 1d9425b8bd762c1e) not found
+10-25 11:40:22.545  5958  6044 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Workspaces
+10-25 11:40:22.580  5958  6044 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Features' (hash ebd054ac833caaaa) not found
+10-25 11:40:22.580  5958  6044 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Features
+10-25 11:40:22.580  5958  6044 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Features' (hash ebd054ac833caaaa) not found
+10-25 11:40:22.580  5958  6044 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Features
+10-25 11:40:26.634  5958  6033 W monodroid-assembly: Shared library 'android' not loaded, p/invoke 'ANativeWindow_fromSurface' may fail
+10-25 11:40:31.186  5958  5958 I TabStudio: TABSTUDIO_SELFTEST_START
+10-25 11:41:10.313  5958  6042 W monodroid-assembly: Assembly 'SQLitePCLRaw.batteries_v2' (hash 3da7781d6333a8fe) not found
+10-25 11:41:10.313  5958  6042 W monodroid-assembly: open_from_bundles: failed to load bundled assembly SQLitePCLRaw.batteries_v2
+10-25 11:41:10.313  5958  6042 W monodroid-assembly: Assembly 'SQLitePCLRaw.batteries_v2' (hash 3da7781d6333a8fe) not found
+10-25 11:41:10.313  5958  6042 W monodroid-assembly: open_from_bundles: failed to load bundled assembly SQLitePCLRaw.batteries_v2
