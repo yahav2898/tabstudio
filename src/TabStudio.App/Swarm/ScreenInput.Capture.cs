@@ -9,7 +9,8 @@ namespace TabStudio.App.Swarm;
 
 /// <summary>
 /// Capturing a person's input: taps, long presses and right clicks from Avalonia's gestures, scrolls from the scroll
-/// viewers they move, typed text, and keys that do something other than type, such as Enter or Ctrl+A.
+/// viewers they move, typed text, and keys that do something other than type, such as Enter or Ctrl+A. The second tap
+/// of a double tap is a tap too, so quick taps on a counter are each captured, and replay as quick taps.
 /// </summary>
 internal sealed partial class ScreenInput
 {
@@ -27,6 +28,7 @@ internal sealed partial class ScreenInput
     private void AttachCapture()
     {
         _surface.AddHandler(Gestures.TappedEvent, OnTapped, RoutingStrategies.Bubble, handledEventsToo: true);
+        _surface.AddHandler(Gestures.DoubleTappedEvent, OnTapped, RoutingStrategies.Bubble, handledEventsToo: true);
         _surface.AddHandler(Gestures.RightTappedEvent, OnRightTapped, RoutingStrategies.Bubble, handledEventsToo: true);
         _surface.AddHandler(Gestures.HoldingEvent, OnHolding, RoutingStrategies.Bubble, handledEventsToo: true);
         _surface.AddHandler(InputElement.PointerPressedEvent, OnPointerActivity, RoutingStrategies.Bubble, handledEventsToo: true);
@@ -42,6 +44,7 @@ internal sealed partial class ScreenInput
     private void DetachCapture()
     {
         _surface.RemoveHandler(Gestures.TappedEvent, OnTapped);
+        _surface.RemoveHandler(Gestures.DoubleTappedEvent, OnTapped);
         _surface.RemoveHandler(Gestures.RightTappedEvent, OnRightTapped);
         _surface.RemoveHandler(Gestures.HoldingEvent, OnHolding);
         _surface.RemoveHandler(InputElement.PointerPressedEvent, OnPointerActivity);

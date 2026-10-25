@@ -65,6 +65,32 @@ public sealed class ScreenInputTests
     }
 
     [AvaloniaFact]
+    public void Quick_taps_are_each_captured_the_second_of_a_double_tap_too()
+    {
+        var app = new CounterApp();
+        var window = SwarmTestHelpers.Show(app.Surface, 360, 640);
+        using var input = new ScreenInput(app.Surface, app.Root);
+        var captured = new List<AppInput>();
+        input.Captured += (_, i) => captured.Add(i);
+
+        // Three quick clicks in the same place: Avalonia makes the second a double tap.
+        var point = app.Count.TranslatePoint(new Point(app.Count.Bounds.Width / 2, app.Count.Bounds.Height / 2), window)!.Value;
+        var doubleTaps = 0;
+        app.Count.DoubleTapped += (_, _) => doubleTaps++;
+        for (var i = 0; i < 3; i++)
+        {
+            window.MouseDown(point, MouseButton.Left);
+            window.MouseUp(point, MouseButton.Left);
+        }
+
+        Assert.Equal(3, app.Clicks);
+        Assert.True(doubleTaps > 0);
+        Assert.Equal(3, captured.Count);
+        Assert.All(captured, tap => Assert.Equal((AppInputKind.Tap, "StackPanel/Button#Count"), (tap.Kind, tap.ElementPath)));
+        window.Close();
+    }
+
+    [AvaloniaFact]
     public async Task Typed_text_and_keys_reach_the_text_box_the_screen_focused_and_go_back_out_as_captures()
     {
         var app = new CounterApp();
