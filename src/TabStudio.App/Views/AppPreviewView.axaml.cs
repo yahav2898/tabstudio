@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using Avalonia.Controls;
 using TabStudio.App.ViewModels;
+using TabStudio.Forms.Hosting;
 
 namespace TabStudio.App.Views;
 
@@ -50,6 +51,12 @@ public sealed partial class AppPreviewView : UserControl
         FramedContent.Content = null;
         if (_preview?.View is { } view)
         {
+            if (view is FormsDesktop desktop && !desktop.IsSet(FormsDesktop.WallpaperProperty))
+            {
+                // A Windows Forms app's desktop follows the IDE's theme, as Windows 11's wallpaper follows dark mode.
+                desktop.Bind(FormsDesktop.WallpaperProperty, this.GetResourceObservable("Brush.FormsDesktop"));
+            }
+
             if (_preview.IsFill)
             {
                 FillContent.Content = view;

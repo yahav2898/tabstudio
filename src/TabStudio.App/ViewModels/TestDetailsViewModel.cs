@@ -72,6 +72,12 @@ public sealed class TestDetailsViewModel
     /// <summary>Whether the test wrote anything.</summary>
     public bool HasOutput => !string.IsNullOrEmpty(Output);
 
+    /// <summary>A picture of the screen a recorded UI test failed on, read from its PNG.</summary>
+    public Avalonia.Media.Imaging.Bitmap? Screenshot { get; init; }
+
+    /// <summary>Whether there is a picture of the failure.</summary>
+    public bool HasScreenshot => Screenshot is not null;
+
     /// <summary>For a group, how many of its tests ended each way.</summary>
     public IReadOnlyList<TestOutcomeCountViewModel> Outcomes { get; init; } = [];
 
@@ -109,7 +115,26 @@ public sealed class TestDetailsViewModel
             Message = finished ? result!.Message : SkipMessage(entry),
             StackFrames = finished ? result!.StackFrames.Select(f => Frame(f, navigate)).ToList() : [],
             Output = finished ? result!.Output : null,
+            Screenshot = finished && entry.State == TestState.Failed ? LoadScreenshot(entry.ScreenshotPath) : null,
         };
+    }
+
+    private static Avalonia.Media.Imaging.Bitmap? LoadScreenshot(string? path)
+    {
+        if (path is null || !File.Exists(path))
+        {
+            return null;
+        }
+
+        try
+        {
+            return new Avalonia.Media.Imaging.Bitmap(path);
+        }
+        catch (Exception ex) when (ex is IOException or ArgumentException or InvalidOperationException)
+        {
+            // A picture that cannot be read leaves the details without it.
+            return null;
+        }
     }
 
     private static TestDetailsViewModel ForGroup(TestNodeViewModel node, Func<string, int, int, Task> navigate)

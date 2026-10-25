@@ -107,9 +107,18 @@ public sealed class AgentSession
     /// <param name="text">The request, such as "Fix the build errors".</param>
     /// <param name="cancellationToken">Stops the agent after the current step; the conversation stays usable.</param>
     /// <exception cref="InvalidOperationException">A request is already in progress.</exception>
-    public async Task<AgentTurnResult> SendAsync(string text, CancellationToken cancellationToken = default)
+    public Task<AgentTurnResult> SendAsync(string text, CancellationToken cancellationToken = default) =>
+        SendAsync(text, [], cancellationToken);
+
+    /// <summary>Sends a request with pictures, such as a screenshot of a layout problem, and lets the agent work until it is done.</summary>
+    /// <param name="text">The request.</param>
+    /// <param name="images">Pictures Claude sees before the request's text.</param>
+    /// <param name="cancellationToken">Stops the agent after the current step; the conversation stays usable.</param>
+    /// <exception cref="InvalidOperationException">A request is already in progress.</exception>
+    public async Task<AgentTurnResult> SendAsync(string text, IReadOnlyList<ImageBlock> images, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(text);
+        ArgumentNullException.ThrowIfNull(images);
         if (Interlocked.Exchange(ref _busy, 1) == 1)
         {
             throw new InvalidOperationException("The agent is still working on the previous request.");
@@ -117,7 +126,7 @@ public sealed class AgentSession
 
         try
         {
-            _history.Add(ChatMessage.FromText(MessageRole.User, text));
+            _history.Add(new ChatMessage(MessageRole.User, [.. images, new TextBlock(text)]));
             return await RunAsync(cancellationToken).ConfigureAwait(false);
         }
         finally

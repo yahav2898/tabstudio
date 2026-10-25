@@ -12,10 +12,10 @@
           Command="{Binding ShowCommitChecksCommand}" ToolTip.Tip="{Binding CiToolTip}">
     <StackPanel Orientation="Horizontal" Spacing="6">
       <!-- A dark disc keeps green, red and amber readable on the accent-colored status bar. -->
-      <Border Width="17" Height="17" CornerRadius="8.5" Background="#59000000" VerticalAlignment="Center">
+      <Border Width="17" Height="17" CornerRadius="8.5" Background="{DynamicResource Brush.StatusBar.Well}" VerticalAlignment="Center">
         <controls:StrokeIcon Size="13" StrokeThickness="2.4" HorizontalAlignment="Center"
                              Data="{Binding CiVisual, Converter={x:Static conv:ActionsConverters.StateIcon}}"
-                             Foreground="{Binding CiVisual, Converter={x:Static conv:ActionsConverters.StateBrush}}"
+                             Foreground="{Binding CiVisual, Converter={x:Static conv:ActionsConverters.StatusBarStateBrush}}"
                              Classes.spinning="{Binding CiVisual, Converter={x:Static conv:ActionsConverters.IsSpinning}}" />
       </Border>
       <TextBlock x:Name="CiLabel" Text="{Binding CiText}" FontSize="12" VerticalAlignment="Center" />

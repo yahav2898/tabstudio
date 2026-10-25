@@ -143,12 +143,17 @@ public sealed record LaunchConfiguration
         return this with { Name = variables.Substitute(Name), Properties = properties };
     }
 
-    /// <summary>The arguments of the <c>launch</c> or <c>attach</c> request: the adapter's defaults under the configuration's properties.</summary>
+    /// <summary>
+    /// The arguments of the <c>launch</c> or <c>attach</c> request: the adapter's defaults, with its terminal defaults
+    /// over them when TabStudio runs the program, under the configuration's properties.
+    /// </summary>
     /// <param name="adapter">The adapter that runs it.</param>
-    public JsonObject ToRequestArguments(DebugAdapterDefinition adapter)
+    /// <param name="inTerminal">Whether TabStudio runs the program for the adapter (<c>runInTerminal</c>).</param>
+    public JsonObject ToRequestArguments(DebugAdapterDefinition adapter, bool inTerminal = false)
     {
         ArgumentNullException.ThrowIfNull(adapter);
-        return JsonSettings.Merge(adapter.Defaults, Properties);
+        var defaults = inTerminal && adapter.TerminalDefaults is { } terminal ? JsonSettings.Merge(adapter.Defaults, terminal) : adapter.Defaults;
+        return JsonSettings.Merge(defaults, Properties);
     }
 
     private static JsonNode? Substitute(JsonNode? node, LaunchVariables variables)

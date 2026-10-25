@@ -32,6 +32,15 @@ public sealed record CompatibilityRowViewModel(CompatibilityReport Report)
 
     /// <summary>Whether code changes would make it run here, which "Fix with Agent" asks Claude to make.</summary>
     public bool CanFixWithAgent => Report.Status == CompatibilityStatus.NeedsChanges;
+
+    /// <summary>The toolchain that runs the project, such as <c>python</c>, for Python and Node.js projects.</summary>
+    public string? ToolchainId { get; init; }
+
+    /// <summary>The label of the fix that installs the project's toolchain, such as "Install Python", when it can be installed.</summary>
+    public string? InstallToolchainText { get; init; }
+
+    /// <summary>Whether installing a toolchain from the Toolchain Store makes it run here.</summary>
+    public bool CanInstallToolchain => InstallToolchainText is not null;
 }
 
 /// <summary>One technology detected in a workspace, shown as a chip.</summary>

@@ -114,6 +114,7 @@ public sealed partial class WorkspaceViewModel
                 _webAssemblyPort = host.Address.Port;
                 Output.WriteLine($"{project.Name} is served at {host.Address} and runs in the web preview on .NET for WebAssembly {app.Runtime.Version}.", OutputKind.Info);
                 WebPreview.Show(project.Name, host.Address, profile.LaunchUrl);
+                OnWebAppStarted(project);
                 SelectSideBarPanel(SideBarPanel.WebPreview);
                 StatusText = $"Running {project.Name} at {host.Address.GetLeftPart(UriPartial.Authority)}";
                 await Task.Delay(Timeout.Infinite, _run.Token);
@@ -135,6 +136,7 @@ public sealed partial class WorkspaceViewModel
             _webAssemblyApp = null;
             _liveProject = null;
             WebPreview.ShowStopped();
+            OnWebAppStopped();
             _run.Dispose();
             _run = null;
         }

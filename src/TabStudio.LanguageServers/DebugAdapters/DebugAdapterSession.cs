@@ -26,6 +26,13 @@ public sealed record DebugAdapterSessionOptions
     /// process; <see cref="DebugAdapterSession.ChildSessionHandler"/> starts them.
     /// </summary>
     public bool SupportsChildSessions { get; init; }
+
+    /// <summary>
+    /// Whether the adapter may ask TabStudio to run the program (<c>runInTerminal</c>), so it reads its input from
+    /// the user: launches then use the adapter's <see cref="DebugAdapterDefinition.TerminalDefaults"/>, and
+    /// <see cref="DebugAdapterSession.RunInTerminalHandler"/> runs the program.
+    /// </summary>
+    public bool SupportsRunInTerminal { get; init; }
 }
 
 /// <summary>A debug adapter's request for a child session, as js-debug sends one for every process it debugs.</summary>
@@ -48,6 +55,7 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
     private readonly TaskCompletionSource _terminated = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private readonly TaskCompletionSource _ended = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private int _disposed;
+    private bool _runsInTerminal;
 
     private DebugAdapterSession(DebugAdapterDefinition adapter, DebugAdapterConnection connection, IServerProcess? process, TcpClient? socket, int? port = null)
     {
@@ -101,6 +109,16 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
     /// Set it before <see cref="LaunchAsync"/>, with <see cref="DebugAdapterSessionOptions.SupportsChildSessions"/>.
     /// </summary>
     public Func<DapChildSessionRequest, CancellationToken, Task>? ChildSessionHandler { get; set; }
+
+    /// <summary>
+    /// Runs the program the adapter asks TabStudio to run (<c>runInTerminal</c>), and completes with its process
+    /// id once it started, or <see langword="null"/> when that is not known. Set it before <see cref="LaunchAsync"/>,
+    /// with <see cref="DebugAdapterSessionOptions.SupportsRunInTerminal"/>; without one, such requests are refused.
+    /// </summary>
+    public Func<DapRunInTerminalRequest, CancellationToken, Task<int?>>? RunInTerminalHandler { get; set; }
+
+    /// <summary>Whether the program runs in TabStudio's console, started through <see cref="RunInTerminalHandler"/>.</summary>
+    public bool RunsInTerminal => _runsInTerminal && RunInTerminalHandler is not null;
 
     /// <summary>Starts an adapter and initializes it.</summary>
     /// <param name="adapter">The adapter.</param>
@@ -214,7 +232,7 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
         ArgumentNullException.ThrowIfNull(configuration);
         ArgumentNullException.ThrowIfNull(breakpoints);
         ArgumentNullException.ThrowIfNull(exceptionFilters);
-        var start = _connection.SendRequestAsync(configuration.IsAttach ? "attach" : "launch", configuration.ToRequestArguments(Adapter), cancellationToken);
+        var start = _connection.SendRequestAsync(configuration.IsAttach ? "attach" : "launch", configuration.ToRequestArguments(Adapter, RunsInTerminal), cancellationToken);
 
         // Adapters send "initialized" when they are ready for breakpoints; some answer the launch first.
         if (await Task.WhenAny(_initialized.Task, start).ConfigureAwait(false) == start)
@@ -343,6 +361,7 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
             _connection.Traced += (_, e) => AdapterLog?.Invoke(this, e.Message);
         }
 
+        _runsInTerminal = options.SupportsRunInTerminal;
         _connection.Start();
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         timeout.CancelAfter(options.StartTimeout);
@@ -356,7 +375,7 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
             PathFormat: "path",
             SupportsVariableType: true,
             SupportsVariablePaging: false,
-            SupportsRunInTerminalRequest: false,
+            SupportsRunInTerminalRequest: options.SupportsRunInTerminal,
             SupportsMemoryReferences: false,
             SupportsProgressReporting: false,
             SupportsInvalidatedEvent: false,
@@ -411,7 +430,16 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
                 Capabilities = ToCapabilities(capabilities);
             }
         });
-        _connection.AddRequestHandler("runInTerminal", (_, _) => throw new DebugAdapterException("TabStudio runs programs in its own console; set \"console\": \"internalConsole\"."));
+        _connection.AddRequestHandler("runInTerminal", async (arguments, cancellationToken) =>
+        {
+            if (RunInTerminalHandler is not { } handler || ReadRunInTerminal(arguments) is not { } request)
+            {
+                throw new DebugAdapterException("TabStudio runs programs in its own console; set \"console\": \"internalConsole\".");
+            }
+
+            var processId = await handler(request, cancellationToken).ConfigureAwait(false);
+            return processId is { } id ? new JsonObject { ["processId"] = id } : new JsonObject();
+        });
         _connection.AddRequestHandler("startDebugging", async (arguments, cancellationToken) =>
         {
             if (ChildSessionHandler is not { } handler
@@ -426,6 +454,39 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
             await handler(new DapChildSessionRequest(properties, request), cancellationToken).ConfigureAwait(false);
             return null;
         });
+    }
+
+    /// <summary>The program a <c>runInTerminal</c> request asks for, or <see langword="null"/> when it names none.</summary>
+    private static DapRunInTerminalRequest? ReadRunInTerminal(JsonElement arguments)
+    {
+        if (arguments.ValueKind != JsonValueKind.Object
+            || !arguments.TryGetProperty("args", out var args)
+            || args.ValueKind != JsonValueKind.Array)
+        {
+            return null;
+        }
+
+        var program = args.EnumerateArray().Where(a => a.ValueKind == JsonValueKind.String).Select(a => a.GetString()!).ToList();
+        if (program.Count == 0 || program[0].Length == 0)
+        {
+            return null;
+        }
+
+        var environment = new Dictionary<string, string?>(StringComparer.Ordinal);
+        if (arguments.TryGetProperty("env", out var env) && env.ValueKind == JsonValueKind.Object)
+        {
+            foreach (var variable in env.EnumerateObject())
+            {
+                environment[variable.Name] = variable.Value.ValueKind == JsonValueKind.String ? variable.Value.GetString() : null;
+            }
+        }
+
+        return new DapRunInTerminalRequest(
+            program,
+            arguments.TryGetProperty("cwd", out var cwd) && cwd.ValueKind == JsonValueKind.String ? cwd.GetString()! : string.Empty,
+            environment,
+            arguments.TryGetProperty("title", out var title) && title.ValueKind == JsonValueKind.String ? title.GetString() : null,
+            arguments.TryGetProperty("kind", out var kind) && kind.ValueKind == JsonValueKind.String && kind.GetString() == "external");
     }
 
     private void PumpStandardError(IServerProcess process) => _ = Task.Run(async () =>

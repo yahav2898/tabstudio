@@ -105,6 +105,10 @@
         "justMyCode": true,
         "redirectOutput": true,
         "showReturnValue": true
+      },
+      "terminalDefaults": {
+        "console": "integratedTerminal",
+        "redirectOutput": false
       }
     },
     "lldb-dap": {
@@ -120,7 +124,8 @@
       "aliases": [ "dlv" ],
       "languages": [ "go" ],
       "command": "dlv",
-      "args": [ "dap" ],
+      "args": [ "dap", "--listen", "127.0.0.1:${port}" ],
+      "transport": "tcp",
       "package": "delve"
     },
     "pwa-node": {
@@ -134,6 +139,9 @@
       "defaults": {
         "console": "internalConsole",
         "sourceMaps": true
+      },
+      "terminalDefaults": {
+        "console": "integratedTerminal"
       }
     }
   }

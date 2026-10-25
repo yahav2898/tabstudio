@@ -55,6 +55,10 @@
     <Setter Property="TextElement.FontWeight" Value="SemiBold" />
     <Setter Property="VerticalAlignment" Value="Center" />
   </Style>
+  <!-- A pill or chip has a fixed height, so its text is centered in it rather than sitting at the top. -->
+  <Style Selector="Border.pill > :is(Control), Border.chip > :is(Control)">
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
   <Style Selector="Border.pill.ready">
     <Setter Property="Background" Value="{DynamicResource Brush.AccentSoft}" />
     <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.AccentText}" />
@@ -155,7 +159,7 @@
     <Setter Property="ShowLineNumbers" Value="True" />
   </Style>
   <Style Selector="ae|TextEditor aee|TextArea">
-    <Setter Property="SelectionBrush" Value="#552B4F86" />
+    <Setter Property="SelectionBrush" Value="{DynamicResource Editor.Selection}" />
     <Setter Property="SelectionCornerRadius" Value="2" />
   </Style>
 

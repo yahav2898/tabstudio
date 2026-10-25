@@ -1,0 +1,180 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="using:TabStudio.App.Controls">
+
+  <!--
+    The shell's shared pieces (docs/design/README.md): the tool window header, the empty, loading and error states every
+    panel uses, and their icons, stroke paths on the 24×24 grid of Icons.axaml.
+  -->
+
+  <!-- Icons -->
+  <StreamGeometry x:Key="Icon.Command">M4 6 L20 6 L20 18 L4 18 Z M7.5 10 L10 12.5 L7.5 15 M12 15 L16 15</StreamGeometry>
+  <StreamGeometry x:Key="Icon.Theme">M12 3 A9 9 0 1 0 12 21 Z M12 3 A9 9 0 0 1 12 21</StreamGeometry>
+  <StreamGeometry x:Key="Icon.Activity">M3 12 L7 12 L10 5 L14 19 L17 12 L21 12</StreamGeometry>
+  <!-- Filled, not stroked: three dots for a More button, big enough to see at 16 pixels. -->
+  <StreamGeometry x:Key="Icon.Overflow">M3.3 12 A1.7 1.7 0 1 0 6.7 12 A1.7 1.7 0 1 0 3.3 12 Z M10.3 12 A1.7 1.7 0 1 0 13.7 12 A1.7 1.7 0 1 0 10.3 12 Z M17.3 12 A1.7 1.7 0 1 0 20.7 12 A1.7 1.7 0 1 0 17.3 12 Z</StreamGeometry>
+
+  <!-- Spacing and radii (docs/design/README.md, "Foundations"): steps of 4, and one radius per size of surface. -->
+  <x:Double x:Key="Space.1">4</x:Double>
+  <x:Double x:Key="Space.2">8</x:Double>
+  <x:Double x:Key="Space.3">12</x:Double>
+  <x:Double x:Key="Space.4">16</x:Double>
+  <x:Double x:Key="Space.6">24</x:Double>
+  <CornerRadius x:Key="Radius.Small">4</CornerRadius>
+  <CornerRadius x:Key="Radius.Control">7</CornerRadius>
+  <CornerRadius x:Key="Radius.Button">8</CornerRadius>
+  <CornerRadius x:Key="Radius.Card">10</CornerRadius>
+  <CornerRadius x:Key="Radius.Dialog">12</CornerRadius>
+  <x:Double x:Key="Touch.Minimum">40</x:Double>
+  <x:Double x:Key="Touch.Comfortable">44</x:Double>
+
+  <!-- A tool window's header: title, context, actions; 40 pixels, with a divider under it, its icon and text centered in it. -->
+  <ControlTheme x:Key="{x:Type controls:PanelHeader}" TargetType="controls:PanelHeader">
+    <Setter Property="MinHeight" Value="40" />
+    <Setter Property="Padding" Value="12,0,4,0" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="{DynamicResource Brush.Divider}" />
+    <Setter Property="BorderThickness" Value="0,0,0,1" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" MinHeight="{TemplateBinding MinHeight}">
+          <DockPanel>
+            <controls:StrokeIcon DockPanel.Dock="Left" Data="{TemplateBinding Icon}" Size="16" Margin="0,0,8,0" VerticalAlignment="Center"
+                                 Foreground="{DynamicResource Brush.TextSecondary}"
+                                 IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}" />
+            <ContentPresenter DockPanel.Dock="Right" Content="{TemplateBinding Actions}" VerticalAlignment="Center" Margin="8,0,0,0" />
+            <TextBlock DockPanel.Dock="Left" Text="{TemplateBinding Title}" FontSize="12.5" FontWeight="SemiBold"
+                       Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" />
+            <TextBlock Text="{TemplateBinding Subtitle}" FontSize="12" Margin="8,0,0,0" Foreground="{DynamicResource Brush.TextMuted}"
+                       VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+          </DockPanel>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+  <!-- An empty panel: an invitation to act. -->
+  <ControlTheme x:Key="{x:Type controls:EmptyState}" TargetType="controls:EmptyState">
+    <Setter Property="HorizontalAlignment" Value="Center" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="Margin" Value="24" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <StackPanel Spacing="6" MaxWidth="340">
+          <controls:StrokeIcon Name="PART_Icon" Data="{TemplateBinding Icon}" Size="40" StrokeThickness="1.4" HorizontalAlignment="Center"
+                               Margin="0,0,0,6" Foreground="{DynamicResource Brush.TextMuted}"
+                               IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}" />
+          <TextBlock Name="PART_Title" Text="{TemplateBinding Title}" FontSize="14" FontWeight="SemiBold" TextAlignment="Center"
+                     TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextBright}" />
+          <TextBlock Text="{TemplateBinding Message}" FontSize="12.5" LineHeight="18" TextAlignment="Center" TextWrapping="Wrap"
+                     Foreground="{DynamicResource Brush.TextMuted}"
+                     IsVisible="{TemplateBinding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+          <Panel Margin="0,10,0,0" HorizontalAlignment="Center"
+                 IsVisible="{TemplateBinding ActionText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+            <Button Name="PART_Action" Theme="{DynamicResource SecondaryButton}" MinHeight="40" Padding="16,0"
+                    Content="{TemplateBinding ActionText}" Command="{TemplateBinding ActionCommand}"
+                    CommandParameter="{TemplateBinding ActionCommandParameter}"
+                    IsVisible="{TemplateBinding IsActionPrimary, Converter={x:Static BoolConverters.Not}}" />
+            <Button Name="PART_PrimaryAction" Theme="{DynamicResource AccentButton}" MinHeight="40" Padding="16,0"
+                    Content="{TemplateBinding ActionText}" Command="{TemplateBinding ActionCommand}"
+                    CommandParameter="{TemplateBinding ActionCommandParameter}" IsVisible="{TemplateBinding IsActionPrimary}" />
+          </Panel>
+        </StackPanel>
+      </ControlTemplate>
+    </Setter>
+    <Style Selector="^[IsCompact=True]">
+      <Setter Property="Margin" Value="12" />
+    </Style>
+    <Style Selector="^[IsCompact=True] /template/ controls|StrokeIcon#PART_Icon">
+      <Setter Property="Size" Value="28" />
+      <Setter Property="Margin" Value="0,0,0,2" />
+    </Style>
+    <Style Selector="^[IsCompact=True] /template/ TextBlock#PART_Title">
+      <Setter Property="FontSize" Value="13" />
+    </Style>
+  </ControlTheme>
+
+  <!-- Loading: a turning arc and what is happening; a row under a growing list when inline. -->
+  <ControlTheme x:Key="{x:Type controls:LoadingState}" TargetType="controls:LoadingState">
+    <Setter Property="HorizontalAlignment" Value="Center" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="Margin" Value="24" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <StackPanel Name="PART_Root" Spacing="10" MaxWidth="340">
+          <controls:StrokeIcon Name="PART_Spinner" Classes="spinning" Data="{DynamicResource Icon.Spinner}" Size="28" StrokeThickness="2.4"
+                               HorizontalAlignment="Center" Foreground="{DynamicResource Brush.AccentText}" />
+          <StackPanel Name="PART_Text" Spacing="2" VerticalAlignment="Center">
+            <TextBlock Name="PART_Message" Text="{TemplateBinding Message}" FontSize="13" TextAlignment="Center" TextWrapping="Wrap"
+                       Foreground="{DynamicResource Brush.TextSecondary}" />
+            <TextBlock Name="PART_Detail" Text="{TemplateBinding Detail}" FontSize="12" TextAlignment="Center" TextWrapping="Wrap"
+                       Foreground="{DynamicResource Brush.TextMuted}"
+                       IsVisible="{TemplateBinding Detail, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+          </StackPanel>
+        </StackPanel>
+      </ControlTemplate>
+    </Setter>
+    <Style Selector="^[IsInline=True]">
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="VerticalAlignment" Value="Top" />
+      <Setter Property="Margin" Value="12,8" />
+    </Style>
+    <Style Selector="^[IsInline=True] /template/ StackPanel#PART_Root">
+      <Setter Property="Orientation" Value="Horizontal" />
+      <Setter Property="MaxWidth" Value="100000" />
+    </Style>
+    <Style Selector="^[IsInline=True] /template/ controls|StrokeIcon#PART_Spinner">
+      <Setter Property="Size" Value="16" />
+      <Setter Property="StrokeThickness" Value="2.2" />
+    </Style>
+    <Style Selector="^[IsInline=True] /template/ TextBlock">
+      <Setter Property="TextAlignment" Value="Left" />
+    </Style>
+  </ControlTheme>
+
+  <!-- An error: what went wrong, how to fix it, the details, and the action that fixes it. -->
+  <ControlTheme x:Key="{x:Type controls:ErrorState}" TargetType="controls:ErrorState">
+    <Setter Property="HorizontalAlignment" Value="Center" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="Margin" Value="24" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <StackPanel Spacing="6" MaxWidth="380">
+          <controls:StrokeIcon Name="PART_Icon" Data="{DynamicResource Icon.Error}" Size="36" StrokeThickness="1.6" HorizontalAlignment="Center"
+                               Margin="0,0,0,6" Foreground="{DynamicResource Brush.Error}" />
+          <TextBlock Name="PART_Title" Text="{TemplateBinding Title}" FontSize="14" FontWeight="SemiBold" TextAlignment="Center"
+                     TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextBright}" />
+          <TextBlock Text="{TemplateBinding Message}" FontSize="12.5" LineHeight="18" TextAlignment="Center" TextWrapping="Wrap"
+                     Foreground="{DynamicResource Brush.TextMuted}"
+                     IsVisible="{TemplateBinding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+          <Border Margin="0,6,0,0" Padding="10,8" CornerRadius="7" Background="{DynamicResource Brush.Notice.Error}"
+                  BorderBrush="{DynamicResource Brush.Notice.ErrorBorder}" BorderThickness="1"
+                  IsVisible="{TemplateBinding Details, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+            <SelectableTextBlock Text="{TemplateBinding Details}" FontFamily="{DynamicResource CodeFont}" FontSize="11.5" TextWrapping="Wrap"
+                                 MaxLines="6" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Brush.Text}" />
+          </Border>
+          <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,10,0,0" HorizontalAlignment="Center">
+            <Button Theme="{DynamicResource SecondaryButton}" MinHeight="40" Padding="16,0" Content="{TemplateBinding RetryText}"
+                    Command="{TemplateBinding RetryCommand}"
+                    IsVisible="{TemplateBinding RetryCommand, Converter={x:Static ObjectConverters.IsNotNull}}" />
+            <Button Theme="{DynamicResource SecondaryButton}" MinHeight="40" Padding="16,0" Content="{TemplateBinding FixText}"
+                    Command="{TemplateBinding FixCommand}"
+                    IsVisible="{TemplateBinding FixText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+          </StackPanel>
+        </StackPanel>
+      </ControlTemplate>
+    </Setter>
+    <Style Selector="^[IsCompact=True]">
+      <Setter Property="Margin" Value="12" />
+    </Style>
+    <Style Selector="^[IsCompact=True] /template/ controls|StrokeIcon#PART_Icon">
+      <Setter Property="Size" Value="26" />
+      <Setter Property="Margin" Value="0,0,0,2" />
+    </Style>
+    <Style Selector="^[IsCompact=True] /template/ TextBlock#PART_Title">
+      <Setter Property="FontSize" Value="13" />
+    </Style>
+  </ControlTheme>
+
+</ResourceDictionary>

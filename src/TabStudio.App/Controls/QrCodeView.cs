@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using TabStudio.App.Theming;
 using TabStudio.Link.Qr;
 
 namespace TabStudio.App.Controls;
@@ -43,7 +44,7 @@ public sealed class QrCodeView : Control
         var module = Math.Max(1, Math.Floor(side / modules));
         var size = module * modules;
         var origin = new Point(Math.Round((Bounds.Width - size) / 2), Math.Round((Bounds.Height - size) / 2));
-        context.DrawRectangle(Brushes.White, null, new Rect(origin, new Size(size, size)), 6, 6);
+        context.DrawRectangle(ThemeBrushes.Get("Brush.QrCode.Light"), null, new Rect(origin, new Size(size, size)), 6, 6);
 
         var geometry = new StreamGeometry();
         using (var figures = geometry.Open())
@@ -68,6 +69,6 @@ public sealed class QrCodeView : Control
             }
         }
 
-        context.DrawGeometry(Brushes.Black, null, geometry);
+        context.DrawGeometry(ThemeBrushes.Get("Brush.QrCode.Dark"), null, geometry);
     }
 }

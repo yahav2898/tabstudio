@@ -2,9 +2,9 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
 using AvaloniaEdit.Editing;
 using AvaloniaEdit.Rendering;
+using TabStudio.App.Theming;
 using TabStudio.App.ViewModels;
 
 namespace TabStudio.App.Editing;
@@ -25,12 +25,8 @@ public sealed class BreakpointMargin : AbstractMargin
     /// <summary>The margin's width: a comfortable tap target beside the line numbers.</summary>
     public const double MarginWidth = 30;
 
-    private static readonly ImmutableSolidColorBrush BreakpointBrush = new(Color.Parse("#E5534B"));
-    private static readonly IPen BreakpointPen = new ImmutablePen(BreakpointBrush, 1.6);
-    private static readonly IBrush ConditionBrush = new ImmutableSolidColorBrush(Colors.White);
-    private static readonly IBrush CurrentBrush = new ImmutableSolidColorBrush(Color.Parse("#F2CC4E"));
-    private static readonly IBrush CallerBrush = new ImmutableSolidColorBrush(Color.Parse("#6FD6A0"));
-    private static readonly IPen ArrowOutline = new ImmutablePen(new ImmutableSolidColorBrush(Color.Parse("#1B1D23")), 1);
+    private static readonly ThemedPen BreakpointOutline = ThemedPen.Editor("Editor.Breakpoint", 1.6);
+    private static readonly ThemedPen ArrowOutlinePen = ThemedPen.Editor("Editor.ArrowOutline", 1);
 
     private readonly Func<IReadOnlyList<BreakpointMark>> _breakpoints;
     private readonly Func<int?> _currentLine;
@@ -112,12 +108,12 @@ public sealed class BreakpointMargin : AbstractMargin
 
             if (number == caller)
             {
-                DrawArrow(context, center, radius, CallerBrush);
+                DrawArrow(context, center, radius, ThemeBrushes.Editor("Editor.CallerStatement"));
             }
 
             if (number == current)
             {
-                DrawArrow(context, center, radius, CurrentBrush);
+                DrawArrow(context, center, radius, ThemeBrushes.Editor("Editor.CurrentStatement"));
             }
         }
     }
@@ -139,7 +135,7 @@ public sealed class BreakpointMargin : AbstractMargin
     {
         if (glyph == BreakpointGlyph.Unbound)
         {
-            context.DrawEllipse(null, BreakpointPen, center, radius - 0.8, radius - 0.8);
+            context.DrawEllipse(null, BreakpointOutline.Pen, center, radius - 0.8, radius - 0.8);
             return;
         }
 
@@ -157,16 +153,16 @@ public sealed class BreakpointMargin : AbstractMargin
                 figure.EndFigure(isClosed: true);
             }
 
-            context.DrawGeometry(BreakpointBrush, null, diamond);
+            context.DrawGeometry(ThemeBrushes.Editor("Editor.Breakpoint"), null, diamond);
             return;
         }
 
-        context.DrawEllipse(BreakpointBrush, null, center, radius, radius);
+        context.DrawEllipse(ThemeBrushes.Editor("Editor.Breakpoint"), null, center, radius, radius);
         if (glyph == BreakpointGlyph.Conditional)
         {
             // A white bar across the dot, as Visual Studio marks breakpoints with conditions.
             var half = radius * 0.55;
-            context.FillRectangle(ConditionBrush, new Rect(center.X - half, center.Y - 1, half * 2, 2));
+            context.FillRectangle(ThemeBrushes.Editor("Editor.BreakpointGlyph"), new Rect(center.X - half, center.Y - 1, half * 2, 2));
         }
     }
 
@@ -189,7 +185,7 @@ public sealed class BreakpointMargin : AbstractMargin
             figure.EndFigure(isClosed: true);
         }
 
-        context.DrawGeometry(brush, ArrowOutline, geometry);
+        context.DrawGeometry(brush, ArrowOutlinePen.Pen, geometry);
     }
 
     private void OnTapped(object? sender, TappedEventArgs e)

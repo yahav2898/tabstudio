@@ -1,7 +1,7 @@
-using Avalonia;
 using Avalonia.Data.Converters;
 using Avalonia.Media;
 using TabStudio.App.Editing;
+using TabStudio.App.Theming;
 using TabStudio.App.ViewModels;
 
 namespace TabStudio.App.Converters;
@@ -68,5 +68,5 @@ public static class AppConverters
 
     private static T? Find<T>(string key)
         where T : class =>
-        Application.Current?.TryGetResource(key, Application.Current.ActualThemeVariant, out var value) == true ? value as T : null;
+        ThemeBrushes.Find<T>(key);
 }

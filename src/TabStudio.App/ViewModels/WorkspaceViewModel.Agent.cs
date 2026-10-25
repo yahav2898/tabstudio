@@ -88,6 +88,11 @@ public sealed partial class WorkspaceViewModel : IAgentWorkspaceHost
     public Task FixWithAgentAsync(BuildDiagnostic diagnostic)
     {
         ArgumentNullException.ThrowIfNull(diagnostic);
+        if (ErrorList.LayoutFindingOf(diagnostic) is { } layout)
+        {
+            return FixLayoutWithAgentAsync(layout);
+        }
+
         SelectSideBarPanel(SideBarPanel.Agent);
         return Agent.AskAsync(DescribeForAgent(diagnostic));
     }

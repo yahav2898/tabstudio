@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    TabStudio's cross-platform Windows Forms layer: the System.Windows.Forms and System.Drawing API that Windows Forms
+    apps use, implemented on Avalonia, so a WinForms project runs on the tablet in the app preview and its forms open
+    in the touch designer. See README.md for what it supports.
+
+    WinForms projects compile against this assembly's reference assembly, which TabStudio.App embeds.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>System.Windows.Forms</RootNamespace>
+    <Description>A cross-platform Windows Forms layer on Avalonia: forms, controls, layout, painting and a message loop of their own.</Description>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+  </ItemGroup>
+
+  <!-- The IDE hosts the runtime, and the designer draws forms, through the layer's internals, which apps never see. -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="TabStudio.Forms.Tests" />
+    <InternalsVisibleTo Include="TabStudio.Forms.Design" />
+    <InternalsVisibleTo Include="TabStudio.Forms.Design.Tests" />
+    <InternalsVisibleTo Include="TabStudio.App" />
+    <InternalsVisibleTo Include="TabStudio.App.Tests" />
+  </ItemGroup>
+
+</Project>

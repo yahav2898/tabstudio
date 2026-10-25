@@ -11,6 +11,9 @@ public sealed record LinkClientOptions
     /// <summary>The tablet's name, as the host shows it, such as <c>Yahav's tablet</c>.</summary>
     public required string DeviceName { get; init; }
 
+    /// <summary>What the device expects the host to offer: builds for it, or a swarm to join. Another kind of host is refused.</summary>
+    public LinkRole Role { get; init; } = LinkRole.Host;
+
     /// <summary>What the tablet is, one of <see cref="LinkDeviceKinds"/>.</summary>
     public string DeviceKind { get; init; } = LinkDeviceKinds.Tablet;
 

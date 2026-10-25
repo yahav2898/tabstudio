@@ -179,6 +179,59 @@ public sealed class ProjectParserTests
     }
 
     [Fact]
+    public void Directory_build_targets_overrides_the_project_as_msbuild_imports_it_last()
+    {
+        // As Piranha CMS does: TargetFrameworks in Directory.Build.props and ImplicitUsings in Directory.Build.targets.
+        using var temp = new TempDirectory();
+        temp.Write("Directory.Build.props", """
+            <Project>
+              <PropertyGroup>
+                <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+              </PropertyGroup>
+            </Project>
+            """);
+        temp.Write("Directory.Build.targets", """
+            <Project>
+              <PropertyGroup>
+                <ImplicitUsings>true</ImplicitUsings>
+                <Nullable>enable</Nullable>
+              </PropertyGroup>
+            </Project>
+            """);
+        var path = temp.Write("core/Hosting/Hosting.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup>
+                <Nullable>disable</Nullable>
+              </PropertyGroup>
+            </Project>
+            """);
+
+        var project = ProjectParser.Load(path);
+
+        Assert.Equal(new[] { "net8.0", "net9.0" }, project.TargetFrameworks);
+        Assert.True(project.ImplicitUsings);
+        Assert.True(project.NullableEnabled);
+    }
+
+    [Theory]
+    [InlineData("true", true)]
+    [InlineData("false", false)]
+    public void A_razor_class_library_with_mvc_support_gets_aspnet_core(string addRazorSupportForMvc, bool expected)
+    {
+        // As Piranha.Manager is: Razor Pages in a Razor class library, with no FrameworkReference of its own.
+        var project = ProjectParser.Parse("/src/Manager/Manager.csproj", $"""
+            <Project Sdk="Microsoft.NET.Sdk.Razor">
+              <PropertyGroup>
+                <TargetFramework>net10.0</TargetFramework>
+                <AddRazorSupportForMvc>{addRazorSupportForMvc}</AddRazorSupportForMvc>
+              </PropertyGroup>
+            </Project>
+            """);
+
+        Assert.Equal(expected, project.FrameworkReferences.Contains(ProjectParser.AspNetCoreFramework));
+    }
+
+    [Fact]
     public void Reads_a_legacy_project_with_the_msbuild_namespace()
     {
         const string xml = """

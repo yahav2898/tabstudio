@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net;
 using System.Net.Sockets;
 using System.Security.Authentication;
@@ -19,7 +20,9 @@ public delegate ILinkMessageHandler LinkSessionFactory(LinkPeer client, LinkConn
 /// <remarks>
 /// <para>
 /// One tablet is served at a time: another paired tablet is refused as busy until the first disconnects, and the
-/// same tablet connecting again replaces its old connection (after Wi-Fi dropped, for example).
+/// same tablet connecting again replaces its old connection (after Wi-Fi dropped, for example). A host with a higher
+/// <see cref="LinkHostOptions.MaxClients"/>, such as a tablet coordinating a swarm of phones, serves that many devices
+/// at once.
 /// </para>
 /// <para>
 /// Events are raised on the thread pool. Every member is thread-safe.
@@ -40,8 +43,7 @@ public sealed class LinkHost : IAsyncDisposable
     private Task _acceptLoop = Task.CompletedTask;
     private LinkPairingCode _code = LinkPairingCode.Create();
     private DateTimeOffset _codeExpires = DateTimeOffset.MaxValue;
-    private LinkPeer? _client;
-    private LinkConnection? _clientConnection;
+    private readonly List<ServedClient> _clients = [];
     private int _disposed;
 
     /// <summary>Creates a host. Call <see cref="Start"/> to listen.</summary>
@@ -59,7 +61,7 @@ public sealed class LinkHost : IAsyncDisposable
     /// <summary>Raised when the pairing code changed: it was used, guessed wrong, expired or renewed.</summary>
     public event EventHandler? PairingCodeChanged;
 
-    /// <summary>Raised when a tablet connected or disconnected.</summary>
+    /// <summary>Raised when a tablet (or, with <see cref="LinkHostOptions.MaxClients"/> above one, any device) connected or disconnected.</summary>
     public event EventHandler? ClientChanged;
 
     /// <summary>Raised when a new tablet paired.</summary>
@@ -98,26 +100,38 @@ public sealed class LinkHost : IAsyncDisposable
         }
     }
 
-    /// <summary>The connected tablet, if any.</summary>
+    /// <summary>The connected tablet, if any; the first one connected when the host serves several.</summary>
     public LinkPeer? Client
     {
         get
         {
             lock (_gate)
             {
-                return _client;
+                return _clients.Count > 0 ? _clients[0].Peer : null;
             }
         }
     }
 
-    /// <summary>The connected tablet's connection, if any.</summary>
+    /// <summary>The connected tablet's connection, if any; the first one's when the host serves several.</summary>
     public LinkConnection? ClientConnection
     {
         get
         {
             lock (_gate)
             {
-                return _clientConnection;
+                return _clients.Count > 0 ? _clients[0].Connection : null;
+            }
+        }
+    }
+
+    /// <summary>Every connected device, in the order they connected.</summary>
+    public IReadOnlyList<LinkPeer> Clients
+    {
+        get
+        {
+            lock (_gate)
+            {
+                return [.. _clients.Select(c => c.Peer)];
             }
         }
     }
@@ -145,7 +159,7 @@ public sealed class LinkHost : IAsyncDisposable
     public LinkInvitation CreateInvitation(IReadOnlyList<string> addresses)
     {
         ArgumentNullException.ThrowIfNull(addresses);
-        return new LinkInvitation(_options.DeviceName, addresses, Port, _options.Identity.Fingerprint, PairingCode);
+        return new LinkInvitation(_options.DeviceName, addresses, Port, _options.Identity.Fingerprint, PairingCode) { Role = _options.Role };
     }
 
     /// <summary>Draws a new pairing code; the old one stops working.</summary>
@@ -166,8 +180,30 @@ public sealed class LinkHost : IAsyncDisposable
         PairingCodeChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    /// <summary>Disconnects the connected tablet, which falls back to compiling on its own.</summary>
-    public void DisconnectClient() => ClientConnection?.Close();
+    /// <summary>Disconnects the connected tablet, which falls back to compiling on its own; every device when the host serves several.</summary>
+    public void DisconnectClient()
+    {
+        foreach (var connection in Connections())
+        {
+            connection.Close();
+        }
+    }
+
+    /// <summary>Disconnects one device.</summary>
+    /// <param name="fingerprint">The device.</param>
+    /// <returns>Whether it was connected.</returns>
+    public bool DisconnectClient(LinkFingerprint fingerprint)
+    {
+        ArgumentNullException.ThrowIfNull(fingerprint);
+        LinkConnection? connection;
+        lock (_gate)
+        {
+            connection = _clients.Find(c => c.Peer.Fingerprint == fingerprint)?.Connection;
+        }
+
+        connection?.Close();
+        return connection is not null;
+    }
 
     /// <summary>Stops listening and disconnects the tablet.</summary>
     public async ValueTask DisposeAsync()
@@ -182,17 +218,20 @@ public sealed class LinkHost : IAsyncDisposable
         await _acceptLoop.ConfigureAwait(false);
         await _codeExpiry.DisposeAsync().ConfigureAwait(false);
 
-        LinkConnection? connection;
+        List<LinkConnection> connections;
         lock (_gate)
         {
-            connection = _clientConnection;
-            _client = null;
-            _clientConnection = null;
+            connections = [.. _clients.Select(c => c.Connection)];
+            _clients.Clear();
         }
 
-        if (connection is not null)
+        foreach (var connection in connections)
         {
             await connection.DisposeAsync().ConfigureAwait(false);
+        }
+
+        if (connections.Count > 0)
+        {
             ClientChanged?.Invoke(this, EventArgs.Empty);
         }
 
@@ -296,7 +335,7 @@ public sealed class LinkHost : IAsyncDisposable
             handshake = new HostHandshake(this, connection, clientFingerprint, nonce, address, LinkTls.Describe(tls));
             connection.Start(handshake);
 
-            var welcome = new LinkWelcome(LinkProtocol.Version, _options.AppVersion, _options.DeviceName, _options.DeviceKind, Base64Url.Encode(nonce));
+            var welcome = new LinkWelcome(LinkProtocol.Version, _options.AppVersion, _options.DeviceName, _options.DeviceKind, Base64Url.Encode(nonce), _options.Role);
             await connection.NotifyAsync(LinkHandshakeMethods.Welcome, JsonSerializer.SerializeToElement(welcome, LinkHandshakeJsonContext.Default.LinkWelcome)).ConfigureAwait(false);
             accepted = await handshake.Completion.WaitAsync(timeout.Token).ConfigureAwait(false);
         }
@@ -356,6 +395,11 @@ public sealed class LinkHost : IAsyncDisposable
             throw new LinkRemoteException(LinkErrorCodes.Self, "A device cannot be its own TabStudio Link host.");
         }
 
+        if (hello.Role != _options.Role)
+        {
+            throw new LinkRemoteException(LinkErrorCodes.WrongRole, LinkRoles.Mismatch(host, _options.Role));
+        }
+
         if (Base64Url.TryDecode(hello.Nonce) is not { Length: LinkProofs.NonceLength } clientNonce)
         {
             throw new LinkRemoteException(LinkErrorCodes.InvalidRequest, "The hello has no valid nonce.");
@@ -391,14 +435,28 @@ public sealed class LinkHost : IAsyncDisposable
         LinkConnection? replaced;
         lock (_gate)
         {
-            if (_client is { } current && _clientConnection is { IsOpen: true } && current.Fingerprint != client)
+            // Devices whose connection already closed make room; the same device connecting again replaces itself.
+            _clients.RemoveAll(c => !c.Connection.IsOpen && c.Peer.Fingerprint != client);
+            var others = _clients.Where(c => c.Peer.Fingerprint != client).ToList();
+            if (others.Count >= _options.MaxClients)
             {
-                throw new LinkRemoteException(LinkErrorCodes.Busy, $"{host} is linked to {current.Name}. Disconnect that device first.");
+                throw new LinkRemoteException(
+                    LinkErrorCodes.Busy,
+                    _options.MaxClients == 1
+                        ? $"{host} is linked to {others[0].Peer.Name}. Disconnect that device first."
+                        : $"{host} already has {_options.MaxClients.ToString(CultureInfo.InvariantCulture)} devices, the most it takes. Remove one first.");
             }
 
-            replaced = _clientConnection;
-            _client = peer;
-            _clientConnection = connection;
+            var index = _clients.FindIndex(c => c.Peer.Fingerprint == client);
+            replaced = index >= 0 ? _clients[index].Connection : null;
+            if (index >= 0)
+            {
+                _clients[index] = new ServedClient(peer, connection);
+            }
+            else
+            {
+                _clients.Add(new ServedClient(peer, connection));
+            }
         }
 
         replaced?.Close();
@@ -426,17 +484,25 @@ public sealed class LinkHost : IAsyncDisposable
     {
         lock (_gate)
         {
-            if (!ReferenceEquals(_clientConnection, connection))
+            if (_clients.RemoveAll(c => ReferenceEquals(c.Connection, connection)) == 0)
             {
                 return;
             }
-
-            _client = null;
-            _clientConnection = null;
         }
 
         ClientChanged?.Invoke(this, EventArgs.Empty);
     }
+
+    private List<LinkConnection> Connections()
+    {
+        lock (_gate)
+        {
+            return [.. _clients.Select(c => c.Connection)];
+        }
+    }
+
+    /// <summary>A device the host serves, and its connection.</summary>
+    private sealed record ServedClient(LinkPeer Peer, LinkConnection Connection);
 
     /// <summary>Answers only the hello, until the device is accepted or refused.</summary>
     private sealed class HostHandshake(LinkHost host, LinkConnection connection, LinkFingerprint client, byte[] nonce, string address, string security) : ILinkMessageHandler

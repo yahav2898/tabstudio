@@ -323,7 +323,7 @@ public sealed partial class LinkService
             {
                 return;
             }
-            catch (LinkAuthenticationException ex) when (ex.Refusal is LinkRefusal.NotPaired or LinkRefusal.VersionMismatch or LinkRefusal.WrongHost)
+            catch (LinkAuthenticationException ex) when (ex.Refusal is LinkRefusal.NotPaired or LinkRefusal.VersionMismatch or LinkRefusal.WrongHost or LinkRefusal.WrongRole)
             {
                 // Trying again cannot help: the host forgot this device, or runs another version.
                 lock (_gate)

@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Documents;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
 
@@ -44,8 +45,10 @@ internal sealed class AppTheme
             Root.Resources = MoveResources(app.Resources);
         }
 
-        // Apps expect a window behind their views; this panel plays that part in the app's own theme.
+        // Apps expect a window behind their views; this panel plays that part in the app's own theme, with the
+        // window's text color, so an app's light theme in TabStudio's dark window still has dark text.
         _background.Bind(Border.BackgroundProperty, _background.GetResourceObservable("SystemControlBackgroundAltHighBrush"));
+        _background.Bind(TextElement.ForegroundProperty, _background.GetResourceObservable("SystemControlForegroundBaseHighBrush"));
         Root.Child = _background;
     }
 
@@ -58,6 +61,11 @@ internal sealed class AppTheme
         get => _background.Child;
         set => _background.Child = value;
     }
+
+    /// <summary>The app's view inside a theme's root, as <see cref="Root"/> holds it.</summary>
+    /// <param name="root">A theme's root.</param>
+    /// <returns>The view, or <see langword="null"/> when the root is not a theme's or holds none.</returns>
+    public static Control? ContentOf(Control root) => root is ThemeVariantScope { Child: Border { Child: { } content } } ? content : null;
 
     private static ResourceDictionary MoveResources(IResourceDictionary from)
     {

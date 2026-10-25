@@ -48,6 +48,8 @@ public sealed partial class WebPreviewView : UserControl
             BrowserHost.Children.Add(webView.Control);
         }
 
+        _preview.WebView = _webView;
+
         UpdatePlaceholder();
         if (_preview.IsRunning && _preview.CurrentPage is { } page)
         {

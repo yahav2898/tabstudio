@@ -2,6 +2,7 @@ using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.Rendering;
+using TabStudio.App.Theming;
 using TabStudio.Extensions.Languages;
 
 namespace TabStudio.App.Editing.Extensions;
@@ -12,11 +13,10 @@ namespace TabStudio.App.Editing.Extensions;
 /// </summary>
 public sealed class BracketHighlightRenderer : IBackgroundRenderer
 {
-    private static readonly IBrush DefaultFill = new ImmutableSolidColorBrush(Color.Parse("#1A0064FF"));
-    private static readonly IPen DefaultBorder = new ImmutablePen(new ImmutableSolidColorBrush(Color.Parse("#8A8F99")), 1);
+    private static readonly ThemedPen DefaultBorder = ThemedPen.Editor("Editor.BracketMatchBorder", 1);
 
-    private IBrush _fill = DefaultFill;
-    private IPen _border = DefaultBorder;
+    private IBrush? _fill;
+    private IPen? _border;
 
     /// <inheritdoc />
     public KnownLayer Layer => KnownLayer.Selection;
@@ -42,10 +42,10 @@ public sealed class BracketHighlightRenderer : IBackgroundRenderer
     /// <param name="theme">The theme, or <see langword="null"/>.</param>
     public void SetTheme(EditorColorTheme? theme)
     {
-        _fill = ThemeColors.Brush(theme?.Source.Color("editorBracketMatch.background")) ?? DefaultFill;
+        _fill = ThemeColors.Brush(theme?.Source.Color("editorBracketMatch.background"));
         _border = ThemeColors.Brush(theme?.Source.Color("editorBracketMatch.border")) is IImmutableBrush border
             ? new ImmutablePen(border, 1)
-            : DefaultBorder;
+            : null;
     }
 
     /// <inheritdoc />
@@ -72,7 +72,7 @@ public sealed class BracketHighlightRenderer : IBackgroundRenderer
         var segment = new TextSegment { StartOffset = start, Length = length };
         foreach (var rect in BackgroundGeometryBuilder.GetRectsForSegment(textView, segment))
         {
-            drawingContext.DrawRectangle(_fill, _border, rect.Deflate(0.5), 2, 2);
+            drawingContext.DrawRectangle(_fill ?? ThemeBrushes.Editor("Editor.BracketMatch"), _border ?? DefaultBorder.Pen, rect.Deflate(0.5), 2, 2);
         }
     }
 }

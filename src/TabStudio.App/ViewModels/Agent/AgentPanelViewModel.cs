@@ -163,7 +163,8 @@ public sealed partial class AgentPanelViewModel : ObservableObject, IDisposable
 
         ErrorText = null;
         InputText = string.Empty;
-        Items.Add(new UserMessageViewModel(text));
+        var images = TakeAttachment(out var attachment);
+        Items.Add(new UserMessageViewModel(text, attachment));
         OnPropertyChanged(nameof(IsEmpty));
         ContentGrew?.Invoke(this, EventArgs.Empty);
         IsBusy = true;
@@ -171,7 +172,7 @@ public sealed partial class AgentPanelViewModel : ObservableObject, IDisposable
         try
         {
             var session = _session ??= await CreateSessionAsync(_turn.Token);
-            var result = await session.SendAsync(text, _turn.Token);
+            var result = await session.SendAsync(text, images, _turn.Token);
             await ShowQueuedEventsAsync();
             var notice = result.End switch
             {

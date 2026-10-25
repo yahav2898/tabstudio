@@ -7,7 +7,8 @@ namespace TabStudio.Link.Security;
 /// <summary>
 /// Everything a tablet needs to pair with a host, as the host's QR code carries it: a
 /// <c>tabstudio-link://pair</c> URI with the host's name, its addresses on the local network, its port, its
-/// certificate fingerprint and the pairing code.
+/// certificate fingerprint and the pairing code. A tablet coordinating a swarm shows the same invitation as a
+/// <c>tabstudio-link://swarm</c> URI (<see cref="Role"/>).
 /// </summary>
 /// <param name="DeviceName">The host's name, such as <c>Pixel 9</c>.</param>
 /// <param name="Addresses">The host's addresses on the local network, the most likely first.</param>
@@ -21,10 +22,15 @@ public sealed record LinkInvitation(string DeviceName, IReadOnlyList<string> Add
 
     private const string Prefix = Scheme + "://pair?";
 
+    private const string SwarmPrefix = Scheme + "://swarm?";
+
+    /// <summary>What the host offers: builds for the tablet that pairs, or a swarm to join.</summary>
+    public LinkRole Role { get; init; } = LinkRole.Host;
+
     /// <summary>The URI the QR code encodes.</summary>
     public string ToUri()
     {
-        var uri = new StringBuilder(Prefix);
+        var uri = new StringBuilder(Role == LinkRole.Swarm ? SwarmPrefix : Prefix);
         uri.Append("v=").Append(LinkProtocol.Version.ToString(CultureInfo.InvariantCulture));
         uri.Append("&n=").Append(Uri.EscapeDataString(DeviceName));
         uri.Append("&a=").Append(string.Join(',', Addresses.Select(address => Uri.EscapeDataString(address))));
@@ -40,13 +46,18 @@ public sealed record LinkInvitation(string DeviceName, IReadOnlyList<string> Add
     public static bool TryParse(string? text, [NotNullWhen(true)] out LinkInvitation? invitation)
     {
         invitation = null;
-        if (text is null || !text.Trim().StartsWith(Prefix, StringComparison.OrdinalIgnoreCase))
+        var trimmed = text?.Trim() ?? string.Empty;
+        var role = trimmed.StartsWith(Prefix, StringComparison.OrdinalIgnoreCase) ? LinkRole.Host
+            : trimmed.StartsWith(SwarmPrefix, StringComparison.OrdinalIgnoreCase) ? LinkRole.Swarm
+            : (LinkRole?)null;
+        if (role is null)
         {
             return false;
         }
 
         var values = new Dictionary<string, string>(StringComparer.Ordinal);
-        foreach (var pair in text.Trim()[Prefix.Length..].Split('&', StringSplitOptions.RemoveEmptyEntries))
+        var query = trimmed[(role == LinkRole.Swarm ? SwarmPrefix : Prefix).Length..];
+        foreach (var pair in query.Split('&', StringSplitOptions.RemoveEmptyEntries))
         {
             var equals = pair.IndexOf('=', StringComparison.Ordinal);
             if (equals > 0)
@@ -73,7 +84,7 @@ public sealed record LinkInvitation(string DeviceName, IReadOnlyList<string> Add
             return false;
         }
 
-        invitation = new LinkInvitation(Uri.UnescapeDataString(name), addressList, port, fingerprint, code);
+        invitation = new LinkInvitation(Uri.UnescapeDataString(name), addressList, port, fingerprint, code) { Role = role.Value };
         return true;
     }
 }

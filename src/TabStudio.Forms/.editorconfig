@@ -1,0 +1,44 @@
+# The Forms layer re-implements the public API of System.Windows.Forms and System.Drawing with their exact names,
+# types and shapes, so Windows Forms code compiles against it unchanged. The design rules below would rename or
+# reshape that API (keyword-like names such as Select and Stop, nested collection types, custom event handler
+# delegates, array properties such as TextBox.Lines, settable collections, virtual members read in constructors
+# such as DefaultSize), so they are off in this library. Everything else, including the naming and style rules of
+# the repository, applies as everywhere.
+
+[*.cs]
+dotnet_diagnostic.CA1003.severity = none
+dotnet_diagnostic.CA1008.severity = none
+dotnet_diagnostic.CA1010.severity = none
+dotnet_diagnostic.CA1024.severity = none
+dotnet_diagnostic.CA1027.severity = none
+dotnet_diagnostic.CA1028.severity = none
+dotnet_diagnostic.CA1030.severity = none
+dotnet_diagnostic.CA1033.severity = none
+dotnet_diagnostic.CA1034.severity = none
+dotnet_diagnostic.CA1043.severity = none
+dotnet_diagnostic.CA1044.severity = none
+dotnet_diagnostic.CA1054.severity = none
+dotnet_diagnostic.CA1055.severity = none
+dotnet_diagnostic.CA1056.severity = none
+dotnet_diagnostic.CA1062.severity = none
+dotnet_diagnostic.CA1069.severity = none
+dotnet_diagnostic.CA1700.severity = none
+dotnet_diagnostic.CA1707.severity = none
+dotnet_diagnostic.CA1708.severity = none
+dotnet_diagnostic.CA1710.severity = none
+dotnet_diagnostic.CA1711.severity = none
+dotnet_diagnostic.CA1712.severity = none
+dotnet_diagnostic.CA1714.severity = none
+dotnet_diagnostic.CA1716.severity = none
+dotnet_diagnostic.CA1717.severity = none
+dotnet_diagnostic.CA1720.severity = none
+dotnet_diagnostic.CA1721.severity = none
+dotnet_diagnostic.CA1724.severity = none
+dotnet_diagnostic.CA1725.severity = none
+dotnet_diagnostic.CA1815.severity = none
+dotnet_diagnostic.CA1819.severity = none
+dotnet_diagnostic.CA1822.severity = none
+dotnet_diagnostic.CA2211.severity = none
+dotnet_diagnostic.CA2214.severity = none
+dotnet_diagnostic.CA2225.severity = none
+dotnet_diagnostic.CA2227.severity = none

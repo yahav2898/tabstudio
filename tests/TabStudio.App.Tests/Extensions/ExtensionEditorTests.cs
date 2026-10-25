@@ -5,6 +5,7 @@ using Avalonia.Input;
 using Avalonia.Media;
 using TabStudio.App.Editing;
 using TabStudio.App.Services;
+using TabStudio.App.Services.Appearance;
 using TabStudio.App.Views;
 using TabStudio.Testing.Extensions;
 using static TabStudio.App.Tests.Views.EditorHarness;
@@ -95,10 +96,10 @@ public sealed class ExtensionEditorTests
 
         var pick = fixture.Workspace.SelectColorThemeCommand.ExecuteAsync(null);
         await UiTestHelpers.WaitUntilAsync(() => picker.IsOpen, because: "the theme picker");
-        Assert.Equal(new[] { "TabStudio Dark", LumenExtension.NightTheme, LumenExtension.DayTheme, "Browse Color Themes on Open VSX…" }, picker.Items.Select(i => i.Label).ToArray());
+        Assert.Equal(new[] { "TabStudio Dark", "TabStudio Light", "Follow the system", LumenExtension.NightTheme, LumenExtension.DayTheme, "Browse Color Themes on Open VSX…" }, picker.Items.Select(i => i.Label).ToArray());
         Assert.Equal("current", picker.SelectedItem!.Description);
 
-        picker.MoveSelection(1);
+        MoveTo(picker, LumenExtension.NightTheme);
 
         await UiTestHelpers.WaitUntilAsync(() => view.ForegroundAt(keyword) == Color.Parse(LumenExtension.NightKeyword), because: "the previewed theme");
         UiTestHelpers.SaveScreenshot(window, "ext-10-theme-picker");
@@ -110,12 +111,16 @@ public sealed class ExtensionEditorTests
 
         pick = fixture.Workspace.SelectColorThemeCommand.ExecuteAsync(null);
         await UiTestHelpers.WaitUntilAsync(() => picker.IsOpen, because: "the theme picker");
-        picker.MoveSelection(2);
+        MoveTo(picker, LumenExtension.DayTheme);
         picker.Accept();
         await pick;
 
+        // A light color theme makes the whole IDE light, so the editor does not sit in dark chrome.
         Assert.Equal(fixture.Service.Contributions.Themes.Single(t => t.Label == LumenExtension.DayTheme).Key, fixture.Service.Settings.ColorTheme);
         Assert.Equal(Color.Parse("#FBFAF5"), Assert.IsAssignableFrom<ISolidColorBrush>(view.EditorBackground).Color);
+        Assert.Equal(IdeTheme.Light, fixture.Appearance.Theme);
+        Assert.Equal(Avalonia.Styling.ThemeVariant.Light, window.ActualThemeVariant);
+        UiTestHelpers.SaveScreenshot(window, "ext-15-lumen-day-light-ide");
         window.Close();
     }
 
@@ -320,4 +325,7 @@ public sealed class ExtensionEditorTests
     /// <summary>The caret line's whole text, with its indentation.</summary>
     private static string LineText(AvaloniaEdit.TextEditor editor) =>
         editor.Document.GetText(editor.Document.GetLineByOffset(editor.CaretOffset));
+
+    private static void MoveTo(TabStudio.App.ViewModels.Extensions.QuickPickViewModel picker, string label) =>
+        picker.MoveSelection(picker.Items.IndexOf(picker.Items.Single(i => i.Label == label)) - picker.Items.IndexOf(picker.SelectedItem!));
 }

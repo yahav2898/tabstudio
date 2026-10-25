@@ -9,10 +9,17 @@ public abstract class AgentItemViewModel : ObservableObject;
 
 /// <summary>Something the user asked.</summary>
 /// <param name="text">The request.</param>
-public sealed class UserMessageViewModel(string text) : AgentItemViewModel
+/// <param name="image">A picture sent with it, such as a screen with a layout problem, if any.</param>
+public sealed class UserMessageViewModel(string text, AgentImageViewModel? image = null) : AgentItemViewModel
 {
     /// <summary>The request.</summary>
     public string Text { get; } = text;
+
+    /// <summary>The picture sent with it, if any.</summary>
+    public AgentImageViewModel? Image { get; } = image;
+
+    /// <summary>Whether a picture was sent with it.</summary>
+    public bool HasImage => Image is not null;
 }
 
 /// <summary>Text Claude wrote, growing as it streams in.</summary>

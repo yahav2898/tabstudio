@@ -35,7 +35,7 @@ public sealed class TableGrid : Border
         CornerRadius = new CornerRadius(6);
         ClipToBounds = true;
         HorizontalAlignment = HorizontalAlignment.Left;
-        BorderBrush = ThemeResources.Brush("Brush.Border", "#2A2E37");
+        BorderBrush = ThemeResources.Brush("Brush.Border");
     }
 
     /// <inheritdoc cref="TableProperty"/>
@@ -74,7 +74,7 @@ public sealed class TableGrid : Border
             TextTrimming = TextTrimming.CharacterEllipsis,
             VerticalAlignment = VerticalAlignment.Center,
             HorizontalAlignment = !isHeader && TableLayout.IsNumber(text) ? HorizontalAlignment.Right : HorizontalAlignment.Left,
-            Foreground = ThemeResources.Brush(isHeader ? "Brush.TextBright" : "Brush.Text", isHeader ? "#E8ECF2" : "#D7DAE0"),
+            Foreground = ThemeResources.Brush(isHeader ? "Brush.TextBright" : "Brush.Text"),
             FontWeight = isHeader ? FontWeight.SemiBold : FontWeight.Normal,
         };
 
