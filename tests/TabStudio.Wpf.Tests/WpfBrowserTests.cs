@@ -105,6 +105,8 @@ public sealed class WpfBrowserTests(NuGetFixture nuget) : IDisposable
         // The app keeps running after it.
         await chrome.ClickTextAsync("Click me");
         await chrome.WaitUntilAsync("document.body.innerText.includes('Clicked 1 time')", TimeSpan.FromSeconds(10));
+        await chrome.ClickTextAsync("Click me");
+        await chrome.WaitUntilAsync("document.body.innerText.includes('Clicked 2 times')", TimeSpan.FromSeconds(10));
     }
 
     [ChromeFact]

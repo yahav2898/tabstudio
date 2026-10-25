@@ -117,12 +117,36 @@ internal static class BrowserHostSource
                             {
                                 Report(e.ExceptionObject);
                                 e.Handled = true;
+                                if (_shown is { } shown)
+                                {
+                                    ReleaseInputCapture(shown);
+                                }
                             }
                         };
 
                         // After the application's own startup, which OpenSilver runs on the dispatcher, as WPF opens StartupUri after Startup.
                         global::System.Windows.Threading.Dispatcher.CurrentDispatcher.BeginInvoke(() => ShowStartupWindow(app));
                         return app;
+                    }
+
+                    /// <summary>Releases capture left behind when OpenSilver's input handler unwinds before its cleanup.</summary>
+                    private static bool ReleaseInputCapture(global::System.Windows.DependencyObject root)
+                    {
+                        if (root is global::System.Windows.UIElement { IsMouseCaptured: true } element)
+                        {
+                            element.ReleaseMouseCapture();
+                            return true;
+                        }
+
+                        for (var i = 0; i < global::System.Windows.Media.VisualTreeHelper.GetChildrenCount(root); i++)
+                        {
+                            if (ReleaseInputCapture(global::System.Windows.Media.VisualTreeHelper.GetChild(root, i)))
+                            {
+                                return true;
+                            }
+                        }
+
+                        return false;
                     }
 
                     private static void ShowStartupWindow(global::System.Windows.Application app)
