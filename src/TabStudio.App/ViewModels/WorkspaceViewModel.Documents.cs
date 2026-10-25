@@ -10,6 +10,7 @@ namespace TabStudio.App.ViewModels;
 /// <summary>Open documents, navigation and editing commands.</summary>
 public sealed partial class WorkspaceViewModel
 {
+    private readonly Dictionary<string, Task<DocumentViewModel?>> _openingDocuments = new(StringComparer.Ordinal);
     private readonly List<string> _history = [];
     private int _historyIndex = -1;
     private bool _navigatingHistory;
@@ -41,6 +42,34 @@ public sealed partial class WorkspaceViewModel
             return open;
         }
 
+        // A file asked for again while it is still being read, as a toolchain project's entry file is when the
+        // workspace opens it by itself and the user opens it too, waits for that first opening. Two openings would
+        // give it two tabs and two documents on its language server, which sends the file's diagnostics to only one.
+        if (_openingDocuments.TryGetValue(path, out var opening))
+        {
+            var opened = await opening;
+            if (opened is not null && Documents.Contains(opened))
+            {
+                ActiveDocument = opened;
+            }
+
+            return opened;
+        }
+
+        var task = OpenNewDocumentAsync(path);
+        _openingDocuments[path] = task;
+        try
+        {
+            return await task;
+        }
+        finally
+        {
+            _openingDocuments.Remove(path);
+        }
+    }
+
+    private async Task<DocumentViewModel?> OpenNewDocumentAsync(string path)
+    {
         DocumentViewModel document;
         try
         {

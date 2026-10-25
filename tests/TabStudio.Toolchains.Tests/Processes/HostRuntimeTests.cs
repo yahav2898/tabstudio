@@ -161,6 +161,50 @@ public sealed class HostRuntimeTests : IDisposable
     }
 
     [Fact]
+    public async Task Programs_start_while_collections_keep_stopping_the_process()
+    {
+        // posix_spawn runs without a GC transition (see UnixNative.posix_spawn): collections wait for it rather than
+        // signalling a forking thread. Four threads start programs while a fifth makes garbage; none may hang or fail.
+        using var stop = new CancellationTokenSource();
+        var collections = GC.CollectionCount(0);
+        var churn = Task.Factory.StartNew(
+            () =>
+            {
+                var recent = new byte[64][];
+                for (var i = 0; !stop.IsCancellationRequested; i++)
+                {
+                    recent[i & 63] = new byte[16 * 1024];
+                }
+
+                GC.KeepAlive(recent);
+            },
+            CancellationToken.None,
+            TaskCreationOptions.LongRunning,
+            TaskScheduler.Default);
+        var exits = new System.Collections.Concurrent.ConcurrentBag<ProcessExit>();
+        try
+        {
+            await Task.WhenAll(Enumerable.Range(0, 4).Select(_ => Task.Run(async () =>
+            {
+                for (var i = 0; i < 50; i++)
+                {
+                    using var process = _runtime.Start(new ProcessStartSpec { Program = "/bin/true" });
+                    exits.Add(await process.Completion.WaitAsync(TimeSpan.FromSeconds(20)));
+                }
+            }))).WaitAsync(TimeSpan.FromSeconds(90));
+        }
+        finally
+        {
+            await stop.CancelAsync();
+            await churn;
+        }
+
+        Assert.Equal(200, exits.Count);
+        Assert.All(exits, e => Assert.True(e.Succeeded, e.Description));
+        Assert.True(GC.CollectionCount(0) > collections, "No collection ran while the programs started.");
+    }
+
+    [Fact]
     public void Resolves_commands_to_full_paths()
     {
         var shell = _runtime.Resolve("sh");

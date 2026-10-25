@@ -105,7 +105,26 @@ internal static partial class UnixNative
     [LibraryImport(LibC)]
     internal static partial int sigaddset(nint set, int signal);
 
+    /// <summary>Starts a program; returns 0, or the error number.</summary>
+    /// <remarks>
+    /// <para>
+    /// The call stays in the runtime's cooperative mode (<see cref="SuppressGCTransitionAttribute"/>): a collection
+    /// that starts meanwhile waits until it returns, and never signals the thread while it forks. On Android, bionic's
+    /// <c>fork</c> sets the calling thread's id to -1 for as long as the kernel copies the process (milliseconds for
+    /// an app of TabStudio's size), so <c>pthread_kill</c> of that thread fails with <c>ESRCH</c>. Mono's collector
+    /// sends that signal to suspend a thread that is in native code, takes <c>ESRCH</c> for a thread that has
+    /// exited, leaves the thread out of the collection and marks it as running managed code; when the call returns,
+    /// the thread finds itself running where it should be leaving native code and Mono aborts the app: "Cannot
+    /// transition thread ... from RUNNING with DONE_BLOCKING".
+    /// </para>
+    /// <para>
+    /// Staying cooperative is safe here: bionic's <c>posix_spawn</c> only forks and returns (the child does the rest),
+    /// calls no managed code and takes no lock a suspended thread could hold, as fork handlers only wait for
+    /// threads still running native code. glibc and macOS start the child without copying the process.
+    /// </para>
+    /// </remarks>
     [LibraryImport(LibC)]
+    [SuppressGCTransition]
     internal static unsafe partial int posix_spawn(out int pid, nint path, nint actions, nint attributes, nint* argv, nint* envp);
 
     /// <summary>The size of a terminal, as <c>TIOCSWINSZ</c> takes it.</summary>

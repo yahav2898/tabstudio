@@ -47,7 +47,7 @@ public sealed class WindowsFormsAppTests
         Assert.Equal("Hello Forms", form.Title);
         Assert.Equal(new System.Drawing.Size(400, 200), form.Client.Size);
         app.Click(new DrawingPoint(form.Client.X + 84, form.Client.Y + 40));
-        await UiTestHelpers.WaitUntilAsync(() => app.TextOf("label1") == "Hello from Windows Forms!", because: "the click to change the label");
+        await app.WaitForTextAsync("label1", "Hello from Windows Forms!", "the click to change the label");
         await UiTestHelpers.WaitUntilAsync(() => app.Desktop.Windows[0].Content.Texts.Contains("Hello from Windows Forms!"), because: "the new label on the screen");
         UiTestHelpers.SaveScreenshot(window, "winforms-01-running-app");
 
@@ -69,7 +69,7 @@ public sealed class WindowsFormsAppTests
         app = await FormsPreview.WaitForAsync(workspace, window, run);
         form = app.Desktop.Windows[0];
         app.Click(new DrawingPoint(form.Client.X + 84, form.Client.Y + 40));
-        await UiTestHelpers.WaitUntilAsync(() => app.TextOf("label1") == "Changed on a tablet", because: "the restarted app's click");
+        await app.WaitForTextAsync("label1", "Changed on a tablet", "the restarted app's click");
 
         // Closing the main form ends the run.
         app.ClickCaption(WindowPart.Close);
@@ -162,6 +162,10 @@ public sealed class WindowsFormsAppTests
     {
         public FormsDesktop Desktop { get; } = desktop;
 
+        /// <summary>
+        /// Waits until the app preview shows a running app's form, laid out and drawn, as a user sees it before tapping
+        /// it: a click sent before the form is drawn may land where its button is not yet.
+        /// </summary>
         public static async Task<FormsPreview> WaitForAsync(WorkspaceViewModel workspace, Window window, Task run)
         {
             await UiTestHelpers.WaitUntilAsync(
@@ -171,7 +175,22 @@ public sealed class WindowsFormsAppTests
             Assert.True(workspace.AppPreview.IsRunning, workspace.Output.Text);
             var desktop = (FormsDesktop)workspace.AppPreview.View!;
             await UiTestHelpers.WaitUntilAsync(() => desktop.IsSizeKnown && desktop.IsAttachedToVisualTree(), because: "the desktop's layout");
+            await UiTestHelpers.WaitUntilAsync(() => desktop.Windows.Count > 0 && desktop.Windows[0].Content.Texts.Any(), because: "the form drawn on the desktop");
             return new FormsPreview(desktop, window);
+        }
+
+        /// <summary>Waits until a control shows a text, and says what it shows instead when it does not.</summary>
+        public async Task WaitForTextAsync(string name, string expected, string because)
+        {
+            string? shown = null;
+            try
+            {
+                await UiTestHelpers.WaitUntilAsync(() => (shown = TextOf(name)) == expected, because: because);
+            }
+            catch (Xunit.Sdk.FailException)
+            {
+                Assert.Fail($"Timed out waiting for {because}: {name} shows \"{shown}\" instead of \"{expected}\".");
+            }
         }
 
         public T Read<T>(Func<TabStudio.Forms.Runtime.FormWindow, T> read)

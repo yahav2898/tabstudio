@@ -106,6 +106,27 @@ public sealed class WorkspaceViewModelTests
     }
 
     [AvaloniaFact]
+    public async Task A_file_opened_again_while_it_opens_gets_one_tab()
+    {
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var workspace = fixture.Workspace;
+        var path = Path.Combine(workspace.Workspace!.Projects.Single(p => p.Name == "Greetings").DirectoryPath, "Greeter.cs");
+        var tabs = workspace.Documents.Count;
+
+        // Both start before the file is read, as when a toolchain project's entry file opens by itself with the
+        // workspace while the user opens it too.
+        var first = workspace.OpenDocumentAsync(path);
+        var second = workspace.OpenDocumentAsync(path);
+        var opened = await Task.WhenAll(first, second);
+
+        Assert.NotNull(opened[0]);
+        Assert.Same(opened[0], opened[1]);
+        Assert.Equal(tabs + 1, workspace.Documents.Count);
+        Assert.Same(opened[0], workspace.ActiveDocument);
+    }
+
+    [AvaloniaFact]
     public async Task Saving_writes_the_file_and_clears_the_asterisk()
     {
         using var fixture = new WorkspaceFixture();
