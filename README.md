@@ -150,7 +150,7 @@ That covers most tablets sold in the last six years, including entry-level and s
 ### Install on a tablet
 
 1. Open the [latest release](https://github.com/yahav2898/tabstudio/releases) on the tablet.
-2. Download `TabStudio.apk` and open it. Android will ask you to allow installs from your browser once.
+2. Download the `TabStudio-<version>.apk` file and open it. Android will ask you to allow installs from your browser once.
 3. Launch TabStudio, tap **Open the sample** and press **F5**.
 
 ### Build and run from source
