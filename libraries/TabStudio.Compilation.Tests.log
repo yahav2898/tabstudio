@@ -1,48 +1,44 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Compilation.Tests/TabStudio.Compilation.Tests.csproj (in 333 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj (in 333 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Compilation.Tests/TabStudio.Compilation.Tests.csproj (in 340 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj (in 340 ms).
   2 of 4 projects are up-to-date for restore.
   TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/Running/ProgramRunner.cs(58,34): warning CA1822: Member 'RunAsync' does not access instance data and can be marked as static (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1822) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/CSharpCompiler.cs(77,30): warning CA1822: Member 'CreateCompilation' does not access instance data and can be marked as static (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1822) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj]
   TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
-/home/runner/work/tabstudio/tabstudio/tests/TabStudio.Compilation.Tests/ProgramRunnerTests.cs(148,24): warning CA2016: Forward the 'cancellationToken' parameter to the 'Compile' method or pass in 'CancellationToken.None' explicitly to indicate intentionally not propagating the token (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2016) [/home/runner/work/tabstudio/tabstudio/tests/TabStudio.Compilation.Tests/TabStudio.Compilation.Tests.csproj]
   TabStudio.Compilation.Tests -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Compilation.Tests/bin/Release/net10.0/TabStudio.Compilation.Tests.dll
 Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Compilation.Tests/bin/Release/net10.0/TabStudio.Compilation.Tests.dll (.NETCoreApp,Version=v10.0)
 A total of 1 test files matched the specified pattern.
 [xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
 [xUnit.net 00:00:00.15]   Discovering: TabStudio.Compilation.Tests
-[xUnit.net 00:00:00.24]   Discovered:  TabStudio.Compilation.Tests
+[xUnit.net 00:00:00.23]   Discovered:  TabStudio.Compilation.Tests
 [xUnit.net 00:00:00.29]   Starting:    TabStudio.Compilation.Tests
-unreachable
-  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Restores_the_console_after_a_run [2 s]
-  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.A_method_named_exit_on_another_type_is_fine [2 s]
-  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Libraries_are_not_checked_for_in_process_safety [27 ms]
-  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Refuses_to_build_programs_that_would_close_the_ide(statement: "System.Environment.FailFast(\"bye\");", expectedId: "TS1002") [28 ms]
-  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Refuses_to_build_programs_that_would_close_the_ide(statement: "Environment.Exit(1);", expectedId: "TS1001") [9 ms]
-  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Loads_referenced_project_assemblies [145 ms]
-  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Reports_errors_with_one_based_positions_in_the_right_file [95 ms]
-  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Stopping_a_program_returns_without_waiting_for_it [34 ms]
-  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Returns_the_exit_code_from_main [42 ms]
-  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Reports_an_unhandled_exception_as_a_crash_with_a_stack_trace [62 ms]
-  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Captures_standard_output [14 ms]
-  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Passes_command_line_arguments [23 ms]
   Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Edits_show_up_in_live_diagnostics [2 s]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Loads_every_csharp_source_file [12 ms]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Builds_and_runs_a_project_with_a_project_reference [76 ms]
-  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Compiles_top_level_statements_with_implicit_usings [329 ms]
-[xUnit.net 00:00:03.41]   Finished:    TabStudio.Compilation.Tests
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Live_diagnostics_include_the_in_process_safety_check [35 ms]
-  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Warnings_do_not_stop_a_build [42 ms]
-  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Awaits_an_async_main [231 ms]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.A_new_file_joins_the_project_that_contains_it [48 ms]
-  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Reads_lines_from_console_input [102 ms]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Classifies_keywords_types_and_strings [107 ms]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Build_order_puts_dependencies_first [11 ms]
-  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.A_clean_file_has_no_errors [23 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Loads_every_csharp_source_file [19 ms]
+  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Restores_the_console_after_a_run [2 s]
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.A_method_named_exit_on_another_type_is_fine [1 s]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Builds_and_runs_a_project_with_a_project_reference [212 ms]
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Libraries_are_not_checked_for_in_process_safety [12 ms]
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Refuses_to_build_programs_that_would_close_the_ide(statement: "System.Environment.FailFast(\"bye\");", expectedId: "TS1002") [22 ms]
+  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Loads_referenced_project_assemblies [48 ms]
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Refuses_to_build_programs_that_would_close_the_ide(statement: "Environment.Exit(1);", expectedId: "TS1001") [33 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Live_diagnostics_include_the_in_process_safety_check [62 ms]
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Reports_errors_with_one_based_positions_in_the_right_file [18 ms]
+  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Stopping_a_program_returns_without_waiting_for_it [55 ms]
+  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Returns_the_exit_code_from_main [31 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.A_new_file_joins_the_project_that_contains_it [57 ms]
+  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Reports_an_unhandled_exception_as_a_crash_with_a_stack_trace [47 ms]
+  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Captures_standard_output [19 ms]
+  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Passes_command_line_arguments [27 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Classifies_keywords_types_and_strings [167 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.Build_order_puts_dependencies_first [21 ms]
+  Passed TabStudio.Compilation.Tests.RoslynWorkspaceHostTests.A_clean_file_has_no_errors [26 ms]
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Compiles_top_level_statements_with_implicit_usings [356 ms]
+  Passed TabStudio.Compilation.Tests.CSharpCompilerTests.Warnings_do_not_stop_a_build [36 ms]
+  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Awaits_an_async_main [263 ms]
+[xUnit.net 00:00:03.48]   Finished:    TabStudio.Compilation.Tests
+  Passed TabStudio.Compilation.Tests.ProgramRunnerTests.Reads_lines_from_console_input [105 ms]
 
 Test Run Successful.
 Total tests: 24
      Passed: 24
- Total time: 4.2787 Seconds
+ Total time: 4.3453 Seconds
