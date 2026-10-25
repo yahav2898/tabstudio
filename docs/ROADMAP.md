@@ -86,6 +86,8 @@ Alongside the milestones, the GitHub work a developer would otherwise do in a br
 - The commit's CI in the status bar, live, and a GitHub Actions window with the branch's runs, their jobs
   and steps, re-run, re-run failed jobs, cancel, and Run workflow with a form built from its inputs.
 - Job logs in an editor tab, folded by step, opened at the first error.
+- Pull request review: the description, conversation, files and commits; comments on diff lines, reviews that
+  approve or request changes, merge, check out, conversations in the editor, and Review with Claude.
 - CI's errors in the Error List with **Fix with Agent**, watched repositories, and a notification when a
   run finishes.
 

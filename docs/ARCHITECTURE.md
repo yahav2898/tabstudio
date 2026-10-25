@@ -250,6 +250,18 @@ talks to GitHub instead:
   shows inline diffs, and settles conflicts by choosing a side. Signing in takes a personal access token,
   which GitHub checks before it is kept in the app's private storage.
 
+### Pull request review
+
+- **`GitHubClient`'s PullRequests, Reviews and GraphQL partials** list, read and merge pull requests, read file
+  versions at any commit, and post review comments, replies and reviews. Resolving threads, marking a draft ready
+  and adding to a pending review exist only in GitHub's GraphQL API, so those few calls use it.
+- **A pull request is a document** (`ViewModels/PullRequests/`, `Views/PullRequests/`): its page, and a diff per
+  file built on `DiffView`. Comments are written into a pending review, so nothing is posted until Finish Review.
+- **Conversations inside an editor** take room under their line with a spacer element (`ReviewSpacerGenerator`)
+  and are drawn by an overlay (`ReviewAdorner`) outside the text area, so typing in a reply never reaches the code.
+- **Review with Claude** (`TabStudio.Agent/PullRequestReviewer.cs`) sends the numbered diff with one tool,
+  `report_review`; findings become drafts on diff lines that the user keeps, edits or dismisses.
+
 ### GitHub Actions
 
 A tablet cannot receive webhooks, so CI is polled, and polled politely:

@@ -78,6 +78,7 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 ### GitHub, inside the IDE
 
 - **Git built in.** Clone, branch, commit, pull and push, and open pull requests on GitHub without leaving the IDE.
+- **Pull request review.** A pull request opens in a page with its description, conversation, changed files and commits. Comment on lines in its diffs, then finish the review as a comment, an approval or a request for changes. Merge it, or check it out to run its code and tests; on its branch the editor shows its conversations beside their lines. **Review with Claude** drafts comments that you keep, edit or dismiss before anything is posted.
 - **CI in the status bar.** Your commit's checks show next to the branch: a spinner with "2/5" while they run, then red or green. Tap it to open the GitHub Actions window.
 - **GitHub Actions.** The branch's runs with their jobs and steps. Re-run every job or only the failed ones, cancel a run, or start a workflow from a form built from its inputs.
 - **Logs you can read.** A job's log opens in a tab, folded by step and scrolled to the first error. F8 jumps to the next one.
