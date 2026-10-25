@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>TabStudio.Web</RootNamespace>
+    <Description>Web apps on the device: static web assets, scoped CSS, the manifests ASP.NET Core reads, the host that serves .NET WebAssembly apps to the WebView, and the Blazor, Razor Pages and MVC project templates.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TabStudio.Core\TabStudio.Core.csproj" />
+    <ProjectReference Include="..\TabStudio.Compilation\TabStudio.Compilation.csproj" />
+    <ProjectReference Include="..\TabStudio.Packages\TabStudio.Packages.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="TabStudio.Web.Tests" />
+  </ItemGroup>
+
+  <!--
+    The project templates' files, as `dotnet new` writes them: compiled into the projects created from them, not
+    into this one.
+  -->
+  <ItemGroup>
+    <Compile Remove="Templates\Content\**" />
+    <None Remove="Templates\Content\**" />
+    <EmbeddedResource Include="Templates\Content\**\*" Exclude="Templates\Content\lib\**"
+                      LogicalName="Templates/%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <!-- Their client libraries, Bootstrap and jQuery, are 10 MB of text: they go in as one zip. -->
+  <ItemGroup>
+    <TemplateLibrary Include="Templates\Content\lib\**\*" />
+    <EmbeddedResource Include="$(IntermediateOutputPath)TemplateLibraries.zip" LogicalName="Templates/lib.zip" />
+  </ItemGroup>
+
+  <Target Name="ZipTemplateLibraries" BeforeTargets="PrepareResources" Inputs="@(TemplateLibrary)" Outputs="$(IntermediateOutputPath)TemplateLibraries.zip">
+    <ZipDirectory SourceDirectory="$(MSBuildProjectDirectory)\Templates\Content\lib" DestinationFile="$(IntermediateOutputPath)TemplateLibraries.zip" Overwrite="true" />
+  </Target>
+
+</Project>

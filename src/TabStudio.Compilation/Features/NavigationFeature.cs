@@ -5,7 +5,7 @@ namespace TabStudio.Compilation.Features;
 
 /// <summary>Go to Definition (F12), Go to Implementation (Ctrl+F12) and Find All References (Shift+F12).</summary>
 /// <remarks>Searches cover every loaded project, so a symbol used in one project and declared in another is found.</remarks>
-public sealed class NavigationFeature
+public sealed partial class NavigationFeature
 {
     private readonly RoslynWorkspaceHost _host;
 
@@ -19,6 +19,11 @@ public sealed class NavigationFeature
     public async Task<DefinitionResult?> FindDefinitionAsync(string filePath, int position, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(filePath);
+        if (_host.IsRazorDocument(filePath))
+        {
+            return await FindRazorDefinitionAsync(filePath, position, cancellationToken).ConfigureAwait(false);
+        }
+
         if (_host.GetDocument(filePath) is not { } document
             || await SymbolResolver.FindSymbolAsync(document, position, cancellationToken).ConfigureAwait(false) is not { } symbol)
         {
@@ -33,7 +38,7 @@ public sealed class NavigationFeature
 
         var source = await SymbolFinder.FindSourceDefinitionAsync(symbol, document.Project.Solution, cancellationToken).ConfigureAwait(false)
             ?? await FindInSkeletonProjectAsync(symbol, document.Project.Solution, cancellationToken).ConfigureAwait(false);
-        return SymbolResolver.ToDefinition(source ?? symbol);
+        return await ToDefinitionAsync(source ?? symbol, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>

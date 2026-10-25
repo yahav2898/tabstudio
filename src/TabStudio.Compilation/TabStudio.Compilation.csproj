@@ -13,6 +13,16 @@
     <PackageReference Include="Basic.Reference.Assemblies.Net100" />
   </ItemGroup>
 
+  <!--
+    The Razor compiler of the .NET SDK 10.0.1xx, built against the Roslyn version above. No stable NuGet package
+    carries it, so the SDK's own build lives in the repository; see Razor/Compiler/NOTICE.txt for its origin and license.
+  -->
+  <ItemGroup>
+    <Reference Include="Microsoft.CodeAnalysis.Razor.Compiler" HintPath="Razor\Compiler\Microsoft.CodeAnalysis.Razor.Compiler.dll" />
+    <Reference Include="Microsoft.AspNetCore.Razor.Utilities.Shared" HintPath="Razor\Compiler\Microsoft.AspNetCore.Razor.Utilities.Shared.dll" />
+    <Reference Include="Microsoft.Extensions.ObjectPool" HintPath="Razor\Compiler\Microsoft.Extensions.ObjectPool.dll" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\TabStudio.Core\TabStudio.Core.csproj" />
   </ItemGroup>

@@ -87,6 +87,12 @@ public sealed record ProjectInfo
     /// <summary>Patterns from <c>&lt;AvaloniaResource Remove="..." /&gt;</c> items.</summary>
     public IReadOnlyList<string> AvaloniaResourceRemoves { get; init; } = [];
 
+    /// <summary>
+    /// Whether the project folder has Razor components (<c>.razor</c> files), which makes a web app a Blazor Web App and
+    /// brings in Blazor's script. Set by <see cref="ProjectParser.Load"/>, which looks at the files.
+    /// </summary>
+    public bool HasRazorComponents { get; init; }
+
     /// <summary>What the project produces.</summary>
     public ProjectKind Kind { get; init; }
 

@@ -27,6 +27,8 @@ public sealed class CompatibilityDoctorTests
     [Theory]
     [InlineData(ProjectKind.Test)]
     [InlineData(ProjectKind.AspNetCore)]
+    [InlineData(ProjectKind.BlazorWebApp)]
+    [InlineData(ProjectKind.BlazorWebAssembly)]
     public void Tests_and_web_apps_in_another_language_are_planned_not_ready(ProjectKind kind)
     {
         var report = CompatibilityDoctor.Diagnose(Project(kind, ProjectLanguage.VisualBasic));
@@ -40,7 +42,8 @@ public sealed class CompatibilityDoctorTests
     [InlineData(ProjectKind.AspNetCore, RunHost.WebView, CompatibilityStatus.Ready)]
     [InlineData(ProjectKind.Test, RunHost.InProcess, CompatibilityStatus.Ready)]
     [InlineData(ProjectKind.Avalonia, RunHost.AndroidView, CompatibilityStatus.Ready)]
-    [InlineData(ProjectKind.BlazorWebAssembly, RunHost.WebView, CompatibilityStatus.Planned)]
+    [InlineData(ProjectKind.BlazorWebAssembly, RunHost.WebView, CompatibilityStatus.Ready)]
+    [InlineData(ProjectKind.BlazorWebApp, RunHost.WebView, CompatibilityStatus.Ready)]
     [InlineData(ProjectKind.Wpf, RunHost.WebView, CompatibilityStatus.NeedsChanges)]
     [InlineData(ProjectKind.WinUI, RunHost.AndroidView, CompatibilityStatus.NeedsChanges)]
     [InlineData(ProjectKind.NativeCpp, RunHost.WindowsBridge, CompatibilityStatus.NeedsWindows)]
@@ -61,8 +64,35 @@ public sealed class CompatibilityDoctorTests
 
         Assert.All(reports, r => Assert.Equal(r.Status == CompatibilityStatus.Ready, r.CanRunToday));
         Assert.Equal(
-            new[] { ProjectKind.ConsoleApp, ProjectKind.Test, ProjectKind.AspNetCore, ProjectKind.Avalonia },
+            new[] { ProjectKind.ConsoleApp, ProjectKind.Test, ProjectKind.AspNetCore, ProjectKind.BlazorWebAssembly, ProjectKind.Avalonia, ProjectKind.BlazorWebApp },
             reports.Where(r => r.CanRunToday).Select(r => r.Kind));
+    }
+
+    [Fact]
+    public void Blazor_apps_say_where_their_code_runs_and_that_WebAssembly_starts_without_the_debugger()
+    {
+        var webApp = CompatibilityDoctor.Diagnose(Project(ProjectKind.BlazorWebApp));
+        var standalone = CompatibilityDoctor.Diagnose(Project(ProjectKind.BlazorWebAssembly));
+
+        Assert.Equal("Local server + WebView", webApp.RunsVia);
+        Assert.Contains("Interactive Server components run here", webApp.Explanation, StringComparison.Ordinal);
+        Assert.Contains("without the debugger", webApp.Explanation, StringComparison.Ordinal);
+        Assert.Equal("WebAssembly in the WebView", standalone.RunsVia);
+        Assert.Contains("cannot be debugged", standalone.Explanation, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void The_WebAssembly_client_of_a_Blazor_Web_App_runs_inside_its_app()
+    {
+        var client = Project(ProjectKind.BlazorWebAssembly) with
+        {
+            Properties = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) { ["StaticWebAssetProjectMode"] = "Default" },
+        };
+
+        var report = CompatibilityDoctor.Diagnose(client);
+
+        Assert.Equal(CompatibilityStatus.NotRunnable, report.Status);
+        Assert.Equal("WebAssembly, in its web app", report.RunsVia);
     }
 
     private static ProjectInfo Project(ProjectKind kind, ProjectLanguage language = ProjectLanguage.CSharp) => new()

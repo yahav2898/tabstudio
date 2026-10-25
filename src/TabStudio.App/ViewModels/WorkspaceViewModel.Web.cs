@@ -20,7 +20,7 @@ public sealed partial class WorkspaceViewModel
     public bool IsWebPreviewSelected => SelectedSideBarPanel == SideBarPanel.WebPreview;
 
     /// <summary>Whether F5 serves a project as a web app rather than running it as a program.</summary>
-    private static bool IsWebApp(ProjectInfo project) => project.Kind == ProjectKind.AspNetCore;
+    private static bool IsWebApp(ProjectInfo project) => project.Kind is ProjectKind.AspNetCore or ProjectKind.BlazorWebApp;
 
     /// <summary>Serves one build of a web app until it stops.</summary>
     private async Task ServeWebAppAsync(ProjectInfo project, BuildResult build, CompiledAssembly entry, bool restarted)
@@ -40,6 +40,9 @@ public sealed partial class WorkspaceViewModel
                 Port = _webPort,
             };
             var packages = _language!.GetPackageRuntimeAssemblies(project.FilePath);
+            using var webApp = await PrepareWebAppAsync(project, build, profile, _run.Token);
+            options = options with { Arguments = [.. webApp?.Arguments ?? [], .. options.Arguments] };
+            _webApp = webApp;
             result = await ServeUntilStoppedAsync(project, build, entry, packages, profile, options, _run.Token);
         }
         catch (OperationCanceledException)
@@ -48,6 +51,7 @@ public sealed partial class WorkspaceViewModel
         }
         finally
         {
+            _webApp = null;
             _liveProject = null;
             WebPreview.ShowStopped();
             _run.Dispose();

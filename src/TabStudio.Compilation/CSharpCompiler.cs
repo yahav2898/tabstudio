@@ -71,6 +71,17 @@ public sealed class CSharpCompiler
         "Microsoft.Extensions.Logging",
     ];
 
+    /// <summary>
+    /// The extra global usings of the Blazor WebAssembly SDK (<c>Microsoft.NET.Sdk.BlazorWebAssembly</c>), as its
+    /// <c>Sdk.props</c> lists them.
+    /// </summary>
+    public static IReadOnlyList<string> BlazorWebAssemblyImplicitUsingNamespaces { get; } =
+    [
+        "Microsoft.Extensions.Configuration",
+        "Microsoft.Extensions.DependencyInjection",
+        "Microsoft.Extensions.Logging",
+    ];
+
     private static readonly string[] CommonSymbols =
     [
         "TRACE", "NET", "NETCOREAPP", "NET10_0", "NET10_0_OR_GREATER", "NET9_0_OR_GREATER", "NET8_0_OR_GREATER",
@@ -138,7 +149,7 @@ public sealed class CSharpCompiler
         return builder.ToString();
     }
 
-    /// <summary>The implicit global usings of an SDK: the base SDK's, plus those the Web and Worker SDKs add.</summary>
+    /// <summary>The implicit global usings of an SDK: the base SDK's, plus those the Web, Worker and Blazor WebAssembly SDKs add.</summary>
     /// <param name="sdk">The project's SDK, such as <c>Microsoft.NET.Sdk.Web</c>, or <see langword="null"/> for the base SDK.</param>
     public static IEnumerable<string> ImplicitUsingsFor(string? sdk)
     {
@@ -146,6 +157,7 @@ public sealed class CSharpCompiler
         {
             _ when string.Equals(sdk, "Microsoft.NET.Sdk.Web", StringComparison.OrdinalIgnoreCase) => WebImplicitUsingNamespaces,
             _ when string.Equals(sdk, "Microsoft.NET.Sdk.Worker", StringComparison.OrdinalIgnoreCase) => WorkerImplicitUsingNamespaces,
+            _ when string.Equals(sdk, "Microsoft.NET.Sdk.BlazorWebAssembly", StringComparison.OrdinalIgnoreCase) => BlazorWebAssemblyImplicitUsingNamespaces,
             _ => [],
         };
         return ImplicitUsingNamespaces.Concat(extra);
@@ -240,6 +252,27 @@ public sealed class CSharpCompiler
         Stopwatch? stopwatch,
         string? projectName,
         IEnumerable<ResourceDescription>? resources,
+        CancellationToken cancellationToken) =>
+        Emit(compilation, checkInProcessSafety, stopwatch, projectName, resources, mapDiagnostics: null, cancellationToken);
+
+    /// <summary>
+    /// Emits a compilation into memory, converting its diagnostics with a mapper of its own, such as one that places
+    /// errors in generated Razor code in their Razor files and adds the Razor compiler's errors.
+    /// </summary>
+    /// <param name="compilation">The compilation to emit.</param>
+    /// <param name="checkInProcessSafety">Whether to reject calls that would close TabStudio (see <see cref="InProcessSafetyAnalyzer"/>).</param>
+    /// <param name="stopwatch">A running stopwatch for the duration, or <see langword="null"/> to start one now.</param>
+    /// <param name="projectName">The project name to attach to diagnostics.</param>
+    /// <param name="resources">The files to compile into the assembly as resources (see <see cref="ManifestResources"/>), if any.</param>
+    /// <param name="mapDiagnostics">Converts the emit's diagnostics; <see cref="DiagnosticMapper"/> when <see langword="null"/>.</param>
+    /// <param name="cancellationToken">Cancels emitting.</param>
+    internal static CompilationResult Emit(
+        RoslynCompilation compilation,
+        bool checkInProcessSafety,
+        Stopwatch? stopwatch,
+        string? projectName,
+        IEnumerable<ResourceDescription>? resources,
+        Func<IEnumerable<Diagnostic>, IReadOnlyList<BuildDiagnostic>>? mapDiagnostics,
         CancellationToken cancellationToken)
     {
         stopwatch ??= Stopwatch.StartNew();
@@ -249,7 +282,7 @@ public sealed class CSharpCompiler
         using var symbols = new MemoryStream();
         var emit = compilation.Emit(image, symbols, manifestResources: resources, options: EmitOptions, cancellationToken: cancellationToken);
 
-        var diagnostics = DiagnosticMapper.Map(emit.Diagnostics, projectName ?? name).ToList();
+        var diagnostics = (mapDiagnostics?.Invoke(emit.Diagnostics) ?? DiagnosticMapper.Map(emit.Diagnostics, projectName ?? name)).ToList();
         if (checkInProcessSafety)
         {
             diagnostics.AddRange(InProcessSafetyAnalyzer.Analyze(compilation, projectName ?? name, cancellationToken));

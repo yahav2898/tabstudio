@@ -171,6 +171,7 @@ public static class StackDetector
     {
         ProjectKind.AspNetCore => new StackComponent(StackKind.AspNetCore, "ASP.NET Core", string.Empty),
         ProjectKind.BlazorWebAssembly => new StackComponent(StackKind.Blazor, "Blazor", string.Empty),
+        ProjectKind.BlazorWebApp => new StackComponent(StackKind.Blazor, "Blazor", string.Empty),
         ProjectKind.Wpf => new StackComponent(StackKind.Wpf, "WPF", string.Empty),
         ProjectKind.WinForms => new StackComponent(StackKind.WinForms, "Windows Forms", string.Empty),
         ProjectKind.WinUI => new StackComponent(StackKind.WinUI, "WinUI", string.Empty),
