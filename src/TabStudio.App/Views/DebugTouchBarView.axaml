@@ -44,6 +44,13 @@
           <TextBlock Text="Out" VerticalAlignment="Center" FontSize="12.5" />
         </StackPanel>
       </Button>
+      <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" ToolTip.Tip="Run to Cursor (Ctrl+F10)"
+              Command="{Binding RunToCursorCommand}" IsVisible="{Binding IsPaused}">
+        <StackPanel Orientation="Horizontal" Spacing="7">
+          <controls:StrokeIcon Data="{StaticResource Icon.NextStatement}" Size="16" />
+          <TextBlock Text="To Cursor" VerticalAlignment="Center" FontSize="12.5" />
+        </StackPanel>
+      </Button>
       <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" ToolTip.Tip="Stop Debugging (Shift+F5)"
               Command="{Binding StopDebuggingCommand}">
         <StackPanel Orientation="Horizontal" Spacing="7">

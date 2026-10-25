@@ -109,6 +109,55 @@ public sealed class DebuggingTests
     }
 
     [AvaloniaFact]
+    public async Task Break_All_pauses_a_running_loop()
+    {
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var workspace = fixture.Workspace;
+        workspace.ActiveDocument!.Document.Text = """
+            var counter = 0;
+            while (true)
+            {
+                counter++;
+            }
+            """;
+
+        await workspace.StartDebuggingCommand.ExecuteAsync(null);
+        Assert.True(workspace.IsDebuggeeRunning);
+        workspace.BreakAllCommand.Execute(null);
+        await UiTestHelpers.WaitUntilAsync(() => workspace.IsPaused, because: "Break All");
+        await workspace.PauseShown;
+
+        Assert.StartsWith("Paused (Break All)", workspace.StatusText, StringComparison.Ordinal);
+        Assert.Contains(workspace.Locals.Tree.Rows, r => r.Name == "counter");
+
+        workspace.StopDebuggingCommand.Execute(null);
+        await WaitForExitAsync(workspace);
+    }
+
+    [AvaloniaFact]
+    public async Task Restart_stops_the_program_and_debugs_it_again()
+    {
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var workspace = fixture.Workspace;
+        fixture.AnswerInput("Ada");
+        workspace.Breakpoints.Toggle(workspace.ActiveDocument!.FilePath, CreateGreeter);
+        await workspace.StartDebuggingCommand.ExecuteAsync(null);
+        await WaitForPauseAsync(workspace, CreateGreeter);
+        var builds = 0;
+        workspace.PropertyChanged += (_, e) => builds += e.PropertyName == nameof(WorkspaceViewModel.State) && workspace.State == IdeState.Busy ? 1 : 0;
+
+        workspace.RestartCommand.Execute(null);
+        await UiTestHelpers.WaitUntilAsync(() => builds == 1 && workspace.IsPaused, because: "the restarted program to pause");
+        await workspace.PauseShown;
+
+        Assert.Equal(CreateGreeter, workspace.CallStack.Frames[0].Location?.Line);
+        workspace.StopDebuggingCommand.Execute(null);
+        await WaitForExitAsync(workspace);
+    }
+
+    [AvaloniaFact]
     public async Task Run_to_cursor_starts_the_program_and_stops_at_the_caret_line()
     {
         using var fixture = new WorkspaceFixture();
