@@ -16,8 +16,13 @@
     <RootNamespace>TabStudio.Android</RootNamespace>
     <!-- Android 9. Keeps entry-level and school tablets in, see the README's requirements. -->
     <SupportedOSPlatformVersion>28</SupportedOSPlatformVersion>
-    <!-- 64-bit and 32-bit ARM, including 32-bit Android on a 64-bit chip. CI adds android-x64 for the emulator. -->
+    <!--
+      64-bit and 32-bit ARM, including 32-bit Android on a 64-bit chip. For an x86_64 emulator, build with
+      -p:TabStudioRuntimeIdentifiers=android-x64: overriding RuntimeIdentifiers itself on the command line would
+      also apply it to the referenced libraries and break their build.
+    -->
     <RuntimeIdentifiers>android-arm64;android-arm</RuntimeIdentifiers>
+    <RuntimeIdentifiers Condition="'$(TabStudioRuntimeIdentifiers)' != ''">$(TabStudioRuntimeIdentifiers)</RuntimeIdentifiers>
     <AndroidPackageFormat>apk</AndroidPackageFormat>
   </PropertyGroup>
 

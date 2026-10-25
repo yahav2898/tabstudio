@@ -96,19 +96,20 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-        run: |
-          notes="The latest build of \`main\`: commit ${GITHUB_SHA}, built $(date -u '+%Y-%m-%d %H:%M UTC').
+        run: bash build/ci/publish-nightly.sh nightly ci-out/TabStudio.apk
 
-          Install \`TabStudio.apk\` on an Android 9+ tablet with an ARM processor. Every nightly is signed with the public development key in \`build/android\`, so it installs as an update over the previous one. Not a stable release."
-          if gh release view nightly > /dev/null 2>&1; then
-            # Move the tag to this commit, then refresh the release.
-            gh api -X PATCH "repos/${GH_REPO}/git/refs/tags/nightly" -f sha="$GITHUB_SHA" -F force=true > /dev/null \
-              || gh api -X POST "repos/${GH_REPO}/git/refs" -f ref=refs/tags/nightly -f sha="$GITHUB_SHA" > /dev/null
-            gh release edit nightly --title "TabStudio nightly" --notes "$notes" --prerelease
-          else
-            gh release create nightly --title "TabStudio nightly" --notes "$notes" --prerelease --target "$GITHUB_SHA"
-          fi
-          gh release upload nightly ci-out/TabStudio.apk --clobber
+      # TEMPORARY, agent/android only: runs the release script end to end (create, then update) with a
+      # throwaway tag that is deleted afterwards, so the main-only step above is known to work.
+      - name: Test the release script
+        if: github.event_name == 'push' && github.ref == 'refs/heads/agent/android'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          tag="ci-test-nightly-${{ github.run_id }}"
+          trap 'gh release delete "$tag" --cleanup-tag --yes || true' EXIT
+          bash build/ci/publish-nightly.sh "$tag" ci-out/TabStudio.apk
+          bash build/ci/publish-nightly.sh "$tag" ci-out/TabStudio.apk
 
       - name: Keep the APK out of the published logs
         if: always()
@@ -134,7 +135,7 @@ jobs:
         run: |
           mkdir -p ci-out
           status=0
-          dotnet publish src/TabStudio.Android -c Release -f net10.0-android -p:RuntimeIdentifiers=android-x64 \
+          dotnet publish src/TabStudio.Android -c Release -f net10.0-android -p:TabStudioRuntimeIdentifiers=android-x64 \
             -p:TabStudioBuildNumber=${{ github.run_number }} \
             -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME" \
             > ci-out/android-x64-build.log 2>&1 || status=$?

@@ -21,7 +21,7 @@ expected="$(keytool -list -v -keystore "$keystore" -storepass tabstudio-dev -ali
   echo
   echo "== manifest"
   "$build_tools/aapt2" dump badging "$apk" 2>/dev/null \
-    | grep -E "^(package|sdkVersion|targetSdkVersion|application-label|launchable-activity|uses-permission|native-code)" || true
+    | grep -E "^(package|sdkVersion|minSdkVersion|targetSdkVersion|application-label:|launchable-activity|uses-permission|native-code)" || true
   echo
   echo "== native libraries per ABI"
   unzip -l "$apk" | awk '{ print $4 }' | grep '^lib/' | cut -d/ -f2 | sort | uniq -c || true
@@ -36,7 +36,8 @@ expected="$(keytool -list -v -keystore "$keystore" -storepass tabstudio-dev -ali
 } > "$report" 2>&1
 cat "$report"
 
-actual="$("$build_tools/apksigner" verify --print-certs "$apk" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p')"
+# apksigner names the signer by scheme ("Signer #1" for v1/v2, "V3.0 Signer" for v3); take the first certificate.
+actual="$({ "$build_tools/apksigner" verify --print-certs "$apk" || true; } | sed -n 's/^.*certificate SHA-256 digest: //p' | head -n 1 || true)"
 if [ -z "$expected" ] || [ "$actual" != "$expected" ]; then
   echo "The APK is not signed with the development key: expected '${expected}', got '${actual}'." >&2
   exit 1
