@@ -147,7 +147,6 @@ public sealed class BridgeFrameView : Control, IDisposable
         }
 
         Focus();
-        _ime.ShowInputPanel();
     }
 
     /// <inheritdoc />

@@ -21,6 +21,18 @@ else
 fi
 
 work="$(mktemp -d)"
+
+# Runs gh api; on failure, keeps why, which the script says as notices when it ends: they can be read through the API
+# even when the logs are not published.
+trap 'cat "$work/notices" 2>/dev/null || true' EXIT
+api() {
+  local out
+  if ! out=$(gh api "$@" 2>&1); then
+    echo "::notice title=publish-logs-api::gh api $1 failed: ${out//$'\n'/ }" >> "$work/notices"
+    return 1
+  fi
+  printf '%s' "$out"
+}
 mkdir -p ci-out
 echo "job=${job} branch=${branch} status=${status} sha=${GITHUB_SHA} run=${GITHUB_RUN_ID} time=$(date -u +%FT%TZ)" > ci-out/STATUS
 
@@ -33,22 +45,22 @@ while IFS= read -r -d '' file; do
     base64 -w0 "$file"
     printf '"}'
   } > "$work/blob.json"
-  sha=$(gh api "repos/$repo/git/blobs" --input "$work/blob.json" --jq .sha)
+  sha=$(api "repos/$repo/git/blobs" --input "$work/blob.json" --jq .sha)
   entries="${entries:+$entries,}{\"path\":\"${relative}\",\"mode\":\"100644\",\"type\":\"blob\",\"sha\":\"${sha}\"}"
 done < <(find ci-out -type f -print0)
 
 printf '{"tree":[%s]}' "$entries" > "$work/folder.json"
-folder_tree=$(gh api "repos/$repo/git/trees" --input "$work/folder.json" --jq .sha)
+folder_tree=$(api "repos/$repo/git/trees" --input "$work/folder.json" --jq .sha)
 
 # Jobs publish in parallel: build on the newest commit, and try again when another job's commit came first.
 for attempt in 1 2 3 4 5 6; do
-  head=$(gh api "repos/$repo/git/ref/heads/ci-logs" --jq .object.sha)
-  base_tree=$(gh api "repos/$repo/git/commits/$head" --jq .tree.sha)
+  head=$(api "repos/$repo/git/ref/heads/ci-logs" --jq .object.sha)
+  base_tree=$(api "repos/$repo/git/commits/$head" --jq .tree.sha)
   printf '{"base_tree":"%s","tree":[{"path":"%s","mode":"040000","type":"tree","sha":"%s"}]}' "$base_tree" "$folder" "$folder_tree" > "$work/root.json"
-  root=$(gh api "repos/$repo/git/trees" --input "$work/root.json" --jq .sha)
+  root=$(api "repos/$repo/git/trees" --input "$work/root.json" --jq .sha)
   printf '{"message":"%s: %s @ %s","tree":"%s","parents":["%s"]}' "$folder" "$status" "${GITHUB_SHA::8}" "$root" "$head" > "$work/commit.json"
-  commit=$(gh api "repos/$repo/git/commits" --input "$work/commit.json" --jq .sha)
-  if gh api -X PATCH "repos/$repo/git/refs/heads/ci-logs" -f sha="$commit" -F force=false > /dev/null; then
+  commit=$(api "repos/$repo/git/commits" --input "$work/commit.json" --jq .sha)
+  if api -X PATCH "repos/$repo/git/refs/heads/ci-logs" -f sha="$commit" -F force=false > /dev/null; then
     echo "Published ci-out to ci-logs:$folder"
     exit 0
   fi

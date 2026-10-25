@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using TabStudio.App.ViewModels.WindowsBridge;
 
@@ -99,7 +100,7 @@ public sealed partial class BridgePaneView : UserControl
 
         try
         {
-            await _viewModel.WritePcClipboardAsync(await clipboard.GetTextAsync());
+            await _viewModel.WritePcClipboardAsync(await clipboard.TryGetTextAsync());
         }
         catch (Exception ex) when (ex is TabStudio.Link.LinkRemoteException or TabStudio.Link.LinkConnectionLostException)
         {
