@@ -181,14 +181,38 @@ public sealed class DebugSession : IDisposable
     /// <param name="cancellationToken">Stops the program, like <see cref="Stop"/>.</param>
     /// <returns>How the program ended.</returns>
     /// <exception cref="InvalidOperationException">The session already ran its program.</exception>
+    public Task<RunResult> RunAsync(
+        IReadOnlyList<string> arguments,
+        IConsoleSink console,
+        ConsoleInput? input = null,
+        CancellationToken cancellationToken = default) =>
+        RunAsync(arguments, packageAssemblies: [], console, input, cancellationToken);
+
+    /// <summary>Runs a program that uses NuGet packages under the debugger and waits until it ends.</summary>
+    /// <remarks>
+    /// Package code is not instrumented: breakpoints and steps stay in the program's own code, and Step Into steps
+    /// over calls into a package, as Just My Code does in Visual Studio.
+    /// </remarks>
+    /// <param name="arguments">Command-line arguments passed to <c>Main</c>.</param>
+    /// <param name="packageAssemblies">
+    /// Full paths of the package assemblies the program may load, such as <c>RestoreResult.RuntimeAssemblies</c>. They
+    /// are found by simple name and loaded from disk on demand, as <see cref="ProgramRunner"/> does.
+    /// </param>
+    /// <param name="console">Receives the program's output.</param>
+    /// <param name="input">Standard input, or <see langword="null"/> for an empty input.</param>
+    /// <param name="cancellationToken">Stops the program, like <see cref="Stop"/>.</param>
+    /// <returns>How the program ended.</returns>
+    /// <exception cref="InvalidOperationException">The session already ran its program.</exception>
     public async Task<RunResult> RunAsync(
         IReadOnlyList<string> arguments,
+        IReadOnlyList<string> packageAssemblies,
         IConsoleSink console,
         ConsoleInput? input = null,
         CancellationToken cancellationToken = default)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
         ArgumentNullException.ThrowIfNull(arguments);
+        ArgumentNullException.ThrowIfNull(packageAssemblies);
         ArgumentNullException.ThrowIfNull(console);
         if (Interlocked.CompareExchange(ref _phase, Running, NotStarted) != NotStarted)
         {
@@ -212,7 +236,7 @@ public sealed class DebugSession : IDisposable
             AppContext.SetData(DebugRuntimeSource.DataKey, sink);
             using var stop = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _stop.Token);
             result = await new ProgramRunner()
-                .RunAsync(_build.Result.EntryAssembly!, _build.Result.Dependencies, arguments, console, input, stop.Token)
+                .RunAsync(_build.Result.EntryAssembly!, _build.Result.Dependencies, packageAssemblies, arguments, console, input, stop.Token)
                 .ConfigureAwait(false);
         }
         finally
