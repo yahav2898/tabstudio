@@ -404,13 +404,14 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         lock (_gate)
         {
             _optimize = optimize;
-            var parseOptions = CSharpCompiler.CreateParseOptions(optimize);
             var level = optimize ? OptimizationLevel.Release : OptimizationLevel.Debug;
             var solution = _workspace.CurrentSolution;
             foreach (var project in solution.Projects)
             {
                 if (project.CompilationOptions is { } options)
                 {
+                    var parseOptions = CSharpCompiler.CreateParseOptions(
+                        optimize, _projects.TryGetValue(project.Id, out var known) ? SdkGenerators.InterceptorsNamespaces(known) : null);
                     solution = solution
                         .WithProjectCompilationOptions(project.Id, options.WithOptimizationLevel(level))
                         .WithProjectParseOptions(project.Id, parseOptions);
@@ -542,7 +543,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             LanguageNames.CSharp,
             filePath: project.FilePath,
             compilationOptions: CSharpCompiler.CreateCompilationOptions(kind, project.NullableEnabled, _optimize, allowUnsafe, _concurrentBuild),
-            parseOptions: CSharpCompiler.CreateParseOptions(_optimize),
+            parseOptions: CSharpCompiler.CreateParseOptions(_optimize, SdkGenerators.InterceptorsNamespaces(project)),
             documents: documents,
             projectReferences: projectReferences,
             metadataReferences: GetMetadataReferences(project),

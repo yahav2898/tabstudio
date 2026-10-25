@@ -71,19 +71,22 @@ public sealed partial class RoslynWorkspaceHost
     }
 
     /// <summary>
-    /// The framework's and the project's analyzers. An Avalonia project gets TabStudio's XAML generator in place of
+    /// The framework's and the project's analyzers, without the generators the SDK leaves off unless the project turns
+    /// them on (see <see cref="SdkGenerators"/>). An Avalonia project gets TabStudio's XAML generator in place of
     /// Avalonia's, which expects XAML compiled after the C# compiler. The caller holds the gate.
     /// </summary>
     private IReadOnlyList<AnalyzerReference> GetAnalyzerReferences(TsProject project)
     {
-        IEnumerable<AnalyzerReference> packages = _packageAnalyzers.GetValueOrDefault(project.FilePath) ?? [];
+        var analyzers = _frameworkAnalyzers
+            .Concat(_packageAnalyzers.GetValueOrDefault(project.FilePath) ?? [])
+            .Where(a => SdkGenerators.IsEnabled(project, a.FullPath));
         if (!UsesAvaloniaXaml(project))
         {
-            return [.. _frameworkAnalyzers, .. packages];
+            return [.. analyzers];
         }
 
-        packages = packages.Where(a => !string.Equals(Path.GetFileName(a.FullPath), "Avalonia.Generators.dll", StringComparison.OrdinalIgnoreCase));
-        return [.. _frameworkAnalyzers, .. packages, Xaml.GeneratorReference.AvaloniaXaml];
+        analyzers = analyzers.Where(a => !string.Equals(Path.GetFileName(a.FullPath), "Avalonia.Generators.dll", StringComparison.OrdinalIgnoreCase));
+        return [.. analyzers, Xaml.GeneratorReference.AvaloniaXaml];
     }
 
     /// <summary>Whether a project uses Avalonia, whose <c>.axaml</c> files TabStudio's XAML generator compiles.</summary>
