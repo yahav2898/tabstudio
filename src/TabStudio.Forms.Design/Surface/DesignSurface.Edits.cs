@@ -211,10 +211,16 @@ internal sealed partial class DesignSurface
     /// <param name="component">The component.</param>
     /// <param name="eventName">The event.</param>
     /// <param name="handler">The handler method's name, or <see langword="null"/> to remove it.</param>
+    /// <exception cref="ArgumentException">The name is not a C# identifier.</exception>
     public void SetHandler(DesignComponent component, string eventName, string? handler)
     {
         ArgumentNullException.ThrowIfNull(component);
         ArgumentNullException.ThrowIfNull(eventName);
+        if (handler is not null && (!SyntaxFacts.IsValidIdentifier(handler) || SyntaxFacts.GetKeywordKind(handler) != SyntaxKind.None))
+        {
+            throw new ArgumentException($"'{handler}' is not a valid method name: use letters, digits and underscores, starting with a letter.", nameof(handler));
+        }
+
         Edit(doc => doc.Find(component.Name)!.SetHandler(eventName, handler));
     }
 

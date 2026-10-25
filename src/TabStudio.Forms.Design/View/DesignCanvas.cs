@@ -117,7 +117,7 @@ internal sealed partial class DesignCanvas : Control
         _surface?.Document is { } document ? [.. _selection.Select(document.Find).OfType<DesignComponent>()] : [];
 
     /// <summary>The selected component the Properties panel shows: the last selected, or the form.</summary>
-    public DesignComponent? PrimarySelection => Selection.LastOrDefault() ?? _surface?.Document?.Root;
+    public DesignComponent? PrimarySelection => Selection is [.., var last] ? last : _surface?.Document?.Root;
 
     /// <summary>Selects components by name.</summary>
     /// <param name="names">The names; none selects nothing.</param>
@@ -162,7 +162,7 @@ internal sealed partial class DesignCanvas : Control
             return default;
         }
 
-        var bounds = _surface.BoundsOf(component);
+        var bounds = DesignSurface.BoundsOf(component);
         if (bounds.IsEmpty && TrayItems().FirstOrDefault(t => t.Component.Name == component.Name) is { Component: not null } tray)
         {
             return tray.Bounds;
@@ -352,6 +352,20 @@ internal sealed partial class DesignCanvas : Control
     {
         var frame = _surface?.Frame(_content)?.Frame ?? DrawingRectangle.Empty;
         return new Point(FormMargin - (frame.X * _scale), FormMargin - (frame.Y * _scale));
+    }
+
+    /// <inheritdoc />
+    protected override void OnSizeChanged(SizeChangedEventArgs e)
+    {
+        base.OnSizeChanged(e);
+
+        // A new width can change the scale, and with it the height the form needs.
+        var scale = _scale;
+        UpdateScale();
+        if (scale != _scale)
+        {
+            InvalidateMeasure();
+        }
     }
 
     /// <summary>The size the form needs on the canvas.</summary>

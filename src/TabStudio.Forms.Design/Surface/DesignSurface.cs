@@ -140,7 +140,7 @@ internal sealed partial class DesignSurface
 
     /// <summary>A component's bounds in the root's client coordinates; empty for a component that is not drawn, such as a timer.</summary>
     /// <param name="component">The component.</param>
-    public Rectangle BoundsOf(DesignComponent component)
+    public static Rectangle BoundsOf(DesignComponent component)
     {
         ArgumentNullException.ThrowIfNull(component);
         return component.Instance switch
@@ -155,7 +155,7 @@ internal sealed partial class DesignSurface
 
     /// <summary>The bounds of a component in its parent's client coordinates, as its Location and Size properties say.</summary>
     /// <param name="component">The component.</param>
-    public Rectangle LocalBoundsOf(DesignComponent component)
+    public static Rectangle LocalBoundsOf(DesignComponent component)
     {
         ArgumentNullException.ThrowIfNull(component);
         return component.Instance switch
@@ -204,7 +204,7 @@ internal sealed partial class DesignSurface
                 var origin = strip.BoundsInWindow().Location;
                 foreach (ToolStripItem item in strip.Items)
                 {
-                    if (item.Visible && document.Of(item) is { } itemComponent && new Rectangle(origin + (Size)item.Bounds.Location, item.Bounds.Size).Contains(point))
+                    if (item.Available && document.Of(item) is { } itemComponent && new Rectangle(origin + (Size)item.Bounds.Location, item.Bounds.Size).Contains(point))
                     {
                         return itemComponent;
                     }

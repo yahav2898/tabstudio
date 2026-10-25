@@ -138,7 +138,7 @@ internal sealed partial class DesignCanvas
 
         var moved = Selection.Where(c => !c.IsRoot && c.Instance is System.Windows.Forms.Control).Select(c =>
         {
-            var bounds = _surface.LocalBoundsOf(c);
+            var bounds = DesignSurface.LocalBoundsOf(c);
             bounds.Offset(dx, dy);
             return (c, bounds);
         }).ToList();
@@ -187,9 +187,9 @@ internal sealed partial class DesignCanvas
         }
 
         // A handle of the selected component resizes it.
-        if (Selection.LastOrDefault() is { } primary && HandleAt(primary, point, touch) is { } handle)
+        if (Selection is [.., var primary] && HandleAt(primary, point, touch) is { } handle)
         {
-            Begin(e, new Gesture(GestureKind.Resize, point, touch) { Handle = handle, Components = [(primary, _surface.LocalBoundsOf(primary))] });
+            Begin(e, new Gesture(GestureKind.Resize, point, touch) { Handle = handle, Components = [(primary, DesignSurface.LocalBoundsOf(primary))] });
             return;
         }
 
@@ -207,7 +207,7 @@ internal sealed partial class DesignCanvas
         }
 
         var movable = Selection.Where(c => !c.IsRoot && c.Instance is System.Windows.Forms.Control control && control.Dock == System.Windows.Forms.DockStyle.None).ToList();
-        Begin(e, new Gesture(GestureKind.Pending, point, touch) { Hit = hit, Components = [.. movable.Select(c => (c, _surface.LocalBoundsOf(c)))] });
+        Begin(e, new Gesture(GestureKind.Pending, point, touch) { Hit = hit, Components = [.. movable.Select(c => (c, DesignSurface.LocalBoundsOf(c)))] });
         if (touch)
         {
             _longPress.Start();
@@ -402,7 +402,7 @@ internal sealed partial class DesignCanvas
             return null;
         }
 
-        var bounds = _surface.BoundsOf(selected);
+        var bounds = DesignSurface.BoundsOf(selected);
         return DesignSurface.IsContainer(control) ? new DrawingPoint(bounds.X + 1, bounds.Y + 1) : null;
     }
 

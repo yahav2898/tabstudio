@@ -108,7 +108,7 @@ public sealed class DesignSurfaceTests
 
         surface.SetProperty(box, "Anchor", AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
         surface.SetProperty(surface.Document!.Find("nameTextBox")!, "BackColor", Color.LightYellow);
-        surface.SetProperty(surface.Document!.Find("nameTextBox")!, "Font", new Font("Segoe UI", 12F, FontStyle.Italic));
+        surface.SetProperty(surface.Document!.Find("nameTextBox")!, "Font", new Font("Segoe UI", 12F, FontStyle.Italic, GraphicsUnit.Point, 0));
         surface.SetProperty(surface.Document!.Find("nameTextBox")!, "Enabled", false);
         surface.SetProperty(surface.Document!.Find("saveButton")!, "ForeColor", SystemColors.ControlText);
 
