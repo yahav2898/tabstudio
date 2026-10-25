@@ -21,6 +21,10 @@ public sealed partial class OutputView : UserControl
         InitializeComponent();
         Editor.Options.EnableHyperlinks = false;
         Editor.Options.EnableEmailHyperlinks = false;
+
+        // Following the end of the output keeps the last lines at the bottom of the panel; scrolling below the
+        // document would leave only the empty last line in view.
+        Editor.Options.AllowScrollBelowDocument = false;
         Editor.TextArea.Caret.CaretBrush = Avalonia.Media.Brushes.Transparent;
         Input.KeyDown += OnInputKeyDown;
     }
