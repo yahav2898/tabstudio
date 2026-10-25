@@ -34,7 +34,8 @@ public sealed record BuildResult(
 /// </summary>
 /// <remarks>
 /// Compilation goes through the <see cref="RoslynWorkspaceHost"/>, so a build reuses the compilations the
-/// editor already keeps warm for live diagnostics. A build after a small edit only recompiles what changed.
+/// editor already keeps warm for live diagnostics. A build after a small edit only recompiles what changed. A
+/// <see cref="WorkspaceSnapshot"/> builds the workspace as it would be with changes that are not saved yet.
 /// </remarks>
 public sealed class ProjectBuilder
 {
@@ -47,11 +48,11 @@ public sealed class ProjectBuilder
     /// </summary>
     public const string UnrestoredPackageId = "TS2003";
 
-    private readonly RoslynWorkspaceHost _host;
+    private readonly IBuildSource _host;
 
-    /// <summary>Creates a builder over a loaded workspace host.</summary>
-    /// <param name="host">The host that holds the projects.</param>
-    public ProjectBuilder(RoslynWorkspaceHost host)
+    /// <summary>Creates a builder over a loaded workspace host or a snapshot of it.</summary>
+    /// <param name="host">Where the projects and their compilations come from.</param>
+    public ProjectBuilder(IBuildSource host)
     {
         ArgumentNullException.ThrowIfNull(host);
         _host = host;

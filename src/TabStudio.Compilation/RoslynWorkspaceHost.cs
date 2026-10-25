@@ -7,6 +7,7 @@ using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.Host;
 using Microsoft.CodeAnalysis.Host.Mef;
 using Microsoft.CodeAnalysis.Text;
+using TabStudio.Compilation.Building;
 using TabStudio.Core.Diagnostics;
 using TabStudio.Core.Workspaces;
 using RoslynProjectInfo = Microsoft.CodeAnalysis.ProjectInfo;
@@ -43,7 +44,7 @@ public readonly record struct TextEdit(int Start, int Length, string NewText);
 /// Updates are serialized; queries work on immutable snapshots and can run concurrently with updates.
 /// </para>
 /// </remarks>
-public sealed partial class RoslynWorkspaceHost : IDisposable
+public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
 {
     private static readonly Lazy<HostServices> SharedHostServices = new(CreateHostServices);
 
