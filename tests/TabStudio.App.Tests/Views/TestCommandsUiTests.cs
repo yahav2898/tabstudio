@@ -39,8 +39,10 @@ public sealed class TestCommandsUiTests : IClassFixture<SharedToolchain>, IDispo
         editor.Editor.CaretOffset = CalculatorSolution.Tests.IndexOf("Adds()", StringComparison.Ordinal);
         var menu = Assert.IsType<ContextMenu>(editor.Editor.ContextMenu);
 
-        menu.Open(editor.Editor);
+        // A right click or a long press asks for the context menu like this, which updates the menu as it opens.
+        editor.Editor.RaiseEvent(new ContextRequestedEventArgs());
         Dispatcher.UIThread.RunJobs();
+        Assert.True(menu.IsOpen);
         var item = Assert.Single(menu.Items.OfType<MenuItem>(), i => i.IsVisible && (i.Header as string)?.StartsWith("Run Test", StringComparison.Ordinal) == true);
         Assert.Equal("Run Test 'Adds'", item.Header);
         item.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
