@@ -26,4 +26,19 @@ public enum EditorAction
 
     /// <summary>Move keyboard focus into the editor.</summary>
     Focus,
+
+    /// <summary>Open the light bulb menu of quick fixes and refactorings (Ctrl+.).</summary>
+    QuickActions,
+
+    /// <summary>Open the completion list (Ctrl+J).</summary>
+    ListMembers,
+
+    /// <summary>Complete the word, or open the completion list when there are several choices (Ctrl+Space).</summary>
+    CompleteWord,
+
+    /// <summary>Show the signature of the call at the caret (Ctrl+Shift+Space).</summary>
+    ParameterInfo,
+
+    /// <summary>Show Quick Info for the symbol at the caret (Ctrl+K, Ctrl+I).</summary>
+    QuickInfo,
 }

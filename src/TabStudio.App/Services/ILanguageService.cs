@@ -74,4 +74,7 @@ public interface ILanguageService : IDisposable
     /// <param name="projectFilePath">The project.</param>
     /// <returns>Full paths, or an empty list when the project has no restored packages.</returns>
     IReadOnlyList<string> GetPackageRuntimeAssemblies(string projectFilePath);
+
+    /// <summary>IntelliSense for the editor, over the same projects and text.</summary>
+    ILanguageFeatures Features { get; }
 }

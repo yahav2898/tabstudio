@@ -24,10 +24,14 @@ public sealed class LocalLanguageService : ILanguageService
         _host = host;
         _builder = new ProjectBuilder(host);
         _restorer = restorer;
+        Features = new LocalLanguageFeatures(host);
     }
 
     /// <summary>The Roslyn host, for features that run in this process, such as IntelliSense and the debugger.</summary>
     public RoslynWorkspaceHost Host => _host;
+
+    /// <inheritdoc />
+    public ILanguageFeatures Features { get; }
 
     /// <inheritdoc />
     public void Reload(Workspace workspace, ISourceTextProvider sources) => _host.Load(workspace, sources);

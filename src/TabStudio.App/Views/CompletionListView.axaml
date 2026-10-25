@@ -1,0 +1,81 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:vm="using:TabStudio.App.ViewModels"
+             x:Class="TabStudio.App.Views.CompletionListView"
+             x:DataType="vm:CompletionListViewModel">
+
+  <UserControl.Resources>
+    <!-- A completion row: tall enough to tap, never takes keyboard focus from the editor. -->
+    <ControlTheme x:Key="CompletionRow" TargetType="ListBoxItem">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderBrush" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="5" />
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="Focusable" Value="False" />
+      <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+      <Setter Property="Template">
+        <ControlTemplate>
+          <ContentPresenter Name="PART_ContentPresenter"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            Padding="{TemplateBinding Padding}"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Center" />
+        </ControlTemplate>
+      </Setter>
+      <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource Brush.Hover}" />
+      </Style>
+      <Style Selector="^:selected /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource Brush.Selection}" />
+      </Style>
+      <Style Selector="^:selected">
+        <Setter Property="Foreground" Value="{DynamicResource Brush.TextBright}" />
+      </Style>
+    </ControlTheme>
+  </UserControl.Resources>
+
+  <UserControl.Styles>
+    <!-- A soft selection is only outlined: Space and punctuation do not commit it, Tab does. -->
+    <Style Selector="ListBox.soft ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderBrush" Value="{DynamicResource Brush.Link}" />
+    </Style>
+  </UserControl.Styles>
+
+  <StackPanel Orientation="Horizontal" Spacing="6">
+    <Border Width="400" VerticalAlignment="Top" Padding="4" CornerRadius="8"
+            Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
+            BoxShadow="0 8 24 0 #59000000">
+      <ListBox x:Name="ItemList" ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem, Mode=OneWay}"
+               ItemContainerTheme="{StaticResource CompletionRow}" Classes.soft="{Binding IsSoftSelection}"
+               Focusable="False" MaxHeight="276" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+        <ListBox.ItemTemplate>
+          <DataTemplate DataType="vm:CompletionItemViewModel">
+            <Grid ColumnDefinitions="Auto,*,Auto" Height="34" Background="Transparent">
+              <controls:SymbolGlyphIcon Kind="{Binding Kind}" Size="16" Margin="8,0,10,0" VerticalAlignment="Center" />
+              <controls:StyledTextBlock Grid.Column="1" Runs="{Binding Runs}" FontFamily="{DynamicResource CodeFont}" FontSize="13"
+                                        BoldForeground="{DynamicResource Brush.Link}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+              <TextBlock Grid.Column="2" Text="{Binding InlineDescription}" Classes="muted" FontSize="11.5" Margin="10,0,8,0"
+                         MaxWidth="150" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+            </Grid>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+    </Border>
+
+    <!-- The description of the selected item, like Visual Studio's tooltip beside the list. -->
+    <Border MaxWidth="440" VerticalAlignment="Top" Padding="12,10" CornerRadius="8" IsVisible="{Binding HasDescription}"
+            Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
+            BoxShadow="0 8 24 0 #59000000">
+      <controls:StyledTextBlock Runs="{Binding Description}" TextWrapping="Wrap" FontFamily="{DynamicResource CodeFont}" FontSize="12.5"
+                                Foreground="{DynamicResource Brush.Text}" />
+    </Border>
+  </StackPanel>
+</UserControl>

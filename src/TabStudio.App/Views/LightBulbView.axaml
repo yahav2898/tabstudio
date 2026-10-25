@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             x:Class="TabStudio.App.Views.LightBulbView">
+  <!-- The light bulb next to the caret line when quick fixes or refactorings are available. Tap it for the menu. -->
+  <Border x:Name="Bulb" Width="32" Height="28" CornerRadius="7" Cursor="Hand"
+          Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
+          ToolTip.Tip="Show potential fixes (Ctrl+.)">
+    <controls:StrokeIcon x:Name="Glyph" Size="17" HorizontalAlignment="Center" Foreground="{DynamicResource Brush.Warning}" />
+  </Border>
+</UserControl>
