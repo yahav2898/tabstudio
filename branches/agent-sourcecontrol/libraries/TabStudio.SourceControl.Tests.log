@@ -1,23 +1,186 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/TabStudio.SourceControl.csproj (in 81 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/TabStudio.SourceControl.Tests.csproj (in 158 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/TabStudio.SourceControl.csproj (in 117 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/TabStudio.SourceControl.Tests.csproj (in 266 ms).
   2 of 4 projects are up-to-date for restore.
   TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/FileFetcher.cs(119,31): warning CA1859: Change type of parameter 'paths' from 'System.Collections.Generic.IReadOnlyList<string>' to 'System.Collections.Generic.List<string>' for improved performance (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1859) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/TabStudio.SourceControl.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/GitHubSync.Commit.cs(182,58): warning CA1859: Change type of parameter 'paths' from 'System.Collections.Generic.IReadOnlyList<string>' to 'System.Collections.Generic.List<string>' for improved performance (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1859) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/TabStudio.SourceControl.csproj]
   TabStudio.SourceControl -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/bin/Release/net10.0/TabStudio.SourceControl.dll
-/home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/GitHubSyncTests.cs(163,16): error CS0121: The call is ambiguous between the following methods or properties: 'Xunit.Assert.Equal(float, float, int)' and 'Xunit.Assert.Equal(decimal, decimal, int)' [/home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/TabStudio.SourceControl.Tests.csproj]
-/home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/Merging/LineDiffTests.cs(122,71): warning CA1859: Change type of parameter 'a' from 'System.Collections.Generic.IReadOnlyList<string>' to 'System.Collections.Generic.List<string>' for improved performance (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1859) [/home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/TabStudio.SourceControl.Tests.csproj]
-/home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/Merging/LineDiffTests.cs(122,96): warning CA1859: Change type of parameter 'b' from 'System.Collections.Generic.IReadOnlyList<string>' to 'System.Collections.Generic.List<string>' for improved performance (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1859) [/home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/TabStudio.SourceControl.Tests.csproj]
-/home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/FakeGitHub.cs(327,95): warning CA1826: Do not use Enumerable methods on indexable collections. Instead use the collection directly. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1826) [/home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/TabStudio.SourceControl.Tests.csproj]
-/home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/FakeGitHub.cs(529,73): warning CA5350: Hash uses a weak cryptographic algorithm SHA1 (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca5350) [/home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/TabStudio.SourceControl.Tests.csproj]
-/home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/FakeGitHub.cs(199,33): warning CA1822: Member 'GetRef' does not access instance data and can be marked as static (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1822) [/home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/TabStudio.SourceControl.Tests.csproj]
-/home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/FakeGitHub.cs(236,33): warning CA1822: Member 'GitCommit' does not access instance data and can be marked as static (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1822) [/home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/TabStudio.SourceControl.Tests.csproj]
-/home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/FakeGitHub.cs(292,33): warning CA1822: Member 'CreateTree' does not access instance data and can be marked as static (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1822) [/home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/TabStudio.SourceControl.Tests.csproj]
-/home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/FakeGitHub.cs(224,33): warning CA1822: Member 'CreateRef' does not access instance data and can be marked as static (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1822) [/home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/TabStudio.SourceControl.Tests.csproj]
-/home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/FakeGitHub.cs(335,33): warning CA1822: Member 'ResolveCommit' does not access instance data and can be marked as static (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1822) [/home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/TabStudio.SourceControl.Tests.csproj]
-/home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/FakeGitHub.cs(338,33): warning CA1822: Member 'Compare' does not access instance data and can be marked as static (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1822) [/home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/TabStudio.SourceControl.Tests.csproj]
-/home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/FakeGitHub.cs(403,20): warning CA1822: Member 'StoreBlob' does not access instance data and can be marked as static (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1822) [/home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/TabStudio.SourceControl.Tests.csproj]
-/home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/FakeGitHub.cs(391,33): warning CA1822: Member 'CreatePullRequest' does not access instance data and can be marked as static (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1822) [/home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/TabStudio.SourceControl.Tests.csproj]
-/home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/FakeGitHub.cs(324,33): warning CA1822: Member 'History' does not access instance data and can be marked as static (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1822) [/home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/TabStudio.SourceControl.Tests.csproj]
+  TabStudio.SourceControl.Tests -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/bin/Release/net10.0/TabStudio.SourceControl.Tests.dll
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.SourceControl.Tests/bin/Release/net10.0/TabStudio.SourceControl.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.14]   Discovering: TabStudio.SourceControl.Tests
+[xUnit.net 00:00:00.30]   Discovered:  TabStudio.SourceControl.Tests
+[xUnit.net 00:00:00.43]   Starting:    TabStudio.SourceControl.Tests
+  Passed TabStudio.SourceControl.Tests.Merging.TextMergeTests.A_conflict_without_a_final_newline_still_gets_markers_on_their_own_lines [26 ms]
+  Passed TabStudio.SourceControl.Tests.Merging.TextMergeTests.Insertions_and_deletions_on_both_sides_are_combined [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.Merging.TextMergeTests.One_sided_changes_take_that_side [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.Merging.TextMergeTests.Text_without_markers_is_not_reported_as_conflicted [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.Merging.TextMergeTests.Several_conflicts_are_counted_and_the_rest_merges [18 ms]
+  Passed TabStudio.SourceControl.Tests.Merging.TextMergeTests.Different_changes_to_the_same_lines_become_a_conflict_with_markers [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.Merging.TextMergeTests.Markers_use_the_files_line_endings [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.Merging.TextMergeTests.Changes_to_neighboring_lines_conflict_as_in_git [< 1 ms]
+[xUnit.net 00:00:00.74]     TabStudio.SourceControl.Tests.Merging.TextMergeTests.Files_added_on_both_sides_merge_against_an_empty_base [FAIL]
+[xUnit.net 00:00:00.74]       Assert.StartsWith() Failure: String start does not match
+[xUnit.net 00:00:00.74]       String:         "<<<<<<< Yours\nsame start\nmine\n=======\nsam"···
+[xUnit.net 00:00:00.74]       Expected start: "same start\n<<<<<<< Yours\n"
+[xUnit.net 00:00:00.74]       Stack Trace:
+[xUnit.net 00:00:00.75]         /_/tests/TabStudio.SourceControl.Tests/Merging/TextMergeTests.cs(96,0): at TabStudio.SourceControl.Tests.Merging.TextMergeTests.Files_added_on_both_sides_merge_against_an_empty_base()
+[xUnit.net 00:00:00.75]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:00.75]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Passed TabStudio.SourceControl.Tests.Merging.TextMergeTests.Changes_to_different_parts_of_a_file_are_combined [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.Merging.TextMergeTests.The_same_change_on_both_sides_is_taken_once [< 1 ms]
+  Failed TabStudio.SourceControl.Tests.Merging.TextMergeTests.Files_added_on_both_sides_merge_against_an_empty_base [6 ms]
+  Error Message:
+   Assert.StartsWith() Failure: String start does not match
+String:         "<<<<<<< Yours\nsame start\nmine\n=======\nsam"···
+Expected start: "same start\n<<<<<<< Yours\n"
+  Stack Trace:
+     at TabStudio.SourceControl.Tests.Merging.TextMergeTests.Files_added_on_both_sides_merge_against_an_empty_base() in /_/tests/TabStudio.SourceControl.Tests/Merging/TextMergeTests.cs:line 96
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Passed TabStudio.SourceControl.Tests.GitObjectsTests.Blob_hashes_match_git(content: "hello\n", expected: "ce013625030ba8dba906f756967f9e9ca394464a") [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.GitObjectsTests.Blob_hashes_match_git(content: "hello world", expected: "95d09f2b10159347eece71399a7e2e907ea3df4f") [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.GitObjectsTests.Blob_hashes_match_git(content: "", expected: "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391") [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.WorkingTreeTests.Paths_outside_the_folder_are_refused [3 ms]
+  Passed TabStudio.SourceControl.Tests.GitIgnoreTests.Windows_line_endings_and_trailing_spaces_are_ignored [10 ms]
+  Passed TabStudio.SourceControl.Tests.GitIgnoreTests.Matches_like_git(pattern: "**/temp", path: "a/b/temp", isDirectory: True, ignored: True) [7 ms]
+  Passed TabStudio.SourceControl.Tests.GitIgnoreTests.Matches_like_git(pattern: "docs/**/*.md", path: "docs/deep/er/a.md", isDirectory: False, ignored: True) [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.GitIgnoreTests.Matches_like_git(pattern: "log?.txt", path: "log1.txt", isDirectory: False, ignored: True) [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.GitIgnoreTests.Matches_like_git(pattern: "bin/", path: "bin", isDirectory: False, ignored: False) [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.GitIgnoreTests.Matches_like_git(pattern: "*.user", path: "src/App/App.csproj", isDirectory: False, ignored: False) [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.GitIgnoreTests.Matches_like_git(pattern: "/build.log", path: "build.log", isDirectory: False, ignored: True) [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.GitIgnoreTests.Matches_like_git(pattern: "bin/", path: "src/App/bin", isDirectory: True, ignored: True) [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.GitIgnoreTests.Matches_like_git(pattern: "[ab].txt", path: "a.txt", isDirectory: False, ignored: True) [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.GitIgnoreTests.Matches_like_git(pattern: "/build.log", path: "src/build.log", isDirectory: False, ignored: False) [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.GitIgnoreTests.Matches_like_git(pattern: "log?.txt", path: "log10.txt", isDirectory: False, ignored: False) [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.GitIgnoreTests.Matches_like_git(pattern: "# a comment", path: "# a comment", isDirectory: False, ignored: False) [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.GitIgnoreTests.Matches_like_git(pattern: "docs/*.md", path: "docs/deep/a.md", isDirectory: False, ignored: False) [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.GitIgnoreTests.Matches_like_git(pattern: "\\#hash", path: "#hash", isDirectory: False, ignored: True) [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.GitIgnoreTests.Matches_like_git(pattern: "docs/*.md", path: "docs/a.md", isDirectory: False, ignored: True) [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.GitIgnoreTests.Matches_like_git(pattern: "[!ab].txt", path: "a.txt", isDirectory: False, ignored: False) [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.GitIgnoreTests.Matches_like_git(pattern: "bin/", path: "bin", isDirectory: True, ignored: True) [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.GitIgnoreTests.Matches_like_git(pattern: "*.user", path: "src/App/App.csproj.user", isDirectory: False, ignored: True) [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.GitIgnoreTests.The_last_matching_rule_wins_and_negation_brings_files_back [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.GitIgnoreTests.Rules_from_a_subfolder_apply_only_below_it [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.WorkingTreeTests.Lists_files_except_ignored_ones_and_the_git_and_tabstudio_folders [46 ms]
+  Passed TabStudio.SourceControl.Tests.WorkingTreeTests.Finds_added_modified_and_deleted_files [14 ms]
+  Passed TabStudio.SourceControl.Tests.WorkingTreeTests.Tracked_files_are_listed_even_when_ignored [7 ms]
+  Passed TabStudio.SourceControl.Tests.WorkingTreeTests.The_hash_cache_does_not_trust_a_file_written_just_before_it_was_hashed [3 ms]
+  Passed TabStudio.SourceControl.Tests.Merging.LineDiffTests.Applying_the_hunks_rebuilds_the_new_text_with_a_minimal_edit_count(seed: 3) [54 ms]
+  Passed TabStudio.SourceControl.Tests.Merging.LineDiffTests.Applying_the_hunks_rebuilds_the_new_text_with_a_minimal_edit_count(seed: 2) [30 ms]
+  Passed TabStudio.SourceControl.Tests.WorkingTreeTests.The_hash_cache_skips_files_that_have_not_changed_since_they_were_hashed [55 ms]
+  Passed TabStudio.SourceControl.Tests.Merging.LineDiffTests.Applying_the_hunks_rebuilds_the_new_text_with_a_minimal_edit_count(seed: 1) [28 ms]
+[xUnit.net 00:00:00.91]     TabStudio.SourceControl.Tests.GitHubSyncTests.Commit_can_include_only_some_files [FAIL]
+[xUnit.net 00:00:00.91]       System.IO.DirectoryNotFoundException : Could not find a part of the path '/tmp/tabstudio-tests/c05f7b96ca094648ae2dc6ca4e6f8ffc/work/.tabstudio/conflicts/b335630551682c19a781afebcf4d07bf.mine'.
+[xUnit.net 00:00:00.91]       Stack Trace:
+[xUnit.net 00:00:00.91]            at System.IO.FileSystem.DeleteFile(String fullPath)
+[xUnit.net 00:00:00.91]         /_/src/TabStudio.SourceControl/ConflictStore.cs(45,0): at TabStudio.SourceControl.ConflictStore.Delete(String root, String path)
+[xUnit.net 00:00:00.91]         /_/src/TabStudio.SourceControl/GitHubSync.Commit.cs(92,0): at TabStudio.SourceControl.GitHubSync.CommitAsync(String message, IReadOnlyCollection`1 paths, IProgress`1 progress, CancellationToken cancellationToken)
+[xUnit.net 00:00:00.91]         /_/tests/TabStudio.SourceControl.Tests/GitHubSyncTests.cs(133,0): at TabStudio.SourceControl.Tests.GitHubSyncTests.Commit_can_include_only_some_files()
+[xUnit.net 00:00:00.91]         --- End of stack trace from previous location ---
+  Passed TabStudio.SourceControl.Tests.Merging.LineDiffTests.Applying_the_hunks_rebuilds_the_new_text_with_a_minimal_edit_count(seed: 4) [18 ms]
+  Passed TabStudio.SourceControl.Tests.Merging.LineDiffTests.Applying_the_hunks_rebuilds_the_new_text_with_a_minimal_edit_count(seed: 5) [22 ms]
+  Passed TabStudio.SourceControl.Tests.Merging.LineDiffTests.Everything_replaced_when_nothing_matches [10 ms]
+  Passed TabStudio.SourceControl.Tests.Merging.LineDiffTests.Splitting_keeps_line_endings_so_text_can_be_rebuilt [9 ms]
+  Passed TabStudio.SourceControl.Tests.Merging.LineDiffTests.A_changed_line_is_one_hunk [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.Merging.LineDiffTests.Over_the_edit_limit_the_texts_are_treated_as_completely_different [1 ms]
+  Passed TabStudio.SourceControl.Tests.Merging.LineDiffTests.Identical_texts_have_no_hunks [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.Merging.LineDiffTests.Insertions_and_deletions_are_found [< 1 ms]
+  Failed TabStudio.SourceControl.Tests.GitHubSyncTests.Commit_can_include_only_some_files [418 ms]
+  Error Message:
+   System.IO.DirectoryNotFoundException : Could not find a part of the path '/tmp/tabstudio-tests/c05f7b96ca094648ae2dc6ca4e6f8ffc/work/.tabstudio/conflicts/b335630551682c19a781afebcf4d07bf.mine'.
+  Stack Trace:
+     at System.IO.FileSystem.DeleteFile(String fullPath)
+   at TabStudio.SourceControl.ConflictStore.Delete(String root, String path) in /_/src/TabStudio.SourceControl/ConflictStore.cs:line 45
+   at TabStudio.SourceControl.GitHubSync.CommitAsync(String message, IReadOnlyCollection`1 paths, IProgress`1 progress, CancellationToken cancellationToken) in /_/src/TabStudio.SourceControl/GitHubSync.Commit.cs:line 92
+   at TabStudio.SourceControl.Tests.GitHubSyncTests.Commit_can_include_only_some_files() in /_/tests/TabStudio.SourceControl.Tests/GitHubSyncTests.cs:line 133
+--- End of stack trace from previous location ---
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.A_push_that_races_another_one_is_refused_and_nothing_is_lost [31 ms]
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.Pull_brings_in_changes_from_GitHub_and_keeps_local_ones [44 ms]
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.Clone_of_a_commit_is_detached_and_cannot_commit [19 ms]
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.A_conflicting_pull_writes_markers_and_blocks_the_commit_until_resolved [40 ms]
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.A_file_deleted_on_GitHub_but_changed_here_is_kept_as_a_conflict [24 ms]
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.Status_lists_changes_and_leaves_out_ignored_files [18 ms]
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.The_same_change_on_both_sides_is_not_a_conflict [14 ms]
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.Valid_branch_names_pass(name: "main") [1 ms]
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.Valid_branch_names_pass(name: "feature/login-page") [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.Valid_branch_names_pass(name: "release-1.2") [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.History_and_branches_come_from_GitHub [26 ms]
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.Clone_reads_huge_trees_folder_by_folder [15 ms]
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.Invalid_branch_names_are_caught(name: "") [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.Invalid_branch_names_are_caught(name: "has space") [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.Invalid_branch_names_are_caught(name: "-dash") [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.Invalid_branch_names_are_caught(name: "ends/") [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.Invalid_branch_names_are_caught(name: "x.lock") [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.Invalid_branch_names_are_caught(name: "what?") [< 1 ms]
+[xUnit.net 00:00:01.32]     TabStudio.SourceControl.Tests.GitHubSyncTests.Discard_restores_changed_and_deleted_files_and_removes_new_ones [FAIL]
+[xUnit.net 00:00:01.32]       System.IO.DirectoryNotFoundException : Could not find a part of the path '/tmp/tabstudio-tests/65053deba8204d26b12ca6162f314f15/work/.tabstudio/conflicts/b335630551682c19a781afebcf4d07bf.mine'.
+[xUnit.net 00:00:01.32]       Stack Trace:
+[xUnit.net 00:00:01.32]            at System.IO.FileSystem.DeleteFile(String fullPath)
+[xUnit.net 00:00:01.32]         /_/src/TabStudio.SourceControl/ConflictStore.cs(45,0): at TabStudio.SourceControl.ConflictStore.Delete(String root, String path)
+[xUnit.net 00:00:01.32]         /_/src/TabStudio.SourceControl/GitHubSync.Commit.cs(127,0): at TabStudio.SourceControl.GitHubSync.DiscardAsync(IReadOnlyCollection`1 paths, CancellationToken cancellationToken)
+[xUnit.net 00:00:01.32]         /_/tests/TabStudio.SourceControl.Tests/GitHubSyncTests.cs(353,0): at TabStudio.SourceControl.Tests.GitHubSyncTests.Discard_restores_changed_and_deleted_files_and_removes_new_ones()
+[xUnit.net 00:00:01.32]         --- End of stack trace from previous location ---
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.Invalid_branch_names_are_caught(name: "feature/.hidden") [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.Invalid_branch_names_are_caught(name: "a..b") [< 1 ms]
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.Switching_branches_replaces_the_files_but_not_over_uncommitted_changes [26 ms]
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.Clone_writes_the_files_and_links_the_folder [11 ms]
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.Pull_merges_a_file_changed_on_both_sides_in_different_places [13 ms]
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.A_conflict_can_be_settled_by_choosing_a_side(resolution: TakeTheirs, expected: "# Theirs\n") [13 ms]
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.A_conflict_can_be_settled_by_choosing_a_side(resolution: KeepMine, expected: "# Mine\n") [19 ms]
+  Failed TabStudio.SourceControl.Tests.GitHubSyncTests.Discard_restores_changed_and_deleted_files_and_removes_new_ones [24 ms]
+  Error Message:
+   System.IO.DirectoryNotFoundException : Could not find a part of the path '/tmp/tabstudio-tests/65053deba8204d26b12ca6162f314f15/work/.tabstudio/conflicts/b335630551682c19a781afebcf4d07bf.mine'.
+  Stack Trace:
+     at System.IO.FileSystem.DeleteFile(String fullPath)
+   at TabStudio.SourceControl.ConflictStore.Delete(String root, String path) in /_/src/TabStudio.SourceControl/ConflictStore.cs:line 45
+   at TabStudio.SourceControl.GitHubSync.DiscardAsync(IReadOnlyCollection`1 paths, CancellationToken cancellationToken) in /_/src/TabStudio.SourceControl/GitHubSync.Commit.cs:line 127
+   at TabStudio.SourceControl.Tests.GitHubSyncTests.Discard_restores_changed_and_deleted_files_and_removes_new_ones() in /_/tests/TabStudio.SourceControl.Tests/GitHubSyncTests.cs:line 353
+--- End of stack trace from previous location ---
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.Publish_creates_a_repository_holding_exactly_the_folders_files [34 ms]
+[xUnit.net 00:00:01.40]     TabStudio.SourceControl.Tests.GitHubSyncTests.Commit_creates_the_commit_on_GitHub_and_moves_the_branch [FAIL]
+[xUnit.net 00:00:01.40]       System.IO.DirectoryNotFoundException : Could not find a part of the path '/tmp/tabstudio-tests/b3494be215f94d77a98868517cb5f472/work/.tabstudio/conflicts/327ffd98a1f7c7084535515e3190e95b.mine'.
+[xUnit.net 00:00:01.40]       Stack Trace:
+[xUnit.net 00:00:01.40]            at System.IO.FileSystem.DeleteFile(String fullPath)
+[xUnit.net 00:00:01.40]         /_/src/TabStudio.SourceControl/ConflictStore.cs(45,0): at TabStudio.SourceControl.ConflictStore.Delete(String root, String path)
+[xUnit.net 00:00:01.40]         /_/src/TabStudio.SourceControl/GitHubSync.Commit.cs(92,0): at TabStudio.SourceControl.GitHubSync.CommitAsync(String message, IReadOnlyCollection`1 paths, IProgress`1 progress, CancellationToken cancellationToken)
+[xUnit.net 00:00:01.40]         /_/tests/TabStudio.SourceControl.Tests/GitHubSyncTests.cs(111,0): at TabStudio.SourceControl.Tests.GitHubSyncTests.Commit_creates_the_commit_on_GitHub_and_moves_the_branch()
+[xUnit.net 00:00:01.40]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:01.41]     TabStudio.SourceControl.Tests.GitHubSyncTests.A_new_branch_takes_the_next_commit_and_a_pull_request_can_be_opened [FAIL]
+[xUnit.net 00:00:01.41]       System.IO.DirectoryNotFoundException : Could not find a part of the path '/tmp/tabstudio-tests/48d140a686a544968c351065c5cf620c/work/.tabstudio/conflicts/b335630551682c19a781afebcf4d07bf.mine'.
+[xUnit.net 00:00:01.41]       Stack Trace:
+[xUnit.net 00:00:01.41]            at System.IO.FileSystem.DeleteFile(String fullPath)
+[xUnit.net 00:00:01.41]         /_/src/TabStudio.SourceControl/ConflictStore.cs(45,0): at TabStudio.SourceControl.ConflictStore.Delete(String root, String path)
+[xUnit.net 00:00:01.41]         /_/src/TabStudio.SourceControl/GitHubSync.Commit.cs(92,0): at TabStudio.SourceControl.GitHubSync.CommitAsync(String message, IReadOnlyCollection`1 paths, IProgress`1 progress, CancellationToken cancellationToken)
+[xUnit.net 00:00:01.41]         /_/tests/TabStudio.SourceControl.Tests/GitHubSyncTests.cs(297,0): at TabStudio.SourceControl.Tests.GitHubSyncTests.A_new_branch_takes_the_next_commit_and_a_pull_request_can_be_opened()
+[xUnit.net 00:00:01.41]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:01.48]   Finished:    TabStudio.SourceControl.Tests
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.Commit_asks_for_a_pull_when_GitHub_has_new_commits [16 ms]
+  Failed TabStudio.SourceControl.Tests.GitHubSyncTests.Commit_creates_the_commit_on_GitHub_and_moves_the_branch [17 ms]
+  Error Message:
+   System.IO.DirectoryNotFoundException : Could not find a part of the path '/tmp/tabstudio-tests/b3494be215f94d77a98868517cb5f472/work/.tabstudio/conflicts/327ffd98a1f7c7084535515e3190e95b.mine'.
+  Stack Trace:
+     at System.IO.FileSystem.DeleteFile(String fullPath)
+   at TabStudio.SourceControl.ConflictStore.Delete(String root, String path) in /_/src/TabStudio.SourceControl/ConflictStore.cs:line 45
+   at TabStudio.SourceControl.GitHubSync.CommitAsync(String message, IReadOnlyCollection`1 paths, IProgress`1 progress, CancellationToken cancellationToken) in /_/src/TabStudio.SourceControl/GitHubSync.Commit.cs:line 92
+   at TabStudio.SourceControl.Tests.GitHubSyncTests.Commit_creates_the_commit_on_GitHub_and_moves_the_branch() in /_/tests/TabStudio.SourceControl.Tests/GitHubSyncTests.cs:line 111
+--- End of stack trace from previous location ---
+  Failed TabStudio.SourceControl.Tests.GitHubSyncTests.A_new_branch_takes_the_next_commit_and_a_pull_request_can_be_opened [12 ms]
+  Error Message:
+   System.IO.DirectoryNotFoundException : Could not find a part of the path '/tmp/tabstudio-tests/48d140a686a544968c351065c5cf620c/work/.tabstudio/conflicts/b335630551682c19a781afebcf4d07bf.mine'.
+  Stack Trace:
+     at System.IO.FileSystem.DeleteFile(String fullPath)
+   at TabStudio.SourceControl.ConflictStore.Delete(String root, String path) in /_/src/TabStudio.SourceControl/ConflictStore.cs:line 45
+   at TabStudio.SourceControl.GitHubSync.CommitAsync(String message, IReadOnlyCollection`1 paths, IProgress`1 progress, CancellationToken cancellationToken) in /_/src/TabStudio.SourceControl/GitHubSync.Commit.cs:line 92
+   at TabStudio.SourceControl.Tests.GitHubSyncTests.A_new_branch_takes_the_next_commit_and_a_pull_request_can_be_opened() in /_/tests/TabStudio.SourceControl.Tests/GitHubSyncTests.cs:line 297
+--- End of stack trace from previous location ---
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.Clone_of_a_large_repository_uses_one_archive_and_downloads_only_what_it_lacks [53 ms]
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.Commit_refuses_when_there_is_nothing_to_commit_or_no_account [5 ms]
+  Passed TabStudio.SourceControl.Tests.GitHubSyncTests.Failures_are_described_for_people [2 ms]
+
+Test Run Failed.
+Total tests: 85
+     Passed: 80
+     Failed: 5
+ Total time: 2.2795 Seconds
