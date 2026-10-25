@@ -81,7 +81,7 @@ public sealed class DebugBuilder
             var compilation = await _host.GetCompilationAsync(current.FilePath, cancellationToken).ConfigureAwait(false) as CSharpCompilation;
             var assembly = compilation is null
                 ? null
-                : Compile(compilation, current.Name, isEntry && current.IsExecutable, info, diagnostics, cancellationToken);
+                : Compile(compilation, current.Name, isEntry && current.IsExecutable, ManifestResources.For(current), info, diagnostics, cancellationToken);
             if (assembly is null)
             {
                 return Finish(project.Name, diagnostics, null, dependencies, stopwatch, info);
@@ -112,7 +112,7 @@ public sealed class DebugBuilder
         var diagnostics = new List<BuildDiagnostic>();
         var name = compilation.AssemblyName ?? "Program";
         var isProgram = compilation.Options.OutputKind == OutputKind.ConsoleApplication;
-        var assembly = Compile(compilation, name, isProgram, info, diagnostics, cancellationToken);
+        var assembly = Compile(compilation, name, isProgram, resources: null, info, diagnostics, cancellationToken);
         return Finish(name, diagnostics, assembly, [], stopwatch, info);
     }
 
@@ -120,6 +120,7 @@ public sealed class DebugBuilder
         CSharpCompilation compilation,
         string projectName,
         bool checkInProcessSafety,
+        IEnumerable<ResourceDescription>? resources,
         DebugInfoBuilder info,
         List<BuildDiagnostic> diagnostics,
         CancellationToken cancellationToken)
@@ -139,7 +140,7 @@ public sealed class DebugBuilder
         var instrumented = DebugInstrumenter.Instrument(compilation, info, cancellationToken);
         using var image = new MemoryStream();
         using var symbols = new MemoryStream();
-        var emit = instrumented.Emit(image, symbols, options: EmitOptions, cancellationToken: cancellationToken);
+        var emit = instrumented.Emit(image, symbols, manifestResources: resources, options: EmitOptions, cancellationToken: cancellationToken);
         if (!emit.Success)
         {
             var error = emit.Diagnostics.FirstOrDefault(d => d.Severity == DiagnosticSeverity.Error);

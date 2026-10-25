@@ -113,6 +113,27 @@ sequenceDiagram
   compile against and the runtime pack for the device's processor to run with, both from NuGet. The packs'
   assemblies are IL, so the Linux pack serves Android too.
 
+## Source generators
+
+Roslyn runs source generators as part of every compilation in `RoslynWorkspaceHost`, so IntelliSense, live
+errors, builds and the debugger all see the code they generate.
+
+- **Where they come from.** A package's `analyzers/dotnet/cs` folder, with the folder for the highest Roslyn
+  version that is not newer than the compiler's, as the SDK picks them. .NET's own generators (behind
+  `[GeneratedRegex]`, `[JsonSerializable]`, `[LibraryImport]`) come from `Microsoft.NETCore.App.Ref`, which is
+  downloaded the first time code uses one of those attributes; ASP.NET Core's come with its targeting pack.
+- **Loading.** `AnalyzerLoader` gives each folder its own `AssemblyLoadContext`, with Roslyn and its
+  dependencies shared from the app.
+- **Build properties.** A generated global `.editorconfig` hands generators the project's MSBuild properties,
+  as the SDK does. `SdkGenerators` applies the SDK's other rules: ASP.NET Core's request delegate generator and
+  the configuration binding generator stay off unless the project turns them on, and generators may put
+  interceptors only in the namespaces the SDK and the project allow.
+- **Avalonia XAML.** Avalonia compiles XAML after the C# compiler, a step TabStudio does not have, so its own
+  generator, `AvaloniaXamlGenerator`, takes the place of Avalonia's: it puts each `.axaml` file into the assembly
+  as text, generates `InitializeComponent` and the fields of `x:Name` elements, and intercepts
+  `AvaloniaXamlLoader.Load(this)` so that the XAML is loaded at run time. XAML that is not well-formed is an
+  error naming the file.
+
 ## Web apps
 
 `WebAppHost` serves an ASP.NET Core app from inside TabStudio. It runs the app like any program, with the
@@ -129,6 +150,29 @@ inside the layout (a native control host), or the system browser where there is 
 `Project` profile of `Properties/launchSettings.json` gives the first page, the environment and extra
 arguments. Saving one of the app's source files while it runs rebuilds it and starts it again on the same
 port, and the preview reloads where it was; a change under `wwwroot` only reloads the page.
+
+## Avalonia apps
+
+`AvaloniaAppHost` shows an Avalonia app inside TabStudio's own window, so it renders natively beside the code:
+
+- **One Avalonia.** The app's assemblies load into their own context, but Avalonia, SkiaSharp and HarfBuzz come
+  from TabStudio, so the app's controls are TabStudio's types, drawn by the same renderer on the UI thread. The
+  app's own copy of Avalonia from NuGet is only compiled against; other libraries, such as control packages
+  TabStudio does not have, load from the app's packages.
+- **Starting the app.** The app's `App` class starts as on a phone, with a single-view lifetime, and sets its
+  main view in `OnFrameworkInitializationCompleted`, as Avalonia's cross-platform template does. An app written
+  for the desktop only sets a window; then the window's content is shown, with a new instance of the view model
+  named after it, and the preview says so.
+- **XAML at run time.** The XAML the generator embedded is loaded with Avalonia's run-time XAML loader.
+  Restarted apps are new assemblies with the same types, and the earlier ones stay loaded because the code the
+  loader emitted references them; `RuntimeXamlTypes` takes them out of the loader's list before each start, so
+  XAML gets the new build's types.
+- **Isolation.** The view sits in a `ThemeVariantScope` with the app's styles and resources, so the app's theme
+  never changes the IDE's. Its console output goes to the Output panel, and an exception its code does not
+  handle on the UI thread ends the app, not TabStudio.
+
+In the IDE, F5 on an Avalonia project shows it in the app preview in the side bar, filling the pane or in a
+phone or tablet frame. Saving one of its files rebuilds it and starts it again.
 
 ## Debugging
 

@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text.RegularExpressions;
 using TabStudio.App.Notebooks;
 
@@ -28,6 +29,13 @@ public sealed partial class ProjectTemplates
     /// <summary>An ASP.NET Core web app: a page and a minimal API.</summary>
     public const string WebId = "web";
 
+    /// <summary>An Avalonia app with a view and a view model, shown in the app preview.</summary>
+    public const string AvaloniaId = "avalonia";
+
+    /// <summary>The Avalonia version of new Avalonia apps: the one inside TabStudio, which runs them.</summary>
+    public static string AvaloniaVersion { get; } =
+        typeof(global::Avalonia.Application).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion.Split('+')[0] ?? "11.3.0";
+
     /// <summary>A C# notebook, in a folder of its own.</summary>
     public const string NotebookId = "notebook";
 
@@ -47,6 +55,7 @@ public sealed partial class ProjectTemplates
         new(ConsoleId, "Console App", "A command-line program that runs on the tablet, with input and output in the Output panel.", ["C#", "Console"]),
         new(ConsoleWithLibraryId, "Console App and Class Library", "A program and a library it references, in one solution.", ["C#", "Console", "Library"]),
         new(WebId, "ASP.NET Core Web App", "A web page and an API, served on the tablet and previewed beside the code.", ["C#", "Web", "ASP.NET Core"]),
+        new(AvaloniaId, "Avalonia App", "A cross-platform app with a view and a view model, rendered natively beside the code.", ["C#", "Avalonia", "MVVM"]),
         new(LibraryId, "Class Library", "Reusable code for other projects to reference.", ["C#", "Library"]),
         new(NotebookId, "C# Notebook", "Cells of C# you run one at a time, with results, tables and errors right under each cell, like Polyglot Notebooks.", ["C#", "Notebook"]),
     ];
@@ -98,6 +107,7 @@ public sealed partial class ProjectTemplates
             LibraryId => [WriteLibrary(root, name)],
             ConsoleWithLibraryId => [WriteConsole(root, name, reference: name + ".Core"), WriteLibrary(root, name + ".Core")],
             WebId => [WriteWeb(root, name)],
+            AvaloniaId => [WriteAvalonia(root, name)],
             _ => throw new ArgumentException($"Unknown template '{templateId}'.", nameof(templateId)),
         };
 
@@ -180,6 +190,171 @@ public sealed partial class ProjectTemplates
             {
                 /// <summary>A welcome message.</summary>
                 public static string Welcome(string name) => $"Hello from {name}!";
+            }
+
+            """);
+        return project;
+    }
+
+    private static string WriteAvalonia(string root, string name)
+    {
+        var directory = Path.Combine(root, name);
+        Directory.CreateDirectory(Path.Combine(directory, "Views"));
+        Directory.CreateDirectory(Path.Combine(directory, "ViewModels"));
+
+        var project = Path.Combine(directory, name + ".csproj");
+        File.WriteAllText(project, $"""
+            <Project Sdk="Microsoft.NET.Sdk">
+
+              <PropertyGroup>
+                <OutputType>WinExe</OutputType>
+                <TargetFramework>net10.0</TargetFramework>
+                <ImplicitUsings>enable</ImplicitUsings>
+                <Nullable>enable</Nullable>
+                <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+              </PropertyGroup>
+
+              <ItemGroup>
+                <AvaloniaResource Include="Assets\**" />
+              </ItemGroup>
+
+              <ItemGroup>
+                <PackageReference Include="Avalonia" Version="{AvaloniaVersion}" />
+                <PackageReference Include="Avalonia.Themes.Fluent" Version="{AvaloniaVersion}" />
+                <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+              </ItemGroup>
+
+            </Project>
+
+            """);
+
+        File.WriteAllText(Path.Combine(directory, "App.axaml"), $"""
+            <Application xmlns="https://github.com/avaloniaui"
+                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                         x:Class="{name}.App"
+                         RequestedThemeVariant="Default">
+              <Application.Styles>
+                <FluentTheme />
+              </Application.Styles>
+            </Application>
+
+            """);
+
+        File.WriteAllText(Path.Combine(directory, "App.axaml.cs"), $$"""
+            using Avalonia;
+            using Avalonia.Controls.ApplicationLifetimes;
+            using Avalonia.Markup.Xaml;
+            using {{name}}.ViewModels;
+            using {{name}}.Views;
+
+            namespace {{name}};
+
+            public partial class App : Application
+            {
+                public override void Initialize() => AvaloniaXamlLoader.Load(this);
+
+                public override void OnFrameworkInitializationCompleted()
+                {
+                    // TabStudio shows the app like a phone does: a single view. On a PC, the view sits in a window.
+                    switch (ApplicationLifetime)
+                    {
+                        case IClassicDesktopStyleApplicationLifetime desktop:
+                            desktop.MainWindow = new MainWindow { DataContext = new MainViewModel() };
+                            break;
+                        case ISingleViewApplicationLifetime singleView:
+                            singleView.MainView = new MainView { DataContext = new MainViewModel() };
+                            break;
+                    }
+
+                    base.OnFrameworkInitializationCompleted();
+                }
+            }
+
+            """);
+
+        File.WriteAllText(Path.Combine(directory, "Views", "MainView.axaml"), $$"""
+            <UserControl xmlns="https://github.com/avaloniaui"
+                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                         xmlns:vm="using:{{name}}.ViewModels"
+                         x:Class="{{name}}.Views.MainView"
+                         x:DataType="vm:MainViewModel">
+              <StackPanel Margin="24" Spacing="16" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock Text="{Binding Greeting}" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Center" />
+                <TextBlock Text="Edit Views/MainView.axaml and save: the app restarts with your change." TextWrapping="Wrap" TextAlignment="Center" Opacity="0.7" />
+                <Button x:Name="CountButton" Content="Count" Command="{Binding CountCommand}" HorizontalAlignment="Center" />
+                <TextBlock Text="{Binding Clicks, StringFormat='Clicked {0} times'}" HorizontalAlignment="Center" />
+              </StackPanel>
+            </UserControl>
+
+            """);
+
+        File.WriteAllText(Path.Combine(directory, "Views", "MainView.axaml.cs"), $$"""
+            using Avalonia.Controls;
+
+            namespace {{name}}.Views;
+
+            public partial class MainView : UserControl
+            {
+                public MainView() => InitializeComponent();
+            }
+
+            """);
+
+        File.WriteAllText(Path.Combine(directory, "Views", "MainWindow.axaml"), $"""
+            <Window xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:views="using:{name}.Views"
+                    x:Class="{name}.Views.MainWindow"
+                    Title="{name}" Width="480" Height="720">
+              <views:MainView />
+            </Window>
+
+            """);
+
+        File.WriteAllText(Path.Combine(directory, "Views", "MainWindow.axaml.cs"), $$"""
+            using Avalonia.Controls;
+
+            namespace {{name}}.Views;
+
+            public partial class MainWindow : Window
+            {
+                public MainWindow() => InitializeComponent();
+            }
+
+            """);
+
+        File.WriteAllText(Path.Combine(directory, "ViewModels", "MainViewModel.cs"), $$"""
+            using CommunityToolkit.Mvvm.ComponentModel;
+            using CommunityToolkit.Mvvm.Input;
+
+            namespace {{name}}.ViewModels;
+
+            public partial class MainViewModel : ObservableObject
+            {
+                public string Greeting => "Hello from Avalonia!";
+
+                [ObservableProperty]
+                private int _clicks;
+
+                [RelayCommand]
+                private void Count() => Clicks++;
+            }
+
+            """);
+
+        File.WriteAllText(Path.Combine(directory, "Program.cs"), $$"""
+            using Avalonia;
+
+            namespace {{name}};
+
+            internal static class Program
+            {
+                // TabStudio shows this app beside the code. To run it on a PC, add the Avalonia.Desktop package
+                // and call UsePlatformDetect() before StartWithClassicDesktopLifetime.
+                [STAThread]
+                public static void Main(string[] args) => BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+
+                public static AppBuilder BuildAvaloniaApp() => AppBuilder.Configure<App>().LogToTrace();
             }
 
             """);

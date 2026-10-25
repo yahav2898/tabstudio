@@ -24,7 +24,8 @@ namespace TabStudio.Compilation.Xaml;
 ///   <item>Calls to <c>AvaloniaXamlLoader.Load(this)</c>, such as the one in <c>App.Initialize</c>, are intercepted
 ///   and load the class's XAML the same way.</item>
 ///   <item>The loader is what the host puts in <see cref="AppContext"/> under <see cref="LoaderKey"/>: a delegate
-///   taking the root object and its XAML.</item>
+///   taking the root object, its XAML and the file's path in the app (<c>/Views/MainView.axaml</c>), which relative
+///   addresses in the XAML, such as <c>/Assets/logo.png</c>, are resolved against.</item>
 /// </list>
 /// <para>
 /// It runs inside TabStudio's own Roslyn (see <see cref="GeneratorReference"/>) rather than shipping as an
@@ -33,7 +34,10 @@ namespace TabStudio.Compilation.Xaml;
 /// </remarks>
 public sealed class AvaloniaXamlGenerator : IIncrementalGenerator
 {
-    /// <summary>The <see cref="AppContext"/> data key of the <c>Action&lt;object, string&gt;</c> that loads XAML into an object.</summary>
+    /// <summary>
+    /// The <see cref="AppContext"/> data key of the <c>Action&lt;object, string, string&gt;</c> that loads XAML into an
+    /// object: the object, the XAML, and the file's path in the app.
+    /// </summary>
     public const string LoaderKey = "TabStudio.Avalonia.LoadXaml";
 
     /// <summary>The namespace of the generated helpers, which the interceptors feature is turned on for.</summary>
@@ -62,9 +66,13 @@ public sealed class AvaloniaXamlGenerator : IIncrementalGenerator
             .Where(static location => location is not null)
             .Collect();
 
+        // The project folder, from the build properties, so each file's path in the app is known (/Views/MainView.axaml).
+        var projectDirectory = context.AnalyzerConfigOptionsProvider.Select(static (options, _) =>
+            options.GlobalOptions.TryGetValue("build_property.ProjectDir", out var directory) ? directory : null);
+
         context.RegisterSourceOutput(
-            documents.Combine(loads).Combine(context.CompilationProvider),
-            static (output, input) => Generate(output, input.Left.Left, input.Left.Right!, input.Right));
+            documents.Combine(loads).Combine(context.CompilationProvider).Combine(projectDirectory),
+            static (output, input) => Generate(output, input.Left.Left.Left, input.Left.Left.Right!, input.Left.Right, input.Right));
     }
 
     /// <summary>The interceptable location of a call to <c>AvaloniaXamlLoader.Load(object)</c>, or null for any other call.</summary>
@@ -81,7 +89,12 @@ public sealed class AvaloniaXamlGenerator : IIncrementalGenerator
             : null;
     }
 
-    private static void Generate(SourceProductionContext output, ImmutableArray<XamlDocument> documents, ImmutableArray<InterceptableLocation?> loads, RoslynCompilation compilation)
+    private static void Generate(
+        SourceProductionContext output,
+        ImmutableArray<XamlDocument> documents,
+        ImmutableArray<InterceptableLocation?> loads,
+        RoslynCompilation compilation,
+        string? projectDirectory)
     {
         var classes = new List<XamlDocument>();
         foreach (var document in documents)
@@ -109,7 +122,19 @@ public sealed class AvaloniaXamlGenerator : IIncrementalGenerator
             output.AddSource($"{document.ClassName}.g.cs", GenerateClass(document, types, DeclaresInitializeComponent(compilation, document.ClassName!)));
         }
 
-        output.AddSource("TabStudioXaml.g.cs", GenerateLoader(classes, loads.OfType<InterceptableLocation>().ToList()));
+        output.AddSource("TabStudioXaml.g.cs", GenerateLoader(classes, loads.OfType<InterceptableLocation>().ToList(), projectDirectory));
+    }
+
+    /// <summary>
+    /// A file's path in the app, as Avalonia's build gives it to resources and the base address of its XAML: from the
+    /// project folder, with forward slashes and a leading one, such as <c>/Views/MainView.axaml</c>.
+    /// </summary>
+    private static string AppPath(string path, string? projectDirectory)
+    {
+        var relative = projectDirectory is { Length: > 0 } && path.StartsWith(projectDirectory, StringComparison.Ordinal)
+            ? path[projectDirectory.Length..]
+            : Path.GetFileName(path);
+        return "/" + relative.Replace('\\', '/').TrimStart('/');
     }
 
     /// <summary>Whether the class's own code declares <c>InitializeComponent</c>, as code written for Avalonia 0.10 does.</summary>
@@ -174,8 +199,8 @@ public sealed class AvaloniaXamlGenerator : IIncrementalGenerator
         return text.ToString();
     }
 
-    /// <summary>The XAML of every class, the loader that hands it to the host, and the interceptors.</summary>
-    private static string GenerateLoader(List<XamlDocument> classes, List<InterceptableLocation> loads)
+    /// <summary>The XAML of every class with its path in the app, the loader that hands it to the host, and the interceptors.</summary>
+    private static string GenerateLoader(List<XamlDocument> classes, List<InterceptableLocation> loads, string? projectDirectory)
     {
         var text = new StringBuilder($$"""
             // <auto-generated/>
@@ -185,13 +210,15 @@ public sealed class AvaloniaXamlGenerator : IIncrementalGenerator
                 /// <summary>The XAML of the project's classes, loaded at run time by the host that runs the app.</summary>
                 internal static class TabStudioXaml
                 {
-                    private static readonly global::System.Collections.Generic.Dictionary<global::System.Type, string> Documents = new()
+                    private static readonly global::System.Collections.Generic.Dictionary<global::System.Type, (string Xaml, string Path)> Documents = new()
                     {
 
             """);
         foreach (var document in classes)
         {
-            text.Append(CultureInfo.InvariantCulture, $"            [typeof(global::{document.ClassName})] = {SymbolDisplay.FormatLiteral(document.Text, quote: true)},\n");
+            var xaml = SymbolDisplay.FormatLiteral(document.Text, quote: true);
+            var path = SymbolDisplay.FormatLiteral(AppPath(document.Path, projectDirectory), quote: true);
+            text.Append(CultureInfo.InvariantCulture, $"            [typeof(global::{document.ClassName})] = ({xaml}, {path}),\n");
         }
 
         text.Append(CultureInfo.InvariantCulture, $$"""
@@ -200,14 +227,14 @@ public sealed class AvaloniaXamlGenerator : IIncrementalGenerator
                     /// <summary>Loads the XAML of an object's class into it.</summary>
                     public static void Load(object root)
                     {
-                        if (!Documents.TryGetValue(root.GetType(), out var xaml))
+                        if (!Documents.TryGetValue(root.GetType(), out var document))
                         {
                             throw new global::System.InvalidOperationException($"{root.GetType()} has no XAML file with x:Class=\"{root.GetType()}\".");
                         }
 
-                        var load = global::System.AppContext.GetData("{{LoaderKey}}") as global::System.Action<object, string>
+                        var load = global::System.AppContext.GetData("{{LoaderKey}}") as global::System.Action<object, string, string>
                             ?? throw new global::System.InvalidOperationException("Avalonia XAML compiled by TabStudio loads in TabStudio's app preview.");
-                        load(root, xaml);
+                        load(root, document.Xaml, document.Path);
                     }
                 }
 

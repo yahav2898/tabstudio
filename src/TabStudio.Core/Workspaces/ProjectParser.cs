@@ -109,6 +109,10 @@ public static partial class ProjectParser
             FrameworkReferences = ReadFrameworkReferences(root, sdk),
             CompileIncludes = ReadItemPatterns(root, "Compile", "Include"),
             CompileRemoves = ReadItemPatterns(root, "Compile", "Remove"),
+            EmbeddedResourceIncludes = ReadItemPatterns(root, "EmbeddedResource", "Include"),
+            EmbeddedResourceRemoves = ReadItemPatterns(root, "EmbeddedResource", "Remove"),
+            AvaloniaResourceIncludes = ReadItemPatterns(root, "AvaloniaResource", "Include"),
+            AvaloniaResourceRemoves = ReadItemPatterns(root, "AvaloniaResource", "Remove"),
             Usings = ReadUsings(root),
             RemovedUsings = ReadItemPatterns(root, "Using", "Remove"),
         };

@@ -463,7 +463,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         var compilation = await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false)
             ?? throw new InvalidOperationException($"Roslyn could not create a compilation for '{info.Name}'.");
 
-        return CSharpCompiler.Emit(compilation, checkInProcessSafety, stopwatch, info.Name, cancellationToken);
+        return CSharpCompiler.Emit(compilation, checkInProcessSafety, stopwatch, info.Name, ManifestResources.For(info), cancellationToken);
     }
 
     /// <inheritdoc />

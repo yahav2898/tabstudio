@@ -85,9 +85,13 @@ public static class CompatibilityDoctor
                 project, RunHost.InProcess, CompatibilityStatus.Planned, "In-process",
                 "Background services will run in-process, with logs in the Output panel."),
 
+            ProjectKind.Avalonia when project.Language == ProjectLanguage.CSharp => Report(
+                project, RunHost.AndroidView, CompatibilityStatus.Ready, "Native view in the app preview",
+                "Rendered natively beside the code by TabStudio's own Avalonia. Saving a file restarts it."),
+
             ProjectKind.Avalonia => Report(
-                project, RunHost.AndroidView, CompatibilityStatus.Planned, "Native Android view",
-                "Avalonia runs on Android, so the app will render natively beside the editor."),
+                project, RunHost.AndroidView, CompatibilityStatus.Planned, "Native view in the app preview",
+                $"Avalonia apps render beside the code. The {LanguageName(project.Language)} compiler is not bundled yet."),
 
             ProjectKind.Uno => Report(
                 project, RunHost.AndroidView, CompatibilityStatus.Planned, "Native Android view",

@@ -63,7 +63,45 @@ public static class ProjectSourceFiles
         return files.Where(f => !removals.Any(r => r.IsMatch(f))).ToList();
     }
 
-    private static IEnumerable<string> EnumerateDirectory(string directory, string extension, List<string> excludedPrefixes)
+    /// <summary>
+    /// Lists the files of a project's items of one type that have no default files, such as
+    /// <c>&lt;EmbeddedResource Include="Data\**" /&gt;</c>, sorted by path. Build output is never included.
+    /// </summary>
+    /// <param name="project">The project.</param>
+    /// <param name="includes">The items' <c>Include</c> patterns, relative to the project folder.</param>
+    /// <param name="removes">The items' <c>Remove</c> patterns.</param>
+    public static IReadOnlyList<string> EnumerateItems(ProjectInfo project, IReadOnlyList<string> includes, IReadOnlyList<string> removes)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+        ArgumentNullException.ThrowIfNull(includes);
+        ArgumentNullException.ThrowIfNull(removes);
+
+        var files = new SortedSet<string>(StringComparer.Ordinal);
+        foreach (var include in includes)
+        {
+            var pattern = new GlobPattern(project.DirectoryPath, include);
+            if (!pattern.HasWildcards)
+            {
+                if (File.Exists(pattern.FullPattern))
+                {
+                    files.Add(pattern.FullPattern);
+                }
+
+                continue;
+            }
+
+            if (Directory.Exists(pattern.BaseDirectory))
+            {
+                files.UnionWith(EnumerateDirectory(pattern.BaseDirectory, extension: null, []).Where(pattern.IsMatch));
+            }
+        }
+
+        var removals = removes.Select(r => new GlobPattern(project.DirectoryPath, r)).ToList();
+        return files.Where(f => !removals.Any(r => r.IsMatch(f))).ToList();
+    }
+
+    /// <summary>The files under a folder with an extension, or all of them, skipping build output and excluded folders.</summary>
+    private static IEnumerable<string> EnumerateDirectory(string directory, string? extension, List<string> excludedPrefixes)
     {
         var pending = new Stack<string>();
         pending.Push(directory);
@@ -85,7 +123,7 @@ public static class ProjectSourceFiles
 
             foreach (var file in files)
             {
-                if (string.Equals(Path.GetExtension(file), extension, StringComparison.OrdinalIgnoreCase))
+                if (extension is null || string.Equals(Path.GetExtension(file), extension, StringComparison.OrdinalIgnoreCase))
                 {
                     yield return file;
                 }

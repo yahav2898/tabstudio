@@ -1,7 +1,7 @@
 # Roadmap
 
 TabStudio is built in eleven milestones. Each one ships as a release on the
-[releases page](https://github.com/yahav2898/tabstudio/releases) with an installable `TabStudio.apk`, and
+[releases page](https://github.com/yahav2898/tabstudio/releases) with an installable APK, and
 each one leaves the app better for real work than the one before.
 
 ## 1. The IDE

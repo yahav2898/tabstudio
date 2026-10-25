@@ -7,7 +7,8 @@ namespace TabStudio.Compilation.Tests;
 
 /// <summary>
 /// TabStudio's XAML generator for Avalonia projects, against a small stand-in for Avalonia: the XAML goes into the
-/// assembly, InitializeComponent and AvaloniaXamlLoader.Load(this) hand it to the host, and x:Name fields are typed.
+/// assembly, InitializeComponent and AvaloniaXamlLoader.Load(this) hand it to the host with the file's path in the
+/// app, and x:Name fields are typed.
 /// </summary>
 public sealed class AvaloniaXamlGeneratorTests : IDisposable
 {
@@ -96,9 +97,9 @@ public sealed class AvaloniaXamlGeneratorTests : IDisposable
             using Tablet.Views;
 
             var loaded = new List<string>();
-            AppContext.SetData("TabStudio.Avalonia.LoadXaml", new Action<object, string>((root, xaml) =>
+            AppContext.SetData("TabStudio.Avalonia.LoadXaml", new Action<object, string, string>((root, xaml, path) =>
             {
-                loaded.Add($"{root.GetType().Name} {xaml.Contains("x:Class", StringComparison.Ordinal)}");
+                loaded.Add($"{root.GetType().Name} {xaml.Contains("x:Class", StringComparison.Ordinal)} {path}");
                 if (root is Avalonia.StyledElement element)
                 {
                     element.Scope = new Scope(new() { ["NameBox"] = new Avalonia.Controls.TextBox { Text = "found" } });
@@ -143,7 +144,7 @@ public sealed class AvaloniaXamlGeneratorTests : IDisposable
         var run = await new ProgramRunner().RunAsync(build.EntryAssembly!, build.Dependencies, [_avalonia], [], console);
 
         Assert.True(run.Outcome == RunOutcome.Completed, console.Error);
-        Assert.Equal("App True, MainView True\nfound\n", console.Output);
+        Assert.Equal("App True /App.axaml, MainView True /Views/MainView.axaml\nfound\n", console.Output);
     }
 
     [Fact]

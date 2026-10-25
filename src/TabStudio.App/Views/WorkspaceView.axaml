@@ -86,6 +86,8 @@
             <MenuItem Header="Claude _Agent" Command="{Binding ShowAgentCommand}" />
             <MenuItem Header="_Web Preview" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.WebPreview}"
                       IsEnabled="{Binding WebPreview.HasApp}" />
+            <MenuItem Header="_App Preview" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.AppPreview}"
+                      IsEnabled="{Binding AppPreview.HasApp}" />
             <MenuItem Header="_Error List" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" />
             <MenuItem Header="_Output" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Output}" />
             <MenuItem Header="_Compatibility Doctor" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Compatibility}" />
@@ -554,6 +556,11 @@
           <views:AgentPanelView DataContext="{Binding Agent}" />
         </Panel>
 
+        <!-- The app preview of the running Avalonia app. -->
+        <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsAppPreviewSelected}">
+          <views:AppPreviewView DataContext="{Binding AppPreview}" />
+        </Panel>
+
         <!-- The web preview of the running web app. -->
         <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsWebPreviewSelected}">
           <views:WebPreviewView DataContext="{Binding WebPreview}" />
@@ -573,6 +580,13 @@
                 <Border Classes="pill" Background="{DynamicResource Brush.Error}" IsVisible="{Binding Tests.HasFailures}">
                   <TextBlock Text="{Binding Tests.FailedCount}" Foreground="{DynamicResource Brush.Window}" VerticalAlignment="Center" />
                 </Border>
+              </StackPanel>
+            </Button>
+            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsAppPreviewSelected}" IsVisible="{Binding AppPreview.HasApp}"
+                    Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.AppPreview}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <controls:StrokeIcon Data="{StaticResource Icon.Window}" Size="12" />
+                <TextBlock Text="App" VerticalAlignment="Center" />
               </StackPanel>
             </Button>
             <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsWebPreviewSelected}" IsVisible="{Binding WebPreview.HasApp}"

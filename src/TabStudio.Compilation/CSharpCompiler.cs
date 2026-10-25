@@ -224,7 +224,7 @@ public sealed class CSharpCompiler
 
         var stopwatch = Stopwatch.StartNew();
         var compilation = CreateCompilation(request, cancellationToken);
-        return Emit(compilation, request.Kind == AssemblyKind.ConsoleApplication, stopwatch, null, cancellationToken);
+        return Emit(compilation, request.Kind == AssemblyKind.ConsoleApplication, stopwatch, null, resources: null, cancellationToken);
     }
 
     /// <summary>Emits a compilation into memory, applying the in-process safety checks to programs.</summary>
@@ -232,12 +232,14 @@ public sealed class CSharpCompiler
     /// <param name="checkInProcessSafety">Whether to reject calls that would close TabStudio (see <see cref="InProcessSafetyAnalyzer"/>).</param>
     /// <param name="stopwatch">A running stopwatch for the duration, or <see langword="null"/> to start one now.</param>
     /// <param name="projectName">The project name to attach to diagnostics.</param>
+    /// <param name="resources">The files to compile into the assembly as resources (see <see cref="ManifestResources"/>), if any.</param>
     /// <param name="cancellationToken">Cancels emitting.</param>
     internal static CompilationResult Emit(
         RoslynCompilation compilation,
         bool checkInProcessSafety,
         Stopwatch? stopwatch,
         string? projectName,
+        IEnumerable<ResourceDescription>? resources,
         CancellationToken cancellationToken)
     {
         stopwatch ??= Stopwatch.StartNew();
@@ -245,7 +247,7 @@ public sealed class CSharpCompiler
 
         using var image = new MemoryStream();
         using var symbols = new MemoryStream();
-        var emit = compilation.Emit(image, symbols, options: EmitOptions, cancellationToken: cancellationToken);
+        var emit = compilation.Emit(image, symbols, manifestResources: resources, options: EmitOptions, cancellationToken: cancellationToken);
 
         var diagnostics = DiagnosticMapper.Map(emit.Diagnostics, projectName ?? name).ToList();
         if (checkInProcessSafety)

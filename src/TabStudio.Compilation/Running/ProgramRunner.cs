@@ -103,7 +103,7 @@ public sealed class ProgramRunner
         // The console is process-wide: wait until no other program, test run or notebook cell owns it.
         using var lease = await ProcessConsole.AcquireAsync(cancellationToken).ConfigureAwait(false);
 
-        var context = new ProgramLoadContext(entryAssembly.Name, dependencies, packageAssemblies);
+        var context = new ProgramLoadContext(entryAssembly.Name, dependencies, packageAssemblies, sharedWithHost: null);
         var output = new CallbackTextWriter(console.WriteOutput);
         var error = new CallbackTextWriter(console.WriteError);
 
@@ -183,59 +183,5 @@ public sealed class ProgramRunner
         error.WriteLine($"Unhandled exception. {exception}");
         error.Flush();
         return new RunResult(RunOutcome.Crashed, -1, TimeSpan.Zero, exception);
-    }
-
-    /// <summary>
-    /// Loads a program and the projects it references from memory, and its NuGet packages from disk. Everything
-    /// else, such as the .NET libraries, comes from the default context, which is the runtime TabStudio itself runs on.
-    /// </summary>
-    private sealed class ProgramLoadContext : AssemblyLoadContext
-    {
-        private readonly Dictionary<string, CompiledAssembly> _dependencies;
-        private readonly Dictionary<string, string> _packageAssemblies = new(StringComparer.OrdinalIgnoreCase);
-
-        public ProgramLoadContext(string name, IReadOnlyList<CompiledAssembly> dependencies, IReadOnlyList<string> packageAssemblies)
-            : base($"TabStudio program: {name}", isCollectible: SupportsUnloading)
-        {
-            _dependencies = dependencies.ToDictionary(d => d.Name, StringComparer.OrdinalIgnoreCase);
-            foreach (var path in packageAssemblies)
-            {
-                // The first assembly of a name wins, as in the restore's list.
-                _packageAssemblies.TryAdd(Path.GetFileNameWithoutExtension(path), path);
-            }
-        }
-
-        /// <summary>Mono, which runs .NET on Android, does not support unloading assemblies.</summary>
-        private static bool SupportsUnloading => !OperatingSystem.IsAndroid() && !OperatingSystem.IsIOS();
-
-        public Assembly LoadFromImage(CompiledAssembly compiled)
-        {
-            using var image = new MemoryStream(compiled.Image, writable: false);
-            using var symbols = compiled.Symbols is null ? null : new MemoryStream(compiled.Symbols, writable: false);
-            return LoadFromStream(image, symbols);
-        }
-
-        public void UnloadIfSupported()
-        {
-            if (IsCollectible)
-            {
-                Unload();
-            }
-        }
-
-        protected override Assembly? Load(AssemblyName assemblyName)
-        {
-            if (assemblyName.Name is not { } name)
-            {
-                return null;
-            }
-
-            if (_dependencies.TryGetValue(name, out var compiled))
-            {
-                return LoadFromImage(compiled);
-            }
-
-            return _packageAssemblies.TryGetValue(name, out var path) ? LoadFromAssemblyPath(path) : null;
-        }
     }
 }

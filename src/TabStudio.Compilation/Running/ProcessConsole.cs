@@ -44,6 +44,7 @@ public static class ProcessConsole
 public sealed class ConsoleLease : IDisposable
 {
     private readonly SemaphoreSlim _gate;
+    private Action? _detach;
     private int _disposed;
 
     internal ConsoleLease(SemaphoreSlim gate)
@@ -75,6 +76,24 @@ public sealed class ConsoleLease : IDisposable
         Console.SetIn(input);
     }
 
+    /// <summary>
+    /// Points standard output and standard error at a sink, such as the Output panel, for as long as the lease lasts,
+    /// with an empty standard input. Writes that come after the lease are dropped.
+    /// </summary>
+    /// <param name="sink">Receives the text.</param>
+    public void Redirect(IConsoleSink sink)
+    {
+        ArgumentNullException.ThrowIfNull(sink);
+        var output = new CallbackTextWriter(sink.WriteOutput);
+        var error = new CallbackTextWriter(sink.WriteError);
+        _detach = () =>
+        {
+            output.Detach();
+            error.Detach();
+        };
+        Redirect(output, error, TextReader.Null);
+    }
+
     /// <summary>Restores the console and gives it to the next owner. Safe to call more than once.</summary>
     public void Dispose()
     {
@@ -83,6 +102,7 @@ public sealed class ConsoleLease : IDisposable
             return;
         }
 
+        _detach?.Invoke();
         Console.SetOut(PreviousOut);
         Console.SetError(PreviousError);
         Console.SetIn(PreviousIn);

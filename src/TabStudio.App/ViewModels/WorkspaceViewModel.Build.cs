@@ -26,9 +26,9 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
-        if (IsWebApp(project))
+        if (IsLiveApp(project))
         {
-            await RunWebProjectAsync(project, fromDebugger: false);
+            await RunLiveProjectAsync(project, fromDebugger: false);
             return;
         }
 
