@@ -227,7 +227,7 @@ internal static class XamlCompletion
         {
             if (attribute.LocalName == "Property")
             {
-                return (semantics.TargetTypeFor(element) is { } target ? TargetProperties(semantics, target) : [], start, end);
+                return (semantics.TargetTypeFor(element) is { } propertyTarget ? TargetProperties(semantics, propertyTarget) : [], start, end);
             }
 
             if (attribute.LocalName == "Value" && semantics.TargetTypeFor(element) is { } target
@@ -320,7 +320,7 @@ internal static class XamlCompletion
     private static XamlCompletionItem Keyword(string value) => new(value, SymbolGlyph.Keyword, value) { Word = XamlWordKind.Value };
 
     /// <summary>The image files of the project, by their paths in it, for an image's <c>Source</c>.</summary>
-    private static IEnumerable<XamlCompletionItem> Images(XamlSemantics semantics)
+    private static List<XamlCompletionItem> Images(XamlSemantics semantics)
     {
         var directory = semantics.File.Project.DirectoryPath;
         if (!Directory.Exists(directory))

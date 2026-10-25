@@ -256,12 +256,21 @@ public sealed class WpfXamlFeatures
         var text = (await missing.Tree.GetTextAsync(cancellationToken).ConfigureAwait(false)).ToString();
         var close = missing.Class.CloseBraceToken.SpanStart;
         var lineStart = text.LastIndexOf('\n', Math.Max(0, close - 1)) + 1;
-        var indent = new string(' ', Math.Max(0, close - lineStart)) + "    ";
+        var newline = text.Contains("\r\n", StringComparison.Ordinal) ? "\r\n" : "\n";
+        var onOwnLine = string.IsNullOrWhiteSpace(text[lineStart..close]);
+        var classLine = text.LastIndexOf('\n', Math.Max(0, missing.Class.Keyword.SpanStart - 1)) + 1;
+        var classIndent = new string(text[classLine..].TakeWhile(c => c is ' ' or '\t').ToArray());
+        var closingIndent = onOwnLine ? text[lineStart..close] : classIndent;
+        var indent = closingIndent + "    ";
         var parameters = string.Join(", ", missing.Parameters.Select((p, i) => $"{p.Type.ToMinimalDisplayString(missing.Model, close)} {(i == 0 ? "sender" : i == 1 ? "e" : p.Name)}"));
-        var method = $"\n{indent}private void {missing.Name}({parameters})\n{indent}{{\n{indent}}}\n";
-        var insertAt = text.LastIndexOf('\n', Math.Max(0, close - 1));
-        insertAt = insertAt < 0 ? close : insertAt;
-        return [new DocumentEdit(missing.Tree.FilePath, DocumentEditKind.Modified, [new TextEdit(insertAt, 0, method.TrimEnd('\n'))])];
+        var method = $"{newline}{indent}private void {missing.Name}({parameters}){newline}{indent}{{{newline}{indent}}}{newline}";
+        var insertAt = onOwnLine ? lineStart : close;
+        if (!onOwnLine)
+        {
+            method += closingIndent;
+        }
+
+        return [new DocumentEdit(missing.Tree.FilePath, DocumentEditKind.Modified, [new TextEdit(insertAt, 0, method)])];
     }
 
     private async Task<(XamlSemantics Semantics, XamlTarget Target)?> TargetAsync(string filePath, int position, CancellationToken cancellationToken)

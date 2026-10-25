@@ -56,7 +56,7 @@ public sealed class WpfTemplateTests(NuGetFixture nuget) : IDisposable
         var diagnostics = await workspace.Host.GetDocumentDiagnosticsAsync(codeBehind);
         var xaml = await workspace.Host.GetWpfXamlFileAsync(_temp.Resolve("WpfApp1/MainWindow.xaml"));
 
-        Assert.Empty(diagnostics.Where(d => d.Severity >= DiagnosticSeverityLevel.Warning));
+        Assert.DoesNotContain(diagnostics, d => d.Severity >= DiagnosticSeverityLevel.Warning);
         var window = xaml!.Compilation.GetTypeByMetadataName("WpfApp1.MainWindow")!;
         Assert.Equal("System.Windows.Controls.TextBlock", ((IFieldSymbol)window.GetMembers("Greeting").Single()).Type.ToDisplayString());
         Assert.Equal("System.Windows.Controls.Button", ((IFieldSymbol)window.GetMembers("Go").Single()).Type.ToDisplayString());
