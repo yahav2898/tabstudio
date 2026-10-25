@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <!--
+    The activity's launch theme. AndroidX SplashScreen draws the Android 12 style splash (the logo on the dark
+    background) on every supported version, including Android 9 to 11, and switches to Theme.TabStudio once
+    MainActivity calls InstallSplashScreen.
+  -->
+  <style name="Theme.TabStudio.Starting" parent="Theme.SplashScreen">
+    <item name="windowSplashScreenBackground">@color/tabstudio_background</item>
+    <item name="windowSplashScreenAnimatedIcon">@drawable/splash_icon</item>
+    <item name="postSplashScreenTheme">@style/Theme.TabStudio</item>
+  </style>
+
+  <!--
+    The theme while the app runs. Avalonia draws the whole UI, so the window only needs the dark background
+    and no action bar or title. TabStudio is dark, so the system bars use light icons.
+  -->
+  <style name="Theme.TabStudio" parent="Theme.AppCompat.NoActionBar">
+    <item name="windowActionBar">false</item>
+    <item name="windowNoTitle">true</item>
+    <item name="android:windowBackground">@color/tabstudio_background</item>
+    <item name="android:statusBarColor">@color/tabstudio_background</item>
+    <item name="android:navigationBarColor">@color/tabstudio_background</item>
+  </style>
+
+</resources>

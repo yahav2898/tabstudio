@@ -1,0 +1,32 @@
+name: Set up the Android toolchain
+description: >-
+  JDK 21, the .NET SDK from global.json with the Android workload, and a NuGet package cache: everything
+  `dotnet publish src/TabStudio.Android` needs on a GitHub-hosted Ubuntu runner, whose preinstalled Android SDK
+  ($ANDROID_HOME) supplies the platform and build tools.
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: '21'
+
+    - uses: actions/setup-dotnet@v4
+      with:
+        global-json-file: global.json
+
+    - uses: actions/cache@v4
+      with:
+        path: .nuget/packages
+        key: nuget-android-${{ hashFiles('Directory.Packages.props', '**/*.csproj') }}
+        restore-keys: nuget-android-
+
+    - name: Install the Android workload
+      shell: bash
+      run: |
+        # The SDK folder is root-owned on some runner images; retry with sudo there.
+        dotnet workload install android || sudo -E "$(command -v dotnet)" workload install android
+        dotnet workload list
+        echo "JAVA_HOME=$JAVA_HOME"
+        echo "ANDROID_HOME=$ANDROID_HOME"

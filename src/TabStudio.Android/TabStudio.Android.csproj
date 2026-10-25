@@ -1,0 +1,86 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The Android app: the activity, manifest, launcher icon, splash screen and signing around TabStudio's
+    Avalonia UI. Build it with:
+
+      dotnet publish src/TabStudio.Android -c Release -f net10.0-android
+
+    Until TabStudio.App lands, the activity hosts a temporary probe app (Probe/) that proves the platform
+    works: Avalonia renders, and Roslyn compiles and runs a program in-process.
+  -->
+
+  <PropertyGroup Label="Android">
+    <TargetFramework>net10.0-android</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>TabStudio.Android</RootNamespace>
+    <!-- Android 9. Keeps entry-level and school tablets in, see the README's requirements. -->
+    <SupportedOSPlatformVersion>28</SupportedOSPlatformVersion>
+    <!-- 64-bit and 32-bit ARM, including 32-bit Android on a 64-bit chip. CI adds android-x64 for the emulator. -->
+    <RuntimeIdentifiers>android-arm64;android-arm</RuntimeIdentifiers>
+    <AndroidPackageFormat>apk</AndroidPackageFormat>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Identity">
+    <ApplicationId>com.tabstudio.ide</ApplicationId>
+    <ApplicationTitle>TabStudio</ApplicationTitle>
+    <!-- versionName follows the repository version in Directory.Build.props. -->
+    <ApplicationDisplayVersion>$(Version)</ApplicationDisplayVersion>
+    <!--
+      versionCode must never go down between builds a device should accept as updates. CI passes its run
+      number (-p:TabStudioBuildNumber=...), so every nightly is newer than the last one; local builds are 1.
+    -->
+    <TabStudioBuildNumber Condition="'$(TabStudioBuildNumber)' == ''">1</TabStudioBuildNumber>
+    <ApplicationVersion>$(TabStudioBuildNumber)</ApplicationVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Runtime">
+    <!--
+      Roslyn composes its services with MEF and the programs TabStudio runs bind to the framework by reflection,
+      so nothing may be trimmed away. Mono AOT is off for now: it multiplies build time and APK size, and
+      startup is not yet the bottleneck.
+    -->
+    <PublishTrimmed>false</PublishTrimmed>
+    <RunAOTCompilation>false</RunAOTCompilation>
+    <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+    <!-- Android creates the activity through a Java callable wrapper, so the head's entry types stay public. -->
+    <NoWarn>$(NoWarn);CA1515</NoWarn>
+  </PropertyGroup>
+
+  <!--
+    Release builds are signed with the repository's development key, so every build, local or CI, has the
+    same signature and installs as an update over the previous one.
+
+    This key is PUBLIC on purpose: the keystore and its password are committed so anyone can reproduce the
+    nightly build. It proves nothing about who built an APK. A store release must be signed with a private
+    key kept out of the repository (pass AndroidSigningKeyStore and the passwords on the command line).
+  -->
+  <PropertyGroup Label="Signing" Condition="'$(Configuration)' == 'Release'">
+    <AndroidKeyStore>true</AndroidKeyStore>
+    <AndroidSigningKeyStore>$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)', '..', '..', 'build', 'android', 'tabstudio-dev.keystore'))</AndroidSigningKeyStore>
+    <AndroidSigningKeyAlias>tabstudio</AndroidSigningKeyAlias>
+    <AndroidSigningKeyPass>tabstudio-dev</AndroidSigningKeyPass>
+    <AndroidSigningStorePass>tabstudio-dev</AndroidSigningStorePass>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+      The Android SDK's implicit usings import Android.App and Android.Widget everywhere, whose Application and
+      Orientation clash with Avalonia's. Files that need Android APIs import them explicitly.
+    -->
+    <Using Remove="Android.App" />
+    <Using Remove="Android.Widget" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia.Android" />
+    <PackageReference Include="Avalonia.Themes.Fluent" />
+    <PackageReference Include="Xamarin.AndroidX.Core.SplashScreen" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The probe compiles with it directly. The real app reaches it through TabStudio.App. -->
+    <ProjectReference Include="..\TabStudio.Compilation\TabStudio.Compilation.csproj" />
+  </ItemGroup>
+
+</Project>

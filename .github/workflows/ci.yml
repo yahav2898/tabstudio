@@ -52,3 +52,129 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: bash build/ci/publish-logs.sh libraries ${{ job.status }}
+
+  android:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-android
+
+      - name: Build the APK
+        run: |
+          mkdir -p ci-out
+          status=0
+          dotnet publish src/TabStudio.Android -c Release -f net10.0-android \
+            -p:TabStudioBuildNumber=${{ github.run_number }} \
+            -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME" \
+            > ci-out/android-build.log 2>&1 || status=$?
+          grep -E ': (warning|error) ' ci-out/android-build.log | sort -u > ci-out/android-build-warnings.txt || true
+          tail -n 60 ci-out/android-build.log
+          echo "== $(wc -l < ci-out/android-build-warnings.txt) distinct warnings and errors"
+          cat ci-out/android-build-warnings.txt
+          exit $status
+
+      - name: Verify the APK
+        run: |
+          apk="$(find src/TabStudio.Android/bin/Release/net10.0-android/publish -name '*-Signed.apk' | head -n 1)"
+          test -n "$apk" || { echo "The build produced no signed APK." >&2; exit 1; }
+          cp "$apk" ci-out/TabStudio.apk
+          bash build/ci/android-verify-apk.sh ci-out/TabStudio.apk ci-out/apk-info.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: TabStudio-apk
+          path: ci-out/TabStudio.apk
+          if-no-files-found: error
+          # An APK is already a zip.
+          compression-level: 0
+
+      - name: Publish the nightly release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          notes="The latest build of \`main\`: commit ${GITHUB_SHA}, built $(date -u '+%Y-%m-%d %H:%M UTC').
+
+          Install \`TabStudio.apk\` on an Android 9+ tablet with an ARM processor. Every nightly is signed with the public development key in \`build/android\`, so it installs as an update over the previous one. Not a stable release."
+          if gh release view nightly > /dev/null 2>&1; then
+            # Move the tag to this commit, then refresh the release.
+            gh api -X PATCH "repos/${GH_REPO}/git/refs/tags/nightly" -f sha="$GITHUB_SHA" -F force=true > /dev/null \
+              || gh api -X POST "repos/${GH_REPO}/git/refs" -f ref=refs/tags/nightly -f sha="$GITHUB_SHA" > /dev/null
+            gh release edit nightly --title "TabStudio nightly" --notes "$notes" --prerelease
+          else
+            gh release create nightly --title "TabStudio nightly" --notes "$notes" --prerelease --target "$GITHUB_SHA"
+          fi
+          gh release upload nightly ci-out/TabStudio.apk --clobber
+
+      - name: Keep the APK out of the published logs
+        if: always()
+        run: rm -f ci-out/*.apk
+
+      - name: Publish logs
+        if: always() && github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs.sh android ${{ job.status }}
+
+  android-emulator:
+    name: Run on an Android emulator
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-android
+
+      # GitHub's runners are x86_64, so the emulator needs an x86_64 build of the same app.
+      - name: Build an x86_64 APK
+        run: |
+          mkdir -p ci-out
+          status=0
+          dotnet publish src/TabStudio.Android -c Release -f net10.0-android -p:RuntimeIdentifiers=android-x64 \
+            -p:TabStudioBuildNumber=${{ github.run_number }} \
+            -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME" \
+            > ci-out/android-x64-build.log 2>&1 || status=$?
+          tail -n 40 ci-out/android-x64-build.log
+          [ "$status" -eq 0 ] || exit $status
+          cp "$(find src/TabStudio.Android/bin/Release/net10.0-android/publish -name '*-Signed.apk' | head -n 1)" ci-out/TabStudio-x64.apk
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Start TabStudio and wait for the probe
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          target: google_apis
+          arch: x86_64
+          profile: pixel_c
+          cores: 3
+          ram-size: 4096M
+          disk-size: 4096M
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
+          script: bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 150
+
+      - name: Keep the APK out of the published logs
+        if: always()
+        run: rm -f ci-out/*.apk
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: android-emulator
+          path: ci-out/
+          if-no-files-found: ignore
+
+      - name: Publish logs
+        if: always() && github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs.sh android-emulator ${{ job.status }}
