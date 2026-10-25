@@ -1,62 +1,62 @@
 NDK: /usr/local/lib/android/sdk/ndk/27.3.13750724
 == arm64-v8a: building proot 5.1.107.101, talloc 2.5.0, API 28, 16 KB pages
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.TCci9VzxiX/arm64-v8a/static/include -O2 -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./syscall/rlimit.c -o syscall/rlimit.o
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.TCci9VzxiX/arm64-v8a/static/include -O2 -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./syscall/pipe_shadow.c -o syscall/pipe_shadow.o
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.TCci9VzxiX/arm64-v8a/static/include -O2 -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./tracee/tracee.c -o tracee/tracee.o
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.TCci9VzxiX/arm64-v8a/static/include -O2 -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./tracee/reg.c -o tracee/reg.o
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.TCci9VzxiX/arm64-v8a/static/include -O2 -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./tracee/event.c -o tracee/event.o
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.TCci9VzxiX/arm64-v8a/static/include -O2 -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./tracee/seccomp.c -o tracee/seccomp.o
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.TCci9VzxiX/arm64-v8a/static/include -O2 -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./tracee/statx.c -o tracee/statx.o
-./tracee/seccomp.c:326:7: warning: variable 'status' set but not used [-Wunused-but-set-variable]
-  326 |                 int status;
-      |                     ^
-./tracee/seccomp.c:638:29: warning: comparison of integers of different signs: 'gid_t' (aka 'unsigned int') and 'int' [-Wsign-compare]
-  638 |                 if (rxid != rxid_ && rxid != -1)
-      |                                      ~~~~ ^  ~~
-./tracee/seccomp.c:640:29: warning: comparison of integers of different signs: 'gid_t' (aka 'unsigned int') and 'int' [-Wsign-compare]
-  640 |                 if (exid != exid_ && exid != -1)
-      |                                      ~~~~ ^  ~~
-./tracee/seccomp.c:642:29: warning: comparison of integers of different signs: 'gid_t' (aka 'unsigned int') and 'int' [-Wsign-compare]
-  642 |                 if (sxid != sxid_ && sxid != -1)
-      |                                      ~~~~ ^  ~~
-./tracee/seccomp.c:631:12: warning: variable 'ret' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
-  631 |                 else if (sysnum == PR_setresgid)
-      |                          ^~~~~~~~~~~~~~~~~~~~~~
-./tracee/seccomp.c:633:7: note: uninitialized use occurs here
-  633 |                 if (ret) {  // EFAULT = address outside address space
-      |                     ^~~
-./tracee/seccomp.c:631:8: note: remove the 'if' if its condition is always true
-  631 |                 else if (sysnum == PR_setresgid)
-      |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-  632 |                         ret = getresgid(&rxid_, &exid_, &sxid_);
-./tracee/seccomp.c:150:9: note: initialize the variable 'ret' to silence this warning
-  150 |         int ret;
+1 warning generated.
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.NO7csugupL/arm64-v8a/static/include -O2 -include /tmp/tmp.NO7csugupL/arm64-v8a/android-includes.h -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./extension/port_switch/port_switch.c -o extension/port_switch/port_switch.o
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.NO7csugupL/arm64-v8a/static/include -O2 -include /tmp/tmp.NO7csugupL/arm64-v8a/android-includes.h -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./extension/sysvipc/sysvipc.c -o extension/sysvipc/sysvipc.o
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.NO7csugupL/arm64-v8a/static/include -O2 -include /tmp/tmp.NO7csugupL/arm64-v8a/android-includes.h -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./extension/sysvipc/sysvipc_msg.c -o extension/sysvipc/sysvipc_msg.o
+./extension/port_switch/port_switch.c:174:100: warning: sizeof on array function parameter will return size of 'long *' instead of 'long[]' [-Wsizeof-array-argument]
+  174 |                     write_data(tracee, peek_reg(tracee, CURRENT, SYSARG_2), socketcall_arg2, sizeof(socketcall_arg2));
+      |                                                                                                    ^
+./extension/port_switch/port_switch.c:145:121: note: declared here
+  145 | void mod_port(Tracee *tracee, bool is_socketcall, bool is_bind, bool is_udp, struct sockaddr_storage *my_sockaddr, long socketcall_arg2[]) {   
+      |                                                                                                                         ^
+./extension/port_switch/port_switch.c:182:100: warning: sizeof on array function parameter will return size of 'long *' instead of 'long[]' [-Wsizeof-array-argument]
+  182 |                     write_data(tracee, peek_reg(tracee, CURRENT, SYSARG_2), socketcall_arg2, sizeof(socketcall_arg2));
+      |                                                                                                    ^
+./extension/port_switch/port_switch.c:145:121: note: declared here
+  145 | void mod_port(Tracee *tracee, bool is_socketcall, bool is_bind, bool is_udp, struct sockaddr_storage *my_sockaddr, long socketcall_arg2[]) {   
+      |                                                                                                                         ^
+./extension/port_switch/port_switch.c:204:100: warning: sizeof on array function parameter will return size of 'long *' instead of 'long[]' [-Wsizeof-array-argument]
+  204 |                     write_data(tracee, peek_reg(tracee, CURRENT, SYSARG_2), socketcall_arg2, sizeof(socketcall_arg2));
+      |                                                                                                    ^
+./extension/port_switch/port_switch.c:145:121: note: declared here
+  145 | void mod_port(Tracee *tracee, bool is_socketcall, bool is_bind, bool is_udp, struct sockaddr_storage *my_sockaddr, long socketcall_arg2[]) {   
+      |                                                                                                                         ^
+./extension/port_switch/port_switch.c:212:100: warning: sizeof on array function parameter will return size of 'long *' instead of 'long[]' [-Wsizeof-array-argument]
+  212 |                     write_data(tracee, peek_reg(tracee, CURRENT, SYSARG_2), socketcall_arg2, sizeof(socketcall_arg2));
+      |                                                                                                    ^
+./extension/port_switch/port_switch.c:145:121: note: declared here
+  145 | void mod_port(Tracee *tracee, bool is_socketcall, bool is_bind, bool is_udp, struct sockaddr_storage *my_sockaddr, long socketcall_arg2[]) {   
+      |                                                                                                                         ^
+4 warnings generated.
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.NO7csugupL/arm64-v8a/static/include -O2 -include /tmp/tmp.NO7csugupL/arm64-v8a/android-includes.h -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./extension/sysvipc/sysvipc_sem.c -o extension/sysvipc/sysvipc_sem.o
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.NO7csugupL/arm64-v8a/static/include -O2 -include /tmp/tmp.NO7csugupL/arm64-v8a/android-includes.h -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./extension/sysvipc/sysvipc_shm.c -o extension/sysvipc/sysvipc_shm.o
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.NO7csugupL/arm64-v8a/static/include -O2 -include /tmp/tmp.NO7csugupL/arm64-v8a/android-includes.h -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./extension/link2symlink/link2symlink.c -o extension/link2symlink/link2symlink.o
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.NO7csugupL/arm64-v8a/static/include -O2 -include /tmp/tmp.NO7csugupL/arm64-v8a/android-includes.h -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./extension/fix_symlink_size/fix_symlink_size.c -o extension/fix_symlink_size/fix_symlink_size.o
+./extension/sysvipc/sysvipc_shm.c:828:10: warning: 'mktemp' is deprecated: mktemp is unsafe, use mkstemp or tmpfile instead [-Wdeprecated-declarations]
+  828 |                 (void) mktemp(path);
+      |                        ^
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/stdlib.h:60:66: note: 'mktemp' has been explicitly marked deprecated here
+   60 | char* _Nullable mktemp(char* _Nonnull __template) __attribute__((__deprecated__("mktemp is unsafe, use mkstemp or tmpfile instead")));
+      |                                                                  ^
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.NO7csugupL/arm64-v8a/static/include -O2 -include /tmp/tmp.NO7csugupL/arm64-v8a/android-includes.h -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./loader/loader.c -o loader/loader.o  -fPIC -ffreestanding 
+./loader/loader.c:91:22: error: static declaration of 'basename' follows non-static declaration
+   91 | static inline word_t basename(word_t string_)
+      |                      ^
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/string.h:208:16: note: previous declaration is here
+  208 | char* _Nonnull basename(const char* _Nonnull __path) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
       |                ^
-      |                 = 0
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.TCci9VzxiX/arm64-v8a/static/include -O2 -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./ptrace/ptrace.c -o ptrace/ptrace.o
-5 warnings generated.
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.TCci9VzxiX/arm64-v8a/static/include -O2 -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./ptrace/user.c -o ptrace/user.o
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.TCci9VzxiX/arm64-v8a/static/include -O2 -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./ptrace/wait.c -o ptrace/wait.o
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.TCci9VzxiX/arm64-v8a/static/include -O2 -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./extension/ashmem_memfd/ashmem_memfd.c -o extension/ashmem_memfd/ashmem_memfd.o
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.TCci9VzxiX/arm64-v8a/static/include -O2 -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./extension/kompat/kompat.c -o extension/kompat/kompat.o
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.TCci9VzxiX/arm64-v8a/static/include -O2 -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./extension/fake_id0/chown.c -o extension/fake_id0/chown.o
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.TCci9VzxiX/arm64-v8a/static/include -O2 -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./extension/fake_id0/chroot.c -o extension/fake_id0/chroot.o
-./extension/ashmem_memfd/ashmem_memfd.c:42:12: error: call to undeclared library function 'strcmp' with type 'int (const char *, const char *)'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-   42 |                 if (0 == strcmp(assume_unsupported, "1")) {
-      |                          ^
-./extension/ashmem_memfd/ashmem_memfd.c:42:12: note: include the header <string.h> or explicitly provide a declaration for 'strcmp'
-./extension/ashmem_memfd/ashmem_memfd.c:179:3: error: call to undeclared library function 'memset' with type 'void *(void *, int, unsigned long)'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-  179 |                 memset(state, 0, sizeof(*state));
-      |                 ^
-./extension/ashmem_memfd/ashmem_memfd.c:179:3: note: include the header <string.h> or explicitly provide a declaration for 'memset'
-./extension/ashmem_memfd/ashmem_memfd.c:172:96: warning: unused parameter 'data2' [-Wunused-parameter]
-  172 | int ashmem_memfd_callback(Extension *extension, ExtensionEvent event, intptr_t data1, intptr_t data2)
-      |                                                                                                ^
-1 warning and 2 errors generated.
-make: *** [GNUmakefile:202: extension/ashmem_memfd/ashmem_memfd.o] Error 1
+./loader/loader.c:245:20: error: incompatible integer to pointer conversion passing 'word_t' (aka 'unsigned long') to parameter of type 'const char * _Nonnull' [-Wint-conversion]
+  245 |                         name = basename(stmt->start.at_execfn);
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/string.h:208:46: note: passing argument to parameter '__path' here
+  208 | char* _Nonnull basename(const char* _Nonnull __path) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
+      |                                              ^
+./loader/loader.c:245:9: error: incompatible pointer to integer conversion assigning to 'word_t' (aka 'unsigned long') from 'char * _Nonnull' [-Wint-conversion]
+  245 |                         name = basename(stmt->start.at_execfn);
+      |                              ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+3 errors generated.
+make: *** [GNUmakefile:240: loader/loader.o] Error 1
 make: *** Waiting for unfinished jobs....
-./extension/fake_id0/chroot.c:54:2: warning: ignoring return value of function declared with 'warn_unused_result' attribute [-Wunused-result]
-   54 |         realpath(path, path_host_absolute);
-      |         ^~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~
 1 warning generated.
 rm .check_seccomp_filter.o .check_process_vm.o

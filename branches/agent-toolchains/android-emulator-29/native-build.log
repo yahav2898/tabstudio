@@ -1,62 +1,62 @@
 NDK: /usr/local/lib/android/sdk/ndk/27.3.13750724
 == x86_64: building proot 5.1.107.101, talloc 2.5.0, API 28, 16 KB pages
-1 warning generated.
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.pLewu47S5K/x86_64/static/include -O2 -include /tmp/tmp.pLewu47S5K/x86_64/android-includes.h -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./extension/port_switch/port_switch.c -o extension/port_switch/port_switch.o
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.pLewu47S5K/x86_64/static/include -O2 -include /tmp/tmp.pLewu47S5K/x86_64/android-includes.h -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./extension/sysvipc/sysvipc.c -o extension/sysvipc/sysvipc.o
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.pLewu47S5K/x86_64/static/include -O2 -include /tmp/tmp.pLewu47S5K/x86_64/android-includes.h -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./extension/sysvipc/sysvipc_msg.c -o extension/sysvipc/sysvipc_msg.o
-./extension/port_switch/port_switch.c:174:100: warning: sizeof on array function parameter will return size of 'long *' instead of 'long[]' [-Wsizeof-array-argument]
-  174 |                     write_data(tracee, peek_reg(tracee, CURRENT, SYSARG_2), socketcall_arg2, sizeof(socketcall_arg2));
-      |                                                                                                    ^
-./extension/port_switch/port_switch.c:145:121: note: declared here
-  145 | void mod_port(Tracee *tracee, bool is_socketcall, bool is_bind, bool is_udp, struct sockaddr_storage *my_sockaddr, long socketcall_arg2[]) {   
-      |                                                                                                                         ^
-./extension/port_switch/port_switch.c:182:100: warning: sizeof on array function parameter will return size of 'long *' instead of 'long[]' [-Wsizeof-array-argument]
-  182 |                     write_data(tracee, peek_reg(tracee, CURRENT, SYSARG_2), socketcall_arg2, sizeof(socketcall_arg2));
-      |                                                                                                    ^
-./extension/port_switch/port_switch.c:145:121: note: declared here
-  145 | void mod_port(Tracee *tracee, bool is_socketcall, bool is_bind, bool is_udp, struct sockaddr_storage *my_sockaddr, long socketcall_arg2[]) {   
-      |                                                                                                                         ^
-./extension/port_switch/port_switch.c:204:100: warning: sizeof on array function parameter will return size of 'long *' instead of 'long[]' [-Wsizeof-array-argument]
-  204 |                     write_data(tracee, peek_reg(tracee, CURRENT, SYSARG_2), socketcall_arg2, sizeof(socketcall_arg2));
-      |                                                                                                    ^
-./extension/port_switch/port_switch.c:145:121: note: declared here
-  145 | void mod_port(Tracee *tracee, bool is_socketcall, bool is_bind, bool is_udp, struct sockaddr_storage *my_sockaddr, long socketcall_arg2[]) {   
-      |                                                                                                                         ^
-./extension/port_switch/port_switch.c:212:100: warning: sizeof on array function parameter will return size of 'long *' instead of 'long[]' [-Wsizeof-array-argument]
-  212 |                     write_data(tracee, peek_reg(tracee, CURRENT, SYSARG_2), socketcall_arg2, sizeof(socketcall_arg2));
-      |                                                                                                    ^
-./extension/port_switch/port_switch.c:145:121: note: declared here
-  145 | void mod_port(Tracee *tracee, bool is_socketcall, bool is_bind, bool is_udp, struct sockaddr_storage *my_sockaddr, long socketcall_arg2[]) {   
-      |                                                                                                                         ^
-4 warnings generated.
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.pLewu47S5K/x86_64/static/include -O2 -include /tmp/tmp.pLewu47S5K/x86_64/android-includes.h -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./extension/sysvipc/sysvipc_sem.c -o extension/sysvipc/sysvipc_sem.o
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.pLewu47S5K/x86_64/static/include -O2 -include /tmp/tmp.pLewu47S5K/x86_64/android-includes.h -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./extension/sysvipc/sysvipc_shm.c -o extension/sysvipc/sysvipc_shm.o
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.pLewu47S5K/x86_64/static/include -O2 -include /tmp/tmp.pLewu47S5K/x86_64/android-includes.h -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./extension/link2symlink/link2symlink.c -o extension/link2symlink/link2symlink.o
-./extension/sysvipc/sysvipc_shm.c:828:10: warning: 'mktemp' is deprecated: mktemp is unsafe, use mkstemp or tmpfile instead [-Wdeprecated-declarations]
-  828 |                 (void) mktemp(path);
-      |                        ^
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/stdlib.h:60:66: note: 'mktemp' has been explicitly marked deprecated here
-   60 | char* _Nullable mktemp(char* _Nonnull __template) __attribute__((__deprecated__("mktemp is unsafe, use mkstemp or tmpfile instead")));
-      |                                                                  ^
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.pLewu47S5K/x86_64/static/include -O2 -include /tmp/tmp.pLewu47S5K/x86_64/android-includes.h -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./extension/fix_symlink_size/fix_symlink_size.c -o extension/fix_symlink_size/fix_symlink_size.o
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android28-clang -DARG_MAX=131072 -DVERSION=\"5.1.107.101\" -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I. -I./ -I/tmp/tmp.pLewu47S5K/x86_64/static/include -O2 -include /tmp/tmp.pLewu47S5K/x86_64/android-includes.h -Werror=implicit-function-declaration -Wall -Wextra -O2 "-DPROOT_UNBUNDLE_LOADER=\".\"" -MD -c ./loader/loader.c -o loader/loader.o  -fPIC -ffreestanding 
-./loader/loader.c:91:22: error: static declaration of 'basename' follows non-static declaration
-   91 | static inline word_t basename(word_t string_)
-      |                      ^
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/string.h:208:16: note: previous declaration is here
-  208 | char* _Nonnull basename(const char* _Nonnull __path) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
-      |                ^
-./loader/loader.c:245:20: error: incompatible integer to pointer conversion passing 'word_t' (aka 'unsigned long') to parameter of type 'const char * _Nonnull' [-Wint-conversion]
-  245 |                         name = basename(stmt->start.at_execfn);
-      |                                         ^~~~~~~~~~~~~~~~~~~~~
-/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/string.h:208:46: note: passing argument to parameter '__path' here
-  208 | char* _Nonnull basename(const char* _Nonnull __path) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
-      |                                              ^
-./loader/loader.c:245:9: error: incompatible pointer to integer conversion assigning to 'word_t' (aka 'unsigned long') from 'char * _Nonnull' [-Wint-conversion]
-  245 |                         name = basename(stmt->start.at_execfn);
-      |                              ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-3 errors generated.
-make: *** [GNUmakefile:240: loader/loader.o] Error 1
-make: *** Waiting for unfinished jobs....
-1 warning generated.
+  ^~~~~~~
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termbits.h:39:1: error: invalid instruction mnemonic '}'
+};
+^
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:11:17: error: invalid register name
+struct winsize {
+                ^
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:11:17: error: Expected an op-mask register at this point
+struct winsize {
+                ^
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:12:18: error: unexpected token in argument list
+  unsigned short ws_row;
+                 ^
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:13:18: error: unexpected token in argument list
+  unsigned short ws_col;
+                 ^
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:14:18: error: unexpected token in argument list
+  unsigned short ws_xpixel;
+                 ^
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:15:18: error: unexpected token in argument list
+  unsigned short ws_ypixel;
+                 ^
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:16:1: error: invalid instruction mnemonic '}'
+};
+^
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:18:16: error: invalid register name
+struct termio {
+               ^
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:18:16: error: Expected an op-mask register at this point
+struct termio {
+               ^
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:19:18: error: unexpected token in argument list
+  unsigned short c_iflag;
+                 ^
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:20:18: error: unexpected token in argument list
+  unsigned short c_oflag;
+                 ^
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:21:18: error: unexpected token in argument list
+  unsigned short c_cflag;
+                 ^
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:22:18: error: unexpected token in argument list
+  unsigned short c_lflag;
+                 ^
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:23:17: error: unexpected token in argument list
+  unsigned char c_line;
+                ^
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:24:17: error: unexpected token in argument list
+  unsigned char c_cc[8];
+                ^
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/asm-generic/termios.h:25:1: error: invalid instruction mnemonic '}'
+};
+^
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/bits/ioctl.h:43:11: error: expected register here
+int ioctl(int __fd, int __op, ...);
+          ^
+/usr/local/lib/android/sdk/ndk/27.3.13750724/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/bits/ioctl.h:60:11: error: expected register here
+int ioctl(int __fd, unsigned __op, ...) __attribute__((__overloadable__)) __attribute__((__enable_if__(1, ""))) __asm__("ioctl");
+          ^
+make: *** [GNUmakefile:240: loader/assembly.o] Error 1
 rm .check_seccomp_filter.o .check_process_vm.o
