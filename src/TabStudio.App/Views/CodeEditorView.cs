@@ -61,6 +61,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
         _editor.TextArea.TextView.CurrentLineBorder = null;
         _editor.TextArea.Caret.CaretBrush = CaretBrush;
         _editor.TextArea.RightClickMovesCaret = true;
+        InitializeRendering();
 
         if (document.UsesSemanticColoring)
         {
@@ -107,6 +108,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
         InitializeLiveTesting();
         InitializeLanguageServer();
         InitializeExtensions();
+        InitializeTouchScrolling();
     }
 
     /// <summary>The editor control, for tests and keyboard focus.</summary>
@@ -132,6 +134,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
         DisposeDebugging();
         DisposeLanguageServer();
         DisposeExtensions();
+        DisposeTouchScrolling();
     }
 
     /// <inheritdoc />

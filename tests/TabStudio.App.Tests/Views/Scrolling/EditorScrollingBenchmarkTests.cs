@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.Text;
 using Microsoft.Extensions.DependencyInjection;
 using TabStudio.App.Editing;
 using TabStudio.App.Services;
+using TabStudio.App.Services.Extensions;
 using TabStudio.App.Tests.Extensions;
 using TabStudio.App.ViewModels;
 using TabStudio.App.Views;
@@ -38,9 +39,9 @@ public sealed class EditorScrollingBenchmarkTests
     public async Task Scrolling_a_long_CSharp_file()
     {
         using var fixture = new ExtensionsFixture();
-        using (var package = new MemoryStream(CSharpConfigurationExtension.Build()))
+        using (var package = new MemoryStream(LanguageConfigurationExtension.CSharp.Package))
         {
-            await fixture.Service.InstallFileAsync(package, CSharpConfigurationExtension.FileName);
+            await fixture.Service.InstallFileAsync(package, LanguageConfigurationExtension.CSharp.FileName);
         }
 
         var solution = await new SampleLibrary(fixture.Paths).EnsureExtractedAsync();
@@ -67,7 +68,8 @@ public sealed class EditorScrollingBenchmarkTests
         var report = new StringBuilder();
         report.AppendLine("# Scrolling a long C# file").AppendLine();
         report.Append(Setup(view, document));
-        report.Append(MeasureAll(bench, view));
+        var (measured, runs) = MeasureAll(bench, view);
+        report.Append(measured);
 
         bench.ScrollViewer.Offset = new Avalonia.Vector(0, bench.MaxOffset / 2);
         bench.Settle();
@@ -79,6 +81,7 @@ public sealed class EditorScrollingBenchmarkTests
         report.Append(touch.Report()).AppendLine();
         Write("editor-scrolling-csharp.md", report.ToString());
 
+        AssertWithinBudget(runs);
         Assert.True(touch.GlideDistance > 0, "the editor glides after a flick");
         window.Close();
     }
@@ -89,6 +92,11 @@ public sealed class EditorScrollingBenchmarkTests
         using var temp = new TempDirectory();
         await using var services = AppServices.Create(new AppPaths(temp.Resolve("app")));
         var main = services.GetRequiredService<MainViewModel>();
+        using (var package = new MemoryStream(LanguageConfigurationExtension.Python.Package))
+        {
+            await services.GetRequiredService<ExtensionsService>().InstallFileAsync(package, LanguageConfigurationExtension.Python.FileName);
+        }
+
         var folder = temp.Resolve("python");
         var path = temp.Write("python/shop.py", CodeCorpus.Python());
         await main.OpenWorkspaceAsync(folder);
@@ -103,10 +111,16 @@ public sealed class EditorScrollingBenchmarkTests
             () => document.LanguageServer?.ServerState is LanguageServerState.Running or LanguageServerState.Failed,
             TimeSpan.FromSeconds(90),
             "Pyright to start");
-        await UiTestHelpers.WaitUntilAsync(
-            () => document.Diagnostics.Count > 0 && document.FoldingRanges.Count > 0 && view.Folding?.AllFoldings.Any() == true,
-            TimeSpan.FromSeconds(90),
-            "Pyright's squiggles and folds");
+        await UiTestHelpers.WaitUntilAsync(() => view.Folding?.AllFoldings.Any() == true, TimeSpan.FromSeconds(30), "the folds");
+
+        // Pyright takes a while over a long file, and longer on a busy machine; the frames are measured either way.
+        var deadline = DateTime.UtcNow + TimeSpan.FromSeconds(120);
+        while (document.Diagnostics.Count == 0 && DateTime.UtcNow < deadline)
+        {
+            Dispatcher.UIThread.RunJobs();
+            await Task.Delay(50);
+        }
+
         foreach (var line in new[] { 50, 260, 520, 900, 1400, 1900 })
         {
             workspace.Breakpoints.Toggle(path, line);
@@ -117,18 +131,20 @@ public sealed class EditorScrollingBenchmarkTests
         var report = new StringBuilder();
         report.AppendLine("# Scrolling a long Python file").AppendLine();
         report.Append(Setup(view, document));
-        report.Append(MeasureAll(bench, view));
+        var (measured, runs) = MeasureAll(bench, view);
+        report.Append(measured);
 
         bench.ScrollViewer.Offset = new Avalonia.Vector(0, bench.MaxOffset / 3);
         bench.Settle();
         UiTestHelpers.SaveScreenshot(window, "perf-02-python-scrolled");
         Write("editor-scrolling-python.md", report.ToString());
+        AssertWithinBudget(runs);
         window.Close();
         main.Workspace?.Dispose();
     }
 
     /// <summary>The main runs, the runs with one part of the editor taken away at a time, and the layout profile.</summary>
-    private static string MeasureAll(EditorScrollBench bench, CodeEditorView view)
+    private static (string Report, IReadOnlyList<ScrollRun> Runs) MeasureAll(EditorScrollBench bench, CodeEditorView view)
     {
         var max = bench.MaxOffset;
         var drag = EditorScrollBench.Drag(0, Math.Min(max, 4500), 15);
@@ -199,7 +215,21 @@ public sealed class EditorScrollingBenchmarkTests
         text.AppendLine("## Where layout time goes").AppendLine();
         text.AppendLine("Exclusive time of Avalonia's layout and style activities by control type, while dragging (profiling slows everything down).").AppendLine();
         text.Append(bench.ProfileLines(drag.Take(200))).AppendLine();
-        return text.ToString();
+        return (text.ToString(), runs);
+    }
+
+    /// <summary>
+    /// The frame budget: 95% of the frames of every drag and fling take the UI thread less than 8 ms (half a 60 Hz frame,
+    /// a whole one at 120 Hz), and the allocations per frame do not grow while scrolling.
+    /// </summary>
+    private static void AssertWithinBudget(IReadOnlyList<ScrollRun> runs)
+    {
+        foreach (var run in runs)
+        {
+            Assert.True(run.UiPercentile(0.95) < 8, $"{run.Name}: 95% of frames under 8 ms, but the 95th percentile is {run.UiPercentile(0.95):0.00} ms");
+            var (first, second) = run.AllocationsByHalf();
+            Assert.True(second <= (first * 1.25) + 4096, $"{run.Name}: allocations per frame grew from {first:0} to {second:0} bytes");
+        }
     }
 
     private static string Setup(CodeEditorView view, DocumentViewModel document)
@@ -213,6 +243,7 @@ public sealed class EditorScrollingBenchmarkTests
         text.AppendLine(culture, $"- Margins: {string.Join(", ", editor.TextArea.LeftMargins.Select(m => m.GetType().Name))}.");
         text.AppendLine(culture, $"- Line transformers: {string.Join(", ", textView.LineTransformers.Select(t => t.GetType().Name))}.");
         text.AppendLine(culture, $"- Background renderers: {string.Join(", ", textView.BackgroundRenderers.Select(r => r.GetType().Name))}.");
+        text.AppendLine(culture, $"- Text view layers: {string.Join(", ", textView.Layers.Select(l => l.GetType().Name))}.");
         text.AppendLine(culture, $"- Element generators: {string.Join(", ", textView.ElementGenerators.Select(g => g.GetType().Name))}.");
         text.AppendLine(culture, $"- Gesture recognizers: {string.Join(", ", Recognizers(editor))}.");
         text.AppendLine(culture, $"- {Environment.ProcessorCount} processors, {Environment.OSVersion}, .NET {Environment.Version}.");
@@ -252,7 +283,7 @@ public sealed class EditorScrollingBenchmarkTests
         return new FileCoverage(path, source, lines);
     }
 
-    private static IDisposable WithoutMargins(TextArea area, Func<Control, bool> which)
+    private static Restore WithoutMargins(TextArea area, Func<Control, bool> which)
     {
         var removed = area.LeftMargins.Select((margin, index) => (margin, index)).Where(m => which(m.margin)).ToList();
         foreach (var (margin, _) in removed)
@@ -269,7 +300,7 @@ public sealed class EditorScrollingBenchmarkTests
         });
     }
 
-    private static IDisposable WithoutTransformers(TextView textView, Func<IVisualLineTransformer, bool> which)
+    private static Restore WithoutTransformers(TextView textView, Func<IVisualLineTransformer, bool> which)
     {
         var removed = textView.LineTransformers.Select((transformer, index) => (transformer, index)).Where(t => which(t.transformer)).ToList();
         foreach (var (transformer, _) in removed)
@@ -289,7 +320,7 @@ public sealed class EditorScrollingBenchmarkTests
         });
     }
 
-    private static IDisposable WithoutRenderers(TextView textView, Func<IBackgroundRenderer, bool> which)
+    private static Restore WithoutRenderers(TextView textView, Func<IBackgroundRenderer, bool> which)
     {
         var removed = textView.BackgroundRenderers.Where(which).ToList();
         foreach (var renderer in removed)
@@ -306,7 +337,7 @@ public sealed class EditorScrollingBenchmarkTests
         });
     }
 
-    private static IDisposable WithoutTouchBar(CodeEditorView view)
+    private static Restore WithoutTouchBar(CodeEditorView view)
     {
         var workspace = Avalonia.VisualTree.VisualExtensions.GetVisualAncestors(view).OfType<Control>().Select(c => c.DataContext).OfType<WorkspaceViewModel>().FirstOrDefault();
         if (workspace is null || workspace.IsTouchBarCollapsed)

@@ -33,6 +33,9 @@ public sealed class BreakpointMargin : AbstractMargin
     private static readonly IPen ArrowOutline = new ImmutablePen(new ImmutableSolidColorBrush(Color.Parse("#1B1D23")), 1);
 
     private readonly Func<IReadOnlyList<BreakpointMark>> _breakpoints;
+
+    // The glyph of each line with a breakpoint, refilled on every render instead of allocated anew.
+    private readonly Dictionary<int, BreakpointGlyph> _marks = [];
     private readonly Func<int?> _currentLine;
     private readonly Func<int?> _callerLine;
 
@@ -89,10 +92,12 @@ public sealed class BreakpointMargin : AbstractMargin
             return;
         }
 
-        var marks = new Dictionary<int, BreakpointGlyph>();
-        foreach (var mark in _breakpoints())
+        var marks = _marks;
+        marks.Clear();
+        var breakpoints = _breakpoints();
+        for (var i = 0; i < breakpoints.Count; i++)
         {
-            marks.TryAdd(mark.Line, mark.Glyph);
+            marks.TryAdd(breakpoints[i].Line, breakpoints[i].Glyph);
         }
 
         var current = _currentLine();

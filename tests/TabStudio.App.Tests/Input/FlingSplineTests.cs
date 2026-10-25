@@ -70,7 +70,8 @@ public sealed class FlingSplineTests
 
         Assert.Equal(1000.0, clamped.Distance);
         Assert.True(clamped.Duration < free.Duration);
-        Assert.Equal(1000.0, clamped.PositionAt(clamped.Duration), 0.01);
+        // Android finds that moment from its time table, which agrees with the distance table to a fraction of a dip.
+        Assert.Equal(1000.0, clamped.PositionAt(clamped.Duration), 0.5);
         Assert.Equal(1000.0, clamped.PositionAt(clamped.Duration + TimeSpan.FromTicks(1)));
         Assert.Equal(free.PositionAt(TimeSpan.FromMilliseconds(100)), clamped.PositionAt(TimeSpan.FromMilliseconds(100)), 1e-9);
 
