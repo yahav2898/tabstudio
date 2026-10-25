@@ -1,0 +1,49 @@
+  Determining projects to restore...
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/TabStudio.Testing.csproj (in 283 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/TabStudio.App.Tests.csproj (in 304 ms).
+  20 of 22 projects are up-to-date for restore.
+  TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
+  TabStudio.LanguageServers -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.LanguageServers/bin/Release/net10.0/TabStudio.LanguageServers.dll
+  TabStudio.Forms -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/bin/Release/net10.0/TabStudio.Forms.dll
+  TabStudio.Extensions -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Extensions/bin/Release/net10.0/TabStudio.Extensions.dll
+  TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
+  TabStudio.Packages -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/bin/Release/net10.0/TabStudio.Packages.dll
+  TabStudio.Agent -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Agent/bin/Release/net10.0/TabStudio.Agent.dll
+  TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
+  TabStudio.Toolchains -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Toolchains/bin/Release/net10.0/TabStudio.Toolchains.dll
+  TabStudio.Notebooks -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/bin/Release/net10.0/TabStudio.Notebooks.dll
+  TabStudio.TestRunner -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/bin/Release/net10.0/TabStudio.TestRunner.dll
+  TabStudio.Web -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Web/bin/Release/net10.0/TabStudio.Web.dll
+  TabStudio.Debugging -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/bin/Release/net10.0/TabStudio.Debugging.dll
+  TabStudio.SourceControl -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/bin/Release/net10.0/TabStudio.SourceControl.dll
+  TabStudio.LiveTesting -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.LiveTesting/bin/Release/net10.0/TabStudio.LiveTesting.dll
+  TabStudio.Forms.Design -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms.Design/bin/Release/net10.0/TabStudio.Forms.Design.dll
+  TabStudio.Link -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Link/bin/Release/net10.0/TabStudio.Link.dll
+  TabStudio.WindowsBridge -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.WindowsBridge/bin/Release/net10.0/TabStudio.WindowsBridge.dll
+  TabStudio.Swarm -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Swarm/bin/Release/net10.0/TabStudio.Swarm.dll
+  TabStudio.WindowsBridge.Windows -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.WindowsBridge.Windows/bin/Release/net10.0/TabStudio.WindowsBridge.Windows.dll
+  TabStudio.App -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.App/bin/Release/net10.0/TabStudio.App.dll
+/home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/Design/DesignSamples.cs(212,28): warning CA1859: Change return type of method 'RunButton' from 'Avalonia.Controls.Control' to 'Avalonia.Controls.StackPanel' for improved performance (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1859) [/home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/TabStudio.App.Tests.csproj]
+  TabStudio.App.Tests -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
+[xUnit.net 00:00:00.12]   Discovering: TabStudio.App.Tests
+[xUnit.net 00:00:00.35]   Discovered:  TabStudio.App.Tests
+[xUnit.net 00:00:00.48]   Starting:    TabStudio.App.Tests
+  Passed TabStudio.App.Tests.DesktopMode.ToolboxCatalogTests.Says_what_is_wrong_with_a_framework_file [39 ms]
+  Passed TabStudio.App.Tests.Toolchains.ToolchainLanguageToolsTests.F5_debugs_the_Python_app_to_a_breakpoint_and_its_input_is_answered [16 s]
+  Passed TabStudio.App.Tests.Swarm.SwarmPiecesTests.The_recorder_joins_typing_into_one_step_and_scrolls_of_one_element_into_one [13 ms]
+  Passed TabStudio.App.Tests.DesktopMode.ToolboxCatalogTests.Knows_the_properties_of_Avalonia_s_types_with_choices_for_enums_and_booleans [17 ms]
+  Passed TabStudio.App.Tests.Swarm.SwarmPiecesTests.A_recorded_test_is_a_row_per_screen_and_a_run_replays_those_rows_and_leaves_the_rest_to_the_runner [115 ms]
+  Passed TabStudio.App.Tests.DesktopMode.DesktopCursorTests.Slow_movements_move_one_pixel_a_count_and_fast_ones_speed_up [4 ms]
+  Passed TabStudio.App.Tests.DesktopMode.DesktopCursorTests.Fractions_of_slow_movements_add_up [< 1 ms]
+  Passed TabStudio.App.Tests.DesktopMode.DesktopCursorTests.The_pointer_starts_in_the_middle_of_the_display_in_its_units_and_pixels [< 1 ms]
+  Passed TabStudio.App.Tests.DesktopMode.DesktopCursorTests.The_pointer_stays_on_the_display_and_where_it_was_when_the_display_changes [< 1 ms]
+  Passed TabStudio.App.Tests.DesktopMode.DesktopCursorTests.Showing_and_hiding_the_pointer_is_observable [< 1 ms]
+  Passed TabStudio.App.Tests.Services.GitHubImporterTests.A_private_repository_needs_an_account_and_opens_once_signed_in [137 ms]
+  Passed TabStudio.App.Tests.Services.GitHubImporterTests.Imports_a_repository_into_a_folder_linked_to_it [14 ms]
+  Passed TabStudio.App.Tests.Services.GitHubImporterTests.An_unknown_branch_is_reported_in_plain_words [7 ms]
+  Passed TabStudio.App.Tests.ViewModels.WebAppTests.F5_serves_the_web_template_in_the_preview_restarts_it_on_save_and_stops_it [5 s]
+  Passed TabStudio.App.Tests.Toolchains.ToolchainLanguageToolsTests.Ctrl_F5_still_runs_the_Python_app_without_the_debugger [2 s]
+  Passed TabStudio.App.Tests.DesktopMode.ToolboxCatalogTests.Lists_Avalonia_s_controls_with_XAML_that_parses_and_icons_that_exist [50 ms]
