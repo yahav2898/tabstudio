@@ -209,10 +209,19 @@ public sealed class Font : MarshalByRefObject, ICloneable, IDisposable
     internal float SizeInPixels => SizeInPoints * 96f / 72f;
 
     /// <summary>The font as drawing and measuring use it.</summary>
-    internal FontSpec Spec => _spec ??= new FontSpec(FontFamily.DrawingFamily, SizeInPixels, Bold, Italic, Underline, Strikeout);
+    internal FontSpec Spec => _spec ??= new FontSpec(
+        FontFamily.DrawingFamily,
+        SizeInPixels * WindowsFontMetrics.WidthScale(FontFamily.Name, FontFamily.DrawingFamily),
+        Bold,
+        Italic,
+        Underline,
+        Strikeout,
+        WindowsFontMetrics.TextLineHeight(FontFamily.Name, FontFamily.DrawingFamily, SizeInPixels));
 
-    /// <summary>The line spacing in pixels.</summary>
-    public float GetHeight() => (float)TextMetrics.LineHeight(Spec);
+    /// <summary>The line spacing in pixels: the Windows font's, for the common Windows fonts, so layouts match Windows.</summary>
+    public float GetHeight() => WindowsFontMetrics.LineSpacing(FontFamily.Name) is { } spacing
+        ? (float)(SizeInPixels * spacing)
+        : (float)TextMetrics.LineHeight(Spec);
 
     /// <summary>The line spacing at a resolution.</summary>
     /// <param name="dpi">The resolution in dots per inch.</param>

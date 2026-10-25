@@ -46,7 +46,7 @@ internal static class TextMetrics
 
     /// <summary>The height of one line of text in a font, in device-independent pixels.</summary>
     /// <param name="font">The font.</param>
-    public static double LineHeight(FontSpec font) => LineHeights.GetOrAdd(font, static spec =>
+    public static double LineHeight(FontSpec font) => !double.IsNaN(font.LineHeight) ? font.LineHeight : LineHeights.GetOrAdd(font, static spec =>
     {
         if (!IsAvailable)
         {
@@ -109,7 +109,8 @@ internal static class TextMetrics
             font.Decorations,
             FlowDirection.LeftToRight,
             maxWidth,
-            maxHeight);
+            maxHeight,
+            font.LineHeight);
 
     /// <summary>The character index nearest to a point in laid-out text, for placing a caret where a finger taps.</summary>
     /// <param name="text">The text.</param>

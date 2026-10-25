@@ -87,13 +87,23 @@ internal sealed class FormsTestRun : IDisposable
     public void Post(Action action) => Runtime.Post(action);
 
     /// <summary>Waits until the Forms thread has handled everything queued so far.</summary>
-    public void Settle() => Assert.True(Runtime.Send(() => { }, Timeout) || Runtime.IsStopping, "The Forms thread is busy.");
+    public void Settle() => Assert.True(Runtime.Send(() => { }, Timeout) || Runtime.IsStopping || Exit.IsCompleted, "The Forms thread is busy.");
+
+    /// <summary>
+    /// Delivers input on the Forms thread as the presenter does: an exception a handler throws goes to the app, which
+    /// ends or raises Application.ThreadException, rather than to the test.
+    /// </summary>
+    public void Deliver(Action input)
+    {
+        Assert.True(Runtime.Send(input, Timeout) || Runtime.IsStopping || Exit.IsCompleted, "The Forms thread did not take the input in time.");
+        Settle();
+    }
 
     /// <summary>The window of a form.</summary>
     public FormWindow WindowOf(Form form) => Invoke(() => form.WindowInternal) ?? throw new InvalidOperationException("The form is not shown.");
 
     /// <summary>A tap on a control, at its center or at a point of its client area.</summary>
-    public void Tap(Control control, Point? at = null) => Invoke(() =>
+    public void Tap(Control control, Point? at = null) => Deliver(() =>
     {
         var window = control.Window ?? throw new InvalidOperationException($"{control.Name} is not shown.");
         var point = ToWindow(control, at ?? new Point(control.ClientSize.Width / 2, control.ClientSize.Height / 2));
@@ -102,7 +112,7 @@ internal sealed class FormsTestRun : IDisposable
     });
 
     /// <summary>A tap at a point of a window's client area.</summary>
-    public void TapWindow(Form form, Point point) => Invoke(() =>
+    public void TapWindow(Form form, Point point) => Deliver(() =>
     {
         var window = form.WindowInternal ?? throw new InvalidOperationException("The form is not shown.");
         window.PointerPressed(point, MouseButtons.Left, 1, touch: false);
@@ -110,7 +120,7 @@ internal sealed class FormsTestRun : IDisposable
     });
 
     /// <summary>A key pressed on the active window.</summary>
-    public void Key(Keys keyData) => Invoke(() =>
+    public void Key(Keys keyData) => Deliver(() =>
     {
         var window = Runtime.ActiveWindow ?? throw new InvalidOperationException("No window is active.");
         window.KeyDown(keyData);
@@ -118,7 +128,7 @@ internal sealed class FormsTestRun : IDisposable
     });
 
     /// <summary>Text typed into the focused native text box.</summary>
-    public void Type(string text) => Invoke(() =>
+    public void Type(string text) => Deliver(() =>
     {
         var window = Runtime.ActiveWindow ?? throw new InvalidOperationException("No window is active.");
         var focused = window.FocusedControl ?? throw new InvalidOperationException("Nothing has focus.");

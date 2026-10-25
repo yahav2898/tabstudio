@@ -364,6 +364,12 @@ public abstract class ToolStripItem : Component
     /// <summary>The margin of a new item.</summary>
     protected virtual Padding DefaultMargin => new(0, 1, 0, 2);
 
+    /// <summary>The space beside the content, across both sides.</summary>
+    private protected virtual int HorizontalSpace => 8;
+
+    /// <summary>The space above and below the text, across both.</summary>
+    private protected virtual int TextVerticalSpace => 4;
+
     /// <summary>The size the strip lays the item out at: its preferred size when sized automatically.</summary>
     internal Size LayoutSize => _autoSize ? GetPreferredSize(Size.Empty) : _size;
 
@@ -395,9 +401,9 @@ public abstract class ToolStripItem : Component
     {
         var text = ShowsText ? TextMetrics.Measure(DisplayText, Font.Spec) : default;
         var image = ShowsImage ? ImageSize : Size.Empty;
-        var width = (int)Math.Ceiling(text.Width) + image.Width + (ShowsText && ShowsImage ? 4 : 0) + Padding.Horizontal + 8;
-        var height = Math.Max((int)Math.Ceiling(text.Height), image.Height) + Padding.Vertical + 6;
-        return new Size(Math.Max(width, 16), Math.Max(height, 20));
+        var width = (int)Math.Ceiling(text.Width) + image.Width + (ShowsText && ShowsImage ? 4 : 0) + Padding.Horizontal + HorizontalSpace;
+        var height = Math.Max(ShowsText ? (int)Math.Ceiling(text.Height) + TextVerticalSpace : 0, ShowsImage ? image.Height + 6 : 0) + Padding.Vertical;
+        return new Size(Math.Max(width, 8), Math.Max(height, 4));
     }
 
     /// <inheritdoc />

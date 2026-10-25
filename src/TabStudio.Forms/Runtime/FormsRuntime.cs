@@ -40,6 +40,7 @@ internal sealed partial class FormsRuntime : IDisposable
     private Thread? _thread;
     private volatile bool _stopping;
     private volatile bool _paintRequested;
+    private readonly TaskCompletionSource _exitedSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private int _nextWindowId;
     private bool _disposed;
 
@@ -146,7 +147,7 @@ internal sealed partial class FormsRuntime : IDisposable
             return true;
         }
 
-        if (_stopping)
+        if (_stopping || _exitedSource.Task.IsCompleted)
         {
             return false;
         }
@@ -163,7 +164,9 @@ internal sealed partial class FormsRuntime : IDisposable
                 done.TrySetResult();
             }
         });
-        return done.Task.Wait(timeout);
+        // The app may end before it gets to the work; the wait then ends too.
+        Task.WaitAny([done.Task, _exitedSource.Task], timeout);
+        return done.Task.IsCompleted;
     }
 
     /// <summary>Runs a message loop until a condition holds or the run ends. UI thread only.</summary>
@@ -393,6 +396,7 @@ internal sealed partial class FormsRuntime : IDisposable
             error ??= ex;
         }
 
+        _exitedSource.TrySetResult();
         Exited?.Invoke(this, new FormsExit(exitCode, error ?? Crash, Stopped: _stopping && Crash is null && error is null));
     }
 

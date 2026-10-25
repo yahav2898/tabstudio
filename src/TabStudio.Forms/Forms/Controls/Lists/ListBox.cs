@@ -164,7 +164,7 @@ public class ListBox : ListControl
     /// <summary>The height of an item.</summary>
     public virtual int ItemHeight
     {
-        get => _itemHeight > 0 ? _itemHeight : Font.Height;
+        get => _itemHeight > 0 ? _itemHeight : (int)Math.Round(TextMetrics.LineHeight(Font.Spec));
         set
         {
             ArgumentOutOfRangeException.ThrowIfLessThan(value, 1);

@@ -13,7 +13,8 @@ namespace TabStudio.Forms.Rendering;
 /// <param name="Italic">Whether the text is italic.</param>
 /// <param name="Underline">Whether the text is underlined.</param>
 /// <param name="Strikeout">Whether the text is struck out.</param>
-internal sealed record FontSpec(string Family, double Size, bool Bold, bool Italic, bool Underline, bool Strikeout)
+/// <param name="LineHeight">The height of a line, or NaN for the family's own: a substituted Windows font keeps its line height.</param>
+internal sealed record FontSpec(string Family, double Size, bool Bold, bool Italic, bool Underline, bool Strikeout, double LineHeight = double.NaN)
 {
     private static readonly ConcurrentDictionary<string, string> ResolvedFamilies = new(StringComparer.OrdinalIgnoreCase);
 

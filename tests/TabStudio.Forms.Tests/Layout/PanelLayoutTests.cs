@@ -25,7 +25,8 @@ public sealed class PanelLayoutTests
 
         Assert.Equal([100, 300], table.GetColumnWidths());
         Assert.Equal([40, 260], table.GetRowHeights());
-        Assert.Equal(new Rectangle(3, 3, 94, 34), name.Bounds);
+        // A label's margin has no top or bottom, as in Windows Forms.
+        Assert.Equal(new Rectangle(3, 0, 94, 40), name.Bounds);
         Assert.Equal(103, box.Left);
         Assert.Equal(new Rectangle(3, 43, 394, 254), notes.Bounds);
         Assert.Equal(new TableLayoutPanelCellPosition(1, 0), table.GetPositionFromControl(box));

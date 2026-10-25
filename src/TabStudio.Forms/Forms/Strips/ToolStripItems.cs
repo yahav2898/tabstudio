@@ -226,6 +226,12 @@ public class ToolStripLabel : ToolStripItem
     public override bool CanSelect => IsLink && Enabled;
 
     /// <inheritdoc />
+    private protected override int HorizontalSpace => 4;
+
+    /// <inheritdoc />
+    private protected override int TextVerticalSpace => 2;
+
+    /// <inheritdoc />
     internal override void PaintOnStrip(Graphics g, Rectangle bounds)
     {
         if (!BackColor.IsEmpty)

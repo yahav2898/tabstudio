@@ -177,7 +177,7 @@ public class TabControl : Control
     protected override Size DefaultSize => new(200, 100);
 
     /// <summary>The height of the tabs.</summary>
-    private int TabHeight => _itemSize.Height > 0 ? _itemSize.Height : Font.Height + (2 * _padding.Y) + 3;
+    private int TabHeight => _itemSize.Height > 0 ? _itemSize.Height : Font.Height + (2 * _padding.Y) - 2;
 
     /// <summary>The bounds of a tab.</summary>
     /// <param name="index">The tab.</param>

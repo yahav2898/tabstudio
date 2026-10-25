@@ -201,7 +201,7 @@ public class DateTimePicker : Control
     public Font? CalendarFont { get; set; }
 
     /// <summary>The height of the box in its font.</summary>
-    public int PreferredHeight => Font.Height + 8;
+    public int PreferredHeight => Font.Height + 7;
 
     /// <summary>Whether the calendar is open.</summary>
     internal bool DroppedDown => _popup is not null;

@@ -87,7 +87,7 @@ public abstract class UpDownBase : ContainerControl, INativeTextEditor
     } = LeftRightAlignment.Right;
 
     /// <summary>The height of the control in its font.</summary>
-    public int PreferredHeight => Font.Height + 8;
+    public int PreferredHeight => Font.Height + 7;
 
     /// <summary>Whether the user typed text that has not been validated yet.</summary>
     protected bool UserEdit { get; set; }

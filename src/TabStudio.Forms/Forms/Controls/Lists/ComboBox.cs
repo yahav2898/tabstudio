@@ -264,7 +264,7 @@ public class ComboBox : ListControl, INativeTextEditor
     /// <summary>The height of an item of the list.</summary>
     public int ItemHeight
     {
-        get => _itemHeight > 0 ? _itemHeight : Font.Height;
+        get => _itemHeight > 0 ? _itemHeight : (int)Math.Round(TextMetrics.LineHeight(Font.Spec));
         set => _itemHeight = value;
     }
 
@@ -306,7 +306,7 @@ public class ComboBox : ListControl, INativeTextEditor
     public AutoCompleteStringCollection AutoCompleteCustomSource { get; set; } = [];
 
     /// <summary>The height of the box in its font.</summary>
-    public int PreferredHeight => Font.Height + 8;
+    public int PreferredHeight => Font.Height + 7;
 
     /// <inheritdoc />
     protected override Size DefaultSize => new(121, 23);

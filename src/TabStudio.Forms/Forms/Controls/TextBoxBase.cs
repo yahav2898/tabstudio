@@ -302,12 +302,7 @@ public abstract class TextBoxBase : Control, INativeTextEditor
     }
 
     /// <summary>The height of a one-line text box in its font.</summary>
-    public int PreferredHeight => Font.Height + _borderStyle switch
-    {
-        BorderStyle.Fixed3D => 8,
-        BorderStyle.FixedSingle => 6,
-        _ => 2,
-    };
+    public int PreferredHeight => Font.Height + (_borderStyle == BorderStyle.None ? 0 : 7);
 
     /// <inheritdoc />
     protected override Size DefaultSize => new(100, 23);
