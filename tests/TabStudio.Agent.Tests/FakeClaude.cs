@@ -47,7 +47,7 @@ internal sealed class FakeClaude : HttpMessageHandler
     {
         _responses.Enqueue(() => new HttpResponseMessage(status)
         {
-            Content = new StringContent($$"""{"type":"error","error":{"type":"{{type}}","message":"{{message}}"}}""", Encoding.UTF8, "application/json"),
+            Content = new StringContent($$$"""{"type":"error","error":{"type":"{{{type}}}","message":"{{{message}}}"}}""", Encoding.UTF8, "application/json"),
         });
         return this;
     }
@@ -68,7 +68,7 @@ internal sealed class FakeClaude : HttpMessageHandler
 
         public static string TextBlock(int index, string text)
         {
-            var events = Event("content_block_start", $$"""{"type":"content_block_start","index":{{index}},"content_block":{"type":"text","text":""}}""");
+            var events = Event("content_block_start", $$$"""{"type":"content_block_start","index":{{{index}}},"content_block":{"type":"text","text":""}}""");
 
             // Split the text in two deltas, as the API streams it in pieces.
             var half = text.Length / 2;
@@ -78,7 +78,7 @@ internal sealed class FakeClaude : HttpMessageHandler
                 events += Event("content_block_delta", delta.ToJsonString());
             }
 
-            return events + Event("content_block_stop", $$"""{"type":"content_block_stop","index":{{index}}}""") + Event("ping", """{"type":"ping"}""");
+            return events + Event("content_block_stop", $$$"""{"type":"content_block_stop","index":{{{index}}}}""") + Event("ping", """{"type":"ping"}""");
         }
 
         public static string ToolBlock(int index, string id, string name, JsonObject input)
@@ -98,11 +98,11 @@ internal sealed class FakeClaude : HttpMessageHandler
                 events += Event("content_block_delta", delta.ToJsonString());
             }
 
-            return events + Event("content_block_stop", $$"""{"type":"content_block_stop","index":{{index}}}""");
+            return events + Event("content_block_stop", $$$"""{"type":"content_block_stop","index":{{{index}}}}""");
         }
 
         public static string Stop(string reason) =>
-            Event("message_delta", $$"""{"type":"message_delta","delta":{"stop_reason":"{{reason}}","stop_sequence":null},"usage":{"output_tokens":42}}""") +
+            Event("message_delta", $$$"""{"type":"message_delta","delta":{"stop_reason":"{{{reason}}}","stop_sequence":null},"usage":{"output_tokens":42}}""") +
             Event("message_stop", """{"type":"message_stop"}""");
 
         private static string Event(string name, string data) => $"event: {name}\ndata: {data}\n\n";
