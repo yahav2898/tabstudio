@@ -18,7 +18,7 @@ namespace TabStudio.App.Views.DesktopMode;
 /// completion list, brackets and indentation, as it would from a keyboard.
 /// </remarks>
 /// <param name="target">The element on the big screen that gets the keys: what had the keyboard focus there.</param>
-internal sealed class DesktopTypingRelay(Func<InputElement?> target)
+internal sealed partial class DesktopTypingRelay(Func<InputElement?> target)
 {
     private string _typed = string.Empty;
 
@@ -131,15 +131,22 @@ internal sealed class DesktopTypingRelay(Func<InputElement?> target)
 
     /// <summary>
     /// Runs the editor's own action for a key a touch keyboard sends. Enter is typed as a line break, with the
-    /// editor's indentation, because the editor's Enter command acts only while the editor has the keyboard focus.
+    /// editor's indentation, and Tab indents, because the editor does both only while it has the keyboard focus.
     /// </summary>
     /// <returns>Whether the key has an action in the editor.</returns>
     private static bool RunEditorKey(TextArea area, Key key, KeyModifiers modifiers)
     {
-        if (key == Key.Enter && modifiers == KeyModifiers.None)
+        switch (key, modifiers)
         {
-            area.PerformTextInput("\n");
-            return true;
+            case (Key.Enter, KeyModifiers.None):
+                area.PerformTextInput("\n");
+                return true;
+            case (Key.Tab, KeyModifiers.None):
+                Indent(area);
+                return true;
+            case (Key.Tab, KeyModifiers.Shift):
+                Outdent(area);
+                return true;
         }
 
         if (EditorCommand(key, modifiers) is not { } command)
@@ -156,8 +163,6 @@ internal sealed class DesktopTypingRelay(Func<InputElement?> target)
     {
         (Key.Back, KeyModifiers.None) => EditingCommands.Backspace,
         (Key.Delete, KeyModifiers.None) => EditingCommands.Delete,
-        (Key.Tab, KeyModifiers.None) => EditingCommands.TabForward,
-        (Key.Tab, KeyModifiers.Shift) => EditingCommands.TabBackward,
         (Key.Left, KeyModifiers.None) => EditingCommands.MoveLeftByCharacter,
         (Key.Right, KeyModifiers.None) => EditingCommands.MoveRightByCharacter,
         (Key.Up, KeyModifiers.None) => EditingCommands.MoveUpByLine,
