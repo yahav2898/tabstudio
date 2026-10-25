@@ -23,6 +23,7 @@ public static class ProjectKindNames
         ProjectKind.Avalonia => "Avalonia",
         ProjectKind.Uno => "Uno Platform",
         ProjectKind.NativeCpp => "C++",
+        ProjectKind.BlazorWebApp => "Blazor Web App",
         ProjectKind.Python => "Python",
         ProjectKind.Node => "Node.js",
         _ => "Project",

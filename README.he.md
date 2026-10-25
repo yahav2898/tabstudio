@@ -68,7 +68,7 @@ TabStudio הופך טאבלט אנדרואיד למחשב פיתוח שבאמת 
 | WPF | ‏OpenSilver, ב-WebView |
 | WinUI | ‏Uno Platform, באופן טבעי על אנדרואיד |
 | C, ‏C++, ‏Rust, ‏Go, ‏Python, ‏Node, ‏Java | כלי פיתוח טבעיים מה-Toolchain Store |
-| כל מה שדורש Windows | ה-Windows Bridge: נבנה ורץ על המחשב שלכם ומוזרם לטאבלט |
+| כל מה שדורש Windows | ‏Windows Compatibility: האפליקציה האמיתית רצה בטאבלט עצמו דרך Wine; או ה-Windows Bridge, שבונה ומריץ אותה על המחשב שלכם ומזרים אותה לטאבלט |
 
 ### כל המסכים בבת אחת
 
@@ -101,6 +101,7 @@ TabStudio הופך טאבלט אנדרואיד למחשב פיתוח שבאמת 
 - **Claude, בתוך ה-IDE.** הסוכן רואה את כל הפתרון, בונה אותו, מריץ את הבדיקות ומתקן את השגיאות שהוא מוצא, וכל שינוי שלו מגיע כ-diff שאתם מאשרים.
 - **נגיעה אחת מהבעיה לתיקון.** כשה-Compatibility Doctor מוצא API שלא רץ על הטאבלט, **Fix with Agent** משכתב את הקוד ומראה לכם את התוצאה.
 - **מסקיצה ל-XAML.** מציירים מסך עם העט ומקבלים XAML שרץ.
+- **המרה ל-cross-platform.** נגיעה אחת ממירה פרויקט WPF או Windows Forms לפרויקט Avalonia שרץ באופן טבעי בכל מקום. ממיר משכתב את כל מה שממופה במדויק, Claude משלים את השאר, ואתם בודקים הכול כ-diff.
 - **מדבר MCP.** הסוכן מתחבר לכל שרת Model Context Protocol, כך שהכלים והשירותים שלכם במרחק הגדרה אחת.
 
 ### בנוי למכשיר שבידיים שלכם
@@ -123,7 +124,7 @@ TabStudio הופך טאבלט אנדרואיד למחשב פיתוח שבאמת 
 
 **מנוע הבנייה** הופך פרויקט למשהו שאפשר להריץ. ל-TabStudio יש מערכת פרויקטים משלו שקוראת קובצי פרויקט בסגנון SDK, ‏`Directory.Build.props`, הפניות בין פרויקטים וחבילות NuGet, שמשוחזרות על המכשיר. ב-C#, ‏Roslyn מקמפל ישר לזיכרון מול reference assemblies שמגיעות עם האפליקציה, כך שמחזור העריכה וההרצה לא נוגע בדיסק בכלל. שפות אחרות נבנות עם כלי פיתוח טבעיים מה-Toolchain Store.
 
-**מארחי הרצה** הם המקום שבו התוכנית שלכם באמת רצה. ‏F5 בוחר אחד לפי סוג הפרויקט: אפליקציות קונסולה רצות בתוך התהליך בהקשר טעינה מבודד, אפליקציות web רצות ב-WebView ליד העורך, ואפליקציות שדורשות Windows יכולות לרוץ על מחשב שלכם דרך ה-Windows Bridge.
+**מארחי הרצה** הם המקום שבו התוכנית שלכם באמת רצה. ‏F5 בוחר אחד לפי סוג הפרויקט: אפליקציות קונסולה רצות בתוך התהליך בהקשר טעינה מבודד, אפליקציות web רצות ב-WebView ליד העורך, ואפליקציות שדורשות Windows רצות בטאבלט עצמו דרך Windows Compatibility, או על מחשב שלכם דרך ה-Windows Bridge.
 
 אנדרואיד מגביל מה אפליקציה רשאית להריץ, ולכן כל החלטת תכנון כאן מתחילה מהכללים של הפלטפורמה במקום להילחם בהם. הפרטים, כולל למה האפליקציה לא תלויה במכונה הווירטואלית של אנדרואיד, נמצאים ב[מסמך הארכיטקטורה](docs/ARCHITECTURE.md).
 
@@ -195,6 +196,9 @@ src/
   TabStudio.SourceControl/ Git through GitHub: changes, commits, pulls and merges, branches, pull requests, Actions
   TabStudio.Agent/         Claude as a coding agent: tools over the workspace, MCP servers, sketch to XAML
   TabStudio.Link/          TabStudio Link: pairing, encrypted transport, QR codes and the remote language service
+  TabStudio.Web/           Web apps: static web assets, Blazor's scripts, a host for .NET apps on WebAssembly
+  TabStudio.LanguageServers/ Language Server and Debug Adapter Protocol clients for every non-C# language
+  TabStudio.Extensions/    VS Code extensions from Open VSX: grammars, language rules, snippets, themes
   TabStudio.App/           The IDE itself: views and view models, shared by every platform
   TabStudio.Desktop/       Desktop host for development
   TabStudio.Android/       The Android app

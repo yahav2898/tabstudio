@@ -72,14 +72,22 @@ public sealed partial class RoslynWorkspaceHost
 
     /// <summary>
     /// The framework's and the project's analyzers, without the generators the SDK leaves off unless the project turns
-    /// them on (see <see cref="SdkGenerators"/>). An Avalonia project gets TabStudio's XAML generator in place of
-    /// Avalonia's, which expects XAML compiled after the C# compiler. The caller holds the gate.
+    /// them on (see <see cref="SdkGenerators"/>). A Razor project gets the Razor compiler TabStudio carries, in place of
+    /// any a package brings. An Avalonia project gets TabStudio's XAML generator in place of Avalonia's, which expects
+    /// XAML compiled after the C# compiler. The caller holds the gate.
     /// </summary>
     private IReadOnlyList<AnalyzerReference> GetAnalyzerReferences(TsProject project)
     {
         var analyzers = _frameworkAnalyzers
             .Concat(_packageAnalyzers.GetValueOrDefault(project.FilePath) ?? [])
             .Where(a => SdkGenerators.IsEnabled(project, a.FullPath));
+        if (Razor.RazorProjects.UsesRazor(project))
+        {
+            analyzers = analyzers
+                .Where(a => !string.Equals(Path.GetFileName(a.FullPath), "Microsoft.CodeAnalysis.Razor.Compiler.dll", StringComparison.OrdinalIgnoreCase))
+                .Append(Razor.RazorCompiler.Reference);
+        }
+
         if (!UsesAvaloniaXaml(project))
         {
             return [.. analyzers];
@@ -115,9 +123,10 @@ public sealed partial class RoslynWorkspaceHost
 
     /// <summary>
     /// The build properties generators read, as MSBuild hands them over in a generated global
-    /// <c>.editorconfig</c>: every property the project file sets, plus the ones the SDK always provides.
+    /// <c>.editorconfig</c>: every property the project file sets, plus the ones the SDK always provides, and for a
+    /// Razor project a section per Razor file with the metadata the Razor compiler reads.
     /// </summary>
-    private static DocumentInfo CreateAnalyzerConfig(ProjectId id, TsProject project)
+    private static DocumentInfo CreateAnalyzerConfig(ProjectId id, TsProject project, IReadOnlyList<string> razorFiles)
     {
         var properties = new SortedDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         foreach (var (key, value) in project.Properties)
@@ -131,12 +140,16 @@ public sealed partial class RoslynWorkspaceHost
         properties["MSBuildProjectDirectory"] = project.DirectoryPath;
         properties["MSBuildProjectName"] = project.Name;
         properties["UsingMicrosoftNETSdkWeb"] = string.Equals(project.Sdk, "Microsoft.NET.Sdk.Web", StringComparison.OrdinalIgnoreCase) ? "true" : string.Empty;
+        var razorSections = new StringBuilder();
+        AppendRazorAnalyzerConfig(project, razorFiles, properties, razorSections);
 
         var text = new StringBuilder("is_global = true\n");
         foreach (var (key, value) in properties)
         {
             text.Append(CultureInfo.InvariantCulture, $"build_property.{key} = {value.ReplaceLineEndings(" ")}\n");
         }
+
+        text.Append(razorSections);
 
         var path = Path.Combine(project.DirectoryPath, "obj", $"{project.Name}.GeneratedMSBuildEditorConfig.editorconfig");
         return DocumentInfo.Create(

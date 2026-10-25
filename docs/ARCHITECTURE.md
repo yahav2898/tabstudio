@@ -20,6 +20,9 @@ flowchart TB
         Agent["TabStudio.Agent"]
         LiveTesting["TabStudio.LiveTesting"]
         Link["TabStudio.Link"]
+        Web["TabStudio.Web"]
+        LanguageServers["TabStudio.LanguageServers"]
+        Extensions["TabStudio.Extensions"]
     end
     Debugging --> Compilation
     TestRunner --> Compilation
@@ -43,6 +46,9 @@ Dependencies point down only. Each layer has one job:
 | `TabStudio.SourceControl` | Git without a Git installation: changes found by hashing, `.gitignore`, and commits, pulls, merges, branches and pull requests through GitHub's API. | Core |
 | `TabStudio.LiveTesting` | Live Unit Testing: coverage instrumentation, per-test attribution, coverage builds, impact analysis and the live test engine. | Compilation, Debugging, TestRunner |
 | `TabStudio.Link` | TabStudio Link: pairing, the TLS transport, QR codes, discovery, and the language protocol a host answers for a tablet. | Compilation, Debugging, LiveTesting |
+| `TabStudio.Web` | What a web app serves beyond its code: static web assets, scoped CSS, Blazor's scripts, and a host for .NET apps on WebAssembly. | Compilation, Packages |
+| `TabStudio.LanguageServers` | Language Server Protocol and Debug Adapter Protocol clients, server and adapter registry, launch configurations. | Nothing but the .NET base library |
+| `TabStudio.Extensions` | VS Code extensions from Open VSX: install and verify, and their grammars, language configurations, snippets and themes. | Nothing but the .NET base library |
 | `TabStudio.Agent` | Claude as a coding agent: the Messages API with streaming and prompt caching, tools over the workspace, Model Context Protocol servers, and sketch to XAML. | Core |
 | `TabStudio.App` | The IDE: Avalonia views, view models, editor integration and app services. Platform-neutral. | Core and every engine, Avalonia |
 | `TabStudio.Android` | The Android entry point: activity, manifest, icons, platform services such as thermal status. | App |
@@ -154,6 +160,22 @@ inside the layout (a native control host), or the system browser where there is 
 `Project` profile of `Properties/launchSettings.json` gives the first page, the environment and extra
 arguments. Saving one of the app's source files while it runs rebuilds it and starts it again on the same
 port, and the preview reloads where it was; a change under `wwwroot` only reloads the page.
+
+### Blazor and Razor
+
+- **The Razor compiler** is the .NET SDK's own Razor source generator, vendored in
+  `src/TabStudio.Compilation/Razor/Compiler` from SDK 10.0.113 (see its NOTICE.txt; refresh it with
+  `build/razor/update-razor-compiler.sh` when Microsoft.CodeAnalysis moves). It gets the `.razor` and `.cshtml` files
+  as additional files with the analyzer config the Razor SDK writes, so components, pages and views compile as they
+  do with the SDK, and `#line` mappings put errors on the right Razor line, live and in builds.
+- **`TabStudio.Web`** serves what the SDK would publish: static web assets with development manifests for
+  `MapStaticAssets`, `_content/<library>` files, scoped CSS bundles, JavaScript initializers and Blazor's scripts.
+- **Interactive Server components** run in-process like any web app. Android cannot unload an earlier run's
+  assemblies, and Blazor finds component types by assembly name, so `ServerComponentTypes` fills Blazor's type caches
+  with the current run's types.
+- **`WebAssemblyAppHost`** serves any .NET 10 browser app to the web preview: the app's IL, the browser-wasm runtime
+  pack from NuGet, and the boot configuration inlined into `dotnet.js`. Blazor WebAssembly uses it, and so will
+  OpenSilver and Uno.
 
 ## Avalonia apps
 
@@ -328,6 +350,26 @@ tablet or a PC. Programs, tests and the debugger still run on the tablet; the ho
 - **What pairing grants.** The host runs the analyzers and source generators of the tablet's packages, so pairing
   gives the tablet code execution on the host; the host's Link window says so, and asks to pair only tablets you own. Mirror paths
   are validated, so a tablet cannot write outside its own mirror folder.
+
+## Language servers and debug adapters
+
+`TabStudio.LanguageServers` speaks the Language Server Protocol (3.17) and the Debug Adapter Protocol, so every
+language with a server or an adapter gets the editor and the debugger C# has. One server runs per language and
+workspace folder, started when a file of its language opens and restarted if it crashes. In the IDE, files Roslyn does
+not own are served by their server through the same completion, Quick Info, signature help, squiggles, navigation,
+rename, formatting, code actions, symbols and folding the C# editor uses; a debug adapter session drives the same
+breakpoints, Locals, Watch, Call Stack and DataTips. `.tabstudio/settings.json` configures servers per folder and
+`.tabstudio/launch.json` holds launch configurations in VS Code's format. Servers and adapters start through
+`IServerProcessLauncher`, which the Toolchain Store implements on the tablet.
+
+## Extensions
+
+`TabStudio.Extensions` installs VS Code extensions from Open VSX (or a company's own registry) and from `.vsix` files,
+after checking each package against Open VSX's SHA-256 and Ed25519 signature, and refusing paths that leave the
+extension's folder. Their declarative contributions work in the editor: TextMate grammars (with injections and
+embedded languages) through TextMateSharp, language configurations (comments, brackets, auto-closing and surrounding
+pairs, indentation, folding, word pattern), snippets with VS Code's syntax, color themes for the editor and file icon
+themes. Contributions that need the extension's own code are installed and shown as such on its details page.
 
 ## The agent
 

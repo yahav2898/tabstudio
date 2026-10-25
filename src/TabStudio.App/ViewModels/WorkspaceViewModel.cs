@@ -301,7 +301,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         StartIntelliSenseWarmUp();
         if (_profile.AnalyzeWholeSolution)
         {
-            _ = AnalyzeSolutionAsync(_background!.Token);
+            StartSolutionAnalysis();
         }
     }
 
@@ -334,7 +334,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         _language?.SetOptimization(configuration == "Release");
         foreach (var document in Documents)
         {
-            _ = document.AnalyzeNowAsync();
+            _ = document.AnalyzeAgainAsync();
         }
     }
 
@@ -419,12 +419,13 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
                 }
 
                 var diagnostics = await language.GetProjectDiagnosticsAsync(project.FilePath, cancellationToken);
+                cancellationToken.ThrowIfCancellationRequested();
                 ApplyProjectDiagnostics(project, diagnostics);
             }
         }
         catch (OperationCanceledException)
         {
-            // The workspace closed.
+            // The workspace closed, or a newer analysis replaced this one.
         }
     }
 

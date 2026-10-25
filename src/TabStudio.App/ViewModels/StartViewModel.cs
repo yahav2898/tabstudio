@@ -272,7 +272,7 @@ public sealed partial class StartViewModel : ObservableObject, IDisposable
     {
         await RunAsync(_ =>
         {
-            var solution = _templates.Create(SelectedTemplate.Id, ProjectName.Trim());
+            var solution = _templates.Create(TemplateIdToCreate, ProjectName.Trim());
             OpenRequested?.Invoke(this, solution);
             return Task.CompletedTask;
         });

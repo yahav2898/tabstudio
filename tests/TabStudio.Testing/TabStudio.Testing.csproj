@@ -15,4 +15,9 @@
     <EmbeddedResource Include="Extensions\Recorded\*" LogicalName="Recorded/%(Filename)%(Extension)" />
   </ItemGroup>
 
+  <!-- For test attributes, such as ChromeFact. -->
+  <ItemGroup>
+    <PackageReference Include="xunit" />
+  </ItemGroup>
+
 </Project>

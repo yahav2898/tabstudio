@@ -145,7 +145,7 @@ public sealed partial class WorkspaceViewModel
     {
         if (ActiveDocument is { } document && !await document.FormatAsync())
         {
-            StatusText = document.HasLanguageService || document.LanguageServer?.Capabilities.Formatting == true
+            StatusText = document.UsesSemanticColoring || document.LanguageServer?.Capabilities.Formatting == true
                 ? "Already formatted"
                 : document.HasLanguageServer ? $"{document.LanguageServer!.ServerName} cannot format documents" : "Format Document is available for C# files and files with a language server";
         }
