@@ -2,6 +2,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using RoslynCompilation = Microsoft.CodeAnalysis.Compilation;
 
 namespace TabStudio.Compilation.Razor;
 
@@ -16,11 +17,11 @@ internal static class RazorComponents
     private const string ParameterAttribute = "Microsoft.AspNetCore.Components.ParameterAttribute";
     private const string ComponentsAssembly = "Microsoft.AspNetCore.Components";
 
-    private static readonly ConditionalWeakTable<Compilation, IReadOnlyList<INamedTypeSymbol>> Cache = new();
+    private static readonly ConditionalWeakTable<RoslynCompilation, IReadOnlyList<INamedTypeSymbol>> Cache = new();
 
     /// <summary>Every component type of a compilation and its references, by simple name.</summary>
     /// <param name="compilation">The compilation of the Razor file's project.</param>
-    public static IReadOnlyList<INamedTypeSymbol> All(Compilation compilation)
+    public static IReadOnlyList<INamedTypeSymbol> All(RoslynCompilation compilation)
     {
         ArgumentNullException.ThrowIfNull(compilation);
         return Cache.GetValue(compilation, Discover);
@@ -29,7 +30,7 @@ internal static class RazorComponents
     /// <summary>The components a generated file can name without a namespace: those in the namespaces it imports or is in.</summary>
     /// <param name="compilation">The compilation.</param>
     /// <param name="generated">The C# the Razor compiler generated for the file.</param>
-    public static IReadOnlyList<INamedTypeSymbol> InScope(Compilation compilation, SyntaxTree generated)
+    public static IReadOnlyList<INamedTypeSymbol> InScope(RoslynCompilation compilation, SyntaxTree generated)
     {
         var namespaces = NamespacesInScope(generated);
         return [.. All(compilation).Where(c => namespaces.Contains(c.ContainingNamespace.ToDisplayString()))];
@@ -39,7 +40,7 @@ internal static class RazorComponents
     /// <param name="compilation">The compilation.</param>
     /// <param name="generated">The C# generated for the file the tag is in.</param>
     /// <param name="tagName">The tag's name.</param>
-    public static INamedTypeSymbol? Find(Compilation compilation, SyntaxTree generated, string tagName)
+    public static INamedTypeSymbol? Find(RoslynCompilation compilation, SyntaxTree generated, string tagName)
     {
         ArgumentNullException.ThrowIfNull(tagName);
         var name = tagName.Split(':')[0];
@@ -109,7 +110,7 @@ internal static class RazorComponents
         return namespaces;
     }
 
-    private static IReadOnlyList<INamedTypeSymbol> Discover(Compilation compilation)
+    private static IReadOnlyList<INamedTypeSymbol> Discover(RoslynCompilation compilation)
     {
         if (compilation.GetTypeByMetadataName(ComponentInterface) is not { } component)
         {

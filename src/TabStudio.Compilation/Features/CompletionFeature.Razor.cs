@@ -2,6 +2,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Completion;
 using Microsoft.CodeAnalysis.Text;
 using TabStudio.Compilation.Razor;
+using RoslynCompilation = Microsoft.CodeAnalysis.Compilation;
 
 namespace TabStudio.Compilation.Features;
 
@@ -129,7 +130,7 @@ public sealed partial class CompletionFeature
 
     /// <summary>The attributes of the tag the caret is in: a component's parameters and directive attributes.</summary>
     private static IEnumerable<MarkupItem> Attributes(
-        Compilation compilation, SyntaxTree generated, RazorMarkupContext context, bool isComponentFile)
+        RoslynCompilation compilation, SyntaxTree generated, RazorMarkupContext context, bool isComponentFile)
     {
         if (!isComponentFile || context.TagName is not { Length: > 0 } tag)
         {
