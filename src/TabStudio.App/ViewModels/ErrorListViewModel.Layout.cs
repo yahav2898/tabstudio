@@ -3,6 +3,8 @@ using Avalonia;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.Input;
 using TabStudio.App.Swarm;
+using TabStudio.App.Swarm.LayoutChecks;
+using TabStudio.App.Swarm.Web;
 using TabStudio.Core.Diagnostics;
 
 namespace TabStudio.App.ViewModels;
@@ -23,7 +25,7 @@ public sealed class LayoutFindingRow(LayoutFinding finding, BuildDiagnostic diag
     public XamlSourceLocation? Xaml { get; } = xaml;
 
     /// <summary>Where the element is written in a web app's page, for a finding on the web preview.</summary>
-    public Swarm.Web.WebSourceLocation? WebSource { get; init; }
+    public WebSourceLocation? WebSource { get; init; }
 
     /// <summary>The pictures of the screens it shows on, made the first time they are shown.</summary>
     public IReadOnlyList<LayoutScreenshotViewModel> Screenshots => field ??= [.. Finding.Screens.Select(s => new LayoutScreenshotViewModel(s))];
@@ -173,7 +175,7 @@ public static class ScreenDetails
         ArgumentNullException.ThrowIfNull(profile);
         var parts = new List<string>
         {
-            Swarm.LayoutChecks.LayoutText.Dips(new Size(profile.Width, profile.Height)),
+            LayoutText.Dips(new Size(profile.Width, profile.Height)),
             profile.FormFactor switch
             {
                 FormFactor.Phablet => "Large phone",

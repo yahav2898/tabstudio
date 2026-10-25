@@ -213,6 +213,7 @@ public sealed partial class WorkspaceViewModel
             StatusText = $"Saved {document.FileName}";
             OnDocumentSavedForTests(document);
             OnDocumentSavedForLiveApp(document);
+            OnDocumentSavedForSwarm(document);
             OnDocumentSavedForXamlDesigner(document);
             OnDocumentSavedForGenerators(document);
             OnDocumentSavedForLiveTesting(document);

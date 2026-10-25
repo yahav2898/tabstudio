@@ -26,7 +26,10 @@ public static partial class SelfTest
     public static Task<SelfTestResult> RunAsync(MainViewModel main, SampleLibrary samples, CancellationToken cancellationToken = default) =>
         RunAsync(main, samples, templates: null, cancellationToken);
 
-    /// <summary>Runs the self test in the running app, then a web app and an Avalonia app when <paramref name="templates"/> is given.</summary>
+    /// <summary>
+    /// Runs the self test in the running app, then a web app, an Avalonia app and the Avalonia app on a phone of the
+    /// swarm when <paramref name="templates"/> is given.
+    /// </summary>
     /// <param name="main">The app's root view model.</param>
     /// <param name="samples">The sample library.</param>
     /// <param name="templates">Creates the web and Avalonia apps; without it, those parts are skipped.</param>
@@ -103,11 +106,15 @@ public static partial class SelfTest
 
             // Swarm's screens run on their own copy of the template first, so the Avalonia part leaves its workspace
             // open for the parts that follow.
-            var swarm = await CheckSwarmScreensAsync(main, templates, cancellationToken);
+            var screens = await CheckSwarmScreensAsync(main, templates, cancellationToken);
             var avalonia = await ShowAvaloniaAppAsync(main, templates, cancellationToken);
-            avalonia = avalonia with { Success = avalonia.Success && swarm.Success, Message = $"{avalonia.Message} | {swarm.Message}" };
+            if (!avalonia.Success || !screens.Success)
+            {
+                return new SelfTestResult(false, $"{summary} | {debugged.Message} | {web.Message} | {avalonia.Message} | {screens.Message}", clock.Elapsed);
+            }
 
-            return new SelfTestResult(avalonia.Success, $"{summary} | {debugged.Message} | {web.Message} | {avalonia.Message}", clock.Elapsed);
+            var swarm = await RunOnSwarmAsync(main, templates, cancellationToken);
+            return new SelfTestResult(swarm.Success, $"{summary} | {debugged.Message} | {web.Message} | {avalonia.Message} | {screens.Message} | {swarm.Message}", clock.Elapsed);
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)
         {

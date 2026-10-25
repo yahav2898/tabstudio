@@ -121,6 +121,11 @@ public static class LinkClient
                     $"{hostName} runs TabStudio {welcome.Version} and this device runs TabStudio {options.AppVersion}. Install the same version on both to link them.");
             }
 
+            if (welcome.Role != options.Role)
+            {
+                throw new LinkAuthenticationException(LinkRefusal.WrongRole, LinkRoles.Mismatch(hostName, welcome.Role));
+            }
+
             if (Base64Url.TryDecode(welcome.Nonce) is not { Length: LinkProofs.NonceLength } hostNonce)
             {
                 throw new LinkProtocolException("The host's welcome has no valid nonce.");
@@ -137,7 +142,7 @@ public static class LinkClient
                 proof = Base64Url.Encode(LinkProofs.ClientProof(key, transcript));
             }
 
-            var hello = new LinkHello(LinkProtocol.Version, options.AppVersion, options.DeviceName, options.DeviceKind, Base64Url.Encode(clientNonce), proof);
+            var hello = new LinkHello(LinkProtocol.Version, options.AppVersion, options.DeviceName, options.DeviceKind, Base64Url.Encode(clientNonce), proof, options.Role);
             LinkAccepted accepted;
             try
             {
@@ -184,6 +189,7 @@ public static class LinkClient
         LinkErrorCodes.VersionMismatch => LinkRefusal.VersionMismatch,
         LinkErrorCodes.Busy => LinkRefusal.Busy,
         LinkErrorCodes.Self => LinkRefusal.Self,
+        LinkErrorCodes.WrongRole => LinkRefusal.WrongRole,
         _ => LinkRefusal.NotPaired,
     };
 

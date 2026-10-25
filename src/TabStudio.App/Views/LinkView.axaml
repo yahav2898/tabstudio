@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="using:TabStudio.App.Controls"
              xmlns:vm="using:TabStudio.App.ViewModels"
+             xmlns:swarmViews="using:TabStudio.App.Views.Swarm"
              x:Class="TabStudio.App.Views.LinkView"
              x:DataType="vm:LinkViewModel">
 
@@ -71,6 +72,16 @@
                 <TextBlock Text="Be a host" VerticalAlignment="Center" />
                 <Border Classes="pill success" IsVisible="{Binding IsHosting}">
                   <TextBlock Text="On" />
+                </Border>
+              </StackPanel>
+            </Button>
+            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsSwarmTab}" MinHeight="40" IsVisible="{Binding HasSwarm}"
+                    Command="{Binding SelectTabCommand}" CommandParameter="{x:Static vm:LinkTab.Swarm}">
+              <StackPanel Orientation="Horizontal" Spacing="7">
+                <controls:StrokeIcon Data="{StaticResource Icon.Swarm}" Size="14" />
+                <TextBlock Text="Join a swarm" VerticalAlignment="Center" />
+                <Border Classes="pill success" IsVisible="{Binding Swarm.IsInSwarm, FallbackValue=False}">
+                  <TextBlock Text="Joined" />
                 </Border>
               </StackPanel>
             </Button>
@@ -146,6 +157,9 @@
                 </StackPanel>
               </Border>
             </StackPanel>
+
+            <!-- Join a swarm -->
+            <swarmViews:SwarmJoinView DataContext="{Binding Swarm}" IsVisible="{Binding $parent[UserControl].((vm:LinkViewModel)DataContext).IsSwarmTab, FallbackValue=False}" />
 
             <!-- Be a host -->
             <StackPanel Spacing="14" IsVisible="{Binding IsHostTab}">

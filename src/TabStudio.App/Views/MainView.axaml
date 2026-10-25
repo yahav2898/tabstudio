@@ -3,6 +3,7 @@
              xmlns:controls="using:TabStudio.App.Controls"
              xmlns:views="using:TabStudio.App.Views"
              xmlns:desktop="using:TabStudio.App.Views.DesktopMode"
+             xmlns:swarmViews="using:TabStudio.App.Views.Swarm"
              xmlns:vm="using:TabStudio.App.ViewModels"
              x:Class="TabStudio.App.Views.MainView"
              x:DataType="vm:MainViewModel"
@@ -36,5 +37,8 @@
     <!-- Desktop mode: the tablet's touch companion while the IDE is on a display, and the offer to use a display. -->
     <desktop:DesktopCompanionView DataContext="{Binding DesktopMode}" />
     <desktop:DesktopModeOfferView DataContext="{Binding DesktopMode}" />
+
+    <!-- In a tablet's swarm: the tablet's app, full screen, over everything else, with a small overlay to leave. -->
+    <swarmViews:SwarmDevicePageView DataContext="{Binding SwarmDevice}" />
   </Panel>
 </UserControl>

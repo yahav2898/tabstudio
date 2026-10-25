@@ -61,6 +61,7 @@ public static class AppServices
 
         // Every screen the app being built runs on: the preview, virtual devices and the swarm's phones.
         services.AddSingleton<Swarm.AppScreenRegistry>();
+        Swarm.SwarmServiceRegistration.AddSwarm(services);
 
         // Language servers and debug adapters start through the platform's IServerProcessLauncher, if it registers one.
         services.TryAddSingleton(provider => new Services.LanguageServers.LanguageServerServices(provider.GetService<TabStudio.LanguageServers.Hosting.IServerProcessLauncher>() ?? TabStudio.LanguageServers.Hosting.ProcessServerLauncher.Instance));

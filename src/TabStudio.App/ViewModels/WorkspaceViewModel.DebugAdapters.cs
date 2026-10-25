@@ -1113,8 +1113,10 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         var targets = new List<RunTargetOption>();
         foreach (var project in StartupProjects)
         {
-            targets.Add(new RunTargetOption(project.Name, "C# project", project.Select));
+            targets.Add(new RunTargetOption(project.Name, "C# project", WithoutSwarm(project.Select)));
         }
+
+        AddSwarmRunTarget(targets);
 
         if (_languageServers is { } host)
         {

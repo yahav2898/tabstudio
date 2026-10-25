@@ -24,12 +24,14 @@ public sealed partial class MainViewModel : ObservableObject
     /// <param name="gitHubAccount">The GitHub account dialog, shown over every page.</param>
     /// <param name="link">The TabStudio Link dialog, shown over every page.</param>
     /// <param name="desktopMode">Desktop mode, which shows the IDE on an external display; none when <see langword="null"/>.</param>
-    public MainViewModel(StartViewModel start, Func<WorkspaceViewModel> createWorkspace, RecentWorkspaces recent, SessionStore sessions, CompilerServices compiler, GitHubAccountViewModel gitHubAccount, LinkViewModel link, DesktopModeViewModel? desktopMode = null)
+    /// <param name="swarmDevice">The page this device shows in a swarm; none when <see langword="null"/>.</param>
+    public MainViewModel(StartViewModel start, Func<WorkspaceViewModel> createWorkspace, RecentWorkspaces recent, SessionStore sessions, CompilerServices compiler, GitHubAccountViewModel gitHubAccount, LinkViewModel link, DesktopModeViewModel? desktopMode = null, Swarm.SwarmDevicePageViewModel? swarmDevice = null)
     {
         ArgumentNullException.ThrowIfNull(start);
         ArgumentNullException.ThrowIfNull(createWorkspace);
 
         DesktopMode = desktopMode;
+        SwarmDevice = swarmDevice;
         Start = start;
         GitHubAccount = gitHubAccount;
         Link = link;
@@ -49,6 +51,9 @@ public sealed partial class MainViewModel : ObservableObject
 
     /// <summary>The TabStudio Link dialog, shared by the start screen and the IDE.</summary>
     public LinkViewModel Link { get; }
+
+    /// <summary>What this device shows while it is in a tablet's swarm: the tablet's app, full screen, over everything else.</summary>
+    public Swarm.SwarmDevicePageViewModel? SwarmDevice { get; }
 
     /// <summary>The page shown: the start screen or a <see cref="WorkspaceViewModel"/>.</summary>
     [ObservableProperty]

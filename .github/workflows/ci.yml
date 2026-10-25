@@ -106,13 +106,23 @@ jobs:
       - name: Build the desktop host and test the IDE
         env:
           TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+          TABSTUDIO_RECORDED_UI_TESTS: ${{ runner.temp }}/recorded-ui-tests
         run: |
           mkdir -p ci-out/screenshots
           status=0
           dotnet build src/TabStudio.Desktop -c Release > ci-out/desktop-build.log 2>&1 || status=1
           tail -n 40 ci-out/desktop-build.log
-          dotnet test tests/TabStudio.App.Tests -c Release --logger "console;verbosity=normal" > ci-out/TabStudio.App.Tests.log 2>&1 || status=1
+          dotnet test tests/TabStudio.App.Tests -c Release --logger "console;verbosity=normal" --blame-hang-timeout 12m --blame-hang-dump-type none > ci-out/TabStudio.App.Tests.log 2>&1 || status=1
           tail -n 80 ci-out/TabStudio.App.Tests.log
+          # The UI test the swarm's test recorded on a phone runs as its users' CI runs it: dotnet test, headless.
+          recorded=$(find "$TABSTUDIO_RECORDED_UI_TESTS" -name '*.UITests.csproj' 2>/dev/null | head -n 1)
+          if [ -n "$recorded" ]; then
+            dotnet test "$recorded" --logger "console;verbosity=normal" > ci-out/recorded-ui-tests.log 2>&1 || status=1
+            tail -n 30 ci-out/recorded-ui-tests.log
+          else
+            echo "No recorded UI test project was written." | tee ci-out/recorded-ui-tests.log
+            status=1
+          fi
           exit $status
 
       - name: Publish logs and screenshots

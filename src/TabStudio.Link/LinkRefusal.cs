@@ -23,4 +23,7 @@ public enum LinkRefusal
 
     /// <summary>A device tried to link to itself.</summary>
     Self,
+
+    /// <summary>The host offers something else than the device asked for: builds instead of a swarm, or the other way round.</summary>
+    WrongRole,
 }
