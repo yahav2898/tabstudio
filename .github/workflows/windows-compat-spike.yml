@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  actions: read
 
 concurrency:
   group: wcspike-${{ github.ref }}
@@ -81,22 +82,30 @@ jobs:
     name: Spike on Alpine aarch64
     needs: apps
     runs-on: ubuntu-24.04-arm
-    timeout-minutes: 170
+    timeout-minutes: 330
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           name: spike
           path: spike
-      - uses: actions/cache@v4
+      - name: Wait for the Wine build
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          key="wcspike-wine-11.0-alpine3.24-aarch64-${{ hashFiles('build/windows-compat/spike/build-wine.sh') }}"
+          for i in $(seq 1 150); do
+            gh api "repos/${{ github.repository }}/actions/caches?key=$key" --jq '.total_count' | grep -qv '^0$' && break
+            sleep 60
+          done
+      - uses: actions/cache/restore@v4
         with:
           path: wine-build
           key: wcspike-wine-11.0-alpine3.24-aarch64-${{ hashFiles('build/windows-compat/spike/build-wine.sh') }}
-      - name: Build Wine
+          fail-on-cache-miss: true
+      - name: Collect the build logs
         run: |
-          mkdir -p ci-out wine-build
-          docker run --rm -v "$PWD:/w" -w /w alpine:3.24 sh build/windows-compat/spike/build-wine.sh /w/wine-build 2>&1 | tail -n 80
-          sudo chown -R "$(id -u)" wine-build
+          mkdir -p ci-out
           cp wine-build/*.txt ci-out/ 2> /dev/null || true
       - name: Run the spike
         run: |
