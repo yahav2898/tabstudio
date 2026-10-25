@@ -50,6 +50,9 @@ public sealed record BuildDiagnostic(
     /// <summary>The file name without its directory, or an empty string for project-wide diagnostics.</summary>
     public string FileName => Location is null ? string.Empty : Path.GetFileName(Location.FilePath);
 
+    /// <summary>A page that explains the diagnostic, such as a language server's link for its code, if any.</summary>
+    public Uri? HelpLink { get; init; }
+
     /// <inheritdoc />
     public override string ToString()
     {

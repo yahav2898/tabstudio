@@ -47,7 +47,7 @@ jobs:
 
       - name: Install language servers and debug adapters
         run: |
-          npm install -g pyright typescript-language-server typescript
+          npm install -g pyright typescript-language-server typescript@5
           python -m pip install debugpy
           echo "TABSTUDIO_REAL_SERVERS=1" >> "$GITHUB_ENV"
           mkdir -p ci-out
@@ -99,7 +99,7 @@ jobs:
 
       - name: Install language servers and debug adapters
         run: |
-          npm install -g pyright typescript-language-server typescript
+          npm install -g pyright typescript-language-server typescript@5
           python -m pip install debugpy
           echo "TABSTUDIO_REAL_SERVERS=1" >> "$GITHUB_ENV"
 

@@ -366,7 +366,7 @@ internal sealed partial class LanguageServerInstance : IAsyncDisposable
             "en",
             RootDirectory,
             RootUri,
-            InitializationOptions.Resolve(Definition.InitializationOptions, RootDirectory, _executable, message => _host.Log(Name, LanguageServerLogLevel.Info, message)),
+            InitializationOptions.Resolve(Definition.InitializationOptions, RootDirectory, _executable, (message, isWarning) => _host.Log(Name, isWarning ? LanguageServerLogLevel.Warning : LanguageServerLogLevel.Info, message)),
             ClientCapabilities.Create(),
             _host.Options.TraceMessages ? "messages" : "off",
             [new WorkspaceFolderDto(RootUri, folderName.Length == 0 ? RootDirectory : folderName)]);

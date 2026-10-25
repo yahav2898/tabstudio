@@ -16,8 +16,8 @@ internal static class InitializationOptions
     /// <param name="options">The server's options.</param>
     /// <param name="rootDirectory">The workspace folder the server runs for.</param>
     /// <param name="executable">The server's program, as the launcher resolved it.</param>
-    /// <param name="log">Told which file each variable became, or that none was found.</param>
-    public static JsonNode? Resolve(JsonObject? options, string rootDirectory, string executable, Action<string>? log = null)
+    /// <param name="log">Told which file each variable became, or that none was found (a warning).</param>
+    public static JsonNode? Resolve(JsonObject? options, string rootDirectory, string executable, Action<string, bool>? log = null)
     {
         if (options?.DeepClone() is not JsonObject copy)
         {
@@ -48,7 +48,7 @@ internal static class InitializationOptions
         return null;
     }
 
-    private static void Fill(JsonObject node, string rootDirectory, string executable, Action<string>? log)
+    private static void Fill(JsonObject node, string rootDirectory, string executable, Action<string, bool>? log)
     {
         foreach (var name in node.Select(p => p.Key).ToList())
         {
@@ -65,12 +65,12 @@ internal static class InitializationOptions
                     if (file is null)
                     {
                         node.Remove(name);
-                        log?.Invoke($"{relative} was not found in the workspace or beside {executable}.");
+                        log?.Invoke($"{relative} was not found in the workspace or beside {executable}.", true);
                     }
                     else
                     {
                         node[name] = file;
-                        log?.Invoke($"Using {file}.");
+                        log?.Invoke($"Using {file}.", false);
                     }
 
                     break;
