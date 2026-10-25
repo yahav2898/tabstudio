@@ -95,6 +95,9 @@ public static partial class SelfTest
         finally
         {
             screen.InputCaptured -= OnCaptured;
+
+            // The name box lets go of the keyboard, as a person's tap elsewhere would, for the parts that follow.
+            await browser.EvaluateAsync("document.activeElement && document.activeElement.blur(); true", CancellationToken.None);
         }
 
         void OnCaptured(object? sender, AppInput input) => echoed.Add(input);
