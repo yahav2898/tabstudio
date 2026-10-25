@@ -99,6 +99,40 @@ public sealed class WindowsBridgeIdeTests
     }
 
     [AvaloniaFact]
+    public async Task Two_programs_run_on_the_PC_at_once_and_a_save_restarts_only_the_one_it_changed()
+    {
+        await using var devices = BridgeDevices.Start(new FakeBridgeDesktop());
+        devices.WriteConsoleProject("Hello");
+        var clockProject = devices.WriteConsoleProject("Clock", "Console.WriteLine(\"Tick\");\nConsole.ReadLine();\n");
+        await devices.PairAsync();
+        var workspace = await devices.OpenAsync(devices.SolutionFolder);
+        var pane = workspace.WindowsBridgePane!;
+        foreach (var name in new[] { "Hello", "Clock" })
+        {
+            workspace.RunTargets.Single(t => t.Name == name && t.Detail == Via).Select.Execute(null);
+            await workspace.RunCommand.ExecuteAsync(null);
+            await UiTestHelpers.WaitUntilAsync(() => pane.Apps.Any(a => a.Name == name), TimeSpan.FromMinutes(3), $"{name} on the PC");
+        }
+
+        var hello = pane.Apps.Single(a => a.Name == "Hello").AppId;
+        var clock = pane.Apps.Single(a => a.Name == "Clock").AppId;
+        Assert.True(workspace.StopDebuggingCommand.CanExecute(null));
+
+        var document = await workspace.OpenDocumentAsync(Path.Combine(Path.GetDirectoryName(clockProject)!, "Program.cs"));
+        var tick = document!.Document.Text.IndexOf("Tick", StringComparison.Ordinal);
+        document.Document.Replace(tick, "Tick".Length, "Tock");
+        await workspace.SaveCommand.ExecuteAsync(null);
+        await UiTestHelpers.WaitUntilAsync(
+            () => pane.Apps.Count == 2 && pane.Apps.Any(a => a.Name == "Clock" && a.AppId != clock) && workspace.Output.Text.Contains("Tock", StringComparison.Ordinal),
+            TimeSpan.FromMinutes(3),
+            "Clock to restart with the change");
+
+        Assert.Contains("Restarting 'Clock' with the saved changes, building Clock only.", workspace.Output.Text, StringComparison.Ordinal);
+        Assert.Equal(hello, pane.Apps.Single(a => a.Name == "Hello").AppId);
+        Assert.Equal(2, devices.Pc.BridgeServer!.Apps.Count);
+    }
+
+    [AvaloniaFact]
     public async Task A_build_error_on_the_PC_lands_in_the_Error_List_on_the_tablets_file()
     {
         await using var devices = BridgeDevices.Start(new FakeBridgeDesktop());
