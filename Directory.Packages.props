@@ -50,6 +50,11 @@
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
   </ItemGroup>
 
+  <ItemGroup Label="Source control">
+    <!-- Reads GitHub Actions workflow files, for the inputs of "Run workflow". Only its representation model is used. -->
+    <PackageVersion Include="YamlDotNet" Version="16.3.0" />
+  </ItemGroup>
+
   <ItemGroup Label="Tests">
     <!-- Native Skia and HarfBuzz for rendering in headless UI tests on Linux, matching Avalonia's versions. -->
     <PackageVersion Include="SkiaSharp.NativeAssets.Linux" Version="2.88.9" />

@@ -15,7 +15,7 @@ namespace TabStudio.SourceControl.GitHub;
 /// Without a token only public repositories can be read, and GitHub allows 60 requests an hour. The client is
 /// cheap to create; share the <see cref="HttpClient"/>.
 /// </remarks>
-public sealed class GitHubClient
+public sealed partial class GitHubClient
 {
     /// <summary>The address of GitHub's API.</summary>
     public static readonly Uri DefaultApiAddress = new("https://api.github.com/");
@@ -354,7 +354,9 @@ public sealed class GitHubClient
     {
         try
         {
-            return await _http.SendAsync(request, completion, cancellationToken).ConfigureAwait(false);
+            var response = await _http.SendAsync(request, completion, cancellationToken).ConfigureAwait(false);
+            RecordRateLimit(response);
+            return response;
         }
         catch (HttpRequestException ex)
         {
