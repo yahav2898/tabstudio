@@ -118,7 +118,8 @@ public static partial class SelfTest
             var avaloniaApp = last.Workspace is { } loaded ? loaded.Solution?.FilePath ?? loaded.RootDirectory : null;
             var extensions = await InstallGrammarExtensionAsync(last, FindEditor, cancellationToken);
             var toolchains = extensions.Success ? await RunToolchainsAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Toolchains: not run", TimeSpan.Zero);
-            var pythonTools = toolchains.Success ? await CheckPythonToolsAsync(main, cancellationToken) : new SelfTestResult(false, "Python tools: not run", TimeSpan.Zero);
+            var processes = toolchains.Success ? await StartProgramsWhileCollectingAsync(cancellationToken) : new SelfTestResult(false, "Processes: not run", TimeSpan.Zero);
+            var pythonTools = processes.Success ? await CheckPythonToolsAsync(main, cancellationToken) : new SelfTestResult(false, "Python tools: not run", TimeSpan.Zero);
             var forms = pythonTools.Success ? await ShowWindowsFormsAppAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Windows Forms: not run", TimeSpan.Zero);
             if (forms.Success && avaloniaApp is not null)
             {
@@ -127,8 +128,8 @@ public static partial class SelfTest
             }
 
             return new SelfTestResult(
-                extensions.Success && toolchains.Success && pythonTools.Success && forms.Success,
-                $"{summary} | {debugged.Message} | {web.Message} | {blazor.Message} | {avalonia.Message} | {extensions.Message} | {toolchains.Message} | {pythonTools.Message} | {forms.Message}",
+                extensions.Success && toolchains.Success && processes.Success && pythonTools.Success && forms.Success,
+                $"{summary} | {debugged.Message} | {web.Message} | {blazor.Message} | {avalonia.Message} | {extensions.Message} | {toolchains.Message} | {processes.Message} | {pythonTools.Message} | {forms.Message}",
                 clock.Elapsed);
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)
