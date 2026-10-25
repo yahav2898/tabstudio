@@ -26,12 +26,14 @@ a tablet, build the APK with `dotnet publish src/TabStudio.Android -c Release -f
 Read [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) first. In short:
 
 - `TabStudio.Core` is the workspace model and has no dependencies. Keep it that way.
-- `TabStudio.Compilation` is the Roslyn language service. It knows nothing about the UI.
+- `TabStudio.Compilation` is the Roslyn language service and IntelliSense. It knows nothing about the UI.
+- The engines (`TabStudio.Packages`, `TabStudio.Debugging`, `TabStudio.TestRunner`, `TabStudio.Notebooks`,
+  `TabStudio.SourceControl`, `TabStudio.Agent`) each do one job without UI, and are tested on their own.
 - `TabStudio.App` is the IDE. Views are in `Views`, view models in `ViewModels`, editor integration in
   `Editing`, and everything else the app needs (files, downloads, templates) in `Services`.
 - Platform heads (`TabStudio.Android`, `TabStudio.Desktop`) only start the app and provide platform services.
 
-Dependencies point down only: Core ← Compilation ← App ← heads.
+Dependencies point down only: Core ← Compilation ← engines ← App ← heads.
 
 ## Code style
 
@@ -39,8 +41,8 @@ The repository's `.editorconfig` and analyzers are the style guide, and the buil
 
 - File-scoped namespaces, one public type per file, `_camelCase` private fields.
 - Nullable reference types are on everywhere. Avoid `!` unless the reason is obvious from the line above.
-- Every public type and member in Core and Compilation has an XML doc comment. Say what it is for, not what
-  the code already says.
+- Every public type and member in Core, Compilation and the engines has an XML doc comment. Say what it is
+  for, not what the code already says.
 - Prefer immutable records for data, and keep I/O at the edges.
 - View models use CommunityToolkit.Mvvm (`[ObservableProperty]`, `[RelayCommand]`). Views bind with compiled
   bindings; code-behind is for view-only concerns such as focus and scrolling.
@@ -57,9 +59,20 @@ screenshots, so a pull request that changes the UI shows what it looks like.
 
 ## Continuous integration
 
-GitHub Actions builds and tests every push and pull request, and builds the Android APK. Logs, test results
-and screenshots of each job on `main` are also published to the
+GitHub Actions builds and tests every push and pull request, builds the Android APK, and runs it on an Android
+tablet emulator: the app opens the sample solution, presses F5 and checks the program's output. Logs, test
+results and screenshots of each job on `main` are also published to the
 [`ci-logs`](https://github.com/yahav2898/tabstudio/tree/ci-logs) branch.
+
+Every push to `main` that passes updates the [nightly](https://github.com/yahav2898/tabstudio/releases/tag/nightly)
+build.
+
+## Releasing
+
+1. Set the new `Version` in `Directory.Build.props`.
+2. Write the release notes in `docs/releases/<version>.md`.
+3. Merge to `main`. Once every check of that commit has passed, CI publishes the release `v<version>` with its
+   APK.
 
 ## Pull requests
 
