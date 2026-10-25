@@ -1,0 +1,70 @@
+  Determining projects to restore...
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Debugging.Tests/TabStudio.Debugging.Tests.csproj (in 248 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/TabStudio.Debugging.csproj (in 248 ms).
+  3 of 5 projects are up-to-date for restore.
+  TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
+  TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
+  TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/Building/DebugBuilder.cs(99,100): warning CS0419: Ambiguous reference in cref attribute: 'CSharpCompiler'. Assuming 'Microsoft.CodeAnalysis.CSharp.CSharpCompiler', but could have also matched other overloads including 'TabStudio.Compilation.CSharpCompiler'. [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/TabStudio.Debugging.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/Engine/DebugEngine.cs(171,21): warning CA1859: Change return type of method 'OnEnter' from 'object?' to 'TabStudio.Debugging.Engine.DebugFrame?' for improved performance (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1859) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/TabStudio.Debugging.csproj]
+  TabStudio.Debugging -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/bin/Release/net10.0/TabStudio.Debugging.dll
+/home/runner/work/tabstudio/tabstudio/tests/TabStudio.Debugging.Tests/DebugValueTests.cs(116,20): warning CA1822: Member 'Number' does not access instance data and can be marked as static (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1822) [/home/runner/work/tabstudio/tabstudio/tests/TabStudio.Debugging.Tests/TabStudio.Debugging.Tests.csproj]
+/home/runner/work/tabstudio/tabstudio/tests/TabStudio.Debugging.Tests/DebugValueTests.cs(118,20): warning CA1822: Member 'Throws' does not access instance data and can be marked as static (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1822) [/home/runner/work/tabstudio/tabstudio/tests/TabStudio.Debugging.Tests/TabStudio.Debugging.Tests.csproj]
+  TabStudio.Debugging.Tests -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Debugging.Tests/bin/Release/net10.0/TabStudio.Debugging.Tests.dll
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Debugging.Tests/bin/Release/net10.0/TabStudio.Debugging.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.10]   Discovering: TabStudio.Debugging.Tests
+[xUnit.net 00:00:00.14]   Discovered:  TabStudio.Debugging.Tests
+[xUnit.net 00:00:00.17]   Starting:    TabStudio.Debugging.Tests
+  Passed TabStudio.Debugging.Tests.InstrumentationTests.Programs_with_span_and_ref_locals_compile_and_report_what_can_be_read [1 s]
+  Passed TabStudio.Debugging.Tests.InstrumentationTests.Generated_files_are_not_instrumented [37 ms]
+  Passed TabStudio.Debugging.Tests.InstrumentationTests.Statements_are_mapped_to_their_original_positions [32 ms]
+  Passed TabStudio.Debugging.Tests.InstrumentationTests.A_program_without_a_debugger_attached_runs_normally [586 ms]
+  Passed TabStudio.Debugging.Tests.InstrumentationTests.Every_construct_keeps_its_behavior_under_the_debugger [221 ms]
+  Passed TabStudio.Debugging.Tests.InstrumentationTests.The_in_process_safety_check_still_rejects_environment_exit [5 ms]
+  Passed TabStudio.Debugging.Tests.InstrumentationTests.Instrumentation_keeps_the_line_numbers_of_exception_stack_traces [46 ms]
+  Passed TabStudio.Debugging.Tests.DebugValueTests.Formats_strings_and_characters_as_csharp_literals [< 1 ms]
+  Passed TabStudio.Debugging.Tests.DebugValueTests.Formats_null_enums_dates_and_tuples [< 1 ms]
+  Passed TabStudio.Debugging.Tests.DebugValueTests.Shows_counts_for_collections_and_lengths_for_arrays [4 ms]
+  Passed TabStudio.Debugging.Tests.DebugValueTests.Uses_to_string_overrides_in_braces [1 ms]
+  Passed TabStudio.Debugging.Tests.DebugValueTests.Expands_objects_into_public_members_without_indexers_or_throwing_properties [1 ms]
+  Passed TabStudio.Debugging.Tests.DebugValueTests.Expands_dictionaries_into_entries [< 1 ms]
+  Passed TabStudio.Debugging.Tests.DebugValueTests.Shows_the_runtime_type_when_it_is_more_specific_than_the_declared_one [< 1 ms]
+  Passed TabStudio.Debugging.Tests.DebugValueTests.Formats_numbers_in_the_invariant_culture [< 1 ms]
+[xUnit.net 00:00:03.17]     TabStudio.Debugging.Tests.DebugSessionTests.Pauses_at_a_breakpoint_with_the_locals_in_scope [FAIL]
+[xUnit.net 00:00:03.17]       Assert.Equal() Failure: Strings differ
+[xUnit.net 00:00:03.17]       Expected: "string"
+[xUnit.net 00:00:03.17]       Actual:   "string?"
+[xUnit.net 00:00:03.17]                        ↑ (pos 6)
+[xUnit.net 00:00:03.18]       Stack Trace:
+[xUnit.net 00:00:03.18]         /_/tests/TabStudio.Debugging.Tests/DebugSessionTests.cs(49,0): at TabStudio.Debugging.Tests.DebugSessionTests.Pauses_at_a_breakpoint_with_the_locals_in_scope()
+[xUnit.net 00:00:03.18]         --- End of stack trace from previous location ---
+  Passed TabStudio.Debugging.Tests.DebugSessionTests.Breaks_on_an_unhandled_exception_at_the_line_that_threw [36 ms]
+  Passed TabStudio.Debugging.Tests.DebugSessionTests.Does_not_break_on_exceptions_the_program_handles [24 ms]
+  Passed TabStudio.Debugging.Tests.DebugSessionTests.Step_over_does_not_stop_inside_the_calls_it_runs [29 ms]
+  Passed TabStudio.Debugging.Tests.DebugSessionTests.Hits_a_breakpoint_in_a_loop_on_every_iteration [30 ms]
+  Passed TabStudio.Debugging.Tests.DebugSessionTests.Breakpoints_bind_to_the_next_statement_or_stay_unbound [18 ms]
+  Failed TabStudio.Debugging.Tests.DebugSessionTests.Pauses_at_a_breakpoint_with_the_locals_in_scope [45 ms]
+  Error Message:
+   Assert.Equal() Failure: Strings differ
+Expected: "string"
+Actual:   "string?"
+                 ↑ (pos 6)
+  Stack Trace:
+     at TabStudio.Debugging.Tests.DebugSessionTests.Pauses_at_a_breakpoint_with_the_locals_in_scope() in /_/tests/TabStudio.Debugging.Tests/DebugSessionTests.cs:line 49
+--- End of stack trace from previous location ---
+  Passed TabStudio.Debugging.Tests.DebugSessionTests.A_breakpoint_set_while_running_is_hit [26 ms]
+  Passed TabStudio.Debugging.Tests.DebugSessionTests.Pause_breaks_into_a_running_loop_and_stop_ends_the_session [38 ms]
+  Passed TabStudio.Debugging.Tests.DebugSessionTests.Steps_into_out_of_and_over_methods [31 ms]
+[xUnit.net 00:00:04.20]   Finished:    TabStudio.Debugging.Tests
+  Passed TabStudio.Debugging.Tests.DebugSessionTests.Shows_the_call_stack_across_methods [35 ms]
+  Passed TabStudio.Debugging.Tests.DebugSessionTests.Debugs_an_async_main_across_awaits [53 ms]
+  Passed TabStudio.Debugging.Tests.WorkspaceDebugTests.A_project_with_errors_is_not_instrumented [796 ms]
+  Passed TabStudio.Debugging.Tests.WorkspaceDebugTests.Breakpoints_work_in_a_referenced_project [43 ms]
+
+Test Run Failed.
+Total tests: 28
+     Passed: 27
+     Failed: 1
+ Total time: 4.8624 Seconds
