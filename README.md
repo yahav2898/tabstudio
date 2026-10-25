@@ -41,11 +41,12 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 
 ### A real Visual Studio experience, built for touch
 
-- **The layout you already know.** Menu bar, toolbar, document tabs, Solution Explorer, Properties, Error List, Output and a status bar, docked exactly where your hands expect them.
-- **Sized for fingers.** Buttons, tabs and rows are fingertip-sized, 34 to 44 pixels tall. A floating action bar puts Rename, Comment, Format, Peek and Run to Cursor one tap away.
+- **The layout you already know, on any screen.** Menu bar, toolbar, document tabs, the Solution Explorer with Properties, Error List, Output and a status bar, as in Visual Studio. An activity bar on the right edge holds every tool window, with badges for changed files, CI, failed tests and the agent's proposed changes. In portrait and on a phone the side bar opens as a drawer, and the toolbar and status bar fold their least used buttons into More instead of clipping.
+- **One search for everything.** Ctrl+Q finds files, every menu command with its shortcut, settings such as the theme, your code's types and members, project templates and recent solutions, ranked together.
+- **Sized for fingers, quiet for keyboards.** Buttons, tabs and rows are fingertip-sized, 34 to 48 pixels tall. A floating touch bar puts Rename, Peek, Comment, Run to Cursor, Format and Run one tap away; it keeps clear of the line you are editing and of IntelliSense, and fades while you type on a hardware keyboard.
 - **Keyboard when you want it.** Attach a keyboard and every Visual Studio shortcut works: F5, Ctrl+Shift+B, F12, Ctrl+. and the rest.
 - **Desktop mode.** Plug in a monitor over USB-C or HDMI, or use a wireless display, and the full IDE moves to the big screen with your documents, caret and debugger exactly as they were. The tablet's keyboard types there and its mouse or touchpad drives a pointer there, while the tablet becomes a touch companion: Run and debugger buttons, a Toolbox that puts controls into your XAML at the caret, and a Properties panel for the element at the caret.
-- **Light, dark or the system's.** A light theme modeled on Visual Studio Light, the dark one, or follow the tablet's dark-mode setting. Switching recolors the whole IDE at once, the editor's syntax colors included, and every color passes WCAG AA. Choosing an extension's color theme sets the IDE's light or dark to match.
+- **Light, dark or the system's.** A light theme modeled on Visual Studio Light, the dark one, or follow the tablet's dark-mode setting (**Tools > Theme**). Switching recolors the whole IDE at once, the editor's syntax colors included, and every color passes WCAG AA. Choosing an extension's color theme sets the IDE's light or dark to match.
 
 ### C# that runs on the tablet
 
