@@ -160,9 +160,10 @@ public sealed partial class ProotRuntime : IToolchainRuntime
     /// <summary>The argument vector that starts a program through PRoot, PRoot's own path first.</summary>
     internal List<string> BuildArguments(ProcessStartSpec spec)
     {
-        if (JavaMappingShim(spec) is { } shim)
+        var javaShim = JavaMappingShim(spec);
+        if (javaShim is not null)
         {
-            ShareFolder(Path.GetDirectoryName(shim)!);
+            ShareFolder(Path.GetDirectoryName(javaShim)!);
         }
 
         var arguments = new List<string>
@@ -208,6 +209,13 @@ public sealed partial class ProotRuntime : IToolchainRuntime
 
         arguments.Add("-w");
         arguments.Add(GuestWorkingDirectory(spec.WorkingDirectory));
+        if (javaShim is not null)
+        {
+            // Set this after entering Alpine: Android's bionic linker cannot load a musl preload into PRoot.
+            arguments.Add("/usr/bin/env");
+            arguments.Add("LD_PRELOAD=" + javaShim);
+        }
+
         arguments.Add(spec.Program);
         arguments.AddRange(spec.Arguments);
         return arguments;
@@ -232,11 +240,6 @@ public sealed partial class ProotRuntime : IToolchainRuntime
         if (spec.Terminal is not null)
         {
             environment["COLORTERM"] = "truecolor";
-        }
-
-        if (JavaMappingShim(spec) is { } shim)
-        {
-            environment["LD_PRELOAD"] = shim;
         }
 
         foreach (var (name, value) in spec.Environment)

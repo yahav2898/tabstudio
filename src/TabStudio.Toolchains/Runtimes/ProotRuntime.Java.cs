@@ -7,7 +7,8 @@ public sealed partial class ProotRuntime
     /// <summary>JVM launchers and their children use the APK's musl-compatible mapping shim on Android.</summary>
     private string? JavaMappingShim(ProcessStartSpec spec)
     {
-        if (Path.GetFileName(spec.Program) is not ("java" or "javac" or "jdtls" or "mvn" or "gradle"))
+        if (spec.Environment.ContainsKey("LD_PRELOAD")
+            || Path.GetFileName(spec.Program) is not ("java" or "javac" or "jdtls" or "mvn" or "gradle"))
         {
             return null;
         }

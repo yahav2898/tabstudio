@@ -23,12 +23,20 @@ public sealed class JavaProotTests
             ProotPath = folder.Resolve("native/libproot.so"), LoaderPath = folder.Resolve("native/libproot-loader.so"),
             Rootfs = folder.Resolve("rootfs"), TemporaryDirectory = folder.Resolve("tmp"),
         });
-        var spec = new ProcessStartSpec { Program = command };
+        var spec = new ProcessStartSpec { Program = command, Arguments = ["-version"] };
         var arguments = runtime.BuildArguments(spec);
         var environment = runtime.BuildEnvironment(spec);
 
-        Assert.Equal(usesShim, environment.Contains("LD_PRELOAD=" + shim));
+        Assert.DoesNotContain(environment, variable => variable.StartsWith("LD_PRELOAD=", StringComparison.Ordinal));
+        Assert.Equal(usesShim, arguments.Contains("LD_PRELOAD=" + shim));
         Assert.Equal(usesShim, arguments.Contains(Path.GetDirectoryName(shim)!));
+        Assert.Equal(usesShim
+            ? ["/usr/bin/env", "LD_PRELOAD=" + shim, command, "-version"]
+            : new[] { command, "-version" }, arguments.TakeLast(usesShim ? 4 : 2));
+        Assert.DoesNotContain("LD_PRELOAD=" + shim, runtime.BuildArguments(spec with
+        {
+            Environment = new Dictionary<string, string?> { ["LD_PRELOAD"] = null },
+        }));
         Assert.DoesNotContain("LD_PRELOAD=" + shim, runtime.BuildEnvironment(spec with
         {
             Environment = new Dictionary<string, string?> { ["LD_PRELOAD"] = null },
