@@ -1,38 +1,78 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj (in 1.41 sec).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms.Design/TabStudio.Forms.Design.csproj (in 1.45 sec).
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Forms.Design.Tests/TabStudio.Forms.Design.Tests.csproj (in 2.74 sec).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms.Design/TabStudio.Forms.Design.csproj (in 313 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj (in 313 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Forms.Design.Tests/TabStudio.Forms.Design.Tests.csproj (in 326 ms).
   2 of 5 projects are up-to-date for restore.
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
   TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
   TabStudio.Forms -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/bin/Release/net10.0/TabStudio.Forms.dll
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms.Design/View/DesignCanvas.cs(120,49): warning CA1826: Do not use Enumerable methods on indexable collections. Instead use the collection directly. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1826) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms.Design/TabStudio.Forms.Design.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms.Design/View/DesignCanvas.Input.cs(190,13): warning CA1826: Do not use Enumerable methods on indexable collections. Instead use the collection directly. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1826) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms.Design/TabStudio.Forms.Design.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms.Design/Surface/DesignSurface.cs(143,22): warning CA1822: Member 'BoundsOf' does not access instance data and can be marked as static (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1822) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms.Design/TabStudio.Forms.Design.csproj]
   TabStudio.Forms.Design -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms.Design/bin/Release/net10.0/TabStudio.Forms.Design.dll
   TabStudio.Forms.Design.Tests -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Forms.Design.Tests/bin/Release/net10.0/TabStudio.Forms.Design.Tests.dll
 Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Forms.Design.Tests/bin/Release/net10.0/TabStudio.Forms.Design.Tests.dll (.NETCoreApp,Version=v10.0)
 A total of 1 test files matched the specified pattern.
 [xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
-[xUnit.net 00:00:00.12]   Discovering: TabStudio.Forms.Design.Tests
-[xUnit.net 00:00:00.20]   Discovered:  TabStudio.Forms.Design.Tests
+[xUnit.net 00:00:00.13]   Discovering: TabStudio.Forms.Design.Tests
+[xUnit.net 00:00:00.21]   Discovered:  TabStudio.Forms.Design.Tests
 [xUnit.net 00:00:00.25]   Starting:    TabStudio.Forms.Design.Tests
-  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.A_control_moved_into_a_group_box_joins_its_controls [2 s]
-  Passed TabStudio.Forms.Design.Tests.DesignerFileTests.The_form_is_built_from_the_designer_file_with_the_Forms_layers_controls [25 ms]
-  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.Renaming_a_control_renames_its_field_and_the_code_that_names_it_but_not_its_text [110 ms]
-  Passed TabStudio.Forms.Design.Tests.DesignerFileTests.A_control_of_a_type_the_designer_does_not_know_is_a_placeholder_of_its_size [9 ms]
-  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.Pasted_copies_get_new_names_and_move_off_the_originals [83 ms]
-  Passed TabStudio.Forms.Design.Tests.DesignerFileTests.Hit_testing_finds_the_innermost_control_and_strip_items [6 ms]
-  Passed TabStudio.Forms.Design.Tests.DesignerFileTests.Components_properties_events_collections_and_other_statements_are_read [6 ms]
+  Passed TabStudio.Forms.Design.Tests.DesignerFileTests.The_form_is_built_from_the_designer_file_with_the_Forms_layers_controls [508 ms]
+  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.A_control_moved_into_a_group_box_joins_its_controls [1 s]
+  Passed TabStudio.Forms.Design.Tests.DesignerFileTests.A_control_of_a_type_the_designer_does_not_know_is_a_placeholder_of_its_size [17 ms]
+[xUnit.net 00:00:03.04]     TabStudio.Forms.Design.Tests.DesignerFileTests.Hit_testing_finds_the_innermost_control_and_strip_items [FAIL]
+[xUnit.net 00:00:03.04]       Assert.Equal() Failure: Strings differ
+[xUnit.net 00:00:03.04]                  ↓ (pos 0)
+[xUnit.net 00:00:03.04]       Expected: "fileMenuItem"
+[xUnit.net 00:00:03.04]       Actual:   "menuStrip1"
+[xUnit.net 00:00:03.04]                  ↑ (pos 0)
+[xUnit.net 00:00:03.04]       Stack Trace:
+[xUnit.net 00:00:03.04]         /_/tests/TabStudio.Forms.Design.Tests/DesignerFileTests.cs(110,0): at TabStudio.Forms.Design.Tests.DesignerFileTests.Hit_testing_finds_the_innermost_control_and_strip_items()
+[xUnit.net 00:00:03.04]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:03.04]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.Renaming_a_control_renames_its_field_and_the_code_that_names_it_but_not_its_text [92 ms]
+  Failed TabStudio.Forms.Design.Tests.DesignerFileTests.Hit_testing_finds_the_innermost_control_and_strip_items [11 ms]
+  Error Message:
+   Assert.Equal() Failure: Strings differ
+           ↓ (pos 0)
+Expected: "fileMenuItem"
+Actual:   "menuStrip1"
+           ↑ (pos 0)
+  Stack Trace:
+     at TabStudio.Forms.Design.Tests.DesignerFileTests.Hit_testing_finds_the_innermost_control_and_strip_items() in /_/tests/TabStudio.Forms.Design.Tests/DesignerFileTests.cs:line 110
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Passed TabStudio.Forms.Design.Tests.DesignerFileTests.Components_properties_events_collections_and_other_statements_are_read [17 ms]
   Passed TabStudio.Forms.Design.Tests.DesignerFileTests.Writing_an_unchanged_file_gives_the_same_designer_code [3 ms]
-  Passed TabStudio.Forms.Design.Tests.DesignerFileTests.The_template_is_read_with_its_style_and_the_forms_properties [10 ms]
+  Passed TabStudio.Forms.Design.Tests.DesignerFileTests.The_template_is_read_with_its_style_and_the_forms_properties [18 ms]
   Passed TabStudio.Forms.Design.Tests.DesignerFileTests.A_file_without_InitializeComponent_is_not_a_designer_file [< 1 ms]
-  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.A_double_tap_handler_is_added_to_the_code_file_and_wired_in_the_designer_file [75 ms]
-  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.Statements_the_designer_does_not_read_are_kept [13 ms]
-  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.A_button_added_to_the_template_is_written_as_Visual_Studio_writes_it [20 ms]
-[xUnit.net 00:00:03.31]   Finished:    TabStudio.Forms.Design.Tests
-  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.Properties_are_written_in_Visual_Studios_form_and_defaults_are_left_out [78 ms]
-  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.Deleting_a_container_deletes_its_controls_and_the_code_that_names_them [43 ms]
-  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.Moving_and_resizing_write_the_new_bounds_and_undo_and_redo_restore_them [29 ms]
+  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.Pasted_copies_get_new_names_and_move_off_the_originals [78 ms]
+  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.A_double_tap_handler_is_added_to_the_code_file_and_wired_in_the_designer_file [55 ms]
+  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.Statements_the_designer_does_not_read_are_kept [12 ms]
+[xUnit.net 00:00:03.26]     TabStudio.Forms.Design.Tests.DesignSurfaceTests.Properties_are_written_in_Visual_Studios_form_and_defaults_are_left_out [FAIL]
+[xUnit.net 00:00:03.27]       Assert.Contains() Failure: Sub-string not found
+[xUnit.net 00:00:03.27]       String:    "namespace Orders\n{\n    partial class Form"···
+[xUnit.net 00:00:03.27]       Not found: "nameTextBox.Font = new Font("Segoe UI", 1"···
+[xUnit.net 00:00:03.27]       Stack Trace:
+[xUnit.net 00:00:03.27]         /_/tests/TabStudio.Forms.Design.Tests/DesignSurfaceTests.cs(118,0): at TabStudio.Forms.Design.Tests.DesignSurfaceTests.Properties_are_written_in_Visual_Studios_form_and_defaults_are_left_out()
+[xUnit.net 00:00:03.27]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:03.27]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:03.35]   Finished:    TabStudio.Forms.Design.Tests
+  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.A_button_added_to_the_template_is_written_as_Visual_Studio_writes_it [29 ms]
+  Failed TabStudio.Forms.Design.Tests.DesignSurfaceTests.Properties_are_written_in_Visual_Studios_form_and_defaults_are_left_out [43 ms]
+  Error Message:
+   Assert.Contains() Failure: Sub-string not found
+String:    "namespace Orders\n{\n    partial class Form"···
+Not found: "nameTextBox.Font = new Font("Segoe UI", 1"···
+  Stack Trace:
+     at TabStudio.Forms.Design.Tests.DesignSurfaceTests.Properties_are_written_in_Visual_Studios_form_and_defaults_are_left_out() in /_/tests/TabStudio.Forms.Design.Tests/DesignSurfaceTests.cs:line 118
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.Deleting_a_container_deletes_its_controls_and_the_code_that_names_them [48 ms]
+  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.Moving_and_resizing_write_the_new_bounds_and_undo_and_redo_restore_them [27 ms]
 
-Test Run Successful.
+Test Run Failed.
 Total tests: 16
-     Passed: 16
- Total time: 3.9495 Seconds
+     Passed: 14
+     Failed: 2
+ Total time: 3.8825 Seconds
