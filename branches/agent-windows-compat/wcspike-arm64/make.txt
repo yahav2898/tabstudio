@@ -4072,10 +4072,10 @@ clang -D__STDC__ -c -o dlls/itss/aarch64-windows/lzx.o dlls/itss/lzx.c -Idlls/it
   -Wvla -Wwrite-strings -Wpointer-arith -Wabsolute-value -ffunction-sections -fasync-exceptions \
   -ffp-exception-behavior=maytrap -O2
 bison -o dlls/jscript/parser.tab.$$.c --defines=dlls/jscript/parser.tab.h dlls/jscript/parser.y && rm -f dlls/jscript/parser.tab.$$.c
+bison -o dlls/jscript/cc_parser.tab.c dlls/jscript/cc_parser.y
 dlls/jscript/parser.y: warning: 1 shift/reduce conflict [-Wconflicts-sr]
 dlls/jscript/parser.y: warning: 18 reduce/reduce conflicts [-Wconflicts-rr]
 dlls/jscript/parser.y: note: rerun with option '-Wcounterexamples' to generate conflict counterexamples
-bison -o dlls/jscript/cc_parser.tab.c dlls/jscript/cc_parser.y
 bison -o dlls/jscript/parser.tab.c dlls/jscript/parser.y
 dlls/jscript/parser.y: warning: 1 shift/reduce conflict [-Wconflicts-sr]
 dlls/jscript/parser.y: warning: 18 reduce/reduce conflicts [-Wconflicts-rr]
@@ -10572,6 +10572,48 @@ gcc -o tools/wrc/wrc tools/wrc/genres.o tools/wrc/newstruc.o tools/wrc/po.o tool
   tools/wrc/wpp.o tools/wrc/wrc.o tools/wrc/parser.yy.o tools/wrc/parser.tab.o tools/wrc/ppl.yy.o \
   tools/wrc/ppy.tab.o 
 tools/make_xftmpl -H -o include/rmxftmpl.h include/rmxftmpl.x
+tools/wrc/wrc -u -o dlls/d3dx9_24/version.res --nostdinc -Idlls/d3dx9_24 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
+  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=24 dlls/d3dx9_24/version.rc
+tools/wrc/wrc -u -o dlls/d3dx9_25/version.res --nostdinc -Idlls/d3dx9_25 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
+  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=25 dlls/d3dx9_25/version.rc
+tools/wrc/wrc -u -o dlls/d3dx9_26/version.res --nostdinc -Idlls/d3dx9_26 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
+  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=26 dlls/d3dx9_26/version.rc
+tools/wrc/wrc -u -o dlls/d3dx9_27/version.res --nostdinc -Idlls/d3dx9_27 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
+  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=27 dlls/d3dx9_27/version.rc
+tools/wrc/wrc -u -o dlls/d3dx9_28/version.res --nostdinc -Idlls/d3dx9_28 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
+  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=28 dlls/d3dx9_28/version.rc
+tools/wrc/wrc -u -o dlls/d3dx9_29/version.res --nostdinc -Idlls/d3dx9_29 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
+  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=29 dlls/d3dx9_29/version.rc
+tools/wrc/wrc -u -o dlls/d3dx9_30/version.res --nostdinc -Idlls/d3dx9_30 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
+  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=30 dlls/d3dx9_30/version.rc
+tools/wrc/wrc -u -o dlls/d3dx9_31/version.res --nostdinc -Idlls/d3dx9_31 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
+  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=31 dlls/d3dx9_31/version.rc
+tools/wrc/wrc -u -o dlls/d3dx9_32/version.res --nostdinc -Idlls/d3dx9_32 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
+  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=32 dlls/d3dx9_32/version.rc
+tools/wrc/wrc -u -o dlls/d3dx9_33/version.res --nostdinc -Idlls/d3dx9_33 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
+  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=33 dlls/d3dx9_33/version.rc
+tools/wrc/wrc -u -o dlls/d3dx9_34/version.res --nostdinc -Idlls/d3dx9_34 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
+  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=34 dlls/d3dx9_34/version.rc
+tools/wrc/wrc -u -o dlls/d3dx9_35/version.res --nostdinc -Idlls/d3dx9_35 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
+  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=35 dlls/d3dx9_35/version.rc
+tools/wrc/wrc -u -o dlls/d3dx9_36/version.res --nostdinc -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt -D_UCRT -D__WINESRC__ \
+  -DD3DX_SDK_VERSION=36 dlls/d3dx9_36/version.rc
+tools/wrc/wrc -u -o dlls/d3dx9_37/version.res --nostdinc -Idlls/d3dx9_37 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
+  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=37 dlls/d3dx9_37/version.rc
+tools/wrc/wrc -u -o dlls/d3dx9_38/version.res --nostdinc -Idlls/d3dx9_38 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
+  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=38 dlls/d3dx9_38/version.rc
+tools/wrc/wrc -u -o dlls/d3dx9_39/version.res --nostdinc -Idlls/d3dx9_39 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
+  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=39 dlls/d3dx9_39/version.rc
+tools/wrc/wrc -u -o dlls/d3dx9_40/version.res --nostdinc -Idlls/d3dx9_40 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
+  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=40 dlls/d3dx9_40/version.rc
+tools/wrc/wrc -u -o dlls/d3dx9_41/version.res --nostdinc -Idlls/d3dx9_41 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
+  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=41 dlls/d3dx9_41/version.rc
+tools/wrc/wrc -u -o dlls/d3dx9_42/version.res --nostdinc -Idlls/d3dx9_42 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
+  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=42 dlls/d3dx9_42/version.rc
+tools/wrc/wrc -u -o dlls/d3dx9_43/version.res --nostdinc -Idlls/d3dx9_43 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
+  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=43 dlls/d3dx9_43/version.rc
+tools/wrc/wrc -u -o dlls/d3dxof/version.res --nostdinc -Idlls/d3dxof -Iinclude -Iinclude/msvcrt -D_UCRT -D__WINESRC__ \
+  dlls/d3dxof/version.rc
 tools/widl/widl -o dlls/d3dxof/aarch64-windows/d3dxof_r.res -b aarch64-windows --nostdinc -Ldlls/\* -Idlls/d3dxof -Iinclude \
   -Iinclude/msvcrt -D_UCRT -D__WINESRC__ dlls/d3dxof/d3dxof.idl
 tools/widl/widl -o include/dragdropinterop.h --nostdinc -Ldlls/\* -Iinclude -Iinclude -D__WINESRC__ \
@@ -14343,6 +14385,20 @@ tools/widl/widl -o include/wincodecsdk.h --nostdinc -Ldlls/\* -Iinclude -Iinclud
 tools/widl/widl -o include/d3dx11core.h --nostdinc -Ldlls/\* -Iinclude -Iinclude -D__WINESRC__ include/d3dx11core.idl
 tools/wrc/wrc -u -o dlls/d3dx11_42/version.res --nostdinc -Idlls/d3dx11_42 -Iinclude -Iinclude/msvcrt -D_UCRT -D__WINESRC__ \
   -DD3DX11_SDK_VERSION=42 dlls/d3dx11_42/version.rc
+clang -D__STDC__ -c -o dlls/d3dx11_43/aarch64-windows/async.o dlls/d3dx11_43/async.c -Idlls/d3dx11_43 -Idlls/d3dx9_36 -Iinclude \
+  -Iinclude/msvcrt -D_UCRT -D__WINESRC__ -DD3DX11_SDK_VERSION=43 -D__WINE_PE_BUILD -Wall -target \
+  aarch64-windows -fuse-ld=lld --no-default-config -fno-strict-aliasing \
+  -Wdeclaration-after-statement -Wempty-body -Wignored-qualifiers -Winit-self \
+  -Wno-microsoft-enum-forward-reference -Wstrict-prototypes -Wtype-limits -Wunused-but-set-parameter \
+  -Wvla -Wwrite-strings -Wpointer-arith -Wabsolute-value -ffunction-sections -fasync-exceptions \
+  -ffp-exception-behavior=maytrap -O2
+clang -D__STDC__ -c -o dlls/d3dx11_43/aarch64-windows/d3dx11_43_main.o dlls/d3dx11_43/d3dx11_43_main.c -Idlls/d3dx11_43 -Idlls/d3dx9_36 -Iinclude \
+  -Iinclude/msvcrt -D_UCRT -D__WINESRC__ -DD3DX11_SDK_VERSION=43 -D__WINE_PE_BUILD -Wall -target \
+  aarch64-windows -fuse-ld=lld --no-default-config -fno-strict-aliasing \
+  -Wdeclaration-after-statement -Wempty-body -Wignored-qualifiers -Winit-self \
+  -Wno-microsoft-enum-forward-reference -Wstrict-prototypes -Wtype-limits -Wunused-but-set-parameter \
+  -Wvla -Wwrite-strings -Wpointer-arith -Wabsolute-value -ffunction-sections -fasync-exceptions \
+  -ffp-exception-behavior=maytrap -O2
 clang -D__STDC__ -c -o dlls/d3dx11_43/aarch64-windows/d3dx_helpers.o dlls/d3dx9_36/d3dx_helpers.c -Idlls/d3dx11_43 -Idlls/d3dx9_36 -Iinclude \
   -Iinclude/msvcrt -D_UCRT -D__WINESRC__ -DD3DX11_SDK_VERSION=43 -D__WINE_PE_BUILD -Wall -target \
   aarch64-windows -fuse-ld=lld --no-default-config -fno-strict-aliasing \
@@ -14492,8 +14548,6 @@ clang -D__STDC__ -c -o dlls/d3dx9_24/aarch64-windows/xfile.o dlls/d3dx9_36/xfile
   -Wno-microsoft-enum-forward-reference -Wstrict-prototypes -Wtype-limits -Wunused-but-set-parameter \
   -Wvla -Wwrite-strings -Wpointer-arith -Wabsolute-value -ffunction-sections -fasync-exceptions \
   -ffp-exception-behavior=maytrap -O2
-tools/wrc/wrc -u -o dlls/d3dx9_24/version.res --nostdinc -Idlls/d3dx9_24 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
-  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=24 dlls/d3dx9_24/version.rc
 clang -D__STDC__ -c -o dlls/d3dx9_25/aarch64-windows/animation.o dlls/d3dx9_36/animation.c -Idlls/d3dx9_25 -Idlls/d3dx9_36 -Iinclude \
   -Iinclude/msvcrt -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=25 -D__WINE_PE_BUILD -Wall -target \
   aarch64-windows -fuse-ld=lld --no-default-config -fno-strict-aliasing \
@@ -14627,8 +14681,6 @@ clang -D__STDC__ -c -o dlls/d3dx9_25/aarch64-windows/xfile.o dlls/d3dx9_36/xfile
   -Wno-microsoft-enum-forward-reference -Wstrict-prototypes -Wtype-limits -Wunused-but-set-parameter \
   -Wvla -Wwrite-strings -Wpointer-arith -Wabsolute-value -ffunction-sections -fasync-exceptions \
   -ffp-exception-behavior=maytrap -O2
-tools/wrc/wrc -u -o dlls/d3dx9_25/version.res --nostdinc -Idlls/d3dx9_25 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
-  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=25 dlls/d3dx9_25/version.rc
 clang -D__STDC__ -c -o dlls/d3dx9_26/aarch64-windows/animation.o dlls/d3dx9_36/animation.c -Idlls/d3dx9_26 -Idlls/d3dx9_36 -Iinclude \
   -Iinclude/msvcrt -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=26 -D__WINE_PE_BUILD -Wall -target \
   aarch64-windows -fuse-ld=lld --no-default-config -fno-strict-aliasing \
@@ -14762,8 +14814,6 @@ clang -D__STDC__ -c -o dlls/d3dx9_26/aarch64-windows/xfile.o dlls/d3dx9_36/xfile
   -Wno-microsoft-enum-forward-reference -Wstrict-prototypes -Wtype-limits -Wunused-but-set-parameter \
   -Wvla -Wwrite-strings -Wpointer-arith -Wabsolute-value -ffunction-sections -fasync-exceptions \
   -ffp-exception-behavior=maytrap -O2
-tools/wrc/wrc -u -o dlls/d3dx9_26/version.res --nostdinc -Idlls/d3dx9_26 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
-  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=26 dlls/d3dx9_26/version.rc
 clang -D__STDC__ -c -o dlls/d3dx9_27/aarch64-windows/animation.o dlls/d3dx9_36/animation.c -Idlls/d3dx9_27 -Idlls/d3dx9_36 -Iinclude \
   -Iinclude/msvcrt -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=27 -D__WINE_PE_BUILD -Wall -target \
   aarch64-windows -fuse-ld=lld --no-default-config -fno-strict-aliasing \
@@ -14897,8 +14947,6 @@ clang -D__STDC__ -c -o dlls/d3dx9_27/aarch64-windows/xfile.o dlls/d3dx9_36/xfile
   -Wno-microsoft-enum-forward-reference -Wstrict-prototypes -Wtype-limits -Wunused-but-set-parameter \
   -Wvla -Wwrite-strings -Wpointer-arith -Wabsolute-value -ffunction-sections -fasync-exceptions \
   -ffp-exception-behavior=maytrap -O2
-tools/wrc/wrc -u -o dlls/d3dx9_27/version.res --nostdinc -Idlls/d3dx9_27 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
-  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=27 dlls/d3dx9_27/version.rc
 clang -D__STDC__ -c -o dlls/d3dx9_28/aarch64-windows/animation.o dlls/d3dx9_36/animation.c -Idlls/d3dx9_28 -Idlls/d3dx9_36 -Iinclude \
   -Iinclude/msvcrt -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=28 -D__WINE_PE_BUILD -Wall -target \
   aarch64-windows -fuse-ld=lld --no-default-config -fno-strict-aliasing \
@@ -15032,8 +15080,6 @@ clang -D__STDC__ -c -o dlls/d3dx9_28/aarch64-windows/xfile.o dlls/d3dx9_36/xfile
   -Wno-microsoft-enum-forward-reference -Wstrict-prototypes -Wtype-limits -Wunused-but-set-parameter \
   -Wvla -Wwrite-strings -Wpointer-arith -Wabsolute-value -ffunction-sections -fasync-exceptions \
   -ffp-exception-behavior=maytrap -O2
-tools/wrc/wrc -u -o dlls/d3dx9_28/version.res --nostdinc -Idlls/d3dx9_28 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
-  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=28 dlls/d3dx9_28/version.rc
 clang -D__STDC__ -c -o dlls/d3dx9_29/aarch64-windows/animation.o dlls/d3dx9_36/animation.c -Idlls/d3dx9_29 -Idlls/d3dx9_36 -Iinclude \
   -Iinclude/msvcrt -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=29 -D__WINE_PE_BUILD -Wall -target \
   aarch64-windows -fuse-ld=lld --no-default-config -fno-strict-aliasing \
@@ -15167,8 +15213,6 @@ clang -D__STDC__ -c -o dlls/d3dx9_29/aarch64-windows/xfile.o dlls/d3dx9_36/xfile
   -Wno-microsoft-enum-forward-reference -Wstrict-prototypes -Wtype-limits -Wunused-but-set-parameter \
   -Wvla -Wwrite-strings -Wpointer-arith -Wabsolute-value -ffunction-sections -fasync-exceptions \
   -ffp-exception-behavior=maytrap -O2
-tools/wrc/wrc -u -o dlls/d3dx9_29/version.res --nostdinc -Idlls/d3dx9_29 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
-  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=29 dlls/d3dx9_29/version.rc
 clang -D__STDC__ -c -o dlls/d3dx9_30/aarch64-windows/animation.o dlls/d3dx9_36/animation.c -Idlls/d3dx9_30 -Idlls/d3dx9_36 -Iinclude \
   -Iinclude/msvcrt -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=30 -D__WINE_PE_BUILD -Wall -target \
   aarch64-windows -fuse-ld=lld --no-default-config -fno-strict-aliasing \
@@ -15302,8 +15346,6 @@ clang -D__STDC__ -c -o dlls/d3dx9_30/aarch64-windows/xfile.o dlls/d3dx9_36/xfile
   -Wno-microsoft-enum-forward-reference -Wstrict-prototypes -Wtype-limits -Wunused-but-set-parameter \
   -Wvla -Wwrite-strings -Wpointer-arith -Wabsolute-value -ffunction-sections -fasync-exceptions \
   -ffp-exception-behavior=maytrap -O2
-tools/wrc/wrc -u -o dlls/d3dx9_30/version.res --nostdinc -Idlls/d3dx9_30 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
-  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=30 dlls/d3dx9_30/version.rc
 clang -D__STDC__ -c -o dlls/d3dx9_31/aarch64-windows/animation.o dlls/d3dx9_36/animation.c -Idlls/d3dx9_31 -Idlls/d3dx9_36 -Iinclude \
   -Iinclude/msvcrt -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=31 -D__WINE_PE_BUILD -Wall -target \
   aarch64-windows -fuse-ld=lld --no-default-config -fno-strict-aliasing \
@@ -15437,8 +15479,6 @@ clang -D__STDC__ -c -o dlls/d3dx9_31/aarch64-windows/xfile.o dlls/d3dx9_36/xfile
   -Wno-microsoft-enum-forward-reference -Wstrict-prototypes -Wtype-limits -Wunused-but-set-parameter \
   -Wvla -Wwrite-strings -Wpointer-arith -Wabsolute-value -ffunction-sections -fasync-exceptions \
   -ffp-exception-behavior=maytrap -O2
-tools/wrc/wrc -u -o dlls/d3dx9_31/version.res --nostdinc -Idlls/d3dx9_31 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
-  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=31 dlls/d3dx9_31/version.rc
 clang -D__STDC__ -c -o dlls/d3dx9_32/aarch64-windows/animation.o dlls/d3dx9_36/animation.c -Idlls/d3dx9_32 -Idlls/d3dx9_36 -Iinclude \
   -Iinclude/msvcrt -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=32 -D__WINE_PE_BUILD -Wall -target \
   aarch64-windows -fuse-ld=lld --no-default-config -fno-strict-aliasing \
@@ -15572,8 +15612,6 @@ clang -D__STDC__ -c -o dlls/d3dx9_32/aarch64-windows/xfile.o dlls/d3dx9_36/xfile
   -Wno-microsoft-enum-forward-reference -Wstrict-prototypes -Wtype-limits -Wunused-but-set-parameter \
   -Wvla -Wwrite-strings -Wpointer-arith -Wabsolute-value -ffunction-sections -fasync-exceptions \
   -ffp-exception-behavior=maytrap -O2
-tools/wrc/wrc -u -o dlls/d3dx9_32/version.res --nostdinc -Idlls/d3dx9_32 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
-  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=32 dlls/d3dx9_32/version.rc
 clang -D__STDC__ -c -o dlls/d3dx9_33/aarch64-windows/animation.o dlls/d3dx9_36/animation.c -Idlls/d3dx9_33 -Idlls/d3dx9_36 -Iinclude \
   -Iinclude/msvcrt -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=33 -D__WINE_PE_BUILD -Wall -target \
   aarch64-windows -fuse-ld=lld --no-default-config -fno-strict-aliasing \
@@ -15707,8 +15745,6 @@ clang -D__STDC__ -c -o dlls/d3dx9_33/aarch64-windows/xfile.o dlls/d3dx9_36/xfile
   -Wno-microsoft-enum-forward-reference -Wstrict-prototypes -Wtype-limits -Wunused-but-set-parameter \
   -Wvla -Wwrite-strings -Wpointer-arith -Wabsolute-value -ffunction-sections -fasync-exceptions \
   -ffp-exception-behavior=maytrap -O2
-tools/wrc/wrc -u -o dlls/d3dx9_33/version.res --nostdinc -Idlls/d3dx9_33 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
-  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=33 dlls/d3dx9_33/version.rc
 clang -D__STDC__ -c -o dlls/d3dx9_34/aarch64-windows/animation.o dlls/d3dx9_36/animation.c -Idlls/d3dx9_34 -Idlls/d3dx9_36 -Iinclude \
   -Iinclude/msvcrt -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=34 -D__WINE_PE_BUILD -Wall -target \
   aarch64-windows -fuse-ld=lld --no-default-config -fno-strict-aliasing \
@@ -15842,8 +15878,6 @@ clang -D__STDC__ -c -o dlls/d3dx9_34/aarch64-windows/xfile.o dlls/d3dx9_36/xfile
   -Wno-microsoft-enum-forward-reference -Wstrict-prototypes -Wtype-limits -Wunused-but-set-parameter \
   -Wvla -Wwrite-strings -Wpointer-arith -Wabsolute-value -ffunction-sections -fasync-exceptions \
   -ffp-exception-behavior=maytrap -O2
-tools/wrc/wrc -u -o dlls/d3dx9_34/version.res --nostdinc -Idlls/d3dx9_34 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
-  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=34 dlls/d3dx9_34/version.rc
 clang -D__STDC__ -c -o dlls/d3dx9_35/aarch64-windows/animation.o dlls/d3dx9_36/animation.c -Idlls/d3dx9_35 -Idlls/d3dx9_36 -Iinclude \
   -Iinclude/msvcrt -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=35 -D__WINE_PE_BUILD -Wall -target \
   aarch64-windows -fuse-ld=lld --no-default-config -fno-strict-aliasing \
@@ -15977,8 +16011,6 @@ clang -D__STDC__ -c -o dlls/d3dx9_35/aarch64-windows/xfile.o dlls/d3dx9_36/xfile
   -Wno-microsoft-enum-forward-reference -Wstrict-prototypes -Wtype-limits -Wunused-but-set-parameter \
   -Wvla -Wwrite-strings -Wpointer-arith -Wabsolute-value -ffunction-sections -fasync-exceptions \
   -ffp-exception-behavior=maytrap -O2
-tools/wrc/wrc -u -o dlls/d3dx9_35/version.res --nostdinc -Idlls/d3dx9_35 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
-  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=35 dlls/d3dx9_35/version.rc
 clang -D__STDC__ -c -o dlls/d3dx9_36/aarch64-windows/animation.o dlls/d3dx9_36/animation.c -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt -D_UCRT \
   -D__WINESRC__ -DD3DX_SDK_VERSION=36 -D__WINE_PE_BUILD -Wall -target aarch64-windows -fuse-ld=lld \
   --no-default-config -fno-strict-aliasing -Wdeclaration-after-statement -Wempty-body \
@@ -16093,8 +16125,6 @@ clang -D__STDC__ -c -o dlls/d3dx9_36/aarch64-windows/xfile.o dlls/d3dx9_36/xfile
   -Wignored-qualifiers -Winit-self -Wno-microsoft-enum-forward-reference -Wstrict-prototypes \
   -Wtype-limits -Wunused-but-set-parameter -Wvla -Wwrite-strings -Wpointer-arith -Wabsolute-value \
   -ffunction-sections -fasync-exceptions -ffp-exception-behavior=maytrap -O2
-tools/wrc/wrc -u -o dlls/d3dx9_36/version.res --nostdinc -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt -D_UCRT -D__WINESRC__ \
-  -DD3DX_SDK_VERSION=36 dlls/d3dx9_36/version.rc
 clang -D__STDC__ -c -o dlls/d3dx9_37/aarch64-windows/animation.o dlls/d3dx9_36/animation.c -Idlls/d3dx9_37 -Idlls/d3dx9_36 -Iinclude \
   -Iinclude/msvcrt -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=37 -D__WINE_PE_BUILD -Wall -target \
   aarch64-windows -fuse-ld=lld --no-default-config -fno-strict-aliasing \
@@ -16228,8 +16258,6 @@ clang -D__STDC__ -c -o dlls/d3dx9_37/aarch64-windows/xfile.o dlls/d3dx9_36/xfile
   -Wno-microsoft-enum-forward-reference -Wstrict-prototypes -Wtype-limits -Wunused-but-set-parameter \
   -Wvla -Wwrite-strings -Wpointer-arith -Wabsolute-value -ffunction-sections -fasync-exceptions \
   -ffp-exception-behavior=maytrap -O2
-tools/wrc/wrc -u -o dlls/d3dx9_37/version.res --nostdinc -Idlls/d3dx9_37 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
-  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=37 dlls/d3dx9_37/version.rc
 clang -D__STDC__ -c -o dlls/d3dx9_38/aarch64-windows/animation.o dlls/d3dx9_36/animation.c -Idlls/d3dx9_38 -Idlls/d3dx9_36 -Iinclude \
   -Iinclude/msvcrt -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=38 -D__WINE_PE_BUILD -Wall -target \
   aarch64-windows -fuse-ld=lld --no-default-config -fno-strict-aliasing \
@@ -16363,8 +16391,6 @@ clang -D__STDC__ -c -o dlls/d3dx9_38/aarch64-windows/xfile.o dlls/d3dx9_36/xfile
   -Wno-microsoft-enum-forward-reference -Wstrict-prototypes -Wtype-limits -Wunused-but-set-parameter \
   -Wvla -Wwrite-strings -Wpointer-arith -Wabsolute-value -ffunction-sections -fasync-exceptions \
   -ffp-exception-behavior=maytrap -O2
-tools/wrc/wrc -u -o dlls/d3dx9_38/version.res --nostdinc -Idlls/d3dx9_38 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
-  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=38 dlls/d3dx9_38/version.rc
 clang -D__STDC__ -c -o dlls/d3dx9_39/aarch64-windows/animation.o dlls/d3dx9_36/animation.c -Idlls/d3dx9_39 -Idlls/d3dx9_36 -Iinclude \
   -Iinclude/msvcrt -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=39 -D__WINE_PE_BUILD -Wall -target \
   aarch64-windows -fuse-ld=lld --no-default-config -fno-strict-aliasing \
@@ -16498,8 +16524,6 @@ clang -D__STDC__ -c -o dlls/d3dx9_39/aarch64-windows/xfile.o dlls/d3dx9_36/xfile
   -Wno-microsoft-enum-forward-reference -Wstrict-prototypes -Wtype-limits -Wunused-but-set-parameter \
   -Wvla -Wwrite-strings -Wpointer-arith -Wabsolute-value -ffunction-sections -fasync-exceptions \
   -ffp-exception-behavior=maytrap -O2
-tools/wrc/wrc -u -o dlls/d3dx9_39/version.res --nostdinc -Idlls/d3dx9_39 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
-  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=39 dlls/d3dx9_39/version.rc
 clang -D__STDC__ -c -o dlls/d3dx9_40/aarch64-windows/animation.o dlls/d3dx9_36/animation.c -Idlls/d3dx9_40 -Idlls/d3dx9_36 -Iinclude \
   -Iinclude/msvcrt -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=40 -D__WINE_PE_BUILD -Wall -target \
   aarch64-windows -fuse-ld=lld --no-default-config -fno-strict-aliasing \
@@ -16633,8 +16657,6 @@ clang -D__STDC__ -c -o dlls/d3dx9_40/aarch64-windows/xfile.o dlls/d3dx9_36/xfile
   -Wno-microsoft-enum-forward-reference -Wstrict-prototypes -Wtype-limits -Wunused-but-set-parameter \
   -Wvla -Wwrite-strings -Wpointer-arith -Wabsolute-value -ffunction-sections -fasync-exceptions \
   -ffp-exception-behavior=maytrap -O2
-tools/wrc/wrc -u -o dlls/d3dx9_40/version.res --nostdinc -Idlls/d3dx9_40 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
-  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=40 dlls/d3dx9_40/version.rc
 clang -D__STDC__ -c -o dlls/d3dx9_41/aarch64-windows/animation.o dlls/d3dx9_36/animation.c -Idlls/d3dx9_41 -Idlls/d3dx9_36 -Iinclude \
   -Iinclude/msvcrt -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=41 -D__WINE_PE_BUILD -Wall -target \
   aarch64-windows -fuse-ld=lld --no-default-config -fno-strict-aliasing \
@@ -16768,8 +16790,6 @@ clang -D__STDC__ -c -o dlls/d3dx9_41/aarch64-windows/xfile.o dlls/d3dx9_36/xfile
   -Wno-microsoft-enum-forward-reference -Wstrict-prototypes -Wtype-limits -Wunused-but-set-parameter \
   -Wvla -Wwrite-strings -Wpointer-arith -Wabsolute-value -ffunction-sections -fasync-exceptions \
   -ffp-exception-behavior=maytrap -O2
-tools/wrc/wrc -u -o dlls/d3dx9_41/version.res --nostdinc -Idlls/d3dx9_41 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
-  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=41 dlls/d3dx9_41/version.rc
 clang -D__STDC__ -c -o dlls/d3dx9_42/aarch64-windows/animation.o dlls/d3dx9_36/animation.c -Idlls/d3dx9_42 -Idlls/d3dx9_36 -Iinclude \
   -Iinclude/msvcrt -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=42 -D__WINE_PE_BUILD -Wall -target \
   aarch64-windows -fuse-ld=lld --no-default-config -fno-strict-aliasing \
@@ -16903,8 +16923,6 @@ clang -D__STDC__ -c -o dlls/d3dx9_42/aarch64-windows/xfile.o dlls/d3dx9_36/xfile
   -Wno-microsoft-enum-forward-reference -Wstrict-prototypes -Wtype-limits -Wunused-but-set-parameter \
   -Wvla -Wwrite-strings -Wpointer-arith -Wabsolute-value -ffunction-sections -fasync-exceptions \
   -ffp-exception-behavior=maytrap -O2
-tools/wrc/wrc -u -o dlls/d3dx9_42/version.res --nostdinc -Idlls/d3dx9_42 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
-  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=42 dlls/d3dx9_42/version.rc
 clang -D__STDC__ -c -o dlls/d3dx9_43/aarch64-windows/animation.o dlls/d3dx9_36/animation.c -Idlls/d3dx9_43 -Idlls/d3dx9_36 -Iinclude \
   -Iinclude/msvcrt -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=43 -D__WINE_PE_BUILD -Wall -target \
   aarch64-windows -fuse-ld=lld --no-default-config -fno-strict-aliasing \
@@ -17038,8 +17056,6 @@ clang -D__STDC__ -c -o dlls/d3dx9_43/aarch64-windows/xfile.o dlls/d3dx9_36/xfile
   -Wno-microsoft-enum-forward-reference -Wstrict-prototypes -Wtype-limits -Wunused-but-set-parameter \
   -Wvla -Wwrite-strings -Wpointer-arith -Wabsolute-value -ffunction-sections -fasync-exceptions \
   -ffp-exception-behavior=maytrap -O2
-tools/wrc/wrc -u -o dlls/d3dx9_43/version.res --nostdinc -Idlls/d3dx9_43 -Idlls/d3dx9_36 -Iinclude -Iinclude/msvcrt \
-  -D_UCRT -D__WINESRC__ -DD3DX_SDK_VERSION=43 dlls/d3dx9_43/version.rc
 clang -D__STDC__ -c -o dlls/d3dxof/aarch64-windows/d3dxof.o dlls/d3dxof/d3dxof.c -Idlls/d3dxof -Iinclude -Iinclude/msvcrt -D_UCRT \
   -D__WINESRC__ -D__WINE_PE_BUILD -Wall -target aarch64-windows -fuse-ld=lld --no-default-config \
   -fno-strict-aliasing -Wdeclaration-after-statement -Wempty-body -Wignored-qualifiers -Winit-self \
@@ -17058,8 +17074,6 @@ clang -D__STDC__ -c -o dlls/d3dxof/aarch64-windows/parsing.o dlls/d3dxof/parsing
   -Wno-microsoft-enum-forward-reference -Wstrict-prototypes -Wtype-limits -Wunused-but-set-parameter \
   -Wvla -Wwrite-strings -Wpointer-arith -Wabsolute-value -ffunction-sections -fasync-exceptions \
   -ffp-exception-behavior=maytrap -O2
-tools/wrc/wrc -u -o dlls/d3dxof/version.res --nostdinc -Idlls/d3dxof -Iinclude -Iinclude/msvcrt -D_UCRT -D__WINESRC__ \
-  dlls/d3dxof/version.rc
 clang -D__STDC__ -c -o dlls/dataexchange/aarch64-windows/main.o dlls/dataexchange/main.c -Idlls/dataexchange -Iinclude -Iinclude/msvcrt \
   -D_UCRT -D__WINESRC__ -D__WINE_PE_BUILD -Wall -target aarch64-windows -fuse-ld=lld \
   --no-default-config -fno-strict-aliasing -Wdeclaration-after-statement -Wempty-body \
@@ -29092,20 +29106,6 @@ clang -D__STDC__ -c -o dlls/d3dx11_42/aarch64-windows/d3dx11_42_main.o dlls/d3dx
   -Wignored-qualifiers -Winit-self -Wno-microsoft-enum-forward-reference -Wstrict-prototypes \
   -Wtype-limits -Wunused-but-set-parameter -Wvla -Wwrite-strings -Wpointer-arith -Wabsolute-value \
   -ffunction-sections -fasync-exceptions -ffp-exception-behavior=maytrap -O2
-clang -D__STDC__ -c -o dlls/d3dx11_43/aarch64-windows/async.o dlls/d3dx11_43/async.c -Idlls/d3dx11_43 -Idlls/d3dx9_36 -Iinclude \
-  -Iinclude/msvcrt -D_UCRT -D__WINESRC__ -DD3DX11_SDK_VERSION=43 -D__WINE_PE_BUILD -Wall -target \
-  aarch64-windows -fuse-ld=lld --no-default-config -fno-strict-aliasing \
-  -Wdeclaration-after-statement -Wempty-body -Wignored-qualifiers -Winit-self \
-  -Wno-microsoft-enum-forward-reference -Wstrict-prototypes -Wtype-limits -Wunused-but-set-parameter \
-  -Wvla -Wwrite-strings -Wpointer-arith -Wabsolute-value -ffunction-sections -fasync-exceptions \
-  -ffp-exception-behavior=maytrap -O2
-clang -D__STDC__ -c -o dlls/d3dx11_43/aarch64-windows/d3dx11_43_main.o dlls/d3dx11_43/d3dx11_43_main.c -Idlls/d3dx11_43 -Idlls/d3dx9_36 -Iinclude \
-  -Iinclude/msvcrt -D_UCRT -D__WINESRC__ -DD3DX11_SDK_VERSION=43 -D__WINE_PE_BUILD -Wall -target \
-  aarch64-windows -fuse-ld=lld --no-default-config -fno-strict-aliasing \
-  -Wdeclaration-after-statement -Wempty-body -Wignored-qualifiers -Winit-self \
-  -Wno-microsoft-enum-forward-reference -Wstrict-prototypes -Wtype-limits -Wunused-but-set-parameter \
-  -Wvla -Wwrite-strings -Wpointer-arith -Wabsolute-value -ffunction-sections -fasync-exceptions \
-  -ffp-exception-behavior=maytrap -O2
 clang -D__STDC__ -c -o dlls/dhtmled.ocx/aarch64-windows/edit.o dlls/dhtmled.ocx/edit.c -Idlls/dhtmled.ocx -Iinclude -Iinclude/msvcrt \
   -D_UCRT -D__WINESRC__ -D__WINE_PE_BUILD -Wall -target aarch64-windows -fuse-ld=lld \
   --no-default-config -fno-strict-aliasing -Wdeclaration-after-statement -Wempty-body \
@@ -30245,6 +30245,26 @@ tools/winegcc/winegcc -o dlls/d3d10core/aarch64-windows/d3d10core.dll --wine-obj
   libs/compiler-rt/aarch64-windows/libcompiler-rt.a dlls/ucrtbase/aarch64-windows/libucrtbase.a \
   dlls/kernel32/aarch64-windows/libkernel32.a dlls/ntdll/aarch64-windows/libntdll.a \
   --no-default-config
+tools/winegcc/winegcc -o dlls/d3d11/aarch64-windows/d3d11.dll --wine-objdir . -b aarch64-windows -Wl,--wine-builtin -shared \
+  dlls/d3d11/d3d11.spec dlls/d3d11/aarch64-windows/async.o dlls/d3d11/aarch64-windows/buffer.o \
+  dlls/d3d11/aarch64-windows/d3d11_main.o dlls/d3d11/aarch64-windows/decoder.o \
+  dlls/d3d11/aarch64-windows/device.o dlls/d3d11/aarch64-windows/inputlayout.o \
+  dlls/d3d11/aarch64-windows/shader.o dlls/d3d11/aarch64-windows/state.o \
+  dlls/d3d11/aarch64-windows/texture.o dlls/d3d11/aarch64-windows/utils.o \
+  dlls/d3d11/aarch64-windows/view.o dlls/d3d11/version.res libs/dxguid/aarch64-windows/libdxguid.a \
+  libs/uuid/aarch64-windows/libuuid.a dlls/dxgi/aarch64-windows/libdxgi.a \
+  dlls/wined3d/aarch64-windows/libwined3d.a dlls/winecrt0/aarch64-windows/libwinecrt0.a \
+  libs/compiler-rt/aarch64-windows/libcompiler-rt.a dlls/ucrtbase/aarch64-windows/libucrtbase.a \
+  dlls/kernel32/aarch64-windows/libkernel32.a dlls/ntdll/aarch64-windows/libntdll.a \
+  --no-default-config
+tools/winegcc/winegcc -o dlls/d3d12/aarch64-windows/d3d12.dll --wine-objdir . -b aarch64-windows -Wl,--wine-builtin -shared \
+  dlls/d3d12/d3d12.spec dlls/d3d12/aarch64-windows/d3d12_main.o dlls/dxgi/aarch64-windows/libdxgi.a \
+  libs/dxguid/aarch64-windows/libdxguid.a dlls/wined3d/aarch64-windows/libwined3d.a \
+  dlls/gdi32/aarch64-windows/libgdi32.a dlls/user32/aarch64-windows/libuser32.a \
+  libs/uuid/aarch64-windows/libuuid.a dlls/win32u/aarch64-windows/libwin32u.a \
+  dlls/winecrt0/aarch64-windows/libwinecrt0.a libs/compiler-rt/aarch64-windows/libcompiler-rt.a \
+  dlls/ucrtbase/aarch64-windows/libucrtbase.a dlls/kernel32/aarch64-windows/libkernel32.a \
+  dlls/ntdll/aarch64-windows/libntdll.a --no-default-config
 tools/winegcc/winegcc -o dlls/d3d12core/aarch64-windows/d3d12core.dll --wine-objdir . -b aarch64-windows -Wl,--wine-builtin -shared \
   dlls/d3d12core/d3d12core.spec dlls/winecrt0/aarch64-windows/libwinecrt0.a \
   libs/compiler-rt/aarch64-windows/libcompiler-rt.a dlls/ucrtbase/aarch64-windows/libucrtbase.a \
@@ -35472,26 +35492,6 @@ tools/winegcc/winegcc -o dlls/d3d10_1/aarch64-windows/d3d10_1.dll --wine-objdir 
   libs/compiler-rt/aarch64-windows/libcompiler-rt.a dlls/ucrtbase/aarch64-windows/libucrtbase.a \
   dlls/kernel32/aarch64-windows/libkernel32.a dlls/ntdll/aarch64-windows/libntdll.a \
   --no-default-config
-tools/winegcc/winegcc -o dlls/d3d11/aarch64-windows/d3d11.dll --wine-objdir . -b aarch64-windows -Wl,--wine-builtin -shared \
-  dlls/d3d11/d3d11.spec dlls/d3d11/aarch64-windows/async.o dlls/d3d11/aarch64-windows/buffer.o \
-  dlls/d3d11/aarch64-windows/d3d11_main.o dlls/d3d11/aarch64-windows/decoder.o \
-  dlls/d3d11/aarch64-windows/device.o dlls/d3d11/aarch64-windows/inputlayout.o \
-  dlls/d3d11/aarch64-windows/shader.o dlls/d3d11/aarch64-windows/state.o \
-  dlls/d3d11/aarch64-windows/texture.o dlls/d3d11/aarch64-windows/utils.o \
-  dlls/d3d11/aarch64-windows/view.o dlls/d3d11/version.res libs/dxguid/aarch64-windows/libdxguid.a \
-  libs/uuid/aarch64-windows/libuuid.a dlls/dxgi/aarch64-windows/libdxgi.a \
-  dlls/wined3d/aarch64-windows/libwined3d.a dlls/winecrt0/aarch64-windows/libwinecrt0.a \
-  libs/compiler-rt/aarch64-windows/libcompiler-rt.a dlls/ucrtbase/aarch64-windows/libucrtbase.a \
-  dlls/kernel32/aarch64-windows/libkernel32.a dlls/ntdll/aarch64-windows/libntdll.a \
-  --no-default-config
-tools/winegcc/winegcc -o dlls/d3d12/aarch64-windows/d3d12.dll --wine-objdir . -b aarch64-windows -Wl,--wine-builtin -shared \
-  dlls/d3d12/d3d12.spec dlls/d3d12/aarch64-windows/d3d12_main.o dlls/dxgi/aarch64-windows/libdxgi.a \
-  libs/dxguid/aarch64-windows/libdxguid.a dlls/wined3d/aarch64-windows/libwined3d.a \
-  dlls/gdi32/aarch64-windows/libgdi32.a dlls/user32/aarch64-windows/libuser32.a \
-  libs/uuid/aarch64-windows/libuuid.a dlls/win32u/aarch64-windows/libwin32u.a \
-  dlls/winecrt0/aarch64-windows/libwinecrt0.a libs/compiler-rt/aarch64-windows/libcompiler-rt.a \
-  dlls/ucrtbase/aarch64-windows/libucrtbase.a dlls/kernel32/aarch64-windows/libkernel32.a \
-  dlls/ntdll/aarch64-windows/libntdll.a --no-default-config
 tools/winegcc/winegcc -o dlls/d3dx10_43/aarch64-windows/d3dx10_43.dll --wine-objdir . -b aarch64-windows -Wl,--wine-builtin -shared \
   dlls/d3dx10_43/d3dx10_43.spec -Wb,--prefer-native dlls/d3dx10_43/aarch64-windows/async.o \
   dlls/d3dx10_43/aarch64-windows/compiler.o dlls/d3dx10_43/aarch64-windows/d3dx10_43_main.o \

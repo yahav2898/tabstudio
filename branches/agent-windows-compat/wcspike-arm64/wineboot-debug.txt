@@ -1,0 +1,279 @@
+002c:trace:module:get_load_order got hardcoded default for L"\\??\\C:\\windows\\system32\\wineboot.exe"
+002c:trace:module:find_builtin_dll looking for "wineboot.exe" for file L"\\??\\C:\\windows\\system32\\wineboot.exe"
+002c:trace:module:map_image_into_view mapping PE file L"\\??\\C:\\windows\\system32\\wineboot.exe" at 0x140000000-0x140080000
+002c:trace:module:map_image_into_view mapping L"\\??\\C:\\windows\\system32\\wineboot.exe" section .text at 0x140010000 off 10000 size 10000 virt 735c flags 60000020
+002c:trace:module:map_image_into_view mapping L"\\??\\C:\\windows\\system32\\wineboot.exe" section .rdata at 0x140020000 off 20000 size 20000 virt 10880 flags 40000040
+002c:trace:module:map_image_into_view mapping L"\\??\\C:\\windows\\system32\\wineboot.exe" section .data at 0x140040000 off 40000 size 10000 virt 7d4 flags c0000040
+002c:trace:module:map_image_into_view mapping L"\\??\\C:\\windows\\system32\\wineboot.exe" section .pdata at 0x140050000 off 50000 size 10000 virt 140 flags 40000040
+002c:trace:module:map_image_into_view mapping L"\\??\\C:\\windows\\system32\\wineboot.exe" section .rsrc at 0x140060000 off 60000 size 10000 virt 6a7 flags 40000040
+002c:trace:module:map_image_into_view mapping L"\\??\\C:\\windows\\system32\\wineboot.exe" section .reloc at 0x140070000 off 70000 size 10000 virt 98 flags 42000040
+002c:trace:module:map_image_into_view mapping PE file L"\\??\\C:\\windows\\system32\\ntdll.dll" at 0x6ffffff00000-0x6fffffff0000
+002c:trace:module:map_image_into_view mapping L"\\??\\C:\\windows\\system32\\ntdll.dll" section .text at 0x6ffffff10000 off 10000 size 70000 virt 6e1c8 flags 60000020
+002c:trace:module:map_image_into_view mapping L"\\??\\C:\\windows\\system32\\ntdll.dll" section .rdata at 0x6ffffff80000 off 80000 size 30000 virt 25b4c flags 40000040
+002c:trace:module:map_image_into_view mapping L"\\??\\C:\\windows\\system32\\ntdll.dll" section .data at 0x6ffffffb0000 off b0000 size 10000 virt 43a8 flags c0000040
+002c:trace:module:map_image_into_view mapping L"\\??\\C:\\windows\\system32\\ntdll.dll" section .pdata at 0x6ffffffc0000 off c0000 size 10000 virt 50f8 flags 40000040
+002c:trace:module:map_image_into_view mapping L"\\??\\C:\\windows\\system32\\ntdll.dll" section .rsrc at 0x6ffffffd0000 off d0000 size 10000 virt 3ac flags 40000040
+002c:trace:module:map_image_into_view mapping L"\\??\\C:\\windows\\system32\\ntdll.dll" section .reloc at 0x6ffffffe0000 off e0000 size 10000 virt 3c0 flags 42000040
+002c:trace:module:map_image_into_view relocating L"\\??\\C:\\windows\\system32\\ntdll.dll" dynamic base 180000000 -> 6ffffff00000 mapped at 0x6ffffff00000
+002c:trace:module:load_apiset_dll loaded L"\\??\\C:\\windows\\system32\\apisetschema.dll" apiset at 0x7ffffe210000
+002c:trace:module:build_module loaded L"\\??\\C:\\windows\\system32\\wineboot.exe" 00007FFFFE234360 0000000140000000
+002c:trace:loaddll:build_module Loaded L"C:\\windows\\system32\\wineboot.exe" at 0000000140000000: builtin
+002c:trace:loaddll:build_ntdll_module Loaded L"C:\\windows\\system32\\ntdll.dll" at 00006FFFFFF00000: builtin
+002c:trace:module:load_dll looking for L"kernel32.dll" in (null)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\kernel32.dll" not found (c0000034)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\kernel32.dll" not found (c0000034)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system\\kernel32.dll" not found (c000003a)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\kernel32.dll" not found (c0000034)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\kernel32.dll" not found (c0000034)
+002c:trace:module:get_load_order got hardcoded default for L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\kernel32.dll"
+002c:trace:module:find_builtin_dll looking for "kernel32.dll" for file L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\kernel32.dll"
+002c:trace:module:map_image_into_view mapping PE file L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\kernel32.dll" at 0x6fffffe50000-0x6fffffef0000
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\kernel32.dll" section .text at 0x6fffffe60000 off 10000 size 30000 virt 2d250 flags 60000020
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\kernel32.dll" section .rdata at 0x6fffffe90000 off 40000 size 20000 virt 1b188 flags 40000040
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\kernel32.dll" section .data at 0x6fffffeb0000 off 60000 size 10000 virt 3a8 flags c0000040
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\kernel32.dll" section .pdata at 0x6fffffec0000 off 70000 size 10000 virt 3580 flags 40000040
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\kernel32.dll" section .rsrc at 0x6fffffed0000 off 80000 size 10000 virt 3bc flags 40000040
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\kernel32.dll" section .reloc at 0x6fffffee0000 off 90000 size 10000 virt 38 flags 42000040
+002c:trace:module:map_image_into_view relocating L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\kernel32.dll" dynamic base 180000000 -> 6fffffe50000 mapped at 0x6fffffe50000
+002c:trace:module:load_dll looking for L"kernelbase.dll" in (null)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\kernelbase.dll" not found (c0000034)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\kernelbase.dll" not found (c0000034)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system\\kernelbase.dll" not found (c000003a)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\kernelbase.dll" not found (c0000034)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\kernelbase.dll" not found (c0000034)
+002c:trace:module:get_load_order got hardcoded default for L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\kernelbase.dll"
+002c:trace:module:find_builtin_dll looking for "kernelbase.dll" for file L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\kernelbase.dll"
+002c:trace:module:map_image_into_view mapping PE file L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\kernelbase.dll" at 0x6fffffce0000-0x6fffffe40000
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\kernelbase.dll" section .text at 0x6fffffcf0000 off 10000 size 80000 virt 74518 flags 60000020
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\kernelbase.dll" section .rdata at 0x6fffffd70000 off 90000 size 40000 virt 31764 flags 40000040
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\kernelbase.dll" section .data at 0x6fffffdb0000 off d0000 size 10000 virt 43cc flags c0000040
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\kernelbase.dll" section .pdata at 0x6fffffdc0000 off e0000 size 10000 virt 52a8 flags 40000040
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\kernelbase.dll" section .rsrc at 0x6fffffdd0000 off f0000 size 60000 virt 5a73c flags 40000040
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\kernelbase.dll" section .reloc at 0x6fffffe30000 off 150000 size 10000 virt 26c flags 42000040
+002c:trace:module:map_image_into_view relocating L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\kernelbase.dll" dynamic base 180000000 -> 6fffffce0000 mapped at 0x6fffffce0000
+002c:trace:module:load_dll looking for L"ntdll.dll" in (null)
+002c:trace:module:load_dll Found L"C:\\windows\\system32\\ntdll.dll" for L"ntdll.dll" at 00006FFFFFF00000, count=2
+002c:trace:module:build_module loaded L"\\??\\C:\\windows\\system32\\kernelbase.dll" 00007FFFFE2374D0 00006FFFFFCE0000
+002c:trace:loaddll:build_module Loaded L"C:\\windows\\system32\\kernelbase.dll" at 00006FFFFFCE0000: builtin
+002c:trace:module:load_dll Loaded module L"\\??\\C:\\windows\\system32\\kernelbase.dll" at 00006FFFFFCE0000
+002c:trace:module:load_dll looking for L"ntdll.dll" in (null)
+002c:trace:module:load_dll Found L"C:\\windows\\system32\\ntdll.dll" for L"ntdll.dll" at 00006FFFFFF00000, count=3
+002c:trace:module:build_module loaded L"\\??\\C:\\windows\\system32\\kernel32.dll" 00007FFFFE235D30 00006FFFFFE50000
+002c:trace:loaddll:build_module Loaded L"C:\\windows\\system32\\kernel32.dll" at 00006FFFFFE50000: builtin
+002c:trace:module:load_dll Loaded module L"\\??\\C:\\windows\\system32\\kernel32.dll" at 00006FFFFFE50000
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\winsxs\\manifests" not found (c000003a)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\Microsoft.Windows.Common-Controls.dll" not found (c0000034)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\Microsoft.Windows.Common-Controls.manifest" not found (c0000034)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\Microsoft.Windows.Common-Controls\\Microsoft.Windows.Common-Controls.dll" not found (c000003a)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\Microsoft.Windows.Common-Controls\\Microsoft.Windows.Common-Controls.manifest" not found (c000003a)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\Microsoft.Windows.Common-Controls.dll" not found (c0000034)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\Microsoft.Windows.Common-Controls.manifest" not found (c0000034)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\Microsoft.Windows.Common-Controls\\Microsoft.Windows.Common-Controls.dll" not found (c000003a)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\Microsoft.Windows.Common-Controls\\Microsoft.Windows.Common-Controls.manifest" not found (c000003a)
+002c:fixme:actctx:parse_depend_manifests Could not find dependent assembly L"Microsoft.Windows.Common-Controls" (6.0.0.0)
+002c:trace:module:needs_elevation image requested run level 0
+002c:trace:module:load_dll looking for L"advapi32.dll" in (null)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\advapi32.dll" not found (c0000034)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\advapi32.dll" not found (c0000034)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system\\advapi32.dll" not found (c000003a)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\advapi32.dll" not found (c0000034)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\advapi32.dll" not found (c0000034)
+002c:trace:module:get_load_order got hardcoded default for L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\advapi32.dll"
+002c:trace:module:find_builtin_dll looking for "advapi32.dll" for file L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\advapi32.dll"
+002c:trace:module:map_image_into_view mapping PE file L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\advapi32.dll" at 0x6fffffc40000-0x6fffffcd0000
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\advapi32.dll" section .text at 0x6fffffc50000 off 10000 size 30000 virt 200f4 flags 60000020
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\advapi32.dll" section .rdata at 0x6fffffc80000 off 40000 size 10000 virt fec4 flags 40000040
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\advapi32.dll" section .data at 0x6fffffc90000 off 50000 size 10000 virt 2b4 flags c0000040
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\advapi32.dll" section .pdata at 0x6fffffca0000 off 60000 size 10000 virt 1c58 flags 40000040
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\advapi32.dll" section .rsrc at 0x6fffffcb0000 off 70000 size 10000 virt 3c8 flags 40000040
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\advapi32.dll" section .reloc at 0x6fffffcc0000 off 80000 size 10000 virt 158 flags 42000040
+002c:trace:module:map_image_into_view relocating L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\advapi32.dll" dynamic base 180000000 -> 6fffffc40000 mapped at 0x6fffffc40000
+002c:trace:module:load_dll looking for L"kernelbase.dll" in (null)
+002c:trace:module:load_dll Found L"C:\\windows\\system32\\kernelbase.dll" for L"kernelbase.dll" at 00006FFFFFCE0000, count=3
+002c:trace:module:load_dll looking for L"sechost.dll" in (null)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\sechost.dll" not found (c0000034)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\sechost.dll" not found (c0000034)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system\\sechost.dll" not found (c000003a)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\sechost.dll" not found (c0000034)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\sechost.dll" not found (c0000034)
+002c:trace:module:get_load_order got hardcoded default for L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\sechost.dll"
+002c:trace:module:find_builtin_dll looking for "sechost.dll" for file L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\sechost.dll"
+002c:trace:module:map_image_into_view mapping PE file L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\sechost.dll" at 0x6fffffbd0000-0x6fffffc30000
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\sechost.dll" section .text at 0x6fffffbe0000 off 10000 size 10000 virt d50c flags 60000020
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\sechost.dll" section .rdata at 0x6fffffbf0000 off 20000 size 10000 virt 8ea0 flags 40000040
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\sechost.dll" section .data at 0x6fffffc00000 off 30000 size 10000 virt 2e4 flags c0000040
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\sechost.dll" section .pdata at 0x6fffffc10000 off 40000 size 10000 virt de8 flags 40000040
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\sechost.dll" section .reloc at 0x6fffffc20000 off 50000 size 10000 virt bc flags 42000040
+002c:trace:module:map_image_into_view relocating L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\sechost.dll" dynamic base 180000000 -> 6fffffbd0000 mapped at 0x6fffffbd0000
+002c:trace:module:load_dll looking for L"kernelbase.dll" in (null)
+002c:trace:module:load_dll Found L"C:\\windows\\system32\\kernelbase.dll" for L"kernelbase.dll" at 00006FFFFFCE0000, count=4
+002c:trace:module:load_dll looking for L"ucrtbase.dll" in (null)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\ucrtbase.dll" not found (c0000034)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\ucrtbase.dll" not found (c0000034)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system\\ucrtbase.dll" not found (c000003a)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\ucrtbase.dll" not found (c0000034)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\ucrtbase.dll" not found (c0000034)
+002c:trace:module:get_load_order got hardcoded default for L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\ucrtbase.dll"
+002c:trace:module:find_builtin_dll looking for "ucrtbase.dll" for file L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\ucrtbase.dll"
+002c:trace:module:map_image_into_view mapping PE file L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\ucrtbase.dll" at 0x6fffffaa0000-0x6fffffbc0000
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\ucrtbase.dll" section .text at 0x6fffffab0000 off 10000 size a0000 virt 98dec flags 60000020
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\ucrtbase.dll" section .rdata at 0x6fffffb50000 off b0000 size 30000 virt 24c1c flags 40000040
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\ucrtbase.dll" section .data at 0x6fffffb80000 off e0000 size 10000 virt 38a4 flags c0000040
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\ucrtbase.dll" section .pdata at 0x6fffffb90000 off f0000 size 10000 virt 7ea0 flags 40000040
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\ucrtbase.dll" section .rsrc at 0x6fffffba0000 off 100000 size 10000 virt 3c8 flags 40000040
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\ucrtbase.dll" section .reloc at 0x6fffffbb0000 off 110000 size 10000 virt 2d4 flags 42000040
+002c:trace:module:map_image_into_view relocating L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\ucrtbase.dll" dynamic base 180000000 -> 6fffffaa0000 mapped at 0x6fffffaa0000
+002c:trace:module:load_dll looking for L"ntdll.dll" in (null)
+002c:trace:module:load_dll Found L"C:\\windows\\system32\\ntdll.dll" for L"ntdll.dll" at 00006FFFFFF00000, count=4
+002c:trace:module:load_dll looking for L"kernel32.dll" in (null)
+002c:trace:module:load_dll Found L"C:\\windows\\system32\\kernel32.dll" for L"kernel32.dll" at 00006FFFFFE50000, count=2
+002c:trace:module:build_module loaded L"\\??\\C:\\windows\\system32\\ucrtbase.dll" 00007FFFFE23E980 00006FFFFFAA0000
+002c:trace:loaddll:build_module Loaded L"C:\\windows\\system32\\ucrtbase.dll" at 00006FFFFFAA0000: builtin
+002c:trace:module:load_dll Loaded module L"\\??\\C:\\windows\\system32\\ucrtbase.dll" at 00006FFFFFAA0000
+002c:trace:module:load_dll looking for L"kernel32.dll" in (null)
+002c:trace:module:load_dll Found L"C:\\windows\\system32\\kernel32.dll" for L"kernel32.dll" at 00006FFFFFE50000, count=3
+002c:trace:module:load_dll looking for L"ntdll.dll" in (null)
+002c:trace:module:load_dll Found L"C:\\windows\\system32\\ntdll.dll" for L"ntdll.dll" at 00006FFFFFF00000, count=5
+002c:trace:module:build_module loaded L"\\??\\C:\\windows\\system32\\sechost.dll" 00007FFFFE23D340 00006FFFFFBD0000
+002c:trace:loaddll:build_module Loaded L"C:\\windows\\system32\\sechost.dll" at 00006FFFFFBD0000: builtin
+002c:trace:module:load_dll Loaded module L"\\??\\C:\\windows\\system32\\sechost.dll" at 00006FFFFFBD0000
+002c:trace:module:load_dll looking for L"msvcrt.dll" in (null)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\msvcrt.dll" not found (c0000034)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\msvcrt.dll" not found (c0000034)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system\\msvcrt.dll" not found (c000003a)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\msvcrt.dll" not found (c0000034)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\msvcrt.dll" not found (c0000034)
+002c:trace:module:get_load_order got hardcoded default for L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\msvcrt.dll"
+002c:trace:module:find_builtin_dll looking for "msvcrt.dll" for file L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\msvcrt.dll"
+002c:trace:module:map_image_into_view mapping PE file L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\msvcrt.dll" at 0x6fffff9a0000-0x6fffffa90000
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\msvcrt.dll" section .text at 0x6fffff9b0000 off 10000 size 80000 virt 74b48 flags 60000020
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\msvcrt.dll" section .rdata at 0x6fffffa30000 off 90000 size 20000 virt 16888 flags 40000040
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\msvcrt.dll" section .data at 0x6fffffa50000 off b0000 size 10000 virt 2f90 flags c0000040
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\msvcrt.dll" section .pdata at 0x6fffffa60000 off c0000 size 10000 virt 4540 flags 40000040
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\msvcrt.dll" section .rsrc at 0x6fffffa70000 off d0000 size 10000 virt 3b4 flags 40000040
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\msvcrt.dll" section .reloc at 0x6fffffa80000 off e0000 size 10000 virt 29c flags 42000040
+002c:trace:module:map_image_into_view relocating L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\msvcrt.dll" dynamic base 180000000 -> 6fffff9a0000 mapped at 0x6fffff9a0000
+002c:trace:module:load_dll looking for L"ntdll.dll" in (null)
+002c:trace:module:load_dll Found L"C:\\windows\\system32\\ntdll.dll" for L"ntdll.dll" at 00006FFFFFF00000, count=6
+002c:trace:module:load_dll looking for L"kernel32.dll" in (null)
+002c:trace:module:load_dll Found L"C:\\windows\\system32\\kernel32.dll" for L"kernel32.dll" at 00006FFFFFE50000, count=4
+002c:trace:module:build_module loaded L"\\??\\C:\\windows\\system32\\msvcrt.dll" 00007FFFFE23FDE0 00006FFFFF9A0000
+002c:trace:loaddll:build_module Loaded L"C:\\windows\\system32\\msvcrt.dll" at 00006FFFFF9A0000: builtin
+002c:trace:module:load_dll Loaded module L"\\??\\C:\\windows\\system32\\msvcrt.dll" at 00006FFFFF9A0000
+002c:trace:module:load_dll looking for L"kernel32.dll" in (null)
+002c:trace:module:load_dll Found L"C:\\windows\\system32\\kernel32.dll" for L"kernel32.dll" at 00006FFFFFE50000, count=5
+002c:trace:module:load_dll looking for L"ntdll.dll" in (null)
+002c:trace:module:load_dll Found L"C:\\windows\\system32\\ntdll.dll" for L"ntdll.dll" at 00006FFFFFF00000, count=7
+002c:trace:module:build_module loaded L"\\??\\C:\\windows\\system32\\advapi32.dll" 00007FFFFE23BF20 00006FFFFFC40000
+002c:trace:loaddll:build_module Loaded L"C:\\windows\\system32\\advapi32.dll" at 00006FFFFFC40000: builtin
+002c:trace:module:load_dll Loaded module L"\\??\\C:\\windows\\system32\\advapi32.dll" at 00006FFFFFC40000
+002c:trace:module:load_dll looking for L"ws2_32.dll" in (null)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\ws2_32.dll" not found (c0000034)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\ws2_32.dll" not found (c0000034)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system\\ws2_32.dll" not found (c000003a)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\ws2_32.dll" not found (c0000034)
+002c:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\ws2_32.dll" not found (c0000034)
+002c:trace:module:get_load_order got hardcoded default for L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\ws2_32.dll"
+002c:trace:module:find_builtin_dll looking for "ws2_32.dll" for file L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\ws2_32.dll"
+002c:trace:module:map_image_into_view mapping PE file L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\ws2_32.dll" at 0x6fffff910000-0x6fffff990000
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\ws2_32.dll" section .text at 0x6fffff920000 off 10000 size 20000 virt 12364 flags 60000020
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\ws2_32.dll" section .rdata at 0x6fffff940000 off 30000 size 10000 virt 7de4 flags 40000040
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\ws2_32.dll" section .data at 0x6fffff950000 off 40000 size 10000 virt 2f0 flags c0000040
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\ws2_32.dll" section .pdata at 0x6fffff960000 off 50000 size 10000 virt 9b0 flags 40000040
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\ws2_32.dll" section .rsrc at 0x6fffff970000 off 60000 size 10000 virt 29b4 flags 40000040
+002c:trace:module:map_image_into_view mapping L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\ws2_32.dll" section .reloc at 0x6fffff980000 off 70000 size 10000 virt 8c flags 42000040
+002c:trace:module:map_image_into_view relocating L"\\??\\Z:\\opt\\tabstudio\\wine\\lib\\wine\\aarch64-windows\\ws2_32.dll" dynamic base 180000000 -> 6fffff910000 mapped at 0x6fffff910000
+002c:trace:module:load_dll looking for L"ucrtbase.dll" in (null)
+002c:trace:module:load_dll Found L"C:\\windows\\system32\\ucrtbase.dll" for L"ucrtbase.dll" at 00006FFFFFAA0000, count=2
+002c:trace:module:load_dll looking for L"kernel32.dll" in (null)
+002c:trace:module:load_dll Found L"C:\\windows\\system32\\kernel32.dll" for L"kernel32.dll" at 00006FFFFFE50000, count=6
+002c:trace:module:load_dll looking for L"ntdll.dll" in (null)
+002c:trace:module:load_dll Found L"C:\\windows\\system32\\ntdll.dll" for L"ntdll.dll" at 00006FFFFFF00000, count=8
+002c:trace:module:build_module loaded L"\\??\\C:\\windows\\system32\\ws2_32.dll" 00007FFFFE3712F0 00006FFFFF910000
+002c:trace:loaddll:build_module Loaded L"C:\\windows\\system32\\ws2_32.dll" at 00006FFFFF910000: builtin
+002c:trace:module:load_dll Loaded module L"\\??\\C:\\windows\\system32\\ws2_32.dll" at 00006FFFFF910000
+002c:trace:module:load_dll looking for L"kernelbase.dll" in (null)
+002c:trace:module:load_dll Found L"C:\\windows\\system32\\kernelbase.dll" for L"kernelbase.dll" at 00006FFFFFCE0000, count=5
+002c:trace:module:load_dll looking for L"ucrtbase.dll" in (null)
+002c:trace:module:load_dll Found L"C:\\windows\\system32\\ucrtbase.dll" for L"ucrtbase.dll" at 00006FFFFFAA0000, count=3
+002c:trace:module:load_dll looking for L"kernel32.dll" in (null)
+002c:trace:module:load_dll Found L"C:\\windows\\system32\\kernel32.dll" for L"kernel32.dll" at 00006FFFFFE50000, count=7
+002c:trace:module:load_dll looking for L"ntdll.dll" in (null)
+002c:trace:module:load_dll Found L"C:\\windows\\system32\\ntdll.dll" for L"ntdll.dll" at 00006FFFFFF00000, count=9
+002c:trace:module:process_attach (L"ntdll.dll",00007FFFFE1FFC70) - START
+002c:trace:module:MODULE_InitDLL (00006FFFFFF00000 L"ntdll.dll",PROCESS_ATTACH,00007FFFFE1FFC70) - CALL
+002c:trace:module:MODULE_InitDLL (00006FFFFFF00000,PROCESS_ATTACH,00007FFFFE1FFC70) - RETURN 1
+002c:trace:module:process_attach (L"ntdll.dll",00007FFFFE1FFC70) - END
+002c:trace:module:process_attach (L"kernel32.dll",00007FFFFE1FFC70) - START
+002c:trace:module:process_attach (L"kernelbase.dll",00007FFFFE1FFC70) - START
+002c:trace:module:MODULE_InitDLL (00006FFFFFCE0000 L"kernelbase.dll",PROCESS_ATTACH,00007FFFFE1FFC70) - CALL
+002c:trace:module:MODULE_InitDLL (00006FFFFFCE0000,PROCESS_ATTACH,00007FFFFE1FFC70) - RETURN 1
+002c:trace:module:process_attach (L"kernelbase.dll",00007FFFFE1FFC70) - END
+002c:trace:module:MODULE_InitDLL (00006FFFFFE50000 L"kernel32.dll",PROCESS_ATTACH,00007FFFFE1FFC70) - CALL
+002c:warn:globalmem:KernelBaseGetGlobalData semi-stub!
+002c:trace:module:MODULE_InitDLL (00006FFFFFE50000,PROCESS_ATTACH,00007FFFFE1FFC70) - RETURN 1
+002c:trace:module:process_attach (L"kernel32.dll",00007FFFFE1FFC70) - END
+002c:trace:module:process_attach (L"advapi32.dll",00007FFFFE1FFC70) - START
+002c:trace:module:process_attach (L"sechost.dll",00007FFFFE1FFC70) - START
+002c:trace:module:process_attach (L"ucrtbase.dll",00007FFFFE1FFC70) - START
+002c:trace:module:MODULE_InitDLL (00006FFFFFAA0000 L"ucrtbase.dll",PROCESS_ATTACH,00007FFFFE1FFC70) - CALL
+002c:trace:module:LdrGetDllFullName module 0000000000000000, name 00007FFFFE1FF6D0.
+002c:trace:module:GetModuleFileNameW L"C:\\windows\\system32\\wineboot.exe"
+002c:trace:module:LdrGetDllFullName module 0000000000000000, name 00007FFFFE1FF700.
+002c:trace:module:GetModuleFileNameW L"C:\\windows\\system32\\wineboot.exe"
+002c:trace:module:MODULE_InitDLL (00006FFFFFAA0000,PROCESS_ATTACH,00007FFFFE1FFC70) - RETURN 1
+002c:trace:module:process_attach (L"ucrtbase.dll",00007FFFFE1FFC70) - END
+002c:trace:module:MODULE_InitDLL (00006FFFFFBD0000 L"sechost.dll",PROCESS_ATTACH,00007FFFFE1FFC70) - CALL
+002c:trace:module:MODULE_InitDLL (00006FFFFFBD0000,PROCESS_ATTACH,00007FFFFE1FFC70) - RETURN 1
+002c:trace:module:process_attach (L"sechost.dll",00007FFFFE1FFC70) - END
+002c:trace:module:process_attach (L"msvcrt.dll",00007FFFFE1FFC70) - START
+002c:trace:module:MODULE_InitDLL (00006FFFFF9A0000 L"msvcrt.dll",PROCESS_ATTACH,00007FFFFE1FFC70) - CALL
+002c:trace:module:LdrGetDllFullName module 0000000000000000, name 00007FFFFE1FF710.
+002c:trace:module:GetModuleFileNameW L"C:\\windows\\system32\\wineboot.exe"
+002c:trace:module:LdrGetDllFullName module 0000000000000000, name 00007FFFFE1FF740.
+002c:trace:module:GetModuleFileNameW L"C:\\windows\\system32\\wineboot.exe"
+002c:trace:module:LdrAddRefDll (L"msvcrt.dll") ldr.LoadCount: -1
+002c:trace:module:MODULE_InitDLL (00006FFFFF9A0000,PROCESS_ATTACH,00007FFFFE1FFC70) - RETURN 1
+002c:trace:module:process_attach (L"msvcrt.dll",00007FFFFE1FFC70) - END
+002c:trace:module:MODULE_InitDLL (00006FFFFFC40000 L"advapi32.dll",PROCESS_ATTACH,00007FFFFE1FFC70) - CALL
+002c:trace:module:MODULE_InitDLL (00006FFFFFC40000,PROCESS_ATTACH,00007FFFFE1FFC70) - RETURN 1
+002c:trace:module:process_attach (L"advapi32.dll",00007FFFFE1FFC70) - END
+002c:trace:module:process_attach (L"ws2_32.dll",00007FFFFE1FFC70) - START
+002c:trace:module:MODULE_InitDLL (00006FFFFF910000 L"ws2_32.dll",PROCESS_ATTACH,00007FFFFE1FFC70) - CALL
+002c:warn:module:get_builtin_unix_funcs failed to load "/opt/tabstudio/wine/lib/wine/aarch64-unix/ws2_32.so": Error loading shared library ntdll.so: No such file or directory (needed by /opt/tabstudio/wine/lib/wine/aarch64-unix/ws2_32.so)
+002c:trace:module:MODULE_InitDLL (00006FFFFF910000,PROCESS_ATTACH,00007FFFFE1FFC70) - RETURN 0
+002c:trace:module:MODULE_InitDLL (00006FFFFF910000 L"ws2_32.dll",PROCESS_DETACH,00007FFFFE1FFC70) - CALL
+002c:trace:module:MODULE_InitDLL (00006FFFFF910000,PROCESS_DETACH,00007FFFFE1FFC70) - RETURN 1
+002c:warn:module:process_attach Initialization of L"ws2_32.dll" failed
+002c:trace:module:process_attach (L"ws2_32.dll",00007FFFFE1FFC70) - END
+002c:err:module:loader_init "ws2_32.dll" failed to initialize, aborting
+002c:err:module:loader_init Initializing dlls for L"C:\\windows\\system32\\wineboot.exe" failed, status c0000142
+0024:trace:module:get_load_order got main exe default n,b for L"\\??\\Z:\\w\\wineboot"
+0024:trace:module:find_builtin_dll looking for "start.exe" for file L"\\??\\C:\\windows\\system32\\start.exe"
+0024:trace:module:map_image_into_view mapping PE file L"\\??\\C:\\windows\\system32\\start.exe" at 0x140000000-0x140070000
+0024:trace:module:map_image_into_view mapping L"\\??\\C:\\windows\\system32\\start.exe" section .text at 0x140010000 off 10000 size 10000 virt 2870 flags 60000020
+0024:trace:module:map_image_into_view mapping L"\\??\\C:\\windows\\system32\\start.exe" section .rdata at 0x140020000 off 20000 size 10000 virt 10c0 flags 40000040
+0024:trace:module:map_image_into_view mapping L"\\??\\C:\\windows\\system32\\start.exe" section .data at 0x140030000 off 30000 size 10000 virt 204 flags c0000040
+0024:trace:module:map_image_into_view mapping L"\\??\\C:\\windows\\system32\\start.exe" section .pdata at 0x140040000 off 40000 size 10000 virt a0 flags 40000040
+0024:trace:module:map_image_into_view mapping L"\\??\\C:\\windows\\system32\\start.exe" section .rsrc at 0x140050000 off 50000 size 10000 virt cf8 flags 40000040
+0024:trace:module:map_image_into_view mapping L"\\??\\C:\\windows\\system32\\start.exe" section .reloc at 0x140060000 off 60000 size 10000 virt 10 flags 42000040
+0024:trace:module:map_image_into_view mapping PE file L"\\??\\C:\\windows\\system32\\ntdll.dll" at 0x6ffffff00000-0x6fffffff0000
+0024:trace:module:map_image_into_view mapping L"\\??\\C:\\windows\\system32\\ntdll.dll" section .text at 0x6ffffff10000 off 10000 size 70000 virt 6e1c8 flags 60000020
+0024:trace:module:map_image_into_view mapping L"\\??\\C:\\windows\\system32\\ntdll.dll" section .rdata at 0x6ffffff80000 off 80000 size 30000 virt 25b4c flags 40000040
+0024:trace:module:map_image_into_view mapping L"\\??\\C:\\windows\\system32\\ntdll.dll" section .data at 0x6ffffffb0000 off b0000 size 10000 virt 43a8 flags c0000040
+0024:trace:module:map_image_into_view mapping L"\\??\\C:\\windows\\system32\\ntdll.dll" section .pdata at 0x6ffffffc0000 off c0000 size 10000 virt 50f8 flags 40000040
+0024:trace:module:map_image_into_view mapping L"\\??\\C:\\windows\\system32\\ntdll.dll" section .rsrc at 0x6ffffffd0000 off d0000 size 10000 virt 3ac flags 40000040
+0024:trace:module:map_image_into_view mapping L"\\??\\C:\\windows\\system32\\ntdll.dll" section .reloc at 0x6ffffffe0000 off e0000 size 10000 virt 3c0 flags 42000040
+0024:trace:module:map_image_into_view relocating L"\\??\\C:\\windows\\system32\\ntdll.dll" dynamic base 180000000 -> 6ffffff00000 mapped at 0x6ffffff00000
+0024:trace:module:load_apiset_dll loaded L"\\??\\C:\\windows\\system32\\apisetschema.dll" apiset at 0x7ffffe210000
+0024:trace:module:build_module loaded L"\\??\\C:\\windows\\system32\\start.exe" 00007FFFFE2342F0 0000000140000000
+0024:trace:loaddll:build_module Loaded L"C:\\windows\\system32\\start.exe" at 0000000140000000: builtin
+0024:trace:loaddll:build_ntdll_module Loaded L"C:\\windows\\system32\\ntdll.dll" at 00006FFFFFF00000: builtin
+0024:trace:module:load_dll looking for L"kernel32.dll" in (null)
+0024:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\kernel32.dll" not found (c0000034)
+0024:warn:file:NtCreateFile L"\\??\\C:\\windows\\system32\\kernel32.dll" not found (c0000034)
+0024:warn:file:NtCreateFile L"\\??\\C:\\windows\\system\\kernel32.dll" not found (c000003a)
+0024:warn:file:NtCreateFile L"\\??\\C:\\windows\\kernel32.dll" not found (c0000034)
+0024:warn:file:NtCreateFile L"\\??\\Z:\\w\\kernel32.dll" not found (c0000034)
+0024:warn:module:load_dll Failed to load module L"kernel32.dll"; status=c0000135
+wine: could not load kernel32.dll, status c0000135
