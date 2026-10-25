@@ -110,22 +110,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
     {
         lock (_gate)
         {
-            if (_loaded is null)
-            {
-                return;
-            }
-
-            var solution = _workspace.CurrentSolution;
-            var texts = new Dictionary<string, string>(StringComparer.Ordinal);
-            foreach (var (path, id) in _documents)
-            {
-                if (solution.GetDocument(id) is { } document && document.TryGetText(out var text))
-                {
-                    texts[path] = text.ToString();
-                }
-            }
-
-            LoadUnderGate(_loaded, new SnapshotTextProvider(texts));
+            ReloadKeepingTexts();
         }
     }
 
@@ -135,6 +120,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         _documents.Clear();
         _projectIds.Clear();
         _projects.Clear();
+        _skeletons.Clear();
 
         var csharpProjects = workspace.Projects
             .Where(p => p.Language == ProjectLanguage.CSharp && p.Kind != ProjectKind.Unknown)
@@ -148,6 +134,24 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         }
 
         var allProjectDirectories = workspace.Projects.Select(p => p.DirectoryPath).ToList();
+        AddSolution(workspace, csharpProjects, allProjectDirectories, sources);
+
+        // With skeleton references, the first solution compiles the projects nobody edits once, into images;
+        // the second references those images, so their full compilations are never kept.
+        if (CreateSkeletons(csharpProjects))
+        {
+            var texts = new SnapshotTextProvider(_documents
+                .Select(d => (d.Key, Text: _workspace.CurrentSolution.GetDocument(d.Value)?.GetTextAsync().GetAwaiter().GetResult().ToString()))
+                .Where(d => d.Text is not null)
+                .ToDictionary(d => d.Key, d => d.Text!, StringComparer.Ordinal));
+            _workspace.ClearSolution();
+            _documents.Clear();
+            AddSolution(workspace, csharpProjects, allProjectDirectories, texts);
+        }
+    }
+
+    private void AddSolution(TsWorkspace workspace, List<TsProject> csharpProjects, List<string> allProjectDirectories, ISourceTextProvider sources)
+    {
         var projectInfos = csharpProjects
             .Select(project => CreateProjectInfo(project, allProjectDirectories, sources))
             .ToList();
@@ -190,7 +194,18 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
 
         lock (_gate)
         {
-            return _documents.TryGetValue(filePath, out var id) && ReplaceText(id, text);
+            if (!_documents.TryGetValue(filePath, out var id) || !ReplaceText(id, text))
+            {
+                return false;
+            }
+
+            // A project referenced as a skeleton image changed: its image no longer matches, so make it again.
+            if (_skeletons.Count > 0 && _projects.TryGetValue(id.ProjectId, out var project) && _skeletons.ContainsKey(project.FilePath))
+            {
+                ReloadKeepingTexts();
+            }
+
+            return true;
         }
     }
 
@@ -412,13 +427,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
                 return [];
             }
 
-            var graph = _workspace.CurrentSolution.GetProjectDependencyGraph();
-            var needed = graph.GetProjectsThatThisProjectTransitivelyDependsOn(id).Append(id).ToHashSet();
-
-            return graph.GetTopologicallySortedProjects()
-                .Where(needed.Contains)
-                .Select(p => _projects[p])
-                .ToList();
+            return BuildOrder.For(_projects[id], _projects.Values.ToDictionary(p => p.FilePath, StringComparer.Ordinal));
         }
     }
 
@@ -501,7 +510,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         }
 
         var projectReferences = project.ProjectReferences
-            .Where(_projectIds.ContainsKey)
+            .Where(reference => _projectIds.ContainsKey(reference) && !_skeletons.ContainsKey(reference))
             .Select(reference => new ProjectReference(_projectIds[reference]));
 
         var kind = project.IsExecutable ? AssemblyKind.ConsoleApplication : AssemblyKind.Library;

@@ -36,14 +36,9 @@ public sealed class WorkspaceSnapshot : IBuildSource
     /// <inheritdoc />
     public IReadOnlyList<TsProject> GetBuildOrder(string projectFilePath)
     {
-        if (!_projectIds.TryGetValue(projectFilePath, out var id))
-        {
-            return [];
-        }
-
-        var graph = _solution.GetProjectDependencyGraph();
-        var needed = graph.GetProjectsThatThisProjectTransitivelyDependsOn(id).Append(id).ToHashSet();
-        return [.. graph.GetTopologicallySortedProjects().Where(needed.Contains).Select(p => _projects[p])];
+        return _projectIds.TryGetValue(projectFilePath, out var id)
+            ? BuildOrder.For(_projects[id], _projects.Values.ToDictionary(p => p.FilePath, StringComparer.Ordinal))
+            : [];
     }
 
     /// <inheritdoc />
