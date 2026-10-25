@@ -66,6 +66,7 @@ public static class TextMateHighlighting
             var installation = editor.InstallTextMate(options);
             TrySetGrammar(installation, scope);
             Track(installation);
+            TextMateScrollTokenizing.Install(installation, editor.TextArea.TextView);
             return installation;
         }
         catch (Exception ex) when (ex is DllNotFoundException or EntryPointNotFoundException or TypeInitializationException or BadImageFormatException)
