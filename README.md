@@ -75,6 +75,15 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 - **Extensions.** VS Code extensions from Open VSX, so any language with a language server works.
 - **Notebooks.** C# notebooks whose cells run as you write them.
 
+### GitHub, inside the IDE
+
+- **Git built in.** Clone, branch, commit, pull and push, and open pull requests on GitHub without leaving the IDE.
+- **CI in the status bar.** Your commit's checks show next to the branch: a spinner with "2/5" while they run, then red or green. Tap it to open the GitHub Actions window.
+- **GitHub Actions.** The branch's runs with their jobs and steps. Re-run every job or only the failed ones, cancel a run, or start a workflow from a form built from its inputs.
+- **Logs you can read.** A job's log opens in a tab, folded by step and scrolled to the first error. F8 jumps to the next one.
+- **CI errors in the Error List.** What failed on CI sits beside your local errors, and **Fix with Agent** knows which check reported it.
+- **Watched repositories.** Follow the CI of any repository, and get a notification on the tablet when a run finishes.
+
 ### An AI pair programmer
 
 - **Claude, inside the IDE.** The agent sees your whole solution, builds it, runs the tests and fixes the errors it finds, and every change it makes arrives as a diff you approve.
@@ -89,7 +98,6 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 - **Never loses your place.** Android closes background apps on small devices. TabStudio saves your session as you work, so it reopens exactly where you left it, unsaved edits included.
 - **Thermal-aware builds.** When the tablet runs hot, TabStudio compiles on fewer cores instead of letting Android throttle everything, and the status bar tells you why.
 - **Works offline.** Everything except downloads, Git remotes and the agent runs without a connection.
-- **Git built in.** Clone, branch, commit, pull and push, and open pull requests on GitHub without leaving the IDE.
 
 The order in which all of this ships is in the [roadmap](docs/ROADMAP.md).
 

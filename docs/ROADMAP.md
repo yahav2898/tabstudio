@@ -79,6 +79,16 @@ their languages, and VS Code extensions from Open VSX. Opening a repository inst
 Claude inside the IDE: an agent that builds, tests and fixes your solution through diffs you approve,
 **Fix with Agent** for every Compatibility Doctor finding, sketch to XAML, and MCP server support.
 
+## GitHub, inside the IDE
+
+Alongside the milestones, the GitHub work a developer would otherwise do in a browser:
+
+- The commit's CI in the status bar, live, and a GitHub Actions window with the branch's runs, their jobs
+  and steps, re-run, re-run failed jobs, cancel, and Run workflow with a form built from its inputs.
+- Job logs in an editor tab, folded by step, opened at the first error.
+- CI's errors in the Error List with **Fix with Agent**, watched repositories, and a notification when a
+  run finishes.
+
 ## Desktop mode
 
 Across every milestone: when a monitor is connected, the full layout moves to the big screen and the tablet

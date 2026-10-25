@@ -250,6 +250,26 @@ talks to GitHub instead:
   shows inline diffs, and settles conflicts by choosing a side. Signing in takes a personal access token,
   which GitHub checks before it is kept in the app's private storage.
 
+### GitHub Actions
+
+A tablet cannot receive webhooks, so CI is polled, and polled politely:
+
+- **`GitHubClient`'s Actions, Checks, Workflows and Logs partials** read check runs, commit statuses, runs,
+  jobs and steps, and call re-run, re-run failed jobs, cancel and workflow dispatch. Every read sends the
+  ETag GitHub gave last time; a `304 Not Modified` reuses the cached answer and does not count against the
+  rate limit, whose headers the client records.
+- **`CiMonitor`** (in the app) watches the linked commit: every 12 s while something runs, every 90 s when
+  nothing does, four times slower when under a tenth of the rate limit is left, and not at all while the
+  app is in the background. A commit, push, pull or branch switch refreshes it at once.
+- **Job logs** come from a redirect that must be followed without the token. A large log is streamed, and
+  only its head and tail are kept, so memory stays bounded; `CiLog` folds logs by step and `##[group]`, colours `##[error]` and
+  `##[warning]`, keeps ANSI colours and hides timestamps.
+- **CI's errors** come from check-run annotations and from compiler lines in failed steps' logs
+  (`CompilerMessage`), mapped onto workspace files and added to the Error List with the check and commit
+  that reported them.
+- **Run workflow** reads the workflow file through the contents API, and `WorkflowFile` turns its
+  `workflow_dispatch` inputs into a form.
+
 ## The agent
 
 `AgentSession` runs Claude in a loop: Claude answers, asks for tools, gets their results and continues until
