@@ -31,9 +31,17 @@ public sealed partial class WorkspaceViewModel
         _restore = AddFrameworkGeneratorsAsync(previous, () => UsesFrameworkGenerators(root, token), token);
     }
 
-    /// <summary>A saved file that starts using .NET's generators gets them.</summary>
+    /// <summary>
+    /// A saved file that starts using .NET's generators gets them, and a saved file that generators read, such as an
+    /// Avalonia <c>.axaml</c> file, goes to the language service so the generated code follows it.
+    /// </summary>
     private void OnDocumentSavedForGenerators(DocumentViewModel document)
     {
+        if (!document.FileType.IsCSharp && document.Notebook is null)
+        {
+            _language?.UpdateText(document.FilePath, document.Document.Text);
+        }
+
         if (!_frameworkGeneratorsRequested && document.FileType.IsCSharp && ContainsGeneratorMarker(document.Document.Text))
         {
             var token = _background?.Token ?? CancellationToken.None;

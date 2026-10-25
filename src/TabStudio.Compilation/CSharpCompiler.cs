@@ -90,13 +90,17 @@ public sealed class CSharpCompiler
         ["CS1702"] = ReportDiagnostic.Suppress,
     };
 
-    /// <summary>Parse options for a project.</summary>
+    /// <summary>
+    /// Parse options for a project. Interceptors are on for the namespace of TabStudio's generated XAML loader,
+    /// which redirects Avalonia's <c>AvaloniaXamlLoader.Load(this)</c>.
+    /// </summary>
     /// <param name="optimize">Whether this is a release build, which defines <c>RELEASE</c> instead of <c>DEBUG</c>.</param>
-    public static CSharpParseOptions CreateParseOptions(bool optimize = false) => new(
+    public static CSharpParseOptions CreateParseOptions(bool optimize = false) => new CSharpParseOptions(
         languageVersion: LanguageVersion.Latest,
         documentationMode: DocumentationMode.Parse,
         kind: SourceCodeKind.Regular,
-        preprocessorSymbols: [.. CommonSymbols, optimize ? "RELEASE" : "DEBUG"]);
+        preprocessorSymbols: [.. CommonSymbols, optimize ? "RELEASE" : "DEBUG"])
+        .WithFeatures([new("InterceptorsNamespaces", Xaml.AvaloniaXamlGenerator.GeneratedNamespace)]);
 
     /// <summary>Compilation options for a project.</summary>
     /// <param name="kind">Whether to produce a program or a library.</param>

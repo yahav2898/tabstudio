@@ -70,12 +70,24 @@ public sealed partial class RoslynWorkspaceHost
         }
     }
 
-    /// <summary>The framework's and the project's analyzers. The caller holds the gate.</summary>
+    /// <summary>
+    /// The framework's and the project's analyzers. An Avalonia project gets TabStudio's XAML generator in place of
+    /// Avalonia's, which expects XAML compiled after the C# compiler. The caller holds the gate.
+    /// </summary>
     private IReadOnlyList<AnalyzerReference> GetAnalyzerReferences(TsProject project)
     {
-        var packages = _packageAnalyzers.GetValueOrDefault(project.FilePath) ?? [];
-        return packages.Count == 0 ? _frameworkAnalyzers : [.. _frameworkAnalyzers, .. packages];
+        IEnumerable<AnalyzerReference> packages = _packageAnalyzers.GetValueOrDefault(project.FilePath) ?? [];
+        if (!UsesAvaloniaXaml(project))
+        {
+            return [.. _frameworkAnalyzers, .. packages];
+        }
+
+        packages = packages.Where(a => !string.Equals(Path.GetFileName(a.FullPath), "Avalonia.Generators.dll", StringComparison.OrdinalIgnoreCase));
+        return [.. _frameworkAnalyzers, .. packages, Xaml.GeneratorReference.AvaloniaXaml];
     }
+
+    /// <summary>Whether a project uses Avalonia, whose <c>.axaml</c> files TabStudio's XAML generator compiles.</summary>
+    private static bool UsesAvaloniaXaml(TsProject project) => project.HasPackage("Avalonia");
 
     /// <summary>Pushes a project's analyzers into the loaded solution. The caller holds the gate.</summary>
     private void ApplyAnalyzerReferences(string projectFilePath)
