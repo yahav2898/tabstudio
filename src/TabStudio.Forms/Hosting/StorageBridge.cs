@@ -172,7 +172,7 @@ internal sealed class StorageBridge : IDisposable
             return extension[1..];
         }
 
-        return type?.Patterns?.FirstOrDefault() is { } pattern && Path.GetExtension(pattern) is { Length: > 1 } fromPattern && !fromPattern.Contains('*', StringComparison.Ordinal)
+        return type?.Patterns is { Count: > 0 } patterns && Path.GetExtension(patterns[0]) is { Length: > 1 } fromPattern && !fromPattern.Contains('*', StringComparison.Ordinal)
             ? fromPattern[1..]
             : null;
     }

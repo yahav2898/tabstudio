@@ -55,7 +55,9 @@ public sealed class CompilerServices
     public async Task<RoslynWorkspaceHost> CreateHostAsync()
     {
         var references = await GetReferencesAsync().ConfigureAwait(false);
-        return new RoslynWorkspaceHost(references);
+        var host = new RoslynWorkspaceHost(references);
+        host.SetWindowsFormsReferences(WindowsFormsReferences.References);
+        return host;
     }
 
     /// <summary>

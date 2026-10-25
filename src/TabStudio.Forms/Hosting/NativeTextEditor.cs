@@ -10,7 +10,6 @@ using Avalonia.Media.Immutable;
 using Avalonia.Styling;
 using TabStudio.Forms.Rendering;
 using TabStudio.Forms.Runtime;
-using AvaloniaControl = Avalonia.Controls.Control;
 using AvaloniaTextBox = Avalonia.Controls.TextBox;
 using DrawingColor = System.Drawing.Color;
 
@@ -154,7 +153,7 @@ internal sealed class NativeTextEditor : AvaloniaTextBox
         }
     }
 
-    private static AvaloniaControl BuildTemplate(AvaloniaTextBox box, INameScope scope)
+    private static Border BuildTemplate(AvaloniaTextBox box, INameScope scope)
     {
         var presenter = new TextPresenter { Name = "PART_TextPresenter" };
         presenter.Bind(TextPresenter.TextProperty, new TemplateBinding(TextProperty) { Mode = BindingMode.TwoWay });
@@ -185,7 +184,7 @@ internal sealed class NativeTextEditor : AvaloniaTextBox
         return background;
     }
 
-    private static IBrush Brush(DrawingColor color) => new ImmutableSolidColorBrush(Color.FromArgb(color.A, color.R, color.G, color.B));
+    private static ImmutableSolidColorBrush Brush(DrawingColor color) => new(Color.FromArgb(color.A, color.R, color.G, color.B));
 
     private void ApplyLook(EditorFrame field)
     {
@@ -200,8 +199,8 @@ internal sealed class NativeTextEditor : AvaloniaTextBox
         Background = Brush(field.BackColor.A == 0 ? DrawingColor.White : field.BackColor);
         TextAlignment = field.Alignment switch
         {
-            HorizontalAlignment.Center => TextAlignment.Center,
-            HorizontalAlignment.Right => TextAlignment.Right,
+            System.Windows.Forms.HorizontalAlignment.Center => TextAlignment.Center,
+            System.Windows.Forms.HorizontalAlignment.Right => TextAlignment.Right,
             _ => TextAlignment.Left,
         };
         AcceptsReturn = field.Multiline && field.AcceptsReturn;

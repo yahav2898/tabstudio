@@ -153,8 +153,8 @@ public sealed class CSharpCompiler
 
     /// <summary>
     /// The source of a project's global usings file, as the SDK generates it: the implicit usings of its SDK when
-    /// <c>ImplicitUsings</c> is enabled, without those its <c>Using Remove</c> items take away, then its
-    /// <c>Using Include</c> items.
+    /// <c>ImplicitUsings</c> is enabled, with those of Windows Forms when it uses it, without those its
+    /// <c>Using Remove</c> items take away, then its <c>Using Include</c> items.
     /// </summary>
     /// <param name="project">The project.</param>
     /// <returns>The source, or <see langword="null"/> when the project has no global usings.</returns>
@@ -162,7 +162,8 @@ public sealed class CSharpCompiler
     {
         ArgumentNullException.ThrowIfNull(project);
         var implicitUsings = project.ImplicitUsings
-            ? ImplicitUsingsFor(project.Sdk).Except(project.RemovedUsings, StringComparer.Ordinal).Select(name => new UsingInfo(name))
+            ? ImplicitUsingsFor(project.Sdk).Concat(WindowsForms.WindowsFormsProject.ImplicitUsings(project))
+                .Except(project.RemovedUsings, StringComparer.Ordinal).Select(name => new UsingInfo(name))
             : [];
         var usings = implicitUsings.Concat(project.Usings).Distinct().ToList();
         if (usings.Count == 0)
