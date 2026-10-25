@@ -7,7 +7,7 @@ using TabStudio.Testing;
 
 namespace TabStudio.Notebooks.Tests;
 
-[Collection(KernelCollection.Name)]
+[Collection(KernelTestGroup.Name)]
 public sealed class CSharpKernelTests : IDisposable
 {
     private readonly CSharpKernel _kernel = new();
@@ -126,6 +126,28 @@ public sealed class CSharpKernelTests : IDisposable
         Assert.Equal("to out\nno input\n", result.StreamText());
         Assert.Equal("to error\n", result.StreamText(StreamOutput.StandardError));
         Assert.Same(originalOut, Console.Out);
+    }
+
+    [Fact]
+    public async Task Background_work_of_a_finished_cell_does_not_show_up_in_later_cells()
+    {
+        await _kernel.RunAsync("""
+            var go = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            var later = Task.Run(async () =>
+            {
+                await go.Task;
+                Console.WriteLine("late");
+                display("late");
+            });
+            """);
+
+        var next = await _kernel.RunAsync("""
+            go.SetResult();
+            await later;
+            "done"
+            """);
+
+        Assert.Equal("done", Assert.IsType<DisplayOutput>(Assert.Single(next.Outputs)).Data.PlainText);
     }
 
     [Fact]

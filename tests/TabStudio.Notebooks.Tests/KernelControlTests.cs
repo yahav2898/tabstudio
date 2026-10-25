@@ -3,7 +3,7 @@ using TabStudio.Notebooks.Outputs;
 
 namespace TabStudio.Notebooks.Tests;
 
-[Collection(KernelCollection.Name)]
+[Collection(KernelTestGroup.Name)]
 public sealed class KernelControlTests : IDisposable
 {
     private static readonly TimeSpan Timeout = TimeSpan.FromSeconds(30);
@@ -75,6 +75,39 @@ public sealed class KernelControlTests : IDisposable
         Assert.Equal(1, result.ExecutionCount);
         Assert.Equal("still here\n", after.StreamText());
         Assert.Equal("2", after.ResultText());
+    }
+
+    [Fact]
+    public async Task A_cell_that_keeps_running_after_an_interrupt_does_not_write_into_the_next_cell()
+    {
+        using var kernel = new CSharpKernel(new CSharpKernelOptions { InterruptGracePeriod = TimeSpan.FromMilliseconds(50) });
+        var started = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        kernel.OutputReceived += (_, e) => started.TrySetResult();
+
+        var running = kernel.ExecuteAsync("""
+            var resume = new System.Threading.ManualResetEventSlim();
+            var resumed = new System.Threading.ManualResetEventSlim();
+            Console.WriteLine("started");
+            resume.Wait();
+            Console.WriteLine("leaked");
+            display("leaked too");
+            resumed.Set();
+            """);
+        await started.Task.WaitAsync(Timeout);
+        kernel.Interrupt();
+        var interrupted = await running.WaitAsync(Timeout);
+
+        // The interrupted cell is still blocked; this cell lets it go on and waits until it has written.
+        var next = await kernel.RunAsync("""
+            resume.Set();
+            resumed.Wait(TimeSpan.FromSeconds(10));
+            Console.WriteLine("next");
+            """);
+
+        Assert.Equal(CellExecutionStatus.Interrupted, interrupted.Status);
+        Assert.Equal("started\n", interrupted.StreamText());
+        Assert.Equal("next\n", next.StreamText());
+        Assert.Empty(next.Outputs.OfType<DisplayOutput>());
     }
 
     [Fact]

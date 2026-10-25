@@ -151,8 +151,10 @@ public sealed class ValueFormatterTests
 
     private sealed class Fragile
     {
-        public string Good => "fine";
+        private readonly string _message = "broken";
 
-        public string Bad => throw new InvalidOperationException("broken");
+        public string Good => _message.Length > 0 ? "fine" : string.Empty;
+
+        public string Bad => throw new InvalidOperationException(_message);
     }
 }

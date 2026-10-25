@@ -9,17 +9,36 @@ namespace TabStudio.Notebooks.Execution;
 /// cell's result.
 /// </summary>
 /// <remarks>
+/// <para>
+/// The run a piece of code belongs to is found through its execution context (<see cref="Current"/>), which
+/// flows into the tasks, timers and threads the cell starts. So output lands in the cell that produced it even
+/// when several cells' code is alive at once, such as a cell that was interrupted but kept running.
+/// </para>
+/// <para>
 /// Console text is buffered until a line ends, or until the cell displays a value, so output keeps its order
 /// and a cell that writes one character at a time does not flood the view. Once the run completes, anything
 /// else the cell's code writes or displays, for example from a background task, is dropped.
+/// </para>
 /// </remarks>
-internal sealed class CellRun(ValueFormatter formatter, CancellationToken cancellationToken, Action<NotebookOutput> published)
+internal sealed class CellRun(ValueFormatter formatter, Action<NotebookOutput> published, CancellationToken cancellationToken)
 {
+    private static readonly AsyncLocal<CellRun?> CurrentRun = new();
+
     private readonly Lock _gate = new();
     private readonly List<NotebookOutput> _outputs = [];
     private readonly StringBuilder _pendingOutput = new();
     private readonly StringBuilder _pendingError = new();
     private bool _completed;
+
+    /// <summary>
+    /// The run of the cell whose code is executing here, or <see langword="null"/> outside cells. Set once at the
+    /// start of a cell's thread; tasks and threads the cell starts inherit it.
+    /// </summary>
+    public static CellRun? Current
+    {
+        get => CurrentRun.Value;
+        set => CurrentRun.Value = value;
+    }
 
     /// <summary>Cancelled when the cell is interrupted; cells read it as <c>CancellationToken</c>.</summary>
     public CancellationToken CancellationToken { get; } = cancellationToken;

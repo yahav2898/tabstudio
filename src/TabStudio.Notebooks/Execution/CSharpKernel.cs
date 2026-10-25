@@ -21,10 +21,16 @@ namespace TabStudio.Notebooks.Execution;
 /// UI thread.
 /// </para>
 /// <para>
+/// Output belongs to the cell whose code produced it, including tasks and threads the cell started. Once a
+/// cell's run is over, anything its leftover code writes or displays is dropped rather than showing up under
+/// another cell.
+/// </para>
+/// <para>
 /// .NET cannot stop a thread from outside. <see cref="Interrupt"/> cancels the cell's token and, if the cell
 /// has not stopped after <see cref="CSharpKernelOptions.InterruptGracePeriod"/>, stops waiting for it and
-/// detaches its console; a cell that ignores its token keeps running in the background until it finishes.
-/// <see cref="RestartAsync"/> starts over with no state.
+/// detaches its output; a cell that ignores its token keeps running in the background until it finishes.
+/// <see cref="RestartAsync"/> starts over with no state. On Android the assemblies of earlier sessions stay
+/// loaded after a restart, because Mono cannot unload assemblies.
 /// </para>
 /// <para>
 /// Cells run inside TabStudio's process, so <c>Environment.Exit</c> and <c>Environment.FailFast</c> are rejected
@@ -33,9 +39,6 @@ namespace TabStudio.Notebooks.Execution;
 /// </remarks>
 public sealed class CSharpKernel : IDisposable
 {
-    /// <summary>The cell whose code is running on the current thread or task, read by <c>display</c> and <c>CancellationToken</c>.</summary>
-    private static readonly AsyncLocal<CellRun?> CurrentRun = new();
-
     private readonly SemaphoreSlim _gate = new(1, 1);
     private readonly Lock _stateGate = new();
     private CancellationTokenSource _interruption = new();
@@ -251,9 +254,9 @@ public sealed class CSharpKernel : IDisposable
         _gate.Dispose();
     }
 
-    private static void Display(object? value, string[] mimeTypes) => CurrentRun.Value?.Display(value, mimeTypes);
+    private static void Display(object? value, string[] mimeTypes) => CellRun.Current?.Display(value, mimeTypes);
 
-    private static CancellationToken CurrentCancellationToken() => CurrentRun.Value?.CancellationToken ?? CancellationToken.None;
+    private static CancellationToken CurrentCancellationToken() => CellRun.Current?.CancellationToken ?? CancellationToken.None;
 
     private static int RequireIndex(NotebookDocument document, string cellId)
     {
@@ -356,7 +359,7 @@ public sealed class CSharpKernel : IDisposable
         }
 
         var compilationDuration = stopwatch.Elapsed;
-        var cellRun = new CellRun(Options.Formatter, cancellationToken, output => OutputReceived?.Invoke(this, new CellOutputEventArgs(cell.Id, output)));
+        var cellRun = new CellRun(Options.Formatter, output => OutputReceived?.Invoke(this, new CellOutputEventArgs(cell.Id, output)), cancellationToken);
         var (status, exception) = run is null
             ? (CellExecutionStatus.Succeeded, null)
             : await RunOnThreadAsync(run, hasValue, executionCount, cellRun, cancellationToken).ConfigureAwait(false);
@@ -392,7 +395,7 @@ public sealed class CSharpKernel : IDisposable
         IDisposable redirection;
         try
         {
-            redirection = await ConsoleRedirection.RedirectAsync(cellRun, cancellationToken).ConfigureAwait(false);
+            redirection = await ConsoleRedirection.RedirectAsync(cancellationToken).ConfigureAwait(false);
         }
         catch (OperationCanceledException)
         {
@@ -426,7 +429,7 @@ public sealed class CSharpKernel : IDisposable
     /// <summary>The body of a cell's thread: runs the code, waits for it, and formats its result.</summary>
     private static (CellExecutionStatus Status, Exception? Exception) RunCell(Func<Task<object?>> run, bool hasValue, int executionCount, CellRun cellRun)
     {
-        CurrentRun.Value = cellRun;
+        CellRun.Current = cellRun;
         try
         {
             var value = run().GetAwaiter().GetResult();
