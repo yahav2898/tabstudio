@@ -51,7 +51,7 @@ public sealed class WorkspaceSnapshotTests : IDisposable
             [_temp.Resolve("Lib/Farewell.cs")] = "namespace Lib;\npublic static class Farewell { public static string Say() => \"Bye\"; }\n",
             [_temp.Resolve("App/Program.cs")] = "Console.WriteLine(Lib.Greeter.Greet() + Lib.Farewell.Say());\n",
         });
-        Assert.Empty((await snapshot.GetDiagnosticsAsync()).Where(d => d.Severity == DiagnosticSeverityLevel.Error));
+        Assert.DoesNotContain(await snapshot.GetDiagnosticsAsync(), d => d.Severity == DiagnosticSeverityLevel.Error);
 
         var deleted = _host.CreateSnapshot(new Dictionary<string, string?> { [_temp.Resolve("Lib/Greeter.cs")] = null });
         Assert.Contains(await deleted.GetDiagnosticsAsync(), d => d.Id == "CS0234" || d.Id == "CS0103");
@@ -67,10 +67,10 @@ public sealed class WorkspaceSnapshotTests : IDisposable
         var app = snapshot.FindProject(_temp.Resolve("App/App.csproj"))!;
 
         var build = await new ProjectBuilder(snapshot).BuildAsync(app);
+        Assert.True(build.Success, string.Join("\n", build.Diagnostics));
         var console = new CapturingConsole();
         var run = await new ProgramRunner().RunAsync(build.EntryAssembly!, build.Dependencies, [], console);
 
-        Assert.True(build.Success);
         Assert.Equal(RunOutcome.Completed, run.Outcome);
         Assert.Contains("Hello from the snapshot", console.Output, StringComparison.Ordinal);
         Assert.Equal(new[] { "Lib", "App" }, snapshot.GetBuildOrder(app.FilePath).Select(p => p.Name));
