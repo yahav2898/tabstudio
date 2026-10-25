@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -73,16 +74,16 @@ public sealed class GlobPattern
             {
                 // "**/" matches zero or more whole folders; a trailing "**" matches everything below.
                 var followedBySeparator = i + 2 < pattern.Length && pattern[i + 2] == Path.DirectorySeparatorChar;
-                builder.Append(followedBySeparator ? $"(?:.*{separator})?" : ".*");
+                builder.Append(followedBySeparator ? "(?:.*" + separator + ")?" : ".*");
                 i += followedBySeparator ? 2 : 1;
             }
             else if (c == '*')
             {
-                builder.Append($"[^{separator}]*");
+                builder.Append(CultureInfo.InvariantCulture, $"[^{separator}]*");
             }
             else if (c == '?')
             {
-                builder.Append($"[^{separator}]");
+                builder.Append(CultureInfo.InvariantCulture, $"[^{separator}]");
             }
             else
             {

@@ -1,6 +1,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using TabStudio.Core.Diagnostics;
+using RoslynCompilation = Microsoft.CodeAnalysis.Compilation;
 
 namespace TabStudio.Compilation;
 
@@ -24,7 +25,7 @@ public static class InProcessSafetyAnalyzer
     /// <param name="compilation">The compilation to check.</param>
     /// <param name="projectName">The project name to attach to diagnostics.</param>
     /// <param name="cancellationToken">Cancels the analysis.</param>
-    public static IReadOnlyList<BuildDiagnostic> Analyze(Compilation compilation, string? projectName, CancellationToken cancellationToken = default)
+    public static IReadOnlyList<BuildDiagnostic> Analyze(RoslynCompilation compilation, string? projectName, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(compilation);
 
@@ -38,7 +39,7 @@ public static class InProcessSafetyAnalyzer
     /// <param name="tree">The tree to check.</param>
     /// <param name="projectName">The project name to attach to diagnostics.</param>
     /// <param name="cancellationToken">Cancels the analysis.</param>
-    public static IReadOnlyList<BuildDiagnostic> AnalyzeTree(Compilation compilation, SyntaxTree tree, string? projectName, CancellationToken cancellationToken = default)
+    public static IReadOnlyList<BuildDiagnostic> AnalyzeTree(RoslynCompilation compilation, SyntaxTree tree, string? projectName, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(compilation);
         ArgumentNullException.ThrowIfNull(tree);

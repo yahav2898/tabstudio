@@ -98,10 +98,10 @@ public sealed record StackComponent(StackKind Kind, string DisplayName, string E
 /// Everything detected in a repository.
 /// </summary>
 /// <param name="Components">The detected technologies, one entry per <see cref="StackKind"/>, in a stable order.</param>
-public sealed record DetectedStack(IReadOnlyList<StackComponent> Components)
+public sealed record StackProfile(IReadOnlyList<StackComponent> Components)
 {
     /// <summary>An empty result.</summary>
-    public static DetectedStack Empty { get; } = new([]);
+    public static StackProfile Empty { get; } = new([]);
 
     /// <summary>Whether a technology was detected.</summary>
     /// <param name="kind">The technology to look for.</param>

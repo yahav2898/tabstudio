@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.Text;
 using TabStudio.Core.Diagnostics;
+using RoslynCompilation = Microsoft.CodeAnalysis.Compilation;
 
 namespace TabStudio.Compilation;
 
@@ -115,7 +116,7 @@ public sealed class CSharpCompiler
     /// <param name="projectName">The project name to attach to diagnostics.</param>
     /// <param name="cancellationToken">Cancels emitting.</param>
     internal static CompilationResult Emit(
-        Compilation compilation,
+        RoslynCompilation compilation,
         bool checkInProcessSafety,
         Stopwatch? stopwatch,
         string? projectName,

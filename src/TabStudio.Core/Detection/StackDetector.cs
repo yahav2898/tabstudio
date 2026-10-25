@@ -36,12 +36,12 @@ public static class StackDetector
     /// <param name="rootDirectory">The repository root.</param>
     /// <param name="projects">Projects already loaded for the workspace, used to detect UI frameworks. Optional.</param>
     /// <param name="maxDepth">How many folder levels below the root to look at.</param>
-    public static DetectedStack Detect(string rootDirectory, IEnumerable<ProjectInfo>? projects = null, int maxDepth = 3)
+    public static StackProfile Detect(string rootDirectory, IEnumerable<ProjectInfo>? projects = null, int maxDepth = 3)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(rootDirectory);
         if (!Directory.Exists(rootDirectory))
         {
-            return DetectedStack.Empty;
+            return StackProfile.Empty;
         }
 
         var found = new Dictionary<StackKind, StackComponent>();
@@ -63,7 +63,7 @@ public static class StackDetector
             }
         }
 
-        return new DetectedStack(found.Values.OrderBy(c => c.Kind).ToList());
+        return new StackProfile(found.Values.OrderBy(c => c.Kind).ToList());
     }
 
     private static IEnumerable<StackComponent> InspectFile(string fullPath, string relativePath)
@@ -132,7 +132,7 @@ public static class StackDetector
         }
     }
 
-    private static IEnumerable<StackComponent> InspectPackageJson(string fullPath, string relativePath)
+    private static List<StackComponent> InspectPackageJson(string fullPath, string relativePath)
     {
         var result = new List<StackComponent> { new(StackKind.Node, "Node.js", relativePath) };
 
