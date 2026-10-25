@@ -42,6 +42,11 @@ internal static class ConflictStore
 
     public static void Delete(string root, string path)
     {
+        if (!Directory.Exists(Folder(root)))
+        {
+            return;
+        }
+
         var name = Path.Combine(Folder(root), Key(path));
         File.Delete(name + ".mine");
         File.Delete(name + ".deleted");

@@ -103,6 +103,7 @@ public static class TextMerge
                 AppendConflict(output, ourRegion, theirRegion, newline);
             }
 
+
             basePosition = regionEnd;
         }
 
@@ -144,7 +145,36 @@ public static class TextMerge
         return builder.ToString();
     }
 
-    private static void AppendConflict(StringBuilder output, string ours, string theirs, string newline)
+    /// <summary>
+    /// Writes a conflict. Lines both versions start or end with are written once, outside the markers, as
+    /// Git's "zealous" merge does, so a file added on both sides only conflicts where it really differs.
+    /// </summary>
+    private static void AppendConflict(StringBuilder output, string oursText, string theirsText, string newline)
+    {
+        var ours = LineDiff.SplitLines(oursText);
+        var theirs = LineDiff.SplitLines(theirsText);
+        var prefix = 0;
+        while (prefix < ours.Count && prefix < theirs.Count && ours[prefix] == theirs[prefix])
+        {
+            prefix++;
+        }
+
+        var suffix = 0;
+        while (suffix < ours.Count - prefix && suffix < theirs.Count - prefix && ours[^(suffix + 1)] == theirs[^(suffix + 1)])
+        {
+            suffix++;
+        }
+
+        AppendLines(output, ours, 0, prefix);
+        AppendMarkers(
+            output,
+            string.Concat(ours.Skip(prefix).Take(ours.Count - prefix - suffix)),
+            string.Concat(theirs.Skip(prefix).Take(theirs.Count - prefix - suffix)),
+            newline);
+        AppendLines(output, ours, ours.Count - suffix, ours.Count);
+    }
+
+    private static void AppendMarkers(StringBuilder output, string ours, string theirs, string newline)
     {
         EnsureLineEnd(output, newline);
         output.Append(OursMarker).Append(newline);
