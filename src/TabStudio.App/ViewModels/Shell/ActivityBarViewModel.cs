@@ -48,7 +48,7 @@ public sealed partial class ActivityBarViewModel : ObservableObject
     /// <param name="id">Its identifier.</param>
     public void Select(string id)
     {
-        if (Find(id) is { } item)
+        if (Find(id) is { Command: null } item)
         {
             Choose(item);
             IsSideBarOpen = true;
@@ -62,6 +62,16 @@ public sealed partial class ActivityBarViewModel : ObservableObject
     {
         if (item is null || !item.IsAvailable)
         {
+            return;
+        }
+
+        if (item.Command is { } command)
+        {
+            if (command.CanExecute(null))
+            {
+                command.Execute(null);
+            }
+
             return;
         }
 
