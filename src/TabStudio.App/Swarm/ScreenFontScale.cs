@@ -69,8 +69,10 @@ public static class ScreenFontScale
     private static void Coerce<T>()
         where T : AvaloniaObject
     {
-        var inherited = TextElement.FontSizeProperty.GetMetadata(typeof(T)).CoerceValue;
-        TextElement.FontSizeProperty.OverrideMetadata<T>(new StyledPropertyMetadata<double>(coerce: (element, size) =>
+        // The default size goes with the override: Avalonia checks it, and a missing one reads as 0.
+        var metadata = TextElement.FontSizeProperty.GetMetadata(typeof(T));
+        var inherited = metadata.CoerceValue;
+        TextElement.FontSizeProperty.OverrideMetadata<T>(new StyledPropertyMetadata<double>(metadata.DefaultValue, coerce: (element, size) =>
         {
             size = inherited?.Invoke(element, size) ?? size;
 
