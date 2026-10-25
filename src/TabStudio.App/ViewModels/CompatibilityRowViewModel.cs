@@ -29,6 +29,9 @@ public sealed record CompatibilityRowViewModel(CompatibilityReport Report)
 
     /// <summary>Whether it cannot run on this device as it is.</summary>
     public bool IsBlocked => !IsReady && !IsLibrary;
+
+    /// <summary>Whether code changes would make it run here, which "Fix with Agent" asks Claude to make.</summary>
+    public bool CanFixWithAgent => Report.Status == CompatibilityStatus.NeedsChanges;
 }
 
 /// <summary>One technology detected in a workspace, shown as a chip.</summary>

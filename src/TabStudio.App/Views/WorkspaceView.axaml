@@ -79,6 +79,7 @@
             <MenuItem Header="_Solution Explorer" InputGesture="Ctrl+Alt+L" Command="{Binding ToggleSideBarCommand}" />
             <MenuItem Header="_Git Changes" Command="{Binding ShowGitChangesCommand}" />
             <MenuItem Header="_Test Explorer (Ctrl+E, T)" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}" />
+            <MenuItem Header="Claude _Agent" Command="{Binding ShowAgentCommand}" />
             <MenuItem Header="_Error List" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" />
             <MenuItem Header="_Output" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Output}" />
             <MenuItem Header="_Compatibility Doctor" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Compatibility}" />
@@ -529,6 +530,11 @@
           <views:TestExplorerView x:Name="TestExplorer" DataContext="{Binding Tests}" />
         </Panel>
 
+        <!-- The agent, like the Test Explorer, takes the whole side bar. -->
+        <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsAgentSelected}">
+          <views:AgentPanelView DataContext="{Binding Agent}" />
+        </Panel>
+
         <!-- Tool window tabs, at the bottom of the dock as in Visual Studio; they scroll when the side bar is narrow. -->
         <Border Grid.Row="3" Height="34" Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0">
           <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
@@ -543,6 +549,16 @@
                   <TextBlock Text="Test Explorer" VerticalAlignment="Center" />
                   <Border Classes="pill" Background="{DynamicResource Brush.Error}" IsVisible="{Binding Tests.HasFailures}">
                     <TextBlock Text="{Binding Tests.FailedCount}" Foreground="{DynamicResource Brush.Window}" VerticalAlignment="Center" />
+                  </Border>
+                </StackPanel>
+              </Button>
+              <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsAgentSelected}"
+                      Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.Agent}">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="12" />
+                  <TextBlock Text="Claude" VerticalAlignment="Center" />
+                  <Border Classes="pill" Background="{DynamicResource Brush.Accent}" IsVisible="{Binding Agent.HasChanges}">
+                    <TextBlock Text="{Binding Agent.Changes.Count}" Foreground="{DynamicResource Brush.OnAccent}" VerticalAlignment="Center" />
                   </Border>
                 </StackPanel>
               </Button>

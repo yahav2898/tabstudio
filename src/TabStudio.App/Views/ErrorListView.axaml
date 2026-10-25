@@ -45,7 +45,7 @@
 
     <!-- Column headers -->
     <Border DockPanel.Dock="Top" Height="26" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1">
-      <Grid ColumnDefinitions="34,80,*,130,160,50" Margin="12,0" VerticalAlignment="Center">
+      <Grid ColumnDefinitions="34,80,*,130,160,50,40" Margin="12,0" VerticalAlignment="Center">
         <TextBlock Grid.Column="1" Classes="muted small" Text="Code" />
         <TextBlock Grid.Column="2" Classes="muted small" Text="Description" />
         <TextBlock Grid.Column="3" Classes="muted small" Text="Project" />
@@ -62,7 +62,7 @@
                ScrollViewer.HorizontalScrollBarVisibility="Disabled">
         <ListBox.ItemTemplate>
           <DataTemplate DataType="vm:ErrorItemViewModel">
-            <Grid ColumnDefinitions="34,80,*,130,160,50" Height="28" Margin="12,0" Background="Transparent"
+            <Grid ColumnDefinitions="34,80,*,130,160,50,40" Height="28" Margin="12,0" Background="Transparent"
                   ToolTip.Tip="{Binding Description}">
               <Panel>
                 <controls:StrokeIcon Data="{StaticResource Icon.Error}" Size="14" Foreground="{DynamicResource Brush.Error}" IsVisible="{Binding IsError}" HorizontalAlignment="Left" />
@@ -74,6 +74,11 @@
               <TextBlock Grid.Column="3" FontSize="12.5" Text="{Binding Project}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
               <TextBlock Grid.Column="4" FontSize="12.5" Text="{Binding File}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
               <TextBlock Grid.Column="5" FontSize="12.5" Text="{Binding Line}" VerticalAlignment="Center" />
+              <Button Grid.Column="6" Theme="{StaticResource ToolButton}" Width="32" Height="26" MinWidth="32" MinHeight="26" Padding="0"
+                      ToolTip.Tip="Fix with Agent" IsVisible="{Binding CanFixWithAgent}"
+                      Command="{Binding $parent[ListBox].((vm:ErrorListViewModel)DataContext).FixWithAgentCommand}" CommandParameter="{Binding}">
+                <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="14" Foreground="{DynamicResource Brush.Accent}" />
+              </Button>
             </Grid>
           </DataTemplate>
         </ListBox.ItemTemplate>

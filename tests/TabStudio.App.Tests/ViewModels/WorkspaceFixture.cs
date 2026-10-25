@@ -10,14 +10,16 @@ internal sealed class WorkspaceFixture : IDisposable
 {
     private readonly TempDirectory _temp = new();
 
-    public WorkspaceFixture(DeviceInfo? device = null)
+    public WorkspaceFixture(DeviceInfo? device = null, HttpClient? agentHttp = null)
     {
         Paths = new AppPaths(_temp.Path);
         DeviceStatus = new DefaultDeviceStatus(device ?? new DeviceInfo(8L * 1024 * 1024 * 1024, 8, IsLowRamDevice: false));
         Profile = DeviceProfile.For(DeviceStatus.Device);
         Compiler = new CompilerServices(Paths);
         Sessions = new SessionStore(Paths);
-        Workspace = new WorkspaceViewModel(Compiler, DeviceStatus, Profile, new AvaloniaUiDispatcher(), Sessions, Paths);
+        Workspace = agentHttp is null
+            ? new WorkspaceViewModel(Compiler, DeviceStatus, Profile, new AvaloniaUiDispatcher(), Sessions, Paths)
+            : new WorkspaceViewModel(Compiler, DeviceStatus, Profile, new AvaloniaUiDispatcher(), Sessions, Paths) { AgentHttp = agentHttp };
     }
 
     public AppPaths Paths { get; }

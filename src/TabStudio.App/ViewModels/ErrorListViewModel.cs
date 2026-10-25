@@ -36,6 +36,9 @@ public sealed record ErrorItemViewModel(BuildDiagnostic Diagnostic)
 
     /// <summary>Whether tapping the row can open the file.</summary>
     public bool HasLocation => Diagnostic.Location is not null;
+
+    /// <summary>Whether the agent can be asked to fix it: an error or a warning.</summary>
+    public bool CanFixWithAgent => Diagnostic.Severity >= DiagnosticSeverityLevel.Warning;
 }
 
 /// <summary>
@@ -115,6 +118,9 @@ public sealed partial class ErrorListViewModel : ObservableObject
 
     /// <summary>Raised when the user opens a row; the workspace navigates to the location.</summary>
     public event EventHandler<BuildDiagnostic>? NavigateRequested;
+
+    /// <summary>Raised when the user asks the agent to fix a row's problem; the workspace hands it to the agent.</summary>
+    public event EventHandler<BuildDiagnostic>? FixWithAgentRequested;
 
     /// <summary>All diagnostics with a location in a file, before filtering.</summary>
     public IEnumerable<BuildDiagnostic> AllDiagnostics =>
@@ -198,6 +204,16 @@ public sealed partial class ErrorListViewModel : ObservableObject
         if (item?.HasLocation == true)
         {
             NavigateRequested?.Invoke(this, item.Diagnostic);
+        }
+    }
+
+    /// <summary>"Fix with Agent" on a row: asks Claude to fix the error or warning.</summary>
+    [RelayCommand]
+    private void FixWithAgent(ErrorItemViewModel? item)
+    {
+        if (item is not null)
+        {
+            FixWithAgentRequested?.Invoke(this, item.Diagnostic);
         }
     }
 
