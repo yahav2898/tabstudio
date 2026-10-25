@@ -47,3 +47,28 @@ jobs:
           name: pic-${{ matrix.compiler }}-${{ matrix.runner }}
           path: ci-out/pic/
           if-no-files-found: error
+
+  report:
+    name: Compare compiler measurements
+    needs: spike
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: pic-*
+          path: measurements
+      - name: Compare ARM64 and x86-64
+        run: |
+          mkdir -p ci-out
+          python3 build/pic/report.py measurements --output ci-out/PIC-compiler-spike.md
+      - name: Add the measurements to the workflow summary
+        if: always()
+        run: cat ci-out/PIC-compiler-spike.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pic-spike-report
+          path: ci-out/PIC-compiler-spike.md
+          if-no-files-found: error

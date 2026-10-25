@@ -14,6 +14,9 @@ from unittest.mock import patch
 spec = importlib.util.spec_from_file_location("spike", Path(__file__).with_name("spike.py"))
 spike = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(spike)
+report_spec = importlib.util.spec_from_file_location("report", Path(__file__).with_name("report.py"))
+report = importlib.util.module_from_spec(report_spec)
+report_spec.loader.exec_module(report)
 
 
 class SpikeTests(unittest.TestCase):
@@ -58,6 +61,28 @@ class SpikeTests(unittest.TestCase):
                 self.assertRegex(asset["sha256"], r"^[0-9a-f]{64}$")
                 self.assertTrue(asset["url"].startswith("https://"))
                 self.assertTrue(asset["version"])
+
+    def test_missing_or_failed_architectures_cannot_pass_the_report(self):
+        with tempfile.TemporaryDirectory() as folder:
+            text, success = report.report(Path(folder))
+            self.assertFalse(success)
+            self.assertEqual(4, text.count("FAILED / missing"))
+
+    def test_report_compares_warm_means_and_firmware_for_both_compilers(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            for compiler in ["xc8", "xc32"]:
+                for arch, times in [("x86_64", [9, 1, 3]), ("aarch64", [19, 4, 8])]:
+                    dest = root / f"{compiler}-{arch}"
+                    dest.mkdir()
+                    (dest / "result.json").write_text(json.dumps({
+                        "compiler": compiler, "hostArchitecture": arch, "compileSeconds": times,
+                        "success": True, "installSeconds": 25, "hexSha256": "abc", "cpu": "CPU model",
+                    }))
+            text, success = report.report(root)
+            self.assertTrue(success)
+            self.assertEqual(2, text.count("**3.00×**"))
+            self.assertEqual(2, text.count("Firmware HEX hashes match: **True**"))
 
 
 if __name__ == "__main__":

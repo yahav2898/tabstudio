@@ -112,7 +112,9 @@ def prepare(work, out, compiler):
                  "PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
                  f"LD_LIBRARY_PATH=/usr/lib/{native}",
                  "BOX64_LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu",
-                 "BOX64_LOG=1", "BOX64_NOBANNER=0", "BOX64_DYNAREC=1", "BOX64_DYNACACHE=0"]
+                 # Compiler/installer subprocesses parse each other's stdout. A box64
+                 # banner is not compiler output and breaks those integrity checks.
+                 "BOX64_LOG=0", "BOX64_NOBANNER=1", "BOX64_DYNAREC=1", "BOX64_DYNACACHE=0"]
     prefix = [str(proot), "--kill-on-exit", "--link2symlink", "--sysvipc", "-L", "-0",
               "-r", str(root), "-b", "/dev", "-b", "/proc", "-b", "/sys",
               "-b", f"{root / 'tmp'}:/dev/shm", "-b", f"{cache}:/downloads",
@@ -148,8 +150,22 @@ def spike(args):
         # Old releases use FreeMode; new releases are license free and omit this option.
         if "--LicenseType" in help_text:
             command += ["--LicenseType", "FreeMode"]
-        _, result["installSeconds"], _ = run(command, out / "installer.log", env=env, timeout=1200)
+        code, elapsed, _ = run(command, out / "installer.log", env=env, timeout=1200, check=False)
+        result.update(installSeconds=elapsed, installerExitCode=code, installMethod="installer")
         compiler = "xc8-cc" if args.compiler == "xc8" else "xc32-gcc"
+        if code:
+            # Microchip also publishes a byte-verified compressed distribution. The
+            # installer's self-check must not prevent testing the compiler itself.
+            archive = fetch(LOCK[args.compiler + "-archive"], cache, args.compiler + ".tar.xz")
+            unpacked = root / "opt/tabstudio/archives" / args.compiler
+            unpacked.mkdir(parents=True, exist_ok=True)
+            run(["tar", "--no-same-owner", "-xJf", str(archive), "-C", str(unpacked)],
+                out / "archive-extract.log", env=env)
+            binaries = list(unpacked.rglob("bin/" + compiler))
+            if len(binaries) != 1:
+                raise RuntimeError(f"Expected one {compiler} in the official archive, found {len(binaries)}")
+            dest = "/" + binaries[0].parent.parent.relative_to(root).as_posix()
+            result["installMethod"] = "official archive (installer self-check failed)"
         program = f"{dest}/bin/{compiler}"
         _, _, result["version"] = run([*prefix, *translate, program, "--version"], out / "version.log", env=env)
         family = "pic18" if args.compiler == "xc8" else "pic32"
