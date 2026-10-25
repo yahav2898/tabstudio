@@ -174,7 +174,7 @@ public sealed class CSharpCompiler
     {
         ArgumentNullException.ThrowIfNull(project);
         var implicitUsings = project.ImplicitUsings
-            ? ImplicitUsingsFor(project.Sdk).Except(project.RemovedUsings, StringComparer.Ordinal).Select(name => new UsingInfo(name))
+            ? ImplicitUsingsFor(project.Sdk).Except([.. project.RemovedUsings, .. Wpf.WpfProject.RemovedUsings(project)], StringComparer.Ordinal).Select(name => new UsingInfo(name))
             : [];
         var usings = implicitUsings.Concat(project.Usings).Distinct().ToList();
         if (usings.Count == 0)

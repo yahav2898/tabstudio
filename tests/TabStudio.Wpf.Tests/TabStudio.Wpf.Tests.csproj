@@ -19,4 +19,10 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <!-- Apps written for WPF, which the tests build on OpenSilver. They are compiled by the tests, not by this project. -->
+  <ItemGroup>
+    <Compile Remove="TestData\**" />
+    <None Include="TestData\**\*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>

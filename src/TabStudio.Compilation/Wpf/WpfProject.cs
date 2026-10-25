@@ -2,6 +2,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
+using Microsoft.CodeAnalysis.CSharp;
 using TsProject = TabStudio.Core.Workspaces.ProjectInfo;
 
 namespace TabStudio.Compilation.Wpf;
@@ -46,6 +47,41 @@ public static class WpfProject
     {
         ArgumentNullException.ThrowIfNull(project);
         return IsTrue(project.GetProperty("UseWPF"));
+    }
+
+    /// <summary>The implicit usings a project's SDK takes away: WPF's, for a WPF project, none otherwise.</summary>
+    /// <param name="project">The project.</param>
+    public static IReadOnlyList<string> RemovedUsings(TsProject project) => UsesWpf(project) ? RemovedImplicitUsings : [];
+
+    /// <summary>A project's parse options with the <c>OPENSILVER</c> symbol when it is a WPF project.</summary>
+    /// <param name="project">The project, or <see langword="null"/>.</param>
+    /// <param name="options">The options without it.</param>
+    public static CSharpParseOptions ParseOptions(TsProject? project, CSharpParseOptions options)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+        return project is not null && UsesWpf(project) && !options.PreprocessorSymbolNames.Contains(OpenSilverSymbol, StringComparer.Ordinal)
+            ? options.WithPreprocessorSymbols(options.PreprocessorSymbolNames.Append(OpenSilverSymbol))
+            : options;
+    }
+
+    /// <summary>
+    /// Where the second pass of OpenSilver's XAML compiler writes the C# of each XAML file, under its path in the
+    /// project: <c>MainWindow.xaml</c> becomes <c>MainWindow.xaml.g.cs</c> in this folder.
+    /// </summary>
+    /// <param name="project">The project.</param>
+    public static string SecondPassDirectory(TsProject project) => Path.Combine(OutputDirectory(project), "xaml");
+
+    /// <summary>The XAML file the second pass generated a C# file from, or <see langword="null"/> for any other file.</summary>
+    /// <param name="project">The project.</param>
+    /// <param name="generatedFilePath">A source file of the project's build.</param>
+    public static string? SecondPassSource(TsProject project, string generatedFilePath)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+        ArgumentNullException.ThrowIfNull(generatedFilePath);
+        var directory = SecondPassDirectory(project) + Path.DirectorySeparatorChar;
+        return generatedFilePath.StartsWith(directory, StringComparison.Ordinal) && generatedFilePath.EndsWith(".xaml.g.cs", StringComparison.OrdinalIgnoreCase)
+            ? Path.Combine(project.DirectoryPath, generatedFilePath[directory.Length..^".g.cs".Length])
+            : null;
     }
 
     /// <summary>The folder of a WPF project where TabStudio writes what it builds, as the SDK writes to <c>obj</c>.</summary>

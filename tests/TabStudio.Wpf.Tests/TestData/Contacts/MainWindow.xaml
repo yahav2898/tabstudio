@@ -1,0 +1,45 @@
+<Window x:Class="Contacts.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Contacts"
+        mc:Ignorable="d"
+        Title="Contacts" Height="520" Width="760"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="240" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.ColumnSpan="2" Style="{StaticResource Heading}" Text="Contacts" />
+
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,0,0,12">
+            <TextBox x:Name="NameBox" Width="180" Margin="0,0,8,0" Text="{Binding NewName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox Width="200" Margin="0,0,8,0" Text="{Binding NewEmail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <Button Style="{StaticResource Command}" Content="Add" Command="{Binding AddCommand}" />
+            <Button Style="{StaticResource Command}" Content="Delete" Command="{Binding DeleteCommand}" />
+            <Button Style="{StaticResource Command}" Content="About" Click="About_Click" />
+        </StackPanel>
+
+        <DataGrid x:Name="People" Grid.Row="2" ItemsSource="{Binding Contacts}" SelectedItem="{Binding Selected, Mode=TwoWay}"
+                  AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" />
+                <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="*" />
+                <DataGridTextColumn Header="Favorite" Binding="{Binding IsFavorite, Converter={StaticResource YesNo}}" Width="90" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <local:ContactCard Grid.Row="2" Grid.Column="1" Margin="12,0,0,0" DataContext="{Binding Selected}" />
+
+        <TextBlock Grid.Row="3" Grid.ColumnSpan="2" Margin="0,12,0,0" Foreground="{StaticResource SubtleBrush}" Text="{Binding Summary}" />
+    </Grid>
+</Window>

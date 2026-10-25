@@ -134,6 +134,33 @@ public sealed class HeadlessChrome : IAsyncDisposable
     public Task ClickAsync(string selector) =>
         EvaluateAsync($"document.querySelector({JsonSerializer.Serialize(selector)}).click()");
 
+    /// <summary>
+    /// Clicks the innermost element that shows a text, with the mouse as a user would: a press and a release at its
+    /// center, for apps that listen for pointer events rather than <c>click</c>, as OpenSilver does.
+    /// </summary>
+    /// <param name="text">The element's whole text, trimmed.</param>
+    /// <exception cref="InvalidOperationException">No element shows the text.</exception>
+    public async Task ClickTextAsync(string text)
+    {
+        var center = await EvaluateAsync($$"""
+            (() => {
+                const text = {{JsonSerializer.Serialize(text)}};
+                const matches = [...document.querySelectorAll('body *')].filter(e => e.textContent.trim() === text && e.getClientRects().length > 0);
+                const element = matches.find(e => ![...e.children].some(c => c.textContent.trim() === text)) ?? matches[0];
+                if (!element) { return null; }
+                const box = element.getBoundingClientRect();
+                return { x: box.left + box.width / 2, y: box.top + box.height / 2 };
+            })()
+            """) ?? throw new InvalidOperationException($"No element shows \"{text}\".");
+        var x = center["x"]!.GetValue<double>();
+        var y = center["y"]!.GetValue<double>();
+        await SendAsync("Input.dispatchMouseEvent", new JsonObject { ["type"] = "mouseMoved", ["x"] = x, ["y"] = y });
+        foreach (var type in new[] { "mousePressed", "mouseReleased" })
+        {
+            await SendAsync("Input.dispatchMouseEvent", new JsonObject { ["type"] = type, ["x"] = x, ["y"] = y, ["button"] = "left", ["clickCount"] = 1 });
+        }
+    }
+
     /// <summary>Waits until a JavaScript condition is true.</summary>
     /// <param name="condition">The condition.</param>
     /// <param name="timeout">How long to wait.</param>

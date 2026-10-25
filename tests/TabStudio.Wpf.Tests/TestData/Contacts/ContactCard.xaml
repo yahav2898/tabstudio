@@ -1,0 +1,12 @@
+<UserControl x:Class="Contacts.ContactCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Border BorderBrush="{StaticResource AccentBrush}" BorderThickness="1" CornerRadius="4" Padding="12">
+        <StackPanel>
+            <TextBlock Text="Selected" FontWeight="SemiBold" Margin="0,0,0,8" />
+            <TextBlock x:Name="CardName" Text="{Binding Name}" FontSize="16" />
+            <TextBlock Text="{Binding Email}" Foreground="{StaticResource SubtleBrush}" />
+            <CheckBox Content="Favorite" IsChecked="{Binding IsFavorite, Mode=TwoWay}" Margin="0,8,0,0" />
+        </StackPanel>
+    </Border>
+</UserControl>

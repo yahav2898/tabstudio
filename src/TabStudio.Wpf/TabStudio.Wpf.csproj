@@ -26,4 +26,9 @@
     <InternalsVisibleTo Include="TabStudio.Wpf.Tests" />
   </ItemGroup>
 
+  <!-- The page a WPF app runs in, in the web preview, with TabStudio's title bar and console relay. -->
+  <ItemGroup>
+    <EmbeddedResource Include="Browser\Web\*" LogicalName="Wpf/Browser/%(Filename)%(Extension)" />
+  </ItemGroup>
+
 </Project>
