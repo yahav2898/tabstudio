@@ -59,6 +59,10 @@
           <Button Theme="{StaticResource ToolButton}" Classes="tool" ToolTip.Tip="Add a device" Command="{Binding AddDeviceCommand}">
             <controls:StrokeIcon Data="{StaticResource Icon.Plus}" Size="15" />
           </Button>
+          <Button Theme="{StaticResource ToolButton}" Classes="tool" ToolTip.Tip="Device Matrix: every screen at once" Command="{Binding OpenDeviceMatrixCommand}"
+                  IsVisible="{Binding OpenDeviceMatrixCommand, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <controls:StrokeIcon Data="{StaticResource Icon.DeviceMatrix}" Size="16" />
+          </Button>
           <Button Theme="{StaticResource ToolButton}" Classes="tool" ToolTip.Tip="Record a UI test" Command="{Binding RecordTestCommand}">
             <Ellipse Width="11" Height="11" Fill="{DynamicResource Brush.Error}" />
           </Button>
@@ -68,6 +72,7 @@
               <MenuFlyout Placement="BottomEdgeAlignedRight">
                 <MenuItem Header="Add a Device…" Command="{Binding AddDeviceCommand}" />
                 <MenuItem Header="Record a UI Test" Command="{Binding RecordTestCommand}" />
+                <MenuItem Header="Device Matrix" Command="{Binding OpenDeviceMatrixCommand}" IsVisible="{Binding OpenDeviceMatrixCommand, Converter={x:Static ObjectConverters.IsNotNull}}" />
                 <Separator />
                 <MenuItem Header="Start the Swarm" Command="{Binding StartCommand}" IsVisible="{Binding !IsOn}" />
                 <MenuItem Header="Stop the Swarm" Command="{Binding StopCommand}" IsVisible="{Binding IsOn}" />

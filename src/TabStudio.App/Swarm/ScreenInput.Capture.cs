@@ -8,10 +8,15 @@ using Avalonia.VisualTree;
 namespace TabStudio.App.Swarm;
 
 /// <summary>
-/// Capturing a person's input: taps, long presses and right clicks from Avalonia's gestures, scrolls from the scroll
-/// viewers they move, typed text, and keys that do something other than type, such as Enter or Ctrl+A. The second tap
-/// of a double tap is a tap too, so quick taps on a counter are each captured, and replay as quick taps.
+/// Capturing a person's input: taps and right clicks from each finger's or button's own press and release, long
+/// presses from Avalonia's holding gesture, scrolls from the scroll viewers they move, typed text, and keys that do
+/// something other than type, such as Enter or Ctrl+A.
 /// </summary>
+/// <remarks>
+/// A tap is named when the finger goes down, so a button that takes its page away when it is clicked is still
+/// captured; and every quick tap is a tap, where Avalonia's own gestures make some of them double taps, or none when
+/// the element under the finger changed in between, as when the app restarts.
+/// </remarks>
 internal sealed partial class ScreenInput
 {
     /// <summary>How long after a person's last touch or wheel a scroll viewer that moves still moves because of them.</summary>
@@ -24,16 +29,14 @@ internal sealed partial class ScreenInput
     private readonly DispatcherTimer _scrollSettle = new(DispatcherPriority.Input) { Interval = ScrollSettleDelay };
     private long _personScrollUntil;
     private Point? _lastPointer;
+    private Press? _press;
 
     private void AttachCapture()
     {
-        _surface.AddHandler(Gestures.TappedEvent, OnTapped, RoutingStrategies.Bubble, handledEventsToo: true);
-        _surface.AddHandler(Gestures.DoubleTappedEvent, OnTapped, RoutingStrategies.Bubble, handledEventsToo: true);
-        _surface.AddHandler(Gestures.RightTappedEvent, OnRightTapped, RoutingStrategies.Bubble, handledEventsToo: true);
         _surface.AddHandler(Gestures.HoldingEvent, OnHolding, RoutingStrategies.Bubble, handledEventsToo: true);
-        _surface.AddHandler(InputElement.PointerPressedEvent, OnPointerActivity, RoutingStrategies.Bubble, handledEventsToo: true);
+        _surface.AddHandler(InputElement.PointerPressedEvent, OnPointerPressed, RoutingStrategies.Bubble, handledEventsToo: true);
         _surface.AddHandler(InputElement.PointerMovedEvent, OnPointerActivity, RoutingStrategies.Bubble, handledEventsToo: true);
-        _surface.AddHandler(InputElement.PointerReleasedEvent, OnPointerActivity, RoutingStrategies.Bubble, handledEventsToo: true);
+        _surface.AddHandler(InputElement.PointerReleasedEvent, OnPointerReleased, RoutingStrategies.Bubble, handledEventsToo: true);
         _surface.AddHandler(InputElement.PointerWheelChangedEvent, OnPointerActivity, RoutingStrategies.Bubble, handledEventsToo: true);
         _surface.AddHandler(ScrollViewer.ScrollChangedEvent, OnScrollChanged, RoutingStrategies.Bubble, handledEventsToo: true);
         _surface.AddHandler(InputElement.TextInputEvent, OnTextInput, RoutingStrategies.Bubble, handledEventsToo: true);
@@ -43,13 +46,10 @@ internal sealed partial class ScreenInput
 
     private void DetachCapture()
     {
-        _surface.RemoveHandler(Gestures.TappedEvent, OnTapped);
-        _surface.RemoveHandler(Gestures.DoubleTappedEvent, OnTapped);
-        _surface.RemoveHandler(Gestures.RightTappedEvent, OnRightTapped);
         _surface.RemoveHandler(Gestures.HoldingEvent, OnHolding);
-        _surface.RemoveHandler(InputElement.PointerPressedEvent, OnPointerActivity);
+        _surface.RemoveHandler(InputElement.PointerPressedEvent, OnPointerPressed);
         _surface.RemoveHandler(InputElement.PointerMovedEvent, OnPointerActivity);
-        _surface.RemoveHandler(InputElement.PointerReleasedEvent, OnPointerActivity);
+        _surface.RemoveHandler(InputElement.PointerReleasedEvent, OnPointerReleased);
         _surface.RemoveHandler(InputElement.PointerWheelChangedEvent, OnPointerActivity);
         _surface.RemoveHandler(ScrollViewer.ScrollChangedEvent, OnScrollChanged);
         _surface.RemoveHandler(InputElement.TextInputEvent, OnTextInput);
@@ -57,29 +57,48 @@ internal sealed partial class ScreenInput
         _surface.RemoveHandler(InputElement.KeyUpEvent, OnKeyUp);
     }
 
-    private void OnTapped(object? sender, TappedEventArgs e)
+    /// <summary>
+    /// A finger, or a mouse's left or right button, going down: it becomes a tap, or a right click's long press, when it
+    /// lifts where it went down. Its element is named now, while it is surely there.
+    /// </summary>
+    private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         if (Fence(e, e.Pointer))
         {
             return;
         }
 
-        if (e.Source is Visual source && AimedAt(source) is { } target)
-        {
-            CaptureAt(AppInputKind.Tap, target, e.GetPosition(target));
-        }
+        NotePointer(e);
+        var point = e.GetCurrentPoint(_root);
+        var isRight = point.Properties.IsRightButtonPressed;
+        _press = (point.Properties.IsLeftButtonPressed || isRight)
+            && e.Source is Visual source && AimedAt(source) is { } target
+            && ElementPaths.Describe(_root, target) is { } path
+            && _root.TranslatePoint(point.Position, target) is { } local
+                ? new Press(e.Pointer, path, Fraction(target, local), point.Position, isRight)
+                : null;
     }
 
-    private void OnRightTapped(object? sender, TappedEventArgs e)
+    /// <summary>A finger or button lifting where it went down: a tap, or a right click's long press, unless a hold took it.</summary>
+    private void OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
         if (Fence(e, e.Pointer))
         {
             return;
         }
 
-        if (e.Source is Visual source && AimedAt(source) is { } target)
+        NotePointer(e);
+        if (_press is not { } press || !ReferenceEquals(press.Pointer, e.Pointer))
         {
-            CaptureAt(AppInputKind.LongPress, target, e.GetPosition(target));
+            return;
+        }
+
+        _press = null;
+        var at = e.GetPosition(_root);
+        var slop = TopLevel.GetTopLevel(_surface)?.PlatformSettings?.GetTapSize(e.Pointer.Type) ?? new Size(4, 4);
+        if (!press.IsHeld && Math.Abs(at.X - press.At.X) <= slop.Width && Math.Abs(at.Y - press.At.Y) <= slop.Height)
+        {
+            Emit(new AppInput(press.IsRight ? AppInputKind.LongPress : AppInputKind.Tap, press.Path, press.Position));
         }
     }
 
@@ -94,18 +113,28 @@ internal sealed partial class ScreenInput
 
         if (e.HoldingState == HoldingState.Started && e.Source is Visual source && AimedAt(source) is { } target)
         {
+            // The finger's lift that follows is part of the long press, not a tap.
+            if (_press is { } press)
+            {
+                press.IsHeld = true;
+            }
+
             CaptureAt(AppInputKind.LongPress, target, source.TranslatePoint(e.Position, target) ?? default);
         }
     }
 
-    /// <summary>A person touching, moving, lifting or scrolling: a scroll viewer that moves now moves because of them.</summary>
+    /// <summary>A person moving or scrolling: a scroll viewer that moves now moves because of them.</summary>
     private void OnPointerActivity(object? sender, PointerEventArgs e)
     {
-        if (Fence(e, e.Pointer))
+        if (!Fence(e, e.Pointer))
         {
-            return;
+            NotePointer(e);
         }
+    }
 
+    /// <summary>Notes where a person's pointer is and that they are touching, for the scrolls their touch makes.</summary>
+    private void NotePointer(PointerEventArgs e)
+    {
         // A mouse moving over the app without a button down scrolls nothing.
         if (e.RoutedEvent == InputElement.PointerMovedEvent && e.Pointer.Type == PointerType.Mouse && !e.GetCurrentPoint(_root).Properties.IsLeftButtonPressed)
         {
@@ -239,6 +268,18 @@ internal sealed partial class ScreenInput
         return new Point(
             size.Width > 0 ? Math.Clamp(at.X / size.Width, 0, 1) : 0.5,
             size.Height > 0 ? Math.Clamp(at.Y / size.Height, 0, 1) : 0.5);
+    }
+
+    /// <summary>A press that may become a tap: its pointer, its element's path and the point in it, and where it went down.</summary>
+    /// <param name="Pointer">The finger or mouse.</param>
+    /// <param name="Path">The element it was aimed at.</param>
+    /// <param name="Position">Where inside the element, as fractions of its size.</param>
+    /// <param name="At">Where it went down, on the app's root.</param>
+    /// <param name="IsRight">Whether it is a mouse's right button, a long press.</param>
+    private sealed record Press(IPointer Pointer, string Path, Point Position, Point At, bool IsRight)
+    {
+        /// <summary>Whether the hold gesture already captured it as a long press.</summary>
+        public bool IsHeld { get; set; }
     }
 
     /// <summary>

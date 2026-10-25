@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TabStudio.App.Services;
@@ -50,6 +51,9 @@ public sealed partial class SwarmViewModel : ObservableObject, IDisposable
 
     /// <summary>The tablet's swarm.</summary>
     public SwarmCoordinatorService Service => _swarm;
+
+    /// <summary>Opens the Device Matrix, which shows the devices with the app's other screens; the workspace sets it.</summary>
+    public ICommand? OpenDeviceMatrixCommand { get; set; }
 
     /// <summary>The Add a device dialog, with the QR code.</summary>
     public SwarmInviteViewModel Invite { get; }

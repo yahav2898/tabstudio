@@ -104,8 +104,8 @@ public sealed class SwarmScreensOnDevicesTests
         Assert.Contains("Pixel 7", row.LayoutScreens, StringComparison.Ordinal);
         SwarmAppFixture.Progress("screens: checked");
 
-        // The Device Matrix: both phones by their pictures, with their issues on their badges.
-        workspace.ShowDeviceMatrixCommand.Execute(null);
+        // The Device Matrix, from the Swarm window: both phones by their pictures, with their issues on their badges.
+        fixture.SwarmWindow.OpenDeviceMatrixCommand!.Execute(null);
         var matrix = workspace.DeviceMatrix!;
         foreach (var tile in matrix.Tiles.Where(t => t.IsVirtual).ToList())
         {
@@ -121,6 +121,9 @@ public sealed class SwarmScreensOnDevicesTests
         Assert.Same(finding, matrix.ShownFinding);
         Assert.All(phones, t => Assert.True(t.HasHighlights));
         workspace.IsSideBarVisible = false;
+        workspace.IsBottomPanelVisible = false;
+        matrix.Zoom = 0.4;
+        await UiTestHelpers.WaitUntilAsync(() => phones.All(t => t.ScreenHeight == Math.Round(915 * 0.4)), because: "the tiles at the new zoom");
         UiTestHelpers.SaveScreenshot(window, "swarm-11-device-matrix-with-phones");
         SwarmAppFixture.Progress("screens: matrix");
 

@@ -99,7 +99,7 @@ public sealed partial class WorkspaceViewModel
         _swarmServices = swarm;
         _swarmLines = new SwarmOutputLines(SwarmOutput);
         var recorder = new UiTestRecorderViewModel(swarm.Registry, _ui, SaveUiTestAsync);
-        Swarm = new SwarmViewModel(swarm.Coordinator, _ui, recorder, RunUiTestsOnEveryScreenAsync);
+        Swarm = new SwarmViewModel(swarm.Coordinator, _ui, recorder, RunUiTestsOnEveryScreenAsync) { OpenDeviceMatrixCommand = ShowDeviceMatrixCommand };
         var coordinator = swarm.Coordinator;
         coordinator.Changed += OnSwarmChanged;
         coordinator.OutputReceived += OnSwarmOutput;
