@@ -262,22 +262,21 @@ public sealed class ShellScreenshotTests : IDisposable
         var window = Show(1280, 800);
         var workspace = await OpenSampleAsync();
         var shell = Shell(window);
-        var document = workspace.ActiveDocument!;
         var editor = window.GetVisualDescendants().OfType<CodeEditorView>().First(view => view.IsVisible);
         var textView = editor.Editor.TextArea.TextView;
         var bar = Named<Panel>(window, "TouchBarHost");
         Assert.False(shell.IsTouchBarAtTop);
 
-        // The caret on a line under the touch bar sends the bar to the top of the editor.
+        // The caret on a line under the touch bar, as a tap there puts it, sends the bar to the top of the editor.
         var middle = bar.TranslatePoint(new Point(bar.Bounds.Width / 2, bar.Bounds.Height / 2), textView)
             ?? throw new InvalidOperationException("The touch bar is not over the editor.");
-        var covered = textView.GetVisualLineFromVisualTop(middle.Y + textView.ScrollOffset.Y)?.FirstDocumentLine.LineNumber
+        var covered = textView.GetVisualLineFromVisualTop(middle.Y + textView.ScrollOffset.Y)?.FirstDocumentLine
             ?? throw new InvalidOperationException("No line is under the touch bar.");
-        document.NavigateTo(covered, 1);
+        editor.Editor.CaretOffset = covered.Offset;
         await UiTestHelpers.WaitUntilAsync(() => shell.IsTouchBarAtTop, because: "the touch bar to move out of the caret's way");
         UiTestHelpers.SaveScreenshot(window, "shell-50-touch-bar-clear-of-the-caret");
 
-        document.NavigateTo(1, 1);
+        editor.Editor.CaretOffset = 0;
         await UiTestHelpers.WaitUntilAsync(() => !shell.IsTouchBarAtTop, because: "the touch bar to come back down");
 
         // A hardware keyboard's key fades it away; touch input brings it back.
@@ -301,9 +300,10 @@ public sealed class ShellScreenshotTests : IDisposable
 
     private static WorkspaceView Shell(Window window) => window.GetVisualDescendants().OfType<WorkspaceView>().Single();
 
+    /// <summary>A control of the shell by its name, or of a view inside it when the shell has no control of that name.</summary>
     private static T Named<T>(Window window, string name)
         where T : Control =>
-        window.GetVisualDescendants().OfType<T>().Single(control => control.Name == name);
+        Shell(window).FindControl<T>(name) ?? window.GetVisualDescendants().OfType<T>().Single(control => control.Name == name);
 
     /// <summary>Asserts that controls are whole inside the window: nothing is clipped at its edges.</summary>
     private static void AssertInWindow(Window window, params Control[] controls)
@@ -340,7 +340,8 @@ public sealed class ShellScreenshotTests : IDisposable
 
     private MainWindow Show(double width, double height)
     {
-        var window = new MainWindow { DataContext = _main, Width = width, Height = height };
+        // The desktop window's least size is a small laptop's; a phone's screen is narrower.
+        var window = new MainWindow { DataContext = _main, Width = width, Height = height, MinWidth = 0, MinHeight = 0 };
         window.Show();
         Avalonia.Threading.Dispatcher.UIThread.RunJobs();
         return window;

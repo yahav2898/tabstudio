@@ -67,7 +67,10 @@
       <Setter Property="TextElement.FontSize" Value="11" />
       <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.TextSecondary}" />
     </Style>
-    <!-- Below 1000 pixels the Search button is its icon (WorkspaceView.Layout.cs sets the class). -->
+    <!-- The Search button: 240 pixels, or below 1000 pixels its icon alone (WorkspaceView.Layout.cs sets the class). -->
+    <Style Selector="Button#SearchButton">
+      <Setter Property="Width" Value="240" />
+    </Style>
     <Style Selector="Button#SearchButton.compact">
       <Setter Property="Width" Value="40" />
       <Setter Property="Padding" Value="0" />
@@ -300,7 +303,7 @@
         </Menu>
 
         <!-- One search for everything: files, commands, settings, symbols, templates and recent solutions (Ctrl+Q). -->
-        <Button x:Name="SearchButton" Grid.Column="3" Theme="{StaticResource SecondaryButton}" Width="240" Height="32" MinHeight="32"
+        <Button x:Name="SearchButton" Grid.Column="3" Theme="{StaticResource SecondaryButton}" Height="32" MinHeight="32"
                 Margin="10,0,0,0" Padding="10,0,6,0" HorizontalContentAlignment="Stretch" VerticalAlignment="Center"
                 Command="{Binding Search.OpenCommand}" ToolTip.Tip="Search (Ctrl+Q)">
           <Grid ColumnDefinitions="Auto,*,Auto">

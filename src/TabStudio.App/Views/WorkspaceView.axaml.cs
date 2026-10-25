@@ -69,7 +69,18 @@ public sealed partial class WorkspaceView : UserControl
             // Ctrl+Q opens the search over the IDE, or closes it, as in Visual Studio.
             _searchBinding = new KeyBinding { Gesture = new KeyGesture(Key.Q, KeyModifiers.Control), Command = _viewModel.Search.ToggleCommand };
             KeyBindings.Add(_searchBinding);
-            RegisterCommands(_viewModel);
+
+            // Once the menus' bindings have the new data context, which they take after this view does.
+            var viewModel = _viewModel;
+            Avalonia.Threading.Dispatcher.UIThread.Post(
+                () =>
+                {
+                    if (ReferenceEquals(_viewModel, viewModel))
+                    {
+                        RegisterCommands(viewModel);
+                    }
+                },
+                Avalonia.Threading.DispatcherPriority.Background);
             AttachLayout(_viewModel);
             AttachToolbar(_viewModel);
             UpdateBottomPanel();

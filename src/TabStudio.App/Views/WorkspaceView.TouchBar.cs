@@ -29,6 +29,7 @@ public sealed partial class WorkspaceView
     private CodeEditorView? _trackedEditor;
     private IDisposable? _popupWatch;
     private bool _placementPending;
+    private int _placementRetries;
 
     /// <summary>Whether the touch bar moved to the top of the editor, out of the caret's or a popup's way; for tests.</summary>
     internal bool IsTouchBarAtTop => TouchBarHost.VerticalAlignment == VerticalAlignment.Top;
@@ -55,6 +56,7 @@ public sealed partial class WorkspaceView
         AddHandler(KeyDownEvent, OnKeyDownForTouchBar, RoutingStrategies.Tunnel, handledEventsToo: true);
         _fadeTimer.Tick += OnTouchBarFaded;
         EditorPanel.SizeChanged += (_, _) => ScheduleTouchBarPlacement();
+        Editors.Children.CollectionChanged += (_, _) => TrackActiveEditorSoon();
         TouchBarHost.SizeChanged += (_, _) => ScheduleTouchBarPlacement();
         RunNotice.PropertyChanged += (_, e) =>
         {
@@ -181,6 +183,14 @@ public sealed partial class WorkspaceView
         }
 
         var textView = view.Editor.TextArea.TextView;
+        if (!textView.VisualLinesValid && _placementRetries++ < 3)
+        {
+            // The editor is between a scroll and its next layout: look again once it has its lines.
+            ScheduleTouchBarPlacement();
+            return obstacles;
+        }
+
+        _placementRetries = 0;
         if (textView.VisualLinesValid && textView.GetVisualLine(view.Editor.TextArea.Caret.Line) is { } line
             && textView.TranslatePoint(new Point(0, line.VisualTop - textView.ScrollOffset.Y), EditorPanel) is { } lineTop)
         {
