@@ -1,6 +1,9 @@
+using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
+using Avalonia.VisualTree;
 using Microsoft.Extensions.DependencyInjection;
 using TabStudio.App.Services;
+using TabStudio.App.Tests.ViewModels;
 using TabStudio.App.ViewModels;
 using TabStudio.App.Views;
 using TabStudio.Testing;
@@ -105,6 +108,51 @@ public sealed class ScreenshotTests : IDisposable
         UiTestHelpers.SaveScreenshot(window, "06-portrait");
 
         Assert.False(workspace.IsSideBarVisible);
+    }
+
+    [AvaloniaFact]
+    public async Task Test_Explorer_with_passed_failed_and_skipped_tests()
+    {
+        var window = Show(1280, 800);
+        await _main.OpenWorkspaceAsync(CalculatorSolution.Write(_temp));
+        var workspace = _main.Workspace!;
+        var tests = workspace.Tests;
+        await UiTestHelpers.WaitUntilAsync(() => tests.TotalCount == 5, because: "the tests found in source");
+
+        await tests.RunAllCommand.ExecuteAsync(null);
+        tests.SelectedNode = tests.Rows.Single(r => r.Name == "Subtracts_with_a_mistake");
+        await workspace.NavigateToAsync(_temp.Resolve(CalculatorSolution.TestFile), CalculatorSolution.FailingLine, 1);
+        var document = workspace.ActiveDocument!;
+        await document.AnalyzeNowAsync();
+        await UiTestHelpers.WaitUntilAsync(() => document.Classifications.Count > 0, because: "syntax colors");
+
+        UiTestHelpers.SaveScreenshot(window, "07-test-explorer");
+
+        Assert.True(workspace.IsTestExplorerSelected);
+        Assert.Equal((3, 1, 1), (tests.PassedCount, tests.FailedCount, tests.SkippedCount));
+        var explorer = window.GetVisualDescendants().OfType<TestExplorerView>().Single();
+        Assert.True(explorer.IsEffectivelyVisible);
+        Assert.Contains(explorer.GetVisualDescendants().OfType<TextBlock>(), t => t.Text == "Stack Trace" && t.IsEffectivelyVisible);
+    }
+
+    [AvaloniaFact]
+    public async Task Test_Explorer_grouped_by_outcome()
+    {
+        var window = Show(1280, 800);
+        await _main.OpenWorkspaceAsync(CalculatorSolution.Write(_temp));
+        var workspace = _main.Workspace!;
+        var tests = workspace.Tests;
+        await UiTestHelpers.WaitUntilAsync(() => tests.TotalCount == 5, because: "the tests found in source");
+        await tests.RunAllCommand.ExecuteAsync(null);
+
+        tests.SetGroupByCommand.Execute(TestGroupBy.Outcome);
+        tests.SelectedNode = tests.Rows.Single(r => r.Name == "Passed Tests");
+        workspace.SelectPanelCommand.Execute(BottomPanel.ErrorList);
+        await UiTestHelpers.WaitUntilAsync(() => true);
+
+        UiTestHelpers.SaveScreenshot(window, "08-test-explorer-outcome");
+
+        Assert.Equal("3 Passed", Assert.Single(tests.Details!.Outcomes).Text);
     }
 
     public void Dispose()
