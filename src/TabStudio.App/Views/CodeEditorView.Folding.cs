@@ -1,7 +1,7 @@
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
 using AvaloniaEdit.Folding;
 using TabStudio.App.Editing.Extensions;
+using TabStudio.App.Theming;
 
 namespace TabStudio.App.Views;
 
@@ -11,8 +11,8 @@ namespace TabStudio.App.Views;
 /// </summary>
 public sealed partial class CodeEditorView
 {
-    private static readonly IBrush FoldMarkerBrush = new ImmutableSolidColorBrush(Color.Parse("#9AA1AE"));
-    private static readonly IBrush FoldMarkerBackground = new ImmutableSolidColorBrush(Color.Parse("#1B1D23"));
+    private static readonly IBrush FoldMarkerBrush = ThemeBrushes.Editor("Editor.FoldMarker");
+    private static readonly IBrush FoldMarkerBackground = ThemeBrushes.Editor("Editor.FoldMarkerBackground");
 
     private FoldingManager? _folding;
 

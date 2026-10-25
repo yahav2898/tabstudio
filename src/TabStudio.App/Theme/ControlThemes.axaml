@@ -73,8 +73,9 @@
     <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
       <Setter Property="Background" Value="{DynamicResource Brush.AccentPressed}" />
     </Style>
+    <!-- Disabled, the whole button is gray: a Run split button never shows a gray half beside a teal one. -->
     <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
-      <Setter Property="Background" Value="{DynamicResource Brush.Control}" />
+      <Setter Property="Background" Value="{DynamicResource Brush.Pressed}" />
     </Style>
     <Style Selector="^.destructive /template/ ContentPresenter#PART_ContentPresenter">
       <Setter Property="Background" Value="{DynamicResource Brush.Destructive}" />

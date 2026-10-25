@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
 using Avalonia.Threading;
 using AvaloniaEdit;
 using AvaloniaEdit.Document;
@@ -10,6 +9,7 @@ using AvaloniaEdit.Search;
 using AvaloniaEdit.TextMate;
 using TabStudio.App.Editing;
 using TabStudio.App.Input;
+using TabStudio.App.Theming;
 using TabStudio.App.ViewModels;
 using TabStudio.Core.Diagnostics;
 
@@ -21,8 +21,8 @@ namespace TabStudio.App.Views;
 /// </summary>
 public sealed partial class CodeEditorView : UserControl, IDisposable
 {
-    private static readonly IBrush CurrentLineBrush = new ImmutableSolidColorBrush(Color.Parse("#23262F"));
-    private static readonly IBrush CaretBrush = new ImmutableSolidColorBrush(Color.Parse("#E8ECF2"));
+    private static readonly IBrush CurrentLineBrush = ThemeBrushes.Get("Brush.CurrentLine");
+    private static readonly IBrush CaretBrush = ThemeBrushes.Editor("Editor.Caret");
 
     private readonly DocumentViewModel _document;
     private readonly TextEditor _editor;
