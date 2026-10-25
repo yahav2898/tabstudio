@@ -16,14 +16,15 @@ internal static class InitializationOptions
     /// <param name="options">The server's options.</param>
     /// <param name="rootDirectory">The workspace folder the server runs for.</param>
     /// <param name="executable">The server's program, as the launcher resolved it.</param>
-    public static JsonNode? Resolve(JsonObject? options, string rootDirectory, string executable)
+    /// <param name="log">Told which file each variable became, or that none was found.</param>
+    public static JsonNode? Resolve(JsonObject? options, string rootDirectory, string executable, Action<string>? log = null)
     {
         if (options?.DeepClone() is not JsonObject copy)
         {
             return null;
         }
 
-        Fill(copy, rootDirectory, executable);
+        Fill(copy, rootDirectory, executable, log);
         return copy;
     }
 
@@ -47,25 +48,29 @@ internal static class InitializationOptions
         return null;
     }
 
-    private static void Fill(JsonObject node, string rootDirectory, string executable)
+    private static void Fill(JsonObject node, string rootDirectory, string executable, Action<string>? log)
     {
         foreach (var name in node.Select(p => p.Key).ToList())
         {
             switch (node[name])
             {
                 case JsonObject child:
-                    Fill(child, rootDirectory, executable);
+                    Fill(child, rootDirectory, executable, log);
                     break;
-                case JsonValue value when value.TryGetValue(out string? text)
+                case JsonValue value when value.GetValueKind() == System.Text.Json.JsonValueKind.String
+                    && value.GetValue<string>() is { } text
                     && text.StartsWith(PackageFilePrefix, StringComparison.Ordinal) && text.EndsWith('}'):
-                    var file = FindPackageFile(text[PackageFilePrefix.Length..^1], rootDirectory, executable);
+                    var relative = text[PackageFilePrefix.Length..^1];
+                    var file = FindPackageFile(relative, rootDirectory, executable);
                     if (file is null)
                     {
                         node.Remove(name);
+                        log?.Invoke($"{relative} was not found in the workspace or beside {executable}.");
                     }
                     else
                     {
                         node[name] = file;
+                        log?.Invoke($"Using {file}.");
                     }
 
                     break;

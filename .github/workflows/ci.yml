@@ -50,6 +50,8 @@ jobs:
           npm install -g pyright typescript-language-server typescript
           python -m pip install debugpy
           echo "TABSTUDIO_REAL_SERVERS=1" >> "$GITHUB_ENV"
+          mkdir -p ci-out
+          { npm ls -g --depth=0; ls -l "$(command -v typescript-language-server)"; python -m pip show debugpy; } > ci-out/language-servers.txt 2>&1 || true
 
       - name: Build and test
         run: |
