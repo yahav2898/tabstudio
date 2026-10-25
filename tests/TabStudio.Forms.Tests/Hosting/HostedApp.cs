@@ -149,7 +149,9 @@ internal sealed class HostedApp : IDisposable
     public WriteableBitmapPixels Screenshot(string name)
     {
         Settle();
-        var frame = Window.CaptureRenderedFrame() ?? throw new InvalidOperationException("Nothing was rendered.");
+        // Disposing the frame at the end keeps it alive while Skia encodes its pixels; a collection during an encode
+        // would otherwise unmap them under Skia and crash the test host.
+        using var frame = Window.CaptureRenderedFrame() ?? throw new InvalidOperationException("Nothing was rendered.");
         if (Screenshots.Folder is { } folder)
         {
             Directory.CreateDirectory(folder);
