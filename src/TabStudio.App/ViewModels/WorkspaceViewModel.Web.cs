@@ -40,7 +40,8 @@ public sealed partial class WorkspaceViewModel
         do
         {
             _restartWebApp = false;
-            var build = await BuildProjectsAsync([project], showOutput: true);
+            // A restart keeps the app's log so far in the Output panel, under the line that says why it restarted.
+            var build = await BuildProjectsAsync([project], showOutput: !restarted);
             if (build is not { Success: true } || build.EntryAssembly is not { } entry)
             {
                 WebPreview.ShowStopped();
