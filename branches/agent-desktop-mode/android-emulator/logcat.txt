@@ -1,0 +1,57 @@
+10-25 09:46:22.891  5681  5681 D DOTNET  : AndroidCryptoNative_InitLibraryOnLoad: jint AndroidCryptoNative_InitLibraryOnLoad(JavaVM *, void *) in /__w/1/s/src/runtime/src/native/libs/System.Security.Cryptography.Native.Android/pal_jni.c
+10-25 09:46:22.891  5681  5681 D DOTNET  : GetOptionalClassGRef: optional class com/android/org/conscrypt/OpenSSLEngineImpl was not found
+10-25 09:46:36.811  5681  5823 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Workspaces' (hash 1d9425b8bd762c1e) not found
+10-25 09:46:36.811  5681  5823 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Workspaces
+10-25 09:46:36.811  5681  5823 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Workspaces' (hash 1d9425b8bd762c1e) not found
+10-25 09:46:36.811  5681  5823 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Workspaces
+10-25 09:46:36.842  5681  5823 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Features' (hash ebd054ac833caaaa) not found
+10-25 09:46:36.842  5681  5823 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Features
+10-25 09:46:36.842  5681  5823 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Features' (hash ebd054ac833caaaa) not found
+10-25 09:46:36.842  5681  5823 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Features
+10-25 09:46:39.298  5681  5813 W monodroid-assembly: Shared library 'android' not loaded, p/invoke 'ANativeWindow_fromSurface' may fail
+10-25 09:46:42.709  5681  5681 I TabStudio: TABSTUDIO_SELFTEST_START
+10-25 09:48:00.327  5681  5681 I TabStudio: TABSTUDIO_DESKTOP_STEP type _by_keyboard
+10-25 09:48:02.973  7182  7182 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-25 09:48:02.991  7182  7182 I AndroidRuntime: Using default boot image
+10-25 09:48:02.992  7182  7182 I AndroidRuntime: Leaving lock profiling enabled
+10-25 09:48:03.165  7182  7182 D AndroidRuntime: Calling main entry com.android.commands.input.Input
+10-25 09:48:03.712  7182  7182 D AndroidRuntime: Shutting down VM
+10-25 09:48:08.582  5681  5681 I TabStudio: Desktop self test: moved the captured mouse to 159,795 on the display
+10-25 09:48:08.814  5681  5681 I TabStudio: Desktop self test: clicked display 1 at 159,795 with the captured mouse
+10-25 09:48:14.698  5681  5681 I TabStudio: Desktop self test: moved the captured mouse to 1100,519 on the display
+10-25 09:48:14.820  5681  5681 I TabStudio: Desktop self test: turned the wheel -3 notches on display 1 at 1100,519
+10-25 09:48:15.525  5681  5681 I TabStudio: TABSTUDIO_DESKTOP_STEP screenshot
+10-25 09:48:21.583  5681  5681 W InputMethodManager: 	at mono.java.lang.RunnableImplementor.n_run(Native Method)
+10-25 09:48:21.583  5681  5681 W InputMethodManager: 	at mono.java.lang.RunnableImplementor.run(RunnableImplementor.java:21)
+10-25 09:48:22.240  5681  5681 I TabStudio: TABSTUDIO_SELFTEST_OK 99.5 s: What's your name? Tablet | Good morning, Tablet! This program was compiled and run on your tablet. | Statically typed languages, oldest first: | C#         since 2000 (26 years) | Rust       since 2015 (11 years) | The program 'HelloTablet' has exited with code 0 (0x0). | Debugger: Paused at a breakpoint · Program.cs, line 15, name = "Tablet" | Web: served on 127.0.0.1:40881 in 25.4 s, the API said "Hello, Tablet!" | Avalonia: shown in 20.9 s, the button counted 2 taps | Designer: previewed MainView.axaml in 2.1 s | Desktop: the IDE on Overlay #1 (1920 × 1080 at 135%, 1422×800) · the Toolbox put a Button into MainView.axaml · the Properties panel set its Content · the tablet's keyboard typed on the display and the designer showed it · the tablet's mouse moved TabStudio's pointer to the Output tab and clicked it · its wheel reached the editor · back on the tablet with the caret at line 19
+10-25 09:48:22.442  5681  5681 D AndroidRuntime: Shutting down VM
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: FATAL EXCEPTION: main
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: Process: com.tabstudio.ide, PID: 5681
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: android.runtime.JavaProxyThrowable: [System.ArgumentException]: Attempt to call InvalidateArrange on wrong LayoutManager.
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: 	at Avalonia.Layout.LayoutManager.InvalidateArrange + 0x3c(Unknown Source)
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: 	at Avalonia.Layout.LayoutManager.ExecuteArrangePass + 0x56(Unknown Source)
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: 	at Avalonia.Layout.LayoutManager.InnerLayoutPass + 0xa(Unknown Source)
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: 	at Avalonia.Layout.LayoutManager.ExecuteLayoutPass + 0xb7(Unknown Source)
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: 	at Avalonia.Layout.LayoutManager.ExecuteQueuedLayoutPass + 0x9(Unknown Source)
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: 	at Avalonia.Media.MediaContext.FireInvokeOnRenderCallbacks + 0x47(Unknown Source)
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: 	at Avalonia.Media.MediaContext.RenderCore + 0x24(Unknown Source)
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: 	at Avalonia.Media.MediaContext.Render + 0x7(Unknown Source)
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: 	at Avalonia.Threading.DispatcherOperation.InvokeCore + 0xb1(Unknown Source)
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: 	at Avalonia.Threading.DispatcherOperation.Execute + 0x12(Unknown Source)
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: 	at Avalonia.Threading.Dispatcher.ExecuteJob + 0x3a(Unknown Source)
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: 	at Avalonia.Threading.Dispatcher.ExecuteJobsCore + 0x59(Unknown Source)
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: 	at Avalonia.Threading.Dispatcher.Signaled + 0x24(Unknown Source)
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: 	at Avalonia.Threading.LegacyDispatcherImpl.<.ctor>b__3_0 + 0xa(Unknown Source)
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: 	at Avalonia.Android.AndroidThreadingInterface.<Signal>b__5_0 + 0xa(Unknown Source)
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: 	at Java.Lang.Thread+RunnableImplementor.Run + 0x8(Unknown Source)
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: 	at Java.Lang.IRunnableInvoker.n_Run + 0x16(Unknown Source)
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: 	at mono.java.lang.RunnableImplementor.n_run(Native Method)
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: 	at mono.java.lang.RunnableImplementor.run(RunnableImplementor.java:21)
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: 	at android.os.Handler.handleCallback(Handler.java:883)
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:100)
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:214)
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:7356)
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:492)
+10-25 09:48:22.442  5681  5681 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:930)
+10-25 09:48:22.457  5681  5681 W monodroid-assembly: Shared library 'liblog' not loaded, p/invoke '__android_log_print' may fail
