@@ -61,7 +61,7 @@ public sealed partial class TestExplorerViewModel
     /// which the test runner runs.
     /// </summary>
     /// <param name="request">The run.</param>
-    public (IReadOnlyList<TestEntry> Rows, TestRunRequest Rest) SplitScreenTests(TestRunRequest request)
+    public (IReadOnlyList<TestEntry> Rows, TestRunRequest Others) SplitScreenTests(TestRunRequest request)
     {
         ArgumentNullException.ThrowIfNull(request);
         List<TestEntry> rows = [];

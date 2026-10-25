@@ -53,14 +53,15 @@ public static partial class UiTestProjects
             }
         }
 
+        var appClass = AppClassOf(app);
         if (!AnySourceContains(directory, "class RecordedApp"))
         {
-            File.WriteAllText(Path.Combine(directory, UiTestWriter.DriverFileName), UiTestWriter.Driver(namespaceName, AppClassOf(app)));
+            File.WriteAllText(Path.Combine(directory, UiTestWriter.DriverFileName), UiTestWriter.Driver(namespaceName, appClass));
         }
 
         if (!AnySourceContains(directory, "AvaloniaTestApplication"))
         {
-            File.WriteAllText(Path.Combine(directory, UiTestWriter.AppBuilderFileName), UiTestWriter.AppBuilder(namespaceName));
+            File.WriteAllText(Path.Combine(directory, UiTestWriter.AppBuilderFileName), UiTestWriter.AppBuilder(namespaceName, appClass));
         }
 
         var folder = Path.Combine(directory, UiTestWriter.Folder);

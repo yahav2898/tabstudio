@@ -3,6 +3,7 @@ using TabStudio.App.Swarm;
 using TabStudio.Core.Workspaces;
 using TabStudio.Debugging;
 using TabStudio.Debugging.Building;
+using TabStudio.Debugging.Symbols;
 using TabStudio.Swarm;
 using TabStudio.Swarm.Coordinator;
 

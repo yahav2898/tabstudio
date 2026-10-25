@@ -22,7 +22,7 @@ internal static class UiTestDriverSource
 
         /// <summary>
         /// Runs the app for the UI tests TabStudio records: starts it as on a phone, with its main view created the way
-        /// the app creates it, in a headless window of the recorded size, and drives it as a person does, with real
+        /// the app creates it for a single-view lifetime, in a headless window of the recorded size, and drives it as a person does, with real
         /// pointer and key input aimed at elements by their names or their paths, such as "CountButton" or
         /// "MainView/StackPanel[0]/TextBlock[2]". TabStudio wrote it with the first recorded test; change it as you like.
         /// </summary>
@@ -40,35 +40,45 @@ internal static class UiTestDriverSource
             /// <summary>Starts the app in a window of the given size, in device-independent pixels.</summary>
             public static RecordedApp Start(double width, double height)
             {
+                // TestAppBuilder starts Avalonia with the app itself; a test project that starts it with another
+                // Application gets a new one, which brings the app's styles to its window.
                 var lifetime = new SingleView();
-                var app = new global::$APP$();
+                var app = Application.Current as global::$APP$;
+                var isOwn = app is null;
+                app ??= new global::$APP$();
+                if (isOwn)
+                {
+                    app.Initialize();
+                }
+
                 app.ApplicationLifetime = lifetime;
-                app.Initialize();
                 app.OnFrameworkInitializationCompleted();
                 var view = lifetime.MainView
                     ?? throw new InvalidOperationException("The app sets no MainView for a single-view lifetime, as Avalonia's cross-platform template does in App.axaml.cs.");
 
-                // The app's theme, styles and resources, around its view, as on a phone.
-                var theme = new ThemeVariantScope { RequestedThemeVariant = app.RequestedThemeVariant ?? ThemeVariant.Default, Child = view };
-                foreach (var style in app.Styles.ToList())
+                var window = new Window { Width = width, Height = height, Content = view };
+                if (isOwn)
                 {
-                    app.Styles.Remove(style);
-                    theme.Styles.Add(style);
+                    window.RequestedThemeVariant = app.RequestedThemeVariant ?? ThemeVariant.Default;
+                    foreach (var style in app.Styles.ToList())
+                    {
+                        app.Styles.Remove(style);
+                        window.Styles.Add(style);
+                    }
+
+                    foreach (var template in app.DataTemplates.ToList())
+                    {
+                        app.DataTemplates.Remove(template);
+                        window.DataTemplates.Add(template);
+                    }
+
+                    foreach (var dictionary in app.Resources.MergedDictionaries.ToList())
+                    {
+                        app.Resources.MergedDictionaries.Remove(dictionary);
+                        window.Resources.MergedDictionaries.Add(dictionary);
+                    }
                 }
 
-                foreach (var template in app.DataTemplates.ToList())
-                {
-                    app.DataTemplates.Remove(template);
-                    theme.DataTemplates.Add(template);
-                }
-
-                foreach (var dictionary in app.Resources.MergedDictionaries.ToList())
-                {
-                    app.Resources.MergedDictionaries.Remove(dictionary);
-                    theme.Resources.MergedDictionaries.Add(dictionary);
-                }
-
-                var window = new Window { Width = width, Height = height, Content = theme };
                 window.Show();
                 Dispatcher.UIThread.RunJobs();
                 return new RecordedApp(window, view);
@@ -98,8 +108,8 @@ internal static class UiTestDriverSource
             /// <summary>Presses a key, with modifiers, on the focused element.</summary>
             public void Press(Key key, KeyModifiers modifiers = KeyModifiers.None)
             {
-                _window.KeyPress(key, (RawInputModifiers)modifiers);
-                _window.KeyRelease(key, (RawInputModifiers)modifiers);
+                _window.KeyPress(key, (RawInputModifiers)modifiers, PhysicalKey.None, null);
+                _window.KeyRelease(key, (RawInputModifiers)modifiers, PhysicalKey.None, null);
                 Settle();
             }
 

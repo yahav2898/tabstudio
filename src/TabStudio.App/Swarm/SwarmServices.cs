@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using TabStudio.App.Services;
 using TabStudio.App.ViewModels.Swarm;
 
 namespace TabStudio.App.Swarm;

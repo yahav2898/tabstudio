@@ -125,11 +125,13 @@ public static class UiTestWriter
         return UiTestDriverSource.Text.Replace("$NAMESPACE$", namespaceName, StringComparison.Ordinal).Replace("$APP$", appClass, StringComparison.Ordinal);
     }
 
-    /// <summary>The C# that starts Avalonia's headless platform for the tests, as <c>dotnet test</c> runs them.</summary>
+    /// <summary>The C# that starts Avalonia's headless platform with the app, as <c>dotnet test</c> runs the tests.</summary>
     /// <param name="namespaceName">The test project's namespace.</param>
-    public static string AppBuilder(string namespaceName)
+    /// <param name="appClass">The full name of the app's <c>Application</c> class, such as <c>HelloAvalonia.App</c>.</param>
+    public static string AppBuilder(string namespaceName, string appClass)
     {
         ArgumentNullException.ThrowIfNull(namespaceName);
+        ArgumentNullException.ThrowIfNull(appClass);
         return $$"""
             using Avalonia;
             using Avalonia.Headless;
@@ -138,10 +140,10 @@ public static class UiTestWriter
 
             namespace {{namespaceName}};
 
-            /// <summary>Starts Avalonia without a screen for the UI tests; each test starts the app itself (see RecordedApp).</summary>
+            /// <summary>Starts Avalonia with the app, without a screen, for the UI tests; each test shows the app's view itself (see RecordedApp).</summary>
             public static class TestAppBuilder
             {
-                public static AppBuilder BuildAvaloniaApp() => AppBuilder.Configure<Application>().UseHeadless(new AvaloniaHeadlessPlatformOptions());
+                public static AppBuilder BuildAvaloniaApp() => AppBuilder.Configure<global::{{appClass}}>().UseHeadless(new AvaloniaHeadlessPlatformOptions());
             }
 
             """;
