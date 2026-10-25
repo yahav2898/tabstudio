@@ -273,6 +273,9 @@
             <Separator />
             <MenuItem Header="Test E_xplorer (Ctrl+E, T)" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}" />
           </MenuItem>
+          <MenuItem Header="_Project">
+            <MenuItem Header="Port to Avalonia…" Command="{Binding PortToAvaloniaCommand}" />
+          </MenuItem>
           <MenuItem Header="E_xtensions">
             <MenuItem Header="_Manage Extensions" InputGesture="Ctrl+Shift+X" Command="{Binding ShowExtensionsCommand}" IsEnabled="{Binding HasExtensions}" />
             <MenuItem Header="_Install from VSIX..." Command="{Binding InstallFromVsixCommand}" IsEnabled="{Binding HasExtensions}" />

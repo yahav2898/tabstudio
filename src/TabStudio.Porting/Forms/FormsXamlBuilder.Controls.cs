@@ -99,7 +99,7 @@ internal sealed partial class FormsXamlBuilder
 
         if (control.Name != "this")
         {
-            element.AddFirst(new XAttribute(Name, control.Name));
+            element.Add(new XAttribute(Name, control.Name));
         }
 
         Info.Components[control.Name] = (control.Type, element.Name.LocalName);
@@ -217,12 +217,26 @@ internal sealed partial class FormsXamlBuilder
         }
     }
 
+    private static readonly HashSet<string> ApproximateProperties = new(StringComparer.Ordinal)
+    {
+        "CausesValidation", "ImeMode", "AutoEllipsis", "ImageAlign", "TextImageRelation", "RightToLeft",
+        "MaximizeBox", "MinimizeBox", "KeyPreview", "ShowIcon", "ControlBox", "SizeGripStyle", "HelpButton",
+        "ColumnHeadersVisible", "AllowUserToAddRows", "AllowUserToDeleteRows", "AllowUserToResizeRows",
+        "AllowUserToOrderColumns", "EnableHeadersVisualStyles", "GridColor", "CellBorderStyle", "BackgroundColor",
+        "AlternatingRowsDefaultCellStyle", "DefaultCellStyle", "ColumnHeadersDefaultCellStyle", "RowTemplate",
+        "AutoSizeRowsMode", "FixedPanel", "IsSplitterFixed", "SplitterWidth", "BackgroundImageLayout",
+        "IntegralHeight", "ItemHeight", "Sorted", "AutoCompleteMode", "AutoCompleteSource", "DropDownHeight",
+        "DropDownWidth", "MaxDropDownItems", "FlatAppearance.BorderSize", "FlatAppearance.BorderColor",
+        "FlatAppearance.MouseOverBackColor", "FlatAppearance.MouseDownBackColor", "HideSelection", "FullRowSelect",
+        "CheckAlign", "LinkBehavior", "LinkColor", "ActiveLinkColor", "VisitedLinkColor", "ShortcutsEnabled",
+    };
+
     /// <summary>Notes for properties the converter set aside that change how the control looks or works.</summary>
     private void NoteUnported(XElement element, FormsComponent control)
     {
         foreach (var (property, value) in control.Properties)
         {
-            if (Dropped.Contains(property) || property.StartsWith("FlatAppearance.", StringComparison.Ordinal))
+            if (Dropped.Contains(property) && !ApproximateProperties.Contains(property))
             {
                 continue;
             }
@@ -355,7 +369,7 @@ internal sealed partial class FormsXamlBuilder
                 break;
         }
 
-        if (FormsValues.EnumMember(Get(control, "TextAlign")) is "Right" or "Center" and var align)
+        if (FormsValues.EnumMember(Get(control, "TextAlign")) is var align && align is "Right" or "Center")
         {
             box.Add(new XAttribute("TextAlignment", align));
         }
@@ -817,7 +831,7 @@ internal sealed partial class FormsXamlBuilder
 
         if (item.Type != "ToolStripSeparator")
         {
-            element.AddFirst(new XAttribute(Name, item.Name));
+            element.Add(new XAttribute(Name, item.Name));
             Info.Components[item.Name] = (item.Type, element.Name.LocalName);
             AddEvents(item, element.Name.LocalName);
         }

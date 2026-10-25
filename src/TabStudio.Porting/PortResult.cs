@@ -55,19 +55,49 @@ public sealed class PortResult
             throw new IOException($"{ProjectDirectory} already exists and is not empty.");
         }
 
-        Directory.CreateDirectory(ProjectDirectory);
-        var encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
+        var root = Path.GetFullPath(ProjectDirectory).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
         foreach (var file in Files)
         {
-            var path = Path.Combine(ProjectDirectory, file.Path.Replace('/', Path.DirectorySeparatorChar));
-            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
-            if (file.Text is { } text)
+            var path = Path.GetFullPath(Path.Combine(root, file.Path.Replace('/', Path.DirectorySeparatorChar)));
+            if (Path.IsPathRooted(file.Path) || !path.StartsWith(root, StringComparison.Ordinal))
             {
-                File.WriteAllText(path, text, encoding);
+                throw new IOException($"The generated path escapes the new project: {file.Path}");
             }
-            else if (file.CopyFrom is { } from && File.Exists(from))
+        }
+
+        var parent = Path.GetDirectoryName(Path.GetFullPath(ProjectDirectory))!;
+        Directory.CreateDirectory(parent);
+        var staging = Path.Combine(parent, ".tabstudio-port-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(staging);
+        try
+        {
+            var encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
+            foreach (var file in Files)
             {
-                File.Copy(from, path);
+                var path = Path.Combine(staging, file.Path.Replace('/', Path.DirectorySeparatorChar));
+                Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+                if (file.Text is { } text)
+                {
+                    File.WriteAllText(path, text, encoding);
+                }
+                else if (file.CopyFrom is { } from)
+                {
+                    File.Copy(from, path);
+                }
+            }
+
+            if (Directory.Exists(ProjectDirectory))
+            {
+                Directory.Delete(ProjectDirectory, recursive: false);
+            }
+
+            Directory.Move(staging, ProjectDirectory);
+        }
+        finally
+        {
+            if (Directory.Exists(staging))
+            {
+                Directory.Delete(staging, recursive: true);
             }
         }
     }

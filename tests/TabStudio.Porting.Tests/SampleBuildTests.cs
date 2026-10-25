@@ -28,7 +28,7 @@ public sealed class SampleBuildTests
         var result = AvaloniaPorter.Port(source, new PortOptions(name, Path.Combine(folder.Path, name), SampleProjects.AvaloniaVersion));
         result.Write();
 
-        var (exitCode, output) = await RunAsync(dotnet, $"build \"{result.ProjectFilePath}\" -c Debug -nologo -clp:NoSummary", folder.Path);
+        var (exitCode, output) = await RunAsync(dotnet, $"build \"{result.ProjectFilePath}\" -c Debug -nologo -clp:NoSummary -m:1 -p:UseSharedCompilation=false", folder.Path);
         var log = SampleProjects.CiOut("porting-build", sample + ".log");
         Directory.CreateDirectory(Path.GetDirectoryName(log)!);
         await File.WriteAllTextAsync(log, output);

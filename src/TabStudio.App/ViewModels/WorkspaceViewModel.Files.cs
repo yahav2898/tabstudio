@@ -170,14 +170,16 @@ public sealed partial class WorkspaceViewModel
     /// Reads the workspace again after files changed on disk: the Solution Explorer, the language service
     /// (with the unsaved text of open documents) and the Compatibility Doctor all follow.
     /// </summary>
-    public async Task ReloadWorkspaceAsync()
+    public Task ReloadWorkspaceAsync() => ReloadWorkspaceAsync(null);
+
+    private async Task ReloadWorkspaceAsync(string? inspectPath)
     {
         if (Workspace is not { } current)
         {
             return;
         }
 
-        var path = current.Solution?.FilePath ?? current.RootDirectory;
+        var path = inspectPath ?? current.Solution?.FilePath ?? current.RootDirectory;
         var preview = await WorkspaceInspector.InspectAsync(path);
         Workspace = preview.Workspace;
         Explorer.Load(preview.Workspace, preview.Reports);

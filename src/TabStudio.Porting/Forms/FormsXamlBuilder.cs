@@ -85,6 +85,13 @@ internal sealed partial class FormsXamlBuilder
             _root.Add(content);
         }
 
+        AddEvents(form, isForm ? "AppForm" : "UserControl");
+        foreach (var component in _design.Components.Values.Where(c => NonVisual.Contains(c.Type)).ToList())
+        {
+            IsVisual(component);
+        }
+
+        NoteUnported(_root, form);
         foreach (var statement in _design.Unread)
         {
             Todo(statement.ToString(), "The converter does not know what this line of InitializeComponent does; set it in the XAML or in code", null);

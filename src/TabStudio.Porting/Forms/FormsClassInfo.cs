@@ -24,6 +24,9 @@ internal sealed class FormsClassInfo
     /// <summary>Handlers whose event arguments have another type in Avalonia: method to the arguments' type.</summary>
     public Dictionary<string, string> HandlerArguments { get; } = new(StringComparer.Ordinal);
 
+    /// <summary>Closing handlers that must complete before the form closes.</summary>
+    public HashSet<string> AsyncClosingHandlers { get; } = new(StringComparer.Ordinal);
+
     /// <summary>The namespaces the statements and fields need.</summary>
     public HashSet<string> Usings { get; } = new(StringComparer.Ordinal);
 }

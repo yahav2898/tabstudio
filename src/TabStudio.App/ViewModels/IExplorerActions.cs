@@ -20,6 +20,9 @@ public interface IExplorerActions
     /// <summary>Moves a file or folder to TabStudio's trash.</summary>
     Task DeleteAsync(WorkspaceNode node);
 
+    /// <summary>Converts a project into a sibling Avalonia project.</summary>
+    Task PortToAvaloniaAsync(WorkspaceNode node) => Task.CompletedTask;
+
     /// <summary>Makes a project the startup project.</summary>
     void SetAsStartupProject(WorkspaceNode node);
 }

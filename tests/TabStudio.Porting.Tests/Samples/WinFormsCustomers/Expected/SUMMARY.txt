@@ -1,0 +1,50 @@
+App.axaml (Xaml)
+App.axaml.cs (Code)
+CustomerEntry.Avalonia.csproj (Project)
+  DataGrid → the Avalonia.Controls.DataGrid package · 1
+  UseWindowsForms project → Avalonia project · 1
+  net8.0-windows → net10.0 · 1
+MainForm.Events.cs (Code)
+MainForm.axaml ← MainForm.Designer.cs (Xaml)
+  Form → AppForm, a window on the desktop and the screen on phones · 1
+  ShortcutKeys → InputGesture and HotKey · 1
+  Click → Click event · 6
+  ToolStripMenuItem → MenuItem · 5
+  MenuStrip → Menu · 1
+  StatusStrip → Border and DockPanel (Avalonia has no status bar) · 1
+  Docked controls → DockPanel · 1
+  Anchored controls → Grid with margins · 1
+  Button → Button · 3
+  DataGridView columns → DataGrid columns · 5
+  DataGridView → DataGrid · 1
+  SelectionChanged → SelectionChanged event · 1
+  Controls at fixed places → Canvas · 1
+  AcceptButton → IsDefault · 1
+  ToolTip.SetToolTip → ToolTip.Tip · 1
+  CheckBox → CheckBox · 1
+  NumericUpDown → NumericUpDown · 1
+  Label → TextBlock · 4
+  ComboBox → ComboBox · 1
+  TextBox → TextBox · 2
+  PlaceholderText → Watermark · 1
+  GroupBox → HeaderedContentControl with the port's group box style · 1
+  FormClosing → FormClosingAsync event · 1
+  Load → Load event · 1
+MainForm.cs (Code)
+  Form → AppForm · 1
+  Items.AddRange → observable item collection helper · 1
+  MessageBox.Show → await MessageBox.ShowAsync · 3
+  DataGridView.Rows → observable GridRows · 5
+  Checked → IsChecked · 2
+  Enabled → IsEnabled · 1
+  DataGridView.SelectedRows → snapshot of selected GridRows · 2
+  DataGridViewRow → GridRow · 1
+Porting/AppForm.cs (Support)
+Porting/GridRows.cs (Support)
+Porting/MessageBox.cs (Support)
+Porting/MessageDialog.cs (Support)
+Porting/PortingStyles.axaml (Support)
+Porting/ScreenHost.cs (Support)
+Porting/WindowView.cs (Support)
+Program.cs (Code)
+  Avalonia's entry point, as TabStudio's Avalonia template has it · 1

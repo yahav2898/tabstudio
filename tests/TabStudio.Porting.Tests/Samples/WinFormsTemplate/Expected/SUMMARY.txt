@@ -1,0 +1,15 @@
+App.axaml (Xaml)
+App.axaml.cs (Code)
+Form1.Events.cs (Code)
+Form1.axaml ← Form1.Designer.cs (Xaml)
+  Form → AppForm, a window on the desktop and the screen on phones · 1
+Form1.cs (Code)
+  Form → AppForm · 1
+Porting/AppForm.cs (Support)
+Porting/ScreenHost.cs (Support)
+Porting/WindowView.cs (Support)
+Program.cs (Code)
+  Avalonia's entry point, as TabStudio's Avalonia template has it · 1
+WinFormsApp1.Avalonia.csproj (Project)
+  UseWindowsForms project → Avalonia project · 1
+  net10.0-windows → net10.0 · 1

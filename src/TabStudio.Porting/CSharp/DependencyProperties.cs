@@ -77,7 +77,7 @@ internal static class DependencyProperties
         return type.WithMembers(type.Members.Insert(index, created));
     }
 
-    private static MemberDeclarationSyntax ConvertField(CodeFile file, FieldDeclarationSyntax field, InvocationExpressionSyntax call, string className, List<StatementSyntax> statements, HashSet<string> usings)
+    private static FieldDeclarationSyntax ConvertField(CodeFile file, FieldDeclarationSyntax field, InvocationExpressionSyntax call, string className, List<StatementSyntax> statements, HashSet<string> usings)
     {
         var method = call.Expression.ToString();
         var arguments = call.ArgumentList.Arguments;

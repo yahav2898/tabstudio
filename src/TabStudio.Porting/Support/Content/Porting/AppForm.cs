@@ -12,6 +12,11 @@ public class AppForm : WindowView
 {
     private DialogResult _dialogResult;
     private bool _loaded;
+    private bool _closingApproved;
+    private bool _closePending;
+
+    /// <summary>Awaited closing handlers, including confirmation dialogs.</summary>
+    public event Func<object?, FormClosingEventArgs, Task>? FormClosingAsync;
 
     /// <summary>Raised before the form is shown for the first time.</summary>
     public event EventHandler? Load;
@@ -76,6 +81,40 @@ public class AppForm : WindowView
         var closing = new FormClosingEventArgs(CloseReason.UserClosing, e.Cancel);
         FormClosing?.Invoke(this, closing);
         e.Cancel = closing.Cancel;
+        if (!_closingApproved && !e.Cancel && FormClosingAsync is { } handlers)
+        {
+            e.Cancel = true;
+            if (!_closePending)
+            {
+                _closePending = true;
+                CompleteCloseAsync(handlers, closing);
+            }
+        }
+    }
+
+    private async void CompleteCloseAsync(Func<object?, FormClosingEventArgs, Task> handlers, FormClosingEventArgs args)
+    {
+        try
+        {
+            foreach (var handler in handlers.GetInvocationList().Cast<Func<object?, FormClosingEventArgs, Task>>())
+            {
+                await handler(this, args);
+            }
+
+            if (!args.Cancel)
+            {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    _closingApproved = true;
+                    Close();
+                    _closingApproved = false;
+                });
+            }
+        }
+        finally
+        {
+            _closePending = false;
+        }
     }
 
     /// <inheritdoc />
@@ -170,4 +209,17 @@ public class FormClosedEventArgs(CloseReason closeReason) : EventArgs
 {
     /// <summary>Why the form closed.</summary>
     public CloseReason CloseReason { get; } = closeReason;
+}
+
+/// <summary>Bulk insertion into Avalonia's observable items without replacing its collection.</summary>
+public static class FormsItems
+{
+    /// <summary>Adds every value, preserving the order used by Windows Forms.</summary>
+    public static void AddRange(Avalonia.Controls.ItemCollection items, System.Collections.IEnumerable values)
+    {
+        foreach (var value in values)
+        {
+            items.Add(value);
+        }
+    }
 }

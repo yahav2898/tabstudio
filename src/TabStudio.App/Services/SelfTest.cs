@@ -128,7 +128,9 @@ public static partial class SelfTest
             var pythonTools = processes.Success ? await CheckPythonToolsAsync(main, cancellationToken) : new SelfTestResult(false, "Python tools: not run", TimeSpan.Zero);
             var forms = pythonTools.Success ? await ShowWindowsFormsAppAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Windows Forms: not run", TimeSpan.Zero);
 
-            var design = forms.Success ? await CheckDesignAsync(main, screenshots, cancellationToken) : new SelfTestResult(false, "Design: not run", TimeSpan.Zero);
+            var porting = forms.Success ? await PortFormsAppAsync(main, templates, screenshots, cancellationToken) : new SelfTestResult(false, "Port to Avalonia: not run", TimeSpan.Zero);
+
+            var design = porting.Success ? await CheckDesignAsync(main, screenshots, cancellationToken) : new SelfTestResult(false, "Design: not run", TimeSpan.Zero);
 
             // Swarm, on copies of the Avalonia template: its screens in the Device Matrix, then a phone in the swarm.
             var screens = design.Success ? await CheckSwarmScreensAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Swarm screens: not run", TimeSpan.Zero);
@@ -140,8 +142,8 @@ public static partial class SelfTest
             }
 
             return new SelfTestResult(
-                extensions.Success && toolchains.Success && processes.Success && pythonTools.Success && forms.Success && design.Success && screens.Success && swarm.Success,
-                $"{summary} | {debugged.Message} | {web.Message} | {blazor.Message} | {avalonia.Message} | {extensions.Message} | {toolchains.Message} | {processes.Message} | {pythonTools.Message} | {forms.Message} | {design.Message} | {screens.Message} | {swarm.Message}",
+                extensions.Success && toolchains.Success && processes.Success && pythonTools.Success && forms.Success && porting.Success && design.Success && screens.Success && swarm.Success,
+                $"{summary} | {debugged.Message} | {web.Message} | {blazor.Message} | {avalonia.Message} | {extensions.Message} | {toolchains.Message} | {processes.Message} | {pythonTools.Message} | {forms.Message} | {porting.Message} | {design.Message} | {screens.Message} | {swarm.Message}",
                 clock.Elapsed);
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)

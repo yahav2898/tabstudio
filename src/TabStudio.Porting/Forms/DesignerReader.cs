@@ -257,10 +257,10 @@ internal static class DesignerReader
             case ("Columns", "AddRange"):
                 foreach (var element in arguments.SelectMany(Elements))
                 {
-                    if (Component(element, components) is { } column)
+                    if (Component(element, components) is { } addedColumn)
                     {
-                        column.Parent = owner;
-                        owner.Columns.Add(column);
+                        addedColumn.Parent = owner;
+                        owner.Columns.Add(addedColumn);
                     }
                 }
 
