@@ -121,6 +121,9 @@ public static partial class CiLogParser
 {
     private const string TimestampFormat = "HH:mm:ss.fff";
 
+    /// <summary>How the runner begins the output of a step that runs a command or an action.</summary>
+    private const string StepGroupStart = "##[group]Run ";
+
     /// <summary>Makes a downloaded log readable.</summary>
     /// <param name="log">The log, or its start and end.</param>
     /// <param name="steps">The job's steps, for step headings; none when empty.</param>
@@ -245,8 +248,9 @@ public static partial class CiLogParser
         }
 
         /// <summary>
-        /// Finds the line each step starts at from its start time: the first line at or after it, or a
-        /// <c>##[group]</c> line in that second, which is how a step's output begins.
+        /// Finds the line each step starts at from its start time: the first line at or after it, or the
+        /// <c>##[group]Run ...</c> line in that second, which is how the runner begins a step's output. The first
+        /// step starts at the top, since the times of its first lines may be a moment before its own.
         /// </summary>
         private static Dictionary<int, GitHubJobStep> StepStarts(List<RawLine> lines, IReadOnlyList<GitHubJobStep> steps)
         {
@@ -271,9 +275,14 @@ public static partial class CiLogParser
                     continue;
                 }
 
+                if (starts.Count == 0)
+                {
+                    index = 0;
+                }
+
                 for (var i = index; i < lines.Count && lines[i].Time is { } time && time < second.AddSeconds(1); i++)
                 {
-                    if (lines[i].Content.StartsWith("##[group]", StringComparison.Ordinal))
+                    if (lines[i].Content.StartsWith(StepGroupStart, StringComparison.Ordinal))
                     {
                         index = i;
                         break;
@@ -387,7 +396,7 @@ public static partial class CiLogParser
             }
         }
 
-        private void AppendLine(string content, DateTimeOffset? time, CiLogLineKind kind, IReadOnlyList<CiLogSpan> spans)
+        private void AppendLine(string content, DateTimeOffset? time, CiLogLineKind kind, List<CiLogSpan> spans)
         {
             if (showTimestamps)
             {

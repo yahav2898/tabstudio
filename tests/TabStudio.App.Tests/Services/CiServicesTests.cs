@@ -1,4 +1,3 @@
-using TabStudio.App.Platform;
 using TabStudio.App.Services.Ci;
 using TabStudio.Core.Diagnostics;
 using TabStudio.SourceControl.GitHub;
@@ -186,7 +185,7 @@ public sealed class CiServicesTests
         var old = github.AddRun("hello", ci, head, "main", "completed", "success", new FakeJob { Name = "Build" });
         var running = github.AddRun("hello", ci, head, "main", "in_progress", null, new FakeJob { Name = "Build", Status = "in_progress", Conclusion = null });
         var client = github.CreateClient();
-        using var monitor = new CiMonitor(() => client, new ForegroundActivity());
+        using var monitor = new CiMonitor(() => client, new FakeAppActivity());
         var finished = new List<CiRunFinished>();
         monitor.RunFinished += (_, run) => finished.Add(run);
 
@@ -227,20 +226,8 @@ public sealed class CiServicesTests
         Assert.False(monitor.HasRunsInProgress);
     }
 
-    private static CiCheck Check(string name, GitHubRunStatus status, GitHubConclusion? conclusion) =>
-        CiCheck.From(new GitHubCheckRun(name.GetHashCode(StringComparison.Ordinal), name, status, conclusion, Now, null, null, null, null, null, 0, "github-actions"));
+    private static GitHubCheckRun Check(string name, GitHubRunStatus status, GitHubConclusion? conclusion) =>
+        new(name.Length, name, status, conclusion, Now, null, null, null, null, null, 0, "github-actions");
 
     private static DateTimeOffset At(int hour, int minute, int second) => new(2026, 10, 25, hour, minute, second, TimeSpan.Zero);
-
-    /// <summary>An app that is always in the foreground.</summary>
-    private sealed class ForegroundActivity : IAppActivity
-    {
-        public bool IsInBackground => false;
-
-        public event EventHandler? Changed
-        {
-            add { }
-            remove { }
-        }
-    }
 }

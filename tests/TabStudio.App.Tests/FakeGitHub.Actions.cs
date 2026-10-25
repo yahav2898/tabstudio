@@ -408,7 +408,7 @@ internal sealed partial class FakeGitHub
         })]),
     };
 
-    private static JsonNode CheckRunJson(Repo repo, FakeRun run, FakeJob job) => new JsonObject
+    private static JsonObject CheckRunJson(Repo repo, FakeRun run, FakeJob job) => new()
     {
         ["id"] = job.Id,
         ["name"] = job.Name,
@@ -422,7 +422,7 @@ internal sealed partial class FakeGitHub
         ["app"] = new JsonObject { ["slug"] = "github-actions" },
     };
 
-    private static JsonNode ExternalCheckJson(FakeExternalCheck check) => new JsonObject
+    private static JsonObject ExternalCheckJson(FakeExternalCheck check) => new()
     {
         ["id"] = check.Id,
         ["name"] = check.Name,
