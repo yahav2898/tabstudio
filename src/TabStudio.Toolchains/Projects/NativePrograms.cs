@@ -25,7 +25,7 @@ public static class NativePrograms
             if (header[0] == 0x7f && header[1] == 'E' && header[2] == 'L' && header[3] == 'F')
             {
                 // A PIE and a shared library are both ET_DYN; a program also has an entry point.
-                return header[5] == 1 && header[16] is 2 or 3 && header[24..32].ContainsAnyExcept((byte)0);
+                return header[5] == 1 && header[16] is 2 or 3 && header.Slice(24, header[4] == 1 ? 4 : 8).ContainsAnyExcept((byte)0);
             }
 
             return (header[0] == 'M' && header[1] == 'Z' && file.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))

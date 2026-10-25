@@ -1,25 +1,20 @@
 using System.ComponentModel;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Interactivity;
-using Avalonia.VisualTree;
 using TabStudio.App.ViewModels;
 
 namespace TabStudio.App.Views;
 
 /// <summary>
-/// The IDE shell: menu bar, toolbar, document tabs and editors, the bottom dock, the Solution Explorer and
-/// the status bar. Code here is view-only: creating editors, sizing panels and keyboard focus.
+/// The IDE shell: menu bar, toolbar, document tabs and editors, the bottom dock, the side bar with the activity bar,
+/// and the status bar. Code here is view-only: creating editors, the shell's key bindings and keyboard focus. The
+/// layout for the screen's size is in WorkspaceView.Layout.cs, the toolbar's run targets in WorkspaceView.Toolbar.cs
+/// and the floating touch bar in WorkspaceView.TouchBar.cs.
 /// </summary>
 public sealed partial class WorkspaceView : UserControl
 {
-    private const double SideBarWidth = 330;
-    private const double BottomPanelHeight = 200;
-
     private WorkspaceViewModel? _viewModel;
-    private GridLength _sideBarWidth = new(SideBarWidth);
-    private GridLength _bottomPanelHeight = new(BottomPanelHeight);
+    private KeyBinding? _searchBinding;
 
     /// <summary>Creates the view.</summary>
     public WorkspaceView()
@@ -36,13 +31,13 @@ public sealed partial class WorkspaceView : UserControl
             DocumentViewModel { FormsDesigner: { } forms } form => new FormsDesignerView(form, forms),
             _ => (Control)new CodeEditorView((DocumentViewModel)document),
         };
-        QuickOpenBox.KeyDown += OnQuickOpenKeyDown;
         PromptBox.KeyDown += OnPromptKeyDown;
-        QuickOpenList.AddHandler(TappedEvent, OnQuickOpenTapped, RoutingStrategies.Bubble, handledEventsToo: true);
-        KeyBindings.Add(new KeyBinding { Gesture = new KeyGesture(Key.Q, KeyModifiers.Control), Command = new FocusCommand(() => QuickOpenBox.Focus()) });
         InitializeKeyChords();
         InitializeTestExplorer();
         InitializeExtensions();
+        InitializeLayout();
+        InitializeToolbar();
+        InitializeTouchBar();
     }
 
     /// <inheritdoc />
@@ -54,6 +49,14 @@ public sealed partial class WorkspaceView : UserControl
             _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
             _viewModel.Prompt.PropertyChanged -= OnPromptPropertyChanged;
             _viewModel.EditorRebuildRequested -= OnEditorRebuildRequested;
+            DetachLayout(_viewModel);
+            DetachToolbar(_viewModel);
+        }
+
+        if (_searchBinding is not null)
+        {
+            KeyBindings.Remove(_searchBinding);
+            _searchBinding = null;
         }
 
         _viewModel = DataContext as WorkspaceViewModel;
@@ -62,27 +65,49 @@ public sealed partial class WorkspaceView : UserControl
             _viewModel.PropertyChanged += OnViewModelPropertyChanged;
             _viewModel.Prompt.PropertyChanged += OnPromptPropertyChanged;
             _viewModel.EditorRebuildRequested += OnEditorRebuildRequested;
-            UpdateSideBar();
+
+            // Ctrl+Q opens the search over the IDE, or closes it, as in Visual Studio.
+            _searchBinding = new KeyBinding { Gesture = new KeyGesture(Key.Q, KeyModifiers.Control), Command = _viewModel.Search.ToggleCommand };
+            KeyBindings.Add(_searchBinding);
+
+            // Once the menus' bindings have the new data context, which they take after this view does.
+            var viewModel = _viewModel;
+            Avalonia.Threading.Dispatcher.UIThread.Post(
+                () =>
+                {
+                    if (ReferenceEquals(_viewModel, viewModel))
+                    {
+                        RegisterCommands(viewModel);
+                    }
+                },
+                Avalonia.Threading.DispatcherPriority.Background);
+            AttachLayout(_viewModel);
+            AttachToolbar(_viewModel);
             UpdateBottomPanel();
+            TrackActiveEditorSoon();
         }
     }
 
-    /// <inheritdoc />
-    protected override void OnSizeChanged(SizeChangedEventArgs e)
+    /// <summary>
+    /// Gives the search every command of the menus, with its menu path and key gesture, and the gestures of the key
+    /// bindings, once per workspace: the menus stay where the commands are defined.
+    /// </summary>
+    private void RegisterCommands(WorkspaceViewModel viewModel)
     {
-        base.OnSizeChanged(e);
-
-        // On a narrow screen (a phone, or a tablet in portrait) the editor gets the width.
-        const double NarrowWidth = 900;
-        var wide = e.NewSize.Width >= NarrowWidth;
-        var firstLayout = e.PreviousSize.Width <= 0;
-        if (_viewModel is not null && e.WidthChanged && (firstLayout || (e.PreviousSize.Width >= NarrowWidth) != wide))
+        if (viewModel.Commands.Commands.Count > 0)
         {
-            _viewModel.IsSideBarVisible = wide;
+            return;
         }
+
+        viewModel.Commands.AddMenuItems(TopMenuItems(), null);
+        viewModel.Commands.AddKeyBindings(KeyBindings);
     }
 
-    private void OnEditorRebuildRequested(object? sender, DocumentViewModel document) => Editors.Rebuild(document);
+    private void OnEditorRebuildRequested(object? sender, DocumentViewModel document)
+    {
+        Editors.Rebuild(document);
+        TrackActiveEditorSoon();
+    }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
@@ -94,21 +119,20 @@ public sealed partial class WorkspaceView : UserControl
             case nameof(WorkspaceViewModel.IsBottomPanelVisible):
                 UpdateBottomPanel();
                 break;
+            case nameof(WorkspaceViewModel.ShowsSideBarProperties):
+                UpdateProperties();
+                break;
+            case nameof(WorkspaceViewModel.ActiveDocument):
+                OnActiveDocumentShown();
+                TrackActiveEditorSoon();
+                break;
+            case nameof(WorkspaceViewModel.IsDebugging) or nameof(WorkspaceViewModel.IsTouchBarCollapsed) or nameof(WorkspaceViewModel.ShowsEditorTouchBar):
+                ScheduleTouchBarPlacement();
+                break;
+            case nameof(WorkspaceViewModel.IsTouchInput) when _viewModel?.IsTouchInput == true:
+                TouchBarFader.Opacity = 1;
+                break;
         }
-    }
-
-    private void UpdateSideBar()
-    {
-        var visible = _viewModel?.IsSideBarVisible ?? true;
-        var column = MainArea.ColumnDefinitions[2];
-        if (!visible && column.Width.Value > 0)
-        {
-            _sideBarWidth = column.Width;
-        }
-
-        column.Width = visible ? _sideBarWidth : new GridLength(0);
-        SideBar.IsVisible = visible;
-        SideSplitter.IsVisible = visible;
     }
 
     private void UpdateBottomPanel()
@@ -154,55 +178,5 @@ public sealed partial class WorkspaceView : UserControl
             prompt.CancelCommand.Execute(null);
             e.Handled = true;
         }
-    }
-
-    private void OnQuickOpenKeyDown(object? sender, KeyEventArgs e)
-    {
-        if (_viewModel is null)
-        {
-            return;
-        }
-
-        switch (e.Key)
-        {
-            case Key.Enter:
-                _viewModel.OpenQuickOpenItemCommand.Execute(QuickOpenList.SelectedItem as QuickOpenItem);
-                e.Handled = true;
-                break;
-            case Key.Down when _viewModel.QuickOpenResults.Count > 0:
-                QuickOpenList.SelectedIndex = Math.Min(QuickOpenList.SelectedIndex + 1, _viewModel.QuickOpenResults.Count - 1);
-                e.Handled = true;
-                break;
-            case Key.Up when QuickOpenList.SelectedIndex > 0:
-                QuickOpenList.SelectedIndex--;
-                e.Handled = true;
-                break;
-            case Key.Escape:
-                _viewModel.QuickOpenText = string.Empty;
-                e.Handled = true;
-                break;
-        }
-    }
-
-    private void OnQuickOpenTapped(object? sender, TappedEventArgs e)
-    {
-        if ((e.Source as Control)?.FindAncestorOfType<ListBoxItem>(includeSelf: true)?.DataContext is QuickOpenItem item)
-        {
-            _viewModel?.OpenQuickOpenItemCommand.Execute(item);
-        }
-    }
-
-    /// <summary>A command that moves keyboard focus, for shortcuts that are view-only.</summary>
-    private sealed class FocusCommand(Action focus) : System.Windows.Input.ICommand
-    {
-        public event EventHandler? CanExecuteChanged
-        {
-            add { }
-            remove { }
-        }
-
-        public bool CanExecute(object? parameter) => true;
-
-        public void Execute(object? parameter) => focus();
     }
 }

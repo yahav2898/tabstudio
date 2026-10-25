@@ -17,7 +17,8 @@ using TabStudio.App.Views;
 namespace TabStudio.App.Services;
 
 /// <summary>
-/// The self test's design part, with the device's own fonts and theme setting (docs/design/README.md): single lines of
+/// The self test's design part, with the device's own fonts and theme setting (docs/design/README.md): the shell's
+/// activity bar, search and adaptive bars (SelfTest.Shell.cs); single lines of
 /// text in a fixed height are centered in it, in the IDE and on the Start screen (on a real tablet, 0.8's template tags
 /// sat at the top of their pills, which the desktop's fonts hid); the light theme recolors the views, the code-drawn
 /// brushes and the editor at once; and Follow the system takes the device's dark theme setting.
@@ -71,6 +72,12 @@ public static partial class SelfTest
             return true;
         }
 
+        var (shellProblem, shellSeen) = await CheckShellAsync(root, workspace, cancellationToken);
+        if (shellProblem is not null)
+        {
+            return Fail($"Shell: {shellProblem}");
+        }
+
         try
         {
             if (!await LookAsync("design-01-forms-designer-dark", IdeTheme.Dark) || !await LookAsync("design-02-forms-designer-light", IdeTheme.Light))
@@ -103,7 +110,7 @@ public static partial class SelfTest
 
             return new SelfTestResult(
                 true,
-                string.Create(CultureInfo.InvariantCulture, $"Design: {lines} lines of text centered in the Forms designer and on the Start screen, in the light and dark themes; Follow the system is {system}"),
+                string.Create(CultureInfo.InvariantCulture, $"Design: {shellSeen}; {lines} lines of text centered in the Forms designer and on the Start screen, in the light and dark themes; Follow the system is {system}"),
                 clock.Elapsed);
         }
         finally

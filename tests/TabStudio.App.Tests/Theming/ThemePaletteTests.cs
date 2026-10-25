@@ -66,6 +66,10 @@ public sealed class ThemePaletteTests
         ("Symbol.Purple", "Brush.Popup", 3),
         ("Symbol.Blue", "Brush.Popup", 3),
         ("Symbol.Gold", "Brush.Popup", 3),
+        ("Brush.TextBright", "Brush.Overlay", 4.5),
+        ("Brush.TextMuted", "Brush.Overlay", 4.5),
+        ("Brush.Info", "Brush.Overlay", 3),
+        ("Brush.Swarm.Highlight", "Brush.Panel", 3),
     ];
 
     private static readonly string[] SyntaxTokens =

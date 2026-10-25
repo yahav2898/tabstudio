@@ -3,23 +3,18 @@
 
   <!--
     Swarm's screens: the Device Matrix's icons, in the style of Icons.axaml (stroke paths on a 24×24 grid, drawn by
-    controls:StrokeIcon), and the colors of its tiles and layout issues.
+    controls:StrokeIcon), and the notice drawn over a screen. Its colors are tokens of Colors.axaml (Brush.Swarm.*,
+    Brush.Overlay), in both themes.
   -->
-
-  <SolidColorBrush x:Key="Swarm.Bezel" Color="#0C0D10" />
-  <SolidColorBrush x:Key="Swarm.BezelBorder" Color="#3A3F4B" />
-  <SolidColorBrush x:Key="Swarm.Highlight" Color="#F44336" />
-  <SolidColorBrush x:Key="Swarm.ErrorSoft" Color="#3A1F22" />
-  <SolidColorBrush x:Key="Swarm.WarningSoft" Color="#3A321C" />
 
   <!-- A short notice over a screen, such as a tap mirrored from another screen that found no element there. -->
   <ControlTheme x:Key="SwarmNotice" TargetType="Border">
-    <Setter Property="Background" Value="#E61B1F24" />
-    <Setter Property="BorderBrush" Value="#33FFFFFF" />
+    <Setter Property="Background" Value="{DynamicResource Brush.Overlay}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource Brush.Overlay.Border}" />
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="CornerRadius" Value="10" />
     <Setter Property="Padding" Value="14,10" />
-    <Setter Property="BoxShadow" Value="0 6 18 0 #66000000" />
+    <Setter Property="BoxShadow" Value="{DynamicResource Shadow.Popup}" />
     <Setter Property="IsHitTestVisible" Value="False" />
   </ControlTheme>
 

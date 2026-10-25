@@ -18,6 +18,8 @@ public sealed class DiagnosticRenderer : IBackgroundRenderer
     private static readonly ThemedPen WarningLine = ThemedPen.Editor("Editor.WarningSquiggle", 1.2);
     private static readonly ThemedPen MessageLine = ThemedPen.Editor("Editor.MessageSquiggle", 1.6, dashStyle: new ImmutableDashStyle([1, 2], 0));
 
+    // Squiggles by their number of waves, made once and moved under each span, rather than built again on every frame.
+    private readonly Dictionary<int, StreamGeometry> _squiggles = [];
     private TrackedRange<BuildDiagnostic>[] _diagnostics = [];
 
     /// <inheritdoc />
@@ -94,30 +96,43 @@ public sealed class DiagnosticRenderer : IBackgroundRenderer
                 }
                 else
                 {
-                    drawingContext.DrawGeometry(null, pen, CreateSquiggle(rect));
+                    using (drawingContext.PushTransform(Matrix.CreateTranslation(rect.Left, rect.Bottom - 1.5)))
+                    {
+                        drawingContext.DrawGeometry(null, pen, Squiggle(rect.Width));
+                    }
                 }
             }
         }
     }
 
-    private static StreamGeometry CreateSquiggle(Rect rect)
+    /// <summary>A squiggle as wide as a span, starting at the origin: up and down in 2.5 dip steps, at least two of them.</summary>
+    private StreamGeometry Squiggle(double width)
     {
         const double Step = 2.5;
+        var steps = (int)Math.Floor((Math.Max(width, Step * 2) / Step) + 1e-9);
+        if (_squiggles.TryGetValue(steps, out var cached))
+        {
+            return cached;
+        }
+
         var geometry = new StreamGeometry();
         using (var context = geometry.Open())
         {
-            var y = rect.Bottom - 1.5;
-            context.BeginFigure(new Point(rect.Left, y), isFilled: false);
-            var up = true;
-            for (var x = rect.Left + Step; x <= Math.Max(rect.Right, rect.Left + (Step * 2)); x += Step)
+            context.BeginFigure(default, isFilled: false);
+            for (var i = 1; i <= steps; i++)
             {
-                context.LineTo(new Point(x, up ? y - Step : y));
-                up = !up;
+                context.LineTo(new Point(i * Step, i % 2 == 1 ? -Step : 0));
             }
 
             context.EndFigure(isClosed: false);
         }
 
+        if (_squiggles.Count > 256)
+        {
+            _squiggles.Clear();
+        }
+
+        _squiggles[steps] = geometry;
         return geometry;
     }
 

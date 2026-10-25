@@ -30,6 +30,11 @@ public sealed partial class WorkspaceViewModel
     /// <summary>Feeds a TCP adapter's inherited console input, without ever writing text to DAP's protocol stream.</summary>
     private void StartAdapterInput(DebugAdapterSession session)
     {
+        if (StartNativeDebugInput())
+        {
+            return;
+        }
+
         if (!session.AcceptsProgramInput)
         {
             return;
@@ -120,9 +125,20 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
+        var withInput = await PrepareNativeDebugInputAsync(configuration);
+        if (withInput is null)
+        {
+            return;
+        }
+
+        configuration = withInput;
         var target = new LaunchTarget(configuration.Name, configuration, IsCurrentFile: false);
         _programEnvironments.AddOrUpdate(target, plan.Run.Environment);
         await LaunchAdapterAsync(target, start, noDebug: false);
+        if (!IsDebuggingWithAdapter)
+        {
+            StopNativeDebugInput();
+        }
     }
 
     /// <summary>
@@ -250,6 +266,7 @@ public sealed partial class WorkspaceViewModel
     /// <summary>Stops the program an adapter started, when the workspace closes. Called when the toolchains are disposed.</summary>
     private void StopAdapterProgram()
     {
+        StopNativeDebugInput();
         if (Interlocked.Exchange(ref _adapterProgramRun, null) is { } run)
         {
             run.Stop.Cancel();

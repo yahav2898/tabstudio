@@ -43,6 +43,17 @@ public static partial class SelfTest
 
         var success = workspace.Output.Text.Contains($"Hello, {Name}! This is C++", StringComparison.Ordinal)
             && workspace.Output.Text.Contains("has exited with code 0", StringComparison.Ordinal);
+        if (success)
+        {
+            var debugged = await DebugCompiledTemplateAsync(workspace, "main.cpp", "return message", "answer", "42", cancellationToken);
+            if (!debugged.Success)
+            {
+                return debugged;
+            }
+
+            return new(true, debugged.Message, clock.Elapsed);
+        }
+
         return new(success, success ? "C/C++: installed from Alpine, template built and ran with console input" : $"C/C++: {LastLines(workspace)}", clock.Elapsed);
     }
 }

@@ -98,5 +98,18 @@ public sealed class CppProjectTests : IDisposable
     public void Warnings_and_progress_are_not_errors(string output) =>
         Assert.Empty(new ProblemMatcher(Cpp).FindErrors([output], _ => true));
 
+    [Fact]
+    public void A_32_bit_shared_library_is_not_mistaken_for_a_Makefile_program()
+    {
+        var library = new byte[32];
+        library[0] = 0x7f; library[1] = (byte)'E'; library[2] = (byte)'L'; library[3] = (byte)'F';
+        library[4] = 1; library[5] = 1; library[16] = 3; library[28] = 52;
+        File.WriteAllBytes(_folder.Resolve("lib.so"), library);
+        Assert.Empty(NativePrograms.Find(_folder.Path));
+        library[24] = 1;
+        File.WriteAllBytes(_folder.Resolve("app"), library);
+        Assert.Equal([_folder.Resolve("app")], NativePrograms.Find(_folder.Path));
+    }
+
     public void Dispose() => _folder.Dispose();
 }

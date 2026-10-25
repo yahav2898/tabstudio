@@ -589,3 +589,8 @@ Output panel console; F5 uses LLDB DAP with runInTerminal. Compiler errors link 
 job verifies clangd completion, diagnostics and navigation, console I/O, a breakpoint, locals and a watch. The
 emulator installs from the real Alpine mirror and builds and runs the CMake template. PRoot native debugging
 needs validation on device kernels; host debugger results do not establish Android ptrace compatibility.
+
+On Android, LLDB 22 launches the debuggee itself inside the same PRoot trace tree. Its `stdio` launch
+configuration reads stdin from a private FIFO shared from the app cache; the Output panel forwards answers
+there, while stdout and stderr arrive as DAP events. Desktop LLDB keeps using runInTerminal. This avoids
+attempting ptrace across two independent PRoot instances. The emulator also checks a breakpoint and a local.
