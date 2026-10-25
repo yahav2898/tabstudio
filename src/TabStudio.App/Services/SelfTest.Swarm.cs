@@ -27,6 +27,9 @@ public static partial class SelfTest
     /// <summary>The name of the phone that joins the swarm.</summary>
     public const string SwarmDeviceName = "Self-test phone";
 
+    /// <summary>The template's count, as every screen of the swarm names it.</summary>
+    private const string SwarmCountPath = "MainView/StackPanel[0]/TextBlock[2]";
+
     /// <summary>How long the phone may take to show the app, its packages restored before by the Avalonia part.</summary>
     private static readonly TimeSpan SwarmStartTimeout = TimeSpan.FromSeconds(150);
 
@@ -110,9 +113,17 @@ public static partial class SelfTest
             }
 
             await WaitAsync(() => SwarmTexts(view).Contains("Clicked 1 times"), cancellationToken);
+
+            // The tablet reads the count through the phone's app preview, the screen it drives, by the element's path.
+            var counted = swarm.ScreenOf(device) is { } screen ? await screen.ReadTextAsync(SwarmCountPath, cancellationToken) : null;
+            if (counted != "Clicked 1 times")
+            {
+                return new SelfTestResult(false, $"Swarm: {detail}, but the phone's screen read \"{counted}\" at {SwarmCountPath}.", clock.Elapsed);
+            }
+
             return new SelfTestResult(
                 true,
-                string.Create(CultureInfo.InvariantCulture, $"Swarm: {SwarmDeviceName} joined over {security}, showed {SwarmAppName} in {shownAfter.TotalSeconds:0.0} s, {detail}, and counted on"),
+                string.Create(CultureInfo.InvariantCulture, $"Swarm: {SwarmDeviceName} joined over {security}, showed {SwarmAppName} in {shownAfter.TotalSeconds:0.0} s, {detail}, counted on, and its screen read \"{counted}\""),
                 clock.Elapsed);
         }
         finally
