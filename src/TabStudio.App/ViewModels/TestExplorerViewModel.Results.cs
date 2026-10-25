@@ -21,9 +21,13 @@ public sealed partial class TestExplorerViewModel
             entry.State = TestState.Queued;
         }
 
-        _runTotal += tests.Count;
-        IsProgressIndeterminate = false;
-        UpdateRunProgress();
+        if (IsRunning)
+        {
+            _runTotal += tests.Count;
+            IsProgressIndeterminate = false;
+            UpdateRunProgress();
+        }
+
         RefreshNodes(queued);
     }
 
@@ -48,8 +52,12 @@ public sealed partial class TestExplorerViewModel
         ArgumentNullException.ThrowIfNull(result);
         if (Find(projectFilePath, result.Test.Id) is { } entry && entry.Apply(result))
         {
-            _runCompleted++;
-            UpdateRunProgress();
+            if (IsRunning)
+            {
+                _runCompleted++;
+                UpdateRunProgress();
+            }
+
             RefreshNodes([entry]);
         }
     }
