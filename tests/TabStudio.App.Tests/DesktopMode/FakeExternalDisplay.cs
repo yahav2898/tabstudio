@@ -21,6 +21,22 @@ internal sealed class FakeExternalDisplay : IExternalDisplayService
     /// <inheritdoc />
     public bool IsPresenting => Window is not null;
 
+    /// <inheritdoc />
+    public DesktopCursor Cursor { get; } = new();
+
+    /// <inheritdoc />
+    public bool HasKeyboard { get; private set; } = true;
+
+    /// <inheritdoc />
+    public event EventHandler? KeyboardChanged;
+
+    /// <summary>Connects or disconnects the tablet's keyboard.</summary>
+    public void SetKeyboard(bool connected)
+    {
+        HasKeyboard = connected;
+        KeyboardChanged?.Invoke(this, EventArgs.Empty);
+    }
+
     /// <summary>The window standing for the display while it shows something.</summary>
     public Window? Window { get; private set; }
 
@@ -77,6 +93,8 @@ internal sealed class FakeExternalDisplay : IExternalDisplayService
             Content = content,
         };
         Window.Show();
+        // A headless window draws one pixel per unit, so its pixels are its units.
+        Cursor.Reset((int)Window.Width, (int)Window.Height, Window.RenderScaling);
         PresentedScale = scale;
         Presentations++;
         return true;
@@ -89,6 +107,7 @@ internal sealed class FakeExternalDisplay : IExternalDisplayService
     {
         if (Window is { } window)
         {
+            Cursor.Hide();
             Window = null;
             window.Content = null;
             window.Close();

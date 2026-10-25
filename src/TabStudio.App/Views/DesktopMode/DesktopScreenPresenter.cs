@@ -36,6 +36,7 @@ internal sealed class DesktopScreenPresenter : IDisposable
         _tablet = tablet;
         _ide = ide;
         _desktop = desktop;
+        _screen.MousePointer = desktop.Displays.Cursor;
         _desktop.PropertyChanged += OnDesktopPropertyChanged;
         _desktop.KeyboardFocusRequested += OnKeyboardFocusRequested;
         _desktop.Displays.PresentationEnded += OnPresentationEnded;

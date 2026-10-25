@@ -24,19 +24,21 @@ namespace TabStudio.Android;
 /// display, at the scale desktop mode picks for it, so the IDE is laid out for the monitor rather than the tablet.
 /// </para>
 /// <para>
-/// Input: a mouse or touch screen on the display (where Android routes the pointer there, as on Android 16 and later
-/// with connected displays, or with an external touch screen) reaches the presentation's view directly. A keyboard
-/// connected to the tablet sends its keys to Android's focused window, normally the tablet's, and Avalonia, which has
-/// one keyboard focus for the whole app, delivers them to the focused element of the IDE on the display.
+/// Input: a keyboard connected to the tablet sends its keys to Android's focused window, the tablet's, and Avalonia,
+/// which has one keyboard focus for the whole app, delivers them to the focused element of the IDE on the display.
+/// The tablet's mouse is captured for the display (<see cref="AndroidDesktopMouse"/>), unless Android moves its own
+/// pointer onto the display, as Android 16's connected displays do, or the display has a touch screen: then their
+/// events reach the presentation's view directly.
 /// </para>
 /// </remarks>
-public sealed partial class AndroidExternalDisplays : Java.Lang.Object, IExternalDisplayService, DisplayManager.IDisplayListener
+public sealed class AndroidExternalDisplays : Java.Lang.Object, IExternalDisplayService, DisplayManager.IDisplayListener
 {
     private static readonly AndroidColor WindowColor = AndroidColor.ParseColor("#1B1D23");
 
     private readonly Context _context;
     private readonly Func<global::Android.App.Activity?> _activity;
     private readonly DisplayManager _displays;
+    private readonly AndroidKeyboardWatcher _keyboard;
     private AndroidPresentation? _presentation;
     private AvaloniaView? _view;
 
@@ -50,6 +52,8 @@ public sealed partial class AndroidExternalDisplays : Java.Lang.Object, IExterna
         _displays = (DisplayManager)context.GetSystemService(Context.DisplayService)!;
         _displays.RegisterDisplayListener(this, new Handler(Looper.MainLooper!));
         Display = FindDisplay() is { } display ? Describe(display) : null;
+        Mouse = new AndroidDesktopMouse(activity, Cursor);
+        _keyboard = new AndroidKeyboardWatcher(context);
     }
 
     /// <inheritdoc />
@@ -60,6 +64,22 @@ public sealed partial class AndroidExternalDisplays : Java.Lang.Object, IExterna
 
     /// <inheritdoc />
     public bool IsPresenting => _presentation is not null;
+
+    /// <inheritdoc />
+    public DesktopCursor Cursor { get; } = new();
+
+    /// <inheritdoc />
+    public bool HasKeyboard => _keyboard.IsConnected;
+
+    /// <summary>The tablet's mouse on the display: the activity forwards the tablet window's pointer events to it.</summary>
+    internal AndroidDesktopMouse Mouse { get; }
+
+    /// <inheritdoc />
+    public event EventHandler? KeyboardChanged
+    {
+        add => _keyboard.Changed += value;
+        remove => _keyboard.Changed -= value;
+    }
 
     /// <inheritdoc />
     public event EventHandler? DisplayChanged;
@@ -103,6 +123,11 @@ public sealed partial class AndroidExternalDisplays : Java.Lang.Object, IExterna
         presentation.DismissEvent += OnPresentationDismissed;
         _presentation = presentation;
         _view = view;
+        if (Display is { } shown)
+        {
+            Mouse.Attach(view, shown.PixelWidth, shown.PixelHeight, scale);
+        }
+
         return true;
     }
 
@@ -137,6 +162,9 @@ public sealed partial class AndroidExternalDisplays : Java.Lang.Object, IExterna
         {
             _displays.UnregisterDisplayListener(this);
             Dismiss();
+            Mouse.Dispose();
+            _context.UnregisterComponentCallbacks(_keyboard);
+            _keyboard.Dispose();
         }
 
         base.Dispose(disposing);
@@ -164,6 +192,7 @@ public sealed partial class AndroidExternalDisplays : Java.Lang.Object, IExterna
     /// <summary>Stops the view drawing on a display that is going away, and lets go of the IDE in it.</summary>
     private void ReleaseView()
     {
+        Mouse.Detach();
         if (_view is { } view)
         {
             // Hiding it first stops Avalonia's rendering of the view before its surface goes.

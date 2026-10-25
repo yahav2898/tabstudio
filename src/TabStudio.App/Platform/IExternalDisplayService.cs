@@ -18,6 +18,21 @@ public interface IExternalDisplayService
     /// <summary>Whether a view is shown on <see cref="Display"/>.</summary>
     bool IsPresenting { get; }
 
+    /// <summary>
+    /// The pointer the platform moves on the display while it has the tablet's mouse to itself, for the shown view
+    /// to draw. Hidden while the system's own pointer is used, or the mouse is with the tablet.
+    /// </summary>
+    DesktopCursor Cursor { get; }
+
+    /// <summary>
+    /// Whether a keyboard is connected to the device: its keys type on the display. Without one, the tablet's
+    /// on-screen keyboard types there through desktop mode's companion.
+    /// </summary>
+    bool HasKeyboard { get; }
+
+    /// <summary>Raised when a keyboard is connected or disconnected.</summary>
+    event EventHandler? KeyboardChanged;
+
     /// <summary>Raised when a display is connected or disconnected, or its size changes.</summary>
     event EventHandler? DisplayChanged;
 

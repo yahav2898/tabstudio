@@ -44,6 +44,7 @@ public sealed partial class DesktopModeViewModel : ObservableObject, IDisposable
         ScaleOptions = [.. Enum.GetValues<DesktopScale>().Select(scale => new DesktopScaleOption(scale, LabelOf(scale), SetScaleCommand))];
         UpdateScaleOptions();
         Displays.DisplayChanged += OnDisplayChanged;
+        Displays.KeyboardChanged += OnKeyboardChanged;
         Display = displays.Display;
         if (Display is not null)
         {
@@ -59,6 +60,9 @@ public sealed partial class DesktopModeViewModel : ObservableObject, IDisposable
 
     /// <summary>Whether the platform can show the IDE on another display; false on the desktop host.</summary>
     public bool IsSupported => Displays.IsSupported;
+
+    /// <summary>Whether a keyboard is connected, which types on the display; without one the companion offers the on-screen keyboard.</summary>
+    public bool HasKeyboard => Displays.HasKeyboard;
 
     /// <summary>The connected display, if any.</summary>
     [ObservableProperty]
@@ -200,6 +204,7 @@ public sealed partial class DesktopModeViewModel : ObservableObject, IDisposable
 
         _disposed = true;
         Displays.DisplayChanged -= OnDisplayChanged;
+        Displays.KeyboardChanged -= OnKeyboardChanged;
         Companion.Dispose();
     }
 
@@ -295,6 +300,8 @@ public sealed partial class DesktopModeViewModel : ObservableObject, IDisposable
             Offer();
         }
     }
+
+    private void OnKeyboardChanged(object? sender, EventArgs e) => OnPropertyChanged(nameof(HasKeyboard));
 
     /// <summary>A display was connected: start desktop mode if the user chose "Always", otherwise offer it.</summary>
     private void Offer()

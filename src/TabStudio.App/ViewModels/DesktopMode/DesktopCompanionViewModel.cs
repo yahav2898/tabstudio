@@ -42,6 +42,7 @@ public sealed partial class DesktopCompanionViewModel : ObservableObject, IDispo
         Element = new XamlPropertiesViewModel();
         Toolbox.Inserted += OnInserted;
         Element.EditFinished += OnEditFinished;
+        Desktop.PropertyChanged += OnDesktopPropertyChanged;
     }
 
     /// <summary>Desktop mode, for the companion's header.</summary>
@@ -49,7 +50,7 @@ public sealed partial class DesktopCompanionViewModel : ObservableObject, IDispo
 
     /// <summary>The open workspace, or <see langword="null"/> while the big screen shows the start screen.</summary>
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(HasWorkspace), nameof(Selection))]
+    [NotifyPropertyChangedFor(nameof(HasWorkspace), nameof(Selection), nameof(ShowsKeyboard))]
     public partial WorkspaceViewModel? Workspace { get; set; }
 
     /// <summary>Whether a workspace is open.</summary>
@@ -110,6 +111,7 @@ public sealed partial class DesktopCompanionViewModel : ObservableObject, IDispo
         Workspace = null;
         Toolbox.Inserted -= OnInserted;
         Element.EditFinished -= OnEditFinished;
+        Desktop.PropertyChanged -= OnDesktopPropertyChanged;
     }
 
     [RelayCommand]

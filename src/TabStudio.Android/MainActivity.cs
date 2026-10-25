@@ -46,7 +46,7 @@ namespace TabStudio.Android;
     ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize | ConfigChanges.SmallestScreenSize
         | ConfigChanges.ScreenLayout | ConfigChanges.UiMode | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden
         | ConfigChanges.Navigation)]
-public sealed class MainActivity : AvaloniaMainActivity<TabStudioApplication>
+public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplication>
 {
     /// <summary>The intent extra that runs the self test.</summary>
     public const string SelfTestExtra = "tabstudio.selftest";
@@ -123,7 +123,7 @@ public sealed class MainActivity : AvaloniaMainActivity<TabStudioApplication>
                 services.AddSingleton<INotifications>(notifications);
 
                 // Presentations on external displays belong to the current activity.
-                services.AddSingleton<IExternalDisplayService>(_ => new AndroidExternalDisplays(context, () => _current));
+                services.AddSingleton<IExternalDisplayService>(_ => _displays ??= new AndroidExternalDisplays(context, () => _current));
             });
     }
 
@@ -142,7 +142,7 @@ public sealed class MainActivity : AvaloniaMainActivity<TabStudioApplication>
         if (result.Success && desktop)
         {
             var tablet = (app.ApplicationLifetime as ISingleViewApplicationLifetime)?.MainView as TabStudio.App.Views.MainView;
-            var input = new AndroidDesktopSelfTestInput(line => AndroidLog.Info(LogTag, line), services.GetService<IExternalDisplayService>() as AndroidExternalDisplays);
+            var input = new AndroidDesktopSelfTestInput(line => AndroidLog.Info(LogTag, line), _displays, () => _current);
             var part = tablet is null
                 ? new SelfTestResult(false, "Desktop: the tablet's view is missing.", TimeSpan.Zero)
                 : await SelfTest.RunDesktopModeAsync(main, tablet, input, screenshots, timeout.Token);

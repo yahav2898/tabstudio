@@ -135,22 +135,11 @@ public static partial class SelfTest
 
         steps.Add("the tablet's keyboard typed on the display and the designer showed it");
 
-        // A click on the display: the Output tab of the bottom panel.
-        workspace.SelectPanelCommand.Execute(BottomPanel.ErrorList);
-        await WaitForAsync(() => FindTab(screen, "Output") is { Bounds.Width: > 0 }, TimeSpan.FromSeconds(5), cancellationToken);
-        if (FindTab(screen, "Output") is not { } outputTab
-            || outputTab.TranslatePoint(new Point(outputTab.Bounds.Width / 2, outputTab.Bounds.Height / 2), displayRoot) is not { } center)
+        // The tablet's mouse on the display: a click on the Output tab, and the wheel over the editor.
+        if (await UseMouseOnDisplayAsync(new DesktopMouseCheck(workspace, desktop, screen, displayRoot, display, editor), input, steps, cancellationToken) is { } mouseProblem)
         {
-            return Fail("the Output tab is not on the display.");
+            return Fail(mouseProblem);
         }
-
-        input.Click(display.Id, (int)Math.Round(center.X * displayRoot.RenderScaling), (int)Math.Round(center.Y * displayRoot.RenderScaling));
-        if (!await WaitForAsync(() => workspace.SelectedPanel == BottomPanel.Output, InputTimeout, cancellationToken))
-        {
-            return Fail("a click on the display did not reach the IDE.");
-        }
-
-        steps.Add("a click on the display opened the Output panel");
 
         if (screenshots is not null)
         {

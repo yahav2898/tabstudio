@@ -18,6 +18,19 @@ public sealed class NoExternalDisplayService : IExternalDisplayService
     public bool IsPresenting => false;
 
     /// <inheritdoc />
+    public DesktopCursor Cursor { get; } = new();
+
+    /// <inheritdoc />
+    public bool HasKeyboard => true;
+
+    /// <inheritdoc />
+    public event EventHandler? KeyboardChanged
+    {
+        add { }
+        remove { }
+    }
+
+    /// <inheritdoc />
     public event EventHandler? DisplayChanged
     {
         add { }

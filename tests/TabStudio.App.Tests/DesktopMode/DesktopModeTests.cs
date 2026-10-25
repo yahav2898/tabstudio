@@ -1,4 +1,6 @@
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
@@ -48,6 +50,8 @@ public sealed class DesktopModeTests : IDisposable
         document.NavigateTo(33, 1);
         await UiTestHelpers.WaitUntilAsync(() => document.CaretLine == 33 && editor.Editor.VerticalOffset > 0, because: "the caret on line 33, scrolled into view");
         var scroll = editor.Editor.VerticalOffset;
+        var touchBar = ide.GetVisualDescendants().OfType<Button>().Single(b => b.Name == "FoldTouchBarButton");
+        Assert.True(touchBar.IsEffectivelyVisible);
 
         _display.Connect();
         await UiTestHelpers.WaitUntilAsync(() => true);
@@ -67,6 +71,9 @@ public sealed class DesktopModeTests : IDisposable
         Assert.Equal(33, document.CaretLine);
         Assert.Equal(1, _display.PresentedScale);
         Assert.Contains(monitor.GetVisualDescendants().OfType<TextBlock>(), t => t.Text == "Desktop mode" && t.IsEffectivelyVisible);
+
+        // A keyboard and a mouse are used there, and the tablet has the big buttons: no floating touch buttons.
+        Assert.False(touchBar.IsEffectivelyVisible);
         UiTestHelpers.SaveScreenshot(monitor, "desktop-02-big-screen");
         UiTestHelpers.SaveScreenshot(tablet, "desktop-03-tablet-companion");
 
@@ -87,7 +94,93 @@ public sealed class DesktopModeTests : IDisposable
         Assert.Equal(caret, document.CaretOffset);
         Assert.Equal(scroll, editor.Editor.VerticalOffset);
         Assert.False(tablet.GetVisualDescendants().OfType<DesktopCompanionView>().Single().IsEffectivelyVisible);
+        Assert.True(touchBar.IsEffectivelyVisible);
         UiTestHelpers.SaveScreenshot(tablet, "desktop-05-back-on-the-tablet");
+    }
+
+    [AvaloniaFact]
+    public async Task Without_a_keyboard_the_tablet_s_on_screen_keyboard_types_into_the_editor_on_the_big_screen()
+    {
+        var tablet = Show(1280, 800);
+        var workspace = await OpenSampleAsync();
+        var document = workspace.ActiveDocument!;
+        _display.SetKeyboard(false);
+        _display.Connect();
+        Desktop.EnterCommand.Execute(null);
+        var monitor = await WaitForMonitorAsync();
+        var editor = monitor.GetVisualDescendants().OfType<CodeEditorView>().Single(view => ReferenceEquals(view.DataContext, document));
+        await UiTestHelpers.WaitUntilAsync(() => editor.Editor.TextArea.IsKeyboardFocusWithin, because: "the editor on the display to have the keyboard");
+        await MoveCaretAsync(document, 0);
+        var bar = tablet.GetVisualDescendants().OfType<DesktopKeyboardView>().Single();
+        Assert.True(bar.IsEffectivelyVisible);
+
+        // A tap on the field: the on-screen keyboard types there, and the text goes to the editor's caret.
+        var field = bar.GetVisualDescendants().OfType<TextBox>().Single();
+        field.Focus();
+        Assert.Same(editor.Editor.TextArea, bar.Target);
+        Assert.Equal("Type into Program.cs on the big screen", field.Watermark);
+        field.Text = "// typed";
+        field.Text = "// typed on a tablet";
+        field.Text = "// Typed on a tablet";
+        Assert.Equal("// Typed on a tablet// Welcome to TabStudio!", Line(document, 1));
+        UiTestHelpers.SaveScreenshot(tablet, "desktop-11-tablet-typing");
+        UiTestHelpers.SaveScreenshot(monitor, "desktop-11-big-screen-typing");
+
+        // Enter goes to the editor, and the field starts again.
+        tablet.KeyPress(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, null);
+        tablet.KeyRelease(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, null);
+        Assert.Equal("// Typed on a tablet", Line(document, 1));
+        Assert.Equal(string.Empty, field.Text);
+
+        // The bar's keys: Tab indents; Backspace on the empty field deletes on the big screen.
+        Button(bar, "Tab").RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Avalonia.Controls.Button.ClickEvent));
+        var indented = Line(document, 2);
+        Assert.True(indented.Length > "// Welcome to TabStudio!".Length && indented.TrimStart() == "// Welcome to TabStudio!", indented);
+        tablet.KeyPress(Key.Back, RawInputModifiers.None, PhysicalKey.Backspace, null);
+        tablet.KeyRelease(Key.Back, RawInputModifiers.None, PhysicalKey.Backspace, null);
+        Assert.True(Line(document, 2).Length < indented.Length);
+
+        // A keyboard connected: its keys type on the big screen, and the bar goes.
+        _display.SetKeyboard(true);
+        await UiTestHelpers.WaitUntilAsync(() => true);
+        Assert.False(bar.IsEffectivelyVisible);
+    }
+
+    [AvaloniaFact]
+    public async Task The_tablet_s_mouse_has_a_pointer_of_its_own_on_the_big_screen()
+    {
+        var tablet = Show(1280, 800);
+        var workspace = await OpenSampleAsync();
+        _display.Connect(1920, 1080, 1.5);
+        Desktop.EnterCommand.Execute(null);
+        var monitor = await WaitForMonitorAsync();
+        var pointer = monitor.GetVisualDescendants().OfType<DesktopPointerView>().Single();
+        Assert.IsType<OverlayLayer>(pointer.GetVisualParent());
+        Assert.Equal(int.MaxValue, pointer.ZIndex);
+        Assert.False(pointer.IsVisible);
+
+        // The platform has the mouse and moves the pointer over the Output tab, where the IDE gets its events.
+        workspace.SelectPanelCommand.Execute(BottomPanel.ErrorList);
+        await UiTestHelpers.WaitUntilAsync(() => true);
+        var output = monitor.GetVisualDescendants().OfType<Button>().Single(b => b.Content as string == "Output" && b.IsEffectivelyVisible);
+        var center = output.TranslatePoint(new Point(output.Bounds.Width / 2, output.Bounds.Height / 2), monitor)!.Value;
+        _display.Cursor.MoveTo(center.X, center.Y);
+        _display.Cursor.Show();
+        monitor.MouseMove(center);
+        await UiTestHelpers.WaitUntilAsync(() => true);
+
+        Assert.True(pointer.IsVisible);
+        Assert.Equal(center.X, Canvas.GetLeft(pointer), 3);
+        Assert.Equal(center.Y, Canvas.GetTop(pointer), 3);
+        Assert.True(output.IsPointerOver);
+        UiTestHelpers.SaveScreenshot(monitor, "desktop-10-big-screen-pointer");
+
+        // The mouse goes back to the tablet, and the pointer goes with it.
+        _display.Cursor.Hide();
+        Assert.False(pointer.IsVisible);
+        Desktop.ExitCommand.Execute(null);
+        await UiTestHelpers.WaitUntilAsync(() => _display.Window is null, because: "the IDE back on the tablet");
+        Assert.False(_display.Cursor.IsVisible);
     }
 
     [AvaloniaFact]
@@ -109,6 +202,7 @@ public sealed class DesktopModeTests : IDisposable
         Assert.True(Desktop.Companion.ShowsSteps);
         Assert.True(Button(actions, "Step Over (F10)").IsEffectivelyVisible);
         Assert.False(Button(actions, "Build Solution (Ctrl+Shift+B)").IsEffectivelyVisible);
+        Assert.False(monitor.GetVisualDescendants().OfType<DebugTouchBarView>().Single().IsEffectivelyVisible);
         UiTestHelpers.SaveScreenshot(tablet, "desktop-04-companion-debugging");
         UiTestHelpers.SaveScreenshot(monitor, "desktop-04-big-screen-debugging");
 
@@ -284,6 +378,9 @@ public sealed class DesktopModeTests : IDisposable
         await UiTestHelpers.WaitUntilAsync(() => true);
     }
 
+    private static string Line(DocumentViewModel document, int number) =>
+        document.Document.GetText(document.Document.GetLineByNumber(number));
+
     private static Button Button(Control root, string toolTip) =>
         root.GetVisualDescendants().OfType<Button>().Single(b => ToolTip.GetTip(b) as string == toolTip);
 
@@ -337,13 +434,31 @@ public sealed class DesktopModeTests : IDisposable
     {
         public void Type(string text) => tablet.KeyTextInput(text);
 
-        public void Click(int displayId, int x, int y)
+        public Task ClickAsync(int displayId, PixelPoint point, CancellationToken cancellationToken)
+        {
+            var (window, at) = MoveTo(displayId, point);
+            window.MouseDown(at, MouseButton.Left);
+            window.MouseUp(at, MouseButton.Left);
+            return Task.CompletedTask;
+        }
+
+        public Task ScrollAsync(int displayId, PixelPoint point, double notches, CancellationToken cancellationToken)
+        {
+            var (window, at) = MoveTo(displayId, point);
+            window.MouseWheel(at, new Vector(0, notches));
+            return Task.CompletedTask;
+        }
+
+        /// <summary>The mouse as TabStudio's own pointer moves it, captured from the tablet.</summary>
+        private (Window Window, Point At) MoveTo(int displayId, PixelPoint point)
         {
             Assert.Equal(FakeExternalDisplay.DisplayId, displayId);
             var window = display.Window!;
-            var point = new Avalonia.Point(x / window.RenderScaling, y / window.RenderScaling);
-            window.MouseDown(point, MouseButton.Left);
-            window.MouseUp(point, MouseButton.Left);
+            display.Cursor.MoveTo(point.X, point.Y);
+            display.Cursor.Show();
+            var at = point.ToPoint(window.RenderScaling);
+            window.MouseMove(at);
+            return (window, at);
         }
 
         public Task ScreenshotAsync(CancellationToken cancellationToken)

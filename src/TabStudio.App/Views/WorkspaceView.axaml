@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="using:TabStudio.App.Controls"
              xmlns:conv="using:TabStudio.App.Converters"
+             xmlns:input="using:TabStudio.App.Input"
              xmlns:views="using:TabStudio.App.Views"
              xmlns:actionViews="using:TabStudio.App.Views.Actions"
              xmlns:prv="using:TabStudio.App.Views.PullRequests"
@@ -436,9 +437,10 @@
           <!-- The floating touch buttons, editing or debugging; folded into one small button they cover no code. -->
           <Panel HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="16,12">
             <Panel.IsVisible>
-              <MultiBinding Converter="{x:Static BoolConverters.Or}">
+              <MultiBinding Converter="{x:Static conv:DesktopModeConverters.TouchBarsVisible}">
                 <Binding Path="ShowsEditorTouchBar" />
                 <Binding Path="IsDebugging" />
+                <Binding Path="$self.(input:InputModality.PrefersKeyboard)" />
               </MultiBinding>
             </Panel.IsVisible>
             <Button x:Name="UnfoldTouchBarButton" Theme="{StaticResource ToolButton}" Width="44" Height="44" CornerRadius="14" Padding="0"

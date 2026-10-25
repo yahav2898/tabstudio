@@ -21,6 +21,7 @@ namespace TabStudio.App.Views.DesktopMode;
 public sealed partial class DesktopScreenView : UserControl
 {
     private IInputElement? _lastFocused;
+    private TextArea? _lastEditor;
     private TopLevel? _topLevel;
 
     /// <summary>Creates the view.</summary>
@@ -42,8 +43,17 @@ public sealed partial class DesktopScreenView : UserControl
         if (ide is null)
         {
             _lastFocused = null;
+            _lastEditor = null;
         }
     }
+
+    /// <summary>
+    /// What typing on the display goes to: what last had the keyboard focus there, or the active document's editor.
+    /// The tablet's on-screen keyboard types into it through the companion.
+    /// </summary>
+    internal InputElement? KeyboardTarget =>
+        Shown(_lastFocused as TextBox) ?? Shown(_lastFocused as TextArea) ?? Shown(_lastEditor)
+            ?? this.GetVisualDescendants().OfType<TextArea>().FirstOrDefault(editor => editor.IsEffectivelyVisible);
 
     /// <summary>Gives the keyboard focus back to what had it on the display, or to the active document's editor.</summary>
     internal void RestoreKeyboardFocus()
@@ -108,11 +118,23 @@ public sealed partial class DesktopScreenView : UserControl
             InputModality.Track(_topLevel);
             _topLevel.AddHandler(KeyDownEvent, OnUnfocusedKeyDown, RoutingStrategies.Bubble);
         }
+
+        AddPointer();
+    }
+
+    /// <inheritdoc />
+    protected override void OnLoaded(RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
+
+        // The window's overlay layer, in case it was not there yet when the view was attached.
+        AddPointer();
     }
 
     /// <inheritdoc />
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
+        RemovePointer();
         if (_topLevel is not null)
         {
             InputModality.Untrack(_topLevel);
@@ -133,5 +155,16 @@ public sealed partial class DesktopScreenView : UserControl
         }
     }
 
-    private void OnGotFocus(object? sender, GotFocusEventArgs e) => _lastFocused = e.Source as IInputElement;
+    private void OnGotFocus(object? sender, GotFocusEventArgs e)
+    {
+        _lastFocused = e.Source as IInputElement;
+        if (e.Source is TextArea editor)
+        {
+            _lastEditor = editor;
+        }
+    }
+
+    /// <summary>An element if it is still on the display and can be typed into.</summary>
+    private InputElement? Shown(InputElement? element) =>
+        element is { IsEffectivelyVisible: true, IsEffectivelyEnabled: true } && this.IsVisualAncestorOf(element) ? element : null;
 }
