@@ -146,6 +146,10 @@ itself. TabStudio's debugger works inside the program instead:
   The call stack is an `AsyncLocal` chain of frames, so it follows `await` across threads and projects.
 - **Unhandled exceptions** break at the throwing line with the exception and the call stack, before anything
   unwinds.
+- **In the IDE**, F5 debugs and Ctrl+F5 runs without the debugger. Breakpoints are anchored to their lines, so
+  they follow edits, move to the statement they bind to, and are saved with the session. Locals, Watch and
+  Call Stack fill the bottom dock while paused, and DataTips evaluate the expression under the pointer or a
+  long press. Package code is not instrumented, so stepping stays in your own code.
 
 ## Tests
 
@@ -155,6 +159,11 @@ each framework's lifecycle (constructors and fixtures for xUnit, set-ups and tea
 every kind of data source, timeouts and cancellation, and reports results with stack traces trimmed to the
 user's code. `SourceTestDiscoverer` finds the same tests in source, with matching ids, so the Test Explorer can
 list tests before the first build.
+
+In the IDE, the Test Explorer lists tests from source as soon as the workspace opens and again on every save,
+runs them through the normal build, and loads one `TestSession` per changed build, since Android cannot unload
+assemblies. Results stream into the tree as each test finishes, and saving a file marks the results it may
+have changed as stale.
 
 ## Notebooks
 
@@ -179,6 +188,9 @@ talks to GitHub instead:
 - **Pulling** applies GitHub's changes file by file. Files changed on both sides are merged with a three-way
   line merge (Myers' diff, as Git uses); conflicts get Git-style markers and can be settled by choosing a side.
 - **Branches, pull requests and publishing** a folder as a new repository are GitHub API calls.
+- **In the IDE**, the Git Changes window lists changes with checkboxes, commits and pushes them in one step,
+  shows inline diffs, and settles conflicts by choosing a side. Signing in takes a personal access token,
+  which GitHub checks before it is kept in the app's private storage.
 
 ## The agent
 
@@ -194,6 +206,30 @@ tests. Tools from Model Context Protocol servers are added over the Streamable H
 - **Costs.** The system prompt, the tool definitions and the conversation so far are marked for prompt
   caching, so each step of a long session re-reads them from the cache.
 
+## In the IDE
+
+`TabStudio.App` puts the engines behind a Visual Studio layout. `WorkspaceViewModel` owns the open workspace
+and is split into partial classes by concern (`.Build`, `.Debugging`, `.Tests`, `.Git`, `.IntelliSense`,
+`.Agent`, `.Web` and so on), each with the view models of its tool windows.
+
+- **Tool windows.** The side bar holds Solution Explorer with Properties, Git Changes, Test Explorer, the web
+  preview and the agent, one at a time, chosen with tabs at its bottom (`SideBarPanel`). The bottom dock holds
+  the Error List, Output, the Compatibility Doctor, References, and Locals, Watch and Call Stack while
+  debugging (`BottomPanel`).
+- **The editor.** `CodeEditorView` is AvaloniaEdit with Roslyn's classifications and squiggles, split into
+  partial files: completion, Parameter Info, Quick Info, quick actions, Peek Definition, the context menu,
+  breakpoints and DataTips, and test commands. Its popups render in the window's overlay layer, placed
+  against the text view. IntelliSense goes through `ILanguageFeatures`, so the editor never touches Roslyn.
+- **Shortcuts.** Single keys are Avalonia key bindings on the shell. Two-key chords such as Ctrl+R, Ctrl+R and
+  Ctrl+R, A share one `KeyChordMap` that sees keys before the focused control, so editor and shell chords with
+  the same first key work together.
+- **Touch.** Every action has a target of at least 44 pixels: the floating action bar over the editor (a
+  debug bar while debugging), long presses for context menus, Quick Info and DataTips, and tabs that wrap when
+  the side bar is narrow. On Android the editor takes the keyboard focus by itself only while a hardware
+  keyboard is in use, so opening a file by touch does not cover the screen with the on-screen keyboard.
+- **Tests of the UI.** The App's tests drive the real views on Avalonia's headless platform: typing into the
+  editor, pressing chords, tapping and long-pressing, and saving screenshots that CI publishes.
+
 ## Run hosts
 
 The Compatibility Doctor gives every project a run host, and F5 uses it:
@@ -201,7 +237,7 @@ The Compatibility Doctor gives every project a run host, and F5 uses it:
 | Run host | Used for |
 | --- | --- |
 | In-process | Console apps and tests, compiled to memory and run inside TabStudio |
-| WebView | ASP.NET Core, Blazor and WebAssembly front ends, served on the device and shown beside the editor |
+| WebView | ASP.NET Core apps, served on the device by `WebAppHost` and shown in the web preview; Blazor and WebAssembly front ends |
 | Android view | Avalonia and Uno apps, rendered natively in a pane |
 | Windows Bridge | Anything that needs Windows, built and run on a PC you pair, and streamed to the tablet |
 
