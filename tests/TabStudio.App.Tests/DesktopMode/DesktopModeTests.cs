@@ -334,6 +334,8 @@ public sealed class DesktopModeTests : IDisposable
             () => document!.Designer!.Preview?.GetLogicalDescendants().OfType<TextBlock>().Any(t => t.Text == "Hello from Avalonia!") == true,
             TimeSpan.FromMinutes(4),
             "the first preview");
+        // A tablet without a keyboard, so the self test types with the companion's typing bar as well.
+        _display.SetKeyboard(false);
         _display.Connect(1920, 1080, 1.5, "Overlay #1");
         var input = new HeadlessInput(tablet, _display);
 
@@ -341,6 +343,7 @@ public sealed class DesktopModeTests : IDisposable
 
         Assert.True(result.Success, result.Message);
         Assert.Contains("the Toolbox put a Button", result.Message, StringComparison.Ordinal);
+        Assert.Contains("the companion's typing bar typed on the display", result.Message, StringComparison.Ordinal);
         Assert.True(File.Exists(Path.Combine(_temp.Path, "Shots", "desktop-display.png")));
         Assert.True(File.Exists(Path.Combine(_temp.Path, "Shots", "desktop-tablet.png")));
     }

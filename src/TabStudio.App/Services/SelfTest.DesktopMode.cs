@@ -69,6 +69,7 @@ public static partial class SelfTest
 
         var editor = ide.GetVisualDescendants().OfType<CodeEditorView>().FirstOrDefault(view => ReferenceEquals(view.DataContext, document));
         var tabletRoot = TopLevel.GetTopLevel(tablet);
+        var touchBarsOnTablet = ShowsTouchBars(ide);
         desktop.IsActive = true;
         if (!await WaitForAsync(() => tablet.DesktopScreen is { Bounds.Width: > 0 } shown && shown.IsVisualAncestorOf(ide) && CompanionShown(tablet), InputTimeout, cancellationToken)
             || tablet.DesktopScreen is not { } screen
@@ -82,6 +83,12 @@ public static partial class SelfTest
         {
             string.Create(CultureInfo.InvariantCulture, $"Desktop: the IDE on {display.Name} ({display.Resolution} at {desktop.EffectiveScale * 100:0}%, {screen.Bounds.Width:0}×{screen.Bounds.Height:0})"),
         };
+
+        // The display is used with a keyboard and a mouse: the floating touch buttons stay off it.
+        if (ShowsTouchBars(screen))
+        {
+            return Fail("the floating touch buttons show on the display.");
+        }
 
         // A tap on the tablet's Toolbox puts a button into the XAML on the display.
         var toolbox = desktop.Companion.Toolbox;
@@ -135,6 +142,12 @@ public static partial class SelfTest
 
         steps.Add("the tablet's keyboard typed on the display and the designer showed it");
 
+        // Without a keyboard, the companion's typing bar types there with the tablet's on-screen keyboard.
+        if (await TypeWithTypingBarAsync(desktop, tablet, document, input, steps, cancellationToken) is { } typingProblem)
+        {
+            return Fail(typingProblem);
+        }
+
         // The tablet's mouse on the display: a click on the Output tab, and the wheel over the editor.
         if (await UseMouseOnDisplayAsync(new DesktopMouseCheck(workspace, desktop, screen, displayRoot, display, editor), input, steps, cancellationToken) is { } mouseProblem)
         {
@@ -167,7 +180,12 @@ public static partial class SelfTest
             return Fail($"the IDE came back to the tablet without its editor or caret (caret {document.CaretOffset}, was {caret}).");
         }
 
-        steps.Add(string.Create(CultureInfo.InvariantCulture, $"back on the tablet with the caret at line {document.CaretLine}"));
+        if (!await WaitForAsync(() => ShowsTouchBars(ide) == touchBarsOnTablet, TimeSpan.FromSeconds(5), cancellationToken))
+        {
+            return Fail("the floating touch buttons did not come back to the tablet.");
+        }
+
+        steps.Add(string.Create(CultureInfo.InvariantCulture, $"back on the tablet with the caret at line {document.CaretLine}{(touchBarsOnTablet ? " and its touch buttons" : string.Empty)}"));
         return new SelfTestResult(true, string.Join(" · ", steps), clock.Elapsed);
     }
 
