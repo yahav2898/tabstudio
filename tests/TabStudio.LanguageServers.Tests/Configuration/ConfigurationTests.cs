@@ -189,3 +189,42 @@ public sealed class LaunchConfigurationTests
         Assert.False(configuration.IsAttach);
     }
 }
+
+public sealed class InitializationOptionsTests
+{
+    [Fact]
+    public void A_package_file_is_found_beside_a_global_server_through_its_link()
+    {
+        using var temp = new TempDirectory();
+        var cli = temp.Write("prefix/lib/node_modules/typescript-language-server/lib/cli.mjs", "// server");
+        var tsserver = temp.Write("prefix/lib/node_modules/typescript/lib/tsserver.js", "// tsserver");
+        var command = temp.Resolve("prefix/bin/typescript-language-server");
+        Directory.CreateDirectory(Path.GetDirectoryName(command)!);
+        File.CreateSymbolicLink(command, "../lib/node_modules/typescript-language-server/lib/cli.mjs");
+        var options = new JsonObject { ["tsserver"] = new JsonObject { ["path"] = "${packageFile:typescript/lib/tsserver.js}" }, ["other"] = 1 };
+
+        var resolved = Hosting.InitializationOptions.Resolve(options, temp.Resolve("workspace"), command);
+
+        Assert.True(File.Exists(cli));
+        Assert.Equal(tsserver, resolved?["tsserver"]?["path"]?.GetValue<string>());
+        Assert.Equal(1, resolved?["other"]?.GetValue<int>());
+        Assert.Equal("${packageFile:typescript/lib/tsserver.js}", options["tsserver"]?["path"]?.GetValue<string>());
+    }
+
+    [Fact]
+    public void The_workspace_copy_of_a_package_wins_and_a_missing_one_is_left_out()
+    {
+        using var temp = new TempDirectory();
+        var local = temp.Write("workspace/node_modules/typescript/lib/tsserver.js", "// local");
+        var options = new JsonObject
+        {
+            ["tsserver"] = new JsonObject { ["path"] = "${packageFile:typescript/lib/tsserver.js}" },
+            ["missing"] = "${packageFile:nothing/here.js}",
+        };
+
+        var resolved = Hosting.InitializationOptions.Resolve(options, temp.Resolve("workspace"), temp.Resolve("bin/server"));
+
+        Assert.Equal(local, resolved?["tsserver"]?["path"]?.GetValue<string>());
+        Assert.False(resolved?.AsObject().ContainsKey("missing"));
+    }
+}

@@ -37,6 +37,7 @@
       "package": "typescript-language-server",
       "rootMarkers": [ "tsconfig.json", "jsconfig.json", "package.json" ],
       "initializationOptions": {
+        "tsserver": { "path": "${packageFile:typescript/lib/tsserver.js}" },
         "preferences": {
           "includeInlayParameterNameHints": "literals",
           "includeInlayFunctionLikeReturnTypeHints": true,

@@ -32,6 +32,8 @@ namespace TabStudio.LanguageServers.Configuration;
 /// <c>args</c>, <c>env</c>, <c>enabled</c> and <c>package</c> (the Toolchain Store package that installs it). A
 /// server also takes <c>rootMarkers</c>, <c>initializationOptions</c> and <c>settings</c>; an adapter takes
 /// <c>aliases</c>, <c>transport</c> (<c>stdio</c> or <c>tcp</c>) and <c>defaults</c> for its launch configurations.
+/// A string in <c>initializationOptions</c> may be <c>${packageFile:typescript/lib/tsserver.js}</c>: a file of an npm
+/// package, from the workspace's <c>node_modules</c> or else installed beside the server's own package.
 /// </para>
 /// </remarks>
 public sealed class WorkspaceConfiguration

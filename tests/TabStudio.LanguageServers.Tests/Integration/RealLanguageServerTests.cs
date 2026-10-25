@@ -41,7 +41,7 @@ public sealed class RealLanguageServerTests(ITestOutputHelper output)
         await using var workspace = new RealWorkspace(output);
         var document = await workspace.OpenAsync("main.py", PythonProgram);
 
-        var diagnostic = await workspace.WaitForDiagnosticAsync(document, d => d.Message.Contains("mesage", StringComparison.Ordinal));
+        var diagnostic = await RealWorkspace.WaitForDiagnosticAsync(document, d => d.Message.Contains("mesage", StringComparison.Ordinal));
 
         Assert.Equal(LspDiagnosticSeverity.Error, diagnostic.Severity);
         Assert.Equal(9, diagnostic.Line);
@@ -109,7 +109,7 @@ public sealed class RealLanguageServerTests(ITestOutputHelper output)
         await using var workspace = new RealWorkspace(output);
         var document = await workspace.OpenAsync("main.ts", TypeScriptProgram);
 
-        var diagnostic = await workspace.WaitForDiagnosticAsync(document, d => d.Message.Contains("mesage", StringComparison.Ordinal));
+        var diagnostic = await RealWorkspace.WaitForDiagnosticAsync(document, d => d.Message.Contains("mesage", StringComparison.Ordinal));
 
         Assert.Equal(LspDiagnosticSeverity.Error, diagnostic.Severity);
         Assert.Equal("2552", diagnostic.Code);
@@ -180,7 +180,7 @@ public sealed class RealLanguageServerTests(ITestOutputHelper output)
         public LanguageServerDocument Open(string path) =>
             Host.OpenDocument(path, File.ReadAllText(path)) ?? throw new InvalidOperationException($"No language server for {path}.");
 
-        public async Task<LspDiagnostic> WaitForDiagnosticAsync(LanguageServerDocument document, Func<LspDiagnostic, bool> match)
+        public static async Task<LspDiagnostic> WaitForDiagnosticAsync(LanguageServerDocument document, Func<LspDiagnostic, bool> match)
         {
             var found = new TaskCompletionSource<LspDiagnostic>(TaskCreationOptions.RunContinuationsAsynchronously);
             void Check()
