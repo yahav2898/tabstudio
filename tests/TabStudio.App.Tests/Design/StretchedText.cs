@@ -31,15 +31,15 @@ internal static class StretchedText
             .Select(Describe)];
 
     /// <summary>
-    /// Adds the stretched text of a screenshot to stretched-text.txt in its folder, so every screenshot test checks the
-    /// rule too; the design tests and <see cref="CenteredTextTests"/> fail on it instead.
+    /// Checks a screenshot: its stretched text goes to stretched-text.txt in its folder, beside the picture that shows
+    /// it, and fails the test. Every screenshot test checks the rule this way.
     /// </summary>
     /// <param name="root">The window the screenshot is of.</param>
     /// <param name="folder">The screenshots' folder.</param>
     /// <param name="screenshot">The screenshot's name.</param>
-    public static void Record(Visual root, string folder, string screenshot)
+    public static void Check(Visual root, string folder, string screenshot)
     {
-        var found = In(root).Distinct().Select(text => $"{screenshot}: {text}").ToList();
+        var found = In(root).Distinct().ToList();
         if (found.Count == 0)
         {
             return;
@@ -47,8 +47,10 @@ internal static class StretchedText
 
         lock (ReportGate)
         {
-            File.AppendAllLines(Path.Combine(folder, ReportName), found);
+            File.AppendAllLines(Path.Combine(folder, ReportName), found.Select(text => $"{screenshot}: {text}"));
         }
+
+        AssertNone(found);
     }
 
     /// <summary>Fails with each stretched line of text under <paramref name="root"/>, when there are any.</summary>

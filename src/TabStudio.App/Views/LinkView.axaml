@@ -17,7 +17,8 @@
           </Panel>
           <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
             <StackPanel Orientation="Horizontal" Spacing="8">
-              <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
+              <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis"
+                         VerticalAlignment="Center" />
               <Border Classes="pill success" IsVisible="{Binding IsCurrent}">
                 <TextBlock Text="Connected" />
               </Border>
