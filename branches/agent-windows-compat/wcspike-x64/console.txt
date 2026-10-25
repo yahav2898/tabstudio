@@ -1,0 +1,47 @@
+Unable to find image 'alpine:3.24' locally
+3.24: Pulling from library/alpine
+7b229517ed22: Pulling fs layer
+7b229517ed22: Verifying Checksum
+7b229517ed22: Download complete
+7b229517ed22: Pull complete
+Digest: sha256:be2656061b536c1883c4034790e21d0a09c5aaaf51968b89368a3c0371ea2c9a
+Status: Downloaded newer image for alpine:3.24
+== 3.24.3 x86_64
+Executing glib-2.88.1-r1.trigger
+OK: 706.3 MiB in 104 packages
+Executing mkfontscale-1.2.4-r0.trigger
+OK: 750.5 MiB in 135 packages
+SPIKE apk_wine_download 234912KiB in 4s
+SPIKE apk_tools_download 19788KiB in 2s
+SPIKE rootfs_size 1036092KiB
+SPIKE arch x64 x86_64 6.17.0-1022-azure
+SPIKE page_size 4096
+SPIKE wine_files 406.8MiB
+SPIKE dotnet_download_seconds 0.5
+SPIKE dotnet_zip windowsdesktop-runtime-10.0.13-win-x64.zip 37.4MiB
+SPIKE dotnet_unzip_seconds 0.7
+SPIKE dotnet_size 94.4MiB
+SPIKE xvfb_start_seconds 0.05
+SPIKE xvfb_running True
+SPIKE wine_binary /usr/bin/wine
+SPIKE wine_version wine-11.0 (0.0s)
+SPIKE wineboot_seconds 14.7 exit=0
+SPIKE prefix_size 420.0MiB
+SPIKE registry_seconds 3.9 exit=0
+SPIKE dotnet_info_seconds 3.9 exit=53
+SPIKE-NOTE dotnet --info: wine: failed to open "C:\\dotnet\\dotnet.exe"
+SPIKE forms_hello_seconds 3.9 exit=53 hello=False
+SPIKE-NOTE hello output: wine: failed to open "C:\\dotnet\\dotnet.exe"
+
+SPIKE forms_hello_session_seconds 0.0 exit=53
+SPIKE framebuffer 1280x800 bpp=32 stride=5120 order=0 masks=ff0000/ff00/ff
+SPIKE forms_shown no
+SPIKE-NOTE forms stderr: wine: failed to open "C:\\dotnet\\dotnet.exe"
+SPIKE forms_animate_shown no
+SPIKE-NOTE forms_animate stderr: wine: failed to open "C:\\dotnet\\dotnet.exe"
+SPIKE wpf_hardware_shown no
+SPIKE-NOTE wpf_hardware stderr: wine: failed to open "C:\\dotnet\\dotnet.exe"
+SPIKE wpf_software_shown no
+SPIKE-NOTE wpf_software stderr: wine: failed to open "C:\\dotnet\\dotnet.exe"
+SPIKE prefix_size_after 420.0MiB
+SPIKE-DONE
