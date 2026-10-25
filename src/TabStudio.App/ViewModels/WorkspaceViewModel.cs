@@ -236,7 +236,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         StatusText = "Loading C#";
         var host = await _compiler.CreateHostAsync();
         await Task.Run(() => host.Load(preview.Workspace, FileSystemTextProvider.Instance));
-        _language = new LocalLanguageService(host);
+        _language = new LocalLanguageService(host, _compiler.Packages);
         _language.SetConcurrentBuild(_device.Thermal == ThermalState.Normal);
         LanguageServiceText = "Roslyn warm";
 
@@ -244,6 +244,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
 
         State = IdeState.Ready;
         StatusText = "Ready";
+        StartPackageRestore(preview.Workspace);
         if (_profile.AnalyzeWholeSolution)
         {
             _ = AnalyzeSolutionAsync(_background!.Token);

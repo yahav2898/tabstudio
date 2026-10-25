@@ -39,7 +39,8 @@ public sealed partial class WorkspaceViewModel
         RunResult result;
         try
         {
-            result = await _runner.RunAsync(entry, build.Dependencies, [], Output, input, _run.Token);
+            var packages = _language.GetPackageRuntimeAssemblies(project.FilePath);
+            result = await _runner.RunAsync(entry, build.Dependencies, packages, [], Output, input, _run.Token);
         }
         finally
         {
@@ -103,6 +104,7 @@ public sealed partial class WorkspaceViewModel
 
         State = IdeState.Busy;
         await SaveAllCoreAsync();
+        await WaitForPackagesAsync();
         foreach (var document in Documents)
         {
             document.SyncText();

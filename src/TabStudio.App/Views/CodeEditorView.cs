@@ -18,7 +18,7 @@ namespace TabStudio.App.Views;
 /// The code editor for one document: AvaloniaEdit with Roslyn coloring and squiggles for C#, TextMate
 /// coloring for other languages, find and replace, and the editor actions the view model asks for.
 /// </summary>
-public sealed class CodeEditorView : UserControl, IDisposable
+public sealed partial class CodeEditorView : UserControl, IDisposable
 {
     private static readonly IBrush CurrentLineBrush = new ImmutableSolidColorBrush(Color.Parse("#23262F"));
     private static readonly IBrush CaretBrush = new ImmutableSolidColorBrush(Color.Parse("#E8ECF2"));

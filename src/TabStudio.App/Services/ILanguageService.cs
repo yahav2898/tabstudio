@@ -2,6 +2,7 @@ using TabStudio.Compilation;
 using TabStudio.Compilation.Building;
 using TabStudio.Core.Diagnostics;
 using TabStudio.Core.Workspaces;
+using TabStudio.Packages;
 
 namespace TabStudio.App.Services;
 
@@ -59,4 +60,18 @@ public interface ILanguageService : IDisposable
 
     /// <summary>Releases cached compilations under memory pressure.</summary>
     void TrimMemory();
+
+    /// <summary>
+    /// Restores a project's NuGet packages, then gives IntelliSense and builds their reference assemblies.
+    /// Never throws for restore problems: they are in the result's diagnostics.
+    /// </summary>
+    /// <param name="project">The project.</param>
+    /// <param name="progress">Receives progress.</param>
+    /// <param name="cancellationToken">Cancels the restore.</param>
+    Task<RestoreResult> RestorePackagesAsync(ProjectInfo project, IProgress<RestoreProgress>? progress, CancellationToken cancellationToken);
+
+    /// <summary>The package assemblies a program needs when it runs, from the project's last restore.</summary>
+    /// <param name="projectFilePath">The project.</param>
+    /// <returns>Full paths, or an empty list when the project has no restored packages.</returns>
+    IReadOnlyList<string> GetPackageRuntimeAssemblies(string projectFilePath);
 }

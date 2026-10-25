@@ -1,12 +1,13 @@
 using Microsoft.CodeAnalysis;
 using TabStudio.Compilation;
+using TabStudio.Packages;
 
 namespace TabStudio.App.Services;
 
 /// <summary>
-/// The parts of the C# toolchain that are shared by every workspace: the reference assemblies and a warm
-/// Roslyn. Warming up happens in the background at startup, so the first file opens with colors and the
-/// first F5 is fast.
+/// The parts of the C# toolchain that are shared by every workspace: the reference assemblies, a warm
+/// Roslyn and the NuGet package restorer. Warming up happens in the background at startup, so the first file
+/// opens with colors and the first F5 is fast.
 /// </summary>
 public sealed class CompilerServices
 {
@@ -15,14 +16,25 @@ public sealed class CompilerServices
     private Task? _warmUp;
 
     /// <summary>Creates the services. Nothing is loaded until it is first needed or <see cref="WarmUpAsync"/> runs.</summary>
-    /// <param name="paths">Where the reference assemblies are cached.</param>
-    public CompilerServices(AppPaths paths)
+    /// <param name="paths">Where the reference assemblies are cached and packages are kept.</param>
+    /// <param name="http">The HTTP client for downloading packages; a new one when <see langword="null"/>.</param>
+    public CompilerServices(AppPaths paths, HttpClient? http = null)
     {
         ArgumentNullException.ThrowIfNull(paths);
         _paths = paths;
         _references = new Lazy<Task<IReadOnlyList<MetadataReference>>>(
             () => Task.Run(() => ReferenceAssemblies.LoadMapped(Path.Combine(_paths.Cache, "ReferenceAssemblies"))));
+        Packages = new PackageRestorer(
+            new PackageRestoreOptions
+            {
+                GlobalPackagesFolder = paths.Packages,
+                FrameworkAssemblyNames = ReferenceAssemblyNames.Net100,
+            },
+            http ?? new HttpClient { Timeout = TimeSpan.FromMinutes(5) });
     }
+
+    /// <summary>Restores NuGet packages into the app's packages folder, shared by every workspace.</summary>
+    public PackageRestorer Packages { get; }
 
     /// <summary>Raised on a background thread when Roslyn finishes warming up.</summary>
     public event EventHandler? Warmed;

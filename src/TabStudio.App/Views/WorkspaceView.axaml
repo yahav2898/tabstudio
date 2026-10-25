@@ -398,6 +398,8 @@
             <TextBlock Text="{Binding StatusText}" VerticalAlignment="Center" />
           </StackPanel>
           <TextBlock Text="{Binding LanguageServiceText}" VerticalAlignment="Center" />
+          <TextBlock Text="{Binding PackagesText}" VerticalAlignment="Center"
+                     IsVisible="{Binding PackagesText, Converter={x:Static ObjectConverters.IsNotNull}}" />
           <StackPanel Orientation="Horizontal" Spacing="5">
             <controls:StrokeIcon Size="13" Data="{StaticResource Icon.Thermometer}" />
             <TextBlock Text="{Binding ThermalText}" VerticalAlignment="Center" />

@@ -203,6 +203,7 @@ public sealed partial class WorkspaceViewModel
         {
             await document.SaveAsync();
             StatusText = $"Saved {document.FileName}";
+            await OnProjectFileSavedAsync(document);
             return true;
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)

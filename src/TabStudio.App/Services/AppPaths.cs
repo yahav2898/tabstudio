@@ -17,6 +17,7 @@ public sealed class AppPaths
         Cache = Path.Combine(root, "Cache");
         State = Path.Combine(root, "State");
         Trash = Path.Combine(root, "Trash");
+        Packages = Path.Combine(root, "Packages");
 
         Directory.CreateDirectory(Projects);
         Directory.CreateDirectory(Cache);
@@ -40,6 +41,12 @@ public sealed class AppPaths
     /// the Solution Explorer can always be undone by hand.
     /// </summary>
     public string Trash { get; }
+
+    /// <summary>
+    /// The global packages folder: every NuGet package any project restored, one copy per version, as in
+    /// <c>~/.nuget/packages</c>.
+    /// </summary>
+    public string Packages { get; }
 
     /// <summary>The list of recently opened workspaces.</summary>
     public string RecentWorkspacesFile => Path.Combine(State, "recent.json");

@@ -46,6 +46,7 @@ public sealed partial class ErrorListViewModel : ObservableObject
 {
     private readonly Dictionary<string, IReadOnlyList<BuildDiagnostic>> _byFile = new(StringComparer.Ordinal);
     private IReadOnlyList<BuildDiagnostic> _withoutLocation = [];
+    private readonly Dictionary<string, IReadOnlyList<BuildDiagnostic>> _restore = new(StringComparer.Ordinal);
 
     /// <summary>The rows that pass the current filters, most severe first.</summary>
     public ObservableCollection<ErrorItemViewModel> Items { get; } = [];
@@ -116,7 +117,8 @@ public sealed partial class ErrorListViewModel : ObservableObject
     public event EventHandler<BuildDiagnostic>? NavigateRequested;
 
     /// <summary>All diagnostics with a location in a file, before filtering.</summary>
-    public IEnumerable<BuildDiagnostic> AllDiagnostics => _byFile.Values.SelectMany(d => d).Concat(_withoutLocation);
+    public IEnumerable<BuildDiagnostic> AllDiagnostics =>
+        _byFile.Values.SelectMany(d => d).Concat(_withoutLocation).Concat(_restore.Values.SelectMany(d => d));
 
     /// <summary>The current diagnostics of one file.</summary>
     /// <param name="filePath">Full path of the file.</param>
@@ -156,6 +158,17 @@ public sealed partial class ErrorListViewModel : ObservableObject
         Refresh();
     }
 
+    /// <summary>Shows the problems found restoring a project's NuGet packages, replacing its previous ones.</summary>
+    /// <param name="projectFilePath">The project.</param>
+    /// <param name="diagnostics">The restore's diagnostics.</param>
+    public void SetRestoreDiagnostics(string projectFilePath, IReadOnlyList<BuildDiagnostic> diagnostics)
+    {
+        ArgumentNullException.ThrowIfNull(projectFilePath);
+        ArgumentNullException.ThrowIfNull(diagnostics);
+        _restore[projectFilePath] = diagnostics;
+        Refresh();
+    }
+
     /// <summary>Shows the result of a build: its diagnostics replace those of the files it compiled.</summary>
     /// <param name="build">The build result.</param>
     public void SetBuildResult(BuildResult build)
@@ -175,6 +188,7 @@ public sealed partial class ErrorListViewModel : ObservableObject
     {
         _byFile.Clear();
         _withoutLocation = [];
+        _restore.Clear();
         Refresh();
     }
 
