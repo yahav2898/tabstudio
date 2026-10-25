@@ -13,7 +13,8 @@ namespace TabStudio.Packages.Caching;
 /// the same inputs is instant and needs no network.
 /// </summary>
 /// <remarks>
-/// The inputs are everything that can change the outcome: the package references and their versions, the target
+/// The inputs are everything that can change the outcome: the package references and their versions (including
+/// those of referenced projects), the target
 /// framework and its fallbacks, the sources, the global packages folder and the framework's assemblies. The cache
 /// is used only when their hash matches and every package folder and assembly it lists is still on disk. Only
 /// successful restores are cached. Writing the cache is best effort: a read-only project folder only costs speed.
@@ -24,13 +25,21 @@ internal static class RestoreCache
     public const int FormatVersion = 1;
 
     /// <summary>Hashes the inputs of a restore.</summary>
-    /// <param name="dependencies">The project's direct dependencies.</param>
+    /// <param name="graph">The project's references and those of the projects it references.</param>
     /// <param name="options">The restore options.</param>
     /// <returns>A hexadecimal SHA-256 hash.</returns>
-    public static string ComputeInputsHash(IEnumerable<PackageDependency> dependencies, PackageRestoreOptions options)
+    public static string ComputeInputsHash(ProjectDependencyGraph graph, PackageRestoreOptions options)
     {
         var text = new StringBuilder();
         void Line(string key, string value) => text.Append(key).Append('=').Append(value).Append('\n');
+        void Dependencies(IEnumerable<PackageDependency> dependencies)
+        {
+            foreach (var dependency in dependencies.OrderBy(d => d.Id, StringComparer.OrdinalIgnoreCase))
+            {
+                var kind = dependency.IsProject ? "project" : "package";
+                Line("dependency", $"{kind}|{NuGetNames.Lower(dependency.Id)}|{dependency.Range.ToNormalizedString()}");
+            }
+        }
 
         Line("format", FormatVersion.ToString(CultureInfo.InvariantCulture));
         Line("framework", options.TargetFramework);
@@ -46,9 +55,11 @@ internal static class RestoreCache
             Line("frameworkAssembly", name);
         }
 
-        foreach (var dependency in dependencies.OrderBy(d => d.Id, StringComparer.OrdinalIgnoreCase))
+        Dependencies(graph.Dependencies);
+        foreach (var (name, project) in graph.Projects.OrderBy(p => p.Key, StringComparer.OrdinalIgnoreCase))
         {
-            Line("dependency", $"{NuGetNames.Lower(dependency.Id)}|{dependency.Range.ToNormalizedString()}");
+            Line("referencedProject", NuGetNames.Lower(name));
+            Dependencies(project.Dependencies);
         }
 
         return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(text.ToString())));

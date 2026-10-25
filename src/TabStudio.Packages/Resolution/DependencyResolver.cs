@@ -42,7 +42,10 @@ internal sealed class DependencyResolver
 
     /// <summary>Walks and analyzes the dependency graph of a project.</summary>
     /// <param name="projectName">The project, which is the root of the graph.</param>
-    /// <param name="dependencies">The project's direct package references.</param>
+    /// <param name="dependencies">
+    /// The project's package references and project references. A referenced project is a node like a package, so
+    /// its own references sit one level further from the project, as in NuGet.
+    /// </param>
     /// <param name="cancellationToken">Cancels the walk.</param>
     public async Task<ResolutionResult> ResolveAsync(string projectName, IReadOnlyList<PackageDependency> dependencies, CancellationToken cancellationToken)
     {
@@ -77,7 +80,7 @@ internal sealed class DependencyResolver
             .ToList();
 
         var packages = acceptedNodes
-            .Where(n => !n.ResolvedMatch.IsUnresolved)
+            .Where(n => n.ResolvedMatch is { IsUnresolved: false, IsProject: false })
             .GroupBy(n => n.ResolvedMatch.Id, StringComparer.OrdinalIgnoreCase)
             .Select(g => new ResolvedPackage(g.First().ResolvedMatch, g.Any(n => n.Parent is { IsRoot: true })))
             .OrderBy(p => p.Match.Id, StringComparer.OrdinalIgnoreCase)

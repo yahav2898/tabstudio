@@ -58,7 +58,7 @@ internal sealed class GraphNode(string id, VersionRange range, GraphNode? parent
     /// <summary>Describes the node with its resolved version, such as <c>Newtonsoft.Json 13.0.3</c>.</summary>
     public string DescribeVersion()
     {
-        if (IsRoot)
+        if (IsRoot || Match is { IsProject: true })
         {
             return Id;
         }

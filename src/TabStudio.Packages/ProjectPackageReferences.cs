@@ -2,13 +2,80 @@ using NuGet.Versioning;
 using TabStudio.Core.Diagnostics;
 using TabStudio.Core.Workspaces;
 using TabStudio.Packages.Manifests;
+using TabStudio.Packages.Resolution;
 
 namespace TabStudio.Packages;
 
-/// <summary>Turns a project's <c>&lt;PackageReference&gt;</c> items into the dependencies a restore starts from.</summary>
+/// <summary>What a restore starts from: a project's references, and the projects it references with theirs.</summary>
+/// <param name="Dependencies">The project's own package references and project references.</param>
+/// <param name="Projects">Every project it references, directly or not, by name, with that project's own references.</param>
+internal sealed record ProjectDependencyGraph(
+    IReadOnlyList<PackageDependency> Dependencies,
+    IReadOnlyDictionary<string, PackageMatch> Projects)
+{
+    /// <summary>Whether any project in the graph references a package, so there is something to restore.</summary>
+    public bool HasPackages =>
+        Dependencies.Any(d => !d.IsProject) ||
+        Projects.Values.Any(p => p.Dependencies.Any(d => !d.IsProject));
+}
+
+/// <summary>Turns the <c>&lt;PackageReference&gt;</c> and <c>&lt;ProjectReference&gt;</c> items of projects into dependencies.</summary>
 internal static class ProjectPackageReferences
 {
-    /// <summary>Reads the direct dependencies of a project.</summary>
+    /// <summary>
+    /// Reads a project and, from disk, every project it references, as NuGet does: the package references of a
+    /// referenced project flow to the projects that reference it.
+    /// </summary>
+    /// <param name="project">The project to restore.</param>
+    /// <param name="diagnostics">Receives problems with the references, such as a version that does not parse.</param>
+    public static ProjectDependencyGraph ReadGraph(ProjectInfo project, List<BuildDiagnostic> diagnostics)
+    {
+        var projects = new Dictionary<string, PackageMatch>(StringComparer.OrdinalIgnoreCase);
+
+        // Project file path -> project name, or null while the project is still being read.
+        var names = new Dictionary<string, string?>(StringComparer.Ordinal) { [project.FilePath] = null };
+
+        List<PackageDependency> Collect(ProjectInfo current)
+        {
+            var dependencies = Read(current, diagnostics);
+            foreach (var path in current.ProjectReferences)
+            {
+                if (names.TryGetValue(path, out var known))
+                {
+                    // Read before (a diamond), or still being read (a cycle, which the build reports).
+                    if (known is not null)
+                    {
+                        dependencies.Add(new PackageDependency(known, VersionRange.All, IsProject: true));
+                    }
+
+                    continue;
+                }
+
+                ProjectInfo referenced;
+                try
+                {
+                    referenced = ProjectParser.Load(path);
+                }
+                catch (Exception ex) when (ex is ProjectLoadException or IOException or UnauthorizedAccessException)
+                {
+                    // The workspace already reports projects it cannot read.
+                    continue;
+                }
+
+                names[path] = null;
+                var referencedDependencies = Collect(referenced);
+                names[path] = referenced.Name;
+                projects[referenced.Name] = PackageMatch.Project(referenced.Name, referencedDependencies);
+                dependencies.Add(new PackageDependency(referenced.Name, VersionRange.All, IsProject: true));
+            }
+
+            return dependencies;
+        }
+
+        return new ProjectDependencyGraph(Collect(project), projects);
+    }
+
+    /// <summary>Reads the package references of one project.</summary>
     /// <param name="project">The project.</param>
     /// <param name="diagnostics">Receives problems with the references, such as a version that does not parse.</param>
     /// <returns>One dependency per valid reference, in project order.</returns>

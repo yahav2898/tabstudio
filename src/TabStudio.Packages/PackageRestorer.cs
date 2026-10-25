@@ -82,6 +82,11 @@ public sealed class PackageRestorer
     }
 
     /// <summary>Restores the packages of a project.</summary>
+    /// <remarks>
+    /// As in NuGet, the package references of the projects it references (read from disk, transitively) flow into
+    /// its graph, one level further away than its own. So the result of a startup project holds everything it
+    /// compiles against and everything its program loads, including what its libraries need.
+    /// </remarks>
     /// <param name="project">The project whose <c>PackageReference</c> items to restore.</param>
     /// <param name="progress">Receives progress for the status bar, or <see langword="null"/>.</param>
     /// <param name="cancellationToken">Cancels the restore. Packages that finished downloading stay installed.</param>
@@ -95,9 +100,9 @@ public sealed class PackageRestorer
 
         var stopwatch = Stopwatch.StartNew();
         var diagnostics = new List<BuildDiagnostic>();
-        var dependencies = ProjectPackageReferences.Read(project, diagnostics);
+        var graph = ProjectPackageReferences.ReadGraph(project, diagnostics);
         var cachePath = GetCacheFilePath(project);
-        var inputsHash = RestoreCache.ComputeInputsHash(dependencies, Options);
+        var inputsHash = RestoreCache.ComputeInputsHash(graph, Options);
 
         // A reference that could not be read is not in the hash, so the cache cannot vouch for the project.
         var referencesValid = diagnostics.All(d => d.Severity != DiagnosticSeverityLevel.Error);
@@ -107,19 +112,19 @@ public sealed class PackageRestorer
             return cached with { Duration = stopwatch.Elapsed };
         }
 
-        diagnostics.AddRange(dependencies
-            .Where(d => _frameworkPackages.Provides(d.Id, d.Range))
+        diagnostics.AddRange(graph.Dependencies
+            .Where(d => !d.IsProject && _frameworkPackages.Provides(d.Id, d.Range))
             .Select(d => PackageDiagnostics.Warning(
                 PackageDiagnosticIds.RedundantFrameworkPackage,
                 $"{d.Id} is part of {Options.TargetFramework}, so the reference to it is probably unnecessary. Its assemblies are not used.",
                 project.Name)));
 
         IReadOnlyList<RestoredPackage> packages = [];
-        if (dependencies.Count > 0)
+        if (graph.HasPackages)
         {
             progress?.Report(new RestoreProgress(RestoreStage.Resolving, $"Resolving the packages of {project.Name}", 0, 0));
-            var finder = new PackageFinder(CreateFeeds(), _packages, _framework, _fallback, _frameworkPackages, progress);
-            var resolution = await new DependencyResolver(finder).ResolveAsync(project.Name, dependencies, cancellationToken).ConfigureAwait(false);
+            var finder = new PackageFinder(CreateFeeds(), _packages, _framework, _fallback, _frameworkPackages, graph.Projects, progress);
+            var resolution = await new DependencyResolver(finder).ResolveAsync(project.Name, graph.Dependencies, cancellationToken).ConfigureAwait(false);
             diagnostics.AddRange(resolution.Diagnostics);
 
             foreach (var node in resolution.Unresolved)

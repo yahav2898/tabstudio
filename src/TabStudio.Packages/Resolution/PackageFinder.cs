@@ -32,6 +32,7 @@ internal sealed class PackageFinder
     private readonly NuGetFramework _framework;
     private readonly IReadOnlyList<NuGetFramework> _fallback;
     private readonly FrameworkPackages _frameworkPackages;
+    private readonly IReadOnlyDictionary<string, PackageMatch> _projects;
     private readonly IProgress<RestoreProgress>? _progress;
     private readonly ConcurrentDictionary<string, Lazy<Task<AvailableVersions>>> _versions = new(StringComparer.OrdinalIgnoreCase);
     private readonly ConcurrentDictionary<string, Lazy<Task<PackageMatch>>> _matches = new(StringComparer.OrdinalIgnoreCase);
@@ -44,6 +45,7 @@ internal sealed class PackageFinder
     /// <param name="framework">The target framework, which selects each package's dependency group.</param>
     /// <param name="fallback">The <c>AssetTargetFallback</c> frameworks.</param>
     /// <param name="frameworkPackages">Packages the framework provides, which are pruned from every package's dependencies.</param>
+    /// <param name="projects">The referenced projects, by name, which project dependencies resolve to.</param>
     /// <param name="progress">Receives a report for every lookup.</param>
     public PackageFinder(
         IReadOnlyList<IPackageFeed> feeds,
@@ -51,6 +53,7 @@ internal sealed class PackageFinder
         NuGetFramework framework,
         IReadOnlyList<NuGetFramework> fallback,
         FrameworkPackages frameworkPackages,
+        IReadOnlyDictionary<string, PackageMatch> projects,
         IProgress<RestoreProgress>? progress)
     {
         _feeds = feeds;
@@ -58,6 +61,7 @@ internal sealed class PackageFinder
         _framework = framework;
         _fallback = fallback;
         _frameworkPackages = frameworkPackages;
+        _projects = projects;
         _progress = progress;
     }
 
@@ -70,6 +74,11 @@ internal sealed class PackageFinder
     /// <returns>The match, which is <see cref="PackageMatch.IsUnresolved"/> when no version fits.</returns>
     public Task<PackageMatch> FindAsync(PackageDependency dependency, CancellationToken cancellationToken)
     {
+        if (dependency.IsProject)
+        {
+            return Task.FromResult(_projects.TryGetValue(dependency.Id, out var project) ? project : PackageMatch.Project(dependency.Id, []));
+        }
+
         var key = $"{dependency.Id}|{dependency.Range.ToNormalizedString()}";
         return _matches.GetOrAdd(key, _ => new Lazy<Task<PackageMatch>>(() => FindCoreAsync(dependency, cancellationToken))).Value;
     }

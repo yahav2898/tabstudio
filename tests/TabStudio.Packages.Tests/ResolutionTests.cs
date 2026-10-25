@@ -1,3 +1,5 @@
+using TabStudio.Core.Workspaces;
+
 namespace TabStudio.Packages.Tests;
 
 public sealed class ResolutionTests : IDisposable
@@ -291,7 +293,54 @@ public sealed class ResolutionTests : IDisposable
         Assert.Equal(PackageDiagnosticIds.InvalidVersion, Assert.Single(result.Diagnostics).Id);
     }
 
+    [Fact]
+    public async Task Packages_of_referenced_projects_flow_to_the_project_one_level_further_away()
+    {
+        _fixture.Add(
+            Package("A", "1.0.0").DependsOn("B", "1.0.0"),
+            Package("B", "1.0.0"),
+            Package("X", "1.0.0"),
+            Package("X", "2.0.0"));
+        WriteProject("Lib", references: ["<PackageReference Include=\"A\" Version=\"1.0.0\" />", "<PackageReference Include=\"X\" Version=\"1.0.0\" />"]);
+        var app = WriteProject("Main", references: ["<ProjectReference Include=\"..\\Lib\\Lib.csproj\" />", "<PackageReference Include=\"X\" Version=\"2.0.0\" />"]);
+
+        var result = await _fixture.CreateRestorer().RestoreAsync(ProjectParser.Load(app));
+
+        Assert.True(result.Success, Describe(result));
+        Assert.Equal(new[] { "A", "B", "X" }, result.Packages.Select(p => p.Id));
+        Assert.Equal("2.0.0", Version(result, "X"));
+        Assert.False(result.Packages.Single(p => p.Id == "A").IsDirect);
+        Assert.DoesNotContain(result.Diagnostics, d => d.Id == PackageDiagnosticIds.Downgrade);
+    }
+
+    [Fact]
+    public async Task Changing_the_packages_of_a_referenced_project_restores_again()
+    {
+        _fixture.Add(Package("A", "1.0.0"), Package("A", "2.0.0"));
+        WriteProject("Lib", references: ["<PackageReference Include=\"A\" Version=\"1.0.0\" />"]);
+        var app = WriteProject("Main", references: ["<ProjectReference Include=\"..\\Lib\\Lib.csproj\" />"]);
+        var restorer = _fixture.CreateRestorer();
+
+        var first = await restorer.RestoreAsync(ProjectParser.Load(app));
+        WriteProject("Lib", references: ["<PackageReference Include=\"A\" Version=\"2.0.0\" />"]);
+        var second = await restorer.RestoreAsync(ProjectParser.Load(app));
+
+        Assert.Equal("1.0.0", Version(first, "A"));
+        Assert.False(second.FromCache);
+        Assert.Equal("2.0.0", Version(second, "A"));
+    }
+
     public void Dispose() => _fixture.Dispose();
+
+    private string WriteProject(string name, string[] references) =>
+        _fixture.Write($"{name}/{name}.csproj", $"""
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+              <ItemGroup>
+                {string.Join('\n', references)}
+              </ItemGroup>
+            </Project>
+            """);
 
     private static TestPackage Package(string id, string version) => new TestPackage(id, version).WithAssembly("lib/netstandard2.0");
 
