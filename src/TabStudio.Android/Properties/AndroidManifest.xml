@@ -4,9 +4,16 @@
   the project file, and the activity from MainActivity's [Activity] attribute.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-  <!-- Downloads, Git remotes and the agent. Everything else works offline. -->
+  <!-- Downloads, Git remotes, the agent and TabStudio Link. Everything else works offline. -->
   <uses-permission android:name="android.permission.INTERNET" />
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+  <!--
+    TabStudio Link: the camera scans a host's QR code, asked for only when the user taps Scan. Devices without a
+    camera install too, and pair by typing the code.
+  -->
+  <uses-permission android:name="android.permission.CAMERA" />
+  <uses-feature android:name="android.hardware.camera.any" android:required="false" />
 
   <!-- The network security config lets the web preview load apps served on the device over plain HTTP. -->
   <application

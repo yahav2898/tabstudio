@@ -29,8 +29,8 @@ namespace TabStudio.Android;
 /// on-screen keyboard; on Android 15 and later, where apps are drawn edge to edge, the IDE pads itself instead.
 /// </para>
 /// <para>
-/// Started with the boolean extra <c>tabstudio.selftest</c>, it opens the sample, presses F5, debugs it, serves
-/// a new web app, shows a new Avalonia app, and logs the outcome under the <c>TabStudio</c> tag as a <c>TABSTUDIO_SELFTEST_OK</c> or
+/// Started with the boolean extra <c>tabstudio.selftest</c>, it opens the sample, presses F5, debugs it, debugs
+/// it again with a TabStudio Link host compiling, serves a new web app, shows a new Avalonia app, and logs the outcome under the <c>TabStudio</c> tag as a <c>TABSTUDIO_SELFTEST_OK</c> or
 /// <c>TABSTUDIO_SELFTEST_FAIL</c> line. CI runs this on an emulator.
 /// </para>
 /// </remarks>
@@ -76,6 +76,8 @@ public sealed class MainActivity : AvaloniaMainActivity<TabStudioApplication>
             {
                 services.AddSingleton<IDeviceStatus>(_ => new AndroidDeviceStatus(context));
                 services.AddSingleton<IWebViewFactory>(_ => new AndroidWebViewFactory(() => this));
+                services.AddSingleton<IQrScanner>(_ => new AndroidQrScanner(() => this));
+                services.AddSingleton<IDeviceIdentity>(_ => new AndroidDeviceIdentity(context));
             });
     }
 
@@ -87,11 +89,6 @@ public sealed class MainActivity : AvaloniaMainActivity<TabStudioApplication>
         {
             AndroidLog.Error(LogTag, "TABSTUDIO_SELFTEST_FAIL The app did not start.");
             return;
-        }
-
-        foreach (var probe in await LinkTransportProbe.RunAsync())
-        {
-            AndroidLog.Info(LogTag, "TABSTUDIO_LINK_PROBE " + probe);
         }
 
         using var timeout = new CancellationTokenSource(SelfTestTimeout);
