@@ -57,6 +57,9 @@ public abstract class LocalAppScreen : IAppScreen, IDisposable
     /// <summary>Everything the screen shows: the app's view on its background, what pictures draw.</summary>
     public Control? Surface { get; private set; }
 
+    /// <summary>Why the last replayed input found no element, or whether the screen showed no app, for a test's message.</summary>
+    public string? LastReplayMiss => _input is null ? "no app on the screen" : _input.LastMiss;
+
     /// <summary>The size the screen is laid out at when Avalonia does not lay it out, because it is not on view.</summary>
     protected abstract Size LayoutSize { get; }
 

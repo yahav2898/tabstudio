@@ -104,7 +104,7 @@ internal sealed partial class AndroidWebView : IScriptableWebView
     private static void Touch(AndroidWebKitView view, long downTime, long eventTime, MotionEventActions action, float x, float y)
     {
         var finger = new MotionEvent.PointerProperties { Id = 0, ToolType = MotionEventToolType.Finger };
-        var at = new MotionEvent.PointerCoords { X = x, Y = y, Pressure = 1, Size = 1 };
+        var at = new MotionEvent.PointerCoords { X = x, Y = y, Pressure = 1, Size = 0.1f };
         using var motion = MotionEvent.Obtain(
             downTime,
             eventTime,

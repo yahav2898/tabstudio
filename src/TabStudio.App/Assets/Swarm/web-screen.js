@@ -1,7 +1,8 @@
 // Makes a web page one of TabStudio's Swarm screens. The web preview's screen (Swarm/Web/WebAppScreen.cs) runs this
 // once per page, then calls window.__tabStudioScreen: state() for the page's size and what a person did on it,
-// point() for where to touch an element, type(), scroll(), expect() before a replayed input, and inspect() for the
-// layout checks (docs/layout-checks.md), worded as the Avalonia checks word them.
+// point() for where to touch an element and landed() for whether the touch reached it, type(), scroll(), expect()
+// before a replayed input, and inspect() for the layout checks (docs/layout-checks.md), worded as the Avalonia
+// checks word them.
 //
 // Elements are named by path from body: tag#id where the id is unique, otherwise tag[index] among the siblings of
 // the same tag, such as body/main[0]/form#form/button[0]. Running this again on the same page does nothing.
@@ -32,6 +33,8 @@
   var positions = new WeakMap();
   var quietScrollUntil = 0;
   var personUntil = 0;
+  var composedFrom = null;
+  var aimed = null;
 
   // ---- Element paths: tag#id where the id is unique, otherwise tag[index] among siblings of the same tag.
 
@@ -283,11 +286,16 @@
 
   function listen() {
     document.addEventListener('pointerdown', function (e) { touched(e.target); }, true);
-    ['touchstart', 'touchend', 'click', 'contextmenu', 'focusin', 'scroll', 'compositionend', 'input'].forEach(function (type) {
+    ['touchstart', 'touchend', 'click', 'contextmenu', 'focusin', 'scroll', 'compositionstart', 'compositionend', 'input'].forEach(function (type) {
       document.addEventListener(type, note, { capture: true, passive: true });
     });
     // Not passive: the browser waits for these before it scrolls, so the positions are the ones before the scroll.
-    document.addEventListener('touchstart', function (e) { touched(e.target); }, { capture: true, passive: false });
+    document.addEventListener('touchstart', function (e) {
+      if (aimed && aimed.landed === null) {
+        aimed.landed = aimed.el.contains(e.target);
+      }
+      touched(e.target);
+    }, { capture: true, passive: false });
     document.addEventListener('touchmove', function () { touched(null); }, { capture: true, passive: true });
     document.addEventListener('wheel', function (e) { touched(e.target); }, { capture: true, passive: false });
     document.addEventListener('keydown', function () { touched(document.activeElement); }, true);
@@ -324,12 +332,43 @@
         emit({ kind: 'Text', path: '', text: e.data });
       }
     }, true);
+    // A soft keyboard composes words. It can also take up a word already typed, to suggest corrections, which
+    // types nothing: only what a composition adds to the text it started from is typed.
+    document.addEventListener('compositionstart', function (e) {
+      composedFrom = textOf(e.target);
+    }, true);
     document.addEventListener('compositionend', function (e) {
-      if (e.data) {
-        emit({ kind: 'Text', path: '', text: e.data });
+      var added = composedFrom === null ? e.data || '' : inserted(composedFrom, textOf(e.target));
+      composedFrom = null;
+      if (added) {
+        emit({ kind: 'Text', path: '', text: added });
       }
     }, true);
     remember(document.body);
+  }
+
+  // The text of a text box or an editable element, to see what a composition changed.
+  function textOf(el) {
+    if (!el || el.nodeType !== 1) {
+      return null;
+    }
+    return 'value' in el && typeof el.value === 'string' ? el.value : el.isContentEditable ? el.textContent : null;
+  }
+
+  // What was typed into a text: what lies between the start and the end the two have in common.
+  function inserted(before, after) {
+    if (before === null || after === null || after.length <= before.length) {
+      return '';
+    }
+    var start = 0;
+    while (start < before.length && before[start] === after[start]) {
+      start++;
+    }
+    var end = 0;
+    while (end < before.length - start && before[before.length - 1 - end] === after[after.length - 1 - end]) {
+      end++;
+    }
+    return after.slice(start, after.length - end);
   }
 
   // What the page saw lately, for finding out why a replayed input did not do what it should.
@@ -368,6 +407,7 @@
     }
     var x = r.left + r.width * fx;
     var y = r.top + r.height * fy;
+    aimed = { el: el, landed: null };
     var viewport = window.visualViewport;
     var zoom = viewport ? viewport.scale : 1;
     var left = viewport ? viewport.offsetLeft : 0;
@@ -847,6 +887,7 @@
 
   window.__tabStudioScreen = {
     recent: function () { return recent.slice(); },
+    landed: function () { return aimed ? aimed.landed : null; },
     describe: describe,
     resolve: resolve,
     state: state,

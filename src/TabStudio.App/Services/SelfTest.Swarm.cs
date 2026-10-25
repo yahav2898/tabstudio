@@ -84,7 +84,7 @@ public static partial class SelfTest
 
             if (!tapped || !Texts(phoneApp).Contains("Clicked 1 times") || !Texts(tabletApp).Contains("Clicked 0 times"))
             {
-                return new SelfTestResult(false, $"Swarm: the tap on {path} did not count on the phone alone: {DescribeTap(button, tapped)}; phone {string.Join(", ", Texts(phoneApp))}", clock.Elapsed);
+                return new SelfTestResult(false, $"Swarm: the tap on {path} did not count on the phone alone: {DescribeTap(button, tapped)}, {phone.LastReplayMiss ?? "found its element"}; phone {string.Join(", ", Texts(phoneApp))}", clock.Elapsed);
             }
 
             // Every screen is checked a moment after the app starts on it.

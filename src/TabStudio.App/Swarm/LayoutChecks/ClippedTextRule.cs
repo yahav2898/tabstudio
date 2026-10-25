@@ -89,19 +89,31 @@ internal static class ClippedTextRule
             return null;
         }
 
+        // Right-to-left runs can come back with negative or no width; such a run takes no room of its own.
         Rect? area = null;
-        foreach (var rect in layout.HitTestTextRange(0, text.Text!.Length))
+        foreach (var rect in layout.HitTestTextRange(0, text.Text!.Length).Select(Normalized))
         {
-            area = area is { } union ? union.Union(rect) : rect;
+            if (rect.Width > 0 && rect.Height > 0)
+            {
+                area = area is { } union ? union.Union(rect) : rect;
+            }
         }
 
         var local = (area ?? new Rect(0, 0, layout.Width, layout.Height)).Translate(new Vector(text.Padding.Left, text.Padding.Top));
         return local.TransformToAABB(toRoot);
     }
 
+    private static Rect Normalized(Rect rect) =>
+        new(Math.Min(rect.X, rect.X + rect.Width), Math.Min(rect.Y, rect.Y + rect.Height), Math.Abs(rect.Width), Math.Abs(rect.Height));
+
     /// <summary>How much of the text is hidden, as a size, when more than the tolerance is.</summary>
     private static Size? Hidden(Rect area, Rect reach)
     {
+        if (area.Width < Tolerance || area.Height < Tolerance)
+        {
+            return null;
+        }
+
         var shown = area.Intersect(reach);
         var hiddenWidth = area.Width - shown.Width;
         var hiddenHeight = area.Height - shown.Height;

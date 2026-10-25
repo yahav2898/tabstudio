@@ -5,6 +5,7 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.LogicalTree;
 using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using TabStudio.App.Services;
 using TabStudio.App.Services.Agent;
@@ -48,7 +49,8 @@ public sealed class SwarmAppTests
               <TextBlock x:Name="Summary" Grid.Column="1" Text="All orders shipped on time this quarter" />
             </Grid>
             <TextBlock x:Name="Hebrew" Text="שלום! ההזמנה שלך בדרך אליך" FontSize="18" TextWrapping="Wrap" />
-            <Button x:Name="CountButton" Content="Count" Command="{Binding CountCommand}" MinWidth="120" MinHeight="48" />
+            <Button x:Name="CountButton" Content="Count" Command="{Binding CountCommand}" MinWidth="120" MinHeight="48"
+                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
             <TextBlock Text="{Binding Clicks, StringFormat='Clicked {0} times'}" />
           </StackPanel>
         </UserControl>
@@ -82,6 +84,15 @@ public sealed class SwarmAppTests
         Assert.Equal(AppScreenKind.Preview, workspace.Screens.Screens[0].Kind);
         var viewModels = devices.Select(d => d.AppRoot!.DataContext).Append(workspace.PreviewScreen.AppRoot!.DataContext).ToList();
         Assert.Equal(4, viewModels.Distinct(ReferenceEqualityComparer.Instance).Count());
+
+        // A tap replayed on the small phone counts there, through its own button, and nowhere else.
+        var phone = devices[0];
+        var phoneButton = phone.AppRoot!.GetLogicalDescendants().OfType<Button>().Single(b => b.Name == "CountButton");
+        var tap = new AppInput(AppInputKind.Tap, ElementPaths.Describe(phone.AppRoot!, phoneButton)!);
+        Assert.True(await SwarmTestHelpers.WithFramesAsync(phone.SendInputAsync(tap, CancellationToken.None)), phone.LastReplayMiss);
+        await UiTestHelpers.WaitUntilAsync(() => Texts(phone.AppRoot!).Contains("Clicked 1 times"), because: "the tap on the phone");
+        Assert.Contains("Clicked 0 times", Texts(devices[2].AppRoot!));
+        Assert.Contains("Clicked 0 times", Texts(workspace.PreviewScreen.AppRoot!));
 
         // The status line is cut off on the small phone, and fits on the foldable and the tablet.
         await UiTestHelpers.WaitUntilAsync(() => Row(workspace, "SWRM001", "TextBlock#Summary") is not null && workspace.LayoutChecks.Checking == 0, CheckTimeout, "the layout checks");
@@ -160,14 +171,14 @@ public sealed class SwarmAppTests
         var path = ElementPaths.Describe(preview.AppRoot!, button)!;
         Assert.Equal("MainView/StackPanel[0]/Button#CountButton", path);
         Assert.True(await SwarmTestHelpers.WithFramesAsync(preview.SendInputAsync(new AppInput(AppInputKind.Tap, path), CancellationToken.None)));
-        await UiTestHelpers.WaitUntilAsync(() => Texts(preview.AppRoot).Contains("Clicked 1 times"), because: "the replayed tap");
+        await UiTestHelpers.WaitUntilAsync(() => Texts(preview.AppRoot!).Contains("Clicked 1 times"), because: "the replayed tap");
         Assert.Empty(captured);
 
         // A person's tap on the preview is captured, by its element.
         var center = button.TranslatePoint(new Point(button.Bounds.Width / 2, button.Bounds.Height / 2), window)!.Value;
         window.MouseDown(center, MouseButton.Left);
         window.MouseUp(center, MouseButton.Left);
-        await UiTestHelpers.WaitUntilAsync(() => Texts(preview.AppRoot).Contains("Clicked 2 times"), because: "the person's tap");
+        await UiTestHelpers.WaitUntilAsync(() => Texts(preview.AppRoot!).Contains("Clicked 2 times"), because: "the person's tap");
         Assert.Equal(path, Assert.Single(captured).ElementPath);
 
         // A picture of the screen, at its density.
@@ -219,6 +230,7 @@ public sealed class SwarmAppTests
 
         // The request's top, with the picture Claude got.
         var conversation = window.GetVisualDescendants().OfType<AgentPanelView>().Single().Messages;
+        Dispatcher.UIThread.RunJobs();
         conversation.UpdateLayout();
         conversation.Offset = default;
         UiTestHelpers.SaveScreenshot(window, "swarm-04-fix-with-agent");

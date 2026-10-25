@@ -107,6 +107,17 @@ public sealed class PreviewAppScreen : LocalAppScreen
     {
         if (e.Property == Visual.BoundsProperty)
         {
+            if (_profile.Width <= 0 || _profile.Height <= 0)
+            {
+                // The first layout gives the screen its size at once.
+                if (UpdateProfile(Surface, AppRoot))
+                {
+                    RaiseChanged();
+                }
+
+                return;
+            }
+
             // A pane being resized changes size on every frame; its profile settles once it rests.
             _resized.Stop();
             _resized.Start();

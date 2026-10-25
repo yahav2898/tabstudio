@@ -30,6 +30,9 @@ internal static class WebScreenScript
     /// <summary>The page's size, theme and readiness, with what a person did since the last read; <c>null</c> before <see cref="Install"/>.</summary>
     public const string State = "window.__tabStudioScreen ? window.__tabStudioScreen.state() : null";
 
+    /// <summary>Whether the last touch aimed by <see cref="PointAt"/> reached its element; <c>null</c> before the page saw it.</summary>
+    public const string Landed = "window.__tabStudioScreen ? window.__tabStudioScreen.landed() : null";
+
     /// <summary>Sets the page up as a screen; running it again on the same page does nothing.</summary>
     public static string Install => InstallScript.Value;
 

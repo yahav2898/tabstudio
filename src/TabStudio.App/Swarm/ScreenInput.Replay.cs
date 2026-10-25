@@ -29,6 +29,9 @@ internal sealed partial class ScreenInput
     /// <summary>How far one notch of a mouse wheel scrolls content that is not scrolled by items, as Avalonia does.</summary>
     private const double WheelStep = 50;
 
+    /// <summary>Why the last replayed input found no element, for a test's message.</summary>
+    public string? LastMiss { get; private set; }
+
     private IPointer? _replayPointer;
     private bool _replayingKeys;
 
@@ -255,8 +258,16 @@ internal sealed partial class ScreenInput
     /// <summary>The element a path names, if it is shown on this screen.</summary>
     private Control? Target(string path)
     {
-        if (ElementPaths.Resolve(_root, path) is not { } target || target.Bounds.Width <= 0 || target.Bounds.Height <= 0)
+        LastMiss = null;
+        if (ElementPaths.Resolve(_root, path) is not { } target)
         {
+            LastMiss = $"no element at {path}";
+            return null;
+        }
+
+        if (target.Bounds.Width <= 0 || target.Bounds.Height <= 0)
+        {
+            LastMiss = $"{target.GetType().Name} has no size";
             return null;
         }
 
@@ -265,8 +276,15 @@ internal sealed partial class ScreenInput
         {
             if (!visual.IsVisible)
             {
+                LastMiss = $"{visual.GetType().Name} around it is hidden";
                 return null;
             }
+        }
+
+        if (target.TranslatePoint(default, _root) is null)
+        {
+            LastMiss = $"{target.GetType().Name} is not under the screen's root";
+            return null;
         }
 
         return target;

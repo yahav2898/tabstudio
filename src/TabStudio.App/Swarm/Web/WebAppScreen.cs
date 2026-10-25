@@ -33,6 +33,12 @@ public sealed class WebAppScreen : IAppScreen, IDisposable
     /// <summary>How long a replayed long press holds its finger down: longer than Android's long press timeout.</summary>
     private static readonly TimeSpan LongPressHold = TimeSpan.FromMilliseconds(800);
 
+    /// <summary>How long the page has to see a replayed touch before the screen asks where it landed.</summary>
+    private static readonly TimeSpan LandWait = TimeSpan.FromMilliseconds(150);
+
+    /// <summary>How long a page that moved under a finger has to settle before the finger aims again.</summary>
+    private static readonly TimeSpan SettleWait = TimeSpan.FromMilliseconds(600);
+
     private readonly DispatcherTimer _poll;
     private IScriptableWebView? _view;
     private ScreenProfile _profile = new(WebPreviewName, FormFactor.Tablet, 0, 0);
@@ -224,14 +230,7 @@ public sealed class WebAppScreen : IAppScreen, IDisposable
         switch (input.Kind)
         {
             case AppInputKind.Tap or AppInputKind.LongPress:
-                var answer = await view.EvaluateAsync(WebScreenScript.PointAt(input.ElementPath, input.Position), cancellationToken);
-                if (WebScreenJson.Read(answer, WebScreenJson.Default.WebScreenPoint) is not { } point)
-                {
-                    return false;
-                }
-
-                await view.EvaluateAsync(WebScreenScript.Expect(input.Kind, null), cancellationToken);
-                return await view.TouchAsync(new Point(point.X, point.Y), input.Kind == AppInputKind.LongPress ? LongPressHold : TapHold, cancellationToken);
+                return await TouchAsync(view, input, cancellationToken);
 
             case AppInputKind.Text:
                 return input.Text is { Length: > 0 } text && await view.EvaluateAsync(WebScreenScript.Type(text), cancellationToken) == "true";
@@ -250,6 +249,37 @@ public sealed class WebAppScreen : IAppScreen, IDisposable
 
             default:
                 return false;
+        }
+    }
+
+    /// <summary>
+    /// A finger on an element. A page can move under it, as one does while a soft keyboard comes or goes: when the
+    /// page saw the finger land elsewhere, the finger aims again once the page has settled, as a person's would.
+    /// </summary>
+    private static async Task<bool> TouchAsync(IScriptableWebView view, AppInput input, CancellationToken cancellationToken)
+    {
+        var hold = input.Kind == AppInputKind.LongPress ? LongPressHold : TapHold;
+        for (var attempt = 0; ; attempt++)
+        {
+            var answer = await view.EvaluateAsync(WebScreenScript.PointAt(input.ElementPath, input.Position), cancellationToken);
+            if (WebScreenJson.Read(answer, WebScreenJson.Default.WebScreenPoint) is not { } point)
+            {
+                return false;
+            }
+
+            await view.EvaluateAsync(WebScreenScript.Expect(input.Kind, null), cancellationToken);
+            if (!await view.TouchAsync(new Point(point.X, point.Y), hold, cancellationToken))
+            {
+                return false;
+            }
+
+            await Task.Delay(LandWait, cancellationToken);
+            if (attempt == 1 || await view.EvaluateAsync(WebScreenScript.Landed, cancellationToken) != "false")
+            {
+                return true;
+            }
+
+            await Task.Delay(SettleWait, cancellationToken);
         }
     }
 

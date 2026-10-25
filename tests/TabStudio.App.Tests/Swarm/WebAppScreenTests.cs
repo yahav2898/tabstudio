@@ -95,6 +95,18 @@ public sealed class WebAppScreenTests
     }
 
     [AvaloniaFact]
+    public async Task A_touch_that_lands_elsewhere_because_the_page_moved_aims_again_once()
+    {
+        var browser = new ScriptedBrowser { LandedAnswer = "false" };
+        using var screen = await RunningAsync(browser);
+
+        Assert.True(await screen.SendInputAsync(new AppInput(AppInputKind.Tap, Button), CancellationToken.None));
+
+        Assert.Equal(2, browser.Touches.Count);
+        Assert.Equal(2, browser.Scripts.Count(s => s.Contains(".point(", StringComparison.Ordinal)));
+    }
+
+    [AvaloniaFact]
     public async Task Keys_go_through_the_browser_s_key_input_and_text_into_the_focused_element()
     {
         var browser = new ScriptedBrowser();
@@ -179,6 +191,9 @@ public sealed class WebAppScreenTests
 
         public string IssuesAnswer { get; set; } = "[]";
 
+        /// <summary>Whether the page saw the last touch land on the element it was aimed at.</summary>
+        public string LandedAnswer { get; set; } = "true";
+
         public byte[] Picture { get; } = [0x89, 0x50, 0x4E, 0x47];
 
         public int CapturedAt { get; private set; }
@@ -238,11 +253,12 @@ public sealed class WebAppScreenTests
             string? answer = script switch
             {
                 _ when script.Contains(".point(", StringComparison.Ordinal) => PointAnswer,
+                _ when script == WebScreenScript.Landed => LandedAnswer,
                 _ when script.Contains(".inspect(", StringComparison.Ordinal) => IssuesAnswer,
                 _ when script.Contains(".type(", StringComparison.Ordinal) || script.Contains(".scroll(", StringComparison.Ordinal) => "true",
                 _ => "null",
             };
-            return Task.FromResult(answer);
+            return Task.FromResult<string?>(answer);
         }
 
         public Task<byte[]?> CaptureAsync(int maxPixels, CancellationToken cancellationToken)

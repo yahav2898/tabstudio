@@ -44,7 +44,20 @@ public sealed class LayoutCheckTests
                 Height = 40,
                 HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
                 Content = new TextBlock { Text = "A very long line that scrolls sideways inside its scroll viewer, so nothing is lost" },
-            }));
+            },
+            new Button
+            {
+                FlowDirection = FlowDirection.RightToLeft,
+                Width = 28,
+                Height = 28,
+                MinWidth = 0,
+                MinHeight = 0,
+                Padding = default,
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+                VerticalContentAlignment = VerticalAlignment.Center,
+                Content = "?",
+            },
+            new TextBlock { FlowDirection = FlowDirection.RightToLeft, Text = "שלום! ההזמנה שלך בדרך אליך" }));
 
         Assert.DoesNotContain(issues, i => i.Kind == LayoutIssueKind.ClippedText);
     }
