@@ -28,7 +28,7 @@ public sealed class LoopbackLauncher(IServerProcessLauncher inner) : IServerProc
             "loopback": { "name": "Loopback Server", "languages": [ "loopback" ], "command": "tabstudio-loopback-language-server" }
           },
           "debugAdapters": {
-            "loopback": { "name": "Loopback Debugger", "languages": [ "loopback" ], "command": "tabstudio-loopback-debug-adapter" }
+            "loopback": { "name": "Loopback", "languages": [ "loopback" ], "command": "tabstudio-loopback-debug-adapter" }
           }
         }
         """;

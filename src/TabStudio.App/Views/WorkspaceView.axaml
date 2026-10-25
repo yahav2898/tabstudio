@@ -291,7 +291,7 @@
 
           <Border Height="34" Padding="10,0" Margin="8,0,0,0" CornerRadius="7" Background="{DynamicResource Brush.Control}"
                   BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1">
-            <TextBlock VerticalAlignment="Center">
+            <TextBlock VerticalAlignment="Center" MaxWidth="166" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding RunHostText}">
               <Run Text="Run on " Foreground="{DynamicResource Brush.TextMuted}" />
               <Run Text="{Binding RunHostText}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" />
             </TextBlock>
