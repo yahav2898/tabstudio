@@ -91,7 +91,13 @@ public static partial class SelfTest
             }
 
             var avalonia = await ShowAvaloniaAppAsync(main, templates, cancellationToken);
-            return new SelfTestResult(avalonia.Success, $"{summary} | {debugged.Message} | {web.Message} | {avalonia.Message}", clock.Elapsed);
+            if (!avalonia.Success || main.Workspace is not { } last)
+            {
+                return new SelfTestResult(false, $"{summary} | {debugged.Message} | {web.Message} | {avalonia.Message}", clock.Elapsed);
+            }
+
+            var extensions = await InstallGrammarExtensionAsync(last, FindEditor, cancellationToken);
+            return new SelfTestResult(extensions.Success, $"{summary} | {debugged.Message} | {web.Message} | {avalonia.Message} | {extensions.Message}", clock.Elapsed);
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)
         {

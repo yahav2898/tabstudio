@@ -13,7 +13,7 @@ namespace TabStudio.App.Views.Extensions;
 public sealed partial class ExtensionsView : UserControl, IDisposable
 {
     // Below this width the lists and the details take turns.
-    private const double NarrowWidth = 760;
+    private const double NarrowWidth = 840;
     private const double ListWidth = 400;
 
     private ExtensionsViewModel? _viewModel;

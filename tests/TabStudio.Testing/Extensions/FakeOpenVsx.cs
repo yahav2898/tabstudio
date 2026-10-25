@@ -116,6 +116,9 @@ public sealed class FakeOpenVsx : HttpMessageHandler
             (_, "README.md") when path.Contains("/vscode/perl/", StringComparison.Ordinal) => Bytes(Encoding.UTF8.GetBytes(PerlReadme()), "text/markdown"),
             (_, "README.md") when path.Contains(LumenExtension.Name, StringComparison.Ordinal) => Bytes(Encoding.UTF8.GetBytes(LumenExtension.Readme), "text/markdown"),
             (_, "CHANGELOG.md") => Bytes(Encoding.UTF8.GetBytes("# Changelog\n\n## 1.1.0\n\n- New snippets\n\n## 1.0.0\n\n- First release\n"), "text/markdown"),
+            (_, "package.json" or "package.nls.json") when path.Contains("/vscode/perl/", StringComparison.Ordinal) => Bytes(PerlFile(file), "application/json"),
+            (_, "package.json") when path.Contains(LumenExtension.Name, StringComparison.Ordinal) => Bytes(Encoding.UTF8.GetBytes(LumenExtension.PackageJson(LumenVersion)), "application/json"),
+            (_, "package.nls.json") when path.Contains(LumenExtension.Name, StringComparison.Ordinal) => Bytes(Encoding.UTF8.GetBytes(LumenExtension.PackageNls), "application/json"),
             _ when file.EndsWith(".png", StringComparison.Ordinal) => Bytes(path.Contains(LumenExtension.Name, StringComparison.Ordinal) ? LumenExtension.IconPng : TestIcons.Create(path), "image/png"),
             _ => NotFound(path),
         };
@@ -188,6 +191,7 @@ public sealed class FakeOpenVsx : HttpMessageHandler
             ["icon"] = Api(root + "images/icon.png"),
             ["readme"] = Api(root + "README.md"),
             ["changelog"] = Api(root + "CHANGELOG.md"),
+            ["manifest"] = Api(root + "package.json"),
         };
     }
 
@@ -209,11 +213,16 @@ public sealed class FakeOpenVsx : HttpMessageHandler
         return package;
     }
 
-    private static string PerlReadme()
+    private static string PerlReadme() => Encoding.UTF8.GetString(PerlFile("README.md"));
+
+    /// <summary>A file of the real Perl package, such as its package.json, as the registry's file API serves it.</summary>
+    private static byte[] PerlFile(string name)
     {
         using var zip = new System.IO.Compression.ZipArchive(new MemoryStream(PerlVsix));
-        using var reader = new StreamReader(zip.GetEntry("extension/README.md")!.Open());
-        return reader.ReadToEnd();
+        using var stream = zip.GetEntry("extension/" + name)!.Open();
+        using var copy = new MemoryStream();
+        stream.CopyTo(copy);
+        return copy.ToArray();
     }
 
     private static string Api(string path) => new Uri(Address, "api/" + path).AbsoluteUri;

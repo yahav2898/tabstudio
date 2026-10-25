@@ -37,8 +37,8 @@ internal static class ContributedFileTypes
     }
 
     /// <summary>
-    /// The badge for a file of a contributed language: its extension in capitals, such as <c>PL</c>, or the start of
-    /// the language's name for a file recognized by its whole name.
+    /// The badge for a file of a contributed language: its extension in capitals when it is short, such as <c>PL</c>,
+    /// otherwise the start of the language's name, as for a file recognized by its whole name.
     /// </summary>
     internal static string Badge(ContributedLanguage language, string fileName)
     {
@@ -47,10 +47,11 @@ internal static class ContributedFileTypes
             .Where(e => fileName.EndsWith(e, StringComparison.OrdinalIgnoreCase))
             .OrderByDescending(e => e.Length)
             .FirstOrDefault();
-        var text = extension is not null && extension.Length > 1
-            ? extension[(extension.LastIndexOf('.') + 1)..]
-            : new string([.. language.DisplayName.Where(char.IsLetterOrDigit)]);
+        var suffix = extension is not null && extension.Length > 1 ? extension[(extension.LastIndexOf('.') + 1)..] : string.Empty;
+        var text = suffix.Length is > 0 and <= 4 && suffix.All(char.IsLetterOrDigit)
+            ? suffix
+            : new string([.. language.DisplayName.Where(char.IsLetterOrDigit).Take(3)]);
         text = text.ToUpperInvariant();
-        return text.Length == 0 ? "TXT" : text[..Math.Min(4, text.Length)];
+        return text.Length == 0 ? "TXT" : text;
     }
 }

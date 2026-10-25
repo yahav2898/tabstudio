@@ -44,6 +44,9 @@ public sealed partial class CodeEditorView
     /// <summary>The folds of the document, when its language configuration folds it; for tests.</summary>
     internal FoldingManager? Folding => _folding;
 
+    /// <summary>The bracket at the caret and its match, as outlined now; for tests.</summary>
+    internal BracketMatch? MatchedBracket => _brackets?.Match;
+
     private void InitializeLanguageRules()
     {
         var textArea = _editor.TextArea;

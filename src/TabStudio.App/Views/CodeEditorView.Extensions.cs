@@ -56,6 +56,9 @@ public sealed partial class CodeEditorView
     /// <summary>The editor's background now, for tests.</summary>
     internal IBrush? EditorBackground => _editor.Background;
 
+    /// <summary>The color of text no grammar rule colors, for tests and the self test.</summary>
+    internal Color? TextForeground => (_editor.Foreground as ISolidColorBrush)?.Color;
+
     private void InitializeExtensions()
     {
         EditorExtensions.Changed += OnEditorExtensionsChanged;
