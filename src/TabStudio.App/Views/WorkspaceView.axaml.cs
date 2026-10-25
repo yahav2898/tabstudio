@@ -31,6 +31,7 @@ public sealed partial class WorkspaceView : UserControl
             DocumentViewModel { IsComparison: true } comparison => new DiffView(comparison),
             DocumentViewModel { IsNotebook: true } notebook => new Notebooks.NotebookView(notebook),
             DocumentViewModel { IsCiLog: true } log => new Actions.CiLogView(log),
+            DocumentViewModel { DeviceMatrix: { } matrix } => new Swarm.DeviceMatrixView { DataContext = matrix },
             DocumentViewModel { Designer: { } designer } xaml => new XamlDesignerView(xaml, designer),
             _ => (Control)new CodeEditorView((DocumentViewModel)document),
         };

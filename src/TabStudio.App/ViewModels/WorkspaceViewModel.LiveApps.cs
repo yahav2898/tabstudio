@@ -43,6 +43,7 @@ public sealed partial class WorkspaceViewModel
             {
                 WebPreview.ShowStopped();
                 AppPreview.ShowStopped();
+                OnLiveRunEnded();
                 return;
             }
 
@@ -59,6 +60,7 @@ public sealed partial class WorkspaceViewModel
             restarted = true;
         }
         while (_restartLiveApp && !_disposed);
+        OnLiveRunEnded();
     }
 
     /// <summary>Ends one run of a live app: either the line that says it restarts, or its exit line.</summary>

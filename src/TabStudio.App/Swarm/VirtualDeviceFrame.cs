@@ -30,11 +30,22 @@ public sealed class VirtualDeviceFrame : Decorator
         Child = _system;
     }
 
+    /// <summary>Whether its device was removed, so no place shows the frame again.</summary>
+    public bool IsRetired { get; private set; }
+
     /// <summary>The app drawn on the screen: the root of its view, in its theme.</summary>
     public Control? App
     {
         get => _system.Child;
         set => _system.Child = value;
+    }
+
+    /// <summary>Takes the frame out of wherever it is shown, for good, as its device is removed.</summary>
+    public void Retire()
+    {
+        IsRetired = true;
+        App = null;
+        ScreenPlacement.Detach(this);
     }
 
     /// <summary>Makes the frame the screen a profile describes.</summary>

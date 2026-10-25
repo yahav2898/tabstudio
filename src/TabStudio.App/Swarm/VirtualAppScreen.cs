@@ -97,6 +97,7 @@ public sealed class VirtualAppScreen : LocalAppScreen
         if (disposing && Dispatcher.UIThread.CheckAccess())
         {
             Stop();
+            Frame.Retire();
         }
 
         base.Dispose(disposing);

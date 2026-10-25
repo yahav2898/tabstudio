@@ -54,7 +54,15 @@ public static class ElementPaths
     /// <param name="root">The app's root element on its screen.</param>
     /// <param name="path">The path, as <see cref="Describe"/> wrote it, on this screen or another.</param>
     /// <returns>The element, or <see langword="null"/> when this screen does not have it.</returns>
-    public static Control? Resolve(Visual root, string path)
+    public static Control? Resolve(Visual root, string path) => Resolve(root, path, bringIntoView: true);
+
+    /// <summary>The element a path names, on this screen, scrolling an item that is not created yet into view or not.</summary>
+    /// <param name="root">The app's root element on its screen.</param>
+    /// <param name="path">The path.</param>
+    /// <param name="bringIntoView">
+    /// Whether an item a list has not created yet is scrolled into view to be found; without, it is not found.
+    /// </param>
+    internal static Control? Resolve(Visual root, string path, bool bringIntoView)
     {
         ArgumentNullException.ThrowIfNull(root);
         ArgumentNullException.ThrowIfNull(path);
@@ -67,7 +75,7 @@ public static class ElementPaths
         Control current = rootControl;
         for (var i = 1; i < segments.Length; i++)
         {
-            if (!PathSegment.TryParse(segments[i], out var segment) || Child(current, segment) is not { } child)
+            if (!PathSegment.TryParse(segments[i], out var segment) || Child(current, segment, bringIntoView) is not { } child)
             {
                 // A wrapper the other screen does not have: a named target is still found by its name.
                 return PathSegment.TryParse(segments[^1], out var last) && last.Name is { } name ? FindByName(rootControl, last.Type, name) : null;
@@ -185,7 +193,7 @@ public static class ElementPaths
         return index;
     }
 
-    private static Control? Child(Control parent, PathSegment segment)
+    private static Control? Child(Control parent, PathSegment segment, bool bringIntoView)
     {
         var children = ((ILogical)parent).LogicalChildren;
         if (segment.Name is { } name)
@@ -202,7 +210,9 @@ public static class ElementPaths
         }
 
         // An item of an items control, by its index in the items, created and scrolled into view when it is not yet.
-        if (parent is ItemsControl items && segment.Index < items.ItemCount && ContainerFromIndex(items, segment.Index) is { } container && TypeName(container) == segment.Type)
+        if (parent is ItemsControl items && segment.Index < items.ItemCount
+            && (bringIntoView ? ContainerFromIndex(items, segment.Index) : items.ContainerFromIndex(segment.Index)) is { } container
+            && TypeName(container) == segment.Type)
         {
             return container;
         }

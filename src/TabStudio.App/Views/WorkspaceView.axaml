@@ -95,6 +95,7 @@
                       IsEnabled="{Binding WebPreview.HasApp}" />
             <MenuItem Header="_App Preview" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.AppPreview}"
                       IsEnabled="{Binding AppPreview.HasApp}" />
+            <MenuItem Header="Device _Matrix" Command="{Binding ShowDeviceMatrixCommand}" />
             <MenuItem Header="_Error List" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" />
             <MenuItem Header="_Output" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Output}" />
             <MenuItem Header="_Compatibility Doctor" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Compatibility}" />

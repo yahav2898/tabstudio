@@ -24,13 +24,13 @@ public sealed class LayoutCheckTests
             new TextBlock { Name = "Overflow", Width = 80, Text = "A sentence much longer than eighty dips" },
             new TextBlock { Name = "Trimmed", Width = 80, TextTrimming = TextTrimming.CharacterEllipsis, Text = "Another long sentence to trim" },
             new TextBlock { Name = "Lines", Width = 80, Height = 20, TextWrapping = TextWrapping.Wrap, Text = "Wrapping text that needs several lines of room" },
-            new Border { Name = "Box", Width = 60, Height = 30, ClipToBounds = true, Child = new TextBlock { Width = 120, Text = "Clipped by the box" } }));
+            new Border { Name = "Box", Width = 60, Height = 30, ClipToBounds = true, Child = new Canvas { Children = { new TextBlock { Text = "Clipped by the box" } } } }));
 
         Assert.Equal(LayoutIssueSeverity.Error, Issue(issues, LayoutIssueKind.ClippedText, "TextBlock#Overflow").Severity);
         Assert.Contains("runs past its box", Issue(issues, LayoutIssueKind.ClippedText, "TextBlock#Overflow").Message, StringComparison.Ordinal);
         Assert.Equal(LayoutIssueSeverity.Warning, Issue(issues, LayoutIssueKind.ClippedText, "TextBlock#Trimmed").Severity);
         Assert.Contains("cut off at the bottom", Issue(issues, LayoutIssueKind.ClippedText, "TextBlock#Lines").Message, StringComparison.Ordinal);
-        Assert.Contains("cut off by its container", Issue(issues, LayoutIssueKind.ClippedText, "Border#Box/TextBlock[0]").Message, StringComparison.Ordinal);
+        Assert.Contains("cut off by its container", Issue(issues, LayoutIssueKind.ClippedText, "Border#Box/Canvas[0]/TextBlock[0]").Message, StringComparison.Ordinal);
     }
 
     [AvaloniaFact]
@@ -54,7 +54,7 @@ public sealed class LayoutCheckTests
     {
         var far = new Button { Name = "Far", Width = 100, Height = 48, Content = "Far" };
         var partly = new Button { Name = "Partly", Width = 200, Height = 48, Content = "Partly" };
-        var canvas = new Canvas { Width = Width, Height = Height };
+        var canvas = new Canvas { Width = Width, Height = Height / 2, VerticalAlignment = VerticalAlignment.Top };
         canvas.Children.Add(far);
         canvas.Children.Add(partly);
         Canvas.SetLeft(far, 420);

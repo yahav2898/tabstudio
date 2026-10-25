@@ -102,6 +102,12 @@ public static partial class SelfTest
             }
 
             var avalonia = await ShowAvaloniaAppAsync(main, templates, cancellationToken);
+            if (avalonia.Success)
+            {
+                var swarm = await CheckSwarmScreensAsync(main, templates, cancellationToken);
+                avalonia = avalonia with { Success = swarm.Success, Message = $"{avalonia.Message} | {swarm.Message}" };
+            }
+
             return new SelfTestResult(avalonia.Success, $"{summary} | {debugged.Message} | {web.Message} | {avalonia.Message}", clock.Elapsed);
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)

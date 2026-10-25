@@ -21,6 +21,12 @@ public sealed partial class ErrorListView : UserControl
 
     private void OnRowTapped(object? sender, TappedEventArgs e)
     {
+        // The screens badge of a layout finding opens its pictures, not the file.
+        if ((e.Source as Control)?.FindAncestorOfType<Button>(includeSelf: true) is { Tag: "screens" })
+        {
+            return;
+        }
+
         if ((e.Source as Control)?.FindAncestorOfType<ListBoxItem>(includeSelf: true)?.DataContext is ErrorItemViewModel item)
         {
             // A code with a page, as language servers give, opens the page; the rest of the row opens the file.

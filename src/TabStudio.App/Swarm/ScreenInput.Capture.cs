@@ -168,7 +168,7 @@ internal sealed partial class ScreenInput
         Emit(new AppInput(
             AppInputKind.Key,
             string.Empty,
-            Key: e.Key.ToString(),
+            Key: KeyNames.Of(e.Key),
             Modifiers: e.KeyModifiers == KeyModifiers.None ? null : e.KeyModifiers.ToString()));
     }
 
