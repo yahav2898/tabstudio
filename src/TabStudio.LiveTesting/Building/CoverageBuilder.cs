@@ -39,15 +39,40 @@ public sealed class CoverageBuilder
     private static readonly EmitOptions EmitOptions = new(debugInformationFormat: DebugInformationFormat.PortablePdb);
 
     private readonly RoslynWorkspaceHost _host;
+    private readonly Func<string, int> _slots;
     private readonly Lock _gate = new();
     private readonly Dictionary<string, BuiltProject> _cache = new(StringComparer.Ordinal);
 
-    /// <summary>Creates a builder over a loaded workspace host.</summary>
+    /// <summary>Creates a builder over a loaded workspace host, for tests that run in this process.</summary>
     /// <param name="host">The host that holds the projects.</param>
     public CoverageBuilder(RoslynWorkspaceHost host)
+        : this(host, SlotOf)
+    {
+    }
+
+    /// <summary>
+    /// Creates a builder over a loaded workspace host, for tests that run in another process, such as a tablet that
+    /// a TabStudio Link host builds for: the instrumented code reports to the slots that process gives its projects.
+    /// </summary>
+    /// <param name="host">The host that holds the projects.</param>
+    /// <param name="slots">The slot of a project, by its full path on this device, as <see cref="SlotOf"/> gives it in the process that runs the tests.</param>
+    public CoverageBuilder(RoslynWorkspaceHost host, Func<string, int> slots)
     {
         ArgumentNullException.ThrowIfNull(host);
+        ArgumentNullException.ThrowIfNull(slots);
         _host = host;
+        _slots = slots;
+    }
+
+    /// <summary>
+    /// The slot of a project in the hit table of this process: the same for every build of the project for as long
+    /// as the process runs, so every assembly built for it reports to its own slot.
+    /// </summary>
+    /// <param name="projectFilePath">The project.</param>
+    public static int SlotOf(string projectFilePath)
+    {
+        ArgumentNullException.ThrowIfNull(projectFilePath);
+        return CoverageModuleBuilder.IndexOf(projectFilePath);
     }
 
     /// <summary>Builds a test project and the projects it references, instrumenting the projects it tests.</summary>
@@ -127,9 +152,11 @@ public sealed class CoverageBuilder
     /// <summary>Compiles one project, or returns what was compiled from the same compilation before.</summary>
     private BuiltProject? Compile(ProjectInfo project, CSharpCompilation compilation, bool instrument, List<BuildDiagnostic> diagnostics, CancellationToken cancellationToken)
     {
+        var slot = instrument ? _slots(project.FilePath) : -1;
         lock (_gate)
         {
-            if (_cache.TryGetValue(project.FilePath, out var cached) && ReferenceEquals(cached.Compilation, compilation) && cached.IsInstrumented == instrument)
+            if (_cache.TryGetValue(project.FilePath, out var cached) && ReferenceEquals(cached.Compilation, compilation) && cached.IsInstrumented == instrument
+                && (cached.Module?.Index ?? -1) == slot)
             {
                 return cached;
             }
@@ -149,7 +176,7 @@ public sealed class CoverageBuilder
         var resources = ManifestResources.For(project);
         if (instrument)
         {
-            var (instrumented, map) = CoverageInstrumenter.Instrument(compilation, project.FilePath, cancellationToken);
+            var (instrumented, map) = CoverageInstrumenter.Instrument(compilation, project.FilePath, slot, cancellationToken);
             assembly = Emit(instrumented, project.Name, resources, out var emitErrors, cancellationToken);
             if (assembly is null)
             {

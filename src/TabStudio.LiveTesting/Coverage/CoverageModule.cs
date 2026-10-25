@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace TabStudio.LiveTesting.Coverage;
 
 /// <summary>
@@ -36,6 +38,58 @@ public sealed class CoverageModule
         }
     }
 
+    /// <summary>
+    /// Recreates a module from its parts, as another device that instrumented the project sent them, such as a
+    /// TabStudio Link host.
+    /// </summary>
+    /// <param name="projectFilePath">The project that was instrumented.</param>
+    /// <param name="index">Its slot in the hit table.</param>
+    /// <param name="members">Every tracked member, by index.</param>
+    /// <param name="statements">Every statement.</param>
+    /// <param name="pointMembers">The member of every coverage point, by point, as <see cref="PointMembers"/> gives it.</param>
+    /// <exception cref="ArgumentException">The parts do not fit together.</exception>
+    public static CoverageModule Create(
+        string projectFilePath,
+        int index,
+        IReadOnlyList<CoverageMember> members,
+        IReadOnlyList<CoverageStatement> statements,
+        IReadOnlyList<int> pointMembers)
+    {
+        ArgumentNullException.ThrowIfNull(projectFilePath);
+        ArgumentNullException.ThrowIfNull(members);
+        ArgumentNullException.ThrowIfNull(statements);
+        ArgumentNullException.ThrowIfNull(pointMembers);
+        ArgumentOutOfRangeException.ThrowIfNegative(index);
+        for (var i = 0; i < members.Count; i++)
+        {
+            if (members[i].Index != i)
+            {
+                throw new ArgumentException($"Member {i.ToString(CultureInfo.InvariantCulture)} has index {members[i].Index.ToString(CultureInfo.InvariantCulture)}.", nameof(members));
+            }
+        }
+
+        var pointMemberArray = pointMembers.ToArray();
+        if (pointMemberArray.Any(m => m < 0 || m >= members.Count))
+        {
+            throw new ArgumentException("A coverage point belongs to no member.", nameof(pointMembers));
+        }
+
+        var ordinals = new int[pointMemberArray.Length];
+        Array.Fill(ordinals, -1);
+        foreach (var statement in statements)
+        {
+            if (statement.Point < 0 || statement.Point >= ordinals.Length || ordinals[statement.Point] != -1
+                || pointMemberArray[statement.Point] != statement.Member || statement.Ordinal < 0)
+            {
+                throw new ArgumentException($"The statement at point {statement.Point.ToString(CultureInfo.InvariantCulture)} does not fit the points.", nameof(statements));
+            }
+
+            ordinals[statement.Point] = statement.Ordinal;
+        }
+
+        return new CoverageModule(projectFilePath, index, members, statements, pointMemberArray, ordinals);
+    }
+
     /// <summary>The project that was instrumented.</summary>
     public string ProjectFilePath { get; }
 
@@ -53,6 +107,9 @@ public sealed class CoverageModule
 
     /// <summary>The number of coverage points: member entries and statements.</summary>
     public int PointCount => _pointMembers.Length;
+
+    /// <summary>The member of every coverage point, by point: with <see cref="Members"/> and <see cref="Statements"/>, what <see cref="Create"/> needs.</summary>
+    public IReadOnlyList<int> PointMembers => Array.AsReadOnly(_pointMembers);
 
     /// <summary>The source files of the members, in no particular order.</summary>
     public IEnumerable<string> Files => _membersByFile.Keys;

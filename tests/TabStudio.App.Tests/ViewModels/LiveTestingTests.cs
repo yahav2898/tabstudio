@@ -270,16 +270,16 @@ public sealed class LiveTestingTests : IClassFixture<SharedToolchain>, IDisposab
         _temp.Dispose();
     }
 
-    private static TestEntry Entry(WorkspaceViewModel workspace, string methodName) =>
+    internal static TestEntry Entry(WorkspaceViewModel workspace, string methodName) =>
         workspace.Tests.Entries.Single(e => e.MethodName == methodName);
 
     private static TestNodeViewModel Row(WorkspaceViewModel workspace, string name) =>
         workspace.Tests.Rows.Single(r => r.Name == name);
 
-    private static IReadOnlyList<(int Line, LiveTestMarker Marker)> Markers(DocumentViewModel document) =>
+    internal static IReadOnlyList<(int Line, LiveTestMarker Marker)> Markers(DocumentViewModel document) =>
         document.LiveTestMarkers?.Lines(document.Document) ?? [];
 
-    private static LiveTestMarker MarkerOn(DocumentViewModel document, int line) =>
+    internal static LiveTestMarker MarkerOn(DocumentViewModel document, int line) =>
         Assert.Single(Markers(document), m => m.Line == line).Marker;
 
     private async Task<(WorkspaceViewModel Workspace, DocumentViewModel Pricing)> StartAsync(DefaultDeviceStatus? device = null)

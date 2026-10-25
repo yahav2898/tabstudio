@@ -39,6 +39,9 @@ internal static class LinkLanguageMethods
     /// <summary>Builds a project; the assemblies come back as attachments.</summary>
     public const string Build = "build/project";
 
+    /// <summary>Builds a test project for Live Unit Testing, the projects it tests instrumented for the tablet's coverage recorder.</summary>
+    public const string BuildForCoverage = "build/coverage";
+
     /// <summary>Builds a project for the debugger; the assemblies come back as attachments.</summary>
     public const string BuildForDebugging = "build/debug";
 

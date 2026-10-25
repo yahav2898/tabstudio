@@ -6,6 +6,7 @@ using TabStudio.Core.Workspaces;
 using TabStudio.Debugging.Building;
 using TabStudio.Link;
 using TabStudio.Link.Language;
+using TabStudio.LiveTesting.Building;
 using TabStudio.Packages;
 
 namespace TabStudio.App.Services.Link;
@@ -19,7 +20,7 @@ namespace TabStudio.App.Services.Link;
 /// It remembers what it needs to start over on either side: the workspace, the editors' unsaved text, the
 /// configuration and the restored projects. When the host goes away, the request that noticed is answered here,
 /// after this device loaded the workspace; when the host comes back, the workspace is sent to it again (only what
-/// changed) and this device's compilations are released.
+/// changed), the host restores the same packages, and this device's compilations are released.
 /// </para>
 /// <para>
 /// Package restores always happen on this device too, because programs run here; the host restores for compiling.
@@ -210,6 +211,11 @@ public sealed class LinkedLanguageService : ILanguageService
     /// <inheritdoc />
     public Task<DebugBuild> BuildForDebuggingAsync(ProjectInfo project, CancellationToken cancellationToken) =>
         CallAsync(s => s.BuildForDebuggingAsync(project, cancellationToken));
+
+    /// <inheritdoc />
+    /// <remarks>When the host goes away during the build, the test project is built again on this device.</remarks>
+    public Task<CoverageBuild> BuildForCoverageAsync(ProjectInfo testProject, IReadOnlySet<string> uninstrumented, CancellationToken cancellationToken) =>
+        CallAsync(s => s.BuildForCoverageAsync(testProject, uninstrumented, cancellationToken));
 
     /// <inheritdoc />
     public void SetOptimization(bool optimize)
@@ -428,7 +434,7 @@ public sealed class LinkedLanguageService : ILanguageService
             remote.SetActiveProjects(_activeProjects);
         }
 
-        if (!TryReload(remote, workspace, sources))
+        if (!TryReload(remote, workspace, sources) || !TryPrepare(remote, workspace))
         {
             remote.Dispose();
             return null;
@@ -458,6 +464,42 @@ public sealed class LinkedLanguageService : ILanguageService
         released?.Dispose();
         RaiseModeChanged();
         return remote;
+    }
+
+    /// <summary>
+    /// Gives the host what this device set up after loading: the packages it restored, which the host compiles
+    /// against, and .NET's source generators when they were added.
+    /// </summary>
+    private bool TryPrepare(RemoteLanguageService remote, Workspace workspace)
+    {
+        List<ProjectInfo> restored;
+        bool generators;
+        lock (_gate)
+        {
+            restored = [.. workspace.Projects.Where(p => _restored.ContainsKey(p.FilePath))];
+            generators = _frameworkGenerators;
+        }
+
+        try
+        {
+            Task.Run(async () =>
+            {
+                foreach (var project in restored)
+                {
+                    await remote.RestorePackagesAsync(project, null, CancellationToken.None).ConfigureAwait(false);
+                }
+
+                if (generators)
+                {
+                    await remote.AddFrameworkGeneratorsAsync(CancellationToken.None).ConfigureAwait(false);
+                }
+            }).GetAwaiter().GetResult();
+            return true;
+        }
+        catch (Exception ex) when (IsLinkFailure(ex) || ex is IOException)
+        {
+            return false;
+        }
     }
 
     private static bool TryReload(RemoteLanguageService remote, Workspace workspace, ISourceTextProvider sources)

@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using TabStudio.Compilation;
 using TabStudio.Compilation.Building;
 using TabStudio.Compilation.Features;
@@ -5,6 +6,7 @@ using TabStudio.Core.Diagnostics;
 using TabStudio.Core.Workspaces;
 using TabStudio.Debugging.Building;
 using TabStudio.Link.Language;
+using TabStudio.LiveTesting.Building;
 
 namespace TabStudio.App.Services.Link;
 
@@ -14,6 +16,10 @@ namespace TabStudio.App.Services.Link;
 /// </summary>
 internal sealed class LocalLinkBackend(LocalLanguageService language) : ILinkLanguageBackend
 {
+    /// <summary>The slots of the tablet's coverage recorder, by project path on this host.</summary>
+    private readonly ConcurrentDictionary<string, int> _slots = new(StringComparer.Ordinal);
+    private CoverageBuilder? _coverage;
+
     /// <summary>The language service, for its settings such as concurrent builds.</summary>
     public LocalLanguageService Language => language;
 
@@ -50,6 +56,21 @@ internal sealed class LocalLinkBackend(LocalLanguageService language) : ILinkLan
 
     public Task<DebugBuild> BuildForDebuggingAsync(ProjectInfo project, CancellationToken cancellationToken) =>
         language.BuildForDebuggingAsync(project, cancellationToken);
+
+    /// <remarks>
+    /// The host's own Live Unit Testing builds report to the host's slots; these report to the tablet's, so they
+    /// have a builder of their own, which keeps what it compiled across the tablet's builds.
+    /// </remarks>
+    public Task<CoverageBuild> BuildForCoverageAsync(ProjectInfo testProject, IReadOnlySet<string> uninstrumented, IReadOnlyDictionary<string, int> slots, CancellationToken cancellationToken)
+    {
+        foreach (var (path, slot) in slots)
+        {
+            _slots[path] = slot;
+        }
+
+        var builder = LazyInitializer.EnsureInitialized(ref _coverage, () => new CoverageBuilder(language.Host, SlotOf));
+        return Task.Run(() => builder.BuildAsync(testProject, uninstrumented, cancellationToken), cancellationToken);
+    }
 
     public async Task<LinkRestoreOutcome> RestorePackagesAsync(ProjectInfo project, CancellationToken cancellationToken)
     {
@@ -115,4 +136,9 @@ internal sealed class LocalLinkBackend(LocalLanguageService language) : ILinkLan
         Task.Run(() => SnapshotBuilds.BuildTestProjectsAsync(language.Host, changes, cancellationToken), cancellationToken);
 
     public void Dispose() => language.Dispose();
+
+    private int SlotOf(string projectFilePath) =>
+        _slots.TryGetValue(projectFilePath, out var slot)
+            ? slot
+            : throw new InvalidOperationException($"The tablet gave '{Path.GetFileName(projectFilePath)}' no Live Unit Testing slot.");
 }

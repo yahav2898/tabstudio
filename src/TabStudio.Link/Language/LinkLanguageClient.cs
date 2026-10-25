@@ -18,7 +18,7 @@ namespace TabStudio.Link.Language;
 /// Loading sends only the files the host's mirror lacks, in batches, so a reconnect after a short drop costs a file
 /// list. Every method may be called from any thread.
 /// </remarks>
-public sealed class LinkLanguageClient
+public sealed partial class LinkLanguageClient
 {
     /// <summary>The most bytes of files sent in one upload request.</summary>
     private const long UploadBatchLength = 8L * 1024 * 1024;

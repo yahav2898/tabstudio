@@ -17,9 +17,18 @@ internal static class CoverageInstrumenter
     /// <param name="projectFilePath">The project, which decides its slot in the hit table.</param>
     /// <param name="cancellationToken">Cancels instrumentation.</param>
     /// <returns>The instrumented compilation and the map of its coverage points.</returns>
-    public static (CSharpCompilation Compilation, CoverageModule Module) Instrument(CSharpCompilation compilation, string projectFilePath, CancellationToken cancellationToken)
+    public static (CSharpCompilation Compilation, CoverageModule Module) Instrument(CSharpCompilation compilation, string projectFilePath, CancellationToken cancellationToken) =>
+        Instrument(compilation, projectFilePath, CoverageModuleBuilder.IndexOf(projectFilePath), cancellationToken);
+
+    /// <summary>Instruments a compilation that compiles without errors, for a given slot in the hit table.</summary>
+    /// <param name="compilation">The project's compilation.</param>
+    /// <param name="projectFilePath">The project.</param>
+    /// <param name="slot">The project's slot in the hit table of the process that runs the tests.</param>
+    /// <param name="cancellationToken">Cancels instrumentation.</param>
+    /// <returns>The instrumented compilation and the map of its coverage points.</returns>
+    public static (CSharpCompilation Compilation, CoverageModule Module) Instrument(CSharpCompilation compilation, string projectFilePath, int slot, CancellationToken cancellationToken)
     {
-        var module = new CoverageModuleBuilder(projectFilePath);
+        var module = new CoverageModuleBuilder(projectFilePath, slot);
         var result = compilation;
         foreach (var tree in compilation.SyntaxTrees)
         {

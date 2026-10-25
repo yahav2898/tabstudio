@@ -5,6 +5,7 @@ using TabStudio.Core.Workspaces;
 using TabStudio.Debugging.Building;
 using TabStudio.Link;
 using TabStudio.Link.Language;
+using TabStudio.LiveTesting.Building;
 using TabStudio.Packages;
 
 namespace TabStudio.App.Services.Link;
@@ -153,6 +154,31 @@ public sealed class RemoteLanguageService : ILanguageService
     {
         ArgumentNullException.ThrowIfNull(project);
         return AskAsync(c => c.BuildForDebuggingAsync(project.FilePath, cancellationToken));
+    }
+
+    /// <inheritdoc />
+    /// <remarks>
+    /// The host compiles and instruments; the tests run on this device, so the instrumented code reports to the slots
+    /// of this process's coverage recorder, which go with the request.
+    /// </remarks>
+    public Task<CoverageBuild> BuildForCoverageAsync(ProjectInfo testProject, IReadOnlySet<string> uninstrumented, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(testProject);
+        ArgumentNullException.ThrowIfNull(uninstrumented);
+        IReadOnlyList<ProjectInfo> projects;
+        lock (_gate)
+        {
+            projects = _workspace?.Projects ?? [];
+        }
+
+        var slots = new Dictionary<string, int>(StringComparer.Ordinal);
+        foreach (var project in projects.Where(p => p.Language == ProjectLanguage.CSharp))
+        {
+            slots[project.FilePath] = CoverageBuilder.SlotOf(project.FilePath);
+        }
+
+        ProjectInfo? Find(string path) => projects.FirstOrDefault(p => string.Equals(p.FilePath, path, StringComparison.Ordinal));
+        return AskAsync(c => c.BuildForCoverageAsync(testProject, uninstrumented, slots, Find, cancellationToken));
     }
 
     /// <inheritdoc />

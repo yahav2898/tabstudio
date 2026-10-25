@@ -20,10 +20,12 @@ internal sealed class CoverageModuleBuilder
 
     /// <summary>Creates a builder for one project.</summary>
     /// <param name="projectFilePath">The project being instrumented.</param>
-    public CoverageModuleBuilder(string projectFilePath)
+    /// <param name="index">Its slot in the hit table of the process that runs the tests, usually <see cref="IndexOf"/>.</param>
+    public CoverageModuleBuilder(string projectFilePath, int index)
     {
+        ArgumentOutOfRangeException.ThrowIfNegative(index);
         ProjectFilePath = projectFilePath;
-        Index = IndexOf(projectFilePath);
+        Index = index;
     }
 
     /// <summary>The project being instrumented.</summary>

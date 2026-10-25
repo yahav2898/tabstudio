@@ -7,15 +7,28 @@ using TabStudio.Core.Workspaces;
 using TabStudio.Debugging.Building;
 using TabStudio.Debugging.Symbols;
 using TabStudio.Link.Language;
+using TabStudio.LiveTesting.Building;
 
 namespace TabStudio.Link.Tests;
 
 /// <summary>
 /// A language service that records what it was asked and answers with results on the host's paths, so tests can see
-/// the server map them.
+/// the server map them. Given a <see cref="Roslyn"/> host, it also loads the mirror there and makes real Live Unit
+/// Testing builds, as the IDE's backend does.
 /// </summary>
 internal sealed class FakeBackend : ILinkLanguageBackend
 {
+    private readonly ConcurrentDictionary<string, int> _slots = new(StringComparer.Ordinal);
+    private CoverageBuilder? _coverage;
+
+    /// <summary>A Roslyn host that loads the mirror and compiles Live Unit Testing builds, or null to fake them.</summary>
+    public RoslynWorkspaceHost? Roslyn { get; init; }
+
+    /// <summary>The assemblies that stand in for the restored packages of test projects.</summary>
+    public IReadOnlyList<string> TestPackages { get; init; } = [];
+
+    /// <summary>How many Live Unit Testing builds the host made.</summary>
+    public int CoverageBuilds { get; private set; }
     public Workspace? Workspace { get; private set; }
 
     public IReadOnlyList<KeyValuePair<string, string>> PathMap { get; private set; } = [];
@@ -35,11 +48,24 @@ internal sealed class FakeBackend : ILinkLanguageBackend
         Workspace = workspace;
         PathMap = pathMap;
         Loads++;
+        if (Roslyn is { } roslyn)
+        {
+            roslyn.SetPathMap(pathMap);
+            roslyn.Load(workspace, FileSystemTextProvider.Instance);
+            foreach (var project in workspace.Projects.Where(p => p.IsTestProject))
+            {
+                roslyn.SetPackageReferences(project.FilePath, TestPackages);
+            }
+        }
     }
 
     public bool ContainsDocument(string filePath) => filePath.EndsWith(".cs", StringComparison.Ordinal);
 
-    public void UpdateText(string filePath, string text) => Texts[filePath] = text;
+    public void UpdateText(string filePath, string text)
+    {
+        Texts[filePath] = text;
+        Roslyn?.UpdateText(filePath, text);
+    }
 
     public bool AddDocument(string filePath, string text)
     {
@@ -74,6 +100,19 @@ internal sealed class FakeBackend : ILinkLanguageBackend
         var span = new DebugSourceSpan(Program, 1, 1, 1, 22, 0, 21);
         var map = DebugInfoMap.Create([new DebugStatement(1, 1, span, [])], [new DebugMethod(1, "Program.<Main>$(string[])", span, [])]);
         return Task.FromResult(new DebugBuild(Build(project), map));
+    }
+
+    public Task<CoverageBuild> BuildForCoverageAsync(ProjectInfo testProject, IReadOnlySet<string> uninstrumented, IReadOnlyDictionary<string, int> slots, CancellationToken cancellationToken)
+    {
+        var roslyn = Roslyn ?? throw new NotSupportedException("Give the fake backend a Roslyn host for Live Unit Testing builds.");
+        foreach (var (path, slot) in slots)
+        {
+            _slots[path] = slot;
+        }
+
+        CoverageBuilds++;
+        _coverage ??= new CoverageBuilder(roslyn, path => _slots[path]);
+        return _coverage.BuildAsync(testProject, uninstrumented, cancellationToken);
     }
 
     public Task<LinkRestoreOutcome> RestorePackagesAsync(ProjectInfo project, CancellationToken cancellationToken) =>

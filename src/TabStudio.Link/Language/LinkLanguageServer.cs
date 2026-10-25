@@ -21,7 +21,7 @@ namespace TabStudio.Link.Language;
 /// <see cref="Activity"/> says what the host is doing for the tablet, such as <c>Building HelloTablet</c>.
 /// </para>
 /// </remarks>
-public sealed class LinkLanguageServer : ILinkMessageHandler, IDisposable
+public sealed partial class LinkLanguageServer : ILinkMessageHandler, IDisposable
 {
     private readonly LinkWorkspaceMirror _mirror;
     private readonly Func<CancellationToken, Task<ILinkLanguageBackend>> _createBackend;
@@ -94,6 +94,7 @@ public sealed class LinkLanguageServer : ILinkMessageHandler, IDisposable
             LinkLanguageMethods.Format => await FileQueryAsync(payload, (b, path, ct) => b.GetFormattingEditsAsync(path, ct), (_, r) => r, [], cancellationToken).ConfigureAwait(false),
             LinkLanguageMethods.Build => await BuildAsync(payload, cancellationToken).ConfigureAwait(false),
             LinkLanguageMethods.BuildForDebugging => await BuildForDebuggingAsync(payload, cancellationToken).ConfigureAwait(false),
+            LinkLanguageMethods.BuildForCoverage => await BuildForCoverageAsync(payload, cancellationToken).ConfigureAwait(false),
             LinkLanguageMethods.RestorePackages => await RestoreAsync(payload, cancellationToken).ConfigureAwait(false),
             LinkLanguageMethods.AddFrameworkGenerators => await AddFrameworkGeneratorsAsync(cancellationToken).ConfigureAwait(false),
             LinkLanguageMethods.Completions => await CompletionsAsync(payload, cancellationToken).ConfigureAwait(false),

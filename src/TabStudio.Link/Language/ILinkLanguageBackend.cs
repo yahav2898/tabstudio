@@ -4,6 +4,7 @@ using TabStudio.Compilation.Features;
 using TabStudio.Core.Diagnostics;
 using TabStudio.Core.Workspaces;
 using TabStudio.Debugging.Building;
+using TabStudio.LiveTesting.Building;
 
 namespace TabStudio.Link.Language;
 
@@ -58,6 +59,20 @@ public interface ILinkLanguageBackend : IDisposable
 
     /// <summary>Builds a project and the projects it references for the debugger.</summary>
     Task<DebugBuild> BuildForDebuggingAsync(ProjectInfo project, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Builds a test project for Live Unit Testing, with the projects it tests instrumented to report to the tablet's
+    /// coverage recorder.
+    /// </summary>
+    /// <param name="testProject">The test project.</param>
+    /// <param name="uninstrumented">Projects to leave without coverage.</param>
+    /// <param name="slots">The slot of each project in the tablet's hit table, by the project's path on the host.</param>
+    /// <param name="cancellationToken">Cancels the build.</param>
+    Task<CoverageBuild> BuildForCoverageAsync(
+        ProjectInfo testProject,
+        IReadOnlySet<string> uninstrumented,
+        IReadOnlyDictionary<string, int> slots,
+        CancellationToken cancellationToken);
 
     /// <summary>Restores a project's NuGet packages for compiling.</summary>
     Task<LinkRestoreOutcome> RestorePackagesAsync(ProjectInfo project, CancellationToken cancellationToken);
