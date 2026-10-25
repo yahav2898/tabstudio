@@ -49,19 +49,22 @@ public sealed record ServerAppAssetsRequest
 /// <remarks>Dispose it when the app stops: the endpoints manifest is removed from TabStudio's folder.</remarks>
 public sealed class ServerAppAssets : IDisposable
 {
-    private ServerAppAssets(IReadOnlyList<StaticWebAsset> assets, IReadOnlyList<BuildDiagnostic> diagnostics, string runtimeManifest, string endpointsManifest)
+    private readonly ServerAppAssetsRequest _request;
+
+    private ServerAppAssets(ServerAppAssetsRequest request, Collected collected)
     {
-        Assets = assets;
-        Diagnostics = diagnostics;
-        RuntimeManifestPath = runtimeManifest;
-        EndpointsManifestPath = endpointsManifest;
+        _request = request;
+        Assets = collected.Assets;
+        Diagnostics = collected.Diagnostics;
+        RuntimeManifestPath = collected.RuntimeManifest;
+        EndpointsManifestPath = collected.EndpointsManifest;
     }
 
     /// <summary>Every asset, by route; the first of a route is the one served.</summary>
-    public IReadOnlyList<StaticWebAsset> Assets { get; }
+    public IReadOnlyList<StaticWebAsset> Assets { get; private set; }
 
     /// <summary>Problems, such as an <c>@import</c> in scoped CSS.</summary>
-    public IReadOnlyList<BuildDiagnostic> Diagnostics { get; }
+    public IReadOnlyList<BuildDiagnostic> Diagnostics { get; private set; }
 
     /// <summary>The runtime manifest, which makes the assets part of the app's web root.</summary>
     public string RuntimeManifestPath { get; }
@@ -77,6 +80,37 @@ public sealed class ServerAppAssets : IDisposable
     public static ServerAppAssets Prepare(ServerAppAssetsRequest request)
     {
         ArgumentNullException.ThrowIfNull(request);
+        return new ServerAppAssets(request, Collect(request));
+    }
+
+    /// <summary>
+    /// Collects the assets again while the app runs, such as after a scoped CSS file was saved: the bundles are
+    /// rewritten, and ASP.NET Core's development support serves their new content on the next request.
+    /// </summary>
+    /// <returns>The problems found, as <see cref="Diagnostics"/> now has them.</returns>
+    public IReadOnlyList<BuildDiagnostic> Refresh()
+    {
+        var collected = Collect(_request);
+        Assets = collected.Assets;
+        Diagnostics = collected.Diagnostics;
+        return Diagnostics;
+    }
+
+    /// <summary>Removes the endpoints manifest from TabStudio's folder.</summary>
+    public void Dispose()
+    {
+        try
+        {
+            File.Delete(EndpointsManifestPath);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // Overwritten by the app's next run anyway.
+        }
+    }
+
+    private static Collected Collect(ServerAppAssetsRequest request)
+    {
         var app = request.App;
         var others = request.References.Select(r => r.DirectoryPath).ToList();
         var assets = new List<StaticWebAsset>();
@@ -130,26 +164,13 @@ public sealed class ServerAppAssets : IDisposable
         var endpointsManifest = Path.Combine(request.ManifestDirectory, $"{name}.staticwebassets.endpoints.json");
         StaticAssetManifests.WriteRuntimeManifest(assets, patternRoots, runtimeManifest);
         StaticAssetManifests.WriteEndpointsManifest(assets, endpointsManifest);
-        return new ServerAppAssets(assets.DistinctBy(a => a.Route, StringComparer.Ordinal).ToList(), diagnostics, runtimeManifest, endpointsManifest);
-    }
-
-    /// <summary>Removes the endpoints manifest from TabStudio's folder.</summary>
-    public void Dispose()
-    {
-        try
-        {
-            File.Delete(EndpointsManifestPath);
-        }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
-        {
-            // Overwritten by the app's next run anyway.
-        }
+        return new Collected([.. assets.DistinctBy(a => a.Route, StringComparer.Ordinal)], diagnostics, runtimeManifest, endpointsManifest);
     }
 
     /// <summary>Blazor's scripts, which the Web SDK serves to every app with Razor components.</summary>
     private static IEnumerable<StaticWebAsset> BlazorScripts(string package)
     {
-        foreach (var script in new[] { "blazor.web.js", "blazor.server.js" })
+        foreach (var script in BlazorScriptNames)
         {
             var file = Path.Combine(package, "_framework", script);
             if (File.Exists(file))
@@ -158,4 +179,8 @@ public sealed class ServerAppAssets : IDisposable
             }
         }
     }
+
+    private static readonly string[] BlazorScriptNames = ["blazor.web.js", "blazor.server.js"];
+
+    private sealed record Collected(IReadOnlyList<StaticWebAsset> Assets, IReadOnlyList<BuildDiagnostic> Diagnostics, string RuntimeManifest, string EndpointsManifest);
 }

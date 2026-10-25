@@ -1,0 +1,191 @@
+using System.Globalization;
+using System.Net;
+using System.Text.Json;
+using TabStudio.Testing;
+using TabStudio.Web.Templates;
+
+namespace TabStudio.Web.Tests.Apps;
+
+/// <summary>
+/// The Blazor, Razor Pages and MVC templates: the files <c>dotnet new</c> writes, each one built against nuget.org and
+/// run, and the Blazor Web App's components interactive in a real browser over Server, WebAssembly and Auto.
+/// </summary>
+[Collection(NuGetTestGroup.Name)]
+public sealed class WebTemplateTests(NuGetFixture nuget) : IDisposable
+{
+    private readonly TempDirectory _temp = new();
+
+    public static TheoryData<string, string[]> TemplateFiles => new()
+    {
+        { WebTemplates.BlazorWebAppId, ["App/App.csproj", "App/Components/Pages/Counter.razor", "App/Components/Layout/ReconnectModal.razor.js", "App/wwwroot/lib/bootstrap/dist/css/bootstrap.min.css"] },
+        { WebTemplates.BlazorWebAppIdFor(BlazorInteractivity.WebAssembly), ["App/App.csproj", "App.Client/App.Client.csproj", "App.Client/Pages/Counter.razor", "App/wwwroot/app.css"] },
+        { WebTemplates.BlazorWebAppIdFor(BlazorInteractivity.Auto), ["App/App.csproj", "App.Client/App.Client.csproj", "App.Client/wwwroot/appsettings.json"] },
+        { WebTemplates.BlazorWebAppIdFor(BlazorInteractivity.None), ["App/App.csproj", "App/Components/Pages/Weather.razor"] },
+        { WebTemplates.BlazorWebAssemblyId, ["App/App.csproj", "App/wwwroot/index.html", "App/wwwroot/sample-data/weather.json", "App/wwwroot/icon-192.png", "App/wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js"] },
+        { WebTemplates.RazorPagesId, ["App/App.csproj", "App/Pages/Index.cshtml.cs", "App/Pages/Shared/_Layout.cshtml.css", "App/wwwroot/lib/jquery/dist/jquery.min.js", "App/wwwroot/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"] },
+        { WebTemplates.MvcId, ["App/App.csproj", "App/Controllers/HomeController.cs", "App/Views/Home/Index.cshtml", "App/wwwroot/lib/bootstrap/LICENSE"] },
+    };
+
+    [Theory]
+    [MemberData(nameof(TemplateFiles))]
+    public void Creates_the_files_dotnet_new_creates(string templateId, string[] expected)
+    {
+        var projects = WebTemplates.Create(templateId, _temp.Path, "App");
+
+        Assert.Equal(_temp.Resolve("App/App.csproj"), projects[0]);
+        foreach (var file in expected)
+        {
+            Assert.True(File.Exists(_temp.Resolve(file)), $"{file} is missing.");
+        }
+
+        foreach (var file in Directory.EnumerateFiles(_temp.Path, "*", SearchOption.AllDirectories).Where(f => !f.Contains($"{Path.DirectorySeparatorChar}lib{Path.DirectorySeparatorChar}", StringComparison.Ordinal)))
+        {
+            var text = File.ReadAllText(file);
+            Assert.DoesNotContain("BlazorApp1", text, StringComparison.Ordinal);
+            Assert.DoesNotContain("WebApplication1", text, StringComparison.Ordinal);
+            Assert.DoesNotContain("$http", text, StringComparison.Ordinal);
+            Assert.DoesNotContain("$copyrightYear$", text, StringComparison.Ordinal);
+        }
+
+        using var launch = JsonDocument.Parse(File.ReadAllText(_temp.Resolve("App/Properties/launchSettings.json")));
+        var url = launch.RootElement.GetProperty("profiles").GetProperty("http").GetProperty("applicationUrl").GetString();
+        Assert.InRange(new Uri(url!).Port, 5000, 5299);
+    }
+
+    [Fact]
+    public void Razor_Pages_and_MVC_get_jQuery_and_Blazor_only_Bootstrap()
+    {
+        WebTemplates.Create(WebTemplates.BlazorWebAppId, _temp.Resolve("blazor"), "App");
+        WebTemplates.Create(WebTemplates.RazorPagesId, _temp.Resolve("pages"), "App");
+
+        Assert.False(Directory.Exists(_temp.Resolve("blazor/App/wwwroot/lib/jquery")));
+        Assert.False(File.Exists(_temp.Resolve("blazor/App/wwwroot/lib/bootstrap/LICENSE")));
+        Assert.True(File.Exists(_temp.Resolve("pages/App/wwwroot/lib/jquery/dist/jquery.js")));
+        Assert.Contains($"&copy; {DateTime.Now.Year} - App - ", File.ReadAllText(_temp.Resolve("pages/App/Pages/Shared/_Layout.cshtml")), StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task The_Blazor_Web_App_serves_its_pages_styles_and_scripts()
+    {
+        using var workspace = await WebAppWorkspace.LoadAsync(nuget, CreateSolution(WebTemplates.BlazorWebAppId));
+        await using var app = await workspace.StartServerAppAsync("App");
+
+        var home = await nuget.Http.GetStringAsync(app.Address);
+        Assert.Contains("<h1>Hello, world!</h1>", home, StringComparison.Ordinal);
+        Assert.Contains("<title>Home</title>", home, StringComparison.Ordinal);
+        Assert.Contains("Current count: 0", await nuget.Http.GetStringAsync(new Uri(app.Address, "counter")), StringComparison.Ordinal);
+        Assert.Contains("<table class=\"table\">", await nuget.Http.GetStringAsync(new Uri(app.Address, "weather")), StringComparison.Ordinal);
+        await AssertServedAsync(app.Address, "_framework/blazor.web.js", "text/javascript");
+        await AssertServedAsync(app.Address, "lib/bootstrap/dist/css/bootstrap.min.css", "text/css");
+        await AssertServedAsync(app.Address, "App.styles.css", "text/css");
+        await AssertServedAsync(app.Address, "Components/Layout/ReconnectModal.razor.js", "text/javascript");
+        using var missing = await nuget.Http.GetAsync(new Uri(app.Address, "no-such-page"));
+        Assert.Equal(HttpStatusCode.NotFound, missing.StatusCode);
+    }
+
+    [ChromeFact]
+    public Task The_Server_Counter_counts() => AssertCounterCountsAsync(WebTemplates.BlazorWebAppId);
+
+    [ChromeFact]
+    public Task The_WebAssembly_Counter_counts_in_the_browser() => AssertCounterCountsAsync(WebTemplates.BlazorWebAppIdFor(BlazorInteractivity.WebAssembly));
+
+    [ChromeFact]
+    public Task The_Auto_Counter_counts() => AssertCounterCountsAsync(WebTemplates.BlazorWebAppIdFor(BlazorInteractivity.Auto));
+
+    [Fact]
+    public async Task The_Blazor_Web_App_without_interactivity_serves_its_pages()
+    {
+        using var workspace = await WebAppWorkspace.LoadAsync(nuget, CreateSolution(WebTemplates.BlazorWebAppIdFor(BlazorInteractivity.None)));
+        await using var app = await workspace.StartServerAppAsync("App");
+
+        Assert.Contains("<h1>Hello, world!</h1>", await nuget.Http.GetStringAsync(app.Address), StringComparison.Ordinal);
+        Assert.Contains("<table class=\"table\">", await nuget.Http.GetStringAsync(new Uri(app.Address, "weather")), StringComparison.Ordinal);
+    }
+
+    [ChromeFact]
+    public async Task The_Blazor_WebAssembly_app_runs_in_the_browser()
+    {
+        using var workspace = await WebAppWorkspace.LoadAsync(nuget, CreateSolution(WebTemplates.BlazorWebAssemblyId));
+        await using var host = await workspace.StartWebAssemblyAppAsync("App");
+        await using var chrome = await HeadlessChrome.StartAsync();
+
+        await chrome.NavigateAsync(new Uri(host.Address, "counter"));
+        await chrome.WaitUntilAsync("document.querySelector('p[role=status]')?.textContent === 'Current count: 0'", TimeSpan.FromSeconds(90));
+        await chrome.ClickAsync("button.btn-primary");
+        await chrome.WaitUntilAsync("document.querySelector('p[role=status]').textContent === 'Current count: 1'", TimeSpan.FromSeconds(10));
+
+        await chrome.NavigateAsync(new Uri(host.Address, "weather"));
+        await chrome.WaitUntilAsync("document.querySelectorAll('table.table tbody tr').length === 5", TimeSpan.FromSeconds(90));
+        Assert.True(host.HasServed("sample-data/weather.json"));
+    }
+
+    [Fact]
+    public async Task The_Razor_Pages_app_serves_its_pages_and_libraries()
+    {
+        using var workspace = await WebAppWorkspace.LoadAsync(nuget, CreateSolution(WebTemplates.RazorPagesId));
+        await using var app = await workspace.StartServerAppAsync("App");
+
+        var home = await nuget.Http.GetStringAsync(app.Address);
+        Assert.Contains("<h1 class=\"display-4\">Welcome</h1>", home, StringComparison.Ordinal);
+        Assert.Contains("<title>Home page - App</title>", home, StringComparison.Ordinal);
+        Assert.Contains("Use this page to detail your site's privacy policy.", await nuget.Http.GetStringAsync(new Uri(app.Address, "Privacy")), StringComparison.Ordinal);
+        await AssertServedAsync(app.Address, "lib/jquery/dist/jquery.min.js", "text/javascript");
+        await AssertServedAsync(app.Address, "css/site.css", "text/css");
+        await AssertServedAsync(app.Address, "App.styles.css", "text/css");
+    }
+
+    [Fact]
+    public async Task The_MVC_app_serves_its_views()
+    {
+        using var workspace = await WebAppWorkspace.LoadAsync(nuget, CreateSolution(WebTemplates.MvcId));
+        await using var app = await workspace.StartServerAppAsync("App");
+
+        Assert.Contains("<h1 class=\"display-4\">Welcome</h1>", await nuget.Http.GetStringAsync(app.Address), StringComparison.Ordinal);
+        Assert.Contains("Use this page to detail your site's privacy policy.", await nuget.Http.GetStringAsync(new Uri(app.Address, "Home/Privacy")), StringComparison.Ordinal);
+        await AssertServedAsync(app.Address, "lib/bootstrap/dist/js/bootstrap.bundle.min.js", "text/javascript");
+    }
+
+    public void Dispose() => _temp.Dispose();
+
+    /// <summary>Opens the Counter page of a Blazor Web App in Chrome and clicks until the component, once interactive, counts.</summary>
+    private async Task AssertCounterCountsAsync(string templateId)
+    {
+        using var workspace = await WebAppWorkspace.LoadAsync(nuget, CreateSolution(templateId));
+        await using var app = await workspace.StartServerAppAsync("App");
+        await using var chrome = await HeadlessChrome.StartAsync();
+
+        await chrome.NavigateAsync(new Uri(app.Address, "counter"));
+        var waited = System.Diagnostics.Stopwatch.StartNew();
+        string? status = null;
+        while (waited.Elapsed < TimeSpan.FromSeconds(90))
+        {
+            await chrome.ClickAsync("button.btn-primary");
+            await Task.Delay(250);
+            status = await chrome.TextOfAsync("p[role=status]");
+            if (status != "Current count: 0")
+            {
+                break;
+            }
+        }
+
+        Assert.NotEqual("Current count: 0", status);
+        var counted = int.Parse(status!["Current count: ".Length..], CultureInfo.InvariantCulture);
+        await chrome.ClickAsync("button.btn-primary");
+        await chrome.WaitUntilAsync($"document.querySelector('p[role=status]').textContent === 'Current count: {counted + 1}'", TimeSpan.FromSeconds(10));
+    }
+
+    private async Task AssertServedAsync(Uri address, string route, string mediaType)
+    {
+        using var response = await nuget.Http.GetAsync(new Uri(address, route));
+        Assert.True(response.StatusCode == HttpStatusCode.OK, $"{route}: {response.StatusCode}");
+        Assert.Equal(mediaType, response.Content.Headers.ContentType?.MediaType);
+    }
+
+    /// <summary>Creates a template's projects with a solution, as the start screen does.</summary>
+    private string CreateSolution(string templateId)
+    {
+        var projects = WebTemplates.Create(templateId, _temp.Path, "App");
+        var solution = _temp.Write("App.slnx", "<Solution>\n" + string.Concat(projects.Select(p => $"  <Project Path=\"{Path.GetRelativePath(_temp.Path, p).Replace('\\', '/')}\" />\n")) + "</Solution>\n");
+        return solution;
+    }
+}

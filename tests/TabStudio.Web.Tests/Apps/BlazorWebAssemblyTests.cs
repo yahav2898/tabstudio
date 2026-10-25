@@ -7,7 +7,7 @@ namespace TabStudio.Web.Tests.Apps;
 /// A standalone Blazor WebAssembly app end to end against nuget.org: built by TabStudio, served by the WebAssembly
 /// app host with the real .NET for WebAssembly, and run by a real browser.
 /// </summary>
-[Collection(NuGetCollection.Name)]
+[Collection(NuGetTestGroup.Name)]
 public sealed class BlazorWebAssemblyTests(NuGetFixture nuget) : IDisposable
 {
     private readonly TempDirectory _temp = new();

@@ -46,7 +46,7 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
         FileType = FileTypes.For(filePath);
         _file = file;
         _profile = profile;
-        _language = FileType.IsCSharp && language?.ContainsDocument(filePath) == true ? language : null;
+        _language = (FileType.IsCSharp || FileType.IsRazor) && language?.ContainsDocument(filePath) == true ? language : null;
 
         Document = new TextDocument(file.Text) { FileName = filePath };
         Document.UndoStack.MarkAsOriginalFile();
@@ -65,6 +65,12 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
 
     /// <summary>Whether Roslyn analyzes this document.</summary>
     public bool HasLanguageService => _language is not null;
+
+    /// <summary>
+    /// Whether Roslyn colors this document. A Razor file's diagnostics come from Roslyn, and its colors from its
+    /// TextMate grammar.
+    /// </summary>
+    public bool UsesSemanticColoring => _language is not null && FileType.IsCSharp;
 
     /// <summary>The text.</summary>
     public TextDocument Document { get; }
@@ -215,6 +221,12 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
 
         // The semantic analysis starts at once; the syntax pass only fills the gap until it arrives.
         var semantic = AnalyzeNowAsync();
+        if (!UsesSemanticColoring)
+        {
+            await semantic;
+            return;
+        }
+
         var text = Document.Text;
         var edits = _edits;
         var syntax = await Task.Run(() => SyntaxClassifier.Classify(text));
@@ -337,11 +349,11 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
 
             SyncText();
             var edits = _edits;
-            var classifications = _language.GetClassificationsAsync(FilePath, cancellationToken);
+            var classifications = UsesSemanticColoring ? _language.GetClassificationsAsync(FilePath, cancellationToken) : null;
             var diagnostics = _language.GetDocumentDiagnosticsAsync(FilePath, cancellationToken);
 
-            var classified = await classifications;
-            if (IsCurrent(edits, cancellationToken))
+            var classified = classifications is null ? null : await classifications;
+            if (classified is not null && IsCurrent(edits, cancellationToken))
             {
                 _hasSemanticClassification = true;
                 Classifications = classified;

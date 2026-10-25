@@ -7,7 +7,7 @@ namespace TabStudio.Web.Tests.Apps;
 /// Razor Pages and MVC apps end to end against nuget.org: their <c>.cshtml</c> pages and views compile with the SDK's
 /// Razor compiler, MVC finds them in the assembly, tag helpers run, and their layout's scoped CSS is served.
 /// </summary>
-[Collection(NuGetCollection.Name)]
+[Collection(NuGetTestGroup.Name)]
 public sealed class RazorPagesAndMvcTests(NuGetFixture nuget) : IDisposable
 {
     private readonly TempDirectory _temp = new();

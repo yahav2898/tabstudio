@@ -36,7 +36,7 @@ public sealed class NuGetFixture : IDisposable
 
 /// <summary>The tests that restore from nuget.org, one after another over one packages folder.</summary>
 [CollectionDefinition(Name)]
-public sealed class NuGetCollection : ICollectionFixture<NuGetFixture>
+public sealed class NuGetTestGroup : ICollectionFixture<NuGetFixture>
 {
     public const string Name = "nuget.org";
 }

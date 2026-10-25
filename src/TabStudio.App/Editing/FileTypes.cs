@@ -39,6 +39,9 @@ public sealed record FileType(
 {
     /// <summary>Whether Roslyn provides the language service for this file.</summary>
     public bool IsCSharp => BadgeKind == BadgeKind.CSharp && DisplayName == "C#";
+
+    /// <summary>Whether this is a Razor component, page or view, which the Razor compiler turns into C#.</summary>
+    public bool IsRazor => DisplayName == "Razor";
 }
 
 /// <summary>Maps file names to <see cref="FileType"/>s.</summary>

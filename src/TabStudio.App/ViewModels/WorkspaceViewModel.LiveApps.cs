@@ -21,7 +21,8 @@ public sealed partial class WorkspaceViewModel
     private bool _restartLiveApp;
 
     /// <summary>Whether F5 shows a project beside the code rather than running it as a program.</summary>
-    private static bool IsLiveApp(ProjectInfo project) => IsWebApp(project) || IsAvaloniaApp(project);
+    private static bool IsLiveApp(ProjectInfo project) =>
+        IsWebApp(project) || IsAvaloniaApp(project) || IsWebAssemblyApp(project) || ProjectClassifier.IsBlazorWebAppClient(project);
 
     /// <summary>
     /// Builds and runs a live app until it is stopped, starting it again whenever one of its files is saved.
@@ -31,7 +32,9 @@ public sealed partial class WorkspaceViewModel
     private async Task RunLiveProjectAsync(ProjectInfo project, bool fromDebugger)
     {
         // Starts a build of the app and shows it, returning when it stops.
-        Func<ProjectInfo, BuildResult, CompiledAssembly, bool, Task> start = IsWebApp(project) ? ServeWebAppAsync : ShowAvaloniaAppAsync;
+        project = AppToRun(project);
+        Func<ProjectInfo, BuildResult, CompiledAssembly, bool, Task> start =
+            IsWebApp(project) ? ServeWebAppAsync : IsWebAssemblyApp(project) ? ServeWebAssemblyAppAsync : ShowAvaloniaAppAsync;
         var restarted = false;
         do
         {
@@ -51,7 +54,9 @@ public sealed partial class WorkspaceViewModel
                 Output.WriteLine(
                     IsWebApp(project)
                         ? "Started without the debugger: it pauses a program on its main thread, and a web app answers requests on others."
-                        : "Started without the debugger: an Avalonia app runs on TabStudio's own UI thread, which the debugger cannot pause.",
+                        : IsWebAssemblyApp(project)
+                            ? "Started without the debugger: a WebAssembly app runs in the web preview's browser, which the debugger cannot reach yet."
+                            : "Started without the debugger: an Avalonia app runs on TabStudio's own UI thread, which the debugger cannot pause.",
                     OutputKind.Info);
             }
 
@@ -81,6 +86,11 @@ public sealed partial class WorkspaceViewModel
     /// </summary>
     private void OnDocumentSavedForLiveApp(DocumentViewModel document)
     {
+        if (OnDocumentSavedForRazorApp(document))
+        {
+            return;
+        }
+
         if (_liveProject is not { } project || _run is not { } run
             || !document.FilePath.StartsWith(project.DirectoryPath + Path.DirectorySeparatorChar, StringComparison.Ordinal))
         {
@@ -94,7 +104,7 @@ public sealed partial class WorkspaceViewModel
                 && !relative.StartsWith("wwwroot" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase));
         if (!restarts)
         {
-            if (IsWebApp(project))
+            if (IsWebApp(project) || IsWebAssemblyApp(project))
             {
                 WebPreview.ReloadCommand.Execute(null);
             }

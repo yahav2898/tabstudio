@@ -9,7 +9,8 @@ namespace TabStudio.Web.Serving;
 /// <param name="Method">The HTTP method, <c>GET</c> or <c>HEAD</c>.</param>
 /// <param name="Path">The path, without the leading <c>/</c> and unescaped, such as <c>_framework/dotnet.js</c>.</param>
 /// <param name="StatusCode">The status it was answered with, such as 200, 304 or 404.</param>
-public sealed record ServedRequest(string Method, string Path, int StatusCode);
+/// <param name="UserAgent">The browser that asked, from its <c>User-Agent</c> header, when it sent one.</param>
+public sealed record ServedRequest(string Method, string Path, int StatusCode, string? UserAgent = null);
 
 /// <summary>
 /// A small static web server on a local port, for the web preview: it answers <c>GET</c> and <c>HEAD</c> with the
@@ -139,7 +140,7 @@ public sealed class LocalWebServer : IAsyncDisposable
             }
         }
 
-        RequestServed?.Invoke(this, new ServedRequest(request.HttpMethod, path, status));
+        RequestServed?.Invoke(this, new ServedRequest(request.HttpMethod, path, status, request.UserAgent));
     }
 
     private async Task<int> RespondAsync(HttpListenerRequest request, HttpListenerResponse response, string path)

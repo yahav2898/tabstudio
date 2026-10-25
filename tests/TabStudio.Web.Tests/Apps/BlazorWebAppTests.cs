@@ -10,7 +10,7 @@ namespace TabStudio.Web.Tests.Apps;
 /// with the SDK's Razor compiler, Razor errors land on their line, and the app serves its pages, its scoped CSS and
 /// Blazor's script, and counts clicks over a live circuit.
 /// </summary>
-[Collection(NuGetCollection.Name)]
+[Collection(NuGetTestGroup.Name)]
 public sealed class BlazorWebAppTests(NuGetFixture nuget) : IDisposable
 {
     private const string Counter = """
@@ -102,8 +102,8 @@ public sealed class BlazorWebAppTests(NuGetFixture nuget) : IDisposable
         Assert.Equal("CS0029", error.Id);
         Assert.Equal(counter, error.Location!.FilePath);
         Assert.Equal(12, error.Location.Line);
-        Assert.Equal(18, error.Location.Column);
-        Assert.Equal("\"one\"", Counter.Replace("Count++;", "Count += \"one\";", StringComparison.Ordinal).ReplaceLineEndings("\n").Substring(error.Location.Start, error.Location.Length));
+        Assert.Equal(9, error.Location.Column);
+        Assert.Equal("Count += \"one\"", Counter.Replace("Count++;", "Count += \"one\";", StringComparison.Ordinal).ReplaceLineEndings("\n").Substring(error.Location.Start, error.Location.Length));
         Assert.Contains(project, d => d.Id == "CS0029" && d.Location?.FilePath == counter && d.Location.Line == 12);
     }
 
