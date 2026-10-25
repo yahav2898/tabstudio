@@ -177,6 +177,34 @@ public sealed class DesignSurfaceTests
     }
 
     [AvaloniaFact]
+    public void Menu_items_typed_in_a_menu_strip_are_named_after_their_text_as_Visual_Studio_names_them()
+    {
+        var surface = new DesignSurface(Samples.Template, "Form", simplified: true);
+        var strip = surface.Add(typeof(MenuStrip), new Point(40, 40));
+
+        var file = surface.AddItem(surface.Document!.Find(strip)!, typeof(ToolStripMenuItem), "&File");
+        var open = surface.AddItem(surface.Document!.Find(file)!, typeof(ToolStripMenuItem), "Open...");
+        var separator = surface.AddItem(surface.Document!.Find(file)!, typeof(ToolStripSeparator), string.Empty);
+        var second = surface.AddItem(surface.Document!.Find(strip)!, typeof(ToolStripMenuItem), "File");
+
+        Assert.Equal("fileToolStripMenuItem", file);
+        Assert.Equal("openToolStripMenuItem", open);
+        Assert.Equal("toolStripSeparator1", separator);
+        Assert.Equal("fileToolStripMenuItem1", second);
+        var text = surface.Text;
+        Assert.Contains("menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, fileToolStripMenuItem1 });", text, StringComparison.Ordinal);
+        Assert.Contains("fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openToolStripMenuItem, toolStripSeparator1 });", text, StringComparison.Ordinal);
+        Assert.Contains("fileToolStripMenuItem.Text = \"&File\";", text, StringComparison.Ordinal);
+        Assert.Contains("MainMenuStrip = menuStrip1;", text, StringComparison.Ordinal);
+        Assert.DoesNotContain("toolStripSeparator1.Text", text, StringComparison.Ordinal);
+        var menu = (MenuStrip)surface.Document!.Find(strip)!.Instance!;
+        Assert.Equal(DockStyle.Top, menu.Dock);
+        Assert.Equal(2, menu.Items.Count);
+        Assert.Equal(2, ((ToolStripMenuItem)menu.Items[0]).DropDownItems.Count);
+        Compiles(text, Samples.TemplateCode);
+    }
+
+    [AvaloniaFact]
     public void Pasted_copies_get_new_names_and_move_off_the_originals()
     {
         var surface = new DesignSurface(Samples.Orders, "Form", simplified: true);

@@ -3,6 +3,8 @@ using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TabStudio.Forms.Design.Catalog;
+using TabStudio.Forms.Design.Surface;
+using TabStudio.Forms.Design.View;
 using DrawingColor = System.Drawing.Color;
 
 namespace TabStudio.App.ViewModels;
@@ -171,6 +173,10 @@ public abstract partial class FormsPropertyViewModel : ObservableObject
     /// <summary>Shows a value.</summary>
     private protected abstract void Show(object? value);
 
+    /// <summary>The font of a control or a strip item, which its font's size and family change.</summary>
+    private protected static System.Drawing.Font? FontOf(FormsDesignerViewModel designer, string component) =>
+        SurfaceBuilder.GetValue(designer.Find(component)?.Instance, "Font") as System.Drawing.Font;
+
     /// <summary>Sets the property, unless a value is only being shown.</summary>
     private protected void Commit(object? value)
     {
@@ -251,7 +257,7 @@ public sealed partial class NumberPropertyViewModel : FormsPropertyViewModel
 
         if (Property.Editor == PropertyEditor.FontSize)
         {
-            if (Designer.Find(ComponentName)?.Instance is System.Windows.Forms.Control { Font: { } font })
+            if (FontOf(Designer, ComponentName) is { } font)
             {
                 // As Visual Studio's font editor writes it: in points, with the default character set.
                 Commit(new System.Drawing.Font(font.FontFamily.Name, (float)number, font.Style, System.Drawing.GraphicsUnit.Point, 0));
@@ -498,7 +504,7 @@ public sealed partial class FontFamilyPropertyViewModel : FormsPropertyViewModel
 
     partial void OnSelectedChanged(string? value)
     {
-        if (IsLoading || value is null || Designer.Find(ComponentName)?.Instance is not System.Windows.Forms.Control { Font: { } font })
+        if (IsLoading || value is null || FontOf(Designer, ComponentName) is not { } font)
         {
             return;
         }
@@ -507,4 +513,27 @@ public sealed partial class FontFamilyPropertyViewModel : FormsPropertyViewModel
     }
 
     private protected override void Show(object? value) => Selected = (value as System.Drawing.Font)?.Name;
+}
+
+/// <summary>An item of the selected strip or menu, which a tap selects, to edit it or add items to its own menu.</summary>
+public sealed partial class StripItemViewModel
+{
+    private readonly DesignCanvas _canvas;
+
+    internal StripItemViewModel(DesignCanvas canvas, string name, string text)
+    {
+        _canvas = canvas;
+        Name = name;
+        Text = text;
+    }
+
+    /// <summary>The item's name.</summary>
+    public string Name { get; }
+
+    /// <summary>The item's text, or a dash for a separator.</summary>
+    public string Text { get; }
+
+    /// <summary>Selects the item.</summary>
+    [RelayCommand]
+    private void Select() => _canvas.Select([Name]);
 }

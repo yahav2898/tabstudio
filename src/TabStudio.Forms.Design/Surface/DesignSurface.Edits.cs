@@ -89,7 +89,11 @@ internal sealed partial class DesignSurface
         return name;
     }
 
-    /// <summary>Adds an item to a strip, such as a menu item to a menu strip or one of its menus, as typing in "Type Here" does.</summary>
+    /// <summary>
+    /// Adds an item to a strip, such as a menu item to a menu strip or one of its menus, as typing in "Type Here" does:
+    /// a menu item is named after its text, as <c>fileToolStripMenuItem</c> for File; another item is numbered, and
+    /// shows its name when it has no text; a separator has none.
+    /// </summary>
     /// <param name="owner">The strip, or the menu item whose drop-down gets the item.</param>
     /// <param name="type">The item's type, such as <see cref="ToolStripMenuItem"/>.</param>
     /// <param name="text">The item's text.</param>
@@ -100,14 +104,18 @@ internal sealed partial class DesignSurface
         ArgumentNullException.ThrowIfNull(type);
         ArgumentNullException.ThrowIfNull(text);
         var document = Document ?? throw new InvalidOperationException(LoadError);
-        var name = document.NewName(type);
+        var name = ItemName(document, type, text);
         Edit(doc =>
         {
             var style = doc.Style;
             var component = new DesignComponent(name, TypeResolver.NameOf(type, style.FullTypeNames)) { Type = type };
             doc.Components.Add(component);
             component.SetCode("Name", ValueWriter.Literal(name));
-            component.SetCode("Text", ValueWriter.Literal(text));
+            if (type != typeof(ToolStripSeparator))
+            {
+                component.SetCode("Text", ValueWriter.Literal(text.Length > 0 ? text : name));
+            }
+
             var target = doc.Find(owner.Name)!;
             var items = target.Collection(target.Type is { } ownerType && typeof(ToolStripDropDownItem).IsAssignableFrom(ownerType) ? "DropDownItems" : "Items");
             items.IsRange = true;
@@ -115,6 +123,25 @@ internal sealed partial class DesignSurface
             items.Items.Add(name);
         });
         return name;
+    }
+
+    /// <summary>The name Visual Studio gives a new strip item: a menu item's comes from its text, as in <c>fileToolStripMenuItem</c>.</summary>
+    private static string ItemName(DesignDocument document, Type type, string text)
+    {
+        var letters = new string([.. text.Where(char.IsLetterOrDigit)]);
+        if (type != typeof(ToolStripMenuItem) || letters.Length == 0 || !char.IsLetter(letters[0]))
+        {
+            return document.NewName(type);
+        }
+
+        var name = char.ToLowerInvariant(letters[0]) + letters[1..] + nameof(ToolStripMenuItem);
+        var candidate = name;
+        for (var number = 1; document.Find(candidate) is not null; number++)
+        {
+            candidate = name + number.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        return candidate;
     }
 
     /// <summary>Moves and resizes components, as dragging them or their handles does.</summary>

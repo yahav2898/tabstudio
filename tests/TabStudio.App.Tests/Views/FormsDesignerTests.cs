@@ -7,6 +7,7 @@ using Avalonia.VisualTree;
 using TabStudio.App.Services;
 using TabStudio.App.Tests.ViewModels;
 using TabStudio.App.ViewModels;
+using TabStudio.App.Views;
 using TabStudio.Core.Diagnostics;
 using TabStudio.Forms.Design.Surface;
 using TabStudio.Forms.Design.View;
@@ -166,6 +167,55 @@ public sealed class FormsDesignerTests
         designed.Window.Close();
     }
 
+    [AvaloniaFact]
+    public async Task A_menu_strip_gets_its_menus_typed_in_the_Properties_and_a_menu_item_gets_its_Click_handler()
+    {
+        using var fixture = new WorkspaceFixture();
+        var designed = await DesignedForm.OpenAsync(fixture);
+        var designer = designed.Designer;
+        var tool = designed.ToolButton("MenuStrip");
+        tool.BringIntoView();
+        await DesignedForm.SettleAsync();
+        designed.Tap(designed.Center(tool));
+        designed.Tap(designed.OnForm(new DrawingPoint(200, 200)));
+        Assert.Equal("menuStrip1", designer.SelectionTitle);
+        Assert.True(designer.HasStripItems);
+        Assert.Equal("Add menu item", designer.AddItemLabel);
+        await DesignedForm.SettleAsync();
+
+        // Type a menu's text and press Enter, as in Visual Studio's "Type Here".
+        designed.TypeNewItem("&File");
+        Assert.Equal("&File", Assert.Single(designer.StripItems).Text);
+        Assert.Equal(string.Empty, designer.NewItemText);
+
+        // Tap the menu to give it items; - is a separator.
+        designed.Tap(designed.Center(designed.StripItemButton("fileToolStripMenuItem")));
+        Assert.Equal("fileToolStripMenuItem", designer.SelectionTitle);
+        designed.TypeNewItem("&Open...");
+        designed.TypeNewItem("-");
+        designed.TypeNewItem("E&xit");
+        Assert.Equal(["&Open...", "—", "E&xit"], designer.StripItems.Select(i => i.Text));
+        var text = designed.DesignerText;
+        Assert.Contains("menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem });", text, StringComparison.Ordinal);
+        Assert.Contains("fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openToolStripMenuItem, toolStripSeparator1, exitToolStripMenuItem });", text, StringComparison.Ordinal);
+        Assert.Contains("MainMenuStrip = menuStrip1;", text, StringComparison.Ordinal);
+        await DesignedForm.SettleAsync();
+        UiTestHelpers.SaveScreenshot(designed.Window, "winforms-designer-04-menu");
+
+        // A menu item's Click handler, from its events.
+        designed.Tap(designed.Center(designed.StripItemButton("exitToolStripMenuItem")));
+        designer.ShowEventsCommand.Execute(null);
+        designer.Events.Single(e => e.Name == "Click").OpenCommand.Execute(null);
+        Assert.True(designer.IsCode);
+        Assert.Contains("private void exitToolStripMenuItem_Click(object sender, EventArgs e)", designed.Document.Document.Text, StringComparison.Ordinal);
+        Assert.Contains("exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;", designed.DesignerText, StringComparison.Ordinal);
+
+        await designed.Workspace.BuildCommand.ExecuteAsync(null);
+        var problems = designed.Workspace.ErrorList.Items.Where(i => i.Diagnostic.Severity >= DiagnosticSeverityLevel.Warning).Select(i => i.Diagnostic.ToString()).ToList();
+        Assert.True(problems.Count == 0, string.Join('\n', problems));
+        designed.Window.Close();
+    }
+
     /// <summary>A form of a new Windows Forms project, open on its designer in the IDE.</summary>
     private sealed class DesignedForm(WorkspaceViewModel workspace, Window window, DocumentViewModel document, string designerPath)
     {
@@ -222,7 +272,19 @@ public sealed class FormsDesignerTests
         public Button ToolButton(string name) =>
             Window.GetVisualDescendants().OfType<Button>().Single(b => b.DataContext is ToolboxItemViewModel tool && tool.Name == name);
 
+        public Button StripItemButton(string name) =>
+            Window.GetVisualDescendants().OfType<Button>().Single(b => b.DataContext is StripItemViewModel item && item.Name == name);
+
         public Point Center(Visual visual) => InWindow(visual, new Rect(visual.Bounds.Size).Center);
+
+        /// <summary>Types an item's text where the Properties say "Type Here", and presses Enter.</summary>
+        public void TypeNewItem(string text)
+        {
+            var box = Window.GetVisualDescendants().OfType<TextBox>().Single(t => t.Name == "NewItemBox");
+            box.Focus();
+            Window.KeyTextInput(text);
+            Window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
+        }
 
         public void Tap(Point at)
         {

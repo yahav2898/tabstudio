@@ -122,15 +122,24 @@ public sealed partial class FormsDesignerView : UserControl, IDisposable
     }
 
     /// <summary>
-    /// Enter commits a property's text, which otherwise commits when the box loses focus; Shift+Enter starts a new line
-    /// of a text that can have several, such as a label's.
+    /// Enter commits a property's text, which otherwise commits when the box loses focus, and adds the strip item typed;
+    /// Shift+Enter starts a new line of a text that can have several, such as a label's.
     /// </summary>
     private void OnPropertyKeyDown(object? sender, KeyEventArgs e)
     {
         if (e.Key == Key.Enter && (e.KeyModifiers & KeyModifiers.Shift) == 0
             && e.Source is Visual source && source.FindAncestorOfType<TextBox>(includeSelf: true) is { } box)
         {
-            BindingOperations.GetBindingExpressionBase(box, TextBox.TextProperty)?.UpdateSource();
+            if (box == NewItemBox)
+            {
+                // Enter adds the item typed, as in Visual Studio's "Type Here".
+                _designer.AddStripItemCommand.Execute(null);
+            }
+            else
+            {
+                BindingOperations.GetBindingExpressionBase(box, TextBox.TextProperty)?.UpdateSource();
+            }
+
             e.Handled = true;
         }
     }

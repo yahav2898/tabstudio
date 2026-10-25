@@ -97,6 +97,21 @@ public sealed partial class FormsDesignerViewModel : ObservableObject, IDisposab
     /// <summary>The selected component's events.</summary>
     public ObservableCollection<FormsEventViewModel> Events { get; } = [];
 
+    /// <summary>The items of the selected strip or menu item, such as a menu strip's menus, listed to select them.</summary>
+    public ObservableCollection<StripItemViewModel> StripItems { get; } = [];
+
+    /// <summary>Whether the selection is a strip or a menu item, which items are added to.</summary>
+    [ObservableProperty]
+    public partial bool HasStripItems { get; private set; }
+
+    /// <summary>What adding an item to the selection adds, such as <c>Add menu item</c>.</summary>
+    [ObservableProperty]
+    public partial string AddItemLabel { get; private set; } = string.Empty;
+
+    /// <summary>The text of the next item, typed where Visual Studio's strips say "Type Here"; <c>-</c> adds a separator.</summary>
+    [ObservableProperty]
+    public partial string NewItemText { get; set; } = string.Empty;
+
     /// <summary>Whether the tab shows the designer or the code.</summary>
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsDesign), nameof(IsCode), nameof(ShowsCode))]
@@ -326,6 +341,38 @@ public sealed partial class FormsDesignerViewModel : ObservableObject, IDisposab
     [RelayCommand]
     private void SelectForm() => Canvas.Select([Surface.ClassName]);
 
+    /// <summary>
+    /// Adds an item to the selected strip or menu item: a menu item to a menu, a label to a status strip, a button to a
+    /// tool strip, or a separator for <c>-</c>. The strip stays selected, for the next item.
+    /// </summary>
+    [RelayCommand]
+    private void AddStripItem()
+    {
+        if (Canvas.PrimarySelection is not { Instance: System.Windows.Forms.ToolStrip or System.Windows.Forms.ToolStripDropDownItem } owner)
+        {
+            return;
+        }
+
+        var text = NewItemText.Trim();
+        var type = text == "-" ? typeof(System.Windows.Forms.ToolStripSeparator) : ItemTypeFor(owner.Instance);
+        if (text.Length == 0 && type == typeof(System.Windows.Forms.ToolStripMenuItem))
+        {
+            _host.ShowStatus("Type the menu item's text, then add it.");
+            return;
+        }
+
+        Surface.AddItem(owner, type, type == typeof(System.Windows.Forms.ToolStripSeparator) ? string.Empty : text);
+        NewItemText = string.Empty;
+    }
+
+    /// <summary>The item a strip gets from "Type Here": a status label, a tool strip button, or a menu item.</summary>
+    private static Type ItemTypeFor(object? owner) => owner switch
+    {
+        System.Windows.Forms.StatusStrip => typeof(System.Windows.Forms.ToolStripStatusLabel),
+        System.Windows.Forms.MenuStrip or System.Windows.Forms.ToolStripDropDown or System.Windows.Forms.ToolStripDropDownItem => typeof(System.Windows.Forms.ToolStripMenuItem),
+        _ => typeof(System.Windows.Forms.ToolStripButton),
+    };
+
     private void DisarmTools() => Arm(null);
 
     private IEnumerable<ToolboxCategoryViewModel> CreateToolbox() =>
@@ -353,6 +400,35 @@ public sealed partial class FormsDesignerViewModel : ObservableObject, IDisposab
         SelectionTitle = primary?.Name ?? string.Empty;
         SelectionType = primary is null ? string.Empty : (primary.Type ?? primary.Instance?.GetType())?.FullName ?? primary.TypeName;
         LoadProperties();
+        LoadStripItems(primary);
+    }
+
+    /// <summary>Lists the items of a strip or a menu item, the ones its drop-down shows when it opens.</summary>
+    private void LoadStripItems(DesignComponent? component)
+    {
+        StripItems.Clear();
+        IEnumerable<System.Windows.Forms.ToolStripItem>? items = component?.Instance switch
+        {
+            System.Windows.Forms.ToolStrip strip => strip.Items.Cast<System.Windows.Forms.ToolStripItem>(),
+            System.Windows.Forms.ToolStripDropDownItem menu => menu.DropDownItems.Cast<System.Windows.Forms.ToolStripItem>(),
+            _ => null,
+        };
+        HasStripItems = items is not null;
+        if (items is null || Surface.Document is not { } document)
+        {
+            return;
+        }
+
+        AddItemLabel = ItemTypeFor(component!.Instance) == typeof(System.Windows.Forms.ToolStripMenuItem) ? "Add menu item"
+            : component.Instance is System.Windows.Forms.StatusStrip ? "Add label"
+            : "Add button";
+        foreach (var item in items)
+        {
+            if (document.Of(item) is { } itemComponent)
+            {
+                StripItems.Add(new StripItemViewModel(Canvas, itemComponent.Name, item is System.Windows.Forms.ToolStripSeparator ? "—" : item.Text ?? string.Empty));
+            }
+        }
     }
 
     /// <summary>
@@ -399,7 +475,7 @@ public sealed partial class FormsDesignerViewModel : ObservableObject, IDisposab
     }
 
     /// <summary>A property's value: the live control's, or the file's for a property the surface does not show, such as Visible.</summary>
-    private object? ValueOf(DesignComponent component, string path)
+    private static object? ValueOf(DesignComponent component, string path)
     {
         if (path == "Name")
         {
