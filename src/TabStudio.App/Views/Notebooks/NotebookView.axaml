@@ -42,6 +42,11 @@
       <Setter Property="CornerRadius" Value="6" />
     </Style>
 
+    <!-- On a narrow notebook (a tablet in portrait) the secondary toolbar buttons show only their icons. -->
+    <Style Selector="Border.compact TextBlock.optionalLabel">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+
     <!-- Outputs -->
     <Style Selector="SelectableTextBlock.output">
       <Setter Property="FontFamily" Value="{DynamicResource CodeFont}" />
@@ -71,7 +76,7 @@
   <DockPanel>
 
     <!-- Notebook toolbar -->
-    <Border DockPanel.Dock="Top" Height="46" Background="{DynamicResource Brush.Toolbar}"
+    <Border x:Name="Toolbar" DockPanel.Dock="Top" Height="46" Background="{DynamicResource Brush.Toolbar}"
             BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
       <Grid ColumnDefinitions="*,Auto" Margin="8,0">
         <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
@@ -85,20 +90,20 @@
             <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Interrupt" Command="{Binding InterruptCommand}">
               <StackPanel Orientation="Horizontal" Spacing="7">
                 <controls:StrokeIcon Data="{StaticResource Icon.Stop}" IsFilled="True" Size="12" />
-                <TextBlock Text="Interrupt" VerticalAlignment="Center" FontSize="12.5" />
+                <TextBlock Text="Interrupt" Classes="optionalLabel" VerticalAlignment="Center" FontSize="12.5" />
               </StackPanel>
             </Button>
             <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Restart the kernel" Command="{Binding RestartCommand}">
               <StackPanel Orientation="Horizontal" Spacing="7">
                 <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="15" />
-                <TextBlock Text="Restart" VerticalAlignment="Center" FontSize="12.5" />
+                <TextBlock Text="Restart" Classes="optionalLabel" VerticalAlignment="Center" FontSize="12.5" />
               </StackPanel>
             </Button>
             <Border Classes="toolbarSeparator" />
             <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Clear All Outputs" Command="{Binding ClearAllOutputsCommand}">
               <StackPanel Orientation="Horizontal" Spacing="7">
                 <controls:StrokeIcon Data="{StaticResource Icon.ClearOutputs}" Size="15" />
-                <TextBlock Text="Clear All Outputs" VerticalAlignment="Center" FontSize="12.5" />
+                <TextBlock Text="Clear All Outputs" Classes="optionalLabel" VerticalAlignment="Center" FontSize="12.5" />
               </StackPanel>
             </Button>
             <Border Classes="toolbarSeparator" />

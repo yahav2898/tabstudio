@@ -105,6 +105,8 @@ public sealed class NotebookScreenshotTests : IDisposable
 
         Assert.False(workspace.IsSideBarVisible);
         Assert.All(notebook.Cells.Where(c => c.IsCode), c => Assert.Equal(CellRunState.Succeeded, c.RunState));
+        var view = window.GetVisualDescendants().OfType<NotebookView>().Single(v => v.IsEffectivelyVisible);
+        Assert.Contains("compact", view.FindControl<Border>("Toolbar")!.Classes);
     }
 
     [AvaloniaFact]

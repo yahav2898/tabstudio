@@ -28,6 +28,9 @@ namespace TabStudio.App.Views.Notebooks;
 /// </remarks>
 public sealed partial class NotebookView : UserControl, IDisposable
 {
+    /// <summary>Below this width the toolbar is compact: its secondary buttons show only their icons.</summary>
+    private const double CompactWidth = 900;
+
     private readonly DocumentViewModel? _document;
     private NotebookViewModel? _notebook;
     private bool _deletePending;
@@ -93,6 +96,13 @@ public sealed partial class NotebookView : UserControl, IDisposable
         {
             _notebook.FindRequested += OnFindRequested;
         }
+    }
+
+    /// <inheritdoc />
+    protected override void OnSizeChanged(SizeChangedEventArgs e)
+    {
+        base.OnSizeChanged(e);
+        Toolbar.Classes.Set("compact", e.NewSize.Width < CompactWidth);
     }
 
     /// <inheritdoc />
