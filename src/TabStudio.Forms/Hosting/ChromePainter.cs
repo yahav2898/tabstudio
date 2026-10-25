@@ -157,7 +157,7 @@ internal static class ChromePainter
         var glyph = !enabled ? DisabledGlyph
             : part == WindowPart.Close && state != ButtonState.Normal ? White
             : active ? ActiveText : InactiveText;
-        var pen = new ImmutablePen(glyph, 1);
+        var pen = new ImmutablePen(glyph.ToImmutable(), 1);
         var size = frame.Chrome.IsToolWindow ? 8 : 10;
         var x = Math.Round(bounds.X + ((bounds.Width - size) / 2)) + 0.5;
         var y = Math.Round(bounds.Y + ((bounds.Height - size) / 2)) + 0.5;
