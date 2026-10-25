@@ -25,7 +25,7 @@
     </Style>
   </UserControl.Styles>
 
-  <DockPanel Background="#16181D">
+  <DockPanel Background="{DynamicResource Brush.Terminal.Background}">
     <Border DockPanel.Dock="Bottom" Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0"
             Padding="6,4" IsVisible="{Binding !ShowsMessage}">
       <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">

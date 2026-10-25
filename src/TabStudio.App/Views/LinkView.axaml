@@ -34,10 +34,10 @@
   </UserControl.DataTemplates>
 
   <!-- The TabStudio Link dialog, drawn over the start screen or the IDE. -->
-  <Panel Background="#99000000" IsVisible="{Binding IsOpen}">
+  <Panel Background="{DynamicResource Brush.Scrim}" IsVisible="{Binding IsOpen}">
     <Border MaxWidth="780" Margin="24" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="12"
             Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
-            BoxShadow="0 12 32 0 #66000000">
+            BoxShadow="{DynamicResource Shadow.Dialog}">
       <DockPanel>
 
         <!-- Title and the two halves -->
@@ -191,7 +191,7 @@
               <StackPanel Spacing="14" IsVisible="{Binding IsHosting}">
                 <!-- The QR code beside its instructions, or above them on a phone's narrow screen (see the code-behind). -->
                 <Grid x:Name="HostCodeGrid" ColumnDefinitions="Auto,22,*" RowDefinitions="Auto,Auto" IsVisible="{Binding HasNetwork}">
-                  <Border Width="236" Height="236" CornerRadius="10" Background="White" VerticalAlignment="Top">
+                  <Border Width="236" Height="236" CornerRadius="10" Background="{DynamicResource Brush.QrCode.Light}" VerticalAlignment="Top">
                     <controls:QrCodeView Code="{Binding HostQrCode}" />
                   </Border>
                   <StackPanel x:Name="HostCodeText" Grid.Column="2" Spacing="10" VerticalAlignment="Center">

@@ -6,7 +6,7 @@
              x:DataType="vm:WorkspaceViewModel">
   <!-- The floating debug buttons over the editor while debugging: a tablet has no F5, F10 or F11 keys. -->
   <Border Padding="4" CornerRadius="14" Background="{DynamicResource Brush.Hover}"
-          BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1" BoxShadow="0 8 24 0 #59000000">
+          BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1" BoxShadow="{DynamicResource Shadow.Popup}">
     <StackPanel Orientation="Horizontal" Spacing="2">
       <Button Theme="{StaticResource ToolButton}" Width="32" Height="44" CornerRadius="10" Padding="0"
               Command="{Binding ToggleTouchBarCommand}" ToolTip.Tip="Fold the touch buttons away">

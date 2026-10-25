@@ -52,7 +52,7 @@
   <StackPanel Orientation="Horizontal" Spacing="6">
     <Border Width="400" VerticalAlignment="Top" Padding="4" CornerRadius="8"
             Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
-            BoxShadow="0 8 24 0 #59000000">
+            BoxShadow="{DynamicResource Shadow.Popup}">
       <ListBox x:Name="ItemList" ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem, Mode=OneWay}"
                ItemContainerTheme="{StaticResource CompletionRow}" Classes.soft="{Binding IsSoftSelection}"
                Focusable="False" MaxHeight="276" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
@@ -73,7 +73,7 @@
     <!-- The description of the selected item, like Visual Studio's tooltip beside the list. -->
     <Border MaxWidth="440" VerticalAlignment="Top" Padding="12,10" CornerRadius="8" IsVisible="{Binding HasDescription}"
             Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
-            BoxShadow="0 8 24 0 #59000000">
+            BoxShadow="{DynamicResource Shadow.Popup}">
       <controls:StyledTextBlock Runs="{Binding Description}" TextWrapping="Wrap" FontFamily="{DynamicResource CodeFont}" FontSize="12.5"
                                 Foreground="{DynamicResource Brush.Text}" />
     </Border>

@@ -10,12 +10,6 @@
     settings. Sized for a side bar: everything wraps, and every action is a button large enough to tap.
   -->
 
-  <UserControl.Resources>
-    <SolidColorBrush x:Key="Agent.UserBubble" Color="#26324A" />
-    <SolidColorBrush x:Key="Agent.DiffAdded" Color="#1E3A2A" />
-    <SolidColorBrush x:Key="Agent.DiffRemoved" Color="#43232A" />
-  </UserControl.Resources>
-
   <UserControl.Styles>
     <Style Selector="TextBlock.diff">
       <Setter Property="FontFamily" Value="{DynamicResource CodeFont}" />
@@ -134,8 +128,8 @@
                           <ItemsControl.ItemTemplate>
                             <DataTemplate DataType="agent:DiffLineViewModel">
                               <Panel>
-                                <Border Background="{StaticResource Agent.DiffAdded}" IsVisible="{Binding IsAdded}" />
-                                <Border Background="{StaticResource Agent.DiffRemoved}" IsVisible="{Binding IsRemoved}" />
+                                <Border Background="{DynamicResource Brush.Agent.DiffAdded}" IsVisible="{Binding IsAdded}" />
+                                <Border Background="{DynamicResource Brush.Agent.DiffRemoved}" IsVisible="{Binding IsRemoved}" />
                                 <TextBlock Classes="diff" Text="⋯" Foreground="{DynamicResource Brush.TextMuted}" IsVisible="{Binding IsGap}" />
                                 <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsGap}">
                                   <TextBlock Classes="diff" Width="22" Text="{Binding Kind}" Foreground="{DynamicResource Brush.TextMuted}" />
@@ -167,7 +161,7 @@
           <ItemsControl ItemsSource="{Binding Items}" Margin="10,8">
             <ItemsControl.DataTemplates>
               <DataTemplate DataType="agent:UserMessageViewModel">
-                <Border Background="{StaticResource Agent.UserBubble}" CornerRadius="10" Padding="12,8" Margin="40,6,0,6" HorizontalAlignment="Right">
+                <Border Background="{DynamicResource Brush.Agent.UserBubble}" CornerRadius="10" Padding="12,8" Margin="40,6,0,6" HorizontalAlignment="Right">
                   <SelectableTextBlock Text="{Binding Text}" TextWrapping="Wrap" />
                 </Border>
               </DataTemplate>
