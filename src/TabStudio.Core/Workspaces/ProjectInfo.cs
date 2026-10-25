@@ -51,6 +51,12 @@ public sealed record ProjectInfo
     /// <summary>NuGet packages the project references.</summary>
     public IReadOnlyList<PackageReferenceInfo> PackageReferences { get; init; } = [];
 
+    /// <summary>
+    /// The shared frameworks the project uses besides .NET itself, such as <c>Microsoft.AspNetCore.App</c>: its
+    /// <c>FrameworkReference</c> items and the framework its SDK brings in.
+    /// </summary>
+    public IReadOnlyList<string> FrameworkReferences { get; init; } = [];
+
     /// <summary>Absolute paths of the projects this project references.</summary>
     public IReadOnlyList<string> ProjectReferences { get; init; } = [];
 

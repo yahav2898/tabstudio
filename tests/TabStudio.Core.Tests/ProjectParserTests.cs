@@ -215,4 +215,22 @@ public sealed class ProjectParserTests
     [InlineData("Program.cs", false)]
     public void Recognizes_project_file_extensions(string fileName, bool expected) =>
         Assert.Equal(expected, ProjectParser.IsProjectFile(fileName));
+
+    [Fact]
+    public void Web_projects_use_the_ASP_NET_Core_framework_and_framework_references_are_read()
+    {
+        var web = ProjectParser.Parse(ProjectPath, """<Project Sdk="Microsoft.NET.Sdk.Web"><PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup></Project>""");
+        var library = ProjectParser.Parse(ProjectPath, """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <ItemGroup>
+                <FrameworkReference Include="Microsoft.AspNetCore.App" />
+              </ItemGroup>
+            </Project>
+            """);
+        var console = ProjectParser.Parse(ProjectPath, """<Project Sdk="Microsoft.NET.Sdk" />""");
+
+        Assert.Equal(new[] { ProjectParser.AspNetCoreFramework }, web.FrameworkReferences);
+        Assert.Equal(new[] { ProjectParser.AspNetCoreFramework }, library.FrameworkReferences);
+        Assert.Empty(console.FrameworkReferences);
+    }
 }
