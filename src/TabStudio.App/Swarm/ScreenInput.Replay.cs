@@ -304,11 +304,20 @@ internal sealed partial class ScreenInput
     /// </summary>
     private void RestoreFocus(IInputElement? focusBefore)
     {
-        var focusNow = TopLevel.GetTopLevel(_surface)?.FocusManager?.GetFocusedElement();
-        if (focusBefore is Visual before && !IsInApp(before) && before.GetVisualRoot() is not null
-            && !ReferenceEquals(focusNow, focusBefore) && focusNow is Visual now && IsInApp(now))
+        var focus = TopLevel.GetTopLevel(_surface)?.FocusManager;
+        if (focus?.GetFocusedElement() is not Visual now || !IsInApp(now) || ReferenceEquals(now, focusBefore))
+        {
+            return;
+        }
+
+        if (focusBefore is Visual before && !IsInApp(before) && before.GetVisualRoot() is not null)
         {
             focusBefore.Focus();
+        }
+        else if (focusBefore is null)
+        {
+            // Nothing had the keyboard: nothing keeps it.
+            focus.ClearFocus();
         }
     }
 

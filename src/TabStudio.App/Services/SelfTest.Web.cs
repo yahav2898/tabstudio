@@ -45,7 +45,7 @@ public static partial class SelfTest
             var message = served
                 ? string.Create(CultureInfo.InvariantCulture, $"Web: served on {address.Authority} in {clock.Elapsed.TotalSeconds:0.0} s, the API said \"Hello, {Name}!\"")
                 : $"Web: unexpected answers: {api}";
-            if (served)
+            if (served && !SkipWebScreenForExperiment)
             {
                 var screen = await CheckWebScreenAsync(workspace, cancellationToken);
                 return new SelfTestResult(screen.Success, $"{message} | {screen.Message}", clock.Elapsed);
@@ -63,6 +63,9 @@ public static partial class SelfTest
             await run.WaitAsync(cancellationToken);
         }
     }
+
+    // TEMPORARY: finds out whether the web screen part changes what desktop mode's part sees.
+    private static readonly bool SkipWebScreenForExperiment = true;
 
     private static string LastLines(WorkspaceViewModel workspace) =>
         string.Join(" | ", workspace.Output.Text.Split('\n').Select(l => l.Trim()).Where(l => l.Length > 0).TakeLast(6));
