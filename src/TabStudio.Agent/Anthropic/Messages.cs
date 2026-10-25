@@ -19,6 +19,11 @@ public abstract record ContentBlock;
 /// <param name="Text">The text.</param>
 public sealed record TextBlock(string Text) : ContentBlock;
 
+/// <summary>An image, such as a sketch to turn into XAML.</summary>
+/// <param name="MediaType">The image type: <c>image/png</c>, <c>image/jpeg</c>, <c>image/gif</c> or <c>image/webp</c>.</param>
+/// <param name="Data">The image file's bytes.</param>
+public sealed record ImageBlock(string MediaType, ReadOnlyMemory<byte> Data) : ContentBlock;
+
 /// <summary>Claude asking to use a tool.</summary>
 /// <param name="Id">The call's id, which the result refers to.</param>
 /// <param name="Name">The tool.</param>

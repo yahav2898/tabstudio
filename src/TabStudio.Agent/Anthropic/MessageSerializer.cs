@@ -61,6 +61,11 @@ internal static class MessageSerializer
     private static JsonObject Serialize(ContentBlock block) => block switch
     {
         TextBlock text => new JsonObject { ["type"] = "text", ["text"] = text.Text },
+        ImageBlock image => new JsonObject
+        {
+            ["type"] = "image",
+            ["source"] = new JsonObject { ["type"] = "base64", ["media_type"] = image.MediaType, ["data"] = Convert.ToBase64String(image.Data.Span) },
+        },
         ToolUseBlock use => new JsonObject { ["type"] = "tool_use", ["id"] = use.Id, ["name"] = use.Name, ["input"] = use.Input.DeepClone() },
         ToolResultBlock result => new JsonObject
         {
