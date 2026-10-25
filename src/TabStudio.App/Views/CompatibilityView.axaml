@@ -1,0 +1,63 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:vm="using:TabStudio.App.ViewModels"
+             x:Class="TabStudio.App.Views.CompatibilityView"
+             x:DataType="vm:WorkspaceViewModel">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+    <StackPanel Margin="12,8" Spacing="10">
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <TextBlock Classes="label" FontWeight="SemiBold" Text="Detected" VerticalAlignment="Center" Margin="0,0,4,0" />
+        <ItemsControl ItemsSource="{Binding Stacks}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <WrapPanel />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="vm:StackChipViewModel">
+              <Border Classes="chip" Margin="0,0,8,4">
+                <TextBlock VerticalAlignment="Center">
+                  <Run Text="{Binding Name}" FontWeight="SemiBold" />
+                  <Run Text="  " />
+                  <Run Text="{Binding Evidence}" Foreground="{DynamicResource Brush.TextMuted}" />
+                </TextBlock>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+
+      <StackPanel>
+        <Border Height="28" BorderBrush="{DynamicResource Brush.Divider}" BorderThickness="0,0,0,1">
+          <Grid ColumnDefinitions="180,130,190,150,*" VerticalAlignment="Center">
+            <TextBlock Classes="muted small" Text="Project" />
+            <TextBlock Grid.Column="1" Classes="muted small" Text="Type" />
+            <TextBlock Grid.Column="2" Classes="muted small" Text="Runs via" />
+            <TextBlock Grid.Column="3" Classes="muted small" Text="Status" />
+            <TextBlock Grid.Column="4" Classes="muted small" Text="Why" />
+          </Grid>
+        </Border>
+        <ItemsControl ItemsSource="{Binding Compatibility}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="vm:CompatibilityRowViewModel">
+              <Border MinHeight="40" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+                <Grid ColumnDefinitions="180,130,190,150,*" Margin="0,6" VerticalAlignment="Center">
+                  <TextBlock Text="{Binding Project}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                  <TextBlock Grid.Column="1" Classes="label" Text="{Binding Type}" VerticalAlignment="Center" />
+                  <TextBlock Grid.Column="2" Text="{Binding RunsVia}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                  <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                    <controls:StrokeIcon Size="14" Data="{StaticResource Icon.Check}" Foreground="{DynamicResource Brush.Success}" IsVisible="{Binding IsReady}" />
+                    <controls:StrokeIcon Size="14" Data="{StaticResource Icon.Info}" Foreground="{DynamicResource Brush.Info}" IsVisible="{Binding IsBlocked}" />
+                    <TextBlock Text="{Binding Status}" VerticalAlignment="Center" />
+                  </StackPanel>
+                  <TextBlock Grid.Column="4" Classes="muted small" Text="{Binding Explanation}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

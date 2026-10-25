@@ -52,3 +52,37 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: bash build/ci/publish-logs.sh libraries ${{ job.status }}
+
+  app:
+    name: Build and test the IDE
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - uses: actions/cache@v4
+        with:
+          path: .nuget/packages
+          key: nuget-app-${{ hashFiles('Directory.Packages.props', '**/*.csproj') }}
+          restore-keys: nuget-app-
+
+      - name: Build the desktop host and test the IDE
+        env:
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+        run: |
+          mkdir -p ci-out/screenshots
+          status=0
+          dotnet build src/TabStudio.Desktop -c Release > ci-out/desktop-build.log 2>&1 || status=1
+          tail -n 40 ci-out/desktop-build.log
+          dotnet test tests/TabStudio.App.Tests -c Release --logger "console;verbosity=normal" > ci-out/TabStudio.App.Tests.log 2>&1 || status=1
+          tail -n 80 ci-out/TabStudio.App.Tests.log
+          exit $status
+
+      - name: Publish logs and screenshots
+        if: always() && github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs.sh app ${{ job.status }}

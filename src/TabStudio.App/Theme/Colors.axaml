@@ -1,0 +1,103 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!--
+    TabStudio's palette. Views use these brushes by role ("Panel", "TextMuted"), never raw colors,
+    so the whole look can be tuned here. The values follow the approved tablet mockup.
+  -->
+
+  <!-- Surfaces, from darkest to lightest -->
+  <SolidColorBrush x:Key="Brush.MenuBar" Color="#15171C" />
+  <SolidColorBrush x:Key="Brush.Window" Color="#1B1D23" />
+  <SolidColorBrush x:Key="Brush.Toolbar" Color="#1F2128" />
+  <SolidColorBrush x:Key="Brush.Panel" Color="#22252C" />
+  <SolidColorBrush x:Key="Brush.CurrentLine" Color="#23262F" />
+  <SolidColorBrush x:Key="Brush.Popup" Color="#262A33" />
+  <SolidColorBrush x:Key="Brush.Control" Color="#272A32" />
+  <SolidColorBrush x:Key="Brush.Hover" Color="#2A2E37" />
+  <SolidColorBrush x:Key="Brush.Pressed" Color="#33384A" />
+  <SolidColorBrush x:Key="Brush.Selection" Color="#2B3B57" />
+  <SolidColorBrush x:Key="Brush.SelectionInactive" Color="#262C38" />
+
+  <!-- Lines -->
+  <SolidColorBrush x:Key="Brush.Border" Color="#2A2E37" />
+  <SolidColorBrush x:Key="Brush.Divider" Color="#2F333D" />
+  <SolidColorBrush x:Key="Brush.BorderStrong" Color="#343844" />
+  <SolidColorBrush x:Key="Brush.BorderPopup" Color="#3A3F4B" />
+
+  <!-- Text -->
+  <SolidColorBrush x:Key="Brush.TextBright" Color="#E8ECF2" />
+  <SolidColorBrush x:Key="Brush.Text" Color="#D7DAE0" />
+  <SolidColorBrush x:Key="Brush.TextSecondary" Color="#C5CAD3" />
+  <SolidColorBrush x:Key="Brush.TextLabel" Color="#B7BDC8" />
+  <SolidColorBrush x:Key="Brush.TextMuted" Color="#9AA1AE" />
+  <SolidColorBrush x:Key="Brush.LineNumber" Color="#858C99" />
+  <SolidColorBrush x:Key="Brush.TextDisabled" Color="#6E7685" />
+  <SolidColorBrush x:Key="Brush.Link" Color="#8FB8FF" />
+  <SolidColorBrush x:Key="Brush.OnAccent" Color="#FFFFFF" />
+
+  <!-- Accent -->
+  <Color x:Key="Color.Accent">#0F7A70</Color>
+  <SolidColorBrush x:Key="Brush.Accent" Color="#0F7A70" />
+  <SolidColorBrush x:Key="Brush.AccentHover" Color="#13897E" />
+  <SolidColorBrush x:Key="Brush.AccentPressed" Color="#0C655D" />
+  <SolidColorBrush x:Key="Brush.AccentSoft" Color="#1E3A36" />
+  <SolidColorBrush x:Key="Brush.AccentText" Color="#6FD6C4" />
+
+  <!-- Status -->
+  <SolidColorBrush x:Key="Brush.Error" Color="#F47067" />
+  <SolidColorBrush x:Key="Brush.Warning" Color="#E3B341" />
+  <SolidColorBrush x:Key="Brush.Info" Color="#6CB6FF" />
+  <SolidColorBrush x:Key="Brush.Success" Color="#6FD6A0" />
+  <SolidColorBrush x:Key="Brush.SuccessSoft" Color="#1C2E28" />
+  <SolidColorBrush x:Key="Brush.Breakpoint" Color="#E5534B" />
+  <SolidColorBrush x:Key="Brush.Running" Color="#F0883E" />
+
+  <!-- Solution Explorer -->
+  <SolidColorBrush x:Key="Brush.Solution" Color="#C9B6FF" />
+  <SolidColorBrush x:Key="Brush.ProjectApp" Color="#6CB6FF" />
+  <SolidColorBrush x:Key="Brush.ProjectLibrary" Color="#6FD6C4" />
+  <SolidColorBrush x:Key="Brush.ProjectTest" Color="#E6A26B" />
+  <SolidColorBrush x:Key="Brush.Folder" Color="#D9B65C" />
+  <SolidColorBrush x:Key="Brush.Pill" Color="#2A2E37" />
+
+  <!-- File badges -->
+  <SolidColorBrush x:Key="Brush.Badge.CSharp" Color="#C9B6FF" />
+  <SolidColorBrush x:Key="Brush.Badge.CSharpBackground" Color="#2E2846" />
+  <SolidColorBrush x:Key="Brush.Badge.Data" Color="#E6C46B" />
+  <SolidColorBrush x:Key="Brush.Badge.Markup" Color="#E6A26B" />
+  <SolidColorBrush x:Key="Brush.Badge.Script" Color="#E2D58E" />
+  <SolidColorBrush x:Key="Brush.Badge.Text" Color="#9AA1AE" />
+
+  <!-- Fonts -->
+  <FontFamily x:Key="CodeFont">avares://TabStudio.App/Assets/Fonts#JetBrains Mono</FontFamily>
+
+  <!-- Fluent theme overrides, so built-in controls (menus, scroll bars, text boxes) match the palette. -->
+  <SolidColorBrush x:Key="MenuFlyoutPresenterBackground" Color="#262A33" />
+  <SolidColorBrush x:Key="MenuFlyoutPresenterBorderBrush" Color="#3A3F4B" />
+  <SolidColorBrush x:Key="MenuFlyoutItemBackgroundPointerOver" Color="#2B3B57" />
+  <SolidColorBrush x:Key="MenuFlyoutItemBackgroundPressed" Color="#33384A" />
+  <SolidColorBrush x:Key="MenuFlyoutItemKeyboardAcceleratorTextForeground" Color="#9AA1AE" />
+  <SolidColorBrush x:Key="FlyoutPresenterBackground" Color="#262A33" />
+  <SolidColorBrush x:Key="FlyoutBorderThemeBrush" Color="#3A3F4B" />
+  <SolidColorBrush x:Key="ComboBoxDropDownBackground" Color="#262A33" />
+  <SolidColorBrush x:Key="ComboBoxDropDownBorderBrush" Color="#3A3F4B" />
+  <SolidColorBrush x:Key="TextControlBackground" Color="#1B1D23" />
+  <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#1B1D23" />
+  <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1B1D23" />
+  <SolidColorBrush x:Key="TextControlBorderBrush" Color="#343844" />
+  <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#3A3F4B" />
+  <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#0F7A70" />
+  <SolidColorBrush x:Key="TextControlForeground" Color="#E8ECF2" />
+  <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#E8ECF2" />
+  <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#9AA1AE" />
+  <SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused" Color="#6E7685" />
+  <SolidColorBrush x:Key="TextControlSelectionHighlightColor" Color="#2B3B57" />
+  <SolidColorBrush x:Key="ToolTipBackground" Color="#262A33" />
+  <SolidColorBrush x:Key="ToolTipBorderBrush" Color="#3A3F4B" />
+  <SolidColorBrush x:Key="ToolTipForeground" Color="#D7DAE0" />
+  <Color x:Key="ScrollBarThumbBackgroundColor">#3A3F4B</Color>
+  <SolidColorBrush x:Key="ScrollBarThumbFillPointerOver" Color="#4A5060" />
+  <SolidColorBrush x:Key="ScrollBarThumbFillPressed" Color="#565D6E" />
+
+</ResourceDictionary>

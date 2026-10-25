@@ -1,0 +1,54 @@
+using Microsoft.Extensions.DependencyInjection;
+using TabStudio.App.Platform;
+using TabStudio.App.Services;
+using TabStudio.App.ViewModels;
+
+namespace TabStudio.App;
+
+/// <summary>
+/// The composition root: every service and view model TabStudio creates, wired in one place.
+/// </summary>
+public static class AppServices
+{
+    /// <summary>Builds the service provider.</summary>
+    /// <param name="paths">Where the app keeps its data.</param>
+    /// <param name="configurePlatform">Registers platform services, such as Android's <see cref="IDeviceStatus"/>.</param>
+    public static ServiceProvider Create(AppPaths paths, Action<IServiceCollection>? configurePlatform = null)
+    {
+        ArgumentNullException.ThrowIfNull(paths);
+
+        var services = new ServiceCollection();
+
+        // Platform: defaults first; the platform head replaces what it implements.
+        services.AddSingleton<IUiDispatcher, AvaloniaUiDispatcher>();
+        services.AddSingleton<IDeviceStatus, DefaultDeviceStatus>();
+        services.AddSingleton<IStoragePicker, TopLevelStoragePicker>();
+        configurePlatform?.Invoke(services);
+        services.AddSingleton(provider => DeviceProfile.For(provider.GetRequiredService<IDeviceStatus>().Device));
+
+        // App services.
+        services.AddSingleton(paths);
+        services.AddSingleton<CompilerServices>();
+        services.AddSingleton<RecentWorkspaces>();
+        services.AddSingleton<SessionStore>();
+        services.AddSingleton<SampleLibrary>();
+        services.AddSingleton<ProjectTemplates>();
+        services.AddSingleton<FolderImporter>();
+        services.AddSingleton(_ =>
+        {
+            var http = new HttpClient { Timeout = TimeSpan.FromMinutes(10) };
+            http.DefaultRequestHeaders.UserAgent.ParseAdd("TabStudio/0.1 (+https://github.com/yahav2898/tabstudio)");
+            return http;
+        });
+        services.AddSingleton<GitHubImporter>();
+
+        // View models.
+        services.AddSingleton<StartViewModel>();
+        // Workspaces are created and disposed by MainViewModel. They are built with ActivatorUtilities rather
+        // than registered as transient, because the container would keep every disposable transient alive.
+        services.AddSingleton<Func<WorkspaceViewModel>>(provider => () => ActivatorUtilities.CreateInstance<WorkspaceViewModel>(provider));
+        services.AddSingleton<MainViewModel>();
+
+        return services.BuildServiceProvider();
+    }
+}
