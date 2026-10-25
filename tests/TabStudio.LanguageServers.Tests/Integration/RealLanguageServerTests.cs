@@ -157,11 +157,15 @@ public sealed class RealLanguageServerTests(ITestOutputHelper output)
         var tags = await html.GetCompletionsAsync(3, LspCompletionTriggerKind.Invoked, null, CancellationToken.None).WaitAsync(TestTimeouts.RealServer);
         Assert.NotNull(tags);
         Assert.Contains(tags.Items, item => item.Label == "div");
+        html.ReplaceText("<style>.card { color: ; }</style>");
+        await RealWorkspace.WaitForDiagnosticAsync(html, d => d.Message.Contains("expected", StringComparison.OrdinalIgnoreCase));
         const string style = "h1 { col";
         var css = await workspace.OpenAsync("site.css", style);
         var properties = await css.GetCompletionsAsync(style.Length, LspCompletionTriggerKind.Invoked, null, CancellationToken.None).WaitAsync(TestTimeouts.RealServer);
         Assert.NotNull(properties);
         Assert.Contains(properties.Items, item => item.Label == "color");
+        css.ReplaceText("h1 { color: ; }");
+        await RealWorkspace.WaitForDiagnosticAsync(css, d => d.Message.Contains("expected", StringComparison.OrdinalIgnoreCase));
     }
 
     [RealServerFact("vscode-json-language-server")]

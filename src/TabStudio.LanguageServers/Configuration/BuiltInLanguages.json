@@ -104,6 +104,10 @@
       "initializationOptions": {
         "provideFormatter": true,
         "embeddedLanguages": { "css": true, "javascript": true }
+      },
+      "settings": {
+        "html": { "validate": { "styles": true, "scripts": true } },
+        "css": { "validate": true }
       }
     },
     "vscode-css-language-server": {
@@ -112,7 +116,12 @@
       "command": "vscode-css-language-server",
       "args": [ "--stdio" ],
       "package": "vscode-css-language-server",
-      "initializationOptions": { "provideFormatter": true }
+      "initializationOptions": { "provideFormatter": true },
+      "settings": {
+        "css": { "validate": true },
+        "scss": { "validate": true },
+        "less": { "validate": true }
+      }
     },
     "vscode-json-language-server": {
       "name": "JSON Language Server",

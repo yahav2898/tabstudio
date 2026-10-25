@@ -41,6 +41,19 @@ public sealed class RegistryTests
         Assert.False((bool?)JsonSettings.Select(custom.SettingsFor(custom.FindServers("jsonc").First()), "json.validate.enable"));
     }
 
+    [Theory]
+    [InlineData("html", "css.validate")]
+    [InlineData("html", "html.validate.styles")]
+    [InlineData("css", "css.validate")]
+    [InlineData("scss", "scss.validate")]
+    [InlineData("less", "less.validate")]
+    public void Web_servers_have_scoped_validation_settings(string language, string setting)
+    {
+        var registry = LanguageServerRegistry.BuiltIn;
+        var server = registry.FindServers(language).First();
+        Assert.True((bool?)JsonSettings.Select(registry.SettingsFor(server), setting));
+    }
+
     [Fact]
     public void The_built_in_registry_has_an_adapter_for_python_by_type_and_alias()
     {

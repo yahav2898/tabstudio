@@ -9,7 +9,7 @@ using TabStudio.Toolchains.Projects;
 namespace TabStudio.App.ViewModels;
 
 /// <summary>
-/// Setting projects up when they open. With "Set up projects when they open" on, the default, opening a repository
+/// Setting projects up when they open. With "Set projects up when they open" on, the default, opening a repository
 /// or folder installs what its projects need without asking: their toolchains from the Toolchain Store, and their
 /// packages (<c>pip install</c> into the project's <c>.venv</c>, <c>npm install</c>, or <c>npm ci</c> when a lock
 /// file records them), with progress in the status bar and the Output panel. It can be cancelled, and it sets each
@@ -26,7 +26,7 @@ public sealed partial class WorkspaceViewModel
     private bool _setupRequested;
 
     /// <summary>
-    /// Whether opening a repository or folder sets its projects up without asking (Tools &gt; Set Up Projects When
+    /// Whether opening a repository or folder sets its projects up without asking (Tools &gt; Set Projects Up When
     /// They Open). The setting is the app's, kept for every workspace.
     /// </summary>
     public bool SetUpProjectsWhenTheyOpen

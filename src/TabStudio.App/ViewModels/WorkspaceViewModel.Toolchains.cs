@@ -39,7 +39,8 @@ public sealed record ToolchainNoticeViewModel(string Key, string Title, string M
 /// <remarks>
 /// F5 runs the project's entry point (<c>main.py</c>, <c>__main__.py</c>, <c>package.json</c>'s <c>start</c>
 /// script or <c>main</c>), or, for a folder of scripts without one, the file being edited; Debug &gt; Run Current
-/// File runs the file being edited. A toolchain that is not installed is installed only after the user agrees.
+/// File runs the file being edited. Opening sets projects up by default; when setup is disabled or cancelled,
+/// a missing toolchain is offered before running.
 /// F5 debugs the same program with the toolchain's debug adapter (<c>WorkspaceViewModel.ToolchainDebugging.cs</c>);
 /// Ctrl+F5 runs it without the debugger, here.
 /// </remarks>
