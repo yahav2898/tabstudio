@@ -51,7 +51,7 @@ public sealed class FormsDesignerTests
         Assert.Equal(new DrawingPoint(x, y), designed.ControlNamed("button1").Location);
 
         // Its bottom-right handle resizes it, the dragged edges on the grid.
-        var handle = designer.Canvas.Handles(designer.Find("button1")!).Single(h => h.Handle == Handle.BottomRight).Center;
+        var handle = designed.HandleOf("button1", Handle.BottomRight);
         designed.Drag(handle, handle + new Point(40, 16));
         var width = DesignSurface.Snap(x + 120 + (int)Math.Round(40 / scale)) - x;
         var height = DesignSurface.Snap(y + 32 + (int)Math.Round(16 / scale)) - y;
@@ -265,6 +265,10 @@ public sealed class FormsDesignerTests
 
         /// <summary>The center of a component on the canvas, in the window.</summary>
         public Point CenterOf(string name) => InWindow(Designer.Canvas, Designer.Canvas.BoundsOnCanvas(Designer.Find(name)!).Center);
+
+        /// <summary>The center of a selection handle of a component, in the window.</summary>
+        public Point HandleOf(string name, Handle handle) =>
+            InWindow(Designer.Canvas, Designer.Canvas.Handles(Designer.Find(name)!).Single(h => h.Handle == handle).Center);
 
         /// <summary>A point of the form's client area, in the window.</summary>
         public Point OnForm(DrawingPoint point) => InWindow(Designer.Canvas, Designer.Canvas.ToCanvas(point));

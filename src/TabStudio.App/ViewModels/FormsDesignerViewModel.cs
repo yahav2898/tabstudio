@@ -47,6 +47,7 @@ public sealed partial class FormsDesignerViewModel : ObservableObject, IDisposab
     private readonly DocumentViewModel _code;
     private readonly IFormsDesignerHost _host;
     private readonly string _designerPath;
+    private string _written;
     private bool _writing;
     private bool _disposed;
 
@@ -65,7 +66,8 @@ public sealed partial class FormsDesignerViewModel : ObservableObject, IDisposab
         _designerPath = designerPath;
         var className = Path.GetFileNameWithoutExtension(code.FilePath);
         var rootType = CodeBehind.BaseTypeOf(code.Document.Text, className) ?? "Form";
-        Surface = new DesignSurface(ReadDesignerText(), rootType, simplified);
+        _written = ReadDesignerText();
+        Surface = new DesignSurface(_written, rootType, simplified);
         Surface.Changed += OnSurfaceChanged;
         Canvas = new DesignCanvas { Surface = Surface };
         Canvas.SelectionChanged += (_, _) => OnSelectionChanged();
@@ -272,6 +274,7 @@ public sealed partial class FormsDesignerViewModel : ObservableObject, IDisposab
         var text = ReadDesignerText();
         if (!string.Equals(text, Surface.Text, StringComparison.Ordinal))
         {
+            _written = text;
             Surface.Reload(text);
         }
     }
@@ -304,11 +307,15 @@ public sealed partial class FormsDesignerViewModel : ObservableObject, IDisposab
     [RelayCommand]
     private void ShowEvents() => ShowsEvents = true;
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanUndo))]
     private void Undo() => Surface.Undo();
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanRedo))]
     private void Redo() => Surface.Redo();
+
+    private bool CanUndo() => Surface.CanUndo;
+
+    private bool CanRedo() => Surface.CanRedo;
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
     private void Delete() => Surface.Delete(Canvas.Selection);
@@ -386,6 +393,8 @@ public sealed partial class FormsDesignerViewModel : ObservableObject, IDisposab
     private void OnSurfaceChanged(object? sender, EventArgs e)
     {
         WriteDesignerText(Surface.Text);
+        UndoCommand.NotifyCanExecuteChanged();
+        RedoCommand.NotifyCanExecuteChanged();
         OnPropertyChanged(nameof(LoadError));
         OnPropertyChanged(nameof(HasLoadError));
         OnPropertyChanged(nameof(Problems));
@@ -550,7 +559,8 @@ public sealed partial class FormsDesignerViewModel : ObservableObject, IDisposab
     /// </summary>
     private void WriteDesignerText(string text)
     {
-        if (_writing)
+        // A reload reads what the file says already, which is not written again.
+        if (_writing || string.Equals(text, _written, StringComparison.Ordinal))
         {
             return;
         }
@@ -570,6 +580,8 @@ public sealed partial class FormsDesignerViewModel : ObservableObject, IDisposab
                 File.WriteAllText(_designerPath, text);
                 _host.UpdateLanguageText(_designerPath, text);
             }
+
+            _written = text;
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {

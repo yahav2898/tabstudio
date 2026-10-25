@@ -111,7 +111,7 @@ public static class CompatibilityDoctor
 
             ProjectKind.WinForms when project.Language == ProjectLanguage.CSharp => Report(
                 project, RunHost.AndroidView, CompatibilityStatus.Ready, "Cross-platform Forms layer in the app preview",
-                "Runs beside the code on TabStudio's own Windows Forms layer, drawn as on Windows 11, and its forms open in the Forms designer. Saving a file restarts it. Code that calls Windows itself, such as P/Invoke, COM or the registry, does not run here."),
+                "Runs beside the code on TabStudio's own Windows Forms layer, drawn as on Windows 10, and its forms open in the Forms designer. Saving a file restarts it. Code that calls Windows itself, such as P/Invoke, COM or the registry, does not run here."),
 
             ProjectKind.WinForms => Report(
                 project, RunHost.AndroidView, CompatibilityStatus.Planned, "Cross-platform Forms layer in the app preview",

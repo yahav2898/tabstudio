@@ -446,6 +446,14 @@ internal sealed partial class DesignCanvas
     {
         gesture.Pointer = e.Pointer;
         _gesture = gesture;
+
+        // A finger on a control or a handle drags it; the scroll viewer around the canvas must not scroll instead.
+        // A finger on the form itself still scrolls a tall form.
+        if (gesture.Kind == GestureKind.Resize || gesture.Components.Count > 0 || ArmedTool is not null)
+        {
+            e.PreventGestureRecognition();
+        }
+
         e.Pointer.Capture(this);
     }
 
