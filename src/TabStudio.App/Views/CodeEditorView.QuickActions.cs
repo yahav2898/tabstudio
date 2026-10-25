@@ -4,6 +4,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Primitives.PopupPositioning;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using TabStudio.App.Controls;
 using TabStudio.Compilation.Features;
 
@@ -127,6 +128,9 @@ public sealed partial class CodeEditorView
             _editor.TextArea.Focus();
         };
         menu.ShowAt(_lightBulb.Anchor);
+
+        // With a keyboard, the arrows and Enter work in the menu at once, as after Ctrl+. in Visual Studio.
+        Dispatcher.UIThread.Post(() => menu.Items.OfType<MenuItem>().FirstOrDefault(i => i.IsEnabled)?.Focus(), DispatcherPriority.Background);
     }
 
     private MenuFlyout CreateQuickActionsMenu(IReadOnlyList<CodeActionItem> actions)

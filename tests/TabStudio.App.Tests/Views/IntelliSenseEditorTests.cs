@@ -242,6 +242,25 @@ public sealed class IntelliSenseEditorTests
         window.Close();
     }
 
+    [AvaloniaFact]
+    public async Task A_right_click_moves_the_caret_and_opens_the_context_menu()
+    {
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var window = Show(fixture);
+        var view = ActiveEditor(window);
+        var offset = OffsetOf(view.Editor, "greeter.Greet()") + "greeter.Gr".Length;
+        var point = PointOf(window, view.Editor, offset);
+
+        window.MouseDown(point, MouseButton.Right);
+        window.MouseUp(point, MouseButton.Right);
+        await UiTestHelpers.WaitUntilAsync(() => view.Editor.ContextMenu!.IsOpen, because: "the context menu");
+
+        Assert.InRange(view.Editor.CaretOffset, offset - 1, offset + 1);
+        view.Editor.ContextMenu!.Close();
+        window.Close();
+    }
+
     private static Window Show(WorkspaceFixture fixture)
     {
         var window = new Window { Width = 1280, Height = 800, Content = new WorkspaceView { DataContext = fixture.Workspace } };
