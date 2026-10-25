@@ -99,6 +99,18 @@ public static class ProjectClassifier
         return sdk.Length > 0 || project.OutputType is not null ? ProjectKind.ClassLibrary : ProjectKind.Unknown;
     }
 
+    /// <summary>
+    /// Whether a Blazor WebAssembly project is the client of a Blazor Web App, which runs in the app that references it,
+    /// rather than an app of its own: the template marks it with <c>StaticWebAssetProjectMode</c> <c>Default</c>.
+    /// </summary>
+    /// <param name="project">The project.</param>
+    public static bool IsBlazorWebAppClient(ProjectInfo project)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+        return project.Kind == ProjectKind.BlazorWebAssembly
+            && string.Equals(project.GetProperty("StaticWebAssetProjectMode")?.Trim(), "Default", StringComparison.OrdinalIgnoreCase);
+    }
+
     private static bool IsTrue(string? value) =>
         string.Equals(value, "true", StringComparison.OrdinalIgnoreCase) ||
         string.Equals(value, "enable", StringComparison.OrdinalIgnoreCase);

@@ -85,7 +85,7 @@ public static class CompatibilityDoctor
                 project, RunHost.WebView, CompatibilityStatus.Planned, "Local server + WebView",
                 $"Blazor apps are served on this device. The {LanguageName(project.Language)} compiler is not bundled yet."),
 
-            ProjectKind.BlazorWebAssembly when project.Language == ProjectLanguage.CSharp && IsHostedWebAssembly(project) => Report(
+            ProjectKind.BlazorWebAssembly when project.Language == ProjectLanguage.CSharp && ProjectClassifier.IsBlazorWebAppClient(project) => Report(
                 project, RunHost.WebView, CompatibilityStatus.NotRunnable, "WebAssembly, in its web app",
                 "The WebAssembly part of a Blazor Web App: it is compiled for the browser and runs in the web preview when the app that references it runs."),
 
@@ -138,13 +138,6 @@ public static class CompatibilityDoctor
                 "TabStudio does not recognize this project type yet."),
         };
     }
-
-    /// <summary>
-    /// Whether a Blazor WebAssembly project is the client of a Blazor Web App rather than an app of its own, as the
-    /// template marks it with <c>StaticWebAssetProjectMode</c> <c>Default</c>.
-    /// </summary>
-    private static bool IsHostedWebAssembly(ProjectInfo project) =>
-        string.Equals(project.GetProperty("StaticWebAssetProjectMode"), "Default", StringComparison.OrdinalIgnoreCase);
 
     private static CompatibilityReport Report(
         ProjectInfo project, RunHost host, CompatibilityStatus status, string runsVia, string explanation) =>

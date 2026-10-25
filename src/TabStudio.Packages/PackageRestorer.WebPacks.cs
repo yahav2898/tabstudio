@@ -28,14 +28,16 @@ public sealed partial class PackageRestorer
     /// Restores Blazor's scripts (<c>_framework/blazor.web.js</c> and <c>blazor.server.js</c>) for the version of
     /// ASP.NET Core an app runs on.
     /// </summary>
-    /// <param name="aspNetCoreVersion">The version of ASP.NET Core, such as a restore's <c>Microsoft.AspNetCore.App</c> framework version.</param>
+    /// <param name="aspNetCoreVersion">
+    /// The version of ASP.NET Core the app runs on, such as a restore's <c>Microsoft.AspNetCore.App</c> framework version;
+    /// the newest release for the target framework when <see langword="null"/> or when that version has no scripts package.
+    /// </param>
     /// <param name="projectName">The project, for diagnostics.</param>
     /// <param name="cancellationToken">Cancels the download.</param>
     /// <returns>The package, or <see langword="null"/> and the reason when it could not be restored.</returns>
-    public Task<(SdkPack? Pack, IReadOnlyList<BuildDiagnostic> Diagnostics)> RestoreAspNetCoreWebAssetsAsync(string aspNetCoreVersion, string projectName, CancellationToken cancellationToken = default)
+    public Task<(SdkPack? Pack, IReadOnlyList<BuildDiagnostic> Diagnostics)> RestoreAspNetCoreWebAssetsAsync(string? aspNetCoreVersion, string projectName, CancellationToken cancellationToken = default)
     {
-        ArgumentException.ThrowIfNullOrEmpty(aspNetCoreVersion);
-        var version = NuGetVersion.TryParse(aspNetCoreVersion, out var parsed) ? parsed : null;
+        var version = aspNetCoreVersion is not null && NuGetVersion.TryParse(aspNetCoreVersion, out var parsed) ? parsed : null;
         return RestoreSdkPackAsync(AspNetCoreWebAssetsPackage, version, "Blazor's scripts", projectName, cancellationToken);
     }
 

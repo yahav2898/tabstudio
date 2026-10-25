@@ -23,10 +23,13 @@ public sealed class Workspace
     /// <summary>Problems found while loading, such as a project file that could not be parsed.</summary>
     public IReadOnlyList<string> LoadErrors { get; init; } = [];
 
-    /// <summary>The project F5 should run when the user has not picked one: the first executable project.</summary>
+    /// <summary>
+    /// The project F5 should run when the user has not picked one: the first executable project, other than the
+    /// WebAssembly client of a Blazor Web App, which runs in its app.
+    /// </summary>
     public ProjectInfo? DefaultStartupProject =>
         Projects.FirstOrDefault(p => p.Kind == ProjectKind.ConsoleApp) ??
-        Projects.FirstOrDefault(p => p.IsExecutable && !p.IsTestProject);
+        Projects.FirstOrDefault(p => p.IsExecutable && !p.IsTestProject && !ProjectClassifier.IsBlazorWebAppClient(p));
 
     /// <summary>Finds the project that owns a file: the project whose directory most closely contains it.</summary>
     /// <param name="filePath">Full path of a file in the workspace.</param>
