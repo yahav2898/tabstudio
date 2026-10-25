@@ -1,0 +1,49 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:input="using:Avalonia.Input"
+             x:Class="TabStudio.App.Views.DesktopMode.DesktopKeyboardView">
+
+  <!--
+    Typing on the big screen without a keyboard: a tap on the field shows the tablet's on-screen keyboard, and what it
+    types goes to the editor on the big screen, at its caret. The keys an on-screen keyboard lacks are buttons here;
+    they never take the focus from the field.
+  -->
+  <UserControl.Styles>
+    <Style Selector="Button.key">
+      <Setter Property="Focusable" Value="False" />
+      <Setter Property="Width" Value="48" />
+      <Setter Property="Height" Value="44" />
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="CornerRadius" Value="10" />
+    </Style>
+  </UserControl.Styles>
+
+  <Border Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0" Padding="12,10">
+    <Grid ColumnDefinitions="Auto,*,Auto">
+      <controls:StrokeIcon Data="{StaticResource Icon.Keyboard}" Size="22" Foreground="{DynamicResource Brush.TextSecondary}" VerticalAlignment="Center" />
+      <TextBox x:Name="Field" Grid.Column="1" Margin="10,0" MinHeight="44" VerticalContentAlignment="Center"
+               FontFamily="{DynamicResource CodeFont}" AcceptsReturn="False" AcceptsTab="False"
+               Watermark="Type on the big screen" />
+      <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6">
+        <Button Classes="key" Theme="{StaticResource SecondaryButton}" Tag="{x:Static input:Key.Tab}" Click="OnKeyClick" ToolTip.Tip="Tab">
+          <controls:StrokeIcon Data="{StaticResource Icon.Tab}" Size="18" />
+        </Button>
+        <Button Classes="key" Theme="{StaticResource SecondaryButton}" Tag="{x:Static input:Key.Left}" Click="OnKeyClick" ToolTip.Tip="Left">
+          <controls:StrokeIcon Data="{StaticResource Icon.ArrowLeft}" Size="18" />
+        </Button>
+        <Button Classes="key" Theme="{StaticResource SecondaryButton}" Tag="{x:Static input:Key.Up}" Click="OnKeyClick" ToolTip.Tip="Up">
+          <controls:StrokeIcon Data="{StaticResource Icon.ArrowUp}" Size="18" />
+        </Button>
+        <Button Classes="key" Theme="{StaticResource SecondaryButton}" Tag="{x:Static input:Key.Down}" Click="OnKeyClick" ToolTip.Tip="Down">
+          <controls:StrokeIcon Data="{StaticResource Icon.ArrowDown}" Size="18" />
+        </Button>
+        <Button Classes="key" Theme="{StaticResource SecondaryButton}" Tag="{x:Static input:Key.Right}" Click="OnKeyClick" ToolTip.Tip="Right">
+          <controls:StrokeIcon Data="{StaticResource Icon.ArrowRight}" Size="18" />
+        </Button>
+        <Button Classes="key" Theme="{StaticResource SecondaryButton}" Tag="{x:Static input:Key.Escape}" Click="OnKeyClick" ToolTip.Tip="Escape"
+                Width="56" Content="Esc" FontSize="13" />
+      </StackPanel>
+    </Grid>
+  </Border>
+</UserControl>

@@ -26,6 +26,11 @@
     <EmbeddedResource Include="Editing\TabStudioDark.tmTheme.json" LogicalName="Themes/TabStudioDark.json" />
   </ItemGroup>
 
+  <!-- The Toolbox's controls and the Properties panel's categories, one file per UI framework. -->
+  <ItemGroup>
+    <EmbeddedResource Include="Toolbox\*.json" LogicalName="Toolbox/%(Filename)%(Extension)" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Avalonia" />
     <PackageReference Include="Avalonia.Themes.Fluent" />

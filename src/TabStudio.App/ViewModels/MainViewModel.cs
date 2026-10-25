@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using TabStudio.App.Services;
+using TabStudio.App.ViewModels.DesktopMode;
 
 namespace TabStudio.App.ViewModels;
 
@@ -22,11 +23,13 @@ public sealed partial class MainViewModel : ObservableObject
     /// <param name="compiler">The shared compiler services, warmed up at startup.</param>
     /// <param name="gitHubAccount">The GitHub account dialog, shown over every page.</param>
     /// <param name="link">The TabStudio Link dialog, shown over every page.</param>
-    public MainViewModel(StartViewModel start, Func<WorkspaceViewModel> createWorkspace, RecentWorkspaces recent, SessionStore sessions, CompilerServices compiler, GitHubAccountViewModel gitHubAccount, LinkViewModel link)
+    /// <param name="desktopMode">Desktop mode, which shows the IDE on an external display; none when <see langword="null"/>.</param>
+    public MainViewModel(StartViewModel start, Func<WorkspaceViewModel> createWorkspace, RecentWorkspaces recent, SessionStore sessions, CompilerServices compiler, GitHubAccountViewModel gitHubAccount, LinkViewModel link, DesktopModeViewModel? desktopMode = null)
     {
         ArgumentNullException.ThrowIfNull(start);
         ArgumentNullException.ThrowIfNull(createWorkspace);
 
+        DesktopMode = desktopMode;
         Start = start;
         GitHubAccount = gitHubAccount;
         Link = link;

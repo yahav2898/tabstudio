@@ -1,0 +1,117 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:desktop="using:TabStudio.App.Views.DesktopMode"
+             xmlns:dm="using:TabStudio.App.ViewModels.DesktopMode"
+             x:Class="TabStudio.App.Views.DesktopMode.DesktopCompanionView"
+             x:DataType="dm:DesktopModeViewModel"
+             IsVisible="{Binding IsActive, FallbackValue=False}"
+             Background="{DynamicResource Brush.Window}">
+
+  <!--
+    The tablet while the IDE is on the external display: a touch Toolbox and Properties panel for what is selected on
+    the big screen, side by side on a landscape tablet and as two tabs in portrait, under big buttons for Run, Stop,
+    Build and the debugger. Its buttons never take the keyboard focus, which stays with the IDE on the display.
+  -->
+  <UserControl.Styles>
+    <!-- Under the narrow layout's tabs, the panes' own headers would repeat the tabs. -->
+    <Style Selector="Grid#Panes.tabbed Border.paneHeader">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+  </UserControl.Styles>
+
+  <DockPanel>
+    <!-- Header: where the IDE is, its size there, and the way back. -->
+    <Border DockPanel.Dock="Top" Background="{DynamicResource Brush.MenuBar}" BorderBrush="{DynamicResource Brush.Border}"
+            BorderThickness="0,0,0,1" Padding="16,10">
+      <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+        <Border Width="42" Height="42" CornerRadius="11" Background="{DynamicResource Brush.AccentSoft}">
+          <controls:StrokeIcon Data="{StaticResource Icon.Monitor}" Size="22" Foreground="{DynamicResource Brush.AccentText}"
+                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Border>
+        <StackPanel Grid.Column="1" Margin="12,0" VerticalAlignment="Center" Spacing="2">
+          <TextBlock Classes="h1" FontSize="16" Text="Desktop mode" />
+          <TextBlock Classes="muted small" Text="{Binding DisplayDescription}" TextTrimming="CharacterEllipsis" />
+        </StackPanel>
+        <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Focusable="False" Height="44" Padding="14,0"
+                ToolTip.Tip="How big the IDE is on the display">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <controls:StrokeIcon Data="{StaticResource Icon.Scale}" Size="15" />
+            <TextBlock Text="Size" VerticalAlignment="Center" />
+            <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="14" />
+          </StackPanel>
+          <Button.Flyout>
+            <MenuFlyout Placement="BottomEdgeAlignedRight" ItemsSource="{Binding ScaleOptions}">
+              <MenuFlyout.ItemContainerTheme>
+                <ControlTheme TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}" x:DataType="dm:DesktopScaleOption">
+                  <Setter Property="Header" Value="{Binding Label}" />
+                  <Setter Property="Command" Value="{Binding Select}" />
+                  <Setter Property="CommandParameter" Value="{Binding Scale}" />
+                  <Setter Property="MinHeight" Value="44" />
+                  <Setter Property="Icon">
+                    <Template>
+                      <controls:StrokeIcon Data="{StaticResource Icon.Check}" Size="14" IsVisible="{Binding IsSelected}" />
+                    </Template>
+                  </Setter>
+                </ControlTheme>
+              </MenuFlyout.ItemContainerTheme>
+            </MenuFlyout>
+          </Button.Flyout>
+        </Button>
+        <Button Grid.Column="3" Theme="{StaticResource AccentButton}" Focusable="False" Height="44" Margin="10,0,0,0" Padding="16,0"
+                Command="{Binding ExitCommand}" ToolTip.Tip="Bring the IDE back to the tablet">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <controls:StrokeIcon Data="{StaticResource Icon.Tablet}" Size="16" />
+            <TextBlock Text="Back to the tablet" VerticalAlignment="Center" />
+          </StackPanel>
+        </Button>
+      </Grid>
+    </Border>
+
+    <!-- Run, Stop, Build and the debugger -->
+    <Border DockPanel.Dock="Top" Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}"
+            BorderThickness="0,0,0,1" Padding="12,10" IsVisible="{Binding Companion.HasWorkspace}">
+      <desktop:CompanionActionsView DataContext="{Binding Companion}" />
+    </Border>
+
+    <!-- The panes' tabs, on a narrow (portrait) tablet. -->
+    <Border x:Name="PaneTabs" DockPanel.Dock="Top" Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}"
+            BorderThickness="0,0,0,1" IsVisible="False">
+      <StackPanel Orientation="Horizontal" Margin="8,0">
+        <Button Theme="{StaticResource PanelTabButton}" Focusable="False" MinHeight="44" FontSize="14" Content="Toolbox"
+                Classes.selected="{Binding Companion.IsToolboxPane}" Command="{Binding Companion.ShowToolboxCommand}" />
+        <Button Theme="{StaticResource PanelTabButton}" Focusable="False" MinHeight="44" FontSize="14" Content="Properties"
+                Classes.selected="{Binding Companion.IsPropertiesPane}" Command="{Binding Companion.ShowPropertiesCommand}" />
+      </StackPanel>
+    </Border>
+
+    <!-- Without a keyboard: the tablet's on-screen keyboard types on the big screen through this bar. -->
+    <desktop:DesktopKeyboardView DockPanel.Dock="Bottom" IsVisible="{Binding Companion.ShowsKeyboard}" />
+
+    <Panel>
+      <Grid x:Name="Panes" ColumnDefinitions="*,Auto,*" IsVisible="{Binding Companion.HasWorkspace}">
+        <Panel x:Name="ToolboxPane" Background="{DynamicResource Brush.Panel}">
+          <desktop:ToolboxView DataContext="{Binding Companion.Toolbox}" />
+        </Panel>
+        <Border x:Name="PaneDivider" Grid.Column="1" Width="1" Background="{DynamicResource Brush.Border}" />
+        <Panel x:Name="PropertiesPane" Grid.Column="2" Background="{DynamicResource Brush.Panel}">
+          <Panel IsVisible="{Binding Companion.ShowsElement}">
+            <desktop:XamlPropertiesView DataContext="{Binding Companion.Element}" />
+          </Panel>
+          <Panel IsVisible="{Binding Companion.ShowsSelection}">
+            <desktop:CompanionPropertiesView DataContext="{Binding Companion.Selection}" />
+          </Panel>
+        </Panel>
+      </Grid>
+
+      <!-- The big screen shows the start screen. -->
+      <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10" Margin="32" MaxWidth="420"
+                  IsVisible="{Binding !Companion.HasWorkspace}">
+        <controls:StrokeIcon Data="{StaticResource Icon.Monitor}" Size="44" Foreground="{DynamicResource Brush.TextDisabled}" HorizontalAlignment="Center" />
+        <TextBlock Classes="h1" Text="Open a solution on the big screen" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
+        <TextBlock Classes="muted" TextWrapping="Wrap" TextAlignment="Center"
+                   Text="The Toolbox, the Properties panel and the Run and debugger buttons appear here for the solution open on the display." />
+      </StackPanel>
+    </Panel>
+  </DockPanel>
+</UserControl>

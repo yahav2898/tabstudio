@@ -1,0 +1,129 @@
+{
+  // The Toolbox and Properties panel of Avalonia XAML files. Another UI framework, such as WPF or WinUI, is another
+  // file like this one in this folder: its file extensions, XML namespace, controls and property categories.
+  //
+  // "xaml" is what a tap inserts at the caret, with two spaces per level of nesting; "icon" names a geometry
+  // Icon.Toolbox.<icon> in Theme/DesktopMode.axaml. "containers" are the elements that hold other elements, so a
+  // control tapped with the caret in <StackPanel /> goes inside it.
+  "name": "Avalonia",
+  "fileExtensions": [ ".axaml" ],
+  "xmlNamespace": "https://github.com/avaloniaui",
+  "categories": [
+    {
+      "name": "Common Controls",
+      "items": [
+        { "name": "Button", "icon": "Button", "description": "Runs a command when it is tapped or clicked", "xaml": "<Button Content=\"Button\" />" },
+        { "name": "TextBlock", "icon": "Text", "description": "Shows a line or paragraph of text", "xaml": "<TextBlock Text=\"TextBlock\" />" },
+        { "name": "TextBox", "icon": "TextBox", "description": "Lets the user type text", "xaml": "<TextBox Watermark=\"TextBox\" />" },
+        { "name": "CheckBox", "icon": "CheckBox", "description": "An option that is on, off or undecided", "xaml": "<CheckBox Content=\"CheckBox\" />" },
+        { "name": "RadioButton", "icon": "RadioButton", "description": "One choice of a group", "xaml": "<RadioButton Content=\"RadioButton\" GroupName=\"Choices\" />" },
+        { "name": "ToggleSwitch", "icon": "ToggleSwitch", "description": "Turns a setting on or off", "xaml": "<ToggleSwitch Content=\"ToggleSwitch\" />" },
+        { "name": "ComboBox", "icon": "ComboBox", "description": "Picks one item from a drop-down list", "xaml": "<ComboBox SelectedIndex=\"0\">\n  <ComboBoxItem Content=\"First item\" />\n  <ComboBoxItem Content=\"Second item\" />\n</ComboBox>" },
+        { "name": "Slider", "icon": "Slider", "description": "Picks a number by dragging", "xaml": "<Slider Minimum=\"0\" Maximum=\"100\" Value=\"50\" />" },
+        { "name": "ProgressBar", "icon": "ProgressBar", "description": "Shows how far along a task is", "xaml": "<ProgressBar Minimum=\"0\" Maximum=\"100\" Value=\"50\" />" },
+        { "name": "Image", "icon": "Image", "description": "Shows a picture from the app's assets", "xaml": "<Image Width=\"120\" Height=\"120\" Stretch=\"Uniform\" />" }
+      ]
+    },
+    {
+      "name": "Layout",
+      "items": [
+        { "name": "Grid", "icon": "Grid", "description": "Rows and columns, sized to content, by ratio or fixed", "xaml": "<Grid ColumnDefinitions=\"*,*\" RowDefinitions=\"Auto,*\">\n</Grid>" },
+        { "name": "StackPanel", "icon": "StackPanel", "description": "Stacks its children in a row or a column", "xaml": "<StackPanel Spacing=\"8\">\n</StackPanel>" },
+        { "name": "DockPanel", "icon": "DockPanel", "description": "Docks children to its edges, the last one fills", "xaml": "<DockPanel>\n</DockPanel>" },
+        { "name": "WrapPanel", "icon": "WrapPanel", "description": "Lines children up and wraps them onto new lines", "xaml": "<WrapPanel>\n</WrapPanel>" },
+        { "name": "UniformGrid", "icon": "Grid", "description": "Cells of equal size", "xaml": "<UniformGrid Columns=\"2\">\n</UniformGrid>" },
+        { "name": "Canvas", "icon": "Canvas", "description": "Places children at exact positions", "xaml": "<Canvas Width=\"200\" Height=\"200\">\n</Canvas>" },
+        { "name": "Border", "icon": "Border", "description": "A background, border and rounded corners around one child", "xaml": "<Border Padding=\"12\" CornerRadius=\"8\" BorderThickness=\"1\" BorderBrush=\"Gray\">\n</Border>" },
+        { "name": "ScrollViewer", "icon": "ScrollViewer", "description": "Scrolls content that does not fit", "xaml": "<ScrollViewer>\n</ScrollViewer>" },
+        { "name": "Viewbox", "icon": "Viewbox", "description": "Scales its child to fit", "xaml": "<Viewbox>\n</Viewbox>" },
+        { "name": "Expander", "icon": "Expander", "description": "Content that opens and closes under a header", "xaml": "<Expander Header=\"Expander\">\n</Expander>" },
+        { "name": "GridSplitter", "icon": "Splitter", "description": "Lets the user resize the rows or columns of a Grid", "xaml": "<GridSplitter />" },
+        { "name": "Separator", "icon": "Separator", "description": "A line between groups of controls", "xaml": "<Separator />" }
+      ]
+    },
+    {
+      "name": "Text and Input",
+      "items": [
+        { "name": "SelectableTextBlock", "icon": "Text", "description": "Text the user can select and copy", "xaml": "<SelectableTextBlock Text=\"SelectableTextBlock\" />" },
+        { "name": "Label", "icon": "Label", "description": "A caption for another control", "xaml": "<Label Content=\"Label\" />" },
+        { "name": "HyperlinkButton", "icon": "Link", "description": "Opens a web page", "xaml": "<HyperlinkButton Content=\"Avalonia\" NavigateUri=\"https://avaloniaui.net\" />" },
+        { "name": "NumericUpDown", "icon": "NumericUpDown", "description": "Types or steps a number", "xaml": "<NumericUpDown Value=\"0\" Minimum=\"0\" Maximum=\"100\" />" },
+        { "name": "MaskedTextBox", "icon": "TextBox", "description": "Text in a fixed format, such as a phone number", "xaml": "<MaskedTextBox Mask=\"(000) 000-0000\" />" },
+        { "name": "AutoCompleteBox", "icon": "Search", "description": "Suggests matching items while typing", "xaml": "<AutoCompleteBox Watermark=\"Search\" />" },
+        { "name": "DatePicker", "icon": "Calendar", "description": "Picks a date", "xaml": "<DatePicker />" },
+        { "name": "TimePicker", "icon": "Clock", "description": "Picks a time of day", "xaml": "<TimePicker />" },
+        { "name": "CalendarDatePicker", "icon": "Calendar", "description": "A date typed or picked from a calendar", "xaml": "<CalendarDatePicker />" },
+        { "name": "Calendar", "icon": "Calendar", "description": "A month to pick days from", "xaml": "<Calendar />" },
+        { "name": "ToggleButton", "icon": "ToggleButton", "description": "A button that stays pressed", "xaml": "<ToggleButton Content=\"ToggleButton\" />" },
+        { "name": "RepeatButton", "icon": "Button", "description": "Repeats its command while held", "xaml": "<RepeatButton Content=\"RepeatButton\" />" },
+        { "name": "DropDownButton", "icon": "ComboBox", "description": "Opens a menu of commands", "xaml": "<DropDownButton Content=\"DropDownButton\">\n  <DropDownButton.Flyout>\n    <MenuFlyout>\n      <MenuItem Header=\"First command\" />\n      <MenuItem Header=\"Second command\" />\n    </MenuFlyout>\n  </DropDownButton.Flyout>\n</DropDownButton>" }
+      ]
+    },
+    {
+      "name": "Lists and Navigation",
+      "items": [
+        { "name": "ListBox", "icon": "List", "description": "A list the user selects items in", "xaml": "<ListBox>\n  <ListBoxItem Content=\"First item\" />\n  <ListBoxItem Content=\"Second item\" />\n</ListBox>" },
+        { "name": "ItemsControl", "icon": "List", "description": "Shows a collection with an item template", "xaml": "<ItemsControl>\n</ItemsControl>" },
+        { "name": "TreeView", "icon": "Tree", "description": "Items in a hierarchy that opens and closes", "xaml": "<TreeView>\n  <TreeViewItem Header=\"Item\">\n    <TreeViewItem Header=\"Child item\" />\n  </TreeViewItem>\n</TreeView>" },
+        { "name": "TabControl", "icon": "Tabs", "description": "Pages chosen with tabs", "xaml": "<TabControl>\n  <TabItem Header=\"First tab\">\n  </TabItem>\n  <TabItem Header=\"Second tab\">\n  </TabItem>\n</TabControl>" },
+        { "name": "Menu", "icon": "Menu", "description": "A menu bar", "xaml": "<Menu>\n  <MenuItem Header=\"_File\">\n    <MenuItem Header=\"_Open\" />\n    <MenuItem Header=\"_Save\" />\n  </MenuItem>\n</Menu>" },
+        { "name": "SplitView", "icon": "SplitView", "description": "A side pane beside the content", "xaml": "<SplitView IsPaneOpen=\"True\" DisplayMode=\"Inline\" OpenPaneLength=\"200\">\n  <SplitView.Pane>\n    <TextBlock Text=\"Pane\" />\n  </SplitView.Pane>\n</SplitView>" },
+        { "name": "Carousel", "icon": "Carousel", "description": "Shows one item at a time", "xaml": "<Carousel>\n</Carousel>" }
+      ]
+    },
+    {
+      "name": "Shapes and Media",
+      "items": [
+        { "name": "Rectangle", "icon": "Rectangle", "description": "A filled or outlined rectangle", "xaml": "<Rectangle Width=\"120\" Height=\"80\" Fill=\"SteelBlue\" />" },
+        { "name": "Ellipse", "icon": "Ellipse", "description": "A filled or outlined ellipse", "xaml": "<Ellipse Width=\"80\" Height=\"80\" Fill=\"Orange\" />" },
+        { "name": "Line", "icon": "Line", "description": "A straight line between two points", "xaml": "<Line StartPoint=\"0,0\" EndPoint=\"120,0\" Stroke=\"Gray\" StrokeThickness=\"2\" />" },
+        { "name": "Path", "icon": "Path", "description": "A shape drawn from path data", "xaml": "<Path Data=\"M 0,20 L 20,0 L 40,20 Z\" Fill=\"MediumSeaGreen\" />" },
+        { "name": "PathIcon", "icon": "Path", "description": "An icon drawn from path data in the text color", "xaml": "<PathIcon Data=\"M 0,10 L 10,0 L 20,10 L 10,20 Z\" />" }
+      ]
+    }
+  ],
+  "containers": [
+    "Border", "Canvas", "Carousel", "ContentControl", "DockPanel", "Expander", "Grid", "ItemsControl", "ListBox",
+    "ListBoxItem", "Panel", "RelativePanel", "ScrollViewer", "SplitView", "StackPanel", "TabControl", "TabItem",
+    "TreeView", "TreeViewItem", "UniformGrid", "UserControl", "Viewbox", "Window", "WrapPanel"
+  ],
+  "commonAttributes": [ "x:Name", "Classes" ],
+  "attachedProperties": {
+    "*": [ "ToolTip.Tip" ],
+    "Grid": [ "Grid.Row", "Grid.Column", "Grid.RowSpan", "Grid.ColumnSpan" ],
+    "DockPanel": [ "DockPanel.Dock" ],
+    "Canvas": [ "Canvas.Left", "Canvas.Top", "Canvas.Right", "Canvas.Bottom" ]
+  },
+  "propertyCategories": [
+    {
+      "name": "Common",
+      "properties": [
+        "x:Name", "Content", "Text", "Header", "Watermark", "Command", "CommandParameter", "IsChecked", "Value", "Minimum",
+        "Maximum", "SelectedIndex", "Source", "Data", "IsEnabled", "IsVisible", "ToolTip.Tip", "Classes"
+      ]
+    },
+    {
+      "name": "Layout",
+      "properties": [
+        "Width", "Height", "MinWidth", "MinHeight", "MaxWidth", "MaxHeight", "Margin", "Padding", "HorizontalAlignment",
+        "VerticalAlignment", "HorizontalContentAlignment", "VerticalContentAlignment", "Orientation", "Spacing",
+        "ColumnDefinitions", "RowDefinitions", "Grid.Row", "Grid.Column", "Grid.RowSpan", "Grid.ColumnSpan",
+        "DockPanel.Dock", "Canvas.Left", "Canvas.Top", "Canvas.Right", "Canvas.Bottom", "Stretch", "ZIndex", "ClipToBounds"
+      ]
+    },
+    {
+      "name": "Appearance",
+      "properties": [
+        "Background", "Foreground", "BorderBrush", "BorderThickness", "CornerRadius", "Opacity", "Fill", "Stroke",
+        "StrokeThickness", "BoxShadow"
+      ]
+    },
+    {
+      "name": "Text",
+      "properties": [
+        "FontFamily", "FontSize", "FontWeight", "FontStyle", "TextWrapping", "TextAlignment", "TextTrimming",
+        "LineHeight", "TextDecorations"
+      ]
+    }
+  ]
+}
