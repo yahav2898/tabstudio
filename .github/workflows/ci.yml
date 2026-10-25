@@ -241,6 +241,13 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
           script: bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 420
 
+      # A crash's native backtrace has only offsets into the runtime's stripped libraries; this names the functions.
+      - name: Name the functions in a crash's backtrace
+        if: failure()
+        run: |
+          grep -q 'F DEBUG' ci-out/logcat-full.txt 2> /dev/null || exit 0
+          bash build/ci/android-symbolize.sh ci-out/TabStudio-x64.apk x86_64 ci-out/symbolized ci-out/logcat-full.txt
+
       - name: Keep the APK out of the published logs
         if: always()
         run: rm -f ci-out/*.apk
