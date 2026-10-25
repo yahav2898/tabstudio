@@ -35,10 +35,13 @@ public sealed class SharedRuntimeAssembliesTests
         var firstRun = await first.RunAllAsync();
         var secondRun = await second.RunAllAsync();
 
-        Assert.Equal(TestOutcome.Passed, firstRun.Result("Writes").Outcome);
-        Assert.Equal(TestOutcome.Passed, secondRun.Result("Writes").Outcome);
+        AssertPassed(firstRun.Result("Writes"));
+        AssertPassed(secondRun.Result("Writes"));
         Assert.Contains("shared hello", secondRun.Result("Writes").Output, StringComparison.Ordinal);
         var withXunit = AssemblyLoadContext.All.Count(c => c.Name == "TabStudio test packages" && c.Assemblies.Any(a => a.GetName().Name == "xunit.core"));
         Assert.Equal(1, withXunit);
     }
+
+    private static void AssertPassed(TestResult result) =>
+        Assert.True(result.Outcome == TestOutcome.Passed, $"{result.Outcome}: {result.ExceptionType}: {result.Message}\n{result.StackTrace}");
 }
