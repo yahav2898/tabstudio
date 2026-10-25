@@ -55,14 +55,18 @@ jobs:
 
       - name: Run each test five times
         run: |
+          set +e
           for test in ScreenshotLifetimeTests A_file_opened_again_while_it_opens_gets_one_tab; do
-            for run in 1 2 3 4 5; do
-              dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter "FullyQualifiedName~$test" > "ci-out/$test-$run.log" 2>&1
+            for run in 1 2 3 4 5 6; do
+              # Runs 5 and 6 compile everything optimized from the start, as code that has run often is.
+              tiering=1
+              [ "$run" -ge 5 ] && tiering=0
+              DOTNET_TieredCompilation=$tiering dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter "FullyQualifiedName~$test" > "ci-out/$test-$run.log" 2>&1
               status=$?
               verdict=passed
               grep -q 'Test host process crashed\|The active test run was aborted' "ci-out/$test-$run.log" && verdict="TEST HOST CRASHED"
               [ "$status" -ne 0 ] && [ "$verdict" = passed ] && verdict="failed: $(grep -m 1 -A 2 'Error Message' "ci-out/$test-$run.log" | tail -n 1 | sed 's/^ *//')"
-              echo "$test run $run: $verdict" | tee -a ci-out/summary.txt
+              echo "$test run $run (tiered compilation $tiering): $verdict" | tee -a ci-out/summary.txt
             done
           done
           { echo "### ${{ matrix.variant }}"; echo '```'; cat ci-out/summary.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
@@ -75,7 +79,7 @@ jobs:
 
   qr-probe:
     name: QR codes of random invitations
-    if: contains(github.event.head_commit.message, '[ide]')
+    if: contains(github.event.head_commit.message, '[qr]')
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -88,12 +92,15 @@ jobs:
       - name: Add the probes
         run: |
           mkdir -p ci-out
-          sed -i 's/private static string Decode(QrCode code)/internal static string Decode(QrCode code)/' tests/TabStudio.Link.Tests/QrCodeTests.cs
           sed -i 's/private static byte\[\] Frame(/internal static byte[] Frame(/; s/private const int /internal const int /' tests/TabStudio.App.Tests/Platform/QrFrameDecoderTests.cs
           cat > tests/TabStudio.Link.Tests/QrRateProbe.cs <<'CS'
           using System.Security.Cryptography;
           using TabStudio.Link.Qr;
           using TabStudio.Link.Security;
+          using ZXing;
+          using ZXing.Common;
+          using ZXing.QrCode;
+          using ZXing.QrCode.Internal;
 
           namespace TabStudio.Link.Tests;
 
@@ -102,45 +109,108 @@ jobs:
               [Fact]
               public void Measure()
               {
+                  const int count = 3000;
                   var lines = new List<string>();
-                  var total = new int[8];
-                  var failed = new int[8];
-                  var versions = new HashSet<int>();
-                  for (var n = 0; n < 3000; n++)
+                  var ours = new int[8];
+                  var oursFailed = new int[8];
+                  var oursFailedTotal = 0;
+                  var oursPure = 0;
+                  var oursWithZxingMask = 0;
+                  var theirs = new int[8];
+                  var theirsFailed = 0;
+                  var sameMask = 0;
+                  for (var n = 0; n < count; n++)
                   {
                       var fingerprint = LinkFingerprint.FromPublicKey(RandomNumberGenerator.GetBytes(91));
-                      var invitation = new LinkInvitation("Yahav's Pixel 9 Pro", ["192.168.1.23", "10.0.0.5"], 47811, fingerprint, LinkPairingCode.Create()).ToUri();
-                      var code = QrCode.Encode(invitation);
-                      versions.Add(code.Version);
-                      total[code.Mask]++;
-                      string? text;
-                      try
+                      var text = new LinkInvitation("Yahav's Pixel 9 Pro", ["192.168.1.23", "10.0.0.5"], 47811, fingerprint, LinkPairingCode.Create()).ToUri();
+                      var code = QrCode.Encode(text);
+                      ours[code.Mask]++;
+                      var reference = Encoder.encode(text, ErrorCorrectionLevel.M);
+                      theirs[reference.MaskPattern]++;
+                      if (reference.MaskPattern == code.Mask)
                       {
-                          text = QrCodeTests.Decode(code);
-                      }
-                      catch (Exception)
-                      {
-                          text = null;
+                          sameMask++;
                       }
 
-                      if (text != invitation)
+                      if (Decode((x, y) => reference.Matrix[x, y] == 1, reference.Matrix.Width, pure: false) != text)
                       {
-                          failed[code.Mask]++;
-                          if (lines.Count < 15)
+                          theirsFailed++;
+                      }
+
+                      if (Decode((x, y) => code[x, y], code.Size, pure: false) != text)
+                      {
+                          oursFailed[code.Mask]++;
+                          oursFailedTotal++;
+                          var pure = Decode((x, y) => code[x, y], code.Size, pure: true) == text;
+                          if (pure)
                           {
-                              lines.Add($"  mask {code.Mask}: {invitation}");
+                              oursPure++;
+                          }
+
+                          if (reference.MaskPattern != code.Mask)
+                          {
+                              oursWithZxingMask++;
+                          }
+
+                          if (lines.Count < 12)
+                          {
+                              lines.Add($"  ours mask {code.Mask}, ZXing's encoder chooses mask {reference.MaskPattern}; read without the finder search (PURE_BARCODE): {pure}; {text}");
                           }
                       }
                   }
 
-                  var summary = new List<string> { $"Link test decode (clean, 4 px a module): {failed.Sum()} of 3000 invitations failed; versions {string.Join(",", versions)}" };
-                  for (var m = 0; m < 8; m++)
+                  var summary = new List<string>
                   {
-                      summary.Add($"  mask {m}: {failed[m]} of {total[m]} failed");
+                      $"TabStudio's codes, drawn cleanly at 4 px a module: {oursFailedTotal} of {count} not read by ZXing; {oursPure} of those read when ZXing is told the image is exactly the code (no finder search); ZXing's encoder chose another mask for {oursWithZxingMask} of them",
+                      $"ZXing's own codes for the same texts: {theirsFailed} of {count} not read; same mask as TabStudio for {sameMask} of {count}",
+                      $"Masks chosen by TabStudio 0-7: {string.Join(" ", ours)}; failures by mask: {string.Join(" ", oursFailed)}",
+                      $"Masks chosen by ZXing    0-7: {string.Join(" ", theirs)}",
+                      "First failures:",
+                  };
+                  File.WriteAllLines(Environment.GetEnvironmentVariable("QR_PROBE_OUT")!, [.. summary, .. lines]);
+              }
+
+              private static string? Decode(Func<int, int, bool> dark, int modules, bool pure)
+              {
+                  const int scale = 4;
+                  const int quiet = 4;
+                  var size = (modules + (2 * quiet)) * scale;
+                  var pixels = new byte[size * size];
+                  Array.Fill(pixels, (byte)255);
+                  for (var y = 0; y < modules; y++)
+                  {
+                      for (var x = 0; x < modules; x++)
+                      {
+                          if (!dark(x, y))
+                          {
+                              continue;
+                          }
+
+                          for (var dy = 0; dy < scale; dy++)
+                          {
+                              for (var dx = 0; dx < scale; dx++)
+                              {
+                                  pixels[((((y + quiet) * scale) + dy) * size) + ((x + quiet) * scale) + dx] = 0;
+                              }
+                          }
+                      }
                   }
 
-                  summary.Add("First failures:");
-                  File.WriteAllLines(Environment.GetEnvironmentVariable("QR_PROBE_OUT")!, [.. summary, .. lines]);
+                  var source = new RGBLuminanceSource(pixels, size, size, RGBLuminanceSource.BitmapFormat.Gray8);
+                  var hints = new Dictionary<DecodeHintType, object> { [DecodeHintType.CHARACTER_SET] = "UTF-8" };
+                  if (pure)
+                  {
+                      hints[DecodeHintType.PURE_BARCODE] = true;
+                  }
+
+                  try
+                  {
+                      return new QRCodeReader().decode(new BinaryBitmap(new HybridBinarizer(source)), hints)?.Text;
+                  }
+                  catch (Exception)
+                  {
+                      return null;
+                  }
               }
           }
           CS
