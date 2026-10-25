@@ -91,7 +91,7 @@ public sealed class PullRequestScreenshotTests
         await composer.SubmitCommand.ExecuteAsync(null);
         var pendingLine = scenario.DiffLineOf(Last);
         await UiTestHelpers.WaitUntilAsync(() => support.Adorner.Views.Count == 2 && CardHeight(diff, pendingLine) > 40, because: "the pending comment's card");
-        ScrollToTop(editor, threadLine - 1);
+        ScrollToTop(editor, threadLine - 2);
         UiTestHelpers.SaveScreenshot(window, "pr-03-diff-review");
 
         Assert.Equal(1, pullRequest.PendingCount);
@@ -127,8 +127,7 @@ public sealed class PullRequestScreenshotTests
         pullRequest.MergeCommand.Execute(null);
         var panel = page.FindControl<Border>("MergePanel")!;
         await UiTestHelpers.WaitUntilAsync(() => page.FindControl<Button>("ConfirmMergeButton")!.IsEffectivelyVisible, because: "the confirmation");
-        var scroller = page.FindControl<ScrollViewer>("SectionScroller")!;
-        scroller.Offset = new Vector(0, panel.TranslatePoint(default, (Visual)scroller.Content!)!.Value.Y);
+        page.FindControl<ScrollViewer>("SectionScroller")!.ScrollToEnd();
         Avalonia.Threading.Dispatcher.UIThread.RunJobs();
         UiTestHelpers.SaveScreenshot(window, "pr-05-merge");
 
@@ -255,7 +254,11 @@ public sealed class PullRequestScreenshotTests
     /// <summary>Scrolls an editor so a line is at its top.</summary>
     private static void ScrollToTop(AvaloniaEdit.TextEditor editor, int line)
     {
+        // The caret goes there first: the editor keeps the caret in view.
         var textView = editor.TextArea.TextView;
+        editor.TextArea.ClearSelection();
+        editor.TextArea.Caret.Line = line;
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
         editor.ScrollToVerticalOffset(textView.GetOrConstructVisualLine(editor.Document.GetLineByNumber(line)).VisualTop);
         Avalonia.Threading.Dispatcher.UIThread.RunJobs();
     }

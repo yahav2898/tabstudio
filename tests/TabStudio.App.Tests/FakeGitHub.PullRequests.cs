@@ -13,17 +13,20 @@ namespace TabStudio.App.Tests;
 /// </summary>
 /// <remarks>
 /// Requests are always made as <see cref="Login"/>; other people's pull requests, comments and reviews are added
-/// with the helpers. Diffs are computed from the merge base, as GitHub's Files changed shows them.
+/// with the helpers. Diffs are computed from the merge base, as GitHub's Files changed shows them. Unlike the source
+/// control tests' copy, what the helpers add is dated two days ago and what requests change is dated now, so the
+/// IDE's screenshots read "2 days ago" and "just now".
 /// </remarks>
 internal sealed partial class FakeGitHub
 {
     /// <summary>Another GitHub user, who opens and reviews pull requests in tests.</summary>
     public const string Reviewer = "octocat";
 
-    private static readonly DateTimeOffset Epoch = new(2026, 10, 20, 9, 0, 0, TimeSpan.Zero);
+    private readonly DateTimeOffset _epoch = new DateTimeOffset(DateTime.UtcNow.Date, TimeSpan.Zero).AddDays(-2).AddHours(9);
 
     private long _nextId = 1000;
     private int _minutes;
+    private DateTimeOffset _lastChange;
 
     /// <summary>Opens a pull request, by default as <see cref="Reviewer"/>.</summary>
     /// <returns>Its number.</returns>
@@ -49,7 +52,7 @@ internal sealed partial class FakeGitHub
             var (repo, pull) = Find(name, number);
             var review = new ReviewRecord(NextId(), author, "COMMENTED", null, HeadSha(repo, pull), Tick());
             pull.Reviews.Add(review);
-            var comment = NewComment(repo, pull, path, line, side == DiffSide.Left ? "LEFT" : "RIGHT", startLine, body, author, review.Id, inReplyTo);
+            var comment = NewComment(repo, pull, path, line, side == DiffSide.Left ? "LEFT" : "RIGHT", startLine, body, author, review.Id, inReplyTo, Tick());
             if (outdated)
             {
                 comment.Line = null;
@@ -194,7 +197,7 @@ internal sealed partial class FakeGitHub
 
     private HttpResponseMessage CreatePullRequest(Repo repo, JsonNode body)
     {
-        var pull = new PullRequest(repo.PullRequests.Count + 1, body["title"]!.GetValue<string>(), body["head"]!.GetValue<string>(), body["base"]!.GetValue<string>(), body["draft"]?.GetValue<bool>() ?? false, Login, Tick())
+        var pull = new PullRequest(repo.PullRequests.Count + 1, body["title"]!.GetValue<string>(), body["head"]!.GetValue<string>(), body["base"]!.GetValue<string>(), body["draft"]?.GetValue<bool>() ?? false, Login, Now())
         {
             Body = body["body"]?.GetValue<string>(),
         };
@@ -260,7 +263,7 @@ internal sealed partial class FakeGitHub
             return refusal;
         }
 
-        var review = new ReviewRecord(NextId(), Login, reviewEvent is null ? "PENDING" : ReviewState(reviewEvent), text, body["commit_id"]?.GetValue<string>() ?? HeadSha(repo, pull), reviewEvent is null ? null : Tick());
+        var review = new ReviewRecord(NextId(), Login, reviewEvent is null ? "PENDING" : ReviewState(reviewEvent), text, body["commit_id"]?.GetValue<string>() ?? HeadSha(repo, pull), reviewEvent is null ? null : Now());
         foreach (var comment in comments)
         {
             var path = comment!["path"]!.GetValue<string>();
@@ -271,7 +274,7 @@ internal sealed partial class FakeGitHub
                 return Error(HttpStatusCode.UnprocessableEntity, "pull_request_review_thread.line must be part of the diff");
             }
 
-            pull.Comments.Add(NewComment(repo, pull, path, line, side, comment["start_line"]?.GetValue<int>(), comment["body"]!.GetValue<string>(), Login, review.Id, inReplyTo: null));
+            pull.Comments.Add(NewComment(repo, pull, path, line, side, comment["start_line"]?.GetValue<int>(), comment["body"]!.GetValue<string>(), Login, review.Id, inReplyTo: null, Now()));
         }
 
         pull.Reviews.Add(review);
@@ -294,7 +297,7 @@ internal sealed partial class FakeGitHub
 
         review.State = ReviewState(reviewEvent);
         review.Body = text;
-        review.Submitted = Tick();
+        review.Submitted = Now();
         pull.RequestedReviewers.Remove(Login);
         return Json(ReviewJson(repo, pull, review));
     }
@@ -334,9 +337,9 @@ internal sealed partial class FakeGitHub
             root = next;
         }
 
-        var review = new ReviewRecord(NextId(), Login, "COMMENTED", null, HeadSha(repo, pull), Tick());
+        var review = new ReviewRecord(NextId(), Login, "COMMENTED", null, HeadSha(repo, pull), Now());
         pull.Reviews.Add(review);
-        var reply = new ReviewCommentRecord(NextId(), root.Path, root.Side, Login, body["body"]!.GetValue<string>(), Tick(), review.Id, root.CommitId, root.DiffHunk)
+        var reply = new ReviewCommentRecord(NextId(), root.Path, root.Side, Login, body["body"]!.GetValue<string>(), Now(), review.Id, root.CommitId, root.DiffHunk)
         {
             Line = root.Line,
             StartLine = root.StartLine,
@@ -367,7 +370,7 @@ internal sealed partial class FakeGitHub
 
     private HttpResponseMessage AddConversationComment(PullRequest pull, JsonNode body)
     {
-        var comment = new IssueCommentRecord(NextId(), Login, body["body"]!.GetValue<string>(), Tick());
+        var comment = new IssueCommentRecord(NextId(), Login, body["body"]!.GetValue<string>(), Now());
         pull.Conversation.Add(comment);
         return Json(IssueCommentJson(comment), HttpStatusCode.Created);
     }
@@ -452,7 +455,7 @@ internal sealed partial class FakeGitHub
         pull.MergedBase = mergeBase;
         pull.MergedSha = commit;
         pull.MergeMethod = method;
-        pull.MergedAt = Tick();
+        pull.MergedAt = Now();
         pull.State = "closed";
         if (settings.DeleteBranchOnMerge)
         {
@@ -569,14 +572,14 @@ internal sealed partial class FakeGitHub
                 return GraphQLError("UNPROCESSABLE", "pull_request_review_thread.line must be part of the diff");
             }
 
-            var comment = NewComment(targetRepo, target, path, line, side, variables["startLine"]?.GetValue<int>(), variables["body"]!.GetValue<string>(), Login, reviewId, inReplyTo: null);
+            var comment = NewComment(targetRepo, target, path, line, side, variables["startLine"]?.GetValue<int>(), variables["body"]!.GetValue<string>(), Login, reviewId, inReplyTo: null, Now());
             target.Comments.Add(comment);
             return Data(new JsonObject { ["addPullRequestReviewThread"] = new JsonObject { ["thread"] = new JsonObject { ["id"] = $"PRRT_{comment.Id}" } } });
         }
 
         var replyTo = long.Parse(variables["replyTo"]!.GetValue<string>()["PRRC_".Length..], CultureInfo.InvariantCulture);
         var root = target.Comments.Single(c => c.Id == replyTo);
-        var reply = new ReviewCommentRecord(NextId(), root.Path, root.Side, Login, variables["body"]!.GetValue<string>(), Tick(), reviewId, root.CommitId, root.DiffHunk)
+        var reply = new ReviewCommentRecord(NextId(), root.Path, root.Side, Login, variables["body"]!.GetValue<string>(), Now(), reviewId, root.CommitId, root.DiffHunk)
         {
             Line = root.Line,
             OriginalLine = root.OriginalLine,
@@ -595,10 +598,10 @@ internal sealed partial class FakeGitHub
     private static HttpResponseMessage Page(Dictionary<string, string> query, IEnumerable<JsonNode> items) =>
         Json(query.TryGetValue("page", out var page) && page != "1" ? new JsonArray() : new JsonArray([.. items]));
 
-    private ReviewCommentRecord NewComment(Repo repo, PullRequest pull, string path, int line, string side, int? startLine, string body, string author, long reviewId, long? inReplyTo)
+    private ReviewCommentRecord NewComment(Repo repo, PullRequest pull, string path, int line, string side, int? startLine, string body, string author, long reviewId, long? inReplyTo, DateTimeOffset created)
     {
         var file = ChangedFiles(repo, pull).FirstOrDefault(f => f.Path == path);
-        return new ReviewCommentRecord(NextId(), path, side, author, body, Tick(), reviewId, HeadSha(repo, pull), DiffHunk(file?.Patch, line, side))
+        return new ReviewCommentRecord(NextId(), path, side, author, body, created, reviewId, HeadSha(repo, pull), DiffHunk(file?.Patch, line, side))
         {
             Line = line,
             StartLine = startLine,
@@ -795,7 +798,17 @@ internal sealed partial class FakeGitHub
         _ => "COMMENTED",
     };
 
-    private DateTimeOffset Tick() => Epoch.AddMinutes(Interlocked.Increment(ref _minutes));
+    /// <summary>The time of something a helper adds: two days ago, a minute after the one before.</summary>
+    private DateTimeOffset Tick() => _epoch.AddMinutes(Interlocked.Increment(ref _minutes));
+
+    /// <summary>The time of a change a request makes: now, to the second, and always after the one before.</summary>
+    private DateTimeOffset Now()
+    {
+        var now = DateTimeOffset.UtcNow;
+        now = now.AddTicks(-(now.Ticks % TimeSpan.TicksPerSecond));
+        _lastChange = now > _lastChange ? now : _lastChange.AddSeconds(1);
+        return _lastChange;
+    }
 
     private long NextId() => Interlocked.Increment(ref _nextId);
 

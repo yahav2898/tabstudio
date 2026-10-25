@@ -302,7 +302,7 @@
                   <StackPanel Spacing="4">
                     <TextBlock Classes="label" Text="Merge method" />
                     <ComboBox x:Name="MergeMethodBox" ItemsSource="{Binding MergeMethods}" SelectedItem="{Binding SelectedMergeMethod}" MinHeight="40"
-                              HorizontalAlignment="Stretch" MaxWidth="560">
+                              HorizontalAlignment="Stretch">
                       <ComboBox.ItemTemplate>
                         <DataTemplate DataType="pr:MergeMethodOption">
                           <StackPanel Spacing="1" Margin="0,3">
