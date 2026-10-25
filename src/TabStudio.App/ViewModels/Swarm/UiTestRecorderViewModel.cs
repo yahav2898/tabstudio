@@ -129,9 +129,12 @@ public sealed partial class UiTestRecorderViewModel : ObservableObject, IDisposa
         StopWatching();
     }
 
-    /// <summary>Starts recording what a person does on the chosen screen.</summary>
+    /// <summary>
+    /// Starts recording what a person does on the chosen screen. The app starts again there first, when the screen can,
+    /// so the recording begins where the test will: on the app's first screen, fresh.
+    /// </summary>
     [RelayCommand(CanExecute = nameof(CanStart))]
-    private void Start()
+    private async Task StartAsync()
     {
         if (SelectedScreen?.Screen is not { } screen)
         {
@@ -144,8 +147,24 @@ public sealed partial class UiTestRecorderViewModel : ObservableObject, IDisposa
         HasSteps = false;
         Error = null;
         _recorded = screen;
-        screen.InputCaptured += OnInputCaptured;
         IsRecording = true;
+        if (screen is IAppScreenRestart restart)
+        {
+            Status = $"Starting the app again on {screen.Profile.Name}, so the test begins where it will begin…";
+            if (!await restart.RestartAppAsync(CancellationToken.None))
+            {
+                IsRecording = false;
+                Error = $"The app did not start again on {screen.Profile.Name}. Run it there, then record again.";
+                return;
+            }
+        }
+
+        if (!IsRecording || !ReferenceEquals(_recorded, screen))
+        {
+            return;
+        }
+
+        screen.InputCaptured += OnInputCaptured;
         Status = $"Recording on {screen.Profile.Name}. Use the app there; long-press an element to check what it shows.";
     }
 

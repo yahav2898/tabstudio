@@ -98,6 +98,9 @@ public sealed partial class TestExplorerViewModel
         return (rows, request with { Projects = rest });
     }
 
+    /// <summary>Whether the workspace has recorded UI tests.</summary>
+    public bool HasScreenTests => _screenRows.Count > 0;
+
     /// <summary>A run of every recorded UI test on every screen, project by project.</summary>
     public IReadOnlyList<TestProjectSelection> ScreenTestSelections() =>
         [.. _screenRows.Select(p => new TestProjectSelection(p.Key, [.. p.Value.Select(r => r.Id)]))];

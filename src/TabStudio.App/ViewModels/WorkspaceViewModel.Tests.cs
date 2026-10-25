@@ -31,7 +31,7 @@ public sealed partial class WorkspaceViewModel : ITestRunHost
     public TestExplorerViewModel Tests => _tests ??= new TestExplorerViewModel(this, _ui);
 
     /// <inheritdoc />
-    bool ITestRunHost.CanStartTestRun => _language is not null && _testRun is null && State is IdeState.Ready or IdeState.Failed;
+    bool ITestRunHost.CanStartTestRun => _language is not null && _testRun is null && (State is IdeState.Ready or IdeState.Failed || CanReplayUiTestsNow);
 
     /// <inheritdoc />
     async Task ITestRunHost.RunTestsAsync(TestRunRequest request)
@@ -44,6 +44,11 @@ public sealed partial class WorkspaceViewModel : ITestRunHost
 
         // Recorded UI tests replay on the screens of the swarm, the app preview and the virtual devices.
         request = await RunUiTestsOnScreensAsync(request);
+        if (State is not (IdeState.Ready or IdeState.Failed))
+        {
+            ReportTestsWaitingForTheApp(request);
+            return;
+        }
         var selections = request.Projects
             .Select(s => (Project: workspace.Projects.FirstOrDefault(p => p.FilePath == s.ProjectFilePath), s.Names))
             .Where(s => s.Project is not null)

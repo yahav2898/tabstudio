@@ -1,5 +1,6 @@
 using TabStudio.App.Services;
 using TabStudio.App.Services.Link;
+using TabStudio.App.ViewModels;
 using TabStudio.Link.Networking;
 using TabStudio.Link.Security;
 using TabStudio.Swarm;

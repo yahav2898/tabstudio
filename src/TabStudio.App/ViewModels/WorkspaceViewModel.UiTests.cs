@@ -20,6 +20,21 @@ public sealed partial class WorkspaceViewModel
     private readonly HashSet<IAppScreen> _uiTestScreens = [];
     private CancellationTokenSource? _uiTestScan;
 
+    /// <summary>
+    /// Whether recorded UI tests can replay while the app runs: they need it running on their screens, and take nothing
+    /// from the tablet's console, so the Test Explorer runs them while the app runs; the other tests wait for it to stop.
+    /// </summary>
+    private bool CanReplayUiTestsNow => _swarmServices is not null && State is IdeState.Running or IdeState.Debugging && Tests.HasScreenTests;
+
+    /// <summary>The tests a run could not run because the app runs: they run in-process once it stops.</summary>
+    private void ReportTestsWaitingForTheApp(TestRunRequest rest)
+    {
+        if (rest.Projects.Count > 0)
+        {
+            Output.WriteLine("The other tests of the run did not run: they run once the app stops. Recorded UI tests replay while it runs.", OutputKind.Info);
+        }
+    }
+
     /// <summary>Test &gt; Record UI Test: opens the Swarm window's recorder and starts recording.</summary>
     [RelayCommand]
     private void RecordUiTest()

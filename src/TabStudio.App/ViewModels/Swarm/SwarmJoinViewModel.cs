@@ -118,7 +118,7 @@ public sealed partial class SwarmJoinViewModel : ObservableObject, IDisposable
             return;
         }
 
-        if (!LinkInvitation.TryParse(scanned, out var invitation) || invitation.Role != LinkRole.Swarm)
+        if (!LinkInvitation.TryParse(scanned, out var invitation) || invitation.Role != TabStudio.Link.LinkRole.Swarm)
         {
             Error = "That is not a swarm's code. On the tablet, open the Swarm window and tap Add a device, then scan the code it shows.";
             return;
