@@ -32,6 +32,16 @@ public sealed class RegistryTests
     }
 
     [Fact]
+    public void JSON_validation_is_enabled_by_default_and_can_be_disabled_by_the_workspace()
+    {
+        var registry = LanguageServerRegistry.BuiltIn;
+        var server = registry.FindServers("jsonc").First();
+        Assert.True((bool?)JsonSettings.Select(registry.SettingsFor(server), "json.validate.enable"));
+        var custom = registry.WithWorkspaceSettings(JsonSettings.ParseObject("""{ "json.validate.enable": false }"""));
+        Assert.False((bool?)JsonSettings.Select(custom.SettingsFor(custom.FindServers("jsonc").First()), "json.validate.enable"));
+    }
+
+    [Fact]
     public void The_built_in_registry_has_an_adapter_for_python_by_type_and_alias()
     {
         var registry = LanguageServerRegistry.BuiltIn;
