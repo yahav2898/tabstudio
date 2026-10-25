@@ -53,6 +53,12 @@ public enum ProjectKind
     /// WebAssembly or Auto components served by an ASP.NET Core host.
     /// </summary>
     BlazorWebApp,
+
+    /// <summary>A Python program: a folder with <c>pyproject.toml</c>, <c>requirements.txt</c> or <c>.py</c> files.</summary>
+    Python,
+
+    /// <summary>A Node.js program: a folder with <c>package.json</c>.</summary>
+    Node,
 }
 
 /// <summary>

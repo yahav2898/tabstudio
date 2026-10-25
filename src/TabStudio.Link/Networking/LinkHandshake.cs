@@ -18,7 +18,8 @@ internal static class LinkHandshakeMethods
 /// <param name="Name">The host's name.</param>
 /// <param name="Kind">What the host is: <c>phone</c>, <c>tablet</c> or <c>computer</c>.</param>
 /// <param name="Nonce">The host's random nonce, base64url.</param>
-internal sealed record LinkWelcome(int Protocol, string Version, string Name, string Kind, string Nonce);
+/// <param name="Role">What the host offers: builds, or a swarm to join.</param>
+internal sealed record LinkWelcome(int Protocol, string Version, string Name, string Kind, string Nonce, LinkRole Role);
 
 /// <summary>The client's request to be served.</summary>
 /// <param name="Protocol">The client's <see cref="LinkProtocol.Version"/>.</param>
@@ -27,14 +28,15 @@ internal sealed record LinkWelcome(int Protocol, string Version, string Name, st
 /// <param name="Kind">What the client is: <c>phone</c>, <c>tablet</c> or <c>computer</c>.</param>
 /// <param name="Nonce">The client's random nonce, base64url.</param>
 /// <param name="PairingProof">When pairing: the client's proof that it knows the pairing code, base64url.</param>
-internal sealed record LinkHello(int Protocol, string Version, string Name, string Kind, string Nonce, string? PairingProof);
+/// <param name="Role">What the client expects the host to offer.</param>
+internal sealed record LinkHello(int Protocol, string Version, string Name, string Kind, string Nonce, string? PairingProof, LinkRole Role);
 
 /// <summary>The host's acceptance.</summary>
 /// <param name="HostProof">When pairing: the host's proof that it knows the pairing code, base64url.</param>
 internal sealed record LinkAccepted(string? HostProof);
 
 /// <summary>Source-generated JSON for the handshake.</summary>
-[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, UseStringEnumConverter = true)]
 [JsonSerializable(typeof(LinkWelcome))]
 [JsonSerializable(typeof(LinkHello))]
 [JsonSerializable(typeof(LinkAccepted))]

@@ -29,6 +29,7 @@ public sealed class CompatibilityDoctorTests
     [InlineData(ProjectKind.AspNetCore)]
     [InlineData(ProjectKind.BlazorWebApp)]
     [InlineData(ProjectKind.BlazorWebAssembly)]
+    [InlineData(ProjectKind.WinForms)]
     public void Tests_and_web_apps_in_another_language_are_planned_not_ready(ProjectKind kind)
     {
         var report = CompatibilityDoctor.Diagnose(Project(kind, ProjectLanguage.VisualBasic));
@@ -44,6 +45,7 @@ public sealed class CompatibilityDoctorTests
     [InlineData(ProjectKind.Avalonia, RunHost.AndroidView, CompatibilityStatus.Ready)]
     [InlineData(ProjectKind.BlazorWebAssembly, RunHost.WebView, CompatibilityStatus.Ready)]
     [InlineData(ProjectKind.BlazorWebApp, RunHost.WebView, CompatibilityStatus.Ready)]
+    [InlineData(ProjectKind.WinForms, RunHost.AndroidView, CompatibilityStatus.Ready)]
     [InlineData(ProjectKind.Wpf, RunHost.WebView, CompatibilityStatus.NeedsChanges)]
     [InlineData(ProjectKind.WinUI, RunHost.AndroidView, CompatibilityStatus.NeedsChanges)]
     [InlineData(ProjectKind.NativeCpp, RunHost.WindowsBridge, CompatibilityStatus.NeedsWindows)]
@@ -64,7 +66,7 @@ public sealed class CompatibilityDoctorTests
 
         Assert.All(reports, r => Assert.Equal(r.Status == CompatibilityStatus.Ready, r.CanRunToday));
         Assert.Equal(
-            new[] { ProjectKind.ConsoleApp, ProjectKind.Test, ProjectKind.AspNetCore, ProjectKind.BlazorWebAssembly, ProjectKind.Avalonia, ProjectKind.BlazorWebApp },
+            new[] { ProjectKind.ConsoleApp, ProjectKind.Test, ProjectKind.AspNetCore, ProjectKind.BlazorWebAssembly, ProjectKind.WinForms, ProjectKind.Avalonia, ProjectKind.BlazorWebApp },
             reports.Where(r => r.CanRunToday).Select(r => r.Kind));
     }
 

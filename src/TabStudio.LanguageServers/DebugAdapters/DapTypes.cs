@@ -41,6 +41,22 @@ public sealed record DapCapabilities
     public IReadOnlyList<DapExceptionFilter> ExceptionFilters { get; init; } = [];
 }
 
+/// <summary>
+/// A program a debug adapter asks TabStudio to run (<c>runInTerminal</c>), as debugpy and js-debug do for
+/// <c>"console": "integratedTerminal"</c>, so that the program reads its input from the user.
+/// </summary>
+/// <param name="Arguments">The program and its arguments; the program is the first.</param>
+/// <param name="WorkingDirectory">The folder to run it in.</param>
+/// <param name="Environment">Variables to set on top of the usual environment; a <see langword="null"/> value removes one.</param>
+/// <param name="Title">The title the adapter suggests for the console, if any.</param>
+/// <param name="IsExternal">Whether the adapter asked for a terminal window of its own rather than the IDE's console.</param>
+public sealed record DapRunInTerminalRequest(
+    IReadOnlyList<string> Arguments,
+    string WorkingDirectory,
+    IReadOnlyDictionary<string, string?> Environment,
+    string? Title,
+    bool IsExternal);
+
 /// <summary>A breakpoint TabStudio sets on a line.</summary>
 /// <param name="Line">One-based line.</param>
 /// <param name="Condition">When it stops, such as <c>count == 3</c>, or <see langword="null"/> to stop every time.</param>

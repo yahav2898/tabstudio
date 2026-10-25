@@ -21,7 +21,7 @@ public sealed partial class WorkspaceViewModel : IAgentWorkspaceHost
     private AgentPanelViewModel? _agent;
 
     /// <summary>The agent tool window, created the first time it is shown.</summary>
-    public AgentPanelViewModel Agent => _agent ??= new AgentPanelViewModel(new AgentSettingsStore(_paths), AgentHttp, _ui, new IdeAgentWorkspace(this, _ui));
+    public AgentPanelViewModel Agent => _agent ??= ConnectAgentActivity(new AgentPanelViewModel(new AgentSettingsStore(_paths), AgentHttp, _ui, new IdeAgentWorkspace(this, _ui)));
 
     /// <summary>The HTTP client the agent talks to Claude and MCP servers with; tests give it a fake.</summary>
     internal HttpClient AgentHttp { get; init; } = SharedAgentHttp.Value;
@@ -88,6 +88,11 @@ public sealed partial class WorkspaceViewModel : IAgentWorkspaceHost
     public Task FixWithAgentAsync(BuildDiagnostic diagnostic)
     {
         ArgumentNullException.ThrowIfNull(diagnostic);
+        if (ErrorList.LayoutFindingOf(diagnostic) is { } layout)
+        {
+            return FixLayoutWithAgentAsync(layout);
+        }
+
         SelectSideBarPanel(SideBarPanel.Agent);
         return Agent.AskAsync(DescribeForAgent(diagnostic));
     }

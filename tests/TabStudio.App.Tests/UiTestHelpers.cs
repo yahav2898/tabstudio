@@ -27,19 +27,29 @@ internal static class UiTestHelpers
 
     /// <summary>
     /// Renders a window and saves it as a PNG in the screenshot folder (TABSTUDIO_SCREENSHOTS, or a
-    /// "screenshots" folder next to the test assembly).
+    /// "screenshots" folder next to the test assembly). Fails when a single line of text in it is stretched to a fixed
+    /// height instead of centered in it (docs/design/README.md, "Type"), which Android's fonts show as text sitting high.
     /// </summary>
     public static string SaveScreenshot(Window window, string name)
     {
-        Dispatcher.UIThread.RunJobs();
-        AvaloniaHeadlessPlatform.ForceRenderTimerTick();
-        var frame = window.CaptureRenderedFrame() ?? throw new InvalidOperationException("Nothing was rendered.");
-
         var folder = Environment.GetEnvironmentVariable("TABSTUDIO_SCREENSHOTS")
             ?? Path.Combine(AppContext.BaseDirectory, "screenshots");
         Directory.CreateDirectory(folder);
         var path = Path.Combine(folder, name + ".png");
-        frame.Save(path);
+        SaveFrame(window, path);
+        Design.StretchedText.Check(window, folder, name);
         return path;
+    }
+
+    /// <summary>Renders a window and saves it as a PNG at the given path.</summary>
+    public static void SaveFrame(Window window, string path)
+    {
+        Dispatcher.UIThread.RunJobs();
+        AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+        // The frame owns the pixels that Skia encodes, and Avalonia's Save does not keep it alive while Skia reads them.
+        // Without the using, a collection during the encode can finalize the frame and unmap its pixels under Skia: a
+        // SIGSEGV in libSkiaSharp.so that kills the test host.
+        using var frame = window.CaptureRenderedFrame() ?? throw new InvalidOperationException("Nothing was rendered.");
+        frame.Save(path);
     }
 }

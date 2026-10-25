@@ -58,6 +58,9 @@ public sealed class LoopbackLauncher(IServerProcessLauncher inner) : IServerProc
         }
     }
 
+    /// <inheritdoc />
+    public string? ToLocalPath(string programPath) => _inner.ToLocalPath(programPath);
+
     /// <summary>A loopback server or adapter as a process: its streams, and its end.</summary>
     private sealed class LoopbackProcess(Stream input, Stream output, Task<int> exited, Action<int> stop, IAsyncDisposable owner) : IServerProcess
     {

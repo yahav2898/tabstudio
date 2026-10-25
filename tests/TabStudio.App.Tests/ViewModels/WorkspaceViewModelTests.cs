@@ -1,7 +1,9 @@
 using Avalonia.Headless.XUnit;
 using TabStudio.App.Platform;
 using TabStudio.App.Services;
+using TabStudio.App.Services.Search;
 using TabStudio.App.ViewModels;
+using TabStudio.App.ViewModels.Search;
 using TabStudio.Core.Diagnostics;
 
 namespace TabStudio.App.Tests.ViewModels;
@@ -106,6 +108,27 @@ public sealed class WorkspaceViewModelTests
     }
 
     [AvaloniaFact]
+    public async Task A_file_opened_again_while_it_opens_gets_one_tab()
+    {
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var workspace = fixture.Workspace;
+        var path = Path.Combine(workspace.Workspace!.Projects.Single(p => p.Name == "Greetings").DirectoryPath, "Greeter.cs");
+        var tabs = workspace.Documents.Count;
+
+        // Both start before the file is read, as when a toolchain project's entry file opens by itself with the
+        // workspace while the user opens it too.
+        var first = workspace.OpenDocumentAsync(path);
+        var second = workspace.OpenDocumentAsync(path);
+        var opened = await Task.WhenAll(first, second);
+
+        Assert.NotNull(opened[0]);
+        Assert.Same(opened[0], opened[1]);
+        Assert.Equal(tabs + 1, workspace.Documents.Count);
+        Assert.Same(opened[0], workspace.ActiveDocument);
+    }
+
+    [AvaloniaFact]
     public async Task Saving_writes_the_file_and_clears_the_asterisk()
     {
         using var fixture = new WorkspaceFixture();
@@ -170,16 +193,59 @@ public sealed class WorkspaceViewModelTests
     }
 
     [AvaloniaFact]
-    public async Task Quick_open_finds_files_by_name()
+    public async Task The_search_finds_files_by_name_and_opens_them()
     {
         using var fixture = new WorkspaceFixture();
         await fixture.OpenSampleAsync();
+        var search = fixture.Workspace.Search;
 
-        fixture.Workspace.QuickOpenText = "greet";
+        search.OpenCommand.Execute(null);
+        search.Query = "greet";
+        await search.Completion;
 
-        var result = Assert.Single(fixture.Workspace.QuickOpenResults);
-        Assert.Equal("Greeter.cs", result.Name);
-        await fixture.Workspace.OpenQuickOpenItemCommand.ExecuteAsync(result);
+        var file = Assert.Single(search.Rows.OfType<SearchResultRow>(), row => row.Item.Kind == SearchKind.File);
+        Assert.Equal("Greeter.cs", file.Title);
+        await search.AcceptCommand.ExecuteAsync(file);
+        Assert.False(search.IsOpen);
         Assert.Equal("Greeter.cs", fixture.Workspace.ActiveDocument?.FileName);
+    }
+
+    [AvaloniaFact]
+    public async Task The_search_finds_the_solutions_types_and_members_and_goes_to_them()
+    {
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var search = fixture.Workspace.Search;
+
+        search.OpenCommand.Execute(null);
+        search.Query = "#Greet";
+        await search.Completion;
+
+        var method = Assert.Single(search.Rows.OfType<SearchResultRow>(), row => row.Title == "Greet");
+        Assert.Equal(SearchKind.Symbol, method.Item.Kind);
+        Assert.StartsWith("Method in Greeter", method.Detail, StringComparison.Ordinal);
+        await search.AcceptCommand.ExecuteAsync(method);
+        var document = fixture.Workspace.ActiveDocument!;
+        Assert.Equal("Greeter.cs", document.FileName);
+        Assert.Equal((16, 19), document.PendingNavigation);
+    }
+
+    [AvaloniaFact]
+    public async Task Commands_registered_from_menus_run_from_the_search()
+    {
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var workspace = fixture.Workspace;
+        workspace.Commands.Add("Bottom Panel", workspace.ToggleBottomPanelCommand, path: "View");
+        var search = workspace.Search;
+
+        search.OpenCommand.Execute(null);
+        search.Query = ">bottom panel";
+        await search.Completion;
+
+        var command = Assert.IsType<SearchResultRow>(search.Rows[0]);
+        Assert.Equal(("Bottom Panel", "View"), (command.Title, command.Detail));
+        await search.AcceptCommand.ExecuteAsync(command);
+        Assert.False(workspace.IsBottomPanelVisible);
     }
 }

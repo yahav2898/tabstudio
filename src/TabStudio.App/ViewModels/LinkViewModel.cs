@@ -16,6 +16,12 @@ public enum LinkTab
 
     /// <summary>Being the host for another device.</summary>
     Host,
+
+    /// <summary>Joining a tablet's swarm, to run the app it builds.</summary>
+    Swarm,
+
+    /// <summary>Building and running Windows-only projects on a Windows PC, or being that PC.</summary>
+    Bridge,
 }
 
 /// <summary>
@@ -33,12 +39,22 @@ public sealed partial class LinkViewModel : ObservableObject, IDisposable
     /// <summary>Creates the dialog's view model.</summary>
     /// <param name="link">The app's TabStudio Link.</param>
     /// <param name="scanner">Scans QR codes with the camera, where there is one.</param>
-    public LinkViewModel(LinkService link, IQrScanner scanner)
+    /// <param name="swarm">The Join a swarm half, where the app has a swarm.</param>
+    /// <param name="bridge">The Windows Bridge tab, where the app has one.</param>
+    public LinkViewModel(LinkService link, IQrScanner scanner, Swarm.SwarmJoinViewModel? swarm = null, WindowsBridge.WindowsBridgeViewModel? bridge = null)
     {
         ArgumentNullException.ThrowIfNull(link);
         ArgumentNullException.ThrowIfNull(scanner);
         _link = link;
         _scanner = scanner;
+        Swarm = swarm;
+        Bridge = bridge;
+        if (swarm is not null)
+        {
+            // Once the device joins, it shows the swarm's app; the dialog is in the way.
+            swarm.Joined += (_, _) => Close();
+        }
+
         _link.Changed += OnLinkChanged;
         Refresh();
     }
@@ -46,13 +62,22 @@ public sealed partial class LinkViewModel : ObservableObject, IDisposable
     /// <summary>The app's TabStudio Link.</summary>
     public LinkService Service => _link;
 
+    /// <summary>The Join a swarm half of the dialog, or <see langword="null"/> where the app has no swarm.</summary>
+    public Swarm.SwarmJoinViewModel? Swarm { get; }
+
+    /// <summary>Whether the dialog offers to join a swarm.</summary>
+    public bool HasSwarm => Swarm is not null;
+
+    /// <summary>Whether the Join a swarm half is shown.</summary>
+    public bool IsSwarmTab => SelectedTab == LinkTab.Swarm;
+
     /// <summary>Whether the dialog is shown.</summary>
     [ObservableProperty]
     public partial bool IsOpen { get; private set; }
 
     /// <summary>The half of the dialog shown.</summary>
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsConnectTab), nameof(IsHostTab))]
+    [NotifyPropertyChangedFor(nameof(IsConnectTab), nameof(IsHostTab), nameof(IsSwarmTab))]
     public partial LinkTab SelectedTab { get; set; }
 
     /// <summary>Whether the link-to-a-host half is shown.</summary>
@@ -142,6 +167,10 @@ public sealed partial class LinkViewModel : ObservableObject, IDisposable
     [RelayCommand]
     private void Show() => Open();
 
+    /// <summary>Shows the dialog on its Join a swarm half, as the start screen's Swarm button does.</summary>
+    [RelayCommand]
+    private void ShowSwarm() => Open(Swarm is null ? null : LinkTab.Swarm);
+
     /// <inheritdoc />
     public void Dispose()
     {
@@ -189,6 +218,14 @@ public sealed partial class LinkViewModel : ObservableObject, IDisposable
         if (!LinkInvitation.TryParse(scanned, out var invitation))
         {
             ClientError = "That is not a TabStudio Link code. On the host, open File > TabStudio Link > Be a host, and scan the code it shows.";
+            return;
+        }
+
+        // A swarm's code: this device joins the swarm, to run the app the tablet builds.
+        if (invitation.Role == TabStudio.Link.LinkRole.Swarm && Swarm is { } swarm)
+        {
+            SelectedTab = LinkTab.Swarm;
+            await swarm.JoinInvitationAsync(invitation);
             return;
         }
 

@@ -2,102 +2,648 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
   <!--
-    TabStudio's palette. Views use these brushes by role ("Panel", "TextMuted"), never raw colors,
-    so the whole look can be tuned here. The values follow the approved tablet mockup.
+    TabStudio's palette, in a dark and a light theme (docs/design/README.md describes every token). Views use these
+    brushes by role ("Panel", "TextMuted") through DynamicResource, never raw colors, so switching the theme recolors
+    the whole IDE at once; code uses ThemeBrushes. Both themes pass WCAG AA, which ThemeContrastTests checks.
   -->
-
-  <!-- Surfaces, from darkest to lightest -->
-  <SolidColorBrush x:Key="Brush.MenuBar" Color="#15171C" />
-  <SolidColorBrush x:Key="Brush.Window" Color="#1B1D23" />
-  <SolidColorBrush x:Key="Brush.Toolbar" Color="#1F2128" />
-  <SolidColorBrush x:Key="Brush.Panel" Color="#22252C" />
-  <SolidColorBrush x:Key="Brush.CurrentLine" Color="#23262F" />
-  <SolidColorBrush x:Key="Brush.Popup" Color="#262A33" />
-  <SolidColorBrush x:Key="Brush.Control" Color="#272A32" />
-  <SolidColorBrush x:Key="Brush.Hover" Color="#2A2E37" />
-  <SolidColorBrush x:Key="Brush.Pressed" Color="#33384A" />
-  <SolidColorBrush x:Key="Brush.Selection" Color="#2B3B57" />
-  <SolidColorBrush x:Key="Brush.SelectionInactive" Color="#262C38" />
-
-  <!-- Lines -->
-  <SolidColorBrush x:Key="Brush.Border" Color="#2A2E37" />
-  <SolidColorBrush x:Key="Brush.Divider" Color="#2F333D" />
-  <SolidColorBrush x:Key="Brush.BorderStrong" Color="#343844" />
-  <SolidColorBrush x:Key="Brush.BorderPopup" Color="#3A3F4B" />
-
-  <!-- Text -->
-  <SolidColorBrush x:Key="Brush.TextBright" Color="#E8ECF2" />
-  <SolidColorBrush x:Key="Brush.Text" Color="#D7DAE0" />
-  <SolidColorBrush x:Key="Brush.TextSecondary" Color="#C5CAD3" />
-  <SolidColorBrush x:Key="Brush.TextLabel" Color="#B7BDC8" />
-  <SolidColorBrush x:Key="Brush.TextMuted" Color="#9AA1AE" />
-  <SolidColorBrush x:Key="Brush.LineNumber" Color="#858C99" />
-  <SolidColorBrush x:Key="Brush.TextDisabled" Color="#6E7685" />
-  <SolidColorBrush x:Key="Brush.Link" Color="#8FB8FF" />
-  <SolidColorBrush x:Key="Brush.OnAccent" Color="#FFFFFF" />
-
-  <!-- Accent -->
-  <Color x:Key="Color.Accent">#0F7A70</Color>
-  <SolidColorBrush x:Key="Brush.Accent" Color="#0F7A70" />
-  <SolidColorBrush x:Key="Brush.AccentHover" Color="#13897E" />
-  <SolidColorBrush x:Key="Brush.AccentPressed" Color="#0C655D" />
-  <SolidColorBrush x:Key="Brush.AccentSoft" Color="#1E3A36" />
-  <SolidColorBrush x:Key="Brush.AccentText" Color="#6FD6C4" />
-
-  <!-- Status -->
-  <SolidColorBrush x:Key="Brush.Error" Color="#F47067" />
-  <SolidColorBrush x:Key="Brush.Warning" Color="#E3B341" />
-  <SolidColorBrush x:Key="Brush.Info" Color="#6CB6FF" />
-  <SolidColorBrush x:Key="Brush.Success" Color="#6FD6A0" />
-  <SolidColorBrush x:Key="Brush.SuccessSoft" Color="#1C2E28" />
-  <SolidColorBrush x:Key="Brush.Breakpoint" Color="#E5534B" />
-  <SolidColorBrush x:Key="Brush.Running" Color="#F0883E" />
-
-  <!-- Solution Explorer -->
-  <SolidColorBrush x:Key="Brush.Solution" Color="#C9B6FF" />
-  <SolidColorBrush x:Key="Brush.ProjectApp" Color="#6CB6FF" />
-  <SolidColorBrush x:Key="Brush.ProjectLibrary" Color="#6FD6C4" />
-  <SolidColorBrush x:Key="Brush.ProjectTest" Color="#E6A26B" />
-  <SolidColorBrush x:Key="Brush.Folder" Color="#D9B65C" />
-  <SolidColorBrush x:Key="Brush.Pill" Color="#2A2E37" />
-
-  <!-- File badges -->
-  <SolidColorBrush x:Key="Brush.Badge.CSharp" Color="#C9B6FF" />
-  <SolidColorBrush x:Key="Brush.Badge.CSharpBackground" Color="#2E2846" />
-  <SolidColorBrush x:Key="Brush.Badge.Data" Color="#E6C46B" />
-  <SolidColorBrush x:Key="Brush.Badge.Markup" Color="#E6A26B" />
-  <SolidColorBrush x:Key="Brush.Badge.Script" Color="#E2D58E" />
-  <SolidColorBrush x:Key="Brush.Badge.Text" Color="#9AA1AE" />
 
   <!-- Fonts -->
   <FontFamily x:Key="CodeFont">avares://TabStudio.App/Assets/Fonts#JetBrains Mono</FontFamily>
 
-  <!-- Fluent theme overrides, so built-in controls (menus, scroll bars, text boxes) match the palette. -->
-  <SolidColorBrush x:Key="MenuFlyoutPresenterBackground" Color="#262A33" />
-  <SolidColorBrush x:Key="MenuFlyoutPresenterBorderBrush" Color="#3A3F4B" />
-  <SolidColorBrush x:Key="MenuFlyoutItemBackgroundPointerOver" Color="#2B3B57" />
-  <SolidColorBrush x:Key="MenuFlyoutItemBackgroundPressed" Color="#33384A" />
-  <SolidColorBrush x:Key="MenuFlyoutItemKeyboardAcceleratorTextForeground" Color="#9AA1AE" />
-  <SolidColorBrush x:Key="FlyoutPresenterBackground" Color="#262A33" />
-  <SolidColorBrush x:Key="FlyoutBorderThemeBrush" Color="#3A3F4B" />
-  <SolidColorBrush x:Key="ComboBoxDropDownBackground" Color="#262A33" />
-  <SolidColorBrush x:Key="ComboBoxDropDownBorderBrush" Color="#3A3F4B" />
-  <SolidColorBrush x:Key="TextControlBackground" Color="#1B1D23" />
-  <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#1B1D23" />
-  <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1B1D23" />
-  <SolidColorBrush x:Key="TextControlBorderBrush" Color="#343844" />
-  <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#3A3F4B" />
-  <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#0F7A70" />
-  <SolidColorBrush x:Key="TextControlForeground" Color="#E8ECF2" />
-  <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#E8ECF2" />
-  <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#9AA1AE" />
-  <SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused" Color="#6E7685" />
-  <SolidColorBrush x:Key="TextControlSelectionHighlightColor" Color="#2B3B57" />
-  <SolidColorBrush x:Key="ToolTipBackground" Color="#262A33" />
-  <SolidColorBrush x:Key="ToolTipBorderBrush" Color="#3A3F4B" />
-  <SolidColorBrush x:Key="ToolTipForeground" Color="#D7DAE0" />
-  <Color x:Key="ScrollBarThumbBackgroundColor">#3A3F4B</Color>
-  <SolidColorBrush x:Key="ScrollBarThumbFillPointerOver" Color="#4A5060" />
-  <SolidColorBrush x:Key="ScrollBarThumbFillPressed" Color="#565D6E" />
+  <!-- Colors that do not change with the theme: a QR code and the sketch pad must stay black on white, the mouse
+       pointer on the external display is drawn like the system's, and avatars and toolchain tiles carry white text. -->
+  <SolidColorBrush x:Key="Brush.QrCode.Light" Color="#FFFFFF" />
+  <SolidColorBrush x:Key="Brush.QrCode.Dark" Color="#000000" />
+  <SolidColorBrush x:Key="Brush.Sketch.Paper" Color="#FFFFFF" />
+  <SolidColorBrush x:Key="Brush.Sketch.Ink" Color="#000000" />
+  <SolidColorBrush x:Key="Brush.Pointer.Fill" Color="#FFFFFF" />
+  <SolidColorBrush x:Key="Brush.Pointer.Outline" Color="#000000" />
+  <SolidColorBrush x:Key="Brush.Avatar.1" Color="#2E6F9E" />
+  <SolidColorBrush x:Key="Brush.Avatar.2" Color="#7A4FA0" />
+  <SolidColorBrush x:Key="Brush.Avatar.3" Color="#2F7D5B" />
+  <SolidColorBrush x:Key="Brush.Avatar.4" Color="#A0563A" />
+  <SolidColorBrush x:Key="Brush.Avatar.5" Color="#8A6D1F" />
+  <SolidColorBrush x:Key="Brush.Avatar.6" Color="#9C3F5E" />
+  <SolidColorBrush x:Key="Brush.Avatar.7" Color="#3F6A8A" />
+  <SolidColorBrush x:Key="Brush.Avatar.8" Color="#566B2E" />
+  <SolidColorBrush x:Key="Brush.Toolchain.Python" Color="#3D7AB8" />
+  <SolidColorBrush x:Key="Brush.Toolchain.Node" Color="#3E8A3A" />
+  <SolidColorBrush x:Key="Brush.Toolchain.Cpp" Color="#5B6FB5" />
+  <SolidColorBrush x:Key="Brush.Toolchain.Rust" Color="#B7593A" />
+  <SolidColorBrush x:Key="Brush.Toolchain.Go" Color="#2A8EA8" />
+  <SolidColorBrush x:Key="Brush.Toolchain.Java" Color="#B5612C" />
+  <SolidColorBrush x:Key="Brush.Toolchain.Kotlin" Color="#7F52D9" />
+  <SolidColorBrush x:Key="Brush.Toolchain.Windows" Color="#2B79C2" />
+  <SolidColorBrush x:Key="Brush.Toolchain.Other" Color="#4A5263" />
+
+  <!-- Swarm outlines an element on an app's screen, the content of the app rather than the IDE's chrome, in one red. -->
+  <SolidColorBrush x:Key="Brush.Swarm.Highlight" Color="#F44336" />
+  <SolidColorBrush x:Key="Brush.Swarm.HighlightFill" Color="#30F44336" />
+
+  <!-- The status bar is teal in both themes, so the states it shows on its dark wells (CI) keep their bright colors. -->
+  <SolidColorBrush x:Key="Brush.StatusBar.Passed" Color="#6FD6A0" />
+  <SolidColorBrush x:Key="Brush.StatusBar.Failed" Color="#F47067" />
+  <SolidColorBrush x:Key="Brush.StatusBar.Running" Color="#E3B341" />
+  <SolidColorBrush x:Key="Brush.StatusBar.Queued" Color="#C69026" />
+  <SolidColorBrush x:Key="Brush.StatusBar.Muted" Color="#AEB4BF" />
+
+  <ResourceDictionary.ThemeDictionaries>
+    <!-- Dark, TabStudio's own look, is also the fallback for lookups that name no theme (x:Key="Default"). -->
+    <ResourceDictionary x:Key="Default">
+      <Color x:Key="Color.Accent">#0F7A70</Color>
+
+      <!-- Surfaces, from the window's edge inwards. Light follows Visual Studio's Light: white documents in cool gray chrome. -->
+      <SolidColorBrush x:Key="Brush.MenuBar" Color="#15171C" />
+      <SolidColorBrush x:Key="Brush.Window" Color="#1B1D23" />
+      <SolidColorBrush x:Key="Brush.Toolbar" Color="#1F2128" />
+      <SolidColorBrush x:Key="Brush.Panel" Color="#22252C" />
+      <SolidColorBrush x:Key="Brush.CurrentLine" Color="#23262F" />
+      <SolidColorBrush x:Key="Brush.Popup" Color="#262A33" />
+      <SolidColorBrush x:Key="Brush.Control" Color="#272A32" />
+      <SolidColorBrush x:Key="Brush.Hover" Color="#2A2E37" />
+      <SolidColorBrush x:Key="Brush.Pressed" Color="#33384A" />
+      <SolidColorBrush x:Key="Brush.Selection" Color="#2B3B57" />
+      <SolidColorBrush x:Key="Brush.SelectionInactive" Color="#262C38" />
+
+      <!-- Lines -->
+      <SolidColorBrush x:Key="Brush.Border" Color="#2A2E37" />
+      <SolidColorBrush x:Key="Brush.Divider" Color="#2F333D" />
+      <SolidColorBrush x:Key="Brush.BorderStrong" Color="#343844" />
+      <SolidColorBrush x:Key="Brush.BorderPopup" Color="#3A3F4B" />
+
+      <!-- Text. TextDisabled is for disabled controls only; everything else passes WCAG AA (4.5:1) on every surface. -->
+      <SolidColorBrush x:Key="Brush.TextBright" Color="#E8ECF2" />
+      <SolidColorBrush x:Key="Brush.Text" Color="#D7DAE0" />
+      <SolidColorBrush x:Key="Brush.TextSecondary" Color="#C5CAD3" />
+      <SolidColorBrush x:Key="Brush.TextLabel" Color="#B7BDC8" />
+      <SolidColorBrush x:Key="Brush.TextMuted" Color="#A0A7B3" />
+      <SolidColorBrush x:Key="Brush.LineNumber" Color="#858C99" />
+      <SolidColorBrush x:Key="Brush.TextDisabled" Color="#6E7685" />
+      <SolidColorBrush x:Key="Brush.Link" Color="#8FB8FF" />
+      <SolidColorBrush x:Key="Brush.OnAccent" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="Brush.SelectionText" Color="#FFFFFF" />
+
+      <!-- Accent: TabStudio's teal, the same in both themes, with white text on it. -->
+      <SolidColorBrush x:Key="Brush.Accent" Color="#0F7A70" />
+      <SolidColorBrush x:Key="Brush.AccentHover" Color="#0E7F74" />
+      <SolidColorBrush x:Key="Brush.AccentPressed" Color="#0C655D" />
+      <SolidColorBrush x:Key="Brush.AccentSoft" Color="#1E3A36" />
+      <SolidColorBrush x:Key="Brush.AccentText" Color="#6FD6C4" />
+
+      <!-- Status -->
+      <SolidColorBrush x:Key="Brush.Error" Color="#F47067" />
+      <SolidColorBrush x:Key="Brush.Warning" Color="#E3B341" />
+      <SolidColorBrush x:Key="Brush.Info" Color="#6CB6FF" />
+      <SolidColorBrush x:Key="Brush.Success" Color="#6FD6A0" />
+      <SolidColorBrush x:Key="Brush.SuccessSoft" Color="#1C2E28" />
+      <SolidColorBrush x:Key="Brush.Breakpoint" Color="#E5534B" />
+      <SolidColorBrush x:Key="Brush.Running" Color="#F0883E" />
+      <SolidColorBrush x:Key="Brush.Destructive" Color="#C93C37" />
+      <SolidColorBrush x:Key="Brush.DestructiveHover" Color="#B8332E" />
+
+      <!-- Solution Explorer -->
+      <SolidColorBrush x:Key="Brush.Solution" Color="#C9B6FF" />
+      <SolidColorBrush x:Key="Brush.ProjectApp" Color="#6CB6FF" />
+      <SolidColorBrush x:Key="Brush.ProjectLibrary" Color="#6FD6C4" />
+      <SolidColorBrush x:Key="Brush.ProjectTest" Color="#E6A26B" />
+      <SolidColorBrush x:Key="Brush.Folder" Color="#D9B65C" />
+      <SolidColorBrush x:Key="Brush.Pill" Color="#2A2E37" />
+
+      <!-- File badges -->
+      <SolidColorBrush x:Key="Brush.Badge.CSharp" Color="#C9B6FF" />
+      <SolidColorBrush x:Key="Brush.Badge.CSharpBackground" Color="#2E2846" />
+      <SolidColorBrush x:Key="Brush.Badge.Data" Color="#E6C46B" />
+      <SolidColorBrush x:Key="Brush.Badge.Markup" Color="#E6A26B" />
+      <SolidColorBrush x:Key="Brush.Badge.Script" Color="#E2D58E" />
+      <SolidColorBrush x:Key="Brush.Badge.Text" Color="#9AA1AE" />
+      <SolidColorBrush x:Key="Brush.Badge.Notebook" Color="#F2A65A" />
+      <SolidColorBrush x:Key="Brush.Badge.NotebookBackground" Color="#3A2B1E" />
+
+      <!-- Chrome: scrims, the status bar's controls, notices, the activity bar, badges and the debugger's colors -->
+      <SolidColorBrush x:Key="Brush.Scrim" Color="#99000000" />
+      <SolidColorBrush x:Key="Brush.StatusBar.Hover" Color="#26FFFFFF" />
+      <SolidColorBrush x:Key="Brush.StatusBar.Pressed" Color="#40FFFFFF" />
+      <SolidColorBrush x:Key="Brush.StatusBar.Well" Color="#59000000" />
+      <SolidColorBrush x:Key="Brush.OnAccent.Divider" Color="#59FFFFFF" />
+      <SolidColorBrush x:Key="Brush.OnAccent.Pill" Color="#33000000" />
+      <SolidColorBrush x:Key="Brush.Notice.SuccessBorder" Color="#2D4A3E" />
+      <SolidColorBrush x:Key="Brush.Notice.Error" Color="#3A2224" />
+      <SolidColorBrush x:Key="Brush.Notice.ErrorBorder" Color="#5A3134" />
+      <SolidColorBrush x:Key="Brush.Notice.Warning" Color="#33291A" />
+      <SolidColorBrush x:Key="Brush.Notice.WarningBorder" Color="#5A4520" />
+      <SolidColorBrush x:Key="Brush.Notice.Info" Color="#1D2B3D" />
+      <SolidColorBrush x:Key="Brush.Notice.InfoBorder" Color="#2E4A6B" />
+      <SolidColorBrush x:Key="Brush.ActivityBar" Color="#191B21" />
+      <SolidColorBrush x:Key="Brush.ActivityIndicator" Color="#6FD6C4" />
+      <SolidColorBrush x:Key="Brush.Badge.Count" Color="#D0372F" />
+      <SolidColorBrush x:Key="Brush.Debugging" Color="#B85212" />
+      <SolidColorBrush x:Key="Brush.CurrentStatement" Color="#F2CC4E" />
+      <SolidColorBrush x:Key="Brush.CallerStatement" Color="#6FD6A0" />
+      <SolidColorBrush x:Key="Brush.ExceptionHeader" Color="#3A2326" />
+
+      <!-- The editor's own decorations: selection, caret, squiggles, breakpoints, debugger lines, diffs, coverage and highlights -->
+      <SolidColorBrush x:Key="Editor.Selection" Color="#552B4F86" />
+      <SolidColorBrush x:Key="Editor.Caret" Color="#E8ECF2" />
+      <SolidColorBrush x:Key="Editor.ErrorSquiggle" Color="#F47067" />
+      <SolidColorBrush x:Key="Editor.WarningSquiggle" Color="#E3B341" />
+      <SolidColorBrush x:Key="Editor.MessageSquiggle" Color="#6CB6FF" />
+      <SolidColorBrush x:Key="Editor.Breakpoint" Color="#E5534B" />
+      <SolidColorBrush x:Key="Editor.BreakpointGlyph" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="Editor.CurrentStatement" Color="#F2CC4E" />
+      <SolidColorBrush x:Key="Editor.CallerStatement" Color="#6FD6A0" />
+      <SolidColorBrush x:Key="Editor.ArrowOutline" Color="#1B1D23" />
+      <SolidColorBrush x:Key="Editor.BreakpointLine" Color="#40E5534B" />
+      <SolidColorBrush x:Key="Editor.CurrentStatementLine" Color="#4DF2CC4E" />
+      <SolidColorBrush x:Key="Editor.CurrentStatementBorder" Color="#B3F2CC4E" />
+      <SolidColorBrush x:Key="Editor.CallerLine" Color="#406FD6A0" />
+      <SolidColorBrush x:Key="Editor.CallerBorder" Color="#B36FD6A0" />
+      <SolidColorBrush x:Key="Editor.InlayHint" Color="#8B93A1" />
+      <SolidColorBrush x:Key="Editor.ReferenceHighlight" Color="#8C34496B" />
+      <SolidColorBrush x:Key="Editor.DefinitionHighlight" Color="#8C3D5A48" />
+      <SolidColorBrush x:Key="Editor.DiffAddedLine" Color="#1E3A2B" />
+      <SolidColorBrush x:Key="Editor.DiffRemovedLine" Color="#45242A" />
+      <SolidColorBrush x:Key="Editor.DiffCollapsedLine" Color="#23262F" />
+      <SolidColorBrush x:Key="Editor.DiffAddedText" Color="#6FD6A0" />
+      <SolidColorBrush x:Key="Editor.DiffRemovedText" Color="#F47067" />
+      <SolidColorBrush x:Key="Editor.DiffLineNumber" Color="#858C99" />
+      <SolidColorBrush x:Key="Editor.DiffCollapsedText" Color="#8FB8FF" />
+      <SolidColorBrush x:Key="Editor.Covered" Color="#6FD6A0" />
+      <SolidColorBrush x:Key="Editor.Failing" Color="#F47067" />
+      <SolidColorBrush x:Key="Editor.NotCovered" Color="#6CB6FF" />
+      <SolidColorBrush x:Key="Editor.ReviewMarker" Color="#0F7A70" />
+      <SolidColorBrush x:Key="Editor.ReviewMarkerGlyph" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="Editor.SnippetTabStop" Color="#337C7C7C" />
+      <SolidColorBrush x:Key="Editor.SnippetTabStopBorder" Color="#B37C9CC4" />
+      <SolidColorBrush x:Key="Editor.BracketMatch" Color="#1A0064FF" />
+      <SolidColorBrush x:Key="Editor.BracketMatchBorder" Color="#8A8F99" />
+      <SolidColorBrush x:Key="Editor.FoldMarker" Color="#9AA1AE" />
+      <SolidColorBrush x:Key="Editor.FoldMarkerBackground" Color="#1B1D23" />
+      <SolidColorBrush x:Key="Editor.FoldMarkerSelected" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="Editor.PeekDefinitionLine" Color="#2B3346" />
+
+      <!-- TabStudio's syntax colors, for C# (Roslyn) and every TextMate grammar; the light ones are the same hues, darkened for white -->
+      <SolidColorBrush x:Key="Syntax.Text" Color="#D7DAE0" />
+      <SolidColorBrush x:Key="Syntax.Keyword" Color="#7FB2FF" />
+      <SolidColorBrush x:Key="Syntax.ControlKeyword" Color="#D3A6F2" />
+      <SolidColorBrush x:Key="Syntax.Type" Color="#5FD0BA" />
+      <SolidColorBrush x:Key="Syntax.Method" Color="#E2D58E" />
+      <SolidColorBrush x:Key="Syntax.Variable" Color="#A9D4F5" />
+      <SolidColorBrush x:Key="Syntax.String" Color="#E6A26B" />
+      <SolidColorBrush x:Key="Syntax.StringEscape" Color="#F0C674" />
+      <SolidColorBrush x:Key="Syntax.Number" Color="#B5CEA8" />
+      <SolidColorBrush x:Key="Syntax.Comment" Color="#8CA77A" />
+      <SolidColorBrush x:Key="Syntax.Muted" Color="#9AA1AE" />
+      <SolidColorBrush x:Key="Syntax.Excluded" Color="#6E7685" />
+
+      <!-- Output and the terminal -->
+      <SolidColorBrush x:Key="Brush.Output.Error" Color="#F47067" />
+      <SolidColorBrush x:Key="Brush.Output.Input" Color="#6FD6C4" />
+      <SolidColorBrush x:Key="Brush.Output.Info" Color="#9AA1AE" />
+      <SolidColorBrush x:Key="Brush.Output.Success" Color="#6FD6A0" />
+      <SolidColorBrush x:Key="Brush.Terminal.Background" Color="#16181D" />
+      <SolidColorBrush x:Key="Brush.Terminal.Foreground" Color="#D7DAE0" />
+      <SolidColorBrush x:Key="Brush.Terminal.Cursor" Color="#6FD6C4" />
+      <SolidColorBrush x:Key="Brush.Terminal.Selection" Color="#2B4A6F" />
+      <SolidColorBrush x:Key="Brush.Terminal.ScrollThumb" Color="#4A5263" />
+      <SolidColorBrush x:Key="Terminal.Ansi0" Color="#1B1D23" />
+      <SolidColorBrush x:Key="Terminal.Ansi1" Color="#F47067" />
+      <SolidColorBrush x:Key="Terminal.Ansi2" Color="#6FD6A0" />
+      <SolidColorBrush x:Key="Terminal.Ansi3" Color="#E3B341" />
+      <SolidColorBrush x:Key="Terminal.Ansi4" Color="#6CB6FF" />
+      <SolidColorBrush x:Key="Terminal.Ansi5" Color="#DCBDFB" />
+      <SolidColorBrush x:Key="Terminal.Ansi6" Color="#56D4DD" />
+      <SolidColorBrush x:Key="Terminal.Ansi7" Color="#C5CAD3" />
+      <SolidColorBrush x:Key="Terminal.Ansi8" Color="#6E7685" />
+      <SolidColorBrush x:Key="Terminal.Ansi9" Color="#FF938A" />
+      <SolidColorBrush x:Key="Terminal.Ansi10" Color="#8DDB8C" />
+      <SolidColorBrush x:Key="Terminal.Ansi11" Color="#F5D06F" />
+      <SolidColorBrush x:Key="Terminal.Ansi12" Color="#96D0FF" />
+      <SolidColorBrush x:Key="Terminal.Ansi13" Color="#E8D3FF" />
+      <SolidColorBrush x:Key="Terminal.Ansi14" Color="#8BE9F0" />
+      <SolidColorBrush x:Key="Terminal.Ansi15" Color="#F0F3F6" />
+
+      <!-- Notebooks -->
+      <SolidColorBrush x:Key="Brush.Notebook.Cell" Color="#22252C" />
+      <SolidColorBrush x:Key="Brush.Notebook.CodeBlock" Color="#262A33" />
+      <SolidColorBrush x:Key="Brush.Notebook.ErrorBackground" Color="#2B1F22" />
+      <SolidColorBrush x:Key="Brush.Notebook.TableHeader" Color="#262A33" />
+      <SolidColorBrush x:Key="Brush.Notebook.TableStripe" Color="#1F2128" />
+
+      <!-- GitHub Actions: run states, and job logs in GitHub's palette -->
+      <SolidColorBrush x:Key="Brush.Run.Passed" Color="#6FD6A0" />
+      <SolidColorBrush x:Key="Brush.Run.Failed" Color="#F47067" />
+      <SolidColorBrush x:Key="Brush.Run.Running" Color="#E3B341" />
+      <SolidColorBrush x:Key="Brush.Run.Queued" Color="#C69026" />
+      <SolidColorBrush x:Key="Brush.Run.Muted" Color="#9AA1AE" />
+      <SolidColorBrush x:Key="Brush.Run.FailedSoft" Color="#3A2326" />
+      <SolidColorBrush x:Key="Brush.Run.PassedSoft" Color="#1C2E28" />
+      <SolidColorBrush x:Key="Brush.Run.RunningSoft" Color="#352E1C" />
+      <SolidColorBrush x:Key="Brush.Log.Error" Color="#F47067" />
+      <SolidColorBrush x:Key="Brush.Log.ErrorBackground" Color="#33F47067" />
+      <SolidColorBrush x:Key="Brush.Log.Warning" Color="#E3B341" />
+      <SolidColorBrush x:Key="Brush.Log.WarningBackground" Color="#26E3B341" />
+      <SolidColorBrush x:Key="Brush.Log.Notice" Color="#6CB6FF" />
+      <SolidColorBrush x:Key="Brush.Log.Debug" Color="#8B949E" />
+      <SolidColorBrush x:Key="Brush.Log.Command" Color="#8FB8FF" />
+      <SolidColorBrush x:Key="Brush.Log.Step" Color="#E8ECF2" />
+      <SolidColorBrush x:Key="Brush.Log.StepBackground" Color="#262A33" />
+      <SolidColorBrush x:Key="Brush.Log.Group" Color="#C5CAD3" />
+      <SolidColorBrush x:Key="Brush.Log.Omitted" Color="#9AA1AE" />
+      <SolidColorBrush x:Key="Brush.Ansi.Gray" Color="#8B949E" />
+      <SolidColorBrush x:Key="Brush.Ansi.Red" Color="#FF7B72" />
+      <SolidColorBrush x:Key="Brush.Ansi.Green" Color="#7EE787" />
+      <SolidColorBrush x:Key="Brush.Ansi.Yellow" Color="#E3B341" />
+      <SolidColorBrush x:Key="Brush.Ansi.Blue" Color="#79C0FF" />
+      <SolidColorBrush x:Key="Brush.Ansi.Magenta" Color="#D2A8FF" />
+      <SolidColorBrush x:Key="Brush.Ansi.Cyan" Color="#56D4DD" />
+      <SolidColorBrush x:Key="Brush.Ansi.White" Color="#F0F6FC" />
+
+      <!-- Pull requests and review cards -->
+      <SolidColorBrush x:Key="Brush.PullRequest.Open" Color="#238636" />
+      <SolidColorBrush x:Key="Brush.PullRequest.Draft" Color="#4A5060" />
+      <SolidColorBrush x:Key="Brush.PullRequest.Merged" Color="#8957E5" />
+      <SolidColorBrush x:Key="Brush.PullRequest.Closed" Color="#C93C37" />
+      <SolidColorBrush x:Key="Brush.PullRequest.OpenText" Color="#6FD6A0" />
+      <SolidColorBrush x:Key="Brush.PullRequest.MergedText" Color="#C9B6FF" />
+      <SolidColorBrush x:Key="Brush.Review.Thread" Color="#6CB6FF" />
+      <SolidColorBrush x:Key="Brush.Review.Pending" Color="#E3B341" />
+      <SolidColorBrush x:Key="Brush.Review.Claude" Color="#C9B6FF" />
+      <SolidColorBrush x:Key="Brush.Review.ClaudeSoft" Color="#2E2846" />
+      <SolidColorBrush x:Key="Brush.Review.ClaudeBorder" Color="#4D3F6E" />
+      <SolidColorBrush x:Key="Brush.Review.PendingSoft" Color="#3A3220" />
+      <SolidColorBrush x:Key="Brush.Review.Card" Color="#262A33" />
+
+      <!-- Extensions -->
+      <SolidColorBrush x:Key="Brush.Extensions.ListBackground" Color="#1F2128" />
+      <SolidColorBrush x:Key="Brush.Extensions.Card" Color="#22252C" />
+      <SolidColorBrush x:Key="Brush.Extensions.Star" Color="#E3B341" />
+      <SolidColorBrush x:Key="Brush.Extensions.Verified" Color="#6CB6FF" />
+      <SolidColorBrush x:Key="Brush.Extensions.Scrim" Color="#80000000" />
+      <SolidColorBrush x:Key="Brush.Extensions.OnBadge" Color="#F2F4F8" />
+
+      <!-- The Claude agent -->
+      <SolidColorBrush x:Key="Brush.Agent.UserBubble" Color="#26324A" />
+      <SolidColorBrush x:Key="Brush.Agent.DiffAdded" Color="#1E3A2A" />
+      <SolidColorBrush x:Key="Brush.Agent.DiffRemoved" Color="#43232A" />
+
+      <!-- The Toolchain Store -->
+      <SolidColorBrush x:Key="Brush.Toolchains.Ready" Color="#1A2B2A" />
+      <SolidColorBrush x:Key="Brush.Toolchains.Attention" Color="#2E2A1B" />
+
+      <!-- The desktop a running Windows Forms app's windows sit on, in the app preview: Windows 11's dark wallpaper. -->
+      <LinearGradientBrush x:Key="Brush.FormsDesktop" StartPoint="0%,0%" EndPoint="100%,100%">
+        <GradientStop Color="#22324A" Offset="0" />
+        <GradientStop Color="#18253A" Offset="0.55" />
+        <GradientStop Color="#101A2B" Offset="1" />
+      </LinearGradientBrush>
+
+      <!-- IntelliSense symbol icons -->
+      <SolidColorBrush x:Key="Symbol.Purple" Color="#B180D7" />
+      <SolidColorBrush x:Key="Symbol.Blue" Color="#4DA3F2" />
+      <SolidColorBrush x:Key="Symbol.LightBlue" Color="#75BEFF" />
+      <SolidColorBrush x:Key="Symbol.Gold" Color="#E3B341" />
+      <SolidColorBrush x:Key="Symbol.Silver" Color="#C5CAD3" />
+      <SolidColorBrush x:Key="Symbol.Gray" Color="#9AA1AE" />
+      <SolidColorBrush x:Key="Symbol.Ink" Color="#1B1D23" />
+
+      <!-- A short notice floating over an app's screen (Swarm, the app preview): dark glass here, white glass in the light theme. -->
+      <SolidColorBrush x:Key="Brush.Overlay" Color="#E61B1F24" />
+      <SolidColorBrush x:Key="Brush.Overlay.Border" Color="#33FFFFFF" />
+
+      <!-- Swarm's Device Matrix: the bezel of a device around its screen. -->
+      <SolidColorBrush x:Key="Brush.Swarm.Bezel" Color="#0C0D10" />
+      <SolidColorBrush x:Key="Brush.Swarm.BezelBorder" Color="#3A3F4B" />
+
+      <!-- Elevation: popups and flyouts, then dialogs. Shadows are softer on light surfaces. -->
+      <BoxShadows x:Key="Shadow.Popup">0 8 24 0 #59000000</BoxShadows>
+      <BoxShadows x:Key="Shadow.Dialog">0 12 32 0 #66000000</BoxShadows>
+
+      <!-- Fluent theme overrides, so built-in controls (menus, scroll bars, text boxes) match the palette. -->
+      <SolidColorBrush x:Key="MenuFlyoutPresenterBackground" Color="#262A33" />
+      <SolidColorBrush x:Key="MenuFlyoutPresenterBorderBrush" Color="#3A3F4B" />
+      <SolidColorBrush x:Key="MenuFlyoutItemBackgroundPointerOver" Color="#2B3B57" />
+      <SolidColorBrush x:Key="MenuFlyoutItemBackgroundPressed" Color="#33384A" />
+      <SolidColorBrush x:Key="MenuFlyoutItemKeyboardAcceleratorTextForeground" Color="#A0A7B3" />
+      <SolidColorBrush x:Key="FlyoutPresenterBackground" Color="#262A33" />
+      <SolidColorBrush x:Key="FlyoutBorderThemeBrush" Color="#3A3F4B" />
+      <SolidColorBrush x:Key="ComboBoxDropDownBackground" Color="#262A33" />
+      <SolidColorBrush x:Key="ComboBoxDropDownBorderBrush" Color="#3A3F4B" />
+      <SolidColorBrush x:Key="TextControlBackground" Color="#1B1D23" />
+      <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#1B1D23" />
+      <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#1B1D23" />
+      <SolidColorBrush x:Key="TextControlBorderBrush" Color="#343844" />
+      <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#3A3F4B" />
+      <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#0F7A70" />
+      <SolidColorBrush x:Key="TextControlForeground" Color="#E8ECF2" />
+      <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#E8ECF2" />
+      <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#A0A7B3" />
+      <SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused" Color="#A0A7B3" />
+      <SolidColorBrush x:Key="TextControlSelectionHighlightColor" Color="#2B3B57" />
+      <SolidColorBrush x:Key="ToolTipBackground" Color="#262A33" />
+      <SolidColorBrush x:Key="ToolTipBorderBrush" Color="#3A3F4B" />
+      <SolidColorBrush x:Key="ToolTipForeground" Color="#D7DAE0" />
+      <Color x:Key="ScrollBarThumbBackgroundColor">#3A3F4B</Color>
+      <SolidColorBrush x:Key="ScrollBarThumbFillPointerOver" Color="#4A5060" />
+      <SolidColorBrush x:Key="ScrollBarThumbFillPressed" Color="#565D6E" />
+    </ResourceDictionary>
+
+    <ResourceDictionary x:Key="Light">
+      <Color x:Key="Color.Accent">#0F7A70</Color>
+
+      <!-- Surfaces, from the window's edge inwards. Light follows Visual Studio's Light: white documents in cool gray chrome. -->
+      <SolidColorBrush x:Key="Brush.MenuBar" Color="#E9ECF1" />
+      <SolidColorBrush x:Key="Brush.Window" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="Brush.Toolbar" Color="#F3F5F8" />
+      <SolidColorBrush x:Key="Brush.Panel" Color="#F7F8FA" />
+      <SolidColorBrush x:Key="Brush.CurrentLine" Color="#F2F5FA" />
+      <SolidColorBrush x:Key="Brush.Popup" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="Brush.Control" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="Brush.Hover" Color="#E6E9EF" />
+      <SolidColorBrush x:Key="Brush.Pressed" Color="#D8DDE6" />
+      <SolidColorBrush x:Key="Brush.Selection" Color="#CCE2F7" />
+      <SolidColorBrush x:Key="Brush.SelectionInactive" Color="#E3E7ED" />
+
+      <!-- Lines -->
+      <SolidColorBrush x:Key="Brush.Border" Color="#D9DDE4" />
+      <SolidColorBrush x:Key="Brush.Divider" Color="#E1E4EA" />
+      <SolidColorBrush x:Key="Brush.BorderStrong" Color="#C3C9D3" />
+      <SolidColorBrush x:Key="Brush.BorderPopup" Color="#BEC5D0" />
+
+      <!-- Text. TextDisabled is for disabled controls only; everything else passes WCAG AA (4.5:1) on every surface. -->
+      <SolidColorBrush x:Key="Brush.TextBright" Color="#111317" />
+      <SolidColorBrush x:Key="Brush.Text" Color="#1D2127" />
+      <SolidColorBrush x:Key="Brush.TextSecondary" Color="#343A44" />
+      <SolidColorBrush x:Key="Brush.TextLabel" Color="#454C58" />
+      <SolidColorBrush x:Key="Brush.TextMuted" Color="#5A6170" />
+      <SolidColorBrush x:Key="Brush.LineNumber" Color="#6A7180" />
+      <SolidColorBrush x:Key="Brush.TextDisabled" Color="#9EA4AF" />
+      <SolidColorBrush x:Key="Brush.Link" Color="#0A5BB8" />
+      <SolidColorBrush x:Key="Brush.OnAccent" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="Brush.SelectionText" Color="#111317" />
+
+      <!-- Accent: TabStudio's teal, the same in both themes, with white text on it. -->
+      <SolidColorBrush x:Key="Brush.Accent" Color="#0F7A70" />
+      <SolidColorBrush x:Key="Brush.AccentHover" Color="#0D6C63" />
+      <SolidColorBrush x:Key="Brush.AccentPressed" Color="#0A5A53" />
+      <SolidColorBrush x:Key="Brush.AccentSoft" Color="#D7EEEA" />
+      <SolidColorBrush x:Key="Brush.AccentText" Color="#0A6A61" />
+
+      <!-- Status -->
+      <SolidColorBrush x:Key="Brush.Error" Color="#C42B2B" />
+      <SolidColorBrush x:Key="Brush.Warning" Color="#8A5E00" />
+      <SolidColorBrush x:Key="Brush.Info" Color="#1462BE" />
+      <SolidColorBrush x:Key="Brush.Success" Color="#157536" />
+      <SolidColorBrush x:Key="Brush.SuccessSoft" Color="#DCF1E3" />
+      <SolidColorBrush x:Key="Brush.Breakpoint" Color="#D13438" />
+      <SolidColorBrush x:Key="Brush.Running" Color="#B24C00" />
+      <SolidColorBrush x:Key="Brush.Destructive" Color="#C42B2B" />
+      <SolidColorBrush x:Key="Brush.DestructiveHover" Color="#A82222" />
+
+      <!-- Solution Explorer -->
+      <SolidColorBrush x:Key="Brush.Solution" Color="#6A3DB8" />
+      <SolidColorBrush x:Key="Brush.ProjectApp" Color="#1462BE" />
+      <SolidColorBrush x:Key="Brush.ProjectLibrary" Color="#0A7368" />
+      <SolidColorBrush x:Key="Brush.ProjectTest" Color="#A65300" />
+      <SolidColorBrush x:Key="Brush.Folder" Color="#A87A00" />
+      <SolidColorBrush x:Key="Brush.Pill" Color="#E5E8EE" />
+
+      <!-- File badges -->
+      <SolidColorBrush x:Key="Brush.Badge.CSharp" Color="#5B36A8" />
+      <SolidColorBrush x:Key="Brush.Badge.CSharpBackground" Color="#ECE5FA" />
+      <SolidColorBrush x:Key="Brush.Badge.Data" Color="#835D00" />
+      <SolidColorBrush x:Key="Brush.Badge.Markup" Color="#A04F00" />
+      <SolidColorBrush x:Key="Brush.Badge.Script" Color="#6F6300" />
+      <SolidColorBrush x:Key="Brush.Badge.Text" Color="#5A6170" />
+      <SolidColorBrush x:Key="Brush.Badge.Notebook" Color="#A44E00" />
+      <SolidColorBrush x:Key="Brush.Badge.NotebookBackground" Color="#FBEBDC" />
+
+      <!-- Chrome: scrims, the status bar's controls, notices, the activity bar, badges and the debugger's colors -->
+      <SolidColorBrush x:Key="Brush.Scrim" Color="#66141A22" />
+      <SolidColorBrush x:Key="Brush.StatusBar.Hover" Color="#26FFFFFF" />
+      <SolidColorBrush x:Key="Brush.StatusBar.Pressed" Color="#40FFFFFF" />
+      <SolidColorBrush x:Key="Brush.StatusBar.Well" Color="#59000000" />
+      <SolidColorBrush x:Key="Brush.OnAccent.Divider" Color="#59FFFFFF" />
+      <SolidColorBrush x:Key="Brush.OnAccent.Pill" Color="#33000000" />
+      <SolidColorBrush x:Key="Brush.Notice.SuccessBorder" Color="#A6D9B8" />
+      <SolidColorBrush x:Key="Brush.Notice.Error" Color="#FCE9E9" />
+      <SolidColorBrush x:Key="Brush.Notice.ErrorBorder" Color="#F0B4B4" />
+      <SolidColorBrush x:Key="Brush.Notice.Warning" Color="#FFF5DB" />
+      <SolidColorBrush x:Key="Brush.Notice.WarningBorder" Color="#EBCB80" />
+      <SolidColorBrush x:Key="Brush.Notice.Info" Color="#E5F0FC" />
+      <SolidColorBrush x:Key="Brush.Notice.InfoBorder" Color="#A9C9EE" />
+      <SolidColorBrush x:Key="Brush.ActivityBar" Color="#ECEEF2" />
+      <SolidColorBrush x:Key="Brush.ActivityIndicator" Color="#0F7A70" />
+      <SolidColorBrush x:Key="Brush.Badge.Count" Color="#C42B2B" />
+      <SolidColorBrush x:Key="Brush.Debugging" Color="#B04A0C" />
+      <SolidColorBrush x:Key="Brush.CurrentStatement" Color="#A87E00" />
+      <SolidColorBrush x:Key="Brush.CallerStatement" Color="#1F9152" />
+      <SolidColorBrush x:Key="Brush.ExceptionHeader" Color="#FBE4E5" />
+
+      <!-- The editor's own decorations: selection, caret, squiggles, breakpoints, debugger lines, diffs, coverage and highlights -->
+      <SolidColorBrush x:Key="Editor.Selection" Color="#99ADD6FF" />
+      <SolidColorBrush x:Key="Editor.Caret" Color="#111317" />
+      <SolidColorBrush x:Key="Editor.ErrorSquiggle" Color="#D3302F" />
+      <SolidColorBrush x:Key="Editor.WarningSquiggle" Color="#B07D00" />
+      <SolidColorBrush x:Key="Editor.MessageSquiggle" Color="#1462BE" />
+      <SolidColorBrush x:Key="Editor.Breakpoint" Color="#D13438" />
+      <SolidColorBrush x:Key="Editor.BreakpointGlyph" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="Editor.CurrentStatement" Color="#F2C230" />
+      <SolidColorBrush x:Key="Editor.CallerStatement" Color="#2EA05A" />
+      <SolidColorBrush x:Key="Editor.ArrowOutline" Color="#6B5300" />
+      <SolidColorBrush x:Key="Editor.BreakpointLine" Color="#33D13438" />
+      <SolidColorBrush x:Key="Editor.CurrentStatementLine" Color="#80FFE36B" />
+      <SolidColorBrush x:Key="Editor.CurrentStatementBorder" Color="#E0B000" />
+      <SolidColorBrush x:Key="Editor.CallerLine" Color="#4D7DDB9F" />
+      <SolidColorBrush x:Key="Editor.CallerBorder" Color="#2EA05A" />
+      <SolidColorBrush x:Key="Editor.InlayHint" Color="#6A7180" />
+      <SolidColorBrush x:Key="Editor.ReferenceHighlight" Color="#B3D6E6F9" />
+      <SolidColorBrush x:Key="Editor.DefinitionHighlight" Color="#B3D2EEDC" />
+      <SolidColorBrush x:Key="Editor.DiffAddedLine" Color="#E3F8E8" />
+      <SolidColorBrush x:Key="Editor.DiffRemovedLine" Color="#FDE8E8" />
+      <SolidColorBrush x:Key="Editor.DiffCollapsedLine" Color="#F2F4F8" />
+      <SolidColorBrush x:Key="Editor.DiffAddedText" Color="#177A39" />
+      <SolidColorBrush x:Key="Editor.DiffRemovedText" Color="#C42B2B" />
+      <SolidColorBrush x:Key="Editor.DiffLineNumber" Color="#6A7180" />
+      <SolidColorBrush x:Key="Editor.DiffCollapsedText" Color="#0A5BB8" />
+      <SolidColorBrush x:Key="Editor.Covered" Color="#1E8A44" />
+      <SolidColorBrush x:Key="Editor.Failing" Color="#D3302F" />
+      <SolidColorBrush x:Key="Editor.NotCovered" Color="#1462BE" />
+      <SolidColorBrush x:Key="Editor.ReviewMarker" Color="#0F7A70" />
+      <SolidColorBrush x:Key="Editor.ReviewMarkerGlyph" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="Editor.SnippetTabStop" Color="#1F7C7C7C" />
+      <SolidColorBrush x:Key="Editor.SnippetTabStopBorder" Color="#B35A7FB0" />
+      <SolidColorBrush x:Key="Editor.BracketMatch" Color="#1A0064FF" />
+      <SolidColorBrush x:Key="Editor.BracketMatchBorder" Color="#AEB4BF" />
+      <SolidColorBrush x:Key="Editor.FoldMarker" Color="#6A7180" />
+      <SolidColorBrush x:Key="Editor.FoldMarkerBackground" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="Editor.FoldMarkerSelected" Color="#111317" />
+      <SolidColorBrush x:Key="Editor.PeekDefinitionLine" Color="#E3EDFA" />
+
+      <!-- TabStudio's syntax colors, for C# (Roslyn) and every TextMate grammar; the light ones are the same hues, darkened for white -->
+      <SolidColorBrush x:Key="Syntax.Text" Color="#1D2127" />
+      <SolidColorBrush x:Key="Syntax.Keyword" Color="#0B57C4" />
+      <SolidColorBrush x:Key="Syntax.ControlKeyword" Color="#8F2FB0" />
+      <SolidColorBrush x:Key="Syntax.Type" Color="#16786B" />
+      <SolidColorBrush x:Key="Syntax.Method" Color="#795300" />
+      <SolidColorBrush x:Key="Syntax.Variable" Color="#1C4F7E" />
+      <SolidColorBrush x:Key="Syntax.String" Color="#A3410B" />
+      <SolidColorBrush x:Key="Syntax.StringEscape" Color="#8A5A00" />
+      <SolidColorBrush x:Key="Syntax.Number" Color="#2F7A2B" />
+      <SolidColorBrush x:Key="Syntax.Comment" Color="#4C7A3A" />
+      <SolidColorBrush x:Key="Syntax.Muted" Color="#5A6170" />
+      <SolidColorBrush x:Key="Syntax.Excluded" Color="#9EA4AF" />
+
+      <!-- Output and the terminal -->
+      <SolidColorBrush x:Key="Brush.Output.Error" Color="#C42B2B" />
+      <SolidColorBrush x:Key="Brush.Output.Input" Color="#0A6A61" />
+      <SolidColorBrush x:Key="Brush.Output.Info" Color="#5A6170" />
+      <SolidColorBrush x:Key="Brush.Output.Success" Color="#177A39" />
+      <SolidColorBrush x:Key="Brush.Terminal.Background" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="Brush.Terminal.Foreground" Color="#1D2127" />
+      <SolidColorBrush x:Key="Brush.Terminal.Cursor" Color="#0F7A70" />
+      <SolidColorBrush x:Key="Brush.Terminal.Selection" Color="#BFDBF7" />
+      <SolidColorBrush x:Key="Brush.Terminal.ScrollThumb" Color="#C3C9D3" />
+      <SolidColorBrush x:Key="Terminal.Ansi0" Color="#1D2127" />
+      <SolidColorBrush x:Key="Terminal.Ansi1" Color="#C42B2B" />
+      <SolidColorBrush x:Key="Terminal.Ansi2" Color="#177A39" />
+      <SolidColorBrush x:Key="Terminal.Ansi3" Color="#8A5E00" />
+      <SolidColorBrush x:Key="Terminal.Ansi4" Color="#1462BE" />
+      <SolidColorBrush x:Key="Terminal.Ansi5" Color="#8250DF" />
+      <SolidColorBrush x:Key="Terminal.Ansi6" Color="#1B7C83" />
+      <SolidColorBrush x:Key="Terminal.Ansi7" Color="#5A6170" />
+      <SolidColorBrush x:Key="Terminal.Ansi8" Color="#6A7180" />
+      <SolidColorBrush x:Key="Terminal.Ansi9" Color="#D3302F" />
+      <SolidColorBrush x:Key="Terminal.Ansi10" Color="#1A7F3C" />
+      <SolidColorBrush x:Key="Terminal.Ansi11" Color="#9A6700" />
+      <SolidColorBrush x:Key="Terminal.Ansi12" Color="#0969DA" />
+      <SolidColorBrush x:Key="Terminal.Ansi13" Color="#9A4FD8" />
+      <SolidColorBrush x:Key="Terminal.Ansi14" Color="#0E7F88" />
+      <SolidColorBrush x:Key="Terminal.Ansi15" Color="#343A44" />
+
+      <!-- Notebooks -->
+      <SolidColorBrush x:Key="Brush.Notebook.Cell" Color="#F7F8FA" />
+      <SolidColorBrush x:Key="Brush.Notebook.CodeBlock" Color="#F0F2F6" />
+      <SolidColorBrush x:Key="Brush.Notebook.ErrorBackground" Color="#FCEBEC" />
+      <SolidColorBrush x:Key="Brush.Notebook.TableHeader" Color="#EDF0F4" />
+      <SolidColorBrush x:Key="Brush.Notebook.TableStripe" Color="#F8F9FB" />
+
+      <!-- GitHub Actions: run states, and job logs in GitHub's palette -->
+      <SolidColorBrush x:Key="Brush.Run.Passed" Color="#1A7F37" />
+      <SolidColorBrush x:Key="Brush.Run.Failed" Color="#CF222E" />
+      <SolidColorBrush x:Key="Brush.Run.Running" Color="#8F6200" />
+      <SolidColorBrush x:Key="Brush.Run.Queued" Color="#8F6200" />
+      <SolidColorBrush x:Key="Brush.Run.Muted" Color="#5A6170" />
+      <SolidColorBrush x:Key="Brush.Run.FailedSoft" Color="#FFEBE9" />
+      <SolidColorBrush x:Key="Brush.Run.PassedSoft" Color="#DAFBE1" />
+      <SolidColorBrush x:Key="Brush.Run.RunningSoft" Color="#FFF5D1" />
+      <SolidColorBrush x:Key="Brush.Log.Error" Color="#CF222E" />
+      <SolidColorBrush x:Key="Brush.Log.ErrorBackground" Color="#1FCF222E" />
+      <SolidColorBrush x:Key="Brush.Log.Warning" Color="#8F6200" />
+      <SolidColorBrush x:Key="Brush.Log.WarningBackground" Color="#26D4A72C" />
+      <SolidColorBrush x:Key="Brush.Log.Notice" Color="#0969DA" />
+      <SolidColorBrush x:Key="Brush.Log.Debug" Color="#59636E" />
+      <SolidColorBrush x:Key="Brush.Log.Command" Color="#0550AE" />
+      <SolidColorBrush x:Key="Brush.Log.Step" Color="#1F2328" />
+      <SolidColorBrush x:Key="Brush.Log.StepBackground" Color="#F0F2F5" />
+      <SolidColorBrush x:Key="Brush.Log.Group" Color="#424A53" />
+      <SolidColorBrush x:Key="Brush.Log.Omitted" Color="#59636E" />
+      <SolidColorBrush x:Key="Brush.Ansi.Gray" Color="#59636E" />
+      <SolidColorBrush x:Key="Brush.Ansi.Red" Color="#CF222E" />
+      <SolidColorBrush x:Key="Brush.Ansi.Green" Color="#116329" />
+      <SolidColorBrush x:Key="Brush.Ansi.Yellow" Color="#7D4E00" />
+      <SolidColorBrush x:Key="Brush.Ansi.Blue" Color="#0969DA" />
+      <SolidColorBrush x:Key="Brush.Ansi.Magenta" Color="#8250DF" />
+      <SolidColorBrush x:Key="Brush.Ansi.Cyan" Color="#1B7C83" />
+      <SolidColorBrush x:Key="Brush.Ansi.White" Color="#424A53" />
+
+      <!-- Pull requests and review cards -->
+      <SolidColorBrush x:Key="Brush.PullRequest.Open" Color="#1F883D" />
+      <SolidColorBrush x:Key="Brush.PullRequest.Draft" Color="#6E7781" />
+      <SolidColorBrush x:Key="Brush.PullRequest.Merged" Color="#8250DF" />
+      <SolidColorBrush x:Key="Brush.PullRequest.Closed" Color="#CF222E" />
+      <SolidColorBrush x:Key="Brush.PullRequest.OpenText" Color="#1A7F37" />
+      <SolidColorBrush x:Key="Brush.PullRequest.MergedText" Color="#6E3FC9" />
+      <SolidColorBrush x:Key="Brush.Review.Thread" Color="#0969DA" />
+      <SolidColorBrush x:Key="Brush.Review.Pending" Color="#8F6200" />
+      <SolidColorBrush x:Key="Brush.Review.Claude" Color="#6E3FC9" />
+      <SolidColorBrush x:Key="Brush.Review.ClaudeSoft" Color="#F1EBFF" />
+      <SolidColorBrush x:Key="Brush.Review.ClaudeBorder" Color="#CDB9F5" />
+      <SolidColorBrush x:Key="Brush.Review.PendingSoft" Color="#FFF5D1" />
+      <SolidColorBrush x:Key="Brush.Review.Card" Color="#FFFFFF" />
+
+      <!-- Extensions -->
+      <SolidColorBrush x:Key="Brush.Extensions.ListBackground" Color="#F3F5F8" />
+      <SolidColorBrush x:Key="Brush.Extensions.Card" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="Brush.Extensions.Star" Color="#9A6700" />
+      <SolidColorBrush x:Key="Brush.Extensions.Verified" Color="#0969DA" />
+      <SolidColorBrush x:Key="Brush.Extensions.Scrim" Color="#59141A22" />
+      <SolidColorBrush x:Key="Brush.Extensions.OnBadge" Color="#FFFFFF" />
+
+      <!-- The Claude agent -->
+      <SolidColorBrush x:Key="Brush.Agent.UserBubble" Color="#E2ECFA" />
+      <SolidColorBrush x:Key="Brush.Agent.DiffAdded" Color="#E3F8E8" />
+      <SolidColorBrush x:Key="Brush.Agent.DiffRemoved" Color="#FDE8E8" />
+
+      <!-- The Toolchain Store -->
+      <SolidColorBrush x:Key="Brush.Toolchains.Ready" Color="#E0F2EF" />
+      <SolidColorBrush x:Key="Brush.Toolchains.Attention" Color="#FFF5D9" />
+
+      <!-- The desktop a running Windows Forms app's windows sit on, in the app preview: Windows 11's light wallpaper. -->
+      <LinearGradientBrush x:Key="Brush.FormsDesktop" StartPoint="0%,0%" EndPoint="100%,100%">
+        <GradientStop Color="#DCE8F6" Offset="0" />
+        <GradientStop Color="#C2D5EE" Offset="0.55" />
+        <GradientStop Color="#A8C3E6" Offset="1" />
+      </LinearGradientBrush>
+
+      <!-- IntelliSense symbol icons -->
+      <SolidColorBrush x:Key="Symbol.Purple" Color="#6C3FB5" />
+      <SolidColorBrush x:Key="Symbol.Blue" Color="#0E63C4" />
+      <SolidColorBrush x:Key="Symbol.LightBlue" Color="#1C78CF" />
+      <SolidColorBrush x:Key="Symbol.Gold" Color="#9A6700" />
+      <SolidColorBrush x:Key="Symbol.Silver" Color="#59606C" />
+      <SolidColorBrush x:Key="Symbol.Gray" Color="#6A7180" />
+      <SolidColorBrush x:Key="Symbol.Ink" Color="#FFFFFF" />
+
+      <!-- A short notice floating over an app's screen (Swarm, the app preview): dark glass here, white glass in the light theme. -->
+      <SolidColorBrush x:Key="Brush.Overlay" Color="#F5FFFFFF" />
+      <SolidColorBrush x:Key="Brush.Overlay.Border" Color="#D9DDE4" />
+
+      <!-- Swarm's Device Matrix: the bezel of a device around its screen, dark as a device's in both themes. -->
+      <SolidColorBrush x:Key="Brush.Swarm.Bezel" Color="#2A2E37" />
+      <SolidColorBrush x:Key="Brush.Swarm.BezelBorder" Color="#1D2127" />
+
+      <!-- Elevation: popups and flyouts, then dialogs. Shadows are softer on light surfaces. -->
+      <BoxShadows x:Key="Shadow.Popup">0 6 20 0 #29101828</BoxShadows>
+      <BoxShadows x:Key="Shadow.Dialog">0 12 32 0 #38101828</BoxShadows>
+
+      <!-- Fluent theme overrides, so built-in controls (menus, scroll bars, text boxes) match the palette. -->
+      <SolidColorBrush x:Key="MenuFlyoutPresenterBackground" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="MenuFlyoutPresenterBorderBrush" Color="#BEC5D0" />
+      <SolidColorBrush x:Key="MenuFlyoutItemBackgroundPointerOver" Color="#CCE2F7" />
+      <SolidColorBrush x:Key="MenuFlyoutItemBackgroundPressed" Color="#D8DDE6" />
+      <SolidColorBrush x:Key="MenuFlyoutItemKeyboardAcceleratorTextForeground" Color="#5A6170" />
+      <SolidColorBrush x:Key="FlyoutPresenterBackground" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="FlyoutBorderThemeBrush" Color="#BEC5D0" />
+      <SolidColorBrush x:Key="ComboBoxDropDownBackground" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="ComboBoxDropDownBorderBrush" Color="#BEC5D0" />
+      <SolidColorBrush x:Key="TextControlBackground" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="TextControlBorderBrush" Color="#C3C9D3" />
+      <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#BEC5D0" />
+      <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#0F7A70" />
+      <SolidColorBrush x:Key="TextControlForeground" Color="#111317" />
+      <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#111317" />
+      <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#5A6170" />
+      <SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused" Color="#5A6170" />
+      <SolidColorBrush x:Key="TextControlSelectionHighlightColor" Color="#CCE2F7" />
+      <SolidColorBrush x:Key="ToolTipBackground" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="ToolTipBorderBrush" Color="#BEC5D0" />
+      <SolidColorBrush x:Key="ToolTipForeground" Color="#1D2127" />
+      <Color x:Key="ScrollBarThumbBackgroundColor">#C3C9D3</Color>
+      <SolidColorBrush x:Key="ScrollBarThumbFillPointerOver" Color="#A9B0BC" />
+      <SolidColorBrush x:Key="ScrollBarThumbFillPressed" Color="#949CA9" />
+    </ResourceDictionary>
+  </ResourceDictionary.ThemeDictionaries>
 
 </ResourceDictionary>

@@ -11,7 +11,8 @@ namespace TabStudio.App.Editing.Extensions;
 /// <summary>
 /// A VS Code color theme as the editor uses it: its token colors for TextMate highlighting, its semantic and token
 /// colors for C#'s Roslyn classifications, and the editor's own colors (background, text, current line, selection,
-/// caret and line numbers). The rest of the IDE keeps TabStudio's dark style.
+/// caret and line numbers). TabStudio's own light colors are one too (<see cref="BuiltInEditorThemes.Light"/>). The IDE
+/// around the editor follows the app's theme.
 /// </summary>
 public sealed class EditorColorTheme
 {
@@ -52,31 +53,46 @@ public sealed class EditorColorTheme
         ["operator - overloaded"] = ("operator", [], ["keyword.operator"]),
     };
 
+    // VS Code's own colors for a theme that leaves them out (its Dark+ and Light+ defaults), not TabStudio's palette:
+    // an extension's theme looks as it does in VS Code.
+    private static readonly Color VsCodeDarkBackground = Color.FromRgb(0x1E, 0x1E, 0x1E);
+    private static readonly Color VsCodeDarkForeground = Color.FromRgb(0xD4, 0xD4, 0xD4);
+    private static readonly Color VsCodeDarkSelection = Color.FromRgb(0x26, 0x4F, 0x78);
+    private static readonly Color VsCodeLightBackground = Color.FromRgb(0xFF, 0xFF, 0xFF);
+    private static readonly Color VsCodeLightForeground = Color.FromRgb(0x1F, 0x1F, 0x1F);
+    private static readonly Color VsCodeLightSelection = Color.FromRgb(0xAD, 0xD6, 0xFF);
+
     private readonly Theme _textMate;
     private readonly Dictionary<string, IBrush?> _classifications = new(StringComparer.Ordinal);
+    private readonly Func<string, IBrush?>? _classify;
 
     /// <summary>Prepares a theme for the editor.</summary>
     /// <param name="theme">The theme, as read from its extension.</param>
     /// <param name="key">Identifies the theme across extensions, for remembering the user's choice.</param>
-    public EditorColorTheme(ColorTheme theme, string key)
+    /// <param name="classify">
+    /// The colors of Roslyn's classifications, for a theme that knows them, such as TabStudio's own; <see langword="null"/>
+    /// derives them from the theme's semantic and TextMate colors.
+    /// </param>
+    public EditorColorTheme(ColorTheme theme, string key, Func<string, IBrush?>? classify = null)
     {
         ArgumentNullException.ThrowIfNull(theme);
         ArgumentException.ThrowIfNullOrEmpty(key);
         Source = theme;
         Key = key;
+        _classify = classify;
         RawTheme = ToRawTheme(theme);
         _textMate = Theme.CreateFromRawTheme(RawTheme, null);
 
         var dark = theme.IsDark;
-        var background = ParseColor(theme.DefaultBackground) ?? (dark ? Color.Parse("#1E1E1E") : Colors.White);
-        var foreground = ParseColor(theme.DefaultForeground) ?? (dark ? Color.Parse("#D4D4D4") : Color.Parse("#1F1F1F"));
-        var edge = dark ? Colors.White : Colors.Black;
+        var background = ParseColor(theme.DefaultBackground) ?? (dark ? VsCodeDarkBackground : VsCodeLightBackground);
+        var foreground = ParseColor(theme.DefaultForeground) ?? (dark ? VsCodeDarkForeground : VsCodeLightForeground);
+        var edge = dark ? VsCodeLightBackground : Color.FromRgb(0, 0, 0);
         Background = Solid(background);
         Foreground = Solid(foreground);
         CurrentLine = Solid(ParseColor(theme.Color("editor.lineHighlightBackground")) is { A: > 0 } line
             ? line
             : ThemeColors.Mix(background, edge, 0.05));
-        Selection = Solid(ParseColor(theme.Color("editor.selectionBackground")) ?? (dark ? Color.Parse("#264F78") : Color.Parse("#ADD6FF")));
+        Selection = Solid(ParseColor(theme.Color("editor.selectionBackground")) ?? (dark ? VsCodeDarkSelection : VsCodeLightSelection));
         Caret = Solid(ParseColor(theme.Color("editorCursor.foreground")) ?? foreground);
         LineNumbers = Solid(ParseColor(theme.Color("editorLineNumber.foreground")) ?? ThemeColors.Mix(background, foreground, 0.45));
     }
@@ -124,7 +140,7 @@ public sealed class EditorColorTheme
         {
             if (!_classifications.TryGetValue(classification, out var brush))
             {
-                brush = Resolve(classification);
+                brush = _classify is { } classify ? classify(classification) : Resolve(classification);
                 _classifications[classification] = brush;
             }
 

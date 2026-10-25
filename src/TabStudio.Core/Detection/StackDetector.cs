@@ -129,6 +129,9 @@ public static class StackDetector
             case ".SOL":
                 yield return new StackComponent(StackKind.Solidity, "Solidity", relativePath);
                 break;
+            case ".PY":
+                yield return new StackComponent(StackKind.Python, "Python", relativePath);
+                break;
         }
     }
 

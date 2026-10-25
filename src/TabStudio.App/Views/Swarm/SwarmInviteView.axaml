@@ -1,0 +1,94 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:swarm="using:TabStudio.App.ViewModels.Swarm"
+             x:Class="TabStudio.App.Views.Swarm.SwarmInviteView"
+             x:DataType="swarm:SwarmInviteViewModel"
+             IsVisible="{Binding IsOpen, FallbackValue=False}">
+
+  <!-- Add a device: the QR code a phone or tablet scans to join the swarm, drawn over the IDE. -->
+  <Panel Background="{DynamicResource Brush.Scrim}">
+    <Border MaxWidth="720" Margin="24" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="12"
+            Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
+            BoxShadow="{DynamicResource Shadow.Dialog}">
+      <DockPanel>
+        <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto,*,Auto" Margin="22,18,14,14">
+          <Border Width="34" Height="34" CornerRadius="9" Background="{DynamicResource Brush.AccentSoft}" Margin="0,0,12,0" VerticalAlignment="Top">
+            <controls:StrokeIcon Data="{StaticResource Icon.Swarm}" Size="18" Foreground="{DynamicResource Brush.AccentText}"
+                                 HorizontalAlignment="Center" VerticalAlignment="Center" />
+          </Border>
+          <StackPanel Grid.Column="1" Spacing="3" VerticalAlignment="Center">
+            <TextBlock Classes="h2" FontSize="16" Text="Add a device to the swarm" />
+            <TextBlock Classes="muted small" TextWrapping="Wrap"
+                       Text="A phone or tablet with TabStudio joins over Wi-Fi and runs the app this tablet builds. No cloud and no account; the connection is end-to-end encrypted." />
+          </StackPanel>
+          <Button Grid.Column="2" Theme="{StaticResource ToolButton}" VerticalAlignment="Top" Command="{Binding CloseCommand}" ToolTip.Tip="Close">
+            <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="16" />
+          </Button>
+        </Grid>
+        <Border DockPanel.Dock="Top" Height="1" Background="{DynamicResource Brush.Divider}" />
+
+        <Grid DockPanel.Dock="Bottom" ColumnDefinitions="*,Auto" Margin="22,10,16,12">
+          <TextBlock Classes="muted small" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"><Run
+            Text="{Binding TabletText}" /><Run Text="  ·  " /><Run Text="{Binding JoinedText}" /></TextBlock>
+          <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Height="40" Padding="20,0" Content="Done" Command="{Binding CloseCommand}" />
+        </Grid>
+        <Border DockPanel.Dock="Bottom" Height="1" Background="{DynamicResource Brush.Divider}" />
+
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" MaxHeight="560">
+          <StackPanel Margin="22,18" Spacing="14">
+            <TextBlock Foreground="{DynamicResource Brush.Error}" TextWrapping="Wrap" Text="{Binding Error}"
+                       IsVisible="{Binding Error, Converter={x:Static ObjectConverters.IsNotNull}}" />
+
+            <!-- The QR code beside its instructions, or above them on a narrow screen (see the code-behind). -->
+            <Grid x:Name="CodeGrid" ColumnDefinitions="Auto,22,*" RowDefinitions="Auto,Auto" IsVisible="{Binding HasNetwork}">
+              <Border Width="236" Height="236" CornerRadius="10" Background="{DynamicResource Brush.QrCode.Light}" VerticalAlignment="Top">
+                <controls:QrCodeView Code="{Binding Code}" />
+              </Border>
+              <StackPanel x:Name="CodeText" Grid.Column="2" Spacing="10" VerticalAlignment="Center">
+                <TextBlock Classes="h2" Text="Scan this with TabStudio on the device" TextWrapping="Wrap" />
+                <TextBlock Classes="muted" TextWrapping="Wrap"
+                           Text="On the phone or tablet: File > TabStudio Link > Join a swarm, or Swarm on the start screen, then Scan the tablet's code. Without a camera, type these instead:" />
+                <Grid ColumnDefinitions="Auto,16,*" RowDefinitions="Auto,6,Auto" Margin="0,4,0,0">
+                  <TextBlock Classes="label" Text="Address" VerticalAlignment="Center" />
+                  <SelectableTextBlock Grid.Column="2" FontFamily="{DynamicResource CodeFont}" FontSize="19" Foreground="{DynamicResource Brush.TextBright}" Text="{Binding AddressText}" VerticalAlignment="Center" />
+                  <TextBlock Grid.Row="2" Classes="label" Text="Code" VerticalAlignment="Center" />
+                  <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal" Spacing="10">
+                    <SelectableTextBlock FontFamily="{DynamicResource CodeFont}" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource Brush.AccentText}" Text="{Binding CodeText}" VerticalAlignment="Center" />
+                    <Button Theme="{StaticResource ToolButton}" Height="38" MinHeight="38" Padding="10,0" Command="{Binding NewCodeCommand}" ToolTip.Tip="Draw a new code; the shown one stops working">
+                      <StackPanel Orientation="Horizontal" Spacing="6">
+                        <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="14" />
+                        <TextBlock Text="New code" VerticalAlignment="Center" />
+                      </StackPanel>
+                    </Button>
+                  </StackPanel>
+                </Grid>
+                <TextBlock Classes="muted small" TextWrapping="Wrap" Text="Each code works once, for ten minutes; it renews after every device that joins. Devices that joined once rejoin by themselves." />
+              </StackPanel>
+            </Grid>
+
+            <Border Padding="14,12" CornerRadius="8" Background="{DynamicResource Brush.Control}" IsVisible="{Binding !HasNetwork}">
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <controls:StrokeIcon Data="{StaticResource Icon.Warning}" Size="16" Foreground="{DynamicResource Brush.Warning}" />
+                <TextBlock TextWrapping="Wrap" VerticalAlignment="Center"
+                           Text="This tablet is not on a network a device can reach. Connect it to the same Wi-Fi as the phones." />
+              </StackPanel>
+            </Border>
+
+            <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,8,Auto,8,Auto">
+              <controls:StrokeIcon Data="{StaticResource Icon.Lock}" Size="15" Margin="0,1,10,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush.AccentText}" />
+              <TextBlock Grid.Column="1" Classes="small" TextWrapping="Wrap"
+                         Text="Only devices that paired with this code join; each checks the other's certificate, and everything between them is encrypted with TLS." />
+              <controls:StrokeIcon Grid.Row="2" Data="{StaticResource Icon.Globe}" Size="15" Margin="0,1,10,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush.AccentText}" />
+              <TextBlock Grid.Row="2" Grid.Column="1" Classes="small" TextWrapping="Wrap"
+                         Text="A web app is served by this tablet on its own loopback address; devices reach it only through the swarm, with a secret for each run." />
+              <controls:StrokeIcon Grid.Row="4" Data="{StaticResource Icon.Warning}" Size="15" Margin="0,1,10,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush.Warning}" />
+              <TextBlock Grid.Row="4" Grid.Column="1" Classes="small" TextWrapping="Wrap"
+                         Text="The devices run the code this tablet builds, so add only devices you own." />
+            </Grid>
+          </StackPanel>
+        </ScrollViewer>
+      </DockPanel>
+    </Border>
+  </Panel>
+</UserControl>

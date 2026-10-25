@@ -3,6 +3,7 @@ using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.Rendering;
+using TabStudio.App.Theming;
 using TabStudio.Core.Diagnostics;
 
 namespace TabStudio.App.Editing;
@@ -13,10 +14,12 @@ namespace TabStudio.App.Editing;
 /// </summary>
 public sealed class DiagnosticRenderer : IBackgroundRenderer
 {
-    private static readonly IPen ErrorPen = new ImmutablePen(new ImmutableSolidColorBrush(Color.Parse("#F47067")), 1.2);
-    private static readonly IPen WarningPen = new ImmutablePen(new ImmutableSolidColorBrush(Color.Parse("#E3B341")), 1.2);
-    private static readonly IPen MessagePen = new ImmutablePen(new ImmutableSolidColorBrush(Color.Parse("#6CB6FF")), 1.6, new ImmutableDashStyle([1, 2], 0));
+    private static readonly ThemedPen ErrorLine = ThemedPen.Editor("Editor.ErrorSquiggle", 1.2);
+    private static readonly ThemedPen WarningLine = ThemedPen.Editor("Editor.WarningSquiggle", 1.2);
+    private static readonly ThemedPen MessageLine = ThemedPen.Editor("Editor.MessageSquiggle", 1.6, dashStyle: new ImmutableDashStyle([1, 2], 0));
 
+    // Squiggles by their number of waves, made once and moved under each span, rather than built again on every frame.
+    private readonly Dictionary<int, StreamGeometry> _squiggles = [];
     private TrackedRange<BuildDiagnostic>[] _diagnostics = [];
 
     /// <inheritdoc />
@@ -77,9 +80,9 @@ public sealed class DiagnosticRenderer : IBackgroundRenderer
 
             var pen = diagnostic.Value.Severity switch
             {
-                DiagnosticSeverityLevel.Error => ErrorPen,
-                DiagnosticSeverityLevel.Warning => WarningPen,
-                _ => MessagePen,
+                DiagnosticSeverityLevel.Error => ErrorLine.Pen,
+                DiagnosticSeverityLevel.Warning => WarningLine.Pen,
+                _ => MessageLine.Pen,
             };
 
             foreach (var segmentRect in BackgroundGeometryBuilder.GetRectsForSegment(textView, segment))
@@ -93,30 +96,43 @@ public sealed class DiagnosticRenderer : IBackgroundRenderer
                 }
                 else
                 {
-                    drawingContext.DrawGeometry(null, pen, CreateSquiggle(rect));
+                    using (drawingContext.PushTransform(Matrix.CreateTranslation(rect.Left, rect.Bottom - 1.5)))
+                    {
+                        drawingContext.DrawGeometry(null, pen, Squiggle(rect.Width));
+                    }
                 }
             }
         }
     }
 
-    private static StreamGeometry CreateSquiggle(Rect rect)
+    /// <summary>A squiggle as wide as a span, starting at the origin: up and down in 2.5 dip steps, at least two of them.</summary>
+    private StreamGeometry Squiggle(double width)
     {
         const double Step = 2.5;
+        var steps = (int)Math.Floor((Math.Max(width, Step * 2) / Step) + 1e-9);
+        if (_squiggles.TryGetValue(steps, out var cached))
+        {
+            return cached;
+        }
+
         var geometry = new StreamGeometry();
         using (var context = geometry.Open())
         {
-            var y = rect.Bottom - 1.5;
-            context.BeginFigure(new Point(rect.Left, y), isFilled: false);
-            var up = true;
-            for (var x = rect.Left + Step; x <= Math.Max(rect.Right, rect.Left + (Step * 2)); x += Step)
+            context.BeginFigure(default, isFilled: false);
+            for (var i = 1; i <= steps; i++)
             {
-                context.LineTo(new Point(x, up ? y - Step : y));
-                up = !up;
+                context.LineTo(new Point(i * Step, i % 2 == 1 ? -Step : 0));
             }
 
             context.EndFigure(isClosed: false);
         }
 
+        if (_squiggles.Count > 256)
+        {
+            _squiggles.Clear();
+        }
+
+        _squiggles[steps] = geometry;
         return geometry;
     }
 

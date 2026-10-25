@@ -2,9 +2,9 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
 using AvaloniaEdit.Editing;
 using AvaloniaEdit.Rendering;
+using TabStudio.App.Theming;
 using TabStudio.LiveTesting.Results;
 
 namespace TabStudio.App.Editing;
@@ -40,14 +40,26 @@ public sealed class LiveTestingMargin : AbstractMargin
     /// <summary>The margin's width: wide enough to tap a marker with a finger beside the line numbers.</summary>
     public const double MarginWidth = 24;
 
-    private static readonly ImmutableSolidColorBrush CoveredBrush = new ImmutableSolidColorBrush(Color.Parse("#6FD6A0"));
-    private static readonly ImmutableSolidColorBrush FailingBrush = new ImmutableSolidColorBrush(Color.Parse("#F47067"));
-    private static readonly ImmutableSolidColorBrush NotCoveredBrush = new ImmutableSolidColorBrush(Color.Parse("#6CB6FF"));
-    private static readonly IPen CoveredPen = new ImmutablePen(CoveredBrush, 2.2, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
-    private static readonly IPen FailingPen = new ImmutablePen(FailingBrush, 2.2, lineCap: PenLineCap.Round);
-    private static readonly IPen StaleCoveredPen = new ImmutablePen(new ImmutableSolidColorBrush(Color.Parse("#6FD6A0"), 0.6), 1.3, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
-    private static readonly IPen StaleFailingPen = new ImmutablePen(new ImmutableSolidColorBrush(Color.Parse("#F47067"), 0.6), 1.3, lineCap: PenLineCap.Round);
-    private static readonly IPen StaleNotCoveredPen = new ImmutablePen(new ImmutableSolidColorBrush(Color.Parse("#6CB6FF"), 0.6), 1.1);
+    private static readonly ThemedPen CoveredLine = ThemedPen.Editor("Editor.Covered", 2.2, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
+    private static readonly ThemedPen FailingLine = ThemedPen.Editor("Editor.Failing", 2.2, lineCap: PenLineCap.Round);
+    private static readonly ThemedPen StaleCoveredLine = ThemedPen.Editor("Editor.Covered", 1.3, opacity: 0.6, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
+    private static readonly ThemedPen StaleFailingLine = ThemedPen.Editor("Editor.Failing", 1.3, opacity: 0.6, lineCap: PenLineCap.Round);
+    private static readonly ThemedPen StaleNotCoveredLine = ThemedPen.Editor("Editor.NotCovered", 1.1, opacity: 0.6);
+
+    private static IBrush NotCoveredBrush => ThemeBrushes.Editor("Editor.NotCovered");
+
+    private static IPen CoveredPen => CoveredLine.Pen;
+
+    private static IPen FailingPen => FailingLine.Pen;
+
+    private static IPen StaleCoveredPen => StaleCoveredLine.Pen;
+
+    private static IPen StaleFailingPen => StaleFailingLine.Pen;
+
+    private static IPen StaleNotCoveredPen => StaleNotCoveredLine.Pen;
+
+    // The check mark around its center, made once and moved to each line, rather than built again on every frame.
+    private static readonly Geometry CheckMark = CreateCheckMark();
 
     private readonly Func<LiveTestMarkers?> _markers;
     private int? _hoveredLine;
@@ -158,16 +170,11 @@ public sealed class LiveTestingMargin : AbstractMargin
         switch (marker.State)
         {
             case LineCoverageState.Covered:
-                var check = new StreamGeometry();
-                using (var figure = check.Open())
+                using (context.PushTransform(Matrix.CreateTranslation(x, y)))
                 {
-                    figure.BeginFigure(new Point(x - 4.2, y + 0.2), isFilled: false);
-                    figure.LineTo(new Point(x - 1.2, y + 3.2));
-                    figure.LineTo(new Point(x + 4.4, y - 3.4));
-                    figure.EndFigure(isClosed: false);
+                    context.DrawGeometry(null, marker.IsStale ? StaleCoveredPen : CoveredPen, CheckMark);
                 }
 
-                context.DrawGeometry(null, marker.IsStale ? StaleCoveredPen : CoveredPen, check);
                 break;
             case LineCoverageState.Failing:
                 var pen = marker.IsStale ? StaleFailingPen : FailingPen;
@@ -187,6 +194,20 @@ public sealed class LiveTestingMargin : AbstractMargin
 
                 break;
         }
+    }
+
+    private static StreamGeometry CreateCheckMark()
+    {
+        var check = new StreamGeometry();
+        using (var figure = check.Open())
+        {
+            figure.BeginFigure(new Point(-4.2, 0.2), isFilled: false);
+            figure.LineTo(new Point(-1.2, 3.2));
+            figure.LineTo(new Point(4.4, -3.4));
+            figure.EndFigure(isClosed: false);
+        }
+
+        return check;
     }
 
     private int? LineAt(Point point)

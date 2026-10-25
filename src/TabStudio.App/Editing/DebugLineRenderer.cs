@@ -1,8 +1,8 @@
 using Avalonia;
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.Rendering;
+using TabStudio.App.Theming;
 
 namespace TabStudio.App.Editing;
 
@@ -13,11 +13,18 @@ namespace TabStudio.App.Editing;
 /// </summary>
 public sealed class DebugLineRenderer : IBackgroundRenderer
 {
-    private static readonly IBrush BreakpointBrush = new ImmutableSolidColorBrush(Color.Parse("#40E5534B"));
-    private static readonly IBrush CurrentBrush = new ImmutableSolidColorBrush(Color.Parse("#4DF2CC4E"));
-    private static readonly IPen CurrentPen = new ImmutablePen(new ImmutableSolidColorBrush(Color.Parse("#B3F2CC4E")), 1);
-    private static readonly IBrush CallerBrush = new ImmutableSolidColorBrush(Color.Parse("#406FD6A0"));
-    private static readonly IPen CallerPen = new ImmutablePen(new ImmutableSolidColorBrush(Color.Parse("#B36FD6A0")), 1);
+    private static readonly ThemedPen CurrentOutline = ThemedPen.Editor("Editor.CurrentStatementBorder", 1);
+    private static readonly ThemedPen CallerOutline = ThemedPen.Editor("Editor.CallerBorder", 1);
+
+    private static IBrush BreakpointBrush => ThemeBrushes.Editor("Editor.BreakpointLine");
+
+    private static IBrush CurrentBrush => ThemeBrushes.Editor("Editor.CurrentStatementLine");
+
+    private static IPen CurrentPen => CurrentOutline.Pen;
+
+    private static IBrush CallerBrush => ThemeBrushes.Editor("Editor.CallerLine");
+
+    private static IPen CallerPen => CallerOutline.Pen;
 
     private readonly Func<IEnumerable<int>> _breakpointLines;
     private TrackedRange<bool>[] _current = [];
@@ -95,9 +102,15 @@ public sealed class DebugLineRenderer : IBackgroundRenderer
         var lastLine = textView.VisualLines[^1].LastDocumentLine.LineNumber;
 
         // A statement the program is stopped at shows its own color instead of the breakpoint's, as in Visual Studio.
-        var stoppedLines = new[] { CurrentLine(document), CallerLine(document) };
-        foreach (var number in _breakpointLines().Where(n => n >= firstLine && n <= lastLine && n <= document.LineCount && !stoppedLines.Contains(n)))
+        var currentLine = CurrentLine(document);
+        var callerLine = CallerLine(document);
+        foreach (var number in _breakpointLines())
         {
+            if (number < firstLine || number > lastLine || number > document.LineCount || number == currentLine || number == callerLine)
+            {
+                continue;
+            }
+
             // From the first character of code to the end of the line, the way Visual Studio marks the statement.
             var line = document.GetLineByNumber(number);
             var indent = TextUtilities.GetLeadingWhitespace(document, line);

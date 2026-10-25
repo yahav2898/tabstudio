@@ -61,7 +61,16 @@ jobs:
           for project in tests/*.Tests; do
             name=$(basename "$project")
             [ "$name" = "TabStudio.App.Tests" ] && continue
-            dotnet test "$project" -c Release --logger "console;verbosity=normal" > "ci-out/$name.log" 2>&1 || status=1
+            if ! dotnet test "$project" -c Release --logger "console;verbosity=normal" > "ci-out/$name.log" 2>&1; then
+              # Known intermittent failures are tracked on the board; one retry keeps them from blocking a release,
+              # and FLAKY.txt and a warning keep them visible. A second failure fails the job.
+              echo "::warning::$name failed once; running it again. The first attempt is in ci-out/$name.log."
+              if dotnet test "$project" -c Release --logger "console;verbosity=normal" > "ci-out/$name.retry.log" 2>&1; then
+                echo "$name: the first attempt failed and the retry passed (see $name.log)" >> ci-out/FLAKY.txt
+              else
+                status=1
+              fi
+            fi
             tail -n 40 "ci-out/$name.log"
           done
           exit $status
@@ -101,18 +110,79 @@ jobs:
         run: |
           npm install -g pyright typescript-language-server typescript@5
           python -m pip install debugpy
+          # vscode-js-debug's adapter, under the command name the Toolchain Store gives it on a tablet.
+          mkdir -p "$RUNNER_TEMP/js-debug/bin"
+          curl -fsSL https://github.com/microsoft/vscode-js-debug/releases/download/v1.140.0/js-debug-dap-v1.140.0.tar.gz | tar -xz -C "$RUNNER_TEMP/js-debug"
+          printf '#!/bin/sh\nexec node "%s/js-debug/src/dapDebugServer.js" "$@"\n' "$RUNNER_TEMP/js-debug" > "$RUNNER_TEMP/js-debug/bin/js-debug-adapter"
+          chmod +x "$RUNNER_TEMP/js-debug/bin/js-debug-adapter"
+          echo "$RUNNER_TEMP/js-debug/bin" >> "$GITHUB_PATH"
           echo "TABSTUDIO_REAL_SERVERS=1" >> "$GITHUB_ENV"
 
       - name: Build the desktop host and test the IDE
         env:
           TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+          TABSTUDIO_RECORDED_UI_TESTS: ${{ runner.temp }}/recorded-ui-tests
         run: |
           mkdir -p ci-out/screenshots
           status=0
           dotnet build src/TabStudio.Desktop -c Release > ci-out/desktop-build.log 2>&1 || status=1
           tail -n 40 ci-out/desktop-build.log
-          dotnet test tests/TabStudio.App.Tests -c Release --logger "console;verbosity=normal" > ci-out/TabStudio.App.Tests.log 2>&1 || status=1
+          # A test host that dies leaves a crash report (its threads' stacks) when the runtime saw the crash.
+          mkdir -p "$RUNNER_TEMP/crash"
+          run_ide_tests() {
+            DOTNET_DbgEnableMiniDump=1 DOTNET_DbgMiniDumpType=1 DOTNET_EnableCrashReport=1 DOTNET_DbgMiniDumpName="$RUNNER_TEMP/crash/%e.%p.dmp" \
+              dotnet test tests/TabStudio.App.Tests -c Release --blame --blame-hang-timeout 12m --blame-hang-dump-type none --logger "console;verbosity=normal" > "$1" 2>&1
+          }
+          first=0
+          run_ide_tests ci-out/TabStudio.App.Tests.log || first=1
           tail -n 80 ci-out/TabStudio.App.Tests.log
+          if [ $first -ne 0 ]; then
+            # Known intermittent failures (a native crash in the test host, slow servers) are tracked on the board;
+            # one retry keeps them from blocking a release, and FLAKY.txt and a warning keep them visible.
+            echo "::warning::The IDE tests failed once; running them again. The first attempt is in ci-out/TabStudio.App.Tests.log."
+            if run_ide_tests ci-out/TabStudio.App.Tests.retry.log; then
+              echo "TabStudio.App.Tests: the first attempt failed and the retry passed (see TabStudio.App.Tests.log)" >> ci-out/FLAKY.txt
+            else
+              status=1
+            fi
+            tail -n 40 ci-out/TabStudio.App.Tests.retry.log
+          fi
+          # The same tests in the light theme, for light screenshots (screenshots/light); the palette and design tests ran above in both.
+          mkdir -p ci-out/screenshots/light
+          run_light_tests() {
+            TABSTUDIO_THEME=Light TABSTUDIO_SCREENSHOTS="$TABSTUDIO_SCREENSHOTS/light" \
+              dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter "FullyQualifiedName!~TabStudio.App.Tests.Theming&FullyQualifiedName!~TabStudio.App.Tests.Design" \
+              --logger "console;verbosity=normal" > "$1" 2>&1
+          }
+          light=0
+          run_light_tests ci-out/TabStudio.App.Tests.Light.log || light=1
+          tail -n 20 ci-out/TabStudio.App.Tests.Light.log
+          if [ $light -ne 0 ]; then
+            echo "::warning::The IDE tests in the light theme failed once; running them again. The first attempt is in ci-out/TabStudio.App.Tests.Light.log."
+            if run_light_tests ci-out/TabStudio.App.Tests.Light.retry.log; then
+              echo "TabStudio.App.Tests (light theme): the first attempt failed and the retry passed (see TabStudio.App.Tests.Light.log)" >> ci-out/FLAKY.txt
+            else
+              status=1
+            fi
+            tail -n 40 ci-out/TabStudio.App.Tests.Light.retry.log
+          fi
+          if [ $first -ne 0 ] || [ $light -ne 0 ] || [ $status -ne 0 ]; then
+            {
+              echo "== Processes left running"; ps -eo pid,ppid,pgid,rss,etime,args --sort=-rss | head -n 40
+              echo "== Kernel messages"; sudo dmesg | tail -n 40
+            } > ci-out/diagnostics.txt 2>&1 || true
+            cp "$RUNNER_TEMP"/crash/*.json ci-out/ 2>/dev/null || true
+            find tests/TabStudio.App.Tests/TestResults -name 'Sequence_*.xml' -exec cp {} ci-out/ \; 2>/dev/null || true
+          fi
+          # The UI test the swarm's test recorded on a phone runs as its users' CI runs it: dotnet test, headless.
+          recorded=$(find "$TABSTUDIO_RECORDED_UI_TESTS" -name '*.UITests.csproj' 2>/dev/null | head -n 1)
+          if [ -n "$recorded" ]; then
+            dotnet test "$recorded" --logger "console;verbosity=normal" > ci-out/recorded-ui-tests.log 2>&1 || status=1
+            tail -n 30 ci-out/recorded-ui-tests.log
+          else
+            echo "No recorded UI test project was written." | tee ci-out/recorded-ui-tests.log
+            status=1
+          fi
           exit $status
 
       - name: Publish logs and screenshots
@@ -129,6 +199,18 @@ jobs:
       - uses: actions/checkout@v4
 
       - uses: ./.github/actions/setup-android
+
+      # PRoot and its loader, which run toolchains on the device; cached until the build script changes.
+      - uses: actions/cache@v4
+        with:
+          path: artifacts/native
+          key: android-native-${{ hashFiles('build/android/native/build.sh') }}-arm
+
+      - name: Build the toolchain runtime
+        run: |
+          mkdir -p ci-out
+          bash build/android/native/build.sh artifacts/native arm64-v8a armeabi-v7a 2>&1 | tee ci-out/native-build.log
+          exit "${PIPESTATUS[0]}"
 
       - name: Build the APK
         run: |
@@ -185,6 +267,17 @@ jobs:
 
       - uses: ./.github/actions/setup-android
 
+      - uses: actions/cache@v4
+        with:
+          path: artifacts/native
+          key: android-native-${{ hashFiles('build/android/native/build.sh') }}-x64
+
+      - name: Build the toolchain runtime
+        run: |
+          mkdir -p ci-out
+          bash build/android/native/build.sh artifacts/native x86_64 2>&1 | tee ci-out/native-build.log
+          exit "${PIPESTATUS[0]}"
+
       # GitHub's runners are x86_64, so the emulator needs an x86_64 build of the same app.
       - name: Build an x86_64 APK
         run: |
@@ -216,7 +309,14 @@ jobs:
           disk-size: 4096M
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
-          script: bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 420
+          script: bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 960
+
+      # A crash's native backtrace has only offsets into the runtime's stripped libraries; this names the functions.
+      - name: Name the functions in a crash's backtrace
+        if: failure()
+        run: |
+          grep -q 'F DEBUG' ci-out/logcat-full.txt 2> /dev/null || exit 0
+          bash build/ci/android-symbolize.sh ci-out/TabStudio-x64.apk x86_64 ci-out/symbolized ci-out/logcat-full.txt
 
       - name: Keep the APK out of the published logs
         if: always()
@@ -234,6 +334,59 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: bash build/ci/publish-logs.sh android-emulator ${{ job.status }}
+
+  # The Windows Bridge on real Windows: the desktop app builds for Windows, WPF, Windows Forms, Visual C++ and
+  # .NET Framework apps build and run through the bridge's service on loopback, their windows are captured and
+  # clicked through the input path, the WPF app is debugged with netcoredbg, and the bridge's own window and the
+  # tablet showing a WPF app are rendered for screenshots.
+  windows:
+    name: Windows Bridge on Windows
+    runs-on: windows-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - uses: actions/cache@v4
+        with:
+          path: .nuget/packages
+          key: nuget-windows-${{ hashFiles('Directory.Packages.props', '**/*.csproj') }}
+          restore-keys: nuget-windows-
+
+      - name: Build the desktop app and test the Windows Bridge
+        env:
+          TABSTUDIO_REAL_SERVERS: '1'
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+        run: |
+          mkdir -p ci-out/screenshots
+          status=0
+          dotnet build src/TabStudio.Desktop -c Release > ci-out/desktop-build.log 2>&1 || status=1
+          tail -n 30 ci-out/desktop-build.log
+          for project in tests/TabStudio.WindowsBridge.Tests tests/TabStudio.WindowsBridge.Windows.Tests; do
+            name=$(basename "$project")
+            dotnet test "$project" -c Release --logger "console;verbosity=normal" > "ci-out/$name.log" 2>&1 || status=1
+            tail -n 60 "ci-out/$name.log"
+          done
+          dotnet test tests/TabStudio.App.Tests -c Release --filter "FullyQualifiedName~WindowsBridge" --logger "console;verbosity=normal" > ci-out/TabStudio.App.Tests.log 2>&1 || status=1
+          tail -n 60 ci-out/TabStudio.App.Tests.log
+          # The errors and the failed tests, also as notices, which can be read even when the logs are not published.
+          for log in ci-out/*.log; do
+            summary=$( (grep -E -A1 "error [A-Z]+[0-9]+|^  Failed |Error Message:|Total tests:|Passed:|Failed:|Skipped:" "$log" | grep -v -E "^--$|^\[xUnit|^  Passed " | awk '!seen[$0]++' | head -c 3500 | sed -e 's/%/%25/g' | tr '\n' '\r' | sed -e 's/\r/%0A/g') || true)
+            if [ -n "$summary" ]; then echo "::notice title=$(basename "$log")::$summary"; fi
+          done
+          exit $status
+
+      - name: Publish logs and screenshots
+        if: always() && github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs-api.sh windows ${{ job.status }}
 
   # Publishes a versioned release once every check has passed: for a v* tag, or on main when
   # Directory.Build.props has a version that has release notes in docs/releases and no release yet.

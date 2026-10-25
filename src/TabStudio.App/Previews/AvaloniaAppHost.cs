@@ -29,7 +29,7 @@ namespace TabStudio.App.Previews;
 /// with a new instance of the view model named after the window.
 /// </para>
 /// </remarks>
-public sealed class AvaloniaAppHost : IDisposable
+public sealed partial class AvaloniaAppHost : IDisposable
 {
     /// <summary>The XAML namespace of Avalonia's controls.</summary>
     private const string AvaloniaNamespace = "https://github.com/avaloniaui";
@@ -63,7 +63,19 @@ public sealed class AvaloniaAppHost : IDisposable
     /// <param name="dependencies">The assemblies of the projects it references.</param>
     /// <param name="packageAssemblies">The app's package assemblies.</param>
     /// <exception cref="InvalidOperationException">The app has no view to show.</exception>
-    public static AvaloniaAppHost Start(CompiledAssembly entryAssembly, IReadOnlyList<CompiledAssembly> dependencies, IReadOnlyList<string> packageAssemblies)
+    public static AvaloniaAppHost Start(CompiledAssembly entryAssembly, IReadOnlyList<CompiledAssembly> dependencies, IReadOnlyList<string> packageAssemblies) =>
+        Start(entryAssembly, dependencies, packageAssemblies, loaded: null);
+
+    /// <summary>Loads an app and creates its main view. UI thread only.</summary>
+    /// <param name="entryAssembly">The app's assembly.</param>
+    /// <param name="dependencies">The assemblies of the projects it references.</param>
+    /// <param name="packageAssemblies">The app's package assemblies.</param>
+    /// <param name="loaded">
+    /// Called with the app's assemblies once they are loaded and before any of their code runs, such as to connect a
+    /// device's debugger to them.
+    /// </param>
+    /// <exception cref="InvalidOperationException">The app has no view to show.</exception>
+    public static AvaloniaAppHost Start(CompiledAssembly entryAssembly, IReadOnlyList<CompiledAssembly> dependencies, IReadOnlyList<string> packageAssemblies, Action<IEnumerable<Assembly>>? loaded)
     {
         ArgumentNullException.ThrowIfNull(entryAssembly);
         Dispatcher.UIThread.VerifyAccess();
@@ -75,6 +87,7 @@ public sealed class AvaloniaAppHost : IDisposable
         {
             // XAML finds its types among the loaded assemblies, including the XAML namespaces of control libraries.
             program.LoadAll();
+            loaded?.Invoke(program.Assemblies);
 
             var types = LoadableTypes(program.EntryAssembly);
             var app = StartApplication(types);

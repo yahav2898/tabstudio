@@ -4,6 +4,7 @@ using AvaloniaEdit;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.Rendering;
 using TabStudio.App.Editing.Extensions;
+using TabStudio.App.Theming;
 using TabStudio.Extensions.Snippets;
 
 namespace TabStudio.App.Editing.Snippets;
@@ -14,11 +15,10 @@ namespace TabStudio.App.Editing.Snippets;
 /// </summary>
 public sealed class SnippetTabStopRenderer : IBackgroundRenderer
 {
-    private static readonly IBrush DefaultFill = new ImmutableSolidColorBrush(Color.Parse("#337C7C7C"));
-    private static readonly IPen DefaultBorder = new ImmutablePen(new ImmutableSolidColorBrush(Color.Parse("#B37C9CC4")), 1);
+    private static readonly ThemedPen DefaultBorder = ThemedPen.Editor("Editor.SnippetTabStopBorder", 1);
 
-    private IBrush _fill = DefaultFill;
-    private IPen _border = DefaultBorder;
+    private IBrush? _fill;
+    private IPen? _border;
     private IReadOnlyList<SnippetRange> _ranges = [];
     private int _current = -1;
 
@@ -42,10 +42,10 @@ public sealed class SnippetTabStopRenderer : IBackgroundRenderer
     /// <param name="theme">The theme, or <see langword="null"/>.</param>
     public void SetTheme(EditorColorTheme? theme)
     {
-        _fill = ThemeColors.Brush(theme?.Source.Color("editor.snippetTabstopHighlightBackground")) ?? DefaultFill;
+        _fill = ThemeColors.Brush(theme?.Source.Color("editor.snippetTabstopHighlightBackground"));
         _border = ThemeColors.Brush(theme?.Source.Color("editor.snippetTabstopHighlightBorder")) is IImmutableBrush border
             ? new ImmutablePen(border, 1)
-            : DefaultBorder;
+            : null;
     }
 
     /// <inheritdoc />
@@ -65,17 +65,17 @@ public sealed class SnippetTabStopRenderer : IBackgroundRenderer
                 continue;
             }
 
-            var pen = range.Index == _current ? _border : null;
+            var pen = range.Index == _current ? _border ?? DefaultBorder.Pen : null;
             if (range.Length == 0)
             {
-                drawingContext.DrawRectangle(_fill, pen, Bar(textView, document, range.Start), 1, 1);
+                drawingContext.DrawRectangle(_fill ?? ThemeBrushes.Editor("Editor.SnippetTabStop"), pen, Bar(textView, document, range.Start), 1, 1);
                 continue;
             }
 
             var segment = new TextSegment { StartOffset = range.Start, Length = range.Length };
             foreach (var rect in BackgroundGeometryBuilder.GetRectsForSegment(textView, segment))
             {
-                drawingContext.DrawRectangle(_fill, pen, rect, 2, 2);
+                drawingContext.DrawRectangle(_fill ?? ThemeBrushes.Editor("Editor.SnippetTabStop"), pen, rect, 2, 2);
             }
         }
     }

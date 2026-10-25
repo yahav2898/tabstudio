@@ -28,6 +28,15 @@ public interface IServerProcessLauncher
     /// <returns>The running program.</returns>
     /// <exception cref="ServerStartException">The program could not be started.</exception>
     IServerProcess Start(ServerStartInfo startInfo);
+
+    /// <summary>
+    /// Finds the file the launcher's programs see at a path, so TabStudio can check it before handing the path to
+    /// a program, such as a file of a server's npm package. Programs that run in an environment of their own, as
+    /// in TabStudio's Linux environment on Android, see their files at other paths than TabStudio does.
+    /// </summary>
+    /// <param name="programPath">A full path as the programs see it, such as one <see cref="Resolve"/> returned.</param>
+    /// <returns>The file's path on this device, or <see langword="null"/> when there is no such file.</returns>
+    string? ToLocalPath(string programPath) => File.Exists(programPath) ? programPath : null;
 }
 
 /// <summary>A program started by an <see cref="IServerProcessLauncher"/>, with its standard streams.</summary>

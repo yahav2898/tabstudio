@@ -7,7 +7,7 @@
   <!-- Parameter Info: overload arrows, the signature with the current parameter in bold, and documentation. -->
   <Border MaxWidth="640" Padding="6,6,12,8" CornerRadius="8"
           Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
-          BoxShadow="0 8 24 0 #59000000">
+          BoxShadow="{DynamicResource Shadow.Popup}">
     <StackPanel Spacing="4">
       <Grid ColumnDefinitions="Auto,*">
         <StackPanel Orientation="Horizontal" VerticalAlignment="Top" IsVisible="{Binding HasOverloads}">

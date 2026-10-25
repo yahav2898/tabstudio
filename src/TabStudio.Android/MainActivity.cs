@@ -56,7 +56,7 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
     public const string DesktopSelfTestExtra = "tabstudio.selftest.desktop";
 
     private const string LogTag = "TabStudio";
-    private static readonly TimeSpan SelfTestTimeout = TimeSpan.FromMinutes(6);
+    private static readonly TimeSpan SelfTestTimeout = TimeSpan.FromMinutes(15);
 
     // The app outlives an activity that Android recreates: its notifications follow whichever activity is current.
     private static MainActivity? _current;
@@ -127,6 +127,7 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
 
                 // Presentations on external displays belong to the current activity.
                 services.AddSingleton<IExternalDisplayService>(_ => _displays ??= new AndroidExternalDisplays(context, () => _current));
+                services.AddSingleton(AndroidToolchainPlatform.Create(context));
             });
     }
 
@@ -141,7 +142,13 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
         }
 
         using var timeout = new CancellationTokenSource(SelfTestTimeout);
-        var result = await SelfTest.RunAsync(main, services.GetRequiredService<SampleLibrary>(), services.GetRequiredService<ProjectTemplates>(), timeout.Token);
+        var result = await SelfTest.RunAsync(main, services.GetRequiredService<SampleLibrary>(), services.GetRequiredService<ProjectTemplates>(), screenshots, timeout.Token);
+        if (result.Success)
+        {
+            var scrolling = await SelfTest.ScrollEditorAsync(main, services.GetRequiredService<SampleLibrary>(), new AndroidTouchSelfTestDevice(() => _current), line => AndroidLog.Info(LogTag, line), timeout.Token);
+            result = new SelfTestResult(scrolling.Success, $"{result.Message} | {scrolling.Message}", result.Duration + scrolling.Duration);
+        }
+
         if (result.Success && desktop)
         {
             var tablet = (app.ApplicationLifetime as ISingleViewApplicationLifetime)?.MainView as TabStudio.App.Views.MainView;

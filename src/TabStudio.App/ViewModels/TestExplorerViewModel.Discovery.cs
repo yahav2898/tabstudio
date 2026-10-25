@@ -136,6 +136,7 @@ public sealed partial class TestExplorerViewModel
             }
         }
 
+        merged = WithScreenRows(merged);
         _byId.Clear();
         foreach (var entry in merged)
         {

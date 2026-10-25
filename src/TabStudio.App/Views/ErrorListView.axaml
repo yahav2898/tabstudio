@@ -10,6 +10,17 @@
       <Setter Property="TextDecorations" Value="Underline" />
       <Setter Property="Cursor" Value="Hand" />
     </Style>
+    <!-- The screens a layout finding shows on: tapping it shows their pictures and outlines it in the Device Matrix. -->
+    <Style Selector="Button.screensBadge">
+      <Setter Property="Background" Value="{DynamicResource Brush.AccentSoft}" />
+      <Setter Property="CornerRadius" Value="4" />
+      <Setter Property="Padding" Value="6,0" />
+      <Setter Property="Margin" Value="0,0,8,0" />
+      <Setter Property="MinHeight" Value="22" />
+      <Setter Property="MinWidth" Value="0" />
+      <Setter Property="Height" Value="22" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
   </UserControl.Styles>
   <DockPanel>
     <!-- Filters -->
@@ -93,6 +104,58 @@
                     <TextBlock Text="{Binding Ci.CheckName}" MaxWidth="150" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Brush.TextSecondary}" />
                   </StackPanel>
                 </Border>
+                <Border DockPanel.Dock="Left" Classes="ciBadge" IsVisible="{Binding IsFromBridge}" ToolTip.Tip="{Binding BridgeToolTip}">
+                  <StackPanel Orientation="Horizontal" Spacing="5">
+                    <controls:StrokeIcon Data="{StaticResource Icon.Computer}" Size="11" Foreground="{DynamicResource Brush.AccentText}" VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding BridgePc}" MaxWidth="150" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Brush.TextSecondary}" />
+                  </StackPanel>
+                </Border>
+                <Button DockPanel.Dock="Left" Theme="{StaticResource ToolButton}" Classes="screensBadge" Tag="screens" IsVisible="{Binding IsFromLayout}"
+                        ToolTip.Tip="{Binding LayoutScreensToolTip}"
+                        Command="{Binding $parent[ListBox].((vm:ErrorListViewModel)DataContext).ShowLayoutScreensCommand}" CommandParameter="{Binding}">
+                  <StackPanel Orientation="Horizontal" Spacing="5">
+                    <controls:StrokeIcon Data="{StaticResource Icon.DeviceMatrix}" Size="12" Foreground="{DynamicResource Brush.AccentText}" />
+                    <TextBlock Text="{Binding LayoutScreens}" MaxWidth="150" FontSize="11" TextTrimming="CharacterEllipsis"
+                               Foreground="{DynamicResource Brush.TextSecondary}" VerticalAlignment="Center" />
+                  </StackPanel>
+                  <Button.Flyout>
+                    <Flyout Placement="BottomEdgeAlignedLeft">
+                      <ScrollViewer MaxHeight="620" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding LayoutScreenshots}" Margin="4">
+                          <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                              <StackPanel Orientation="Horizontal" Spacing="16" />
+                            </ItemsPanelTemplate>
+                          </ItemsControl.ItemsPanel>
+                          <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="vm:LayoutScreenshotViewModel">
+                              <StackPanel Width="220" Spacing="6">
+                                <StackPanel Spacing="1">
+                                  <TextBlock Text="{Binding Title}" FontWeight="SemiBold" />
+                                  <TextBlock Classes="muted small" Text="{Binding Details}" TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+                                <Border CornerRadius="8" ClipToBounds="True" BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1"
+                                        Width="220" Height="{Binding PictureHeight}" Background="{DynamicResource Brush.Window}">
+                                  <Panel>
+                                    <Image Source="{Binding Picture}" Stretch="Fill" />
+                                    <Canvas>
+                                      <Border Canvas.Left="{Binding HighlightLeft}" Canvas.Top="{Binding HighlightTop}"
+                                              Width="{Binding Highlight.Width}" Height="{Binding Highlight.Height}"
+                                              BorderBrush="{DynamicResource Brush.Swarm.Highlight}" BorderThickness="2" CornerRadius="3" />
+                                    </Canvas>
+                                    <TextBlock Classes="muted small" Text="No picture of this screen" IsVisible="{Binding !HasPicture}"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                  </Panel>
+                                </Border>
+                                <TextBlock Classes="small" Text="{Binding Message}" TextWrapping="Wrap" />
+                              </StackPanel>
+                            </DataTemplate>
+                          </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                      </ScrollViewer>
+                    </Flyout>
+                  </Button.Flyout>
+                </Button>
                 <TextBlock FontSize="12.5" Text="{Binding Description}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
               </DockPanel>
               <TextBlock Grid.Column="3" FontSize="12.5" Text="{Binding Project}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />

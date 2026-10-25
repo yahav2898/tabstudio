@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The Windows Bridge: a Windows PC the user owns builds and runs the tablet's Windows-only projects (WPF, Windows
+    Forms, WinUI 3, .NET Framework, Visual C++) and streams their windows back. This library is the part both sides
+    share and everything that does not need Windows: the protocol over TabStudio Link, the frame codec, touch
+    gestures and keys, MSBuild output and path mapping, the debug adapter tunnel, the bridge's server around a
+    desktop session it is given, and the tablet's client. The Windows desktop session itself (window capture,
+    input, clipboard) is in TabStudio.WindowsBridge.Windows.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>TabStudio.WindowsBridge</RootNamespace>
+    <Description>The TabStudio Windows Bridge: Windows-only projects build and run on your PC, streamed to the tablet.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TabStudio.Core\TabStudio.Core.csproj" />
+    <ProjectReference Include="..\TabStudio.Link\TabStudio.Link.csproj" />
+    <ProjectReference Include="..\TabStudio.LanguageServers\TabStudio.LanguageServers.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="TabStudio.WindowsBridge.Tests" />
+  </ItemGroup>
+
+</Project>

@@ -22,7 +22,8 @@
 TabStudio הופך טאבלט אנדרואיד למחשב פיתוח שבאמת תרצו לעבוד עליו.
 
 - **אפליקציה אחת.** מורידים, פותחים, כותבים קוד. בלי Termux, בלי root ובלי התקנות נוספות.
-- **הסידור שאתם כבר מכירים.** Solution Explorer, Properties, Error List, Output וסרגל כלים עם כפתור Run גדול. מי שעבד ב-Visual Studio יודע איפה הכול נמצא.
+- **הסידור שאתם כבר מכירים, בכל מסך.** סרגל תפריטים, סרגל כלים, לשוניות מסמכים, Solution Explorer עם Properties, ‏Error List, ‏Output ושורת מצב, כמו ב-Visual Studio. פס פעילות בקצה הימני מחזיק את כל חלונות הכלים, עם תגים לקבצים שהשתנו, ל-CI, לבדיקות שנכשלו ולשינויים שהסוכן מציע. במצב אנכי ובטלפון הסרגל הצדדי נפתח כמגירה, וסרגל הכלים ושורת המצב מקפלים את הכפתורים הפחות שימושיים ל-More במקום להיחתך.
+- **חיפוש אחד לכל דבר.** ‏Ctrl+Q מוצא קבצים, כל פקודת תפריט עם הקיצור שלה, הגדרות כמו ערכת הצבעים, טיפוסים וחברים בקוד שלכם, תבניות פרויקט ופתרונות אחרונים, מדורגים יחד.
 - **הקוד שלכם רץ על הטאבלט.** לא על שרת שאתם שוכרים ולא בענן של מישהו אחר. לוחצים F5 והקוד נבנה ורץ שם, ליד העורך.
 - **קוד פתוח מהיום הראשון.** Apache-2.0. קראו, עשו fork, תפיצו.
 
@@ -44,9 +45,11 @@ TabStudio הופך טאבלט אנדרואיד למחשב פיתוח שבאמת 
 ### חוויית Visual Studio אמיתית, בנויה למגע
 
 - **הסידור שאתם כבר מכירים.** סרגל תפריטים, סרגל כלים, לשוניות מסמכים, Solution Explorer, ‏Properties, ‏Error List, ‏Output ושורת מצב, מעוגנים בדיוק איפה שהידיים מצפות למצוא אותם.
-- **בגודל של אצבעות.** כפתורים, לשוניות ושורות בגודל של קצה אצבע, בגובה 34 עד 44 פיקסלים. סרגל פעולות צף שם Rename, ‏Comment, ‏Format, ‏Peek ו-Run to Cursor במרחק נגיעה אחת.
+- **בגודל של אצבעות, שקט למקלדות.** כפתורים, לשוניות ושורות בגודל של קצה אצבע, בגובה 34 עד 48 פיקסלים. סרגל מגע צף שם Rename, ‏Peek, ‏Comment, ‏Run to Cursor, ‏Format ו-Run במרחק נגיעה אחת; הוא מתרחק מהשורה שעורכים ומ-IntelliSense, ונעלם בזמן הקלדה במקלדת פיזית.
+- **גלילה כמו בעורך טבעי.** גרירה עוקבת בדיוק אחרי האצבע, והטלה גולשת ומאטה לפי עקומת ההטלה של אנדרואיד עצמה, בקצב הרענון המלא של המסך, גם בקבצים של אלפי שורות עם צבעים, קווים אדומים, קיפול וכל השוליים. נגיעה שגוללת לא מזיזה את הסמן ולא פותחת את המקלדת.
 - **מקלדת כשרוצים.** מחברים מקלדת וכל קיצורי הדרך של Visual Studio עובדים: F5, ‏Ctrl+Shift+B, ‏F12, ‏Ctrl+. וכל השאר.
 - **מצב שולחני.** מחברים מסך ב-USB-C או HDMI, או מסך אלחוטי, וכל ה-IDE עובר למסך הגדול עם הקבצים, הסמן והדיבאגר בדיוק כמו שהיו. המקלדת של הטאבלט מקלידה שם, והעכבר או משטח המגע מזיזים שם סמן. הטאבלט הופך לשותף במגע: כפתורי הרצה ודיבאג, Toolbox שמכניס פקדים ל-XAML במקום הסמן, ו-Properties לאלמנט שבמקום הסמן.
+- **בהיר, כהה או לפי המערכת.** ערכת צבעים בהירה בהשראת Visual Studio Light, הכהה, או מעבר אוטומטי לפי מצב הכהה של הטאבלט (**Tools > Theme**). המעבר צובע מחדש את כל ה-IDE בבת אחת, כולל צבעי התחביר בעורך, וכל צבע עומד בתקן הנגישות WCAG AA. בחירת ערכת צבעים של תוסף מעבירה את ה-IDE לבהיר או לכהה בהתאם.
 
 ### C# שרץ על הטאבלט
 
@@ -56,6 +59,15 @@ TabStudio הופך טאבלט אנדרואיד למחשב פיתוח שבאמת 
 - **דיבאגר.** נקודות עצירה, Step Into, ‏Over ו-Out, ‏Locals, ‏Watch, ‏Call Stack, ‏DataTips ועצירה על חריגות.
 - **בדיקות.** Test Explorer ל-xUnit, ‏NUnit ו-MSTest, ו-Live Unit Testing: וי ירוק, איקס אדום או קו כחול ליד כל שורה בקוד הנבדק, והבדיקות שעריכה משפיעה עליהן רצות שוב מעצמן רגע אחרי שמפסיקים להקליד.
 - **NuGet על המכשיר.** החבילות משוחזרות על הטאבלט, כך שפרויקטים אמיתיים נבנים כמו שהם.
+
+### ‏Python, ‏Node.js וטרמינל
+
+- **ה-Toolchain Store.** ‏**Tools > Toolchain Store** מתקין Python ו-Node.js על הטאבלט, בסביבת לינוקס שחיה בתוך האפליקציה: Alpine Linux שרץ עם PRoot, בלי root ובלי הרשאות מיוחדות. כל חבילה מגיעה מהשרתים של Alpine עצמה ונבדקת מול החתימות של Alpine לפני שמשהו מותקן.
+- **פרויקטים שנפתחים כמו שהם.** במסך הפתיחה יש Python Application ו-Node.js Console App. פותחים תיקייה עם `pyproject.toml`, ‏`requirements.txt` או `package.json`, ו-TabStudio מציע להתקין את כלי הפיתוח ואת החבילות של הפרויקט. F5 מריץ אותו, עם הפלט ו-`input()` בחלון ה-Output, השגיאות ב-Error List, וכל שורה ב-traceback היא קישור לקוד שלה.
+- **IntelliSense.** ‏Pyright מביא השלמה אוטומטית, קווים אדומים וניווט ל-Python, ו-typescript-language-server עושה את אותו הדבר ל-JavaScript ול-TypeScript.
+- **דיבאגר.** F5 מדבג עם debugpy או vscode-js-debug, כולל תהליכי הבן של Node: נקודות עצירה, צעדים, Locals, ‏Watch, ‏Call Stack וחריגות. Ctrl+F5 מריץ בלי הדיבאגר.
+- **התקנה בנגיעה אחת.** כשחסר שרת שפה או מתאם דיבאג, שורת המצב, העורך ו-F5 מציעים להתקין את כלי הפיתוח שמביא אותו, והשרת עולה ברגע שההתקנה מסתיימת.
+- **טרמינל.** Ctrl+` פותח shell בסביבת הלינוקס, מצויר כמו ש-xterm מצייר.
 
 ### כל עומסי העבודה של Visual Studio, על אנדרואיד
 
@@ -68,14 +80,18 @@ TabStudio הופך טאבלט אנדרואיד למחשב פיתוח שבאמת 
 | WPF | ‏OpenSilver, ב-WebView |
 | WinUI | ‏Uno Platform, באופן טבעי על אנדרואיד |
 | C, ‏C++, ‏Rust, ‏Go, ‏Python, ‏Node, ‏Java | כלי פיתוח טבעיים מה-Toolchain Store |
-| כל מה שדורש Windows | ה-Windows Bridge: נבנה ורץ על המחשב שלכם ומוזרם לטאבלט |
+| כל מה שדורש Windows | ‏Windows Compatibility: האפליקציה האמיתית רצה בטאבלט עצמו דרך Wine; או ה-Windows Bridge, שבונה ומריץ אותה על המחשב שלכם ומזרים אותה לטאבלט |
+
+**אפליקציות Windows Forms.** יוצרים Windows Forms App, או פותחים אחת מ-Visual Studio, ולוחצים F5. היא רצה ליד הקוד על שכבת ה-Windows Forms של TabStudio עצמו, בחלון של Windows 10, עם דיאלוגים, תפריטים, טבלאות, data binding ו-MessageBox, ושמירת קובץ מפעילה אותה מחדש. ‏`Form1.cs` נפתח במעצב מגע: נוגעים בכלי ואז בטופס, גוררים פקדים על הרשת, משנים את הגודל שלהם בידיות, עורכים אותם בחלון ה-Properties, ונגיעה כפולה בכפתור כותבת את ה-Click handler שלו. המעצב כותב את `Form1.Designer.cs` בדיוק כמו Visual Studio, כך שהפרויקט ממשיך להיפתח במחשב. קוד שקורא ל-Windows עצמו, כמו P/Invoke, ‏COM או ה-registry, רץ דרך Windows Compatibility או גשר Windows; [ה-README של שכבת ה-Forms](src/TabStudio.Forms/README.md) מפרט מה נתמך.
+
+**גשר Windows.** כל מה שדורש Windows נבנה ורץ על מחשב שלכם, והחלונות שלו משודרים לטאבלט. במחשב פותחים את TabStudio ובוחרים **File > TabStudio Link > Be a Windows Bridge**, ובטאבלט סורקים את קוד ה-QR שלו. מאותו רגע WPF, ‏Windows Forms האמיתי, WinUI 3, ‏.NET Framework ו-Visual C++ מסומנים כמוכנים ב-Compatibility Doctor, וכפתור ההרצה יכול להריץ כל פרויקט על המחשב. הבנייה זורמת לחלון ה-Output והשגיאות שלה מגיעות ל-Error List על הקבצים שלכם. נגיעה היא קליק, לחיצה ארוכה היא קליק ימני ושתי אצבעות גוללות; מקלדת והעתקת טקסט עובדות בשני הכיוונים. אפליקציות ‎.NET מדובגות באותו דיבאגר, כמה תוכניות רצות יחד, שמירה מפעילה מחדש רק את התוכנית שהשתנתה, ומחשב שנרדם מקבל הודעה ברורה.
 
 ### כל המסכים בבת אחת
 
-- **‏Run on Swarm.** טלפונים וטאבלטים שמריצים TabStudio מצטרפים ל-Swarm שלכם בסריקה אחת. לוחצים F5, והאפליקציה שאתם בונים עולה בכולם יחד, וכל שמירה מעדכנת את כולם. אפליקציות Avalonia רצות באופן טבעי, אתרים בדפדפן של כל מכשיר, ואפליקציות קונסול שולחות את הפלט שלהן חזרה.
+- **‏Run on Swarm.** טלפונים וטאבלטים שמריצים TabStudio מצטרפים ל-Swarm שלכם בסריקה אחת (**File > Join a Swarm** בטלפון). בוחרים Swarm בתפריט ההרצה, לוחצים F5, והאפליקציה שאתם בונים עולה בכולם יחד, וכל שמירה מעדכנת את כולם. אפליקציות Avalonia רצות באופן טבעי, אתרים בדפדפן של כל מכשיר, ואפליקציות קונסול שולחות את הפלט שלהן חזרה.
 - **דיבאג בכל מכשיר.** לוחצים על כפתור בטלפון, ונקודת העצירה שלו עוצרת בטאבלט עם ה-Locals וה-Call Stack של הטלפון. עוצרים את המכשיר הזה או את כולם.
 - **מגע משוכפל.** נגיעה, גלילה או הקלדה במכשיר אחד קורות בכל המכשירים, כך שמשווים את אותו מסך בכל הגדלים.
-- **מכשירים וירטואליים.** אין טלפונים נוספים? הטאבלט מציג את האפליקציה זה לצד זה כטלפון קטן, טלפון גדול וטאבלט, בבהיר ובכהה, משמאל לימין ומימין לשמאל, ועם גופנים גדולים.
+- **‏Device Matrix.** כל המסכים זה לצד זה: הטלפונים שלכם, ה-App Preview ומכשירים וירטואליים. אין טלפונים נוספים? הטאבלט מציג את האפליקציה זה לצד זה כטלפון קטן, טלפון גדול וטאבלט, בבהיר ובכהה, משמאל לימין ומימין לשמאל, ועם גופנים גדולים.
 - **בדיקות פריסה.** אחרי כל שינוי TabStudio בודק כל מסך: טקסט חתוך, פקדים שנדחפו מחוץ למסך, פקדים חופפים, מטרות מגע קטנות מ-44 פיקסלים וניגודיות נמוכה. כל ממצא מגיע ל-Error List עם המכשיר וצילום מסך, ו-**Fix with Agent** במרחק נגיעה.
 - **בדיקות E2E מוקלטות.** מקליטים כמה נגיעות ומקבלים בדיקת UI שמריצה אותן שוב בכל מכשיר וב-CI, עם תוצאה לכל מכשיר ב-Test Explorer.
 
@@ -101,6 +117,7 @@ TabStudio הופך טאבלט אנדרואיד למחשב פיתוח שבאמת 
 - **Claude, בתוך ה-IDE.** הסוכן רואה את כל הפתרון, בונה אותו, מריץ את הבדיקות ומתקן את השגיאות שהוא מוצא, וכל שינוי שלו מגיע כ-diff שאתם מאשרים.
 - **נגיעה אחת מהבעיה לתיקון.** כשה-Compatibility Doctor מוצא API שלא רץ על הטאבלט, **Fix with Agent** משכתב את הקוד ומראה לכם את התוצאה.
 - **מסקיצה ל-XAML.** מציירים מסך עם העט ומקבלים XAML שרץ.
+- **המרה ל-cross-platform.** נגיעה אחת ממירה פרויקט WPF או Windows Forms לפרויקט Avalonia שרץ באופן טבעי בכל מקום. ממיר משכתב את כל מה שממופה במדויק, Claude משלים את השאר, ואתם בודקים הכול כ-diff.
 - **מדבר MCP.** הסוכן מתחבר לכל שרת Model Context Protocol, כך שהכלים והשירותים שלכם במרחק הגדרה אחת.
 
 ### בנוי למכשיר שבידיים שלכם
@@ -123,7 +140,7 @@ TabStudio הופך טאבלט אנדרואיד למחשב פיתוח שבאמת 
 
 **מנוע הבנייה** הופך פרויקט למשהו שאפשר להריץ. ל-TabStudio יש מערכת פרויקטים משלו שקוראת קובצי פרויקט בסגנון SDK, ‏`Directory.Build.props`, הפניות בין פרויקטים וחבילות NuGet, שמשוחזרות על המכשיר. ב-C#, ‏Roslyn מקמפל ישר לזיכרון מול reference assemblies שמגיעות עם האפליקציה, כך שמחזור העריכה וההרצה לא נוגע בדיסק בכלל. שפות אחרות נבנות עם כלי פיתוח טבעיים מה-Toolchain Store.
 
-**מארחי הרצה** הם המקום שבו התוכנית שלכם באמת רצה. ‏F5 בוחר אחד לפי סוג הפרויקט: אפליקציות קונסולה רצות בתוך התהליך בהקשר טעינה מבודד, אפליקציות web רצות ב-WebView ליד העורך, ואפליקציות שדורשות Windows יכולות לרוץ על מחשב שלכם דרך ה-Windows Bridge.
+**מארחי הרצה** הם המקום שבו התוכנית שלכם באמת רצה. ‏F5 בוחר אחד לפי סוג הפרויקט: אפליקציות קונסולה רצות בתוך התהליך בהקשר טעינה מבודד, אפליקציות web רצות ב-WebView ליד העורך, ואפליקציות שדורשות Windows רצות בטאבלט עצמו דרך Windows Compatibility, או על מחשב שלכם דרך ה-Windows Bridge.
 
 אנדרואיד מגביל מה אפליקציה רשאית להריץ, ולכן כל החלטת תכנון כאן מתחילה מהכללים של הפלטפורמה במקום להילחם בהם. הפרטים, כולל למה האפליקציה לא תלויה במכונה הווירטואלית של אנדרואיד, נמצאים ב[מסמך הארכיטקטורה](docs/ARCHITECTURE.md).
 
@@ -195,6 +212,13 @@ src/
   TabStudio.SourceControl/ Git through GitHub: changes, commits, pulls and merges, branches, pull requests, Actions
   TabStudio.Agent/         Claude as a coding agent: tools over the workspace, MCP servers, sketch to XAML
   TabStudio.Link/          TabStudio Link: pairing, encrypted transport, QR codes and the remote language service
+  TabStudio.Swarm/         Swarm: running, updating, debugging and recording an app on every joined device
+  TabStudio.Forms/         Windows Forms on Avalonia: System.Windows.Forms and System.Drawing, drawn as on Windows 10
+  TabStudio.Forms.Design/  The touch designer's model: reads and writes InitializeComponent, the canvas and Toolbox
+  TabStudio.Web/           Web apps: static web assets, Blazor's scripts, a host for .NET apps on WebAssembly
+  TabStudio.Toolchains/    The Toolchain Store: Alpine Linux on PRoot, packages, processes and the terminal
+  TabStudio.LanguageServers/ Language Server and Debug Adapter Protocol clients for every non-C# language
+  TabStudio.Extensions/    VS Code extensions from Open VSX: grammars, language rules, snippets, themes
   TabStudio.App/           The IDE itself: views and view models, shared by every platform
   TabStudio.Desktop/       Desktop host for development
   TabStudio.Android/       The Android app
@@ -212,7 +236,7 @@ build/                     CI scripts
 
 ## רישיון וסימנים מסחריים
 
-‏TabStudio מופץ תחת [רישיון Apache 2.0](LICENSE).
+‏TabStudio מופץ תחת [רישיון Apache 2.0](LICENSE). התוכנות של צד שלישי שהוא כולל או מוריד, כל אחת תחת הרישיון שלה, מפורטות ב-[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 
 ‏TabStudio הוא פרויקט עצמאי. הוא לא קשור ל-Microsoft, לא מאושר על ידה ולא ממומן על ידה. ‏Visual Studio הוא סימן מסחרי של Microsoft Corporation, ומוזכר כאן רק כדי לתאר את סוג החוויה ש-TabStudio מציע. ‏TabStudio לא מכיל קוד של Microsoft מלבד רכיבי ה-.NET בקוד פתוח שעליהם הוא בנוי, תחת הרישיונות שלהם.
 

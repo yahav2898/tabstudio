@@ -25,11 +25,8 @@ public sealed record OutputSourceOption(string Name, OutputViewModel Output);
 /// </summary>
 public sealed partial class WorkspaceViewModel
 {
-    private const int WorkspaceSymbolLimit = 20;
-
     private LanguageServerServices _languageServerServices = null!;
     private LanguageServerHost? _languageServers;
-    private CancellationTokenSource? _symbolSearch;
 
     /// <summary>The language servers' log: what TabStudio sent and what the servers said.</summary>
     public OutputViewModel LanguageServerOutput => field ??= new OutputViewModel(_ui, _profile.OutputCharacterLimit);
@@ -43,6 +40,7 @@ public sealed partial class WorkspaceViewModel
         new OutputSourceOption("Build and Run", Output),
         new OutputSourceOption("Language Servers", LanguageServerOutput),
         new OutputSourceOption("Debug Adapters", DebugAdapterOutput),
+        new OutputSourceOption("Swarm", SwarmOutput),
     ];
 
     /// <summary>The source the Output panel shows.</summary>
@@ -101,7 +99,7 @@ public sealed partial class WorkspaceViewModel
 
         if (host.FindMissingServers(document.FilePath) is [{ } missing, ..] && host.Configuration.Registry.FindLanguage(document.FilePath) is { } language)
         {
-            var install = missing.Package is { } package ? $" Install {package} from the Toolchain Store, or put {missing.Command} on the PATH." : string.Empty;
+            var install = MissingToolHint(missing.Name, missing.Command, missing.Package);
             StatusText = $"{language.Name} IntelliSense needs {missing.Name}, which is not installed.{install}";
             LanguageServerOutput.WriteLine($"[{missing.Name}] {missing.Command} was not found, so {document.FileName} has no IntelliSense.{install}", OutputKind.Info);
         }
@@ -137,7 +135,6 @@ public sealed partial class WorkspaceViewModel
     private void DisposeLanguageServers()
     {
         PropertyChanged -= OnPropertyChangedForLanguageServers;
-        _symbolSearch?.Cancel();
         if (Interlocked.Exchange(ref _languageServers, null) is { } host)
         {
             _ = host.DisposeAsync().AsTask();
@@ -149,7 +146,7 @@ public sealed partial class WorkspaceViewModel
     {
         if (_languageServers?.FindMissingServers(document.FilePath) is [{ } missing, ..])
         {
-            return $"This needs {missing.Name}, which is not installed.";
+            return OfferServerInstall(document, missing) ?? $"This needs {missing.Name}, which is not installed.";
         }
 
         return _languageServers?.Configuration.Registry.FindLanguage(document.FilePath) is { } language
@@ -184,9 +181,6 @@ public sealed partial class WorkspaceViewModel
                 break;
             case nameof(ActiveDocument):
                 UpdateLanguageServerText();
-                break;
-            case nameof(QuickOpenText):
-                SearchWorkspaceSymbols(QuickOpenText);
                 break;
             case nameof(State) when State is IdeState.Busy or IdeState.Running or IdeState.Debugging:
                 // A build or a run writes to its own output: show it, as Visual Studio does.
@@ -406,54 +400,6 @@ public sealed partial class WorkspaceViewModel
         {
             ShowLocations($"'{result.SymbolDisplay}' {(typeDefinition ? "type definitions" : "declarations")}", result.Locations);
         }
-    }
-
-    /// <summary>Adds the workspace's symbols to the search box's files, as Visual Studio's Go To All does.</summary>
-    private void SearchWorkspaceSymbols(string text)
-    {
-        _symbolSearch?.Cancel();
-        _symbolSearch?.Dispose();
-        _symbolSearch = null;
-        var query = text.Trim();
-        if (query.Length < 2 || _languageServers is not { } host || !host.Servers.Any(s => s.State == LanguageServerState.Running))
-        {
-            return;
-        }
-
-        _symbolSearch = new CancellationTokenSource();
-        _ = SearchWorkspaceSymbolsAsync(host, query, _symbolSearch.Token);
-    }
-
-    private async Task SearchWorkspaceSymbolsAsync(LanguageServerHost host, string query, CancellationToken cancellationToken)
-    {
-        IReadOnlyList<LspWorkspaceSymbol> symbols;
-        try
-        {
-            await Task.Delay(TimeSpan.FromMilliseconds(200), cancellationToken);
-            symbols = await host.FindWorkspaceSymbolsAsync(query, cancellationToken);
-        }
-        catch (OperationCanceledException)
-        {
-            return;
-        }
-
-        if (cancellationToken.IsCancellationRequested || QuickOpenText.Trim() != query || Workspace is not { } workspace)
-        {
-            return;
-        }
-
-        foreach (var symbol in symbols.Take(WorkspaceSymbolLimit))
-        {
-            var where = Path.GetRelativePath(workspace.RootDirectory, symbol.Location.FilePath);
-            var container = symbol.ContainerName is { Length: > 0 } name ? $" in {name}" : string.Empty;
-            QuickOpenResults.Add(new QuickOpenItem(symbol.Location.FilePath, symbol.Name, $"{LspMapping.Describe(symbol.Kind)}{container} · {where}:{symbol.Location.Line.ToString(CultureInfo.CurrentCulture)}")
-            {
-                Line = symbol.Location.Line,
-                Column = symbol.Location.Column,
-            });
-        }
-
-        IsQuickOpenOpen = QuickOpenResults.Count > 0;
     }
 
     /// <summary>The text of a file for the servers: the editor's text when it is open, else the file on disk.</summary>

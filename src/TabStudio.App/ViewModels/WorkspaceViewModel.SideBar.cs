@@ -29,6 +29,12 @@ public enum SideBarPanel
 
     /// <summary>The pull requests of the linked repository.</summary>
     PullRequests,
+
+    /// <summary>The Swarm window: the phones and tablets that run the app being built.</summary>
+    Swarm,
+
+    /// <summary>The Windows Bridge: the programs running on the paired Windows PC, streamed live.</summary>
+    WindowsBridge,
 }
 
 /// <summary>The side bar's tool windows, docked together as Visual Studio docks Solution Explorer, Git Changes and Test Explorer, with the agent beside them.</summary>
@@ -39,6 +45,8 @@ public sealed partial class WorkspaceViewModel
     [NotifyPropertyChangedFor(nameof(IsSolutionExplorerSelected), nameof(IsGitChangesSelected), nameof(IsTestExplorerSelected), nameof(IsAgentSelected), nameof(IsWebPreviewSelected), nameof(IsAppPreviewSelected))]
     [NotifyPropertyChangedFor(nameof(IsActionsSelected))]
     [NotifyPropertyChangedFor(nameof(IsPullRequestsSelected))]
+    [NotifyPropertyChangedFor(nameof(IsSwarmSelected), nameof(ShowsSwarmTab))]
+    [NotifyPropertyChangedFor(nameof(IsWindowsBridgeSelected))]
     public partial SideBarPanel SelectedSideBarPanel { get; set; } = SideBarPanel.SolutionExplorer;
 
     /// <summary>Whether the side bar shows the Solution Explorer and Properties.</summary>

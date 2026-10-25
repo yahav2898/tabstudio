@@ -24,12 +24,14 @@ public sealed partial class MainViewModel : ObservableObject
     /// <param name="gitHubAccount">The GitHub account dialog, shown over every page.</param>
     /// <param name="link">The TabStudio Link dialog, shown over every page.</param>
     /// <param name="desktopMode">Desktop mode, which shows the IDE on an external display; none when <see langword="null"/>.</param>
-    public MainViewModel(StartViewModel start, Func<WorkspaceViewModel> createWorkspace, RecentWorkspaces recent, SessionStore sessions, CompilerServices compiler, GitHubAccountViewModel gitHubAccount, LinkViewModel link, DesktopModeViewModel? desktopMode = null)
+    /// <param name="swarmDevice">The page this device shows in a swarm; none when <see langword="null"/>.</param>
+    public MainViewModel(StartViewModel start, Func<WorkspaceViewModel> createWorkspace, RecentWorkspaces recent, SessionStore sessions, CompilerServices compiler, GitHubAccountViewModel gitHubAccount, LinkViewModel link, DesktopModeViewModel? desktopMode = null, Swarm.SwarmDevicePageViewModel? swarmDevice = null)
     {
         ArgumentNullException.ThrowIfNull(start);
         ArgumentNullException.ThrowIfNull(createWorkspace);
 
         DesktopMode = desktopMode;
+        SwarmDevice = swarmDevice;
         Start = start;
         GitHubAccount = gitHubAccount;
         Link = link;
@@ -49,6 +51,9 @@ public sealed partial class MainViewModel : ObservableObject
 
     /// <summary>The TabStudio Link dialog, shared by the start screen and the IDE.</summary>
     public LinkViewModel Link { get; }
+
+    /// <summary>What this device shows while it is in a tablet's swarm: the tablet's app, full screen, over everything else.</summary>
+    public Swarm.SwarmDevicePageViewModel? SwarmDevice { get; }
 
     /// <summary>The page shown: the start screen or a <see cref="WorkspaceViewModel"/>.</summary>
     [ObservableProperty]
@@ -76,6 +81,8 @@ public sealed partial class MainViewModel : ObservableObject
 
         var workspace = _createWorkspace();
         workspace.CloseRequested += OnWorkspaceCloseRequested;
+        workspace.OpenWorkspaceRequested += OnOpenWorkspaceRequested;
+        workspace.NewProjectRequested += OnNewProjectRequested;
         CurrentPage = workspace;
         OnPropertyChanged(nameof(Workspace));
         try
@@ -113,11 +120,27 @@ public sealed partial class MainViewModel : ObservableObject
         OnPropertyChanged(nameof(Workspace));
     }
 
+    /// <summary>The search opened a recent solution: it takes the open one's place.</summary>
+    private async void OnOpenWorkspaceRequested(object? sender, string path) => await OpenWorkspaceAsync(path);
+
+    /// <summary>The search started a new project from a template: the Start window's New project, with the template chosen.</summary>
+    private void OnNewProjectRequested(object? sender, ProjectTemplate template)
+    {
+        CloseCurrentWorkspace();
+        Start.RefreshRecent();
+        Start.SelectedAction = StartAction.NewProject;
+        Start.SelectedTemplate = template;
+        CurrentPage = Start;
+        OnPropertyChanged(nameof(Workspace));
+    }
+
     private void CloseCurrentWorkspace()
     {
         if (CurrentPage is WorkspaceViewModel current)
         {
             current.CloseRequested -= OnWorkspaceCloseRequested;
+            current.OpenWorkspaceRequested -= OnOpenWorkspaceRequested;
+            current.NewProjectRequested -= OnNewProjectRequested;
             current.Dispose();
         }
     }

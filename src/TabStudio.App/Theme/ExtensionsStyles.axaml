@@ -14,7 +14,7 @@
     <Setter Property="HorizontalAlignment" Value="Center" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="FontWeight" Value="Bold" />
-    <Setter Property="Foreground" Value="#F2F4F8" />
+    <Setter Property="Foreground" Value="{DynamicResource Brush.Extensions.OnBadge}" />
   </Style>
 
   <!-- A category chip of Browse, filled when selected. -->
@@ -74,18 +74,18 @@
     <Setter Property="Padding" Value="12,4,4,4" />
     <Setter Property="CornerRadius" Value="8" />
     <Setter Property="Background" Value="{DynamicResource Brush.SuccessSoft}" />
-    <Setter Property="BorderBrush" Value="#2D4A3E" />
+    <Setter Property="BorderBrush" Value="{DynamicResource Brush.Notice.SuccessBorder}" />
     <Setter Property="BorderThickness" Value="1" />
   </Style>
   <Style Selector="Border.extensionNotice.error">
-    <Setter Property="Background" Value="#3A2224" />
-    <Setter Property="BorderBrush" Value="#5A3134" />
+    <Setter Property="Background" Value="{DynamicResource Brush.Notice.Error}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource Brush.Notice.ErrorBorder}" />
   </Style>
   <Style Selector="Border.extensionWarning">
     <Setter Property="Padding" Value="12,8" />
     <Setter Property="CornerRadius" Value="8" />
-    <Setter Property="Background" Value="#33291A" />
-    <Setter Property="BorderBrush" Value="#5A4520" />
+    <Setter Property="Background" Value="{DynamicResource Brush.Notice.Warning}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource Brush.Notice.WarningBorder}" />
     <Setter Property="BorderThickness" Value="1" />
   </Style>
 

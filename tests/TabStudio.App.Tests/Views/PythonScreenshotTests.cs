@@ -97,7 +97,10 @@ public sealed class PythonScreenshotTests : IDisposable
         var window = Show();
         var (workspace, document) = await OpenAsync("program.py", Program.Replace("print(mesage)", string.Empty, StringComparison.Ordinal), waitForServer: false);
         workspace.Breakpoints.Toggle(document.FilePath, 6);
-        Assert.Equal("Python: Current File", workspace.RunLabel);
+
+        // A folder of Python scripts is a Python project: F5 debugs the script being edited with debugpy.
+        Assert.Equal("python", workspace.RunLabel);
+        Assert.Equal("Python toolchain", workspace.RunHostText);
 
         await workspace.StartDebuggingCommand.ExecuteAsync(null);
         await UiTestHelpers.WaitUntilAsync(() => workspace.IsPaused, TimeSpan.FromSeconds(90), because: "debugpy to stop at the breakpoint");

@@ -158,7 +158,9 @@ public sealed class LiveTestingScreenshotTests : IClassFixture<SharedToolchain>,
     {
         Dispatcher.UIThread.RunJobs();
         AvaloniaHeadlessPlatform.ForceRenderTimerTick();
-        var frame = window.CaptureRenderedFrame() ?? throw new InvalidOperationException("Nothing was rendered.");
+        // Each frame is disposed after drawing, which keeps it and the pixels Skia reads alive until then; see
+        // UiTestHelpers.SaveFrame.
+        using var frame = window.CaptureRenderedFrame() ?? throw new InvalidOperationException("Nothing was rendered.");
         using var target = new RenderTargetBitmap(frame.PixelSize);
         using (var context = target.CreateDrawingContext())
         {
@@ -168,8 +170,11 @@ public sealed class LiveTestingScreenshotTests : IClassFixture<SharedToolchain>,
             {
                 if (TopLevel.GetTopLevel(control) is { } popup && !ReferenceEquals(popup, window) && popup.CaptureRenderedFrame() is { } image)
                 {
-                    var corner = popup.PointToScreen(default);
-                    context.DrawImage(image, new Rect(new Point(corner.X - origin.X, corner.Y - origin.Y), image.Size));
+                    using (image)
+                    {
+                        var corner = popup.PointToScreen(default);
+                        context.DrawImage(image, new Rect(new Point(corner.X - origin.X, corner.Y - origin.Y), image.Size));
+                    }
                 }
             }
         }

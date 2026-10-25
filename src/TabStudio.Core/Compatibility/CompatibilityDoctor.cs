@@ -47,6 +47,13 @@ public static class CompatibilityDoctor
     {
         ArgumentNullException.ThrowIfNull(project);
 
+        if (WindowsBridgeCompatibility.IsNetFramework(project) && project.IsExecutable && !project.IsTestProject)
+        {
+            return Report(
+                project, RunHost.WindowsBridge, CompatibilityStatus.NeedsWindows, "Windows Bridge",
+                ".NET Framework apps run on Windows only. They build and run on your PC through the Windows Bridge.");
+        }
+
         return project.Kind switch
         {
             ProjectKind.ConsoleApp when project.Language == ProjectLanguage.CSharp => Report(
@@ -125,13 +132,25 @@ public static class CompatibilityDoctor
                 project, RunHost.WebView, CompatibilityStatus.NeedsChanges, "OpenSilver, or your PC",
                 "WPF is Windows-only. OpenSilver can run most WPF code in a WebView; the rest runs through the Windows Bridge."),
 
+            ProjectKind.WinForms when project.Language == ProjectLanguage.CSharp => Report(
+                project, RunHost.AndroidView, CompatibilityStatus.Ready, "Cross-platform Forms layer in the app preview",
+                "Runs beside the code on TabStudio's own Windows Forms layer, drawn as on Windows 10, and its forms open in the Forms designer. Saving a file restarts it. Code that calls Windows itself, such as P/Invoke, COM or the registry, does not run here."),
+
             ProjectKind.WinForms => Report(
-                project, RunHost.AndroidView, CompatibilityStatus.NeedsChanges, "Cross-platform WinForms, or your PC",
-                "Windows Forms is Windows-only. A cross-platform WinForms layer can render it on Android; otherwise it runs through the Windows Bridge."),
+                project, RunHost.AndroidView, CompatibilityStatus.Planned, "Cross-platform Forms layer in the app preview",
+                $"Windows Forms apps run on TabStudio's own Forms layer. The {LanguageName(project.Language)} compiler is not bundled yet."),
 
             ProjectKind.NativeCpp => Report(
                 project, RunHost.WindowsBridge, CompatibilityStatus.NeedsWindows, "Windows Bridge",
                 "Visual C++ projects need the MSVC toolchain. They build and run on your PC through the Windows Bridge."),
+
+            ProjectKind.Python => Report(
+                project, RunHost.Toolchain, CompatibilityStatus.NeedsToolchain, "Python toolchain",
+                "Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it."),
+
+            ProjectKind.Node => Report(
+                project, RunHost.Toolchain, CompatibilityStatus.NeedsToolchain, "Node.js toolchain",
+                "Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it."),
 
             _ => Report(
                 project, RunHost.None, CompatibilityStatus.Unsupported, "Unknown",
