@@ -1,0 +1,142 @@
+using Android.App;
+using Android.Content;
+using Android.Content.PM;
+using Avalonia.Android;
+using Avalonia.Threading;
+using TabStudio.App.Platform;
+
+namespace TabStudio.Android;
+
+/// <summary>
+/// System notifications on Android, in a "GitHub Actions" channel: a run that finished while TabStudio was in the
+/// background. Tapping one brings TabStudio back and opens the run. On Android 13 and later the user is asked
+/// for the POST_NOTIFICATIONS permission the first time they turn notifications on.
+/// </summary>
+internal sealed class AndroidNotifications : INotifications
+{
+    /// <summary>The intent extra that carries a tapped notification's tag back to the activity.</summary>
+    public const string TagExtra = "tabstudio.notification";
+
+    private const string ChannelId = "github-actions";
+    private const int PermissionRequestCode = 7301;
+
+    /// <summary>Android 13's permission to post notifications (<c>Manifest.Permission.PostNotifications</c>).</summary>
+    private const string PostNotificationsPermission = "android.permission.POST_NOTIFICATIONS";
+
+    private static readonly string[] Permissions = [PostNotificationsPermission];
+
+    private readonly Context _context;
+    private readonly Func<Activity?> _activity;
+
+    /// <summary>Creates the notifications and their channel.</summary>
+    /// <param name="context">The application context.</param>
+    /// <param name="activity">Returns the activity, which asks for permissions and opens from a notification.</param>
+    public AndroidNotifications(Context context, Func<Activity?> activity)
+    {
+        _context = context;
+        _activity = activity;
+        if (context.GetSystemService(Context.NotificationService) is NotificationManager manager)
+        {
+            var channel = new NotificationChannel(ChannelId, "GitHub Actions runs", NotificationImportance.Default)
+            {
+                Description = "When a workflow run you are waiting for finishes.",
+            };
+            manager.CreateNotificationChannel(channel);
+        }
+    }
+
+    /// <inheritdoc />
+    public event EventHandler<string>? Opened;
+
+    /// <inheritdoc />
+    public bool IsSupported => true;
+
+    /// <inheritdoc />
+    public bool IsAllowed
+    {
+        get
+        {
+            if (_context.GetSystemService(Context.NotificationService) is not NotificationManager manager || !manager.AreNotificationsEnabled())
+            {
+                return false;
+            }
+
+            if (OperatingSystem.IsAndroidVersionAtLeast(33))
+            {
+                return _context.CheckSelfPermission(PostNotificationsPermission) == Permission.Granted;
+            }
+
+            return true;
+        }
+    }
+
+    /// <inheritdoc />
+    public Task<bool> RequestPermissionAsync()
+    {
+        if (IsAllowed)
+        {
+            return Task.FromResult(true);
+        }
+
+        // Before Android 13 there is nothing to ask: the user turned notifications off in the system settings.
+        return OperatingSystem.IsAndroidVersionAtLeast(33) && _activity() is AvaloniaActivity activity
+            ? AskAsync(activity)
+            : Task.FromResult(false);
+    }
+
+    [System.Runtime.Versioning.SupportedOSPlatform("android33.0")]
+    private static Task<bool> AskAsync(AvaloniaActivity activity)
+    {
+        var answer = new TaskCompletionSource<bool>();
+        void OnResult(int requestCode, string[] permissions, Permission[] results)
+        {
+            if (requestCode != PermissionRequestCode)
+            {
+                return;
+            }
+
+            activity.RequestPermissionsResult -= OnResult;
+            answer.TrySetResult(results.Length > 0 && results.All(r => r == Permission.Granted));
+        }
+
+        activity.RequestPermissionsResult += OnResult;
+        activity.RequestPermissions(Permissions, PermissionRequestCode);
+        return answer.Task;
+    }
+
+    /// <inheritdoc />
+    public void Show(SystemNotification notification)
+    {
+        ArgumentNullException.ThrowIfNull(notification);
+        if (!IsAllowed || _context.GetSystemService(Context.NotificationService) is not NotificationManager manager)
+        {
+            return;
+        }
+
+        var open = new Intent(_context, typeof(MainActivity))
+            .SetFlags(ActivityFlags.SingleTop | ActivityFlags.ClearTop)
+            .PutExtra(TagExtra, notification.Tag);
+        var pending = PendingIntent.GetActivity(_context, notification.Tag.GetHashCode(StringComparison.Ordinal), open, PendingIntentFlags.Immutable | PendingIntentFlags.UpdateCurrent);
+        var built = new Notification.Builder(_context, ChannelId)
+            .SetSmallIcon(Resource.Drawable.ic_stat_tabstudio)
+            .SetContentTitle(notification.Title)
+            .SetContentText(notification.Text)
+            .SetStyle(new Notification.BigTextStyle().BigText(notification.Text))
+            .SetCategory(notification.IsFailure ? Notification.CategoryError : Notification.CategoryStatus)
+            .SetContentIntent(pending)
+            .SetAutoCancel(true)
+            .Build();
+        manager.Notify(notification.Tag, 1, built);
+    }
+
+    /// <summary>Opens what a tapped notification is about, when the activity was started or brought back by one.</summary>
+    /// <param name="intent">The intent the activity received.</param>
+    public void HandleIntent(Intent? intent)
+    {
+        if (intent?.GetStringExtra(TagExtra) is { Length: > 0 } tag)
+        {
+            intent.RemoveExtra(TagExtra);
+            Dispatcher.UIThread.Post(() => Opened?.Invoke(this, tag));
+        }
+    }
+}

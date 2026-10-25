@@ -3,6 +3,7 @@
              xmlns:controls="using:TabStudio.App.Controls"
              xmlns:conv="using:TabStudio.App.Converters"
              xmlns:views="using:TabStudio.App.Views"
+             xmlns:actionViews="using:TabStudio.App.Views.Actions"
              xmlns:vm="using:TabStudio.App.ViewModels"
              xmlns:sys="using:System"
              x:Class="TabStudio.App.Views.WorkspaceView"
@@ -82,6 +83,7 @@
           <MenuItem Header="_View">
             <MenuItem Header="_Solution Explorer" InputGesture="Ctrl+Alt+L" Command="{Binding ToggleSideBarCommand}" />
             <MenuItem Header="_Git Changes" Command="{Binding ShowGitChangesCommand}" />
+            <MenuItem Header="GitHub Actio_ns" Command="{Binding ShowActionsCommand}" />
             <MenuItem Header="_Test Explorer (Ctrl+E, T)" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}" />
             <MenuItem Header="Claude _Agent" Command="{Binding ShowAgentCommand}" />
             <MenuItem Header="_Web Preview" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.WebPreview}"
@@ -117,6 +119,7 @@
             <MenuItem Header="P_ublish to GitHub..." Command="{Binding ShowGitChangesCommand}" IsEnabled="{Binding GitChanges.IsPublishVisible}" />
             <MenuItem Header="Open on _GitHub" Command="{Binding GitChanges.OpenOnGitHubCommand}" />
             <MenuItem Header="View _History" Command="{Binding GitChanges.OpenHistoryCommand}" />
+            <MenuItem Header="GitHub Ac_tions" Command="{Binding ShowActionsCommand}" />
             <Separator />
             <MenuItem Header="GitHub _Account..." Command="{Binding GitChanges.Account.OpenCommand}" />
           </MenuItem>
@@ -478,6 +481,7 @@
               <views:DebugTouchBarView IsVisible="{Binding IsDebugging}" />
             </Panel>
           </Panel>
+          <actionViews:RunNoticeView DataContext="{Binding Actions}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="16,12" />
         </Panel>
 
         <GridSplitter Grid.Row="3" x:Name="BottomSplitter" Height="6" ResizeDirection="Rows" Background="Transparent">
@@ -586,6 +590,11 @@
           <views:WebPreviewView DataContext="{Binding WebPreview}" />
         </Panel>
 
+        <!-- GitHub Actions: the commit's checks, runs, workflows and watched repositories. -->
+        <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsActionsSelected}">
+          <actionViews:ActionsView DataContext="{Binding Actions}" />
+        </Panel>
+
         <!-- Tool window tabs, at the bottom of the dock as in Visual Studio; they wrap when the side bar is narrow. -->
         <Border Grid.Row="3" MinHeight="34" Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0">
           <WrapPanel Orientation="Horizontal" Margin="4,0">
@@ -593,6 +602,14 @@
                     Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.SolutionExplorer}" Content="Solution Explorer" />
             <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsGitChangesSelected}" Content="Git Changes"
                     Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.GitChanges}" />
+            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsActionsSelected}"
+                    Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.Actions}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <TextBlock Text="Actions" VerticalAlignment="Center" />
+                <Ellipse Width="7" Height="7" VerticalAlignment="Center" IsVisible="{Binding Actions.IsCiVisible}"
+                         Fill="{Binding Actions.CiVisual, Converter={x:Static conv:ActionsConverters.StateBrush}}" />
+              </StackPanel>
+            </Button>
             <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsTestExplorerSelected}"
                     Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}">
               <StackPanel Orientation="Horizontal" Spacing="6">
@@ -657,6 +674,7 @@
                          IsVisible="{Binding GitChanges.HasIncoming}" />
             </StackPanel>
           </Button>
+          <actionViews:CiStatusBarItem DataContext="{Binding Actions}" />
         </StackPanel>
 
         <TextBlock Grid.Column="1" Margin="18,0" Foreground="{DynamicResource Brush.OnAccent}" FontSize="12" Opacity="0.9"
@@ -675,6 +693,9 @@
 
     <!-- Git's dialogs: switch branch, create a pull request, history. -->
     <views:GitDialogsView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding GitChanges}" />
+
+    <!-- GitHub Actions' dialog: Run workflow. -->
+    <actionViews:ActionsDialogsView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding Actions}" />
 
     <!-- The in-app dialog that asks for names and confirmations. -->
     <Panel Grid.Row="0" Grid.RowSpan="4" Background="#99000000" IsVisible="{Binding Prompt.IsOpen}">

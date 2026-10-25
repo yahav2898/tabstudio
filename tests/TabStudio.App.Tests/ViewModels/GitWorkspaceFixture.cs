@@ -17,14 +17,17 @@ internal sealed class GitWorkspaceFixture : IDisposable
 
     private readonly TempDirectory _temp = new();
 
-    public GitWorkspaceFixture()
+    /// <param name="notifications">The system's notifications, for tests of CI notifications.</param>
+    /// <param name="appActivity">Whether the app is in the background, for tests of CI polling.</param>
+    public GitWorkspaceFixture(INotifications? notifications = null, IAppActivity? appActivity = null)
     {
         Paths = new AppPaths(_temp.Path);
         var device = new DefaultDeviceStatus(new DeviceInfo(8L * 1024 * 1024 * 1024, 8, IsLowRamDevice: false));
         Account = GitHub.CreateAccount(Paths);
         AccountView = new GitHubAccountViewModel(Account, Browser);
         Workspace = new WorkspaceViewModel(
-            new CompilerServices(Paths), device, DeviceProfile.For(device.Device), new AvaloniaUiDispatcher(), new SessionStore(Paths), Paths, AccountView, Browser);
+            new CompilerServices(Paths), device, DeviceProfile.For(device.Device), new AvaloniaUiDispatcher(), new SessionStore(Paths), Paths, AccountView, Browser,
+            notifications: notifications, appActivity: appActivity);
     }
 
     public FakeGitHub GitHub { get; } = new();

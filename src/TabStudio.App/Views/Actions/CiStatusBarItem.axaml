@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:conv="using:TabStudio.App.Converters"
+             xmlns:actions="using:TabStudio.App.ViewModels.Actions"
+             x:Class="TabStudio.App.Views.Actions.CiStatusBarItem"
+             x:DataType="actions:ActionsViewModel"
+             IsVisible="{Binding IsCiVisible}">
+
+  <!-- The workspace commit's CI, next to the branch: tap to open GitHub Actions on this commit. -->
+  <Button x:Name="CiButton" Theme="{StaticResource StatusBarButton}" Height="24"
+          Command="{Binding ShowCommitChecksCommand}" ToolTip.Tip="{Binding CiToolTip}">
+    <StackPanel Orientation="Horizontal" Spacing="6">
+      <!-- A dark disc keeps green, red and amber readable on the accent-colored status bar. -->
+      <Border Width="17" Height="17" CornerRadius="8.5" Background="#59000000" VerticalAlignment="Center">
+        <controls:StrokeIcon Size="13" StrokeThickness="2.4" HorizontalAlignment="Center"
+                             Data="{Binding CiVisual, Converter={x:Static conv:ActionsConverters.StateIcon}}"
+                             Foreground="{Binding CiVisual, Converter={x:Static conv:ActionsConverters.StateBrush}}"
+                             Classes.spinning="{Binding CiVisual, Converter={x:Static conv:ActionsConverters.IsSpinning}}" />
+      </Border>
+      <TextBlock x:Name="CiLabel" Text="{Binding CiText}" FontSize="12" VerticalAlignment="Center" />
+    </StackPanel>
+  </Button>
+</UserControl>

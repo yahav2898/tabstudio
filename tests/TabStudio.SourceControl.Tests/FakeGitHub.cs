@@ -17,7 +17,7 @@ namespace TabStudio.SourceControl.Tests;
 /// Blob hashes are real Git hashes. Tree and commit hashes are made up but stable, which is all the client
 /// relies on.
 /// </remarks>
-internal sealed class FakeGitHub : HttpMessageHandler
+internal sealed partial class FakeGitHub : HttpMessageHandler
 {
     public const string Login = "tester";
 
@@ -121,13 +121,20 @@ internal sealed class FakeGitHub : HttpMessageHandler
         var uri = request.RequestUri!;
         var path = string.Join('/', uri.AbsolutePath.Trim('/').Split('/').Select(Uri.UnescapeDataString));
         _requests.Enqueue($"{request.Method} {path}{uri.Query}");
+        if (HandleDownload(request) is { } download)
+        {
+            return download;
+        }
 
         var body = request.Content is null ? null : JsonNode.Parse(await request.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false));
         var signedIn = request.Headers.Authorization is not null;
+        HttpResponseMessage response;
         lock (_gate)
         {
-            return Handle(request.Method.Method, path, Query(uri), body, signedIn);
+            response = Handle(request.Method.Method, path, Query(uri), body, signedIn);
         }
+
+        return await ApplyETagAsync(request, response).ConfigureAwait(false);
     }
 
     private HttpResponseMessage Handle(string method, string path, Dictionary<string, string> query, JsonNode? body, bool signedIn)
@@ -166,6 +173,11 @@ internal sealed class FakeGitHub : HttpMessageHandler
         }
 
         var rest = string.Join('/', parts.Skip(3));
+        if (HandleActions(method, rest, query, body, repo) is { } actions)
+        {
+            return actions;
+        }
+
         return (method, rest) switch
         {
             ("GET", "") => Json(RepositoryJson(repo)),

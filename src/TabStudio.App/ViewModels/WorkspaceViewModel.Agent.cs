@@ -115,7 +115,8 @@ public sealed partial class WorkspaceViewModel : IAgentWorkspaceHost
     {
         var kind = diagnostic.Severity == DiagnosticSeverityLevel.Error ? "error" : "warning";
         var text = new StringBuilder();
-        text.Append(CultureInfo.InvariantCulture, $"Fix this {kind}, then check that the project builds:\n{diagnostic.Id}: {diagnostic.Message}\n");
+        var code = diagnostic.Id.Length > 0 ? diagnostic.Id + ": " : string.Empty;
+        text.Append(CultureInfo.InvariantCulture, $"Fix this {kind}, then check that the project builds:\n{code}{diagnostic.Message}\n");
         if (diagnostic.Location is { } location)
         {
             var root = Workspace?.RootDirectory;
@@ -128,6 +129,11 @@ public sealed partial class WorkspaceViewModel : IAgentWorkspaceHost
         if (diagnostic.ProjectName is { } project)
         {
             text.Append(CultureInfo.InvariantCulture, $"Project: {project}.\n");
+        }
+
+        if (ErrorList.CiSourceOf(diagnostic) is { } ci)
+        {
+            text.Append(CultureInfo.InvariantCulture, $"CI reported it: the check \"{ci.CheckName}\" on commit {ci.ShortSha}. The file may have changed since that commit.\n");
         }
 
         return text.ToString().TrimEnd();
