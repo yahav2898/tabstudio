@@ -1,3 +1,4 @@
+using System.Buffers;
 using System.Text;
 using TabStudio.Toolchains.Processes;
 
@@ -102,6 +103,8 @@ public sealed class WindowsProgram : IDisposable
 /// <summary>Wine's own messages on a program's console, which are not the program's output.</summary>
 internal static class WineMessages
 {
+    private static readonly SearchValues<char> HexDigits = SearchValues.Create("0123456789abcdef");
+
     /// <summary>
     /// Whether a line is one of Wine's debug messages rather than the app's output, such as
     /// <c>0024:fixme:ole:CoInitializeSecurity stub</c>. Wine's other messages, such as a crash report, stay.
@@ -111,7 +114,7 @@ internal static class WineMessages
     {
         ArgumentNullException.ThrowIfNull(line);
         var colon = line.IndexOf(':', StringComparison.Ordinal);
-        if (colon is < 4 or > 8 || line.AsSpan(0, colon).ContainsAnyExcept("0123456789abcdef"))
+        if (colon is < 4 or > 8 || line.AsSpan(0, colon).ContainsAnyExcept(HexDigits))
         {
             return false;
         }

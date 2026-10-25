@@ -34,7 +34,7 @@ public sealed class WindowsDisplay : IDesktopInput, IAsyncDisposable, IDisposabl
     private readonly Task _inputPump;
     private readonly Task _framePump;
     private readonly SemaphoreSlim _damaged = new(0, 1);
-    private PixelRect _dirty;
+    private ScreenRect _dirty;
     private uint? _damage;
     private uint? _desktopWindow;
     private int _disposed;
@@ -64,7 +64,7 @@ public sealed class WindowsDisplay : IDesktopInput, IAsyncDisposable, IDisposabl
     /// Part of the desktop changed: the rectangle to copy with <see cref="CopyPixels"/>. Raised on a background
     /// thread, at most once per <see cref="FrameInterval"/>.
     /// </summary>
-    public event EventHandler<PixelRect>? FrameChanged;
+    public event EventHandler<ScreenRect>? FrameChanged;
 
     /// <summary>The connection to the X server ended, such as when the session stopped.</summary>
     public event EventHandler<Exception?>? Disconnected;
@@ -121,13 +121,13 @@ public sealed class WindowsDisplay : IDesktopInput, IAsyncDisposable, IDisposabl
     /// <param name="area">The part, such as the rectangle <see cref="FrameChanged"/> reported.</param>
     /// <param name="destination">The buffer.</param>
     /// <param name="stride">The bytes of one row of the buffer.</param>
-    public void CopyPixels(PixelRect area, Span<byte> destination, int stride)
+    public void CopyPixels(ScreenRect area, Span<byte> destination, int stride)
     {
         lock (_gate)
         {
             if (Volatile.Read(ref _disposed) == 0)
             {
-                _framebuffer.Copy(area.Intersect(new PixelRect(0, 0, DesktopSize.Width, DesktopSize.Height)), destination, stride);
+                _framebuffer.Copy(area.Intersect(new ScreenRect(0, 0, DesktopSize.Width, DesktopSize.Height)), destination, stride);
             }
         }
     }
@@ -148,10 +148,10 @@ public sealed class WindowsDisplay : IDesktopInput, IAsyncDisposable, IDisposabl
         DesktopSize = (width, height);
         if (await FindDesktopWindowAsync(cancellationToken).ConfigureAwait(false) is { } window)
         {
-            await _client.ConfigureWindowAsync(window, new PixelRect(0, 0, width, height), cancellationToken).ConfigureAwait(false);
+            await _client.ConfigureWindowAsync(window, new ScreenRect(0, 0, width, height), cancellationToken).ConfigureAwait(false);
         }
 
-        MarkDirty(new PixelRect(0, 0, width, height));
+        MarkDirty(new ScreenRect(0, 0, width, height));
     }
 
     /// <summary>Waits until every input sent so far reached the X server.</summary>
@@ -284,7 +284,7 @@ public sealed class WindowsDisplay : IDesktopInput, IAsyncDisposable, IDisposabl
     private async Task StartTrackingAsync(CancellationToken cancellationToken)
     {
         _damage = await _client.TrackDamageAsync(_client.Screen.Root, cancellationToken).ConfigureAwait(false);
-        MarkDirty(new PixelRect(0, 0, DesktopSize.Width, DesktopSize.Height));
+        MarkDirty(new ScreenRect(0, 0, DesktopSize.Width, DesktopSize.Height));
     }
 
     private void Enqueue(Func<CancellationToken, Task> action)
@@ -317,9 +317,9 @@ public sealed class WindowsDisplay : IDesktopInput, IAsyncDisposable, IDisposabl
         }
     }
 
-    private void OnDamaged(object? sender, PixelRect area) => MarkDirty(area);
+    private void OnDamaged(object? sender, ScreenRect area) => MarkDirty(area);
 
-    private void MarkDirty(PixelRect area)
+    private void MarkDirty(ScreenRect area)
     {
         lock (_gate)
         {
@@ -357,14 +357,14 @@ public sealed class WindowsDisplay : IDesktopInput, IAsyncDisposable, IDisposabl
                 {
                     // Without DAMAGE, look for changes a few times a second.
                     await Task.Delay(100, _stop.Token).ConfigureAwait(false);
-                    MarkDirty(new PixelRect(0, 0, DesktopSize.Width, DesktopSize.Height));
+                    MarkDirty(new ScreenRect(0, 0, DesktopSize.Width, DesktopSize.Height));
                 }
 
                 await _damaged.WaitAsync(_stop.Token).ConfigureAwait(false);
-                PixelRect area;
+                ScreenRect area;
                 lock (_gate)
                 {
-                    area = _dirty.Intersect(new PixelRect(0, 0, DesktopSize.Width, DesktopSize.Height));
+                    area = _dirty.Intersect(new ScreenRect(0, 0, DesktopSize.Width, DesktopSize.Height));
                     _dirty = default;
                 }
 

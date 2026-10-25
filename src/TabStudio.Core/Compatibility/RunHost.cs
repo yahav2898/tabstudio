@@ -22,6 +22,12 @@ public enum RunHost
 
     /// <summary>Run by a toolchain from the Toolchain Store, such as Python, with its output in the Output panel.</summary>
     Toolchain,
+
+    /// <summary>
+    /// The real Windows app, on the real .NET Windows Desktop runtime under Wine in the Toolchain Store's Linux
+    /// environment, shown in the app preview.
+    /// </summary>
+    WindowsCompatibility,
 }
 
 /// <summary>

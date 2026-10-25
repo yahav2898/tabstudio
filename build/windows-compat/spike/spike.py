@@ -400,22 +400,29 @@ def animate(fb, label, dll, extra_env=None):
     time.sleep(1)
 
 
-def resize(fb, program):
+def resize(fb, program, forms):
+    """Ways to resize Wine's virtual desktop while an app runs; the app reports the screen size it sees."""
     code, output, _ = run(["xdotool", "search", "--name", "Wine desktop"], timeout=30)
     ids = output.split()
     log("desktop_windows", " ".join(ids) or "none")
-    if not ids:
-        code, tree, _ = run(["xwininfo", "-root", "-children"], timeout=30)
-        note("root children: " + " | ".join(l.strip() for l in tree.splitlines() if "0x" in l)[:1500])
-        return
-    run(["xdotool", "windowsize", ids[-1], "800", "600"], timeout=30)
-    _, line = program.wait_for("SCREEN 800x600", 15)
-    log("resize_desktop_800x600", "the app saw the new screen size" if line else "the app did not see it")
+    if ids:
+        run(["xdotool", "windowsize", ids[-1], "800", "600"], timeout=30)
+        _, line = program.wait_for("SCREEN 800x600", 8)
+        log("resize_x_window", "the app saw 800x600" if line else "the app did not see it")
+    start = time.monotonic()
+    code, output, _ = run(dotnet_command(forms, "--resize", "900", "650"), timeout=120)
+    _, line = program.wait_for("SCREEN 900x650", 10)
+    log("resize_change_display_settings", f"{output.strip()[-80:]} in {time.monotonic() - start:.2f}s; the app {'saw 900x650' if line else 'did not see it'}")
     time.sleep(1)
-    fb.png(os.path.join(OUT, "resize-800x600.png"), 0, 0, 1024, 720)
-    run(["xdotool", "windowsize", ids[-1], str(DESKTOP[0]), str(DESKTOP[1])], timeout=30)
-    _, line = program.wait_for(f"SCREEN {DESKTOP[0]}x{DESKTOP[1]}", 15)
-    log("resize_desktop_back", "yes" if line else "no")
+    fb.png(os.path.join(OUT, "resize-900x650.png"), 0, 0, 1024, 720)
+    start = time.monotonic()
+    explorer = subprocess.Popen([WINE, "explorer", "/desktop=Default,960x600"], env=ENV, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    _, line = program.wait_for("SCREEN 960x600", 10)
+    log("resize_explorer_again", f"the app {'saw 960x600' if line else 'did not see it'} after {time.monotonic() - start:.2f}s; explorer {'still runs' if explorer.poll() is None else 'exited ' + str(explorer.returncode)}")
+    if explorer.poll() is None:
+        explorer.kill()
+    time.sleep(1)
+    fb.png(os.path.join(OUT, "resize-960x600.png"), 0, 0, 1024, 720)
 
 
 def diagnose():
@@ -513,7 +520,7 @@ def main():
     if program is not None:
         exercise(fb, "forms", program, parts)
         if not QUICK:
-            resize(fb, program)
+            resize(fb, program, forms)
         program.stop()
         time.sleep(1)
         program, parts = show_app(fb, "forms_again", dotnet_command(forms))

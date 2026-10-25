@@ -345,7 +345,51 @@
       ]
     },
     {
+      "id": "windows",
+      "kind": "platform",
+      "name": "Windows Compatibility",
+      "description": "Runs Windows Forms and WPF apps on the tablet as the real Windows app: Wine, an X server for its windows, and .NET's Windows Desktop runtime.",
+      "languages": [ "C#" ],
+      "listed": true,
+      "homepage": "https://www.winehq.org/",
+      "license": "LGPL-2.1-or-later AND MIT",
+      "displayVersion": "Wine 11.0 · .NET 10.0.13",
+      "packages": [ "xvfb", "xkbcomp", "xkeyboard-config" ],
+      "estimatedDownloadSize": 330000000,
+      "estimatedInstalledSize": 1250000000,
+      "host": { "commands": [ "wine" ], "versionArguments": [ "--version" ], "versionPattern": "wine-(?<version>\\S+)" },
+      "architectures": {
+        "x86_64": {
+          "packages": [ "wine" ],
+          "versionPackage": "wine",
+          "setup": [
+            {
+              "name": ".NET runtime for Windows",
+              "description": "Microsoft's .NET 10 runtime for 64-bit x86 Windows, which the apps run on inside Wine.",
+              "archive": {
+                "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/10.0.13/dotnet-runtime-10.0.13-win-x64.zip",
+                "sha256": "8db74a746baa450925d01325a2108ccf6ac39af4018047475292ae155c013d89",
+                "size": 36970749,
+                "destination": "/opt/tabstudio/windows/dotnet"
+              }
+            },
+            {
+              "name": ".NET Windows Desktop runtime",
+              "description": "Windows Forms and WPF, from Microsoft's Windows Desktop runtime for 64-bit x86 Windows.",
+              "archive": {
+                "url": "https://builds.dotnet.microsoft.com/dotnet/WindowsDesktop/10.0.13/windowsdesktop-runtime-10.0.13-win-x64.zip",
+                "sha256": "5b68b6739ff71ac862c2e90a50851483da041941ee76cf71b5dbb5d081c15870",
+                "size": 39169839,
+                "destination": "/opt/tabstudio/windows/desktop"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
       "id": "windows-spike",
+      "kind": "platform",
       "name": "Windows Compatibility (spike)",
       "description": "Temporary: Wine, Xvfb and the tools the Windows Compatibility spike measures with.",
       "languages": [],

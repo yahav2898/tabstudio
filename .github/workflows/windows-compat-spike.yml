@@ -79,31 +79,50 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: bash build/ci/publish-logs.sh wcspike-x64 ${{ job.status }}
 
+  wine:
+    name: Build Wine for Alpine aarch64
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - id: cache
+        uses: actions/cache/restore@v4
+        with:
+          path: wine-build
+          key: wcspike-wine-11.0-alpine3.24-aarch64-${{ hashFiles('build/windows-compat/spike/build-wine.sh') }}
+      - name: Build Wine
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p wine-build
+          docker run --rm -v "$PWD:/w" -w /w alpine:3.24 sh build/windows-compat/spike/build-wine.sh /w/wine-build 2>&1 | tail -n 80
+          sudo chown -R "$(id -u)" wine-build
+          test -f wine-build/wine.tar.gz
+      - uses: actions/cache/save@v4
+        if: steps.cache.outputs.cache-hit != 'true'
+        with:
+          path: wine-build
+          key: wcspike-wine-11.0-alpine3.24-aarch64-${{ hashFiles('build/windows-compat/spike/build-wine.sh') }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wine-aarch64
+          path: wine-build/
+          compression-level: 0
+
   arm64:
     name: Spike on Alpine aarch64
-    needs: apps
+    needs: [apps, wine]
     runs-on: ubuntu-24.04-arm
-    timeout-minutes: 330
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           name: spike
           path: spike
-      - name: Wait for the Wine build
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          key="wcspike-wine-11.0-alpine3.24-aarch64-${{ hashFiles('build/windows-compat/spike/build-wine.sh') }}"
-          for i in $(seq 1 150); do
-            gh api "repos/${{ github.repository }}/actions/caches?key=$key" --jq '.total_count' | grep -qv '^0$' && break
-            sleep 60
-          done
-      - uses: actions/cache/restore@v4
+      - uses: actions/download-artifact@v4
         with:
+          name: wine-aarch64
           path: wine-build
-          key: wcspike-wine-11.0-alpine3.24-aarch64-${{ hashFiles('build/windows-compat/spike/build-wine.sh') }}
-          fail-on-cache-miss: true
       - name: Collect the build logs
         run: |
           mkdir -p ci-out

@@ -41,7 +41,7 @@ public sealed class XwdFramebuffer : IDisposable
     public int Stride { get; }
 
     /// <summary>The whole screen.</summary>
-    public PixelRect Bounds => new(0, 0, Width, Height);
+    public ScreenRect Bounds => new(0, 0, Width, Height);
 
     /// <summary>Maps an Xvfb framebuffer file.</summary>
     /// <param name="path">The file, <c>Xvfb_screen0</c> in the folder given to <c>-fbdir</c>.</param>
@@ -89,7 +89,7 @@ public sealed class XwdFramebuffer : IDisposable
     /// <param name="destination">The buffer: the pixels of a picture as big as the whole screen, or as the area when <paramref name="destinationIsArea"/>.</param>
     /// <param name="destinationStride">The bytes of one row of the buffer.</param>
     /// <param name="destinationIsArea">Whether the buffer starts at the area's corner rather than the screen's.</param>
-    public void Copy(PixelRect area, Span<byte> destination, int destinationStride, bool destinationIsArea = false)
+    public void Copy(ScreenRect area, Span<byte> destination, int destinationStride, bool destinationIsArea = false)
     {
         var clipped = area.Intersect(Bounds);
         if (clipped.IsEmpty)
@@ -110,14 +110,14 @@ public sealed class XwdFramebuffer : IDisposable
 
     /// <summary>A checksum of part of the screen, to find out whether it changed; it differs from one process to the next.</summary>
     /// <param name="area">The part of the screen.</param>
-    public uint Checksum(PixelRect area)
+    public uint Checksum(ScreenRect area)
     {
         var clipped = area.Intersect(Bounds);
         var row = new byte[clipped.Width * 4];
         var hash = default(HashCode);
         for (var y = 0; y < clipped.Height; y++)
         {
-            Copy(new PixelRect(clipped.X, clipped.Y + y, clipped.Width, 1), row, row.Length, destinationIsArea: true);
+            Copy(new ScreenRect(clipped.X, clipped.Y + y, clipped.Width, 1), row, row.Length, destinationIsArea: true);
             hash.AddBytes(row);
         }
 
@@ -134,18 +134,17 @@ public sealed class XwdFramebuffer : IDisposable
     /// <summary>Reads an XWD header and checks it describes a framebuffer TabStudio can show.</summary>
     internal static (int Width, int Height, int Stride, long Pixels) ReadHeader(ReadOnlySpan<byte> header)
     {
-        uint Field(int index) => BinaryPrimitives.ReadUInt32BigEndian(header[(index * 4)..]);
-        var headerSize = Field(0);
-        var version = Field(1);
-        var width = (int)Field(4);
-        var height = (int)Field(5);
-        var byteOrder = Field(7);
-        var bitsPerPixel = Field(11);
-        var stride = (int)Field(12);
-        var redMask = Field(14);
-        var greenMask = Field(15);
-        var blueMask = Field(16);
-        var colors = Field(19);
+        var headerSize = Field(header, 0);
+        var version = Field(header, 1);
+        var width = (int)Field(header, 4);
+        var height = (int)Field(header, 5);
+        var byteOrder = Field(header, 7);
+        var bitsPerPixel = Field(header, 11);
+        var stride = (int)Field(header, 12);
+        var redMask = Field(header, 14);
+        var greenMask = Field(header, 15);
+        var blueMask = Field(header, 16);
+        var colors = Field(header, 19);
         if (version != 7)
         {
             throw new InvalidDataException($"The framebuffer file is not in XWD format (version {version}).");
@@ -164,4 +163,6 @@ public sealed class XwdFramebuffer : IDisposable
 
         return (width, height, stride, headerSize + (colors * 12L));
     }
+
+    private static uint Field(ReadOnlySpan<byte> header, int index) => BinaryPrimitives.ReadUInt32BigEndian(header[(index * 4)..]);
 }

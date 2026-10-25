@@ -14,7 +14,7 @@ public sealed partial class WorkspaceViewModel
 {
     private static readonly HashSet<string> RestartingExtensions = new(StringComparer.OrdinalIgnoreCase)
     {
-        ".cs", ".csproj", ".json", ".cshtml", ".razor", ".axaml", ".props", ".targets",
+        ".cs", ".csproj", ".json", ".cshtml", ".razor", ".axaml", ".props", ".targets", ".xaml",
     };
 
     private ProjectInfo? _liveProject;
@@ -89,7 +89,7 @@ public sealed partial class WorkspaceViewModel
 
         // An Avalonia app's files are all compiled into it, its images and fonts included.
         var relative = Path.GetRelativePath(project.DirectoryPath, document.FilePath);
-        var restarts = IsAvaloniaApp(project)
+        var restarts = IsAvaloniaApp(project) || UsesWindowsCompatibility(project)
             || (RestartingExtensions.Contains(Path.GetExtension(document.FilePath))
                 && !relative.StartsWith("wwwroot" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase));
         if (!restarts)

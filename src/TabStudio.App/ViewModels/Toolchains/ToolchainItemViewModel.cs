@@ -63,6 +63,7 @@ public sealed partial class ToolchainItemViewModel : ObservableObject
         "go" => "Go",
         "java" => "Jv",
         "kotlin" => "Kt",
+        "windows" => "Win",
         _ => Toolchain.Name[..Math.Min(2, Toolchain.Name.Length)],
     };
 
@@ -76,12 +77,14 @@ public sealed partial class ToolchainItemViewModel : ObservableObject
         "go" => "#2A8EA8",
         "java" => "#B5612C",
         "kotlin" => "#7F52D9",
+        "windows" => "#2B79C2",
         _ => "#4A5263",
     }));
 
     /// <summary>The version: installed, or what installing gets.</summary>
     public string VersionText => Status switch
     {
+        { State: not ToolchainState.UpdateAvailable } when Toolchain.DisplayVersion is { } display => display,
         { State: ToolchainState.UpdateAvailable, Version: { } installed, AvailableVersion: { } available } => $"{installed} → {available}",
         { Version: { } installed } => installed,
         { AvailableVersion: { } available } => available,

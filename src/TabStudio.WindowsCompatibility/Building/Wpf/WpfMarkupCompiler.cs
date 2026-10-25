@@ -2,6 +2,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Tasks.Windows;
 using Microsoft.Build.Utilities;
 using TabStudio.Core.Diagnostics;
+using Task = System.Threading.Tasks.Task;
 
 namespace TabStudio.WindowsCompatibility.Building.Wpf;
 

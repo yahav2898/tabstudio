@@ -391,6 +391,12 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
             return;
         }
 
+        if (UsesWindowsCompatibility(project))
+        {
+            await RunWindowsAppAsync(project, fromDebugger: true);
+            return;
+        }
+
         if (IsLiveApp(project))
         {
             await RunLiveProjectAsync(project, fromDebugger: true);

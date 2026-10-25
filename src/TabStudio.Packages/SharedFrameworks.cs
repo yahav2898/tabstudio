@@ -123,7 +123,7 @@ internal sealed class SharedFrameworks(GlobalPackagesFolder packages, Func<IRead
                 isNetCore ? [] : WindowsDesktopProfiles.IsWindowsDesktop(name) ? WindowsDesktopProfiles.Assemblies(reference, targetFramework, name) : Assemblies(Path.Combine(reference, "ref", targetFramework)),
                 referenceOnly ? [] : Assemblies(Path.Combine(runtime, "runtimes", RuntimeIdentifier, "lib", targetFramework)))
             {
-                Analyzers = Analyzers(reference),
+                Analyzers = WindowsDesktopProfiles.IsWindowsDesktop(name) ? WindowsDesktopProfiles.Analyzers(reference, name, Analyzers(reference)) : Analyzers(reference),
             };
         }
         catch (Exception ex) when (ex is PackageSourceException or InvalidPackageException or IOException)

@@ -142,6 +142,7 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
         }
 
         using var timeout = new CancellationTokenSource(SelfTestTimeout);
+        SelfTest.ScreenshotFolder = screenshots;
         var result = await SelfTest.RunAsync(main, services.GetRequiredService<SampleLibrary>(), services.GetRequiredService<ProjectTemplates>(), timeout.Token);
         if (result.Success && desktop)
         {

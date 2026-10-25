@@ -91,7 +91,7 @@ public sealed class WindowsDisplayTests : IDisposable
         await using var server = new FakeXServer(_temp.Resolve("X5"));
         using var framebuffer = new SyntheticFramebuffer(_temp.Resolve("Xvfb_screen0"), 320, 240);
         await using var display = await Connect(server, framebuffer);
-        var frames = new List<PixelRect>();
+        var frames = new List<ScreenRect>();
         display.FrameChanged += (_, area) =>
         {
             lock (frames)
@@ -103,10 +103,10 @@ public sealed class WindowsDisplayTests : IDisposable
 
         framebuffer.Fill(10, 20, 30, 40, blue: 1, green: 2, red: 3);
         await server.SendDamageAsync(10, 20, 30, 40);
-        await WaitUntilAsync(() => Snapshot(frames).Any(f => f == new PixelRect(10, 20, 30, 40)));
+        await WaitUntilAsync(() => Snapshot(frames).Any(f => f == new ScreenRect(10, 20, 30, 40)));
 
         var pixels = new byte[320 * 240 * 4];
-        display.CopyPixels(new PixelRect(10, 20, 30, 40), pixels, 320 * 4);
+        display.CopyPixels(new ScreenRect(10, 20, 30, 40), pixels, 320 * 4);
         var offset = ((20 * 320) + 10) * 4;
         Assert.Equal(new byte[] { 1, 2, 3 }, pixels[offset..(offset + 3)]);
         Assert.Equal(0, pixels[0]);

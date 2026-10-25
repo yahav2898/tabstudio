@@ -9,6 +9,9 @@ namespace TabStudio.WindowsCompatibility.Building;
 /// </summary>
 public sealed class WindowsDesktopProject
 {
+    /// <summary>The files the SDK takes as a WPF app's application definition, in order.</summary>
+    private static readonly string[] DefaultApplicationDefinitions = ["App.xaml", "Application.xaml"];
+
     private WindowsDesktopProject(ProjectInfo project, bool usesWpf, bool usesWindowsForms)
     {
         Project = project;
@@ -18,7 +21,7 @@ public sealed class WindowsDesktopProject
         RootNamespace = project.GetProperty("RootNamespace") is { Length: > 0 } ns ? ns : AssemblyName.Replace(' ', '_');
         OutputType = project.OutputType is { Length: > 0 } type ? type : "Library";
         TargetFramework = project.TargetFrameworks.FirstOrDefault(f => f.Contains("-windows", StringComparison.OrdinalIgnoreCase))
-            ?? project.TargetFrameworks.FirstOrDefault() ?? "net10.0-windows";
+            ?? (project.TargetFrameworks.Count > 0 ? project.TargetFrameworks[0] : "net10.0-windows");
     }
 
     /// <summary>The project.</summary>
@@ -81,7 +84,7 @@ public sealed class WindowsDesktopProject
         var application = Explicit(root, "ApplicationDefinition", "Include").FirstOrDefault();
         if (application is null && defaults && !IsFalse(Project.GetProperty("EnableDefaultApplicationDefinition")))
         {
-            application = new[] { "App.xaml", "Application.xaml" }.FirstOrDefault(name => File.Exists(Path.Combine(Directory, name)));
+            application = DefaultApplicationDefinitions.FirstOrDefault(name => File.Exists(Path.Combine(Directory, name)));
         }
 
         var pages = new List<string>();

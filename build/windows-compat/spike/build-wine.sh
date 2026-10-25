@@ -29,6 +29,11 @@ built=$(date +%s)
 make install-lib DESTDIR=/tmp/dest > "$out/install.txt" 2>&1 || { tail -n 40 "$out/install.txt"; exit 1; }
 find /tmp/dest/opt/tabstudio/wine -type f -name '*.so' -exec strip --strip-unneeded {} + 2> /dev/null || true
 for program in /tmp/dest/opt/tabstudio/wine/bin/*; do strip --strip-unneeded "$program" 2> /dev/null || true; done
+# What the Unix libraries miss when they are loaded on their own (some symbols come from ntdll.so, which is fine).
+for so in /tmp/dest/opt/tabstudio/wine/lib/wine/*-unix/*.so; do
+  ldd "$so" 2>&1 | grep -E "not found|Error" | sed "s|^|$(basename "$so"): |"
+done > "$out/unix-libs.txt" 2>&1 || true
+ls -la /tmp/dest/opt/tabstudio/wine/lib/wine/*-unix/ > "$out/unix-files.txt" 2>&1 || true
 tar -czf "$out/wine.tar.gz" -C /tmp/dest/opt/tabstudio wine
 {
   echo "SPIKE wine_build_configure_seconds $((configured - start))"

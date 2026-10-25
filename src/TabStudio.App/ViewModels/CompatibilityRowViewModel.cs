@@ -41,6 +41,12 @@ public sealed record CompatibilityRowViewModel(CompatibilityReport Report)
 
     /// <summary>Whether installing a toolchain from the Toolchain Store makes it run here.</summary>
     public bool CanInstallToolchain => InstallToolchainText is not null;
+
+    /// <summary>For a Windows-only project, every way it can run, best first, with why each can or cannot.</summary>
+    public IReadOnlyList<RunHostChoiceViewModel> HostChoices { get; init; } = [];
+
+    /// <summary>Whether the row lists the ways the project can run.</summary>
+    public bool HasHostChoices => HostChoices.Count > 0;
 }
 
 /// <summary>One technology detected in a workspace, shown as a chip.</summary>

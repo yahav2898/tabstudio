@@ -26,6 +26,20 @@ internal static class WindowsDesktopProfiles
         || string.Equals(name, WpfFramework, StringComparison.OrdinalIgnoreCase)
         || string.Equals(name, WindowsFormsFramework, StringComparison.OrdinalIgnoreCase);
 
+    /// <summary>
+    /// The analyzers of a profile: the targeting pack's <c>data/FrameworkList.xml</c> marks the Windows Forms source
+    /// generator and analyzers for Windows Forms, so a WPF project does not get them.
+    /// </summary>
+    /// <param name="packDirectory">The extracted targeting pack.</param>
+    /// <param name="name">The framework reference, which names the profile.</param>
+    /// <param name="analyzers">The pack's analyzers for the compiler, as full paths.</param>
+    public static List<string> Analyzers(string packDirectory, string name, IReadOnlyList<string> analyzers)
+    {
+        var profile = ProfileOf(name);
+        var profiles = Profiles(packDirectory, "Analyzer");
+        return [.. analyzers.Where(path => profile is null || InProfile(profiles, Path.GetRelativePath(packDirectory, path).Replace('\\', '/'), profile))];
+    }
+
     /// <summary>The reference assemblies of a profile, from the targeting pack.</summary>
     /// <param name="packDirectory">The extracted <c>Microsoft.WindowsDesktop.App.Ref</c> package.</param>
     /// <param name="targetFramework">The target framework, such as <c>net10.0</c>.</param>
@@ -39,22 +53,41 @@ internal static class WindowsDesktopProfiles
         }
 
         var all = Directory.EnumerateFiles(folder, "*.dll").Order(StringComparer.Ordinal).ToList();
-        var profile = string.Equals(name, WpfFramework, StringComparison.OrdinalIgnoreCase) ? "WPF"
-            : string.Equals(name, WindowsFormsFramework, StringComparison.OrdinalIgnoreCase) ? "WindowsForms"
-            : null;
-        var list = Path.Combine(packDirectory, "data", "FrameworkList.xml");
-        if (profile is null || !File.Exists(list))
+        var profile = ProfileOf(name);
+        if (profile is null)
         {
             return all;
         }
 
-        // Files without a Profile belong to every profile; the others list theirs, separated by semicolons.
-        var profiles = XDocument.Load(list).Descendants("File")
-            .Select(file => (Name: Path.GetFileName((string?)file.Attribute("Path") ?? string.Empty), Profile: (string?)file.Attribute("Profile")))
-            .Where(file => file.Name.Length > 0)
-            .GroupBy(file => file.Name, StringComparer.OrdinalIgnoreCase)
-            .ToDictionary(group => group.Key, group => group.First().Profile, StringComparer.OrdinalIgnoreCase);
-        return all.Where(path => !profiles.TryGetValue(Path.GetFileName(path), out var marked) || string.IsNullOrEmpty(marked)
-            || marked.Split(';', StringSplitOptions.TrimEntries).Contains(profile, StringComparer.OrdinalIgnoreCase)).ToList();
+        var profiles = Profiles(packDirectory, "Managed");
+        return [.. all.Where(path => InProfile(profiles, Path.GetRelativePath(packDirectory, path).Replace('\\', '/'), profile))];
     }
+
+    /// <summary>The profile a framework reference names, or <see langword="null"/> for the whole framework.</summary>
+    private static string? ProfileOf(string name) =>
+        string.Equals(name, WpfFramework, StringComparison.OrdinalIgnoreCase) ? "WPF"
+        : string.Equals(name, WindowsFormsFramework, StringComparison.OrdinalIgnoreCase) ? "WindowsForms"
+        : null;
+
+    /// <summary>The profiles <c>data/FrameworkList.xml</c> gives the pack's files of a type, by their paths in the pack.</summary>
+    private static Dictionary<string, string?> Profiles(string packDirectory, string type)
+    {
+        var list = Path.Combine(packDirectory, "data", "FrameworkList.xml");
+        if (!File.Exists(list))
+        {
+            return new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
+        }
+
+        return XDocument.Load(list).Descendants("File")
+            .Where(file => string.Equals((string?)file.Attribute("Type"), type, StringComparison.OrdinalIgnoreCase))
+            .Select(file => (Path: ((string?)file.Attribute("Path") ?? string.Empty).Replace('\\', '/'), Profile: (string?)file.Attribute("Profile")))
+            .Where(file => file.Path.Length > 0)
+            .GroupBy(file => file.Path, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First().Profile, StringComparer.OrdinalIgnoreCase);
+    }
+
+    /// <summary>Whether a file is in a profile: files the list does not mark belong to every profile.</summary>
+    private static bool InProfile(Dictionary<string, string?> profiles, string path, string profile) =>
+        !profiles.TryGetValue(path, out var marked) || string.IsNullOrEmpty(marked)
+        || marked.Split(';', StringSplitOptions.TrimEntries).Contains(profile, StringComparer.OrdinalIgnoreCase);
 }

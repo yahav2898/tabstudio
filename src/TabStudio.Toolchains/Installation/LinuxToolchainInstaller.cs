@@ -88,7 +88,7 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
         if (!_environment.IsSetUp)
         {
             var setup = _environment.Distribution.Rootfs.GetValueOrDefault(_environment.Architecture ?? string.Empty)?.Size ?? 0;
-            return [.. toolchains.Select(t => Estimate(t, ToolchainState.NotInstalled) with
+            return [.. toolchains.Select(t => !t.SupportsArchitecture(_environment.Architecture) ? Unsupported(t) : Estimate(t, ToolchainState.NotInstalled) with
             {
                 DownloadSize = t.EstimatedDownloadSize + setup,
                 Note = $"Sets up {_environment.Distribution.DisplayName} the first time.",
@@ -113,7 +113,7 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
         var result = new List<ToolchainStatus>();
         foreach (var toolchain in toolchains)
         {
-            result.Add(ReadStatus(toolchain, records, installed, index));
+            result.Add(toolchain.SupportsArchitecture(_environment.Architecture) ? ReadStatus(Specialize(toolchain), records, installed, index) : Unsupported(toolchain));
         }
 
         return result;
@@ -123,6 +123,7 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
     public async Task InstallAsync(ToolchainDefinition toolchain, IProgress<InstallProgress>? progress, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(toolchain);
+        toolchain = Specialize(toolchain);
         progress?.Report(new InstallProgress(InstallStage.Preparing, $"Preparing to install {toolchain.Name}", 0));
         await PrepareRuntimeAsync(new InlineProgress<InstallProgress>(p => progress?.Report(p with { Fraction = p.Fraction * 0.1 })), cancellationToken).ConfigureAwait(false);
 
@@ -152,6 +153,7 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
     public async Task UpdateAsync(ToolchainDefinition toolchain, IProgress<InstallProgress>? progress, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(toolchain);
+        toolchain = Specialize(toolchain);
         progress?.Report(new InstallProgress(InstallStage.Resolving, $"Checking for a newer {toolchain.Name}", 0.05));
         await _environment.SetUpAsync(null, cancellationToken).ConfigureAwait(false);
         var records = InstalledToolchains.Load(_recordsFile);
@@ -185,6 +187,8 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
     {
         ArgumentNullException.ThrowIfNull(toolchain);
         ArgumentNullException.ThrowIfNull(installed);
+        toolchain = toolchain.ForArchitecture(_environment.Architecture);
+        installed = [.. installed.Select(t => t.ForArchitecture(_environment.Architecture))];
         progress?.Report(new InstallProgress(InstallStage.Removing, $"Removing {toolchain.Name}", 0.1));
         var kept = installed.Where(t => t.Id != toolchain.Id).SelectMany(t => t.Packages).ToHashSet(StringComparer.Ordinal);
         var database = _packages.Installed;
@@ -213,6 +217,7 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
     public DiskUsage MeasureDiskUsage(IReadOnlyList<ToolchainDefinition> toolchains)
     {
         ArgumentNullException.ThrowIfNull(toolchains);
+        toolchains = [.. toolchains.Select(t => t.ForArchitecture(_environment.Architecture))];
         var downloads = DiskSpace.Size(_environment.Downloads);
         if (!_environment.IsSetUp)
         {

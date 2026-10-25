@@ -94,6 +94,45 @@ public sealed record ToolchainDefinition
     /// <param name="path">The file.</param>
     public bool RunsFile(string path) =>
         FileExtensions.Contains(Path.GetExtension(path), StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// What the toolchain is: a language's tools (the default), or a platform that apps of other languages run on,
+    /// such as Windows Compatibility, which has no files, runs or language server of its own.
+    /// </summary>
+    public ToolchainKind Kind { get; init; }
+
+    /// <summary>
+    /// What differs by the device's processor, by Alpine Linux's name for it (<c>aarch64</c>, <c>x86_64</c>,
+    /// <c>armv7</c>): more packages and setup steps. A toolchain with any is only for those processors.
+    /// </summary>
+    public IReadOnlyDictionary<string, ArchitectureDefinition> Architectures { get; init; } = new Dictionary<string, ArchitectureDefinition>();
+
+    /// <summary>The version to show, such as <c>Wine 11.0 · .NET 10.0.13</c>, for a toolchain made of several parts.</summary>
+    public string? DisplayVersion { get; init; }
+
+    /// <summary>Whether the toolchain is for a processor.</summary>
+    /// <param name="architecture">Alpine Linux's name for it, or <see langword="null"/> when it is not known.</param>
+    public bool SupportsArchitecture(string? architecture) =>
+        Architectures.Count == 0 || (architecture is not null && Architectures.ContainsKey(architecture));
+
+    /// <summary>The toolchain for one processor: its packages and setup steps with those of the processor added.</summary>
+    /// <param name="architecture">Alpine Linux's name for the processor.</param>
+    public ToolchainDefinition ForArchitecture(string? architecture)
+    {
+        if (Architectures.Count == 0)
+        {
+            return this;
+        }
+
+        var extra = architecture is not null ? Architectures.GetValueOrDefault(architecture) : null;
+        return this with
+        {
+            Packages = [.. Packages, .. extra?.Packages ?? []],
+            Setup = [.. Setup, .. extra?.Setup ?? []],
+            VersionPackage = extra?.VersionPackage ?? VersionPackage,
+            Architectures = new Dictionary<string, ArchitectureDefinition>(),
+        };
+    }
 }
 
 /// <summary>How to find a toolchain installed on a desktop computer.</summary>

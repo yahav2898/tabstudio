@@ -1113,6 +1113,12 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         var targets = new List<RunTargetOption>();
         foreach (var project in StartupProjects)
         {
+            if (WindowsRunTargets(project.Project) is { Count: > 0 } hosts)
+            {
+                targets.AddRange(hosts);
+                continue;
+            }
+
             targets.Add(new RunTargetOption(project.Name, "C# project", project.Select));
         }
 

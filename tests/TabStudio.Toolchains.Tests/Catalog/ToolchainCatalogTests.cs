@@ -9,24 +9,27 @@ public sealed class ToolchainCatalogTests
 {
     private static readonly ToolchainCatalog Catalog = ToolchainCatalog.Default;
 
+    /// <summary>The toolchains of languages, without platforms such as Windows Compatibility.</summary>
+    private static readonly IReadOnlyList<ToolchainDefinition> Languages = [.. Catalog.Toolchains.Where(t => t.Kind == ToolchainKind.Language)];
+
     [Fact]
     public void Describes_all_seven_languages()
     {
-        Assert.Equal(["python", "node", "cpp", "rust", "go", "java", "kotlin"], Catalog.Toolchains.Select(t => t.Id));
-        var languages = Catalog.Toolchains.SelectMany(t => t.Languages).ToHashSet();
+        Assert.Equal(["python", "node", "cpp", "rust", "go", "java", "kotlin"], Languages.Select(t => t.Id));
+        var languages = Languages.SelectMany(t => t.Languages).ToHashSet();
         Assert.Superset(new HashSet<string> { "Python", "JavaScript", "TypeScript", "C", "C++", "Rust", "Go", "Java", "Kotlin" }, languages);
     }
 
     [Fact]
-    public void The_store_lists_python_and_node()
+    public void The_store_lists_python_node_and_windows_compatibility()
     {
-        Assert.Equal(["python", "node"], Catalog.Listed.Select(t => t.Id));
+        Assert.Equal(["python", "node", "windows"], Catalog.Listed.Select(t => t.Id));
     }
 
     [Fact]
     public void Every_toolchain_says_what_it_installs_and_how_it_runs()
     {
-        foreach (var toolchain in Catalog.Toolchains)
+        foreach (var toolchain in Languages)
         {
             Assert.False(string.IsNullOrWhiteSpace(toolchain.Name), toolchain.Id);
             Assert.EndsWith(".", toolchain.Description, StringComparison.Ordinal);
@@ -53,7 +56,7 @@ public sealed class ToolchainCatalogTests
     [Fact]
     public void Listed_toolchains_have_a_debug_adapter_and_dependency_installs()
     {
-        foreach (var toolchain in Catalog.Listed)
+        foreach (var toolchain in Catalog.Listed.Where(t => t.Kind == ToolchainKind.Language))
         {
             Assert.NotNull(toolchain.DebugAdapter);
             Assert.NotEmpty(toolchain.DebugAdapter.Command);
@@ -90,7 +93,7 @@ public sealed class ToolchainCatalogTests
     [Fact]
     public void Archives_are_pinned_by_their_hash()
     {
-        var archives = Catalog.Toolchains.SelectMany(t => t.Setup).Select(s => s.Archive).OfType<ArchiveDefinition>().ToList();
+        var archives = Catalog.Toolchains.SelectMany(t => t.Setup.Concat(t.Architectures.Values.SelectMany(a => a.Setup))).Select(s => s.Archive).OfType<ArchiveDefinition>().ToList();
 
         Assert.NotEmpty(archives);
         Assert.All(archives, a =>
@@ -213,7 +216,7 @@ public sealed class ToolchainCatalogTests
             ["pyright-langserver"] = ["/usr/local/bin/pyright-langserver"],
             ["js-debug-adapter"] = ["/usr/local/bin/js-debug-adapter"],
         };
-        foreach (var toolchain in Catalog.Listed)
+        foreach (var toolchain in Catalog.Listed.Where(t => t.Kind == ToolchainKind.Language))
         {
             foreach (var tool in new[] { toolchain.LanguageServer!, toolchain.DebugAdapter! })
             {

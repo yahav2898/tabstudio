@@ -38,6 +38,12 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
+        if (UsesWindowsCompatibility(project))
+        {
+            await RunWindowsAppAsync(project, fromDebugger: false);
+            return;
+        }
+
         if (IsLiveApp(project))
         {
             await RunLiveProjectAsync(project, fromDebugger: false);

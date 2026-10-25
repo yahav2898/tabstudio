@@ -114,9 +114,10 @@ public static partial class SelfTest
 
             var extensions = await InstallGrammarExtensionAsync(last, FindEditor, cancellationToken);
             var toolchains = extensions.Success ? await RunToolchainsAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Toolchains: not run", TimeSpan.Zero);
+            var windows = toolchains.Success ? await RunWindowsCompatibilityAsync(main, templates, ScreenshotFolder, cancellationToken) : new SelfTestResult(false, "Windows: not run", TimeSpan.Zero);
             return new SelfTestResult(
-                extensions.Success && toolchains.Success,
-                $"{summary} | {debugged.Message} | {web.Message} | {avalonia.Message} | {extensions.Message} | {toolchains.Message}",
+                extensions.Success && toolchains.Success && windows.Success,
+                $"{summary} | {debugged.Message} | {web.Message} | {avalonia.Message} | {extensions.Message} | {toolchains.Message} | {windows.Message}",
                 clock.Elapsed);
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)

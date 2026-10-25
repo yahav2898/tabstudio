@@ -8,6 +8,18 @@ internal static class Program
     private static void Main(string[] args)
     {
         Console.WriteLine($"STARTED {Environment.TickCount64} {RuntimeInformation.FrameworkDescription} {RuntimeInformation.ProcessArchitecture} {RuntimeInformation.OSDescription}");
+        if (args.Length == 3 && args[0] == "--resize")
+        {
+            var mode = new DevMode { dmSize = (ushort)Marshal.SizeOf<DevMode>() };
+            var current = EnumDisplaySettingsW(null, -1, ref mode);
+            mode.dmPelsWidth = uint.Parse(args[1]);
+            mode.dmPelsHeight = uint.Parse(args[2]);
+            mode.dmFields = 0x80000 | 0x100000;
+            var result = ChangeDisplaySettingsExW(null, ref mode, IntPtr.Zero, 0, IntPtr.Zero);
+            Console.WriteLine($"RESIZE enum={current} result={result}");
+            return;
+        }
+
         if (args.Contains("--hello"))
         {
             Console.WriteLine("HELLO from " + RuntimeInformation.FrameworkDescription);
@@ -69,6 +81,47 @@ internal static class Program
         resizeProbe.Start();
         Application.Run(form);
         Console.WriteLine("EXITED");
+    }
+
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+    private static extern bool EnumDisplaySettingsW(string? device, int mode, ref DevMode devMode);
+
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+    private static extern int ChangeDisplaySettingsExW(string? device, ref DevMode devMode, IntPtr hwnd, uint flags, IntPtr param);
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    private struct DevMode
+    {
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)] public string dmDeviceName;
+        public ushort dmSpecVersion;
+        public ushort dmDriverVersion;
+        public ushort dmSize;
+        public ushort dmDriverExtra;
+        public uint dmFields;
+        public int dmPositionX;
+        public int dmPositionY;
+        public uint dmDisplayOrientation;
+        public uint dmDisplayFixedOutput;
+        public short dmColor;
+        public short dmDuplex;
+        public short dmYResolution;
+        public short dmTTOption;
+        public short dmCollate;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)] public string dmFormName;
+        public ushort dmLogPixels;
+        public uint dmBitsPerPel;
+        public uint dmPelsWidth;
+        public uint dmPelsHeight;
+        public uint dmDisplayFlags;
+        public uint dmDisplayFrequency;
+        public uint dmICMMethod;
+        public uint dmICMIntent;
+        public uint dmMediaType;
+        public uint dmDitherType;
+        public uint dmReserved1;
+        public uint dmReserved2;
+        public uint dmPanningWidth;
+        public uint dmPanningHeight;
     }
 
     private sealed class DoubleBufferedPanel : Panel

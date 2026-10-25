@@ -29,6 +29,7 @@ public sealed class WindowsLayout
         _rootfs = rootfs;
         Root = root;
         DotNetRoot = root + "/dotnet";
+        DesktopRuntimeRoot = root + "/desktop";
         Prefix = root + "/prefix";
         SessionFolder = rootfs is null ? root + "/session" : "/tmp/tabstudio-windows";
     }
@@ -41,6 +42,12 @@ public sealed class WindowsLayout
 
     /// <summary>The .NET runtime for Windows: <c>dotnet.exe</c> with Microsoft.NETCore.App and Microsoft.WindowsDesktop.App.</summary>
     public string DotNetRoot { get; }
+
+    /// <summary>
+    /// Where the Windows Desktop runtime's archive unpacks (<c>shared/Microsoft.WindowsDesktop.App</c>), which
+    /// <see cref="EnsureDesktopFramework"/> links into <see cref="DotNetRoot"/>, where <c>dotnet.exe</c> finds it.
+    /// </summary>
+    public string DesktopRuntimeRoot { get; }
 
     /// <summary>The Wine prefix: its <c>drive_c</c>, registry and settings.</summary>
     public string Prefix { get; }
@@ -61,7 +68,49 @@ public sealed class WindowsLayout
     public string? WineServer => Wine is { } wine ? Runtime.Resolve(wine[..(wine.LastIndexOf('/') + 1)] + "wineserver") ?? Runtime.Resolve("wineserver") : null;
 
     /// <summary>Whether everything a session needs is installed: Wine, Xvfb and the .NET runtime for Windows.</summary>
-    public bool IsComplete => Wine is not null && WineServer is not null && Runtime.HasCommand("Xvfb") && File.Exists(ToDevicePath(DotNetRoot + "/dotnet.exe"));
+    public bool IsComplete => Wine is not null && Runtime.HasCommand("Xvfb") && File.Exists(ToDevicePath(DotNetRoot + "/dotnet.exe")) && EnsureDesktopFramework();
+
+    /// <summary>
+    /// Makes the Windows Desktop framework part of the .NET runtime: the two come as separate archives, and
+    /// <c>dotnet.exe</c> looks for shared frameworks only next to itself.
+    /// </summary>
+    /// <returns>Whether the runtime has the framework.</returns>
+    public bool EnsureDesktopFramework()
+    {
+        const string Framework = "/shared/Microsoft.WindowsDesktop.App";
+        var link = ToDevicePath(DotNetRoot + Framework);
+        var target = DesktopRuntimeRoot + Framework;
+        if (!Directory.Exists(ToDevicePath(target)))
+        {
+            return Directory.Exists(link) && new DirectoryInfo(link).LinkTarget is null;
+        }
+
+        var existing = new DirectoryInfo(link);
+        if (existing.LinkTarget == target)
+        {
+            return true;
+        }
+
+        if (existing.Exists && existing.LinkTarget is null)
+        {
+            // The runtime came with the framework itself.
+            return true;
+        }
+
+        if (!Directory.Exists(Path.GetDirectoryName(link)))
+        {
+            return false;
+        }
+
+        if (existing.LinkTarget is not null)
+        {
+            existing.Delete();
+        }
+
+        // The link holds the path programs see, which PRoot resolves inside the environment.
+        Directory.CreateSymbolicLink(link, target);
+        return true;
+    }
 
     /// <summary>The layout in a runtime: fixed paths in TabStudio's Linux environment, or a data folder on a desktop computer.</summary>
     /// <param name="runtime">Where programs run.</param>

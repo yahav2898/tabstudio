@@ -39,7 +39,7 @@ internal sealed class X11Client : IAsyncDisposable, IDisposable
     public bool IsOpen => _connection.IsOpen;
 
     /// <summary>Part of the screen changed, as a DAMAGE object reports it. Raised on the connection's reader thread.</summary>
-    public event EventHandler<PixelRect>? Damaged;
+    public event EventHandler<ScreenRect>? Damaged;
 
     /// <summary>The keyboard mapping changed.</summary>
     public event EventHandler? KeyboardMappingChanged;
@@ -98,10 +98,10 @@ internal sealed class X11Client : IAsyncDisposable, IDisposable
     /// <summary>A window's position and size, relative to its parent.</summary>
     /// <param name="window">The window.</param>
     /// <param name="cancellationToken">Gives up.</param>
-    public async Task<PixelRect> GeometryAsync(uint window, CancellationToken cancellationToken = default)
+    public async Task<ScreenRect> GeometryAsync(uint window, CancellationToken cancellationToken = default)
     {
         var reply = await _connection.RequestAsync(new X11Request(X11Opcodes.GetGeometry, 0, 8) { HasReply = true }.UInt32(window), cancellationToken).ConfigureAwait(false);
-        return new PixelRect(reply.Int16(12), reply.Int16(14), reply.UInt16(16), reply.UInt16(18));
+        return new ScreenRect(reply.Int16(12), reply.Int16(14), reply.UInt16(16), reply.UInt16(18));
     }
 
     /// <summary>A window's title (<c>WM_NAME</c>), or <see langword="null"/> when it has none.</summary>
@@ -121,7 +121,7 @@ internal sealed class X11Client : IAsyncDisposable, IDisposable
     /// <param name="window">The window.</param>
     /// <param name="bounds">Its new position and size.</param>
     /// <param name="cancellationToken">Gives up.</param>
-    public Task ConfigureWindowAsync(uint window, PixelRect bounds, CancellationToken cancellationToken = default) =>
+    public Task ConfigureWindowAsync(uint window, ScreenRect bounds, CancellationToken cancellationToken = default) =>
         _connection.SendAsync(
             new X11Request(X11Opcodes.ConfigureWindow, 0, 28)
                 .UInt32(window).UInt16(0b1111).Skip(2)
@@ -237,7 +237,7 @@ internal sealed class X11Client : IAsyncDisposable, IDisposable
     {
         if (_damage != 0 && e.Code == _damageEvent)
         {
-            Damaged?.Invoke(this, new PixelRect(e.Int16(16), e.Int16(18), e.UInt16(20), e.UInt16(22)));
+            Damaged?.Invoke(this, new ScreenRect(e.Int16(16), e.Int16(18), e.UInt16(20), e.UInt16(22)));
         }
         else if (e.Code == X11Opcodes.MappingNotify)
         {

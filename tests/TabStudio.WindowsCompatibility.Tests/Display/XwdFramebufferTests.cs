@@ -20,7 +20,7 @@ public sealed class XwdFramebufferTests : IDisposable
         using var framebuffer = XwdFramebuffer.Open(synthetic.Path);
 
         var pixels = new byte[64 * 48 * 4];
-        framebuffer.Copy(new PixelRect(0, 0, 64, 48), pixels, 64 * 4);
+        framebuffer.Copy(new ScreenRect(0, 0, 64, 48), pixels, 64 * 4);
 
         Assert.Equal((64, 48, 256), (framebuffer.Width, framebuffer.Height, framebuffer.Stride));
         var inside = ((7 * 64) + 11) * 4;
@@ -34,11 +34,11 @@ public sealed class XwdFramebufferTests : IDisposable
     {
         using var synthetic = new SyntheticFramebuffer(_temp.Resolve("Xvfb_screen0"), 32, 32);
         using var framebuffer = XwdFramebuffer.Open(synthetic.Path);
-        var before = framebuffer.Checksum(new PixelRect(0, 0, 32, 32));
+        var before = framebuffer.Checksum(new ScreenRect(0, 0, 32, 32));
 
         synthetic.Fill(0, 0, 4, 4, 9, 9, 9);
 
-        Assert.NotEqual(before, framebuffer.Checksum(new PixelRect(0, 0, 32, 32)));
+        Assert.NotEqual(before, framebuffer.Checksum(new ScreenRect(0, 0, 32, 32)));
     }
 
     [Fact]
@@ -49,7 +49,7 @@ public sealed class XwdFramebufferTests : IDisposable
         using var framebuffer = XwdFramebuffer.Open(synthetic.Path);
 
         var area = new byte[4 * 4 * 4];
-        framebuffer.Copy(new PixelRect(14, 14, 4, 4), area, 4 * 4, destinationIsArea: true);
+        framebuffer.Copy(new ScreenRect(14, 14, 4, 4), area, 4 * 4, destinationIsArea: true);
 
         Assert.Equal(new byte[] { 1, 2, 3 }, area[0..3]);
         Assert.Equal(new byte[] { 0, 0, 0 }, area[(2 * 4)..((2 * 4) + 3)]);

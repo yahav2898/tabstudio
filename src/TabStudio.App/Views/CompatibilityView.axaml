@@ -42,6 +42,7 @@
           <ItemsControl.ItemTemplate>
             <DataTemplate DataType="vm:CompatibilityRowViewModel">
               <Border MinHeight="40" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+                <StackPanel>
                 <Grid ColumnDefinitions="180,130,190,150,*" Margin="0,6" VerticalAlignment="Center">
                   <TextBlock Text="{Binding Project}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
                   <TextBlock Grid.Column="1" Classes="label" Text="{Binding Type}" VerticalAlignment="Center" />
@@ -71,6 +72,36 @@
                     </Button>
                   </Grid>
                 </Grid>
+
+                <!-- A Windows-only project: every way it can run on this device, best first, and why. -->
+                <ItemsControl ItemsSource="{Binding HostChoices}" IsVisible="{Binding HasHostChoices}" Margin="180,0,0,8">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="vm:RunHostChoiceViewModel">
+                      <Grid ColumnDefinitions="190,150,*,Auto" MinHeight="34">
+                        <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                          <controls:StrokeIcon Size="12" Data="{StaticResource Icon.Play}" Foreground="{DynamicResource Brush.Success}" IsVisible="{Binding IsChosen}" />
+                          <TextBlock Text="{Binding Name}" FontWeight="SemiBold" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <TextBlock Grid.Column="1" Classes="small" Text="{Binding State}" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="2" Classes="muted small" Text="{Binding Explanation}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                        <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="8" Margin="8,0,0,0" VerticalAlignment="Center">
+                          <Button Theme="{StaticResource SecondaryButton}" Padding="10,0" Height="30" MinHeight="30" IsVisible="{Binding CanChoose}"
+                                  Command="{Binding Choose}" ToolTip.Tip="Run the project with this host when you press F5">
+                            <TextBlock Text="Use for F5" FontSize="12.5" VerticalAlignment="Center" />
+                          </Button>
+                          <Button Theme="{StaticResource SecondaryButton}" Padding="10,0" Height="30" MinHeight="30" IsVisible="{Binding CanInstall}"
+                                  Command="{Binding Install}" ToolTip.Tip="Install what this host needs from the Toolchain Store">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                              <controls:StrokeIcon Data="{StaticResource Icon.Download}" Size="13" Foreground="{DynamicResource Brush.Accent}" />
+                              <TextBlock Text="Install" FontSize="12.5" VerticalAlignment="Center" />
+                            </StackPanel>
+                          </Button>
+                        </StackPanel>
+                      </Grid>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                </StackPanel>
               </Border>
             </DataTemplate>
           </ItemsControl.ItemTemplate>

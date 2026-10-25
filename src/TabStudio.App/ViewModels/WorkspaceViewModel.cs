@@ -142,6 +142,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         InitializeLanguageServers(languageServers, browser);
         InitializeExtensions(extensions, browser);
         InitializeToolchains(toolchains);
+        InitializeWindowsCompatibility();
     }
 
     /// <summary>Raised when the user closes the workspace to return to the start screen.</summary>
@@ -244,7 +245,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     public string RunLabel => StartupProject?.Name ?? LaunchTargetLabel ?? "Start";
 
     /// <summary>Where the startup project runs, such as "In-process".</summary>
-    public string RunHostText => StartupProject is { } project ? CompatibilityDoctor.Diagnose(project).RunsVia : LaunchTargetHost ?? "Nothing to run";
+    public string RunHostText => StartupProject is { } project ? WindowsRunHostText(project) ?? CompatibilityDoctor.Diagnose(project).RunsVia : LaunchTargetHost ?? "Nothing to run";
 
     /// <summary>The build configuration, "Debug" or "Release".</summary>
     [ObservableProperty]
@@ -282,6 +283,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
 
         LoadStartupProjects(preview.Workspace, session?.StartupProject);
         await LoadToolchainProjectsAsync(preview.Workspace, session?.StartupProject, opening: true);
+        RefreshRunHosts();
 
         StatusText = "Loading C#";
         _language = await CreateLanguageServiceAsync(preview.Workspace);
@@ -384,6 +386,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         _language = null;
         DisposeActions();
         DisposePullRequests();
+        DisposeWindowsCompatibility();
         DisposeToolchains();
         GitChanges.Dispose();
         DisposeLanguageServers();
