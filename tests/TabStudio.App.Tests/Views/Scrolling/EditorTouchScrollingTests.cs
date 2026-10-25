@@ -178,6 +178,8 @@ public sealed class EditorTouchScrollingTests
         FocusElsewhere(window);
         var editor = view.Editor;
         var target = OffsetOf(editor, "public sealed class InventoryService") + "public sealed class Inv".Length;
+        editor.ScrollTo(editor.Document.GetLineByOffset(target).LineNumber, 1);
+        Render();
         var point = PointOf(window, editor, target);
         var touch = new HeadlessTouchScreen(window);
 
@@ -228,6 +230,7 @@ public sealed class EditorTouchScrollingTests
         Assert.Equal(typeof(CachedLineNumberMargin), editor.TextArea.LeftMargins.OfType<LineNumberMargin>().Single().GetType());
         var touch = new HeadlessTouchScreen(window);
         var finger = numbers.TranslatePoint(new Point(numbers.Bounds.Width / 2, numbers.Bounds.Height * 0.7), window)!.Value;
+        var caret = editor.CaretOffset;
 
         touch.Down(finger);
         for (var i = 0; i < 20; i++)
@@ -243,10 +246,12 @@ public sealed class EditorTouchScrollingTests
         Render();
         Assert.True(scroll.Offset.Y > 150, "the drag on the line numbers scrolled");
         Assert.True(editor.TextArea.Selection.IsEmpty, "nor did it select lines");
+        Assert.Equal(caret, editor.CaretOffset);
 
+        // A tap on a line's number (drawn at the margin's right edge) selects the line.
         var textView = editor.TextArea.TextView;
         var line = textView.VisualLines[3].FirstDocumentLine;
-        var tap = numbers.TranslatePoint(new Point(numbers.Bounds.Width / 2, textView.VisualLines[3].VisualTop - textView.VerticalOffset + 5), window)!.Value;
+        var tap = numbers.TranslatePoint(new Point(numbers.Bounds.Width - 3, textView.VisualLines[3].VisualTop - textView.VerticalOffset + 5), window)!.Value;
         touch.Down(tap);
         touch.Wait(60);
         touch.Up(tap);

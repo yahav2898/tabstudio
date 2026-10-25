@@ -33,7 +33,7 @@ internal sealed class HeadlessTouchScreen
     {
         ArgumentNullException.ThrowIfNull(root);
         _root = root;
-        _device = (IInputDevice)(Activator.CreateInstance(typeof(TouchDevice)) ?? throw new InvalidOperationException("No touch device."));
+        _device = Activator.CreateInstance<TouchDevice>();
         var impl = root.PlatformImpl ?? throw new InvalidOperationException("The window is not shown.");
         _input = impl.GetType().GetProperty("Input", BindingFlags.Public | BindingFlags.Instance)?.GetValue(impl) as Action<RawInputEventArgs>
             ?? throw new InvalidOperationException("The window takes no input.");

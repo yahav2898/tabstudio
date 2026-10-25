@@ -56,8 +56,7 @@ public sealed partial class CodeEditorView
     {
         _pendingTouch = null;
         if (e.Handled || e.Pointer.Type is not (PointerType.Touch or PointerType.Pen) || e.Source is not Visual source
-            || !(ReferenceEquals(source, TextView) || TextView.IsVisualAncestorOf(source))
-            || !e.GetCurrentPoint(TextView).Properties.IsLeftButtonPressed)
+            || !IsOnText(source) || !e.GetCurrentPoint(TextView).Properties.IsLeftButtonPressed)
         {
             return;
         }
@@ -65,6 +64,29 @@ public sealed partial class CodeEditorView
         // The editor would focus itself and move the caret now; that waits until the touch is a tap or a long press.
         _pendingTouch = new PendingTouch(e.Pointer, e.GetPosition(TextView), e.ClickCount, e.KeyModifiers);
         e.Handled = true;
+    }
+
+    /// <summary>
+    /// Whether a touch landed on the text area outside its margins: on the text, or on the text area's own background
+    /// (such as the empty part of the line number column), where the editor would place the caret.
+    /// </summary>
+    private bool IsOnText(Visual source)
+    {
+        var textArea = _editor.TextArea;
+        if (!ReferenceEquals(source, textArea) && !textArea.IsVisualAncestorOf(source))
+        {
+            return false;
+        }
+
+        foreach (var margin in textArea.LeftMargins)
+        {
+            if (ReferenceEquals(margin, source) || margin.IsVisualAncestorOf(source))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private void OnTouchReleased(object? sender, PointerReleasedEventArgs e)

@@ -90,7 +90,9 @@ public sealed class TouchScrollGestureRecognizer : GestureRecognizer
     protected override void PointerPressed(PointerPressedEventArgs e)
     {
         ArgumentNullException.ThrowIfNull(e);
-        if (e.Pointer.Type is not (PointerType.Touch or PointerType.Pen) || _tracking is not null
+        // A second finger during a drag is ignored; before a drag starts the newest finger is the one that counts, so a
+        // touch the platform cancelled never leaves the gesture waiting for its release.
+        if (e.Pointer.Type is not (PointerType.Touch or PointerType.Pen) || IsDragging
             || !e.GetCurrentPoint(null).Properties.IsLeftButtonPressed)
         {
             return;
