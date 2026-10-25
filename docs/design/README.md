@@ -60,9 +60,15 @@ The UI font is Inter, the code font JetBrains Mono (`CodeFont`). Sizes are in de
 header, status bar item or row with a fixed height sets `VerticalAlignment="Center"` on its text (or on the panel that
 holds the text, so the panel sizes to it). A stretched text block draws its line at its top: in the headless
 screenshots this is a pixel or two, but Android's font metrics put the glyphs visibly high (the Start screen's template
-tags on a real tablet, 0.8). Multi-line text next to an icon is the exception: it aligns to the top, with the icon on its
-first line. `CenteredTextTests` checks the Start screen and every tool window, and the component tests check the new
-pieces, by finding single-line text blocks that are taller than their text (`StretchedText`).
+tags on a real tablet, 0.8). The same goes for a name beside a taller pill or tag in a row: center the name. Multi-line
+text next to an icon is the exception: it aligns to the top, with the icon on its first line. Three checks find single
+lines of text that are taller than their text (`StretchedText` in the tests):
+
+- every screenshot test fails on one (`UiTestHelpers.SaveScreenshot`), and lists it in `stretched-text.txt` beside the
+  screenshots, in both themes;
+- `CenteredTextTests` looks at the Start screen and every tool window, screenshot or not;
+- the self test looks at the Forms designer and the Start screen on the Android emulator, with Android's own fonts, in
+  both themes (`SelfTest.Design.cs`), and saves the pictures with the emulator job's logs (`design-0*.png`).
 
 Section headers are sentence case ("This commit", not "THIS COMMIT"). Text that can be long (paths, test names,
 messages) trims with an ellipsis and shows in full in a tooltip; paths trim in the middle when the file name matters.
