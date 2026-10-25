@@ -1,0 +1,41 @@
+SPIKE apk_wine_download 8724KiB in 0s
+SPIKE apk_tools_download 98824KiB in 2s
+SPIKE rootfs_size 413820KiB
+SPIKE wine_tar 62636KiB unpacked in 3s to 501080KiB
+SPIKE arch arm64 aarch64 6.17.0-1022-azure
+SPIKE page_size 4096
+SPIKE wine_files 488.8MiB
+SPIKE dotnet_size 185.5MiB
+SPIKE xvfb_start_seconds 0.05
+SPIKE xvfb_running True
+SPIKE wine_binary /opt/tabstudio/wine/bin/wine
+SPIKE wine_version wine-11.0 (0.0s)
+SPIKE wineboot_seconds 3.5 exit=53
+NOTE wineboot output: wine: created the configuration directory '/root/.wine-spike'
+002c:err:module:loader_init "ws2_32.dll" failed to initialize, aborting
+002c:err:module:loader_init Initializing dlls for L"C:\\windows\\system32\\wineboot.exe" failed, status c0000142
+wine: could not load kernel32.dll, status c0000135
+
+SPIKE prefix_size 0.0MiB
+SPIKE prefix_system32 0.0MiB
+SPIKE prefix_syswow64 0.0MiB
+SPIKE prefix_dedupe linked 0 files, saved 0.0MiB, prefix now 0.0MiB
+SPIKE registry_seconds 3.5 exit=53
+SPIKE dotnet_info_seconds 3.5 exit=53
+NOTE dotnet --info: 002c:err:module:loader_init "ws2_32.dll" failed to initialize, aborting / 002c:err:module:loader_init Initializing dlls for L"C:\\windows\\system32\\wineboot.exe" failed, status c0000142 / wine: could not load kernel32.dll, status c0000135
+SPIKE forms_hello_seconds 3.5 exit=53 hello=False
+NOTE hello output: 002c:err:module:loader_init "ws2_32.dll" failed to initialize, aborting
+002c:err:module:loader_init Initializing dlls for L"C:\\windows\\system32\\wineboot.exe" failed, status c0000142
+wine: could not load kernel32.dll, status c0000135
+
+SPIKE forms_hello_session_seconds 0.0 exit=53
+SPIKE framebuffer 1280x800 bpp=32 stride=5120 order=0 masks=ff0000/ff00/ff
+SPIKE forms_shown no
+NOTE forms stderr: 004c:err:module:loader_init "ws2_32.dll" failed to initialize, aborting / 004c:err:module:loader_init Initializing dlls for L"C:\\windows\\system32\\wineboot.exe" failed, status c0000142 / wine: could not load kernel32.dll, status c0000135
+SPIKE forms_animate_shown no
+NOTE forms_animate stderr: 005c:err:module:loader_init "ws2_32.dll" failed to initialize, aborting / 005c:err:module:loader_init Initializing dlls for L"C:\\windows\\system32\\wineboot.exe" failed, status c0000142 / wine: could not load kernel32.dll, status c0000135
+SPIKE wpf_hardware_shown no
+NOTE wpf_hardware stderr: 006c:err:module:loader_init "ws2_32.dll" failed to initialize, aborting / 006c:err:module:loader_init Initializing dlls for L"C:\\windows\\system32\\wineboot.exe" failed, status c0000142 / wine: could not load kernel32.dll, status c0000135
+SPIKE wpf_software_shown no
+NOTE wpf_software stderr: 008c:err:module:loader_init "ws2_32.dll" failed to initialize, aborting / 008c:err:module:loader_init Initializing dlls for L"C:\\windows\\system32\\wineboot.exe" failed, status c0000142 / wine: could not load kernel32.dll, status c0000135
+SPIKE prefix_size_after 0.0MiB
