@@ -35,7 +35,8 @@ internal sealed class PullRequestScenario : IDisposable
     public const int FarewellLine = 28;
 
     /// <param name="agentHttp">Where the workspace sends requests to Claude.</param>
-    public PullRequestScenario(HttpClient? agentHttp = null) => Fixture = new GitWorkspaceFixture(agentHttp);
+    public PullRequestScenario(HttpClient? agentHttp = null) =>
+        Fixture = agentHttp is null ? new GitWorkspaceFixture() : new GitWorkspaceFixture(agentHttp);
 
     public GitWorkspaceFixture Fixture { get; }
 

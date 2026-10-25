@@ -17,18 +17,25 @@ internal sealed class GitWorkspaceFixture : IDisposable
 
     private readonly TempDirectory _temp = new();
 
-    /// <param name="agentHttp">Where the workspace sends requests to Claude, such as <see cref="FakeClaude"/>.</param>
-    public GitWorkspaceFixture(HttpClient? agentHttp = null)
+    public GitWorkspaceFixture()
     {
         Paths = new AppPaths(_temp.Path);
         var device = new DefaultDeviceStatus(new DeviceInfo(8L * 1024 * 1024 * 1024, 8, IsLowRamDevice: false));
         Account = GitHub.CreateAccount(Paths);
         AccountView = new GitHubAccountViewModel(Account, Browser);
-        Workspace = agentHttp is null
-            ? new WorkspaceViewModel(
-                new CompilerServices(Paths), device, DeviceProfile.For(device.Device), new AvaloniaUiDispatcher(), new SessionStore(Paths), Paths, AccountView, Browser)
-            : new WorkspaceViewModel(
-                new CompilerServices(Paths), device, DeviceProfile.For(device.Device), new AvaloniaUiDispatcher(), new SessionStore(Paths), Paths, AccountView, Browser) { AgentHttp = agentHttp };
+        Workspace = new WorkspaceViewModel(
+            new CompilerServices(Paths), device, DeviceProfile.For(device.Device), new AvaloniaUiDispatcher(), new SessionStore(Paths), Paths, AccountView, Browser);
+    }
+
+    /// <summary>A fixture whose workspace sends its requests to Claude through the test's own client.</summary>
+    /// <param name="agentHttp">Where the workspace sends requests to Claude, such as <see cref="FakeClaude"/>.</param>
+    public GitWorkspaceFixture(HttpClient agentHttp)
+        : this()
+    {
+        Workspace.Dispose();
+        var device = new DefaultDeviceStatus(new DeviceInfo(8L * 1024 * 1024 * 1024, 8, IsLowRamDevice: false));
+        Workspace = new WorkspaceViewModel(
+            new CompilerServices(Paths), device, DeviceProfile.For(device.Device), new AvaloniaUiDispatcher(), new SessionStore(Paths), Paths, AccountView, Browser) { AgentHttp = agentHttp };
     }
 
     public FakeGitHub GitHub { get; } = new();
