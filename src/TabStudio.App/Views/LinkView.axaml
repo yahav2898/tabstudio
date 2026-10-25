@@ -170,6 +170,11 @@
                       <controls:StrokeIcon Data="{StaticResource Icon.Folder}" Size="15" Foreground="{DynamicResource Brush.AccentText}" />
                       <TextBlock Classes="small" TextWrapping="Wrap" Text="The tablet's files stay on the tablet; this device keeps a copy to compile, in its cache." VerticalAlignment="Center" />
                     </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                      <controls:StrokeIcon Data="{StaticResource Icon.Warning}" Size="15" Foreground="{DynamicResource Brush.Warning}" />
+                      <TextBlock Classes="small" TextWrapping="Wrap" VerticalAlignment="Center"
+                                 Text="Compiling runs the analyzers and source generators of the tablet's packages on this device, so pair only tablets you own." />
+                    </StackPanel>
                   </StackPanel>
                   <Button Theme="{StaticResource AccentButton}" Height="44" Padding="20,0" HorizontalAlignment="Left" Command="{Binding StartHostingCommand}">
                     <StackPanel Orientation="Horizontal" Spacing="8">

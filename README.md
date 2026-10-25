@@ -95,7 +95,7 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 ### Built for the device in your hands
 
 - **Runs on modest tablets.** TabStudio measures the device it runs on and adapts. On a 3 GB tablet it keeps a full compiler model only of the projects you are editing, reads .NET's metadata straight from storage instead of holding it in memory, and gives memory back the moment Android asks for it.
-- **Borrow your phone's power.** With TabStudio Link, the same app on your phone or PC becomes a build and language server for your tablet over local Wi-Fi. The tablet shows the IDE; the stronger device does the heavy lifting. No cloud and no account: pair once with a QR code, and the connection is end-to-end encrypted.
+- **Borrow your phone's power.** With TabStudio Link, the same app on your phone or PC becomes a build and language server for your tablet over local Wi-Fi. The tablet shows the IDE; the stronger device does the heavy lifting. No cloud and no account: pair once with a QR code, and the connection is end-to-end encrypted. If the phone leaves, the tablet keeps compiling on its own and reconnects by itself.
 - **Never loses your place.** Android closes background apps on small devices. TabStudio saves your session as you work, so it reopens exactly where you left it, unsaved edits included.
 - **Thermal-aware builds.** When the tablet runs hot, TabStudio compiles on fewer cores instead of letting Android throttle everything, and the status bar tells you why.
 - **Works offline.** Everything except downloads, Git remotes and the agent runs without a connection.
@@ -189,8 +189,11 @@ src/
   TabStudio.Packages/      NuGet restore on the device
   TabStudio.Debugging/     The debugger: instrumented builds, breakpoints, stepping, inspection
   TabStudio.TestRunner/    xUnit, NUnit and MSTest discovery and execution
+  TabStudio.LiveTesting/   Live Unit Testing: coverage instrumentation, impact analysis, the live test engine
   TabStudio.Notebooks/     C# notebooks: .ipynb and .dib, the C# kernel, value formatting
-  TabStudio.SourceControl/ Git through GitHub: changes, commits, pulls and merges, branches, pull requests
+  TabStudio.SourceControl/ Git through GitHub: changes, commits, pulls and merges, branches, pull requests, Actions
+  TabStudio.Agent/         Claude as a coding agent: tools over the workspace, MCP servers, sketch to XAML
+  TabStudio.Link/          TabStudio Link: pairing, encrypted transport, QR codes and the remote language service
   TabStudio.App/           The IDE itself: views and view models, shared by every platform
   TabStudio.Desktop/       Desktop host for development
   TabStudio.Android/       The Android app

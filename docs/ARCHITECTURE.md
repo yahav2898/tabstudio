@@ -18,6 +18,8 @@ flowchart TB
         Packages["TabStudio.Packages"]
         SourceControl["TabStudio.SourceControl"]
         Agent["TabStudio.Agent"]
+        LiveTesting["TabStudio.LiveTesting"]
+        Link["TabStudio.Link"]
     end
     Debugging --> Compilation
     TestRunner --> Compilation
@@ -39,6 +41,8 @@ Dependencies point down only. Each layer has one job:
 | `TabStudio.TestRunner` | Test discovery and execution for xUnit, NUnit and MSTest, in-process and without runner packages. | Compilation |
 | `TabStudio.Notebooks` | C# notebooks: the `.ipynb` and `.dib` formats, a C# kernel and rich value formatting. | Compilation |
 | `TabStudio.SourceControl` | Git without a Git installation: changes found by hashing, `.gitignore`, and commits, pulls, merges, branches and pull requests through GitHub's API. | Core |
+| `TabStudio.LiveTesting` | Live Unit Testing: coverage instrumentation, per-test attribution, coverage builds, impact analysis and the live test engine. | Compilation, Debugging, TestRunner |
+| `TabStudio.Link` | TabStudio Link: pairing, the TLS transport, QR codes, discovery, and the language protocol a host answers for a tablet. | Compilation, Debugging, LiveTesting |
 | `TabStudio.Agent` | Claude as a coding agent: the Messages API with streaming and prompt caching, tools over the workspace, Model Context Protocol servers, and sketch to XAML. | Core |
 | `TabStudio.App` | The IDE: Avalonia views, view models, editor integration and app services. Platform-neutral. | Core and every engine, Avalonia |
 | `TabStudio.Android` | The Android entry point: activity, manifest, icons, platform services such as thermal status. | App |
@@ -297,6 +301,33 @@ A tablet cannot receive webhooks, so CI is polled, and polled politely:
   that reported them.
 - **Run workflow** reads the workflow file through the contents API, and `WorkflowFile` turns its
   `workflow_dispatch` inputs into a form.
+
+## TabStudio Link
+
+A tablet with little memory can hand its language service to a stronger device running TabStudio: a phone, another
+tablet or a PC. Programs, tests and the debugger still run on the tablet; the host only compiles.
+
+- **Transport.** TLS 1.3 (1.2 on Android 9) through `SslStream`. Each device has a self-signed ECDSA P-256
+  certificate, and each checks the other's, pinned by the SHA-256 of its public key. Messages are length-prefixed
+  JSON frames (source-generated) with request ids, cancellation, notifications and binary attachments for
+  assemblies and PDBs.
+- **Pairing.** The host shows a QR code (`tabstudio-link://`, drawn by the library's own encoder) with its address,
+  fingerprint and a one-time 8-character code; typing the address and code works too. Both sides prove they know the
+  code with HMACs over the handshake, keyed by PBKDF2-SHA256, so a man in the middle learns nothing he can use in the
+  20 seconds a handshake lasts. The code works once, expires after 10 minutes and is replaced after a wrong guess.
+  Paired devices are remembered by fingerprint; a UDP broadcast finds a paired host again after its address changed,
+  and TLS still checks the fingerprint.
+- **The language protocol.** The host keeps a mirror of the tablet's workspace, indexed by file hash, so only changed
+  files travel. A path map rewrites paths between the two devices, PDBs included, so diagnostics, IntelliSense,
+  builds, debug builds, Live Unit Testing's coverage builds and the agent's snapshot checks all come back in the
+  tablet's terms. The tablet sends its coverage slots with each coverage build, so hits from a host-built assembly
+  land where the tablet's own builds would put them.
+- **Falling back.** `LinkedLanguageService` sends work to `RemoteLanguageService` while a host is connected and to
+  the local service otherwise. Unsaved edits are kept on both sides, so losing the host costs nothing but speed, and
+  the link comes back by itself.
+- **What pairing grants.** The host runs the analyzers and source generators of the tablet's packages, so pairing
+  gives the tablet code execution on the host; the host's Link window says so, and asks to pair only tablets you own. Mirror paths
+  are validated, so a tablet cannot write outside its own mirror folder.
 
 ## The agent
 

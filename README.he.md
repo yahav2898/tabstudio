@@ -97,7 +97,7 @@ TabStudio הופך טאבלט אנדרואיד למחשב פיתוח שבאמת 
 ### בנוי למכשיר שבידיים שלכם
 
 - **רץ גם על טאבלטים צנועים.** ‏TabStudio מודד את המכשיר שהוא רץ עליו ומתאים את עצמו. בטאבלט עם 3 GB הוא מחזיק מודל מהדר מלא רק של הפרויקטים שאתם עורכים, קורא את המטא-דאטה של ‎.NET ישר מהאחסון במקום להחזיק אותה בזיכרון, ומחזיר זיכרון ברגע שאנדרואיד מבקש.
-- **שואלים כוח מהטלפון.** עם TabStudio Link, אותה אפליקציה בטלפון או במחשב הופכת לשרת בנייה ושפה בשביל הטאבלט, דרך ה-Wi-Fi המקומי. הטאבלט מציג את ה-IDE, והמכשיר החזק יותר עושה את העבודה הכבדה. בלי ענן ובלי חשבון: מצמידים פעם אחת עם קוד QR, והחיבור מוצפן מקצה לקצה.
+- **שואלים כוח מהטלפון.** עם TabStudio Link, אותה אפליקציה בטלפון או במחשב הופכת לשרת בנייה ושפה בשביל הטאבלט, דרך ה-Wi-Fi המקומי. הטאבלט מציג את ה-IDE, והמכשיר החזק יותר עושה את העבודה הכבדה. בלי ענן ובלי חשבון: מצמידים פעם אחת עם קוד QR, והחיבור מוצפן מקצה לקצה. אם הטלפון מתרחק, הטאבלט ממשיך לבנות לבד ומתחבר מחדש מעצמו.
 - **אף פעם לא מאבדים את המקום.** במכשירים קטנים אנדרואיד סוגר אפליקציות ברקע. ‏TabStudio שומר את הסשן תוך כדי עבודה, כך שהוא נפתח בדיוק איפה שהפסקתם, כולל שינויים שלא נשמרו.
 - **בנייה שמודעת לחום.** כשהטאבלט מתחמם, ‏TabStudio מקמפל על פחות ליבות במקום לתת לאנדרואיד להאט את הכול, ושורת המצב מסבירה למה.
 - **עובד בלי אינטרנט.** הכול חוץ מהורדות, שרתי Git מרוחקים והסוכן עובד בלי חיבור.
@@ -181,8 +181,11 @@ src/
   TabStudio.Packages/      NuGet restore on the device
   TabStudio.Debugging/     The debugger: instrumented builds, breakpoints, stepping, inspection
   TabStudio.TestRunner/    xUnit, NUnit and MSTest discovery and execution
+  TabStudio.LiveTesting/   Live Unit Testing: coverage instrumentation, impact analysis, the live test engine
   TabStudio.Notebooks/     C# notebooks: .ipynb and .dib, the C# kernel, value formatting
-  TabStudio.SourceControl/ Git through GitHub: changes, commits, pulls and merges, branches, pull requests
+  TabStudio.SourceControl/ Git through GitHub: changes, commits, pulls and merges, branches, pull requests, Actions
+  TabStudio.Agent/         Claude as a coding agent: tools over the workspace, MCP servers, sketch to XAML
+  TabStudio.Link/          TabStudio Link: pairing, encrypted transport, QR codes and the remote language service
   TabStudio.App/           The IDE itself: views and view models, shared by every platform
   TabStudio.Desktop/       Desktop host for development
   TabStudio.Android/       The Android app
