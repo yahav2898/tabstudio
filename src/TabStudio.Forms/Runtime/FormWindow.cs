@@ -256,6 +256,11 @@ internal sealed partial class FormWindow : IDisposable
         var origin = Point.Empty;
         while (true)
         {
+            if (current.KeepsPointFromChildren(new Point(point.X - origin.X, point.Y - origin.Y)))
+            {
+                return current;
+            }
+
             Control? hit = null;
             foreach (var child in current.Controls.ToArray())
             {

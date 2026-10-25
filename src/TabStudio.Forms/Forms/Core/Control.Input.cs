@@ -178,6 +178,13 @@ public partial class Control
     {
     }
 
+    /// <summary>
+    /// Whether a point of the client area belongs to the control rather than to the child under it, such as the area
+    /// around a split container's splitter, which is wider than the splitter for a finger.
+    /// </summary>
+    /// <param name="point">The point, in client coordinates.</param>
+    internal virtual bool KeepsPointFromChildren(Point point) => false;
+
     /// <summary>Handles a press on the non-client area: a border or a scroll bar.</summary>
     /// <param name="point">The point in the control's bounds coordinates.</param>
     /// <returns>Whether the press was handled.</returns>

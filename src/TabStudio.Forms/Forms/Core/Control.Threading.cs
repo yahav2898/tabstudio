@@ -111,7 +111,7 @@ public partial class Control
                 {
                     Action action when args is null or { Length: 0 } => Run(action),
                     MethodInvoker invoker when args is null or { Length: 0 } => Run(invoker),
-                    EventHandler handler when args is null or { Length: 0 } => Run(() => handler(null, EventArgs.Empty)),
+                    EventHandler handler when args is null or { Length: 0 } => Run(new Action(() => handler(null, EventArgs.Empty))),
                     _ => method.DynamicInvoke(args),
                 };
             }
