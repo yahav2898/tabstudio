@@ -86,10 +86,14 @@ public sealed partial class RoslynWorkspaceHost
     }
 
     /// <summary>The framework references plus the project's package references. The caller holds the gate.</summary>
-    private IReadOnlyList<MetadataReference> GetMetadataReferences(TsProject project) =>
-        _packageReferences.TryGetValue(project.FilePath, out var packages) && packages.Count > 0
-            ? [.. _frameworkReferences, .. packages]
-            : _frameworkReferences;
+    private IReadOnlyList<MetadataReference> GetMetadataReferences(TsProject project)
+    {
+        var packages = _packageReferences.TryGetValue(project.FilePath, out var restored) ? restored : [];
+        var skeletons = SkeletonReferencesFor(project).ToList();
+        return packages.Count == 0 && skeletons.Count == 0
+            ? _frameworkReferences
+            : [.. _frameworkReferences, .. packages, .. skeletons];
+    }
 
     /// <summary>Pushes a project's current references into the loaded solution. The caller holds the gate.</summary>
     private void ApplyMetadataReferences(string projectFilePath)

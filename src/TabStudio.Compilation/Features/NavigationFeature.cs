@@ -31,8 +31,28 @@ public sealed class NavigationFeature
             symbol = constructor.ContainingType;
         }
 
-        var source = await SymbolFinder.FindSourceDefinitionAsync(symbol, document.Project.Solution, cancellationToken).ConfigureAwait(false);
+        var source = await SymbolFinder.FindSourceDefinitionAsync(symbol, document.Project.Solution, cancellationToken).ConfigureAwait(false)
+            ?? await FindInSkeletonProjectAsync(symbol, document.Project.Solution, cancellationToken).ConfigureAwait(false);
         return SymbolResolver.ToDefinition(source ?? symbol);
+    }
+
+    /// <summary>
+    /// Finds the source of a symbol that came from a project referenced as a skeleton image (see
+    /// <see cref="RoslynWorkspaceHost.UseSkeletonReferences"/>): the project is in the solution, only not
+    /// referenced as source, so its declaration is looked up there by documentation id.
+    /// </summary>
+    private static async Task<ISymbol?> FindInSkeletonProjectAsync(ISymbol symbol, Solution solution, CancellationToken cancellationToken)
+    {
+        if (symbol.ContainingAssembly is not { } assembly
+            || symbol.OriginalDefinition.GetDocumentationCommentId() is not { } id
+            || solution.Projects.FirstOrDefault(p => p.AssemblyName == assembly.Name) is not { } project
+            || await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false) is not { } compilation)
+        {
+            return null;
+        }
+
+        var declared = DocumentationCommentId.GetFirstSymbolForDeclarationId(id, compilation);
+        return declared?.Locations.Any(l => l.IsInSource) == true ? declared : null;
     }
 
     /// <summary>
