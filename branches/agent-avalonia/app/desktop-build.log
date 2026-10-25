@@ -1,32 +1,32 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/TabStudio.Core.csproj (in 129 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/TabStudio.Packages.csproj (in 351 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/TabStudio.SourceControl.csproj (in 2 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj (in 379 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/TabStudio.TestRunner.csproj (in 217 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/TabStudio.Notebooks.csproj (in 379 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/TabStudio.Debugging.csproj (in 4 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Agent/TabStudio.Agent.csproj (in 3 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj (in 323 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Desktop/TabStudio.Desktop.csproj (in 368 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/TabStudio.SourceControl.csproj (in 182 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Agent/TabStudio.Agent.csproj (in 183 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/TabStudio.Core.csproj (in 2 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/TabStudio.Packages.csproj (in 208 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj (in 251 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/TabStudio.Notebooks.csproj (in 475 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/TabStudio.TestRunner.csproj (in 475 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/TabStudio.Debugging.csproj (in 5 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj (in 406 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Desktop/TabStudio.Desktop.csproj (in 352 ms).
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
   TabStudio.Agent -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Agent/bin/Release/net10.0/TabStudio.Agent.dll
   TabStudio.Packages -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/bin/Release/net10.0/TabStudio.Packages.dll
-  TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
   TabStudio.SourceControl -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/bin/Release/net10.0/TabStudio.SourceControl.dll
-  TabStudio.TestRunner -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/bin/Release/net10.0/TabStudio.TestRunner.dll
-  TabStudio.Notebooks -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/bin/Release/net10.0/TabStudio.Notebooks.dll
+  TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
   TabStudio.Debugging -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/bin/Release/net10.0/TabStudio.Debugging.dll
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/ViewModels/DocumentViewModel.Designer.cs(10,33): warning CS8669: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context. Auto-generated code requires an explicit '#nullable' directive in source. [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Views/XamlDesignerView.axaml : Avalonia warning AVLN3001: XAML resource "avares://TabStudio.App/Views/XamlDesignerView.axaml" won't be reachable via runtime loader, as no public constructor was found [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
-  TabStudio.App -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.App/bin/Release/net10.0/TabStudio.App.dll
-  TabStudio.Desktop -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Desktop/bin/Release/net10.0/TabStudio.Desktop.dll
+  TabStudio.Notebooks -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/bin/Release/net10.0/TabStudio.Notebooks.dll
+  TabStudio.TestRunner -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/bin/Release/net10.0/TabStudio.TestRunner.dll
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Previews/RuntimeXamlTypes.cs(60,30): error CS9273: In language version 14.0, 'field' is a keyword within a property accessor. Rename the variable or use the identifier '@field' instead. [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Previews/RuntimeXamlTypes.cs(60,39): warning CS9258: In language version 14.0, the 'field' keyword binds to a synthesized backing field for the property. To avoid generating a synthesized backing field, and to refer to the existing member, use 'this.field' or '@field' instead. [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Previews/RuntimeXamlTypes.cs(60,52): error CS0037: Cannot convert null to 'bool' because it is a non-nullable value type [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
 
-Build succeeded.
+Build FAILED.
 
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/ViewModels/DocumentViewModel.Designer.cs(10,33): warning CS8669: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context. Auto-generated code requires an explicit '#nullable' directive in source. [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Views/XamlDesignerView.axaml : Avalonia warning AVLN3001: XAML resource "avares://TabStudio.App/Views/XamlDesignerView.axaml" won't be reachable via runtime loader, as no public constructor was found [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
-    2 Warning(s)
-    0 Error(s)
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Previews/RuntimeXamlTypes.cs(60,39): warning CS9258: In language version 14.0, the 'field' keyword binds to a synthesized backing field for the property. To avoid generating a synthesized backing field, and to refer to the existing member, use 'this.field' or '@field' instead. [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Previews/RuntimeXamlTypes.cs(60,30): error CS9273: In language version 14.0, 'field' is a keyword within a property accessor. Rename the variable or use the identifier '@field' instead. [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Previews/RuntimeXamlTypes.cs(60,52): error CS0037: Cannot convert null to 'bool' because it is a non-nullable value type [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+    1 Warning(s)
+    2 Error(s)
 
-Time Elapsed 00:00:39.81
+Time Elapsed 00:00:30.65
