@@ -117,8 +117,19 @@ jobs:
           status=0
           dotnet build src/TabStudio.Desktop -c Release > ci-out/desktop-build.log 2>&1 || status=1
           tail -n 40 ci-out/desktop-build.log
-          dotnet test tests/TabStudio.App.Tests -c Release --logger "console;verbosity=normal" > ci-out/TabStudio.App.Tests.log 2>&1 || status=1
+          # A test host that dies leaves a crash report (its threads' stacks) when the runtime saw the crash.
+          mkdir -p "$RUNNER_TEMP/crash"
+          DOTNET_DbgEnableMiniDump=1 DOTNET_DbgMiniDumpType=1 DOTNET_EnableCrashReport=1 DOTNET_DbgMiniDumpName="$RUNNER_TEMP/crash/%e.%p.dmp" \
+            dotnet test tests/TabStudio.App.Tests -c Release --blame --logger "console;verbosity=normal" > ci-out/TabStudio.App.Tests.log 2>&1 || status=1
           tail -n 80 ci-out/TabStudio.App.Tests.log
+          if [ $status -ne 0 ]; then
+            {
+              echo "== Processes left running"; ps -eo pid,ppid,pgid,rss,etime,args --sort=-rss | head -n 40
+              echo "== Kernel messages"; sudo dmesg | tail -n 40
+            } > ci-out/diagnostics.txt 2>&1 || true
+            cp "$RUNNER_TEMP"/crash/*.json ci-out/ 2>/dev/null || true
+            find tests/TabStudio.App.Tests/TestResults -name 'Sequence_*.xml' -exec cp {} ci-out/ \; 2>/dev/null || true
+          fi
           exit $status
 
       - name: Publish logs and screenshots
