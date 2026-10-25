@@ -20,18 +20,21 @@ namespace TabStudio.App.Tests.Toolchains;
 public sealed class ToolchainLanguageToolsTests : IDisposable
 {
     private const string NodeProgram = """
-        const readline = require('node:readline');
+        const { createInterface } = require('node:readline/promises');
 
         function greet(name) {
           const message = `Hello, ${name}!`;
           return message;
         }
 
-        const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-        rl.question('What is your name? ', (answer) => {
-          console.log(greet(answer.trim()));
+        async function main() {
+          const rl = createInterface({ input: process.stdin, output: process.stdout });
+          const name = (await rl.question('What is your name? ')).trim();
+          console.log(greet(name));
           rl.close();
-        });
+        }
+
+        main();
         """;
 
     private readonly TempDirectory _temp = new();
@@ -158,6 +161,7 @@ public sealed class ToolchainLanguageToolsTests : IDisposable
         var output = workspace.Output.Text;
         Assert.Single(output.Split('\n'), l => l.Contains("Hello, Ada!", StringComparison.Ordinal));
         Assert.Contains("The program 'app.js' has exited with code 0 (0x0).", output, StringComparison.Ordinal);
+        trace.Passed = true;
     }
 
     public void Dispose()
@@ -167,12 +171,17 @@ public sealed class ToolchainLanguageToolsTests : IDisposable
         _temp.Dispose();
     }
 
-    /// <summary>Saves the Output panel and the debug adapters' log beside the screenshots when a test ends.</summary>
+    /// <summary>
+    /// Saves the Output panel, the debug adapters' log and the running processes beside the screenshots when a test
+    /// fails, as CI publishes them.
+    /// </summary>
     private sealed class SavedLogs(WorkspaceViewModel workspace, string name) : IDisposable
     {
+        public bool Passed { get; set; }
+
         public void Dispose()
         {
-            if (Environment.GetEnvironmentVariable("TABSTUDIO_SCREENSHOTS") is { Length: > 0 } folder)
+            if (!Passed && Environment.GetEnvironmentVariable("TABSTUDIO_SCREENSHOTS") is { Length: > 0 } folder)
             {
                 Directory.CreateDirectory(folder);
                 File.WriteAllText(Path.Combine(folder, name + ".txt"), $"== Output\n{workspace.Output.Text}\n== Debug Adapters\n{workspace.DebugAdapterOutput.Text}\n== Processes\n{Processes()}");
