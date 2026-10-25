@@ -53,6 +53,20 @@
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <!-- Android creates the activity through a Java callable wrapper, so the head's entry types stay public. -->
     <NoWarn>$(NoWarn);CA1515</NoWarn>
+    <!--
+      Mono's garbage collector marks the major heap on its own thread unless this is off, and that concurrent mark
+      races with the Java GC bridge in .NET 10's runtime: while a minor collection runs the Tarjan bridge, the
+      bridge tags the header of every object it walks (in a minor collection that is everything reachable from a
+      dead Java peer, here most of the IDE's heap), and two places in the concurrent mark read such a header
+      without untagging it. They then treat a large array as a small object, read a block header that does not
+      exist and lose or misplace mark and card bits, which frees arrays still in use. On a tablet that is a random
+      abort in the collector ("How can an object and a reference inside it not be in the same block?", a broken
+      free chunk map in sgen-los.c, or SIGSEGV on the SGen worker thread). The serial collector marks while the
+      app is stopped, after the bridge has restored every header. The GC stress workflow (.github/workflows/
+      gc-stress.yml) reproduces the race with build/android/gc-stress/concurrent.env; turn this back on once the
+      runtime untags those headers.
+    -->
+    <AndroidEnableSGenConcurrent>false</AndroidEnableSGenConcurrent>
   </PropertyGroup>
 
   <!--
