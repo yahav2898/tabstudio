@@ -1,7 +1,8 @@
 # Architecture
 
 This document explains how TabStudio is put together: the layers of the code, what happens when you open a
-solution and press F5, and the Android rules every design decision starts from.
+solution and press F5, how the debugger, Test Explorer, notebooks and Git work without the tools they normally
+need, and the Android rules every design decision starts from.
 
 ## Layers
 
@@ -9,9 +10,20 @@ solution and press F5, and the Android rules every design decision starts from.
 flowchart TB
     Android["TabStudio.Android<br/>the APK"] --> App
     Desktop["TabStudio.Desktop<br/>development host"] --> App
-    App["TabStudio.App<br/>views, view models, services"] --> Compilation
-    App --> Core
-    Compilation["TabStudio.Compilation<br/>Roslyn language service, build, run"] --> Core
+    App["TabStudio.App<br/>views, view models, services"] --> Engines
+    subgraph Engines["Engines"]
+        Debugging["TabStudio.Debugging"]
+        TestRunner["TabStudio.TestRunner"]
+        Notebooks["TabStudio.Notebooks"]
+        Packages["TabStudio.Packages"]
+        SourceControl["TabStudio.SourceControl"]
+    end
+    Debugging --> Compilation
+    TestRunner --> Compilation
+    Notebooks --> Compilation
+    Engines --> Core
+    App --> Compilation
+    Compilation["TabStudio.Compilation<br/>Roslyn language service, IntelliSense, build, run"] --> Core
     Core["TabStudio.Core<br/>workspace model, detection, Compatibility Doctor"]
 ```
 
@@ -20,12 +32,17 @@ Dependencies point down only. Each layer has one job:
 | Project | Responsibility | Depends on |
 | --- | --- | --- |
 | `TabStudio.Core` | Reads solutions (`.sln`, `.slnx`) and projects (`.csproj`, `.vbproj`, `.fsproj`, `.vcxproj`) into an immutable workspace model, detects the technology stack of any folder, and decides where each project can run. | Nothing but the .NET base library |
-| `TabStudio.Compilation` | The C# language service: a live Roslyn model of the workspace, diagnostics, classification, in-memory builds and running programs in-process. | Core, Roslyn |
-| `TabStudio.App` | The IDE: Avalonia views, view models, editor integration and app services. Platform-neutral. | Core, Compilation, Avalonia |
+| `TabStudio.Compilation` | The C# language service: a live Roslyn model of the workspace, diagnostics, classification, IntelliSense (completion, Quick Info, signature help, navigation, references, rename, code actions, document symbols), in-memory builds and running programs in-process. | Core, Roslyn |
+| `TabStudio.Packages` | NuGet restore on the device: version resolution as NuGet does it, downloads from nuget.org or local feeds, the global packages folder and asset selection. | Core, NuGet.Versioning, NuGet.Frameworks |
+| `TabStudio.Debugging` | The debugger: builds programs with statement hooks, and pauses, steps and inspects them. | Compilation |
+| `TabStudio.TestRunner` | Test discovery and execution for xUnit, NUnit and MSTest, in-process and without runner packages. | Compilation |
+| `TabStudio.Notebooks` | C# notebooks: the `.ipynb` and `.dib` formats, a C# kernel and rich value formatting. | Compilation |
+| `TabStudio.SourceControl` | Git without a Git installation: changes found by hashing, `.gitignore`, and commits, pulls, merges, branches and pull requests through GitHub's API. | Core |
+| `TabStudio.App` | The IDE: Avalonia views, view models, editor integration and app services. Platform-neutral. | Core and every engine, Avalonia |
 | `TabStudio.Android` | The Android entry point: activity, manifest, icons, platform services such as thermal status. | App |
 | `TabStudio.Desktop` | A desktop window around the same app, so contributors can work from any computer. | App |
 
-Core and Compilation have no UI dependency and are covered by unit tests. The App is tested headlessly with
+Core, Compilation and the engines have no UI dependency and are covered by unit tests. The App is tested headlessly with
 Avalonia's headless platform, including screenshots of the real views.
 
 ## Opening a workspace
@@ -39,7 +56,10 @@ Avalonia's headless platform, including screenshots of the real views.
 2. **Detection.** `StackDetector` reads marker files (`global.json`, `package.json`, `Cargo.toml`, `go.mod`,
    `CMakeLists.txt`, `foundry.toml`, `Move.toml` and more) to list every technology in the repository.
    `CompatibilityDoctor` turns each project's kind into a run host and an explanation.
-3. **Language service.** `RoslynWorkspaceHost` mirrors every C# project into a Roslyn `AdhocWorkspace`,
+3. **Packages.** Projects that use NuGet packages (directly or through a project they reference) are restored
+   in the background as soon as the workspace opens, and again when a project file is saved. Builds wait for
+   the restore, and IntelliSense sees the packages as soon as they are on the device.
+4. **Language service.** `RoslynWorkspaceHost` mirrors every C# project into a Roslyn `AdhocWorkspace`,
    with project references, implicit global usings and the .NET 10 reference assemblies bundled in the app.
    From then on the editor sends every edit to the host, and the host answers questions about it: which
    diagnostics a file has, how to color it, and how to compile a project. Roslyn reuses its compilations
@@ -63,14 +83,79 @@ sequenceDiagram
     UI->>R: Lines typed in the Output input box
 ```
 
-- **Build.** `ProjectBuilder` emits the startup project and the projects it references, dependencies first,
-  as assemblies with portable PDBs in memory. Nothing is written to disk.
+- **Build.** Once any package restore in progress has finished, `ProjectBuilder` emits the startup project and
+  the projects it references, dependencies first, as assemblies with portable PDBs in memory. Nothing is
+  written to disk.
 - **Safety.** A program runs inside TabStudio's own process, so `InProcessSafetyAnalyzer` rejects calls that
   would close the IDE, such as `Environment.Exit`, before the program starts (diagnostics `TS1001` and
   `TS1002`).
-- **Run.** `ProgramRunner` loads the program into its own `AssemblyLoadContext`, redirects the console to the
-  Output panel and starts `Main` on a dedicated thread with a 16 MB stack. Console input comes from the
+- **Run.** `ProgramRunner` loads the program and its package assemblies into its own `AssemblyLoadContext`,
+  redirects the console to the Output panel and starts `Main` on a dedicated thread with a 16 MB stack. Console input comes from the
   Output panel's input box. Stopping a program detaches its console immediately.
+
+## NuGet packages
+
+`PackageRestorer` does what `dotnet restore` does, without the SDK:
+
+- **Resolution** follows NuGet's rules: the lowest version in a range wins, the nearest reference wins along a
+  path (with NU1605 for a downgrade), and conflicting paths settle on the lowest version that satisfies both
+  (NU1107 when none does). Central package versions from `Directory.Packages.props` are honoured.
+- **Sources** are NuGet V3 feeds (nuget.org by default) and local folders. Packages are installed into a
+  global packages folder in NuGet's layout, verified and extracted safely, and shared by every project.
+- **Assets** come from `ref/` or `lib/` for `net10.0` with NuGet's fallback rules. Packages that the framework
+  already provides are pruned, so their assemblies always come from .NET itself.
+- **No-op restores** are instant: the inputs are hashed, and an unchanged project reuses its last result.
+  Offline, versions already on the device are used.
+
+## Debugging
+
+A debugger normally attaches to the runtime through a debugging API, which a .NET app on Android cannot do to
+itself. TabStudio's debugger works inside the program instead:
+
+- **Instrumented builds.** `DebugBuilder` rewrites the syntax trees before compiling: every statement gets a
+  hook on the same line (`if (Step(f, id)) Break(f, id, locals)`), and every method body records its frame
+  and reports exceptions from an exception filter, which runs while the stack is still intact. Line numbers in
+  stack traces are identical with and without the hooks.
+- **Pausing** blocks the program's thread inside the hook until the IDE says continue or step. Breakpoints,
+  conditions and hit counts, Step Into, Over and Out, Run to Cursor and Break All are decisions the hook makes
+  from the session's state.
+- **Inspecting.** The hook passes the statement's locals, which `DebugValue` formats and expands lazily.
+  The call stack is an `AsyncLocal` chain of frames, so it follows `await` across threads and projects.
+- **Unhandled exceptions** break at the throwing line with the exception and the call stack, before anything
+  unwinds.
+
+## Tests
+
+`TestSession` discovers xUnit, NUnit and MSTest tests by reflection on the built assemblies, recognising each
+framework by its attribute type names, so no runner or adapter package is needed. It runs them in-process with
+each framework's lifecycle (constructors and fixtures for xUnit, set-ups and tear-downs for NUnit and MSTest),
+every kind of data source, timeouts and cancellation, and reports results with stack traces trimmed to the
+user's code. `SourceTestDiscoverer` finds the same tests in source, with matching ids, so the Test Explorer can
+list tests before the first build.
+
+## Notebooks
+
+The C# kernel compiles each cell as a Roslyn script submission chained to the previous cell, emits it to
+memory and runs it, so variables, functions and types carry from cell to cell. It does not use Roslyn's
+scripting package, which needs assembly file paths that apps on Android do not have. Values are formatted
+into text, HTML and tables. Notebooks are read and written as `.ipynb` (Jupyter and VS Code) and `.dib`
+(Polyglot Notebooks), preserving unchanged cells byte for byte.
+
+## Source control
+
+Git normally needs the `git` executable, and Android does not allow an app to run one it downloaded. TabStudio
+talks to GitHub instead:
+
+- **Linked folders.** Cloning a repository records its owner, branch and the hash of every file of the commit
+  in `.tabstudio/sync.json`. Large repositories download as one archive; files the archive lacks or changes
+  are fetched one by one.
+- **Changes** are found by computing each file's Git blob hash and comparing it with the commit's. A cache of
+  sizes and modification times, with Git's guard against "racy" files, keeps this fast.
+- **Committing** creates blobs, a tree and a commit with GitHub's Git data API and moves the branch, which is
+  committing and pushing in one step. A push that is not a fast-forward is refused, and you pull first.
+- **Pulling** applies GitHub's changes file by file. Files changed on both sides are merged with a three-way
+  line merge (Myers' diff, as Git uses); conflicts get Git-style markers and can be settled by choosing a side.
+- **Branches, pull requests and publishing** a folder as a new repository are GitHub API calls.
 
 ## Run hosts
 
@@ -130,6 +215,8 @@ design keeps the second part proportional to what you are actually editing:
 | Roslyn in-process instead of a language server | No process to start or talk to, and the same compilations serve highlighting, diagnostics and builds. |
 | Its own project system instead of MSBuild | MSBuild needs the .NET SDK, which does not run on Android. TabStudio evaluates the parts of project files that editing and building need. |
 | In-memory builds | The edit-run loop never waits for the disk, and builds reuse the editor's warm compilations. |
+| A debugger built into the program | .NET's debugging interfaces are not available to an app debugging code in its own process on Android. Statement hooks give breakpoints, stepping and inspection with nothing but the compiler. |
+| Git through GitHub's API | Android forbids running downloaded executables, and a reimplementation of Git's network protocol would duplicate what GitHub already offers over HTTPS. |
 
 ## Code conventions
 
