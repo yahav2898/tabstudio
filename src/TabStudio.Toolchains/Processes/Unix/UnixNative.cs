@@ -100,10 +100,10 @@ internal static partial class UnixNative
     internal static partial int posix_spawnattr_setsigmask(nint attributes, nint signals);
 
     [LibraryImport(LibC)]
-    internal static partial int sigfillset(nint set);
+    internal static partial int sigemptyset(nint set);
 
     [LibraryImport(LibC)]
-    internal static partial int sigemptyset(nint set);
+    internal static partial int sigaddset(nint set, int signal);
 
     [LibraryImport(LibC)]
     internal static unsafe partial int posix_spawn(out int pid, nint path, nint actions, nint attributes, nint* argv, nint* envp);

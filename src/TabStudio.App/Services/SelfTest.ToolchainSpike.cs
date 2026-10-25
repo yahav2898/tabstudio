@@ -124,6 +124,19 @@ public static partial class SelfTest
             await SafeAsync("pty-system-sh", () => Task.Run(() => RunPseudoTerminal("pty-system-sh", ["/system/bin/sh", "-c", "tty; stty size; echo done"], ["PATH=/system/bin", "TERM=xterm-256color"])).WaitAsync(TimeSpan.FromSeconds(60)));
             string[] prootArguments = [Path.Combine(_lib, "libproot.so"), "--kill-on-exit", "--link2symlink", "-0", "-r", _rootfs, "-b", "/dev", "-b", "/proc", "-b", "/sys", "-w", "/root"];
             await SafeAsync("pty-proot", () => Task.Run(() => RunPseudoTerminal("pty-proot", [.. prootArguments, "/bin/sh", "-c", "tty; stty size; echo TERM=$TERM; printf '\\033[31mred\\033[0m\\n'"], guest)).WaitAsync(TimeSpan.FromSeconds(60)));
+            await SafeAsync("pty-library-host", () => LibraryTerminalAsync("pty-library-host", new TabStudio.Toolchains.Runtimes.HostRuntime(), new TabStudio.Toolchains.Processes.ProcessStartSpec { Program = "/system/bin/sh", Arguments = ["-c", "tty; stty size; echo done"] }, null));
+            var library = new TabStudio.Toolchains.Runtimes.ProotRuntime(new TabStudio.Toolchains.Runtimes.ProotRuntimeOptions
+            {
+                ProotPath = Path.Combine(_lib, "libproot.so"),
+                LoaderPath = Path.Combine(_lib, "libproot-loader.so"),
+                Rootfs = _rootfs,
+                TemporaryDirectory = Path.Combine(_files, "proot-tmp"),
+                SharedFolders = [_files],
+            });
+            await SafeAsync("pty-library-proot", () => LibraryTerminalAsync("pty-library-proot", library, new TabStudio.Toolchains.Processes.ProcessStartSpec { Program = "/bin/sh", Arguments = ["-c", "tty; stty size; echo TERM=$TERM; printf '\\033[31mred\\033[0m\\n'"] }, null));
+            await SafeAsync("pty-library-ash", () => LibraryTerminalAsync("pty-library-ash", library, library.Shell(_files, new TabStudio.Toolchains.Processes.TerminalSize(30, 100)), "echo shell-says-hi; pwd; exit\n"));
+            await SafeAsync("pipes-library-python", () => LibraryPipesAsync(library));
+            await TryGuestAsync("apk-database", ["/bin/sh", "-c", "ls -la /lib/apk/db; head -c 700 /lib/apk/db/installed; echo; cat /etc/apk/world"], null, 60, r => r.Code == 0);
             await SafeAsync("local-repository", LocalRepositoryAsync);
             await SafeAsync("fake-proc", FakeProcAsync);
             for (var i = 0; i < 3; i++)
@@ -426,6 +439,46 @@ public static partial class SelfTest
 
             var text = output.ToString().Replace("\u001b", "\\e", StringComparison.Ordinal);
             Log(name, text.Contains("30 100", StringComparison.Ordinal), $"pid {pid} exit {exit} in {clock.ElapsedMilliseconds} ms; {diagnostics}; output: {text}");
+        }
+
+        private async Task LibraryTerminalAsync(string name, TabStudio.Toolchains.Runtimes.IToolchainRuntime runtime, TabStudio.Toolchains.Processes.ProcessStartSpec spec, string? input)
+        {
+            var clock = Stopwatch.StartNew();
+            using var process = runtime.Start(spec with { Terminal = new TabStudio.Toolchains.Processes.TerminalSize(30, 100) });
+            var reader = Task.Run(() =>
+            {
+                var text = new StringBuilder();
+                var buffer = new byte[4096];
+                int read;
+                while ((read = process.Output.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    text.Append(Encoding.UTF8.GetString(buffer, 0, read));
+                }
+
+                return text.ToString();
+            });
+            if (input is not null)
+            {
+                await Task.Delay(1500);
+                process.Input.Write(Encoding.UTF8.GetBytes(input));
+            }
+
+            var exit = await process.Completion.WaitAsync(TimeSpan.FromSeconds(30));
+            var output = await reader.WaitAsync(TimeSpan.FromSeconds(10));
+            var shown = output.Replace("\u001b", "\\e", StringComparison.Ordinal);
+            Log(name, exit.Succeeded && (output.Contains("30 100", StringComparison.Ordinal) || output.Contains("shell-says-hi", StringComparison.Ordinal)), $"{exit.Description} in {clock.ElapsedMilliseconds} ms: {shown}");
+        }
+
+        private async Task LibraryPipesAsync(TabStudio.Toolchains.Runtimes.IToolchainRuntime runtime)
+        {
+            var clock = Stopwatch.StartNew();
+            using var process = runtime.Start(new TabStudio.Toolchains.Processes.ProcessStartSpec { Program = "python3", Arguments = ["-u", "-c", "import os; print('cwd', os.getcwd()); print('Hello, ' + input('Name? ') + '!')"], WorkingDirectory = _files });
+            var output = Task.Run(() => new StreamReader(process.Output).ReadToEnd());
+            var error = Task.Run(() => new StreamReader(process.Error!).ReadToEnd());
+            process.Input.Write("Tablet\n"u8);
+            process.CloseInput();
+            var exit = await process.Completion.WaitAsync(TimeSpan.FromSeconds(30));
+            Log("pipes-library-python", exit.Succeeded && (await output).Contains("Hello, Tablet!", StringComparison.Ordinal), $"{exit.Description} in {clock.ElapsedMilliseconds} ms: {await output} | {await error}");
         }
 
         private async Task LocalRepositoryAsync()

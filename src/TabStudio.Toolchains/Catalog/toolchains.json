@@ -8,9 +8,9 @@
     "mirror": "https://dl-cdn.alpinelinux.org/alpine",
     "repositories": [ "main", "community" ],
     "rootfs": {
-      "x86_64": { "file": "alpine-minirootfs-3.24.3-x86_64.tar.gz", "sha256": "PENDING", "size": 3700000 },
-      "aarch64": { "file": "alpine-minirootfs-3.24.3-aarch64.tar.gz", "sha256": "PENDING", "size": 4000000 },
-      "armv7": { "file": "alpine-minirootfs-3.24.3-armv7.tar.gz", "sha256": "PENDING", "size": 3500000 }
+      "x86_64": { "file": "alpine-minirootfs-3.24.3-x86_64.tar.gz", "sha256": "f8e1cafba9b1b283b5d30d06f9885c8d2bc161ffe9083ade8e2e157813a53407", "size": 3704080 },
+      "aarch64": { "file": "alpine-minirootfs-3.24.3-aarch64.tar.gz", "sha256": "4d3f80afaebd447c5591a63a73bde380a149fe8b2d85488cafabb2ff97551f50", "size": 4029999 },
+      "armv7": { "file": "alpine-minirootfs-3.24.3-armv7.tar.gz", "sha256": "dc1ddfaf03ede4be79ad7475490f6b7859dbcbbbbb85150aa1ee013b4bc2f0c1", "size": 3183009 }
     }
   },
   "toolchains": [
@@ -64,8 +64,13 @@
       "setup": [
         {
           "name": "debugpy",
-          "description": "The debug adapter for Python.",
-          "command": [ "python3", "-m", "pip", "install", "--disable-pip-version-check", "--no-input", "--target", "/opt/tabstudio/python/debugpy", "debugpy==1.8.17" ]
+          "description": "The debug adapter for Python, from its universal wheel.",
+          "archive": {
+            "url": "https://files.pythonhosted.org/packages/56/3d/c7dc9f35bc9e22cdb53679f844bee40fd5cff871862f60595869a433400d/debugpy-1.8.22-py2.py3-none-any.whl",
+            "sha256": "a9e9d3550e15ca479c59333e90845029190531f0cacfedab3b815a57bd913947",
+            "size": 5374857,
+            "destination": "/opt/tabstudio/python/debugpy"
+          }
         }
       ],
       "languageServer": { "command": [ "pylsp" ], "languages": [ "python" ] },
@@ -127,16 +132,16 @@
           "name": "JavaScript debugger",
           "description": "vscode-js-debug's debug adapter, for Node.js programs.",
           "archive": {
-            "url": "https://github.com/microsoft/vscode-js-debug/releases/download/v1.105.0/js-debug-dap-v1.105.0.tar.gz",
-            "sha256": "PENDING",
-            "size": 6000000,
-            "destination": "/opt/tabstudio/node/js-debug"
+            "url": "https://github.com/microsoft/vscode-js-debug/releases/download/v1.140.0/js-debug-dap-v1.140.0.tar.gz",
+            "sha256": "27dab92937ec1ab35821ae955aac867544fe06a1b6307229049f2d789af10968",
+            "size": 1249709,
+            "destination": "/opt/tabstudio/node"
           }
         }
       ],
       "languageServer": { "command": [ "typescript-language-server", "--stdio" ], "languages": [ "javascript", "typescript", "javascriptreact", "typescriptreact" ] },
       "debugAdapter": {
-        "command": [ "node", "/opt/tabstudio/node/js-debug/js-debug/src/dapDebugServer.js", "{port}", "127.0.0.1" ],
+        "command": [ "node", "/opt/tabstudio/node/js-debug/src/dapDebugServer.js", "{port}", "127.0.0.1" ],
         "transport": "tcp",
         "type": "pwa-node",
         "languages": [ "javascript", "typescript" ]
@@ -285,17 +290,17 @@
           { "file": "build.gradle.kts", "build": [ "gradle", "--console=plain", "build" ], "command": [ "gradle", "--console=plain", "--quiet", "run" ] },
           { "file": "settings.gradle.kts", "build": [ "gradle", "--console=plain", "build" ], "command": [ "gradle", "--console=plain", "--quiet", "run" ] }
         ],
-        "environment": { "JAVA_HOME": "/usr/lib/jvm/java-21-openjdk", "PATH": "/opt/tabstudio/kotlin/kotlinc/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" }
+        "environment": { "JAVA_HOME": "/usr/lib/jvm/java-21-openjdk", "PATH": "/opt/tabstudio/kotlinc/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" }
       },
       "setup": [
         {
           "name": "Kotlin compiler",
           "description": "kotlinc, from JetBrains' release, which Alpine does not package.",
           "archive": {
-            "url": "https://github.com/JetBrains/kotlin/releases/download/v2.2.20/kotlin-compiler-2.2.20.zip",
-            "sha256": "PENDING",
-            "size": 90000000,
-            "destination": "/opt/tabstudio/kotlin"
+            "url": "https://github.com/JetBrains/kotlin/releases/download/v2.4.21/kotlin-compiler-2.4.21.zip",
+            "sha256": "7cc140e76daf416a0424a5557f99afd7ca89ebd463ea1101261e3e01c33e75cd",
+            "size": 89733618,
+            "destination": "/opt/tabstudio"
           }
         }
       ],

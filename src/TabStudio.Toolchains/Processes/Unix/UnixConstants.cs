@@ -41,6 +41,9 @@ internal static class UnixConstants
     /// <summary><c>SIGKILL</c>.</summary>
     public const int SignalKill = 9;
 
+    /// <summary><c>SIGSTOP</c>, whose action cannot be changed.</summary>
+    public static int SignalStop => IsMac ? 17 : 19;
+
     /// <summary><c>SIGINT</c>.</summary>
     public const int SignalInterrupt = 2;
 

@@ -22,6 +22,21 @@ namespace TabStudio.Toolchains.Processes.Unix;
 /// </remarks>
 internal static class UnixSpawner
 {
+    private static readonly Lazy<bool> ChangeDirectorySupported = new(() =>
+    {
+        UnixNative.EnsureLoaded();
+        unsafe
+        {
+            return UnixNative.FindAddChdir() is not null;
+        }
+    });
+
+    /// <summary>
+    /// Whether processes can start in a folder of their own: <c>posix_spawn_file_actions_addchdir_np</c> exists on
+    /// glibc 2.29 and later, macOS 10.15 and later and Android 14 and later.
+    /// </summary>
+    public static bool CanChangeDirectory => ChangeDirectorySupported.Value;
+
     /// <summary>Starts a process.</summary>
     /// <param name="path">The absolute path of the program to execute.</param>
     /// <param name="arguments">The full argument vector, starting with the program's name.</param>
@@ -167,7 +182,17 @@ internal static class UnixSpawner
                     Check(UnixNative.posix_spawnattr_setpgroup(attributes, 0), "posix_spawnattr_setpgroup");
                 }
 
-                _ = UnixNative.sigfillset(signals);
+                // Every standard signal back to its default action, except SIGKILL and SIGSTOP, whose action cannot
+                // change: bionic's posix_spawn fails the child (exit 127) when one of those is in the set.
+                _ = UnixNative.sigemptyset(signals);
+                for (var signal = 1; signal < 32; signal++)
+                {
+                    if (signal != UnixConstants.SignalKill && signal != UnixConstants.SignalStop)
+                    {
+                        _ = UnixNative.sigaddset(signals, signal);
+                    }
+                }
+
                 Check(UnixNative.posix_spawnattr_setsigdefault(attributes, signals), "posix_spawnattr_setsigdefault");
                 _ = UnixNative.sigemptyset(signals);
                 Check(UnixNative.posix_spawnattr_setsigmask(attributes, signals), "posix_spawnattr_setsigmask");
