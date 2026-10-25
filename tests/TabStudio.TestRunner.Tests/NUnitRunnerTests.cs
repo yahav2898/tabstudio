@@ -173,4 +173,46 @@ public sealed class NUnitRunnerTests
         Assert.Equal(2, summary.Errored);
         Assert.All(summary.Results, r => Assert.Equal("OneTimeSetUp failed: System.InvalidOperationException: no database", r.Message));
     }
+
+    [Fact]
+    public async Task Test_case_sources_take_argument_arrays_single_values_and_source_types()
+    {
+        var source = """
+            using System.Collections;
+            using NUnit.Framework;
+
+            namespace Sources.Tests;
+
+            public class SourceTests
+            {
+                private static readonly object[] Pairs = [new object[] { 1, 1 }, new object[] { 2, 2 }];
+
+                private static IEnumerable<string> Words() => ["a", "bb"];
+
+                [TestCaseSource(nameof(Pairs))]
+                public void AreEqual(int left, int right) => Assert.That(left, Is.EqualTo(right));
+
+                [TestCaseSource(nameof(Words))]
+                public void IsShort(string word) => Assert.That(word.Length, Is.LessThan(3));
+
+                [TestCaseSource(typeof(SquareSource))]
+                public void Squares(int value, int square) => Assert.That(value * value, Is.EqualTo(square));
+            }
+
+            public class SquareSource : IEnumerable
+            {
+                public IEnumerator GetEnumerator()
+                {
+                    yield return new object[] { 3, 9 };
+                }
+            }
+            """;
+
+        var summary = await UserProject.RunAllAsync(source, UserProject.NUnitAssemblies);
+
+        Assert.Equal(5, summary.Total);
+        Assert.True(summary.Succeeded, string.Join('\n', summary.Results.Select(r => $"{r.Test.DisplayName}: {r.Message}")));
+        Assert.Equal(TestOutcome.Passed, summary.Result("IsShort(\"bb\")").Outcome);
+        Assert.Equal(TestOutcome.Passed, summary.Result("Squares(3,9)").Outcome);
+    }
 }

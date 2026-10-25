@@ -225,7 +225,7 @@ internal sealed class SourceAttribute
         _ => type.ToString(),
     };
 
-    /// <summary>The runtime name of a C# keyword type, as <see cref="System.Type.Name"/> prints it.</summary>
+    /// <summary>The runtime name of a C# keyword type, as <c>Type.Name</c> prints it.</summary>
     private static string PredefinedName(SyntaxKind keyword) => keyword switch
     {
         SyntaxKind.IntKeyword => "Int32",
