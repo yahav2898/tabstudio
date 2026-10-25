@@ -41,7 +41,7 @@ internal static class DataSources
                 var values = arguments ?? [];
                 var method = methods.Find(m => m.GetParameters().Length == values.Count) ?? methods[0];
                 var bound = ArgumentBinder.Bind(method, values, out var closed);
-                return AsSequence(MethodInvoker.Invoke(closed, null, bound), memberName, declaringType);
+                return AsSequence(UserCode.Invoke(closed, null, bound), memberName, declaringType);
             }
         }
 

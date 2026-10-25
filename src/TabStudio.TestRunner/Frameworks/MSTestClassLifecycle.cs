@@ -48,7 +48,7 @@ internal sealed class MSTestClassLifecycle : ClassLifecycle
         {
             try
             {
-                MethodInvoker.Invoke(method, null, NullArguments(method));
+                UserCode.Invoke(method, null, NullArguments(method));
             }
             catch (Exception ex)
             {
@@ -72,7 +72,7 @@ internal sealed class MSTestClassLifecycle : ClassLifecycle
             {
                 foreach (var method in level)
                 {
-                    MethodInvoker.Invoke(method, instance, NullArguments(method));
+                    UserCode.Invoke(method, instance, NullArguments(method));
                 }
 
                 levelsDone++;
@@ -94,7 +94,7 @@ internal sealed class MSTestClassLifecycle : ClassLifecycle
             {
                 try
                 {
-                    MethodInvoker.Invoke(method, instance, NullArguments(method));
+                    UserCode.Invoke(method, instance, NullArguments(method));
                 }
                 catch (Exception ex)
                 {
@@ -123,7 +123,7 @@ internal sealed class MSTestClassLifecycle : ClassLifecycle
         {
             try
             {
-                MethodInvoker.Invoke(method, null, NullArguments(method));
+                UserCode.Invoke(method, null, NullArguments(method));
             }
             catch (Exception ex)
             {
@@ -141,7 +141,7 @@ internal sealed class MSTestClassLifecycle : ClassLifecycle
         try
         {
             var arguments = ArgumentBinder.Bind(test.Method, test.Arguments, out var method);
-            MethodInvoker.Invoke(method, instance, arguments);
+            UserCode.Invoke(method, instance, arguments);
             if (expected is not null)
             {
                 failures.Add(new TestStepOutcome(TestOutcome.Failed, $"Test method {test.Case.FullyQualifiedName} did not throw expected exception {expected.FullName}."));
@@ -175,7 +175,7 @@ internal sealed class MSTestClassLifecycle : ClassLifecycle
     }
 
     /// <summary>Runs <c>[AssemblyInitialize]</c> and schedules <c>[AssemblyCleanup]</c> for the end of the run.</summary>
-    private object InitializeAssembly(Assembly assembly)
+    private Assembly InitializeAssembly(Assembly assembly)
     {
         var testClasses = AssemblyTypes.Of(assembly)
             .Where(t => AttributeReader.Of(t).Exists(a => a.Is(FrameworkNames.MSTestTestClass)))
@@ -188,14 +188,14 @@ internal sealed class MSTestClassLifecycle : ClassLifecycle
             {
                 foreach (var cleanup in cleanups)
                 {
-                    MethodInvoker.Invoke(cleanup, null, NullArguments(cleanup));
+                    UserCode.Invoke(cleanup, null, NullArguments(cleanup));
                 }
             });
         }
 
         foreach (var initializer in testClasses.SelectMany(t => LifecycleMethods.Marked(t, FrameworkNames.MSTestAssemblyInitialize)))
         {
-            MethodInvoker.Invoke(initializer, null, NullArguments(initializer));
+            UserCode.Invoke(initializer, null, NullArguments(initializer));
         }
 
         return assembly;

@@ -38,7 +38,7 @@ internal static class ObjectLifetime
     {
         if (AsyncLifetimeMethod(instance, "InitializeAsync") is { } initialize)
         {
-            MethodInvoker.Invoke(initialize, instance, null);
+            UserCode.Invoke(initialize, instance, null);
         }
     }
 
@@ -57,7 +57,7 @@ internal static class ObjectLifetime
         var lifetimeDispose = AsyncLifetimeMethod(instance, "DisposeAsync");
         if (lifetimeDispose is not null && !IsAsyncDisposableImplementation(instance, lifetimeDispose))
         {
-            MethodInvoker.Invoke(lifetimeDispose, instance, null);
+            UserCode.Invoke(lifetimeDispose, instance, null);
         }
 
         switch (instance)

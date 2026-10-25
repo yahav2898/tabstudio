@@ -64,7 +64,7 @@ internal sealed class NUnitClassLifecycle : ClassLifecycle
             {
                 try
                 {
-                    MethodInvoker.Invoke(method, method.IsStatic ? null : _fixture, null);
+                    UserCode.Invoke(method, method.IsStatic ? null : _fixture, null);
                 }
                 catch (Exception ex)
                 {
@@ -105,7 +105,7 @@ internal sealed class NUnitClassLifecycle : ClassLifecycle
             {
                 foreach (var method in level)
                 {
-                    MethodInvoker.Invoke(method, method.IsStatic ? null : target, null);
+                    UserCode.Invoke(method, method.IsStatic ? null : target, null);
                 }
 
                 levelsDone++;
@@ -121,7 +121,7 @@ internal sealed class NUnitClassLifecycle : ClassLifecycle
             try
             {
                 var arguments = ArgumentBinder.Bind(test.Method, test.Arguments, out var method);
-                var result = MethodInvoker.Invoke(method, method.IsStatic ? null : target, arguments);
+                var result = UserCode.Invoke(method, method.IsStatic ? null : target, arguments);
                 if (CheckResult(test, method, result) is { } mismatch)
                 {
                     failures.Add(mismatch);
@@ -139,7 +139,7 @@ internal sealed class NUnitClassLifecycle : ClassLifecycle
             {
                 try
                 {
-                    MethodInvoker.Invoke(method, method.IsStatic ? null : target, null);
+                    UserCode.Invoke(method, method.IsStatic ? null : target, null);
                 }
                 catch (Exception ex)
                 {
@@ -173,7 +173,7 @@ internal sealed class NUnitClassLifecycle : ClassLifecycle
             {
                 try
                 {
-                    MethodInvoker.Invoke(method, method.IsStatic ? null : _fixture, null);
+                    UserCode.Invoke(method, method.IsStatic ? null : _fixture, null);
                 }
                 catch (Exception ex)
                 {

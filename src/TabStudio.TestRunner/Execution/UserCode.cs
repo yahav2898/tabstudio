@@ -7,7 +7,7 @@ namespace TabStudio.TestRunner.Execution;
 /// Calls user methods by reflection and waits for whatever they return, so <c>async Task</c>,
 /// <c>ValueTask</c> and other awaitable tests, setups and fixtures all run to completion on the test's thread.
 /// </summary>
-internal static class MethodInvoker
+internal static class UserCode
 {
     /// <summary>
     /// Invokes a method and waits for the task it returns, if any. Exceptions surface unwrapped, with their

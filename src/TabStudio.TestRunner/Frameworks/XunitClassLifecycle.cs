@@ -68,7 +68,7 @@ internal sealed class XunitClassLifecycle(Type testClass, RunScope scope) : Clas
                 ObjectLifetime.Initialize(instance);
             }
 
-            MethodInvoker.Invoke(method, instance, arguments);
+            UserCode.Invoke(method, instance, arguments);
         }
         catch (Exception ex)
         {
