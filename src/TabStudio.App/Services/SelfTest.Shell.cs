@@ -50,20 +50,21 @@ public static partial class SelfTest
             return ("the Run button is not in the toolbar.", string.Empty);
         }
 
-        // One search for everything: the menus' commands, by name.
+        // One search for everything: the menus' commands, by name. The search is not opened, as its query box would
+        // bring up the on-screen keyboard over the IDE the design step looks at next.
         var search = workspace.Search;
-        search.OpenCommand.Execute(null);
         search.Query = "build solution";
         var found = await WaitForAsync(
             () => search.Completion.IsCompleted && search.Rows.OfType<SearchResultRow>().FirstOrDefault()?.Title == "Build Solution",
             SearchTimeout,
             cancellationToken);
-        search.CloseCommand.Execute(null);
+        var rows = search.Rows.Count;
+        search.Query = string.Empty;
         if (!found)
         {
-            return ($"the search did not find Build Solution (it shows {search.Rows.Count} rows).", string.Empty);
+            return ($"the search did not find Build Solution (it shows {rows} rows).", string.Empty);
         }
 
-        return (null, string.Create(CultureInfo.InvariantCulture, $"the activity bar with {shown} tool windows, Ctrl+Q found Build Solution, the bars fit {width:0} pixels"));
+        return (null, string.Create(CultureInfo.InvariantCulture, $"the activity bar with {shown} tool windows, the search found Build Solution, the bars fit {width:0} pixels"));
     }
 }
