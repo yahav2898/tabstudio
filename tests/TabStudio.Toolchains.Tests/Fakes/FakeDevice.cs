@@ -120,7 +120,6 @@ internal sealed class FakeDevice : IDisposable
     {
         Mirror.Add("main", "python3", "3.14.8-r0", new Dictionary<string, string> { ["usr/bin/python3"] = "#!/bin/sh\n" }, installedSize: 52_400_000);
         Mirror.Add("community", "py3-pip", "25.3-r0", depends: ["python3"], installedSize: 14_200_000);
-        Mirror.Add("community", "py3-lsp-server", "1.13.1-r0", depends: ["python3"], installedSize: 2_100_000);
         Mirror.Add("main", "nodejs", "24.11.1-r0", new Dictionary<string, string> { ["usr/bin/node"] = "#!/bin/sh\n" }, installedSize: 68_000_000);
         Mirror.Add("community", "npm", "11.6.2-r0", depends: ["nodejs"], installedSize: 11_300_000);
         var catalog = ToolchainCatalog.Default;

@@ -107,15 +107,21 @@ public sealed class ProotRuntime : IToolchainRuntime
     }
 
     /// <inheritdoc />
-    public bool HasCommand(string command)
+    public bool HasCommand(string command) => Resolve(command) is not null;
+
+    /// <inheritdoc />
+    public string? Resolve(string command)
     {
         ArgumentNullException.ThrowIfNull(command);
         if (command.StartsWith('/'))
         {
-            return Exists(ToRootfs(command)) || (IsShared(command) && Exists(command));
+            return Exists(ToRootfs(command)) || (IsShared(command) && Exists(command)) ? command : null;
         }
 
-        return SearchPath.Split(':').Any(folder => Exists(Path.Combine(_options.Rootfs, folder.TrimStart('/'), command)));
+        return SearchPath.Split(':')
+            .Where(folder => Exists(Path.Combine(_options.Rootfs, folder.TrimStart('/'), command)))
+            .Select(folder => folder + "/" + command)
+            .FirstOrDefault();
     }
 
     /// <inheritdoc />

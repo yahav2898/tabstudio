@@ -35,6 +35,15 @@ public interface IToolchainRuntime
     /// <param name="command">A command name, such as <c>python3</c>.</param>
     bool HasCommand(string command);
 
+    /// <summary>
+    /// Finds the program a command names, as <see cref="ProcessStartSpec.Program"/> would. In TabStudio's Linux
+    /// environment the path is the one programs see, such as <c>/usr/bin/python3</c>, which <see cref="Start"/>
+    /// accepts but which is not a file on the device itself; <see cref="ToDevicePath"/> gives that.
+    /// </summary>
+    /// <param name="command">A command name, such as <c>pyright-langserver</c>, or a full path.</param>
+    /// <returns>The program's full path, or <see langword="null"/> when it is not installed.</returns>
+    string? Resolve(string command);
+
     /// <summary>What the Terminal runs: the environment's interactive shell, in a folder.</summary>
     /// <param name="workingDirectory">The folder, usually the workspace's.</param>
     /// <param name="size">The terminal's size.</param>

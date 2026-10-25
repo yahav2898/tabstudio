@@ -204,17 +204,38 @@ public sealed record SetupStepDefinition
     /// <summary>An archive to download, verify and unpack, or <see langword="null"/>.</summary>
     public ArchiveDefinition? Archive { get; init; }
 
+    /// <summary>A file to write, such as a small script that starts a tool by the command name others use, or <see langword="null"/>.</summary>
+    public FileDefinition? File { get; init; }
+
     /// <summary>
     /// What removing the toolchain deletes for this step, as paths in the environment, such as the folders a
-    /// command installed. An archive's destination is always deleted.
+    /// command installed. An archive's destination and a written file are always deleted.
     /// </summary>
     public IReadOnlyList<string> Removes { get; init; } = [];
 
     /// <summary>
-    /// What identifies this version of the step: the archive's hash, or the command. A step whose fingerprint
-    /// changed runs again on update.
+    /// What identifies this version of the step: the archive's hash, the file's content, or the command. A step
+    /// whose fingerprint changed runs again on update.
     /// </summary>
-    public string Fingerprint => Archive is { } archive ? $"sha256:{archive.Sha256}" : $"command:{string.Join('\u001f', Command)}";
+    public string Fingerprint => (Archive, File) switch
+    {
+        ({ } archive, _) => $"sha256:{archive.Sha256}",
+        (_, { } file) => $"file:{file.Path}\u001f{file.Content}",
+        _ => $"command:{string.Join('\u001f', Command)}",
+    };
+}
+
+/// <summary>A file a setup step writes into the environment.</summary>
+public sealed record FileDefinition
+{
+    /// <summary>Its path, as programs in the environment see it, such as <c>/usr/local/bin/js-debug-adapter</c>.</summary>
+    public required string Path { get; init; }
+
+    /// <summary>Its text.</summary>
+    public required string Content { get; init; }
+
+    /// <summary>Whether it is a program: a script that can be run by name.</summary>
+    public bool Executable { get; init; }
 }
 
 /// <summary>A downloadable archive with a pinned hash.</summary>
@@ -236,6 +257,12 @@ public sealed record ArchiveDefinition
 /// <summary>A program the IDE starts to serve an editor or a debugger, such as a language server.</summary>
 public sealed record ToolCommandDefinition
 {
+    /// <summary>
+    /// The tool's id, the one the language server and debug adapter clients know it by, such as <c>pyright</c>,
+    /// <c>typescript-language-server</c>, <c>debugpy</c> or <c>js-debug</c>.
+    /// </summary>
+    public string? Id { get; init; }
+
     /// <summary>The command.</summary>
     public IReadOnlyList<string> Command { get; init; } = [];
 

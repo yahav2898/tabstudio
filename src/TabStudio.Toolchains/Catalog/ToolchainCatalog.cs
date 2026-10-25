@@ -91,6 +91,18 @@ public sealed record ToolchainCatalog
     public ToolchainDefinition? ForFile(string path) =>
         Toolchains.Where(t => t.RunsFile(path)).OrderByDescending(t => t.Listed).FirstOrDefault();
 
+    /// <summary>
+    /// Finds the toolchain that installs a language server or debug adapter, by the id its clients know it by, such
+    /// as <c>pyright</c> or <c>js-debug</c>: what the Store must install for that tool to run.
+    /// </summary>
+    /// <param name="toolId">The tool's id (<see cref="ToolCommandDefinition.Id"/>).</param>
+    /// <returns>The toolchain, listed ones first, or <see langword="null"/>.</returns>
+    public ToolchainDefinition? ForTool(string toolId) =>
+        Toolchains
+            .Where(t => string.Equals(t.LanguageServer?.Id, toolId, StringComparison.Ordinal) || string.Equals(t.DebugAdapter?.Id, toolId, StringComparison.Ordinal))
+            .OrderByDescending(t => t.Listed)
+            .FirstOrDefault();
+
     private static ToolchainCatalog LoadBuiltIn()
     {
         using var stream = typeof(ToolchainCatalog).Assembly.GetManifestResourceStream("TabStudio.Toolchains.Catalog.toolchains.json")

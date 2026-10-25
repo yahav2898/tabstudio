@@ -17,15 +17,15 @@
     {
       "id": "python",
       "name": "Python",
-      "description": "Python 3 with pip and virtual environments, the Python language server and the debugpy debugger.",
+      "description": "Python 3 with pip and virtual environments, the Pyright language server (which runs on Node.js) and the debugpy debugger.",
       "languages": [ "Python" ],
       "listed": true,
       "homepage": "https://www.python.org",
       "license": "PSF-2.0",
-      "packages": [ "python3", "py3-pip", "py3-lsp-server" ],
+      "packages": [ "python3", "py3-pip", "nodejs", "npm" ],
       "versionPackage": "python3",
-      "estimatedDownloadSize": 21000000,
-      "estimatedInstalledSize": 88000000,
+      "estimatedDownloadSize": 48000000,
+      "estimatedInstalledSize": 185000000,
       "host": { "commands": [ "python3", "python" ], "versionArguments": [ "--version" ], "versionPattern": "Python (?<version>\\S+)" },
       "fileExtensions": [ ".py", ".pyw" ],
       "projectFiles": [ "pyproject.toml", "requirements.txt", "setup.py", "Pipfile" ],
@@ -72,10 +72,22 @@
             "size": 5374857,
             "destination": "/opt/tabstudio/python/debugpy"
           }
+        },
+        {
+          "name": "debugpy on Python's path",
+          "description": "Lets python3 -m debugpy.adapter find debugpy without PYTHONPATH.",
+          "command": [ "python3", "-c", "import site; open(site.getsitepackages()[0] + '/tabstudio-debugpy.pth', 'w').write('/opt/tabstudio/python/debugpy\\n')" ]
+        },
+        {
+          "name": "Pyright",
+          "description": "The language server for Python.",
+          "command": [ "npm", "install", "--global", "--no-fund", "--no-audit", "pyright@1.1.403" ],
+          "removes": [ "/usr/local/lib/node_modules/pyright", "/usr/local/bin/pyright", "/usr/local/bin/pyright-langserver" ]
         }
       ],
-      "languageServer": { "command": [ "pylsp" ], "languages": [ "python" ] },
+      "languageServer": { "id": "pyright", "command": [ "pyright-langserver", "--stdio" ], "languages": [ "python" ] },
       "debugAdapter": {
+        "id": "debugpy",
         "command": [ "python3", "-m", "debugpy.adapter" ],
         "environment": { "PYTHONPATH": "/opt/tabstudio/python/debugpy" },
         "type": "debugpy",
@@ -140,11 +152,21 @@
             "size": 1249709,
             "destination": "/opt/tabstudio/node"
           }
+        },
+        {
+          "name": "js-debug-adapter",
+          "description": "Starts the JavaScript debugger by the command name its clients use.",
+          "file": {
+            "path": "/usr/local/bin/js-debug-adapter",
+            "content": "#!/bin/sh\n# Written by TabStudio: vscode-js-debug's debug adapter, listening on the port and host given.\nexec node /opt/tabstudio/node/js-debug/src/dapDebugServer.js \"$@\"\n",
+            "executable": true
+          }
         }
       ],
-      "languageServer": { "command": [ "typescript-language-server", "--stdio" ], "languages": [ "javascript", "typescript", "javascriptreact", "typescriptreact" ] },
+      "languageServer": { "id": "typescript-language-server", "command": [ "typescript-language-server", "--stdio" ], "languages": [ "javascript", "typescript", "javascriptreact", "typescriptreact" ] },
       "debugAdapter": {
-        "command": [ "node", "/opt/tabstudio/node/js-debug/src/dapDebugServer.js", "{port}", "127.0.0.1" ],
+        "id": "js-debug",
+        "command": [ "js-debug-adapter", "{port}", "127.0.0.1" ],
         "transport": "tcp",
         "type": "pwa-node",
         "languages": [ "javascript", "typescript" ]
@@ -178,8 +200,8 @@
           { "file": "Makefile", "build": [ "make" ], "command": [ "make", "run" ] }
         ]
       },
-      "languageServer": { "command": [ "clangd", "--background-index" ], "languages": [ "c", "cpp" ] },
-      "debugAdapter": { "command": [ "lldb-dap" ], "type": "lldb-dap", "languages": [ "c", "cpp" ] },
+      "languageServer": { "id": "clangd", "command": [ "clangd", "--background-index" ], "languages": [ "c", "cpp" ] },
+      "debugAdapter": { "id": "lldb-dap", "command": [ "lldb-dap" ], "type": "lldb-dap", "languages": [ "c", "cpp" ] },
       "problemPatterns": [
         { "pattern": "^(?<file>[^:\\s][^:]*):(?<line>\\d+):(?<column>\\d+): (?<severity>error|warning|note): (?<message>.*)$" }
       ]
@@ -206,8 +228,8 @@
         ],
         "environment": { "CARGO_TERM_COLOR": "never" }
       },
-      "languageServer": { "command": [ "rust-analyzer" ], "languages": [ "rust" ] },
-      "debugAdapter": { "command": [ "lldb-dap" ], "type": "lldb-dap", "languages": [ "rust" ] },
+      "languageServer": { "id": "rust-analyzer", "command": [ "rust-analyzer" ], "languages": [ "rust" ] },
+      "debugAdapter": { "id": "lldb-dap", "command": [ "lldb-dap" ], "type": "lldb-dap", "languages": [ "rust" ] },
       "problemPatterns": [
         { "pattern": "-->\\s+(?<file>[^:\\s]+):(?<line>\\d+):(?<column>\\d+)" },
         { "pattern": "panicked at (?<file>[^:\\s]+):(?<line>\\d+):(?<column>\\d+)" }
@@ -235,8 +257,8 @@
         ],
         "environment": { "GOFLAGS": "-buildvcs=false", "GOTOOLCHAIN": "local" }
       },
-      "languageServer": { "command": [ "gopls" ], "languages": [ "go" ] },
-      "debugAdapter": { "command": [ "dlv", "dap", "--listen", "127.0.0.1:{port}" ], "transport": "tcp", "type": "go", "languages": [ "go" ] },
+      "languageServer": { "id": "gopls", "command": [ "gopls" ], "languages": [ "go" ] },
+      "debugAdapter": { "id": "delve", "command": [ "dlv", "dap", "--listen", "127.0.0.1:{port}" ], "transport": "tcp", "type": "go", "languages": [ "go" ] },
       "problemPatterns": [
         { "pattern": "^(?<file>[^:\\s]+\\.go):(?<line>\\d+):(?<column>\\d+): (?<message>.*)$" },
         { "pattern": "^\\s+(?<file>/[^:\\s]+\\.go):(?<line>\\d+)" }
@@ -266,7 +288,7 @@
         ],
         "environment": { "JAVA_HOME": "/usr/lib/jvm/java-21-openjdk" }
       },
-      "languageServer": { "command": [ "jdtls" ], "languages": [ "java" ] },
+      "languageServer": { "id": "jdtls", "command": [ "jdtls" ], "languages": [ "java" ] },
       "problemPatterns": [
         { "pattern": "^(?<file>[^:\\s]+\\.java):(?<line>\\d+): (?<severity>error|warning): (?<message>.*)$" },
         { "pattern": "^\\[(?<severity>ERROR|WARNING)\\] (?<file>/[^:\\s]+\\.java):\\[(?<line>\\d+),(?<column>\\d+)\\] (?<message>.*)$" }
@@ -317,7 +339,7 @@
           }
         }
       ],
-      "languageServer": { "command": [ "/opt/tabstudio/kotlin-language-server/server/bin/kotlin-language-server" ], "environment": { "JAVA_HOME": "/usr/lib/jvm/java-21-openjdk" }, "languages": [ "kotlin" ] },
+      "languageServer": { "id": "kotlin-language-server", "command": [ "/opt/tabstudio/kotlin-language-server/server/bin/kotlin-language-server" ], "environment": { "JAVA_HOME": "/usr/lib/jvm/java-21-openjdk" }, "languages": [ "kotlin" ] },
       "problemPatterns": [
         { "pattern": "^(?<severity>e|w): (?:file://)?(?<file>/[^:\\s]+\\.kts?):(?<line>\\d+):(?<column>\\d+) (?<message>.*)$" }
       ]

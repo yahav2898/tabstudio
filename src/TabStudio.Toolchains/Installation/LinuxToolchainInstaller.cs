@@ -387,6 +387,11 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
                 }
             }
 
+            if (step.File is { } file)
+            {
+                WriteGuestFile(file);
+            }
+
             if (step.Command.Count > 0)
             {
                 var result = await CommandRunner.RunAsync(
@@ -420,7 +425,29 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
 
     /// <summary>The paths a toolchain's setup steps put files at, in the environment.</summary>
     private static IEnumerable<string> PathsOf(ToolchainDefinition toolchain) =>
-        toolchain.Setup.SelectMany(s => s.Archive is { } archive ? [archive.Destination, .. s.Removes] : s.Removes);
+        toolchain.Setup.SelectMany(s => (s.Archive, s.File) switch
+        {
+            ({ } archive, _) => [archive.Destination, .. s.Removes],
+            (_, { } file) => [file.Path, .. s.Removes],
+            _ => s.Removes,
+        });
+
+    /// <summary>Writes a setup step's file into the environment, as a program when it is one.</summary>
+    private void WriteGuestFile(FileDefinition file)
+    {
+        var path = GuestToDevice(file.Path);
+        Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+        if (new FileInfo(path).LinkTarget is not null)
+        {
+            File.Delete(path);
+        }
+
+        File.WriteAllText(path, file.Content.ReplaceLineEndings("\n"));
+        if (file.Executable && !OperatingSystem.IsWindows())
+        {
+            File.SetUnixFileMode(path, (UnixFileMode)0b111_101_101);
+        }
+    }
 
     private string GuestToDevice(string guestPath) => Path.Combine(_environment.Rootfs, guestPath.TrimStart('/'));
 

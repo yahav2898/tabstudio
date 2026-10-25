@@ -153,6 +153,26 @@ public sealed class HostRuntimeTests : IDisposable
     }
 
     [Fact]
+    public async Task Exited_gives_the_exit_code_as_language_server_hosts_want_it()
+    {
+        using var process = _runtime.Start(Shell("exit 5"));
+
+        Assert.Equal(5, await process.Exited.WaitAsync(TimeSpan.FromSeconds(20)));
+    }
+
+    [Fact]
+    public void Resolves_commands_to_full_paths()
+    {
+        var shell = _runtime.Resolve("sh");
+
+        Assert.NotNull(shell);
+        Assert.True(Path.IsPathRooted(shell));
+        Assert.True(File.Exists(shell));
+        Assert.Null(_runtime.Resolve("tabstudio-no-such-program"));
+        Assert.Equal(shell, _runtime.Resolve(shell));
+    }
+
+    [Fact]
     public void A_missing_program_is_reported_in_words()
     {
         var error = Assert.Throws<ToolchainRuntimeException>(() => _runtime.Start(new ProcessStartSpec { Program = "tabstudio-no-such-program" }));

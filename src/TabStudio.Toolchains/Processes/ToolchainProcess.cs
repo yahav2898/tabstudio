@@ -26,6 +26,7 @@ public sealed class ToolchainProcess : IDisposable
         _handle = handle;
         Spec = spec;
         Completion = WatchAsync();
+        Exited = ExitCodeAsync();
     }
 
     /// <summary>What was started.</summary>
@@ -48,6 +49,12 @@ public sealed class ToolchainProcess : IDisposable
 
     /// <summary>Completes when the program has exited.</summary>
     public Task<ProcessExit> Completion { get; }
+
+    /// <summary>
+    /// Completes with the exit code when the program has exited: 128 plus the signal number for a program ended by
+    /// a signal, as a shell reports it. For hosts that want only the code, such as language server clients.
+    /// </summary>
+    public Task<int> Exited { get; }
 
     /// <summary>Whether the program has exited.</summary>
     public bool HasExited => Completion.IsCompleted;
@@ -91,6 +98,8 @@ public sealed class ToolchainProcess : IDisposable
         Stop();
         _handle.Dispose();
     }
+
+    private async Task<int> ExitCodeAsync() => (await Completion.ConfigureAwait(false)).ExitCode;
 
     private async Task<ProcessExit> WatchAsync()
     {

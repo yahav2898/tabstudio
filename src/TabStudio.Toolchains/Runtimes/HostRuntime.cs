@@ -58,7 +58,14 @@ public sealed class HostRuntime : IToolchainRuntime
     }
 
     /// <inheritdoc />
-    public bool HasCommand(string command) => FindProgram(command, CurrentEnvironment()) is not null;
+    public bool HasCommand(string command) => Resolve(command) is not null;
+
+    /// <inheritdoc />
+    public string? Resolve(string command)
+    {
+        ArgumentNullException.ThrowIfNull(command);
+        return FindProgram(command, CurrentEnvironment()) is { } path ? Path.GetFullPath(path) : null;
+    }
 
     /// <inheritdoc />
     public ProcessStartSpec Shell(string workingDirectory, TerminalSize size)

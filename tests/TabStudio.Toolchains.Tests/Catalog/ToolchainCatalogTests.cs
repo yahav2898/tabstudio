@@ -181,11 +181,54 @@ public sealed class ToolchainCatalogTests
         var server = python.LanguageServer!.ToStartSpec("/projects/app");
         var adapter = node.DebugAdapter!.ToStartSpec("/projects/web", port: 4711);
 
-        Assert.Equal(("pylsp", "/projects/app"), (server.Program, server.WorkingDirectory));
+        Assert.Equal(("pyright-langserver", "/projects/app"), (server.Program, server.WorkingDirectory));
+        Assert.Equal(["--stdio"], server.Arguments);
         Assert.True(node.DebugAdapter.UsesTcp);
-        Assert.Equal(["/opt/tabstudio/node/js-debug/src/dapDebugServer.js", "4711", "127.0.0.1"], adapter.Arguments);
+        Assert.Equal(("js-debug-adapter", "4711"), (adapter.Program, adapter.Arguments[0]));
         Assert.Equal("/opt/tabstudio/python/debugpy", python.DebugAdapter!.ToStartSpec().Environment["PYTHONPATH"]);
         Assert.Throws<InvalidOperationException>(() => node.DebugAdapter.ToStartSpec());
+    }
+
+    [Theory]
+    [InlineData("pyright", "python")]
+    [InlineData("debugpy", "python")]
+    [InlineData("typescript-language-server", "node")]
+    [InlineData("js-debug", "node")]
+    [InlineData("clangd", "cpp")]
+    [InlineData("rust-analyzer", "rust")]
+    [InlineData("gopls", "go")]
+    [InlineData("delve", "go")]
+    [InlineData("jdtls", "java")]
+    public void Finds_the_toolchain_that_installs_a_tool_by_the_id_its_clients_use(string tool, string toolchain)
+    {
+        Assert.Equal(toolchain, Catalog.ForTool(tool)?.Id);
+    }
+
+    [Fact]
+    public void Listed_toolchains_install_their_tools_under_the_commands_they_name()
+    {
+        // A tool's command is a program on PATH that a setup step or a package installs, so clients can find it by name.
+        var installed = new Dictionary<string, string[]>
+        {
+            ["pyright-langserver"] = ["/usr/local/bin/pyright-langserver"],
+            ["js-debug-adapter"] = ["/usr/local/bin/js-debug-adapter"],
+        };
+        foreach (var toolchain in Catalog.Listed)
+        {
+            foreach (var tool in new[] { toolchain.LanguageServer!, toolchain.DebugAdapter! })
+            {
+                Assert.NotNull(tool.Id);
+                var paths = toolchain.Setup.SelectMany(s => s.Removes.Concat(s.File is { } file ? [file.Path] : []));
+                if (installed.TryGetValue(tool.Command[0], out var expected))
+                {
+                    Assert.Contains(expected[0], paths);
+                }
+            }
+        }
+
+        var script = Catalog.Find("node")!.Setup.Single(s => s.File is not null).File!;
+        Assert.True(script.Executable);
+        Assert.StartsWith("#!/bin/sh\n", script.Content, StringComparison.Ordinal);
     }
 
     [Fact]
