@@ -75,12 +75,14 @@ TabStudio הופך טאבלט אנדרואיד למחשב פיתוח שבאמת 
 | ASP.NET Core ו-Blazor | מוגש מקומית, תצוגה חיה ב-WebView |
 | Avalonia | מצויר באופן טבעי בחלונית ליד העורך, עם מעצב XAML חי |
 | Windows Forms | שכבת Forms חוצת פלטפורמות, עם מעצב גרור ושחרר במגע |
-| WPF | ‏OpenSilver, ב-WebView |
+| WPF | ‏OpenSilver 3.3.3 ב-WebView, עם IntelliSense ל-XAML ותיקון מהיר להוספת event handler |
 | WinUI | ‏Uno Platform, באופן טבעי על אנדרואיד |
 | C, ‏C++, ‏Rust, ‏Go, ‏Python, ‏Node, ‏Java | כלי פיתוח טבעיים מה-Toolchain Store |
 | כל מה שדורש Windows | ‏Windows Compatibility: האפליקציה האמיתית רצה בטאבלט עצמו דרך Wine; או ה-Windows Bridge, שבונה ומריץ אותה על המחשב שלכם ומזרים אותה לטאבלט |
 
 **אפליקציות Windows Forms.** יוצרים Windows Forms App, או פותחים אחת מ-Visual Studio, ולוחצים F5. היא רצה ליד הקוד על שכבת ה-Windows Forms של TabStudio עצמו, בחלון של Windows 10, עם דיאלוגים, תפריטים, טבלאות, data binding ו-MessageBox, ושמירת קובץ מפעילה אותה מחדש. ‏`Form1.cs` נפתח במעצב מגע: נוגעים בכלי ואז בטופס, גוררים פקדים על הרשת, משנים את הגודל שלהם בידיות, עורכים אותם בחלון ה-Properties, ונגיעה כפולה בכפתור כותבת את ה-Click handler שלו. המעצב כותב את `Form1.Designer.cs` בדיוק כמו Visual Studio, כך שהפרויקט ממשיך להיפתח במחשב. קוד שקורא ל-Windows עצמו, כמו P/Invoke, ‏COM או ה-registry, רץ דרך Windows Compatibility או גשר Windows; [ה-README של שכבת ה-Forms](src/TabStudio.Forms/README.md) מפרט מה נתמך.
+
+**אפליקציות WPF.** יוצרים **WPF Application**, או פותחים פרויקט WPF ב-C# מ-Visual Studio, ולוחצים F5. ‏TabStudio מקמפל את ה-XAML בעזרת OpenSilver ומריץ את האפליקציה בתצוגת האינטרנט; שמירה מפעילה אותה מחדש, ופלט הקונסול והחריגות מופיעים ב-Output. עורך ה-XAML מציע השלמה, Quick Info, מעבר להגדרה, שגיאות בזמן ההקלדה ונורה שמוסיפה event handler חסר לקובץ הקוד. API של WPF שאינו נתמך מופיע בשמו ב-Error List, עם הפניה לגשר Windows. בתצוגת הדפדפן אין דיבאגר ל-C#, ותכונות שדורשות Windows, כולל תלת-ממד וחלונות מודאליים של WPF, דורשות את גשר Windows.
 
 ### כל המסכים בבת אחת
 

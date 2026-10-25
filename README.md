@@ -73,12 +73,14 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 | ASP.NET Core and Blazor | Served locally, previewed live in a WebView |
 | Avalonia | Rendered natively in a pane beside the editor, with a live XAML designer |
 | Windows Forms | A cross-platform Forms layer, with a touch drag-and-drop designer |
-| WPF | OpenSilver, in a WebView |
+| WPF | OpenSilver 3.3.3 in a WebView, with XAML IntelliSense and event-handler quick fixes |
 | WinUI | Uno Platform, natively on Android |
 | C, C++, Rust, Go, Python, Node, Java | Native toolchains from the Toolchain Store |
 | Anything Windows-only | Windows Compatibility: the real app on the tablet itself through Wine; or the Windows Bridge, which builds and runs it on your PC and streams it to the tablet |
 
 **Windows Forms apps.** Create a Windows Forms App, or open one from Visual Studio, and press F5. It runs beside the code on TabStudio's own Windows Forms layer, in a Windows 10 window, with dialogs, menus, grids, data binding and message boxes, and saving a file restarts it. `Form1.cs` opens in a touch designer: tap a tool and then the form, drag controls on the grid, resize them by their handles, change them in the Properties panel, and double-tap a button to write its Click handler. The designer writes `Form1.Designer.cs` exactly as Visual Studio does, so the project still opens on a PC. Code that calls Windows itself, such as P/Invoke, COM or the registry, runs through Windows Compatibility or the Windows Bridge instead; [the Forms layer's README](src/TabStudio.Forms/README.md) lists what it supports.
+
+**WPF apps.** Create a **WPF Application**, or open a C# WPF project from Visual Studio, and press F5. TabStudio compiles its XAML on OpenSilver and runs it in the web preview; saving restarts it, and console output and exceptions appear in Output. The XAML editor offers completion, Quick Info, Go to Definition, live errors, and a light bulb that adds a missing event handler to the code-behind. Unsupported WPF APIs are named in the Error List with a route to the Windows Bridge. The browser preview has no C# debugger, and APIs that require Windows, including WPF 3D and modal windows, need the Windows Bridge.
 
 ### Every screen at once
 
