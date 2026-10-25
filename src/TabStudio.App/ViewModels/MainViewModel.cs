@@ -81,6 +81,8 @@ public sealed partial class MainViewModel : ObservableObject
 
         var workspace = _createWorkspace();
         workspace.CloseRequested += OnWorkspaceCloseRequested;
+        workspace.OpenWorkspaceRequested += OnOpenWorkspaceRequested;
+        workspace.NewProjectRequested += OnNewProjectRequested;
         CurrentPage = workspace;
         OnPropertyChanged(nameof(Workspace));
         try
@@ -118,11 +120,27 @@ public sealed partial class MainViewModel : ObservableObject
         OnPropertyChanged(nameof(Workspace));
     }
 
+    /// <summary>The search opened a recent solution: it takes the open one's place.</summary>
+    private async void OnOpenWorkspaceRequested(object? sender, string path) => await OpenWorkspaceAsync(path);
+
+    /// <summary>The search started a new project from a template: the Start window's New project, with the template chosen.</summary>
+    private void OnNewProjectRequested(object? sender, ProjectTemplate template)
+    {
+        CloseCurrentWorkspace();
+        Start.RefreshRecent();
+        Start.SelectedAction = StartAction.NewProject;
+        Start.SelectedTemplate = template;
+        CurrentPage = Start;
+        OnPropertyChanged(nameof(Workspace));
+    }
+
     private void CloseCurrentWorkspace()
     {
         if (CurrentPage is WorkspaceViewModel current)
         {
             current.CloseRequested -= OnWorkspaceCloseRequested;
+            current.OpenWorkspaceRequested -= OnOpenWorkspaceRequested;
+            current.NewProjectRequested -= OnNewProjectRequested;
             current.Dispose();
         }
     }

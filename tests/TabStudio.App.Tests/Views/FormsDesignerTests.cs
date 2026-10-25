@@ -122,6 +122,10 @@ public sealed class FormsDesignerTests
         await DesignedForm.SettleAsync();
         UiTestHelpers.SaveScreenshot(designed.Window, "winforms-designer-02-toolbox-and-properties");
 
+        // The designer's Properties are beside the form, so the side bar's hide: two never show at once.
+        Assert.False(designed.Workspace.ShowsSideBarProperties);
+        Assert.False(designed.Window.GetVisualDescendants().OfType<PropertiesView>().Single().IsVisible);
+
         // Renaming the button renames it in the designer file.
         var name = designer.Properties.OfType<TextPropertyViewModel>().Single(p => p.Path == "Name");
         name.Text = "orderButton";

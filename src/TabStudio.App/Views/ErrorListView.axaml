@@ -135,7 +135,7 @@
                                     <Canvas>
                                       <Border Canvas.Left="{Binding HighlightLeft}" Canvas.Top="{Binding HighlightTop}"
                                               Width="{Binding Highlight.Width}" Height="{Binding Highlight.Height}"
-                                              BorderBrush="{StaticResource Swarm.Highlight}" BorderThickness="2" CornerRadius="3" />
+                                              BorderBrush="{DynamicResource Brush.Swarm.Highlight}" BorderThickness="2" CornerRadius="3" />
                                     </Canvas>
                                     <TextBlock Classes="muted small" Text="No picture of this screen" IsVisible="{Binding !HasPicture}"
                                                HorizontalAlignment="Center" VerticalAlignment="Center" />

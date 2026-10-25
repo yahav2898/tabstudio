@@ -20,11 +20,11 @@
       <Setter Property="Foreground" Value="{DynamicResource Brush.TextLabel}" />
     </Style>
     <Style Selector="Border.pill.paused">
-      <Setter Property="Background" Value="#33E3B341" />
+      <Setter Property="Background" Value="{DynamicResource Brush.Notice.Warning}" />
       <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.Warning}" />
     </Style>
     <Style Selector="Border.pill.failed">
-      <Setter Property="Background" Value="#33F47067" />
+      <Setter Property="Background" Value="{DynamicResource Brush.Notice.Error}" />
       <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.Error}" />
     </Style>
     <Style Selector="Border.device">
@@ -169,7 +169,7 @@
           </ItemsControl>
 
           <!-- A mirrored input that a screen could not take -->
-          <Border Padding="12,9" CornerRadius="8" Background="#26E3B341" IsVisible="{Binding Notice, Converter={x:Static ObjectConverters.IsNotNull}}">
+          <Border Padding="12,9" CornerRadius="8" Background="{DynamicResource Brush.Notice.Warning}" IsVisible="{Binding Notice, Converter={x:Static ObjectConverters.IsNotNull}}">
             <Grid ColumnDefinitions="Auto,*">
               <controls:StrokeIcon Data="{StaticResource Icon.Warning}" Size="15" Margin="0,1,9,0" Foreground="{DynamicResource Brush.Warning}" VerticalAlignment="Top" />
               <TextBlock Grid.Column="1" Classes="small" TextWrapping="Wrap" Text="{Binding Notice}" />

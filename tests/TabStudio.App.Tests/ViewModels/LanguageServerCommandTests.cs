@@ -1,7 +1,9 @@
 using Avalonia.Headless.XUnit;
 using Microsoft.Extensions.DependencyInjection;
 using TabStudio.App.Services;
+using TabStudio.App.Services.Search;
 using TabStudio.App.ViewModels;
+using TabStudio.App.ViewModels.Search;
 using TabStudio.Compilation.Features;
 using TabStudio.LanguageServers.Hosting;
 using TabStudio.LanguageServers.Loopback;
@@ -65,7 +67,7 @@ public sealed class LanguageServerCommandTests : IDisposable
     }
 
     [AvaloniaFact]
-    public async Task The_breadcrumb_and_quick_open_show_the_servers_symbols()
+    public async Task The_breadcrumb_and_the_search_show_the_servers_symbols()
     {
         var (workspace, document) = await OpenScriptAsync();
 
@@ -74,11 +76,14 @@ public sealed class LanguageServerCommandTests : IDisposable
         Assert.Equal("name", crumb.Name);
         Assert.Equal(SymbolGlyph.Local, crumb.Kind);
 
-        workspace.QuickOpenText = "greet";
-        await UiTestHelpers.WaitUntilAsync(() => workspace.QuickOpenResults.Any(r => r.Line == 1), because: "the workspace symbol");
-        var symbol = workspace.QuickOpenResults.First(r => r.Line == 1);
-        Assert.Equal("greeting", symbol.Name);
-        Assert.StartsWith("Variable · greet.loopback:1", symbol.Folder, StringComparison.Ordinal);
+        workspace.Search.OpenCommand.Execute(null);
+        workspace.Search.Query = "#greet";
+        await workspace.Search.Completion;
+        var symbol = Assert.Single(workspace.Search.Rows.OfType<SearchResultRow>(), row => row.Title == "greeting");
+        Assert.Equal(SearchKind.Symbol, symbol.Item.Kind);
+        Assert.Equal("Variable, greet.loopback", symbol.Detail);
+        await workspace.Search.AcceptCommand.ExecuteAsync(symbol);
+        Assert.Equal(1, document.PendingNavigation?.Line ?? document.CaretLine);
     }
 
     [AvaloniaFact]

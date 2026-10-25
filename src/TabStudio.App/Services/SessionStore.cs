@@ -37,6 +37,9 @@ public sealed record SessionState(
 
     /// <summary>The expressions in the Watch panel.</summary>
     public IReadOnlyList<string>? WatchExpressions { get; init; }
+
+    /// <summary>Whether the Properties panel was open rather than folded into its header; <see langword="null"/> in older sessions.</summary>
+    public bool? IsPropertiesExpanded { get; init; }
 }
 
 /// <summary>
