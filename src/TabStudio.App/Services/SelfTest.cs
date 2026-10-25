@@ -95,16 +95,19 @@ public static partial class SelfTest
                 return new SelfTestResult(debugged.Success, $"{summary} | {debugged.Message}", clock.Elapsed);
             }
 
-            // A web app that fails does not hide what the Avalonia app shows.
             var web = await ServeWebAppAsync(main, templates, cancellationToken);
-            var avalonia = await ShowAvaloniaAppAsync(main, templates, cancellationToken);
-            if (avalonia.Success)
+            if (!web.Success)
             {
-                var swarm = await CheckSwarmScreensAsync(main, templates, cancellationToken);
-                avalonia = avalonia with { Success = swarm.Success, Message = $"{avalonia.Message} | {swarm.Message}" };
+                return new SelfTestResult(false, $"{summary} | {debugged.Message} | {web.Message}", clock.Elapsed);
             }
 
-            return new SelfTestResult(web.Success && avalonia.Success, $"{summary} | {debugged.Message} | {web.Message} | {avalonia.Message}", clock.Elapsed);
+            // Swarm's screens run on their own copy of the template first, so the Avalonia part leaves its workspace
+            // open for the parts that follow.
+            var swarm = await CheckSwarmScreensAsync(main, templates, cancellationToken);
+            var avalonia = await ShowAvaloniaAppAsync(main, templates, cancellationToken);
+            avalonia = avalonia with { Success = avalonia.Success && swarm.Success, Message = $"{avalonia.Message} | {swarm.Message}" };
+
+            return new SelfTestResult(avalonia.Success, $"{summary} | {debugged.Message} | {web.Message} | {avalonia.Message}", clock.Elapsed);
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)
         {

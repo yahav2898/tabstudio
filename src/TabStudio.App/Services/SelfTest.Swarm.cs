@@ -106,6 +106,12 @@ public static partial class SelfTest
         {
             workspace.StopCommand.Execute(null);
             await run.WaitAsync(cancellationToken);
+
+            // The IDE is left as the Avalonia part left it, for the parts that follow.
+            if (workspace.Documents.FirstOrDefault(d => d.IsDeviceMatrix) is { } matrixTab)
+            {
+                await workspace.CloseDocumentCommand.ExecuteAsync(matrixTab);
+            }
         }
     }
 
