@@ -1,7 +1,7 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj (in 305 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms.Design/TabStudio.Forms.Design.csproj (in 265 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Forms.Design.Tests/TabStudio.Forms.Design.Tests.csproj (in 317 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms.Design/TabStudio.Forms.Design.csproj (in 314 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Forms.Design.Tests/TabStudio.Forms.Design.Tests.csproj (in 325 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj (in 315 ms).
   2 of 5 projects are up-to-date for restore.
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
   TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
@@ -11,29 +11,29 @@
 Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Forms.Design.Tests/bin/Release/net10.0/TabStudio.Forms.Design.Tests.dll (.NETCoreApp,Version=v10.0)
 A total of 1 test files matched the specified pattern.
 [xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
-[xUnit.net 00:00:00.13]   Discovering: TabStudio.Forms.Design.Tests
-[xUnit.net 00:00:00.20]   Discovered:  TabStudio.Forms.Design.Tests
-[xUnit.net 00:00:00.24]   Starting:    TabStudio.Forms.Design.Tests
-  Passed TabStudio.Forms.Design.Tests.DesignerFileTests.The_form_is_built_from_the_designer_file_with_the_Forms_layers_controls [359 ms]
-  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.A_control_moved_into_a_group_box_joins_its_controls [1 s]
-  Passed TabStudio.Forms.Design.Tests.DesignerFileTests.A_control_of_a_type_the_designer_does_not_know_is_a_placeholder_of_its_size [17 ms]
-  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.Renaming_a_control_renames_its_field_and_the_code_that_names_it_but_not_its_text [91 ms]
-  Passed TabStudio.Forms.Design.Tests.DesignerFileTests.Hit_testing_finds_the_innermost_control_and_strip_items [10 ms]
-  Passed TabStudio.Forms.Design.Tests.DesignerFileTests.Components_properties_events_collections_and_other_statements_are_read [15 ms]
-  Passed TabStudio.Forms.Design.Tests.DesignerFileTests.Writing_an_unchanged_file_gives_the_same_designer_code [3 ms]
-  Passed TabStudio.Forms.Design.Tests.DesignerFileTests.The_template_is_read_with_its_style_and_the_forms_properties [18 ms]
+[xUnit.net 00:00:00.09]   Discovering: TabStudio.Forms.Design.Tests
+[xUnit.net 00:00:00.15]   Discovered:  TabStudio.Forms.Design.Tests
+[xUnit.net 00:00:00.18]   Starting:    TabStudio.Forms.Design.Tests
+  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.A_control_moved_into_a_group_box_joins_its_controls [2 s]
+  Passed TabStudio.Forms.Design.Tests.DesignerFileTests.The_form_is_built_from_the_designer_file_with_the_Forms_layers_controls [25 ms]
+  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.Renaming_a_control_renames_its_field_and_the_code_that_names_it_but_not_its_text [107 ms]
+  Passed TabStudio.Forms.Design.Tests.DesignerFileTests.A_control_of_a_type_the_designer_does_not_know_is_a_placeholder_of_its_size [10 ms]
+  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.Pasted_copies_get_new_names_and_move_off_the_originals [82 ms]
+  Passed TabStudio.Forms.Design.Tests.DesignerFileTests.Hit_testing_finds_the_innermost_control_and_strip_items [6 ms]
+  Passed TabStudio.Forms.Design.Tests.DesignerFileTests.Components_properties_events_collections_and_other_statements_are_read [6 ms]
+  Passed TabStudio.Forms.Design.Tests.DesignerFileTests.Writing_an_unchanged_file_gives_the_same_designer_code [5 ms]
+  Passed TabStudio.Forms.Design.Tests.DesignerFileTests.The_template_is_read_with_its_style_and_the_forms_properties [13 ms]
   Passed TabStudio.Forms.Design.Tests.DesignerFileTests.A_file_without_InitializeComponent_is_not_a_designer_file [< 1 ms]
-  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.Pasted_copies_get_new_names_and_move_off_the_originals [85 ms]
-[xUnit.net 00:00:03.04]   Finished:    TabStudio.Forms.Design.Tests
-  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.A_double_tap_handler_is_added_to_the_code_file_and_wired_in_the_designer_file [59 ms]
-  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.Statements_the_designer_does_not_read_are_kept [12 ms]
-  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.A_button_added_to_the_template_is_written_as_Visual_Studio_writes_it [22 ms]
-  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.Menu_items_typed_in_a_menu_strip_are_named_after_their_text_as_Visual_Studio_names_them [38 ms]
-  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.Properties_are_written_in_Visual_Studios_form_and_defaults_are_left_out [84 ms]
-  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.Deleting_a_container_deletes_its_controls_and_the_code_that_names_them [42 ms]
-  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.Moving_and_resizing_write_the_new_bounds_and_undo_and_redo_restore_them [35 ms]
+  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.A_double_tap_handler_is_added_to_the_code_file_and_wired_in_the_designer_file [88 ms]
+  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.Statements_the_designer_does_not_read_are_kept [13 ms]
+  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.A_button_added_to_the_template_is_written_as_Visual_Studio_writes_it [21 ms]
+  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.Menu_items_typed_in_a_menu_strip_are_named_after_their_text_as_Visual_Studio_names_them [41 ms]
+  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.Properties_are_written_in_Visual_Studios_form_and_defaults_are_left_out [88 ms]
+  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.Deleting_a_container_deletes_its_controls_and_the_code_that_names_them [48 ms]
+[xUnit.net 00:00:03.34]   Finished:    TabStudio.Forms.Design.Tests
+  Passed TabStudio.Forms.Design.Tests.DesignSurfaceTests.Moving_and_resizing_write_the_new_bounds_and_undo_and_redo_restore_them [43 ms]
 
 Test Run Successful.
 Total tests: 17
      Passed: 17
- Total time: 3.6658 Seconds
+ Total time: 3.9475 Seconds
