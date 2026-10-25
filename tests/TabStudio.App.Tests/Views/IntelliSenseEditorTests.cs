@@ -93,16 +93,45 @@ public sealed class IntelliSenseEditorTests
     {
         using var fixture = new WorkspaceFixture();
         await fixture.OpenSampleAsync();
+        var greetings = fixture.Workspace.Workspace!.Projects.Single(p => p.Name == "Greetings").DirectoryPath;
+        await fixture.Workspace.OpenDocumentAsync(Path.Combine(greetings, "Greeter.cs"));
         var window = Show(fixture);
         var view = ActiveEditor(window);
-        view.Editor.CaretOffset = OffsetOf(view.Editor, "new Greeter(") + "new Gree".Length;
+        view.Editor.CaretOffset = OffsetOf(view.Editor, "class Greeter") + "class Gree".Length;
 
         fixture.Workspace.QuickInfoCommand.Execute(null);
 
         await UiTestHelpers.WaitUntilAsync(() => view.QuickInfo is not null, because: "Quick Info");
         var info = view.QuickInfo!;
-        Assert.Contains("Greetings.Greeter", string.Concat(info.Signature.Select(r => r.Text)), StringComparison.Ordinal);
+        Assert.Equal(SymbolGlyph.Class, info.Kind);
+        Assert.Contains("class Greetings.Greeter", string.Concat(info.Signature.Select(r => r.Text)), StringComparison.Ordinal);
+        Assert.Contains(info.Signature, r => r.Text == "Greeter" && r.Classification == "class name");
         Assert.Contains(info.Sections, s => string.Concat(s.Runs.Select(r => r.Text)).Contains("friendly greeting", StringComparison.Ordinal));
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public async Task Quick_info_also_shows_the_warning_at_the_same_place()
+    {
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var window = Show(fixture);
+        var view = ActiveEditor(window);
+        var document = fixture.Workspace.ActiveDocument!;
+        StartLineAfter(view.Editor, "Console.WriteLine();");
+        Type(view.Editor, "int unused = 42;");
+        await document.AnalyzeNowAsync();
+        await UiTestHelpers.WaitUntilAsync(() => document.Diagnostics.Any(d => d.Id == "CS0219"), because: "the warning");
+        view.Editor.CaretOffset = OffsetOf(view.Editor, "unused") + 2;
+
+        fixture.Workspace.QuickInfoCommand.Execute(null);
+
+        await UiTestHelpers.WaitUntilAsync(() => view.QuickInfo is not null, because: "Quick Info");
+        var info = view.QuickInfo!;
+        Assert.Contains("unused", string.Concat(info.Signature.Select(r => r.Text)), StringComparison.Ordinal);
+        var warning = Assert.Single(info.Diagnostics);
+        Assert.Equal("CS0219", warning.Code);
+        Assert.True(warning.IsWarning);
         window.Close();
     }
 

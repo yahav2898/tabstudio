@@ -39,19 +39,42 @@ public sealed class IntelliSenseScreenshotTests : IDisposable
     }
 
     [AvaloniaFact]
-    public async Task Quick_info_on_a_type()
+    public async Task Quick_info_with_a_warning()
     {
         var window = Show();
         var workspace = await OpenSampleAsync();
         var view = ActiveEditor(window);
-        view.Editor.CaretOffset = OffsetOf(view.Editor, "new Greeter(") + "new Gree".Length;
+        var document = workspace.ActiveDocument!;
+        StartLineAfter(view.Editor, "Console.WriteLine();");
+        Type(view.Editor, "int unused = 42;");
+        await document.AnalyzeNowAsync();
+        await UiTestHelpers.WaitUntilAsync(() => document.Diagnostics.Any(d => d.Id == "CS0219"), because: "the warning");
+        view.Editor.CaretOffset = OffsetOf(view.Editor, "unused") + 2;
 
         workspace.QuickInfoCommand.Execute(null);
         await UiTestHelpers.WaitUntilAsync(() => view.QuickInfo is not null, because: "Quick Info");
 
         UiTestHelpers.SaveScreenshot(window, "08-quick-info");
 
-        Assert.True(view.QuickInfo!.HasSignature);
+        Assert.True(view.QuickInfo!.HasSignature && view.QuickInfo.HasDiagnostics);
+    }
+
+    [AvaloniaFact]
+    public async Task Quick_info_with_documentation()
+    {
+        var window = Show();
+        var workspace = await OpenSampleAsync();
+        var greetings = workspace.Workspace!.Projects.Single(p => p.Name == "Greetings").DirectoryPath;
+        await workspace.OpenDocumentAsync(Path.Combine(greetings, "Greeter.cs"));
+        var view = ActiveEditor(window);
+        view.Editor.CaretOffset = OffsetOf(view.Editor, "class Greeter") + "class Gree".Length;
+
+        workspace.QuickInfoCommand.Execute(null);
+        await UiTestHelpers.WaitUntilAsync(() => view.QuickInfo is not null, because: "Quick Info");
+
+        UiTestHelpers.SaveScreenshot(window, "12-quick-info-docs");
+
+        Assert.NotEmpty(view.QuickInfo!.Sections);
     }
 
     [AvaloniaFact]
@@ -64,7 +87,7 @@ public sealed class IntelliSenseScreenshotTests : IDisposable
         StartLineAfter(view.Editor, "Console.WriteLine();");
         Type(view.Editor, "Console.WriteLine(");
         await UiTestHelpers.WaitUntilAsync(() => view.SignatureHelp!.IsOpen, because: "Parameter Info");
-        Type(view.Editor, "\"Hi\", ");
+        Type(view.Editor, "\"Hi\", 42");
         await UiTestHelpers.WaitUntilAsync(() => view.SignatureHelp!.Result?.ArgumentIndex == 1, because: "the second argument");
 
         UiTestHelpers.SaveScreenshot(window, "09-parameter-info");

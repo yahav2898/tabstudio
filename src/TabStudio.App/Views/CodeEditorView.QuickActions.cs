@@ -53,7 +53,7 @@ public sealed partial class CodeEditorView
             return;
         }
 
-        if (actions.Count > 0)
+        if (actions.Count > 0 && _completion?.IsOpen != true && _signatureHelp?.IsOpen != true)
         {
             ShowLightBulb();
         }

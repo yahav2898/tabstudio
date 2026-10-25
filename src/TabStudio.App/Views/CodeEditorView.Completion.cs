@@ -1,5 +1,8 @@
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Text;
+using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Primitives.PopupPositioning;
 using Avalonia.Input;
@@ -18,7 +21,13 @@ namespace TabStudio.App.Views;
 /// </summary>
 public sealed partial class CodeEditorView
 {
+    // The list moves left by its padding and icon column, so the items' text lines up with the typed word.
+    private const double CompletionTextIndent = 39;
+    private const double CompletionRowHeight = 34;
+    private const int CompletionVisibleRows = 8;
+
     private readonly StringBuilder _typedWhileCommitting = new();
+    private bool _completionAbove;
     private CompletionListViewModel? _completion;
     private CompletionListView? _completionView;
     private Popup? _completionPopup;
@@ -33,6 +42,7 @@ public sealed partial class CodeEditorView
         _completionView.ItemChosen += OnCompletionItemChosen;
         _completionPopup = CreatePopup(_completionView, PopupAnchor.BottomLeft, PopupGravity.BottomRight);
         _completion.PropertyChanged += OnCompletionPropertyChanged;
+        _completion.Items.CollectionChanged += OnCompletionItemsChanged;
         _editor.TextArea.TextEntering += OnCompletionTextEntering;
         _editor.TextArea.TextEntered += OnCompletionTextEntered;
     }
@@ -45,6 +55,7 @@ public sealed partial class CodeEditorView
         }
 
         _completion.PropertyChanged -= OnCompletionPropertyChanged;
+        _completion.Items.CollectionChanged -= OnCompletionItemsChanged;
         _editor.TextArea.TextEntering -= OnCompletionTextEntering;
         _editor.TextArea.TextEntered -= OnCompletionTextEntered;
         if (_completionView is not null)
@@ -239,6 +250,7 @@ public sealed partial class CodeEditorView
                 else if (_completionPopup is not null)
                 {
                     _completionPopup.IsOpen = false;
+                    PlaceSignatureHelpPopup();
                 }
 
                 break;
@@ -248,7 +260,19 @@ public sealed partial class CodeEditorView
         }
     }
 
-    /// <summary>Places the list under the start of the word being completed, or above it near the bottom.</summary>
+    private void OnCompletionItemsChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        // Above the line, the list grows and shrinks upwards; Parameter Info stays on top of it.
+        if (_completionAbove)
+        {
+            PlaceSignatureHelpPopup();
+        }
+    }
+
+    /// <summary>
+    /// Places the list under the start of the word being completed, or above the line when it does not fit below.
+    /// The side is chosen when the list opens and kept while it is open, so it does not jump while the user types.
+    /// </summary>
     private void PlaceCompletionPopup()
     {
         if (_completionPopup is null || _completion is not { IsOpen: true } completion)
@@ -262,7 +286,33 @@ public sealed partial class CodeEditorView
             return;
         }
 
+        if (!_completionPopup.IsOpen)
+        {
+            _completionAbove = !FitsBelow(anchor, (CompletionVisibleRows * CompletionRowHeight) + 10);
+        }
+
+        _completionPopup.PlacementAnchor = _completionAbove ? PopupAnchor.TopLeft : PopupAnchor.BottomLeft;
+        _completionPopup.PlacementGravity = _completionAbove ? PopupGravity.TopRight : PopupGravity.BottomRight;
+        _completionPopup.HorizontalOffset = -CompletionTextIndent;
         _completionPopup.PlacementRect = anchor;
         _completionPopup.IsOpen = true;
+        PlaceSignatureHelpPopup();
+    }
+
+    /// <summary>The height of the list as shown now.</summary>
+    private double CompletionHeight() =>
+        (Math.Min(_completion?.Items.Count ?? 0, CompletionVisibleRows) * CompletionRowHeight) + 10;
+
+    /// <summary>Whether something this tall fits between a line and the bottom of the window, or does not fit above it either.</summary>
+    private bool FitsBelow(Rect line, double height)
+    {
+        if (TopLevel.GetTopLevel(this) is not { } topLevel
+            || TextView.TranslatePoint(line.BottomLeft, topLevel) is not { } bottom
+            || TextView.TranslatePoint(line.TopLeft, topLevel) is not { } top)
+        {
+            return true;
+        }
+
+        return bottom.Y + height <= topLevel.Bounds.Height || top.Y < height;
     }
 }

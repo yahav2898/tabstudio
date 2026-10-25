@@ -17,9 +17,14 @@ public sealed class StyledTextBlock : TextBlock
     public static readonly StyledProperty<IReadOnlyList<StyledRun>?> RunsProperty =
         AvaloniaProperty.Register<StyledTextBlock, IReadOnlyList<StyledRun>?>(nameof(Runs));
 
+    /// <summary>The color of bold runs that have no classification of their own, such as matched letters.</summary>
+    public static readonly StyledProperty<IBrush?> BoldForegroundProperty =
+        AvaloniaProperty.Register<StyledTextBlock, IBrush?>(nameof(BoldForeground));
+
     static StyledTextBlock()
     {
         RunsProperty.Changed.AddClassHandler<StyledTextBlock>((block, _) => block.UpdateInlines());
+        BoldForegroundProperty.Changed.AddClassHandler<StyledTextBlock>((block, _) => block.UpdateInlines());
     }
 
     /// <inheritdoc cref="RunsProperty"/>
@@ -27,6 +32,13 @@ public sealed class StyledTextBlock : TextBlock
     {
         get => GetValue(RunsProperty);
         set => SetValue(RunsProperty, value);
+    }
+
+    /// <inheritdoc cref="BoldForegroundProperty"/>
+    public IBrush? BoldForeground
+    {
+        get => GetValue(BoldForegroundProperty);
+        set => SetValue(BoldForegroundProperty, value);
     }
 
     /// <inheritdoc />
@@ -59,12 +71,16 @@ public sealed class StyledTextBlock : TextBlock
         }
     }
 
-    private static Run CreateRun(string text, StyledRun style)
+    private Run CreateRun(string text, StyledRun style)
     {
         var inline = new Run(text);
         if (style.Classification is { } classification && SyntaxTheme.For(classification) is { } brush)
         {
             inline.Foreground = brush;
+        }
+        else if (style.IsBold && BoldForeground is { } bold)
+        {
+            inline.Foreground = bold;
         }
 
         if (style.IsBold)

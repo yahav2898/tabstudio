@@ -25,10 +25,6 @@
     <KeyBinding Gesture="Alt+Left" Command="{Binding NavigateBackCommand}" />
     <KeyBinding Gesture="Alt+Right" Command="{Binding NavigateForwardCommand}" />
     <KeyBinding Gesture="Ctrl+Alt+L" Command="{Binding ToggleSideBarCommand}" />
-    <KeyBinding Gesture="F12" Command="{Binding GoToDefinitionCommand}" />
-    <KeyBinding Gesture="Ctrl+F12" Command="{Binding GoToImplementationCommand}" />
-    <KeyBinding Gesture="Shift+F12" Command="{Binding FindAllReferencesCommand}" />
-    <KeyBinding Gesture="F2" Command="{Binding RenameSymbolCommand}" />
   </UserControl.KeyBindings>
 
   <Grid RowDefinitions="40,46,*,28">
@@ -74,7 +70,7 @@
             <MenuItem Header="_Error List" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" />
             <MenuItem Header="_Output" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Output}" />
             <MenuItem Header="_Compatibility Doctor" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Compatibility}" />
-            <MenuItem Header="Find _Symbol Results" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.References}" />
+            <MenuItem Header="Re_ferences" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.References}" />
             <MenuItem Header="_Bottom Panel" Command="{Binding ToggleBottomPanelCommand}" />
             <Separator />
             <MenuItem Header="Navigate _Backward" InputGesture="Alt+Left" Command="{Binding NavigateBackCommand}" />

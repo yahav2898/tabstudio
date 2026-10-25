@@ -150,6 +150,8 @@ public sealed partial class CodeEditorView
             return;
         }
 
+        // When the completion list had to open above the line, Parameter Info goes above the list.
+        _signatureHelpPopup.VerticalOffset = _completionPopup?.IsOpen == true && _completionAbove ? -(CompletionHeight() + 4) : 0;
         _signatureHelpPopup.PlacementRect = anchor;
         _signatureHelpPopup.IsOpen = true;
     }

@@ -61,7 +61,7 @@
             <Grid ColumnDefinitions="Auto,*,Auto" Height="34" Background="Transparent">
               <controls:SymbolGlyphIcon Kind="{Binding Kind}" Size="16" Margin="8,0,10,0" VerticalAlignment="Center" />
               <controls:StyledTextBlock Grid.Column="1" Runs="{Binding Runs}" FontFamily="{DynamicResource CodeFont}" FontSize="13"
-                                        VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                        BoldForeground="{DynamicResource Brush.Link}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
               <TextBlock Grid.Column="2" Text="{Binding InlineDescription}" Classes="muted" FontSize="11.5" Margin="10,0,8,0"
                          MaxWidth="150" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
             </Grid>

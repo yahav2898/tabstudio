@@ -11,5 +11,5 @@ public static class IntelliSenseIcons
 
     /// <summary>The screwdriver of refactorings.</summary>
     public static Geometry Screwdriver { get; } = Geometry.Parse(
-        "M3.5 20.5 L9.5 14.5 M8 13 L11 16 L19.5 7.5 L16.5 4.5 Z M16.5 4.5 L18.5 2.5 L21.5 5.5 L19.5 7.5");
+        "M3 18 L6 21 L10.5 16.5 L7.5 13.5 Z M9 15 L17 7 M16 4.5 L19.5 8 L21.5 6 L18 2.5 Z");
 }

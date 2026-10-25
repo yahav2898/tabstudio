@@ -183,6 +183,18 @@ public sealed partial class CodeEditorView
 
         switch (e.Key)
         {
+            case Key.F12 when e.KeyModifiers == KeyModifiers.None:
+                _ = Workspace?.GoToDefinitionCommand.ExecuteAsync(null);
+                return true;
+            case Key.F12 when e.KeyModifiers == KeyModifiers.Control:
+                _ = Workspace?.GoToImplementationCommand.ExecuteAsync(null);
+                return true;
+            case Key.F12 when e.KeyModifiers == KeyModifiers.Shift:
+                _ = Workspace?.FindAllReferencesCommand.ExecuteAsync(null);
+                return true;
+            case Key.F2 when e.KeyModifiers == KeyModifiers.None:
+                _ = Workspace?.RenameSymbolCommand.ExecuteAsync(null);
+                return true;
             case Key.Space when e.KeyModifiers == KeyModifiers.Control:
                 _ = OpenCompletionAsync(completeWord: true);
                 return true;

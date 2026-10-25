@@ -34,7 +34,8 @@
             <TextBlock Text="{Binding Line}" FontFamily="{DynamicResource CodeFont}" FontSize="12" HorizontalAlignment="Right"
                        Foreground="{DynamicResource Brush.LineNumber}" VerticalAlignment="Center" Margin="0,0,14,0" />
             <controls:StyledTextBlock Grid.Column="1" Runs="{Binding Text}" FontFamily="{DynamicResource CodeFont}" FontSize="12.5"
-                                      Foreground="{DynamicResource Brush.Text}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                      Foreground="{DynamicResource Brush.TextLabel}" BoldForeground="{DynamicResource Brush.TextBright}"
+                                      VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
             <Border Grid.Column="2" Classes="pill ready" Margin="10,0,0,0" IsVisible="{Binding IsDefinition}">
               <TextBlock Text="definition" />
             </Border>
