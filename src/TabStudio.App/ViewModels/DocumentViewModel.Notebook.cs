@@ -19,9 +19,9 @@ public sealed partial class DocumentViewModel
 
     /// <summary>
     /// Whether the floating editing actions (Comment, Format, Find, Run) apply to this document. A notebook has
-    /// its own toolbar instead.
+    /// its own toolbar instead, and a XAML file's designer hides them while the code is not shown.
     /// </summary>
-    public bool ShowsEditorActions => Notebook is null;
+    public bool ShowsEditorActions => Notebook is null && Designer?.ShowsCode != false;
 
     /// <summary>The text the file would have if it were saved now, for restoring unsaved work.</summary>
     public string CurrentText => Notebook?.Serialize() ?? Document.Text;

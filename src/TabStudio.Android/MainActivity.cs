@@ -30,7 +30,7 @@ namespace TabStudio.Android;
 /// </para>
 /// <para>
 /// Started with the boolean extra <c>tabstudio.selftest</c>, it opens the sample, presses F5, debugs it, serves
-/// a new web app, and logs the outcome under the <c>TabStudio</c> tag as a <c>TABSTUDIO_SELFTEST_OK</c> or
+/// a new web app, shows a new Avalonia app, and logs the outcome under the <c>TabStudio</c> tag as a <c>TABSTUDIO_SELFTEST_OK</c> or
 /// <c>TABSTUDIO_SELFTEST_FAIL</c> line. CI runs this on an emulator.
 /// </para>
 /// </remarks>

@@ -205,16 +205,6 @@ public sealed partial class RoslynWorkspaceHost
             return;
         }
 
-        var solution = _workspace.CurrentSolution;
-        var texts = new Dictionary<string, string>(StringComparer.Ordinal);
-        foreach (var (path, id) in _documents)
-        {
-            if (solution.GetDocument(id) is { } document && document.TryGetText(out var text))
-            {
-                texts[path] = text.ToString();
-            }
-        }
-
-        LoadUnderGate(_loaded, new SnapshotTextProvider(texts));
+        LoadUnderGate(_loaded, new SnapshotTextProvider(CurrentTexts()));
     }
 }

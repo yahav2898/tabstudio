@@ -303,11 +303,14 @@ public sealed class DebugSession : IDisposable
     /// </summary>
     public void Stop()
     {
-        _engine.Stop();
+        // The run ends as stopped first; released, the program's thread unwinds with an exception, which would
+        // otherwise end the run as a crash when it gets there first.
         if (!_disposed)
         {
             _stop.Cancel();
         }
+
+        _engine.Stop();
     }
 
     /// <summary>Stops the program if it is still running.</summary>

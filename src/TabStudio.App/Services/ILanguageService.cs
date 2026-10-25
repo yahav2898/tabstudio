@@ -65,6 +65,17 @@ public interface ILanguageService : IDisposable
     /// <summary>Allows or prevents compiling on several threads, for thermal throttling.</summary>
     void SetConcurrentBuild(bool enabled);
 
+    /// <summary>
+    /// Keeps a full compiler model only of the projects being edited, and references the others through compact
+    /// metadata images cached in a folder. For devices short of memory.
+    /// </summary>
+    /// <param name="cacheDirectory">Where the images are kept.</param>
+    void UseSkeletonReferences(string cacheDirectory);
+
+    /// <summary>Tells the language service which projects are being edited, such as those of the open documents.</summary>
+    /// <param name="projectFilePaths">The project files.</param>
+    void SetActiveProjects(IEnumerable<string> projectFilePaths);
+
     /// <summary>Releases cached compilations under memory pressure.</summary>
     void TrimMemory();
 
@@ -76,6 +87,15 @@ public interface ILanguageService : IDisposable
     /// <param name="progress">Receives progress.</param>
     /// <param name="cancellationToken">Cancels the restore.</param>
     Task<RestoreResult> RestorePackagesAsync(ProjectInfo project, IProgress<RestoreProgress>? progress, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Gives every C# project .NET's own source generators, such as those behind <c>[GeneratedRegex]</c> and
+    /// <c>[JsonSerializable]</c>, downloading .NET's targeting pack the first time. Never throws for download
+    /// problems: they are returned.
+    /// </summary>
+    /// <param name="cancellationToken">Cancels the download.</param>
+    /// <returns>Problems, such as no network before the generators were ever downloaded.</returns>
+    Task<IReadOnlyList<BuildDiagnostic>> AddFrameworkGeneratorsAsync(CancellationToken cancellationToken);
 
     /// <summary>The package assemblies a program needs when it runs, from the project's last restore.</summary>
     /// <param name="projectFilePath">The project.</param>

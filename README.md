@@ -42,7 +42,7 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 ### A real Visual Studio experience, built for touch
 
 - **The layout you already know.** Menu bar, toolbar, document tabs, Solution Explorer, Properties, Error List, Output and a status bar, docked exactly where your hands expect them.
-- **Sized for fingers.** Every target is at least 44 pixels. A floating action bar puts Rename, Comment, Format, Peek and Run to Cursor one tap away.
+- **Sized for fingers.** Buttons, tabs and rows are fingertip-sized, 34 to 44 pixels tall. A floating action bar puts Rename, Comment, Format, Peek and Run to Cursor one tap away.
 - **Keyboard when you want it.** Attach a keyboard and every Visual Studio shortcut works: F5, Ctrl+Shift+B, F12, Ctrl+. and the rest.
 - **Desktop mode.** Plug in a monitor and the full layout moves to the big screen, while the tablet becomes a touch Toolbox and Properties panel.
 
@@ -61,7 +61,7 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 | --- | --- |
 | Console and class libraries | Compiled in memory, run in-process |
 | ASP.NET Core and Blazor | Served locally, previewed live in a WebView |
-| Avalonia | Rendered natively in a pane beside the editor |
+| Avalonia | Rendered natively in a pane beside the editor, with a live XAML designer |
 | Windows Forms | A cross-platform Forms layer, with a touch drag-and-drop designer |
 | WPF | OpenSilver, in a WebView |
 | WinUI | Uno Platform, natively on Android |
@@ -113,7 +113,7 @@ flowchart LR
     Host --> Bridge["Windows Bridge<br/>your PC, optional"]
 ```
 
-**The shell** is the part you see: a docked, Visual Studio-style layout scaled for touch, with 44-pixel tap targets and a floating action bar for the things you would otherwise reach for with a keyboard.
+**The shell** is the part you see: a docked, Visual Studio-style layout scaled for touch, with fingertip-sized tap targets and a floating action bar for the things you would otherwise reach for with a keyboard.
 
 **The language service** runs [Roslyn](https://github.com/dotnet/roslyn), the real C# compiler, inside the app. It keeps a live model of every project in the solution, which is what makes errors appear as you type and what powers semantic highlighting, completion and refactoring. Other languages get the same features from their own language servers.
 
@@ -150,7 +150,7 @@ That covers most tablets sold in the last six years, including entry-level and s
 ### Install on a tablet
 
 1. Open the [latest release](https://github.com/yahav2898/tabstudio/releases) on the tablet.
-2. Download `TabStudio.apk` and open it. Android will ask you to allow installs from your browser once.
+2. Download the `TabStudio-<version>.apk` file and open it. Android will ask you to allow installs from your browser once.
 3. Launch TabStudio, tap **Open the sample** and press **F5**.
 
 ### Build and run from source

@@ -210,7 +210,9 @@ public sealed partial class WorkspaceViewModel
             await document.SaveAsync();
             StatusText = $"Saved {document.FileName}";
             OnDocumentSavedForTests(document);
-            OnDocumentSavedForWeb(document);
+            OnDocumentSavedForLiveApp(document);
+            OnDocumentSavedForXamlDesigner(document);
+            OnDocumentSavedForGenerators(document);
             await OnProjectFileSavedAsync(document);
             GitChanges.ScheduleRefresh();
             return true;
@@ -227,6 +229,7 @@ public sealed partial class WorkspaceViewModel
         document.DiagnosticsChanged += OnDocumentDiagnosticsChanged;
         document.PropertyChanged += OnDocumentPropertyChanged;
         AttachDebugging(document);
+        AttachXamlDesigner(document);
     }
 
     private void Detach(DocumentViewModel document)
@@ -234,6 +237,7 @@ public sealed partial class WorkspaceViewModel
         document.DiagnosticsChanged -= OnDocumentDiagnosticsChanged;
         document.PropertyChanged -= OnDocumentPropertyChanged;
         DetachDebugging(document);
+        DetachXamlDesigner(document);
     }
 
     private void OnDocumentDiagnosticsChanged(object? sender, EventArgs e)
@@ -264,6 +268,9 @@ public sealed partial class WorkspaceViewModel
                 break;
             case nameof(DocumentViewModel.IsDirty):
                 ScheduleSessionSave();
+                break;
+            case nameof(DocumentViewModel.ShowsEditorActions):
+                OnPropertyChanged(nameof(ShowsEditorTouchBar));
                 break;
         }
     }

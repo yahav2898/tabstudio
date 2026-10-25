@@ -337,9 +337,9 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
             return;
         }
 
-        if (IsWebApp(project))
+        if (IsLiveApp(project))
         {
-            await RunWebProjectAsync(project, fromDebugger: true);
+            await RunLiveProjectAsync(project, fromDebugger: true);
             return;
         }
 

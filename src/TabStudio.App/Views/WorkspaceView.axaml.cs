@@ -29,6 +29,7 @@ public sealed partial class WorkspaceView : UserControl
         {
             DocumentViewModel { IsComparison: true } comparison => new DiffView(comparison),
             DocumentViewModel { IsNotebook: true } notebook => new Notebooks.NotebookView(notebook),
+            DocumentViewModel { Designer: { } designer } xaml => new XamlDesignerView(xaml, designer),
             _ => (Control)new CodeEditorView((DocumentViewModel)document),
         };
         QuickOpenBox.KeyDown += OnQuickOpenKeyDown;

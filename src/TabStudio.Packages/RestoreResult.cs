@@ -6,8 +6,8 @@ namespace TabStudio.Packages;
 /// The outcome of restoring the packages of one project.
 /// </summary>
 /// <remarks>
-/// Pass <see cref="CompileAssemblies"/> to the language service so code that uses the packages compiles, and
-/// <see cref="RuntimeAssemblies"/> to the program runner so the program finds them when it runs.
+/// Pass <see cref="CompileAssemblies"/> and <see cref="Analyzers"/> to the language service so code that uses the
+/// packages compiles, and <see cref="RuntimeAssemblies"/> to the program runner so the program finds them when it runs.
 /// </remarks>
 public sealed record RestoreResult
 {
@@ -25,6 +25,12 @@ public sealed record RestoreResult
 
     /// <summary>Full paths of the assemblies the project loads when it runs, from every package.</summary>
     public IReadOnlyList<string> RuntimeAssemblies { get; init; } = [];
+
+    /// <summary>
+    /// Full paths of the analyzers and source generators the compiler runs for the project, from every package and
+    /// shared framework, such as CommunityToolkit.Mvvm's.
+    /// </summary>
+    public IReadOnlyList<string> Analyzers { get; init; } = [];
 
     /// <summary>Errors and warnings, with NuGet's ids where NuGet has one (such as NU1101), most severe first.</summary>
     public IReadOnlyList<BuildDiagnostic> Diagnostics { get; init; } = [];

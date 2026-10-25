@@ -1,0 +1,158 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:vm="using:TabStudio.App.ViewModels"
+             x:Class="TabStudio.App.Views.XamlDesignerView"
+             x:DataType="vm:XamlDesignerViewModel">
+
+  <!--
+    A XAML file of an Avalonia app: the XAML in the code editor and, beside or above it, the view it describes,
+    rendered live as Visual Studio's XAML designer does. The panes are placed by the code-behind.
+  -->
+
+  <DockPanel>
+    <Border DockPanel.Dock="Top" Padding="6,2" Background="{DynamicResource Brush.Toolbar}"
+            BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+      <Grid ColumnDefinitions="Auto,Auto,*,Auto">
+        <StackPanel Orientation="Horizontal" Spacing="2">
+          <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsDesignOnly}" Command="{Binding ShowDesignCommand}" ToolTip.Tip="Design">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <controls:StrokeIcon Data="{StaticResource Icon.Window}" Size="13" />
+              <TextBlock Text="Design" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+          <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsSplit}" Command="{Binding ShowSplitCommand}" ToolTip.Tip="Design and XAML">
+            <TextBlock Text="Split" VerticalAlignment="Center" />
+          </Button>
+          <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsXamlOnly}" Command="{Binding ShowXamlCommand}" ToolTip.Tip="XAML">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <controls:StrokeIcon Data="{StaticResource Icon.File}" Size="13" />
+              <TextBlock Text="XAML" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="2" Margin="10,0,0,0">
+          <Button Theme="{StaticResource ToolButton}" Command="{Binding ToggleOrientationCommand}" IsVisible="{Binding IsSplit}"
+                  ToolTip.Tip="Side by side, or one above the other">
+            <Panel>
+              <controls:StrokeIcon Data="{StaticResource Icon.SplitColumns}" Size="15" IsVisible="{Binding IsSideBySide}" />
+              <controls:StrokeIcon Data="{StaticResource Icon.SplitRows}" Size="15" IsVisible="{Binding !IsSideBySide}" />
+            </Panel>
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Command="{Binding ToggleFitCommand}" IsVisible="{Binding HasDesignSize}"
+                  ToolTip.Tip="Fit the preview to the pane, or show it at its design size">
+            <TextBlock x:Name="ZoomText" Text="Fit" />
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Command="{Binding RefreshCommand}" ToolTip.Tip="Render again">
+            <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="15" />
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Command="{Binding Sketch.OpenCommand}" ToolTip.Tip="Draw a screen, and Claude writes its XAML">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <controls:StrokeIcon Data="{StaticResource Icon.Rename}" Size="14" />
+              <TextBlock Text="Sketch" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+        </StackPanel>
+
+        <TextBlock Grid.Column="3" Classes="small" Foreground="{DynamicResource Brush.TextMuted}" Text="{Binding Status}"
+                   VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="8,0" MaxWidth="520" />
+      </Grid>
+    </Border>
+
+    <Grid x:Name="Panes">
+      <!-- The preview: the app's view on its own background, under the error and note banners. -->
+      <Panel x:Name="DesignPane" Background="{DynamicResource Brush.Window}" ClipToBounds="True">
+        <ContentControl x:Name="Surface" />
+
+        <StackPanel IsVisible="{Binding Preview, Converter={x:Static ObjectConverters.IsNull}}" VerticalAlignment="Center"
+                    HorizontalAlignment="Center" Spacing="10" MaxWidth="360">
+          <ProgressBar IsIndeterminate="True" Width="160" IsVisible="{Binding IsBuilding}" />
+          <TextBlock Classes="muted" Text="{Binding Status}" TextWrapping="Wrap" TextAlignment="Center" />
+        </StackPanel>
+
+        <Button VerticalAlignment="Top" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Margin="10"
+                IsVisible="{Binding HasError}" Command="{Binding GoToErrorCommand}" Padding="0" Background="Transparent" BorderThickness="0">
+          <Border Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.Error}" BorderThickness="1"
+                  CornerRadius="8" Padding="12,8">
+            <Grid ColumnDefinitions="Auto,*">
+              <controls:StrokeIcon Data="{StaticResource Icon.Error}" Size="15" Foreground="{DynamicResource Brush.Error}"
+                                   VerticalAlignment="Top" Margin="0,1,10,0" />
+              <StackPanel Grid.Column="1" Spacing="2">
+                <TextBlock Text="{Binding Error}" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Text}" />
+                <TextBlock Classes="small" Foreground="{DynamicResource Brush.Link}" IsVisible="{Binding ErrorLocation, Converter={x:Static ObjectConverters.IsNotNull}}">
+                  <Run Text="{Binding ErrorLocation}" /><Run Text=" · tap to go there" />
+                </TextBlock>
+              </StackPanel>
+            </Grid>
+          </Border>
+        </Button>
+
+        <Border VerticalAlignment="Bottom" Margin="10,10,10,64" IsVisible="{Binding HasSketchNotes}" Background="{DynamicResource Brush.Popup}"
+                BorderBrush="{DynamicResource Brush.Accent}" BorderThickness="1" CornerRadius="8" Padding="12,4,4,4">
+          <Grid ColumnDefinitions="Auto,*,Auto">
+            <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="14" Foreground="{DynamicResource Brush.Accent}" VerticalAlignment="Center" Margin="0,0,8,0" />
+            <TextBlock Grid.Column="1" Classes="small" Text="{Binding SketchNotes}" TextWrapping="Wrap" VerticalAlignment="Center" />
+            <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Command="{Binding DismissSketchNotesCommand}" ToolTip.Tip="Dismiss">
+              <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="12" />
+            </Button>
+          </Grid>
+        </Border>
+
+        <Border VerticalAlignment="Bottom" Margin="10" IsVisible="{Binding HasNote}" Background="{DynamicResource Brush.Popup}"
+                BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" CornerRadius="8" Padding="12,8">
+          <Grid ColumnDefinitions="Auto,*">
+            <controls:StrokeIcon Data="{StaticResource Icon.Info}" Size="13" Foreground="{DynamicResource Brush.Info}" VerticalAlignment="Top" Margin="0,2,8,0" />
+            <TextBlock Grid.Column="1" Classes="small" Text="{Binding Note}" TextWrapping="Wrap" />
+          </Grid>
+        </Border>
+      </Panel>
+
+      <!-- Sketch to XAML: a sheet of paper over the designer, to draw a screen on. -->
+      <Border x:Name="SketchPane" Grid.RowSpan="3" Grid.ColumnSpan="3" ZIndex="1" IsVisible="{Binding Sketch.IsOpen}"
+              Background="{DynamicResource Brush.Panel}" Padding="14">
+        <DockPanel>
+          <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto,*" Margin="0,0,0,10">
+            <StackPanel VerticalAlignment="Center" Spacing="2" Margin="0,0,14,0">
+              <TextBlock Classes="h2" Text="Sketch to XAML" />
+              <TextBlock Classes="small muted" Text="Draw the screen with a finger or a stylus. Claude writes it as this view's content." />
+            </StackPanel>
+            <TextBox Grid.Column="1" Classes="large" Text="{Binding Sketch.Hint}" Watermark="What is this screen? For example: a login form" />
+          </Grid>
+
+          <Grid DockPanel.Dock="Bottom" ColumnDefinitions="Auto,Auto,*,Auto,Auto" Margin="0,10,0,0">
+            <Button Theme="{StaticResource SecondaryButton}" Click="OnUndoStroke" ToolTip.Tip="Undo the last stroke">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <controls:StrokeIcon Data="{StaticResource Icon.Undo}" Size="14" />
+                <TextBlock Text="Undo" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+            <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Click="OnClearSketch" Margin="8,0,0,0" Content="Clear" />
+            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" Margin="14,0" VerticalAlignment="Center">
+              <ProgressBar IsIndeterminate="True" Width="80" IsVisible="{Binding Sketch.IsConverting}" />
+              <TextBlock Classes="small" Foreground="{DynamicResource Brush.Error}" Text="{Binding Sketch.Error}" TextWrapping="Wrap"
+                         IsVisible="{Binding Sketch.HasError}" VerticalAlignment="Center" />
+              <Button Theme="{StaticResource ToolButton}" Command="{Binding Sketch.OpenAgentSettingsCommand}" IsVisible="{Binding Sketch.NeedsApiKey}"
+                      Content="Open Claude settings" Foreground="{DynamicResource Brush.Link}" />
+            </StackPanel>
+            <Button Grid.Column="3" Theme="{StaticResource SecondaryButton}" Command="{Binding Sketch.CloseCommand}" Content="Cancel" />
+            <Button Grid.Column="4" Theme="{StaticResource AccentButton}" Command="{Binding Sketch.MakeXamlCommand}" Margin="8,0,0,0">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="14" />
+                <TextBlock Text="Make XAML" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+          </Grid>
+
+          <Border CornerRadius="10" ClipToBounds="True" BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1">
+            <controls:SketchCanvas x:Name="SketchPad" Cursor="Cross" />
+          </Border>
+        </DockPanel>
+      </Border>
+
+      <GridSplitter x:Name="Splitter" Background="{DynamicResource Brush.Border}" ResizeDirection="Auto" />
+
+      <ContentControl x:Name="EditorHost" />
+    </Grid>
+  </DockPanel>
+</UserControl>

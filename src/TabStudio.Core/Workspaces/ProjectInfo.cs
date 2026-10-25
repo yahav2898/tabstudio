@@ -72,6 +72,21 @@ public sealed record ProjectInfo
     /// <summary>Patterns from <c>&lt;Compile Remove="..." /&gt;</c> items, relative to the project directory.</summary>
     public IReadOnlyList<string> CompileRemoves { get; init; } = [];
 
+    /// <summary>Patterns from <c>&lt;EmbeddedResource Include="..." /&gt;</c> items: files compiled into the assembly.</summary>
+    public IReadOnlyList<string> EmbeddedResourceIncludes { get; init; } = [];
+
+    /// <summary>Patterns from <c>&lt;EmbeddedResource Remove="..." /&gt;</c> items.</summary>
+    public IReadOnlyList<string> EmbeddedResourceRemoves { get; init; } = [];
+
+    /// <summary>
+    /// Patterns from <c>&lt;AvaloniaResource Include="..." /&gt;</c> items: files an Avalonia app opens through
+    /// <c>avares://</c> addresses, such as its images and fonts.
+    /// </summary>
+    public IReadOnlyList<string> AvaloniaResourceIncludes { get; init; } = [];
+
+    /// <summary>Patterns from <c>&lt;AvaloniaResource Remove="..." /&gt;</c> items.</summary>
+    public IReadOnlyList<string> AvaloniaResourceRemoves { get; init; } = [];
+
     /// <summary>What the project produces.</summary>
     public ProjectKind Kind { get; init; }
 

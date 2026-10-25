@@ -1,0 +1,44 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:vm="using:TabStudio.App.ViewModels"
+             x:Class="TabStudio.App.Views.AppPreviewView"
+             x:DataType="vm:AppPreviewViewModel">
+
+  <!-- The running Avalonia app, drawn natively by TabStudio's own Avalonia, in a phone, tablet or full frame. -->
+
+  <DockPanel>
+    <Border DockPanel.Dock="Top" Padding="10,4,6,4" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+      <Grid ColumnDefinitions="Auto,*,Auto">
+        <controls:StrokeIcon Data="{StaticResource Icon.Window}" Size="15" Foreground="{DynamicResource Brush.Accent}" VerticalAlignment="Center" />
+        <TextBlock Grid.Column="1" Classes="header" Text="{Binding Title}" Margin="8,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+        <ComboBox Grid.Column="2" ItemsSource="{Binding Frames}" SelectedItem="{Binding Frame}" MinWidth="104" ToolTip.Tip="Frame" />
+      </Grid>
+    </Border>
+
+    <Border DockPanel.Dock="Top" IsVisible="{Binding HasNote}" Padding="10,6" Background="{DynamicResource Brush.Hover}"
+            BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+      <Grid ColumnDefinitions="Auto,*">
+        <controls:StrokeIcon Data="{StaticResource Icon.Info}" Size="13" Foreground="{DynamicResource Brush.Info}" VerticalAlignment="Top" Margin="0,2,8,0" />
+        <TextBlock Grid.Column="1" Classes="small" Text="{Binding Note}" TextWrapping="Wrap" />
+      </Grid>
+    </Border>
+
+    <Panel>
+      <!-- The app fills the pane, or sits in a device's frame scaled to fit. -->
+      <ContentControl x:Name="FillContent" IsVisible="{Binding IsFill}" />
+      <Viewbox IsVisible="{Binding !IsFill}" Stretch="Uniform" Margin="12">
+        <Border Width="{Binding FrameWidth}" Height="{Binding FrameHeight}" CornerRadius="18" ClipToBounds="True"
+                BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="6">
+          <ContentControl x:Name="FramedContent" />
+        </Border>
+      </Viewbox>
+
+      <StackPanel IsVisible="{Binding !IsRunning}" Margin="24" Spacing="10" VerticalAlignment="Center" MaxWidth="360">
+        <controls:StrokeIcon Data="{StaticResource Icon.Window}" Size="34" Foreground="{DynamicResource Brush.Accent}" HorizontalAlignment="Center" />
+        <TextBlock Classes="h2" Text="{Binding Title}" HorizontalAlignment="Center" />
+        <TextBlock Classes="muted" Text="{Binding StatusText}" TextWrapping="Wrap" TextAlignment="Center" />
+      </StackPanel>
+    </Panel>
+  </DockPanel>
+</UserControl>

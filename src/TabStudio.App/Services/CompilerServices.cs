@@ -29,12 +29,18 @@ public sealed class CompilerServices
             {
                 GlobalPackagesFolder = paths.Packages,
                 FrameworkAssemblyNames = ReferenceAssemblyNames.Net100,
+                CompilerVersion = CompilerVersion,
             },
             http ?? new HttpClient { Timeout = TimeSpan.FromMinutes(5) });
     }
 
     /// <summary>Restores NuGet packages into the app's packages folder, shared by every workspace.</summary>
     public PackageRestorer Packages { get; }
+
+    /// <summary>The version of Roslyn inside TabStudio, which decides which analyzers of a package it can run.</summary>
+    public static Version CompilerVersion { get; } = typeof(Microsoft.CodeAnalysis.Compilation).Assembly.GetName().Version is { } version
+        ? new Version(version.Major, version.Minor)
+        : new Version(5, 0);
 
     /// <summary>Raised on a background thread when Roslyn finishes warming up.</summary>
     public event EventHandler? Warmed;

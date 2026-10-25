@@ -15,7 +15,9 @@ namespace TabStudio.Packages.Assets;
 ///   packages say "the framework already has this".</item>
 ///   <item>When nothing is compatible with the target, the <c>AssetTargetFallback</c> frameworks are tried in order.</item>
 /// </list>
-/// Runtime-specific assets (<c>runtimes/{rid}/</c>), native libraries, analyzers and MSBuild files are not used.
+/// Analyzers and source generators come from <c>analyzers/dotnet/cs/</c> and <c>analyzers/dotnet/</c>, and from the
+/// highest <c>analyzers/dotnet/roslyn{version}/cs/</c> folder the in-app compiler supports, as the .NET SDK picks them.
+/// Runtime-specific assets (<c>runtimes/{rid}/</c>), native libraries and MSBuild files are not used.
 /// </remarks>
 internal static class AssetSelector
 {
@@ -25,7 +27,8 @@ internal static class AssetSelector
     /// <param name="relativePaths">Every file in the package, relative to its root, with forward slashes.</param>
     /// <param name="target">The project's framework.</param>
     /// <param name="fallback">The <c>AssetTargetFallback</c> frameworks.</param>
-    public static PackageAssets Select(IEnumerable<string> relativePaths, NuGetFramework target, IReadOnlyList<NuGetFramework> fallback)
+    /// <param name="compilerVersion">The version of Roslyn that runs the analyzers; <see langword="null"/> for no analyzers.</param>
+    public static PackageAssets Select(IEnumerable<string> relativePaths, NuGetFramework target, IReadOnlyList<NuGetFramework> fallback, Version? compilerVersion = null)
     {
         var paths = relativePaths.ToList();
         var lib = GroupByFramework(paths, "lib");
@@ -48,7 +51,69 @@ internal static class AssetSelector
 
         var supported = lib.Keys.Concat(reference.Keys).Distinct().ToList();
         var compatible = supported.Count == 0 || compile is not null || runtime is not null;
-        return new PackageAssets(Assemblies(compile), Assemblies(runtime), compatible, usedFallback, supported);
+        var analyzers = compilerVersion is null ? [] : SelectAnalyzers(paths, compilerVersion);
+        return new PackageAssets(Assemblies(compile), Assemblies(runtime), compatible, usedFallback, supported) { Analyzers = analyzers };
+    }
+
+    /// <summary>
+    /// Selects the C# analyzer assemblies of a package: those for any Roslyn version, plus the folder of the highest
+    /// Roslyn version that is not newer than the compiler.
+    /// </summary>
+    /// <param name="relativePaths">Every file in the package, relative to its root, with forward slashes.</param>
+    /// <param name="compilerVersion">The version of Roslyn that runs the analyzers.</param>
+    public static IReadOnlyList<string> SelectAnalyzers(IEnumerable<string> relativePaths, Version compilerVersion)
+    {
+        ArgumentNullException.ThrowIfNull(relativePaths);
+        ArgumentNullException.ThrowIfNull(compilerVersion);
+        var unversioned = new List<string>();
+        var versioned = new Dictionary<Version, List<string>>();
+        foreach (var path in relativePaths)
+        {
+            var parts = path.Split('/');
+            if (parts.Length < 3 || !parts[0].Equals("analyzers", StringComparison.OrdinalIgnoreCase)
+                || !parts[1].Equals("dotnet", StringComparison.OrdinalIgnoreCase)
+                || !Path.GetExtension(path).Equals(".dll", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            // analyzers/dotnet/X.dll, analyzers/dotnet/cs/X.dll, analyzers/dotnet/roslyn4.4/cs/X.dll
+            var rest = parts[2..];
+            Version? roslyn = null;
+            if (rest.Length > 1 && rest[0].StartsWith("roslyn", StringComparison.OrdinalIgnoreCase))
+            {
+                if (!Version.TryParse(rest[0]["roslyn".Length..], out roslyn) || roslyn > compilerVersion)
+                {
+                    continue;
+                }
+
+                rest = rest[1..];
+            }
+
+            var isCSharp = rest.Length == 1 || (rest.Length == 2 && rest[0].Equals("cs", StringComparison.OrdinalIgnoreCase));
+            if (!isCSharp)
+            {
+                continue;
+            }
+
+            if (roslyn is null)
+            {
+                unversioned.Add(path);
+            }
+            else
+            {
+                if (!versioned.TryGetValue(roslyn, out var files))
+                {
+                    files = [];
+                    versioned[roslyn] = files;
+                }
+
+                files.Add(path);
+            }
+        }
+
+        List<string> best = versioned.Count == 0 ? [] : versioned[versioned.Keys.Max()!];
+        return [.. unversioned.Concat(best).Order(StringComparer.Ordinal)];
     }
 
     private static (List<string>? Compile, List<string>? Runtime) Choose(

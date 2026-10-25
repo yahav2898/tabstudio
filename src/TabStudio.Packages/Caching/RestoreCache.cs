@@ -22,7 +22,7 @@ namespace TabStudio.Packages.Caching;
 internal static class RestoreCache
 {
     /// <summary>The current layout of the file.</summary>
-    public const int FormatVersion = 1;
+    public const int FormatVersion = 2;
 
     /// <summary>Hashes the inputs of a restore.</summary>
     /// <param name="graph">The project's references and those of the projects it references.</param>
@@ -43,6 +43,7 @@ internal static class RestoreCache
 
         Line("format", FormatVersion.ToString(CultureInfo.InvariantCulture));
         Line("framework", options.TargetFramework);
+        Line("compiler", options.CompilerVersion?.ToString() ?? "none");
         Line("fallback", string.Join(';', options.AssetTargetFallback));
         Line("packages", Path.GetFullPath(options.GlobalPackagesFolder));
         foreach (var source in options.Sources)
@@ -94,7 +95,7 @@ internal static class RestoreCache
         }
 
         var stillInstalled = file.Packages.All(p => File.Exists(Path.Combine(p.DirectoryPath, GlobalPackagesFolder.CompletionMarkerName))) &&
-            file.CompileAssemblies.Concat(file.RuntimeAssemblies).All(File.Exists);
+            file.CompileAssemblies.Concat(file.RuntimeAssemblies).Concat(file.Analyzers).All(File.Exists);
         if (!stillInstalled)
         {
             return null;
@@ -104,10 +105,11 @@ internal static class RestoreCache
         {
             ProjectName = projectName,
             Packages = file.Packages
-                .Select(p => new RestoredPackage(p.Id, p.Version, p.DirectoryPath, p.IsDirect, p.CompileAssemblies, p.RuntimeAssemblies, p.ProvidedByFramework))
+                .Select(p => new RestoredPackage(p.Id, p.Version, p.DirectoryPath, p.IsDirect, p.CompileAssemblies, p.RuntimeAssemblies, p.ProvidedByFramework) { Analyzers = p.Analyzers })
                 .ToList(),
             CompileAssemblies = file.CompileAssemblies,
             RuntimeAssemblies = file.RuntimeAssemblies,
+            Analyzers = file.Analyzers,
             Diagnostics = file.Diagnostics
                 .Select(d => new BuildDiagnostic(
                     d.Id,
@@ -138,10 +140,12 @@ internal static class RestoreCache
                 IsDirect = p.IsDirect,
                 CompileAssemblies = [.. p.CompileAssemblies],
                 RuntimeAssemblies = [.. p.RuntimeAssemblies],
+                Analyzers = [.. p.Analyzers],
                 ProvidedByFramework = p.ProvidedByFramework,
             }).ToList(),
             CompileAssemblies = [.. result.CompileAssemblies],
             RuntimeAssemblies = [.. result.RuntimeAssemblies],
+            Analyzers = [.. result.Analyzers],
             Diagnostics = result.Diagnostics.Select(d => new CachedDiagnostic
             {
                 Id = d.Id,
