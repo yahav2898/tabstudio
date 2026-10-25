@@ -4,64 +4,47 @@
              xmlns:vm="using:TabStudio.App.ViewModels"
              x:Class="TabStudio.App.Views.DebugTouchBarView"
              x:DataType="vm:WorkspaceViewModel">
-  <!-- The floating debug buttons over the editor while debugging: a tablet has no F5, F10 or F11 keys. -->
-  <Border Padding="4" CornerRadius="14" Background="{DynamicResource Brush.Hover}"
+
+  <UserControl.Styles>
+    <!-- 44-pixel touch targets. -->
+    <Style Selector="Button.touch">
+      <Setter Property="Height" Value="44" />
+      <Setter Property="MinHeight" Value="44" />
+      <Setter Property="MinWidth" Value="44" />
+      <Setter Property="CornerRadius" Value="{StaticResource Radius.Card}" />
+      <Setter Property="Padding" Value="12,0" />
+    </Style>
+  </UserControl.Styles>
+
+  <!--
+    The floating debug buttons over the editor while debugging: a tablet has no F5, F10 or F11 keys. An adaptive bar,
+    so on a narrow editor the least used fold to their icons and then into More; Continue and Stop always stay.
+  -->
+  <Border Padding="4" CornerRadius="{StaticResource Radius.Dialog}" Background="{DynamicResource Brush.Hover}"
           BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1" BoxShadow="{DynamicResource Shadow.Popup}">
-    <StackPanel Orientation="Horizontal" Spacing="2">
-      <Button Theme="{StaticResource ToolButton}" Width="32" Height="44" CornerRadius="10" Padding="0"
-              Command="{Binding ToggleTouchBarCommand}" ToolTip.Tip="Fold the touch buttons away">
+    <DockPanel>
+      <Button DockPanel.Dock="Left" Theme="{StaticResource ToolButton}" Width="32" Height="44" MinWidth="32" CornerRadius="{StaticResource Radius.Card}"
+              Padding="0" Margin="0,0,2,0" Command="{Binding ToggleTouchBarCommand}" ToolTip.Tip="Fold the touch buttons away">
         <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="16" Foreground="{DynamicResource Brush.TextSecondary}" />
       </Button>
-      <!-- The primary action while paused: white on teal in both themes. -->
-      <Button Theme="{StaticResource AccentButton}" Height="44" CornerRadius="10" Padding="12,0" ToolTip.Tip="Continue (F5)"
-              Command="{Binding StartDebuggingCommand}" IsVisible="{Binding IsPaused}">
-        <StackPanel Orientation="Horizontal" Spacing="7">
-          <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="14" Foreground="{DynamicResource Brush.OnAccent}" />
-          <TextBlock Text="Continue" VerticalAlignment="Center" FontSize="12.5" />
-        </StackPanel>
-      </Button>
-      <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" ToolTip.Tip="Break All (Ctrl+Alt+Break)"
-              Command="{Binding BreakAllCommand}" IsVisible="{Binding IsDebuggeeRunning}">
-        <StackPanel Orientation="Horizontal" Spacing="7">
-          <controls:StrokeIcon Data="{StaticResource Icon.Pause}" Size="16" StrokeThickness="2.4" />
-          <TextBlock Text="Break" VerticalAlignment="Center" FontSize="12.5" />
-        </StackPanel>
-      </Button>
-      <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" ToolTip.Tip="Step Over (F10)"
-              Command="{Binding StepOverCommand}">
-        <StackPanel Orientation="Horizontal" Spacing="7">
-          <controls:StrokeIcon Data="{StaticResource Icon.StepOver}" Size="16" />
-          <TextBlock Text="Over" VerticalAlignment="Center" FontSize="12.5" />
-        </StackPanel>
-      </Button>
-      <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" ToolTip.Tip="Step Into (F11)"
-              Command="{Binding StepIntoCommand}">
-        <StackPanel Orientation="Horizontal" Spacing="7">
-          <controls:StrokeIcon Data="{StaticResource Icon.StepInto}" Size="16" />
-          <TextBlock Text="Into" VerticalAlignment="Center" FontSize="12.5" />
-        </StackPanel>
-      </Button>
-      <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" ToolTip.Tip="Step Out (Shift+F11)"
-              Command="{Binding StepOutCommand}">
-        <StackPanel Orientation="Horizontal" Spacing="7">
-          <controls:StrokeIcon Data="{StaticResource Icon.StepOut}" Size="16" />
-          <TextBlock Text="Out" VerticalAlignment="Center" FontSize="12.5" />
-        </StackPanel>
-      </Button>
-      <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" ToolTip.Tip="Run to Cursor (Ctrl+F10)"
-              Command="{Binding RunToCursorCommand}" IsVisible="{Binding IsPaused}">
-        <StackPanel Orientation="Horizontal" Spacing="7">
-          <controls:StrokeIcon Data="{StaticResource Icon.NextStatement}" Size="16" />
-          <TextBlock Text="To Cursor" VerticalAlignment="Center" FontSize="12.5" />
-        </StackPanel>
-      </Button>
-      <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" ToolTip.Tip="Stop Debugging (Shift+F5)"
-              Command="{Binding StopDebuggingCommand}">
-        <StackPanel Orientation="Horizontal" Spacing="7">
-          <controls:StrokeIcon Data="{StaticResource Icon.Stop}" IsFilled="True" Size="13" Foreground="{DynamicResource Brush.Error}" />
-          <TextBlock Text="Stop" VerticalAlignment="Center" FontSize="12.5" />
-        </StackPanel>
-      </Button>
-    </StackPanel>
+      <controls:AdaptiveBar x:Name="Bar" Spacing="2" MorePlacement="TopEdgeAlignedRight">
+        <!-- The primary action while paused: white on teal in both themes. -->
+        <controls:AdaptiveBarItem Classes="touch" Theme="{StaticResource AccentButton}" Icon="{StaticResource Icon.Play}" IsIconFilled="True" IconSize="14"
+                                  Label="Continue" Gesture="F5" IsPinned="True" Priority="100" FontWeight="SemiBold"
+                                  Command="{Binding StartDebuggingCommand}" IsVisible="{Binding IsPaused}" />
+        <controls:AdaptiveBarItem Classes="touch" Icon="{StaticResource Icon.Pause}" IconSize="16" Label="Break" Gesture="Ctrl+Alt+Break"
+                                  Priority="75" Command="{Binding BreakAllCommand}" IsVisible="{Binding IsDebuggeeRunning}" />
+        <controls:AdaptiveBarItem Classes="touch" Icon="{StaticResource Icon.StepOver}" IconSize="16" Label="Over" Gesture="F10"
+                                  Priority="90" Command="{Binding StepOverCommand}" />
+        <controls:AdaptiveBarItem Classes="touch" Icon="{StaticResource Icon.StepInto}" IconSize="16" Label="Into" Gesture="F11"
+                                  Priority="85" Command="{Binding StepIntoCommand}" />
+        <controls:AdaptiveBarItem Classes="touch" Icon="{StaticResource Icon.StepOut}" IconSize="16" Label="Out" Gesture="Shift+F11"
+                                  Priority="80" Command="{Binding StepOutCommand}" />
+        <controls:AdaptiveBarItem Classes="touch" Icon="{StaticResource Icon.NextStatement}" IconSize="16" Label="To Cursor" Gesture="Ctrl+F10"
+                                  Priority="60" Command="{Binding RunToCursorCommand}" IsVisible="{Binding IsPaused}" />
+        <controls:AdaptiveBarItem Classes="touch" Icon="{StaticResource Icon.Stop}" IsIconFilled="True" IconSize="13" Label="Stop" Gesture="Shift+F5"
+                                  IsPinned="True" Priority="95" IconBrush="{DynamicResource Brush.Error}" Command="{Binding StopDebuggingCommand}" />
+      </controls:AdaptiveBar>
+    </DockPanel>
   </Border>
 </UserControl>

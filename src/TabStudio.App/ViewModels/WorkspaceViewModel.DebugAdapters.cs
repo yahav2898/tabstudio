@@ -460,7 +460,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
     {
         if (FileTypes.For(file).IsCSharp)
         {
-            return false;
+            return IsWindowsBridgeSession(session);
         }
 
         return session.Adapter.Languages.Count == 0
@@ -1130,6 +1130,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         }
 
         AddSwarmRunTarget(targets);
+        AddWindowsBridgeRunTargets(targets);
 
         if (_languageServers is { } host)
         {

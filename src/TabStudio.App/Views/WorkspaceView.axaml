@@ -9,10 +9,20 @@
              xmlns:swarmViews="using:TabStudio.App.Views.Swarm"
              xmlns:extensionViews="using:TabStudio.App.Views.Extensions"
              xmlns:toolchainViews="using:TabStudio.App.Views.Toolchains"
+             xmlns:searchViews="using:TabStudio.App.Views.Search"
+             xmlns:appearance="using:TabStudio.App.Services.Appearance"
              xmlns:vm="using:TabStudio.App.ViewModels"
+             xmlns:bridgeViews="using:TabStudio.App.Views.WindowsBridge"
              xmlns:sys="using:System"
              x:Class="TabStudio.App.Views.WorkspaceView"
              x:DataType="vm:WorkspaceViewModel">
+
+  <!--
+    The IDE's shell (docs/design/README.md): the menu bar with the Search button, the adaptive toolbar, the documents
+    and the bottom dock, the side bar's tool windows with the activity bar on its outer edge, and the adaptive status
+    bar. On a narrow or portrait screen the side bar opens as a drawer over the editor, the menus fold into one button
+    on a phone, and the bars fold their least used items into More (WorkspaceView.Layout.cs). Ctrl+Q opens the search.
+  -->
 
   <UserControl.KeyBindings>
     <KeyBinding Gesture="F5" Command="{Binding StartDebuggingCommand}" />
@@ -45,16 +55,69 @@
     <KeyBinding Gesture="Ctrl+OemTilde" Command="{Binding ShowTerminalCommand}" />
   </UserControl.KeyBindings>
 
+  <UserControl.Styles>
+    <!-- The Search button's key cap, as the search shows key gestures. -->
+    <Style Selector="Border.keycap">
+      <Setter Property="MinWidth" Value="22" />
+      <Setter Property="Height" Value="20" />
+      <Setter Property="Padding" Value="6,0" />
+      <Setter Property="CornerRadius" Value="{StaticResource Radius.Small}" />
+      <Setter Property="Background" Value="{DynamicResource Brush.Control}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource Brush.BorderStrong}" />
+      <Setter Property="BorderThickness" Value="1,1,1,2" />
+      <Setter Property="TextElement.FontSize" Value="11" />
+      <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.TextSecondary}" />
+    </Style>
+    <!-- The Search button: 240 pixels, or below 1000 pixels its icon alone (WorkspaceView.Layout.cs sets the class). -->
+    <Style Selector="Button#SearchButton">
+      <Setter Property="Width" Value="240" />
+    </Style>
+    <Style Selector="Button#SearchButton.compact">
+      <Setter Property="Width" Value="40" />
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Button#SearchButton.compact TextBlock#SearchLabel">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <Style Selector="Button#SearchButton.compact Border.keycap">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <!-- The status bar's items: 24 pixels high, small text, white on teal. -->
+    <Style Selector="Button.status">
+      <Setter Property="Height" Value="24" />
+      <Setter Property="MinHeight" Value="24" />
+      <Setter Property="FontSize" Value="12" />
+    </Style>
+    <!-- The floating touch bar's buttons: 44-pixel touch targets. -->
+    <Style Selector="Button.touch">
+      <Setter Property="Height" Value="44" />
+      <Setter Property="MinHeight" Value="44" />
+      <Setter Property="MinWidth" Value="44" />
+      <Setter Property="CornerRadius" Value="{StaticResource Radius.Card}" />
+      <Setter Property="Padding" Value="12,0" />
+    </Style>
+  </UserControl.Styles>
+
   <Grid RowDefinitions="40,46,*,28">
 
-    <!-- Menu bar -->
+    <!-- Menu bar: the logo, the menus (one Menu button on a phone), the Search button and the solution's name. -->
     <Border Grid.Row="0" Background="{DynamicResource Brush.MenuBar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
-      <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto" Margin="8,0">
+      <Grid x:Name="MenuBar" ColumnDefinitions="Auto,Auto,Auto,Auto,*" Margin="8,0">
         <Border Width="26" Height="26" CornerRadius="7" Background="{DynamicResource Brush.Accent}" Margin="0,0,6,0">
           <controls:StrokeIcon Data="{StaticResource Icon.Logo}" Size="16" StrokeThickness="2.6" Foreground="{DynamicResource Brush.OnAccent}" HorizontalAlignment="Center" />
         </Border>
 
-        <Menu Grid.Column="1" VerticalAlignment="Center">
+        <!-- On a phone the menus fold into this button: WorkspaceView.Layout.cs moves them between it and the menu bar. -->
+        <Button x:Name="MenuButton" Grid.Column="1" Theme="{StaticResource ToolButton}" Width="40" Height="36" MinHeight="36" Padding="0"
+                IsVisible="False" ToolTip.Tip="Menu">
+          <controls:StrokeIcon Data="{StaticResource Icon.Menu}" Size="18" />
+          <Button.Flyout>
+            <MenuFlyout Placement="BottomEdgeAlignedLeft" />
+          </Button.Flyout>
+        </Button>
+
+        <Menu x:Name="MainMenu" Grid.Column="2" VerticalAlignment="Center">
           <MenuItem Header="_File">
             <MenuItem Header="_New">
               <MenuItem Header="C# _Notebook" Command="{Binding NewNotebookCommand}" />
@@ -65,6 +128,7 @@
             <Separator />
             <MenuItem Header="TabStudio _Link..." Command="{Binding OpenLinkCommand}" IsVisible="{Binding IsLinkAvailable}" />
             <MenuItem Header="_Join a Swarm..." Command="{Binding JoinSwarmCommand}" IsVisible="{Binding CanJoinSwarm}" />
+            <MenuItem Header="{Binding WindowsBridgeMenuHeader}" Command="{Binding OpenWindowsBridgeCommand}" IsVisible="{Binding HasWindowsBridge}" />
             <Separator />
             <MenuItem Header="_Close Document" InputGesture="Ctrl+F4" Command="{Binding CloseDocumentCommand}" />
             <MenuItem Header="Close Sol_ution" Command="{Binding CloseWorkspaceCommand}" />
@@ -105,6 +169,7 @@
             <MenuItem Header="_App Preview" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.AppPreview}"
                       IsEnabled="{Binding AppPreview.HasApp}" />
             <MenuItem Header="Device _Matrix" Command="{Binding ShowDeviceMatrixCommand}" />
+            <MenuItem Header="Windows _Bridge" Command="{Binding ShowWindowsBridgePaneCommand}" IsVisible="{Binding HasWindowsBridge}" />
             <MenuItem Header="_Error List" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" />
             <MenuItem Header="_Output" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Output}" />
             <MenuItem Header="Ter_minal (Ctrl+`)" Command="{Binding ShowTerminalCommand}" />
@@ -220,6 +285,19 @@
           <MenuItem Header="T_ools">
             <MenuItem Header="Toolchain _Store" Command="{Binding ShowToolchainStoreCommand}" />
             <MenuItem Header="Install Project _Packages" Command="{Binding InstallProjectPackagesCommand}" />
+            <Separator />
+            <!-- TabStudio's own colors in a theme of the IDE; Extensions > Color Theme also lists the extensions' themes. -->
+            <MenuItem Header="_Theme">
+              <MenuItem Header="_Dark" ToggleType="Radio" GroupName="IdeTheme"
+                        IsChecked="{Binding CurrentTheme, Mode=OneWay, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static appearance:IdeTheme.Dark}}"
+                        Command="{Binding UseTabStudioThemeCommand}" CommandParameter="{x:Static appearance:IdeTheme.Dark}" />
+              <MenuItem Header="_Light" ToggleType="Radio" GroupName="IdeTheme"
+                        IsChecked="{Binding CurrentTheme, Mode=OneWay, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static appearance:IdeTheme.Light}}"
+                        Command="{Binding UseTabStudioThemeCommand}" CommandParameter="{x:Static appearance:IdeTheme.Light}" />
+              <MenuItem Header="Follow the _System" ToggleType="Radio" GroupName="IdeTheme"
+                        IsChecked="{Binding CurrentTheme, Mode=OneWay, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static appearance:IdeTheme.System}}"
+                        Command="{Binding UseTabStudioThemeCommand}" CommandParameter="{x:Static appearance:IdeTheme.System}" />
+            </MenuItem>
           </MenuItem>
           <MenuItem Header="_Window">
             <MenuItem Header="_Next Document" InputGesture="Ctrl+Tab" Command="{Binding NextDocumentCommand}" />
@@ -227,96 +305,79 @@
           </MenuItem>
         </Menu>
 
-        <!-- Search: type part of a file name to open it. -->
-        <Panel Grid.Column="2" Width="240" Margin="10,0,0,0" VerticalAlignment="Center">
-          <TextBox x:Name="QuickOpenBox" Watermark="Search files (Ctrl+Q)" Text="{Binding QuickOpenText}"
-                   Background="{DynamicResource Brush.Panel}">
-            <TextBox.InnerLeftContent>
-              <controls:StrokeIcon Data="{StaticResource Icon.Search}" Size="14" Margin="9,0,0,0" Foreground="{DynamicResource Brush.TextMuted}" />
-            </TextBox.InnerLeftContent>
-          </TextBox>
-          <Popup IsOpen="{Binding IsQuickOpenOpen, Mode=TwoWay}" PlacementTarget="{Binding #QuickOpenBox}"
-                 Placement="BottomEdgeAlignedLeft" IsLightDismissEnabled="True" Width="420">
-            <Border Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
-                    CornerRadius="8" Padding="4" BoxShadow="0 8 24 0 #59000000">
-              <ListBox x:Name="QuickOpenList" ItemsSource="{Binding QuickOpenResults}" ItemContainerTheme="{StaticResource ListRow}" MaxHeight="420">
-                <ListBox.ItemTemplate>
-                  <DataTemplate DataType="vm:QuickOpenItem">
-                    <StackPanel Margin="10,6" Spacing="2" Background="Transparent">
-                      <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
-                      <TextBlock Text="{Binding Folder}" Classes="muted small" TextTrimming="CharacterEllipsis" />
-                    </StackPanel>
-                  </DataTemplate>
-                </ListBox.ItemTemplate>
-              </ListBox>
+        <!-- One search for everything: files, commands, settings, symbols, templates and recent solutions (Ctrl+Q). -->
+        <Button x:Name="SearchButton" Grid.Column="3" Theme="{StaticResource SecondaryButton}" Height="32" MinHeight="32"
+                Margin="10,0,0,0" Padding="10,0,6,0" HorizontalContentAlignment="Stretch" VerticalAlignment="Center"
+                Command="{Binding Search.OpenCommand}" ToolTip.Tip="Search (Ctrl+Q)">
+          <Grid ColumnDefinitions="Auto,*,Auto">
+            <controls:StrokeIcon Data="{StaticResource Icon.Search}" Size="14" />
+            <TextBlock x:Name="SearchLabel" Grid.Column="1" Text="Search" Margin="8,0,0,0" FontSize="12.5" FontWeight="Normal"
+                       Foreground="{DynamicResource Brush.TextMuted}" VerticalAlignment="Center" />
+            <Border Grid.Column="2" Classes="keycap" VerticalAlignment="Center">
+              <TextBlock Text="Ctrl+Q" HorizontalAlignment="Center" VerticalAlignment="Center" />
             </Border>
-          </Popup>
-        </Panel>
+          </Grid>
+        </Button>
 
-        <Border Grid.Column="4" Height="28" Padding="10,0" CornerRadius="8" Background="{DynamicResource Brush.Panel}" VerticalAlignment="Center">
-          <StackPanel Orientation="Horizontal" Spacing="6">
-            <controls:StrokeIcon Data="{StaticResource Icon.Solution}" Size="14" Foreground="{DynamicResource Brush.TextSecondary}" />
-            <TextBlock Text="{Binding Title}" FontSize="12.5" FontWeight="Medium" Foreground="{DynamicResource Brush.TextSecondary}" VerticalAlignment="Center" />
-          </StackPanel>
+        <!-- The solution's name, which trims when the menu bar is short of room. -->
+        <Border x:Name="SolutionChip" Grid.Column="4" Height="28" Padding="10,0" Margin="10,0,0,0" CornerRadius="8" Background="{DynamicResource Brush.Panel}"
+                HorizontalAlignment="Right" VerticalAlignment="Center" ToolTip.Tip="{Binding Title}">
+          <Grid ColumnDefinitions="Auto,*">
+            <controls:StrokeIcon Data="{StaticResource Icon.Solution}" Size="14" Margin="0,0,6,0" Foreground="{DynamicResource Brush.TextSecondary}" />
+            <TextBlock Grid.Column="1" Text="{Binding Title}" FontSize="12.5" FontWeight="Medium" Foreground="{DynamicResource Brush.TextSecondary}"
+                       VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+          </Grid>
         </Border>
       </Grid>
     </Border>
 
-    <!-- Standard toolbar -->
+    <!--
+      Standard toolbar: an adaptive bar that never scrolls or clips. When it runs out of room the least used commands
+      fold to their icons and then into More, by priority (docs/design/stage-2.md, 2.4); Run and Stop always stay.
+    -->
     <Border Grid.Row="1" Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
       <Grid Margin="8,0" ColumnDefinitions="*,Auto">
-        <!-- On a narrow screen the toolbar scrolls sideways instead of overlapping. -->
-        <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
-        <StackPanel Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
-          <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Navigate Backward (Alt+Left)" Command="{Binding NavigateBackCommand}">
-            <controls:StrokeIcon Data="{StaticResource Icon.Back}" />
-          </Button>
-          <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Navigate Forward (Alt+Right)" Command="{Binding NavigateForwardCommand}">
-            <controls:StrokeIcon Data="{StaticResource Icon.Forward}" />
-          </Button>
-          <Border Classes="toolbarSeparator" />
-          <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Save (Ctrl+S)" Command="{Binding SaveCommand}">
-            <controls:StrokeIcon Data="{StaticResource Icon.Save}" />
-          </Button>
-          <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Save All (Ctrl+Shift+S)" Command="{Binding SaveAllCommand}">
-            <controls:StrokeIcon Data="{StaticResource Icon.SaveAll}" />
-          </Button>
-          <Border Classes="toolbarSeparator" />
-          <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Undo (Ctrl+Z)" Command="{Binding UndoCommand}"
-                  IsEnabled="{Binding ActiveDocument.CanUndo, FallbackValue=False}">
-            <controls:StrokeIcon Data="{StaticResource Icon.Undo}" />
-          </Button>
-          <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Redo (Ctrl+Y)" Command="{Binding RedoCommand}"
-                  IsEnabled="{Binding ActiveDocument.CanRedo, FallbackValue=False}">
-            <controls:StrokeIcon Data="{StaticResource Icon.Redo}" />
-          </Button>
-          <Border Classes="toolbarSeparator" />
+        <controls:AdaptiveBar x:Name="Toolbar" Spacing="2" VerticalAlignment="Center">
+          <controls:AdaptiveBarItem Icon="{StaticResource Icon.Back}" Label="Navigate Backward" Gesture="Alt+Left" ShowsLabel="False" IconSize="16"
+                                    Priority="30" Command="{Binding NavigateBackCommand}" />
+          <controls:AdaptiveBarItem Icon="{StaticResource Icon.Forward}" Label="Navigate Forward" Gesture="Alt+Right" ShowsLabel="False" IconSize="16"
+                                    Priority="20" Command="{Binding NavigateForwardCommand}" />
+          <controls:AdaptiveBarSeparator />
+          <controls:AdaptiveBarItem Icon="{StaticResource Icon.Save}" Label="Save" Gesture="Ctrl+S" ShowsLabel="False" IconSize="16"
+                                    Priority="60" Command="{Binding SaveCommand}" />
+          <controls:AdaptiveBarItem Icon="{StaticResource Icon.SaveAll}" Label="Save All" Gesture="Ctrl+Shift+S" ShowsLabel="False" IconSize="16"
+                                    Priority="25" Command="{Binding SaveAllCommand}" />
+          <controls:AdaptiveBarSeparator />
+          <controls:AdaptiveBarItem Icon="{StaticResource Icon.Undo}" Label="Undo" Gesture="Ctrl+Z" ShowsLabel="False" IconSize="16"
+                                    Priority="50" Command="{Binding UndoCommand}" IsEnabled="{Binding ActiveDocument.CanUndo, FallbackValue=False}" />
+          <controls:AdaptiveBarItem Icon="{StaticResource Icon.Redo}" Label="Redo" Gesture="Ctrl+Y" ShowsLabel="False" IconSize="16"
+                                    Priority="40" Command="{Binding RedoCommand}" IsEnabled="{Binding ActiveDocument.CanRedo, FallbackValue=False}" />
+          <controls:AdaptiveBarSeparator />
 
-          <!-- Configuration -->
-          <Button Theme="{StaticResource SecondaryButton}" Padding="10,0" ToolTip.Tip="Solution Configuration">
-            <StackPanel Orientation="Horizontal" Spacing="6">
-              <TextBlock Text="{Binding Configuration}" VerticalAlignment="Center" />
-              <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="14" />
-            </StackPanel>
-            <Button.Flyout>
+          <!-- Configuration: Debug or Release; in More it becomes a submenu. -->
+          <controls:AdaptiveBarItem x:Name="ConfigurationItem" Theme="{StaticResource SecondaryButton}" Icon="{StaticResource Icon.Build}" IconSize="16"
+                                    Label="{Binding Configuration}" Priority="48" Margin="2,0" Padding="10,0"
+                                    controls:AdaptiveBar.MenuHeader="{Binding Configuration, StringFormat='Solution Configuration: {0}'}">
+            <controls:AdaptiveBarItem.Flyout>
               <MenuFlyout Placement="BottomEdgeAlignedLeft">
                 <MenuItem Header="Debug" Command="{Binding SetConfigurationCommand}" CommandParameter="Debug" />
                 <MenuItem Header="Release" Command="{Binding SetConfigurationCommand}" CommandParameter="Release" />
               </MenuFlyout>
-            </Button.Flyout>
-          </Button>
+            </controls:AdaptiveBarItem.Flyout>
+          </controls:AdaptiveBarItem>
 
-          <!-- Run: the startup project, with a menu to choose another one. -->
-          <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
-            <Button Theme="{StaticResource AccentButton}" Height="36" MinHeight="36" CornerRadius="8,0,0,8" Padding="12,0"
+          <!-- Run: the startup project, with a menu to choose another one. Both halves are enabled together. -->
+          <StackPanel x:Name="RunSplit" Orientation="Horizontal" Margin="8,0,4,0" controls:AdaptiveBar.IsPinned="True">
+            <Button x:Name="RunButton" Theme="{StaticResource AccentButton}" Height="36" MinHeight="36" CornerRadius="8,0,0,8" Padding="12,0"
                     ToolTip.Tip="{Binding StartDebuggingToolTip}" Command="{Binding StartDebuggingCommand}">
               <StackPanel Orientation="Horizontal" Spacing="8">
                 <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="14" />
-                <TextBlock Text="{Binding StartDebuggingLabel}" VerticalAlignment="Center" />
+                <TextBlock Text="{Binding StartDebuggingLabel}" VerticalAlignment="Center" MaxWidth="200" TextTrimming="CharacterEllipsis" />
               </StackPanel>
             </Button>
-            <Button Theme="{StaticResource AccentButton}" Height="36" MinHeight="36" Width="30" MinWidth="30" Padding="0"
-                    CornerRadius="0,8,8,0" BorderBrush="#59FFFFFF" BorderThickness="1,0,0,0" ToolTip.Tip="Choose Startup Project or Launch Configuration">
+            <Button x:Name="RunTargetButton" Theme="{StaticResource AccentButton}" Height="36" MinHeight="36" Width="30" MinWidth="30" Padding="0"
+                    CornerRadius="0,8,8,0" BorderBrush="{DynamicResource Brush.OnAccent.Divider}" BorderThickness="1,0,0,0"
+                    IsEnabled="{Binding #RunButton.IsEffectivelyEnabled}" ToolTip.Tip="Choose Startup Project or Launch Configuration">
               <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="14" />
               <Button.Flyout>
                 <MenuFlyout Placement="BottomEdgeAlignedLeft" ItemsSource="{Binding RunTargets}">
@@ -331,36 +392,45 @@
             </Button>
           </StackPanel>
 
-          <Button Theme="{StaticResource ToolButton}" Margin="4,0,0,0" ToolTip.Tip="Stop (Shift+F5)" Command="{Binding StopCommand}"
-                  IsVisible="{Binding IsRunning}">
-            <controls:StrokeIcon Data="{StaticResource Icon.Stop}" IsFilled="True" Size="14" Foreground="{DynamicResource Brush.Error}" />
-          </Button>
-          <views:DebugToolbarView />
+          <controls:AdaptiveBarItem Icon="{StaticResource Icon.Stop}" IsIconFilled="True" IconSize="14" Label="Stop" Gesture="Shift+F5" ShowsLabel="False"
+                                    IsPinned="True" IconBrush="{DynamicResource Brush.Error}" Command="{Binding StopCommand}" IsVisible="{Binding IsRunning}" />
 
-          <Border Height="34" Padding="10,0" Margin="8,0,0,0" CornerRadius="7" Background="{DynamicResource Brush.Control}"
-                  BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1">
-            <TextBlock VerticalAlignment="Center">
-              <Run Text="Run on " Foreground="{DynamicResource Brush.TextMuted}" />
-              <Run Text="{Binding RunHostText}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" />
-            </TextBlock>
-          </Border>
+          <!-- Debugging, as Visual Studio's Debug toolbar: Start Without Debugging, or while debugging Break All, Stop, Restart and the steps. -->
+          <controls:AdaptiveBarItem Icon="{StaticResource Icon.PlayOutline}" IconSize="15" Label="Start Without Debugging" Gesture="Ctrl+F5" ShowsLabel="False"
+                                    Priority="45" IconBrush="{DynamicResource Brush.Success}" Command="{Binding RunCommand}" IsVisible="{Binding !IsDebugging}" />
+          <controls:AdaptiveBarItem Icon="{StaticResource Icon.Pause}" IconSize="16" Label="Break All" Gesture="Ctrl+Alt+Break" ShowsLabel="False"
+                                    Priority="70" Command="{Binding BreakAllCommand}" IsVisible="{Binding IsDebugging}" />
+          <controls:AdaptiveBarItem Icon="{StaticResource Icon.Stop}" IsIconFilled="True" IconSize="14" Label="Stop Debugging" Gesture="Shift+F5" ShowsLabel="False"
+                                    IsPinned="True" IconBrush="{DynamicResource Brush.Error}" Command="{Binding StopDebuggingCommand}" IsVisible="{Binding IsDebugging}" />
+          <controls:AdaptiveBarItem Icon="{StaticResource Icon.Restart}" IconSize="16" Label="Restart" Gesture="Ctrl+Shift+F5" ShowsLabel="False"
+                                    Priority="65" Command="{Binding RestartCommand}" IsVisible="{Binding IsDebugging}" />
+          <controls:AdaptiveBarSeparator IsVisible="{Binding IsDebugging}" />
+          <controls:AdaptiveBarItem Icon="{StaticResource Icon.NextStatement}" IsIconFilled="True" IconSize="16" Label="Show Next Statement" Gesture="Alt+Num *"
+                                    ShowsLabel="False" Priority="62" IconBrush="{DynamicResource Brush.CurrentStatement}"
+                                    Command="{Binding ShowNextStatementCommand}" IsVisible="{Binding IsDebugging}" />
+          <controls:AdaptiveBarItem Icon="{StaticResource Icon.StepInto}" IconSize="16" Label="Step Into" Gesture="F11"
+                                    Priority="85" Command="{Binding StepIntoCommand}" IsVisible="{Binding IsDebugging}" />
+          <controls:AdaptiveBarItem Icon="{StaticResource Icon.StepOver}" IconSize="16" Label="Step Over" Gesture="F10"
+                                    Priority="90" Command="{Binding StepOverCommand}" IsVisible="{Binding IsDebugging}" />
+          <controls:AdaptiveBarItem Icon="{StaticResource Icon.StepOut}" IconSize="16" Label="Step Out" Gesture="Shift+F11"
+                                    Priority="80" Command="{Binding StepOutCommand}" IsVisible="{Binding IsDebugging}" />
+          <controls:AdaptiveBarSeparator />
 
-          <Border Classes="toolbarSeparator" />
-          <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Toggle Line Comment (Ctrl+/)" Command="{Binding ToggleCommentCommand}">
-            <controls:StrokeIcon Data="{StaticResource Icon.Comment}" />
-          </Button>
-          <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Format Document (Shift+Alt+F)" Command="{Binding FormatDocumentCommand}">
-            <controls:StrokeIcon Data="{StaticResource Icon.Format}" />
-          </Button>
-          <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Find (Ctrl+F)" Command="{Binding FindCommand}">
-            <controls:StrokeIcon Data="{StaticResource Icon.Search}" />
-          </Button>
-        </StackPanel>
-        </ScrollViewer>
+          <!-- Where the startup project runs; a tap chooses another target, as the Run button's menu does. -->
+          <controls:AdaptiveBarItem x:Name="RunHostItem" Icon="{StaticResource Icon.Computer}" IconSize="16"
+                                    Label="{Binding RunHostText, StringFormat='Run on {0}'}" Priority="35" />
+          <controls:AdaptiveBarSeparator />
+          <controls:AdaptiveBarItem Icon="{StaticResource Icon.Comment}" IconSize="16" Label="Toggle Line Comment" Gesture="Ctrl+/" ShowsLabel="False"
+                                    Priority="15" Command="{Binding ToggleCommentCommand}" />
+          <controls:AdaptiveBarItem Icon="{StaticResource Icon.Format}" IconSize="16" Label="Format Document" Gesture="Shift+Alt+F" ShowsLabel="False"
+                                    Priority="10" Command="{Binding FormatDocumentCommand}" />
+          <controls:AdaptiveBarItem Icon="{StaticResource Icon.Search}" IconSize="16" Label="Find" Gesture="Ctrl+F" ShowsLabel="False"
+                                    Priority="55" Command="{Binding FindCommand}" />
+        </controls:AdaptiveBar>
 
-        <!-- Problems at a glance -->
-        <Button Grid.Column="1" Margin="8,0,0,0" Theme="{StaticResource ToolButton}" VerticalAlignment="Center"
-                Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}">
+        <!-- Problems at a glance, pinned beside the toolbar. -->
+        <Button x:Name="ProblemsButton" Grid.Column="1" Margin="8,0,0,0" Theme="{StaticResource ToolButton}" VerticalAlignment="Center"
+                Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" ToolTip.Tip="Error List">
           <StackPanel Orientation="Horizontal" Spacing="12">
             <StackPanel Orientation="Horizontal" Spacing="5">
               <controls:StrokeIcon Data="{StaticResource Icon.Error}" Size="15" Foreground="{DynamicResource Brush.Error}" />
@@ -375,8 +445,11 @@
       </Grid>
     </Border>
 
-    <!-- Main area: documents and bottom dock on the left, Solution Explorer and Properties on the right. -->
-    <Grid Grid.Row="2" x:Name="MainArea" ColumnDefinitions="*,Auto,330">
+    <!--
+      Main area: documents and the bottom dock, the side bar's tool windows, and the activity bar on the outer edge. On
+      a narrow or portrait screen the side bar is a drawer over the editor (WorkspaceView.Layout.cs).
+    -->
+    <Grid Grid.Row="2" x:Name="MainArea" ColumnDefinitions="*,Auto,330,48">
       <Grid x:Name="EditorArea" RowDefinitions="38,30,*,Auto,200">
 
         <!-- Document tabs -->
@@ -468,16 +541,20 @@
         </Border>
 
         <!-- Editors -->
-        <Panel Grid.Row="2">
+        <Panel x:Name="EditorPanel" Grid.Row="2">
           <controls:DocumentHost x:Name="Editors" Documents="{Binding Documents}" ActiveDocument="{Binding ActiveDocument}" />
 
-          <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10" IsVisible="{Binding !HasDocuments}">
-            <controls:StrokeIcon Data="{StaticResource Icon.File}" Size="40" Foreground="{DynamicResource Brush.TextDisabled}" HorizontalAlignment="Center" />
-            <TextBlock Classes="muted" Text="Open a file from the Solution Explorer" HorizontalAlignment="Center" />
-          </StackPanel>
+          <controls:EmptyState IsVisible="{Binding !HasDocuments}" Icon="{StaticResource Icon.File}" Title="No document is open"
+                               Message="Open a file from the Solution Explorer, or find one with Search (Ctrl+Q)."
+                               ActionText="Search" ActionCommand="{Binding Search.OpenCommand}" />
 
-          <!-- The floating touch buttons, editing or debugging; folded into one small button they cover no code. -->
-          <Panel HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="16,12">
+          <!--
+            The floating touch buttons, editing or debugging (WorkspaceView.TouchBar.cs): they show after a touch and fade
+            away while a hardware keyboard types, sit above the bottom dock, and move to the top of the editor when the
+            caret's line or a popup such as the completion list would be under them. Folded into one small button they
+            cover no code.
+          -->
+          <Panel x:Name="TouchBarHost" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="16,12">
             <Panel.IsVisible>
               <MultiBinding Converter="{x:Static conv:DesktopModeConverters.TouchBarsVisible}">
                 <Binding Path="ShowsEditorTouchBar" />
@@ -485,64 +562,50 @@
                 <Binding Path="$self.(input:InputModality.PrefersKeyboard)" />
               </MultiBinding>
             </Panel.IsVisible>
-            <Button x:Name="UnfoldTouchBarButton" Theme="{StaticResource ToolButton}" Width="44" Height="44" CornerRadius="14" Padding="0"
-                    Background="{DynamicResource Brush.Hover}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
-                    Command="{Binding ToggleTouchBarCommand}" IsVisible="{Binding IsTouchBarCollapsed}" ToolTip.Tip="Show the touch buttons">
-              <controls:StrokeIcon Data="{StaticResource Icon.ChevronLeft}" Size="18" />
-            </Button>
-            <Panel IsVisible="{Binding !IsTouchBarCollapsed}">
-              <!-- Touch actions: what a keyboard user reaches with F2, Ctrl+/, Shift+Alt+F, Alt+F12, Ctrl+F10 and F5. -->
-              <Border Padding="4" CornerRadius="14"
+            <Panel x:Name="TouchBarFader" IsVisible="{Binding IsTouchInput}">
+              <Panel.Transitions>
+                <Transitions>
+                  <DoubleTransition Property="Opacity" Duration="0:0:0.15" />
+                </Transitions>
+              </Panel.Transitions>
+              <Button x:Name="UnfoldTouchBarButton" Theme="{StaticResource ToolButton}" Width="44" Height="44" CornerRadius="14" Padding="0"
                       Background="{DynamicResource Brush.Hover}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
-                      BoxShadow="0 8 24 0 #59000000" IsVisible="{Binding ShowsEditorTouchBar}">
-                <StackPanel Orientation="Horizontal" Spacing="2">
-                  <Button x:Name="FoldTouchBarButton" Theme="{StaticResource ToolButton}" Width="32" Height="44" CornerRadius="10" Padding="0"
-                          Command="{Binding ToggleTouchBarCommand}" ToolTip.Tip="Fold the touch buttons away">
-                    <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="16" Foreground="{DynamicResource Brush.TextSecondary}" />
-                  </Button>
-                  <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding RenameSymbolCommand}" ToolTip.Tip="Rename (F2)">
-                    <StackPanel Orientation="Horizontal" Spacing="7">
-                      <controls:StrokeIcon Data="{StaticResource Icon.Rename}" Size="16" />
-                      <TextBlock Text="Rename" VerticalAlignment="Center" FontSize="12.5" />
-                    </StackPanel>
-                  </Button>
-                  <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding ToggleCommentCommand}" ToolTip.Tip="Toggle Line Comment (Ctrl+/)">
-                    <StackPanel Orientation="Horizontal" Spacing="7">
-                      <controls:StrokeIcon Data="{StaticResource Icon.Comment}" Size="16" />
-                      <TextBlock Text="Comment" VerticalAlignment="Center" FontSize="12.5" />
-                    </StackPanel>
-                  </Button>
-                  <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding FormatDocumentCommand}" ToolTip.Tip="Format Document (Shift+Alt+F)">
-                    <StackPanel Orientation="Horizontal" Spacing="7">
-                      <controls:StrokeIcon Data="{StaticResource Icon.Format}" Size="16" />
-                      <TextBlock Text="Format" VerticalAlignment="Center" FontSize="12.5" />
-                    </StackPanel>
-                  </Button>
-                  <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding PeekDefinitionCommand}" ToolTip.Tip="Peek Definition (Alt+F12)">
-                    <StackPanel Orientation="Horizontal" Spacing="7">
-                      <controls:StrokeIcon Data="{StaticResource Icon.Search}" Size="16" />
-                      <TextBlock Text="Peek" VerticalAlignment="Center" FontSize="12.5" />
-                    </StackPanel>
-                  </Button>
-                  <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding RunToCursorCommand}" ToolTip.Tip="Run to Cursor (Ctrl+F10)">
-                    <StackPanel Orientation="Horizontal" Spacing="7">
-                      <controls:StrokeIcon Data="{StaticResource Icon.Forward}" Size="16" />
-                      <TextBlock Text="To Cursor" VerticalAlignment="Center" FontSize="12.5" />
-                    </StackPanel>
-                  </Button>
-                  <Button Theme="{StaticResource AccentButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding StartDebuggingCommand}"
-                          ToolTip.Tip="Start Debugging (F5)">
-                    <StackPanel Orientation="Horizontal" Spacing="7">
-                      <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="14" />
-                      <TextBlock Text="Run" VerticalAlignment="Center" FontSize="12.5" />
-                    </StackPanel>
-                  </Button>
-                </StackPanel>
-              </Border>
-              <views:DebugTouchBarView IsVisible="{Binding IsDebugging}" />
+                      Command="{Binding ToggleTouchBarCommand}" IsVisible="{Binding IsTouchBarCollapsed}" ToolTip.Tip="Show the touch buttons">
+                <controls:StrokeIcon Data="{StaticResource Icon.ChevronLeft}" Size="18" />
+              </Button>
+              <Panel IsVisible="{Binding !IsTouchBarCollapsed}">
+                <!-- Touch actions: what a keyboard user reaches with F2, Alt+F12, Ctrl+/, Ctrl+F10, Shift+Alt+F and F5. -->
+                <Border x:Name="EditTouchBar" Padding="4" CornerRadius="{StaticResource Radius.Dialog}"
+                        Background="{DynamicResource Brush.Hover}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
+                        BoxShadow="{DynamicResource Shadow.Popup}" IsVisible="{Binding ShowsEditorTouchBar}">
+                  <DockPanel>
+                    <Button x:Name="FoldTouchBarButton" DockPanel.Dock="Left" Theme="{StaticResource ToolButton}" Width="32" Height="44" MinWidth="32"
+                            CornerRadius="{StaticResource Radius.Card}" Padding="0" Margin="0,0,2,0"
+                            Command="{Binding ToggleTouchBarCommand}" ToolTip.Tip="Fold the touch buttons away">
+                      <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="16" Foreground="{DynamicResource Brush.TextSecondary}" />
+                    </Button>
+                    <controls:AdaptiveBar x:Name="TouchBar" Spacing="2" MorePlacement="TopEdgeAlignedRight">
+                      <controls:AdaptiveBarItem Classes="touch" Icon="{StaticResource Icon.Rename}" IconSize="16" Label="Rename" Gesture="F2"
+                                                Priority="30" Command="{Binding RenameSymbolCommand}" />
+                      <controls:AdaptiveBarItem Classes="touch" Icon="{StaticResource Icon.Search}" IconSize="16" Label="Peek" Gesture="Alt+F12"
+                                                Priority="25" Command="{Binding PeekDefinitionCommand}" />
+                      <controls:AdaptiveBarItem Classes="touch" Icon="{StaticResource Icon.Comment}" IconSize="16" Label="Comment" Gesture="Ctrl+/"
+                                                Priority="20" Command="{Binding ToggleCommentCommand}" />
+                      <controls:AdaptiveBarItem Classes="touch" Icon="{StaticResource Icon.Forward}" IconSize="16" Label="To Cursor" Gesture="Ctrl+F10"
+                                                Priority="15" Command="{Binding RunToCursorCommand}" />
+                      <controls:AdaptiveBarItem Classes="touch" Icon="{StaticResource Icon.Format}" IconSize="16" Label="Format" Gesture="Shift+Alt+F"
+                                                Priority="10" Command="{Binding FormatDocumentCommand}" />
+                      <controls:AdaptiveBarItem Classes="touch" Theme="{StaticResource AccentButton}" Icon="{StaticResource Icon.Play}" IsIconFilled="True"
+                                                IconSize="14" Label="Run" Gesture="F5" IsPinned="True" Priority="100" FontWeight="SemiBold"
+                                                Command="{Binding StartDebuggingCommand}" />
+                    </controls:AdaptiveBar>
+                  </DockPanel>
+                </Border>
+                <views:DebugTouchBarView x:Name="DebugTouchBar" IsVisible="{Binding IsDebugging}" />
+              </Panel>
             </Panel>
           </Panel>
-          <actionViews:RunNoticeView DataContext="{Binding Actions}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="16,12" />
+          <actionViews:RunNoticeView x:Name="RunNotice" DataContext="{Binding Actions}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="16,12" />
         </Panel>
 
         <GridSplitter Grid.Row="3" x:Name="BottomSplitter" Height="6" ResizeDirection="Rows" Background="Transparent">
@@ -635,217 +698,183 @@
         </GridSplitter.Template>
       </GridSplitter>
 
-      <!-- Solution Explorer and Properties, Git Changes or the Test Explorer, chosen with the tool window tabs at the bottom as in Visual Studio -->
-      <Grid Grid.Column="2" x:Name="SideBar" RowDefinitions="*,Auto,214,Auto" Background="{DynamicResource Brush.Panel}">
-        <views:SolutionExplorerView DataContext="{Binding Explorer}" />
-        <GridSplitter Grid.Row="1" Height="6" ResizeDirection="Rows" Background="Transparent">
-          <GridSplitter.Template>
-            <ControlTemplate>
-              <Border Background="Transparent">
-                <Border Height="1" VerticalAlignment="Center" Background="{DynamicResource Brush.Divider}" />
-              </Border>
-            </ControlTemplate>
-          </GridSplitter.Template>
-        </GridSplitter>
-        <views:PropertiesView Grid.Row="2" DataContext="{Binding Properties}" />
-        <views:GitChangesView Grid.Row="0" Grid.RowSpan="3" DataContext="{Binding GitChanges}"
-                              IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsGitChangesSelected}" />
+      <!-- On a narrow screen, a tap beside the drawer closes it. -->
+      <Border x:Name="DrawerDismiss" Grid.Column="0" Grid.ColumnSpan="3" Background="Transparent" IsVisible="False" ZIndex="9" />
 
-        <!-- The repository's pull requests, beside Git Changes. -->
-        <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsPullRequestsSelected}">
-          <prv:PullRequestListView x:Name="PullRequestList" DataContext="{Binding PullRequests}" />
-        </Panel>
-
-        <!-- The Test Explorer covers the Solution Explorer and Properties while its tab is selected. -->
-        <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsTestExplorerSelected}">
-          <views:TestExplorerView x:Name="TestExplorer" DataContext="{Binding Tests}" />
-        </Panel>
-
-        <!-- The agent, like the Test Explorer, takes the whole side bar. -->
-        <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsAgentSelected}">
-          <views:AgentPanelView DataContext="{Binding Agent}" />
-        </Panel>
-
-        <!-- The app preview of the running Avalonia app. -->
-        <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsAppPreviewSelected}">
-          <views:AppPreviewView DataContext="{Binding AppPreview}" />
-        </Panel>
-
-        <!-- The web preview of the running web app. -->
-        <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsWebPreviewSelected}">
-          <views:WebPreviewView DataContext="{Binding WebPreview}" />
-        </Panel>
-
-        <!-- The Swarm window: the phones and tablets that run the app, its toggles and the UI test recorder. -->
-        <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsSwarmSelected}">
-          <swarmViews:SwarmView DataContext="{Binding Swarm}" />
-        </Panel>
-
-        <!-- GitHub Actions: the commit's checks, runs, workflows and watched repositories. -->
-        <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsActionsSelected}">
-          <actionViews:ActionsView DataContext="{Binding Actions}" />
-        </Panel>
-
-        <!-- Tool window tabs, at the bottom of the dock as in Visual Studio; they wrap when the side bar is narrow. -->
-        <Border Grid.Row="3" MinHeight="34" Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0">
-          <WrapPanel Orientation="Horizontal" Margin="4,0">
-            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsSolutionExplorerSelected}"
-                    Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.SolutionExplorer}" Content="Solution Explorer" />
-            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsGitChangesSelected}" Content="Git Changes"
-                    Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.GitChanges}" />
-            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsActionsSelected}"
-                    Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.Actions}">
-              <StackPanel Orientation="Horizontal" Spacing="6">
-                <TextBlock Text="Actions" VerticalAlignment="Center" />
-                <Ellipse Width="7" Height="7" VerticalAlignment="Center" IsVisible="{Binding Actions.IsCiVisible}"
-                         Fill="{Binding Actions.CiVisual, Converter={x:Static conv:ActionsConverters.StateBrush}}" />
-              </StackPanel>
-            </Button>
-            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsPullRequestsSelected}" Content="Pull Requests"
-                    Command="{Binding ShowPullRequestsCommand}" />
-            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsTestExplorerSelected}"
-                    Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}">
-              <StackPanel Orientation="Horizontal" Spacing="6">
-                <TextBlock Text="Test Explorer" VerticalAlignment="Center" />
-                <Border Classes="pill" Background="{DynamicResource Brush.Error}" IsVisible="{Binding Tests.HasFailures}">
-                  <TextBlock Text="{Binding Tests.FailedCount}" Foreground="{DynamicResource Brush.Window}" VerticalAlignment="Center" />
+      <!--
+        The side bar: the tool window the activity bar chose. Docked beside the editor on a wide screen, a drawer over it
+        on a narrow or portrait one.
+      -->
+      <Border x:Name="SideBarFrame" Grid.Column="2" Background="{DynamicResource Brush.Panel}" BorderBrush="{DynamicResource Brush.Border}" ZIndex="10">
+        <Grid x:Name="SideBar" RowDefinitions="*,Auto,Auto">
+          <views:SolutionExplorerView DataContext="{Binding Explorer}" />
+          <GridSplitter Grid.Row="1" x:Name="PropertiesSplitter" Height="6" ResizeDirection="Rows" Background="Transparent" IsVisible="False">
+            <GridSplitter.Template>
+              <ControlTemplate>
+                <Border Background="Transparent">
+                  <Border Height="1" VerticalAlignment="Center" Background="{DynamicResource Brush.Divider}" />
                 </Border>
-              </StackPanel>
-            </Button>
-            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsAppPreviewSelected}" IsVisible="{Binding AppPreview.HasApp}"
-                    Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.AppPreview}">
-              <StackPanel Orientation="Horizontal" Spacing="6">
-                <controls:StrokeIcon Data="{StaticResource Icon.Window}" Size="12" />
-                <TextBlock Text="App" VerticalAlignment="Center" />
-              </StackPanel>
-            </Button>
-            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsWebPreviewSelected}" IsVisible="{Binding WebPreview.HasApp}"
-                    Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.WebPreview}">
-              <StackPanel Orientation="Horizontal" Spacing="6">
-                <controls:StrokeIcon Data="{StaticResource Icon.Globe}" Size="12" />
-                <TextBlock Text="Preview" VerticalAlignment="Center" />
-              </StackPanel>
-            </Button>
-            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsSwarmSelected}" IsVisible="{Binding ShowsSwarmTab}"
-                    Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.Swarm}">
-              <StackPanel Orientation="Horizontal" Spacing="6">
-                <controls:StrokeIcon Data="{StaticResource Icon.Swarm}" Size="12" />
-                <TextBlock Text="Swarm" VerticalAlignment="Center" />
-                <Border Classes="pill success" IsVisible="{Binding Swarm.HasDevices, FallbackValue=False}">
-                  <TextBlock Text="{Binding Swarm.Devices.Count, FallbackValue=0}" VerticalAlignment="Center" />
-                </Border>
-              </StackPanel>
-            </Button>
-            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsAgentSelected}"
-                    Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.Agent}">
-              <StackPanel Orientation="Horizontal" Spacing="6">
-                <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="12" />
-                <TextBlock Text="Claude" VerticalAlignment="Center" />
-                <Border Classes="pill" Background="{DynamicResource Brush.Accent}" IsVisible="{Binding Agent.HasChanges}">
-                  <TextBlock Text="{Binding Agent.Changes.Count}" Foreground="{DynamicResource Brush.OnAccent}" VerticalAlignment="Center" />
-                </Border>
-              </StackPanel>
-            </Button>
-          </WrapPanel>
-        </Border>
-      </Grid>
+              </ControlTemplate>
+            </GridSplitter.Template>
+          </GridSplitter>
+          <!-- Properties, folded into its header until a tap opens it; hidden while a designer shows its own. -->
+          <views:PropertiesView Grid.Row="2" x:Name="PropertiesPanel" DataContext="{Binding Properties}"
+                                IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).ShowsSideBarProperties}" />
+          <views:GitChangesView Grid.Row="0" Grid.RowSpan="3" DataContext="{Binding GitChanges}"
+                                IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsGitChangesSelected}" />
+
+          <!-- The repository's pull requests, beside Git Changes. -->
+          <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsPullRequestsSelected}">
+            <prv:PullRequestListView x:Name="PullRequestList" DataContext="{Binding PullRequests}" />
+          </Panel>
+
+          <!-- The Test Explorer covers the Solution Explorer and Properties while its tab is selected. -->
+          <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsTestExplorerSelected}">
+            <views:TestExplorerView x:Name="TestExplorer" DataContext="{Binding Tests}" />
+          </Panel>
+
+          <!-- The agent, like the Test Explorer, takes the whole side bar. -->
+          <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsAgentSelected}">
+            <views:AgentPanelView DataContext="{Binding Agent}" />
+          </Panel>
+
+          <!-- The app preview of the running Avalonia app. -->
+          <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsAppPreviewSelected}">
+            <views:AppPreviewView DataContext="{Binding AppPreview}" />
+          </Panel>
+
+          <!-- The Windows Bridge: programs running on the paired Windows PC, streamed live. -->
+          <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsWindowsBridgeSelected}">
+            <bridgeViews:BridgePaneView DataContext="{Binding WindowsBridgePane}" />
+          </Panel>
+
+          <!-- The web preview of the running web app. -->
+          <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsWebPreviewSelected}">
+            <views:WebPreviewView DataContext="{Binding WebPreview}" />
+          </Panel>
+
+          <!-- The Swarm window: the phones and tablets that run the app, its toggles and the UI test recorder. -->
+          <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsSwarmSelected}">
+            <swarmViews:SwarmView DataContext="{Binding Swarm}" />
+          </Panel>
+
+          <!-- GitHub Actions: the commit's checks, runs, workflows and watched repositories. -->
+          <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsActionsSelected}">
+            <actionViews:ActionsView DataContext="{Binding Actions}" />
+          </Panel>
+
+        </Grid>
+      </Border>
+
+      <!-- The activity bar: one icon per tool window, on the side bar's outer edge; a tap on the shown one folds the side bar. -->
+      <Border x:Name="ActivityEdge" Grid.Column="3" Background="{DynamicResource Brush.ActivityBar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1,0,0,0">
+        <controls:ActivityBar x:Name="ActivityBarView" Bar="{Binding Activity}" />
+      </Border>
     </Grid>
 
-    <!-- Status bar -->
+    <!--
+      Status bar: one adaptive bar, the IDE's state on the left and the editor's on the right, both folding into one More
+      menu at the right end (docs/design/stage-2.md, 2.5). It stays quiet about what is fine: a language service that is
+      ready, a device that is not throttling, a device that is not linked.
+    -->
     <Border Grid.Row="3" Background="{Binding IsDebugging, Converter={x:Static conv:DebugConverters.StatusBarBackground}}">
-      <Grid ColumnDefinitions="Auto,*,Auto" Margin="12,0">
-        <StackPanel Orientation="Horizontal" Spacing="18" TextElement.Foreground="{DynamicResource Brush.OnAccent}" TextElement.FontSize="12">
-          <StackPanel Orientation="Horizontal" Spacing="6">
-            <controls:StrokeIcon Size="13" Data="{Binding State, Converter={x:Static conv:AppConverters.StateIcon}}" />
-            <TextBlock Text="{Binding StatusText}" VerticalAlignment="Center" MaxWidth="460" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding StatusText}" />
-          </StackPanel>
-          <TextBlock Text="{Binding LanguageServiceText}" VerticalAlignment="Center" />
-          <Button Theme="{StaticResource StatusBarButton}" Height="24" ToolTip.Tip="{Binding LinkStatusTip}" Command="{Binding OpenLinkCommand}"
-                  IsVisible="{Binding IsLinkAvailable}">
-            <StackPanel Orientation="Horizontal" Spacing="5">
-              <controls:StrokeIcon Size="13" Data="{StaticResource Icon.Link}" />
-              <TextBlock Text="{Binding LinkStatusText}" FontSize="12" VerticalAlignment="Center" />
-              <Ellipse Width="7" Height="7" Fill="{DynamicResource Brush.Success}" VerticalAlignment="Center" IsVisible="{Binding IsLinkedToHost}" />
-              <Ellipse Width="7" Height="7" Fill="{DynamicResource Brush.Warning}" VerticalAlignment="Center" IsVisible="{Binding IsLinkReconnecting}" />
-            </StackPanel>
-          </Button>
-          <Button Theme="{StaticResource StatusBarButton}" Height="24" ToolTip.Tip="Show the language servers' log" Command="{Binding ShowLanguageServerLogCommand}"
-                  IsVisible="{Binding ShowsLanguageServerText}">
-            <TextBlock Text="{Binding LanguageServerText}" FontSize="12" VerticalAlignment="Center" />
-          </Button>
-          <Button Theme="{StaticResource StatusBarButton}" Height="24" Command="{Binding InstallServerToolchainCommand}"
-                  ToolTip.Tip="{Binding ServerInstallOffer.ToolTip, FallbackValue={x:Null}}"
-                  IsVisible="{Binding ServerInstallOffer, Converter={x:Static ObjectConverters.IsNotNull}}">
-            <StackPanel Orientation="Horizontal" Spacing="5">
-              <controls:StrokeIcon Size="13" Data="{StaticResource Icon.Download}" />
-              <TextBlock Text="{Binding ServerInstallOffer.StatusBarText, FallbackValue={x:Null}}" FontSize="12" VerticalAlignment="Center" />
-            </StackPanel>
-          </Button>
-          <TextBlock Text="{Binding PackagesText}" VerticalAlignment="Center"
-                     IsVisible="{Binding PackagesText, Converter={x:Static ObjectConverters.IsNotNull}}" />
-          <StackPanel Orientation="Horizontal" Spacing="5">
-            <controls:StrokeIcon Size="13" Data="{StaticResource Icon.Thermometer}" />
-            <TextBlock Text="{Binding ThermalText}" VerticalAlignment="Center" />
-          </StackPanel>
-          <TextBlock Text="{Binding DeviceText}" VerticalAlignment="Center"
-                     IsVisible="{Binding DeviceText, Converter={x:Static ObjectConverters.IsNotNull}}" />
-          <Button Theme="{StaticResource StatusBarButton}" Height="24" ToolTip.Tip="Git Changes" Command="{Binding ShowGitChangesCommand}"
-                  IsVisible="{Binding GitChanges.IsLinked}">
-            <StackPanel Orientation="Horizontal" Spacing="5">
-              <controls:StrokeIcon Size="13" Data="{StaticResource Icon.Branch}" />
-              <TextBlock Text="{Binding GitChanges.BranchName}" FontSize="12" VerticalAlignment="Center" />
-              <TextBlock Text="{Binding GitChanges.IncomingCommits, StringFormat='↓{0}'}" FontSize="12" VerticalAlignment="Center"
-                         IsVisible="{Binding GitChanges.HasIncoming}" />
-            </StackPanel>
-          </Button>
+      <controls:AdaptiveBar x:Name="StatusBar" Spacing="6" Margin="6,0" ItemTheme="{StaticResource StatusBarButton}" MorePlacement="TopEdgeAlignedRight"
+                            VerticalAlignment="Center" TextElement.Foreground="{DynamicResource Brush.OnAccent}" TextElement.FontSize="12">
+        <!-- What the IDE is doing; long messages trim, with the whole message in the tooltip. -->
+        <StackPanel x:Name="StatusMessage" Orientation="Horizontal" Spacing="6" Margin="6,0,4,0" Background="Transparent" ToolTip.Tip="{Binding StatusText}">
+          <controls:StrokeIcon Size="13" Data="{Binding State, Converter={x:Static conv:AppConverters.StateIcon}}" Foreground="{DynamicResource Brush.OnAccent}" />
+          <TextBlock x:Name="StatusMessageText" Text="{Binding StatusText}" FontSize="12" Foreground="{DynamicResource Brush.OnAccent}"
+                     VerticalAlignment="Center" MaxWidth="460" TextTrimming="CharacterEllipsis" />
+        </StackPanel>
+
+        <controls:AdaptiveBarItem Classes="status" Icon="{StaticResource Icon.Branch}" IconSize="13" Priority="80"
+                                  Command="{Binding ShowGitChangesCommand}" IsVisible="{Binding GitChanges.IsLinked}">
+          <controls:AdaptiveBarItem.Label>
+            <MultiBinding Converter="{x:Static conv:ShellConverters.BranchLabel}">
+              <Binding Path="GitChanges.BranchName" />
+              <Binding Path="GitChanges.IncomingCommits" />
+            </MultiBinding>
+          </controls:AdaptiveBarItem.Label>
+        </controls:AdaptiveBarItem>
+
+        <!-- The paired Windows PC: tap for the Windows Bridge pane. -->
+        <controls:AdaptiveBarItem Classes="status" Icon="{StaticResource Icon.Computer}" IconSize="13" Priority="60"
+                                  Label="{Binding WindowsBridgeStatusText}" ToolTip.Tip="{Binding WindowsBridgeStatusTip}"
+                                  Command="{Binding OpenWindowsBridgeCommand}"
+                                  IsVisible="{Binding WindowsBridgeStatusText, Converter={x:Static ObjectConverters.IsNotNull}}" />
+
+        <!-- The commit's CI: tap for GitHub Actions on this commit. -->
+        <Panel controls:AdaptiveBar.Priority="75" controls:AdaptiveBar.IsPinned="False" IsVisible="{Binding Actions.IsCiVisible}"
+               controls:AdaptiveBar.MenuHeader="{Binding Actions.CiText, StringFormat='CI: {0}'}"
+               controls:AdaptiveBar.MenuCommand="{Binding Actions.ShowCommitChecksCommand}" controls:AdaptiveBar.MenuIcon="{StaticResource Icon.Actions}">
           <actionViews:CiStatusBarItem DataContext="{Binding Actions}" />
-          <!-- The swarm, while it is on: how many devices are in it; tap for the Swarm window. -->
-          <Button Theme="{StaticResource StatusBarButton}" Height="24" ToolTip.Tip="{Binding Swarm.StatusTip, FallbackValue={x:Null}}"
-                  Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.Swarm}"
-                  IsVisible="{Binding Swarm.IsOn, FallbackValue=False}">
-            <StackPanel Orientation="Horizontal" Spacing="5">
-              <controls:StrokeIcon Size="13" Data="{StaticResource Icon.Swarm}" />
-              <TextBlock Text="{Binding Swarm.StatusText, FallbackValue={x:Null}}" FontSize="12" VerticalAlignment="Center" />
-            </StackPanel>
-          </Button>
-          <!-- Live Unit Testing, while it is on: what it does, or how the tests fare; tap for Pause and Stop. -->
-          <Button Theme="{StaticResource StatusBarButton}" Height="24" ToolTip.Tip="{Binding LiveTesting.DetailText}"
-                  IsVisible="{Binding LiveTesting.IsEnabled}">
-            <StackPanel Orientation="Horizontal" Spacing="5">
-              <controls:StrokeIcon Size="13" Data="{Binding LiveTesting.State, Converter={x:Static conv:LiveTestingConverters.StateIcon}}" />
-              <TextBlock Text="{Binding LiveTesting.StatusText}" FontSize="12" VerticalAlignment="Center" />
-            </StackPanel>
-            <Button.Flyout>
-              <MenuFlyout Placement="TopEdgeAlignedLeft">
-                <MenuItem Header="Pause Live Unit Testing" Command="{Binding LiveTesting.PauseCommand}" IsVisible="{Binding !LiveTesting.IsPaused}" />
-                <MenuItem Header="Continue Live Unit Testing" Command="{Binding LiveTesting.ContinueCommand}" IsVisible="{Binding LiveTesting.IsPaused}" />
-                <MenuItem Header="Stop Live Unit Testing" Command="{Binding LiveTesting.StopCommand}" />
-                <Separator />
-                <MenuItem Header="Test Explorer" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}" />
-              </MenuFlyout>
-            </Button.Flyout>
-          </Button>
-          <Button Theme="{StaticResource StatusBarButton}" Height="24" Command="{Binding DesktopMode.ToggleCommand, FallbackValue={x:Null}}"
-                  ToolTip.Tip="{Binding DesktopMode.StatusToolTip, FallbackValue={x:Null}}" IsVisible="{Binding DesktopMode.HasDisplay, FallbackValue=False}">
-            <StackPanel Orientation="Horizontal" Spacing="5">
-              <controls:StrokeIcon Size="13" Data="{StaticResource Icon.Monitor}" />
-              <TextBlock Text="{Binding DesktopMode.StatusText, FallbackValue={x:Null}}" FontSize="12" VerticalAlignment="Center" />
-            </StackPanel>
-          </Button>
-        </StackPanel>
+        </Panel>
 
-        <TextBlock Grid.Column="1" Margin="18,0" Foreground="{DynamicResource Brush.OnAccent}" FontSize="12" Opacity="0.9"
-                   Text="{Binding ActiveDocument.CaretMessage, FallbackValue={x:Null}}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+        <!-- Live Unit Testing, while it is on: what it does, or how the tests fare; tap for Pause and Stop. -->
+        <controls:AdaptiveBarItem Classes="status" Icon="{Binding LiveTesting.State, Converter={x:Static conv:LiveTestingConverters.StateIcon}}" IconSize="13"
+                                  Label="{Binding LiveTesting.StatusText}" Priority="60" IsVisible="{Binding LiveTesting.IsEnabled}">
+          <controls:AdaptiveBarItem.Flyout>
+            <MenuFlyout Placement="TopEdgeAlignedLeft">
+              <MenuItem Header="Pause Live Unit Testing" Command="{Binding LiveTesting.PauseCommand}" IsVisible="{Binding !LiveTesting.IsPaused}" />
+              <MenuItem Header="Continue Live Unit Testing" Command="{Binding LiveTesting.ContinueCommand}" IsVisible="{Binding LiveTesting.IsPaused}" />
+              <MenuItem Header="Stop Live Unit Testing" Command="{Binding LiveTesting.StopCommand}" />
+              <Separator />
+              <MenuItem Header="Test Explorer" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}" />
+            </MenuFlyout>
+          </controls:AdaptiveBarItem.Flyout>
+        </controls:AdaptiveBarItem>
 
-        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="18" TextElement.Foreground="{DynamicResource Brush.OnAccent}" TextElement.FontSize="12"
-                    IsVisible="{Binding ShowsEditorStatus}">
-          <TextBlock Text="{Binding CaretText}" VerticalAlignment="Center" />
-          <TextBlock Text="Spaces: 4" VerticalAlignment="Center" />
-          <TextBlock Text="{Binding ActiveDocument.EncodingLabel, FallbackValue={x:Null}}" VerticalAlignment="Center" />
-          <TextBlock Text="{Binding ActiveDocument.NewlineLabel, FallbackValue={x:Null}}" VerticalAlignment="Center" />
-          <TextBlock Text="{Binding ActiveDocument.FileType.DisplayName, FallbackValue={x:Null}}" VerticalAlignment="Center" />
-        </StackPanel>
-      </Grid>
+        <!-- The swarm, while it is on: how many devices are in it; tap for the Swarm window. -->
+        <controls:AdaptiveBarItem Classes="status" Icon="{StaticResource Icon.Swarm}" IconSize="13" Label="{Binding Swarm.StatusText, FallbackValue={x:Null}}"
+                                  Priority="55" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.Swarm}"
+                                  IsVisible="{Binding Swarm.IsOn, FallbackValue=False}" />
+
+        <!-- TabStudio Link, while this device is linked: the host and its latency; tap for the Link dialog. -->
+        <controls:AdaptiveBarItem Classes="status" Icon="{StaticResource Icon.Link}" IconSize="13" Label="{Binding LinkStatusText}"
+                                  Priority="50" Command="{Binding OpenLinkCommand}" IsVisible="{Binding ShowsLinkStatus}" />
+
+        <!-- Desktop mode, while an external display is connected: tap to move the IDE to it or back. -->
+        <controls:AdaptiveBarItem Classes="status" Icon="{StaticResource Icon.Monitor}" IconSize="13" Label="{Binding DesktopMode.StatusText, FallbackValue={x:Null}}"
+                                  Priority="45" Command="{Binding DesktopMode.ToggleCommand, FallbackValue={x:Null}}"
+                                  IsVisible="{Binding DesktopMode.HasDisplay, FallbackValue=False}" />
+
+        <!-- The diagnostic at the caret: tap for the Error List. -->
+        <controls:AdaptiveBarItem Classes="status" Icon="{StaticResource Icon.Info}" IconSize="13" Label="{Binding ActiveDocument.CaretMessage, FallbackValue={x:Null}}"
+                                  Priority="40" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}"
+                                  IsVisible="{Binding ActiveDocument.CaretMessage, Converter={x:Static ObjectConverters.IsNotNull}, FallbackValue=False}" />
+
+        <!-- The language service and the language servers, only while they are not ready. -->
+        <controls:AdaptiveBarItem Classes="status" Icon="{StaticResource Icon.Spinner}" IconSize="13" Label="{Binding LanguageServiceText}" Priority="30"
+                                  IsVisible="{Binding LanguageServiceText, Converter={x:Static ObjectConverters.IsNotNull}}" />
+        <controls:AdaptiveBarItem Classes="status" Icon="{StaticResource Icon.Terminal}" IconSize="13" Label="{Binding LanguageServerText}" Priority="30"
+                                  Command="{Binding ShowLanguageServerLogCommand}" IsVisible="{Binding ShowsLanguageServerStatus}" />
+        <controls:AdaptiveBarItem Classes="status" Icon="{StaticResource Icon.Download}" IconSize="13" Priority="32"
+                                  Label="{Binding ServerInstallOffer.StatusBarText, FallbackValue={x:Null}}" Command="{Binding InstallServerToolchainCommand}"
+                                  IsVisible="{Binding ServerInstallOffer, Converter={x:Static ObjectConverters.IsNotNull}}" />
+
+        <!-- Packages being restored; tap for the Output. -->
+        <controls:AdaptiveBarItem Classes="status" Icon="{StaticResource Icon.Package}" IconSize="13" Label="{Binding PackagesText}" Priority="25"
+                                  Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Output}"
+                                  IsVisible="{Binding PackagesText, Converter={x:Static ObjectConverters.IsNotNull}}" />
+
+        <!-- The device, only when it matters: warm enough to slow TabStudio down, or small enough for Lite mode. -->
+        <controls:AdaptiveBarItem Classes="status" Icon="{StaticResource Icon.Thermometer}" IconSize="13" Label="{Binding ThermalText}" Priority="22"
+                                  IsVisible="{Binding IsThrottled}" />
+        <controls:AdaptiveBarItem Classes="status" Icon="{StaticResource Icon.Tablet}" IconSize="13" Label="{Binding DeviceText}" Priority="20"
+                                  IsVisible="{Binding DeviceText, Converter={x:Static ObjectConverters.IsNotNull}}" />
+
+        <controls:AdaptiveBarSpacer />
+
+        <!-- The editor: the caret stays; the language, encoding, line endings and indentation fold into More. -->
+        <controls:AdaptiveBarItem Classes="status" Label="{Binding CaretText}" IsPinned="True" Priority="90" IsVisible="{Binding ShowsEditorStatus}" />
+        <controls:AdaptiveBarItem Classes="status" Label="Spaces: 4" Priority="20" IsVisible="{Binding ShowsEditorStatus}" />
+        <controls:AdaptiveBarItem Classes="status" Label="{Binding ActiveDocument.EncodingLabel, FallbackValue={x:Null}}" Priority="30"
+                                  IsVisible="{Binding ShowsEditorStatus}" />
+        <controls:AdaptiveBarItem Classes="status" Label="{Binding ActiveDocument.NewlineLabel, FallbackValue={x:Null}}" Priority="25"
+                                  IsVisible="{Binding ShowsEditorStatus}" />
+        <controls:AdaptiveBarItem Classes="status" Label="{Binding ActiveDocument.FileType.DisplayName, FallbackValue={x:Null}}" Priority="70"
+                                  IsVisible="{Binding ShowsEditorStatus}" />
+      </controls:AdaptiveBar>
     </Border>
 
     <!-- Git's dialogs: switch branch, create a pull request, history. -->
@@ -862,11 +891,14 @@
     <!-- The Toolchain Store, and offers to install a project's toolchain or packages. -->
     <toolchainViews:ToolchainOverlaysView Grid.Row="0" Grid.RowSpan="4" />
 
+    <!-- One search for everything (Ctrl+Q): over the whole IDE, as a dialog at the top. -->
+    <searchViews:UnifiedSearchView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding Search}" />
+
     <!-- The in-app dialog that asks for names and confirmations. -->
-    <Panel Grid.Row="0" Grid.RowSpan="4" Background="#99000000" IsVisible="{Binding Prompt.IsOpen}">
-      <Border Width="440" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="22" CornerRadius="12"
+    <Panel Grid.Row="0" Grid.RowSpan="4" Background="{DynamicResource Brush.Scrim}" IsVisible="{Binding Prompt.IsOpen}">
+      <Border MaxWidth="440" Margin="16" VerticalAlignment="Center" Padding="22" CornerRadius="{StaticResource Radius.Dialog}"
               Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
-              BoxShadow="0 12 32 0 #66000000">
+              BoxShadow="{DynamicResource Shadow.Dialog}">
         <StackPanel Spacing="14">
           <TextBlock Classes="h2" FontSize="15" Text="{Binding Prompt.Title}" />
           <TextBlock Classes="muted" TextWrapping="Wrap" Text="{Binding Prompt.Message}" />

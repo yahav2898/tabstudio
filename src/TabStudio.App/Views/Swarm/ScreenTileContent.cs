@@ -3,10 +3,10 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using TabStudio.App.Swarm;
+using TabStudio.App.Theming;
 using TabStudio.App.ViewModels;
 
 namespace TabStudio.App.Views.Swarm;
@@ -34,8 +34,8 @@ public sealed class ScreenTileContent : Decorator
     /// <summary>How often the app preview's live picture is drawn again, while on view.</summary>
     private static readonly TimeSpan MirrorInterval = TimeSpan.FromMilliseconds(120);
 
-    private static readonly IBrush HighlightStroke = new ImmutableSolidColorBrush(Color.FromRgb(0xF4, 0x43, 0x36));
-    private static readonly IBrush HighlightFill = new ImmutableSolidColorBrush(Color.FromArgb(0x30, 0xF4, 0x43, 0x36));
+    private static readonly IBrush HighlightStroke = ThemeBrushes.Get("Brush.Swarm.Highlight");
+    private static readonly IBrush HighlightFill = ThemeBrushes.Get("Brush.Swarm.HighlightFill");
 
     private readonly LayoutTransformControl _zoom = new();
     private readonly Panel _screen = new() { ClipToBounds = true };

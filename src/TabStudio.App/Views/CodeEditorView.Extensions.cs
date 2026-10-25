@@ -6,6 +6,7 @@ using AvaloniaEdit.Folding;
 using AvaloniaEdit.TextMate;
 using TabStudio.App.Editing;
 using TabStudio.App.Editing.Extensions;
+using TabStudio.App.Theming;
 
 namespace TabStudio.App.Views;
 
@@ -174,7 +175,7 @@ public sealed partial class CodeEditorView
     {
         _editor.SetValue(FoldingMargin.FoldingMarkerBrushProperty, FoldMarkerBrush);
         _editor.SetValue(FoldingMargin.FoldingMarkerBackgroundBrushProperty, FoldMarkerBackground);
-        _editor.SetValue(FoldingMargin.SelectedFoldingMarkerBrushProperty, Brushes.White);
+        _editor.SetValue(FoldingMargin.SelectedFoldingMarkerBrushProperty, ThemeBrushes.Editor("Editor.FoldMarkerSelected"));
         _editor.SetValue(FoldingMargin.SelectedFoldingMarkerBackgroundBrushProperty, FoldMarkerBackground);
     }
 }

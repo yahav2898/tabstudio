@@ -7,10 +7,10 @@
              IsVisible="{Binding IsOpen, FallbackValue=False}">
 
   <!-- Add a device: the QR code a phone or tablet scans to join the swarm, drawn over the IDE. -->
-  <Panel Background="#99000000">
+  <Panel Background="{DynamicResource Brush.Scrim}">
     <Border MaxWidth="720" Margin="24" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="12"
             Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
-            BoxShadow="0 12 32 0 #66000000">
+            BoxShadow="{DynamicResource Shadow.Dialog}">
       <DockPanel>
         <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto,*,Auto" Margin="22,18,14,14">
           <Border Width="34" Height="34" CornerRadius="9" Background="{DynamicResource Brush.AccentSoft}" Margin="0,0,12,0" VerticalAlignment="Top">
@@ -42,7 +42,7 @@
 
             <!-- The QR code beside its instructions, or above them on a narrow screen (see the code-behind). -->
             <Grid x:Name="CodeGrid" ColumnDefinitions="Auto,22,*" RowDefinitions="Auto,Auto" IsVisible="{Binding HasNetwork}">
-              <Border Width="236" Height="236" CornerRadius="10" Background="White" VerticalAlignment="Top">
+              <Border Width="236" Height="236" CornerRadius="10" Background="{DynamicResource Brush.QrCode.Light}" VerticalAlignment="Top">
                 <controls:QrCodeView Code="{Binding Code}" />
               </Border>
               <StackPanel x:Name="CodeText" Grid.Column="2" Spacing="10" VerticalAlignment="Center">

@@ -41,11 +41,13 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 
 ### A real Visual Studio experience, built for touch
 
-- **The layout you already know.** Menu bar, toolbar, document tabs, Solution Explorer, Properties, Error List, Output and a status bar, docked exactly where your hands expect them.
-- **Sized for fingers.** Buttons, tabs and rows are fingertip-sized, 34 to 44 pixels tall. A floating action bar puts Rename, Comment, Format, Peek and Run to Cursor one tap away.
+- **The layout you already know, on any screen.** Menu bar, toolbar, document tabs, the Solution Explorer with Properties, Error List, Output and a status bar, as in Visual Studio. An activity bar on the right edge holds every tool window, with badges for changed files, CI, failed tests and the agent's proposed changes. In portrait and on a phone the side bar opens as a drawer, and the toolbar and status bar fold their least used buttons into More instead of clipping.
+- **One search for everything.** Ctrl+Q finds files, every menu command with its shortcut, settings such as the theme, your code's types and members, project templates and recent solutions, ranked together.
+- **Sized for fingers, quiet for keyboards.** Buttons, tabs and rows are fingertip-sized, 34 to 48 pixels tall. A floating touch bar puts Rename, Peek, Comment, Run to Cursor, Format and Run one tap away; it keeps clear of the line you are editing and of IntelliSense, and fades while you type on a hardware keyboard.
+- **Scrolls like a native editor.** A drag follows your finger exactly, and a flick glides and slows on Android's own fling curve at the display's full refresh rate, even in files of thousands of lines with coloring, squiggles, folding and every margin on. A touch that scrolls never moves the caret or opens the keyboard.
 - **Keyboard when you want it.** Attach a keyboard and every Visual Studio shortcut works: F5, Ctrl+Shift+B, F12, Ctrl+. and the rest.
 - **Desktop mode.** Plug in a monitor over USB-C or HDMI, or use a wireless display, and the full IDE moves to the big screen with your documents, caret and debugger exactly as they were. The tablet's keyboard types there and its mouse or touchpad drives a pointer there, while the tablet becomes a touch companion: Run and debugger buttons, a Toolbox that puts controls into your XAML at the caret, and a Properties panel for the element at the caret.
-- **Light, dark or the system's.** A light theme modeled on Visual Studio Light, the dark one, or follow the tablet's dark-mode setting. Switching recolors the whole IDE at once, the editor's syntax colors included, and every color passes WCAG AA. Choosing an extension's color theme sets the IDE's light or dark to match.
+- **Light, dark or the system's.** A light theme modeled on Visual Studio Light, the dark one, or follow the tablet's dark-mode setting (**Tools > Theme**). Switching recolors the whole IDE at once, the editor's syntax colors included, and every color passes WCAG AA. Choosing an extension's color theme sets the IDE's light or dark to match.
 
 ### C# that runs on the tablet
 
@@ -83,6 +85,8 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 **WPF apps.** Create a **WPF Application**, or open a C# WPF project from Visual Studio, and press F5. TabStudio compiles its XAML on OpenSilver and runs it in the web preview; saving restarts it, and console output and exceptions appear in Output. The .NET 10 preview needs an up-to-date Android System WebView. The XAML editor offers completion, Quick Info, Go to Definition, live errors, and a light bulb that adds a missing event handler to the code-behind. Unsupported WPF APIs are named in the Error List with a route to the Windows Bridge. The browser preview has no C# debugger, and APIs that require Windows, including WPF 3D and modal windows, need the Windows Bridge.
 
 [XAML completion](docs/wpf/images/wpf-01-xaml-completion.png) · [Add an event handler](docs/wpf/images/wpf-02-add-event-handler.png)
+
+**Windows Bridge.** Anything Windows-only builds and runs on a PC you own and streams its windows to the tablet. On the PC, open TabStudio and choose **File > TabStudio Link > Be a Windows Bridge**, then scan its QR code on the tablet. WPF, the real Windows Forms, WinUI 3, .NET Framework and Visual C++ projects then show as ready in the Compatibility Doctor, and the Run button can run any project on the PC. Builds stream into the Output panel and their errors land in the Error List on your files. A tap is a click, a long press a right click and two fingers scroll; keyboard and clipboard text work both ways. .NET apps debug through the same debugger, several programs run at once, saving restarts only the changed program, and a sleeping PC gets a plain message.
 
 ### Every screen at once
 

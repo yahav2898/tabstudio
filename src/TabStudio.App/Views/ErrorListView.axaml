@@ -104,6 +104,12 @@
                     <TextBlock Text="{Binding Ci.CheckName}" MaxWidth="150" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Brush.TextSecondary}" />
                   </StackPanel>
                 </Border>
+                <Border DockPanel.Dock="Left" Classes="ciBadge" IsVisible="{Binding IsFromBridge}" ToolTip.Tip="{Binding BridgeToolTip}">
+                  <StackPanel Orientation="Horizontal" Spacing="5">
+                    <controls:StrokeIcon Data="{StaticResource Icon.Computer}" Size="11" Foreground="{DynamicResource Brush.AccentText}" VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding BridgePc}" MaxWidth="150" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Brush.TextSecondary}" />
+                  </StackPanel>
+                </Border>
                 <Button DockPanel.Dock="Left" Theme="{StaticResource ToolButton}" Classes="screensBadge" Tag="screens" IsVisible="{Binding IsFromLayout}"
                         ToolTip.Tip="{Binding LayoutScreensToolTip}"
                         Command="{Binding $parent[ListBox].((vm:ErrorListViewModel)DataContext).ShowLayoutScreensCommand}" CommandParameter="{Binding}">
@@ -135,7 +141,7 @@
                                     <Canvas>
                                       <Border Canvas.Left="{Binding HighlightLeft}" Canvas.Top="{Binding HighlightTop}"
                                               Width="{Binding Highlight.Width}" Height="{Binding Highlight.Height}"
-                                              BorderBrush="{StaticResource Swarm.Highlight}" BorderThickness="2" CornerRadius="3" />
+                                              BorderBrush="{DynamicResource Brush.Swarm.Highlight}" BorderThickness="2" CornerRadius="3" />
                                     </Canvas>
                                     <TextBlock Classes="muted small" Text="No picture of this screen" IsVisible="{Binding !HasPicture}"
                                                HorizontalAlignment="Center" VerticalAlignment="Center" />

@@ -21,11 +21,20 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\TabStudio.App\TabStudio.App.csproj" />
+    <ProjectReference Include="..\..\src\TabStudio.WindowsBridge.Windows\TabStudio.WindowsBridge.Windows.csproj" />
     <ProjectReference Include="..\TabStudio.Testing\TabStudio.Testing.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Using Include="Xunit" />
+  </ItemGroup>
+
+  <!--
+    Avalonia publishes its frame metrics (layout, render and compositor passes) and layout activities only with its
+    diagnostics on; the editor's scrolling benchmarks read them. Nothing listens in the other tests.
+  -->
+  <ItemGroup>
+    <RuntimeHostConfigurationOption Include="Avalonia.Diagnostics.Diagnostic.IsEnabled" Value="true" />
   </ItemGroup>
 
   <!-- The toolchain library's fakes: a tablet with a fake Alpine mirror, for the Toolchain Store's tests. -->

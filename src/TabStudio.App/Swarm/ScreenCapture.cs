@@ -2,6 +2,8 @@ using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Media.Immutable;
+using Avalonia.Styling;
+using TabStudio.App.Theming;
 
 namespace TabStudio.App.Swarm;
 
@@ -11,8 +13,11 @@ internal static class ScreenCapture
     /// <summary>The longest side of a picture, in pixels: as much detail as Claude's vision uses, at a size phones can send.</summary>
     public const int MaxPixels = 1568;
 
-    /// <summary>The outline drawn around an element in a picture, such as the one a layout issue is about.</summary>
-    private static readonly IPen Outline = new ImmutablePen(new ImmutableSolidColorBrush(Color.FromRgb(0xF4, 0x43, 0x36)), 3);
+    /// <summary>
+    /// The outline drawn around an element in a picture, such as the one a layout issue is about: the palette's
+    /// <c>Brush.Swarm.Highlight</c>, the same in both themes because the picture is the app's, not the IDE's.
+    /// </summary>
+    private static IPen Outline => new ImmutablePen(new ImmutableSolidColorBrush(ThemeBrushes.ColorOf("Brush.Swarm.Highlight", ThemeVariant.Dark)), 3);
 
     /// <summary>Draws a control as it is laid out now.</summary>
     /// <param name="visual">The control.</param>
