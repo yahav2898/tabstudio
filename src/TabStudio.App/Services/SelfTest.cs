@@ -107,9 +107,16 @@ public static partial class SelfTest
                 return new SelfTestResult(false, $"{summary} | {debugged.Message} | {web.Message} | {avalonia.Message}", clock.Elapsed);
             }
 
+            var avaloniaApp = last.Workspace is { } loaded ? loaded.Solution?.FilePath ?? loaded.RootDirectory : null;
             var extensions = await InstallGrammarExtensionAsync(last, FindEditor, cancellationToken);
             var toolchains = extensions.Success ? await RunToolchainsAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Toolchains: not run", TimeSpan.Zero);
             var pythonTools = toolchains.Success ? await CheckPythonToolsAsync(main, cancellationToken) : new SelfTestResult(false, "Python tools: not run", TimeSpan.Zero);
+            if (pythonTools.Success && avaloniaApp is not null)
+            {
+                // The self test ends in the Avalonia app, which the desktop part continues with.
+                await main.OpenWorkspaceAsync(avaloniaApp);
+            }
+
             return new SelfTestResult(
                 extensions.Success && toolchains.Success && pythonTools.Success,
                 $"{summary} | {debugged.Message} | {web.Message} | {avalonia.Message} | {extensions.Message} | {toolchains.Message} | {pythonTools.Message}",
