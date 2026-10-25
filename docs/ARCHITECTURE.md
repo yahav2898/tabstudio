@@ -242,6 +242,7 @@ C# projects with `<UseWPF>true</UseWPF>` compile against OpenSilver 3.3.3 instea
 `TabStudio.Wpf` runs OpenSilver's own second-pass XAML compiler before emitting the application. F5 prepares and
 serves a .NET WebAssembly browser host in the web preview. The window attaches before its first forced layout;
 saving rebuilds and reloads the page, and the host forwards console output, uncaught exceptions and window closure.
+An unhandled input exception releases stranded mouse capture so later clicks still reach the app.
 Android installs a `WebChromeClient`, so OpenSilver's `MessageBox` alert/confirm calls show the native browser dialogs.
 
 `Wpf/Editing` in Compilation reads the project's actual types and current additional-document text for completion,

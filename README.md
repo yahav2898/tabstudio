@@ -82,6 +82,8 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 
 **WPF apps.** Create a **WPF Application**, or open a C# WPF project from Visual Studio, and press F5. TabStudio compiles its XAML on OpenSilver and runs it in the web preview; saving restarts it, and console output and exceptions appear in Output. The XAML editor offers completion, Quick Info, Go to Definition, live errors, and a light bulb that adds a missing event handler to the code-behind. Unsupported WPF APIs are named in the Error List with a route to the Windows Bridge. The browser preview has no C# debugger, and APIs that require Windows, including WPF 3D and modal windows, need the Windows Bridge.
 
+[XAML completion](docs/wpf/images/wpf-01-xaml-completion.png) · [Add an event handler](docs/wpf/images/wpf-02-add-event-handler.png)
+
 ### Every screen at once
 
 - **Run on Swarm.** Phones and tablets running TabStudio join your swarm with one scan (**File > Join a Swarm** on the phone). Choose Swarm in the Run menu, press F5, and the app you are building starts on all of them together, and every save updates them all. Avalonia apps run natively, web apps in each device's browser view, and console apps stream their output back.
