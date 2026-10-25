@@ -85,7 +85,7 @@ public sealed class CSharpCompiler
 
         if (request.ImplicitUsings)
         {
-            trees.Add(CSharpSyntaxTree.ParseText(CreateGlobalUsingsSource(), parseOptions, $"{request.AssemblyName}.GlobalUsings.g.cs", cancellationToken: cancellationToken));
+            trees.Add(CSharpSyntaxTree.ParseText(SourceText.From(CreateGlobalUsingsSource(), Encoding.UTF8), parseOptions, $"{request.AssemblyName}.GlobalUsings.g.cs", cancellationToken));
         }
 
         var options = CreateCompilationOptions(request.Kind, request.Nullable, request.Optimize, request.AllowUnsafe);
