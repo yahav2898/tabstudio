@@ -309,7 +309,7 @@ jobs:
           disk-size: 4096M
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
-          script: bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 660
+          script: bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 960
 
       # A crash's native backtrace has only offsets into the runtime's stripped libraries; this names the functions.
       - name: Name the functions in a crash's backtrace
