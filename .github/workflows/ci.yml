@@ -79,7 +79,7 @@ jobs:
           status=0
           dotnet build src/TabStudio.Desktop -c Release > ci-out/desktop-build.log 2>&1 || status=1
           tail -n 40 ci-out/desktop-build.log
-          dotnet test tests/TabStudio.App.Tests -c Release --logger "console;verbosity=normal" --blame-hang --blame-hang-timeout 4m --blame-hang-dump-type none > ci-out/TabStudio.App.Tests.log 2>&1 || status=1
+          dotnet test tests/TabStudio.App.Tests -c Release --logger "console;verbosity=normal" > ci-out/TabStudio.App.Tests.log 2>&1 || status=1
           tail -n 80 ci-out/TabStudio.App.Tests.log
           exit $status
 
