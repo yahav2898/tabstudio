@@ -28,7 +28,7 @@ public sealed partial class WorkspaceViewModel : IPullRequestHost
     GitHubAccountViewModel IPullRequestHost.Account => GitChanges.Account;
 
     /// <inheritdoc />
-    GitHubLink? IPullRequestHost.Link => GitChanges.Link;
+    GitHubLink? IPullRequestHost.Link => GitChanges.RepositoryLink;
 
     /// <inheritdoc />
     HttpClient IPullRequestHost.AgentHttp => AgentHttp;
@@ -131,7 +131,7 @@ public sealed partial class WorkspaceViewModel : IPullRequestHost
     /// <summary>The view model of a pull request of the linked repository, created once per workspace.</summary>
     private PullRequestViewModel? PullRequestFor(int number)
     {
-        if (GitChanges.Link is not { } link)
+        if (GitChanges.RepositoryLink is not { } link)
         {
             return null;
         }
@@ -234,7 +234,7 @@ public sealed partial class WorkspaceViewModel : IPullRequestHost
             return;
         }
 
-        var root = GitChanges.Link is null ? null : GitHubSync.FindRoot(document.FilePath);
+        var root = GitChanges.RepositoryLink is null ? null : GitHubSync.FindRoot(document.FilePath);
         if (_branchPullRequest is not { IsLoaded: true } pullRequest || root is null)
         {
             document.EditorReview = null;

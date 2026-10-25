@@ -98,7 +98,7 @@ public sealed partial class GitHubClient
     /// <param name="reviewId">The pending review.</param>
     /// <param name="cancellationToken">Cancels the request.</param>
     public Task DeletePendingReviewAsync(string owner, string repository, int number, long reviewId, CancellationToken cancellationToken = default) =>
-        SendWithoutAnswerAsync(HttpMethod.Delete, string.Create(CultureInfo.InvariantCulture, $"{Pull(owner, repository, number)}/reviews/{reviewId}"), null, cancellationToken);
+        SendIgnoringAnswerAsync(HttpMethod.Delete, string.Create(CultureInfo.InvariantCulture, $"{Pull(owner, repository, number)}/reviews/{reviewId}"), null, cancellationToken);
 
     /// <summary>Replies to a comment on the diff. The reply is posted at once.</summary>
     /// <param name="owner">The owner.</param>
@@ -134,7 +134,7 @@ public sealed partial class GitHubClient
     /// <param name="commentId">The comment.</param>
     /// <param name="cancellationToken">Cancels the request.</param>
     public Task DeleteReviewCommentAsync(string owner, string repository, long commentId, CancellationToken cancellationToken = default) =>
-        SendWithoutAnswerAsync(HttpMethod.Delete, ReviewCommentPath(owner, repository, commentId), null, cancellationToken);
+        SendIgnoringAnswerAsync(HttpMethod.Delete, ReviewCommentPath(owner, repository, commentId), null, cancellationToken);
 
     private static string ReviewCommentPath(string owner, string repository, long commentId) =>
         string.Create(CultureInfo.InvariantCulture, $"{Repo(owner, repository)}/pulls/comments/{commentId}");

@@ -15,7 +15,7 @@ public sealed partial class GitChangesViewModel
     public event EventHandler<int>? PullRequestViewRequested;
 
     /// <summary>The repository and branch of the linked folder, or <see langword="null"/> when it is not linked.</summary>
-    public GitHubLink? Link => _sync?.Link;
+    public GitHubLink? RepositoryLink => _sync?.Link;
 
     /// <summary>Finds the open pull request of the folder's branch, as after a push, so the window and the editors can show it.</summary>
     public Task FindBranchPullRequestAsync() => FindPullRequestAsync();

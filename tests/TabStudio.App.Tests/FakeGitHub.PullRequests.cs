@@ -24,7 +24,7 @@ internal sealed partial class FakeGitHub
 
     private readonly DateTimeOffset _epoch = new DateTimeOffset(DateTime.UtcNow.Date, TimeSpan.Zero).AddDays(-2).AddHours(9);
 
-    private long _nextId = 1000;
+    private long _lastObjectId = 1000;
     private int _minutes;
     private DateTimeOffset _lastChange;
 
@@ -217,7 +217,7 @@ internal sealed partial class FakeGitHub
         switch (parts)
         {
             case ["contents", ..] when method == "GET":
-                return Contents(repo, string.Join('/', parts.Skip(1)), query.GetValueOrDefault("ref") ?? repo.DefaultBranch);
+                return FileContents(repo, string.Join('/', parts.Skip(1)), query.GetValueOrDefault("ref") ?? repo.DefaultBranch);
             case ["git", "refs", "heads", ..] when method == "DELETE":
                 return DeleteBranch(repo, string.Join('/', parts.Skip(3)));
             case ["pulls", "comments", var id]:
@@ -470,7 +470,7 @@ internal sealed partial class FakeGitHub
             ? new HttpResponseMessage(HttpStatusCode.NoContent)
             : Error(HttpStatusCode.UnprocessableEntity, "Reference does not exist");
 
-    private static HttpResponseMessage Contents(Repo repo, string path, string reference)
+    private static HttpResponseMessage FileContents(Repo repo, string path, string reference)
     {
         if (Resolve(repo, reference) is not { } sha || !repo.Trees[repo.Commits[sha].Tree].TryGetValue(path, out var file))
         {
@@ -810,7 +810,7 @@ internal sealed partial class FakeGitHub
         return _lastChange;
     }
 
-    private long NextId() => Interlocked.Increment(ref _nextId);
+    private long NextId() => Interlocked.Increment(ref _lastObjectId);
 
     private static JsonObject PullRequestJson(Repo repo, PullRequest pull, bool details)
     {

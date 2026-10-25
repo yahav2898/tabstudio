@@ -91,7 +91,7 @@ internal sealed record CommitShaDto(string Sha);
 
 internal sealed record MergeBaseDto(CommitShaDto? MergeBaseCommit);
 
-internal sealed record ContentDto(string Type, string? Encoding, string? Content, string Sha, long Size);
+internal sealed record FileContentDto(string Type, string? Encoding, string? Content, string Sha, long Size);
 
 internal sealed record SearchIssueDto(int Number, int Comments);
 
@@ -119,7 +119,7 @@ internal sealed record SearchIssuesDto(int TotalCount, IReadOnlyList<SearchIssue
 [JsonSerializable(typeof(RequestReviewersRequest))]
 [JsonSerializable(typeof(MergeSettingsDto))]
 [JsonSerializable(typeof(MergeBaseDto))]
-[JsonSerializable(typeof(ContentDto))]
+[JsonSerializable(typeof(FileContentDto))]
 [JsonSerializable(typeof(SearchIssuesDto))]
 internal sealed partial class PullRequestJsonContext : JsonSerializerContext
 {

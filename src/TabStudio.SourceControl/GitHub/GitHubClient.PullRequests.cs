@@ -173,7 +173,7 @@ public sealed partial class GitHubClient
     /// <param name="branch">The branch.</param>
     /// <param name="cancellationToken">Cancels the request.</param>
     public Task DeleteBranchAsync(string owner, string repository, string branch, CancellationToken cancellationToken = default) =>
-        SendWithoutAnswerAsync(HttpMethod.Delete, $"{Repo(owner, repository)}/git/refs/heads/{EscapePath(branch)}", null, cancellationToken);
+        SendIgnoringAnswerAsync(HttpMethod.Delete, $"{Repo(owner, repository)}/git/refs/heads/{EscapePath(branch)}", null, cancellationToken);
 
     /// <summary>Asks people to review a pull request.</summary>
     /// <param name="owner">The owner.</param>
@@ -214,10 +214,10 @@ public sealed partial class GitHubClient
     public async Task<byte[]?> GetFileContentAsync(string owner, string repository, string path, string reference, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrEmpty(path);
-        ContentDto content;
+        FileContentDto content;
         try
         {
-            content = await SendAsync(HttpMethod.Get, $"{Repo(owner, repository)}/contents/{EscapePath(path)}?ref={Uri.EscapeDataString(reference)}", null, PullRequestJsonContext.Default.ContentDto, cancellationToken).ConfigureAwait(false);
+            content = await SendAsync(HttpMethod.Get, $"{Repo(owner, repository)}/contents/{EscapePath(path)}?ref={Uri.EscapeDataString(reference)}", null, PullRequestJsonContext.Default.FileContentDto, cancellationToken).ConfigureAwait(false);
         }
         catch (GitHubApiException ex) when (ex.IsNotFound)
         {
@@ -260,7 +260,7 @@ public sealed partial class GitHubClient
     }
 
     /// <summary>Sends a request whose answer TabStudio does not need, such as a deletion.</summary>
-    private async Task SendWithoutAnswerAsync(HttpMethod method, string path, HttpContent? content, CancellationToken cancellationToken)
+    private async Task SendIgnoringAnswerAsync(HttpMethod method, string path, HttpContent? content, CancellationToken cancellationToken)
     {
         using var request = CreateRequest(method, path, content);
         using var response = await SendRawAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken).ConfigureAwait(false);
