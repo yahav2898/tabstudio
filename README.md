@@ -176,7 +176,12 @@ The desktop build exists so contributors can work on TabStudio from any computer
 ```
 src/
   TabStudio.Core/          Workspace model: solutions, projects, stack detection, Compatibility Doctor
-  TabStudio.Compilation/   Roslyn: diagnostics, in-memory compilation, running programs
+  TabStudio.Compilation/   Roslyn: diagnostics, IntelliSense, in-memory compilation, running programs
+  TabStudio.Packages/      NuGet restore on the device
+  TabStudio.Debugging/     The debugger: instrumented builds, breakpoints, stepping, inspection
+  TabStudio.TestRunner/    xUnit, NUnit and MSTest discovery and execution
+  TabStudio.Notebooks/     C# notebooks: .ipynb and .dib, the C# kernel, value formatting
+  TabStudio.SourceControl/ Git through GitHub: changes, commits, pulls and merges, branches, pull requests
   TabStudio.App/           The IDE itself: views and view models, shared by every platform
   TabStudio.Desktop/       Desktop host for development
   TabStudio.Android/       The Android app
