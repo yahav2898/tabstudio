@@ -346,6 +346,40 @@ public sealed class DebugAdapterSessionTests
     }
 
     [Fact]
+    public async Task Child_sessions_the_adapter_asks_for_go_to_the_handler()
+    {
+        var launcher = new FakeDebugAdapter.Launcher(adapter => adapter.AskForChildSession = true);
+        await using var session = await DebugAdapterSession.StartAsync(Adapter(), "/fake/bin/fake-adapter", "/work", launcher, new DebugAdapterSessionOptions { SupportsChildSessions = true })
+            .WaitAsync(TestTimeouts.Default);
+        var requested = new TaskCompletionSource<DapChildSessionRequest>(TaskCreationOptions.RunContinuationsAsynchronously);
+        session.ChildSessionHandler = (request, _) =>
+        {
+            requested.TrySetResult(request);
+            return Task.CompletedTask;
+        };
+
+        await LaunchAsync(session);
+        var child = await requested.Task.WaitAsync(TestTimeouts.Default);
+
+        Assert.True(launcher.Started[0].Requests[0].Arguments.GetProperty("supportsStartDebuggingRequest").GetBoolean());
+        Assert.Equal("attach", child.Request);
+        Assert.Equal("child-1", child.Configuration["__pendingTargetId"]?.GetValue<string>());
+        Assert.True(await launcher.Started[0].ChildSessionAnswered.Task.WaitAsync(TestTimeouts.Default));
+    }
+
+    [Fact]
+    public async Task Child_sessions_are_refused_without_a_handler()
+    {
+        var launcher = new FakeDebugAdapter.Launcher(adapter => adapter.AskForChildSession = true);
+        await using var session = await StartAsync(launcher);
+
+        await LaunchAsync(session);
+
+        Assert.False(launcher.Started[0].Requests[0].Arguments.GetProperty("supportsStartDebuggingRequest").GetBoolean());
+        Assert.False(await launcher.Started[0].ChildSessionAnswered.Task.WaitAsync(TestTimeouts.Default));
+    }
+
+    [Fact]
     public async Task Run_in_terminal_requests_are_refused_with_a_way_out()
     {
         var launcher = new FakeDebugAdapter.Launcher();

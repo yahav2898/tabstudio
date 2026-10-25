@@ -72,14 +72,14 @@ public sealed class LoopbackDebugAdapter : IAsyncDisposable
             ["supportsTerminateRequest"] = true,
             ["exceptionBreakpointFilters"] = new JsonArray(new JsonObject { ["filter"] = "uncaught", ["label"] = "Uncaught Errors", ["default"] = true }),
         });
-        _connection.AddRequestHandler("launch", async (arguments, _) =>
+        _connection.AddRequestHandler("launch", async (arguments, cancellationToken) =>
         {
             _programPath = arguments.TryGetProperty("program", out var program) ? program.GetString() ?? string.Empty : string.Empty;
             _stopOnEntry = arguments.TryGetProperty("stopOnEntry", out var entry) && entry.ValueKind == JsonValueKind.True;
             _noDebug = arguments.TryGetProperty("noDebug", out var noDebug) && noDebug.ValueKind == JsonValueKind.True;
             try
             {
-                _program = LoopbackScript.Parse(await File.ReadAllTextAsync(_programPath).ConfigureAwait(false));
+                _program = LoopbackScript.Parse(await File.ReadAllTextAsync(_programPath, cancellationToken).ConfigureAwait(false));
             }
             catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException)
             {
@@ -314,7 +314,7 @@ public sealed class LoopbackDebugAdapter : IAsyncDisposable
         }
 
         var hits = _hits[line] = _hits.GetValueOrDefault(line) + 1;
-        if (breakpoint.HitCount is { Length: > 0 } hitCount && int.TryParse(hitCount.TrimStart('=', ' '), NumberStyles.Integer, CultureInfo.InvariantCulture, out var count) && hits < count)
+        if (breakpoint.HitCondition is { Length: > 0 } hitCount && int.TryParse(hitCount.TrimStart('=', ' '), NumberStyles.Integer, CultureInfo.InvariantCulture, out var count) && hits < count)
         {
             return null;
         }

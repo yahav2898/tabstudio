@@ -20,7 +20,18 @@ public sealed record DebugAdapterSessionOptions
 
     /// <summary>Whether every message is written to the log.</summary>
     public bool TraceMessages { get; init; }
+
+    /// <summary>
+    /// Whether the adapter may ask for child sessions with <c>startDebugging</c>, as js-debug does for every Node
+    /// process; <see cref="DebugAdapterSession.ChildSessionHandler"/> starts them.
+    /// </summary>
+    public bool SupportsChildSessions { get; init; }
 }
+
+/// <summary>A debug adapter's request for a child session, as js-debug sends one for every process it debugs.</summary>
+/// <param name="Configuration">The child session's launch configuration, as the adapter gave it.</param>
+/// <param name="Request"><c>launch</c> or <c>attach</c>.</param>
+public sealed record DapChildSessionRequest(JsonObject Configuration, string Request);
 
 /// <summary>
 /// A debug session with a debug adapter: starts the adapter, launches or attaches to the program with a launch
@@ -38,9 +49,10 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
     private readonly TaskCompletionSource _ended = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private int _disposed;
 
-    private DebugAdapterSession(DebugAdapterDefinition adapter, DebugAdapterConnection connection, IServerProcess? process, TcpClient? socket)
+    private DebugAdapterSession(DebugAdapterDefinition adapter, DebugAdapterConnection connection, IServerProcess? process, TcpClient? socket, int? port = null)
     {
         Adapter = adapter;
+        Port = port;
         _connection = connection;
         _process = process;
         _socket = socket;
@@ -81,6 +93,15 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
     /// <summary>The exit code the program reported, once it exited.</summary>
     public int? ExitCode { get; private set; }
 
+    /// <summary>The port the adapter listens on, when it is reached over TCP; child sessions connect to it too.</summary>
+    public int? Port { get; }
+
+    /// <summary>
+    /// Starts a child session the adapter asks for with <c>startDebugging</c>; without one, such requests are refused.
+    /// Set it before <see cref="LaunchAsync"/>, with <see cref="DebugAdapterSessionOptions.SupportsChildSessions"/>.
+    /// </summary>
+    public Func<DapChildSessionRequest, CancellationToken, Task>? ChildSessionHandler { get; set; }
+
     /// <summary>Starts an adapter and initializes it.</summary>
     /// <param name="adapter">The adapter.</param>
     /// <param name="executable">The full path of its program, as the launcher resolved it.</param>
@@ -111,7 +132,7 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
             if (adapter.Transport == DebugAdapterTransport.Tcp)
             {
                 var socket = await ConnectWithRetriesAsync(IPAddress.Loopback.ToString(), port, options.StartTimeout, process, cancellationToken).ConfigureAwait(false);
-                session = new DebugAdapterSession(adapter, new DebugAdapterConnection(socket.GetStream(), socket.GetStream()), process, socket);
+                session = new DebugAdapterSession(adapter, new DebugAdapterConnection(socket.GetStream(), socket.GetStream()), process, socket, port);
             }
             else
             {
@@ -153,7 +174,7 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
         try
         {
             var socket = await ConnectWithRetriesAsync(IPAddress.Loopback.ToString(), port, options.StartTimeout, null, cancellationToken).ConfigureAwait(false);
-            session = new DebugAdapterSession(adapter, new DebugAdapterConnection(socket.GetStream(), socket.GetStream()), null, socket);
+            session = new DebugAdapterSession(adapter, new DebugAdapterConnection(socket.GetStream(), socket.GetStream()), null, socket, port);
             await session.InitializeAsync(options, cancellationToken).ConfigureAwait(false);
             return session;
         }
@@ -339,7 +360,7 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
             SupportsMemoryReferences: false,
             SupportsProgressReporting: false,
             SupportsInvalidatedEvent: false,
-            SupportsStartDebuggingRequest: false,
+            SupportsStartDebuggingRequest: options.SupportsChildSessions,
             SupportsArgsCanBeInterpretedByShell: false);
         var body = await _connection.SendRequestAsync("initialize", arguments, DapJsonContext.Default.InitializeArgumentsDto, timeout.Token).ConfigureAwait(false);
         Capabilities = ToCapabilities(body);
@@ -391,6 +412,20 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
             }
         });
         _connection.AddRequestHandler("runInTerminal", (_, _) => throw new DebugAdapterException("TabStudio runs programs in its own console; set \"console\": \"internalConsole\"."));
+        _connection.AddRequestHandler("startDebugging", async (arguments, cancellationToken) =>
+        {
+            if (ChildSessionHandler is not { } handler
+                || arguments.ValueKind != JsonValueKind.Object
+                || !arguments.TryGetProperty("configuration", out var configuration)
+                || JsonNode.Parse(configuration.GetRawText()) is not JsonObject properties)
+            {
+                throw new DebugAdapterException($"TabStudio cannot start the child session {Adapter.Name} asks for.");
+            }
+
+            var request = arguments.TryGetProperty("request", out var kind) && kind.GetString() is { } value ? value : "launch";
+            await handler(new DapChildSessionRequest(properties, request), cancellationToken).ConfigureAwait(false);
+            return null;
+        });
     }
 
     private void PumpStandardError(IServerProcess process) => _ = Task.Run(async () =>

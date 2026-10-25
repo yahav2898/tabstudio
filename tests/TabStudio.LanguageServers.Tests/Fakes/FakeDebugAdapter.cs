@@ -63,6 +63,12 @@ internal sealed class FakeDebugAdapter : IAsyncDisposable
     /// <summary>The reason the program stops with once configured; <c>exception</c> stops as at an unhandled error.</summary>
     public string StopReason { get; set; } = "breakpoint";
 
+    /// <summary>Whether the adapter asks for a child session with <c>startDebugging</c> once configured, as js-debug does.</summary>
+    public bool AskForChildSession { get; set; }
+
+    /// <summary>Completes with whether the client accepted the child session the adapter asked for.</summary>
+    public TaskCompletionSource<bool> ChildSessionAnswered { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
     /// <summary>The requests received, in order.</summary>
     public IReadOnlyList<(string Command, JsonElement Arguments)> Requests => [.. _requests];
 
@@ -107,6 +113,26 @@ internal sealed class FakeDebugAdapter : IAsyncDisposable
         {
             Record("configurationDone", arguments);
             _configured.TrySetResult();
+            if (AskForChildSession)
+            {
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        await Connection.SendRequestAsync("startDebugging", new JsonObject
+                        {
+                            ["request"] = "attach",
+                            ["configuration"] = new JsonObject { ["type"] = "fake", ["name"] = "Child", ["__pendingTargetId"] = "child-1" },
+                        }, CancellationToken.None);
+                        ChildSessionAnswered.TrySetResult(true);
+                    }
+                    catch (DebugAdapterException)
+                    {
+                        ChildSessionAnswered.TrySetResult(false);
+                    }
+                }, CancellationToken.None);
+            }
+
             _ = Task.Run(async () =>
             {
                 await Task.Delay(50);

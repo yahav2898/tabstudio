@@ -123,14 +123,17 @@
       "args": [ "dap" ],
       "package": "delve"
     },
-    "node": {
+    "pwa-node": {
       "name": "Node.js (js-debug)",
-      "aliases": [ "pwa-node" ],
+      "aliases": [ "node" ],
       "languages": [ "javascript", "typescript" ],
       "command": "js-debug-adapter",
+      "args": [ "${port}", "127.0.0.1" ],
+      "transport": "tcp",
       "package": "js-debug",
       "defaults": {
-        "console": "internalConsole"
+        "console": "internalConsole",
+        "sourceMaps": true
       }
     }
   }

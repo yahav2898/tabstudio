@@ -39,6 +39,19 @@ public sealed class RegistryTests
     }
 
     [Fact]
+    public void JavaScript_is_debugged_with_js_debug_over_tcp()
+    {
+        var registry = LanguageServerRegistry.BuiltIn;
+
+        var adapter = registry.FindAdapter("node");
+
+        Assert.Equal("pwa-node", adapter?.Id);
+        Assert.Equal(DebugAdapterTransport.Tcp, adapter!.Transport);
+        Assert.Contains("${port}", adapter.Arguments);
+        Assert.Equal("pwa-node", registry.FindAdaptersForLanguage("javascript").First().Id);
+    }
+
+    [Fact]
     public void Workspace_settings_change_a_server_add_a_language_and_set_settings()
     {
         var settings = JsonSettings.ParseObject("""

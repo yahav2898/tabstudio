@@ -85,7 +85,10 @@ public interface IEditorBreakpointOptions
 public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
 {
     private readonly Dictionary<string, List<DapSourceBreakpoint>> _sentBreakpoints = new(StringComparer.Ordinal);
+    private readonly List<DebugAdapterSession> _adapterChildren = [];
     private DebugAdapterSession? _adapter;
+    private DebugAdapterSession? _adapterRoot;
+    private int? _adapterExitCode;
     private LaunchTarget? _adapterTarget;
     private string _adapterProgram = string.Empty;
     private int? _adapterThread;
@@ -246,7 +249,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         DebugAdapterSession session;
         try
         {
-            var options = new DebugAdapterSessionOptions { TraceMessages = _languageServerServices.TraceMessages };
+            var options = new DebugAdapterSessionOptions { TraceMessages = _languageServerServices.TraceMessages, SupportsChildSessions = true };
             session = configuration.DebugServerPort is { } port
                 ? await DebugAdapterSession.ConnectAsync(adapter, port, options)
                 : await DebugAdapterSession.StartAsync(adapter, executable, workspace.RootDirectory, _languageServerServices.Launcher, options);
@@ -258,10 +261,13 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         }
 
         _adapter = session;
+        _adapterRoot = session;
+        _adapterExitCode = null;
         _adapterTarget = target;
         _adapterLaunched = false;
         _sentBreakpoints.Clear();
         WireAdapterEvents(session);
+        AcceptChildSessions(session, executable, workspace.RootDirectory, noDebug);
         if (session.HasEnded)
         {
             // The adapter ended before its events were wired, such as one that crashed at once.
@@ -305,9 +311,91 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         StatusText = $"{adapter.Name} did not start";
     }
 
+    /// <summary>
+    /// Starts the child sessions an adapter asks for, as js-debug does for every Node process: the debugger then
+    /// drives the child, and the session ends with the first one.
+    /// </summary>
+    private void AcceptChildSessions(DebugAdapterSession parent, string executable, string workingDirectory, bool noDebug) =>
+        parent.ChildSessionHandler = (request, _) => InvokeOnUiAsync(() => StartChildSessionAsync(parent, executable, workingDirectory, request, noDebug));
+
+    private async Task<bool> StartChildSessionAsync(DebugAdapterSession parent, string executable, string workingDirectory, DapChildSessionRequest request, bool noDebug)
+    {
+        if (parent.HasEnded || _adapterRoot is null)
+        {
+            throw new DebugAdapterException("The debug session ended.");
+        }
+
+        DebugAdapterSession child;
+        var options = new DebugAdapterSessionOptions { TraceMessages = _languageServerServices.TraceMessages, SupportsChildSessions = true };
+        try
+        {
+            child = parent.Port is { } port
+                ? await DebugAdapterSession.ConnectAsync(parent.Adapter, port, options)
+                : await DebugAdapterSession.StartAsync(parent.Adapter, executable, workingDirectory, _languageServerServices.Launcher, options);
+        }
+        catch (Exception ex) when (ex is ServerStartException or OperationCanceledException)
+        {
+            throw new DebugAdapterException($"The child session did not start: {ex.Message}", ex);
+        }
+
+        _adapterChildren.Add(child);
+        WireAdapterEvents(child);
+        AcceptChildSessions(child, executable, workingDirectory, noDebug);
+        _adapter = child;
+        _adapterLaunched = false;
+        _sentBreakpoints.Clear();
+        ShowExceptionFilters(child);
+        var configuration = new LaunchConfiguration
+        {
+            Name = request.Configuration["name"]?.GetValue<string>() ?? _adapterProgram,
+            Type = parent.Adapter.Id,
+            Request = request.Request,
+            Properties = request.Configuration,
+        };
+        var breakpoints = noDebug
+            ? new Dictionary<string, IReadOnlyList<DapSourceBreakpoint>>(StringComparer.Ordinal)
+            : AdapterBreakpoints(child);
+
+        // The adapter waits for this answer before the child can attach, so the child launches after it.
+        _ = LaunchChildSessionAsync(child, configuration, breakpoints);
+        return true;
+    }
+
+    private async Task LaunchChildSessionAsync(DebugAdapterSession child, LaunchConfiguration configuration, Dictionary<string, IReadOnlyList<DapSourceBreakpoint>> breakpoints)
+    {
+        await Task.Yield();
+        try
+        {
+            var results = await child.LaunchAsync(configuration, breakpoints, EnabledExceptionFilters(), CancellationToken.None);
+            if (ReferenceEquals(child, _adapter))
+            {
+                _adapterLaunched = true;
+                foreach (var (file, set) in results)
+                {
+                    Breakpoints.ApplyAdapterResults(file, set);
+                }
+            }
+        }
+        catch (Exception ex) when (ex is DebugAdapterException or TimeoutException or OperationCanceledException)
+        {
+            DebugAdapterOutput.WriteLine($"[{child.Adapter.Name}] The child session {configuration.Name} did not start: {ex.Message}", OutputKind.Failure);
+            await child.DisposeAsync();
+        }
+    }
+
     private void WireAdapterEvents(DebugAdapterSession session)
     {
-        session.Stopped += (_, e) => _ui.Post(() => _pauseShown = ShowAdapterPauseAsync(session, e));
+        session.Stopped += (_, e) => _ui.Post(() =>
+        {
+            // The session that stopped is the one the debugger shows, as when a child of js-debug hits a breakpoint.
+            if (!session.HasEnded && (ReferenceEquals(session, _adapterRoot) || _adapterChildren.Contains(session)))
+            {
+                _adapter = session;
+            }
+
+            _pauseShown = ShowAdapterPauseAsync(session, e);
+        });
+        session.Exited += (_, e) => _ui.Post(() => _adapterExitCode ??= e.ExitCode);
         session.Continued += (_, _) => _ui.Post(() => ShowAdapterRunning(session));
         session.OutputReceived += (_, e) => Output.Write(e.Output, e.Category switch
         {
@@ -761,23 +849,26 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
 
     private async Task StopAdapterAsync()
     {
-        if (_adapter is not { } session)
+        if ((_adapterRoot ?? _adapter) is not { } root)
         {
             return;
         }
 
         StatusText = "Stopping";
-        try
+        foreach (var session in _adapterChildren.Where(c => !c.HasEnded).Reverse().Append(root).ToList())
         {
-            using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(10));
-            await session.TerminateAsync(timeout.Token);
-        }
-        catch (OperationCanceledException)
-        {
-            // Disposing ends what did not end in time.
-        }
+            try
+            {
+                using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+                await session.TerminateAsync(timeout.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                // Disposing ends what did not end in time.
+            }
 
-        await session.DisposeAsync();
+            await session.DisposeAsync();
+        }
     }
 
     private void RestartAdapter()
@@ -811,11 +902,24 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
 
     private void EndAdapterSession(DebugAdapterSession session)
     {
-        if (!ReferenceEquals(session, _adapter))
+        if (_adapterChildren.Remove(session))
+        {
+            EndChildSession(session);
+            return;
+        }
+
+        if (!ReferenceEquals(session, _adapterRoot ?? _adapter))
         {
             return;
         }
 
+        foreach (var child in _adapterChildren)
+        {
+            _ = child.DisposeAsync().AsTask();
+        }
+
+        _adapterChildren.Clear();
+        _adapterRoot = null;
         _adapter = null;
         _adapterPauses++;
         _adapterCurrent = null;
@@ -834,7 +938,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         ShowExecutionPoints();
         _ = session.DisposeAsync().AsTask();
 
-        var code = session.ExitCode;
+        var code = _adapterExitCode ?? session.ExitCode;
         Output.WriteLine();
         Output.WriteLine(
             code is { } exit
@@ -856,11 +960,37 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         }
     }
 
+    /// <summary>A child session ended: the debugger goes back to the session that is left, or ends when none is.</summary>
+    private void EndChildSession(DebugAdapterSession child)
+    {
+        _ = child.DisposeAsync().AsTask();
+        if (!ReferenceEquals(child, _adapter))
+        {
+            return;
+        }
+
+        ShowAdapterRunning(child);
+        _adapter = _adapterChildren.LastOrDefault(c => !c.HasEnded) ?? _adapterRoot;
+        if (_adapterRoot is { HasEnded: true } root)
+        {
+            EndAdapterSession(root);
+        }
+    }
+
     private void DisposeAdapterSession()
     {
-        if (Interlocked.Exchange(ref _adapter, null) is { } session)
+        foreach (var child in _adapterChildren)
         {
-            _ = session.DisposeAsync().AsTask();
+            _ = child.DisposeAsync().AsTask();
+        }
+
+        _adapterChildren.Clear();
+        var root = _adapterRoot ?? _adapter;
+        _adapterRoot = null;
+        _adapter = null;
+        if (root is not null)
+        {
+            _ = root.DisposeAsync().AsTask();
         }
     }
 
