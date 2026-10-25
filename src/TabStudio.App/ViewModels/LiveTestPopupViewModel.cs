@@ -24,11 +24,22 @@ public sealed partial class CoveringTestViewModel
     /// <summary>The test.</summary>
     public CoveringTest Test { get; }
 
-    /// <summary>The test's name, with a data row's arguments.</summary>
-    public string Name => Test.Test.DisplayName;
+    /// <summary>The test's name, without a data row's arguments, which <see cref="Detail"/> shows.</summary>
+    public string Name => SplitDisplayName().Name;
 
     /// <summary>The test's class, without its namespace.</summary>
     public string ClassName => Test.Test.TypeName;
+
+    /// <summary>The line under the name: the class, and the arguments of a data row, such as "PricingTests · total: 200".</summary>
+    public string Detail => SplitDisplayName().Arguments is { Length: > 0 } arguments ? ClassName + " · " + arguments : ClassName;
+
+    /// <summary>Why the test failed, on one line, or <see langword="null"/> when it did not fail.</summary>
+    public string? Failure => Test.Message is { } message && Test.IsFailing
+        ? string.Join(" · ", message.Split('\n').Select(l => l.Trim()).Where(l => l.Length > 0))
+        : null;
+
+    /// <summary>Whether <see cref="Failure"/> is shown.</summary>
+    public bool HasFailure => !string.IsNullOrEmpty(Failure);
 
     /// <summary>The outcome shown with the test's icon.</summary>
     public TestState State => Test.IsPending
@@ -46,6 +57,24 @@ public sealed partial class CoveringTestViewModel
 
     /// <summary>The row's tooltip.</summary>
     public string Description => Test.Test.FullyQualifiedName + Test.Test.DataRow + (Test.IsPending ? " (waiting to run again)" : string.Empty);
+
+    /// <summary>
+    /// The display name split into the name and a data row's arguments: "Adds(a: 1, b: 2)" becomes "Adds" and
+    /// "a: 1, b: 2", so that rows of one theory differ where the popup has room to show it.
+    /// </summary>
+    private (string Name, string? Arguments) SplitDisplayName()
+    {
+        var display = Test.Test.DisplayName;
+        if (Test.Test.DataRow is not { } row)
+        {
+            return (display, null);
+        }
+
+        var open = display.IndexOf('(', StringComparison.Ordinal);
+        return open > 0 && display.EndsWith(')')
+            ? (display[..open], display[(open + 1)..^1])
+            : (display, row.Trim('(', ')'));
+    }
 
     [RelayCommand]
     private Task RunAsync() => _editor?.RunTestsAsync([Test.Key]) ?? Task.CompletedTask;

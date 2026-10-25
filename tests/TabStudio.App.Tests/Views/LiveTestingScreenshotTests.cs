@@ -87,6 +87,7 @@ public sealed class LiveTestingScreenshotTests : IClassFixture<SharedToolchain>,
         Assert.True(editor.ShowLiveTestPopup(PricingSolution.LineOf("var rate = 20;")));
         Assert.Equal("Tax_is_seventeen_percent", editor.LiveTestPopup!.Tests[0].Name);
         Assert.Equal(TestState.Failed, editor.LiveTestPopup.Tests[0].State);
+        Assert.Contains("Expected: 17", editor.LiveTestPopup.Tests[0].Failure, StringComparison.Ordinal);
         UiTestHelpers.SaveScreenshot(window, "live-02b-failing-popup");
     }
 

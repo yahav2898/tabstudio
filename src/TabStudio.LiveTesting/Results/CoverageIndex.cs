@@ -310,7 +310,7 @@ public sealed class CoverageIndex
             {
                 var tests = line.Tests
                     .Select(key => (Key: key, Entry: _tests[key]))
-                    .Select(t => new CoveringTest(t.Key, t.Entry.Test, t.Entry.Result?.Outcome, t.Entry.Result?.Duration ?? TimeSpan.Zero, t.Entry.IsPending))
+                    .Select(t => Covering(t.Key, t.Entry))
                     .OrderBy(t => t.IsFailing ? 0 : 1)
                     .ThenBy(t => t.Test.DisplayName, StringComparer.OrdinalIgnoreCase)
                     .ToList();
@@ -373,6 +373,13 @@ public sealed class CoverageIndex
 
             keys.Add(key);
         }
+    }
+
+    private static CoveringTest Covering(TestKey key, Entry entry)
+    {
+        var result = entry.Result;
+        var message = result is { Outcome: TestOutcome.Failed or TestOutcome.Errored } ? result.Message : null;
+        return new CoveringTest(key, entry.Test, result?.Outcome, result?.Duration ?? TimeSpan.Zero, entry.IsPending, message);
     }
 
     private void OnChanged() => Changed?.Invoke(this, EventArgs.Empty);

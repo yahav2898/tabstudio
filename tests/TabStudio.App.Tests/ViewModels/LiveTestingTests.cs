@@ -68,6 +68,10 @@ public sealed class LiveTestingTests : IClassFixture<SharedToolchain>, IDisposab
         Assert.True(edited.IsStale);
         Assert.Equal(LineCoverageState.Failing, edited.State);
 
+        // The test that ran the line runs again, so the other line it ran is out of date too; other tests' lines are not.
+        Assert.True(MarkerOn(pricing, rateLine + 1).IsStale);
+        Assert.False(MarkerOn(pricing, PricingSolution.LineOf("return price * quantity;")).IsStale);
+
         await UiTestHelpers.WaitUntilAsync(
             () => MarkerOn(pricing, rateLine) is { State: LineCoverageState.Covered, IsStale: false } && workspace.LiveTesting.State == LiveTestingState.UpToDate,
             RunTimeout,
@@ -100,9 +104,10 @@ public sealed class LiveTestingTests : IClassFixture<SharedToolchain>, IDisposab
         var popup = new LiveTestPopupViewModel(line, MarkerOn(pricing, line), workspace.LiveTesting);
 
         Assert.Equal("Covered by 2 tests", popup.Title);
+        Assert.All(popup.Tests, t => Assert.Equal("Discount_takes_ten_percent_off_large_orders", t.Name));
         Assert.Equal(
-            new[] { "Discount_takes_ten_percent_off_large_orders(total: 100, expected: 90)", "Discount_takes_ten_percent_off_large_orders(total: 200, expected: 180)" },
-            popup.Tests.Select(t => t.Name));
+            new[] { "PricingTests · total: 100, expected: 90", "PricingTests · total: 200, expected: 180" },
+            popup.Tests.Select(t => t.Detail));
         Assert.All(popup.Tests, t => Assert.Equal(TestState.Passed, t.State));
         Assert.True(popup.CanRunAll);
 

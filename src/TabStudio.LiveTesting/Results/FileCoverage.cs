@@ -27,7 +27,8 @@ public enum LineCoverageState
 /// <param name="Outcome">How its latest live run ended, or <see langword="null"/> before it finished one.</param>
 /// <param name="Duration">How long its latest live run took.</param>
 /// <param name="IsPending">Whether it is waiting to run again because code it depends on changed.</param>
-public sealed record CoveringTest(TestKey Key, TestCase Test, TestOutcome? Outcome, TimeSpan Duration, bool IsPending)
+/// <param name="Message">Why its latest live run failed, or <see langword="null"/> when it did not fail.</param>
+public sealed record CoveringTest(TestKey Key, TestCase Test, TestOutcome? Outcome, TimeSpan Duration, bool IsPending, string? Message = null)
 {
     /// <summary>Whether its latest result is a failure or an error.</summary>
     public bool IsFailing => Outcome is TestOutcome.Failed or TestOutcome.Errored;
