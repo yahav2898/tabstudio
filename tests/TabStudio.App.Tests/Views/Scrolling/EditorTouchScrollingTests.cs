@@ -273,6 +273,7 @@ public sealed class EditorTouchScrollingTests
         }
 
         Assert.InRange(numbers.CachedNumbers, textView.VisualLines.Count, (textView.VisualLines.Count * 4) + 64);
+        Assert.Equal(textView.VisualLines.Count, numbers.DrawnNumbers);
         window.Close();
     }
 
