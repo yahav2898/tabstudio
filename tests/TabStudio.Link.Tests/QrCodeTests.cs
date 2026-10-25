@@ -38,8 +38,9 @@ public sealed class QrCodeTests
     [Fact]
     public void An_invitation_fits_a_code_a_tablet_camera_reads_easily()
     {
-        using var identity = LinkIdentity.Create();
-        var invitation = new LinkInvitation("Yahav's Pixel 9 Pro", ["192.168.1.23", "10.0.0.5"], 47811, identity.Fingerprint, LinkPairingCode.Create());
+        // A fixed key and pairing code, so every run checks the same code: the encoder picks its mask by the data.
+        Assert.True(LinkPairingCode.TryParse("7K3M-Q9TX", out var pairingCode));
+        var invitation = new LinkInvitation("Yahav's Pixel 9 Pro", ["192.168.1.23", "10.0.0.5"], 47811, LinkFingerprint.FromPublicKey("TabStudio Link test host key"u8), pairingCode);
 
         var code = QrCode.Encode(invitation.ToUri());
 

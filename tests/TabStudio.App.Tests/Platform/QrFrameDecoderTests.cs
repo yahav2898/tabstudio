@@ -21,8 +21,10 @@ public sealed class QrFrameDecoderTests
     [InlineData(270)]
     public void Reads_a_hosts_code_from_a_camera_frame(int degrees)
     {
-        using var identity = LinkIdentity.Create();
-        var invitation = new LinkInvitation("Pixel 9", ["192.168.1.23", "10.0.0.7"], 50517, identity.Fingerprint, LinkPairingCode.Create()).ToUri();
+        // A fixed key and pairing code, so every run draws the same code: the encoder picks its mask by the data.
+        Assert.True(LinkPairingCode.TryParse("7K3M-Q9TX", out var code));
+        var fingerprint = LinkFingerprint.FromPublicKey("TabStudio Link test host key"u8);
+        var invitation = new LinkInvitation("Pixel 9", ["192.168.1.23", "10.0.0.7"], 50517, fingerprint, code).ToUri();
         var frame = Frame(QrCode.Encode(invitation), degrees, seed: degrees);
 
         var text = QrFrameDecoder.Decode(frame, RowStride, Width, Height);
