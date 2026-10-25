@@ -68,13 +68,7 @@ public sealed class HeadlessChrome : IAsyncDisposable
             var chrome = new HeadlessChrome(process, profile, socket);
             await chrome.SendAsync("Page.enable");
             await chrome.SendAsync("Runtime.enable");
-            await chrome.SendAsync("Emulation.setDeviceMetricsOverride", new JsonObject
-            {
-                ["width"] = width,
-                ["height"] = height,
-                ["deviceScaleFactor"] = 1,
-                ["mobile"] = false,
-            });
+            await chrome.ResizeAsync(width, height);
             return chrome;
         }
         catch
@@ -85,6 +79,18 @@ public sealed class HeadlessChrome : IAsyncDisposable
             throw;
         }
     }
+
+    /// <summary>Sizes the page, as a browser window of that size would.</summary>
+    /// <param name="width">The width in CSS pixels.</param>
+    /// <param name="height">The height in CSS pixels.</param>
+    public Task ResizeAsync(int width, int height) =>
+        SendAsync("Emulation.setDeviceMetricsOverride", new JsonObject
+        {
+            ["width"] = width,
+            ["height"] = height,
+            ["deviceScaleFactor"] = 1,
+            ["mobile"] = false,
+        });
 
     /// <summary>Opens a page and waits until it has loaded.</summary>
     /// <param name="address">The page.</param>

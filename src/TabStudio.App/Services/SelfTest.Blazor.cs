@@ -72,8 +72,9 @@ public static partial class SelfTest
             using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(30) };
             var page = await http.GetStringAsync(address, cancellationToken);
             var loader = await http.GetStringAsync(new Uri(address, "_framework/dotnet.js"), cancellationToken);
-            using var runtime = await http.GetAsync(new Uri(address, "_framework/dotnet.native.wasm"), HttpCompletionOption.ResponseHeadersRead, cancellationToken);
-            using var assembly = await http.GetAsync(new Uri(address, $"_framework/{BlazorWebAssemblyAppName}.dll"), HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+            // Whole answers: on Android, closing a response that was not read touches the network on this, the UI, thread.
+            using var runtime = await http.GetAsync(new Uri(address, "_framework/dotnet.native.wasm"), cancellationToken);
+            using var assembly = await http.GetAsync(new Uri(address, $"_framework/{BlazorWebAssemblyAppName}.dll"), cancellationToken);
             if (!page.Contains("_framework/blazor.webassembly.js", StringComparison.Ordinal)
                 || !loader.Contains($"\"mainAssemblyName\": \"{BlazorWebAssemblyAppName}\"", StringComparison.Ordinal)
                 || runtime.Content.Headers.ContentType?.MediaType != "application/wasm"

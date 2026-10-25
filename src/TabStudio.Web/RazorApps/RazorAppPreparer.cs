@@ -51,6 +51,7 @@ public sealed record PreparedWebAssemblyApp(WebAssemblyApp? App, IReadOnlyList<B
 /// WebAssembly restored from NuGet the first time, the scoped CSS bundled, the static web asset manifests written, a
 /// Blazor Web App's WebAssembly client built for the browser, and the runtime switches the project sets.
 /// </summary>
+/// <remarks>Downloads and file work run on the thread pool, so the methods may be called from the UI thread.</remarks>
 /// <param name="restorer">Restores the packages the SDK would bring itself.</param>
 public sealed class RazorAppPreparer(PackageRestorer restorer)
 {
@@ -78,7 +79,8 @@ public sealed class RazorAppPreparer(PackageRestorer restorer)
         if (project.HasRazorComponents)
         {
             progress?.Report("Getting Blazor's scripts");
-            var (pack, problems) = await restorer.RestoreAspNetCoreWebAssetsAsync(AspNetCoreVersion(packages), project.Name, cancellationToken).ConfigureAwait(false);
+            var version = AspNetCoreVersion(packages);
+            var (pack, problems) = await Task.Run(() => restorer.RestoreAspNetCoreWebAssetsAsync(version, project.Name, cancellationToken), cancellationToken).ConfigureAwait(false);
             diagnostics.AddRange(problems);
             scripts = pack?.DirectoryPath;
         }
@@ -173,7 +175,7 @@ public sealed class RazorAppPreparer(PackageRestorer restorer)
         }
 
         progress?.Report("Getting .NET for WebAssembly");
-        var (pack, problems) = await restorer.RestoreBrowserRuntimeAsync(app.Project.Name, cancellationToken).ConfigureAwait(false);
+        var (pack, problems) = await Task.Run(() => restorer.RestoreBrowserRuntimeAsync(app.Project.Name, cancellationToken), cancellationToken).ConfigureAwait(false);
         if (pack is null)
         {
             return new PreparedWebAssemblyApp(null, problems);
