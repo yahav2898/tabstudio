@@ -87,11 +87,19 @@ public sealed class NUnitRunnerTests
         """;
 
     [Fact]
-    public void Discovers_tests_test_cases_and_sources()
+    public async Task Discovers_tests_test_cases_and_sources()
     {
         using var session = UserProject.Load(Source, UserProject.NUnitAssemblies);
+        var summary = await session.RunAllAsync();
 
-        Assert.Equal(13, session.Tests.Count);
+        Assert.Empty(summary.Results.Where(r => r.Outcome == TestOutcome.Errored).Select(r => $"{r.Test.DisplayName}: {r.Message}"));
+        Assert.Equal(
+            new[]
+            {
+                "SharesOneFixture", "Adds(1,2)", "Adds(2,2)", "Halves(10)", "DoublesAsync(2)", "Cheap", "PricesArePositive(-2)",
+                "PassesAfterAwait", "IgnoredAtRunTime", "IgnoredByAttribute", "FailsAnAssertion", "OnlyOnRequest",
+            },
+            session.Tests.Select(t => t.DisplayName));
         Assert.All(session.Tests, t => Assert.Equal(TestFramework.NUnit, t.Framework));
         Assert.Equal("Shop.Tests.CartTests.Adds(1, 2)", session.Tests.First(t => t.MethodName == "Adds").Id);
         Assert.Equal("Adds(1,2)", session.Tests.First(t => t.MethodName == "Adds").DisplayName);
@@ -106,7 +114,7 @@ public sealed class NUnitRunnerTests
         using var session = UserProject.Load(Source, UserProject.NUnitAssemblies);
         var summary = await session.RunAllAsync();
 
-        Assert.Equal(12, summary.Total);
+        Assert.Equal(11, summary.Total);
         Assert.Equal(TestOutcome.Passed, summary.Result("Adds(1,2)").Outcome);
         var wrongResult = summary.Result("Adds(2,2)");
         Assert.Equal(TestOutcome.Failed, wrongResult.Outcome);

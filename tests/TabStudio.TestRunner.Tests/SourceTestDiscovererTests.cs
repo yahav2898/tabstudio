@@ -163,6 +163,6 @@ public sealed class SourceTestDiscovererTests
         Assert.Equal("Rows (1,\"a\")", Assert.Single(rows.DataRows).DisplayName);
     }
 
-    private static Microsoft.CodeAnalysis.Compilation XunitCompilation() =>
+    private static CSharpCompilation XunitCompilation() =>
         new CSharpCompiler().CreateCompilation(UserProject.Request(XunitSource, UserProject.XunitAssemblies));
 }
