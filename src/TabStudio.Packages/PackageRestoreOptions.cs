@@ -52,4 +52,10 @@ public sealed record PackageRestoreOptions
 
     /// <summary>How many packages are downloaded at the same time.</summary>
     public int MaxParallelDownloads { get; init; } = 4;
+
+    /// <summary>
+    /// The version of Roslyn that runs the packages' analyzers and source generators, which picks among a package's
+    /// <c>analyzers/dotnet/roslyn{version}/</c> folders; <see langword="null"/> restores no analyzers.
+    /// </summary>
+    public Version? CompilerVersion { get; init; } = new(5, 0);
 }

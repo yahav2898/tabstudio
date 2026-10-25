@@ -90,13 +90,21 @@ public sealed class CSharpCompiler
         ["CS1702"] = ReportDiagnostic.Suppress,
     };
 
-    /// <summary>Parse options for a project.</summary>
+    /// <summary>The namespaces interceptors are allowed in when the project is not known.</summary>
+    private static readonly string[] DefaultInterceptorsNamespaces = [Xaml.AvaloniaXamlGenerator.GeneratedNamespace];
+
+    /// <summary>
+    /// Parse options for a project. Generators may put interceptors in the given namespaces; by default, only in that
+    /// of TabStudio's generated XAML loader, which redirects Avalonia's <c>AvaloniaXamlLoader.Load(this)</c>.
+    /// </summary>
     /// <param name="optimize">Whether this is a release build, which defines <c>RELEASE</c> instead of <c>DEBUG</c>.</param>
-    public static CSharpParseOptions CreateParseOptions(bool optimize = false) => new(
+    /// <param name="interceptorsNamespaces">The namespaces interceptors are allowed in, as the SDK's <c>InterceptorsNamespaces</c> property lists them.</param>
+    public static CSharpParseOptions CreateParseOptions(bool optimize = false, IEnumerable<string>? interceptorsNamespaces = null) => new CSharpParseOptions(
         languageVersion: LanguageVersion.Latest,
         documentationMode: DocumentationMode.Parse,
         kind: SourceCodeKind.Regular,
-        preprocessorSymbols: [.. CommonSymbols, optimize ? "RELEASE" : "DEBUG"]);
+        preprocessorSymbols: [.. CommonSymbols, optimize ? "RELEASE" : "DEBUG"])
+        .WithFeatures([new("InterceptorsNamespaces", string.Join(';', interceptorsNamespaces ?? DefaultInterceptorsNamespaces))]);
 
     /// <summary>Compilation options for a project.</summary>
     /// <param name="kind">Whether to produce a program or a library.</param>

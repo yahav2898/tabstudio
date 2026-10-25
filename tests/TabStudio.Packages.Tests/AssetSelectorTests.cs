@@ -91,4 +91,43 @@ public sealed class AssetSelectorTests
     }
 
     private static PackageAssets Select(params string[] files) => AssetSelector.Select(files, Net10, Fallback);
+
+    [Fact]
+    public void Analyzers_come_from_the_highest_roslyn_folder_the_compiler_supports_plus_unversioned_ones()
+    {
+        var analyzers = AssetSelector.SelectAnalyzers(
+            [
+                "analyzers/dotnet/cs/Shared.dll",
+                "analyzers/dotnet/Agnostic.dll",
+                "analyzers/dotnet/vb/VisualBasic.dll",
+                "analyzers/dotnet/roslyn4.0/cs/Generator.dll",
+                "analyzers/dotnet/roslyn4.12/cs/Generator.dll",
+                "analyzers/dotnet/roslyn4.12/cs/Generator.CodeFixes.dll",
+                "analyzers/dotnet/roslyn5.0/cs/Generator.dll",
+                "analyzers/dotnet/cs/readme.txt",
+                "lib/net8.0/Lib.dll",
+            ],
+            new Version(4, 14));
+
+        Assert.Equal(
+            new[]
+            {
+                "analyzers/dotnet/Agnostic.dll",
+                "analyzers/dotnet/cs/Shared.dll",
+                "analyzers/dotnet/roslyn4.12/cs/Generator.CodeFixes.dll",
+                "analyzers/dotnet/roslyn4.12/cs/Generator.dll",
+            },
+            analyzers);
+    }
+
+    [Fact]
+    public void Packages_without_a_compiler_version_bring_no_analyzers()
+    {
+        var assets = Select("lib/net8.0/Lib.dll", "analyzers/dotnet/cs/Generator.dll");
+
+        Assert.Empty(assets.Analyzers);
+        Assert.Equal(
+            new[] { "analyzers/dotnet/cs/Generator.dll" },
+            AssetSelector.Select(["lib/net8.0/Lib.dll", "analyzers/dotnet/cs/Generator.dll"], Net10, Fallback, new Version(4, 14)).Analyzers);
+    }
 }

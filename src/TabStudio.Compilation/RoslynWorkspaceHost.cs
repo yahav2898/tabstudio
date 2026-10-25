@@ -52,6 +52,9 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
     private readonly IReadOnlyList<MetadataReference> _frameworkReferences;
     private readonly Lock _gate = new();
     private readonly Dictionary<string, DocumentId> _documents = new(StringComparer.Ordinal);
+
+    /// <summary>Files that are not C# but that generators read, such as Avalonia's <c>.axaml</c> files.</summary>
+    private readonly Dictionary<string, DocumentId> _additionalDocuments = new(StringComparer.Ordinal);
     private readonly Dictionary<string, ProjectId> _projectIds = new(StringComparer.Ordinal);
     private readonly Dictionary<ProjectId, TsProject> _projects = [];
     private TsWorkspace? _loaded;
@@ -118,6 +121,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
     {
         _workspace.ClearSolution();
         _documents.Clear();
+        _additionalDocuments.Clear();
         _projectIds.Clear();
         _projects.Clear();
         _skeletons.Clear();
@@ -140,12 +144,10 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         // the second references those images, so their full compilations are never kept.
         if (CreateSkeletons(csharpProjects))
         {
-            var texts = new SnapshotTextProvider(_documents
-                .Select(d => (d.Key, Text: _workspace.CurrentSolution.GetDocument(d.Value)?.GetTextAsync().GetAwaiter().GetResult().ToString()))
-                .Where(d => d.Text is not null)
-                .ToDictionary(d => d.Key, d => d.Text!, StringComparer.Ordinal));
+            var texts = new SnapshotTextProvider(CurrentTexts());
             _workspace.ClearSolution();
             _documents.Clear();
+            _additionalDocuments.Clear();
             AddSolution(workspace, csharpProjects, allProjectDirectories, texts);
         }
     }
@@ -194,6 +196,11 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
 
         lock (_gate)
         {
+            if (_additionalDocuments.TryGetValue(filePath, out var additional))
+            {
+                return _workspace.TryApplyChanges(_workspace.CurrentSolution.WithAdditionalDocumentText(additional, SourceText.From(text, Encoding.UTF8)));
+            }
+
             if (!_documents.TryGetValue(filePath, out var id) || !ReplaceText(id, text))
             {
                 return false;
@@ -397,13 +404,14 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         lock (_gate)
         {
             _optimize = optimize;
-            var parseOptions = CSharpCompiler.CreateParseOptions(optimize);
             var level = optimize ? OptimizationLevel.Release : OptimizationLevel.Debug;
             var solution = _workspace.CurrentSolution;
             foreach (var project in solution.Projects)
             {
                 if (project.CompilationOptions is { } options)
                 {
+                    var parseOptions = CSharpCompiler.CreateParseOptions(
+                        optimize, _projects.TryGetValue(project.Id, out var known) ? SdkGenerators.InterceptorsNamespaces(known) : null);
                     solution = solution
                         .WithProjectCompilationOptions(project.Id, options.WithOptimizationLevel(level))
                         .WithProjectParseOptions(project.Id, parseOptions);
@@ -503,6 +511,17 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             _documents[path] = documentId;
         }
 
+        var additionalDocuments = new List<DocumentInfo>();
+        if (UsesAvaloniaXaml(project))
+        {
+            foreach (var path in ProjectSourceFiles.Enumerate(project, allProjectDirectories, ".axaml"))
+            {
+                var documentId = DocumentId.CreateNewId(id, path);
+                additionalDocuments.Add(CreateDocumentInfo(documentId, path, ReadSource(sources, path), isGenerated: false));
+                _additionalDocuments[path] = documentId;
+            }
+        }
+
         if (CSharpCompiler.CreateGlobalUsingsSource(project) is { } globalUsings)
         {
             var path = Path.Combine(project.DirectoryPath, "obj", $"{project.Name}.GlobalUsings.g.cs");
@@ -524,10 +543,37 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             LanguageNames.CSharp,
             filePath: project.FilePath,
             compilationOptions: CSharpCompiler.CreateCompilationOptions(kind, project.NullableEnabled, _optimize, allowUnsafe, _concurrentBuild),
-            parseOptions: CSharpCompiler.CreateParseOptions(_optimize),
+            parseOptions: CSharpCompiler.CreateParseOptions(_optimize, SdkGenerators.InterceptorsNamespaces(project)),
             documents: documents,
             projectReferences: projectReferences,
-            metadataReferences: GetMetadataReferences(project));
+            metadataReferences: GetMetadataReferences(project),
+            analyzerReferences: GetAnalyzerReferences(project),
+            additionalDocuments: additionalDocuments)
+            .WithAnalyzerConfigDocuments([CreateAnalyzerConfig(id, project)]);
+    }
+
+    /// <summary>The current text of every source and additional file, to load the solution again with. The caller holds the gate.</summary>
+    private Dictionary<string, string> CurrentTexts()
+    {
+        var solution = _workspace.CurrentSolution;
+        var texts = new Dictionary<string, string>(StringComparer.Ordinal);
+        foreach (var (path, id) in _documents)
+        {
+            if (solution.GetDocument(id) is { } document && document.TryGetText(out var text))
+            {
+                texts[path] = text.ToString();
+            }
+        }
+
+        foreach (var (path, id) in _additionalDocuments)
+        {
+            if (solution.GetAdditionalDocument(id) is { } document && document.TryGetText(out var text))
+            {
+                texts[path] = text.ToString();
+            }
+        }
+
+        return texts;
     }
 
     private static DocumentInfo CreateDocumentInfo(DocumentId id, string path, string text, bool isGenerated) =>

@@ -69,7 +69,7 @@ public sealed class PackageRestorer
             .ToList();
         _frameworkPackages = new FrameworkPackages(options.FrameworkAssemblyNames, framework);
         _packages = new GlobalPackagesFolder(options.GlobalPackagesFolder);
-        _sharedFrameworks = new SharedFrameworks(_packages, CreateFeeds, options.TargetFramework);
+        _sharedFrameworks = new SharedFrameworks(_packages, CreateFeeds, options.TargetFramework, options.CompilerVersion);
     }
 
     /// <summary>The options the restorer was created with.</summary>
@@ -149,6 +149,7 @@ public sealed class PackageRestorer
             Packages = packages,
             CompileAssemblies = Combine(packages, p => p.CompileAssemblies),
             RuntimeAssemblies = Combine(packages, p => p.RuntimeAssemblies),
+            Analyzers = Combine(packages, p => p.Analyzers),
             Diagnostics = PackageDiagnostics.Sort(diagnostics),
             Duration = stopwatch.Elapsed,
         };
@@ -160,6 +161,19 @@ public sealed class PackageRestorer
 
         progress?.Report(new RestoreProgress(RestoreStage.Completed, $"Restored {packages.Count} packages for {project.Name}", packages.Count, packages.Count));
         return WithFrameworks(result, frameworks, frameworkDiagnostics);
+    }
+
+    /// <summary>
+    /// Restores .NET's own source generators, such as those behind <c>[GeneratedRegex]</c> and <c>[JsonSerializable]</c>,
+    /// from the targeting pack on NuGet. Every C# project can use them; the pack is downloaded once.
+    /// </summary>
+    /// <param name="cancellationToken">Cancels the download.</param>
+    /// <returns>The generators, and any problem, such as no network before the pack was ever downloaded.</returns>
+    public async Task<(IReadOnlyList<string> Analyzers, IReadOnlyList<BuildDiagnostic> Diagnostics)> RestoreFrameworkAnalyzersAsync(CancellationToken cancellationToken = default)
+    {
+        var diagnostics = new List<BuildDiagnostic>();
+        var framework = await _sharedFrameworks.RestoreAsync(SharedFrameworks.NetCoreFramework, ".NET", diagnostics, cancellationToken).ConfigureAwait(false);
+        return (framework?.Analyzers ?? [], diagnostics);
     }
 
     /// <summary>Restores the shared frameworks a project uses, such as ASP.NET Core.</summary>
@@ -198,6 +212,7 @@ public sealed class PackageRestorer
             Frameworks = frameworks,
             CompileAssemblies = [.. frameworks.SelectMany(f => f.CompileAssemblies), .. result.CompileAssemblies.Where(NotProvided)],
             RuntimeAssemblies = [.. frameworks.SelectMany(f => f.RuntimeAssemblies), .. result.RuntimeAssemblies.Where(NotProvided)],
+            Analyzers = [.. frameworks.SelectMany(f => f.Analyzers), .. result.Analyzers.Where(NotProvided)],
             Diagnostics = PackageDiagnostics.Sort([.. frameworkDiagnostics, .. result.Diagnostics]),
         };
     }
@@ -273,7 +288,7 @@ public sealed class PackageRestorer
         var name = $"{match.Id} {match.Version.ToNormalizedString()}";
         var files = Directory.EnumerateFiles(directory, "*", SearchOption.AllDirectories)
             .Select(file => Path.GetRelativePath(directory, file).Replace(Path.DirectorySeparatorChar, '/'));
-        var assets = AssetSelector.Select(files, _framework, _fallback);
+        var assets = AssetSelector.Select(files, _framework, _fallback, Options.CompilerVersion);
 
         if (!assets.IsCompatible)
         {
@@ -294,7 +309,11 @@ public sealed class PackageRestorer
         var compile = ToFullPaths(directory, assets.CompileAssemblies);
         var runtime = ToFullPaths(directory, assets.RuntimeAssemblies);
         var providedByFramework = assets.CompileAssemblies.Count + assets.RuntimeAssemblies.Count > 0 && compile.Count + runtime.Count == 0;
-        return new RestoredPackage(match.Id, match.Version.ToNormalizedString(), directory, package.IsDirect, compile, runtime, providedByFramework);
+        var analyzers = assets.Analyzers.Select(path => Path.Combine(directory, path.Replace('/', Path.DirectorySeparatorChar))).ToList();
+        return new RestoredPackage(match.Id, match.Version.ToNormalizedString(), directory, package.IsDirect, compile, runtime, providedByFramework)
+        {
+            Analyzers = analyzers,
+        };
     }
 
     /// <summary>Turns relative asset paths into full paths, without the assemblies the framework already has.</summary>

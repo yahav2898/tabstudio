@@ -18,4 +18,8 @@ internal sealed record PackageAssets(
     IReadOnlyList<string> RuntimeAssemblies,
     bool IsCompatible,
     NuGetFramework? FallbackFramework,
-    IReadOnlyList<NuGetFramework> SupportedFrameworks);
+    IReadOnlyList<NuGetFramework> SupportedFrameworks)
+{
+    /// <summary>The C# analyzers and source generators the compiler loads: <c>analyzers/dotnet/...</c>.</summary>
+    public IReadOnlyList<string> Analyzers { get; init; } = [];
+}

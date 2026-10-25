@@ -211,6 +211,7 @@ public sealed partial class WorkspaceViewModel
             StatusText = $"Saved {document.FileName}";
             OnDocumentSavedForTests(document);
             OnDocumentSavedForWeb(document);
+            OnDocumentSavedForGenerators(document);
             await OnProjectFileSavedAsync(document);
             GitChanges.ScheduleRefresh();
             return true;

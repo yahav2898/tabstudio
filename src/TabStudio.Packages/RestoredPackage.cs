@@ -19,4 +19,8 @@ public sealed record RestoredPackage(
     bool IsDirect,
     IReadOnlyList<string> CompileAssemblies,
     IReadOnlyList<string> RuntimeAssemblies,
-    bool ProvidedByFramework = false);
+    bool ProvidedByFramework = false)
+{
+    /// <summary>Full paths of the package's C# analyzers and source generators.</summary>
+    public IReadOnlyList<string> Analyzers { get; init; } = [];
+}

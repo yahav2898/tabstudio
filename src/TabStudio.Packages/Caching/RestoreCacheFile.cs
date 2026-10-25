@@ -20,6 +20,9 @@ internal sealed class RestoreCacheFile
     /// <summary>The assemblies to load at run time.</summary>
     public List<string> RuntimeAssemblies { get; set; } = [];
 
+    /// <summary>The analyzers and source generators.</summary>
+    public List<string> Analyzers { get; set; } = [];
+
     /// <summary>The warnings the restore reported, repeated whenever the cache is used.</summary>
     public List<CachedDiagnostic> Diagnostics { get; set; } = [];
 }
@@ -44,6 +47,9 @@ internal sealed class CachedPackage
 
     /// <summary>See <see cref="RestoredPackage.RuntimeAssemblies"/>.</summary>
     public List<string> RuntimeAssemblies { get; set; } = [];
+
+    /// <summary>See <see cref="RestoredPackage.Analyzers"/>.</summary>
+    public List<string> Analyzers { get; set; } = [];
 
     /// <summary>See <see cref="RestoredPackage.ProvidedByFramework"/>.</summary>
     public bool ProvidedByFramework { get; set; }

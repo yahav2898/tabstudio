@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices;
 using NuGet.Versioning;
 using TabStudio.Core.Diagnostics;
+using TabStudio.Packages.Assets;
 using TabStudio.Packages.Feeds;
 using TabStudio.Packages.Installation;
 
@@ -11,7 +12,11 @@ namespace TabStudio.Packages;
 /// <param name="Version">Its version.</param>
 /// <param name="CompileAssemblies">Its reference assemblies, to compile against.</param>
 /// <param name="RuntimeAssemblies">Its implementation assemblies, to run with.</param>
-public sealed record SharedFrameworkAssets(string Name, string Version, IReadOnlyList<string> CompileAssemblies, IReadOnlyList<string> RuntimeAssemblies);
+public sealed record SharedFrameworkAssets(string Name, string Version, IReadOnlyList<string> CompileAssemblies, IReadOnlyList<string> RuntimeAssemblies)
+{
+    /// <summary>The analyzers and source generators its targeting pack brings, such as ASP.NET Core's.</summary>
+    public IReadOnlyList<string> Analyzers { get; init; } = [];
+}
 
 /// <summary>
 /// Restores shared frameworks other than .NET itself from NuGet, the way the .NET SDK gets them for a
@@ -22,12 +27,16 @@ public sealed record SharedFrameworkAssets(string Name, string Version, IReadOnl
 /// assemblies. The runtime pack of the device's operating system and processor is used; its assemblies are IL,
 /// so a pack built for Linux also serves Android.
 /// </remarks>
-internal sealed class SharedFrameworks(GlobalPackagesFolder packages, Func<IReadOnlyList<IPackageFeed>> feeds, string targetFramework)
+internal sealed class SharedFrameworks(GlobalPackagesFolder packages, Func<IReadOnlyList<IPackageFeed>> feeds, string targetFramework, Version? compilerVersion)
 {
+    /// <summary>.NET itself: its targeting pack brings the source generators of the base library, such as the regular expression and JSON ones.</summary>
+    public const string NetCoreFramework = "Microsoft.NETCore.App";
+
     /// <summary>The frameworks TabStudio can restore, and the package id prefix of their packs.</summary>
     private static readonly Dictionary<string, string> PackPrefixes = new(StringComparer.OrdinalIgnoreCase)
     {
         ["Microsoft.AspNetCore.App"] = "Microsoft.AspNetCore.App",
+        [NetCoreFramework] = "Microsoft.NETCore.App",
     };
 
     /// <summary>The runtime identifier whose runtime packs this device uses, such as <c>linux-arm64</c>.</summary>
@@ -59,13 +68,15 @@ internal sealed class SharedFrameworks(GlobalPackagesFolder packages, Func<IRead
         {
             diagnostics.Add(PackageDiagnostics.Error(
                 PackageDiagnosticIds.UnsupportedFramework,
-                $"The shared framework {name} does not run on this device; only ASP.NET Core (Microsoft.AspNetCore.App) can be added to a project here.",
+                $"The shared framework {name} does not run on this device; ASP.NET Core (Microsoft.AspNetCore.App) is the one a project can add here.",
                 projectName));
             return null;
         }
 
         var referencePack = $"{prefix}.Ref";
-        var runtimePack = $"{prefix}.Runtime.{RuntimeIdentifier}";
+
+        // .NET's own runtime is the one TabStudio runs on, so only its targeting pack is needed, for the generators.
+        var runtimePack = string.Equals(name, NetCoreFramework, StringComparison.OrdinalIgnoreCase) ? referencePack : $"{prefix}.Runtime.{RuntimeIdentifier}";
         var major = MajorVersion(targetFramework);
 
         NuGetVersion? version;
@@ -100,11 +111,15 @@ internal sealed class SharedFrameworks(GlobalPackagesFolder packages, Func<IRead
         {
             var reference = feed is null ? packages.GetPackageDirectory(referencePack, version) : await packages.InstallAsync(feed, referencePack, version, cancellationToken).ConfigureAwait(false);
             var runtime = feed is null ? packages.GetPackageDirectory(runtimePack, version) : await packages.InstallAsync(feed, runtimePack, version, cancellationToken).ConfigureAwait(false);
+            var isNetCore = string.Equals(name, NetCoreFramework, StringComparison.OrdinalIgnoreCase);
             return new SharedFrameworkAssets(
                 name,
                 version.ToNormalizedString(),
-                Assemblies(Path.Combine(reference, "ref", targetFramework)),
-                Assemblies(Path.Combine(runtime, "runtimes", RuntimeIdentifier, "lib", targetFramework)));
+                isNetCore ? [] : Assemblies(Path.Combine(reference, "ref", targetFramework)),
+                isNetCore ? [] : Assemblies(Path.Combine(runtime, "runtimes", RuntimeIdentifier, "lib", targetFramework)))
+            {
+                Analyzers = Analyzers(reference),
+            };
         }
         catch (Exception ex) when (ex is PackageSourceException or InvalidPackageException or IOException)
         {
@@ -151,4 +166,18 @@ internal sealed class SharedFrameworks(GlobalPackagesFolder packages, Func<IRead
 
     private static List<string> Assemblies(string folder) =>
         Directory.Exists(folder) ? [.. Directory.EnumerateFiles(folder, "*.dll").Order(StringComparer.Ordinal)] : [];
+
+    /// <summary>The C# analyzers of a targeting pack that the compiler can run.</summary>
+    private List<string> Analyzers(string packDirectory)
+    {
+        var analyzers = Path.Combine(packDirectory, "analyzers");
+        if (compilerVersion is null || !Directory.Exists(analyzers))
+        {
+            return [];
+        }
+
+        var files = Directory.EnumerateFiles(analyzers, "*.dll", SearchOption.AllDirectories)
+            .Select(file => Path.GetRelativePath(packDirectory, file).Replace(Path.DirectorySeparatorChar, '/'));
+        return [.. AssetSelector.SelectAnalyzers(files, compilerVersion).Select(path => Path.Combine(packDirectory, path.Replace('/', Path.DirectorySeparatorChar)))];
+    }
 }
