@@ -94,8 +94,11 @@ public sealed partial class WorkspaceViewModel
     private bool CanBuild() => State is IdeState.Ready or IdeState.Failed;
 
     /// <summary>Builds projects one after another, reporting in the Output panel and the Error List.</summary>
+    /// <param name="projects">The projects.</param>
+    /// <param name="showOutput">Whether to clear the Output panel and bring it forward.</param>
+    /// <param name="results">Receives the result of every project, in order, when given.</param>
     /// <returns>The result for the last project, or <see langword="null"/> when nothing was built.</returns>
-    private async Task<BuildResult?> BuildProjectsAsync(List<ProjectInfo> projects, bool showOutput)
+    private async Task<BuildResult?> BuildProjectsAsync(List<ProjectInfo> projects, bool showOutput, List<BuildResult>? results = null)
     {
         if (_language is not { } language || projects.Count == 0)
         {
@@ -128,6 +131,7 @@ public sealed partial class WorkspaceViewModel
             Output.WriteLine($"{prefix}------ Build started: Project: {project.Name}, Configuration: {Configuration} ------", OutputKind.Info);
 
             last = await language.BuildAsync(project, CancellationToken.None);
+            results?.Add(last);
             ErrorList.SetBuildResult(last);
             foreach (var diagnostic in last.Diagnostics.Where(d => d.Severity >= DiagnosticSeverityLevel.Warning))
             {
