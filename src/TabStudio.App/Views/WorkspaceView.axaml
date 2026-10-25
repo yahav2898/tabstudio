@@ -103,6 +103,8 @@
             <MenuItem Header="Go To _Definition" InputGesture="F12" Command="{Binding GoToDefinitionCommand}" />
             <MenuItem Header="_Peek Definition" InputGesture="Alt+F12" Command="{Binding PeekDefinitionCommand}" />
             <MenuItem Header="Go To _Implementation" InputGesture="Ctrl+F12" Command="{Binding GoToImplementationCommand}" />
+            <MenuItem Header="Go To D_eclaration" Command="{Binding GoToDeclarationCommand}" />
+            <MenuItem Header="Go To _Type Definition" Command="{Binding GoToTypeDefinitionCommand}" />
             <MenuItem Header="Find All _References" InputGesture="Shift+F12" Command="{Binding FindAllReferencesCommand}" />
           </MenuItem>
           <MenuItem Header="_Git">
@@ -516,8 +518,18 @@
                         Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.CallStack}" Content="Call Stack" />
               </StackPanel>
               <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <TextBlock Classes="muted small" Text="Show output from:" VerticalAlignment="Center" Margin="0,0,8,0"
+                           IsVisible="{Binding IsOutputSelected}" />
+                <ComboBox x:Name="OutputSourceBox" MinWidth="170" Height="30" MinHeight="30" Margin="0,0,6,0" FontSize="12.5" VerticalAlignment="Center"
+                          ItemsSource="{Binding OutputSources}" SelectedItem="{Binding SelectedOutputSource}" IsVisible="{Binding IsOutputSelected}">
+                  <ComboBox.ItemTemplate>
+                    <DataTemplate DataType="vm:OutputSourceOption">
+                      <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
+                    </DataTemplate>
+                  </ComboBox.ItemTemplate>
+                </ComboBox>
                 <Button Theme="{StaticResource ToolButton}" MinHeight="30" Height="30" FontSize="12.5" Content="Clear"
-                        Command="{Binding Output.ClearCommand}" IsVisible="{Binding IsOutputSelected}" />
+                        Command="{Binding ShownOutput.ClearCommand}" IsVisible="{Binding IsOutputSelected}" />
                 <Button Theme="{StaticResource ToolButton}" Width="30" Height="30" MinWidth="30" MinHeight="30" Padding="0"
                         ToolTip.Tip="Hide" Command="{Binding ToggleBottomPanelCommand}">
                   <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="14" />
@@ -531,7 +543,7 @@
             </Border>
             <Panel>
               <views:ErrorListView DataContext="{Binding ErrorList}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsErrorListSelected}" />
-              <views:OutputView DataContext="{Binding Output}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsOutputSelected}" />
+              <views:OutputView DataContext="{Binding ShownOutput}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsOutputSelected}" />
               <views:CompatibilityView IsVisible="{Binding IsCompatibilitySelected}" />
               <Panel IsVisible="{Binding SelectedPanel, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static vm:BottomPanel.References}}">
                 <views:ReferencesView DataContext="{Binding References}" />
@@ -657,6 +669,10 @@
             <TextBlock Text="{Binding StatusText}" VerticalAlignment="Center" />
           </StackPanel>
           <TextBlock Text="{Binding LanguageServiceText}" VerticalAlignment="Center" />
+          <Button Theme="{StaticResource StatusBarButton}" Height="24" ToolTip.Tip="Show the language servers' log" Command="{Binding ShowLanguageServerLogCommand}"
+                  IsVisible="{Binding LanguageServerText, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <TextBlock Text="{Binding LanguageServerText}" FontSize="12" VerticalAlignment="Center" />
+          </Button>
           <TextBlock Text="{Binding PackagesText}" VerticalAlignment="Center"
                      IsVisible="{Binding PackagesText, Converter={x:Static ObjectConverters.IsNotNull}}" />
           <StackPanel Orientation="Horizontal" Spacing="5">

@@ -126,7 +126,8 @@ public sealed partial class CodeEditorView
             return;
         }
 
-        if (!completion.IsSoftSelection && completion.SelectedItem is not null && CompletionMatcher.IsCommitCharacter(typed))
+        if (!completion.IsSoftSelection && completion.SelectedItem is { } item
+            && (item.Entry.CommitCharacters?.Contains(typed) ?? CompletionMatcher.IsCommitCharacter(typed)))
         {
             e.Handled = true;
             _ = CommitCompletionAsync(null, typed);
@@ -224,6 +225,11 @@ public sealed partial class CodeEditorView
         if (outcome is not null)
         {
             _editor.CaretOffset = Math.Clamp(outcome.Caret, 0, _editor.Document.TextLength);
+            if (outcome.SelectionLength > 0 && _editor.CaretOffset + outcome.SelectionLength <= _editor.Document.TextLength)
+            {
+                // A snippet's first placeholder is selected, so typing replaces it.
+                _editor.Select(_editor.CaretOffset, outcome.SelectionLength);
+            }
         }
 
         if (commitCharacter is { } character && (outcome is null || outcome.TypeCommitCharacter))

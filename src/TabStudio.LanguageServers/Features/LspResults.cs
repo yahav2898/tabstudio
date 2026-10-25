@@ -34,7 +34,14 @@ public sealed record LspCompletionEdit(TextSpan Span, string NewText, int CaretO
 /// <summary>A completion list.</summary>
 /// <param name="Items">The items, in the server's order.</param>
 /// <param name="IsIncomplete">Whether typing more should ask the server again rather than only filter.</param>
-public sealed record LspCompletionList(IReadOnlyList<LspCompletionItem> Items, bool IsIncomplete);
+public sealed record LspCompletionList(IReadOnlyList<LspCompletionItem> Items, bool IsIncomplete)
+{
+    /// <summary>The text the list was computed for, which the items' spans are offsets into.</summary>
+    public TextSnapshot? Snapshot { get; init; }
+
+    /// <summary>The offset the list was asked for at.</summary>
+    public int Offset { get; init; }
+}
 
 /// <summary>A hover tooltip.</summary>
 /// <param name="Contents">What to show.</param>

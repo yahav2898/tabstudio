@@ -59,7 +59,7 @@ internal static class CompletionConverter
             }
         }
 
-        return new LspCompletionList(converted, isIncomplete);
+        return new LspCompletionList(converted, isIncomplete) { Snapshot = snapshot, Offset = offset };
     }
 
     /// <summary>An item with what <c>completionItem/resolve</c> added: documentation, detail and extra edits.</summary>

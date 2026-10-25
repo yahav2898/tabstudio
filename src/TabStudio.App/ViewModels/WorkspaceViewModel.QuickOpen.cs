@@ -9,7 +9,14 @@ namespace TabStudio.App.ViewModels;
 /// <param name="Path">Full path of the file.</param>
 /// <param name="Name">The file name.</param>
 /// <param name="Folder">The folder, relative to the workspace root.</param>
-public sealed record QuickOpenItem(string Path, string Name, string Folder);
+public sealed record QuickOpenItem(string Path, string Name, string Folder)
+{
+    /// <summary>For a symbol, the one-based line it is on; <see langword="null"/> for a file.</summary>
+    public int? Line { get; init; }
+
+    /// <summary>For a symbol, the one-based column it is at.</summary>
+    public int Column { get; init; } = 1;
+}
 
 /// <summary>The search box in the menu bar: type part of a file name, tap a result to open it.</summary>
 public sealed partial class WorkspaceViewModel
@@ -43,7 +50,14 @@ public sealed partial class WorkspaceViewModel
 
         QuickOpenText = string.Empty;
         IsQuickOpenOpen = false;
-        await OpenDocumentAsync(item.Path);
+        if (item.Line is { } line)
+        {
+            await NavigateToAsync(item.Path, line, item.Column);
+        }
+        else
+        {
+            await OpenDocumentAsync(item.Path);
+        }
     }
 
     partial void OnQuickOpenTextChanged(string value)

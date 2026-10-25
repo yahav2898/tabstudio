@@ -93,7 +93,8 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     /// <param name="webViews">Creates the web preview's embedded browser; none when <see langword="null"/>.</param>
     /// <param name="notifications">The system's notifications, for finished CI runs; none when <see langword="null"/>.</param>
     /// <param name="appActivity">Whether the app is in the background, so CI polling rests; Avalonia's lifetime when <see langword="null"/>.</param>
-    public WorkspaceViewModel(CompilerServices compiler, IDeviceStatus device, DeviceProfile profile, IUiDispatcher ui, SessionStore sessions, AppPaths paths, GitHubAccountViewModel? gitHubAccount = null, IStoragePicker? browser = null, IWebViewFactory? webViews = null, INotifications? notifications = null, IAppActivity? appActivity = null)
+    /// <param name="languageServers">Starts language servers and debug adapters; the desktop's launcher when <see langword="null"/>.</param>
+    public WorkspaceViewModel(CompilerServices compiler, IDeviceStatus device, DeviceProfile profile, IUiDispatcher ui, SessionStore sessions, AppPaths paths, GitHubAccountViewModel? gitHubAccount = null, IStoragePicker? browser = null, IWebViewFactory? webViews = null, INotifications? notifications = null, IAppActivity? appActivity = null, Services.LanguageServers.LanguageServerServices? languageServers = null)
     {
         ArgumentNullException.ThrowIfNull(compiler);
         ArgumentNullException.ThrowIfNull(device);
@@ -124,6 +125,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         InitializeAgent();
         Documents.CollectionChanged += (_, _) => UpdateActiveProjects();
         InitializeActions(browser, notifications, appActivity);
+        InitializeLanguageServers(languageServers, browser);
     }
 
     /// <summary>Raised when the user closes the workspace to return to the start screen.</summary>
@@ -368,6 +370,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         _language = null;
         DisposeActions();
         GitChanges.Dispose();
+        DisposeLanguageServers();
     }
 
     private void LoadStartupProjects(Workspace workspace, string? preferred)

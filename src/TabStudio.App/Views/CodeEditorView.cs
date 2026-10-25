@@ -76,6 +76,11 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
             _textMate = TextMateHighlighting.TryInstall(_editor, extension);
         }
 
+        if (document.HasLanguageServer)
+        {
+            InstallLanguageServerRendering(out _colorizer, out _diagnostics);
+        }
+
         _search = SearchPanel.Install(_editor);
         Content = _editor;
 
@@ -91,6 +96,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
         InitializeDebugging();
         InstallTestCommands();
         InitializePeek();
+        InitializeLanguageServer();
     }
 
     /// <summary>The editor control, for tests and keyboard focus.</summary>
@@ -112,6 +118,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
         _search.Uninstall();
         _textMate?.Dispose();
         DisposeDebugging();
+        DisposeLanguageServer();
     }
 
     /// <inheritdoc />

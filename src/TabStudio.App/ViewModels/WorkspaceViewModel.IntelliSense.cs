@@ -251,6 +251,12 @@ public sealed partial class WorkspaceViewModel
             }
         }
 
+        if (!await PreviewServerRenameAsync(document, target.CurrentName, newName, result.Edits))
+        {
+            document.RequestAction(EditorAction.Focus);
+            return;
+        }
+
         var files = await ApplyDocumentEditsAsync(result.Edits);
         StatusText = files == 1
             ? $"Renamed '{target.CurrentName}' to '{newName}'"
@@ -330,7 +336,7 @@ public sealed partial class WorkspaceViewModel
     {
         if (ActiveDocument is not { Features: { } features } document)
         {
-            StatusText = ActiveDocument is null ? "Open a C# file first." : "This works in C# files of the solution.";
+            StatusText = ActiveDocument is null ? "Open a C# file first." : NoIntelliSenseReason(ActiveDocument);
             return null;
         }
 

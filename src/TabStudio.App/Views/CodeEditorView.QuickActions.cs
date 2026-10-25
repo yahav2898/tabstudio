@@ -181,7 +181,8 @@ public sealed partial class CodeEditorView
 
         HideLightBulb();
         var listedFor = _codeActionsFor;
-        var edits = await _features.GetCodeActionEditsAsync(action.Id, CancellationToken.None);
+        var applied = action.Id;
+        var edits = await _features.GetCodeActionEditsAsync(applied, CancellationToken.None);
         if (edits.Count == 0)
         {
             // Another list replaced this one in the language service: list again and pick the same action.
@@ -190,7 +191,8 @@ public sealed partial class CodeEditorView
                 && again.FirstOrDefault(a => a.Title == action.Title && a.Group == action.Group) is { } same)
             {
                 listedFor = _codeActionsFor;
-                edits = await _features.GetCodeActionEditsAsync(same.Id, CancellationToken.None);
+                applied = same.Id;
+                edits = await _features.GetCodeActionEditsAsync(applied, CancellationToken.None);
             }
         }
 
@@ -211,6 +213,11 @@ public sealed partial class CodeEditorView
             {
                 _document.ApplyEdits(edit.Edits);
             }
+        }
+
+        if (_features is Services.ICodeActionFollowUp followUp)
+        {
+            await followUp.RunAfterEditsAsync(applied, CancellationToken.None);
         }
 
         _editor.TextArea.Focus();
