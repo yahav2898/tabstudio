@@ -3,7 +3,7 @@ using Android.Content.PM;
 using Android.OS;
 using Avalonia.Android;
 using TabStudio.Android.Probe;
-using SplashScreen = AndroidX.Core.SplashScreen.SplashScreen;
+using AndroidXSplashScreen = AndroidX.Core.SplashScreen.SplashScreen;
 
 namespace TabStudio.Android;
 
@@ -37,7 +37,7 @@ public sealed class MainActivity : AvaloniaMainActivity<ProbeApp>
     protected override void OnCreate(Bundle? savedInstanceState)
     {
         // Before base.OnCreate: shows the splash screen, then switches to the app theme.
-        SplashScreen.InstallSplashScreen(this);
+        AndroidXSplashScreen.InstallSplashScreen(this);
         base.OnCreate(savedInstanceState);
     }
 }

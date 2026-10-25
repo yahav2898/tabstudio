@@ -1,6 +1,5 @@
 using System.Globalization;
 using System.Runtime.InteropServices;
-using Android.OS;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
@@ -10,6 +9,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
 using TabStudio.Compilation;
+using AndroidBuild = Android.OS.Build;
 using ShapePath = Avalonia.Controls.Shapes.Path;
 
 namespace TabStudio.Android.Probe;
@@ -186,7 +186,7 @@ internal sealed class ProbeView : UserControl
     }
 
     private static string DescribeDevice() =>
-        $"Android {Build.VERSION.Release} (API {(int)Build.VERSION.SdkInt}) · {Build.Manufacturer} {Build.Model} · "
+        $"Android {AndroidBuild.VERSION.Release} (API {(int)AndroidBuild.VERSION.SdkInt}) · {AndroidBuild.Manufacturer} {AndroidBuild.Model} · "
         + $"{RuntimeInformation.ProcessArchitecture} · {Environment.ProcessorCount} cores · {RuntimeInformation.FrameworkDescription}";
 
     private static StackPanel CreateHeader() => new()
