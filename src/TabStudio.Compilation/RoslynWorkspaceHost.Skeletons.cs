@@ -170,7 +170,8 @@ public sealed partial class RoslynWorkspaceHost
 
         var roslynProject = _workspace.CurrentSolution.GetProject(_projectIds[project.FilePath])!;
         Add(roslynProject.AssemblyName);
-        Add(roslynProject.CompilationOptions?.Nullable.ToString() ?? string.Empty);
+        Add(project.NullableEnabled.ToString(CultureInfo.InvariantCulture));
+        Add(project.GetProperty("AllowUnsafeBlocks") ?? string.Empty);
         Add(_optimize.ToString(CultureInfo.InvariantCulture));
         foreach (var document in roslynProject.Documents.OrderBy(d => d.FilePath, StringComparer.Ordinal))
         {
