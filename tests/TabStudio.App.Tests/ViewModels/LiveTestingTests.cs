@@ -206,6 +206,52 @@ public sealed class LiveTestingTests : IClassFixture<SharedToolchain>, IDisposab
         Assert.True(workspace.LiveTesting.IsActive);
     }
 
+    [AvaloniaFact]
+    public async Task A_hot_device_holds_runs_back_until_it_cools_down()
+    {
+        var device = new DefaultDeviceStatus(new DeviceInfo(8L * 1024 * 1024 * 1024, 8, IsLowRamDevice: false));
+        var (workspace, pricing) = await StartAsync(device);
+        var live = workspace.LiveTesting;
+
+        device.SetThermal(ThermalState.Hot);
+        await UiTestHelpers.WaitUntilAsync(() => workspace.IsThrottled, because: "the thermal state");
+        pricing.Document.Replace(pricing.Document.Text.IndexOf("20;", StringComparison.Ordinal), 2, "17");
+        await UiTestHelpers.WaitUntilAsync(() => live.State == LiveTestingState.WaitingForDevice, RunTimeout, "the run to wait");
+
+        Assert.Equal(TestState.Failed, Entry(workspace, "Tax_is_seventeen_percent").State);
+        Assert.Equal("Live Unit Testing waits for the device to cool down", live.StatusText);
+
+        device.SetThermal(ThermalState.Normal);
+        await UiTestHelpers.WaitUntilAsync(
+            () => Entry(workspace, "Tax_is_seventeen_percent").State == TestState.Passed && live.State == LiveTestingState.UpToDate,
+            RunTimeout,
+            "the run once the device cooled down");
+    }
+
+    [AvaloniaFact]
+    public async Task On_a_compact_device_tests_run_when_a_file_is_saved()
+    {
+        var device = new DefaultDeviceStatus(new DeviceInfo(2L * 1024 * 1024 * 1024, 4, IsLowRamDevice: true));
+        var (workspace, pricing) = await StartAsync(device);
+        var live = workspace.LiveTesting;
+        Assert.True(live.RunsOnSave);
+
+        pricing.Document.Replace(pricing.Document.Text.IndexOf("20;", StringComparison.Ordinal), 2, "17");
+        await Task.Delay(TimeSpan.FromSeconds(3));
+        await UiTestHelpers.WaitUntilAsync(() => true);
+
+        Assert.Equal(LiveTestingState.Pending, live.State);
+        Assert.Equal("Live Unit Testing: save to run tests", live.StatusText);
+        Assert.Equal(TestState.Failed, Entry(workspace, "Tax_is_seventeen_percent").State);
+
+        workspace.ActiveDocument = pricing;
+        await workspace.SaveCommand.ExecuteAsync(null);
+        await UiTestHelpers.WaitUntilAsync(
+            () => Entry(workspace, "Tax_is_seventeen_percent").State == TestState.Passed && live.State == LiveTestingState.UpToDate,
+            RunTimeout,
+            "the run after saving");
+    }
+
     public void Dispose()
     {
         foreach (var workspace in _workspaces)
@@ -225,9 +271,9 @@ public sealed class LiveTestingTests : IClassFixture<SharedToolchain>, IDisposab
     private static LiveTestMarker MarkerOn(DocumentViewModel document, int line) =>
         Assert.Single(Markers(document), m => m.Line == line).Marker;
 
-    private async Task<(WorkspaceViewModel Workspace, DocumentViewModel Pricing)> StartAsync()
+    private async Task<(WorkspaceViewModel Workspace, DocumentViewModel Pricing)> StartAsync(DefaultDeviceStatus? device = null)
     {
-        var workspace = await OpenAsync();
+        var workspace = await OpenAsync(device);
         var pricing = (await workspace.OpenDocumentAsync(_temp.Resolve(PricingSolution.LibraryFile)))!;
         workspace.LiveTesting.StartCommand.Execute(null);
         await UiTestHelpers.WaitUntilAsync(
@@ -240,9 +286,9 @@ public sealed class LiveTestingTests : IClassFixture<SharedToolchain>, IDisposab
         return (workspace, pricing);
     }
 
-    private async Task<WorkspaceViewModel> OpenAsync()
+    private async Task<WorkspaceViewModel> OpenAsync(DefaultDeviceStatus? device = null)
     {
-        var device = new DefaultDeviceStatus(new DeviceInfo(8L * 1024 * 1024 * 1024, 8, IsLowRamDevice: false));
+        device ??= new DefaultDeviceStatus(new DeviceInfo(8L * 1024 * 1024 * 1024, 8, IsLowRamDevice: false));
         var workspace = new WorkspaceViewModel(
             _toolchain.Compiler, device, DeviceProfile.For(device.Device), new AvaloniaUiDispatcher(), new SessionStore(_toolchain.Paths), _toolchain.Paths);
         _workspaces.Add(workspace);
