@@ -276,7 +276,7 @@ public sealed class IntelliSenseEditorTests
         Assert.Equal(
             new string?[]
             {
-                "Quick Actions and Refactorings...", "Rename...", "Go To Definition", "Go To Implementation", "Find All References",
+                "Quick Actions and Refactorings...", "Rename...", "Go To Definition", "Peek Definition", "Go To Implementation", "Find All References",
                 "Cut", "Copy", "Paste", "Format Document", "Toggle Line Comment",
             },
             headers);

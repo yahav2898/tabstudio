@@ -142,6 +142,9 @@ public sealed partial class CodeEditorView
             case Key.F12 when e.KeyModifiers == KeyModifiers.Control:
                 _ = Workspace?.GoToImplementationCommand.ExecuteAsync(null);
                 return true;
+            case Key.F12 when e.KeyModifiers == KeyModifiers.Alt:
+                _ = Workspace?.PeekDefinitionCommand.ExecuteAsync(null);
+                return true;
             case Key.F12 when e.KeyModifiers == KeyModifiers.Shift:
                 _ = Workspace?.FindAllReferencesCommand.ExecuteAsync(null);
                 return true;
@@ -162,7 +165,7 @@ public sealed partial class CodeEditorView
                 _ = ShowQuickActionsAsync();
                 return true;
             case Key.Escape when e.KeyModifiers == KeyModifiers.None:
-                return CloseQuickInfo();
+                return ClosePeek() | CloseQuickInfo();
             default:
                 return false;
         }
