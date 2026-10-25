@@ -42,6 +42,21 @@ public sealed class SharedRuntimeAssembliesTests
         Assert.Equal(1, withXunit);
     }
 
+    [Fact]
+    public async Task Sessions_with_their_own_copy_of_xunit_each_get_an_output_helper_of_their_own()
+    {
+        // Each session loads its own xunit.abstractions: the second's ITestOutputHelper is another type than the first's.
+        using var first = UserProject.Load(Source, UserProject.XunitAssemblies);
+        using var second = UserProject.Load(Source, UserProject.XunitAssemblies);
+
+        var firstRun = await first.RunAllAsync();
+        var secondRun = await second.RunAllAsync();
+
+        AssertPassed(firstRun.Result("Writes"));
+        AssertPassed(secondRun.Result("Writes"));
+        Assert.Contains("shared hello", secondRun.Result("Writes").Output, StringComparison.Ordinal);
+    }
+
     private static void AssertPassed(TestResult result) =>
         Assert.True(result.Outcome == TestOutcome.Passed, $"{result.Outcome}: {result.ExceptionType}: {result.Message}\n{result.StackTrace}");
 }
