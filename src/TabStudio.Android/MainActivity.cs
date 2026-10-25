@@ -127,6 +127,7 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
 
                 // Presentations on external displays belong to the current activity.
                 services.AddSingleton<IExternalDisplayService>(_ => _displays ??= new AndroidExternalDisplays(context, () => _current));
+                services.AddSingleton(AndroidToolchainPlatform.Create(context));
             });
     }
 

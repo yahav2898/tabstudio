@@ -67,6 +67,7 @@ public static class AppServices
 
         // Installed VS Code extensions and the Open VSX registry.
         services.TryAddSingleton<TabStudio.App.Services.Extensions.ExtensionsService>();
+        services.TryAddSingleton(provider => new Services.Toolchains.ToolchainServices(provider.GetRequiredService<AppPaths>(), provider.GetService<TabStudio.Toolchains.Linux.ToolchainPlatform>()));
 
         // View models.
         services.AddSingleton<LinkViewModel>();

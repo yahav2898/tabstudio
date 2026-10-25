@@ -47,6 +47,12 @@ public enum ProjectKind
 
     /// <summary>A native C or C++ project (<c>.vcxproj</c>).</summary>
     NativeCpp,
+
+    /// <summary>A Python program: a folder with <c>pyproject.toml</c>, <c>requirements.txt</c> or <c>.py</c> files.</summary>
+    Python,
+
+    /// <summary>A Node.js program: a folder with <c>package.json</c>.</summary>
+    Node,
 }
 
 /// <summary>
