@@ -6,8 +6,8 @@
 
       dotnet publish src/TabStudio.Android -c Release -f net10.0-android
 
-    Until TabStudio.App lands, the activity hosts a temporary probe app (Probe/) that proves the platform
-    works: Avalonia renders, and Roslyn compiles and runs a program in-process.
+    The IDE itself lives in TabStudio.App; this project only adds what is Android's: the activity, device
+    status (memory, thermal state, memory pressure) and packaging.
   -->
 
   <PropertyGroup Label="Android">
@@ -79,13 +79,11 @@
 
   <ItemGroup>
     <PackageReference Include="Avalonia.Android" />
-    <PackageReference Include="Avalonia.Themes.Fluent" />
     <PackageReference Include="Xamarin.AndroidX.Core.SplashScreen" />
   </ItemGroup>
 
   <ItemGroup>
-    <!-- The probe compiles with it directly. The real app reaches it through TabStudio.App. -->
-    <ProjectReference Include="..\TabStudio.Compilation\TabStudio.Compilation.csproj" />
+    <ProjectReference Include="..\TabStudio.App\TabStudio.App.csproj" />
   </ItemGroup>
 
 </Project>
