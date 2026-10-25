@@ -114,25 +114,35 @@ public sealed class DebugSession : IDisposable
         }
     }
 
-    /// <summary>Sets a breakpoint on a line, or returns the one already there.</summary>
+    /// <summary>Sets a breakpoint on a line, or returns the one already there with the same condition.</summary>
     /// <param name="filePath">Full path of the source file.</param>
     /// <param name="line">One-based line number.</param>
+    /// <param name="condition">When to stop, such as <c>count == 3</c> (see <see cref="Breakpoint"/>), or
+    /// <see langword="null"/> to stop every time. A different condition replaces the breakpoint on the line.</param>
     /// <returns>The breakpoint; check <see cref="Breakpoint.IsBound"/> and <see cref="Breakpoint.Location"/> for where it hits.</returns>
-    public Breakpoint SetBreakpoint(string filePath, int line)
+    public Breakpoint SetBreakpoint(string filePath, int line, string? condition = null)
     {
         ArgumentNullException.ThrowIfNull(filePath);
         ArgumentOutOfRangeException.ThrowIfLessThan(line, 1);
 
+        var breakpoint = new Breakpoint(filePath, line, DebugInfo.FindStatement(filePath, line), condition);
         lock (_breakpointsGate)
         {
-            var existing = _breakpoints.Find(b => b.Line == line && string.Equals(b.FilePath, filePath, StringComparison.Ordinal));
-            if (existing is not null)
+            var index = _breakpoints.FindIndex(b => b.Line == line && string.Equals(b.FilePath, filePath, StringComparison.Ordinal));
+            if (index >= 0 && _breakpoints[index].Condition == breakpoint.Condition)
             {
-                return existing;
+                return _breakpoints[index];
             }
 
-            var breakpoint = new Breakpoint(filePath, line, DebugInfo.FindStatement(filePath, line));
-            _breakpoints.Add(breakpoint);
+            if (index >= 0)
+            {
+                _breakpoints[index] = breakpoint;
+            }
+            else
+            {
+                _breakpoints.Add(breakpoint);
+            }
+
             _engine.SetBreakpoints(_breakpoints);
             return breakpoint;
         }

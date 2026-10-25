@@ -12,7 +12,8 @@ public sealed class DebugPausedEventArgs : EventArgs
         Breakpoint? breakpoint,
         Exception? exception,
         int threadId,
-        long generation)
+        long generation,
+        string? conditionError = null)
     {
         Reason = reason;
         CallStack = callStack;
@@ -21,6 +22,7 @@ public sealed class DebugPausedEventArgs : EventArgs
         Exception = exception;
         ThreadId = threadId;
         Generation = generation;
+        ConditionError = conditionError;
     }
 
     /// <summary>Why it paused.</summary>
@@ -43,6 +45,12 @@ public sealed class DebugPausedEventArgs : EventArgs
 
     /// <summary>The exception, when <see cref="Reason"/> is <see cref="PauseReason.Exception"/>.</summary>
     public Exception? Exception { get; }
+
+    /// <summary>
+    /// Why the condition of <see cref="Breakpoint"/> could not be evaluated, for example a misspelled variable. The
+    /// program stops so the condition can be fixed.
+    /// </summary>
+    public string? ConditionError { get; }
 
     /// <summary>The managed thread id of the paused thread.</summary>
     public int ThreadId { get; }

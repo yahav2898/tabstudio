@@ -284,6 +284,18 @@ internal sealed class DebugEngine
         }
 
         var frame = token as DebugFrame;
+        var slots = _map.GetStatement(statementId)?.Locals;
+
+        // A condition can run property getters of the program, so it is evaluated before taking the gate.
+        DebugValue[]? values = null;
+        string? conditionError = null;
+        var conditionMet = true;
+        if (_breakpoints.Find(statementId)?.Condition is { } condition)
+        {
+            values = CreateLocals(slots, locals);
+            conditionMet = BreakpointCondition.IsMet(condition, values, out conditionError);
+        }
+
         DebugPausedEventArgs? pause = null;
         lock (_gate)
         {
@@ -292,10 +304,11 @@ internal sealed class DebugEngine
                 Monitor.Wait(_gate);
             }
 
-            if (!_stopped && ReasonToBreak(frame, statementId) is { } reason)
+            if (!_stopped && ReasonToBreak(frame, statementId) is { } reason && (reason != PauseReason.Breakpoint || conditionMet))
             {
                 var breakpoint = reason == PauseReason.Breakpoint ? _breakpoints.Find(statementId) : null;
-                pause = BeginPause(reason, frame, CreateLocals(_map.GetStatement(statementId)?.Locals, locals), breakpoint, exception: null);
+                breakpoint?.RecordHit();
+                pause = BeginPause(reason, frame, values ?? CreateLocals(slots, locals), breakpoint, exception: null, conditionError);
             }
         }
 
@@ -403,7 +416,13 @@ internal sealed class DebugEngine
     }
 
     /// <summary>Records a new pause. The caller holds the gate.</summary>
-    private DebugPausedEventArgs BeginPause(PauseReason reason, DebugFrame? frame, IReadOnlyList<DebugValue> locals, Breakpoint? breakpoint, Exception? exception)
+    private DebugPausedEventArgs BeginPause(
+        PauseReason reason,
+        DebugFrame? frame,
+        IReadOnlyList<DebugValue> locals,
+        Breakpoint? breakpoint,
+        Exception? exception,
+        string? conditionError = null)
     {
         _pauseGeneration++;
         _runToStatement = 0;
@@ -418,7 +437,8 @@ internal sealed class DebugEngine
             breakpoint,
             exception,
             Environment.CurrentManagedThreadId,
-            _pauseGeneration);
+            _pauseGeneration,
+            conditionError);
         return _currentPause;
     }
 
