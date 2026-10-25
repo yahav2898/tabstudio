@@ -108,7 +108,7 @@ internal sealed class PackageFinder
 
         var range = node.Range.PrettyPrint();
         var prerelease = available.All.Where(v => v.IsPrerelease && node.Range.Satisfies(v)).Order().ToList();
-        if (!node.Range.HasPrereleaseBounds && prerelease.Count > 0)
+        if (!AllowsPrerelease(node.Range) && prerelease.Count > 0)
         {
             return PackageDiagnostics.Error(
                 PackageDiagnosticIds.OnlyPrereleaseVersions,
@@ -210,6 +210,14 @@ internal sealed class PackageFinder
             .ToList();
         return new PackageMatch(manifest.Id, manifest.Version, dependencies, feed);
     }
+
+    /// <summary>Whether a range lets NuGet pick prerelease versions: one of its bounds is a prerelease, or it floats over them.</summary>
+    private static bool AllowsPrerelease(VersionRange range) =>
+        range.MinVersion?.IsPrerelease == true ||
+        range.MaxVersion?.IsPrerelease == true ||
+        range.Float?.FloatBehavior is NuGetVersionFloatBehavior.Prerelease or NuGetVersionFloatBehavior.PrereleaseRevision or
+            NuGetVersionFloatBehavior.PrereleasePatch or NuGetVersionFloatBehavior.PrereleaseMinor or
+            NuGetVersionFloatBehavior.PrereleaseMajor or NuGetVersionFloatBehavior.AbsoluteLatest;
 
     private void RecordFailure(PackageSourceException failure) =>
         _failures.TryAdd(failure.PackageSource?.Name ?? string.Empty, failure);
