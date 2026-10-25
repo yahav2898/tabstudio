@@ -36,7 +36,8 @@ public static partial class SelfTest
         }
 
         var runtime = new HostRuntime();
-        var collections = GC.CollectionCount(0);
+        var minor = GC.CollectionCount(0);
+        var major = GC.CollectionCount(GC.MaxGeneration);
         using var stop = new CancellationTokenSource();
         var churn = Task.Factory.StartNew(() => Churn(stop.Token), CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         var failures = new ConcurrentQueue<string>();
@@ -63,20 +64,25 @@ public static partial class SelfTest
             await churn;
         }
 
-        collections = GC.CollectionCount(0) - collections;
+        minor = GC.CollectionCount(0) - minor;
+        major = GC.CollectionCount(GC.MaxGeneration) - major;
         var message = failures.Count == 0
-            ? string.Create(CultureInfo.InvariantCulture, $"Processes: started {SpawnedPrograms} programs in {clock.Elapsed.TotalSeconds:0.0} s while {collections} collections ran")
+            ? string.Create(CultureInfo.InvariantCulture, $"Processes: started {SpawnedPrograms} programs in {clock.Elapsed.TotalSeconds:0.0} s while {minor} minor and {major} major collections ran")
             : $"Processes: {failures.Count} of {SpawnedPrograms} programs failed: {string.Join(", ", failures.Distinct().Take(3))}";
         return new SelfTestResult(failures.Count == 0, message, clock.Elapsed);
     }
 
-    /// <summary>Allocates short-lived arrays until stopped, so the nursery fills and minor collections keep running.</summary>
+    /// <summary>
+    /// Allocates short-lived arrays until stopped, so the nursery fills and minor collections keep running. They are
+    /// small objects (Mono puts arrays of more than 8000 bytes straight into its large object space, which fills no
+    /// nursery).
+    /// </summary>
     private static void Churn(CancellationToken cancellationToken)
     {
         var recent = new byte[64][];
         for (var i = 0; !cancellationToken.IsCancellationRequested; i++)
         {
-            recent[i & 63] = new byte[16 * 1024];
+            recent[i & 63] = new byte[1024];
         }
 
         GC.KeepAlive(recent);
