@@ -1,30 +1,30 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/TabStudio.Core.csproj (in 128 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/TabStudio.Packages.csproj (in 393 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/TabStudio.Core.csproj (in 135 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/TabStudio.Debugging.csproj (in 451 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj (in 451 ms).
   Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Agent/TabStudio.Agent.csproj (in 3 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/TabStudio.Compilation.csproj (in 422 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/TabStudio.Notebooks.csproj (in 422 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/TabStudio.TestRunner.csproj (in 16 ms).
   Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/TabStudio.SourceControl.csproj (in 2 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/TabStudio.Debugging.csproj (in 5 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj (in 504 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Desktop/TabStudio.Desktop.csproj (in 234 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/TabStudio.Packages.csproj (in 4 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/TabStudio.TestRunner.csproj (in 8 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/TabStudio.Notebooks.csproj (in 5 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj (in 490 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Desktop/TabStudio.Desktop.csproj (in 667 ms).
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
+  TabStudio.Packages -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/bin/Release/net10.0/TabStudio.Packages.dll
+  TabStudio.SourceControl -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/bin/Release/net10.0/TabStudio.SourceControl.dll
   TabStudio.Agent -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Agent/bin/Release/net10.0/TabStudio.Agent.dll
   TabStudio.Compilation -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Compilation/bin/Release/net10.0/TabStudio.Compilation.dll
-  TabStudio.SourceControl -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.SourceControl/bin/Release/net10.0/TabStudio.SourceControl.dll
-  TabStudio.Packages -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Packages/bin/Release/net10.0/TabStudio.Packages.dll
-  TabStudio.TestRunner -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/bin/Release/net10.0/TabStudio.TestRunner.dll
   TabStudio.Debugging -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/bin/Release/net10.0/TabStudio.Debugging.dll
+  TabStudio.TestRunner -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.TestRunner/bin/Release/net10.0/TabStudio.TestRunner.dll
   TabStudio.Notebooks -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Notebooks/bin/Release/net10.0/TabStudio.Notebooks.dll
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Previews/AvaloniaAppHost.cs(342,44): error CS0535: 'AvaloniaAppHost.PreviewLifetime' does not implement interface member 'ISingleViewApplicationLifetime.(This interface or abstract class is -not- implementable by user code !)()' [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Previews/AvaloniaAppHost.cs(342,44): error CS0535: 'AvaloniaAppHost.PreviewLifetime' does not implement interface member 'IApplicationLifetime.(This interface or abstract class is -not- implementable by user code !)()' [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Previews/AvaloniaAppHost.cs(280,28): warning CA1859: Change return type of method 'Wrap' from 'Avalonia.Controls.Control' to 'Avalonia.Controls.ThemeVariantScope' for improved performance (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1859) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+  TabStudio.App -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.App/bin/Release/net10.0/TabStudio.App.dll
+  TabStudio.Desktop -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Desktop/bin/Release/net10.0/TabStudio.Desktop.dll
 
-Build FAILED.
+Build succeeded.
 
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Previews/AvaloniaAppHost.cs(342,44): error CS0535: 'AvaloniaAppHost.PreviewLifetime' does not implement interface member 'ISingleViewApplicationLifetime.(This interface or abstract class is -not- implementable by user code !)()' [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Previews/AvaloniaAppHost.cs(342,44): error CS0535: 'AvaloniaAppHost.PreviewLifetime' does not implement interface member 'IApplicationLifetime.(This interface or abstract class is -not- implementable by user code !)()' [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
-    0 Warning(s)
-    2 Error(s)
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Previews/AvaloniaAppHost.cs(280,28): warning CA1859: Change return type of method 'Wrap' from 'Avalonia.Controls.Control' to 'Avalonia.Controls.ThemeVariantScope' for improved performance (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1859) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+    1 Warning(s)
+    0 Error(s)
 
-Time Elapsed 00:00:24.65
+Time Elapsed 00:00:37.17
