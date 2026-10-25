@@ -3,6 +3,7 @@ using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.VisualTree;
+using AvaloniaEdit;
 using AvaloniaEdit.Rendering;
 using Microsoft.Extensions.DependencyInjection;
 using TabStudio.App.Services;
@@ -73,8 +74,14 @@ public sealed class DebuggerScreenshotTests : IDisposable
         Assert.True(workspace.ShowsCallStackBeside);
         Assert.Contains(workspace.Locals.Tree.Rows, r => r.Name == "Year" && r.Value == "2000");
 
+        // A long press on touch, as Avalonia raises it on the text area, which captures the touch.
         var editor = VisibleEditor(window);
-        await editor.ShowDataTipAtAsync(program.Document.Text.IndexOf("in languages", StringComparison.Ordinal) + 4);
+        var textArea = editor.Editor.TextArea;
+        var textView = textArea.TextView;
+        var location = program.Document.GetLocation(program.Document.Text.IndexOf("in languages", StringComparison.Ordinal) + 5);
+        var visual = textView.GetVisualPosition(new TextViewPosition(location), VisualYPosition.LineMiddle) - textView.ScrollOffset;
+        var press = textView.TranslatePoint(visual, textArea) ?? throw new InvalidOperationException("The text is not in view.");
+        textArea.RaiseEvent(new HoldingRoutedEventArgs(HoldingState.Started, press, PointerType.Touch));
         await UiTestHelpers.WaitUntilAsync(() => editor.IsDataTipOpen, because: "the DataTip");
 
         UiTestHelpers.SaveScreenshot(window, "debug-03-datatip");

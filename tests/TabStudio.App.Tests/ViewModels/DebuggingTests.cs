@@ -64,25 +64,28 @@ public sealed class DebuggingTests
     }
 
     [AvaloniaFact]
-    public async Task A_breakpoint_on_a_line_without_code_moves_to_the_next_statement()
+    public async Task A_breakpoint_on_a_line_without_code_moves_to_the_next_statement_or_is_hollow()
     {
         using var fixture = new WorkspaceFixture();
         await fixture.OpenSampleAsync();
         var workspace = fixture.Workspace;
         var program = workspace.ActiveDocument!;
         fixture.AnswerInput("Ada");
-        workspace.Breakpoints.Toggle(program.FilePath, CreateGreeter - 1);
+        var blankLine = workspace.Breakpoints.Toggle(program.FilePath, CreateGreeter - 1)!;
+        var afterTheLastStatement = workspace.Breakpoints.Toggle(program.FilePath, program.Document.LineCount)!;
 
         await workspace.StartDebuggingCommand.ExecuteAsync(null);
         await WaitForPauseAsync(workspace, CreateGreeter);
 
-        var breakpoint = Assert.Single(workspace.Breakpoints.All);
-        Assert.Equal(CreateGreeter, breakpoint.Line);
-        Assert.Equal(BreakpointGlyph.Normal, breakpoint.Glyph);
-        Assert.Same(breakpoint, Assert.Single(program.Breakpoints));
+        Assert.Equal(CreateGreeter, blankLine.Line);
+        Assert.Equal(BreakpointGlyph.Normal, blankLine.Glyph);
+        Assert.Equal(BreakpointGlyph.Unbound, afterTheLastStatement.Glyph);
+        Assert.Equal(new[] { blankLine, afterTheLastStatement }, program.Breakpoints);
 
         workspace.StopDebuggingCommand.Execute(null);
         await WaitForExitAsync(workspace);
+
+        Assert.Equal(BreakpointGlyph.Normal, afterTheLastStatement.Glyph);
     }
 
     [AvaloniaFact]

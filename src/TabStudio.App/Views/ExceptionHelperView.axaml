@@ -44,9 +44,9 @@
         <SelectableTextBlock Text="{Binding QuotedMessage}" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Text}" />
         <Border IsVisible="{Binding IsDetailsVisible}" Margin="0,6,0,0" Padding="10,8" CornerRadius="6"
                 Background="{DynamicResource Brush.Window}">
-          <ScrollViewer MaxHeight="180" HorizontalScrollBarVisibility="Auto">
+          <ScrollViewer MaxHeight="180" HorizontalScrollBarVisibility="Disabled">
             <SelectableTextBlock Text="{Binding Details}" FontFamily="{DynamicResource CodeFont}" FontSize="12"
-                                 Foreground="{DynamicResource Brush.TextSecondary}" />
+                                 TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextSecondary}" />
           </ScrollViewer>
         </Border>
       </StackPanel>

@@ -154,7 +154,8 @@ public sealed class BreakpointMargin : AbstractMargin
 
     private static void DrawArrow(DrawingContext context, Point center, double radius, IBrush brush)
     {
-        var size = radius + 3;
+        // A little narrower than tall, so a breakpoint's dot shows around the arrow.
+        var size = radius + 1.5;
         var left = center.X - size;
         var right = center.X + size;
         var geometry = new StreamGeometry();

@@ -93,7 +93,10 @@ public sealed class DebugLineRenderer : IBackgroundRenderer
 
         var firstLine = textView.VisualLines[0].FirstDocumentLine.LineNumber;
         var lastLine = textView.VisualLines[^1].LastDocumentLine.LineNumber;
-        foreach (var number in _breakpointLines().Where(n => n >= firstLine && n <= lastLine && n <= document.LineCount))
+
+        // A statement the program is stopped at shows its own color instead of the breakpoint's, as in Visual Studio.
+        var stoppedLines = new[] { CurrentLine(document), CallerLine(document) };
+        foreach (var number in _breakpointLines().Where(n => n >= firstLine && n <= lastLine && n <= document.LineCount && !stoppedLines.Contains(n)))
         {
             // From the first character of code to the end of the line, the way Visual Studio marks the statement.
             var line = document.GetLineByNumber(number);

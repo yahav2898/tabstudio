@@ -5,7 +5,6 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
-using AvaloniaEdit;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.Rendering;
 using TabStudio.App.Editing;
@@ -46,16 +45,6 @@ public sealed partial class CodeEditorView
     /// <summary>Whether a DataTip is open, for tests.</summary>
     internal bool IsDataTipOpen => _dataTip.IsOpen;
 
-    /// <summary>Shows the DataTip for the text at an offset, as hovering there does. For tests.</summary>
-    /// <param name="offset">A document offset on an identifier.</param>
-    internal Task ShowDataTipAtAsync(int offset)
-    {
-        var textView = _editor.TextArea.TextView;
-        var position = new TextViewPosition(_editor.Document.GetLocation(offset));
-        var visual = textView.GetVisualPosition(position, VisualYPosition.LineMiddle) - textView.ScrollOffset;
-        return ShowDataTipAsync(textView.TranslatePoint(visual, _editor) ?? visual);
-    }
-
     /// <summary>Adds the debugger's margin, highlights and popups to the editor. Called once, by the constructor.</summary>
     [MemberNotNull(nameof(_breakpointMargin), nameof(_debugLines))]
     private void InitializeDebugging()
@@ -84,7 +73,8 @@ public sealed partial class CodeEditorView
         _document.Document.Changed += OnDocumentChangedForDebugging;
         textView.PointerHover += OnDebugPointerHover;
         textView.PointerHoverStopped += OnDebugPointerHoverStopped;
-        textView.AddHandler(HoldingEvent, OnTextViewHolding, RoutingStrategies.Bubble, handledEventsToo: true);
+        // The text area captures touches, so a long press is raised on it and bubbles to the editor.
+        _editor.AddHandler(HoldingEvent, OnEditorHolding, RoutingStrategies.Bubble, handledEventsToo: true);
         textView.VisualLinesChanged += OnVisualLinesChangedForDebugging;
         _dataTipCloseTimer.Tick += OnDataTipCloseTimerTick;
         PropertyChanged += OnPropertyChangedForDebugging;
@@ -99,7 +89,7 @@ public sealed partial class CodeEditorView
         _document.Document.Changed -= OnDocumentChangedForDebugging;
         textView.PointerHover -= OnDebugPointerHover;
         textView.PointerHoverStopped -= OnDebugPointerHoverStopped;
-        textView.RemoveHandler(HoldingEvent, OnTextViewHolding);
+        _editor.RemoveHandler(HoldingEvent, OnEditorHolding);
         textView.VisualLinesChanged -= OnVisualLinesChangedForDebugging;
         _dataTipCloseTimer.Stop();
         _dataTipCloseTimer.Tick -= OnDataTipCloseTimerTick;
@@ -219,12 +209,12 @@ public sealed partial class CodeEditorView
 
     private void OnDebugPointerHoverStopped(object? sender, PointerEventArgs e) => RestartDataTipCloseTimer();
 
-    private void OnTextViewHolding(object? sender, HoldingRoutedEventArgs e)
+    private void OnEditorHolding(object? sender, HoldingRoutedEventArgs e)
     {
-        // A long press on touch shows the DataTip a mouse shows on hover.
+        // A long press on touch shows the DataTip a mouse shows on hover; in the margin it opens the breakpoint menu.
         if (e.HoldingState == HoldingState.Started
             && _document.Debugger is { IsPaused: true }
-            && e.Source is Visual source
+            && e.Source is Visual source and not BreakpointMargin
             && source.TranslatePoint(e.Position, _editor) is { } point)
         {
             _ = ShowDataTipAsync(point);
