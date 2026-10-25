@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="using:TabStudio.App.Controls"
              xmlns:vm="using:TabStudio.App.ViewModels"
+             xmlns:swarmViews="using:TabStudio.App.Views.Swarm"
              x:Class="TabStudio.App.Views.LinkView"
              x:DataType="vm:LinkViewModel">
 
@@ -17,7 +18,8 @@
           </Panel>
           <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
             <StackPanel Orientation="Horizontal" Spacing="8">
-              <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
+              <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis"
+                         VerticalAlignment="Center" />
               <Border Classes="pill success" IsVisible="{Binding IsCurrent}">
                 <TextBlock Text="Connected" />
               </Border>
@@ -34,10 +36,10 @@
   </UserControl.DataTemplates>
 
   <!-- The TabStudio Link dialog, drawn over the start screen or the IDE. -->
-  <Panel Background="#99000000" IsVisible="{Binding IsOpen}">
+  <Panel Background="{DynamicResource Brush.Scrim}" IsVisible="{Binding IsOpen}">
     <Border MaxWidth="780" Margin="24" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="12"
             Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
-            BoxShadow="0 12 32 0 #66000000">
+            BoxShadow="{DynamicResource Shadow.Dialog}">
       <DockPanel>
 
         <!-- Title and the two halves -->
@@ -71,6 +73,16 @@
                 <TextBlock Text="Be a host" VerticalAlignment="Center" />
                 <Border Classes="pill success" IsVisible="{Binding IsHosting}">
                   <TextBlock Text="On" />
+                </Border>
+              </StackPanel>
+            </Button>
+            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsSwarmTab}" MinHeight="40" IsVisible="{Binding HasSwarm}"
+                    Command="{Binding SelectTabCommand}" CommandParameter="{x:Static vm:LinkTab.Swarm}">
+              <StackPanel Orientation="Horizontal" Spacing="7">
+                <controls:StrokeIcon Data="{StaticResource Icon.Swarm}" Size="14" />
+                <TextBlock Text="Join a swarm" VerticalAlignment="Center" />
+                <Border Classes="pill success" IsVisible="{Binding Swarm.IsInSwarm, FallbackValue=False}">
+                  <TextBlock Text="Joined" />
                 </Border>
               </StackPanel>
             </Button>
@@ -147,6 +159,9 @@
               </Border>
             </StackPanel>
 
+            <!-- Join a swarm -->
+            <swarmViews:SwarmJoinView DataContext="{Binding Swarm}" IsVisible="{Binding $parent[UserControl].((vm:LinkViewModel)DataContext).IsSwarmTab, FallbackValue=False}" />
+
             <!-- Be a host -->
             <StackPanel Spacing="14" IsVisible="{Binding IsHostTab}">
 
@@ -191,7 +206,7 @@
               <StackPanel Spacing="14" IsVisible="{Binding IsHosting}">
                 <!-- The QR code beside its instructions, or above them on a phone's narrow screen (see the code-behind). -->
                 <Grid x:Name="HostCodeGrid" ColumnDefinitions="Auto,22,*" RowDefinitions="Auto,Auto" IsVisible="{Binding HasNetwork}">
-                  <Border Width="236" Height="236" CornerRadius="10" Background="White" VerticalAlignment="Top">
+                  <Border Width="236" Height="236" CornerRadius="10" Background="{DynamicResource Brush.QrCode.Light}" VerticalAlignment="Top">
                     <controls:QrCodeView Code="{Binding HostQrCode}" />
                   </Border>
                   <StackPanel x:Name="HostCodeText" Grid.Column="2" Spacing="10" VerticalAlignment="Center">

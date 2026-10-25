@@ -1,0 +1,227 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:swarm="using:TabStudio.App.ViewModels.Swarm"
+             xmlns:swarmViews="using:TabStudio.App.Views.Swarm"
+             x:Class="TabStudio.App.Views.Swarm.SwarmView"
+             x:DataType="swarm:SwarmViewModel">
+
+  <UserControl.Styles>
+    <Style Selector="Button.tool">
+      <Setter Property="Width" Value="36" />
+      <Setter Property="MinWidth" Value="36" />
+      <Setter Property="Height" Value="34" />
+      <Setter Property="MinHeight" Value="34" />
+      <Setter Property="Padding" Value="0" />
+    </Style>
+    <Style Selector="TextBlock.section">
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Foreground" Value="{DynamicResource Brush.TextLabel}" />
+    </Style>
+    <Style Selector="Border.pill.paused">
+      <Setter Property="Background" Value="#33E3B341" />
+      <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.Warning}" />
+    </Style>
+    <Style Selector="Border.pill.failed">
+      <Setter Property="Background" Value="#33F47067" />
+      <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.Error}" />
+    </Style>
+    <Style Selector="Border.device">
+      <Setter Property="Padding" Value="12,10" />
+      <Setter Property="CornerRadius" Value="9" />
+      <Setter Property="Background" Value="{DynamicResource Brush.Control}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource Brush.Border}" />
+      <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    <Style Selector="Border.device.paused">
+      <Setter Property="BorderBrush" Value="{DynamicResource Brush.Warning}" />
+    </Style>
+    <Style Selector="Border.device.failed">
+      <Setter Property="BorderBrush" Value="{DynamicResource Brush.Error}" />
+    </Style>
+    <Style Selector="Border.device.offline">
+      <Setter Property="Opacity" Value="0.6" />
+    </Style>
+  </UserControl.Styles>
+
+  <DockPanel>
+    <!-- Title and the swarm's commands -->
+    <Border DockPanel.Dock="Top" Height="36" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+      <Grid ColumnDefinitions="*,Auto" Margin="12,0,2,0">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <TextBlock Classes="header" Text="Swarm" />
+          <Border Classes="pill success" IsVisible="{Binding IsOn}">
+            <TextBlock Text="On" />
+          </Border>
+        </StackPanel>
+        <StackPanel Grid.Column="1" Orientation="Horizontal">
+          <Button Theme="{StaticResource ToolButton}" Classes="tool" ToolTip.Tip="Add a device" Command="{Binding AddDeviceCommand}">
+            <controls:StrokeIcon Data="{StaticResource Icon.Plus}" Size="15" />
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Classes="tool" ToolTip.Tip="Device Matrix: every screen at once" Command="{Binding OpenDeviceMatrixCommand}"
+                  IsVisible="{Binding OpenDeviceMatrixCommand, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <controls:StrokeIcon Data="{StaticResource Icon.DeviceMatrix}" Size="16" />
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Classes="tool" ToolTip.Tip="Record a UI test" Command="{Binding RecordTestCommand}">
+            <Ellipse Width="11" Height="11" Fill="{DynamicResource Brush.Error}" />
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Classes="tool" ToolTip.Tip="More">
+            <controls:StrokeIcon Data="{StaticResource Icon.More}" Size="15" />
+            <Button.Flyout>
+              <MenuFlyout Placement="BottomEdgeAlignedRight">
+                <MenuItem Header="Add a Device…" Command="{Binding AddDeviceCommand}" />
+                <MenuItem Header="Record a UI Test" Command="{Binding RecordTestCommand}" />
+                <MenuItem Header="Device Matrix" Command="{Binding OpenDeviceMatrixCommand}" IsVisible="{Binding OpenDeviceMatrixCommand, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                <Separator />
+                <MenuItem Header="Start the Swarm" Command="{Binding StartCommand}" IsVisible="{Binding !IsOn}" />
+                <MenuItem Header="Stop the Swarm" Command="{Binding StopCommand}" IsVisible="{Binding IsOn}" />
+              </MenuFlyout>
+            </Button.Flyout>
+          </Button>
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+      <StackPanel Margin="12" Spacing="12">
+
+        <!-- Off: what the swarm is, and how to start it -->
+        <Border Padding="16,14" CornerRadius="10" Background="{DynamicResource Brush.Panel}" BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1"
+                IsVisible="{Binding !IsOn}">
+          <StackPanel Spacing="10">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <controls:StrokeIcon Data="{StaticResource Icon.Swarm}" Size="20" Foreground="{DynamicResource Brush.AccentText}" />
+              <TextBlock Classes="h2" Text="Every phone and tablet at once" VerticalAlignment="Center" />
+            </StackPanel>
+            <TextBlock Classes="muted" TextWrapping="Wrap"
+                       Text="Phones and tablets with TabStudio join this tablet's swarm. Run on the swarm, and the app runs on all of them; every save updates them all, and a breakpoint on any of them stops here." />
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Button Theme="{StaticResource AccentButton}" Height="40" Padding="16,0" Command="{Binding AddDeviceCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <controls:StrokeIcon Data="{StaticResource Icon.Plus}" Size="14" />
+                  <TextBlock Text="Add a device" VerticalAlignment="Center" />
+                </StackPanel>
+              </Button>
+              <Button Theme="{StaticResource SecondaryButton}" Height="40" Padding="16,0" Content="Start the swarm" Command="{Binding StartCommand}" />
+            </StackPanel>
+          </StackPanel>
+        </Border>
+
+        <TextBlock Foreground="{DynamicResource Brush.Error}" TextWrapping="Wrap" Text="{Binding Error}"
+                   IsVisible="{Binding Error, Converter={x:Static ObjectConverters.IsNotNull}}" />
+
+        <!-- On: the devices -->
+        <StackPanel Spacing="8" IsVisible="{Binding IsOn}">
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Classes="section" Text="Devices" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" Classes="muted small" Text="{Binding ListeningText}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+          </Grid>
+
+          <Border Padding="14,12" CornerRadius="9" BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1" IsVisible="{Binding !HasDevices}">
+            <StackPanel Spacing="10">
+              <TextBlock TextWrapping="Wrap" Text="No device has joined yet." Foreground="{DynamicResource Brush.TextBright}" />
+              <TextBlock Classes="muted small" TextWrapping="Wrap"
+                         Text="On a phone or tablet with TabStudio: File > TabStudio Link > Join a swarm, or Swarm on the start screen, then scan this tablet's code." />
+              <Button Theme="{StaticResource AccentButton}" Height="38" Padding="14,0" HorizontalAlignment="Left" Command="{Binding AddDeviceCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <controls:StrokeIcon Data="{StaticResource Icon.Plus}" Size="14" />
+                  <TextBlock Text="Add a device" VerticalAlignment="Center" />
+                </StackPanel>
+              </Button>
+            </StackPanel>
+          </Border>
+
+          <ItemsControl ItemsSource="{Binding Devices}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <StackPanel Spacing="8" />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate DataType="swarm:SwarmDeviceRowViewModel">
+                <Border Classes="device" Classes.paused="{Binding IsPaused}" Classes.failed="{Binding IsFailed}" Classes.offline="{Binding IsOffline}">
+                  <Grid ColumnDefinitions="Auto,*,Auto">
+                    <Panel Margin="0,2,12,0" VerticalAlignment="Top">
+                      <controls:StrokeIcon Data="{StaticResource Icon.Phone}" Size="22" Foreground="{DynamicResource Brush.TextSecondary}" IsVisible="{Binding IsPhone}" />
+                      <controls:StrokeIcon Data="{StaticResource Icon.Tablet}" Size="22" Foreground="{DynamicResource Brush.TextSecondary}" IsVisible="{Binding IsTablet}" />
+                      <controls:StrokeIcon Data="{StaticResource Icon.Computer}" Size="22" Foreground="{DynamicResource Brush.TextSecondary}" IsVisible="{Binding IsComputer}" />
+                    </Panel>
+                    <StackPanel Grid.Column="1" Spacing="3">
+                      <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                        <Border Classes="pill" Classes.success="{Binding IsRunning}" Classes.paused="{Binding IsPaused}" Classes.failed="{Binding IsFailed}">
+                          <TextBlock Text="{Binding StateLabel}" />
+                        </Border>
+                      </StackPanel>
+                      <TextBlock Classes="muted small" Text="{Binding Detail}" TextTrimming="CharacterEllipsis" />
+                      <TextBlock Classes="small" Text="{Binding StateText}" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Text}" />
+                      <TextBlock Classes="muted small" Text="{Binding UpdateText}" TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                    <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Width="36" Height="36" MinWidth="36" MinHeight="36" Padding="0" VerticalAlignment="Top"
+                            ToolTip.Tip="Remove from the swarm; it has to pair again" Command="{Binding RemoveCommand}" CommandParameter="{Binding}">
+                      <controls:StrokeIcon Data="{StaticResource Icon.Trash}" Size="15" />
+                    </Button>
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+
+          <!-- A mirrored input that a screen could not take -->
+          <Border Padding="12,9" CornerRadius="8" Background="#26E3B341" IsVisible="{Binding Notice, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <Grid ColumnDefinitions="Auto,*">
+              <controls:StrokeIcon Data="{StaticResource Icon.Warning}" Size="15" Margin="0,1,9,0" Foreground="{DynamicResource Brush.Warning}" VerticalAlignment="Top" />
+              <TextBlock Grid.Column="1" Classes="small" TextWrapping="Wrap" Text="{Binding Notice}" />
+            </Grid>
+          </Border>
+        </StackPanel>
+
+        <!-- The toggles -->
+        <Border Padding="14,6" CornerRadius="9" Background="{DynamicResource Brush.Panel}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1">
+          <StackPanel>
+            <Grid ColumnDefinitions="*,Auto" Margin="0,6">
+              <StackPanel Spacing="2" VerticalAlignment="Center">
+                <TextBlock Text="Mirror input" Foreground="{DynamicResource Brush.TextBright}" />
+                <TextBlock Classes="muted small" TextWrapping="Wrap" Text="A tap, scroll or key on any screen happens on every screen." />
+              </StackPanel>
+              <ToggleSwitch Grid.Column="1" IsChecked="{Binding MirrorInput}" OnContent="" OffContent="" Margin="12,0,0,0" />
+            </Grid>
+            <Border Height="1" Background="{DynamicResource Brush.Divider}" />
+            <Grid ColumnDefinitions="*,Auto" Margin="0,6">
+              <StackPanel Spacing="2" VerticalAlignment="Center">
+                <TextBlock Text="Pause all on a breakpoint" Foreground="{DynamicResource Brush.TextBright}" />
+                <TextBlock Classes="muted small" TextWrapping="Wrap" Text="A breakpoint on one device pauses every device, until they continue together." />
+              </StackPanel>
+              <ToggleSwitch Grid.Column="1" IsChecked="{Binding PauseAllOnBreakpoint}" OnContent="" OffContent="" Margin="12,0,0,0" />
+            </Grid>
+          </StackPanel>
+        </Border>
+
+        <!-- Recorded UI tests: record one, or replay them all on every screen -->
+        <Border Padding="14,12" CornerRadius="9" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" IsVisible="{Binding !Recorder.IsOpen}">
+          <StackPanel Spacing="10">
+            <TextBlock Classes="h2" Text="UI tests" />
+            <TextBlock Classes="muted small" TextWrapping="Wrap"
+                       Text="Record taps, typing and checks on one screen. The test goes into the solution's test project, replays on every screen from the Test Explorer, and runs in CI." />
+            <WrapPanel Orientation="Horizontal">
+              <Button Theme="{StaticResource SecondaryButton}" Height="38" Padding="14,0" Margin="0,0,8,8" Command="{Binding RecordTestCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <Ellipse Width="10" Height="10" Fill="{DynamicResource Brush.Error}" VerticalAlignment="Center" />
+                  <TextBlock Text="Record a test" VerticalAlignment="Center" />
+                </StackPanel>
+              </Button>
+              <Button Theme="{StaticResource SecondaryButton}" Height="38" Padding="14,0" Margin="0,0,8,8" Command="{Binding RunUiTestsCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <controls:StrokeIcon Data="{StaticResource Icon.RunAll}" IsFilled="True" Size="14" Foreground="{DynamicResource Brush.Success}" />
+                  <TextBlock Text="Run on every screen" VerticalAlignment="Center" />
+                </StackPanel>
+              </Button>
+            </WrapPanel>
+          </StackPanel>
+        </Border>
+        <swarmViews:UiTestRecorderView DataContext="{Binding Recorder}" />
+      </StackPanel>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

@@ -1,0 +1,32 @@
+<Project>
+
+  <!--
+    The toolchain runtime's native programs: PRoot and its loader, built for each ABI by
+    build/android/native/build.sh into artifacts/native/<abi>/. They are packaged as native libraries because
+    Android lets an app execute files only from its native library folder, and the package installer puts them
+    there (android:extractNativeLibs in AndroidManifest.xml). Only the ABIs this APK is built for are included,
+    so a device never picks an ABI that has nothing but these two files.
+
+    A build without them still works; the Toolchain Store then explains that this build has no toolchain runtime.
+  -->
+
+  <PropertyGroup>
+    <TabStudioNativeDirectory Condition="'$(TabStudioNativeDirectory)' == ''">$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)', '..', '..', 'artifacts', 'native'))</TabStudioNativeDirectory>
+    <_TabStudioRuntimeIdentifiers>;$(RuntimeIdentifiers);</_TabStudioRuntimeIdentifiers>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AndroidNativeLibrary Include="$(TabStudioNativeDirectory)arm64-v8a/*.so" Abi="arm64-v8a"
+                          Condition="$(_TabStudioRuntimeIdentifiers.Contains(';android-arm64;'))" />
+    <AndroidNativeLibrary Include="$(TabStudioNativeDirectory)armeabi-v7a/*.so" Abi="armeabi-v7a"
+                          Condition="$(_TabStudioRuntimeIdentifiers.Contains(';android-arm;'))" />
+    <AndroidNativeLibrary Include="$(TabStudioNativeDirectory)x86_64/*.so" Abi="x86_64"
+                          Condition="$(_TabStudioRuntimeIdentifiers.Contains(';android-x64;'))" />
+  </ItemGroup>
+
+  <Target Name="_TabStudioReportToolchainRuntime" BeforeTargets="Build">
+    <Message Importance="high" Text="Toolchain runtime: @(AndroidNativeLibrary->'%(Abi)/%(Filename)%(Extension)', ', ')" Condition="'@(AndroidNativeLibrary)' != ''" />
+    <Message Importance="high" Text="Toolchain runtime: not included; run build/android/native/build.sh to build PRoot for this APK." Condition="'@(AndroidNativeLibrary)' == ''" />
+  </Target>
+
+</Project>

@@ -1,0 +1,102 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:vm="using:TabStudio.App.ViewModels"
+             xmlns:swarm="using:TabStudio.App.ViewModels.Swarm"
+             x:Class="TabStudio.App.Views.Swarm.SwarmJoinView"
+             x:DataType="swarm:SwarmJoinViewModel">
+
+  <!-- The Join a swarm half of the TabStudio Link dialog, on the phone or tablet that runs the tablet's app. -->
+  <StackPanel Spacing="14">
+    <Border Padding="16,14" CornerRadius="10" Background="{DynamicResource Brush.Panel}" BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1">
+      <Grid ColumnDefinitions="Auto,*,Auto">
+        <Panel Width="12" Height="12" Margin="2,4,14,0" VerticalAlignment="Top">
+          <Ellipse Fill="{DynamicResource Brush.Success}" IsVisible="{Binding IsInSwarm}" />
+          <Ellipse Fill="{DynamicResource Brush.TextDisabled}" IsVisible="{Binding !IsInSwarm}" />
+        </Panel>
+        <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
+          <TextBlock Text="{Binding StatusText}" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextWrapping="Wrap" />
+          <TextBlock Classes="muted small" TextWrapping="Wrap"
+                     Text="In a swarm, this device shows the app a tablet builds, full screen: every save on the tablet updates it, and the tablet's debugger stops it at breakpoints." />
+        </StackPanel>
+        <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Height="40" Padding="16,0" Margin="12,0,0,0" VerticalAlignment="Center"
+                Content="Leave" Command="{Binding LeaveCommand}" IsVisible="{Binding IsInSwarm}" />
+      </Grid>
+    </Border>
+
+    <TextBlock Foreground="{DynamicResource Brush.Error}" TextWrapping="Wrap" Text="{Binding Error}"
+               IsVisible="{Binding Error, Converter={x:Static ObjectConverters.IsNotNull}}" />
+
+    <StackPanel Spacing="8" IsVisible="{Binding HasPairedSwarms}">
+      <TextBlock Classes="label" FontWeight="SemiBold" Text="Swarms this device joined" />
+      <ItemsControl ItemsSource="{Binding PairedSwarms}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate DataType="vm:PairedDeviceViewModel">
+            <Border MinHeight="58" Padding="12,8" Margin="0,0,0,6" CornerRadius="8" Background="{DynamicResource Brush.Control}">
+              <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                <Panel Margin="2,0,14,0" VerticalAlignment="Center">
+                  <controls:StrokeIcon Data="{StaticResource Icon.Phone}" Size="22" Foreground="{DynamicResource Brush.TextSecondary}" IsVisible="{Binding IsPhone}" />
+                  <controls:StrokeIcon Data="{StaticResource Icon.Tablet}" Size="22" Foreground="{DynamicResource Brush.TextSecondary}" IsVisible="{Binding IsTablet}" />
+                  <controls:StrokeIcon Data="{StaticResource Icon.Computer}" Size="22" Foreground="{DynamicResource Brush.TextSecondary}" IsVisible="{Binding IsComputer}" />
+                </Panel>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" />
+                    <Border Classes="pill success" IsVisible="{Binding IsCurrent}">
+                      <TextBlock Text="Joined" />
+                    </Border>
+                  </StackPanel>
+                  <TextBlock Classes="muted small" Text="{Binding Detail}" TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+                <Button Grid.Column="2" Theme="{StaticResource AccentButton}" Height="38" MinHeight="38" Padding="16,0" Margin="8,0,0,0"
+                        Content="Join" Command="{Binding ConnectCommand}" IsVisible="{Binding CanConnect}" />
+                <Button Grid.Column="3" Theme="{StaticResource ToolButton}" Height="38" MinHeight="38" Padding="12,0" Margin="4,0,0,0"
+                        Content="Forget" Command="{Binding ForgetCommand}" ToolTip.Tip="Forget this swarm; this device has to pair again" />
+              </Grid>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </StackPanel>
+
+    <Border Padding="16,14" CornerRadius="10" BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1" IsVisible="{Binding !IsInSwarm}">
+      <StackPanel Spacing="12">
+        <TextBlock Classes="h2" Text="Join a tablet's swarm" />
+        <TextBlock Classes="muted" TextWrapping="Wrap"
+                   Text="On the tablet, open the Swarm window and tap Add a device. Both devices must be on the same Wi-Fi." />
+        <Button Theme="{StaticResource AccentButton}" Height="44" Padding="18,0" HorizontalAlignment="Left"
+                Command="{Binding ScanCommand}" IsVisible="{Binding CanScan}">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <controls:StrokeIcon Data="{StaticResource Icon.Camera}" Size="16" />
+            <TextBlock Text="Scan the tablet's code" VerticalAlignment="Center" />
+          </StackPanel>
+        </Button>
+        <TextBlock Classes="muted small" TextWrapping="Wrap" Text="Or type the address and the code it shows under the QR code:" IsVisible="{Binding CanScan}" />
+        <TextBlock Classes="muted small" TextWrapping="Wrap" Text="Type the address and the code it shows under its QR code:" IsVisible="{Binding !CanScan}" />
+        <!-- The address and the code in one row on a tablet, the code under the address on a phone (see the code-behind). -->
+        <Grid x:Name="JoinGrid" ColumnDefinitions="*,12,190" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+          <TextBlock x:Name="AddressLabel" Classes="label" Text="Address" Margin="2,0,0,5" />
+          <TextBlock x:Name="CodeLabel" Grid.Column="2" Classes="label" Text="Code" Margin="2,0,0,5" />
+          <TextBox x:Name="AddressBox" Grid.Row="1" Classes="large mono" Watermark="192.168.1.23" Text="{Binding AddressText}" />
+          <TextBox x:Name="CodeBox" Grid.Row="1" Grid.Column="2" Classes="large mono" Watermark="XXXX-XXXX" MaxLength="10" Text="{Binding CodeText}" />
+          <Button x:Name="JoinButton" Grid.Row="2" Grid.ColumnSpan="3" Margin="0,12,0,0" Theme="{StaticResource AccentButton}" Height="44" Padding="22,0" HorizontalAlignment="Left" Command="{Binding JoinCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <controls:StrokeIcon Data="{StaticResource Icon.Swarm}" Size="16" />
+              <TextBlock Text="Join the swarm" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+        </Grid>
+        <Grid ColumnDefinitions="Auto,*" IsVisible="{Binding IsBusy}">
+          <ProgressBar IsIndeterminate="True" Width="96" Margin="0,0,10,0" VerticalAlignment="Center" />
+          <TextBlock Grid.Column="1" Classes="muted" TextWrapping="Wrap" Text="Joining and checking that it is the right tablet…" VerticalAlignment="Center" />
+        </Grid>
+      </StackPanel>
+    </Border>
+
+    <Grid ColumnDefinitions="Auto,*">
+      <controls:StrokeIcon Data="{StaticResource Icon.Warning}" Size="15" Margin="0,1,10,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush.Warning}" />
+      <TextBlock Grid.Column="1" Classes="small" TextWrapping="Wrap"
+                 Text="This device runs the code the tablet builds, so join only swarms of tablets you own." />
+    </Grid>
+  </StackPanel>
+</UserControl>

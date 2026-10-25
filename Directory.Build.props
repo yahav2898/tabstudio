@@ -24,7 +24,7 @@
     <Copyright>Copyright © TabStudio contributors</Copyright>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/yahav2898/tabstudio</RepositoryUrl>
-    <Version>0.6.0</Version>
+    <Version>0.11.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Label="Projects">
@@ -34,7 +34,7 @@
 
   <!-- Libraries document their public surface; a missing XML comment is a warning there. -->
   <PropertyGroup>
-    <TabStudioDocumentedLibraries>TabStudio.Core;TabStudio.Compilation;TabStudio.Packages;TabStudio.TestRunner;TabStudio.Debugging;TabStudio.LiveTesting;TabStudio.Notebooks;TabStudio.SourceControl;TabStudio.Agent;TabStudio.Link;TabStudio.LanguageServers;TabStudio.Web;TabStudio.Wpf</TabStudioDocumentedLibraries>
+    <TabStudioDocumentedLibraries>TabStudio.Core;TabStudio.Compilation;TabStudio.Packages;TabStudio.TestRunner;TabStudio.Debugging;TabStudio.LiveTesting;TabStudio.Notebooks;TabStudio.SourceControl;TabStudio.Agent;TabStudio.Link;TabStudio.LanguageServers;TabStudio.Web;TabStudio.Wpf;TabStudio.Swarm</TabStudioDocumentedLibraries>
   </PropertyGroup>
   <PropertyGroup Condition="'$(IsTestProject)' != 'true' AND $([System.String]::Copy(';$(TabStudioDocumentedLibraries);').Contains(';$(MSBuildProjectName);'))">
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

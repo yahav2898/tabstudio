@@ -6,7 +6,9 @@
              xmlns:views="using:TabStudio.App.Views"
              xmlns:actionViews="using:TabStudio.App.Views.Actions"
              xmlns:prv="using:TabStudio.App.Views.PullRequests"
+             xmlns:swarmViews="using:TabStudio.App.Views.Swarm"
              xmlns:extensionViews="using:TabStudio.App.Views.Extensions"
+             xmlns:toolchainViews="using:TabStudio.App.Views.Toolchains"
              xmlns:vm="using:TabStudio.App.ViewModels"
              xmlns:sys="using:System"
              x:Class="TabStudio.App.Views.WorkspaceView"
@@ -40,6 +42,7 @@
     <KeyBinding Gesture="Alt+Right" Command="{Binding NavigateForwardCommand}" />
     <KeyBinding Gesture="Ctrl+Alt+L" Command="{Binding ToggleSideBarCommand}" />
     <KeyBinding Gesture="Ctrl+Shift+X" Command="{Binding ShowExtensionsCommand}" />
+    <KeyBinding Gesture="Ctrl+OemTilde" Command="{Binding ShowTerminalCommand}" />
   </UserControl.KeyBindings>
 
   <Grid RowDefinitions="40,46,*,28">
@@ -61,6 +64,7 @@
             <MenuItem Header="Save A_ll" InputGesture="Ctrl+Shift+S" Command="{Binding SaveAllCommand}" />
             <Separator />
             <MenuItem Header="TabStudio _Link..." Command="{Binding OpenLinkCommand}" IsVisible="{Binding IsLinkAvailable}" />
+            <MenuItem Header="_Join a Swarm..." Command="{Binding JoinSwarmCommand}" IsVisible="{Binding CanJoinSwarm}" />
             <Separator />
             <MenuItem Header="_Close Document" InputGesture="Ctrl+F4" Command="{Binding CloseDocumentCommand}" />
             <MenuItem Header="Close Sol_ution" Command="{Binding CloseWorkspaceCommand}" />
@@ -94,12 +98,16 @@
             <MenuItem Header="Pull Re_quests" Command="{Binding ShowPullRequestsCommand}" />
             <MenuItem Header="_Test Explorer (Ctrl+E, T)" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}" />
             <MenuItem Header="Claude _Agent" Command="{Binding ShowAgentCommand}" />
+            <MenuItem Header="S_warm" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.Swarm}"
+                      IsVisible="{Binding IsSwarmAvailable}" />
             <MenuItem Header="_Web Preview" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.WebPreview}"
                       IsEnabled="{Binding WebPreview.HasApp}" />
             <MenuItem Header="_App Preview" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.AppPreview}"
                       IsEnabled="{Binding AppPreview.HasApp}" />
+            <MenuItem Header="Device _Matrix" Command="{Binding ShowDeviceMatrixCommand}" />
             <MenuItem Header="_Error List" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" />
             <MenuItem Header="_Output" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Output}" />
+            <MenuItem Header="Ter_minal (Ctrl+`)" Command="{Binding ShowTerminalCommand}" />
             <MenuItem Header="_Compatibility Doctor" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Compatibility}" />
             <MenuItem Header="Re_ferences" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.References}" />
             <MenuItem Header="_Bottom Panel" Command="{Binding ToggleBottomPanelCommand}" />
@@ -152,6 +160,7 @@
             <Separator />
             <MenuItem Header="{Binding StartDebuggingMenuHeader}" InputGesture="F5" Command="{Binding StartDebuggingCommand}" />
             <MenuItem Header="Start Wit_hout Debugging" InputGesture="Ctrl+F5" Command="{Binding RunCommand}" />
+            <MenuItem Header="Run C_urrent File" Command="{Binding RunCurrentFileCommand}" />
             <MenuItem Header="Brea_k All (Ctrl+Alt+Break)" Command="{Binding BreakAllCommand}" />
             <MenuItem Header="Stop D_ebugging" InputGesture="Shift+F5" Command="{Binding StopDebuggingCommand}" />
             <MenuItem Header="_Restart" InputGesture="Ctrl+Shift+F5" Command="{Binding RestartCommand}" />
@@ -194,6 +203,9 @@
                         IsChecked="{Binding LiveTesting.RunsOnSave, Mode=OneWay}" Command="{Binding LiveTesting.UseRunOnSaveCommand}" />
             </MenuItem>
             <Separator />
+            <MenuItem Header="Record _UI Test" Command="{Binding RecordUiTestCommand}" IsVisible="{Binding IsSwarmAvailable}" />
+            <MenuItem Header="Run UI Tests on _Every Screen" Command="{Binding RunUiTestsOnEveryScreenCommand}" IsVisible="{Binding IsSwarmAvailable}" />
+            <Separator />
             <MenuItem Header="Test E_xplorer (Ctrl+E, T)" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}" />
           </MenuItem>
           <MenuItem Header="E_xtensions">
@@ -204,6 +216,10 @@
             <MenuItem Header="_File Icon Theme..." Command="{Binding SelectFileIconThemeCommand}" IsEnabled="{Binding HasExtensions}" />
             <Separator />
             <MenuItem Header="Check for _Updates" Command="{Binding CheckForExtensionUpdatesCommand}" IsEnabled="{Binding HasExtensions}" />
+          </MenuItem>
+          <MenuItem Header="T_ools">
+            <MenuItem Header="Toolchain _Store" Command="{Binding ShowToolchainStoreCommand}" />
+            <MenuItem Header="Install Project _Packages" Command="{Binding InstallProjectPackagesCommand}" />
           </MenuItem>
           <MenuItem Header="_Window">
             <MenuItem Header="_Next Document" InputGesture="Ctrl+Tab" Command="{Binding NextDocumentCommand}" />
@@ -514,8 +530,8 @@
                       <TextBlock Text="To Cursor" VerticalAlignment="Center" FontSize="12.5" />
                     </StackPanel>
                   </Button>
-                  <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding StartDebuggingCommand}"
-                          Background="{DynamicResource Brush.Pressed}" Foreground="{DynamicResource Brush.OnAccent}" ToolTip.Tip="Start Debugging (F5)">
+                  <Button Theme="{StaticResource AccentButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding StartDebuggingCommand}"
+                          ToolTip.Tip="Start Debugging (F5)">
                     <StackPanel Orientation="Horizontal" Spacing="7">
                       <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="14" />
                       <TextBlock Text="Run" VerticalAlignment="Center" FontSize="12.5" />
@@ -543,6 +559,8 @@
         <Border Grid.Row="4" x:Name="BottomDock" Background="{DynamicResource Brush.Toolbar}">
           <DockPanel>
             <Grid DockPanel.Dock="Top" Height="34" ColumnDefinitions="*,Auto" Margin="6,0">
+              <!-- The tabs scroll sideways when the debugger's tabs leave too little room beside the Output's source. -->
+              <ScrollViewer Margin="0,0,10,0" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
               <StackPanel Orientation="Horizontal">
                 <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsErrorListSelected}"
                         Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" Content="Error List" />
@@ -559,7 +577,10 @@
                         Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Watch}" Content="Watch" />
                 <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsCallStackSelected}" IsVisible="{Binding ShowsDebugPanels}"
                         Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.CallStack}" Content="Call Stack" />
+                <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsTerminalSelected}"
+                        Command="{Binding ShowTerminalCommand}" Content="Terminal" />
               </StackPanel>
+              </ScrollViewer>
               <StackPanel Grid.Column="1" Orientation="Horizontal">
                 <TextBlock Classes="muted small" Text="Show output from:" VerticalAlignment="Center" Margin="0,0,8,0"
                            IsVisible="{Binding IsOutputSelected}" />
@@ -573,6 +594,10 @@
                 </ComboBox>
                 <Button Theme="{StaticResource ToolButton}" MinHeight="30" Height="30" FontSize="12.5" Content="Clear"
                         Command="{Binding ShownOutput.ClearCommand}" IsVisible="{Binding IsOutputSelected}" />
+                <Button Theme="{StaticResource ToolButton}" MinHeight="30" Height="30" FontSize="12.5" Content="Clear"
+                        Command="{Binding Terminal.ClearCommand}" IsVisible="{Binding IsTerminalSelected}" />
+                <Button Theme="{StaticResource ToolButton}" MinHeight="30" Height="30" FontSize="12.5" Content="Restart"
+                        Command="{Binding Terminal.RestartCommand}" IsVisible="{Binding IsTerminalSelected}" />
                 <Button Theme="{StaticResource ToolButton}" Width="30" Height="30" MinWidth="30" MinHeight="30" Padding="0"
                         ToolTip.Tip="Hide" Command="{Binding ToggleBottomPanelCommand}">
                   <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="14" />
@@ -594,6 +619,7 @@
               <views:LocalsView DataContext="{Binding Locals}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsLocalsSelected}" />
               <views:WatchView DataContext="{Binding Watch}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsWatchSelected}" />
               <views:CallStackView DataContext="{Binding CallStack}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsCallStackSelected}" />
+              <toolchainViews:TerminalPanelView DataContext="{Binding Terminal}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsTerminalSelected}" />
             </Panel>
           </DockPanel>
         </Border>
@@ -650,6 +676,11 @@
           <views:WebPreviewView DataContext="{Binding WebPreview}" />
         </Panel>
 
+        <!-- The Swarm window: the phones and tablets that run the app, its toggles and the UI test recorder. -->
+        <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsSwarmSelected}">
+          <swarmViews:SwarmView DataContext="{Binding Swarm}" />
+        </Panel>
+
         <!-- GitHub Actions: the commit's checks, runs, workflows and watched repositories. -->
         <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsActionsSelected}">
           <actionViews:ActionsView DataContext="{Binding Actions}" />
@@ -695,6 +726,16 @@
                 <TextBlock Text="Preview" VerticalAlignment="Center" />
               </StackPanel>
             </Button>
+            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsSwarmSelected}" IsVisible="{Binding ShowsSwarmTab}"
+                    Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.Swarm}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <controls:StrokeIcon Data="{StaticResource Icon.Swarm}" Size="12" />
+                <TextBlock Text="Swarm" VerticalAlignment="Center" />
+                <Border Classes="pill success" IsVisible="{Binding Swarm.HasDevices, FallbackValue=False}">
+                  <TextBlock Text="{Binding Swarm.Devices.Count, FallbackValue=0}" VerticalAlignment="Center" />
+                </Border>
+              </StackPanel>
+            </Button>
             <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsAgentSelected}"
                     Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.Agent}">
               <StackPanel Orientation="Horizontal" Spacing="6">
@@ -716,7 +757,7 @@
         <StackPanel Orientation="Horizontal" Spacing="18" TextElement.Foreground="{DynamicResource Brush.OnAccent}" TextElement.FontSize="12">
           <StackPanel Orientation="Horizontal" Spacing="6">
             <controls:StrokeIcon Size="13" Data="{Binding State, Converter={x:Static conv:AppConverters.StateIcon}}" />
-            <TextBlock Text="{Binding StatusText}" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding StatusText}" VerticalAlignment="Center" MaxWidth="460" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding StatusText}" />
           </StackPanel>
           <TextBlock Text="{Binding LanguageServiceText}" VerticalAlignment="Center" />
           <Button Theme="{StaticResource StatusBarButton}" Height="24" ToolTip.Tip="{Binding LinkStatusTip}" Command="{Binding OpenLinkCommand}"
@@ -729,8 +770,16 @@
             </StackPanel>
           </Button>
           <Button Theme="{StaticResource StatusBarButton}" Height="24" ToolTip.Tip="Show the language servers' log" Command="{Binding ShowLanguageServerLogCommand}"
-                  IsVisible="{Binding LanguageServerText, Converter={x:Static ObjectConverters.IsNotNull}}">
+                  IsVisible="{Binding ShowsLanguageServerText}">
             <TextBlock Text="{Binding LanguageServerText}" FontSize="12" VerticalAlignment="Center" />
+          </Button>
+          <Button Theme="{StaticResource StatusBarButton}" Height="24" Command="{Binding InstallServerToolchainCommand}"
+                  ToolTip.Tip="{Binding ServerInstallOffer.ToolTip, FallbackValue={x:Null}}"
+                  IsVisible="{Binding ServerInstallOffer, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+              <controls:StrokeIcon Size="13" Data="{StaticResource Icon.Download}" />
+              <TextBlock Text="{Binding ServerInstallOffer.StatusBarText, FallbackValue={x:Null}}" FontSize="12" VerticalAlignment="Center" />
+            </StackPanel>
           </Button>
           <TextBlock Text="{Binding PackagesText}" VerticalAlignment="Center"
                      IsVisible="{Binding PackagesText, Converter={x:Static ObjectConverters.IsNotNull}}" />
@@ -750,6 +799,15 @@
             </StackPanel>
           </Button>
           <actionViews:CiStatusBarItem DataContext="{Binding Actions}" />
+          <!-- The swarm, while it is on: how many devices are in it; tap for the Swarm window. -->
+          <Button Theme="{StaticResource StatusBarButton}" Height="24" ToolTip.Tip="{Binding Swarm.StatusTip, FallbackValue={x:Null}}"
+                  Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.Swarm}"
+                  IsVisible="{Binding Swarm.IsOn, FallbackValue=False}">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+              <controls:StrokeIcon Size="13" Data="{StaticResource Icon.Swarm}" />
+              <TextBlock Text="{Binding Swarm.StatusText, FallbackValue={x:Null}}" FontSize="12" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
           <!-- Live Unit Testing, while it is on: what it does, or how the tests fare; tap for Pause and Stop. -->
           <Button Theme="{StaticResource StatusBarButton}" Height="24" ToolTip.Tip="{Binding LiveTesting.DetailText}"
                   IsVisible="{Binding LiveTesting.IsEnabled}">
@@ -793,11 +851,16 @@
     <!-- Git's dialogs: switch branch, create a pull request, history. -->
     <views:GitDialogsView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding GitChanges}" />
 
+    <!-- The swarm's Add a device dialog, with its QR code. -->
+    <swarmViews:SwarmInviteView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding Swarm.Invite, FallbackValue={x:Null}}" />
+
     <!-- GitHub Actions' dialog: Run workflow. -->
     <actionViews:ActionsDialogsView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding Actions}" />
 
     <!-- The quick pick: color themes, file icon themes and snippets. -->
     <extensionViews:QuickPickView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding QuickPick}" />
+    <!-- The Toolchain Store, and offers to install a project's toolchain or packages. -->
+    <toolchainViews:ToolchainOverlaysView Grid.Row="0" Grid.RowSpan="4" />
 
     <!-- The in-app dialog that asks for names and confirmations. -->
     <Panel Grid.Row="0" Grid.RowSpan="4" Background="#99000000" IsVisible="{Binding Prompt.IsOpen}">

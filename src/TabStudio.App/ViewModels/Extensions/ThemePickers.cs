@@ -1,3 +1,4 @@
+using TabStudio.App.Services.Appearance;
 using TabStudio.App.Services.Extensions;
 using TabStudio.Extensions.Manifests;
 
@@ -5,7 +6,8 @@ namespace TabStudio.App.ViewModels.Extensions;
 
 /// <summary>
 /// The color theme and file icon theme pickers, as VS Code's: the installed extensions' themes, grouped by kind, with
-/// TabStudio's own first. Moving through the color themes previews each in the open editors; Escape goes back.
+/// TabStudio's own first (Dark, Light, Follow the system). A color theme sets the whole IDE's theme: a light one makes
+/// it light. Moving through the color themes previews each; Escape goes back.
 /// </summary>
 public static class ThemePickers
 {
@@ -30,9 +32,20 @@ public static class ThemePickers
 
         var current = service.Settings.ColorTheme is { } key && themes.Any(t => t.Key == key) ? key : null;
         var items = new List<QuickPickItem>();
+        object? selectedValue = current;
         if (only is null)
         {
-            items.Add(new QuickPickItem("TabStudio Dark", current is null ? "current" : null, "TabStudio's own editor colors", null, "TabStudio"));
+            // TabStudio's own themes set the whole IDE: Dark, Light, or as the system is.
+            var appTheme = service.Appearance?.Theme ?? IdeTheme.Dark;
+            foreach (var theme in TabStudioThemes(service))
+            {
+                var isCurrent = current is null && theme.Theme == appTheme;
+                items.Add(new QuickPickItem(theme.Label, isCurrent ? "current" : null, theme.Detail, theme, "TabStudio"));
+                if (isCurrent)
+                {
+                    selectedValue = theme;
+                }
+            }
         }
 
         foreach (var group in themes.GroupBy(t => KindName(t.Kind)).OrderBy(g => KindOrder(g.Key)))
@@ -47,33 +60,61 @@ public static class ThemePickers
             items.Add(new QuickPickItem("Browse Color Themes on Open VSX…", null, null, BrowseMore, "More"));
         }
 
-        var selected = items.FirstOrDefault(i => Equals(i.Value, current));
+        var selected = items.FirstOrDefault(i => Equals(i.Value, selectedValue));
         var picked = await quickPick.ShowAsync(
             "Color Theme",
-            "Select a color theme for the editor (arrow keys preview it)",
+            "Select a color theme (arrow keys preview it)",
             items,
             selected,
             item =>
             {
-                if (item is not null && !Equals(item.Value, BrowseMore))
+                switch (item?.Value)
                 {
-                    service.PreviewColorTheme(item.Value as string);
+                    case TabStudioTheme theme:
+                        service.PreviewTabStudioTheme(theme.Theme);
+                        break;
+                    case string key when key != BrowseMore:
+                        service.PreviewColorTheme(key);
+                        break;
                 }
             });
 
         if (picked is null)
         {
             service.PreviewColorTheme(service.Settings.ColorTheme);
+            return;
         }
-        else if (Equals(picked.Value, BrowseMore))
+
+        switch (picked.Value)
         {
-            service.PreviewColorTheme(service.Settings.ColorTheme);
-            browseMore?.Invoke();
+            case BrowseMore:
+                service.PreviewColorTheme(service.Settings.ColorTheme);
+                browseMore?.Invoke();
+                break;
+            case TabStudioTheme theme:
+                service.UseTabStudioTheme(theme.Theme);
+                break;
+            default:
+                service.SelectColorTheme(picked.Value as string);
+                break;
         }
-        else
+    }
+
+    /// <summary>
+    /// TabStudio's own color themes, which set the IDE's theme as Visual Studio's Tools &gt; Theme does. Without the
+    /// IDE's theme at hand (as in some tests) only the dark one is offered.
+    /// </summary>
+    /// <param name="service">The extensions, which know the IDE's theme.</param>
+    private static IEnumerable<TabStudioTheme> TabStudioThemes(ExtensionsService service)
+    {
+        yield return new TabStudioTheme(IdeTheme.Dark, "TabStudio Dark", "TabStudio's own colors");
+        if (service.Appearance is null)
         {
-            service.SelectColorTheme(picked.Value as string);
+            yield break;
         }
+
+        yield return new TabStudioTheme(IdeTheme.Light, "TabStudio Light", "TabStudio's own colors, after Visual Studio's Light");
+        yield return new TabStudioTheme(IdeTheme.System, AppearanceService.DisplayName(IdeTheme.System), "Dark or light as the system is, changing with it");
     }
 
     /// <summary>Lets the user pick the file icon theme of the Solution Explorer and tabs.</summary>
@@ -132,6 +173,12 @@ public static class ThemePickers
             service.SelectIconTheme(picked.Value as string);
         }
     }
+
+    /// <summary>One of TabStudio's own themes in the picker.</summary>
+    /// <param name="Theme">The IDE's theme it sets.</param>
+    /// <param name="Label">Its name.</param>
+    /// <param name="Detail">What it is.</param>
+    private sealed record TabStudioTheme(IdeTheme Theme, string Label, string Detail);
 
     private static string OwnerName(ExtensionsService service, ExtensionIdentifier owner) =>
         service.Store.Find(owner)?.Manifest.DisplayName ?? owner.ToString();

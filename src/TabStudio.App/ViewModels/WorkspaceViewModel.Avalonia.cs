@@ -43,6 +43,7 @@ public sealed partial class WorkspaceViewModel
             app.Crashed += (_, exception) => crashed.TrySetResult(exception);
 
             AppPreview.Show(project.Name, app.View, app.Note);
+            OnAvaloniaAppStarted(project, app);
             SelectSideBarPanel(SideBarPanel.AppPreview);
             StatusText = $"Running {project.Name}";
             Output.WriteLine($"{project.Name} is running in the app preview.", OutputKind.Info);
@@ -77,6 +78,7 @@ public sealed partial class WorkspaceViewModel
         finally
         {
             _liveProject = null;
+            OnAvaloniaAppStopping();
             AppPreview.ShowStopped();
             app?.Dispose();
             console?.Dispose();

@@ -190,6 +190,7 @@ public sealed partial class WorkspaceViewModel
 
         var startup = StartupProject?.FilePath;
         LoadStartupProjects(preview.Workspace, startup);
+        await LoadToolchainProjectsAsync(preview.Workspace, startup);
 
         if (_language is { } language)
         {

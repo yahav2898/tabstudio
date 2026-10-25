@@ -15,7 +15,7 @@ namespace TabStudio.Testing;
 /// Chrome is found through <c>TABSTUDIO_CHROME</c> or on the <c>PATH</c> (<c>google-chrome</c>, <c>chromium</c>…).
 /// Tests that need it use <see cref="ChromeFactAttribute"/>, so they are skipped where it is missing, except on CI.
 /// </remarks>
-public sealed class HeadlessChrome : IAsyncDisposable
+public sealed partial class HeadlessChrome : IAsyncDisposable
 {
     private static readonly string[] Candidates =
         ["google-chrome", "google-chrome-stable", "chromium", "chromium-browser", "chrome", "msedge"];
@@ -40,48 +40,47 @@ public sealed class HeadlessChrome : IAsyncDisposable
     /// <summary>The browser to run, or <see langword="null"/> when none is installed.</summary>
     public static string? ExecutablePath { get; } = FindExecutable();
 
-    /// <summary>Starts a browser with one blank page, sized like a landscape tablet.</summary>
+    /// <summary>
+    /// Starts a browser with one blank page, sized like a landscape tablet. A browser that does not come up in time is
+    /// stopped and launched once more (see <see cref="Launches"/>).
+    /// </summary>
     /// <param name="width">The page's width in CSS pixels.</param>
     /// <param name="height">The page's height in CSS pixels.</param>
     public static async Task<HeadlessChrome> StartAsync(int width = 1280, int height = 800)
     {
         var executable = ExecutablePath ?? throw new InvalidOperationException("Chrome or Chromium is not installed, or set TABSTUDIO_CHROME to it.");
-        var profile = new TempDirectory();
-        var start = new ProcessStartInfo(executable)
+        for (var launch = 1; ; launch++)
         {
-            RedirectStandardError = true,
-            RedirectStandardOutput = true,
-            UseShellExecute = false,
-        };
-        foreach (var argument in new[]
-        {
-            "--headless=new", "--no-sandbox", "--disable-gpu", "--no-first-run", "--no-default-browser-check",
-            "--remote-debugging-port=0", $"--user-data-dir={profile.Path}", $"--window-size={width},{height}", "about:blank",
-        })
-        {
-            start.ArgumentList.Add(argument);
-        }
+            var profile = new TempDirectory();
+            var log = new BrowserLog();
+            Process? process = null;
+            HeadlessChrome? chrome = null;
+            try
+            {
+                process = Launch(executable, profile.Path, width, height, log);
+                var browserEndpoint = await WaitForDevToolsAsync(process, profile.Path, log);
+                var page = await FindPageAsync(browserEndpoint);
+                var socket = new ClientWebSocket();
+                chrome = new HeadlessChrome(process, profile, socket);
+                using (var timeout = new CancellationTokenSource(StepTimeout))
+                {
+                    await socket.ConnectAsync(page, timeout.Token);
+                }
 
-        var process = Process.Start(start) ?? throw new InvalidOperationException($"{executable} did not start.");
-        try
-        {
-            var browserEndpoint = await ReadDevToolsEndpointAsync(process);
-            var page = await FindPageAsync(browserEndpoint);
-            var socket = new ClientWebSocket();
-            await socket.ConnectAsync(page, CancellationToken.None);
-            var chrome = new HeadlessChrome(process, profile, socket);
-            await chrome.SendAsync("Page.enable");
-            await chrome.SendAsync("Runtime.enable");
-            await chrome.SendAsync("Log.enable");
-            await chrome.ResizeAsync(width, height);
-            return chrome;
-        }
-        catch
-        {
-            process.Kill(entireProcessTree: true);
-            process.Dispose();
-            profile.Dispose();
-            throw;
+                await chrome.SendAsync("Page.enable");
+                await chrome.SendAsync("Runtime.enable");
+                await chrome.SendAsync("Log.enable");
+                await chrome.ResizeAsync(width, height);
+                return chrome;
+            }
+            catch (Exception ex)
+            {
+                await AbandonAsync(chrome, process, profile);
+                if (launch >= Launches)
+                {
+                    throw new InvalidOperationException($"Chrome did not start in {Launches} launches: {ex.Message}\nWhat it printed last:\n{log}", ex);
+                }
+            }
         }
     }
 
@@ -206,19 +205,8 @@ public sealed class HeadlessChrome : IAsyncDisposable
         }
 
         _socket.Dispose();
-        try
-        {
-            _process.Kill(entireProcessTree: true);
-            await _process.WaitForExitAsync();
-        }
-        catch (InvalidOperationException)
-        {
-            // Already exited.
-        }
-
-        _process.Dispose();
+        await StopAsync(_process, _profile);
         _sendGate.Dispose();
-        _profile.Dispose();
     }
 
     /// <summary>Sends a DevTools command and returns its result.</summary>
@@ -294,26 +282,10 @@ public sealed class HeadlessChrome : IAsyncDisposable
         return JsonNode.Parse(message.ToArray());
     }
 
-    /// <summary>The browser's DevTools address, which it prints at startup.</summary>
-    private static async Task<Uri> ReadDevToolsEndpointAsync(Process process)
-    {
-        const string Prefix = "DevTools listening on ";
-        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
-        while (await process.StandardError.ReadLineAsync(timeout.Token) is { } line)
-        {
-            if (line.StartsWith(Prefix, StringComparison.Ordinal))
-            {
-                return new Uri(line[Prefix.Length..].Trim());
-            }
-        }
-
-        throw new InvalidOperationException("Chrome exited before it opened its DevTools port.");
-    }
-
     /// <summary>The DevTools address of the browser's blank page.</summary>
     private static async Task<Uri> FindPageAsync(Uri browserEndpoint)
     {
-        using var http = new HttpClient();
+        using var http = new HttpClient { Timeout = StepTimeout };
         var list = new Uri($"http://{browserEndpoint.Authority}/json/list");
         for (var attempt = 0; attempt < 50; attempt++)
         {

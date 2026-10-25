@@ -1,0 +1,107 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:views="using:TabStudio.App.Views"
+             xmlns:swarm="using:TabStudio.App.ViewModels.Swarm"
+             x:Class="TabStudio.App.Views.Swarm.SwarmDevicePageView"
+             x:DataType="swarm:SwarmDevicePageViewModel"
+             IsVisible="{Binding IsVisible, FallbackValue=False}"
+             Background="{DynamicResource Brush.Window}">
+
+  <UserControl.Styles>
+    <Style Selector="Border.overlay">
+      <Setter Property="Background" Value="#E61B1F24" />
+      <Setter Property="BorderBrush" Value="#33FFFFFF" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="BoxShadow" Value="0 6 18 0 #66000000" />
+    </Style>
+  </UserControl.Styles>
+
+  <!-- The tablet's app, full screen, as it runs on this device while it is in the swarm. -->
+  <Panel x:Name="Screen">
+    <ContentControl x:Name="AppContent" Content="{Binding Host.Preview.View}" IsVisible="{Binding ShowsApp}"
+                    HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+    <views:WebPreviewView DataContext="{Binding Host.Web}" IsVisible="{Binding $parent[UserControl].((swarm:SwarmDevicePageViewModel)DataContext).ShowsWeb, FallbackValue=False}" />
+    <DockPanel IsVisible="{Binding ShowsConsole}">
+      <Border DockPanel.Dock="Top" Height="44" Padding="16,0" Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+        <StackPanel Orientation="Horizontal" Spacing="9">
+          <controls:StrokeIcon Data="{StaticResource Icon.Terminal}" Size="15" Foreground="{DynamicResource Brush.AccentText}" />
+          <TextBlock Classes="header" Text="{Binding Host.AppName}" />
+        </StackPanel>
+      </Border>
+      <views:OutputView DataContext="{Binding Host.Console}" />
+    </DockPanel>
+
+    <!-- Nothing runs yet -->
+    <StackPanel Spacing="14" MaxWidth="420" Margin="28" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="{Binding ShowsWaiting}">
+      <Border Width="64" Height="64" CornerRadius="18" Background="{DynamicResource Brush.AccentSoft}" HorizontalAlignment="Center">
+        <controls:StrokeIcon Data="{StaticResource Icon.Swarm}" Size="32" Foreground="{DynamicResource Brush.AccentText}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+      </Border>
+      <TextBlock Classes="h1" FontSize="18" TextAlignment="Center" TextWrapping="Wrap" Text="{Binding StateText}" />
+      <TextBlock Classes="muted" TextAlignment="Center" TextWrapping="Wrap"
+                 Text="On the tablet, choose Swarm in the Run button's menu and press F5. The app shows here full screen, and every save on the tablet updates it." />
+      <TextBlock Classes="muted small" TextAlignment="Center" TextWrapping="Wrap" Text="{Binding DetailText}" />
+    </StackPanel>
+
+    <!-- Paused in the tablet's debugger: the app takes no input until it continues. -->
+    <Border Background="#8C000000" IsVisible="{Binding IsPaused}">
+      <Border Classes="overlay" CornerRadius="14" Padding="22,18" MaxWidth="360" Margin="24" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <StackPanel Spacing="10">
+          <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
+            <controls:StrokeIcon Data="{StaticResource Icon.Pause}" Size="18" StrokeThickness="2.6" Foreground="{DynamicResource Brush.Warning}" />
+            <TextBlock Classes="h2" FontSize="15" Text="Paused in the tablet's debugger" VerticalAlignment="Center" />
+          </StackPanel>
+          <TextBlock Classes="muted" TextAlignment="Center" TextWrapping="Wrap"
+                     Text="Step or continue on the tablet; the app continues here." />
+        </StackPanel>
+      </Border>
+    </Border>
+
+    <!-- A short message, such as a mirrored input that found no element here. -->
+    <Border Classes="overlay" CornerRadius="10" Padding="14,10" Margin="16,0,16,28" MaxWidth="460"
+            HorizontalAlignment="Center" VerticalAlignment="Bottom" IsVisible="{Binding HasNotice}" IsHitTestVisible="False">
+      <Grid ColumnDefinitions="Auto,*">
+        <controls:StrokeIcon Data="{StaticResource Icon.Info}" Size="15" Margin="0,1,9,0" Foreground="{DynamicResource Brush.Info}" VerticalAlignment="Top" />
+        <TextBlock Grid.Column="1" Classes="small" Foreground="White" TextWrapping="Wrap" Text="{Binding Notice}" />
+      </Grid>
+    </Border>
+
+    <!-- The overlay: the tablet's name and what the app does; a tap shows Leave. -->
+    <StackPanel Margin="0,10,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" Spacing="8">
+      <Button x:Name="OverlayButton" Padding="0" Background="Transparent" BorderThickness="0" HorizontalAlignment="Right"
+              Command="{Binding ToggleExpandedCommand}" ToolTip.Tip="TabStudio Swarm">
+        <Border Classes="overlay" CornerRadius="16" Height="32" Padding="10,0,12,0">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <Panel Width="8" Height="8" VerticalAlignment="Center">
+              <Ellipse Fill="{DynamicResource Brush.Success}" IsVisible="{Binding IsRunning}" />
+              <Ellipse Fill="{DynamicResource Brush.Warning}" IsVisible="{Binding IsPaused}" />
+              <Ellipse Fill="{DynamicResource Brush.Warning}" IsVisible="{Binding IsReconnecting}" />
+              <Ellipse Fill="{DynamicResource Brush.Error}" IsVisible="{Binding IsFailed}" />
+              <Ellipse Fill="{DynamicResource Brush.Info}" IsVisible="{Binding IsWaiting}" />
+            </Panel>
+            <controls:StrokeIcon Data="{StaticResource Icon.Swarm}" Size="13" Foreground="White" />
+            <TextBlock Text="{Binding CoordinatorName}" FontSize="12" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center" MaxWidth="180" TextTrimming="CharacterEllipsis" />
+            <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="11" Foreground="#B3FFFFFF" IsVisible="{Binding !IsExpanded}" />
+            <controls:StrokeIcon Data="{StaticResource Icon.ChevronUp}" Size="11" Foreground="#B3FFFFFF" IsVisible="{Binding IsExpanded}" />
+          </StackPanel>
+        </Border>
+      </Button>
+
+      <Border Classes="overlay" CornerRadius="12" Padding="14,12" Width="280" IsVisible="{Binding IsExpanded}">
+        <StackPanel Spacing="10">
+          <StackPanel Spacing="3">
+            <TextBlock Text="{Binding StateText}" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" />
+            <TextBlock FontSize="12" Foreground="#B3FFFFFF" TextWrapping="Wrap" Text="{Binding DetailText}" />
+          </StackPanel>
+          <Button Theme="{StaticResource SecondaryButton}" Height="38" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                  Command="{Binding LeaveCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="13" />
+              <TextBlock Text="Leave the swarm" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </Panel>
+</UserControl>

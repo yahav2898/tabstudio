@@ -14,6 +14,9 @@ public sealed record LinkHostOptions
     /// <summary>The host's name, as tablets show it, such as <c>Pixel 9</c>.</summary>
     public required string DeviceName { get; init; }
 
+    /// <summary>What the host offers the devices that connect: builds for a tablet, or a swarm to join.</summary>
+    public LinkRole Role { get; init; } = LinkRole.Host;
+
     /// <summary>What the host is, one of <see cref="LinkDeviceKinds"/>.</summary>
     public string DeviceKind { get; init; } = LinkDeviceKinds.Phone;
 
@@ -31,6 +34,12 @@ public sealed record LinkHostOptions
 
     /// <summary>How long a connected tablet may stay silent before the host treats it as gone. Tablets ping every few seconds.</summary>
     public TimeSpan IdleTimeout { get; init; } = TimeSpan.FromSeconds(20);
+
+    /// <summary>
+    /// How many devices the host serves at once. A build host serves one tablet; a tablet coordinating a swarm serves
+    /// every phone and tablet that joined it. Another device beyond this is refused as busy.
+    /// </summary>
+    public int MaxClients { get; init; } = 1;
 
     /// <summary>The TabStudio version the host announces and requires; tests change it.</summary>
     public string AppVersion { get; init; } = LinkProtocol.AppVersion;

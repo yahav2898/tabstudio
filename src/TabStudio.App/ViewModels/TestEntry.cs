@@ -92,6 +92,9 @@ public sealed class TestEntry
     /// <summary>Whether code the test depends on changed after <see cref="Result"/> was produced.</summary>
     public bool IsStale { get; internal set; }
 
+    /// <summary>A picture of the screen a recorded UI test failed on, as a PNG file, when it failed there.</summary>
+    public string? ScreenshotPath { get; internal set; }
+
     /// <summary>Creates the entry for a test found in source.</summary>
     /// <param name="projectFilePath">The test project.</param>
     /// <param name="projectName">The test project's name.</param>
@@ -150,6 +153,7 @@ public sealed class TestEntry
         State = previous.State;
         Result = previous.Result;
         IsStale = previous.IsStale;
+        ScreenshotPath = previous.ScreenshotPath;
     }
 
     /// <summary>Records a result.</summary>

@@ -58,12 +58,14 @@ public sealed partial class ProjectTemplates
         new(WebId, "ASP.NET Core Web App", "A web page and an API, served on the tablet and previewed beside the code.", ["C#", "Web", "ASP.NET Core"]),
         new(AvaloniaId, "Avalonia App", "A cross-platform app with a view and a view model, rendered natively beside the code.", ["C#", "Avalonia", "MVVM"]),
         WpfTemplate,
+        WindowsFormsTemplate,
         new(LibraryId, "Class Library", "Reusable code for other projects to reference.", ["C#", "Library"]),
         new(NotebookId, "C# Notebook", "Cells of C# you run one at a time, with results, tables and errors right under each cell, like Polyglot Notebooks.", ["C#", "Notebook"]),
         new(WebTemplates.BlazorWebAppId, "Blazor Web App", "Interactive Razor components with server rendering, served on the tablet and previewed beside the code.", ["C#", "Blazor", "Web"]),
         new(WebTemplates.BlazorWebAssemblyId, "Blazor WebAssembly Standalone App", "A Blazor app that runs in the browser on .NET for WebAssembly, in the web preview beside the code.", ["C#", "Blazor", "WebAssembly"]),
         new(WebTemplates.RazorPagesId, "ASP.NET Core Web App (Razor Pages)", "Pages with Razor Pages and Bootstrap, served on the tablet and previewed beside the code.", ["C#", "Web", "Razor Pages"]),
         new(WebTemplates.MvcId, "ASP.NET Core Web App (Model-View-Controller)", "Controllers and views with ASP.NET Core MVC and Bootstrap, served on the tablet and previewed beside the code.", ["C#", "Web", "MVC"]),
+        .. ToolchainTemplates,
     ];
 
     /// <summary>Checks a project name. Names become namespaces, so they follow C# identifier rules.</summary>
@@ -89,7 +91,7 @@ public sealed partial class ProjectTemplates
     /// <summary>Creates a new solution, or a notebook, from a template.</summary>
     /// <param name="templateId">One of the template identifiers.</param>
     /// <param name="name">The solution and project name. Must pass <see cref="Validate"/>.</param>
-    /// <returns>The path of the new solution file, or of the notebook file for <see cref="NotebookId"/>.</returns>
+    /// <returns>The path of the new solution file, of the notebook file for <see cref="NotebookId"/>, or of the folder for <see cref="PythonId"/> and <see cref="NodeId"/>.</returns>
     /// <exception cref="ArgumentException">The name is invalid or the template is unknown.</exception>
     public string Create(string templateId, string name)
     {
@@ -107,6 +109,11 @@ public sealed partial class ProjectTemplates
             return notebook;
         }
 
+        if (CreateToolchainProject(templateId, root, name) is { } folder)
+        {
+            return folder;
+        }
+
         string[] projects = templateId switch
         {
             ConsoleId => [WriteConsole(root, name, reference: null)],
@@ -116,6 +123,7 @@ public sealed partial class ProjectTemplates
             AvaloniaId => [WriteAvalonia(root, name)],
             WpfId => [WriteWpf(root, name)],
             _ when WebTemplates.IsTemplate(templateId) => [.. WebTemplates.Create(templateId, root, name)],
+            WindowsFormsId => [WriteWindowsForms(root, name)],
             _ => throw new ArgumentException($"Unknown template '{templateId}'.", nameof(templateId)),
         };
 

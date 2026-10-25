@@ -28,4 +28,9 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <!-- The toolchain library's fakes: a tablet with a fake Alpine mirror, for the Toolchain Store's tests. -->
+  <ItemGroup>
+    <Compile Include="..\TabStudio.Toolchains.Tests\Fakes\*.cs" LinkBase="Toolchains\Fakes" />
+  </ItemGroup>
+
 </Project>

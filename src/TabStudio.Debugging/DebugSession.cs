@@ -1,3 +1,5 @@
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using TabStudio.Compilation.Running;
 using TabStudio.Debugging.Building;
 using TabStudio.Debugging.Engine;
@@ -23,6 +25,11 @@ namespace TabStudio.Debugging;
 /// process; a second <see cref="RunAsync(IReadOnlyList{string}, IConsoleSink, ConsoleInput, CancellationToken)"/> waits for the first to finish.
 /// </para>
 /// <para>
+/// A host that loads and runs the program itself, such as the app preview of a device in a swarm showing an Avalonia
+/// app, calls <see cref="Attach"/> once the program is loaded instead, and <see cref="EndHostedRun"/> when it ends.
+/// Such hosted sessions can run side by side, each with its own program.
+/// </para>
+/// <para>
 /// Thread safety: every member can be called from any thread. <see cref="Paused"/> is raised on the program's thread
 /// that paused, just before it blocks; <see cref="Resumed"/> on the thread that called the resuming command, before
 /// the program continues; <see cref="Exited"/> on a pool thread when the program ends. Handlers must not block, and
@@ -39,6 +46,9 @@ public sealed class DebugSession : IDisposable
     private const int Finished = 2;
 
     private static readonly SemaphoreSlim ActiveSession = new(1, 1);
+
+    /// <summary>Hosted sessions connect their programs one at a time, as that briefly uses the process-wide sink.</summary>
+    private static readonly Lock AttachGate = new();
 
     private readonly DebugBuild _build;
     private readonly DebugEngine _engine;
@@ -100,6 +110,16 @@ public sealed class DebugSession : IDisposable
     {
         get => _engine.BreakOnUnhandledExceptions;
         set => _engine.BreakOnUnhandledExceptions = value;
+    }
+
+    /// <summary>
+    /// Keeps the host's UI alive when the program pauses on the host's UI thread, as an Avalonia app's code does;
+    /// <see langword="null"/> to block every paused thread.
+    /// </summary>
+    public IDebugWaitPump? WaitPump
+    {
+        get => _engine.Pump;
+        set => _engine.Pump = value;
     }
 
     /// <summary>The breakpoints, in the order they were set.</summary>
@@ -256,6 +276,68 @@ public sealed class DebugSession : IDisposable
         return result;
     }
 
+    /// <summary>
+    /// Debugs a program that its host loads and runs itself, such as an Avalonia app whose views the app preview
+    /// creates: connects the instrumented code of its assemblies to this session. Call it once the assemblies are
+    /// loaded and before any of their code runs, then <see cref="EndHostedRun"/> when the program ends.
+    /// </summary>
+    /// <remarks>
+    /// The program runs on its host's threads, so stopping it never unwinds them: a stopped session's hooks do nothing.
+    /// </remarks>
+    /// <param name="assemblies">The program's instrumented assemblies; others are skipped.</param>
+    /// <exception cref="InvalidOperationException">The session already ran or attached a program.</exception>
+    public void Attach(IEnumerable<Assembly> assemblies)
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        ArgumentNullException.ThrowIfNull(assemblies);
+        if (Interlocked.CompareExchange(ref _phase, Running, NotStarted) != NotStarted)
+        {
+            throw new InvalidOperationException("This session has already run its program. Start a new session to debug again.");
+        }
+
+        _engine.IsHosted = true;
+        var sink = _engine.CreateSink();
+        lock (AttachGate)
+        {
+            // Each assembly reads the sink once, in its runtime's static constructor, so it stays with this session.
+            var previous = AppContext.GetData(DebugRuntimeSource.DataKey);
+            AppContext.SetData(DebugRuntimeSource.DataKey, sink);
+            try
+            {
+                foreach (var assembly in assemblies)
+                {
+                    if (assembly.GetType(DebugRuntimeSource.ClassName, throwOnError: false) is { } runtime)
+                    {
+                        RuntimeHelpers.RunClassConstructor(runtime.TypeHandle);
+                    }
+                }
+            }
+            finally
+            {
+                AppContext.SetData(DebugRuntimeSource.DataKey, previous);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Ends the run of a program connected with <see cref="Attach"/>: releases it if it is paused, turns its hooks off
+    /// and raises <see cref="Exited"/>.
+    /// </summary>
+    /// <param name="result">How the program ended.</param>
+    /// <returns><see langword="false"/> when the session was not running an attached program.</returns>
+    public bool EndHostedRun(RunResult result)
+    {
+        ArgumentNullException.ThrowIfNull(result);
+        if (!_engine.IsHosted || Interlocked.CompareExchange(ref _phase, Finished, Running) != Running)
+        {
+            return false;
+        }
+
+        _engine.Stop();
+        Exited?.Invoke(this, new DebugExitedEventArgs(result));
+        return true;
+    }
+
     /// <summary>Continues the paused program until a breakpoint, an unhandled exception or the end.</summary>
     /// <returns><see langword="false"/> when the program was not paused.</returns>
     public bool Continue() => _engine.Resume(StepMode.Run);
@@ -296,6 +378,10 @@ public sealed class DebugSession : IDisposable
     /// debugging with Step Into.
     /// </remarks>
     public void Pause() => _engine.Pause();
+
+    /// <summary>Cancels a <see cref="Pause"/> that has not paused the program yet, so it keeps running.</summary>
+    /// <returns><see langword="true"/> when a pause was pending.</returns>
+    public bool CancelPause() => _engine.CancelPause();
 
     /// <summary>
     /// Stops debugging: releases the program if it is paused, ends <see cref="RunAsync(IReadOnlyList{string}, IConsoleSink, ConsoleInput, CancellationToken)"/> with

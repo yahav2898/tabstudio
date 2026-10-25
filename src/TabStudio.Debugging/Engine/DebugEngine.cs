@@ -19,7 +19,12 @@ namespace TabStudio.Debugging.Engine;
 /// All state changes happen under one monitor; the hot path of <see cref="OnStep"/> only reads volatile fields.
 /// After <see cref="Stop"/>, hooks do nothing, except on the program's main thread, where they throw
 /// <see cref="DebugSessionStoppedException"/> so the program unwinds. Other threads are left alone, because an
-/// exception there could take down the whole app.
+/// exception there could take down the whole app. A hosted program (<see cref="IsHosted"/>) has no main thread of its
+/// own: it runs on its host's threads, which are never unwound.
+/// </para>
+/// <para>
+/// A thread the <see cref="Pump"/> can keep alive, such as the host's UI thread, does not block while it waits: it runs
+/// the host's message loop until the program continues.
 /// </para>
 /// </remarks>
 internal sealed class DebugEngine
@@ -41,6 +46,8 @@ internal sealed class DebugEngine
     private volatile bool _paused;
     private volatile bool _stopped;
     private volatile bool _breakOnUnhandledExceptions = true;
+    private volatile bool _hosted;
+    private volatile IDebugWaitPump? _pump;
     private volatile int _runToStatement;
     private int _mainThreadId;
 
@@ -67,6 +74,23 @@ internal sealed class DebugEngine
 
     /// <summary>Whether a thread of the program is paused.</summary>
     public bool IsPaused => _paused;
+
+    /// <summary>
+    /// Whether the program runs on its host's threads, as an Avalonia app does on the UI thread, rather than on a main
+    /// thread of its own: then stopping never throws into its threads.
+    /// </summary>
+    public bool IsHosted
+    {
+        get => _hosted;
+        set => _hosted = value;
+    }
+
+    /// <summary>Keeps the host's UI thread alive while it waits, or <see langword="null"/> to block every waiting thread.</summary>
+    public IDebugWaitPump? Pump
+    {
+        get => _pump;
+        set => _pump = value;
+    }
 
     /// <summary>The current pause, or <see langword="null"/> while running.</summary>
     public DebugPausedEventArgs? CurrentPause
@@ -114,6 +138,22 @@ internal sealed class DebugEngine
         }
     }
 
+    /// <summary>Cancels a <see cref="Pause"/> that has not paused the program yet.</summary>
+    /// <returns><see langword="true"/> when a pause was pending.</returns>
+    public bool CancelPause()
+    {
+        lock (_gate)
+        {
+            if (_paused || _mode != StepMode.Pause)
+            {
+                return false;
+            }
+
+            _mode = StepMode.Run;
+            return true;
+        }
+    }
+
     /// <summary>Resumes the paused program.</summary>
     /// <param name="mode">How far it runs before pausing again.</param>
     /// <returns><see langword="false"/> when the program was not paused.</returns>
@@ -151,6 +191,7 @@ internal sealed class DebugEngine
             Monitor.PulseAll(_gate);
         }
 
+        _pump?.Wake();
         return true;
     }
 
@@ -187,6 +228,8 @@ internal sealed class DebugEngine
             _currentPause = null;
             Monitor.PulseAll(_gate);
         }
+
+        _pump?.Wake();
     }
 
     // ---- Hooks, called by the program ----
@@ -200,7 +243,7 @@ internal sealed class DebugEngine
         }
 
         var parent = _current.Value;
-        if (parent is null && !Thread.CurrentThread.IsThreadPoolThread)
+        if (parent is null && !_hosted && !Thread.CurrentThread.IsThreadPoolThread)
         {
             // The first function entered without a caller on a dedicated thread is the program's entry point.
             Interlocked.CompareExchange(ref _mainThreadId, Environment.CurrentManagedThreadId, 0);
@@ -299,10 +342,7 @@ internal sealed class DebugEngine
         DebugPausedEventArgs? pause = null;
         lock (_gate)
         {
-            while (_paused && !_stopped)
-            {
-                Monitor.Wait(_gate);
-            }
+            WaitHoldingGate(() => _paused && !_stopped);
 
             if (!_stopped && ReasonToBreak(frame, statementId) is { } reason && (reason != PauseReason.Breakpoint || conditionMet))
             {
@@ -354,10 +394,7 @@ internal sealed class DebugEngine
         DebugPausedEventArgs pause;
         lock (_gate)
         {
-            while (_paused && !_stopped)
-            {
-                Monitor.Wait(_gate);
-            }
+            WaitHoldingGate(() => _paused && !_stopped);
 
             if (_stopped)
             {
@@ -448,10 +485,7 @@ internal sealed class DebugEngine
         _onPaused(pause);
         lock (_gate)
         {
-            while (_paused && !_stopped && _pauseGeneration == pause.Generation)
-            {
-                Monitor.Wait(_gate);
-            }
+            WaitHoldingGate(() => _paused && !_stopped && _pauseGeneration == pause.Generation);
         }
 
         ThrowIfStoppedOnMainThread();
@@ -461,16 +495,45 @@ internal sealed class DebugEngine
     {
         lock (_gate)
         {
-            while (_paused && !_stopped)
+            WaitHoldingGate(() => _paused && !_stopped);
+        }
+    }
+
+    /// <summary>
+    /// Waits while a condition holds. The caller holds the gate, and holds it again when this returns. A thread the
+    /// pump keeps alive runs the host's message loop meanwhile, without the gate; any other thread blocks.
+    /// </summary>
+    private void WaitHoldingGate(Func<bool> waiting)
+    {
+        while (waiting())
+        {
+            if (_pump is not { CanPumpCurrentThread: true } pump)
             {
                 Monitor.Wait(_gate);
+                continue;
+            }
+
+            Monitor.Exit(_gate);
+            try
+            {
+                pump.PumpWhile(() =>
+                {
+                    lock (_gate)
+                    {
+                        return waiting();
+                    }
+                });
+            }
+            finally
+            {
+                Monitor.Enter(_gate);
             }
         }
     }
 
     private void ThrowIfStoppedOnMainThread()
     {
-        if (_stopped && !Evaluator.IsEvaluating && Environment.CurrentManagedThreadId == Volatile.Read(ref _mainThreadId))
+        if (_stopped && !_hosted && !Evaluator.IsEvaluating && Environment.CurrentManagedThreadId == Volatile.Read(ref _mainThreadId))
         {
             throw new DebugSessionStoppedException();
         }

@@ -1,23 +1,14 @@
 using System.Globalization;
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
+using TabStudio.App.Theming;
 
 namespace TabStudio.App.ViewModels.PullRequests;
 
 /// <summary>How pull requests and reviews read in the IDE: ages, people's initials and colors, and counts.</summary>
 public static class ReviewDisplay
 {
-    private static readonly IBrush[] AvatarBrushes =
-    [
-        new ImmutableSolidColorBrush(Color.Parse("#2E6F9E")),
-        new ImmutableSolidColorBrush(Color.Parse("#7A4FA0")),
-        new ImmutableSolidColorBrush(Color.Parse("#2F7D5B")),
-        new ImmutableSolidColorBrush(Color.Parse("#A0563A")),
-        new ImmutableSolidColorBrush(Color.Parse("#8A6D1F")),
-        new ImmutableSolidColorBrush(Color.Parse("#9C3F5E")),
-        new ImmutableSolidColorBrush(Color.Parse("#3F6A8A")),
-        new ImmutableSolidColorBrush(Color.Parse("#566B2E")),
-    ];
+    /// <summary>How many avatar colors the palette has (<c>Brush.Avatar.1</c> to <c>Brush.Avatar.8</c>), all dark enough for white letters.</summary>
+    private const int AvatarColors = 8;
 
     /// <summary>How long ago something happened, such as "3 hours ago", or the date when it was over a month ago.</summary>
     /// <param name="when">When it happened.</param>
@@ -54,7 +45,7 @@ public static class ReviewDisplay
             hash = unchecked((hash * 31) + c);
         }
 
-        return AvatarBrushes[(hash & int.MaxValue) % AvatarBrushes.Length];
+        return ThemeBrushes.Get(string.Create(CultureInfo.InvariantCulture, $"Brush.Avatar.{((hash & int.MaxValue) % AvatarColors) + 1}"));
     }
 
     /// <summary>"1 comment", "3 comments".</summary>
