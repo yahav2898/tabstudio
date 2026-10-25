@@ -25,3 +25,16 @@ public interface IAppScreenNotices
     /// <param name="text">The message.</param>
     void ShowNotice(string text);
 }
+
+/// <summary>
+/// A screen that can start the app again, fresh, as a recorded UI test starts it before its first step. An addition to
+/// <see cref="IAppScreen"/>: the swarm's device screens do it on the device, and the preview and virtual devices should.
+/// A screen without it replays recorded tests on the app as it is.
+/// </summary>
+public interface IAppScreenRestart
+{
+    /// <summary>Starts the app again and waits until it shows.</summary>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    /// <returns>Whether the app started again.</returns>
+    Task<bool> RestartAppAsync(CancellationToken cancellationToken);
+}

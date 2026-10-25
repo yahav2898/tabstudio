@@ -97,7 +97,8 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     /// <param name="link">The app's TabStudio Link; without it, this device always compiles on its own.</param>
     /// <param name="linkDialog">The TabStudio Link dialog, opened from the File menu and the status bar.</param>
     /// <param name="languageServers">Starts language servers and debug adapters; the desktop's launcher when <see langword="null"/>.</param>
-    public WorkspaceViewModel(CompilerServices compiler, IDeviceStatus device, DeviceProfile profile, IUiDispatcher ui, SessionStore sessions, AppPaths paths, GitHubAccountViewModel? gitHubAccount = null, IStoragePicker? browser = null, IWebViewFactory? webViews = null, INotifications? notifications = null, IAppActivity? appActivity = null, LinkService? link = null, LinkViewModel? linkDialog = null, Services.LanguageServers.LanguageServerServices? languageServers = null)
+    /// <param name="swarm">The swarm, which runs the app on phones and tablets; none when <see langword="null"/>.</param>
+    public WorkspaceViewModel(CompilerServices compiler, IDeviceStatus device, DeviceProfile profile, IUiDispatcher ui, SessionStore sessions, AppPaths paths, GitHubAccountViewModel? gitHubAccount = null, IStoragePicker? browser = null, IWebViewFactory? webViews = null, INotifications? notifications = null, IAppActivity? appActivity = null, LinkService? link = null, LinkViewModel? linkDialog = null, Services.LanguageServers.LanguageServerServices? languageServers = null, global::TabStudio.App.Swarm.SwarmServices? swarm = null)
     {
         ArgumentNullException.ThrowIfNull(compiler);
         ArgumentNullException.ThrowIfNull(device);
@@ -134,6 +135,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         InitializePullRequests();
         InitializeLiveTesting();
         InitializeLanguageServers(languageServers, browser);
+        InitializeSwarm(swarm);
     }
 
     /// <summary>Raised when the user closes the workspace to return to the start screen.</summary>
@@ -236,7 +238,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     public string RunLabel => StartupProject?.Name ?? LaunchTargetLabel ?? "Start";
 
     /// <summary>Where the startup project runs, such as "In-process".</summary>
-    public string RunHostText => StartupProject is { } project ? CompatibilityDoctor.Diagnose(project).RunsVia : LaunchTargetHost ?? "Nothing to run";
+    public string RunHostText => StartupProject is { } project ? IsRunOnSwarm ? SwarmRunHostText : CompatibilityDoctor.Diagnose(project).RunsVia : LaunchTargetHost ?? "Nothing to run";
 
     /// <summary>The build configuration, "Debug" or "Release".</summary>
     [ObservableProperty]
@@ -357,6 +359,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         _sessionSave?.Cancel();
         DisposeDebugging();
         DisposeTests();
+        DisposeSwarm();
         DisposeLiveTesting();
         DisposeLink();
         _agent?.Dispose();

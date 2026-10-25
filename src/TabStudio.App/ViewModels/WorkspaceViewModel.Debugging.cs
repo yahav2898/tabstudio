@@ -152,6 +152,11 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
             return await EvaluateAdapterDataTipAsync(expression);
         }
 
+        if (_swarmDebug is not null)
+        {
+            return await EvaluateSwarmDataTipAsync(expression);
+        }
+
         if (_pause is not { } pause || string.IsNullOrWhiteSpace(expression))
         {
             return null;
@@ -172,6 +177,11 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
     [RelayCommand(CanExecute = nameof(CanStartDebugging))]
     private Task StartDebuggingAsync()
     {
+        if (_swarmDebug is not null)
+        {
+            return IsPaused ? ContinueSwarmAsync() : Task.CompletedTask;
+        }
+
         if (_adapter is not null)
         {
             return ContinueAdapterAsync();
@@ -190,16 +200,24 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
 
     /// <summary>F11: runs the current statement, stepping into the calls it makes; before debugging, starts at the first statement.</summary>
     [RelayCommand(CanExecute = nameof(CanStep))]
-    private Task StepIntoAsync() => _adapter is not null ? StepAdapterAsync(AdapterStep.Into) : StepOrStartAsync(session => session.StepInto());
+    private Task StepIntoAsync() => _swarmDebug is not null ? StepSwarmAsync(TabStudio.Swarm.SwarmResumeMode.StepInto)
+        : _adapter is not null ? StepAdapterAsync(AdapterStep.Into) : StepOrStartAsync(session => session.StepInto());
 
     /// <summary>F10: runs the current statement and the calls it makes; before debugging, starts at the first statement.</summary>
     [RelayCommand(CanExecute = nameof(CanStep))]
-    private Task StepOverAsync() => _adapter is not null ? StepAdapterAsync(AdapterStep.Over) : StepOrStartAsync(session => session.StepOver());
+    private Task StepOverAsync() => _swarmDebug is not null ? StepSwarmAsync(TabStudio.Swarm.SwarmResumeMode.StepOver)
+        : _adapter is not null ? StepAdapterAsync(AdapterStep.Over) : StepOrStartAsync(session => session.StepOver());
 
     /// <summary>Shift+F11: runs to the end of the current function and pauses in its caller.</summary>
     [RelayCommand(CanExecute = nameof(IsPaused))]
     private void StepOut()
     {
+        if (_swarmDebug is not null)
+        {
+            _ = StepSwarmAsync(TabStudio.Swarm.SwarmResumeMode.StepOut);
+            return;
+        }
+
         if (_adapter is not null)
         {
             _ = StepAdapterAsync(AdapterStep.Out);
@@ -215,6 +233,7 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
     {
         _session?.Pause();
         _ = PauseAdapterAsync();
+        _ = PauseSwarmAsync();
         StatusText = "Pausing at the next statement of the program's own code";
     }
 
@@ -226,7 +245,7 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
         {
             _run?.Cancel();
         }
-        else
+        else if (!StopSwarmDebugging())
         {
             _session?.Stop();
             _ = StopAdapterAsync();
@@ -239,6 +258,11 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
     [RelayCommand(CanExecute = nameof(IsDebugging))]
     private void Restart()
     {
+        if (RestartSwarmDebugging())
+        {
+            return;
+        }
+
         _restartRequested = _session is not null;
         _session?.Stop();
         RestartAdapter();
@@ -256,6 +280,11 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
         if (!IsPaused)
         {
             return LaunchAsync(DebugStart.RunToCursor);
+        }
+
+        if (_swarmDebug is not null)
+        {
+            return RunSwarmToCursorAsync(document);
         }
 
         if (_adapter is not null)
@@ -380,6 +409,12 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
 
     private async Task LaunchAsync(DebugStart start)
     {
+        if (IsRunOnSwarm && StartupProject is { } swarmProject && _session is null && _swarmDebug is null)
+        {
+            await RunOnSwarmAsync(swarmProject, debug: true, pauseAtStart: start == DebugStart.StepInto);
+            return;
+        }
+
         if (UsesLaunchTarget && CurrentLaunchTarget is { } target && _session is null)
         {
             await LaunchAdapterAsync(target, start, noDebug: false);
@@ -573,6 +608,12 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
     /// <summary>Marks a frame's statement in the editor and opens its file, as choosing a frame in the Call Stack does.</summary>
     private async Task ShowFrameAsync(StackFrameViewModel? frame)
     {
+        if (_swarmDebug is not null)
+        {
+            await ShowSwarmFrameAsync(frame);
+            return;
+        }
+
         if (_adapter is not null)
         {
             await ShowAdapterFrameAsync(frame);
@@ -603,7 +644,7 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
 
     private void ApplyExecutionPoints(DocumentViewModel document)
     {
-        var current = _pause is { CallStack.Count: > 0 } pause ? pause.CallStack[0].Location : _adapterCurrent;
+        var current = _pause is { CallStack.Count: > 0 } pause ? pause.CallStack[0].Location : _adapterCurrent ?? _swarmCurrent;
         var caller = CallStack.ActiveFrame is { IsTop: false } frame ? frame.Location : null;
         document.ShowExecutionPoints(PointIn(document, current), PointIn(document, caller), _exceptionHelper);
     }

@@ -56,6 +56,24 @@ public sealed partial class SwarmCoordinator
         return run;
     }
 
+    /// <summary>
+    /// Starts the app of the current run again on one device, fresh, as a recorded UI test starts it. The device has
+    /// the build already, so nothing is sent but the request.
+    /// </summary>
+    /// <param name="device">The device.</param>
+    /// <param name="cancellationToken">Stops waiting.</param>
+    /// <returns>Whether the device started the app again.</returns>
+    public async Task<bool> RestartAsync(SwarmDevice device, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(device);
+        if (CurrentRun is not { } run || !device.IsConnected)
+        {
+            return false;
+        }
+
+        return await DeployAsync(device, run, cancellationToken, restart: true).ConfigureAwait(false) is { Succeeded: true };
+    }
+
     /// <summary>Stops the app on every device; they wait for the next build.</summary>
     public async Task StopRunAsync()
     {
@@ -97,7 +115,7 @@ public sealed partial class SwarmCoordinator
     }
 
     /// <summary>Sends a run to one device: what it lacks, then the request to run it.</summary>
-    private async Task DeployAsync(SwarmDevice device, SwarmRun run, CancellationToken cancellationToken)
+    private async Task<SwarmDeployment?> DeployAsync(SwarmDevice device, SwarmRun run, CancellationToken cancellationToken, bool restart = false)
     {
         var clock = Stopwatch.StartNew();
         SwarmPayload? payload;
@@ -108,7 +126,7 @@ public sealed partial class SwarmCoordinator
 
         if (payload is null || device.Connection is not { } connection)
         {
-            return;
+            return null;
         }
 
         SwarmDeployment deployment;
@@ -133,7 +151,7 @@ public sealed partial class SwarmCoordinator
                 bytes += content.Length;
             }
 
-            var request = payload.CreateRequest(run, attached, Breakpoints);
+            var request = payload.CreateRequest(run, attached, Breakpoints, restart);
             await connection.RequestAsync(
                 SwarmMethods.Run,
                 SwarmJson.Body(request, SwarmJsonContext.Default.SwarmRunRequest),
@@ -159,6 +177,7 @@ public sealed partial class SwarmCoordinator
         run.Add(deployment);
         RaiseDeviceChanged(device);
         Deployed?.Invoke(this, deployment);
+        return deployment;
     }
 
     private static SwarmDeployment Failed(SwarmDevice device, string error, Stopwatch clock)

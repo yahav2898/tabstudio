@@ -71,6 +71,7 @@ internal sealed record SwarmWebSetup(string Secret, string LaunchPath);
 /// <param name="Arguments">Command-line arguments, for console apps.</param>
 /// <param name="Debug">How to debug it, or <see langword="null"/> to run it without the debugger.</param>
 /// <param name="Web">How to open it, for web apps.</param>
+/// <param name="Restart">Starts the app again even when the device runs this run already, so it starts fresh.</param>
 internal sealed record SwarmRunRequest(
     long Run,
     string AppName,
@@ -81,7 +82,8 @@ internal sealed record SwarmRunRequest(
     IReadOnlyList<string> Attached,
     IReadOnlyList<string> Arguments,
     SwarmDebugSetup? Debug,
-    SwarmWebSetup? Web);
+    SwarmWebSetup? Web,
+    bool Restart = false);
 
 /// <summary>Stops a run on a device.</summary>
 /// <param name="Run">The run, or 0 for whatever runs.</param>

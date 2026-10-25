@@ -147,13 +147,14 @@ public static class UiTestWriter
             """;
     }
 
-    /// <summary>The project file of a new test project for an app.</summary>
+    /// <summary>
+    /// The project file of a new test project for an app, without its packages, which <see cref="Packages"/> lists:
+    /// they are added the way TabStudio adds every package, so central package management keeps working.
+    /// </summary>
     /// <param name="appProject">The app's project file, relative to the test project's folder.</param>
-    /// <param name="avaloniaVersion">The Avalonia version the app uses.</param>
-    public static string Project(string appProject, string avaloniaVersion)
+    public static string Project(string appProject)
     {
         ArgumentNullException.ThrowIfNull(appProject);
-        ArgumentNullException.ThrowIfNull(avaloniaVersion);
         return $"""
             <Project Sdk="Microsoft.NET.Sdk">
 
@@ -166,13 +167,6 @@ public static class UiTestWriter
               </PropertyGroup>
 
               <ItemGroup>
-                <PackageReference Include="Avalonia.Headless.XUnit" Version="{avaloniaVersion}" />
-                <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
-                <PackageReference Include="xunit" Version="2.9.3" />
-                <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" />
-              </ItemGroup>
-
-              <ItemGroup>
                 <ProjectReference Include="{appProject.Replace('/', '\\')}" />
               </ItemGroup>
 
@@ -183,6 +177,20 @@ public static class UiTestWriter
             </Project>
 
             """;
+    }
+
+    /// <summary>The packages recorded UI tests need: xUnit, its runner, and Avalonia's headless platform for xUnit.</summary>
+    /// <param name="avaloniaVersion">The Avalonia version the app uses.</param>
+    public static IReadOnlyList<(string Id, string Version)> Packages(string avaloniaVersion)
+    {
+        ArgumentNullException.ThrowIfNull(avaloniaVersion);
+        return
+        [
+            ("Avalonia.Headless.XUnit", avaloniaVersion),
+            ("Microsoft.NET.Test.Sdk", "17.14.1"),
+            ("xunit", "2.9.3"),
+            ("xunit.runner.visualstudio", "3.1.5"),
+        ];
     }
 
     private static string Literal(string text) => SymbolDisplay.FormatLiteral(text, quote: true);

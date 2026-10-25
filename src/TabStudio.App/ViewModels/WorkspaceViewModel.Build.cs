@@ -32,6 +32,12 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
+        if (IsRunOnSwarm)
+        {
+            await RunOnSwarmAsync(project, debug: false, pauseAtStart: false);
+            return;
+        }
+
         if (IsLiveApp(project))
         {
             await RunLiveProjectAsync(project, fromDebugger: false);

@@ -12,17 +12,21 @@ namespace TabStudio.App.Swarm;
 /// The <see cref="SwarmCoordinatorService"/> creates one for every device of the swarm and keeps it in the
 /// <see cref="AppScreenRegistry"/> while the device is in the swarm, so the Device Matrix shows it.
 /// </remarks>
-public sealed class DeviceAppScreen : IAppScreen, IAppScreenElements, IAppScreenNotices
+public sealed class DeviceAppScreen : IAppScreen, IAppScreenElements, IAppScreenNotices, IAppScreenRestart
 {
+    private readonly SwarmCoordinator _coordinator;
     private ScreenProfile _profile;
     private bool _isRunning;
 
     /// <summary>Creates the screen of a device.</summary>
     /// <param name="device">The device, as the coordinator sees it.</param>
-    public DeviceAppScreen(SwarmDevice device)
+    /// <param name="coordinator">The swarm's coordinator, which starts the app again on the device.</param>
+    public DeviceAppScreen(SwarmDevice device, SwarmCoordinator coordinator)
     {
         ArgumentNullException.ThrowIfNull(device);
+        ArgumentNullException.ThrowIfNull(coordinator);
         Device = device;
+        _coordinator = coordinator;
         Id = "swarm:" + device.Fingerprint.Value[..16];
         _profile = SwarmScreens.Profile(device.Name, device.Screen);
         _isRunning = IsAppRunning(device);
@@ -68,6 +72,32 @@ public sealed class DeviceAppScreen : IAppScreen, IAppScreenElements, IAppScreen
 
     /// <inheritdoc />
     public void ShowNotice(string text) => _ = Device.ShowNoticeAsync(text);
+
+    /// <inheritdoc />
+    public async Task<bool> RestartAppAsync(CancellationToken cancellationToken)
+    {
+        if (!await _coordinator.RestartAsync(Device, cancellationToken).ConfigureAwait(false))
+        {
+            return false;
+        }
+
+        // The device answers before the app shows; it reports Running once it does.
+        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeout.CancelAfter(TimeSpan.FromSeconds(30));
+        try
+        {
+            while (Device.State is SwarmDeviceState.Deploying or SwarmDeviceState.Starting)
+            {
+                await Task.Delay(50, timeout.Token).ConfigureAwait(false);
+            }
+        }
+        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+        {
+            return false;
+        }
+
+        return Device.State is SwarmDeviceState.Running or SwarmDeviceState.Paused;
+    }
 
     /// <summary>Reads the device's state again and tells the screen's watchers when it changed. UI thread.</summary>
     internal void Refresh()

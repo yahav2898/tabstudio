@@ -6,6 +6,7 @@
              xmlns:views="using:TabStudio.App.Views"
              xmlns:actionViews="using:TabStudio.App.Views.Actions"
              xmlns:prv="using:TabStudio.App.Views.PullRequests"
+             xmlns:swarmViews="using:TabStudio.App.Views.Swarm"
              xmlns:vm="using:TabStudio.App.ViewModels"
              xmlns:sys="using:System"
              x:Class="TabStudio.App.Views.WorkspaceView"
@@ -59,6 +60,7 @@
             <MenuItem Header="Save A_ll" InputGesture="Ctrl+Shift+S" Command="{Binding SaveAllCommand}" />
             <Separator />
             <MenuItem Header="TabStudio _Link..." Command="{Binding OpenLinkCommand}" IsVisible="{Binding IsLinkAvailable}" />
+            <MenuItem Header="_Join a Swarm..." Command="{Binding JoinSwarmCommand}" IsVisible="{Binding CanJoinSwarm}" />
             <Separator />
             <MenuItem Header="_Close Document" InputGesture="Ctrl+F4" Command="{Binding CloseDocumentCommand}" />
             <MenuItem Header="Close Sol_ution" Command="{Binding CloseWorkspaceCommand}" />
@@ -91,6 +93,8 @@
             <MenuItem Header="Pull Re_quests" Command="{Binding ShowPullRequestsCommand}" />
             <MenuItem Header="_Test Explorer (Ctrl+E, T)" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}" />
             <MenuItem Header="Claude _Agent" Command="{Binding ShowAgentCommand}" />
+            <MenuItem Header="S_warm" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.Swarm}"
+                      IsVisible="{Binding IsSwarmAvailable}" />
             <MenuItem Header="_Web Preview" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.WebPreview}"
                       IsEnabled="{Binding WebPreview.HasApp}" />
             <MenuItem Header="_App Preview" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.AppPreview}"
@@ -190,6 +194,9 @@
               <MenuItem Header="Run on _Save" ToggleType="Radio" GroupName="LiveUnitTestingTrigger"
                         IsChecked="{Binding LiveTesting.RunsOnSave, Mode=OneWay}" Command="{Binding LiveTesting.UseRunOnSaveCommand}" />
             </MenuItem>
+            <Separator />
+            <MenuItem Header="Record _UI Test" Command="{Binding RecordUiTestCommand}" IsVisible="{Binding IsSwarmAvailable}" />
+            <MenuItem Header="Run UI Tests on _Every Screen" Command="{Binding RunUiTestsOnEveryScreenCommand}" IsVisible="{Binding IsSwarmAvailable}" />
             <Separator />
             <MenuItem Header="Test E_xplorer (Ctrl+E, T)" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}" />
           </MenuItem>
@@ -637,6 +644,11 @@
           <views:WebPreviewView DataContext="{Binding WebPreview}" />
         </Panel>
 
+        <!-- The Swarm window: the phones and tablets that run the app, its toggles and the UI test recorder. -->
+        <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsSwarmSelected}">
+          <swarmViews:SwarmView DataContext="{Binding Swarm}" />
+        </Panel>
+
         <!-- GitHub Actions: the commit's checks, runs, workflows and watched repositories. -->
         <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsActionsSelected}">
           <actionViews:ActionsView DataContext="{Binding Actions}" />
@@ -680,6 +692,16 @@
               <StackPanel Orientation="Horizontal" Spacing="6">
                 <controls:StrokeIcon Data="{StaticResource Icon.Globe}" Size="12" />
                 <TextBlock Text="Preview" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsSwarmSelected}" IsVisible="{Binding IsSwarmAvailable}"
+                    Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.Swarm}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <controls:StrokeIcon Data="{StaticResource Icon.Swarm}" Size="12" />
+                <TextBlock Text="Swarm" VerticalAlignment="Center" />
+                <Border Classes="pill success" IsVisible="{Binding Swarm.HasDevices, FallbackValue=False}">
+                  <TextBlock Text="{Binding Swarm.Devices.Count, FallbackValue=0}" VerticalAlignment="Center" />
+                </Border>
               </StackPanel>
             </Button>
             <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsAgentSelected}"
@@ -737,6 +759,15 @@
             </StackPanel>
           </Button>
           <actionViews:CiStatusBarItem DataContext="{Binding Actions}" />
+          <!-- The swarm, while it is on: how many devices are in it; tap for the Swarm window. -->
+          <Button Theme="{StaticResource StatusBarButton}" Height="24" ToolTip.Tip="{Binding Swarm.StatusTip, FallbackValue={x:Null}}"
+                  Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.Swarm}"
+                  IsVisible="{Binding Swarm.IsOn, FallbackValue=False}">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+              <controls:StrokeIcon Size="13" Data="{StaticResource Icon.Swarm}" />
+              <TextBlock Text="{Binding Swarm.StatusText, FallbackValue={x:Null}}" FontSize="12" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
           <!-- Live Unit Testing, while it is on: what it does, or how the tests fare; tap for Pause and Stop. -->
           <Button Theme="{StaticResource StatusBarButton}" Height="24" ToolTip.Tip="{Binding LiveTesting.DetailText}"
                   IsVisible="{Binding LiveTesting.IsEnabled}">
@@ -779,6 +810,9 @@
 
     <!-- Git's dialogs: switch branch, create a pull request, history. -->
     <views:GitDialogsView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding GitChanges}" />
+
+    <!-- The swarm's Add a device dialog, with its QR code. -->
+    <swarmViews:SwarmInviteView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding Swarm.Invite, FallbackValue={x:Null}}" />
 
     <!-- GitHub Actions' dialog: Run workflow. -->
     <actionViews:ActionsDialogsView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding Actions}" />

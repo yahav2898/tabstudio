@@ -314,6 +314,13 @@
                     </ItemsControl.ItemTemplate>
                   </ItemsControl>
 
+                  <!-- A recorded UI test that failed on a screen: what the screen showed then. -->
+                  <TextBlock Classes="section" Text="Screen at the Failure" IsVisible="{Binding HasScreenshot}" />
+                  <Border CornerRadius="6" ClipToBounds="True" HorizontalAlignment="Left" MaxHeight="420"
+                          BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" IsVisible="{Binding HasScreenshot}">
+                    <Image Source="{Binding Screenshot}" Stretch="Uniform" />
+                  </Border>
+
                   <TextBlock Classes="section" Text="Standard Output" IsVisible="{Binding HasOutput}" />
                   <Border CornerRadius="6" Padding="8,6" Background="{DynamicResource Brush.Window}" IsVisible="{Binding HasOutput}">
                     <SelectableTextBlock FontFamily="{DynamicResource CodeFont}" FontSize="12" TextWrapping="Wrap" Text="{Binding Output}" />

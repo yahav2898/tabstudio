@@ -98,7 +98,7 @@ public sealed partial class SwarmMember
         await _runs.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
-            if (Current() is { HasEnded: false } same && same.Id == request.Run)
+            if (!request.Restart && Current() is { HasEnded: false } same && same.Id == request.Run)
             {
                 // The tablet sends the run again when the device reconnects: the app keeps running, with today's breakpoints.
                 if (request.Debug is { } debug)

@@ -42,6 +42,8 @@ public sealed partial class WorkspaceViewModel : ITestRunHost
             return;
         }
 
+        // Recorded UI tests replay on the screens of the swarm, the app preview and the virtual devices.
+        request = await RunUiTestsOnScreensAsync(request);
         var selections = request.Projects
             .Select(s => (Project: workspace.Projects.FirstOrDefault(p => p.FilePath == s.ProjectFilePath), s.Names))
             .Where(s => s.Project is not null)

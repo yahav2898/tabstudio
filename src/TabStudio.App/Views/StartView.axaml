@@ -21,17 +21,28 @@
           <TextBlock Text="TabStudio" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" />
         </StackPanel>
 
-        <!-- TabStudio Link: borrow a phone's or PC's power, or lend this device's. -->
-        <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Height="38" MinHeight="38" Padding="12,0" VerticalAlignment="Center"
-                ToolTip.Tip="TabStudio Link: a phone or PC compiles for this device" Command="{Binding Link.ShowCommand}">
-          <StackPanel Orientation="Horizontal" Spacing="8">
-            <controls:StrokeIcon Data="{StaticResource Icon.Link}" Size="15" />
-            <TextBlock Text="TabStudio Link" VerticalAlignment="Center" />
-            <Border Classes="pill" Classes.success="{Binding Link.IsLinked}" Classes.ready="{Binding Link.IsHosting}">
-              <TextBlock Text="{Binding Link.StatusText}" />
-            </Border>
-          </StackPanel>
-        </Button>
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+          <!-- TabStudio Swarm: run the app a tablet builds, full screen, on this device. -->
+          <Button Theme="{StaticResource ToolButton}" Height="38" MinHeight="38" Padding="12,0" VerticalAlignment="Center"
+                  ToolTip.Tip="Join a tablet's swarm, to run the app it builds on this device" Command="{Binding Link.ShowSwarmCommand}"
+                  IsVisible="{Binding Link.HasSwarm}">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <controls:StrokeIcon Data="{StaticResource Icon.Swarm}" Size="15" />
+              <TextBlock Text="Swarm" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+          <!-- TabStudio Link: borrow a phone's or PC's power, or lend this device's. -->
+          <Button Theme="{StaticResource ToolButton}" Height="38" MinHeight="38" Padding="12,0" VerticalAlignment="Center"
+                  ToolTip.Tip="TabStudio Link: a phone or PC compiles for this device" Command="{Binding Link.ShowCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <controls:StrokeIcon Data="{StaticResource Icon.Link}" Size="15" />
+              <TextBlock Text="TabStudio Link" VerticalAlignment="Center" />
+              <Border Classes="pill" Classes.success="{Binding Link.IsLinked}" Classes.ready="{Binding Link.IsHosting}">
+                <TextBlock Text="{Binding Link.StatusText}" />
+              </Border>
+            </StackPanel>
+          </Button>
+        </StackPanel>
       </Grid>
     </Border>
 

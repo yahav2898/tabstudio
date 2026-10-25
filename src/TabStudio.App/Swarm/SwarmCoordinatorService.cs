@@ -295,16 +295,17 @@ public sealed class SwarmCoordinatorService : IAsyncDisposable, IDisposable
     /// <summary>Puts a screen in the registry for every device of the swarm, and takes out those of devices that left. UI thread.</summary>
     private void SyncScreens()
     {
-        var devices = Devices;
+        var coordinator = Coordinator;
+        IReadOnlyList<SwarmDevice> devices = coordinator?.Devices ?? [];
         List<DeviceAppScreen> added = [];
         List<DeviceAppScreen> removed = [];
         lock (_gate)
         {
             foreach (var device in devices)
             {
-                if (!_screens.ContainsKey(device.Fingerprint))
+                if (coordinator is not null && !_screens.ContainsKey(device.Fingerprint))
                 {
-                    var screen = new DeviceAppScreen(device);
+                    var screen = new DeviceAppScreen(device, coordinator);
                     _screens[device.Fingerprint] = screen;
                     added.Add(screen);
                 }

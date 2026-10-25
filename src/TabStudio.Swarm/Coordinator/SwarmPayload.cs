@@ -47,13 +47,14 @@ internal sealed class SwarmPayload
     /// <param name="run">The run.</param>
     /// <param name="attached">The hashes of the files attached to the request, in order.</param>
     /// <param name="breakpoints">The breakpoints now.</param>
-    public SwarmRunRequest CreateRequest(SwarmRun run, IReadOnlyList<string> attached, IReadOnlyList<SwarmBreakpoint> breakpoints)
+    /// <param name="restart">Whether the device starts the app again when it runs this run already.</param>
+    public SwarmRunRequest CreateRequest(SwarmRun run, IReadOnlyList<string> attached, IReadOnlyList<SwarmBreakpoint> breakpoints, bool restart)
     {
         var debug = _build.Debug is { } options
             ? new SwarmDebugSetup(options.DebugInfo.Statements, options.DebugInfo.Methods, breakpoints, options.BreakOnUnhandledExceptions, options.PauseAtStart)
             : null;
         var web = _build.Web is { } target && run.WebSecret is { } secret ? new SwarmWebSetup(secret, target.LaunchPath) : null;
-        return new SwarmRunRequest(run.Id, _build.AppName, _build.Kind, _entry, _dependencies, _packages, attached, _build.Arguments, debug, web);
+        return new SwarmRunRequest(run.Id, _build.AppName, _build.Kind, _entry, _dependencies, _packages, attached, _build.Arguments, debug, web, restart);
     }
 
     private SwarmAssemblyEntry AddAssembly(CompiledAssembly assembly)
