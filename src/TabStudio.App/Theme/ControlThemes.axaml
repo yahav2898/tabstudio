@@ -216,4 +216,22 @@
     </Style>
   </ControlTheme>
 
+  <!-- An activity bar button: 48 pixels square, quiet until hovered or selected. -->
+  <ControlTheme x:Key="ActivityButton" TargetType="Button" BasedOn="{StaticResource ToolButton}">
+    <Setter Property="Foreground" Value="{DynamicResource Brush.TextMuted}" />
+    <Setter Property="CornerRadius" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="MinWidth" Value="48" />
+    <Setter Property="MinHeight" Value="48" />
+    <Style Selector="^:pointerover">
+      <Setter Property="Foreground" Value="{DynamicResource Brush.TextBright}" />
+    </Style>
+    <Style Selector="^.selected">
+      <Setter Property="Foreground" Value="{DynamicResource Brush.TextBright}" />
+    </Style>
+    <Style Selector="^.selected /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="Transparent" />
+    </Style>
+  </ControlTheme>
+
 </ResourceDictionary>
