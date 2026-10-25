@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Classification;
+using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.Host;
 using Microsoft.CodeAnalysis.Host.Mef;
 using Microsoft.CodeAnalysis.Text;
@@ -21,6 +22,12 @@ namespace TabStudio.Compilation;
 /// <param name="Classification">A Roslyn classification name, see <see cref="ClassificationTypeNames"/>.</param>
 public readonly record struct ClassifiedRange(int Start, int Length, string Classification);
 
+/// <summary>A replacement of part of a document's text, such as one produced by Format Document.</summary>
+/// <param name="Start">Zero-based offset of the replaced range.</param>
+/// <param name="Length">Length of the replaced range.</param>
+/// <param name="NewText">The text that replaces it.</param>
+public readonly record struct TextEdit(int Start, int Length, string NewText);
+
 /// <summary>
 /// Keeps a live Roslyn model of every C# project in the open workspace.
 /// </summary>
@@ -36,19 +43,34 @@ public readonly record struct ClassifiedRange(int Start, int Length, string Clas
 /// Updates are serialized; queries work on immutable snapshots and can run concurrently with updates.
 /// </para>
 /// </remarks>
-public sealed class RoslynWorkspaceHost : IDisposable
+public sealed partial class RoslynWorkspaceHost : IDisposable
 {
     private static readonly Lazy<HostServices> SharedHostServices = new(CreateHostServices);
 
     private readonly AdhocWorkspace _workspace;
+    private readonly IReadOnlyList<MetadataReference> _frameworkReferences;
     private readonly Lock _gate = new();
     private readonly Dictionary<string, DocumentId> _documents = new(StringComparer.Ordinal);
     private readonly Dictionary<string, ProjectId> _projectIds = new(StringComparer.Ordinal);
     private readonly Dictionary<ProjectId, TsProject> _projects = [];
+    private TsWorkspace? _loaded;
+    private bool _concurrentBuild = true;
+    private bool _optimize;
 
-    /// <summary>Creates an empty host.</summary>
+    /// <summary>Creates an empty host that compiles against the in-memory .NET 10 reference assemblies.</summary>
     public RoslynWorkspaceHost()
+        : this(ReferenceAssemblies.Net100)
     {
+    }
+
+    /// <summary>Creates an empty host with a specific set of framework references.</summary>
+    /// <param name="frameworkReferences">
+    /// The reference assemblies every project compiles against, such as <see cref="ReferenceAssemblies.LoadMapped"/>.
+    /// </param>
+    public RoslynWorkspaceHost(IReadOnlyList<MetadataReference> frameworkReferences)
+    {
+        ArgumentNullException.ThrowIfNull(frameworkReferences);
+        _frameworkReferences = frameworkReferences;
         _workspace = new AdhocWorkspace(SharedHostServices.Value);
     }
 
@@ -74,33 +96,66 @@ public sealed class RoslynWorkspaceHost : IDisposable
 
         lock (_gate)
         {
-            _workspace.ClearSolution();
-            _documents.Clear();
-            _projectIds.Clear();
-            _projects.Clear();
+            _loaded = workspace;
+            LoadUnderGate(workspace, sources);
+        }
+    }
 
-            var csharpProjects = workspace.Projects
-                .Where(p => p.Language == ProjectLanguage.CSharp && p.Kind != ProjectKind.Unknown)
-                .ToList();
-
-            foreach (var project in csharpProjects)
+    /// <summary>
+    /// Releases every compilation Roslyn has cached, keeping the current text of every file. The next query
+    /// recompiles only what it needs. Called when the device runs low on memory.
+    /// </summary>
+    public void TrimMemory()
+    {
+        lock (_gate)
+        {
+            if (_loaded is null)
             {
-                var id = ProjectId.CreateNewId(project.Name);
-                _projectIds[project.FilePath] = id;
-                _projects[id] = project;
+                return;
             }
 
-            var allProjectDirectories = workspace.Projects.Select(p => p.DirectoryPath).ToList();
-            var projectInfos = csharpProjects
-                .Select(project => CreateProjectInfo(project, allProjectDirectories, sources))
-                .ToList();
+            var solution = _workspace.CurrentSolution;
+            var texts = new Dictionary<string, string>(StringComparer.Ordinal);
+            foreach (var (path, id) in _documents)
+            {
+                if (solution.GetDocument(id) is { } document && document.TryGetText(out var text))
+                {
+                    texts[path] = text.ToString();
+                }
+            }
 
-            _workspace.AddSolution(RoslynSolutionInfo.Create(
-                SolutionId.CreateNewId(workspace.Name),
-                VersionStamp.Create(),
-                workspace.Solution?.FilePath,
-                projectInfos));
+            LoadUnderGate(_loaded, new SnapshotTextProvider(texts));
         }
+    }
+
+    private void LoadUnderGate(TsWorkspace workspace, ISourceTextProvider sources)
+    {
+        _workspace.ClearSolution();
+        _documents.Clear();
+        _projectIds.Clear();
+        _projects.Clear();
+
+        var csharpProjects = workspace.Projects
+            .Where(p => p.Language == ProjectLanguage.CSharp && p.Kind != ProjectKind.Unknown)
+            .ToList();
+
+        foreach (var project in csharpProjects)
+        {
+            var id = ProjectId.CreateNewId(project.Name);
+            _projectIds[project.FilePath] = id;
+            _projects[id] = project;
+        }
+
+        var allProjectDirectories = workspace.Projects.Select(p => p.DirectoryPath).ToList();
+        var projectInfos = csharpProjects
+            .Select(project => CreateProjectInfo(project, allProjectDirectories, sources))
+            .ToList();
+
+        _workspace.AddSolution(RoslynSolutionInfo.Create(
+            SolutionId.CreateNewId(workspace.Name),
+            VersionStamp.Create(),
+            workspace.Solution?.FilePath,
+            projectInfos));
     }
 
     /// <summary>Whether a file is a source file of a loaded project.</summary>
@@ -240,6 +295,109 @@ public sealed class RoslynWorkspaceHost : IDisposable
             .ToList();
     }
 
+    /// <summary>Returns the errors and warnings of a whole project, without emitting it.</summary>
+    /// <param name="projectFilePath">Full path of the project file.</param>
+    /// <param name="cancellationToken">Cancels the analysis.</param>
+    /// <returns>The diagnostics, or an empty list when the project is not loaded.</returns>
+    public async Task<IReadOnlyList<BuildDiagnostic>> GetProjectDiagnosticsAsync(string projectFilePath, CancellationToken cancellationToken = default)
+    {
+        Project? project;
+        TsProject info;
+        lock (_gate)
+        {
+            if (!_projectIds.TryGetValue(projectFilePath, out var id))
+            {
+                return [];
+            }
+
+            project = _workspace.CurrentSolution.GetProject(id);
+            info = _projects[id];
+        }
+
+        if (project is null || await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false) is not { } compilation)
+        {
+            return [];
+        }
+
+        var diagnostics = DiagnosticMapper.Map(compilation.GetDiagnostics(cancellationToken), info.Name).ToList();
+        if (info.IsExecutable)
+        {
+            diagnostics.AddRange(InProcessSafetyAnalyzer.Analyze(compilation, info.Name, cancellationToken));
+        }
+
+        return diagnostics;
+    }
+
+    /// <summary>Computes the edits that format a document with the default C# style.</summary>
+    /// <param name="filePath">Full path of the file.</param>
+    /// <param name="cancellationToken">Cancels formatting.</param>
+    /// <returns>Non-overlapping edits in document order, or an empty list when the file is not loaded.</returns>
+    public async Task<IReadOnlyList<TextEdit>> GetFormattingEditsAsync(string filePath, CancellationToken cancellationToken = default)
+    {
+        var (document, _) = Snapshot(filePath);
+        if (document is null)
+        {
+            return [];
+        }
+
+        var formatted = await Formatter.FormatAsync(document, cancellationToken: cancellationToken).ConfigureAwait(false);
+        var changes = await formatted.GetTextChangesAsync(document, cancellationToken).ConfigureAwait(false);
+        return changes
+            .OrderBy(c => c.Span.Start)
+            .Select(c => new TextEdit(c.Span.Start, c.Span.Length, c.NewText ?? string.Empty))
+            .ToList();
+    }
+
+    /// <summary>
+    /// Allows or prevents Roslyn from compiling on several threads at once. TabStudio turns this off while the
+    /// device is hot, so a build does not push it into thermal throttling.
+    /// </summary>
+    /// <param name="enabled">Whether concurrent compilation is allowed.</param>
+    public void SetConcurrentBuild(bool enabled)
+    {
+        lock (_gate)
+        {
+            _concurrentBuild = enabled;
+            var solution = _workspace.CurrentSolution;
+            foreach (var project in solution.Projects)
+            {
+                if (project.CompilationOptions is { } options && options.ConcurrentBuild != enabled)
+                {
+                    solution = solution.WithProjectCompilationOptions(project.Id, options.WithConcurrentBuild(enabled));
+                }
+            }
+
+            _workspace.TryApplyChanges(solution);
+        }
+    }
+
+    /// <summary>Switches every project between the Debug and Release configurations.</summary>
+    /// <param name="optimize">
+    /// <see langword="true"/> for Release: optimized code and the <c>RELEASE</c> symbol.
+    /// <see langword="false"/> for Debug: unoptimized code and the <c>DEBUG</c> symbol.
+    /// </param>
+    public void SetOptimization(bool optimize)
+    {
+        lock (_gate)
+        {
+            _optimize = optimize;
+            var parseOptions = CSharpCompiler.CreateParseOptions(optimize);
+            var level = optimize ? OptimizationLevel.Release : OptimizationLevel.Debug;
+            var solution = _workspace.CurrentSolution;
+            foreach (var project in solution.Projects)
+            {
+                if (project.CompilationOptions is { } options)
+                {
+                    solution = solution
+                        .WithProjectCompilationOptions(project.Id, options.WithOptimizationLevel(level))
+                        .WithProjectParseOptions(project.Id, parseOptions);
+                }
+            }
+
+            _workspace.TryApplyChanges(solution);
+        }
+    }
+
     /// <summary>
     /// Returns the projects that must be compiled to run a project, dependencies first and the project itself last.
     /// </summary>
@@ -355,11 +513,11 @@ public sealed class RoslynWorkspaceHost : IDisposable
             project.GetProperty("AssemblyName") ?? project.Name,
             LanguageNames.CSharp,
             filePath: project.FilePath,
-            compilationOptions: CSharpCompiler.CreateCompilationOptions(kind, project.NullableEnabled, allowUnsafe: allowUnsafe),
-            parseOptions: CSharpCompiler.CreateParseOptions(),
+            compilationOptions: CSharpCompiler.CreateCompilationOptions(kind, project.NullableEnabled, _optimize, allowUnsafe, _concurrentBuild),
+            parseOptions: CSharpCompiler.CreateParseOptions(_optimize),
             documents: documents,
             projectReferences: projectReferences,
-            metadataReferences: ReferenceAssemblies.Net100);
+            metadataReferences: _frameworkReferences);
     }
 
     private static DocumentInfo CreateDocumentInfo(DocumentId id, string path, string text, bool isGenerated) =>
@@ -369,6 +527,13 @@ public sealed class RoslynWorkspaceHost : IDisposable
             loader: TextLoader.From(TextAndVersion.Create(SourceText.From(text, Encoding.UTF8), VersionStamp.Create(), path)),
             filePath: path,
             isGenerated: isGenerated);
+
+    /// <summary>Serves the texts captured by <see cref="TrimMemory"/>, and the disk for anything else.</summary>
+    private sealed class SnapshotTextProvider(Dictionary<string, string> texts) : ISourceTextProvider
+    {
+        public string GetText(string filePath) =>
+            texts.TryGetValue(filePath, out var text) ? text : FileSystemTextProvider.Instance.GetText(filePath);
+    }
 
     private static string ReadSource(ISourceTextProvider sources, string path)
     {

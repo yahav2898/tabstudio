@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, 'agent/**']
   pull_request:
 
 permissions:
@@ -38,8 +38,10 @@ jobs:
         run: |
           mkdir -p ci-out
           status=0
-          for project in tests/TabStudio.Core.Tests tests/TabStudio.Compilation.Tests; do
+          # Every test project except the UI tests, which run in their own job.
+          for project in tests/*.Tests; do
             name=$(basename "$project")
+            [ "$name" = "TabStudio.App.Tests" ] && continue
             dotnet test "$project" -c Release --logger "console;verbosity=normal" > "ci-out/$name.log" 2>&1 || status=1
             tail -n 40 "ci-out/$name.log"
           done

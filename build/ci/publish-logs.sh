@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Publishes the contents of ci-out/ to the `ci-logs` branch, so the latest build logs, test results and
-# screenshots can be read without access to the Actions UI. One folder per job; the newest run wins.
+# screenshots can be read without access to the Actions UI. One folder per job (and per branch for branches
+# other than main); the newest run wins.
 #
 # Usage: build/ci/publish-logs.sh <job-name> <job-status>
 set -euo pipefail
@@ -21,13 +22,21 @@ else
   git -C "$workdir" checkout -q --orphan ci-logs
 fi
 
-rm -rf "${workdir:?}/${job}"
-mkdir -p "$workdir/$job"
-cp -r ci-out/. "$workdir/$job/" 2>/dev/null || true
-echo "job=${job} status=${status} sha=${GITHUB_SHA} run=${GITHUB_RUN_ID} time=$(date -u +%FT%TZ)" > "$workdir/$job/STATUS"
+# main publishes to <job>/; any other branch to branches/<branch>/<job>/, with '/' in the name replaced by '-'.
+branch="${GITHUB_REF_NAME:-main}"
+if [ "$branch" = "main" ]; then
+  folder="$job"
+else
+  folder="branches/${branch//\//-}/$job"
+fi
+
+rm -rf "${workdir:?}/${folder}"
+mkdir -p "$workdir/$folder"
+cp -r ci-out/. "$workdir/$folder/" 2>/dev/null || true
+echo "job=${job} branch=${branch} status=${status} sha=${GITHUB_SHA} run=${GITHUB_RUN_ID} time=$(date -u +%FT%TZ)" > "$workdir/$folder/STATUS"
 
 git -C "$workdir" add -A
-git -C "$workdir" commit -qm "${job}: ${status} @ ${GITHUB_SHA::8}" || exit 0
+git -C "$workdir" commit -qm "${folder}: ${status} @ ${GITHUB_SHA::8}" || exit 0
 
 # Jobs run in parallel; retry on a race with another job's push.
 for attempt in 1 2 3 4 5; do
@@ -36,6 +45,6 @@ for attempt in 1 2 3 4 5; do
   fi
   sleep $((attempt * 3))
   git -C "$workdir" fetch -q --depth 1 "$remote" ci-logs
-  git -C "$workdir" rebase -q FETCH_HEAD || { git -C "$workdir" rebase --abort; git -C "$workdir" reset -q --soft FETCH_HEAD; git -C "$workdir" commit -qm "${job}: ${status}"; }
+  git -C "$workdir" rebase -q FETCH_HEAD || { git -C "$workdir" rebase --abort; git -C "$workdir" reset -q --soft FETCH_HEAD; git -C "$workdir" commit -qm "${folder}: ${status}"; }
 done
 echo "Could not publish logs after 5 attempts" >&2

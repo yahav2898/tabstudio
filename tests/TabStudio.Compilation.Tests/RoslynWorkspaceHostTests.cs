@@ -137,6 +137,87 @@ public sealed class RoslynWorkspaceHostTests : IDisposable
         Assert.DoesNotContain(diagnostics, d => d.Severity == DiagnosticSeverityLevel.Error);
     }
 
+    [Fact]
+    public async Task Project_diagnostics_cover_every_file()
+    {
+        _host.UpdateText(_temp.Resolve("Lib/Greeter.cs"), "namespace Lib; public static class Greeter { public static string Greet(string name) => nam; }");
+
+        var diagnostics = await _host.GetProjectDiagnosticsAsync(_temp.Resolve("Lib/Lib.csproj"));
+
+        Assert.Contains(diagnostics, d => d.Id == "CS0103" && d.Location?.FilePath == _temp.Resolve("Lib/Greeter.cs"));
+    }
+
+    [Fact]
+    public async Task Format_document_produces_edits_that_fix_the_layout()
+    {
+        const string messy = "namespace Lib;public static class Greeter{public static string Greet(string name)=>name;}";
+        _host.UpdateText(_temp.Resolve("Lib/Greeter.cs"), messy);
+
+        var edits = await _host.GetFormattingEditsAsync(_temp.Resolve("Lib/Greeter.cs"));
+
+        var formatted = messy;
+        foreach (var edit in edits.Reverse())
+        {
+            formatted = formatted.Remove(edit.Start, edit.Length).Insert(edit.Start, edit.NewText);
+        }
+
+        Assert.NotEmpty(edits);
+        Assert.Contains("public static string Greet(string name) => name;", formatted, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task Builds_still_work_with_concurrent_compilation_turned_off()
+    {
+        _host.SetConcurrentBuild(false);
+        var app = _host.FindProject(_temp.Resolve("App/App.csproj"))!;
+
+        var build = await new ProjectBuilder(_host).BuildAsync(app);
+
+        Assert.True(build.Success, string.Join('\n', build.Diagnostics));
+    }
+
+    [Fact]
+    public async Task Trimming_memory_keeps_unsaved_edits()
+    {
+        _host.UpdateText(ProgramPath, "Console.WriteLine(Greeter.Gret(\"x\"));");
+
+        _host.TrimMemory();
+        var diagnostics = await _host.GetDocumentDiagnosticsAsync(ProgramPath);
+
+        Assert.True(_host.ContainsDocument(ProgramPath));
+        Assert.Contains(diagnostics, d => d.Id == "CS0103" || d.Id == "CS0117");
+    }
+
+    [Fact]
+    public async Task Release_configuration_defines_the_release_symbol()
+    {
+        _host.UpdateText(ProgramPath, """
+            #if RELEASE
+            Console.WriteLine("release");
+            #else
+            this is not valid C#
+            #endif
+            """);
+
+        _host.SetOptimization(true);
+        var diagnostics = await _host.GetDocumentDiagnosticsAsync(ProgramPath);
+
+        Assert.DoesNotContain(diagnostics, d => d.Severity == DiagnosticSeverityLevel.Error);
+    }
+
+    [Fact]
+    public async Task Memory_mapped_references_compile_the_same_code()
+    {
+        using var cache = new TempDirectory();
+        using var host = new RoslynWorkspaceHost(ReferenceAssemblies.LoadMapped(cache.Path));
+        host.Load(WorkspaceLoader.Load(_temp.Path), FileSystemTextProvider.Instance);
+
+        var build = await new ProjectBuilder(host).BuildAsync(host.FindProject(_temp.Resolve("App/App.csproj"))!);
+
+        Assert.True(build.Success, string.Join('\n', build.Diagnostics));
+        Assert.True(Directory.EnumerateFiles(cache.Path, "System.Runtime.dll", SearchOption.AllDirectories).Any());
+    }
+
     public void Dispose()
     {
         _host.Dispose();
