@@ -204,6 +204,21 @@ public sealed partial class RoslynWorkspaceHost
         return document is null ? null : await document.GetTextAsync(cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>The text of a Razor file, when it is at hand without waiting, for checks on every keystroke.</summary>
+    /// <param name="filePath">Full path of the Razor file.</param>
+    internal SourceText? TryGetRazorText(string filePath)
+    {
+        lock (_gate)
+        {
+            return _razorDocuments.Contains(filePath)
+                && _additionalDocuments.TryGetValue(filePath, out var id)
+                && _workspace.CurrentSolution.GetAdditionalDocument(id) is { } document
+                && document.TryGetText(out var text)
+                    ? text
+                    : null;
+        }
+    }
+
     /// <summary>Whether a Razor file's directives apply to the other Razor files of its folder and below.</summary>
     private static bool IsImportsFile(string filePath) =>
         Path.GetFileName(filePath) is var name

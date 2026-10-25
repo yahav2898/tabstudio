@@ -122,6 +122,28 @@ public sealed class BlazorAppTests : IClassFixture<SharedToolchain>, IDisposable
         window.Close();
     }
 
+    [AvaloniaFact]
+    public async Task Typing_a_tag_in_a_Razor_file_offers_the_components_it_can_use()
+    {
+        var (workspace, _) = await CreateWorkspaceAsync(withBrowser: false);
+        var solution = new ProjectTemplates(_toolchain.Paths).Create(WebTemplates.BlazorWebAppId, "Typing");
+        await workspace.LoadAsync(solution);
+        var window = Show(workspace);
+        await workspace.BuildCommand.ExecuteAsync(null);
+        await workspace.OpenDocumentAsync(Path.Combine(Path.GetDirectoryName(solution)!, "Typing", "Components", "Pages", "Home.razor"));
+        var view = Views.EditorHarness.ActiveEditor(window);
+        var completion = view.Completion!;
+
+        Views.EditorHarness.StartLineAfter(view.Editor, "Welcome to your new app.");
+        Views.EditorHarness.Type(view.Editor, "<Cou");
+        await UiTestHelpers.WaitUntilAsync(() => completion.IsOpen && completion.SelectedItem?.Entry.DisplayText == "Counter", because: "the components");
+
+        UiTestHelpers.SaveScreenshot(window, "blazor-05-razor-completion");
+
+        Assert.Equal("Typing.Components.Pages", completion.SelectedItem!.Entry.InlineDescription);
+        window.Close();
+    }
+
     [AvaloniaTheory]
     [InlineData(WebTemplates.RazorPagesId, "", "<h1 class=\"display-4\">Welcome</h1>")]
     [InlineData(WebTemplates.MvcId, "Home/Privacy", "<h1>Privacy Policy</h1>")]

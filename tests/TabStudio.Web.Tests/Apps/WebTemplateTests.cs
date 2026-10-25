@@ -17,13 +17,13 @@ public sealed class WebTemplateTests(NuGetFixture nuget) : IDisposable
 
     public static TheoryData<string, string[]> TemplateFiles => new()
     {
-        { WebTemplates.BlazorWebAppId, ["Shop/App.csproj", "Shop/Components/Pages/Counter.razor", "Shop/Components/Layout/ReconnectModal.razor.js", "Shop/wwwroot/lib/bootstrap/dist/css/bootstrap.min.css"] },
-        { WebTemplates.BlazorWebAppIdFor(BlazorInteractivity.WebAssembly), ["Shop/App.csproj", "Shop.Client/App.Client.csproj", "Shop.Client/Pages/Counter.razor", "Shop/wwwroot/app.css"] },
-        { WebTemplates.BlazorWebAppIdFor(BlazorInteractivity.Auto), ["Shop/App.csproj", "Shop.Client/App.Client.csproj", "Shop.Client/wwwroot/appsettings.json"] },
-        { WebTemplates.BlazorWebAppIdFor(BlazorInteractivity.None), ["Shop/App.csproj", "Shop/Components/Pages/Weather.razor"] },
-        { WebTemplates.BlazorWebAssemblyId, ["Shop/App.csproj", "Shop/wwwroot/index.html", "Shop/wwwroot/sample-data/weather.json", "Shop/wwwroot/icon-192.png", "Shop/wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js"] },
-        { WebTemplates.RazorPagesId, ["Shop/App.csproj", "Shop/Pages/Index.cshtml.cs", "Shop/Pages/Shared/_Layout.cshtml.css", "Shop/wwwroot/lib/jquery/dist/jquery.min.js", "Shop/wwwroot/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"] },
-        { WebTemplates.MvcId, ["Shop/App.csproj", "Shop/Controllers/HomeController.cs", "Shop/Views/Home/Index.cshtml", "Shop/wwwroot/lib/bootstrap/LICENSE"] },
+        { WebTemplates.BlazorWebAppId, ["Shop/Shop.csproj", "Shop/Components/Pages/Counter.razor", "Shop/Components/Layout/ReconnectModal.razor.js", "Shop/wwwroot/lib/bootstrap/dist/css/bootstrap.min.css"] },
+        { WebTemplates.BlazorWebAppIdFor(BlazorInteractivity.WebAssembly), ["Shop/Shop.csproj", "Shop.Client/Shop.Client.csproj", "Shop.Client/Pages/Counter.razor", "Shop/wwwroot/app.css"] },
+        { WebTemplates.BlazorWebAppIdFor(BlazorInteractivity.Auto), ["Shop/Shop.csproj", "Shop.Client/Shop.Client.csproj", "Shop.Client/wwwroot/appsettings.json"] },
+        { WebTemplates.BlazorWebAppIdFor(BlazorInteractivity.None), ["Shop/Shop.csproj", "Shop/Components/Pages/Weather.razor"] },
+        { WebTemplates.BlazorWebAssemblyId, ["Shop/Shop.csproj", "Shop/wwwroot/index.html", "Shop/wwwroot/sample-data/weather.json", "Shop/wwwroot/icon-192.png", "Shop/wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js"] },
+        { WebTemplates.RazorPagesId, ["Shop/Shop.csproj", "Shop/Pages/Index.cshtml.cs", "Shop/Pages/Shared/_Layout.cshtml.css", "Shop/wwwroot/lib/jquery/dist/jquery.min.js", "Shop/wwwroot/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"] },
+        { WebTemplates.MvcId, ["Shop/Shop.csproj", "Shop/Controllers/HomeController.cs", "Shop/Views/Home/Index.cshtml", "Shop/wwwroot/lib/bootstrap/LICENSE"] },
     };
 
     [Theory]
@@ -32,7 +32,7 @@ public sealed class WebTemplateTests(NuGetFixture nuget) : IDisposable
     {
         var projects = WebTemplates.Create(templateId, _temp.Path, "Shop");
 
-        Assert.Equal(_temp.Resolve("Shop/App.csproj"), projects[0]);
+        Assert.Equal(_temp.Resolve("Shop/Shop.csproj"), projects[0]);
         foreach (var file in expected)
         {
             Assert.True(File.Exists(_temp.Resolve(file)), $"{file} is missing.");
@@ -168,7 +168,9 @@ public sealed class WebTemplateTests(NuGetFixture nuget) : IDisposable
             }
         }
 
-        Assert.NotEqual("Current count: 0", status);
+        Assert.True(
+            status != "Current count: 0",
+            $"The counter never counted.\nThe console:\n{string.Join('\n', chrome.ConsoleMessages)}\nThe app:\n{app.Console.Output}\n{app.Console.Error}");
         var counted = int.Parse(status!["Current count: ".Length..], CultureInfo.InvariantCulture);
         await chrome.ClickAsync("button.btn-primary");
         await chrome.WaitUntilAsync($"document.querySelector('p[role=status]').textContent === 'Current count: {counted + 1}'", TimeSpan.FromSeconds(10));

@@ -24,6 +24,7 @@ public sealed class HeadlessChrome : IAsyncDisposable
     private readonly TempDirectory _profile;
     private readonly ClientWebSocket _socket;
     private readonly SemaphoreSlim _sendGate = new(1, 1);
+    private readonly System.Collections.Concurrent.ConcurrentQueue<string> _console = new();
     private int _nextId;
 
     private HeadlessChrome(Process process, TempDirectory profile, ClientWebSocket socket)
@@ -32,6 +33,9 @@ public sealed class HeadlessChrome : IAsyncDisposable
         _profile = profile;
         _socket = socket;
     }
+
+    /// <summary>What the pages wrote to the console, their uncaught errors and the browser's own log, oldest first.</summary>
+    public IReadOnlyList<string> ConsoleMessages => [.. _console];
 
     /// <summary>The browser to run, or <see langword="null"/> when none is installed.</summary>
     public static string? ExecutablePath { get; } = FindExecutable();
@@ -68,6 +72,7 @@ public sealed class HeadlessChrome : IAsyncDisposable
             var chrome = new HeadlessChrome(process, profile, socket);
             await chrome.SendAsync("Page.enable");
             await chrome.SendAsync("Runtime.enable");
+            await chrome.SendAsync("Log.enable");
             await chrome.ResizeAsync(width, height);
             return chrome;
         }
@@ -146,7 +151,7 @@ public sealed class HeadlessChrome : IAsyncDisposable
             if (waited.Elapsed > timeout)
             {
                 var html = (await EvaluateAsync("document.documentElement.outerHTML"))?.GetValue<string>();
-                throw new TimeoutException($"After {timeout.TotalSeconds:0} s, still not true: {condition}\nThe page:\n{html}");
+                throw new TimeoutException($"After {timeout.TotalSeconds:0} s, still not true: {condition}\nThe console:\n{string.Join('\n', ConsoleMessages)}\nThe page:\n{html}");
             }
 
             await Task.Delay(100);
@@ -202,7 +207,13 @@ public sealed class HeadlessChrome : IAsyncDisposable
             while (true)
             {
                 var reply = await ReceiveAsync(timeout.Token);
-                if (reply?["id"]?.GetValue<int>() != id)
+                if (reply?["id"] is null)
+                {
+                    Record(reply);
+                    continue;
+                }
+
+                if (reply["id"]!.GetValue<int>() != id)
                 {
                     continue;
                 }
@@ -218,6 +229,26 @@ public sealed class HeadlessChrome : IAsyncDisposable
         finally
         {
             _sendGate.Release();
+        }
+    }
+
+    /// <summary>Keeps the console messages, errors and log entries among the browser's events.</summary>
+    private void Record(JsonNode? message)
+    {
+        var parameters = message?["params"];
+        var arguments = parameters?["args"] is JsonArray values
+            ? values.Select(a => a?["value"]?.ToString() ?? a?["description"]?.ToString() ?? string.Empty).ToList()
+            : new List<string>();
+        var text = message?["method"]?.GetValue<string>() switch
+        {
+            "Runtime.consoleAPICalled" => $"console.{parameters?["type"]}: {string.Join(" ", arguments)}",
+            "Runtime.exceptionThrown" => $"uncaught: {parameters?["exceptionDetails"]?["exception"]?["description"] ?? parameters?["exceptionDetails"]?["text"]}",
+            "Log.entryAdded" => $"{parameters?["entry"]?["level"]}: {parameters?["entry"]?["text"]} {parameters?["entry"]?["url"]}",
+            _ => null,
+        };
+        if (text is not null)
+        {
+            _console.Enqueue(text);
         }
     }
 

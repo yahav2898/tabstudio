@@ -20,7 +20,7 @@ namespace TabStudio.Compilation.Features;
 /// filter it. Call <see cref="RoslynWorkspaceHost.UpdateText"/> with every keystroke before committing.
 /// </para>
 /// </remarks>
-public sealed class CompletionFeature
+public sealed partial class CompletionFeature
 {
     private const int RememberedSessions = 4;
 
@@ -40,6 +40,11 @@ public sealed class CompletionFeature
     public async Task<CompletionResult> GetCompletionsAsync(string filePath, int position, CompletionTrigger trigger, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(filePath);
+        if (_host.IsRazorDocument(filePath))
+        {
+            return await GetRazorCompletionsAsync(filePath, position, trigger, cancellationToken).ConfigureAwait(false);
+        }
+
         if (_host.GetDocument(filePath) is not { } document || CompletionService.GetService(document) is not { } service)
         {
             return CompletionResult.Empty;
@@ -75,6 +80,11 @@ public sealed class CompletionFeature
     public bool ShouldTriggerCompletion(string filePath, int position, char typedCharacter)
     {
         ArgumentNullException.ThrowIfNull(filePath);
+        if (_host.IsRazorDocument(filePath))
+        {
+            return ShouldTriggerRazorCompletion(filePath, position, typedCharacter);
+        }
+
         if (_host.GetDocument(filePath) is not { } document || CompletionService.GetService(document) is not { } service)
         {
             return false;
@@ -101,6 +111,11 @@ public sealed class CompletionFeature
     {
         ArgumentNullException.ThrowIfNull(filePath);
         ArgumentNullException.ThrowIfNull(entry);
+
+        if (_host.IsRazorDocument(filePath))
+        {
+            return await GetRazorCompletionChangeAsync(filePath, entry, cancellationToken).ConfigureAwait(false);
+        }
 
         if (_host.GetDocument(filePath) is not { } current)
         {
