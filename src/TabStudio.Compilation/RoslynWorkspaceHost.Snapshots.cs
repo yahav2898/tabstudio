@@ -1,3 +1,4 @@
+using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using TsProject = TabStudio.Core.Workspaces.ProjectInfo;
@@ -34,7 +35,7 @@ public sealed partial class RoslynWorkspaceHost
             {
                 solution = text is null
                     ? solution.RemoveDocument(documentId)
-                    : solution.WithDocumentText(documentId, SourceText.From(text), PreservationMode.PreserveIdentity);
+                    : solution.WithDocumentText(documentId, SourceText.From(text, Encoding.UTF8), PreservationMode.PreserveIdentity);
             }
             else if (text is not null
                 && path.EndsWith(".cs", StringComparison.OrdinalIgnoreCase)
@@ -44,7 +45,7 @@ public sealed partial class RoslynWorkspaceHost
                 solution = solution.AddDocument(DocumentInfo.Create(
                     id,
                     Path.GetFileName(path),
-                    loader: TextLoader.From(TextAndVersion.Create(SourceText.From(text), VersionStamp.Create(), path)),
+                    loader: TextLoader.From(TextAndVersion.Create(SourceText.From(text, Encoding.UTF8), VersionStamp.Create(), path)),
                     filePath: path));
             }
         }
