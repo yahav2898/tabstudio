@@ -38,6 +38,10 @@
 
         <Menu Grid.Column="1" VerticalAlignment="Center">
           <MenuItem Header="_File">
+            <MenuItem Header="_New">
+              <MenuItem Header="C# _Notebook" Command="{Binding NewNotebookCommand}" />
+            </MenuItem>
+            <Separator />
             <MenuItem Header="_Save" InputGesture="Ctrl+S" Command="{Binding SaveCommand}" />
             <MenuItem Header="Save A_ll" InputGesture="Ctrl+Shift+S" Command="{Binding SaveAllCommand}" />
             <Separator />
@@ -292,7 +296,7 @@
           <!-- Touch actions -->
           <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="16,12" Padding="4" CornerRadius="14"
                   Background="{DynamicResource Brush.Hover}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
-                  BoxShadow="0 8 24 0 #59000000" IsVisible="{Binding HasDocuments}">
+                  BoxShadow="0 8 24 0 #59000000" IsVisible="{Binding ActiveDocument.ShowsEditorActions, FallbackValue=False}">
             <StackPanel Orientation="Horizontal" Spacing="2">
               <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding ToggleCommentCommand}">
                 <StackPanel Orientation="Horizontal" Spacing="7">

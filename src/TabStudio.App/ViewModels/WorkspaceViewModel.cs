@@ -214,7 +214,8 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         State = IdeState.Busy;
         StatusText = "Opening";
 
-        var preview = await WorkspaceInspector.InspectAsync(path);
+        var notebook = NotebookToOpen(path);
+        var preview = await WorkspaceInspector.InspectAsync(notebook is null ? path : Path.GetDirectoryName(notebook)!);
         Workspace = preview.Workspace;
         Explorer.Load(preview.Workspace, preview.Reports);
         Properties.Show(Explorer.SelectedItem?.Node, Workspace);
@@ -241,6 +242,10 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         LanguageServiceText = "Roslyn warm";
 
         await RestoreDocumentsAsync(preview.Workspace, session);
+        if (notebook is not null)
+        {
+            await OpenDocumentAsync(notebook);
+        }
 
         State = IdeState.Ready;
         StatusText = "Ready";

@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using TabStudio.App.Notebooks;
 using TabStudio.Core.Workspaces;
 
 namespace TabStudio.App.Services;
@@ -29,6 +30,7 @@ public static partial class FileTemplates
             ".cs" when project is not null => CSharpType(filePath, project, name),
             ".json" => "{\n}\n",
             ".md" => $"# {name}\n",
+            ".ipynb" or ".dib" => NotebookFiles.ContentFor(filePath),
             ".xml" or ".props" or ".targets" => "<Project>\n</Project>\n",
             _ => string.Empty,
         };

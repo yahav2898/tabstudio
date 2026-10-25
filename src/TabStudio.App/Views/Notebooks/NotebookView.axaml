@@ -1,0 +1,168 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:nb="using:TabStudio.App.Views.Notebooks"
+             xmlns:vm="using:TabStudio.App.ViewModels.Notebooks"
+             x:Class="TabStudio.App.Views.Notebooks.NotebookView"
+             x:DataType="vm:NotebookViewModel"
+             Focusable="True"
+             Background="{DynamicResource Brush.Window}">
+
+  <UserControl.Styles>
+    <!-- A cell: a panel with a border that turns accent when the cell is selected. Rendered Markdown has no panel. -->
+    <Style Selector="Border.cellFrame">
+      <Setter Property="Background" Value="{DynamicResource Brush.Notebook.Cell}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource Brush.Border}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="8" />
+    </Style>
+    <Style Selector="Border.cellFrame.rendered">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderBrush" Value="Transparent" />
+    </Style>
+    <Style Selector="Border.cellFrame.selected">
+      <Setter Property="BorderBrush" Value="{DynamicResource Brush.Accent}" />
+    </Style>
+
+    <!-- The selected cell's floating toolbar. -->
+    <Style Selector="Border.cellToolbar">
+      <Setter Property="Background" Value="{DynamicResource Brush.Popup}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource Brush.BorderPopup}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="8" />
+      <Setter Property="Padding" Value="2" />
+      <Setter Property="BoxShadow" Value="0 4 14 0 #4D000000" />
+    </Style>
+    <Style Selector="Border.cellToolbar Button">
+      <Setter Property="Width" Value="34" />
+      <Setter Property="Height" Value="34" />
+      <Setter Property="MinWidth" Value="34" />
+      <Setter Property="MinHeight" Value="34" />
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="CornerRadius" Value="6" />
+    </Style>
+
+    <!-- Outputs -->
+    <Style Selector="SelectableTextBlock.output">
+      <Setter Property="FontFamily" Value="{DynamicResource CodeFont}" />
+      <Setter Property="FontSize" Value="13" />
+      <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+      <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+    <Style Selector="SelectableTextBlock.output.error">
+      <Setter Property="Foreground" Value="{DynamicResource Brush.Error}" />
+    </Style>
+
+    <!-- The spinner of a running cell. -->
+    <Style Selector="controls|StrokeIcon.spinner">
+      <Style.Animations>
+        <Animation Duration="0:0:0.9" IterationCount="INFINITE">
+          <KeyFrame Cue="0%">
+            <Setter Property="RotateTransform.Angle" Value="0.0" />
+          </KeyFrame>
+          <KeyFrame Cue="100%">
+            <Setter Property="RotateTransform.Angle" Value="360.0" />
+          </KeyFrame>
+        </Animation>
+      </Style.Animations>
+    </Style>
+  </UserControl.Styles>
+
+  <DockPanel>
+
+    <!-- Notebook toolbar -->
+    <Border DockPanel.Dock="Top" Height="46" Background="{DynamicResource Brush.Toolbar}"
+            BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+      <Grid ColumnDefinitions="*,Auto" Margin="8,0">
+        <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
+          <StackPanel Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
+            <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Run All" Command="{Binding RunAllCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="7">
+                <controls:StrokeIcon Data="{StaticResource Icon.RunAll}" IsFilled="True" Size="15" Foreground="{DynamicResource Brush.Success}" />
+                <TextBlock Text="Run All" VerticalAlignment="Center" FontSize="12.5" />
+              </StackPanel>
+            </Button>
+            <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Interrupt" Command="{Binding InterruptCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="7">
+                <controls:StrokeIcon Data="{StaticResource Icon.Stop}" IsFilled="True" Size="12" />
+                <TextBlock Text="Interrupt" VerticalAlignment="Center" FontSize="12.5" />
+              </StackPanel>
+            </Button>
+            <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Restart the kernel" Command="{Binding RestartCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="7">
+                <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="15" />
+                <TextBlock Text="Restart" VerticalAlignment="Center" FontSize="12.5" />
+              </StackPanel>
+            </Button>
+            <Border Classes="toolbarSeparator" />
+            <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Clear All Outputs" Command="{Binding ClearAllOutputsCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="7">
+                <controls:StrokeIcon Data="{StaticResource Icon.ClearOutputs}" Size="15" />
+                <TextBlock Text="Clear All Outputs" VerticalAlignment="Center" FontSize="12.5" />
+              </StackPanel>
+            </Button>
+            <Border Classes="toolbarSeparator" />
+            <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Add a code cell below the selected one" Command="{Binding AddCodeCellCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <controls:StrokeIcon Data="{StaticResource Icon.Plus}" Size="15" />
+                <TextBlock Text="Code" VerticalAlignment="Center" FontSize="12.5" />
+              </StackPanel>
+            </Button>
+            <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Add a Markdown cell below the selected one" Command="{Binding AddMarkdownCellCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <controls:StrokeIcon Data="{StaticResource Icon.Plus}" Size="15" />
+                <TextBlock Text="Markdown" VerticalAlignment="Center" FontSize="12.5" />
+              </StackPanel>
+            </Button>
+          </StackPanel>
+        </ScrollViewer>
+
+        <!-- What happened last, and the kernel's state -->
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center" Margin="8,0,4,0">
+          <TextBlock Text="{Binding StatusMessage}" Classes="muted" FontSize="12" MaxWidth="300"
+                     TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+          <Border Height="28" Padding="10,0" CornerRadius="14" Background="{DynamicResource Brush.Panel}"
+                  BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1" ToolTip.Tip="The kernel runs C# cells inside TabStudio">
+            <StackPanel Orientation="Horizontal" Spacing="7">
+              <Ellipse Width="8" Height="8" Fill="{DynamicResource Brush.Success}" IsVisible="{Binding !IsBusy}" VerticalAlignment="Center" />
+              <Ellipse Width="8" Height="8" Fill="{DynamicResource Brush.Running}" IsVisible="{Binding IsBusy}" VerticalAlignment="Center" />
+              <TextBlock Text="{Binding KernelStatusText}" FontSize="12" Foreground="{DynamicResource Brush.TextSecondary}" VerticalAlignment="Center" />
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <!-- The cells -->
+    <ScrollViewer x:Name="Scroller" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+      <StackPanel Margin="0,16,0,120">
+        <ItemsControl x:Name="CellList" ItemsSource="{Binding Cells}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="vm:NotebookCellViewModel">
+              <nb:NotebookCellView />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <TextBlock Classes="muted" HorizontalAlignment="Center" Margin="0,24,0,0" IsVisible="{Binding !HasCells}"
+                   Text="This notebook is empty. Add a code cell to write C#, or a Markdown cell for notes." />
+
+        <!-- Add a cell at the end -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10" Margin="0,14,0,0">
+          <Button Theme="{StaticResource SecondaryButton}" Height="38" Padding="14,0" Command="{Binding AppendCodeCellCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="7">
+              <controls:StrokeIcon Data="{StaticResource Icon.Plus}" Size="14" />
+              <TextBlock Text="Code" VerticalAlignment="Center" FontSize="12.5" />
+            </StackPanel>
+          </Button>
+          <Button Theme="{StaticResource SecondaryButton}" Height="38" Padding="14,0" Command="{Binding AppendMarkdownCellCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="7">
+              <controls:StrokeIcon Data="{StaticResource Icon.Plus}" Size="14" />
+              <TextBlock Text="Markdown" VerticalAlignment="Center" FontSize="12.5" />
+            </StackPanel>
+          </Button>
+        </StackPanel>
+      </StackPanel>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

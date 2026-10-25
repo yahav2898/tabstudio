@@ -89,7 +89,7 @@ public sealed partial class WorkspaceViewModel
         }
     }
 
-    private bool CanRun() => StartupProject is not null && State is IdeState.Ready or IdeState.Failed;
+    private bool CanRun() => StartupProject is not null && State is IdeState.Ready or IdeState.Failed && !IsNotebookRunning;
 
     private bool CanBuild() => State is IdeState.Ready or IdeState.Failed;
 

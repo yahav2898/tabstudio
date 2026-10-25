@@ -41,12 +41,19 @@ public static class AppConverters
         BadgeKind.Data => "Brush.Badge.Data",
         BadgeKind.Markup => "Brush.Badge.Markup",
         BadgeKind.Script => "Brush.Badge.Script",
+        BadgeKind.Notebook => "Brush.Badge.Notebook",
         _ => "Brush.Badge.Text",
     }));
 
-    /// <summary>The background of a file badge: only C# has a filled badge, as in Visual Studio's file icons.</summary>
-    public static IValueConverter BadgeBackground { get; } = new FuncValueConverter<BadgeKind, IBrush?>(kind =>
-        kind == BadgeKind.CSharp ? Find<IBrush>("Brush.Badge.CSharpBackground") : Brushes.Transparent);
+    /// <summary>
+    /// The background of a file badge: only C# and notebooks have a filled badge, as in Visual Studio's file icons.
+    /// </summary>
+    public static IValueConverter BadgeBackground { get; } = new FuncValueConverter<BadgeKind, IBrush?>(kind => kind switch
+    {
+        BadgeKind.CSharp => Find<IBrush>("Brush.Badge.CSharpBackground"),
+        BadgeKind.Notebook => Find<IBrush>("Brush.Badge.NotebookBackground"),
+        _ => Brushes.Transparent,
+    });
 
     /// <summary>The status bar icon for the IDE state.</summary>
     public static IValueConverter StateIcon { get; } = new FuncValueConverter<IdeState, Geometry?>(state => Find<Geometry>(state switch

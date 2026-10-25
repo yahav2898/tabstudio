@@ -44,7 +44,7 @@ public sealed partial class WorkspaceViewModel
         DocumentViewModel document;
         try
         {
-            document = await DocumentViewModel.OpenAsync(path, _language, _profile);
+            document = await CreateDocumentAsync(path);
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
@@ -94,7 +94,7 @@ public sealed partial class WorkspaceViewModel
         }
 
         var documents = Documents
-            .Select(d => new SessionDocument(d.FilePath, d.CaretOffset, d.IsDirty ? d.Document.Text : null))
+            .Select(d => new SessionDocument(d.FilePath, d.CaretOffset, d.IsDirty ? d.CurrentText : null))
             .ToList();
         var path = workspace.Solution?.FilePath ?? workspace.RootDirectory;
         _sessions.Save(new SessionState(path, documents, ActiveDocument?.FilePath, StartupProject?.FilePath));

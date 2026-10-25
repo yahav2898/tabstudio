@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using TabStudio.App.Notebooks;
 
 namespace TabStudio.App.Services;
 
@@ -24,6 +25,9 @@ public sealed partial class ProjectTemplates
     /// <summary>A console app and a class library it references.</summary>
     public const string ConsoleWithLibraryId = "console-with-library";
 
+    /// <summary>A C# notebook, in a folder of its own.</summary>
+    public const string NotebookId = "notebook";
+
     private readonly AppPaths _paths;
 
     /// <summary>Creates the template service over the app's folders.</summary>
@@ -40,6 +44,7 @@ public sealed partial class ProjectTemplates
         new(ConsoleId, "Console App", "A command-line program that runs on the tablet, with input and output in the Output panel.", ["C#", "Console"]),
         new(ConsoleWithLibraryId, "Console App and Class Library", "A program and a library it references, in one solution.", ["C#", "Console", "Library"]),
         new(LibraryId, "Class Library", "Reusable code for other projects to reference.", ["C#", "Library"]),
+        new(NotebookId, "C# Notebook", "Cells of C# you run one at a time, with results, tables and errors right under each cell, like Polyglot Notebooks.", ["C#", "Notebook"]),
     ];
 
     /// <summary>Checks a project name. Names become namespaces, so they follow C# identifier rules.</summary>
@@ -62,10 +67,10 @@ public sealed partial class ProjectTemplates
             : "Use letters, digits, dots and underscores, starting with a letter.";
     }
 
-    /// <summary>Creates a new solution from a template.</summary>
+    /// <summary>Creates a new solution, or a notebook, from a template.</summary>
     /// <param name="templateId">One of the template identifiers.</param>
     /// <param name="name">The solution and project name. Must pass <see cref="Validate"/>.</param>
-    /// <returns>The path of the new solution file.</returns>
+    /// <returns>The path of the new solution file, or of the notebook file for <see cref="NotebookId"/>.</returns>
     /// <exception cref="ArgumentException">The name is invalid or the template is unknown.</exception>
     public string Create(string templateId, string name)
     {
@@ -76,6 +81,12 @@ public sealed partial class ProjectTemplates
 
         var root = _paths.GetAvailableProjectDirectory(name);
         Directory.CreateDirectory(root);
+        if (templateId == NotebookId)
+        {
+            var notebook = Path.Combine(root, name + NotebookFiles.DefaultExtension);
+            File.WriteAllText(notebook, NotebookFiles.ContentFor(notebook, title: name));
+            return notebook;
+        }
 
         string[] projects = templateId switch
         {

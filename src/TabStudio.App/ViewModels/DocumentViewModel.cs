@@ -165,6 +165,12 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
     public void RestoreUnsavedText(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
+        if (Notebook is { } notebook)
+        {
+            notebook.RestoreUnsavedText(text);
+            return;
+        }
+
         if (!string.Equals(text, Document.Text, StringComparison.Ordinal))
         {
             Document.Text = text;
@@ -185,6 +191,12 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
     /// <param name="cancellationToken">Cancels the save.</param>
     public async Task SaveAsync(CancellationToken cancellationToken = default)
     {
+        if (Notebook is { } notebook)
+        {
+            await SaveNotebookAsync(notebook, cancellationToken);
+            return;
+        }
+
         var text = Document.Text;
         await TextFile.WriteAsync(FilePath, text, _file.Encoding, cancellationToken);
         Document.UndoStack.MarkAsOriginalFile();
@@ -279,6 +291,7 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
         _analysis?.Dispose();
         Document.Changed -= OnDocumentChanged;
         Document.UndoStack.PropertyChanged -= OnUndoStackChanged;
+        DisposeNotebook();
     }
 
     private void OnDocumentChanged(object? sender, DocumentChangeEventArgs e)
