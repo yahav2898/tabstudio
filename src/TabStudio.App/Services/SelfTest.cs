@@ -12,8 +12,7 @@ public sealed record SelfTestResult(bool Success, string Message, TimeSpan Durat
 /// <summary>
 /// Does what a person does first: opens the sample solution, presses F5, types a name when the program asks,
 /// and reads the Output panel; then debugs it, debugs it again with a TabStudio Link host compiling, serves a new web
-/// app and shows a new Avalonia app. CI runs it on an
-/// Android emulator to prove the whole IDE works on a device.
+/// app and shows a new Avalonia app. CI runs it on an Android emulator to prove the whole IDE works on a device.
 /// </summary>
 public static partial class SelfTest
 {
