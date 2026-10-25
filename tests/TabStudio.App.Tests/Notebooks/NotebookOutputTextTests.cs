@@ -81,7 +81,8 @@ public sealed class NotebookOutputTextTests : IDisposable
         Assert.Equal("Untitled-2.ipynb", Path.GetFileName(second));
         var cell = Assert.Single(NotebookSerializer.Parse(File.ReadAllText(first), NotebookFormat.Jupyter).Cells);
         Assert.True(cell.IsCode);
-        Assert.Contains("#!csharp", FileTemplates.ContentFor(_temp.Resolve("Script.dib"), project: null), StringComparison.Ordinal);
+        var dib = NotebookSerializer.Parse(FileTemplates.ContentFor(_temp.Resolve("Script.dib"), project: null), NotebookFormat.Polyglot);
+        Assert.True(Assert.Single(dib.Cells).IsCode);
     }
 
     [Fact]

@@ -6,7 +6,7 @@
              x:Class="TabStudio.App.Views.Notebooks.NotebookCellView"
              x:DataType="vm:NotebookCellViewModel">
 
-  <Grid ColumnDefinitions="60,*" Margin="0,0,0,12" Background="Transparent">
+  <Grid ColumnDefinitions="60,*" Margin="0,14,0,0" Background="Transparent">
 
     <!-- Gutter: run button and execution count -->
     <StackPanel Spacing="3" Margin="0,4,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" IsVisible="{Binding IsCode}">
@@ -47,7 +47,7 @@
           </StackPanel>
         </Border>
 
-        <Border Classes="cellToolbar" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-18,10,0" IsVisible="{Binding IsSelected}">
+        <Border Classes="cellToolbar" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-14,10,0" IsVisible="{Binding IsSelected}">
           <StackPanel Orientation="Horizontal" Spacing="1">
             <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Run Cell (Ctrl+Enter)" Command="{Binding RunCommand}" IsVisible="{Binding IsCode}">
               <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="13" Foreground="{DynamicResource Brush.Success}" />

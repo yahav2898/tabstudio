@@ -10,19 +10,19 @@ namespace TabStudio.App.Services;
 public sealed class LocalNotebookKernel : INotebookKernel
 {
     private readonly CompilerServices _compiler;
-    private readonly INotebookReferenceResolver? _references;
+    private readonly NotebookPackageResolver? _packages;
     private readonly Lock _gate = new();
     private Task<CSharpKernel>? _kernel;
     private bool _disposed;
 
     /// <summary>Creates the kernel. Nothing is loaded until the first cell runs.</summary>
     /// <param name="compiler">The app's compiler services, for the reference assemblies.</param>
-    /// <param name="references">Resolves <c>#r</c> references such as NuGet packages, or <see langword="null"/>.</param>
-    public LocalNotebookKernel(CompilerServices compiler, INotebookReferenceResolver? references = null)
+    /// <param name="packages">Resolves <c>#r</c> lines such as NuGet packages, or <see langword="null"/> to report them as not supported.</param>
+    public LocalNotebookKernel(CompilerServices compiler, NotebookPackageResolver? packages = null)
     {
         ArgumentNullException.ThrowIfNull(compiler);
         _compiler = compiler;
-        _references = references;
+        _packages = packages;
     }
 
     /// <inheritdoc />
@@ -52,6 +52,9 @@ public sealed class LocalNotebookKernel : INotebookKernel
         {
             await kernel.RestartAsync(cancellationToken).ConfigureAwait(false);
         }
+
+        // The new session has none of the references earlier #r lines added.
+        _packages?.ForgetReferences();
     }
 
     /// <inheritdoc />
@@ -105,7 +108,7 @@ public sealed class LocalNotebookKernel : INotebookKernel
         var kernel = new CSharpKernel(new CSharpKernelOptions
         {
             FrameworkReferences = frameworkReferences,
-            ReferenceResolver = _references,
+            ReferenceResolver = _packages,
         });
 
         lock (_gate)

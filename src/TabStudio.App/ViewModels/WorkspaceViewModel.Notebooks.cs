@@ -26,7 +26,12 @@ public sealed partial class WorkspaceViewModel : INotebookHost
         : null;
 
     /// <inheritdoc />
-    INotebookKernel INotebookHost.CreateKernel() => new LocalNotebookKernel(_compiler);
+    INotebookKernel INotebookHost.CreateKernel()
+    {
+        // #r "nuget: ..." restores into the packages folder every project shares; relative #r paths start at the workspace.
+        var folder = Path.Combine(_paths.Cache, "NotebookPackages", Guid.NewGuid().ToString("N")[..12]);
+        return new LocalNotebookKernel(_compiler, new NotebookPackageResolver(_compiler.Packages, folder, Workspace?.RootDirectory));
+    }
 
     /// <inheritdoc />
     void INotebookHost.OnNotebookBusyChanged(NotebookViewModel notebook)
