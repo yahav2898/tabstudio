@@ -91,6 +91,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
         InitializeDebugging();
         InstallTestCommands();
         InitializePeek();
+        InitializeReviewThreads();
     }
 
     /// <summary>The editor control, for tests and keyboard focus.</summary>
@@ -99,6 +100,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
     /// <inheritdoc />
     public void Dispose()
     {
+        DisposeReviewThreads();
         DisposePeek();
         DisposeIntelliSense();
         _document.Document.Changed -= OnTextChanged;

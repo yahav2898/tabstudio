@@ -120,6 +120,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         InitializeDebugging();
         InitializeTests();
         InitializeAgent();
+        InitializePullRequests();
     }
 
     /// <summary>Raised when the user closes the workspace to return to the start screen.</summary>
@@ -355,6 +356,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         Output.EndInput();
         _language?.Dispose();
         _language = null;
+        DisposePullRequests();
         GitChanges.Dispose();
     }
 

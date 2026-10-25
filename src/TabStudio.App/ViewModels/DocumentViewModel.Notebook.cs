@@ -19,9 +19,9 @@ public sealed partial class DocumentViewModel
 
     /// <summary>
     /// Whether the floating editing actions (Comment, Format, Find, Run) apply to this document. A notebook has
-    /// its own toolbar instead.
+    /// its own toolbar instead, and a pull request's page and its diffs have their own review actions.
     /// </summary>
-    public bool ShowsEditorActions => Notebook is null;
+    public bool ShowsEditorActions => Notebook is null && PullRequest is null && Review is null;
 
     /// <summary>The text the file would have if it were saved now, for restoring unsaved work.</summary>
     public string CurrentText => Notebook?.Serialize() ?? Document.Text;

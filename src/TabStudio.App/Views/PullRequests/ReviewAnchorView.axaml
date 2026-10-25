@@ -1,0 +1,250 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:conv="using:TabStudio.App.Converters"
+             xmlns:nb="using:TabStudio.App.Views.Notebooks"
+             xmlns:pr="using:TabStudio.App.ViewModels.PullRequests"
+             x:Class="TabStudio.App.Views.PullRequests.ReviewAnchorView"
+             x:DataType="pr:ReviewAnchorViewModel"
+             Background="{DynamicResource Brush.Window}">
+
+  <!--
+    The review items under one line of a diff or a code file: conversations, Claude's drafts and a comment being
+    written, as cards with a colored stripe on their left edge. The band they sit in has the editor's background,
+    so the code above and below reads as one page.
+  -->
+
+  <UserControl.Styles>
+    <Style Selector="Border.card">
+      <Setter Property="Background" Value="{DynamicResource Brush.Review.Card}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource Brush.BorderPopup}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="8" />
+      <Setter Property="ClipToBounds" Value="True" />
+      <Setter Property="MaxWidth" Value="920" />
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+    </Style>
+    <Style Selector="Border.stripe">
+      <Setter Property="Width" Value="3" />
+      <Setter Property="Background" Value="{DynamicResource Brush.Review.Thread}" />
+    </Style>
+    <Style Selector="Border.stripe.pending">
+      <Setter Property="Background" Value="{DynamicResource Brush.Review.Pending}" />
+    </Style>
+    <Style Selector="Border.stripe.resolved">
+      <Setter Property="Background" Value="{DynamicResource Brush.Success}" />
+    </Style>
+    <Style Selector="Border.stripe.outdated">
+      <Setter Property="Background" Value="{DynamicResource Brush.TextDisabled}" />
+    </Style>
+    <Style Selector="Border.stripe.claude">
+      <Setter Property="Background" Value="{DynamicResource Brush.Review.Claude}" />
+    </Style>
+    <Style Selector="Border.stripe.writing">
+      <Setter Property="Background" Value="{DynamicResource Brush.AccentText}" />
+    </Style>
+    <Style Selector="Border.tag">
+      <Setter Property="Height" Value="20" />
+      <Setter Property="Padding" Value="7,0" />
+      <Setter Property="CornerRadius" Value="10" />
+      <Setter Property="Background" Value="{DynamicResource Brush.Pill}" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="TextElement.FontSize" Value="11" />
+      <Setter Property="TextElement.FontWeight" Value="SemiBold" />
+      <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.TextSecondary}" />
+    </Style>
+    <Style Selector="Border.tag.pending">
+      <Setter Property="Background" Value="{DynamicResource Brush.Review.PendingSoft}" />
+      <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.Review.Pending}" />
+    </Style>
+    <Style Selector="Border.tag.claude">
+      <Setter Property="Background" Value="{DynamicResource Brush.Review.ClaudeSoft}" />
+      <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.Review.Claude}" />
+    </Style>
+    <Style Selector="Border.tag.resolved">
+      <Setter Property="Background" Value="{DynamicResource Brush.SuccessSoft}" />
+      <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.Success}" />
+    </Style>
+    <Style Selector="Border.avatar">
+      <Setter Property="Width" Value="26" />
+      <Setter Property="Height" Value="26" />
+      <Setter Property="CornerRadius" Value="13" />
+      <Setter Property="VerticalAlignment" Value="Top" />
+    </Style>
+    <Style Selector="Border.avatar > TextBlock">
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Foreground" Value="White" />
+      <Setter Property="HorizontalAlignment" Value="Center" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Button.compact">
+      <Setter Property="Height" Value="34" />
+      <Setter Property="MinHeight" Value="34" />
+      <Setter Property="Padding" Value="12,0" />
+      <Setter Property="FontSize" Value="12.5" />
+    </Style>
+  </UserControl.Styles>
+
+  <ItemsControl ItemsSource="{Binding Items}" Margin="12,6,16,12">
+    <ItemsControl.ItemsPanel>
+      <ItemsPanelTemplate>
+        <StackPanel Spacing="8" />
+      </ItemsPanelTemplate>
+    </ItemsControl.ItemsPanel>
+
+    <ItemsControl.DataTemplates>
+
+      <!-- A conversation: its comments, then a reply box. -->
+      <DataTemplate DataType="pr:ReviewThreadViewModel">
+        <Border Classes="card">
+          <DockPanel>
+            <Border DockPanel.Dock="Left" Classes="stripe" Classes.pending="{Binding IsPending}"
+                    Classes.resolved="{Binding IsResolved}" Classes.outdated="{Binding IsOutdated}" />
+            <StackPanel Margin="14,10,12,12" Spacing="12">
+              <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <controls:StrokeIcon Data="{StaticResource Icon.Conversation}" Size="14" Foreground="{DynamicResource Brush.TextMuted}" />
+                  <TextBlock Classes="muted small" Text="{Binding LocationText}" VerticalAlignment="Center" />
+                  <Border Classes="tag" IsVisible="{Binding IsOutdated}" ToolTip.Tip="The lines this was written on changed since">
+                    <TextBlock Text="Outdated" VerticalAlignment="Center" />
+                  </Border>
+                  <Border Classes="tag resolved" IsVisible="{Binding IsResolved}">
+                    <TextBlock Text="Resolved" VerticalAlignment="Center" />
+                  </Border>
+                </StackPanel>
+                <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Classes="compact" Content="{Binding ResolveText}"
+                        Command="{Binding ToggleResolvedCommand}" IsVisible="{Binding CanResolve}" />
+              </Grid>
+
+              <ItemsControl ItemsSource="{Binding Comments}">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <StackPanel Spacing="14" />
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate DataType="pr:ReviewCommentViewModel">
+                    <Grid ColumnDefinitions="Auto,*">
+                      <Border Classes="avatar" Background="{Binding Author, Converter={x:Static conv:ReviewConverters.AvatarBrush}}">
+                        <TextBlock Text="{Binding Initial}" />
+                      </Border>
+                      <StackPanel Grid.Column="1" Margin="10,0,0,0" Spacing="4">
+                        <Grid ColumnDefinitions="*,Auto" MinHeight="26">
+                          <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding Author}" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource Brush.TextBright}" />
+                            <TextBlock Classes="muted small" Text="{Binding When}" VerticalAlignment="Center" />
+                            <Border Classes="tag pending" IsVisible="{Binding IsPending}" ToolTip.Tip="Only you see it until you finish your review">
+                              <TextBlock Text="Pending" VerticalAlignment="Center" />
+                            </Border>
+                          </StackPanel>
+                          <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Width="30" Height="30" MinWidth="30" MinHeight="30" Padding="0"
+                                  ToolTip.Tip="Delete this pending comment" Command="{Binding DeleteCommand}" IsVisible="{Binding IsPending}">
+                            <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="12" />
+                          </Button>
+                        </Grid>
+                        <nb:MarkdownView Blocks="{Binding Body}" />
+                      </StackPanel>
+                    </Grid>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+
+              <StackPanel IsVisible="{Binding CanReply}" Spacing="8">
+                <Button Theme="{StaticResource SecondaryButton}" Height="36" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                        Padding="12,0" Command="{Binding StartReplyCommand}" IsVisible="{Binding !IsReplying}">
+                  <TextBlock Text="Reply…" Foreground="{DynamicResource Brush.TextMuted}" />
+                </Button>
+                <StackPanel IsVisible="{Binding IsReplying}" Spacing="8">
+                  <controls:AutoFocusTextBox Text="{Binding ReplyText}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="64" MaxHeight="220"
+                                             Padding="10,8" VerticalContentAlignment="Top" Watermark="Write a reply. Markdown works here." />
+                  <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+                    <Button Theme="{StaticResource SecondaryButton}" Classes="compact" Content="Cancel" Command="{Binding CancelReplyCommand}" />
+                    <Button Theme="{StaticResource AccentButton}" Classes="compact" Content="{Binding SendReplyText}" Command="{Binding SendReplyCommand}"
+                            ToolTip.Tip="Ctrl+Enter" />
+                  </StackPanel>
+                </StackPanel>
+              </StackPanel>
+              <TextBlock Classes="small" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Error}" Text="{Binding ErrorText}"
+                         IsVisible="{Binding ErrorText, Converter={x:Static ObjectConverters.IsNotNull}}" />
+            </StackPanel>
+          </DockPanel>
+        </Border>
+      </DataTemplate>
+
+      <!-- A comment Claude drafted: kept, edited or dismissed; never posted on its own. -->
+      <DataTemplate DataType="pr:DraftCommentViewModel">
+        <Border Classes="card">
+          <DockPanel>
+            <Border DockPanel.Dock="Left" Classes="stripe claude" />
+            <StackPanel Margin="14,10,12,12" Spacing="8">
+              <Grid ColumnDefinitions="Auto,*,Auto">
+                <Border Classes="avatar" Background="{DynamicResource Brush.Review.ClaudeSoft}">
+                  <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="14" Foreground="{DynamicResource Brush.Review.Claude}" HorizontalAlignment="Center" />
+                </Border>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" Margin="10,0,0,0" VerticalAlignment="Center">
+                  <TextBlock Text="Claude" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource Brush.TextBright}" />
+                  <Border Classes="tag">
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                      <controls:StrokeIcon Data="{Binding Severity, Converter={x:Static conv:ReviewConverters.SeverityIcon}}" Size="11"
+                                           Foreground="{Binding Severity, Converter={x:Static conv:ReviewConverters.SeverityBrush}}" />
+                      <TextBlock Text="{Binding SeverityText}" VerticalAlignment="Center" />
+                    </StackPanel>
+                  </Border>
+                  <TextBlock Classes="muted small" Text="{Binding LocationText}" VerticalAlignment="Center" />
+                </StackPanel>
+                <Border Grid.Column="2" Classes="tag claude" ToolTip.Tip="Nothing is posted until you keep it">
+                  <TextBlock Text="Draft" VerticalAlignment="Center" />
+                </Border>
+              </Grid>
+              <nb:MarkdownView Blocks="{Binding BodyBlocks}" Margin="36,0,0,0" IsVisible="{Binding !IsEditing}" />
+              <controls:AutoFocusTextBox Text="{Binding Body}" Margin="36,0,0,0" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="72" MaxHeight="260"
+                                         Padding="10,8" VerticalContentAlignment="Top" IsVisible="{Binding IsEditing}" />
+              <TextBlock Classes="small" TextWrapping="Wrap" Margin="36,0,0,0" Foreground="{DynamicResource Brush.Error}" Text="{Binding ErrorText}"
+                         IsVisible="{Binding ErrorText, Converter={x:Static ObjectConverters.IsNotNull}}" />
+              <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+                <Button Theme="{StaticResource SecondaryButton}" Classes="compact" Content="Dismiss" Command="{Binding DismissCommand}" />
+                <Button Theme="{StaticResource SecondaryButton}" Classes="compact" Content="Edit" Command="{Binding EditCommand}" IsVisible="{Binding !IsEditing}" />
+                <Button Theme="{StaticResource SecondaryButton}" Classes="compact" Content="Done" Command="{Binding FinishEditingCommand}" IsVisible="{Binding IsEditing}" />
+                <Button Theme="{StaticResource AccentButton}" Classes="compact" Command="{Binding KeepCommand}" ToolTip.Tip="Adds it to your pending review">
+                  <StackPanel Orientation="Horizontal" Spacing="6">
+                    <controls:StrokeIcon Data="{StaticResource Icon.Check}" Size="13" />
+                    <TextBlock Text="Keep" VerticalAlignment="Center" />
+                  </StackPanel>
+                </Button>
+              </StackPanel>
+            </StackPanel>
+          </DockPanel>
+        </Border>
+      </DataTemplate>
+
+      <!-- A comment being written. -->
+      <DataTemplate DataType="pr:NewCommentViewModel">
+        <Border Classes="card">
+          <DockPanel>
+            <Border DockPanel.Dock="Left" Classes="stripe writing" />
+            <StackPanel Margin="14,10,12,12" Spacing="8">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <controls:StrokeIcon Data="{StaticResource Icon.Plus}" Size="14" Foreground="{DynamicResource Brush.AccentText}" />
+                <TextBlock Classes="muted small" Text="{Binding LocationText}" VerticalAlignment="Center" />
+              </StackPanel>
+              <controls:AutoFocusTextBox Text="{Binding Text}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="76" MaxHeight="260"
+                                         Padding="10,8" VerticalContentAlignment="Top" Watermark="Leave a comment. Markdown works here." />
+              <TextBlock Classes="small" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Error}" Text="{Binding ErrorText}"
+                         IsVisible="{Binding ErrorText, Converter={x:Static ObjectConverters.IsNotNull}}" />
+              <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Classes="muted small" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,12,0"
+                           Text="Your comments wait on GitHub, seen only by you, until you finish your review." />
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                  <Button Theme="{StaticResource SecondaryButton}" Classes="compact" Content="Cancel" Command="{Binding CancelCommand}" ToolTip.Tip="Esc" />
+                  <Button Theme="{StaticResource AccentButton}" Classes="compact" Content="{Binding SubmitText}" Command="{Binding SubmitCommand}" ToolTip.Tip="Ctrl+Enter" />
+                </StackPanel>
+              </Grid>
+            </StackPanel>
+          </DockPanel>
+        </Border>
+      </DataTemplate>
+
+    </ItemsControl.DataTemplates>
+  </ItemsControl>
+</UserControl>

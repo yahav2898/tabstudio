@@ -9,6 +9,7 @@ using AvaloniaEdit.Search;
 using AvaloniaEdit.TextMate;
 using TabStudio.App.Editing;
 using TabStudio.App.ViewModels;
+using TabStudio.App.Views.PullRequests;
 
 namespace TabStudio.App.Views;
 
@@ -65,7 +66,13 @@ public sealed class DiffView : UserControl, IDisposable
 
         _header = new DiffHeaderView { DataContext = comparison };
         DockPanel.SetDock(_header, Dock.Top);
-        Content = new DockPanel { Children = { _header, _editor } };
+        var editorHost = new Panel { Children = { _editor } };
+        var layout = new DockPanel { Children = { _header, editorHost } };
+        Content = layout;
+        if (document.Review is { } review)
+        {
+            ReviewSupport = new DiffReviewSupport(review, _editor, editorHost, layout);
+        }
 
         _header.MoveRequested += OnMoveRequested;
         _editor.TextArea.Caret.PositionChanged += OnCaretPositionChanged;
@@ -77,9 +84,13 @@ public sealed class DiffView : UserControl, IDisposable
     /// <summary>The editor control, for tests and keyboard focus.</summary>
     public TextEditor Editor => _editor;
 
+    /// <summary>The pull request review of the file, when the diff is a pull request's file.</summary>
+    internal DiffReviewSupport? ReviewSupport { get; }
+
     /// <inheritdoc />
     public void Dispose()
     {
+        ReviewSupport?.Dispose();
         _document.ActionRequested -= OnActionRequested;
         _document.ComparisonChanged -= OnComparisonChanged;
         _header.MoveRequested -= OnMoveRequested;

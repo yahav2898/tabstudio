@@ -82,8 +82,10 @@ public sealed class DiagnosticRenderer : IBackgroundRenderer
                 _ => MessagePen,
             };
 
-            foreach (var rect in BackgroundGeometryBuilder.GetRectsForSegment(textView, segment))
+            foreach (var segmentRect in BackgroundGeometryBuilder.GetRectsForSegment(textView, segment))
             {
+                // A line with review comments under it is taller; the squiggle stays under its text.
+                var rect = segmentRect.WithHeight(Math.Min(segmentRect.Height, textView.DefaultLineHeight));
                 if (diagnostic.Value.Severity == DiagnosticSeverityLevel.Info)
                 {
                     var y = rect.Bottom - 1;

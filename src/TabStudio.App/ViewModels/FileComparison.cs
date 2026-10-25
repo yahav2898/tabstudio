@@ -11,7 +11,16 @@ namespace TabStudio.App.ViewModels;
 public sealed record FileComparison(string FilePath, string RelativePath, string BaseLabel, InlineDiff Diff)
 {
     /// <summary>The tab title, such as "Program.cs vs. Unmodified".</summary>
-    public string Title => $"{Path.GetFileName(FilePath)} vs. Unmodified";
+    public string Title => Caption ?? $"{Path.GetFileName(FilePath)} vs. Unmodified";
+
+    /// <summary>A tab title of its own, such as a pull request's "Program.cs (#12)", instead of the usual one.</summary>
+    public string? Caption { get; init; }
+
+    /// <summary>What the header calls the left version, before <see cref="BaseLabel"/>.</summary>
+    public string BaseName { get; init; } = "Unmodified";
+
+    /// <summary>What the header calls the right version.</summary>
+    public string HeadName { get; init; } = "working copy";
 
     /// <summary>
     /// The path the tab is known by: next to the file, named after the title. It never exists on disk, so it

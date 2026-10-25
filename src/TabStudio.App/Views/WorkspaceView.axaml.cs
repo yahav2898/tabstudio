@@ -27,6 +27,7 @@ public sealed partial class WorkspaceView : UserControl
         InitializeComponent();
         Editors.ViewFactory = document => document switch
         {
+            DocumentViewModel { PullRequest: { } pullRequest } => new PullRequests.PullRequestView { DataContext = pullRequest },
             DocumentViewModel { IsComparison: true } comparison => new DiffView(comparison),
             DocumentViewModel { IsNotebook: true } notebook => new Notebooks.NotebookView(notebook),
             _ => (Control)new CodeEditorView((DocumentViewModel)document),

@@ -3,6 +3,7 @@
              xmlns:controls="using:TabStudio.App.Controls"
              xmlns:conv="using:TabStudio.App.Converters"
              xmlns:views="using:TabStudio.App.Views"
+             xmlns:prv="using:TabStudio.App.Views.PullRequests"
              xmlns:vm="using:TabStudio.App.ViewModels"
              xmlns:sys="using:System"
              x:Class="TabStudio.App.Views.WorkspaceView"
@@ -82,6 +83,7 @@
           <MenuItem Header="_View">
             <MenuItem Header="_Solution Explorer" InputGesture="Ctrl+Alt+L" Command="{Binding ToggleSideBarCommand}" />
             <MenuItem Header="_Git Changes" Command="{Binding ShowGitChangesCommand}" />
+            <MenuItem Header="Pull Re_quests" Command="{Binding ShowPullRequestsCommand}" />
             <MenuItem Header="_Test Explorer (Ctrl+E, T)" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}" />
             <MenuItem Header="Claude _Agent" Command="{Binding ShowAgentCommand}" />
             <MenuItem Header="_Web Preview" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.WebPreview}"
@@ -111,6 +113,7 @@
             <MenuItem Header="_New Branch..." Command="{Binding GitChanges.NewBranchCommand}" />
             <MenuItem Header="S_witch Branch..." Command="{Binding GitChanges.OpenBranchPickerCommand}" />
             <MenuItem Header="Create Pull _Request..." Command="{Binding GitChanges.OpenPullRequestFormCommand}" />
+            <MenuItem Header="Pull Re_quests" Command="{Binding ShowPullRequestsCommand}" />
             <Separator />
             <MenuItem Header="P_ublish to GitHub..." Command="{Binding ShowGitChangesCommand}" IsEnabled="{Binding GitChanges.IsPublishVisible}" />
             <MenuItem Header="Open on _GitHub" Command="{Binding GitChanges.OpenOnGitHubCommand}" />
@@ -544,6 +547,11 @@
         <views:GitChangesView Grid.Row="0" Grid.RowSpan="3" DataContext="{Binding GitChanges}"
                               IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsGitChangesSelected}" />
 
+        <!-- The repository's pull requests, beside Git Changes. -->
+        <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsPullRequestsSelected}">
+          <prv:PullRequestListView x:Name="PullRequestList" DataContext="{Binding PullRequests}" />
+        </Panel>
+
         <!-- The Test Explorer covers the Solution Explorer and Properties while its tab is selected. -->
         <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsTestExplorerSelected}">
           <views:TestExplorerView x:Name="TestExplorer" DataContext="{Binding Tests}" />
@@ -566,6 +574,8 @@
                     Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.SolutionExplorer}" Content="Solution Explorer" />
             <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsGitChangesSelected}" Content="Git Changes"
                     Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.GitChanges}" />
+            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsPullRequestsSelected}" Content="Pull Requests"
+                    Command="{Binding ShowPullRequestsCommand}" />
             <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsTestExplorerSelected}"
                     Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}">
               <StackPanel Orientation="Horizontal" Spacing="6">
