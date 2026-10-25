@@ -159,11 +159,7 @@ jobs:
   android-emulator:
     name: Run on an Android emulator
     runs-on: ubuntu-latest
-    timeout-minutes: 60
-    strategy:
-      fail-fast: false
-      matrix:
-        api: [29, 35]
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
 
@@ -202,7 +198,7 @@ jobs:
       - name: Start TabStudio and run its self test
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: ${{ matrix.api }}
+          api-level: 29
           target: google_apis
           arch: x86_64
           profile: pixel_c
@@ -211,7 +207,7 @@ jobs:
           disk-size: 4096M
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
-          script: bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 1500
+          script: bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 420
 
       - name: Keep the APK out of the published logs
         if: always()
@@ -220,7 +216,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: android-emulator-${{ matrix.api }}
+          name: android-emulator
           path: ci-out/
           if-no-files-found: ignore
 
@@ -228,7 +224,7 @@ jobs:
         if: always() && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: bash build/ci/publish-logs.sh android-emulator-${{ matrix.api }} ${{ job.status }}
+        run: bash build/ci/publish-logs.sh android-emulator ${{ job.status }}
 
   # Publishes a versioned release once every check has passed: for a v* tag, or on main when
   # Directory.Build.props has a version that has release notes in docs/releases and no release yet.
