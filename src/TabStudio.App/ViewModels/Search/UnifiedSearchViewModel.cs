@@ -278,7 +278,12 @@ public sealed partial class UnifiedSearchViewModel : ObservableObject, IDisposab
         }
 
         // Recent items are shown as they are now (a command may have become unavailable), when the providers still offer them.
-        var current = items.ToDictionary(item => item.Id, item => item, StringComparer.Ordinal);
+        var current = new Dictionary<string, SearchItem>(StringComparer.Ordinal);
+        foreach (var item in items)
+        {
+            current.TryAdd(item.Id, item);
+        }
+
         return [.. _history.Recent
             .Select(item => current.GetValueOrDefault(item.Id))
             .OfType<SearchItem>()

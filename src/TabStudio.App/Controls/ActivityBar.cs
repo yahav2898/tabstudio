@@ -51,8 +51,9 @@ public sealed class ActivityBar : Control
         _more = new ActivityButton(null) { Name = "ActivityMore" };
         _more.SetIcon(Resource<Geometry>("Icon.More"));
         ToolTip.SetTip(_more, "More tool windows");
-        _more.Flyout = new MenuFlyout { Placement = PlacementMode.LeftEdgeAlignedBottom };
-        _more.Flyout.Opening += (_, _) => FillMoreMenu();
+        var menu = new MenuFlyout { Placement = PlacementMode.LeftEdgeAlignedBottom };
+        menu.Opening += (_, _) => FillMoreMenu();
+        _more.Flyout = menu;
         AddChild(_more);
         ClipToBounds = true;
     }
@@ -281,8 +282,8 @@ public sealed class ActivityBar : Control
             ToolTip.SetPlacement(this, PlacementMode.Left);
             ToolTip.SetShowDelay(this, 250);
             AddHandler(Gestures.HoldingEvent, OnHolding);
-            Bind(_indicator, Border.BackgroundProperty, "Brush.ActivityIndicator");
-            Bind(_dot, Border.BorderBrushProperty, "Brush.ActivityBar");
+            BindToken(_indicator, Border.BackgroundProperty, "Brush.ActivityIndicator");
+            BindToken(_dot, Border.BorderBrushProperty, "Brush.ActivityBar");
             if (item is not null)
             {
                 item.PropertyChanged += OnItemChanged;
@@ -342,7 +343,7 @@ public sealed class ActivityBar : Control
         }
 
         /// <summary>Gives a property a palette token, following the theme.</summary>
-        private static void Bind(StyledElement target, AvaloniaProperty property, string token) =>
+        private static void BindToken(StyledElement target, AvaloniaProperty property, string token) =>
             target.Bind(property, target.GetResourceObservable(token));
 
         private void OnHolding(object? sender, HoldingRoutedEventArgs e)
@@ -383,10 +384,10 @@ public sealed class ActivityBar : Control
                 ActivityTone.Running => ("Brush.Running", "Brush.Window"),
                 _ => ("Brush.TextMuted", "Brush.Window"),
             };
-            Bind(_count, Border.BackgroundProperty, background);
-            Bind(_countText, TextBlock.ForegroundProperty, foreground);
-            Bind(_dot, Border.BackgroundProperty, background);
-            Bind(_activity, StrokeIcon.ForegroundProperty, item.BadgeTone == ActivityTone.Running ? "Brush.AccentText" : background);
+            BindToken(_count, Border.BackgroundProperty, background);
+            BindToken(_countText, TextBlock.ForegroundProperty, foreground);
+            BindToken(_dot, Border.BackgroundProperty, background);
+            BindToken(_activity, StrokeIcon.ForegroundProperty, item.BadgeTone == ActivityTone.Running ? "Brush.AccentText" : background);
         }
     }
 }

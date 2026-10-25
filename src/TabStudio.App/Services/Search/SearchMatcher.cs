@@ -82,16 +82,17 @@ public static class SearchMatcher
             return new SearchMatch(Exact, Range(0, word.Length));
         }
 
+        // A whole word ("Build" in "Build Solution") beats the start of a longer one ("Builder.cs").
         if (text.StartsWith(word, StringComparison.OrdinalIgnoreCase))
         {
-            return new SearchMatch(Prefix - Math.Min(99, text.Length - word.Length), Range(0, word.Length));
+            return new SearchMatch(Prefix - (EndsWord(text, word.Length) ? 0 : 50) - Math.Min(49, text.Length - word.Length), Range(0, word.Length));
         }
 
         for (var at = 1; at <= text.Length - word.Length; at++)
         {
             if (IsWordStart(text, at) && string.Compare(text, at, word, 0, word.Length, StringComparison.OrdinalIgnoreCase) == 0)
             {
-                return new SearchMatch(WordPrefix - Math.Min(99, at), Range(at, word.Length));
+                return new SearchMatch(WordPrefix - (EndsWord(text, at + word.Length) ? 0 : 50) - Math.Min(49, at), Range(at, word.Length));
             }
         }
 
@@ -108,7 +109,7 @@ public static class SearchMatcher
         }
 
         return scattered is null ? null
-            : new SearchMatch(Math.Max(1, Scattered - Math.Min(250, (scattered.Gaps * 3) + scattered.Indices[0]) + (scattered.Anchored * 10)), scattered.Indices);
+            : new SearchMatch(Math.Clamp(Scattered - Math.Min(250, (scattered.Gaps * 3) + scattered.Indices[0]) + (scattered.Anchored * 10), 1, Scattered), scattered.Indices);
     }
 
     /// <summary>
@@ -182,6 +183,9 @@ public static class SearchMatcher
             || (char.IsUpper(current) && char.IsLower(previous))
             || (char.IsDigit(current) && char.IsLetter(previous));
     }
+
+    /// <summary>Whether a word ends at a position: the text ends, or a separator or a new word follows.</summary>
+    private static bool EndsWord(string text, int at) => at >= text.Length || !char.IsLetterOrDigit(text[at]) || IsWordStart(text, at);
 
     private static bool SameLetter(char a, char b) => char.ToUpperInvariant(a) == char.ToUpperInvariant(b);
 

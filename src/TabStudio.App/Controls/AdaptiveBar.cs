@@ -47,8 +47,9 @@ public sealed class AdaptiveBar : Panel
     public AdaptiveBar()
     {
         _more = new AdaptiveBarItem { Icon = MoreIcon, Label = "More", ShowsLabel = false, Name = "MoreButton" };
-        _more.Flyout = new MenuFlyout { Placement = PlacementMode.BottomEdgeAlignedRight };
-        _more.Flyout.Opening += (_, _) => FillMoreMenu();
+        var menu = new MenuFlyout { Placement = PlacementMode.BottomEdgeAlignedRight };
+        menu.Opening += (_, _) => FillMoreMenu();
+        _more.Flyout = menu;
         VisualChildren.Add(_more);
         LogicalChildren.Add(_more);
     }
