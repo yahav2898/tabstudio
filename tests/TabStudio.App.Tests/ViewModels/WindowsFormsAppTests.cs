@@ -167,7 +167,14 @@ public sealed class WindowsFormsAppTests
             return value;
         }
 
-        public string? TextOf(string name) => Read(w => w.Form.Controls.Find(name, true).FirstOrDefault()?.Text);
+        /// <summary>The text of a control, or of a strip's item, such as a status label.</summary>
+        public string? TextOf(string name) => Read(w =>
+            w.Form.Controls.Find(name, true).FirstOrDefault()?.Text
+            ?? Descendants(w.Form).OfType<System.Windows.Forms.ToolStrip>()
+                .SelectMany(strip => strip.Items.Find(name, true)).FirstOrDefault()?.Text);
+
+        private static IEnumerable<System.Windows.Forms.Control> Descendants(System.Windows.Forms.Control control) =>
+            control.Controls.Cast<System.Windows.Forms.Control>().SelectMany(child => Descendants(child).Prepend(child));
 
         public System.Drawing.Rectangle BoundsOf(string name) => Read(w =>
         {
