@@ -221,6 +221,7 @@ public sealed partial class LiveTestingViewModel : ObservableObject, ILiveTestin
         }
 
         State = LiveTestingState.Off;
+        _discovered.Clear();
         PassedCount = 0;
         FailedCount = 0;
         RunningCount = 0;

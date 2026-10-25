@@ -121,8 +121,11 @@ public sealed class LiveTestMarkers
             }
             else if (range.Start == offset && change.RemovalLength == 0)
             {
-                // Typing at the start of the line pushes its text, and its marker, along.
-                result.Add(range with { Start = range.Start + delta, Value = Stale(range.Value) });
+                // Text inserted at the start of the line pushes it along: whole lines move it down unchanged, while
+                // anything else is typed into the line.
+                var inserted = change.InsertedText;
+                var wholeLines = inserted.TextLength > 0 && inserted.GetCharAt(inserted.TextLength - 1) == '\n';
+                result.Add(range with { Start = range.Start + delta, Value = wholeLines ? range.Value : Stale(range.Value) });
             }
             else if (range.Start <= offset && range.End >= removedEnd)
             {

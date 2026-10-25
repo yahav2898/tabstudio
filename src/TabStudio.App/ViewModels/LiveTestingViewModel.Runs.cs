@@ -13,6 +13,7 @@ namespace TabStudio.App.ViewModels;
 public sealed partial class LiveTestingViewModel
 {
     private readonly List<TestKey> _requested = [];
+    private readonly Dictionary<string, IReadOnlyList<TestCase>> _discovered = new(StringComparer.Ordinal);
     private CancellationTokenSource? _delay;
     private CancellationTokenSource? _run;
     private Task _runLoop = Task.CompletedTask;
@@ -319,8 +320,11 @@ public sealed partial class LiveTestingViewModel
         public void TestsDiscovered(ProjectInfo testProject, IReadOnlyList<TestCase> tests) =>
             owner.PostForRun(id, () =>
             {
-                if (!owner._host.Tests.IsRunning)
+                // A build that changed nothing keeps its session and its list: the Test Explorer already shows it.
+                if (!owner._host.Tests.IsRunning
+                    && !(owner._discovered.TryGetValue(testProject.FilePath, out var shown) && ReferenceEquals(shown, tests)))
                 {
+                    owner._discovered[testProject.FilePath] = tests;
                     owner._host.Tests.SetBuiltTests(testProject, tests);
                 }
             });
