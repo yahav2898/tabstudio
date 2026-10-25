@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TabStudio.App.ViewModels"
+             x:Class="TabStudio.App.Views.PropertiesView"
+             x:DataType="vm:PropertiesViewModel">
+  <DockPanel>
+    <Border DockPanel.Dock="Top" Height="34" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="12,0">
+      <TextBlock Classes="header" Text="Properties" />
+    </Border>
+    <Border DockPanel.Dock="Top" Height="30" Padding="12,0">
+      <TextBlock VerticalAlignment="Center" FontSize="12.5" TextTrimming="CharacterEllipsis">
+        <Run Text="{Binding Title}" FontWeight="SemiBold" />
+        <Run Text="  " />
+        <Run Text="{Binding Subtitle}" Foreground="{DynamicResource Brush.TextMuted}" />
+      </TextBlock>
+    </Border>
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+      <ItemsControl ItemsSource="{Binding Rows}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate DataType="vm:PropertyRow">
+            <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0">
+              <Grid ColumnDefinitions="130,*" MinHeight="28">
+                <TextBlock Classes="label" FontSize="12.5" Text="{Binding Name}" Margin="12,0" VerticalAlignment="Center" />
+                <Border Grid.Column="1" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1,0,0,0" Padding="10,4">
+                  <SelectableTextBlock FontSize="12.5" Text="{Binding Value}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                </Border>
+              </Grid>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

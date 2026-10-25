@@ -1,0 +1,127 @@
+using Avalonia;
+using Avalonia.Media;
+using Avalonia.Media.Immutable;
+using AvaloniaEdit.Document;
+using AvaloniaEdit.Rendering;
+using TabStudio.Core.Diagnostics;
+
+namespace TabStudio.App.Editing;
+
+/// <summary>
+/// Draws squiggles under errors and warnings, and dots under messages, like Visual Studio. The spans follow
+/// edits until the next analysis replaces them.
+/// </summary>
+public sealed class DiagnosticRenderer : IBackgroundRenderer
+{
+    private static readonly IPen ErrorPen = new ImmutablePen(new ImmutableSolidColorBrush(Color.Parse("#F47067")), 1.2);
+    private static readonly IPen WarningPen = new ImmutablePen(new ImmutableSolidColorBrush(Color.Parse("#E3B341")), 1.2);
+    private static readonly IPen MessagePen = new ImmutablePen(new ImmutableSolidColorBrush(Color.Parse("#6CB6FF")), 1.6, new ImmutableDashStyle([1, 2], 0));
+
+    private TrackedRange<BuildDiagnostic>[] _diagnostics = [];
+
+    /// <inheritdoc />
+    public KnownLayer Layer => KnownLayer.Selection;
+
+    /// <summary>Replaces the diagnostics shown in the document.</summary>
+    /// <param name="diagnostics">Diagnostics located in this document.</param>
+    /// <param name="documentLength">The current length of the document, to clamp stale spans.</param>
+    public void SetDiagnostics(IEnumerable<BuildDiagnostic> diagnostics, int documentLength)
+    {
+        ArgumentNullException.ThrowIfNull(diagnostics);
+        _diagnostics = diagnostics
+            .Where(d => d.Location is not null && d.Severity != DiagnosticSeverityLevel.Hidden)
+            .Select(d => Clamp(d, documentLength))
+            .OrderBy(d => d.Value.Severity)
+            .ToArray();
+    }
+
+    /// <summary>Moves the squiggles through an edit. Call from the document's <c>Changed</c> event.</summary>
+    /// <param name="change">The edit.</param>
+    public void OnDocumentChanged(DocumentChangeEventArgs change) => _diagnostics = TrackedRanges.Apply(_diagnostics, change);
+
+    /// <summary>The most severe diagnostic at an offset, for tooltips and the status bar.</summary>
+    /// <param name="offset">A document offset.</param>
+    public BuildDiagnostic? DiagnosticAt(int offset) => _diagnostics
+        .Where(d => d.Start <= offset && offset <= d.End)
+        .OrderByDescending(d => d.Value.Severity)
+        .Select(d => d.Value)
+        .FirstOrDefault();
+
+    /// <inheritdoc />
+    public void Draw(TextView textView, DrawingContext drawingContext)
+    {
+        ArgumentNullException.ThrowIfNull(textView);
+        ArgumentNullException.ThrowIfNull(drawingContext);
+
+        if (_diagnostics.Length == 0 || !textView.VisualLinesValid || textView.VisualLines.Count == 0)
+        {
+            return;
+        }
+
+        var visibleStart = textView.VisualLines[0].FirstDocumentLine.Offset;
+        var visibleEnd = textView.VisualLines[^1].LastDocumentLine.EndOffset;
+        var documentLength = textView.Document?.TextLength ?? 0;
+
+        foreach (var diagnostic in _diagnostics)
+        {
+            if (diagnostic.End < visibleStart || diagnostic.Start > visibleEnd || diagnostic.Start >= documentLength)
+            {
+                continue;
+            }
+
+            var segment = new TextSegment
+            {
+                StartOffset = diagnostic.Start,
+                Length = Math.Max(1, Math.Min(diagnostic.Length, documentLength - diagnostic.Start)),
+            };
+
+            var pen = diagnostic.Value.Severity switch
+            {
+                DiagnosticSeverityLevel.Error => ErrorPen,
+                DiagnosticSeverityLevel.Warning => WarningPen,
+                _ => MessagePen,
+            };
+
+            foreach (var rect in BackgroundGeometryBuilder.GetRectsForSegment(textView, segment))
+            {
+                if (diagnostic.Value.Severity == DiagnosticSeverityLevel.Info)
+                {
+                    var y = rect.Bottom - 1;
+                    drawingContext.DrawLine(pen, new Point(rect.Left, y), new Point(Math.Min(rect.Right, rect.Left + 12), y));
+                }
+                else
+                {
+                    drawingContext.DrawGeometry(null, pen, CreateSquiggle(rect));
+                }
+            }
+        }
+    }
+
+    private static StreamGeometry CreateSquiggle(Rect rect)
+    {
+        const double Step = 2.5;
+        var geometry = new StreamGeometry();
+        using (var context = geometry.Open())
+        {
+            var y = rect.Bottom - 1.5;
+            context.BeginFigure(new Point(rect.Left, y), isFilled: false);
+            var up = true;
+            for (var x = rect.Left + Step; x <= Math.Max(rect.Right, rect.Left + (Step * 2)); x += Step)
+            {
+                context.LineTo(new Point(x, up ? y - Step : y));
+                up = !up;
+            }
+
+            context.EndFigure(isClosed: false);
+        }
+
+        return geometry;
+    }
+
+    private static TrackedRange<BuildDiagnostic> Clamp(BuildDiagnostic diagnostic, int documentLength)
+    {
+        var start = Math.Clamp(diagnostic.Location!.Start, 0, Math.Max(0, documentLength));
+        var length = Math.Clamp(diagnostic.Location.Length, 0, Math.Max(0, documentLength - start));
+        return new TrackedRange<BuildDiagnostic>(start, length, diagnostic);
+    }
+}

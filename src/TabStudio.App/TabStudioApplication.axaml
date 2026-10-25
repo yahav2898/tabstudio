@@ -1,0 +1,55 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="TabStudio.App.TabStudioApplication"
+             Name="TabStudio"
+             RequestedThemeVariant="Dark">
+
+  <Application.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source="avares://TabStudio.App/Theme/Colors.axaml" />
+        <ResourceInclude Source="avares://TabStudio.App/Theme/Icons.axaml" />
+        <ResourceInclude Source="avares://TabStudio.App/Theme/ControlThemes.axaml" />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </Application.Resources>
+
+  <Application.Styles>
+    <FluentTheme>
+      <FluentTheme.Palettes>
+        <ColorPaletteResources x:Key="Dark"
+                               Accent="#0F7A70"
+                               RegionColor="#1B1D23"
+                               AltHigh="#1B1D23"
+                               AltLow="#1B1D23"
+                               AltMedium="#1B1D23"
+                               AltMediumHigh="#1B1D23"
+                               AltMediumLow="#1B1D23"
+                               BaseHigh="#E8ECF2"
+                               BaseLow="#343844"
+                               BaseMedium="#9AA1AE"
+                               BaseMediumHigh="#C5CAD3"
+                               BaseMediumLow="#6E7685"
+                               ChromeAltLow="#C5CAD3"
+                               ChromeBlackHigh="#000000"
+                               ChromeBlackLow="#C5CAD3"
+                               ChromeBlackMedium="#15171C"
+                               ChromeBlackMediumLow="#1B1D23"
+                               ChromeDisabledHigh="#343844"
+                               ChromeDisabledLow="#6E7685"
+                               ChromeGray="#9AA1AE"
+                               ChromeHigh="#3A3F4B"
+                               ChromeLow="#22252C"
+                               ChromeMedium="#272A32"
+                               ChromeMediumLow="#22252C"
+                               ChromeWhite="#FFFFFF"
+                               ListLow="#2A2E37"
+                               ListMedium="#33384A"
+                               ErrorText="#F47067" />
+      </FluentTheme.Palettes>
+    </FluentTheme>
+    <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
+    <StyleInclude Source="avares://TabStudio.App/Theme/Controls.axaml" />
+  </Application.Styles>
+
+</Application>

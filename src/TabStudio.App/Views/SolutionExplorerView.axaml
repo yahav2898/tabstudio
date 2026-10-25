@@ -1,0 +1,74 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:conv="using:TabStudio.App.Converters"
+             xmlns:vm="using:TabStudio.App.ViewModels"
+             x:Class="TabStudio.App.Views.SolutionExplorerView"
+             x:DataType="vm:SolutionExplorerViewModel">
+  <DockPanel>
+    <Border DockPanel.Dock="Top" Height="36" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+      <Grid ColumnDefinitions="*,Auto" Margin="12,0,4,0">
+        <TextBlock Classes="header" Text="Solution Explorer" />
+        <StackPanel Grid.Column="1" Orientation="Horizontal">
+          <Button Theme="{StaticResource ToolButton}" Width="34" Height="34" MinWidth="34" MinHeight="34" Padding="0"
+                  ToolTip.Tip="Collapse All" Command="{Binding CollapseAllCommand}">
+            <controls:StrokeIcon Data="{StaticResource Icon.Collapse}" Size="15" />
+          </Button>
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <Border DockPanel.Dock="Top" Padding="8,6">
+      <TextBox Watermark="Search Solution Explorer" Text="{Binding SearchText}">
+        <TextBox.InnerLeftContent>
+          <controls:StrokeIcon Data="{StaticResource Icon.Search}" Size="13" Margin="8,0,0,0"
+                               Foreground="{DynamicResource Brush.TextMuted}" />
+        </TextBox.InnerLeftContent>
+      </TextBox>
+    </Border>
+
+    <ListBox x:Name="Tree" ItemsSource="{Binding Rows}" SelectedItem="{Binding SelectedItem}"
+             ItemContainerTheme="{StaticResource ListRow}" SelectionMode="Single"
+             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+      <ListBox.ItemTemplate>
+        <DataTemplate DataType="vm:ExplorerItemViewModel">
+          <Grid ColumnDefinitions="Auto,18,Auto,*,Auto" Height="30" Background="Transparent">
+            <Border Width="{Binding IndentWidth}" />
+
+            <!-- Expand chevron -->
+            <Panel Grid.Column="1" IsVisible="{Binding IsExpandable}">
+              <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="14"
+                                   Foreground="{DynamicResource Brush.TextMuted}" IsVisible="{Binding !IsExpanded}" />
+              <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="14"
+                                   Foreground="{DynamicResource Brush.TextMuted}" IsVisible="{Binding IsExpanded}" />
+            </Panel>
+
+            <!-- Icon, or a badge for files -->
+            <Panel Grid.Column="2" Margin="4,0,8,0" MinWidth="16">
+              <controls:StrokeIcon Size="16" IsVisible="{Binding !IsFile}"
+                                   Data="{Binding Icon, Converter={x:Static conv:AppConverters.ExplorerIconGeometry}}"
+                                   Foreground="{Binding Icon, Converter={x:Static conv:AppConverters.ExplorerIconBrush}}" />
+              <Border Classes="badge" IsVisible="{Binding IsFile}"
+                      Background="{Binding BadgeKind, Converter={x:Static conv:AppConverters.BadgeBackground}}">
+                <TextBlock Text="{Binding Badge}"
+                           Foreground="{Binding BadgeKind, Converter={x:Static conv:AppConverters.BadgeForeground}}" />
+              </Border>
+            </Panel>
+
+            <TextBlock Grid.Column="3" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" FontSize="13">
+              <Run Text="{Binding Name}" />
+              <Run Text=" " />
+              <Run Text="{Binding Detail}" Foreground="{DynamicResource Brush.TextMuted}" />
+              <Run Text="{Binding Location}" Foreground="{DynamicResource Brush.TextMuted}" FontSize="11.5" />
+            </TextBlock>
+
+            <Border Grid.Column="4" Classes="pill" Classes.ready="{Binding IsPillReady}" Margin="6,0,10,0"
+                    IsVisible="{Binding Pill, Converter={x:Static ObjectConverters.IsNotNull}}">
+              <TextBlock Text="{Binding Pill}" VerticalAlignment="Center" />
+            </Border>
+          </Grid>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+  </DockPanel>
+</UserControl>

@@ -1,0 +1,420 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
+             xmlns:conv="using:TabStudio.App.Converters"
+             xmlns:views="using:TabStudio.App.Views"
+             xmlns:vm="using:TabStudio.App.ViewModels"
+             xmlns:sys="using:System"
+             x:Class="TabStudio.App.Views.WorkspaceView"
+             x:DataType="vm:WorkspaceViewModel">
+
+  <UserControl.KeyBindings>
+    <KeyBinding Gesture="F5" Command="{Binding RunCommand}" />
+    <KeyBinding Gesture="Ctrl+F5" Command="{Binding RunCommand}" />
+    <KeyBinding Gesture="Shift+F5" Command="{Binding StopCommand}" />
+    <KeyBinding Gesture="Ctrl+Shift+B" Command="{Binding BuildCommand}" />
+    <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveCommand}" />
+    <KeyBinding Gesture="Ctrl+Shift+S" Command="{Binding SaveAllCommand}" />
+    <KeyBinding Gesture="Ctrl+OemQuestion" Command="{Binding ToggleCommentCommand}" />
+    <KeyBinding Gesture="Shift+Alt+F" Command="{Binding FormatDocumentCommand}" />
+    <KeyBinding Gesture="Ctrl+H" Command="{Binding ReplaceCommand}" />
+    <KeyBinding Gesture="Ctrl+F4" Command="{Binding CloseDocumentCommand}" />
+    <KeyBinding Gesture="Ctrl+W" Command="{Binding CloseDocumentCommand}" />
+    <KeyBinding Gesture="Ctrl+Tab" Command="{Binding NextDocumentCommand}" />
+    <KeyBinding Gesture="Ctrl+Shift+Tab" Command="{Binding PreviousDocumentCommand}" />
+    <KeyBinding Gesture="Alt+Left" Command="{Binding NavigateBackCommand}" />
+    <KeyBinding Gesture="Alt+Right" Command="{Binding NavigateForwardCommand}" />
+    <KeyBinding Gesture="Ctrl+Alt+L" Command="{Binding ToggleSideBarCommand}" />
+  </UserControl.KeyBindings>
+
+  <Grid RowDefinitions="40,46,*,28">
+
+    <!-- Menu bar -->
+    <Border Grid.Row="0" Background="{DynamicResource Brush.MenuBar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+      <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto" Margin="8,0">
+        <Border Width="26" Height="26" CornerRadius="7" Background="{DynamicResource Brush.Accent}" Margin="0,0,6,0">
+          <controls:StrokeIcon Data="{StaticResource Icon.Logo}" Size="16" StrokeThickness="2.6" Foreground="{DynamicResource Brush.OnAccent}" HorizontalAlignment="Center" />
+        </Border>
+
+        <Menu Grid.Column="1" VerticalAlignment="Center">
+          <MenuItem Header="_File">
+            <MenuItem Header="_Save" InputGesture="Ctrl+S" Command="{Binding SaveCommand}" />
+            <MenuItem Header="Save A_ll" InputGesture="Ctrl+Shift+S" Command="{Binding SaveAllCommand}" />
+            <Separator />
+            <MenuItem Header="_Close Document" InputGesture="Ctrl+F4" Command="{Binding CloseDocumentCommand}" />
+            <MenuItem Header="Close Sol_ution" Command="{Binding CloseWorkspaceCommand}" />
+          </MenuItem>
+          <MenuItem Header="_Edit">
+            <MenuItem Header="_Undo" InputGesture="Ctrl+Z" Command="{Binding UndoCommand}" />
+            <MenuItem Header="_Redo" InputGesture="Ctrl+Y" Command="{Binding RedoCommand}" />
+            <Separator />
+            <MenuItem Header="_Find" InputGesture="Ctrl+F" Command="{Binding FindCommand}" />
+            <MenuItem Header="Re_place" InputGesture="Ctrl+H" Command="{Binding ReplaceCommand}" />
+            <Separator />
+            <MenuItem Header="Toggle Line _Comment (Ctrl+/)" Command="{Binding ToggleCommentCommand}" />
+            <MenuItem Header="F_ormat Document" InputGesture="Shift+Alt+F" Command="{Binding FormatDocumentCommand}" />
+          </MenuItem>
+          <MenuItem Header="_View">
+            <MenuItem Header="_Solution Explorer" InputGesture="Ctrl+Alt+L" Command="{Binding ToggleSideBarCommand}" />
+            <MenuItem Header="_Error List" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" />
+            <MenuItem Header="_Output" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Output}" />
+            <MenuItem Header="_Compatibility Doctor" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Compatibility}" />
+            <MenuItem Header="_Bottom Panel" Command="{Binding ToggleBottomPanelCommand}" />
+            <Separator />
+            <MenuItem Header="Navigate _Backward" InputGesture="Alt+Left" Command="{Binding NavigateBackCommand}" />
+            <MenuItem Header="Navigate _Forward" InputGesture="Alt+Right" Command="{Binding NavigateForwardCommand}" />
+            <MenuItem Header="Sync with _Active Document" Command="{Binding SyncWithActiveDocumentCommand}" />
+          </MenuItem>
+          <MenuItem Header="_Build">
+            <MenuItem Header="_Build Solution" InputGesture="Ctrl+Shift+B" Command="{Binding BuildCommand}" />
+            <Separator />
+            <MenuItem Header="_Debug Configuration" Command="{Binding SetConfigurationCommand}" CommandParameter="Debug" />
+            <MenuItem Header="_Release Configuration" Command="{Binding SetConfigurationCommand}" CommandParameter="Release" />
+          </MenuItem>
+          <MenuItem Header="_Debug">
+            <MenuItem Header="_Start" InputGesture="F5" Command="{Binding RunCommand}" />
+            <MenuItem Header="Stop _Running" InputGesture="Shift+F5" Command="{Binding StopCommand}" />
+          </MenuItem>
+          <MenuItem Header="_Window">
+            <MenuItem Header="_Next Document" InputGesture="Ctrl+Tab" Command="{Binding NextDocumentCommand}" />
+            <MenuItem Header="_Previous Document" InputGesture="Ctrl+Shift+Tab" Command="{Binding PreviousDocumentCommand}" />
+          </MenuItem>
+        </Menu>
+
+        <!-- Search: type part of a file name to open it. -->
+        <Panel Grid.Column="2" Width="240" Margin="10,0,0,0" VerticalAlignment="Center">
+          <TextBox x:Name="QuickOpenBox" Watermark="Search files (Ctrl+Q)" Text="{Binding QuickOpenText}"
+                   Background="{DynamicResource Brush.Panel}">
+            <TextBox.InnerLeftContent>
+              <controls:StrokeIcon Data="{StaticResource Icon.Search}" Size="14" Margin="9,0,0,0" Foreground="{DynamicResource Brush.TextMuted}" />
+            </TextBox.InnerLeftContent>
+          </TextBox>
+          <Popup IsOpen="{Binding IsQuickOpenOpen, Mode=TwoWay}" PlacementTarget="{Binding #QuickOpenBox}"
+                 Placement="BottomEdgeAlignedLeft" IsLightDismissEnabled="True" Width="420">
+            <Border Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
+                    CornerRadius="8" Padding="4" BoxShadow="0 8 24 0 #59000000">
+              <ListBox x:Name="QuickOpenList" ItemsSource="{Binding QuickOpenResults}" ItemContainerTheme="{StaticResource ListRow}" MaxHeight="420">
+                <ListBox.ItemTemplate>
+                  <DataTemplate DataType="vm:QuickOpenItem">
+                    <StackPanel Margin="10,6" Spacing="2" Background="Transparent">
+                      <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                      <TextBlock Text="{Binding Folder}" Classes="muted small" TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+            </Border>
+          </Popup>
+        </Panel>
+
+        <Border Grid.Column="4" Height="28" Padding="10,0" CornerRadius="8" Background="{DynamicResource Brush.Panel}" VerticalAlignment="Center">
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <controls:StrokeIcon Data="{StaticResource Icon.Solution}" Size="14" Foreground="{DynamicResource Brush.TextSecondary}" />
+            <TextBlock Text="{Binding Title}" FontSize="12.5" FontWeight="Medium" Foreground="{DynamicResource Brush.TextSecondary}" VerticalAlignment="Center" />
+          </StackPanel>
+        </Border>
+      </Grid>
+    </Border>
+
+    <!-- Standard toolbar -->
+    <Border Grid.Row="1" Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+      <DockPanel Margin="8,0" LastChildFill="False">
+        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
+          <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Navigate Backward (Alt+Left)" Command="{Binding NavigateBackCommand}">
+            <controls:StrokeIcon Data="{StaticResource Icon.Back}" />
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Navigate Forward (Alt+Right)" Command="{Binding NavigateForwardCommand}">
+            <controls:StrokeIcon Data="{StaticResource Icon.Forward}" />
+          </Button>
+          <Border Classes="toolbarSeparator" />
+          <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Save (Ctrl+S)" Command="{Binding SaveCommand}">
+            <controls:StrokeIcon Data="{StaticResource Icon.Save}" />
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Save All (Ctrl+Shift+S)" Command="{Binding SaveAllCommand}">
+            <controls:StrokeIcon Data="{StaticResource Icon.SaveAll}" />
+          </Button>
+          <Border Classes="toolbarSeparator" />
+          <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Undo (Ctrl+Z)" Command="{Binding UndoCommand}"
+                  IsEnabled="{Binding ActiveDocument.CanUndo, FallbackValue=False}">
+            <controls:StrokeIcon Data="{StaticResource Icon.Undo}" />
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Redo (Ctrl+Y)" Command="{Binding RedoCommand}"
+                  IsEnabled="{Binding ActiveDocument.CanRedo, FallbackValue=False}">
+            <controls:StrokeIcon Data="{StaticResource Icon.Redo}" />
+          </Button>
+          <Border Classes="toolbarSeparator" />
+
+          <!-- Configuration -->
+          <Button Theme="{StaticResource SecondaryButton}" Padding="10,0" ToolTip.Tip="Solution Configuration">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <TextBlock Text="{Binding Configuration}" VerticalAlignment="Center" />
+              <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="14" />
+            </StackPanel>
+            <Button.Flyout>
+              <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                <MenuItem Header="Debug" Command="{Binding SetConfigurationCommand}" CommandParameter="Debug" />
+                <MenuItem Header="Release" Command="{Binding SetConfigurationCommand}" CommandParameter="Release" />
+              </MenuFlyout>
+            </Button.Flyout>
+          </Button>
+
+          <!-- Run: the startup project, with a menu to choose another one. -->
+          <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+            <Button Theme="{StaticResource AccentButton}" Height="36" MinHeight="36" CornerRadius="8,0,0,8" Padding="12,0"
+                    ToolTip.Tip="Start (F5)" Command="{Binding RunCommand}">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="14" />
+                <TextBlock Text="{Binding RunLabel}" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+            <Button Theme="{StaticResource AccentButton}" Height="36" MinHeight="36" Width="30" MinWidth="30" Padding="0"
+                    CornerRadius="0,8,8,0" BorderBrush="#59FFFFFF" BorderThickness="1,0,0,0" ToolTip.Tip="Choose Startup Project">
+              <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="14" />
+              <Button.Flyout>
+                <MenuFlyout Placement="BottomEdgeAlignedLeft" ItemsSource="{Binding StartupProjects}">
+                  <MenuFlyout.ItemContainerTheme>
+                    <ControlTheme TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}" x:DataType="vm:StartupProjectOption">
+                      <Setter Property="Header" Value="{Binding Name}" />
+                      <Setter Property="Command" Value="{Binding Select}" />
+                    </ControlTheme>
+                  </MenuFlyout.ItemContainerTheme>
+                </MenuFlyout>
+              </Button.Flyout>
+            </Button>
+          </StackPanel>
+
+          <Button Theme="{StaticResource ToolButton}" Margin="4,0,0,0" ToolTip.Tip="Stop (Shift+F5)" Command="{Binding StopCommand}"
+                  IsVisible="{Binding IsRunning}">
+            <controls:StrokeIcon Data="{StaticResource Icon.Stop}" IsFilled="True" Size="14" Foreground="{DynamicResource Brush.Error}" />
+          </Button>
+
+          <Border Height="34" Padding="10,0" Margin="8,0,0,0" CornerRadius="7" Background="{DynamicResource Brush.Control}"
+                  BorderBrush="{DynamicResource Brush.BorderStrong}" BorderThickness="1">
+            <TextBlock VerticalAlignment="Center">
+              <Run Text="Run on " Foreground="{DynamicResource Brush.TextMuted}" />
+              <Run Text="{Binding RunHostText}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" />
+            </TextBlock>
+          </Border>
+
+          <Border Classes="toolbarSeparator" />
+          <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Toggle Line Comment (Ctrl+/)" Command="{Binding ToggleCommentCommand}">
+            <controls:StrokeIcon Data="{StaticResource Icon.Comment}" />
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Format Document (Shift+Alt+F)" Command="{Binding FormatDocumentCommand}">
+            <controls:StrokeIcon Data="{StaticResource Icon.Format}" />
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Find (Ctrl+F)" Command="{Binding FindCommand}">
+            <controls:StrokeIcon Data="{StaticResource Icon.Search}" />
+          </Button>
+        </StackPanel>
+
+        <!-- Problems at a glance -->
+        <Button DockPanel.Dock="Right" Theme="{StaticResource ToolButton}" VerticalAlignment="Center"
+                Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}">
+          <StackPanel Orientation="Horizontal" Spacing="12">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+              <controls:StrokeIcon Data="{StaticResource Icon.Error}" Size="15" Foreground="{DynamicResource Brush.Error}" />
+              <TextBlock Text="{Binding ErrorList.ErrorCount}" VerticalAlignment="Center" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="5">
+              <controls:StrokeIcon Data="{StaticResource Icon.Warning}" Size="15" Foreground="{DynamicResource Brush.Warning}" />
+              <TextBlock Text="{Binding ErrorList.WarningCount}" VerticalAlignment="Center" />
+            </StackPanel>
+          </StackPanel>
+        </Button>
+      </DockPanel>
+    </Border>
+
+    <!-- Main area: documents and bottom dock on the left, Solution Explorer and Properties on the right. -->
+    <Grid Grid.Row="2" x:Name="MainArea" ColumnDefinitions="*,Auto,330">
+      <Grid x:Name="EditorArea" RowDefinitions="38,30,*,Auto,200">
+
+        <!-- Document tabs -->
+        <Border Grid.Row="0" Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+          <ListBox ItemsSource="{Binding Documents}" SelectedItem="{Binding ActiveDocument}"
+                   ItemContainerTheme="{StaticResource DocumentTab}"
+                   ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+            <ListBox.ItemsPanel>
+              <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal" />
+              </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+              <DataTemplate DataType="vm:DocumentViewModel">
+                <StackPanel Orientation="Horizontal" Spacing="8" Height="36">
+                  <Border Classes="badge" Background="{Binding FileType.BadgeKind, Converter={x:Static conv:AppConverters.BadgeBackground}}">
+                    <TextBlock Text="{Binding FileType.Badge}" Foreground="{Binding FileType.BadgeKind, Converter={x:Static conv:AppConverters.BadgeForeground}}" />
+                  </Border>
+                  <TextBlock Text="{Binding Title}" VerticalAlignment="Center" />
+                  <Button Theme="{StaticResource ToolButton}" Width="26" Height="26" MinWidth="26" MinHeight="26" Padding="0" CornerRadius="5"
+                          ToolTip.Tip="Close (Ctrl+F4)"
+                          Command="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).CloseDocumentCommand}"
+                          CommandParameter="{Binding}">
+                    <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="12" Foreground="{DynamicResource Brush.TextMuted}" />
+                  </Button>
+                </StackPanel>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </Border>
+
+        <!-- Breadcrumb -->
+        <Border Grid.Row="1" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="12,0">
+          <ItemsControl ItemsSource="{Binding Breadcrumb}" VerticalAlignment="Center">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal" Spacing="6" />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate DataType="sys:String">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <TextBlock Text="{Binding}" Classes="muted" FontSize="12.5" VerticalAlignment="Center" />
+                  <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="12" Foreground="{DynamicResource Brush.TextDisabled}" />
+                </StackPanel>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </Border>
+
+        <!-- Editors -->
+        <Panel Grid.Row="2">
+          <controls:DocumentHost x:Name="Editors" Documents="{Binding Documents}" ActiveDocument="{Binding ActiveDocument}" />
+
+          <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10" IsVisible="{Binding !HasDocuments}">
+            <controls:StrokeIcon Data="{StaticResource Icon.File}" Size="40" Foreground="{DynamicResource Brush.TextDisabled}" HorizontalAlignment="Center" />
+            <TextBlock Classes="muted" Text="Open a file from the Solution Explorer" HorizontalAlignment="Center" />
+          </StackPanel>
+
+          <!-- Touch actions -->
+          <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="16,12" Padding="4" CornerRadius="14"
+                  Background="{DynamicResource Brush.Hover}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
+                  BoxShadow="0 8 24 0 #59000000" IsVisible="{Binding HasDocuments}">
+            <StackPanel Orientation="Horizontal" Spacing="2">
+              <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding ToggleCommentCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="7">
+                  <controls:StrokeIcon Data="{StaticResource Icon.Comment}" Size="16" />
+                  <TextBlock Text="Comment" VerticalAlignment="Center" FontSize="12.5" />
+                </StackPanel>
+              </Button>
+              <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding FormatDocumentCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="7">
+                  <controls:StrokeIcon Data="{StaticResource Icon.Format}" Size="16" />
+                  <TextBlock Text="Format" VerticalAlignment="Center" FontSize="12.5" />
+                </StackPanel>
+              </Button>
+              <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding FindCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="7">
+                  <controls:StrokeIcon Data="{StaticResource Icon.Search}" Size="16" />
+                  <TextBlock Text="Find" VerticalAlignment="Center" FontSize="12.5" />
+                </StackPanel>
+              </Button>
+              <Button Theme="{StaticResource ToolButton}" Height="44" CornerRadius="10" Padding="12,0" Command="{Binding RunCommand}"
+                      Background="{DynamicResource Brush.Pressed}" Foreground="{DynamicResource Brush.OnAccent}">
+                <StackPanel Orientation="Horizontal" Spacing="7">
+                  <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="14" />
+                  <TextBlock Text="Run" VerticalAlignment="Center" FontSize="12.5" />
+                </StackPanel>
+              </Button>
+            </StackPanel>
+          </Border>
+        </Panel>
+
+        <GridSplitter Grid.Row="3" x:Name="BottomSplitter" Height="6" ResizeDirection="Rows" Background="Transparent">
+          <GridSplitter.Template>
+            <ControlTemplate>
+              <Border Background="Transparent">
+                <Border Height="1" VerticalAlignment="Center" Background="{DynamicResource Brush.Divider}" />
+              </Border>
+            </ControlTemplate>
+          </GridSplitter.Template>
+        </GridSplitter>
+
+        <!-- Bottom dock -->
+        <Border Grid.Row="4" x:Name="BottomDock" Background="{DynamicResource Brush.Toolbar}">
+          <DockPanel>
+            <Grid DockPanel.Dock="Top" Height="34" ColumnDefinitions="*,Auto" Margin="6,0">
+              <StackPanel Orientation="Horizontal">
+                <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsErrorListSelected}"
+                        Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" Content="Error List" />
+                <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsOutputSelected}"
+                        Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Output}" Content="Output" />
+                <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsCompatibilitySelected}"
+                        Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Compatibility}" Content="Compatibility Doctor" />
+              </StackPanel>
+              <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <Button Theme="{StaticResource ToolButton}" MinHeight="30" Height="30" FontSize="12.5" Content="Clear"
+                        Command="{Binding Output.ClearCommand}" IsVisible="{Binding IsOutputSelected}" />
+                <Button Theme="{StaticResource ToolButton}" Width="30" Height="30" MinWidth="30" MinHeight="30" Padding="0"
+                        ToolTip.Tip="Hide" Command="{Binding ToggleBottomPanelCommand}">
+                  <controls:StrokeIcon Data="{StaticResource Icon.ChevronDown}" Size="14" />
+                </Button>
+              </StackPanel>
+            </Grid>
+            <Panel>
+              <views:ErrorListView DataContext="{Binding ErrorList}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsErrorListSelected}" />
+              <views:OutputView DataContext="{Binding Output}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsOutputSelected}" />
+              <views:CompatibilityView IsVisible="{Binding IsCompatibilitySelected}" />
+            </Panel>
+          </DockPanel>
+        </Border>
+      </Grid>
+
+      <GridSplitter Grid.Column="1" x:Name="SideSplitter" Width="6" ResizeDirection="Columns" Background="Transparent">
+        <GridSplitter.Template>
+          <ControlTemplate>
+            <Border Background="Transparent">
+              <Border Width="1" HorizontalAlignment="Center" Background="{DynamicResource Brush.Border}" />
+            </Border>
+          </ControlTemplate>
+        </GridSplitter.Template>
+      </GridSplitter>
+
+      <!-- Solution Explorer and Properties -->
+      <Grid Grid.Column="2" x:Name="SideBar" RowDefinitions="*,Auto,214" Background="{DynamicResource Brush.Panel}">
+        <views:SolutionExplorerView DataContext="{Binding Explorer}" />
+        <GridSplitter Grid.Row="1" Height="6" ResizeDirection="Rows" Background="Transparent">
+          <GridSplitter.Template>
+            <ControlTemplate>
+              <Border Background="Transparent">
+                <Border Height="1" VerticalAlignment="Center" Background="{DynamicResource Brush.Divider}" />
+              </Border>
+            </ControlTemplate>
+          </GridSplitter.Template>
+        </GridSplitter>
+        <views:PropertiesView Grid.Row="2" DataContext="{Binding Properties}" />
+      </Grid>
+    </Grid>
+
+    <!-- Status bar -->
+    <Border Grid.Row="3" Background="{DynamicResource Brush.Accent}">
+      <Grid ColumnDefinitions="Auto,*,Auto" Margin="12,0">
+        <StackPanel Orientation="Horizontal" Spacing="18" TextElement.Foreground="{DynamicResource Brush.OnAccent}" TextElement.FontSize="12">
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <controls:StrokeIcon Size="13" Data="{Binding State, Converter={x:Static conv:AppConverters.StateIcon}}" />
+            <TextBlock Text="{Binding StatusText}" VerticalAlignment="Center" />
+          </StackPanel>
+          <TextBlock Text="{Binding LanguageServiceText}" VerticalAlignment="Center" />
+          <StackPanel Orientation="Horizontal" Spacing="5">
+            <controls:StrokeIcon Size="13" Data="{StaticResource Icon.Thermometer}" />
+            <TextBlock Text="{Binding ThermalText}" VerticalAlignment="Center" />
+          </StackPanel>
+          <TextBlock Text="{Binding DeviceText}" VerticalAlignment="Center"
+                     IsVisible="{Binding DeviceText, Converter={x:Static ObjectConverters.IsNotNull}}" />
+        </StackPanel>
+
+        <TextBlock Grid.Column="1" Margin="18,0" Foreground="{DynamicResource Brush.OnAccent}" FontSize="12" Opacity="0.9"
+                   Text="{Binding ActiveDocument.CaretMessage, FallbackValue={x:Null}}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+
+        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="18" TextElement.Foreground="{DynamicResource Brush.OnAccent}" TextElement.FontSize="12"
+                    IsVisible="{Binding HasDocuments}">
+          <TextBlock Text="{Binding CaretText}" VerticalAlignment="Center" />
+          <TextBlock Text="Spaces: 4" VerticalAlignment="Center" />
+          <TextBlock Text="{Binding ActiveDocument.EncodingLabel, FallbackValue={x:Null}}" VerticalAlignment="Center" />
+          <TextBlock Text="{Binding ActiveDocument.NewlineLabel, FallbackValue={x:Null}}" VerticalAlignment="Center" />
+          <TextBlock Text="{Binding ActiveDocument.FileType.DisplayName, FallbackValue={x:Null}}" VerticalAlignment="Center" />
+        </StackPanel>
+      </Grid>
+    </Border>
+  </Grid>
+</UserControl>
