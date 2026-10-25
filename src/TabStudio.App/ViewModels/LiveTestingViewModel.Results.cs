@@ -36,7 +36,10 @@ public sealed partial class LiveTestingViewModel
             document.ShowLiveTestCoverage(engine.Index.GetFile(document.FilePath));
         }
 
-        var included = engine.Index.Tests.Where(t => Inclusion.IsIncluded(t.Key.ProjectFilePath, t.Test)).ToList();
+        var projects = _host.TestProjects.Select(p => p.FilePath).ToHashSet(StringComparer.Ordinal);
+        var included = engine.Index.Tests
+            .Where(t => projects.Contains(t.Key.ProjectFilePath) && Inclusion.IsIncluded(t.Key.ProjectFilePath, t.Test))
+            .ToList();
         PassedCount = included.Count(t => t.Result?.Outcome == TestOutcome.Passed);
         FailedCount = included.Count(t => t.Result?.Outcome is TestOutcome.Failed or TestOutcome.Errored);
     }
