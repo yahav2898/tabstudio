@@ -12,11 +12,22 @@ namespace TabStudio.App.Views;
 /// </summary>
 public sealed partial class CodeEditorView
 {
-    private void InitializeWordSelection() =>
-        _editor.TextArea.AddHandler(PointerPressedEvent, OnWordSelectionPointerPressed, RoutingStrategies.Bubble, handledEventsToo: true);
+    // The language's word under a double-click, selected when the pointer is released.
+    private (int Start, int End)? _pendingWordSelection;
 
-    private void DisposeWordSelection() =>
-        _editor.TextArea.RemoveHandler(PointerPressedEvent, OnWordSelectionPointerPressed);
+    private void InitializeWordSelection()
+    {
+        var textArea = _editor.TextArea;
+        textArea.AddHandler(PointerPressedEvent, OnWordSelectionPointerPressed, RoutingStrategies.Tunnel, handledEventsToo: true);
+        textArea.AddHandler(PointerReleasedEvent, OnWordSelectionPointerReleased, RoutingStrategies.Bubble, handledEventsToo: true);
+    }
+
+    private void DisposeWordSelection()
+    {
+        var textArea = _editor.TextArea;
+        textArea.RemoveHandler(PointerPressedEvent, OnWordSelectionPointerPressed);
+        textArea.RemoveHandler(PointerReleasedEvent, OnWordSelectionPointerReleased);
+    }
 
     /// <summary>
     /// The word at an offset by the language's word pattern: the word the offset is in or at the end of. Returns
@@ -33,46 +44,88 @@ public sealed partial class CodeEditorView
 
         var line = document.GetLineByOffset(offset);
         var column = offset - line.Offset;
-        var text = document.GetText(line.Offset, line.Length);
-        try
+        (int Start, int End)? atEnd = null;
+        foreach (var (start, end) in Words(pattern, document.GetText(line.Offset, line.Length)))
         {
-            (int Start, int End)? atEnd = null;
-            for (var match = pattern.Match(text); match.Success && match.Index <= column; match = match.NextMatch())
+            if (start > column)
             {
-                var end = match.Index + match.Length;
-                if (match.Length == 0 || end < column)
-                {
-                    continue;
-                }
-
-                // Inside a word, or at the end of one when the next does not start here.
-                if (end > column)
-                {
-                    return (line.Offset + match.Index, line.Offset + end);
-                }
-
-                atEnd = (line.Offset + match.Index, line.Offset + end);
+                break;
             }
 
-            return atEnd;
+            // Inside a word, or at the end of one when the next does not start here.
+            if (end > column)
+            {
+                return (line.Offset + start, line.Offset + end);
+            }
+
+            if (end == column)
+            {
+                atEnd = (line.Offset + start, line.Offset + end);
+            }
+        }
+
+        return atEnd;
+    }
+
+    /// <summary>The words of a line by a word pattern, in order; none when the pattern takes too long.</summary>
+    private static List<(int Start, int End)> Words(Regex pattern, string line)
+    {
+        var words = new List<(int Start, int End)>();
+        try
+        {
+            for (var match = pattern.Match(line); match.Success; match = match.NextMatch())
+            {
+                if (match.Length > 0)
+                {
+                    words.Add((match.Index, match.Index + match.Length));
+                }
+            }
         }
         catch (RegexMatchTimeoutException)
         {
-            return null;
+            words.Clear();
         }
+
+        return words;
     }
 
     private void OnWordSelectionPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        // The editor has selected its own idea of the word by now; the language's replaces it.
-        var textArea = _editor.TextArea;
-        if (e.ClickCount != 2 || _rules?.WordPattern is null || !e.GetCurrentPoint(textArea).Properties.IsLeftButtonPressed
-            || _editor.GetPositionFromPoint(e.GetPosition(_editor)) is not { } position)
+        _pendingWordSelection = null;
+        if (e.ClickCount == 2 && _rules?.WordPattern is not null && e.GetCurrentPoint(_editor.TextArea).Properties.IsLeftButtonPressed
+            && _editor.GetPositionFromPoint(e.GetPosition(_editor)) is { } position)
+        {
+            _pendingWordSelection = WordAt(_editor.Document.GetOffset(position.Location));
+        }
+    }
+
+    private void OnWordSelectionPointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        if (_pendingWordSelection is not { } word)
         {
             return;
         }
 
-        if (WordAt(_editor.Document.GetOffset(position.Location)) is { } word)
+        // The editor selected its own idea of the word on the double-click. Unless dragging took the selection on to
+        // more words, the language's word replaces it.
+        _pendingWordSelection = null;
+        var textArea = _editor.TextArea;
+        var document = _editor.Document;
+        if (textArea.Selection.IsEmpty || textArea.Selection.SurroundingSegment is not { } selected || _rules?.WordPattern is not { } pattern)
+        {
+            return;
+        }
+
+        var line = document.GetLineByOffset(word.Start);
+        if (selected.EndOffset > line.EndOffset || selected.Offset < line.Offset)
+        {
+            return;
+        }
+
+        var start = selected.Offset - line.Offset;
+        var end = selected.EndOffset - line.Offset;
+        var touched = Words(pattern, document.GetText(line.Offset, line.Length)).Where(w => w.Start < end && w.End > start).ToList();
+        if (touched is [var only] && only == (word.Start - line.Offset, word.End - line.Offset))
         {
             textArea.Selection = Selection.Create(textArea, word.Start, word.End);
             textArea.Caret.Offset = word.End;
