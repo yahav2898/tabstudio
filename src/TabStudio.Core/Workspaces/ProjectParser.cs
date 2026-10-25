@@ -26,6 +26,9 @@ namespace TabStudio.Core.Workspaces;
 /// </remarks>
 public static partial class ProjectParser
 {
+    /// <summary>The shared framework of ASP.NET Core.</summary>
+    public const string AspNetCoreFramework = "Microsoft.AspNetCore.App";
+
     private const int MaxPropertyExpansionDepth = 8;
 
     /// <summary>File extensions TabStudio treats as project files.</summary>
@@ -103,6 +106,7 @@ public static partial class ProjectParser
             Properties = properties,
             PackageReferences = packages,
             ProjectReferences = projectReferences,
+            FrameworkReferences = ReadFrameworkReferences(root, sdk),
             CompileIncludes = ReadItemPatterns(root, "Compile", "Include"),
             CompileRemoves = ReadItemPatterns(root, "Compile", "Remove"),
         };
@@ -281,6 +285,22 @@ public static partial class ProjectParser
                 p.Element.Elements().FirstOrDefault(c => c.Name.LocalName == "Version")?.Value))
             .DistinctBy(p => p.Name, StringComparer.OrdinalIgnoreCase)
             .ToList();
+
+    /// <summary>
+    /// The shared frameworks a project uses: <c>FrameworkReference</c> items, plus ASP.NET Core for projects on the
+    /// Web SDK, which adds it implicitly.
+    /// </summary>
+    private static List<string> ReadFrameworkReferences(XElement root, string? sdk)
+    {
+        var frameworks = ReadItemPatterns(root, "FrameworkReference", "Include");
+        if (string.Equals(sdk, "Microsoft.NET.Sdk.Web", StringComparison.OrdinalIgnoreCase)
+            && !frameworks.Contains(AspNetCoreFramework, StringComparer.OrdinalIgnoreCase))
+        {
+            frameworks.Insert(0, AspNetCoreFramework);
+        }
+
+        return frameworks;
+    }
 
     private static List<string> ReadProjectReferences(XElement root, string projectDirectory) =>
         root.Descendants()
