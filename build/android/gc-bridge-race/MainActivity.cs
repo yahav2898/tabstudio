@@ -15,19 +15,17 @@ namespace GcBridgeRace;
 /// <list type="number">
 /// <item>A large, live object graph: about a million small objects, dictionaries whose entry arrays are large
 /// objects (over 8,000 bytes) and arrays over 1 MB, which Mono maps one by one.</item>
-/// <item>A Java peer that is dead on the managed side, waiting on the Java side, whose managed fields reach the
-/// graph. <see cref="Handler.PostDelayed(Action, long)"/> makes one per call: a <c>Java.Lang.Thread.RunnableImplementor</c>
-/// that only a ConditionalWeakTable keyed on its own Action holds, which Avalonia's Android dispatcher does for
-/// every signal. In a minor collection every old object counts as dead to the bridge, so its pass walks the whole
-/// graph and tags each object's header for hundreds of milliseconds.</item>
+/// <item>Java peers that are dead on the managed side and waiting on the Java side, whose managed fields reach the
+/// graph: a <see cref="Touch"/> runnable posted with a delay, about fifty waiting at any time, so every minor
+/// collection finds young ones. If the bridge's pass walks old objects in a minor collection, it walks the whole
+/// graph from them and tags each object's header for hundreds of milliseconds.</item>
 /// <item>Threads that allocate, so that minor collections come often and concurrent major marks run beside them,
 /// and that store young objects and new large entry arrays into old objects.</item>
 /// </list>
 /// <para>
 /// Within minutes the app aborts with "How can an object and a reference inside it not be in the same block?", a
-/// failed assertion on <c>free_chunk_map</c> in sgen-los.c, or SIGSEGV on the SGen worker thread; with
-/// <c>MONO_GC_DEBUG=mod-union-consistency-check</c> it aborts sooner with "major-&gt;major reference ... not found in
-/// remsets". It logs GCBRIDGERACE_ALIVE every 10 s while it runs.
+/// failed assertion on <c>free_chunk_map</c> in sgen-los.c, or SIGSEGV on the SGen worker thread. It logs
+/// GCBRIDGERACE_ALIVE every 10 s while it runs.
 /// </para>
 /// </remarks>
 [Activity(Label = "GcBridgeRace", MainLauncher = true, Name = "com.example.gcbridgerace.MainActivity")]
@@ -48,9 +46,6 @@ public sealed class MainActivity : Activity
         {
             while (true)
             {
-                // The closure captures graph, so a waiting RunnableImplementor reaches all of it. Run() disposes the
-                // implementor, so it is a dead bridge object only while it waits: delayed, about fifty wait at any
-                // time, and every minor collection finds some.
                 Post(main, graph);
                 Thread.Sleep(2);
             }
@@ -76,11 +71,20 @@ public sealed class MainActivity : Activity
     private static void Start(Action body) => new Thread(() => body()) { IsBackground = true }.Start();
 
     /// <summary>
-    /// Posts a new closure, from a frame of its own so that no stale slot of the posting loop keeps the closure alive:
-    /// Mono scans thread stacks conservatively, and a live closure would end the bridge's walk at it.
+    /// Posts a new <see cref="Touch"/>, from a frame of its own so that no stale slot of the posting loop keeps it
+    /// alive: Mono scans thread stacks conservatively, and a live peer is not a dead bridge object.
     /// </summary>
     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
-    private static void Post(Handler main, Graph graph) => main.PostDelayed(() => graph.Touch(), 100);
+    private static void Post(Handler main, Graph graph) => main.PostDelayed(new Touch(graph), 100);
+}
+
+/// <summary>
+/// A Java runnable implemented in C#. Once posted, only the Java side holds it, so to Mono's collector it is a dead
+/// bridge object whose field reaches the graph.
+/// </summary>
+internal sealed class Touch(Graph graph) : Java.Lang.Object, Java.Lang.IRunnable
+{
+    public void Run() => graph.Touch();
 }
 
 /// <summary>A small object of the graph.</summary>

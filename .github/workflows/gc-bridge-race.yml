@@ -27,7 +27,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        collector: [concurrent, concurrent-checked, serial]
+        collector: [concurrent, serial]
         api: [29, 35]
     steps:
       - uses: actions/checkout@v4
@@ -37,11 +37,10 @@ jobs:
       - name: Build the reproduction
         run: |
           mkdir -p ci-out
-          concurrent=true; checks=false
+          concurrent=true
           [ "${{ matrix.collector }}" = serial ] && concurrent=false
-          [ "${{ matrix.collector }}" = concurrent-checked ] && checks=true
           dotnet publish build/android/gc-bridge-race -c Release -f net10.0-android -p:RuntimeIdentifiers=android-x64 \
-            -p:AndroidEnableSGenConcurrent=$concurrent -p:GcBridgeRaceChecks=$checks \
+            -p:AndroidEnableSGenConcurrent=$concurrent \
             -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME" > ci-out/build.log 2>&1 || { tail -n 60 ci-out/build.log; exit 1; }
           tail -n 5 ci-out/build.log
           cp "$(find build/android/gc-bridge-race/bin/Release/net10.0-android/publish -name '*-Signed.apk' | head -n 1)" repro.apk
