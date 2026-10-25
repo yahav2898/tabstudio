@@ -1,6 +1,7 @@
 using Android.App;
 using Android.Content;
 using Android.OS;
+using Android.Runtime;
 
 namespace TabStudio.Android;
 
@@ -12,6 +13,18 @@ namespace TabStudio.Android;
 [Instrumentation(Name = "com.tabstudio.ide.SelfTestInstrumentation", TargetPackage = "com.tabstudio.ide")]
 public sealed class SelfTestInstrumentation : Instrumentation
 {
+    /// <summary>Creates the self-test instrumentation.</summary>
+    public SelfTestInstrumentation()
+    {
+    }
+
+    /// <summary>Attaches the managed runner to the instrumentation Android created before the app starts.</summary>
+    /// <param name="handle">The native instrumentation instance.</param>
+    /// <param name="transfer">Who owns its JNI reference.</param>
+    public SelfTestInstrumentation(IntPtr handle, JniHandleOwnership transfer) : base(handle, transfer)
+    {
+    }
+
     /// <inheritdoc />
     public override void OnCreate(Bundle? arguments)
     {
