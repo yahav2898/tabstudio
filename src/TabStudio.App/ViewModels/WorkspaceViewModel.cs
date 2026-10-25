@@ -116,6 +116,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         UpdateThermal();
         GitChanges = CreateGitChanges(gitHubAccount, browser);
         InitializeDebugging();
+        InitializeTests();
     }
 
     /// <summary>Raised when the user closes the workspace to return to the start screen.</summary>
@@ -332,6 +333,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         _background = null;
         _run?.Cancel();
         DisposeDebugging();
+        DisposeTests();
         _device.ThermalChanged -= OnThermalChanged;
         _device.MemoryPressureRaised -= OnMemoryPressure;
         _compiler.Warmed -= OnCompilerWarmed;

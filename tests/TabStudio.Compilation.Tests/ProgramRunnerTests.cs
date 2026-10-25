@@ -105,11 +105,19 @@ public sealed class ProgramRunnerTests
     [Fact]
     public async Task Restores_the_console_after_a_run()
     {
-        var originalOut = Console.Out;
+        // Other tests redirect the console too, so look at it only while holding the console.
+        TextWriter originalOut;
+        using (await ProcessConsole.AcquireAsync())
+        {
+            originalOut = Console.Out;
+        }
 
         await RunAsync("Console.WriteLine(1);", new CapturingConsole());
 
-        Assert.Same(originalOut, Console.Out);
+        using (await ProcessConsole.AcquireAsync())
+        {
+            Assert.Same(originalOut, Console.Out);
+        }
     }
 
     [Fact]

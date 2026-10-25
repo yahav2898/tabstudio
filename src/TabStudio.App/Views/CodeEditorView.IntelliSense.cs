@@ -16,8 +16,9 @@ namespace TabStudio.App.Views;
 
 /// <summary>
 /// IntelliSense in the editor: the shared plumbing for the completion list, Parameter Info, Quick Info, the light
-/// bulb and the context menu (each in its own <c>CodeEditorView.*.cs</c> file), keyboard shortcuts and chords, and
-/// the work that follows the caret: reference highlights, the breadcrumb and the light bulb.
+/// bulb and the context menu (each in its own <c>CodeEditorView.*.cs</c> file), keyboard shortcuts, and the work
+/// that follows the caret: reference highlights, the breadcrumb and the light bulb. Two-key chords such as
+/// Ctrl+R, Ctrl+R belong to the shell's chord map (<c>WorkspaceView.Chords.cs</c>).
 /// </summary>
 public sealed partial class CodeEditorView
 {
@@ -28,8 +29,6 @@ public sealed partial class CodeEditorView
     private Panel? _popupHost;
     private ReferenceHighlightRenderer? _highlights;
     private CancellationTokenSource? _caretIdle;
-    private KeyGesture? _chord;
-    private string? _statusBeforeChord;
 
     /// <summary>The highlights of the symbol under the caret, for tests.</summary>
     public ReferenceHighlightRenderer? ReferenceHighlights => _highlights;
@@ -122,64 +121,9 @@ public sealed partial class CodeEditorView
 
     private void OnIntelliSenseKeyDown(object? sender, KeyEventArgs e)
     {
-        if (HandleChord(e) || HandleCompletionKey(e) || HandleSignatureHelpKey(e) || HandleIntelliSenseShortcut(e))
+        if (HandleCompletionKey(e) || HandleSignatureHelpKey(e) || HandleIntelliSenseShortcut(e))
         {
             e.Handled = true;
-        }
-    }
-
-    /// <summary>
-    /// Visual Studio's two-key shortcuts: Ctrl+R, Ctrl+R renames; Ctrl+K, Ctrl+I shows Quick Info; Ctrl+K, Ctrl+P
-    /// Parameter Info; Ctrl+K, Ctrl+L lists members; Ctrl+K, Ctrl+W completes the word. As in Visual Studio, the status
-    /// bar says when it waits for the second key, and the second key is the Ctrl key's letter with or without Ctrl.
-    /// </summary>
-    private bool HandleChord(KeyEventArgs e)
-    {
-        if (_features is null || IsModifierKey(e.Key))
-        {
-            return false;
-        }
-
-        if (_chord is { } first)
-        {
-            _chord = null;
-            Action? command = (first.Key, e.Key) switch
-            {
-                (Key.R, Key.R) => () => _ = Workspace?.RenameSymbolCommand.ExecuteAsync(null),
-                (Key.K, Key.I) => () => _ = ShowQuickInfoAtCaretAsync(),
-                (Key.K, Key.P) => () => _ = RequestSignatureHelpAsync(),
-                (Key.K, Key.L) => () => _ = OpenCompletionAsync(completeWord: false),
-                (Key.K, Key.W) => () => _ = OpenCompletionAsync(completeWord: true),
-                _ => null,
-            };
-            if (e.KeyModifiers is not (KeyModifiers.Control or KeyModifiers.None))
-            {
-                command = null;
-            }
-
-            var second = new KeyGesture(e.Key, e.KeyModifiers);
-            Workspace?.ShowStatus(command is null ? $"The key combination ({first}, {second}) is not a command." : _statusBeforeChord ?? string.Empty);
-            command?.Invoke();
-            return true;
-        }
-
-        if (e.KeyModifiers == KeyModifiers.Control && e.Key is Key.R or Key.K)
-        {
-            _chord = new KeyGesture(e.Key, e.KeyModifiers);
-            _statusBeforeChord = Workspace?.StatusText;
-            Workspace?.ShowStatus($"({_chord}) was pressed. Waiting for second key of chord...");
-            return true;
-        }
-
-        return false;
-    }
-
-    private void CancelChord()
-    {
-        if (_chord is not null)
-        {
-            _chord = null;
-            Workspace?.ShowStatus(_statusBeforeChord ?? string.Empty);
         }
     }
 
@@ -248,7 +192,6 @@ public sealed partial class CodeEditorView
 
     private void OnIntelliSenseLostFocus(object? sender, RoutedEventArgs e)
     {
-        CancelChord();
         // A tap on a popup never takes focus; focus moving elsewhere, such as to a panel or a dialog, ends the session.
         if (!_editor.TextArea.IsKeyboardFocusWithin && (_completion?.IsCommitting != true))
         {
@@ -260,7 +203,6 @@ public sealed partial class CodeEditorView
     /// <summary>Ctrl+click goes to the definition of the symbol under the pointer.</summary>
     private void OnIntelliSensePointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        CancelChord();
         if (e.KeyModifiers != KeyModifiers.Control
             || !e.GetCurrentPoint(_editor.TextArea).Properties.IsLeftButtonPressed
             || OffsetAt(e.GetPosition(TextView)) is not { } offset)

@@ -78,6 +78,7 @@
           <MenuItem Header="_View">
             <MenuItem Header="_Solution Explorer" InputGesture="Ctrl+Alt+L" Command="{Binding ToggleSideBarCommand}" />
             <MenuItem Header="_Git Changes" Command="{Binding ShowGitChangesCommand}" />
+            <MenuItem Header="_Test Explorer (Ctrl+E, T)" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}" />
             <MenuItem Header="_Error List" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" />
             <MenuItem Header="_Output" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Output}" />
             <MenuItem Header="_Compatibility Doctor" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Compatibility}" />
@@ -138,6 +139,15 @@
             <MenuItem Header="Toggle _Breakpoint" InputGesture="F9" Command="{Binding ToggleBreakpointCommand}" />
             <MenuItem Header="_Delete All Breakpoints" InputGesture="Ctrl+Shift+F9" Command="{Binding DeleteAllBreakpointsCommand}" />
             <MenuItem Header="Break on Unhandled E_xceptions" ToggleType="CheckBox" IsChecked="{Binding BreakOnUnhandledExceptions, Mode=TwoWay}" />
+          </MenuItem>
+          <MenuItem Header="_Test">
+            <MenuItem Header="Run _All Tests (Ctrl+R, A)" Command="{Binding Tests.RunAllCommand}" />
+            <MenuItem Header="Run _Failed Tests (Ctrl+R, F)" Command="{Binding Tests.RunFailedCommand}" />
+            <MenuItem Header="Run Tests in _Context (Ctrl+R, T)" Command="{Binding RunTestsInContextCommand}" />
+            <MenuItem Header="_Repeat Last Run (Ctrl+R, L)" Command="{Binding Tests.RepeatLastRunCommand}" />
+            <MenuItem Header="_Cancel Test Run" Command="{Binding Tests.CancelCommand}" />
+            <Separator />
+            <MenuItem Header="Test E_xplorer (Ctrl+E, T)" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}" />
           </MenuItem>
           <MenuItem Header="_Window">
             <MenuItem Header="_Next Document" InputGesture="Ctrl+Tab" Command="{Binding NextDocumentCommand}" />
@@ -498,7 +508,7 @@
         </GridSplitter.Template>
       </GridSplitter>
 
-      <!-- Solution Explorer and Properties, or Git Changes; tool window tabs at the bottom as in Visual Studio -->
+      <!-- Solution Explorer and Properties, Git Changes or the Test Explorer, chosen with the tool window tabs at the bottom as in Visual Studio -->
       <Grid Grid.Column="2" x:Name="SideBar" RowDefinitions="*,Auto,214,Auto" Background="{DynamicResource Brush.Panel}">
         <views:SolutionExplorerView DataContext="{Binding Explorer}" />
         <GridSplitter Grid.Row="1" Height="6" ResizeDirection="Rows" Background="Transparent">
@@ -513,13 +523,31 @@
         <views:PropertiesView Grid.Row="2" DataContext="{Binding Properties}" />
         <views:GitChangesView Grid.Row="0" Grid.RowSpan="3" DataContext="{Binding GitChanges}"
                               IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsGitChangesSelected}" />
+
+        <!-- The Test Explorer covers the Solution Explorer and Properties while its tab is selected. -->
+        <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsTestExplorerSelected}">
+          <views:TestExplorerView x:Name="TestExplorer" DataContext="{Binding Tests}" />
+        </Panel>
+
+        <!-- Tool window tabs, at the bottom of the dock as in Visual Studio; they scroll when the side bar is narrow. -->
         <Border Grid.Row="3" Height="34" Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0">
-          <StackPanel Orientation="Horizontal" Margin="6,0">
-            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsSolutionExplorerSelected}" Content="Solution Explorer"
-                    Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.SolutionExplorer}" />
-            <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsGitChangesSelected}" Content="Git Changes"
-                    Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.GitChanges}" />
-          </StackPanel>
+          <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
+            <StackPanel Orientation="Horizontal" Margin="4,0">
+              <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsSolutionExplorerSelected}"
+                      Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.SolutionExplorer}" Content="Solution Explorer" />
+              <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsGitChangesSelected}" Content="Git Changes"
+                      Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.GitChanges}" />
+              <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsTestExplorerSelected}"
+                      Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <TextBlock Text="Test Explorer" VerticalAlignment="Center" />
+                  <Border Classes="pill" Background="{DynamicResource Brush.Error}" IsVisible="{Binding Tests.HasFailures}">
+                    <TextBlock Text="{Binding Tests.FailedCount}" Foreground="{DynamicResource Brush.Window}" VerticalAlignment="Center" />
+                  </Border>
+                </StackPanel>
+              </Button>
+            </StackPanel>
+          </ScrollViewer>
         </Border>
       </Grid>
     </Grid>

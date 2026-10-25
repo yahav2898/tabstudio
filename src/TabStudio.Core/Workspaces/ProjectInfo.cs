@@ -8,6 +8,15 @@ namespace TabStudio.Core.Workspaces;
 public sealed record PackageReferenceInfo(string Name, string? Version);
 
 /// <summary>
+/// A namespace imported into every file of a project by a <c>&lt;Using Include="..." /&gt;</c> item, as the xUnit,
+/// NUnit and MSTest project templates do for their framework.
+/// </summary>
+/// <param name="Name">The namespace, or the type of a static using.</param>
+/// <param name="Alias">The alias, from the item's <c>Alias</c> metadata, or <see langword="null"/>.</param>
+/// <param name="IsStatic">Whether the item's <c>Static</c> metadata makes it a <c>using static</c>.</param>
+public sealed record UsingInfo(string Name, string? Alias = null, bool IsStatic = false);
+
+/// <summary>
 /// Everything TabStudio knows about one project file, read straight from the file without running MSBuild.
 /// </summary>
 /// <remarks>
@@ -44,6 +53,12 @@ public sealed record ProjectInfo
 
     /// <summary>Absolute paths of the projects this project references.</summary>
     public IReadOnlyList<string> ProjectReferences { get; init; } = [];
+
+    /// <summary>The global usings the project's <c>&lt;Using Include="..." /&gt;</c> items add, in order.</summary>
+    public IReadOnlyList<UsingInfo> Usings { get; init; } = [];
+
+    /// <summary>The namespaces <c>&lt;Using Remove="..." /&gt;</c> items take away from the implicit global usings.</summary>
+    public IReadOnlyList<string> RemovedUsings { get; init; } = [];
 
     /// <summary>Patterns from <c>&lt;Compile Include="..." /&gt;</c> items, relative to the project directory.</summary>
     public IReadOnlyList<string> CompileIncludes { get; init; } = [];

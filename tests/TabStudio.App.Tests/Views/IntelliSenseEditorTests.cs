@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
+using Avalonia.Threading;
 using TabStudio.App.Tests.ViewModels;
 using TabStudio.App.Views;
 using TabStudio.Compilation.Features;
@@ -266,7 +267,11 @@ public sealed class IntelliSenseEditorTests
         var window = Show(fixture);
         var view = ActiveEditor(window);
 
-        var headers = view.Editor.ContextMenu!.Items.OfType<MenuItem>().Select(i => i.Header as string).ToList();
+        var menu = view.Editor.ContextMenu!;
+        menu.Open(view.Editor);
+        Dispatcher.UIThread.RunJobs();
+        var headers = menu.Items.OfType<MenuItem>().Where(i => i.IsVisible).Select(i => i.Header as string).ToList();
+        menu.Close();
 
         Assert.Equal(
             new string?[]

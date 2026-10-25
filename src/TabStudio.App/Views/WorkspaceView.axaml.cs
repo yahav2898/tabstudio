@@ -32,6 +32,8 @@ public sealed partial class WorkspaceView : UserControl
         PromptBox.KeyDown += OnPromptKeyDown;
         QuickOpenList.AddHandler(TappedEvent, OnQuickOpenTapped, RoutingStrategies.Bubble, handledEventsToo: true);
         KeyBindings.Add(new KeyBinding { Gesture = new KeyGesture(Key.Q, KeyModifiers.Control), Command = new FocusCommand(() => QuickOpenBox.Focus()) });
+        InitializeKeyChords();
+        InitializeTestExplorer();
     }
 
     /// <inheritdoc />

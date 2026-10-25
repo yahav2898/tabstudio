@@ -1,4 +1,3 @@
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TabStudio.App.Platform;
 using TabStudio.App.Services;
@@ -6,32 +5,11 @@ using TabStudio.Core.Workspaces;
 
 namespace TabStudio.App.ViewModels;
 
-/// <summary>The tool windows that share the side bar, as tabs.</summary>
-public enum SideBarPanel
-{
-    /// <summary>The Solution Explorer, with Properties below it.</summary>
-    SolutionExplorer,
-
-    /// <summary>The Git Changes window.</summary>
-    GitChanges,
-}
-
 /// <summary>Source control in the workspace: the Git Changes window, comparison tabs and reloading files that Git rewrote.</summary>
 public sealed partial class WorkspaceViewModel : ISourceControlHost
 {
     /// <summary>The Git Changes window.</summary>
     public GitChangesViewModel GitChanges { get; }
-
-    /// <summary>The side bar's visible tool window.</summary>
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsSolutionExplorerSelected), nameof(IsGitChangesSelected))]
-    public partial SideBarPanel SelectedSideBarPanel { get; set; } = SideBarPanel.SolutionExplorer;
-
-    /// <summary>Whether the Solution Explorer is the visible side bar tab.</summary>
-    public bool IsSolutionExplorerSelected => SelectedSideBarPanel == SideBarPanel.SolutionExplorer;
-
-    /// <summary>Whether the Git Changes window is the visible side bar tab.</summary>
-    public bool IsGitChangesSelected => SelectedSideBarPanel == SideBarPanel.GitChanges;
 
     /// <inheritdoc />
     Task<bool> ISourceControlHost.SaveDocumentsAsync() => SaveAllCoreAsync();
@@ -97,13 +75,6 @@ public sealed partial class WorkspaceViewModel : ISourceControlHost
 
     /// <inheritdoc />
     void ISourceControlHost.ReportStatus(string message) => StatusText = message;
-
-    [RelayCommand]
-    private void SelectSideBarPanel(SideBarPanel panel)
-    {
-        SelectedSideBarPanel = panel;
-        IsSideBarVisible = true;
-    }
 
     /// <summary>Shows the Git Changes window, as View > Git Changes does.</summary>
     [RelayCommand]

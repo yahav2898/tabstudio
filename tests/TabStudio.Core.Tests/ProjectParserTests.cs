@@ -109,6 +109,28 @@ public sealed class ProjectParserTests
     }
 
     [Fact]
+    public void Reads_using_items_with_their_alias_and_static_metadata()
+    {
+        const string xml = """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <ItemGroup>
+                <Using Include="Xunit" />
+                <Using Include="System.Console" Static="true" />
+                <Using Include="System.Text.StringBuilder"><Alias>Builder</Alias></Using>
+                <Using Remove="System.Net.Http" />
+              </ItemGroup>
+            </Project>
+            """;
+
+        var project = ProjectParser.Parse(ProjectPath, xml);
+
+        Assert.Equal(
+            new[] { new UsingInfo("Xunit"), new UsingInfo("System.Console", IsStatic: true), new UsingInfo("System.Text.StringBuilder", Alias: "Builder") },
+            project.Usings);
+        Assert.Equal(new[] { "System.Net.Http" }, project.RemovedUsings);
+    }
+
+    [Fact]
     public void An_unconditional_property_wins_over_a_conditional_one()
     {
         const string xml = """

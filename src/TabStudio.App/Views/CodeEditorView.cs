@@ -88,6 +88,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
         _editor.TextArea.TextView.PointerHoverStopped += OnPointerHoverStopped;
         InitializeIntelliSense();
         InitializeDebugging();
+        InstallTestCommands();
     }
 
     /// <summary>The editor control, for tests and keyboard focus.</summary>
