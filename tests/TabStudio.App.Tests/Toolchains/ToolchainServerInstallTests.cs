@@ -61,6 +61,8 @@ public sealed class ToolchainServerInstallTests : IDisposable
         Assert.False(document.HasLanguageServer);
         Assert.Equal("Pyright not installed", workspace.LanguageServerText);
         Assert.Equal("Install Python", workspace.ServerInstallOffer!.ActionText);
+        Assert.Equal("Install Pyright", workspace.ServerInstallOffer.StatusBarText);
+        Assert.False(workspace.ShowsLanguageServerText);
         Assert.StartsWith("Pyright comes with Python from the Toolchain Store (about ", workspace.ServerInstallOffer.ToolTip, StringComparison.Ordinal);
 
         // A command that needs IntelliSense says why it cannot work, and offers the install over the editor.
@@ -79,6 +81,7 @@ public sealed class ToolchainServerInstallTests : IDisposable
         Assert.False(workspace.ToolchainStore.IsOpen);
         Assert.Equal("Pyright ready", workspace.LanguageServerText);
         Assert.Null(workspace.ServerInstallOffer);
+        Assert.True(workspace.ShowsLanguageServerText);
         var started = Assert.Single(_launcher.Started);
         Assert.Equal(("/usr/local/bin/pyright-langserver", "--stdio"), (started.FileName, started.Arguments[0]));
         var after = ActiveEditor(window);
@@ -104,7 +107,7 @@ public sealed class ToolchainServerInstallTests : IDisposable
         var debugging = workspace.StartDebuggingCommand.ExecuteAsync(null);
         await UiTestHelpers.WaitUntilAsync(() => workspace.Prompt.IsOpen, because: "the offer to install Python");
         Assert.Equal("Install Python?", workspace.Prompt.Title);
-        Assert.StartsWith("Debugging needs Python (debugpy), which comes with Python from the Toolchain Store. Install it now? It downloads about ", workspace.Prompt.Message, StringComparison.Ordinal);
+        Assert.StartsWith("Debugging needs debugpy, which comes with Python from the Toolchain Store. Install it now? It downloads about ", workspace.Prompt.Message, StringComparison.Ordinal);
         UiTestHelpers.SaveScreenshot(window, "toolchains-lsp-05-debug-adapter-install");
 
         workspace.Prompt.ConfirmCommand.Execute(null);

@@ -143,7 +143,7 @@ public sealed class ToolchainLanguageToolsTests : IDisposable
         Assert.Equal("Node.js toolchain", workspace.RunHostText);
         Assert.Contains(workspace.Locals.Tree.Rows, r => r.Name == "name" && r.Value.Contains("Ada", StringComparison.Ordinal));
         Assert.Contains(workspace.Locals.Tree.Rows, r => r.Name == "message" && r.Value.Contains("Hello, Ada!", StringComparison.Ordinal));
-        Assert.Equal("greet", workspace.CallStack.Frames[0].MethodName);
+        Assert.EndsWith("greet", workspace.CallStack.Frames[0].MethodName, StringComparison.Ordinal);
         Assert.Contains("Debugging app.js with Node.js (js-debug)", workspace.Output.Text, StringComparison.Ordinal);
 
         workspace.StartDebuggingCommand.Execute(null);

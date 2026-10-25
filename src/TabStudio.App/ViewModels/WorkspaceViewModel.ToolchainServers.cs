@@ -22,6 +22,9 @@ public sealed record ToolInstallOffer(string ToolName, ToolchainDefinition Toolc
     /// <summary>The offer's button, such as <c>Install Python</c>.</summary>
     public string ActionText => $"{Verb} {Toolchain.Name}";
 
+    /// <summary>The status bar's button, such as <c>Install Pyright</c>, which stands for the missing server there.</summary>
+    public string StatusBarText => IsUpdate ? $"Update {Toolchain.Name}" : $"Install {ToolName}";
+
     /// <summary>What the offer brings, for its tooltip, such as <c>Pyright comes with Python from the Toolchain Store</c>.</summary>
     public string ToolTip => $"{ToolName} comes with {Toolchain.Name} from the Toolchain Store ({DownloadText})";
 }
@@ -43,7 +46,11 @@ public sealed partial class WorkspaceViewModel
 
     /// <summary>The install that brings the active file's missing language server, for the status bar's button.</summary>
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowsLanguageServerText))]
     public partial ToolInstallOffer? ServerInstallOffer { get; private set; }
+
+    /// <summary>Whether the status bar shows <see cref="LanguageServerText"/>; an install offer takes its place.</summary>
+    public bool ShowsLanguageServerText => LanguageServerText is not null && ServerInstallOffer is null;
 
     /// <summary>The status bar's Install button: installs the toolchain that brings the active file's language server.</summary>
     [RelayCommand]
@@ -133,14 +140,15 @@ public sealed partial class WorkspaceViewModel
     /// <returns>The adapter's program once installed, or <see langword="null"/>.</returns>
     private async Task<string?> InstallMissingAdapterAsync(DebugAdapterDefinition adapter)
     {
-        if (FindToolOffer(adapter.Name, adapter.Package) is not { } offer)
+        // The adapter by its own name, such as debugpy, rather than its display name, Python (debugpy).
+        if (FindToolOffer(adapter.Package ?? adapter.Name, adapter.Package) is not { } offer)
         {
             return null;
         }
 
         var confirmed = await Prompt.ConfirmAsync(
             $"{offer.Verb} {offer.Toolchain.Name}?",
-            $"Debugging needs {adapter.Name}, which comes with {offer.Toolchain.Name} from the Toolchain Store. {offer.Verb} it now? It downloads {offer.DownloadText}.",
+            $"Debugging needs {offer.ToolName}, which comes with {offer.Toolchain.Name} from the Toolchain Store. {offer.Verb} it now? It downloads {offer.DownloadText}.",
             offer.Verb);
         return confirmed && await InstallToolAsync(offer) ? _languageServerServices.Launcher.ResolveFirst(adapter.Commands) : null;
     }
@@ -195,6 +203,7 @@ public sealed partial class WorkspaceViewModel
                 break;
             case nameof(ActiveDocument) or nameof(LanguageServerText):
                 UpdateServerInstallOffer();
+                OnPropertyChanged(nameof(ShowsLanguageServerText));
                 break;
         }
     }

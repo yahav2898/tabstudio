@@ -149,6 +149,7 @@ public sealed partial class WorkspaceViewModel
             StartupProject = _toolchainProjects[0].Info;
         }
 
+        ShowProperties(Explorer.SelectedItem?.Node);
         if (_toolchainProjects.Count > 0)
         {
             // Once the workspace is open, a toolchain project shows its entry point, as a C# one shows Program.cs.
@@ -183,6 +184,11 @@ public sealed partial class WorkspaceViewModel
         },
         OutputType = "Exe",
     };
+
+    /// <summary>Shows a Solution Explorer node in the Properties panel, counting the toolchain projects with the solution's.</summary>
+    /// <param name="node">The node, or <see langword="null"/> to clear the panel.</param>
+    private void ShowProperties(WorkspaceNode? node) =>
+        Properties.Show(node, Workspace, [.. _toolchainProjects.Select(t => t.Info)], StartupProject);
 
     private ToolchainStartupItem? FindToolchainProject(ProjectInfo project) =>
         _toolchainProjects.FirstOrDefault(t => ReferenceEquals(t.Info, project) || t.Info.FilePath == project.FilePath);
@@ -261,6 +267,7 @@ public sealed partial class WorkspaceViewModel
                 break;
             case nameof(StartupProject):
                 UpdateToolchainNotice();
+                ShowProperties(Explorer.SelectedItem?.Node);
                 break;
             case nameof(ActiveDocument) or nameof(State):
                 if (e.PropertyName == nameof(State) && _openToolchainEntry && State == IdeState.Ready)

@@ -123,7 +123,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         Explorer = new SolutionExplorerViewModel(this);
         Output = new OutputViewModel(ui, profile.OutputCharacterLimit);
         Explorer.OpenFileRequested += async (_, path) => await OpenDocumentAsync(path);
-        Explorer.SelectionChanged += (_, node) => Properties.Show(node, Workspace);
+        Explorer.SelectionChanged += (_, node) => ShowProperties(node);
         ErrorList.NavigateRequested += async (_, diagnostic) => await NavigateToAsync(diagnostic.Location!.FilePath, diagnostic.Location.Line, diagnostic.Location.Column);
         _device.ThermalChanged += OnThermalChanged;
         _device.MemoryPressureRaised += OnMemoryPressure;
@@ -266,7 +266,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         var preview = await WorkspaceInspector.InspectAsync(notebook is null ? path : Path.GetDirectoryName(notebook)!);
         Workspace = preview.Workspace;
         Explorer.Load(preview.Workspace, preview.Reports);
-        Properties.Show(Explorer.SelectedItem?.Node, Workspace);
+        ShowProperties(Explorer.SelectedItem?.Node);
 
         Compatibility.Clear();
         foreach (var report in preview.Reports)

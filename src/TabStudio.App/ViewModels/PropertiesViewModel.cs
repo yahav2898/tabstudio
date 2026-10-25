@@ -29,7 +29,9 @@ public sealed partial class PropertiesViewModel : ObservableObject
     /// <summary>Shows the properties of a Solution Explorer node.</summary>
     /// <param name="node">The node, or <see langword="null"/> to clear the panel.</param>
     /// <param name="workspace">The workspace the node belongs to.</param>
-    public void Show(WorkspaceNode? node, Workspace? workspace)
+    /// <param name="otherProjects">Projects the workspace's solution does not list, such as its Python and Node.js projects.</param>
+    /// <param name="startupProject">The startup project the user chose, if any; the workspace's default otherwise.</param>
+    public void Show(WorkspaceNode? node, Workspace? workspace, IReadOnlyList<ProjectInfo>? otherProjects = null, ProjectInfo? startupProject = null)
     {
         Rows.Clear();
         if (node is null)
@@ -74,8 +76,8 @@ public sealed partial class PropertiesViewModel : ObservableObject
 
             case WorkspaceNodeKind.Solution or WorkspaceNodeKind.Root:
                 Subtitle = node.Kind == WorkspaceNodeKind.Solution ? "Solution Properties" : "Folder Properties";
-                Add("Projects", (workspace?.Projects.Count ?? 0).ToString(CultureInfo.InvariantCulture));
-                Add("Startup Project", workspace?.DefaultStartupProject?.Name ?? "None");
+                Add("Projects", ((workspace?.Projects.Count ?? 0) + (otherProjects?.Count ?? 0)).ToString(CultureInfo.InvariantCulture));
+                Add("Startup Project", startupProject?.Name ?? workspace?.DefaultStartupProject?.Name ?? "None");
                 Add("Path", node.FullPath ?? workspace?.RootDirectory ?? string.Empty);
                 break;
 
