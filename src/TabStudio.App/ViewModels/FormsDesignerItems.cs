@@ -12,26 +12,26 @@ namespace TabStudio.App.ViewModels;
 /// <summary>A tab of the Toolbox, such as Common Controls.</summary>
 /// <param name="name">The tab's name.</param>
 /// <param name="items">Its tools.</param>
-public sealed class ToolboxCategoryViewModel(string name, IReadOnlyList<ToolboxItemViewModel> items)
+public sealed class FormsToolboxCategoryViewModel(string name, IReadOnlyList<FormsToolboxItemViewModel> items)
 {
     /// <summary>The tab's name.</summary>
     public string Name { get; } = name;
 
     /// <summary>Its tools.</summary>
-    public IReadOnlyList<ToolboxItemViewModel> Items { get; } = items;
+    public IReadOnlyList<FormsToolboxItemViewModel> Items { get; } = items;
 }
 
 /// <summary>A tool of the Toolbox: tap it, then tap the form; or drag it onto the form.</summary>
-public sealed partial class ToolboxItemViewModel : ObservableObject
+public sealed partial class FormsToolboxItemViewModel : ObservableObject
 {
-    private readonly Action<ToolboxItemViewModel> _arm;
+    private readonly Action<FormsToolboxItemViewModel> _arm;
 
     /// <summary>Creates a tool.</summary>
     /// <param name="type">The control's or component's type.</param>
     /// <param name="name">The name shown.</param>
     /// <param name="icon">The icon's stroke path data.</param>
     /// <param name="arm">Arms or disarms the tool.</param>
-    internal ToolboxItemViewModel(Type type, string name, string icon, Action<ToolboxItemViewModel> arm)
+    internal FormsToolboxItemViewModel(Type type, string name, string icon, Action<FormsToolboxItemViewModel> arm)
     {
         Type = type;
         Name = name;

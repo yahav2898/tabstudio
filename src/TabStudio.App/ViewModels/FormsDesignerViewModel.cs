@@ -91,7 +91,7 @@ public sealed partial class FormsDesignerViewModel : ObservableObject, IDisposab
     internal DesignCanvas Canvas { get; }
 
     /// <summary>The Toolbox's tabs.</summary>
-    public IReadOnlyList<ToolboxCategoryViewModel> Toolbox { get; }
+    public IReadOnlyList<FormsToolboxCategoryViewModel> Toolbox { get; }
 
     /// <summary>The selected component's properties.</summary>
     public ObservableCollection<FormsPropertyViewModel> Properties { get; } = [];
@@ -258,7 +258,7 @@ public sealed partial class FormsDesignerViewModel : ObservableObject, IDisposab
 
     /// <summary>Arms a tool: the next tap on the form adds it there.</summary>
     /// <param name="tool">The tool, or <see langword="null"/> to put it away.</param>
-    internal void Arm(ToolboxItemViewModel? tool)
+    internal void Arm(FormsToolboxItemViewModel? tool)
     {
         foreach (var item in Toolbox.SelectMany(c => c.Items))
         {
@@ -382,11 +382,11 @@ public sealed partial class FormsDesignerViewModel : ObservableObject, IDisposab
 
     private void DisarmTools() => Arm(null);
 
-    private IEnumerable<ToolboxCategoryViewModel> CreateToolbox() =>
-        ToolboxCatalog.Categories.Select(category => new ToolboxCategoryViewModel(
+    private IEnumerable<FormsToolboxCategoryViewModel> CreateToolbox() =>
+        ToolboxCatalog.Categories.Select(category => new FormsToolboxCategoryViewModel(
             category,
             [.. ToolboxCatalog.Items.Where(i => i.Category == category)
-                .Select(i => new ToolboxItemViewModel(i.Type, i.Name, i.Icon, tool => Arm(tool.IsArmed ? null : tool)))]));
+                .Select(i => new FormsToolboxItemViewModel(i.Type, i.Name, i.Icon, tool => Arm(tool.IsArmed ? null : tool)))]));
 
     private void OnCodeNavigationRequested(object? sender, EventArgs e) => Mode = FormsDesignerMode.Code;
 

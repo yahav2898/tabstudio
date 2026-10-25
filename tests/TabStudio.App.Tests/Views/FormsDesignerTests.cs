@@ -78,9 +78,9 @@ public sealed class FormsDesignerTests
         // Tap a tool, then tap the form: the control is added there, on the grid.
         var buttonTool = designed.ToolButton("Button");
         designed.Tap(designed.Center(buttonTool));
-        Assert.True(((ToolboxItemViewModel)buttonTool.DataContext!).IsArmed);
+        Assert.True(((FormsToolboxItemViewModel)buttonTool.DataContext!).IsArmed);
         designed.Tap(designed.OnForm(new DrawingPoint(40, 40)));
-        Assert.False(((ToolboxItemViewModel)buttonTool.DataContext!).IsArmed);
+        Assert.False(((FormsToolboxItemViewModel)buttonTool.DataContext!).IsArmed);
         Assert.Equal("button1", designer.SelectionTitle);
         var text = designed.DesignerText;
         Assert.Contains("button1 = new Button();", text, StringComparison.Ordinal);
@@ -93,7 +93,7 @@ public sealed class FormsDesignerTests
         var labelTool = designed.ToolButton("Label");
         var from = designed.Center(labelTool);
         designed.Drag(from, designed.OnForm(new DrawingPoint(40, 120)), through: from + new Point(40, 0));
-        Assert.False(((ToolboxItemViewModel)labelTool.DataContext!).IsArmed);
+        Assert.False(((FormsToolboxItemViewModel)labelTool.DataContext!).IsArmed);
         Assert.Equal("label1", designer.SelectionTitle);
         text = designed.DesignerText;
         Assert.Contains("label1.AutoSize = true;", text, StringComparison.Ordinal);
@@ -274,7 +274,7 @@ public sealed class FormsDesignerTests
         public Point OnForm(DrawingPoint point) => InWindow(Designer.Canvas, Designer.Canvas.ToCanvas(point));
 
         public Button ToolButton(string name) =>
-            Window.GetVisualDescendants().OfType<Button>().Single(b => b.DataContext is ToolboxItemViewModel tool && tool.Name == name);
+            Window.GetVisualDescendants().OfType<Button>().Single(b => b.DataContext is FormsToolboxItemViewModel tool && tool.Name == name);
 
         public Button StripItemButton(string name) =>
             Window.GetVisualDescendants().OfType<Button>().Single(b => b.DataContext is StripItemViewModel item && item.Name == name);

@@ -22,7 +22,7 @@ internal sealed partial class FormsDesignerView : UserControl, IDisposable
 
     private readonly FormsDesignerViewModel _designer;
     private readonly CodeEditorView _editor;
-    private ToolboxItemViewModel? _dragTool;
+    private FormsToolboxItemViewModel? _dragTool;
     private Point _dragStart;
     private bool _dragging;
     private bool _sized;
@@ -184,7 +184,7 @@ internal sealed partial class FormsDesignerView : UserControl, IDisposable
 
     private void OnToolPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (e.Source is Visual source && source.FindAncestorOfType<Button>(includeSelf: true) is { DataContext: ToolboxItemViewModel tool })
+        if (e.Source is Visual source && source.FindAncestorOfType<Button>(includeSelf: true) is { DataContext: FormsToolboxItemViewModel tool })
         {
             _dragTool = tool;
             _dragStart = e.GetPosition(DragLayer);

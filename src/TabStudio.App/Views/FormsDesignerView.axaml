@@ -96,12 +96,12 @@
             <ScrollViewer HorizontalScrollBarVisibility="Disabled">
               <ItemsControl x:Name="ToolboxList" ItemsSource="{Binding Toolbox}" Margin="6,0,6,12">
                 <ItemsControl.ItemTemplate>
-                  <DataTemplate x:DataType="vm:ToolboxCategoryViewModel">
+                  <DataTemplate x:DataType="vm:FormsToolboxCategoryViewModel">
                     <StackPanel>
                       <TextBlock Classes="small" Foreground="{DynamicResource Brush.TextMuted}" Text="{Binding Name}" Margin="8,10,8,4" FontWeight="SemiBold" />
                       <ItemsControl ItemsSource="{Binding Items}">
                         <ItemsControl.ItemTemplate>
-                          <DataTemplate x:DataType="vm:ToolboxItemViewModel">
+                          <DataTemplate x:DataType="vm:FormsToolboxItemViewModel">
                             <Button Classes="tool" Theme="{StaticResource ToolButton}" Classes.selected="{Binding IsArmed}" Command="{Binding ArmCommand}"
                                     HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" MinHeight="36" Padding="10,0">
                               <StackPanel Orientation="Horizontal" Spacing="10">
