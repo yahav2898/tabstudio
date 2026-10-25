@@ -110,11 +110,12 @@ public sealed class ActionsScreenshotTests : IDisposable
             [".github/workflows/ci.yml"] = ActionsTests.CiWorkflow,
             [".github/workflows/release.yml"] = ActionsTests.ReleaseWorkflow,
         });
-        Aged(_github.AddRun(Repository, ci, head, "main", "completed", "success", new FakeJob { Name = "Build and test" }), "Add the languages table", hours: 26);
-        Aged(_github.AddRun(Repository, release, head, "main", "completed", "success", new FakeJob { Name = "Publish" }), "Release 1.3.0", hours: 5, "workflow_dispatch");
+        // Earlier commits' runs, this commit's failed run, and a run of a commit someone pushed since.
+        Aged(_github.AddRun(Repository, ci, "1f0a9c3e5b7d2468ace013579bdf2468ace01357", "main", "completed", "success", new FakeJob { Name = "Build and test" }), "Add the languages table", hours: 26);
+        Aged(_github.AddRun(Repository, release, "2e1b8d4f6a0c3579bdf124680ace13579bdf1246", "main", "completed", "success", new FakeJob { Name = "Publish" }), "Release 1.3.0", hours: 5, "workflow_dispatch");
         var failed = _github.AddRun(Repository, ci, head, "main", "completed", "failure", BuildJob(), new FakeJob { Name = "Lint" });
         Aged(failed, "Greet in the evening too", hours: 0);
-        _github.AddRun(Repository, ci, head, "main", "in_progress", null,
+        _github.AddRun(Repository, ci, "3d2c7e5a9b1f4680ace235791bdf3579ace24680", "main", "in_progress", null,
             new FakeJob { Name = "Build and test", Status = "in_progress", Conclusion = null, StartedAt = DateTimeOffset.UtcNow.AddSeconds(-40) }).Title = "Say good night";
         workspace.SelectSideBarPanelCommand.Execute(SideBarPanel.Actions);
         await UiTestHelpers.WaitUntilAsync(() => actions.Runs.Count == 4 && actions.Workflows.Count == 2 && actions.Workflows.All(w => w.Definition is not null), because: "the runs and workflows");
@@ -313,7 +314,7 @@ public sealed class ActionsScreenshotTests : IDisposable
         job.CompletedAt = conclusion == "skipped" ? job.StartedAt : DateTimeOffset.UtcNow;
     }
 
-    private static IEnumerable<AvaloniaEdit.Folding.FoldingSection> FoldsAt(CiLogView view, int line)
+    private static System.Collections.ObjectModel.ReadOnlyCollection<AvaloniaEdit.Folding.FoldingSection> FoldsAt(CiLogView view, int line)
     {
         var offset = view.Editor.Document.GetLineByNumber(line).EndOffset;
         return view.Folding.GetFoldingsAt(offset);

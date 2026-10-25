@@ -115,7 +115,8 @@ public sealed class ActionsTests
 
         var item = actions.Runs[0];
         Assert.Equal((failed.Id, "CI #2", "push · main", RunVisual.Failed), (item.Run.Id, item.Workflow, item.Trigger, item.Visual));
-        Assert.Equal("This branch (main)", actions.BranchFilter?.Label);
+        Assert.Equal(("main", "main"), (actions.BranchFilter?.Label, actions.BranchFilter?.Branch));
+        Assert.Equal("All branches", actions.BranchFilters[^1].Label);
         Assert.Equal("CI", actions.WorkflowFilters[1].Label);
 
         await actions.OpenRunCommand.ExecuteAsync(item);
@@ -309,7 +310,7 @@ public sealed class ActionsTests
 
         Assert.True(actions.IsWatchedScope);
         Assert.Equal("tester/platform", actions.ScopeName);
-        Assert.Equal("Default branch (trunk)", actions.BranchFilter?.Label);
+        Assert.Equal("trunk (default)", actions.BranchFilter?.Label);
         await UiTestHelpers.WaitUntilAsync(() => actions.Runs.Count == 2, because: "the watched repository's runs");
         Assert.Equal(latest.Id, actions.Runs[0].Run.Id);
 

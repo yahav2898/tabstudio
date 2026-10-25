@@ -6,7 +6,7 @@ using TabStudio.SourceControl.GitHub;
 namespace TabStudio.App.ViewModels.Actions;
 
 /// <summary>Which branches the Runs list shows.</summary>
-/// <param name="Label">"This branch (main)", "Default branch (main)" or "All branches".</param>
+/// <param name="Label">"main" for the workspace's branch, "main (default)" for a watched repository's, or "All branches".</param>
 /// <param name="Branch">The branch, or <see langword="null"/> for all of them.</param>
 public sealed record RunBranchFilter(string Label, string? Branch);
 
@@ -75,7 +75,8 @@ public sealed partial class ActionsViewModel
         {
             if (scope.Branch is { } branch)
             {
-                BranchFilters.Add(new RunBranchFilter(scope.IsWorkspace ? $"This branch ({branch})" : $"Default branch ({branch})", branch));
+                // The branch's name first, so it shows in the narrow side bar.
+                BranchFilters.Add(new RunBranchFilter(scope.IsWorkspace ? branch : $"{branch} (default)", branch));
             }
 
             BranchFilters.Add(new RunBranchFilter("All branches", null));

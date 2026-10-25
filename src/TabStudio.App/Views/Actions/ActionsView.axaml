@@ -151,7 +151,10 @@
                           ToolTip.Tip="Which branches">
                   <ComboBox.ItemTemplate>
                     <DataTemplate DataType="actions:RunBranchFilter">
-                      <TextBlock Text="{Binding Label}" TextTrimming="CharacterEllipsis" />
+                      <StackPanel Orientation="Horizontal" Spacing="6">
+                        <controls:StrokeIcon Data="{StaticResource Icon.Branch}" Size="13" Foreground="{DynamicResource Brush.TextMuted}" />
+                        <TextBlock Text="{Binding Label}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                      </StackPanel>
                     </DataTemplate>
                   </ComboBox.ItemTemplate>
                 </ComboBox>
@@ -159,7 +162,10 @@
                           ToolTip.Tip="Which workflows">
                   <ComboBox.ItemTemplate>
                     <DataTemplate DataType="actions:RunWorkflowFilter">
-                      <TextBlock Text="{Binding Label}" TextTrimming="CharacterEllipsis" />
+                      <StackPanel Orientation="Horizontal" Spacing="6">
+                        <controls:StrokeIcon Data="{StaticResource Icon.Workflow}" Size="13" Foreground="{DynamicResource Brush.TextMuted}" />
+                        <TextBlock Text="{Binding Label}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                      </StackPanel>
                     </DataTemplate>
                   </ComboBox.ItemTemplate>
                 </ComboBox>
