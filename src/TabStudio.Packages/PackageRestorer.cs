@@ -104,6 +104,7 @@ public sealed partial class PackageRestorer
         var diagnostics = new List<BuildDiagnostic>();
         var frameworkDiagnostics = new List<BuildDiagnostic>();
         var frameworks = await RestoreFrameworksAsync(project, frameworkDiagnostics, cancellationToken).ConfigureAwait(false);
+        project = await WithUnoPackagesAsync(project, diagnostics, cancellationToken).ConfigureAwait(false);
         var graph = ProjectPackageReferences.ReadGraph(project, diagnostics);
         var cachePath = GetCacheFilePath(project);
         var inputsHash = RestoreCache.ComputeInputsHash(graph, Options);
