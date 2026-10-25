@@ -17,14 +17,18 @@ internal sealed class GitWorkspaceFixture : IDisposable
 
     private readonly TempDirectory _temp = new();
 
-    public GitWorkspaceFixture()
+    /// <param name="agentHttp">Where the workspace sends requests to Claude, such as <see cref="FakeClaude"/>.</param>
+    public GitWorkspaceFixture(HttpClient? agentHttp = null)
     {
         Paths = new AppPaths(_temp.Path);
         var device = new DefaultDeviceStatus(new DeviceInfo(8L * 1024 * 1024 * 1024, 8, IsLowRamDevice: false));
         Account = GitHub.CreateAccount(Paths);
         AccountView = new GitHubAccountViewModel(Account, Browser);
-        Workspace = new WorkspaceViewModel(
-            new CompilerServices(Paths), device, DeviceProfile.For(device.Device), new AvaloniaUiDispatcher(), new SessionStore(Paths), Paths, AccountView, Browser);
+        Workspace = agentHttp is null
+            ? new WorkspaceViewModel(
+                new CompilerServices(Paths), device, DeviceProfile.For(device.Device), new AvaloniaUiDispatcher(), new SessionStore(Paths), Paths, AccountView, Browser)
+            : new WorkspaceViewModel(
+                new CompilerServices(Paths), device, DeviceProfile.For(device.Device), new AvaloniaUiDispatcher(), new SessionStore(Paths), Paths, AccountView, Browser) { AgentHttp = agentHttp };
     }
 
     public FakeGitHub GitHub { get; } = new();

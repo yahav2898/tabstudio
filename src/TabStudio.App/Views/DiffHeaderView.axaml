@@ -12,9 +12,9 @@
       <!-- Runs on one line: whitespace between them would show as spaces. -->
       <TextBlock Grid.Column="1" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" FontSize="12.5"><Run
         Text="{Binding RelativePath}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" /><Run
-        Text="{Binding BaseName, StringFormat='    {0} ('}" Foreground="{DynamicResource Brush.TextMuted}" /><Run
+        Text="{Binding BaseName, Mode=OneWay, StringFormat='    {0} ('}" Foreground="{DynamicResource Brush.TextMuted}" /><Run
         Text="{Binding BaseLabel}" Foreground="{DynamicResource Brush.TextSecondary}" /><Run
-        Text="{Binding HeadName, StringFormat=') vs. {0}'}" Foreground="{DynamicResource Brush.TextMuted}" /></TextBlock>
+        Text="{Binding HeadName, Mode=OneWay, StringFormat=') vs. {0}'}" Foreground="{DynamicResource Brush.TextMuted}" /></TextBlock>
       <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10" Margin="12,0,8,0">
         <TextBlock Text="{Binding Diff.AddedCount, StringFormat='+{0}'}" FontSize="12.5" FontWeight="SemiBold" VerticalAlignment="Center"
                    Foreground="{DynamicResource Brush.Success}" />

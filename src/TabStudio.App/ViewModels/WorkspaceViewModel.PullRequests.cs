@@ -19,7 +19,7 @@ public sealed partial class WorkspaceViewModel : IPullRequestHost
     private PullRequestViewModel? _branchPullRequest;
 
     /// <summary>The Pull Requests window, created the first time it is shown.</summary>
-    public PullRequestListViewModel PullRequests => _pullRequestList ??= new PullRequestListViewModel(this, OpenPullRequestAsync);
+    public PullRequestListViewModel PullRequests => _pullRequestList ??= new PullRequestListViewModel(this, ShowPullRequestAsync);
 
     /// <summary>Whether the side bar shows the Pull Requests window.</summary>
     public bool IsPullRequestsSelected => SelectedSideBarPanel == SideBarPanel.PullRequests;
@@ -127,8 +127,6 @@ public sealed partial class WorkspaceViewModel : IPullRequestHost
         SelectSideBarPanel(SideBarPanel.PullRequests);
         PullRequests.OnShown();
     }
-
-    private Task OpenPullRequestAsync(int number) => ShowPullRequestAsync(number);
 
     /// <summary>The view model of a pull request of the linked repository, created once per workspace.</summary>
     private PullRequestViewModel? PullRequestFor(int number)

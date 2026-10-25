@@ -282,6 +282,9 @@ public sealed partial class PullRequestViewModel
 
         ReviewSummary = string.Empty;
         IsFinishReviewOpen = false;
+
+        // A review takes the reviewer off the requested list, and shows in the conversation.
+        await LoadAsync();
         InfoText = verdict switch
         {
             ReviewEvent.Approve => $"Approved pull request {NumberText}.",
