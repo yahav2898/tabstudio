@@ -45,6 +45,7 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 - **Sized for fingers.** Buttons, tabs and rows are fingertip-sized, 34 to 44 pixels tall. A floating action bar puts Rename, Comment, Format, Peek and Run to Cursor one tap away.
 - **Keyboard when you want it.** Attach a keyboard and every Visual Studio shortcut works: F5, Ctrl+Shift+B, F12, Ctrl+. and the rest.
 - **Desktop mode.** Plug in a monitor over USB-C or HDMI, or use a wireless display, and the full IDE moves to the big screen with your documents, caret and debugger exactly as they were. The tablet's keyboard types there and its mouse or touchpad drives a pointer there, while the tablet becomes a touch companion: Run and debugger buttons, a Toolbox that puts controls into your XAML at the caret, and a Properties panel for the element at the caret.
+- **Light, dark or the system's.** A light theme modeled on Visual Studio Light, the dark one, or follow the tablet's dark-mode setting. Switching recolors the whole IDE at once, the editor's syntax colors included, and every color passes WCAG AA. Choosing an extension's color theme sets the IDE's light or dark to match.
 
 ### C# that runs on the tablet
 
