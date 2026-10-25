@@ -48,6 +48,11 @@
     <PackageVersion Include="SkiaSharp" Version="3.119.0" />
   </ItemGroup>
 
+  <ItemGroup Label="Link">
+    <!-- Reads QR codes from camera frames for TabStudio Link pairing, and checks TabStudio's own QR encoder in tests. -->
+    <PackageVersion Include="ZXing.Net" Version="0.16.11" />
+  </ItemGroup>
+
   <ItemGroup Label="Infrastructure">
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
   </ItemGroup>

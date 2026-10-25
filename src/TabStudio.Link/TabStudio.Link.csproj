@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    TabStudio Link: another device running TabStudio (a phone or a PC) becomes the build and language server of
+    the tablet over the local network. This library is the protocol and the transport, without UI: pairing with a
+    QR code or a typed code, TLS with pinned self-signed certificates, framed request/response messages with
+    cancellation, notifications and binary attachments, discovery on the local network, the QR code encoder, and
+    the language service's messages and workspace mirroring.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>TabStudio.Link</RootNamespace>
+    <Description>TabStudio Link: a phone or PC as the tablet's build and language server, end-to-end encrypted over the local network.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TabStudio.Core\TabStudio.Core.csproj" />
+    <ProjectReference Include="..\TabStudio.Compilation\TabStudio.Compilation.csproj" />
+    <ProjectReference Include="..\TabStudio.Debugging\TabStudio.Debugging.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="TabStudio.Link.Tests" />
+  </ItemGroup>
+
+</Project>

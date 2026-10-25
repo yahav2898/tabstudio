@@ -28,6 +28,36 @@ public sealed class DebugInfoMap
                 StringComparer.Ordinal);
     }
 
+    /// <summary>
+    /// Creates a map from statements and methods numbered elsewhere, such as by the TabStudio Link host that built the
+    /// program.
+    /// </summary>
+    /// <param name="statements">Every statement, in id order, with ids starting at 1.</param>
+    /// <param name="methods">Every method, in id order, with ids starting at 1.</param>
+    /// <exception cref="ArgumentException">The ids are not 1, 2, 3 and so on.</exception>
+    public static DebugInfoMap Create(IReadOnlyList<DebugStatement> statements, IReadOnlyList<DebugMethod> methods)
+    {
+        ArgumentNullException.ThrowIfNull(statements);
+        ArgumentNullException.ThrowIfNull(methods);
+        for (var i = 0; i < statements.Count; i++)
+        {
+            if (statements[i].Id != i + 1)
+            {
+                throw new ArgumentException("Statement ids must count up from 1.", nameof(statements));
+            }
+        }
+
+        for (var i = 0; i < methods.Count; i++)
+        {
+            if (methods[i].Id != i + 1)
+            {
+                throw new ArgumentException("Method ids must count up from 1.", nameof(methods));
+            }
+        }
+
+        return new DebugInfoMap(statements, methods);
+    }
+
     /// <summary>Every statement, in id order.</summary>
     public IReadOnlyList<DebugStatement> Statements => _statements;
 
