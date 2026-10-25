@@ -28,26 +28,26 @@ public sealed class AppearanceService
     public AppearanceSettings Settings { get; private set; }
 
     /// <summary>The chosen theme.</summary>
-    public AppTheme Theme => Settings.Theme;
+    public IdeTheme Theme => Settings.Theme;
 
     /// <summary>Whether the IDE is light now: chosen, or followed from the system.</summary>
     public static bool IsLight => Application.Current?.ActualThemeVariant == ThemeVariant.Light;
 
     /// <summary>The theme's display name, as in the theme picker.</summary>
     /// <param name="theme">The theme.</param>
-    public static string DisplayName(AppTheme theme) => theme switch
+    public static string DisplayName(IdeTheme theme) => theme switch
     {
-        AppTheme.Light => "Light",
-        AppTheme.System => "Follow the system",
+        IdeTheme.Light => "Light",
+        IdeTheme.System => "Follow the system",
         _ => "Dark",
     };
 
     /// <summary>The theme variant Avalonia is asked for: dark, light, or the platform's.</summary>
     /// <param name="theme">The theme.</param>
-    public static ThemeVariant VariantOf(AppTheme theme) => theme switch
+    public static ThemeVariant VariantOf(IdeTheme theme) => theme switch
     {
-        AppTheme.Light => ThemeVariant.Light,
-        AppTheme.System => ThemeVariant.Default,
+        IdeTheme.Light => ThemeVariant.Light,
+        IdeTheme.System => ThemeVariant.Default,
         _ => ThemeVariant.Dark,
     };
 
@@ -56,7 +56,7 @@ public sealed class AppearanceService
 
     /// <summary>Uses a theme from now on, and remembers it.</summary>
     /// <param name="theme">The theme.</param>
-    public void SetTheme(AppTheme theme)
+    public void SetTheme(IdeTheme theme)
     {
         if (theme != Theme)
         {
@@ -70,9 +70,9 @@ public sealed class AppearanceService
 
     /// <summary>Shows a theme without remembering it, as the theme picker does while the user browses.</summary>
     /// <param name="theme">The theme to show; <see cref="Apply"/> goes back to the chosen one.</param>
-    public static void Preview(AppTheme theme) => Show(theme);
+    public static void Preview(IdeTheme theme) => Show(theme);
 
-    private static void Show(AppTheme theme)
+    private static void Show(IdeTheme theme)
     {
         if (Application.Current is { } application)
         {

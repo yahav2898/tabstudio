@@ -36,7 +36,7 @@ public static class ThemePickers
         if (only is null)
         {
             // TabStudio's own themes set the whole IDE: Dark, Light, or as the system is.
-            var appTheme = service.Appearance?.Theme ?? AppTheme.Dark;
+            var appTheme = service.Appearance?.Theme ?? IdeTheme.Dark;
             foreach (var theme in TabStudioThemes(service))
             {
                 var isCurrent = current is null && theme.Theme == appTheme;
@@ -107,14 +107,14 @@ public static class ThemePickers
     /// <param name="service">The extensions, which know the IDE's theme.</param>
     private static IEnumerable<TabStudioTheme> TabStudioThemes(ExtensionsService service)
     {
-        yield return new TabStudioTheme(AppTheme.Dark, "TabStudio Dark", "TabStudio's own colors");
+        yield return new TabStudioTheme(IdeTheme.Dark, "TabStudio Dark", "TabStudio's own colors");
         if (service.Appearance is null)
         {
             yield break;
         }
 
-        yield return new TabStudioTheme(AppTheme.Light, "TabStudio Light", "TabStudio's own colors, after Visual Studio's Light");
-        yield return new TabStudioTheme(AppTheme.System, AppearanceService.DisplayName(AppTheme.System), "Dark or light as the system is, changing with it");
+        yield return new TabStudioTheme(IdeTheme.Light, "TabStudio Light", "TabStudio's own colors, after Visual Studio's Light");
+        yield return new TabStudioTheme(IdeTheme.System, AppearanceService.DisplayName(IdeTheme.System), "Dark or light as the system is, changing with it");
     }
 
     /// <summary>Lets the user pick the file icon theme of the Solution Explorer and tabs.</summary>
@@ -178,7 +178,7 @@ public static class ThemePickers
     /// <param name="Theme">The IDE's theme it sets.</param>
     /// <param name="Label">Its name.</param>
     /// <param name="Detail">What it is.</param>
-    private sealed record TabStudioTheme(AppTheme Theme, string Label, string Detail);
+    private sealed record TabStudioTheme(IdeTheme Theme, string Label, string Detail);
 
     private static string OwnerName(ExtensionsService service, ExtensionIdentifier owner) =>
         service.Store.Find(owner)?.Manifest.DisplayName ?? owner.ToString();

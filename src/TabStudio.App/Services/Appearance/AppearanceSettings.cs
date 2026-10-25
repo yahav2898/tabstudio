@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 namespace TabStudio.App.Services.Appearance;
 
 /// <summary>The IDE's theme, as Visual Studio offers it under Tools &gt; Theme.</summary>
-public enum AppTheme
+public enum IdeTheme
 {
     /// <summary>TabStudio's dark theme, the default.</summary>
     Dark,
@@ -18,10 +18,10 @@ public enum AppTheme
 
 /// <summary>The user's choices for how the IDE looks.</summary>
 /// <param name="Theme">The IDE's theme.</param>
-public sealed record AppearanceSettings(AppTheme Theme)
+public sealed record AppearanceSettings(IdeTheme Theme)
 {
     /// <summary>The settings before the user changed anything: the dark theme TabStudio has always had.</summary>
-    public static AppearanceSettings Default { get; } = new(AppTheme.Dark);
+    public static AppearanceSettings Default { get; } = new(IdeTheme.Dark);
 }
 
 /// <summary>Keeps the appearance settings in the app's state folder.</summary>

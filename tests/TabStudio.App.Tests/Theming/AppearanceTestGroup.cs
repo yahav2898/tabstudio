@@ -13,21 +13,29 @@ public sealed class AppearanceTestGroup
     public const string Name = "Appearance";
 }
 
-/// <summary>Shows the IDE in a theme until disposed, then goes back to the dark theme every other test expects.</summary>
+/// <summary>The theme the tests run in: dark, or light when <c>TABSTUDIO_THEME</c> is <c>Light</c>.</summary>
+internal static class TestTheme
+{
+    /// <summary>The theme every test starts in and goes back to.</summary>
+    public static IdeTheme Baseline { get; } =
+        string.Equals(Environment.GetEnvironmentVariable("TABSTUDIO_THEME"), "Light", StringComparison.OrdinalIgnoreCase) ? IdeTheme.Light : IdeTheme.Dark;
+}
+
+/// <summary>Shows the IDE in a theme until disposed, then goes back to the theme every other test expects.</summary>
 internal sealed class ThemeScope : IDisposable
 {
-    private ThemeScope(AppTheme theme)
+    private ThemeScope(IdeTheme theme)
     {
         AppearanceService.Preview(theme);
         Dispatcher.UIThread.RunJobs();
     }
 
     /// <summary>Shows the light theme.</summary>
-    public static ThemeScope Light() => new(AppTheme.Light);
+    public static ThemeScope Light() => new(IdeTheme.Light);
 
     public void Dispose()
     {
-        AppearanceService.Preview(AppTheme.Dark);
+        AppearanceService.Preview(TestTheme.Baseline);
         Dispatcher.UIThread.RunJobs();
     }
 }

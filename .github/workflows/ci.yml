@@ -122,6 +122,12 @@ jobs:
           DOTNET_DbgEnableMiniDump=1 DOTNET_DbgMiniDumpType=1 DOTNET_EnableCrashReport=1 DOTNET_DbgMiniDumpName="$RUNNER_TEMP/crash/%e.%p.dmp" \
             dotnet test tests/TabStudio.App.Tests -c Release --blame --logger "console;verbosity=normal" > ci-out/TabStudio.App.Tests.log 2>&1 || status=1
           tail -n 80 ci-out/TabStudio.App.Tests.log
+          # The same tests in the light theme, for light screenshots (screenshots/light); the palette's own tests ran above.
+          mkdir -p ci-out/screenshots/light
+          TABSTUDIO_THEME=Light TABSTUDIO_SCREENSHOTS="$TABSTUDIO_SCREENSHOTS/light" \
+            dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter "FullyQualifiedName!~TabStudio.App.Tests.Theming" \
+            --logger "console;verbosity=normal" > ci-out/TabStudio.App.Tests.Light.log 2>&1 || status=1
+          tail -n 20 ci-out/TabStudio.App.Tests.Light.log
           if [ $status -ne 0 ]; then
             {
               echo "== Processes left running"; ps -eo pid,ppid,pgid,rss,etime,args --sort=-rss | head -n 40

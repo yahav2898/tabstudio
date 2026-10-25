@@ -28,7 +28,7 @@ public sealed class AppearanceTests : IDisposable
         Assert.Equal(Color.Parse("#1B1D23"), Solid(window));
         Assert.Null(EditorExtensions.Theme);
 
-        appearance.SetTheme(AppTheme.Light);
+        appearance.SetTheme(IdeTheme.Light);
         Dispatcher.UIThread.RunJobs();
 
         Assert.Equal(ThemeVariant.Light, Application.Current!.ActualThemeVariant);
@@ -38,7 +38,7 @@ public sealed class AppearanceTests : IDisposable
         Assert.Same(BuiltInEditorThemes.Light, EditorExtensions.Theme);
         Assert.Equal(ThemeVariant.Light, ThemeBrushes.EditorVariant);
 
-        appearance.SetTheme(AppTheme.Dark);
+        appearance.SetTheme(IdeTheme.Dark);
         Dispatcher.UIThread.RunJobs();
 
         Assert.Equal(ThemeVariant.Dark, Application.Current.ActualThemeVariant);
@@ -51,19 +51,19 @@ public sealed class AppearanceTests : IDisposable
     {
         var paths = new AppPaths(_temp.Path);
         var appearance = new AppearanceService(new AppearanceSettingsStore(paths));
-        Assert.Equal(AppTheme.Dark, appearance.Theme);
+        Assert.Equal(IdeTheme.Dark, appearance.Theme);
 
         try
         {
-            appearance.SetTheme(AppTheme.System);
+            appearance.SetTheme(IdeTheme.System);
 
             Assert.Equal(ThemeVariant.Default, Application.Current!.RequestedThemeVariant);
-            Assert.Equal(AppTheme.System, new AppearanceService(new AppearanceSettingsStore(paths)).Theme);
+            Assert.Equal(IdeTheme.System, new AppearanceService(new AppearanceSettingsStore(paths)).Theme);
             Assert.Contains("system", File.ReadAllText(Path.Combine(paths.State, "appearance.json")), StringComparison.OrdinalIgnoreCase);
         }
         finally
         {
-            AppearanceService.Preview(AppTheme.Dark);
+            AppearanceService.Preview(IdeTheme.Dark);
         }
     }
 

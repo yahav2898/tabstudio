@@ -177,7 +177,7 @@ public sealed class ExtensionsService : IDisposable
     /// color theme, and remembers it.
     /// </summary>
     /// <param name="theme">The IDE's theme.</param>
-    public void UseTabStudioTheme(AppTheme theme)
+    public void UseTabStudioTheme(IdeTheme theme)
     {
         if (Settings.ColorTheme is not null)
         {
@@ -191,7 +191,7 @@ public sealed class ExtensionsService : IDisposable
 
     /// <summary>Shows TabStudio's own colors in a theme of the IDE without remembering it, while the picker browses.</summary>
     /// <param name="theme">The IDE's theme.</param>
-    public void PreviewTabStudioTheme(AppTheme theme)
+    public void PreviewTabStudioTheme(IdeTheme theme)
     {
         ColorTheme = null;
         EditorExtensions.Publish(this, Contributions, null, IconTheme);
@@ -286,7 +286,7 @@ public sealed class ExtensionsService : IDisposable
     }
 
     /// <summary>The IDE's theme that goes with a color theme: light for a light one, dark otherwise.</summary>
-    private static AppTheme KindOf(EditorColorTheme theme) => theme.Source.IsDark ? AppTheme.Dark : AppTheme.Light;
+    private static IdeTheme KindOf(EditorColorTheme theme) => theme.Source.IsDark ? IdeTheme.Dark : IdeTheme.Light;
 
     private EditorColorTheme? LoadColorTheme(string? key)
     {
