@@ -56,4 +56,7 @@ public static class PackageDiagnosticIds
 
     /// <summary>The global packages folder could not be written.</summary>
     public const string PackagesFolderFailed = "TS3004";
+
+    /// <summary>TabStudio: the project uses a shared framework that cannot be restored or does not run on the device.</summary>
+    public const string UnsupportedFramework = "TS3005";
 }

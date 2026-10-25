@@ -102,7 +102,7 @@ public static partial class ProjectParser
             Language = language,
             Sdk = sdk,
             TargetFrameworks = targetFrameworks,
-            OutputType = properties.GetValueOrDefault("OutputType"),
+            OutputType = properties.GetValueOrDefault("OutputType") ?? DefaultOutputType(sdk),
             Properties = properties,
             PackageReferences = packages,
             ProjectReferences = projectReferences,
@@ -303,6 +303,16 @@ public static partial class ProjectParser
 
         return frameworks;
     }
+
+    /// <summary>
+    /// The output type an SDK sets when the project does not: the Web and Worker SDKs build apps, the others
+    /// libraries.
+    /// </summary>
+    private static string? DefaultOutputType(string? sdk) =>
+        string.Equals(sdk, "Microsoft.NET.Sdk.Web", StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(sdk, "Microsoft.NET.Sdk.Worker", StringComparison.OrdinalIgnoreCase)
+            ? "Exe"
+            : null;
 
     private static List<string> ReadProjectReferences(XElement root, string projectDirectory) =>
         root.Descendants()

@@ -116,7 +116,7 @@ public sealed class NuGetOrgTests : IDisposable
         _temp.Dispose();
     }
 
-    private static void AssertNuGetOrgReachable(RestoreResult restore)
+    internal static void AssertNuGetOrgReachable(RestoreResult restore)
     {
         var unreachable = restore.Diagnostics.FirstOrDefault(d => d.Id == PackageDiagnosticIds.NetworkUnreachable);
         if (unreachable is not null)

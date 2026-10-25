@@ -17,6 +17,9 @@ public sealed record RestoreResult
     /// <summary>Every package in the project's dependency graph, ordered by id.</summary>
     public IReadOnlyList<RestoredPackage> Packages { get; init; } = [];
 
+    /// <summary>The shared frameworks the project uses besides .NET, such as ASP.NET Core.</summary>
+    public IReadOnlyList<SharedFrameworkAssets> Frameworks { get; init; } = [];
+
     /// <summary>Full paths of the assemblies the project compiles against, from every package.</summary>
     public IReadOnlyList<string> CompileAssemblies { get; init; } = [];
 

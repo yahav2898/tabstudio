@@ -233,4 +233,16 @@ public sealed class ProjectParserTests
         Assert.Equal(new[] { ProjectParser.AspNetCoreFramework }, library.FrameworkReferences);
         Assert.Empty(console.FrameworkReferences);
     }
+
+    [Theory]
+    [InlineData("Microsoft.NET.Sdk.Web", "", true)]
+    [InlineData("Microsoft.NET.Sdk.Worker", "", true)]
+    [InlineData("Microsoft.NET.Sdk.Web", "<OutputType>Library</OutputType>", false)]
+    [InlineData("Microsoft.NET.Sdk", "", false)]
+    public void Web_and_worker_projects_are_executable_unless_they_say_otherwise(string sdk, string properties, bool executable)
+    {
+        var project = ProjectParser.Parse(ProjectPath, $"""<Project Sdk="{sdk}"><PropertyGroup>{properties}</PropertyGroup></Project>""");
+
+        Assert.Equal(executable, project.IsExecutable);
+    }
 }

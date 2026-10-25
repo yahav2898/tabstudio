@@ -108,6 +108,21 @@ sequenceDiagram
   already provides are pruned, so their assemblies always come from .NET itself.
 - **No-op restores** are instant: the inputs are hashed, and an unchanged project reuses its last result.
   Offline, versions already on the device are used.
+- **Shared frameworks.** A project on the Web SDK, or with a `FrameworkReference` to `Microsoft.AspNetCore.App`,
+  gets ASP.NET Core the way a self-contained app does: its targeting pack (`Microsoft.AspNetCore.App.Ref`) to
+  compile against and the runtime pack for the device's processor to run with, both from NuGet. The packs'
+  assemblies are IL, so the Linux pack serves Android too.
+
+## Web apps
+
+`WebAppHost` serves an ASP.NET Core app from inside TabStudio. It runs the app like any program, with the
+arguments the .NET host passes in development (`--urls` on a free local port, `--contentRoot` and
+`--environment Development`), and waits until the port accepts connections. ASP.NET Core and the app's
+packages load into the program's own load context, isolated from TabStudio's copies.
+
+To stop the app gracefully, the host it builds is captured the way `WebApplicationFactory` captures it: the
+hosting library announces each host on the `Microsoft.Extensions.Hosting` diagnostic listener, and stopping
+calls that host's `StopAsync`. The server closes its port, the app's shutdown code runs and `Main` returns.
 
 ## Debugging
 

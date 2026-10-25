@@ -39,6 +39,7 @@ public sealed class PackageRestorer
     private readonly List<NuGetFramework> _fallback;
     private readonly FrameworkPackages _frameworkPackages;
     private readonly GlobalPackagesFolder _packages;
+    private readonly SharedFrameworks _sharedFrameworks;
 
     /// <summary>Creates a restorer.</summary>
     /// <param name="options">Where packages come from and go to, and what they are restored for.</param>
@@ -68,6 +69,7 @@ public sealed class PackageRestorer
             .ToList();
         _frameworkPackages = new FrameworkPackages(options.FrameworkAssemblyNames, framework);
         _packages = new GlobalPackagesFolder(options.GlobalPackagesFolder);
+        _sharedFrameworks = new SharedFrameworks(_packages, CreateFeeds, options.TargetFramework);
     }
 
     /// <summary>The options the restorer was created with.</summary>
@@ -100,6 +102,8 @@ public sealed class PackageRestorer
 
         var stopwatch = Stopwatch.StartNew();
         var diagnostics = new List<BuildDiagnostic>();
+        var frameworkDiagnostics = new List<BuildDiagnostic>();
+        var frameworks = await RestoreFrameworksAsync(project, frameworkDiagnostics, cancellationToken).ConfigureAwait(false);
         var graph = ProjectPackageReferences.ReadGraph(project, diagnostics);
         var cachePath = GetCacheFilePath(project);
         var inputsHash = RestoreCache.ComputeInputsHash(graph, Options);
@@ -109,7 +113,7 @@ public sealed class PackageRestorer
         if (Options.UseRestoreCache && referencesValid && RestoreCache.TryRead(cachePath, inputsHash, project.Name) is { } cached)
         {
             progress?.Report(new RestoreProgress(RestoreStage.Completed, $"The packages of {project.Name} are up to date", cached.Packages.Count, cached.Packages.Count));
-            return cached with { Duration = stopwatch.Elapsed };
+            return WithFrameworks(cached, frameworks, frameworkDiagnostics) with { Duration = stopwatch.Elapsed };
         }
 
         diagnostics.AddRange(graph.Dependencies
@@ -155,7 +159,47 @@ public sealed class PackageRestorer
         }
 
         progress?.Report(new RestoreProgress(RestoreStage.Completed, $"Restored {packages.Count} packages for {project.Name}", packages.Count, packages.Count));
-        return result;
+        return WithFrameworks(result, frameworks, frameworkDiagnostics);
+    }
+
+    /// <summary>Restores the shared frameworks a project uses, such as ASP.NET Core.</summary>
+    private async Task<List<SharedFrameworkAssets>> RestoreFrameworksAsync(ProjectInfo project, List<BuildDiagnostic> diagnostics, CancellationToken cancellationToken)
+    {
+        var frameworks = new List<SharedFrameworkAssets>();
+        foreach (var name in project.FrameworkReferences)
+        {
+            if (await _sharedFrameworks.RestoreAsync(name, project.Name, diagnostics, cancellationToken).ConfigureAwait(false) is { } framework)
+            {
+                frameworks.Add(framework);
+            }
+        }
+
+        return frameworks;
+    }
+
+    /// <summary>
+    /// Adds the shared frameworks to a result. A framework's assemblies win over packages that carry assemblies
+    /// with the same names, as the SDK's conflict resolution does.
+    /// </summary>
+    private static RestoreResult WithFrameworks(RestoreResult result, List<SharedFrameworkAssets> frameworks, List<BuildDiagnostic> frameworkDiagnostics)
+    {
+        if (frameworks.Count == 0 && frameworkDiagnostics.Count == 0)
+        {
+            return result;
+        }
+
+        var provided = frameworks.SelectMany(f => f.RuntimeAssemblies.Concat(f.CompileAssemblies))
+            .Select(Path.GetFileName)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        bool NotProvided(string path) => !provided.Contains(Path.GetFileName(path));
+
+        return result with
+        {
+            Frameworks = frameworks,
+            CompileAssemblies = [.. frameworks.SelectMany(f => f.CompileAssemblies), .. result.CompileAssemblies.Where(NotProvided)],
+            RuntimeAssemblies = [.. frameworks.SelectMany(f => f.RuntimeAssemblies), .. result.RuntimeAssemblies.Where(NotProvided)],
+            Diagnostics = PackageDiagnostics.Sort([.. frameworkDiagnostics, .. result.Diagnostics]),
+        };
     }
 
     private List<IPackageFeed> CreateFeeds() =>
