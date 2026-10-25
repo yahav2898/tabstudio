@@ -77,6 +77,8 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 | C, C++, Rust, Go, Python, Node, Java | Native toolchains from the Toolchain Store |
 | Anything Windows-only | Windows Compatibility: the real app on the tablet itself through Wine; or the Windows Bridge, which builds and runs it on your PC and streams it to the tablet |
 
+**Windows Forms apps.** Create a Windows Forms App, or open one from Visual Studio, and press F5. It runs beside the code on TabStudio's own Windows Forms layer, in a Windows 10 window, with dialogs, menus, grids, data binding and message boxes, and saving a file restarts it. `Form1.cs` opens in a touch designer: tap a tool and then the form, drag controls on the grid, resize them by their handles, change them in the Properties panel, and double-tap a button to write its Click handler. The designer writes `Form1.Designer.cs` exactly as Visual Studio does, so the project still opens on a PC. Code that calls Windows itself, such as P/Invoke, COM or the registry, runs through Windows Compatibility or the Windows Bridge instead; [the Forms layer's README](src/TabStudio.Forms/README.md) lists what it supports.
+
 ### Every screen at once
 
 - **Run on Swarm.** Phones and tablets running TabStudio join your swarm with one scan. Press F5 and the app you are building starts on all of them together, and every save updates them all. Avalonia apps run natively, web apps in each device's browser view, and console apps stream their output back.
@@ -213,6 +215,8 @@ src/
   TabStudio.SourceControl/ Git through GitHub: changes, commits, pulls and merges, branches, pull requests, Actions
   TabStudio.Agent/         Claude as a coding agent: tools over the workspace, MCP servers, sketch to XAML
   TabStudio.Link/          TabStudio Link: pairing, encrypted transport, QR codes and the remote language service
+  TabStudio.Forms/         Windows Forms on Avalonia: System.Windows.Forms and System.Drawing, drawn as on Windows 10
+  TabStudio.Forms.Design/  The touch designer's model: reads and writes InitializeComponent, the canvas and Toolbox
   TabStudio.Web/           Web apps: static web assets, Blazor's scripts, a host for .NET apps on WebAssembly
   TabStudio.Toolchains/    The Toolchain Store: Alpine Linux on PRoot, packages, processes and the terminal
   TabStudio.LanguageServers/ Language Server and Debug Adapter Protocol clients for every non-C# language

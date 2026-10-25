@@ -49,6 +49,8 @@ Dependencies point down only. Each layer has one job:
 | `TabStudio.Link` | TabStudio Link: pairing, the TLS transport, QR codes, discovery, and the language protocol a host answers for a tablet. | Compilation, Debugging, LiveTesting |
 | `TabStudio.Web` | What a web app serves beyond its code: static web assets, scoped CSS, Blazor's scripts, and a host for .NET apps on WebAssembly. | Compilation, Packages |
 | `TabStudio.Toolchains` | The Toolchain Store: the catalog, Alpine Linux on PRoot, verified Alpine packages, processes and pseudo terminals, toolchain projects and the terminal emulator. | `TabStudio.Core` |
+| `TabStudio.Forms` | Windows Forms on Avalonia: `System.Windows.Forms` and `System.Drawing`, run in the app preview. | Avalonia |
+| `TabStudio.Forms.Design` | The Windows Forms designer's model: reads and writes `InitializeComponent`, the Toolbox and properties. | `TabStudio.Forms`, Roslyn |
 | `TabStudio.LanguageServers` | Language Server Protocol and Debug Adapter Protocol clients, server and adapter registry, launch configurations. | Nothing but the .NET base library |
 | `TabStudio.Extensions` | VS Code extensions from Open VSX: install and verify, and their grammars, language configurations, snippets and themes. | Nothing but the .NET base library |
 | `TabStudio.Agent` | Claude as a coding agent: the Messages API with streaming and prompt caching, tools over the workspace, Model Context Protocol servers, and sketch to XAML. | Core |
@@ -215,6 +217,21 @@ line they are on. The project is built again only when one of its files is saved
 image (`SketchToXaml` in the agent engine, with the user's own API key), and `XamlContentEdit` puts the answer in
 as the root element's content, keeping its property elements and every other character of the file, as one edit
 that Undo takes back.
+
+## Windows Forms apps
+
+`TabStudio.Forms` is the `System.Windows.Forms` and `System.Drawing` API implemented on Avalonia, with the names,
+signatures, defaults and event order of Windows Forms on .NET, so code written in Visual Studio compiles unchanged. A
+project with `<UseWindowsForms>true</UseWindowsForms>` or a `-windows` target compiles against it instead of the Windows
+Desktop SDK, with the SDK's global usings and a generated `ApplicationConfiguration`. F5 runs the app in the app
+preview inside a Windows 10 window: `Application.Run` runs its message loop on its own UI thread, `Show` and
+`ShowDialog` open more windows, closing the main form ends the run, and an unhandled exception ends only the app. A
+member that cannot work on a tablet throws `NotSupportedException` naming the member and what to use instead.
+
+`TabStudio.Forms.Design` is the designer's model. It reads `InitializeComponent` with Roslyn, never running the app's
+code, edits a model of the controls, and writes changes back in the file's own style the way Visual Studio does,
+keeping statements it does not understand. The IDE draws the model with the Forms layer on a canvas with handles, a
+grid and a Toolbox, and the Properties panel edits it, Events included.
 
 ## Debugging
 
