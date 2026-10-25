@@ -1,0 +1,32 @@
+10-25 11:45:10.698  1123  1141 D ForcePeakRefreshRateCtr: DEFAULT_REFRESH_RATE : 60.0 mPeakRefreshRate : 60.000004
+10-25 11:45:11.290  1123  1233 D RefreshRatePrefCtr: DEFAULT_REFRESH_RATE : 60.0 mPeakRefreshRate : 60.0
+10-25 11:45:11.308  1123  1141 D RefreshRatePrefCtr: DEFAULT_REFRESH_RATE : 60.0 mPeakRefreshRate : 60.0
+10-25 11:45:12.350  1123  3431 D ForcePeakRefreshRateCtr: DEFAULT_REFRESH_RATE : 60.0 mPeakRefreshRate : 60.000004
+10-25 11:45:12.410  1123  3431 D RefreshRatePrefCtr: DEFAULT_REFRESH_RATE : 60.0 mPeakRefreshRate : 60.0
+10-25 11:45:22.220  1123  1188 D RefreshRatePrefCtr: DEFAULT_REFRESH_RATE : 60.0 mPeakRefreshRate : 60.0
+10-25 11:45:30.902  2853  3014 E m.tabstudio.ide: * Assertion at /__w/1/s/src/runtime/src/mono/mono/utils/mono-threads.c:223, condition `mono_threads_suspend_begin_async_resume (info)' not met
+10-25 11:45:30.958  2853  3014 F monodroid: * Assertion at /__w/1/s/src/runtime/src/mono/mono/utils/mono-threads.c:223, condition `mono_threads_suspend_begin_async_resume (info)' not met
+10-25 11:45:30.958  2853  3014 F monodroid: Abort at mono-log-adapter.cc:46:3 ('static void xamarin::android::internal::MonodroidRuntime::mono_log_handler(const char *, const char *, const char *, mono_bool, void *)')
+10-25 11:45:31.349  2853  3014 F libc    : Fatal signal 6 (SIGABRT), code -1 (SI_QUEUE) in tid 3014 (.NET TP Worker), pid 2853 (m.tabstudio.ide)
+10-25 11:45:33.361  4038  4038 F DEBUG   : Abort message: '* Assertion at /__w/1/s/src/runtime/src/mono/mono/utils/mono-threads.c:223, condition `mono_threads_suspend_begin_async_resume (info)' not met'
+
+10-25 11:45:33.360  4038  4038 F DEBUG   : *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+10-25 11:45:33.360  4038  4038 F DEBUG   : Build fingerprint: 'google/sdk_gphone64_x86_64/emu64xa:15/AE3A.240806.043/12960925:userdebug/dev-keys'
+10-25 11:45:33.360  4038  4038 F DEBUG   : Revision: '0'
+10-25 11:45:33.360  4038  4038 F DEBUG   : ABI: 'x86_64'
+10-25 11:45:33.360  4038  4038 F DEBUG   : Timestamp: 2026-10-25 11:45:31.702615316+0000
+10-25 11:45:33.360  4038  4038 F DEBUG   : Process uptime: 39s
+10-25 11:45:33.361  4038  4038 F DEBUG   : Cmdline: com.tabstudio.ide
+10-25 11:45:33.361  4038  4038 F DEBUG   : pid: 2853, tid: 3014, name: .NET TP Worker  >>> com.tabstudio.ide <<<
+10-25 11:45:33.361  4038  4038 F DEBUG   : uid: 10209
+10-25 11:45:33.361  4038  4038 F DEBUG   : signal 6 (SIGABRT), code -1 (SI_QUEUE), fault addr --------
+10-25 11:45:33.361  4038  4038 F DEBUG   : Abort message: '* Assertion at /__w/1/s/src/runtime/src/mono/mono/utils/mono-threads.c:223, condition `mono_threads_suspend_begin_async_resume (info)' not met'
+10-25 11:45:33.361  4038  4038 F DEBUG   :     rax 0000000000000000  rbx 00007f975e3f5588  rcx 00007f9abd915b90  rdx 0000000000000006
+10-25 11:45:33.361  4038  4038 F DEBUG   :     r8  0000000000000000  r9  0000000000000000  r10 00007f975e3f5590  r11 0000000000000203
+10-25 11:45:33.361  4038  4038 F DEBUG   :     r12 00007f9764289179  r13 00007f98f7046810  r14 0000000000000b25  r15 0000000000000bc6
+10-25 11:45:33.361  4038  4038 F DEBUG   :     rdi 0000000000000b25  rsi 0000000000000bc6
+10-25 11:45:33.361  4038  4038 F DEBUG   :     rbp 00007f975e3f5870  rsp 00007f975e3f5580  rip 00007f9abd915b90
+10-25 11:45:33.361  4038  4038 F DEBUG   : 2 total frames
+10-25 11:45:33.361  4038  4038 F DEBUG   : backtrace:
+10-25 11:45:33.361  4038  4038 F DEBUG   :       #00 pc 000000000005cb90  /apex/com.android.runtime/lib64/bionic/libc.so (abort+192) (BuildId: eb58b4d427279994f00c0e1818477e4f)
+10-25 11:45:33.361  4038  4038 F DEBUG   :       #01 pc 00000000000b30af  /data/app/~~ClH-1sUhY1IH0UyI7YiZsQ==/com.tabstudio.ide-QRzKyMMVja2dnwP3rPCdcg==/lib/x86_64/libmonodroid.so (xamarin::android::Helpers::abort_application(_LogCategories, char const*, bool, std::__ndk1::source_location)+767) (BuildId: d3370263a3d5aba8cc143ea0be7afdd2a4ce251e)
