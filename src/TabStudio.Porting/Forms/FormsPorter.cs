@@ -16,8 +16,20 @@ internal static class FormsPorter
     public static List<PortedFile> Port(PortContext context)
     {
         var files = new List<PortedFile>();
+        // Designer partial declarations usually omit the base list. Read it from the user's other partial file
+        // before deciding whether the XAML root is a form or a reusable UserControl.
+        var bases = context.Source.Files.Where(f => f.Key.EndsWith(".cs", StringComparison.OrdinalIgnoreCase))
+            .SelectMany(f => CSharpSyntaxTree.ParseText(f.Value).GetRoot().DescendantNodes().OfType<ClassDeclarationSyntax>())
+            .Where(c => c.BaseList?.Types.FirstOrDefault() is not null)
+            .Select(c => (Name: c.Ancestors().OfType<BaseNamespaceDeclarationSyntax>().FirstOrDefault() is { } ns
+                ? ns.Name + "." + c.Identifier.ValueText : c.Identifier.ValueText,
+                Base: DesignerReader.SimpleName(c.BaseList!.Types[0].Type)))
+            .GroupBy(c => c.Name, StringComparer.Ordinal).ToDictionary(g => g.Key, g => g.First().Base, StringComparer.Ordinal);
         var designs = context.Source.Files.Where(f => f.Key.EndsWith(".Designer.cs", StringComparison.OrdinalIgnoreCase))
-            .Select(f => (f.Key, Design: DesignerReader.Read(f.Value))).Where(f => f.Design is not null).ToList();
+            .Select(f => (f.Key, Design: DesignerReader.Read(f.Value)))
+            .Select(f => (f.Key, Design: f.Design is { } design && bases.TryGetValue(design.ClassName, out var baseType)
+                ? design with { BaseType = baseType } : f.Design))
+            .Where(f => f.Design is not null).ToList();
         var types = context.Source.Files.Where(f => f.Key.EndsWith(".cs", StringComparison.OrdinalIgnoreCase))
             .SelectMany(f => CSharpSyntaxTree.ParseText(f.Value).GetRoot().DescendantNodes().OfType<ClassDeclarationSyntax>())
             .Select(c => c.Identifier.ValueText).ToHashSet(StringComparer.Ordinal);

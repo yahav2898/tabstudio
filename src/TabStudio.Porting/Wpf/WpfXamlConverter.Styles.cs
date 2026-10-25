@@ -207,6 +207,7 @@ internal sealed partial class WpfXamlConverter
                 value.Value = "False";
                 break;
             case "Hidden":
+                Note(setter, "Visibility.Hidden setter", "Opacity preserves layout but not hidden input or focus semantics; add IsHitTestVisible and focus rules to this selector");
                 setter.SetAttributeValue("Property", "Opacity");
                 value.Value = "0";
                 break;

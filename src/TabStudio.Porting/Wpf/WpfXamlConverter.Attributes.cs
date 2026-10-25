@@ -329,6 +329,7 @@ internal sealed partial class WpfXamlConverter
                 break;
             case "Hidden":
                 ReplaceAttribute(element, attribute, new XAttribute("Opacity", "0"), new XAttribute("IsHitTestVisible", "False"));
+                Note(element, "Visibility.Hidden", "Opacity preserves layout and suppresses pointer input; review keyboard focus and accessibility for hidden descendants");
                 _report.Converted("Visibility Hidden → Opacity 0, without input");
                 return;
             default:
