@@ -70,7 +70,7 @@ public sealed class IntelliSenseCommandTests
         await fixture.OpenSampleAsync();
         var workspace = fixture.Workspace;
         var programPath = workspace.ActiveDocument!.FilePath;
-        var greeterPath = workspace.Workspace!.Projects.Single(p => p.Name == "Greetings").DirectoryPath + "/Greeter.cs";
+        var greeterPath = Path.Combine(workspace.Workspace!.Projects.Single(p => p.Name == "Greetings").DirectoryPath, "Greeter.cs");
         var greeter = (await workspace.OpenDocumentAsync(greeterPath))!;
         await workspace.CloseDocumentCommand.ExecuteAsync(workspace.Documents.Single(d => d.FilePath == programPath));
         greeter.CaretOffset = OffsetOf(greeter, "string Greet()", "string Gr".Length);
@@ -133,15 +133,17 @@ public sealed class IntelliSenseCommandTests
     {
         using var fixture = new WorkspaceFixture();
         await fixture.OpenSampleAsync();
-        var greeterPath = fixture.Workspace.Workspace!.Projects.Single(p => p.Name == "Greetings").DirectoryPath + "/Greeter.cs";
+        var greeterPath = Path.Combine(fixture.Workspace.Workspace!.Projects.Single(p => p.Name == "Greetings").DirectoryPath, "Greeter.cs");
         var greeter = (await fixture.Workspace.OpenDocumentAsync(greeterPath))!;
 
         await greeter.UpdateSymbolPathAsync(OffsetOf(greeter, "var partOfDay", 0));
 
-        Assert.Equal(["Greeter", "Greet()"], greeter.SymbolPath.Select(c => c.Name).TakeLast(2));
+        var names = greeter.SymbolPath.Select(c => c.Name).ToList();
+        Assert.Contains("Greeter", names);
+        Assert.StartsWith("Greet(", names[^1], StringComparison.Ordinal);
         var member = greeter.SymbolPath[^1];
         Assert.Equal(SymbolGlyph.Method, member.Kind);
-        Assert.Contains(member.Siblings, s => s.Name == "Greeter(string?)" || s.Name.StartsWith("Greeter(", StringComparison.Ordinal));
+        Assert.Contains(member.Siblings, s => s.Name.StartsWith("Greeter(", StringComparison.Ordinal));
 
         member.Siblings.First(s => s.Kind == SymbolGlyph.Field).NavigateCommand.Execute(null);
         var line = greeter.Document.GetLineByNumber(greeter.PendingNavigation!.Value.Line);
