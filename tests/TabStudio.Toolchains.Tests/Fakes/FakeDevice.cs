@@ -28,7 +28,7 @@ internal sealed class FakeDevice : IDisposable
     {
     }
 
-    private FakeDevice(long freeSpace, bool pythonAndNode)
+    private FakeDevice(long freeSpace, bool pythonAndNode, string[]? catalogIds = null)
     {
         FreeSpace = freeSpace;
         var native = Directory.CreateDirectory(Path.Combine(_temp.Path, "lib")).FullName;
@@ -70,7 +70,9 @@ internal sealed class FakeDevice : IDisposable
             ],
         };
         Shared = Hello with { Id = "shared", Name = "Shared", Packages = ["hello"], Setup = [] };
-        Catalog = pythonAndNode ? Mirror.Catalog(PythonAndNode()) : Mirror.Catalog(Hello, Shared);
+        Catalog = catalogIds is { Length: > 0 } ? Mirror.Catalog(FromCatalog(catalogIds))
+            : pythonAndNode ? Mirror.Catalog(PythonAndNode())
+            : Mirror.Catalog(Hello, Shared);
 
         _http = Mirror.Server.CreateClient();
         Downloader = new Downloader(_http) { RetryDelay = TimeSpan.FromMilliseconds(5) };
@@ -85,6 +87,10 @@ internal sealed class FakeDevice : IDisposable
 
     /// <summary>A device whose Store offers the real catalog's Python and Node.js, installed from fake packages.</summary>
     public static FakeDevice WithPythonAndNode() => new(50_000_000_000, pythonAndNode: true);
+
+    /// <summary>A device whose Store offers these toolchains of the real catalog, over empty packages of the same names on the fake mirror.</summary>
+    /// <param name="ids">The toolchains' ids, such as "android", in the Store's order.</param>
+    public static FakeDevice WithCatalogToolchains(params string[] ids) => new(50_000_000_000, pythonAndNode: false, ids);
 
     public long FreeSpace { get; set; }
 
@@ -124,6 +130,22 @@ internal sealed class FakeDevice : IDisposable
         Mirror.Add("community", "npm", "11.6.2-r0", depends: ["nodejs"], installedSize: 11_300_000);
         var catalog = ToolchainCatalog.Default;
         return [catalog.Find("python")! with { Setup = [] }, catalog.Find("node")! with { Setup = [] }];
+    }
+
+    /// <summary>
+    /// Toolchains of the real catalog, without their setup steps, which download from the internet and run programs; each
+    /// package they name is on the fake mirror, empty.
+    /// </summary>
+    private ToolchainDefinition[] FromCatalog(string[] ids)
+    {
+        var catalog = ToolchainCatalog.Default;
+        var toolchains = ids.Select(id => catalog.Find(id) ?? throw new ArgumentException($"The catalog has no toolchain {id}.", nameof(ids))).ToArray();
+        foreach (var package in toolchains.SelectMany(t => t.Packages).Distinct(StringComparer.Ordinal))
+        {
+            Mirror.Add("main", package, "1.0-r0");
+        }
+
+        return [.. toolchains.Select(t => t with { Setup = [] })];
     }
 
     /// <summary>A path inside the environment's root file system.</summary>
