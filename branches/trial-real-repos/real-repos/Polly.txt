@@ -1,5 +1,5 @@
 Polly at 87a2e4a0074f01b4b9a430d2f67b28f39f01274d
-Opened /home/runner/work/_temp/real-repos/Polly/Polly.slnx in 0.2 s
+Opened /home/runner/work/_temp/real-repos/Polly/Polly.slnx in 0.3 s
 Compatibility Doctor:
   Polly.Benchmarks: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
   Polly.Core.Benchmarks: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
@@ -10,48 +10,44 @@ Compatibility Doctor:
   Polly: Library via Built with its users - A library is compiled together with the projects that reference it.
   Snippets: Library via Built with its users - A library is compiled together with the projects that reference it.
   Polly.AotTest: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
-  Polly.Core.Tests: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
-  Polly.Extensions.Tests: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
-  Polly.RateLimiting.Tests: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
-  Polly.Specs: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
-  Polly.Testing.Tests: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  Polly.Core.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Polly.Extensions.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Polly.RateLimiting.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Polly.Specs: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Polly.Testing.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   Polly.TestUtils: Library via Built with its users - A library is compiled together with the projects that reference it.
-Built in 18.0 s: 2 errors, 5 warnings
-  1 x CS1705
-      [Snippets] error CS1705: Assembly 'Microsoft.Extensions.Http.Resilience' with identity 'Microsoft.Extensions.Http.Resilience, Version=10.11.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' uses 'Polly.Core, Version=8.0.0.0, Culture=neutral, PublicKeyToken=c8a3ffc3f8f825cc' which has a higher version than referenced assembly 'Polly.Core' with identity 'Polly.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=c8a3ffc3f8f825cc'
-  1 x CS5001
-      [Polly.Core.Tests] error CS5001: Program does not contain a static 'Main' method suitable for an entry point
+Built in 23.0 s: 0 errors, 5 warnings
 Output:
-Build started at 14:40:46...
+Build started at 14:52:17...
 1>------ Build started: Project: Polly.Core, Configuration: Debug ------
-1>Polly.Core -> compiled in memory (228.5 KB, 259 ms)
+1>Polly.Core -> compiled in memory (228.5 KB, 410 ms)
 2>------ Build started: Project: Polly, Configuration: Debug ------
-2>Polly -> compiled in memory (284 KB, 810 ms)
+2>Polly -> compiled in memory (284 KB, 1068 ms)
 3>------ Build started: Project: Polly.Benchmarks, Configuration: Debug ------
-3>Polly.Benchmarks -> compiled in memory (25 KB, 682 ms)
+3>Polly.Benchmarks -> compiled in memory (25 KB, 877 ms)
 4>------ Build started: Project: Polly.Extensions, Configuration: Debug ------
-4>Polly.Extensions -> compiled in memory (43.5 KB, 355 ms)
+4>Polly.Extensions -> compiled in memory (43.5 KB, 348 ms)
 5>------ Build started: Project: Polly.RateLimiting, Configuration: Debug ------
-5>Polly.RateLimiting -> compiled in memory (14 KB, 241 ms)
+5>Polly.RateLimiting -> compiled in memory (14 KB, 325 ms)
 6>------ Build started: Project: Polly.Core.Benchmarks, Configuration: Debug ------
-6>Polly.Core.Benchmarks -> compiled in memory (53 KB, 736 ms)
+6>Polly.Core.Benchmarks -> compiled in memory (53 KB, 828 ms)
 7>------ Build started: Project: Polly.Testing, Configuration: Debug ------
-7>Polly.Testing -> compiled in memory (7 KB, 267 ms)
+7>Polly.Testing -> compiled in memory (7 KB, 246 ms)
 8>------ Build started: Project: Snippets, Configuration: Debug ------
-8>error CS1705: Assembly 'Microsoft.Extensions.Http.Resilience' with identity 'Microsoft.Extensions.Http.Resilience, Version=10.11.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' uses 'Polly.Core, Version=8.0.0.0, Culture=neutral, PublicKeyToken=c8a3ffc3f8f825cc' which has a higher version than referenced assembly 'Polly.Core' with identity 'Polly.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=c8a3ffc3f8f825cc'
+8>Snippets -> compiled in memory (170 KB, 1139 ms)
 9>------ Build started: Project: Polly.AotTest, Configuration: Debug ------
-9>Polly.AotTest -> compiled in memory (3 KB, 305 ms)
+9>Polly.AotTest -> compiled in memory (3 KB, 344 ms)
 10>------ Build started: Project: Polly.TestUtils, Configuration: Debug ------
-10>Polly.TestUtils -> compiled in memory (23.5 KB, 237 ms)
+10>Polly.TestUtils -> compiled in memory (23.5 KB, 245 ms)
 11>------ Build started: Project: Polly.Core.Tests, Configuration: Debug ------
-11>error CS5001: Program does not contain a static 'Main' method suitable for an entry point
+11>Polly.Core.Tests -> compiled in memory (830.5 KB, 1385 ms)
 12>------ Build started: Project: Polly.Extensions.Tests, Configuration: Debug ------
-12>error CS5001: Program does not contain a static 'Main' method suitable for an entry point
+12>Polly.Extensions.Tests -> compiled in memory (111 KB, 583 ms)
 13>------ Build started: Project: Polly.RateLimiting.Tests, Configuration: Debug ------
-13>error CS5001: Program does not contain a static 'Main' method suitable for an entry point
+13>Polly.RateLimiting.Tests -> compiled in memory (31 KB, 311 ms)
 14>------ Build started: Project: Polly.Specs, Configuration: Debug ------
-14>error CS5001: Program does not contain a static 'Main' method suitable for an entry point
+14>Polly.Specs -> compiled in memory (2352 KB, 3745 ms)
 15>------ Build started: Project: Polly.Testing.Tests, Configuration: Debug ------
-15>error CS5001: Program does not contain a static 'Main' method suitable for an entry point
-========== Build: 9 succeeded, 6 failed ==========
+15>Polly.Testing.Tests -> compiled in memory (14 KB, 324 ms)
+========== Build: 15 succeeded, 0 failed ==========
 
