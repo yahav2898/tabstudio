@@ -149,6 +149,12 @@ jobs:
         run: |
           # A stalled package mirror must fail setup rather than occupy the
           # runner for hours before any IDE or real-tool tests can start.
+          # The hosted image's Azure mirror delivered LLVM at about 40 KB/s
+          # in the stalled run. Prefer Ubuntu's primary mirror for these
+          # signed packages; leave the image's security sources unchanged.
+          if [ -f /etc/apt/apt-mirrors.txt ]; then
+            printf '%s\n' 'https://archive.ubuntu.com/ubuntu/' | sudo tee /etc/apt/apt-mirrors.txt
+          fi
           apt_options=(-o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30)
           sudo apt-get "${apt_options[@]}" update -qq
           sudo env DEBIAN_FRONTEND=noninteractive apt-get "${apt_options[@]}" install -y clang-19 clangd-19 lldb-19 cmake make
