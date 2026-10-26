@@ -225,7 +225,8 @@ public sealed class LanguageServerRegistry
                 AlternativeCommands = JsonSettings.GetStrings(node, "alternativeCommands"),
                 Arguments = JsonSettings.GetStrings(node, "args"),
                 Environment = JsonSettings.GetStringMap(node, "env"),
-                Transport = string.Equals(transport, "tcp", StringComparison.OrdinalIgnoreCase) ? DebugAdapterTransport.Tcp : DebugAdapterTransport.Stdio,
+                Transport = string.Equals(transport, "unix", StringComparison.OrdinalIgnoreCase) ? DebugAdapterTransport.UnixSocket
+                    : string.Equals(transport, "tcp", StringComparison.OrdinalIgnoreCase) ? DebugAdapterTransport.Tcp : DebugAdapterTransport.Stdio,
                 UsesProcessInput = JsonSettings.GetBoolean(node, "usesProcessInput") ?? false,
                 Defaults = node["defaults"]?.DeepClone() as JsonObject,
                 TerminalDefaults = node["terminalDefaults"]?.DeepClone() as JsonObject,

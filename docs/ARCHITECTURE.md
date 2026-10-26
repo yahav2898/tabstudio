@@ -410,8 +410,9 @@ With several commands, the active source selects the package. F5 and Ctrl+F5 bui
 sibling files, and Go compiler locations become Error List links.
 
 Alpine installs Go, gopls and Delve from its verified package index; desktops use PATH. gopls supplies completion,
-diagnostics and navigation. Delve serves DAP over loopback TCP with `mode: exec`, remote output, and stdin inherited
-from its runtime process; user input never enters the DAP stream. Real-tool IDE and emulator tests cover the
+diagnostics and navigation. Delve serves DAP over loopback TCP on a computer and a Unix socket in a private app-cache directory on Android.
+The socket directory is shared into PRoot and removed with the debug session. Launches use `mode: exec`, remote
+output and stdin inherited from the runtime process; user input never enters the DAP stream. Real-tool IDE and emulator tests cover the
 console template, compiler errors, a breakpoint and Locals.
 
 ## Swarm

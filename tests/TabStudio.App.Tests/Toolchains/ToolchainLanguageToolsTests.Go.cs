@@ -72,4 +72,16 @@ public sealed partial class ToolchainLanguageToolsTests
         Assert.Equal("/dev/stdin", (string?)launch.Properties["stdinFrom"]);
         Assert.Equal("remote", (string?)launch.Properties["outputMode"]);
     }
+
+    [Fact]
+    public void Delve_uses_a_private_Unix_socket_on_Android_and_TCP_on_a_computer()
+    {
+        var adapter = TabStudio.LanguageServers.Configuration.LanguageServerRegistry.BuiltIn.FindAdapter("go")!;
+        var linux = TabStudio.App.Services.Toolchains.ToolchainLaunch.ForRuntime(adapter, TabStudio.Toolchains.Runtimes.RuntimeKind.Linux);
+        Assert.Equal(TabStudio.LanguageServers.Configuration.DebugAdapterTransport.UnixSocket, linux.Transport);
+        Assert.Contains("unix:${socket}", linux.Arguments);
+        Assert.True(linux.UsesProcessInput);
+        Assert.Same(adapter, TabStudio.App.Services.Toolchains.ToolchainLaunch.ForRuntime(adapter, TabStudio.Toolchains.Runtimes.RuntimeKind.Host));
+    }
+
 }

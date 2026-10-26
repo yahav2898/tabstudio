@@ -33,6 +33,14 @@ public sealed class ToolchainServerLauncher(IToolchainRuntime runtime) : IServer
             _runtime.ShareFolder(startInfo.WorkingDirectory);
         }
 
+        foreach (var address in startInfo.Arguments.Where(a => a.StartsWith("unix:", StringComparison.Ordinal)))
+        {
+            if (Path.GetDirectoryName(address[5..]) is { } folder && Directory.Exists(folder))
+            {
+                _runtime.ShareFolder(folder);
+            }
+        }
+
         try
         {
             var process = _runtime.Start(new ProcessStartSpec
@@ -41,8 +49,6 @@ public sealed class ToolchainServerLauncher(IToolchainRuntime runtime) : IServer
                 Arguments = startInfo.Arguments,
                 WorkingDirectory = startInfo.WorkingDirectory,
                 Environment = startInfo.Environment,
-                // Delve compares its UID with the socket owner's real UID; simulated root would reject the IDE.
-                UseHostIdentity = _runtime.Kind == RuntimeKind.Linux && Path.GetFileName(startInfo.FileName) == "dlv",
             });
             return new ToolchainServerProcess(process);
         }

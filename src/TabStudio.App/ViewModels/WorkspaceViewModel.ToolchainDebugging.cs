@@ -27,7 +27,7 @@ public sealed partial class WorkspaceViewModel
     /// <summary>Whether the debugged program runs in the Output panel's console, started for its debug adapter.</summary>
     private bool IsProgramInConsole => _adapterProgramRun is not null;
 
-    /// <summary>Feeds a TCP adapter's inherited console input, without ever writing text to DAP's protocol stream.</summary>
+    /// <summary>Feeds a socket adapter's inherited console input, without ever writing text to DAP's protocol stream.</summary>
     private void StartAdapterInput(DebugAdapterSession session)
     {
         if (!session.AcceptsProgramInput)

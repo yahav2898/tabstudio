@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TabStudio.App.Editing;
 using TabStudio.App.Services.LanguageServers;
+using TabStudio.App.Services.Toolchains;
 using TabStudio.Debugging;
 using TabStudio.Debugging.Symbols;
 using TabStudio.LanguageServers.Configuration;
@@ -206,6 +207,8 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
             StatusText = $"No debug adapter is set up for \"{target.Configuration.Type}\" launch configurations.";
             return;
         }
+
+        adapter = ToolchainLaunch.ForRuntime(adapter, _toolchains.Runtime.Kind);
 
         // A configuration with "debugServer" connects to an adapter that already runs.
         var executable = target.Configuration.DebugServerPort is not null

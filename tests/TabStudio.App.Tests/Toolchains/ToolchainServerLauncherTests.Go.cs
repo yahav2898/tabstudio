@@ -1,19 +1,20 @@
 using TabStudio.App.Services.Toolchains;
 using TabStudio.LanguageServers.Hosting;
+using TabStudio.Testing;
 
 namespace TabStudio.App.Tests.Toolchains;
 
 public sealed partial class ToolchainServerLauncherTests
 {
-    [Theory]
-    [InlineData("/usr/bin/dlv", true)]
-    [InlineData("/usr/bin/gopls", false)]
-    [InlineData("/usr/bin/python3", false)]
-    public void Delve_preserves_the_real_UID_for_its_same_user_connection_check(string command, bool realIdentity)
+    [Fact]
+    public void A_private_Delve_socket_directory_is_shared_with_the_runtime()
     {
+        using var folder = new TempDirectory();
         var runtime = new FakeRuntime();
-        using var process = new ToolchainServerLauncher(runtime).Start(new ServerStartInfo(command, [], "/work", new Dictionary<string, string?>()));
+        var address = "unix:" + folder.Resolve("d");
+        using var process = new ToolchainServerLauncher(runtime).Start(new ServerStartInfo("/usr/bin/dlv", ["dap", "--listen", address], "/work", new Dictionary<string, string?>()));
 
-        Assert.Equal(realIdentity, Assert.Single(runtime.Started).Spec.UseHostIdentity);
+        Assert.Equal(["share " + folder.Path, "start /usr/bin/dlv"], runtime.Calls);
+        Assert.Equal(["dap", "--listen", address], Assert.Single(runtime.Started).Spec.Arguments);
     }
 }

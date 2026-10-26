@@ -63,7 +63,7 @@ jobs:
             [ "$name" = "TabStudio.App.Tests" ] && continue
             if ! dotnet test "$project" -c Release --logger "console;verbosity=normal" > "ci-out/$name.log" 2>&1; then
               # A retry may not hide a flaky test for this language.
-              if grep -Eq 'GoProjectTests.*\[FAIL\]' "ci-out/$name.log"; then status=1; fi
+              if grep -Eq '(GoProjectTests|DebugAdapterUnixSocketTests).*\[FAIL\]' "ci-out/$name.log"; then status=1; fi
               # Known intermittent failures are tracked on the board; one retry keeps them from blocking a release,
               # and FLAKY.txt and a warning keep them visible. A second failure fails the job.
               echo "::warning::$name failed once; running it again. The first attempt is in ci-out/$name.log."
@@ -158,7 +158,7 @@ jobs:
           first=0
           run_ide_tests ci-out/TabStudio.App.Tests.log || first=1
           tail -n 80 ci-out/TabStudio.App.Tests.log
-          if grep -Eq 'A_Go_template.*\[FAIL\]' ci-out/TabStudio.App.Tests.log; then status=1; fi
+          if grep -Eq '(A_Go_template|Delve_|A_private_Delve_socket).*\[FAIL\]' ci-out/TabStudio.App.Tests.log; then status=1; fi
           if [ $first -ne 0 ]; then
             # Known intermittent failures (a native crash in the test host, slow servers) are tracked on the board;
             # one retry keeps them from blocking a release, and FLAKY.txt and a warning keep them visible.
@@ -180,7 +180,7 @@ jobs:
           light=0
           run_light_tests ci-out/TabStudio.App.Tests.Light.log || light=1
           tail -n 20 ci-out/TabStudio.App.Tests.Light.log
-          if grep -Eq 'A_Go_template.*\[FAIL\]' ci-out/TabStudio.App.Tests.Light.log; then status=1; fi
+          if grep -Eq '(A_Go_template|Delve_|A_private_Delve_socket).*\[FAIL\]' ci-out/TabStudio.App.Tests.Light.log; then status=1; fi
           if [ $light -ne 0 ]; then
             echo "::warning::The IDE tests in the light theme failed once; running them again. The first attempt is in ci-out/TabStudio.App.Tests.Light.log."
             if run_light_tests ci-out/TabStudio.App.Tests.Light.retry.log; then

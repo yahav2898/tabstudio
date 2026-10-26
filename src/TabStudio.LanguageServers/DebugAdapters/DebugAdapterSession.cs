@@ -123,10 +123,10 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
     /// <summary>Whether the program runs in TabStudio's console, started through <see cref="RunInTerminalHandler"/>.</summary>
     public bool RunsInTerminal => _runsInTerminal && RunInTerminalHandler is not null;
 
-    /// <summary>Whether input can be sent to the debuggee through this TCP adapter's own standard input.</summary>
-    public bool AcceptsProgramInput => Adapter.UsesProcessInput && Adapter.Transport == DebugAdapterTransport.Tcp && _process is not null;
+    /// <summary>Whether input can be sent to the debuggee through this socket adapter's own standard input.</summary>
+    public bool AcceptsProgramInput => Adapter.UsesProcessInput && Adapter.Transport != DebugAdapterTransport.Stdio && _process is not null;
 
-    /// <summary>Sends a line typed in the Output panel to a TCP adapter whose child inherits standard input.</summary>
+    /// <summary>Sends a line typed in the Output panel to a socket adapter whose child inherits standard input.</summary>
     /// <param name="line">The line, without its newline.</param>
     /// <param name="cancellationToken">Stops writing.</param>
     /// <exception cref="InvalidOperationException">This adapter's standard input carries protocol messages.</exception>
@@ -163,10 +163,13 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
         ArgumentNullException.ThrowIfNull(launcher);
         options ??= new DebugAdapterSessionOptions();
         var port = adapter.Transport == DebugAdapterTransport.Tcp ? FreePort() : 0;
-        var arguments = adapter.Arguments.Select(a => a.Replace("${port}", port.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal)).ToList();
-        var process = launcher.Start(new ServerStartInfo(executable, arguments, workingDirectory, adapter.Environment));
+        var socketDirectory = adapter.Transport == DebugAdapterTransport.UnixSocket ? CreateUnixSocketDirectory() : null;
+        var socketPath = socketDirectory is null ? string.Empty : Path.Combine(socketDirectory, "d");
+        var arguments = adapter.Arguments.Select(a => a.Replace("${port}", port.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal).Replace("${socket}", socketPath, StringComparison.Ordinal)).ToList();
+        var process = StartAdapterProcess(launcher, new ServerStartInfo(executable, arguments, workingDirectory, adapter.Environment), socketDirectory);
         DebugAdapterSession? session = null;
         var initializing = 1;
+        var started = false;
         PumpStandardError(process, line =>
         {
             if (Volatile.Read(ref initializing) != 0)
@@ -185,6 +188,12 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
                 var socket = await ConnectWithRetriesAsync(IPAddress.Loopback.ToString(), port, options.StartTimeout, process, cancellationToken).ConfigureAwait(false);
                 session = new DebugAdapterSession(adapter, new DebugAdapterConnection(socket.GetStream(), socket.GetStream()), process, socket, port);
             }
+            else if (adapter.Transport == DebugAdapterTransport.UnixSocket)
+            {
+                var socket = await ConnectToUnixSocketAsync(socketPath, options.StartTimeout, process, cancellationToken).ConfigureAwait(false);
+                var stream = new NetworkStream(socket, ownsSocket: true);
+                session = new DebugAdapterSession(adapter, new DebugAdapterConnection(stream, stream), process, null) { _unixSocketDirectory = socketDirectory };
+            }
             else
             {
                 session = new DebugAdapterSession(adapter, new DebugAdapterConnection(process.StandardOutput, process.StandardInput), process, null);
@@ -192,6 +201,7 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
 
             await session.InitializeAsync(options, cancellationToken).ConfigureAwait(false);
             Interlocked.Exchange(ref initializing, 0);
+            started = true;
             return session;
         }
         catch (DebugAdapterException)
@@ -208,6 +218,13 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
         {
             await AbandonAsync(session, process).ConfigureAwait(false);
             throw new DebugAdapterException($"{adapter.Name} did not start: {ex.Message}", ex);
+        }
+        finally
+        {
+            if (!started)
+            {
+                RemoveUnixSocketDirectory(socketDirectory);
+            }
         }
     }
 
@@ -331,6 +348,7 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
             _process.Dispose();
         }
 
+        RemoveUnixSocketDirectory(_unixSocketDirectory);
         End();
     }
 

@@ -37,9 +37,6 @@ public sealed record ProcessStartSpec
     /// </summary>
     public IReadOnlyDictionary<string, string?> Environment { get; init; } = new Dictionary<string, string?>();
 
-    /// <summary>Preserves the device user's UID and GID inside PRoot instead of simulating root; hosts already use their real identity.</summary>
-    public bool UseHostIdentity { get; init; }
-
     /// <summary>
     /// Runs the program in a pseudo terminal of this size, so it can use colors, move the cursor and read keys as
     /// they are typed; <see langword="null"/> connects its standard streams to pipes instead.
