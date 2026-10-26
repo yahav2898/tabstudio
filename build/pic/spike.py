@@ -351,7 +351,7 @@ def spike(args):
             run([*native, "/usr/local/bin/xc32-gcc", *exact], out / "project-wrapper-control.log", env=env, timeout=180, check=False)
             for label, arguments, capture in [
                 ("cwd-absolute", exact, False),
-                ("cwd-relative", [processor, "-mdfp=" + str(installed_pack).removeprefix(str(root)), "-O0", "-g", "-Wl,--defsym=_min_heap_size=0,--report-mem", "-o", "dist/default/production/control.elf", "main.c"], False),
+                ("cwd-relative", [processor, "-mdfp=" + str(installed_pack).removeprefix(str(root)), "-O0", "-g", "-Wl,--defsym=_min_heap_size=0,--report-mem", "-o", "dist/default/production/firmware.elf", "main.c"], False),
                 ("pipe", exact, True),
             ]:
                 invocation = ["/usr/local/bin/xc32-gcc", *arguments]
@@ -366,17 +366,21 @@ def spike(args):
             raise RuntimeError("The shipped project driver did not produce firmware and compiler builtin metadata")
         shutil.copy2(project_hex, out / "template.hex")
         result["mplabProjectBuild"] = True
-        # The editor must parse the real device/compiler headers, not merely
-        # produce a compilation-database JSON file with plausible arguments.
-        run([*native, "clangd", "--check=/work/project/main.c", "--compile-commands-dir=/work/project/.tabstudio/pic"],
-            out / "clangd-device-headers.log", env=env, timeout=180)
-        result["intelliSenseCheck"] = True
+        shutil.copy2(project_path / ".tabstudio/pic/xc-predefined-macros.txt", out / "xc-predefined-macros.txt")
         if args.compiler == "xc8":
             # Compile a small source-line/stepping fixture independently from
             # the blink template, using its actual supported PIC18F14K22 model.
             shutil.copy2(REPO / "build/pic/simulation-smoke.c", root / "work/simulation.c")
             shutil.copy2(REPO / "build/pic/simulation-smoke.c", out / "simulation.c")
             run([*prefix, *translate, program, "-mcpu=18F14K22", f"-mdfp={pack}", "-O0", "-o", "/results/simulation.elf", "simulation.c"], out / "simulation-compile.log", env=env, timeout=180)
+        # The editor must parse the real device/compiler headers, not merely
+        # produce a compilation-database JSON file with plausible arguments.
+        # Limit optional refactoring probes to the opening comment. Diagnostics
+        # still parse the entire translation unit and all device headers; this
+        # avoids clangd's unrelated SwapBinaryOperands macro-rewrite failure.
+        run([*native, "clangd", "--check=/work/project/main.c", "--compile-commands-dir=/work/project/.tabstudio/pic", "--check-lines=1-1"],
+            out / "clangd-device-headers.log", env=env, timeout=180)
+        result["intelliSenseCheck"] = True
         result["success"] = True
     except Exception as error:
         result["error"] = str(error)

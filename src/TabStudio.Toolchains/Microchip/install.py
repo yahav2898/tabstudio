@@ -176,10 +176,20 @@ def write_wrappers(compiler, destination):
         # driver those must be the original x86 binaries, not another host shell
         # wrapper that recursively starts Box64 with the helper's argv layout.
         lines.append("environment['PATH'] = " + repr(str(destination / "bin") + ":") + " + environment.get('PATH', '/usr/bin:/bin')")
+        # The driver receives its complete arguments from MPLAB's recipe.
+        # Keep make's own control/jobserver variables out of translated tools.
+        for key in ("MAKEFLAGS", "MFLAGS", "MAKELEVEL"):
+            lines.append("environment.pop(" + repr(key) + ", None)")
         for key, value in runtime_environment(compiler).items():
             if key.startswith("BOX64_") or key == "LD_LIBRARY_PATH":
                 lines.append("environment[" + repr(key) + "] = " + repr(value))
-        lines.append("result = subprocess.call(" + repr(translated([str(binary)])) + " + sys.argv[1:], env=environment)")
+        # Keep the recipe's source paths (and therefore __FILE__) untouched.
+        # An absolute -o names the same artifact while avoiding the translated
+        # driver's relative-output path handling for nested MPLAB directories.
+        lines += ["arguments = sys.argv[1:]", "for index, value in enumerate(arguments[:-1]):",
+                  "    if value == '-o' and arguments[index + 1] != '-':",
+                  "        arguments[index + 1] = os.path.abspath(arguments[index + 1])"]
+        lines.append("result = subprocess.call(" + repr(translated([str(binary)])) + " + arguments, env=environment)")
         lines.append("raise SystemExit(result if result >= 0 else 128 - result)")
         wrapper = wrappers / binary.name
         wrapper.write_text("\n".join(lines) + "\n")

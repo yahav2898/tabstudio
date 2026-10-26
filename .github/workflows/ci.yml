@@ -323,13 +323,7 @@ jobs:
           disk-size: 4096M
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
-          script: |
-            set -e
-            adb install -r ci-out/TabStudio-x64.apk
-            status=0
-            python3 build/pic/android_spike.py run --work "$RUNNER_TEMP/pic-android" --output ci-out/pic-android || status=1
-            bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 960 || status=1
-            exit "$status"
+          script: bash build/pic/android-emulator-test.sh ci-out/TabStudio-x64.apk ci-out "$RUNNER_TEMP/pic-android"
 
       # A crash's native backtrace has only offsets into the runtime's stripped libraries; this names the functions.
       - name: Name the functions in a crash's backtrace

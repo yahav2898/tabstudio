@@ -40,6 +40,7 @@ def prepare(args):
     with zipfile.ZipFile(spike.fetch(spike.LOCK["pic18-dfp"], cache, "pic18.atpack")) as package:
         package.extractall(pack)
     shutil.copyfile(spike.REPO / "samples/PIC/PIC18Blink/main.c", root / "work/main.c")
+    spike.run(["cc", "-static", "-O2", str(spike.REPO / "build/pic/static-spawn.c"), "-o", str(root / "work/static-spawn")], out / "android-guest-probe-build.log")
     (work / "compiler-path.txt").write_text("/" + compiler.relative_to(root).as_posix())
     spike.run(["tar", "-czf", str(work / "android-rootfs.tar.gz"), "-C", str(root), "."], out / "android-pack.log", timeout=300)
 
@@ -59,6 +60,13 @@ def native_library_directory(dump, package_paths, abi):
     if not apk or not instruction:
         raise RuntimeError("Cannot locate the installed APK's native library directory")
     return apk.rsplit("/", 1)[0] + "/lib/" + instruction
+
+
+def guest_command(native, base, arguments):
+    # env interprets a randomized APK ...==/lib executable path as another
+    # assignment. POSIX shell assignments validate the variable name instead.
+    variables = {"PROOT_LOADER": native + "/libproot-loader.so", "PROOT_TMP_DIR": base + "/tmp", "PROOT_NO_SECCOMP": "1"}
+    return " ".join(key + "=" + shlex.quote(value) for key, value in variables.items()) + " " + shlex.join(arguments)
 
 
 def run(args):
@@ -96,10 +104,16 @@ def run(args):
                   "/usr/bin/env", "-i", "HOME=/root", "TMPDIR=/tmp", "PATH=/usr/bin:/bin", "LANG=C",
                   "LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu", "BOX64_LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu",
                   "BOX64_DYNAREC=0", "BOX64_LOG=0", "BOX64_NOBANNER=1", "BOX64_DYNACACHE=0", "/usr/bin/box64"]
-        def command(arguments):
-            inner = shlex.join(["env", "PROOT_LOADER=" + native + "/libproot-loader.so", "PROOT_TMP_DIR=" + base + "/tmp", "PROOT_NO_SECCOMP=1", *prefix, *arguments])
+        def command(arguments, boxed=True):
+            inner = guest_command(native, base, [*(prefix if boxed else prefix[:-1]), *arguments])
             return ["adb", "shell", shlex.join(["run-as", PACKAGE, "sh", "-c", inner])]
+        # Infrastructure failures are hard errors, never an unsupported-Box64
+        # skip. This must execute Alpine as the app UID before the Box64 probe.
+        spike.run(command(["/bin/true"], boxed=False), out / "android-proot-native-probe.log", timeout=30)
+        result["prootNativeProbe"] = True
         code, _, _ = spike.run(command(["-v"]), out / "android-box64-probe.log", timeout=30, check=False)
+        if not code:
+            code, _, _ = spike.run(command(["/work/static-spawn"]), out / "android-box64-guest-probe.log", timeout=30, check=False)
         result["box64Available"] = code == 0
         if code:
             result["conditionalSkip"] = "box64 cannot execute on this emulator ABI; see Android probe log. ARM64 runner proof is separate."

@@ -3,6 +3,7 @@ import importlib.util
 import json
 from pathlib import Path
 import sys
+import subprocess
 import tempfile
 import unittest
 
@@ -102,6 +103,20 @@ class UsbProtocolTests(unittest.TestCase):
         UsbSerial(usb, interface=3)
         self.assertEqual([2], usb.claimed)
         self.assertEqual([2, 2], usb.control_interfaces)
+
+    def test_emulator_executes_an_apk_library_path_containing_equals(self):
+        spec = importlib.util.spec_from_file_location("android_pic_test", ROOT / "build/pic/android_spike.py")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        with tempfile.TemporaryDirectory() as folder:
+            native = Path(folder) / "APK with spaces==/lib"
+            native.mkdir(parents=True)
+            program = native / "libproot.so"
+            program.write_text('#!/bin/sh\nprintf \'%s\\n\' "$PROOT_LOADER" "$1"\n')
+            program.chmod(0o755)
+            command = module.guest_command(str(native), folder, [str(program), "--kill-on-exit"])
+            result = subprocess.check_output(["/bin/sh", "-c", command], text=True)
+            self.assertEqual([str(native / "libproot-loader.so"), "--kill-on-exit"], result.splitlines())
 
     def test_emulator_finds_native_libraries_across_android_package_dump_formats(self):
         spec = importlib.util.spec_from_file_location("android_pic_test", ROOT / "build/pic/android_spike.py")

@@ -94,6 +94,8 @@ class InstallationTests(unittest.TestCase):
             self.assertEqual(0, self.project.build(root))
         self.assertIn("-dM", query.call_args.args[0])
         self.assertIn("-mcpu=18F45K22", query.call_args.args[0])
+        self.assertEqual(root / ".tabstudio/pic/predefines.c", Path(query.call_args.args[0][-1]))
+        self.assertEqual("", (root / ".tabstudio/pic/predefines.c").read_text())
         command = call.call_args.args[0]
         self.assertEqual(["make", "-f", "nbproject/Makefile-production.mk"], command[:3])
         self.assertIn(".build-conf", command)

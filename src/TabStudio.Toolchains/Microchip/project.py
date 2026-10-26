@@ -129,8 +129,12 @@ def write_intellisense(path, conf, manifest, compiler, device, dfp):
     compatibility = support / "xc-builtins.h"
     cc = "/usr/local/bin/xc8-cc" if compiler == "xc8" else "/usr/local/bin/xc32-gcc"
     processor = "-mcpu=" + device.removeprefix("PIC") if compiler == "xc8" else "-mprocessor=" + device.removeprefix("PIC")
-    builtins = subprocess.run([cc, processor, "-mdfp=" + str(dfp), "-E", "-dM", "-x", "c", "-"],
-                              input="", text=True, capture_output=True, timeout=60)
+    # XC32's translated stdin preprocessor path is less robust than a regular
+    # source file. The empty translation unit yields the same target builtins.
+    empty_source = support / "predefines.c"
+    empty_source.write_text("")
+    builtins = subprocess.run([cc, processor, "-mdfp=" + str(dfp), "-E", "-dM", "-x", "c", str(empty_source)],
+                              text=True, capture_output=True, timeout=60)
     if builtins.returncode or not any("__XC" in line for line in builtins.stdout.splitlines()):
         raise ValueError("Could not query the selected XC compiler's predefined macros: " + builtins.stderr[-2000:])
     # Preserve the real compiler/device macros. clangd's own type and ABI macros
@@ -139,7 +143,7 @@ def write_intellisense(path, conf, manifest, compiler, device, dfp):
     for line in builtins.stdout.splitlines():
         match = re.match(r"#define\s+([A-Za-z_][A-Za-z_0-9]*)", line)
         if match and ("XC" in match[1] or device.removeprefix("PIC").upper() in match[1].upper()
-                      or match[1].startswith(("_PIC", "__PIC", "__18", "__16", "__12", "__10", "__32", "_18", "_16", "_12", "_10", "_32"))):
+                      or match[1].startswith(("_PIC", "__PIC", "__LANGUAGE_", "_LANGUAGE_", "__18", "__16", "__12", "__10", "__32", "_18", "_16", "_12", "_10", "_32"))):
             macros.append(line)
     (support / "xc-predefined-macros.txt").write_text(builtins.stdout)
     compatibility.write_text("/* Editor-only XC/device macros and declarations; never used for firmware. */\n" + "\n".join(macros) + "\n" + """
@@ -152,6 +156,10 @@ def write_intellisense(path, conf, manifest, compiler, device, dfp):
 #define __ram
 #define __far
 #define __near
+#ifdef __XC8
+#define __int24 _BitInt(24)
+#define __uint24 unsigned _BitInt(24)
+#endif
 #define __bit unsigned char
 #define __pack
 #define __interrupt(...)

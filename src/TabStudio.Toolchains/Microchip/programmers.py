@@ -90,7 +90,13 @@ def install_support(tool, accepted_pk2cmd=False):
         include = source / "hidapi/hidapi/hidapi.h"
         include.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile("/usr/include/hidapi/hidapi.h", include)
-        run(["make", "-j2", "GITCOUNT=0", "HIDLIB=/usr/lib/libhidapi-libusb.so",
+        hid_library = "/usr/lib/libhidapi-libusb.so"
+        if not Path(hid_library).is_file():
+            raise ValueError("Install Alpine's hidapi-dev package with its libusb backend before building pic32prog")
+        # The copied upstream header is newer than the installed library.
+        # -o keeps make from running its submodule bootstrap rule on that
+        # system library; it is already supplied by the signed Alpine package.
+        run(["make", "-j2", "-o", hid_library, "GITCOUNT=0", "HIDLIB=" + hid_library,
              "LIBS=-lusb-1.0 -lpthread", 'CFLAGS=-O2 -std=gnu17 -fcommon -include sys/select.h -include sys/time.h -Ihidapi/hidapi -DUSE_MPSSE -DGITCOUNT=\\"0\\"'], source)
         binary.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source / "pic32prog", binary)
