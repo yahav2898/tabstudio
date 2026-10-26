@@ -1,29 +1,21 @@
-10-26 08:05:23.055  3416  3416 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-10-26 08:05:23.061  3416  3416 I AndroidRuntime: Using default boot image
-10-26 08:05:23.061  3416  3416 I AndroidRuntime: Leaving lock profiling enabled
-10-26 08:05:23.505  3416  3416 D AndroidRuntime: Calling main entry com.android.commands.am.Am
-10-26 08:05:23.640  3416  3416 I AndroidRuntime: VM exiting with result code 0.
-10-26 08:05:24.882  3430  3430 D nativeloader: Load /data/app/~~90v6jxZBK0ZVLMiHKQngSw==/com.tabstudio.ide-I-x-xZllDj72u5RQRmqPWg==/lib/x86_64/libmonosgen-2.0.so using ns clns-7 from class loader (caller=/data/app/~~90v6jxZBK0ZVLMiHKQngSw==/com.tabstudio.ide-I-x-xZllDj72u5RQRmqPWg==/base.apk): ok
-10-26 08:05:24.884  3430  3430 D nativeloader: Load /data/app/~~90v6jxZBK0ZVLMiHKQngSw==/com.tabstudio.ide-I-x-xZllDj72u5RQRmqPWg==/lib/x86_64/libmonodroid.so using ns clns-7 from class loader (caller=/data/app/~~90v6jxZBK0ZVLMiHKQngSw==/com.tabstudio.ide-I-x-xZllDj72u5RQRmqPWg==/base.apk): ok
-10-26 08:05:25.419  3430  3430 D DOTNET  : AndroidCryptoNative_InitLibraryOnLoad: jint AndroidCryptoNative_InitLibraryOnLoad(JavaVM *, void *) in /__w/1/s/src/runtime/src/native/libs/System.Security.Cryptography.Native.Android/pal_jni.c
-10-26 08:05:25.420  3430  3430 D DOTNET  : GetOptionalClassGRef: optional class com/android/org/conscrypt/OpenSSLEngineImpl was not found
-10-26 08:05:36.593  3430  3552 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Workspaces' (hash 1d9425b8bd762c1e) not found
-10-26 08:05:36.593  3430  3552 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Workspaces
-10-26 08:05:36.593  3430  3552 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Workspaces' (hash 1d9425b8bd762c1e) not found
-10-26 08:05:36.593  3430  3552 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Workspaces
-10-26 08:05:36.655  3430  3552 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Features' (hash ebd054ac833caaaa) not found
-10-26 08:05:36.660  3430  3552 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Features
-10-26 08:05:36.660  3430  3552 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Features' (hash ebd054ac833caaaa) not found
-10-26 08:05:36.660  3430  3552 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Features
-10-26 08:05:37.581  3430  3430 I TabStudio: TABSTUDIO_SELFTEST_START shard=native
-10-26 08:05:39.417  3430  3533 W monodroid-assembly: Shared library 'android' not loaded, p/invoke 'ANativeWindow_fromSurface' may fail
-10-26 08:06:13.013  3430  3606 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'pipe2' may fail
-10-26 08:06:13.014  3430  3606 W monodroid-assembly: Shared library 'libc' not loaded, p/invoke 'fcntl' may fail
-10-26 08:06:16.768  4072  4072 F DEBUG   :       #03 pc 00000000001c9d28  /data/app/~~90v6jxZBK0ZVLMiHKQngSw==/com.tabstudio.ide-I-x-xZllDj72u5RQRmqPWg==/lib/x86_64/libmonosgen-2.0.so (BuildId: b9db63cc66e53a97dc8483280f7aab8a31672169)
-10-26 08:06:16.768  4072  4072 F DEBUG   :       #04 pc 00000000001c8497  /data/app/~~90v6jxZBK0ZVLMiHKQngSw==/com.tabstudio.ide-I-x-xZllDj72u5RQRmqPWg==/lib/x86_64/libmonosgen-2.0.so (BuildId: b9db63cc66e53a97dc8483280f7aab8a31672169)
-10-26 08:06:16.768  4072  4072 F DEBUG   :       #05 pc 00000000001ba5e2  /data/app/~~90v6jxZBK0ZVLMiHKQngSw==/com.tabstudio.ide-I-x-xZllDj72u5RQRmqPWg==/lib/x86_64/libmonosgen-2.0.so (BuildId: b9db63cc66e53a97dc8483280f7aab8a31672169)
-10-26 08:06:16.768  4072  4072 F DEBUG   :       #06 pc 00000000001b8182  /data/app/~~90v6jxZBK0ZVLMiHKQngSw==/com.tabstudio.ide-I-x-xZllDj72u5RQRmqPWg==/lib/x86_64/libmonosgen-2.0.so (BuildId: b9db63cc66e53a97dc8483280f7aab8a31672169)
-10-26 08:06:16.768  4072  4072 F DEBUG   :       #07 pc 0000000000280586  /data/app/~~90v6jxZBK0ZVLMiHKQngSw==/com.tabstudio.ide-I-x-xZllDj72u5RQRmqPWg==/lib/x86_64/libmonosgen-2.0.so (mono_runtime_invoke_checked+134) (BuildId: b9db63cc66e53a97dc8483280f7aab8a31672169)
-10-26 08:06:16.768  4072  4072 F DEBUG   :       #08 pc 0000000000296b08  /data/app/~~90v6jxZBK0ZVLMiHKQngSw==/com.tabstudio.ide-I-x-xZllDj72u5RQRmqPWg==/lib/x86_64/libmonosgen-2.0.so (BuildId: b9db63cc66e53a97dc8483280f7aab8a31672169)
-10-26 08:06:19.006  1642  1867 D nativeloader: Load /data/app/~~l5fmVxeCsUtvwRAVwO_-AQ==/com.google.android.trichromelibrary_636771938-33WqzbFe2EubG0Ji4-B_Gw==/TrichromeLibrary.apk!/lib/x86_64/libmonochrome_64.so using ns clns-9 from class loader (caller=/data/app/~~Gtob-RiP8BTxve0rRXgfPg==/com.google.android.webview-HCdsZw-lzUBM5RvKmyivTg==/WebViewGoogle.apk): ok
-10-26 08:06:22.872  4184  4184 D nativeloader: Load /data/app/~~l5fmVxeCsUtvwRAVwO_-AQ==/com.google.android.trichromelibrary_636771938-33WqzbFe2EubG0Ji4-B_Gw==/TrichromeLibrary.apk!/lib/x86_64/libmonochrome_64.so using ns clns-8 from class loader (caller=/data/app/~~Gtob-RiP8BTxve0rRXgfPg==/com.google.android.webview-HCdsZw-lzUBM5RvKmyivTg==/WebViewGoogle.apk): ok
+10-26 08:26:17.853  2958  2958 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-26 08:26:17.857  2958  2958 I AndroidRuntime: Using default boot image
+10-26 08:26:17.857  2958  2958 I AndroidRuntime: Leaving lock profiling enabled
+10-26 08:26:18.327  2958  2958 D AndroidRuntime: Calling main entry com.android.commands.am.Am
+10-26 08:26:18.687  2958  2958 I AndroidRuntime: VM exiting with result code 0.
+10-26 08:26:19.343  3029  3029 D nativeloader: Load /data/app/~~y79_dO4viEnuVje7AUhcfw==/com.tabstudio.ide-SAA6PqazZKpW768wjbo_qA==/lib/x86_64/libmonosgen-2.0.so using ns clns-7 from class loader (caller=/data/app/~~y79_dO4viEnuVje7AUhcfw==/com.tabstudio.ide-SAA6PqazZKpW768wjbo_qA==/base.apk): ok
+10-26 08:26:19.348  3029  3029 D nativeloader: Load /data/app/~~y79_dO4viEnuVje7AUhcfw==/com.tabstudio.ide-SAA6PqazZKpW768wjbo_qA==/lib/x86_64/libmonodroid.so using ns clns-7 from class loader (caller=/data/app/~~y79_dO4viEnuVje7AUhcfw==/com.tabstudio.ide-SAA6PqazZKpW768wjbo_qA==/base.apk): ok
+10-26 08:26:20.161  3029  3029 D DOTNET  : AndroidCryptoNative_InitLibraryOnLoad: jint AndroidCryptoNative_InitLibraryOnLoad(JavaVM *, void *) in /__w/1/s/src/runtime/src/native/libs/System.Security.Cryptography.Native.Android/pal_jni.c
+10-26 08:26:20.161  3029  3029 D DOTNET  : GetOptionalClassGRef: optional class com/android/org/conscrypt/OpenSSLEngineImpl was not found
+10-26 08:26:28.760  1668  1996 D nativeloader: Load /data/app/~~EZ5FePI1nFHLL3t9AqmIhg==/com.google.android.trichromelibrary_636771938-6yvsUUn9F6puC_GnR6-8Hw==/TrichromeLibrary.apk!/lib/x86_64/libmonochrome_64.so using ns clns-9 from class loader (caller=/data/app/~~7P-MXybDcMlJN9C9E3MZtw==/com.google.android.webview-g5Dm6oeMneKTWG_J4yqH5w==/WebViewGoogle.apk): ok
+10-26 08:26:30.503  3493  3493 D nativeloader: Load /data/app/~~EZ5FePI1nFHLL3t9AqmIhg==/com.google.android.trichromelibrary_636771938-6yvsUUn9F6puC_GnR6-8Hw==/TrichromeLibrary.apk!/lib/x86_64/libmonochrome_64.so using ns clns-8 from class loader (caller=/data/app/~~7P-MXybDcMlJN9C9E3MZtw==/com.google.android.webview-g5Dm6oeMneKTWG_J4yqH5w==/WebViewGoogle.apk): ok
+10-26 08:26:34.902  3029  3279 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Workspaces' (hash 1d9425b8bd762c1e) not found
+10-26 08:26:34.914  3029  3279 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Workspaces
+10-26 08:26:34.914  3029  3279 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Workspaces' (hash 1d9425b8bd762c1e) not found
+10-26 08:26:34.914  3029  3279 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Workspaces
+10-26 08:26:35.109  3029  3279 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Features' (hash ebd054ac833caaaa) not found
+10-26 08:26:35.109  3029  3279 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Features
+10-26 08:26:35.109  3029  3279 W monodroid-assembly: Assembly 'Microsoft.CodeAnalysis.VisualBasic.Features' (hash ebd054ac833caaaa) not found
+10-26 08:26:35.109  3029  3279 W monodroid-assembly: open_from_bundles: failed to load bundled assembly Microsoft.CodeAnalysis.VisualBasic.Features
+10-26 08:26:37.209  3029  3029 I TabStudio: TABSTUDIO_SELFTEST_START shard=native
+10-26 08:26:39.452  3029  3272 W monodroid-assembly: Shared library 'android' not loaded, p/invoke 'ANativeWindow_fromSurface' may fail
