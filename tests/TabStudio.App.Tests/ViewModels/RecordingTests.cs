@@ -92,6 +92,11 @@ public sealed class RecordingTests
         Assert.Equal(2, workspace.CallStack.Frames[0].Location!.Line);
         Assert.Equal("0", workspace.Locals.Tree.Rows.Single(r => r.Name == "divisor").Value);
 
+        await workspace.ReturnToLiveCommand.ExecuteAsync(null);
+        Assert.False(workspace.IsHistorical);
+        Assert.Equal(4, workspace.CallStack.Frames[0].Location!.Line);
+        Assert.NotNull(workspace.ActiveDocument.ExceptionHelper);
+
         await workspace.StartDebuggingCommand.ExecuteAsync(null);
         await DebuggingTests.WaitForExitAsync(workspace);
         Assert.Equal(IdeState.Failed, workspace.State);

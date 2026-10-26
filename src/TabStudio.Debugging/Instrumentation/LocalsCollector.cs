@@ -58,10 +58,11 @@ internal static class LocalsCollector
         }
 
         // Static fields have no receiver to snapshot. Read them only for recording and never invoke properties.
+        var frameType = model.GetEnclosingSymbol(position, cancellationToken)?.ContainingType;
         foreach (var field in model.LookupSymbols(position).OfType<IFieldSymbol>())
         {
             if (!field.IsStatic || field.IsConst || field.IsImplicitlyDeclared || !SyntaxFacts.IsValidIdentifier(field.Name) ||
-                !IsBoxable(field.Type) || result.Any(r => r.Slot.Name == field.Name))
+                !IsFrameType(field.ContainingType, frameType) || !IsBoxable(field.Type) || result.Any(r => r.Slot.Name == field.Name))
             {
                 continue;
             }
@@ -70,6 +71,13 @@ internal static class LocalsCollector
                 new DebugLocalSlot(field.Name, field.Type.ToDisplayString(TypeFormat)) { RecordingOnly = true }));
         }
         return result;
+    }
+
+    private static bool IsFrameType(INamedTypeSymbol declaringType, INamedTypeSymbol? frameType)
+    {
+        for (var type = frameType; type is not null; type = type.BaseType)
+            if (SymbolEqualityComparer.Default.Equals(type, declaringType)) return true;
+        return false;
     }
 
     /// <summary>The expressions a function's fault filter passes: <c>this</c> and every readable parameter.</summary>

@@ -14,7 +14,8 @@ namespace TabStudio.Debugging.Instrumentation;
 /// <para>
 /// The array holds <see cref="ContractVersion"/> followed by, in order: enter (<c>Func&lt;int, object?&gt;</c>),
 /// exit, suspend and resume (<c>Action&lt;object?&gt;</c>), step (<c>Func&lt;object?, int, bool&gt;</c>), break
-/// (<c>Action&lt;object?, int, object?[]?&gt;</c>) and fault (<c>Func&lt;object?, Exception, object?[]?, bool&gt;</c>).
+/// (<c>Action&lt;object?, int, object?[]?&gt;</c>), fault (<c>Func&lt;object?, Exception, object?[]?, bool&gt;</c>)
+/// and optional write (<c>Action&lt;object?, int, string, object?&gt;</c>: frame, write site, path, value).
 /// Without that data every hook does nothing, so an instrumented program also runs normally on its own.
 /// </para>
 /// </remarks>

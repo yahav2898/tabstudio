@@ -107,8 +107,16 @@ public sealed class DebugRecording
             else if (frame.RecordedValues.TryGetValue(path[..dot], out var owner))
             {
                 var member = path[(dot + 1)..];
-                var children = owner.Expand().Where(v => v.Name != member).Append(Capture(member, null, value)).ToArray();
-                frame.RecordedValues[path[..dot]] = new DebugValue(owner.Name, owner.Type, owner.Value, children);
+                var captured = Capture(member, null, value);
+                // Two names for one object must show the same fields at a write event, including caller aliases.
+                for (var current = frame; current is not null; current = current.Parent)
+                {
+                    foreach (var alias in current.RecordedValues.Values.Where(v => v.Value == owner.Value).ToArray())
+                    {
+                        var children = alias.Expand().Where(v => v.Name != member).Append(captured).ToArray();
+                        current.RecordedValues[alias.Name] = new DebugValue(alias.Name, alias.Type, alias.Value, children);
+                    }
+                }
             }
             else
             {
@@ -143,17 +151,31 @@ public sealed class DebugRecording
     {
         lock (_gate)
         {
-            var found = FindLastWriteCore(path, frameId, _first + beforeIndex);
+            var anchor = Read(_entries[_first + Math.Min(beforeIndex, _entries.Count - _first - 1)]);
+            var locals = anchor.Frames.FirstOrDefault(f => f.Id == frameId)?.Locals ?? [];
+            if (!locals.Any(v => v.Name == path) && ValuePath.Find(locals, "this." + path) is not null) path = "this." + path;
+            var dot = path.IndexOf('.');
+            var owner = dot < 0 ? null : ValuePath.Find(locals, path[..dot]);
+            var identity = owner is not null && owner.Value.StartsWith('{') ? owner.Value : null;
+            var found = FindLastWriteCore(path, frameId, _first + beforeIndex, identity);
             return found < 0 ? -1 : found - _first;
         }
     }
 
-    private int FindLastWriteCore(string path, long frameId, int before)
+    private int FindLastWriteCore(string path, long frameId, int before, string? identity = null)
     {
         for (var i = Math.Min(before, _entries.Count) - 1; i >= _first; i--)
         {
             var step = Read(_entries[i]);
             if (step.Frames[0].Id == frameId && (step.WrittenPath == path || step.WrittenPath == "this." + path)) return i;
+            if (identity is null || step.WrittenPath is not { } written) continue;
+            var dot = written.IndexOf('.');
+            var targetDot = path.IndexOf('.');
+            if (dot > 0 && targetDot > 0 && written[dot..] == path[targetDot..] &&
+                ValuePath.Find(step.Frames[0].Locals, written[..dot])?.Value == identity)
+            {
+                return i;
+            }
         }
         return -1;
     }
@@ -161,7 +183,7 @@ public sealed class DebugRecording
     private DebugValue Capture(string name, string? declaredType, object? value)
     {
         var type = value?.GetType();
-        var typeName = declaredType ?? type?.Name ?? "object";
+        var typeName = ValueInspector.FormatType(value, declaredType);
         if (value is null) return new DebugValue(name, typeName, "null", []);
         if (IsScalar(type!))
         {
@@ -172,12 +194,17 @@ public sealed class DebugRecording
 
         var identity = _identities.GetValue(value, _ => new Identity(++_nextIdentity));
         var fields = new List<DebugValue>();
-        for (var current = type; current is not null && fields.Count < 128; current = current.BaseType)
+        for (var current = type; current is not null; current = current.BaseType)
         {
             foreach (var field in current.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
             {
-                if (!IsScalar(field.FieldType) || fields.Count >= 128) continue;
-                try { fields.Add(Capture(field.Name, field.FieldType.Name, field.GetValue(value))); }
+                if (!IsScalar(field.FieldType)) continue;
+                var fieldName = field.Name;
+                if (fieldName.StartsWith('<') && fieldName.EndsWith(">k__BackingField", StringComparison.Ordinal))
+                {
+                    fieldName = fieldName[1..fieldName.IndexOf('>')];
+                }
+                try { fields.Add(Capture(fieldName, null, field.GetValue(value))); }
                 catch (Exception ex) when (ex is MemberAccessException or NotSupportedException) { }
             }
         }
@@ -198,7 +225,7 @@ public sealed class DebugRecording
         writer.Write(breakpoint);
         writer.Write(path ?? string.Empty);
         var frames = new List<DebugFrame>();
-        for (var f = frame; f is not null && frames.Count < 256; f = f.Parent) frames.Add(f);
+        for (var f = frame; f is not null && frames.Count < 10_000; f = f.Parent) frames.Add(f);
         writer.Write7BitEncodedInt(frames.Count);
         foreach (var f in frames)
         {

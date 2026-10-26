@@ -86,7 +86,9 @@ public sealed class RecordingTests(ITestOutputHelper output)
         Assert.DoesNotContain(box.Expand(), v => v.Name == "Evil");
         var write = Steps(session).Last(s => s.WrittenPath == "box.Number");
         Assert.Equal("3", write.Frames[0].Locals.Single(l => l.Name == "box").Expand().Single(v => v.Name == "Number").Value);
+        Assert.Equal("3", write.Frames[0].Locals.Single(l => l.Name == "alias").Expand().Single(v => v.Name == "Number").Value);
         Assert.Equal("1", box.Expand().Single(v => v.Name == "Number").Value);
+        Assert.Equal(4, session.JumpToLastWrite("alias.Number")!.Location!.Line);
     }
 
     [Fact]
@@ -111,6 +113,21 @@ public sealed class RecordingTests(ITestOutputHelper output)
         Assert.Contains(Steps(session), s => s.WrittenPath == "parameter" && s.Frames[0].Locals.Any(v => v.Name == "parameter" && v.Value == "5"));
         Assert.Contains(Steps(session), s => s.WrittenPath == "this.number" && s.Frames[0].Locals.Single(v => v.Name == "this").Expand().Any(v => v.Name == "number" && v.Value == "5"));
         Assert.Contains(Steps(session), s => s.WrittenPath == "count" && s.Frames[0].Locals.Any(v => v.Name == "count" && v.Value == "7"));
+    }
+
+    [Fact]
+    public async Task Recording_does_not_touch_unrelated_static_imports()
+    {
+        using var session = Recorded("""
+            using static Other;
+            Console.WriteLine("No unrelated initialization");
+            static class Other
+            {
+                public static int Unused = Fail();
+                static int Fail() => throw new Exception("Recording initialized an unrelated type");
+            }
+            """);
+        await RunAsync(session);
     }
 
     [Fact]
@@ -166,6 +183,51 @@ public sealed class RecordingTests(ITestOutputHelper output)
         using var session = Recorded("int x = 7; throw new InvalidOperationException(x.ToString());");
         await RunAsync(session, RunOutcome.Crashed);
         Assert.Null(session.Recording!.ExceptionCause);
+    }
+
+    [Fact]
+    public async Task A_handled_exception_does_not_become_the_cause_of_a_later_unrelated_crash()
+    {
+        using var session = Recorded("""
+            int divisor = 0;
+            try { Console.WriteLine(1 / divisor); } catch (DivideByZeroException) { }
+            throw new InvalidOperationException("unrelated");
+            """);
+        await RunAsync(session, RunOutcome.Crashed);
+        Assert.Null(session.Recording!.ExceptionCause);
+    }
+
+    [Fact]
+    public async Task A_null_reference_links_only_to_the_null_write()
+    {
+        using var session = Recorded("""
+            string text = "hello";
+            text = null;
+            int unrelated = 3;
+            Console.WriteLine(text.Length + unrelated);
+            """);
+        await RunAsync(session, RunOutcome.Crashed);
+        Assert.NotNull(session.Recording!.ExceptionCause);
+        var cause = session.ReverseContinue()!;
+        Assert.Equal(2, cause.Location!.Line);
+        Assert.Equal("null", cause.FindValue("text")!.Value);
+    }
+
+    [Fact]
+    public async Task Concurrent_threads_record_a_total_sequence_order_and_their_logical_frames()
+    {
+        using var session = Recorded("""
+            using var barrier = new System.Threading.Barrier(2);
+            var first = Task.Run(() => { int a = 0; barrier.SignalAndWait(); a = 1; Console.WriteLine(a); });
+            var second = Task.Run(() => { int b = 0; barrier.SignalAndWait(); b = 2; Console.WriteLine(b); });
+            await Task.WhenAll(first, second);
+            """);
+        await RunAsync(session);
+        var steps = Steps(session).ToArray();
+        Assert.Equal(steps.Select(s => s.Sequence).Order(), steps.Select(s => s.Sequence));
+        Assert.True(steps.Select(s => s.ThreadId).Distinct().Count() >= 2);
+        Assert.Contains(steps, s => s.WrittenPath == "a" && s.Frames[0].Locals.Any(v => v.Name == "a" && v.Value == "1"));
+        Assert.Contains(steps, s => s.WrittenPath == "b" && s.Frames[0].Locals.Any(v => v.Name == "b" && v.Value == "2"));
     }
 
     [Fact]

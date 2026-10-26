@@ -31,10 +31,15 @@ public sealed partial class VariableTreeViewModel : ObservableObject
     [ObservableProperty]
     public partial bool IsHistorical { get; set; }
 
+    /// <summary>Whether the containing debugger has a stopped recording whose writes can be searched.</summary>
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(LastWriteCommand))]
+    public partial bool CanFindLastWrite { get; set; }
+
     /// <summary>Raised when the last-write context action is chosen.</summary>
     public event EventHandler<VariableViewModel>? LastWriteRequested;
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanFindLastWrite))]
     private void LastWrite(VariableViewModel? row)
     {
         if (row is { IsError: false }) LastWriteRequested?.Invoke(this, row);

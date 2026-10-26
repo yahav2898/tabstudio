@@ -274,7 +274,7 @@ locations come from the original debug map. Records are independent snapshots: e
 without its baseline. The ring wraps byte ranges and evicts complete records. The index is bounded by retained
 record count and periodically compacted; transient encoding/decoding and active-frame state are additional memory.
 Oversized events are dropped with a visible counter. Weak object identities do not keep the debuggee alive.
-Scalar values and full strings are copied; objects have an identity and up to 128 primitive/string fields,
+Scalar values and full strings are copied; objects have an identity and their primitive/string fields,
 including private fields, captured without property getters, collection enumeration or user `ToString`.
 
 The live engine pause stays separate from `HistoricalPause`. Navigation is allowed only while paused or exited;

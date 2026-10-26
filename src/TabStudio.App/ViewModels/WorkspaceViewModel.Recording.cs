@@ -9,6 +9,7 @@ public sealed partial class WorkspaceViewModel
 {
     private DebugSession? _recordedSession;
     private bool _updatingTimeline;
+    private string? _recordingExitStatus;
 
     /// <summary>Size of the next recording's ring. Recording remains off until Start with Recording is chosen.</summary>
     [ObservableProperty]
@@ -29,7 +30,7 @@ public sealed partial class WorkspaceViewModel
 
     /// <summary>Historical marker, selected step, thread, buffer usage and eviction information.</summary>
     public string RecordingLabel => _recordedSession?.Recording is { } recording
-        ? $"{(IsHistorical ? "Historical" : IsDebuggeeRunning ? "Recording" : "Recorded")} · step {(IsHistorical ? _pause?.RecordedStep : recording.GetStep((int)RecordingPosition)?.Sequence)} / {recording.Count} · thread {_pause?.ThreadId ?? recording.GetStep((int)RecordingPosition)?.ThreadId} · {recording.UsedBytes / (1024d * 1024):F1} MiB · {recording.EvictedSteps} evicted · {recording.DroppedSteps} dropped"
+        ? $"{(IsHistorical ? "Historical" : IsDebuggeeRunning ? "Recording" : "Recorded")} · step {(IsHistorical ? _pause?.RecordedStep : recording.GetStep((int)RecordingPosition)?.Sequence)} · {recording.Count} retained · thread {_pause?.ThreadId ?? recording.GetStep((int)RecordingPosition)?.ThreadId} · {recording.UsedBytes / 1024d:F1} KiB · {recording.EvictedSteps} evicted · {recording.DroppedSteps} dropped"
         : string.Empty;
 
     /// <summary>History can be inspected only while execution is stopped.</summary>
@@ -72,6 +73,7 @@ public sealed partial class WorkspaceViewModel
             _pause = null;
             CallStack.Clear(); Locals.Clear();
             await Watch.EvaluateAsync(null);
+            StatusText = _recordingExitStatus ?? "Ready";
             ShowExecutionPoints();
             RefreshRecording();
         }
@@ -119,6 +121,7 @@ public sealed partial class WorkspaceViewModel
         RecordingPosition = Math.Max(0, _recordedSession?.HistoryIndex ?? 0);
         _updatingTimeline = false;
         Locals.Tree.IsHistorical = Watch.Tree.IsHistorical = IsHistorical;
+        Locals.Tree.CanFindLastWrite = Watch.Tree.CanFindLastWrite = CanNavigateRecording;
         OnPropertyChanged(nameof(HasRecording));
         OnPropertyChanged(nameof(IsHistorical));
         OnPropertyChanged(nameof(RecordingMaximum));
@@ -141,6 +144,7 @@ public sealed partial class WorkspaceViewModel
     private void ClearRecording()
     {
         _recordedSession = null;
+        _recordingExitStatus = null;
         if (IsHistorical)
         {
             _pause = null; _exceptionHelper = null;

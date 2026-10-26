@@ -173,7 +173,7 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
             return null;
         }
 
-        var tree = new VariableTreeViewModel { IsHistorical = pause.IsHistorical };
+        var tree = new VariableTreeViewModel { IsHistorical = pause.IsHistorical, CanFindLastWrite = CanNavigateRecording };
         tree.LastWriteRequested += async (_, row) => await JumpToLastWriteAsync(row.Path);
         await tree.ShowAsync([new VariableSource(expression, expression, value)]);
         return tree;
@@ -552,6 +552,7 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
             RunOutcome.Stopped => "Debugging stopped",
             _ => "The program stopped with an error",
         };
+        if (session.Recording is not null) _recordingExitStatus = StatusText;
         RefreshRecording();
 
         if (SelectedPanel is BottomPanel.Locals or BottomPanel.Watch or BottomPanel.CallStack)

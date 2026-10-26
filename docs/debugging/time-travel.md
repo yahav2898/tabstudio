@@ -22,11 +22,18 @@ that caller's last captured locals. These are immutable snapshots; historical in
 The timeline reports retained steps, managed thread id, encoded bytes, evicted steps and oversized dropped steps.
 Starting a new debugging run replaces the previous recording; recordings are held in memory, not persisted to disk.
 
+The running IDE's timeline after selecting an earlier loop value:
+
+![Historical loop state with the timeline in the dark theme](images/timeline-dark.webp)
+
+![Historical loop state with the timeline in the light theme](images/timeline-light.webp)
+
 Sequence points contain the current thread, logical method stack, locals, parameters and shallow object state.
 Assignment/initializer/increment hooks add writes at their original source location, including unchanged values.
-Primitives and full strings are copied by value. Objects are weakly identified and copied as an id plus up to
-128 primitive/string fields (public or private); nested object graphs, properties and collection items are not
-traversed. Subsequent sequence points refresh those shallow fields. Ref structs/pointers cannot be boxed and are
+Primitives and full strings are copied by value. Objects are weakly identified and copied as an id plus their
+primitive/string fields (public or private); nested object graphs, property getters and collection items are not
+traversed. Auto-property backing fields are shown under their property names without calling getters.
+Subsequent sequence points refresh those shallow fields. Ref structs/pointers cannot be boxed and are
 omitted, as in the ordinary debugger. Object initializer fields are captured on first touch. Writes through
 reflection, native code, indexers, arbitrary receiver expressions and uninstrumented package methods are visible
 in later shallow snapshots where readable, but do not have precise last-write hooks. History records an observed
@@ -52,8 +59,8 @@ temporary codec allocations are additional memory. No ring is allocated with ord
 discards one warmup, and prints the median of three ordinary debug runs and three recorded runs, their ratio and
 retained bytes. It excludes build time and uses an 8 MiB ring. Run:
 
-Measured on Linux x86-64 / .NET 10.0.0 in the development host on 2026-10-26: **1.92 ms ordinary debugging,
-150.84 ms recording (78.52×)**, retaining **3,489,831 bytes**. This deliberately dense loop reaches tens of thousands
+Measured on Linux x86-64 / .NET 10.0.0 in the development host on 2026-10-26: **2.58 ms ordinary debugging,
+142.50 ms recording (55.25×)**, retaining **3,449,828 bytes**. This deliberately dense loop reaches tens of thousands
 of hooks in a few milliseconds without recording. The figure is workload- and host-dependent, and is not a claim
 about Android performance.
 

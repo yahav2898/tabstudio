@@ -343,19 +343,18 @@ internal sealed class DebugEngine
             conditionMet = BreakpointCondition.IsMet(condition, values, out conditionError);
         }
 
-        if (frame is not null)
-            Recording?.Record(frame, slots, locals, _breakpoints.Contains(statementId) && conditionMet);
-
         DebugPausedEventArgs? pause = null;
         lock (_gate)
         {
             WaitHoldingGate(() => _paused && !_stopped);
-
-            if (!_stopped && ReasonToBreak(frame, statementId) is { } reason && (reason != PauseReason.Breakpoint || conditionMet))
+            var reason = ReasonToBreak(frame, statementId);
+            if (!_stopped && frame is not null)
+                Recording?.Record(frame, slots, locals, reason == PauseReason.Breakpoint && conditionMet);
+            if (!_stopped && reason is { } pauseReason && (pauseReason != PauseReason.Breakpoint || conditionMet))
             {
-                var breakpoint = reason == PauseReason.Breakpoint ? _breakpoints.Find(statementId) : null;
+                var breakpoint = pauseReason == PauseReason.Breakpoint ? _breakpoints.Find(statementId) : null;
                 breakpoint?.RecordHit();
-                pause = BeginPause(reason, frame, values ?? CreateLocals(slots, locals), breakpoint, exception: null, conditionError);
+                pause = BeginPause(pauseReason, frame, values ?? CreateLocals(slots, locals), breakpoint, exception: null, conditionError);
             }
         }
 
