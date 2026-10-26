@@ -60,6 +60,25 @@ public sealed class SdkProjectItemsTests
     }
 
     [Fact]
+    public void MSBuildThisFileDirectory_means_the_file_that_sets_the_property()
+    {
+        // Serilog: <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)assets/Serilog.snk</AssemblyOriginatorKeyFile>
+        using var temp = new TempDirectory();
+        temp.Write("Directory.Build.props", """
+            <Project><PropertyGroup><AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)assets/Repo.snk</AssemblyOriginatorKeyFile></PropertyGroup></Project>
+            """);
+        var path = temp.Write("src/Lib/Lib.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><Notes>$(MSBuildThisFileDirectory)notes</Notes></PropertyGroup></Project>
+            """);
+
+        var project = ProjectParser.Load(path);
+
+        Assert.Equal(Path.Combine(temp.Path, "assets/Repo.snk"), project.GetProperty("AssemblyOriginatorKeyFile"));
+        Assert.Equal(Path.Combine(temp.Path, "src", "Lib") + Path.DirectorySeparatorChar + "notes", project.GetProperty("Notes"));
+        Assert.Equal("Lib", project.GetProperty("MSBuildProjectName"));
+    }
+
+    [Fact]
     public void Project_references_keep_their_metadata_and_packages_their_PrivateAssets()
     {
         var project = ProjectParser.Parse(ProjectPath, """

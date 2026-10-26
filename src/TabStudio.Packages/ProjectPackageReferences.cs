@@ -136,7 +136,9 @@ internal static class ProjectPackageReferences
         var dependencies = new List<PackageDependency>();
         foreach (var reference in project.PackageReferences.Where(r => includePrivate || !r.IsPrivate))
         {
-            var text = reference.Version ?? central.GetValueOrDefault(reference.Name);
+            var text = reference.Version is { } own
+                ? CentralPackageVersions.ExpandProperties(own, project.Properties)
+                : central.GetValueOrDefault(reference.Name);
             if (string.IsNullOrWhiteSpace(text))
             {
                 diagnostics.Add(PackageDiagnostics.Warning(

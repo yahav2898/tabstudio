@@ -101,10 +101,16 @@ public static partial class ProjectParser
             }
         }
 
-        foreach (var (key, value) in ReadProperties(root))
+        foreach (var (key, value) in WithThisFile(ReadProperties(root), filePath))
         {
             properties[key] = value;
         }
+
+        // MSBuild's reserved properties, which repositories use for paths such as a key file next to the project.
+        properties.TryAdd("MSBuildProjectDirectory", directory);
+        properties.TryAdd("MSBuildProjectName", Path.GetFileNameWithoutExtension(filePath));
+        properties.TryAdd("MSBuildProjectFile", Path.GetFileName(filePath));
+        properties.TryAdd("MSBuildProjectFullPath", filePath);
 
         if (overridingProperties is not null)
         {
@@ -192,7 +198,7 @@ public static partial class ProjectParser
     {
         try
         {
-            return ReadProperties(LoadXml(propsPath, File.ReadAllText(propsPath)));
+            return WithThisFile(ReadProperties(LoadXml(propsPath, File.ReadAllText(propsPath))), propsPath);
         }
         catch (ProjectLoadException)
         {
@@ -203,6 +209,25 @@ public static partial class ProjectParser
         {
             return null;
         }
+    }
+
+    /// <summary>
+    /// Resolves <c>$(MSBuildThisFileDirectory)</c>, <c>$(MSBuildThisFileFullPath)</c> and <c>$(MSBuildThisFile)</c> in
+    /// one file's properties, which mean the file that sets them, such as
+    /// <c>$(MSBuildThisFileDirectory)assets/Serilog.snk</c> in a <c>Directory.Build.props</c>.
+    /// </summary>
+    private static Dictionary<string, string> WithThisFile(Dictionary<string, string> properties, string file)
+    {
+        var folder = (Path.GetDirectoryName(file) ?? string.Empty).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+        foreach (var key in properties.Keys.ToList())
+        {
+            properties[key] = properties[key]
+                .Replace("$(MSBuildThisFileDirectory)", folder, StringComparison.OrdinalIgnoreCase)
+                .Replace("$(MSBuildThisFileFullPath)", file, StringComparison.OrdinalIgnoreCase)
+                .Replace("$(MSBuildThisFile)", Path.GetFileName(file), StringComparison.OrdinalIgnoreCase);
+        }
+
+        return properties;
     }
 
     private static XElement LoadXml(string filePath, string xml)

@@ -12,7 +12,7 @@ namespace TabStudio.Packages;
 /// The versions apply only when <c>ManagePackageVersionsCentrally</c> is <c>true</c>, in the props file or the
 /// project, as in the .NET SDK. Conditions, imports and <c>VersionOverride</c> are not evaluated.
 /// </remarks>
-internal static class CentralPackageVersions
+internal static partial class CentralPackageVersions
 {
     /// <summary>The file name MSBuild looks for.</summary>
     public const string FileName = "Directory.Packages.props";
@@ -55,6 +55,19 @@ internal static class CentralPackageVersions
             return versions;
         }
 
+        // Versions are often properties of the file itself, such as <AspNetVersion>8.0.2</AspNetVersion>; the
+        // project's properties come later in MSBuild's evaluation, so they win.
+        var properties = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var property in root.Elements().Where(e => e.Name.LocalName == "PropertyGroup").SelectMany(g => g.Elements()))
+        {
+            properties[property.Name.LocalName] = property.Value.Trim();
+        }
+
+        foreach (var (name, value) in project.Properties)
+        {
+            properties[name] = value;
+        }
+
         foreach (var item in root.Descendants().Where(e => e.Name.LocalName == "PackageVersion"))
         {
             var id = item.Attribute("Include")?.Value.Trim();
@@ -62,12 +75,38 @@ internal static class CentralPackageVersions
                 item.Elements().FirstOrDefault(e => e.Name.LocalName == "Version")?.Value;
             if (!string.IsNullOrEmpty(id) && !string.IsNullOrWhiteSpace(version))
             {
-                versions.TryAdd(id, version.Trim());
+                versions.TryAdd(id, ExpandProperties(version.Trim(), properties));
             }
         }
 
         return versions;
     }
+
+    /// <summary>
+    /// Replaces <c>$(Name)</c> references with property values, a few levels deep, as in <c>Version="$(AspNetVersion)"</c>.
+    /// A reference to an unknown property stays, so the restore reports the version as invalid.
+    /// </summary>
+    /// <param name="text">The text, such as a version.</param>
+    /// <param name="properties">The properties, case-insensitive.</param>
+    public static string ExpandProperties(string text, IReadOnlyDictionary<string, string> properties)
+    {
+        for (var depth = 0; depth < 8 && text.Contains("$(", StringComparison.Ordinal); depth++)
+        {
+            var expanded = PropertyReference().Replace(text, match =>
+                properties.TryGetValue(match.Groups["name"].Value, out var value) ? value : match.Value);
+            if (expanded == text)
+            {
+                break;
+            }
+
+            text = expanded;
+        }
+
+        return text;
+    }
+
+    [System.Text.RegularExpressions.GeneratedRegex(@"\$\((?<name>[A-Za-z_][A-Za-z0-9_.-]*)\)", System.Text.RegularExpressions.RegexOptions.CultureInvariant, 100)]
+    private static partial System.Text.RegularExpressions.Regex PropertyReference();
 
     /// <summary>Finds the nearest <c>Directory.Packages.props</c> in a folder or its parents.</summary>
     private static string? Find(string startDirectory)
