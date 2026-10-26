@@ -54,6 +54,8 @@ public sealed partial class WorkspaceViewModel : INotebookHost
     /// <summary>Opens a file as a document: notebooks in the notebook editor, everything else as text.</summary>
     private async Task<DocumentViewModel> CreateDocumentAsync(string path)
     {
+        // Remote notebooks open as source; their kernel would otherwise execute on the tablet instead of the host.
+        if (IsRemoteWorkspace) { return await DocumentViewModel.OpenAsync(path, _language, _profile); }
         if (NotebookSerializer.GetFormat(path) is not { } format)
         {
             return await DocumentViewModel.OpenAsync(path, _language, _profile);

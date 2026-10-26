@@ -48,6 +48,7 @@ Dependencies point down only. Each layer has one job:
 | `TabStudio.LiveTesting` | Live Unit Testing: coverage instrumentation, per-test attribution, coverage builds, impact analysis and the live test engine. | Compilation, Debugging, TestRunner |
 | `TabStudio.Link` | TabStudio Link: pairing, the TLS transport, QR codes, discovery, and the language protocol a host answers for a tablet. | Compilation, Debugging, LiveTesting |
 | `TabStudio.Web` | What a web app serves beyond its code: static web assets, scoped CSS, Blazor's scripts, and a host for .NET apps on WebAssembly. | Compilation, Packages |
+| `TabStudio.Remote` | SSH.NET connections, platform signing, SFTP source caches, remote processes, forwarding and publishing. | `TabStudio.Toolchains` |
 | `TabStudio.Toolchains` | The Toolchain Store: the catalog, Alpine Linux on PRoot, verified Alpine packages, processes and pseudo terminals, toolchain projects and the terminal emulator. | `TabStudio.Core` |
 | `TabStudio.Forms` | Windows Forms on Avalonia: `System.Windows.Forms` and `System.Drawing`, run in the app preview. | Avalonia |
 | `TabStudio.Forms.Design` | The Windows Forms designer's model: reads and writes `InitializeComponent`, the Toolbox and properties. | `TabStudio.Forms`, Roslyn |
@@ -370,6 +371,32 @@ tablet or a PC. Programs, tests and the debugger still run on the tablet; the ho
 - **What pairing grants.** The host runs the analyzers and source generators of the tablet's packages, so pairing
   gives the tablet code execution on the host; the host's Link window says so, and asks to pair only tablets you own. Mirror paths
   are validated, so a tablet cannot write outside its own mirror folder.
+
+## SSH remote development
+
+`TabStudio.Remote` depends on Core/Toolchains and SSH.NET. `SshConnection` owns separately authenticated SSH and SFTP
+clients with the same pinned SHA256 server fingerprint. Unknown fingerprints require a first-use prompt; changed
+fingerprints abort before authentication. `ISshKeyStore` is injected by the platform: `AndroidSshKeyStore` generates
+RSA keys inside Android Keystore and supplies non-exportable RSA SHA-2 signing callbacks through `SigningKeySource`;
+`FileSshKeyStore` supplies the desktop implementation. No private keys enter host or publish profiles.
+
+`RemoteWorkspace` maps an absolute remote root to a device cache used by the existing workspace loader, explorer,
+editor and search. It bounds traversal, excludes links/generated directories, persists downloaded content baselines,
+checks conflicts before saves and replaces uploaded files through OpenSSH POSIX rename. `DocumentViewModel` awaits
+its external-save callback before marking a remote document clean. Failed uploads keep edits dirty. Cache markers
+prevent reopened/disconnected remote folders from falling back to local builds or terminals. Literal content search
+uses the source cache and navigates matches through the normal document navigation service.
+
+`SshRuntime` adapts SSH exec channels and ShellStream PTYs to `ToolchainProcess`, reusing OutputProcess and the
+Terminal emulator. F5/Build are routed through the remote folder's saved shell commands; diagnostic paths map back
+to source cache files. `PortForward` binds only device loopback and forwards to remote loopback, with ownership tied
+to the workspace. `RemoteExplorerViewModel` exposes hosts, config import, profiles, search, refresh and forwarding.
+
+Publishing invokes the local SDK (offering Alpine dotnet10-sdk installation on tablets), stages successful publish
+output with SFTP into a new release directory, switches `current` atomically, restarts the configured systemd unit
+and restores the old link on activation failure. The unit and scoped sudo policy are server-admin prerequisites.
+See [REMOTE_SSH.md](REMOTE_SSH.md) for protocol/import limits and operational setup. CI's library and App jobs run
+against an OpenSSH container; Android self-test exercises the native signing provider.
 
 ## Toolchains
 

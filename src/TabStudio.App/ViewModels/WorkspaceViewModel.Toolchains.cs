@@ -623,6 +623,7 @@ public sealed partial class WorkspaceViewModel
 
     private ToolchainNoticeViewModel? NextNotice()
     {
+        if (IsRemoteWorkspace) { return null; }
         if (CurrentToolchainProject() is not { } item)
         {
             return null;
@@ -698,6 +699,7 @@ public sealed partial class WorkspaceViewModel
     {
         try
         {
+            if (IsRemoteWorkspace && _remoteWorkspace is { } remote) { return remote.ToLocalPath(file); }
             return Path.IsPathRooted(file) ? Path.GetFullPath(file) : _runDirectory is { } folder ? Path.GetFullPath(Path.Combine(folder, file)) : null;
         }
         catch (Exception ex) when (ex is ArgumentException or NotSupportedException or PathTooLongException)
@@ -720,6 +722,10 @@ public sealed partial class WorkspaceViewModel
         }
 
         var links = new List<OutputLink>();
+        if (IsRemoteWorkspace)
+        {
+            links.AddRange(RemoteErrorLocations(line).Select(location => new OutputLink(location.FilePath, location.Line, location.Column, location.Start, location.Length)));
+        }
         foreach (var toolchain in _toolchains.Catalog.Listed)
         {
             foreach (var location in Matcher(toolchain).Match(line))

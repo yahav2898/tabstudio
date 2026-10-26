@@ -177,6 +177,7 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
     [RelayCommand(CanExecute = nameof(CanStartDebugging))]
     private Task StartDebuggingAsync()
     {
+        if (IsRemoteWorkspace) { return RunRemoteAsync(buildOnly: false); }
         if (_swarmDebug is not null)
         {
             return IsPaused ? ContinueSwarmAsync() : Task.CompletedTask;

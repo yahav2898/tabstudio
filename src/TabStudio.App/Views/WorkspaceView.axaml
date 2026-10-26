@@ -124,6 +124,8 @@
             </MenuItem>
             <Separator />
             <MenuItem Header="_Save" InputGesture="Ctrl+S" Command="{Binding SaveCommand}" />
+            <MenuItem Header="Open _Remote Folder (SSH)..." Command="{Binding ShowRemoteExplorerCommand}" />
+            <MenuItem Header="Publish to _server..." Command="{Binding PublishToServerCommand}" />
             <MenuItem Header="Save A_ll" InputGesture="Ctrl+Shift+S" Command="{Binding SaveAllCommand}" />
             <Separator />
             <MenuItem Header="TabStudio _Link..." Command="{Binding OpenLinkCommand}" IsVisible="{Binding IsLinkAvailable}" />
@@ -708,6 +710,9 @@
       <Border x:Name="SideBarFrame" Grid.Column="2" Background="{DynamicResource Brush.Panel}" BorderBrush="{DynamicResource Brush.Border}" ZIndex="10">
         <Grid x:Name="SideBar" RowDefinitions="*,Auto,Auto">
           <views:SolutionExplorerView DataContext="{Binding Explorer}" />
+          <Panel Grid.RowSpan="3" ZIndex="20" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsRemoteExplorerSelected}">
+            <views:RemoteExplorerView DataContext="{Binding RemoteExplorer}" />
+          </Panel>
           <GridSplitter Grid.Row="1" x:Name="PropertiesSplitter" Height="6" ResizeDirection="Rows" Background="Transparent" IsVisible="False">
             <GridSplitter.Template>
               <ControlTemplate>

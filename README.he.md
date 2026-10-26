@@ -15,6 +15,8 @@
 
 </div>
 
+**פיתוח מרחוק דרך SSH.** בתפריט **File > Open Remote Folder (SSH)** אפשר להוסיף שרת או לייבא `~/.ssh/config`, ליצור מפתח במכשיר ולפתוח תיקיית קוד מרוחקת. באנדרואיד המפתח הפרטי נוצר בתוך Android Keystore ואינו ניתן לייצוא. הקבצים מופיעים בסייר הפתרון דרך מטמון SFTP; אפשר לערוך, לשמור עם זיהוי התנגשויות ולחפש בקוד. הטרמינל פותח shell בשרת, F5 מפעיל פקודות בנייה והרצה מרוחקות, ואפשר להעביר פורט לתצוגת ה־web. **Publish to server** מבצע פרסום מקומי של ASP.NET Core, מעלה גרסה דרך SFTP ומפעיל מחדש שירות systemd קיים. [הוראות התקנה, פרסום ומגבלות](docs/REMOTE_SSH.md).
+
 ---
 
 ## במבט אחד
@@ -217,6 +219,7 @@ src/
   TabStudio.Forms.Design/  The touch designer's model: reads and writes InitializeComponent, the canvas and Toolbox
   TabStudio.Web/           Web apps: static web assets, Blazor's scripts, a host for .NET apps on WebAssembly
   TabStudio.Toolchains/    The Toolchain Store: Alpine Linux on PRoot, packages, processes and the terminal
+  TabStudio.Remote/        SSH.NET, Android Keystore, SFTP source caches, remote shells and publishing
   TabStudio.LanguageServers/ Language Server and Debug Adapter Protocol clients for every non-C# language
   TabStudio.Extensions/    VS Code extensions from Open VSX: grammars, language rules, snippets, themes
   TabStudio.App/           The IDE itself: views and view models, shared by every platform

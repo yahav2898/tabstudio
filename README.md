@@ -17,6 +17,14 @@
 
 ## At a glance
 
+**Remote development over SSH.** Choose **File > Open Remote Folder (SSH)** to open Remote Explorer, save a host
+or import `~/.ssh/config`, generate a device key and open a remote source folder. Android identities are generated
+inside Android Keystore and remain non-exportable. SFTP caches files for Solution Explorer, editing and search;
+Save uploads with conflict detection, Terminal opens a remote shell, and F5 / Build execute the folder's saved SSH
+commands. Forward a remote web port into the web preview. **File > Publish to server** publishes an ASP.NET Core
+project locally, uploads a new release through SFTP and restarts its existing systemd service. See
+[SSH setup, publishing and limits](docs/REMOTE_SSH.md).
+
 TabStudio turns an Android tablet into a development machine you would actually choose to use.
 
 - **One app.** Download it, open it, write code. No Termux, no root, no companion installs.
@@ -225,6 +233,7 @@ src/
   TabStudio.Forms.Design/  The touch designer's model: reads and writes InitializeComponent, the canvas and Toolbox
   TabStudio.Web/           Web apps: static web assets, Blazor's scripts, a host for .NET apps on WebAssembly
   TabStudio.Toolchains/    The Toolchain Store: Alpine Linux on PRoot, packages, processes and the terminal
+  TabStudio.Remote/        SSH.NET connections, device signing, SFTP source caches, SSH runs and server publishing
   TabStudio.LanguageServers/ Language Server and Debug Adapter Protocol clients for every non-C# language
   TabStudio.Extensions/    VS Code extensions from Open VSX: grammars, language rules, snippets, themes
   TabStudio.App/           The IDE itself: views and view models, shared by every platform

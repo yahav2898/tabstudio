@@ -21,6 +21,7 @@ public sealed partial class WorkspaceViewModel
     [RelayCommand(CanExecute = nameof(CanRun))]
     private async Task RunAsync()
     {
+        if (IsRemoteWorkspace) { await RunRemoteAsync(buildOnly: false); return; }
         if (UsesLaunchTarget && CurrentLaunchTarget is { } target)
         {
             await LaunchAdapterAsync(target, DebugStart.Run, noDebug: true);
@@ -118,15 +119,16 @@ public sealed partial class WorkspaceViewModel
     [RelayCommand(CanExecute = nameof(CanBuild))]
     private async Task BuildAsync()
     {
+        if (IsRemoteWorkspace) { await RunRemoteAsync(buildOnly: true); return; }
         if (Workspace is { } workspace)
         {
             await BuildProjectsAsync(workspace.Projects.Where(p => p.Language == ProjectLanguage.CSharp).ToList(), showOutput: true);
         }
     }
 
-    private bool CanRun() => (StartupProject is not null || UsesLaunchTarget) && State is IdeState.Ready or IdeState.Failed && !IsNotebookRunning;
+    private bool CanRun() => (IsRemoteWorkspace ? _remoteWorkspace?.Connection.IsConnected == true : StartupProject is not null || UsesLaunchTarget) && State is IdeState.Ready or IdeState.Failed && !IsNotebookRunning;
 
-    private bool CanBuild() => State is IdeState.Ready or IdeState.Failed;
+    private bool CanBuild() => (!IsRemoteWorkspace || _remoteWorkspace?.Connection.IsConnected == true) && State is IdeState.Ready or IdeState.Failed;
 
     /// <summary>Builds projects one after another, reporting in the Output panel and the Error List.</summary>
     /// <param name="projects">The projects.</param>

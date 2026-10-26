@@ -82,6 +82,12 @@ public sealed partial class WorkspaceViewModel
         }
 
         Attach(document);
+        if (IsRemoteWorkspace)
+        {
+            document.SaveExternalAsync = token => _remoteWorkspace is { } remote
+                ? remote.SaveAsync(document.FilePath, token)
+                : Task.FromException(new IOException("Reconnect in Remote Explorer before saving remote files."));
+        }
         var index = ActiveDocument is null ? Documents.Count : Documents.IndexOf(ActiveDocument) + 1;
         Documents.Insert(index, document);
         ActiveDocument = document;

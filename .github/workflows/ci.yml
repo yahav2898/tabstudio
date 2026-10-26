@@ -53,6 +53,9 @@ jobs:
           mkdir -p ci-out
           { npm ls -g --depth=0; ls -l "$(command -v typescript-language-server)"; python -m pip show debugpy; } > ci-out/language-servers.txt 2>&1 || true
 
+      - name: Start OpenSSH integration container
+        run: bash build/ci/start-ssh-server.sh
+
       - name: Build and test
         run: |
           mkdir -p ci-out
@@ -96,6 +99,9 @@ jobs:
           path: .nuget/packages
           key: nuget-app-${{ hashFiles('Directory.Packages.props', '**/*.csproj') }}
           restore-keys: nuget-app-
+
+      - name: Start OpenSSH integration container
+        run: bash build/ci/start-ssh-server.sh
 
       # The editor and debugger tests for Python files use real Pyright and debugpy.
       - uses: actions/setup-node@v4

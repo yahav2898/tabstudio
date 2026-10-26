@@ -44,6 +44,7 @@ public static class AppServices
         services.AddSingleton<SampleLibrary>();
         services.AddSingleton<ProjectTemplates>();
         services.AddSingleton<FolderImporter>();
+        services.AddSingleton<RemoteSshServices>();
         services.AddSingleton(_ =>
         {
             var http = new HttpClient { Timeout = TimeSpan.FromMinutes(10) };

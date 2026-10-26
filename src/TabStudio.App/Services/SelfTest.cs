@@ -127,6 +127,7 @@ public static partial class SelfTest
             var processes = toolchains.Success ? await StartProgramsWhileCollectingAsync(cancellationToken) : new SelfTestResult(false, "Processes: not run", TimeSpan.Zero);
             var pythonTools = processes.Success ? await CheckPythonToolsAsync(main, cancellationToken) : new SelfTestResult(false, "Python tools: not run", TimeSpan.Zero);
             var forms = pythonTools.Success ? await ShowWindowsFormsAppAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Windows Forms: not run", TimeSpan.Zero);
+            var ssh = forms.Success && main.Workspace is { } sshWorkspace ? await CheckRemoteSshAsync(sshWorkspace, cancellationToken) : new SelfTestResult(false, "SSH: not run", TimeSpan.Zero);
 
             var design = forms.Success ? await CheckDesignAsync(main, screenshots, cancellationToken) : new SelfTestResult(false, "Design: not run", TimeSpan.Zero);
 
@@ -140,8 +141,8 @@ public static partial class SelfTest
             }
 
             return new SelfTestResult(
-                extensions.Success && toolchains.Success && processes.Success && pythonTools.Success && forms.Success && design.Success && screens.Success && swarm.Success,
-                $"{summary} | {debugged.Message} | {web.Message} | {blazor.Message} | {avalonia.Message} | {extensions.Message} | {toolchains.Message} | {processes.Message} | {pythonTools.Message} | {forms.Message} | {design.Message} | {screens.Message} | {swarm.Message}",
+                extensions.Success && toolchains.Success && processes.Success && pythonTools.Success && forms.Success && ssh.Success && design.Success && screens.Success && swarm.Success,
+                $"{summary} | {debugged.Message} | {web.Message} | {blazor.Message} | {avalonia.Message} | {extensions.Message} | {toolchains.Message} | {processes.Message} | {pythonTools.Message} | {forms.Message} | {ssh.Message} | {design.Message} | {screens.Message} | {swarm.Message}",
                 clock.Elapsed);
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)
