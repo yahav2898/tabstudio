@@ -11,7 +11,19 @@ public static partial class SelfTest
 {
     public const string ServicesAppName = "SelfTestServices";
 
-    private static async Task<SelfTestResult> RunServicesAsync(MainViewModel main, ProjectTemplates templates, CancellationToken cancellationToken)
+    internal static async Task<SelfTestResult> RunServicesAsync(MainViewModel main, ProjectTemplates templates, CancellationToken cancellationToken)
+    {
+        var previous = main.Workspace?.Workspace;
+        var previousPath = previous?.Solution?.FilePath ?? previous?.RootDirectory;
+        try { return await RunServicesCoreAsync(main, templates, cancellationToken); }
+        finally
+        {
+            // The next self-test step continues in the Python workspace left by RunToolchainsAsync.
+            if (previousPath is not null) await main.OpenWorkspaceAsync(previousPath);
+        }
+    }
+
+    private static async Task<SelfTestResult> RunServicesCoreAsync(MainViewModel main, ProjectTemplates templates, CancellationToken cancellationToken)
     {
         var clock = Stopwatch.StartNew();
         var solution = templates.Create(ProjectTemplates.ConsoleId, ServicesAppName);

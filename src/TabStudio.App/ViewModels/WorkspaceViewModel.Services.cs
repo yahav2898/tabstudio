@@ -31,7 +31,7 @@ public sealed partial class WorkspaceViewModel
     private async Task<bool> PrepareServicesAsync(string projectDirectory)
     {
         _run = new CancellationTokenSource();
-        State = IdeState.Running;
+        State = Services.HasServices ? IdeState.Running : IdeState.Busy;
         StatusText = "Starting backing services";
         try
         {

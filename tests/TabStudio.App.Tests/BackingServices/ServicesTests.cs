@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
+using Microsoft.Extensions.DependencyInjection;
 using TabStudio.App.Platform;
 using TabStudio.App.Services;
 using TabStudio.App.Services.Toolchains;
@@ -61,6 +62,24 @@ public sealed class ServicesTests
             Assert.True(workspace.IsServicesSelected);
         }
         finally { window.Close(); }
+    }
+
+    [AvaloniaFact]
+    public async Task Services_self_test_restores_the_workspace_needed_by_later_steps()
+    {
+        using var temp = new TempDirectory();
+        var paths = new AppPaths(temp.Path);
+        using var provider = AppServices.Create(paths);
+        var main = provider.GetRequiredService<MainViewModel>();
+        var templates = new ProjectTemplates(paths);
+        var python = templates.Create(ProjectTemplates.PythonId, "BeforeServices");
+        await main.OpenWorkspaceAsync(python);
+        var directory = main.Workspace!.Workspace!.RootDirectory;
+        using var timeout = new CancellationTokenSource(TimeSpan.FromMinutes(1));
+        var result = await SelfTest.RunServicesAsync(main, templates, timeout.Token);
+        Assert.True(result.Success, result.Message);
+        Assert.Equal(directory, main.Workspace!.Workspace!.RootDirectory);
+        Assert.Contains(main.Workspace.ToolchainProjects, p => p.Toolchain.Id == "python");
     }
 
     [AlpineAvaloniaFact]
