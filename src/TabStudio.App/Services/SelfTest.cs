@@ -90,6 +90,8 @@ public static partial class SelfTest
         var managed = shard is SelfTestShard.All or SelfTestShard.Managed;
         var ui = shard is SelfTestShard.All or SelfTestShard.Ui;
         var native = shard is SelfTestShard.All or SelfTestShard.Native;
+        var previousProcessTrace = Environment.GetEnvironmentVariable("TABSTUDIO_TRACE_PROCESSES");
+        if (native && OperatingSystem.IsAndroid()) Environment.SetEnvironmentVariable("TABSTUDIO_TRACE_PROCESSES", "1");
         using var preparationStop = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         Task? preparation = null;
         string? avaloniaApp = null;
@@ -166,6 +168,13 @@ public static partial class SelfTest
                 return Finish(false);
             }
 
+            // ApplyUpdate and the complete native process/GC stress sequence run together before package work.
+            if (native && (!await CheckAsync(() => Task.FromResult(CheckHotReload(cancellationToken)))
+                || !await CheckAsync(() => StartProgramsWhileCollectingAsync(cancellationToken))))
+            {
+                return Finish(false);
+            }
+
             // In a full run the browser's trusted-input assertions finish before downloads/decompression start.
             // Each independent shard installs only its own tools. Full runs retain the original complete plan.
             // Native Hot Reload/process-integrity checks belong immediately before this preparation starts.
@@ -221,7 +230,6 @@ public static partial class SelfTest
                 // Package operations must finish before native debuggers and their programs use the environment.
                 await preparation!;
                 if (!await CheckAsync(() => RunToolchainsAsync(main, templates, cancellationToken))
-                    || !await CheckAsync(() => StartProgramsWhileCollectingAsync(cancellationToken))
                     || !await CheckAsync(() => CheckPythonToolsAsync(main, cancellationToken))
                     || !await CheckAsync(() => CheckListeningPortAsync(main, templates, cancellationToken))
                     || (shard == SelfTestShard.All && !await CheckGoAndRustAsync())
@@ -248,6 +256,7 @@ public static partial class SelfTest
         finally
         {
             await FinishSelfTestPreparationAsync(preparation, preparationStop);
+            if (native && OperatingSystem.IsAndroid()) Environment.SetEnvironmentVariable("TABSTUDIO_TRACE_PROCESSES", previousProcessTrace);
         }
     }
 }

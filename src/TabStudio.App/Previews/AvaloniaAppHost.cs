@@ -53,7 +53,20 @@ public sealed partial class AvaloniaAppHost : IDisposable
     public event EventHandler<Exception>? Crashed;
 
     /// <summary>The app's main view, wrapped in the app's theme, styles and resources.</summary>
-    public Control View { get; }
+    public Control View { get; private set; }
+
+    /// <summary>The exact entry assembly of this running app, for metadata updates.</summary>
+    public Assembly EntryAssembly => _program.EntryAssembly;
+
+    /// <summary>Recreates the main content from the updated assembly without loading or starting a new program.</summary>
+    public void RefreshContent()
+    {
+        Dispatcher.UIThread.VerifyAccess();
+        var fresh = CreateView();
+        if (MainView is { } old) old.DataContext = null;
+        if (View is Decorator decorator) decorator.Child = null;
+        View = fresh.Root;
+    }
 
     /// <summary>How the view differs from the app on a device, when it does, such as a window shown as its content.</summary>
     public string? Note { get; }

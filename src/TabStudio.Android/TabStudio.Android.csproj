@@ -46,6 +46,9 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Runtime">
+    <!-- The IDE also ships Release APKs, but user projects run as Debug assemblies. Mono's metadata updates
+         require the interpreter and the startup environment below; setting it in OnCreate is too late. -->
+    <AndroidUseInterpreter>true</AndroidUseInterpreter>
     <!--
       Roslyn composes its services with MEF and the programs TabStudio runs bind to the framework by reflection,
       so nothing may be trimmed away. Mono AOT is off for now: it multiplies build time and APK size, and
@@ -73,6 +76,10 @@
     -->
     <AndroidEnableSGenConcurrent>false</AndroidEnableSGenConcurrent>
   </PropertyGroup>
+
+  <ItemGroup>
+    <AndroidEnvironment Include="..\..\build\android\hot-reload.env" />
+  </ItemGroup>
 
   <!--
     Release builds are signed with the repository's development key, so every build, local or CI, has the

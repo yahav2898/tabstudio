@@ -389,6 +389,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         _sessionSave?.Cancel();
         DatabaseExplorer.Dispose();
         DisposeDebugging();
+        EndHotReload();
         DisposeTests();
         DisposeSwarm();
         DisposeLiveTesting();

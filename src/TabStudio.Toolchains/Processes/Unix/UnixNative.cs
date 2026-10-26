@@ -30,6 +30,13 @@ internal static partial class UnixNative
         // The static constructor does the work.
     }
 
+    /// <summary>Opt-in native PID diagnostics, enabled only by the Android emulator self test.</summary>
+    internal static void TraceProcess(string stage, int pid, int? stored = null)
+    {
+        if (Environment.GetEnvironmentVariable("TABSTUDIO_TRACE_PROCESSES") == "1")
+            Console.Error.WriteLine(FormattableString.Invariant($"TabStudio process trace: {stage}: PID {pid}; stored {stored}."));
+    }
+
     [LibraryImport(LibC, SetLastError = true)]
     internal static partial int posix_openpt(int flags);
 

@@ -66,6 +66,38 @@ public static partial class SelfTest
             {
                 return new SelfTestResult(false, $"Avalonia: the button did not count: {string.Join(", ", Texts(view))}", clock.Elapsed);
             }
+
+            if (TabStudio.Compilation.HotReload.HotReloadSession.IsSupported)
+            {
+                var path = Path.Combine(workspace.StartupProject!.DirectoryPath, "ViewModels", "MainViewModel.cs");
+                var document = await workspace.OpenDocumentAsync(path)
+                    ?? throw new InvalidOperationException("Hot Reload: MainViewModel.cs did not open.");
+                var original = document.CurrentText;
+                try
+                {
+                    document.Document.Text = original.Replace("Hello from Avalonia!", "Hello from Hot Reload!", StringComparison.Ordinal);
+                    await workspace.ApplyHotReloadCommand.ExecuteAsync(null).WaitAsync(cancellationToken);
+                    if (workspace.HotReloadGeneration != 1 || workspace.AppPreview.View is not { } refreshed
+                        || !Texts(refreshed).Contains("Hello from Hot Reload!") || run.IsCompleted)
+                    {
+                        return new SelfTestResult(false, $"Avalonia Hot Reload failed: {LastLines(workspace)}", clock.Elapsed);
+                    }
+
+                    // Updating the editor alone leaves its debounced language buffer and the loaded assembly
+                    // on the edited greeting. Restore through the command before the designer uses either one.
+                    document.Document.Text = original;
+                    await workspace.ApplyHotReloadCommand.ExecuteAsync(null).WaitAsync(cancellationToken);
+                    if (workspace.HotReloadGeneration != 2 || workspace.AppPreview.View is not { } restored
+                        || !Texts(restored).Contains("Hello from Avalonia!") || run.IsCompleted)
+                    {
+                        return new SelfTestResult(false, $"Avalonia Hot Reload restore failed: {LastLines(workspace)}", clock.Elapsed);
+                    }
+                }
+                finally
+                {
+                    document.Document.Text = original; // The following designer step still previews the template.
+                }
+            }
         }
         finally
         {

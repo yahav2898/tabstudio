@@ -51,6 +51,7 @@ public sealed partial class WorkspaceViewModel
         }
         finally
         {
+            EndHotReload();
             _webApp = null;
             _liveProject = null;
             WebPreview.ShowStopped();
@@ -71,7 +72,11 @@ public sealed partial class WorkspaceViewModel
         WebAppOptions options,
         CancellationToken cancellationToken)
     {
-        await using var web = await WebAppHost.StartAsync(entry, build.Dependencies, packages, project.DirectoryPath, Output, options, cancellationToken);
+        await using var web = await WebAppHost.StartAsync(entry, build.Dependencies, packages, project.DirectoryPath, Output, options,
+            loaded: assembly => _ui.Post(() =>
+            {
+                if (_run is not null && !cancellationToken.IsCancellationRequested) BeginHotReload(project, build, assembly);
+            }), cancellationToken);
         if (!web.IsRunning)
         {
             return await web.Completion;

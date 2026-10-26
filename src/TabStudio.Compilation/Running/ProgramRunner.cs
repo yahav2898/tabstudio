@@ -45,6 +45,9 @@ public sealed record RunResult(RunOutcome Outcome, int ExitCode, TimeSpan Durati
 /// </remarks>
 public sealed class ProgramRunner
 {
+    /// <summary>Raised after loading the exact entry assembly and before invoking Main, for Hot Reload hosts.</summary>
+    public event Action<Assembly>? Loaded;
+
     /// <summary>The stack size of the program's main thread: 16 MB, generous for deeply recursive code.</summary>
     public const int DefaultStackSize = 16 * 1024 * 1024;
 
@@ -103,13 +106,15 @@ public sealed class ProgramRunner
         // The console is process-wide: wait until no other program, test run or notebook cell owns it.
         using var lease = await ProcessConsole.AcquireAsync(cancellationToken).ConfigureAwait(false);
 
-        var context = new ProgramLoadContext(entryAssembly.Name, dependencies, packageAssemblies, sharedWithHost: null);
+        var context = new ProgramLoadContext(entryAssembly.Name, dependencies, packageAssemblies, sharedWithHost: null,
+            unloadable: !HotReload.HotReloadSession.IsSupported || entryAssembly.HotReloadCompilation is null);
         var output = new CallbackTextWriter(console.WriteOutput);
         var error = new CallbackTextWriter(console.WriteError);
 
         try
         {
             var assembly = context.LoadFromImage(entryAssembly);
+            Loaded?.Invoke(assembly);
             if (assembly.EntryPoint is not { } entryPoint)
             {
                 return new RunResult(RunOutcome.NoEntryPoint, -1, TimeSpan.Zero);

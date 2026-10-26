@@ -49,7 +49,12 @@ public sealed record CompilationRequest
 /// <param name="Name">The assembly name.</param>
 /// <param name="Image">The assembly bytes.</param>
 /// <param name="Symbols">The portable PDB bytes, for stack traces with line numbers.</param>
-public sealed record CompiledAssembly(string Name, byte[] Image, byte[]? Symbols);
+public sealed record CompiledAssembly(string Name, byte[] Image, byte[]? Symbols)
+{
+    /// <summary>The exact compilation emitted into this image, retained for local Debug Hot Reload only.</summary>
+    [System.Text.Json.Serialization.JsonIgnore]
+    public Microsoft.CodeAnalysis.CSharp.CSharpCompilation? HotReloadCompilation { get; init; }
+}
 
 /// <summary>
 /// The outcome of compiling one assembly.
