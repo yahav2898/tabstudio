@@ -44,7 +44,8 @@ public sealed record DevicePack(string Vendor, string Name, string Version, stri
 
     /// <summary>The XC compiler's device-support directory passed to -mdfp.</summary>
     /// <param name="compiler">XC8 or XC32.</param>
-    public string CompilerDirectory(string compiler)
+    /// <param name="compilerVersion">Compiler version; XC32 6 and later take the pack root.</param>
+    public string CompilerDirectory(string compiler, string? compilerVersion = null)
     {
         ArgumentException.ThrowIfNullOrEmpty(compiler);
         var folder = compiler.ToUpperInvariant() switch
@@ -54,7 +55,12 @@ public sealed record DevicePack(string Vendor, string Name, string Version, stri
             _ => throw new ArgumentException("Device packs are resolved for XC8 or XC32.", nameof(compiler)),
         };
         var path = Path.Combine(Directory, folder);
-        return System.IO.Directory.Exists(path) ? path : throw new InvalidDataException($"{Vendor}.{Name} {Version} has no {compiler} support directory.");
+        if (!System.IO.Directory.Exists(path))
+        {
+            throw new InvalidDataException($"{Vendor}.{Name} {Version} has no {compiler} support directory.");
+        }
+
+        return folder == "xc32" && System.Version.TryParse(compilerVersion, out var version) && version.Major >= 6 ? Directory : path;
     }
 
     /// <summary>Resolves a device, honoring an exact MPLAB pack reference when present.</summary>

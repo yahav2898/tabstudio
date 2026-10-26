@@ -230,7 +230,8 @@ def spike(args):
             archive.extractall(pack_dir)
         source = REPO / "samples/PIC" / ("PIC18Blink" if family == "pic18" else "PIC32Blink") / "main.c"
         shutil.copy2(source, root / "work/main.c")
-        pack = f"/opt/tabstudio/packs/{family}/xc8" if family == "pic18" else f"/opt/tabstudio/packs/{family}/xc32"
+        # XC32 6 uses the pack root; older XC32 versions used its xc32 subfolder.
+        pack = f"/opt/tabstudio/packs/{family}/xc8" if family == "pic18" else f"/opt/tabstudio/packs/{family}"
         device = "18F45K22" if family == "pic18" else "32MX250F128B"
         processor = f"-mcpu={device}" if family == "pic18" else f"-mprocessor={device}"
         options = [processor, f"-mdfp={pack}", "-O0", "-o", "/results/blink.elf", "main.c"]

@@ -47,4 +47,16 @@ public sealed class DevicePackTests
 
     private static DevicePack Pack(string version, string device) => new("Microchip", "PIC18F-K_DFP", version,
         "/packs/" + version, new HashSet<string>(StringComparer.OrdinalIgnoreCase) { device });
+
+    [Fact]
+    public void Xc32_six_uses_the_pack_root_while_legacy_compilers_use_the_xc32_subfolder()
+    {
+        using var folder = new TempDirectory();
+        folder.Write("xc32/device_files/32MX250F128B.info");
+        var pack = new DevicePack("Microchip", "PIC32MX_DFP", "1.7.380", folder.Path,
+            new HashSet<string> { "PIC32MX250F128B" });
+
+        Assert.Equal(folder.Path, pack.CompilerDirectory("XC32", "6.00"));
+        Assert.Equal(folder.Resolve("xc32"), pack.CompilerDirectory("XC32", "4.60"));
+    }
 }
