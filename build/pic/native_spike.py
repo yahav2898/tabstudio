@@ -55,7 +55,12 @@ def evaluate(args):
             # Microchip's BFD adds linker hooks that gprof does not link against.
             # gprof is not a compiler, assembler, linker or firmware converter.
             # Disable this optional profiler explicitly; keep the actual tools.
-            (root / "work/xc32-source/config.mk").write_text("binutils += --disable-gprof\n")
+            # config.mk is included before the vendor Makefile assigns
+            # `binutils = ...`, so putting += there is overwritten. Append the
+            # option after that assignment instead of dropping the tool flags.
+            makefile = root / "work/xc32-source/Makefile"
+            with makefile.open("a") as stream:
+                stream.write("\nbinutils += --disable-gprof\n")
             # These are Microchip's own top-level Makefile targets, ordered by
             # their actual dependencies (the published host-libs target has none).
             components = ["gmp", "mpfr", "mpc", "expat", "libmchp", "pic32m-binutils", "pic32m-gcc"]
