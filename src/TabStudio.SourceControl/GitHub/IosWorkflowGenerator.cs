@@ -125,9 +125,10 @@ public static class IosWorkflowGenerator
                       if os.environ['IOS_TEAM_ID'] not in profile['TeamIdentifier']: raise SystemExit('Profile team does not match IOS_TEAM_ID')
                       app_id = profile['Entitlements']['application-identifier']
                       if app_id != os.environ['IOS_TEAM_ID'] + '.' + os.environ['IOS_BUNDLE_ID']: raise SystemExit('Profile does not match IOS_BUNDLE_ID')
-                      folder = pathlib.Path.home() / 'Library/MobileDevice/Provisioning Profiles'
-                      folder.mkdir(parents=True, exist_ok=True)
-                      (folder / (profile['UUID'] + '.mobileprovision')).write_bytes((root / 'profile.mobileprovision').read_bytes())
+                      for relative in ('Library/Developer/Xcode/UserData/Provisioning Profiles', 'Library/MobileDevice/Provisioning Profiles'):
+                          folder = pathlib.Path.home() / relative
+                          folder.mkdir(parents=True, exist_ok=True)
+                          (folder / (profile['UUID'] + '.mobileprovision')).write_bytes((root / 'profile.mobileprovision').read_bytes())
                       options = {'method':'app-store-connect', 'teamID':os.environ['IOS_TEAM_ID'], 'signingStyle':'manual', 'signingCertificate':'Apple Distribution', 'provisioningProfiles':{os.environ['IOS_BUNDLE_ID']:profile['UUID']}}
                       (root / 'ExportOptions.plist').write_bytes(plistlib.dumps(options))
                       PY
@@ -167,6 +168,7 @@ public static class IosWorkflowGenerator
                       rm -f "$RUNNER_TEMP/distribution.p12" "$RUNNER_TEMP/profile.mobileprovision" "$RUNNER_TEMP/profile.plist" "$RUNNER_TEMP"/AuthKey_*.p8
                       rm -f "$HOME/.appstoreconnect/private_keys/AuthKey_${ASC_KEY_ID}.p8"
                       rm -f "$HOME/Library/MobileDevice/Provisioning Profiles/"*.mobileprovision
+                      rm -f "$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles/"*.mobileprovision
             """ + "\n";
     }
 

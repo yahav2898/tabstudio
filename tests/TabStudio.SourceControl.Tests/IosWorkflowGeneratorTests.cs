@@ -24,6 +24,7 @@ public sealed class IosWorkflowGeneratorTests
         Assert.Contains(steps.Children.OfType<YamlMappingNode>(), s => s.Children.TryGetValue(new YamlScalarNode("uses"), out var value) && ((YamlScalarNode)value).Value == "actions/upload-artifact@v4");
         Assert.Contains("if: always()", yaml, StringComparison.Ordinal);
         Assert.Contains("security delete-keychain", yaml, StringComparison.Ordinal);
+        Assert.Contains("Library/Developer/Xcode/UserData/Provisioning Profiles", yaml, StringComparison.Ordinal);
         Assert.Equal(capacitor, yaml.Contains("npx --no-install cap sync ios", StringComparison.Ordinal));
         foreach (var secret in IosWorkflowGenerator.Secrets)
         {
