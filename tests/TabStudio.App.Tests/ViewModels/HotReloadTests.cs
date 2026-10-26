@@ -168,6 +168,21 @@ public sealed class HotReloadTests
         await fixture.OpenSampleAsync();
         var view = new WorkspaceView { DataContext = fixture.Workspace };
         Assert.Contains(view.KeyBindings, b => b.Gesture.ToString() == "Alt+F10" && ReferenceEquals(b.Command, fixture.Workspace.ApplyHotReloadCommand));
+        var menu = view.GetLogicalDescendants().OfType<Menu>().First();
+        var onSave = MenuItems(menu).Single(item => Equals(item.Header, "Hot Reload C# on Save"));
+        onSave.SetCurrentValue(MenuItem.IsCheckedProperty, true);
+        Assert.True(fixture.Workspace.HotReloadOnSave);
+        onSave.SetCurrentValue(MenuItem.IsCheckedProperty, false);
+        Assert.False(fixture.Workspace.HotReloadOnSave);
+    }
+
+    private static IEnumerable<MenuItem> MenuItems(ItemsControl parent)
+    {
+        foreach (var item in parent.Items.OfType<MenuItem>())
+        {
+            yield return item;
+            foreach (var child in MenuItems(item)) yield return child;
+        }
     }
 
     private static void Submit(WorkspaceViewModel workspace, string text)

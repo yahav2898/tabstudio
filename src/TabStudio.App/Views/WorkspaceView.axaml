@@ -231,7 +231,7 @@
             <MenuItem Header="Stop D_ebugging" InputGesture="Shift+F5" Command="{Binding StopDebuggingCommand}" />
             <MenuItem Header="_Restart" InputGesture="Ctrl+Shift+F5" Command="{Binding RestartCommand}" />
             <MenuItem Header="Apply C# Hot Reload" InputGesture="Alt+F10" Command="{Binding ApplyHotReloadCommand}" />
-            <MenuItem Header="Hot Reload C# on Save" ToggleType="CheckBox" IsChecked="{Binding HotReloadOnSave}" />
+            <MenuItem Header="Hot Reload C# on Save" ToggleType="CheckBox" IsChecked="{Binding HotReloadOnSave, Mode=TwoWay}" />
             <Separator />
             <MenuItem Header="Show _Next Statement (Alt+Num *)" Command="{Binding ShowNextStatementCommand}" />
             <MenuItem Header="Step _Into" InputGesture="F11" Command="{Binding StepIntoCommand}" />

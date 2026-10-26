@@ -87,6 +87,7 @@ internal sealed class UnixProcessHandle : IProcessHandle
             }
 
             // ECHILD: something else reaped it (it no longer exists either way).
+            Console.Error.WriteLine(FormattableString.Invariant($"TabStudio process wait: waitpid({Id}) returned {result}, errno {error}; exit status unavailable."));
             return (-1, null);
         }
     }
