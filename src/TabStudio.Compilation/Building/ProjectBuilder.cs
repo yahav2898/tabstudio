@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using TabStudio.Core.Compatibility;
 using TabStudio.Core.Diagnostics;
 using TabStudio.Core.Workspaces;
 
@@ -48,6 +49,12 @@ public sealed class ProjectBuilder
     /// </summary>
     public const string UnrestoredPackageId = "TS2003";
 
+    /// <summary>
+    /// Reported for a .NET Framework program that needs Windows (see <see cref="NetFrameworkCompatibility"/>), which is
+    /// built on a PC through the Windows Bridge rather than compiled here against .NET.
+    /// </summary>
+    public const string NeedsWindowsId = "TS2004";
+
     private readonly IBuildSource _host;
 
     /// <summary>Creates a builder over a loaded workspace host or a snapshot of it.</summary>
@@ -75,6 +82,17 @@ public sealed class ProjectBuilder
                 null,
                 project.Name);
             return new BuildResult(project.Name, [appHost], null, [], stopwatch.Elapsed);
+        }
+
+        if (NetFrameworkCompatibility.NeedsWindows(project))
+        {
+            var needsWindows = new BuildDiagnostic(
+                NeedsWindowsId,
+                DiagnosticSeverityLevel.Error,
+                NetFrameworkCompatibility.NeedsWindowsMessage(project) + " It builds and runs on your PC through the Windows Bridge, or Upgrade project makes it an SDK-style .NET project.",
+                null,
+                project.Name);
+            return new BuildResult(project.Name, [needsWindows], null, [], stopwatch.Elapsed);
         }
 
         if (project.Language != ProjectLanguage.CSharp || _host.FindProject(project.FilePath) is null)

@@ -10,8 +10,12 @@ namespace TabStudio.Compilation;
 /// SDK names them, and an Avalonia app's <c>AvaloniaResource</c> items, packed the way Avalonia's build packs them.
 /// </summary>
 /// <remarks>
-/// <c>.resx</c> files are not embedded: they are compiled into <c>.resources</c> by a build step TabStudio does not
-/// have. A <c>LogicalName</c> or <c>Link</c> on an item is not read; the resource is named after its path.
+/// A <c>.resx</c> item is compiled into <c>.resources</c> with its strings, as MSBuild's <c>GenerateResource</c>
+/// does, so <c>Properties.Resources</c> and a form's <c>ComponentResourceManager</c> find their resources; entries of
+/// other types, such as images, are left out and read as <see langword="null"/>. A <c>.resx</c> beside the code file of
+/// a class, such as <c>Form1.resx</c> beside <c>Form1.cs</c>, is named after the class. Culture-specific <c>.resx</c>
+/// files, which build satellite assemblies, are not compiled. A <c>LogicalName</c> or <c>Link</c> on an item is not
+/// read; the resource is named after its path.
 /// </remarks>
 public static class ManifestResources
 {
@@ -30,10 +34,14 @@ public static class ManifestResources
         var resources = new List<ResourceDescription>();
         foreach (var path in ProjectSourceFiles.EnumerateItems(project, project.EmbeddedResourceIncludes, project.EmbeddedResourceRemoves))
         {
+            var file = path;
             if (!string.Equals(Path.GetExtension(path), ".resx", StringComparison.OrdinalIgnoreCase))
             {
-                var file = path;
                 resources.Add(new ResourceDescription(EmbeddedResourceName(project, path), () => File.OpenRead(file), isPublic: true));
+            }
+            else if (!IsCultureSpecific(path))
+            {
+                resources.Add(new ResourceDescription(ResxResourceName(project, path), () => CompileResx(file), isPublic: true));
             }
         }
 
@@ -72,6 +80,126 @@ public static class ManifestResources
         }
 
         return name.ToString();
+    }
+
+    /// <summary>
+    /// The name MSBuild gives a compiled <c>.resx</c>: the class of the code file beside it, such as
+    /// <c>Calculator.Form1.resources</c> for <c>Form1.resx</c> beside <c>Form1.cs</c>, or else the root namespace and the
+    /// file's path, such as <c>Calculator.Properties.Resources.resources</c>.
+    /// </summary>
+    /// <param name="project">The project.</param>
+    /// <param name="path">The <c>.resx</c> file's full path.</param>
+    public static string ResxResourceName(TsProject project, string path)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+        ArgumentNullException.ThrowIfNull(path);
+        var code = Path.ChangeExtension(path, ".cs");
+        if (File.Exists(code) && ClassOf(File.ReadAllText(code)) is { } type)
+        {
+            return type + ".resources";
+        }
+
+        var name = EmbeddedResourceName(project, path);
+        return name[..^".resx".Length] + ".resources";
+    }
+
+    /// <summary>
+    /// The full name of the first class a C# file declares, as MSBuild's <c>CreateCSharpManifestResourceName</c> reads
+    /// it: its namespace, block or file-scoped, and its name.
+    /// </summary>
+    private static string? ClassOf(string code)
+    {
+        var tree = Microsoft.CodeAnalysis.CSharp.CSharpSyntaxTree.ParseText(code);
+        var type = tree.GetRoot().DescendantNodes().OfType<Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax>().FirstOrDefault();
+        if (type is null)
+        {
+            return null;
+        }
+
+        var names = new List<string> { type.Identifier.ValueText };
+        for (var node = type.Parent; node is not null; node = node.Parent)
+        {
+            switch (node)
+            {
+                case Microsoft.CodeAnalysis.CSharp.Syntax.BaseNamespaceDeclarationSyntax ns:
+                    names.Insert(0, ns.Name.ToString());
+                    break;
+                case Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax outer:
+                    names.Insert(0, outer.Identifier.ValueText);
+                    break;
+            }
+        }
+
+        return string.Join('.', names);
+    }
+
+    /// <summary>Whether a <c>.resx</c> is for one culture, as <c>Strings.fr-FR.resx</c> is, which builds a satellite assembly.</summary>
+    private static bool IsCultureSpecific(string path)
+    {
+        var name = Path.GetFileNameWithoutExtension(path);
+        var dot = name.LastIndexOf('.');
+        if (dot < 0)
+        {
+            return false;
+        }
+
+        var suffix = name[(dot + 1)..];
+        if (!System.Text.RegularExpressions.Regex.IsMatch(suffix, "^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8}){0,2}$", System.Text.RegularExpressions.RegexOptions.None, TimeSpan.FromSeconds(1)))
+        {
+            return false;
+        }
+
+        try
+        {
+            return System.Globalization.CultureInfo.GetCultureInfo(suffix, predefinedOnly: true).Name.Length > 0;
+        }
+        catch (System.Globalization.CultureNotFoundException)
+        {
+            return false;
+        }
+    }
+
+    /// <summary>A <c>.resx</c> compiled into the binary <c>.resources</c> format, with its string entries.</summary>
+    /// <param name="path">The <c>.resx</c> file.</param>
+    public static MemoryStream CompileResx(string path)
+    {
+        ArgumentNullException.ThrowIfNull(path);
+        var compiled = new MemoryStream();
+        byte[] bytes;
+        using (var writer = new System.Resources.ResourceWriter(compiled))
+        {
+            foreach (var (name, value) in ReadResxStrings(path))
+            {
+                writer.AddResource(name, value);
+            }
+
+            writer.Generate();
+            bytes = compiled.ToArray();
+        }
+
+        return new MemoryStream(bytes);
+    }
+
+    /// <summary>The string entries of a <c>.resx</c>: its <c>data</c> elements with no <c>type</c> or <c>mimetype</c>.</summary>
+    /// <param name="path">The <c>.resx</c> file.</param>
+    public static IReadOnlyList<(string Name, string Value)> ReadResxStrings(string path)
+    {
+        ArgumentNullException.ThrowIfNull(path);
+        System.Xml.Linq.XDocument document;
+        try
+        {
+            document = System.Xml.Linq.XDocument.Load(path);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or System.Xml.XmlException)
+        {
+            return [];
+        }
+
+        return document.Root?.Elements("data")
+            .Where(d => d.Attribute("type") is null && d.Attribute("mimetype") is null && d.Attribute("name")?.Value is { Length: > 0 })
+            .Select(d => (d.Attribute("name")!.Value, d.Element("value")?.Value ?? string.Empty))
+            .DistinctBy(d => d.Item1, StringComparer.Ordinal)
+            .ToList() ?? [];
     }
 
     /// <summary>

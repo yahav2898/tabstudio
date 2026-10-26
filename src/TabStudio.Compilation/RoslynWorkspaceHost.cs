@@ -9,6 +9,7 @@ using Microsoft.CodeAnalysis.Host.Mef;
 using Microsoft.CodeAnalysis.Text;
 using TabStudio.Compilation.Building;
 using TabStudio.Compilation.Wpf;
+using TabStudio.Core.Compatibility;
 using TabStudio.Core.Diagnostics;
 using TabStudio.Core.Workspaces;
 using RoslynProjectInfo = Microsoft.CodeAnalysis.ProjectInfo;
@@ -131,9 +132,11 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         _skeletons.Clear();
 
         // An Aspire AppHost compiles against code only its SDK generates, and runs only on a computer (see the
-        // Compatibility Doctor), so it is not compiled here.
+        // Compatibility Doctor), so it is not compiled here. Nor is a .NET Framework program that needs Windows:
+        // compiled against .NET, its errors would only say that it is the wrong framework.
         var csharpProjects = workspace.Projects
             .Where(p => p.Language == ProjectLanguage.CSharp && p.Kind is not (ProjectKind.Unknown or ProjectKind.AspireAppHost))
+            .Where(p => !NetFrameworkCompatibility.NeedsWindows(p))
             .ToList();
 
         foreach (var project in csharpProjects)
@@ -584,6 +587,11 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         }
 
         documents.AddRange(WindowsFormsDocuments(id, project));
+        if (DesktopSettings.Applies(project, documents.Where(d => !d.IsGenerated).Select(d => d.FilePath ?? string.Empty)))
+        {
+            var path = Path.Combine(project.DirectoryPath, "obj", "TabStudio", "System.Configuration.Settings.g.cs");
+            documents.Add(CreateDocumentInfo(DocumentId.CreateNewId(id, path), path, DesktopSettings.Source, isGenerated: true));
+        }
 
         var projectReferences = CompileReferencesOf(project)
             .Where(reference => _projectIds.ContainsKey(reference) && !_skeletons.ContainsKey(reference))

@@ -33,6 +33,9 @@ public sealed record CompatibilityRowViewModel(CompatibilityReport Report)
     /// <summary>Whether code changes would make it run here, which "Fix with Agent" asks Claude to make.</summary>
     public bool CanFixWithAgent => Report.Status == CompatibilityStatus.NeedsChanges;
 
+    /// <summary>Whether it is a legacy .NET Framework project, which Upgrade project converts to an SDK-style one.</summary>
+    public bool CanUpgradeProject => Report.CanUpgradeProject;
+
     /// <summary>Whether this framework has an Avalonia conversion.</summary>
     public bool CanPortToAvalonia => Report.Kind is TabStudio.Core.Workspaces.ProjectKind.Wpf or TabStudio.Core.Workspaces.ProjectKind.WinForms;
 

@@ -42,9 +42,9 @@ public static class ProjectSourceFiles
             var pattern = new GlobPattern(project.DirectoryPath, include);
             if (!pattern.HasWildcards)
             {
-                if (File.Exists(pattern.FullPattern))
+                if (PathUtilities.FindFile(pattern.FullPattern) is { } existing)
                 {
-                    files.Add(pattern.FullPattern);
+                    files.Add(existing);
                 }
 
                 continue;
@@ -82,9 +82,9 @@ public static class ProjectSourceFiles
             var pattern = new GlobPattern(project.DirectoryPath, include);
             if (!pattern.HasWildcards)
             {
-                if (File.Exists(pattern.FullPattern))
+                if (PathUtilities.FindFile(pattern.FullPattern) is { } existing)
                 {
-                    files.Add(pattern.FullPattern);
+                    files.Add(existing);
                 }
 
                 continue;

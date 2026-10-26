@@ -227,6 +227,7 @@ public sealed partial class WorkspaceViewModel
     {
         ErrorList.CurrentDocumentPath = newValue?.FilePath;
         OnPropertyChanged(nameof(ShowsSideBarProperties));
+        UpdateNetFrameworkBanner();
         if (newValue is not null && !_navigatingHistory)
         {
             RecordHistory(newValue.FilePath);
