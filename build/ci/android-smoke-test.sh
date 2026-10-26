@@ -9,7 +9,7 @@
 # and asks this script in its log (TABSTUDIO_DESKTOP_STEP lines) to type on the keyboard and take screenshots,
 # which it does with adb. (The app clicks the display itself: adb's taps have no mouse button events.)
 #
-# Usage: build/ci/android-smoke-test.sh <apk> <output-folder> [timeout-seconds] [all|managed|ui|native]
+# Usage: build/ci/android-smoke-test.sh <apk> <output-folder> [timeout-seconds] [all|managed|ui|native|performance]
 set -euo pipefail
 
 apk="${1:?apk}"
@@ -17,7 +17,7 @@ out="${2:?output folder}"
 timeout="${3:-900}"
 shard="${4:-all}"
 case "$shard" in
-  all|managed|ui|native) ;;
+  all|managed|ui|native|performance) ;;
   *) echo "Unknown self-test shard: $shard" >&2; exit 2 ;;
 esac
 package="com.tabstudio.ide"
@@ -28,22 +28,27 @@ echo "Device: Android $(adb shell getprop ro.build.version.release | tr -d '\r')
   "(API $(adb shell getprop ro.build.version.sdk | tr -d '\r')), $(adb shell getprop ro.product.cpu.abi | tr -d '\r')," \
   "screen $(adb shell wm size | tr -d '\r' | sed 's/.*: //')"
 
-# The second display: 1920 × 1080 at 240 dpi.
-adb shell settings put global overlay_display_devices 1920x1080/240
-for _ in $(seq 1 20); do
-  [ "$(adb shell dumpsys display | grep -c 'mDisplayId=' || true)" -ge 2 ] && break
-  sleep 1
-done
-# Each logical display's name and id, and its flags: the overlay display is a presentation display. Android 10
-# writes DisplayInfo{"Overlay #1, displayId 1", ...}, later versions DisplayInfo{"Overlay #1", displayId 2, ...}.
-adb shell dumpsys display | tr -d '\r' \
-  | awk 'match($0, /DisplayInfo\{"[^"]*"(, displayId [0-9]+)?/) {
-      name = substr($0, RSTART + 12, RLENGTH - 12)
-      gsub(/"/, "", name)
-      print name (index($0, "FLAG_PRESENTATION") ? ": a presentation display" : "")
-    }' | sort -u > "$out/displays.txt" || true
-echo "Displays:"
-cat "$out/displays.txt"
+if [ "$shard" = performance ]; then
+  # The paired latency run measures the editor on one display, without desktop-mode notifications.
+  adb shell settings delete global overlay_display_devices > /dev/null 2>&1 || true
+else
+  # The second display: 1920 × 1080 at 240 dpi.
+  adb shell settings put global overlay_display_devices 1920x1080/240
+  for _ in $(seq 1 20); do
+    [ "$(adb shell dumpsys display | grep -c 'mDisplayId=' || true)" -ge 2 ] && break
+    sleep 1
+  done
+  # Each logical display's name and id, and its flags: the overlay display is a presentation display. Android 10
+  # writes DisplayInfo{"Overlay #1, displayId 1", ...}, later versions DisplayInfo{"Overlay #1", displayId 2, ...}.
+  adb shell dumpsys display | tr -d '\r' \
+    | awk 'match($0, /DisplayInfo\{"[^"]*"(, displayId [0-9]+)?/) {
+        name = substr($0, RSTART + 12, RLENGTH - 12)
+        gsub(/"/, "", name)
+        print name (index($0, "FLAG_PRESENTATION") ? ": a presentation display" : "")
+      }' | sort -u > "$out/displays.txt" || true
+  echo "Displays:"
+  cat "$out/displays.txt"
+fi
 
 # Does what a TABSTUDIO_DESKTOP_STEP line asks: type, or take screenshots.
 desktop_step() {

@@ -16,10 +16,12 @@ public enum SelfTestShard
     All,
     /// <summary>Console, debugger, Link, web apps, and Go/Rust builds and debuggers.</summary>
     Managed,
-    /// <summary>Native app previews, design, extensions, Swarm, scrolling and external-display input.</summary>
+    /// <summary>Native app previews, design, extensions, Swarm, Java, scrolling and external-display input.</summary>
     Ui,
-    /// <summary>Python/Node, C/C++/Java and native process integrity.</summary>
+    /// <summary>Python/Node, C/C++ and native process integrity.</summary>
     Native,
+    /// <summary>Opt-in paired-runtime latency measurements; not a functional CI shard.</summary>
+    Performance,
 }
 
 /// <summary>
@@ -43,6 +45,7 @@ public static partial class SelfTest
             "managed" => SelfTestShard.Managed,
             "ui" => SelfTestShard.Ui,
             "native" => SelfTestShard.Native,
+            "performance" => SelfTestShard.Performance,
             _ => (SelfTestShard)(-1),
         };
         return Enum.IsDefined(shard);
@@ -76,7 +79,11 @@ public static partial class SelfTest
         ArgumentNullException.ThrowIfNull(main);
         ArgumentNullException.ThrowIfNull(samples);
         ArgumentOutOfRangeException.ThrowIfNegative((int)shard);
-        ArgumentOutOfRangeException.ThrowIfGreaterThan((int)shard, (int)SelfTestShard.Native);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan((int)shard, (int)SelfTestShard.Performance);
+        if (shard == SelfTestShard.Performance)
+        {
+            return await RunPerformanceAsync(main, samples, screenshots, cancellationToken);
+        }
         var clock = Stopwatch.StartNew();
         var messages = new List<string> { $"Shard: {shard.ToString().ToLowerInvariant()}" };
         SelfTestResult Finish(bool success) => new(success, string.Join(" | ", messages), clock.Elapsed);
@@ -170,7 +177,7 @@ public static partial class SelfTest
                 return Finish(false);
             }
 
-            // ApplyUpdate and the complete native process/GC stress sequence run together before package work.
+            // Check the runtime capability boundary and the complete native process/GC sequence before packages.
             if (native && (!await CheckAsync(() => Task.FromResult(CheckHotReload(cancellationToken)))
                 || !await CheckAsync(() => StartProgramsWhileCollectingAsync(cancellationToken))))
             {
@@ -179,7 +186,7 @@ public static partial class SelfTest
 
             // In a full run the browser's trusted-input assertions finish before downloads/decompression start.
             // Each independent shard installs only its own tools. Full runs retain the original complete plan.
-            // Native Hot Reload/process-integrity checks belong immediately before this preparation starts.
+            // Native runtime/process-integrity checks belong immediately before this preparation starts.
             if (native || shard == SelfTestShard.Managed)
             {
                 preparation = PrepareSelfTestToolchainsAsync(main.Workspace!.Toolchains, shard, preparationStop.Token);
@@ -225,6 +232,18 @@ public static partial class SelfTest
                 {
                     return Finish(false);
                 }
+
+                if (shard == SelfTestShard.Ui)
+                {
+                    // The device timings leave room here for Java. Keep package preparation after the UI's
+                    // trusted-input checks, and restore its Avalonia workspace for scrolling/desktop below.
+                    preparation = PrepareSelfTestToolchainsAsync(main.Workspace!.Toolchains, shard, preparationStop.Token);
+                    await preparation;
+                    if (!await CheckAsync(() => CheckJavaToolchainAsync(main, templates, cancellationToken)))
+                    {
+                        return Finish(false);
+                    }
+                }
             }
 
             if (native)
@@ -236,7 +255,7 @@ public static partial class SelfTest
                     || !await CheckAsync(() => CheckListeningPortAsync(main, templates, cancellationToken))
                     || (shard == SelfTestShard.All && !await CheckGoAndRustAsync())
                     || !await CheckAsync(() => CheckCppToolchainAsync(main, templates, cancellationToken))
-                    || !await CheckAsync(() => CheckJavaToolchainAsync(main, templates, cancellationToken)))
+                    || (shard == SelfTestShard.All && !await CheckAsync(() => CheckJavaToolchainAsync(main, templates, cancellationToken))))
                 {
                     return Finish(false);
                 }

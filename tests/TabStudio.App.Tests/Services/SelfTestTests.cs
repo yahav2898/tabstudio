@@ -26,6 +26,7 @@ public sealed class SelfTestTests : IDisposable
     [InlineData("managed", SelfTestShard.Managed)]
     [InlineData("UI", SelfTestShard.Ui)]
     [InlineData("native", SelfTestShard.Native)]
+    [InlineData("performance", SelfTestShard.Performance)]
     public void Recognizes_only_named_device_test_shards(string? value, SelfTestShard expected)
     {
         Assert.True(SelfTest.TryParseShard(value, out var actual));
@@ -35,6 +36,7 @@ public sealed class SelfTestTests : IDisposable
     [Theory]
     [InlineData("0")]
     [InlineData("3")]
+    [InlineData("4")]
     [InlineData("unknown")]
     [InlineData("managed,ui")]
     public void Rejects_invalid_device_test_shards(string value) =>
@@ -44,14 +46,17 @@ public sealed class SelfTestTests : IDisposable
     public void Shard_installation_plans_cover_the_full_run_without_installing_other_shards_tools()
     {
         var managed = SelfTest.SelfTestToolchainIdsForShard(SelfTestShard.Managed);
+        var ui = SelfTest.SelfTestToolchainIdsForShard(SelfTestShard.Ui);
         var native = SelfTest.SelfTestToolchainIdsForShard(SelfTestShard.Native);
         var all = SelfTest.SelfTestToolchainIdsForShard(SelfTestShard.All);
 
         Assert.Equal(["go", "rust"], managed);
-        Assert.Equal(["python", "node", "cpp", "java"], native);
-        Assert.Empty(SelfTest.SelfTestToolchainIdsForShard(SelfTestShard.Ui));
+        Assert.Equal(["java"], ui);
+        Assert.Equal(["python", "node", "cpp"], native);
+        Assert.Empty(managed.Intersect(ui, StringComparer.Ordinal));
+        Assert.Empty(ui.Intersect(native, StringComparer.Ordinal));
         Assert.Empty(managed.Intersect(native, StringComparer.Ordinal));
-        Assert.Equal(all.Order(StringComparer.Ordinal), managed.Concat(native).Order(StringComparer.Ordinal));
+        Assert.Equal(all.Order(StringComparer.Ordinal), managed.Concat(ui).Concat(native).Order(StringComparer.Ordinal));
     }
 
     [Fact]
