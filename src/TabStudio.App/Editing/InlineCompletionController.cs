@@ -53,6 +53,9 @@ public sealed class InlineCompletionController(
         _version++;
         _request?.Cancel();
         _request = null;
+        // Caret movement cancels even while inline completion is disabled. Redrawing an unchanged ghost would
+        // invalidate the editor's visual lines while Quick Info or another IntelliSense response is placing itself.
+        if (Text.Length == 0) return;
         Text = string.Empty;
         Changed?.Invoke(this, EventArgs.Empty);
     }

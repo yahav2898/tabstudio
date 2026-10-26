@@ -17,6 +17,31 @@ namespace TabStudio.App.Tests.Views;
 
 public sealed class LocalAIEditorTests
 {
+    [Fact]
+    public async Task Cancelling_an_empty_or_pending_ghost_does_not_invalidate_the_editor()
+    {
+        var response = new TaskCompletionSource<string?>();
+        using var controller = new InlineCompletionController((_, _, _, _, _) => response.Task, TimeSpan.Zero);
+        var changes = 0;
+        controller.Changed += (_, _) => changes++;
+
+        controller.Cancel();
+        var pending = controller.RequestAsync("a.py", "prefix", 6, []);
+        controller.Cancel();
+        response.SetResult("stale");
+        await pending;
+        Assert.Equal(0, changes);
+
+        await controller.RequestAsync("a.py", "prefix", 6, []);
+        Assert.Equal("stale", controller.Text);
+        Assert.Equal(1, changes);
+        controller.Cancel();
+        Assert.Empty(controller.Text);
+        Assert.Equal(2, changes);
+        controller.Cancel();
+        Assert.Equal(2, changes);
+    }
+
     [AvaloniaTheory]
     [InlineData("code.cs")]
     [InlineData("code.py")]
