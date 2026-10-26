@@ -156,7 +156,10 @@ class An1388:
         for address in range(first, last, 4096):
             count = min(4096, last - address)
             data = bytes(image.get(a, 255) for a in range(address, address + count))
-            response = self.command(4, struct.pack("<II", address, count))
+            # HEX records carry physical flash addresses. AN1388's CRC reader
+            # dereferences a PIC32 virtual address (KSEG0), as in the upstream
+            # an1388_verify_data request; writing keeps the original address.
+            response = self.command(4, struct.pack("<II", address | 0x80000000, count))
             if len(response) != 2 or int.from_bytes(response, "little") != binascii.crc_hqx(data, 0):
                 raise ValueError(f"AN1388 verification failed at 0x{address:x}; application was not started")
         self.command(5, reply=False)

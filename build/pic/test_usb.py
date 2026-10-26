@@ -13,6 +13,21 @@ from bootloaders import An1388, An1388Decoder, MccUart, an1388_frame, mcc_reques
 from usb_serial import UsbSerial, ch340_baud, ftdi_baud
 
 
+class An1388Recording(An1388):
+    """Protocol peer with the reference CRC for bytes 00..0f, independent of our encoder."""
+    def __init__(self, crc=b"\x3d\x51"):
+        super().__init__(None)
+        self.calls = []
+        self.crc = crc
+
+    def command(self, command, data=b"", reply=True):
+        self.calls.append((command, data, reply))
+        return b"\x01\x00" if command == 1 else self.crc if command == 4 else b""
+
+
+AN1388_FIRMWARE = ":020000041D00DD\n:10100000000102030405060708090A0B0C0D0E0F68\n:00000001FF\n"
+
+
 class UsbProtocolTests(unittest.TestCase):
     def test_recorded_reference_encoder_frames(self):
         fixtures = json.loads((ROOT / "build/pic/fixtures/bootloader-frames.json").read_text())
@@ -33,6 +48,27 @@ class UsbProtocolTests(unittest.TestCase):
     def test_an1388_rejects_bad_crc(self):
         with self.assertRaisesRegex(ValueError, "CRC"):
             An1388Decoder().feed(bytes.fromhex("01100122101004"))
+
+    def test_an1388_writes_physical_hex_and_verifies_the_reference_virtual_address(self):
+        fixtures = json.loads((ROOT / "build/pic/fixtures/bootloader-frames.json").read_text())
+        reference = next(f for f in fixtures["frames"] if f["name"] == "read-crc-virtual-address")
+        bootloader = An1388Recording()
+        with tempfile.TemporaryDirectory() as folder:
+            firmware = Path(folder) / "application.hex"
+            firmware.write_text(AN1388_FIRMWARE)
+            bootloader.program(firmware, 0x1d001000, 0x1d002000)
+        self.assertIn((3, bytes.fromhex("020000041d00dd"), True), bootloader.calls)
+        self.assertIn((4, bytes.fromhex(reference["payload"]), True), bootloader.calls)
+        self.assertEqual((5, b"", False), bootloader.calls[-1])
+
+    def test_an1388_does_not_start_the_application_after_failed_verification(self):
+        bootloader = An1388Recording(crc=b"\x00\x00")
+        with tempfile.TemporaryDirectory() as folder:
+            firmware = Path(folder) / "application.hex"
+            firmware.write_text(AN1388_FIRMWARE)
+            with self.assertRaisesRegex(ValueError, "verification failed"):
+                bootloader.program(firmware, 0x1d001000, 0x1d002000)
+        self.assertFalse(any(command == 5 for command, _, _ in bootloader.calls))
 
     def test_mcc_response_uses_stx_and_echoes_the_nine_byte_header(self):
         class Recording:
