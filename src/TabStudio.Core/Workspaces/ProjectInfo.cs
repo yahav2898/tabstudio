@@ -57,6 +57,14 @@ public sealed record AssemblyAttributeInfo(string TypeName, IReadOnlyList<Assemb
 public sealed record UsingInfo(string Name, string? Alias = null, bool IsStatic = false);
 
 /// <summary>
+/// A <c>&lt;Reference Include="..." /&gt;</c> item: an assembly the project compiles against by name, as .NET Framework
+/// projects reference <c>PresentationFramework</c> or <c>System.Windows.Forms</c>, or by file, with a <c>HintPath</c>.
+/// </summary>
+/// <param name="Name">The assembly's simple name, without the version and culture an <c>Include</c> may carry.</param>
+/// <param name="HintPath">The <c>HintPath</c> metadata, as written in the project file, or <see langword="null"/>.</param>
+public sealed record AssemblyReferenceInfo(string Name, string? HintPath = null);
+
+/// <summary>
 /// Everything TabStudio knows about one project file, read straight from the file without running MSBuild.
 /// </summary>
 /// <remarks>
@@ -147,6 +155,19 @@ public sealed record ProjectInfo
     /// brings in Blazor's script. Set by <see cref="ProjectParser.Load"/>, which looks at the files.
     /// </summary>
     public bool HasRazorComponents { get; init; }
+
+    /// <summary>The project's <c>&lt;Reference&gt;</c> items, in order: assemblies it compiles against by name or by file.</summary>
+    public IReadOnlyList<AssemblyReferenceInfo> AssemblyReferences { get; init; } = [];
+
+    /// <summary>The <c>Include</c> of each <c>&lt;COMReference&gt;</c> item: the COM type libraries the project uses.</summary>
+    public IReadOnlyList<string> ComReferences { get; init; } = [];
+
+    /// <summary>
+    /// The source files of a .NET Framework project, relative to its folder, that call Windows through P/Invoke
+    /// (<c>DllImport</c>, <c>LibraryImport</c> or <c>static extern</c>). Set by <see cref="ProjectParser.Load"/>, which
+    /// reads the files of legacy projects only; empty for others.
+    /// </summary>
+    public IReadOnlyList<string> PlatformInvokeFiles { get; init; } = [];
 
     /// <summary>What the project produces.</summary>
     public ProjectKind Kind { get; init; }

@@ -49,11 +49,34 @@ public static class CompatibilityDoctor
 
         if (WindowsBridgeCompatibility.IsNetFramework(project) && project.IsExecutable && !project.IsTestProject)
         {
+            if (NetFrameworkCompatibility.RunsHere(project))
+            {
+                // Read as MSBuild reads its items, it runs on the path of the SDK-style project it would be upgraded to.
+                var report = DiagnoseKind(project);
+                return report.Status == CompatibilityStatus.Ready
+                    ? report with { Explanation = NetFrameworkCompatibility.RunsHereSummary + " " + report.Explanation }
+                    : report;
+            }
+
+            if (ProjectParser.IsLegacyFrameworkProject(project))
+            {
+                return Report(
+                    project, RunHost.WindowsBridge, CompatibilityStatus.NeedsWindows, "Windows Bridge",
+                    $"A .NET Framework project that needs Windows: it {NetFrameworkCompatibility.WhyWindows(project)}. "
+                    + "It builds and runs on your PC through the Windows Bridge, and Upgrade project makes it an SDK-style .NET project.");
+            }
+
             return Report(
                 project, RunHost.WindowsBridge, CompatibilityStatus.NeedsWindows, "Windows Bridge",
                 ".NET Framework apps run on Windows only. They build and run on your PC through the Windows Bridge.");
         }
 
+        return DiagnoseKind(project);
+    }
+
+    /// <summary>The verdict for what a project produces.</summary>
+    private static CompatibilityReport DiagnoseKind(ProjectInfo project)
+    {
         return project.Kind switch
         {
             ProjectKind.AspireAppHost => Report(

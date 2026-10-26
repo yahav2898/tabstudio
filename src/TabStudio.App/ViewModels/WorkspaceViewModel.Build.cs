@@ -5,6 +5,7 @@ using TabStudio.App.Platform;
 using TabStudio.App.Services;
 using TabStudio.Compilation.Building;
 using TabStudio.Compilation.Running;
+using TabStudio.Core.Compatibility;
 using TabStudio.Core.Diagnostics;
 using TabStudio.Core.Workspaces;
 
@@ -153,7 +154,7 @@ public sealed partial class WorkspaceViewModel
         if (Workspace is { } workspace)
         {
             var csharp = workspace.Projects.Where(p => p.Language == ProjectLanguage.CSharp).ToList();
-            var skipped = csharp.Where(p => p.Kind == ProjectKind.AspireAppHost).ToList();
+            var skipped = csharp.Where(p => p.Kind == ProjectKind.AspireAppHost || NetFrameworkCompatibility.NeedsWindows(p)).ToList();
             await BuildProjectsAsync(InDependencyOrder(csharp.Except(skipped).ToList()), showOutput: true, skipped: skipped);
             foreach (var item in _toolchainProjects.Where(t => TabStudio.Toolchains.Microchip.MicrochipInstallation.IsCompiler(t.Toolchain.Id)))
             {
@@ -199,9 +200,12 @@ public sealed partial class WorkspaceViewModel
     }
 
     /// <summary>Why a project of the solution is not built on this device, for the Output panel.</summary>
-    private static string SkipReason(ProjectInfo project) => project.Kind == ProjectKind.AspireAppHost
-        ? "an Aspire AppHost runs on a computer, where Aspire's developer control plane starts the app's projects and containers"
-        : "it is not built on this device";
+    private static string SkipReason(ProjectInfo project) =>
+        project.Kind == ProjectKind.AspireAppHost
+            ? "an Aspire AppHost runs on a computer, where Aspire's developer control plane starts the app's projects and containers"
+            : NetFrameworkCompatibility.NeedsWindows(project)
+                ? $"a .NET Framework project that needs Windows: it {NetFrameworkCompatibility.WhyWindows(project)}"
+                : "it is not built on this device";
 
     private bool CanRun() => !_preparingServices && (IsRemoteWorkspace ? _remoteWorkspace?.Connection.IsConnected == true : StartupProject is not null || UsesLaunchTarget) && State is IdeState.Ready or IdeState.Failed && !IsNotebookRunning;
 
