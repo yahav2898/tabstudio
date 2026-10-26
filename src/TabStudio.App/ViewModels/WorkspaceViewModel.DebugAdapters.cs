@@ -255,7 +255,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         {
             var options = new DebugAdapterSessionOptions
             {
-                TraceMessages = _languageServerServices.TraceMessages, SupportsChildSessions = true, SupportsRunInTerminal = true,
+                TraceMessages = _languageServerServices.TraceMessages || TraceDebugAdapterMessages, SupportsChildSessions = true, SupportsRunInTerminal = true,
                 StartupLog = line => DebugAdapterOutput.WriteLine($"[{adapter.Name}] {line}", OutputKind.Info),
             };
             session = configuration.DebugServerPort is { } port

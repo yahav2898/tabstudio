@@ -415,6 +415,11 @@ The socket directory is shared into PRoot and removed with the debug session. La
 output and stdin inherited from the runtime process; user input never enters the DAP stream. Real-tool IDE and emulator tests cover the
 console template, compiler errors, a breakpoint and Locals.
 
+The APK's PRoot includes a thread-wait patch: Linux permits one thread to collect debugger events for a sibling
+thread's ptracees, which Delve needs. `__WNOTHREAD` still limits waits to the calling thread, and ptrace control
+requests remain restricted to the original tracing thread. A native CI fixture checks blocking and nonblocking
+waits, exit status and those ownership boundaries before the emulator exercises Delve itself.
+
 ## Swarm
 
 `TabStudio.Swarm` runs the app being built on every device that joins the tablet's swarm. Devices join through

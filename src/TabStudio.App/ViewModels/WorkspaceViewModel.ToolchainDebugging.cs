@@ -24,6 +24,9 @@ public sealed partial class WorkspaceViewModel
     private AdapterProgram? _adapterProgramRun;
     private Task? _adapterProgramFinish;
 
+    /// <summary>Records adapter messages during the emulator's real-tool debugging check.</summary>
+    internal bool TraceDebugAdapterMessages { get; set; }
+
     /// <summary>Whether the debugged program runs in the Output panel's console, started for its debug adapter.</summary>
     private bool IsProgramInConsole => _adapterProgramRun is not null;
 

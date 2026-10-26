@@ -18,6 +18,8 @@ public static partial class SelfTest
         }
 
         var breakpoint = workspace.Breakpoints.Add(source, line);
+        var traced = workspace.TraceDebugAdapterMessages;
+        workspace.TraceDebugAdapterMessages = true;
         void Answer(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(OutputViewModel.IsWaitingForInput) && workspace.Output.IsWaitingForInput)
@@ -30,7 +32,7 @@ public static partial class SelfTest
         workspace.Output.PropertyChanged += Answer;
         try
         {
-            await workspace.StartDebuggingCommand.ExecuteAsync(null).WaitAsync(cancellationToken);
+            await workspace.StartDebuggingCommand.ExecuteAsync(null).WaitAsync(TimeSpan.FromMinutes(3), cancellationToken);
             await WaitForAsync(() => workspace.IsPaused || (!workspace.IsDebugging && workspace.State != IdeState.Busy), TimeSpan.FromMinutes(3), cancellationToken);
             if (!workspace.IsPaused)
             {
@@ -48,8 +50,13 @@ public static partial class SelfTest
                 ? $"{project.Toolchain.Name} debugging: stopped at {line}, {localName} = {value}, console input and completed greeting"
                 : $"{project.Toolchain.Name} debugging: {localName} = {value ?? "missing"}; {CompiledDebugFailure(workspace)}", clock.Elapsed);
         }
+        catch (TimeoutException)
+        {
+            return new(false, $"{project.Toolchain.Name} debugging: launch timed out: {CompiledDebugFailure(workspace)}", clock.Elapsed);
+        }
         finally
         {
+            workspace.TraceDebugAdapterMessages = traced;
             workspace.Output.PropertyChanged -= Answer;
             workspace.Breakpoints.Remove(breakpoint);
         }

@@ -11,24 +11,21 @@
 #
 # Sources are downloaded at pinned versions and checked against their SHA-256 hashes, the same ones Termux uses.
 # PRoot is GPL-2.0-or-later and talloc LGPL-3.0-or-later; both are separate programs inside the APK, built from
-# the unmodified sources named here.
+# the sources named here, with the local thread-wait patch for Linux ptrace semantics.
 #
 # Usage: build/android/native/build.sh <output-folder> <abi>...
 #   abi: arm64-v8a, armeabi-v7a or x86_64. Each one lands in <output-folder>/<abi>/; an ABI that is already
 #   built at these versions is skipped, so CI can cache the folder.
 # Needs: the Android NDK ($ANDROID_NDK_HOME, $ANDROID_NDK_LATEST_HOME, $ANDROID_NDK_ROOT or the newest under
-# $ANDROID_HOME/ndk), make, python3 (talloc's build system), curl, unzip, readelf and gawk.
+# $ANDROID_HOME/ndk), make, python3 (talloc's build system), curl, unzip, patch, readelf and gawk.
 set -euo pipefail
 
-PROOT_VERSION=5.1.107.101
-PROOT_URL="https://github.com/termux/proot/archive/v${PROOT_VERSION}.zip"
-PROOT_SHA256=a66743f50c7b0bac1913b83bf55e139d679c80a0ca2808eec76432a65640017f
-TALLOC_VERSION=2.5.0
-TALLOC_URL="https://www.samba.org/ftp/talloc/talloc-${TALLOC_VERSION}.tar.gz"
-TALLOC_SHA256=912afa237510ae542a7733998eb18a12bcda35ab6729c8e2ddb43e8d0ebab007
+native="$(cd "$(dirname "$0")" && pwd)"
+source "$native/sources.sh"
 # TabStudio's minimum Android version (API 28, Android 9).
 API=28
-STAMP="proot ${PROOT_VERSION}, talloc ${TALLOC_VERSION}, API ${API}, 16 KB pages"
+patch_sha="$(sha256sum "$native/proot-thread-waits.patch" | cut -d ' ' -f1)"
+STAMP="proot ${PROOT_VERSION}, talloc ${TALLOC_VERSION}, API ${API}, 16 KB pages, waits ${patch_sha}"
 
 out="$(realpath -m "${1:?usage: build.sh <output-folder> <abi>...}")"
 shift
@@ -158,6 +155,7 @@ EOF
   # PRoot with an unbundled loader: TabStudio passes the loader's path in PROOT_LOADER. 64-bit builds are
   # aligned for devices with 16 KB memory pages.
   unzip -q "$downloads/proot.zip" -d "$dir"
+  (cd "$dir/proot-$PROOT_VERSION" && patch -p1 < "$native/proot-thread-waits.patch")
   (
     cd "$dir/proot-$PROOT_VERSION/src"
     local pages=""

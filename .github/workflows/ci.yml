@@ -53,6 +53,13 @@ jobs:
           mkdir -p ci-out
           { npm ls -g --depth=0; ls -l "$(command -v typescript-language-server)"; python -m pip show debugpy; } > ci-out/language-servers.txt 2>&1 || true
 
+      - name: Test PRoot debugger thread waits
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libtalloc-dev gawk
+          bash build/android/native/tests/ptrace-threads.sh > ci-out/proot-thread-waits.log 2>&1 || { cat ci-out/proot-thread-waits.log; exit 1; }
+          cat ci-out/proot-thread-waits.log
+
       - name: Build and test
         run: |
           mkdir -p ci-out
@@ -228,7 +235,7 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: artifacts/native
-          key: android-native-${{ hashFiles('build/android/native/build.sh') }}-arm
+          key: android-native-${{ hashFiles('build/android/native/build.sh', 'build/android/native/sources.sh', 'build/android/native/*.patch') }}-arm
 
       - name: Build the toolchain runtime
         run: |
@@ -294,7 +301,7 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: artifacts/native
-          key: android-native-${{ hashFiles('build/android/native/build.sh') }}-x64
+          key: android-native-${{ hashFiles('build/android/native/build.sh', 'build/android/native/sources.sh', 'build/android/native/*.patch') }}-x64
 
       - name: Build the toolchain runtime
         run: |
