@@ -29,7 +29,7 @@
       <!-- One row on every screen: the device takes the room left; the speed and interface are under the speed's button. -->
       <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="8">
         <ComboBox ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}" MinWidth="110" MaxWidth="360" HorizontalAlignment="Stretch"
-                  IsEnabled="{Binding !IsConnected}" PlaceholderText="No USB device" AutomationProperties.Name="USB device"
+                  IsEnabled="{Binding !IsConnected}" PlaceholderText="No device" AutomationProperties.Name="USB device"
                   ToolTip.Tip="The board's USB serial adapter" />
         <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Classes="tool" Padding="10,0" IsEnabled="{Binding !IsConnected}"
                 ToolTip.Tip="Speed and interface; 8 data bits, no parity, 1 stop bit (8-N-1)">
