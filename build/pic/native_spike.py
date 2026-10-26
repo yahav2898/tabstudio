@@ -28,7 +28,9 @@ def evaluate(args):
             raise RuntimeError("This evaluation requires a real aarch64 host")
         root, cache, prefix, _, env = spike.prepare(work, out, args.tool)
         # Alpine build tools are musl programs. Never inject Debian's glibc libs into them.
-        native = [*prefix, "/usr/bin/env", "-u", "LD_LIBRARY_PATH"]
+        # These source releases predate GCC 15's C23 default. In particular,
+        # GMP's configure probes intentionally use pre-C23 function declarations.
+        native = [*prefix, "/usr/bin/env", "-u", "LD_LIBRARY_PATH", "CC=gcc -std=gnu17"]
         shutil.copyfile("/etc/resolv.conf", root / "etc/resolv.conf")
         (root / "etc/ssl/certs").mkdir(parents=True, exist_ok=True)
         shutil.copyfile("/etc/ssl/certs/ca-certificates.crt", root / "etc/ssl/certs/ca-certificates.crt")
@@ -36,7 +38,7 @@ def evaluate(args):
         (root / "etc/apk/repositories").write_text("\n".join(f'{catalog["mirror"]}/{catalog["branch"]}/{repo}' for repo in catalog["repositories"]) + "\n")
         packages = ["build-base", "bash", "bison", "flex", "texinfo", "zlib-dev", "zstd-dev", "python3", "gawk"]
         if args.tool == "sdcc":
-            packages += ["boost-dev", "gputils"]
+            packages += ["boost-dev"]
         spike.run([*native, "/sbin/apk", "add", "--no-cache", *packages], out / "alpine-build-tools.log", env=env, timeout=600)
         _, _, host = spike.run([*native, "gcc", "-dumpmachine"], out / "host-toolchain.log", env=env)
         result["nativeHost"] = host.strip()
@@ -66,11 +68,19 @@ def evaluate(args):
                 package.extractall(pack)
             options = ["-mprocessor=32MX250F128B", "-mdfp=/opt/tabstudio/packs/pic32", "-ffreestanding", "-O0", "-c", "blink.c", "-o", "/results/blink.o"]
         else:
+            # Alpine 3.24 has no gputils package. Build the verified upstream
+            # release rather than silently using an assembler on the host.
+            gputils = spike.fetch(spike.LOCK["gputils-source"], cache, "gputils.tar.gz")
+            spike.run(["tar", "--no-same-owner", "-xzf", str(gputils), "-C", str(root / "work")], out / "gputils-extract.log")
+            spike.run([*native, "sh", "-c", "cd /work/gputils-1.5.2 && ./configure --prefix=/usr/local"], out / "gputils-configure.log", env=env, timeout=300)
+            _, seconds, _ = spike.run([*native, "sh", "-c", "cd /work/gputils-1.5.2 && make -j4 && make install"], out / "gputils-build.log", env=env, timeout=900)
+            result["componentSeconds"]["gputils"] = seconds
             archive = spike.fetch(spike.LOCK["sdcc-source"], cache, "sdcc.tar.bz2")
             spike.run(["tar", "--no-same-owner", "-xjf", str(archive), "-C", str(root / "work")], out / "extract.log")
             # Build only the PIC18 backend. Device libraries and other backends
             # are separate work; do not spend CI compiling thousands of devices.
-            configure = 'cd /work/sdcc-4.5.0 && exec ./configure --prefix=/opt/sdcc --enable-pic16-port --disable-pic14-port --disable-device-lib --disable-ucsim --disable-sdcdb'
+            ports = ["mcs51", "z80", "z180", "r2k", "r2ka", "r3ka", "sm83", "tlcs90", "ez80_z80", "z80n", "r800", "ds390", "ds400", "pic14", "hc08", "s08", "stm8", "pdk13", "pdk14", "pdk15", "mos6502", "mos65c02", "f8"]
+            configure = 'cd /work/sdcc-4.5.0 && exec ./configure --prefix=/opt/sdcc --enable-pic16-port --disable-device-lib --disable-ucsim --disable-sdcdb ' + " ".join("--disable-" + port + "-port" for port in ports)
             spike.run([*native, "sh", "-c", configure], out / "configure.log", env=env, timeout=300)
             _, seconds, _ = spike.run([*native, "sh", "-c", "cd /work/sdcc-4.5.0 && make -j4 && make install"], out / "build.log", env=env, timeout=2400)
             result["componentSeconds"]["sdcc"] = seconds
@@ -92,6 +102,11 @@ def evaluate(args):
         result["error"] = str(error)
         raise
     finally:
+        if "root" in locals():
+            for file in root.glob("work/**/config.log"):
+                destination = out / "configure-details" / file.relative_to(root / "work")
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(file, destination)
         (out / "result.json").write_text(json.dumps(result, indent=2) + "\n")
 
 
