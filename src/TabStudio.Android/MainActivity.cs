@@ -111,6 +111,9 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
     /// <inheritdoc />
     protected override AppBuilder CustomizeAppBuilder(AppBuilder builder)
     {
+        // Mono can resolve SqlClient's general runtime flavor. Select managed SNI before any provider
+        // initializes; Android cannot load the Windows native SNI library. The switch keeps its historic name.
+        AppContext.SetSwitch("Switch.Microsoft.Data.SqlClient.UseManagedNetworkingOnWindows", true);
         var context = ApplicationContext!;
         var dataDirectory = Path.Combine(context.FilesDir!.AbsolutePath, "TabStudio");
         var notifications = _notifications ??= new AndroidNotifications(context, () => _current);
