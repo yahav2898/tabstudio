@@ -17,7 +17,8 @@ internal static class HotReloadRuntime
         + $"feature switch={(AppContext.TryGetSwitch(FeatureSwitch, out var enabled) ? enabled.ToString() : "default")}; "
         + (IsAndroidMono ? MonoProbe.Value.Detail : "native capability check");
 
-    private static bool IsAndroidMono => OperatingSystem.IsAndroid() && typeof(object).Assembly.GetType("Mono.Runtime") is not null;
+    // Use the same marker as dotnet/runtime's PlatformDetection; Mono.Runtime was removed from modern Mono.
+    private static bool IsAndroidMono => OperatingSystem.IsAndroid() && typeof(object).Assembly.GetType("Mono.RuntimeStructs") is not null;
 
     private static (bool, string) VerifyMono()
     {
