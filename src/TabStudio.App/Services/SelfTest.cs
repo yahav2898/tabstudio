@@ -59,11 +59,6 @@ public static partial class SelfTest
                 return new SelfTestResult(false, $"F5 is not available: {workspace.StatusText}.", clock.Elapsed);
             }
 
-            if (templates is not null)
-            {
-                preparation = PrepareSelfTestToolchainsAsync(workspace.Toolchains, preparationStop.Token);
-            }
-
             void Answer(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
             {
                 if (e.PropertyName == nameof(OutputViewModel.IsWaitingForInput) && workspace.Output.IsWaitingForInput)
@@ -114,6 +109,10 @@ public static partial class SelfTest
             {
                 return new SelfTestResult(false, $"{summary} | {debugged.Message} | {web.Message}", clock.Elapsed);
             }
+
+            // Keep the browser's trusted-input check independent of package decompression and downloads.
+            // Preparation still overlaps all the remaining .NET/UI checks before any native toolchain runs.
+            preparation = PrepareSelfTestToolchainsAsync(main.Workspace!.Toolchains, preparationStop.Token);
 
             var blazor = await ServeBlazorAppsAsync(main, templates, cancellationToken);
             if (!blazor.Success)
