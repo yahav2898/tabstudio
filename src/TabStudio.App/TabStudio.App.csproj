@@ -75,6 +75,7 @@
     <ProjectReference Include="..\TabStudio.Swarm\TabStudio.Swarm.csproj" />
     <ProjectReference Include="..\TabStudio.Extensions\TabStudio.Extensions.csproj" />
     <ProjectReference Include="..\TabStudio.Toolchains\TabStudio.Toolchains.csproj" />
+    <ProjectReference Include="..\TabStudio.Services\TabStudio.Services.csproj" />
     <ProjectReference Include="..\TabStudio.Web\TabStudio.Web.csproj" />
     <ProjectReference Include="..\TabStudio.Wpf\TabStudio.Wpf.csproj" />
 
@@ -86,6 +87,13 @@
   </ItemGroup>
 
   <Import Project="TabStudio.App.WindowsForms.targets" />
+
+  <!-- Automatically bridge to the optional agent/database feature when combined. -->
+  <ItemGroup>
+    <Compile Remove="ViewModels/WorkspaceViewModel.Services.Database.cs" />
+    <Compile Include="ViewModels/WorkspaceViewModel.Services.Database.cs"
+             Condition="Exists('$(MSBuildProjectDirectory)/ViewModels/WorkspaceViewModel.Database.cs')" />
+  </ItemGroup>
 
   <ItemGroup>
     <InternalsVisibleTo Include="TabStudio.App.Tests" />

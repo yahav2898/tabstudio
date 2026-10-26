@@ -146,6 +146,27 @@ public sealed class ProgramRunnerTests
         Assert.Equal("Hello, tablet\n", console.Output);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Service_environment_is_visible_to_the_app_and_restored_after_exit_or_crash(bool crash)
+    {
+        var key = "TABSTUDIO_SERVICE_RUN_" + Guid.NewGuid().ToString("N");
+        Environment.SetEnvironmentVariable(key, "previous");
+        try
+        {
+            var source = $"Console.WriteLine(Environment.GetEnvironmentVariable(\"{key}\"));" + (crash ? "throw new InvalidOperationException(\"test crash\");" : "");
+            var compiled = _compiler.Compile(new CompilationRequest { AssemblyName = "ServiceEnvironment" + Guid.NewGuid().ToString("N"), Documents = [new SourceDocument("Program.cs", source)] });
+            Assert.True(compiled.Success, string.Join('\n', compiled.Diagnostics));
+            var console = new CapturingConsole();
+            var result = await _runner.RunAsync(compiled.Assembly!, [], [], [], console, environment: new Dictionary<string, string?> { [key] = "localhost-connection" });
+            Assert.Equal(crash ? RunOutcome.Crashed : RunOutcome.Completed, result.Outcome);
+            Assert.Equal("localhost-connection\n", console.Output);
+            Assert.Equal("previous", Environment.GetEnvironmentVariable(key));
+        }
+        finally { Environment.SetEnvironmentVariable(key, null); }
+    }
+
     private async Task<RunResult> RunAsync(
         string source,
         CapturingConsole console,

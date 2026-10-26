@@ -298,6 +298,10 @@ jobs:
           tail -n 80 ci-out/java-tools.log
           exit "$status"
 
+      - name: Prepare native backing services in Alpine
+        timeout-minutes: 15
+        run: bash build/ci/services-alpine.sh "$RUNNER_TEMP/services-alpine"
+
       # This test deliberately collects the entire process heap during every PNG encode. Run it in its own
       # test host so previous IDE workspaces cannot make that heap several gigabytes; all 100 captures remain.
       - name: Test screenshot lifetime under GC
@@ -515,6 +519,40 @@ jobs:
           name: ssh-integration
           path: ci-out
           retention-days: 7
+
+  services:
+    name: Native Services (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { arch: x64, runner: ubuntu-latest }
+          - { arch: arm64, runner: ubuntu-24.04-arm }
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Prepare Alpine and PRoot
+        run: bash build/ci/services-alpine.sh "$RUNNER_TEMP/services-alpine"
+      - name: Test parsing, mapping, PostgreSQL and Redis in PRoot
+        run: |
+          mkdir -p ci-out
+          if ! dotnet test tests/TabStudio.Services.Tests -c Release --logger "console;verbosity=normal" > ci-out/services.log 2>&1; then
+            echo "::warning::Services tests failed once; retrying."
+            dotnet test tests/TabStudio.Services.Tests -c Release --logger "console;verbosity=normal" > ci-out/services.retry.log 2>&1 || { cat ci-out/services.retry.log; exit 1; }
+            echo "Native Services (${{ matrix.arch }}): first attempt failed, retry passed" >> ci-out/FLAKY.txt
+          fi
+          cat ci-out/services.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-services-${{ matrix.arch }}
+          path: |
+            ci-out/
+            ${{ runner.temp }}/services-alpine/*log
 
   android:
     name: Build Android APK
@@ -774,7 +812,7 @@ jobs:
   release:
     name: Publish the release
     if: github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/main')
-    needs: [libraries, app, android, android-emulator-verdict, windows, ssh, mobile-android]
+    needs: [libraries, app, services, android, android-emulator-verdict, windows, ssh, mobile-android]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

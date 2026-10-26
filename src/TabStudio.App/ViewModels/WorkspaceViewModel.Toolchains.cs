@@ -525,7 +525,7 @@ public sealed partial class WorkspaceViewModel
                 }
             }
 
-            result = await OutputProcess.RunAsync(_toolchains.Runtime, plan.Run, Output, input, _run.Token, listening: listening);
+            result = await OutputProcess.RunAsync(_toolchains.Runtime, WithServiceEnvironment(plan.Run), Output, input, _run.Token, listening: listening);
         }
         finally
         {

@@ -36,6 +36,7 @@ public sealed partial class WorkspaceViewModel
             var options = new WebAppOptions
             {
                 Environment = profile.Environment ?? "Development",
+                EnvironmentVariables = _serviceEnvironment,
                 Arguments = profile.CommandLineArgs,
                 Port = _webPort,
             };

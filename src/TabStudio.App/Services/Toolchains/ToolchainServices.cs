@@ -70,6 +70,11 @@ public sealed class ToolchainServices : IDisposable
         Environment = environment;
     }
 
+    internal AlpinePackageManager? ServicePackageManager => _packages;
+
+    internal Task WithPackageOperationAsync(Func<Task> action, CancellationToken cancellationToken) =>
+        Manager.WithRuntimeOperationAsync(action, cancellationToken);
+
     /// <summary>Installs, updates and removes toolchains, and knows their states.</summary>
     public ToolchainManager Manager { get; }
 

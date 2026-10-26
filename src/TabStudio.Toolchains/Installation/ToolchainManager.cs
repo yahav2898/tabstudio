@@ -243,6 +243,17 @@ public sealed class ToolchainManager : IDisposable
         Changed?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <summary>Serializes an additional package operation with Toolchain Store installs and removals.</summary>
+    /// <param name="operation">The operation using the runtime's package database.</param>
+    /// <param name="cancellationToken">Cancels waiting for other installers.</param>
+    public async Task WithRuntimeOperationAsync(Func<Task> operation, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(operation);
+        await _operations.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try { await operation().ConfigureAwait(false); }
+        finally { _operations.Release(); }
+    }
+
     /// <inheritdoc />
     public void Dispose() => _operations.Dispose();
 

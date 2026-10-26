@@ -155,7 +155,7 @@ public sealed partial class WorkspaceViewModel
         }
 
         var target = new LaunchTarget(configuration.Name, configuration, IsCurrentFile: false);
-        _programEnvironments.AddOrUpdate(target, plan.Run.Environment);
+        _programEnvironments.AddOrUpdate(target, WithServiceEnvironment(plan.Run).Environment);
         await LaunchAdapterAsync(target, start, noDebug: false);
         if (!IsDebuggingWithAdapter)
         {

@@ -9,6 +9,9 @@ public sealed record WebAppOptions
     /// <summary>More command-line arguments, such as a launch profile's <c>commandLineArgs</c>.</summary>
     public IReadOnlyList<string> Arguments { get; init; } = [];
 
+    /// <summary>Environment variables scoped to the app run, including native service connections.</summary>
+    public IReadOnlyDictionary<string, string?> EnvironmentVariables { get; init; } = new Dictionary<string, string?>();
+
     /// <summary>The port to listen on when it is free, so a restarted app keeps its address; any free port otherwise.</summary>
     public int? Port { get; init; }
 

@@ -28,6 +28,7 @@ Open a solution, press F5, and it builds, runs and debugs on the tablet itself.
 - [Features](#features)
   - [The IDE](#the-ide)
   - [Languages](#languages)
+  - [Backing services without Docker](#backing-services-without-docker)
   - [App platforms](#app-platforms)
   - [Every screen at once](#every-screen-at-once)
   - [Projects and repositories](#projects-and-repositories)
@@ -142,6 +143,21 @@ From there, try **New project** for a template in any language, **Open from GitH
   server or debug adapter is missing, the status bar, the editor and F5 offer to install it.
 - **More languages through extensions.** VS Code extensions from Open VSX bring grammars, snippets, themes and
   language settings for anything else.
+
+### Backing services without Docker
+
+**View > Services** (also in Ctrl+Q) reads `compose.yaml`, `compose.yml`, `docker-compose.yml` or
+`docker-compose.yaml`, plus `.devcontainer/devcontainer.json` Compose references and overrides. PostgreSQL,
+Redis/Valkey, MySQL via MariaDB, RabbitMQ, nginx, Mailpit, MinIO, and MongoDB when Alpine packages it, run as native
+PRoot processes. Start all, stop, restart, health, per-service logs and localhost preview links are in one pane.
+F5 starts the startup project's dependencies first and rewrites Compose/appsettings connection hosts to localhost;
+`ConnectionStrings__<service>`, `<SERVICE>_HOST` and `<SERVICE>_PORT` are also supplied to the launched app.
+
+Each workspace keeps its own data in private app storage. PostgreSQL initializes the configured user, password and
+database and runs `/docker-entrypoint-initdb.d` SQL and shell scripts once. Image versions are matched against the
+signed Alpine index: PostgreSQL majors never silently change, and other version substitutions are shown in logs.
+Unsupported images explain why and offer a remote host. This is a native development runner, not Docker emulation:
+see [Services](docs/SERVICES.md) for mappings, volumes, networking, supported Compose fields and the CI harness.
 
 ### App platforms
 
@@ -369,6 +385,7 @@ src/
   TabStudio.LiveTesting/     Live Unit Testing: coverage, impact analysis, the live test engine
   TabStudio.Notebooks/       C# notebooks: .ipynb and .dib, the kernel, value formatting
   TabStudio.Toolchains/      Alpine/PRoot toolchains, verified SDK downloads, processes and the terminal
+  TabStudio.Services/        Compose and devcontainer backing services run natively on Alpine/PRoot
   TabStudio.LanguageServers/ LSP and DAP clients for every language other than C#
   TabStudio.Extensions/      VS Code extensions from Open VSX
   TabStudio.Web/             Web apps: static web assets, Blazor, .NET on WebAssembly
