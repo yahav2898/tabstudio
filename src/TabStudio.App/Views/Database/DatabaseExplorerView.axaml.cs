@@ -14,7 +14,8 @@ public sealed partial class DatabaseExplorerView : UserControl
     {
         if (DataContext is not DatabaseExplorerViewModel vm || TopLevel.GetTopLevel(this) is not { } top) return;
         var files = await top.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions { Title = "SQLite database", AllowMultiple = false });
-        if (files.FirstOrDefault() is not { } file) return;
+        if (files.Count == 0) return;
+        var file = files[0];
         if (file.TryGetLocalPath() is not { } path)
         {
             // A content URI cannot be opened by SQLite. Import an app-private copy for read/write access.

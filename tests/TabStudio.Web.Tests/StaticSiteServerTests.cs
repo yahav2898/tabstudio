@@ -8,7 +8,7 @@ namespace TabStudio.Web.Tests;
 /// Serving a static web site for the web preview: its files, the live reload script in every page, the events that
 /// reload a page or swap a saved style sheet, and nothing outside the folder.
 /// </summary>
-public sealed class StaticSiteServerTests : IAsyncLifetime
+public sealed class StaticSiteServerTests : IAsyncLifetime, IAsyncDisposable
 {
     private static readonly TimeSpan EventTimeout = TimeSpan.FromSeconds(10);
 
@@ -144,6 +144,8 @@ public sealed class StaticSiteServerTests : IAsyncLifetime
         _http.Dispose();
         _site.Dispose();
     }
+
+    ValueTask IAsyncDisposable.DisposeAsync() => new(DisposeAsync());
 
     private static async Task<string?> ReadLineAsync(StreamReader reader)
     {

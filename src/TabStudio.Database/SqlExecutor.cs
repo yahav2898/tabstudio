@@ -1,5 +1,6 @@
 using System.Data.Common;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
 using System.Text.Json;
@@ -8,10 +9,14 @@ namespace TabStudio.Database;
 
 public sealed class SqlExecutor
 {
+    private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
+
     public const int DefaultRowLimit = 5000;
     public const int MaximumResultSets = 32;
 
     // SQLite's async API executes synchronously. Always keep both reading and Cancel off the UI thread.
+    [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Preserve the public instance service API used by Database Explorer and its consumers.")]
+    [SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Preserve the existing public parameter order, including callers passing a token before the optional row limit.")]
     public Task<QueryResult> ExecuteAsync(DatabaseConnection connection, string sql, CancellationToken cancellationToken = default, int rowLimit = DefaultRowLimit) =>
         Task.Run(async () =>
         {
@@ -74,7 +79,7 @@ public sealed class SqlExecutor
     public static string Json(QueryResultSet result) => JsonSerializer.Serialize(new
     {
         columns = result.Columns.Select(c => c.Name), rows = result.Rows, truncated = result.Truncated,
-    }, new JsonSerializerOptions { WriteIndented = true });
+    }, JsonOptions);
 
     public static string Format(object? value) => value switch
     {

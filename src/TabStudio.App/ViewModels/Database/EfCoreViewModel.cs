@@ -65,7 +65,7 @@ public sealed partial class EfCoreViewModel : ObservableObject, IDisposable
         Status = "Migration added: " + string.Join(", ", files); MigrationName = string.Empty;
     });
     private void RequireContext() { if (SelectedContext is null) throw new InvalidOperationException("List and select a DbContext first."); }
-    private Task<object?> ExecuteAsync(string operation, IDictionary args, CancellationToken token)
+    private Task<object?> ExecuteAsync(string operation, Hashtable args, CancellationToken token)
     {
         if (SelectedProject is not { } project) throw new InvalidOperationException("Open a solution containing an EF Core project.");
         Status = "Building projects and running EF Core…";

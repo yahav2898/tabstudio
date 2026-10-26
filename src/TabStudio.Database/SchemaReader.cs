@@ -1,10 +1,12 @@
 using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 namespace TabStudio.Database;
 
 public sealed class SchemaReader
 {
+    [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Preserve the public instance service API used by Database Explorer and its consumers.")]
     public Task<IReadOnlyList<string>> DatabasesAsync(DatabaseConnection connection, CancellationToken token = default) => Task.Run(async () =>
     {
         await using var db = DatabaseConnections.Create(connection);
@@ -19,6 +21,7 @@ public sealed class SchemaReader
         return (IReadOnlyList<string>)rows.Select(r => Text(r[connection.Provider == DatabaseProvider.SQLite ? 1 : 0])).ToArray();
     }, token);
 
+    [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Preserve the public instance service API used by Database Explorer and its consumers.")]
     public Task<DatabaseSchema> ReadAsync(DatabaseConnection connection, CancellationToken token = default) => Task.Run(async () =>
     {
         await using var db = DatabaseConnections.Create(connection);

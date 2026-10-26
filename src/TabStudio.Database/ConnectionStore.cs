@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
 namespace TabStudio.Database;
@@ -18,6 +19,7 @@ public sealed class MemoryDatabaseSecretStore : IDatabaseSecretStore
     public Task RemoveAsync(string key, CancellationToken token = default) { _values.TryRemove(key, out _); return Task.CompletedTask; }
 }
 
+[SuppressMessage("Design", "CA1001:Types that own disposable fields should be disposable", Justification = "The async-only semaphore never exposes AvailableWaitHandle and allocates no native handle. Letting its managed state be collected avoids disposing it while a pending store operation still needs to release it.")]
 public sealed class ConnectionStore(string metadataFile, IDatabaseSecretStore secrets)
 {
     private readonly SemaphoreSlim _gate = new(1);
@@ -30,8 +32,12 @@ public sealed class ConnectionStore(string metadataFile, IDatabaseSecretStore se
         {
             var found = new List<DatabaseConnection>();
             foreach (var p in await ProfilesAsync(token).ConfigureAwait(false))
+            {
                 if (await secrets.GetAsync(p.Id.ToString("N"), token).ConfigureAwait(false) is { } value)
+                {
                     found.Add(new DatabaseConnection(p.Id, p.Name, p.Provider, value));
+                }
+            }
             return found;
         }
         finally { _gate.Release(); }

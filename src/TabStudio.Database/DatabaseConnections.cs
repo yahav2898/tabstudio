@@ -7,6 +7,8 @@ namespace TabStudio.Database;
 
 public static class DatabaseConnections
 {
+    private static readonly string[] SqlServerKeys = ["Initial Catalog", "Server", "Database", "User ID", "UserID", "UID", "Integrated Security", "Trusted_Connection"];
+
     public static DbConnection Create(DatabaseConnection connection) => connection.Provider switch
     {
         DatabaseProvider.SQLite => new SqliteConnection(connection.ConnectionString),
@@ -49,7 +51,7 @@ public static class DatabaseConnections
         {
             var b = new DbConnectionStringBuilder { ConnectionString = value };
             if (b.ContainsKey("Host")) return DatabaseProvider.PostgreSql;
-            if (new[] { "Initial Catalog", "Server", "Database", "User ID", "UserID", "UID", "Integrated Security", "Trusted_Connection" }.Any(b.ContainsKey)) return DatabaseProvider.SqlServer;
+            if (SqlServerKeys.Any(b.ContainsKey)) return DatabaseProvider.SqlServer;
             if (b.ContainsKey("Data Source") || b.ContainsKey("DataSource") || b.ContainsKey("Filename")) return DatabaseProvider.SQLite;
         }
         catch (ArgumentException) { }
@@ -61,7 +63,9 @@ public static class DatabaseConnections
         var b = new SqliteConnectionStringBuilder(value);
         if (b.DataSource.Length > 0 && b.DataSource != ":memory:" && !Path.IsPathRooted(b.DataSource)
             && !b.DataSource.StartsWith("file:", StringComparison.OrdinalIgnoreCase))
+        {
             b.DataSource = Path.GetFullPath(b.DataSource, projectDirectory);
+        }
         return b.ConnectionString;
     }
 }

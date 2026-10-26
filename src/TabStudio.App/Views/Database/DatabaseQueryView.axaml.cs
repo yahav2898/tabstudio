@@ -14,7 +14,7 @@ using TabStudio.Database;
 
 namespace TabStudio.App.Views.Database;
 
-public sealed partial class DatabaseQueryView : UserControl
+internal sealed partial class DatabaseQueryView : UserControl
 {
     private readonly DatabaseQueryViewModel _model;
     private CompletionWindow? _completion;
@@ -76,8 +76,10 @@ public sealed partial class DatabaseQueryView : UserControl
         _sortIndex = index;
         _sortDescending = descending;
         if (_model.SelectedResult is { } result)
+        {
             for (var i = 0; i < ResultsGrid.Columns.Count; i++)
                 ResultsGrid.Columns[i].Header = result.Data.Columns[i].Name + (i == index ? descending ? " ↓" : " ↑" : string.Empty);
+        }
         var sorted = _model.Rows.OrderBy(r => r.Values[index], Comparer<object?>.Create(Compare)).ToArray();
         if (descending) Array.Reverse(sorted);
         _model.Rows.Clear(); foreach (var row in sorted) _model.Rows.Add(row);

@@ -1,9 +1,11 @@
 using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
 
 namespace TabStudio.Database;
 
 public sealed class TableEditor
 {
+    [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Preserve the public instance service API used by Database Explorer and its consumers.")]
     public async Task<TablePage> ReadAsync(DatabaseConnection connection, DatabaseTable table, int page, int pageSize = 100, CancellationToken token = default)
     {
         ArgumentOutOfRangeException.ThrowIfNegative(page);
@@ -20,6 +22,7 @@ public sealed class TableEditor
     }
 
     // One changed cell, with the complete original row as an optimistic concurrency guard.
+    [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Preserve the public instance service API used by Database Explorer and its consumers.")]
     public Task UpdateAsync(DatabaseConnection connection, DatabaseTable table, IReadOnlyList<object?> original, int column, object? value, CancellationToken token = default) => Task.Run(async () =>
     {
         if (table.IsView || !table.Columns.Any(c => c.KeyOrder > 0)) throw new InvalidOperationException("Editing requires a table with a primary key.");

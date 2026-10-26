@@ -31,11 +31,13 @@ public static partial class SqlCompletions
         {
             items.AddRange(Keywords.Select(k => new SqlCompletion(k, "keyword")));
             if (schema is not null)
+            {
                 foreach (var table in schema.Tables)
                 {
                     items.Add(Identifier(table.Name, table.IsView ? "view" : "table"));
                     items.AddRange(table.Columns.Select(c => Identifier(c.Name, $"{table.Name}: {c.Type}")));
                 }
+            }
         }
         return items.Where(i => i.Text.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)).DistinctBy(i => i.Text, StringComparer.OrdinalIgnoreCase).OrderBy(i => i.Text, StringComparer.OrdinalIgnoreCase).Take(100).ToArray();
         SqlCompletion Identifier(string name, string kind) => new(name, kind, DatabaseConnections.Quote(provider, name));
@@ -57,8 +59,8 @@ public static partial class SqlCompletions
             }
             if (c == '-' && next == '-') { line = true; i++; }
             else if (c == '/' && next == '*') { block = true; i++; }
-            else if (c is '\'' or '"' or '`') quote = c;
-            else if (c == '[') quote = ']';
+            else if (c is '\'' or '"' or '`') { quote = c; }
+            else if (c == '[') { quote = ']'; }
         }
         return quote != '\0' || line || block;
     }
