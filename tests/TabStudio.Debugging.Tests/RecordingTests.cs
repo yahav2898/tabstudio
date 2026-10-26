@@ -116,6 +116,29 @@ public sealed class RecordingTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public async Task A_static_field_write_does_not_overwrite_a_same_named_local_in_history()
+    {
+        using var session = Recorded("""
+            class Counter
+            {
+                static int count;
+                static void Main()
+                {
+                    int count = 3;
+                    Counter.count = 7;
+                    Console.WriteLine(count + Counter.count);
+                }
+            }
+            """);
+        await RunAsync(session);
+        var write = Steps(session).Single(s => s.WrittenPath == "Counter.count");
+        Assert.Equal("3", write.Frames[0].Locals.Single(v => v.Name == "count").Value);
+        Assert.Equal("7", write.Frames[0].Locals.Single(v => v.Name == "Counter.count").Value);
+        Assert.Equal("3", session.SeekHistory(session.Recording!.Count - 1)!.FindValue("count")!.Value);
+        Assert.Equal("7", session.HistoricalPause!.FindValue("Counter.count")!.Value);
+    }
+
+    [Fact]
     public async Task Recording_does_not_touch_unrelated_static_imports()
     {
         using var session = Recorded("""

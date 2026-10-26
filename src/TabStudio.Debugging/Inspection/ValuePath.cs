@@ -16,6 +16,8 @@ internal static class ValuePath
     /// <returns>The value, or <see langword="null"/> when a part of the path does not exist.</returns>
     public static DebugValue? Find(IReadOnlyList<DebugValue> locals, string path)
     {
+        // Qualified static fields remain distinct from a same-named local in recorded snapshots.
+        if (locals.FirstOrDefault(l => l.Name == path) is { } exact) return exact;
         var parts = Split(path);
         if (parts.Count == 0)
         {

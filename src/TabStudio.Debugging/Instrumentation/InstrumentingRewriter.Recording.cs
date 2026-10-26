@@ -73,7 +73,13 @@ internal sealed partial class InstrumentingRewriter
         var symbol = _model.GetSymbolInfo(expression, _cancellationToken).Symbol;
         if (expression is IdentifierNameSyntax && symbol is ILocalSymbol or IParameterSymbol) return symbol.Name;
         if (symbol is not IFieldSymbol field) return null;
-        if (field.IsStatic) return field.Name;
+        if (field.IsStatic)
+        {
+            return _model.LookupSymbols(expression.SpanStart, name: field.Name)
+                .Any(s => s is ILocalSymbol or IParameterSymbol || s is IFieldSymbol other && !SymbolEqualityComparer.Default.Equals(field, other))
+                ? field.ContainingType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat) + "." + field.Name
+                : field.Name;
+        }
         if (expression is IdentifierNameSyntax) return field.IsStatic ? field.Name : "this." + field.Name;
         return expression is MemberAccessExpressionSyntax member && SimplePath(member.Expression) is { } receiver
             ? receiver + "." + field.Name : null;
