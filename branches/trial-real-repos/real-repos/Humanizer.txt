@@ -7,331 +7,156 @@ Compatibility Doctor:
   Humanizer.Analyzers.Roslyn414: Library via Built with its users - A library is compiled together with the projects that reference it.
   Humanizer.SourceGenerators: Library via Built with its users - A library is compiled together with the projects that reference it.
   Humanizer: Library via Built with its users - A library is compiled together with the projects that reference it.
-  Humanizer.Analyzers.Tests.Roslyn38: Library via Built with its users - A library is compiled together with the projects that reference it.
-  Humanizer.Analyzers.Tests.Roslyn48: Library via Built with its users - A library is compiled together with the projects that reference it.
-  Humanizer.Analyzers.Tests.Roslyn414: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Humanizer.Analyzers.Tests.Roslyn38: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  Humanizer.Analyzers.Tests.Roslyn48: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  Humanizer.Analyzers.Tests.Roslyn414: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
   Humanizer.SourceGenerators.Tests: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
   Humanizer.Tests: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
   Humanizer.UnicodeDataGenerator: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
   Humanizer.Docs.LanguageCoverage: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
   website: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
-Built in 12.2 s: 24850 errors, 12 warnings
-  19616 x CS0246
-      [Humanizer.Analyzers.Roslyn38] NamespaceMigrationAnalyzer.cs(10,2): error CS0246: The type or namespace name 'DiagnosticAnalyzerAttribute' could not be found (are you missing a using directive or an assembly reference?)
-      [Humanizer.Analyzers.Roslyn38] NamespaceMigrationAnalyzer.cs(10,2): error CS0246: The type or namespace name 'DiagnosticAnalyzer' could not be found (are you missing a using directive or an assembly reference?)
-      [Humanizer.Analyzers.Roslyn38] NamespaceMigrationAnalyzer.cs(11,43): error CS0246: The type or namespace name 'DiagnosticAnalyzer' could not be found (are you missing a using directive or an assembly reference?)
-      [Humanizer.Analyzers.Roslyn38] NamespaceMigrationAnalyzer.cs(16,29): error CS0246: The type or namespace name 'LocalizableString' could not be found (are you missing a using directive or an assembly reference?)
-      [Humanizer.Analyzers.Roslyn38] NamespaceMigrationAnalyzer.cs(17,29): error CS0246: The type or namespace name 'LocalizableString' could not be found (are you missing a using directive or an assembly reference?)
-  4676 x CS0103
-      [Humanizer.Analyzers.Roslyn38] NamespaceMigrationAnalyzer.cs(10,21): error CS0103: The name 'LanguageNames' does not exist in the current context
-      [Humanizer.Analyzers.Roslyn38] NamespaceMigrationAnalyzer.cs(25,9): error CS0103: The name 'DiagnosticSeverity' does not exist in the current context
-      [Humanizer.Analyzers.Roslyn38] NamespaceMigrationAnalyzer.cs(50,48): error CS0103: The name 'GeneratedCodeAnalysisFlags' does not exist in the current context
-      [Humanizer.Analyzers.Roslyn38] NamespaceMigrationAnalyzer.cs(53,65): error CS0103: The name 'SyntaxKind' does not exist in the current context
-      [Humanizer.Analyzers.Roslyn38] NamespaceMigrationAnalyzer.cs(54,64): error CS0103: The name 'SyntaxKind' does not exist in the current context
-  305 x CS0616
-      [Humanizer.Tests] BitFieldEnumHumanizeTests.cs(1,2): error CS0616: 'UseCultureAttribute' is not an attribute class
-      [Humanizer.Tests] ArithmeticTests.cs(25,6): error CS0616: 'UseCultureAttribute' is not an attribute class
-      [Humanizer.Tests] ByteRateTests.cs(8,2): error CS0616: 'UseCultureAttribute' is not an attribute class
-      [Humanizer.Tests] ByteSizeExtensionsTests.cs(1,2): error CS0616: 'UseCultureAttribute' is not an attribute class
-      [Humanizer.Tests] ByteSizeMultiSectionFormatTests.cs(1,2): error CS0616: 'UseCultureAttribute' is not an attribute class
-  73 x CS0121
-      [Benchmarks] CollectionHumanizeBenchmarks.cs(15,17): error CS0121: The call is ambiguous between the following methods or properties: 'Humanizer.CollectionHumanizeExtensions.Humanize<T>(System.Collections.Generic.IEnumerable<T>)' and 'Humanizer.CollectionHumanizeExtensions.Humanize<T>(System.Collections.Generic.IEnumerable<T>)'
-      [Benchmarks] CollectionHumanizeBenchmarks.cs(19,22): error CS0121: The call is ambiguous between the following methods or properties: 'Humanizer.CollectionHumanizeExtensions.Humanize<T>(System.Collections.Generic.IEnumerable<T>, System.Func<T, string>)' and 'Humanizer.CollectionHumanizeExtensions.Humanize<T>(System.Collections.Generic.IEnumerable<T>, System.Func<T, string>)'
-      [Benchmarks] CollectionHumanizeBenchmarks.cs(23,17): error CS0121: The call is ambiguous between the following methods or properties: 'Humanizer.CollectionHumanizeExtensions.Humanize<T>(System.Collections.Generic.IEnumerable<T>, System.Func<T, object>)' and 'Humanizer.CollectionHumanizeExtensions.Humanize<T>(System.Collections.Generic.IEnumerable<T>, System.Func<T, object>)'
-      [Benchmarks] EnglishToWordsBenchmark.cs(8,22): error CS0121: The call is ambiguous between the following methods or properties: 'Humanizer.NumberToWordsExtension.ToWords(int, System.Globalization.CultureInfo?)' and 'Humanizer.NumberToWordsExtension.ToWords(int, System.Globalization.CultureInfo?)'
-      [Benchmarks] EnglishToWordsBenchmark.cs(12,22): error CS0121: The call is ambiguous between the following methods or properties: 'Humanizer.NumberToWordsExtension.ToOrdinalWords(int, System.Globalization.CultureInfo?)' and 'Humanizer.NumberToWordsExtension.ToOrdinalWords(int, System.Globalization.CultureInfo?)'
-  72 x CS1503
-      [Humanizer] ByteSize.cs(1321,18): error CS1503: Argument 1: cannot convert from 'System.ReadOnlySpan<char>' to 'string?'
-      [Humanizer] ByteSize.cs(1538,40): error CS1503: Argument 1: cannot convert from 'System.ReadOnlySpan<char>' to 'CharSpan'
-      [Humanizer] ByteSize.cs(1565,36): error CS1503: Argument 1: cannot convert from 'System.ReadOnlySpan<char>' to 'CharSpan'
-      [Humanizer] ByteSize.cs(1588,36): error CS1503: Argument 1: cannot convert from 'System.ReadOnlySpan<char>' to 'CharSpan'
-      [Humanizer] Vocabulary.cs(388,51): error CS1503: Argument 1: cannot convert from 'char' to 'CharSpan'
-  48 x CS0433
-      [Benchmarks] ByteSizeBenchmarks.cs(9,21): error CS0433: The type 'ByteSize' exists in both 'Humanizer, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' and 'Humanizer, Version=3.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e'
-      [Benchmarks] ByteSizeBenchmarks.cs(9,37): error CS0433: The type 'ByteSize' exists in both 'Humanizer, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' and 'Humanizer, Version=3.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e'
-      [Benchmarks] EnglishArticleBenchmarks.cs(6,9): error CS0433: The type 'EnglishArticle' exists in both 'Humanizer, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' and 'Humanizer, Version=3.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e'
-      [Benchmarks] EnglishArticleBenchmarks.cs(10,9): error CS0433: The type 'EnglishArticle' exists in both 'Humanizer, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' and 'Humanizer, Version=3.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e'
-      [Benchmarks] FormatterBenchmarks.cs(16,21): error CS0433: The type 'IFormatter' exists in both 'Humanizer, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' and 'Humanizer, Version=3.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e'
-  35 x CS0234
-      [Humanizer.Analyzers.Roslyn38] NamespaceMigrationAnalyzer.cs(3,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-      [Humanizer.Analyzers.Roslyn38] NamespaceMigrationAnalyzer.cs(4,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-      [Humanizer.Analyzers.Roslyn38] NamespaceMigrationAnalyzer.cs(5,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-      [Humanizer.Analyzers.Roslyn38] NamespaceMigrationAnalyzer.cs(6,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-      [Humanizer.Analyzers.Roslyn38] NamespaceMigrationCodeFixProvider.cs(2,14): error CS0234: The type or namespace name 'Composition' does not exist in the namespace 'System' (are you missing an assembly reference?)
-  7 x CS0117
-      [Humanizer.Tests] CldrDurationCaseTests.cs(412,67): error CS0117: 'LocaleDurationCaseTableCatalog' does not contain a definition for 'LocaleCodes'
-      [Humanizer.Tests] SupportedCultureTests.cs(8,34): error CS0117: 'Configurator' does not contain a definition for 'IsCultureSupported'
-      [Humanizer.Tests] SupportedCultureTests.cs(14,34): error CS0117: 'Configurator' does not contain a definition for 'IsCultureSupported'
-      [Humanizer.Tests] SupportedCultureTests.cs(21,35): error CS0117: 'Configurator' does not contain a definition for 'IsCultureSupported'
-      [Humanizer.Tests] LocalizedInflectionEngineTests.RulesAndSafety.cs(1175,34): error CS0117: 'Configurator' does not contain a definition for 'IsCultureSupported'
+Built in 21.1 s: 59 errors, 9 warnings
+  38 x CS0103
+      [Humanizer] ByteSize.cs(493,24): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+      [Humanizer] ByteSize.cs(530,24): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+      [Humanizer] ByteSize.cs(709,30): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+      [Humanizer] ByteSize.cs(1335,16): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+      [Humanizer] ByteSize.cs(1337,30): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
   6 x CS8795
       [Humanizer] HeadingTable.cs(49,43): error CS8795: Partial method 'HeadingTableCatalog.ResolveCore(string)' must have an implementation part because it has accessibility modifiers.
       [Humanizer] LocalizedInflectionCatalog.cs(107,33): error CS8795: Partial method 'LocalizedInflectionCatalog.TryResolveRuleCore(string, out CardinalPluralRuleKind)' must have an implementation part because it has accessibility modifiers.
       [Humanizer] LocalizedInflectionCatalog.cs(111,33): error CS8795: Partial method 'LocalizedInflectionCatalog.TryResolveBundleCore(string, out InflectionBundle?)' must have an implementation part because it has accessibility modifiers.
       [Humanizer] LocaleDurationCaseTable.cs(77,54): error CS8795: Partial method 'LocaleDurationCaseTableCatalog.ResolveCore(string)' must have an implementation part because it has accessibility modifiers.
       [Humanizer] LocalePhraseTable.cs(172,48): error CS8795: Partial method 'LocalePhraseTableCatalog.ResolveCore(string)' must have an implementation part because it has accessibility modifiers.
-  4 x CS0311
-      [Humanizer.Analyzers.Tests.Roslyn414] NamespaceMigrationAnalyzerTests.cs(2,7): error CS0311: The type 'Humanizer.Analyzers.NamespaceMigrationAnalyzer' cannot be used as type parameter 'TAnalyzer' in the generic type or method 'CSharpCodeFixVerifier<TAnalyzer, TCodeFix>'. There is no implicit reference conversion from 'Humanizer.Analyzers.NamespaceMigrationAnalyzer' to 'DiagnosticAnalyzer'.
-      [Humanizer.Analyzers.Tests.Roslyn414] NamespaceMigrationAnalyzerTests.cs(2,7): error CS0311: The type 'Humanizer.Analyzers.NamespaceMigrationCodeFixProvider' cannot be used as type parameter 'TCodeFix' in the generic type or method 'CSharpCodeFixVerifier<TAnalyzer, TCodeFix>'. There is no implicit reference conversion from 'Humanizer.Analyzers.NamespaceMigrationCodeFixProvider' to 'CodeFixProvider'.
-      [Humanizer.Analyzers.Tests.Roslyn414] NamespaceMigrationCodeFixTests.cs(8,7): error CS0311: The type 'Humanizer.Analyzers.NamespaceMigrationAnalyzer' cannot be used as type parameter 'TAnalyzer' in the generic type or method 'CSharpCodeFixVerifier<TAnalyzer, TCodeFix>'. There is no implicit reference conversion from 'Humanizer.Analyzers.NamespaceMigrationAnalyzer' to 'DiagnosticAnalyzer'.
-      [Humanizer.Analyzers.Tests.Roslyn414] NamespaceMigrationCodeFixTests.cs(8,7): error CS0311: The type 'Humanizer.Analyzers.NamespaceMigrationCodeFixProvider' cannot be used as type parameter 'TCodeFix' in the generic type or method 'CSharpCodeFixVerifier<TAnalyzer, TCodeFix>'. There is no implicit reference conversion from 'Humanizer.Analyzers.NamespaceMigrationCodeFixProvider' to 'CodeFixProvider'.
+  6 x CS0234
+      [Humanizer.Analyzers.Tests.Roslyn38] Verifiers.cs(23,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+      [Humanizer.Analyzers.Tests.Roslyn38] Verifiers.cs(47,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+      [Humanizer.Analyzers.Tests.Roslyn38] Verifiers.cs(48,67): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+      [Humanizer.Analyzers.Tests.Roslyn38] WordsToNumberMigrationCodeFixTests.cs(215,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+      [Humanizer.Analyzers.Tests.Roslyn38] WordsToNumberMigrationCodeFixTests.cs(216,67): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
   3 x CS0165
       [Humanizer] ByteSize.cs(1337,84): error CS0165: Use of unassigned local variable 'parseCulture'
       [Humanizer] LocaliserRegistry.cs(129,23): error CS0165: Use of unassigned local variable 'generatedLocaliser'
       [Humanizer] LocalizedMetricScaleWordCatalog.cs(19,25): error CS0165: Use of unassigned local variable 'resolved'
+  2 x CS1705
+      [Humanizer.Analyzers.Tests.Roslyn38] error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis, Version=3.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis' with identity 'Microsoft.CodeAnalysis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+      [Humanizer.Analyzers.Tests.Roslyn38] error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis.Workspaces, Version=3.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis.Workspaces' with identity 'Microsoft.CodeAnalysis.Workspaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+  2 x CS1061
+      [Humanizer.Analyzers.Tests.Roslyn38] WordsToNumberMigrationCodeFixTests.cs(286,21): error CS1061: 'AnalysisContext' does not contain a definition for 'EnableConcurrentExecution' and no accessible extension method 'EnableConcurrentExecution' accepting a first argument of type 'AnalysisContext' could be found (are you missing a using directive or an assembly reference?)
+      [Humanizer.Analyzers.Tests.Roslyn38] WordsToNumberMigrationCodeFixTests.cs(287,21): error CS1061: 'AnalysisContext' does not contain a definition for 'ConfigureGeneratedCodeAnalysis' and no accessible extension method 'ConfigureGeneratedCodeAnalysis' accepting a first argument of type 'AnalysisContext' could be found (are you missing a using directive or an assembly reference?)
+  1 x CS5001
+      [Humanizer.Analyzers.Tests.Roslyn38] error CS5001: Program does not contain a static 'Main' method suitable for an entry point
   1 x CS1029
-      [Humanizer.Analyzers.Tests.Roslyn414] AnalyzerAssemblyCompatibilityTests.cs(40,8): error CS1029: #error: 'Expected a System.Collections.Immutable compatibility cap for this analyzer test project.'
-  1 x CS0305
-      [Humanizer.Analyzers.Tests.Roslyn414] Verifiers.cs(13,12): error CS0305: Using the generic type 'CSharpCodeFixVerifier<TAnalyzer, TCodeFix>' requires 2 type arguments
-  1 x CS1061
-      [Humanizer.Tests] PublicApiApprovalTest.cs(8,67): error CS1061: 'Assembly' does not contain a definition for 'GeneratePublicApi' and no accessible extension method 'GeneratePublicApi' accepting a first argument of type 'Assembly' could be found (are you missing a using directive or an assembly reference?)
-  1 x CS0641
-      [Humanizer.Tests] UseCultureAttribute.cs(21,2): error CS0641: Attribute 'AttributeUsage' is only valid on classes derived from System.Attribute
-  1 x CS0400
-      [Humanizer.Tests] Humanizer.Tests.GlobalUsings.g.cs(9,22): error CS0400: The type or namespace name 'Xunit' could not be found in the global namespace (are you missing an assembly reference?)
+      [Humanizer.Analyzers.Tests.Roslyn38] AnalyzerAssemblyCompatibilityTests.cs(40,8): error CS1029: #error: 'Expected a System.Collections.Immutable compatibility cap for this analyzer test project.'
 Output:
-66): error CS0103: The name 'WellKnownFixAllProviders' does not exist in the current context
-1>NamespaceMigrationCodeFixProvider.cs(37,62): error CS0246: The type or namespace name 'CodeFixContext' could not be found (are you missing a using directive or an assembly reference?)
-1>NamespaceMigrationCodeFixProvider.cs(48,55): error CS0246: The type or namespace name 'UsingDirectiveSyntax' could not be found (are you missing a using directive or an assembly reference?)
-1>NamespaceMigrationCodeFixProvider.cs(52,17): error CS0103: The name 'CodeAction' does not exist in the current context
-1>NamespaceMigrationCodeFixProvider.cs(61,21): error CS0246: The type or namespace name 'QualifiedNameSyntax' could not be found (are you missing a using directive or an assembly reference?)
-1>NamespaceMigrationCodeFixProvider.cs(64,17): error CS0103: The name 'CodeAction' does not exist in the current context
-1>NamespaceMigrationCodeFixProvider.cs(72,31): error CS0246: The type or namespace name 'Document' could not be found (are you missing a using directive or an assembly reference?)
-1>NamespaceMigrationCodeFixProvider.cs(73,9): error CS0246: The type or namespace name 'Document' could not be found (are you missing a using directive or an assembly reference?)
-1>NamespaceMigrationCodeFixProvider.cs(74,9): error CS0246: The type or namespace name 'UsingDirectiveSyntax' could not be found (are you missing a using directive or an assembly reference?)
-1>NamespaceMigrationCodeFixProvider.cs(82,23): error CS0103: The name 'SyntaxFactory' does not exist in the current context
-1>NamespaceMigrationCodeFixProvider.cs(89,31): error CS0246: The type or namespace name 'Document' could not be found (are you missing a using directive or an assembly reference?)
-1>NamespaceMigrationCodeFixProvider.cs(89,67): error CS0246: The type or namespace name 'Document' could not be found (are you missing a using directive or an assembly reference?)
-1>NamespaceMigrationCodeFixProvider.cs(89,86): error CS0246: The type or namespace name 'QualifiedNameSyntax' could not be found (are you missing a using directive or an assembly reference?)
-1>NamespaceMigrationCodeFixProvider.cs(103,32): error CS0103: The name 'SyntaxFactory' does not exist in the current context
-1>WordsToNumberMigrationCodeFixProvider.cs(2,14): error CS0234: The type or namespace name 'Composition' does not exist in the namespace 'System' (are you missing an assembly reference?)
-1>WordsToNumberMigrationCodeFixProvider.cs(4,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-1>WordsToNumberMigrationCodeFixProvider.cs(5,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-1>WordsToNumberMigrationCodeFixProvider.cs(6,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-1>WordsToNumberMigrationCodeFixProvider.cs(7,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-1>WordsToNumberMigrationCodeFixProvider.cs(8,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-1>WordsToNumberMigrationCodeFixProvider.cs(12,2): error CS0246: The type or namespace name 'ExportCodeFixProviderAttribute' could not be found (are you missing a using directive or an assembly reference?)
-1>WordsToNumberMigrationCodeFixProvider.cs(12,2): error CS0246: The type or namespace name 'ExportCodeFixProvider' could not be found (are you missing a using directive or an assembly reference?)
-1>WordsToNumberMigrationCodeFixProvider.cs(12,24): error CS0103: The name 'LanguageNames' does not exist in the current context
-1>WordsToNumberMigrationCodeFixProvider.cs(12,101): error CS0246: The type or namespace name 'SharedAttribute' could not be found (are you missing a using directive or an assembly reference?)
-1>WordsToNumberMigrationCodeFixProvider.cs(12,101): error CS0246: The type or namespace name 'Shared' could not be found (are you missing a using directive or an assembly reference?)
-1>WordsToNumberMigrationCodeFixProvider.cs(13,54): error CS0246: The type or namespace name 'CodeFixProvider' could not be found (are you missing a using directive or an assembly reference?)
-1>WordsToNumberMigrationCodeFixProvider.cs(19,28): error CS0246: The type or namespace name 'FixAllProvider' could not be found (are you missing a using directive or an assembly reference?)
-1>WordsToNumberMigrationCodeFixProvider.cs(19,66): error CS0103: The name 'WellKnownFixAllProviders' does not exist in the current context
-1>WordsToNumberMigrationCodeFixProvider.cs(21,62): error CS0246: The type or namespace name 'CodeFixContext' could not be found (are you missing a using directive or an assembly reference?)
-1>WordsToNumberMigrationCodeFixProvider.cs(40,29): error CS0103: The name 'CodeAction' does not exist in the current context
-1>WordsToNumberMigrationCodeFixProvider.cs(54,48): error CS0246: The type or namespace name 'SyntaxNode' could not be found (are you missing a using directive or an assembly reference?)
-1>WordsToNumberMigrationCodeFixProvider.cs(54,70): error CS0246: The type or namespace name 'InvocationExpressionSyntax' could not be found (are you missing a using directive or an assembly reference?)
-1>WordsToNumberMigrationCodeFixProvider.cs(56,48): error CS0246: The type or namespace name 'InvocationExpressionSyntax' could not be found (are you missing a using directive or an assembly reference?)
-1>WordsToNumberMigrationCodeFixProvider.cs(60,43): error CS0246: The type or namespace name 'InvocationExpressionSyntax' could not be found (are you missing a using directive or an assembly reference?)
-1>WordsToNumberMigrationCodeFixProvider.cs(60,82): error CS0246: The type or namespace name 'SemanticModel' could not be found (are you missing a using directive or an assembly reference?)
-1>WordsToNumberMigrationCodeFixProvider.cs(61,78): error CS0246: The type or namespace name 'IMethodSymbol' could not be found (are you missing a using directive or an assembly reference?)
-1>WordsToNumberMigrationCodeFixProvider.cs(64,43): error CS0246: The type or namespace name 'IMethodSymbol' could not be found (are you missing a using directive or an assembly reference?)
-1>WordsToNumberMigrationCodeFixProvider.cs(67,183): error CS0103: The name 'SpecialType' does not exist in the current context
-1>WordsToNumberMigrationCodeFixProvider.cs(68,147): error CS0103: The name 'SpecialType' does not exist in the current context
-1>WordsToNumberMigrationCodeFixProvider.cs(72,50): error CS0246: The type or namespace name 'INamedTypeSymbol' could not be found (are you missing a using directive or an assembly reference?)
-1>WordsToNumberMigrationCodeFixProvider.cs(76,23): error CS0246: The type or namespace name 'Document' could not be found (are you missing a using directive or an assembly reference?)
-1>WordsToNumberMigrationCodeFixProvider.cs(76,68): error CS0246: The type or namespace name 'Document' could not be found (are you missing a using directive or an assembly reference?)
-1>WordsToNumberMigrationCodeFixProvider.cs(76,87): error CS0246: The type or namespace name 'InvocationExpressionSyntax' could not be found (are you missing a using directive or an assembly reference?)
-1>WordsToNumberMigrationCodeFixProvider.cs(81,30): error CS0103: The name 'SyntaxFactory' does not exist in the current context
-1>WordsToNumberMigrationCodeFixProvider.cs(82,13): error CS0103: The name 'SyntaxKind' does not exist in the current context
-1>WordsToNumberMigrationCodeFixProvider.cs(83,13): error CS0103: The name 'SyntaxFactory' does not exist in the current context
-1>WordsToNumberMigrationCodeFixProvider.cs(84,17): error CS0103: The name 'SyntaxFactory' does not exist in the current context
-1>WordsToNumberMigrationCodeFixProvider.cs(85,21): error CS0103: The name 'SyntaxFactory' does not exist in the current context
-1>WordsToNumberMigrationCodeFixProvider.cs(85,50): error CS0103: The name 'SyntaxFactory' does not exist in the current context
-1>WordsToNumberMigrationCodeFixProvider.cs(85,70): error CS0103: The name 'SyntaxKind' does not exist in the current context
+Build started at 13:39:47...
+1>------ Build started: Project: Humanizer.Analyzers.Roslyn38, Configuration: Debug ------
+1>Humanizer.Analyzers.Roslyn38 -> compiled in memory (20 KB, 21 ms)
 2>------ Build started: Project: Humanizer.Analyzers.Roslyn48, Configuration: Debug ------
-2>NamespaceMigrationAnalyzer.cs(3,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-2>NamespaceMigrationAnalyzer.cs(4,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-2>NamespaceMigrationAnalyzer.cs(5,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-2>NamespaceMigrationAnalyzer.cs(6,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-2>NamespaceMigrationAnalyzer.cs(10,2): error CS0246: The type or namespace name 'DiagnosticAnalyzerAttribute' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationAnalyzer.cs(10,2): error CS0246: The type or namespace name 'DiagnosticAnalyzer' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationAnalyzer.cs(10,21): error CS0103: The name 'LanguageNames' does not exist in the current context
-2>NamespaceMigrationAnalyzer.cs(11,43): error CS0246: The type or namespace name 'DiagnosticAnalyzer' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationAnalyzer.cs(16,29): error CS0246: The type or namespace name 'LocalizableString' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationAnalyzer.cs(17,29): error CS0246: The type or namespace name 'LocalizableString' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationAnalyzer.cs(18,29): error CS0246: The type or namespace name 'LocalizableString' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationAnalyzer.cs(20,29): error CS0246: The type or namespace name 'DiagnosticDescriptor' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationAnalyzer.cs(25,9): error CS0103: The name 'DiagnosticSeverity' does not exist in the current context
-2>NamespaceMigrationAnalyzer.cs(46,36): error CS0246: The type or namespace name 'DiagnosticDescriptor' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationAnalyzer.cs(48,37): error CS0246: The type or namespace name 'AnalysisContext' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationAnalyzer.cs(50,48): error CS0103: The name 'GeneratedCodeAnalysisFlags' does not exist in the current context
-2>NamespaceMigrationAnalyzer.cs(53,65): error CS0103: The name 'SyntaxKind' does not exist in the current context
-2>NamespaceMigrationAnalyzer.cs(54,64): error CS0103: The name 'SyntaxKind' does not exist in the current context
-2>NamespaceMigrationAnalyzer.cs(57,47): error CS0246: The type or namespace name 'SyntaxNodeAnalysisContext' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationAnalyzer.cs(59,33): error CS0246: The type or namespace name 'UsingDirectiveSyntax' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationAnalyzer.cs(69,30): error CS0103: The name 'Diagnostic' does not exist in the current context
-2>NamespaceMigrationAnalyzer.cs(74,46): error CS0246: The type or namespace name 'SyntaxNodeAnalysisContext' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationAnalyzer.cs(76,33): error CS0246: The type or namespace name 'QualifiedNameSyntax' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationAnalyzer.cs(82,46): error CS0246: The type or namespace name 'UsingDirectiveSyntax' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationAnalyzer.cs(87,37): error CS0246: The type or namespace name 'QualifiedNameSyntax' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationAnalyzer.cs(98,26): error CS0103: The name 'Diagnostic' does not exist in the current context
-2>NamespaceMigrationCodeFixProvider.cs(2,14): error CS0234: The type or namespace name 'Composition' does not exist in the namespace 'System' (are you missing an assembly reference?)
-2>NamespaceMigrationCodeFixProvider.cs(4,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-2>NamespaceMigrationCodeFixProvider.cs(5,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-2>NamespaceMigrationCodeFixProvider.cs(6,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-2>NamespaceMigrationCodeFixProvider.cs(7,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-2>NamespaceMigrationCodeFixProvider.cs(8,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-2>NamespaceMigrationCodeFixProvider.cs(12,2): error CS0246: The type or namespace name 'ExportCodeFixProviderAttribute' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationCodeFixProvider.cs(12,2): error CS0246: The type or namespace name 'ExportCodeFixProvider' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationCodeFixProvider.cs(12,24): error CS0103: The name 'LanguageNames' does not exist in the current context
-2>NamespaceMigrationCodeFixProvider.cs(12,97): error CS0246: The type or namespace name 'SharedAttribute' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationCodeFixProvider.cs(12,97): error CS0246: The type or namespace name 'Shared' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationCodeFixProvider.cs(13,50): error CS0246: The type or namespace name 'CodeFixProvider' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationCodeFixProvider.cs(35,28): error CS0246: The type or namespace name 'FixAllProvider' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationCodeFixProvider.cs(35,66): error CS0103: The name 'WellKnownFixAllProviders' does not exist in the current context
-2>NamespaceMigrationCodeFixProvider.cs(37,62): error CS0246: The type or namespace name 'CodeFixContext' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationCodeFixProvider.cs(48,55): error CS0246: The type or namespace name 'UsingDirectiveSyntax' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationCodeFixProvider.cs(52,17): error CS0103: The name 'CodeAction' does not exist in the current context
-2>NamespaceMigrationCodeFixProvider.cs(61,21): error CS0246: The type or namespace name 'QualifiedNameSyntax' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationCodeFixProvider.cs(64,17): error CS0103: The name 'CodeAction' does not exist in the current context
-2>NamespaceMigrationCodeFixProvider.cs(72,31): error CS0246: The type or namespace name 'Document' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationCodeFixProvider.cs(73,9): error CS0246: The type or namespace name 'Document' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationCodeFixProvider.cs(74,9): error CS0246: The type or namespace name 'UsingDirectiveSyntax' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationCodeFixProvider.cs(82,23): error CS0103: The name 'SyntaxFactory' does not exist in the current context
-2>NamespaceMigrationCodeFixProvider.cs(89,31): error CS0246: The type or namespace name 'Document' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationCodeFixProvider.cs(89,67): error CS0246: The type or namespace name 'Document' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationCodeFixProvider.cs(89,86): error CS0246: The type or namespace name 'QualifiedNameSyntax' could not be found (are you missing a using directive or an assembly reference?)
-2>NamespaceMigrationCodeFixProvider.cs(103,32): error CS0103: The name 'SyntaxFactory' does not exist in the current context
-2>WordsToNumberMigrationCodeFixProvider.cs(2,14): error CS0234: The type or namespace name 'Composition' does not exist in the namespace 'System' (are you missing an assembly reference?)
-2>WordsToNumberMigrationCodeFixProvider.cs(4,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-2>WordsToNumberMigrationCodeFixProvider.cs(5,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-2>WordsToNumberMigrationCodeFixProvider.cs(6,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-2>WordsToNumberMigrationCodeFixProvider.cs(7,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-2>WordsToNumberMigrationCodeFixProvider.cs(8,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-2>WordsToNumberMigrationCodeFixProvider.cs(12,2): error CS0246: The type or namespace name 'ExportCodeFixProviderAttribute' could not be found (are you missing a using directive or an assembly reference?)
-2>WordsToNumberMigrationCodeFixProvider.cs(12,2): error CS0246: The type or namespace name 'ExportCodeFixProvider' could not be found (are you missing a using directive or an assembly reference?)
-2>WordsToNumberMigrationCodeFixProvider.cs(12,24): error CS0103: The name 'LanguageNames' does not exist in the current context
-2>WordsToNumberMigrationCodeFixProvider.cs(12,101): error CS0246: The type or namespace name 'SharedAttribute' could not be found (are you missing a using directive or an assembly reference?)
-2>WordsToNumberMigrationCodeFixProvider.cs(12,101): error CS0246: The type or namespace name 'Shared' could not be found (are you missing a using directive or an assembly reference?)
-2>WordsToNumberMigrationCodeFixProvider.cs(13,54): error CS0246: The type or namespace name 'CodeFixProvider' could not be found (are you missing a using directive or an assembly reference?)
-2>WordsToNumberMigrationCodeFixProvider.cs(19,28): error CS0246: The type or namespace name 'FixAllProvider' could not be found (are you missing a using directive or an assembly reference?)
-2>WordsToNumberMigrationCodeFixProvider.cs(19,66): error CS0103: The name 'WellKnownFixAllProviders' does not exist in the current context
-2>WordsToNumberMigrationCodeFixProvider.cs(21,62): error CS0246: The type or namespace name 'CodeFixContext' could not be found (are you missing a using directive or an assembly reference?)
-2>WordsToNumberMigrationCodeFixProvider.cs(40,29): error CS0103: The name 'CodeAction' does not exist in the current context
-2>WordsToNumberMigrationCodeFixProvider.cs(54,48): error CS0246: The type or namespace name 'SyntaxNode' could not be found (are you missing a using directive or an assembly reference?)
-2>WordsToNumberMigrationCodeFixProvider.cs(54,70): error CS0246: The type or namespace name 'InvocationExpressionSyntax' could not be found (are you missing a using directive or an assembly reference?)
-2>WordsToNumberMigrationCodeFixProvider.cs(56,48): error CS0246: The type or namespace name 'InvocationExpressionSyntax' could not be found (are you missing a using directive or an assembly reference?)
-2>WordsToNumberMigrationCodeFixProvider.cs(60,43): error CS0246: The type or namespace name 'InvocationExpressionSyntax' could not be found (are you missing a using directive or an assembly reference?)
-2>WordsToNumberMigrationCodeFixProvider.cs(60,82): error CS0246: The type or namespace name 'SemanticModel' could not be found (are you missing a using directive or an assembly reference?)
-2>WordsToNumberMigrationCodeFixProvider.cs(61,78): error CS0246: The type or namespace name 'IMethodSymbol' could not be found (are you missing a using directive or an assembly reference?)
-2>WordsToNumberMigrationCodeFixProvider.cs(64,43): error CS0246: The type or namespace name 'IMethodSymbol' could not be found (are you missing a using directive or an assembly reference?)
-2>WordsToNumberMigrationCodeFixProvider.cs(67,183): error CS0103: The name 'SpecialType' does not exist in the current context
-2>WordsToNumberMigrationCodeFixProvider.cs(68,147): error CS0103: The name 'SpecialType' does not exist in the current context
-2>WordsToNumberMigrationCodeFixProvider.cs(72,50): error CS0246: The type or namespace name 'INamedTypeSymbol' could not be found (are you missing a using directive or an assembly reference?)
-2>WordsToNumberMigrationCodeFixProvider.cs(76,23): error CS0246: The type or namespace name 'Document' could not be found (are you missing a using directive or an assembly reference?)
-2>WordsToNumberMigrationCodeFixProvider.cs(76,68): error CS0246: The type or namespace name 'Document' could not be found (are you missing a using directive or an assembly reference?)
-2>WordsToNumberMigrationCodeFixProvider.cs(76,87): error CS0246: The type or namespace name 'InvocationExpressionSyntax' could not be found (are you missing a using directive or an assembly reference?)
-2>WordsToNumberMigrationCodeFixProvider.cs(81,30): error CS0103: The name 'SyntaxFactory' does not exist in the current context
-2>WordsToNumberMigrationCodeFixProvider.cs(82,13): error CS0103: The name 'SyntaxKind' does not exist in the current context
-2>WordsToNumberMigrationCodeFixProvider.cs(83,13): error CS0103: The name 'SyntaxFactory' does not exist in the current context
-2>WordsToNumberMigrationCodeFixProvider.cs(84,17): error CS0103: The name 'SyntaxFactory' does not exist in the current context
-2>WordsToNumberMigrationCodeFixProvider.cs(85,21): error CS0103: The name 'SyntaxFactory' does not exist in the current context
-2>WordsToNumberMigrationCodeFixProvider.cs(85,50): error CS0103: The name 'SyntaxFactory' does not exist in the current context
-2>WordsToNumberMigrationCodeFixProvider.cs(85,70): error CS0103: The name 'SyntaxKind' does not exist in the current context
+2>Humanizer.Analyzers.Roslyn48 -> compiled in memory (20 KB, 20 ms)
 3>------ Build started: Project: Humanizer.Analyzers.Roslyn414, Configuration: Debug ------
-3>NamespaceMigrationAnalyzer.cs(3,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-3>NamespaceMigrationAnalyzer.cs(4,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-3>NamespaceMigrationAnalyzer.cs(5,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-3>NamespaceMigrationAnalyzer.cs(6,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-3>NamespaceMigrationAnalyzer.cs(10,2): error CS0246: The type or namespace name 'DiagnosticAnalyzerAttribute' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationAnalyzer.cs(10,2): error CS0246: The type or namespace name 'DiagnosticAnalyzer' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationAnalyzer.cs(10,21): error CS0103: The name 'LanguageNames' does not exist in the current context
-3>NamespaceMigrationAnalyzer.cs(11,43): error CS0246: The type or namespace name 'DiagnosticAnalyzer' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationAnalyzer.cs(16,29): error CS0246: The type or namespace name 'LocalizableString' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationAnalyzer.cs(17,29): error CS0246: The type or namespace name 'LocalizableString' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationAnalyzer.cs(18,29): error CS0246: The type or namespace name 'LocalizableString' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationAnalyzer.cs(20,29): error CS0246: The type or namespace name 'DiagnosticDescriptor' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationAnalyzer.cs(25,9): error CS0103: The name 'DiagnosticSeverity' does not exist in the current context
-3>NamespaceMigrationAnalyzer.cs(46,36): error CS0246: The type or namespace name 'DiagnosticDescriptor' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationAnalyzer.cs(48,37): error CS0246: The type or namespace name 'AnalysisContext' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationAnalyzer.cs(50,48): error CS0103: The name 'GeneratedCodeAnalysisFlags' does not exist in the current context
-3>NamespaceMigrationAnalyzer.cs(53,65): error CS0103: The name 'SyntaxKind' does not exist in the current context
-3>NamespaceMigrationAnalyzer.cs(54,64): error CS0103: The name 'SyntaxKind' does not exist in the current context
-3>NamespaceMigrationAnalyzer.cs(57,47): error CS0246: The type or namespace name 'SyntaxNodeAnalysisContext' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationAnalyzer.cs(59,33): error CS0246: The type or namespace name 'UsingDirectiveSyntax' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationAnalyzer.cs(69,30): error CS0103: The name 'Diagnostic' does not exist in the current context
-3>NamespaceMigrationAnalyzer.cs(74,46): error CS0246: The type or namespace name 'SyntaxNodeAnalysisContext' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationAnalyzer.cs(76,33): error CS0246: The type or namespace name 'QualifiedNameSyntax' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationAnalyzer.cs(82,46): error CS0246: The type or namespace name 'UsingDirectiveSyntax' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationAnalyzer.cs(87,37): error CS0246: The type or namespace name 'QualifiedNameSyntax' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationAnalyzer.cs(98,26): error CS0103: The name 'Diagnostic' does not exist in the current context
-3>NamespaceMigrationCodeFixProvider.cs(2,14): error CS0234: The type or namespace name 'Composition' does not exist in the namespace 'System' (are you missing an assembly reference?)
-3>NamespaceMigrationCodeFixProvider.cs(4,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-3>NamespaceMigrationCodeFixProvider.cs(5,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-3>NamespaceMigrationCodeFixProvider.cs(6,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-3>NamespaceMigrationCodeFixProvider.cs(7,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-3>NamespaceMigrationCodeFixProvider.cs(8,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-3>NamespaceMigrationCodeFixProvider.cs(12,2): error CS0246: The type or namespace name 'ExportCodeFixProviderAttribute' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationCodeFixProvider.cs(12,2): error CS0246: The type or namespace name 'ExportCodeFixProvider' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationCodeFixProvider.cs(12,24): error CS0103: The name 'LanguageNames' does not exist in the current context
-3>NamespaceMigrationCodeFixProvider.cs(12,97): error CS0246: The type or namespace name 'SharedAttribute' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationCodeFixProvider.cs(12,97): error CS0246: The type or namespace name 'Shared' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationCodeFixProvider.cs(13,50): error CS0246: The type or namespace name 'CodeFixProvider' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationCodeFixProvider.cs(35,28): error CS0246: The type or namespace name 'FixAllProvider' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationCodeFixProvider.cs(35,66): error CS0103: The name 'WellKnownFixAllProviders' does not exist in the current context
-3>NamespaceMigrationCodeFixProvider.cs(37,62): error CS0246: The type or namespace name 'CodeFixContext' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationCodeFixProvider.cs(48,55): error CS0246: The type or namespace name 'UsingDirectiveSyntax' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationCodeFixProvider.cs(52,17): error CS0103: The name 'CodeAction' does not exist in the current context
-3>NamespaceMigrationCodeFixProvider.cs(61,21): error CS0246: The type or namespace name 'QualifiedNameSyntax' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationCodeFixProvider.cs(64,17): error CS0103: The name 'CodeAction' does not exist in the current context
-3>NamespaceMigrationCodeFixProvider.cs(72,31): error CS0246: The type or namespace name 'Document' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationCodeFixProvider.cs(73,9): error CS0246: The type or namespace name 'Document' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationCodeFixProvider.cs(74,9): error CS0246: The type or namespace name 'UsingDirectiveSyntax' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationCodeFixProvider.cs(82,23): error CS0103: The name 'SyntaxFactory' does not exist in the current context
-3>NamespaceMigrationCodeFixProvider.cs(89,31): error CS0246: The type or namespace name 'Document' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationCodeFixProvider.cs(89,67): error CS0246: The type or namespace name 'Document' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationCodeFixProvider.cs(89,86): error CS0246: The type or namespace name 'QualifiedNameSyntax' could not be found (are you missing a using directive or an assembly reference?)
-3>NamespaceMigrationCodeFixProvider.cs(103,32): error CS0103: The name 'SyntaxFactory' does not exist in the current context
-3>WordsToNumberMigrationCodeFixProvider.cs(2,14): error CS0234: The type or namespace name 'Composition' does not exist in the namespace 'System' (are you missing an assembly reference?)
-3>WordsToNumberMigrationCodeFixProvider.cs(4,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-3>WordsToNumberMigrationCodeFixProvider.cs(5,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-3>WordsToNumberMigrationCodeFixProvider.cs(6,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-3>WordsToNumberMigrationCodeFixProvider.cs(7,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-3>WordsToNumberMigrationCodeFixProvider.cs(8,17): error CS0234: The type or namespace name 'CodeAnalysis' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-3>WordsToNumberMigrationCodeFixProvider.cs(12,2): error CS0246: The type or namespace name 'ExportCodeFixProviderAttribute' could not be found (are you missing a using directive or an assembly reference?)
-3>WordsToNumberMigrationCodeFixProvider.cs(12,2): error CS0246: The type or namespace name 'ExportCodeFixProvider' could not be found (are you missing a using directive or an assembly reference?)
-3>WordsToNumberMigrationCodeFixProvider.cs(12,24): error CS0103: The name 'LanguageNames' does not exist in the current context
-3>WordsToNumberMigrationCodeFixProvider.cs(12,101): error CS0246: The type or namespace name 'SharedAttribute' could not be found (are you missing a using directive or an assembly reference?)
-3>WordsToNumberMigrationCodeFixProvider.cs(12,101): error CS0246: The type or namespace name 'Shared' could not be found (are you missing a using directive or an assembly reference?)
-3>WordsToNumberMigrationCodeFixProvider.cs(13,54): error CS0246: The type or namespace name 'CodeFixProvider' could not be found (are you missing a using directive or an assembly reference?)
-3>WordsToNumberMigrationCodeFixProvider.cs(19,28): error CS0246: The type or namespace name 'FixAllProvider' could not be found (are you missing a using directive or an assembly reference?)
-3>WordsToNumberMigrationCodeFixProvider.cs(19,66): error CS0103: The name 'WellKnownFixAllProviders' does not exist in the current context
-3>WordsToNumberMigrationCodeFixProvider.cs(21,62): error CS0246: The type or namespace name 'CodeFixContext' could not be found (are you missing a using directive or an assembly reference?)
-3>WordsToNumberMigrationCodeFixProvider.cs(40,29): error CS0103: The name 'CodeAction' does not exist in the current context
-3>WordsToNumberMigrationCodeFixProvider.cs(54,48): error CS0246: The type or namespace name 'SyntaxNode' could not be found (are you missing a using directive or an assembly reference?)
-3>WordsToNumberMigrationCodeFixProvider.cs(54,70): error CS0246: The type or namespace name 'InvocationExpressionSyntax' could not be found (are you missing a using directive or an assembly reference?)
-3>WordsToNumberMigrationCodeFixProvider.cs(56,48): error CS0246: The type or namespace name 'InvocationExpressionSyntax' could not be found (are you missing a using directive or an assembly reference?)
-3>WordsToNumberMigrationCodeFixProvider.cs(60,43): error CS0246: The type or namespace name 'InvocationExpressionSyntax' could not be found (are you missing a using directive or an assembly reference?)
-3>WordsToNumberMigrationCodeFixProvider.cs(60,82): error CS0246: The type or namespace name 'SemanticModel' could not be found (are you missing a using directive or an assembly reference?)
-3>WordsToNumberMigrationCodeFixProvider.cs(61,78): error CS0246: The type or namespace name 'IMethodSymbol' could not be found (are you missing a using directive or an assembly reference?)
-3>WordsToNumberMigrationCodeFixProvider.cs(64,43): error CS0246: The type or namespace name 'IMethodSymbol' could not be found (are you missing a using directive or an assembly reference?)
-3>WordsToNumberMigrationCodeFixProvider.cs(67,183): error CS0103: The name 'SpecialType' does not exist in the current context
-3>WordsToNumberMigrationCodeFixProvider.cs(68,147): error CS0103: The name 'SpecialType' does not exist in the current context
-3>WordsToNumberMigrationCodeFixProvider.cs(72,50): error CS0246: The type or namespace name 'INamedTypeSymbol' could not be found (are you missing a using directive or an assembly reference?)
-3>WordsToNumberMigrationCodeFixProvider.cs(76,23): error CS0246: The type or namespace name 'Document' could not be found (are you missing a using directive or an assembly reference?)
-3>WordsToNumberMigrationCodeFixProvider.cs(76,68): error CS0246: The type or namespace name 'Document' could not be found (are you missing a using directive or an assembly reference?)
-3>WordsToNumberMigrationCodeFixProvider.cs(76,87): error CS0246: The type or namespace name 'InvocationExpressionSyntax' could not be found (are you missing a using directive or an assembly reference?)
-3>WordsToNumberMigrationCodeFixProvider.cs(81,30): error CS0103: The name 'SyntaxFactory' does not exist in the current context
-3>WordsToNumberMigrationCodeFixProvider.cs(82,13): error CS0103: The name 'SyntaxKind' does not exist in the current context
-3>WordsToNumberMigrationCodeFixProvider.cs(83,13): error CS0103: The name 'SyntaxFactory' does not exist in the current context
-3>WordsToNumberMigrationCodeFixProvider.cs(84,17): error CS0103: The name 'SyntaxFactory' does not exist in the current context
-3>WordsToNumberMigrationCodeFixProvider.cs(85,21): error CS0103: The name 'SyntaxFactory' does not exist in the current context
-3>WordsToNumberMigrationCodeFixProvider.cs(85,50): error CS0103: The name 'SyntaxFactory' does not exist in the current context
-3>WordsToNumberMigrationCodeFixProvider.cs(85,70): error CS0103: The name 'SyntaxKind' does not exist in the current context
+3>Humanizer.Analyzers.Roslyn414 -> compiled in memory (20 KB, 25 ms)
 4>------ Build started: Project: Humanizer.SourceGenerators, Configuration: Debug ------
-4>Humanizer.SourceGenerators -> compiled in memory (519 KB, 884 ms)
+4>Humanizer.SourceGenerators -> compiled in memory (519 KB, 508 ms)
 5>------ Build started: Project: Humanizer, Configuration: Debug ------
+5>ByteSize.cs(493,24): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>ByteSize.cs(530,24): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>ByteSize.cs(709,30): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>ByteSize.cs(1335,16): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>ByteSize.cs(1337,30): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>ByteSize.cs(1337,84): error CS0165: Use of unassigned local variable 'parseCulture'
+5>ByteSize.cs(1649,30): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>ByteSizeExtensions.cs(523,30): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>ByteSizeExtensions.cs(615,30): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>CollectionFormatterRegistry.cs(7,12): error CS0103: The name 'CollectionFormatterRegistryRegistrations' does not exist in the current context
+5>DateOnlyToOrdinalWordsConverterRegistry.cs(7,9): error CS0103: The name 'DateOnlyToOrdinalWordsConverterRegistryRegistrations' does not exist in the current context
+5>DateToOrdinalWordsConverterRegistry.cs(7,12): error CS0103: The name 'DateToOrdinalWordsConverterRegistryRegistrations' does not exist in the current context
+5>FormatterRegistry.cs(7,12): error CS0103: The name 'FormatterRegistryRegistrations' does not exist in the current context
+5>LocaliserRegistry.cs(127,20): error CS0103: The name 'GeneratedCultureResolver' does not exist in the current context
+5>LocaliserRegistry.cs(129,23): error CS0165: Use of unassigned local variable 'generatedLocaliser'
+5>NumberToWordsConverterRegistry.cs(6,21): error CS0103: The name 'NumberToWordsProfileCatalog' does not exist in the current context
+5>NumberToWordsConverterRegistry.cs(7,12): error CS0103: The name 'NumberToWordsConverterRegistryRegistrations' does not exist in the current context
+5>OrdinalizerRegistry.cs(7,12): error CS0103: The name 'OrdinalizerRegistryRegistrations' does not exist in the current context
+5>TimeOnlyToClockNotationConvertersRegistry.cs(7,68): error CS0103: The name 'TimeOnlyToClockNotationProfileCatalog' does not exist in the current context
+5>TimeOnlyToClockNotationConvertersRegistry.cs(8,9): error CS0103: The name 'TimeOnlyToClockNotationConvertersRegistryRegistrations' does not exist in the current context
+5>WordsToDecimalNumberConverterRegistry.cs(7,9): error CS0103: The name 'WordsToDecimalNumberConverterRegistryRegistrations' does not exist in the current context
+5>WordsToNumberConverterRegistry.cs(6,16): error CS0103: The name 'TokenMapWordsToNumberConverters' does not exist in the current context
+5>WordsToNumberConverterRegistry.cs(7,12): error CS0103: The name 'WordsToNumberConverterRegistryRegistrations' does not exist in the current context
+5>FractionalizeExtensions.cs(61,35): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>HeadingTable.cs(49,43): error CS8795: Partial method 'HeadingTableCatalog.ResolveCore(string)' must have an implementation part because it has accessibility modifiers.
+5>LocalizedInflectionCatalog.cs(66,14): error CS0103: The name 'GeneratedCultureResolver' does not exist in the current context
+5>LocalizedInflectionCatalog.cs(96,13): error CS0103: The name 'GeneratedCultureResolver' does not exist in the current context
+5>LocalizedInflectionCatalog.cs(107,33): error CS8795: Partial method 'LocalizedInflectionCatalog.TryResolveRuleCore(string, out CardinalPluralRuleKind)' must have an implementation part because it has accessibility modifiers.
+5>LocalizedInflectionCatalog.cs(111,33): error CS8795: Partial method 'LocalizedInflectionCatalog.TryResolveBundleCore(string, out InflectionBundle?)' must have an implementation part because it has accessibility modifiers.
+5>DefaultFormatter.cs(86,13): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>LocaleDurationCaseTable.cs(77,54): error CS8795: Partial method 'LocaleDurationCaseTableCatalog.ResolveCore(string)' must have an implementation part because it has accessibility modifiers.
+5>LocalePhraseTable.cs(172,48): error CS8795: Partial method 'LocalePhraseTableCatalog.ResolveCore(string)' must have an implementation part because it has accessibility modifiers.
+5>TokenMapWordsToNumberOrdinalMapBuilder.cs(39,13): error CS0103: The name 'NumberToWordsProfileCatalog' does not exist in the current context
+5>LocalizedMetricScaleWordCatalog.cs(19,25): error CS0165: Use of unassigned local variable 'resolved'
+5>LocalizedMetricScaleWordCatalog.cs(28,33): error CS8795: Partial method 'LocalizedMetricScaleWordCatalog.TryResolveCore(string, char, CardinalPluralCategory, out string)' must have an implementation part because it has accessibility modifiers.
+5>MetricNumeralExtensions.cs(184,19): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>MetricNumeralExtensions.cs(229,27): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>MetricNumeralExtensions.cs(265,27): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>MetricNumeralExtensions.cs(368,19): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>MetricNumeralExtensions.cs(463,19): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>MetricNumeralExtensions.cs(535,19): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>MetricNumeralExtensions.cs(565,19): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>NumberToWordsExtension.cs(245,67): error CS0103: The name 'NumberToWordsProfileCatalog' does not exist in the current context
+5>OrdinalizeExtensions.cs(447,28): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
 6>------ Build started: Project: Benchmarks, Configuration: Debug ------
 7>------ Build started: Project: Humanizer.Analyzers.Tests.Roslyn38, Configuration: Debug ------
+7>error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis, Version=3.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis' with identity 'Microsoft.CodeAnalysis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+7>error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis.Workspaces, Version=3.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis.Workspaces' with identity 'Microsoft.CodeAnalysis.Workspaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+7>error CS5001: Program does not contain a static 'Main' method suitable for an entry point
+7>AnalyzerAssemblyCompatibilityTests.cs(27,106): error CS0103: The name 'MaxSupportedSystemCollectionsImmutableMajorVersion' does not exist in the current context
+7>AnalyzerAssemblyCompatibilityTests.cs(29,107): error CS0103: The name 'MaxSupportedSystemCollectionsImmutableMajorVersion' does not exist in the current context
+7>AnalyzerAssemblyCompatibilityTests.cs(40,8): error CS1029: #error: 'Expected a System.Collections.Immutable compatibility cap for this analyzer test project.'
+7>Verifiers.cs(23,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+7>Verifiers.cs(47,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+7>Verifiers.cs(48,67): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+7>WordsToNumberMigrationCodeFixTests.cs(215,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+7>WordsToNumberMigrationCodeFixTests.cs(216,67): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+7>WordsToNumberMigrationCodeFixTests.cs(229,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+7>WordsToNumberMigrationCodeFixTests.cs(286,21): error CS1061: 'AnalysisContext' does not contain a definition for 'EnableConcurrentExecution' and no accessible extension method 'EnableConcurrentExecution' accepting a first argument of type 'AnalysisContext' could be found (are you missing a using directive or an assembly reference?)
+7>WordsToNumberMigrationCodeFixTests.cs(287,21): error CS1061: 'AnalysisContext' does not contain a definition for 'ConfigureGeneratedCodeAnalysis' and no accessible extension method 'ConfigureGeneratedCodeAnalysis' accepting a first argument of type 'AnalysisContext' could be found (are you missing a using directive or an assembly reference?)
+7>WordsToNumberMigrationCodeFixTests.cs(287,52): error CS0103: The name 'GeneratedCodeAnalysisFlags' does not exist in the current context
 8>------ Build started: Project: Humanizer.Analyzers.Tests.Roslyn48, Configuration: Debug ------
+8>error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis, Version=3.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis' with identity 'Microsoft.CodeAnalysis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+8>error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis.Workspaces, Version=3.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis.Workspaces' with identity 'Microsoft.CodeAnalysis.Workspaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+8>error CS5001: Program does not contain a static 'Main' method suitable for an entry point
+8>AnalyzerAssemblyCompatibilityTests.cs(27,106): error CS0103: The name 'MaxSupportedSystemCollectionsImmutableMajorVersion' does not exist in the current context
+8>AnalyzerAssemblyCompatibilityTests.cs(29,107): error CS0103: The name 'MaxSupportedSystemCollectionsImmutableMajorVersion' does not exist in the current context
+8>AnalyzerAssemblyCompatibilityTests.cs(40,8): error CS1029: #error: 'Expected a System.Collections.Immutable compatibility cap for this analyzer test project.'
+8>Verifiers.cs(23,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+8>Verifiers.cs(47,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+8>Verifiers.cs(48,67): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+8>WordsToNumberMigrationCodeFixTests.cs(215,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+8>WordsToNumberMigrationCodeFixTests.cs(216,67): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+8>WordsToNumberMigrationCodeFixTests.cs(229,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+8>WordsToNumberMigrationCodeFixTests.cs(286,21): error CS1061: 'AnalysisContext' does not contain a definition for 'EnableConcurrentExecution' and no accessible extension method 'EnableConcurrentExecution' accepting a first argument of type 'AnalysisContext' could be found (are you missing a using directive or an assembly reference?)
+8>WordsToNumberMigrationCodeFixTests.cs(287,21): error CS1061: 'AnalysisContext' does not contain a definition for 'ConfigureGeneratedCodeAnalysis' and no accessible extension method 'ConfigureGeneratedCodeAnalysis' accepting a first argument of type 'AnalysisContext' could be found (are you missing a using directive or an assembly reference?)
+8>WordsToNumberMigrationCodeFixTests.cs(287,52): error CS0103: The name 'GeneratedCodeAnalysisFlags' does not exist in the current context
 9>------ Build started: Project: Humanizer.Analyzers.Tests.Roslyn414, Configuration: Debug ------
+9>error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis, Version=3.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis' with identity 'Microsoft.CodeAnalysis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+9>error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis.Workspaces, Version=3.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis.Workspaces' with identity 'Microsoft.CodeAnalysis.Workspaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+9>error CS5001: Program does not contain a static 'Main' method suitable for an entry point
+9>AnalyzerAssemblyCompatibilityTests.cs(27,106): error CS0103: The name 'MaxSupportedSystemCollectionsImmutableMajorVersion' does not exist in the current context
+9>AnalyzerAssemblyCompatibilityTests.cs(29,107): error CS0103: The name 'MaxSupportedSystemCollectionsImmutableMajorVersion' does not exist in the current context
+9>AnalyzerAssemblyCompatibilityTests.cs(40,8): error CS1029: #error: 'Expected a System.Collections.Immutable compatibility cap for this analyzer test project.'
+9>Verifiers.cs(23,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+9>Verifiers.cs(47,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+9>Verifiers.cs(48,67): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+9>WordsToNumberMigrationCodeFixTests.cs(215,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+9>WordsToNumberMigrationCodeFixTests.cs(216,67): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+9>WordsToNumberMigrationCodeFixTests.cs(229,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+9>WordsToNumberMigrationCodeFixTests.cs(286,21): error CS1061: 'AnalysisContext' does not contain a definition for 'EnableConcurrentExecution' and no accessible extension method 'EnableConcurrentExecution' accepting a first argument of type 'AnalysisContext' could be found (are you missing a using directive or an assembly reference?)
+9>WordsToNumberMigrationCodeFixTests.cs(287,21): error CS1061: 'AnalysisContext' does not contain a definition for 'ConfigureGeneratedCodeAnalysis' and no accessible extension method 'ConfigureGeneratedCodeAnalysis' accepting a first argument of type 'AnalysisContext' could be found (are you missing a using directive or an assembly reference?)
+9>WordsToNumberMigrationCodeFixTests.cs(287,52): error CS0103: The name 'GeneratedCodeAnalysisFlags' does not exist in the current context
 10>------ Build started: Project: Humanizer.SourceGenerators.Tests, Configuration: Debug ------
 11>------ Build started: Project: Humanizer.Tests, Configuration: Debug ------
 12>------ Build started: Project: Humanizer.UnicodeDataGenerator, Configuration: Debug ------
-12>Humanizer.UnicodeDataGenerator -> compiled in memory (35.5 KB, 135 ms)
+12>Humanizer.UnicodeDataGenerator -> compiled in memory (35.5 KB, 47 ms)
 13>------ Build started: Project: Humanizer.Docs.LanguageCoverage, Configuration: Debug ------
-13>Humanizer.Docs.LanguageCoverage -> compiled in memory (14.5 KB, 874 ms)
-========== Build: 3 succeeded, 10 failed ==========
+13>Humanizer.Docs.LanguageCoverage -> compiled in memory (14.5 KB, 279 ms)
+========== Build: 6 succeeded, 7 failed ==========
 
