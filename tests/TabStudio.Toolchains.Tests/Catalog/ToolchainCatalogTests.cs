@@ -141,6 +141,16 @@ public sealed class ToolchainCatalogTests
     }
 
     [Fact]
+    public void Android_catalog_order_does_not_take_over_standalone_Java_or_Kotlin_files()
+    {
+        var android = Catalog.Find("android")!;
+        var androidFirst = Catalog with { Toolchains = [android, .. Catalog.Toolchains.Where(t => t.Id != "android")] };
+
+        Assert.Equal("java", androidFirst.ForFile("Main.java")?.Id);
+        Assert.Equal("kotlin", androidFirst.ForFile("App.kt")?.Id);
+    }
+
+    [Fact]
     public void Finds_nothing_for_files_no_toolchain_runs()
     {
         Assert.Null(Catalog.ForFile("Program.cs"));

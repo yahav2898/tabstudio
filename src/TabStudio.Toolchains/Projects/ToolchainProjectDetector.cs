@@ -54,9 +54,28 @@ public static class ToolchainProjectDetector
                 continue;
             }
 
+            var androidRoot = GradleAndroidProject.IsProject(folder);
+            var mobileRoot = androidRoot || GradleAndroidProject.IsCapacitor(folder);
+            var owner = result.Where(p => IsInside(folder, p.Directory)
+                    && (p.Toolchain.Id is "android" or "java"
+                        || p.Toolchain.Id == "node" && GradleAndroidProject.IsCapacitor(p.Directory)))
+                .MaxBy(p => p.Directory.Length);
+            var insideMobile = owner is not null && owner.Toolchain.Id != "java";
+            var independentJavaRoot = files.Contains("pom.xml", StringComparer.OrdinalIgnoreCase)
+                || files.Contains("settings.gradle", StringComparer.OrdinalIgnoreCase)
+                || files.Contains("settings.gradle.kts", StringComparer.OrdinalIgnoreCase);
+
             foreach (var toolchain in toolchains)
             {
-                if (toolchain.Id == "android" && !GradleAndroidProject.IsProject(folder))
+                if (toolchain.Id == "android" && !androidRoot)
+                {
+                    continue;
+                }
+
+                // Android settings and module build files also match Java's Gradle markers. A module and its
+                // source folders belong to the mobile root; an explicit Maven or independent Gradle root can
+                // start a separate JVM project, whose own descendants then follow the usual nesting rules.
+                if (toolchain.Id == "java" && (mobileRoot || insideMobile && !independentJavaRoot))
                 {
                     continue;
                 }

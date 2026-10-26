@@ -40,8 +40,63 @@ public sealed class MobileProjectTests
         temp.Write("mobile/gradle/libs.versions.toml", "[plugins]\nandroid-application = { id = \"com.android.application\", version = \"8.7.3\" }");
         temp.Write("mobile/app/build.gradle.kts", "plugins { alias(libs.plugins.android.application) }");
         temp.Write("server/settings.gradle.kts", "rootProject.name=\"server\"");
-        var project = Assert.Single(ToolchainProjectDetector.Detect(temp.Path, ToolchainCatalog.Default));
+        var projects = ToolchainProjectDetector.Detect(temp.Path, ToolchainCatalog.Default);
+        var project = Assert.Single(projects, p => p.Toolchain.Id == "android");
         Assert.Equal(temp.Resolve("mobile"), project.Directory);
+        Assert.Equal(temp.Resolve("server"), Assert.Single(projects, p => p.Toolchain.Id == "java").Directory);
+        Assert.Equal(2, projects.Count);
+    }
+
+    [Theory]
+    [InlineData("settings.gradle", "build.gradle")]
+    [InlineData("settings.gradle.kts", "build.gradle.kts")]
+    public void Android_owns_its_Gradle_modules_and_Java_source_folders(string settings, string build)
+    {
+        using var temp = new TempDirectory();
+        temp.Write(settings, "include(\":app\")");
+        temp.Write("app/" + build, "plugins { id(\"com.android.application\") }");
+        temp.Write("app/src/Main.java", "class Main {}\n");
+
+        var project = Assert.Single(ToolchainProjectDetector.Detect(temp.Path, ToolchainCatalog.Default));
+
+        Assert.Equal("android", project.Toolchain.Id);
+        Assert.Equal(temp.Path, project.Directory);
+    }
+
+    [Fact]
+    public void Independent_Maven_and_Gradle_JVM_roots_inside_Android_remain_discoverable()
+    {
+        using var temp = new TempDirectory();
+        temp.Write("settings.gradle.kts", "include(\":app\")");
+        temp.Write("app/build.gradle.kts", "plugins { id(\"com.android.application\") }");
+        temp.Write("app/src/Main.java", "class Main {}\n");
+        temp.Write("tools/maven/pom.xml", "<project><artifactId>tool</artifactId></project>");
+        temp.Write("tools/maven/src/Main.java", "class Main {}\n");
+        temp.Write("tools/jvm/settings.gradle.kts", "rootProject.name=\"jvm-tool\"");
+        temp.Write("tools/jvm/build.gradle.kts", "plugins { application }");
+        temp.Write("tools/jvm/src/Main.java", "class Main {}\n");
+
+        var projects = ToolchainProjectDetector.Detect(temp.Path, ToolchainCatalog.Default);
+
+        Assert.Equal(
+            [("android", temp.Path), ("java", temp.Resolve("tools/jvm")), ("java", temp.Resolve("tools/maven"))],
+            projects.Select(p => (p.Toolchain.Id, p.Directory)).OrderBy(p => p.Directory, StringComparer.Ordinal));
+    }
+
+    [Fact]
+    public void Capacitor_source_folders_do_not_create_incidental_Java_projects()
+    {
+        using var temp = new TempDirectory();
+        temp.Write("package.json", """{ "name": "web-app" }""");
+        temp.Write("capacitor.config.json", """{ "appId": "example.app" }""");
+        temp.Write("src/Main.java", "class Main {}\n");
+        temp.Write("tools/pom.xml", "<project><artifactId>tool</artifactId></project>");
+
+        var projects = ToolchainProjectDetector.Detect(temp.Path, ToolchainCatalog.Default);
+
+        Assert.Equal(
+            [("node", temp.Path), ("java", temp.Resolve("tools"))],
+            projects.Select(p => (p.Toolchain.Id, p.Directory)).OrderBy(p => p.Directory, StringComparer.Ordinal));
     }
 
     [Fact]
