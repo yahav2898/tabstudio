@@ -87,7 +87,9 @@ def build_current_box64(work, root, out, cache, *, fix_clone_stack=False):
             raise RuntimeError("Pinned box64 clone implementation changed")
         syscall.write_text(text.replace(old, "if((R_EDI&~0xff)==0x4100 && !R_RSI) {"))
     build = work / "box64-build"
-    run(["cmake", "-S", str(source), "-B", str(build), "-DARM_DYNAREC=ON", "-DBAD_SIGNAL=ON",
+    native_arm = platform.machine() == "aarch64"
+    run(["cmake", "-S", str(source), "-B", str(build), "-DARM_DYNAREC=" + ("ON" if native_arm else "OFF"),
+         "-DLD80BITS=" + ("OFF" if native_arm else "ON"), "-DNOALIGN=" + ("OFF" if native_arm else "ON"), "-DBAD_SIGNAL=ON",
          "-DCMAKE_BUILD_TYPE=Release", "-DNOGIT=1"], out / "box64-configure.log")
     run(["cmake", "--build", str(build), "--parallel", "4"], out / "box64-build.log", timeout=900)
     shutil.copy2(build / "box64", root / "usr/bin/box64")
@@ -102,7 +104,7 @@ def verify_clone_fix(work, root, out, cache, prefix, env):
     run([*prefix, "/usr/bin/box64", "/work/static-spawn"], out / "spawn-fixed-box64.log", env=env, timeout=30)
 
 
-def prepare(work, out, compiler):
+def prepare(work, out, compiler, *, build_runtime=True):
     cache = work / "downloads"
     cache.mkdir(parents=True, exist_ok=True)
     arch = {"aarch64": "aarch64", "arm64": "aarch64", "x86_64": "x86_64"}[platform.machine()]
@@ -132,6 +134,8 @@ def prepare(work, out, compiler):
         loader.symlink_to("../usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2")
     if arch == "aarch64":
         unpack_deb(fetch(LOCK["box64-arm64"], cache, "box64.deb"), root)
+    if not build_runtime:
+        return root, cache, [], [], dict(os.environ)
     source = work / "proot-5.1.107.101"
     if not source.exists():
         with zipfile.ZipFile(fetch(LOCK["proot"], cache, "proot.zip")) as archive:
@@ -184,6 +188,13 @@ def spike(args):
             raise ValueError("Read the Microchip license and pass --accept-microchip-license to install.")
         root, cache, prefix, translate, env = prepare(work, out, args.compiler)
         result["box64Version"] = LOCK["box64-arm64"]["version"] if translate else None
+        if translate:
+            # Phase 0 established that unmodified releases lose posix_spawn's
+            # child stack. Start with the measured working build, including for
+            # the installer, instead of repeating the known failing path.
+            verify_clone_fix(work, root, out, cache, prefix, env)
+            result["box64Version"] = LOCK["box64-source"]["version"] + " (child-stack fix, BAD_SIGNAL=ON)"
+            result["box64CloneStackFix"] = True
         installer = fetch(asset, cache, args.compiler + ".run")
         installer.chmod(0o755)
         install_guest = "/downloads/" + installer.name

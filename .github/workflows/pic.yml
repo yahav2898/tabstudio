@@ -50,6 +50,8 @@ jobs:
 
   native-fallback:
     name: Native ${{ matrix.tool }} feasibility (aarch64-musl)
+    needs: spike
+    if: ${{ always() && needs.spike.result == 'failure' }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 60
     strategy:

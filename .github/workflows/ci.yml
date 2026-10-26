@@ -261,7 +261,7 @@ jobs:
   android-emulator:
     name: Run on an Android emulator
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
 
@@ -282,14 +282,28 @@ jobs:
       - name: Build an x86_64 APK
         run: |
           mkdir -p ci-out
+          # Only this disposable CI APK permits run-as, for the app-UID PIC
+          # compiler check. Normal release APKs keep their original manifest.
+          python3 - <<'PY'
+          import os, xml.etree.ElementTree as ET
+          tree = ET.parse('src/TabStudio.Android/Properties/AndroidManifest.xml')
+          tree.getroot().find('application').set('{http://schemas.android.com/apk/res/android}debuggable', 'true')
+          tree.write(os.environ['RUNNER_TEMP'] + '/pic-emulator-manifest.xml', encoding='utf-8', xml_declaration=True)
+          PY
           status=0
           dotnet publish src/TabStudio.Android -c Release -f net10.0-android -p:TabStudioRuntimeIdentifiers=android-x64 \
+            -p:AndroidManifest="$RUNNER_TEMP/pic-emulator-manifest.xml" \
             -p:TabStudioBuildNumber=$(( ($(date +%s) - 1767225600) / 60 )) \
             -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME" \
             > ci-out/android-x64-build.log 2>&1 || status=$?
           tail -n 40 ci-out/android-x64-build.log
           [ "$status" -eq 0 ] || exit $status
           cp "$(find src/TabStudio.Android/bin/Release/net10.0-android/publish -name '*-Signed.apk' | head -n 1)" ci-out/TabStudio-x64.apk
+
+      - name: Prepare the verified PIC18 compiler and box64 interpreter for Android
+        run: |
+          python3 build/pic/android_spike.py prepare --work "$RUNNER_TEMP/pic-android" \
+            --output ci-out/pic-android --accept-microchip-license
 
       - name: Enable KVM
         run: |
@@ -309,7 +323,10 @@ jobs:
           disk-size: 4096M
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
-          script: bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 960
+          script: |
+            set -e
+            bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 960
+            python3 build/pic/android_spike.py run --work "$RUNNER_TEMP/pic-android" --output ci-out/pic-android
 
       # A crash's native backtrace has only offsets into the runtime's stripped libraries; this names the functions.
       - name: Name the functions in a crash's backtrace
