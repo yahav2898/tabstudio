@@ -285,7 +285,9 @@ then refreshes the preview. Avalonia creates fresh main content from the **same*
 static state survives, while the recreated view and its view model start fresh. A web preview reloads its current
 page; the server, its port and its application state remain alive.
 
-**Runtime activation.** Capability is always checked with `MetadataUpdater.IsSupported`. It must be enabled
+**Runtime activation.** Capability is always checked with `MetadataUpdater.IsSupported`. `Directory.Build.props`
+explicitly sets `MetadataUpdaterSupport=true`: .NET 10 otherwise writes the feature switch as false in Release
+hosts, including the APK and test executables, even if the user's emitted assembly is Debug. It must also be enabled
 before the runtime starts: the desktop `launchSettings.json` and CI set `DOTNET_MODIFIABLE_ASSEMBLIES=debug`;
 Android packages `build/android/hot-reload.env` and enables `AndroidUseInterpreter`, which also selects Mono's
 hot-reload runtime component. This is enabled in Release-packaged IDEs too: the assemblies being edited are the

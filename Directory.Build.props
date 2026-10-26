@@ -18,6 +18,12 @@
     <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
+  <PropertyGroup Label="Runtime">
+    <!-- .NET 10 disables this feature switch in Release hosts. The optimized IDE and Release test hosts must
+         still be able to update the user's dynamically emitted Debug assemblies (Android Mono checks it too). -->
+    <MetadataUpdaterSupport>true</MetadataUpdaterSupport>
+  </PropertyGroup>
+
   <PropertyGroup Label="Product">
     <Product>TabStudio</Product>
     <Authors>TabStudio contributors</Authors>
