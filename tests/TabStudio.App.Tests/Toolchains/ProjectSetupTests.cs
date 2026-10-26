@@ -114,6 +114,68 @@ public sealed class ProjectSetupTests
     }
 
     [AvaloniaFact]
+    public async Task An_offline_SSH_cache_never_installs_or_runs_its_projects_locally()
+    {
+        using var fixture = new WorkspaceFixture();
+        using var repo = new TempDirectory();
+        repo.Write(".tabstudio/remote-workspace.txt", "development");
+        repo.Write("package.json", """
+            {
+              "name": "remote-cache",
+              "main": "index.js",
+              "dependencies": { "local-only": "file:./dependency" },
+              "scripts": { "postinstall": "node postinstall.js" }
+            }
+            """);
+        repo.Write("dependency/package.json", """{ "name": "local-only", "version": "1.0.0", "main": "index.js" }""");
+        repo.Write("dependency/index.js", "module.exports = 'local dependency';");
+        repo.Write("postinstall.js", "require('node:fs').writeFileSync('install-marker.txt', 'installed locally');");
+        repo.Write("index.js", "require('node:fs').writeFileSync('run-marker.txt', 'ran locally');");
+        repo.Write("python/requirements.txt", "-e ./local-package\n");
+        repo.Write("python/local-package/setup.py", "from setuptools import setup\nsetup(name='remote-cache-only', version='1.0.0')\n");
+        repo.Write("python/main.py", "from pathlib import Path\nPath('python-run-marker.txt').write_text('ran locally')\n");
+        repo.Write("capacitor.config.json", "{}");
+        var workspace = fixture.Workspace;
+        Assert.True(workspace.SetUpProjectsWhenTheyOpen);
+
+        await workspace.LoadAsync(repo.Path);
+        await workspace.ProjectSetupTask.WaitAsync(SetupTimeout);
+        Assert.True(workspace.IsRemoteWorkspace);
+        Assert.Contains(workspace.ToolchainProjects, item => item.Project.Directory == repo.Path);
+        Assert.Contains(workspace.ToolchainProjects, item => item.Project.Directory == repo.Resolve("python"));
+        Assert.False(workspace.IsSettingUpProjects);
+        Assert.Null(workspace.ToolchainNotice);
+
+        // Changing the preference must not schedule a second, local setup of the cached manifests.
+        workspace.SetUpProjectsWhenTheyOpen = false;
+        workspace.SetUpProjectsWhenTheyOpen = true;
+        await workspace.ProjectSetupTask.WaitAsync(SetupTimeout);
+        await workspace.OpenDocumentAsync(repo.Resolve("index.js"));
+        Assert.False(workspace.RunCurrentFileCommand.CanExecute(null));
+        Assert.False(workspace.InstallProjectPackagesCommand.CanExecute(null));
+
+        // ExecuteAsync also exercises callers that bypass the command's disabled UI state.
+        await workspace.RunCurrentFileCommand.ExecuteAsync(null);
+        Assert.Contains("remote run profile", workspace.StatusText, StringComparison.Ordinal);
+        await workspace.InstallProjectPackagesCommand.ExecuteAsync(null);
+        Assert.Contains("remote run profile", workspace.StatusText, StringComparison.Ordinal);
+        await workspace.BuildAndroidCommand.ExecuteAsync(null);
+        Assert.Contains("remote run profile", workspace.StatusText, StringComparison.Ordinal);
+        await workspace.OpenDocumentAsync(repo.Resolve("python/main.py"));
+        await workspace.RunCurrentFileCommand.ExecuteAsync(null);
+        Assert.Contains("remote run profile", workspace.StatusText, StringComparison.Ordinal);
+
+        Assert.False(Directory.Exists(repo.Resolve(".venv")));
+        Assert.False(Directory.Exists(repo.Resolve("python/.venv")));
+        Assert.Empty(Directory.EnumerateDirectories(repo.Path, "node_modules", SearchOption.AllDirectories));
+        Assert.False(File.Exists(repo.Resolve("install-marker.txt")));
+        Assert.False(File.Exists(repo.Resolve("run-marker.txt")));
+        Assert.False(File.Exists(repo.Resolve("python/python-run-marker.txt")));
+        Assert.DoesNotContain("------ Setting up", workspace.Output.Text, StringComparison.Ordinal);
+        Assert.DoesNotContain("> ", workspace.Output.Text, StringComparison.Ordinal);
+    }
+
+    [AvaloniaFact]
     public async Task The_setting_is_in_the_Tools_menu_and_is_kept_for_the_next_workspace()
     {
         using var fixture = new WorkspaceFixture();

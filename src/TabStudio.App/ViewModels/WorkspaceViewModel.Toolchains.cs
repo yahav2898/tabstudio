@@ -79,7 +79,7 @@ public sealed partial class WorkspaceViewModel
     public bool IsTerminalSelected => SelectedPanel == BottomPanel.Terminal;
 
     /// <summary>Whether the file being edited is a program a toolchain runs, such as a <c>.py</c> file.</summary>
-    public bool CanRunCurrentFile => ActiveDocument is { } document && _toolchains.Catalog.ForFile(document.FilePath) is { Listed: true } && CanRun();
+    public bool CanRunCurrentFile => !IsRemoteWorkspace && ActiveDocument is { } document && _toolchains.Catalog.ForFile(document.FilePath) is { Listed: true } && CanRun();
 
     private void InitializeToolchains(ToolchainServices? toolchains)
     {
@@ -338,6 +338,7 @@ public sealed partial class WorkspaceViewModel
     [RelayCommand(CanExecute = nameof(CanRunCurrentFile))]
     private async Task RunCurrentFileAsync()
     {
+        if (BlockLocalToolchainActionForRemote()) return;
         if (ActiveDocument?.FilePath is not { } file || _toolchains.Catalog.ForFile(file) is not { Listed: true } toolchain)
         {
             return;
@@ -352,6 +353,7 @@ public sealed partial class WorkspaceViewModel
     [RelayCommand(CanExecute = nameof(CanInstallProjectPackages))]
     private async Task InstallProjectPackagesAsync()
     {
+        if (BlockLocalToolchainActionForRemote()) return;
         if (CurrentToolchainProject() is { } item && RunPlanner.DependenciesOf(item.Project) is { } dependency)
         {
             await InstallDependenciesAsync(item.Project, dependency);
@@ -359,11 +361,12 @@ public sealed partial class WorkspaceViewModel
     }
 
     private bool CanInstallProjectPackages() =>
-        CurrentToolchainProject() is { } item && RunPlanner.DependenciesOf(item.Project) is not null && State is IdeState.Ready or IdeState.Failed;
+        !IsRemoteWorkspace && CurrentToolchainProject() is { } item && RunPlanner.DependenciesOf(item.Project) is not null && State is IdeState.Ready or IdeState.Failed;
 
     /// <summary>F5 and Ctrl+F5 on a toolchain project.</summary>
     private async Task RunToolchainProjectAsync(ProjectInfo info)
     {
+        if (BlockLocalToolchainActionForRemote()) return;
         if (FindToolchainProject(info) is not { } item)
         {
             return;
@@ -435,17 +438,20 @@ public sealed partial class WorkspaceViewModel
 
     private async Task RunToolchainPlanAsync(ToolchainProject project, Func<RunPlan?> planner)
     {
+        if (BlockLocalToolchainActionForRemote()) return;
         if (!await SaveAllCoreAsync())
         {
             return;
         }
 
         var toolchain = project.Toolchain;
+        if (BlockLocalToolchainActionForRemote()) return;
         if (!await EnsureToolchainReadyAsync(toolchain, $"{project.Name} runs with {toolchain.Name}, which is not installed yet."))
         {
             return;
         }
 
+        if (BlockLocalToolchainActionForRemote()) return;
         Output.Clear();
         SelectedPanel = BottomPanel.Output;
         IsBottomPanelVisible = true;
@@ -549,8 +555,10 @@ public sealed partial class WorkspaceViewModel
     /// <returns>Whether it is ready.</returns>
     private async Task<bool> EnsureToolchainReadyAsync(ToolchainDefinition toolchain, string reason)
     {
+        if (BlockLocalToolchainActionForRemote()) return false;
         await WaitForProjectSetupAsync();
         await _toolchains.EnsureStatusAsync();
+        if (BlockLocalToolchainActionForRemote()) return false;
         var manager = _toolchains.Manager;
         var status = manager.Status(toolchain.Id);
         if (status.IsReady)
@@ -582,6 +590,7 @@ public sealed partial class WorkspaceViewModel
             }
         }
 
+        if (BlockLocalToolchainActionForRemote()) return false;
         StatusText = $"Installing {toolchain.Name}";
         ToolchainStore.Open(toolchain.Id);
         await ToolchainStore.InstallAsync(toolchain.Id);
@@ -599,6 +608,7 @@ public sealed partial class WorkspaceViewModel
     /// <summary>Installs a project's packages, such as <c>npm install</c>, with the output in the Output panel.</summary>
     private async Task InstallDependenciesAsync(ToolchainProject project, DependencyInstallDefinition dependency)
     {
+        if (BlockLocalToolchainActionForRemote()) return;
         project = NodeWorkspaces.DependencyOwner(project, _toolchainProjects.Select(p => p.Project));
         dependency = RunPlanner.DependenciesOf(project) ?? dependency;
         if (!await EnsureToolchainReadyAsync(project.Toolchain, $"Installing {project.Name}'s packages needs {project.Toolchain.Name}, which is not installed yet."))
@@ -607,6 +617,7 @@ public sealed partial class WorkspaceViewModel
         }
 
         await SaveAllCoreAsync();
+        if (BlockLocalToolchainActionForRemote()) return;
         Output.Clear();
         SelectedPanel = BottomPanel.Output;
         IsBottomPanelVisible = true;
@@ -620,6 +631,7 @@ public sealed partial class WorkspaceViewModel
         {
             foreach (var step in RunPlanner.PlanDependencies(project, dependency))
             {
+                if (BlockLocalToolchainActionForRemote()) return;
                 Output.WriteLine("> " + step.CommandLine, OutputKind.Info);
                 var result = await OutputProcess.RunAsync(_toolchains.Runtime, step, Output, null, _run.Token);
                 if (!result.Succeeded)

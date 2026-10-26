@@ -89,7 +89,7 @@ public sealed partial class WorkspaceViewModel
     private void StartProjectSetup()
     {
         // Built-in .NET projects restore elsewhere; do not probe external compilers for an unrelated workspace.
-        if (!SetUpProjectsWhenTheyOpen || _disposed || Workspace is null || (_toolchainProjects.Count == 0 && StaticSite is null))
+        if (!SetUpProjectsWhenTheyOpen || _disposed || IsRemoteWorkspace || Workspace is null || (_toolchainProjects.Count == 0 && StaticSite is null))
         {
             return;
         }
@@ -110,7 +110,7 @@ public sealed partial class WorkspaceViewModel
                 _setupRequested = false;
                 await SetUpProjectsAsync();
             }
-            while (_setupRequested && SetUpProjectsWhenTheyOpen && !_disposed);
+            while (_setupRequested && SetUpProjectsWhenTheyOpen && !_disposed && !IsRemoteWorkspace);
         }
         finally
         {
@@ -151,6 +151,12 @@ public sealed partial class WorkspaceViewModel
 
     private async Task SetUpProjectsAsync()
     {
+        if (IsRemoteWorkspace)
+        {
+            _setupRequested = false;
+            return;
+        }
+
         using var cancellation = new CancellationTokenSource();
         _setup = cancellation;
         var token = cancellation.Token;
@@ -159,6 +165,12 @@ public sealed partial class WorkspaceViewModel
         try
         {
             await _toolchains.EnsureStatusAsync().WaitAsync(token);
+            if (IsRemoteWorkspace)
+            {
+                _setupRequested = false;
+                return;
+            }
+
             var current = CurrentToolchainProject();
             var projects = _toolchainProjects.OrderBy(item => ReferenceEquals(item, current) ? 0 : 1).Select(item => item.Project).ToList();
             foreach (var toolchain in ToolchainsToInstall(projects))
@@ -258,6 +270,7 @@ public sealed partial class WorkspaceViewModel
 
     private async Task<bool> InstallToolchainForSetupAsync(ToolchainDefinition toolchain, CancellationToken cancellationToken)
     {
+        if (BlockLocalToolchainActionForRemote()) return false;
         var manager = _toolchains.Manager;
         ShowSetupOutput();
         Output.WriteLine($"------ Installing {toolchain.Name} from the Toolchain Store ------", OutputKind.Info);
@@ -309,11 +322,13 @@ public sealed partial class WorkspaceViewModel
 
     private async Task<bool> InstallPackagesForSetupAsync(ToolchainProject project, DependencyInstallDefinition dependency, CancellationToken cancellationToken)
     {
+        if (BlockLocalToolchainActionForRemote()) return false;
         ShowSetupOutput();
         Output.WriteLine($"------ Setting up {project.Name}: {dependency.Name} ------", OutputKind.Info);
         ProjectSetupText = $"Setting up {project.Name}: {dependency.Name}";
         foreach (var step in RunPlanner.PlanDependencies(project, dependency))
         {
+            if (BlockLocalToolchainActionForRemote()) return false;
             Output.WriteLine("> " + step.CommandLine, OutputKind.Info);
             var result = await OutputProcess.RunAsync(_toolchains.Runtime, step, Output, null, cancellationToken);
             if (!result.Succeeded)

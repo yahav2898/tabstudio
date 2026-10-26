@@ -17,6 +17,7 @@ public sealed partial class WorkspaceViewModel
 
     private string? MobileRoot()
     {
+        if (IsRemoteWorkspace) return null;
         var chosen = CurrentToolchainProject()?.Project.Directory;
         if (chosen is not null && (GradleAndroidProject.IsProject(chosen) || GradleAndroidProject.IsCapacitor(chosen)))
         {
@@ -36,6 +37,7 @@ public sealed partial class WorkspaceViewModel
 
     private async Task BuildAndroidCoreAsync(bool install)
     {
+        if (BlockLocalToolchainActionForRemote()) return;
         if (MobileRoot() is not { } root)
         {
             StatusText = "Choose a Gradle Android or Capacitor startup project first";

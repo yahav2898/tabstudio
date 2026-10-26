@@ -117,6 +117,7 @@ public sealed partial class WorkspaceViewModel
         _remoteMarker = File.Exists(marker) ? File.ReadAllText(marker) : null;
         if (IsRemoteWorkspace)
         {
+            CancelProjectSetup();
             var profile = RemoteRunProfile.Load(root);
             RemoteExplorer.BuildScript = profile.BuildCommand;
             RemoteExplorer.RunScript = profile.RunCommand;
@@ -183,6 +184,15 @@ public sealed partial class WorkspaceViewModel
         OnPropertyChanged(nameof(IsRemoteWorkspace)); OnPropertyChanged(nameof(RemoteWorkspace));
         OnPropertyChanged(nameof(Title)); OnPropertyChanged(nameof(RunHostText));
         RunCommand.NotifyCanExecuteChanged(); StartDebuggingCommand.NotifyCanExecuteChanged(); BuildCommand.NotifyCanExecuteChanged();
+        OnPropertyChanged(nameof(CanRunCurrentFile));
+        RunCurrentFileCommand.NotifyCanExecuteChanged(); InstallProjectPackagesCommand.NotifyCanExecuteChanged();
+    }
+
+    private bool BlockLocalToolchainActionForRemote()
+    {
+        if (!IsRemoteWorkspace) return false;
+        StatusText = "Use the remote run profile or SSH Terminal to run or install packages for this SSH workspace.";
+        return true;
     }
 
     private async Task RunRemoteAsync(bool buildOnly)
