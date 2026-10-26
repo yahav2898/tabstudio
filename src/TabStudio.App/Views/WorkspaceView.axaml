@@ -253,6 +253,8 @@
             <MenuItem Header="Hot Reload C# on Save" ToggleType="CheckBox" IsChecked="{Binding HotReloadOnSave, Mode=TwoWay}"
                       IsEnabled="{x:Static hotReload:HotReloadSession.IsSupported}"
                       ToolTip.Tip="Available in the desktop host. On Android 0.15, saving a preview app restarts it." />
+            <MenuItem Header="Flutter Hot Reload" Command="{Binding FlutterHotReloadCommand}" />
+            <MenuItem Header="Flutter Hot Restart" Command="{Binding FlutterHotRestartCommand}" />
             <Separator />
             <MenuItem Header="Show _Next Statement (Alt+Num *)" Command="{Binding ShowNextStatementCommand}" />
             <MenuItem Header="Step _Into" InputGesture="F11" Command="{Binding StepIntoCommand}" />

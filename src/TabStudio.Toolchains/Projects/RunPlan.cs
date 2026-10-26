@@ -45,6 +45,11 @@ public static partial class RunPlanner
             return PlanJavaProject(project);
         }
 
+        if (project.Toolchain.Id == "flutter")
+        {
+            return FlutterProject.Plan(project.Directory);
+        }
+
         var run = project.Toolchain.Run;
         if (run is null)
         {

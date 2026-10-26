@@ -995,3 +995,13 @@ CI runs real PostgreSQL and Redis in the same Alpine/PRoot runtime on x64 and AR
 ASP.NET Core template using Npgsql and queries PostgreSQL through its HTTP endpoint. The emulator self-test installs
 PostgreSQL via the signed package manager, initializes it, runs a SQL script and SELECT, and stops it. See
 [Services](SERVICES.md) for package/Compose coverage and local reproduction.
+
+## Flutter and Dart
+
+`FlutterToolchainInstaller` wraps `LinuxToolchainInstaller` and owns `Toolchains/flutter/rootfs`. Its Ubuntu Base 24.04.3 ARM64/amd64 archives and matching official Dart ZIPs have pinned SHA-256 digests. Flutter source is pinned to release 3.38.0 and checked against its immutable Git commit before bootstrap. Ubuntu installs its prerequisites through signed apt repositories; package versions follow Ubuntu security updates. SDK bootstrap and cache preparation remain network operations.
+
+`FlutterRuntime` routes `flutter`, `dart`, and absolute `/opt/flutter/` commands through a second `ProotRuntime` using the same packaged PRoot and loader. Workspace paths are shared unchanged, keeping LSP/DAP source paths valid. All other tools and the default Terminal remain in Alpine. The generic PRoot options now include shell and search path while retaining Alpine defaults.
+
+`FlutterProject` distinguishes Flutter SDK dependencies from plain Dart packages. The ordinary dependency notice offers pub get. The analysis server runs as `dart language-server --protocol=lsp`; Flutter DAP runs as `flutter debug-adapter`, Dart DAP as `dart debug_adapter`. Flutter's forwarded web-launch event opens only a loopback HTTP(S) URL in the existing preview. Saves serialize/coalesce adapter hot-restart requests for web, or hot-reload requests for native VM targets. Explicit launch configurations can choose a native device once the mobile toolchain is available. Swarm web targets tunnel the same loopback server to phones.
+
+See [Flutter verification](flutter.md) for the experiment's measured results, pending SDK/PRoot/device checks and the dedicated emulator test entry point. Web preview is a no-debug DAP launch: a generic WebView does not implement Dart's browser-debug extension.

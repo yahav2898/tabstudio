@@ -1,5 +1,11 @@
 {
   "languages": {
+    "dart": {
+      "name": "Dart",
+      "extensions": [
+        ".dart"
+      ]
+    },
     "python": {
       "name": "Python",
       "extensions": [
@@ -117,6 +123,22 @@
     }
   },
   "languageServers": {
+    "dart-analysis-server": {
+      "name": "Dart analysis server",
+      "languages": [
+        "dart"
+      ],
+      "command": "dart",
+      "args": [
+        "language-server",
+        "--protocol=lsp"
+      ],
+      "package": "dart-analysis-server",
+      "rootMarkers": [
+        "pubspec.yaml",
+        "analysis_options.yaml"
+      ]
+    },
     "pyright": {
       "name": "Pyright",
       "languages": [
@@ -361,6 +383,28 @@
       "terminalDefaults": {
         "console": "integratedTerminal"
       }
+    },
+    "flutter": {
+      "name": "Flutter",
+      "languages": [
+        "dart"
+      ],
+      "command": "flutter",
+      "args": [
+        "debug-adapter"
+      ],
+      "package": "flutter-dap"
+    },
+    "dart": {
+      "name": "Dart",
+      "languages": [
+        "dart"
+      ],
+      "command": "dart",
+      "args": [
+        "debug_adapter"
+      ],
+      "package": "flutter-dap"
     },
     "debugpy": {
       "name": "Python (debugpy)",

@@ -9,7 +9,9 @@
 # and asks this script in its log (TABSTUDIO_DESKTOP_STEP lines) to type on the keyboard and take screenshots,
 # which it does with adb. (The app clicks the display itself: adb's taps have no mouse button events.)
 #
-# Usage: build/ci/android-smoke-test.sh <apk> <output-folder> [timeout-seconds] [all|managed|ui|native|performance]
+# Usage: build/ci/android-smoke-test.sh <apk> <output-folder> [timeout-seconds] [all|managed|ui|native|performance|flutter]
+#
+# The opt-in flutter mode runs only the experimental Flutter web self test (tabstudio.selftest.flutter).
 set -euo pipefail
 
 apk="${1:?apk}"
@@ -17,10 +19,11 @@ out="${2:?output folder}"
 timeout="${3:-900}"
 shard="${4:-all}"
 case "$shard" in
-  all|managed|ui|native|performance) ;;
+  all|managed|ui|native|performance|flutter) ;;
   *) echo "Unknown self-test shard: $shard" >&2; exit 2 ;;
 esac
 package="com.tabstudio.ide"
+activity="com.tabstudio.ide.MainActivity"
 
 mkdir -p "$out"
 adb wait-for-device
@@ -84,9 +87,14 @@ desktop_step() {
 adb install -r "$apk"
 adb logcat -c
 started=$(date +%s)
-# The shell's instrumentation source permits the existing desktop checks to inject real Android input events.
-# Keep instrumentation active until the emulator is stopped, so the IDE is still present in the screenshots.
-adb shell am instrument -e tabstudio.selftest.shard "$shard" "$package/com.tabstudio.ide.SelfTestInstrumentation"
+if [ "$shard" = flutter ]; then
+  # The Flutter web self test needs no injected input or desktop mode.
+  adb shell am start -W -n "$package/$activity" --ez tabstudio.selftest true --ez tabstudio.selftest.flutter true
+else
+  # The shell's instrumentation source permits the existing desktop checks to inject real Android input events.
+  # Keep instrumentation active until the emulator is stopped, so the IDE is still present in the screenshots.
+  adb shell am instrument -e tabstudio.selftest.shard "$shard" "$package/com.tabstudio.ide.SelfTestInstrumentation"
+fi
 
 verdict=""
 handled=0

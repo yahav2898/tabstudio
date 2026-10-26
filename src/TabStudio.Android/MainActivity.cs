@@ -58,6 +58,9 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
     /// <summary>The optional independent self-test group: managed, ui, native, or all.</summary>
     public const string SelfTestShardExtra = "tabstudio.selftest.shard";
 
+    /// <summary>The intent extra that runs only the experimental Flutter web self test instead of a shard.</summary>
+    public const string FlutterSelfTestExtra = "tabstudio.selftest.flutter";
+
     private const string LogTag = "TabStudio";
     private static readonly TimeSpan SelfTestTimeout = TimeSpan.FromMinutes(15);
 
@@ -78,8 +81,9 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
         {
             var desktop = Intent.GetBooleanExtra(DesktopSelfTestExtra, false);
             var shard = Intent.GetStringExtra(SelfTestShardExtra);
+            var flutter = Intent.GetBooleanExtra(FlutterSelfTestExtra, false);
             var screenshots = GetExternalFilesDir(null) is { } files ? Path.Combine(files.AbsolutePath, "selftest") : null;
-            Dispatcher.UIThread.Post(() => _ = RunSelfTestAsync(desktop, screenshots, shard));
+            Dispatcher.UIThread.Post(() => _ = RunSelfTestAsync(desktop, screenshots, shard, flutter));
         }
 
         // Started from a tapped notification: open the run it is about.
@@ -142,7 +146,7 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
             });
     }
 
-    private static async Task RunSelfTestAsync(bool desktop, string? screenshots, string? shardName)
+    private static async Task RunSelfTestAsync(bool desktop, string? screenshots, string? shardName, bool flutter)
     {
         if (!SelfTest.TryParseShard(shardName, out var shard))
         {
@@ -150,7 +154,7 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
             return;
         }
 
-        AndroidLog.Info(LogTag, $"TABSTUDIO_SELFTEST_START shard={shard.ToString().ToLowerInvariant()}");
+        AndroidLog.Info(LogTag, flutter ? "TABSTUDIO_SELFTEST_START flutter" : $"TABSTUDIO_SELFTEST_START shard={shard.ToString().ToLowerInvariant()}");
         var app = Avalonia.Application.Current as TabStudioApplication;
         if (app?.Main is not { } main || app.Services is not { } services)
         {
@@ -183,19 +187,21 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
         toolchains.StatusChanged += ReportPreparation;
         try
         {
-            result = await SelfTest.RunShardAsync(main, services.GetRequiredService<SampleLibrary>(), services.GetRequiredService<ProjectTemplates>(), screenshots, shard, timeout.Token);
+            result = flutter
+                ? await SelfTest.RunFlutterWebAsync(main, services.GetRequiredService<ProjectTemplates>(), timeout.Token)
+                : await SelfTest.RunShardAsync(main, services.GetRequiredService<SampleLibrary>(), services.GetRequiredService<ProjectTemplates>(), screenshots, shard, timeout.Token);
         }
         finally
         {
             toolchains.StatusChanged -= ReportPreparation;
         }
-        if (result.Success && (shard is SelfTestShard.All or SelfTestShard.Ui))
+        if (result.Success && !flutter && (shard is SelfTestShard.All or SelfTestShard.Ui))
         {
             var scrolling = await SelfTest.ScrollEditorAsync(main, services.GetRequiredService<SampleLibrary>(), new AndroidTouchSelfTestDevice(() => _current), line => AndroidLog.Info(LogTag, line), timeout.Token);
             result = new SelfTestResult(scrolling.Success, $"{result.Message} | {scrolling.Message}", result.Duration + scrolling.Duration);
         }
 
-        if (result.Success && desktop && (shard is SelfTestShard.All or SelfTestShard.Ui))
+        if (result.Success && desktop && !flutter && (shard is SelfTestShard.All or SelfTestShard.Ui))
         {
             var tablet = (app.ApplicationLifetime as ISingleViewApplicationLifetime)?.MainView as TabStudio.App.Views.MainView;
             var input = new AndroidDesktopSelfTestInput(line => AndroidLog.Info(LogTag, line), _displays, () => _current);

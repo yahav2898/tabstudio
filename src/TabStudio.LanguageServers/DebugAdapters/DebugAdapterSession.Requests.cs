@@ -6,6 +6,10 @@ namespace TabStudio.LanguageServers.DebugAdapters;
 /// <summary>The requests of a debug session: breakpoints, execution, and inspecting the paused program.</summary>
 public sealed partial class DebugAdapterSession
 {
+    /// <summary>Applies saved Flutter code over the adapter's VM service, optionally resetting app state.</summary>
+    public Task<System.Text.Json.JsonElement> ReloadFlutterAsync(bool fullRestart, string reason, CancellationToken cancellationToken) =>
+        _connection.SendRequestAsync(fullRestart ? "hotRestart" : "hotReload", new System.Text.Json.Nodes.JsonObject { ["reason"] = reason }, cancellationToken);
+
     /// <summary>Replaces the breakpoints of a file. Conditions, hit counts and log messages the adapter does not support are left out.</summary>
     /// <param name="filePath">Full path of the file.</param>
     /// <param name="breakpoints">Every breakpoint of the file.</param>
