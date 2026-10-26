@@ -256,6 +256,7 @@ public sealed partial class WorkspaceViewModel
             OnDocumentSavedForLanguageServer(document);
             OnDocumentSavedForStaticSite(document);
             OnDocumentSavedForProjectSetup(document);
+            OnDocumentSavedForFlutter(document);
             OnDocumentSavedForWindowsBridge(document);
             RefreshPicCommands();
             await OnProjectFileSavedAsync(document);

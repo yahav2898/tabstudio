@@ -140,3 +140,11 @@ Models are downloaded only after the user sees and accepts the model's full upst
 | TinyLlamas stories260K, diagnostic self-test builds only | MIT (llama2.c / TinyStories model distribution) | [ggml-org models](https://huggingface.co/ggml-org/models/tree/7ae2acaf51ef0706af00804d8fdd6ae9e70829ae/tinyllamas), [llama2.c](https://github.com/karpathy/llama2.c/blob/master/LICENSE) |
 
 The llama.cpp MIT license is also packaged in the app's `Assets/Notices/llama.cpp.LICENSE.txt`.
+
+## Flutter and Dart (optional Toolchain Store downloads)
+
+- Flutter, Copyright The Flutter Authors, BSD-3-Clause: https://github.com/flutter/flutter/blob/3.38.0/LICENSE
+- Dart SDK and its analysis/debug tools, Copyright the Dart project authors, BSD-3-Clause: https://github.com/dart-lang/sdk/blob/main/LICENSE
+- Ubuntu Base 24.04.3 is an optional glibc side environment, not embedded in the APK. It contains separately licensed packages, including GNU libc (LGPL-2.1-or-later), Bash (GPL-3.0-or-later), Git (GPL-2.0-only), OpenSSL (Apache-2.0) and curl (curl license). Package-specific copyright and license texts remain in `/usr/share/doc/*/copyright` in that environment. Ubuntu source packages: https://archive.ubuntu.com/ubuntu/pool/ and https://ports.ubuntu.com/ubuntu-ports/pool/ . Ubuntu distributions and licensing: https://ubuntu.com/legal/intellectual-property-policy .
+
+Flutter and Dart retain their upstream LICENSE and third-party notices in `/opt/flutter` and `/opt/flutter/bin/cache/dart-sdk`. These optional downloads do not change the licensing of TabStudio.

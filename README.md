@@ -28,6 +28,7 @@ Open a solution, press F5, and it builds, runs and debugs on the tablet itself.
 - [Features](#features)
   - [The IDE](#the-ide)
   - [Languages](#languages)
+  - [Flutter and Dart (experimental)](#flutter-and-dart-experimental)
   - [App platforms](#app-platforms)
   - [Every screen at once](#every-screen-at-once)
   - [Projects and repositories](#projects-and-repositories)
@@ -142,6 +143,12 @@ From there, try **New project** for a template in any language, **Open from GitH
   server or debug adapter is missing, the status bar, the editor and F5 offer to install it.
 - **More languages through extensions.** VS Code extensions from Open VSX bring grammars, snippets, themes and
   language settings for anything else.
+
+### Flutter and Dart (experimental)
+
+The Flutter Toolchain Store entry installs Flutter and its bundled Dart SDK in a separate Ubuntu glibc PRoot environment on ARM64/x64 tablets. Open `pubspec.yaml` projects, accept **flutter pub get**, and run the counter templates in the web preview. Dart IntelliSense uses the analysis server; Dart console debugging uses DAP. Saving Dart code hot-restarts Flutter web; Debug offers Flutter Hot Reload and Hot Restart for native VM-service targets.
+
+Native Android deployment of Flutter apps through the Android SDK toolchain is not verified yet. Embedded `web-server` previews do not provide VM breakpoints without a browser debugging bridge. See [the SDK spike and verification status](docs/flutter.md) before enabling this experimental feature in a release.
 
 ### App platforms
 

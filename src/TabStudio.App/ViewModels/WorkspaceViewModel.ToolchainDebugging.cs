@@ -80,6 +80,11 @@ public sealed partial class WorkspaceViewModel
             await DebugPicProjectAsync(info, start);
             return;
         }
+        if (toolchain.Id == "flutter")
+        {
+            await StartDartOrFlutterAsync(item, noDebug: false);
+            return;
+        }
         if (toolchain.DebugAdapter?.Type is not { } type || !ToolchainLaunch.Supports(type) || _languageServers?.Configuration.Registry.FindAdapter(type) is null)
         {
             // A toolchain without a debug adapter TabStudio drives runs as with Ctrl+F5.
