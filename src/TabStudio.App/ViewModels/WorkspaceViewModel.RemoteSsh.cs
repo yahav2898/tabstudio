@@ -265,6 +265,9 @@ public sealed partial class WorkspaceViewModel
             try
             {
                 await EnsurePublishingSdkAsync(_run.Token);
+                var publishCache = Path.GetDirectoryName(output)!;
+                Directory.CreateDirectory(publishCache);
+                _toolchains.ShareFolder(publishCache);
                 var args = new List<string> { "publish", project.FilePath, "-c", "Release", "-o", output, "--self-contained", "false", "-p:UseAppHost=false" };
                 if (profile.RuntimeIdentifier is { } runtimeId) { args.AddRange(["-r", runtimeId]); }
                 var result = await OutputProcess.RunAsync(_toolchains.Runtime, new ProcessStartSpec { Program = "dotnet", Arguments = args, WorkingDirectory = workspace.RootDirectory }, Output, null, _run.Token);

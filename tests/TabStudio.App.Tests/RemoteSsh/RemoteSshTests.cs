@@ -115,6 +115,42 @@ public sealed class RemoteSshTests
     }
 
     [AvaloniaFact]
+    public async Task Local_AspNet_publish_builds_real_output_uploads_it_and_rolls_back_a_failed_service_restart()
+    {
+        if (!SshTestServer.Available) { return; }
+        using var temp = new TempDirectory();
+        var paths = new AppPaths(temp.Path);
+        var project = Path.Combine(paths.Projects, "PublishWeb");
+        Directory.CreateDirectory(project);
+        await File.WriteAllTextAsync(Path.Combine(project, "PublishWeb.csproj"), "<Project Sdk=\"Microsoft.NET.Sdk.Web\"><PropertyGroup><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings></PropertyGroup></Project>");
+        await File.WriteAllTextAsync(Path.Combine(project, "Program.cs"), "var app = WebApplication.CreateBuilder(args).Build(); app.MapGet(\"/\", () => \"published from tablet\"); app.Run();");
+        using var services = AppServices.Create(paths);
+        var remoteServices = services.GetRequiredService<RemoteSshServices>();
+        remoteServices.Hosts.Save([SshTestServer.Host]);
+        remoteServices.Hosts.Trust(SshTestServer.Host, SshTestServer.Fingerprint);
+        using var server = await SshTestServer.ConnectAsync();
+        var destination = SshTestServer.Root + "/app-publish-" + Guid.NewGuid().ToString("N");
+        using (var setup = server.Ssh.RunCommand("mkdir -p " + SshRuntime.Quote(destination + "/previous") + " && ln -s " + SshRuntime.Quote(destination + "/previous") + " " + SshRuntime.Quote(destination + "/current"))) { Assert.Equal(0, setup.ExitStatus); }
+        new ServerPublishProfile(SshTestServer.Host.Name, destination, "tabstudio-intentionally-absent.service", "linux-x64").Save(project);
+        var main = services.GetRequiredService<MainViewModel>();
+        await main.OpenWorkspaceAsync(project);
+        var workspace = main.Workspace!;
+        var publish = workspace.PublishToServerCommand.ExecuteAsync(null);
+        foreach (var title in new[] { "Publish to server", "Publish destination", "systemd service", "Server runtime", "Publish to " + SshTestServer.Host.Name + "?" })
+        {
+            await UiTestHelpers.WaitUntilAsync(() => workspace.Prompt.IsOpen && workspace.Prompt.Title == title, TimeSpan.FromSeconds(30), title);
+            workspace.Prompt.ConfirmCommand.Execute(null);
+        }
+        await publish.WaitAsync(TimeSpan.FromMinutes(3));
+        Assert.Equal(IdeState.Failed, workspace.State);
+        Assert.Contains("previous current link was restored", workspace.StatusText, StringComparison.Ordinal);
+        var release = Assert.Single(server.Sftp.ListDirectory(destination + "/releases").Where(f => f.IsDirectory && f.Name is not "." and not ".."));
+        Assert.True(server.Sftp.Exists(release.FullName + "/PublishWeb.dll"));
+        using var current = server.Ssh.RunCommand("readlink " + SshRuntime.Quote(destination + "/current"));
+        Assert.Equal(destination + "/previous", current.Result.Trim());
+    }
+
+    [AvaloniaFact]
     public async Task Screenshot_of_Remote_Explorer_in_the_IDE()
     {
         using var temp = new TempDirectory();
