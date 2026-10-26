@@ -239,12 +239,15 @@ public sealed partial class DebugSession : IDisposable
     /// <param name="cancellationToken">Stops the program, like <see cref="Stop"/>.</param>
     /// <returns>How the program ended.</returns>
     /// <exception cref="InvalidOperationException">The session already ran its program.</exception>
+    /// <param name="environment">Environment variables scoped to this debug run.</param>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "The optional environment was added after the token; existing positional callers pass the token first.")]
     public async Task<RunResult> RunAsync(
         IReadOnlyList<string> arguments,
         IReadOnlyList<string> packageAssemblies,
         IConsoleSink console,
         ConsoleInput? input = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        IReadOnlyDictionary<string, string?>? environment = null)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
         ArgumentNullException.ThrowIfNull(arguments);
@@ -274,7 +277,7 @@ public sealed partial class DebugSession : IDisposable
             var runner = new ProgramRunner();
             runner.Loaded += assembly => Loaded?.Invoke(assembly);
             result = await runner
-                .RunAsync(_build.Result.EntryAssembly!, _build.Result.Dependencies, packageAssemblies, arguments, console, input, stop.Token)
+                .RunAsync(_build.Result.EntryAssembly!, _build.Result.Dependencies, packageAssemblies, arguments, console, input, stop.Token, environment)
                 .ConfigureAwait(false);
         }
         finally

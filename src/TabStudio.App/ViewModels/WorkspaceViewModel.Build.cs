@@ -51,6 +51,8 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
+        if (!await PrepareServicesAsync(project)) return;
+
         if (IsToolchainProject(project))
         {
             await RunToolchainProjectAsync(project);
@@ -84,7 +86,7 @@ public sealed partial class WorkspaceViewModel
         try
         {
             var packages = _language.GetPackageRuntimeAssemblies(project.FilePath);
-            result = await _runner.RunAsync(entry, build.Dependencies, packages, [], new ServerConsoleSink(Output, listening), input, _run.Token);
+            result = await _runner.RunAsync(entry, build.Dependencies, packages, [], new ServerConsoleSink(Output, listening), input, _run.Token, _serviceEnvironment);
         }
         finally
         {
@@ -159,9 +161,9 @@ public sealed partial class WorkspaceViewModel
         }
     }
 
-    private bool CanRun() => (IsRemoteWorkspace ? _remoteWorkspace?.Connection.IsConnected == true : StartupProject is not null || UsesLaunchTarget) && State is IdeState.Ready or IdeState.Failed && !IsNotebookRunning;
+    private bool CanRun() => !_preparingServices && (IsRemoteWorkspace ? _remoteWorkspace?.Connection.IsConnected == true : StartupProject is not null || UsesLaunchTarget) && State is IdeState.Ready or IdeState.Failed && !IsNotebookRunning;
 
-    private bool CanBuild() => (!IsRemoteWorkspace || _remoteWorkspace?.Connection.IsConnected == true) && State is IdeState.Ready or IdeState.Failed;
+    private bool CanBuild() => !_preparingServices && (!IsRemoteWorkspace || _remoteWorkspace?.Connection.IsConnected == true) && State is IdeState.Ready or IdeState.Failed;
 
     /// <summary>Builds projects one after another, reporting in the Output panel and the Error List.</summary>
     /// <param name="projects">The projects.</param>
@@ -187,6 +189,16 @@ public sealed partial class WorkspaceViewModel
         {
             document.SyncText();
         }
+
+        // Background analyses may still describe the text from before Save All. The build below is now the
+        // authoritative result; an older analysis must not clear its Error List while F5 reports a failure.
+        _solutionAnalysis?.Cancel();
+        foreach (var analysis in _projectAnalysis.Values)
+        {
+            analysis.Cancel();
+            analysis.Dispose();
+        }
+        _projectAnalysis.Clear();
 
         if (showOutput)
         {

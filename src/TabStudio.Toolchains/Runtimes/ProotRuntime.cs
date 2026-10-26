@@ -173,7 +173,6 @@ public sealed partial class ProotRuntime : IToolchainRuntime
             "--link2symlink",
             "--sysvipc",
             "-L",
-            "-0",
             "-r", _options.Rootfs,
             "-b", "/dev",
             "-b", "/proc",
@@ -186,6 +185,16 @@ public sealed partial class ProotRuntime : IToolchainRuntime
             // Android has no /dev/shm; POSIX shared memory and semaphores (Python's multiprocessing) need one.
             "-b", $"{Path.Combine(_options.Rootfs, "tmp")}:/dev/shm",
         };
+
+        if (spec.UserId is { } uid)
+        {
+            ArgumentOutOfRangeException.ThrowIfNegative(uid);
+            arguments.AddRange(["-i", $"{uid}:{uid}"]);
+        }
+        else
+        {
+            arguments.Add("-0");
+        }
 
         foreach (var file in _procStandIns.Value)
         {
@@ -205,6 +214,17 @@ public sealed partial class ProotRuntime : IToolchainRuntime
                 arguments.Add("-b");
                 arguments.Add(shared);
             }
+        }
+
+        foreach (var mount in spec.Mounts)
+        {
+            if (!Path.IsPathFullyQualified(mount.Source) || !mount.Target.StartsWith('/')
+                || mount.Source.Contains(':') || mount.Target.Contains(':') || mount.Target.Split('/').Contains(".."))
+            {
+                throw new ArgumentException("Process mounts need absolute paths without ':' or '..'.", nameof(spec));
+            }
+
+            arguments.AddRange(["-b", $"{mount.Source}:{mount.Target}"]);
         }
 
         arguments.Add("-w");

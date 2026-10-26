@@ -52,6 +52,7 @@ Dependencies point down only. Each layer has one job:
 | `TabStudio.Wpf` | OpenSilver's in-process XAML compiler, WPF template and browser startup, on the WebAssembly host. | Compilation, Packages, Web |
 | `TabStudio.Porting` | Converts saved C# WPF and Windows Forms projects into sibling Avalonia projects, with generated support files and structured port notes. | Core, Roslyn |
 | `TabStudio.Remote` | SSH.NET connections, platform signing, SFTP source caches, remote processes, forwarding and publishing. | `TabStudio.Toolchains` |
+| `TabStudio.Services` | Compose/devcontainer parsing, native service mappings, persistent data, dependency scheduling, health, per-service logs and connection rewriting. | `TabStudio.Toolchains` |
 | `TabStudio.Toolchains` | The Toolchain Store: the catalog, Alpine Linux on PRoot, verified Alpine packages, processes and pseudo terminals, toolchain projects and the terminal emulator. | `TabStudio.Core` |
 | `TabStudio.Forms` | Windows Forms on Avalonia: `System.Windows.Forms` and `System.Drawing`, run in the app preview. | Avalonia |
 | `TabStudio.Forms.Design` | The Windows Forms designer's model: reads and writes `InitializeComponent`, the Toolbox and properties. | `TabStudio.Forms`, Roslyn |
@@ -959,3 +960,38 @@ Library tests cover SQLite schema details, quoting, multi-result queries, cancel
 `FimPromptBuilder` uses Qwen's FIM vocabulary and a UTF-8 byte budget for the current prefix/suffix plus three unsaved open neighbors. `InlineCompletionController` waits 450 ms after editing, cancels pending work and rejects stale responses even if the generator ignores cancellation. Every `CodeEditorView` can render the proposal through a zero-document-length `GhostTextGenerator`; Tab inserts it as a single undo group. Typing, movement, selection, loss of focus and Escape clear it. No language service is required. Background completions do not queue behind an occupied chat engine. Android's existing thermal state and sticky battery broadcasts pause completions when hot or at 15% charge or lower without external power.
 
 `local-ai.yml` compares native/server inference on x64 and ARM64 Linux and the Android emulator, then runs the managed real-model tests. Fake-server tests cover the completion protocol; other tests cover FIM, model integrity, licenses, proposal confinement and ghost-text input. The main emulator APK bundles the verified 260K diagnostic model only with `TabStudioIncludeLocalAITestModel=true`; its in-app self-test loads the model through P/Invoke and must generate tokens. Regular APKs carry no model. See [the spike](local-ai/spike.md) for measured results and limitations.
+
+## Native backing services
+
+`TabStudio.Services` translates known Compose images to Alpine packages and foreground PRoot processes. It has no UI
+or Docker dependency. `ComposeReader` reads YAML, anchors/merges, environment interpolation, `.env`/`env_file`, short
+and long ports/volumes/dependencies, commands, health checks and devcontainer JSONC with ordered Compose overrides.
+`ServiceCatalog` checks package availability/version in the signed index. `ServicePackages` in the App layer uses the
+existing `AlpinePackageManager` and serializes changes with Toolchain Store operations.
+
+`ServiceManager` owns the processes of one workspace. It topologically orders dependencies, rejects cycles and missing
+required services before launch, waits for readiness, rolls back only new processes on failure/cancellation, monitors
+health, and stops dependents first. Daemons get private per-service bind mounts through `ProcessStartSpec.Mounts`;
+`UserId` selects a simulated non-root PRoot identity (PostgreSQL 70). Other toolchain runs retain their original root
+identity and mounts. Each workspace's stable path hash selects `Services/<hash>` in app storage; named volumes are
+shared within that workspace. Bind sources seed private copies, with read-only seeds refreshed on start.
+
+The processes share the device network, so daemon listen options use published localhost ports. Explicit conflicts
+fail before startup; implicit collisions/privileged ports use a free unprivileged port. Final endpoints rewrite host
+fields, URIs and Redis endpoints without replacing credentials. F5 starts dependencies of the Compose application
+whose build context contains the startup project (or the devcontainer service), then supplies environment overrides
+to external processes and in-process .NET runs. `RunEnvironment` sets/restores variables under the existing
+`ProcessConsole` lease, including debug runs and ASP.NET Core hosts. It never edits appsettings files.
+
+`ServicesViewModel` feeds the Services tool window and its per-service logs, controls and preview links. The optional
+`IServiceDatabaseExplorer` adapter exposes “Open in Database Explorer” only for an available provider. When
+`agent/database` is combined, MSBuild includes its typed PostgreSQL bridge automatically; it reuses transient
+connection IDs while refreshing ports and does not persist service credentials. Hosts can also inject an adapter.
+Unknown images stay visible with reasons and a remote-host action. Closing a workspace disposes its services;
+stopping an app leaves its backing services available for the next
+F5. Reload stops services and reparses configuration, preserving their data.
+
+CI runs real PostgreSQL and Redis in the same Alpine/PRoot runtime on x64 and ARM64, plus an App test that builds an
+ASP.NET Core template using Npgsql and queries PostgreSQL through its HTTP endpoint. The emulator self-test installs
+PostgreSQL via the signed package manager, initializes it, runs a SQL script and SELECT, and stops it. See
+[Services](SERVICES.md) for package/Compose coverage and local reproduction.
