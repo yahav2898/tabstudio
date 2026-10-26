@@ -191,6 +191,24 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
 
         var seconds = result.Duration.TotalSeconds.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture);
         var line = $"{(result.Success ? "TABSTUDIO_SELFTEST_OK" : "TABSTUDIO_SELFTEST_FAIL")} {seconds} s: {result.Message}";
+        if (screenshots is not null)
+        {
+            try
+            {
+                // Logcat truncates long verdicts before the final traceback; the smoke test pulls these files.
+                Directory.CreateDirectory(screenshots);
+                await File.WriteAllTextAsync(Path.Combine(screenshots, "app-selftest-result.txt"), line);
+                if (!result.Success && main.Workspace is { } failedWorkspace)
+                {
+                    await File.WriteAllTextAsync(Path.Combine(screenshots, "app-language-servers.txt"), failedWorkspace.LanguageServerOutput.Text);
+                }
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                AndroidLog.Warn(LogTag, $"Could not save the full self-test diagnostics: {ex.Message}");
+            }
+        }
+
         if (result.Success)
         {
             AndroidLog.Info(LogTag, line);
