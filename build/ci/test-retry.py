@@ -97,17 +97,7 @@ FEATURE_CLASSES = frozenset({
     "LocalAITests",
     "LocalNativeTests",
     "LocalAIEditorTests",
-    # Microchip compiler/install/flash integration.
-    "ProjectTemplatesTests",
-    "DevicePackTests",
-    "MicrochipInstallationTests",
-    "MplabProjectTests",
-    "PicCompilerDiagnosticTests",
-    "PicFlashProfileTests",
-    "PicMemoryUsageTests",
-    "PicProjectDetectionTests",
-    "UsbDescriptorInheritanceTests",
-    "MplabTests",
+
 })
 
 

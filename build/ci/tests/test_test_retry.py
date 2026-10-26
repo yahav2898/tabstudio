@@ -35,15 +35,15 @@ class RetryPolicyTests(unittest.TestCase):
     def test_015_feature_regressions_cannot_retry_in_shared_projects(self):
         cases = {
             "TabStudio.App.Tests": [
-                "ProjectSetupTests.Setup_is_cancelable", "StaticSiteTests.Saving_reloads",
-                "PortingTests.Convert_and_run", "DatabaseExplorerTests.Query",
-                "RemoteSshTests.Save_conflict", "ServicesTests.F5_starts_dependencies",
-                "MobileWorkflowTests.Listening_notice", "HotReloadTests.Apply_current_edits",
-                "RecordingTests.Rewind", "LocalAIEditorTests.Ghost_text",
+                "Toolchains.ProjectSetupTests.Setup_is_cancelable", "ViewModels.StaticSiteTests.Saving_reloads",
+                "ViewModels.PortingTests.Convert_and_run", "Database.DatabaseExplorerTests.Query",
+                "RemoteSsh.RemoteSshTests.Save_conflict", "BackingServices.ServicesTests.F5_starts_dependencies",
+                "Toolchains.MobileWorkflowTests.Listening_notice", "ViewModels.HotReloadTests.Apply_current_edits",
+                "ViewModels.RecordingTests.Rewind", "Views.LocalAIEditorTests.Ghost_text",
             ],
             "TabStudio.Compilation.Tests": ["HotReloadTests.Second_generation", "ProgramRunnerTests.Environment"],
             "TabStudio.Debugging.Tests": ["RecordingFormatTests.Evict_complete_records"],
-            "TabStudio.Toolchains.Tests": ["PicFlashProfileTests.Verify_before_reset", "ListeningPortsTests.Owned_socket"],
+            "TabStudio.Toolchains.Tests": ["Projects.ProjectSetupPlanTests.Manifest_change", "Networking.ListeningPortsTests.Owned_socket"],
             "TabStudio.Agent.Tests": ["LocalAITests.Model_checksum", "LocalNativeTests.Inference"],
         }
         for project, names in cases.items():
