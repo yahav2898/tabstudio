@@ -294,12 +294,12 @@ hot-reload runtime component. This is enabled in Release-packaged IDEs too: the 
 user's **Debug** assemblies, not the optimized IDE. Setting an environment variable in managed startup would be
 too late. A manually launched desktop host needs the same environment variable.
 
-Android also sets `MONO_INTERPRETER_OPTIONS=-precise`, using Mono 10's conservative interpreter root scanning.
-With precise maps enabled, the emulator observed two different native PIDs become the same invalid integer
-between spawn and managed handle construction during GC. Conservative scanning avoids relocating interpreter
-roots through those maps; it can retain more memory. The interpreter and metadata updates remain enabled, and
-the mandatory post-update process stress verifies the native handoff under repeated collections. The verdict
-records this startup setting as well as the update capability. See dotnet/runtime's `interp.c` option parser.
+Android also sets `MONO_INTERPRETER_OPTIONS=-all`, disabling interpreter optimizations as Mono's debugger does.
+The optimized Mono 10 interpreter let two different native PIDs become the same invalid integer between spawn
+and managed handle construction during GC, even with precise root maps disabled. The interpreter and metadata
+updates remain enabled; execution can be slower and conservative scanning can retain more memory. The mandatory
+post-update process stress verifies the native handoff under repeated collections. The verdict records this
+startup setting as well as the update capability. See dotnet/runtime's `interp.c` option parser and debugger setup.
 
 Mono 10's native `hot_reload_update_enabled` caches the configured mode but returns a local false on subsequent
 checks, which can make the public `MetadataUpdater.IsSupported` flag false after interpreter initialization.
