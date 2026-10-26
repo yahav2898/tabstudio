@@ -222,8 +222,17 @@ Native Android deployment of Flutter apps through the Android SDK toolchain is n
   `vscode-langservers-extracted`.
 - **Compatibility Doctor.** For every project it shows where it runs on the tablet and why, and fixes what stands in
   the way.
-- **Real-world project files.** SDK-style projects, `Directory.Build.props` and `.targets`, project references,
-  central package management and multi-targeting are read as MSBuild reads them.
+- **Real-world project files.** SDK-style projects, `Directory.Build.props`, `.targets` and the files they import,
+  `Directory.Packages.props`, project references, central package management and multi-targeting are read as MSBuild
+  reads them. Projects compile against the projects their references reference, get the `InternalsVisibleTo` and
+  other assembly attributes the SDK generates, and are strong-name signed with their key files. Source generators
+  load with dependencies from anywhere in their package, and a generator that fails shows in the Error List. Build
+  Solution builds in dependency order and reports each error once.
+- **Honest about what cannot run here.** An Aspire AppHost is explained in the Compatibility Doctor and skipped by
+  Build with the reason: it starts the app's projects and containers on a computer.
+- **Tested on real repositories.** CI opens ten public repositories pinned to commits, such as MediatR,
+  CleanArchitecture, Polly and eShopOnWeb, builds them in the IDE and holds each to an error baseline that only goes
+  down.
 
 ### Database Explorer
 

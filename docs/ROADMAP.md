@@ -22,26 +22,13 @@ and run it on an Android tablet emulator, and each one installs as an update ove
 | [0.12](releases/0.12.0.md) | A shell rebuilt for landscape, portrait and phones: the activity bar, one search for everything, and native scrolling. |
 | [0.13](releases/0.13.0.md) | The Windows Bridge: Windows-only projects built and run on a PC you own and streamed to the tablet. |
 | [0.14](releases/0.14.0.md) | Go, Rust, C/C++ and Java with IntelliSense and debuggers, WPF on OpenSilver, and WinUI and Uno Platform on Skia. |
+| [0.15](releases/0.15.0.md) | Repositories that set themselves up, the Database Explorer, remote development over SSH, Android apps built on the tablet, C# Hot Reload, time-travel debugging, offline AI, Port to Avalonia, and Microchip PIC microcontrollers. |
+| [0.16](releases/0.16.0.md) | Real-world .NET repositories built as the SDK builds them, backing services from Compose files without Docker, and experimental Flutter and Dart. |
 
 ## Next
 
-The next release, 0.15, is being integrated now. It brings:
-
-- **Repositories that set themselves up.** Opening a repository installs its toolchains and packages, and static
-  web sites run with live reload.
-- **Backing services.** The databases and services a repository needs run natively on the tablet, and a Database
-  Explorer browses SQLite, PostgreSQL and SQL Server.
-- **Hot Reload and Edit and Continue** for C# apps under the debugger.
-- **Time-travel debugging.** Record a C# run and step backward through its timeline.
-- **On-device AI.** Offline models with llama.cpp, model management and inline completions, with no connection.
-- **Remote development** over SSH, and publishing ASP.NET Core apps to your server.
-- **Android apps built on the tablet,** local server previews, and iOS through cloud builds.
-- **Flutter and Dart** with a web preview.
-- **Port to Avalonia** completed for WPF and Windows Forms projects.
-- **Microcontrollers.** Microchip PIC projects built on the tablet, flashed over USB and debugged in a simulator.
-
-After 0.15:
-
+- **Source generators built from the repository.** Projects referenced as analyzers (`OutputItemType="Analyzer"`),
+  compiled and run as generators, as Humanizer's are.
 - **STM32 and other ARM Cortex-M boards,** built, flashed and debugged from the tablet.
 - **Windows Compatibility:** Windows-only apps run on the tablet itself through Wine, for when no PC is at hand.
 
