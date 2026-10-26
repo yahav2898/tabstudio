@@ -89,7 +89,7 @@ public sealed record ToolchainCatalog
     /// <summary>Finds the toolchain that runs a file, by its extension; listed toolchains first.</summary>
     /// <param name="path">The file.</param>
     public ToolchainDefinition? ForFile(string path) =>
-        Toolchains.Where(t => t.RunsFile(path)).OrderByDescending(t => t.Listed).FirstOrDefault();
+        Toolchains.Where(t => t.Id != "android" && t.RunsFile(path)).OrderByDescending(t => t.Listed).FirstOrDefault();
 
     /// <summary>
     /// Finds the toolchain that installs a language server or debug adapter, by the id its clients know it by, such

@@ -9,11 +9,19 @@ public sealed partial class ProjectTemplates
     /// <summary>A Node.js console program.</summary>
     public const string NodeId = "node";
 
+    /// <summary>A Kotlin Android application.</summary>
+    public const string AndroidId = "android-kotlin";
+
+    /// <summary>A Capacitor app with a Vite TypeScript web part.</summary>
+    public const string CapacitorId = "capacitor";
+
     /// <summary>The Python and Node.js templates, for the start screen.</summary>
     private static ProjectTemplate[] ToolchainTemplates =>
     [
         new(PythonId, "Python Application", "A Python program that reads input and prints in the Output panel, run with Python from the Toolchain Store.", ["Python", "Console"]),
         new(NodeId, "Node.js Console App", "A JavaScript program for Node.js that reads input and prints in the Output panel, run with Node.js from the Toolchain Store.", ["JavaScript", "Node.js", "Console"]),
+        new(AndroidId, "Android App (Kotlin)", "Build and install a Kotlin Android app directly on this tablet with the Android SDK from the Toolchain Store.", ["Kotlin", "Android"]),
+        new(CapacitorId, "Capacitor App", "A Vite and TypeScript web app with a live web preview, Android builds on the tablet, and iOS builds through GitHub Actions.", ["TypeScript", "Android", "iOS", "Web"]),
     ];
 
     /// <summary>Writes a toolchain project into a new folder, which is the workspace: there is no solution file.</summary>
@@ -22,6 +30,12 @@ public sealed partial class ProjectTemplates
     {
         switch (templateId)
         {
+            case AndroidId:
+                TabStudio.Toolchains.Projects.MobileTemplates.CreateAndroid(root, name);
+                return root;
+            case CapacitorId:
+                TabStudio.Toolchains.Projects.MobileTemplates.CreateCapacitor(root, name);
+                return root;
             case PythonId:
                 File.WriteAllText(Path.Combine(root, "main.py"), """"
                     """Press F5 to run this program with Python on your tablet.

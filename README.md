@@ -100,6 +100,22 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 - **Extensions.** VS Code extensions from Open VSX, so any language with a language server works.
 - **Notebooks.** C# notebooks whose cells run as you write them.
 
+### Web servers and mobile apps
+
+Programs in any toolchain can offer **App listening on port N**: open the local server in the web preview beside
+code or in the device browser. The ASP.NET and Blazor preview also has **Open in browser**.
+
+The **Android SDK** Toolchain Store entry installs OpenJDK 17, Gradle, SDK tools/platform 35 and SHA-256-pinned
+ARM64/ARMv7 replacements for native Android build tools. Create **Android App (Kotlin)**, then F5 builds an APK,
+asks Android to install it and launches it. **Build > Build Android APK** builds without installing. Java editing
+uses jdtls; Kotlin compiler diagnostics go to the Error List. **Logcat** shows the built app's own debug process.
+
+Create **Capacitor App** for a Vite + TypeScript app: F5 runs its web part, and **Run Android App** builds/syncs
+Capacitor and installs the native APK. **Build for iOS…** generates a reviewable GitHub Actions workflow and signing
+guide; **Run iOS Workflow…** uses the existing Actions progress, logs and IPA artifact download. A Mac is never
+needed locally, but an Apple Developer account and repository signing secrets are required. See
+[mobile workflows](docs/MOBILE.md) for setup and limitations.
+
 ### GitHub, inside the IDE
 
 - **Git built in.** Clone, branch, commit, pull and push, and open pull requests on GitHub without leaving the IDE.

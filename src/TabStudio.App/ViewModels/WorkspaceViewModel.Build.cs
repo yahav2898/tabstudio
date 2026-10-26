@@ -118,6 +118,12 @@ public sealed partial class WorkspaceViewModel
     [RelayCommand(CanExecute = nameof(CanBuild))]
     private async Task BuildAsync()
     {
+        if (MobileRoot() is not null)
+        {
+            await BuildAndroidCoreAsync(install: false);
+            return;
+        }
+
         if (Workspace is { } workspace)
         {
             await BuildProjectsAsync(workspace.Projects.Where(p => p.Language == ProjectLanguage.CSharp).ToList(), showOutput: true);

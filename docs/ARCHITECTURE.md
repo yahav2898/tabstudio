@@ -402,6 +402,34 @@ adapter it brings.
   to install the toolchain that brings it. For F5, a project's run plan becomes a DAP launch configuration, and the
   program starts through the adapter's `runInTerminal` request, so its input and output stay in the Output panel.
 
+## Local listeners and mobile builds
+
+`ListeningPorts` parses Linux TCP/TCP6 LISTEN rows and associates socket inodes with the launched process tree.
+PRoot shares the Android network namespace. `ProcessPortWatcher` also parses complete stdout/stderr lines for
+local HTTP URLs and explicit listen messages, preserving chunks and deduplicating ports. Android may deny the
+socket tables; output is the fallback. `OutputProcess` wires both normal and adapter-launched programs to the
+workspace notice. Its actions use the existing `WebPreviewViewModel` or platform URI launcher.
+
+`GradleAndroidProject` recognizes settings.gradle(.kts) roots with the Android application plugin in Gradle
+files or a version catalog, excluding comments, dependency folders and JVM-only projects. `MobileTemplates`
+provides the exact Kotlin template compiled by the ARM64 Alpine CI job. Capacitor remains a Node startup project;
+its Android command builds the web app, adds/syncs Android and follows the same Gradle path. Android diagnostic
+locations become Error List entries. The runtime plan prefers a repository wrapper and overrides Maven's x86
+AAPT2 on Linux. The Store filters architecture-specific setup steps before downloading and checking fingerprints.
+
+The Android head implements `IAndroidAppInstaller` using a PackageInstaller session, an explicit callback receiver,
+REQUEST_INSTALL_PACKAGES and the system's unknown-source/installation confirmations. Success is awaited before
+launch. Cancellation abandons an incomplete session. Logcat cannot read another UID on an unprivileged device:
+`AndroidLogcatRelay` generates a debug-only ContentProvider via a Gradle init script beneath build/. It runs logcat
+as the target app, filters by its PID, and sends lines over authenticated loopback TCP to a separate bounded Output
+model. Original sources/manifests and release variants are not instrumented. No READ_LOGS or root is requested.
+
+`IosWorkflowGenerator` in SourceControl produces dispatch-only macOS YAML and secret documentation. Repository
+paths and schemes enter shell steps through quoted environment variables. Signing is confined to a temporary
+keychain, uses GitHub secrets, cleans up in an always step, publishes the IPA artifact and optionally uploads to
+TestFlight. The IDE writes the workflow and opens its setup guide; dispatch, progress, logs and artifacts use the
+existing Actions window. First dispatch requires the workflow on GitHub's default branch.
+
 ## Swarm
 
 `TabStudio.Swarm` runs the app being built on every device that joins the tablet's swarm. Devices join through

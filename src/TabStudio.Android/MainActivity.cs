@@ -120,6 +120,7 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
             .UseTabStudioPlatform(services =>
             {
                 services.AddSingleton<IDeviceStatus>(_ => new AndroidDeviceStatus(context));
+                services.AddSingleton<IAndroidAppInstaller>(_ => new AndroidAppInstaller(context));
                 services.AddSingleton<IWebViewFactory>(_ => new AndroidWebViewFactory(() => this));
                 services.AddSingleton<INotifications>(notifications);
                 services.AddSingleton<IQrScanner>(_ => new AndroidQrScanner(() => this));

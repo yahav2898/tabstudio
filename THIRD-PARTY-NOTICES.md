@@ -35,3 +35,21 @@ The following are not part of the APK. The Toolchain Store downloads them only w
 
 The web templates include Bootstrap, jQuery, jQuery Validation and jQuery Validation Unobtrusive, each with its licence
 file beside it under [src/TabStudio.Web/Templates/Content/lib](src/TabStudio.Web/Templates/Content/lib).
+
+## Android SDK and mobile project tools (downloaded on request)
+
+- **Google Android SDK command-line tools 12, platform 35 and build-tools 35** — Google Android SDK License
+  Agreement, displayed before installation: https://developer.android.com/studio/terms . Original notices and
+  licenses remain in the installed archives. These tools are downloaded from Google's repository, not bundled
+  into TabStudio's APK. D8/R8 and apksigner run as Java bytecode from the official build-tools archive.
+- **lzhiyong/android-sdk-tools 35.0.2** — open-source static ARM64/ARMv7 builds of AOSP aapt/aapt2, aidl,
+  zipalign and related tools; Apache-2.0 with dependency notices included by upstream. Source and releases:
+  https://github.com/lzhiyong/android-sdk-tools . Architecture archives are pinned by SHA-256 in the catalog.
+- **Gradle 8.9** — Apache-2.0; https://github.com/gradle/gradle . Downloaded from the pinned official distribution.
+- **OpenJDK 17/21 and Eclipse JDT LS** — GPL-2.0 WITH Classpath-exception-2.0 and EPL-2.0 respectively;
+  installed as verified Alpine packages. https://openjdk.org/ ; https://github.com/eclipse-jdtls/eclipse.jdt.ls .
+- **Capacitor 6.2.1** — MIT; https://github.com/ionic-team/capacitor . **Vite** — MIT; https://github.com/vitejs/vite .
+  **TypeScript** — Apache-2.0; https://github.com/microsoft/TypeScript . Templates declare these npm dependencies;
+  they are installed into user projects, not bundled in TabStudio.
+- **Android Gradle Plugin and Kotlin Gradle Plugin** — Apache-2.0, downloaded by Gradle into user project caches.
+  https://android.googlesource.com/platform/tools/base/ ; https://github.com/JetBrains/kotlin .

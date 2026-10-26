@@ -210,6 +210,10 @@
             <MenuItem Header="GitHub _Account..." Command="{Binding GitChanges.Account.OpenCommand}" />
           </MenuItem>
           <MenuItem Header="_Build">
+            <MenuItem Header="Build Android APK" Command="{Binding BuildAndroidCommand}" />
+            <MenuItem Header="Run Android App" Command="{Binding RunAndroidCommand}" />
+            <MenuItem Header="Build for iOS…" Command="{Binding BuildForIosCommand}" />
+            <MenuItem Header="Run iOS Workflow…" Command="{Binding RunIosWorkflowCommand}" />
             <MenuItem Header="_Build Solution" InputGesture="Ctrl+Shift+B" Command="{Binding BuildCommand}" />
             <Separator />
             <MenuItem Header="_Debug Configuration" Command="{Binding SetConfigurationCommand}" CommandParameter="Debug" />
@@ -642,6 +646,8 @@
                         Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.CallStack}" Content="Call Stack" />
                 <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsTerminalSelected}"
                         Command="{Binding ShowTerminalCommand}" Content="Terminal" />
+                <Button Theme="{StaticResource PanelTabButton}" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Logcat}" Content="Logcat"
+                        Classes.selected="{Binding SelectedPanel, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static vm:BottomPanel.Logcat}}" />
               </StackPanel>
               </ScrollViewer>
               <StackPanel Grid.Column="1" Orientation="Horizontal">
@@ -682,6 +688,7 @@
               <views:LocalsView DataContext="{Binding Locals}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsLocalsSelected}" />
               <views:WatchView DataContext="{Binding Watch}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsWatchSelected}" />
               <views:CallStackView DataContext="{Binding CallStack}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsCallStackSelected}" />
+              <Panel IsVisible="{Binding SelectedPanel, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static vm:BottomPanel.Logcat}}"><views:OutputView DataContext="{Binding Logcat}" /></Panel>
               <toolchainViews:TerminalPanelView DataContext="{Binding Terminal}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsTerminalSelected}" />
             </Panel>
           </DockPanel>

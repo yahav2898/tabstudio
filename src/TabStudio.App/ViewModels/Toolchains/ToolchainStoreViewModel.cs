@@ -104,7 +104,16 @@ public sealed partial class ToolchainStoreViewModel : ObservableObject, IDisposa
     /// <summary>Installs a toolchain, or returns the install already running.</summary>
     /// <param name="id">The toolchain.</param>
     /// <returns>Completes when the install ends, whether it succeeded, failed or was cancelled; the status says which.</returns>
-    public Task InstallAsync(string id) => Run(id, cancellation => Manager.InstallAsync(id, cancellation));
+    public async Task InstallAsync(string id)
+    {
+        if (Manager.Catalog.Find(id)?.LicenseAgreement is { } agreement
+            && !await _confirm("Android SDK license", agreement, "Accept and install", false))
+        {
+            return;
+        }
+
+        await Run(id, cancellation => Manager.InstallAsync(id, cancellation));
+    }
 
     /// <summary>Updates a toolchain.</summary>
     /// <param name="id">The toolchain.</param>

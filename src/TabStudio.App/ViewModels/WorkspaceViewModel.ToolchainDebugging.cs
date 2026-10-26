@@ -112,7 +112,8 @@ public sealed partial class WorkspaceViewModel
         var stop = new CancellationTokenSource();
         _adapterProgramFinish = null;
         var input = Output.BeginProcessInput();
-        var completion = OutputProcess.RunAsync(_toolchains.Runtime, spec, Output, input, stop.Token, process => started.TrySetResult(process.Id));
+        BeginServerRun();
+        var completion = OutputProcess.RunAsync(_toolchains.Runtime, spec, Output, input, stop.Token, process => started.TrySetResult(process.Id), OfferServer);
         _adapterProgramRun = new AdapterProgram(completion, stop);
         _ = ObserveAsync();
         return await started.Task;
@@ -122,6 +123,7 @@ public sealed partial class WorkspaceViewModel
             try
             {
                 var result = await completion;
+                _ui.Post(EndServerRun);
                 started.TrySetException(new DebugAdapterException(result.StartError ?? "The program ended before it started."));
             }
             catch (Exception ex) when (ex is not OutOfMemoryException)
