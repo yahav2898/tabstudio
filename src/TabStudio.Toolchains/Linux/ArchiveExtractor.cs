@@ -28,7 +28,7 @@ public sealed record ExtractionResult(int Files, int Folders, int Links, int Har
 public static class ArchiveExtractor
 {
     /// <summary>Unpacks an archive, choosing the format from the file name.</summary>
-    /// <param name="archive">A <c>.tar.gz</c>, <c>.tgz</c>, <c>.zip</c> or <c>.whl</c> file.</param>
+    /// <param name="archive">A <c>.tar.gz</c>, <c>.tgz</c>, <c>.zip</c>, <c>.whl</c> or <c>.vsix</c> file.</param>
     /// <param name="destination">The folder to unpack into; created when missing.</param>
     /// <param name="cancellationToken">Stops unpacking.</param>
     /// <exception cref="InvalidDataException">The archive is damaged, or an entry would land outside the folder.</exception>
@@ -36,7 +36,7 @@ public static class ArchiveExtractor
     {
         ArgumentNullException.ThrowIfNull(archive);
         var name = archive.ToUpperInvariant();
-        return name.EndsWith(".ZIP", StringComparison.Ordinal) || name.EndsWith(".WHL", StringComparison.Ordinal)
+        return name.EndsWith(".ZIP", StringComparison.Ordinal) || name.EndsWith(".WHL", StringComparison.Ordinal) || name.EndsWith(".VSIX", StringComparison.Ordinal)
             ? Task.Run(() => ExtractZip(archive, destination, cancellationToken), cancellationToken)
             : ExtractTarGzAsync(archive, destination, cancellationToken);
     }

@@ -451,7 +451,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         ErrorList.SetProjectDiagnostics(project.DirectoryPath, diagnostics);
 
         // Open documents have fresher results from live analysis; keep those.
-        foreach (var document in Documents.Where(d => d.HasLanguageService && d.FilePath.StartsWith(project.DirectoryPath, StringComparison.Ordinal)))
+        foreach (var document in Documents.Where(d => (d.HasLanguageService || d.HasXamlFeatures) && d.FilePath.StartsWith(project.DirectoryPath, StringComparison.Ordinal)))
         {
             ErrorList.SetFileDiagnostics(document.FilePath, document.Diagnostics);
         }

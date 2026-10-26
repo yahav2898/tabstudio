@@ -14,9 +14,8 @@ set -euo pipefail
 
 apk="${1:?apk}"
 out="${2:?output folder}"
-timeout="${3:-300}"
+timeout="${3:-900}"
 package="com.tabstudio.ide"
-activity="com.tabstudio.ide.MainActivity"
 
 mkdir -p "$out"
 adb wait-for-device
@@ -69,7 +68,9 @@ desktop_step() {
 adb install -r "$apk"
 adb logcat -c
 started=$(date +%s)
-adb shell am start -W -n "$package/$activity" --ez tabstudio.selftest true --ez tabstudio.selftest.desktop true
+# The shell's instrumentation source permits the existing desktop checks to inject real Android input events.
+# Keep instrumentation active until the emulator is stopped, so the IDE is still present in the screenshots.
+adb shell am instrument "$package/com.tabstudio.ide.SelfTestInstrumentation"
 
 verdict=""
 handled=0
@@ -107,6 +108,10 @@ echo "Seconds from launch to verdict: $elapsed" | tee -a "$out/verdict.txt"
 
 case "$verdict" in
   TABSTUDIO_SELFTEST_OK*)
+    if [ "$elapsed" -ge "$timeout" ]; then
+      echo "Self test exceeded its ${timeout}-second launch-to-verdict limit." | tee -a "$out/verdict.txt"
+      exit 1
+    fi
     # The filtered log is enough when everything worked; keep the full one only to debug a failure.
     rm -f "$out/logcat-full.txt"
     ;;

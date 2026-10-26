@@ -55,6 +55,16 @@ jobs:
           mkdir -p ci-out
           { npm ls -g --depth=0; ls -l "$(command -v typescript-language-server)"; python -m pip show debugpy; } > ci-out/language-servers.txt 2>&1 || true
 
+      - name: Test CI retry policy
+        run: python -m unittest discover -s build/ci/tests
+
+      - name: Test PRoot debugger thread waits
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libtalloc-dev gawk
+          bash build/android/native/tests/ptrace-threads.sh > ci-out/proot-thread-waits.log 2>&1 || { cat ci-out/proot-thread-waits.log; exit 1; }
+          cat ci-out/proot-thread-waits.log
+
       - name: Build and test
         run: |
           mkdir -p ci-out
@@ -63,11 +73,16 @@ jobs:
           for project in tests/*.Tests; do
             name=$(basename "$project")
             [ "$name" = "TabStudio.App.Tests" ] && continue
-            if ! dotnet test "$project" -c Release --logger "console;verbosity=normal" > "ci-out/$name.log" 2>&1; then
+            if ! dotnet test "$project" -c Release -p:TreatWarningsAsErrors=true --logger "console;verbosity=normal" > "ci-out/$name.log" 2>&1; then
+              if ! python build/ci/test-retry.py "ci-out/$name.log" "$name"; then
+                tail -n 80 "ci-out/$name.log"
+                status=1
+                continue
+              fi
               # Known intermittent failures are tracked on the board; one retry keeps them from blocking a release,
               # and FLAKY.txt and a warning keep them visible. A second failure fails the job.
               echo "::warning::$name failed once; running it again. The first attempt is in ci-out/$name.log."
-              if dotnet test "$project" -c Release --logger "console;verbosity=normal" > "ci-out/$name.retry.log" 2>&1; then
+              if dotnet test "$project" -c Release -p:TreatWarningsAsErrors=true --logger "console;verbosity=normal" > "ci-out/$name.retry.log" 2>&1; then
                 echo "$name: the first attempt failed and the retry passed (see $name.log)" >> ci-out/FLAKY.txt
               else
                 status=1
@@ -76,6 +91,20 @@ jobs:
             tail -n 40 "ci-out/$name.log"
           done
           exit $status
+
+      - name: Save first-attempt test logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: library-test-logs
+          retention-days: 14
+          if-no-files-found: ignore
+          path: |
+            ci-out/*.log
+            ci-out/FLAKY.txt
+            ci-out/*.json
+            ci-out/Sequence_*.xml
+            tests/**/TestResults/**/Sequence_*.xml
 
       - name: Publish logs
         if: always() && github.event_name == 'push'
@@ -86,7 +115,6 @@ jobs:
   app:
     name: Build and test the IDE
     runs-on: ubuntu-latest
-    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
 
@@ -109,10 +137,56 @@ jobs:
         with:
           python-version: '3.12'
 
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.10'
+          cache: false
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rust-analyzer, rust-src
+
+      - name: Install LLVM, C and C++ tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y clang-19 clangd-19 lldb-19 cmake make
+          mkdir -p "$RUNNER_TEMP/cpp-bin"
+          ln -s /usr/bin/clangd-19 "$RUNNER_TEMP/cpp-bin/clangd"
+          ln -s /usr/bin/lldb-dap-19 "$RUNNER_TEMP/cpp-bin/lldb-dap"
+          echo "$RUNNER_TEMP/cpp-bin" >> "$GITHUB_PATH"
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Install Java tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y maven
+          cc -shared -nostdlib -fPIC -O2 -Wall -Wextra -Werror build/android/native/jvm-mapping.c -o "$RUNNER_TEMP/libtabstudio-jvm.so"
+          LD_PRELOAD="$RUNNER_TEMP/libtabstudio-jvm.so" java -version
+          curl -fsSL https://services.gradle.org/distributions/gradle-8.14.4-bin.zip -o "$RUNNER_TEMP/gradle.zip"
+          echo "f1771298a70f6db5a29daf62378c4e18a17fc33c9ba6b14362e0cdf40610380d  $RUNNER_TEMP/gradle.zip" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/gradle.zip" -d "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/gradle-8.14.4/bin" >> "$GITHUB_PATH"
+          mkdir -p "$RUNNER_TEMP/jdtls" "$RUNNER_TEMP/java-debug"
+          curl -fsSL https://download.eclipse.org/jdtls/milestones/1.58.0/jdt-language-server-1.58.0-202604151538.tar.gz -o "$RUNNER_TEMP/jdtls.tar.gz"
+          echo "2a5bbe55ec91b4325392050dc422cead3220a2459b3766be35e1fff45b4a50d9  $RUNNER_TEMP/jdtls.tar.gz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/jdtls.tar.gz" -C "$RUNNER_TEMP/jdtls"
+          curl -fsSL https://open-vsx.org/api/vscjava/vscode-java-debug/0.60.0/file/vscjava.vscode-java-debug-0.60.0.vsix -o "$RUNNER_TEMP/java-debug.vsix"
+          echo "f09ebe358a7b08b3c17b21b8d8207b0649acad120eb6f1604dc4f15379f59d66  $RUNNER_TEMP/java-debug.vsix" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/java-debug.vsix" -d "$RUNNER_TEMP/java-debug"
+          echo "$RUNNER_TEMP/jdtls/bin" >> "$GITHUB_PATH"
+          echo "TABSTUDIO_JAVA_DEBUG_BUNDLE=$RUNNER_TEMP/java-debug/extension/server/com.microsoft.java.debug.plugin-0.53.2.jar" >> "$GITHUB_ENV"
+
       - name: Install language servers and debug adapters
         run: |
           npm install -g pyright typescript-language-server typescript@5
           python -m pip install debugpy
+          go install golang.org/x/tools/gopls@v0.21.1
+          go install github.com/go-delve/delve/cmd/dlv@v1.26.2
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
           # vscode-js-debug's adapter, under the command name the Toolchain Store gives it on a tablet.
           mkdir -p "$RUNNER_TEMP/js-debug/bin"
           curl -fsSL https://github.com/microsoft/vscode-js-debug/releases/download/v1.140.0/js-debug-dap-v1.140.0.tar.gz | tar -xz -C "$RUNNER_TEMP/js-debug"
@@ -121,6 +195,82 @@ jobs:
           echo "$RUNNER_TEMP/js-debug/bin" >> "$GITHUB_PATH"
           echo "TABSTUDIO_REAL_SERVERS=1" >> "$GITHUB_ENV"
 
+      - name: Test Go tools
+        env:
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+        run: |
+          mkdir -p ci-out/screenshots
+          status=0
+          dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 5m --blame-hang-dump-type none \
+            --filter "FullyQualifiedName~ToolchainLanguageToolsTests.A_Go_template" --logger "console;verbosity=normal" \
+            > ci-out/go-tools.log 2>&1 || status=$?
+          tail -n 80 ci-out/go-tools.log
+          exit "$status"
+
+      - name: Test Rust tools
+        env:
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+        run: |
+          mkdir -p ci-out/screenshots
+          status=0
+          dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 5m --blame-hang-dump-type none \
+            --filter "FullyQualifiedName~ToolchainLanguageToolsTests.A_Rust_template" --logger "console;verbosity=normal" \
+            > ci-out/rust-tools.log 2>&1 || status=$?
+          tail -n 80 ci-out/rust-tools.log
+          exit "$status"
+
+      - name: Test C and C++ tools
+        env:
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+        run: |
+          mkdir -p ci-out/screenshots
+          status=0
+          dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 5m --blame-hang-dump-type none \
+            --filter "FullyQualifiedName~ToolchainLanguageToolsTests.A_Cpp_template" --logger "console;verbosity=normal" \
+            > ci-out/cpp-tools.log 2>&1 || status=$?
+          tail -n 80 ci-out/cpp-tools.log
+          exit "$status"
+
+      - name: Test Java tools
+        env:
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+        run: |
+          mkdir -p ci-out/screenshots
+          status=0
+          dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 5m --blame-hang-dump-type none \
+            --filter "FullyQualifiedName~ToolchainLanguageToolsTests.A_Java_template|FullyQualifiedName~ToolchainLanguageToolsTests.Java_" --logger "console;verbosity=normal" \
+            > ci-out/java-tools.log 2>&1 || status=$?
+          tail -n 80 ci-out/java-tools.log
+          exit "$status"
+
+      # This test deliberately collects the entire process heap during every PNG encode. Run it in its own
+      # test host so previous IDE workspaces cannot make that heap several gigabytes; all 100 captures remain.
+      - name: Test screenshot lifetime under GC
+        run: |
+          mkdir -p ci-out
+          status=0
+          for theme in Dark Light; do
+            log="ci-out/ScreenshotLifetime.$theme.log"
+            run_screenshot_test() {
+              TABSTUDIO_THEME="$theme" dotnet test tests/TabStudio.App.Tests -c Release --no-build \
+                --blame --blame-hang-timeout 5m --blame-hang-dump-type none \
+                --filter "FullyQualifiedName~ScreenshotLifetimeTests" --logger "console;verbosity=normal" > "$1" 2>&1
+            }
+            if ! run_screenshot_test "$log"; then
+              tail -n 80 "$log"
+              echo "::warning::The baseline screenshot GC test failed once in $theme; retrying in a fresh host."
+              if run_screenshot_test "ci-out/ScreenshotLifetime.$theme.retry.log"; then
+                echo "ScreenshotLifetime ($theme): the first attempt failed and the retry passed (see ScreenshotLifetime.$theme.log)" >> ci-out/FLAKY.txt
+              else
+                status=1
+              fi
+              tail -n 40 "ci-out/ScreenshotLifetime.$theme.retry.log"
+            else
+              tail -n 20 "$log"
+            fi
+          done
+          exit "$status"
+
       - name: Build the desktop host and test the IDE
         env:
           TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
@@ -128,14 +278,13 @@ jobs:
         run: |
           mkdir -p ci-out/screenshots
           status=0
-          dotnet build src/TabStudio.Desktop -c Release > ci-out/desktop-build.log 2>&1 || status=1
+          dotnet build src/TabStudio.Desktop -c Release -p:TreatWarningsAsErrors=true > ci-out/desktop-build.log 2>&1 || status=1
           tail -n 40 ci-out/desktop-build.log
           # A test host that dies leaves a crash report (its threads' stacks) when the runtime saw the crash.
           mkdir -p "$RUNNER_TEMP/crash"
-          # The 100-frame GC stress can take eleven minutes on hosted runners; do not abort a healthy run.
           run_ide_tests() {
             DOTNET_DbgEnableMiniDump=1 DOTNET_DbgMiniDumpType=1 DOTNET_EnableCrashReport=1 DOTNET_DbgMiniDumpName="$RUNNER_TEMP/crash/%e.%p.dmp" \
-              dotnet test tests/TabStudio.App.Tests -c Release --blame --blame-hang-timeout 12m --blame-hang-dump-type none --logger "console;verbosity=normal" > "$1" 2>&1
+              dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --blame --blame-hang-timeout 12m --blame-hang-dump-type none --filter "FullyQualifiedName!~ScreenshotLifetimeTests" --logger "console;verbosity=normal" > "$1" 2>&1
           }
           first=0
           run_ide_tests ci-out/TabStudio.App.Tests.log || first=1
@@ -144,19 +293,20 @@ jobs:
             # Known intermittent failures (a native crash in the test host, slow servers) are tracked on the board;
             # one retry keeps them from blocking a release, and FLAKY.txt and a warning keep them visible.
             echo "::warning::The IDE tests failed once; running them again. The first attempt is in ci-out/TabStudio.App.Tests.log."
-            if run_ide_tests ci-out/TabStudio.App.Tests.retry.log; then
+            if ! python build/ci/test-retry.py ci-out/TabStudio.App.Tests.log TabStudio.App.Tests; then
+              status=1
+            elif run_ide_tests ci-out/TabStudio.App.Tests.retry.log; then
               echo "TabStudio.App.Tests: the first attempt failed and the retry passed (see TabStudio.App.Tests.log)" >> ci-out/FLAKY.txt
             else
               status=1
             fi
-            tail -n 40 ci-out/TabStudio.App.Tests.retry.log
+            if [ -f ci-out/TabStudio.App.Tests.retry.log ]; then tail -n 40 ci-out/TabStudio.App.Tests.retry.log; fi
           fi
           # The same tests in the light theme, for light screenshots (screenshots/light); the palette and design tests ran above in both.
           mkdir -p ci-out/screenshots/light
           run_light_tests() {
             TABSTUDIO_THEME=Light TABSTUDIO_SCREENSHOTS="$TABSTUDIO_SCREENSHOTS/light" \
-              dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter "FullyQualifiedName!~TabStudio.App.Tests.Theming&FullyQualifiedName!~TabStudio.App.Tests.Design" \
-              --blame --blame-hang-timeout 12m --blame-hang-dump-type none \
+              dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --no-build --blame --blame-hang-timeout 12m --blame-hang-dump-type none --filter "FullyQualifiedName!~TabStudio.App.Tests.Theming&FullyQualifiedName!~TabStudio.App.Tests.Design&FullyQualifiedName!~ScreenshotLifetimeTests" \
               --logger "console;verbosity=normal" > "$1" 2>&1
           }
           light=0
@@ -164,12 +314,14 @@ jobs:
           tail -n 20 ci-out/TabStudio.App.Tests.Light.log
           if [ $light -ne 0 ]; then
             echo "::warning::The IDE tests in the light theme failed once; running them again. The first attempt is in ci-out/TabStudio.App.Tests.Light.log."
-            if run_light_tests ci-out/TabStudio.App.Tests.Light.retry.log; then
+            if ! python build/ci/test-retry.py ci-out/TabStudio.App.Tests.Light.log TabStudio.App.Tests; then
+              status=1
+            elif run_light_tests ci-out/TabStudio.App.Tests.Light.retry.log; then
               echo "TabStudio.App.Tests (light theme): the first attempt failed and the retry passed (see TabStudio.App.Tests.Light.log)" >> ci-out/FLAKY.txt
             else
               status=1
             fi
-            tail -n 40 ci-out/TabStudio.App.Tests.Light.retry.log
+            if [ -f ci-out/TabStudio.App.Tests.Light.retry.log ]; then tail -n 40 ci-out/TabStudio.App.Tests.Light.retry.log; fi
           fi
           if [ $first -ne 0 ] || [ $light -ne 0 ] || [ $status -ne 0 ]; then
             {
@@ -190,6 +342,20 @@ jobs:
           fi
           exit $status
 
+      - name: Save first-attempt test logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ide-test-logs
+          retention-days: 14
+          if-no-files-found: ignore
+          path: |
+            ci-out/*.log
+            ci-out/FLAKY.txt
+            ci-out/*.json
+            ci-out/Sequence_*.xml
+            tests/**/TestResults/**/Sequence_*.xml
+
       - name: Publish logs and screenshots
         if: always() && github.event_name == 'push'
         env:
@@ -209,7 +375,7 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: artifacts/native
-          key: android-native-${{ hashFiles('build/android/native/build.sh') }}-arm
+          key: android-native-${{ hashFiles('build/android/native/build.sh', 'build/android/native/sources.sh', 'build/android/native/*.patch', 'build/android/native/*.c') }}-arm
 
       - name: Build the toolchain runtime
         run: |
@@ -221,7 +387,7 @@ jobs:
         run: |
           mkdir -p ci-out
           status=0
-          dotnet publish src/TabStudio.Android -c Release -f net10.0-android \
+          dotnet publish src/TabStudio.Android -c Release -p:TreatWarningsAsErrors=true -f net10.0-android \
             -p:TabStudioBuildNumber=$(( ($(date +%s) - 1767225600) / 60 )) \
             -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME" \
             > ci-out/android-build.log 2>&1 || status=$?
@@ -275,7 +441,7 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: artifacts/native
-          key: android-native-${{ hashFiles('build/android/native/build.sh') }}-x64
+          key: android-native-${{ hashFiles('build/android/native/build.sh', 'build/android/native/sources.sh', 'build/android/native/*.patch', 'build/android/native/*.c') }}-x64
 
       - name: Build the toolchain runtime
         run: |
@@ -288,7 +454,7 @@ jobs:
         run: |
           mkdir -p ci-out
           status=0
-          dotnet publish src/TabStudio.Android -c Release -f net10.0-android -p:TabStudioRuntimeIdentifiers=android-x64 \
+          dotnet publish src/TabStudio.Android -c Release -p:TreatWarningsAsErrors=true -f net10.0-android -p:TabStudioRuntimeIdentifiers=android-x64 \
             -p:TabStudioBuildNumber=$(( ($(date +%s) - 1767225600) / 60 )) \
             -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME" \
             > ci-out/android-x64-build.log 2>&1 || status=$?
@@ -305,7 +471,8 @@ jobs:
       - name: Start TabStudio and run its self test
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
+          # WPF's .NET 10 browser runtime needs a modern WebView; API 29 ships Chrome 74.
+          api-level: 35
           target: google_apis
           arch: x86_64
           profile: pixel_c

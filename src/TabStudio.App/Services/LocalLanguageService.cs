@@ -1,11 +1,13 @@
 using TabStudio.Compilation;
 using TabStudio.Compilation.Building;
+using TabStudio.Compilation.Wpf;
 using TabStudio.Core.Diagnostics;
 using System.Collections.Concurrent;
 using TabStudio.Core.Workspaces;
 using TabStudio.Debugging.Building;
 using TabStudio.LiveTesting.Building;
 using TabStudio.Packages;
+using TabStudio.Wpf;
 
 namespace TabStudio.App.Services;
 
@@ -102,7 +104,9 @@ public sealed class LocalLanguageService : ILanguageService
             throw new InvalidOperationException("This language service was created without a package restorer.");
         }
 
-        var result = await Task.Run(() => _restorer.RestoreAsync(project, progress, cancellationToken), cancellationToken).ConfigureAwait(false);
+        // A WPF project compiles against OpenSilver, which TabStudio restores in place of the Windows Desktop pack.
+        var restored = WpfProject.UsesWpf(project) ? OpenSilverPackages.WithOpenSilver(project) : project;
+        var result = await Task.Run(() => _restorer.RestoreAsync(restored, progress, cancellationToken), cancellationToken).ConfigureAwait(false);
         if (result.Success)
         {
             _host.SetPackageReferences(project.FilePath, result.CompileAssemblies);

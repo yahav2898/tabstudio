@@ -139,6 +139,41 @@ public sealed class ToolchainManager : IDisposable
     public Task InstallAsync(string id, CancellationToken cancellationToken = default) =>
         RunAsync(id, ToolchainState.Installing, (toolchain, progress) => _installer.InstallAsync(toolchain, progress, cancellationToken), cancellationToken);
 
+    /// <summary>Installs several toolchains serially, measuring the shared disk usage once at the end.</summary>
+    /// <param name="ids">The toolchain ids; each distinct id is installed once.</param>
+    /// <param name="cancellationToken">Stops the batch; completed installs and resumable downloads are kept.</param>
+    public async Task InstallManyAsync(IEnumerable<string> ids, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(ids);
+        var pending = ids.Distinct(StringComparer.Ordinal).ToList();
+        foreach (var id in pending)
+        {
+            _ = Status(id); // Validate the complete request before changing any toolchain.
+        }
+
+        if (pending.Count == 0)
+        {
+            return;
+        }
+
+        try
+        {
+            foreach (var id in pending)
+            {
+                await RunAsync(id, ToolchainState.Installing,
+                    (toolchain, progress) => _installer.InstallAsync(toolchain, progress, cancellationToken),
+                    cancellationToken, measureDiskUsage: false).ConfigureAwait(false);
+            }
+        }
+        finally
+        {
+            // A full recursive scan is expensive after adding several SDKs. Each installed status is still
+            // published immediately; refresh the shared total once, including any completed partial batch.
+            await MeasureDiskUsageAsync().ConfigureAwait(false);
+            Changed?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
     /// <summary>Updates a toolchain.</summary>
     /// <param name="id">The toolchain's id.</param>
     /// <param name="cancellationToken">Stops the update.</param>
@@ -187,7 +222,7 @@ public sealed class ToolchainManager : IDisposable
     /// <inheritdoc />
     public void Dispose() => _operations.Dispose();
 
-    private async Task RunAsync(string id, ToolchainState state, Func<ToolchainDefinition, IProgress<InstallProgress>, Task> operation, CancellationToken cancellationToken)
+    private async Task RunAsync(string id, ToolchainState state, Func<ToolchainDefinition, IProgress<InstallProgress>, Task> operation, CancellationToken cancellationToken, bool measureDiskUsage = true)
     {
         var before = Status(id);
         if (before.IsBusy)
@@ -230,13 +265,21 @@ public sealed class ToolchainManager : IDisposable
         // The operation is over: read what is installed now, without asking the mirror again.
         var statuses = await _installer.ReadStatusAsync([toolchain], checkForUpdates: false, CancellationToken.None).ConfigureAwait(false);
         Publish(statuses[0]);
+        if (measureDiskUsage)
+        {
+            await MeasureDiskUsageAsync().ConfigureAwait(false);
+        }
+
+        Changed?.Invoke(this, EventArgs.Empty);
+    }
+
+    private async Task MeasureDiskUsageAsync()
+    {
         var usage = await Task.Run(() => _installer.MeasureDiskUsage(Catalog.Toolchains), CancellationToken.None).ConfigureAwait(false);
         lock (_gate)
         {
             _diskUsage = usage;
         }
-
-        Changed?.Invoke(this, EventArgs.Empty);
     }
 
     private void Publish(ToolchainStatus status)

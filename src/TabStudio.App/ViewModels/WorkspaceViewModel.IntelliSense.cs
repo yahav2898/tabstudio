@@ -61,6 +61,10 @@ public sealed partial class WorkspaceViewModel
         {
             await ReloadWorkspaceAsync();
         }
+        else
+        {
+            RefreshWpfXamlAfterEdits(edits);
+        }
 
         return changed;
     }

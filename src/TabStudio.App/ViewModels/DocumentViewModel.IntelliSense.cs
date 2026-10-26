@@ -13,8 +13,8 @@ public sealed partial class DocumentViewModel
     private int _symbolsEdits = -1;
     private int _crumbsSymbolsEdits = -1;
 
-    /// <summary>IntelliSense for this document, from Roslyn or a language server; <see langword="null"/> when neither analyzes it.</summary>
-    public ILanguageFeatures? Features => _language?.Features ?? _serverFeatures;
+    /// <summary>IntelliSense from C#, WPF XAML or a language server; <see langword="null"/> when none analyzes this file.</summary>
+    public ILanguageFeatures? Features => _language?.Features ?? (ILanguageFeatures?)_xamlFeatures ?? _serverFeatures;
 
     /// <summary>A number that changes with every edit, to tell whether a result is about the current text.</summary>
     public int EditCount => _edits;

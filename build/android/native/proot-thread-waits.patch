@@ -1,0 +1,139 @@
+--- a/src/tracee/tracee.c
++++ b/src/tracee/tracee.c
+@@ -229,0 +230 @@
++	tracee->tgid = pid;
+@@ -236,0 +238,22 @@
++}
++
++/* Linux permits waiting for ptracees owned by a sibling thread unless
++ * __WNOTHREAD is set. Ptrace requests themselves remain thread-specific. */
++static bool can_wait_for(const Tracee *waiter, const Tracee *owner, word_t options)
++{
++	return owner != NULL && (waiter == owner
++		|| (!(options & __WNOTHREAD) && waiter->tgid == owner->tgid));
++}
++
++/* Find a blocked waiter without changing which thread owns the ptracee. */
++Tracee *get_waiting_ptracer(const Tracee *ptracee)
++{
++	Tracee *waiter;
++	LIST_FOREACH(waiter, &tracees, link) {
++		if (waiter->as_ptracer.wait_pid != -1 && waiter->as_ptracer.wait_pid != ptracee->pid)
++			continue;
++		if (can_wait_for(waiter, ptracee->as_ptracee.ptracer, waiter->as_ptracer.wait_options)
++		    && EXPECTED_WAIT_CLONE(waiter->as_ptracer.wait_options, ptracee))
++			return waiter;
++	}
++	return NULL;
+@@ -249,6 +272,5 @@
+-	Tracee *ptracee;
+-
+-	/* Return zombies first.  */
+-	LIST_FOREACH(ptracee, &PTRACER.zombies, link) {
+-		/* Not the ptracee you're looking for?  */
+-		if (pid != ptracee->pid && pid != -1)
++	Tracee *ptracee, *owner;
++
++	/* Return zombies first, including those owned by a sibling tracer thread. */
++	LIST_FOREACH(owner, &tracees, link) {
++		if (!can_wait_for(ptracer, owner, wait_options))
+@@ -256,6 +278,5 @@
+-
+-		/* Not the expected kind of cloned process?  */
+-		if (!EXPECTED_WAIT_CLONE(wait_options, ptracee))
+-			continue;
+-
+-		return ptracee;
++		LIST_FOREACH(ptracee, &owner->as_ptracer.zombies, link) {
++			if ((pid == ptracee->pid || pid == -1)
++			    && EXPECTED_WAIT_CLONE(wait_options, ptracee))
++				return ptracee;
++		}
+@@ -266 +287 @@
+-		if (PTRACEE.ptracer != ptracer)
++		if (!can_wait_for(ptracer, PTRACEE.ptracer, wait_options))
+@@ -832,0 +854 @@
++	child->tgid = child->clone ? parent->tgid : child->pid;
+--- a/src/tracee/tracee.h
++++ b/src/tracee/tracee.h
+@@ -84,0 +85,3 @@
++
++	/* Thread-group id: wait(2) may collect another thread's ptracees. */
++	pid_t tgid;
+@@ -423,0 +427 @@
++extern Tracee *get_waiting_ptracer(const Tracee *ptracee);
+--- a/src/ptrace/ptrace.c
++++ b/src/ptrace/ptrace.c
+@@ -163,2 +163,12 @@
+-		if (PTRACER.waits_in == WAITS_IN_KERNEL) {
+-			status = kill(ptracer->pid, SIGSTOP);
++		Tracee *waiter;
++		LIST_FOREACH(waiter, get_tracees_list_head(), link) {
++			if (waiter->tgid != ptracer->tgid || waiter->as_ptracer.waits_in != WAITS_IN_KERNEL)
++				continue;
++			Sysnum call = get_sysnum(waiter, ORIGINAL);
++			if (call != PR_wait4 && call != PR_waitpid)
++				continue;
++			pid_t waiting_for = (pid_t) peek_reg(waiter, ORIGINAL, SYSARG_1);
++			word_t options = peek_reg(waiter, ORIGINAL, SYSARG_3);
++			if (!has_ptracees(waiter, waiting_for, options))
++				continue;
++			status = kill(waiter->pid, SIGSTOP);
+@@ -166,2 +176 @@
+-				note(tracee, WARNING, INTERNAL,
+-					"can't wake ptracer %d", ptracer->pid);
++				note(tracee, WARNING, INTERNAL, "can't wake ptracer %d", waiter->pid);
+@@ -169,2 +178,2 @@
+-				ptracer->sigstop = SIGSTOP_IGNORED;
+-				PTRACER.waits_in = WAITS_IN_PROOT;
++				waiter->sigstop = SIGSTOP_IGNORED;
++				waiter->as_ptracer.waits_in = WAITS_IN_PROOT;
+@@ -212,2 +221,3 @@
+-	ptracee = get_stopped_ptracee(ptracer, pid, false, __WALL);
+-	if (ptracee == NULL) {
++	ptracee = get_stopped_ptracee(ptracer, pid, false, __WALL | __WNOTHREAD);
++	/* A cloned thread is not ready until its initial stop reaches PRoot. */
++	if (ptracee == NULL || !PTRACEE.tracing_started) {
+--- a/src/ptrace/wait.c
++++ b/src/ptrace/wait.c
+@@ -89 +88,0 @@
+-	Tracee *ptracee;
+@@ -90,0 +90 @@
++	word_t options;
+@@ -93,3 +93,5 @@
+-
+-	/* Don't emulate the ptrace mechanism if it's not a ptracer.  */
+-	if (PTRACER.nb_ptracees == 0)
++	pid = (pid_t) peek_reg(ptracer, ORIGINAL, SYSARG_1);
++	options = peek_reg(ptracer, ORIGINAL, SYSARG_3);
++
++	/* A sibling thread can wait for this tracer's children too. */
++	if (!has_ptracees(ptracer, pid, options))
+@@ -97,9 +98,0 @@
+-
+-	/* Don't emulate the ptrace mechanism if the requested pid is
+-	 * not a ptracee.  */
+-	pid = (pid_t) peek_reg(ptracer, ORIGINAL, SYSARG_1);
+-	if (pid != -1) {
+-		ptracee = get_tracee(ptracer, pid, false);
+-		if (ptracee == NULL || PTRACEE.ptracer != ptracer)
+-			return 0;
+-	}
+@@ -199 +192 @@
+-		if (PTRACER.nb_ptracees == 0)
++		if (!has_ptracees(ptracer, pid, options))
+@@ -369,2 +362,3 @@
+-	if (   (PTRACER.wait_pid == -1 || PTRACER.wait_pid == ptracee->pid)
+-	    && EXPECTED_WAIT_CLONE(PTRACER.wait_options, ptracee)) {
++	Tracee *waiter = get_waiting_ptracer(ptracee);
++	if (waiter != NULL) {
++		ptracer = waiter;
+--- a/src/tracee/event.c
++++ b/src/tracee/event.c
+@@ -955,0 +956,6 @@
++	if (tracee->restart_how == 0)
++		note(tracee, WARNING, INTERNAL,
++			"restart state: pid=%d running=%d traced=%d pending=%d last=%d wait=%d",
++			tracee->pid, tracee->running, tracee->as_ptracee.tracing_started,
++			tracee->as_ptracee.event4.proot.pending, tracee->last_restart_how,
++			tracee->as_ptracer.wait_pid);

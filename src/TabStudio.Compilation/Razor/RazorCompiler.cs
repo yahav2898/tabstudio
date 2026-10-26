@@ -26,7 +26,7 @@ internal static class RazorCompiler
     /// <param name="optimize">Whether this is a release build.</param>
     public static CSharpParseOptions ParseOptionsFor(TsProject? project, bool optimize)
     {
-        var options = CSharpCompiler.CreateParseOptions(optimize, project is null ? null : SdkGenerators.InterceptorsNamespaces(project));
+        var options = Wpf.WpfProject.ParseOptions(project, CSharpCompiler.CreateParseOptions(optimize, project is null ? null : SdkGenerators.InterceptorsNamespaces(project)));
         return project is not null && RazorProjects.UsesRazor(project)
             ? options.WithFeatures([.. options.Features, new(RoslynTokenizerFeature, "true")])
             : options;

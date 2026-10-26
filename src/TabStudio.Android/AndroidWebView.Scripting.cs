@@ -71,16 +71,73 @@ internal sealed partial class AndroidWebView : IScriptableWebView
         var keyboard = KeyboardOutside(view);
         var (x, y) = ((float)pixel.X, (float)pixel.Y);
         var down = SystemClock.UptimeMillis();
+        if (hold < TimeSpan.FromMilliseconds(ViewConfiguration.LongPressTimeout))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            // Replay both short-gesture events without a managed timer between them. Their native
+            // timestamps retain the requested duration even when the IDE's dispatcher is busy.
+            Touch(view, down, down, MotionEventActions.Down, x, y);
+            try
+            {
+                Touch(view, down, down + (long)Math.Max(0, hold.TotalMilliseconds), MotionEventActions.Up, x, y);
+            }
+            finally
+            {
+                GiveKeyboardBack(view, keyboard);
+            }
+
+            // Keep subsequent replayed input after this gesture's event time, without holding a finger down.
+            await Task.Delay(hold, cancellationToken);
+            await Task.Delay(FocusSettle, CancellationToken.None);
+            GiveKeyboardBack(view, keyboard);
+            return true;
+        }
+
+        var lifted = false;
+        var released = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        using var touches = new Handler(Looper.MainLooper!);
+        void Lift()
+        {
+            if (lifted)
+            {
+                return;
+            }
+
+            lifted = true;
+            Touch(view, down, SystemClock.UptimeMillis(), MotionEventActions.Up, x, y);
+            GiveKeyboardBack(view, keyboard);
+        }
+
+        void ScheduledLift()
+        {
+            try
+            {
+                Lift();
+                released.TrySetResult(true);
+            }
+            catch (Exception ex)
+            {
+                released.TrySetException(ex);
+            }
+        }
+
         Touch(view, down, down, MotionEventActions.Down, x, y);
         try
         {
-            await Task.Delay(hold, cancellationToken);
+            // Queue the release with Android's gesture timers. A busy Avalonia dispatcher must not turn
+            // the requested short tap into a long press while waiting to resume a managed Task.Delay.
+            if (!touches.PostDelayed(ScheduledLift, (long)Math.Max(0, hold.TotalMilliseconds)))
+            {
+                throw new InvalidOperationException("The browser's touch release could not be queued.");
+            }
+
+            await released.Task.WaitAsync(cancellationToken);
         }
         finally
         {
+            touches.RemoveCallbacks(ScheduledLift);
             // The finger always lifts, even when the touch is cut short.
-            Touch(view, down, SystemClock.UptimeMillis(), MotionEventActions.Up, x, y);
-            GiveKeyboardBack(view, keyboard);
+            Lift();
         }
 
         // The browser can ask for the focus a moment after the finger lifted, once the page took the touch.

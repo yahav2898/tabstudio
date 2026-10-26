@@ -183,7 +183,7 @@
       "name": "C and C++",
       "description": "GCC and Clang, CMake and make, the clangd language server and the GDB and LLDB debuggers.",
       "languages": [ "C", "C++" ],
-      "listed": false,
+      "listed": true,
       "homepage": "https://clang.llvm.org",
       "license": "GPL-3.0-or-later AND Apache-2.0 WITH LLVM-exception",
       "packages": [ "build-base", "clang22", "clang22-extra-tools", "cmake", "samurai", "gdb", "lldb" ],
@@ -191,19 +191,20 @@
       "estimatedDownloadSize": 190000000,
       "estimatedInstalledSize": 780000000,
       "host": { "commands": [ "cc", "gcc", "clang" ], "versionArguments": [ "--version" ], "versionPattern": "(?<version>\\d+\\.\\d+(?:\\.\\d+)?)" },
-      "fileExtensions": [ ".c", ".h", ".cpp", ".cc", ".cxx", ".hpp", ".hh", ".hxx" ],
-      "projectFiles": [ "CMakeLists.txt", "Makefile", "meson.build" ],
+      "fileExtensions": [ ".c", ".cpp", ".cc", ".cxx" ],
+      "projectFiles": [ "CMakeLists.txt", "Makefile", "makefile", "GNUmakefile" ],
+      "sourceFolderIsProject": true,
       "run": {
         "file": [ "sh", "-c", "c++ -std=c++20 -g -O0 -o /tmp/tabstudio-run \"$0\" && exec /tmp/tabstudio-run", "{file}" ],
         "entries": [
-          { "file": "CMakeLists.txt", "build": [ "sh", "-c", "cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug && cmake --build build" ], "command": [ "sh", "-c", "exec \"$(find build -maxdepth 1 -type f -perm -u+x | head -n 1)\"" ] },
+          { "file": "CMakeLists.txt", "build": [ "cmake", "--build", ".tabstudio/cmake", "--config", "Debug" ], "command": [ ".tabstudio/bin/app" ] },
           { "file": "Makefile", "build": [ "make" ], "command": [ "make", "run" ] }
         ]
       },
       "languageServer": { "id": "clangd", "command": [ "clangd", "--background-index" ], "languages": [ "c", "cpp" ] },
       "debugAdapter": { "id": "lldb-dap", "command": [ "lldb-dap" ], "type": "lldb-dap", "languages": [ "c", "cpp" ] },
       "problemPatterns": [
-        { "pattern": "^(?<file>[^:\\s][^:]*):(?<line>\\d+):(?<column>\\d+): (?<severity>error|warning|note): (?<message>.*)$" }
+        { "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+): (?<severity>fatal error|error|warning|note): (?<message>.*)$" }
       ]
     },
     {
@@ -211,7 +212,7 @@
       "name": "Rust",
       "description": "The Rust compiler and Cargo, rust-analyzer, and LLDB for debugging.",
       "languages": [ "Rust" ],
-      "listed": false,
+      "listed": true,
       "homepage": "https://www.rust-lang.org",
       "license": "MIT OR Apache-2.0",
       "packages": [ "rust", "cargo", "rust-analyzer", "rust-src", "rustfmt", "rust-clippy", "lldb" ],
@@ -221,26 +222,29 @@
       "host": { "commands": [ "rustc" ], "versionArguments": [ "--version" ], "versionPattern": "rustc (?<version>\\S+)" },
       "fileExtensions": [ ".rs" ],
       "projectFiles": [ "Cargo.toml" ],
+      "allowNestedProjects": true,
       "run": {
         "file": [ "sh", "-c", "rustc -g -o /tmp/tabstudio-run \"$0\" && exec /tmp/tabstudio-run", "{file}" ],
         "entries": [
-          { "file": "Cargo.toml", "build": [ "cargo", "build" ], "command": [ "cargo", "run", "--quiet" ] }
+          { "file": "Cargo.toml", "build": [ "cargo", "build", "--message-format=json-render-diagnostics" ], "command": [ "cargo", "run", "--quiet" ] }
         ],
         "environment": { "CARGO_TERM_COLOR": "never" }
       },
       "languageServer": { "id": "rust-analyzer", "command": [ "rust-analyzer" ], "languages": [ "rust" ] },
       "debugAdapter": { "id": "lldb-dap", "command": [ "lldb-dap" ], "type": "lldb-dap", "languages": [ "rust" ] },
       "problemPatterns": [
+        { "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+): (?<severity>error|warning|note): (?<message>.*)$" },
         { "pattern": "-->\\s+(?<file>[^:\\s]+):(?<line>\\d+):(?<column>\\d+)" },
         { "pattern": "panicked at (?<file>[^:\\s]+):(?<line>\\d+):(?<column>\\d+)" }
-      ]
+      ],
+      "errorPattern": "^error(?:\\[[^\\]]+\\])?: (?<message>.*)$"
     },
     {
       "id": "go",
       "name": "Go",
       "description": "The Go toolchain, the gopls language server and the Delve debugger.",
       "languages": [ "Go" ],
-      "listed": false,
+      "listed": true,
       "homepage": "https://go.dev",
       "license": "BSD-3-Clause",
       "packages": [ "go", "gopls", "delve" ],
@@ -250,35 +254,44 @@
       "host": { "commands": [ "go" ], "versionArguments": [ "version" ], "versionPattern": "go(?<version>\\d+\\.\\d+(?:\\.\\d+)?)" },
       "fileExtensions": [ ".go" ],
       "projectFiles": [ "go.mod" ],
+      "allowNestedProjects": true,
       "run": {
         "file": [ "go", "run", "{file}" ],
         "entries": [
-          { "file": "go.mod", "build": [ "go", "build", "./..." ], "command": [ "go", "run", "." ] }
+          { "file": "go.mod", "build": [ "go", "build", "-gcflags=all=-N -l", "-o", ".tabstudio/bin/app", "." ], "command": [ ".tabstudio/bin/app" ] }
         ],
         "environment": { "GOFLAGS": "-buildvcs=false", "GOTOOLCHAIN": "local" }
       },
       "languageServer": { "id": "gopls", "command": [ "gopls" ], "languages": [ "go" ] },
       "debugAdapter": { "id": "delve", "command": [ "dlv", "dap", "--listen", "127.0.0.1:{port}" ], "transport": "tcp", "type": "go", "languages": [ "go" ] },
       "problemPatterns": [
-        { "pattern": "^(?<file>[^:\\s]+\\.go):(?<line>\\d+):(?<column>\\d+): (?<message>.*)$" },
-        { "pattern": "^\\s+(?<file>/[^:\\s]+\\.go):(?<line>\\d+)" }
-      ]
+        { "pattern": "^(?<file>.+?\\.go):(?<line>\\d+):(?:(?<column>\\d+):)? (?<message>.*)$" },
+        { "pattern": "^\\s+(?<file>/.+?\\.go):(?<line>\\d+)" }
+      ],
+      "errorPattern": "^(?<message>panic:.*|fatal error:.*)$"
     },
     {
       "id": "java",
       "name": "Java",
       "description": "OpenJDK 21 with Maven and Gradle, and the Eclipse JDT language server.",
       "languages": [ "Java" ],
-      "listed": false,
+      "listed": true,
       "homepage": "https://openjdk.org",
       "license": "GPL-2.0-only WITH Classpath-exception-2.0",
-      "packages": [ "openjdk21-jdk", "maven", "gradle", "jdtls" ],
+      "packages": [ "openjdk21-jdk", "jdtls" ],
       "versionPackage": "openjdk21-jdk",
       "estimatedDownloadSize": 260000000,
       "estimatedInstalledSize": 560000000,
       "host": { "commands": [ "java" ], "versionArguments": [ "-version" ], "versionPattern": "version \"(?<version>[^\"]+)\"" },
       "fileExtensions": [ ".java" ],
-      "projectFiles": [ "pom.xml", "build.gradle", "settings.gradle" ],
+      "projectFiles": [ "pom.xml", "build.gradle", "build.gradle.kts", "settings.gradle", "settings.gradle.kts" ],
+      "sourceFolderIsProject": true,
+      "allowNestedProjects": true,
+      "projectTools": [
+        { "manifest": "pom.xml", "command": "mvn", "packages": [ "maven" ] },
+        { "manifest": "build.gradle", "command": "gradle", "packages": [ "gradle" ] },
+        { "manifest": "build.gradle.kts", "command": "gradle", "packages": [ "gradle" ] }
+      ],
       "run": {
         "file": [ "java", "{file}" ],
         "entries": [
@@ -286,12 +299,25 @@
           { "file": "build.gradle", "build": [ "gradle", "--console=plain", "build" ], "command": [ "gradle", "--console=plain", "--quiet", "run" ] },
           { "file": "settings.gradle", "build": [ "gradle", "--console=plain", "build" ], "command": [ "gradle", "--console=plain", "--quiet", "run" ] }
         ],
-        "environment": { "JAVA_HOME": "/usr/lib/jvm/java-21-openjdk" }
+        "environment": { "NO_COLOR": "1" }
       },
+      "setup": [
+        {
+          "name": "Java debugger",
+          "description": "Microsoft java-debug's JDT LS bundle, from the official Java Debugger extension.",
+          "archive": {
+            "url": "https://open-vsx.org/api/vscjava/vscode-java-debug/0.60.0/file/vscjava.vscode-java-debug-0.60.0.vsix",
+            "sha256": "f09ebe358a7b08b3c17b21b8d8207b0649acad120eb6f1604dc4f15379f59d66",
+            "size": 3461057,
+            "destination": "/opt/tabstudio/java/java-debug"
+          }
+        }
+      ],
       "languageServer": { "id": "jdtls", "command": [ "jdtls" ], "languages": [ "java" ] },
+      "debugAdapter": { "id": "java-debug", "command": [ "jdtls" ], "type": "java", "languages": [ "java" ] },
       "problemPatterns": [
-        { "pattern": "^(?<file>[^:\\s]+\\.java):(?<line>\\d+): (?<severity>error|warning): (?<message>.*)$" },
-        { "pattern": "^\\[(?<severity>ERROR|WARNING)\\] (?<file>/[^:\\s]+\\.java):\\[(?<line>\\d+),(?<column>\\d+)\\] (?<message>.*)$" }
+        { "pattern": "^(?<file>.+?\\.java):(?<line>\\d+): (?<severity>error|warning): (?<message>.*)$" },
+        { "pattern": "^\\[(?<severity>ERROR|WARNING)\\] (?<file>.+?\\.java):\\[(?<line>\\d+),(?<column>\\d+)\\] (?<message>.*)$" }
       ]
     },
     {

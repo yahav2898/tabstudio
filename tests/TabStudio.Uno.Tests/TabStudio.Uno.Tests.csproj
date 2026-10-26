@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Uno Platform and WinUI 3 apps end to end against nuget.org: the templates restore, Uno's XAML generator compiles
+    them, and they run in this process on Uno's Skia renderer, as in the IDE. Frames of the running apps are written to
+    the folder in TABSTUDIO_SCREENSHOTS.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <!-- What TabStudio runs Uno with: SkiaSharp 3 and HarfBuzz, with their native libraries for Linux. -->
+    <PackageReference Include="SkiaSharp" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" VersionOverride="3.119.0" />
+    <PackageReference Include="HarfBuzzSharp" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\TabStudio.Uno\TabStudio.Uno.csproj" />
+    <ProjectReference Include="..\..\src\TabStudio.Compilation\TabStudio.Compilation.csproj" />
+    <ProjectReference Include="..\..\src\TabStudio.Packages\TabStudio.Packages.csproj" />
+    <ProjectReference Include="..\TabStudio.Testing\TabStudio.Testing.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+</Project>

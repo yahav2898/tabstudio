@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>{{AppName}}</title>
+    <base href="/" />
+    <link rel="preload" id="webassembly" />
+    <link rel="stylesheet" href="_tabstudio/wpf.css" />
+    <script type="importmap"></script>
+    <script src="_tabstudio/wpf.js"></script>
+</head>
+
+<body>
+    <div id="tabstudio-wpf-window" class="tabstudio-wpf-window">
+        <div class="tabstudio-wpf-titlebar">
+            <svg class="tabstudio-wpf-icon" viewBox="0 0 16 16" aria-hidden="true">
+                <rect x="1.5" y="2.5" width="13" height="11" rx="1.5" fill="none" stroke="currentColor" />
+                <path d="M1.5 5.5h13" stroke="currentColor" />
+            </svg>
+            <span id="tabstudio-wpf-title" class="tabstudio-wpf-title">{{AppName}}</span>
+            <button id="tabstudio-wpf-close" class="tabstudio-wpf-close" type="button" title="Close {{AppName}}" aria-label="Close">
+                <svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1 1l8 8M9 1l-8 8" stroke="currentColor" stroke-width="1.1" /></svg>
+            </button>
+        </div>
+        <div id="tabstudio-wpf-client" class="tabstudio-wpf-client">
+            <div id="tabstudio-wpf-starting" class="tabstudio-wpf-starting">Starting {{AppName}}…</div>
+        </div>
+    </div>
+    <div id="app"></div>
+    <div id="opensilver-root" class="tabstudio-wpf-offscreen"></div>
+
+    <script>
+        (function () {
+            var script = document.createElement('script');
+            script.setAttribute('src', 'libs/opensilver.js');
+            script.addEventListener('load', function () {
+                var blazor = document.createElement('script');
+                blazor.setAttribute('src', '_framework/blazor.webassembly.js');
+                document.body.appendChild(blazor);
+            });
+            document.body.appendChild(script);
+        })();
+    </script>
+</body>
+
+</html>

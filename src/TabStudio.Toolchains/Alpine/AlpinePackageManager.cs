@@ -130,11 +130,27 @@ public sealed class AlpinePackageManager : IDisposable
     public async Task DownloadAsync(ApkPlan plan, Action<long, ApkPackage>? progress, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(plan);
-        long done = 0;
-        foreach (var package in plan.Packages)
+        var received = new long[plan.Packages.Count];
+        var reporting = new Lock();
+        // HTTP waits can overlap; apk still installs serially, after every package has passed verification.
+        // Four streams bound memory and connections on a tablet while avoiding one round trip per package.
+        await Parallel.ForEachAsync(Enumerable.Range(0, plan.Packages.Count), new ParallelOptions
         {
-            var completed = done;
-            progress?.Invoke(completed, package);
+            MaxDegreeOfParallelism = 4,
+            CancellationToken = cancellationToken,
+        }, async (index, stop) =>
+        {
+            var package = plan.Packages[index];
+            void Report(long bytes)
+            {
+                lock (reporting)
+                {
+                    received[index] = Math.Clamp(bytes, 0, package.Size);
+                    progress?.Invoke(received.Sum(), package);
+                }
+            }
+
+            Report(0);
             await _downloader.DownloadAsync(
                 new DownloadRequest
                 {
@@ -144,12 +160,12 @@ public sealed class AlpinePackageManager : IDisposable
                     Size = package.Size,
                     Verify = path => ApkSignature.VerifyPackage(path, package),
                 },
-                new InlineProgress<DownloadProgress>(p => progress?.Invoke(completed + p.Received, package)),
-                cancellationToken).ConfigureAwait(false);
-            done += package.Size;
-        }
+                new InlineProgress<DownloadProgress>(p => Report(p.Received)),
+                stop).ConfigureAwait(false);
+            Report(package.Size);
+        }).ConfigureAwait(false);
 
-        progress?.Invoke(done, plan.Packages.Count > 0 ? plan.Packages[^1] : new ApkPackage { Name = string.Empty, Version = string.Empty });
+        progress?.Invoke(plan.DownloadSize, plan.Packages.Count > 0 ? plan.Packages[^1] : new ApkPackage { Name = string.Empty, Version = string.Empty });
     }
 
     /// <summary>

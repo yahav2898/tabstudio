@@ -9,11 +9,30 @@ public sealed partial class ProjectTemplates
     /// <summary>A Node.js console program.</summary>
     public const string NodeId = "node";
 
+    /// <summary>A Go console program.</summary>
+    public const string GoId = "go";
+
+    /// <summary>A Rust console program.</summary>
+    public const string RustId = "rust";
+
+    /// <summary>A CMake C++ console program.</summary>
+    public const string CppId = "cpp";
+
+    /// <summary>A Java Maven console program.</summary>
+    public const string JavaId = "java";
+
     /// <summary>The Python and Node.js templates, for the start screen.</summary>
     private static ProjectTemplate[] ToolchainTemplates =>
     [
         new(PythonId, "Python Application", "A Python program that reads input and prints in the Output panel, run with Python from the Toolchain Store.", ["Python", "Console"]),
         new(NodeId, "Node.js Console App", "A JavaScript program for Node.js that reads input and prints in the Output panel, run with Node.js from the Toolchain Store.", ["JavaScript", "Node.js", "Console"]),
+        new(GoId, "Go Console App", "A Go module with console input and output, gopls IntelliSense and Delve debugging.", ["Go", "Console"]),
+
+        new(RustId, "Rust Console App", "A Cargo console app with rust-analyzer IntelliSense and LLDB debugging.", ["Rust", "Console"]),
+
+        new(CppId, "C++ Console App (CMake)", "A C++ console app with CMake, clangd IntelliSense and LLDB debugging.", ["C++", "CMake", "Console"]),
+
+        new(JavaId, "Java Console App (Maven)", "A Java 21 Maven app with JDT IntelliSense and java-debug debugging.", ["Java", "Maven", "Console"]),
     ];
 
     /// <summary>Writes a toolchain project into a new folder, which is the workspace: there is no solution file.</summary>
@@ -80,6 +99,18 @@ public sealed partial class ProjectTemplates
                     """);
                 File.WriteAllText(Path.Combine(root, ".gitignore"), "node_modules/\n");
                 return root;
+
+            case GoId:
+                return CreateGoProject(root, name);
+
+            case RustId:
+                return CreateRustProject(root, name);
+
+            case CppId:
+                return CreateCppProject(root);
+
+            case JavaId:
+                return CreateJavaProject(root, name);
 
             default:
                 return null;

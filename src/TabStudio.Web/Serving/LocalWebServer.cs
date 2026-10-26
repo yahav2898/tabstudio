@@ -6,7 +6,7 @@ using TabStudio.Compilation.Running;
 namespace TabStudio.Web.Serving;
 
 /// <summary>A request a <see cref="LocalWebServer"/> answered.</summary>
-/// <param name="Method">The HTTP method, <c>GET</c> or <c>HEAD</c>.</param>
+/// <param name="Method">The HTTP method: <c>GET</c> or <c>HEAD</c>, or <c>POST</c> for a message the page posted.</param>
 /// <param name="Path">The path, without the leading <c>/</c> and unescaped, such as <c>_framework/dotnet.js</c>.</param>
 /// <param name="StatusCode">The status it was answered with, such as 200, 304 or 404.</param>
 /// <param name="UserAgent">The browser that asked, from its <c>User-Agent</c> header, when it sent one.</param>
@@ -23,15 +23,20 @@ public sealed record ServedRequest(string Method, string Path, int StatusCode, s
 /// </remarks>
 public sealed class LocalWebServer : IAsyncDisposable
 {
+    /// <summary>The largest message a page may post, so a page cannot fill the IDE's memory.</summary>
+    private const int MaxPostLength = 1024 * 1024;
+
     private readonly HttpListener _listener;
     private readonly Func<string, ServedFile?> _resolve;
+    private readonly Func<string, string, bool>? _receive;
     private readonly CancellationTokenSource _stop = new();
     private readonly Task _accepting;
 
-    private LocalWebServer(HttpListener listener, Uri address, Func<string, ServedFile?> resolve)
+    private LocalWebServer(HttpListener listener, Uri address, Func<string, ServedFile?> resolve, Func<string, string, bool>? receive)
     {
         _listener = listener;
         _resolve = resolve;
+        _receive = receive;
         Address = address;
         _accepting = Task.Run(AcceptAsync);
     }
@@ -48,7 +53,17 @@ public sealed class LocalWebServer : IAsyncDisposable
     /// <see langword="null"/> for a 404. Called on thread-pool threads, concurrently.
     /// </param>
     /// <param name="preferredPort">A port to listen on when it is free, so a restarted app keeps its address; any free port otherwise.</param>
-    public static LocalWebServer Start(Func<string, ServedFile?> resolve, int? preferredPort = null)
+    public static LocalWebServer Start(Func<string, ServedFile?> resolve, int? preferredPort = null) => Start(resolve, receive: null, preferredPort);
+
+    /// <summary>Starts serving, and takes the messages a page posts.</summary>
+    /// <param name="resolve">Returns the file for a path, as for <see cref="Start(Func{string, ServedFile?}, int?)"/>.</param>
+    /// <param name="receive">
+    /// Takes a <c>POST</c>'s path (without the leading <c>/</c>) and its body as UTF-8 text, and returns whether it
+    /// was for it; the page gets 204, or 405 when the route does not accept messages. Called on thread-pool threads, concurrently.
+    /// <see langword="null"/> answers every <c>POST</c> with 405.
+    /// </param>
+    /// <param name="preferredPort">A port to listen on when it is free.</param>
+    public static LocalWebServer Start(Func<string, ServedFile?> resolve, Func<string, string, bool>? receive, int? preferredPort)
     {
         ArgumentNullException.ThrowIfNull(resolve);
         HttpListenerException? last = null;
@@ -61,7 +76,7 @@ public sealed class LocalWebServer : IAsyncDisposable
             try
             {
                 listener.Start();
-                return new LocalWebServer(listener, address, resolve);
+                return new LocalWebServer(listener, address, resolve, receive);
             }
             catch (HttpListenerException ex)
             {
@@ -146,6 +161,11 @@ public sealed class LocalWebServer : IAsyncDisposable
     private async Task<int> RespondAsync(HttpListenerRequest request, HttpListenerResponse response, string path)
     {
         var isHead = string.Equals(request.HttpMethod, "HEAD", StringComparison.OrdinalIgnoreCase);
+        if (_receive is not null && string.Equals(request.HttpMethod, "POST", StringComparison.OrdinalIgnoreCase))
+        {
+            return await ReceiveAsync(request, response, path, _receive).ConfigureAwait(false);
+        }
+
         if (!isHead && !string.Equals(request.HttpMethod, "GET", StringComparison.OrdinalIgnoreCase))
         {
             response.StatusCode = 405;
@@ -178,6 +198,40 @@ public sealed class LocalWebServer : IAsyncDisposable
         }
 
         return 200;
+    }
+
+    /// <summary>Hands a posted message to the receiver: 204 when it took it, 405 when the route does not accept it, 413 when too long.</summary>
+    private async Task<int> ReceiveAsync(HttpListenerRequest request, HttpListenerResponse response, string path, Func<string, string, bool> receive)
+    {
+        if (request.ContentLength64 > MaxPostLength)
+        {
+            response.StatusCode = 413;
+            return 413;
+        }
+
+        using var body = new MemoryStream();
+        var buffer = new byte[16 * 1024];
+        int read;
+        while ((read = await request.InputStream.ReadAsync(buffer, _stop.Token).ConfigureAwait(false)) > 0)
+        {
+            if (body.Length + read > MaxPostLength)
+            {
+                response.StatusCode = 413;
+                return 413;
+            }
+
+            body.Write(buffer, 0, read);
+        }
+
+        var status = receive(path, Encoding.UTF8.GetString(body.GetBuffer(), 0, (int)body.Length)) ? 204 : 405;
+        response.StatusCode = status;
+        if (status == 405)
+        {
+            response.Headers["Allow"] = "GET, HEAD";
+        }
+
+        response.Headers["Cache-Control"] = "no-cache";
+        return status;
     }
 
     /// <summary>Whether the browser's copy, named by its <c>If-None-Match</c> header, is the current one.</summary>

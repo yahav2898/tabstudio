@@ -58,6 +58,9 @@ internal static partial class UnixNative
     [LibraryImport(LibC, SetLastError = true)]
     internal static partial int pipe2(Span<int> fds, int flags);
 
+    [LibraryImport(LibC, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
+    internal static partial int mkfifo(string path, uint mode);
+
     [LibraryImport(LibC, EntryPoint = "fcntl", SetLastError = true)]
     internal static partial int fcntl_int(int fd, int command, int argument);
 

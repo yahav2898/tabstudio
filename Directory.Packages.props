@@ -43,7 +43,7 @@
     <!--
       Avalonia 11 ships with SkiaSharp 2.88, whose native library is not aligned for Android devices with 16 KB
       memory pages (Android 15 and later). The Android head references SkiaSharp 3, which is, as Avalonia
-      recommends; desktop and tests stay on Avalonia's own version.
+      recommends. Uno and Avalonia use that same version on desktop and in tests as well.
     -->
     <PackageVersion Include="SkiaSharp" Version="3.119.0" />
   </ItemGroup>
@@ -63,7 +63,7 @@
   </ItemGroup>
 
   <ItemGroup Label="Tests">
-    <!-- Native Skia and HarfBuzz for rendering in headless UI tests on Linux, matching Avalonia's versions. -->
+    <!-- Native Skia for libraries using Avalonia alone; the IDE and Uno tests override it to match SkiaSharp 3. -->
     <PackageVersion Include="SkiaSharp.NativeAssets.Linux" Version="2.88.9" />
     <PackageVersion Include="HarfBuzzSharp.NativeAssets.Linux" Version="8.3.1.1" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
@@ -72,6 +72,17 @@
     <!-- Only referenced so the test runner's tests can compile NUnit and MSTest projects in memory. -->
     <PackageVersion Include="NUnit" Version="4.3.2" />
     <PackageVersion Include="MSTest.TestFramework" Version="3.8.3" />
+  </ItemGroup>
+
+  <ItemGroup Label="WPF">
+    <!-- The interfaces of MSBuild tasks, for running OpenSilver's XAML compiler task inside TabStudio. -->
+    <PackageVersion Include="Microsoft.Build.Framework" Version="17.13.26" />
+    <PackageVersion Include="Microsoft.Build.Utilities.Core" Version="17.13.26" />
+  </ItemGroup>
+
+  <ItemGroup Label="Uno Platform">
+    <!-- Uno and Avalonia share SkiaSharp 3 and the matching HarfBuzz runtime. -->
+    <PackageVersion Include="HarfBuzzSharp" Version="8.3.1.1" />
   </ItemGroup>
 
 </Project>

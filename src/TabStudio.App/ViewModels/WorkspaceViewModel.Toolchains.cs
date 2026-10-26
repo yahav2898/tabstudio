@@ -180,6 +180,13 @@ public sealed partial class WorkspaceViewModel
         {
             "python" => ProjectKind.Python,
             "node" => ProjectKind.Node,
+            "go" => ProjectKind.Go,
+
+            "rust" => ProjectKind.Rust,
+
+            "cpp" => ProjectKind.Cpp,
+
+            "java" => ProjectKind.Java,
             _ => ProjectKind.Unknown,
         },
         OutputType = "Exe",
@@ -387,6 +394,16 @@ public sealed partial class WorkspaceViewModel
             }
         }
 
+        if (toolchain.Id == "rust" && File.Exists(Path.Combine(project.Directory, "src", "main.rs")))
+        {
+            return Path.Combine(project.Directory, "src", "main.rs");
+        }
+
+        if (toolchain.Id == "java" && JavaProject.MainSource(project.Directory) is { } java)
+        {
+            return java;
+        }
+
         return Directory.EnumerateFiles(project.Directory).Where(toolchain.RunsFile).Order(StringComparer.Ordinal).FirstOrDefault() ?? project.MarkerPath;
     }
 
@@ -431,7 +448,9 @@ public sealed partial class WorkspaceViewModel
             if (plan.Build is { } build)
             {
                 Output.WriteLine("> " + build.CommandLine, OutputKind.Info);
-                var built = await OutputProcess.RunAsync(_toolchains.Runtime, build, Output, null, _run.Token);
+                var compiled = await BuildCargoOrToolchainAsync(project, plan, _run.Token);
+                plan = compiled.Plan;
+                var built = compiled.Result;
                 if (!built.Succeeded)
                 {
                     result = built;
@@ -490,10 +509,7 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
-        if (Matcher(project.Toolchain).FindError(result.Lines, IsWorkspaceFile) is { } error)
-        {
-            ErrorList.SetRunError(project.Directory, ToDiagnostic(project, error));
-        }
+        ErrorList.SetRunErrors(project.Directory, [.. Matcher(project.Toolchain).FindErrors(result.Lines, IsWorkspaceFile).Select(error => ToDiagnostic(project, error))]);
 
         if (RunPlanner.DependenciesOf(project) is { } dependency && RunPlanner.IsPending(project, dependency))
         {

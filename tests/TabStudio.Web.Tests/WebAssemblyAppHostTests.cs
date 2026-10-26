@@ -2,6 +2,7 @@ using System.Net;
 using System.Text;
 using System.Text.Json;
 using TabStudio.Testing;
+using TabStudio.Web.Serving;
 using TabStudio.Web.StaticWebAssets;
 using TabStudio.Web.WebAssembly;
 
@@ -135,6 +136,29 @@ public sealed class WebAssemblyAppHostTests : IDisposable
 
         using var post = await _http.PostAsync(host.Address, new StringContent("x"));
         Assert.Equal(HttpStatusCode.MethodNotAllowed, post.StatusCode);
+        Assert.Equal(new[] { "GET", "HEAD" }, post.Content.Headers.Allow);
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task Posts_console_messages_even_when_the_IDE_is_not_listening(bool listening)
+    {
+        await using var host = await WebAssemblyAppHost.StartAsync(App());
+        var message = new TaskCompletionSource<PostedMessage>(TaskCreationOptions.RunContinuationsAsynchronously);
+        if (listening)
+        {
+            host.MessageReceived += (_, posted) => message.SetResult(posted);
+        }
+
+        const string body = "Hello from WPF · שלום";
+        using var post = await _http.PostAsync(new Uri(host.Address, WebAssemblyAppHost.MessageRoute + "console"), new StringContent(body));
+
+        Assert.Equal(HttpStatusCode.NoContent, post.StatusCode);
+        if (listening)
+        {
+            Assert.Equal(new PostedMessage("_tabstudio/console", body), await message.Task.WaitAsync(TimeSpan.FromSeconds(5)));
+        }
     }
 
     [Fact]
