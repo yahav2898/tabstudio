@@ -86,6 +86,7 @@ jobs:
   app:
     name: Build and test the IDE
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
 
@@ -133,7 +134,7 @@ jobs:
           mkdir -p "$RUNNER_TEMP/crash"
           run_ide_tests() {
             DOTNET_DbgEnableMiniDump=1 DOTNET_DbgMiniDumpType=1 DOTNET_EnableCrashReport=1 DOTNET_DbgMiniDumpName="$RUNNER_TEMP/crash/%e.%p.dmp" \
-              dotnet test tests/TabStudio.App.Tests -c Release --blame --blame-hang-timeout 12m --blame-hang-dump-type none --logger "console;verbosity=normal" > "$1" 2>&1
+              dotnet test tests/TabStudio.App.Tests -c Release --blame --blame-hang-timeout 5m --blame-hang-dump-type none --logger "console;verbosity=normal" > "$1" 2>&1
           }
           first=0
           run_ide_tests ci-out/TabStudio.App.Tests.log || first=1
@@ -154,6 +155,7 @@ jobs:
           run_light_tests() {
             TABSTUDIO_THEME=Light TABSTUDIO_SCREENSHOTS="$TABSTUDIO_SCREENSHOTS/light" \
               dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter "FullyQualifiedName!~TabStudio.App.Tests.Theming&FullyQualifiedName!~TabStudio.App.Tests.Design" \
+              --blame --blame-hang-timeout 5m --blame-hang-dump-type none \
               --logger "console;verbosity=normal" > "$1" 2>&1
           }
           light=0
@@ -179,7 +181,7 @@ jobs:
           # The UI test the swarm's test recorded on a phone runs as its users' CI runs it: dotnet test, headless.
           recorded=$(find "$TABSTUDIO_RECORDED_UI_TESTS" -name '*.UITests.csproj' 2>/dev/null | head -n 1)
           if [ -n "$recorded" ]; then
-            dotnet test "$recorded" --logger "console;verbosity=normal" > ci-out/recorded-ui-tests.log 2>&1 || status=1
+            dotnet test "$recorded" --blame --blame-hang-timeout 5m --blame-hang-dump-type none --logger "console;verbosity=normal" > ci-out/recorded-ui-tests.log 2>&1 || status=1
             tail -n 30 ci-out/recorded-ui-tests.log
           else
             echo "No recorded UI test project was written." | tee ci-out/recorded-ui-tests.log
