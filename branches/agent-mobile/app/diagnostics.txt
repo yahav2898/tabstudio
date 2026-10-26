@@ -1,0 +1,82 @@
+== Processes left running
+    PID    PPID    PGID   RSS     ELAPSED COMMAND
+   2080    2076    2060 159420   01:04:01 /tmp/provjobd1584702278
+   2142    2121    2060 150464   01:01:20 /home/runner/actions-runner/cached/2.338.0/bin/Runner.Worker spawnclient 142 145
+   2121    2060    2060 123764   01:01:22 /home/runner/actions-runner/cached/2.338.0/bin/Runner.Listener run
+   1245       1    1245 74580    01:04:17 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+   1014       1    1014 51676    01:04:17 php-fpm: master process (/etc/php/8.3/fpm/php-fpm.conf)
+   1092       1    1092 46704    01:04:17 /usr/bin/containerd
+    221       1     221 43716    01:04:25 /sbin/multipathd -d -s
+   1399    1049    1049 37276    01:04:16 /usr/bin/python3 -u bin/WALinuxAgent-2.16.0.2-py3.12.egg -run-exthandlers
+   1049       1    1049 31584    01:04:17 /usr/bin/python3 -u /usr/sbin/waagent -daemon
+   2060       1    2060 21556    01:04:01 /opt/hca/hosted-compute-agent
+   1313    1014    1014 21488    01:04:16 php-fpm: pool www
+   1307    1014    1014 21484    01:04:16 php-fpm: pool www
+   1010       1    1010 21008    01:04:17 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
+    156       1     156 17724    01:04:26 /usr/lib/systemd/systemd-journald
+      1       0       1 14396    01:04:27 /sbin/init
+   1048       1    1048 13720    01:04:17 /usr/libexec/udisks2/udisksd
+    540       1     540 13328    01:04:24 /usr/lib/systemd/systemd-resolved
+   1226       1    1226 13084    01:04:17 /usr/sbin/ModemManager
+   1288       1    1288 11376    01:04:16 /usr/lib/systemd/systemd --user
+   1018       1    1018 10104    01:04:17 /usr/lib/polkit-1/polkitd --no-debug
+   1046       1    1046  9888    01:04:17 /usr/lib/systemd/systemd-logind
+    719       1     719  9772    01:04:22 /usr/lib/systemd/systemd-networkd
+    228       1     228  8024    01:04:25 /usr/lib/systemd/systemd-udevd
+   2076    2060    2060  7060    01:04:01 sudo -n PROVJOBD_E2E=1 /tmp/provjobd1584702278
+    580       1     580  6560    01:04:24 /usr/sbin/haveged --Foreground --verbose=1
+   1192       1    1192  6312    01:04:17 /usr/sbin/rsyslogd -n -iNONE
+   1006       1    1006  5608    01:04:17 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+  26704    2877    2060  4216       00:00 ps -eo pid,ppid,pgid,rss,etime,args --sort=-rss
+   1169       1    1166  3724    01:04:17 /usr/sbin/chronyd -F 1
+   1290    1288    1288  3596    01:04:16 (sd-pam)
+   2877    2142    2060  3576    01:00:50 /usr/bin/bash -e /home/runner/work/_temp/3d588288-b65d-451f-bc4a-fab58b8cee55.sh
+    388       1     388  2904    01:04:24 /usr/lib/linux-tools/6.17.0-1022-azure/hv_kvp_daemon -n
+   1074       1    1074  2756    01:04:17 /usr/sbin/cron -f -P
+   1120       1    1120  2140    01:04:17 /sbin/agetty -o -p -- \u --keep-baud 115200,57600,38400,9600 - vt220
+   1135       1    1135  2036    01:04:17 /sbin/agetty -o -p -- \u --noclear - linux
+  26705    2877    2060  1920       00:00 head -n 40
+   1172    1169    1166  1288    01:04:17 /usr/sbin/chronyd -F 1
+      2       0       0     0    01:04:27 [kthreadd]
+      3       2       0     0    01:04:27 [pool_workqueue_release]
+== Kernel messages
+[   11.109692] kauditd_printk_skb: 113 callbacks suppressed
+[   11.109696] audit: type=1400 audit(1792978347.874:124): apparmor="STATUS" operation="profile_replace" info="same as current profile, skipping" profile="unconfined" name="rsyslogd" pid=1091 comm="apparmor_parser"
+[   11.247189] loop0: detected capacity change from 0 to 8
+[   11.345626] hv_netvsc 6045bd05-c317-6045-bd05-c3176045bd05 eth0: VF slot 1 added
+[   11.347672] hv_pci 4a709cfd-b46e-41f4-a113-084f38d03cf8: PCI VMBus probing: Using version 0x10004
+[   11.349276] hv_pci 4a709cfd-b46e-41f4-a113-084f38d03cf8: PCI host bridge to bus b46e:00
+[   11.349281] pci_bus b46e:00: root bus resource [mem 0xfc0000000-0xfc00fffff window]
+[   11.349287] pci_bus b46e:00: No busn resource found for root bus, will use [bus 00-ff]
+[   11.352399] pci b46e:00:02.0: [15b3:1016] type 00 class 0x020000 PCIe Endpoint
+[   11.357836] pci b46e:00:02.0: BAR 0 [mem 0xfc0000000-0xfc00fffff 64bit pref]
+[   11.358648] pci b46e:00:02.0: enabling Extended Tags
+[   11.369719] pci b46e:00:02.0: 0.000 Gb/s available PCIe bandwidth, limited by Unknown x0 link at b46e:00:02.0 (capable of 63.008 Gb/s with 8.0 GT/s PCIe x8 link)
+[   11.384252] pci_bus b46e:00: busn_res: [bus 00-ff] end is updated to 00
+[   11.384270] pci b46e:00:02.0: BAR 0 [mem 0xfc0000000-0xfc00fffff 64bit pref]: assigned
+[   11.688878] audit: type=1400 audit(1792978348.452:125): apparmor="STATUS" operation="profile_replace" info="same as current profile, skipping" profile="unconfined" name="/usr/lib/snapd/snap-confine" pid=1238 comm="apparmor_parser"
+[   11.859378] systemd-journald[156]: /var/log/journal/2d791d5cce6240faa3c626058b1ffc7d/user-1001.journal: Journal file uses a different sequence number ID, rotating.
+[   12.032508] mlx5_core b46e:00:02.0: enabling device (0000 -> 0002)
+[   12.039097] mlx5_core b46e:00:02.0: firmware version: 14.30.5026
+[   12.057026] Adding 3145724k swap on /swapfile.  Priority:-2 extents:100 across:40820736k 
+[   12.059189] audit: type=1400 audit(1792978348.824:126): apparmor="STATUS" operation="profile_load" profile="unconfined" name="docker-default" pid=1429 comm="apparmor_parser"
+[   12.179780] mlx5_core b46e:00:02.0: Flow counters bulk query buffer size increased, bulk_query_len(8)
+[   12.260225] hv_netvsc 6045bd05-c317-6045-bd05-c3176045bd05 eth0: VF registering: eth1
+[   12.260284] mlx5_core b46e:00:02.0 eth1: joined to eth0
+[   12.260289] mlx5_core b46e:00:02.0 eth1: Disabling LRO, not supported in legacy RQ
+[   12.261100] mlx5_core b46e:00:02.0 eth1: Disabling LRO, not supported in legacy RQ
+[   12.261126] mlx5_core b46e:00:02.0: MLX5E: StrdRq(0) RqSz(1024) StrdSz(256) RxCqeCmprss(0 basic)
+[   12.278682] mlx5_core b46e:00:02.0 enP46190s1: renamed from eth1
+[   12.332416] MACsec IEEE 802.1AE
+[   12.426888] mlx5_core b46e:00:02.0 enP46190s1: Link up
+[   12.460009] hv_netvsc 6045bd05-c317-6045-bd05-c3176045bd05 eth0: Data path switched to VF: enP46190s1
+[   12.460537] mlx5_core b46e:00:02.0 mlx5_0: Port: 1 Link ACTIVE
+[   12.600795] Initializing XFRM netlink socket
+[   12.758604] bridge: filtering via arp/ip/ip6tables is no longer available by default. Update your scripts to load br_netfilter if you need this.
+[   13.069809] systemd-fstab-generator[1809]: Checking was requested for "ephemeral0", but it is not a device.
+[   13.069822] systemd-fstab-generator[1809]: x-systemd.device-timeout ignored for ephemeral0
+[   25.891393] systemd-fstab-generator[1987]: Checking was requested for "ephemeral0", but it is not a device.
+[   25.891412] systemd-fstab-generator[1987]: x-systemd.device-timeout ignored for ephemeral0
+[   26.160969] systemd-fstab-generator[2040]: Checking was requested for "ephemeral0", but it is not a device.
+[   26.160982] systemd-fstab-generator[2040]: x-systemd.device-timeout ignored for ephemeral0
+[   49.225209] hv_balloon: Max. dynamic memory size: 16384 MB
