@@ -118,9 +118,12 @@ public sealed class HotReloadSession : IDisposable
                 return new(HotReloadStatus.NoChanges, "No executable C# changes to apply.", []);
             }
 
-            var warnings = MetadataUpdateHandlers.Notify(_context);
-            return new(HotReloadStatus.Applied, "C# edits applied without restarting. Existing calls finish their old code; new calls use the edits." + warnings, []);
         }
+
+        // User/framework callbacks can marshal to the UI thread. Never hold the session lock while invoking
+        // them: Stop on the UI thread must be able to dispose the session without deadlocking those callbacks.
+        var warnings = MetadataUpdateHandlers.Notify(_context);
+        return new(HotReloadStatus.Applied, "C# edits applied without restarting. Existing calls finish their old code; new calls use the edits." + warnings, []);
     }
 
     private static Guid ReadMvid(byte[] image)

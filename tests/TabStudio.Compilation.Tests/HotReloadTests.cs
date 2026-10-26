@@ -170,6 +170,43 @@ public sealed class HotReloadTests
         Assert.Equal("clear;update:2", program.EntryAssembly.GetType("Handler")!.GetField("Calls")!.GetValue(null));
     }
 
+    [Fact]
+    public void Stopping_the_run_during_a_framework_update_does_not_deadlock()
+    {
+        const string callbackKey = "TabStudio.HotReload.Tests.StopCallback";
+        const string source = """
+            [assembly: System.Reflection.Metadata.MetadataUpdateHandler(typeof(Handler))]
+            public static class Handler
+            {
+                public static void UpdateApplication(Type[]? types)
+                {
+                    ((Action)AppContext.GetData("TabStudio.HotReload.Tests.StopCallback")!)();
+                }
+            }
+            public static class Probe { public static int Value() => 1; }
+            """;
+        CompiledAssembly Build(string text) => new CSharpCompiler().Compile(new CompilationRequest
+        {
+            AssemblyName = "ReloadStopCallback",
+            Kind = AssemblyKind.Library,
+            Documents = [new SourceDocument("Stop.cs", text)],
+        }).Assembly!;
+        var original = Build(source);
+        using var program = LoadedProgram.Load(original, [], [], unloadable: false);
+        using var session = new HotReloadSession(original, [], program.EntryAssembly);
+        var stopped = false;
+        AppContext.SetData(callbackKey, (Action)(() => stopped = Task.Run(session.Dispose).Wait(TimeSpan.FromSeconds(3))));
+        try
+        {
+            Assert.Equal(HotReloadStatus.Applied, session.Apply([Build(source.Replace("=> 1", "=> 2", StringComparison.Ordinal))]).Status);
+            Assert.True(stopped, "A framework callback must not hold a lock that Stop needs on another thread.");
+        }
+        finally
+        {
+            AppContext.SetData(callbackKey, null);
+        }
+    }
+
     private static CompiledAssembly Compile(string members)
     {
         var result = new CSharpCompiler().Compile(Request(members));

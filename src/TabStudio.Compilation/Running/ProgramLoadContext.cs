@@ -21,7 +21,10 @@ internal sealed class ProgramLoadContext : AssemblyLoadContext
     public ProgramLoadContext(string name, IReadOnlyList<CompiledAssembly> dependencies, IReadOnlyList<string> packageAssemblies, Func<string, bool>? sharedWithHost, bool unloadable = true)
         : base($"TabStudio program: {name}", isCollectible: unloadable && SupportsUnloading)
     {
-        _dependencies = dependencies.ToDictionary(d => d.Name, StringComparer.OrdinalIgnoreCase);
+        // A debug load context can live for the process lifetime. It needs images for lazy loads, never the
+        // compiler graphs; only the active Hot Reload session should keep those alive.
+        _dependencies = dependencies.Select(d => d with { HotReloadCompilation = null })
+            .ToDictionary(d => d.Name, StringComparer.OrdinalIgnoreCase);
         _sharedWithHost = sharedWithHost;
         foreach (var path in packageAssemblies)
         {

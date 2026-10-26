@@ -50,7 +50,7 @@ public sealed class DebugSession : IDisposable
     /// <summary>Hosted sessions connect their programs one at a time, as that briefly uses the process-wide sink.</summary>
     private static readonly Lock AttachGate = new();
 
-    private readonly DebugBuild _build;
+    private DebugBuild _build;
     private DebugInfoMap _debugInfo;
     private readonly DebugEngine _engine;
     private readonly Lock _breakpointsGate = new();
@@ -426,6 +426,18 @@ public sealed class DebugSession : IDisposable
         Stop();
         _disposed = true;
         _stop.Dispose();
+        // The stopped program's static hook delegates can still reference this session on Mono. Retain its
+        // images/source map for the existing inspection contract, but release the much larger compiler graphs.
+        var result = _build.Result;
+        _build = _build with
+        {
+            Result = result with
+            {
+                EntryAssembly = result.EntryAssembly is { } entry ? entry with { HotReloadCompilation = null } : null,
+                Dependencies = result.Dependencies.Select(a => a with { HotReloadCompilation = null }).ToArray(),
+            },
+        };
+        Loaded = null;
     }
 
     private void OnPaused(DebugPausedEventArgs pause) => Paused?.Invoke(this, pause);
