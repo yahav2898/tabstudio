@@ -6,11 +6,26 @@
     "version": "3.24.3",
     "branch": "v3.24",
     "mirror": "https://dl-cdn.alpinelinux.org/alpine",
-    "repositories": [ "main", "community" ],
+    "repositories": [
+      "main",
+      "community"
+    ],
     "rootfs": {
-      "x86_64": { "file": "alpine-minirootfs-3.24.3-x86_64.tar.gz", "sha256": "f8e1cafba9b1b283b5d30d06f9885c8d2bc161ffe9083ade8e2e157813a53407", "size": 3704080 },
-      "aarch64": { "file": "alpine-minirootfs-3.24.3-aarch64.tar.gz", "sha256": "4d3f80afaebd447c5591a63a73bde380a149fe8b2d85488cafabb2ff97551f50", "size": 4029999 },
-      "armv7": { "file": "alpine-minirootfs-3.24.3-armv7.tar.gz", "sha256": "dc1ddfaf03ede4be79ad7475490f6b7859dbcbbbbb85150aa1ee013b4bc2f0c1", "size": 3183009 }
+      "x86_64": {
+        "file": "alpine-minirootfs-3.24.3-x86_64.tar.gz",
+        "sha256": "f8e1cafba9b1b283b5d30d06f9885c8d2bc161ffe9083ade8e2e157813a53407",
+        "size": 3704080
+      },
+      "aarch64": {
+        "file": "alpine-minirootfs-3.24.3-aarch64.tar.gz",
+        "sha256": "4d3f80afaebd447c5591a63a73bde380a149fe8b2d85488cafabb2ff97551f50",
+        "size": 4029999
+      },
+      "armv7": {
+        "file": "alpine-minirootfs-3.24.3-armv7.tar.gz",
+        "sha256": "dc1ddfaf03ede4be79ad7475490f6b7859dbcbbbbb85150aa1ee013b4bc2f0c1",
+        "size": 3183009
+      }
     }
   },
   "toolchains": [
@@ -18,33 +33,106 @@
       "id": "python",
       "name": "Python",
       "description": "Python 3 with pip and virtual environments, the Pyright language server (which runs on Node.js) and the debugpy debugger.",
-      "languages": [ "Python" ],
+      "languages": [
+        "Python"
+      ],
       "listed": true,
       "homepage": "https://www.python.org",
       "license": "PSF-2.0",
-      "packages": [ "python3", "py3-pip", "nodejs", "npm" ],
+      "packages": [
+        "python3",
+        "py3-pip",
+        "nodejs",
+        "npm"
+      ],
       "versionPackage": "python3",
       "estimatedDownloadSize": 48000000,
       "estimatedInstalledSize": 185000000,
-      "host": { "commands": [ "python3", "python" ], "versionArguments": [ "--version" ], "versionPattern": "Python (?<version>\\S+)" },
-      "fileExtensions": [ ".py", ".pyw" ],
-      "projectFiles": [ "pyproject.toml", "requirements.txt", "setup.py", "Pipfile" ],
+      "host": {
+        "commands": [
+          "python3",
+          "python"
+        ],
+        "versionArguments": [
+          "--version"
+        ],
+        "versionPattern": "Python (?<version>\\S+)"
+      },
+      "fileExtensions": [
+        ".py",
+        ".pyw"
+      ],
+      "projectFiles": [
+        "pyproject.toml",
+        "requirements.txt",
+        "setup.py",
+        "Pipfile"
+      ],
       "sourceFolderIsProject": true,
       "run": {
-        "file": [ "{python}", "-u", "{file}" ],
-        "entries": [
-          { "file": "__main__.py", "command": [ "{python}", "-u", "__main__.py" ] },
-          { "file": "main.py", "command": [ "{python}", "-u", "main.py" ] },
-          { "file": "app.py", "command": [ "{python}", "-u", "app.py" ] },
-          { "file": "src/*/__main__.py", "command": [ "{python}", "-u", "-m", "{match}" ], "environment": { "PYTHONPATH": "src" } }
+        "file": [
+          "{python}",
+          "-u",
+          "{file}"
         ],
-        "environment": { "PYTHONUNBUFFERED": "1", "PYTHONIOENCODING": "utf-8", "PIP_ROOT_USER_ACTION": "ignore" }
+        "entries": [
+          {
+            "file": "__main__.py",
+            "command": [
+              "{python}",
+              "-u",
+              "__main__.py"
+            ]
+          },
+          {
+            "file": "main.py",
+            "command": [
+              "{python}",
+              "-u",
+              "main.py"
+            ]
+          },
+          {
+            "file": "app.py",
+            "command": [
+              "{python}",
+              "-u",
+              "app.py"
+            ]
+          },
+          {
+            "file": "src/*/__main__.py",
+            "command": [
+              "{python}",
+              "-u",
+              "-m",
+              "{match}"
+            ],
+            "environment": {
+              "PYTHONPATH": "src"
+            }
+          }
+        ],
+        "environment": {
+          "PYTHONUNBUFFERED": "1",
+          "PYTHONIOENCODING": "utf-8",
+          "PIP_ROOT_USER_ACTION": "ignore"
+        }
       },
       "projectEnvironment": {
         "directory": ".venv",
-        "create": [ "python3", "-m", "venv", ".venv" ],
-        "variables": { "python": ".venv/bin/python" },
-        "defaults": { "python": "python3" },
+        "create": [
+          "python3",
+          "-m",
+          "venv",
+          ".venv"
+        ],
+        "variables": {
+          "python": ".venv/bin/python"
+        },
+        "defaults": {
+          "python": "python3"
+        },
         "path": ".venv/bin"
       },
       "dependencies": [
@@ -52,14 +140,30 @@
           "manifest": "requirements.txt",
           "name": "pip install -r requirements.txt",
           "description": "Installs the packages requirements.txt lists into the project's virtual environment, .venv.",
-          "command": [ ".venv/bin/python", "-m", "pip", "install", "--disable-pip-version-check", "-r", "requirements.txt" ],
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "pip",
+            "install",
+            "--disable-pip-version-check",
+            "-r",
+            "requirements.txt"
+          ],
           "installed": ".venv"
         },
         {
           "manifest": "pyproject.toml",
           "name": "pip install -e .",
           "description": "Installs the project and its dependencies from pyproject.toml into .venv, in editable mode.",
-          "command": [ ".venv/bin/python", "-m", "pip", "install", "--disable-pip-version-check", "-e", "." ],
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "pip",
+            "install",
+            "--disable-pip-version-check",
+            "-e",
+            "."
+          ],
           "installed": ".venv"
         }
       ],
@@ -77,25 +181,59 @@
         {
           "name": "debugpy on Python's path",
           "description": "Lets python3 -m debugpy.adapter find debugpy without PYTHONPATH.",
-          "command": [ "python3", "-c", "import site; open(site.getsitepackages()[0] + '/tabstudio-debugpy.pth', 'w').write('/opt/tabstudio/python/debugpy\\n')" ]
+          "command": [
+            "python3",
+            "-c",
+            "import site; open(site.getsitepackages()[0] + '/tabstudio-debugpy.pth', 'w').write('/opt/tabstudio/python/debugpy\\n')"
+          ]
         },
         {
           "name": "Pyright",
           "description": "The language server for Python.",
-          "command": [ "npm", "install", "--global", "--no-fund", "--no-audit", "pyright@1.1.403" ],
-          "removes": [ "/usr/local/lib/node_modules/pyright", "/usr/local/bin/pyright", "/usr/local/bin/pyright-langserver" ]
+          "command": [
+            "npm",
+            "install",
+            "--global",
+            "--no-fund",
+            "--no-audit",
+            "pyright@1.1.403"
+          ],
+          "removes": [
+            "/usr/local/lib/node_modules/pyright",
+            "/usr/local/bin/pyright",
+            "/usr/local/bin/pyright-langserver"
+          ]
         }
       ],
-      "languageServer": { "id": "pyright", "command": [ "pyright-langserver", "--stdio" ], "languages": [ "python" ] },
+      "languageServer": {
+        "id": "pyright",
+        "command": [
+          "pyright-langserver",
+          "--stdio"
+        ],
+        "languages": [
+          "python"
+        ]
+      },
       "debugAdapter": {
         "id": "debugpy",
-        "command": [ "python3", "-m", "debugpy.adapter" ],
-        "environment": { "PYTHONPATH": "/opt/tabstudio/python/debugpy" },
+        "command": [
+          "python3",
+          "-m",
+          "debugpy.adapter"
+        ],
+        "environment": {
+          "PYTHONPATH": "/opt/tabstudio/python/debugpy"
+        },
         "type": "debugpy",
-        "languages": [ "python" ]
+        "languages": [
+          "python"
+        ]
       },
       "problemPatterns": [
-        { "pattern": "File \"(?<file>[^\"]+)\", line (?<line>\\d+)" }
+        {
+          "pattern": "File \"(?<file>[^\"]+)\", line (?<line>\\d+)"
+        }
       ],
       "errorPattern": "^(?<message>(?:[A-Za-z_][\\w.]*(?:Error|Exception|Exit|Interrupt|Warning)|KeyboardInterrupt)(?::.*)?)$"
     },
@@ -103,45 +241,153 @@
       "id": "node",
       "name": "Node.js",
       "description": "Node.js with npm, the TypeScript language server for JavaScript and TypeScript, the HTML, CSS and JSON language servers, and the JavaScript debugger.",
-      "languages": [ "JavaScript", "TypeScript" ],
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
       "listed": true,
       "homepage": "https://nodejs.org",
       "license": "MIT",
-      "packages": [ "nodejs", "npm" ],
+      "packages": [
+        "nodejs",
+        "npm"
+      ],
       "versionPackage": "nodejs",
       "estimatedDownloadSize": 30000000,
       "estimatedInstalledSize": 140000000,
-      "host": { "commands": [ "node" ], "versionArguments": [ "--version" ], "versionPattern": "v(?<version>\\S+)" },
-      "fileExtensions": [ ".js", ".mjs", ".cjs", ".ts", ".mts", ".cts" ],
-      "projectFiles": [ "package.json" ],
-      "run": {
-        "file": [ "node", "{file}" ],
-        "entries": [
-          { "file": "package.json", "json": "scripts.start", "command": [ "npm", "start" ] },
-          { "file": "package.json", "json": "scripts.dev", "command": [ "npm", "run", "dev" ] },
-          { "file": "package.json", "json": "scripts.serve", "command": [ "npm", "run", "serve" ] },
-          { "file": "package.json", "json": "main", "command": [ "node", "{json}" ] },
-          { "file": "index.js", "command": [ "node", "index.js" ] },
-          { "file": "index.ts", "command": [ "node", "index.ts" ] },
-          { "file": "main.js", "command": [ "node", "main.js" ] },
-          { "file": "app.js", "command": [ "node", "app.js" ] },
-          { "file": "server.js", "command": [ "node", "server.js" ] }
+      "host": {
+        "commands": [
+          "node"
         ],
-        "environment": { "NODE_DISABLE_COLORS": "1", "NO_UPDATE_NOTIFIER": "1", "npm_config_update_notifier": "false", "npm_config_fund": "false" }
+        "versionArguments": [
+          "--version"
+        ],
+        "versionPattern": "v(?<version>\\S+)"
+      },
+      "fileExtensions": [
+        ".js",
+        ".mjs",
+        ".cjs",
+        ".ts",
+        ".mts",
+        ".cts"
+      ],
+      "projectFiles": [
+        "package.json"
+      ],
+      "run": {
+        "file": [
+          "node",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": "package.json",
+            "json": "scripts.start",
+            "command": [
+              "npm",
+              "start"
+            ]
+          },
+          {
+            "file": "package.json",
+            "json": "scripts.dev",
+            "command": [
+              "npm",
+              "run",
+              "dev"
+            ]
+          },
+          {
+            "file": "package.json",
+            "json": "scripts.serve",
+            "command": [
+              "npm",
+              "run",
+              "serve"
+            ]
+          },
+          {
+            "file": "package.json",
+            "json": "main",
+            "command": [
+              "node",
+              "{json}"
+            ]
+          },
+          {
+            "file": "index.js",
+            "command": [
+              "node",
+              "index.js"
+            ]
+          },
+          {
+            "file": "index.ts",
+            "command": [
+              "node",
+              "index.ts"
+            ]
+          },
+          {
+            "file": "main.js",
+            "command": [
+              "node",
+              "main.js"
+            ]
+          },
+          {
+            "file": "app.js",
+            "command": [
+              "node",
+              "app.js"
+            ]
+          },
+          {
+            "file": "server.js",
+            "command": [
+              "node",
+              "server.js"
+            ]
+          }
+        ],
+        "environment": {
+          "NODE_DISABLE_COLORS": "1",
+          "NO_UPDATE_NOTIFIER": "1",
+          "npm_config_update_notifier": "false",
+          "npm_config_fund": "false"
+        }
       },
       "dependencies": [
         {
           "manifest": "package.json",
           "name": "npm install",
           "description": "Installs the packages package.json lists into node_modules.",
-          "command": [ "npm", "install", "--no-fund", "--no-audit" ],
+          "command": [
+            "npm",
+            "install",
+            "--no-fund",
+            "--no-audit"
+          ],
           "installed": "node_modules",
-          "declares": [ "dependencies", "devDependencies", "optionalDependencies" ],
+          "declares": [
+            "dependencies",
+            "devDependencies",
+            "optionalDependencies"
+          ],
           "locked": {
-            "files": [ "package-lock.json", "npm-shrinkwrap.json" ],
+            "files": [
+              "package-lock.json",
+              "npm-shrinkwrap.json"
+            ],
             "name": "npm ci",
             "description": "Installs the exact packages package-lock.json records into node_modules.",
-            "command": [ "npm", "ci", "--no-fund", "--no-audit" ]
+            "command": [
+              "npm",
+              "ci",
+              "--no-fund",
+              "--no-audit"
+            ]
           }
         }
       ],
@@ -149,14 +395,42 @@
         {
           "name": "TypeScript language server",
           "description": "The language server for JavaScript and TypeScript, with TypeScript itself.",
-          "command": [ "npm", "install", "--global", "--no-fund", "--no-audit", "typescript-language-server@6.0.2", "typescript@5.9.3" ],
-          "removes": [ "/usr/local/lib/node_modules/typescript-language-server", "/usr/local/lib/node_modules/typescript", "/usr/local/bin/typescript-language-server", "/usr/local/bin/tsc", "/usr/local/bin/tsserver" ]
+          "command": [
+            "npm",
+            "install",
+            "--global",
+            "--no-fund",
+            "--no-audit",
+            "typescript-language-server@6.0.2",
+            "typescript@5.9.3"
+          ],
+          "removes": [
+            "/usr/local/lib/node_modules/typescript-language-server",
+            "/usr/local/lib/node_modules/typescript",
+            "/usr/local/bin/typescript-language-server",
+            "/usr/local/bin/tsc",
+            "/usr/local/bin/tsserver"
+          ]
         },
         {
           "name": "HTML, CSS and JSON language servers",
           "description": "The language servers of VS Code's HTML, CSS and JSON support, from vscode-langservers-extracted.",
-          "command": [ "npm", "install", "--global", "--no-fund", "--no-audit", "vscode-langservers-extracted@4.10.0" ],
-          "removes": [ "/usr/local/lib/node_modules/vscode-langservers-extracted", "/usr/local/bin/vscode-html-language-server", "/usr/local/bin/vscode-css-language-server", "/usr/local/bin/vscode-json-language-server", "/usr/local/bin/vscode-eslint-language-server", "/usr/local/bin/vscode-markdown-language-server" ]
+          "command": [
+            "npm",
+            "install",
+            "--global",
+            "--no-fund",
+            "--no-audit",
+            "vscode-langservers-extracted@4.10.0"
+          ],
+          "removes": [
+            "/usr/local/lib/node_modules/vscode-langservers-extracted",
+            "/usr/local/bin/vscode-html-language-server",
+            "/usr/local/bin/vscode-css-language-server",
+            "/usr/local/bin/vscode-json-language-server",
+            "/usr/local/bin/vscode-eslint-language-server",
+            "/usr/local/bin/vscode-markdown-language-server"
+          ]
         },
         {
           "name": "JavaScript debugger",
@@ -178,23 +452,77 @@
           }
         }
       ],
-      "languageServer": { "id": "typescript-language-server", "command": [ "typescript-language-server", "--stdio" ], "languages": [ "javascript", "typescript", "javascriptreact", "typescriptreact" ] },
+      "languageServer": {
+        "id": "typescript-language-server",
+        "command": [
+          "typescript-language-server",
+          "--stdio"
+        ],
+        "languages": [
+          "javascript",
+          "typescript",
+          "javascriptreact",
+          "typescriptreact"
+        ]
+      },
       "additionalLanguageServers": [
-        { "id": "vscode-html-language-server", "command": [ "vscode-html-language-server", "--stdio" ], "languages": [ "html" ] },
-        { "id": "vscode-css-language-server", "command": [ "vscode-css-language-server", "--stdio" ], "languages": [ "css", "scss", "less" ] },
-        { "id": "vscode-json-language-server", "command": [ "vscode-json-language-server", "--stdio" ], "languages": [ "jsonc" ] }
+        {
+          "id": "vscode-html-language-server",
+          "command": [
+            "vscode-html-language-server",
+            "--stdio"
+          ],
+          "languages": [
+            "html"
+          ]
+        },
+        {
+          "id": "vscode-css-language-server",
+          "command": [
+            "vscode-css-language-server",
+            "--stdio"
+          ],
+          "languages": [
+            "css",
+            "scss",
+            "less"
+          ]
+        },
+        {
+          "id": "vscode-json-language-server",
+          "command": [
+            "vscode-json-language-server",
+            "--stdio"
+          ],
+          "languages": [
+            "jsonc"
+          ]
+        }
       ],
       "debugAdapter": {
         "id": "js-debug",
-        "command": [ "js-debug-adapter", "{port}", "127.0.0.1" ],
+        "command": [
+          "js-debug-adapter",
+          "{port}",
+          "127.0.0.1"
+        ],
         "transport": "tcp",
         "type": "pwa-node",
-        "languages": [ "javascript", "typescript" ]
+        "languages": [
+          "javascript",
+          "typescript"
+        ]
       },
       "problemPatterns": [
-        { "pattern": "\\((?<file>/[^()]+?):(?<line>\\d+):(?<column>\\d+)\\)" },
-        { "pattern": "at (?<file>/[^\\s()]+?):(?<line>\\d+):(?<column>\\d+)" },
-        { "pattern": "^(?<file>/[^\\s:]+\\.(?:js|mjs|cjs|ts|mts|cts)):(?<line>\\d+)$" }
+        {
+          "pattern": "\\((?<file>/[^()]+?):(?<line>\\d+):(?<column>\\d+)\\)"
+        },
+        {
+          "pattern": "at (?<file>/[^\\s()]+?):(?<line>\\d+):(?<column>\\d+)"
+        },
+        {
+          "pattern": "^(?<file>/[^\\s:]+\\.(?:js|mjs|cjs|ts|mts|cts)):(?<line>\\d+)$"
+        }
       ],
       "errorPattern": "^(?<message>(?:Uncaught )?(?:[A-Z]\\w*)?Error(?: \\[[A-Z_]+\\])?: .*)$"
     },
@@ -202,60 +530,203 @@
       "id": "cpp",
       "name": "C and C++",
       "description": "GCC and Clang, CMake and make, the clangd language server and the GDB and LLDB debuggers.",
-      "languages": [ "C", "C++" ],
+      "languages": [
+        "C",
+        "C++"
+      ],
       "listed": true,
       "homepage": "https://clang.llvm.org",
       "license": "GPL-3.0-or-later AND Apache-2.0 WITH LLVM-exception",
-      "packages": [ "build-base", "clang22", "clang22-extra-tools", "cmake", "samurai", "gdb", "lldb" ],
+      "packages": [
+        "build-base",
+        "clang22",
+        "clang22-extra-tools",
+        "cmake",
+        "samurai",
+        "gdb",
+        "lldb"
+      ],
       "versionPackage": "clang22",
       "estimatedDownloadSize": 190000000,
       "estimatedInstalledSize": 780000000,
-      "host": { "commands": [ "cc", "gcc", "clang" ], "versionArguments": [ "--version" ], "versionPattern": "(?<version>\\d+\\.\\d+(?:\\.\\d+)?)" },
-      "fileExtensions": [ ".c", ".cpp", ".cc", ".cxx" ],
-      "projectFiles": [ "CMakeLists.txt", "Makefile", "makefile", "GNUmakefile" ],
+      "host": {
+        "commands": [
+          "cc",
+          "gcc",
+          "clang"
+        ],
+        "versionArguments": [
+          "--version"
+        ],
+        "versionPattern": "(?<version>\\d+\\.\\d+(?:\\.\\d+)?)"
+      },
+      "fileExtensions": [
+        ".c",
+        ".cpp",
+        ".cc",
+        ".cxx"
+      ],
+      "projectFiles": [
+        "CMakeLists.txt",
+        "Makefile",
+        "makefile",
+        "GNUmakefile"
+      ],
       "sourceFolderIsProject": true,
       "run": {
-        "file": [ "sh", "-c", "c++ -std=c++20 -g -O0 -o /tmp/tabstudio-run \"$0\" && exec /tmp/tabstudio-run", "{file}" ],
+        "file": [
+          "sh",
+          "-c",
+          "c++ -std=c++20 -g -O0 -o /tmp/tabstudio-run \"$0\" && exec /tmp/tabstudio-run",
+          "{file}"
+        ],
         "entries": [
-          { "file": "CMakeLists.txt", "build": [ "cmake", "--build", ".tabstudio/cmake", "--config", "Debug" ], "command": [ ".tabstudio/bin/app" ] },
-          { "file": "Makefile", "build": [ "make" ], "command": [ "make", "run" ] }
+          {
+            "file": "CMakeLists.txt",
+            "build": [
+              "cmake",
+              "--build",
+              ".tabstudio/cmake",
+              "--config",
+              "Debug"
+            ],
+            "command": [
+              ".tabstudio/bin/app"
+            ]
+          },
+          {
+            "file": "Makefile",
+            "build": [
+              "make"
+            ],
+            "command": [
+              "make",
+              "run"
+            ]
+          }
         ]
       },
-      "languageServer": { "id": "clangd", "command": [ "clangd", "--background-index" ], "languages": [ "c", "cpp" ] },
-      "debugAdapter": { "id": "lldb-dap", "command": [ "lldb-dap" ], "type": "lldb-dap", "languages": [ "c", "cpp" ] },
+      "languageServer": {
+        "id": "clangd",
+        "command": [
+          "clangd",
+          "--background-index"
+        ],
+        "languages": [
+          "c",
+          "cpp"
+        ]
+      },
+      "debugAdapter": {
+        "id": "lldb-dap",
+        "command": [
+          "lldb-dap"
+        ],
+        "type": "lldb-dap",
+        "languages": [
+          "c",
+          "cpp"
+        ]
+      },
       "problemPatterns": [
-        { "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+): (?<severity>fatal error|error|warning|note): (?<message>.*)$" }
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+): (?<severity>fatal error|error|warning|note): (?<message>.*)$"
+        }
       ]
     },
     {
       "id": "rust",
       "name": "Rust",
       "description": "The Rust compiler and Cargo, rust-analyzer, and LLDB for debugging.",
-      "languages": [ "Rust" ],
+      "languages": [
+        "Rust"
+      ],
       "listed": true,
       "homepage": "https://www.rust-lang.org",
       "license": "MIT OR Apache-2.0",
-      "packages": [ "rust", "cargo", "rust-analyzer", "rust-src", "rustfmt", "rust-clippy", "lldb" ],
+      "packages": [
+        "rust",
+        "cargo",
+        "rust-analyzer",
+        "rust-src",
+        "rustfmt",
+        "rust-clippy",
+        "lldb"
+      ],
       "versionPackage": "rust",
       "estimatedDownloadSize": 210000000,
       "estimatedInstalledSize": 900000000,
-      "host": { "commands": [ "rustc" ], "versionArguments": [ "--version" ], "versionPattern": "rustc (?<version>\\S+)" },
-      "fileExtensions": [ ".rs" ],
-      "projectFiles": [ "Cargo.toml" ],
+      "host": {
+        "commands": [
+          "rustc"
+        ],
+        "versionArguments": [
+          "--version"
+        ],
+        "versionPattern": "rustc (?<version>\\S+)"
+      },
+      "fileExtensions": [
+        ".rs"
+      ],
+      "projectFiles": [
+        "Cargo.toml"
+      ],
       "allowNestedProjects": true,
       "run": {
-        "file": [ "sh", "-c", "rustc -g -o /tmp/tabstudio-run \"$0\" && exec /tmp/tabstudio-run", "{file}" ],
-        "entries": [
-          { "file": "Cargo.toml", "build": [ "cargo", "build", "--message-format=json-render-diagnostics" ], "command": [ "cargo", "run", "--quiet" ] }
+        "file": [
+          "sh",
+          "-c",
+          "rustc -g -o /tmp/tabstudio-run \"$0\" && exec /tmp/tabstudio-run",
+          "{file}"
         ],
-        "environment": { "CARGO_TERM_COLOR": "never" }
+        "entries": [
+          {
+            "file": "Cargo.toml",
+            "build": [
+              "cargo",
+              "build",
+              "--message-format=json-render-diagnostics"
+            ],
+            "command": [
+              "cargo",
+              "run",
+              "--quiet"
+            ]
+          }
+        ],
+        "environment": {
+          "CARGO_TERM_COLOR": "never"
+        }
       },
-      "languageServer": { "id": "rust-analyzer", "command": [ "rust-analyzer" ], "languages": [ "rust" ] },
-      "debugAdapter": { "id": "lldb-dap", "command": [ "lldb-dap" ], "type": "lldb-dap", "languages": [ "rust" ] },
+      "languageServer": {
+        "id": "rust-analyzer",
+        "command": [
+          "rust-analyzer"
+        ],
+        "languages": [
+          "rust"
+        ]
+      },
+      "debugAdapter": {
+        "id": "lldb-dap",
+        "command": [
+          "lldb-dap"
+        ],
+        "type": "lldb-dap",
+        "languages": [
+          "rust"
+        ]
+      },
       "problemPatterns": [
-        { "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+): (?<severity>error|warning|note): (?<message>.*)$" },
-        { "pattern": "-->\\s+(?<file>[^:\\s]+):(?<line>\\d+):(?<column>\\d+)" },
-        { "pattern": "panicked at (?<file>[^:\\s]+):(?<line>\\d+):(?<column>\\d+)" }
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+): (?<severity>error|warning|note): (?<message>.*)$"
+        },
+        {
+          "pattern": "-->\\s+(?<file>[^:\\s]+):(?<line>\\d+):(?<column>\\d+)"
+        },
+        {
+          "pattern": "panicked at (?<file>[^:\\s]+):(?<line>\\d+):(?<column>\\d+)"
+        }
       ],
       "errorPattern": "^error(?:\\[[^\\]]+\\])?: (?<message>.*)$"
     },
@@ -263,30 +734,93 @@
       "id": "go",
       "name": "Go",
       "description": "The Go toolchain, the gopls language server and the Delve debugger.",
-      "languages": [ "Go" ],
+      "languages": [
+        "Go"
+      ],
       "listed": true,
       "homepage": "https://go.dev",
       "license": "BSD-3-Clause",
-      "packages": [ "go", "gopls", "delve" ],
+      "packages": [
+        "go",
+        "gopls",
+        "delve"
+      ],
       "versionPackage": "go",
       "estimatedDownloadSize": 90000000,
       "estimatedInstalledSize": 330000000,
-      "host": { "commands": [ "go" ], "versionArguments": [ "version" ], "versionPattern": "go(?<version>\\d+\\.\\d+(?:\\.\\d+)?)" },
-      "fileExtensions": [ ".go" ],
-      "projectFiles": [ "go.mod" ],
+      "host": {
+        "commands": [
+          "go"
+        ],
+        "versionArguments": [
+          "version"
+        ],
+        "versionPattern": "go(?<version>\\d+\\.\\d+(?:\\.\\d+)?)"
+      },
+      "fileExtensions": [
+        ".go"
+      ],
+      "projectFiles": [
+        "go.mod"
+      ],
       "allowNestedProjects": true,
       "run": {
-        "file": [ "go", "run", "{file}" ],
-        "entries": [
-          { "file": "go.mod", "build": [ "go", "build", "-gcflags=all=-N -l", "-o", ".tabstudio/bin/app", "." ], "command": [ ".tabstudio/bin/app" ] }
+        "file": [
+          "go",
+          "run",
+          "{file}"
         ],
-        "environment": { "GOFLAGS": "-buildvcs=false", "GOTOOLCHAIN": "local" }
+        "entries": [
+          {
+            "file": "go.mod",
+            "build": [
+              "go",
+              "build",
+              "-gcflags=all=-N -l",
+              "-o",
+              ".tabstudio/bin/app",
+              "."
+            ],
+            "command": [
+              ".tabstudio/bin/app"
+            ]
+          }
+        ],
+        "environment": {
+          "GOFLAGS": "-buildvcs=false",
+          "GOTOOLCHAIN": "local"
+        }
       },
-      "languageServer": { "id": "gopls", "command": [ "gopls" ], "languages": [ "go" ] },
-      "debugAdapter": { "id": "delve", "command": [ "dlv", "dap", "--listen", "127.0.0.1:{port}" ], "transport": "tcp", "type": "go", "languages": [ "go" ] },
+      "languageServer": {
+        "id": "gopls",
+        "command": [
+          "gopls"
+        ],
+        "languages": [
+          "go"
+        ]
+      },
+      "debugAdapter": {
+        "id": "delve",
+        "command": [
+          "dlv",
+          "dap",
+          "--listen",
+          "127.0.0.1:{port}"
+        ],
+        "transport": "tcp",
+        "type": "go",
+        "languages": [
+          "go"
+        ]
+      },
       "problemPatterns": [
-        { "pattern": "^(?<file>.+?\\.go):(?<line>\\d+):(?:(?<column>\\d+):)? (?<message>.*)$" },
-        { "pattern": "^\\s+(?<file>/.+?\\.go):(?<line>\\d+)" }
+        {
+          "pattern": "^(?<file>.+?\\.go):(?<line>\\d+):(?:(?<column>\\d+):)? (?<message>.*)$"
+        },
+        {
+          "pattern": "^\\s+(?<file>/.+?\\.go):(?<line>\\d+)"
+        }
       ],
       "errorPattern": "^(?<message>panic:.*|fatal error:.*)$"
     },
@@ -294,32 +828,114 @@
       "id": "java",
       "name": "Java",
       "description": "OpenJDK 21 with Maven and Gradle, and the Eclipse JDT language server.",
-      "languages": [ "Java" ],
+      "languages": [
+        "Java"
+      ],
       "listed": true,
       "homepage": "https://openjdk.org",
       "license": "GPL-2.0-only WITH Classpath-exception-2.0",
-      "packages": [ "openjdk21-jdk", "jdtls" ],
+      "packages": [
+        "openjdk21-jdk",
+        "jdtls"
+      ],
       "versionPackage": "openjdk21-jdk",
       "estimatedDownloadSize": 260000000,
       "estimatedInstalledSize": 560000000,
-      "host": { "commands": [ "java" ], "versionArguments": [ "-version" ], "versionPattern": "version \"(?<version>[^\"]+)\"" },
-      "fileExtensions": [ ".java" ],
-      "projectFiles": [ "pom.xml", "build.gradle", "build.gradle.kts", "settings.gradle", "settings.gradle.kts" ],
+      "host": {
+        "commands": [
+          "java"
+        ],
+        "versionArguments": [
+          "-version"
+        ],
+        "versionPattern": "version \"(?<version>[^\"]+)\""
+      },
+      "fileExtensions": [
+        ".java"
+      ],
+      "projectFiles": [
+        "pom.xml",
+        "build.gradle",
+        "build.gradle.kts",
+        "settings.gradle",
+        "settings.gradle.kts"
+      ],
       "sourceFolderIsProject": true,
       "allowNestedProjects": true,
       "projectTools": [
-        { "manifest": "pom.xml", "command": "mvn", "packages": [ "maven" ] },
-        { "manifest": "build.gradle", "command": "gradle", "packages": [ "gradle" ] },
-        { "manifest": "build.gradle.kts", "command": "gradle", "packages": [ "gradle" ] }
+        {
+          "manifest": "pom.xml",
+          "command": "mvn",
+          "packages": [
+            "maven"
+          ]
+        },
+        {
+          "manifest": "build.gradle",
+          "command": "gradle",
+          "packages": [
+            "gradle"
+          ]
+        },
+        {
+          "manifest": "build.gradle.kts",
+          "command": "gradle",
+          "packages": [
+            "gradle"
+          ]
+        }
       ],
       "run": {
-        "file": [ "java", "{file}" ],
-        "entries": [
-          { "file": "pom.xml", "build": [ "mvn", "-q", "package" ], "command": [ "mvn", "-q", "exec:java" ] },
-          { "file": "build.gradle", "build": [ "gradle", "--console=plain", "build" ], "command": [ "gradle", "--console=plain", "--quiet", "run" ] },
-          { "file": "settings.gradle", "build": [ "gradle", "--console=plain", "build" ], "command": [ "gradle", "--console=plain", "--quiet", "run" ] }
+        "file": [
+          "java",
+          "{file}"
         ],
-        "environment": { "NO_COLOR": "1" }
+        "entries": [
+          {
+            "file": "pom.xml",
+            "build": [
+              "mvn",
+              "-q",
+              "package"
+            ],
+            "command": [
+              "mvn",
+              "-q",
+              "exec:java"
+            ]
+          },
+          {
+            "file": "build.gradle",
+            "build": [
+              "gradle",
+              "--console=plain",
+              "build"
+            ],
+            "command": [
+              "gradle",
+              "--console=plain",
+              "--quiet",
+              "run"
+            ]
+          },
+          {
+            "file": "settings.gradle",
+            "build": [
+              "gradle",
+              "--console=plain",
+              "build"
+            ],
+            "command": [
+              "gradle",
+              "--console=plain",
+              "--quiet",
+              "run"
+            ]
+          }
+        ],
+        "environment": {
+          "NO_COLOR": "1"
+        }
       },
       "setup": [
         {
@@ -333,35 +949,109 @@
           }
         }
       ],
-      "languageServer": { "id": "jdtls", "command": [ "jdtls" ], "languages": [ "java" ] },
-      "debugAdapter": { "id": "java-debug", "command": [ "jdtls" ], "type": "java", "languages": [ "java" ] },
+      "languageServer": {
+        "id": "jdtls",
+        "command": [
+          "jdtls"
+        ],
+        "languages": [
+          "java"
+        ]
+      },
+      "debugAdapter": {
+        "id": "java-debug",
+        "command": [
+          "jdtls"
+        ],
+        "type": "java",
+        "languages": [
+          "java"
+        ]
+      },
       "problemPatterns": [
-        { "pattern": "^(?<file>.+?\\.java):(?<line>\\d+): (?<severity>error|warning): (?<message>.*)$" },
-        { "pattern": "^\\[(?<severity>ERROR|WARNING)\\] (?<file>.+?\\.java):\\[(?<line>\\d+),(?<column>\\d+)\\] (?<message>.*)$" }
+        {
+          "pattern": "^(?<file>.+?\\.java):(?<line>\\d+): (?<severity>error|warning): (?<message>.*)$"
+        },
+        {
+          "pattern": "^\\[(?<severity>ERROR|WARNING)\\] (?<file>.+?\\.java):\\[(?<line>\\d+),(?<column>\\d+)\\] (?<message>.*)$"
+        }
       ]
     },
     {
       "id": "kotlin",
       "name": "Kotlin",
       "description": "The Kotlin compiler on OpenJDK 21, with Gradle and the Kotlin language server.",
-      "languages": [ "Kotlin" ],
+      "languages": [
+        "Kotlin"
+      ],
       "listed": false,
       "homepage": "https://kotlinlang.org",
       "license": "Apache-2.0",
-      "packages": [ "openjdk21-jdk", "gradle" ],
+      "packages": [
+        "openjdk21-jdk",
+        "gradle"
+      ],
       "versionPackage": "openjdk21-jdk",
       "estimatedDownloadSize": 320000000,
       "estimatedInstalledSize": 700000000,
-      "host": { "commands": [ "kotlinc" ], "versionArguments": [ "-version" ], "versionPattern": "kotlinc-jvm (?<version>\\S+)" },
-      "fileExtensions": [ ".kt", ".kts" ],
-      "projectFiles": [ "build.gradle.kts", "settings.gradle.kts" ],
-      "run": {
-        "file": [ "sh", "-c", "kotlinc \"$0\" -include-runtime -d /tmp/tabstudio-run.jar && exec java -jar /tmp/tabstudio-run.jar", "{file}" ],
-        "entries": [
-          { "file": "build.gradle.kts", "build": [ "gradle", "--console=plain", "build" ], "command": [ "gradle", "--console=plain", "--quiet", "run" ] },
-          { "file": "settings.gradle.kts", "build": [ "gradle", "--console=plain", "build" ], "command": [ "gradle", "--console=plain", "--quiet", "run" ] }
+      "host": {
+        "commands": [
+          "kotlinc"
         ],
-        "environment": { "JAVA_HOME": "/usr/lib/jvm/java-21-openjdk", "PATH": "/opt/tabstudio/kotlinc/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" }
+        "versionArguments": [
+          "-version"
+        ],
+        "versionPattern": "kotlinc-jvm (?<version>\\S+)"
+      },
+      "fileExtensions": [
+        ".kt",
+        ".kts"
+      ],
+      "projectFiles": [
+        "build.gradle.kts",
+        "settings.gradle.kts"
+      ],
+      "run": {
+        "file": [
+          "sh",
+          "-c",
+          "kotlinc \"$0\" -include-runtime -d /tmp/tabstudio-run.jar && exec java -jar /tmp/tabstudio-run.jar",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": "build.gradle.kts",
+            "build": [
+              "gradle",
+              "--console=plain",
+              "build"
+            ],
+            "command": [
+              "gradle",
+              "--console=plain",
+              "--quiet",
+              "run"
+            ]
+          },
+          {
+            "file": "settings.gradle.kts",
+            "build": [
+              "gradle",
+              "--console=plain",
+              "build"
+            ],
+            "command": [
+              "gradle",
+              "--console=plain",
+              "--quiet",
+              "run"
+            ]
+          }
+        ],
+        "environment": {
+          "JAVA_HOME": "/usr/lib/jvm/java-21-openjdk",
+          "PATH": "/opt/tabstudio/kotlinc/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+        }
       },
       "setup": [
         {
@@ -385,9 +1075,233 @@
           }
         }
       ],
-      "languageServer": { "id": "kotlin-language-server", "command": [ "/opt/tabstudio/kotlin-language-server/server/bin/kotlin-language-server" ], "environment": { "JAVA_HOME": "/usr/lib/jvm/java-21-openjdk" }, "languages": [ "kotlin" ] },
+      "languageServer": {
+        "id": "kotlin-language-server",
+        "command": [
+          "/opt/tabstudio/kotlin-language-server/server/bin/kotlin-language-server"
+        ],
+        "environment": {
+          "JAVA_HOME": "/usr/lib/jvm/java-21-openjdk"
+        },
+        "languages": [
+          "kotlin"
+        ]
+      },
       "problemPatterns": [
-        { "pattern": "^(?<severity>e|w): (?:file://)?(?<file>/[^:\\s]+\\.kts?):(?<line>\\d+):(?<column>\\d+) (?<message>.*)$" }
+        {
+          "pattern": "^(?<severity>e|w): (?:file://)?(?<file>/[^:\\s]+\\.kts?):(?<line>\\d+):(?<column>\\d+) (?<message>.*)$"
+        }
+      ]
+    },
+    {
+      "id": "android",
+      "name": "Android SDK",
+      "description": "OpenJDK 17, Gradle 8.9 and Android SDK 35 with verified ARM build tools and Java IntelliSense through Eclipse JDT.",
+      "languages": [
+        "Java",
+        "Kotlin",
+        "Android"
+      ],
+      "listed": true,
+      "homepage": "https://developer.android.com",
+      "license": "Apache-2.0 AND GPL-2.0-only WITH Classpath-exception-2.0",
+      "licenseAgreement": "Android SDK License Agreement: https://developer.android.com/studio/terms . Read the agreement before installing. Accepting installs Google SDK command-line tools, platform 35 and build-tools 35 for developing Android apps. Open-source ARM replacements use Apache-2.0 and the notices shipped in their archive.",
+      "packages": [
+        "openjdk17-jdk",
+        "openjdk21-jdk",
+        "jdtls",
+        "python3",
+        "bash",
+        "unzip",
+        "libstdc++",
+        "zlib"
+      ],
+      "versionPackage": "openjdk17-jdk",
+      "estimatedDownloadSize": 650000000,
+      "estimatedInstalledSize": 2100000000,
+      "host": {
+        "commands": [
+          "gradle"
+        ],
+        "versionArguments": [
+          "--version"
+        ],
+        "versionPattern": "Gradle (?<version>\\S+)"
+      },
+      "fileExtensions": [
+        ".java",
+        ".kt",
+        ".kts"
+      ],
+      "projectFiles": [
+        "settings.gradle.kts",
+        "settings.gradle"
+      ],
+      "run": {
+        "file": [
+          "gradle",
+          "--console=plain",
+          "assembleDebug",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": "settings.gradle.kts",
+            "command": [
+              "gradle",
+              "--console=plain",
+              "assembleDebug"
+            ]
+          },
+          {
+            "file": "settings.gradle",
+            "command": [
+              "gradle",
+              "--console=plain",
+              "assembleDebug"
+            ]
+          }
+        ],
+        "environment": {
+          "JAVA_HOME": "/usr/lib/jvm/java-17-openjdk",
+          "ANDROID_HOME": "/opt/tabstudio/android/sdk",
+          "ANDROID_SDK_ROOT": "/opt/tabstudio/android/sdk"
+        }
+      },
+      "setup": [
+        {
+          "name": "Android SDK command-line tools 12",
+          "archive": {
+            "url": "https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip",
+            "sha256": "2d2d50857e4eb553af5a6dc3ad507a17adf43d115264b1afc116f95c92e5e258",
+            "size": 153607504,
+            "destination": "/opt/tabstudio/android/commandline"
+          }
+        },
+        {
+          "name": "Android platform 35 revision 2",
+          "archive": {
+            "url": "https://dl.google.com/android/repository/platform-35_r02.zip",
+            "sha256": "0988cacad01b38a18a47bac14a0695f246bc76c1b06c0eeb8eb0dc825ab0c8e0",
+            "size": 64273788,
+            "destination": "/opt/tabstudio/android/platform"
+          }
+        },
+        {
+          "name": "Android build-tools 35",
+          "archive": {
+            "url": "https://dl.google.com/android/repository/build-tools_r35_linux.zip",
+            "sha256": "bd3a4966912eb8b30ed0d00b0cda6b6543b949d5ffe00bea54c04c81e1561d88",
+            "size": 61900821,
+            "destination": "/opt/tabstudio/android/buildtools"
+          }
+        },
+        {
+          "name": "Gradle 8.9",
+          "archive": {
+            "url": "https://services.gradle.org/distributions/gradle-8.9-bin.zip",
+            "sha256": "d725d707bfabd4dfdc958c624003b3c80accc03f7037b5122c4b1d0ef15cecab",
+            "size": 136114148,
+            "destination": "/opt/tabstudio/android/gradle"
+          }
+        },
+        {
+          "name": "ARM64 static Android build-tools 35.0.2",
+          "archive": {
+            "url": "https://github.com/lzhiyong/android-sdk-tools/releases/download/35.0.2/android-sdk-tools-static-aarch64.zip",
+            "sha256": "db1cea2c4454d5f9c5a802646b2d1cf560b4ee7badbe23e51ab8e1881bb50fc2",
+            "size": 14401170,
+            "destination": "/opt/tabstudio/android/native"
+          },
+          "architectures": [
+            "aarch64"
+          ]
+        },
+        {
+          "name": "ARMv7 static Android build-tools 35.0.2",
+          "archive": {
+            "url": "https://github.com/lzhiyong/android-sdk-tools/releases/download/35.0.2/android-sdk-tools-static-arm.zip",
+            "sha256": "17b27ad0136b8d1c3ab67be24b3ab9a81c412c39fdc4112b622d900f90b02983",
+            "size": 12354195,
+            "destination": "/opt/tabstudio/android/native"
+          },
+          "architectures": [
+            "armv7"
+          ]
+        },
+        {
+          "name": "Android SDK setup script",
+          "file": {
+            "path": "/opt/tabstudio/android/setup-sdk",
+            "content": "#!/bin/sh\nset -eu\nsdk=/opt/tabstudio/android/sdk\nmkdir -p \"$sdk/cmdline-tools\" \"$sdk/platforms\" \"$sdk/build-tools\"\nrm -rf \"$sdk/cmdline-tools/latest\" \"$sdk/platforms/android-35\" \"$sdk/build-tools/35.0.0\"\ncp -a /opt/tabstudio/android/commandline/cmdline-tools \"$sdk/cmdline-tools/latest\"\ncp -a /opt/tabstudio/android/platform/* \"$sdk/platforms/android-35\"\ncp -a /opt/tabstudio/android/buildtools/* \"$sdk/build-tools/35.0.0\"\n# Replace every native SDK executable that Gradle uses; d8 and apksigner run on the JVM.\nif [ -d /opt/tabstudio/android/native/build-tools ]; then\n  for tool in aapt aapt2 aidl zipalign dexdump split-select; do\n    [ ! -f \"/opt/tabstudio/android/native/build-tools/$tool\" ] || cp \"/opt/tabstudio/android/native/build-tools/$tool\" \"$sdk/build-tools/35.0.0/$tool\"\n  done\nfi\nchmod +x \"$sdk\"/cmdline-tools/latest/bin/* \"$sdk\"/build-tools/35.0.0/* 2>/dev/null || true\nchmod +x /opt/tabstudio/android/gradle/gradle-8.9/bin/gradle\n# This command runs only after the Store has shown Google's SDK license and the user accepts it.\nyes | \"$sdk/cmdline-tools/latest/bin/sdkmanager\" --sdk_root=\"$sdk\" --licenses >/dev/null\n\"$sdk/build-tools/35.0.0/aapt2\" version\njava -cp \"$sdk/build-tools/35.0.0/lib/d8.jar\" com.android.tools.r8.D8 --version\n",
+            "executable": true
+          }
+        },
+        {
+          "name": "Configure Android SDK",
+          "command": [
+            "sh",
+            "/opt/tabstudio/android/setup-sdk"
+          ],
+          "removes": [
+            "/opt/tabstudio/android/sdk"
+          ],
+          "runAfterSetupChanges": true
+        },
+        {
+          "name": "Gradle command",
+          "file": {
+            "path": "/usr/local/bin/gradle",
+            "content": "#!/bin/sh\nexport JAVA_HOME=/usr/lib/jvm/java-17-openjdk\nexec /opt/tabstudio/android/gradle/gradle-8.9/bin/gradle \"$@\"\n",
+            "executable": true
+          }
+        },
+        {
+          "name": "sdkmanager command",
+          "file": {
+            "path": "/usr/local/bin/sdkmanager",
+            "content": "#!/bin/sh\nexport JAVA_HOME=/usr/lib/jvm/java-17-openjdk\nexec /opt/tabstudio/android/sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=/opt/tabstudio/android/sdk \"$@\"\n",
+            "executable": true
+          }
+        },
+        {
+          "name": "Kotlin language server",
+          "description": "fwcd's kotlin-language-server, which Alpine does not package.",
+          "archive": {
+            "url": "https://github.com/fwcd/kotlin-language-server/releases/download/1.3.13/server.zip",
+            "sha256": "4fe7d71d087b307c7869036171bd9d8c6a4284cd7c25b89098b0a24eb2d9b6d2",
+            "size": 87291855,
+            "destination": "/opt/tabstudio/kotlin-language-server"
+          }
+        },
+        {
+          "name": "Kotlin language server command",
+          "file": {
+            "path": "/usr/local/bin/kotlin-language-server",
+            "content": "#!/bin/sh\nexport JAVA_HOME=/usr/lib/jvm/java-21-openjdk\nexec sh /opt/tabstudio/kotlin-language-server/server/bin/kotlin-language-server \"$@\"\n",
+            "executable": true
+          }
+        }
+      ],
+      "languageServer": {
+        "id": "jdtls",
+        "command": [
+          "jdtls"
+        ],
+        "environment": {
+          "JAVA_HOME": "/usr/lib/jvm/java-21-openjdk"
+        },
+        "languages": [
+          "java"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?:e: |w: )?(?:file://)?(?<file>/[^:]+\\.(?:java|kt|kts|xml)):(?<line>\\d+)(?::(?<column>\\d+))?:?\\s*(?:(?<severity>error|warning):\\s*)?(?<message>.*)$"
+        }
+      ],
+      "additionalToolIds": [
+        "kotlin-language-server"
       ]
     }
   ]

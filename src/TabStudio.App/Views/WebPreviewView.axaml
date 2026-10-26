@@ -29,8 +29,11 @@
             <controls:StrokeIcon Data="{StaticResource Icon.Globe}" Size="13" Margin="8,0,0,0" Foreground="{DynamicResource Brush.TextMuted}" />
           </TextBox.InnerLeftContent>
         </TextBox>
-        <Button Grid.Column="4" Theme="{StaticResource ToolButton}" ToolTip.Tip="Open in the system browser" Command="{Binding OpenInBrowserCommand}">
-          <controls:StrokeIcon Data="{StaticResource Icon.External}" Size="15" />
+        <Button Grid.Column="4" Theme="{StaticResource ToolButton}" ToolTip.Tip="Open in browser" Command="{Binding OpenInBrowserCommand}">
+          <StackPanel Orientation="Horizontal" Spacing="5">
+            <controls:StrokeIcon Data="{StaticResource Icon.External}" Size="15" />
+            <TextBlock Text="Open in browser" VerticalAlignment="Center" />
+          </StackPanel>
         </Button>
       </Grid>
     </Border>

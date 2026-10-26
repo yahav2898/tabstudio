@@ -24,7 +24,13 @@ public sealed partial class ProjectTemplates
     /// <summary>A static web site: an HTML page with a style sheet and a script, served on the tablet.</summary>
     public const string StaticSiteId = "static-site";
 
-    /// <summary>The Python, Node.js and static web site templates, for the start screen.</summary>
+    /// <summary>A Kotlin Android application.</summary>
+    public const string AndroidId = "android-kotlin";
+
+    /// <summary>A Capacitor app with a Vite TypeScript web part.</summary>
+    public const string CapacitorId = "capacitor";
+
+    /// <summary>The installed-language and web/mobile templates, for the start screen.</summary>
     private static ProjectTemplate[] ToolchainTemplates =>
     [
         new(PythonId, "Python Application", "A Python program that reads input and prints in the Output panel, run with Python from the Toolchain Store.", ["Python", "Console"]),
@@ -37,6 +43,8 @@ public sealed partial class ProjectTemplates
 
         new(JavaId, "Java Console App (Maven)", "A Java 21 Maven app with JDT IntelliSense and java-debug debugging.", ["Java", "Maven", "Console"]),
         new(StaticSiteId, "Static Web Site", "An HTML page with a style sheet and a script, served on the tablet and previewed beside the code, reloading as you save.", ["HTML", "CSS", "JavaScript", "Web"]),
+        new(AndroidId, "Android App (Kotlin)", "Build and install a Kotlin Android app directly on this tablet with the Android SDK from the Toolchain Store.", ["Kotlin", "Android"]),
+        new(CapacitorId, "Capacitor App", "A Vite and TypeScript web app with a live web preview, Android builds on the tablet, and iOS builds through GitHub Actions.", ["TypeScript", "Android", "iOS", "Web"]),
     ];
 
     /// <summary>Writes a toolchain project into a new folder, which is the workspace: there is no solution file.</summary>
@@ -45,6 +53,12 @@ public sealed partial class ProjectTemplates
     {
         switch (templateId)
         {
+            case AndroidId:
+                TabStudio.Toolchains.Projects.MobileTemplates.CreateAndroid(root, name);
+                return root;
+            case CapacitorId:
+                TabStudio.Toolchains.Projects.MobileTemplates.CreateCapacitor(root, name);
+                return root;
             case PythonId:
                 File.WriteAllText(Path.Combine(root, "main.py"), """"
                     """Press F5 to run this program with Python on your tablet.

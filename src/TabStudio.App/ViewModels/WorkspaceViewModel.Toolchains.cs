@@ -198,6 +198,7 @@ public sealed partial class WorkspaceViewModel
             "cpp" => ProjectKind.Cpp,
 
             "java" => ProjectKind.Java,
+            "android" => ProjectKind.Android,
             _ => ProjectKind.Unknown,
         },
         OutputType = "Exe",
@@ -370,6 +371,12 @@ public sealed partial class WorkspaceViewModel
 
         var project = item.Project;
         var file = ActiveDocument?.FilePath;
+        if (item.Toolchain.Id == "android")
+        {
+            await BuildAndroidCoreAsync(install: true);
+            return;
+        }
+
         await RunToolchainPlanAsync(project, () => PlanToolchainProject(project, file));
     }
 
@@ -457,6 +464,7 @@ public sealed partial class WorkspaceViewModel
         var status = _toolchains.Manager.Status(toolchain.Id);
         Output.WriteLine($"Running {plan.EntryPoint} with {toolchain.Name}{(status.Version is { } version ? " " + version : string.Empty)}", OutputKind.Info);
         _run = new CancellationTokenSource();
+        var listening = BeginServerRun();
         OutputProcessResult result;
         var input = Output.BeginProcessInput();
         try
@@ -475,13 +483,14 @@ public sealed partial class WorkspaceViewModel
                 }
             }
 
-            result = await OutputProcess.RunAsync(_toolchains.Runtime, plan.Run, Output, input, _run.Token);
+            result = await OutputProcess.RunAsync(_toolchains.Runtime, plan.Run, Output, input, _run.Token, listening: listening);
         }
         finally
         {
             Output.EndInput();
             _run?.Dispose();
             _run = null;
+            EndServerRun();
         }
 
         ReportToolchainRun(project, plan.EntryPoint, result);

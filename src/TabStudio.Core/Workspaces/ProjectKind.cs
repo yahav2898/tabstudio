@@ -76,6 +76,8 @@ public enum ProjectKind
     /// a .NET or Node.js project to build it.
     /// </summary>
     StaticWebSite,
+    /// <summary>An Android application built with Gradle on this device.</summary>
+    Android,
 }
 
 /// <summary>

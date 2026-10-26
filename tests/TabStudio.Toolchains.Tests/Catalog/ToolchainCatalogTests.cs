@@ -12,7 +12,7 @@ public sealed class ToolchainCatalogTests
     [Fact]
     public void Describes_all_seven_languages()
     {
-        Assert.Equal(["python", "node", "cpp", "rust", "go", "java", "kotlin"], Catalog.Toolchains.Select(t => t.Id));
+        Assert.Equal(["python", "node", "cpp", "rust", "go", "java", "kotlin", "android"], Catalog.Toolchains.Select(t => t.Id));
         var languages = Catalog.Toolchains.SelectMany(t => t.Languages).ToHashSet();
         Assert.Superset(new HashSet<string> { "Python", "JavaScript", "TypeScript", "C", "C++", "Rust", "Go", "Java", "Kotlin" }, languages);
     }
@@ -20,7 +20,8 @@ public sealed class ToolchainCatalogTests
     [Fact]
     public void The_store_lists_the_finished_toolchains()
     {
-        Assert.Equal(["python", "node", "cpp", "rust", "go", "java"], Catalog.Listed.Select(t => t.Id));
+        Assert.Equal(["python", "node", "cpp", "rust", "go", "java", "android"], Catalog.Listed.Select(t => t.Id));
+        Assert.Contains("jdtls", Catalog.Find("android")!.AdditionalToolIds);
     }
 
     [Fact]
@@ -53,7 +54,7 @@ public sealed class ToolchainCatalogTests
     [Fact]
     public void Listed_toolchains_have_a_debug_adapter()
     {
-        foreach (var toolchain in Catalog.Listed)
+        foreach (var toolchain in Catalog.Listed.Where(t => t.Id != "android"))
         {
             Assert.NotNull(toolchain.DebugAdapter);
             Assert.NotEmpty(toolchain.DebugAdapter.Command);
@@ -201,6 +202,7 @@ public sealed class ToolchainCatalogTests
     [InlineData("vscode-html-language-server", "node")]
     [InlineData("vscode-css-language-server", "node")]
     [InlineData("vscode-json-language-server", "node")]
+    [InlineData("kotlin-language-server", "android")]
     public void Finds_the_toolchain_that_installs_a_tool_by_the_id_its_clients_use(string tool, string toolchain)
     {
         Assert.Equal(toolchain, Catalog.ForTool(tool)?.Id);
@@ -217,7 +219,7 @@ public sealed class ToolchainCatalogTests
         };
         foreach (var toolchain in Catalog.Listed)
         {
-            foreach (var tool in new[] { toolchain.LanguageServer!, toolchain.DebugAdapter! })
+            foreach (var tool in new[] { toolchain.LanguageServer, toolchain.DebugAdapter }.OfType<ToolCommandDefinition>())
             {
                 Assert.NotNull(tool.Id);
                 var paths = toolchain.Setup.SelectMany(s => s.Removes.Concat(s.File is { } file ? [file.Path] : []));

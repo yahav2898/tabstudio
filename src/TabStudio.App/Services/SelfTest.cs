@@ -223,6 +223,7 @@ public static partial class SelfTest
                 if (!await CheckAsync(() => RunToolchainsAsync(main, templates, cancellationToken))
                     || !await CheckAsync(() => StartProgramsWhileCollectingAsync(cancellationToken))
                     || !await CheckAsync(() => CheckPythonToolsAsync(main, cancellationToken))
+                    || !await CheckAsync(() => CheckListeningPortAsync(main, templates, cancellationToken))
                     || (shard == SelfTestShard.All && !await CheckGoAndRustAsync())
                     || !await CheckAsync(() => CheckCppToolchainAsync(main, templates, cancellationToken))
                     || !await CheckAsync(() => CheckJavaToolchainAsync(main, templates, cancellationToken)))

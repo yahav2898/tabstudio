@@ -13,6 +13,35 @@ public sealed class ToolchainManagerTests : IDisposable
     private ToolchainManager Manager => _device.Manager;
 
     [Fact]
+    public async Task Architecture_specific_setup_never_downloads_or_extracts_another_CPUs_tools()
+    {
+        var toolchain = _device.Hello with
+        {
+            Setup = [
+                new TabStudio.Toolchains.Catalog.SetupStepDefinition
+                {
+                    Name = "This architecture",
+                    Architectures = [FakeAlpineRepository.Architecture],
+                    File = new TabStudio.Toolchains.Catalog.FileDefinition { Path = "/opt/chosen-architecture", Content = "chosen" },
+                },
+                new TabStudio.Toolchains.Catalog.SetupStepDefinition
+                {
+                    Name = "Wrong architecture",
+                    Architectures = ["armv7"],
+                    Archive = new TabStudio.Toolchains.Catalog.ArchiveDefinition
+                    {
+                        Url = new Uri("https://downloads.example.org/must-not-download.zip"),
+                        Sha256 = new string('0', 64), Destination = "/opt/wrong-architecture",
+                    },
+                },
+            ],
+        };
+        await _device.Installer.InstallAsync(toolchain, null, CancellationToken.None);
+        Assert.Equal("chosen", File.ReadAllText(_device.Rootfs("/opt/chosen-architecture")));
+        Assert.False(Directory.Exists(_device.Rootfs("/opt/wrong-architecture")));
+    }
+
+    [Fact]
     public async Task Before_the_first_install_estimates_and_says_linux_will_be_set_up()
     {
         await Manager.RefreshAsync();

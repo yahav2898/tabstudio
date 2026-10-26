@@ -72,17 +72,19 @@ public sealed partial class WorkspaceViewModel
         StatusText = $"Running {project.Name}";
         _run = new CancellationTokenSource();
         var input = Output.BeginInput();
+        var listening = BeginServerRun();
         RunResult result;
         try
         {
             var packages = _language.GetPackageRuntimeAssemblies(project.FilePath);
-            result = await _runner.RunAsync(entry, build.Dependencies, packages, [], Output, input, _run.Token);
+            result = await _runner.RunAsync(entry, build.Dependencies, packages, [], new ServerConsoleSink(Output, listening), input, _run.Token);
         }
         finally
         {
             Output.EndInput();
             _run.Dispose();
             _run = null;
+            EndServerRun();
         }
 
         ReportRunResult(project, result);
@@ -126,6 +128,12 @@ public sealed partial class WorkspaceViewModel
     private async Task BuildAsync()
     {
         if (IsRemoteWorkspace) { await RunRemoteAsync(buildOnly: true); return; }
+        if (MobileRoot() is not null)
+        {
+            await BuildAndroidCoreAsync(install: false);
+            return;
+        }
+
         if (Workspace is { } workspace)
         {
             await BuildProjectsAsync(workspace.Projects.Where(p => p.Language == ProjectLanguage.CSharp).ToList(), showOutput: true);

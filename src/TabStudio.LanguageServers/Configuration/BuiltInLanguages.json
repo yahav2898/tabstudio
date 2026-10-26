@@ -1,29 +1,140 @@
 {
   "languages": {
-    "python": { "name": "Python", "extensions": [ ".py", ".pyi", ".pyw" ] },
-    "typescript": { "name": "TypeScript", "extensions": [ ".ts", ".mts", ".cts" ] },
-    "typescriptreact": { "name": "TypeScript React", "extensions": [ ".tsx" ] },
-    "javascript": { "name": "JavaScript", "extensions": [ ".js", ".mjs", ".cjs" ] },
-    "javascriptreact": { "name": "JavaScript React", "extensions": [ ".jsx" ] },
-    "c": { "name": "C", "extensions": [ ".c", ".h" ] },
-    "cpp": { "name": "C++", "extensions": [ ".cpp", ".cc", ".cxx", ".c++", ".hpp", ".hh", ".hxx", ".h++", ".ipp", ".inl" ] },
-    "rust": { "name": "Rust", "extensions": [ ".rs" ] },
-    "go": { "name": "Go", "extensions": [ ".go" ] },
-    "java": { "name": "Java", "extensions": [ ".java" ] },
-    "html": { "name": "HTML", "extensions": [ ".html", ".htm" ] },
-    "css": { "name": "CSS", "extensions": [ ".css" ] },
-    "scss": { "name": "SCSS", "extensions": [ ".scss" ] },
-    "less": { "name": "Less", "extensions": [ ".less" ] },
-    "jsonc": { "name": "JSON", "extensions": [ ".json", ".jsonc" ] }
+    "python": {
+      "name": "Python",
+      "extensions": [
+        ".py",
+        ".pyi",
+        ".pyw"
+      ]
+    },
+    "typescript": {
+      "name": "TypeScript",
+      "extensions": [
+        ".ts",
+        ".mts",
+        ".cts"
+      ]
+    },
+    "typescriptreact": {
+      "name": "TypeScript React",
+      "extensions": [
+        ".tsx"
+      ]
+    },
+    "javascript": {
+      "name": "JavaScript",
+      "extensions": [
+        ".js",
+        ".mjs",
+        ".cjs"
+      ]
+    },
+    "javascriptreact": {
+      "name": "JavaScript React",
+      "extensions": [
+        ".jsx"
+      ]
+    },
+    "c": {
+      "name": "C",
+      "extensions": [
+        ".c",
+        ".h"
+      ]
+    },
+    "cpp": {
+      "name": "C++",
+      "extensions": [
+        ".cpp",
+        ".cc",
+        ".cxx",
+        ".c++",
+        ".hpp",
+        ".hh",
+        ".hxx",
+        ".h++",
+        ".ipp",
+        ".inl"
+      ]
+    },
+    "rust": {
+      "name": "Rust",
+      "extensions": [
+        ".rs"
+      ]
+    },
+    "go": {
+      "name": "Go",
+      "extensions": [
+        ".go"
+      ]
+    },
+    "java": {
+      "name": "Java",
+      "extensions": [
+        ".java"
+      ]
+    },
+    "html": {
+      "name": "HTML",
+      "extensions": [
+        ".html",
+        ".htm"
+      ]
+    },
+    "css": {
+      "name": "CSS",
+      "extensions": [
+        ".css"
+      ]
+    },
+    "scss": {
+      "name": "SCSS",
+      "extensions": [
+        ".scss"
+      ]
+    },
+    "less": {
+      "name": "Less",
+      "extensions": [
+        ".less"
+      ]
+    },
+    "jsonc": {
+      "name": "JSON",
+      "extensions": [
+        ".json",
+        ".jsonc"
+      ]
+    },
+    "kotlin": {
+      "name": "Kotlin",
+      "extensions": [
+        ".kt",
+        ".kts"
+      ]
+    }
   },
   "languageServers": {
     "pyright": {
       "name": "Pyright",
-      "languages": [ "python" ],
+      "languages": [
+        "python"
+      ],
       "command": "pyright-langserver",
-      "args": [ "--stdio" ],
+      "args": [
+        "--stdio"
+      ],
       "package": "pyright",
-      "rootMarkers": [ "pyproject.toml", "pyrightconfig.json", "setup.py", "setup.cfg", "requirements.txt", "Pipfile" ],
+      "rootMarkers": [
+        "pyproject.toml",
+        "pyrightconfig.json",
+        "setup.py",
+        "setup.cfg",
+        "requirements.txt",
+        "Pipfile"
+      ],
       "settings": {
         "python": {
           "analysis": {
@@ -36,13 +147,26 @@
     },
     "typescript-language-server": {
       "name": "TypeScript",
-      "languages": [ "typescript", "typescriptreact", "javascript", "javascriptreact" ],
+      "languages": [
+        "typescript",
+        "typescriptreact",
+        "javascript",
+        "javascriptreact"
+      ],
       "command": "typescript-language-server",
-      "args": [ "--stdio" ],
+      "args": [
+        "--stdio"
+      ],
       "package": "typescript-language-server",
-      "rootMarkers": [ "tsconfig.json", "jsconfig.json", "package.json" ],
+      "rootMarkers": [
+        "tsconfig.json",
+        "jsconfig.json",
+        "package.json"
+      ],
       "initializationOptions": {
-        "tsserver": { "path": "${packageFile:typescript/lib/tsserver.js}" },
+        "tsserver": {
+          "path": "${packageFile:typescript/lib/tsserver.js}"
+        },
         "preferences": {
           "includeInlayParameterNameHints": "literals",
           "includeInlayFunctionLikeReturnTypeHints": true,
@@ -68,90 +192,192 @@
     },
     "clangd": {
       "name": "clangd",
-      "languages": [ "c", "cpp" ],
+      "languages": [
+        "c",
+        "cpp"
+      ],
       "command": "clangd",
-      "args": [ "--background-index", "--header-insertion=never" ],
+      "args": [
+        "--background-index",
+        "--header-insertion=never"
+      ],
       "package": "clangd",
-      "rootMarkers": [ "compile_commands.json", "compile_flags.txt", ".clangd", "CMakeLists.txt", "Makefile" ]
+      "rootMarkers": [
+        "compile_commands.json",
+        "compile_flags.txt",
+        ".clangd",
+        "CMakeLists.txt",
+        "Makefile"
+      ]
     },
     "rust-analyzer": {
       "name": "rust-analyzer",
-      "languages": [ "rust" ],
+      "languages": [
+        "rust"
+      ],
       "command": "rust-analyzer",
       "package": "rust-analyzer",
-      "rootMarkers": [ "Cargo.toml" ]
+      "rootMarkers": [
+        "Cargo.toml"
+      ]
     },
     "gopls": {
       "name": "gopls",
-      "languages": [ "go" ],
+      "languages": [
+        "go"
+      ],
       "command": "gopls",
       "package": "gopls",
-      "rootMarkers": [ "go.work", "go.mod" ]
+      "rootMarkers": [
+        "go.work",
+        "go.mod"
+      ]
     },
     "jdtls": {
       "name": "Eclipse JDT",
-      "languages": [ "java" ],
+      "languages": [
+        "java"
+      ],
       "command": "jdtls",
-      "args": [ "-data", "${serverStorage}" ],
+      "args": [
+        "-data",
+        "${serverStorage}"
+      ],
       "initializationOptions": {
-        "bundles": [ "${env:TABSTUDIO_JAVA_DEBUG_BUNDLE:/opt/tabstudio/java/java-debug/extension/server/com.microsoft.java.debug.plugin-0.53.2.jar}" ]
+        "bundles": [
+          "${env:TABSTUDIO_JAVA_DEBUG_BUNDLE:/opt/tabstudio/java/java-debug/extension/server/com.microsoft.java.debug.plugin-0.53.2.jar}"
+        ]
       },
       "package": "jdtls",
-      "rootMarkers": [ "pom.xml", "build.gradle", "build.gradle.kts", "settings.gradle", ".project" ]
+      "rootMarkers": [
+        "pom.xml",
+        "build.gradle",
+        "build.gradle.kts",
+        "settings.gradle",
+        ".project",
+        "settings.gradle.kts"
+      ]
     },
     "vscode-html-language-server": {
       "name": "HTML Language Server",
-      "languages": [ "html" ],
+      "languages": [
+        "html"
+      ],
       "command": "vscode-html-language-server",
-      "args": [ "--stdio" ],
+      "args": [
+        "--stdio"
+      ],
       "package": "vscode-html-language-server",
       "initializationOptions": {
         "provideFormatter": true,
-        "embeddedLanguages": { "css": true, "javascript": true }
+        "embeddedLanguages": {
+          "css": true,
+          "javascript": true
+        }
       },
       "settings": {
-        "html": { "validate": { "styles": true, "scripts": true } },
-        "css": { "validate": true }
+        "html": {
+          "validate": {
+            "styles": true,
+            "scripts": true
+          }
+        },
+        "css": {
+          "validate": true
+        }
       }
     },
     "vscode-css-language-server": {
       "name": "CSS Language Server",
-      "languages": [ "css", "scss", "less" ],
+      "languages": [
+        "css",
+        "scss",
+        "less"
+      ],
       "command": "vscode-css-language-server",
-      "args": [ "--stdio" ],
+      "args": [
+        "--stdio"
+      ],
       "package": "vscode-css-language-server",
-      "initializationOptions": { "provideFormatter": true },
+      "initializationOptions": {
+        "provideFormatter": true
+      },
       "settings": {
-        "css": { "validate": true },
-        "scss": { "validate": true },
-        "less": { "validate": true }
+        "css": {
+          "validate": true
+        },
+        "scss": {
+          "validate": true
+        },
+        "less": {
+          "validate": true
+        }
       }
     },
     "vscode-json-language-server": {
       "name": "JSON Language Server",
-      "languages": [ "jsonc" ],
+      "languages": [
+        "jsonc"
+      ],
       "command": "vscode-json-language-server",
-      "args": [ "--stdio" ],
+      "args": [
+        "--stdio"
+      ],
       "package": "vscode-json-language-server",
-      "initializationOptions": { "provideFormatter": true },
-      "settings": { "json": { "validate": { "enable": true } } }
+      "initializationOptions": {
+        "provideFormatter": true
+      },
+      "settings": {
+        "json": {
+          "validate": {
+            "enable": true
+          }
+        }
+      }
+    },
+    "kotlin-language-server": {
+      "name": "Kotlin language server",
+      "languages": [
+        "kotlin"
+      ],
+      "command": "kotlin-language-server",
+      "package": "kotlin-language-server",
+      "rootMarkers": [
+        "settings.gradle.kts",
+        "settings.gradle",
+        "build.gradle.kts",
+        "build.gradle"
+      ]
     }
   },
   "debugAdapters": {
     "java": {
       "name": "Java (java-debug)",
-      "languages": [ "java" ],
+      "languages": [
+        "java"
+      ],
       "command": "jdtls",
       "package": "java-debug",
-      "terminalDefaults": { "console": "integratedTerminal" }
+      "terminalDefaults": {
+        "console": "integratedTerminal"
+      }
     },
     "debugpy": {
       "name": "Python (debugpy)",
-      "aliases": [ "python" ],
-      "languages": [ "python" ],
+      "aliases": [
+        "python"
+      ],
+      "languages": [
+        "python"
+      ],
       "command": "python3",
-      "alternativeCommands": [ "python" ],
-      "args": [ "-m", "debugpy.adapter" ],
+      "alternativeCommands": [
+        "python"
+      ],
+      "args": [
+        "-m",
+        "debugpy.adapter"
+      ],
       "package": "debugpy",
       "defaults": {
         "console": "internalConsole",
@@ -166,29 +392,56 @@
     },
     "lldb-dap": {
       "name": "LLDB",
-      "aliases": [ "lldb", "lldb-vscode" ],
-      "languages": [ "c", "cpp", "rust" ],
+      "aliases": [
+        "lldb",
+        "lldb-vscode"
+      ],
+      "languages": [
+        "c",
+        "cpp",
+        "rust"
+      ],
       "command": "lldb-dap",
-      "alternativeCommands": [ "lldb-vscode" ],
+      "alternativeCommands": [
+        "lldb-vscode"
+      ],
       "package": "lldb-dap"
     },
     "go": {
       "name": "Delve",
-      "aliases": [ "dlv" ],
-      "languages": [ "go" ],
+      "aliases": [
+        "dlv"
+      ],
+      "languages": [
+        "go"
+      ],
       "command": "dlv",
-      "args": [ "dap", "--listen", "127.0.0.1:${port}" ],
+      "args": [
+        "dap",
+        "--listen",
+        "127.0.0.1:${port}"
+      ],
       "transport": "tcp",
       "package": "delve",
       "usesProcessInput": true,
-      "defaults": { "outputMode": "remote" }
+      "defaults": {
+        "outputMode": "remote"
+      }
     },
     "pwa-node": {
       "name": "Node.js (js-debug)",
-      "aliases": [ "node" ],
-      "languages": [ "javascript", "typescript" ],
+      "aliases": [
+        "node"
+      ],
+      "languages": [
+        "javascript",
+        "typescript"
+      ],
       "command": "js-debug-adapter",
-      "args": [ "${port}", "127.0.0.1" ],
+      "args": [
+        "${port}",
+        "127.0.0.1"
+      ],
       "transport": "tcp",
       "package": "js-debug",
       "defaults": {

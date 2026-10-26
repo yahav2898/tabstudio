@@ -36,6 +36,9 @@ public sealed record ToolchainDefinition
     /// <summary>The license, as an SPDX expression.</summary>
     public string? License { get; init; }
 
+    /// <summary>An additional license agreement shown before installation, when required by the SDK vendor.</summary>
+    public string? LicenseAgreement { get; init; }
+
     /// <summary>The Alpine Linux packages to install. Their dependencies are installed with them.</summary>
     public IReadOnlyList<string> Packages { get; init; } = [];
 
@@ -83,6 +86,9 @@ public sealed record ToolchainDefinition
 
     /// <summary>The language server, for the editor.</summary>
     public ToolCommandDefinition? LanguageServer { get; init; }
+
+    /// <summary>Other tool ids provided by this SDK, such as a second language server.</summary>
+    public IReadOnlyList<string> AdditionalToolIds { get; init; } = [];
 
     /// <summary>The debug adapter, for the debugger.</summary>
     public ToolCommandDefinition? DebugAdapter { get; init; }
@@ -236,6 +242,12 @@ public sealed record LockedInstallDefinition
 /// <summary>A step that runs after a toolchain's packages are installed: a command, or an archive to unpack.</summary>
 public sealed record SetupStepDefinition
 {
+    /// <summary>Alpine architectures for this step, or empty for every device.</summary>
+    public IReadOnlyList<string> Architectures { get; init; } = [];
+
+    /// <summary>Reruns this configuration command when another setup step changes during an update.</summary>
+    public bool RunAfterSetupChanges { get; init; }
+
     /// <summary>What the step installs, such as <c>debugpy</c>.</summary>
     public required string Name { get; init; }
 

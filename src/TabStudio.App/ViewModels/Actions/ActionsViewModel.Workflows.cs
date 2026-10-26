@@ -32,6 +32,27 @@ public sealed partial class ActionsViewModel
     /// <summary>Whether the repository has workflows.</summary>
     public bool HasWorkflows => Workflows.Count > 0;
 
+    /// <summary>Shows the Actions window and opens a repository workflow's existing dispatch form.</summary>
+    public async Task OpenWorkflowAsync(string path)
+    {
+        _host.ShowActions();
+        if (Scope is null)
+        {
+            ErrorText = "Connect this repository to GitHub in Git Changes before running its iOS workflow.";
+            return;
+        }
+
+        await RefreshWorkflowsAsync();
+        if (Workflows.FirstOrDefault(w => w.Workflow.Path == path) is { } workflow)
+        {
+            await OpenDispatchFormAsync(workflow);
+        }
+        else
+        {
+            ErrorText = "Commit and push the iOS workflow first. GitHub requires the workflow on the repository's default branch before it can be run by hand.";
+        }
+    }
+
     /// <summary>Reads the workflows, and the files of those whose dispatch trigger is not known yet.</summary>
     private async Task RefreshWorkflowsAsync()
     {

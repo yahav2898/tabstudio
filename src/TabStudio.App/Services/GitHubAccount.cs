@@ -21,10 +21,10 @@ namespace TabStudio.App.Services;
 public sealed class GitHubAccount
 {
     /// <summary>
-    /// GitHub's page for creating a classic token with the <c>repo</c> scope, named TabStudio: everything the IDE
+    /// GitHub's page for creating a classic token with the <c>repo</c> and <c>workflow</c> scopes, named TabStudio: everything the IDE
     /// does with an account in one step.
     /// </summary>
-    public static readonly Uri NewTokenUri = new("https://github.com/settings/tokens/new?scopes=repo&description=TabStudio");
+    public static readonly Uri NewTokenUri = new("https://github.com/settings/tokens/new?scopes=repo,workflow&description=TabStudio");
 
     private const string FileName = "github-account.json";
 

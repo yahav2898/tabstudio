@@ -38,7 +38,7 @@
             <StackPanel Spacing="6">
               <TextBlock Classes="small" FontWeight="SemiBold" Text="What the token needs" />
               <TextBlock Classes="muted small" TextWrapping="Wrap"
-                         Text="Classic token: the repo scope. Fine-grained token: access to your repositories with Contents (read and write) and Pull requests (read and write); add Administration (read and write) to publish new repositories." />
+                         Text="Classic token: repo and workflow scopes. Fine-grained token: Contents and Pull requests (read and write); add Workflows (write) to push generated iOS workflows, Actions (read and write) to run them, and Administration (read and write) to publish new repositories." />
             </StackPanel>
           </Border>
           <Button Theme="{StaticResource ToolButton}" Height="36" MinHeight="36" Padding="6,0" HorizontalAlignment="Left"

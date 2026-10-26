@@ -20,6 +20,7 @@ public sealed class RegistryTests
     [InlineData("site.css", "css", "vscode-css-language-server")]
     [InlineData("theme.scss", "scss", "vscode-css-language-server")]
     [InlineData("tsconfig.json", "jsonc", "vscode-json-language-server")]
+    [InlineData("MainActivity.kt", "kotlin", "kotlin-language-server")]
     public void The_built_in_registry_knows_each_language_and_its_server(string file, string language, string server)
     {
         var registry = LanguageServerRegistry.BuiltIn;

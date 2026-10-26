@@ -176,6 +176,9 @@ public static class CompatibilityDoctor
             ProjectKind.StaticWebSite => Report(
                 project, RunHost.WebView, CompatibilityStatus.Ready, "Web preview",
                 "Served from the tablet and shown in the web preview beside the code. Saving a file reloads the page, and saved CSS applies without a reload."),
+            ProjectKind.Android => Report(
+                project, RunHost.Toolchain, CompatibilityStatus.NeedsToolchain, "Android SDK toolchain",
+                "Builds with Gradle and the Android SDK on this tablet, installs with Android's confirmation, and streams its debug logcat."),
 
             _ => Report(
                 project, RunHost.None, CompatibilityStatus.Unsupported, "Unknown",

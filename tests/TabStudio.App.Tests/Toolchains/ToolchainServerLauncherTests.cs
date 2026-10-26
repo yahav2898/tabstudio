@@ -38,7 +38,7 @@ public sealed partial class ToolchainServerLauncherTests
         Assert.Equal(["share " + folder.Path, "start /usr/local/bin/pyright-langserver"], runtime.Calls);
         Assert.Equal(["--stdio"], spec.Arguments);
         Assert.Equal(folder.Path, spec.WorkingDirectory);
-        Assert.Same(environment, spec.Environment);
+        Assert.Equal(environment, spec.Environment);
         Assert.Null(spec.Terminal);
     }
 

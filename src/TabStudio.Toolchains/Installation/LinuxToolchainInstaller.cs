@@ -113,7 +113,7 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
         var result = new List<ToolchainStatus>();
         foreach (var toolchain in toolchains)
         {
-            result.Add(ReadStatus(toolchain, records, installed, index));
+            result.Add(ReadStatus(ForDevice(toolchain), records, installed, index));
         }
 
         return result;
@@ -123,6 +123,7 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
     public async Task InstallAsync(ToolchainDefinition toolchain, IProgress<InstallProgress>? progress, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(toolchain);
+        toolchain = ForDevice(toolchain);
         progress?.Report(new InstallProgress(InstallStage.Preparing, $"Preparing to install {toolchain.Name}", 0));
         await PrepareRuntimeAsync(new InlineProgress<InstallProgress>(p => progress?.Report(p with { Fraction = p.Fraction * 0.1 })), cancellationToken).ConfigureAwait(false);
 
@@ -152,12 +153,17 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
     public async Task UpdateAsync(ToolchainDefinition toolchain, IProgress<InstallProgress>? progress, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(toolchain);
+        toolchain = ForDevice(toolchain);
         progress?.Report(new InstallProgress(InstallStage.Resolving, $"Checking for a newer {toolchain.Name}", 0.05));
         await _environment.SetUpAsync(null, cancellationToken).ConfigureAwait(false);
         var records = InstalledToolchains.Load(_recordsFile);
         var record = records.Toolchains.GetValueOrDefault(toolchain.Id) ?? new InstalledToolchain();
         var plan = await PlanAsync(() => _packages.PlanUpgradeAsync(toolchain.Packages, refresh: true, cancellationToken), toolchain).ConfigureAwait(false);
         var stale = toolchain.Setup.Where(s => record.Setup.GetValueOrDefault(s.Name) != s.Fingerprint).ToList();
+        if (stale.Count > 0)
+        {
+            stale = toolchain.Setup.Where(s => stale.Contains(s) || s.RunAfterSetupChanges).ToList();
+        }
         var archives = stale.Where(s => s.Archive is not null).ToList();
         _environment.EnsureSpace(plan.DownloadSize + plan.InstalledSize + (archives.Sum(s => s.Archive!.Size) * 3), toolchain.Name);
 
@@ -185,6 +191,7 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
     {
         ArgumentNullException.ThrowIfNull(toolchain);
         ArgumentNullException.ThrowIfNull(installed);
+        toolchain = ForDevice(toolchain);
         progress?.Report(new InstallProgress(InstallStage.Removing, $"Removing {toolchain.Name}", 0.1));
         var kept = installed.Where(t => t.Id != toolchain.Id).SelectMany(t => t.Packages).ToHashSet(StringComparer.Ordinal);
         var database = _packages.Installed;
@@ -424,6 +431,11 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
     }
 
     /// <summary>The paths a toolchain's setup steps put files at, in the environment.</summary>
+    private ToolchainDefinition ForDevice(ToolchainDefinition toolchain) => toolchain with
+    {
+        Setup = toolchain.Setup.Where(s => s.Architectures.Count == 0 || s.Architectures.Contains(_environment.Architecture, StringComparer.Ordinal)).ToList(),
+    };
+
     private static IEnumerable<string> PathsOf(ToolchainDefinition toolchain) =>
         toolchain.Setup.SelectMany(s => (s.Archive, s.File) switch
         {

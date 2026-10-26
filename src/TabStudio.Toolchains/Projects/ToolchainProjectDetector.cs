@@ -56,6 +56,11 @@ public static class ToolchainProjectDetector
 
             foreach (var toolchain in toolchains)
             {
+                if (toolchain.Id == "android" && !GradleAndroidProject.IsProject(folder))
+                {
+                    continue;
+                }
+
                 var marker = toolchain.ProjectFiles.FirstOrDefault(f => files.Contains(f, StringComparer.OrdinalIgnoreCase));
                 var insideProject = result.Any(p => p.Toolchain.Id == toolchain.Id && IsInside(folder, p.Directory));
                 if (insideProject && marker is null && !toolchain.AllowNestedProjects)
