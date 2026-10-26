@@ -9,17 +9,44 @@ namespace TabStudio.App.Services;
 /// <param name="Duration">How long it took, from opening the sample to the program's exit.</param>
 public sealed record SelfTestResult(bool Success, string Message, TimeSpan Duration);
 
+/// <summary>Independent device-test groups. Together the three named shards run the complete self test.</summary>
+public enum SelfTestShard
+{
+    /// <summary>The original, complete self test, for manual device runs.</summary>
+    All,
+    /// <summary>In-process console, debugger, Link, language servers and web apps.</summary>
+    Managed,
+    /// <summary>Native app previews, design, extensions, Swarm, scrolling and external-display input.</summary>
+    Ui,
+    /// <summary>Installed Linux toolchains, native processes and native debuggers.</summary>
+    Native,
+}
+
 /// <summary>
-/// Does what a person does first: opens the sample solution, presses F5, types a name when the program asks,
-/// and reads the Output panel; then debugs it, debugs it again with a TabStudio Link host compiling, serves a new web
-/// app and new Blazor apps, shows a new Avalonia app, installs an extension, installs and runs Python and Node.js,
-/// runs and designs a new Windows Forms app, looks at the IDE and the Start screen in both themes, and runs WPF. CI runs it on an
-/// Android emulator to prove the whole IDE works on a device.
+/// Opens and runs real projects on a device. CI partitions the same assertions into three independent shards;
+/// the default run still executes all of them. A shard owns its workspace and does not depend on another job.
 /// </summary>
 public static partial class SelfTest
 {
     /// <summary>The name typed when the sample asks for one.</summary>
     public const string Name = "Tablet";
+
+    /// <summary>Parses the optional device-test shard, rejecting misspellings and numeric enum values.</summary>
+    /// <param name="value">An absent value means the full self test.</param>
+    /// <param name="shard">The selected shard, when recognized.</param>
+    /// <returns>Whether the value names a supported shard.</returns>
+    public static bool TryParseShard(string? value, out SelfTestShard shard)
+    {
+        shard = value?.ToLowerInvariant() switch
+        {
+            null or "" or "all" => SelfTestShard.All,
+            "managed" => SelfTestShard.Managed,
+            "ui" => SelfTestShard.Ui,
+            "native" => SelfTestShard.Native,
+            _ => (SelfTestShard)(-1),
+        };
+        return Enum.IsDefined(shard);
+    }
 
     /// <summary>Runs the self test in the running app.</summary>
     /// <param name="main">The app's root view model.</param>
@@ -28,142 +55,163 @@ public static partial class SelfTest
     public static Task<SelfTestResult> RunAsync(MainViewModel main, SampleLibrary samples, CancellationToken cancellationToken = default) =>
         RunAsync(main, samples, templates: null, screenshots: null, cancellationToken);
 
-    /// <summary>
-    /// Runs the self test in the running app, then, when <paramref name="templates"/> is given, a web app, Blazor apps,
-    /// an Avalonia app, a grammar extension, toolchains, a Windows Forms app, a WPF app, and Swarm: the Avalonia app on virtual
-    /// devices and on a phone that joins the swarm.
-    /// </summary>
+    /// <summary>Runs every device-test group, with web and native apps when templates are available.</summary>
     /// <param name="main">The app's root view model.</param>
     /// <param name="samples">The sample library.</param>
-    /// <param name="templates">Creates the web and Avalonia apps; without it, those parts are skipped.</param>
-    /// <param name="screenshots">A folder for the design part's pictures, or <see langword="null"/> for none.</param>
+    /// <param name="templates">Creates the test apps; without it, only the sample checks run.</param>
+    /// <param name="screenshots">A folder for design pictures, or <see langword="null"/> for none.</param>
     /// <param name="cancellationToken">Gives up, for example after a timeout.</param>
-    public static async Task<SelfTestResult> RunAsync(MainViewModel main, SampleLibrary samples, ProjectTemplates? templates, string? screenshots, CancellationToken cancellationToken = default)
+    public static Task<SelfTestResult> RunAsync(MainViewModel main, SampleLibrary samples, ProjectTemplates? templates, string? screenshots, CancellationToken cancellationToken = default) =>
+        RunShardAsync(main, samples, templates, screenshots, SelfTestShard.All, cancellationToken);
+
+    /// <summary>Runs a complete independent subset of the device test, without weakening its assertions.</summary>
+    /// <param name="main">The app's root view model.</param>
+    /// <param name="samples">The sample library.</param>
+    /// <param name="templates">Creates the test apps; without it, only the sample checks run.</param>
+    /// <param name="screenshots">A folder for design pictures, or <see langword="null"/> for none.</param>
+    /// <param name="shard">The device-test group, or <see cref="SelfTestShard.All"/>.</param>
+    /// <param name="cancellationToken">Gives up, for example after a timeout.</param>
+    public static async Task<SelfTestResult> RunShardAsync(MainViewModel main, SampleLibrary samples, ProjectTemplates? templates, string? screenshots, SelfTestShard shard, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(main);
         ArgumentNullException.ThrowIfNull(samples);
+        ArgumentOutOfRangeException.ThrowIfNegative((int)shard);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan((int)shard, (int)SelfTestShard.Native);
         var clock = Stopwatch.StartNew();
+        var messages = new List<string> { $"Shard: {shard.ToString().ToLowerInvariant()}" };
+        SelfTestResult Finish(bool success) => new(success, string.Join(" | ", messages), clock.Elapsed);
+        async Task<bool> CheckAsync(Func<Task<SelfTestResult>> run)
+        {
+            var result = await run();
+            messages.Add(result.Message);
+            return result.Success;
+        }
+
+        var managed = shard is SelfTestShard.All or SelfTestShard.Managed;
+        var ui = shard is SelfTestShard.All or SelfTestShard.Ui;
+        var native = shard is SelfTestShard.All or SelfTestShard.Native;
         using var preparationStop = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         Task? preparation = null;
+        string? avaloniaApp = null;
         try
         {
             var solution = await samples.EnsureExtractedAsync(cancellationToken);
             await main.OpenWorkspaceAsync(solution);
             if (main.Workspace is not { } workspace)
             {
-                return new SelfTestResult(false, "The sample did not open.", clock.Elapsed);
+                messages.Add("The sample did not open.");
+                return Finish(false);
             }
 
-            if (!workspace.RunCommand.CanExecute(null))
+            if (managed)
             {
-                return new SelfTestResult(false, $"F5 is not available: {workspace.StatusText}.", clock.Elapsed);
-            }
-
-            void Answer(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-            {
-                if (e.PropertyName == nameof(OutputViewModel.IsWaitingForInput) && workspace.Output.IsWaitingForInput)
+                if (!workspace.RunCommand.CanExecute(null))
                 {
-                    workspace.Output.InputText = Name;
-                    workspace.Output.SubmitInputCommand.Execute(null);
+                    messages.Add($"F5 is not available: {workspace.StatusText}.");
+                    return Finish(false);
+                }
+
+                void Answer(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+                {
+                    if (e.PropertyName == nameof(OutputViewModel.IsWaitingForInput) && workspace.Output.IsWaitingForInput)
+                    {
+                        workspace.Output.InputText = Name;
+                        workspace.Output.SubmitInputCommand.Execute(null);
+                    }
+                }
+
+                workspace.Output.PropertyChanged += Answer;
+                try
+                {
+                    await workspace.RunCommand.ExecuteAsync(null).WaitAsync(cancellationToken);
+                }
+                finally
+                {
+                    workspace.Output.PropertyChanged -= Answer;
+                }
+
+                var output = workspace.Output.Text;
+                messages.Add(string.Join(" | ", output.Split('\n').Select(l => l.Trim()).Where(l => l.Length > 0).TakeLast(6)));
+                if (!output.Contains("has exited with code 0", StringComparison.Ordinal)
+                    || !output.Contains($", {Name}!", StringComparison.Ordinal)
+                    || !await CheckAsync(() => DebugSampleAsync(workspace, cancellationToken))
+                    || !await CheckAsync(() => LinkSampleAsync(main, workspace, cancellationToken))
+                    || !await CheckAsync(() => CheckLanguageServersAsync(main, cancellationToken)))
+                {
+                    return Finish(false);
                 }
             }
 
-            workspace.Output.PropertyChanged += Answer;
-            try
+            if (templates is null)
             {
-                await workspace.RunCommand.ExecuteAsync(null).WaitAsync(cancellationToken);
-            }
-            finally
-            {
-                workspace.Output.PropertyChanged -= Answer;
+                return Finish(managed);
             }
 
-            var output = workspace.Output.Text;
-            var exited = output.Contains("has exited with code 0", StringComparison.Ordinal);
-            var greeted = output.Contains($", {Name}!", StringComparison.Ordinal);
-            var summary = string.Join(" | ", output.Split('\n').Select(l => l.Trim()).Where(l => l.Length > 0).TakeLast(6));
-            if (!exited || !greeted)
+            if (managed && !await CheckAsync(() => ServeWebAppAsync(main, templates, cancellationToken)))
             {
-                return new SelfTestResult(false, summary, clock.Elapsed);
+                return Finish(false);
             }
 
-            var debugged = await DebugSampleAsync(workspace, cancellationToken);
-            if (debugged.Success)
+            // In a full run the browser's trusted-input assertions finish before downloads/decompression start.
+            // Native-only shards can prepare immediately and never rely on another shard's installed packages.
+            if (native)
             {
-                var linked = await LinkSampleAsync(main, workspace, cancellationToken);
-                debugged = new SelfTestResult(linked.Success, $"{debugged.Message} | {linked.Message}", debugged.Duration + linked.Duration);
-                if (debugged.Success)
+                preparation = PrepareSelfTestToolchainsAsync(main.Workspace!.Toolchains, preparationStop.Token);
+            }
+
+            if (managed && !await CheckAsync(() => ServeBlazorAppsAsync(main, templates, cancellationToken)))
+            {
+                return Finish(false);
+            }
+
+            if (ui)
+            {
+                if (!await CheckAsync(() => ShowAvaloniaAppAsync(main, templates, cancellationToken)) || main.Workspace is not { } last)
                 {
-                    var servers = await CheckLanguageServersAsync(main, cancellationToken);
-                    debugged = debugged with { Success = servers.Success, Message = $"{debugged.Message} | {servers.Message}" };
+                    return Finish(false);
+                }
+
+                avaloniaApp = last.Workspace is { } loaded ? loaded.Solution?.FilePath ?? loaded.RootDirectory : null;
+                if (!await CheckAsync(() => InstallGrammarExtensionAsync(last, FindEditor, cancellationToken))
+                    || !await CheckAsync(() => ShowWindowsFormsAppAsync(main, templates, cancellationToken))
+                    || !await CheckAsync(() => CheckDesignAsync(main, screenshots, cancellationToken))
+                    || !await CheckAsync(() => ShowWpfAppAsync(main, templates, cancellationToken))
+                    || !await CheckAsync(() => ShowUnoAppAsync(main, templates, cancellationToken))
+                    || !await CheckAsync(() => CheckSwarmScreensAsync(main, templates, cancellationToken))
+                    || !await CheckAsync(() => RunOnSwarmAsync(main, templates, cancellationToken)))
+                {
+                    return Finish(false);
                 }
             }
 
-            if (!debugged.Success || templates is null)
+            if (native)
             {
-                return new SelfTestResult(debugged.Success, $"{summary} | {debugged.Message}", clock.Elapsed);
+                // Package operations must finish before native debuggers and their programs use the environment.
+                await preparation!;
+                if (!await CheckAsync(() => RunToolchainsAsync(main, templates, cancellationToken))
+                    || !await CheckAsync(() => StartProgramsWhileCollectingAsync(cancellationToken))
+                    || !await CheckAsync(() => CheckPythonToolsAsync(main, cancellationToken))
+                    || !await CheckAsync(() => CheckGoToolchainAsync(main, templates, cancellationToken))
+                    || !await CheckAsync(() => CheckRustToolchainAsync(main, templates, cancellationToken))
+                    || !await CheckAsync(() => CheckCppToolchainAsync(main, templates, cancellationToken))
+                    || !await CheckAsync(() => CheckJavaToolchainAsync(main, templates, cancellationToken)))
+                {
+                    return Finish(false);
+                }
             }
 
-            var web = await ServeWebAppAsync(main, templates, cancellationToken);
-            if (!web.Success)
+            if (avaloniaApp is not null)
             {
-                return new SelfTestResult(false, $"{summary} | {debugged.Message} | {web.Message}", clock.Elapsed);
-            }
-
-            // Keep the browser's trusted-input check independent of package decompression and downloads.
-            // Preparation still overlaps all the remaining .NET/UI checks before any native toolchain runs.
-            preparation = PrepareSelfTestToolchainsAsync(main.Workspace!.Toolchains, preparationStop.Token);
-
-            var blazor = await ServeBlazorAppsAsync(main, templates, cancellationToken);
-            if (!blazor.Success)
-            {
-                return new SelfTestResult(false, $"{summary} | {debugged.Message} | {web.Message} | {blazor.Message}", clock.Elapsed);
-            }
-
-            // Remember the Avalonia app so desktop mode can continue in its workspace after all feature checks.
-            var avalonia = await ShowAvaloniaAppAsync(main, templates, cancellationToken);
-            if (!avalonia.Success || main.Workspace is not { } last)
-            {
-                return new SelfTestResult(false, $"{summary} | {debugged.Message} | {web.Message} | {blazor.Message} | {avalonia.Message}", clock.Elapsed);
-            }
-
-            var avaloniaApp = last.Workspace is { } loaded ? loaded.Solution?.FilePath ?? loaded.RootDirectory : null;
-            var extensions = await InstallGrammarExtensionAsync(last, FindEditor, cancellationToken);
-            var forms = extensions.Success ? await ShowWindowsFormsAppAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Windows Forms: not run", TimeSpan.Zero);
-            var design = forms.Success ? await CheckDesignAsync(main, screenshots, cancellationToken) : new SelfTestResult(false, "Design: not run", TimeSpan.Zero);
-            var wpf = design.Success ? await ShowWpfAppAsync(main, templates, cancellationToken) : new SelfTestResult(false, "WPF: not run", TimeSpan.Zero);
-            var uno = wpf.Success ? await ShowUnoAppAsync(main, templates, cancellationToken) : new SelfTestResult(false, "WinUI: not run", TimeSpan.Zero);
-
-            // These UI checks do not use the Linux environment being prepared in the background.
-            var screens = uno.Success ? await CheckSwarmScreensAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Swarm screens: not run", TimeSpan.Zero);
-            var swarm = screens.Success ? await RunOnSwarmAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Swarm devices: not run", TimeSpan.Zero);
-            if (swarm.Success && preparation is not null)
-            {
-                // Finish all package operations before opening a native debugger or running its program.
-                await preparation;
-            }
-
-            var toolchains = swarm.Success ? await RunToolchainsAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Toolchains: not run", TimeSpan.Zero);
-            var processes = toolchains.Success ? await StartProgramsWhileCollectingAsync(cancellationToken) : new SelfTestResult(false, "Processes: not run", TimeSpan.Zero);
-            var pythonTools = processes.Success ? await CheckPythonToolsAsync(main, cancellationToken) : new SelfTestResult(false, "Python tools: not run", TimeSpan.Zero);
-            var goTools = pythonTools.Success ? await CheckGoToolchainAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Go: not run", TimeSpan.Zero);
-            var rustTools = goTools.Success ? await CheckRustToolchainAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Rust: not run", TimeSpan.Zero);
-            var cppTools = rustTools.Success ? await CheckCppToolchainAsync(main, templates, cancellationToken) : new SelfTestResult(false, "C/C++: not run", TimeSpan.Zero);
-            var javaTools = cppTools.Success ? await CheckJavaToolchainAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Java: not run", TimeSpan.Zero);
-            if (javaTools.Success && avaloniaApp is not null)
-            {
-                // The self test ends in the Avalonia app, which the desktop part continues with.
+                // Scrolling and external-display checks continue with this known Avalonia project.
                 await main.OpenWorkspaceAsync(avaloniaApp);
             }
 
-            return new SelfTestResult(
-                extensions.Success && toolchains.Success && processes.Success && pythonTools.Success && goTools.Success && rustTools.Success && cppTools.Success && javaTools.Success && forms.Success && design.Success && wpf.Success && uno.Success && screens.Success && swarm.Success,
-                $"{summary} | {debugged.Message} | {web.Message} | {blazor.Message} | {avalonia.Message} | {extensions.Message} | {forms.Message} | {design.Message} | {wpf.Message} | {uno.Message} | {screens.Message} | {swarm.Message} | {toolchains.Message} | {processes.Message} | {pythonTools.Message} | {goTools.Message} | {rustTools.Message} | {cppTools.Message} | {javaTools.Message}",
-                clock.Elapsed);
+            return Finish(true);
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)
         {
-            return new SelfTestResult(false, $"{ex.GetType().Name}: {ex.Message}{DescribeActivity(main)}".ReplaceLineEndings(" "), clock.Elapsed);
+            messages.Add($"{ex.GetType().Name}: {ex.Message}{DescribeActivity(main)}".ReplaceLineEndings(" "));
+            return Finish(false);
         }
         finally
         {

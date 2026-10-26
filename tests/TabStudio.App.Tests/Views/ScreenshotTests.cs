@@ -19,6 +19,7 @@ public sealed class ScreenshotTests : IDisposable
     private readonly TempDirectory _temp = new();
     private readonly ServiceProvider _services;
     private readonly MainViewModel _main;
+    private readonly List<MainWindow> _windows = [];
 
     public ScreenshotTests()
     {
@@ -185,14 +186,20 @@ public sealed class ScreenshotTests : IDisposable
 
     public void Dispose()
     {
+        foreach (var window in _windows) { window.Close(); }
+        // Headless per-test teardown disposes FontManager before draining its dispatcher. Close the
+        // visual roots and finish their pending layout while their fonts still belong to this test.
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
         _main.Workspace?.Dispose();
         _services.Dispose();
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
         _temp.Dispose();
     }
 
     private MainWindow Show(double width, double height)
     {
         var window = new MainWindow { DataContext = _main, Width = width, Height = height };
+        _windows.Add(window);
         window.Show();
         Avalonia.Threading.Dispatcher.UIThread.RunJobs();
         return window;

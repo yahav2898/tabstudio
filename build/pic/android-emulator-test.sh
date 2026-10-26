@@ -7,11 +7,21 @@ apk=${1:?APK path is required}
 output=${2:?Output directory is required}
 work=${3:?PIC working directory is required}
 probe_apk=${4:?Disposable PIC probe APK path is required}
+shard=${5:-all}
+case "$shard" in
+  all|managed|ui|native) ;;
+  *) echo "Unknown self-test shard: $shard" >&2; exit 2 ;;
+esac
 
 status=0
 # Run the existing timed IDE check on the same clean device as main. Afterwards
 # stop its instrumentation/app before the independent compiler's memory test.
-bash build/ci/android-smoke-test.sh "$apk" "$output" 900 || status=1
+bash build/ci/android-smoke-test.sh "$apk" "$output" 900 "$shard" || status=1
+# The native shard owns the compiler probe. Managed/UI jobs need only their normal APK.
+# An omitted shard preserves the original full IDE + PIC run for manual use.
+if [ "$shard" != all ] && [ "$shard" != native ]; then
+  exit "$status"
+fi
 adb shell am force-stop com.tabstudio.ide
 adb install -r "$probe_apk"
 python3 build/pic/android_spike.py run --work "$work" --output "$output/pic-android" || status=1

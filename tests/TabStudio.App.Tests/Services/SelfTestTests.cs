@@ -19,6 +19,27 @@ public sealed class SelfTestTests : IDisposable
         _main = _services.GetRequiredService<MainViewModel>();
     }
 
+    [Theory]
+    [InlineData(null, SelfTestShard.All)]
+    [InlineData("", SelfTestShard.All)]
+    [InlineData("all", SelfTestShard.All)]
+    [InlineData("managed", SelfTestShard.Managed)]
+    [InlineData("UI", SelfTestShard.Ui)]
+    [InlineData("native", SelfTestShard.Native)]
+    public void Recognizes_only_named_device_test_shards(string? value, SelfTestShard expected)
+    {
+        Assert.True(SelfTest.TryParseShard(value, out var actual));
+        Assert.Equal(expected, actual);
+    }
+
+    [Theory]
+    [InlineData("0")]
+    [InlineData("3")]
+    [InlineData("unknown")]
+    [InlineData("managed,ui")]
+    public void Rejects_invalid_device_test_shards(string value) =>
+        Assert.False(SelfTest.TryParseShard(value, out _));
+
     [AvaloniaFact]
     public async Task Opens_the_sample_runs_it_and_answers_its_question()
     {

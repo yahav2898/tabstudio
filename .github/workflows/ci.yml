@@ -438,9 +438,14 @@ jobs:
         run: bash build/ci/publish-logs.sh android ${{ job.status }}
 
   android-emulator:
-    name: Run on an Android emulator
+    name: Android emulator (${{ matrix.shard }})
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    strategy:
+      # Keep all assertions visible even when a different group fails.
+      fail-fast: false
+      matrix:
+        shard: [managed, ui, native]
     steps:
       - uses: actions/checkout@v4
 
@@ -471,6 +476,7 @@ jobs:
           cp "$(find src/TabStudio.Android/bin/Release/net10.0-android/publish -name '*-Signed.apk' | head -n 1)" ci-out/TabStudio-x64.apk
 
       - name: Build the disposable app-UID PIC probe APK
+        if: matrix.shard == 'native'
         run: |
           # Keep the existing IDE performance check on its normal Release APK.
           # Only the subsequent compiler probe needs a debuggable manifest for
@@ -492,6 +498,7 @@ jobs:
           cp "$(find src/TabStudio.Android/bin/Release/net10.0-android/publish -name '*-Signed.apk' | head -n 1)" ci-out/TabStudio-pic-probe.apk
 
       - name: Prepare the verified PIC18 compiler and box64 interpreter for Android
+        if: matrix.shard == 'native'
         run: |
           python3 build/pic/android_spike.py prepare --work "$RUNNER_TEMP/pic-android" \
             --output ci-out/pic-android --accept-microchip-license
@@ -510,14 +517,14 @@ jobs:
           target: google_apis
           arch: x86_64
           profile: pixel_c
-          # Use the public Linux runner's four cores for the cold six-SDK
-          # self-test; keep the existing memory and 900-second timing limits.
+          # Each shard keeps the existing memory and 900-second self-test limit.
+          # The native shard then runs the independent app-UID PIC compiler probe.
           cores: 4
           ram-size: 4096M
           disk-size: 8192M
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
-          script: bash build/pic/android-emulator-test.sh ci-out/TabStudio-x64.apk ci-out "$RUNNER_TEMP/pic-android" ci-out/TabStudio-pic-probe.apk
+          script: bash build/pic/android-emulator-test.sh ci-out/TabStudio-x64.apk ci-out "$RUNNER_TEMP/pic-android" ci-out/TabStudio-pic-probe.apk ${{ matrix.shard }}
 
       # A crash's native backtrace has only offsets into the runtime's stripped libraries; this names the functions.
       - name: Name the functions in a crash's backtrace
@@ -533,7 +540,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: android-emulator
+          name: android-emulator-${{ matrix.shard }}
           path: ci-out/
           if-no-files-found: ignore
 
@@ -541,7 +548,19 @@ jobs:
         if: always() && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: bash build/ci/publish-logs.sh android-emulator ${{ job.status }}
+        run: bash build/ci/publish-logs.sh android-emulator-${{ matrix.shard }} ${{ job.status }}
+
+  # Preserve the existing required check name, and fail it unless every matrix child passed.
+  android-emulator-verdict:
+    name: Run on an Android emulator
+    if: always()
+    needs: android-emulator
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require every emulator shard
+        env:
+          SHARDS_RESULT: ${{ needs.android-emulator.result }}
+        run: test "$SHARDS_RESULT" = success
 
   # The Windows Bridge on real Windows: the desktop app builds for Windows, WPF, Windows Forms, Visual C++ and
   # .NET Framework apps build and run through the bridge's service on loopback, their windows are captured and
@@ -601,7 +620,7 @@ jobs:
   release:
     name: Publish the release
     if: github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/main')
-    needs: [libraries, app, android, android-emulator]
+    needs: [libraries, app, android, android-emulator-verdict]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
