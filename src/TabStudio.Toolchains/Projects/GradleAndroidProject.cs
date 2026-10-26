@@ -6,6 +6,8 @@ namespace TabStudio.Toolchains.Projects;
 /// <summary>Identifies Android Gradle roots, including Kotlin DSL and version-catalog plugin aliases.</summary>
 public static partial class GradleAndroidProject
 {
+    /// <summary>The SDK's isolated Gradle launcher inside the tablet's Linux environment.</summary>
+    public const string LinuxGradleCommand = "/usr/local/bin/tabstudio-android-gradle";
     private static readonly string[] CapacitorFiles = ["capacitor.config.ts", "capacitor.config.json", "capacitor.config.js"];
     /// <summary>Whether a settings.gradle(.kts) root includes an Android application plugin.</summary>
     public static bool IsProject(string directory)
@@ -57,7 +59,7 @@ public static partial class GradleAndroidProject
             environment["ANDROID_SDK_ROOT"] = "/opt/tabstudio/android/sdk";
         }
 
-        return new ProcessStartSpec { Program = wrapper ? "sh" : "gradle", Arguments = args, WorkingDirectory = directory, Environment = environment };
+        return new ProcessStartSpec { Program = wrapper ? "sh" : linuxEnvironment ? LinuxGradleCommand : "gradle", Arguments = args, WorkingDirectory = directory, Environment = environment };
     }
 
     /// <summary>Finds APK outputs without looking in dependency caches or choosing an unrelated APK.</summary>

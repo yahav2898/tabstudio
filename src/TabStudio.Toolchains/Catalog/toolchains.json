@@ -1139,7 +1139,7 @@
       ],
       "run": {
         "file": [
-          "gradle",
+          "/usr/local/bin/tabstudio-android-gradle",
           "--console=plain",
           "assembleDebug",
           "{file}"
@@ -1148,7 +1148,7 @@
           {
             "file": "settings.gradle.kts",
             "command": [
-              "gradle",
+              "/usr/local/bin/tabstudio-android-gradle",
               "--console=plain",
               "assembleDebug"
             ]
@@ -1156,7 +1156,7 @@
           {
             "file": "settings.gradle",
             "command": [
-              "gradle",
+              "/usr/local/bin/tabstudio-android-gradle",
               "--console=plain",
               "assembleDebug"
             ]
@@ -1249,9 +1249,9 @@
           "runAfterSetupChanges": true
         },
         {
-          "name": "Gradle command",
+          "name": "Android Gradle command",
           "file": {
-            "path": "/usr/local/bin/gradle",
+            "path": "/usr/local/bin/tabstudio-android-gradle",
             "content": "#!/bin/sh\nexport JAVA_HOME=/usr/lib/jvm/java-17-openjdk\nexec /opt/tabstudio/android/gradle/gradle-8.9/bin/gradle \"$@\"\n",
             "executable": true
           }
@@ -1281,6 +1281,15 @@
             "content": "#!/bin/sh\nexport JAVA_HOME=/usr/lib/jvm/java-21-openjdk\nexec sh /opt/tabstudio/kotlin-language-server/server/bin/kotlin-language-server \"$@\"\n",
             "executable": true
           }
+        },
+        {
+          "name": "Retire legacy Android Gradle shim",
+          "command": [
+            "sh",
+            "-c",
+            "if [ -f /usr/local/bin/gradle ] && cmp -s /usr/local/bin/gradle - <<'TABSTUDIO_OLD_ANDROID_GRADLE'\n#!/bin/sh\nexport JAVA_HOME=/usr/lib/jvm/java-17-openjdk\nexec /opt/tabstudio/android/gradle/gradle-8.9/bin/gradle \"$@\"\nTABSTUDIO_OLD_ANDROID_GRADLE\nthen\n  rm /usr/local/bin/gradle\nfi\n"
+          ],
+          "runAfterSetupChanges": true
         }
       ],
       "languageServer": {
