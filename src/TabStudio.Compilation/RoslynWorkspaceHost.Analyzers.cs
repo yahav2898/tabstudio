@@ -90,7 +90,7 @@ public sealed partial class RoslynWorkspaceHost
 
         if (!UsesAvaloniaXaml(project))
         {
-            return [.. analyzers];
+            return [.. analyzers, .. WpfAnalyzers(project)];
         }
 
         analyzers = analyzers.Where(a => !string.Equals(Path.GetFileName(a.FullPath), "Avalonia.Generators.dll", StringComparison.OrdinalIgnoreCase));
@@ -142,6 +142,7 @@ public sealed partial class RoslynWorkspaceHost
         properties["UsingMicrosoftNETSdkWeb"] = string.Equals(project.Sdk, "Microsoft.NET.Sdk.Web", StringComparison.OrdinalIgnoreCase) ? "true" : string.Empty;
         var razorSections = new StringBuilder();
         AppendRazorAnalyzerConfig(project, razorFiles, properties, razorSections);
+        AppendWpfAnalyzerConfig(project, razorSections);
 
         var text = new StringBuilder("is_global = true\n");
         foreach (var (key, value) in properties)

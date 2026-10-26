@@ -48,6 +48,7 @@ Dependencies point down only. Each layer has one job:
 | `TabStudio.LiveTesting` | Live Unit Testing: coverage instrumentation, per-test attribution, coverage builds, impact analysis and the live test engine. | Compilation, Debugging, TestRunner |
 | `TabStudio.Link` | TabStudio Link: pairing, the TLS transport, QR codes, discovery, and the language protocol a host answers for a tablet. | Compilation, Debugging, LiveTesting |
 | `TabStudio.Web` | What a web app serves beyond its code: static web assets, scoped CSS, Blazor's scripts, and a host for .NET apps on WebAssembly. | Compilation, Packages |
+| `TabStudio.Wpf` | OpenSilver's in-process XAML compiler, WPF template and browser startup, on the WebAssembly host. | Compilation, Packages, Web |
 | `TabStudio.Toolchains` | The Toolchain Store: the catalog, Alpine Linux on PRoot, verified Alpine packages, processes and pseudo terminals, toolchain projects and the terminal emulator. | `TabStudio.Core` |
 | `TabStudio.Forms` | Windows Forms on Avalonia: `System.Windows.Forms` and `System.Drawing`, run in the app preview. | Avalonia |
 | `TabStudio.Forms.Design` | The Windows Forms designer's model: reads and writes `InitializeComponent`, the Toolbox and properties. | `TabStudio.Forms`, Roslyn |
@@ -233,6 +234,32 @@ member that cannot work on a tablet throws `NotSupportedException` naming the me
 code, edits a model of the controls, and writes changes back in the file's own style the way Visual Studio does,
 keeping statements it does not understand. The IDE draws the model with the Forms layer on a canvas with handles, a
 grid and a Toolbox, and the Properties panel edits it, Events included.
+
+## WPF apps
+
+C# projects with `<UseWPF>true</UseWPF>` compile against OpenSilver 3.3.3 instead of the Windows Desktop pack.
+`TabStudio.Compilation/Wpf` supplies typed `x:Name` fields and the first-pass `InitializeComponent` while editing;
+`TabStudio.Wpf` runs OpenSilver's own second-pass XAML compiler before emitting the application. F5 prepares and
+serves a .NET WebAssembly browser host in the web preview. The window attaches before its first forced layout;
+saving rebuilds and reloads the page, and the host forwards console output, uncaught exceptions and window closure.
+An unhandled input exception releases stranded mouse capture so later clicks still reach the app.
+Android installs a `WebChromeClient`, so OpenSilver's `MessageBox` alert/confirm calls show the native browser dialogs.
+The .NET 10 preview needs an up-to-date Android System WebView. CI uses Android 15 (API 35) to exercise the
+rendered WPF page; the API 29 image's Chrome 74 cannot run this browser runtime.
+The device self test starts through `SelfTestInstrumentation`, so its existing desktop mouse checks retain
+Android's input injection permission through their adb instrumentation source.
+
+`Wpf/Editing` in Compilation reads the project's actual types and current additional-document text for completion,
+Quick Info, definitions, live XAML errors and missing-handler fixes. `DocumentViewModel.Xaml.cs` attaches it through
+the editor's language-feature interface, synchronizes unsaved XAML and code-behind, and rejects stale analysis.
+The existing workspace edit path applies handler fixes, preserving open documents' unsaved changes and Undo.
+These XAML queries use the local Roslyn host; they are unavailable while a TabStudio Link host owns compilation.
+The shipped catalog compares WPF 10 with OpenSilver: TS7004 names missing APIs and points to the Windows Bridge,
+TS7005 warns about APIs marked not implemented, and TS7006 explains window settings ignored by the web preview.
+The preview has no C# debugger, WPF 3D or native modal windows; XAML rename and Find All References are not provided.
+Library tests cover the editing engine, headless IDE tests capture completion and the handler light bulb, and
+`SelfTest.Wpf.cs` creates the template, presses F5 and reads rendered page text on Android after the Windows Forms
+and design checks and before Swarm, retaining every existing self-test step.
 
 ## Debugging
 

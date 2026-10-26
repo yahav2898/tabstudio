@@ -31,4 +31,9 @@
     <InternalsVisibleTo Include="TabStudio.Compilation.Tests" />
   </ItemGroup>
 
+  <!-- What WPF has that OpenSilver does not, which names unsupported API in WPF projects; made by TabStudio.Wpf.Tests. -->
+  <ItemGroup>
+    <EmbeddedResource Include="Wpf\MissingInOpenSilver.txt" LogicalName="Wpf/MissingInOpenSilver.txt" />
+  </ItemGroup>
+
 </Project>

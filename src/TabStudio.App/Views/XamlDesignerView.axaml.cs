@@ -13,7 +13,7 @@ namespace TabStudio.App.Views;
 /// The tab of an Avalonia XAML file: the code editor and the live preview of the XAML, split side by side or one
 /// above the other, or either one alone, as Visual Studio's Design, split and XAML buttons choose.
 /// </summary>
-public sealed partial class XamlDesignerView : UserControl, IDisposable
+internal sealed partial class XamlDesignerView : UserControl, IDisposable
 {
     private const double SplitterThickness = 6;
 

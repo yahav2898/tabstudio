@@ -74,4 +74,10 @@
     <PackageVersion Include="MSTest.TestFramework" Version="3.8.3" />
   </ItemGroup>
 
+  <ItemGroup Label="WPF">
+    <!-- The interfaces of MSBuild tasks, for running OpenSilver's XAML compiler task inside TabStudio. -->
+    <PackageVersion Include="Microsoft.Build.Framework" Version="17.13.26" />
+    <PackageVersion Include="Microsoft.Build.Utilities.Core" Version="17.13.26" />
+  </ItemGroup>
+
 </Project>

@@ -49,10 +49,15 @@ public static class ReferenceAssemblies
             .ToList();
     }
 
-    /// <summary>Writes the reference assemblies to a versioned subfolder, unless they are already there.</summary>
+    /// <summary>
+    /// Writes the reference assemblies to a versioned subfolder, unless they are already there, for tools that read
+    /// them as files, such as OpenSilver's XAML compiler.
+    /// </summary>
+    /// <param name="cacheDirectory">A folder the app owns. A subfolder per package version is created in it.</param>
     /// <returns>The folder that holds the assemblies.</returns>
-    internal static string ExtractTo(string cacheDirectory)
+    public static string ExtractTo(string cacheDirectory)
     {
+        ArgumentException.ThrowIfNullOrEmpty(cacheDirectory);
         var assembly = typeof(Basic.Reference.Assemblies.Net100).Assembly;
         var version = assembly.ManifestModule.ModuleVersionId.ToString("N")[..12];
         var directory = Path.Combine(cacheDirectory, $"{TargetFramework}-{version}");

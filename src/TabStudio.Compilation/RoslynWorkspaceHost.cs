@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis.Host;
 using Microsoft.CodeAnalysis.Host.Mef;
 using Microsoft.CodeAnalysis.Text;
 using TabStudio.Compilation.Building;
+using TabStudio.Compilation.Wpf;
 using TabStudio.Core.Diagnostics;
 using TabStudio.Core.Workspaces;
 using RoslynProjectInfo = Microsoft.CodeAnalysis.ProjectInfo;
@@ -300,6 +301,11 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         }
 
         var diagnostics = DiagnosticMapper.Map(model.GetDiagnostics(cancellationToken: cancellationToken), project.Name).ToList();
+        if (WpfProject.UsesWpf(project))
+        {
+            return WpfDiagnostics.Explain(diagnostics, model, project, cancellationToken);
+        }
+
         if (project.IsExecutable)
         {
             diagnostics.AddRange(InProcessSafetyAnalyzer.AnalyzeTree(model.Compilation, model.SyntaxTree, project.Name, cancellationToken));
@@ -357,6 +363,11 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         }
 
         var diagnostics = await Razor.RazorCompilations.MapAsync(project, info, compilation.GetDiagnostics(cancellationToken), cancellationToken).ConfigureAwait(false);
+        if (WpfProject.UsesWpf(info))
+        {
+            return WpfDiagnostics.Explain(WpfDiagnostics.Map(compilation.GetDiagnostics(cancellationToken), info), compilation, info, cancellationToken);
+        }
+
         if (info.IsExecutable)
         {
             diagnostics.AddRange(InProcessSafetyAnalyzer.Analyze(compilation, info.Name, cancellationToken));
@@ -476,6 +487,11 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         var compilation = await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false)
             ?? throw new InvalidOperationException($"Roslyn could not create a compilation for '{info.Name}'.");
 
+        if (await EmitWpfAsync(info, compilation, stopwatch, cancellationToken).ConfigureAwait(false) is { } wpf)
+        {
+            return wpf;
+        }
+
         return await Razor.RazorCompilations.EmitAsync(project, info, compilation, checkInProcessSafety, stopwatch, cancellationToken).ConfigureAwait(false);
     }
 
@@ -536,6 +552,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         }
 
         AddRazorDocuments(project, id, allProjectDirectories, sources, documents, additionalDocuments);
+        AddWpfDocuments(project, id, sources, additionalDocuments);
 
         if (CSharpCompiler.CreateGlobalUsingsSource(project) is { } globalUsings)
         {

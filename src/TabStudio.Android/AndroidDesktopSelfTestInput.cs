@@ -17,7 +17,8 @@ namespace TabStudio.Android;
 /// <c>input text</c>, which Android sends to the tablet's window as it does a keyboard's keys, and <c>screencap</c>.
 /// </para>
 /// <para>
-/// The mouse goes through Android's input system, injected into TabStudio's own window, which an app may do: it moves
+/// The mouse goes through Android's input system, injected into TabStudio's own window through the adb-started
+/// <see cref="SelfTestInstrumentation"/>, whose shell source permits input injection on current Android. It moves
 /// on the tablet, so TabStudio captures it, and then its raw movements and wheel come to TabStudio as a captured
 /// mouse's do and move TabStudio's pointer on the display. Only its button is given to TabStudio's capture listener
 /// directly: Android refuses an injected button press without an action button, which only the system can set.

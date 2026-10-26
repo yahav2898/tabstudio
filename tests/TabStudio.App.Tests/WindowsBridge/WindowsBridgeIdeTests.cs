@@ -22,32 +22,40 @@ public sealed class WindowsBridgeIdeTests
 {
     private const string Via = "Windows Bridge: Test PC";
 
-    [AvaloniaFact]
-    public async Task A_paired_PC_makes_WPF_ready_on_it_and_joins_the_Run_menu()
+    [AvaloniaTheory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task A_paired_PC_adds_a_WPF_run_target_and_keeps_locally_supported_WPF_ready(bool visualBasic)
     {
         await using var devices = BridgeDevices.Start(new FakeBridgeDesktop());
         devices.WriteConsoleProject("Hello");
-        devices.WriteWpfProject("HelloWpf");
+        devices.WriteWpfProject("HelloWpf", visualBasic);
         var workspace = await devices.OpenAsync(devices.SolutionFolder);
-        Assert.False(Row(workspace, "HelloWpf").IsReady);
+        Assert.Equal(!visualBasic, Row(workspace, "HelloWpf").IsReady);
         Assert.DoesNotContain(workspace.RunTargets, t => t.Detail == Via);
 
         await devices.PairAsync();
-        await UiTestHelpers.WaitUntilAsync(() => Row(workspace, "HelloWpf").IsReady, because: "the Doctor's verdict with the PC");
+        await UiTestHelpers.WaitUntilAsync(() => workspace.RunTargets.Any(t => t.Name == "HelloWpf" && t.Detail == Via), because: "the WPF run target on the PC");
         workspace.SelectPanelCommand.Execute(BottomPanel.Compatibility);
         workspace.SetStartupProject(workspace.Workspace!.FindProject("HelloWpf"));
-        UiTestHelpers.SaveScreenshot(devices.Window, "windows-bridge-01-doctor");
+        workspace.RunTargets.Single(t => t.Name == "HelloWpf" && t.Detail == Via).Select.Execute(null);
+        UiTestHelpers.SaveScreenshot(devices.Window, visualBasic ? "windows-bridge-01-doctor" : "windows-bridge-01-opensilver");
 
-        Assert.Equal(Via, Row(workspace, "HelloWpf").RunsVia);
+        Assert.Equal(visualBasic ? Via : "OpenSilver in the web preview", Row(workspace, "HelloWpf").RunsVia);
         Assert.Equal("Ready", Row(workspace, "HelloWpf").Status);
         Assert.Equal(Via, workspace.RunHostText);
         Assert.Contains(workspace.RunTargets, t => t.Name == "HelloWpf" && t.Detail == Via);
+        if (!visualBasic)
+        {
+            Assert.Contains(workspace.RunTargets, t => t.Name == "HelloWpf" && t.Detail == "C# project");
+        }
         Assert.Contains(workspace.RunTargets, t => t.Name == "Hello" && t.Detail == Via);
         Assert.Contains(workspace.RunTargets, t => t.Name == "Hello" && t.Detail == "C# project");
         Assert.StartsWith("Test PC", workspace.WindowsBridgeStatusText, StringComparison.Ordinal);
 
         await devices.Tablet.ForgetPcAsync(devices.Tablet.PairedPcs.Devices[0]);
-        await UiTestHelpers.WaitUntilAsync(() => !Row(workspace, "HelloWpf").IsReady, because: "the Doctor's own verdict again");
+        await UiTestHelpers.WaitUntilAsync(() => !workspace.RunTargets.Any(t => t.Detail == Via), because: "the PC's run targets to leave");
+        Assert.Equal(!visualBasic, Row(workspace, "HelloWpf").IsReady);
         Assert.DoesNotContain(workspace.RunTargets, t => t.Detail == Via);
         Assert.NotEqual(Via, workspace.RunHostText);
     }

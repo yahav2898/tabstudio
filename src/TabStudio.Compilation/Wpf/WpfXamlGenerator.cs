@@ -1,0 +1,415 @@
+using System.Collections.Immutable;
+using System.Globalization;
+using System.Text;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Diagnostics;
+using TabStudio.Compilation.Wpf.Xaml;
+using RoslynCompilation = Microsoft.CodeAnalysis.Compilation;
+
+namespace TabStudio.Compilation.Wpf;
+
+/// <summary>
+/// The first pass of OpenSilver's XAML compiler for WPF projects, inside TabStudio's Roslyn so it follows the XAML as it
+/// is typed: for every XAML file with an <c>x:Class</c>, the class's base type, a field for every <c>x:Name</c> and
+/// <c>InitializeComponent</c>, as OpenSilver's own pass 1 writes them. Building the project replaces that code with what
+/// OpenSilver's compiler writes in its second pass (see <c>TabStudio.Wpf</c>).
+/// </summary>
+/// <remarks>
+/// <para>
+/// It also writes what WPF projects get from the Windows Desktop SDK and OpenSilver does not have, kept in both passes:
+/// the <c>Main</c> of the application class, as WPF's markup compiler writes it, a parameterless constructor for it
+/// when its code has none (OpenSilver declares one of its own, which would take the implicit one away), WPF's
+/// <c>ThemeInfoAttribute</c>, which the Visual Studio template uses, and <c>Application.Run</c>.
+/// </para>
+/// <para>It runs inside TabStudio's own Roslyn rather than shipping as an analyzer assembly, so it is not marked with <c>[Generator]</c>.</para>
+/// </remarks>
+public sealed class WpfXamlGenerator : IIncrementalGenerator
+{
+    /// <summary>The editorconfig metadata that says how a XAML file is built: <c>ApplicationDefinition</c> or <c>Page</c>.</summary>
+    public const string ItemKindMetadata = "build_metadata.AdditionalFiles.TabStudioXamlItemKind";
+
+    /// <summary>The suffix of the first pass's files, which a build replaces with the second pass's.</summary>
+    public const string FirstPassSuffix = ".g.i.cs";
+
+    /// <summary>The <see cref="AppContext"/> data key under which <c>Application.Run(Window)</c> leaves the window to show.</summary>
+    public const string MainWindowKey = "TabStudio.Wpf.MainWindow";
+
+    /// <inheritdoc />
+    public void Initialize(IncrementalGeneratorInitializationContext context)
+    {
+        var files = context.AdditionalTextsProvider
+            .Where(static text => text.Path.EndsWith(".xaml", StringComparison.OrdinalIgnoreCase))
+            .Combine(context.AnalyzerConfigOptionsProvider)
+            .Select(static (pair, cancellationToken) => XamlClassFile.Read(pair.Left, pair.Right, cancellationToken));
+
+        var outputType = context.AnalyzerConfigOptionsProvider.Select(static (options, _) =>
+            options.GlobalOptions.TryGetValue("build_property.OutputType", out var value) ? value : null);
+
+        context.RegisterSourceOutput(files.Combine(context.CompilationProvider), static (output, input) =>
+        {
+            if (input.Left is { ClassName: not null } file)
+            {
+                output.AddSource(HintName(file.RelativePath) + FirstPassSuffix, GenerateClass(file, XamlTypeSystem.For(input.Right)));
+            }
+        });
+
+        context.RegisterSourceOutput(files.Collect().Combine(context.CompilationProvider).Combine(outputType), static (output, input) =>
+        {
+            if (GenerateProjectCode(input.Left.Left, input.Left.Right, input.Right) is { } code)
+            {
+                output.AddSource("TabStudio.Wpf.g.cs", code);
+            }
+        });
+    }
+
+    /// <summary>Whether a syntax tree is this generator's first-pass code, which a build replaces.</summary>
+    /// <param name="tree">A tree of the project's compilation.</param>
+    public static bool IsFirstPassTree(SyntaxTree tree)
+    {
+        ArgumentNullException.ThrowIfNull(tree);
+        return tree.FilePath.EndsWith(FirstPassSuffix, StringComparison.Ordinal)
+            && tree.FilePath.Contains(nameof(WpfXamlGenerator), StringComparison.Ordinal);
+    }
+
+    /// <summary>The name of a file's generated source: its path in the project, with dots for the folders.</summary>
+    private static string HintName(string relativePath) => relativePath.Replace('/', '.').Replace('\\', '.');
+
+    /// <summary>The partial class of one XAML file, as OpenSilver's first pass writes it.</summary>
+    private static string GenerateClass(XamlClassFile file, XamlTypeSystem types)
+    {
+        var className = file.ClassName!;
+        var dot = className.LastIndexOf('.');
+        var ns = dot < 0 ? null : className[..dot];
+        var name = dot < 0 ? className : className[(dot + 1)..];
+        var baseType = types.FindType(file.RootNamespace, file.RootName) is { } root ? " : " + Display(root) : string.Empty;
+        var fallback = types.Compilation.GetTypeByMetadataName("System.Windows.FrameworkElement") is { } element ? Display(element) : "object";
+
+        var text = new StringBuilder();
+        text.Append(CultureInfo.InvariantCulture, $"""
+            // <auto-generated>
+            //     Generated by TabStudio from {file.RelativePath}, as OpenSilver's XAML compiler does before the C# compiler:
+            //     the class's named elements and InitializeComponent. Building the project replaces it with what OpenSilver's
+            //     compiler generates after the C# compiler.
+            // </auto-generated>
+
+
+            """);
+        if (ns is not null)
+        {
+            text.Append(CultureInfo.InvariantCulture, $"namespace {ns}\n{{\n");
+        }
+
+        text.Append(CultureInfo.InvariantCulture, $"{file.ClassModifier} partial class {name}{baseType}\n{{\n");
+        if (file.NamedElements.Count > 0)
+        {
+            text.Append("#pragma warning disable 169, 649, 0628 // Fields that XAML sets, never the class's own code.\n");
+            foreach (var named in file.NamedElements)
+            {
+                var type = types.FindType(named.XmlNamespace, named.TypeName) is { } found ? Display(found) : fallback;
+                text.Append(CultureInfo.InvariantCulture, $"    {named.Modifier} {type} @{named.Name};\n");
+            }
+
+            text.Append("#pragma warning restore 169, 649, 0628\n\n");
+        }
+
+        var fileName = SymbolDisplay.FormatLiteral(file.RelativePath, quote: true);
+        text.Append(CultureInfo.InvariantCulture, $$"""
+                private bool _contentLoaded;
+
+                /// <summary>Builds the user interface its XAML describes.</summary>
+                public void InitializeComponent()
+                {
+                    if (_contentLoaded)
+                    {
+                        return;
+                    }
+
+                    _contentLoaded = true;
+                    throw new global::System.InvalidOperationException({{fileName}} + " is compiled by OpenSilver's XAML compiler when TabStudio builds the project.");
+                }
+            }
+
+            """);
+        if (ns is not null)
+        {
+            text.Append("}\n");
+        }
+
+        return text.ToString();
+    }
+
+    /// <summary>
+    /// What the project gets beside its XAML, kept when it builds: the application's <c>Main</c> and constructor, and
+    /// the WPF API OpenSilver lacks that the project's code needs to compile. <see langword="null"/> when there is none.
+    /// </summary>
+    private static string? GenerateProjectCode(ImmutableArray<XamlClassFile?> files, RoslynCompilation compilation, string? outputType)
+    {
+        var types = XamlTypeSystem.For(compilation);
+        if (types.Application is not { } application)
+        {
+            // Not compiled against WPF's API, as before OpenSilver is restored: nothing to add to.
+            return null;
+        }
+
+        var text = new StringBuilder("""
+            // <auto-generated>
+            //     Generated by TabStudio for a WPF project, which builds on OpenSilver: what the Windows Desktop SDK and WPF's
+            //     markup compiler give it that OpenSilver does not.
+            // </auto-generated>
+
+            """);
+        var hasCode = false;
+
+        var isExecutable = outputType is { } type && (type.Equals("WinExe", StringComparison.OrdinalIgnoreCase) || type.Equals("Exe", StringComparison.OrdinalIgnoreCase));
+        if (files.FirstOrDefault(f => f is { Kind: XamlItemKind.ApplicationDefinition, ClassName: not null }) is { } app && isExecutable)
+        {
+            hasCode = true;
+            text.Append(ApplicationClass(app, compilation, hasRun: !application.GetMembers("Run").IsEmpty));
+        }
+
+        var compatibility = Compatibility(compilation, application);
+        if (compatibility.Length > 0)
+        {
+            hasCode = true;
+            text.Append("\nnamespace System.Windows\n{\n").Append(compatibility).Append("}\n");
+        }
+
+        return hasCode ? text.ToString() : null;
+    }
+
+    /// <summary>The application class's <c>Main</c>, as WPF's markup compiler writes it, and its constructor when it has none.</summary>
+    private static string ApplicationClass(XamlClassFile app, RoslynCompilation compilation, bool hasRun)
+    {
+        var className = app.ClassName!;
+        var dot = className.LastIndexOf('.');
+        var ns = dot < 0 ? null : className[..dot];
+        var name = dot < 0 ? className : className[(dot + 1)..];
+        var declared = compilation.GetTypeByMetadataName(className);
+        var hasConstructor = declared?.InstanceConstructors.Any(c => !c.IsImplicitlyDeclared) == true;
+        var type = Display(declared) ?? "global::" + className;
+
+        // Without OpenSilver's own Run, the extension method below; it is not in scope of the class's namespace.
+        var run = hasRun ? "app.Run();" : "global::System.Windows.TabStudioApplicationExtensions.Run(app);";
+
+        var text = new StringBuilder("\n");
+        if (ns is not null)
+        {
+            text.Append(CultureInfo.InvariantCulture, $"namespace {ns}\n{{\n");
+        }
+
+        text.Append(CultureInfo.InvariantCulture, $"{app.ClassModifier} partial class {name}\n{{\n");
+        if (!hasConstructor)
+        {
+            text.Append(CultureInfo.InvariantCulture, $$"""
+                    /// <summary>Creates the application.</summary>
+                    public {{name}}()
+                    {
+                    }
+
+
+                """);
+        }
+
+        text.Append(CultureInfo.InvariantCulture, $$"""
+                /// <summary>Application Entry Point.</summary>
+                [global::System.STAThreadAttribute()]
+                public static void Main()
+                {
+                    {{type}} app = new {{type}}();
+                    app.InitializeComponent();
+                    {{run}}
+                }
+            }
+
+            """);
+        if (ns is not null)
+        {
+            text.Append("}\n");
+        }
+
+        return text.ToString();
+    }
+
+    /// <summary>WPF's types and members the Visual Studio template's code uses that OpenSilver does not have.</summary>
+    private static string Compatibility(RoslynCompilation compilation, INamedTypeSymbol application)
+    {
+        var text = new StringBuilder();
+        if (compilation.GetTypeByMetadataName("System.Windows.ResourceDictionaryLocation") is null)
+        {
+            text.Append("""
+                    /// <summary>Where theme dictionaries are, for <see cref="ThemeInfoAttribute"/>.</summary>
+                    internal enum ResourceDictionaryLocation
+                    {
+                        /// <summary>No theme dictionaries.</summary>
+                        None = 0,
+
+                        /// <summary>In the assembly itself.</summary>
+                        SourceAssembly = 1,
+
+                        /// <summary>In assemblies of their own.</summary>
+                        ExternalAssembly = 2,
+                    }
+
+
+                """);
+        }
+
+        if (compilation.GetTypeByMetadataName("System.Windows.ThemeInfoAttribute") is null)
+        {
+            text.Append("""
+                    /// <summary>
+                    /// Where an assembly's theme dictionaries are, as WPF's attribute says. OpenSilver finds a control's
+                    /// default style in Themes/generic.xaml by itself, so it only documents the assembly here.
+                    /// </summary>
+                    [global::System.AttributeUsage(global::System.AttributeTargets.Assembly)]
+                    internal sealed class ThemeInfoAttribute : global::System.Attribute
+                    {
+                        /// <summary>Records where the theme dictionaries are.</summary>
+                        /// <param name="themeDictionaryLocation">Where the theme-specific dictionaries are.</param>
+                        /// <param name="genericDictionaryLocation">Where the generic dictionary is.</param>
+                        public ThemeInfoAttribute(ResourceDictionaryLocation themeDictionaryLocation, ResourceDictionaryLocation genericDictionaryLocation)
+                        {
+                            ThemeDictionaryLocation = themeDictionaryLocation;
+                            GenericDictionaryLocation = genericDictionaryLocation;
+                        }
+
+                        /// <summary>Where the theme-specific dictionaries are.</summary>
+                        public ResourceDictionaryLocation ThemeDictionaryLocation { get; }
+
+                        /// <summary>Where the generic dictionary is.</summary>
+                        public ResourceDictionaryLocation GenericDictionaryLocation { get; }
+                    }
+
+
+                """);
+        }
+
+        if (application.GetMembers("Run").IsEmpty)
+        {
+            text.Append(CultureInfo.InvariantCulture, $$"""
+                    /// <summary>WPF's <c>Application.Run</c>, for apps that run in the browser on OpenSilver.</summary>
+                    internal static class TabStudioApplicationExtensions
+                    {
+                        /// <summary>
+                        /// Runs the application, as WPF's <c>Application.Run</c> does. In the browser, OpenSilver keeps the
+                        /// app running once it has started, so this returns at once.
+                        /// </summary>
+                        /// <param name="application">The application.</param>
+                        /// <returns>0, the exit code.</returns>
+                        public static int Run(this global::System.Windows.Application application) => 0;
+
+                        /// <summary>Runs the application with a window as its main window, which TabStudio shows in the web preview.</summary>
+                        /// <param name="application">The application.</param>
+                        /// <param name="window">The main window.</param>
+                        /// <returns>0, the exit code.</returns>
+                        public static int Run(this global::System.Windows.Application application, global::System.Windows.Window window)
+                        {
+                            global::System.AppContext.SetData("{{MainWindowKey}}", window);
+                            return 0;
+                        }
+                    }
+
+                """);
+        }
+
+        return text.ToString();
+    }
+
+    private static string? Display(ITypeSymbol? type) => type?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+
+    /// <summary>A XAML file, as the generator needs it.</summary>
+    private sealed record XamlClassFile(
+        string RelativePath,
+        XamlItemKind Kind,
+        string? ClassName,
+        string ClassModifier,
+        string RootNamespace,
+        string RootName,
+        IReadOnlyList<NamedElement> NamedElements)
+    {
+        public static XamlClassFile? Read(AdditionalText file, AnalyzerConfigOptionsProvider options, CancellationToken cancellationToken)
+        {
+            var text = file.GetText(cancellationToken)?.ToString() ?? string.Empty;
+            var document = XamlDocument.Parse(text);
+            if (document.Root is not { } root)
+            {
+                return null;
+            }
+
+            var fileOptions = options.GetOptions(file);
+            var kind = fileOptions.TryGetValue(ItemKindMetadata, out var value) && value == nameof(XamlItemKind.ApplicationDefinition)
+                ? XamlItemKind.ApplicationDefinition
+                : XamlItemKind.Page;
+            var projectDirectory = options.GlobalOptions.TryGetValue("build_property.ProjectDir", out var directory) ? directory : null;
+            var relative = projectDirectory is { Length: > 0 } && file.Path.StartsWith(projectDirectory, StringComparison.Ordinal)
+                ? file.Path[projectDirectory.Length..].Replace('\\', '/')
+                : Path.GetFileName(file.Path);
+
+            var className = root.Attribute(XamlNamespaces.Language, "Class")?.Value.Trim();
+            var classModifier = root.Attribute(XamlNamespaces.Language, "ClassModifier")?.Value.Trim().ToUpperInvariant() switch
+            {
+                "INTERNAL" or "FRIEND" => "internal",
+                _ => "public",
+            };
+
+            return new XamlClassFile(
+                relative,
+                kind,
+                className is { Length: > 0 } && className.Split('.').All(SyntaxFacts.IsValidIdentifier) ? className : null,
+                classModifier,
+                root.XmlNamespace,
+                root.LocalName,
+                FindNamedElements(document, root));
+        }
+
+        /// <summary>The elements with an <c>x:Name</c> or <c>Name</c> that get a field: those outside templates, once each.</summary>
+        private static List<NamedElement> FindNamedElements(XamlDocument document, XamlElement root)
+        {
+            var ignorable = XamlNamespaces.IgnorablePrefixes(root);
+            var named = new List<NamedElement>();
+            foreach (var element in document.Elements)
+            {
+                if (element.IsPropertyElement || element.LocalName.Length == 0 || ignorable.Contains(element.Prefix) || InsideTemplate(element))
+                {
+                    continue;
+                }
+
+                var name = (element.Attribute(XamlNamespaces.Language, "Name") ?? element.Attribute("Name"))?.Value.Trim();
+                if (name is null || !SyntaxFacts.IsValidIdentifier(name) || named.Exists(n => n.Name == name))
+                {
+                    continue;
+                }
+
+                var modifier = element.Attribute(XamlNamespaces.Language, "FieldModifier")?.Value.Trim().ToUpperInvariant() switch
+                {
+                    "PUBLIC" => "public",
+                    "PRIVATE" => "private",
+                    "PROTECTED" => "protected",
+                    "PROTECTED INTERNAL" => "protected internal",
+                    _ => "internal",
+                };
+                named.Add(new NamedElement(name, element.XmlNamespace, element.LocalName, modifier));
+            }
+
+            return named;
+        }
+
+        /// <summary>Elements in templates belong to the controls the template makes, not to the class.</summary>
+        private static bool InsideTemplate(XamlElement element)
+        {
+            for (var parent = element.Parent; parent is not null; parent = parent.Parent)
+            {
+                if (!parent.IsPropertyElement && parent.LocalName.EndsWith("Template", StringComparison.Ordinal))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+
+    /// <summary>An element with an <c>x:Name</c>.</summary>
+    private sealed record NamedElement(string Name, string XmlNamespace, string TypeName, string Modifier);
+}
