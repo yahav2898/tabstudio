@@ -6,7 +6,7 @@ fixture="${RUNNER_TEMP:-/tmp}/tabstudio-ssh-${GITHUB_JOB:-local}"
 mkdir -p "$fixture"
 ssh-keygen -q -t rsa -b 3072 -m PEM -N '' -f "$fixture/id_rsa"
 docker build -t tabstudio-openssh build/ci/ssh
-docker run -d --rm --name tabstudio-openssh -p 127.0.0.1:2222:22 \
+docker run -d --name tabstudio-openssh -p 127.0.0.1:2222:22 \
   -v "$fixture/id_rsa.pub:/authorized_key:ro" tabstudio-openssh
 for attempt in $(seq 1 60); do
   if ssh-keyscan -t ed25519 -p 2222 127.0.0.1 > ci-out/ssh/known_hosts 2>/dev/null && [ -s ci-out/ssh/known_hosts ]; then break; fi

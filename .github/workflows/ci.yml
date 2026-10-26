@@ -208,18 +208,31 @@ jobs:
             nuget-ssh-
             nuget-app-
       - name: Start OpenSSH integration container
-        run: bash build/ci/start-ssh-server.sh
+        run: |
+          set -euo pipefail
+          mkdir -p ci-out
+          bash build/ci/start-ssh-server.sh 2>&1 | tee ci-out/ssh-start.log
       - name: Test real SSH, SFTP, remote workspace and publishing
         env:
           TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
         run: |
-          set -euo pipefail
+          set -uo pipefail
           mkdir -p ci-out/screenshots
-          dotnet test tests/TabStudio.Remote.Tests -c Release --blame-hang-timeout 2m --blame-hang-dump-type none --logger "console;verbosity=normal" 2>&1 | tee ci-out/ssh-library.log
-          dotnet test tests/TabStudio.App.Tests -c Release --filter FullyQualifiedName~RemoteSsh --blame-hang-timeout 2m --blame-hang-dump-type none --logger "console;verbosity=normal" 2>&1 | tee ci-out/ssh-app.log
+          status=0
+          # Both projects always run, so one failure never hides the other's output.
+          dotnet test tests/TabStudio.Remote.Tests -c Release --blame-hang-timeout 2m --blame-hang-dump-type none --logger "console;verbosity=normal" 2>&1 | tee ci-out/ssh-library.log || status=1
+          dotnet test tests/TabStudio.App.Tests -c Release --filter FullyQualifiedName~RemoteSsh --blame-hang-timeout 2m --blame-hang-dump-type none --logger "console;verbosity=normal" 2>&1 | tee ci-out/ssh-app.log || status=1
+          exit $status
       - name: Capture OpenSSH logs
         if: always()
-        run: docker logs tabstudio-openssh > ci-out/sshd.log 2>&1 || true
+        run: |
+          mkdir -p ci-out
+          { docker ps -a; docker logs tabstudio-openssh; } > ci-out/sshd.log 2>&1 || true
+      - name: Publish logs
+        if: always() && github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs.sh ssh ${{ job.status }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
