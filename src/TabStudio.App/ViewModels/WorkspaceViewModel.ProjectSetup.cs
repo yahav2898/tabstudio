@@ -88,7 +88,8 @@ public sealed partial class WorkspaceViewModel
     /// <summary>Sets the workspace's projects up in the background, when the setting is on.</summary>
     private void StartProjectSetup()
     {
-        if (!SetUpProjectsWhenTheyOpen || _disposed || Workspace is null)
+        // Built-in .NET projects restore elsewhere; do not probe external compilers for an unrelated workspace.
+        if (!SetUpProjectsWhenTheyOpen || _disposed || Workspace is null || (_toolchainProjects.Count == 0 && StaticSite is null))
         {
             return;
         }

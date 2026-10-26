@@ -93,6 +93,22 @@ public sealed class ProjectSetupDeviceTests : IDisposable
         Assert.True(_device.Manager.IsReady("python"), workspace.Output.Text);
     }
 
+    [AvaloniaFact]
+    public async Task Opening_a_dotnet_project_does_not_probe_unrelated_toolchains()
+    {
+        var refreshes = 0;
+        _device.Manager.Changed += (_, _) => Interlocked.Increment(ref refreshes);
+
+        await _main.OpenWorkspaceAsync(new ProjectTemplates(_paths).Create(ProjectTemplates.ConsoleId, "DotNetOnly"));
+        var workspace = _main.Workspace!;
+        await workspace.ProjectSetupTask;
+
+        Assert.Empty(workspace.ToolchainProjects);
+        Assert.Null(workspace.StaticSite);
+        Assert.Equal(0, refreshes);
+        Assert.False(workspace.IsSettingUpProjects);
+    }
+
     public void Dispose()
     {
         _main.Workspace?.Dispose();
