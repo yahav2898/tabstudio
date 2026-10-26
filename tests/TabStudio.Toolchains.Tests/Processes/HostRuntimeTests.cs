@@ -60,6 +60,31 @@ public sealed class HostRuntimeTests : IDisposable
     }
 
     [Fact]
+    public void Native_descriptor_flags_are_preserved_when_a_descriptor_is_duplicated()
+    {
+        UnixNative.EnsureLoaded();
+        Span<int> descriptors = stackalloc int[2];
+        Assert.Equal(0, UnixNative.pipe(descriptors));
+        var duplicate = -1;
+        try
+        {
+            Assert.Equal(0, UnixNative.fcntl_int(descriptors[0], UnixConstants.SetDescriptorFlags, UnixConstants.CloseOnExecFlag));
+            const int getDescriptorFlags = 1; // F_GETFD on Linux, Android and macOS.
+            Assert.Equal(UnixConstants.CloseOnExecFlag, UnixNative.fcntl_int(descriptors[0], getDescriptorFlags, 0) & UnixConstants.CloseOnExecFlag);
+
+            duplicate = UnixNative.fcntl_int(descriptors[0], OperatingSystem.IsMacOS() ? 67 : 1030, 3);
+            Assert.True(duplicate >= 3);
+            Assert.Equal(UnixConstants.CloseOnExecFlag, UnixNative.fcntl_int(duplicate, getDescriptorFlags, 0) & UnixConstants.CloseOnExecFlag);
+        }
+        finally
+        {
+            if (duplicate >= 0) _ = UnixNative.close(duplicate);
+            _ = UnixNative.close(descriptors[0]);
+            _ = UnixNative.close(descriptors[1]);
+        }
+    }
+
+    [Fact]
     public async Task Reads_standard_input_until_it_is_closed()
     {
         using var process = _runtime.Start(Shell("read name; echo \"Hello, $name!\"; cat"));

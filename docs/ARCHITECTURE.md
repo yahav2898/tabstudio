@@ -356,6 +356,10 @@ updates remain enabled; execution can be slower and conservative scanning can re
 post-update process stress verifies the native handoff under repeated collections. The verdict records this
 startup setting as well as the update capability. See dotnet/runtime's `interp.c` option parser and debugger setup.
 
+Native `fcntl` arguments use `nint`: Android's bionic reads the variadic slot as a pointer-sized value. An `int`
+P/Invoke declaration can leave stale upper bits in Mono and abort `F_SETFD` in bionic's FORTIFY check. Process
+tests verify close-on-exec flags and descriptor duplication; the emulator exercises this boundary after updates.
+
 Mono 10's native `hot_reload_update_enabled` caches the configured mode but returns a local false on subsequent
 checks, which can make the public `MetadataUpdater.IsSupported` flag false after interpreter initialization.
 `HotReloadRuntime` still checks that flag first. On Android Mono only, if the startup environment and feature
