@@ -212,13 +212,18 @@ internal static class UnixSpawner
 
                 envp[environment.Count] = 0;
                 var program = Utf8(path, strings);
-                var result = UnixNative.posix_spawn(out var pid, program, actions, attributes, argv, envp);
+                // Use explicit native storage for the output, just like argv/envp. Mono's interpreter can return
+                // garbage for a managed out local across this suppressed-transition call (seen as impossible
+                // positive/negative PIDs on Android). A pointer avoids the byref marshalling/copy-back path.
+                var pid = stackalloc int[1];
+                pid[0] = -1;
+                var result = UnixNative.posix_spawn(pid, program, actions, attributes, argv, envp);
                 if (result != 0)
                 {
                     throw Failure($"Could not start {path}", result);
                 }
 
-                return pid;
+                return pid[0];
             }
             finally
             {

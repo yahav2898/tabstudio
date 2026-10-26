@@ -125,7 +125,7 @@ internal static partial class UnixNative
     /// </remarks>
     [LibraryImport(LibC)]
     [SuppressGCTransition]
-    internal static unsafe partial int posix_spawn(out int pid, nint path, nint actions, nint attributes, nint* argv, nint* envp);
+    internal static unsafe partial int posix_spawn(int* pid, nint path, nint actions, nint attributes, nint* argv, nint* envp);
 
     /// <summary>The size of a terminal, as <c>TIOCSWINSZ</c> takes it.</summary>
     [StructLayout(LayoutKind.Sequential)]

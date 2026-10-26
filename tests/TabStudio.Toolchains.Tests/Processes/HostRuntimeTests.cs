@@ -30,6 +30,25 @@ public sealed class HostRuntimeTests : IDisposable
     }
 
     [Fact]
+    public async Task Native_spawn_reports_the_actual_child_pid_and_its_nonzero_exit_status()
+    {
+        // Checking output alone misses a corrupt out PID: the child still runs, but waitpid has no such child.
+        // Exercise repeated native calls and collections, including a nonzero exit rather than assuming success.
+        for (var i = 0; i < 30; i++)
+        {
+            using var process = _runtime.Start(Shell("echo $$; exit 23"));
+            var output = new ProcessOutput(process);
+            GC.Collect();
+            var exit = await process.Completion.WaitAsync(TimeSpan.FromSeconds(20));
+            await output.CompletedAsync();
+
+            Assert.Equal(process.Id.ToString(System.Globalization.CultureInfo.InvariantCulture), output.Output.Trim());
+            Assert.Equal(23, exit.ExitCode);
+            Assert.Null(exit.Signal);
+        }
+    }
+
+    [Fact]
     public async Task Reads_standard_input_until_it_is_closed()
     {
         using var process = _runtime.Start(Shell("read name; echo \"Hello, $name!\"; cat"));
