@@ -189,9 +189,19 @@ jobs:
           components: rust-analyzer, rust-src
 
       - name: Install LLVM, C and C++ tools
+        timeout-minutes: 10
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y clang-19 clangd-19 lldb-19 cmake make
+          # A stalled package mirror must fail setup rather than occupy the
+          # runner for hours before any IDE or real-tool tests can start.
+          # The hosted image's Azure mirror delivered LLVM at about 40 KB/s
+          # in the stalled run. Prefer Ubuntu's primary mirror for these
+          # signed packages; leave the image's security sources unchanged.
+          if [ -f /etc/apt/apt-mirrors.txt ]; then
+            printf '%s\n' 'https://archive.ubuntu.com/ubuntu/' | sudo tee /etc/apt/apt-mirrors.txt
+          fi
+          apt_options=(-o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30)
+          sudo apt-get "${apt_options[@]}" update -qq
+          sudo env DEBIAN_FRONTEND=noninteractive apt-get "${apt_options[@]}" install -y clang-19 clangd-19 lldb-19 cmake make
           mkdir -p "$RUNNER_TEMP/cpp-bin"
           ln -s /usr/bin/clangd-19 "$RUNNER_TEMP/cpp-bin/clangd"
           ln -s /usr/bin/lldb-dap-19 "$RUNNER_TEMP/cpp-bin/lldb-dap"
@@ -467,7 +477,7 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: artifacts/native
-          key: android-native-${{ hashFiles('build/android/native/build.sh', 'build/android/native/sources.sh', 'build/android/native/*.patch', 'build/android/native/*.c') }}-arm
+          key: android-native-${{ hashFiles('build/android/native/build.sh', 'build/android/native/sources.sh', 'build/android/native/*.patch', 'build/android/native/*.c', 'build/pic/build_box64.py', 'build/pic/spike.py', 'build/pic/assets.lock.json', 'build/pic/*.patch') }}-arm
 
       - name: Build the toolchain runtime
         run: |
@@ -541,7 +551,7 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: artifacts/native
-          key: android-native-${{ hashFiles('build/android/native/build.sh', 'build/android/native/sources.sh', 'build/android/native/*.patch', 'build/android/native/*.c') }}-x64
+          key: android-native-${{ hashFiles('build/android/native/build.sh', 'build/android/native/sources.sh', 'build/android/native/*.patch', 'build/android/native/*.c', 'build/pic/build_box64.py', 'build/pic/spike.py', 'build/pic/assets.lock.json', 'build/pic/*.patch') }}-x64
 
       - name: Build the toolchain runtime
         run: |
@@ -567,6 +577,34 @@ jobs:
           [ "$status" -eq 0 ] || exit $status
           cp "$(find src/TabStudio.Android/bin/Release/net10.0-android/publish -name '*-Signed.apk' | head -n 1)" ci-out/TabStudio-x64.apk
 
+      - name: Build the disposable app-UID PIC probe APK
+        if: matrix.shard == 'native'
+        run: |
+          # Keep the existing IDE performance check on its normal Release APK.
+          # Only the subsequent compiler probe needs a debuggable manifest for
+          # run-as; both packages contain exactly the same application code.
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          tree = ET.parse('src/TabStudio.Android/Properties/AndroidManifest.xml')
+          tree.getroot().find('application').set('{http://schemas.android.com/apk/res/android}debuggable', 'true')
+          tree.write('src/TabStudio.Android/Properties/PicEmulatorManifest.xml', encoding='utf-8', xml_declaration=True)
+          PY
+          status=0
+          dotnet publish src/TabStudio.Android -c Release -p:TreatWarningsAsErrors=true -f net10.0-android -p:TabStudioRuntimeIdentifiers=android-x64 \
+            -p:AndroidManifest=Properties/PicEmulatorManifest.xml \
+            -p:TabStudioBuildNumber=$(( ($(date +%s) - 1767225600) / 60 )) \
+            -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME" \
+            > ci-out/android-pic-probe-build.log 2>&1 || status=$?
+          tail -n 40 ci-out/android-pic-probe-build.log
+          [ "$status" -eq 0 ] || exit $status
+          cp "$(find src/TabStudio.Android/bin/Release/net10.0-android/publish -name '*-Signed.apk' | head -n 1)" ci-out/TabStudio-pic-probe.apk
+
+      - name: Prepare the verified PIC18 compiler and box64 interpreter for Android
+        if: matrix.shard == 'native'
+        run: |
+          python3 build/pic/android_spike.py prepare --work "$RUNNER_TEMP/pic-android" \
+            --output ci-out/pic-android --accept-microchip-license
+
       - name: Enable KVM
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -581,12 +619,14 @@ jobs:
           target: google_apis
           arch: x86_64
           profile: pixel_c
-          cores: 3
+          # Use the public Linux runner's four cores for the cold six-SDK
+          # self-test; keep the existing memory and 900-second timing limits.
+          cores: 4
           ram-size: 4096M
-          disk-size: 4096M
+          disk-size: 8192M
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
-          script: bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 900 ${{ matrix.shard }}
+          script: bash build/pic/android-emulator-test.sh ci-out/TabStudio-x64.apk ci-out "$RUNNER_TEMP/pic-android" ci-out/TabStudio-pic-probe.apk ${{ matrix.shard }}
 
       # A crash's native backtrace has only offsets into the runtime's stripped libraries; this names the functions.
       - name: Name the functions in a crash's backtrace

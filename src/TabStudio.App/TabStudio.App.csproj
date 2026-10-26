@@ -27,6 +27,9 @@
     <EmbeddedResource Include="..\..\samples\HelloTablet\**\*"
                       Exclude="..\..\samples\HelloTablet\**\bin\**;..\..\samples\HelloTablet\**\obj\**"
                       LogicalName="Samples/HelloTablet/%(RecursiveDir)%(Filename)%(Extension)" />
+    <EmbeddedResource Include="..\..\samples\PIC\**\*"
+                      Exclude="..\..\samples\PIC\**\build\**;..\..\samples\PIC\**\dist\**"
+                      LogicalName="Templates/PIC/%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
 
   <ItemGroup>

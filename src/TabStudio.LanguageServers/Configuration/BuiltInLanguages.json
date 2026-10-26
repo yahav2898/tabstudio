@@ -451,6 +451,20 @@
       "terminalDefaults": {
         "console": "integratedTerminal"
       }
+    },
+    "gpsim": {
+      "name": "PIC18 simulator (gpsim)",
+      "languages": [
+        "c"
+      ],
+      "command": "python3",
+      "args": [
+        "/opt/tabstudio/microchip/gpsim_dap.py"
+      ],
+      "package": "gpsim",
+      "defaults": {
+        "stopOnEntry": true
+      }
     }
   }
 }

@@ -402,6 +402,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
 
     private void WireAdapterEvents(DebugAdapterSession session)
     {
+        var console = _adapterConsoles.GetOrCreateValue(_adapterRoot ?? session);
         session.RunInTerminalHandler = RunAdapterProgramAsync;
         session.Stopped += (_, e) => _ui.Post(() =>
         {
@@ -418,7 +419,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         session.OutputReceived += (_, e) =>
         {
             // A program in the Output panel's console writes there itself; the adapter's copies go to its own log.
-            if (IsProgramInConsole && e.Category is "stdout" or "stderr")
+            if (Volatile.Read(ref console.Value) && e.Category is "stdout" or "stderr")
             {
                 DebugAdapterOutput.Write($"[{session.Adapter.Name}] ({e.Category}) {e.Output}", OutputKind.Info);
                 return;

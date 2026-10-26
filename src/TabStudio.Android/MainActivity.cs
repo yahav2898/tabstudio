@@ -138,6 +138,7 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
                 services.AddSingleton<IExternalDisplayService>(_ => _displays ??= new AndroidExternalDisplays(context, () => _current));
                 services.AddSingleton(AndroidToolchainPlatform.Create(context));
                 services.AddSingleton<TabStudio.Remote.ISshKeyStore, AndroidSshKeyStore>();
+                services.AddSingleton<TabStudio.Toolchains.Microchip.IUsbHost>(_ => new AndroidUsbHost(context));
             });
     }
 

@@ -44,7 +44,7 @@ class RetryPolicyTests(unittest.TestCase):
             ],
             "TabStudio.Compilation.Tests": ["HotReloadTests.Second_generation", "ProgramRunnerTests.Environment"],
             "TabStudio.Debugging.Tests": ["RecordingFormatTests.Evict_complete_records"],
-            "TabStudio.Toolchains.Tests": ["Projects.ProjectSetupPlanTests.Manifest_change", "Networking.ListeningPortsTests.Owned_socket"],
+            "TabStudio.Toolchains.Tests": ["Projects.ProjectSetupPlanTests.Manifest_change", "Networking.ListeningPortsTests.Owned_socket", "Microchip.PicProjectDetectionTests.Configuration", "Microchip.UsbDescriptorInheritanceTests.Only_selected_device"],
             "TabStudio.Agent.Tests": ["LocalAITests.Model_checksum", "LocalNativeTests.Inference"],
             "TabStudio.LanguageServers.Tests": ["Hosting.LanguageServerHostTests.Startup_EOF_recovers"],
         }

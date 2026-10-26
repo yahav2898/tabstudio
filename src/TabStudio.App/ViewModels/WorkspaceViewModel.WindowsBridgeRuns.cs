@@ -177,7 +177,9 @@ public sealed partial class WorkspaceViewModel
 
             StatusText = $"Building {project.Name} on {pc}";
             Output.WriteLine($"1>------ Build started: Project: {project.Name}, Configuration: {Configuration}, on {pc} ------", OutputKind.Info);
-            var outcome = await client.BuildAsync(project.FilePath, Configuration, skipReferences, line => Output.WriteLine("1>" + line, OutputKindOf(line)));
+            var configuration = FindToolchainProject(project) is { } toolchain && TabStudio.Toolchains.Microchip.MicrochipInstallation.IsCompiler(toolchain.Toolchain.Id)
+                ? TabStudio.Toolchains.Microchip.MplabProject.Load(project.FilePath).SelectedConfiguration().Name : Configuration;
+            var outcome = await client.BuildAsync(project.FilePath, configuration, skipReferences, line => Output.WriteLine("1>" + line, OutputKindOf(line)));
             ErrorList.SetWindowsBridgeDiagnostics(project.FilePath, pc, outcome.Diagnostics);
             var time = outcome.Duration.TotalSeconds.ToString("0.0", CultureInfo.InvariantCulture);
             Output.WriteLine(

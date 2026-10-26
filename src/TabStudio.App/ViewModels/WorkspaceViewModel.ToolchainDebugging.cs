@@ -21,14 +21,12 @@ public sealed partial class WorkspaceViewModel
     private static readonly TimeSpan ProgramDrainTime = TimeSpan.FromSeconds(3);
 
     private readonly ConditionalWeakTable<LaunchTarget, IReadOnlyDictionary<string, string?>> _programEnvironments = new();
+    private readonly ConditionalWeakTable<DebugAdapterSession, StrongBox<bool>> _adapterConsoles = new();
     private AdapterProgram? _adapterProgramRun;
     private Task? _adapterProgramFinish;
 
     /// <summary>Records adapter messages during the emulator's real-tool debugging check.</summary>
     internal bool TraceDebugAdapterMessages { get; set; }
-
-    /// <summary>Whether the debugged program runs in the Output panel's console, started for its debug adapter.</summary>
-    private bool IsProgramInConsole => _adapterProgramRun is not null;
 
     /// <summary>Feeds a socket adapter's inherited console input, without ever writing text to DAP's protocol stream.</summary>
     private void StartAdapterInput(DebugAdapterSession session)
@@ -77,6 +75,11 @@ public sealed partial class WorkspaceViewModel
 
         var project = item.Project;
         var toolchain = item.Toolchain;
+        if (TabStudio.Toolchains.Microchip.MicrochipInstallation.IsCompiler(toolchain.Id))
+        {
+            await DebugPicProjectAsync(info, start);
+            return;
+        }
         if (toolchain.DebugAdapter?.Type is not { } type || !ToolchainLaunch.Supports(type) || _languageServers?.Configuration.Registry.FindAdapter(type) is null)
         {
             // A toolchain without a debug adapter TabStudio drives runs as with Ctrl+F5.
@@ -207,6 +210,10 @@ public sealed partial class WorkspaceViewModel
         var stop = new CancellationTokenSource();
         _adapterProgramFinish = null;
         var input = Output.BeginProcessInput();
+        // Retain the output owner for this root and all its child sessions.
+        // DAP stdout/stderr can arrive after FinishAdapterProgram clears the
+        // process field while its final output is still draining.
+        Volatile.Write(ref _adapterConsoles.GetOrCreateValue(_adapterRoot).Value, true);
         var listening = BeginServerRun();
         var completion = OutputProcess.RunAsync(_toolchains.Runtime, spec, Output, input, stop.Token, process => started.TrySetResult(process.Id), listening);
         _adapterProgramRun = new AdapterProgram(completion, stop);

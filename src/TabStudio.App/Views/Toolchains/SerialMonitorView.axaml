@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TabStudio.App.ViewModels" xmlns:views="using:TabStudio.App.Views"
+             x:Class="TabStudio.App.Views.Toolchains.SerialMonitorView" x:DataType="vm:SerialMonitorViewModel">
+  <DockPanel>
+    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="8,4">
+      <ComboBox ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}" MinWidth="210" MaxWidth="360" IsEnabled="{Binding !IsConnected}" />
+      <TextBox Text="{Binding Baud}" Watermark="Baud" Width="90" IsEnabled="{Binding !IsConnected}" />
+      <TextBox Text="{Binding Interface}" Watermark="Port" Width="65" IsEnabled="{Binding !IsConnected}" />
+      <Button Content="Refresh" Command="{Binding RefreshCommand}" IsEnabled="{Binding !IsConnected}" />
+      <Button Content="Connect" Command="{Binding ConnectCommand}" IsVisible="{Binding !IsConnected}" />
+      <Button Content="Disconnect" Command="{Binding DisconnectCommand}" IsVisible="{Binding IsConnected}" />
+      <TextBlock Text="8-N-1" VerticalAlignment="Center" Classes="muted" />
+    </StackPanel>
+    <Grid DockPanel.Dock="Bottom" ColumnDefinitions="*,Auto" Margin="8,4">
+      <TextBox Text="{Binding Input}" Watermark="Send a UTF-8 line (LF)" IsEnabled="{Binding IsConnected}" />
+      <Button Grid.Column="1" Content="Send" Command="{Binding SendCommand}" IsEnabled="{Binding IsConnected}" Margin="8,0,0,0" />
+    </Grid>
+    <views:OutputView DataContext="{Binding Output}" />
+  </DockPanel>
+</UserControl>

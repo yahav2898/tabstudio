@@ -1312,6 +1312,169 @@
       "additionalToolIds": [
         "kotlin-language-server"
       ]
+    },
+    {
+      "id": "xc8",
+      "name": "Microchip XC8",
+      "description": "The official XC8 compiler for PIC10/12/16/18, installed by you under Microchip's license, with verified device packs and clangd.",
+      "languages": [
+        "C",
+        "Embedded PIC10/12/16/18"
+      ],
+      "listed": true,
+      "homepage": "https://www.microchip.com/en-us/tools-resources/develop/mplab-xc-compilers/xc8",
+      "license": "LicenseRef-Microchip-XC",
+      "packages": [
+        "python3",
+        "make",
+        "clang22-extra-tools",
+        "libusb",
+        "lscpu"
+      ],
+      "pinnedVersion": "4.00",
+      "estimatedDownloadSize": 180000000,
+      "estimatedInstalledSize": 360000000,
+      "host": {
+        "commands": [
+          "xc8-cc"
+        ],
+        "versionArguments": [
+          "--version"
+        ],
+        "versionPattern": "XC8 C Compiler V(?<version>\\S+)"
+      },
+      "fileExtensions": [
+        ".c",
+        ".h",
+        ".cpp",
+        ".S"
+      ],
+      "projectFiles": [
+        "nbproject/configurations.xml"
+      ],
+      "run": {
+        "file": [
+          "python3",
+          "/opt/tabstudio/microchip/project.py",
+          "build",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": "nbproject/configurations.xml",
+            "command": [
+              "python3",
+              "/opt/tabstudio/microchip/project.py",
+              "build",
+              "."
+            ]
+          }
+        ]
+      },
+      "languageServer": {
+        "id": "clangd",
+        "command": [
+          "clangd",
+          "--background-index"
+        ],
+        "languages": [
+          "c",
+          "cpp"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+)(?::(?<column>\\d+))?:\\s*(?<severity>fatal error|error|warning|note):\\s*(?<message>.+)$"
+        }
+      ],
+      "errorPattern": "^(?<message>PIC build: error: .+)$",
+      "debugAdapter": {
+        "id": "gpsim",
+        "type": "gpsim",
+        "command": [
+          "python3",
+          "/opt/tabstudio/microchip/gpsim_dap.py"
+        ],
+        "languages": [
+          "c"
+        ]
+      }
+    },
+    {
+      "id": "xc32",
+      "name": "Microchip XC32",
+      "description": "The official XC32 compiler for PIC32, installed by you under Microchip's license, with verified device packs and clangd.",
+      "languages": [
+        "C",
+        "Embedded PIC32"
+      ],
+      "listed": true,
+      "homepage": "https://www.microchip.com/en-us/tools-resources/develop/mplab-xc-compilers/xc32",
+      "license": "LicenseRef-Microchip-XC",
+      "packages": [
+        "python3",
+        "make",
+        "clang22-extra-tools",
+        "libusb",
+        "lscpu"
+      ],
+      "pinnedVersion": "6.00",
+      "estimatedDownloadSize": 2900000000,
+      "estimatedInstalledSize": 5800000000,
+      "host": {
+        "commands": [
+          "xc32-gcc"
+        ],
+        "versionArguments": [
+          "--version"
+        ],
+        "versionPattern": "XC32 Compiler v(?<version>[^)\\s]+)"
+      },
+      "fileExtensions": [
+        ".c",
+        ".h",
+        ".cpp",
+        ".S"
+      ],
+      "projectFiles": [
+        "nbproject/configurations.xml"
+      ],
+      "run": {
+        "file": [
+          "python3",
+          "/opt/tabstudio/microchip/project.py",
+          "build",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": "nbproject/configurations.xml",
+            "command": [
+              "python3",
+              "/opt/tabstudio/microchip/project.py",
+              "build",
+              "."
+            ]
+          }
+        ]
+      },
+      "languageServer": {
+        "id": "clangd",
+        "command": [
+          "clangd",
+          "--background-index"
+        ],
+        "languages": [
+          "c",
+          "cpp"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+)(?::(?<column>\\d+))?:\\s*(?<severity>fatal error|error|warning|note):\\s*(?<message>.+)$"
+        }
+      ],
+      "errorPattern": "^(?<message>PIC build: error: .+)$"
     }
   ]
 }

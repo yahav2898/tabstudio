@@ -180,6 +180,7 @@
             <MenuItem Header="_Error List" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" />
             <MenuItem Header="_Output" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Output}" />
             <MenuItem Header="Ter_minal (Ctrl+`)" Command="{Binding ShowTerminalCommand}" />
+            <MenuItem Header="_Serial Monitor" Command="{Binding ShowSerialMonitorCommand}" />
             <MenuItem Header="_Compatibility Doctor" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Compatibility}" />
             <MenuItem Header="Re_ferences" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.References}" />
             <MenuItem Header="_Bottom Panel" Command="{Binding ToggleBottomPanelCommand}" />
@@ -239,6 +240,10 @@
             <MenuItem Header="Recording Buffer..." Command="{Binding ConfigureRecordingCommand}" />
             <MenuItem Header="Start Wit_hout Debugging" InputGesture="Ctrl+F5" Command="{Binding RunCommand}" />
             <MenuItem Header="Run C_urrent File" Command="{Binding RunCurrentFileCommand}" />
+            <MenuItem Header="{Binding PicFlashMenuText}" Command="{Binding FlashPicCommand}" IsVisible="{Binding IsPicProject}" />
+            <MenuItem Header="PIC _Target…" Command="{Binding ConfigurePicTargetCommand}" IsVisible="{Binding IsPicProject}" />
+            <MenuItem Header="MPLAB _Configuration…" Command="{Binding SelectPicConfigurationCommand}" IsVisible="{Binding IsPicProject}" />
+            <MenuItem Header="On-chip Debugging in _MPLAB X…" Command="{Binding DebugPicOnBridgeCommand}" IsVisible="{Binding IsPicProject}" />
             <MenuItem Header="Brea_k All (Ctrl+Alt+Break)" Command="{Binding BreakAllCommand}" />
             <MenuItem Header="Stop D_ebugging" InputGesture="Shift+F5" Command="{Binding StopDebuggingCommand}" />
             <MenuItem Header="_Restart" InputGesture="Ctrl+Shift+F5" Command="{Binding RestartCommand}" />
@@ -692,6 +697,8 @@
                         Command="{Binding ShowTerminalCommand}" Content="Terminal" />
                 <Button Theme="{StaticResource PanelTabButton}" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Logcat}" Content="Logcat"
                         Classes.selected="{Binding SelectedPanel, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static vm:BottomPanel.Logcat}}" />
+                <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsSerialMonitorSelected}"
+                        Command="{Binding ShowSerialMonitorCommand}" Content="Serial Monitor" />
               </StackPanel>
               </ScrollViewer>
               <StackPanel Grid.Column="1" Orientation="Horizontal">
@@ -734,6 +741,7 @@
               <views:CallStackView DataContext="{Binding CallStack}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsCallStackSelected}" />
               <Panel IsVisible="{Binding SelectedPanel, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static vm:BottomPanel.Logcat}}"><views:OutputView DataContext="{Binding Logcat}" /></Panel>
               <toolchainViews:TerminalPanelView DataContext="{Binding Terminal}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsTerminalSelected}" />
+              <toolchainViews:SerialMonitorView DataContext="{Binding SerialMonitor}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsSerialMonitorSelected}" />
             </Panel>
           </DockPanel>
         </Border>
@@ -967,7 +975,9 @@
               BoxShadow="{DynamicResource Shadow.Dialog}">
         <StackPanel Spacing="14">
           <TextBlock Classes="h2" FontSize="15" Text="{Binding Prompt.Title}" />
-          <TextBlock Classes="muted" TextWrapping="Wrap" Text="{Binding Prompt.Message}" />
+          <ScrollViewer MaxHeight="360" HorizontalScrollBarVisibility="Disabled">
+            <TextBlock Classes="muted" TextWrapping="Wrap" Text="{Binding Prompt.Message}" />
+          </ScrollViewer>
           <TextBox x:Name="PromptBox" Classes="large mono" Text="{Binding Prompt.Text}" IsVisible="{Binding Prompt.HasInput}" />
           <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
             <Button Theme="{StaticResource SecondaryButton}" Height="40" Padding="18,0" Content="Cancel" Command="{Binding Prompt.CancelCommand}" />

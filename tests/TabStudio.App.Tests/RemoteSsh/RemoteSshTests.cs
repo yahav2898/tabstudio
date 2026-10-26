@@ -2,12 +2,15 @@ using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Microsoft.Extensions.DependencyInjection;
 using TabStudio.App.Services;
+using TabStudio.App.Services.Toolchains;
 using TabStudio.App.Tests.ViewModels;
 using TabStudio.App.ViewModels;
 using TabStudio.App.Views;
 using TabStudio.Remote;
 using TabStudio.Remote.Tests;
 using TabStudio.Testing;
+using TabStudio.Toolchains.Linux;
+using TabStudio.Toolchains.Microchip;
 
 namespace TabStudio.App.Tests.RemoteSsh;
 
@@ -49,6 +52,83 @@ public sealed class RemoteSshTests
         await fixture.Workspace.SaveCommand.ExecuteAsync(null);
         Assert.True(document.IsDirty);
         Assert.Contains("Reconnect", fixture.Workspace.StatusText, StringComparison.Ordinal);
+    }
+
+    [AvaloniaFact]
+    public async Task Remote_MPLAB_cache_cannot_offer_local_PIC_actions_write_profiles_install_or_open_USB()
+    {
+        using var device = new TempDirectory();
+        var native = Directory.CreateDirectory(device.Resolve("lib")).FullName;
+        device.Write("lib/libproot.so", string.Empty);
+        device.Write("lib/libproot-loader.so", string.Empty);
+        var usb = new ObservedUsbHost();
+        using var toolchains = new ToolchainServices(new AppPaths(device.Path), new ToolchainPlatform
+        {
+            NativeLibraryDirectory = native, AndroidApiLevel = 35,
+        }, usb);
+        using var fixture = new WorkspaceFixture(toolchains: toolchains);
+        var workspace = fixture.Workspace;
+        workspace.SetUpProjectsWhenTheyOpen = false;
+        var root = fixture.Paths.Projects;
+        Directory.CreateDirectory(Path.Combine(root, "nbproject"));
+        await File.WriteAllTextAsync(Path.Combine(root, "nbproject", "configurations.xml"), """
+            <configurationDescriptor><logicalFolder><itemPath>main.c</itemPath></logicalFolder>
+            <confs><conf name="default"><toolsSet><targetDevice>PIC18F45K22</targetDevice>
+            <languageToolchain>XC8</languageToolchain><languageToolchainVersion>4.00</languageToolchainVersion>
+            </toolsSet></conf></confs></configurationDescriptor>
+            """);
+        await File.WriteAllTextAsync(Path.Combine(root, "main.c"), "void main(void) {}\n");
+        await workspace.LoadAsync(root);
+        Assert.True(workspace.IsPicProject); // The same detected project becomes an offline SSH cache.
+        Directory.CreateDirectory(Path.Combine(root, ".tabstudio"));
+        await File.WriteAllTextAsync(Path.Combine(root, ".tabstudio", "remote-workspace.txt"), "development");
+        await workspace.LoadAsync(root);
+        await workspace.ProjectSetupTask;
+        Assert.True(workspace.IsRemoteWorkspace);
+        Assert.Contains(workspace.ToolchainProjects, item => item.Toolchain.Id == "xc8");
+        var before = Snapshot();
+        var installations = 0;
+        toolchains.Manager.StatusChanged += (_, status) => { if (status.IsBusy) installations++; };
+
+        // ExecuteAsync also covers callers that bypass a command's disabled UI state.
+        await workspace.ConfigurePicTargetCommand.ExecuteAsync(null);
+        Assert.False(File.Exists(Path.Combine(root, PicFlashProfile.FileName)));
+        Assert.False(workspace.IsPicProject);
+        await workspace.SelectPicConfigurationCommand.ExecuteAsync(null);
+        await workspace.FlashPicCommand.ExecuteAsync(null);
+        await workspace.DebugPicOnBridgeCommand.ExecuteAsync(null);
+
+        Assert.False(workspace.Prompt.IsOpen);
+        Assert.False(workspace.ToolchainStore.IsOpen);
+        Assert.False(File.Exists(Path.Combine(root, ".tabstudio", "pic-build.json")));
+        Assert.Equal(before, Snapshot());
+        Assert.Equal(0, installations);
+        Assert.False(Directory.Exists(toolchains.Environment!.Rootfs));
+        Assert.Equal(0, usb.DeviceReads);
+        Assert.Equal(0, usb.OpenRequests);
+        Assert.False(workspace.RunCommand.CanExecute(null));
+        Assert.False(workspace.BuildCommand.CanExecute(null));
+        await workspace.RunCommand.ExecuteAsync(null);
+        Assert.Contains("Reconnect", workspace.StatusText, StringComparison.Ordinal);
+        await workspace.BuildCommand.ExecuteAsync(null);
+        Assert.Contains("Reconnect", workspace.StatusText, StringComparison.Ordinal);
+        await workspace.StartDebuggingCommand.ExecuteAsync(null);
+        Assert.Contains("Reconnect", workspace.StatusText, StringComparison.Ordinal);
+
+        string[] Snapshot() => Directory.GetFiles(root, "*", SearchOption.AllDirectories)
+            .Order(StringComparer.Ordinal).Select(path => Path.GetRelativePath(root, path) + "\n" + File.ReadAllText(path)).ToArray();
+    }
+
+    private sealed class ObservedUsbHost : IUsbHost
+    {
+        public int DeviceReads { get; private set; }
+        public int OpenRequests { get; private set; }
+        public IReadOnlyList<UsbDeviceInfo> Devices { get { DeviceReads++; return []; } }
+        public Task<IUsbConnection> OpenAsync(UsbDeviceInfo device, CancellationToken cancellationToken)
+        {
+            OpenRequests++;
+            throw new InvalidOperationException("A remote cache must not request USB permission.");
+        }
     }
 
     [AvaloniaFact]

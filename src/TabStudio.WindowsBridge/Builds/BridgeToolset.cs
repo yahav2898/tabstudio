@@ -19,6 +19,8 @@ public sealed record BridgeToolset(
     bool HasNetFrameworkPack,
     string? Netcoredbg)
 {
+    /// <summary>MPLAB X and IPE installed by the PC's owner.</summary>
+    public MplabTools? Mplab { get; init; }
     /// <summary>No tools at all.</summary>
     public static BridgeToolset None { get; } = new(null, null, null, false, false, false, false, null);
 }

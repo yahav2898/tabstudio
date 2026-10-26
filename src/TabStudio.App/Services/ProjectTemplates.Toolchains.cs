@@ -9,6 +9,12 @@ public sealed partial class ProjectTemplates
     /// <summary>A Node.js console program.</summary>
     public const string NodeId = "node";
 
+    /// <summary>A PIC18 LED blink, built with the official XC8 compiler.</summary>
+    public const string Pic18Id = "pic18-xc8";
+
+    /// <summary>A PIC32MX LED blink, built with the official XC32 compiler.</summary>
+    public const string Pic32Id = "pic32-xc32";
+
     /// <summary>A Go console program.</summary>
     public const string GoId = "go";
 
@@ -35,6 +41,9 @@ public sealed partial class ProjectTemplates
     [
         new(PythonId, "Python Application", "A Python program that reads input and prints in the Output panel, run with Python from the Toolchain Store.", ["Python", "Console"]),
         new(NodeId, "Node.js Console App", "A JavaScript program for Node.js that reads input and prints in the Output panel, run with Node.js from the Toolchain Store.", ["JavaScript", "Node.js", "Console"]),
+        new(Pic18Id, "PIC18 Blink (XC8)", "PIC18F14K22, 16 MHz internal oscillator, LED on RC0. Builds with XC8 and simulates with gpsim on a 64-bit tablet.", ["C", "Microchip", "PIC18"]),
+        new(Pic32Id, "PIC32 Blink (XC32)", "PIC32MX250F128B, internal FRC oscillator, LED on RB0. Builds with XC32 on a 64-bit tablet.", ["C", "Microchip", "PIC32"]),
+
         new(GoId, "Go Console App", "A Go module with console input and output, gopls IntelliSense and Delve debugging.", ["Go", "Console"]),
 
         new(RustId, "Rust Console App", "A Cargo console app with rust-analyzer IntelliSense and LLDB debugging.", ["Rust", "Console"]),
@@ -59,6 +68,22 @@ public sealed partial class ProjectTemplates
             case CapacitorId:
                 TabStudio.Toolchains.Projects.MobileTemplates.CreateCapacitor(root, name);
                 return root;
+            case Pic18Id or Pic32Id:
+                var template = templateId == Pic18Id ? "PIC18Blink" : "PIC32Blink";
+                var prefix = "Templates/PIC/" + template + "/";
+                var assembly = typeof(ProjectTemplates).Assembly;
+                foreach (var resource in assembly.GetManifestResourceNames().Where(r => r.Replace('\\', '/').StartsWith(prefix, StringComparison.Ordinal)))
+                {
+                    var relative = resource.Replace('\\', '/')[prefix.Length..];
+                    var destination = Path.Combine(root, relative);
+                    Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
+                    using var stream = assembly.GetManifestResourceStream(resource)!;
+                    using var reader = new StreamReader(stream);
+                    File.WriteAllText(destination, reader.ReadToEnd().Replace(template, name, StringComparison.Ordinal));
+                }
+
+                return root;
+
             case PythonId:
                 File.WriteAllText(Path.Combine(root, "main.py"), """"
                     """Press F5 to run this program with Python on your tablet.

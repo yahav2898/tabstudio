@@ -43,6 +43,13 @@ public sealed record ProcessStartSpec
     /// </summary>
     public TerminalSize? Terminal { get; init; }
 
+    /// <summary>
+    /// Explicit Unix descriptors to duplicate into the child: parent descriptor to child descriptor (3 or higher).
+    /// Used for an Android USB connection the user permitted. All other app descriptors keep close-on-exec.
+    /// The caller keeps the parent connection open until the child exits.
+    /// </summary>
+    public IReadOnlyDictionary<int, int> InheritedDescriptors { get; init; } = new Dictionary<int, int>();
+
     /// <summary>The program and its arguments as one line, quoted where needed, for logs and the Output panel.</summary>
     public string CommandLine => string.Join(' ', new[] { Program }.Concat(Arguments).Select(Quote));
 

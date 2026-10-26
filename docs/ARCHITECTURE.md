@@ -736,6 +736,19 @@ paths and schemes enter shell steps through quoted environment variables. Signin
 keychain, uses GitHub secrets, cleans up in an always step, publishes the IPA artifact and optionally uploads to
 TestFlight. The IDE writes the workflow and opens its setup guide; dispatch, progress, logs and artifacts use the
 existing Actions window. First dispatch requires the workflow on GitHub's default branch.
+## Embedded: Microchip PIC
+
+`TabStudio.Toolchains/Microchip` adds MPLAB configuration/DFP parsing, memory/diagnostic readers, user-owned XC installation and native PIC helpers. Store entries XC8 4.00 and XC32 6.00 require explicit Microchip licence acceptance before compiler downloads. Official installers/distributions and per-device DFPs are pinned by SHA-256; no Microchip compiler, pack, programmer firmware or device database is redistributed.
+
+The ARM64 APK carries Box64 0.4.4, built from pinned source with regression-tested static-heap and clone-context fixes and 16 KiB segment alignment. PRoot's existing loader maps it, alongside separately extracted Debian ARM64/amd64 glibc runtimes. Android never loads it into Bionic with `dlopen`. XC8 uses dynamic translation; XC32 uses the interpreter mode proven in the ARM64 spike. Alpine keeps its musl loader. The selected MPLAB generated makefile remains the source of build options, libraries and custom steps; missing makefiles or mismatched compiler/pack versions produce an explicit failure. clangd's editor database uses the selected headers and queried XC predefinitions; it never builds firmware.
+
+Android's `IUsbHost` requests USB permission and owns `UsbDeviceConnection`. `ProcessStartSpec.InheritedDescriptors` is an explicit one-device parent-to-child mapping through `posix_spawn` and PRoot. The original descriptor retains close-on-exec; only the worker receives fd 3. A native Alpine libusb context disables discovery and wraps that descriptor with `libusb_wrap_sys_device`. A scoped native preload adapter gives legacy CLIs the same single-device view. Disconnect/cancellation ends the worker before closing the parent connection.
+
+Native Python workers implement AN1388 HID/UART and MCC/UBHA UART framing, bounded HEX validation and verification. Programmer compatibility is explicit: pymcuprog PIC uses supported PKOB nano parts/DFP scripts; unsupported PICkit 4/5/Snap PIC targets use the Bridge. Native pk2cmd requires its separate restrictive licence and a user-owned pinned database; pic32prog handles its upstream PIC32/PICkit 2/3 subset. The independent serial panel supports CDC-ACM, CH340, CP210x and FTDI.
+
+The gpsim DAP adapter runs a native headless simulator, reads XC8 ELF/DWARF separately, synchronizes CLI commands with unique markers, and exposes source/instruction breakpoints, stepping, CPU registers and SFRs. It refuses unsupported MCU models; no similar-device substitution is made. On-chip debugging opens the synchronized project in the PC's installed MPLAB X through the Windows Bridge. Bridge builds use `prjMakefilesGenerator` and vendor make; programming/verification uses `ipecmd` with an explicit tool/optional serial.
+
+The mandatory compiler CI matrix runs real ARM64 and x86-64 Ubuntu hosts inside Alpine/PRoot, emits linked HEX images, compares timing and hashes, and also invokes the production MPLAB driver. Native helper CI builds aarch64-musl tools and tests gpsim DAP with supported-model XC8 firmware. A disposable debuggable emulator APK tests the app-UID PRoot/Box64 path when available. Protocol fixtures identify independent reference-encoder recordings versus physical captures; no physical programmer is attached to CI. See [PIC.md](PIC.md) for measurements, model/device lists and limits.
 
 ## Swarm
 

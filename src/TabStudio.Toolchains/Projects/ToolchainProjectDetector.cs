@@ -1,4 +1,5 @@
 using TabStudio.Toolchains.Catalog;
+using TabStudio.Toolchains.Microchip;
 
 namespace TabStudio.Toolchains.Projects;
 
@@ -65,8 +66,16 @@ public static class ToolchainProjectDetector
                 || files.Contains("settings.gradle", StringComparer.OrdinalIgnoreCase)
                 || files.Contains("settings.gradle.kts", StringComparer.OrdinalIgnoreCase);
 
+            var inMplabProject = File.Exists(Path.Combine(folder, MplabProject.Marker))
+                || result.Any(p => MicrochipInstallation.IsCompiler(p.Toolchain.Id) && IsInside(folder, p.Directory));
             foreach (var toolchain in toolchains)
             {
+                // MPLAB owns its Makefiles and C sources, including source-only child folders.
+                if (inMplabProject && toolchain.Id == "cpp")
+                {
+                    continue;
+                }
+
                 if (toolchain.Id == "android" && !androidRoot)
                 {
                     continue;
@@ -80,7 +89,29 @@ public static class ToolchainProjectDetector
                     continue;
                 }
 
-                var marker = toolchain.ProjectFiles.FirstOrDefault(f => files.Contains(f, StringComparer.OrdinalIgnoreCase));
+                var marker = toolchain.ProjectFiles.FirstOrDefault(f => files.Contains(f, StringComparer.OrdinalIgnoreCase)
+                    || (f.Contains('/') && File.Exists(Path.Combine(folder, f))));
+                if (marker is not null && !marker.Contains('/'))
+                {
+                    marker = files.First(f => string.Equals(f, marker, StringComparison.OrdinalIgnoreCase));
+                }
+                if (marker is not null && MicrochipInstallation.IsCompiler(toolchain.Id))
+                {
+                    try
+                    {
+                        var mplab = MplabProject.Load(Path.Combine(folder, marker));
+                        var configuration = mplab.Configurations.FirstOrDefault(c => c.Name == "default") ?? mplab.Configurations[0];
+                        if (!configuration.Compiler.Equals(toolchain.Id, StringComparison.OrdinalIgnoreCase))
+                        {
+                            continue;
+                        }
+                    }
+                    catch (Exception ex) when (ex is IOException or System.Xml.XmlException)
+                    {
+                        continue;
+                    }
+                }
+
                 var insideProject = result.Any(p => p.Toolchain.Id == toolchain.Id && IsInside(folder, p.Directory));
                 if (insideProject && marker is null && !toolchain.AllowNestedProjects)
                 {
@@ -90,7 +121,7 @@ public static class ToolchainProjectDetector
                 var isSourceFolder = !insideProject && marker is null && toolchain.SourceFolderIsProject && files.Any(toolchain.RunsFile);
                 if (marker is not null || isSourceFolder)
                 {
-                    result.Add(new ToolchainProject(toolchain, folder, marker is null ? null : files.First(f => string.Equals(f, marker, StringComparison.OrdinalIgnoreCase))));
+                    result.Add(new ToolchainProject(toolchain, folder, marker));
                 }
             }
 

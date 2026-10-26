@@ -112,8 +112,15 @@ public sealed class AlpinePackageManager : IDisposable
     /// <summary>Plans installing packages, with the newest index.</summary>
     /// <param name="names">The packages.</param>
     /// <param name="cancellationToken">Stops reading the index.</param>
-    public async Task<ApkPlan> PlanInstallAsync(IEnumerable<string> names, CancellationToken cancellationToken) =>
-        ApkResolver.PlanInstall(await LoadIndexAsync(refresh: true, cancellationToken).ConfigureAwait(false), Installed.Packages, names);
+    public Task<ApkPlan> PlanInstallAsync(IEnumerable<string> names, CancellationToken cancellationToken) =>
+        PlanInstallAsync(names, refresh: true, cancellationToken);
+
+    /// <summary>Plans an install using fresh metadata or the previously verified index of the same batch.</summary>
+    /// <param name="names">The packages.</param>
+    /// <param name="refresh">Whether to ask the mirror for a newer index first.</param>
+    /// <param name="cancellationToken">Stops reading the index.</param>
+    public async Task<ApkPlan> PlanInstallAsync(IEnumerable<string> names, bool refresh, CancellationToken cancellationToken) =>
+        ApkResolver.PlanInstall(await LoadIndexAsync(refresh, cancellationToken).ConfigureAwait(false), Installed.Packages, names);
 
     /// <summary>Plans updating packages and what they depend on.</summary>
     /// <param name="names">The packages.</param>

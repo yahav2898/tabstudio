@@ -99,6 +99,17 @@ FEATURE_CLASSES = frozenset({
     "LocalAITests",
     "LocalNativeTests",
     "LocalAIEditorTests",
+    # Microchip toolchains, firmware metadata and inherited USB descriptors.
+    "MplabProjectTests",
+    "MplabTests",
+    "MicrochipInstallationTests",
+    "DevicePackTests",
+    "PicProjectDetectionTests",
+    "PicMemoryUsageTests",
+    "PicCompilerDiagnosticTests",
+    "UsbDescriptorInheritanceTests",
+    "PicFlashProfileTests",
+    "BuildOutputTests",
 
 })
 

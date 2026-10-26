@@ -156,13 +156,17 @@ public sealed class ToolchainManager : IDisposable
             return;
         }
 
+        var refreshMetadata = true;
         try
         {
             foreach (var id in pending)
             {
                 await RunAsync(id, ToolchainState.Installing,
-                    (toolchain, progress) => _installer.InstallAsync(toolchain, progress, cancellationToken),
+                    (toolchain, progress) => _installer.InstallAsync(toolchain, progress, refreshMetadata, cancellationToken),
                     cancellationToken, measureDiskUsage: false).ConfigureAwait(false);
+                // A batch shares its first verified repository snapshot. A new
+                // batch or an independent install refreshes metadata again.
+                refreshMetadata = false;
             }
         }
         finally
@@ -210,6 +214,26 @@ public sealed class ToolchainManager : IDisposable
         try
         {
             await _installer.PrepareRuntimeAsync(progress, cancellationToken).ConfigureAwait(false);
+        }
+        finally
+        {
+            _operations.Release();
+        }
+
+        Changed?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>Serializes optional runtime support installation with Store package operations.</summary>
+    /// <param name="configure">Installs verified support in the prepared runtime.</param>
+    /// <param name="cancellationToken">Cancels setup.</param>
+    public async Task ConfigureRuntimeAsync(Func<CancellationToken, Task> configure, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(configure);
+        await _operations.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            await _installer.PrepareRuntimeAsync(null, cancellationToken).ConfigureAwait(false);
+            await configure(cancellationToken).ConfigureAwait(false);
         }
         finally
         {

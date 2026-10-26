@@ -10,6 +10,7 @@ using TabStudio.Toolchains.Catalog;
 using TabStudio.Toolchains.Installation;
 using TabStudio.Toolchains.Linux;
 using TabStudio.Toolchains.Projects;
+using TabStudio.Toolchains.Microchip;
 
 namespace TabStudio.App.ViewModels;
 
@@ -64,6 +65,12 @@ public sealed partial class WorkspaceViewModel
     /// <summary>The Terminal panel.</summary>
     public TerminalViewModel Terminal { get; private set; } = null!;
 
+    /// <summary>The permissioned USB serial monitor.</summary>
+    public SerialMonitorViewModel SerialMonitor { get; private set; } = null!;
+
+    /// <summary>Whether serial output is visible.</summary>
+    public bool IsSerialMonitorSelected => SelectedPanel == BottomPanel.SerialMonitor;
+
     /// <summary>The workspace's Python and Node.js projects.</summary>
     public IReadOnlyList<ToolchainStartupItem> ToolchainProjects => _toolchainProjects;
 
@@ -87,6 +94,7 @@ public sealed partial class WorkspaceViewModel
         _toolchains = toolchains ?? new ToolchainServices(_paths);
         ToolchainStore = new ToolchainStoreViewModel(_toolchains, _ui, (title, message, confirm, destructive) => Prompt.ConfirmAsync(title, message, confirm, destructive));
         Terminal = new TerminalViewModel(_toolchains, _ui, () => Workspace?.RootDirectory ?? _paths.Projects, ToolchainStore.Open);
+        SerialMonitor = new SerialMonitorViewModel(_toolchains, _ui);
         _toolchains.Manager.StatusChanged += OnToolchainStatusChanged;
         Output.LinkFinder = FindOutputLinks;
         Output.LinkActivated += OnOutputLinkActivated;
@@ -113,6 +121,7 @@ public sealed partial class WorkspaceViewModel
         Output.LinkActivated -= OnOutputLinkActivated;
         _toolchains.Manager.StatusChanged -= OnToolchainStatusChanged;
         Terminal.Dispose();
+        SerialMonitor.Dispose();
         ToolchainStore.Dispose();
         if (_ownsToolchains)
         {
@@ -278,6 +287,7 @@ public sealed partial class WorkspaceViewModel
         {
             case nameof(SelectedPanel):
                 OnPropertyChanged(nameof(IsTerminalSelected));
+                OnPropertyChanged(nameof(IsSerialMonitorSelected));
                 if (IsTerminalSelected)
                 {
                     Terminal.EnsureStarted();
@@ -285,10 +295,12 @@ public sealed partial class WorkspaceViewModel
 
                 break;
             case nameof(StartupProject):
+                RefreshPicCommands();
                 UpdateToolchainNotice();
                 ShowProperties(Explorer.SelectedItem?.Node);
                 break;
             case nameof(ActiveDocument) or nameof(State):
+                RefreshPicCommands();
                 if (e.PropertyName == nameof(State) && _openToolchainEntry && State == IdeState.Ready)
                 {
                     _openToolchainEntry = false;
@@ -315,6 +327,15 @@ public sealed partial class WorkspaceViewModel
         IsBottomPanelVisible = true;
         Terminal.EnsureStarted();
         Terminal.RequestFocus();
+    }
+
+    /// <summary>View &gt; Serial Monitor.</summary>
+    [RelayCommand]
+    private void ShowSerialMonitor()
+    {
+        SelectedPanel = BottomPanel.SerialMonitor;
+        IsBottomPanelVisible = true;
+        SerialMonitor.Refresh();
     }
 
     /// <summary>Tools &gt; Toolchain Store.</summary>
@@ -373,6 +394,21 @@ public sealed partial class WorkspaceViewModel
         }
 
         var project = item.Project;
+        if (MicrochipInstallation.IsCompiler(project.Toolchain.Id) && project.MarkerPath is { } marker)
+        {
+            _lastPicBuildSucceeded = false;
+            try
+            {
+                var selected = MplabProject.Load(marker).SelectedConfiguration();
+                if (_toolchains.Catalog.Find(selected.Compiler.ToLowerInvariant()) is { } compiler) project = project with { Toolchain = compiler };
+            }
+            catch (Exception error) when (error is IOException or InvalidDataException or System.Text.Json.JsonException or System.Xml.XmlException)
+            {
+                Output.WriteLine(error.Message, OutputKind.Failure);
+                State = IdeState.Failed;
+                return;
+            }
+        }
         var file = ActiveDocument?.FilePath;
         if (item.Toolchain.Id == "android")
         {
@@ -505,6 +541,10 @@ public sealed partial class WorkspaceViewModel
     /// <summary>Ends a run: the exit line, as Visual Studio writes it, the Error List and the status bar.</summary>
     private void ReportToolchainRun(ToolchainProject project, string entryPoint, OutputProcessResult result)
     {
+        if (MicrochipInstallation.IsCompiler(project.Toolchain.Id))
+        {
+            ReportPicBuild(project, result.Lines, result.Exit?.Succeeded == true);
+        }
         Output.WriteLine();
         if (result.Exit is not { } exit)
         {
@@ -536,7 +576,10 @@ public sealed partial class WorkspaceViewModel
         if (exit.Succeeded)
         {
             State = IdeState.Ready;
-            StatusText = "Ready";
+            if (!MicrochipInstallation.IsCompiler(project.Toolchain.Id))
+            {
+                StatusText = "Ready";
+            }
             return;
         }
 

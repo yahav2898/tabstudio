@@ -14,7 +14,11 @@ public sealed record BridgeProcessStart(
     IReadOnlyList<string> Arguments,
     string WorkingDirectory,
     IReadOnlyDictionary<string, string?>? Environment = null,
-    bool BinaryStreams = false);
+    bool BinaryStreams = false)
+{
+    /// <summary>Exact Windows cmd command line for a vendor batch entrypoint; never used for normal executable arguments.</summary>
+    public string? WindowsCommandLine { get; init; }
+}
 
 /// <summary>A process the bridge started could not start.</summary>
 public sealed class BridgeProcessException : Exception
@@ -89,9 +93,14 @@ public sealed class BridgeProcess : IDisposable
             RedirectStandardInput = true,
             CreateNoWindow = true,
         };
-        foreach (var argument in start.Arguments)
+        if (start.WindowsCommandLine is { } commandLine)
         {
-            info.ArgumentList.Add(argument);
+            if (!OperatingSystem.IsWindows()) throw new BridgeProcessException("A Windows batch entrypoint requires Windows.");
+            info.Arguments = commandLine;
+        }
+        else
+        {
+            foreach (var argument in start.Arguments) info.ArgumentList.Add(argument);
         }
 
         if (!start.BinaryStreams)

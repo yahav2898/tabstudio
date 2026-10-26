@@ -190,4 +190,11 @@ EOF
 
 for abi in "$@"; do
   build_abi "$abi"
+  if [ "$abi" = arm64-v8a ]; then
+    # box64 is a standalone GNU/Linux program mapped by PRoot's loader. It uses
+    # the Store's glibc runtime rather than Android's JNI/Bionic loader.
+    command -v aarch64-linux-gnu-gcc > /dev/null || sudo apt-get install -y -qq gcc-aarch64-linux-gnu > /dev/null
+    command -v cmake > /dev/null || sudo apt-get install -y -qq cmake > /dev/null
+    python3 "$(dirname "$0")/../../pic/build_box64.py" "$out/$abi"
+  fi
 done

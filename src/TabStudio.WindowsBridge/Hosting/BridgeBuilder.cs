@@ -36,6 +36,7 @@ internal static class BridgeBuilder
             throw new TabStudio.Link.LinkRemoteException(TabStudio.Link.LinkErrorCodes.NoWorkspace, $"The bridge has no {Path.GetFileName(hostProject)}; send the workspace first.");
         }
 
+        if (MplabBuilder.IsDescriptor(hostProject)) return await MplabBuilder.BuildAsync(request, hostProject, paths, tools.Mplab, output, cancellationToken).ConfigureAwait(false);
         var project = ProjectParser.Load(hostProject);
         BridgeBuildPlan plan;
         try
@@ -98,9 +99,9 @@ internal static class BridgeBuilder
     }
 
     /// <summary>Runs a tool to its end, passing its lines on, and stops it when canceled.</summary>
-    private static async Task<int> RunAsync(string fileName, IReadOnlyList<string> arguments, string directory, Action<string> line, CancellationToken cancellationToken)
+    internal static async Task<int> RunAsync(string fileName, IReadOnlyList<string> arguments, string directory, Action<string> line, CancellationToken cancellationToken, IReadOnlyDictionary<string, string?>? environment = null, string? windowsCommandLine = null)
     {
-        using var process = BridgeProcess.Start(new BridgeProcessStart(fileName, arguments, directory));
+        using var process = BridgeProcess.Start(new BridgeProcessStart(fileName, arguments, directory, environment) { WindowsCommandLine = windowsCommandLine });
         process.OutputLine += (_, text) => line(text);
         process.ErrorLine += (_, text) => line(text);
         process.BeginReading();

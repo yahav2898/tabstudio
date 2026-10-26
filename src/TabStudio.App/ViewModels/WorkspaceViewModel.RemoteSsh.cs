@@ -186,6 +186,7 @@ public sealed partial class WorkspaceViewModel
         RunCommand.NotifyCanExecuteChanged(); StartDebuggingCommand.NotifyCanExecuteChanged(); BuildCommand.NotifyCanExecuteChanged();
         OnPropertyChanged(nameof(CanRunCurrentFile));
         RunCurrentFileCommand.NotifyCanExecuteChanged(); InstallProjectPackagesCommand.NotifyCanExecuteChanged();
+        RefreshPicCommands();
     }
 
     private bool BlockLocalToolchainActionForRemote()

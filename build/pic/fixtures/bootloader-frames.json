@@ -1,0 +1,49 @@
+{
+  "provenance": {
+    "hardwareCapture": false,
+    "an1388": "Captured stdout of calculate_crc/add_byte and an1388_verify_data from sergev/pic32prog@4b4c8e5f7175f7c18bc82b8d744ee9aef7b6e746; GCC host encoder/verifier, not the implementation under test. Verification maps physical HEX 0x1d001000 to virtual 0x9d001000.",
+    "mcc": "Microchip PIC18F57Q43 Melody@ca2bfbbfefc67eeaeef7b4beac31e121a51e9d82, 8bit_bootloader.c request format and bl_communication_interface.c response STX"
+  },
+  "frames": [
+    {
+      "name": "version",
+      "protocol": "an1388",
+      "command": 1,
+      "payload": "",
+      "request": "01100121101004"
+    },
+    {
+      "name": "escaped-data",
+      "protocol": "an1388",
+      "command": 3,
+      "payload": "010410ff",
+      "request": "0103100110041010ff255904"
+    },
+    {
+      "name": "read-crc-virtual-address",
+      "protocol": "an1388",
+      "command": 4,
+      "payload": "0010009d10000000",
+      "request": "011004001010009d1010000000c3b704"
+    },
+    {
+      "name": "mcc-version",
+      "protocol": "mcc",
+      "command": 0,
+      "address": 0,
+      "length": 0,
+      "payload": "",
+      "request": "000000000000000000"
+    },
+    {
+      "name": "mcc-write-page",
+      "protocol": "mcc",
+      "command": 2,
+      "address": 12288,
+      "length": 4,
+      "payload": "010410ff",
+      "request": "02040055aa00300000010410ff",
+      "response": "5502040055aa0030000001"
+    }
+  ]
+}
