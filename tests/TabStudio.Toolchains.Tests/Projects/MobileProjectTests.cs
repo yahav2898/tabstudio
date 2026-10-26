@@ -63,11 +63,24 @@ public sealed class MobileProjectTests
         MobileTemplates.CreateAndroid(temp.Path, "MyApp");
         Assert.True(GradleAndroidProject.IsProject(temp.Path));
         Assert.Contains("com.android.application", File.ReadAllText(temp.Resolve("build.gradle.kts")), StringComparison.Ordinal);
-        Assert.True(File.Exists(temp.Resolve("app/src/main/java/com/example/myapp/MainActivity.kt")));
+        Assert.True(File.Exists(temp.Resolve("app/src/main/java/com/example/appmyapp/MainActivity.kt")));
         using var relay = new AndroidLogcatRelay(_ => { });
         var init = relay.PrepareBuild(temp.Path);
         Assert.Contains("getByName('debug')", File.ReadAllText(init), StringComparison.Ordinal);
         Assert.DoesNotContain("LogcatProvider", File.ReadAllText(temp.Resolve("app/src/main/AndroidManifest.xml")), StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("Class", "com.example.appclass")]
+    [InlineData("My.App_2", "com.example.appmyapp2")]
+    public void Template_identifiers_work_in_Java_Kotlin_and_Apple_bundle_IDs(string name, string expected)
+    {
+        using var temp = new TempDirectory();
+        MobileTemplates.CreateCapacitor(temp.Path, name);
+        using var config = System.Text.Json.JsonDocument.Parse(File.ReadAllText(temp.Resolve("capacitor.config.json")));
+        Assert.Equal(expected, config.RootElement.GetProperty("appId").GetString());
+        MobileTemplates.CreateAndroid(temp.Resolve("native"), name);
+        Assert.Contains("applicationId = \"" + expected + "\"", File.ReadAllText(temp.Resolve("native/app/build.gradle.kts")), StringComparison.Ordinal);
     }
 
     [Fact]

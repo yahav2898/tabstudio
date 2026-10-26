@@ -133,7 +133,8 @@ public static class MobileTemplates
         Write(directory, ".gitignore", "node_modules/\ndist/\nandroid/.gradle/\nandroid/**/build/\nandroid/local.properties\nios/App/Pods/\n*.p12\n*.mobileprovision\nAuthKey_*.p8\n");
     }
 
-    private static string PackageName(string name) => "com.example." + name.ToLowerInvariant().Replace('.', '_');
+    // The prefix also keeps Java/Kotlin keywords valid; the alphabet works for Apple bundle IDs as well.
+    private static string PackageName(string name) => "com.example.app" + new string(name.Where(char.IsAsciiLetterOrDigit).ToArray()).ToLowerInvariant();
 
     private static void Write(string root, string relative, string text)
     {

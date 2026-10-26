@@ -65,6 +65,7 @@ public sealed partial class WorkspaceViewModel
     {
         private readonly Lock _gate = new();
         private readonly Dictionary<bool, string> _tails = [];
+        private readonly HashSet<int> _seen = [];
 
         public void WriteOutput(string text)
         {
@@ -86,7 +87,10 @@ public sealed partial class WorkspaceViewModel
                 var end = combined.LastIndexOf('\n');
                 if (end >= 0)
                 {
-                    foreach (var port in ListeningPorts.ParseOutput(combined[..(end + 1)])) listening(port);
+                    foreach (var port in ListeningPorts.ParseOutput(combined[..(end + 1)]))
+                    {
+                        if (_seen.Add(port)) listening(port);
+                    }
                 }
 
                 var tail = combined[(end + 1)..];
