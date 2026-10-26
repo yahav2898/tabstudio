@@ -43,6 +43,11 @@ public sealed class OpenSshTests
         Assert.Equal("concurrent edit\n", connection.Sftp.ReadAllText(root + "/Program.cs"));
         Assert.Equal("my second edit\n", await File.ReadAllTextAsync(local));
         Assert.DoesNotContain(connection.Sftp.ListDirectory(root), f => f.Name.Contains(".tabstudio-", StringComparison.Ordinal));
+        await workspace.ReloadFileAsync(local);
+        Assert.Equal("concurrent edit\n", await File.ReadAllTextAsync(local));
+        await File.WriteAllTextAsync(local, "resolved\n");
+        await workspace.SaveAsync(local);
+        Assert.Equal("resolved\n", connection.Sftp.ReadAllText(root + "/Program.cs"));
     }
 
     [SshFact]

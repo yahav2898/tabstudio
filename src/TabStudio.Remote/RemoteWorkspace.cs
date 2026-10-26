@@ -59,7 +59,11 @@ public sealed class RemoteWorkspace(SshConnection connection, string remoteRoot,
                             seen.Add(path);
                             progress?.Report(Path.GetRelativePath(LocalRoot, path));
                             using var data = new MemoryStream();
-                            sftp.DownloadFile(item.FullName, data);
+                            sftp.DownloadFile(item.FullName, data, transferred =>
+                            {
+                                cancellationToken.ThrowIfCancellationRequested();
+                                if (transferred > MaximumFileBytes) { throw new IOException("A remote file grew beyond the 8 MiB cache limit."); }
+                            });
                             var contents = data.ToArray();
                             var hash = Convert.ToHexString(SHA256.HashData(contents));
                             // Preserve locally modified cache files, including recovery text from a failed upload.
@@ -100,7 +104,7 @@ public sealed class RemoteWorkspace(SshConnection connection, string remoteRoot,
                 sftp.DownloadFile(remote, current);
                 if (!_hashes.TryGetValue(Path.GetFullPath(localPath), out var expected) || Convert.ToHexString(SHA256.HashData(current.ToArray())) != expected)
                 {
-                    throw new IOException("The remote file changed since it was downloaded. Your edits remain in the editor and cache; compare with the server before saving.");
+                    throw new IOException("The remote file changed since it was downloaded. Your edits remain in the editor and cache. Preserve your changes, then choose Reload file from server in Remote Explorer to resolve the conflict.");
                 }
                 var attributes = sftp.GetAttributes(remote);
                 var temp = remote + ".tabstudio-" + Guid.NewGuid().ToString("N");
@@ -136,6 +140,32 @@ public sealed class RemoteWorkspace(SshConnection connection, string remoteRoot,
         var relative = Path.GetRelativePath(LocalRoot, Path.GetFullPath(localPath));
         if (relative == ".." || relative.StartsWith(".." + Path.DirectorySeparatorChar, StringComparison.Ordinal) || Path.IsPathRooted(relative)) { throw new IOException("The file is outside the remote cache."); }
         return relative == "." ? _remoteRoot : Normalize(_remoteRoot.TrimEnd('/') + "/" + relative.Replace(Path.DirectorySeparatorChar, '/'));
+    }
+
+    /// <summary>Explicitly discards one cached version and adopts the current server content as its new baseline.</summary>
+    public async Task ReloadFileAsync(string localPath, CancellationToken cancellationToken = default)
+    {
+        var remote = ToRemotePath(localPath);
+        await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            await Task.Run(() =>
+            {
+                if (Connection.Sftp.Get(remote).IsSymbolicLink) { throw new IOException("The remote file is now a symbolic link."); }
+                using var data = new MemoryStream();
+                Connection.Sftp.DownloadFile(remote, data, transferred =>
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    if (transferred > MaximumFileBytes) { throw new IOException("The file exceeds the 8 MiB cache limit."); }
+                });
+                var contents = data.ToArray();
+                File.WriteAllBytes(localPath, contents);
+                _hashes[Path.GetFullPath(localPath)] = Convert.ToHexString(SHA256.HashData(contents));
+                SaveHashes();
+            }, cancellationToken).ConfigureAwait(false);
+        }
+        catch (Renci.SshNet.Common.SshException ex) { throw new IOException("SFTP reload failed: " + ex.Message, ex); }
+        finally { _gate.Release(); }
     }
 
     public string? ToLocalPath(string remotePath)

@@ -2,6 +2,8 @@
 
 Open a local workspace, then choose **File > Open Remote Folder (SSH)**, or the Remote Explorer activity icon.
 
+![Remote Explorer in the running IDE](screenshots/remote-explorer.png)
+
 1. Enter an alias, host/IP, SSH user and port; choose **Save host**. Alternatively expand **Import ~/.ssh/config**
    and paste a config, or leave its text blank to read the current device's `~/.ssh/config`.
 2. Choose **Generate device key**. Install the displayed public key in the account's `~/.ssh/authorized_keys` on
@@ -18,6 +20,9 @@ content against the downloaded baseline, then upload a sibling temporary file an
 using OpenSSH's POSIX rename extension. A failed upload or conflicting server change leaves the document dirty
 and retains its local recovery text. Reconnect to the same host and folder before retrying a failed save. Compare
 conflicts in the SSH terminal before refreshing; Refresh deliberately refuses unsaved editor changes.
+To resolve a conflict, preserve the edits you want, then choose **Reload file from server** in Remote Explorer.
+After confirmation it keeps a recovery copy under `.tabstudio/recovery`, reloads the current server version and
+resets that file's baseline, so you can reapply your changes and save.
 
 **Terminal** (Ctrl+`) opens a remote `xterm-256color` PTY in the source folder, including input, Ctrl+C and resize.
 Creating, renaming or deleting remote files is currently done in that terminal; choose **Refresh** afterwards.

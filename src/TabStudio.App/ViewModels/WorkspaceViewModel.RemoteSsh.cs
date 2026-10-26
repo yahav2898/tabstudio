@@ -30,6 +30,7 @@ public sealed partial class WorkspaceViewModel
         {
             OpenFolder = OpenRemoteFolderAsync,
             RefreshFolder = RefreshRemoteFolderAsync,
+            ReloadFile = ReloadRemoteFileAsync,
             ForwardPort = ForwardRemotePortAsync,
             SaveRunProfile = () =>
             {
@@ -49,6 +50,15 @@ public sealed partial class WorkspaceViewModel
 
     /// <summary>Connects and caches the remote source folder, then opens it using the normal editor and explorer.</summary>
     public async Task OpenRemoteFolderAsync(SshHost host, string remoteFolder, CancellationToken cancellationToken = default)
+    {
+        if (State is not (IdeState.Ready or IdeState.Failed)) { throw new IOException("Wait for the current operation, or stop the running program, before opening another folder."); }
+        var before = State;
+        State = IdeState.Busy;
+        try { await OpenRemoteFolderCoreAsync(host, remoteFolder, cancellationToken); }
+        finally { if (State == IdeState.Busy) { State = before; } }
+    }
+
+    private async Task OpenRemoteFolderCoreAsync(SshHost host, string remoteFolder, CancellationToken cancellationToken)
     {
         if (State is IdeState.Running or IdeState.Debugging or IdeState.Paused) { throw new IOException("Stop the running program before opening another folder."); }
         remoteFolder = RemoteWorkspace.Normalize(remoteFolder);
@@ -128,6 +138,21 @@ public sealed partial class WorkspaceViewModel
         RemoteExplorer.Status = "Remote source cache refreshed.";
     }
 
+    private async Task ReloadRemoteFileAsync(CancellationToken cancellationToken)
+    {
+        var remote = _remoteWorkspace ?? throw new IOException("Reconnect to the host first.");
+        var document = ActiveDocument ?? throw new IOException("Open the file to reload first.");
+        if (!await Prompt.ConfirmAsync("Reload " + document.FileName + " from server?", "The editor will load the current server version. Copy any edits you want to keep before continuing. A local recovery copy will also be kept in the source cache's .tabstudio/recovery directory.", "Reload", destructive: true).WaitAsync(cancellationToken)) { return; }
+        var recovery = Path.Combine(remote.LocalRoot, ".tabstudio", "recovery");
+        Directory.CreateDirectory(recovery);
+        await File.WriteAllTextAsync(Path.Combine(recovery, Guid.NewGuid().ToString("N") + "-" + document.FileName), document.CurrentText, cancellationToken);
+        await remote.ReloadFileAsync(document.FilePath, cancellationToken);
+        var path = document.FilePath;
+        Documents.Remove(document); Detach(document); document.Dispose(); ActiveDocument = null;
+        await OpenDocumentAsync(path);
+        RemoteExplorer.Status = "Loaded the server version. You can reapply your edits and save against this version.";
+    }
+
     private async Task ForwardRemotePortAsync()
     {
         var remote = _remoteWorkspace ?? throw new IOException("Connect to a host first.");
@@ -141,6 +166,7 @@ public sealed partial class WorkspaceViewModel
 
     private void DisconnectRemote()
     {
+        if (_remoteWorkspace is not null) { _run?.Cancel(); }
         Terminal.RemoteShellFactory = null;
         Terminal.StopShell();
         _remoteForward?.Dispose(); _remoteForward = null;

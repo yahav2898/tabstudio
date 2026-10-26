@@ -20,6 +20,7 @@ public sealed partial class RemoteExplorerViewModel : ObservableObject, IDisposa
     public ObservableCollection<SshHost> Hosts { get; } = [];
     public Func<SshHost, string, CancellationToken, Task>? OpenFolder { get; set; }
     public Func<Task>? RefreshFolder { get; set; }
+    public Func<CancellationToken, Task>? ReloadFile { get; set; }
     public Func<Task>? ForwardPort { get; set; }
     public Func<Task>? SaveRunProfile { get; set; }
     public Action? Disconnect { get; set; }
@@ -98,6 +99,7 @@ public sealed partial class RemoteExplorerViewModel : ObservableObject, IDisposa
     });
 
     [RelayCommand] private async Task RefreshAsync() => await OperateAsync(async _ => { if (RefreshFolder is not null) { await RefreshFolder(); } });
+    [RelayCommand] private async Task ReloadFileAsync() => await OperateAsync(async token => { if (ReloadFile is not null) { await ReloadFile(token); } });
     [RelayCommand] private async Task ForwardAsync() => await OperateAsync(async _ => { if (ForwardPort is not null) { await ForwardPort(); } });
     [RelayCommand] private async Task SaveProfileAsync() => await OperateAsync(async _ => { if (SaveRunProfile is not null) { await SaveRunProfile(); } });
     [RelayCommand] private void DisconnectHost() => Disconnect?.Invoke();

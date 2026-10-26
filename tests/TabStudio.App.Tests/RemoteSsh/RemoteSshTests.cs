@@ -96,6 +96,22 @@ public sealed class RemoteSshTests
         await workspace.SaveCommand.ExecuteAsync(null);
         Assert.True(document.IsDirty);
         Assert.Contains("remote file changed", workspace.StatusText, StringComparison.OrdinalIgnoreCase);
+        workspace.RemoteExplorer.DisconnectHostCommand.Execute(null);
+        Assert.False(workspace.RunCommand.CanExecute(null));
+        await workspace.OpenRemoteFolderAsync(SshTestServer.Host, root);
+        Assert.Same(document, workspace.ActiveDocument);
+        Assert.True(document.IsDirty);
+        var reload = workspace.RemoteExplorer.ReloadFileCommand.ExecuteAsync(null);
+        await UiTestHelpers.WaitUntilAsync(() => workspace.Prompt.IsOpen);
+        workspace.Prompt.ConfirmCommand.Execute(null);
+        await reload;
+        var resolved = workspace.ActiveDocument!;
+        Assert.False(resolved.IsDirty);
+        Assert.Contains("other developer", resolved.CurrentText, StringComparison.Ordinal);
+        resolved.Document.Text = "// conflict resolved\n";
+        await workspace.SaveCommand.ExecuteAsync(null);
+        Assert.False(resolved.IsDirty);
+        Assert.Contains("conflict resolved", server.Sftp.ReadAllText(root + "/Program.cs"), StringComparison.Ordinal);
     }
 
     [AvaloniaFact]

@@ -27,11 +27,13 @@
             <TextBox Text="{Binding IdentityFile}" Watermark="IdentityFile (optional)" />
             <WrapPanel Orientation="Horizontal"><Button Content="Save host" Command="{Binding SaveHostCommand}" Margin="0,0,6,6" /><Button Content="Generate device key" Command="{Binding GenerateKeyCommand}" Margin="0,0,0,6" /></WrapPanel>
             <SelectableTextBlock Text="{Binding PublicKey}" TextWrapping="Wrap" FontSize="11" MaxHeight="110" />
+            <Button Content="Copy public key" Click="CopyPublicKey" HorizontalAlignment="Left" />
           </StackPanel>
         </Expander>
         <TextBlock Text="Remote folder" FontWeight="SemiBold" />
         <TextBox Text="{Binding RemoteFolder}" Watermark="/home/user/project" />
         <WrapPanel><Button Content="Open folder" Command="{Binding OpenFolderCommand}" Margin="0,0,6,6" /><Button Content="Refresh" Command="{Binding RefreshCommand}" Margin="0,0,6,6" /><Button Content="Disconnect" Command="{Binding DisconnectHostCommand}" Margin="0,0,0,6" /></WrapPanel>
+        <Button Content="Reload file from server..." Command="{Binding ReloadFileCommand}" HorizontalAlignment="Left" />
         <ProgressBar IsIndeterminate="True" Height="3" IsVisible="{Binding IsBusy}" />
         <TextBlock Text="{Binding Status}" TextWrapping="Wrap" FontSize="12" />
         <Button Content="Cancel" Command="{Binding CancelCommand}" IsVisible="{Binding IsBusy}" HorizontalAlignment="Left" />
