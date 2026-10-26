@@ -59,8 +59,8 @@ temporary codec allocations are additional memory. No ring is allocated with ord
 discards one warmup, and prints the median of three ordinary debug runs and three recorded runs, their ratio and
 retained bytes. It excludes build time and uses an 8 MiB ring. Run:
 
-Measured on Linux x86-64 / .NET 10.0.0 in the development host on 2026-10-26: **2.58 ms ordinary debugging,
-142.50 ms recording (55.25×)**, retaining **3,449,828 bytes**. This deliberately dense loop reaches tens of thousands
+Measured on Linux x86-64 / .NET 10.0.0 in the development host on 2026-10-26: **1.96 ms ordinary debugging,
+196.26 ms recording (99.95×)**, retaining **3,449,828 bytes**. This deliberately dense loop reaches tens of thousands
 of hooks in a few milliseconds without recording. The figure is workload- and host-dependent, and is not a claim
 about Android performance.
 
@@ -70,6 +70,6 @@ dotnet test tests/TabStudio.Debugging.Tests -c Release \
 ```
 
 The benchmark measures host CoreCLR. Android Mono/device measurements must be reported separately; the emulator
-self-test verifies behavior rather than claiming a device overhead number. CI runs the benchmark as a test and
-publishes its output with the library logs. The App job renders the timeline in dark and light themes; the Android
+self-test verifies behavior rather than claiming a device overhead number. CI runs the benchmark as a test; use
+the detailed logger command above to see its timing output. The App job renders the timeline in dark and light themes; the Android
 emulator self-test records a loop and verifies an earlier value after exit.

@@ -311,6 +311,58 @@ public sealed class RecordingTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public async Task A_custom_postfix_operator_can_replace_its_receiver_without_the_hook_reading_it_again()
+    {
+        const string source = """
+            Box box = new Box();
+            var original = box;
+            Counter.OnIncrement = () => box = null;
+            var before = box.Value++;
+            Console.WriteLine($"{before.Number},{original.Value.Number},{box is null}");
+            class Box { public Counter Value = new Counter { Number = 1 }; }
+            struct Counter
+            {
+                public int Number;
+                public static Action OnIncrement;
+                public static Counter operator ++(Counter value)
+                {
+                    OnIncrement();
+                    value.Number++;
+                    return value;
+                }
+            }
+            """;
+        foreach (var recording in new[] { false, true })
+        {
+            using var session = new DebugSession(DebuggedProgram.Compile(source), DebugSession.DefaultEvaluationTimeout,
+                recording ? new RecordingOptions { CapacityBytes = 1024 * 1024 } : null);
+            session.BreakOnUnhandledExceptions = false;
+            var console = new CapturingConsole();
+            var result = await session.RunAsync([], console).WaitAsync(DebuggedProgram.Timeout);
+            Assert.True(result.Outcome == RunOutcome.Completed, result.Exception?.ToString());
+            Assert.Contains("1,2,True", console.Output, StringComparison.Ordinal);
+        }
+    }
+
+    [Fact]
+    public async Task A_multiline_postfix_receiver_does_not_shift_exception_line_numbers()
+    {
+        const string source = """
+            Box box = new Box();
+            var before = box.
+                Number++;
+            Console.WriteLine(before);
+            throw new InvalidOperationException("original line");
+            class Box { public int Number = 1; }
+            """;
+        using var session = Recorded(source);
+        session.BreakOnUnhandledExceptions = false;
+        var result = await session.RunAsync([], new CapturingConsole()).WaitAsync(DebuggedProgram.Timeout);
+        Assert.Equal(RunOutcome.Crashed, result.Outcome);
+        Assert.Contains("Program.cs:line 5", result.Exception!.StackTrace, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task Recording_overhead_is_measured_against_the_same_instrumented_debug_build()
     {
         const string source = "long sum = 0; for (int i = 0; i < 10000; i++) { sum += i; } Console.WriteLine(sum);";

@@ -92,9 +92,9 @@ internal static class DebugRuntimeSource
                 return value;
             }
 
-            public static T PostWrite<T>(object? frame, int site, string path, T result, T value)
+            public static T PostWrite<T>(object? frame, int site, string path, ref T storage, T result)
             {
-                if (s_write is not null) s_write(frame, site, path, value);
+                if (s_write is not null) s_write(frame, site, path, storage);
                 return result;
             }
         }

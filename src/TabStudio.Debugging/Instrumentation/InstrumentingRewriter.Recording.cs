@@ -55,7 +55,10 @@ internal sealed partial class InstrumentingRewriter
             return updated;
         }
         var site = _info.AddWriteSite(context.MethodId, Locate(original.Span));
-        return WriteCall(context.Frame, site, path, type, updated, post ? target.WithoutTrivia() : null);
+        var storage = post
+            ? target.ReplaceTrivia(target.DescendantTrivia(descendIntoTrivia: true), static (_, _) => default(SyntaxTrivia)).WithoutTrivia()
+            : null;
+        return WriteCall(context.Frame, site, path, type, updated, storage);
     }
 
     private static bool CanRecord(ITypeSymbol type) => LocalsCollector.IsBoxable(type) && !type.IsAnonymousType &&
@@ -96,9 +99,14 @@ internal sealed partial class InstrumentingRewriter
             SyntaxFactory.Argument(SyntaxFactory.LiteralExpression(SyntaxKind.StringLiteralExpression, SyntaxFactory.Literal(path))),
             SyntaxFactory.Argument(SyntaxFactory.ParenthesizedExpression(expression.WithoutTrivia())),
         };
-        if (after is not null) args.Add(SyntaxFactory.Argument(after));
+        if (after is not null)
+        {
+            // Bind the storage before the operation. A user-defined ++ can change the receiver variable;
+            // evaluating the receiver again afterwards could throw or observe a different field.
+            args.Insert(3, SyntaxFactory.Argument(after).WithRefKindKeyword(SyntaxFactory.Token(SyntaxKind.RefKeyword).WithTrailingTrivia(SyntaxFactory.Space)));
+        }
         // Preserve trivia, including line breaks inside the original expression: original PDB lines must not move.
-        args[3] = SyntaxFactory.Argument(SyntaxFactory.ParenthesizedExpression(expression.WithoutLeadingTrivia().WithoutTrailingTrivia()));
+        args[after is null ? 3 : 4] = SyntaxFactory.Argument(SyntaxFactory.ParenthesizedExpression(expression.WithoutLeadingTrivia().WithoutTrailingTrivia()));
         return SyntaxFactory.InvocationExpression(name, SyntaxFactory.ArgumentList(SyntaxFactory.SeparatedList(args)))
             .WithTriviaFrom(expression);
     }
