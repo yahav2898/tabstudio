@@ -306,7 +306,7 @@ public sealed class PanelAuditTests
         window.GetVisualDescendants().OfType<T>().First(control => control.IsEffectivelyVisible);
 
     /// <summary>The in-app dialog that asks a question: the box around its title, message and buttons.</summary>
-    private static Control PromptDialog(Window window) =>
+    private static Border PromptDialog(Window window) =>
         Shell(window).FindControl<TextBox>("PromptBox")!.GetVisualAncestors().OfType<Border>().First();
 
     private static void CopyTree(string source, string destination)
