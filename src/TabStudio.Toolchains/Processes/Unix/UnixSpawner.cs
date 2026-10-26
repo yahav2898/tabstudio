@@ -16,8 +16,8 @@ namespace TabStudio.Toolchains.Processes.Unix;
 /// terminal's Ctrl+C and window size reach it, as in any terminal emulator.
 /// </para>
 /// <para>
-/// The child process inherits no descriptor of TabStudio's but its three standard streams: .NET opens files with
-/// <c>O_CLOEXEC</c>, and so does this class.
+/// The child inherits standard streams and, when explicitly requested, one permissioned device descriptor.
+/// .NET opens other files with <c>O_CLOEXEC</c>, and so does this class.
 /// </para>
 /// </remarks>
 internal static class UnixSpawner
@@ -43,16 +43,38 @@ internal static class UnixSpawner
     /// <param name="environment">The complete environment, as <c>NAME=value</c> strings.</param>
     /// <param name="workingDirectory">The folder to start in, or <see langword="null"/> to keep TabStudio's.</param>
     /// <param name="terminal">The size of a new pseudo terminal, or <see langword="null"/> for pipes.</param>
+    /// <param name="inheritedDescriptors">Explicit parent-to-child descriptor mappings, otherwise none.</param>
     /// <exception cref="ToolchainRuntimeException">The program could not be started.</exception>
-    public static IProcessHandle Start(string path, IReadOnlyList<string> arguments, IReadOnlyList<string> environment, string? workingDirectory, TerminalSize? terminal)
+    public static IProcessHandle Start(string path, IReadOnlyList<string> arguments, IReadOnlyList<string> environment, string? workingDirectory, TerminalSize? terminal, IReadOnlyDictionary<int, int>? inheritedDescriptors = null)
     {
         UnixNative.EnsureLoaded();
-        return terminal is { } size
-            ? StartInTerminal(path, arguments, environment, workingDirectory, size)
-            : StartWithPipes(path, arguments, environment, workingDirectory);
+        if (inheritedDescriptors is not null && (inheritedDescriptors.Count > 1 || inheritedDescriptors.Any(p => p.Key < 3 || p.Value < 3 || p.Value > 1024)))
+        {
+            throw new ArgumentException("Pass one explicit device descriptor to a child descriptor from 3 to 1024.", nameof(inheritedDescriptors));
+        }
+
+        var temporary = -1;
+        try
+        {
+            if (inheritedDescriptors is { Count: 1 } && inheritedDescriptors.Single() is var mapping && mapping.Key == mapping.Value)
+            {
+                // dup2(fd, fd) can retain FD_CLOEXEC on some libcs. Always use
+                // distinct source/target descriptors in the child's file action.
+                temporary = Duplicate(mapping.Key);
+                inheritedDescriptors = new Dictionary<int, int> { [temporary] = mapping.Value };
+            }
+
+            return terminal is { } size
+                ? StartInTerminal(path, arguments, environment, workingDirectory, size, inheritedDescriptors)
+                : StartWithPipes(path, arguments, environment, workingDirectory, inheritedDescriptors);
+        }
+        finally
+        {
+            if (temporary >= 0) _ = UnixNative.close(temporary);
+        }
     }
 
-    private static UnixProcessHandle StartWithPipes(string path, IReadOnlyList<string> arguments, IReadOnlyList<string> environment, string? workingDirectory)
+    private static UnixProcessHandle StartWithPipes(string path, IReadOnlyList<string> arguments, IReadOnlyList<string> environment, string? workingDirectory, IReadOnlyDictionary<int, int>? descriptors)
     {
         var input = CreatePipe();
         var output = CreatePipe();
@@ -65,6 +87,7 @@ internal static class UnixSpawner
                 Check(UnixNative.posix_spawn_file_actions_adddup2(actions, input.Read, 0), "posix_spawn_file_actions_adddup2");
                 Check(UnixNative.posix_spawn_file_actions_adddup2(actions, output.Write, 1), "posix_spawn_file_actions_adddup2");
                 Check(UnixNative.posix_spawn_file_actions_adddup2(actions, error.Write, 2), "posix_spawn_file_actions_adddup2");
+                AddDescriptors(actions, descriptors);
             });
         }
         catch
@@ -85,7 +108,7 @@ internal static class UnixSpawner
             new FileDescriptorStream(error.Read, canRead: true));
     }
 
-    private static UnixProcessHandle StartInTerminal(string path, IReadOnlyList<string> arguments, IReadOnlyList<string> environment, string? workingDirectory, TerminalSize size)
+    private static UnixProcessHandle StartInTerminal(string path, IReadOnlyList<string> arguments, IReadOnlyList<string> environment, string? workingDirectory, TerminalSize size, IReadOnlyDictionary<int, int>? descriptors)
     {
         var master = UnixNative.posix_openpt(UnixConstants.OpenReadWrite | UnixConstants.OpenNoControllingTerminal | UnixConstants.OpenCloseOnExec);
         if (master < 0)
@@ -120,6 +143,7 @@ internal static class UnixSpawner
                     Check(UnixNative.posix_spawn_file_actions_addopen(actions, 0, slavePath, UnixConstants.OpenReadWrite, 0), "posix_spawn_file_actions_addopen");
                     Check(UnixNative.posix_spawn_file_actions_adddup2(actions, 0, 1), "posix_spawn_file_actions_adddup2");
                     Check(UnixNative.posix_spawn_file_actions_adddup2(actions, 0, 2), "posix_spawn_file_actions_adddup2");
+                    AddDescriptors(actions, descriptors);
                 });
             }
             finally
@@ -140,6 +164,21 @@ internal static class UnixSpawner
         {
             _ = UnixNative.close(master);
             throw;
+        }
+    }
+
+    private static void AddDescriptors(nint actions, IReadOnlyDictionary<int, int>? descriptors)
+    {
+        if (descriptors is null)
+        {
+            return;
+        }
+
+        foreach (var (source, destination) in descriptors)
+        {
+            // The file action clears close-on-exec on the child's duplicate;
+            // changing the parent descriptor's flags would leak it to other runs.
+            Check(UnixNative.posix_spawn_file_actions_adddup2(actions, source, destination), "posix_spawn_file_actions_adddup2(USB)");
         }
     }
 
@@ -218,6 +257,7 @@ internal static class UnixSpawner
                     throw Failure($"Could not start {path}", result);
                 }
 
+                UnixNative.TraceProcess("spawn", pid);
                 return pid;
             }
             finally
@@ -280,7 +320,7 @@ internal static class UnixSpawner
         var duplicate = UnixNative.fcntl_int(fd, OperatingSystem.IsMacOS() ? 67 : 1030, 3);
         if (duplicate < 0)
         {
-            throw Failure("Could not duplicate the pseudo terminal", Marshal.GetLastPInvokeError());
+            throw Failure("Could not duplicate a file descriptor", Marshal.GetLastPInvokeError());
         }
 
         return duplicate;

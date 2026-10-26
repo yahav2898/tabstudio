@@ -19,10 +19,19 @@ internal sealed class DebugInfoBuilder
     }
 
     /// <summary>Registers a statement and returns its id.</summary>
-    public int AddStatement(int methodId, DebugSourceSpan location, IReadOnlyList<DebugLocalSlot> locals)
+    public int AddStatement(int methodId, DebugSourceSpan location, IReadOnlyList<DebugLocalSlot> locals, string? divisionOperand = null, string? nullReceiver = null)
     {
         var id = _statements.Count + 1;
-        _statements.Add(new DebugStatement(id, methodId, location, locals));
+        _statements.Add(new DebugStatement(id, methodId, location, locals) { DivisionOperand = divisionOperand, NullReceiver = nullReceiver });
+        return id;
+    }
+
+    /// <summary>Registers a write independently of executable sequence points.</summary>
+    public int AddWriteSite(int methodId, DebugSourceSpan location)
+    {
+        var sites = (Dictionary<int, DebugSourceSpan>)_methods[methodId - 1].WriteSites;
+        var id = sites.Count + 1;
+        sites.Add(id, location);
         return id;
     }
 

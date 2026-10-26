@@ -1,0 +1,51 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:edit="using:AvaloniaEdit"
+             xmlns:model="using:TabStudio.Database"
+             xmlns:db="using:TabStudio.App.ViewModels.Database"
+             x:Class="TabStudio.App.Views.Database.DatabaseQueryView"
+             x:ClassModifier="internal"
+             x:DataType="db:DatabaseQueryViewModel"
+             Background="{DynamicResource Brush.Panel}">
+  <UserControl.Styles>
+    <Style Selector="Button"><Setter Property="MinHeight" Value="36" /><Setter Property="VerticalContentAlignment" Value="Center" /></Style>
+  </UserControl.Styles>
+  <Grid RowDefinitions="Auto,Auto,Auto,*,Auto,Auto">
+    <Border Padding="12,6" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Text="{Binding Heading}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+        <WrapPanel Grid.Column="1">
+          <Button Content="Run · Ctrl+Enter" Command="{Binding RunCommand}" IsVisible="{Binding !IsTable}" IsEnabled="{Binding !IsBusy}" />
+          <Button Content="Schema" Command="{Binding RefreshSchemaCommand}" IsVisible="{Binding !IsTable}" IsEnabled="{Binding !IsBusy}" />
+          <Button Content="Cancel" Command="{Binding CancelCommand}" IsEnabled="{Binding IsBusy}" />
+        </WrapPanel>
+      </Grid>
+    </Border>
+    <edit:TextEditor Grid.Row="1" x:Name="SqlEditor" Height="220" ShowLineNumbers="True" FontFamily="monospace" FontSize="14"
+                     IsVisible="{Binding !IsTable}" Background="{DynamicResource Brush.Control}" Foreground="{DynamicResource Brush.Text}" />
+    <Border Grid.Row="2" Padding="10,4" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1">
+      <Grid ColumnDefinitions="*,Auto">
+        <ComboBox ItemsSource="{Binding Results}" SelectedItem="{Binding SelectedResult}" MinWidth="180" HorizontalAlignment="Left" />
+        <WrapPanel Grid.Column="1"><Button Content="Copy CSV" Click="OnCopyCsv" /><Button Content="Copy JSON" Click="OnCopyJson" /></WrapPanel>
+      </Grid>
+    </Border>
+    <DataGrid Grid.Row="3" x:Name="ResultsGrid" ItemsSource="{Binding Rows}" SelectedItem="{Binding SelectedRow}"
+              IsReadOnly="True" AutoGenerateColumns="False" CanUserSortColumns="True" CanUserResizeColumns="True"
+              GridLinesVisibility="Horizontal" HeadersVisibility="Column" RowHeight="34" FontSize="13" />
+    <StackPanel Grid.Row="4" Margin="10,6" Spacing="6" IsVisible="{Binding IsTable}" IsEnabled="{Binding !IsBusy}">
+      <WrapPanel><Button Content="Previous" Command="{Binding PreviousPageCommand}" IsEnabled="{Binding HasPrevious}" /><Button Content="Next" Command="{Binding NextPageCommand}" IsEnabled="{Binding HasNext}" /><Button Content="Refresh" Command="{Binding RefreshPageCommand}" /></WrapPanel>
+      <TextBlock Text="{Binding EditHint}" Classes="small muted" TextWrapping="Wrap" />
+      <Grid ColumnDefinitions="160,*,Auto,Auto" IsVisible="{Binding CanEdit}">
+        <ComboBox ItemsSource="{Binding EditableColumns}" SelectedItem="{Binding EditColumn}" HorizontalAlignment="Stretch">
+          <ComboBox.ItemTemplate><DataTemplate DataType="model:DatabaseColumn"><TextBlock Text="{Binding Name}" /></DataTemplate></ComboBox.ItemTemplate>
+        </ComboBox>
+        <TextBox Grid.Column="1" Text="{Binding EditValue}" Watermark="Value" Margin="6,0" IsEnabled="{Binding !SetNull}" />
+        <CheckBox Grid.Column="2" Content="NULL" IsChecked="{Binding SetNull}" VerticalAlignment="Center" />
+        <Button Grid.Column="3" Content="Apply cell" Command="{Binding ApplyEditCommand}" Margin="6,0,0,0" />
+      </Grid>
+    </StackPanel>
+    <Border Grid.Row="5" Padding="12,8" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0">
+      <TextBlock Text="{Binding Status}" Classes="small muted" TextWrapping="Wrap" />
+    </Border>
+  </Grid>
+</UserControl>

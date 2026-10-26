@@ -1,0 +1,79 @@
+name: Local AI
+on:
+  push:
+    branches: [main, 'agent/**']
+    paths: ['native/local-ai/**', 'build/local-ai/**', '.github/workflows/local-ai.yml', 'src/TabStudio.Agent/Local/**']
+  pull_request:
+    paths: ['native/local-ai/**', 'build/local-ai/**', '.github/workflows/local-ai.yml', 'src/TabStudio.Agent/Local/**']
+permissions:
+  contents: read
+concurrency:
+  group: local-ai-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  inference:
+    name: Local inference (${{ matrix.runner }})
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-24.04, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build native library and server candidates
+        run: bash build/local-ai/build.sh artifacts/local-ai
+      - name: Download and verify the tiny test model
+        run: bash build/local-ai/download-tiny.sh artifacts/tiny.gguf
+      - name: Generate real tokens and measure both candidates
+        run: |
+          mkdir -p ci-out
+          python3 build/local-ai/benchmark.py artifacts/local-ai/bin artifacts/tiny.gguf | tee ci-out/local-ai.jsonl
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Verify managed PInvoke, FIM, protocol and model storage
+        run: |
+          export TABSTUDIO_LOCAL_AI_LIBRARY="$PWD/artifacts/local-ai/bin/libtabstudio-ai.so"
+          export TABSTUDIO_LOCAL_AI_MODEL="$PWD/artifacts/tiny.gguf"
+          dotnet test tests/TabStudio.Agent.Tests -c Release --filter 'FullyQualifiedName~Local' --logger 'console;verbosity=normal'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: local-ai-${{ matrix.runner }}
+          path: |
+            ci-out/
+            artifacts/local-ai/bin/server.log
+  emulator:
+    name: Inference on Android emulator
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;27.2.12479018"'
+      - name: Build Android candidates
+        run: |
+          export ANDROID_NDK_HOME="$ANDROID_HOME/ndk/27.2.12479018"
+          bash build/local-ai/build.sh artifacts/local-ai x86_64
+      - run: bash build/local-ai/download-tiny.sh artifacts/tiny.gguf
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          target: google_apis
+          profile: pixel_c
+          cores: 3
+          ram-size: 4096M
+          disk-size: 4096M
+          arch: x86_64
+          disable-animations: true
+          script: bash build/local-ai/emulator-spike.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: local-ai-emulator
+          path: ci-out/

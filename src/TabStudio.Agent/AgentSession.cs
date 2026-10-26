@@ -64,7 +64,7 @@ public sealed record AgentTurnResult(AgentTurnEnd End, string Text, TokenUsage U
 /// </summary>
 public sealed class AgentSession
 {
-    private readonly AnthropicClient _client;
+    private readonly IAgentClient _client;
     private readonly IAgentWorkspace _workspace;
     private readonly AgentOptions _options;
     private readonly List<ChatMessage> _history = [];
@@ -77,7 +77,8 @@ public sealed class AgentSession
     /// <param name="workspace">The workspace the agent works on.</param>
     /// <param name="options">Settings; defaults when <see langword="null"/>.</param>
     /// <param name="extraTools">More tools, such as those of MCP servers.</param>
-    public AgentSession(AnthropicClient client, IAgentWorkspace workspace, AgentOptions? options = null, IEnumerable<AgentTool>? extraTools = null)
+    /// <param name="allowedTools">Optional capability restriction, used for on-device models.</param>
+    public AgentSession(IAgentClient client, IAgentWorkspace workspace, AgentOptions? options = null, IEnumerable<AgentTool>? extraTools = null, IReadOnlySet<string>? allowedTools = null)
     {
         ArgumentNullException.ThrowIfNull(client);
         ArgumentNullException.ThrowIfNull(workspace);
@@ -85,7 +86,7 @@ public sealed class AgentSession
         _workspace = workspace;
         _options = options ?? new AgentOptions();
         Changes = new ChangeSet();
-        _tools = [.. new WorkspaceTools(workspace, Changes).All, .. extraTools ?? []];
+        _tools = [.. new WorkspaceTools(workspace, Changes).All.Where(t => allowedTools is null || allowedTools.Contains(t.Definition.Name)), .. (extraTools ?? []).Where(t => allowedTools is null || allowedTools.Contains(t.Definition.Name))];
     }
 
     /// <summary>Raised as the agent works: text, tool calls and their results. Raised on a background thread.</summary>

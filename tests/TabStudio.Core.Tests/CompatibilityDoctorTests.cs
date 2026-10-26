@@ -52,6 +52,7 @@ public sealed class CompatibilityDoctorTests
     [InlineData(ProjectKind.Uno, RunHost.AndroidView, CompatibilityStatus.Ready)]
     [InlineData(ProjectKind.WinUI, RunHost.AndroidView, CompatibilityStatus.Ready)]
     [InlineData(ProjectKind.NativeCpp, RunHost.WindowsBridge, CompatibilityStatus.NeedsWindows)]
+    [InlineData(ProjectKind.StaticWebSite, RunHost.WebView, CompatibilityStatus.Ready)]
     [InlineData(ProjectKind.Unknown, RunHost.None, CompatibilityStatus.Unsupported)]
     public void Each_project_kind_gets_an_honest_verdict(ProjectKind kind, RunHost host, CompatibilityStatus status)
     {
@@ -69,7 +70,7 @@ public sealed class CompatibilityDoctorTests
 
         Assert.All(reports, r => Assert.Equal(r.Status == CompatibilityStatus.Ready, r.CanRunToday));
         Assert.Equal(
-            new[] { ProjectKind.ConsoleApp, ProjectKind.Test, ProjectKind.AspNetCore, ProjectKind.BlazorWebAssembly, ProjectKind.WinForms, ProjectKind.Wpf, ProjectKind.WinUI, ProjectKind.Avalonia, ProjectKind.Uno, ProjectKind.BlazorWebApp },
+            new[] { ProjectKind.ConsoleApp, ProjectKind.Test, ProjectKind.AspNetCore, ProjectKind.BlazorWebAssembly, ProjectKind.WinForms, ProjectKind.Wpf, ProjectKind.WinUI, ProjectKind.Avalonia, ProjectKind.Uno, ProjectKind.BlazorWebApp, ProjectKind.StaticWebSite },
             reports.Where(r => r.CanRunToday).Select(r => r.Kind));
     }
 

@@ -21,6 +21,12 @@ public static class StackDetector
         CommentHandling = JsonCommentHandling.Skip,
     };
 
+    /// <summary>The MSBuild files that set properties for the projects under them, which only .NET repositories have.</summary>
+    private static readonly HashSet<string> BuildPropertyFiles = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "Directory.Build.props", "Directory.Build.targets", "Directory.Packages.props",
+    };
+
     private static readonly (string Package, StackKind Kind, string Name)[] NodeFrameworks =
     [
         ("next", StackKind.NextJs, "Next.js"),
@@ -45,6 +51,8 @@ public static class StackDetector
         }
 
         var found = new Dictionary<StackKind, StackComponent>();
+        StackComponent? buildProperties = null;
+        var nodeServesPages = false;
 
         foreach (var file in EnumerateFilesBreadthFirst(rootDirectory, maxDepth))
         {
@@ -53,6 +61,28 @@ public static class StackDetector
             {
                 found.TryAdd(component.Kind, component);
             }
+
+            var name = Path.GetFileName(file);
+            if (BuildPropertyFiles.Contains(name))
+            {
+                buildProperties ??= new StackComponent(StackKind.DotNet, ".NET", relative);
+            }
+            else if (!nodeServesPages && name.Equals("package.json", StringComparison.OrdinalIgnoreCase))
+            {
+                nodeServesPages = StaticSiteDetector.IsRunByNode(file);
+            }
+        }
+
+        // Directory.Build.props is .NET too, but a solution or project names the repository better.
+        if (buildProperties is not null)
+        {
+            found.TryAdd(StackKind.DotNet, buildProperties);
+        }
+
+        // An index.html is the startup item only when no .NET project or Node.js package serves the pages itself.
+        if (!found.ContainsKey(StackKind.DotNet) && !nodeServesPages && StaticSiteDetector.FindIndex(rootDirectory) is { } index)
+        {
+            found.TryAdd(StackKind.StaticSite, new StackComponent(StackKind.StaticSite, "Static web site", Path.GetRelativePath(rootDirectory, index)));
         }
 
         foreach (var project in projects ?? [])
@@ -142,6 +172,11 @@ public static class StackDetector
         try
         {
             using var document = JsonDocument.Parse(File.ReadAllText(fullPath), JsonOptions);
+            if (document.RootElement.ValueKind != JsonValueKind.Object)
+            {
+                return result;
+            }
+
             var dependencies = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
             foreach (var section in new[] { "dependencies", "devDependencies", "peerDependencies" })
             {

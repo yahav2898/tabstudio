@@ -25,7 +25,9 @@ public sealed partial class WorkspaceView : UserControl
             DocumentViewModel { PullRequest: { } pullRequest } => new PullRequests.PullRequestView { DataContext = pullRequest },
             DocumentViewModel { IsComparison: true } comparison => new DiffView(comparison),
             DocumentViewModel { IsNotebook: true } notebook => new Notebooks.NotebookView(notebook),
+            DocumentViewModel { DatabaseQuery: not null } query => new Database.DatabaseQueryView(query),
             DocumentViewModel { IsCiLog: true } log => new Actions.CiLogView(log),
+            DocumentViewModel { PortSummary: { } summary } => new PortSummaryView { DataContext = summary },
             DocumentViewModel { DeviceMatrix: { } matrix } => new Swarm.DeviceMatrixView { DataContext = matrix },
             DocumentViewModel { Designer: { } designer } xaml => new XamlDesignerView(xaml, designer),
             DocumentViewModel { FormsDesigner: { } forms } form => new FormsDesignerView(form, forms),
@@ -117,6 +119,7 @@ public sealed partial class WorkspaceView : UserControl
                 UpdateSideBar();
                 break;
             case nameof(WorkspaceViewModel.IsBottomPanelVisible):
+            case nameof(WorkspaceViewModel.HasRecording):
                 UpdateBottomPanel();
                 break;
             case nameof(WorkspaceViewModel.ShowsSideBarProperties):
@@ -144,7 +147,9 @@ public sealed partial class WorkspaceView : UserControl
             _bottomPanelHeight = row.Height;
         }
 
-        row.Height = visible ? _bottomPanelHeight : new GridLength(0);
+        row.Height = visible
+            ? new GridLength(Math.Max(_bottomPanelHeight.Value, _viewModel?.HasRecording == true ? 320 : 0))
+            : new GridLength(0);
         BottomDock.IsVisible = visible;
         BottomSplitter.IsVisible = visible;
     }

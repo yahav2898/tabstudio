@@ -1,0 +1,121 @@
+<Window x:Class="ContactBook.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ContactBook"
+        xmlns:vm="clr-namespace:ContactBook.ViewModels"
+        xmlns:models="clr-namespace:ContactBook.Models"
+        xmlns:controls="clr-namespace:ContactBook.Controls"
+        xmlns:conv="clr-namespace:ContactBook.Converters"
+        mc:Ignorable="d"
+        Title="Contact Book" Height="520" Width="860"
+        WindowStartupLocation="CenterScreen">
+    <Window.DataContext>
+        <vm:MainViewModel/>
+    </Window.DataContext>
+    <Window.InputBindings>
+        <KeyBinding Key="N" Modifiers="Ctrl" Command="{Binding AddCommand}"/>
+    </Window.InputBindings>
+    <Window.Resources>
+        <conv:InitialsConverter x:Key="Initials"/>
+
+        <!-- How the selected contact looks in the details pane. -->
+        <DataTemplate DataType="{x:Type models:Contact}">
+            <StackPanel>
+                <Border Width="48" Height="48" CornerRadius="24" Background="{StaticResource AccentBrush}" HorizontalAlignment="Left">
+                    <TextBlock Text="{Binding Name, Converter={StaticResource Initials}}" Foreground="White" FontSize="18"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <TextBlock Text="{Binding Name}" FontSize="18" FontWeight="SemiBold" Margin="0,12,0,0"/>
+                <TextBlock Text="{Binding Company}" Foreground="{StaticResource MutedBrush}" Margin="0,2,0,12"/>
+                <Label Content="Email" Padding="0" FontWeight="SemiBold"/>
+                <TextBlock Text="{Binding Email}" Margin="0,0,0,8"/>
+                <Label Content="Phone" Padding="0" FontWeight="SemiBold"/>
+                <TextBlock Text="{Binding Phone}" Margin="0,0,0,8"/>
+                <controls:RatingBar Value="{Binding Rating}" Margin="0,0,0,8"/>
+                <CheckBox Content="Favorite" IsChecked="{Binding IsFavorite}"/>
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
+
+    <DockPanel>
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock Text="{Binding StatusText}"/>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <TextBlock Text="{x:Static local:AppInfo.Version}" Foreground="{StaticResource MutedBrush}"/>
+            </StatusBarItem>
+        </StatusBar>
+
+        <Grid Margin="16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="260"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="Contacts" Style="{StaticResource Heading}"/>
+
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,12">
+                <Button Content="_Add" Command="{Binding AddCommand}" Style="{StaticResource PrimaryButton}"/>
+                <Button Content="_Edit" Click="Edit_Click" IsEnabled="{Binding HasSelection}"/>
+                <Button Content="About" Click="About_Click"/>
+                <TextBox x:Name="SearchBox" Width="200" Margin="16,0,0,0" VerticalContentAlignment="Center"
+                         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" ToolTip="Search by name or company"/>
+            </StackPanel>
+
+            <DataGrid x:Name="ContactsGrid" Grid.Row="2" ItemsSource="{Binding Contacts}" SelectedItem="{Binding SelectedContact}"
+                      AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" CanUserAddRows="False"
+                      MouseDoubleClick="ContactsGrid_MouseDoubleClick">
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsFavorite}" Value="True">
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Width="32">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Style="{StaticResource FavoriteMark}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+                    <DataGridTextColumn Header="Company" Binding="{Binding Company}" Width="*"/>
+                    <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="*"/>
+                    <DataGridTemplateColumn Width="Auto">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Delete" Padding="6,0" Margin="0" MinWidth="0" Cursor="Hand"
+                                        Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        CommandParameter="{Binding}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <TextBlock Grid.Row="2" Text="No contacts match your search." HorizontalAlignment="Center" VerticalAlignment="Center"
+                       Foreground="{StaticResource MutedBrush}" Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVisibility}}"/>
+
+            <Border Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Margin="16,0,0,0" Padding="16"
+                    BorderBrush="#DDDDDD" BorderThickness="1" CornerRadius="6">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Foreground="{StaticResource MutedBrush}" Margin="0,0,0,12"
+                               Text="{Binding ElementName=ContactsGrid, Path=SelectedItem.Company, StringFormat=Works at {0}}"/>
+                    <ContentControl Content="{Binding SelectedContact}"/>
+                </DockPanel>
+            </Border>
+        </Grid>
+    </DockPanel>
+</Window>

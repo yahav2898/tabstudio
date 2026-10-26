@@ -9,36 +9,52 @@
 # and asks this script in its log (TABSTUDIO_DESKTOP_STEP lines) to type on the keyboard and take screenshots,
 # which it does with adb. (The app clicks the display itself: adb's taps have no mouse button events.)
 #
-# Usage: build/ci/android-smoke-test.sh <apk> <output-folder> [timeout-seconds]
+# Usage: build/ci/android-smoke-test.sh <apk> <output-folder> [timeout-seconds] [all|managed|ui|native|performance]
 set -euo pipefail
 
 apk="${1:?apk}"
 out="${2:?output folder}"
 timeout="${3:-900}"
+shard="${4:-all}"
+case "$shard" in
+  all|managed|ui|native|performance) ;;
+  *) echo "Unknown self-test shard: $shard" >&2; exit 2 ;;
+esac
 package="com.tabstudio.ide"
 
 mkdir -p "$out"
 adb wait-for-device
+# Headless CI uses Android's standard error-dialog policy so a background system app's ANR cannot
+# consume the injected input. A successful app verdict, process liveness and the time limit stay required.
+# Chromium's emulator setup uses the same setting; manual device runs leave the device policy alone.
+if [ "${GITHUB_ACTIONS:-false}" = true ]; then
+  adb shell settings put global hide_error_dialogs 1
+fi
 echo "Device: Android $(adb shell getprop ro.build.version.release | tr -d '\r')" \
   "(API $(adb shell getprop ro.build.version.sdk | tr -d '\r')), $(adb shell getprop ro.product.cpu.abi | tr -d '\r')," \
   "screen $(adb shell wm size | tr -d '\r' | sed 's/.*: //')"
 
-# The second display: 1920 × 1080 at 240 dpi.
-adb shell settings put global overlay_display_devices 1920x1080/240
-for _ in $(seq 1 20); do
-  [ "$(adb shell dumpsys display | grep -c 'mDisplayId=' || true)" -ge 2 ] && break
-  sleep 1
-done
-# Each logical display's name and id, and its flags: the overlay display is a presentation display. Android 10
-# writes DisplayInfo{"Overlay #1, displayId 1", ...}, later versions DisplayInfo{"Overlay #1", displayId 2, ...}.
-adb shell dumpsys display | tr -d '\r' \
-  | awk 'match($0, /DisplayInfo\{"[^"]*"(, displayId [0-9]+)?/) {
-      name = substr($0, RSTART + 12, RLENGTH - 12)
-      gsub(/"/, "", name)
-      print name (index($0, "FLAG_PRESENTATION") ? ": a presentation display" : "")
-    }' | sort -u > "$out/displays.txt" || true
-echo "Displays:"
-cat "$out/displays.txt"
+if [ "$shard" = performance ]; then
+  # The paired latency run measures the editor on one display, without desktop-mode notifications.
+  adb shell settings delete global overlay_display_devices > /dev/null 2>&1 || true
+else
+  # The second display: 1920 × 1080 at 240 dpi.
+  adb shell settings put global overlay_display_devices 1920x1080/240
+  for _ in $(seq 1 20); do
+    [ "$(adb shell dumpsys display | grep -c 'mDisplayId=' || true)" -ge 2 ] && break
+    sleep 1
+  done
+  # Each logical display's name and id, and its flags: the overlay display is a presentation display. Android 10
+  # writes DisplayInfo{"Overlay #1, displayId 1", ...}, later versions DisplayInfo{"Overlay #1", displayId 2, ...}.
+  adb shell dumpsys display | tr -d '\r' \
+    | awk 'match($0, /DisplayInfo\{"[^"]*"(, displayId [0-9]+)?/) {
+        name = substr($0, RSTART + 12, RLENGTH - 12)
+        gsub(/"/, "", name)
+        print name (index($0, "FLAG_PRESENTATION") ? ": a presentation display" : "")
+      }' | sort -u > "$out/displays.txt" || true
+  echo "Displays:"
+  cat "$out/displays.txt"
+fi
 
 # Does what a TABSTUDIO_DESKTOP_STEP line asks: type, or take screenshots.
 desktop_step() {
@@ -70,12 +86,14 @@ adb logcat -c
 started=$(date +%s)
 # The shell's instrumentation source permits the existing desktop checks to inject real Android input events.
 # Keep instrumentation active until the emulator is stopped, so the IDE is still present in the screenshots.
-adb shell am instrument "$package/com.tabstudio.ide.SelfTestInstrumentation"
+adb shell am instrument -e tabstudio.selftest.shard "$shard" "$package/com.tabstudio.ide.SelfTestInstrumentation"
 
 verdict=""
 handled=0
 while [ -z "$verdict" ] && [ $(($(date +%s) - started)) -lt "$timeout" ]; do
-  sleep 3
+  # Desktop input/screenshot requests are handshakes with the app. Respond
+  # promptly so polling latency does not consume its launch-to-verdict budget.
+  sleep 1
   log="$(adb logcat -d -s TabStudio | tr -d '\r')"
   steps="$(printf '%s\n' "$log" | grep -oE 'TABSTUDIO_DESKTOP_STEP .*' || true)"
   count="$(printf '%s' "$steps" | grep -c . || true)"
@@ -104,6 +122,7 @@ grep -E 'TabStudio|mono|monodroid|AndroidRuntime|DOTNET|FATAL' "$out/logcat-full
 
 verdict="${verdict:-TABSTUDIO_SELFTEST_TIMEOUT no verdict after ${timeout} s}"
 echo "$verdict" | tee "$out/verdict.txt"
+echo "Shard: $shard" | tee -a "$out/verdict.txt"
 echo "Seconds from launch to verdict: $elapsed" | tee -a "$out/verdict.txt"
 
 case "$verdict" in

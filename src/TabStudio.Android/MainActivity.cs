@@ -55,6 +55,9 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
     /// <summary>The intent extra that adds desktop mode to the self test, on a device with a second display.</summary>
     public const string DesktopSelfTestExtra = "tabstudio.selftest.desktop";
 
+    /// <summary>The optional independent self-test group: managed, ui, native, or all.</summary>
+    public const string SelfTestShardExtra = "tabstudio.selftest.shard";
+
     private const string LogTag = "TabStudio";
     private static readonly TimeSpan SelfTestTimeout = TimeSpan.FromMinutes(15);
 
@@ -74,8 +77,9 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
         if (Intent?.GetBooleanExtra(SelfTestExtra, false) == true)
         {
             var desktop = Intent.GetBooleanExtra(DesktopSelfTestExtra, false);
+            var shard = Intent.GetStringExtra(SelfTestShardExtra);
             var screenshots = GetExternalFilesDir(null) is { } files ? Path.Combine(files.AbsolutePath, "selftest") : null;
-            Dispatcher.UIThread.Post(() => _ = RunSelfTestAsync(desktop, screenshots));
+            Dispatcher.UIThread.Post(() => _ = RunSelfTestAsync(desktop, screenshots, shard));
         }
 
         // Started from a tapped notification: open the run it is about.
@@ -111,6 +115,9 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
     /// <inheritdoc />
     protected override AppBuilder CustomizeAppBuilder(AppBuilder builder)
     {
+        // Mono can resolve SqlClient's general runtime flavor. Select managed SNI before any provider
+        // initializes; Android cannot load the Windows native SNI library. The switch keeps its historic name.
+        AppContext.SetSwitch("Switch.Microsoft.Data.SqlClient.UseManagedNetworkingOnWindows", true);
         var context = ApplicationContext!;
         var dataDirectory = Path.Combine(context.FilesDir!.AbsolutePath, "TabStudio");
         var notifications = _notifications ??= new AndroidNotifications(context, () => _current);
@@ -119,7 +126,9 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
             .AfterSetup(b => ((TabStudioApplication)b.Instance!).UseDataDirectory(dataDirectory))
             .UseTabStudioPlatform(services =>
             {
+                services.AddSingleton<TabStudio.Database.IDatabaseSecretStore>(_ => new AndroidDatabaseSecretStore(context));
                 services.AddSingleton<IDeviceStatus>(_ => new AndroidDeviceStatus(context));
+                services.AddSingleton<IAndroidAppInstaller>(_ => new AndroidAppInstaller(context));
                 services.AddSingleton<IWebViewFactory>(_ => new AndroidWebViewFactory(() => this));
                 services.AddSingleton<INotifications>(notifications);
                 services.AddSingleton<IQrScanner>(_ => new AndroidQrScanner(() => this));
@@ -128,12 +137,20 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
                 // Presentations on external displays belong to the current activity.
                 services.AddSingleton<IExternalDisplayService>(_ => _displays ??= new AndroidExternalDisplays(context, () => _current));
                 services.AddSingleton(AndroidToolchainPlatform.Create(context));
+                services.AddSingleton<TabStudio.Remote.ISshKeyStore, AndroidSshKeyStore>();
+                services.AddSingleton<TabStudio.Toolchains.Microchip.IUsbHost>(_ => new AndroidUsbHost(context));
             });
     }
 
-    private static async Task RunSelfTestAsync(bool desktop, string? screenshots)
+    private static async Task RunSelfTestAsync(bool desktop, string? screenshots, string? shardName)
     {
-        AndroidLog.Info(LogTag, "TABSTUDIO_SELFTEST_START");
+        if (!SelfTest.TryParseShard(shardName, out var shard))
+        {
+            AndroidLog.Error(LogTag, $"TABSTUDIO_SELFTEST_FAIL Unknown self-test shard '{shardName}'.");
+            return;
+        }
+
+        AndroidLog.Info(LogTag, $"TABSTUDIO_SELFTEST_START shard={shard.ToString().ToLowerInvariant()}");
         var app = Avalonia.Application.Current as TabStudioApplication;
         if (app?.Main is not { } main || app.Services is not { } services)
         {
@@ -166,19 +183,19 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
         toolchains.StatusChanged += ReportPreparation;
         try
         {
-            result = await SelfTest.RunAsync(main, services.GetRequiredService<SampleLibrary>(), services.GetRequiredService<ProjectTemplates>(), screenshots, timeout.Token);
+            result = await SelfTest.RunShardAsync(main, services.GetRequiredService<SampleLibrary>(), services.GetRequiredService<ProjectTemplates>(), screenshots, shard, timeout.Token);
         }
         finally
         {
             toolchains.StatusChanged -= ReportPreparation;
         }
-        if (result.Success)
+        if (result.Success && (shard is SelfTestShard.All or SelfTestShard.Ui))
         {
             var scrolling = await SelfTest.ScrollEditorAsync(main, services.GetRequiredService<SampleLibrary>(), new AndroidTouchSelfTestDevice(() => _current), line => AndroidLog.Info(LogTag, line), timeout.Token);
             result = new SelfTestResult(scrolling.Success, $"{result.Message} | {scrolling.Message}", result.Duration + scrolling.Duration);
         }
 
-        if (result.Success && desktop)
+        if (result.Success && desktop && (shard is SelfTestShard.All or SelfTestShard.Ui))
         {
             var tablet = (app.ApplicationLifetime as ISingleViewApplicationLifetime)?.MainView as TabStudio.App.Views.MainView;
             var input = new AndroidDesktopSelfTestInput(line => AndroidLog.Info(LogTag, line), _displays, () => _current);

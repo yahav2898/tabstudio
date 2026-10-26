@@ -163,6 +163,31 @@ public sealed class BridgeClient : ILinkMessageHandler
         }
     }
 
+    /// <summary>Programs and verifies a PIC image with the paired PC's licensed MPLAB IPE.</summary>
+    /// <param name="projectPath">MPLAB descriptor path.</param>
+    /// <param name="firmwarePath">HEX path returned by a Bridge build.</param>
+    /// <param name="device">Device selected in the project.</param>
+    /// <param name="tool">IPE tool id.</param>
+    /// <param name="serial">Optional tool serial number.</param>
+    /// <param name="output">Output lines.</param>
+    /// <param name="cancellationToken">Stops programming.</param>
+    public async Task<BuildOutcome> ProgramPicAsync(string projectPath, string firmwarePath, string device, string tool, string? serial, Action<string> output, CancellationToken cancellationToken = default)
+    {
+        var id = Interlocked.Increment(ref _nextBuild);
+        _buildOutput[id] = output;
+        try
+        {
+            return await RequestAsync<BuildOutcome>(BridgeMethods.ProgramPic, BridgeJson.ToJson(new PicProgramRequest(id, projectPath, firmwarePath, device, tool, serial)), cancellationToken).ConfigureAwait(false);
+        }
+        finally { _buildOutput.TryRemove(id, out _); }
+    }
+
+    /// <summary>Opens MPLAB X for vendor on-chip debugging on the paired PC.</summary>
+    /// <param name="projectPath">Synchronized MPLAB project descriptor.</param>
+    /// <param name="cancellationToken">Stops the request.</param>
+    public Task<AppStarted> OpenMplabAsync(string projectPath, CancellationToken cancellationToken = default) =>
+        RequestAsync<AppStarted>(BridgeMethods.OpenMplab, BridgeJson.ToJson(new OpenMplabRequest(projectPath)), cancellationToken);
+
     /// <summary>Runs a built program on the PC.</summary>
     /// <param name="projectPath">The project it was built from.</param>
     /// <param name="program">The program.</param>

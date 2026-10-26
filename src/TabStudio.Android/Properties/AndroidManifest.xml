@@ -9,6 +9,15 @@
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
   <!-- Notifications when a GitHub Actions run finishes; Android 13 and later ask the user the first time. -->
   <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+  <!-- User-built APKs are installed through a session with Android's normal confirmation. -->
+  <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+  <!-- Find the launch activity of a newly installed app under Android 11+ package visibility rules. -->
+  <queries>
+    <intent>
+      <action android:name="android.intent.action.MAIN" />
+      <category android:name="android.intent.category.LAUNCHER" />
+    </intent>
+  </queries>
 
   <!--
     TabStudio Link: the camera scans a host's QR code, asked for only when the user taps Scan. Devices without a
@@ -16,6 +25,7 @@
   -->
   <uses-permission android:name="android.permission.CAMERA" />
   <uses-feature android:name="android.hardware.camera.any" android:required="false" />
+  <uses-feature android:name="android.hardware.usb.host" android:required="false" />
 
   <!-- The network security config lets the web preview load apps served on the device over plain HTTP. -->
   <!--

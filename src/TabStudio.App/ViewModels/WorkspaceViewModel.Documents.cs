@@ -82,6 +82,12 @@ public sealed partial class WorkspaceViewModel
         }
 
         Attach(document);
+        if (IsRemoteWorkspace)
+        {
+            document.SaveExternalAsync = token => _remoteWorkspace is { } remote
+                ? remote.SaveAsync(document.FilePath, token)
+                : Task.FromException(new IOException("Reconnect in Remote Explorer before saving remote files."));
+        }
         var index = ActiveDocument is null ? Documents.Count : Documents.IndexOf(ActiveDocument) + 1;
         Documents.Insert(index, document);
         ActiveDocument = document;
@@ -242,13 +248,16 @@ public sealed partial class WorkspaceViewModel
             await document.SaveAsync();
             StatusText = $"Saved {document.FileName}";
             OnDocumentSavedForTests(document);
-            OnDocumentSavedForLiveApp(document);
+            if (!await TryHotReloadOnSaveAsync(document)) OnDocumentSavedForLiveApp(document);
             OnDocumentSavedForSwarm(document);
             OnDocumentSavedForXamlDesigner(document);
             OnDocumentSavedForGenerators(document);
             OnDocumentSavedForLiveTesting(document);
             OnDocumentSavedForLanguageServer(document);
+            OnDocumentSavedForStaticSite(document);
+            OnDocumentSavedForProjectSetup(document);
             OnDocumentSavedForWindowsBridge(document);
+            RefreshPicCommands();
             await OnProjectFileSavedAsync(document);
             GitChanges.ScheduleRefresh();
             return true;
@@ -262,6 +271,8 @@ public sealed partial class WorkspaceViewModel
 
     private void Attach(DocumentViewModel document)
     {
+        document.LocalAI = LocalAI;
+        document.LocalAINeighbors = () => Documents.Where(d => !ReferenceEquals(d, document) && !d.IsExtensionsPage).Select(d => new TabStudio.Agent.Local.OpenFileContext(d.FilePath, d.Document.Text)).ToList();
         document.DiagnosticsChanged += OnDocumentDiagnosticsChanged;
         document.PropertyChanged += OnDocumentPropertyChanged;
         AttachDebugging(document);
@@ -273,6 +284,7 @@ public sealed partial class WorkspaceViewModel
 
     private void Detach(DocumentViewModel document)
     {
+        document.LocalAINeighbors = null;
         document.DiagnosticsChanged -= OnDocumentDiagnosticsChanged;
         document.PropertyChanged -= OnDocumentPropertyChanged;
         DetachDebugging(document);

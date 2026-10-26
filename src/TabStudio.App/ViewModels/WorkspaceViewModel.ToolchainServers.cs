@@ -80,7 +80,10 @@ public sealed partial class WorkspaceViewModel
     private ToolInstallOffer? FindToolOffer(string toolName, string? package)
     {
         var manager = _toolchains.Manager;
-        if (package is null || !manager.CanInstall || _toolchains.Catalog.ForTool(package) is not { Listed: true } toolchain)
+        var candidate = package == "clangd" && ActiveDocument is { } document
+            ? _toolchains.Catalog.ForFile(document.FilePath)
+            : package is null ? null : _toolchains.Catalog.ForTool(package);
+        if (package is null || !manager.CanInstall || candidate is not { Listed: true } toolchain)
         {
             return null;
         }

@@ -3,6 +3,7 @@ using TabStudio.App.Notebooks;
 using TabStudio.Compilation.Running;
 using TabStudio.Toolchains.Processes;
 using TabStudio.Toolchains.Runtimes;
+using TabStudio.Toolchains.Networking;
 
 namespace TabStudio.App.ViewModels;
 
@@ -38,7 +39,7 @@ internal static class OutputProcess
     /// <param name="input">Lines for its standard input, from <see cref="OutputViewModel.BeginProcessInput"/>, or <see langword="null"/> for none.</param>
     /// <param name="cancellationToken">Stops the program and everything it started.</param>
     /// <param name="started">Told the program once it started, before its output is read, such as for its process id.</param>
-    public static async Task<OutputProcessResult> RunAsync(IToolchainRuntime runtime, ProcessStartSpec spec, OutputViewModel output, ConsoleInput? input, CancellationToken cancellationToken, Action<ToolchainProcess>? started = null)
+    public static async Task<OutputProcessResult> RunAsync(IToolchainRuntime runtime, ProcessStartSpec spec, OutputViewModel output, ConsoleInput? input, CancellationToken cancellationToken, Action<ToolchainProcess>? started = null, Action<int>? listening = null)
     {
         ToolchainProcess process;
         try
@@ -57,9 +58,10 @@ internal static class OutputProcess
         using (cancellationToken.Register(process.Stop))
         using (var prompt = new PromptWatcher(output))
         {
+            using var ports = listening is null ? null : new ProcessPortWatcher(process, listening);
             var lines = new LineCollector();
-            var stdout = PumpAsync(process.Output, OutputKind.Program, output, lines, prompt);
-            var stderr = process.Error is { } error ? PumpAsync(error, OutputKind.Error, output, lines, prompt) : Task.CompletedTask;
+            var stdout = PumpAsync(process.Output, OutputKind.Program, output, lines, prompt, ports);
+            var stderr = process.Error is { } error ? PumpAsync(error, OutputKind.Error, output, lines, prompt, ports) : Task.CompletedTask;
             if (input is null)
             {
                 process.CloseInput();
@@ -78,7 +80,7 @@ internal static class OutputProcess
         }
     }
 
-    private static async Task PumpAsync(Stream stream, OutputKind kind, OutputViewModel output, LineCollector lines, PromptWatcher prompt)
+    private static async Task PumpAsync(Stream stream, OutputKind kind, OutputViewModel output, LineCollector lines, PromptWatcher prompt, ProcessPortWatcher? ports)
     {
         var decoder = Encoding.UTF8.GetDecoder();
         var bytes = new byte[8192];
@@ -101,6 +103,7 @@ internal static class OutputProcess
                     output.Write(text, kind);
                     lines.Add(text, kind);
                     prompt.Wrote(text);
+                    ports?.Feed(text, kind == OutputKind.Error);
                 }
             }
         }

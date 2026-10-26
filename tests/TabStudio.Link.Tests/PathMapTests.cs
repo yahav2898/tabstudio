@@ -1,6 +1,7 @@
 using TabStudio.Compilation.Features;
 using TabStudio.Core.Diagnostics;
 using TabStudio.Link.Language;
+using TabStudio.Debugging.Symbols;
 using TabStudio.Testing;
 
 namespace TabStudio.Link.Tests;
@@ -85,6 +86,24 @@ public sealed class PathMapTests
         Assert.Equal($"Source file '{AndroidRoot}/Program.cs' could not be found.", mapped.Message);
         Assert.Equal("Program.cs", mapped.FileName);
         Assert.Equal(AndroidRoot + "/Program.cs", map.ToClient(reference).FilePath);
+    }
+
+    [Fact]
+    public void Recorded_write_sites_follow_the_method_to_the_tablets_source_paths()
+    {
+        using var mirror = new TempDirectory();
+        var map = new LinkPathMap(AndroidRoot, '/', mirror.Path);
+        var source = map.ToHost(AndroidRoot + "/Program.cs")!;
+        var span = new DebugSourceSpan(source, 3, 5, 3, 8, 20, 3);
+        var method = new DebugMethod(1, "Run()", span, [])
+        {
+            WriteSites = new Dictionary<int, DebugSourceSpan> { [1] = span },
+        };
+        var mapped = map.ToClient(method);
+        Assert.Equal(AndroidRoot + "/Program.cs", mapped.Location.FilePath);
+        Assert.Equal(AndroidRoot + "/Program.cs", mapped.WriteSites[1].FilePath);
+        Assert.Equal(3, mapped.WriteSites[1].Line);
+        Assert.Equal(source, method.WriteSites[1].FilePath);
     }
 
     [Fact]

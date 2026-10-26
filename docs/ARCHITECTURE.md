@@ -38,6 +38,7 @@ Dependencies point down only. Each layer has one job:
 
 | Project | Responsibility | Depends on |
 | --- | --- | --- |
+| `TabStudio.Database` | SQLite, PostgreSQL and SQL Server schema readers, SQL execution, exports, paging, optimistic cell updates and configuration discovery. No UI or compiler dependency. | Microsoft.Data.Sqlite, Npgsql, Microsoft.Data.SqlClient |
 | `TabStudio.Core` | Reads solutions (`.sln`, `.slnx`) and projects (`.csproj`, `.vbproj`, `.fsproj`, `.vcxproj`) into an immutable workspace model, detects the technology stack of any folder, and decides where each project can run. | Nothing but the .NET base library |
 | `TabStudio.Compilation` | The C# language service: a live Roslyn model of the workspace, diagnostics, classification, IntelliSense (completion, Quick Info, signature help, navigation, references, rename, code actions, document symbols), in-memory builds and running programs in-process. | Core, Roslyn |
 | `TabStudio.Packages` | NuGet restore on the device: version resolution as NuGet does it, downloads from nuget.org or local feeds, the global packages folder and asset selection. | Core, NuGet.Versioning, NuGet.Frameworks |
@@ -49,6 +50,8 @@ Dependencies point down only. Each layer has one job:
 | `TabStudio.Link` | TabStudio Link: pairing, the TLS transport, QR codes, discovery, and the language protocol a host answers for a tablet. | Compilation, Debugging, LiveTesting |
 | `TabStudio.Web` | What a web app serves beyond its code: static web assets, scoped CSS, Blazor's scripts, and a host for .NET apps on WebAssembly. | Compilation, Packages |
 | `TabStudio.Wpf` | OpenSilver's in-process XAML compiler, WPF template and browser startup, on the WebAssembly host. | Compilation, Packages, Web |
+| `TabStudio.Porting` | Converts saved C# WPF and Windows Forms projects into sibling Avalonia projects, with generated support files and structured port notes. | Core, Roslyn |
+| `TabStudio.Remote` | SSH.NET connections, platform signing, SFTP source caches, remote processes, forwarding and publishing. | `TabStudio.Toolchains` |
 | `TabStudio.Toolchains` | The Toolchain Store: the catalog, Alpine Linux on PRoot, verified Alpine packages, processes and pseudo terminals, toolchain projects and the terminal emulator. | `TabStudio.Core` |
 | `TabStudio.Forms` | Windows Forms on Avalonia: `System.Windows.Forms` and `System.Drawing`, run in the app preview. | Avalonia |
 | `TabStudio.Forms.Design` | The Windows Forms designer's model: reads and writes `InitializeComponent`, the Toolbox and properties. | `TabStudio.Forms`, Roslyn |
@@ -282,12 +285,30 @@ Library tests cover the editing engine, headless IDE tests capture completion an
 `SelfTest.Wpf.cs` creates the template, presses F5 and reads rendered page text on Android after the Windows Forms
 and design checks and before Swarm, retaining every existing self-test step.
 
-The combined device self test installs Python, Node.js, Go, Rust, C/C++ and Java serially through the shared
-Toolchain Manager while the independent .NET and UI checks run. Package downloads use at most four streams,
-every package is still verified before the serial apk operation, and the batch measures shared disk usage once. It awaits all package operations before the
-native run/debug checks, observes cancellation on every exit, and retains every check under the 15-minute
-launch-to-verdict limit. CI permits one retry only for named failures outside the merged feature tests and
+The manual combined device self test installs Python, Node.js, Go, Rust, C/C++ and Java serially through the
+shared Toolchain Manager. CI runs three independent shards: managed owns Go/Rust, UI owns the app previews and
+input checks, and native owns Python/Node/C/C++/Java. Each installs only its own tools. UI restores its Avalonia
+workspace for scrolling and desktop input. Native checks the Android
+JIT capability boundary and runs all 200 process/GC checks before any package preparation. Package downloads use at most four
+streams; every package is verified before the serial apk operation, and each batch measures shared disk usage
+once. Each shard awaits its package operations before using the tools, observes cancellation on every exit,
+and retains every assertion under its own 15-minute launch-to-verdict limit. A required aggregate passes only
+when all three shards pass. CI permits one retry only for named failures outside the merged feature tests and
 keeps first-attempt logs and `FLAKY.txt` as artifacts for both pushes and pull requests.
+
+## Port to Avalonia
+
+`TabStudio.Porting` reads a project's saved files into `PortSource`. `AvaloniaPorter` dispatches to the WPF or
+Windows Forms converter: XAML/designer mappings and Roslyn code rewriting produce a `PortResult` in memory,
+including the Avalonia project and runtime support files. Unsupported or approximate mappings produce `PortNote`
+records with the original file, line, what changed and why. Writing the result uses a separate target directory;
+the original project is never rewritten.
+
+`WorkspaceViewModel.Porting` connects the Compatibility Doctor, Project menu and Solution Explorer action to the
+dialog. It adds the converted project through `SolutionFileEditor`, reloads the workspace, starts package restore
+and selects the result for F5. The summary links notes to their source lines and sends them as one agent task of
+proposed changes. Undo removes the solution entry and moves the converted folder, including subsequent edits,
+to app trash before restoring the previous startup project. See [PORTING.md](PORTING.md) for conversion limits.
 
 ## Debugging
 
@@ -309,6 +330,125 @@ itself. TabStudio's debugger works inside the program instead:
   they follow edits, move to the statement they bind to, and are saved with the session. Locals, Watch and
   Call Stack fill the bottom dock while paused, and DataTips evaluate the expression under the pointer or a
   long press. Package code is not instrumented, so stepping stays in your own code.
+
+## Hot Reload
+
+`TabStudio.Compilation/HotReload` uses Roslyn's public Edit and Continue emission APIs, not a rebuild-and-restart
+approximation. `CompiledAssembly.HotReloadCompilation` retains the exact Debug compilation that emitted its PE
+and portable PDB (including source generators or debugger instrumentation). It is excluded from JSON, so Link and
+Swarm's wire format is unchanged. `HotReloadBaseline` owns `ModuleMetadata`, the PE and PDB readers and the chained
+`EmitBaseline`. Its debug-information provider reads the EnC local-slot, lambda/closure and state-machine blobs;
+its local-signature provider reads the original method bodies. `EmitDifference` produces metadata, IL and PDB
+deltas. A prepared baseline advances only after `MetadataUpdater.ApplyUpdate` accepts its delta.
+
+`ProgramRunner.Loaded`, `DebugSession.Loaded` and `AvaloniaAppHost.EntryAssembly` identify the exact assembly of
+this run. A `HotReloadSession` checks its MVID and resolves referenced project assemblies in that same load
+context. Every changed project is validated before any deltas are applied. A runtime failure invalidates the
+session: cross-assembly ApplyUpdate is not transactional, so the user must restart rather than retry a potentially
+partial update. Disposing the run releases its retained compilations, PE/PDB readers and baselines. CoreCLR debug
+runs use a non-collectible context when metadata updates are enabled; Mono cannot unload assemblies in any case.
+
+**Commands and refresh.** The toolbar, **Debug > Apply C# Hot Reload** and **Alt+F10** build the current editor
+buffers, including unsaved edits, without changing the running/paused IDE state. **Debug > Hot Reload C# on Save**
+is opt-in. When it is off, live apps retain their existing restart-on-save behavior. F5/Continue while paused
+prepares the same instrumented build and only resumes after the edits succeed. A rude edit or compile error keeps
+the app/paused frame alive. The status bar and Output explain the problem; rude edits expose **Restart to apply
+edits**. Stop, restart and workspace disposal invalidate outstanding update work.
+
+After ApplyUpdate, the host discovers assemblies' `MetadataUpdateHandlerAttribute`s, calls every `ClearCache`
+before any `UpdateApplication` (including ASP.NET Core routing/reflection caches and Blazor's renderer handler),
+then refreshes the preview. Avalonia creates fresh main content from the **same** loaded assembly; application
+static state survives, while the recreated view and its view model start fresh. A web preview reloads its current
+page; the server, its port and its application state remain alive.
+
+**Runtime activation.** Desktop capability is checked with `MetadataUpdater.IsSupported`.
+`Directory.Build.props` sets `MetadataUpdaterSupport=true`, and the desktop launch profile and CI set
+`DOTNET_MODIFIABLE_ASSEMBLIES=debug` before startup. A manually launched desktop host needs the same environment.
+
+Android explicitly sets `AndroidUseInterpreter=false`. In the .NET 10 Android SDK this is a global packaging
+choice: the interpreter APK does not contain the normal JIT. The supported per-assembly `MtouchInterpreter`
+configuration belongs to Apple targets, not Android. We do not ship a custom Mono runtime to change that boundary.
+See Microsoft's [Android build properties](https://learn.microsoft.com/en-us/dotnet/android/building-apps/build-properties#androiduseinterpreter).
+The upstream [mixed-runtime discussion](https://github.com/dotnet/runtime/issues/106491) describes this limitation.
+The IDE, Roslyn, IntelliSense and editor therefore retain JIT execution. Local Android C# Hot Reload and Edit and
+Continue are deferred in 0.15; ordinary debugging, recording, Continue and restart-on-save remain available.
+The command is disabled, no Android update probe runs, and unsupported-runtime messages direct the user to restart.
+TabStudio Link provides compilation services and does not add a remote Hot Reload execution protocol.
+
+The previous interpreter startup settings in `build/android/hot-reload.env` are packaged only when
+`TabStudioInterpreterBenchmark=true`. The runtime comparison builds both modes from the same source, clears
+app data, and measures real F5-to-input and C# completion-popup latency on the same emulator. It records the
+first request and warm samples separately, including baseline failures; the production JIT measurement must pass.
+This opt-in diagnostic setting is absent from production APK builds. Inference uses the original native backend,
+without reverse-callback workarounds for the removed global interpreter.
+
+**Supported scope and rude edits.** Method, constructor, operator and accessor bodies, expression-bodied getters
+and top-level statements can be updated. For lambdas, local functions, async methods and iterators, only changes
+that preserve syntax topology, lambda/local-function signatures and variable/capture names and types are accepted,
+with a new-to-old syntax map preserving their identity. Roslyn's IDE rude-edit service is internal;
+`EmitDifference` assumes its caller has validated
+the edits. Our conservative analyzer therefore rejects changes to declarations, signatures, fields/initializers,
+attributes/imports, file/project sets and embedded resources, and forwards Roslyn's further EnC diagnostics.
+Instrumented debugging also requires stable method/statement ids and local slots; successful updates refresh
+the source map and rebind breakpoints. Structural changes offer a restart instead of risking a bad delta.
+
+ApplyUpdate does **not** move an active frame's instruction pointer or re-execute Main. Existing invocations
+finish their original IL and locals; later invocations use the new code. At a breakpoint before a helper call,
+editing that helper changes the output on Continue without a restart. A change to an already executing method
+itself appears on its next invocation. Startup/DI registration changes require a restart to execute again.
+The desktop host supports local console, Avalonia, ASP.NET Core and server-rendered/interactive-server Blazor. Standalone
+Blazor WebAssembly and WebAssembly/Auto client components run in a different browser Mono instance whose boot
+configuration currently disables metadata updates; these, remote Link/Swarm/Bridge runs and Release user builds
+still require a restart. An unsupported target/runtime reports this explicitly.
+
+**Verification.** Compilation tests exercise metadata/IL/PDB emission, async and lambda edits, rude edits, failed
+and abandoned generations and real ApplyUpdate across multiple generations with an existing delegate and static
+state. App tests drive unsaved console edits, save updates, Edit and Continue, the shortcut and an Avalonia view
+refresh in the same loaded assembly. Desktop tests call ApplyUpdate across multiple generations with static state
+preserved. The Android self test verifies that local Hot Reload is unavailable and the interpreter startup
+environment is absent, then runs all 200 process/GC assertions before the toolchain checks. Separate managed,
+UI and native emulator shards retain the other feature assertions, including nonempty real local-inference text.
+
+Run the feature's tests on CoreCLR with:
+
+```sh
+DOTNET_MODIFIABLE_ASSEMBLIES=debug dotnet test tests/TabStudio.Compilation.Tests --filter FullyQualifiedName~HotReload
+DOTNET_MODIFIABLE_ASSEMBLIES=debug dotnet test tests/TabStudio.App.Tests --filter FullyQualifiedName~HotReload
+```
+### C# recording and history
+
+`DebugSession(build, RecordingOptions)` opts into `DebugRecording`; an ordinary session has no recorder or ring.
+The default is a 64 MiB binary ring, configurable under **Debug > Recording Buffer** (1–512 MiB in the UI).
+`OnStep` requests the existing locals payload at every sequence point while recording. The rewriter also wraps
+boxable assignments, initializers and increments in typed value-preserving `Write` / `PostWrite` hooks, so a write
+of an unchanged value is still an event, including the last statement of a function. The runtime sink contract is
+version 2; slot 8 is the optional write delegate. No delegate means the generic hook returns its original result
+without allocating a recording payload.
+
+Each format-v1 record contains a version byte, sequence number, managed thread id, actual-breakpoint-hit flag,
+optional written path, and logical frames (invocation id, method/statement ids, shallow named values).
+Write-expression sites live separately on each `DebugMethod`; negative statement ids in records select those
+locations, preserving loop incrementor locations without introducing extra breakpoint or coverage targets.
+Integers use 7-bit encoding where appropriate; strings use BinaryWriter's length-prefixed UTF-8. All source
+locations come from the original debug map. Records are independent snapshots: eviction never leaves a delta
+without its baseline. The ring wraps byte ranges and evicts complete records. The index is bounded by retained
+record count and periodically compacted; transient encoding/decoding and active-frame state are additional memory.
+Oversized events are dropped with a visible counter. Weak object identities do not keep the debuggee alive.
+Scalar values and full strings are copied; objects have an identity and their primitive/string fields,
+including private fields, captured without property getters, collection enumeration or user `ToString`.
+
+The live engine pause stays separate from `HistoricalPause`. Navigation is allowed only while paused or exited;
+it never mutates program memory or replays I/O. Step Back follows invocation identities over child calls (also
+across await continuations); Back Into and the timeline can inspect every retained event. Reverse Continue uses
+breakpoint hits whose conditions matched, plus a derivable unhandled exception's faulty write. Division operands
+and null receivers are recorded as conservative symbol paths; ambiguous/unsupported causes are not guessed.
+The UI retains the recording after disposing the finished session, and marks inspector trees and stack frames
+historical. F5 resumes the actual live pause. A new run clears the previous history.
+
+`RecordingFormatTests`, `RecordingTests`, App command tests, a dark/light `debug-06-recording-timeline` screenshot,
+and `SelfTest.RecordSampleAsync` cover the wire format, wrapping/eviction, write semantics, navigation, crash cause,
+and history on the Android emulator. See [time-travel debugging](debugging/time-travel.md) for usage, limits and the
+reproducible overhead measurement.
 
 ## Tests
 
@@ -426,6 +566,32 @@ tablet or a PC. Programs, tests and the debugger still run on the tablet; the ho
   gives the tablet code execution on the host; the host's Link window says so, and asks to pair only tablets you own. Mirror paths
   are validated, so a tablet cannot write outside its own mirror folder.
 
+## SSH remote development
+
+`TabStudio.Remote` depends on Core/Toolchains and SSH.NET. `SshConnection` owns separately authenticated SSH and SFTP
+clients with the same pinned SHA256 server fingerprint. Unknown fingerprints require a first-use prompt; changed
+fingerprints abort before authentication. `ISshKeyStore` is injected by the platform: `AndroidSshKeyStore` generates
+RSA keys inside Android Keystore and supplies non-exportable RSA SHA-2 signing callbacks through `SigningKeySource`;
+`FileSshKeyStore` supplies the desktop implementation. No private keys enter host or publish profiles.
+
+`RemoteWorkspace` maps an absolute remote root to a device cache used by the existing workspace loader, explorer,
+editor and search. It bounds traversal, excludes links/generated directories, persists downloaded content baselines,
+checks conflicts before saves and replaces uploaded files through OpenSSH POSIX rename. `DocumentViewModel` awaits
+its external-save callback before marking a remote document clean. Failed uploads keep edits dirty. Cache markers
+prevent reopened/disconnected remote folders from falling back to local builds or terminals. Literal content search
+uses the source cache and navigates matches through the normal document navigation service.
+
+`SshRuntime` adapts SSH exec channels and ShellStream PTYs to `ToolchainProcess`, reusing OutputProcess and the
+Terminal emulator. F5/Build are routed through the remote folder's saved shell commands; diagnostic paths map back
+to source cache files. `PortForward` binds only device loopback and forwards to remote loopback, with ownership tied
+to the workspace. `RemoteExplorerViewModel` exposes hosts, config import, profiles, search, refresh and forwarding.
+
+Publishing invokes the local SDK (offering Alpine dotnet10-sdk installation on tablets), stages successful publish
+output with SFTP into a new release directory, switches `current` atomically, restarts the configured systemd unit
+and restores the old link on activation failure. The unit and scoped sudo policy are server-admin prerequisites.
+See [REMOTE_SSH.md](REMOTE_SSH.md) for protocol/import limits and operational setup. CI's SSH integration job runs
+library and App tests against an OpenSSH container; Android self-test exercises the native signing provider.
+
 ## Toolchains
 
 `TabStudio.Toolchains` runs languages other than C# from the Toolchain Store. Its catalog (`toolchains.json`)
@@ -456,6 +622,27 @@ adapter it brings.
   environment and paths are translated between the device and the environment. A missing server or adapter offers
   to install the toolchain that brings it. For F5, a project's run plan becomes a DAP launch configuration, and the
   program's input and output stay in the Output panel through its adapter's terminal or runtime streams.
+
+### Repository setup and static web sites
+
+After project detection, `WorkspaceViewModel.ProjectSetup` queues the detected toolchains and their package
+installs when **Set projects up when they open** is enabled, the default. `ProjectSetupStore` atomically keeps
+the setting and successful manifest/lock-file fingerprints in `State/project-setup.json`. Python uses a project
+`.venv`; a fresh npm install uses `npm ci` when a lock file is available, while a changed manifest can update its
+install and lock. `NodeWorkspaces.DependencyOwner` shares installation at a declared workspace root without
+removing member run targets. F5 awaits setup; saves during installation queue another pass, and status-bar/Output
+progress is cancellable. Remote workspaces and unrelated .NET-only workspaces do not start this setup path.
+
+`StaticSiteDetector` recognizes an `index.html` folder without a .NET project or a Node package that runs the site.
+The app adds a `StaticWebSite` startup project. F5 starts `StaticSiteServer` from `TabStudio.Web` on loopback and
+opens the existing web preview. Its injected script receives server-sent events from save notifications: linked
+stylesheets are replaced after the new sheet loads, preserving page state; other changes and unmatched stylesheets
+reload the page. Stop closes the listener and event streams.
+
+The Node.js catalog setup installs `vscode-langservers-extracted@4.10.0`. Its HTML, CSS and JSON stdio servers are
+registered as additional Node tools and launched through `ToolchainServerLauncher`, using the built-in LSP
+configuration for completion, formatting and scoped validation settings. Static sites request Node.js for these
+servers even though serving the site itself does not need Node.
 
 ### Go
 
@@ -522,6 +709,47 @@ its returned port and uses the run plan's main class and classpath. `runInTermin
 IDE and emulator tests cover the Maven template, a breakpoint and Locals; additional IDE tests cover both Gradle
 DSLs and standalone sources.
 
+## Local listeners and mobile builds
+
+`ListeningPorts` parses Linux TCP/TCP6 LISTEN rows and associates socket inodes with the launched process tree.
+PRoot shares the Android network namespace. `ProcessPortWatcher` also parses complete stdout/stderr lines for
+local HTTP URLs and explicit listen messages, preserving chunks and deduplicating ports. Android may deny the
+socket tables; output is the fallback. `OutputProcess` wires both normal and adapter-launched programs to the
+workspace notice. Its actions use the existing `WebPreviewViewModel` or platform URI launcher.
+
+`GradleAndroidProject` recognizes settings.gradle(.kts) roots with the Android application plugin in Gradle
+files or a version catalog, excluding comments, dependency folders and JVM-only projects. `MobileTemplates`
+provides the exact Kotlin template compiled by the ARM64 Alpine CI job. Capacitor remains a Node startup project;
+its Android command builds the web app, adds/syncs Android and follows the same Gradle path. Android diagnostic
+locations become Error List entries. The runtime plan prefers a repository wrapper and overrides Maven's x86
+AAPT2 on Linux. The Store filters architecture-specific setup steps before downloading and checking fingerprints.
+
+The Android head implements `IAndroidAppInstaller` using a PackageInstaller session, an explicit callback receiver,
+REQUEST_INSTALL_PACKAGES and the system's unknown-source/installation confirmations. Success is awaited before
+launch. Cancellation abandons an incomplete session. Logcat cannot read another UID on an unprivileged device:
+`AndroidLogcatRelay` generates a debug-only ContentProvider via a Gradle init script beneath build/. It runs logcat
+as the target app, filters by its PID, and sends lines over authenticated loopback TCP to a separate bounded Output
+model. Original sources/manifests and release variants are not instrumented. No READ_LOGS or root is requested.
+
+`IosWorkflowGenerator` in SourceControl produces dispatch-only macOS YAML and secret documentation. Repository
+paths and schemes enter shell steps through quoted environment variables. Signing is confined to a temporary
+keychain, uses GitHub secrets, cleans up in an always step, publishes the IPA artifact and optionally uploads to
+TestFlight. The IDE writes the workflow and opens its setup guide; dispatch, progress, logs and artifacts use the
+existing Actions window. First dispatch requires the workflow on GitHub's default branch.
+## Embedded: Microchip PIC
+
+`TabStudio.Toolchains/Microchip` adds MPLAB configuration/DFP parsing, memory/diagnostic readers, user-owned XC installation and native PIC helpers. Store entries XC8 4.00 and XC32 6.00 require explicit Microchip licence acceptance before compiler downloads. Official installers/distributions and per-device DFPs are pinned by SHA-256; no Microchip compiler, pack, programmer firmware or device database is redistributed.
+
+The ARM64 APK carries Box64 0.4.4, built from pinned source with regression-tested static-heap and clone-context fixes and 16 KiB segment alignment. PRoot's existing loader maps it, alongside separately extracted Debian ARM64/amd64 glibc runtimes. Android never loads it into Bionic with `dlopen`. XC8 uses dynamic translation; XC32 uses the interpreter mode proven in the ARM64 spike. Alpine keeps its musl loader. The selected MPLAB generated makefile remains the source of build options, libraries and custom steps; missing makefiles or mismatched compiler/pack versions produce an explicit failure. clangd's editor database uses the selected headers and queried XC predefinitions; it never builds firmware.
+
+Android's `IUsbHost` requests USB permission and owns `UsbDeviceConnection`. `ProcessStartSpec.InheritedDescriptors` is an explicit one-device parent-to-child mapping through `posix_spawn` and PRoot. The original descriptor retains close-on-exec; only the worker receives fd 3. A native Alpine libusb context disables discovery and wraps that descriptor with `libusb_wrap_sys_device`. A scoped native preload adapter gives legacy CLIs the same single-device view. Disconnect/cancellation ends the worker before closing the parent connection.
+
+Native Python workers implement AN1388 HID/UART and MCC/UBHA UART framing, bounded HEX validation and verification. Programmer compatibility is explicit: pymcuprog PIC uses supported PKOB nano parts/DFP scripts; unsupported PICkit 4/5/Snap PIC targets use the Bridge. Native pk2cmd requires its separate restrictive licence and a user-owned pinned database; pic32prog handles its upstream PIC32/PICkit 2/3 subset. The independent serial panel supports CDC-ACM, CH340, CP210x and FTDI.
+
+The gpsim DAP adapter runs a native headless simulator, reads XC8 ELF/DWARF separately, synchronizes CLI commands with unique markers, and exposes source/instruction breakpoints, stepping, CPU registers and SFRs. It refuses unsupported MCU models; no similar-device substitution is made. On-chip debugging opens the synchronized project in the PC's installed MPLAB X through the Windows Bridge. Bridge builds use `prjMakefilesGenerator` and vendor make; programming/verification uses `ipecmd` with an explicit tool/optional serial.
+
+The mandatory compiler CI matrix runs real ARM64 and x86-64 Ubuntu hosts inside Alpine/PRoot, emits linked HEX images, compares timing and hashes, and also invokes the production MPLAB driver. Native helper CI builds aarch64-musl tools and tests gpsim DAP with supported-model XC8 firmware. A disposable debuggable emulator APK tests the app-UID PRoot/Box64 path when available. Protocol fixtures identify independent reference-encoder recordings versus physical captures; no physical programmer is attached to CI. See [PIC.md](PIC.md) for measurements, model/device lists and limits.
+
 ## Swarm
 
 `TabStudio.Swarm` runs the app being built on every device that joins the tablet's swarm. Devices join through
@@ -556,6 +784,16 @@ rename, formatting, code actions, symbols and folding the C# editor uses; a debu
 breakpoints, Locals, Watch, Call Stack and DataTips. `.tabstudio/settings.json` configures servers per folder and
 `.tabstudio/launch.json` holds launch configurations in VS Code's format. Servers and adapters start through
 `IServerProcessLauncher`, which the Toolchain Store implements on the tablet.
+
+An orderly connection EOF during `initialize` uses the same bounded restart budget and backoff as a later server
+crash. Readiness and queued commands stay pending across those attempts, and the restarted server receives the
+latest document text. Initialization rejection, protocol/read errors, timeouts and missing launchers still fail;
+closing the workspace cancels recovery. Startup failures retain available exit codes and completed stderr.
+
+On disposable GitHub emulators, the smoke script uses Android's `hide_error_dialogs` setting, as Chromium's
+emulator setup does, so another system app's ANR dialog cannot steal the self test's injected input. Manual
+device runs keep their normal dialog policy. Every functional assertion, app-liveness check and shard deadline
+remains required; the setting does not turn an app crash or missing verdict into a pass.
 
 ## Extensions
 
@@ -695,3 +933,29 @@ design keeps the second part proportional to what you are actually editing:
 ## Code conventions
 
 See [CONTRIBUTING.md](../CONTRIBUTING.md) for code style, tests and how CI reports results.
+
+## Database Explorer
+
+`TabStudio.Database` owns provider-neutral connection and schema records. `SchemaReader` uses SQLite's catalog and table/index/foreign-key pragmas, PostgreSQL's information schema and `pg_catalog`, and SQL Server's information schema and `sys` catalog. A fresh connection targets each selected database, so schemas and IntelliSense stay scoped to that database. The Explorer loads other databases when expanded; Refresh rereads the catalog. SqlClient is pinned to 7.0.3: its Unix assembly contains only managed SNI, whereas the 7.1 unified assembly initializes Windows native SNI on Mono. Android also enables managed networking at startup and in runtime configuration using the historically named `Switch.Microsoft.Data.SqlClient.UseManagedNetworkingOnWindows` switch. The device self-test opens a refused loopback port with both network providers so this dependency regression cannot silently return.
+
+`SqlExecutor` opens and disposes an ADO.NET connection/command/reader per execution on a worker thread, including SQLite's synchronous implementation of its async API. Cancellation registers `DbCommand.Cancel`; SQLite uses `sqlite3_interrupt` because its command cancellation method does nothing. Readers consume every result set, storing at most 5,000 rows per set and 32 displayed sets. Each tab owns its cancellation lifetime. JSON exports preserve duplicate column names and SQL NULL as separate columns and row arrays; CSV uses invariant formatting and quotes/escapes every field.
+
+`TableEditor` issues ordered, dialect-specific pages with one extra row to determine whether Next exists. Primary keys order editable tables; views and keyless tables are read-only. Cell updates quote identifiers, parameterize values, and check the primary key plus the original comparable row values in a transaction. Zero or multiple affected rows roll back. SQL Server's text/ntext/image/xml columns cannot be compared and are excluded from the concurrency predicate. Paging is not a snapshot across concurrent inserts/deletes.
+
+The app owns the Explorer and its EF Core pane; SQL and table pages use the normal document host and dispose with their tabs. Query text can be saved to the app's SQL query folder; passwords are never part of a query document or session state. `ConnectionStore` writes only ID/name/provider metadata. Its `IDatabaseSecretStore` holds the entire connection string. Android replaces the session-only desktop store with AES-GCM encryption using a non-exportable AndroidKeyStore key, authenticated per connection ID; ciphertext lives in `NoBackupFilesDir`. There is no plaintext fallback. Connection discovery is local and opt-in, skips build/dependency folders and directory symlinks, resolves SQLite paths beside configuration, and only reads user-secret IDs present in solution projects.
+
+EF Core's panel selects both a migrations project and a startup project. The workspace saves edits, waits for its normal package restore and invokes `ILanguageService.BuildAsync`. It restores matching `Microsoft.EntityFrameworkCore.Design` tools to the app cache if needed, loads build images and runtime packages into `LoadedProgram`, and enters contextual reflection. `EfCoreOperations` calls the same `OperationExecutor` operations as dotnet-ef without starting a process or running Main. `IDesignTimeDbContextFactory<T>` is supported; configuration arguments include the startup project's content root. Context and migration lists are materialized before unloading. Scaffolding writes EF's migration, designer and snapshot files and reloads the workspace. EF's synchronous design API has no cancellation token: builds/restores can cancel before invocation, and a started migration operation runs to completion.
+
+Library tests cover SQLite schema details, quoting, multi-result queries, cancellation, paging, stale updates, export formats, secret separation and discovery. The libraries CI job supplies PostgreSQL 17 and requires its integration test. App tests drive selection execution in the real shell, render screenshots, and exercise an actual in-memory EF build/scaffold/rebuild/update round trip. The Android self-test saves, decrypts and removes a Keystore connection and checks SQLite schema and two result sets.
+
+## On-device AI
+
+`IAgentClient` separates `AgentSession` and its proposal overlay from the inference transport. Claude still uses `AnthropicClient`; Local mode uses `LocalAgentClient` over `ILocalTextGenerator`. Local mode never creates Anthropic/MCP clients. Its allowlist is `list_files`, `read_file`, `edit_file` and `create_file`; there is no shell, network, deletion, build or test execution. It can generate tests as proposed files. Tool JSON is validated against the actual allowlist, and all edits use the existing `WorkspaceTools` / `ChangeSet` approval path. Images are rejected explicitly. Plain answers stream; tool JSON is buffered until valid. The small model context fits bounded whole recent messages and tool results, with six tool rounds per turn.
+
+`native/local-ai` pins llama.cpp b6000 (`4762ad7…`) behind a small C ABI: load, generate, cancel and free. The runtime's version-specific structures stay in C++. `NativeTextGenerator` uses UTF-8 P/Invoke and serializes calls, joins incomplete UTF-8 token pieces, propagates cancellation through the decoder's abort callback and bounds context to 4096 tokens. Android packages `libtabstudio-ai.so` inside the APK for arm64 and the x64 emulator, statically linking llama/ggml/C++ and using 16 KB load alignment. There is no writable executable, PRoot process, listening socket or inference HTTP client. ARM64 includes NEON; CPU inference is the portable baseline. `TABSTUDIO_AI_VULKAN=1` builds the optional Vulkan backend when the build host has a Vulkan SDK.
+
+`LocalAIService` owns one model/context for the app and shares it between chat and completion. It lazily verifies the stored model before loading, unloads before deletion, cancels on memory pressure and releases model memory on demand. Model files live under `LocalAI/models` in private app storage. `ModelManager` uses a separate download-only HTTP client; the curated catalog pins repository revisions, sizes, SHA-256 hashes and full licenses. A download is opt-in after license acceptance; it streams to `.partial`, verifies size/hash, atomically renames, and removes partial data after cancellation/failure. Inference never downloads, updates, or falls back to the cloud. RAM is an estimate, while speed is measured and stored per model on the current device.
+
+`FimPromptBuilder` uses Qwen's FIM vocabulary and a UTF-8 byte budget for the current prefix/suffix plus three unsaved open neighbors. `InlineCompletionController` waits 450 ms after editing, cancels pending work and rejects stale responses even if the generator ignores cancellation. Every `CodeEditorView` can render the proposal through a zero-document-length `GhostTextGenerator`; Tab inserts it as a single undo group. Typing, movement, selection, loss of focus and Escape clear it. No language service is required. Background completions do not queue behind an occupied chat engine. Android's existing thermal state and sticky battery broadcasts pause completions when hot or at 15% charge or lower without external power.
+
+`local-ai.yml` compares native/server inference on x64 and ARM64 Linux and the Android emulator, then runs the managed real-model tests. Fake-server tests cover the completion protocol; other tests cover FIM, model integrity, licenses, proposal confinement and ghost-text input. The main emulator APK bundles the verified 260K diagnostic model only with `TabStudioIncludeLocalAITestModel=true`; its in-app self-test loads the model through P/Invoke and must generate tokens. Regular APKs carry no model. See [the spike](local-ai/spike.md) for measured results and limitations.

@@ -5,6 +5,8 @@ using CommunityToolkit.Mvvm.Input;
 using TabStudio.Agent;
 using TabStudio.Agent.Anthropic;
 using TabStudio.Agent.Mcp;
+using TabStudio.Agent.Local;
+using TabStudio.App.Services.LocalAI;
 using TabStudio.Agent.Tools;
 using TabStudio.App.Services;
 using TabStudio.App.Services.Agent;
@@ -21,6 +23,7 @@ public sealed partial class AgentPanelViewModel : ObservableObject, IDisposable
     private readonly HttpClient _http;
     private readonly IUiDispatcher _ui;
     private readonly IAgentWorkspace _workspace;
+    private readonly LocalAIService? _localAI;
     private AgentSettings _settings;
     private AgentSession? _session;
     private CancellationTokenSource? _turn;
@@ -30,7 +33,7 @@ public sealed partial class AgentPanelViewModel : ObservableObject, IDisposable
     /// <param name="http">The HTTP client for Claude and MCP servers.</param>
     /// <param name="ui">The UI dispatcher.</param>
     /// <param name="workspace">The workspace the agent works on.</param>
-    public AgentPanelViewModel(AgentSettingsStore settingsStore, HttpClient http, IUiDispatcher ui, IAgentWorkspace workspace)
+    public AgentPanelViewModel(AgentSettingsStore settingsStore, HttpClient http, IUiDispatcher ui, IAgentWorkspace workspace, LocalAIService? localAI = null)
     {
         ArgumentNullException.ThrowIfNull(settingsStore);
         ArgumentNullException.ThrowIfNull(http);
@@ -40,9 +43,11 @@ public sealed partial class AgentPanelViewModel : ObservableObject, IDisposable
         _http = http;
         _ui = ui;
         _workspace = workspace;
+        _localAI = localAI;
+        LocalAI = localAI is null ? null : new LocalAIViewModel(localAI, ui);
         _settings = settingsStore.Load();
         LoadSettingsFields();
-        IsSettingsOpen = !_settings.HasApiKey;
+        IsSettingsOpen = !_settings.HasApiKey && !_settings.LocalMode;
     }
 
     /// <summary>Raised when the conversation grows, so the view can follow the newest text.</summary>
@@ -112,14 +117,31 @@ public sealed partial class AgentPanelViewModel : ObservableObject, IDisposable
     public IReadOnlyList<string> Models { get; } = AgentSettings.Models;
 
     /// <summary>The model in use, for the header.</summary>
-    public string ModelLabel => _settings.Model;
+    public string ModelLabel => _settings.LocalMode ? "Local · on this device" : _settings.Model;
+
+    /// <summary>True only for a session with no cloud or MCP transport.</summary>
+    public bool IsLocalMode => _settings.LocalMode;
+
+    /// <summary>The explicit on-device privacy indicator.</summary>
+    public string PrivacyBadge => _settings.LocalMode ? "LOCAL · Code and prompts stay on device" : "Claude · Cloud";
+
+    /// <summary>The local model manager.</summary>
+    public LocalAIViewModel? LocalAI { get; }
+
+    /// <summary>The edited provider selection; applied by Save.</summary>
+    [ObservableProperty]
+    public partial bool UseLocalMode { get; set; }
 
     /// <summary>Whether an API key is set.</summary>
     public bool HasApiKey => _settings.HasApiKey;
 
+    /// <summary>Whether the current provider can be used without editing settings.</summary>
+    public bool HasConfiguredProvider => _settings.LocalMode || _settings.HasApiKey;
+
     /// <summary>Stops the agent if it is working.</summary>
     public void Dispose()
     {
+        LocalAI?.Dispose();
         _turn?.Cancel();
         _turn?.Dispose();
         _turn = null;
@@ -155,12 +177,17 @@ public sealed partial class AgentPanelViewModel : ObservableObject, IDisposable
             return;
         }
 
-        if (!_settings.HasApiKey)
+        if (!_settings.LocalMode && !_settings.HasApiKey)
         {
             IsSettingsOpen = true;
             return;
         }
 
+        if (_settings.LocalMode && HasAttachment)
+        {
+            ErrorText = "Local mode supports text. Remove the screenshot to continue on device.";
+            return;
+        }
         ErrorText = null;
         InputText = string.Empty;
         var images = TakeAttachment(out var attachment);
@@ -171,6 +198,7 @@ public sealed partial class AgentPanelViewModel : ObservableObject, IDisposable
         _turn = new CancellationTokenSource();
         try
         {
+            if (_settings.LocalMode && _localAI is null) throw new InvalidOperationException("Local AI is unavailable in this workspace.");
             var session = _session ??= await CreateSessionAsync(_turn.Token);
             var result = await session.SendAsync(text, images, _turn.Token);
             await ShowQueuedEventsAsync();
@@ -189,7 +217,7 @@ public sealed partial class AgentPanelViewModel : ObservableObject, IDisposable
 
             UsageText = FormatUsage(session.Usage);
         }
-        catch (Exception ex) when (ex is AnthropicException or McpException or InvalidOperationException or HttpRequestException)
+        catch (Exception ex) when (ex is AnthropicException or McpException or InvalidOperationException or HttpRequestException or IOException or UnauthorizedAccessException)
         {
             ErrorText = ex.Message;
             if (ex is AnthropicException { IsAuthenticationError: true })
@@ -293,7 +321,7 @@ public sealed partial class AgentPanelViewModel : ObservableObject, IDisposable
     private void CancelSettings()
     {
         LoadSettingsFields();
-        IsSettingsOpen = !_settings.HasApiKey;
+        IsSettingsOpen = !_settings.HasApiKey && !_settings.LocalMode;
     }
 
     [RelayCommand]
@@ -312,21 +340,31 @@ public sealed partial class AgentPanelViewModel : ObservableObject, IDisposable
             servers.Add(new McpServerSetting(parts[0], parts[1], parts.Length > 2 ? parts[2] : null));
         }
 
+        if (IsBusy) { ErrorText = "Stop the current conversation before changing provider."; return; }
         _settings = new AgentSettings(
             string.IsNullOrWhiteSpace(ApiKeyText) ? null : ApiKeyText.Trim(),
             string.IsNullOrWhiteSpace(SelectedModel) ? AnthropicClient.DefaultModel : SelectedModel,
             string.IsNullOrWhiteSpace(InstructionsText) ? null : InstructionsText.Trim(),
-            servers);
+            servers, UseLocalMode);
         _settingsStore.Save(_settings);
         _session = null;
+        Items.Clear();
+        Changes.Clear();
+        UsageText = string.Empty;
+        OnPropertyChanged(nameof(IsEmpty));
+        OnChangesChanged();
         ErrorText = null;
-        IsSettingsOpen = !_settings.HasApiKey;
+        IsSettingsOpen = !_settings.HasApiKey && !_settings.LocalMode;
         OnPropertyChanged(nameof(ModelLabel));
         OnPropertyChanged(nameof(HasApiKey));
+        OnPropertyChanged(nameof(HasConfiguredProvider));
+        OnPropertyChanged(nameof(IsLocalMode));
+        OnPropertyChanged(nameof(PrivacyBadge));
     }
 
     private void LoadSettingsFields()
     {
+        UseLocalMode = _settings.LocalMode;
         ApiKeyText = _settings.ApiKey ?? string.Empty;
         SelectedModel = _settings.Model;
         InstructionsText = _settings.Instructions ?? string.Empty;
@@ -335,6 +373,15 @@ public sealed partial class AgentPanelViewModel : ObservableObject, IDisposable
 
     private async Task<AgentSession> CreateSessionAsync(CancellationToken cancellationToken)
     {
+        if (_settings.LocalMode)
+        {
+            if (_localAI is null) throw new InvalidOperationException("Local AI is unavailable in this workspace.");
+            var local = new AgentSession(new LocalAgentClient(_localAI, _settings.Instructions), _workspace,
+                new AgentOptions(Model: _localAI.SelectedModelId, MaxToolRounds: 6, MaxTokens: 768, Instructions: _settings.Instructions), allowedTools: LocalAgentClient.AllowedTools);
+            local.Event += (_, e) => _ui.Post(() => OnAgentEvent(e));
+            local.Changes.Changed += (_, _) => _ui.Post(SyncChanges);
+            return local;
+        }
         var tools = new List<AgentTool>();
         foreach (var server in _settings.McpServers)
         {

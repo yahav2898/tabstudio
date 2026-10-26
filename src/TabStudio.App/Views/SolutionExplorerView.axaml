@@ -39,6 +39,7 @@
                 <MenuItem Header="Open" Command="{Binding OpenCommand}" IsVisible="{Binding IsFile}" />
                 <MenuItem Header="New File..." Command="{Binding NewFileCommand}" IsVisible="{Binding CanCreateChildren}" />
                 <MenuItem Header="New Folder..." Command="{Binding NewFolderCommand}" IsVisible="{Binding CanCreateChildren}" />
+                <MenuItem Header="Port to Avalonia…" Command="{Binding PortToAvaloniaCommand}" IsVisible="{Binding CanPortToAvalonia}" />
                 <MenuItem Header="Set as Startup Project" Command="{Binding SetAsStartupProjectCommand}" IsVisible="{Binding CanBeStartupProject}" />
                 <MenuItem Header="Live Unit Testing" IsVisible="{Binding CanSetLiveTesting}">
                   <MenuItem Header="Include" Command="{Binding IncludeInLiveTestingCommand}" />

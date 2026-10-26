@@ -31,6 +31,20 @@ public sealed class DebugValue
         _children = new Lazy<IReadOnlyList<DebugValue>>(() => inspector.GetChildren(value));
     }
 
+    // Historical values contain no debuggee references and never invoke getters or ToString.
+    internal DebugValue(string name, string type, string display, IReadOnlyList<DebugValue> children)
+    {
+        Name = name;
+        IsHistorical = true;
+        _value = new(() => display);
+        _type = new(() => type);
+        _hasChildren = new(() => children.Count > 0);
+        _children = new(() => children);
+    }
+
+    /// <summary>Whether this is an immutable recorded value rather than a live object.</summary>
+    public bool IsHistorical { get; }
+
     /// <summary>The name: a variable name, <c>this</c>, a member name or an index such as <c>[0]</c>.</summary>
     public string Name { get; }
 

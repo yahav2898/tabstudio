@@ -90,6 +90,9 @@ public sealed class RunPlannerTests : IDisposable
         Assert.All(steps, s => Assert.Equal(_workspace.Path, s.WorkingDirectory));
 
         Directory.CreateDirectory(_workspace.Resolve(".venv"));
+        Assert.True(RunPlanner.IsPending(project, dependency));
+        Assert.Equal(2, RunPlanner.PlanDependencies(project, dependency).Count);
+        _workspace.Write(".venv/bin/python");
         Assert.False(RunPlanner.IsPending(project, dependency));
         Assert.Single(RunPlanner.PlanDependencies(project, dependency));
     }

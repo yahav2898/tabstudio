@@ -26,6 +26,9 @@ public enum BridgeToolchainKind
 
     /// <summary>netcoredbg, the debug adapter for .NET apps.</summary>
     Debugger,
+
+    /// <summary>Microchip MPLAB X IDE and IPE.</summary>
+    MplabX,
 }
 
 /// <summary>An SDK or tool the bridge found on the PC.</summary>
@@ -62,6 +65,12 @@ public enum BridgeCapabilities
 
     /// <summary>Debugging .NET apps with netcoredbg.</summary>
     DebugDotNet = 64,
+
+    /// <summary>MPLAB X project builds with its generated makefiles.</summary>
+    MplabX = 128,
+
+    /// <summary>Programming and verification through Microchip's IPE command line.</summary>
+    PicProgramming = 256,
 }
 
 /// <summary>Whether the PC can serve the tablet right now.</summary>

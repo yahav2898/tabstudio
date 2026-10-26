@@ -8,6 +8,42 @@ namespace TabStudio.Toolchains.Tests.Installation;
 public sealed class ToolchainBatchTests
 {
     [Fact]
+    public async Task One_batch_fetches_each_signed_repository_index_once()
+    {
+        using var device = new FakeDevice();
+
+        await device.Manager.InstallManyAsync(["shared", "hello"]);
+
+        Assert.True(device.Manager.IsReady("shared"));
+        Assert.True(device.Manager.IsReady("hello"));
+        Assert.Equal(2, device.Mirror.Server.Requests.Count(r => r.Contains("APKINDEX.tar.gz", StringComparison.Ordinal)));
+        Assert.Equal(2, device.Apk.Calls.Count);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task A_later_install_refreshes_the_index_again(bool anotherBatch)
+    {
+        using var device = new FakeDevice();
+        await device.Manager.InstallManyAsync(["shared"]);
+        device.Mirror.Server.Requests.Clear();
+        device.Mirror.Add("community", "hello-tools", "3.0-r0");
+
+        if (anotherBatch)
+        {
+            await device.Manager.InstallManyAsync(["hello"]);
+        }
+        else
+        {
+            await device.Manager.InstallAsync("hello");
+        }
+
+        Assert.Equal("3.0-r0", device.Packages.Installed.Packages.Single(p => p.Name == "hello-tools").Version);
+        Assert.Equal(2, device.Mirror.Server.Requests.Count(r => r.Contains("APKINDEX.tar.gz", StringComparison.Ordinal)));
+    }
+
+    [Fact]
     public async Task Installs_every_distinct_toolchain_and_measures_the_shared_tree_once()
     {
         using var device = new FakeDevice();
@@ -43,6 +79,7 @@ public sealed class ToolchainBatchTests
         Assert.Single(device.Apk.Calls);
         Assert.Equal(1, installer.Measurements);
         Assert.True(manager.DiskUsage.Toolchains > 0);
+        Assert.Equal(2, device.Mirror.Server.Requests.Count(r => r.Contains("APKINDEX.tar.gz", StringComparison.Ordinal)));
     }
 
     [Fact]
@@ -92,6 +129,7 @@ public sealed class ToolchainBatchTests
         public Task PrepareRuntimeAsync(IProgress<InstallProgress>? progress, CancellationToken cancellationToken) => inner.PrepareRuntimeAsync(progress, cancellationToken);
         public Task<IReadOnlyList<ToolchainStatus>> ReadStatusAsync(IReadOnlyList<ToolchainDefinition> toolchains, bool checkForUpdates, CancellationToken cancellationToken) => inner.ReadStatusAsync(toolchains, checkForUpdates, cancellationToken);
         public Task InstallAsync(ToolchainDefinition toolchain, IProgress<InstallProgress>? progress, CancellationToken cancellationToken) => inner.InstallAsync(toolchain, progress, cancellationToken);
+        public Task InstallAsync(ToolchainDefinition toolchain, IProgress<InstallProgress>? progress, bool refreshMetadata, CancellationToken cancellationToken) => inner.InstallAsync(toolchain, progress, refreshMetadata, cancellationToken);
         public Task UpdateAsync(ToolchainDefinition toolchain, IProgress<InstallProgress>? progress, CancellationToken cancellationToken) => inner.UpdateAsync(toolchain, progress, cancellationToken);
         public Task RemoveAsync(ToolchainDefinition toolchain, IReadOnlyList<ToolchainDefinition> installed, IProgress<InstallProgress>? progress, CancellationToken cancellationToken) => inner.RemoveAsync(toolchain, installed, progress, cancellationToken);
         public DiskUsage MeasureDiskUsage(IReadOnlyList<ToolchainDefinition> toolchains)

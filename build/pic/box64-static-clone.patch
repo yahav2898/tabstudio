@@ -1,0 +1,104 @@
+--- a/src/core.c
++++ b/src/core.c
+@@ -1,5 +1,8 @@
+ #include <stdio.h>
+ #include <stdlib.h>
++#ifdef __GLIBC__
++#include <malloc.h>
++#endif
+ #include <string.h>
+ #include <time.h>
+ #include <limits.h>
+@@ -1475,6 +1478,15 @@
+         my_context->orig_argv = (char**)argv;
+     }
+     box64_hasinterp = hasElfInterp(elf_header);
++    // Static guest libc uses raw brk with its own cached break. Keep future
++    // host allocations and trimming away from that heap, so host libc cannot
++    // shrink or overwrite the guest's TLS/allocator state.
++    #ifdef __GLIBC__
++    if(!box64_hasinterp) {
++        mallopt(M_MMAP_THRESHOLD, 0);
++        mallopt(M_TRIM_THRESHOLD, -1);
++    }
++    #endif
+     box64_nolibs = (NeededLibs(elf_header)==0);
+     if(!box64_hasinterp) printf_log(LOG_INFO, "Warning, box64 is not really compatible with staticaly linked binaries. Expect crash!\n");
+     box64_isglibc234 = GetNeededVersionForLib(elf_header, "libc.so.6", "GLIBC_2.34");
+--- a/src/emu/x64syscall.c
++++ b/src/emu/x64syscall.c
+@@ -43,6 +43,9 @@
+ #include "x64int_private.h"
+ #include "syscall_user_dispatch.h"
+ #include "cpumask.h"
++#include "threads.h"
++emuthread_t* thread_get_et(void);
++void thread_set_et(emuthread_t* et);
+ 
+ typedef struct x64_sigaction_s x64_sigaction_t;
+ typedef struct x64_stack_s x64_stack_t;
+@@ -498,6 +501,8 @@
+     x64emu_t* emu;
+     void* stack2free;
+     void* tls;
++    int shared_vfork;
++    emuthread_t* thread;
+ } clone_t;
+ 
+ static int clone_fn_syscall(void* arg)
+@@ -506,10 +511,14 @@
+     x64emu_t *emu = args->emu;
+     thread_forget_emu();
+     thread_set_emu(emu);
++    if(args->shared_vfork) args->thread = thread_get_et();
+     //TODO: do something with TLS. Refresh libc tls with that?
+     R_RAX = 0;
+     DynaRun(emu);
+     int ret = R_EAX;
++    // The suspended parent owns cleanup for shared vfork. In particular, a
++    // child must never free the native stack on which it is still executing.
++    if(args->shared_vfork) _exit(ret);
+     FreeX64Emu(&emu);
+     void* stack2free = args->stack2free;
+     box_free(args);
+@@ -738,7 +747,7 @@
+         case 56: // sys_clone
+             // x86_64 raw syscall is long clone(unsigned long flags, void *stack, int *parent_tid, int *child_tid, unsigned long tls);
+             // so flags=R_RDI, stack=R_RSI, parent_tid=R_RDX, child_tid=R_R10, tls=R_R8
+-            if((R_EDI&~0xff)==0x4100) {
++            if((R_EDI&~0xff)==0x4100 && !R_RSI) {
+                 // this is a case of vfork...
+                 S_RAX = my_vfork(emu);
+                 if(S_RAX==-1)
+@@ -756,6 +765,7 @@
+                     clone_t* args = box_calloc(1, sizeof(clone_t));
+                     newemu->regs[_SP].q[0] = sp;  // setup new stack pointer
+                     args->emu = newemu;
++                    args->shared_vfork = (flags&CLONE_VM) && (flags&CLONE_VFORK);
+                     if(flags&CLONE_SETTLS) args->tls = (void*)R_R9;
+                     void* mystack = NULL;
+                     if(my_context->stack_clone_used) {
+@@ -767,7 +777,23 @@
+                         my_context->stack_clone_used = 1;
+                     }
+                     flags&=~CLONE_SETTLS;   // to be handled differently
++                    int shared_vfork = args->shared_vfork;
++                    emuthread_t* parent_thread = thread_get_et();
+                     int64_t ret = clone(clone_fn_syscall, (void*)((uintptr_t)mystack+1024*1024), flags, args, R_RDX, R_R8, R_R10);
++                    if(shared_vfork) {
++                        // The child changed our shared native pthread TLS.
++                        // It has now exec'd or exited; restore the parent before
++                        // freeing the child emulator and its native stack.
++                        thread_set_et(parent_thread);
++                        if(args->thread) {
++                            box_free(args->thread->cancels);
++                            box_free(args->thread);
++                        }
++                        FreeX64Emu(&args->emu);
++                        if(args->stack2free) box_free(args->stack2free);
++                        else my_context->stack_clone_used = 0;
++                        box_free(args);
++                    }
+                     S_RAX = ret;
+                 }
+                 else

@@ -39,6 +39,19 @@ public sealed partial class TerminalViewModel : ObservableObject, IDisposable
     private TerminalSize _size = TerminalSize.Default;
     private int _flushScheduled;
     private bool _disposed;
+    private bool _startingRemote;
+
+    /// <summary>Starts a remote PTY when an SSH folder is open, instead of the local shell.</summary>
+    public Func<TerminalSize, Task<ToolchainProcess>>? RemoteShellFactory { get; set; }
+
+    /// <summary>Closes the current shell when changing workspaces or disconnecting SSH.</summary>
+    public void StopShell()
+    {
+        var process = _process;
+        _process = null;
+        process?.Dispose();
+        IsRunning = false;
+    }
 
     /// <summary>Creates the panel; the shell starts when the panel is first shown.</summary>
     /// <param name="toolchains">The device's toolchains, whose runtime runs the shell.</param>
@@ -314,6 +327,11 @@ public sealed partial class TerminalViewModel : ObservableObject, IDisposable
 
     private void Start()
     {
+        if (RemoteShellFactory is { } remote)
+        {
+            if (!_startingRemote) { _ = StartRemoteAsync(remote); }
+            return;
+        }
         if (_toolchains.Manager.Problem is { } problem)
         {
             Message = problem;
@@ -346,6 +364,22 @@ public sealed partial class TerminalViewModel : ObservableObject, IDisposable
         Title = Path.GetFileName(_process.Spec.Program);
         _ = ReadAsync(_process);
         _ = WatchAsync(_process);
+    }
+
+    private async Task StartRemoteAsync(Func<TerminalSize, Task<ToolchainProcess>> factory)
+    {
+        _startingRemote = true;
+        try
+        {
+            var process = await factory(_size);
+            if (_disposed || !ReferenceEquals(RemoteShellFactory, factory)) { process.Dispose(); return; }
+            _process = process;
+            Message = null; NeedsSetup = false; IsRunning = true; Title = "SSH Terminal";
+            _ = ReadAsync(process);
+            _ = WatchAsync(process);
+        }
+        catch (Exception ex) when (ex is ToolchainRuntimeException or IOException or OperationCanceledException) { Message = ex.Message; }
+        finally { _startingRemote = false; }
     }
 
     private async Task ReadAsync(ToolchainProcess process)

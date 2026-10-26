@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Reflection;
 using CommunityToolkit.Mvvm.Input;
 using TabStudio.App.Platform;
 using TabStudio.App.Services;
@@ -21,6 +22,7 @@ public sealed partial class WorkspaceViewModel
     [RelayCommand(CanExecute = nameof(CanRun))]
     private async Task RunAsync()
     {
+        if (IsRemoteWorkspace) { await RunRemoteAsync(buildOnly: false); return; }
         if (UsesLaunchTarget && CurrentLaunchTarget is { } target)
         {
             await LaunchAdapterAsync(target, DebugStart.Run, noDebug: true);
@@ -35,6 +37,12 @@ public sealed partial class WorkspaceViewModel
         if (IsRunOnSwarm)
         {
             StartOnSwarm(project, debug: false, pauseAtStart: false);
+            return;
+        }
+
+        if (IsStaticSite(project))
+        {
+            await ServeStaticSiteAsync(project);
             return;
         }
 
@@ -65,20 +73,35 @@ public sealed partial class WorkspaceViewModel
         StatusText = $"Running {project.Name}";
         _run = new CancellationTokenSource();
         var input = Output.BeginInput();
+        var listening = BeginServerRun();
+        var runLifetime = _run;
         RunResult result;
+        void Loaded(Assembly assembly) => _ui.Post(() =>
+        {
+            if (ReferenceEquals(_run, runLifetime) && !runLifetime.IsCancellationRequested) BeginHotReload(project, build, assembly);
+        });
+        _runner.Loaded += Loaded;
         try
         {
             var packages = _language.GetPackageRuntimeAssemblies(project.FilePath);
-            result = await _runner.RunAsync(entry, build.Dependencies, packages, [], Output, input, _run.Token);
+            result = await _runner.RunAsync(entry, build.Dependencies, packages, [], new ServerConsoleSink(Output, listening), input, _run.Token);
         }
         finally
         {
+            _runner.Loaded -= Loaded;
+            EndHotReload();
             Output.EndInput();
             _run.Dispose();
             _run = null;
+            EndServerRun();
         }
 
         ReportRunResult(project, result);
+        if (_restartConsoleForHotReload && !_disposed)
+        {
+            _restartConsoleForHotReload = false;
+            await RunAsync();
+        }
     }
 
     /// <summary>Ends a run: the exit line in the Output panel, as Visual Studio writes it, and the status bar.</summary>
@@ -118,15 +141,27 @@ public sealed partial class WorkspaceViewModel
     [RelayCommand(CanExecute = nameof(CanBuild))]
     private async Task BuildAsync()
     {
+        if (IsRemoteWorkspace) { await RunRemoteAsync(buildOnly: true); return; }
+        if (MobileRoot() is not null)
+        {
+            await BuildAndroidCoreAsync(install: false);
+            return;
+        }
+
         if (Workspace is { } workspace)
         {
             await BuildProjectsAsync(workspace.Projects.Where(p => p.Language == ProjectLanguage.CSharp).ToList(), showOutput: true);
+            foreach (var item in _toolchainProjects.Where(t => TabStudio.Toolchains.Microchip.MicrochipInstallation.IsCompiler(t.Toolchain.Id)))
+            {
+                await RunToolchainProjectAsync(item.Info);
+                if (State == IdeState.Failed) break;
+            }
         }
     }
 
-    private bool CanRun() => (StartupProject is not null || UsesLaunchTarget) && State is IdeState.Ready or IdeState.Failed && !IsNotebookRunning;
+    private bool CanRun() => (IsRemoteWorkspace ? _remoteWorkspace?.Connection.IsConnected == true : StartupProject is not null || UsesLaunchTarget) && State is IdeState.Ready or IdeState.Failed && !IsNotebookRunning;
 
-    private bool CanBuild() => State is IdeState.Ready or IdeState.Failed;
+    private bool CanBuild() => (!IsRemoteWorkspace || _remoteWorkspace?.Connection.IsConnected == true) && State is IdeState.Ready or IdeState.Failed;
 
     /// <summary>Builds projects one after another, reporting in the Output panel and the Error List.</summary>
     /// <param name="projects">The projects.</param>

@@ -48,6 +48,7 @@ public sealed partial class WorkspaceViewModel
         {
             new FileSearchProvider(SearchableFiles, path => OpenDocumentAsync(path)),
             new CommandSearchProvider(Commands),
+            new SettingSearchProvider(ProjectSetupSearchSettings()),
         };
         if (_extensions is { Appearance: { } appearance } extensions)
         {
@@ -65,6 +66,23 @@ public sealed partial class WorkspaceViewModel
         var search = new UnifiedSearchViewModel(providers, new SearchHistory(_paths));
         search.PropertyChanged += OnSearchPropertyChanged;
         return search;
+    }
+
+    private IEnumerable<SettingEntry> ProjectSetupSearchSettings()
+    {
+        foreach (var enabled in new[] { true, false })
+        {
+            yield return new SettingEntry(
+                $"Set projects up when they open: {(enabled ? "On" : "Off")}",
+                enabled ? "Install toolchains and project packages when opening a folder or repository" : "Offer toolchain and package installs instead of starting them automatically",
+                ["setup", "project setup", "set up projects", "automatic", "install packages", "install", "packages", "npm", "pip", "toolchain", "repository"],
+                () => SetUpProjectsWhenTheyOpen == enabled,
+                () =>
+                {
+                    SetUpProjectsWhenTheyOpen = enabled;
+                    return Task.CompletedTask;
+                });
+        }
     }
 
     /// <summary>Stops following the app's theme and ends a running search. Called by <see cref="Dispose"/>.</summary>

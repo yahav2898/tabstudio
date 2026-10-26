@@ -32,7 +32,9 @@ public sealed partial class WorkspaceViewModel
         AddActivity(SideBarPanel.AppPreview, "App Preview", "Icon.Window");
         AddActivity(SideBarPanel.WebPreview, "Web Preview", "Icon.Globe");
         AddActivity(SideBarPanel.Swarm, "Swarm", "Icon.Swarm");
+        AddActivity(SideBarPanel.Database, "Database Explorer", "Icon.Database");
         AddActivity(SideBarPanel.WindowsBridge, "Windows Bridge", "Icon.Computer");
+        AddActivity(SideBarPanel.RemoteExplorer, "Remote Explorer (SSH)", "Icon.Computer");
         Activity.Add(new ActivityItem("Extensions", "Extensions", Icon("Icon.Extensions"), "Ctrl+Shift+X")
         {
             IsAtBottom = true,

@@ -18,11 +18,54 @@ env:
   DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+  # Required at process startup, before CoreCLR loads the test host or any dynamically emitted Debug assemblies.
+  DOTNET_MODIFIABLE_ASSEMBLIES: debug
 
 jobs:
+  mobile-android:
+    name: Android template in ARM64 Alpine
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Generate the IDE's Android template and build plan
+        run: |
+          dotnet run --project build/mobile/TabStudio.Mobile.Smoke.csproj -- "$GITHUB_WORKSPACE/ci-out/mobile-template"
+          dotnet run --project build/mobile/TabStudio.Mobile.Smoke.csproj -- "$GITHUB_WORKSPACE/ci-out/capacitor-template" capacitor
+      - name: Build with the catalog SDK in Alpine on ARM64
+        run: |
+          set -o pipefail
+          docker run --rm -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" alpine:3.24 \
+            sh -c 'apk add --no-cache python3 ca-certificates && python3 build/mobile/alpine-build.py "$1" "$2"' \
+            sh "$GITHUB_WORKSPACE/ci-out/mobile-template" "$GITHUB_WORKSPACE/ci-out/capacitor-template" 2>&1 | tee ci-out/mobile-alpine-build.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mobile-android-template
+          path: |
+            ci-out/mobile-alpine-build.log
+            ci-out/mobile-template/app/build/outputs/apk/debug/*.apk
+            ci-out/capacitor-template/android/app/build/outputs/apk/debug/*.apk
+
   libraries:
     name: Build and test libraries
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: tabstudio
+          POSTGRES_PASSWORD: tabstudio_ci
+          POSTGRES_DB: tabstudio
+        ports: [5432:5432]
+        options: >-
+          --health-cmd "pg_isready -U tabstudio -d tabstudio"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      TABSTUDIO_POSTGRES: Host=127.0.0.1;Port=5432;Database=tabstudio;Username=tabstudio;Password=tabstudio_ci
     steps:
       - uses: actions/checkout@v4
 
@@ -47,7 +90,7 @@ jobs:
 
       - name: Install language servers and debug adapters
         run: |
-          npm install -g pyright typescript-language-server typescript@5
+          npm install -g pyright typescript-language-server typescript@5 vscode-langservers-extracted@4.10.0
           python -m pip install debugpy
           echo "TABSTUDIO_REAL_SERVERS=1" >> "$GITHUB_ENV"
           mkdir -p ci-out
@@ -113,6 +156,7 @@ jobs:
   app:
     name: Build and test the IDE
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
 
@@ -145,9 +189,19 @@ jobs:
           components: rust-analyzer, rust-src
 
       - name: Install LLVM, C and C++ tools
+        timeout-minutes: 10
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y clang-19 clangd-19 lldb-19 cmake make
+          # A stalled package mirror must fail setup rather than occupy the
+          # runner for hours before any IDE or real-tool tests can start.
+          # The hosted image's Azure mirror delivered LLVM at about 40 KB/s
+          # in the stalled run. Prefer Ubuntu's primary mirror for these
+          # signed packages; leave the image's security sources unchanged.
+          if [ -f /etc/apt/apt-mirrors.txt ]; then
+            printf '%s\n' 'https://archive.ubuntu.com/ubuntu/' | sudo tee /etc/apt/apt-mirrors.txt
+          fi
+          apt_options=(-o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30)
+          sudo apt-get "${apt_options[@]}" update -qq
+          sudo env DEBIAN_FRONTEND=noninteractive apt-get "${apt_options[@]}" install -y clang-19 clangd-19 lldb-19 cmake make
           mkdir -p "$RUNNER_TEMP/cpp-bin"
           ln -s /usr/bin/clangd-19 "$RUNNER_TEMP/cpp-bin/clangd"
           ln -s /usr/bin/lldb-dap-19 "$RUNNER_TEMP/cpp-bin/lldb-dap"
@@ -180,7 +234,7 @@ jobs:
 
       - name: Install language servers and debug adapters
         run: |
-          npm install -g pyright typescript-language-server typescript@5
+          npm install -g pyright typescript-language-server typescript@5 vscode-langservers-extracted@4.10.0
           python -m pip install debugpy
           go install golang.org/x/tools/gopls@v0.21.1
           go install github.com/go-delve/delve/cmd/dlv@v1.26.2
@@ -280,6 +334,7 @@ jobs:
           tail -n 40 ci-out/desktop-build.log
           # A test host that dies leaves a crash report (its threads' stacks) when the runtime saw the crash.
           mkdir -p "$RUNNER_TEMP/crash"
+          # The 100-frame GC stress can take eleven minutes on hosted runners; do not abort a healthy run.
           run_ide_tests() {
             DOTNET_DbgEnableMiniDump=1 DOTNET_DbgMiniDumpType=1 DOTNET_EnableCrashReport=1 DOTNET_DbgMiniDumpName="$RUNNER_TEMP/crash/%e.%p.dmp" \
               dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --blame --blame-hang-timeout 12m --blame-hang-dump-type none --filter "FullyQualifiedName!~ScreenshotLifetimeTests" --logger "console;verbosity=normal" > "$1" 2>&1
@@ -332,7 +387,7 @@ jobs:
           # The UI test the swarm's test recorded on a phone runs as its users' CI runs it: dotnet test, headless.
           recorded=$(find "$TABSTUDIO_RECORDED_UI_TESTS" -name '*.UITests.csproj' 2>/dev/null | head -n 1)
           if [ -n "$recorded" ]; then
-            dotnet test "$recorded" --logger "console;verbosity=normal" > ci-out/recorded-ui-tests.log 2>&1 || status=1
+            dotnet test "$recorded" --blame --blame-hang-timeout 12m --blame-hang-dump-type none --logger "console;verbosity=normal" > ci-out/recorded-ui-tests.log 2>&1 || status=1
             tail -n 30 ci-out/recorded-ui-tests.log
           else
             echo "No recorded UI test project was written." | tee ci-out/recorded-ui-tests.log
@@ -360,6 +415,55 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: bash build/ci/publish-logs.sh app ${{ job.status }}
 
+  ssh:
+    name: SSH and SFTP integration
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - uses: actions/cache@v4
+        with:
+          path: .nuget/packages
+          key: nuget-ssh-${{ hashFiles('Directory.Packages.props', '**/*.csproj') }}
+          restore-keys: |
+            nuget-ssh-
+            nuget-app-
+      - name: Start OpenSSH integration container
+        run: |
+          set -euo pipefail
+          mkdir -p ci-out
+          bash build/ci/start-ssh-server.sh 2>&1 | tee ci-out/ssh-start.log
+      - name: Test real SSH, SFTP, remote workspace and publishing
+        env:
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+        run: |
+          set -uo pipefail
+          mkdir -p ci-out/screenshots
+          status=0
+          # Both projects always run, so one failure never hides the other's output.
+          dotnet test tests/TabStudio.Remote.Tests -c Release --blame-hang-timeout 2m --blame-hang-dump-type none --logger "console;verbosity=normal" 2>&1 | tee ci-out/ssh-library.log || status=1
+          dotnet test tests/TabStudio.App.Tests -c Release --filter FullyQualifiedName~RemoteSsh --blame-hang-timeout 2m --blame-hang-dump-type none --logger "console;verbosity=normal" 2>&1 | tee ci-out/ssh-app.log || status=1
+          exit $status
+      - name: Capture OpenSSH logs
+        if: always()
+        run: |
+          mkdir -p ci-out
+          { docker ps -a; docker logs tabstudio-openssh; } > ci-out/sshd.log 2>&1 || true
+      - name: Publish logs
+        if: always() && github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs.sh ssh ${{ job.status }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ssh-integration
+          path: ci-out
+          retention-days: 7
+
   android:
     name: Build Android APK
     runs-on: ubuntu-latest
@@ -373,13 +477,16 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: artifacts/native
-          key: android-native-${{ hashFiles('build/android/native/build.sh', 'build/android/native/sources.sh', 'build/android/native/*.patch', 'build/android/native/*.c') }}-arm
+          key: android-native-${{ hashFiles('build/android/native/build.sh', 'build/android/native/sources.sh', 'build/android/native/*.patch', 'build/android/native/*.c', 'build/pic/build_box64.py', 'build/pic/spike.py', 'build/pic/assets.lock.json', 'build/pic/*.patch') }}-arm
 
       - name: Build the toolchain runtime
         run: |
           mkdir -p ci-out
           bash build/android/native/build.sh artifacts/native arm64-v8a armeabi-v7a 2>&1 | tee ci-out/native-build.log
           exit "${PIPESTATUS[0]}"
+
+      - name: Build the local AI runtime
+        run: bash build/local-ai/android.sh arm64-v8a
 
       - name: Build the APK
         run: |
@@ -428,9 +535,14 @@ jobs:
         run: bash build/ci/publish-logs.sh android ${{ job.status }}
 
   android-emulator:
-    name: Run on an Android emulator
+    name: Android emulator (${{ matrix.shard }})
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    strategy:
+      # Keep all assertions visible even when a different group fails.
+      fail-fast: false
+      matrix:
+        shard: [managed, ui, native]
     steps:
       - uses: actions/checkout@v4
 
@@ -439,7 +551,7 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: artifacts/native
-          key: android-native-${{ hashFiles('build/android/native/build.sh', 'build/android/native/sources.sh', 'build/android/native/*.patch', 'build/android/native/*.c') }}-x64
+          key: android-native-${{ hashFiles('build/android/native/build.sh', 'build/android/native/sources.sh', 'build/android/native/*.patch', 'build/android/native/*.c', 'build/pic/build_box64.py', 'build/pic/spike.py', 'build/pic/assets.lock.json', 'build/pic/*.patch') }}-x64
 
       - name: Build the toolchain runtime
         run: |
@@ -447,18 +559,51 @@ jobs:
           bash build/android/native/build.sh artifacts/native x86_64 2>&1 | tee ci-out/native-build.log
           exit "${PIPESTATUS[0]}"
 
+      - name: Build local AI and bundle its verified diagnostic model
+        run: |
+          bash build/local-ai/android.sh x86_64
+          bash build/local-ai/download-tiny.sh artifacts/local-ai/tiny.gguf
+
       # GitHub's runners are x86_64, so the emulator needs an x86_64 build of the same app.
       - name: Build an x86_64 APK
         run: |
           mkdir -p ci-out
           status=0
-          dotnet publish src/TabStudio.Android -c Release -p:TreatWarningsAsErrors=true -f net10.0-android -p:TabStudioRuntimeIdentifiers=android-x64 \
+          dotnet publish src/TabStudio.Android -c Release -p:TreatWarningsAsErrors=true -f net10.0-android -p:TabStudioRuntimeIdentifiers=android-x64 -p:TabStudioIncludeLocalAITestModel=true \
             -p:TabStudioBuildNumber=$(( ($(date +%s) - 1767225600) / 60 )) \
             -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME" \
             > ci-out/android-x64-build.log 2>&1 || status=$?
           tail -n 40 ci-out/android-x64-build.log
           [ "$status" -eq 0 ] || exit $status
           cp "$(find src/TabStudio.Android/bin/Release/net10.0-android/publish -name '*-Signed.apk' | head -n 1)" ci-out/TabStudio-x64.apk
+
+      - name: Build the disposable app-UID PIC probe APK
+        if: matrix.shard == 'native'
+        run: |
+          # Keep the existing IDE performance check on its normal Release APK.
+          # Only the subsequent compiler probe needs a debuggable manifest for
+          # run-as; both packages contain exactly the same application code.
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          tree = ET.parse('src/TabStudio.Android/Properties/AndroidManifest.xml')
+          tree.getroot().find('application').set('{http://schemas.android.com/apk/res/android}debuggable', 'true')
+          tree.write('src/TabStudio.Android/Properties/PicEmulatorManifest.xml', encoding='utf-8', xml_declaration=True)
+          PY
+          status=0
+          dotnet publish src/TabStudio.Android -c Release -p:TreatWarningsAsErrors=true -f net10.0-android -p:TabStudioRuntimeIdentifiers=android-x64 \
+            -p:AndroidManifest=Properties/PicEmulatorManifest.xml \
+            -p:TabStudioBuildNumber=$(( ($(date +%s) - 1767225600) / 60 )) \
+            -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME" \
+            > ci-out/android-pic-probe-build.log 2>&1 || status=$?
+          tail -n 40 ci-out/android-pic-probe-build.log
+          [ "$status" -eq 0 ] || exit $status
+          cp "$(find src/TabStudio.Android/bin/Release/net10.0-android/publish -name '*-Signed.apk' | head -n 1)" ci-out/TabStudio-pic-probe.apk
+
+      - name: Prepare the verified PIC18 compiler and box64 interpreter for Android
+        if: matrix.shard == 'native'
+        run: |
+          python3 build/pic/android_spike.py prepare --work "$RUNNER_TEMP/pic-android" \
+            --output ci-out/pic-android --accept-microchip-license
 
       - name: Enable KVM
         run: |
@@ -474,12 +619,14 @@ jobs:
           target: google_apis
           arch: x86_64
           profile: pixel_c
-          cores: 3
+          # Use the public Linux runner's four cores for the cold six-SDK
+          # self-test; keep the existing memory and 900-second timing limits.
+          cores: 4
           ram-size: 4096M
-          disk-size: 4096M
+          disk-size: 8192M
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
-          script: bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 900
+          script: bash build/pic/android-emulator-test.sh ci-out/TabStudio-x64.apk ci-out "$RUNNER_TEMP/pic-android" ci-out/TabStudio-pic-probe.apk ${{ matrix.shard }}
 
       # A crash's native backtrace has only offsets into the runtime's stripped libraries; this names the functions.
       - name: Name the functions in a crash's backtrace
@@ -495,7 +642,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: android-emulator
+          name: android-emulator-${{ matrix.shard }}
           path: ci-out/
           if-no-files-found: ignore
 
@@ -503,7 +650,19 @@ jobs:
         if: always() && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: bash build/ci/publish-logs.sh android-emulator ${{ job.status }}
+        run: bash build/ci/publish-logs.sh android-emulator-${{ matrix.shard }} ${{ job.status }}
+
+  # Preserve the existing required check name, and fail it unless every matrix child passed.
+  android-emulator-verdict:
+    name: Run on an Android emulator
+    if: always()
+    needs: android-emulator
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require every emulator shard
+        env:
+          SHARDS_RESULT: ${{ needs.android-emulator.result }}
+        run: test "$SHARDS_RESULT" = success
 
   # The Windows Bridge on real Windows: the desktop app builds for Windows, WPF, Windows Forms, Visual C++ and
   # .NET Framework apps build and run through the bridge's service on loopback, their windows are captured and
@@ -563,7 +722,7 @@ jobs:
   release:
     name: Publish the release
     if: github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/main')
-    needs: [libraries, app, android, android-emulator]
+    needs: [libraries, app, android, android-emulator-verdict, windows, ssh, mobile-android]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

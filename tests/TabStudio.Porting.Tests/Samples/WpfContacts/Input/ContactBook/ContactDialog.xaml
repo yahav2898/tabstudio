@@ -1,0 +1,33 @@
+<Window x:Class="ContactBook.ContactDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Edit Contact" Width="380" SizeToContent="Height" ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
+    <Grid Margin="16">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Label Content="_Name" Target="{Binding ElementName=NameBox}"/>
+        <TextBox x:Name="NameBox" Grid.Column="1" Margin="0,0,0,8" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+        <Label Grid.Row="1" Content="_Company" Target="{Binding ElementName=CompanyBox}"/>
+        <TextBox x:Name="CompanyBox" Grid.Row="1" Grid.Column="1" Margin="0,0,0,8" Text="{Binding Company}"/>
+        <Label Grid.Row="2" Content="E_mail"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Margin="0,0,0,8" Text="{Binding Email}"/>
+        <Label Grid.Row="3" Content="_Phone"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Margin="0,0,0,8" Text="{Binding Phone}"/>
+
+        <StackPanel Grid.Row="4" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+            <Button Content="OK" IsDefault="True" Click="Ok_Click" Style="{StaticResource PrimaryButton}"/>
+            <Button Content="Cancel" IsCancel="True" Margin="0"/>
+        </StackPanel>
+    </Grid>
+</Window>

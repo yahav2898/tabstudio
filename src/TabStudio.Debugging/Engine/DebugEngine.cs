@@ -2,6 +2,7 @@ using System.Runtime.CompilerServices;
 using TabStudio.Debugging.Inspection;
 using TabStudio.Debugging.Instrumentation;
 using TabStudio.Debugging.Symbols;
+using TabStudio.Debugging.Recording;
 
 namespace TabStudio.Debugging.Engine;
 
@@ -34,7 +35,7 @@ internal sealed class DebugEngine
     private readonly object _gate = new();
     private readonly AsyncLocal<DebugFrame?> _current = new();
     private readonly ConditionalWeakTable<Exception, FaultOrigin> _faults = new();
-    private readonly DebugInfoMap _map;
+    private volatile DebugInfoMap _map;
     private readonly ValueInspector _inspector;
     private readonly Action<DebugPausedEventArgs> _onPaused;
     private readonly Action _onResumed;
@@ -51,6 +52,8 @@ internal sealed class DebugEngine
     private volatile int _runToStatement;
     private int _mainThreadId;
 
+    internal DebugRecording? Recording { get; set; }
+
     // Guarded by _gate.
     private long _pauseGeneration;
     private long _resumedGeneration;
@@ -63,6 +66,14 @@ internal sealed class DebugEngine
         _inspector = inspector;
         _onPaused = onPaused;
         _onResumed = onResumed;
+    }
+
+    public void UpdateDebugInfo(DebugInfoMap map)
+    {
+        lock (_gate)
+        {
+            _map = map;
+        }
     }
 
     /// <summary>Whether to pause when an exception is about to leave the program unhandled.</summary>
@@ -118,6 +129,7 @@ internal sealed class DebugEngine
         new Func<object?, int, bool>(OnStep),
         new Action<object?, int, object?[]?>(OnBreak),
         new Func<object?, Exception, object?[]?, bool>(OnFault),
+        Recording is null ? null! : new Action<object?, int, string, object?>(OnWrite),
     ];
 
     // ---- Commands, called by the IDE ----
@@ -316,7 +328,7 @@ internal sealed class DebugEngine
         }
 
         var mode = _mode;
-        return (mode != StepMode.Run && IsStepComplete(mode, frame)) || _breakpoints.Contains(statementId) || statementId == _runToStatement;
+        return Recording is not null || (mode != StepMode.Run && IsStepComplete(mode, frame)) || _breakpoints.Contains(statementId) || statementId == _runToStatement;
     }
 
     private void OnBreak(object? token, int statementId, object?[]? locals)
@@ -343,12 +355,14 @@ internal sealed class DebugEngine
         lock (_gate)
         {
             WaitHoldingGate(() => _paused && !_stopped);
-
-            if (!_stopped && ReasonToBreak(frame, statementId) is { } reason && (reason != PauseReason.Breakpoint || conditionMet))
+            var reason = ReasonToBreak(frame, statementId);
+            if (!_stopped && frame is not null)
+                Recording?.Record(frame, slots, locals, reason == PauseReason.Breakpoint && conditionMet);
+            if (!_stopped && reason is { } pauseReason && (pauseReason != PauseReason.Breakpoint || conditionMet))
             {
-                var breakpoint = reason == PauseReason.Breakpoint ? _breakpoints.Find(statementId) : null;
+                var breakpoint = pauseReason == PauseReason.Breakpoint ? _breakpoints.Find(statementId) : null;
                 breakpoint?.RecordHit();
-                pause = BeginPause(reason, frame, values ?? CreateLocals(slots, locals), breakpoint, exception: null, conditionError);
+                pause = BeginPause(pauseReason, frame, values ?? CreateLocals(slots, locals), breakpoint, exception: null, conditionError);
             }
         }
 
@@ -380,10 +394,13 @@ internal sealed class DebugEngine
             _faults.AddOrUpdate(exception, origin);
         }
 
-        if (frame is null || frame.Parent is not null || !_breakOnUnhandledExceptions)
+        if (frame is null || frame.Parent is not null)
         {
             return false;
         }
+
+        if (origin.Frame is not null) Recording?.FindExceptionCause(origin.Frame, exception);
+        if (!_breakOnUnhandledExceptions) return false;
 
         // Nothing has unwound yet, so the innermost frame of this flow is still the one that threw.
         var top = _current.Value ?? frame;
@@ -417,6 +434,12 @@ internal sealed class DebugEngine
     }
 
     // ---- Internals ----
+
+    private void OnWrite(object? token, int site, string path, object? value)
+    {
+        if (!Evaluator.IsEvaluating && !_stopped && token is DebugFrame frame)
+            Recording?.Write(frame, site, path, value);
+    }
 
     private PauseReason? ReasonToBreak(DebugFrame? frame, int statementId)
     {
@@ -560,13 +583,14 @@ internal sealed class DebugEngine
         }
 
         var count = Math.Min(slots.Count, values.Length);
-        var result = new DebugValue[count];
+        var result = new List<DebugValue>(count);
         for (var i = 0; i < count; i++)
         {
-            result[i] = new DebugValue(slots[i].Name, slots[i].Type, values[i], _inspector);
+            if (!slots[i].RecordingOnly || Recording is not null)
+                result.Add(new DebugValue(slots[i].Name, slots[i].Type, values[i], _inspector));
         }
 
-        return result;
+        return result.ToArray();
     }
 
     /// <summary>The frame an exception was first seen in, and the parameter values its filter passed.</summary>

@@ -13,6 +13,8 @@ namespace TabStudio.Android;
 [Instrumentation(Name = "com.tabstudio.ide.SelfTestInstrumentation", TargetPackage = "com.tabstudio.ide")]
 public sealed class SelfTestInstrumentation : Instrumentation
 {
+    private string? _shard;
+
     /// <summary>Creates the self-test instrumentation.</summary>
     public SelfTestInstrumentation()
     {
@@ -29,6 +31,7 @@ public sealed class SelfTestInstrumentation : Instrumentation
     public override void OnCreate(Bundle? arguments)
     {
         base.OnCreate(arguments);
+        _shard = arguments?.GetString(MainActivity.SelfTestShardExtra);
         Start();
     }
 
@@ -41,6 +44,10 @@ public sealed class SelfTestInstrumentation : Instrumentation
         intent.AddFlags(ActivityFlags.NewTask);
         intent.PutExtra(MainActivity.SelfTestExtra, true);
         intent.PutExtra(MainActivity.DesktopSelfTestExtra, true);
+        if (_shard is not null)
+        {
+            intent.PutExtra(MainActivity.SelfTestShardExtra, _shard);
+        }
         context.StartActivity(intent);
     }
 }

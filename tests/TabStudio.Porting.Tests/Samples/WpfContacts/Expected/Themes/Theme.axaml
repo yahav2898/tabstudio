@@ -1,0 +1,42 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Styles.Resources>
+        <ResourceDictionary>
+            <SolidColorBrush x:Key="AccentBrush" Color="#2B579A"/>
+            <SolidColorBrush x:Key="AccentHoverBrush" Color="#3A6CB5"/>
+            <SolidColorBrush x:Key="MutedBrush" Color="#6B6B6B"/>
+        </ResourceDictionary>
+    </Styles.Resources>
+
+    <!-- Every button in the app. -->
+
+    <Style Selector="Button">
+        <Setter Property="Padding" Value="12,4"/>
+        <Setter Property="Margin" Value="0,0,8,0"/>
+        <Setter Property="MinWidth" Value="80"/>
+    </Style>
+    <Style Selector="Button.PrimaryButton">
+        <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+    <Style Selector="Button.PrimaryButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{StaticResource AccentHoverBrush}"/>
+    </Style>
+    <Style Selector="Button.PrimaryButton:disabled">
+        <Setter Property="Opacity" Value="0.5"/>
+    </Style>
+    <Style Selector="TextBlock.Heading">
+        <Setter Property="FontSize" Value="22"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Margin" Value="0,0,0,12"/>
+    </Style>
+    <Style Selector="TextBlock.FavoriteMark">
+        <Setter Property="Text" Value="☆"/>
+        <Setter Property="Foreground" Value="{StaticResource MutedBrush}"/>
+    </Style>
+    <Style Selector="TextBlock.FavoriteMark.isFavorite">
+        <Setter Property="Text" Value="★"/>
+        <Setter Property="Foreground" Value="Goldenrod"/>
+    </Style>
+</Styles>

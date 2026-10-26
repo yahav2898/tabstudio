@@ -4,6 +4,9 @@ using TabStudio.Toolchains.Downloads;
 using TabStudio.Toolchains.Installation;
 using TabStudio.Toolchains.Linux;
 using TabStudio.Toolchains.Runtimes;
+using TabStudio.Toolchains.Microchip;
+using System.Net;
+using System.Text.RegularExpressions;
 
 namespace TabStudio.App.Services.Toolchains;
 
@@ -19,7 +22,8 @@ namespace TabStudio.App.Services.Toolchains;
 /// TabStudio uses the toolchains installed on the computer, so tests and the desktop build run the same flows.
 /// </para>
 /// <para>
-/// Nothing is installed or downloaded until the user asks for it in the Toolchain Store or answers a prompt.
+/// Opening a project installs its toolchain when "Set projects up when they open" is enabled (the default).
+/// With it off, the Toolchain Store and install prompts start downloads.
 /// </para>
 /// </remarks>
 public sealed class ToolchainServices : IDisposable
@@ -32,10 +36,11 @@ public sealed class ToolchainServices : IDisposable
     /// <summary>Creates the toolchains for the app.</summary>
     /// <param name="paths">Where the app keeps its data.</param>
     /// <param name="platform">What the device offers, from the platform head; a desktop computer when <see langword="null"/>.</param>
-    public ToolchainServices(AppPaths paths, ToolchainPlatform? platform = null)
+    public ToolchainServices(AppPaths paths, ToolchainPlatform? platform = null, IUsbHost? usb = null)
     {
         ArgumentNullException.ThrowIfNull(paths);
         Platform = platform ?? ToolchainPlatform.Desktop;
+        Usb = usb ?? new NoUsbHost();
         var catalog = ToolchainCatalog.Default;
         if (!Platform.UsesLinuxEnvironment)
         {
@@ -77,8 +82,82 @@ public sealed class ToolchainServices : IDisposable
     /// <summary>What the device offers.</summary>
     public ToolchainPlatform Platform { get; }
 
+    /// <summary>Android USB permissions and open connection lifetime.</summary>
+    public IUsbHost Usb { get; } = new NoUsbHost();
+
+    /// <summary>Installs USB support without requiring an XC license or compiler download.</summary>
+    /// <param name="developmentTools">Also prepares native builds of optional programmer/simulator tools.</param>
+    /// <param name="line">Setup output.</param>
+    /// <param name="cancellationToken">Stops setup.</param>
+    public Task PreparePicSupportAsync(bool developmentTools, Action<string> line, CancellationToken cancellationToken) =>
+        Manager.ConfigureRuntimeAsync(async token =>
+        {
+            if (Environment is not { } environment || _packages is null)
+            {
+                throw new NotSupportedException("USB-OTG requires the Android Linux environment. Use the Windows Bridge.");
+            }
+
+            string[] packages = developmentTools
+                ? ["python3", "libusb", "build-base", "libusb-dev", "hidapi-dev", "readline-dev", "popt-dev", "glib-dev", "bison", "flex", "pkgconf"]
+                : ["python3", "libusb"];
+            var installed = _packages.Installed;
+            if (packages.Any(name => installed.Find(name) is null))
+            {
+                var plan = await _packages.PlanInstallAsync(packages, token).ConfigureAwait(false);
+                await _packages.DownloadAsync(plan, (_, package) => line("Downloading " + package.Name), token).ConfigureAwait(false);
+                await _packages.InstallAsync(packages, upgrade: false, line, token).ConfigureAwait(false);
+            }
+            foreach (var name in MicrochipInstallation.SupportFiles)
+            {
+                var destination = Path.Combine(environment.Rootfs, MicrochipInstallation.ToolsDirectory.TrimStart('/'), name);
+                Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
+                await File.WriteAllTextAsync(destination, MicrochipInstallation.Resource(name), token).ConfigureAwait(false);
+            }
+        }, cancellationToken);
+
     /// <summary>The Linux environment on Android, or <see langword="null"/> on a desktop computer.</summary>
     public AlpineEnvironment? Environment { get; }
+
+    /// <summary>Retrieves Microchip's terms for the Store's explicit acceptance dialog.</summary>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    public async Task<string> ReadMicrochipLicenseAsync(CancellationToken cancellationToken)
+    {
+        var http = _http ?? throw new InvalidOperationException("Compiler installation needs the tablet's Linux environment.");
+        var html = await http.GetStringAsync(MicrochipInstallation.LicenseAddress, cancellationToken).ConfigureAwait(false);
+        if (html.Length > 3_000_000)
+        {
+            throw new InvalidDataException("Microchip's license response is unexpectedly large.");
+        }
+
+        var text = Regex.Replace(html, @"<(script|style)\b[^>]*>[\s\S]*?</\1>", string.Empty, RegexOptions.IgnoreCase);
+        text = Regex.Replace(text, @"</(?:p|div|li|h[1-6])\s*>", "\n\n", RegexOptions.IgnoreCase);
+        text = WebUtility.HtmlDecode(Regex.Replace(text, "<[^>]+>", string.Empty));
+        var start = text.IndexOf("SOFTWARE LICENSE AGREEMENT", StringComparison.Ordinal);
+        var end = text.IndexOf("Questions about this Agreement", start >= 0 ? start : 0, StringComparison.Ordinal);
+        if (start < 0 || end <= start || end - start < 5000)
+        {
+            throw new InvalidDataException("Could not read Microchip's complete software license. Open its license page and try again; no compiler was downloaded.");
+        }
+
+        var last = text.IndexOf("\n\n", end, StringComparison.Ordinal);
+        return MicrochipInstallation.LicenseAddress + "\n\n" + text[start..(last > end ? last : end)].Trim();
+    }
+
+    /// <summary>Records the terms the user accepted for a specific pinned compiler download.</summary>
+    /// <param name="id">Compiler id.</param>
+    /// <param name="terms">The displayed terms.</param>
+    public void AcceptMicrochipLicense(string id, string terms) =>
+        MicrochipInstallation.AcceptLicense(Environment ?? throw new InvalidOperationException("No Linux environment."), id, terms);
+
+    /// <summary>Reads pk2cmd's separate, restrictive license before downloading its source.</summary>
+    /// <param name="token">Stops loading.</param>
+    public async Task<string> ReadPicKitLicenseAsync(CancellationToken token)
+    {
+        const string address = "https://raw.githubusercontent.com/jaka-fi/pk2cmd/38ad052d453db7d5a7f4a115427cc640e1522ed3/license.txt";
+        var text = await (_http ?? throw new NotSupportedException("Install PIC tools on Android.")).GetStringAsync(address, token).ConfigureAwait(false);
+        if (text.Length is < 5000 or > 100000 || !text.Contains("Microchip", StringComparison.Ordinal)) throw new InvalidDataException("Could not read the complete PICkit license; its source was not downloaded.");
+        return address + "\n\n" + text;
+    }
 
     /// <summary>
     /// Reads the toolchains' states the first time it is called, and returns that same reading afterwards. Never

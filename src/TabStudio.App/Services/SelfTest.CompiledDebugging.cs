@@ -66,7 +66,8 @@ public static partial class SelfTest
     private static string CompiledDebugFailure(WorkspaceViewModel workspace)
     {
         var lines = workspace.DebugAdapterOutput.Text.Split('\n').Where(l => !string.IsNullOrWhiteSpace(l)).ToList();
-        return LastLines(workspace) + " | " + workspace.StatusText + " | Locals: " + string.Join(", ", workspace.Locals.Tree.Rows.Select(r => r.Name + "=" + r.Value)) + " | Adapter: " + string.Join(" | ", lines.Take(20).Concat(lines.TakeLast(20)).Distinct());
+        var servers = workspace.LanguageServerOutput.Text.Split('\n').Where(l => !string.IsNullOrWhiteSpace(l));
+        return LastLines(workspace) + " | " + workspace.StatusText + " | Locals: " + string.Join(", ", workspace.Locals.Tree.Rows.Select(r => r.Name + "=" + r.Value)) + " | Adapter: " + string.Join(" | ", lines.Take(20).Concat(lines.TakeLast(20)).Distinct()) + " | Language servers: " + string.Join(" | ", servers.TakeLast(8));
     }
 
 }

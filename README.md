@@ -31,8 +31,12 @@ Open a solution, press F5, and it builds, runs and debugs on the tablet itself.
   - [App platforms](#app-platforms)
   - [Every screen at once](#every-screen-at-once)
   - [Projects and repositories](#projects-and-repositories)
+  - [Database Explorer](#database-explorer)
+  - [Remote development over SSH](#remote-development-over-ssh)
+  - [Web servers and mobile apps](#web-servers-and-mobile-apps)
   - [GitHub](#github)
   - [AI pair programmer](#ai-pair-programmer)
+  - [Offline AI](#offline-ai)
   - [Built for the device in your hands](#built-for-the-device-in-your-hands)
 - [How it works](#how-it-works)
 - [Requirements](#requirements)
@@ -113,9 +117,26 @@ From there, try **New project** for a template in any language, **Open from GitH
 - **C# on the tablet.** NuGet packages restore on the device, so real projects build as they are. Test Explorer runs
   xUnit, NUnit and MSTest, and **Live Unit Testing** marks every covered line with a pass, fail or not-covered glyph
   and reruns the affected tests as you type. C# notebooks run cells as you write them.
-- **The Toolchain Store.** Every other language installs into a Linux environment inside the app: Alpine Linux run
-  with PRoot, with no root and no special permissions. Every package comes from Alpine's mirror and is verified
-  against Alpine's signatures before it is installed.
+- **C# Hot Reload and Edit and Continue on desktop.** In the desktop host, run a local Debug console, Avalonia, ASP.NET Core or server-side
+  Blazor app, then tap **Hot Reload** or press **Alt+F10** to apply current edits without restarting. **Debug
+  > Hot Reload C# on Save** applies them on save; while paused at a breakpoint, **Continue** applies them
+  first. Avalonia recreates its content and web frameworks clear their metadata caches. Unsupported edits
+  offer **Restart to apply edits**. Existing calls finish their old code; later calls use the changes. Android
+  keeps the IDE and Roslyn on the JIT and requires a restart to apply C# edits in 0.15. On desktop, `dotnet run --project
+  src/TabStudio.Desktop` uses the included launch profile, or start with `DOTNET_MODIFIABLE_ASSEMBLIES=debug`.
+  Browser WebAssembly, remote runs and Release user projects need a restart. See [Hot
+  Reload](docs/ARCHITECTURE.md#hot-reload).
+- **C# history.** **Debug > Start with Recording** captures shallow state into a configurable ring (64 MiB by
+  default). Step Back (**Shift+F10**), Step Back Into, Reverse Continue and the timeline inspect earlier
+  Locals, Watch, Call Stack and DataTips, marked **historical**, even after exit or a crash. A variable's
+  **When did this change?** action finds its last recorded write. Simple divide-by-zero and null-reference
+  causes link to the faulty write. Recording is off by default; history inspection never re-executes code.
+  During a recording, applying C# edits requires **Restart to apply edits**, which starts a new recording.
+  Continue without edits, or after reverting the edits, resumes the existing recording. See [recording details
+  and overhead](docs/debugging/time-travel.md).
+- **The Toolchain Store.** Languages and SDKs install into a Linux environment inside the app: Alpine Linux run
+  with PRoot, with no root and no special permissions. Alpine packages are verified against Alpine's signatures;
+  SDK components can also use official upstream archives with pinned SHA-256 checks.
 - **Everywhere the same.** Output and program input live in the Output panel, compiler errors land in the Error List
   with links to their lines, **Ctrl+F5** runs without the debugger, and **Ctrl+`** opens a terminal. If a language
   server or debug adapter is missing, the status bar, the editor and F5 offer to install it.
@@ -166,11 +187,62 @@ From there, try **New project** for a template in any language, **Open from GitH
 ### Projects and repositories
 
 - **Open from GitHub.** Paste a repository's address; TabStudio downloads it, detects what it is built with, opens its
-  main solution and installs the toolchains it needs.
+  main solution and selects its build, run and debug plans.
+- **Automatic project setup.** **Set projects up when they open** is on by default and available through Tools
+  and Ctrl+Q. Opening a Python or Node.js repository installs its toolchain and packages, with progress and
+  cancellation: pip uses a project venv; npm uses `npm ci` when a lockfile is present, otherwise `npm
+  install`. Setup runs once per manifest change. Monorepo packages remain separate run targets, while declared
+  npm workspaces share their root install.
+- **Static web sites.** Open a folder with `index.html` or create a **Static Web Site**. F5 serves it in the
+  web preview; saved HTML reloads, and saved CSS is replaced without losing page state. Node.js from the
+  Toolchain Store supplies HTML, CSS and JSON completion and diagnostics through
+  `vscode-langservers-extracted`.
 - **Compatibility Doctor.** For every project it shows where it runs on the tablet and why, and fixes what stands in
   the way.
 - **Real-world project files.** SDK-style projects, `Directory.Build.props` and `.targets`, project references,
   central package management and multi-targeting are read as MSBuild reads them.
+
+### Database Explorer
+
+**View > Database Explorer** (also in Ctrl+Q and the activity bar) connects to SQLite files, PostgreSQL
+through Npgsql and SQL Server through Microsoft.Data.SqlClient. Browse databases, schemas, tables, views,
+columns, keys and indexes. Discover connection strings from the solution's `appsettings*.json` and user
+secrets, then choose which to save. Android encrypts saved credentials with an Android Keystore key; desktop
+credentials last for the session.
+
+Open **New query** for SQL completion from the connected schema. **Ctrl+Enter** runs the selection or the
+whole tab; Cancel interrupts the command. Results have sortable columns, CSV/JSON copying, multiple result
+sets, row counts and timings. **Edit data** pages through tables and applies individual cell changes with a
+primary-key and original-row concurrency check. The **EF Core** tab builds projects in memory to list
+DbContexts and migrations, update the configured database, or add a migration. See [Database
+Explorer](docs/DATABASE.md) for setup and limits.
+
+### Remote development over SSH
+
+Choose **File > Open Remote Folder (SSH)** to open Remote Explorer, save a host or import `~/.ssh/config`,
+generate a device key and open a remote source folder. Android identities are generated inside Android
+Keystore and remain non-exportable. SFTP caches files for Solution Explorer, editing and search; Save uploads
+with conflict detection, Terminal opens a remote shell, and F5 / Build execute the folder's saved SSH
+commands. Forward a remote web port into the web preview. **File > Publish to server** publishes an ASP.NET
+Core project locally, uploads a new release through SFTP and restarts its existing systemd service. See [SSH
+setup, publishing and limits](docs/REMOTE_SSH.md).
+
+### Web servers and mobile apps
+
+Programs in any toolchain can offer **App listening on port N**: open the local server in the web preview
+beside code or in the device browser. The ASP.NET and Blazor preview also has **Open in browser**.
+
+The **Android SDK** Toolchain Store entry installs OpenJDK 17, Gradle, SDK tools/platform 35 and
+SHA-256-pinned ARM64/ARMv7 replacements for native Android build tools. Create **Android App (Kotlin)**, then
+F5 builds an APK, asks Android to install it and launches it. **Build > Build Android APK** builds without
+installing. Java editing uses jdtls; Kotlin uses kotlin-language-server, with compiler diagnostics in the
+Error List. **Logcat** shows the built app's own debug process.
+
+Create **Capacitor App** for a Vite + TypeScript app: F5 runs its web part, and **Run Android App**
+builds/syncs Capacitor and installs the native APK. **Build for iOS…** generates a reviewable GitHub Actions
+workflow and signing guide; **Run iOS Workflow…** uses the existing Actions progress, logs and IPA artifact
+download. A Mac is never needed locally, but an Apple Developer account and repository signing secrets are
+required. See [mobile workflows](docs/MOBILE.md) for setup and limitations.
 
 ### GitHub
 
@@ -187,9 +259,27 @@ From there, try **New project** for a template in any language, **Open from GitH
   Every change arrives as a diff you approve.
 - **Fix with Agent.** From an error, a CI failure, a layout finding or a Compatibility Doctor row, one tap hands the
   problem to the agent with its context.
-- **Port to cross-platform.** One tap converts a WPF or Windows Forms project into an Avalonia project that runs
-  everywhere: a converter rewrites what maps exactly and Claude does the rest, all reviewed as a diff.
+- **Port to Avalonia.** Use the Compatibility Doctor, Solution Explorer context menu or Project menu to
+  convert a C# WPF or Windows Forms project into a sibling Avalonia project; the original stays unchanged. The
+  summary links structured port notes to source lines, can send them to the agent as one task of proposed
+  changes, and offers undo. F5 runs the converted project. See [porting behavior and limits](docs/PORTING.md).
 - **Sketch to XAML** with the stylus, and **MCP** servers for your own tools.
+
+### Offline AI
+
+Open **Agent settings**, choose a local GGUF model, read and accept its license, then download it. **Local
+mode** runs chat, explanations, fixes and test generation on the tablet with the same Keep/Undo proposals. Its
+badge says **Code and prompts stay on device**; local mode has no cloud or MCP connection.
+
+Enable **Inline completions** for ghost text in any editor language: **Tab** accepts, **Escape** or typing
+cancels. Context includes the current file and unsaved open neighbors. Completion pauses when the device is
+hot or below 16% battery while unplugged. The model manager shows download size, estimated RAM and speed
+measured on this device, and offers cancel, unload and delete.
+
+Qwen2.5-Coder 1.5B/3B Q4 and Qwen2.5 0.5B chat are offered at pinned revisions with SHA-256 verification.
+Models are optional downloads; their individual licenses apply (the 3B model uses the Qwen Research License).
+Local AI requires a 64-bit build with the native runtime. See [runtime measurements and
+reproduction](docs/local-ai/spike.md).
 
 ### Built for the device in your hands
 
@@ -200,7 +290,7 @@ From there, try **New project** for a template in any language, **Open from GitH
 - **Never loses your place.** Your session, unsaved edits included, is saved as you work and restored when Android
   closes the app.
 - **Thermal-aware builds and offline by default.** Builds use fewer cores when the tablet runs hot, and everything
-  except downloads, Git remotes and the agent works without a connection.
+  except downloads, Git remotes and cloud agent mode works without a connection.
 
 The order in which features ship is in the [roadmap](docs/ROADMAP.md).
 
@@ -273,20 +363,23 @@ src/
   TabStudio.Core/            Workspace model: solutions, projects, detection, the Compatibility Doctor
   TabStudio.Compilation/     Roslyn: diagnostics, IntelliSense, in-memory compilation, running programs
   TabStudio.Packages/        NuGet restore on the device
+  TabStudio.Database/        SQLite, PostgreSQL and SQL Server connections, schema, queries and table editing
   TabStudio.Debugging/       The C# debugger: instrumented builds, breakpoints, stepping, inspection
   TabStudio.TestRunner/      xUnit, NUnit and MSTest discovery and execution
   TabStudio.LiveTesting/     Live Unit Testing: coverage, impact analysis, the live test engine
   TabStudio.Notebooks/       C# notebooks: .ipynb and .dib, the kernel, value formatting
-  TabStudio.Toolchains/      The Toolchain Store: Alpine Linux on PRoot, packages, processes, the terminal
+  TabStudio.Toolchains/      Alpine/PRoot toolchains, verified SDK downloads, processes and the terminal
   TabStudio.LanguageServers/ LSP and DAP clients for every language other than C#
   TabStudio.Extensions/      VS Code extensions from Open VSX
   TabStudio.Web/             Web apps: static web assets, Blazor, .NET on WebAssembly
   TabStudio.Forms/           Windows Forms on Avalonia
   TabStudio.Forms.Design/    The Windows Forms touch designer's model
   TabStudio.Wpf/             WPF on OpenSilver
+  TabStudio.Porting/         WPF and Windows Forms conversion to sibling Avalonia projects and port notes
   TabStudio.Uno/             WinUI and Uno Platform on Skia
   TabStudio.SourceControl/   Git and GitHub: changes, branches, pull requests, Actions
-  TabStudio.Agent/           Claude as a coding agent, MCP, sketch to XAML
+  TabStudio.Remote/          SSH.NET, device keys, SFTP source caches, remote shells and server publishing
+  TabStudio.Agent/           Cloud and offline coding agents, MCP, sketch to XAML
   TabStudio.Link/            TabStudio Link: pairing, encrypted transport, the remote language service
   TabStudio.Swarm/           Swarm: running, debugging and recording an app on every joined device
   TabStudio.WindowsBridge/   The Windows Bridge protocol, shared by the tablet and the PC
@@ -305,6 +398,14 @@ build/                       CI and build scripts
 TabStudio is built in the open, and one contributor can still shape a whole feature. Start with the
 [roadmap](docs/ROADMAP.md), and read [CONTRIBUTING.md](CONTRIBUTING.md) for how the code is organized, how CI works
 and what a good pull request looks like.
+
+## Microchip PIC on the tablet
+
+Install **Microchip XC8** (PIC10/12/16/18) or **Microchip XC32** (PIC32) in the Toolchain Store after reading Microchip's licence. The official x86-64 Linux compilers run through Box64 in the tablet's Alpine/PRoot environment, with verified glibc runtimes and device packs. **The compilers are installed by the user under Microchip's licence and are never redistributed.** No PC or licence-manager activation is needed for local builds.
+
+Create **PIC18 Blink (XC8)** or **PIC32 Blink (XC32)**, or open an MPLAB X project with `nbproject/configurations.xml` and its generated makefiles. Builds retain MPLAB's options, populate the Error List, show memory usage and prepare clangd's device headers/builtins. PIC18 Blink uses a real gpsim-supported PIC18F14K22 model for local F5 debugging.
+
+Configure a compatible USB-OTG bootloader/programmer for **Flash**; other devices say **Use the Windows Bridge**. The serial monitor supports CDC-ACM, CH340, CP210x and FTDI. PICkit 4/5 and Snap PIC programming/debugging use the paired PC's MPLAB tools: pymcuprog's documented PIC support is PKOB nano, not those programmers. [Setup, exact device lists, measured ARM64 compiler results and hardware limitations](docs/PIC.md).
 
 ## License and trademarks
 

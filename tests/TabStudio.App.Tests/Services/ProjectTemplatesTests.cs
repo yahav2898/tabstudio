@@ -3,6 +3,7 @@ using TabStudio.Compilation;
 using TabStudio.Compilation.Building;
 using TabStudio.Core.Workspaces;
 using TabStudio.Testing;
+using TabStudio.Toolchains.Microchip;
 
 namespace TabStudio.App.Tests.Services;
 
@@ -56,6 +57,22 @@ public sealed class ProjectTemplatesTests : IDisposable
         var second = _templates.Create(ProjectTemplates.ConsoleId, "Twice");
 
         Assert.NotEqual(Path.GetDirectoryName(first), Path.GetDirectoryName(second));
+    }
+
+    [Theory]
+    [InlineData(ProjectTemplates.Pic18Id, "XC8", "PIC18F14K22")]
+    [InlineData(ProjectTemplates.Pic32Id, "XC32", "PIC32MX250F128B")]
+    public void Pic_templates_include_mplab_metadata_and_the_portable_makefile(string template, string compiler, string device)
+    {
+        var folder = _templates.Create(template, "MyBlink");
+        var project = MplabProject.Load(Path.Combine(folder, MplabProject.Marker));
+        var configuration = Assert.Single(project.Configurations);
+
+        Assert.Equal(compiler, configuration.Compiler);
+        Assert.Equal(device, configuration.Device);
+        Assert.Equal(["main.c"], configuration.Files);
+        Assert.True(File.Exists(Path.Combine(folder, "nbproject/Makefile-default.mk")));
+        Assert.True(File.Exists(Path.Combine(folder, "nbproject/project.xml")));
     }
 
     public void Dispose() => _temp.Dispose();

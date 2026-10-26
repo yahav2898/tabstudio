@@ -36,7 +36,7 @@ namespace TabStudio.Debugging;
 /// should hand the event to the UI thread. <see cref="DebugValue"/>s of a pause should be read while it lasts.
 /// </para>
 /// </remarks>
-public sealed class DebugSession : IDisposable
+public sealed partial class DebugSession : IDisposable
 {
     /// <summary>How long a property getter or <c>ToString</c> of the program may run while it is inspected.</summary>
     public static TimeSpan DefaultEvaluationTimeout { get; } = TimeSpan.FromSeconds(1);
@@ -50,7 +50,8 @@ public sealed class DebugSession : IDisposable
     /// <summary>Hosted sessions connect their programs one at a time, as that briefly uses the process-wide sink.</summary>
     private static readonly Lock AttachGate = new();
 
-    private readonly DebugBuild _build;
+    private DebugBuild _build;
+    private DebugInfoMap _debugInfo;
     private readonly DebugEngine _engine;
     private readonly Lock _breakpointsGate = new();
     private readonly List<Breakpoint> _breakpoints = [];
@@ -69,8 +70,9 @@ public sealed class DebugSession : IDisposable
     /// <summary>Creates a session for a successful debug build.</summary>
     /// <param name="build">The instrumented program.</param>
     /// <param name="evaluationTimeout">How long one property getter or <c>ToString</c> may run during inspection.</param>
+    /// <param name="recording">Opt-in ring settings, or null to leave recording off.</param>
     /// <exception cref="ArgumentException">The build failed.</exception>
-    public DebugSession(DebugBuild build, TimeSpan evaluationTimeout)
+    public DebugSession(DebugBuild build, TimeSpan evaluationTimeout, Recording.RecordingOptions? recording = null)
     {
         ArgumentNullException.ThrowIfNull(build);
         if (!build.Success)
@@ -79,7 +81,9 @@ public sealed class DebugSession : IDisposable
         }
 
         _build = build;
+        _debugInfo = build.DebugInfo;
         _engine = new DebugEngine(build.DebugInfo, new ValueInspector(new Evaluator(evaluationTimeout)), OnPaused, OnResumed);
+        if (recording is not null) _engine.Recording = new Recording.DebugRecording(build.DebugInfo, recording);
     }
 
     /// <summary>Raised when the program pauses. The event data has the location, call stack and locals.</summary>
@@ -91,8 +95,20 @@ public sealed class DebugSession : IDisposable
     /// <summary>Raised once when the program has ended, however it ended.</summary>
     public event EventHandler<DebugExitedEventArgs>? Exited;
 
+    /// <summary>Raised once the program's entry assembly is loaded, before Main runs, for Hot Reload.</summary>
+    public event Action<Assembly>? Loaded;
+
     /// <summary>Where every statement and method of the build is, for the breakpoint margin.</summary>
-    public DebugInfoMap DebugInfo => _build.DebugInfo;
+    public DebugInfoMap DebugInfo => Volatile.Read(ref _debugInfo);
+
+    /// <summary>Updates source locations after a Hot Reload that preserves statement/method ids and local slots.</summary>
+    /// <param name="info">The validated instrumenter's map for the new generation.</param>
+    public void UpdateDebugInfo(DebugInfoMap info)
+    {
+        ArgumentNullException.ThrowIfNull(info);
+        _engine.UpdateDebugInfo(info);
+        Volatile.Write(ref _debugInfo, info);
+    }
 
     /// <summary>Where the session is in its life.</summary>
     public DebugSessionState State => Volatile.Read(ref _phase) switch
@@ -255,7 +271,9 @@ public sealed class DebugSession : IDisposable
         {
             AppContext.SetData(DebugRuntimeSource.DataKey, sink);
             using var stop = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _stop.Token);
-            result = await new ProgramRunner()
+            var runner = new ProgramRunner();
+            runner.Loaded += assembly => Loaded?.Invoke(assembly);
+            result = await runner
                 .RunAsync(_build.Result.EntryAssembly!, _build.Result.Dependencies, packageAssemblies, arguments, console, input, stop.Token)
                 .ConfigureAwait(false);
         }
@@ -410,6 +428,18 @@ public sealed class DebugSession : IDisposable
         Stop();
         _disposed = true;
         _stop.Dispose();
+        // The stopped program's static hook delegates can still reference this session on Mono. Retain its
+        // images/source map for the existing inspection contract, but release the much larger compiler graphs.
+        var result = _build.Result;
+        _build = _build with
+        {
+            Result = result with
+            {
+                EntryAssembly = result.EntryAssembly is { } entry ? entry with { HotReloadCompilation = null } : null,
+                Dependencies = result.Dependencies.Select(a => a with { HotReloadCompilation = null }).ToArray(),
+            },
+        };
+        Loaded = null;
     }
 
     private void OnPaused(DebugPausedEventArgs pause) => Paused?.Invoke(this, pause);

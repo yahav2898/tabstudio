@@ -12,7 +12,7 @@ public static class PathUtilities
     /// <summary>Directory names that never belong in the Solution Explorer or in a search.</summary>
     public static IReadOnlySet<string> IgnoredDirectoryNames { get; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
     {
-        "bin", "obj", ".git", ".vs", ".idea", ".vscode", "node_modules", "packages", "TestResults", ".gradle", "target", "__pycache__",
+        "bin", "obj", ".git", ".vs", ".idea", ".vscode", "node_modules", "TestResults", ".gradle", "target", "__pycache__",
     };
 
     /// <summary>Converts both <c>/</c> and <c>\</c> to the separator of the current platform.</summary>

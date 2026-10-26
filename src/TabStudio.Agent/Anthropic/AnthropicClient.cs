@@ -55,7 +55,7 @@ public sealed class AnthropicException : Exception
 /// A client of Claude's Messages API that streams answers: text arrives as it is written, and the complete
 /// message, with any tool calls, is returned at the end.
 /// </summary>
-public sealed class AnthropicClient
+public sealed class AnthropicClient : IAgentClient
 {
     /// <summary>The API's address.</summary>
     public static readonly Uri DefaultAddress = new("https://api.anthropic.com/");

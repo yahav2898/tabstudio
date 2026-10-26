@@ -39,6 +39,11 @@ public enum BottomPanel
 
     /// <summary>The Terminal: a shell in the workspace folder.</summary>
     Terminal,
+
+    /// <summary>The running Android app's logcat.</summary>
+    Logcat,
+    /// <summary>The USB serial monitor, independent of the firmware build.</summary>
+    SerialMonitor,
 }
 
 /// <summary>What the IDE is doing, for the status bar.</summary>
@@ -106,7 +111,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     /// <param name="swarm">The swarm, which runs the app on phones and tablets; none when <see langword="null"/>.</param>
     /// <param name="recentWorkspaces">The solutions opened recently, which the search finds; none when <see langword="null"/>.</param>
     /// <param name="windowsBridge">The Windows Bridge, which builds and runs Windows-only projects on a paired PC; none when <see langword="null"/>.</param>
-    public WorkspaceViewModel(CompilerServices compiler, IDeviceStatus device, DeviceProfile profile, IUiDispatcher ui, SessionStore sessions, AppPaths paths, GitHubAccountViewModel? gitHubAccount = null, IStoragePicker? browser = null, IWebViewFactory? webViews = null, INotifications? notifications = null, IAppActivity? appActivity = null, LinkService? link = null, LinkViewModel? linkDialog = null, Services.LanguageServers.LanguageServerServices? languageServers = null, ExtensionsService? extensions = null, Services.Toolchains.ToolchainServices? toolchains = null, global::TabStudio.App.Swarm.SwarmServices? swarm = null, RecentWorkspaces? recentWorkspaces = null, Services.WindowsBridge.WindowsBridgeService? windowsBridge = null)
+    public WorkspaceViewModel(CompilerServices compiler, IDeviceStatus device, DeviceProfile profile, IUiDispatcher ui, SessionStore sessions, AppPaths paths, GitHubAccountViewModel? gitHubAccount = null, IStoragePicker? browser = null, IWebViewFactory? webViews = null, INotifications? notifications = null, IAppActivity? appActivity = null, LinkService? link = null, LinkViewModel? linkDialog = null, Services.LanguageServers.LanguageServerServices? languageServers = null, ExtensionsService? extensions = null, Services.Toolchains.ToolchainServices? toolchains = null, global::TabStudio.App.Swarm.SwarmServices? swarm = null, RecentWorkspaces? recentWorkspaces = null, Services.WindowsBridge.WindowsBridgeService? windowsBridge = null, global::TabStudio.Database.IDatabaseSecretStore? databaseSecrets = null, RemoteSshServices? remoteSsh = null, IAndroidAppInstaller? androidInstaller = null, Services.LocalAI.LocalAIService? localAI = null)
     {
         ArgumentNullException.ThrowIfNull(compiler);
         ArgumentNullException.ThrowIfNull(device);
@@ -125,6 +130,8 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
 
         Explorer = new SolutionExplorerViewModel(this);
         Output = new OutputViewModel(ui, profile.OutputCharacterLimit);
+        Logcat = new OutputViewModel(ui, profile.OutputCharacterLimit);
+        _androidInstaller = androidInstaller;
         Explorer.OpenFileRequested += async (_, path) => await OpenDocumentAsync(path);
         Explorer.SelectionChanged += (_, node) => ShowProperties(node);
         ErrorList.NavigateRequested += async (_, diagnostic) => await NavigateToAsync(diagnostic.Location!.FilePath, diagnostic.Location.Line, diagnostic.Location.Column);
@@ -134,8 +141,11 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         UpdateThermal();
         GitChanges = CreateGitChanges(gitHubAccount, browser);
         WebPreview = new WebPreviewViewModel(webViews ?? new NoWebViewFactory(), browser ?? new TopLevelStoragePicker());
+        _serverBrowser = browser ?? new TopLevelStoragePicker();
         InitializeDebugging();
         InitializeTests();
+        LocalAI = localAI ?? new Services.LocalAI.LocalAIService(paths, device);
+        _ownsLocalAI = localAI is null;
         InitializeAgent();
         InitializeLink();
         Documents.CollectionChanged += (_, _) => UpdateActiveProjects();
@@ -145,11 +155,13 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         InitializeLanguageServers(languageServers, browser);
         InitializeExtensions(extensions, browser);
         InitializeToolchains(toolchains);
+        InitializeRemoteSsh(remoteSsh);
         InitializeSwarmScreens(swarm?.Registry);
         InitializeSwarm(swarm);
         InitializeProperties();
         InitializeStatusBar();
         InitializeWindowsBridge(windowsBridge);
+        InitializeDatabase(databaseSecrets);
         InitializeActivity();
         Search = CreateSearch(recentWorkspaces);
     }
@@ -163,7 +175,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     public partial Workspace? Workspace { get; private set; }
 
     /// <summary>The workspace name, shown in the menu bar.</summary>
-    public string Title => Workspace?.Name ?? "TabStudio";
+    public string Title => IsRemoteWorkspace ? $"{Workspace?.Name} [SSH: {_remoteMarker}]" : Workspace?.Name ?? "TabStudio";
 
     /// <summary>The Solution Explorer.</summary>
     public SolutionExplorerViewModel Explorer { get; }
@@ -254,7 +266,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     public string RunLabel => StartupProject?.Name ?? LaunchTargetLabel ?? "Start";
 
     /// <summary>Where the startup project runs, such as "In-process".</summary>
-    public string RunHostText => StartupProject is { } project ? IsRunOnSwarm ? SwarmRunHostText : RunsViaFor(project) : LaunchTargetHost ?? "Nothing to run";
+    public string RunHostText => IsRemoteWorkspace ? _remoteMarker! : StartupProject is { } project ? IsRunOnSwarm ? SwarmRunHostText : RunsViaFor(project) : LaunchTargetHost ?? "Nothing to run";
 
     /// <summary>The build configuration, "Debug" or "Release".</summary>
     [ObservableProperty]
@@ -271,6 +283,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         ArgumentNullException.ThrowIfNull(path);
         State = IdeState.Busy;
         StatusText = "Opening";
+        LoadRemoteState(Directory.Exists(path) ? path : Path.GetDirectoryName(path)!);
 
         var notebook = NotebookToOpen(path);
         var preview = await WorkspaceInspector.InspectAsync(notebook is null ? path : Path.GetDirectoryName(notebook)!);
@@ -290,6 +303,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
             Stacks.Add(new StackChipViewModel(component.Version is null ? component.DisplayName : $"{component.DisplayName} {component.Version}", component.Evidence));
         }
 
+        DatabaseExplorer.EfCore.LoadProjects(preview.Workspace.Projects);
         LoadStartupProjects(preview.Workspace, session?.StartupProject);
         await LoadToolchainProjectsAsync(preview.Workspace, session?.StartupProject, opening: true);
 
@@ -372,10 +386,14 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         _background?.Dispose();
         _background = null;
         _run?.Cancel();
+        RemoteExplorer.Dispose();
+        DisconnectRemote();
 
         // A session save still waiting would reach for the UI thread after the workspace is gone.
         _sessionSave?.Cancel();
+        DatabaseExplorer.Dispose();
         DisposeDebugging();
+        EndHotReload();
         DisposeTests();
         DisposeSwarm();
         DisposeLiveTesting();
@@ -399,6 +417,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         DisposeActions();
         DisposePullRequests();
         DisposeToolchains();
+        if (_ownsLocalAI) LocalAI.Dispose();
         GitChanges.Dispose();
         DisposeLanguageServers();
         DisposeExtensions();

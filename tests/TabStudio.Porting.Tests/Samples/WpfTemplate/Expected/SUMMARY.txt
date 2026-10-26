@@ -1,0 +1,24 @@
+App.axaml ← App.xaml (Xaml)
+  WPF xmlns → Avalonia xmlns · 1
+  clr-namespace → using: · 1
+  StartupUri → App.axaml.cs opens the window · 1
+  WPF's look → Fluent theme in light · 1
+App.axaml.cs ← App.xaml.cs (Code)
+  Application → Avalonia's Initialize and OnFrameworkInitializationCompleted · 1
+  WPF usings → Avalonia usings · 1
+MainWindow.axaml ← MainWindow.xaml (Xaml)
+  WPF xmlns → Avalonia xmlns · 1
+  clr-namespace → using: · 1
+  Window → AppWindow, a window on the desktop and the screen on phones · 1
+MainWindow.axaml.cs ← MainWindow.xaml.cs (Code)
+  Window → AppWindow · 1
+  WPF usings → Avalonia usings · 1
+Porting/AppWindow.cs (Support)
+Porting/ScreenHost.cs (Support)
+Porting/WindowView.cs (Support)
+Program.cs (Code)
+  Avalonia's entry point, as TabStudio's Avalonia template has it · 1
+WpfApp1.Avalonia.csproj (Project)
+  AssemblyInfo.cs with only ThemeInfo removed: Avalonia has no theme dictionaries per assembly · 1
+  UseWPF project → Avalonia project · 1
+  net10.0-windows → net10.0 · 1

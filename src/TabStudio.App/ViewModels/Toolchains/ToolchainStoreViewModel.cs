@@ -5,6 +5,7 @@ using TabStudio.App.Services;
 using TabStudio.App.Services.Toolchains;
 using TabStudio.Toolchains.Installation;
 using TabStudio.Toolchains.Linux;
+using TabStudio.Toolchains.Microchip;
 
 namespace TabStudio.App.ViewModels;
 
@@ -104,11 +105,50 @@ public sealed partial class ToolchainStoreViewModel : ObservableObject, IDisposa
     /// <summary>Installs a toolchain, or returns the install already running.</summary>
     /// <param name="id">The toolchain.</param>
     /// <returns>Completes when the install ends, whether it succeeded, failed or was cancelled; the status says which.</returns>
-    public Task InstallAsync(string id) => Run(id, cancellation => Manager.InstallAsync(id, cancellation));
+    public Task InstallAsync(string id) => Run(id, cancellation => InstallWithLicenseAsync(id, update: false, cancellation));
 
     /// <summary>Updates a toolchain.</summary>
     /// <param name="id">The toolchain.</param>
-    public Task UpdateAsync(string id) => Run(id, cancellation => Manager.UpdateAsync(id, cancellation));
+    public Task UpdateAsync(string id) => Run(id, cancellation => InstallWithLicenseAsync(id, update: true, cancellation));
+
+    private async Task InstallWithLicenseAsync(string id, bool update, CancellationToken cancellationToken)
+    {
+        if (Manager.Catalog.Find(id)?.LicenseAgreement is { } agreement
+            && !await _confirm("Android SDK license", agreement, "Accept and install", false))
+        {
+            return;
+        }
+
+        if (MicrochipInstallation.IsCompiler(id))
+        {
+            string terms;
+            try
+            {
+                terms = await _toolchains.ReadMicrochipLicenseAsync(cancellationToken);
+            }
+            catch (Exception ex) when (ex is HttpRequestException or InvalidDataException)
+            {
+                await _confirm("Microchip license unavailable", ex.Message, "Close", false);
+                return;
+            }
+
+            if (!await _confirm("Microchip software license", "The compiler is installed by you under Microchip's license. TabStudio never redistributes it. Free operation needs no license-manager activation.\n\n" + terms, "I accept — install", false))
+            {
+                return;
+            }
+
+            _toolchains.AcceptMicrochipLicense(id, terms);
+        }
+
+        if (update)
+        {
+            await Manager.UpdateAsync(id, cancellationToken);
+        }
+        else
+        {
+            await Manager.InstallAsync(id, cancellationToken);
+        }
+    }
 
     /// <summary>Asks, then removes a toolchain.</summary>
     /// <param name="id">The toolchain.</param>

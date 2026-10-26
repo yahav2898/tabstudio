@@ -5,12 +5,25 @@ namespace TabStudio.App.Services;
 public static partial class SelfTest
 {
     private static readonly string[] SelfTestToolchainIds = ["python", "node", "go", "rust", "cpp", "java"];
+    private static readonly string[] ManagedSelfTestToolchainIds = ["go", "rust"];
+    private static readonly string[] NativeSelfTestToolchainIds = ["python", "node", "cpp", "java"];
+
+    // Kept in one place so the partition can be checked without downloading SDKs in a unit test.
+    internal static IReadOnlyList<string> SelfTestToolchainIdsForShard(SelfTestShard shard) => shard switch
+    {
+        SelfTestShard.All => SelfTestToolchainIds,
+        SelfTestShard.Managed => ManagedSelfTestToolchainIds,
+        SelfTestShard.Native => NativeSelfTestToolchainIds,
+        SelfTestShard.Ui => [],
+        _ => throw new ArgumentOutOfRangeException(nameof(shard), shard, "Unknown self-test shard."),
+    };
 
     /// <summary>
-    /// Installs the self test's toolchains while its independent .NET and UI checks run. The manager serializes
-    /// package operations; the caller awaits this task before running any of the toolchain checks.
+    /// Installs only the current shard's toolchains while its independent .NET and UI checks run. The manager
+    /// serializes package operations; callers await this task before running the tools. Separate emulator jobs
+    /// never install packages solely to support assertions assigned to a different shard.
     /// </summary>
-    private static async Task PrepareSelfTestToolchainsAsync(ToolchainServices toolchains, CancellationToken cancellationToken)
+    private static async Task PrepareSelfTestToolchainsAsync(ToolchainServices toolchains, SelfTestShard shard, CancellationToken cancellationToken)
     {
         await toolchains.EnsureStatusAsync().WaitAsync(cancellationToken).ConfigureAwait(false);
         if (!toolchains.Manager.CanInstall)
@@ -18,7 +31,7 @@ public static partial class SelfTest
             return;
         }
 
-        var missing = SelfTestToolchainIds
+        var missing = SelfTestToolchainIdsForShard(shard)
             .Where(id => !toolchains.Manager.IsReady(id));
         await toolchains.Manager.InstallManyAsync(missing, cancellationToken).ConfigureAwait(false);
     }

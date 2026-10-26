@@ -1,4 +1,5 @@
 using TabStudio.Toolchains.Catalog;
+using TabStudio.Toolchains.Microchip;
 
 namespace TabStudio.Toolchains.Projects;
 
@@ -7,8 +8,9 @@ namespace TabStudio.Toolchains.Projects;
 /// toolchain whose programs are single files (Python), a folder with its source files at the top.
 /// </summary>
 /// <remarks>
-/// Only the Store's listed toolchains count, since only they run. A project's own subfolders are not projects
-/// of the same toolchain (a Python package inside a Python app, say), and dependency and build folders
+/// Only the Store's listed toolchains count, since only they run. Explicit manifests identify separate projects,
+/// including nested packages in a monorepo. Source folders inside a project (a Python package, say) belong to it,
+/// and dependency and build folders
 /// (<c>node_modules</c>, <c>.venv</c>, <c>bin</c>, <c>obj</c>, dot folders) are never searched.
 /// </remarks>
 public static class ToolchainProjectDetector
@@ -53,19 +55,73 @@ public static class ToolchainProjectDetector
                 continue;
             }
 
+            var androidRoot = GradleAndroidProject.IsProject(folder);
+            var mobileRoot = androidRoot || GradleAndroidProject.IsCapacitor(folder);
+            var owner = result.Where(p => IsInside(folder, p.Directory)
+                    && (p.Toolchain.Id is "android" or "java"
+                        || p.Toolchain.Id == "node" && GradleAndroidProject.IsCapacitor(p.Directory)))
+                .MaxBy(p => p.Directory.Length);
+            var insideMobile = owner is not null && owner.Toolchain.Id != "java";
+            var independentJavaRoot = files.Contains("pom.xml", StringComparer.OrdinalIgnoreCase)
+                || files.Contains("settings.gradle", StringComparer.OrdinalIgnoreCase)
+                || files.Contains("settings.gradle.kts", StringComparer.OrdinalIgnoreCase);
+
+            var inMplabProject = File.Exists(Path.Combine(folder, MplabProject.Marker))
+                || result.Any(p => MicrochipInstallation.IsCompiler(p.Toolchain.Id) && IsInside(folder, p.Directory));
             foreach (var toolchain in toolchains)
             {
-                var insideProject = result.Any(p => p.Toolchain.Id == toolchain.Id && IsInside(folder, p.Directory));
-                if (insideProject && !toolchain.AllowNestedProjects)
+                // MPLAB owns its Makefiles and C sources, including source-only child folders.
+                if (inMplabProject && toolchain.Id == "cpp")
                 {
                     continue;
                 }
 
-                var marker = toolchain.ProjectFiles.FirstOrDefault(f => files.Contains(f, StringComparer.OrdinalIgnoreCase));
+                if (toolchain.Id == "android" && !androidRoot)
+                {
+                    continue;
+                }
+
+                // Android settings and module build files also match Java's Gradle markers. A module and its
+                // source folders belong to the mobile root; an explicit Maven or independent Gradle root can
+                // start a separate JVM project, whose own descendants then follow the usual nesting rules.
+                if (toolchain.Id == "java" && (mobileRoot || insideMobile && !independentJavaRoot))
+                {
+                    continue;
+                }
+
+                var marker = toolchain.ProjectFiles.FirstOrDefault(f => files.Contains(f, StringComparer.OrdinalIgnoreCase)
+                    || (f.Contains('/') && File.Exists(Path.Combine(folder, f))));
+                if (marker is not null && !marker.Contains('/'))
+                {
+                    marker = files.First(f => string.Equals(f, marker, StringComparison.OrdinalIgnoreCase));
+                }
+                if (marker is not null && MicrochipInstallation.IsCompiler(toolchain.Id))
+                {
+                    try
+                    {
+                        var mplab = MplabProject.Load(Path.Combine(folder, marker));
+                        var configuration = mplab.Configurations.FirstOrDefault(c => c.Name == "default") ?? mplab.Configurations[0];
+                        if (!configuration.Compiler.Equals(toolchain.Id, StringComparison.OrdinalIgnoreCase))
+                        {
+                            continue;
+                        }
+                    }
+                    catch (Exception ex) when (ex is IOException or System.Xml.XmlException)
+                    {
+                        continue;
+                    }
+                }
+
+                var insideProject = result.Any(p => p.Toolchain.Id == toolchain.Id && IsInside(folder, p.Directory));
+                if (insideProject && marker is null && !toolchain.AllowNestedProjects)
+                {
+                    continue;
+                }
+
                 var isSourceFolder = !insideProject && marker is null && toolchain.SourceFolderIsProject && files.Any(toolchain.RunsFile);
                 if (marker is not null || isSourceFolder)
                 {
-                    result.Add(new ToolchainProject(toolchain, folder, marker is null ? null : files.First(f => string.Equals(f, marker, StringComparison.OrdinalIgnoreCase))));
+                    result.Add(new ToolchainProject(toolchain, folder, marker));
                 }
             }
 
@@ -77,7 +133,7 @@ public static class ToolchainProjectDetector
             foreach (var child in folders)
             {
                 var name = Path.GetFileName(child);
-                if (!name.StartsWith('.') && !IgnoredFolders.Contains(name))
+                if (!name.StartsWith('.') && !IgnoredFolders.Contains(name) && (File.GetAttributes(child) & FileAttributes.ReparsePoint) == 0)
                 {
                     queue.Enqueue((child, depth + 1));
                 }

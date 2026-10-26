@@ -19,6 +19,50 @@ public sealed class SelfTestTests : IDisposable
         _main = _services.GetRequiredService<MainViewModel>();
     }
 
+    [Theory]
+    [InlineData(null, SelfTestShard.All)]
+    [InlineData("", SelfTestShard.All)]
+    [InlineData("all", SelfTestShard.All)]
+    [InlineData("managed", SelfTestShard.Managed)]
+    [InlineData("UI", SelfTestShard.Ui)]
+    [InlineData("native", SelfTestShard.Native)]
+    [InlineData("performance", SelfTestShard.Performance)]
+    public void Recognizes_only_named_device_test_shards(string? value, SelfTestShard expected)
+    {
+        Assert.True(SelfTest.TryParseShard(value, out var actual));
+        Assert.Equal(expected, actual);
+    }
+
+    [Theory]
+    [InlineData("0")]
+    [InlineData("3")]
+    [InlineData("4")]
+    [InlineData("unknown")]
+    [InlineData("managed,ui")]
+    public void Rejects_invalid_device_test_shards(string value) =>
+        Assert.False(SelfTest.TryParseShard(value, out _));
+
+    [Fact]
+    public void Shard_installation_plans_cover_the_full_run_without_installing_other_shards_tools()
+    {
+        var managed = SelfTest.SelfTestToolchainIdsForShard(SelfTestShard.Managed);
+        var ui = SelfTest.SelfTestToolchainIdsForShard(SelfTestShard.Ui);
+        var native = SelfTest.SelfTestToolchainIdsForShard(SelfTestShard.Native);
+        var all = SelfTest.SelfTestToolchainIdsForShard(SelfTestShard.All);
+
+        Assert.Equal(["go", "rust"], managed);
+        Assert.Empty(ui);
+        Assert.Equal(["python", "node", "cpp", "java"], native);
+        Assert.Empty(managed.Intersect(ui, StringComparer.Ordinal));
+        Assert.Empty(ui.Intersect(native, StringComparer.Ordinal));
+        Assert.Empty(managed.Intersect(native, StringComparer.Ordinal));
+        Assert.Equal(all.Order(StringComparer.Ordinal), managed.Concat(ui).Concat(native).Order(StringComparer.Ordinal));
+    }
+
+    [Fact]
+    public void An_unknown_shard_cannot_silently_skip_toolchain_preparation() =>
+        Assert.Throws<ArgumentOutOfRangeException>(() => SelfTest.SelfTestToolchainIdsForShard((SelfTestShard)(-1)));
+
     [AvaloniaFact]
     public async Task Opens_the_sample_runs_it_and_answers_its_question()
     {

@@ -19,6 +19,7 @@ public sealed partial class WorkspaceViewModel
     /// <inheritdoc />
     async Task IExplorerActions.NewFileAsync(WorkspaceNode node)
     {
+        if (IsRemoteWorkspace) { StatusText = "Create remote files in the SSH Terminal, then Refresh in Remote Explorer."; return; }
         if (DirectoryOf(node) is not { } folder || Workspace is not { } workspace)
         {
             return;
@@ -50,6 +51,7 @@ public sealed partial class WorkspaceViewModel
     /// <inheritdoc />
     async Task IExplorerActions.NewFolderAsync(WorkspaceNode node)
     {
+        if (IsRemoteWorkspace) { StatusText = "Create remote folders in the SSH Terminal, then Refresh in Remote Explorer."; return; }
         if (DirectoryOf(node) is not { } folder)
         {
             return;
@@ -77,6 +79,7 @@ public sealed partial class WorkspaceViewModel
     /// <inheritdoc />
     async Task IExplorerActions.RenameAsync(WorkspaceNode node)
     {
+        if (IsRemoteWorkspace) { StatusText = "Rename remote files in the SSH Terminal, then Refresh in Remote Explorer."; return; }
         if (node.FullPath is not { } path)
         {
             return;
@@ -124,6 +127,7 @@ public sealed partial class WorkspaceViewModel
     /// <inheritdoc />
     async Task IExplorerActions.DeleteAsync(WorkspaceNode node)
     {
+        if (IsRemoteWorkspace) { StatusText = "Delete remote files in the SSH Terminal, then Refresh in Remote Explorer."; return; }
         if (node.FullPath is not { } path)
         {
             return;
@@ -170,14 +174,16 @@ public sealed partial class WorkspaceViewModel
     /// Reads the workspace again after files changed on disk: the Solution Explorer, the language service
     /// (with the unsaved text of open documents) and the Compatibility Doctor all follow.
     /// </summary>
-    public async Task ReloadWorkspaceAsync()
+    public Task ReloadWorkspaceAsync() => ReloadWorkspaceAsync(null);
+
+    private async Task ReloadWorkspaceAsync(string? inspectPath)
     {
         if (Workspace is not { } current)
         {
             return;
         }
 
-        var path = current.Solution?.FilePath ?? current.RootDirectory;
+        var path = inspectPath ?? current.Solution?.FilePath ?? current.RootDirectory;
         var preview = await WorkspaceInspector.InspectAsync(path);
         Workspace = preview.Workspace;
         Explorer.Load(preview.Workspace, preview.Reports);
@@ -188,6 +194,7 @@ public sealed partial class WorkspaceViewModel
             Compatibility.Add(new CompatibilityRowViewModel(report));
         }
 
+        DatabaseExplorer.EfCore.LoadProjects(preview.Workspace.Projects);
         var startup = StartupProject?.FilePath;
         LoadStartupProjects(preview.Workspace, startup);
         await LoadToolchainProjectsAsync(preview.Workspace, startup);

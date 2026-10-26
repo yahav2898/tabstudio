@@ -236,7 +236,7 @@ internal sealed partial class LanguageServerInstance : IAsyncDisposable
     /// <summary>Runs the server, and runs it again after it stopped unexpectedly, until it fails too often.</summary>
     private async Task RunAsync()
     {
-        while (!_life.IsCancellationRequested)
+        while (!_stopping && !_life.IsCancellationRequested)
         {
             if (!await RunOnceAsync().ConfigureAwait(false) || _stopping || _life.IsCancellationRequested)
             {
@@ -272,7 +272,7 @@ internal sealed partial class LanguageServerInstance : IAsyncDisposable
     }
 
     /// <summary>Starts the program, initializes it and waits until it ends.</summary>
-    /// <returns>Whether it ran, so a crash may be followed by a restart; <see langword="false"/> when it could not start.</returns>
+    /// <returns>Whether it stopped unexpectedly and may restart; <see langword="false"/> for a terminal startup failure.</returns>
     private async Task<bool> RunOnceAsync()
     {
         IServerProcess process;
@@ -288,7 +288,7 @@ internal sealed partial class LanguageServerInstance : IAsyncDisposable
         }
 
         _process = process;
-        _ = PumpStandardErrorAsync(process);
+        var standardError = PumpStandardErrorAsync(process);
         var connection = new JsonRpcConnection(process.StandardOutput, process.StandardInput);
         RegisterHandlers(connection);
         if (_host.Options.TraceMessages)
@@ -303,11 +303,39 @@ internal sealed partial class LanguageServerInstance : IAsyncDisposable
         }
         catch (Exception ex) when (ex is JsonRpcException or OperationCanceledException or JsonException)
         {
-            if (!_life.IsCancellationRequested)
+            // An orderly EOF before initialize answers is the same unexpected process stop as one after it.
+            // Keep the original readiness pending while RunAsync applies its existing restart budget and backoff.
+            // Protocol/read errors and a server's initialize rejection still fail immediately.
+            var restart = !_stopping && !_life.IsCancellationRequested
+                && ex is JsonRpcException { IsConnectionClosed: true }
+                && connection.IsClosed && connection.CloseReason is null;
+            if (!_stopping && !_life.IsCancellationRequested)
             {
-                Fail(ex is OperationCanceledException
+                // Drain stderr only for an already exited process; a server that closed stdout may still be running.
+                if (process.Exited.IsCompletedSuccessfully)
+                {
+                    try
+                    {
+                        await standardError.WaitAsync(TimeSpan.FromSeconds(1)).ConfigureAwait(false);
+                    }
+                    catch (TimeoutException)
+                    {
+                        // Its inherited stderr may still be held open by a child.
+                    }
+                }
+
+                var exit = process.Exited.IsCompletedSuccessfully ? $" (exit code {await process.Exited.ConfigureAwait(false)})" : string.Empty;
+                var message = ex is OperationCanceledException
                     ? $"{Name} did not answer within {_host.Options.InitializeTimeout.TotalSeconds:0} seconds of starting."
-                    : $"{Name} could not be initialized: {ex.Message}");
+                    : $"{Name} could not be initialized: {ex.Message}{exit}";
+                if (restart)
+                {
+                    _host.Log(Name, LanguageServerLogLevel.Error, message);
+                }
+                else
+                {
+                    Fail(message);
+                }
             }
 
             if (Interlocked.Exchange(ref _process, null) is { } failed)
@@ -315,7 +343,7 @@ internal sealed partial class LanguageServerInstance : IAsyncDisposable
                 await CleanUpAsync(failed, connection).ConfigureAwait(false);
             }
 
-            return false;
+            return restart;
         }
 
         List<LanguageServerDocument> documents;

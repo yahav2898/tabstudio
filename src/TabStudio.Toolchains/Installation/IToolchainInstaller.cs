@@ -44,6 +44,15 @@ public interface IToolchainInstaller
     /// <exception cref="ToolchainInstallException">It failed.</exception>
     Task InstallAsync(ToolchainDefinition toolchain, IProgress<InstallProgress>? progress, CancellationToken cancellationToken);
 
+    /// <summary>Installs a toolchain, optionally reusing verified repository metadata from the same batch.</summary>
+    /// <param name="toolchain">The toolchain.</param>
+    /// <param name="progress">Receives progress.</param>
+    /// <param name="refreshMetadata">Whether to refresh shared package metadata before planning this install.</param>
+    /// <param name="cancellationToken">Stops the install; downloads are kept for the next attempt.</param>
+    /// <remarks>Providers without shared repository metadata retain their ordinary install behavior.</remarks>
+    Task InstallAsync(ToolchainDefinition toolchain, IProgress<InstallProgress>? progress, bool refreshMetadata, CancellationToken cancellationToken) =>
+        InstallAsync(toolchain, progress, cancellationToken);
+
     /// <summary>Updates an installed toolchain to the newest versions.</summary>
     /// <param name="toolchain">The toolchain.</param>
     /// <param name="progress">Receives progress.</param>

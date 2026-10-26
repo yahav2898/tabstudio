@@ -41,6 +41,8 @@ public sealed class ToolchainServerInstallTests : IDisposable
         };
         _toolchains = new ToolchainServices(_device.Manager, _device.Platform, _device.Environment);
         _launcher = new TabletLauncher(_toolchains.Runtime);
+        // These tests are about the offers, which opening a project makes when it does not set itself up.
+        new ProjectSetupStore(new AppPaths(_temp.Path)).Save(ProjectSetupSettings.Default with { SetUpProjectsWhenTheyOpen = false });
         _services = AppServices.Create(new AppPaths(_temp.Path), services =>
         {
             services.AddSingleton(_toolchains);

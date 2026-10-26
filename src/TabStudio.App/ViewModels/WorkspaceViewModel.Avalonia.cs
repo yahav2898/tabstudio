@@ -39,6 +39,7 @@ public sealed partial class WorkspaceViewModel
             console = await ProcessConsole.AcquireAsync(_run.Token);
             console.Redirect(Output);
             app = AvaloniaAppHost.Start(entry, build.Dependencies, _language!.GetPackageRuntimeAssemblies(project.FilePath));
+            BeginHotReload(project, build, app.EntryAssembly, avalonia: app);
             var crashed = new TaskCompletionSource<Exception>(TaskCreationOptions.RunContinuationsAsynchronously);
             app.Crashed += (_, exception) => crashed.TrySetResult(exception);
 
@@ -77,6 +78,7 @@ public sealed partial class WorkspaceViewModel
         }
         finally
         {
+            EndHotReload();
             _liveProject = null;
             OnAvaloniaAppStopping();
             AppPreview.ShowStopped();

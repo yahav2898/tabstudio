@@ -52,13 +52,33 @@ public sealed class WebAppHost : IAsyncDisposable
     /// The app, listening on <see cref="Address"/>. When it exits before it listens, such as when it crashes at
     /// startup, <see cref="IsRunning"/> is <see langword="false"/> and <see cref="Completion"/> says why.
     /// </returns>
-    public static async Task<WebAppHost> StartAsync(
+    public static Task<WebAppHost> StartAsync(
         CompiledAssembly entryAssembly,
         IReadOnlyList<CompiledAssembly> dependencies,
         IReadOnlyList<string> frameworkAndPackageAssemblies,
         string contentRoot,
         IConsoleSink console,
         WebAppOptions? options = null,
+        CancellationToken cancellationToken = default) =>
+        StartAsync(entryAssembly, dependencies, frameworkAndPackageAssemblies, contentRoot, console, options, loaded: null, cancellationToken);
+
+    /// <summary>Starts a web app with a callback identifying its exact loaded entry assembly for Hot Reload.</summary>
+    /// <param name="entryAssembly">The web project's assembly.</param>
+    /// <param name="dependencies">Its project assemblies.</param>
+    /// <param name="frameworkAndPackageAssemblies">Its framework and package assemblies.</param>
+    /// <param name="contentRoot">The project folder.</param>
+    /// <param name="console">Receives output and logs.</param>
+    /// <param name="options">The web host options.</param>
+    /// <param name="loaded">Called before Main with the exact loaded entry assembly.</param>
+    /// <param name="cancellationToken">Gives up waiting and stops the app.</param>
+    public static async Task<WebAppHost> StartAsync(
+        CompiledAssembly entryAssembly,
+        IReadOnlyList<CompiledAssembly> dependencies,
+        IReadOnlyList<string> frameworkAndPackageAssemblies,
+        string contentRoot,
+        IConsoleSink console,
+        WebAppOptions? options,
+        Action<Assembly>? loaded,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(entryAssembly);
@@ -86,7 +106,9 @@ public sealed class WebAppHost : IAsyncDisposable
         try
         {
             host._capture.Start();
-            host._completion = new ProgramRunner().RunAsync(
+            var runner = new ProgramRunner();
+            if (loaded is not null) runner.Loaded += loaded;
+            host._completion = runner.RunAsync(
                 entryAssembly, dependencies, frameworkAndPackageAssemblies, arguments, console, input: null, host._run.Token);
             await host.WaitUntilListeningAsync(port, options.StartupTimeout, cancellationToken).ConfigureAwait(false);
             return host;

@@ -11,6 +11,13 @@
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TabStudioIncludeLocalAITestModel)' == 'true'">
+    <DefineConstants>$(DefineConstants);TABSTUDIO_LOCAL_AI_SELF_TEST</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(TabStudioIncludeLocalAITestModel)' == 'true'">
+    <EmbeddedResource Include="../../artifacts/local-ai/tiny.gguf" LogicalName="LocalAI/tiny.gguf" />
+  </ItemGroup>
+
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
@@ -20,6 +27,9 @@
     <EmbeddedResource Include="..\..\samples\HelloTablet\**\*"
                       Exclude="..\..\samples\HelloTablet\**\bin\**;..\..\samples\HelloTablet\**\obj\**"
                       LogicalName="Samples/HelloTablet/%(RecursiveDir)%(Filename)%(Extension)" />
+    <EmbeddedResource Include="..\..\samples\PIC\**\*"
+                      Exclude="..\..\samples\PIC\**\build\**;..\..\samples\PIC\**\dist\**"
+                      LogicalName="Templates/PIC/%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,6 +46,7 @@
     <!-- Uno and Avalonia share one compatible SkiaSharp runtime, as on Android. -->
     <PackageReference Include="SkiaSharp" />
     <PackageReference Include="HarfBuzzSharp" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" />
     <PackageReference Include="Avalonia.Themes.Fluent" />
     <PackageReference Include="Avalonia.Fonts.Inter" />
     <PackageReference Include="Avalonia.AvaloniaEdit" />
@@ -48,7 +59,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TabStudio.Database\TabStudio.Database.csproj" />
     <ProjectReference Include="..\TabStudio.Core\TabStudio.Core.csproj" />
+    <ProjectReference Include="..\TabStudio.Porting\TabStudio.Porting.csproj" />
     <ProjectReference Include="..\TabStudio.Compilation\TabStudio.Compilation.csproj" />
     <ProjectReference Include="..\TabStudio.Packages\TabStudio.Packages.csproj" />
     <ProjectReference Include="..\TabStudio.Agent\TabStudio.Agent.csproj" />
@@ -69,6 +82,7 @@
     <ProjectReference Include="..\TabStudio.Forms\TabStudio.Forms.csproj" />
     <ProjectReference Include="..\TabStudio.Forms.Design\TabStudio.Forms.Design.csproj" />
     <ProjectReference Include="..\TabStudio.WindowsBridge\TabStudio.WindowsBridge.csproj" />
+    <ProjectReference Include="..\TabStudio.Remote\TabStudio.Remote.csproj" />
   </ItemGroup>
 
   <Import Project="TabStudio.App.WindowsForms.targets" />

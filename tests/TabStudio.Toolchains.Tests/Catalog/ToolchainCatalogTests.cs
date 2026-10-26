@@ -10,9 +10,9 @@ public sealed class ToolchainCatalogTests
     private static readonly ToolchainCatalog Catalog = ToolchainCatalog.Default;
 
     [Fact]
-    public void Describes_all_seven_languages()
+    public void Describes_languages_and_the_separately_licensed_pic_compilers()
     {
-        Assert.Equal(["python", "node", "cpp", "rust", "go", "java", "kotlin"], Catalog.Toolchains.Select(t => t.Id));
+        Assert.Equal(["python", "node", "cpp", "rust", "go", "java", "kotlin", "android", "xc8", "xc32"], Catalog.Toolchains.Select(t => t.Id));
         var languages = Catalog.Toolchains.SelectMany(t => t.Languages).ToHashSet();
         Assert.Superset(new HashSet<string> { "Python", "JavaScript", "TypeScript", "C", "C++", "Rust", "Go", "Java", "Kotlin" }, languages);
     }
@@ -20,7 +20,9 @@ public sealed class ToolchainCatalogTests
     [Fact]
     public void The_store_lists_the_finished_toolchains()
     {
-        Assert.Equal(["python", "node", "cpp", "rust", "go", "java"], Catalog.Listed.Select(t => t.Id));
+        Assert.Equal(["python", "node", "cpp", "rust", "go", "java", "android", "xc8", "xc32"], Catalog.Listed.Select(t => t.Id));
+        Assert.Equal("jdtls", Catalog.Find("android")!.LanguageServer!.Id);
+        Assert.Contains("kotlin-language-server", Catalog.Find("android")!.AdditionalToolIds);
     }
 
     [Fact]
@@ -31,7 +33,7 @@ public sealed class ToolchainCatalogTests
             Assert.False(string.IsNullOrWhiteSpace(toolchain.Name), toolchain.Id);
             Assert.EndsWith(".", toolchain.Description, StringComparison.Ordinal);
             Assert.NotEmpty(toolchain.Packages);
-            Assert.Contains(toolchain.VersionPackage, toolchain.Packages);
+            Assert.True(toolchain.PinnedVersion is not null || toolchain.Packages.Contains(toolchain.VersionPackage!));
             Assert.NotEmpty(toolchain.FileExtensions);
             Assert.All(toolchain.FileExtensions, e => Assert.StartsWith(".", e, StringComparison.Ordinal));
             Assert.NotEmpty(toolchain.ProjectFiles);
@@ -53,7 +55,7 @@ public sealed class ToolchainCatalogTests
     [Fact]
     public void Listed_toolchains_have_a_debug_adapter()
     {
-        foreach (var toolchain in Catalog.Listed)
+        foreach (var toolchain in Catalog.Listed.Where(t => t.Id is not ("android" or "xc32")))
         {
             Assert.NotNull(toolchain.DebugAdapter);
             Assert.NotEmpty(toolchain.DebugAdapter.Command);
@@ -140,6 +142,16 @@ public sealed class ToolchainCatalogTests
     }
 
     [Fact]
+    public void Android_catalog_order_does_not_take_over_standalone_Java_or_Kotlin_files()
+    {
+        var android = Catalog.Find("android")!;
+        var androidFirst = Catalog with { Toolchains = [android, .. Catalog.Toolchains.Where(t => t.Id != "android")] };
+
+        Assert.Equal("java", androidFirst.ForFile("Main.java")?.Id);
+        Assert.Equal("kotlin", androidFirst.ForFile("App.kt")?.Id);
+    }
+
+    [Fact]
     public void Finds_nothing_for_files_no_toolchain_runs()
     {
         Assert.Null(Catalog.ForFile("Program.cs"));
@@ -198,6 +210,10 @@ public sealed class ToolchainCatalogTests
     [InlineData("gopls", "go")]
     [InlineData("delve", "go")]
     [InlineData("jdtls", "java")]
+    [InlineData("vscode-html-language-server", "node")]
+    [InlineData("vscode-css-language-server", "node")]
+    [InlineData("vscode-json-language-server", "node")]
+    [InlineData("kotlin-language-server", "android")]
     public void Finds_the_toolchain_that_installs_a_tool_by_the_id_its_clients_use(string tool, string toolchain)
     {
         Assert.Equal(toolchain, Catalog.ForTool(tool)?.Id);
@@ -214,7 +230,7 @@ public sealed class ToolchainCatalogTests
         };
         foreach (var toolchain in Catalog.Listed)
         {
-            foreach (var tool in new[] { toolchain.LanguageServer!, toolchain.DebugAdapter! })
+            foreach (var tool in new[] { toolchain.LanguageServer, toolchain.DebugAdapter }.OfType<ToolCommandDefinition>())
             {
                 Assert.NotNull(tool.Id);
                 var paths = toolchain.Setup.SelectMany(s => s.Removes.Concat(s.File is { } file ? [file.Path] : []));

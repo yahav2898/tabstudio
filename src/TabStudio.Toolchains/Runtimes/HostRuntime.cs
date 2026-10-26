@@ -33,6 +33,10 @@ public sealed class HostRuntime : IToolchainRuntime
 
         if (OperatingSystem.IsWindows())
         {
+            if (spec.InheritedDescriptors.Count > 0)
+            {
+                throw new ToolchainRuntimeException("USB file descriptors are supported by the Android/Linux runtime.");
+            }
             if (spec.Terminal is { } size)
             {
                 return OperatingSystem.IsWindowsVersionAtLeast(10, 0, 17763)
@@ -54,7 +58,7 @@ public sealed class HostRuntime : IToolchainRuntime
             workingDirectory = null;
         }
 
-        return new ToolchainProcess(UnixSpawner.Start(path, arguments, variables, workingDirectory, spec.Terminal), spec);
+        return new ToolchainProcess(UnixSpawner.Start(path, arguments, variables, workingDirectory, spec.Terminal, spec.InheritedDescriptors), spec);
     }
 
     /// <inheritdoc />

@@ -83,6 +83,9 @@ public enum StackKind
 
     /// <summary>A Dockerfile.</summary>
     Docker,
+
+    /// <summary>A static web site: HTML, CSS and JavaScript served as they are, from an <c>index.html</c>.</summary>
+    StaticSite,
 }
 
 /// <summary>

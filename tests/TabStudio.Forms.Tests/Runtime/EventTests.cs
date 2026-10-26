@@ -63,7 +63,9 @@ public sealed class EventTests
         Assert.True(run.Invoke(() => form.Visible));
 
         allowClose = true;
-        run.Invoke(() => form.WindowInternal!.CloseRequested());
+        // Closing the main form ends the message loop. A second Send used to settle Invoke can race the
+        // runtime exit notification; post the close and wait for the actual exit below instead.
+        run.Post(() => form.WindowInternal!.CloseRequested());
 
         Assert.True(run.Exit.Wait(TimeSpan.FromSeconds(10)));
         Assert.Null(run.Exit.Result.Error);

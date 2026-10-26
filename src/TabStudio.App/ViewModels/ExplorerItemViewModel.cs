@@ -133,6 +133,12 @@ public sealed partial class ExplorerItemViewModel : ObservableObject
     /// <summary>Whether the row is a project that can be made the startup project.</summary>
     public bool CanBeStartupProject => _actions is not null && Node.Project is { IsExecutable: true, IsTestProject: false };
 
+    /// <summary>Whether the selected project can be converted to Avalonia.</summary>
+    public bool CanPortToAvalonia => _actions is not null && IsProject && Node.Project is { } project && TabStudio.Porting.AvaloniaPorter.CanPort(project);
+
+    [RelayCommand(CanExecute = nameof(CanPortToAvalonia))]
+    private Task PortToAvaloniaAsync() => _actions?.PortToAvaloniaAsync(Node) ?? Task.CompletedTask;
+
     [RelayCommand(CanExecute = nameof(IsFile))]
     private Task OpenAsync() => _actions?.OpenAsync(Node) ?? Task.CompletedTask;
 
