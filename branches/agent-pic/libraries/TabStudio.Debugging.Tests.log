@@ -1,6 +1,6 @@
   Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/TabStudio.Debugging.csproj (in 320 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Debugging.Tests/TabStudio.Debugging.Tests.csproj (in 320 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Debugging.Tests/TabStudio.Debugging.Tests.csproj (in 336 ms).
+  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Debugging/TabStudio.Debugging.csproj (in 291 ms).
   3 of 5 projects are up-to-date for restore.
   TabStudio.Testing -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Testing/bin/Release/net10.0/TabStudio.Testing.dll
   TabStudio.Core -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Core/bin/Release/net10.0/TabStudio.Core.dll
@@ -11,47 +11,21 @@ Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Debugging.Tes
 A total of 1 test files matched the specified pattern.
 [xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
 [xUnit.net 00:00:00.25]   Discovering: TabStudio.Debugging.Tests
-[xUnit.net 00:00:00.44]   Discovered:  TabStudio.Debugging.Tests
-[xUnit.net 00:00:00.53]   Starting:    TabStudio.Debugging.Tests
+[xUnit.net 00:00:00.42]   Discovered:  TabStudio.Debugging.Tests
+[xUnit.net 00:00:00.48]   Starting:    TabStudio.Debugging.Tests
   Passed TabStudio.Debugging.Tests.PackageDebugTests.Without_the_package_assemblies_the_program_cannot_load_the_package [3 s]
-  Passed TabStudio.Debugging.Tests.PackageDebugTests.Debugs_a_program_that_uses_a_restored_package [85 ms]
-  Passed TabStudio.Debugging.Tests.PackageDebugTests.Unrestored_packages_are_reported_by_the_debug_build [59 ms]
-  Passed TabStudio.Debugging.Tests.InterceptorTests.A_call_a_generated_interceptor_replaces_is_still_replaced_in_the_debug_build [169 ms]
-  Passed TabStudio.Debugging.Tests.DebugSessionTests.Breaks_on_an_unhandled_exception_at_the_line_that_threw [149 ms]
-  Passed TabStudio.Debugging.Tests.DebugSessionTests.Does_not_break_on_exceptions_the_program_handles [47 ms]
-  Passed TabStudio.Debugging.Tests.DebugSessionTests.Step_over_does_not_stop_inside_the_calls_it_runs [74 ms]
-  Passed TabStudio.Debugging.Tests.DebugSessionTests.Hits_a_breakpoint_in_a_loop_on_every_iteration [91 ms]
-  Passed TabStudio.Debugging.Tests.DebugSessionTests.Pausing_before_the_start_stops_at_the_first_statement [53 ms]
-  Passed TabStudio.Debugging.Tests.DebugSessionTests.Breakpoints_bind_to_the_next_statement_or_stay_unbound [45 ms]
-  Passed TabStudio.Debugging.Tests.DebugSessionTests.Pauses_at_a_breakpoint_with_the_locals_in_scope [145 ms]
-  Passed TabStudio.Debugging.Tests.DebugSessionTests.A_breakpoint_on_a_while_condition_hits_on_every_check [47 ms]
-  Passed TabStudio.Debugging.Tests.DebugSessionTests.Run_to_cursor_pauses_at_the_line_once [63 ms]
-  Passed TabStudio.Debugging.Tests.DebugSessionTests.A_breakpoint_set_while_running_is_hit [51 ms]
-  Passed TabStudio.Debugging.Tests.DebugSessionTests.Stepping_over_the_end_of_a_loop_body_returns_to_its_condition [52 ms]
-  Passed TabStudio.Debugging.Tests.DebugSessionTests.Pause_breaks_into_a_running_loop_and_stop_ends_the_session [60 ms]
-  Passed TabStudio.Debugging.Tests.DebugSessionTests.Steps_into_out_of_and_over_methods [50 ms]
-  Passed TabStudio.Debugging.Tests.DebugSessionTests.Shows_the_call_stack_across_methods [55 ms]
-  Passed TabStudio.Debugging.Tests.DebugSessionTests.Debugs_an_async_main_across_awaits [202 ms]
-  Passed TabStudio.Debugging.Tests.WorkspaceDebugTests.A_project_with_errors_is_not_instrumented [110 ms]
-  Passed TabStudio.Debugging.Tests.WorkspaceDebugTests.Breakpoints_work_in_a_referenced_project [68 ms]
-  Passed TabStudio.Debugging.Tests.DebugValueTests.Finds_values_by_path_for_data_tips_and_watches [5 ms]
-  Passed TabStudio.Debugging.Tests.DebugValueTests.Formats_strings_and_characters_as_csharp_literals [< 1 ms]
-  Passed TabStudio.Debugging.Tests.DebugValueTests.Formats_null_enums_dates_and_tuples [18 ms]
-  Passed TabStudio.Debugging.Tests.DebugValueTests.Shows_counts_for_collections_and_lengths_for_arrays [1 ms]
-  Passed TabStudio.Debugging.Tests.DebugValueTests.Uses_to_string_overrides_in_braces [1 ms]
-  Passed TabStudio.Debugging.Tests.DebugValueTests.Expands_objects_into_public_members_without_indexers_or_throwing_properties [1 ms]
-  Passed TabStudio.Debugging.Tests.DebugValueTests.Expands_dictionaries_into_entries [< 1 ms]
-  Passed TabStudio.Debugging.Tests.DebugValueTests.Shows_the_runtime_type_when_it_is_more_specific_than_the_declared_one [< 1 ms]
-  Passed TabStudio.Debugging.Tests.DebugValueTests.Formats_numbers_in_the_invariant_culture [< 1 ms]
-  Passed TabStudio.Debugging.Tests.InstrumentationTests.Programs_with_span_and_ref_locals_compile_and_report_what_can_be_read [152 ms]
+  Passed TabStudio.Debugging.Tests.PackageDebugTests.Debugs_a_program_that_uses_a_restored_package [69 ms]
+  Passed TabStudio.Debugging.Tests.PackageDebugTests.Unrestored_packages_are_reported_by_the_debug_build [73 ms]
+  Passed TabStudio.Debugging.Tests.InterceptorTests.A_call_a_generated_interceptor_replaces_is_still_replaced_in_the_debug_build [145 ms]
+  Passed TabStudio.Debugging.Tests.InstrumentationTests.Programs_with_span_and_ref_locals_compile_and_report_what_can_be_read [216 ms]
   Passed TabStudio.Debugging.Tests.InstrumentationTests.Stepping_through_every_statement_keeps_the_program_behavior [1 s]
-  Passed TabStudio.Debugging.Tests.InstrumentationTests.Generated_files_are_not_instrumented [43 ms]
-  Passed TabStudio.Debugging.Tests.InstrumentationTests.Statements_are_mapped_to_their_original_positions [39 ms]
-  Passed TabStudio.Debugging.Tests.InstrumentationTests.A_program_without_a_debugger_attached_runs_normally [552 ms]
-  Passed TabStudio.Debugging.Tests.InstrumentationTests.Every_construct_keeps_its_behavior_under_the_debugger [531 ms]
-  Passed TabStudio.Debugging.Tests.InstrumentationTests.The_in_process_safety_check_still_rejects_environment_exit [6 ms]
-  Passed TabStudio.Debugging.Tests.InstrumentationTests.Instrumentation_keeps_the_line_numbers_of_exception_stack_traces [82 ms]
-  Passed TabStudio.Debugging.Tests.BreakpointConditionTests.Evaluates_comparisons_of_variables_and_literals(condition: "flag", expected: True) [3 ms]
+  Passed TabStudio.Debugging.Tests.InstrumentationTests.Generated_files_are_not_instrumented [57 ms]
+  Passed TabStudio.Debugging.Tests.InstrumentationTests.Statements_are_mapped_to_their_original_positions [61 ms]
+  Passed TabStudio.Debugging.Tests.InstrumentationTests.A_program_without_a_debugger_attached_runs_normally [570 ms]
+  Passed TabStudio.Debugging.Tests.InstrumentationTests.Every_construct_keeps_its_behavior_under_the_debugger [559 ms]
+  Passed TabStudio.Debugging.Tests.InstrumentationTests.The_in_process_safety_check_still_rejects_environment_exit [5 ms]
+  Passed TabStudio.Debugging.Tests.InstrumentationTests.Instrumentation_keeps_the_line_numbers_of_exception_stack_traces [53 ms]
+  Passed TabStudio.Debugging.Tests.BreakpointConditionTests.Evaluates_comparisons_of_variables_and_literals(condition: "flag", expected: True) [4 ms]
   Passed TabStudio.Debugging.Tests.BreakpointConditionTests.Evaluates_comparisons_of_variables_and_literals(condition: "name != null", expected: True) [< 1 ms]
   Passed TabStudio.Debugging.Tests.BreakpointConditionTests.Evaluates_comparisons_of_variables_and_literals(condition: "ratio < 1", expected: True) [< 1 ms]
   Passed TabStudio.Debugging.Tests.BreakpointConditionTests.Evaluates_comparisons_of_variables_and_literals(condition: "nothing == null", expected: True) [< 1 ms]
@@ -65,12 +39,38 @@ A total of 1 test files matched the specified pattern.
   Passed TabStudio.Debugging.Tests.BreakpointConditionTests.Evaluates_comparisons_of_variables_and_literals(condition: "count != 3", expected: False) [< 1 ms]
   Passed TabStudio.Debugging.Tests.BreakpointConditionTests.A_condition_that_cannot_be_evaluated_stops_and_says_why(condition: "name") [< 1 ms]
   Passed TabStudio.Debugging.Tests.BreakpointConditionTests.A_condition_that_cannot_be_evaluated_stops_and_says_why(condition: "name < 3") [< 1 ms]
-[xUnit.net 00:00:08.07]   Finished:    TabStudio.Debugging.Tests
   Passed TabStudio.Debugging.Tests.BreakpointConditionTests.A_condition_that_cannot_be_evaluated_stops_and_says_why(condition: "missing > 1") [< 1 ms]
-  Passed TabStudio.Debugging.Tests.BreakpointConditionTests.A_new_condition_replaces_the_breakpoint_on_the_line [35 ms]
-  Passed TabStudio.Debugging.Tests.BreakpointConditionTests.A_conditional_breakpoint_stops_only_when_its_condition_holds [38 ms]
+  Passed TabStudio.Debugging.Tests.BreakpointConditionTests.A_new_condition_replaces_the_breakpoint_on_the_line [30 ms]
+  Passed TabStudio.Debugging.Tests.BreakpointConditionTests.A_conditional_breakpoint_stops_only_when_its_condition_holds [49 ms]
+  Passed TabStudio.Debugging.Tests.DebugSessionTests.Breaks_on_an_unhandled_exception_at_the_line_that_threw [57 ms]
+  Passed TabStudio.Debugging.Tests.DebugSessionTests.Does_not_break_on_exceptions_the_program_handles [36 ms]
+  Passed TabStudio.Debugging.Tests.DebugSessionTests.Step_over_does_not_stop_inside_the_calls_it_runs [53 ms]
+  Passed TabStudio.Debugging.Tests.DebugSessionTests.Hits_a_breakpoint_in_a_loop_on_every_iteration [47 ms]
+  Passed TabStudio.Debugging.Tests.DebugSessionTests.Pausing_before_the_start_stops_at_the_first_statement [48 ms]
+  Passed TabStudio.Debugging.Tests.DebugSessionTests.Breakpoints_bind_to_the_next_statement_or_stay_unbound [40 ms]
+  Passed TabStudio.Debugging.Tests.DebugSessionTests.Pauses_at_a_breakpoint_with_the_locals_in_scope [77 ms]
+  Passed TabStudio.Debugging.Tests.DebugSessionTests.A_breakpoint_on_a_while_condition_hits_on_every_check [61 ms]
+  Passed TabStudio.Debugging.Tests.DebugSessionTests.Run_to_cursor_pauses_at_the_line_once [66 ms]
+  Passed TabStudio.Debugging.Tests.DebugSessionTests.A_breakpoint_set_while_running_is_hit [47 ms]
+  Passed TabStudio.Debugging.Tests.DebugSessionTests.Stepping_over_the_end_of_a_loop_body_returns_to_its_condition [52 ms]
+  Passed TabStudio.Debugging.Tests.DebugSessionTests.Pause_breaks_into_a_running_loop_and_stop_ends_the_session [55 ms]
+  Passed TabStudio.Debugging.Tests.DebugSessionTests.Steps_into_out_of_and_over_methods [44 ms]
+  Passed TabStudio.Debugging.Tests.DebugSessionTests.Shows_the_call_stack_across_methods [42 ms]
+  Passed TabStudio.Debugging.Tests.DebugSessionTests.Debugs_an_async_main_across_awaits [66 ms]
+  Passed TabStudio.Debugging.Tests.WorkspaceDebugTests.A_project_with_errors_is_not_instrumented [136 ms]
+  Passed TabStudio.Debugging.Tests.WorkspaceDebugTests.Breakpoints_work_in_a_referenced_project [67 ms]
+  Passed TabStudio.Debugging.Tests.DebugValueTests.Finds_values_by_path_for_data_tips_and_watches [4 ms]
+  Passed TabStudio.Debugging.Tests.DebugValueTests.Formats_strings_and_characters_as_csharp_literals [< 1 ms]
+  Passed TabStudio.Debugging.Tests.DebugValueTests.Formats_null_enums_dates_and_tuples [< 1 ms]
+  Passed TabStudio.Debugging.Tests.DebugValueTests.Shows_counts_for_collections_and_lengths_for_arrays [1 ms]
+[xUnit.net 00:00:07.81]   Finished:    TabStudio.Debugging.Tests
+  Passed TabStudio.Debugging.Tests.DebugValueTests.Uses_to_string_overrides_in_braces [< 1 ms]
+  Passed TabStudio.Debugging.Tests.DebugValueTests.Expands_objects_into_public_members_without_indexers_or_throwing_properties [< 1 ms]
+  Passed TabStudio.Debugging.Tests.DebugValueTests.Expands_dictionaries_into_entries [< 1 ms]
+  Passed TabStudio.Debugging.Tests.DebugValueTests.Shows_the_runtime_type_when_it_is_more_specific_than_the_declared_one [< 1 ms]
+  Passed TabStudio.Debugging.Tests.DebugValueTests.Formats_numbers_in_the_invariant_culture [< 1 ms]
 
 Test Run Successful.
 Total tests: 55
      Passed: 55
- Total time: 9.2876 Seconds
+ Total time: 8.9297 Seconds
