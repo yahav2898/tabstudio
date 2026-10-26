@@ -66,6 +66,28 @@ public static partial class SelfTest
             {
                 return new SelfTestResult(false, $"Avalonia: the button did not count: {string.Join(", ", Texts(view))}", clock.Elapsed);
             }
+
+            if (TabStudio.Compilation.HotReload.HotReloadSession.IsSupported)
+            {
+                var path = Path.Combine(workspace.StartupProject!.DirectoryPath, "ViewModels", "MainViewModel.cs");
+                var document = await workspace.OpenDocumentAsync(path)
+                    ?? throw new InvalidOperationException("Hot Reload: MainViewModel.cs did not open.");
+                var original = document.CurrentText;
+                try
+                {
+                    document.Document.Text = original.Replace("Hello from Avalonia!", "Hello from Hot Reload!", StringComparison.Ordinal);
+                    await workspace.ApplyHotReloadCommand.ExecuteAsync(null).WaitAsync(cancellationToken);
+                    if (workspace.HotReloadGeneration != 1 || workspace.AppPreview.View is not { } refreshed
+                        || !Texts(refreshed).Contains("Hello from Hot Reload!") || run.IsCompleted)
+                    {
+                        return new SelfTestResult(false, $"Avalonia Hot Reload failed: {LastLines(workspace)}", clock.Elapsed);
+                    }
+                }
+                finally
+                {
+                    document.Document.Text = original; // The following designer step still previews the template.
+                }
+            }
         }
         finally
         {

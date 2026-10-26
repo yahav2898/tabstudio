@@ -34,7 +34,7 @@ internal sealed class DebugEngine
     private readonly object _gate = new();
     private readonly AsyncLocal<DebugFrame?> _current = new();
     private readonly ConditionalWeakTable<Exception, FaultOrigin> _faults = new();
-    private readonly DebugInfoMap _map;
+    private volatile DebugInfoMap _map;
     private readonly ValueInspector _inspector;
     private readonly Action<DebugPausedEventArgs> _onPaused;
     private readonly Action _onResumed;
@@ -63,6 +63,14 @@ internal sealed class DebugEngine
         _inspector = inspector;
         _onPaused = onPaused;
         _onResumed = onResumed;
+    }
+
+    public void UpdateDebugInfo(DebugInfoMap map)
+    {
+        lock (_gate)
+        {
+            _map = map;
+        }
     }
 
     /// <summary>Whether to pause when an exception is about to leave the program unhandled.</summary>

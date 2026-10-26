@@ -18,6 +18,8 @@ env:
   DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+  # Required at process startup, before CoreCLR loads the test host or any dynamically emitted Debug assemblies.
+  DOTNET_MODIFIABLE_ASSEMBLIES: debug
 
 jobs:
   libraries:

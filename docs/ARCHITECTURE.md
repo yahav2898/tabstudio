@@ -255,6 +255,74 @@ itself. TabStudio's debugger works inside the program instead:
   Call Stack fill the bottom dock while paused, and DataTips evaluate the expression under the pointer or a
   long press. Package code is not instrumented, so stepping stays in your own code.
 
+## Hot Reload
+
+`TabStudio.Compilation/HotReload` uses Roslyn's public Edit and Continue emission APIs, not a rebuild-and-restart
+approximation. `CompiledAssembly.HotReloadCompilation` retains the exact Debug compilation that emitted its PE
+and portable PDB (including source generators or debugger instrumentation). It is excluded from JSON, so Link and
+Swarm's wire format is unchanged. `HotReloadBaseline` owns `ModuleMetadata`, the PE and PDB readers and the chained
+`EmitBaseline`. Its debug-information provider reads the EnC local-slot, lambda/closure and state-machine blobs;
+its local-signature provider reads the original method bodies. `EmitDifference` produces metadata, IL and PDB
+deltas. A prepared baseline advances only after `MetadataUpdater.ApplyUpdate` accepts its delta.
+
+`ProgramRunner.Loaded`, `DebugSession.Loaded` and `AvaloniaAppHost.EntryAssembly` identify the exact assembly of
+this run. A `HotReloadSession` checks its MVID and resolves referenced project assemblies in that same load
+context. Every changed project is validated before any deltas are applied. A runtime failure invalidates the
+session: cross-assembly ApplyUpdate is not transactional, so the user must restart rather than retry a potentially
+partial update. Disposing the run releases its retained compilations, PE/PDB readers and baselines. CoreCLR debug
+runs use a non-collectible context when metadata updates are enabled; Mono cannot unload assemblies in any case.
+
+**Commands and refresh.** The toolbar, **Debug > Apply C# Hot Reload** and **Alt+F10** build the current editor
+buffers, including unsaved edits, without changing the running/paused IDE state. **Debug > Hot Reload C# on Save**
+is opt-in. When it is off, live apps retain their existing restart-on-save behavior. F5/Continue while paused
+prepares the same instrumented build and only resumes after the edits succeed. A rude edit or compile error keeps
+the app/paused frame alive. The status bar and Output explain the problem; rude edits expose **Restart to apply
+edits**. Stop, restart and workspace disposal invalidate outstanding update work.
+
+After ApplyUpdate, the host discovers assemblies' `MetadataUpdateHandlerAttribute`s, calls every `ClearCache`
+before any `UpdateApplication` (including ASP.NET Core routing/reflection caches and Blazor's renderer handler),
+then refreshes the preview. Avalonia creates fresh main content from the **same** loaded assembly; application
+static state survives, while the recreated view and its view model start fresh. A web preview reloads its current
+page; the server, its port and its application state remain alive.
+
+**Runtime activation.** Capability is always checked with `MetadataUpdater.IsSupported`. It must be enabled
+before the runtime starts: the desktop `launchSettings.json` and CI set `DOTNET_MODIFIABLE_ASSEMBLIES=debug`;
+Android packages `build/android/hot-reload.env` and enables `AndroidUseInterpreter`, which also selects Mono's
+hot-reload runtime component. This is enabled in Release-packaged IDEs too: the assemblies being edited are the
+user's **Debug** assemblies, not the optimized IDE. Setting an environment variable in managed startup would be
+too late. A manually launched desktop host needs the same environment variable.
+
+**Supported scope and rude edits.** Method, constructor, operator and accessor bodies, expression-bodied getters
+and top-level statements can be updated. For lambdas, local functions, async methods and iterators, only changes
+that preserve syntax topology and variable/capture names are accepted, with a new-to-old syntax map preserving
+their identity. Roslyn's IDE rude-edit service is internal; `EmitDifference` assumes its caller has validated
+the edits. Our conservative analyzer therefore rejects changes to declarations, signatures, fields/initializers,
+attributes/imports, file/project sets and embedded resources, and forwards Roslyn's further EnC diagnostics.
+Instrumented debugging also requires stable method/statement ids and local slots; successful updates refresh
+the source map and rebind breakpoints. Structural changes offer a restart instead of risking a bad delta.
+
+ApplyUpdate does **not** move an active frame's instruction pointer or re-execute Main. Existing invocations
+finish their original IL and locals; later invocations use the new code. At a breakpoint before a helper call,
+editing that helper changes the output on Continue without a restart. A change to an already executing method
+itself appears on its next invocation. Startup/DI registration changes require a restart to execute again.
+Local console, Avalonia, ASP.NET Core and server-rendered/interactive-server Blazor are supported. Standalone
+Blazor WebAssembly and WebAssembly/Auto client components run in a different browser Mono instance whose boot
+configuration currently disables metadata updates; these, remote Link/Swarm/Bridge runs and Release user builds
+still require a restart. An unsupported target/runtime reports this explicitly.
+
+**Verification.** Compilation tests exercise metadata/IL/PDB emission, async and lambda edits, rude edits, failed
+and abandoned generations and real ApplyUpdate across multiple generations with an existing delegate and static
+state. App tests drive unsaved console edits, save updates, Edit and Continue, the shortcut and an Avalonia view
+refresh in the same loaded assembly. The emulator self test calls ApplyUpdate twice and checks `2 -> 12 -> 103`
+with a preserved static counter; capability being unavailable on Android fails the step.
+
+Run the feature's tests on CoreCLR with:
+
+```sh
+DOTNET_MODIFIABLE_ASSEMBLIES=debug dotnet test tests/TabStudio.Compilation.Tests --filter FullyQualifiedName~HotReload
+DOTNET_MODIFIABLE_ASSEMBLIES=debug dotnet test tests/TabStudio.App.Tests --filter FullyQualifiedName~HotReload
+```
+
 ## Tests
 
 `TestSession` discovers xUnit, NUnit and MSTest tests by reflection on the built assemblies, recognising each

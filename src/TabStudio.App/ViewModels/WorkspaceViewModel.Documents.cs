@@ -242,7 +242,7 @@ public sealed partial class WorkspaceViewModel
             await document.SaveAsync();
             StatusText = $"Saved {document.FileName}";
             OnDocumentSavedForTests(document);
-            OnDocumentSavedForLiveApp(document);
+            if (!await TryHotReloadOnSaveAsync(document)) OnDocumentSavedForLiveApp(document);
             OnDocumentSavedForSwarm(document);
             OnDocumentSavedForXamlDesigner(document);
             OnDocumentSavedForGenerators(document);

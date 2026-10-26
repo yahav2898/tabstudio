@@ -51,6 +51,7 @@ public sealed class DebugSession : IDisposable
     private static readonly Lock AttachGate = new();
 
     private readonly DebugBuild _build;
+    private DebugInfoMap _debugInfo;
     private readonly DebugEngine _engine;
     private readonly Lock _breakpointsGate = new();
     private readonly List<Breakpoint> _breakpoints = [];
@@ -79,6 +80,7 @@ public sealed class DebugSession : IDisposable
         }
 
         _build = build;
+        _debugInfo = build.DebugInfo;
         _engine = new DebugEngine(build.DebugInfo, new ValueInspector(new Evaluator(evaluationTimeout)), OnPaused, OnResumed);
     }
 
@@ -91,8 +93,20 @@ public sealed class DebugSession : IDisposable
     /// <summary>Raised once when the program has ended, however it ended.</summary>
     public event EventHandler<DebugExitedEventArgs>? Exited;
 
+    /// <summary>Raised once the program's entry assembly is loaded, before Main runs, for Hot Reload.</summary>
+    public event Action<Assembly>? Loaded;
+
     /// <summary>Where every statement and method of the build is, for the breakpoint margin.</summary>
-    public DebugInfoMap DebugInfo => _build.DebugInfo;
+    public DebugInfoMap DebugInfo => Volatile.Read(ref _debugInfo);
+
+    /// <summary>Updates source locations after a Hot Reload that preserves statement/method ids and local slots.</summary>
+    /// <param name="info">The validated instrumenter's map for the new generation.</param>
+    public void UpdateDebugInfo(DebugInfoMap info)
+    {
+        ArgumentNullException.ThrowIfNull(info);
+        _engine.UpdateDebugInfo(info);
+        Volatile.Write(ref _debugInfo, info);
+    }
 
     /// <summary>Where the session is in its life.</summary>
     public DebugSessionState State => Volatile.Read(ref _phase) switch
@@ -255,7 +269,9 @@ public sealed class DebugSession : IDisposable
         {
             AppContext.SetData(DebugRuntimeSource.DataKey, sink);
             using var stop = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _stop.Token);
-            result = await new ProgramRunner()
+            var runner = new ProgramRunner();
+            runner.Loaded += assembly => Loaded?.Invoke(assembly);
+            result = await runner
                 .RunAsync(_build.Result.EntryAssembly!, _build.Result.Dependencies, packageAssemblies, arguments, console, input, stop.Token)
                 .ConfigureAwait(false);
         }

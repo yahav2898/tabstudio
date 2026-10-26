@@ -88,6 +88,11 @@ public static partial class SelfTest
             var debugged = await DebugSampleAsync(workspace, cancellationToken);
             if (debugged.Success)
             {
+                var reload = CheckHotReload(cancellationToken);
+                debugged = debugged with { Success = reload.Success, Message = $"{debugged.Message} | {reload.Message}" };
+            }
+            if (debugged.Success)
+            {
                 var linked = await LinkSampleAsync(main, workspace, cancellationToken);
                 debugged = new SelfTestResult(linked.Success, $"{debugged.Message} | {linked.Message}", debugged.Duration + linked.Duration);
                 if (debugged.Success)
