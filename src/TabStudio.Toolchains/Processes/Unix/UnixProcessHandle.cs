@@ -20,15 +20,7 @@ internal sealed class UnixProcessHandle : IProcessHandle
         UnixNative.TraceProcess("handle", pid, Id);
 
         // waitpid blocks, so it gets a thread of its own rather than one from the pool.
-        // Use a void entry point and pass the PID explicitly. This avoids a struct-return delegate/instance
-        // target across Mono's interpreter thread-entry trampoline; the result travels through the completion.
-        var completion = new TaskCompletionSource<(int ExitCode, int? Signal)>(TaskCreationOptions.RunContinuationsAsynchronously);
-        _exit = completion.Task;
-        _ = Task.Factory.StartNew(() =>
-        {
-            try { completion.SetResult(Wait(pid)); }
-            catch (Exception ex) { completion.SetException(ex); }
-        }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+        _exit = Task.Factory.StartNew(Wait, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Default);
     }
 
     /// <inheritdoc />
@@ -78,8 +70,9 @@ internal sealed class UnixProcessHandle : IProcessHandle
         Error?.Dispose();
     }
 
-    private static (int ExitCode, int? Signal) Wait(int pid)
+    private (int ExitCode, int? Signal) Wait()
     {
+        var pid = Id;
         UnixNative.TraceProcess("wait", pid);
         while (true)
         {

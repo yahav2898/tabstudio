@@ -14,6 +14,7 @@ internal static class HotReloadRuntime
 
     public static string Details => $"MetadataUpdater.IsSupported={MetadataUpdater.IsSupported}; AndroidMono={IsAndroidMono}; "
         + $"startup environment={Environment.GetEnvironmentVariable("DOTNET_MODIFIABLE_ASSEMBLIES") ?? "unset"}; "
+        + $"Mono interpreter options={Environment.GetEnvironmentVariable("MONO_INTERPRETER_OPTIONS") ?? "default"}; "
         + $"feature switch={(AppContext.TryGetSwitch(FeatureSwitch, out var enabled) ? enabled.ToString() : "default")}; "
         + (IsAndroidMono ? MonoProbe.Value.Detail : "native capability check");
 
