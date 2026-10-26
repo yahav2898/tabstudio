@@ -10,6 +10,7 @@ echo "$PROOT_SHA256  $work/proot.zip" | sha256sum -c --quiet -
 unzip -q "$work/proot.zip" -d "$work"
 cd "$work/proot-$PROOT_VERSION"
 patch -p1 < "$native/proot-thread-waits.patch"
+patch -p1 < "$native/proot-usb-fd.patch"
 make -C src -j2 > "$work/build.log" 2>&1 || { tail -n 60 "$work/build.log"; exit 1; }
 cc -std=c11 -Wall -Wextra -Werror -pthread "$native/tests/ptrace-threads.c" -o "$work/ptrace-threads"
 # The same fixture must pass on the kernel and under PRoot. No retry can hide a failure.

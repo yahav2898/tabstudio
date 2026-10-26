@@ -9,6 +9,19 @@ public static class UsbBridgeProcess
 {
     private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 
+    /// <summary>Runs a usbfs client against a single permissioned device and its private descriptor inventory.</summary>
+    /// <remarks>TabStudio's PRoot usbfs syscall patch covers raw-syscall/static nusb clients. The preload is only a fallback for dynamically linked libc clients. Keep inventory and connection alive until the child exits.</remarks>
+    public static ProcessStartSpec CreateUsbfs(IUsbConnection connection, UsbfsInventory inventory, ProcessStartSpec command)
+    {
+        ArgumentNullException.ThrowIfNull(inventory);
+        var spec = WithConnection(connection, command);
+        var environment = new Dictionary<string, string?>(spec.Environment);
+        environment.TryGetValue("LD_PRELOAD", out var previous);
+        environment["LD_PRELOAD"] = UsbBridgeInstallation.ToolsDirectory + "/usbfs-fd.so" + (string.IsNullOrEmpty(previous) ? string.Empty : ":" + previous);
+        environment["TABSTUDIO_USB_DEVPATH"] = inventory.DevicePath;
+        return spec with { Environment = environment, Mounts = [.. spec.Mounts, .. inventory.Mounts] };
+    }
+
     /// <summary>Runs an unchanged dynamically linked libusb client against exactly the granted device.</summary>
     /// <remarks>Does not support nusb, direct usbfs, hidraw, or statically linked libusb.</remarks>
     /// <param name="connection">Connection the caller keeps open until the process exits.</param>

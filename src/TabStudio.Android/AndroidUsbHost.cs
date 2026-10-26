@@ -47,8 +47,8 @@ internal sealed class AndroidUsbHost(Context context) : IUsbHost, IUsbHotplugHos
 
     private void StartHotplug()
     {
-        _knownDevices = Devices.ToDictionary(device => device.Id, StringComparer.Ordinal);
         var receiver = new HotplugReceiver(this);
+        var registered = false;
         using var filter = new IntentFilter();
         filter.AddAction(UsbManager.ActionUsbDeviceAttached);
         filter.AddAction(UsbManager.ActionUsbDeviceDetached);
@@ -64,10 +64,17 @@ internal sealed class AndroidUsbHost(Context context) : IUsbHost, IUsbHotplugHos
                 context.RegisterReceiver(receiver, filter);
 #pragma warning restore CA1422
             }
+            registered = true;
             _hotplugReceiver = receiver;
+            _knownDevices = Devices.ToDictionary(device => device.Id, StringComparer.Ordinal);
         }
         catch
         {
+            _hotplugReceiver = null;
+            if (registered)
+            {
+                context.UnregisterReceiver(receiver);
+            }
             receiver.Dispose();
             _knownDevices.Clear();
             throw;
@@ -236,6 +243,19 @@ internal sealed class AndroidUsbHost(Context context) : IUsbHost, IUsbHotplugHos
         private bool _disposed;
         public UsbDeviceInfo Device => device;
         public int FileDescriptor => _disposed ? -1 : connection.FileDescriptor;
+        public ReadOnlyMemory<byte> RawDescriptors => _disposed ? ReadOnlyMemory<byte>.Empty : connection.GetRawDescriptors() ?? [];
+        public int? ActiveConfiguration
+        {
+            get
+            {
+                if (_disposed) return null;
+                var value = new byte[1];
+                // USB standard/device request bits are both zero; UsbAddressing only exposes the direction.
+                var count = connection.ControlTransfer(UsbAddressing.In,
+                    0x08, 0, 0, value, 1, 500);
+                return count == 1 ? value[0] : null;
+            }
+        }
         public void Dispose()
         {
             if (!_disposed)

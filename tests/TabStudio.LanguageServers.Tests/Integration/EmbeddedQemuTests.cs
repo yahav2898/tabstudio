@@ -69,7 +69,8 @@ public sealed class EmbeddedQemuTests(ITestOutputHelper output)
             var debuggerName = architecture == "avr" ? Environment.GetEnvironmentVariable("TABSTUDIO_AVR_GDB") ?? "avr-gdb-dap" : "gdb-multiarch";
             var debugger = ProcessServerLauncher.Instance.Resolve(debuggerName) ?? throw new InvalidOperationException(debuggerName + " is required. Ubuntu gdb-multiarch omits AVR; use build/embedded/build-avr-gdb.sh.");
             var adapterArguments = new List<string> { "--quiet", "--nx", "--interpreter=dap" };
-            if (architecture != "avr" && Environment.GetEnvironmentVariable("TABSTUDIO_GDB_DATA_DIRECTORY") is { Length: > 0 } gdbData)
+            var dataDirectory = architecture == "avr" ? Environment.GetEnvironmentVariable("TABSTUDIO_AVR_GDB_DATA_DIRECTORY") : Environment.GetEnvironmentVariable("TABSTUDIO_GDB_DATA_DIRECTORY");
+            if (dataDirectory is { Length: > 0 } gdbData)
             {
                 adapterArguments.Add("--data-directory=" + gdbData);
             }

@@ -65,7 +65,8 @@ public sealed class UsbBridgeTests
         Assert.Contains("libusb_wrap_sys_device", sources["usb_fd.c"], StringComparison.Ordinal);
         Assert.Contains("def configure", sources["usb_serial.py"], StringComparison.Ordinal);
         var native = UsbBridgeInstallation.Setup.Where(step => step.Command.Count > 0).ToList();
-        Assert.Equal(2, native.Count);
+        Assert.Contains(native, step => step.Command.Contains(UsbBridgeInstallation.ToolsDirectory + "/usb_fd.c"));
+        Assert.Contains(native, step => step.Command.Contains(UsbBridgeInstallation.ToolsDirectory + "/serial_posix.c"));
         Assert.All(native, step => Assert.True(step.RunAfterSetupChanges));
         Assert.Equal(UsbBridgeInstallation.Setup.Count, UsbBridgeInstallation.Setup.Select(step => step.Name).Distinct().Count());
     }

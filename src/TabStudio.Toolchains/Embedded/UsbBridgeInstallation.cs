@@ -21,6 +21,7 @@ public static class UsbBridgeInstallation
         ["usb_serial.py"] = MicrochipInstallation.Resource("usb_serial.py"),
         ["serial_bridge.py"] = Resource("serial_bridge.py"),
         ["serial_posix.c"] = Resource("serial_posix.c"),
+        ["usbfs_fd.c"] = Resource("usbfs_fd.c"),
     };
 
     /// <summary>Native build commands; failures must be surfaced before any flashing attempt.</summary>
@@ -28,6 +29,7 @@ public static class UsbBridgeInstallation
     [
         new() { Program = "cc", Arguments = ["-std=gnu17", "-O2", "-Wall", "-Wextra", "-Werror", "-shared", "-fPIC", ToolsDirectory + "/usb_fd.c", "-o", ToolsDirectory + "/libusb-fd.so", "-lusb-1.0", "-ldl", "-pthread"] },
         new() { Program = "cc", Arguments = ["-std=gnu17", "-O2", "-Wall", "-Wextra", "-Werror", "-shared", "-fPIC", ToolsDirectory + "/serial_posix.c", "-o", ToolsDirectory + "/serial-posix.so", "-ldl", "-pthread"] },
+        new() { Program = "cc", Arguments = ["-std=gnu17", "-O2", "-Wall", "-Wextra", "-Werror", "-shared", "-fPIC", ToolsDirectory + "/usbfs_fd.c", "-o", ToolsDirectory + "/usbfs-fd.so", "-ldl", "-pthread"] },
     ];
 
     /// <summary>Toolchain Store setup, fingerprinted by source contents and rebuilt after source changes.</summary>

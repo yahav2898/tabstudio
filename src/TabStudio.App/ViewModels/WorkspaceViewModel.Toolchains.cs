@@ -95,6 +95,7 @@ public sealed partial class WorkspaceViewModel
         ToolchainStore = new ToolchainStoreViewModel(_toolchains, _ui, (title, message, confirm, destructive) => Prompt.ConfirmAsync(title, message, confirm, destructive));
         Terminal = new TerminalViewModel(_toolchains, _ui, () => Workspace?.RootDirectory ?? _paths.Projects, ToolchainStore.Open);
         SerialMonitor = new SerialMonitorViewModel(_toolchains, _ui);
+        InitializeEmbeddedHotplug();
         _toolchains.Manager.StatusChanged += OnToolchainStatusChanged;
         Output.LinkFinder = FindOutputLinks;
         Output.LinkActivated += OnOutputLinkActivated;
@@ -113,6 +114,7 @@ public sealed partial class WorkspaceViewModel
 
     private void DisposeToolchains()
     {
+        DisposeEmbeddedHotplug();
         DisposeEmbeddedAnalysis();
         DisposeEmbeddedDebug();
         DisposeProjectSetup();

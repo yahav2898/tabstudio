@@ -37,6 +37,12 @@ public interface IUsbConnection : IDisposable
 
     /// <summary>The borrowed platform descriptor, never a path to a USB device node.</summary>
     int FileDescriptor { get; }
+
+    /// <summary>Device/configuration descriptor bytes obtained from the permissioned connection, or empty when unavailable.</summary>
+    ReadOnlyMemory<byte> RawDescriptors => ReadOnlyMemory<byte>.Empty;
+
+    /// <summary>Current USB configuration read from the permissioned device; unknown configurations cannot be guessed for usbfs clients.</summary>
+    int? ActiveConfiguration => null;
 }
 
 /// <summary>Platform USB permission and descriptor ownership.</summary>

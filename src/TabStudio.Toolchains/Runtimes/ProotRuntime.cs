@@ -252,11 +252,12 @@ public sealed partial class ProotRuntime : IToolchainRuntime
 
         arguments.Add("-w");
         arguments.Add(GuestWorkingDirectory(spec.WorkingDirectory));
-        if (javaShim is not null)
+        var guestPreload = spec.Environment.TryGetValue("LD_PRELOAD", out var explicitPreload) ? explicitPreload : javaShim;
+        if (guestPreload is not null)
         {
             // Set this after entering Alpine: Android's bionic linker cannot load a musl preload into PRoot.
             arguments.Add("/usr/bin/env");
-            arguments.Add("LD_PRELOAD=" + javaShim);
+            arguments.Add("LD_PRELOAD=" + guestPreload);
         }
 
         arguments.Add(spec.Program);
@@ -287,6 +288,9 @@ public sealed partial class ProotRuntime : IToolchainRuntime
 
         foreach (var (name, value) in spec.Environment)
         {
+            // A guest's libusb/serial/JVM shim must never be loaded into the Android Bionic PRoot executable.
+            // BuildArguments adds it through the guest's env program, after the Linux loader takes over.
+            if (name == "LD_PRELOAD") continue;
             if (value is null)
             {
                 environment.Remove(name);

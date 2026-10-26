@@ -155,6 +155,10 @@ def prepare(work, out, compiler, *, build_runtime=True):
         if patch.is_file() and not (source / ".tabstudio-thread-waits").exists():
             run(["patch", "-d", str(source), "-p1", "-i", str(patch)], out / "proot-patch.log")
             (source / ".tabstudio-thread-waits").touch()
+        usb_patch = REPO / "build/android/native/proot-usb-fd.patch"
+        if usb_patch.is_file() and not (source / ".tabstudio-usb-fd").exists():
+            run(["patch", "-d", str(source), "-p1", "-i", str(usb_patch)], out / "proot-usb-patch.log")
+            (source / ".tabstudio-usb-fd").touch()
         env = {**os.environ, "PROOT_UNBUNDLE_LOADER": ".", "CFLAGS": "-O2",
                "CPPFLAGS": '-DVERSION=\\\"5.1.107.101\\\"'}
         # This spike runs only 64-bit tools. PRoot also tries an optional -m32 loader,

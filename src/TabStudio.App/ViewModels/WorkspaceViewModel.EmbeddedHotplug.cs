@@ -14,6 +14,10 @@ public sealed partial class WorkspaceViewModel
         {
             _embeddedHotplug = host;
             host.DevicesChanged += OnEmbeddedUsbChanged;
+            if (!SerialMonitor.IsConnected)
+            {
+                SerialMonitor.Refresh();
+            }
         }
     }
 
@@ -59,7 +63,7 @@ public sealed partial class WorkspaceViewModel
                 StatusText = message;
             }
         }
-        catch (Exception error) when (error is IOException or InvalidOperationException or ObjectDisposedException)
+        catch (Exception error) when (error is IOException or InvalidOperationException)
         {
             if (!_disposed)
             {

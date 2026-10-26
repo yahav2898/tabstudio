@@ -172,3 +172,81 @@ CI harness uses the same pinned PRoot sources and rootfs SHA-256 values as the A
 - Ubuntu Base 24.04.3 is an optional glibc side environment, not embedded in the APK. It contains separately licensed packages, including GNU libc (LGPL-2.1-or-later), Bash (GPL-3.0-or-later), Git (GPL-2.0-only), OpenSSL (Apache-2.0) and curl (curl license). Package-specific copyright and license texts remain in `/usr/share/doc/*/copyright` in that environment. Ubuntu source packages: https://archive.ubuntu.com/ubuntu/pool/ and https://ports.ubuntu.com/ubuntu-ports/pool/ . Ubuntu distributions and licensing: https://ubuntu.com/legal/intellectual-property-policy .
 
 Flutter and Dart retain their upstream LICENSE and third-party notices in `/opt/flutter` and `/opt/flutter/bin/cache/dart-sdk`. These optional downloads do not change the licensing of TabStudio.
+
+## Embedded firmware tools (optional downloads)
+
+These are separate processes installed on request. Compiler binaries are not newly redistributed in the APK.
+Signed Alpine packages retain their license metadata and corresponding-source origin. Ordinary package versions
+resolve from that signed repository; they are not separate binary archives with invented SHA-256 values.
+
+| Component | License | Source / handling |
+| --- | --- | --- |
+| GNU ARM/RISC-V/AVR GCC | GPL-3.0-or-later; applicable target runtime libraries have GCC Runtime Library Exception 3.1 | [GCC](https://gcc.gnu.org/); optional signed cross-compiler packages. The runtime exception does not relicense the compiler itself. |
+| GNU binutils | GPL-3.0-or-later, with included component-specific notices/exceptions | [binutils](https://www.gnu.org/software/binutils/); signed cross-binutils packages. |
+| newlib | Permissive BSD/MIT/other licenses, per included source copyright files | [newlib](https://sourceware.org/newlib/); signed ARM/RISC-V packages. No single license replaces its component notices. |
+| avr-libc | BSD-3-Clause and included per-file notices | [avr-libc](https://avrdudes.github.io/avr-libc/); signed Alpine package. |
+| OpenOCD | GPL-2.0-or-later | [OpenOCD](https://openocd.org/); signed Alpine package. Vendor forks are not automatically downloaded. |
+| avrdude | GPL-2.0-or-later | [avrdude](https://github.com/avrdudes/avrdude); signed Alpine package. |
+| dfu-util | GPL-2.0-or-later | [dfu-util](https://dfu-util.sourceforge.net/); signed Alpine package. |
+| GNU GDB / gdb-multiarch and Python DAP adapter | GPL-3.0-or-later and included component notices | [GDB](https://www.gnu.org/software/gdb/); signed Alpine package. CI's AVR-capable GDB is built from signed Ubuntu `gdb-source`, retaining source and COPYING in its build tree. |
+| Arduino CLI 1.5.1 | GPL-3.0-only | [arduino-cli](https://github.com/arduino/arduino-cli/tree/v1.5.1); official Linux ARM64, ARMv7 and x64 archives pinned by URL/size/SHA-256 in the catalog. Board cores and tools are separate downloads under their included licenses. |
+| PlatformIO Core 6.1.18 | Apache-2.0 | [PlatformIO Core](https://github.com/platformio/platformio-core/tree/v6.1.18); isolated Python environment with the full hashed dependency lock below. Third-party platforms/cores/tools have separate licenses and architecture constraints. |
+| mpremote 1.26.1 | MIT | [MicroPython mpremote](https://github.com/micropython/micropython/tree/v1.26.1/tools/mpremote); isolated Python environment with hashed mpremote/platformdirs/pyserial wheels. |
+| Ninja | Apache-2.0 | [Ninja](https://github.com/ninja-build/ninja); signed Alpine package. CMake, Make, Python, Git and clangd retain their notices above. |
+
+`build/embedded/platformio.requirements.txt` and `build/embedded/mpremote.requirements.txt` contain every selected
+Python distribution and SHA-256, installed with `--require-hashes --only-binary=:all:`. The same locks appear in
+the Toolchain Store setup data. Installed wheel metadata and license files remain with each environment. The
+following licenses were checked against those wheels' metadata/license files; downloaded board platforms have
+their own dependency notices.
+
+| Python distribution | Locked version | License |
+| --- | --- | --- |
+| ajsonrpc | 1.2.0 | MIT |
+| anyio | 4.15.1 | MIT |
+| bottle | 0.13.4 | MIT |
+| certifi | 2026.10.23 | MPL-2.0 |
+| charset-normalizer | 3.5.2 | MIT |
+| click | 8.1.7 | BSD-3-Clause |
+| colorama | 0.4.6 | BSD-3-Clause |
+| h11 | 0.16.0 | MIT |
+| idna | 3.20 | BSD-3-Clause |
+| marshmallow | 3.26.2 | MIT |
+| packaging | 26.3 | Apache-2.0 OR BSD-2-Clause |
+| platformio | 6.1.18 | Apache-2.0 |
+| pyelftools | 0.33 | Public domain, with the distribution's included terms |
+| pyserial | 3.5 | BSD-3-Clause |
+| requests | 2.34.2 | Apache-2.0 |
+| semantic-version | 2.10.0 | BSD-2-Clause |
+| starlette | 0.46.2 | BSD-3-Clause |
+| tabulate | 0.10.0 | MIT |
+| typing_extensions | 4.16.0 | PSF-2.0 |
+| urllib3 | 2.8.0 | MIT |
+| uvicorn | 0.34.3 | BSD-3-Clause |
+| wsproto | 1.3.2 | MIT |
+| mpremote | 1.26.1 | MIT |
+| platformdirs | 4.13.5 | MIT |
+
+The new serial-control bridge and analysis/import code are TabStudio code. USB-serial control sequences retain
+the usb-serial-for-android attribution above. A libusb wrapper does not replace libusb's license.
+
+### Embedded ecosystem tools used externally or by CI
+
+Names in build plans/host CI do not imply that complete Android installers/backends are supplied. Upstream source
+and dependency notices remain authoritative.
+
+| Component | License | Source / current handling |
+| --- | --- | --- |
+| Espressif ESP-IDF | Apache-2.0, with separately licensed bundled components | [ESP-IDF](https://github.com/espressif/esp-idf); CI source commit pinned. Compiler distributions retain GCC/runtime notices. No complete Android glibc SDK installer is added here. |
+| esptool | GPL-2.0-or-later | [esptool](https://github.com/espressif/esptool); typed external route, not newly bundled or installed by the basic embedded USB entry. |
+| Raspberry Pi Pico SDK / picotool | BSD-3-Clause, with included dependency notices | [Pico SDK](https://github.com/raspberrypi/pico-sdk), [picotool](https://github.com/raspberrypi/picotool); SDK CI source pinned. picotool has an external command route, not a complete automatic installer here. |
+| Zephyr / west | Apache-2.0, with Zephyr's per-component notices | [Zephyr](https://github.com/zephyrproject-rtos/zephyr), [west](https://github.com/zephyrproject-rtos/west); pinned Zephyr source; CI west 1.3.0. |
+| probe-rs / nusb | MIT OR Apache-2.0 | [probe-rs](https://github.com/probe-rs/probe-rs), [nusb](https://github.com/kevinmehall/nusb); stock Android transport is not enabled by the libusb shim. |
+| stm32flash | GPL-2.0-or-later | [stm32flash](https://sourceforge.net/projects/stm32flash/); external command route requiring an installed compatible tool. |
+| BOSSA / bossac | BSD-3-Clause | [BOSSA](https://github.com/shumatech/BOSSA); external command route requiring an installed compatible tool. |
+| QEMU | GPL-2.0 and included component-specific licenses | [QEMU](https://www.qemu.org/); host CI package, not physical MCU proof. |
+| simavr | GPL-3.0-or-later and included component notices | [simavr](https://github.com/buserror/simavr); host CI package. |
+| Embassy | MIT OR Apache-2.0, with individual crate/dependency notices | [Embassy](https://github.com/embassy-rs/embassy); pinned example source; generated Cargo lock retained where upstream omits one. |
+
+Requested nrfutil, WCH, MSP430 and Teensy programming integration remains incomplete. Mentioning those tools in
+the guide does not represent them as installed and hardware-verified.

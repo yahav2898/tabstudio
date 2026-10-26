@@ -38,6 +38,7 @@ Open a solution, press F5, and it builds, runs and debugs on the tablet itself.
   - [Remote development over SSH](#remote-development-over-ssh)
   - [Web servers and mobile apps](#web-servers-and-mobile-apps)
   - [Microchip PIC](#microchip-pic)
+  - [Embedded firmware (experimental)](#embedded-firmware-experimental)
   - [GitHub](#github)
   - [AI pair programmer](#ai-pair-programmer)
   - [Offline AI](#offline-ai)
@@ -284,6 +285,23 @@ Native Android deployment of Flutter apps through the Android SDK toolchain is n
   bootloader or programmer, and the serial monitor speaks CDC-ACM, CH340, CP210x and FTDI. PICkit 4/5 and Snap use
   MPLAB on a PC paired as a Windows Bridge.
 - [Setup, device lists and limits](docs/features/pic.md).
+
+### Embedded firmware (experimental)
+
+- **Open native firmware projects.** PlatformIO, Arduino sketches and library examples, generated STM32Cube
+  builds, ESP-IDF, Zephyr, Pico SDK and embedded Rust use their own build systems. The Toolchain Store adds
+  ARM/RISC-V/AVR GCC, pinned PlatformIO Core and Arduino CLI; board cores and SDKs remain separate prerequisites.
+- **Use Android's granted USB device.** Reused PIC USB drivers, a libusb descriptor bridge and a serial PTY/control
+  bridge let compatible upstream tools upload and verify application firmware. OpenOCD with GDB's DAP adapter
+  provides the on-chip debug route. Stock nusb/hidraw programs need further integration.
+- **Keep evidence from real work.** Read application flash twice before saving a backup, compare dumps, program
+  an explicitly selected batch with per-board verification/logs, or upload to an ArduinoOTA-capable Wi-Fi board.
+- **Understand the firmware.** Linked-ELF memory treemaps and build-size changes, crash decoding with matching
+  symbols, conservative stack budgets, pin checks, SVD register inspection and verified mask quick fixes. Host
+  tests and imported board test results appear in Test Explorer; mpremote opens the board REPL and verifies file sync.
+- **Review the actual coverage.** Templates and synthetic/emulator tests do not verify physical boards. SDK
+  installation, unsupported programmer routes, RTT/defmt acquisition and hardware checks still have gaps. The
+  [embedded guide](docs/features/embedded.md) lists every route, its verification evidence and its limits.
 
 ### GitHub
 

@@ -1,4 +1,4 @@
-"""8-N-1 USB serial using only a permissioned libusb handle.
+"""USB serial with runtime line coding using only a permissioned libusb handle.
 
 Control sequences follow usb-serial-for-android v3.9.0 (MIT). No driver is
 installed and no tty device node is needed. Standard CDC-ACM, CH340/341,
