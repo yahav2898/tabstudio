@@ -17,9 +17,18 @@ internal sealed class UnixProcessHandle : IProcessHandle
         Input = input;
         Output = output;
         Error = error;
+        UnixNative.TraceProcess("handle", pid, Id);
 
         // waitpid blocks, so it gets a thread of its own rather than one from the pool.
-        _exit = Task.Factory.StartNew(Wait, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+        // Use a void entry point and pass the PID explicitly. This avoids a struct-return delegate/instance
+        // target across Mono's interpreter thread-entry trampoline; the result travels through the completion.
+        var completion = new TaskCompletionSource<(int ExitCode, int? Signal)>(TaskCreationOptions.RunContinuationsAsynchronously);
+        _exit = completion.Task;
+        _ = Task.Factory.StartNew(() =>
+        {
+            try { completion.SetResult(Wait(pid)); }
+            catch (Exception ex) { completion.SetException(ex); }
+        }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Default);
     }
 
     /// <inheritdoc />
@@ -69,9 +78,9 @@ internal sealed class UnixProcessHandle : IProcessHandle
         Error?.Dispose();
     }
 
-    private (int ExitCode, int? Signal) Wait()
+    private static (int ExitCode, int? Signal) Wait(int pid)
     {
-        var pid = Id;
+        UnixNative.TraceProcess("wait", pid);
         while (true)
         {
             var result = UnixNative.waitpid(pid, out var status, 0);
@@ -89,7 +98,7 @@ internal sealed class UnixProcessHandle : IProcessHandle
             }
 
             // ECHILD: something else reaped it (it no longer exists either way).
-            Console.Error.WriteLine(FormattableString.Invariant($"TabStudio process wait: waitpid({pid}) returned {result}, errno {error}; stored PID {Id}; exit status unavailable."));
+            Console.Error.WriteLine(FormattableString.Invariant($"TabStudio process wait: waitpid({pid}) returned {result}, errno {error}; exit status unavailable."));
             return (-1, null);
         }
     }

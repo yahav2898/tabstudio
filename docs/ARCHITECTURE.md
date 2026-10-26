@@ -327,6 +327,8 @@ and abandoned generations and real ApplyUpdate across multiple generations with 
 state. App tests drive unsaved console edits, save updates, Edit and Continue, the shortcut and an Avalonia view
 refresh in the same loaded assembly. The emulator self test calls ApplyUpdate twice and checks `2 -> 12 -> 103`
 with a preserved static counter; capability being unavailable on Android fails the step.
+Immediately after these updates, the emulator runs the existing 200-process GC stress case before the app and
+toolchain checks, with opt-in PID handoff diagnostics for the interpreter's native process boundary.
 
 Run the feature's tests on CoreCLR with:
 

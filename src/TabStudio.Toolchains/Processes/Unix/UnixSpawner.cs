@@ -150,7 +150,7 @@ internal static class UnixSpawner
         _ = UnixNative.ioctl_winsize(master, UnixConstants.SetWindowSize, ref winsize);
     }
 
-    private static int Spawn(
+    private static unsafe int Spawn(
         string path,
         IReadOnlyList<string> arguments,
         IReadOnlyList<string> environment,
@@ -163,14 +163,6 @@ internal static class UnixSpawner
         var actions = Marshal.AllocHGlobal(1024);
         var attributes = Marshal.AllocHGlobal(1024);
         var signals = Marshal.AllocHGlobal(256);
-        // Keep every native argument, including the PID output, outside Mono's interpreter frame/localloc arena.
-        // Both managed out locals and localloc storage have produced corrupt PIDs on Android's interpreter.
-        var vectors = Marshal.AllocHGlobal(checked((arguments.Count + environment.Count + 2) * IntPtr.Size + sizeof(int)));
-        var argv = vectors;
-        var envp = argv + (arguments.Count + 1) * IntPtr.Size;
-        var pid = envp + (environment.Count + 1) * IntPtr.Size;
-        Marshal.WriteInt32(pid, -1);
-        var childPid = -1;
         var strings = new List<nint>();
         try
         {
@@ -205,30 +197,29 @@ internal static class UnixSpawner
                 _ = UnixNative.sigemptyset(signals);
                 Check(UnixNative.posix_spawnattr_setsigmask(attributes, signals), "posix_spawnattr_setsigmask");
 
+                var argv = stackalloc nint[arguments.Count + 1];
                 for (var i = 0; i < arguments.Count; i++)
                 {
-                    Marshal.WriteIntPtr(argv, i * IntPtr.Size, Utf8(arguments[i], strings));
+                    argv[i] = Utf8(arguments[i], strings);
                 }
 
-                Marshal.WriteIntPtr(argv, arguments.Count * IntPtr.Size, 0);
+                argv[arguments.Count] = 0;
+                var envp = stackalloc nint[environment.Count + 1];
                 for (var i = 0; i < environment.Count; i++)
                 {
-                    Marshal.WriteIntPtr(envp, i * IntPtr.Size, Utf8(environment[i], strings));
+                    envp[i] = Utf8(environment[i], strings);
                 }
 
-                Marshal.WriteIntPtr(envp, environment.Count * IntPtr.Size, 0);
+                envp[environment.Count] = 0;
                 var program = Utf8(path, strings);
-                var result = UnixNative.posix_spawn(pid, program, actions, attributes, argv, envp);
+                var result = UnixNative.posix_spawn(out var pid, program, actions, attributes, argv, envp);
                 if (result != 0)
                 {
                     throw Failure($"Could not start {path}", result);
                 }
 
-                childPid = Marshal.ReadInt32(pid);
-                if (childPid <= 0)
-                {
-                    throw new ToolchainRuntimeException($"Native process startup returned an invalid PID ({childPid}) for {path}.");
-                }
+                UnixNative.TraceProcess("spawn", pid);
+                return pid;
             }
             finally
             {
@@ -246,10 +237,7 @@ internal static class UnixSpawner
             Marshal.FreeHGlobal(actions);
             Marshal.FreeHGlobal(attributes);
             Marshal.FreeHGlobal(signals);
-            Marshal.FreeHGlobal(vectors);
         }
-
-        return childPid;
     }
 
     private static unsafe void AddChangeDirectory(nint actions, string workingDirectory, List<nint> strings)

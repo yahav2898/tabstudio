@@ -43,6 +43,8 @@ public static partial class SelfTest
         ArgumentNullException.ThrowIfNull(main);
         ArgumentNullException.ThrowIfNull(samples);
         var clock = Stopwatch.StartNew();
+        var previousProcessTrace = Environment.GetEnvironmentVariable("TABSTUDIO_TRACE_PROCESSES");
+        if (OperatingSystem.IsAndroid()) Environment.SetEnvironmentVariable("TABSTUDIO_TRACE_PROCESSES", "1");
         try
         {
             var solution = await samples.EnsureExtractedAsync(cancellationToken);
@@ -91,6 +93,13 @@ public static partial class SelfTest
                 var reload = CheckHotReload(cancellationToken);
                 debugged = debugged with { Success = reload.Success, Message = $"{debugged.Message} | {reload.Message}" };
             }
+            if (debugged.Success && templates is not null)
+            {
+                // Verify the interpreter's native process boundary immediately after real ApplyUpdates, before
+                // downloading packages or exercising the remaining apps; every stress case remains mandatory.
+                var processes = await StartProgramsWhileCollectingAsync(cancellationToken);
+                debugged = debugged with { Success = processes.Success, Message = $"{debugged.Message} | {processes.Message}" };
+            }
             if (debugged.Success)
             {
                 var linked = await LinkSampleAsync(main, workspace, cancellationToken);
@@ -129,8 +138,7 @@ public static partial class SelfTest
             var avaloniaApp = last.Workspace is { } loaded ? loaded.Solution?.FilePath ?? loaded.RootDirectory : null;
             var extensions = await InstallGrammarExtensionAsync(last, FindEditor, cancellationToken);
             var toolchains = extensions.Success ? await RunToolchainsAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Toolchains: not run", TimeSpan.Zero);
-            var processes = toolchains.Success ? await StartProgramsWhileCollectingAsync(cancellationToken) : new SelfTestResult(false, "Processes: not run", TimeSpan.Zero);
-            var pythonTools = processes.Success ? await CheckPythonToolsAsync(main, cancellationToken) : new SelfTestResult(false, "Python tools: not run", TimeSpan.Zero);
+            var pythonTools = toolchains.Success ? await CheckPythonToolsAsync(main, cancellationToken) : new SelfTestResult(false, "Python tools: not run", TimeSpan.Zero);
             var forms = pythonTools.Success ? await ShowWindowsFormsAppAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Windows Forms: not run", TimeSpan.Zero);
 
             var design = forms.Success ? await CheckDesignAsync(main, screenshots, cancellationToken) : new SelfTestResult(false, "Design: not run", TimeSpan.Zero);
@@ -145,13 +153,17 @@ public static partial class SelfTest
             }
 
             return new SelfTestResult(
-                extensions.Success && toolchains.Success && processes.Success && pythonTools.Success && forms.Success && design.Success && screens.Success && swarm.Success,
-                $"{summary} | {debugged.Message} | {web.Message} | {blazor.Message} | {avalonia.Message} | {extensions.Message} | {toolchains.Message} | {processes.Message} | {pythonTools.Message} | {forms.Message} | {design.Message} | {screens.Message} | {swarm.Message}",
+                extensions.Success && toolchains.Success && pythonTools.Success && forms.Success && design.Success && screens.Success && swarm.Success,
+                $"{summary} | {debugged.Message} | {web.Message} | {blazor.Message} | {avalonia.Message} | {extensions.Message} | {toolchains.Message} | {pythonTools.Message} | {forms.Message} | {design.Message} | {screens.Message} | {swarm.Message}",
                 clock.Elapsed);
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)
         {
             return new SelfTestResult(false, $"{ex.GetType().Name}: {ex.Message}{DescribeActivity(main)}".ReplaceLineEndings(" "), clock.Elapsed);
+        }
+        finally
+        {
+            if (OperatingSystem.IsAndroid()) Environment.SetEnvironmentVariable("TABSTUDIO_TRACE_PROCESSES", previousProcessTrace);
         }
     }
 }
