@@ -1,72 +1,72 @@
 Activity Resolver Table:
   Non-Data Actions:
       android.intent.action.MAIN:
-        715ef0c com.tabstudio.ide/.MainActivity filter 1209b1e
+        a3f7425 com.tabstudio.ide/.MainActivity filter 37ba60
           Action: "android.intent.action.MAIN"
           Category: "android.intent.category.LAUNCHER"
 
 Receiver Resolver Table:
   Non-Data Actions:
       androidx.profileinstaller.action.SAVE_PROFILE:
-        274a055 com.tabstudio.ide/androidx.profileinstaller.ProfileInstallReceiver filter 2a1dc15
+        c05e9fa com.tabstudio.ide/androidx.profileinstaller.ProfileInstallReceiver filter c296dbf
           Action: "androidx.profileinstaller.action.SAVE_PROFILE"
       androidx.profileinstaller.action.INSTALL_PROFILE:
-        274a055 com.tabstudio.ide/androidx.profileinstaller.ProfileInstallReceiver filter 1595fff
+        c05e9fa com.tabstudio.ide/androidx.profileinstaller.ProfileInstallReceiver filter 8c3cb19
           Action: "androidx.profileinstaller.action.INSTALL_PROFILE"
       androidx.profileinstaller.action.SKIP_FILE:
-        274a055 com.tabstudio.ide/androidx.profileinstaller.ProfileInstallReceiver filter c87c1cc
+        c05e9fa com.tabstudio.ide/androidx.profileinstaller.ProfileInstallReceiver filter 19547de
           Action: "androidx.profileinstaller.action.SKIP_FILE"
       androidx.profileinstaller.action.BENCHMARK_OPERATION:
-        274a055 com.tabstudio.ide/androidx.profileinstaller.ProfileInstallReceiver filter d374b2a
+        c05e9fa com.tabstudio.ide/androidx.profileinstaller.ProfileInstallReceiver filter dce1c8c
           Action: "androidx.profileinstaller.action.BENCHMARK_OPERATION"
 
 Permissions:
-  Permission [com.tabstudio.ide.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION] (b405a6a):
+  Permission [com.tabstudio.ide.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION] (d2afbab):
     sourcePackage=com.tabstudio.ide
     uid=10146 gids=null type=0 prot=signature
-    perm=Permission{deefb5b com.tabstudio.ide.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION}
-    packageSetting=PackageSetting{2b8eff8 com.tabstudio.ide/10146}
+    perm=Permission{53d7208 com.tabstudio.ide.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION}
+    packageSetting=PackageSetting{e182da1 com.tabstudio.ide/10146}
 
 Registered ContentProviders:
   com.tabstudio.ide/mono.MonoRuntimeProvider:
-    Provider{3abecd1 com.tabstudio.ide/mono.MonoRuntimeProvider}
+    Provider{9b8abc6 com.tabstudio.ide/mono.MonoRuntimeProvider}
   com.tabstudio.ide/androidx.startup.InitializationProvider:
-    Provider{d01b336 com.tabstudio.ide/androidx.startup.InitializationProvider}
+    Provider{91ba787 com.tabstudio.ide/androidx.startup.InitializationProvider}
 
 ContentProvider Authorities:
   [com.tabstudio.ide.androidx-startup]:
-    Provider{d01b336 com.tabstudio.ide/androidx.startup.InitializationProvider}
-      applicationInfo=ApplicationInfo{17f237 com.tabstudio.ide}
+    Provider{91ba787 com.tabstudio.ide/androidx.startup.InitializationProvider}
+      applicationInfo=ApplicationInfo{73ba6b4 com.tabstudio.ide}
   [com.tabstudio.ide.mono.MonoRuntimeProvider.__mono_init__]:
-    Provider{3abecd1 com.tabstudio.ide/mono.MonoRuntimeProvider}
-      applicationInfo=ApplicationInfo{17f237 com.tabstudio.ide}
+    Provider{9b8abc6 com.tabstudio.ide/mono.MonoRuntimeProvider}
+      applicationInfo=ApplicationInfo{73ba6b4 com.tabstudio.ide}
 
 Key Set Manager:
   [com.tabstudio.ide]
       Signing KeySets: 29
 
 Packages:
-  Package [com.tabstudio.ide] (2b8eff8):
+  Package [com.tabstudio.ide] (e182da1):
     userId=10146
-    pkg=Package{38913a4 com.tabstudio.ide}
-    codePath=/data/app/com.tabstudio.ide-Sst9esC2pAVKHv5dm5mtVg==
-    resourcePath=/data/app/com.tabstudio.ide-Sst9esC2pAVKHv5dm5mtVg==
-    legacyNativeLibraryDir=/data/app/com.tabstudio.ide-Sst9esC2pAVKHv5dm5mtVg==/lib
+    pkg=Package{46902dd com.tabstudio.ide}
+    codePath=/data/app/com.tabstudio.ide-7m0Xx5nu26NJNpMKZFS_wA==
+    resourcePath=/data/app/com.tabstudio.ide-7m0Xx5nu26NJNpMKZFS_wA==
+    legacyNativeLibraryDir=/data/app/com.tabstudio.ide-7m0Xx5nu26NJNpMKZFS_wA==/lib
     primaryCpuAbi=x86_64
     secondaryCpuAbi=null
-    versionCode=429400 minSdk=28 targetSdk=36
+    versionCode=429425 minSdk=28 targetSdk=36
     versionName=0.13.0
     splits=[base]
     apkSigningVersion=3
-    applicationInfo=ApplicationInfo{17f237 com.tabstudio.ide}
+    applicationInfo=ApplicationInfo{73ba6b4 com.tabstudio.ide}
     flags=[ DEBUGGABLE HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP ]
     privateFlags=[ PRIVATE_FLAG_ACTIVITIES_RESIZE_MODE_RESIZEABLE_VIA_SDK_VERSION ALLOW_AUDIO_PLAYBACK_CAPTURE ]
     dataDir=/data/user/0/com.tabstudio.ide
     supportsScreens=[small, medium, large, xlarge, resizeable, anyDensity]
-    timeStamp=2026-10-26 04:46:02
-    firstInstallTime=2026-10-26 04:46:11
-    lastUpdateTime=2026-10-26 04:46:11
-    signatures=PackageSignatures{a31850d version:3, signatures:[fccb9a2d], past signatures:[]}
+    timeStamp=2026-10-26 05:12:06
+    firstInstallTime=2026-10-26 05:12:18
+    lastUpdateTime=2026-10-26 05:12:18
+    signatures=PackageSignatures{383be52 version:3, signatures:[fccb9a2d], past signatures:[]}
     installPermissionsFixed=true
     pkgFlags=[ DEBUGGABLE HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP ]
     declared permissions:
@@ -81,12 +81,12 @@ Packages:
       android.permission.INTERNET: granted=true
       com.tabstudio.ide.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION: granted=true
       android.permission.ACCESS_NETWORK_STATE: granted=true
-    User 0: ceDataInode=131260 installed=true hidden=false suspended=false stopped=true notLaunched=true enabled=0 instant=false virtual=false
+    User 0: ceDataInode=131280 installed=true hidden=false suspended=false stopped=true notLaunched=true enabled=0 instant=false virtual=false
       gids=[3003]
       runtime permissions:
 
 Package Changes:
-  Sequence number=24
+  Sequence number=26
   User 0:
     seq=0, package=com.google.android.apps.inputmethod.hindi
     seq=1, package=com.google.android.inputmethod.korean
@@ -98,17 +98,17 @@ Package Changes:
     seq=7, package=com.google.android.gms
     seq=8, package=com.google.android.inputmethod.latin
     seq=9, package=com.google.android.sdksetup
-    seq=11, package=com.google.android.apps.restore
-    seq=15, package=com.google.android.googlequicksearchbox
+    seq=13, package=com.google.android.googlequicksearchbox
+    seq=15, package=com.google.android.apps.restore
     seq=16, package=com.google.android.partnersetup
-    seq=17, package=com.tabstudio.ide
-    seq=18, package=com.google.android.gm
-    seq=23, package=com.google.android.apps.messaging
+    seq=17, package=com.google.android.gm
+    seq=24, package=com.google.android.apps.messaging
+    seq=25, package=com.tabstudio.ide
 
 
 Dexopt state:
   [com.tabstudio.ide]
-    path: /data/app/com.tabstudio.ide-Sst9esC2pAVKHv5dm5mtVg==/base.apk
+    path: /data/app/com.tabstudio.ide-7m0Xx5nu26NJNpMKZFS_wA==/base.apk
       x86_64: [status=run-from-apk] [reason=unknown]
 
 
