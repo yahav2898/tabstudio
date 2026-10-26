@@ -40,7 +40,7 @@ def prepare(args):
     with zipfile.ZipFile(spike.fetch(spike.LOCK["pic18-dfp"], cache, "pic18.atpack")) as package:
         package.extractall(pack)
     shutil.copyfile(spike.REPO / "samples/PIC/PIC18Blink/main.c", root / "work/main.c")
-    spike.run(["cc", "-static", "-O2", str(spike.REPO / "build/pic/static-spawn.c"), "-o", str(root / "work/static-spawn")], out / "android-guest-probe-build.log")
+    spike.run(["cc", "-static", "-O2", "-fstack-protector-strong", str(spike.REPO / "build/pic/static-spawn.c"), "-o", str(root / "work/static-spawn")], out / "android-guest-probe-build.log")
     (work / "compiler-path.txt").write_text("/" + compiler.relative_to(root).as_posix())
     spike.run(["tar", "-czf", str(work / "android-rootfs.tar.gz"), "-C", str(root), "."], out / "android-pack.log", timeout=300)
 
@@ -113,7 +113,9 @@ def run(args):
         result["prootNativeProbe"] = True
         code, _, _ = spike.run(command(["-v"]), out / "android-box64-probe.log", timeout=30, check=False)
         if not code:
-            code, _, _ = spike.run(command(["/work/static-spawn"]), out / "android-box64-guest-probe.log", timeout=30, check=False)
+            code, _, text = spike.run(command(["/work/static-spawn"]), out / "android-box64-guest-probe.log", timeout=60, check=False)
+            if not code and "32 repetitions and ENOENT checked" not in text:
+                raise RuntimeError("Box64 returned success before completing its static spawn regression")
         result["box64Available"] = code == 0
         if code:
             result["conditionalSkip"] = "box64 cannot execute on this emulator ABI; see Android probe log. ARM64 runner proof is separate."

@@ -373,7 +373,7 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: artifacts/native
-          key: android-native-${{ hashFiles('build/android/native/build.sh', 'build/android/native/sources.sh', 'build/android/native/*.patch', 'build/android/native/*.c', 'build/pic/build_box64.py', 'build/pic/spike.py', 'build/pic/assets.lock.json') }}-arm
+          key: android-native-${{ hashFiles('build/android/native/build.sh', 'build/android/native/sources.sh', 'build/android/native/*.patch', 'build/android/native/*.c', 'build/pic/build_box64.py', 'build/pic/spike.py', 'build/pic/assets.lock.json', 'build/pic/*.patch') }}-arm
 
       - name: Build the toolchain runtime
         run: |
@@ -439,7 +439,7 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: artifacts/native
-          key: android-native-${{ hashFiles('build/android/native/build.sh', 'build/android/native/sources.sh', 'build/android/native/*.patch', 'build/android/native/*.c', 'build/pic/build_box64.py', 'build/pic/spike.py', 'build/pic/assets.lock.json') }}-x64
+          key: android-native-${{ hashFiles('build/android/native/build.sh', 'build/android/native/sources.sh', 'build/android/native/*.patch', 'build/android/native/*.c', 'build/pic/build_box64.py', 'build/pic/spike.py', 'build/pic/assets.lock.json', 'build/pic/*.patch') }}-x64
 
       - name: Build the toolchain runtime
         run: |
@@ -490,7 +490,7 @@ jobs:
           profile: pixel_c
           cores: 3
           ram-size: 4096M
-          disk-size: 4096M
+          disk-size: 8192M
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
           script: bash build/pic/android-emulator-test.sh ci-out/TabStudio-x64.apk ci-out "$RUNNER_TEMP/pic-android"

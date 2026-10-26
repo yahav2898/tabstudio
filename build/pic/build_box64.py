@@ -17,7 +17,8 @@ import spike
 
 def build(output):
     output.mkdir(parents=True, exist_ok=True)
-    version = spike.LOCK["box64-source"]["sha256"] + " child-stack-v1, 16KB"
+    patch = hashlib.sha256((spike.REPO / "build/pic/box64-static-clone.patch").read_bytes()).hexdigest()
+    version = spike.LOCK["box64-source"]["sha256"] + " static-clone-v2 " + patch + ", 16KB"
     binary, stamp = output / "libbox64.so", output / "BOX64.VERSION"
     if binary.exists() and stamp.exists() and stamp.read_text() == version:
         return

@@ -77,15 +77,10 @@ def build_current_box64(work, root, out, cache, *, fix_clone_stack=False, target
     run(["tar", "--no-same-owner", "-xzf", str(archive), "-C", str(source_parent)], out / "box64-extract.log")
     source = next(source_parent.iterdir())
     if fix_clone_stack:
-        # A raw clone(CLONE_VM|CLONE_VFORK|SIGCHLD, child_stack, ...) is
-        # posix_spawn, not the stack-less vfork syscall. Use the existing clone
-        # implementation, which sets up the child's emulated SP and entry point.
-        syscall = source / "src/emu/x64syscall.c"
-        text = syscall.read_text()
-        old = "if((R_EDI&~0xff)==0x4100) {"
-        if text.count(old) != 1:
-            raise RuntimeError("Pinned box64 clone implementation changed")
-        syscall.write_text(text.replace(old, "if((R_EDI&~0xff)==0x4100 && !R_RSI) {"))
+        # Static guest libc and host libc must not compete over brk. Raw
+        # vfork-style clones also need a child SP and parent-owned cleanup/TLS.
+        run(["patch", "-d", str(source), "-p1", "-i", str(REPO / "build/pic/box64-static-clone.patch")],
+            out / "box64-static-clone-patch.log")
     build = work / "box64-build"
     native_arm = (target_arch or platform.machine()) == "aarch64"
     cross = (["-DCMAKE_SYSTEM_NAME=Linux", "-DCMAKE_SYSTEM_PROCESSOR=" + target_arch,
@@ -102,8 +97,15 @@ def verify_clone_fix(work, root, out, cache, prefix, env):
     build_current_box64(work, root, out, cache, fix_clone_stack=True)
     source = REPO / "build/pic/static-spawn.c"
     binary = root / "work/static-spawn"
-    run(["x86_64-linux-gnu-gcc", "-static", "-O2", str(source), "-o", str(binary)], out / "spawn-build.log")
-    run([*prefix, "/usr/bin/box64", "/work/static-spawn"], out / "spawn-fixed-box64.log", env=env, timeout=30)
+    run(["x86_64-linux-gnu-gcc", "-static", "-O2", "-fstack-protector-strong", str(source), "-o", str(binary)], out / "spawn-build.log")
+    _, _, text = run([*prefix, "/usr/bin/box64", "/work/static-spawn"], out / "spawn-fixed-box64.log", env=env, timeout=30)
+    if "32 repetitions and ENOENT checked" not in text:
+        raise RuntimeError("Box64 exited before the complete static spawn regression")
+    callback = REPO / "build/pic/clone-callback.c"
+    run(["x86_64-linux-gnu-gcc", "-O2", "-fstack-protector-strong", str(callback), "-o", str(root / "work/clone-callback")], out / "callback-build.log")
+    _, _, text = run([*prefix, "/usr/bin/box64", "/work/clone-callback"], out / "callback-fixed-box64.log", env=env, timeout=30)
+    if "parent libc callbacks use the parent stack (8 children)" not in text:
+        raise RuntimeError("Box64 did not preserve the parent's callback context after clone")
 
 
 def prepare(work, out, compiler, *, build_runtime=True):
@@ -201,7 +203,7 @@ def spike(args):
             # child stack. Start with the measured working build, including for
             # the installer, instead of repeating the known failing path.
             verify_clone_fix(work, root, out, cache, prefix, env)
-            result["box64Version"] = LOCK["box64-source"]["version"] + " (child-stack fix, BAD_SIGNAL=ON)"
+            result["box64Version"] = LOCK["box64-source"]["version"] + " (static-heap + clone-context fixes, BAD_SIGNAL=ON)"
             result["box64CloneStackFix"] = True
         installer = fetch(asset, cache, args.compiler + ".run")
         installer.chmod(0o755)
