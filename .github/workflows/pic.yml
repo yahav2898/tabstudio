@@ -2,7 +2,7 @@ name: Microchip PIC
 
 on:
   push:
-    branches: [main]
+    branches: [main, agent/pic]
     paths:
       - 'build/pic/**'
       - 'src/TabStudio.Toolchains/Microchip/**'
