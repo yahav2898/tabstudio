@@ -87,13 +87,9 @@
   </ItemGroup>
 
   <ItemGroup Label="WPF">
-    <!--
-      The interfaces of MSBuild tasks, for running OpenSilver's XAML compiler task inside TabStudio. Both at the version
-      Entity Framework Core 10's design-time package brings, so a process with both, such as the IDE's tests, loads a
-      Utilities.Core whose TaskItem implements the Framework's interfaces.
-    -->
-    <PackageVersion Include="Microsoft.Build.Framework" Version="18.0.2" />
-    <PackageVersion Include="Microsoft.Build.Utilities.Core" Version="18.0.2" />
+    <!-- The interfaces of MSBuild tasks, for running OpenSilver's XAML compiler task inside TabStudio. -->
+    <PackageVersion Include="Microsoft.Build.Framework" Version="17.13.26" />
+    <PackageVersion Include="Microsoft.Build.Utilities.Core" Version="17.13.26" />
   </ItemGroup>
 
   <ItemGroup Label="Uno Platform">
