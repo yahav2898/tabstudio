@@ -178,6 +178,7 @@ Native Android deployment of Flutter apps through the Android SDK toolchain is n
 | Windows Forms | TabStudio's Windows Forms layer, with a touch drag-and-drop designer |
 | WPF | OpenSilver, in the web preview, with XAML IntelliSense |
 | WinUI 3 and Uno Platform | Uno's Skia renderer, natively on Android |
+| Classic .NET Framework WPF and Windows Forms | Read as MSBuild reads the old project format, and run on the paths above |
 | Anything Windows-only | The Windows Bridge: built and run on a Windows PC you own, streamed beside your code |
 
 - **Windows Forms.** Apps run in a Windows 10 window with dialogs, menus, grids, data binding and message boxes.
@@ -188,9 +189,13 @@ Native Android deployment of Flutter apps through the Android SDK toolchain is n
   completion, Quick Info, Go to Definition, live errors and a light bulb that adds a missing event handler
   ([completion](docs/images/wpf/xaml-completion.png), [event handler](docs/images/wpf/add-event-handler.png)).
   WPF APIs that need Windows are named in the Error List with a route to the Windows Bridge.
+- **Classic .NET Framework projects.** The old project format most tutorials and student projects on GitHub use
+  (`App.config`, a `Properties` folder, `TargetFrameworkVersion` v4.x) runs on the tablet like a modern one. What
+  truly needs Windows says why, in one message, and **Upgrade project** converts it to an SDK-style project as a
+  reviewed diff.
 - **WinUI 3 and Uno Platform.** Projects build on the tablet and render natively beside the code; saving XAML or C#
   restarts them.
-- **Windows Bridge.** For what truly needs Windows (P/Invoke, COM, .NET Framework, Visual C++), pair a Windows PC with
+- **Windows Bridge.** For what truly needs Windows (P/Invoke, COM, Visual C++), pair a Windows PC with
   a QR code (**File > TabStudio Link > Be a Windows Bridge** on the PC). Projects build and run there and stream into
   a pane beside your code, with touch, keyboard and clipboard going back, errors mapped onto your files, and .NET
   debugging through the same debugger.
