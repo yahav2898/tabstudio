@@ -41,6 +41,7 @@ public sealed class HotReloadTests
     [InlineData("public static Func<int> Value() => () => 1;", "public static Func<int> Value() => () => 1 + 2;")]
     [InlineData("public static Func<long> Value() { var x = 1; return () => x; }", "public static Func<long> Value() { var x = 1L; return () => x; }")]
     [InlineData("public static long Value() { int Local() => 1; return Local(); }", "public static long Value() { long Local() => 1; return Local(); }")]
+    [InlineData("public static void Value() { Task.Run(() => 1); }", "public static void Value() { Task.Run(() => 1L); }")]
     public void Rude_edits_produce_no_delta(string before, string after)
     {
         using var baseline = new HotReloadBaseline(Compile(before));

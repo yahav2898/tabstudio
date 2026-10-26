@@ -305,8 +305,9 @@ flag and the probe outcome before its independent two-generation state-preservat
 
 **Supported scope and rude edits.** Method, constructor, operator and accessor bodies, expression-bodied getters
 and top-level statements can be updated. For lambdas, local functions, async methods and iterators, only changes
-that preserve syntax topology and variable/capture names are accepted, with a new-to-old syntax map preserving
-their identity. Roslyn's IDE rude-edit service is internal; `EmitDifference` assumes its caller has validated
+that preserve syntax topology, lambda/local-function signatures and variable/capture names and types are accepted,
+with a new-to-old syntax map preserving their identity. Roslyn's IDE rude-edit service is internal;
+`EmitDifference` assumes its caller has validated
 the edits. Our conservative analyzer therefore rejects changes to declarations, signatures, fields/initializers,
 attributes/imports, file/project sets and embedded resources, and forwards Roslyn's further EnC diagnostics.
 Instrumented debugging also requires stable method/statement ids and local slots; successful updates refresh

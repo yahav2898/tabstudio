@@ -75,7 +75,7 @@ internal static class HotReloadEdits
                         || !StateSymbols(before.GetSemanticModel(oldTree), oldNodes, token)
                             .SequenceEqual(StateSymbols(after.GetSemanticModel(newTree), newNodes, token), StringComparer.Ordinal))
                     {
-                        return ([], $"{Path.GetFileName(path)}: changing the shape of a lambda, local function, iterator or async method requires a restart.");
+                        return ([], $"{Path.GetFileName(path)}: changing the shape, captures or inferred types of a lambda, local function, iterator or async method requires a restart.");
                     }
 
                     var pairs = newNodes.Zip(oldNodes).ToDictionary(p => p.First, p => p.Second);
@@ -98,11 +98,14 @@ internal static class HotReloadEdits
 
     private static IEnumerable<string> StateSymbols(SemanticModel model, IEnumerable<SyntaxNode> nodes, CancellationToken token)
     {
-        foreach (var node in nodes.Where(n => n is VariableDeclaratorSyntax or ParameterSyntax or LocalFunctionStatementSyntax
+        foreach (var node in nodes.Where(n => n is VariableDeclaratorSyntax or ParameterSyntax or LocalFunctionStatementSyntax or AnonymousFunctionExpressionSyntax
             or ForEachStatementSyntax or CatchDeclarationSyntax or SingleVariableDesignationSyntax))
         {
-            // Syntax alone misses inferred changes (var x = 1 -> 1L), which would change a hoisted field's type.
-            var symbol = model.GetDeclaredSymbol(node, token);
+            // Syntax alone misses inferred changes (var x = 1 -> 1L, or Task.Run(() => 1 -> 1L)), which change
+            // hoisted field types or generated lambda signatures even without a local variable declaration.
+            var symbol = node is AnonymousFunctionExpressionSyntax
+                ? model.GetSymbolInfo(node, token).Symbol
+                : model.GetDeclaredSymbol(node, token);
             yield return symbol switch
             {
                 ILocalSymbol local => $"local:{local.Name}:{local.RefKind}:{local.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)}",
