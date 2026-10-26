@@ -108,7 +108,7 @@ code or in the device browser. The ASP.NET and Blazor preview also has **Open in
 The **Android SDK** Toolchain Store entry installs OpenJDK 17, Gradle, SDK tools/platform 35 and SHA-256-pinned
 ARM64/ARMv7 replacements for native Android build tools. Create **Android App (Kotlin)**, then F5 builds an APK,
 asks Android to install it and launches it. **Build > Build Android APK** builds without installing. Java editing
-uses jdtls; Kotlin compiler diagnostics go to the Error List. **Logcat** shows the built app's own debug process.
+uses jdtls; Kotlin uses kotlin-language-server, with compiler diagnostics in the Error List. **Logcat** shows the built app's own debug process.
 
 Create **Capacitor App** for a Vite + TypeScript app: F5 runs its web part, and **Run Android App** builds/syncs
 Capacitor and installs the native APK. **Build for iOS…** generates a reviewable GitHub Actions workflow and signing

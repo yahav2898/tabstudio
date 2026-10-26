@@ -5,11 +5,13 @@ namespace TabStudio.Toolchains.Projects;
 /// <summary>The mobile templates shared by the IDE and the ARM Alpine CI build.</summary>
 public static class MobileTemplates
 {
+    private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
     /// <summary>Writes a Kotlin Android application using a pinned Android Gradle plugin.</summary>
     public static void CreateAndroid(string directory, string name)
     {
         ArgumentNullException.ThrowIfNull(directory);
         ArgumentNullException.ThrowIfNull(name);
+        var package = PackageName(name);
         Write(directory, "settings.gradle.kts", """
             pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }
             dependencyResolutionManagement { repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS); repositories { google(); mavenCentral() } }
@@ -45,7 +47,7 @@ public static class MobileTemplates
                 compileOptions { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }
                 kotlinOptions { jvmTarget = "17" }
             }
-            """);
+            """.Replace("com.example.tabstudioapp", package, StringComparison.Ordinal));
         Write(directory, "app/src/main/AndroidManifest.xml", """
             <manifest xmlns:android="http://schemas.android.com/apk/res/android">
               <application android:label="@string/app_name" android:theme="@android:style/Theme.Material.Light.NoActionBar">
@@ -59,7 +61,7 @@ public static class MobileTemplates
             </manifest>
             """);
         Write(directory, "app/src/main/res/values/strings.xml", $"<resources><string name=\"app_name\">{System.Security.SecurityElement.Escape(name)}</string></resources>\n");
-        Write(directory, "app/src/main/java/com/example/tabstudioapp/MainActivity.kt", """
+        Write(directory, "app/src/main/java/" + package.Replace('.', '/') + "/MainActivity.kt", """
             package com.example.tabstudioapp
 
             import android.app.Activity
@@ -85,7 +87,7 @@ public static class MobileTemplates
                     Log.i("TabStudioApp", "Hello from an app built with TabStudio")
                 }
             }
-            """);
+            """.Replace("com.example.tabstudioapp", package, StringComparison.Ordinal));
         Write(directory, ".gitignore", ".gradle/\n**/build/\nlocal.properties\n*.jks\n");
     }
 
@@ -108,8 +110,8 @@ public static class MobileTemplates
             },
             dependencies = new Dictionary<string, string> { ["@capacitor/core"] = "6.2.1", ["@capacitor/android"] = "6.2.1", ["@capacitor/ios"] = "6.2.1" },
             devDependencies = new Dictionary<string, string> { ["@capacitor/cli"] = "6.2.1", ["typescript"] = "5.9.3", ["vite"] = "6.4.1" },
-        }, new JsonSerializerOptions { WriteIndented = true }) + "\n");
-        Write(directory, "capacitor.config.json", JsonSerializer.Serialize(new { appId = "com.example.tabstudioapp", appName = name, webDir = "dist" }, new JsonSerializerOptions { WriteIndented = true }) + "\n");
+        }, JsonOptions) + "\n");
+        Write(directory, "capacitor.config.json", JsonSerializer.Serialize(new { appId = PackageName(name), appName = name, webDir = "dist" }, JsonOptions) + "\n");
         Write(directory, "tsconfig.json", """{ "compilerOptions": { "target": "ES2022", "module": "ESNext", "moduleResolution": "Bundler", "strict": true, "lib": ["ES2022", "DOM"], "noEmit": true }, "include": ["src"] }""");
         Write(directory, "index.html", """
             <!doctype html>
@@ -130,6 +132,8 @@ public static class MobileTemplates
             """);
         Write(directory, ".gitignore", "node_modules/\ndist/\nandroid/.gradle/\nandroid/**/build/\nandroid/local.properties\nios/App/Pods/\n*.p12\n*.mobileprovision\nAuthKey_*.p8\n");
     }
+
+    private static string PackageName(string name) => "com.example." + name.ToLowerInvariant().Replace('.', '_');
 
     private static void Write(string root, string relative, string text)
     {

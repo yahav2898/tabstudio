@@ -11,7 +11,7 @@ public static partial class SelfTest
         var clock = Stopwatch.StartNew();
         var folder = templates.Create(ProjectTemplates.NodeId, "ListeningPortSelfTest");
         await File.WriteAllTextAsync(Path.Combine(folder, "index.js"), """
-            const http = require('node:http');
+            import http from 'node:http';
             const server = http.createServer((req, res) => res.end('TabStudio listening port self-test'));
             server.listen(0, '127.0.0.1', () => console.log(`App listening on port ${server.address().port}`));
             """, cancellationToken);

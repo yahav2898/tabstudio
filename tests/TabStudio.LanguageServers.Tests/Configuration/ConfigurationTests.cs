@@ -16,6 +16,7 @@ public sealed class RegistryTests
     [InlineData("lib.rs", "rust", "rust-analyzer")]
     [InlineData("main.go", "go", "gopls")]
     [InlineData("App.java", "java", "jdtls")]
+    [InlineData("MainActivity.kt", "kotlin", "kotlin-language-server")]
     public void The_built_in_registry_knows_each_language_and_its_server(string file, string language, string server)
     {
         var registry = LanguageServerRegistry.BuiltIn;

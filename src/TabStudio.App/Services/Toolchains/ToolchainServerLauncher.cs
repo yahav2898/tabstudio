@@ -35,12 +35,18 @@ public sealed class ToolchainServerLauncher(IToolchainRuntime runtime) : IServer
 
         try
         {
+            var environment = startInfo.Environment.ToDictionary(e => e.Key, e => e.Value, StringComparer.Ordinal);
+            if (_runtime.Kind == RuntimeKind.Linux && Path.GetFileName(startInfo.FileName) == "jdtls")
+            {
+                environment.TryAdd("JAVA_HOME", "/usr/lib/jvm/java-21-openjdk");
+            }
+
             var process = _runtime.Start(new ProcessStartSpec
             {
                 Program = startInfo.FileName,
                 Arguments = startInfo.Arguments,
                 WorkingDirectory = startInfo.WorkingDirectory,
-                Environment = startInfo.Environment,
+                Environment = environment,
             });
             return new ToolchainServerProcess(process);
         }

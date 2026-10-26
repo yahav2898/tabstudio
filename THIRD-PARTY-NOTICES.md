@@ -53,3 +53,5 @@ file beside it under [src/TabStudio.Web/Templates/Content/lib](src/TabStudio.Web
   they are installed into user projects, not bundled in TabStudio.
 - **Android Gradle Plugin and Kotlin Gradle Plugin** — Apache-2.0, downloaded by Gradle into user project caches.
   https://android.googlesource.com/platform/tools/base/ ; https://github.com/JetBrains/kotlin .
+
+- **kotlin-language-server 1.3.13** — MIT; https://github.com/fwcd/kotlin-language-server . The SDK installs the pinned JVM server archive for Kotlin completion and navigation.

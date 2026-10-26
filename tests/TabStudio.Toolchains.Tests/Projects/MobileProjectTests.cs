@@ -63,10 +63,41 @@ public sealed class MobileProjectTests
         MobileTemplates.CreateAndroid(temp.Path, "MyApp");
         Assert.True(GradleAndroidProject.IsProject(temp.Path));
         Assert.Contains("com.android.application", File.ReadAllText(temp.Resolve("build.gradle.kts")), StringComparison.Ordinal);
-        Assert.True(File.Exists(temp.Resolve("app/src/main/java/com/example/tabstudioapp/MainActivity.kt")));
+        Assert.True(File.Exists(temp.Resolve("app/src/main/java/com/example/myapp/MainActivity.kt")));
         using var relay = new AndroidLogcatRelay(_ => { });
         var init = relay.PrepareBuild(temp.Path);
         Assert.Contains("getByName('debug')", File.ReadAllText(init), StringComparison.Ordinal);
         Assert.DoesNotContain("LogcatProvider", File.ReadAllText(temp.Resolve("app/src/main/AndroidManifest.xml")), StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task Logcat_accepts_only_this_builds_authenticated_loopback_stream()
+    {
+        using var temp = new TempDirectory();
+        var received = new System.Collections.Concurrent.ConcurrentQueue<string>();
+        var arrived = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        using var relay = new AndroidLogcatRelay(line => { received.Enqueue(line); arrived.TrySetResult(); });
+        relay.PrepareBuild(temp.Path);
+        var source = File.ReadAllText(temp.Resolve("build/tabstudio-logcat/java/dev/tabstudio/LogcatProvider.java"));
+        var portMatch = System.Text.RegularExpressions.Regex.Match(source, "InetSocketAddress\\(\"127.0.0.1\", (\\d+)\\)");
+        var tokenMatch = System.Text.RegularExpressions.Regex.Match(source, "out.println\\(\"([A-F0-9]{64})\"\\)");
+        Assert.True(portMatch.Success && tokenMatch.Success);
+        var port = int.Parse(portMatch.Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture);
+        using (var wrong = new System.Net.Sockets.TcpClient())
+        {
+            await wrong.ConnectAsync(System.Net.IPAddress.Loopback, port);
+            using var writer = new StreamWriter(wrong.GetStream()) { AutoFlush = true };
+            await writer.WriteLineAsync("not-the-build-token");
+            await writer.WriteLineAsync("unrelated app's log");
+        }
+
+        using var client = new System.Net.Sockets.TcpClient();
+        await client.ConnectAsync(System.Net.IPAddress.Loopback, port);
+        using var authenticated = new StreamWriter(client.GetStream()) { AutoFlush = true };
+        await authenticated.WriteLineAsync(tokenMatch.Groups[1].Value);
+        await authenticated.WriteLineAsync("the built app's log");
+        await arrived.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        Assert.Equal(["the built app's log"], received);
+        Assert.Contains("--pid=", source, StringComparison.Ordinal);
     }
 }

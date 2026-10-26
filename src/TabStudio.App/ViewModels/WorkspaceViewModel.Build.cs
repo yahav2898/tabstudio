@@ -65,17 +65,19 @@ public sealed partial class WorkspaceViewModel
         StatusText = $"Running {project.Name}";
         _run = new CancellationTokenSource();
         var input = Output.BeginInput();
+        var listening = BeginServerRun();
         RunResult result;
         try
         {
             var packages = _language.GetPackageRuntimeAssemblies(project.FilePath);
-            result = await _runner.RunAsync(entry, build.Dependencies, packages, [], Output, input, _run.Token);
+            result = await _runner.RunAsync(entry, build.Dependencies, packages, [], new ServerConsoleSink(Output, listening), input, _run.Token);
         }
         finally
         {
             Output.EndInput();
             _run.Dispose();
             _run = null;
+            EndServerRun();
         }
 
         ReportRunResult(project, result);

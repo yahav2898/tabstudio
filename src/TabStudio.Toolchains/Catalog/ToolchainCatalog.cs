@@ -99,7 +99,8 @@ public sealed record ToolchainCatalog
     /// <returns>The toolchain, listed ones first, or <see langword="null"/>.</returns>
     public ToolchainDefinition? ForTool(string toolId) =>
         Toolchains
-            .Where(t => string.Equals(t.LanguageServer?.Id, toolId, StringComparison.Ordinal) || string.Equals(t.DebugAdapter?.Id, toolId, StringComparison.Ordinal))
+            .Where(t => string.Equals(t.LanguageServer?.Id, toolId, StringComparison.Ordinal) || string.Equals(t.DebugAdapter?.Id, toolId, StringComparison.Ordinal)
+                || t.AdditionalToolIds.Contains(toolId, StringComparer.Ordinal))
             .OrderByDescending(t => t.Listed)
             .FirstOrDefault();
 

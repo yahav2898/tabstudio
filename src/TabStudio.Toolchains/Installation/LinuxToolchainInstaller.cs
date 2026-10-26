@@ -160,6 +160,10 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
         var record = records.Toolchains.GetValueOrDefault(toolchain.Id) ?? new InstalledToolchain();
         var plan = await PlanAsync(() => _packages.PlanUpgradeAsync(toolchain.Packages, refresh: true, cancellationToken), toolchain).ConfigureAwait(false);
         var stale = toolchain.Setup.Where(s => record.Setup.GetValueOrDefault(s.Name) != s.Fingerprint).ToList();
+        if (stale.Count > 0)
+        {
+            stale = toolchain.Setup.Where(s => stale.Contains(s) || s.RunAfterSetupChanges).ToList();
+        }
         var archives = stale.Where(s => s.Archive is not null).ToList();
         _environment.EnsureSpace(plan.DownloadSize + plan.InstalledSize + (archives.Sum(s => s.Archive!.Size) * 3), toolchain.Name);
 

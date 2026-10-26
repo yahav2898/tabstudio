@@ -45,4 +45,18 @@ public sealed class ListeningPortsTests
         var foreign = ((IPEndPoint)listener.LocalEndpoint).Port;
         Assert.DoesNotContain(foreign, ListeningPorts.ForProcess(process.Id));
     }
+
+    [Fact]
+    public void Output_chunks_wait_for_a_complete_port_and_duplicate_streams_are_deduplicated()
+    {
+        if (!OperatingSystem.IsLinux()) return;
+        using var process = new HostRuntime().Start(new ProcessStartSpec { Program = "sh", Arguments = ["-c", "sleep 10"] });
+        var offered = new System.Collections.Concurrent.ConcurrentQueue<int>();
+        using var watcher = new ProcessPortWatcher(process, offered.Enqueue);
+        watcher.Feed("Listening on http://127.0.0.1:3");
+        Assert.Empty(offered);
+        watcher.Feed("000/\n");
+        watcher.Feed("Listening on port 3000\n", standardError: true);
+        Assert.Equal([3000], offered);
+    }
 }

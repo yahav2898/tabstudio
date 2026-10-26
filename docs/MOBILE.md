@@ -25,8 +25,8 @@ The **Logcat** panel receives only the launched debug app's own process through 
 random per-run token on loopback. The provider reads logcat with that app's UID and PID. It is injected only into
 the debug source set through a generated Gradle init script, without changing original sources/manifests.
 Release builds have no relay. Stop (Shift+F5) disconnects the log stream; use Android's app controls to close the
-installed app. Java IntelliSense uses jdtls. Kotlin currently has syntax editing and Gradle errors; a Kotlin
-language server is not included in this SDK entry.
+installed app. Java IntelliSense uses jdtls. Kotlin completion and navigation use kotlin-language-server; compiler diagnostics
+still come from the project's Gradle build, including Android resources and build variants.
 
 ## Capacitor
 

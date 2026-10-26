@@ -199,6 +199,7 @@ public sealed class ToolchainCatalogTests
     [InlineData("gopls", "go")]
     [InlineData("delve", "go")]
     [InlineData("jdtls", "android")]
+    [InlineData("kotlin-language-server", "android")]
     public void Finds_the_toolchain_that_installs_a_tool_by_the_id_its_clients_use(string tool, string toolchain)
     {
         Assert.Equal(toolchain, Catalog.ForTool(tool)?.Id);

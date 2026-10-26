@@ -124,10 +124,10 @@ public static partial class SelfTest
             var avaloniaApp = last.Workspace is { } loaded ? loaded.Solution?.FilePath ?? loaded.RootDirectory : null;
             var extensions = await InstallGrammarExtensionAsync(last, FindEditor, cancellationToken);
             var toolchains = extensions.Success ? await RunToolchainsAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Toolchains: not run", TimeSpan.Zero);
-            var listening = toolchains.Success ? await CheckListeningPortAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Listening port: not run", TimeSpan.Zero);
-            var processes = listening.Success ? await StartProgramsWhileCollectingAsync(cancellationToken) : new SelfTestResult(false, "Processes: not run", TimeSpan.Zero);
+            var processes = toolchains.Success ? await StartProgramsWhileCollectingAsync(cancellationToken) : new SelfTestResult(false, "Processes: not run", TimeSpan.Zero);
             var pythonTools = processes.Success ? await CheckPythonToolsAsync(main, cancellationToken) : new SelfTestResult(false, "Python tools: not run", TimeSpan.Zero);
-            var forms = pythonTools.Success ? await ShowWindowsFormsAppAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Windows Forms: not run", TimeSpan.Zero);
+            var listening = pythonTools.Success ? await CheckListeningPortAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Listening port: not run", TimeSpan.Zero);
+            var forms = listening.Success ? await ShowWindowsFormsAppAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Windows Forms: not run", TimeSpan.Zero);
 
             var design = forms.Success ? await CheckDesignAsync(main, screenshots, cancellationToken) : new SelfTestResult(false, "Design: not run", TimeSpan.Zero);
 

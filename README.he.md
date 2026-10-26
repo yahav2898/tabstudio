@@ -250,7 +250,7 @@ build/                     CI scripts
 הערך **Android SDK** בחנות הכלים מתקין OpenJDK 17, Gradle, כלי SDK ופלטפורמה 35, וכלי בנייה ל-ARM64/ARMv7
 עם אימות SHA-256. התבנית **Android App (Kotlin)** נבנית בטאבלט; F5 מבקש אישור התקנה ממערכת Android ומפעיל
 את האפליקציה. חלונית **Logcat** מציגה את הלוגים של תהליך האפליקציה שנבנתה, והקומפיילר שולח שגיאות לרשימת
-השגיאות. השלמה ל-Java משתמשת ב-jdtls.
+השגיאות. השלמה ל-Java משתמשת ב-jdtls, ול-Kotlin ב-kotlin-language-server.
 
 התבנית **Capacitor App** יוצרת Vite ו-TypeScript: F5 מפעיל את צד הרשת בתצוגה, ו-**Run Android App** בונה
 ומתקין את הצד המקורי. **Build for iOS…** יוצר תהליך GitHub Actions לבנייה בשרת macOS ומסביר את סודות

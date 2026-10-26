@@ -485,7 +485,7 @@
           "name": "Android SDK setup script",
           "file": {
             "path": "/opt/tabstudio/android/setup-sdk",
-            "content": "#!/bin/sh\nset -eu\nsdk=/opt/tabstudio/android/sdk\nmkdir -p \"$sdk/cmdline-tools\" \"$sdk/platforms\" \"$sdk/build-tools\"\nrm -rf \"$sdk/cmdline-tools/latest\" \"$sdk/platforms/android-35\" \"$sdk/build-tools/35.0.0\"\nmv /opt/tabstudio/android/commandline/cmdline-tools \"$sdk/cmdline-tools/latest\"\nmv /opt/tabstudio/android/platform/* \"$sdk/platforms/android-35\"\nmv /opt/tabstudio/android/buildtools/* \"$sdk/build-tools/35.0.0\"\n# Replace every native SDK executable that Gradle uses; d8 and apksigner run on the JVM.\nif [ -d /opt/tabstudio/android/native/build-tools ]; then\n  for tool in aapt aapt2 aidl zipalign dexdump split-select; do\n    [ ! -f \"/opt/tabstudio/android/native/build-tools/$tool\" ] || cp \"/opt/tabstudio/android/native/build-tools/$tool\" \"$sdk/build-tools/35.0.0/$tool\"\n  done\nfi\nchmod +x \"$sdk\"/cmdline-tools/latest/bin/* \"$sdk\"/build-tools/35.0.0/* 2>/dev/null || true\nchmod +x /opt/tabstudio/android/gradle/gradle-8.9/bin/gradle\n# This command runs only after the Store has shown Google's SDK license and the user accepts it.\nyes | \"$sdk/cmdline-tools/latest/bin/sdkmanager\" --sdk_root=\"$sdk\" --licenses >/dev/null\n\"$sdk/build-tools/35.0.0/aapt2\" version\njava -cp \"$sdk/build-tools/35.0.0/lib/d8.jar\" com.android.tools.r8.D8 --version\n",
+            "content": "#!/bin/sh\nset -eu\nsdk=/opt/tabstudio/android/sdk\nmkdir -p \"$sdk/cmdline-tools\" \"$sdk/platforms\" \"$sdk/build-tools\"\nrm -rf \"$sdk/cmdline-tools/latest\" \"$sdk/platforms/android-35\" \"$sdk/build-tools/35.0.0\"\ncp -a /opt/tabstudio/android/commandline/cmdline-tools \"$sdk/cmdline-tools/latest\"\ncp -a /opt/tabstudio/android/platform/* \"$sdk/platforms/android-35\"\ncp -a /opt/tabstudio/android/buildtools/* \"$sdk/build-tools/35.0.0\"\n# Replace every native SDK executable that Gradle uses; d8 and apksigner run on the JVM.\nif [ -d /opt/tabstudio/android/native/build-tools ]; then\n  for tool in aapt aapt2 aidl zipalign dexdump split-select; do\n    [ ! -f \"/opt/tabstudio/android/native/build-tools/$tool\" ] || cp \"/opt/tabstudio/android/native/build-tools/$tool\" \"$sdk/build-tools/35.0.0/$tool\"\n  done\nfi\nchmod +x \"$sdk\"/cmdline-tools/latest/bin/* \"$sdk\"/build-tools/35.0.0/* 2>/dev/null || true\nchmod +x /opt/tabstudio/android/gradle/gradle-8.9/bin/gradle\n# This command runs only after the Store has shown Google's SDK license and the user accepts it.\nyes | \"$sdk/cmdline-tools/latest/bin/sdkmanager\" --sdk_root=\"$sdk\" --licenses >/dev/null\n\"$sdk/build-tools/35.0.0/aapt2\" version\njava -cp \"$sdk/build-tools/35.0.0/lib/d8.jar\" com.android.tools.r8.D8 --version\n",
             "executable": true
           }
         },
@@ -497,7 +497,8 @@
           ],
           "removes": [
             "/opt/tabstudio/android/sdk"
-          ]
+          ],
+          "runAfterSetupChanges": true
         },
         {
           "name": "Gradle command",
@@ -512,6 +513,24 @@
           "file": {
             "path": "/usr/local/bin/sdkmanager",
             "content": "#!/bin/sh\nexport JAVA_HOME=/usr/lib/jvm/java-17-openjdk\nexec /opt/tabstudio/android/sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=/opt/tabstudio/android/sdk \"$@\"\n",
+            "executable": true
+          }
+        },
+        {
+          "name": "Kotlin language server",
+          "description": "fwcd's kotlin-language-server, which Alpine does not package.",
+          "archive": {
+            "url": "https://github.com/fwcd/kotlin-language-server/releases/download/1.3.13/server.zip",
+            "sha256": "4fe7d71d087b307c7869036171bd9d8c6a4284cd7c25b89098b0a24eb2d9b6d2",
+            "size": 87291855,
+            "destination": "/opt/tabstudio/kotlin-language-server"
+          }
+        },
+        {
+          "name": "Kotlin language server command",
+          "file": {
+            "path": "/usr/local/bin/kotlin-language-server",
+            "content": "#!/bin/sh\nexport JAVA_HOME=/usr/lib/jvm/java-21-openjdk\nexec sh /opt/tabstudio/kotlin-language-server/server/bin/kotlin-language-server \"$@\"\n",
             "executable": true
           }
         }
@@ -532,6 +551,9 @@
         {
           "pattern": "^(?:e: |w: )?(?:file://)?(?<file>/[^:]+\\.(?:java|kt|kts|xml)):(?<line>\\d+)(?::(?<column>\\d+))?:?\\s*(?:(?<severity>error|warning):\\s*)?(?<message>.*)$"
         }
+      ],
+      "additionalToolIds": [
+        "kotlin-language-server"
       ]
     }
   ]

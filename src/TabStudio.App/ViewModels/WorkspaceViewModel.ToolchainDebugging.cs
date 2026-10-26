@@ -112,8 +112,8 @@ public sealed partial class WorkspaceViewModel
         var stop = new CancellationTokenSource();
         _adapterProgramFinish = null;
         var input = Output.BeginProcessInput();
-        BeginServerRun();
-        var completion = OutputProcess.RunAsync(_toolchains.Runtime, spec, Output, input, stop.Token, process => started.TrySetResult(process.Id), OfferServer);
+        var listening = BeginServerRun();
+        var completion = OutputProcess.RunAsync(_toolchains.Runtime, spec, Output, input, stop.Token, process => started.TrySetResult(process.Id), listening);
         _adapterProgramRun = new AdapterProgram(completion, stop);
         _ = ObserveAsync();
         return await started.Task;

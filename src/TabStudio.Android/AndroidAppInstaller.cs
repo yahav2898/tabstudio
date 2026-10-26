@@ -14,6 +14,18 @@ public sealed class AndroidAppInstaller(Context context) : IAndroidAppInstaller
     /// <inheritdoc />
     public async Task<string> InstallAndLaunchAsync(string apk, CancellationToken cancellationToken)
     {
+        try
+        {
+            return await InstallCoreAsync(apk, cancellationToken);
+        }
+        catch (global::Java.Lang.Exception ex)
+        {
+            throw new InvalidOperationException("Android installation failed: " + ex.Message, ex);
+        }
+    }
+
+    private async Task<string> InstallCoreAsync(string apk, CancellationToken cancellationToken)
+    {
         var manager = context.PackageManager ?? throw new InvalidOperationException("Android's package manager is unavailable.");
         if (OperatingSystem.IsAndroidVersionAtLeast(26) && !manager.CanRequestPackageInstalls())
         {
@@ -63,7 +75,8 @@ public sealed class AndroidAppInstaller(Context context) : IAndroidAppInstaller
             InstallResultReceiver.Pending.TryRemove(sessionId, out _);
             if (!result.Task.IsCompletedSuccessfully)
             {
-                installer.AbandonSession(sessionId);
+                try { installer.AbandonSession(sessionId); }
+                catch (global::Java.Lang.Exception) { /* Android may have already abandoned a declined session. */ }
             }
         }
     }
@@ -86,7 +99,7 @@ public sealed class InstallResultReceiver : BroadcastReceiver
         var status = intent.GetIntExtra(PackageInstaller.ExtraStatus, (int)PackageInstallStatus.Failure);
         if (status == (int)PackageInstallStatus.PendingUserAction)
         {
-#pragma warning disable CA1422 // The typed API is Android 13+; this app also runs on Android 7+.
+#pragma warning disable CA1422 // The typed API is Android 13+; this app also runs on earlier releases.
             if (intent.GetParcelableExtra(Intent.ExtraIntent) is Intent confirmation)
 #pragma warning restore CA1422
             {

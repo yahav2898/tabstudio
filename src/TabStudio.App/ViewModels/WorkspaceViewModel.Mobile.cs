@@ -129,16 +129,30 @@ public sealed partial class WorkspaceViewModel
                 Output.WriteLine("APK: " + apk, OutputKind.Success);
             }
 
-            if (apks.Count != 1)
+            if (apks.Count == 0)
             {
-                StatusText = apks.Count == 0 ? "Gradle produced no debug APK" : "Multiple APKs built; select one application module or flavor before installing";
-                State = apks.Count == 0 ? IdeState.Failed : IdeState.Ready;
+                StatusText = "Gradle produced no debug APK";
+                State = IdeState.Failed;
                 return;
             }
 
             if (install && _androidInstaller is not null)
             {
-                var package = await _androidInstaller.InstallAndLaunchAsync(apks[0], _run.Token);
+                var selected = apks[0];
+                if (apks.Count > 1)
+                {
+                    var choices = string.Join('\n', apks.Select((p, i) => $"{i + 1}. {Path.GetRelativePath(nativeRoot, p)}"));
+                    var answer = await Prompt.AskAsync("Choose Android APK", choices + "\nEnter the number of the APK to install.", "Install", "1");
+                    if (!int.TryParse(answer, System.Globalization.CultureInfo.InvariantCulture, out var index) || index < 1 || index > apks.Count)
+                    {
+                        StatusText = "APK installation cancelled";
+                        return;
+                    }
+
+                    selected = apks[index - 1];
+                }
+
+                var package = await _androidInstaller.InstallAndLaunchAsync(selected, _run.Token);
                 StatusText = "Running " + package;
                 Logcat.WriteLine("Logcat for " + package + " (debug app process)", OutputKind.Info);
                 SelectedPanel = BottomPanel.Logcat;

@@ -6,6 +6,7 @@ namespace TabStudio.Toolchains.Projects;
 /// <summary>Identifies Android Gradle roots, including Kotlin DSL and version-catalog plugin aliases.</summary>
 public static partial class GradleAndroidProject
 {
+    private static readonly string[] CapacitorFiles = ["capacitor.config.ts", "capacitor.config.json", "capacitor.config.js"];
     /// <summary>Whether a settings.gradle(.kts) root includes an Android application plugin.</summary>
     public static bool IsProject(string directory)
     {
@@ -32,7 +33,7 @@ public static partial class GradleAndroidProject
 
     /// <summary>Whether this is a Capacitor web project whose Android folder can be created on the tablet.</summary>
     public static bool IsCapacitor(string directory) => File.Exists(Path.Combine(directory, "package.json"))
-        && new[] { "capacitor.config.ts", "capacitor.config.json", "capacitor.config.js" }.Any(f => File.Exists(Path.Combine(directory, f)));
+        && CapacitorFiles.Any(f => File.Exists(Path.Combine(directory, f)));
 
     /// <summary>Creates a Gradle build, using the repository's wrapper when present and ARM AAPT2 on tablets.</summary>
     public static ProcessStartSpec Build(string directory, bool linuxEnvironment)

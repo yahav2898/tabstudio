@@ -30,13 +30,15 @@ jobs:
         with:
           global-json-file: global.json
       - name: Generate the IDE's Android template and build plan
-        run: dotnet run --project build/mobile/TabStudio.Mobile.Smoke.csproj -- "$GITHUB_WORKSPACE/ci-out/mobile-template"
+        run: |
+          dotnet run --project build/mobile/TabStudio.Mobile.Smoke.csproj -- "$GITHUB_WORKSPACE/ci-out/mobile-template"
+          dotnet run --project build/mobile/TabStudio.Mobile.Smoke.csproj -- "$GITHUB_WORKSPACE/ci-out/capacitor-template" capacitor
       - name: Build with the catalog SDK in Alpine on ARM64
         run: |
           set -o pipefail
           docker run --rm -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" alpine:3.24 \
-            sh -c 'apk add --no-cache python3 ca-certificates && python3 build/mobile/alpine-build.py "$1"' \
-            sh "$GITHUB_WORKSPACE/ci-out/mobile-template" 2>&1 | tee ci-out/mobile-alpine-build.log
+            sh -c 'apk add --no-cache python3 ca-certificates && python3 build/mobile/alpine-build.py "$1" "$2"' \
+            sh "$GITHUB_WORKSPACE/ci-out/mobile-template" "$GITHUB_WORKSPACE/ci-out/capacitor-template" 2>&1 | tee ci-out/mobile-alpine-build.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -44,6 +46,7 @@ jobs:
           path: |
             ci-out/mobile-alpine-build.log
             ci-out/mobile-template/app/build/outputs/apk/debug/*.apk
+            ci-out/capacitor-template/android/app/build/outputs/apk/debug/*.apk
 
   libraries:
     name: Build and test libraries

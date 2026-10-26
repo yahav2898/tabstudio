@@ -431,7 +431,7 @@ public sealed partial class WorkspaceViewModel
         var status = _toolchains.Manager.Status(toolchain.Id);
         Output.WriteLine($"Running {plan.EntryPoint} with {toolchain.Name}{(status.Version is { } version ? " " + version : string.Empty)}", OutputKind.Info);
         _run = new CancellationTokenSource();
-        BeginServerRun();
+        var listening = BeginServerRun();
         OutputProcessResult result;
         var input = Output.BeginProcessInput();
         try
@@ -448,7 +448,7 @@ public sealed partial class WorkspaceViewModel
                 }
             }
 
-            result = await OutputProcess.RunAsync(_toolchains.Runtime, plan.Run, Output, input, _run.Token, listening: OfferServer);
+            result = await OutputProcess.RunAsync(_toolchains.Runtime, plan.Run, Output, input, _run.Token, listening: listening);
         }
         finally
         {

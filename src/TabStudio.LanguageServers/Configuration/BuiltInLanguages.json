@@ -9,7 +9,8 @@
     "cpp": { "name": "C++", "extensions": [ ".cpp", ".cc", ".cxx", ".c++", ".hpp", ".hh", ".hxx", ".h++", ".ipp", ".inl" ] },
     "rust": { "name": "Rust", "extensions": [ ".rs" ] },
     "go": { "name": "Go", "extensions": [ ".go" ] },
-    "java": { "name": "Java", "extensions": [ ".java" ] }
+    "java": { "name": "Java", "extensions": [ ".java" ] },
+    "kotlin": { "name": "Kotlin", "extensions": [ ".kt", ".kts" ] }
   },
   "languageServers": {
     "pyright": {
@@ -83,12 +84,19 @@
       "package": "gopls",
       "rootMarkers": [ "go.work", "go.mod" ]
     },
+    "kotlin-language-server": {
+      "name": "Kotlin language server",
+      "languages": [ "kotlin" ],
+      "command": "kotlin-language-server",
+      "package": "kotlin-language-server",
+      "rootMarkers": [ "settings.gradle.kts", "settings.gradle", "build.gradle.kts", "build.gradle" ]
+    },
     "jdtls": {
       "name": "Eclipse JDT",
       "languages": [ "java" ],
       "command": "jdtls",
       "package": "jdtls",
-      "rootMarkers": [ "pom.xml", "build.gradle", "build.gradle.kts", "settings.gradle", ".project" ]
+      "rootMarkers": [ "pom.xml", "build.gradle", "build.gradle.kts", "settings.gradle", "settings.gradle.kts", ".project" ]
     }
   },
   "debugAdapters": {

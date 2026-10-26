@@ -38,10 +38,17 @@ for step in tool['setup']:
     if command := step.get('command'):
         subprocess.run(command, env=environment, check=True)
 
-plan = json.loads(Path(sys.argv[1], 'build-plan.json').read_text())
-subprocess.run([plan['Program'], *plan['Arguments']], cwd=plan['WorkingDirectory'], env=os.environ | plan['Environment'], check=True)
-apks = list(Path(sys.argv[1]).glob('*/build/outputs/apk/debug/*.apk'))
-if not apks:
-    raise SystemExit('Gradle did not produce the Android template APK')
-for apk in apks:
-    print('Built APK:', apk, apk.stat().st_size, 'bytes')
+for folder in sys.argv[1:]:
+    root = Path(folder)
+    if (root / 'capacitor.config.json').exists():
+        subprocess.run(['apk', 'add', '--no-cache', 'nodejs', 'npm'], check=True)
+        for command in [['npm', 'install', '--no-fund', '--no-audit'], ['npm', 'run', 'build'],
+                        ['npx', '--no-install', 'cap', 'add', 'android'], ['npx', '--no-install', 'cap', 'sync', 'android']]:
+            subprocess.run(command, cwd=root, check=True)
+    plan = json.loads((root / 'build-plan.json').read_text())
+    subprocess.run([plan['Program'], *plan['Arguments']], cwd=plan['WorkingDirectory'], env=os.environ | plan['Environment'], check=True)
+    apks = list(Path(plan['WorkingDirectory']).glob('*/build/outputs/apk/debug/*.apk'))
+    if not apks:
+        raise SystemExit('Gradle did not produce the Android template APK')
+    for apk in apks:
+        print('Built APK:', apk, apk.stat().st_size, 'bytes')

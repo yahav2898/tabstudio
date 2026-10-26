@@ -146,7 +146,7 @@ public sealed class AndroidLogcatRelay : IDisposable
         public final class LogcatProvider extends ContentProvider {
           public boolean onCreate() {
             new Thread(() -> {
-              while (true) {
+              for (int attempt = 0; attempt < 10; attempt++) {
                 Process logs = null;
                 try (Socket socket = new Socket()) {
                   socket.connect(new InetSocketAddress("127.0.0.1", {{port}}), 3000);
@@ -156,6 +156,7 @@ public sealed class AndroidLogcatRelay : IDisposable
                   try (BufferedReader reader = new BufferedReader(new InputStreamReader(logs.getInputStream(), "UTF-8"))) {
                     String line;
                     while ((line = reader.readLine()) != null && !out.checkError()) out.println(line);
+                    return;
                   }
                 } catch (IOException ignored) { }
                 finally { if (logs != null) logs.destroy(); }
