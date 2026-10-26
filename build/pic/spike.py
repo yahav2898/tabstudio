@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 import platform
 import shutil
+import signal
 import subprocess
 import time
 import zipfile
@@ -37,13 +38,23 @@ def run(command, log, *, env=None, timeout=900, check=True):
     print("+", " ".join(map(str, command)), flush=True)
     start = time.monotonic()
     with log.open("w") as output:
-        result = subprocess.run(command, stdout=output, stderr=subprocess.STDOUT,
-                                env=env, timeout=timeout)
+        with subprocess.Popen(command, stdout=output, stderr=subprocess.STDOUT,
+                              env=env, start_new_session=True) as process:
+            try:
+                code = process.wait(timeout=timeout)
+            except subprocess.TimeoutExpired:
+                os.killpg(process.pid, signal.SIGTERM)
+                try:
+                    process.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    os.killpg(process.pid, signal.SIGKILL)
+                    process.wait()
+                code = 124
     text = log.read_text(errors="replace")
     print(text[-6000:], flush=True)
-    if check and result.returncode:
-        raise RuntimeError(f"{log.name}: exit {result.returncode}")
-    return result.returncode, time.monotonic() - start, text
+    if check and code:
+        raise RuntimeError(f"{log.name}: exit {code}")
+    return code, time.monotonic() - start, text
 
 
 def unpack_deb(package, root):
@@ -139,6 +150,7 @@ def spike(args):
         if not args.accept_microchip_license:
             raise ValueError("Read the Microchip license and pass --accept-microchip-license to install.")
         root, cache, prefix, translate, env = prepare(work, out, args.compiler)
+        result["box64Version"] = LOCK["box64-arm64"]["version"] if translate else None
         installer = fetch(asset, cache, args.compiler + ".run")
         installer.chmod(0o755)
         install_guest = "/downloads/" + installer.name
@@ -150,7 +162,7 @@ def spike(args):
         # Old releases use FreeMode; new releases are license free and omit this option.
         if "--LicenseType" in help_text:
             command += ["--LicenseType", "FreeMode"]
-        code, elapsed, _ = run(command, out / "installer.log", env=env, timeout=1200, check=False)
+        code, elapsed, _ = run(command, out / "installer.log", env=env, timeout=300, check=False)
         result.update(installSeconds=elapsed, installerExitCode=code, installMethod="installer")
         compiler = "xc8-cc" if args.compiler == "xc8" else "xc32-gcc"
         if code:
@@ -167,7 +179,31 @@ def spike(args):
             dest = "/" + binaries[0].parent.parent.relative_to(root).as_posix()
             result["installMethod"] = "official archive (installer self-check failed)"
         program = f"{dest}/bin/{compiler}"
-        _, _, result["version"] = run([*prefix, *translate, program, "--version"], out / "version.log", env=env)
+        result["compilerFile"] = subprocess.check_output(["file", str(root / program.lstrip("/"))], text=True).strip()
+        code, _, version = run([*prefix, *translate, program, "--version"], out / "version.log", env=env, check=False, timeout=30)
+        result["versionExitCode"] = code
+        result["executionMode"] = "dynarec" if translate else "native"
+        if code and translate:
+            run([*prefix, "/usr/bin/env", "BOX64_LOG=2", "BOX64_NOBANNER=0", *translate, program, "--version"],
+                out / "version-diagnostic.log", env=env, check=False, timeout=30)
+            interpreted = ["/usr/bin/env", "BOX64_DYNAREC=0", *translate]
+            code, _, version = run([*prefix, *interpreted, program, "--version"], out / "version-interpreter.log", env=env, check=False, timeout=60)
+            result["interpreterVersionExitCode"] = code
+            if not code:
+                translate = interpreted
+                result["executionMode"] = "interpreter"
+            else:
+                # A diagnostic control, not a substitute for success in Alpine/PRoot.
+                native_lib = root / "usr/lib/aarch64-linux-gnu"
+                diagnostic_env = {**os.environ, "BOX64_LD_LIBRARY_PATH": str(root / "usr/lib/x86_64-linux-gnu"),
+                                  "BOX64_LOG": "2", "BOX64_NOBANNER": "0", "BOX64_DYNACACHE": "0"}
+                control, _, _ = run([str(native_lib / "ld-linux-aarch64.so.1"), "--library-path", str(native_lib),
+                                     str(root / "usr/bin/box64"), str(root / program.lstrip("/")), "--version"],
+                                    out / "version-outside-proot-control.log", env=diagnostic_env, check=False, timeout=30)
+                result["outsideProotVersionExitCode"] = control
+        if code:
+            raise RuntimeError(f"{compiler} --version failed (exit {code}); see version diagnostics")
+        result["version"] = version
         family = "pic18" if args.compiler == "xc8" else "pic32"
         pack_dir = root / f"opt/tabstudio/packs/{family}"
         pack_dir.mkdir(parents=True, exist_ok=True)
