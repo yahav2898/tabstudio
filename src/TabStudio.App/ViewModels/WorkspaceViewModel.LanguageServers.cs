@@ -86,7 +86,7 @@ public sealed partial class WorkspaceViewModel
     /// <summary>Opens a document on its language server, before its editor is created. Called by <see cref="Attach"/>.</summary>
     private void AttachLanguageServer(DocumentViewModel document)
     {
-        if (_languageServers is not { } host || document.HasLanguageService || document.IsNotebook || document.IsCiLog || document.IsComparison)
+        if (_languageServers is not { } host || document.HasLanguageService || document.HasXamlFeatures || document.IsNotebook || document.IsCiLog || document.IsComparison)
         {
             return;
         }

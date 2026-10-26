@@ -28,7 +28,7 @@ public static partial class SelfTest
 
         var store = workspace.ToolchainStore;
         var manager = workspace.Toolchains.Manager;
-        if (manager.CanInstall)
+        if (manager.CanInstall && !manager.IsReady("python"))
         {
             await store.InstallAsync("python").WaitAsync(cancellationToken);
             if (!manager.IsReady("python"))
@@ -64,7 +64,7 @@ public static partial class SelfTest
             return new SelfTestResult(false, $"Toolchains: the Python app did not run: {LastLines(workspace)}", clock.Elapsed);
         }
 
-        if (manager.CanInstall)
+        if (manager.CanInstall && !manager.IsReady("node"))
         {
             await store.InstallAsync("node").WaitAsync(cancellationToken);
             if (!manager.IsReady("node"))

@@ -58,14 +58,22 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 - **Tests.** Test Explorer for xUnit, NUnit and MSTest, and Live Unit Testing: a green check, red cross or blue dash beside every line of the code under test, and the tests an edit affects run again by themselves a moment after you stop typing.
 - **NuGet on the device.** Packages restore on the tablet, so real projects build as they are.
 
-### Python, Node.js and a terminal
+### Python, Node.js, Go, Rust, C/C++ and Java
 
-- **The Toolchain Store.** **Tools > Toolchain Store** installs Python and Node.js on the tablet, in a Linux environment that lives inside the app: Alpine Linux, run with PRoot, with no root and no special permissions. Every package comes from Alpine's own mirror and is checked against Alpine's signatures before anything is installed.
+- **The Toolchain Store.** **Tools > Toolchain Store** installs Python, Node.js, Go, Rust, C/C++ and Java on the tablet, in a Linux environment that lives inside the app: Alpine Linux, run with PRoot, with no root and no special permissions. Every package comes from Alpine's own mirror and is checked against Alpine's signatures before anything is installed.
 - **Projects that open as they are.** The start screen has a Python Application and a Node.js Console App. Open a folder with `pyproject.toml`, `requirements.txt` or `package.json`, and TabStudio offers to install its toolchain and packages. F5 runs it with its output and `input()` in the Output panel, its errors in the Error List, and every line of a traceback a link to its code.
 - **IntelliSense.** Pyright brings completion, squiggles and navigation to Python, and typescript-language-server does the same for JavaScript and TypeScript.
 - **A debugger.** F5 debugs with debugpy or vscode-js-debug, including Node's child processes: breakpoints, stepping, Locals, Watch, the Call Stack and exceptions. Ctrl+F5 runs without the debugger.
 - **One tap to install.** If a language server or debug adapter is missing, the status bar, the editor and F5 offer to install the toolchain that brings it, and the server starts as soon as the install finishes.
 - **A terminal.** Ctrl+` opens a shell in the Linux environment, drawn as xterm draws it.
+
+Go: open a module or choose Go Console App. Ctrl+F5 builds and runs; F5 debugs with Delve. gopls provides IntelliSense and navigation.
+
+Rust: open Cargo.toml or choose Rust Console App. Select a workspace member from the startup menu; Ctrl+F5 builds and runs, and F5 debugs with LLDB and Cargo's actual executable paths.
+
+C/C++: open CMakeLists.txt, a Makefile or a source folder, or choose C++ Console App (CMake). clangd provides IntelliSense, CMake exports a compilation database, and F5 debugs with LLDB.
+
+Java: open Maven, Gradle or standalone Java sources, or choose Java Console App (Maven). Ctrl+F5 builds and runs; F5 debugs through JDT LS and java-debug.
 
 ### Every Visual Studio workload, on Android
 
@@ -75,12 +83,18 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 | ASP.NET Core and Blazor | Served locally, previewed live in a WebView |
 | Avalonia | Rendered natively in a pane beside the editor, with a live XAML designer |
 | Windows Forms | A cross-platform Forms layer, with a touch drag-and-drop designer |
-| WPF | OpenSilver, in a WebView |
+| WPF | OpenSilver 3.3.3 in a WebView, with XAML IntelliSense and event-handler quick fixes |
 | WinUI | Uno Platform, natively on Android |
 | C, C++, Rust, Go, Python, Node, Java | Native toolchains from the Toolchain Store |
 | Anything Windows-only | Windows Compatibility: the real app on the tablet itself through Wine; or the Windows Bridge, which builds and runs it on your PC and streams it to the tablet |
 
 **Windows Forms apps.** Create a Windows Forms App, or open one from Visual Studio, and press F5. It runs beside the code on TabStudio's own Windows Forms layer, in a Windows 10 window, with dialogs, menus, grids, data binding and message boxes, and saving a file restarts it. `Form1.cs` opens in a touch designer: tap a tool and then the form, drag controls on the grid, resize them by their handles, change them in the Properties panel, and double-tap a button to write its Click handler. The designer writes `Form1.Designer.cs` exactly as Visual Studio does, so the project still opens on a PC. Code that calls Windows itself, such as P/Invoke, COM or the registry, runs through Windows Compatibility or the Windows Bridge instead; [the Forms layer's README](src/TabStudio.Forms/README.md) lists what it supports.
+
+**WPF apps.** Create a **WPF Application**, or open a C# WPF project from Visual Studio, and press F5. TabStudio compiles its XAML on OpenSilver and runs it in the web preview; saving restarts it, and console output and exceptions appear in Output. The .NET 10 preview needs an up-to-date Android System WebView. The XAML editor offers completion, Quick Info, Go to Definition, live errors, and a light bulb that adds a missing event handler to the code-behind. Unsupported WPF APIs are named in the Error List with a route to the Windows Bridge. The browser preview has no C# debugger, and APIs that require Windows, including WPF 3D and modal windows, need the Windows Bridge.
+
+[XAML completion](docs/wpf/images/wpf-01-xaml-completion.png) · [Add an event handler](docs/wpf/images/wpf-02-add-event-handler.png)
+
+**WinUI 3 and Uno Platform.** Create either template or open a C# project and press F5. It builds on the tablet and renders natively beside the code through Uno's Skia renderer; saving XAML or C# restarts it.
 
 **Windows Bridge.** Anything Windows-only builds and runs on a PC you own and streams its windows to the tablet. On the PC, open TabStudio and choose **File > TabStudio Link > Be a Windows Bridge**, then scan its QR code on the tablet. WPF, the real Windows Forms, WinUI 3, .NET Framework and Visual C++ projects then show as ready in the Compatibility Doctor, and the Run button can run any project on the PC. Builds stream into the Output panel and their errors land in the Error List on your files. A tap is a click, a long press a right click and two fingers scroll; keyboard and clipboard text work both ways. .NET apps debug through the same debugger, several programs run at once, saving restarts only the changed program, and a sleeping PC gets a plain message.
 
@@ -224,6 +238,8 @@ src/
   TabStudio.Forms/         Windows Forms on Avalonia: System.Windows.Forms and System.Drawing, drawn as on Windows 10
   TabStudio.Forms.Design/  The touch designer's model: reads and writes InitializeComponent, the canvas and Toolbox
   TabStudio.Web/           Web apps: static web assets, Blazor's scripts, a host for .NET apps on WebAssembly
+  TabStudio.Wpf/           WPF on OpenSilver: XAML compilation and the browser preview
+  TabStudio.Uno/           WinUI and Uno: XAML compilation and the native Skia preview
   TabStudio.Toolchains/    The Toolchain Store: Alpine Linux on PRoot, packages, processes and the terminal
   TabStudio.LanguageServers/ Language Server and Debug Adapter Protocol clients for every non-C# language
   TabStudio.Extensions/    VS Code extensions from Open VSX: grammars, language rules, snippets, themes

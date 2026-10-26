@@ -116,21 +116,26 @@ public static class CompatibilityDoctor
                 project, RunHost.AndroidView, CompatibilityStatus.Planned, "Native view in the app preview",
                 $"Avalonia apps render beside the code. The {LanguageName(project.Language)} compiler is not bundled yet."),
 
-            ProjectKind.Uno => Report(
-                project, RunHost.AndroidView, CompatibilityStatus.Planned, "Native Android view",
-                "Uno Platform runs on Android, so the app will render natively beside the editor."),
+            ProjectKind.Uno or ProjectKind.WinUI when project.Language == ProjectLanguage.CSharp => Report(
+                project, RunHost.AndroidView, CompatibilityStatus.Ready, "Uno Platform in the app preview",
+                "Compiled on this device and drawn natively beside the code by Uno Platform's Skia renderer. Saving a XAML or C# file restarts it. Windows-only APIs require the Windows Bridge."),
+
+            ProjectKind.Uno or ProjectKind.WinUI => Report(
+                project, RunHost.AndroidView, CompatibilityStatus.Planned, "Uno Platform in the app preview",
+                $"Uno and WinUI apps render beside the code. The {LanguageName(project.Language)} compiler is not bundled yet."),
 
             ProjectKind.Maui => Report(
                 project, RunHost.AndroidView, CompatibilityStatus.Planned, "Android app",
                 "MAUI targets Android directly; the app will be packaged and installed on this tablet."),
 
-            ProjectKind.WinUI => Report(
-                project, RunHost.AndroidView, CompatibilityStatus.NeedsChanges, "Uno Platform",
-                "WinUI is Windows-only. Uno Platform implements the WinUI API on Android, so the app can run here with an Uno head."),
+            ProjectKind.Wpf when project.Language == ProjectLanguage.CSharp => Report(
+                project, RunHost.WebView, CompatibilityStatus.Ready, "OpenSilver in the web preview",
+                "Built on OpenSilver, which implements WPF's API, and run in the web preview. What OpenSilver lacks, such as 3D, "
+                + "Window.ShowDialog and some members, is named in the Error List; that code runs on your PC through the Windows Bridge."),
 
             ProjectKind.Wpf => Report(
-                project, RunHost.WebView, CompatibilityStatus.NeedsChanges, "OpenSilver, or your PC",
-                "WPF is Windows-only. OpenSilver can run most WPF code in a WebView; the rest runs through the Windows Bridge."),
+                project, RunHost.WindowsBridge, CompatibilityStatus.NeedsWindows, "Windows Bridge",
+                $"OpenSilver builds C# WPF projects. A WPF project in {LanguageName(project.Language)} builds and runs on your PC through the Windows Bridge."),
 
             ProjectKind.WinForms when project.Language == ProjectLanguage.CSharp => Report(
                 project, RunHost.AndroidView, CompatibilityStatus.Ready, "Cross-platform Forms layer in the app preview",
@@ -144,9 +149,25 @@ public static class CompatibilityDoctor
                 project, RunHost.WindowsBridge, CompatibilityStatus.NeedsWindows, "Windows Bridge",
                 "Visual C++ projects need the MSVC toolchain. They build and run on your PC through the Windows Bridge."),
 
+            ProjectKind.Cpp => Report(
+                project, RunHost.Toolchain, CompatibilityStatus.NeedsToolchain, "C and C++ toolchain",
+                "Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel."),
+
             ProjectKind.Python => Report(
                 project, RunHost.Toolchain, CompatibilityStatus.NeedsToolchain, "Python toolchain",
                 "Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it."),
+
+            ProjectKind.Go => Report(
+                project, RunHost.Toolchain, CompatibilityStatus.NeedsToolchain, "Go toolchain",
+                "Runs with Go from the Toolchain Store, with console input and output in the Output panel. Install Go to run it."),
+
+            ProjectKind.Rust => Report(
+                project, RunHost.Toolchain, CompatibilityStatus.NeedsToolchain, "Rust toolchain",
+                "Runs with Rust from the Toolchain Store, with console input and output in the Output panel. Install Rust to run it."),
+
+            ProjectKind.Java => Report(
+                project, RunHost.Toolchain, CompatibilityStatus.NeedsToolchain, "Java toolchain",
+                "Runs with Java from the Toolchain Store, with console input and output in the Output panel. Install Java to run it."),
 
             ProjectKind.Node => Report(
                 project, RunHost.Toolchain, CompatibilityStatus.NeedsToolchain, "Node.js toolchain",

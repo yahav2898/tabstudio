@@ -1,0 +1,87 @@
+using TabStudio.App.Services;
+using TabStudio.App.ViewModels;
+using TabStudio.LanguageServers.Features;
+using TabStudio.LanguageServers.Hosting;
+using TabStudio.Toolchains.Projects;
+
+namespace TabStudio.App.Tests.Toolchains;
+
+public sealed partial class ToolchainLanguageToolsTests
+{
+    [RealServerAvaloniaFact("go", "gopls", "dlv")]
+    public async Task A_Go_template_gets_completion_diagnostics_navigation_output_and_a_Delve_breakpoint()
+    {
+        using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(150));
+        var window = Show();
+        var (workspace, document) = await OpenTemplateAsync(ProjectTemplates.GoId, "main.go");
+        using var trace = new SavedLogs(workspace, "toolchains-go");
+        await UiTestHelpers.WaitUntilAsync(() => document.LanguageServer?.ServerState is LanguageServerState.Running or LanguageServerState.Failed, TimeSpan.FromSeconds(120), because: "gopls");
+        Assert.NotNull(document.LanguageServer);
+        Assert.True(document.LanguageServer.ServerState == LanguageServerState.Running, workspace.LanguageServerOutput.Text);
+        var server = document.LanguageServer!;
+        var original = document.Document.Text;
+        var offset = original.IndexOf("fmt.Println", StringComparison.Ordinal) + 4;
+        var completion = await AwaitCompletionsAsync(server, offset, i => i.Label.StartsWith("Println", StringComparison.Ordinal), deadline.Token);
+        Assert.Contains(completion!.Items, i => i.Label.StartsWith("Println", StringComparison.Ordinal));
+        var call = original.LastIndexOf("greet(name)", StringComparison.Ordinal) + 1;
+        Assert.NotEmpty(await server.GetDefinitionsAsync(call, deadline.Token));
+        Assert.True((await server.FindReferencesAsync(call, true, deadline.Token)).Count >= 2);
+        Assert.NotNull(await server.RenameAsync(call, "welcome", deadline.Token));
+
+        document.Document.Text = original.Replace("fmt.Println(greet(name))", "fmt.Println(undefined_name)", StringComparison.Ordinal);
+        await UiTestHelpers.WaitUntilAsync(() => document.Diagnostics.Any(d => d.Message.Contains("undefined_name", StringComparison.Ordinal)), TimeSpan.FromSeconds(90), because: "Go's squiggle");
+        await workspace.RunCommand.ExecuteAsync(null);
+        Assert.Equal(IdeState.Failed, workspace.State);
+        Assert.Contains(workspace.ErrorList.Items, e => e.Description.Contains("undefined_name", StringComparison.Ordinal) && e.File == "main.go");
+        document.Document.Text = original;
+        AnswerInput(workspace, "Ada");
+        await workspace.RunCommand.ExecuteAsync(null);
+        Assert.Contains("Hello, Ada! This is Go", workspace.Output.Text, StringComparison.Ordinal);
+        Assert.Contains("has exited with code 0", workspace.Output.Text, StringComparison.Ordinal);
+        Assert.Contains(workspace.Compatibility, r => r.ToolchainId == "go" && r.IsReady);
+
+        var line = LineOf(document, "return message");
+        workspace.Breakpoints.Toggle(document.FilePath, line);
+        AnswerInput(workspace, "Ada");
+        await workspace.StartDebuggingCommand.ExecuteAsync(null);
+        Assert.True(workspace.IsDebugging, workspace.Output.Text);
+        await UiTestHelpers.WaitUntilAsync(() => workspace.IsPaused, TimeSpan.FromSeconds(120), because: "Delve's breakpoint");
+        await workspace.PauseShown;
+        await UiTestHelpers.WaitUntilAsync(() => workspace.Locals.Tree.Rows.Any(r => r.Name == "name"), because: "Go locals");
+        Assert.Contains(workspace.Locals.Tree.Rows, r => r.Name == "name" && r.Value.Contains("Ada", StringComparison.Ordinal));
+        Assert.Contains(workspace.CallStack.Frames, f => f.MethodName.Contains("greet", StringComparison.Ordinal));
+        await workspace.Watch.AddAsync("name");
+        Assert.Contains(workspace.Watch.Tree.Rows, r => r.Value.Contains("Ada", StringComparison.Ordinal));
+        UiTestHelpers.SaveScreenshot(window, "toolchains-go-breakpoint");
+        workspace.StartDebuggingCommand.Execute(null);
+        await UiTestHelpers.WaitUntilAsync(() => !workspace.IsDebugging, TimeSpan.FromSeconds(60), because: "Go exit");
+        Assert.Contains("Hello, Ada! This is Go", workspace.Output.Text, StringComparison.Ordinal);
+        Assert.False(workspace.Output.IsAcceptingInput);
+        trace.Passed = true;
+    }
+
+    [Fact]
+    public void Delve_launches_the_built_binary_and_keeps_DAP_separate_from_program_input()
+    {
+        var project = new ToolchainProject(TabStudio.Toolchains.Catalog.ToolchainCatalog.Default.Find("go")!, _temp.Path, "go.mod");
+        var file = _temp.Write("main.go", "package main\nfunc main() {}\n");
+        var plan = RunPlanner.PlanFile(project, file);
+        var launch = TabStudio.App.Services.Toolchains.ToolchainLaunch.Create("go", plan)!;
+        Assert.Equal(plan.Run.Program, launch.Program);
+        Assert.Equal("exec", (string?)launch.Properties["mode"]);
+        Assert.Equal("/dev/stdin", (string?)launch.Properties["stdinFrom"]);
+        Assert.Equal("remote", (string?)launch.Properties["outputMode"]);
+    }
+
+    [Fact]
+    public void Delve_uses_a_private_Unix_socket_on_Android_and_TCP_on_a_computer()
+    {
+        var adapter = TabStudio.LanguageServers.Configuration.LanguageServerRegistry.BuiltIn.FindAdapter("go")!;
+        var linux = TabStudio.App.Services.Toolchains.ToolchainLaunch.ForRuntime(adapter, TabStudio.Toolchains.Runtimes.RuntimeKind.Linux);
+        Assert.Equal(TabStudio.LanguageServers.Configuration.DebugAdapterTransport.UnixSocket, linux.Transport);
+        Assert.Contains("unix:${socket}", linux.Arguments);
+        Assert.True(linux.UsesProcessInput);
+        Assert.Same(adapter, TabStudio.App.Services.Toolchains.ToolchainLaunch.ForRuntime(adapter, TabStudio.Toolchains.Runtimes.RuntimeKind.Host));
+    }
+
+}

@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TabStudio.App.Editing;
 using TabStudio.App.Services.LanguageServers;
+using TabStudio.App.Services.Toolchains;
 using TabStudio.Debugging;
 using TabStudio.Debugging.Symbols;
 using TabStudio.LanguageServers.Configuration;
@@ -106,6 +107,8 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
     [ObservableProperty]
     public partial LaunchTarget? SelectedLaunchTarget { get; private set; }
 
+    private Task _adapterBreakpointUpdate = Task.CompletedTask;
+
     /// <summary>The exception filters of the debug adapter's session, for the Debug menu.</summary>
     public ObservableCollection<ExceptionFilterOption> ExceptionFilters { get; } = [];
 
@@ -171,7 +174,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
     /// <summary>Sets up debug adapters. Called once, when language servers are set up.</summary>
     private void InitializeDebugAdapters()
     {
-        Breakpoints.Changed += (_, _) => _ = SyncAdapterBreakpointsAsync();
+        Breakpoints.Changed += (_, _) => _adapterBreakpointUpdate = UpdateAdapterBreakpointsAfterAsync(_adapterBreakpointUpdate);
         Locals.Tree.EditValueRequested += async (_, row) => await EditVariableAsync(row);
         Watch.Tree.EditValueRequested += async (_, row) => await EditVariableAsync(row);
         CallStack.ThreadChosen += async (_, thread) => await ShowAdapterThreadAsync(thread.Id);
@@ -206,6 +209,8 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
             StatusText = $"No debug adapter is set up for \"{target.Configuration.Type}\" launch configurations.";
             return;
         }
+
+        adapter = ToolchainLaunch.ForRuntime(adapter, _toolchains.Runtime.Kind);
 
         // A configuration with "debugServer" connects to an adapter that already runs.
         var executable = target.Configuration.DebugServerPort is not null
@@ -250,7 +255,11 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         DebugAdapterSession session;
         try
         {
-            var options = new DebugAdapterSessionOptions { TraceMessages = _languageServerServices.TraceMessages, SupportsChildSessions = true, SupportsRunInTerminal = true };
+            var options = new DebugAdapterSessionOptions
+            {
+                TraceMessages = _languageServerServices.TraceMessages || TraceDebugAdapterMessages, SupportsChildSessions = true, SupportsRunInTerminal = true,
+                StartupLog = line => DebugAdapterOutput.WriteLine($"[{adapter.Name}] {line}", OutputKind.Info),
+            };
             session = configuration.DebugServerPort is { } port
                 ? await DebugAdapterSession.ConnectAsync(adapter, port, options)
                 : await DebugAdapterSession.StartAsync(adapter, executable, workspace.RootDirectory, _languageServerServices.Launcher, options);
@@ -268,6 +277,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         _adapterLaunched = false;
         _sentBreakpoints.Clear();
         WireAdapterEvents(session);
+        StartAdapterInput(session);
         AcceptChildSessions(session, executable, workspace.RootDirectory, noDebug);
         if (session.HasEnded)
         {
@@ -311,6 +321,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
 
     private void FailAdapterStart(DebugAdapterDefinition adapter, string reason)
     {
+        StopNativeDebugInput();
         Output.WriteLine($"{adapter.Name} did not start: {reason}", OutputKind.Failure);
         DebugAdapterOutput.WriteLine($"[{adapter.Name}] {reason}", OutputKind.Failure);
         State = IdeState.Failed;
@@ -419,6 +430,10 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
                 "console" or "important" => OutputKind.Info,
                 _ => OutputKind.Program,
             });
+            if ((session.AcceptsProgramInput || _nativeDebugInput is not null) && e.Category == "stdout" && !e.Output.EndsWith('\n'))
+            {
+                Output.ShowWaitingForInput();
+            }
         };
         session.BreakpointChanged += (_, e) => _ui.Post(() => OnAdapterBreakpointChanged(e));
         session.AdapterLog += (_, line) => DebugAdapterOutput.WriteLine($"[{session.Adapter.Name}] {line}", OutputKind.Info);
@@ -465,6 +480,12 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
 
         return session.Adapter.Languages.Count == 0
             || (_languageServers?.Configuration.Registry.FindLanguage(file) is { } language && session.Adapter.Languages.Contains(language.Id, StringComparer.Ordinal));
+    }
+
+    private async Task UpdateAdapterBreakpointsAfterAsync(Task previous)
+    {
+        await previous;
+        await SyncAdapterBreakpointsAsync();
     }
 
     /// <summary>Sends the breakpoints of files that changed to the adapter's session, as the user sets and clears them.</summary>
@@ -816,6 +837,12 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
             return;
         }
 
+        await _adapterBreakpointUpdate;
+        if (!ReferenceEquals(session, _adapter) || !IsPaused)
+        {
+            return;
+        }
+
         ShowAdapterRunning(session);
         try
         {
@@ -936,6 +963,11 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         }
 
         _adapterChildren.Clear();
+        StopNativeDebugInput();
+        if (session.AcceptsProgramInput)
+        {
+            Output.EndInput();
+        }
         _adapterRoot = null;
         _adapter = null;
         _adapterPauses++;

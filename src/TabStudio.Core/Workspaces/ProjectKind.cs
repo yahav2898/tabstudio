@@ -59,6 +59,18 @@ public enum ProjectKind
 
     /// <summary>A Node.js program: a folder with <c>package.json</c>.</summary>
     Node,
+
+    /// <summary>A Go module.</summary>
+    Go,
+
+    /// <summary>A Rust Cargo package or workspace.</summary>
+    Rust,
+
+    /// <summary>A portable C or C++ project built with CMake, make or a compiler from the Toolchain Store.</summary>
+    Cpp,
+
+    /// <summary>A Java Maven, Gradle or source project.</summary>
+    Java,
 }
 
 /// <summary>

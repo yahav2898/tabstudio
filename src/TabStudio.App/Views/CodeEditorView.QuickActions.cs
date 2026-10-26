@@ -147,7 +147,7 @@ public sealed partial class CodeEditorView
         {
             var item = new MenuItem
             {
-                Header = action.Title,
+                Header = new TextBlock { Text = action.Title, VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center },
                 Icon = new StrokeIcon { Data = action.Kind == CodeActionKind.QuickFix ? IntelliSenseIcons.LightBulb : IntelliSenseIcons.Screwdriver, Size = 15 },
             };
             item.Click += (_, _) => _ = ApplyCodeActionAsync(action);

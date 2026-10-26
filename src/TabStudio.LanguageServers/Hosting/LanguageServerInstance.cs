@@ -279,7 +279,7 @@ internal sealed partial class LanguageServerInstance : IAsyncDisposable
         try
         {
             _host.Log(Name, LanguageServerLogLevel.Info, $"Starting {Name} for {RootDirectory}: {_executable} {string.Join(' ', Definition.Arguments)}");
-            process = _host.Launcher.Start(new ServerStartInfo(_executable, Definition.Arguments, RootDirectory, Definition.Environment));
+            process = _host.Launcher.Start(new ServerStartInfo(_executable, Definition.Arguments.Select(a => a.Replace("${workspaceFolder}", RootDirectory, StringComparison.Ordinal).Replace("${serverStorage}", a.Contains("${serverStorage}", StringComparison.Ordinal) ? ServerStorage() : string.Empty, StringComparison.Ordinal)).ToList(), RootDirectory, Definition.Environment));
         }
         catch (ServerStartException ex)
         {
@@ -461,4 +461,12 @@ internal sealed partial class LanguageServerInstance : IAsyncDisposable
 
         process.Dispose();
     }
+    private string ServerStorage()
+    {
+        var name = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(RootDirectory + "\n" + Definition.Id)))[..24];
+        var folder = Path.Combine(Path.GetTempPath(), "tabstudio-language-servers", name);
+        Directory.CreateDirectory(folder);
+        return folder;
+    }
+
 }

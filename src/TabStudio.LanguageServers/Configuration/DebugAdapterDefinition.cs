@@ -13,6 +13,9 @@ public enum DebugAdapterTransport
     /// <c>${port}</c> in the arguments, and connects once the adapter listens.
     /// </summary>
     Tcp,
+
+    /// <summary>Over a Unix socket in a private temporary directory, passed in place of <c>${socket}</c>.</summary>
+    UnixSocket,
 }
 
 /// <summary>
@@ -47,6 +50,9 @@ public sealed record DebugAdapterDefinition
 
     /// <summary>How to talk to it.</summary>
     public DebugAdapterTransport Transport { get; init; }
+
+    /// <summary>Whether a socket adapter passes its process's standard input to the debugged program (Delve).</summary>
+    public bool UsesProcessInput { get; init; }
 
     /// <summary>Values every launch configuration of this type starts from, such as <c>"console": "internalConsole"</c>.</summary>
     public JsonObject? Defaults { get; init; }

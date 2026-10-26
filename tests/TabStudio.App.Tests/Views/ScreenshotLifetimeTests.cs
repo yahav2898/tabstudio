@@ -12,6 +12,7 @@ namespace TabStudio.App.Tests.Views;
 /// must: a frame collected during the encode unmaps its pixels under Skia, a SIGSEGV in libSkiaSharp.so that kills
 /// the test host (one IDE test run in four, before it did).
 /// </summary>
+[Collection(ScreenshotLifetimeTestGroup.Name)]
 public sealed class ScreenshotLifetimeTests
 {
     [AvaloniaFact]
@@ -66,4 +67,11 @@ public sealed class ScreenshotLifetimeTests
             window.Close();
         }
     }
+}
+
+/// <summary>Process-wide GC stress runs without other collections manipulating native UI resources.</summary>
+[CollectionDefinition(Name, DisableParallelization = true)]
+public sealed class ScreenshotLifetimeTestGroup
+{
+    public const string Name = "Screenshot lifetime GC stress";
 }
