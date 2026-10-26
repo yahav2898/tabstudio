@@ -32,7 +32,7 @@ public static partial class SelfTest
             }
             using var generator = await Task.Run(() => new NativeTextGenerator(path, context: 512), cancellationToken);
             var result = await generator.GenerateAsync("Once upon a time", 16, cancellationToken: cancellationToken);
-            return new SelfTestResult(result.Tokens > 0 && result.Text.Length > 0, FormattableString.Invariant($"Local AI: tiny GGUF generated {result.Tokens} tokens at {result.TokensPerSecond:0.0} tokens/s on device"), clock.Elapsed);
+            return new SelfTestResult(result.Tokens > 0 && result.Text.Length > 0, FormattableString.Invariant($"Local AI: tiny GGUF generated {result.Tokens} tokens / {result.Text.Length} characters at {result.TokensPerSecond:0.0} tokens/s on device"), clock.Elapsed);
         }
         catch (Exception ex) when (ex is InvalidOperationException or IOException or UnauthorizedAccessException)
         {

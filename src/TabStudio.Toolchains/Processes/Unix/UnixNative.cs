@@ -61,8 +61,10 @@ internal static partial class UnixNative
     [LibraryImport(LibC, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
     internal static partial int mkfifo(string path, uint mode);
 
+    // Bionic reads this variadic slot as void*. Mono can leave the upper half of an int argument's
+    // register unspecified on LP64, so pass a complete native word even for integer-valued commands.
     [LibraryImport(LibC, EntryPoint = "fcntl", SetLastError = true)]
-    internal static partial int fcntl_int(int fd, int command, int argument);
+    internal static partial int fcntl_int(int fd, int command, nint argument);
 
     [LibraryImport(LibC, SetLastError = true)]
     internal static partial int close(int fd);
