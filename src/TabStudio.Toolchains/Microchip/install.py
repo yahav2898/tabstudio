@@ -101,9 +101,8 @@ def runtime_environment(compiler=None):
     native = "aarch64-linux-gnu" if platform.machine() == "aarch64" else "x86_64-linux-gnu"
     env.update(LD_LIBRARY_PATH="/usr/lib/" + native, BOX64_LD_LIBRARY_PATH="/usr/lib/x86_64-linux-gnu",
                BOX64_NOBANNER="1", BOX64_LOG="0", BOX64_DYNAREC="0" if compiler == "xc32" else "1",
-               BOX64_AVX="2", BOX64_DYNACACHE="0")
-    if compiler == "xc32" and platform.machine() == "aarch64":
-        env.update(BOX64_SSE42="0", GLIBC_TUNABLES="glibc.cpu.hwcaps=-AVX2,-AVX,-SSE4_2,-SSE4_1,-SSSE3,-ERMS,-FSRM")
+               BOX64_DYNACACHE="0")
+    if compiler != "xc32": env["BOX64_AVX"] = "2"
     return env
 
 

@@ -54,8 +54,17 @@ public static class ToolchainProjectDetector
                 continue;
             }
 
+            var inMplabProject = File.Exists(Path.Combine(folder, "nbproject", "configurations.xml"))
+                || result.Any(p => MicrochipInstallation.IsCompiler(p.Toolchain.Id) && IsInside(folder, p.Directory));
             foreach (var toolchain in toolchains)
             {
+                // MPLAB projects also contain Makefiles and C source folders.
+                // Their selected XC compiler owns those files, including src/.
+                if (inMplabProject && toolchain.Id == "cpp")
+                {
+                    continue;
+                }
+
                 var insideProject = result.Any(p => p.Toolchain.Id == toolchain.Id && IsInside(folder, p.Directory));
                 if (insideProject && !toolchain.AllowNestedProjects)
                 {

@@ -170,7 +170,7 @@ def prepare(work, out, compiler, *, build_runtime=True):
                  # Compiler/installer subprocesses parse each other's stdout. A box64
                  # banner is not compiler output and breaks those integrity checks.
                  "BOX64_LOG=0", "BOX64_NOBANNER=1", "BOX64_DYNAREC=" + ("0" if compiler == "xc32" else "1"),
-                 "BOX64_AVX=2", "BOX64_DYNACACHE=0"]
+                 *(["BOX64_AVX=2"] if compiler != "xc32" else []), "BOX64_DYNACACHE=0"]
     prefix = [str(proot), "--kill-on-exit", "--link2symlink", "--sysvipc", "-L", "-0",
               "-r", str(root), "-b", "/dev", "-b", "/proc", "-b", "/sys",
               "-b", f"{root / 'tmp'}:/dev/shm", "-b", f"{cache}:/downloads",
@@ -281,6 +281,7 @@ def spike(args):
         options = [processor, f"-mdfp={pack}", "-O0", "-o", "/results/blink.elf", "main.c"]
         if family == "pic32":
             options += ["-g", "-Wl,--defsym=_min_heap_size=0,--report-mem"]
+        compile_failed = False
         for i in range(3):
             code, elapsed, _ = run([*prefix, *translate, program, *options], out / f"compile-{i}.log", env=env, timeout=180, check=False)
             if code and translate and i == 0:
@@ -305,14 +306,20 @@ def spike(args):
                         result["box64CloneStackFix"] = True
                         code, elapsed, _ = run([*prefix, *translate, program, *options], out / "compile-clone-fixed-box64.log", env=env, timeout=180, check=False)
             if code:
+                if args.compiler == "xc32" and translate:
+                    # A failure remains a failure, but do not lose the full
+                    # production compatibility matrix to an earlier probe.
+                    result["referenceCompileExitCode"] = code
+                    compile_failed = True
+                    break
                 raise RuntimeError(f"{compiler} compile failed (exit {code}); see compile diagnostics")
             result["compileSeconds"].append(elapsed)
-        if family == "pic32":
+        if family == "pic32" and not compile_failed:
             run([*prefix, *translate, f"{dest}/bin/xc32-bin2hex", "/results/blink.elf"], out / "bin2hex.log", env=env)
         hex_files = list(out.glob("*.hex"))
-        if not hex_files:
+        if not hex_files and not compile_failed:
             raise RuntimeError("The compiler did not produce a HEX file")
-        result["hexSha256"] = hashlib.sha256(hex_files[0].read_bytes()).hexdigest()
+        if hex_files: result["hexSha256"] = hashlib.sha256(hex_files[0].read_bytes()).hexdigest()
         # Exercise the shipped Store wrappers and MPLAB driver, not just a direct
         # compiler command. The already verified DFP is copied into its real
         # per-version install layout; no compiler is uploaded as an artifact.
@@ -371,6 +378,7 @@ def spike(args):
             # These diagnostics never turn a failed product default green.
             baseline = "glibc.cpu.hwcaps=-AVX2,-AVX,-SSE4_2,-SSE4_1,-SSSE3,-ERMS,-FSRM"
             profiles = {
+                "interpreter-default": {},
                 "interpreter-avx2-sse2": {"BOX64_DYNAREC": "0", "BOX64_AVX": "2", "BOX64_SSE42": "0", "GLIBC_TUNABLES": ""},
                 "interpreter-no-avx": {"BOX64_DYNAREC": "0", "BOX64_AVX": "0", "BOX64_SSE42": "0", "GLIBC_TUNABLES": ""},
                 "interpreter-glibc-baseline": {"BOX64_DYNAREC": "0", "BOX64_AVX": "2", "BOX64_SSE42": "1", "GLIBC_TUNABLES": baseline},
@@ -378,6 +386,9 @@ def spike(args):
                 "dynarec-conservative": {"BOX64_DYNAREC": "1", "BOX64_AVX": "0", "BOX64_SSE42": "0", "BOX64_DYNAREC_SAFEFLAGS": "2", "BOX64_DYNAREC_BIGBLOCK": "0", "BOX64_DYNAREC_STRONGMEM": "1", "GLIBC_TUNABLES": baseline},
                 "dynarec-avx2-conservative": {"BOX64_DYNAREC": "1", "BOX64_AVX": "2", "BOX64_SSE42": "1", "BOX64_DYNAREC_SAFEFLAGS": "2", "BOX64_DYNAREC_BIGBLOCK": "0", "BOX64_DYNAREC_STRONGMEM": "1", "GLIBC_TUNABLES": ""},
                 "interpreter-amd": {"BOX64_DYNAREC": "0", "BOX64_AVX": "2", "BOX64_SSE42": "0", "BOX64_CPUTYPE": "1", "GLIBC_TUNABLES": ""},
+                "interpreter-emulated-libc": {"BOX64_DYNAREC": "0", "BOX64_AVX": "0", "BOX64_EMULATED_LIBS": "libc.so.6:libm.so.6:libpthread.so.0:libdl.so.2:librt.so.1", "BOX64_PREFER_EMULATED": "1", "GLIBC_TUNABLES": baseline},
+                "dynarec-emulated-libc": {"BOX64_DYNAREC": "1", "BOX64_AVX": "0", "BOX64_PROFILE": "safest", "BOX64_EMULATED_LIBS": "libc.so.6:libm.so.6:libpthread.so.0:libdl.so.2:librt.so.1", "BOX64_PREFER_EMULATED": "1", "GLIBC_TUNABLES": baseline},
+                "interpreter-backtrace": {"BOX64_DYNAREC": "0", "BOX64_LOG": "2", "BOX64_SHOWBT": "1", "BOX64_ROLLING_LOG": "64"},
             }
             result["compatibilityProfileTrials"] = {}
             for name, settings in profiles.items():
@@ -386,11 +397,13 @@ def spike(args):
                 script = setup[:-1] + "," + repr(settings) + ")"
                 run([*native, "python3", "-c", script], out / (name + "-wrapper.log"), env=env)
                 code, seconds, _ = run([*native, "python3", "/opt/tabstudio/microchip/project.py", "build", "/work/project"],
-                    out / (name + ".log"), env=env, timeout=120, check=False)
+                    out / (name + ".log"), env=env, timeout=240, check=False)
                 result["compatibilityProfileTrials"][name] = {"settings": settings, "exitCode": code, "seconds": seconds,
                     "builtins": (project_path / ".tabstudio/pic/xc-predefined-macros.txt").is_file()}
         if project_code:
             raise RuntimeError("The shipped MPLAB project driver failed; see project-build.log and controls")
+        if compile_failed:
+            raise RuntimeError("The default XC32 reference compile failed; production-driver diagnostics were retained")
         project_hex = project_path / "dist/default/production/firmware.hex"
         if not project_hex.is_file() or not (project_path / ".tabstudio/pic/xc-predefined-macros.txt").is_file():
             raise RuntimeError("The shipped project driver did not produce firmware and compiler builtin metadata")

@@ -18,10 +18,10 @@ public sealed class PicProjectDetectionTests
             <languageToolchain>{compiler}</languageToolchain><languageToolchainVersion>6.00</languageToolchainVersion>
             </toolsSet></conf></confs></configurationDescriptor>
             """);
-        var catalog = ToolchainCatalog.Default with
-        {
-            Toolchains = [.. ToolchainCatalog.Default.Toolchains.Where(t => t.Id is "xc8" or "xc32").Select(t => t with { Listed = true })],
-        };
+        folder.Write("Blink.X/Makefile", "# MPLAB's generated entry point\n");
+        folder.Write("Blink.X/main.c", "int main(void) { return 0; }\n");
+        folder.Write("Blink.X/src/driver.c", "void driver(void) {}\n");
+        var catalog = ToolchainCatalog.Default;
 
         var project = Assert.Single(ToolchainProjectDetector.Detect(folder.Path, catalog));
 
