@@ -9,6 +9,24 @@ namespace TabStudio.WindowsBridge.Tests;
 public sealed class MplabTests
 {
     [Fact]
+    public async Task Windows_batch_generator_keeps_a_project_path_with_spaces_as_one_argument()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+        using var folder = new TempDirectory();
+        var batch = folder.Write("Vendor Tools/generator.bat", "@echo off\r\necho PROJECT=[%~1]\r\n");
+        var project = folder.Resolve("Project with spaces") + "@production";
+        var lines = new List<string>();
+        using var process = BridgeProcess.Start(new BridgeProcessStart("cmd.exe", [], folder.Path)
+        {
+            WindowsCommandLine = $"/d /s /c \"\"{batch}\" \"{project}\"\"",
+        });
+        process.OutputLine += (_, line) => lines.Add(line);
+        process.BeginReading();
+        Assert.Equal(0, await process.Exited.WaitAsync(TimeSpan.FromSeconds(15)));
+        Assert.Contains("PROJECT=[" + project + "]", lines);
+    }
+
+    [Fact]
     public void Finds_the_newest_vendor_tools_including_bundled_java()
     {
         using var folder = new TempDirectory();

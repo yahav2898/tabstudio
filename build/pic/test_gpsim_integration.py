@@ -4,6 +4,7 @@ import json
 import os
 from pathlib import Path
 import sys
+import tempfile
 import unittest
 
 source = Path(__file__).resolve().parents[2] / "src/TabStudio.Toolchains/Microchip"
@@ -61,6 +62,27 @@ class NativeGpsimTests(unittest.TestCase):
         self.assertTrue(messages[2]["body"]["result"].startswith("0x"))
         with self.assertRaisesRegex(ValueError, "arbitrary"):
             self.adapter.handle({"seq": 4, "command": "evaluate", "arguments": {"expression": "quit\n"}})
+
+    def test_step_out_uses_the_actual_pic18_hardware_return_stack(self):
+        # PIC18 CALL 0x8; BRA .; NOP; MOVLW 1; RETURN. Byte addresses,
+        # deliberately independent of compiler source-line placement.
+        payload = bytes.fromhex("04ec00f0ffd70000010e1200")
+        record = bytes([len(payload), 0, 0, 0]) + payload
+        with tempfile.TemporaryDirectory() as folder:
+            firmware = Path(folder) / "call.hex"
+            firmware.write_text(":" + record.hex() + f"{-sum(record) & 255:02x}" + "\n:00000001FF\n")
+            self.adapter.close()
+            self.adapter.launch({"device": "PIC18F14K22", "program": str(firmware), "gpsim": os.environ["PIC_TEST_GPSIM"]})
+            self.adapter.instruction_breakpoints = [8]
+            self.adapter.install_breakpoints()
+            self.adapter.continue_run()
+            self.adapter.worker.join(timeout=10)
+            self.assertEqual(8, self.adapter.pc())
+            self.assertEqual(1, int(self.adapter.value("stkptr"), 0) & 31)
+            self.adapter.handle({"seq": 1, "command": "stepOut", "arguments": {"threadId": 1}})
+            self.adapter.worker.join(timeout=10)
+            self.assertEqual(4, self.adapter.pc())
+            self.assertEqual(0, int(self.adapter.value("stkptr"), 0) & 31)
 
 
 if __name__ == "__main__":

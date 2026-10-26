@@ -79,7 +79,8 @@ def run(args):
         native = native_library_directory(dump, adb_shell("pm path " + PACKAGE), result["emulatorAbi"])
         result["nativeLibraryDirectory"] = native
         for library in ("libproot.so", "libproot-loader.so"):
-            adb_shell(shlex.join(["run-as", PACKAGE, "test", "-r", native + "/" + library]))
+            # Android's test is a shell builtin, not an executable for run-as.
+            adb_shell(shlex.join(["run-as", PACKAGE, "sh", "-c", "test -r " + shlex.quote(native + "/" + library)]))
         base = home + "/files/pic-phase0"
         setup = f"mkdir -p {shlex.quote(base)}/rootfs {shlex.quote(base)}/results {shlex.quote(base)}/tmp && cd {shlex.quote(base)}/rootfs && tar -xzf -"
         # Stream into the app UID. SELinux need not permit the app to read a

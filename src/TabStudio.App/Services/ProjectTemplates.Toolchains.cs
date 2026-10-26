@@ -20,7 +20,7 @@ public sealed partial class ProjectTemplates
     [
         new(PythonId, "Python Application", "A Python program that reads input and prints in the Output panel, run with Python from the Toolchain Store.", ["Python", "Console"]),
         new(NodeId, "Node.js Console App", "A JavaScript program for Node.js that reads input and prints in the Output panel, run with Node.js from the Toolchain Store.", ["JavaScript", "Node.js", "Console"]),
-        new(Pic18Id, "PIC18 Blink (XC8)", "PIC18F45K22, 16 MHz internal oscillator, LED on RD0. Builds with XC8 on a 64-bit tablet.", ["C", "Microchip", "PIC18"]),
+        new(Pic18Id, "PIC18 Blink (XC8)", "PIC18F14K22, 16 MHz internal oscillator, LED on RC0. Builds with XC8 and simulates with gpsim on a 64-bit tablet.", ["C", "Microchip", "PIC18"]),
         new(Pic32Id, "PIC32 Blink (XC32)", "PIC32MX250F128B, internal FRC oscillator, LED on RB0. Builds with XC32 on a 64-bit tablet.", ["C", "Microchip", "PIC32"]),
     ];
 

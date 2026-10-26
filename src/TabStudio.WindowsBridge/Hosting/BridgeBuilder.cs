@@ -99,9 +99,9 @@ internal static class BridgeBuilder
     }
 
     /// <summary>Runs a tool to its end, passing its lines on, and stops it when canceled.</summary>
-    internal static async Task<int> RunAsync(string fileName, IReadOnlyList<string> arguments, string directory, Action<string> line, CancellationToken cancellationToken)
+    internal static async Task<int> RunAsync(string fileName, IReadOnlyList<string> arguments, string directory, Action<string> line, CancellationToken cancellationToken, IReadOnlyDictionary<string, string?>? environment = null, string? windowsCommandLine = null)
     {
-        using var process = BridgeProcess.Start(new BridgeProcessStart(fileName, arguments, directory));
+        using var process = BridgeProcess.Start(new BridgeProcessStart(fileName, arguments, directory, environment) { WindowsCommandLine = windowsCommandLine });
         process.OutputLine += (_, text) => line(text);
         process.ErrorLine += (_, text) => line(text);
         process.BeginReading();

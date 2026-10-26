@@ -53,6 +53,7 @@ jobs:
   native-tools:
     name: PIC programmers and gpsim DAP (aarch64-musl)
     needs: spike
+    if: ${{ always() && !cancelled() }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 35
     steps:

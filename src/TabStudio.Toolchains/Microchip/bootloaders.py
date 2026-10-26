@@ -168,12 +168,22 @@ class An1388:
 
 
 class MccUart:
-    def __init__(self, transport):
+    def __init__(self, transport, auto_baud=True):
         self.transport = transport
         self.pending = bytearray()
+        self.auto_baud = auto_baud
+
+    def send(self, request):
+        # Melody's CommunicationModuleInit enables hardware auto-baud before
+        # each request. Its 0x55 training byte is consumed by the UART, outside
+        # the nine-byte bootloader header. Fixed-baud variants can disable it.
+        if self.auto_baud:
+            self.transport.write(b"\x55")
+            time.sleep(0.002)
+        self.transport.write(request)
 
     def exchange(self, request, payload_length=1):
-        self.transport.write(request)
+        self.send(request)
         deadline = time.monotonic() + 10
         expected = 1 + 9 + payload_length
         while len(self.pending) < expected and time.monotonic() < deadline:
@@ -209,5 +219,5 @@ class MccUart:
             if actual[:1] != b"\x01" or actual[1:] != data:
                 raise ValueError(f"MCC readback verification failed at 0x{address:x}; application was not started")
         # Reset has no response in Melody; do not wait for one.
-        self.transport.write(mcc_request(9))
+        self.send(mcc_request(9))
         print("Flash verified; reset requested.", flush=True)

@@ -54,6 +54,7 @@ public sealed partial class WorkspaceViewModel
                     ["applicationStart"] = "0x0", ["applicationEnd"] = "0x0", ["pageSizeBytes"] = 0,
                     ["addressUnitBytes"] = conf.Device.StartsWith("PIC16", StringComparison.OrdinalIgnoreCase) ? 2 : 1,
                     ["baud"] = 115200, ["interface"] = null, ["bridgeTool"] = "PK4", ["bridgeSerial"] = null,
+                    ["autoBaud"] = true,
                     ["deviceFile"] = "", ["deviceFileSha256"] = "",
                 }, PicJsonOptions);
                 await File.WriteAllTextAsync(path, text + "\n");

@@ -42,7 +42,7 @@ The following are not part of the APK. The Toolchain Store downloads them only w
 | [gpsim](https://gpsim.sourceforge.net/) 0.32.1 | GPL-2.0-or-later | Pinned upstream source; built natively with the GUI disabled. Source and COPYING remain with the installation. |
 | [pymcuprog](https://github.com/microchip-pic-avr-tools/pymcuprog) 3.19.4.61 | MIT | Verified PyPI wheel; its included licence is retained. |
 | [pyedbglib](https://github.com/microchip-pic-avr-tools/pyedbglib) 2.24.2.18 | MIT | Verified PyPI wheel. |
-| [pk2cmd](https://github.com/jaka-fi/pk2cmd) at 38ad052 | **Non-free Microchip PICkit Software License Agreement**, not GPL | Separate acceptance before source download. No device database or PICkit firmware is redistributed/downloaded by TabStudio. The upstream release/database removal is documented in [PIC.md](docs/PIC.md). |
+| [pk2cmd](https://github.com/jaka-fi/pk2cmd) at 38ad052 | **Non-free Microchip PICkit Software License Agreement**, not GPL | Separate acceptance before source download. No device database is downloaded; no PICkit firmware is redistributed or flashed by TabStudio. The upstream release/database removal is documented in [PIC.md](docs/PIC.md). |
 | [pic32prog](https://github.com/sergev/pic32prog) at 4b4c8e5 | GPL-2.0 | Pinned source; built against Alpine's hidapi/libusb. Source and COPYING remain with the installation. |
 | pyserial 3.5; IntelHex 2.3.0 | BSD-3-Clause | Verified Python distributions; included notices retained. |
 | appdirs 1.4.4; PyYAML 6.0.3 | MIT | Verified distributions; included notices retained. |

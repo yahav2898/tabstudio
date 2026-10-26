@@ -71,7 +71,7 @@ def main():
             interface = profile.get("interface")
             transport = HidTransport(usb, interface) if protocol == "an1388-hid" else UsbSerial(usb, profile.get("baud", 115200), interface)
             if protocol == "mcc-uart":
-                MccUart(transport).program(firmware, start, end, profile["pageSizeBytes"], profile.get("addressUnitBytes", 1))
+                MccUart(transport, profile.get("autoBaud", True)).program(firmware, start, end, profile["pageSizeBytes"], profile.get("addressUnitBytes", 1))
             else:
                 An1388(transport).program(firmware, start, end)
     else:

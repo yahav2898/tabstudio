@@ -336,7 +336,19 @@ def spike(args):
         (support / (args.compiler + ".json")).write_text(json.dumps(manifest))
         setup = "import sys;sys.path.insert(0,'/opt/tabstudio/microchip');from install import write_wrappers;write_wrappers(" + repr(args.compiler) + ",__import__('pathlib').Path(" + repr(dest) + "))"
         run([*native, "python3", "-c", setup], out / "project-wrappers.log", env=env)
-        run([*native, "python3", "/opt/tabstudio/microchip/project.py", "build", "/work/project"], out / "project-build.log", env=env, timeout=300)
+        project_code, _, _ = run([*native, "python3", "/opt/tabstudio/microchip/project.py", "build", "/work/project"], out / "project-build.log", env=env, timeout=300, check=False)
+        if project_code and args.compiler == "xc32" and translate:
+            # Keep failures actionable: distinguish compiler arguments, shell
+            # wrappers and spawning from native musl Python. None replaces the
+            # mandatory production-driver result below.
+            exact = [processor, "-mdfp=" + str(installed_pack).removeprefix(str(root)), "-O0", "-g", "-Wl,--defsym=_min_heap_size=0,--report-mem", "-o", "/results/diagnostic.elf", "/work/project/main.c"]
+            run([*prefix, *translate, program, *exact], out / "project-direct-control.log", env=env, timeout=180, check=False)
+            invocation = ["/opt/tabstudio/microchip/box64", program, *exact]
+            script = "import subprocess;raise SystemExit(subprocess.call(" + repr(invocation) + "))"
+            run([*native, "python3", "-c", script], out / "project-native-python-control.log", env=env, timeout=180, check=False)
+            run([*native, "/usr/local/bin/xc32-gcc", *exact], out / "project-wrapper-control.log", env=env, timeout=180, check=False)
+        if project_code:
+            raise RuntimeError("The shipped MPLAB project driver failed; see project-build.log and controls")
         project_hex = project_path / "dist/default/production/firmware.hex"
         if not project_hex.is_file() or not (project_path / ".tabstudio/pic/xc-predefined-macros.txt").is_file():
             raise RuntimeError("The shipped project driver did not produce firmware and compiler builtin metadata")

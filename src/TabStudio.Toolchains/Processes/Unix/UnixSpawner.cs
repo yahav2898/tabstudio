@@ -53,9 +53,25 @@ internal static class UnixSpawner
             throw new ArgumentException("Pass one explicit device descriptor to a child descriptor from 3 to 1024.", nameof(inheritedDescriptors));
         }
 
-        return terminal is { } size
-            ? StartInTerminal(path, arguments, environment, workingDirectory, size, inheritedDescriptors)
-            : StartWithPipes(path, arguments, environment, workingDirectory, inheritedDescriptors);
+        var temporary = -1;
+        try
+        {
+            if (inheritedDescriptors is { Count: 1 } && inheritedDescriptors.Single() is var mapping && mapping.Key == mapping.Value)
+            {
+                // dup2(fd, fd) can retain FD_CLOEXEC on some libcs. Always use
+                // distinct source/target descriptors in the child's file action.
+                temporary = Duplicate(mapping.Key);
+                inheritedDescriptors = new Dictionary<int, int> { [temporary] = mapping.Value };
+            }
+
+            return terminal is { } size
+                ? StartInTerminal(path, arguments, environment, workingDirectory, size, inheritedDescriptors)
+                : StartWithPipes(path, arguments, environment, workingDirectory, inheritedDescriptors);
+        }
+        finally
+        {
+            if (temporary >= 0) _ = UnixNative.close(temporary);
+        }
     }
 
     private static UnixProcessHandle StartWithPipes(string path, IReadOnlyList<string> arguments, IReadOnlyList<string> environment, string? workingDirectory, IReadOnlyDictionary<int, int>? descriptors)
@@ -303,7 +319,7 @@ internal static class UnixSpawner
         var duplicate = UnixNative.fcntl_int(fd, OperatingSystem.IsMacOS() ? 67 : 1030, 3);
         if (duplicate < 0)
         {
-            throw Failure("Could not duplicate the pseudo terminal", Marshal.GetLastPInvokeError());
+            throw Failure("Could not duplicate a file descriptor", Marshal.GetLastPInvokeError());
         }
 
         return duplicate;

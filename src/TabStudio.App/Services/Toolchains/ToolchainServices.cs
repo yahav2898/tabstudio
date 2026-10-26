@@ -99,9 +99,13 @@ public sealed class ToolchainServices : IDisposable
             string[] packages = developmentTools
                 ? ["python3", "libusb", "build-base", "libusb-dev", "hidapi-dev", "readline-dev", "popt-dev", "glib-dev", "bison", "flex", "pkgconf"]
                 : ["python3", "libusb"];
-            var plan = await _packages.PlanInstallAsync(packages, token).ConfigureAwait(false);
-            await _packages.DownloadAsync(plan, (_, package) => line("Downloading " + package.Name), token).ConfigureAwait(false);
-            await _packages.InstallAsync(packages, upgrade: false, line, token).ConfigureAwait(false);
+            var installed = _packages.Installed;
+            if (packages.Any(name => installed.Find(name) is null))
+            {
+                var plan = await _packages.PlanInstallAsync(packages, token).ConfigureAwait(false);
+                await _packages.DownloadAsync(plan, (_, package) => line("Downloading " + package.Name), token).ConfigureAwait(false);
+                await _packages.InstallAsync(packages, upgrade: false, line, token).ConfigureAwait(false);
+            }
             foreach (var name in MicrochipInstallation.SupportFiles)
             {
                 var destination = Path.Combine(environment.Rootfs, MicrochipInstallation.ToolsDirectory.TrimStart('/'), name);

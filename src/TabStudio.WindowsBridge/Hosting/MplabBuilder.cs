@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using System.Security.Cryptography;
+using System.Text.Json;
 using TabStudio.Core.Diagnostics;
 using TabStudio.Toolchains.Microchip;
 using TabStudio.WindowsBridge.Builds;
@@ -40,15 +42,20 @@ internal static class MplabBuilder
             if ((tools.Generator + project.Directory + configuration.Name).Any(c => "\"%!&|<>^\r\n".Contains(c, StringComparison.Ordinal)))
                 throw new BridgeBuildException("MPLAB's batch generator requires project/tool paths without shell metacharacters.");
             var generate = $"\"{tools.Generator}\" \"{project.Directory}@{configuration.Name}\"";
-            var code = await BridgeBuilder.RunAsync("cmd.exe", ["/d", "/s", "/c", "\"" + generate + "\""], project.Directory, Line, token).ConfigureAwait(false);
+            var environment = new Dictionary<string, string?> { ["PATH"] = Path.GetDirectoryName(tools.Make) + Path.PathSeparator + Environment.GetEnvironmentVariable("PATH") };
+            var code = await BridgeBuilder.RunAsync("cmd.exe", [], project.Directory, Line, token, environment, "/d /s /c \"" + generate + "\"").ConfigureAwait(false);
             if (code != 0) throw new BridgeBuildException($"MPLAB's makefile generator exited {code}. See the Output panel.");
             var file = "nbproject/Makefile-" + configuration.Name + ".mk";
             if (!File.Exists(Path.Combine(project.Directory, file))) throw new BridgeBuildException("MPLAB did not generate the selected configuration's makefile.");
-            code = await BridgeBuilder.RunAsync(tools.Make, ["-f", file, "SUBPROJECTS=", ".build-conf", "TYPE_IMAGE=PRODUCTION"], project.Directory, Line, token).ConfigureAwait(false);
+            code = await BridgeBuilder.RunAsync(tools.Make, ["-f", file, "SUBPROJECTS=", ".build-conf", "TYPE_IMAGE=PRODUCTION"], project.Directory, Line, token, environment).ConfigureAwait(false);
             if (code != 0) throw new BridgeBuildException($"MPLAB build exited {code}. See the Output panel.");
             var directory = Path.Combine(project.Directory, "dist", configuration.Name, "production");
             var files = Directory.Exists(directory) ? Directory.GetFiles(directory, "*.hex") : [];
             if (files.Length != 1) throw new BridgeBuildException("The MPLAB build did not produce one unambiguous production HEX image.");
+            var receipt = Path.Combine(project.Directory, ".tabstudio", "pic-bridge-build.json");
+            Directory.CreateDirectory(Path.GetDirectoryName(receipt)!);
+            var hash = Convert.ToHexStringLower(SHA256.HashData(await File.ReadAllBytesAsync(files[0], token).ConfigureAwait(false)));
+            await File.WriteAllTextAsync(receipt, JsonSerializer.Serialize(new Dictionary<string, string> { ["device"] = configuration.Device, ["configuration"] = configuration.Name, ["firmware"] = files[0], ["sha256"] = hash }), token).ConfigureAwait(false);
             lock (gate)
             {
                 return new BuildOutcome(diagnostics.All(d => d.Severity != DiagnosticSeverityLevel.Error), diagnostics.ToArray(), clock.Elapsed, "MPLAB X / " + configuration.Compiler,
@@ -76,6 +83,15 @@ internal static class MplabBuilder
             if (!project.Configurations.Any(c => c.Device.Equals(request.Device, StringComparison.OrdinalIgnoreCase))) throw new BridgeBuildException("The programming device does not match any MPLAB project configuration.");
             var firmware = paths.ToHost(request.FirmwarePath) ?? throw new BridgeBuildException("The HEX image is outside the synchronized workspace.");
             if (!firmware.EndsWith(".hex", StringComparison.OrdinalIgnoreCase) || !File.Exists(firmware)) throw new BridgeBuildException("Build the firmware on the Windows Bridge before programming.");
+            using var receipt = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Combine(project.Directory, ".tabstudio", "pic-bridge-build.json"), token).ConfigureAwait(false));
+            var built = receipt.RootElement;
+            var hash = Convert.ToHexStringLower(SHA256.HashData(await File.ReadAllBytesAsync(firmware, token).ConfigureAwait(false)));
+            if (!string.Equals(built.GetProperty("device").GetString(), request.Device, StringComparison.OrdinalIgnoreCase)
+                || !string.Equals(built.GetProperty("firmware").GetString(), firmware, StringComparison.OrdinalIgnoreCase)
+                || built.GetProperty("sha256").GetString() != hash)
+            {
+                throw new BridgeBuildException("The image or device differs from the Bridge build receipt. Build the selected configuration again before programming.");
+            }
             if (tools?.Ipe is null || (tools.Ipe.EndsWith(".jar", StringComparison.OrdinalIgnoreCase) && tools.Java is null)) throw new BridgeBuildException("Install MPLAB IPE (including its command-line tools and Java runtime) on the paired PC.");
             var command = tools.Ipe.EndsWith(".jar", StringComparison.OrdinalIgnoreCase) ? tools.Java! : tools.Ipe;
             using var deadline = CancellationTokenSource.CreateLinkedTokenSource(token);
@@ -85,7 +101,7 @@ internal static class MplabBuilder
             if (code != 0) throw new BridgeBuildException($"ipecmd exited {code}; programming/verification failed.");
             return new BuildOutcome(true, [], clock.Elapsed, "MPLAB IPE", null);
         }
-        catch (Exception error) when (error is BridgeBuildException or BridgeProcessException or IOException)
+        catch (Exception error) when (error is BridgeBuildException or BridgeProcessException or IOException or JsonException or KeyNotFoundException)
         {
             output("ipecmd: error: " + error.Message);
             return new BuildOutcome(false, [new BuildDiagnostic("TS3004", DiagnosticSeverityLevel.Error, error.Message, null)], clock.Elapsed, "MPLAB IPE", null);

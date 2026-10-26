@@ -214,18 +214,19 @@ class Adapter:
         self.running = False
         self.event("stopped", {"reason": reason, "threadId": 1, "allThreadsStopped": True})
 
-    def continue_run(self):
+    def continue_run(self, return_address=None, temporary_ids=()):
         if self.running: raise ValueError("gpsim is already running")
         self.running = True
         self.pause_reason = None
         def run():
             try:
                 output = self.sim.command("run", timeout=None)
+                for identity in temporary_ids: self.sim.command("clear " + str(identity))
                 if "WDT" in output or "INVALID" in output:
                     self.event("output", {"category": "stderr", "output": output})
                     self.stopped(self.pause_reason or "exception")
                 else:
-                    self.stopped(self.pause_reason or "breakpoint")
+                    self.stopped(self.pause_reason or ("step" if return_address is not None and self.pc() == return_address else "breakpoint"))
             except (OSError, ValueError, EOFError) as error:
                 self.running = False
                 self.event("output", {"category": "stderr", "output": str(error) + "\n"})
@@ -310,11 +311,20 @@ class Adapter:
             self.response(request)
         elif command in ("next", "stepIn", "stepOut"):
             if self.running: raise ValueError("Pause before stepping")
-            if command == "stepOut": raise ValueError("gpsim adapter does not reconstruct a C call stack; use instruction/source stepping")
+            depth = int(self.value("stkptr"), 0) & 31
+            if command == "stepOut":
+                if depth == 0: raise ValueError("The PIC18 hardware return stack has no caller")
+                address = sum(int(self.value(name), 0) << shift for name, shift in (("tosl", 0), ("tosh", 8), ("tosu", 16)))
+                before = set(re.findall(r"(?m)^(\d+):", self.sim.command("break")))
+                self.sim.command("break e " + hex(address))
+                after = set(re.findall(r"(?m)^(\d+):", self.sim.command("break")))
+                self.response(request)
+                self.continue_run(address, after - before)
+                return True
             original = self.sources.location(self.pc())
             for _ in range(2048 if original and args.get("granularity") != "instruction" else 1):
                 self.sim.command("step")
-                if self.sources.location(self.pc()) != original: break
+                if self.sources.location(self.pc()) != original and (command != "next" or (int(self.value("stkptr"), 0) & 31) <= depth): break
             self.response(request)
             self.stopped("step")
         elif command == "stackTrace":
@@ -332,6 +342,9 @@ class Adapter:
             self.response(request, {"variables": variables})
         elif command == "evaluate":
             expression = args["expression"].strip()
+            expression = next((name for name in self.registers if name.lower() == expression.lower()), expression)
+            if expression.lower() == "wreg": expression = "W"
+            if expression.lower() == "pc": expression = "pc"
             if expression not in self.registers and expression != "pc" and not re.fullmatch(r"reg\(0x[0-9a-fA-F]{1,3}\)", expression):
                 raise ValueError("Evaluate a register/SFR name or reg(0xADDR); arbitrary gpsim commands are not evaluated")
             self.response(request, {"result": self.value(expression), "type": "register", "variablesReference": 0})

@@ -167,6 +167,10 @@ def write_wrappers(compiler, destination):
         if not binary.is_file() or not os.access(binary, os.X_OK):
             continue
         lines = ["#!/bin/sh"]
+        # GCC locates assembler/linker helpers through PATH. Inside the emulated
+        # driver those must be the original x86 binaries, not another host shell
+        # wrapper that recursively starts Box64 with the helper's argv layout.
+        lines.append("export PATH=" + shlex.quote(str(destination / "bin")) + ':"$PATH"')
         for key, value in runtime_environment(compiler).items():
             if key.startswith("BOX64_") or key == "LD_LIBRARY_PATH":
                 lines.append("export " + key + "=" + shlex.quote(value))

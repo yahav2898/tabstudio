@@ -35,7 +35,8 @@ class UsbProtocolTests(unittest.TestCase):
 
     def test_mcc_response_uses_stx_and_echoes_the_nine_byte_header(self):
         class Recording:
-            def write(self, data): self.written = data
+            def __init__(self): self.writes = []
+            def write(self, data): self.written = data; self.writes.append(data)
             def read(self, timeout):
                 data, self.data = self.data[:2], self.data[2:]
                 return data
@@ -44,6 +45,16 @@ class UsbProtocolTests(unittest.TestCase):
         request = bytes.fromhex("02040055aa00300000010410ff")
         self.assertEqual(b"\x01", MccUart(transport).exchange(request))
         self.assertEqual(request, transport.written)
+        self.assertEqual([b"\x55", request], transport.writes)
+
+    def test_fixed_baud_mcc_variant_does_not_receive_an_autobaud_character(self):
+        class Recording:
+            def __init__(self): self.writes = []
+            def write(self, data): self.writes.append(data)
+        transport = Recording()
+        request = mcc_request(9)
+        MccUart(transport, auto_baud=False).send(request)
+        self.assertEqual([request], transport.writes)
 
     def test_mcc_write_length_is_checked(self):
         with self.assertRaisesRegex(ValueError, "length"):
