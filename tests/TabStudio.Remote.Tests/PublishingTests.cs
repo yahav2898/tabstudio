@@ -47,7 +47,7 @@ public sealed class PublishingTests
         await Assert.ThrowsAsync<IOException>(() => ServerPublisher.UploadAndRestartAsync(connection, temp.Path, profile));
         using var current = connection.Ssh.RunCommand("readlink " + SshRuntime.Quote(root + "/current"));
         Assert.Equal(root + "/previous", current.Result.Trim());
-        var release = Assert.Single(connection.Sftp.ListDirectory(root + "/releases").Where(f => f.IsDirectory && f.Name is not "." and not ".."));
+        var release = Assert.Single(connection.Sftp.ListDirectory(root + "/releases"), f => f.IsDirectory && f.Name is not "." and not "..");
         Assert.Equal("Hello from the tablet", connection.Sftp.ReadAllText(release.FullName + "/wwwroot/index.html"));
     }
 

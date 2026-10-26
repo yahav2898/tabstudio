@@ -10,6 +10,7 @@ using TabStudio.Database;
 namespace TabStudio.Android;
 
 // The AES key never leaves AndroidKeyStore. Ciphertexts are excluded from device backup.
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1001:Types that own disposable fields should be disposable", Justification = "This app-lifetime gate uses WaitAsync only and never creates AvailableWaitHandle; disposing it could race a pending release.")]
 internal sealed class AndroidDatabaseSecretStore(Context context) : IDatabaseSecretStore
 {
     private const string Alias = "TabStudio.Database.Connections.v1";
