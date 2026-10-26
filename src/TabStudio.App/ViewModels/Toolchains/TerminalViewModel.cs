@@ -135,6 +135,27 @@ public sealed partial class TerminalViewModel : ObservableObject, IDisposable
     /// <summary>Asks the view to take the keyboard focus.</summary>
     public void RequestFocus() => FocusRequested?.Invoke(this, EventArgs.Empty);
 
+    /// <summary>Runs an interactive tool in this terminal, retaining its caller's resource lifetime until exit.</summary>
+    /// <param name="spec">A tool such as the MicroPython REPL, with argument-vector parameters.</param>
+    /// <param name="title">The terminal tab title.</param>
+    /// <param name="cancellationToken">Stops the program and all its children.</param>
+    public async Task<ProcessExit> RunProgramAsync(ProcessStartSpec spec, string title, CancellationToken cancellationToken)
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        ArgumentNullException.ThrowIfNull(spec);
+        StopShell();
+        var process = _toolchains.Runtime.Start(spec with { Terminal = _size });
+        _process = process;
+        Message = null;
+        NeedsSetup = false;
+        IsRunning = true;
+        Title = title;
+        _ = ReadAsync(process);
+        _ = WatchAsync(process);
+        RequestFocus();
+        return await process.WaitAsync(cancellationToken);
+    }
+
     /// <summary>Sends a key, with the latched on-screen modifiers.</summary>
     /// <param name="key">The key.</param>
     /// <param name="modifiers">The modifiers held on the keyboard.</param>

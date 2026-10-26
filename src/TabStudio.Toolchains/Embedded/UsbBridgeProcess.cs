@@ -50,6 +50,41 @@ public static class UsbBridgeProcess
         return CreateSerial(connection, new ProcessStartSpec { Program = "python3", Arguments = ["-c", script, "{port}"] }, portAlias ?? "/tmp/tabstudio-touch-" + Guid.NewGuid().ToString("N"), 1200);
     }
 
+    /// <summary>Exercises the real native serial shim and PTY in Android CI using a synthetic loopback device.</summary>
+    /// <remarks>This validates transport and POSIX controls, not physical USB electrical behavior.</remarks>
+    public static ProcessStartSpec CreateVirtualSelfTest()
+    {
+        const string script = """
+            import array,fcntl,os,select,sys,termios,time,tty
+            fd=os.open(sys.argv[1],os.O_RDWR|os.O_NOCTTY)
+            tty.setraw(fd)
+            config=termios.tcgetattr(fd)
+            config[4]=config[5]=termios.B1200
+            config[2]|=termios.HUPCL
+            termios.tcsetattr(fd,termios.TCSANOW,config)
+            fcntl.ioctl(fd,termios.TIOCMSET,array.array('i',[termios.TIOCM_DTR|termios.TIOCM_RTS]))
+            bits=array.array('i',[0])
+            fcntl.ioctl(fd,termios.TIOCMGET,bits,True)
+            assert bits[0]&6==6
+            payload=b'\x00\xff\r\nTabStudio'
+            assert os.write(fd,payload)==len(payload)
+            termios.tcdrain(fd)
+            actual=b''
+            deadline=time.monotonic()+5
+            while len(actual)<len(payload):
+                assert time.monotonic()<deadline, 'Loopback timed out'
+                if select.select([fd],[],[],0.1)[0]: actual+=os.read(fd,len(payload)-len(actual))
+            assert actual==payload
+            os.close(fd)
+            print('EMBEDDED_BRIDGE_PASSED')
+            """;
+        return new ProcessStartSpec
+        {
+            Program = "python3",
+            Arguments = [UsbBridgeInstallation.ToolsDirectory + "/serial_bridge.py", "--virtual", "--shim", UsbBridgeInstallation.ToolsDirectory + "/serial-posix.so", "--port", "/tmp/tabstudio-bridge-test-" + Guid.NewGuid().ToString("N"), "--", "python3", "-c", script, "{port}"],
+        };
+    }
+
     private static ProcessStartSpec WithConnection(IUsbConnection connection, ProcessStartSpec command)
     {
         ArgumentNullException.ThrowIfNull(connection);

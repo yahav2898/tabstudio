@@ -253,6 +253,7 @@ public static partial class SelfTest
                 // Backing services run after the toolchains: they share the Alpine package database, and the check
                 // reopens the Python workspace that RunToolchainsAsync leaves for the Python tools check.
                 if (!await CheckAsync(() => RunToolchainsAsync(main, templates, cancellationToken))
+                    || !await CheckAsync(() => CheckEmbeddedBridgeAsync(main.Workspace!, cancellationToken))
                     || !await CheckAsync(() => RunServicesAsync(main, templates, cancellationToken))
                     || !await CheckAsync(() => CheckPythonToolsAsync(main, cancellationToken))
                     || !await CheckAsync(() => CheckListeningPortAsync(main, templates, cancellationToken))

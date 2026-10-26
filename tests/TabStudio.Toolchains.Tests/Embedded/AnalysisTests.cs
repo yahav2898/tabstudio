@@ -36,6 +36,18 @@ public sealed class AnalysisTests
     }
 
     [Fact]
+    public void Linux_host_executable_provides_real_elf_tables_without_a_cross_compiler()
+    {
+        if (!OperatingSystem.IsLinux()) return;
+        var executable = Environment.ProcessPath ?? throw new InvalidOperationException("No test host executable.");
+        var report = MemoryAnalyzer.AnalyzeElf(File.ReadAllBytes(executable));
+        Assert.True(report.FlashBytes > 0);
+        Assert.NotEmpty(report.Sections);
+        Assert.All(report.Sections, section => Assert.True(section.Size > 0));
+        Assert.Equal(new FirmwareMemoryDelta(0, 0), report.Compare(report));
+    }
+
+    [Fact]
     public void Corrupt_elf_tables_fail_before_allocating_or_indexing()
     {
         Assert.Throws<InvalidDataException>(() => MemoryAnalyzer.AnalyzeElf([0, 1, 2]));
@@ -228,15 +240,16 @@ public sealed class AnalysisTests
         W16(wide ? 52 : 40, (ushort)(wide ? 64 : 52));
         W16(wide ? 54 : 42, (ushort)(wide ? 56 : 32)); W16(wide ? 56 : 44, 2);
         W16(wide ? 58 : 46, (ushort)(wide ? 64 : 40)); W16(wide ? 60 : 48, 6); W16(wide ? 62 : 50, 5);
-        void Segment(int index, ulong vma, ulong lma, ulong fileSize, ulong memorySize)
+        void Segment(int index, ulong offset, ulong vma, ulong lma, ulong fileSize, ulong memorySize)
         {
             var p = (wide ? 64 : 52) + index * (wide ? 56 : 32);
             W32(p, 1);
+            Word(p + (wide ? 8 : 4), offset);
             Word(p + (wide ? 16 : 8), vma); Word(p + (wide ? 24 : 12), lma);
             Word(p + (wide ? 32 : 16), fileSize); Word(p + (wide ? 40 : 20), memorySize);
         }
-        Segment(0, 0x8000000, 0x8000000, 16, 16);
-        Segment(1, 0x20000000, 0x8000010, 8, 20);
+        Segment(0, 800, 0x8000000, 0x8000000, 16, 16);
+        Segment(1, 816, 0x20000000, 0x8000010, 8, 20);
         void Section(int index, uint name, uint type, ulong flags, ulong address, ulong offset, ulong size)
         {
             var p = (wide ? 256 : 128) + index * (wide ? 64 : 40);

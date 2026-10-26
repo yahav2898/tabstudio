@@ -88,6 +88,10 @@ public static class EmbeddedFlashExecutor
                     throw new InvalidDataException("Programmed flash readback differs from the firmware. The target was not reset or started.");
                 }
             }
+            if (await DigestAsync(plan.FirmwarePath, cancellationToken).ConfigureAwait(false) != digest)
+            {
+                throw new InvalidDataException("Firmware changed while an upload tool was running; success cannot be attributed to the validated input.");
+            }
             return new(digest, elapsed.Elapsed, completed);
         }
         finally

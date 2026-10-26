@@ -8,8 +8,125 @@ using System.Runtime.InteropServices;
 namespace TabStudio.Android;
 
 /// <summary>Android owns USB permission; Linux receives only the permitted connection's descriptor.</summary>
-internal sealed class AndroidUsbHost(Context context) : IUsbHost
+internal sealed class AndroidUsbHost(Context context) : IUsbHost, IUsbHotplugHost
 {
+    private readonly object _hotplugGate = new();
+    private EventHandler<UsbDeviceChangedEventArgs>? _devicesChanged;
+    private HotplugReceiver? _hotplugReceiver;
+    private Dictionary<string, UsbDeviceInfo> _knownDevices = new(StringComparer.Ordinal);
+
+    public event EventHandler<UsbDeviceChangedEventArgs>? DevicesChanged
+    {
+        add
+        {
+            if (value is null)
+            {
+                return;
+            }
+            lock (_hotplugGate)
+            {
+                if (_devicesChanged is null)
+                {
+                    StartHotplug();
+                }
+                _devicesChanged += value;
+            }
+        }
+        remove
+        {
+            lock (_hotplugGate)
+            {
+                _devicesChanged -= value;
+                if (_devicesChanged is null)
+                {
+                    StopHotplug();
+                }
+            }
+        }
+    }
+
+    private void StartHotplug()
+    {
+        _knownDevices = Devices.ToDictionary(device => device.Id, StringComparer.Ordinal);
+        var receiver = new HotplugReceiver(this);
+        using var filter = new IntentFilter();
+        filter.AddAction(UsbManager.ActionUsbDeviceAttached);
+        filter.AddAction(UsbManager.ActionUsbDeviceDetached);
+        try
+        {
+            if (OperatingSystem.IsAndroidVersionAtLeast(33))
+            {
+                context.RegisterReceiver(receiver, filter, ReceiverFlags.NotExported);
+            }
+            else
+            {
+#pragma warning disable CA1422 // The scoped receiver-flags overload was introduced in API 33.
+                context.RegisterReceiver(receiver, filter);
+#pragma warning restore CA1422
+            }
+            _hotplugReceiver = receiver;
+        }
+        catch
+        {
+            receiver.Dispose();
+            _knownDevices.Clear();
+            throw;
+        }
+    }
+
+    private void StopHotplug()
+    {
+        if (_hotplugReceiver is not { } receiver)
+        {
+            return;
+        }
+        _hotplugReceiver = null;
+        try
+        {
+            context.UnregisterReceiver(receiver);
+        }
+        finally
+        {
+            receiver.Dispose();
+            _knownDevices.Clear();
+        }
+    }
+
+    private void RefreshHotplug()
+    {
+        List<UsbDeviceChangedEventArgs> changes = [];
+        EventHandler<UsbDeviceChangedEventArgs>? listeners;
+        lock (_hotplugGate)
+        {
+            if (_hotplugReceiver is null || _devicesChanged is null)
+            {
+                return;
+            }
+            // The USB service's current list is authoritative; broadcast extras are never trusted.
+            var current = Devices.ToDictionary(device => device.Id, StringComparer.Ordinal);
+            foreach (var previous in _knownDevices.Values)
+            {
+                if (!current.TryGetValue(previous.Id, out var now) || now.VendorId != previous.VendorId || now.ProductId != previous.ProductId)
+                {
+                    changes.Add(new(previous, UsbDeviceChangeKind.Detached));
+                }
+            }
+            foreach (var device in current.Values)
+            {
+                if (!_knownDevices.TryGetValue(device.Id, out var previous) || previous.VendorId != device.VendorId || previous.ProductId != device.ProductId)
+                {
+                    changes.Add(new(device, UsbDeviceChangeKind.Attached));
+                }
+            }
+            _knownDevices = current;
+            listeners = _devicesChanged;
+        }
+        foreach (var change in changes)
+        {
+            listeners?.Invoke(this, change);
+        }
+    }
+
     private UsbManager Manager => (UsbManager?)context.GetSystemService(Context.UsbService)
         ?? throw new IOException("This Android device has no USB host service.");
 
@@ -88,6 +205,17 @@ internal sealed class AndroidUsbHost(Context context) : IUsbHost
 
         return new UsbDeviceInfo(device.DeviceName, device.VendorId, device.ProductId,
             device.ProductName ?? $"USB device {device.DeviceId}", interfaces);
+    }
+
+    private sealed class HotplugReceiver(AndroidUsbHost owner) : BroadcastReceiver
+    {
+        public override void OnReceive(Context? context, Intent? intent)
+        {
+            if (intent?.Action is UsbManager.ActionUsbDeviceAttached or UsbManager.ActionUsbDeviceDetached)
+            {
+                owner.RefreshHotplug();
+            }
+        }
     }
 
     private sealed class PermissionReceiver(string action) : BroadcastReceiver

@@ -2327,31 +2327,25 @@
         "C",
         "C++"
       ],
-      "listed": false,
+      "listed": true,
       "homepage": "https://gcc.gnu.org/",
-      "license": "GPL-3.0-or-later WITH GCC-exception-3.1",
+      "license": "MIT",
       "estimatedDownloadSize": 60000000,
       "estimatedInstalledSize": 300000000,
       "fileExtensions": [
-        ".c",
-        ".cpp",
-        ".h",
-        ".hpp",
-        ".s",
-        ".S"
+        ".py"
       ],
       "projectFiles": [
         ".micropython"
       ],
       "languageServer": {
-        "id": "clangd",
+        "id": "pyright",
         "command": [
-          "clangd",
-          "--background-index"
+          "pyright-langserver",
+          "--stdio"
         ],
         "languages": [
-          "c",
-          "cpp"
+          "python"
         ]
       },
       "problemPatterns": [
@@ -2361,14 +2355,10 @@
       ],
       "id": "micropython",
       "name": "MicroPython / CircuitPython",
-      "description": "MicroPython / CircuitPython project detection and native build plans; SDK installation and architecture validation are required before this entry can be offered in the Store.",
+      "description": "MicroPython and CircuitPython REPL and verified active-file synchronization with mpremote 1.26.1 through the permissioned USB serial bridge.",
       "packages": [
         "python3",
-        "git",
-        "cmake",
-        "make",
-        "ninja",
-        "clang-extra-tools"
+        "py3-pip"
       ],
       "versionPackage": "python3",
       "host": {
@@ -2376,7 +2366,7 @@
           "mpremote"
         ],
         "versionArguments": [
-          "--version"
+          "--help"
         ]
       },
       "run": {
@@ -2393,7 +2383,47 @@
             ]
           }
         ]
-      }
+      },
+      "pinnedVersion": "1.26.1",
+      "setup": [
+        {
+          "name": "mpremote Python environment",
+          "command": [
+            "python3",
+            "-m",
+            "venv",
+            "/opt/tabstudio/mpremote"
+          ]
+        },
+        {
+          "name": "mpremote verified dependency lock",
+          "file": {
+            "path": "/opt/tabstudio/mpremote.requirements.txt",
+            "content": "mpremote==1.26.1 --hash=sha256:39251644305be718c52bc5965315adc4ae824901750abf6a3fb63683234df05c\nplatformdirs==4.13.5 --hash=sha256:53d3ec4280b815c1e0b02edad7f9ee8fda1ba9c0865dd9c2e6e63849ce82fc1e\npyserial==3.5 --hash=sha256:c4451db6ba391ca6ca299fb3ec7bae67a5c55dde170964c7a14ceefec02f2cf0\n"
+          }
+        },
+        {
+          "name": "mpremote pinned wheels",
+          "command": [
+            "/opt/tabstudio/mpremote/bin/python",
+            "-m",
+            "pip",
+            "install",
+            "--only-binary=:all:",
+            "--require-hashes",
+            "-r",
+            "/opt/tabstudio/mpremote.requirements.txt"
+          ]
+        },
+        {
+          "name": "mpremote launcher",
+          "file": {
+            "path": "/usr/local/bin/mpremote",
+            "executable": true,
+            "content": "#!/bin/sh\nexec /opt/tabstudio/mpremote/bin/python -m mpremote \"$@\"\n"
+          }
+        }
+      ]
     },
     {
       "languages": [
@@ -2464,6 +2494,76 @@
             "file": ".uvprojx",
             "command": [
               "cmake",
+              "--version"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "listed": true,
+      "homepage": "https://gcc.gnu.org/",
+      "license": "GPL-3.0-or-later AND GPL-2.0-or-later",
+      "estimatedDownloadSize": 60000000,
+      "estimatedInstalledSize": 300000000,
+      "fileExtensions": [
+        ".c",
+        ".cpp",
+        ".h",
+        ".hpp",
+        ".s",
+        ".S"
+      ],
+      "projectFiles": [
+        ".tabstudio-embedded-debug"
+      ],
+      "languageServer": {
+        "id": "clangd",
+        "command": [
+          "clangd",
+          "--background-index"
+        ],
+        "languages": [
+          "c",
+          "cpp"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+):\\s*(?<severity>error|warning|note):\\s*(?<message>.*)$"
+        }
+      ],
+      "id": "embedded-debug",
+      "name": "Embedded GDB debugger",
+      "description": "OpenOCD and Python-enabled GDB multiarch DAP for halted-target debugging through a supported permissioned libusb probe.",
+      "packages": [
+        "openocd",
+        "gdb-multiarch",
+        "python3"
+      ],
+      "versionPackage": "gdb-multiarch",
+      "host": {
+        "commands": [
+          "gdb-multiarch"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "run": {
+        "file": [
+          "gdb-multiarch",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": ".tabstudio-embedded-debug",
+            "command": [
+              "gdb-multiarch",
               "--version"
             ]
           }

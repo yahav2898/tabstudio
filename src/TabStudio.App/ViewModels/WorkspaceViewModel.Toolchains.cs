@@ -113,6 +113,8 @@ public sealed partial class WorkspaceViewModel
 
     private void DisposeToolchains()
     {
+        DisposeEmbeddedAnalysis();
+        DisposeEmbeddedDebug();
         DisposeProjectSetup();
         DisposeStaticSite();
         DisposeToolchainServers();
@@ -196,7 +198,7 @@ public sealed partial class WorkspaceViewModel
 
         // A folder of scripts has no project file; the project is known by a name in its folder.
         FilePath = project.MarkerPath ?? Path.Combine(project.Directory, "." + project.Toolchain.Id),
-        Kind = project.Toolchain.Id switch
+        Kind = TabStudio.Toolchains.Embedded.Projects.EmbeddedProjectDetector.Read(project.Directory) is not null ? ProjectKind.EmbeddedFirmware : project.Toolchain.Id switch
         {
             "python" => ProjectKind.Python,
             "node" => ProjectKind.Node,
@@ -236,8 +238,10 @@ public sealed partial class WorkspaceViewModel
             var version = status.Version is { } v ? " " + v : string.Empty;
             report = report with
             {
-                Status = CompatibilityStatus.Ready,
-                Explanation = $"Runs with {toolchain.Name}{version} {source}, with its output in the Output panel and errors in the Error List.",
+                Status = item.Info.Kind == ProjectKind.EmbeddedFirmware ? CompatibilityStatus.NeedsToolchain : CompatibilityStatus.Ready,
+                Explanation = item.Info.Kind == ProjectKind.EmbeddedFirmware
+                    ? $"Build tools: {toolchain.Name}{version} {source}. Select the exact SDK/board and permissioned upload or debug transport; an installed compiler does not verify hardware support."
+                    : $"Runs with {toolchain.Name}{version} {source}, with its output in the Output panel and errors in the Error List.",
             };
         }
         else if (status.State == ToolchainState.Unavailable)
@@ -402,6 +406,35 @@ public sealed partial class WorkspaceViewModel
         }
 
         var project = item.Project;
+        if (TabStudio.Toolchains.Embedded.Projects.EmbeddedProjectDetector.Read(project.Directory) is { } embedded)
+        {
+            try
+            {
+                if (embedded.Kind == TabStudio.Toolchains.Embedded.Projects.EmbeddedProjectKind.MicroPython)
+                {
+                    await OpenMicroPythonReplAsync();
+                }
+                else if (File.Exists(Path.Combine(project.Directory, ".tabstudio", "embedded-flash.json")))
+                {
+                    await UploadEmbeddedAsync();
+                    if (State == IdeState.Ready && StatusText == "Firmware upload verified")
+                    {
+                        ShowSerialMonitor();
+                        if (_lastEmbeddedSerialDevice is { } id && SerialMonitor.Devices.FirstOrDefault(d => d.Id == id) is { } serial)
+                        {
+                            SerialMonitor.SelectedDevice = serial;
+                            _ = SerialMonitor.ConnectCommand.ExecuteAsync(null);
+                        }
+                    }
+                }
+                else
+                {
+                    await BuildEmbeddedCoreAsync(embedded);
+                }
+            }
+            catch (Exception error) when (IsEmbeddedError(error)) { EmbeddedFailure(error); }
+            return;
+        }
         if (MicrochipInstallation.IsCompiler(project.Toolchain.Id) && project.MarkerPath is { } marker)
         {
             _lastPicBuildSucceeded = false;

@@ -81,6 +81,10 @@ public static class EmbeddedFlashPlanner
     public static EmbeddedFlashPlan Plan(EmbeddedFlashRequest request)
     {
         ArgumentNullException.ThrowIfNull(request);
+        if (new FileInfo(request.FirmwarePath).Length is <= 0 or > 128 * 1024 * 1024)
+        {
+            throw new InvalidDataException("Firmware must contain 1 byte..128 MiB.");
+        }
         var imageBytes = File.ReadAllBytes(request.FirmwarePath);
         var actualRanges = FirmwareImageInspector.Inspect(imageBytes, Path.GetExtension(request.FirmwarePath), request.BinaryAddress);
         FlashSafety.ValidateFirmware(actualRanges, request.ApplicationFlash);
@@ -126,8 +130,8 @@ public static class EmbeddedFlashPlanner
                 }
                 Serial(request.SerialPort);
                 Add("esptool.py", "--chip", request.Target, "--port", request.SerialPort!, "--baud", request.BaudRate.ToString(CultureInfo.InvariantCulture),
-                    "write_flash", "0x" + address, firmware);
-                Add("esptool.py", "--chip", request.Target, "--port", request.SerialPort!, "verify_flash", "0x" + address, firmware);
+                    "--after", "no_reset", "write_flash", "0x" + address, firmware);
+                Add("esptool.py", "--chip", request.Target, "--port", request.SerialPort!, "--before", "no_reset", "--after", "hard_reset", "verify_flash", "0x" + address, firmware);
                 break;
             case EmbeddedFlashProtocol.Stm32Flash:
                 Serial(request.SerialPort);

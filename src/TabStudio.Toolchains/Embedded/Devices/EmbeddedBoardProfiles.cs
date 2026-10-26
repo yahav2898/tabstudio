@@ -16,7 +16,7 @@ public static class EmbeddedBoardProfiles
     public static IReadOnlyList<EmbeddedBoardProfile> All { get; } =
     [
         new("uno", "Arduino Uno", "uno", "arduino:avr:uno", "ATmega328P", "Optiboot, 115200 baud."),
-        new("nano", "Arduino Nano", "nanoatmega328", "arduino:avr:nano:cpu=atmega328", "ATmega328P", "Select old bootloader explicitly for clones that need it."),
+        new("nano", "Arduino Nano", "nanoatmega328new", "arduino:avr:nano:cpu=atmega328", "ATmega328P", "Select old bootloader explicitly for clones that need it."),
         new("mega", "Arduino Mega 2560", "megaatmega2560", "arduino:avr:mega:cpu=atmega2560", "ATmega2560", "STK500v2, 115200 baud."),
         new("leonardo", "Arduino Leonardo", "leonardo", "arduino:avr:leonardo", "ATmega32U4", "1200-baud touch; reacquire the bootloader device after re-enumeration."),
         new("micro", "Arduino Micro", "micro", "arduino:avr:micro", "ATmega32U4", "1200-baud touch; bootloader VID/PID may differ from the sketch."),

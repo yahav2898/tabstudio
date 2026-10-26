@@ -86,7 +86,7 @@ public static class RegisterAccess
 
     private static void ValidateValue(SvdField field, ulong value)
     {
-        if (field.BitWidth is < 1 or > 64 || field.BitOffset < 0 || field.BitOffset + field.BitWidth > 64)
+        if (field.BitWidth is < 1 or > 64 || field.BitOffset < 0 || field.BitOffset > 64 - field.BitWidth)
             throw new ArgumentException("Field range must fit 64 bits.", nameof(field));
         if (field.BitWidth < 64 && value >= 1UL << field.BitWidth)
             throw new ArgumentOutOfRangeException(nameof(value), "Value does not fit the field.");

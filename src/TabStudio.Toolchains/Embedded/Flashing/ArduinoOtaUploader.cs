@@ -26,6 +26,8 @@ public static class ArduinoOtaUploader
     public static string CreateAuthenticationResponse(string password, string nonce, string clientNonce, bool legacyMd5Password = false)
     {
         ArgumentNullException.ThrowIfNull(password);
+        ArgumentNullException.ThrowIfNull(nonce);
+        ArgumentNullException.ThrowIfNull(clientNonce);
         if (nonce.Length is not (32 or 64) || clientNonce.Length != nonce.Length || !nonce.All(Uri.IsHexDigit) || !clientNonce.All(Uri.IsHexDigit))
         {
             throw new InvalidDataException("ArduinoOTA requires matching 32- or 64-hex-digit challenge nonces.");
@@ -54,7 +56,7 @@ public static class ArduinoOtaUploader
         ArgumentNullException.ThrowIfNull(request);
         var timeout = operationTimeout ?? TimeSpan.FromSeconds(10);
         if (timeout < TimeSpan.FromSeconds(1) || timeout > TimeSpan.FromSeconds(60) || request.Target.Port is < 1 or > 65535 ||
-            IPAddress.IsLoopback(request.Target.Address) && request.Target.Port < 1024 || request.Target.Address.Equals(IPAddress.Any) || request.Target.Address.Equals(IPAddress.IPv6Any))
+            request.Target.Address.Equals(IPAddress.Any) || request.Target.Address.Equals(IPAddress.IPv6Any))
         {
             throw new ArgumentException("Select the board's Wi-Fi address, OTA port and a 1..60 second operation timeout.", nameof(request));
         }
@@ -131,7 +133,7 @@ public static class ArduinoOtaUploader
             }
             using var finalTimeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             finalTimeout.CancelAfter(timeout);
-            while (!finalText.ToString().Contains("OK", StringComparison.Ordinal))
+            while (!IsSuccessAcknowledgment(finalText.ToString()))
             {
                 var received = await connection.ReadAsync(acknowledgment, finalTimeout.Token).ConfigureAwait(false);
                 if (received == 0)
@@ -152,6 +154,17 @@ public static class ArduinoOtaUploader
         }
     }
 #pragma warning restore CA5351
+
+    private static bool IsSuccessAcknowledgment(string text)
+    {
+        var value = text.Trim();
+        if (!value.EndsWith("OK", StringComparison.Ordinal))
+        {
+            return false;
+        }
+        // A TCP read can coalesce decimal chunk acknowledgments and the final OK.
+        return value[..^2].All(c => char.IsAsciiDigit(c) || char.IsWhiteSpace(c));
+    }
 
     private static async Task<string> ReceiveUdpAsync(UdpClient udp, TimeSpan timeout, CancellationToken cancellationToken)
     {

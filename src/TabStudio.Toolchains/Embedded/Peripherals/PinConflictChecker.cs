@@ -76,7 +76,7 @@ public static class PinConflictChecker
     public static IReadOnlyList<PinAssignment> ReadArduino(string text, string file)
     {
         ArgumentNullException.ThrowIfNull(text);
-        var clean = RemoveComments(text);
+        var clean = RemoveComments(text, stripStrings: true);
         var constants = new Dictionary<string, string>(StringComparer.Ordinal);
         foreach (Match constant in Regex.Matches(clean,
             @"(?:#\s*define\s+|\b(?:const\s+)?(?:unsigned\s+)?(?:int|uint8_t|byte|constexpr\s+int)\s+)([A-Za-z_]\w*)\s*(?:=\s*)?(\d+|A\d+)\b", RegexOptions.CultureInvariant, RegexTimeout))
@@ -125,12 +125,12 @@ public static class PinConflictChecker
 
     private static string Normalize(string pin) => pin.Trim().ToUpperInvariant();
 
-    private static string RemoveComments(string text)
+    private static string RemoveComments(string text, bool stripStrings = false)
     {
         // Preserve every character position and newline so diagnostics still refer to the original source.
         return Regex.Replace(text, """/\*[\s\S]*?\*/|//[^\r\n]*|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'""", match =>
         {
-            if (match.Value.StartsWith('"') || match.Value.StartsWith('\'')) return match.Value;
+            if (!stripStrings && (match.Value.StartsWith('"') || match.Value.StartsWith('\''))) return match.Value;
             return new string(match.Value.Select(c => c is '\r' or '\n' ? c : ' ').ToArray());
         }, RegexOptions.CultureInvariant, RegexTimeout);
     }

@@ -26,6 +26,7 @@ public static class SvdReader
         var symbols = new Dictionary<string, XElement>(StringComparer.Ordinal);
         Collect(device.Element("peripherals"), "", symbols);
         var peripherals = new List<SvdPeripheral>();
+        var budget = new ExpansionBudget();
         var deviceSize = Integer(device, "size", 32);
         var deviceAccess = Text(device, "access") ?? "read-write";
         foreach (var source in device.Element("peripherals")?.Elements("peripheral") ?? [])
@@ -40,7 +41,7 @@ public static class SvdReader
             var registers = new List<SvdRegister>();
             AddRegisters(effective.Element("registers"), name, "", address,
                 Integer(effective, "size", deviceSize), Text(effective, "access") ?? deviceAccess,
-                symbols, registers);
+                symbols, registers, budget, 0);
             peripherals.Add(new(name, Description(effective), address, registers));
         }
         return new(Text(device, "name") ?? "Unnamed device", peripherals)
@@ -108,9 +109,10 @@ public static class SvdReader
     }
 
     private static void AddRegisters(XElement? container, string sourcePrefix, string displayPrefix, ulong baseAddress,
-        int parentSize, string parentAccess, IReadOnlyDictionary<string, XElement> symbols, List<SvdRegister> result)
+        int parentSize, string parentAccess, IReadOnlyDictionary<string, XElement> symbols, List<SvdRegister> result, ExpansionBudget budget, int depth)
     {
         if (container is null) return;
+        if (depth > 32) throw new FormatException("SVD cluster nesting exceeds its bound.");
         foreach (var original in container.Elements().Where(x => x.Name.LocalName is "register" or "cluster"))
         {
             var originalName = Required(original, "name");
@@ -118,6 +120,7 @@ public static class SvdReader
             var element = Resolve(original, sourcePath, symbols, new HashSet<string>(StringComparer.Ordinal));
             foreach (var (instanceName, increment) in Instances(element))
             {
+                if (++budget.Instances > 131072) throw new FormatException("SVD expands to too many cluster/register instances.");
                 if (result.Count >= MaximumInstances) throw new FormatException("SVD expands to too many registers.");
                 var address = checked(baseAddress + Number(Required(element, "addressOffset")) + increment);
                 var name = Join(displayPrefix, instanceName);
@@ -125,7 +128,7 @@ public static class SvdReader
                 var access = Text(element, "access") ?? parentAccess;
                 if (element.Name.LocalName == "cluster")
                 {
-                    AddRegisters(element, sourcePath, name, address, size, access, symbols, result);
+                    AddRegisters(element, sourcePath, name, address, size, access, symbols, result, budget, depth + 1);
                     continue;
                 }
                 if (size is < 1 or > 64) throw new FormatException($"Unsupported register width {size} at {sourcePath}.");
@@ -140,8 +143,9 @@ public static class SvdReader
                     var (offset, width) = BitRange(field);
                     foreach (var (fieldName, fieldIncrement) in Instances(field))
                     {
+                        if (++budget.Fields > 262144) throw new FormatException("SVD expands to too many fields.");
                         var bit = checked(offset + (int)fieldIncrement);
-                        if (width < 1 || bit < 0 || bit + width > size)
+                        if (width < 1 || width > size || bit < 0 || bit > size - width)
                             throw new FormatException($"Invalid field range at {fieldPath}.");
                         var values = new List<SvdEnumValue>();
                         foreach (var value in field.Elements("enumeratedValues").Elements("enumeratedValue"))
@@ -238,4 +242,10 @@ public static class SvdReader
     private static string? Text(XElement element, string name) => element.Element(name)?.Value.Trim();
     private static string Required(XElement element, string name) => Text(element, name) ?? throw new FormatException($"SVD {element.Name.LocalName} is missing {name}.");
     private static string Description(XElement element) => Text(element, "description") ?? "";
+
+    private sealed class ExpansionBudget
+    {
+        public int Instances { get; set; }
+        public int Fields { get; set; }
+    }
 }

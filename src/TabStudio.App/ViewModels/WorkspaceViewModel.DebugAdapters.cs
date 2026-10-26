@@ -931,6 +931,11 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
 
     private void RestartAdapter()
     {
+        if (_adapter?.Adapter.Id == "embedded-gdb")
+        {
+            _ = RestartEmbeddedDebugAsync();
+            return;
+        }
         if (_adapter?.Adapter.Id == "flutter")
         {
             _ = ReloadFlutterAsync(fullRestart: true);
@@ -989,6 +994,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         }
         _adapterRoot = null;
         _adapter = null;
+        if (session.Adapter.Id == "embedded-gdb") DisposeEmbeddedDebug();
         _adapterPauses++;
         _adapterCurrent = null;
         _adapterFrames = [];
@@ -1056,6 +1062,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         var root = _adapterRoot ?? _adapter;
         _adapterRoot = null;
         _adapter = null;
+        DisposeEmbeddedDebug();
         if (root is not null)
         {
             _ = root.DisposeAsync().AsTask();

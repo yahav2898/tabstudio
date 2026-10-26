@@ -75,6 +75,12 @@ public sealed partial class WorkspaceViewModel
 
         var project = item.Project;
         var toolchain = item.Toolchain;
+        if (TabStudio.Toolchains.Embedded.Projects.EmbeddedProjectDetector.Read(project.Directory) is not null)
+        {
+            if (File.Exists(Path.Combine(project.Directory, ".tabstudio", "embedded-debug.json"))) await DebugEmbeddedChipAsync();
+            else await RunToolchainProjectAsync(info);
+            return;
+        }
         if (TabStudio.Toolchains.Microchip.MicrochipInstallation.IsCompiler(toolchain.Id))
         {
             await DebugPicProjectAsync(info, start);

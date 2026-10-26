@@ -142,6 +142,9 @@ public static class StackDetector
             case ".MICROPYTHON":
                 yield return new StackComponent(StackKind.MicroPython, "MicroPython / CircuitPython", relativePath);
                 yield break;
+            case "TABSTUDIO-GCC.CMAKE":
+                yield return new StackComponent(StackKind.EmbeddedVendor, "Embedded GCC import", relativePath);
+                yield break;
             case "PYPROJECT.TOML" or "REQUIREMENTS.TXT" or "SETUP.PY" or "PIPFILE":
                 yield return new StackComponent(StackKind.Python, "Python", relativePath);
                 yield break;

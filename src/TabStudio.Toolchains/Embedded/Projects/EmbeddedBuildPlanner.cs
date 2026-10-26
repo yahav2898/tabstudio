@@ -29,6 +29,8 @@ public static class EmbeddedBuildPlanner
         EmbeddedProjectKind.PicoSdk => "pico-sdk",
         EmbeddedProjectKind.Rust => "rust",
         EmbeddedProjectKind.MicroPython => "micropython",
+        EmbeddedProjectKind.GccCMakeArm => "embedded-arm",
+        EmbeddedProjectKind.GccCMakeAvr => "embedded-avr",
         _ => "embedded-import",
     };
 
@@ -82,13 +84,13 @@ public static class EmbeddedBuildPlanner
             case EmbeddedProjectKind.PlatformIO:
             {
                 var environment = options.Environment ?? project.DefaultEnvironment
-                    ?? (project.Environments.Count == 1 ? project.Environments[0].Name : null);
+                    ?? (!project.HasNativeEnvironmentSelection && project.Environments.Count == 1 ? project.Environments[0].Name : null);
                 if (environment is not null)
                 {
                     ValidateToken(environment, "environment");
                     if (project.Environments.Count > 0 && !project.Environments.Any(e => e.Name == environment))
                     {
-                        throw new ArgumentException($"PlatformIO environment '{environment}' is not declared in platformio.ini.");
+                        notes.Add($"PlatformIO environment '{environment}' is not declared locally; Core resolves extra_configs and reports missing environments.");
                     }
                 }
                 var selection = environment is null ? Array.Empty<string>() : new[] { "--environment", environment };
@@ -114,19 +116,31 @@ public static class EmbeddedBuildPlanner
             }
             case EmbeddedProjectKind.Arduino:
             {
+                var sketchDirectory = project.Directory;
+                var library = project.Marker == "library.properties";
+                if (library)
+                {
+                    if (options.Sketch is null)
+                    {
+                        notes.Add("Set Sketch to a specific example directory inside the library; libraries are built through their examples.");
+                        break;
+                    }
+                    sketchDirectory = ArduinoExampleDirectory(project.Directory, options.Sketch);
+                }
                 if (options.Board is not { } fqbn)
                 {
                     notes.Add("Set board to the exact Arduino fully qualified board name (for example arduino:avr:uno).");
                     break;
                 }
-                var compilationArgs = new[] { "compile", "--fqbn", fqbn, "--build-path", buildDirectory, project.Directory };
-                preparation.Add(Command("arduino-cli", [.. compilationArgs[..^1], "--only-compilation-database", project.Directory]));
+                var libraryArgs = library ? new[] { "--library", project.Directory } : Array.Empty<string>();
+                string[] compilationArgs = ["compile", "--fqbn", fqbn, "--build-path", buildDirectory, .. libraryArgs, sketchDirectory];
+                preparation.Add(Command("arduino-cli", [.. compilationArgs[..^1], "--only-compilation-database", sketchDirectory]));
                 build.Add(Command("arduino-cli", compilationArgs));
                 compilationDatabase = Path.Combine(buildDirectory, "compile_commands.json");
                 if (options.Port is not null)
                 {
                     upload.Add(Command("arduino-cli", "upload", "--fqbn", fqbn, "--port", options.Port,
-                        "--input-dir", buildDirectory, project.Directory));
+                        "--input-dir", buildDirectory, sketchDirectory));
                 }
                 else
                 {
@@ -179,11 +193,11 @@ public static class EmbeddedBuildPlanner
                 var board = options.Board ?? project.Target;
                 if (board is null)
                 {
-                    notes.Add("Select the exact Pico SDK board (pico, pico_w, pico2, pico2_w or another SDK board).");
-                    break;
+                    notes.Add("Pico SDK selects the board from the project's native configuration/defaults. Select an explicit matching board before upload.");
                 }
-                preparation.Add(Command("cmake", "-S", project.Directory, "-B", buildDirectory,
-                    "-DPICO_BOARD=" + board, "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"));
+                var boardArgs = board is null ? Array.Empty<string>() : new[] { "-DPICO_BOARD=" + board };
+                preparation.Add(Command("cmake", ["-S", project.Directory, "-B", buildDirectory,
+                    .. boardArgs, "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"]));
                 build.Add(Command("cmake", "--build", buildDirectory, "--parallel", jobs));
                 compilationDatabase = Path.Combine(buildDirectory, "compile_commands.json");
                 if (options.Firmware is not null && options.Port is not null)
@@ -198,6 +212,8 @@ public static class EmbeddedBuildPlanner
                 break;
             }
             case EmbeddedProjectKind.Stm32Cube:
+            case EmbeddedProjectKind.GccCMakeArm:
+            case EmbeddedProjectKind.GccCMakeAvr:
             {
                 if (File.Exists(Path.Combine(project.Directory, "CMakeLists.txt")))
                 {
@@ -210,7 +226,7 @@ public static class EmbeddedBuildPlanner
                 {
                     build.Add(Command("make", "-j" + jobs));
                 }
-                notes.Add("Cube's generated build retains its linker script, CPU flags and startup. Select a chip/probe upload profile separately; an MCU family never implies a safe flash address.");
+                notes.Add("The generated build retains its linker script, CPU flags and startup. Select a chip/probe upload profile separately; an MCU family never implies a safe flash address.");
                 break;
             }
             case EmbeddedProjectKind.Rust:
@@ -287,5 +303,30 @@ public static class EmbeddedBuildPlanner
             throw new ArgumentException("Firmware must be a file path without control characters.", nameof(firmware));
         }
         return Path.GetFullPath(firmware, directory);
+    }
+
+    private static string ArduinoExampleDirectory(string directory, string sketch)
+    {
+        var example = Path.GetFullPath(sketch, directory);
+        var relative = Path.GetRelativePath(directory, example);
+        if (relative == ".." || relative.StartsWith(".." + Path.DirectorySeparatorChar, StringComparison.Ordinal)
+            || Path.IsPathRooted(relative) || !Directory.Exists(example))
+        {
+            throw new ArgumentException("Arduino Sketch must name an existing example directory inside the library.", nameof(sketch));
+        }
+        var cursor = directory;
+        foreach (var part in relative.Split(Path.DirectorySeparatorChar))
+        {
+            cursor = Path.Combine(cursor, part);
+            if ((File.GetAttributes(cursor) & FileAttributes.ReparsePoint) != 0)
+            {
+                throw new ArgumentException("Arduino example paths must not traverse symbolic links.", nameof(sketch));
+            }
+        }
+        if (!File.Exists(Path.Combine(example, Path.GetFileName(example) + ".ino")))
+        {
+            throw new ArgumentException("The selected Arduino example must contain a sketch matching its folder name.", nameof(sketch));
+        }
+        return example;
     }
 }

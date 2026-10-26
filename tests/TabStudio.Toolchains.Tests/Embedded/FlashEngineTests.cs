@@ -7,6 +7,8 @@ using TabStudio.Testing;
 using TabStudio.Toolchains.Embedded.Devices;
 using TabStudio.Toolchains.Embedded.Flashing;
 using TabStudio.Toolchains.Microchip;
+using TabStudio.Toolchains.Processes;
+using TabStudio.Toolchains.Runtimes;
 
 namespace TabStudio.Toolchains.Tests.Embedded;
 
@@ -72,6 +74,8 @@ public sealed class FlashEngineTests : IDisposable
         Assert.Throws<NotSupportedException>(() => FlashSafety.RequiredConfirmation(efuse));
         var rdp = new TargetConfigurationChange("stm", TargetConfigurationKind.ReadoutProtection, "RDP", 0xAA, 0xCC, false, "Permanent", 2);
         Assert.Throws<NotSupportedException>(() => FlashSafety.AuthorizeConfigurationChange(rdp, "CONFIRM"));
+        Assert.Throws<NotSupportedException>(() => FlashSafety.RequiredConfirmation(rdp with { Kind = TargetConfigurationKind.OptionBytes, ReadoutProtectionLevel = null }));
+        Assert.Throws<NotSupportedException>(() => FlashSafety.RequiredConfirmation(efuse with { Kind = TargetConfigurationKind.Fuses, Register = "EFUSE_SPI_BOOT_CRYPT_CNT" }));
     }
 
     [Fact]
@@ -240,7 +244,7 @@ public sealed class FlashEngineTests : IDisposable
         var results = await ProductionFlasher.RunAsync(jobs, path, parallelism: 2);
         Assert.InRange(peak, 1, 2);
         Assert.Equal(8, results.Count);
-        Assert.Single(results.Where(x => !x.Verified));
+        Assert.Single(results, x => !x.Verified);
         Assert.Equal(8, File.ReadAllLines(path).Length);
     }
 
@@ -277,7 +281,68 @@ public sealed class FlashEngineTests : IDisposable
         Assert.Equal(Convert.ToHexStringLower(SHA256.HashData(payload)), result.FirmwareSha256);
     }
 
-    private static async Task SimulateBoardAsync(UdpClient device, byte[] expected, bool authenticate, CancellationToken token)
+    [Fact]
+    public async Task Ota_rejected_final_response_never_reports_success()
+    {
+        byte[] payload = [1, 2, 3, 4];
+        var path = _temp.Resolve("rejected.bin");
+        File.WriteAllBytes(path, payload);
+        using var device = new UdpClient(new IPEndPoint(IPAddress.Loopback, 0));
+        using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+        var emulatedBoard = SimulateBoardAsync(device, payload, false, deadline.Token, accept: false);
+        await Assert.ThrowsAsync<IOException>(() => ArduinoOtaUploader.UploadAsync(new(path, (IPEndPoint)device.Client.LocalEndPoint!), cancellationToken: deadline.Token));
+        await emulatedBoard;
+    }
+
+    [Fact]
+    public void Readback_plan_cannot_disable_protection_and_requires_one_explicit_interval()
+    {
+        var request = Request(EmbeddedFlashProtocol.OpenOcd, "unused.bin") with
+        {
+            InterfaceConfig = "interface/stlink.cfg",
+            TargetConfig = "target/stm32f4x.cfg",
+        };
+        var plan = EmbeddedReadbackPlanner.Plan(request, _temp.Resolve("backup.bin"));
+        Assert.Equal("openocd", plan.Program);
+        Assert.Contains("dump_image", plan.Arguments[^1], StringComparison.Ordinal);
+        Assert.DoesNotContain("unlock", plan.CommandLine, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("erase", plan.CommandLine, StringComparison.OrdinalIgnoreCase);
+        Assert.Throws<InvalidOperationException>(() => EmbeddedReadbackPlanner.Plan(request with { ApplicationFlash = [] }, _temp.Resolve("backup.bin")));
+        Assert.Throws<NotSupportedException>(() => EmbeddedReadbackPlanner.Plan(request with { Protocol = EmbeddedFlashProtocol.Esptool }, _temp.Resolve("backup.bin")));
+    }
+
+    [Fact]
+    public async Task Executor_checks_firmware_stability_and_stops_after_the_first_failed_tool()
+    {
+        var image = _temp.Resolve("stable.bin");
+        File.WriteAllBytes(image, [1, 2, 3, 4]);
+        var digest = Convert.ToHexStringLower(SHA256.HashData(File.ReadAllBytes(image)));
+        var plan = new EmbeddedFlashPlan([new() { Program = "test-tool" }, new() { Program = "test-tool" }], false, "test-only", FirmwarePath: image, FirmwareSha256: digest);
+        var runtime = new FakeFlashRuntime(exitCode: 1);
+        await Assert.ThrowsAsync<IOException>(() => EmbeddedFlashExecutor.ExecuteAsync(runtime, plan));
+        Assert.Single(runtime.Started);
+        File.WriteAllBytes(image, [4, 3, 2, 1]);
+        runtime = new FakeFlashRuntime(exitCode: 0);
+        await Assert.ThrowsAsync<InvalidDataException>(() => EmbeddedFlashExecutor.ExecuteAsync(runtime, plan));
+        Assert.Empty(runtime.Started);
+    }
+
+    [Fact]
+    public async Task Executor_keeps_bridge_transform_and_never_runs_without_required_touch()
+    {
+        var image = _temp.Resolve("firmware.bin");
+        File.WriteAllBytes(image, [1]);
+        var plan = new EmbeddedFlashPlan([new() { Program = "test-tool" }], false, "test-only", FirmwarePath: image);
+        var runtime = new FakeFlashRuntime(exitCode: 0);
+        var result = await EmbeddedFlashExecutor.ExecuteAsync(runtime, plan, command => command with { Environment = new Dictionary<string, string?> { ["bridge"] = "selected-device" } });
+        Assert.Equal(1, result.StepsCompleted);
+        Assert.Equal("selected-device", Assert.Single(runtime.Started).Environment["bridge"]);
+        runtime = new FakeFlashRuntime(exitCode: 0);
+        await Assert.ThrowsAsync<InvalidOperationException>(() => EmbeddedFlashExecutor.ExecuteAsync(runtime, plan with { Touch1200Baud = true }));
+        Assert.Empty(runtime.Started);
+    }
+
+    private static async Task SimulateBoardAsync(UdpClient device, byte[] expected, bool authenticate, CancellationToken token, bool accept = true)
     {
         var invite = await device.ReceiveAsync(token);
         var fields = Encoding.ASCII.GetString(invite.Buffer).Trim().Split(' ');
@@ -301,7 +366,7 @@ public sealed class FlashEngineTests : IDisposable
         {
             var count = Math.Min(1024, bytes.Length - offset);
             await stream.ReadExactlyAsync(bytes.AsMemory(offset, count), token);
-            var response = count.ToString(System.Globalization.CultureInfo.InvariantCulture) + (offset + count == bytes.Length ? "OK" : string.Empty);
+            var response = count.ToString(System.Globalization.CultureInfo.InvariantCulture) + (offset + count == bytes.Length ? accept ? "OK" : "NOTOK" : string.Empty);
             await stream.WriteAsync(Encoding.ASCII.GetBytes(response), token);
         }
         Assert.Equal(expected, bytes);
@@ -344,6 +409,37 @@ public sealed class FlashEngineTests : IDisposable
         BinaryPrimitives.WriteUInt32LittleEndian(bytes.AsSpan(64), 0x08000000); // flash LMA
         BinaryPrimitives.WriteUInt32LittleEndian(bytes.AsSpan(68), 4);
         return bytes;
+    }
+
+    private sealed class FakeFlashRuntime(int exitCode) : IToolchainRuntime
+    {
+        public List<ProcessStartSpec> Started { get; } = [];
+        public string DisplayName => "Test runtime";
+        public RuntimeKind Kind => RuntimeKind.Host;
+        public ToolchainProcess Start(ProcessStartSpec spec)
+        {
+            Started.Add(spec);
+            return new ToolchainProcess(new FakeHandle(exitCode), spec);
+        }
+        public bool HasCommand(string command) => true;
+        public string? Resolve(string command) => command;
+        public ProcessStartSpec Shell(string workingDirectory, TerminalSize size) => throw new NotSupportedException();
+        public void ShareFolder(string folder) { }
+        public string? ToDevicePath(string programPath, string? workingDirectory) => programPath;
+    }
+
+    private sealed class FakeHandle(int exitCode) : IProcessHandle
+    {
+        public int Id => 1;
+        public bool IsTerminal => false;
+        public Stream Input { get; } = new MemoryStream();
+        public Stream Output { get; } = new MemoryStream("tool output"u8.ToArray());
+        public Stream? Error => null;
+        public Task<(int ExitCode, int? Signal)> WaitForExitAsync() => Task.FromResult<(int, int?)>((exitCode, null));
+        public void Resize(TerminalSize size) { }
+        public void CloseInput() { }
+        public void KillTree() { }
+        public void Dispose() { Input.Dispose(); Output.Dispose(); }
     }
 
     public void Dispose() => _temp.Dispose();

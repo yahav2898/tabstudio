@@ -38,6 +38,22 @@ public sealed partial class PromptViewModel : ObservableObject
     [ObservableProperty]
     public partial bool IsDestructive { get; private set; }
 
+    /// <summary>The password mask for a secret prompt, or zero for ordinary text.</summary>
+    [ObservableProperty]
+    public partial char PasswordCharacter { get; private set; }
+
+    private bool _allowEmptySecret;
+
+    /// <summary>Asks for a secret without trimming it; the prompt clears its copy when it closes.</summary>
+    public Task<string?> AskSecretAsync(string title, string message, string confirmText)
+    {
+        var answer = Open(title, message, confirmText, string.Empty, hasInput: true, destructive: false);
+        PasswordCharacter = '●';
+        _allowEmptySecret = true;
+        ConfirmCommand.NotifyCanExecuteChanged();
+        return answer;
+    }
+
     /// <summary>The text the user types.</summary>
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(ConfirmCommand))]
@@ -86,6 +102,8 @@ public sealed partial class PromptViewModel : ObservableObject
     {
         _answer?.TrySetResult(null);
         _answer = new TaskCompletionSource<string?>();
+        PasswordCharacter = default;
+        _allowEmptySecret = false;
         Title = title;
         Message = message;
         ConfirmText = confirmText;
@@ -106,16 +124,22 @@ public sealed partial class PromptViewModel : ObservableObject
     }
 
     [RelayCommand(CanExecute = nameof(CanConfirm))]
-    private void Confirm() => Close(HasChoices ? SelectedIndex.ToString(CultureInfo.InvariantCulture) : HasInput ? Text.Trim() : "confirmed");
+    private void Confirm() => Close(HasChoices ? SelectedIndex.ToString(CultureInfo.InvariantCulture) : HasInput ? PasswordCharacter == default ? Text.Trim() : Text : "confirmed");
 
     [RelayCommand]
     private void Cancel() => Close(null);
 
-    private bool CanConfirm() => HasChoices ? SelectedIndex >= 0 && SelectedIndex < Choices.Count : !HasInput || !string.IsNullOrWhiteSpace(Text);
+    private bool CanConfirm() => HasChoices ? SelectedIndex >= 0 && SelectedIndex < Choices.Count : !HasInput || _allowEmptySecret || !string.IsNullOrWhiteSpace(Text);
 
     private void Close(string? answer)
     {
         IsOpen = false;
+        if (PasswordCharacter != default)
+        {
+            Text = string.Empty;
+            PasswordCharacter = default;
+            _allowEmptySecret = false;
+        }
         var pending = _answer;
         _answer = null;
         pending?.TrySetResult(answer);

@@ -45,6 +45,9 @@ public sealed partial class SerialMonitorViewModel(ToolchainServices tools, IUiD
     [ObservableProperty]
     public partial bool IsConnected { get; private set; }
 
+    /// <summary>The active physical attachment, independent of selection changes in the monitor's device list.</summary>
+    public string? ConnectedDeviceId { get; private set; }
+
     /// <summary>Line to send, followed by LF.</summary>
     [ObservableProperty]
     public partial string Input { get; set; } = string.Empty;
@@ -73,6 +76,7 @@ public sealed partial class SerialMonitorViewModel(ToolchainServices tools, IUiD
             return;
         }
 
+        ConnectedDeviceId = device.Id;
         IsConnected = true;
         using var cancel = new CancellationTokenSource();
         _session = cancel;
@@ -103,6 +107,7 @@ public sealed partial class SerialMonitorViewModel(ToolchainServices tools, IUiD
         {
             _process = null;
             _session = null;
+            ConnectedDeviceId = null;
             IsConnected = false;
         }
     }

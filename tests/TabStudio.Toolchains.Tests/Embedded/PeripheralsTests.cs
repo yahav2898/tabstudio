@@ -90,6 +90,7 @@ public sealed class PeripheralsTests
 
     [Theory]
     [InlineData("clear", null)]
+    [InlineData("modify", null)]
     [InlineData(null, "oneToClear")]
     [InlineData(null, "zeroToSet")]
     public void Field_write_refuses_register_side_effects(string? readAction, string? writeAction)
@@ -153,11 +154,39 @@ public sealed class PeripheralsTests
             digitalWrite(LED_PIN, HIGH);
             pinMode(RELAY_PIN, OUTPUT);
             digitalRead(computedPin);
+            const char *example = "pinMode(99, OUTPUT)";
             """, "blink.ino");
         Assert.Equal(3, pins.Count);
         Assert.Equal(4, pins[0].Line);
         Assert.Equal(3, PinConflictChecker.Check(pins).Count);
         Assert.Empty(PinConflictChecker.Check(pins.Take(2)));
+    }
+
+    [Fact]
+    public void Peripheral_write_map_requires_exact_device_address_and_ordinary_register_names()
+    {
+        var policy = PeripheralAccessPolicy.Parse("""{"device":"Test","ordinaryRegisters":[{"name":"GPIO.MODER","address":1073741824,"sizeBits":32}]}""");
+        var register = new SvdRegister("MODER", "", 0x40000000, 32, "read-write", null, null, null, []);
+        var peripheral = new SvdPeripheral("GPIO", "", 0x40000000, [register]);
+        policy.AuthorizeOrdinaryWrite(new("Test", [peripheral]), peripheral, register);
+        Assert.Throws<InvalidOperationException>(() => policy.AuthorizeOrdinaryWrite(new("OtherChip", [peripheral]), peripheral, register));
+        Assert.Throws<InvalidOperationException>(() => policy.AuthorizeOrdinaryWrite(new("Test", [peripheral]), peripheral, register with { Address = 0x50000000 }));
+        Assert.Throws<InvalidDataException>(() => PeripheralAccessPolicy.Parse("""{"device":"Test","ordinaryRegisters":[{"name":"FLASH.OPTCR","address":1073741824,"sizeBits":32}]}"""));
+        Assert.Throws<InvalidDataException>(() => PeripheralAccessPolicy.Parse("""{"device":"Test","ordinaryRegisters":[{"name":"GPIO.MODER","address":1073741825,"sizeBits":32}]}"""));
+    }
+
+    [Fact]
+    public void Register_lookup_only_matches_exact_literal_peripheral_and_register_under_the_caret()
+    {
+        var device = SvdReader.Parse(Wrap("<register><name>CTRL</name><description>Clock control</description><addressOffset>0</addressOffset></register>"));
+        const string source = "void f() {\n  P -> CTRL = 1;\n}";
+        var offset = source.IndexOf("CTRL", StringComparison.Ordinal);
+        var match = Assert.IsType<SvdRegisterReference>(SvdRegisterLookup.FindReference(device, source, offset + 2));
+        Assert.Equal(offset, match.Start);
+        Assert.Equal(4, match.Length);
+        Assert.Equal("Clock control", match.Register.Description);
+        Assert.Null(SvdRegisterLookup.FindReference(device, source.Replace("P ->", "pointer ->", StringComparison.Ordinal), offset));
+        Assert.Null(SvdRegisterLookup.FindReference(device, source, 0));
     }
 
     private static string Wrap(string registers) => "<device><name>Test</name><peripherals><peripheral><name>P</name><baseAddress>0x40000000</baseAddress><registers>" + registers + "</registers></peripheral></peripherals></device>";

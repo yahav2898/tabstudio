@@ -124,6 +124,54 @@ public sealed class ToolchainServices : IDisposable
     /// <summary>The Linux environment on Android, or <see langword="null"/> on a desktop computer.</summary>
     public AlpineEnvironment? Environment { get; }
 
+    /// <summary>Installs permissioned libusb and POSIX serial bridges without installing a compiler.</summary>
+    /// <param name="line">Package and native compilation output.</param>
+    /// <param name="cancellationToken">Stops installation and compilation.</param>
+    public Task PrepareEmbeddedSupportAsync(Action<string> line, CancellationToken cancellationToken) =>
+        Manager.ConfigureRuntimeAsync(async token =>
+        {
+            if (Environment is not { } environment || _packages is null)
+            {
+                throw new NotSupportedException("USB-OTG requires the Android Linux environment.");
+            }
+
+            var packages = TabStudio.Toolchains.Embedded.UsbBridgeInstallation.Packages;
+            if (packages.Any(name => _packages.Installed.Find(name) is null))
+            {
+                var plan = await _packages.PlanInstallAsync(packages, token).ConfigureAwait(false);
+                await _packages.DownloadAsync(plan, (_, package) => line("Downloading " + package.Name), token).ConfigureAwait(false);
+                await _packages.InstallAsync(packages, upgrade: false, line, token).ConfigureAwait(false);
+            }
+
+            var sources = TabStudio.Toolchains.Embedded.UsbBridgeInstallation.SupportFiles;
+            var fingerprint = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(
+                string.Join('\n', sources.Select(source => source.Key + "\n" + source.Value)) +
+                string.Join('\n', TabStudio.Toolchains.Embedded.UsbBridgeInstallation.BuildCommands.Select(command => command.CommandLine)))));
+            var stamp = Path.Combine(environment.Rootfs, TabStudio.Toolchains.Embedded.UsbBridgeInstallation.ToolsDirectory.TrimStart('/'), ".bridge-build.sha256");
+            var rebuild = !File.Exists(stamp) || await File.ReadAllTextAsync(stamp, token).ConfigureAwait(false) != fingerprint;
+            foreach (var source in sources)
+            {
+                var destination = Path.Combine(environment.Rootfs, TabStudio.Toolchains.Embedded.UsbBridgeInstallation.ToolsDirectory.TrimStart('/'), source.Key);
+                Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
+                if (!File.Exists(destination) || await File.ReadAllTextAsync(destination, token).ConfigureAwait(false) != source.Value)
+                {
+                    await File.WriteAllTextAsync(destination, source.Value, token).ConfigureAwait(false);
+                    rebuild = true;
+                }
+            }
+
+            rebuild |= TabStudio.Toolchains.Embedded.UsbBridgeInstallation.BuildCommands.Any(command =>
+                !File.Exists(Path.Combine(environment.Rootfs, command.Arguments[9].TrimStart('/'))));
+            if (rebuild) File.Delete(stamp);
+            foreach (var command in TabStudio.Toolchains.Embedded.UsbBridgeInstallation.BuildCommands)
+            {
+                if (!rebuild) continue;
+                var result = await TabStudio.Toolchains.Processes.CommandRunner.RunAsync(Runtime, command, line, token).ConfigureAwait(false);
+                if (!result.Succeeded) throw new IOException("Could not build the embedded USB bridge: " + result.Tail());
+            }
+            await File.WriteAllTextAsync(stamp, fingerprint, token).ConfigureAwait(false);
+        }, cancellationToken);
+
     /// <summary>Retrieves Microchip's terms for the Store's explicit acceptance dialog.</summary>
     /// <param name="cancellationToken">Cancels the request.</param>
     public async Task<string> ReadMicrochipLicenseAsync(CancellationToken cancellationToken)

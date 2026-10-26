@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.Json.Serialization;
 
 namespace TabStudio.Toolchains.Embedded.Flashing;
 
@@ -8,6 +9,7 @@ namespace TabStudio.Toolchains.Embedded.Flashing;
 public readonly record struct FlashAddressRange(ulong Start, ulong Length)
 {
     /// <summary>First address after the range, checked for overflow.</summary>
+    [JsonIgnore]
     public ulong End => checked(Start + Length);
 
     /// <summary>Whether this non-empty interval contains the whole other interval.</summary>
@@ -68,16 +70,18 @@ public static class FlashSafety
         ArgumentException.ThrowIfNullOrWhiteSpace(change.DeviceIdentity);
         ArgumentException.ThrowIfNullOrWhiteSpace(change.Register);
         ArgumentException.ThrowIfNullOrWhiteSpace(change.Consequence);
-        if (change.Kind == TargetConfigurationKind.Efuses)
+        if (change.Kind == TargetConfigurationKind.Efuses || change.Register.Contains("EFUSE", StringComparison.OrdinalIgnoreCase))
         {
             throw new NotSupportedException("TabStudio refuses eFuse burning.");
         }
+        var readoutProtection = change.Kind == TargetConfigurationKind.ReadoutProtection ||
+            change.Register.Contains("RDP", StringComparison.OrdinalIgnoreCase) || change.Register.Contains("READOUT", StringComparison.OrdinalIgnoreCase);
         if (change.ReadoutProtectionLevel >= 2 ||
-            change.Kind == TargetConfigurationKind.ReadoutProtection && change.NewValue is 2 or 0xCC)
+            readoutProtection && change.NewValue is 2 or 0xCC)
         {
             throw new NotSupportedException("TabStudio refuses permanent readout protection (RDP level 2).");
         }
-        if (change.Kind == TargetConfigurationKind.ReadoutProtection && change.ReadoutProtectionLevel is not (0 or 1))
+        if (readoutProtection && change.ReadoutProtectionLevel is not (0 or 1))
         {
             throw new InvalidOperationException("An explicit reversible readout-protection level is required.");
         }

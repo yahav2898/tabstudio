@@ -84,7 +84,16 @@ public static class EmbeddedProjectDetector
             return ReadPlatformIO(directory);
         }
 
-        var cmake = Text(Path.Combine(directory, "CMakeLists.txt"));
+        var cmake = string.Join('\n', Text(Path.Combine(directory, "CMakeLists.txt")).Split('\n')
+            .Where(line => !line.TrimStart().StartsWith('#')));
+        var importedToolchain = Text(Path.Combine(directory, "tabstudio-gcc.cmake"));
+        if (cmake.Contains("tabstudio-gcc.cmake", StringComparison.Ordinal) && importedToolchain.Length > 0)
+        {
+            var kind = importedToolchain.Contains("avr-gcc", StringComparison.Ordinal)
+                ? EmbeddedProjectKind.GccCMakeAvr : EmbeddedProjectKind.GccCMakeArm;
+            return Project(kind, directory, "CMakeLists.txt",
+                notes: ["Review IMPORT.md and import-notes.json, supply the exact startup/linker/device settings, then build. Imported firmware never runs as a tablet executable."]);
+        }
         if (cmake.Contains("idf.cmake", StringComparison.Ordinal)
             || cmake.Contains("$ENV{IDF_PATH}", StringComparison.Ordinal))
         {
@@ -107,6 +116,11 @@ public static class EmbeddedProjectDetector
         }
 
         var files = Directory.EnumerateFiles(directory).Order(StringComparer.Ordinal).ToArray();
+        if (File.Exists(Path.Combine(directory, "library.properties")))
+        {
+            return Project(EmbeddedProjectKind.Arduino, directory, "library.properties",
+                notes: ["Select an example sketch under this Arduino library, or set Sketch in .tabstudio/embedded.json."]);
+        }
         if (files.FirstOrDefault(f => f.EndsWith(".ioc", StringComparison.OrdinalIgnoreCase)) is { } cube)
         {
             var values = ReadProperties(Text(cube));
@@ -172,17 +186,25 @@ public static class EmbeddedProjectDetector
                 s.Value.GetValueOrDefault("framework") ?? shared.GetValueOrDefault("framework"))).ToArray();
         var defaults = sections.GetValueOrDefault("platformio")?.GetValueOrDefault("default_envs")
             ?.Split([',', '\n', ' ', '\t'], StringSplitOptions.RemoveEmptyEntries);
-        var defaultEnvironment = defaults is { Length: 1 } ? defaults[0] : null;
+        var defaultEnvironment = defaults is { Length: 1 } && !defaults[0].Contains("${", StringComparison.Ordinal) ? defaults[0] : null;
         var notes = new List<string>();
         if (defaults is { Length: > 1 })
         {
             notes.Add("platformio.ini declares multiple default environments; select one to upload one board.");
         }
+        if (defaults?.Any(value => value.Contains("${", StringComparison.Ordinal)) == true)
+        {
+            notes.Add("PlatformIO resolves interpolated default environments itself; select a concrete environment before upload.");
+        }
         if (environments.Length == 0)
         {
             notes.Add("No local [env:name] section; PlatformIO may supply environments through extra_configs.");
         }
-        return new EmbeddedProject(EmbeddedProjectKind.PlatformIO, directory, "platformio.ini", environments, defaultEnvironment, null, notes);
+        return new EmbeddedProject(EmbeddedProjectKind.PlatformIO, directory, "platformio.ini", environments, defaultEnvironment, null, notes)
+        {
+            HasNativeEnvironmentSelection = defaults is { Length: > 0 }
+                || sections.GetValueOrDefault("platformio")?.ContainsKey("extra_configs") == true,
+        };
     }
 
     internal static Dictionary<string, Dictionary<string, string>> ReadIni(string text)

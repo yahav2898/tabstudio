@@ -496,6 +496,13 @@
         "console": "integratedTerminal"
       }
     },
+    "embedded-gdb": {
+      "name": "On-chip GDB (OpenOCD)",
+      "languages": [],
+      "command": "gdb-multiarch",
+      "args": [ "--quiet", "--nx", "--interpreter=dap" ],
+      "package": "embedded-debug"
+    },
     "gpsim": {
       "name": "PIC18 simulator (gpsim)",
       "languages": [

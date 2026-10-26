@@ -66,7 +66,7 @@ public static partial class MemoryAnalyzer
 {
     private sealed record Section(uint Name, uint Type, ulong Flags, ulong Address, ulong Offset,
         ulong Size, uint Link, ulong EntrySize);
-    private sealed record Segment(ulong Address, ulong Physical, ulong FileSize, ulong MemorySize);
+    private sealed record Segment(ulong Offset, ulong Address, ulong Physical, ulong FileSize, ulong MemorySize);
 
     /// <summary>Analyzes ET_EXEC/ET_DYN allocated sections; malformed tables and overflow are rejected.</summary>
     public static FirmwareMemoryReport AnalyzeElf(ReadOnlySpan<byte> image,
@@ -120,11 +120,12 @@ public static partial class MemoryAnalyzer
             var p = checked(phoff + (ulong)i * phsize);
             if (U32(image, p, little) != 1) continue;
             var segment = wide
-                ? new Segment(U64(image, p + 16, little), U64(image, p + 24, little), U64(image, p + 32, little), U64(image, p + 40, little))
-                : new Segment(U32(image, p + 8, little), U32(image, p + 12, little), U32(image, p + 16, little), U32(image, p + 20, little));
+                ? new Segment(U64(image, p + 8, little), U64(image, p + 16, little), U64(image, p + 24, little), U64(image, p + 32, little), U64(image, p + 40, little))
+                : new Segment(U32(image, p + 4, little), U32(image, p + 8, little), U32(image, p + 12, little), U32(image, p + 16, little), U32(image, p + 20, little));
             if (segment.Address > ulong.MaxValue - segment.MemorySize || segment.Physical > ulong.MaxValue - segment.MemorySize)
                 throw new InvalidDataException("Segment address overflow.");
             if (segment.FileSize > segment.MemorySize) throw new InvalidDataException("ELF load file size exceeds memory size.");
+            Need(image, segment.Offset, segment.FileSize);
             segments.Add(segment);
         }
         var names = sections[namesIndex];
@@ -141,7 +142,9 @@ public static partial class MemoryAnalyzer
             var fileSize = s.Type == 8 ? 0 : s.Size;
             if (fileSize != 0)
             {
-                var segment = segments.FirstOrDefault(p => s.Address >= p.Address && s.Address - p.Address <= p.FileSize && fileSize <= p.FileSize - (s.Address - p.Address));
+                var segment = segments.FirstOrDefault(p => s.Address >= p.Address && s.Address - p.Address <= p.FileSize
+                    && s.Offset >= p.Offset && s.Offset - p.Offset == s.Address - p.Address
+                    && fileSize <= p.FileSize - (s.Address - p.Address));
                 load = segment is null ? s.Address : checked(segment.Physical + s.Address - segment.Address);
             }
             allocated.Add(i, new(name, s.Address, load, s.Size, fileSize, ram, region?.Name));
@@ -154,6 +157,8 @@ public static partial class MemoryAnalyzer
             var minimum = wide ? 24u : 16u;
             if (table.EntrySize < minimum || table.Size % table.EntrySize != 0)
                 throw new InvalidDataException("Invalid symbol entry size.");
+            if (table.Size / table.EntrySize > 262_144)
+                throw new InvalidDataException("ELF exceeds the 262,144-symbol analysis limit.");
             string? source = null;
             for (ulong at = 0; at < table.Size; at += table.EntrySize)
             {

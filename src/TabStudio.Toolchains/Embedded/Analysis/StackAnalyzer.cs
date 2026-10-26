@@ -85,6 +85,7 @@ public static partial class StackAnalyzer
         FunctionStackBound Walk(string function)
         {
             if (cache.TryGetValue(function, out var cached)) return cached;
+            if (visiting.Count >= 512) return new(function, null, 0, ["Call graph exceeds the 512-frame analysis depth limit."]);
             if (!visiting.Add(function)) return new(function, null, 0, ["Recursive call cycle has no configured recursion bound."]);
             var reasons = new HashSet<string>(StringComparer.Ordinal);
             ulong own = 0;

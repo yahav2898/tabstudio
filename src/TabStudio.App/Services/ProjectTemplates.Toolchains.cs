@@ -45,6 +45,7 @@ public sealed partial class ProjectTemplates
     /// <summary>The installed-language and web/mobile templates, for the start screen.</summary>
     private static ProjectTemplate[] ToolchainTemplates =>
     [
+        .. EmbeddedTemplates,
         new(PythonId, "Python Application", "A Python program that reads input and prints in the Output panel, run with Python from the Toolchain Store.", ["Python", "Console"]),
         new(NodeId, "Node.js Console App", "A JavaScript program for Node.js that reads input and prints in the Output panel, run with Node.js from the Toolchain Store.", ["JavaScript", "Node.js", "Console"]),
         new(Pic18Id, "PIC18 Blink (XC8)", "PIC18F14K22, 16 MHz internal oscillator, LED on RC0. Builds with XC8 and simulates with gpsim on a 64-bit tablet.", ["C", "Microchip", "PIC18"]),
@@ -68,6 +69,11 @@ public sealed partial class ProjectTemplates
     /// <returns>The folder, or <see langword="null"/> when the template is not a toolchain one.</returns>
     private static string? CreateToolchainProject(string templateId, string root, string name)
     {
+        if (CreateEmbeddedProject(templateId, root, name) is { } embedded)
+        {
+            return embedded;
+        }
+
         switch (templateId)
         {
             case AndroidId:

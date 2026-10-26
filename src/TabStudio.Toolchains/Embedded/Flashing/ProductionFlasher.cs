@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Text.Json;
+using TabStudio.Toolchains.Processes;
 
 namespace TabStudio.Toolchains.Embedded.Flashing;
 
@@ -55,7 +56,7 @@ public static class ProductionFlasher
             {
                 result = new(job.DeviceIdentity, DateTimeOffset.UtcNow, false, null, "Cancelled; verification not completed.");
             }
-            catch (Exception exception) when (exception is IOException or InvalidOperationException or ArgumentException or NotSupportedException)
+            catch (Exception exception) when (exception is IOException or InvalidOperationException or ArgumentException or NotSupportedException or ToolchainRuntimeException)
             {
                 result = new(job.DeviceIdentity, DateTimeOffset.UtcNow, false, null, exception.Message);
             }

@@ -37,7 +37,7 @@ public sealed record SvdRegister(string Name, string Description, ulong Address,
 /// <param name="Access">Effective access inherited from its register.</param>
 /// <param name="ModifiedWriteValues">Effective write side effect.</param>
 /// <param name="ReadAction">Effective read side effect.</param>
-/// <param name="Values">Enumerated values. Wildcard enumerations are retained in the description, not guessed.</param>
+/// <param name="Values">Concrete enumerated values. Wildcard/default enumerations are not guessed as numeric values.</param>
 public sealed record SvdField(string Name, string Description, int BitOffset, int BitWidth, string Access,
     string? ModifiedWriteValues, string? ReadAction, IReadOnlyList<SvdEnumValue> Values)
 {

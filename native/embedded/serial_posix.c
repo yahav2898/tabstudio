@@ -187,8 +187,10 @@ int tcsetattr(int fd, int action, const struct termios *attributes) {
     if (!serial_fd(fd)) return fn(fd, action, attributes);
     if (!attributes) { errno = EFAULT; return -1; }
     if (action != TCSANOW && action != TCSADRAIN && action != TCSAFLUSH) { errno = EINVAL; return -1; }
+    speed_t input = cfgetispeed(attributes), output = cfgetospeed(attributes);
+    if (input != B0 && input != output) { errno = ENOTSUP; return -1; }
     if (action != TCSANOW && rpc(TS_DRAIN, 0, 0, 0, 0, NULL) < 0) return -1;
-    if (configure(attributes->c_cflag, baud_value(cfgetospeed(attributes))) < 0) return -1;
+    if (configure(attributes->c_cflag, baud_value(output)) < 0) return -1;
     struct termios local = *attributes;
     local.c_cflag = coding(local.c_cflag, 8, 1, 0) | CREAD | CLOCAL;
     if (cfsetispeed(&local, B38400) < 0 || cfsetospeed(&local, B38400) < 0) return -1;

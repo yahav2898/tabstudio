@@ -89,6 +89,7 @@ class SerialBridge:
         self.stop = threading.Event()
         self.control_lock = threading.Lock()
         self.tx_lock = threading.Lock()
+        self.tx_deadline = 0.0
         self.error = None
         self.directory = tempfile.TemporaryDirectory(prefix="ts-serial-")
         # FIFOs work in Android app storage and need no socket permission. The
@@ -139,21 +140,29 @@ class SerialBridge:
                         count = self.serial.write(data)
                         if count != len(data):
                             raise OSError(errno.EIO, "Short USB serial write")
+                        # A completed bulk OUT means accepted by the USB UART,
+                        # not necessarily shifted onto its wire. There is no
+                        # portable CDC query for transmitter-empty. Preserve a
+                        # conservative wire-time budget before tcdrain returns
+                        # or a TCSADRAIN baud change is acknowledged.
+                        frame_bits = 1 + self.serial.data_bits + self.serial.stop_bits + bool(self.serial.parity)
+                        self.tx_deadline = max(self.tx_deadline, time.monotonic()) + len(data) * frame_bits / self.serial.baud
         except OSError as error:
             if not self.stop.is_set():
                 self.fail(error)
 
     def drain(self):
-        deadline = time.monotonic() + 5
+        deadline = time.monotonic() + 60
         while not self.stop.is_set():
             with self.tx_lock:
                 pending = array.array("i", [0])
                 fcntl.ioctl(self.master, termios.FIONREAD, pending, True)
-                if not pending[0]:
+                delay = self.tx_deadline - time.monotonic()
+                if not pending[0] and delay <= 0:
                     return
             if time.monotonic() >= deadline:
                 raise OSError(errno.ETIMEDOUT, "Serial output did not drain")
-            self.stop.wait(0.001)
+            self.stop.wait(min(max(delay, 0.001), 0.05))
         raise OSError(errno.ENODEV, "Serial device disconnected")
 
     def dispatch(self, request):

@@ -51,7 +51,7 @@ public sealed record EmbeddedTestResult(string BoardId, EmbeddedTestFormat Forma
 }
 
 /// <summary>Parses a single board's decoded test stream. Binary RTT/defmt decoding remains the debugger's job.</summary>
-public sealed class EmbeddedTestStream
+public sealed class EmbeddedTestOutputParser
 {
     private const int MaxLineLength = 64 * 1024;
     private static readonly TimeSpan RegexTimeout = TimeSpan.FromSeconds(1);
@@ -75,13 +75,18 @@ public sealed class EmbeddedTestStream
     private bool _harnessCompleted;
     private bool _badSequence;
     private int _rustBatchCount;
+    private int _unityBatchCount;
 
     /// <summary>Creates a parser for exactly one device or host stream.</summary>
     /// <param name="boardId">The device identity, stable for the test run.</param>
     /// <param name="format">The emitted format. GoogleTest uses <see cref="EmbeddedTestXml.ReadGoogleTest"/> instead.</param>
-    public EmbeddedTestStream(string boardId, EmbeddedTestFormat format)
+    public EmbeddedTestOutputParser(string boardId, EmbeddedTestFormat format)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(boardId);
+        if (!Enum.IsDefined(format))
+        {
+            throw new ArgumentException("Unknown embedded test format.", nameof(format));
+        }
         if (format == EmbeddedTestFormat.GoogleTest)
         {
             throw new ArgumentException("GoogleTest XML is parsed as a complete report.", nameof(format));
@@ -150,7 +155,7 @@ public sealed class EmbeddedTestStream
         {
             Add(name, EmbeddedTestOutcome.Errored, "The Rust test started but no completion event was received.");
         }
-        if (_format == EmbeddedTestFormat.Unity && (!_harnessCompleted || _expected != _results.Count))
+        if (_format == EmbeddedTestFormat.Unity && !_harnessCompleted)
         {
             Add("[harness]", EmbeddedTestOutcome.Errored, "Unity's final summary was missing or did not match the received results.");
         }
@@ -177,7 +182,8 @@ public sealed class EmbeddedTestStream
         }
         if (_results.Count == 0)
         {
-            Add("[harness]", EmbeddedTestOutcome.Errored, "No individual test results were received.");
+            Add("[harness]", _expected == 0 ? EmbeddedTestOutcome.Skipped : EmbeddedTestOutcome.Errored,
+                _expected == 0 ? "The harness declared zero tests." : "No individual test results were received.");
         }
         return _results;
     }
@@ -190,6 +196,11 @@ public sealed class EmbeddedTestStream
             _harnessCompleted = true;
             _expected = int.TryParse(summary.Groups["count"].Value, NumberStyles.None, CultureInfo.InvariantCulture, out var count)
                 ? count : throw new InvalidDataException("Invalid Unity test count.");
+            if (_expected != _unityBatchCount)
+            {
+                Add("[harness]", EmbeddedTestOutcome.Errored, "Unity's summary did not match the received individual results.");
+            }
+            _unityBatchCount = 0;
             return;
         }
         var match = UnityLine.Match(line);
@@ -203,6 +214,8 @@ public sealed class EmbeddedTestStream
             "FAIL" => EmbeddedTestOutcome.Failed,
             _ => EmbeddedTestOutcome.Skipped,
         };
+        _unityBatchCount++;
+        _harnessCompleted = false;
         var number = int.TryParse(match.Groups["line"].Value, NumberStyles.None, CultureInfo.InvariantCulture, out var parsed) && parsed > 0 ? (int?)parsed : null;
         _results.Add(new(_boardId, _format, match.Groups["name"].Value, outcome,
             Optional(match.Groups["message"].Value), match.Groups["file"].Value, number));
@@ -348,6 +361,11 @@ public sealed class EmbeddedTestStream
                 _defmtCurrent = match.Groups["name"].Value;
             }
         }
+        else if (line.Contains("test failed with outcome:", StringComparison.Ordinal) && _defmtCurrent is not null)
+        {
+            Add(_defmtCurrent, EmbeddedTestOutcome.Failed, line);
+            _defmtCurrent = null;
+        }
         else if (line.EndsWith("all tests passed!", StringComparison.Ordinal))
         {
             _harnessCompleted = true;
@@ -418,7 +436,7 @@ public static class EmbeddedTestXml
             var line = int.TryParse((string?)test.Attribute("line"), NumberStyles.None, CultureInfo.InvariantCulture, out var parsedLine) && parsedLine > 0
                 ? (int?)parsedLine : null;
             var duration = double.TryParse((string?)test.Attribute("time"), NumberStyles.Float, CultureInfo.InvariantCulture, out var seconds)
-                ? EmbeddedTestStream.SafeDuration(seconds) : TimeSpan.Zero;
+                ? EmbeddedTestOutputParser.SafeDuration(seconds) : TimeSpan.Zero;
             results.Add(new(boardId, EmbeddedTestFormat.GoogleTest, string.IsNullOrEmpty(suite) ? name : suite + "." + name,
                 outcome, message, (string?)test.Attribute("file"), line, duration));
         }

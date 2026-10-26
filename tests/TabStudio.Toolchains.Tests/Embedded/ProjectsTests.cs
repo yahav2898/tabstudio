@@ -38,12 +38,14 @@ public sealed class ProjectsTests
     }
 
     [Fact]
-    public void Unknown_environment_is_rejected_before_native_tools_start()
+    public void An_environment_from_extra_configs_is_left_for_PlatformIO_to_resolve()
     {
         using var temp = new TempDirectory();
         temp.Write("platformio.ini", "[env:uno]\nboard=uno");
-        Assert.Throws<ArgumentException>(() => EmbeddedBuildPlanner.Plan(EmbeddedProjectDetector.Read(temp.Path)!,
-            new EmbeddedBuildOptions { Environment = "wrong" }));
+        var plan = EmbeddedBuildPlanner.Plan(EmbeddedProjectDetector.Read(temp.Path)!,
+            new EmbeddedBuildOptions { Environment = "imported-debug" });
+        Assert.Contains("imported-debug", Assert.Single(plan.Build).Arguments);
+        Assert.Contains(plan.Notes, n => n.Contains("extra_configs", StringComparison.Ordinal));
     }
 
     [Theory]
@@ -219,5 +221,55 @@ public sealed class ProjectsTests
         Assert.Throws<JsonException>(() => EmbeddedBuildPlanner.LoadOptions(temp.Path));
         Assert.Throws<ArgumentException>(() => EmbeddedBuildPlanner.Plan(EmbeddedProjectDetector.Read(temp.Path)!,
             new EmbeddedBuildOptions { Environment = "--target=erase" }));
+    }
+
+    [Theory]
+    [InlineData("arm-none-eabi-gcc", EmbeddedProjectKind.GccCMakeArm, "embedded-arm")]
+    [InlineData("avr-gcc", EmbeddedProjectKind.GccCMakeAvr, "embedded-avr")]
+    public void Imported_CMake_firmware_is_built_as_firmware_and_never_executed_as_a_tablet_program(string compiler, EmbeddedProjectKind kind, string toolchainId)
+    {
+        using var temp = new TempDirectory();
+        temp.Write("CMakeLists.txt", "set(CMAKE_TOOLCHAIN_FILE tabstudio-gcc.cmake)\nproject(firmware C)\n");
+        temp.Write("tabstudio-gcc.cmake", "set(CMAKE_SYSTEM_NAME Generic)\nset(CMAKE_C_COMPILER " + compiler + ")\n");
+        var project = EmbeddedProjectDetector.Read(temp.Path)!;
+        Assert.Equal(kind, project.Kind);
+        var plan = EmbeddedBuildPlanner.Plan(project);
+        Assert.Equal(toolchainId, plan.ToolchainId);
+        Assert.Equal("cmake", Assert.Single(plan.Build).Program);
+        Assert.Empty(plan.Upload);
+        var run = EmbeddedBuildPlanner.RunPlan(project);
+        Assert.Null(run.Build);
+        Assert.Equal("cmake", run.Run.Program);
+    }
+
+    [Fact]
+    public void An_Arduino_library_builds_one_explicit_example_with_its_own_library_path()
+    {
+        using var temp = new TempDirectory();
+        temp.Write("library.properties", "name=SensorDriver\narchitectures=*");
+        temp.Write("examples/ReadSensor/ReadSensor.ino", "void setup(){} void loop(){}");
+        var project = EmbeddedProjectDetector.Read(temp.Path)!;
+        Assert.Equal("library.properties", project.Marker);
+        Assert.Empty(EmbeddedBuildPlanner.Plan(project, new EmbeddedBuildOptions { Board = "arduino:avr:uno" }).Build);
+        var plan = EmbeddedBuildPlanner.Plan(project, new EmbeddedBuildOptions { Board = "arduino:avr:uno", Sketch = "examples/ReadSensor" });
+        var build = Assert.Single(plan.Build);
+        Assert.Contains("--library", build.Arguments);
+        Assert.Contains(temp.Path, build.Arguments);
+        Assert.Equal(temp.Resolve("examples/ReadSensor"), build.Arguments[^1]);
+        Assert.Throws<ArgumentException>(() => EmbeddedBuildPlanner.Plan(project,
+            new EmbeddedBuildOptions { Board = "arduino:avr:uno", Sketch = "../outside" }));
+    }
+
+    [Fact]
+    public void PlatformIO_interpolated_defaults_are_resolved_by_the_native_tool_without_selecting_another_environment()
+    {
+        using var temp = new TempDirectory();
+        temp.Write("platformio.ini", "[platformio]\ndefault_envs=${local.selected}\nextra_configs=local.ini\n[env:uno]\nboard=uno\n");
+        var project = EmbeddedProjectDetector.Read(temp.Path)!;
+        Assert.True(project.HasNativeEnvironmentSelection);
+        Assert.Null(project.DefaultEnvironment);
+        var plan = EmbeddedBuildPlanner.Plan(project, new EmbeddedBuildOptions { Port = "/dev/ttyUSB0" });
+        Assert.DoesNotContain("--environment", Assert.Single(plan.Build).Arguments);
+        Assert.Empty(plan.Upload);
     }
 }
