@@ -25,6 +25,8 @@
   </UserControl.Styles>
 
   <DockPanel>
+    <TextBlock DockPanel.Dock="Top" Text="Historical · recorded values" IsVisible="{Binding IsHistorical}"
+               Classes="muted small" Margin="12,4" />
     <!-- Column headers -->
     <Border DockPanel.Dock="Top" Height="26" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
       <Grid ColumnDefinitions="2*,3*,2*,34" Margin="12,0,0,0" VerticalAlignment="Center">
@@ -44,6 +46,8 @@
               <MenuFlyout>
                 <MenuItem Header="Add Watch" IsVisible="{Binding !IsError}"
                           Command="{Binding Owner.AddWatchCommand, FallbackValue={x:Null}}" CommandParameter="{Binding}" />
+                <MenuItem Header="When did this change?" IsVisible="{Binding !IsError}"
+                          Command="{Binding Owner.LastWriteCommand, FallbackValue={x:Null}}" CommandParameter="{Binding}" />
                 <MenuItem Header="Edit Value..." IsVisible="{Binding IsEditable}"
                           Command="{Binding Owner.EditValueCommand, FallbackValue={x:Null}}" CommandParameter="{Binding}" />
                 <MenuItem Header="Remove Watch" IsVisible="{Binding IsRemovable}"

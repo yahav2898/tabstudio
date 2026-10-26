@@ -37,7 +37,7 @@ namespace TabStudio.Debugging.Instrumentation;
 /// stack nor as a step. Destructors are not instrumented, so the finalizer thread never stops.
 /// </para>
 /// </remarks>
-internal sealed class InstrumentingRewriter : CSharpSyntaxRewriter
+internal sealed partial class InstrumentingRewriter : CSharpSyntaxRewriter
 {
     private readonly SemanticModel _model;
     private readonly SyntaxTree _tree;
@@ -518,7 +518,8 @@ internal sealed class InstrumentingRewriter : CSharpSyntaxRewriter
     private StatementSyntax CreateStepHook(FunctionContext context, SyntaxNode original)
     {
         var locals = LocalsCollector.Collect(_model, original, context, _cancellationToken);
-        var id = _info.AddStatement(context.MethodId, Locate(HighlightSpan(original)), locals.Select(l => l.Slot).ToList());
+        var id = _info.AddStatement(context.MethodId, Locate(HighlightSpan(original)), locals.Select(l => l.Slot).ToList(),
+            ExceptionOperand(original, division: true), ExceptionOperand(original, division: false));
         return HookSyntax.Step(context.Frame, id, locals.Select(l => l.Expression).ToList());
     }
 

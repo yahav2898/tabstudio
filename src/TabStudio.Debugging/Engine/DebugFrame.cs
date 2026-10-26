@@ -10,6 +10,11 @@ namespace TabStudio.Debugging.Engine;
 /// </remarks>
 internal sealed class DebugFrame
 {
+    private static long _nextId;
+
+    internal long Id { get; } = Interlocked.Increment(ref _nextId);
+
+    internal Dictionary<string, DebugValue> RecordedValues { get; } = new(StringComparer.Ordinal);
     private volatile int _statementId;
     private volatile bool _exited;
 

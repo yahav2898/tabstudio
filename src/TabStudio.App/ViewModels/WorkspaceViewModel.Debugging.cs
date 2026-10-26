@@ -31,6 +31,9 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
         /// <summary>Run until a breakpoint (F5).</summary>
         Run,
 
+        /// <summary>Run with an explicitly requested bounded recording.</summary>
+        Record,
+
         /// <summary>Stop at the first statement (F10, F11).</summary>
         StepInto,
 
@@ -78,16 +81,18 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
     public bool IsCallStackSelected => SelectedPanel == BottomPanel.CallStack;
 
     /// <summary>Whether the Locals, Watch and Call Stack tabs are shown: while debugging, as in Visual Studio's debug layout.</summary>
-    public bool ShowsDebugPanels => IsDebugging || SelectedPanel is BottomPanel.Locals or BottomPanel.Watch or BottomPanel.CallStack;
+    public bool ShowsDebugPanels => IsDebugging || HasRecording || SelectedPanel is BottomPanel.Locals or BottomPanel.Watch or BottomPanel.CallStack;
 
     /// <summary>Whether the Call Stack is shown beside Locals or Watch, so both are in view while debugging.</summary>
-    public bool ShowsCallStackBeside => IsDebugging && SelectedPanel is BottomPanel.Locals or BottomPanel.Watch;
+    public bool ShowsCallStackBeside => (IsDebugging || IsHistorical) && SelectedPanel is BottomPanel.Locals or BottomPanel.Watch;
+
+    bool IEditorDebugger.IsPaused => IsPaused || IsHistorical;
 
     /// <summary>
     /// Whether the floating editing buttons are shown: over code, not over a notebook, which has buttons of its own;
     /// while debugging, the debug buttons take their place.
     /// </summary>
-    public bool ShowsEditorTouchBar => HasDocuments && !IsDebugging && ActiveDocument?.ShowsEditorActions != false;
+    public bool ShowsEditorTouchBar => HasDocuments && !IsDebugging && !IsHistorical && ActiveDocument?.ShowsEditorActions != false;
 
     /// <summary>
     /// Whether the floating editing and debug buttons are folded into one small button at the edge of the editor, so
@@ -168,7 +173,8 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
             return null;
         }
 
-        var tree = new VariableTreeViewModel();
+        var tree = new VariableTreeViewModel { IsHistorical = pause.IsHistorical };
+        tree.LastWriteRequested += async (_, row) => await JumpToLastWriteAsync(row.Path);
         await tree.ShowAsync([new VariableSource(expression, expression, value)]);
         return tree;
     }
@@ -335,6 +341,8 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
         CallStack.FrameActivated += async (_, frame) => await ShowFrameAsync(frame);
         Breakpoints.Changed += (_, _) => ScheduleSessionSave();
         Watch.ExpressionsChanged += (_, _) => ScheduleSessionSave();
+        Locals.Tree.LastWriteRequested += async (_, row) => await JumpToLastWriteAsync(row.Path);
+        Watch.Tree.LastWriteRequested += async (_, row) => await JumpToLastWriteAsync(row.Path);
         Locals.Tree.AddWatchRequested += async (_, row) =>
         {
             await Watch.AddAsync(row.Path);
@@ -347,11 +355,12 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
     {
         Breakpoints.Load(session?.Breakpoints);
         Watch.Load(session?.WatchExpressions);
+        RecordingBufferMegabytes = Math.Clamp(session?.RecordingBufferMegabytes ?? 64, 1, 512);
     }
 
     /// <summary>Adds the breakpoints and watches to a session about to be saved.</summary>
     private SessionState WithDebuggingState(SessionState state) =>
-        state with { Breakpoints = Breakpoints.Save(), WatchExpressions = [.. Watch.Expressions] };
+        state with { Breakpoints = Breakpoints.Save(), WatchExpressions = [.. Watch.Expressions], RecordingBufferMegabytes = RecordingBufferMegabytes };
 
     /// <summary>Shows breakpoints and execution points in a document that just opened.</summary>
     private void AttachDebugging(DocumentViewModel document)
@@ -406,10 +415,16 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
 
     /// <summary>Resumes the paused program with a command such as Step Over.</summary>
     /// <returns><see langword="false"/> when nothing was paused or the command did not apply.</returns>
-    private bool Resume(Func<DebugSession, bool> command) => _session is { } session && IsPaused && command(session);
+    private bool Resume(Func<DebugSession, bool> command)
+    {
+        if (_session is not { } session || !IsPaused) return false;
+        session.ReturnToLive();
+        return command(session);
+    }
 
     private async Task LaunchAsync(DebugStart start)
     {
+        if (_session is null) ClearRecording();
         if (IsRunOnSwarm && StartupProject is { } swarmProject && _session is null && _swarmDebug is null)
         {
             StartOnSwarm(swarmProject, debug: true, pauseAtStart: start == DebugStart.StepInto);
@@ -459,10 +474,13 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
             return;
         }
 
-        var session = new DebugSession(build) { BreakOnUnhandledExceptions = BreakOnUnhandledExceptions };
+        var session = new DebugSession(build, DebugSession.DefaultEvaluationTimeout,
+            start == DebugStart.Record ? new TabStudio.Debugging.Recording.RecordingOptions { CapacityBytes = RecordingBufferMegabytes * 1024 * 1024 } : null)
+            { BreakOnUnhandledExceptions = BreakOnUnhandledExceptions };
         session.Paused += OnSessionPaused;
         session.Resumed += OnSessionResumed;
         _session = session;
+        if (session.Recording is not null) _recordedSession = session;
         _debuggedProject = project;
         Breakpoints.Bind(session);
         switch (start)
@@ -477,6 +495,7 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
 
         State = IdeState.Debugging;
         StatusText = $"Debugging {project.Name}";
+        RefreshRecording();
         var input = Output.BeginInput();
         var packages = language.GetPackageRuntimeAssemblies(project.FilePath);
         _ = RunSessionAsync(session, project, packages, input);
@@ -533,6 +552,7 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
             RunOutcome.Stopped => "Debugging stopped",
             _ => "The program stopped with an error",
         };
+        RefreshRecording();
 
         if (SelectedPanel is BottomPanel.Locals or BottomPanel.Watch or BottomPanel.CallStack)
         {
@@ -573,7 +593,7 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
         }
     }
 
-    private async Task ShowPauseAsync(DebugSession session, DebugPausedEventArgs pause)
+    private async Task ShowPauseAsync(DebugSession session, DebugPausedEventArgs pause, bool selectCause = true)
     {
         if (!ReferenceEquals(session, _session) || !ReferenceEquals(session.CurrentPause, pause))
         {
@@ -581,6 +601,8 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
         }
 
         _pause = pause;
+        session.ReturnToLive();
+        RefreshRecording();
         _exceptionHelper = pause is { Reason: PauseReason.Exception, Exception: { } exception }
             ? new ExceptionHelperViewModel(exception, pause.CallStack, StartDebuggingCommand, StopDebuggingCommand)
             : null;
@@ -599,6 +621,8 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
         {
             await Task.WhenAll(Locals.ShowAsync(pause.Locals), Watch.EvaluateAsync(pause));
         }
+        if (selectCause && pause.Exception is not null && session.Recording?.ExceptionCause is { } cause && session.Recording.IndexOf(cause) is var causeIndex && causeIndex >= 0)
+            await ShowHistoricalAsync(session.SeekHistory(causeIndex));
     }
 
     private void ShowRunning(DebugSession session)
@@ -616,6 +640,7 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
         Locals.Tree.IsStale = true;
         Watch.MarkStale();
         ShowExecutionPoints();
+        RefreshRecording();
     }
 
     /// <summary>Marks a frame's statement in the editor and opens its file, as choosing a frame in the Call Stack does.</summary>
@@ -640,6 +665,12 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
         }
 
         Locals.ShowFrameNote(pause.CallStack[0].MethodName, frame.IsTop ? null : frame.MethodName);
+        if (pause.IsHistorical && _recordedSession?.GetHistoricalFrame(frame.Index) is { } historical)
+        {
+            _pause = historical;
+            await Task.WhenAll(Locals.ShowAsync(historical.Locals), Watch.EvaluateAsync(historical));
+            Locals.Tree.IsHistorical = Watch.Tree.IsHistorical = true;
+        }
         if (frame.Location is { } location && await OpenDocumentAsync(location.FilePath) is { } document)
         {
             ApplyExecutionPoints(document);
@@ -722,6 +753,7 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
         RunToCursorCommand.NotifyCanExecuteChanged();
         ToggleBreakpointCommand.NotifyCanExecuteChanged();
         ShowNextStatementCommand.NotifyCanExecuteChanged();
+        NotifyRecordingCommands();
     }
 
     private static ExecutionPoint? PointIn(DocumentViewModel document, DebugSourceSpan? span) =>

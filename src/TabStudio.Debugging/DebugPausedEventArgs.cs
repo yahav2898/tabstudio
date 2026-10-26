@@ -28,6 +28,12 @@ public sealed class DebugPausedEventArgs : EventArgs
     /// <summary>Why it paused.</summary>
     public PauseReason Reason { get; }
 
+    /// <summary>Whether the values and stack come from recording, without rewinding execution.</summary>
+    public bool IsHistorical { get; internal init; }
+
+    /// <summary>The selected recorded step, or zero for a live pause.</summary>
+    public long RecordedStep { get; internal init; }
+
     /// <summary>The statement about to run, or for an exception the statement that threw. The editor highlights it.</summary>
     public DebugSourceSpan? Location => CallStack.Count == 0 ? null : CallStack[0].Location;
 

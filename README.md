@@ -55,6 +55,7 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 - **F5 in under a second.** Projects compile straight to memory and run next to the code. Console input and output live in the Output panel.
 - **IntelliSense.** Completion, signature help, Quick Info, Go to Definition, Find All References, Rename and quick fixes.
 - **A debugger.** Breakpoints, Step Into, Over and Out, Locals, Watch, Call Stack, DataTips and break on exceptions.
+- **C# history.** **Debug > Start with Recording** captures shallow state into a configurable ring (64 MiB by default). Step Back (**Shift+F10**), Step Back Into, Reverse Continue and the timeline inspect earlier Locals, Watch, Call Stack and DataTips, marked **historical**, even after exit or a crash. A variable's **When did this change?** action finds its last recorded write. Simple divide-by-zero and null-reference causes link to the faulty write. Recording is off by default; history inspection never re-executes code. See [recording details and overhead](docs/debugging/time-travel.md).
 - **Tests.** Test Explorer for xUnit, NUnit and MSTest, and Live Unit Testing: a green check, red cross or blue dash beside every line of the code under test, and the tests an edit affects run again by themselves a moment after you stop typing.
 - **NuGet on the device.** Packages restore on the tablet, so real projects build as they are.
 

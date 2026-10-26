@@ -117,6 +117,7 @@ public sealed partial class WorkspaceView : UserControl
                 UpdateSideBar();
                 break;
             case nameof(WorkspaceViewModel.IsBottomPanelVisible):
+            case nameof(WorkspaceViewModel.HasRecording):
                 UpdateBottomPanel();
                 break;
             case nameof(WorkspaceViewModel.ShowsSideBarProperties):
@@ -144,7 +145,9 @@ public sealed partial class WorkspaceView : UserControl
             _bottomPanelHeight = row.Height;
         }
 
-        row.Height = visible ? _bottomPanelHeight : new GridLength(0);
+        row.Height = visible
+            ? new GridLength(Math.Max(_bottomPanelHeight.Value, _viewModel?.HasRecording == true ? 320 : 0))
+            : new GridLength(0);
         BottomDock.IsVisible = visible;
         BottomSplitter.IsVisible = visible;
     }

@@ -27,6 +27,19 @@ public sealed partial class VariableTreeViewModel : ObservableObject
     [ObservableProperty]
     public partial bool IsStale { get; set; }
 
+    /// <summary>Whether all shown values come from an immutable recording.</summary>
+    [ObservableProperty]
+    public partial bool IsHistorical { get; set; }
+
+    /// <summary>Raised when the last-write context action is chosen.</summary>
+    public event EventHandler<VariableViewModel>? LastWriteRequested;
+
+    [RelayCommand]
+    private void LastWrite(VariableViewModel? row)
+    {
+        if (row is { IsError: false }) LastWriteRequested?.Invoke(this, row);
+    }
+
     /// <summary>Raised when the remove button of a row is tapped.</summary>
     public event EventHandler<VariableViewModel>? RemoveRequested;
 

@@ -255,6 +255,41 @@ itself. TabStudio's debugger works inside the program instead:
   Call Stack fill the bottom dock while paused, and DataTips evaluate the expression under the pointer or a
   long press. Package code is not instrumented, so stepping stays in your own code.
 
+### C# recording and history
+
+`DebugSession(build, RecordingOptions)` opts into `DebugRecording`; an ordinary session has no recorder or ring.
+The default is a 64 MiB binary ring, configurable under **Debug > Recording Buffer** (1–512 MiB in the UI).
+`OnStep` requests the existing locals payload at every sequence point while recording. The rewriter also wraps
+boxable assignments, initializers and increments in typed value-preserving `Write` / `PostWrite` hooks, so a write
+of an unchanged value is still an event, including the last statement of a function. The runtime sink contract is
+version 2; slot 8 is the optional write delegate. No delegate means the generic hook returns its original result
+without allocating a recording payload.
+
+Each format-v1 record contains a version byte, sequence number, managed thread id, actual-breakpoint-hit flag,
+optional written path, and logical frames (invocation id, method/statement ids, shallow named values).
+Write-expression sites live separately on each `DebugMethod`; negative statement ids in records select those
+locations, preserving loop incrementor locations without introducing extra breakpoint or coverage targets.
+Integers use 7-bit encoding where appropriate; strings use BinaryWriter's length-prefixed UTF-8. All source
+locations come from the original debug map. Records are independent snapshots: eviction never leaves a delta
+without its baseline. The ring wraps byte ranges and evicts complete records. The index is bounded by retained
+record count and periodically compacted; transient encoding/decoding and active-frame state are additional memory.
+Oversized events are dropped with a visible counter. Weak object identities do not keep the debuggee alive.
+Scalar values and full strings are copied; objects have an identity and up to 128 primitive/string fields,
+including private fields, captured without property getters, collection enumeration or user `ToString`.
+
+The live engine pause stays separate from `HistoricalPause`. Navigation is allowed only while paused or exited;
+it never mutates program memory or replays I/O. Step Back follows invocation identities over child calls (also
+across await continuations); Back Into and the timeline can inspect every retained event. Reverse Continue uses
+breakpoint hits whose conditions matched, plus a derivable unhandled exception's faulty write. Division operands
+and null receivers are recorded as conservative symbol paths; ambiguous/unsupported causes are not guessed.
+The UI retains the recording after disposing the finished session, and marks inspector trees and stack frames
+historical. F5 resumes the actual live pause. A new run clears the previous history.
+
+`RecordingFormatTests`, `RecordingTests`, App command tests, a dark/light `debug-06-recording-timeline` screenshot,
+and `SelfTest.RecordSampleAsync` cover the wire format, wrapping/eviction, write semantics, navigation, crash cause,
+and history on the Android emulator. See [time-travel debugging](debugging/time-travel.md) for usage, limits and the
+reproducible overhead measurement.
+
 ## Tests
 
 `TestSession` discovers xUnit, NUnit and MSTest tests by reflection on the built assemblies, recognising each

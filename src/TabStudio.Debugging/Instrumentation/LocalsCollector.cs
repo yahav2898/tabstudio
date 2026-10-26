@@ -57,6 +57,18 @@ internal static class LocalsCollector
             }
         }
 
+        // Static fields have no receiver to snapshot. Read them only for recording and never invoke properties.
+        foreach (var field in model.LookupSymbols(position).OfType<IFieldSymbol>())
+        {
+            if (!field.IsStatic || field.IsConst || field.IsImplicitlyDeclared || !SyntaxFacts.IsValidIdentifier(field.Name) ||
+                !IsBoxable(field.Type) || result.Any(r => r.Slot.Name == field.Name))
+            {
+                continue;
+            }
+            var expression = field.ContainingType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) + ".@" + field.Name;
+            result.Add(new CollectedLocal("(global::__TabStudioDebug.IsRecording ? (object)" + expression + " : null)",
+                new DebugLocalSlot(field.Name, field.Type.ToDisplayString(TypeFormat)) { RecordingOnly = true }));
+        }
         return result;
     }
 

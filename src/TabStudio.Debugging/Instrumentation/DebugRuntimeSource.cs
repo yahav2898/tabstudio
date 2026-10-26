@@ -30,10 +30,10 @@ internal static class DebugRuntimeSource
     public const string FilePath = "__TabStudioDebug.g.cs";
 
     /// <summary>The version of the sink layout, the first element of the sink array.</summary>
-    public const int ContractVersion = 1;
+    public const int ContractVersion = 2;
 
     /// <summary>The number of elements in the sink array.</summary>
-    public const int SinkLength = 8;
+    public const int SinkLength = 9;
 
     /// <summary>The source of the runtime.</summary>
     public const string Text = """
@@ -52,10 +52,11 @@ internal static class DebugRuntimeSource
             private static readonly global::System.Func<object?, int, bool>? s_step;
             private static readonly global::System.Action<object?, int, object?[]?>? s_break;
             private static readonly global::System.Func<object?, global::System.Exception, object?[]?, bool>? s_fault;
+            private static readonly global::System.Action<object?, int, string, object?>? s_write;
 
             static __TabStudioDebug()
             {
-                if (global::System.AppContext.GetData("TabStudio.Debugger") is object[] sink && sink.Length == 8 && sink[0] is int version && version == 1)
+                if (global::System.AppContext.GetData("TabStudio.Debugger") is object[] sink && sink.Length == 9 && sink[0] is int version && version == 2)
                 {
                     s_enter = sink[1] as global::System.Func<int, object?>;
                     s_exit = sink[2] as global::System.Action<object?>;
@@ -64,10 +65,13 @@ internal static class DebugRuntimeSource
                     s_step = sink[5] as global::System.Func<object?, int, bool>;
                     s_break = sink[6] as global::System.Action<object?, int, object?[]?>;
                     s_fault = sink[7] as global::System.Func<object?, global::System.Exception, object?[]?, bool>;
+                    s_write = sink[8] as global::System.Action<object?, int, string, object?>;
                 }
             }
 
             public static object? Enter(int methodId) => s_enter?.Invoke(methodId);
+
+            public static bool IsRecording => s_write is not null;
 
             public static void Exit(object? frame) => s_exit?.Invoke(frame);
 
@@ -80,6 +84,18 @@ internal static class DebugRuntimeSource
             public static void Break(object? frame, int statementId, object?[]? locals) => s_break?.Invoke(frame, statementId, locals);
 
             public static bool Fault(object? frame, global::System.Exception exception, object?[]? values) => s_fault is not null && s_fault(frame, exception, values);
+
+            public static T Write<T>(object? frame, int site, string path, T value)
+            {
+                if (s_write is not null) s_write(frame, site, path, value);
+                return value;
+            }
+
+            public static T PostWrite<T>(object? frame, int site, string path, T result, T value)
+            {
+                if (s_write is not null) s_write(frame, site, path, value);
+                return result;
+            }
         }
         """;
 }

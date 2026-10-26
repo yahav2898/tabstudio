@@ -88,6 +88,11 @@ public static partial class SelfTest
             var debugged = await DebugSampleAsync(workspace, cancellationToken);
             if (debugged.Success)
             {
+                var recording = await RecordSampleAsync(workspace, cancellationToken);
+                debugged = new SelfTestResult(recording.Success, $"{debugged.Message} | {recording.Message}", debugged.Duration + recording.Duration);
+            }
+            if (debugged.Success)
+            {
                 var linked = await LinkSampleAsync(main, workspace, cancellationToken);
                 debugged = new SelfTestResult(linked.Success, $"{debugged.Message} | {linked.Message}", debugged.Duration + linked.Duration);
                 if (debugged.Success)

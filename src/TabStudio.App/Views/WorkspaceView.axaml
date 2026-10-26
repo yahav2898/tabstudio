@@ -32,6 +32,7 @@
     <KeyBinding Gesture="F9" Command="{Binding ToggleBreakpointCommand}" />
     <KeyBinding Gesture="Ctrl+Shift+F9" Command="{Binding DeleteAllBreakpointsCommand}" />
     <KeyBinding Gesture="F10" Command="{Binding StepOverCommand}" />
+    <KeyBinding Gesture="Shift+F10" Command="{Binding StepBackCommand}" />
     <KeyBinding Gesture="Ctrl+F10" Command="{Binding RunToCursorCommand}" />
     <KeyBinding Gesture="F11" Command="{Binding StepIntoCommand}" />
     <KeyBinding Gesture="Shift+F11" Command="{Binding StepOutCommand}" />
@@ -224,6 +225,8 @@
             </MenuItem>
             <Separator />
             <MenuItem Header="{Binding StartDebuggingMenuHeader}" InputGesture="F5" Command="{Binding StartDebuggingCommand}" />
+            <MenuItem Header="Start with Recording" Command="{Binding StartWithRecordingCommand}" />
+            <MenuItem Header="Recording Buffer..." Command="{Binding ConfigureRecordingCommand}" />
             <MenuItem Header="Start Wit_hout Debugging" InputGesture="Ctrl+F5" Command="{Binding RunCommand}" />
             <MenuItem Header="Run C_urrent File" Command="{Binding RunCurrentFileCommand}" />
             <MenuItem Header="Brea_k All (Ctrl+Alt+Break)" Command="{Binding BreakAllCommand}" />
@@ -234,6 +237,9 @@
             <MenuItem Header="Step _Into" InputGesture="F11" Command="{Binding StepIntoCommand}" />
             <MenuItem Header="Step _Over" InputGesture="F10" Command="{Binding StepOverCommand}" />
             <MenuItem Header="Step O_ut" InputGesture="Shift+F11" Command="{Binding StepOutCommand}" />
+            <MenuItem Header="Step Back" InputGesture="Shift+F10" Command="{Binding StepBackCommand}" />
+            <MenuItem Header="Step Back Into" Command="{Binding StepBackIntoCommand}" />
+            <MenuItem Header="Reverse Continue" Command="{Binding ReverseContinueCommand}" />
             <MenuItem Header="Run _To Cursor" InputGesture="Ctrl+F10" Command="{Binding RunToCursorCommand}" />
             <Separator />
             <MenuItem Header="Toggle _Breakpoint" InputGesture="F9" Command="{Binding ToggleBreakpointCommand}" />
@@ -621,6 +627,23 @@
         <!-- Bottom dock -->
         <Border Grid.Row="4" x:Name="BottomDock" Background="{DynamicResource Brush.Toolbar}">
           <DockPanel>
+            <Border x:Name="RecordingTimeline" DockPanel.Dock="Top" IsVisible="{Binding HasRecording}"
+                    BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="12,6">
+              <StackPanel Spacing="4">
+                <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto">
+                  <Button Theme="{StaticResource ToolButton}" Content="Step Back" Command="{Binding StepBackCommand}"
+                          ToolTip.Tip="Step Back (Shift+F10)" />
+                  <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Content="Back Into" Command="{Binding StepBackIntoCommand}" />
+                  <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Content="Reverse Continue" Command="{Binding ReverseContinueCommand}" />
+                  <TextBlock Grid.Column="3" Text="{Binding RecordingLabel}" Classes="muted small" VerticalAlignment="Center"
+                             Margin="12,0" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding RecordingLabel}" />
+                  <Button Grid.Column="4" Theme="{StaticResource ToolButton}" Content="Return to Live" Command="{Binding ReturnToLiveCommand}" />
+                </Grid>
+                <Slider x:Name="RecordingSlider" Minimum="0" Maximum="{Binding RecordingMaximum}" Value="{Binding RecordingPosition, Mode=TwoWay}"
+                        IsSnapToTickEnabled="True" TickFrequency="1" IsEnabled="{Binding CanNavigateRecording}"
+                        AutomationProperties.Name="Recorded steps" ToolTip.Tip="Drag to inspect any retained recorded step" />
+              </StackPanel>
+            </Border>
             <Grid DockPanel.Dock="Top" Height="34" ColumnDefinitions="*,Auto" Margin="6,0">
               <!-- The tabs scroll sideways when the debugger's tabs leave too little room beside the Output's source. -->
               <ScrollViewer Margin="0,0,10,0" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">

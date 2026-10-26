@@ -3,7 +3,11 @@ namespace TabStudio.Debugging.Symbols;
 /// <summary>A variable whose value an instrumented statement hands to the debugger when it pauses there.</summary>
 /// <param name="Name">The name as written in the source, or <c>this</c>.</param>
 /// <param name="Type">The declared type as C# displays it, for example <c>List&lt;int&gt;</c>.</param>
-public sealed record DebugLocalSlot(string Name, string Type);
+public sealed record DebugLocalSlot(string Name, string Type)
+{
+    /// <summary>Whether the slot is a static field captured only by recording sessions.</summary>
+    public bool RecordingOnly { get; init; }
+}
 
 /// <summary>
 /// A statement the debugger can stop at. Every statement in the user's code has one, numbered across all the
@@ -15,7 +19,14 @@ public sealed record DebugLocalSlot(string Name, string Type);
 /// <c>while</c>, only the header is covered.</param>
 /// <param name="Locals">The locals and parameters in scope and definitely assigned before it runs, in the order the
 /// instrumented code passes their values.</param>
-public sealed record DebugStatement(int Id, int MethodId, DebugSourceSpan Location, IReadOnlyList<DebugLocalSlot> Locals);
+public sealed record DebugStatement(int Id, int MethodId, DebugSourceSpan Location, IReadOnlyList<DebugLocalSlot> Locals)
+{
+    /// <summary>A simple divisor path, when this point has exactly one identifiable division.</summary>
+    public string? DivisionOperand { get; init; }
+
+    /// <summary>A simple dereferenced path, when this point has exactly one identifiable receiver.</summary>
+    public string? NullReceiver { get; init; }
+}
 
 /// <summary>A method, accessor, local function or lambda that the debugger tracks on the call stack.</summary>
 /// <param name="Id">The method id the instrumented code reports.</param>
@@ -23,4 +34,8 @@ public sealed record DebugStatement(int Id, int MethodId, DebugSourceSpan Locati
 /// <param name="Location">Where it is declared.</param>
 /// <param name="Parameters">The parameters (and <c>this</c>) whose values are reported when an exception leaves the
 /// method, in order.</param>
-public sealed record DebugMethod(int Id, string Name, DebugSourceSpan Location, IReadOnlyList<DebugLocalSlot> Parameters);
+public sealed record DebugMethod(int Id, string Name, DebugSourceSpan Location, IReadOnlyList<DebugLocalSlot> Parameters)
+{
+    /// <summary>Original write-expression locations, separately numbered so breakpoint/coverage points stay unchanged.</summary>
+    public IReadOnlyDictionary<int, DebugSourceSpan> WriteSites { get; init; } = new Dictionary<int, DebugSourceSpan>();
+}
