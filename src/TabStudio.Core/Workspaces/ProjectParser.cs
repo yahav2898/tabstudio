@@ -148,7 +148,7 @@ public static partial class ProjectParser
     }
 
     /// <summary>The files a project or props file imports whose paths can be worked out without evaluating MSBuild.</summary>
-    private static IEnumerable<string> ImportsOf(XElement root, string file, IReadOnlyDictionary<string, string> known)
+    private static IEnumerable<string> ImportsOf(XElement root, string file, Dictionary<string, string> known)
     {
         var folder = Path.GetDirectoryName(file) ?? string.Empty;
         var imports = root.Elements()
@@ -253,7 +253,14 @@ public static partial class ProjectParser
         ExpandPropertyReferences(properties);
 
         var sdk = ReadSdk(root);
-        List<XElement> allRoots = [root, .. ImportedRoots(importedFiles)];
+        // Items in imported files keep only the groups their conditions allow, evaluated for the first target framework.
+        var evaluation = new Dictionary<string, string>(properties, StringComparer.OrdinalIgnoreCase);
+        if (!evaluation.ContainsKey("TargetFramework") && ReadTargetFrameworks(properties) is [var first, ..])
+        {
+            evaluation["TargetFramework"] = first;
+        }
+
+        List<XElement> allRoots = [root, .. ImportedRoots(importedFiles, evaluation)];
         var packages = ReadPackageReferences(allRoots);
         var projectReferenceItems = ReadProjectReferenceItems(root, directory);
         var projectReferences = projectReferenceItems.Select(r => r.Path).ToList();
@@ -544,7 +551,7 @@ public static partial class ProjectParser
             .ToList();
 
     /// <summary>The roots of <c>Directory.Build.props</c> and <c>.targets</c>; files that cannot be read are skipped.</summary>
-    private static IEnumerable<XElement> ImportedRoots(IReadOnlyList<string>? files)
+    private static IEnumerable<XElement> ImportedRoots(IReadOnlyList<string>? files, Dictionary<string, string> properties)
     {
         foreach (var file in files ?? [])
         {
@@ -560,6 +567,7 @@ public static partial class ProjectParser
 
             if (root is not null)
             {
+                MsBuildConditions.RemoveFalse(root, properties, Path.GetDirectoryName(file) ?? string.Empty);
                 yield return root;
             }
         }
