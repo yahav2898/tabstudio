@@ -48,7 +48,7 @@ public sealed partial class WorkspaceViewModel
                 Directory.CreateDirectory(Path.GetDirectoryName(path)!);
                 var text = JsonSerializer.Serialize(new Dictionary<string, object?>
                 {
-                    ["_help"] = "protocol: an1388-hid, an1388-uart, mcc-uart, pymcuprog (PKOB nano/nedbg), pk2cmd, pic32prog, or windows-bridge. See docs/PIC.md. Bootloader images need their own linker offset/script; bounds below are HEX BYTE addresses, end exclusive.",
+                    ["_help"] = "protocol: an1388-hid, an1388-uart, mcc-uart, pymcuprog (PKOB nano/nedbg), pk2cmd, pic32prog, or windows-bridge. See docs/features/pic.md. Bootloader images need their own linker offset/script; bounds below are HEX BYTE addresses, end exclusive.",
                     ["protocol"] = "windows-bridge", ["device"] = conf.Device,
                     ["firmware"] = $"dist/{conf.Name}/production/firmware.hex", ["tool"] = "nedbg",
                     ["applicationStart"] = "0x0", ["applicationEnd"] = "0x0", ["pageSizeBytes"] = 0,

@@ -22,27 +22,23 @@ and run it on an Android tablet emulator, and each one installs as an update ove
 | [0.12](releases/0.12.0.md) | A shell rebuilt for landscape, portrait and phones: the activity bar, one search for everything, and native scrolling. |
 | [0.13](releases/0.13.0.md) | The Windows Bridge: Windows-only projects built and run on a PC you own and streamed to the tablet. |
 | [0.14](releases/0.14.0.md) | Go, Rust, C/C++ and Java with IntelliSense and debuggers, WPF on OpenSilver, and WinUI and Uno Platform on Skia. |
+| [0.15](releases/0.15.0.md) | Repositories that set themselves up, static web sites, the Database Explorer, remote development over SSH, Android apps built on the tablet and iOS through cloud builds, Microchip PIC, C# Hot Reload on the desktop and time-travel debugging, offline AI, and Port to Avalonia completed. |
 
 ## Next
 
-The next release, 0.15, is being integrated now. It brings:
+The next release, 0.16, makes real projects work as they are:
 
-- **Repositories that set themselves up.** Opening a repository installs its toolchains and packages, and static
-  web sites run with live reload.
-- **Backing services.** The databases and services a repository needs run natively on the tablet, and a Database
-  Explorer browses SQLite, PostgreSQL and SQL Server.
-- **Hot Reload and Edit and Continue** for C# apps under the debugger.
-- **Time-travel debugging.** Record a C# run and step backward through its timeline.
-- **On-device AI.** Offline models with llama.cpp, model management and inline completions, with no connection.
-- **Remote development** over SSH, and publishing ASP.NET Core apps to your server.
-- **Android apps built on the tablet,** local server previews, and iOS through cloud builds.
+- **Real-world repositories.** Popular open-source solutions build on the tablet with no errors: transitive project
+  references, `InternalsVisibleTo` and strong-name signing, source generators from packages, and honest handling of
+  project types a tablet cannot run. A CI job builds a fixed set of public repositories on every change.
+- **Backing services.** The databases and services a repository needs, such as PostgreSQL, run natively on the
+  tablet, so a full web application runs without a server.
 - **Flutter and Dart** with a web preview.
-- **Port to Avalonia** completed for WPF and Windows Forms projects.
-- **Microcontrollers.** Microchip PIC projects built on the tablet, flashed over USB and debugged in a simulator.
 
-After 0.15:
+After 0.16:
 
 - **STM32 and other ARM Cortex-M boards,** built, flashed and debugged from the tablet.
+- **Hot Reload on Android,** for the user's own code, without slowing the IDE.
 - **Windows Compatibility:** Windows-only apps run on the tablet itself through Wine, for when no PC is at hand.
 
 ## How the roadmap changes

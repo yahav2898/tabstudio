@@ -24,9 +24,9 @@ Starting a new debugging run replaces the previous recording; recordings are hel
 
 The running IDE's timeline after selecting an earlier loop value:
 
-![Historical loop state with the timeline in the dark theme](images/timeline-dark.webp)
+![Historical loop state with the timeline in the dark theme](../images/time-travel/timeline-dark.webp)
 
-![Historical loop state with the timeline in the light theme](images/timeline-light.webp)
+![Historical loop state with the timeline in the light theme](../images/time-travel/timeline-light.webp)
 
 Sequence points contain the current thread, logical method stack, locals, parameters and shallow object state.
 Assignment/initializer/increment hooks add writes at their original source location, including unchanged values.
