@@ -156,7 +156,7 @@ public sealed class ServiceManager : IAsyncDisposable
             Update(name, ServiceState.Starting, "Initializing and waiting for health");
             instance.Process = _runtime.Start(plan.Start);
             instance.Process.CloseInput();
-            instance.Readers = Task.WhenAll(Task.Run(() => ReadLogAsync(name, instance.Process.Output), CancellationToken.None), instance.Process.Error is { } error ? Task.Run(() => ReadLogAsync(name, error), CancellationToken.None) : Task.CompletedTask);
+            instance.Readers = Task.WhenAll(ReadLogAsync(name, instance.Process.Output), instance.Process.Error is { } error ? ReadLogAsync(name, error) : Task.CompletedTask);
             var oneShot = Project.Services.Values.Any(s => s.Dependencies.Any(d => d.Name == name && d.Condition == "service_completed_successfully"));
             if (oneShot)
             {
@@ -267,8 +267,9 @@ public sealed class ServiceManager : IAsyncDisposable
         }
         finally
         {
-            instance.Process?.Dispose();
-            try { await instance.Readers.WaitAsync(TimeSpan.FromSeconds(3)).ConfigureAwait(false); } catch (TimeoutException) { }
+            try { await instance.Readers.WaitAsync(TimeSpan.FromSeconds(3)).ConfigureAwait(false); }
+            catch (TimeoutException) { /* A child may still hold a pipe; closing it below ends its reader. */ }
+            finally { instance.Process?.Dispose(); }
             instance.Stop.Dispose();
             Update(name, previous.State is ServiceState.Failed or ServiceState.Unsupported ? previous.State : ServiceState.Stopped, previous.State is ServiceState.Failed or ServiceState.Unsupported ? previous.Detail : Get(name).Mapping?.Note);
         }

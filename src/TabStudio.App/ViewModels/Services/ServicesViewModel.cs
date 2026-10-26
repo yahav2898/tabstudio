@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Text.Json;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TabStudio.App.Services;
@@ -28,6 +29,7 @@ public sealed partial class ServicesViewModel : ObservableObject, IAsyncDisposab
     private CancellationTokenSource? _operation;
     private ServiceManager? _manager;
     private string? _root;
+    private string? _configuration;
     private bool _disposed;
 
     public ServicesViewModel(ToolchainServices toolchains, AppPaths paths, IUiDispatcher ui, Action<Uri> preview, Action remoteHost, IServiceDatabaseExplorer? databases = null)
@@ -65,6 +67,7 @@ public sealed partial class ServicesViewModel : ObservableObject, IAsyncDisposab
         try
         {
             var project = await Task.Run(() => ComposeReader.Discover(_root));
+            _configuration = JsonSerializer.Serialize(project);
             if (project is null) { Summary = "No Compose file found. Add compose.yaml to run backing services on this device."; return; }
             _manager = new ServiceManager(project, _toolchains.Runtime, new ServicePackages(_toolchains), new ServiceStorage(_paths.Root, _root));
             _manager.Changed += OnChanged; _manager.Logged += OnLogged;
@@ -94,8 +97,17 @@ public sealed partial class ServicesViewModel : ObservableObject, IAsyncDisposab
 
     public async Task<IReadOnlyDictionary<string, string?>?> PrepareAsync(string projectDirectory, string environmentName, CancellationToken cancellationToken)
     {
-        // Reread before F5, so saved Compose/configuration changes are effective. Active processes keep their model until Reload.
-        if (_manager is null && _root is not null) await ReloadAsync();
+        // Reparse before F5 so saved Compose and .env edits take effect, while unchanged data/processes persist.
+        if (_root is not null)
+        {
+            try
+            {
+                var latest = await Task.Run(() => ComposeReader.Discover(_root), cancellationToken);
+                if (_configuration != JsonSerializer.Serialize(latest)) await ReloadAsync();
+            }
+            catch (Exception ex) when (ex is not OutOfMemoryException) { Error = ex.Message; return null; }
+        }
+        if (_manager is null && _root is not null && _configuration is null) await ReloadAsync();
         if (_manager is null) return Error is null ? new Dictionary<string, string?>() : null;
         IReadOnlyDictionary<string, string?>? environment = null;
         var success = await PerformAsync(async token => environment = await _manager.StartForProjectAsync(projectDirectory, environmentName, token), cancellationToken);
@@ -124,10 +136,10 @@ public sealed partial class ServicesViewModel : ObservableObject, IAsyncDisposab
     private void RefreshLogs() => Logs = SelectedItem is { } selected && _manager is { } manager ? string.Join('\n', manager.Logs(selected.Name).Select(l => $"{l.Time.LocalDateTime:HH:mm:ss} {l.Text}")) : "Select a service to see its logs.";
     private void OnChanged(object? sender, ServiceStatus status) => _ui.Post(() =>
     {
-        if (_disposed) return;
+        if (_disposed || !ReferenceEquals(sender, _manager)) return;
         Items.FirstOrDefault(i => i.Name == status.Name)?.Update(status);
     });
-    private void OnLogged(object? sender, ServiceLogLine line) => _ui.Post(() => { if (!_disposed && SelectedItem?.Name == line.Service) RefreshLogs(); });
+    private void OnLogged(object? sender, ServiceLogLine line) => _ui.Post(() => { if (!_disposed && ReferenceEquals(sender, _manager) && SelectedItem?.Name == line.Service) RefreshLogs(); });
     public async ValueTask DisposeAsync()
     {
         _disposed = true; _operation?.Cancel();

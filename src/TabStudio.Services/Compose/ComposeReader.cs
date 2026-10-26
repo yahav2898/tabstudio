@@ -52,6 +52,7 @@ public static partial class ComposeReader
         var variables = ReadEnvironmentFile(Path.Combine(directory, ".env"), supplied, required: false);
         foreach (var (name, value) in supplied) variables[name] = value;
         var merged = new Dictionary<string, YamlMappingNode>(StringComparer.Ordinal);
+        var unsupportedVolumes = new Dictionary<string, bool>(StringComparer.Ordinal);
         foreach (var file in files)
         {
             if (!File.Exists(file)) throw new ComposeException($"Compose file not found: {file}");
@@ -64,6 +65,11 @@ public static partial class ComposeReader
                 if (Get(root, "include") is not null) throw new ComposeException("Compose 'include' is not supported locally. Use a remote host.");
                 var expanded = new HashSet<YamlNode>(ReferenceEqualityComparer.Instance);
                 ResolveMerges(root, new HashSet<YamlNode>(ReferenceEqualityComparer.Instance));
+                foreach (var (key, value) in Mapping(Get(root, "volumes")).Children)
+                {
+                    var settings = Mapping(value);
+                    unsupportedVolumes[Text(key)] = Text(Get(settings, "external")) == "true" || Get(settings, "driver_opts") is not null || Text(Get(settings, "driver")) is not ("" or "local");
+                }
                 foreach (var pair in Mapping(Get(root, "services")).Children)
                 {
                     var name = Text(pair.Key);
@@ -76,7 +82,11 @@ public static partial class ComposeReader
             }
             catch (YamlException ex) { throw new ComposeException($"Invalid Compose YAML in {Path.GetFileName(file)} at line {ex.Start.Line + 1}."); }
         }
-        var services = merged.ToDictionary(p => p.Key, p => ReadService(p.Key, p.Value, directory, variables), StringComparer.Ordinal);
+        var services = merged.ToDictionary(p => p.Key, p =>
+        {
+            var service = ReadService(p.Key, p.Value, directory, variables);
+            return service with { Unsupported = [.. service.Unsupported, .. service.Volumes.Where(v => !v.IsBind && v.Source is { } name && unsupportedVolumes.GetValueOrDefault(name)).Select(_ => "External or driver-backed volumes require a remote host.")] };
+        }, StringComparer.Ordinal);
         return new ComposeProject(directory, files, services);
     }
 

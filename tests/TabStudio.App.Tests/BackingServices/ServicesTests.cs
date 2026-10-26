@@ -13,6 +13,14 @@ using TabStudio.Toolchains.Linux;
 
 namespace TabStudio.App.Tests.BackingServices;
 
+public sealed class AlpineAvaloniaFactAttribute : AvaloniaFactAttribute
+{
+    public AlpineAvaloniaFactAttribute()
+    {
+        if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("TABSTUDIO_SERVICE_ROOTFS"))) Skip = "Native Alpine service harness is not configured.";
+    }
+}
+
 public sealed class ServicesTests
 {
     [AvaloniaFact]
@@ -54,10 +62,9 @@ public sealed class ServicesTests
         finally { window.Close(); }
     }
 
-    [AvaloniaFact]
+    [AlpineAvaloniaFact]
     public async Task F5_of_an_AspNet_template_connects_with_Npgsql_using_rewritten_compose_environment()
     {
-        if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("TABSTUDIO_SERVICE_ROOTFS"))) return;
         using var alpine = new AlpineServiceFixture();
         using var temp = new TempDirectory();
         var paths = new AppPaths(temp.Path);

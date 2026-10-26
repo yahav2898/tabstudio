@@ -82,11 +82,20 @@ public sealed record NativeServicePlan(ProcessStartSpec Start, ProcessStartSpec 
                 environment["HOME"] = GuestDirectory;
                 environment["RABBITMQ_NODENAME"] = "ts_" + service.Name.Replace('-', '_') + "@localhost";
                 environment["RABBITMQ_NODE_PORT"] = At(5672);
-                environment["RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS"] = "+S 2:2 +sbwt none";
+                environment["ERL_EPMD_PORT"] = new LocalServiceNetwork().FreePort().ToString(CultureInfo.InvariantCulture);
+                environment["ERL_EPMD_ADDRESS"] = "127.0.0.1";
+                environment["RABBITMQ_DIST_PORT"] = new LocalServiceNetwork().FreePort().ToString(CultureInfo.InvariantCulture);
+                environment["RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS"] = "+S 2:2 +sbwt none -kernel inet_dist_use_interface {127,0,0,1}";
                 environment["RABBITMQ_CONFIG_FILE"] = GuestDirectory + "/rabbitmq";
                 environment["RABBITMQ_ENABLED_PLUGINS_FILE"] = GuestDirectory + "/enabled_plugins";
                 File.WriteAllText(Path.Combine(directory, "rabbitmq.conf"), $"listeners.tcp.1 = 127.0.0.1:{At(5672)}\n" + (ports.Any(p => p.Target == 15672) ? $"management.tcp.ip = 127.0.0.1\nmanagement.tcp.port = {At(15672)}\n" : ""));
                 File.WriteAllText(Path.Combine(directory, "enabled_plugins"), ports.Any(p => p.Target == 15672) ? "[rabbitmq_management].\n" : "[].\n");
+                if (environment.GetValueOrDefault("RABBITMQ_DEFAULT_USER") is { Length: > 0 } rabbitUser)
+                {
+                    var rabbitPassword = environment.GetValueOrDefault("RABBITMQ_DEFAULT_PASS") ?? "";
+                    if (rabbitUser.Contains('\n') || rabbitPassword.Contains('\n')) throw new ComposeException("RabbitMQ credentials must be single-line values.");
+                    File.AppendAllText(Path.Combine(directory, "rabbitmq.conf"), $"default_user = {rabbitUser}\ndefault_pass = {rabbitPassword}\n");
+                }
                 args = [mapping.Program];
                 probe = ["rabbitmq-diagnostics", "-q", "check_running"];
                 stop = "rabbitmqctl stop";
@@ -96,6 +105,17 @@ public sealed record NativeServicePlan(ProcessStartSpec Start, ProcessStartSpec 
                 File.WriteAllText(Path.Combine(directory, "www", "index.html"), "TabStudio service is running.\n");
                 var config = service.Volumes.FirstOrDefault(v => v.Target == "/etc/nginx/nginx.conf");
                 var includes = service.Volumes.Any(v => v.Target.StartsWith("/etc/nginx/conf.d", StringComparison.Ordinal)) ? "include /etc/nginx/conf.d/*.conf;" : $"server {{ listen 127.0.0.1:{At(80)}; root {(service.Volumes.Any(v => v.Target == "/usr/share/nginx/html") ? "/usr/share/nginx/html" : GuestDirectory + "/www")}; }}";
+                foreach (var mount in mounts.Skip(1))
+                {
+                    var configurations = File.Exists(mount.Source) && mount.Target.EndsWith(".conf", StringComparison.Ordinal) ? new[] { mount.Source }
+                        : Directory.Exists(mount.Source) && mount.Target.StartsWith("/etc/nginx", StringComparison.Ordinal) ? Directory.EnumerateFiles(mount.Source, "*.conf", SearchOption.AllDirectories) : [];
+                    foreach (var path in configurations)
+                    {
+                        var text = rewrite(File.ReadAllText(path));
+                        text = Regex.Replace(text, @"\blisten\s+(?:(?:[0-9.]+|\[::\]):)?80(?=[\s;])", "listen 127.0.0.1:" + At(80), RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
+                        File.WriteAllText(path, text);
+                    }
+                }
                 File.WriteAllText(Path.Combine(directory, "nginx.conf"), $"pid {GuestDirectory}/nginx.pid; error_log /dev/stderr; events {{ worker_connections 128; }} http {{ access_log /dev/stdout; client_body_temp_path {GuestDirectory}/tmp; proxy_temp_path {GuestDirectory}/tmp; fastcgi_temp_path {GuestDirectory}/tmp; uwsgi_temp_path {GuestDirectory}/tmp; scgi_temp_path {GuestDirectory}/tmp; {includes} }}");
                 args = [mapping.Program, "-p", GuestDirectory + "/", "-c", config is null ? GuestDirectory + "/nginx.conf" : config.Target, "-g", "daemon off;"];
                 stop = "kill -QUIT \"$(cat \"$TS_SERVICE/nginx.pid\")\"";
@@ -119,6 +139,17 @@ public sealed record NativeServicePlan(ProcessStartSpec Start, ProcessStartSpec 
             {
                 var options = Path.GetFileName(supplied[0]) == mapping.Program ? supplied[1..] : supplied;
                 args = [args[0], .. options, .. args.Skip(1)];
+            }
+            else if (mapping.Kind == NativeServiceKind.Minio && supplied[0] == "server")
+            {
+                var custom = new List<string> { mapping.Program, "server" };
+                for (var i = 1; i < supplied.Length; i++)
+                {
+                    if (supplied[i] is "--address" or "--console-address") { i++; continue; }
+                    if (supplied[i].StartsWith("--address=", StringComparison.Ordinal) || supplied[i].StartsWith("--console-address=", StringComparison.Ordinal)) continue;
+                    custom.Add(supplied[i] == "/data" ? data : supplied[i]);
+                }
+                args = [.. custom, .. args.Skip(3)];
             }
             else args = supplied;
         }
