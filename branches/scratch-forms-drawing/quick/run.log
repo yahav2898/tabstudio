@@ -1,68 +1,14 @@
-+ dotnet --info
-+ head -20
-.NET SDK:
- Version:           10.0.403
- Commit:            5a2162bea6
- Workload version:  10.0.400-manifests.a00bebb6
- MSBuild version:   18.9.15+5a2162bea
-
-Runtime Environment:
- OS Name:     ubuntu
- OS Version:  24.04
- OS Platform: Linux
- RID:         linux-x64
- Base Path:   /usr/share/dotnet/sdk/10.0.403/
-
-.NET workloads installed:
-There are no installed workloads to display.
-Configured to use workload sets when installing new manifests.
-No workload sets are installed. Run "dotnet workload restore" to install a workload set.
-
-Host:
-  Version:      10.0.14
 + dotnet build tests/TabStudio.Forms.Tests -c Release -p:TreatWarningsAsErrors=true
-+ tail -30
-  Determining projects to restore...
-  Restored /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj (in 366 ms).
-  Restored /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Forms.Tests/TabStudio.Forms.Tests.csproj (in 778 ms).
-  TabStudio.Forms -> /home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/bin/Release/net10.0/TabStudio.Forms.dll
-  TabStudio.Forms.Tests -> /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Forms.Tests/bin/Release/net10.0/TabStudio.Forms.Tests.dll
-
-Build succeeded.
-    0 Warning(s)
-    0 Error(s)
-
-Time Elapsed 00:00:15.85
-
-real	0m16.315s
-user	0m4.673s
-sys	0m0.839s
++ grep -E 'error|warning|Build succeeded'
++ sed 's|/home/runner/work/tabstudio/tabstudio/||'
++ sort -u
++ head -150
+src/TabStudio.Forms/Rendering/DisplayListRenderer.cs(258,57): error CS0103: The name 'BitmapBlendingMode' does not exist in the current context [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
+src/TabStudio.Forms/Rendering/DisplayListRenderer.cs(258,85): error CS0103: The name 'BitmapBlendingMode' does not exist in the current context [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
+src/TabStudio.Forms/Rendering/DisplayListRenderer.cs(96,103): error CS0103: The name 'BitmapInterpolationMode' does not exist in the current context [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
+src/TabStudio.Forms/Rendering/DisplayListRenderer.cs(96,141): error CS0103: The name 'BitmapInterpolationMode' does not exist in the current context [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
+src/TabStudio.Forms/Rendering/ImageBuffer.cs(277,19): error CA2201: Exception type System.OutOfMemoryException is reserved by the runtime (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2201) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
 + dotnet test tests/TabStudio.Forms.Tests -c Release --no-build --logger 'console;verbosity=minimal'
-+ tail -30
++ tail -40
 Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Forms.Tests/bin/Release/net10.0/TabStudio.Forms.Tests.dll (.NETCoreApp,Version=v10.0)
-A total of 1 test files matched the specified pattern.
-
-Passed!  - Failed:     0, Passed:    49, Skipped:     0, Total:    49, Duration: 1 s - TabStudio.Forms.Tests.dll (net10.0)
-
-real	0m3.375s
-user	0m3.851s
-sys	0m0.441s
-+ ls /home/runner/.nuget/packages
-+ head
-+ ls /home/runner/work/tabstudio/tabstudio/.nuget/packages/skiasharp /home/runner/work/tabstudio/tabstudio/.nuget/packages/skiasharp.nativeassets.linux /home/runner/work/tabstudio/tabstudio/.nuget/packages/skiasharp.nativeassets.macos /home/runner/work/tabstudio/tabstudio/.nuget/packages/skiasharp.nativeassets.webassembly /home/runner/work/tabstudio/tabstudio/.nuget/packages/skiasharp.nativeassets.win32 -d
-/home/runner/work/tabstudio/tabstudio/.nuget/packages/skiasharp
-/home/runner/work/tabstudio/tabstudio/.nuget/packages/skiasharp.nativeassets.linux
-/home/runner/work/tabstudio/tabstudio/.nuget/packages/skiasharp.nativeassets.macos
-/home/runner/work/tabstudio/tabstudio/.nuget/packages/skiasharp.nativeassets.webassembly
-/home/runner/work/tabstudio/tabstudio/.nuget/packages/skiasharp.nativeassets.win32
-+ ls /home/runner/work/tabstudio/tabstudio/.nuget/packages/skiasharp/ /home/runner/work/tabstudio/tabstudio/.nuget/packages/skiasharp.nativeassets.linux/ /home/runner/work/tabstudio/tabstudio/.nuget/packages/microsoft.data.sqlclient/
-/home/runner/work/tabstudio/tabstudio/.nuget/packages/microsoft.data.sqlclient/:
-7.0.3
-
-/home/runner/work/tabstudio/tabstudio/.nuget/packages/skiasharp.nativeassets.linux/:
-2.88.9
-3.119.0
-
-/home/runner/work/tabstudio/tabstudio/.nuget/packages/skiasharp/:
-2.88.9
-3.119.0
+The argument /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Forms.Tests/bin/Release/net10.0/TabStudio.Forms.Tests.dll is invalid. Please use the /help option to check the list of valid arguments.
