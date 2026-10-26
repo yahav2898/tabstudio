@@ -122,8 +122,7 @@ internal static class XamlSanitizer
 
             var content = text[element.StartTagEnd..element.EndTagStart];
             var value = content.Trim();
-            if (value.Length == 0 || value.Contains('
-', StringComparison.Ordinal) || value.Contains('', StringComparison.Ordinal)
+            if (value.Length == 0 || value.Contains('\n', StringComparison.Ordinal) || value.Contains('\r', StringComparison.Ordinal)
                 || value.Contains('<', StringComparison.Ordinal) || value.Contains("<![CDATA[", StringComparison.Ordinal))
             {
                 continue;
