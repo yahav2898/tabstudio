@@ -1,0 +1,82 @@
+== Processes left running
+    PID    PPID    PGID   RSS     ELAPSED COMMAND
+  13197       1   13197 561508      30:29 /usr/lib/jvm/temurin-21-jdk-amd64/bin/java --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED --add-opens=java.base/java.nio.charset=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.xml/javax.xml.namespace=ALL-UNNAMED --add-opens=java.base/java.time=ALL-UNNAMED -XX:MaxMetaspaceSize=384m -XX:+HeapDumpOnOutOfMemoryError -Xms256m -Xmx512m -Dfile.encoding=UTF-8 -Duser.country -Duser.language=en -Duser.variant -cp /usr/share/gradle-9.8.1/lib/gradle-daemon-main-9.8.1.jar -javaagent:/usr/share/gradle-9.8.1/lib/agents/gradle-instrumentation-agent-9.8.1.jar org.gradle.launcher.daemon.bootstrap.GradleDaemon 9.8.1
+  20000       1    1845 254696      12:00 /usr/bin/google-chrome --headless=new --no-sandbox --disable-gpu --no-first-run --no-default-browser-check --disable-crash-reporter --remote-debugging-port=0 --user-data-dir=/tmp/tabstudio-tests/f44fc6e9586c45569d09502118c86d24 --window-size=1280,800 about:blank
+   1883    1881    1845 159356      36:45 /tmp/provjobd981832720
+   1918    1897    1845 158788      36:39 /home/runner/actions-runner/cached/2.338.0/bin/Runner.Worker spawnclient 142 145
+  20084   20015    1845 146972      12:00 /opt/google/chrome/chrome --type=renderer --top-chrome-webui --crashpad-handler-pid=20007 --enable-crash-reporter=, --noerrdialogs --user-data-dir=/tmp/tabstudio-tests/f44fc6e9586c45569d09502118c86d24 --change-stack-guard-on-fork=enable --no-sandbox --remote-debugging-port=0 --ozone-platform=headless --disable-gpu-compositing --lang=en-US --num-raster-threads=2 --enable-main-frame-before-activation --renderer-client-id=5 --launch-time-ticks=1514669686 --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,3686202014806447319,8537753404110146198,262144 --disable-features=PaintHolding --variations-seed-version --pseudonymization-salt-handle=7,i,13144614624375387682,11843639233243756958,4 --trace-process-track-uuid=3190708990997080739
+  20037   20000    1845 129416      12:00 /opt/google/chrome/chrome --type=utility --utility-sub-type=network.mojom.NetworkService --lang=en-US --service-sandbox-type=none --no-sandbox --use-angle=swiftshader-webgl --crashpad-handler-pid=20007 --enable-crash-reporter=, --noerrdialogs --user-data-dir=/tmp/tabstudio-tests/f44fc6e9586c45569d09502118c86d24 --change-stack-guard-on-fork=enable --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,3686202014806447319,8537753404110146198,262144 --disable-features=PaintHolding --variations-seed-version --pseudonymization-salt-handle=7,i,13144614624375387682,11843639233243756958,4 --trace-process-track-uuid=3190708989122997041
+   1897    1845    1845 111796      36:41 /home/runner/actions-runner/cached/2.338.0/bin/Runner.Listener run
+  20092   20015    1845 111452      12:00 /opt/google/chrome/chrome --type=renderer --crashpad-handler-pid=20007 --enable-crash-reporter=, --noerrdialogs --user-data-dir=/tmp/tabstudio-tests/f44fc6e9586c45569d09502118c86d24 --change-stack-guard-on-fork=enable --no-sandbox --remote-debugging-port=0 --ozone-platform=headless --disable-gpu-compositing --lang=en-US --num-raster-threads=2 --enable-main-frame-before-activation --renderer-client-id=6 --launch-time-ticks=1514707587 --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,3686202014806447319,8537753404110146198,262144 --disable-features=PaintHolding --variations-seed-version --pseudonymization-salt-handle=7,i,13144614624375387682,11843639233243756958,4 --trace-process-track-uuid=3190708991934122588
+  20015   20000    1845 102208      12:00 /opt/google/chrome/chrome --type=zygote --no-sandbox --headless=new --crashpad-handler-pid=20007 --enable-crash-reporter=, --noerrdialogs --user-data-dir=/tmp/tabstudio-tests/f44fc6e9586c45569d09502118c86d24 --change-stack-guard-on-fork=enable --no-first-run --ozone-platform=headless --ozone-override-screen-size=800,600 --use-angle=swiftshader-webgl
+  20014   20000    1845 99456       12:00 /opt/google/chrome/chrome --type=zygote --no-zygote-sandbox --no-sandbox --headless=new --crashpad-handler-pid=20007 --enable-crash-reporter=, --noerrdialogs --user-data-dir=/tmp/tabstudio-tests/f44fc6e9586c45569d09502118c86d24 --change-stack-guard-on-fork=enable --no-first-run --ozone-platform=headless --ozone-override-screen-size=800,600 --use-angle=swiftshader-webgl
+  20249   20015    1845 87908       11:57 /opt/google/chrome/chrome --type=renderer --crashpad-handler-pid=20007 --enable-crash-reporter=, --noerrdialogs --user-data-dir=/tmp/tabstudio-tests/f44fc6e9586c45569d09502118c86d24 --change-stack-guard-on-fork=enable --no-sandbox --remote-debugging-port=0 --ozone-platform=headless --disable-gpu-compositing --lang=en-US --num-raster-threads=2 --enable-main-frame-before-activation --renderer-client-id=20 --launch-time-ticks=1517814933 --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,3686202014806447319,8537753404110146198,262144 --disable-features=PaintHolding --variations-seed-version --pseudonymization-salt-handle=7,i,13144614624375387682,11843639233243756958,4 --trace-process-track-uuid=3190709005052708474
+  20036   20014    1845 85008       12:00 /opt/google/chrome/chrome --type=gpu-process --gpu-recent-crash-count=0 --no-sandbox --headless=new --ozone-platform=headless --use-angle=swiftshader-webgl --crashpad-handler-pid=20007 --enable-crash-reporter=, --noerrdialogs --user-data-dir=/tmp/tabstudio-tests/f44fc6e9586c45569d09502118c86d24 --change-stack-guard-on-fork=enable --gpu-preferences=YAAAAAAAAAAgAAAEAAAAAAAAAAAAAGAASAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAwAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAMAAAAAQAAAAAAAAAAAAAACAAAAAAAAAAIAAAAAAAAAA== --shared-files --field-trial-handle=3,i,3686202014806447319,8537753404110146198,262144 --disable-features=PaintHolding --variations-seed-version --pseudonymization-salt-handle=7,i,13144614624375387682,11843639233243756958,4 --trace-process-track-uuid=3190708988185955192
+   1128       1    1128 67792       37:02 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+  20061   20015    1845 53600       12:00 /opt/google/chrome/chrome --type=utility --utility-sub-type=storage.mojom.StorageService --lang=en-US --service-sandbox-type=utility --no-sandbox --use-angle=swiftshader-webgl --crashpad-handler-pid=20007 --enable-crash-reporter=, --noerrdialogs --user-data-dir=/tmp/tabstudio-tests/f44fc6e9586c45569d09502118c86d24 --change-stack-guard-on-fork=enable --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,3686202014806447319,8537753404110146198,262144 --disable-features=PaintHolding --variations-seed-version --pseudonymization-salt-handle=7,i,13144614624375387682,11843639233243756958,4 --trace-process-track-uuid=3190708990060038890
+  14319       1   14319 52096       28:59 php-fpm: master process (/etc/php/8.3/fpm/php-fpm.conf)
+    221       1     221 43684       37:12 /sbin/multipathd -d -s
+    925       1     925 43348       37:02 /usr/bin/containerd
+   1287     844     844 37728       37:01 /usr/bin/python3 -u bin/WALinuxAgent-2.16.0.2-py3.12.egg -run-exthandlers
+    844       1     844 31876       37:03 /usr/bin/python3 -u /usr/sbin/waagent -daemon
+  14322   14319   14319 21484       28:59 php-fpm: pool www
+  14321   14319   14319 21480       28:59 php-fpm: pool www
+   1845       1    1845 21068       36:45 /opt/hca/hosted-compute-agent
+    822       1     822 20860       37:03 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
+    156       1     156 16580       37:13 /usr/lib/systemd/systemd-journald
+      1       0       1 14448       37:14 /sbin/init
+    843       1     843 13740       37:03 /usr/libexec/udisks2/udisksd
+    450       1     450 13384       37:10 /usr/lib/systemd/systemd-resolved
+    980       1     980 12844       37:02 /usr/sbin/ModemManager
+    945       1     945 11496       37:02 /usr/lib/systemd/systemd --user
+    841       1     841 10100       37:03 /usr/lib/systemd/systemd-logind
+    829       1     829 10084       37:03 /usr/lib/polkit-1/polkitd --no-debug
+    650       1     650  9820       37:08 /usr/lib/systemd/systemd-networkd
+    227       1     227  8016       37:12 /usr/lib/systemd/systemd-udevd
+   1881    1845    1845  6940       36:45 sudo -n PROVJOBD_E2E=1 /tmp/provjobd981832720
+    882       1     882  6524       37:02 /usr/sbin/rsyslogd -n -iNONE
+  20007       1   20006  6340       12:00 /opt/google/chrome/chrome_crashpad_handler --monitor-self --monitor-self-annotation=ptype=crashpad-handler --database=/home/runner/.config/google-chrome/Crash Reports --url=https://clients2.google.com/cr/report --annotation=channel= --annotation=lsb-release=Ubuntu 24.04.5 LTS --annotation=plat=Linux --annotation=prod=Chrome_Linux --annotation=ver=155.0.8059.39 --initial-client-fd=5 --shared-client-connection
+  20009       1   20008  6308       12:00 /opt/google/chrome/chrome_crashpad_handler --no-periodic-tasks --monitor-self-annotation=ptype=crashpad-handler --database=/home/runner/.config/google-chrome/Crash Reports --url=https://clients2.google.com/cr/report --annotation=channel= --annotation=lsb-release=Ubuntu 24.04.5 LTS --annotation=plat=Linux --annotation=prod=Chrome_Linux --annotation=ver=155.0.8059.39 --initial-client-fd=4 --shared-client-connection
+    817       1     817  5552       37:03 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+    508       1     508  5088       37:10 /usr/sbin/haveged --Foreground --verbose=1
+== Kernel messages
+[    4.122375] audit: type=1400 audit(1793040825.592:5): apparmor="STATUS" operation="profile_load" profile="unconfined" name="1password" pid=391 comm="apparmor_parser"
+[    4.124007] audit: type=1400 audit(1793040825.594:6): apparmor="STATUS" operation="profile_load" profile="unconfined" name="brave" pid=397 comm="apparmor_parser"
+[    4.124159] audit: type=1400 audit(1793040825.594:7): apparmor="STATUS" operation="profile_load" profile="unconfined" name="cam" pid=399 comm="apparmor_parser"
+[    4.124326] audit: type=1400 audit(1793040825.594:8): apparmor="STATUS" operation="profile_load" profile="unconfined" name="balena-etcher" pid=396 comm="apparmor_parser"
+[    4.124440] audit: type=1400 audit(1793040825.594:9): apparmor="STATUS" operation="profile_load" profile="unconfined" name="buildah" pid=398 comm="apparmor_parser"
+[    4.125828] audit: type=1400 audit(1793040825.596:10): apparmor="STATUS" operation="profile_load" profile="unconfined" name="ch-run" pid=401 comm="apparmor_parser"
+[    4.676447] /dev/sr0: Can't lookup blockdev
+[    4.763957] mlx5_core e945:00:02.0 enP59717s1: Link up
+[    4.793994] hv_netvsc 70a8a528-77f1-70a8-a528-77f170a8a528 eth0: Data path switched to VF: enP59717s1
+[    4.794613] mlx5_core e945:00:02.0 mlx5_0: Port: 1 Link ACTIVE
+[    4.809272] 8021q: 802.1Q VLAN Support v1.8
+[    6.315343] hv_netvsc 70a8a528-77f1-70a8-a528-77f170a8a528 eth0: Data path switched from VF: enP59717s1
+[    6.346208] mlx5_core e945:00:02.0 mlx5_0: Port: 1 Link DOWN
+[    6.996897] mlx5_core e945:00:02.0 enP59717s1: Link up
+[    7.013364] hv_netvsc 70a8a528-77f1-70a8-a528-77f170a8a528 eth0: Data path switched to VF: enP59717s1
+[    7.014193] mlx5_core e945:00:02.0 mlx5_0: Port: 1 Link ACTIVE
+[    9.167307] EXT4-fs (nvme0n1p1): resizing filesystem from 19398395 to 39059195 blocks
+[   10.374215] EXT4-fs (nvme0n1p1): resized filesystem to 39059195
+[   10.431554] ephemeral0: Can't lookup blockdev
+[   10.472895] systemd-fstab-generator[783]: Checking was requested for "ephemeral0", but it is not a device.
+[   10.472909] systemd-fstab-generator[783]: x-systemd.device-timeout ignored for ephemeral0
+[   12.050986] block nvme0n1: No UUID available providing old NGUID
+[   12.150790] ephemeral0: Can't lookup blockdev
+[   12.201660] kauditd_printk_skb: 113 callbacks suppressed
+[   12.201663] audit: type=1400 audit(1793040833.672:124): apparmor="STATUS" operation="profile_replace" info="same as current profile, skipping" profile="unconfined" name="rsyslogd" pid=866 comm="apparmor_parser"
+[   12.735452] systemd-journald[156]: /var/log/journal/2d791d5cce6240faa3c626058b1ffc7d/user-1001.journal: Journal file uses a different sequence number ID, rotating.
+[   12.840189] evm: overlay not supported
+[   12.981651] loop0: detected capacity change from 0 to 8
+[   13.147582] audit: type=1400 audit(1793040834.617:125): apparmor="STATUS" operation="profile_replace" info="same as current profile, skipping" profile="unconfined" name="/usr/lib/snapd/snap-confine" pid=1151 comm="apparmor_parser"
+[   13.453667] Adding 3145724k swap on /swapfile.  Priority:-2 extents:37 across:26501116k SS
+[   13.545355] audit: type=1400 audit(1793040835.015:126): apparmor="STATUS" operation="profile_load" profile="unconfined" name="docker-default" pid=1295 comm="apparmor_parser"
+[   14.299521] systemd-fstab-generator[1380]: Checking was requested for "ephemeral0", but it is not a device.
+[   14.299557] systemd-fstab-generator[1380]: x-systemd.device-timeout ignored for ephemeral0
+[   14.390889] Initializing XFRM netlink socket
+[   14.638375] bridge: filtering via arp/ip/ip6tables is no longer available by default. Update your scripts to load br_netfilter if you need this.
+[   29.002286] systemd-fstab-generator[1768]: Checking was requested for "ephemeral0", but it is not a device.
+[   29.002298] systemd-fstab-generator[1768]: x-systemd.device-timeout ignored for ephemeral0
+[   29.234964] systemd-fstab-generator[1827]: Checking was requested for "ephemeral0", but it is not a device.
+[   29.234977] systemd-fstab-generator[1827]: x-systemd.device-timeout ignored for ephemeral0
+[   49.152645] hv_balloon: Max. dynamic memory size: 16384 MB
