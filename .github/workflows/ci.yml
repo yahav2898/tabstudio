@@ -175,7 +175,7 @@ jobs:
           mkdir -p ci-out/screenshots/light
           run_light_tests() {
             TABSTUDIO_THEME=Light TABSTUDIO_SCREENSHOTS="$TABSTUDIO_SCREENSHOTS/light" \
-              dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter "FullyQualifiedName!~TabStudio.App.Tests.Theming&FullyQualifiedName!~TabStudio.App.Tests.Design" \
+              dotnet test tests/TabStudio.App.Tests -c Release --no-build --blame --blame-hang-timeout 12m --blame-hang-dump-type none --filter "FullyQualifiedName!~TabStudio.App.Tests.Theming&FullyQualifiedName!~TabStudio.App.Tests.Design" \
               --logger "console;verbosity=normal" > "$1" 2>&1
           }
           light=0
