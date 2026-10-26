@@ -85,6 +85,10 @@ public static partial class SelfTest
                 return new SelfTestResult(false, summary, clock.Elapsed);
             }
 
+            var localAI = await CheckLocalAIAsync(cancellationToken);
+            if (!localAI.Success) return new SelfTestResult(false, $"{summary} | {localAI.Message}", clock.Elapsed);
+            summary += " | " + localAI.Message;
+
             var debugged = await DebugSampleAsync(workspace, cancellationToken);
             if (debugged.Success)
             {

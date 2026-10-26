@@ -1,5 +1,6 @@
 // Stable, deliberately small C ABI. llama.cpp's version-dependent structs never cross P/Invoke.
 #include "llama.h"
+#include "ggml-backend.h"
 #include <algorithm>
 #include <atomic>
 #include <chrono>
@@ -27,8 +28,17 @@ API void *tsai_load(const char *path, int context, int threads, int gpu_layers) 
         std::call_once(init, [] { llama_backend_init(); });
         auto e = std::make_unique<engine>();
         auto mp = llama_model_default_params();
-        mp.n_gpu_layers = gpu_layers;
+        mp.n_gpu_layers = std::max(0, gpu_layers);
+        if(gpu_layers < 0) {
+            for(size_t i = 0; i < ggml_backend_dev_count(); ++i) {
+                if(ggml_backend_dev_type(ggml_backend_dev_get(i)) == GGML_BACKEND_DEVICE_TYPE_GPU) { mp.n_gpu_layers = 99; break; }
+            }
+        }
         e->model = llama_model_load_from_file(path, mp);
+        if(!e->model && gpu_layers < 0 && mp.n_gpu_layers > 0) {
+            mp.n_gpu_layers = 0;
+            e->model = llama_model_load_from_file(path, mp);
+        }
         if(!e->model) { last_error = "Cannot load this GGUF model."; return nullptr; }
         auto cp = llama_context_default_params();
         cp.n_ctx = std::clamp(context, 256, 4096);
@@ -38,6 +48,12 @@ API void *tsai_load(const char *path, int context, int threads, int gpu_layers) 
         cp.abort_callback = [](void *p) { return static_cast<engine *>(p)->canceled.load(); };
         cp.abort_callback_data = e.get();
         e->context = llama_init_from_model(e->model, cp);
+        if(!e->context && gpu_layers < 0 && mp.n_gpu_layers > 0) {
+            llama_model_free(e->model);
+            mp.n_gpu_layers = 0;
+            e->model = llama_model_load_from_file(path, mp);
+            if(e->model) e->context = llama_init_from_model(e->model, cp);
+        }
         if(!e->context) { last_error = "Cannot allocate model context; try a smaller model."; return nullptr; }
         return e.release();
     } catch(const std::exception &ex) { last_error = ex.what(); return nullptr; }

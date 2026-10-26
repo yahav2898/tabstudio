@@ -39,6 +39,7 @@ public static class AppServices
         // App services.
         services.AddSingleton(paths);
         services.AddSingleton<CompilerServices>();
+        services.AddSingleton<Services.LocalAI.LocalAIService>();
         services.AddSingleton<RecentWorkspaces>();
         services.AddSingleton<SessionStore>();
         services.AddSingleton<SampleLibrary>();

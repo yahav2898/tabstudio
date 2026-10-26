@@ -19,9 +19,13 @@ public sealed partial class WorkspaceViewModel : IAgentWorkspaceHost
     private static readonly Lazy<HttpClient> SharedAgentHttp = new(() => new HttpClient { Timeout = TimeSpan.FromMinutes(10) });
 
     private AgentPanelViewModel? _agent;
+    private readonly bool _ownsLocalAI;
+
+    /// <summary>Shared on-device inference and model storage.</summary>
+    public Services.LocalAI.LocalAIService LocalAI { get; }
 
     /// <summary>The agent tool window, created the first time it is shown.</summary>
-    public AgentPanelViewModel Agent => _agent ??= ConnectAgentActivity(new AgentPanelViewModel(new AgentSettingsStore(_paths), AgentHttp, _ui, new IdeAgentWorkspace(this, _ui)));
+    public AgentPanelViewModel Agent => _agent ??= ConnectAgentActivity(new AgentPanelViewModel(new AgentSettingsStore(_paths), AgentHttp, _ui, new IdeAgentWorkspace(this, _ui), LocalAI));
 
     /// <summary>The HTTP client the agent talks to Claude and MCP servers with; tests give it a fake.</summary>
     internal HttpClient AgentHttp { get; init; } = SharedAgentHttp.Value;

@@ -106,7 +106,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     /// <param name="swarm">The swarm, which runs the app on phones and tablets; none when <see langword="null"/>.</param>
     /// <param name="recentWorkspaces">The solutions opened recently, which the search finds; none when <see langword="null"/>.</param>
     /// <param name="windowsBridge">The Windows Bridge, which builds and runs Windows-only projects on a paired PC; none when <see langword="null"/>.</param>
-    public WorkspaceViewModel(CompilerServices compiler, IDeviceStatus device, DeviceProfile profile, IUiDispatcher ui, SessionStore sessions, AppPaths paths, GitHubAccountViewModel? gitHubAccount = null, IStoragePicker? browser = null, IWebViewFactory? webViews = null, INotifications? notifications = null, IAppActivity? appActivity = null, LinkService? link = null, LinkViewModel? linkDialog = null, Services.LanguageServers.LanguageServerServices? languageServers = null, ExtensionsService? extensions = null, Services.Toolchains.ToolchainServices? toolchains = null, global::TabStudio.App.Swarm.SwarmServices? swarm = null, RecentWorkspaces? recentWorkspaces = null, Services.WindowsBridge.WindowsBridgeService? windowsBridge = null)
+    public WorkspaceViewModel(CompilerServices compiler, IDeviceStatus device, DeviceProfile profile, IUiDispatcher ui, SessionStore sessions, AppPaths paths, GitHubAccountViewModel? gitHubAccount = null, IStoragePicker? browser = null, IWebViewFactory? webViews = null, INotifications? notifications = null, IAppActivity? appActivity = null, LinkService? link = null, LinkViewModel? linkDialog = null, Services.LanguageServers.LanguageServerServices? languageServers = null, ExtensionsService? extensions = null, Services.Toolchains.ToolchainServices? toolchains = null, global::TabStudio.App.Swarm.SwarmServices? swarm = null, RecentWorkspaces? recentWorkspaces = null, Services.WindowsBridge.WindowsBridgeService? windowsBridge = null, Services.LocalAI.LocalAIService? localAI = null)
     {
         ArgumentNullException.ThrowIfNull(compiler);
         ArgumentNullException.ThrowIfNull(device);
@@ -136,6 +136,8 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         WebPreview = new WebPreviewViewModel(webViews ?? new NoWebViewFactory(), browser ?? new TopLevelStoragePicker());
         InitializeDebugging();
         InitializeTests();
+        LocalAI = localAI ?? new Services.LocalAI.LocalAIService(paths, device);
+        _ownsLocalAI = localAI is null;
         InitializeAgent();
         InitializeLink();
         Documents.CollectionChanged += (_, _) => UpdateActiveProjects();
@@ -399,6 +401,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         DisposeActions();
         DisposePullRequests();
         DisposeToolchains();
+        if (_ownsLocalAI) LocalAI.Dispose();
         GitChanges.Dispose();
         DisposeLanguageServers();
         DisposeExtensions();

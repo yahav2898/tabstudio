@@ -118,13 +118,21 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 - **Port to cross-platform.** One tap converts a WPF or Windows Forms project into an Avalonia project that runs natively everywhere. A converter rewrites everything that maps exactly, Claude does the rest, and you review it all as a diff.
 - **Speaks MCP.** The agent connects to any Model Context Protocol server, so your own tools and services are one setting away.
 
+### Offline AI
+
+Open **Agent settings**, choose a local GGUF model, read and accept its license, then download it. **Local mode** runs chat, explanations, fixes and test generation on the tablet with the same Keep/Undo proposals. Its badge says **Code and prompts stay on device**; local mode has no cloud or MCP connection.
+
+Enable **Inline completions** for ghost text in any editor language: **Tab** accepts, **Escape** or typing cancels. Context includes the current file and unsaved open neighbors. Completion pauses when the device is hot or below 16% battery while unplugged. The model manager shows download size, estimated RAM and speed measured on this device, and offers cancel, unload and delete.
+
+Qwen2.5-Coder 1.5B/3B Q4 and Qwen2.5 0.5B chat are offered at pinned revisions with SHA-256 verification. Models are optional downloads; their individual licenses apply (the 3B model uses the Qwen Research License). Local AI requires a 64-bit build with the native runtime. See [runtime measurements and reproduction](docs/local-ai/spike.md).
+
 ### Built for the device in your hands
 
 - **Runs on modest tablets.** TabStudio measures the device it runs on and adapts. On a 3 GB tablet it keeps a full compiler model only of the projects you are editing, reads .NET's metadata straight from storage instead of holding it in memory, and gives memory back the moment Android asks for it.
 - **Borrow your phone's power.** With TabStudio Link, the same app on your phone or PC becomes a build and language server for your tablet over local Wi-Fi. The tablet shows the IDE; the stronger device does the heavy lifting. No cloud and no account: pair once with a QR code, and the connection is end-to-end encrypted. If the phone leaves, the tablet keeps compiling on its own and reconnects by itself.
 - **Never loses your place.** Android closes background apps on small devices. TabStudio saves your session as you work, so it reopens exactly where you left it, unsaved edits included.
 - **Thermal-aware builds.** When the tablet runs hot, TabStudio compiles on fewer cores instead of letting Android throttle everything, and the status bar tells you why.
-- **Works offline.** Everything except downloads, Git remotes and the agent runs without a connection.
+- **Works offline.** Everything except downloads, Git remotes and cloud agent mode runs without a connection.
 
 The order in which all of this ships is in the [roadmap](docs/ROADMAP.md).
 

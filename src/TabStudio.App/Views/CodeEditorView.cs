@@ -34,7 +34,8 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
 
     /// <summary>Creates the editor for a document.</summary>
     /// <param name="document">The document to edit.</param>
-    public CodeEditorView(DocumentViewModel document)
+    /// <param name="inlineCompletion">Optional completion provider, also used by editor integration tests.</param>
+    public CodeEditorView(DocumentViewModel document, InlineCompletionController? inlineCompletion = null)
     {
         ArgumentNullException.ThrowIfNull(document);
         _document = document;
@@ -100,6 +101,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
         _editor.TextArea.Caret.PositionChanged += OnCaretPositionChanged;
         _editor.TextArea.TextView.PointerHover += OnPointerHover;
         _editor.TextArea.TextView.PointerHoverStopped += OnPointerHoverStopped;
+        InitializeInlineCompletion(inlineCompletion);
         InitializeIntelliSense();
         InitializeDebugging();
         InstallTestCommands();
@@ -117,6 +119,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
     /// <inheritdoc />
     public void Dispose()
     {
+        DisposeInlineCompletion();
         DisposeReviewThreads();
         DisposePeek();
         DisposeLiveTesting();

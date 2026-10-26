@@ -46,6 +46,15 @@ public interface IDeviceStatus
     /// <summary>The current thermal state.</summary>
     ThermalState Thermal { get; }
 
+    /// <summary>Battery charge, or -1 when the platform cannot read it.</summary>
+    int BatteryPercent => -1;
+
+    /// <summary>Whether external power is connected.</summary>
+    bool IsCharging => true;
+
+    /// <summary>Raised when battery charge or charging state changes.</summary>
+    event EventHandler? PowerChanged { add { } remove { } }
+
     /// <summary>Raised when <see cref="Thermal"/> changes. May be raised on any thread.</summary>
     event EventHandler? ThermalChanged;
 
