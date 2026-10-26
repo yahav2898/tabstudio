@@ -142,7 +142,36 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
         }
 
         using var timeout = new CancellationTokenSource(SelfTestTimeout);
-        var result = await SelfTest.RunAsync(main, services.GetRequiredService<SampleLibrary>(), services.GetRequiredService<ProjectTemplates>(), screenshots, timeout.Token);
+        var toolchains = services.GetRequiredService<TabStudio.App.Services.Toolchains.ToolchainServices>().Manager;
+        var preparationClock = System.Diagnostics.Stopwatch.StartNew();
+        var phases = new Dictionary<string, string>(StringComparer.Ordinal);
+        var phaseGate = new object();
+        void ReportPreparation(object? sender, TabStudio.Toolchains.Installation.ToolchainStatus status)
+        {
+            var phase = status.Progress?.Stage.ToString() ?? status.State.ToString();
+            lock (phaseGate)
+            {
+                if (phases.GetValueOrDefault(status.Toolchain.Id) == phase)
+                {
+                    return;
+                }
+
+                phases[status.Toolchain.Id] = phase;
+            }
+
+            AndroidLog.Info(LogTag, $"Toolchain preparation: {status.Toolchain.Id} {phase} at {preparationClock.Elapsed.TotalSeconds:0.0} s");
+        }
+
+        SelfTestResult result;
+        toolchains.StatusChanged += ReportPreparation;
+        try
+        {
+            result = await SelfTest.RunAsync(main, services.GetRequiredService<SampleLibrary>(), services.GetRequiredService<ProjectTemplates>(), screenshots, timeout.Token);
+        }
+        finally
+        {
+            toolchains.StatusChanged -= ReportPreparation;
+        }
         if (result.Success)
         {
             var scrolling = await SelfTest.ScrollEditorAsync(main, services.GetRequiredService<SampleLibrary>(), new AndroidTouchSelfTestDevice(() => _current), line => AndroidLog.Info(LogTag, line), timeout.Token);

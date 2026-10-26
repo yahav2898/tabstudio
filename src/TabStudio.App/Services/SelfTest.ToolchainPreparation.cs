@@ -4,6 +4,8 @@ namespace TabStudio.App.Services;
 
 public static partial class SelfTest
 {
+    private static readonly string[] SelfTestToolchainIds = ["python", "node", "go", "rust", "cpp", "java"];
+
     /// <summary>
     /// Installs the self test's toolchains while its independent .NET and UI checks run. The manager serializes
     /// package operations; the caller awaits this task before running any of the toolchain checks.
@@ -16,14 +18,9 @@ public static partial class SelfTest
             return;
         }
 
-        foreach (var id in new[] { "python", "node", "go", "rust", "cpp", "java" })
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (!toolchains.Manager.IsReady(id))
-            {
-                await toolchains.Manager.InstallAsync(id, cancellationToken).ConfigureAwait(false);
-            }
-        }
+        var missing = SelfTestToolchainIds
+            .Where(id => !toolchains.Manager.IsReady(id));
+        await toolchains.Manager.InstallManyAsync(missing, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>Stops and observes preparation on every exit path, including a failed earlier UI check.</summary>
