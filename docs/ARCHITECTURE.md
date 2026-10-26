@@ -52,6 +52,7 @@ Dependencies point down only. Each layer has one job:
 | `TabStudio.Wpf` | OpenSilver's in-process XAML compiler, WPF template and browser startup, on the WebAssembly host. | Compilation, Packages, Web |
 | `TabStudio.Porting` | Converts saved C# WPF and Windows Forms projects into sibling Avalonia projects, with generated support files and structured port notes. | Core, Roslyn |
 | `TabStudio.Remote` | SSH.NET connections, platform signing, SFTP source caches, remote processes, forwarding and publishing. | `TabStudio.Toolchains` |
+| `TabStudio.Services` | Compose/devcontainer parsing, native service mappings, persistent data, dependency scheduling, health, per-service logs and connection rewriting. | `TabStudio.Toolchains` |
 | `TabStudio.Toolchains` | The Toolchain Store: the catalog, Alpine Linux on PRoot, verified Alpine packages, processes and pseudo terminals, toolchain projects and the terminal emulator. | `TabStudio.Core` |
 | `TabStudio.Forms` | Windows Forms on Avalonia: `System.Windows.Forms` and `System.Drawing`, run in the app preview. | Avalonia |
 | `TabStudio.Forms.Design` | The Windows Forms designer's model: reads and writes `InitializeComponent`, the Toolbox and properties. | `TabStudio.Forms`, Roslyn |
@@ -959,3 +960,48 @@ Library tests cover SQLite schema details, quoting, multi-result queries, cancel
 `FimPromptBuilder` uses Qwen's FIM vocabulary and a UTF-8 byte budget for the current prefix/suffix plus three unsaved open neighbors. `InlineCompletionController` waits 450 ms after editing, cancels pending work and rejects stale responses even if the generator ignores cancellation. Every `CodeEditorView` can render the proposal through a zero-document-length `GhostTextGenerator`; Tab inserts it as a single undo group. Typing, movement, selection, loss of focus and Escape clear it. No language service is required. Background completions do not queue behind an occupied chat engine. Android's existing thermal state and sticky battery broadcasts pause completions when hot or at 15% charge or lower without external power.
 
 `local-ai.yml` compares native/server inference on x64 and ARM64 Linux and the Android emulator, then runs the managed real-model tests. Fake-server tests cover the completion protocol; other tests cover FIM, model integrity, licenses, proposal confinement and ghost-text input. The main emulator APK bundles the verified 260K diagnostic model only with `TabStudioIncludeLocalAITestModel=true`; its in-app self-test loads the model through P/Invoke and must generate tokens. Regular APKs carry no model. See [the spike](features/local-ai.md) for measured results and limitations.
+
+## Native backing services
+
+`TabStudio.Services` translates known Compose images to Alpine packages and foreground PRoot processes. It has no UI
+or Docker dependency. `ComposeReader` reads YAML, anchors/merges, environment interpolation, `.env`/`env_file`, short
+and long ports/volumes/dependencies, commands, health checks and devcontainer JSONC with ordered Compose overrides.
+`ServiceCatalog` checks package availability/version in the signed index. `ServicePackages` in the App layer uses the
+existing `AlpinePackageManager` and serializes changes with Toolchain Store operations.
+
+`ServiceManager` owns the processes of one workspace. It topologically orders dependencies, rejects cycles and missing
+required services before launch, waits for readiness, rolls back only new processes on failure/cancellation, monitors
+health, and stops dependents first. Daemons get private per-service bind mounts through `ProcessStartSpec.Mounts`;
+`UserId` selects a simulated non-root PRoot identity (PostgreSQL 70). Other toolchain runs retain their original root
+identity and mounts. Each workspace's stable path hash selects `Services/<hash>` in app storage; named volumes are
+shared within that workspace. Bind sources seed private copies, with read-only seeds refreshed on start.
+
+The processes share the device network, so daemon listen options use published localhost ports. Explicit conflicts
+fail before startup; implicit collisions/privileged ports use a free unprivileged port. Final endpoints rewrite host
+fields, URIs and Redis endpoints without replacing credentials. F5 starts dependencies of the Compose application
+whose build context contains the startup project (or the devcontainer service), then supplies environment overrides
+to external processes and in-process .NET runs. `RunEnvironment` sets/restores variables under the existing
+`ProcessConsole` lease, including debug runs and ASP.NET Core hosts. It never edits appsettings files.
+
+`ServicesViewModel` feeds the Services tool window and its per-service logs, controls and preview links. The optional
+`IServiceDatabaseExplorer` adapter exposes “Open in Database Explorer” only for an available provider. When
+`agent/database` is combined, MSBuild includes its typed PostgreSQL bridge automatically; it reuses transient
+connection IDs while refreshing ports and does not persist service credentials. Hosts can also inject an adapter.
+Unknown images stay visible with reasons and a remote-host action. Closing a workspace disposes its services;
+stopping an app leaves its backing services available for the next
+F5. Reload stops services and reparses configuration, preserving their data.
+
+CI runs real PostgreSQL and Redis in the same Alpine/PRoot runtime on x64 and ARM64, plus an App test that builds an
+ASP.NET Core template using Npgsql and queries PostgreSQL through its HTTP endpoint. The emulator self-test installs
+PostgreSQL via the signed package manager, initializes it, runs a SQL script and SELECT, and stops it. See
+[Services](features/services.md) for package/Compose coverage and local reproduction.
+
+## Flutter and Dart
+
+`FlutterToolchainInstaller` wraps `LinuxToolchainInstaller` and owns `Toolchains/flutter/rootfs`. Its Ubuntu Base 24.04.3 ARM64/amd64 archives and matching official Dart ZIPs have pinned SHA-256 digests. Flutter source is pinned to release 3.38.0 and checked against its immutable Git commit before bootstrap. Ubuntu installs its prerequisites through signed apt repositories; package versions follow Ubuntu security updates. SDK bootstrap and cache preparation remain network operations.
+
+`FlutterRuntime` routes `flutter`, `dart`, and absolute `/opt/flutter/` commands through a second `ProotRuntime` using the same packaged PRoot and loader. Workspace paths are shared unchanged, keeping LSP/DAP source paths valid. All other tools and the default Terminal remain in Alpine. The generic PRoot options now include shell and search path while retaining Alpine defaults.
+
+`FlutterProject` distinguishes Flutter SDK dependencies from plain Dart packages. The ordinary dependency notice offers pub get. The analysis server runs as `dart language-server --protocol=lsp`; Flutter DAP runs as `flutter debug-adapter`, Dart DAP as `dart debug_adapter`. Flutter's forwarded web-launch event opens only a loopback HTTP(S) URL in the existing preview. Saves serialize/coalesce adapter hot-restart requests for web, or hot-reload requests for native VM targets. Explicit launch configurations can choose a native device once the mobile toolchain is available. Swarm web targets tunnel the same loopback server to phones.
+
+See [Flutter verification](features/flutter.md) for the experiment's measured results, pending SDK/PRoot/device checks and the dedicated emulator test entry point. Web preview is a no-debug DAP launch: a generic WebView does not implement Dart's browser-debug extension.

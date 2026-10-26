@@ -21,6 +21,12 @@ public sealed record ProotRuntimeOptions
     /// <summary>The environment's name for the UI, such as <c>Alpine Linux 3.24</c>.</summary>
     public string DisplayName { get; init; } = "Alpine Linux";
 
+    /// <summary>The interactive shell of this distribution.</summary>
+    public string Shell { get; init; } = "/bin/ash";
+
+    /// <summary>The distribution's command search path.</summary>
+    public string SearchPath { get; init; } = ProotRuntime.SearchPath;
+
     /// <summary>Folders of the device visible to programs at the same path, such as TabStudio's projects folder.</summary>
     public IReadOnlyList<string> SharedFolders { get; init; } = [];
 }
@@ -118,7 +124,7 @@ public sealed partial class ProotRuntime : IToolchainRuntime
             return Exists(ToRootfs(command)) || (IsShared(command) && Exists(command)) ? command : null;
         }
 
-        return SearchPath.Split(':')
+        return _options.SearchPath.Split(':')
             .Where(folder => Exists(Path.Combine(_options.Rootfs, folder.TrimStart('/'), command)))
             .Select(folder => folder + "/" + command)
             .FirstOrDefault();
@@ -127,7 +133,7 @@ public sealed partial class ProotRuntime : IToolchainRuntime
     /// <inheritdoc />
     public ProcessStartSpec Shell(string workingDirectory, TerminalSize size) => new()
     {
-        Program = "/bin/ash",
+        Program = _options.Shell,
         Arguments = ["-l"],
         WorkingDirectory = workingDirectory,
         Terminal = size,
@@ -173,7 +179,6 @@ public sealed partial class ProotRuntime : IToolchainRuntime
             "--link2symlink",
             "--sysvipc",
             "-L",
-            "-0",
             "-r", _options.Rootfs,
             "-b", "/dev",
             "-b", "/proc",
@@ -187,6 +192,16 @@ public sealed partial class ProotRuntime : IToolchainRuntime
             "-b", $"{Path.Combine(_options.Rootfs, "tmp")}:/dev/shm",
         };
 
+        if (spec.UserId is { } uid)
+        {
+            ArgumentOutOfRangeException.ThrowIfNegative(uid);
+            arguments.AddRange(["-i", $"{uid}:{uid}"]);
+        }
+        else
+        {
+            arguments.Add("-0");
+        }
+
         foreach (var file in _procStandIns.Value)
         {
             arguments.Add("-b");
@@ -198,13 +213,41 @@ public sealed partial class ProotRuntime : IToolchainRuntime
             ShareFolder(folder);
         }
 
+        List<string> shared;
         lock (_gate)
         {
-            foreach (var shared in _sharedFolders.Where(Directory.Exists))
+            shared = [.. _sharedFolders];
+        }
+
+        foreach (var path in shared)
+        {
+            if (!Directory.Exists(path))
             {
-                arguments.Add("-b");
-                arguments.Add(shared);
+                // A session's folder that is gone, such as a debug adapter's socket folder.
+                RemoveMountPoint(path);
+                continue;
             }
+
+            EnsureMountPoint(path);
+            arguments.Add("-b");
+            arguments.Add(path);
+        }
+
+        foreach (var mount in spec.Mounts)
+        {
+            if (!Path.IsPathFullyQualified(mount.Source) || !mount.Target.StartsWith('/')
+                || mount.Source.Contains(':') || mount.Target.Contains(':') || mount.Target.Split('/').Contains(".."))
+            {
+                throw new ArgumentException("Process mounts need absolute paths without ':' or '..'.", nameof(spec));
+            }
+
+            // A service's data folder gets a lasting mount point too, so no other PRoot's exit removes it.
+            if (Directory.Exists(mount.Source))
+            {
+                EnsureMountPoint(mount.Target);
+            }
+
+            arguments.AddRange(["-b", $"{mount.Source}:{mount.Target}"]);
         }
 
         arguments.Add("-w");
@@ -226,11 +269,11 @@ public sealed partial class ProotRuntime : IToolchainRuntime
     {
         var environment = new Dictionary<string, string>(StringComparer.Ordinal)
         {
-            ["PATH"] = SearchPath,
+            ["PATH"] = _options.SearchPath,
             ["HOME"] = "/root",
             ["USER"] = "root",
             ["LOGNAME"] = "root",
-            ["SHELL"] = "/bin/ash",
+            ["SHELL"] = _options.Shell,
             ["LANG"] = "C.UTF-8",
             ["TMPDIR"] = "/tmp",
             ["TERM"] = spec.Terminal is null ? "dumb" : "xterm-256color",
@@ -250,12 +293,59 @@ public sealed partial class ProotRuntime : IToolchainRuntime
             }
             else
             {
-                environment[name] = name == "PATH" ? value.Replace("$PATH", SearchPath, StringComparison.Ordinal) : value;
+                environment[name] = name == "PATH" ? value.Replace("$PATH", _options.SearchPath, StringComparison.Ordinal) : value;
             }
         }
 
         Directory.CreateDirectory(_options.TemporaryDirectory);
         return [.. environment.Select(e => $"{e.Key}={e.Value}")];
+    }
+
+    /// <summary>
+    /// Creates a shared folder's own path inside the root file system, so that PRoot binds over a directory that
+    /// already exists.
+    /// </summary>
+    /// <remarks>
+    /// When a binding's guest path is missing, PRoot creates each missing component in the root file system as a
+    /// placeholder and removes the empty placeholders when that PRoot process exits. Every program shares one root
+    /// file system, so the first PRoot to bind <c>/data/…/Projects</c> owned <c>rootfs/data</c> and its children,
+    /// and its exit (a language server or debugger stopping with a closed workspace) deleted them under programs
+    /// still running: their working directory vanished, and <c>rustc</c> started by a running <c>cargo build</c>
+    /// failed with "Current directory is invalid". A path that exists before PRoot starts is never a placeholder,
+    /// so no PRoot removes it.
+    /// </remarks>
+    private void EnsureMountPoint(string shared)
+    {
+        if (!Directory.Exists(_options.Rootfs))
+        {
+            return;
+        }
+
+        try
+        {
+            Directory.CreateDirectory(ToRootfs(shared));
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // PRoot then glues the path itself, as it did before.
+        }
+    }
+
+    /// <summary>Removes the empty mount point of a shared folder that no longer exists on the device.</summary>
+    private void RemoveMountPoint(string shared)
+    {
+        var mountPoint = ToRootfs(shared);
+        try
+        {
+            if (Directory.Exists(mountPoint) && !Directory.EnumerateFileSystemEntries(mountPoint).Any())
+            {
+                Directory.Delete(mountPoint);
+            }
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // Not empty, or already removed: an empty folder is all that is left either way.
+        }
     }
 
     private string GuestWorkingDirectory(string? folder) =>

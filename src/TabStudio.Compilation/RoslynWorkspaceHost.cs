@@ -130,8 +130,10 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         _projects.Clear();
         _skeletons.Clear();
 
+        // An Aspire AppHost compiles against code only its SDK generates, and runs only on a computer (see the
+        // Compatibility Doctor), so it is not compiled here.
         var csharpProjects = workspace.Projects
-            .Where(p => p.Language == ProjectLanguage.CSharp && p.Kind != ProjectKind.Unknown)
+            .Where(p => p.Language == ProjectLanguage.CSharp && p.Kind is not (ProjectKind.Unknown or ProjectKind.AspireAppHost))
             .ToList();
 
         foreach (var project in csharpProjects)
@@ -140,6 +142,8 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             _projectIds[project.FilePath] = id;
             _projects[id] = project;
         }
+
+        IndexProjects();
 
         var allProjectDirectories = workspace.Projects.Select(p => p.DirectoryPath).ToList();
         AddSolution(workspace, csharpProjects, allProjectDirectories, sources);
@@ -370,6 +374,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         }
 
         var diagnostics = await Razor.RazorCompilations.MapAsync(project, info, compilation.GetDiagnostics(cancellationToken), cancellationToken).ConfigureAwait(false);
+        diagnostics.AddRange(AnalyzerFailuresFor(info, project.AnalyzerReferences.Select(r => r.FullPath)));
         if (WpfProject.UsesWpf(info))
         {
             return WpfDiagnostics.Explain(WpfDiagnostics.Map(compilation.GetDiagnostics(cancellationToken), info), compilation, info, cancellationToken);
@@ -499,7 +504,10 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             return wpf;
         }
 
-        return await Razor.RazorCompilations.EmitAsync(project, info, compilation, checkInProcessSafety, stopwatch, cancellationToken).ConfigureAwait(false);
+        var result = await Razor.RazorCompilations.EmitAsync(project, info, compilation, checkInProcessSafety, stopwatch, cancellationToken).ConfigureAwait(false);
+        return AnalyzerFailuresFor(info, project.AnalyzerReferences.Select(r => r.FullPath)) is { Count: > 0 } failures
+            ? result with { Diagnostics = [.. result.Diagnostics, .. failures] }
+            : result;
     }
 
     /// <inheritdoc />
@@ -569,14 +577,22 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             documents.Add(CreateDocumentInfo(DocumentId.CreateNewId(id, path), path, globalUsings, isGenerated: true));
         }
 
+        if (CreateAssemblyAttributesSource(project) is { } assemblyInfo)
+        {
+            var path = Path.Combine(project.DirectoryPath, "obj", $"{project.Name}.AssemblyInfo.g.cs");
+            documents.Add(CreateDocumentInfo(DocumentId.CreateNewId(id, path), path, assemblyInfo, isGenerated: true));
+        }
+
         documents.AddRange(WindowsFormsDocuments(id, project));
 
-        var projectReferences = project.ProjectReferences
+        var projectReferences = CompileReferencesOf(project)
             .Where(reference => _projectIds.ContainsKey(reference) && !_skeletons.ContainsKey(reference))
             .Select(reference => new ProjectReference(_projectIds[reference]));
 
         // An Uno or WinUI 3 app has no Main of its own here: TabStudio's host starts it, as each platform's head does.
-        var kind = project.IsExecutable && !Uno.UnoBuild.UsesUno(project) ? AssemblyKind.ConsoleApplication : AssemblyKind.Library;
+        // Nor has a test project, even an executable one such as xUnit v3's, whose Main its package's targets generate:
+        // TabStudio's test runner loads it as a library.
+        var kind = project.IsExecutable && !project.IsTestProject && !Uno.UnoBuild.UsesUno(project) ? AssemblyKind.ConsoleApplication : AssemblyKind.Library;
         var allowUnsafe = string.Equals(project.GetProperty("AllowUnsafeBlocks"), "true", StringComparison.OrdinalIgnoreCase);
 
         return RoslynProjectInfo.Create(
@@ -586,7 +602,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             project.GetProperty("AssemblyName") ?? project.Name,
             LanguageNames.CSharp,
             filePath: project.FilePath,
-            compilationOptions: WithPathMap(CSharpCompiler.CreateCompilationOptions(kind, project.NullableEnabled, _optimize, allowUnsafe, _concurrentBuild), project),
+            compilationOptions: WithStrongName(WithPathMap(CSharpCompiler.CreateCompilationOptions(kind, project.NullableEnabled, _optimize, allowUnsafe, _concurrentBuild), project), project),
             parseOptions: ParseOptionsFor(project, _optimize),
             documents: documents,
             projectReferences: projectReferences,

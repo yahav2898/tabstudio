@@ -31,7 +31,9 @@ internal static class RazorCompilations
 
         if (!RazorProjects.UsesRazor(info))
         {
-            return [.. DiagnosticMapper.Map(compilerDiagnostics, info.Name)];
+            // What source generators report, such as a generator that threw (CS8785), joins the compiler's errors.
+            var generated = await GeneratorDiagnostics.GetAsync(project, cancellationToken).ConfigureAwait(false);
+            return [.. DiagnosticMapper.Map(compilerDiagnostics.Concat(generated), info.Name)];
         }
 
         var generator = await GeneratorDiagnostics.GetAsync(project, cancellationToken).ConfigureAwait(false);
@@ -61,7 +63,16 @@ internal static class RazorCompilations
 
         if (!RazorProjects.UsesRazor(info))
         {
-            return CSharpCompiler.Emit(compilation, checkInProcessSafety, stopwatch, info.Name, ManifestResources.For(info), cancellationToken);
+            // A generator's errors fail the build, as with the SDK.
+            var generated = await GeneratorDiagnostics.GetAsync(project, cancellationToken).ConfigureAwait(false);
+            return CSharpCompiler.Emit(
+                compilation,
+                checkInProcessSafety,
+                stopwatch,
+                info.Name,
+                ManifestResources.For(info),
+                generated.IsEmpty ? null : diagnostics => DiagnosticMapper.Map(diagnostics.Concat(generated), info.Name),
+                cancellationToken);
         }
 
         var generator = await GeneratorDiagnostics.GetAsync(project, cancellationToken).ConfigureAwait(false);

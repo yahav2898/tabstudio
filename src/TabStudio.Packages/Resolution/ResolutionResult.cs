@@ -5,7 +5,11 @@ namespace TabStudio.Packages.Resolution;
 /// <summary>A package in the final dependency graph.</summary>
 /// <param name="Match">The selected version and where it comes from.</param>
 /// <param name="IsDirect">Whether the project references the package itself.</param>
-internal sealed record ResolvedPackage(PackageMatch Match, bool IsDirect);
+/// <param name="FlowsAnalyzers">
+/// Whether the project reaches the package through packages only, not through another project: NuGet's default
+/// <c>PrivateAssets</c> keeps a referenced project's analyzers and source generators to that project.
+/// </param>
+internal sealed record ResolvedPackage(PackageMatch Match, bool IsDirect, bool FlowsAnalyzers = true);
 
 /// <summary>The outcome of resolving a project's dependency graph.</summary>
 /// <param name="Packages">The selected packages, one version per id, ordered by id.</param>

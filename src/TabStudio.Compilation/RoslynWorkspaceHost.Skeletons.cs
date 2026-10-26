@@ -88,7 +88,7 @@ public sealed partial class RoslynWorkspaceHost
 
     /// <summary>The skeleton images a project references in place of project references.</summary>
     private IEnumerable<MetadataReference> SkeletonReferencesFor(TsProject project) =>
-        project.ProjectReferences.Where(_skeletons.ContainsKey).Select(r => _skeletons[r]);
+        CompileReferencesOf(project).Where(_skeletons.ContainsKey).Select(r => _skeletons[r]);
 
     /// <summary>
     /// Creates skeletons for the referenced projects nobody is editing, from the solution just loaded with full
@@ -102,7 +102,7 @@ public sealed partial class RoslynWorkspaceHost
             return false;
         }
 
-        var referenced = projects.SelectMany(p => p.ProjectReferences).ToHashSet(StringComparer.Ordinal);
+        var referenced = projects.SelectMany(CompileReferencesOf).ToHashSet(StringComparer.Ordinal);
         var keys = new Dictionary<string, string>(StringComparer.Ordinal);
         foreach (var project in projects.Where(p => referenced.Contains(p.FilePath) && !_activeProjects.Contains(p.FilePath)))
         {
@@ -173,6 +173,8 @@ public sealed partial class RoslynWorkspaceHost
         Add(project.NullableEnabled.ToString(CultureInfo.InvariantCulture));
         Add(project.GetProperty("AllowUnsafeBlocks") ?? string.Empty);
         Add(_optimize.ToString(CultureInfo.InvariantCulture));
+        Add(StrongNameKeyFile(project) is { } keyFile ? keyFile + "\n" + Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(keyFile))) : string.Empty);
+        Add(CreateAssemblyAttributesSource(project) ?? string.Empty);
         foreach (var document in roslynProject.Documents.OrderBy(d => d.FilePath, StringComparer.Ordinal))
         {
             Add(document.FilePath ?? document.Name);

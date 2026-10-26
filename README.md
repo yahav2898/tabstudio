@@ -29,6 +29,8 @@ Open a solution, press F5, and it builds, runs and debugs on the tablet itself.
 - [Features](#features)
   - [The IDE](#the-ide)
   - [Languages](#languages)
+  - [Backing services without Docker](#backing-services-without-docker)
+  - [Flutter and Dart (experimental)](#flutter-and-dart-experimental)
   - [App platforms](#app-platforms)
   - [Every screen at once](#every-screen-at-once)
   - [Projects and repositories](#projects-and-repositories)
@@ -145,6 +147,27 @@ From there, try **New project** for a template in any language, **Open from GitH
 - **More languages through extensions.** VS Code extensions from Open VSX bring grammars, snippets, themes and
   language settings for anything else.
 
+### Backing services without Docker
+
+**View > Services** (also in Ctrl+Q) reads `compose.yaml`, `compose.yml`, `docker-compose.yml` or
+`docker-compose.yaml`, plus `.devcontainer/devcontainer.json` Compose references and overrides. PostgreSQL,
+Redis/Valkey, MySQL via MariaDB, RabbitMQ, nginx, Mailpit, MinIO, and MongoDB when Alpine packages it, run as native
+PRoot processes. Start all, stop, restart, health, per-service logs and localhost preview links are in one pane.
+F5 starts the startup project's dependencies first and rewrites Compose/appsettings connection hosts to localhost;
+`ConnectionStrings__<service>`, `<SERVICE>_HOST` and `<SERVICE>_PORT` are also supplied to the launched app.
+
+Each workspace keeps its own data in private app storage. PostgreSQL initializes the configured user, password and
+database and runs `/docker-entrypoint-initdb.d` SQL and shell scripts once. Image versions are matched against the
+signed Alpine index: PostgreSQL majors never silently change, and other version substitutions are shown in logs.
+Unsupported images explain why and offer a remote host. This is a native development runner, not Docker emulation:
+see [Services](docs/features/services.md) for mappings, volumes, networking, supported Compose fields and the CI harness.
+
+### Flutter and Dart (experimental)
+
+The Flutter Toolchain Store entry installs Flutter and its bundled Dart SDK in a separate Ubuntu glibc PRoot environment on ARM64/x64 tablets. Open `pubspec.yaml` projects, accept **flutter pub get**, and run the counter templates in the web preview. Dart IntelliSense uses the analysis server; Dart console debugging uses DAP. Saving Dart code hot-restarts Flutter web; Debug offers Flutter Hot Reload and Hot Restart for native VM-service targets.
+
+Native Android deployment of Flutter apps through the Android SDK toolchain is not verified yet. Embedded `web-server` previews do not provide VM breakpoints without a browser debugging bridge. See [the SDK spike and verification status](docs/features/flutter.md) before enabling this experimental feature in a release.
+
 ### App platforms
 
 | Workload | How it runs on the tablet |
@@ -197,8 +220,17 @@ From there, try **New project** for a template in any language, **Open from GitH
   reloads and saved CSS applies without losing the page's state, with HTML, CSS and JSON IntelliSense.
 - **Compatibility Doctor.** For every project it shows where it runs on the tablet and why, and fixes what stands in
   the way.
-- **Real-world project files.** SDK-style projects, `Directory.Build.props` and `.targets`, project references,
-  central package management and multi-targeting are read as MSBuild reads them.
+- **Real-world project files.** SDK-style projects, `Directory.Build.props`, `.targets` and the files they import,
+  `Directory.Packages.props`, project references, central package management and multi-targeting are read as MSBuild
+  reads them. Projects compile against the projects their references reference, get the `InternalsVisibleTo` and
+  other assembly attributes the SDK generates, and are strong-name signed with their key files. Source generators
+  load with dependencies from anywhere in their package, and a generator that fails shows in the Error List. Build
+  Solution builds in dependency order and reports each error once.
+- **Honest about what cannot run here.** An Aspire AppHost is explained in the Compatibility Doctor and skipped by
+  Build with the reason: it starts the app's projects and containers on a computer.
+- **Tested on real repositories.** CI opens ten public repositories pinned to commits, such as MediatR,
+  CleanArchitecture, Polly and eShopOnWeb, builds them in the IDE and holds each to an error baseline that only goes
+  down.
 
 ### Database Explorer
 
@@ -368,6 +400,7 @@ src/
   TabStudio.LiveTesting/     Live Unit Testing: coverage, impact analysis, the live test engine
   TabStudio.Notebooks/       C# notebooks: .ipynb and .dib, the kernel, value formatting
   TabStudio.Toolchains/      Alpine/PRoot toolchains, verified SDK downloads, processes and the terminal
+  TabStudio.Services/        Compose and devcontainer backing services run natively on Alpine/PRoot
   TabStudio.LanguageServers/ LSP and DAP clients for every language other than C#
   TabStudio.Extensions/      VS Code extensions from Open VSX
   TabStudio.Web/             Web apps: static web assets, Blazor, .NET on WebAssembly

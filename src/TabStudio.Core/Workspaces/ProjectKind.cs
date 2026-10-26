@@ -78,6 +78,12 @@ public enum ProjectKind
     StaticWebSite,
     /// <summary>An Android application built with Gradle on this device.</summary>
     Android,
+
+    /// <summary>
+    /// A .NET Aspire AppHost (<c>Aspire.AppHost.Sdk</c>): it starts an app's projects and containers through Aspire's
+    /// developer control plane on a computer, and builds with code its SDK generates for the projects it references.
+    /// </summary>
+    AspireAppHost,
 }
 
 /// <summary>

@@ -156,7 +156,10 @@ jobs:
   app:
     name: Build and test the IDE
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    # A healthy run takes about 27 minutes: setup (apt alone may take its full 10), the tool tests, and about 20
+    # minutes of IDE tests in both themes. The one retry below repeats the whole dark-theme run, and a hung first
+    # attempt only ends at its 12-minute hang timeout, so the budget holds both attempts and the log publishing.
+    timeout-minutes: 80
     steps:
       - uses: actions/checkout@v4
 
@@ -295,6 +298,10 @@ jobs:
           tail -n 80 ci-out/java-tools.log
           exit "$status"
 
+      - name: Prepare native backing services in Alpine
+        timeout-minutes: 15
+        run: bash build/ci/services-alpine.sh "$RUNNER_TEMP/services-alpine"
+
       # This test deliberately collects the entire process heap during every PNG encode. Run it in its own
       # test host so previous IDE workspaces cannot make that heap several gigabytes; all 100 captures remain.
       - name: Test screenshot lifetime under GC
@@ -415,6 +422,55 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: bash build/ci/publish-logs.sh app ${{ job.status }}
 
+  # Public .NET repositories, pinned to commits in build/ci/real-repos.json, opened and built in the real IDE as a
+  # person would on the tablet. Each has an error baseline that may only go down; reports and screenshots are published.
+  real-repos:
+    name: Real repositories
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - uses: actions/cache@v4
+        with:
+          path: .nuget/packages
+          key: nuget-real-repos-${{ hashFiles('Directory.Packages.props', '**/*.csproj', 'build/ci/real-repos.json') }}
+          restore-keys: nuget-real-repos-
+
+      - name: Clone the pinned repositories
+        run: python3 build/ci/real-repos.py "$RUNNER_TEMP/real-repos"
+
+      - name: Open and build them in TabStudio
+        env:
+          TABSTUDIO_REAL_REPOS: ${{ runner.temp }}/real-repos
+          TABSTUDIO_REAL_REPOS_OUT: ${{ github.workspace }}/ci-out
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+        run: |
+          mkdir -p ci-out/screenshots
+          status=0
+          dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --blame-hang-timeout 30m --blame-hang-dump-type none \
+            --filter "FullyQualifiedName~RealRepositoryTests" --logger "console;verbosity=normal" > ci-out/test.log 2>&1 || status=$?
+          tail -n 60 ci-out/test.log
+          if [ -f ci-out/summary.md ]; then cat ci-out/summary.md >> "$GITHUB_STEP_SUMMARY"; cat ci-out/summary.md; fi
+          exit "$status"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: real-repos
+          path: ci-out/
+          if-no-files-found: ignore
+
+      - name: Publish logs and screenshots
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs.sh real-repos ${{ job.status }}
+
   ssh:
     name: SSH and SFTP integration
     runs-on: ubuntu-latest
@@ -463,6 +519,40 @@ jobs:
           name: ssh-integration
           path: ci-out
           retention-days: 7
+
+  services:
+    name: Native Services (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { arch: x64, runner: ubuntu-latest }
+          - { arch: arm64, runner: ubuntu-24.04-arm }
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Prepare Alpine and PRoot
+        run: bash build/ci/services-alpine.sh "$RUNNER_TEMP/services-alpine"
+      - name: Test parsing, mapping, PostgreSQL and Redis in PRoot
+        run: |
+          mkdir -p ci-out
+          if ! dotnet test tests/TabStudio.Services.Tests -c Release --logger "console;verbosity=normal" > ci-out/services.log 2>&1; then
+            echo "::warning::Services tests failed once; retrying."
+            dotnet test tests/TabStudio.Services.Tests -c Release --logger "console;verbosity=normal" > ci-out/services.retry.log 2>&1 || { cat ci-out/services.retry.log; exit 1; }
+            echo "Native Services (${{ matrix.arch }}): first attempt failed, retry passed" >> ci-out/FLAKY.txt
+          fi
+          cat ci-out/services.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-services-${{ matrix.arch }}
+          path: |
+            ci-out/
+            ${{ runner.temp }}/services-alpine/*log
 
   android:
     name: Build Android APK
@@ -646,8 +736,9 @@ jobs:
           path: ci-out/
           if-no-files-found: ignore
 
+      # Pull request runs publish too, under branches/<number>-merge/, so their failures can be read as well.
       - name: Publish logs
-        if: always() && github.event_name == 'push'
+        if: always()
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: bash build/ci/publish-logs.sh android-emulator-${{ matrix.shard }} ${{ job.status }}
@@ -722,7 +813,7 @@ jobs:
   release:
     name: Publish the release
     if: github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/main')
-    needs: [libraries, app, android, android-emulator-verdict, windows, ssh, mobile-android]
+    needs: [libraries, app, services, android, android-emulator-verdict, windows, ssh, mobile-android]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

@@ -5,7 +5,47 @@ namespace TabStudio.Core.Workspaces;
 /// </summary>
 /// <param name="Name">The package id, for example <c>Newtonsoft.Json</c>.</param>
 /// <param name="Version">The requested version, when the project states one.</param>
-public sealed record PackageReferenceInfo(string Name, string? Version);
+/// <param name="PrivateAssets">
+/// The reference's <c>PrivateAssets</c> metadata, such as <c>all</c>, which keeps the package from flowing to projects
+/// that reference this one; <see langword="null"/> when it is not set.
+/// </param>
+public sealed record PackageReferenceInfo(string Name, string? Version, string? PrivateAssets = null)
+{
+    /// <summary>Whether <c>PrivateAssets</c> is <c>all</c>: the package stays with this project.</summary>
+    public bool IsPrivate => AssemblyAttributeItems.IncludesAll(PrivateAssets);
+}
+
+/// <summary>A <c>&lt;ProjectReference&gt;</c> item with the metadata that decides how it is used.</summary>
+/// <param name="Path">Absolute path of the referenced project file.</param>
+/// <param name="ReferenceOutputAssembly">
+/// Whether the referencing project compiles against the referenced project's assembly. <c>false</c> makes it a
+/// build-order dependency only.
+/// </param>
+/// <param name="IsPrivate">
+/// Whether <c>PrivateAssets</c> is <c>all</c>, which stops the reference from flowing on to projects that reference
+/// the referencing project.
+/// </param>
+/// <param name="OutputItemType">The <c>OutputItemType</c> metadata, such as <c>Analyzer</c> for an in-repo source generator.</param>
+public sealed record ProjectReferenceInfo(string Path, bool ReferenceOutputAssembly = true, bool IsPrivate = false, string? OutputItemType = null)
+{
+    /// <summary>Whether the referencing project compiles against this project's assembly, as a reference.</summary>
+    public bool IsCompiledAgainst =>
+        ReferenceOutputAssembly && !string.Equals(OutputItemType, "Analyzer", StringComparison.OrdinalIgnoreCase);
+}
+
+/// <summary>One argument of an assembly-level attribute the SDK generates.</summary>
+/// <param name="Value">The value: the text of a string, or C# code when <paramref name="IsLiteral"/>.</param>
+/// <param name="IsLiteral">Whether <paramref name="Value"/> is written as code (<c>_Parameter1_IsLiteral</c>) rather than as a string.</param>
+/// <param name="Name">The property name of a named argument, or <see langword="null"/> for a positional one.</param>
+public sealed record AssemblyAttributeArgument(string Value, bool IsLiteral = false, string? Name = null);
+
+/// <summary>
+/// An assembly-level attribute the .NET SDK generates from the project: an <c>&lt;AssemblyAttribute&gt;</c> item, or
+/// <c>InternalsVisibleTo</c> from an <c>&lt;InternalsVisibleTo&gt;</c> item.
+/// </summary>
+/// <param name="TypeName">The attribute type, such as <c>System.Runtime.CompilerServices.InternalsVisibleToAttribute</c>.</param>
+/// <param name="Arguments">Its positional arguments in order, then its named ones.</param>
+public sealed record AssemblyAttributeInfo(string TypeName, IReadOnlyList<AssemblyAttributeArgument> Arguments);
 
 /// <summary>
 /// A namespace imported into every file of a project by a <c>&lt;Using Include="..." /&gt;</c> item, as the xUnit,
@@ -59,6 +99,21 @@ public sealed record ProjectInfo
 
     /// <summary>Absolute paths of the projects this project references.</summary>
     public IReadOnlyList<string> ProjectReferences { get; init; } = [];
+
+    /// <summary>
+    /// The project references with their metadata, in the same order as <see cref="ProjectReferences"/>. A reference
+    /// missing here (a project built in code) counts as an ordinary one.
+    /// </summary>
+    public IReadOnlyList<ProjectReferenceInfo> ProjectReferenceItems { get; init; } = [];
+
+    /// <summary>Every MSBuild SDK the project uses, such as <c>Microsoft.NET.Sdk</c> and <c>Aspire.AppHost.Sdk</c>.</summary>
+    public IReadOnlyList<string> Sdks { get; init; } = [];
+
+    /// <summary>
+    /// The assembly attributes the SDK generates for the project: its <c>AssemblyAttribute</c> and
+    /// <c>InternalsVisibleTo</c> items, including those of <c>Directory.Build.props</c> and <c>.targets</c>.
+    /// </summary>
+    public IReadOnlyList<AssemblyAttributeInfo> AssemblyAttributes { get; init; } = [];
 
     /// <summary>The global usings the project's <c>&lt;Using Include="..." /&gt;</c> items add, in order.</summary>
     public IReadOnlyList<UsingInfo> Usings { get; init; } = [];
@@ -122,6 +177,16 @@ public sealed record ProjectInfo
     /// <param name="name">The property name. Case-insensitive.</param>
     public string? GetProperty(string name) =>
         Properties.TryGetValue(name, out var value) ? value : null;
+
+    /// <summary>The metadata of a project reference; an ordinary reference when the project has none recorded.</summary>
+    /// <param name="path">Absolute path of the referenced project file.</param>
+    public ProjectReferenceInfo GetProjectReference(string path) =>
+        ProjectReferenceItems.FirstOrDefault(r => string.Equals(r.Path, path, StringComparison.Ordinal)) ?? new ProjectReferenceInfo(path);
+
+    /// <summary>Whether the project uses an MSBuild SDK, as its main SDK or an additional one. Case-insensitive.</summary>
+    /// <param name="sdk">The SDK name, such as <c>Aspire.AppHost.Sdk</c>.</param>
+    public bool UsesSdk(string sdk) =>
+        string.Equals(Sdk, sdk, StringComparison.OrdinalIgnoreCase) || Sdks.Contains(sdk, StringComparer.OrdinalIgnoreCase);
 
     /// <summary>Whether the project references the given NuGet package. Case-insensitive.</summary>
     /// <param name="packageName">The package id.</param>

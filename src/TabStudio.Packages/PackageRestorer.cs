@@ -150,7 +150,7 @@ public sealed partial class PackageRestorer
             Packages = packages,
             CompileAssemblies = Combine(packages, p => p.CompileAssemblies),
             RuntimeAssemblies = Combine(packages, p => p.RuntimeAssemblies),
-            Analyzers = Combine(packages, p => p.Analyzers),
+            Analyzers = Combine(packages.Where(p => p.FlowsAnalyzers).ToList(), p => p.Analyzers),
             Diagnostics = PackageDiagnostics.Sort(diagnostics),
             Duration = stopwatch.Elapsed,
         };
@@ -317,6 +317,7 @@ public sealed partial class PackageRestorer
         return new RestoredPackage(match.Id, match.Version.ToNormalizedString(), directory, package.IsDirect, compile, runtime, providedByFramework)
         {
             Analyzers = analyzers,
+            FlowsAnalyzers = package.FlowsAnalyzers,
         };
     }
 

@@ -80,6 +80,11 @@ public sealed partial class WorkspaceViewModel
             await DebugPicProjectAsync(info, start);
             return;
         }
+        if (toolchain.Id == "flutter")
+        {
+            await StartDartOrFlutterAsync(item, noDebug: false);
+            return;
+        }
         if (toolchain.DebugAdapter?.Type is not { } type || !ToolchainLaunch.Supports(type) || _languageServers?.Configuration.Registry.FindAdapter(type) is null)
         {
             // A toolchain without a debug adapter TabStudio drives runs as with Ctrl+F5.
@@ -155,7 +160,7 @@ public sealed partial class WorkspaceViewModel
         }
 
         var target = new LaunchTarget(configuration.Name, configuration, IsCurrentFile: false);
-        _programEnvironments.AddOrUpdate(target, plan.Run.Environment);
+        _programEnvironments.AddOrUpdate(target, WithServiceEnvironment(plan.Run).Environment);
         await LaunchAdapterAsync(target, start, noDebug: false);
         if (!IsDebuggingWithAdapter)
         {

@@ -23,20 +23,12 @@ and run it on an Android tablet emulator, and each one installs as an update ove
 | [0.13](releases/0.13.0.md) | The Windows Bridge: Windows-only projects built and run on a PC you own and streamed to the tablet. |
 | [0.14](releases/0.14.0.md) | Go, Rust, C/C++ and Java with IntelliSense and debuggers, WPF on OpenSilver, and WinUI and Uno Platform on Skia. |
 | [0.15](releases/0.15.0.md) | Repositories that set themselves up, static web sites, the Database Explorer, remote development over SSH, Android apps built on the tablet and iOS through cloud builds, Microchip PIC, C# Hot Reload on the desktop and time-travel debugging, offline AI, and Port to Avalonia completed. |
+| [0.16](releases/0.16.0.md) | Real-world .NET repositories built as the SDK builds them, backing services from Compose files without Docker, and experimental Flutter and Dart. |
 
 ## Next
 
-The next release, 0.16, makes real projects work as they are:
-
-- **Real-world repositories.** Popular open-source solutions build on the tablet with no errors: transitive project
-  references, `InternalsVisibleTo` and strong-name signing, source generators from packages, and honest handling of
-  project types a tablet cannot run. A CI job builds a fixed set of public repositories on every change.
-- **Backing services.** The databases and services a repository needs, such as PostgreSQL, run natively on the
-  tablet, so a full web application runs without a server.
-- **Flutter and Dart** with a web preview.
-
-After 0.16:
-
+- **Source generators built from the repository.** Projects referenced as analyzers (`OutputItemType="Analyzer"`),
+  compiled and run as generators, as Humanizer's are.
 - **STM32 and other ARM Cortex-M boards,** built, flashed and debugged from the tablet.
 - **Hot Reload on Android,** for the user's own code, without slowing the IDE.
 - **Windows Compatibility:** Windows-only apps run on the tablet itself through Wine, for when no PC is at hand.

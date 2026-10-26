@@ -18,7 +18,7 @@ public enum SelfTestShard
     Managed,
     /// <summary>Native app previews, design, extensions, Swarm, scrolling and external-display input.</summary>
     Ui,
-    /// <summary>Python/Node, C/C++/Java and native process integrity.</summary>
+    /// <summary>Python/Node, C/C++/Java, native backing services and native process integrity.</summary>
     Native,
     /// <summary>Opt-in paired-runtime latency measurements; not a functional CI shard.</summary>
     Performance,
@@ -250,7 +250,10 @@ public static partial class SelfTest
             {
                 // Package operations must finish before native debuggers and their programs use the environment.
                 await preparation!;
+                // Backing services run after the toolchains: they share the Alpine package database, and the check
+                // reopens the Python workspace that RunToolchainsAsync leaves for the Python tools check.
                 if (!await CheckAsync(() => RunToolchainsAsync(main, templates, cancellationToken))
+                    || !await CheckAsync(() => RunServicesAsync(main, templates, cancellationToken))
                     || !await CheckAsync(() => CheckPythonToolsAsync(main, cancellationToken))
                     || !await CheckAsync(() => CheckListeningPortAsync(main, templates, cancellationToken))
                     || (shard == SelfTestShard.All && !await CheckGoAndRustAsync())

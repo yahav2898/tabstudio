@@ -3,6 +3,7 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
+using TabStudio.Core.Diagnostics;
 using TsProject = TabStudio.Core.Workspaces.ProjectInfo;
 
 namespace TabStudio.Compilation;
@@ -114,11 +115,59 @@ public sealed partial class RoslynWorkspaceHost
     {
         if (!_analyzerCache.TryGetValue(path, out var reference))
         {
-            reference = new AnalyzerFileReference(path, AnalyzerLoader.Shared);
+            // Registered first, so an analyzer can find a dependency that another folder of its package holds.
+            AnalyzerLoader.Shared.AddDependencyLocation(path);
+            var file = new AnalyzerFileReference(path, AnalyzerLoader.Shared);
+            file.AnalyzerLoadFailed += (_, e) => RecordAnalyzerFailure(path, e);
+            reference = file;
             _analyzerCache[path] = reference;
         }
 
         return reference;
+    }
+
+    private readonly Lock _failureGate = new();
+    private readonly Dictionary<string, BuildDiagnostic> _analyzerFailures = new(StringComparer.Ordinal);
+
+    /// <summary>
+    /// Keeps a failure to load an analyzer or source generator, which Roslyn's workspace only raises as an event: the
+    /// compiler would report it as a warning, and without it a generator that never ran looks like code that is wrong.
+    /// </summary>
+    private void RecordAnalyzerFailure(string path, AnalyzerLoadFailureEventArgs e)
+    {
+        // A library next to the generators, such as Vogen.SharedTypes.dll, has none of its own.
+        if (e.ErrorCode == AnalyzerLoadFailureEventArgs.FailureErrorCode.NoAnalyzers)
+        {
+            return;
+        }
+
+        var file = Path.GetFileName(path);
+        var (id, message) = e.ErrorCode switch
+        {
+            AnalyzerLoadFailureEventArgs.FailureErrorCode.UnableToCreateAnalyzer =>
+                ("CS8032", $"An instance of analyzer {e.TypeName} cannot be created from {file}: {e.Message}. Its generated code is missing."),
+            AnalyzerLoadFailureEventArgs.FailureErrorCode.ReferencesNewerCompiler =>
+                ("CS9057", $"The analyzer assembly {file} references a newer version of the compiler than the one in TabStudio. Its generated code is missing."),
+            _ => ("CS8034", $"Unable to load analyzer assembly {file}: {e.Message}. Its generated code is missing."),
+        };
+        lock (_failureGate)
+        {
+            _analyzerFailures[path + "\n" + e.TypeName] = new BuildDiagnostic(id, DiagnosticSeverityLevel.Warning, message, null);
+        }
+    }
+
+    /// <summary>The analyzers and generators of a project that could not be loaded, as the compiler's warnings.</summary>
+    /// <param name="project">The project.</param>
+    /// <param name="analyzerPaths">Full paths of its analyzer assemblies.</param>
+    private List<BuildDiagnostic> AnalyzerFailuresFor(TsProject project, IEnumerable<string?> analyzerPaths)
+    {
+        var paths = analyzerPaths.OfType<string>().ToHashSet(StringComparer.Ordinal);
+        lock (_failureGate)
+        {
+            return [.. _analyzerFailures
+                .Where(f => paths.Contains(f.Key[..f.Key.IndexOf('\n', StringComparison.Ordinal)]))
+                .Select(f => f.Value with { ProjectName = project.Name })];
+        }
     }
 
     /// <summary>

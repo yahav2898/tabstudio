@@ -82,7 +82,7 @@ internal sealed class DependencyResolver
         var packages = acceptedNodes
             .Where(n => n.ResolvedMatch is { IsUnresolved: false, IsProject: false })
             .GroupBy(n => n.ResolvedMatch.Id, StringComparer.OrdinalIgnoreCase)
-            .Select(g => new ResolvedPackage(g.First().ResolvedMatch, g.Any(n => n.Parent is { IsRoot: true })))
+            .Select(g => new ResolvedPackage(g.First().ResolvedMatch, g.Any(n => n.Parent is { IsRoot: true }), g.Any(ReachedThroughPackagesOnly)))
             .OrderBy(p => p.Match.Id, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
@@ -229,5 +229,19 @@ internal sealed class DependencyResolver
                 }
             }
         }
+    }
+
+    /// <summary>Whether no project lies between the project being restored and a node.</summary>
+    private static bool ReachedThroughPackagesOnly(GraphNode node)
+    {
+        for (var parent = node.Parent; parent is { IsRoot: false }; parent = parent.Parent)
+        {
+            if (parent.Match is { IsProject: true })
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

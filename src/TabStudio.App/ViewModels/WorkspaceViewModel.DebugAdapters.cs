@@ -225,9 +225,20 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
             return;
         }
 
+        if (!await PrepareServicesAsync(StartupProject?.DirectoryPath ?? workspace.RootDirectory)) return;
+
         await SaveAllCoreAsync();
         var variables = new LaunchVariables(workspace.RootDirectory, ActiveDocument?.FilePath);
         var configuration = target.Configuration.Substitute(variables);
+        if (_serviceEnvironment.Count > 0)
+        {
+            var properties = (System.Text.Json.Nodes.JsonObject)configuration.Properties.DeepClone();
+            var environment = properties["env"] as System.Text.Json.Nodes.JsonObject ?? new System.Text.Json.Nodes.JsonObject();
+            foreach (var (name, value) in _serviceEnvironment) environment[name] = value;
+            properties["env"] = environment.DeepClone();
+            configuration = configuration with { Properties = properties };
+        }
+
         if (noDebug || start == DebugStart.StepInto)
         {
             var properties = (System.Text.Json.Nodes.JsonObject)configuration.Properties.DeepClone();
@@ -278,6 +289,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         _sentBreakpoints.Clear();
         WireAdapterEvents(session);
         StartAdapterInput(session);
+        if (session.Adapter.Id == "flutter") ConfigureFlutterTarget(configuration);
         AcceptChildSessions(session, executable, workspace.RootDirectory, noDebug);
         if (session.HasEnded)
         {
@@ -404,6 +416,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
     {
         var console = _adapterConsoles.GetOrCreateValue(_adapterRoot ?? session);
         session.RunInTerminalHandler = RunAdapterProgramAsync;
+        WireFlutterEvents(session);
         session.Stopped += (_, e) => _ui.Post(() =>
         {
             // The session that stopped is the one the debugger shows, as when a child of js-debug hits a breakpoint.
@@ -918,6 +931,11 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
 
     private void RestartAdapter()
     {
+        if (_adapter?.Adapter.Id == "flutter")
+        {
+            _ = ReloadFlutterAsync(fullRestart: true);
+            return;
+        }
         if (_adapter is not null)
         {
             _adapterRestart = true;
@@ -1201,6 +1219,10 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         }
 
         var configuration = LaunchConfiguration.ForCurrentFile(adapter, language.Name);
+        if (language.Id == "dart" && registry.FindAdapter("dart") is { } dart)
+        {
+            configuration = LaunchConfiguration.ForCurrentFile(dart, language.Name);
+        }
         return new LaunchTarget(configuration.Name, configuration, IsCurrentFile: true);
     }
 

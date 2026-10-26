@@ -36,6 +36,21 @@ public sealed class RustProjectTests : IDisposable
     }
 
     [Fact]
+    public void A_Cargo_run_is_named_after_its_crate_not_its_manifest()
+    {
+        _folder.Write("Cargo.toml", "# A greeting\n[package]\nname = \"selftestrust\" # the crate\nversion = \"0.1.0\"\n\n[[bin]]\nname = \"other\"\n");
+        Assert.Equal("selftestrust", RunPlanner.PlanProject(new(Rust, _folder.Path, "Cargo.toml"))!.EntryPoint);
+
+        _folder.Write("Cargo.toml", "[dependencies]\nname = \"not-the-crate\"\n\n[package]\nname = 'quoted'\n");
+        Assert.Equal("quoted", RunPlanner.CargoPackageName(_folder.Resolve("Cargo.toml")));
+
+        // A virtual workspace has no crate of its own; its manifest stays the name.
+        _folder.Write("Cargo.toml", "[workspace]\nmembers = [\"crates/hello\"]\n");
+        Assert.Null(RunPlanner.CargoPackageName(_folder.Resolve("Cargo.toml")));
+        Assert.Equal("Cargo.toml", RunPlanner.PlanProject(new(Rust, _folder.Path, "Cargo.toml"))!.EntryPoint);
+    }
+
+    [Fact]
     public void Artifact_selection_handles_custom_targets_and_excludes_test_harnesses_and_build_scripts()
     {
         const string output = """

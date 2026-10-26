@@ -1,5 +1,10 @@
 namespace TabStudio.Toolchains.Processes;
 
+/// <summary>A per-process PRoot mount. Its source is in the app's storage.</summary>
+/// <param name="Source">The absolute device path.</param>
+/// <param name="Target">The absolute path inside this process's environment.</param>
+public sealed record ProcessMount(string Source, string Target);
+
 /// <summary>The size of a pseudo terminal, in character cells.</summary>
 /// <param name="Rows">The number of rows, at least 1.</param>
 /// <param name="Columns">The number of columns, at least 1.</param>
@@ -49,6 +54,12 @@ public sealed record ProcessStartSpec
     /// The caller keeps the parent connection open until the child exits.
     /// </summary>
     public IReadOnlyDictionary<int, int> InheritedDescriptors { get; init; } = new Dictionary<int, int>();
+
+    /// <summary>Extra mounts visible only to this PRoot process and its children.</summary>
+    public IReadOnlyList<ProcessMount> Mounts { get; init; } = [];
+
+    /// <summary>A simulated non-root identity in PRoot, for servers such as PostgreSQL that reject root.</summary>
+    public int? UserId { get; init; }
 
     /// <summary>The program and its arguments as one line, quoted where needed, for logs and the Output panel.</summary>
     public string CommandLine => string.Join(' ', new[] { Program }.Concat(Arguments).Select(Quote));

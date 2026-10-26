@@ -56,6 +56,11 @@ public static class CompatibilityDoctor
 
         return project.Kind switch
         {
+            ProjectKind.AspireAppHost => Report(
+                project, RunHost.None, CompatibilityStatus.Unsupported, "Not on a tablet",
+                "An Aspire AppHost starts the app's projects and containers through Aspire's developer control plane, which runs on a computer, "
+                + "and it compiles against code its SDK generates for the projects it references. TabStudio leaves it out of builds; run the projects it starts on their own."),
+
             ProjectKind.ConsoleApp when project.Language == ProjectLanguage.CSharp => Report(
                 project, RunHost.InProcess, CompatibilityStatus.Ready, "In-process",
                 "Compiled in memory and run right here, with its output in the Output panel."),

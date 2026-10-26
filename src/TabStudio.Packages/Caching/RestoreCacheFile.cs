@@ -53,6 +53,9 @@ internal sealed class CachedPackage
 
     /// <summary>See <see cref="RestoredPackage.ProvidedByFramework"/>.</summary>
     public bool ProvidedByFramework { get; set; }
+
+    /// <summary>See <see cref="RestoredPackage.FlowsAnalyzers"/>.</summary>
+    public bool FlowsAnalyzers { get; set; } = true;
 }
 
 /// <summary>One diagnostic in <see cref="RestoreCacheFile"/>.</summary>

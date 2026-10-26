@@ -54,7 +54,8 @@ public sealed class ToolchainServices : IDisposable
         var downloader = new Downloader(_http);
         Environment = new AlpineEnvironment(Path.Combine(paths.Root, "Toolchains", "linux"), catalog.Linux, Platform, downloader, [paths.Projects]);
         _packages = new AlpinePackageManager(Environment, _http, downloader, new ApkTool(Environment.Runtime));
-        Manager = new ToolchainManager(catalog, new LinuxToolchainInstaller(Environment, _packages, downloader));
+        Manager = new ToolchainManager(catalog, new FlutterToolchainInstaller(
+            new LinuxToolchainInstaller(Environment, _packages, downloader), Path.Combine(paths.Root, "Toolchains", "flutter"), Platform, downloader, [paths.Projects]));
     }
 
     /// <summary>Wraps a manager built elsewhere, such as one over a fake mirror in tests.</summary>
@@ -69,6 +70,11 @@ public sealed class ToolchainServices : IDisposable
         Platform = platform;
         Environment = environment;
     }
+
+    internal AlpinePackageManager? ServicePackageManager => _packages;
+
+    internal Task WithPackageOperationAsync(Func<Task> action, CancellationToken cancellationToken) =>
+        Manager.WithRuntimeOperationAsync(action, cancellationToken);
 
     /// <summary>Installs, updates and removes toolchains, and knows their states.</summary>
     public ToolchainManager Manager { get; }

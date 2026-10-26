@@ -179,6 +179,7 @@
             <MenuItem Header="Windows _Bridge" Command="{Binding ShowWindowsBridgePaneCommand}" IsVisible="{Binding HasWindowsBridge}" />
             <MenuItem Header="_Error List" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" />
             <MenuItem Header="_Output" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Output}" />
+            <MenuItem Header="_Services" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.Services}" />
             <MenuItem Header="Ter_minal (Ctrl+`)" Command="{Binding ShowTerminalCommand}" />
             <MenuItem Header="_Serial Monitor" Command="{Binding ShowSerialMonitorCommand}" />
             <MenuItem Header="_Compatibility Doctor" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Compatibility}" />
@@ -252,6 +253,8 @@
             <MenuItem Header="Hot Reload C# on Save" ToggleType="CheckBox" IsChecked="{Binding HotReloadOnSave, Mode=TwoWay}"
                       IsEnabled="{x:Static hotReload:HotReloadSession.IsSupported}"
                       ToolTip.Tip="Available in the desktop host. On Android 0.15, saving a preview app restarts it." />
+            <MenuItem Header="Flutter Hot Reload" Command="{Binding FlutterHotReloadCommand}" />
+            <MenuItem Header="Flutter Hot Restart" Command="{Binding FlutterHotRestartCommand}" />
             <Separator />
             <MenuItem Header="Show _Next Statement (Alt+Num *)" Command="{Binding ShowNextStatementCommand}" />
             <MenuItem Header="Step _Into" InputGesture="F11" Command="{Binding StepIntoCommand}" />
@@ -808,6 +811,11 @@
           <!-- The Windows Bridge: programs running on the paired Windows PC, streamed live. -->
           <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsWindowsBridgeSelected}">
             <bridgeViews:BridgePaneView DataContext="{Binding WindowsBridgePane}" />
+          </Panel>
+
+          <!-- Native backing services from the repository's Compose files. -->
+          <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsServicesSelected}">
+            <views:ServicesView DataContext="{Binding Services}" />
           </Panel>
 
           <!-- The web preview of the running web app. -->

@@ -45,6 +45,11 @@ public static partial class RunPlanner
             return PlanJavaProject(project);
         }
 
+        if (project.Toolchain.Id == "flutter")
+        {
+            return FlutterProject.Plan(project.Directory);
+        }
+
         var run = project.Toolchain.Run;
         if (run is null)
         {
@@ -71,7 +76,9 @@ public static partial class RunPlanner
                 variables["match"] = match;
             }
 
-            var entryPoint = rule.Json is null ? entry.RelativePath : string.Join(' ', rule.Command.Select(a => Expand(a, variables)));
+            var entryPoint = rule.Json is not null ? string.Join(' ', rule.Command.Select(a => Expand(a, variables)))
+                : project.Toolchain.Id == "rust" ? CargoEntryPoint(entry)
+                : entry.RelativePath;
             return new RunPlan(
                 rule.Build.Count > 0 ? Spec(project, rule.Build, variables, rule.Environment) : null,
                 Spec(project, rule.Command, variables, rule.Environment),

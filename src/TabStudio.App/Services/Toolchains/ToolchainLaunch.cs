@@ -33,7 +33,7 @@ internal static partial class ToolchainLaunch
 
     /// <summary>Whether a configuration type is one this class writes configurations for.</summary>
     /// <param name="type">The debug adapter's type, from the toolchain catalog.</param>
-    public static bool Supports(string? type) => type is PythonType or NodeType or "go" or "lldb-dap" or "java";
+    public static bool Supports(string? type) => type is PythonType or NodeType or "go" or "lldb-dap" or "java" or "flutter" or "dart";
 
     /// <summary>The configuration that debugs a plan's program.</summary>
     /// <param name="type">The debug adapter's type: <see cref="PythonType"/> or <see cref="NodeType"/>.</param>
@@ -63,10 +63,12 @@ internal static partial class ToolchainLaunch
             "lldb-dap" => FillNative(properties, run),
 
             "java" => FillJava(properties, run),
+
+            "flutter" or "dart" => FillDart(properties, run, folder),
             _ => false,
         };
         return filled
-            ? new LaunchConfiguration { Name = plan.EntryPoint, Type = type, Request = "launch", Properties = properties }
+            ? new LaunchConfiguration { Name = plan.EntryPoint, Type = properties["type"]!.GetValue<string>(), Request = "launch", Properties = properties }
             : null;
     }
 
@@ -146,6 +148,22 @@ internal static partial class ToolchainLaunch
 
         properties["runtimeExecutable"] = program;
         properties["runtimeArgs"] = Strings(arguments);
+        return true;
+    }
+
+    private static bool FillDart(JsonObject properties, ProcessStartSpec run, string folder)
+    {
+        var flutter = Path.GetFileNameWithoutExtension(run.Program) == "flutter";
+        properties["type"] = flutter ? "flutter" : "dart";
+        properties["program"] = Path.GetFullPath(Path.Combine(folder, flutter ? "lib/main.dart" : (run.Arguments.Count > 0 ? run.Arguments[^1] : "bin/main.dart")));
+        if (flutter)
+        {
+            properties["toolArgs"] = Strings(run.Arguments.Skip(1));
+        }
+        else
+        {
+            properties["console"] = "terminal";
+        }
         return true;
     }
 

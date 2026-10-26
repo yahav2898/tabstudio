@@ -36,6 +36,12 @@ public sealed partial class ProjectTemplates
     /// <summary>A Capacitor app with a Vite TypeScript web part.</summary>
     public const string CapacitorId = "capacitor";
 
+    /// <summary>A Flutter counter app.</summary>
+    public const string FlutterId = "flutter";
+
+    /// <summary>A Flutter web app.</summary>
+    public const string FlutterWebId = "flutter-web";
+
     /// <summary>The installed-language and web/mobile templates, for the start screen.</summary>
     private static ProjectTemplate[] ToolchainTemplates =>
     [
@@ -54,6 +60,8 @@ public sealed partial class ProjectTemplates
         new(StaticSiteId, "Static Web Site", "An HTML page with a style sheet and a script, served on the tablet and previewed beside the code, reloading as you save.", ["HTML", "CSS", "JavaScript", "Web"]),
         new(AndroidId, "Android App (Kotlin)", "Build and install a Kotlin Android app directly on this tablet with the Android SDK from the Toolchain Store.", ["Kotlin", "Android"]),
         new(CapacitorId, "Capacitor App", "A Vite and TypeScript web app with a live web preview, Android builds on the tablet, and iOS builds through GitHub Actions.", ["TypeScript", "Android", "iOS", "Web"]),
+        new(FlutterId, "Flutter App", "A Material counter app. Run in the web preview; native targets require Android SDK support.", ["Dart", "Flutter"]),
+        new(FlutterWebId, "Flutter Web App", "A Flutter counter app in the web preview, with Hot Restart on save.", ["Dart", "Flutter", "Web"]),
     ];
 
     /// <summary>Writes a toolchain project into a new folder, which is the workspace: there is no solution file.</summary>
@@ -84,6 +92,8 @@ public sealed partial class ProjectTemplates
 
                 return root;
 
+            case FlutterId or FlutterWebId:
+                return CreateFlutterProject(root, name);
             case PythonId:
                 File.WriteAllText(Path.Combine(root, "main.py"), """"
                     """Press F5 to run this program with Python on your tablet.

@@ -22,6 +22,8 @@ Start with the [README](../README.md) for what TabStudio is and how to install i
 | [Port to Avalonia](features/porting.md) | Converting WPF and Windows Forms projects into Avalonia projects |
 | [Time-travel debugging](features/time-travel.md) | Recording a C# run and stepping back through its timeline |
 | [Layout checks](layout-checks.md) | SWRM001 to SWRM005: what Swarm checks on every screen, and how to fix each finding |
+| [Backing services](features/services.md) | PostgreSQL, Redis and other Compose services run natively, without Docker |
+| [Flutter and Dart](features/flutter.md) | The experimental Flutter SDK environment, its verification status and limits |
 | [On-device AI](features/local-ai.md) | The llama.cpp runtime: measurements, model choices and limits |
 
 ## Design
