@@ -126,9 +126,9 @@ public sealed partial class WorkspaceViewModel
         }
     }
 
-    private bool CanRun() => (StartupProject is not null || UsesLaunchTarget) && State is IdeState.Ready or IdeState.Failed && !IsNotebookRunning;
+    private bool CanRun() => !_preparingServices && (StartupProject is not null || UsesLaunchTarget) && State is IdeState.Ready or IdeState.Failed && !IsNotebookRunning;
 
-    private bool CanBuild() => State is IdeState.Ready or IdeState.Failed;
+    private bool CanBuild() => !_preparingServices && State is IdeState.Ready or IdeState.Failed;
 
     /// <summary>Builds projects one after another, reporting in the Output panel and the Error List.</summary>
     /// <param name="projects">The projects.</param>

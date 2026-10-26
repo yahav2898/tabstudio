@@ -9,6 +9,7 @@ namespace TabStudio.App.ViewModels;
 /// <summary>Backing services run before F5; the launched app gets localhost connection variables.</summary>
 public sealed partial class WorkspaceViewModel
 {
+    private bool _preparingServices;
     private IReadOnlyDictionary<string, string?> _serviceEnvironment = new Dictionary<string, string?>();
     public ServicesViewModel Services { get; private set; } = null!;
     public bool IsServicesSelected => SelectedSideBarPanel == SideBarPanel.Services;
@@ -31,7 +32,9 @@ public sealed partial class WorkspaceViewModel
     private async Task<bool> PrepareServicesAsync(string projectDirectory)
     {
         _run = new CancellationTokenSource();
-        State = Services.HasServices ? IdeState.Running : IdeState.Busy;
+        _preparingServices = true;
+        if (Services.HasServices) State = IdeState.Running;
+        NotifyServicePreparationCommands();
         StatusText = "Starting backing services";
         try
         {
@@ -47,7 +50,19 @@ public sealed partial class WorkspaceViewModel
             State = IdeState.Ready;
             return true;
         }
-        finally { _run.Dispose(); _run = null; }
+        finally
+        {
+            _run.Dispose(); _run = null;
+            _preparingServices = false;
+            NotifyServicePreparationCommands();
+        }
+    }
+
+    private void NotifyServicePreparationCommands()
+    {
+        RunCommand.NotifyCanExecuteChanged();
+        BuildCommand.NotifyCanExecuteChanged();
+        NotifyDebugCommands();
     }
 
     private ProcessStartSpec WithServiceEnvironment(ProcessStartSpec spec)

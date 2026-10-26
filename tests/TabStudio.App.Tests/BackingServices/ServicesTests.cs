@@ -76,10 +76,14 @@ public sealed class ServicesTests
         await main.OpenWorkspaceAsync(python);
         var directory = main.Workspace!.Workspace!.RootDirectory;
         using var timeout = new CancellationTokenSource(TimeSpan.FromMinutes(1));
-        var result = await SelfTest.RunServicesAsync(main, templates, timeout.Token);
-        Assert.True(result.Success, result.Message);
-        Assert.Equal(directory, main.Workspace!.Workspace!.RootDirectory);
-        Assert.Contains(main.Workspace.ToolchainProjects, p => p.Toolchain.Id == "python");
+        try
+        {
+            var result = await SelfTest.RunServicesAsync(main, templates, timeout.Token);
+            Assert.True(result.Success, result.Message);
+            Assert.Equal(directory, main.Workspace!.Workspace!.RootDirectory);
+            Assert.Contains(main.Workspace.ToolchainProjects, p => p.Toolchain.Id == "python");
+        }
+        finally { main.Workspace?.Dispose(); }
     }
 
     [AlpineAvaloniaFact]
