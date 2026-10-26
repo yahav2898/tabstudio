@@ -86,6 +86,7 @@ FEATURE_CLASSES = frozenset({
     "IosWorkflowGeneratorTests",
     "ListeningPortsTests",
     "MobileProjectTests",
+    "GradleCoexistenceTests",
     # Hot Reload, recording and on-device AI.
     "HotReloadTests",
     "HostRuntimeTests",
