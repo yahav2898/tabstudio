@@ -43,6 +43,8 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
+        if (!await PrepareServicesAsync(project)) return;
+
         if (IsToolchainProject(project))
         {
             await RunToolchainProjectAsync(project);
@@ -69,7 +71,7 @@ public sealed partial class WorkspaceViewModel
         try
         {
             var packages = _language.GetPackageRuntimeAssemblies(project.FilePath);
-            result = await _runner.RunAsync(entry, build.Dependencies, packages, [], Output, input, _run.Token);
+            result = await _runner.RunAsync(entry, build.Dependencies, packages, [], Output, input, _run.Token, _serviceEnvironment);
         }
         finally
         {

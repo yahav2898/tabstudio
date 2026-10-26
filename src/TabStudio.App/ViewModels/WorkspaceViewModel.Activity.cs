@@ -24,6 +24,7 @@ public sealed partial class WorkspaceViewModel
     private void InitializeActivity()
     {
         AddActivity(SideBarPanel.SolutionExplorer, "Solution Explorer", "Icon.Solution", "Ctrl+Alt+L");
+        AddActivity(SideBarPanel.Services, "Services", "Icon.Computer");
         AddActivity(SideBarPanel.GitChanges, "Git Changes", "Icon.Branch");
         AddActivity(SideBarPanel.Actions, "GitHub Actions", "Icon.Actions");
         AddActivity(SideBarPanel.PullRequests, "Pull Requests", "Icon.PullRequest");

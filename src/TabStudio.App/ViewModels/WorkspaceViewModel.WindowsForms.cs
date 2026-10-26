@@ -33,6 +33,7 @@ public sealed partial class WorkspaceViewModel
         _liveProject = project;
         var clock = Stopwatch.StartNew();
         ConsoleLease? console = null;
+        RunEnvironment? environment = null;
         LoadedProgram? program = null;
         FormsHost? host = null;
         RunResult result;
@@ -41,6 +42,7 @@ public sealed partial class WorkspaceViewModel
             // The app's Console.WriteLine goes to the Output panel while it runs.
             console = await ProcessConsole.AcquireAsync(_run.Token);
             console.Redirect(Output);
+            environment = new RunEnvironment(_serviceEnvironment);
 
             // The app's forms are TabStudio's Forms layer's types, which draw on the preview's desktop.
             program = LoadedProgram.Load(entry, build.Dependencies, _language!.GetPackageRuntimeAssemblies(project.FilePath), IsSharedWithWindowsForms);
@@ -75,6 +77,7 @@ public sealed partial class WorkspaceViewModel
             AppPreview.ShowStopped();
             host?.Dispose();
             program?.Dispose();
+            environment?.Dispose();
             console?.Dispose();
             _run.Dispose();
             _run = null;

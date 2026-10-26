@@ -85,6 +85,7 @@ public sealed class ProgramRunner
     /// <param name="console">Receives the program's output.</param>
     /// <param name="input">Standard input, or <see langword="null"/> for an empty input.</param>
     /// <param name="cancellationToken">Stops the program.</param>
+    /// <param name="environment">Environment variables scoped to this run, restored when it ends.</param>
     public async Task<RunResult> RunAsync(
         CompiledAssembly entryAssembly,
         IReadOnlyList<CompiledAssembly> dependencies,
@@ -92,7 +93,8 @@ public sealed class ProgramRunner
         IReadOnlyList<string> arguments,
         IConsoleSink console,
         ConsoleInput? input = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        IReadOnlyDictionary<string, string?>? environment = null)
     {
         ArgumentNullException.ThrowIfNull(entryAssembly);
         ArgumentNullException.ThrowIfNull(dependencies);
@@ -102,6 +104,7 @@ public sealed class ProgramRunner
 
         // The console is process-wide: wait until no other program, test run or notebook cell owns it.
         using var lease = await ProcessConsole.AcquireAsync(cancellationToken).ConfigureAwait(false);
+        using var runEnvironment = new RunEnvironment(environment);
 
         var context = new ProgramLoadContext(entryAssembly.Name, dependencies, packageAssemblies, sharedWithHost: null);
         var output = new CallbackTextWriter(console.WriteOutput);

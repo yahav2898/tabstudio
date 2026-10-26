@@ -31,6 +31,7 @@ public sealed partial class WorkspaceViewModel
         _liveProject = project;
         var clock = Stopwatch.StartNew();
         ConsoleLease? console = null;
+        RunEnvironment? environment = null;
         AvaloniaAppHost? app = null;
         RunResult result;
         try
@@ -38,6 +39,7 @@ public sealed partial class WorkspaceViewModel
             // The app's Console.WriteLine goes to the Output panel while it runs.
             console = await ProcessConsole.AcquireAsync(_run.Token);
             console.Redirect(Output);
+            environment = new RunEnvironment(_serviceEnvironment);
             app = AvaloniaAppHost.Start(entry, build.Dependencies, _language!.GetPackageRuntimeAssemblies(project.FilePath));
             var crashed = new TaskCompletionSource<Exception>(TaskCreationOptions.RunContinuationsAsynchronously);
             app.Crashed += (_, exception) => crashed.TrySetResult(exception);
@@ -81,6 +83,7 @@ public sealed partial class WorkspaceViewModel
             OnAvaloniaAppStopping();
             AppPreview.ShowStopped();
             app?.Dispose();
+            environment?.Dispose();
             console?.Dispose();
             _run.Dispose();
             _run = null;

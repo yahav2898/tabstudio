@@ -172,6 +172,7 @@
             <MenuItem Header="Windows _Bridge" Command="{Binding ShowWindowsBridgePaneCommand}" IsVisible="{Binding HasWindowsBridge}" />
             <MenuItem Header="_Error List" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" />
             <MenuItem Header="_Output" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Output}" />
+            <MenuItem Header="_Services" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.Services}" />
             <MenuItem Header="Ter_minal (Ctrl+`)" Command="{Binding ShowTerminalCommand}" />
             <MenuItem Header="_Compatibility Doctor" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Compatibility}" />
             <MenuItem Header="Re_ferences" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.References}" />
@@ -749,6 +750,9 @@
           </Panel>
 
           <!-- The web preview of the running web app. -->
+          <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsServicesSelected}">
+            <views:ServicesView DataContext="{Binding Services}" />
+          </Panel>
           <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsWebPreviewSelected}">
             <views:WebPreviewView DataContext="{Binding WebPreview}" />
           </Panel>

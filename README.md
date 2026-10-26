@@ -67,6 +67,21 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 - **One tap to install.** If a language server or debug adapter is missing, the status bar, the editor and F5 offer to install the toolchain that brings it, and the server starts as soon as the install finishes.
 - **A terminal.** Ctrl+` opens a shell in the Linux environment, drawn as xterm draws it.
 
+### Backing services without Docker
+
+**View > Services** (also in Ctrl+Q) reads `compose.yaml`, `compose.yml`, `docker-compose.yml` or
+`docker-compose.yaml`, plus `.devcontainer/devcontainer.json` Compose references and overrides. PostgreSQL,
+Redis/Valkey, MySQL via MariaDB, RabbitMQ, nginx, Mailpit, MinIO, and MongoDB when Alpine packages it, run as native
+PRoot processes. Start all, stop, restart, health, per-service logs and localhost preview links are in one pane.
+F5 starts the startup project's dependencies first and rewrites Compose/appsettings connection hosts to localhost;
+`ConnectionStrings__<service>`, `<SERVICE>_HOST` and `<SERVICE>_PORT` are also supplied to the launched app.
+
+Each workspace keeps its own data in private app storage. PostgreSQL initializes the configured user, password and
+database and runs `/docker-entrypoint-initdb.d` SQL and shell scripts once. Image versions are matched against the
+signed Alpine index: PostgreSQL majors never silently change, and other version substitutions are shown in logs.
+Unsupported images explain why and offer a remote host. This is a native development runner, not Docker emulation:
+see [Services](docs/SERVICES.md) for mappings, volumes, networking, supported Compose fields and the CI harness.
+
 ### Every Visual Studio workload, on Android
 
 | Workload | How it runs on the tablet |

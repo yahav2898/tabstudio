@@ -35,3 +35,28 @@ The following are not part of the APK. The Toolchain Store downloads them only w
 
 The web templates include Bootstrap, jQuery, jQuery Validation and jQuery Validation Unobtrusive, each with its licence
 file beside it under [src/TabStudio.Web/Templates/Content/lib](src/TabStudio.Web/Templates/Content/lib).
+
+
+## Downloaded by Services
+
+Native service packages are optional downloads from the same signed Alpine repositories as toolchains. Docker images
+and their entrypoint scripts are not downloaded, copied or executed. The initialization code is TabStudio's own.
+Alpine package metadata is authoritative for the selected version's licence and corresponding source package.
+
+| Component | Licence (depends on selected Alpine version) | Upstream/source |
+| --- | --- | --- |
+| PostgreSQL | PostgreSQL | https://www.postgresql.org/ / Alpine aports `main/postgresql*` |
+| Redis | BSD-3-Clause for older releases; newer releases have different upstream terms; read selected package metadata | https://redis.io/ / Alpine aports `community/redis` |
+| Valkey | BSD-3-Clause | https://valkey.io/ / Alpine aports `community/valkey` |
+| MariaDB | GPL-2.0-only (server); package dependencies have their own licences | https://mariadb.org/ / Alpine aports `main/mariadb` |
+| MongoDB, only when packaged | Version-dependent; contemporary upstream releases use SSPL-1.0 | https://www.mongodb.com/ / selected Alpine package metadata |
+| RabbitMQ | MPL-2.0 | https://www.rabbitmq.com/ / Alpine aports `community/rabbitmq-server` |
+| nginx | BSD-2-Clause | https://nginx.org/ / Alpine aports `main/nginx` |
+| Mailpit | MIT | https://github.com/axllent/mailpit / selected Alpine package metadata |
+| MinIO | AGPL-3.0-or-later | https://github.com/minio/minio / Alpine aports `community/minio` |
+| YamlDotNet (Compose reader) | MIT | https://github.com/aaubry/YamlDotNet |
+| Npgsql (integration tests and user template test only) | PostgreSQL | https://github.com/npgsql/npgsql |
+
+Alpine's signed package indexes and package metadata include source origins, versions, maintainers and licences.
+Corresponding package build scripts/source references are at https://gitlab.alpinelinux.org/alpine/aports; the Services
+CI harness uses the same pinned PRoot sources and rootfs SHA-256 values as the Android runtime.

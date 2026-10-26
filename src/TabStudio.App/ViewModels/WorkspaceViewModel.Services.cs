@@ -1,0 +1,59 @@
+using TabStudio.App.ViewModels.BackingServices;
+using TabStudio.Compilation.Running;
+using TabStudio.Core.Workspaces;
+using TabStudio.Services;
+using TabStudio.Toolchains.Processes;
+
+namespace TabStudio.App.ViewModels;
+
+/// <summary>Backing services run before F5; the launched app gets localhost connection variables.</summary>
+public sealed partial class WorkspaceViewModel
+{
+    private IReadOnlyDictionary<string, string?> _serviceEnvironment = new Dictionary<string, string?>();
+    public ServicesViewModel Services { get; private set; } = null!;
+    public bool IsServicesSelected => SelectedSideBarPanel == SideBarPanel.Services;
+
+    private void InitializeServices(IServiceDatabaseExplorer? databases)
+    {
+        Services = new ServicesViewModel(_toolchains, _paths, _ui, address =>
+        {
+            WebPreview.Show("Service", address, null);
+            SelectSideBarPanel(SideBarPanel.WebPreview);
+        }, () =>
+        {
+            Output.WriteLine("This image needs a remote container host. Use TabStudio Link / Windows Bridge, or connect with Remote SSH when available, and run Compose there.", OutputKind.Info);
+            SelectSideBarPanel(SideBarPanel.WindowsBridge);
+        }, databases);
+    }
+
+    private Task<bool> PrepareServicesAsync(ProjectInfo project) => PrepareServicesAsync(project.DirectoryPath);
+
+    private async Task<bool> PrepareServicesAsync(string projectDirectory)
+    {
+        _run = new CancellationTokenSource();
+        State = IdeState.Running;
+        StatusText = "Starting backing services";
+        try
+        {
+            var profile = LaunchSettings.Read(projectDirectory);
+            var environment = await Services.PrepareAsync(projectDirectory, profile.Environment ?? "Development", _run.Token);
+            if (environment is null)
+            {
+                State = IdeState.Failed; StatusText = Services.Error ?? "Services did not start";
+                SelectSideBarPanel(SideBarPanel.Services);
+                return false;
+            }
+            _serviceEnvironment = environment;
+            State = IdeState.Ready;
+            return true;
+        }
+        finally { _run.Dispose(); _run = null; }
+    }
+
+    private ProcessStartSpec WithServiceEnvironment(ProcessStartSpec spec)
+    {
+        var environment = new Dictionary<string, string?>(spec.Environment, StringComparer.Ordinal);
+        foreach (var (name, value) in _serviceEnvironment) environment[name] = value;
+        return spec with { Environment = environment };
+    }
+}

@@ -432,6 +432,8 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
             return;
         }
 
+        if (!await PrepareServicesAsync(project)) return;
+
         if (IsLiveApp(project))
         {
             await RunLiveProjectAsync(project, fromDebugger: true);
@@ -487,7 +489,7 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
         RunResult result;
         try
         {
-            result = await session.RunAsync([], packages, Output, input);
+            result = await session.RunAsync([], packages, Output, input, environment: _serviceEnvironment);
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)
         {

@@ -205,7 +205,7 @@ public sealed class AlpineEnvironment
     /// <param name="bytes">The bytes needed.</param>
     /// <param name="what">What needs them, for the message.</param>
     /// <exception cref="ToolchainInstallException">There is not enough space.</exception>
-    internal void EnsureSpace(long bytes, string what)
+    public void EnsureSpace(long bytes, string what)
     {
         const long Margin = 50_000_000;
         if (_platform.FreeSpace(Root) is { } free && free < bytes + Margin)

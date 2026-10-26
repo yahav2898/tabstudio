@@ -223,12 +223,14 @@ public sealed class DebugSession : IDisposable
     /// <param name="cancellationToken">Stops the program, like <see cref="Stop"/>.</param>
     /// <returns>How the program ended.</returns>
     /// <exception cref="InvalidOperationException">The session already ran its program.</exception>
+    /// <param name="environment">Environment variables scoped to this debug run.</param>
     public async Task<RunResult> RunAsync(
         IReadOnlyList<string> arguments,
         IReadOnlyList<string> packageAssemblies,
         IConsoleSink console,
         ConsoleInput? input = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        IReadOnlyDictionary<string, string?>? environment = null)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
         ArgumentNullException.ThrowIfNull(arguments);
@@ -256,7 +258,7 @@ public sealed class DebugSession : IDisposable
             AppContext.SetData(DebugRuntimeSource.DataKey, sink);
             using var stop = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _stop.Token);
             result = await new ProgramRunner()
-                .RunAsync(_build.Result.EntryAssembly!, _build.Result.Dependencies, packageAssemblies, arguments, console, input, stop.Token)
+                .RunAsync(_build.Result.EntryAssembly!, _build.Result.Dependencies, packageAssemblies, arguments, console, input, stop.Token, environment)
                 .ConfigureAwait(false);
         }
         finally

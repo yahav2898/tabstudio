@@ -1,0 +1,47 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TabStudio.App.ViewModels.BackingServices" xmlns:model="using:TabStudio.Services.Compose"
+             x:Class="TabStudio.App.Views.ServicesView" x:DataType="vm:ServicesViewModel">
+  <Grid RowDefinitions="Auto,Auto,Auto,*,Auto,1.2*" Margin="12" RowSpacing="8">
+    <TextBlock Text="Services" FontSize="16" FontWeight="SemiBold" />
+    <WrapPanel Grid.Row="1">
+      <Button Content="Start all" Command="{Binding StartAllCommand}" Margin="0,0,4,4" />
+      <Button Content="Stop all" Command="{Binding StopAllCommand}" Margin="0,0,4,4" />
+      <Button Content="Restart" Command="{Binding RestartAllCommand}" Margin="0,0,4,4" />
+      <Button Content="Reload" Command="{Binding ReloadCommand}" Margin="0,0,4,4" />
+      <Button Content="Cancel" Command="{Binding CancelCommand}" IsVisible="{Binding IsBusy}" Margin="0,0,4,4" />
+    </WrapPanel>
+    <StackPanel Grid.Row="2" Spacing="4">
+      <TextBlock Text="{Binding Summary}" TextWrapping="Wrap" Opacity="0.75" />
+      <TextBlock Text="{Binding Error}" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Error}" />
+    </StackPanel>
+    <ListBox Grid.Row="3" ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}">
+      <ListBox.ItemTemplate>
+        <DataTemplate x:DataType="vm:ServiceItemViewModel">
+          <StackPanel Spacing="5" Margin="2,6">
+            <Grid ColumnDefinitions="*,Auto"><TextBlock Text="{Binding Name}" FontWeight="SemiBold" /><TextBlock Grid.Column="1" Text="{Binding State}" Margin="8,0,0,0" /></Grid>
+            <TextBlock Text="{Binding Image}" Opacity="0.65" FontSize="11" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding Detail}" FontSize="11" TextWrapping="Wrap" />
+            <WrapPanel>
+              <Button Content="Start" Command="{Binding StartCommand}" IsVisible="{Binding CanStart}" Margin="0,0,4,0" />
+              <Button Content="Stop" Command="{Binding StopCommand}" IsVisible="{Binding CanStop}" Margin="0,0,4,0" />
+              <Button Content="Restart" Command="{Binding RestartCommand}" IsVisible="{Binding CanStop}" Margin="0,0,4,0" />
+              <Button Content="Use a remote host" Command="{Binding RemoteCommand}" IsVisible="{Binding IsUnsupported}" />
+              <Button Content="Open in Database Explorer" Command="{Binding DatabaseCommand}" IsVisible="{Binding CanOpenDatabase}" />
+            </WrapPanel>
+            <ItemsControl ItemsSource="{Binding Ports}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="model:ServicePort">
+                  <Button Content="{Binding Published, StringFormat='Open localhost:{0}'}"
+                          Command="{Binding $parent[ListBoxItem].((vm:ServiceItemViewModel)DataContext).OpenPortCommand}" CommandParameter="{Binding}" Margin="0,2,0,0" />
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+    <TextBlock Grid.Row="4" Text="Logs" FontWeight="SemiBold" />
+    <TextBox Grid.Row="5" Text="{Binding Logs, Mode=OneWay}" IsReadOnly="True" AcceptsReturn="True" TextWrapping="NoWrap" FontFamily="monospace"
+             ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" />
+  </Grid>
+</UserControl>

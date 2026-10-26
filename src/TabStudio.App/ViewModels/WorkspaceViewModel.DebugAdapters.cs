@@ -220,9 +220,20 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
             return;
         }
 
+        if (!await PrepareServicesAsync(StartupProject?.DirectoryPath ?? workspace.RootDirectory)) return;
+
         await SaveAllCoreAsync();
         var variables = new LaunchVariables(workspace.RootDirectory, ActiveDocument?.FilePath);
         var configuration = target.Configuration.Substitute(variables);
+        if (_serviceEnvironment.Count > 0)
+        {
+            var properties = (System.Text.Json.Nodes.JsonObject)configuration.Properties.DeepClone();
+            var environment = properties["env"] as System.Text.Json.Nodes.JsonObject ?? new System.Text.Json.Nodes.JsonObject();
+            foreach (var (name, value) in _serviceEnvironment) environment[name] = value;
+            properties["env"] = environment.DeepClone();
+            configuration = configuration with { Properties = properties };
+        }
+
         if (noDebug || start == DebugStart.StepInto)
         {
             var properties = (System.Text.Json.Nodes.JsonObject)configuration.Properties.DeepClone();

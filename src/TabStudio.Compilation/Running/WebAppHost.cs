@@ -87,7 +87,7 @@ public sealed class WebAppHost : IAsyncDisposable
         {
             host._capture.Start();
             host._completion = new ProgramRunner().RunAsync(
-                entryAssembly, dependencies, frameworkAndPackageAssemblies, arguments, console, input: null, host._run.Token);
+                entryAssembly, dependencies, frameworkAndPackageAssemblies, arguments, console, input: null, host._run.Token, options.EnvironmentVariables);
             await host.WaitUntilListeningAsync(port, options.StartupTimeout, cancellationToken).ConfigureAwait(false);
             return host;
         }
