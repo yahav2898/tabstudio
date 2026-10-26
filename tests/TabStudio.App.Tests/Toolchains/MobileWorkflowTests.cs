@@ -10,6 +10,53 @@ namespace TabStudio.App.Tests.Toolchains;
 public sealed class MobileWorkflowTests
 {
     [AvaloniaFact]
+    public async Task A_CSharp_F5_server_offers_its_real_listener_in_the_browser_until_the_debug_run_ends()
+    {
+        var browser = new FakeBrowser();
+        using var fixture = new WorkspaceFixture(browser: browser);
+        await fixture.OpenSampleAsync();
+        var workspace = fixture.Workspace;
+        workspace.ActiveDocument!.Document.Text = """
+            var listener = new System.Net.Sockets.TcpListener(System.Net.IPAddress.Loopback, 0);
+            listener.Start();
+            try
+            {
+                int port = ((System.Net.IPEndPoint)listener.LocalEndpoint).Port;
+                Console.WriteLine($"Listening on http://127.0.0.1:{port}");
+                Console.ReadLine();
+            }
+            finally
+            {
+                listener.Stop();
+            }
+            """;
+        await workspace.StartDebuggingCommand.ExecuteAsync(null);
+        try
+        {
+            await UiTestHelpers.WaitUntilAsync(() => workspace.ServerNotice is not null && workspace.Output.IsWaitingForInput,
+                because: "the C# debugger's live server notice and input wait");
+            var notice = workspace.ServerNotice!;
+            using var client = new System.Net.Sockets.TcpClient();
+            await client.ConnectAsync("127.0.0.1", notice.Port);
+            Assert.True(workspace.IsDebugging);
+            await notice.OpenBrowser.ExecuteAsync(null);
+            Assert.Equal(new Uri($"http://127.0.0.1:{notice.Port}/"), Assert.Single(browser.Opened));
+            Assert.Same(notice, workspace.ServerNotice);
+
+            workspace.Output.InputText = "done";
+            workspace.Output.SubmitInputCommand.Execute(null);
+            await DebuggingTests.WaitForExitAsync(workspace);
+            Assert.Null(workspace.ServerNotice);
+            Assert.Contains("has exited with code 0", workspace.Output.Text, StringComparison.Ordinal);
+        }
+        finally
+        {
+            workspace.StopDebuggingCommand.Execute(null);
+            await DebuggingTests.WaitForExitAsync(workspace);
+        }
+    }
+
+    [AvaloniaFact]
     public async Task A_Node_servers_port_is_offered_and_opens_in_the_existing_web_preview()
     {
         using var fixture = new WorkspaceFixture();

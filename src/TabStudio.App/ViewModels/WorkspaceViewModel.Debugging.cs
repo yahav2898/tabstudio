@@ -518,10 +518,11 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
 
     private async Task RunSessionAsync(DebugSession session, ProjectInfo project, IReadOnlyList<string> packages, ConsoleInput input)
     {
+        var listening = BeginServerRun();
         RunResult result;
         try
         {
-            result = await session.RunAsync([], packages, Output, input);
+            result = await session.RunAsync([], packages, new ServerConsoleSink(Output, listening), input);
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)
         {
@@ -532,6 +533,7 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
         finally
         {
             Output.EndInput();
+            EndServerRun();
         }
 
         EndSession(session, project, result);
@@ -579,7 +581,7 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
         if (_restartRequested)
         {
             _restartRequested = false;
-            _ = LaunchAsync(DebugStart.Run);
+            _ = LaunchAsync(session.Recording is null ? DebugStart.Run : DebugStart.Record);
         }
     }
 

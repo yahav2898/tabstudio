@@ -16,7 +16,8 @@ internal sealed class WorkspaceFixture : IDisposable
     /// <param name="agentHttp">The agent's HTTP client, for a fake Claude.</param>
     /// <param name="link">Whether the workspace follows TabStudio Link, as in the app, from a tablet named <c>Test tablet</c>.</param>
     /// <param name="webViews">The embedded browsers of the web preview, for a fake one; none by default, as on a desktop.</param>
-    public WorkspaceFixture(DeviceInfo? device = null, HttpClient? agentHttp = null, bool link = false, IWebViewFactory? webViews = null)
+    /// <param name="browser">The system folder picker and browser, when a test needs to observe launches.</param>
+    public WorkspaceFixture(DeviceInfo? device = null, HttpClient? agentHttp = null, bool link = false, IWebViewFactory? webViews = null, IStoragePicker? browser = null)
     {
         Paths = new AppPaths(_temp.Path);
         DeviceStatus = new DefaultDeviceStatus(device ?? new DeviceInfo(8L * 1024 * 1024 * 1024, 8, IsLowRamDevice: false));
@@ -30,8 +31,8 @@ internal sealed class WorkspaceFixture : IDisposable
         }
 
         Workspace = agentHttp is null
-            ? new WorkspaceViewModel(Compiler, DeviceStatus, Profile, new AvaloniaUiDispatcher(), Sessions, Paths, webViews: webViews, link: Link, linkDialog: LinkDialog)
-            : new WorkspaceViewModel(Compiler, DeviceStatus, Profile, new AvaloniaUiDispatcher(), Sessions, Paths, webViews: webViews, link: Link, linkDialog: LinkDialog) { AgentHttp = agentHttp };
+            ? new WorkspaceViewModel(Compiler, DeviceStatus, Profile, new AvaloniaUiDispatcher(), Sessions, Paths, browser: browser, webViews: webViews, link: Link, linkDialog: LinkDialog)
+            : new WorkspaceViewModel(Compiler, DeviceStatus, Profile, new AvaloniaUiDispatcher(), Sessions, Paths, browser: browser, webViews: webViews, link: Link, linkDialog: LinkDialog) { AgentHttp = agentHttp };
     }
 
     public AppPaths Paths { get; }
