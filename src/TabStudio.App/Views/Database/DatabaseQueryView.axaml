@@ -52,10 +52,10 @@
             </StackPanel>
           </Button>
         </StackPanel>
-        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="12,0,4,0">
+        <Grid Grid.Column="1" ColumnDefinitions="Auto,*" ColumnSpacing="6" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="12,0,4,0">
           <controls:StrokeIcon Data="{StaticResource Icon.Database}" Size="14" Foreground="{DynamicResource Brush.TextMuted}" VerticalAlignment="Center" />
-          <TextBlock Classes="small muted" Text="{Binding Heading}" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Heading}" VerticalAlignment="Center" />
-        </StackPanel>
+          <TextBlock Grid.Column="1" Classes="small muted" Text="{Binding Heading}" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Heading}" VerticalAlignment="Center" />
+        </Grid>
       </Grid>
     </Border>
 
