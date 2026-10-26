@@ -12,7 +12,7 @@ public static partial class SelfTest
         var clock = Stopwatch.StartNew();
         await main.OpenWorkspaceAsync(templates.Create(ProjectTemplates.CppId, "SelfTestCpp"));
         var workspace = main.Workspace!;
-        if (workspace.Toolchains.Manager.CanInstall)
+        if (workspace.Toolchains.Manager.CanInstall && !workspace.Toolchains.Manager.IsReady("cpp"))
         {
             await workspace.ToolchainStore.InstallAsync("cpp").WaitAsync(cancellationToken);
         }

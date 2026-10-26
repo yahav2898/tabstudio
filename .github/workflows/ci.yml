@@ -53,6 +53,9 @@ jobs:
           mkdir -p ci-out
           { npm ls -g --depth=0; ls -l "$(command -v typescript-language-server)"; python -m pip show debugpy; } > ci-out/language-servers.txt 2>&1 || true
 
+      - name: Test CI retry policy
+        run: python -m unittest discover -s build/ci/tests
+
       - name: Test PRoot debugger thread waits
         run: |
           sudo apt-get update -qq
@@ -69,9 +72,7 @@ jobs:
             name=$(basename "$project")
             [ "$name" = "TabStudio.App.Tests" ] && continue
             if ! dotnet test "$project" -c Release -p:TreatWarningsAsErrors=true --logger "console;verbosity=normal" > "ci-out/$name.log" 2>&1; then
-              if grep -Eq '(GoProjectTests|RustProjectTests|CppProjectTests|JavaProjectTests|JavaProotTests|DebugAdapterUnixSocketTests).*\[FAIL\]' "ci-out/$name.log"; then status=1; fi
-              # WinUI must pass on its first attempt; never mask a failure with a retry.
-              if [ "$name" = "TabStudio.Uno.Tests" ]; then
+              if ! python build/ci/test-retry.py "ci-out/$name.log" "$name"; then
                 tail -n 80 "ci-out/$name.log"
                 status=1
                 continue
@@ -88,6 +89,20 @@ jobs:
             tail -n 40 "ci-out/$name.log"
           done
           exit $status
+
+      - name: Save first-attempt test logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: library-test-logs
+          retention-days: 14
+          if-no-files-found: ignore
+          path: |
+            ci-out/*.log
+            ci-out/FLAKY.txt
+            ci-out/*.json
+            ci-out/Sequence_*.xml
+            tests/**/TestResults/**/Sequence_*.xml
 
       - name: Publish logs
         if: always() && github.event_name == 'push'
@@ -272,19 +287,18 @@ jobs:
           first=0
           run_ide_tests ci-out/TabStudio.App.Tests.log || first=1
           tail -n 80 ci-out/TabStudio.App.Tests.log
-          if grep -Eq '(A_Go_template|A_Rust_template|A_Cpp_template|A_Java_template|Java_|Delve_|A_private_Delve_socket).*\[FAIL\]' ci-out/TabStudio.App.Tests.log; then status=1; fi
           if [ $first -ne 0 ]; then
             # Known intermittent failures (a native crash in the test host, slow servers) are tracked on the board;
             # one retry keeps them from blocking a release, and FLAKY.txt and a warning keep them visible.
             echo "::warning::The IDE tests failed once; running them again. The first attempt is in ci-out/TabStudio.App.Tests.log."
-            if grep -Eq 'UnoAppTests.*\[FAIL\]' ci-out/TabStudio.App.Tests.log; then
+            if ! python build/ci/test-retry.py ci-out/TabStudio.App.Tests.log TabStudio.App.Tests; then
               status=1
             elif run_ide_tests ci-out/TabStudio.App.Tests.retry.log; then
               echo "TabStudio.App.Tests: the first attempt failed and the retry passed (see TabStudio.App.Tests.log)" >> ci-out/FLAKY.txt
             else
               status=1
             fi
-            tail -n 40 ci-out/TabStudio.App.Tests.retry.log
+            if [ -f ci-out/TabStudio.App.Tests.retry.log ]; then tail -n 40 ci-out/TabStudio.App.Tests.retry.log; fi
           fi
           # The same tests in the light theme, for light screenshots (screenshots/light); the palette and design tests ran above in both.
           mkdir -p ci-out/screenshots/light
@@ -296,17 +310,16 @@ jobs:
           light=0
           run_light_tests ci-out/TabStudio.App.Tests.Light.log || light=1
           tail -n 20 ci-out/TabStudio.App.Tests.Light.log
-          if grep -Eq '(A_Go_template|A_Rust_template|A_Cpp_template|A_Java_template|Java_|Delve_|A_private_Delve_socket).*\[FAIL\]' ci-out/TabStudio.App.Tests.Light.log; then status=1; fi
           if [ $light -ne 0 ]; then
             echo "::warning::The IDE tests in the light theme failed once; running them again. The first attempt is in ci-out/TabStudio.App.Tests.Light.log."
-            if grep -Eq 'UnoAppTests.*\[FAIL\]' ci-out/TabStudio.App.Tests.Light.log; then
+            if ! python build/ci/test-retry.py ci-out/TabStudio.App.Tests.Light.log TabStudio.App.Tests; then
               status=1
             elif run_light_tests ci-out/TabStudio.App.Tests.Light.retry.log; then
               echo "TabStudio.App.Tests (light theme): the first attempt failed and the retry passed (see TabStudio.App.Tests.Light.log)" >> ci-out/FLAKY.txt
             else
               status=1
             fi
-            tail -n 40 ci-out/TabStudio.App.Tests.Light.retry.log
+            if [ -f ci-out/TabStudio.App.Tests.Light.retry.log ]; then tail -n 40 ci-out/TabStudio.App.Tests.Light.retry.log; fi
           fi
           if [ $first -ne 0 ] || [ $light -ne 0 ] || [ $status -ne 0 ]; then
             {
@@ -326,6 +339,20 @@ jobs:
             status=1
           fi
           exit $status
+
+      - name: Save first-attempt test logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ide-test-logs
+          retention-days: 14
+          if-no-files-found: ignore
+          path: |
+            ci-out/*.log
+            ci-out/FLAKY.txt
+            ci-out/*.json
+            ci-out/Sequence_*.xml
+            tests/**/TestResults/**/Sequence_*.xml
 
       - name: Publish logs and screenshots
         if: always() && github.event_name == 'push'
@@ -452,7 +479,7 @@ jobs:
           disk-size: 4096M
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
-          script: bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 1500
+          script: bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 900
 
       # A crash's native backtrace has only offsets into the runtime's stripped libraries; this names the functions.
       - name: Name the functions in a crash's backtrace

@@ -12,7 +12,7 @@ public static partial class SelfTest
         var clock = Stopwatch.StartNew();
         await main.OpenWorkspaceAsync(templates.Create(ProjectTemplates.RustId, "SelfTestRust"));
         var workspace = main.Workspace!;
-        if (workspace.Toolchains.Manager.CanInstall)
+        if (workspace.Toolchains.Manager.CanInstall && !workspace.Toolchains.Manager.IsReady("rust"))
         {
             await workspace.ToolchainStore.InstallAsync("rust").WaitAsync(cancellationToken);
         }

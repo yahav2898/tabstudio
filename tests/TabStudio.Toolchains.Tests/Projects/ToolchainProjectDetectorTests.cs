@@ -59,10 +59,13 @@ public sealed class ToolchainProjectDetectorTests : IDisposable
     [Fact]
     public void Lists_only_toolchains_the_store_offers()
     {
-        _workspace.Write("pom.xml", "[package]\nname = \"demo\"\n");
+        _workspace.Write("pom.xml", "<project><artifactId>demo</artifactId></project>\n");
         _workspace.Write("src/Main.java", "class Main {}\n");
+        var java = Catalog.Find("java")!;
+        var hiddenCatalog = Catalog with { Toolchains = [java with { Listed = false }] };
 
-        Assert.Empty(ToolchainProjectDetector.Detect(_workspace.Path, Catalog));
+        Assert.Equal("java", Assert.Single(ToolchainProjectDetector.Detect(_workspace.Path, Catalog)).Toolchain.Id);
+        Assert.Empty(ToolchainProjectDetector.Detect(_workspace.Path, hiddenCatalog));
     }
 
     [Fact]

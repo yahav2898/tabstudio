@@ -12,7 +12,7 @@ public static partial class SelfTest
         var clock = Stopwatch.StartNew();
         await main.OpenWorkspaceAsync(templates.Create(ProjectTemplates.GoId, "SelfTestGo"));
         var workspace = main.Workspace!;
-        if (workspace.Toolchains.Manager.CanInstall)
+        if (workspace.Toolchains.Manager.CanInstall && !workspace.Toolchains.Manager.IsReady("go"))
         {
             await workspace.ToolchainStore.InstallAsync("go").WaitAsync(cancellationToken);
         }

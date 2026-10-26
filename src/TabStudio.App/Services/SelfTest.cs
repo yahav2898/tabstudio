@@ -43,6 +43,8 @@ public static partial class SelfTest
         ArgumentNullException.ThrowIfNull(main);
         ArgumentNullException.ThrowIfNull(samples);
         var clock = Stopwatch.StartNew();
+        using var preparationStop = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        Task? preparation = null;
         try
         {
             var solution = await samples.EnsureExtractedAsync(cancellationToken);
@@ -55,6 +57,11 @@ public static partial class SelfTest
             if (!workspace.RunCommand.CanExecute(null))
             {
                 return new SelfTestResult(false, $"F5 is not available: {workspace.StatusText}.", clock.Elapsed);
+            }
+
+            if (templates is not null)
+            {
+                preparation = PrepareSelfTestToolchainsAsync(workspace.Toolchains, preparationStop.Token);
             }
 
             void Answer(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -114,7 +121,7 @@ public static partial class SelfTest
                 return new SelfTestResult(false, $"{summary} | {debugged.Message} | {web.Message} | {blazor.Message}", clock.Elapsed);
             }
 
-            // The Avalonia app goes last among the apps: desktop mode's step runs in the workspace it leaves open.
+            // Remember the Avalonia app so desktop mode can continue in its workspace after all feature checks.
             var avalonia = await ShowAvaloniaAppAsync(main, templates, cancellationToken);
             if (!avalonia.Success || main.Workspace is not { } last)
             {
@@ -123,24 +130,28 @@ public static partial class SelfTest
 
             var avaloniaApp = last.Workspace is { } loaded ? loaded.Solution?.FilePath ?? loaded.RootDirectory : null;
             var extensions = await InstallGrammarExtensionAsync(last, FindEditor, cancellationToken);
-            var toolchains = extensions.Success ? await RunToolchainsAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Toolchains: not run", TimeSpan.Zero);
+            var forms = extensions.Success ? await ShowWindowsFormsAppAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Windows Forms: not run", TimeSpan.Zero);
+            var design = forms.Success ? await CheckDesignAsync(main, screenshots, cancellationToken) : new SelfTestResult(false, "Design: not run", TimeSpan.Zero);
+            var wpf = design.Success ? await ShowWpfAppAsync(main, templates, cancellationToken) : new SelfTestResult(false, "WPF: not run", TimeSpan.Zero);
+            var uno = wpf.Success ? await ShowUnoAppAsync(main, templates, cancellationToken) : new SelfTestResult(false, "WinUI: not run", TimeSpan.Zero);
+
+            // These UI checks do not use the Linux environment being prepared in the background.
+            var screens = uno.Success ? await CheckSwarmScreensAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Swarm screens: not run", TimeSpan.Zero);
+            var swarm = screens.Success ? await RunOnSwarmAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Swarm devices: not run", TimeSpan.Zero);
+            if (swarm.Success && preparation is not null)
+            {
+                // Finish all package operations before opening a native debugger or running its program.
+                await preparation;
+            }
+
+            var toolchains = swarm.Success ? await RunToolchainsAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Toolchains: not run", TimeSpan.Zero);
             var processes = toolchains.Success ? await StartProgramsWhileCollectingAsync(cancellationToken) : new SelfTestResult(false, "Processes: not run", TimeSpan.Zero);
             var pythonTools = processes.Success ? await CheckPythonToolsAsync(main, cancellationToken) : new SelfTestResult(false, "Python tools: not run", TimeSpan.Zero);
             var goTools = pythonTools.Success ? await CheckGoToolchainAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Go: not run", TimeSpan.Zero);
             var rustTools = goTools.Success ? await CheckRustToolchainAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Rust: not run", TimeSpan.Zero);
             var cppTools = rustTools.Success ? await CheckCppToolchainAsync(main, templates, cancellationToken) : new SelfTestResult(false, "C/C++: not run", TimeSpan.Zero);
             var javaTools = cppTools.Success ? await CheckJavaToolchainAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Java: not run", TimeSpan.Zero);
-            var forms = javaTools.Success ? await ShowWindowsFormsAppAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Windows Forms: not run", TimeSpan.Zero);
-
-            var design = forms.Success ? await CheckDesignAsync(main, screenshots, cancellationToken) : new SelfTestResult(false, "Design: not run", TimeSpan.Zero);
-            var wpf = design.Success ? await ShowWpfAppAsync(main, templates, cancellationToken) : new SelfTestResult(false, "WPF: not run", TimeSpan.Zero);
-
-            var uno = wpf.Success ? await ShowUnoAppAsync(main, templates, cancellationToken) : new SelfTestResult(false, "WinUI: not run", TimeSpan.Zero);
-
-            // Swarm, on copies of the Avalonia template: its screens in the Device Matrix, then a phone in the swarm.
-            var screens = uno.Success ? await CheckSwarmScreensAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Swarm screens: not run", TimeSpan.Zero);
-            var swarm = screens.Success ? await RunOnSwarmAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Swarm devices: not run", TimeSpan.Zero);
-            if (swarm.Success && avaloniaApp is not null)
+            if (javaTools.Success && avaloniaApp is not null)
             {
                 // The self test ends in the Avalonia app, which the desktop part continues with.
                 await main.OpenWorkspaceAsync(avaloniaApp);
@@ -148,12 +159,16 @@ public static partial class SelfTest
 
             return new SelfTestResult(
                 extensions.Success && toolchains.Success && processes.Success && pythonTools.Success && goTools.Success && rustTools.Success && cppTools.Success && javaTools.Success && forms.Success && design.Success && wpf.Success && uno.Success && screens.Success && swarm.Success,
-                $"{summary} | {debugged.Message} | {web.Message} | {blazor.Message} | {avalonia.Message} | {extensions.Message} | {toolchains.Message} | {processes.Message} | {pythonTools.Message} | {goTools.Message} | {rustTools.Message} | {cppTools.Message} | {javaTools.Message} | {forms.Message} | {design.Message} | {wpf.Message} | {uno.Message} | {screens.Message} | {swarm.Message}",
+                $"{summary} | {debugged.Message} | {web.Message} | {blazor.Message} | {avalonia.Message} | {extensions.Message} | {forms.Message} | {design.Message} | {wpf.Message} | {uno.Message} | {screens.Message} | {swarm.Message} | {toolchains.Message} | {processes.Message} | {pythonTools.Message} | {goTools.Message} | {rustTools.Message} | {cppTools.Message} | {javaTools.Message}",
                 clock.Elapsed);
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)
         {
             return new SelfTestResult(false, $"{ex.GetType().Name}: {ex.Message}{DescribeActivity(main)}".ReplaceLineEndings(" "), clock.Elapsed);
+        }
+        finally
+        {
+            await FinishSelfTestPreparationAsync(preparation, preparationStop);
         }
     }
 }

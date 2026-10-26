@@ -282,6 +282,12 @@ Library tests cover the editing engine, headless IDE tests capture completion an
 `SelfTest.Wpf.cs` creates the template, presses F5 and reads rendered page text on Android after the Windows Forms
 and design checks and before Swarm, retaining every existing self-test step.
 
+The combined device self test installs Python, Node.js, Go, Rust, C/C++ and Java serially through the shared
+Toolchain Manager while the independent .NET and UI checks run. It awaits all package operations before the
+native run/debug checks, observes cancellation on every exit, and retains every check under the 15-minute
+launch-to-verdict limit. CI permits one retry only for named failures outside the merged feature tests and
+keeps first-attempt logs and `FLAKY.txt` as artifacts for both pushes and pull requests.
+
 ## Debugging
 
 A debugger normally attaches to the runtime through a debugging API, which a .NET app on Android cannot do to

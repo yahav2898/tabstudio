@@ -14,7 +14,7 @@ set -euo pipefail
 
 apk="${1:?apk}"
 out="${2:?output folder}"
-timeout="${3:-300}"
+timeout="${3:-900}"
 package="com.tabstudio.ide"
 
 mkdir -p "$out"

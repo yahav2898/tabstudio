@@ -13,7 +13,7 @@ public static partial class SelfTest
         var clock = Stopwatch.StartNew();
         await main.OpenWorkspaceAsync(templates.Create(ProjectTemplates.JavaId, "SelfTestJava"));
         var workspace = main.Workspace!;
-        if (workspace.Toolchains.Manager.CanInstall)
+        if (workspace.Toolchains.Manager.CanInstall && !workspace.Toolchains.Manager.IsReady("java"))
         {
             await workspace.ToolchainStore.InstallAsync("java").WaitAsync(cancellationToken);
         }

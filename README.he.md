@@ -60,14 +60,22 @@ TabStudio הופך טאבלט אנדרואיד למחשב פיתוח שבאמת 
 - **בדיקות.** Test Explorer ל-xUnit, ‏NUnit ו-MSTest, ו-Live Unit Testing: וי ירוק, איקס אדום או קו כחול ליד כל שורה בקוד הנבדק, והבדיקות שעריכה משפיעה עליהן רצות שוב מעצמן רגע אחרי שמפסיקים להקליד.
 - **NuGet על המכשיר.** החבילות משוחזרות על הטאבלט, כך שפרויקטים אמיתיים נבנים כמו שהם.
 
-### ‏Python, ‏Node.js וטרמינל
+### ‏Python, ‏Node.js, ‏Go, ‏Rust, ‏C/C++ ו-Java
 
-- **ה-Toolchain Store.** ‏**Tools > Toolchain Store** מתקין Python ו-Node.js על הטאבלט, בסביבת לינוקס שחיה בתוך האפליקציה: Alpine Linux שרץ עם PRoot, בלי root ובלי הרשאות מיוחדות. כל חבילה מגיעה מהשרתים של Alpine עצמה ונבדקת מול החתימות של Alpine לפני שמשהו מותקן.
+- **ה-Toolchain Store.** ‏**Tools > Toolchain Store** מתקין Python, ‏Node.js, ‏Go, ‏Rust, ‏C/C++ ו-Java על הטאבלט, בסביבת לינוקס שחיה בתוך האפליקציה: Alpine Linux שרץ עם PRoot, בלי root ובלי הרשאות מיוחדות. כל חבילה מגיעה מהשרתים של Alpine עצמה ונבדקת מול החתימות של Alpine לפני שמשהו מותקן.
 - **פרויקטים שנפתחים כמו שהם.** במסך הפתיחה יש Python Application ו-Node.js Console App. פותחים תיקייה עם `pyproject.toml`, ‏`requirements.txt` או `package.json`, ו-TabStudio מציע להתקין את כלי הפיתוח ואת החבילות של הפרויקט. F5 מריץ אותו, עם הפלט ו-`input()` בחלון ה-Output, השגיאות ב-Error List, וכל שורה ב-traceback היא קישור לקוד שלה.
 - **IntelliSense.** ‏Pyright מביא השלמה אוטומטית, קווים אדומים וניווט ל-Python, ו-typescript-language-server עושה את אותו הדבר ל-JavaScript ול-TypeScript.
 - **דיבאגר.** F5 מדבג עם debugpy או vscode-js-debug, כולל תהליכי הבן של Node: נקודות עצירה, צעדים, Locals, ‏Watch, ‏Call Stack וחריגות. Ctrl+F5 מריץ בלי הדיבאגר.
 - **התקנה בנגיעה אחת.** כשחסר שרת שפה או מתאם דיבאג, שורת המצב, העורך ו-F5 מציעים להתקין את כלי הפיתוח שמביא אותו, והשרת עולה ברגע שההתקנה מסתיימת.
 - **טרמינל.** Ctrl+` פותח shell בסביבת הלינוקס, מצויר כמו ש-xterm מצייר.
+
+Go: פותחים מודול או יוצרים Go Console App. ‏Ctrl+F5 בונה ומריץ; F5 מדבג עם Delve. ‏gopls מספק IntelliSense וניווט בקוד.
+
+Rust: פותחים Cargo.toml או יוצרים Rust Console App. בוחרים חבר ב-workspace מתפריט פרויקט ההפעלה; Ctrl+F5 בונה ומריץ ו-F5 מדבג עם LLDB, לפי נתיב קובץ ההרצה ש-Cargo מדווח עליו.
+
+C/C++: פותחים CMakeLists.txt, ‏Makefile או תיקיית קוד, או יוצרים C++ Console App (CMake). ‏clangd מספק IntelliSense, ‏CMake מייצא מסד נתוני קומפילציה ו-F5 מדבג עם LLDB.
+
+Java: פותחים פרויקט Maven, ‏Gradle או קובצי Java, או יוצרים Java Console App (Maven). ‏Ctrl+F5 בונה ומריץ; F5 מדבג דרך JDT LS ו-java-debug.
 
 ### כל עומסי העבודה של Visual Studio, על אנדרואיד
 
@@ -87,6 +95,8 @@ TabStudio הופך טאבלט אנדרואיד למחשב פיתוח שבאמת 
 **אפליקציות WPF.** יוצרים **WPF Application**, או פותחים פרויקט WPF ב-C# מ-Visual Studio, ולוחצים F5. ‏TabStudio מקמפל את ה-XAML בעזרת OpenSilver ומריץ את האפליקציה בתצוגת האינטרנט; שמירה מפעילה אותה מחדש, ופלט הקונסול והחריגות מופיעים ב-Output. להרצת תצוגת .NET 10 נדרש Android System WebView עדכני. עורך ה-XAML מציע השלמה, Quick Info, מעבר להגדרה, שגיאות בזמן ההקלדה ונורה שמוסיפה event handler חסר לקובץ הקוד. API של WPF שאינו נתמך מופיע בשמו ב-Error List, עם הפניה לגשר Windows. בתצוגת הדפדפן אין דיבאגר ל-C#, ותכונות שדורשות Windows, כולל תלת-ממד וחלונות מודאליים של WPF, דורשות את גשר Windows.
 
 [השלמת XAML](docs/wpf/images/wpf-01-xaml-completion.png) · [הוספת event handler](docs/wpf/images/wpf-02-add-event-handler.png)
+
+**WinUI 3 ו-Uno Platform.** יוצרים אחת מהתבניות או פותחים פרויקט C# ולוחצים F5. האפליקציה נבנית על הטאבלט ומוצגת ליד הקוד באמצעות Skia של Uno; שמירת XAML או C# מפעילה אותה מחדש.
 
 **גשר Windows.** כל מה שדורש Windows נבנה ורץ על מחשב שלכם, והחלונות שלו משודרים לטאבלט. במחשב פותחים את TabStudio ובוחרים **File > TabStudio Link > Be a Windows Bridge**, ובטאבלט סורקים את קוד ה-QR שלו. מאותו רגע WPF, ‏Windows Forms האמיתי, WinUI 3, ‏.NET Framework ו-Visual C++ מסומנים כמוכנים ב-Compatibility Doctor, וכפתור ההרצה יכול להריץ כל פרויקט על המחשב. הבנייה זורמת לחלון ה-Output והשגיאות שלה מגיעות ל-Error List על הקבצים שלכם. נגיעה היא קליק, לחיצה ארוכה היא קליק ימני ושתי אצבעות גוללות; מקלדת והעתקת טקסט עובדות בשני הכיוונים. אפליקציות ‎.NET מדובגות באותו דיבאגר, כמה תוכניות רצות יחד, שמירה מפעילה מחדש רק את התוכנית שהשתנתה, ומחשב שנרדם מקבל הודעה ברורה.
 
@@ -220,6 +230,8 @@ src/
   TabStudio.Forms/         Windows Forms on Avalonia: System.Windows.Forms and System.Drawing, drawn as on Windows 10
   TabStudio.Forms.Design/  The touch designer's model: reads and writes InitializeComponent, the canvas and Toolbox
   TabStudio.Web/           Web apps: static web assets, Blazor's scripts, a host for .NET apps on WebAssembly
+  TabStudio.Wpf/           WPF on OpenSilver: XAML compilation and the browser preview
+  TabStudio.Uno/           WinUI and Uno: XAML compilation and the native Skia preview
   TabStudio.Toolchains/    The Toolchain Store: Alpine Linux on PRoot, packages, processes and the terminal
   TabStudio.LanguageServers/ Language Server and Debug Adapter Protocol clients for every non-C# language
   TabStudio.Extensions/    VS Code extensions from Open VSX: grammars, language rules, snippets, themes
