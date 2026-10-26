@@ -40,11 +40,11 @@ These operations use TabStudio's existing in-process compiler and the project's 
 
 ## Screenshots
 
-![SQL editor and Database Explorer](screenshots/database-01-explorer-sql-results.png)
+![SQL editor and Database Explorer](../images/database/explorer-sql-results.png)
 
-![Paged table editor](screenshots/database-02-table-editor.png)
+![Paged table editor](../images/database/table-editor.png)
 
-![Connection form on a tablet](screenshots/database-03-connection-tablet.png)
+![Connection form on a tablet](../images/database/connection-tablet.png)
 
 ## Verification
 

@@ -66,7 +66,7 @@ Upstream also contains PIC24FJ128GA705 and PIC24FJ64GU205 modules; PIC24/XC16 is
 
 Pause the simulation before changing breakpoints or inspecting registers, SFRs or the current frame. The adapter rejects those requests while running so its Pause/Stop controls remain responsive.
 
-The exact PIC18 model list is in [`gpsim.devices.json`](../src/TabStudio.Toolchains/Microchip/gpsim.devices.json). Unsupported PIC18 models and PIC32 on-chip debugging use **Debug > On-chip Debugging in MPLAB X**. The paired PC opens its installed MPLAB X project in the Bridge pane; select the PICkit 4/5 and use MPLAB's Debug Project controls there. This is vendor debugging on the PC, not a local open PICkit DAP implementation.
+The exact PIC18 model list is in [`gpsim.devices.json`](../../src/TabStudio.Toolchains/Microchip/gpsim.devices.json). Unsupported PIC18 models and PIC32 on-chip debugging use **Debug > On-chip Debugging in MPLAB X**. The paired PC opens its installed MPLAB X project in the Bridge pane; select the PICkit 4/5 and use MPLAB's Debug Project controls there. This is vendor debugging on the PC, not a local open PICkit DAP implementation.
 
 On the Windows Bridge, install MPLAB X, IPE, the selected XC version and DFPs yourself. TabStudio finds the vendor makefile generator, GNU make, IPE and bundled Java, builds the synchronized project, streams diagnostics back, and programs/verifies the resulting HEX with `ipecmd`. Select the IPE tool and optional serial via `bridgeTool`/`bridgeSerial`. Target-power defaults are left to IPE; TabStudio supplies no voltage override.
 

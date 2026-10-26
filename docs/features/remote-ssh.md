@@ -2,7 +2,7 @@
 
 Open a local workspace, then choose **File > Open Remote Folder (SSH)**, or the Remote Explorer activity icon.
 
-![Remote Explorer in the running IDE](screenshots/remote-explorer.png)
+![Remote Explorer in the running IDE](../images/remote-ssh/remote-explorer.png)
 
 1. Enter an alias, host/IP, SSH user and port; choose **Save host**. Alternatively expand **Import ~/.ssh/config**
    and paste a config, or leave its text blank to read the current device's `~/.ssh/config`.

@@ -13,6 +13,7 @@ Open a solution, press F5, and it builds, runs and debugs on the tablet itself.
 
 [**Download**](https://github.com/yahav2898/tabstudio/releases/latest) ·
 [עברית](README.he.md) ·
+[Documentation](docs/README.md) ·
 [Architecture](docs/ARCHITECTURE.md) ·
 [Roadmap](docs/ROADMAP.md) ·
 [Contributing](CONTRIBUTING.md)
@@ -36,6 +37,7 @@ Open a solution, press F5, and it builds, runs and debugs on the tablet itself.
   - [Database Explorer](#database-explorer)
   - [Remote development over SSH](#remote-development-over-ssh)
   - [Web servers and mobile apps](#web-servers-and-mobile-apps)
+  - [Microchip PIC](#microchip-pic)
   - [GitHub](#github)
   - [AI pair programmer](#ai-pair-programmer)
   - [Offline AI](#offline-ai)
@@ -135,7 +137,7 @@ From there, try **New project** for a template in any language, **Open from GitH
   causes link to the faulty write. Recording is off by default; history inspection never re-executes code.
   During a recording, applying C# edits requires **Restart to apply edits**, which starts a new recording.
   Continue without edits, or after reverting the edits, resumes the existing recording. See [recording details
-  and overhead](docs/debugging/time-travel.md).
+  and overhead](docs/features/time-travel.md).
 - **The Toolchain Store.** Languages and SDKs install into a Linux environment inside the app: Alpine Linux run
   with PRoot, with no root and no special permissions. Alpine packages are verified against Alpine's signatures;
   SDK components can also use official upstream archives with pinned SHA-256 checks.
@@ -158,13 +160,13 @@ Each workspace keeps its own data in private app storage. PostgreSQL initializes
 database and runs `/docker-entrypoint-initdb.d` SQL and shell scripts once. Image versions are matched against the
 signed Alpine index: PostgreSQL majors never silently change, and other version substitutions are shown in logs.
 Unsupported images explain why and offer a remote host. This is a native development runner, not Docker emulation:
-see [Services](docs/SERVICES.md) for mappings, volumes, networking, supported Compose fields and the CI harness.
+see [Services](docs/features/services.md) for mappings, volumes, networking, supported Compose fields and the CI harness.
 
 ### Flutter and Dart (experimental)
 
 The Flutter Toolchain Store entry installs Flutter and its bundled Dart SDK in a separate Ubuntu glibc PRoot environment on ARM64/x64 tablets. Open `pubspec.yaml` projects, accept **flutter pub get**, and run the counter templates in the web preview. Dart IntelliSense uses the analysis server; Dart console debugging uses DAP. Saving Dart code hot-restarts Flutter web; Debug offers Flutter Hot Reload and Hot Restart for native VM-service targets.
 
-Native Android deployment of Flutter apps through the Android SDK toolchain is not verified yet. Embedded `web-server` previews do not provide VM breakpoints without a browser debugging bridge. See [the SDK spike and verification status](docs/flutter.md) before enabling this experimental feature in a release.
+Native Android deployment of Flutter apps through the Android SDK toolchain is not verified yet. Embedded `web-server` previews do not provide VM breakpoints without a browser debugging bridge. See [the SDK spike and verification status](docs/features/flutter.md) before enabling this experimental feature in a release.
 
 ### App platforms
 
@@ -184,7 +186,7 @@ Native Android deployment of Flutter apps through the Android SDK toolchain is n
   Visual Studio does. See [what the Forms layer supports](src/TabStudio.Forms/README.md).
 - **WPF.** XAML compiles on OpenSilver and runs in the web preview; saving restarts the app. The XAML editor has
   completion, Quick Info, Go to Definition, live errors and a light bulb that adds a missing event handler
-  ([completion](docs/wpf/images/wpf-01-xaml-completion.png), [event handler](docs/wpf/images/wpf-02-add-event-handler.png)).
+  ([completion](docs/images/wpf/xaml-completion.png), [event handler](docs/images/wpf/add-event-handler.png)).
   WPF APIs that need Windows are named in the Error List with a route to the Windows Bridge.
 - **WinUI 3 and Uno Platform.** Projects build on the tablet and render natively beside the code; saving XAML or C#
   restarts them.
@@ -211,15 +213,11 @@ Native Android deployment of Flutter apps through the Android SDK toolchain is n
 
 - **Open from GitHub.** Paste a repository's address; TabStudio downloads it, detects what it is built with, opens its
   main solution and selects its build, run and debug plans.
-- **Automatic project setup.** **Set projects up when they open** is on by default and available through Tools
-  and Ctrl+Q. Opening a Python or Node.js repository installs its toolchain and packages, with progress and
-  cancellation: pip uses a project venv; npm uses `npm ci` when a lockfile is present, otherwise `npm
-  install`. Setup runs once per manifest change. Monorepo packages remain separate run targets, while declared
-  npm workspaces share their root install.
-- **Static web sites.** Open a folder with `index.html` or create a **Static Web Site**. F5 serves it in the
-  web preview; saved HTML reloads, and saved CSS is replaced without losing page state. Node.js from the
-  Toolchain Store supplies HTML, CSS and JSON completion and diagnostics through
-  `vscode-langservers-extracted`.
+- **Automatic setup.** Opening a Python or Node.js repository installs its toolchain and packages once per manifest
+  change, with progress and cancel: a virtual environment for pip, and `npm ci` when there is a lockfile. **Set
+  projects up when they open** in Tools turns it off.
+- **Static web sites.** A folder with `index.html` opens as a site. F5 serves it in the web preview, saved HTML
+  reloads and saved CSS applies without losing the page's state, with HTML, CSS and JSON IntelliSense.
 - **Compatibility Doctor.** For every project it shows where it runs on the tablet and why, and fixes what stands in
   the way.
 - **Real-world project files.** SDK-style projects, `Directory.Build.props`, `.targets` and the files they import,
@@ -236,45 +234,51 @@ Native Android deployment of Flutter apps through the Android SDK toolchain is n
 
 ### Database Explorer
 
-**View > Database Explorer** (also in Ctrl+Q and the activity bar) connects to SQLite files, PostgreSQL
-through Npgsql and SQL Server through Microsoft.Data.SqlClient. Browse databases, schemas, tables, views,
-columns, keys and indexes. Discover connection strings from the solution's `appsettings*.json` and user
-secrets, then choose which to save. Android encrypts saved credentials with an Android Keystore key; desktop
-credentials last for the session.
-
-Open **New query** for SQL completion from the connected schema. **Ctrl+Enter** runs the selection or the
-whole tab; Cancel interrupts the command. Results have sortable columns, CSV/JSON copying, multiple result
-sets, row counts and timings. **Edit data** pages through tables and applies individual cell changes with a
-primary-key and original-row concurrency check. The **EF Core** tab builds projects in memory to list
-DbContexts and migrations, update the configured database, or add a migration. See [Database
-Explorer](docs/DATABASE.md) for setup and limits.
+- **Connect.** SQLite files, PostgreSQL and SQL Server. Connection strings are discovered in the solution's
+  `appsettings*.json` and user secrets, and saved ones are encrypted with an Android Keystore key.
+- **Browse and query.** Databases, schemas, tables, views, columns, keys and indexes. SQL tabs complete from the
+  connected schema, and **Ctrl+Enter** runs the selection, with sortable results, CSV and JSON copying, multiple
+  result sets and timings.
+- **Edit data.** Page through a table and change cells; each update is checked against the row as it was read.
+- **EF Core.** List DbContexts and migrations, add a migration and update the database, built in memory on the
+  tablet.
+- [Setup and limits](docs/features/database.md).
 
 ### Remote development over SSH
 
-Choose **File > Open Remote Folder (SSH)** to open Remote Explorer, save a host or import `~/.ssh/config`,
-generate a device key and open a remote source folder. Android identities are generated inside Android
-Keystore and remain non-exportable. SFTP caches files for Solution Explorer, editing and search; Save uploads
-with conflict detection, Terminal opens a remote shell, and F5 / Build execute the folder's saved SSH
-commands. Forward a remote web port into the web preview. **File > Publish to server** publishes an ASP.NET
-Core project locally, uploads a new release through SFTP and restarts its existing systemd service. See [SSH
-setup, publishing and limits](docs/REMOTE_SSH.md).
+- **Open a folder on your server.** **File > Open Remote Folder (SSH)** saves a host or imports `~/.ssh/config`.
+  The device's key is generated inside Android Keystore and never leaves it.
+- **Work as if it were local.** Solution Explorer, editing and search over SFTP, saves with conflict detection, a
+  remote terminal, F5 and Build through the folder's saved commands, and remote web ports forwarded into the web
+  preview.
+- **Publish to server.** An ASP.NET Core project is published, uploaded as a new release and its systemd service
+  restarted.
+- [Setup, publishing and limits](docs/features/remote-ssh.md).
 
 ### Web servers and mobile apps
 
-Programs in any toolchain can offer **App listening on port N**: open the local server in the web preview
-beside code or in the device browser. The ASP.NET and Blazor preview also has **Open in browser**.
+- **Any server, previewed.** A program in any toolchain that listens on a port opens in the web preview beside the
+  code, or in the device's browser.
+- **Android apps.** The **Android SDK** toolchain brings OpenJDK, Gradle and the SDK tools. In an **Android App
+  (Kotlin)**, F5 builds the APK, installs and launches it, with Kotlin and Java IntelliSense, compiler errors in the
+  Error List, and Logcat.
+- **Capacitor apps.** F5 runs the web part, and **Run Android App** builds and installs the native app.
+- **iOS without a Mac.** **Build for iOS…** writes a GitHub Actions workflow for you to review, and **Run iOS
+  Workflow…** builds the IPA in the cloud. An Apple Developer account and signing secrets are required.
+- [Setup and limits](docs/features/mobile.md).
 
-The **Android SDK** Toolchain Store entry installs OpenJDK 17, Gradle, SDK tools/platform 35 and
-SHA-256-pinned ARM64/ARMv7 replacements for native Android build tools. Create **Android App (Kotlin)**, then
-F5 builds an APK, asks Android to install it and launches it. **Build > Build Android APK** builds without
-installing. Java editing uses jdtls; Kotlin uses kotlin-language-server, with compiler diagnostics in the
-Error List. **Logcat** shows the built app's own debug process.
+### Microchip PIC
 
-Create **Capacitor App** for a Vite + TypeScript app: F5 runs its web part, and **Run Android App**
-builds/syncs Capacitor and installs the native APK. **Build for iOS…** generates a reviewable GitHub Actions
-workflow and signing guide; **Run iOS Workflow…** uses the existing Actions progress, logs and IPA artifact
-download. A Mac is never needed locally, but an Apple Developer account and repository signing secrets are
-required. See [mobile workflows](docs/MOBILE.md) for setup and limitations.
+- **Compilers on the tablet.** Install **Microchip XC8** (PIC10/12/16/18) or **XC32** (PIC32) from the Toolchain
+  Store under Microchip's licence. The official compilers run in the tablet's Linux environment, with no PC and no
+  licence activation for local builds. You install them; TabStudio never redistributes them.
+- **MPLAB X projects.** Open a project with `nbproject/configurations.xml`, or create **PIC18 Blink (XC8)** or
+  **PIC32 Blink (XC32)**. Builds keep MPLAB's options, fill the Error List, show memory usage and give clangd the
+  device's headers.
+- **Debug and flash.** F5 debugs PIC18 Blink in the gpsim simulator. **Flash** programs a supported USB-OTG
+  bootloader or programmer, and the serial monitor speaks CDC-ACM, CH340, CP210x and FTDI. PICkit 4/5 and Snap use
+  MPLAB on a PC paired as a Windows Bridge.
+- [Setup, device lists and limits](docs/features/pic.md).
 
 ### GitHub
 
@@ -294,24 +298,19 @@ required. See [mobile workflows](docs/MOBILE.md) for setup and limitations.
 - **Port to Avalonia.** Use the Compatibility Doctor, Solution Explorer context menu or Project menu to
   convert a C# WPF or Windows Forms project into a sibling Avalonia project; the original stays unchanged. The
   summary links structured port notes to source lines, can send them to the agent as one task of proposed
-  changes, and offers undo. F5 runs the converted project. See [porting behavior and limits](docs/PORTING.md).
+  changes, and offers undo. F5 runs the converted project. See [porting behavior and limits](docs/features/porting.md).
 - **Sketch to XAML** with the stylus, and **MCP** servers for your own tools.
 
 ### Offline AI
 
-Open **Agent settings**, choose a local GGUF model, read and accept its license, then download it. **Local
-mode** runs chat, explanations, fixes and test generation on the tablet with the same Keep/Undo proposals. Its
-badge says **Code and prompts stay on device**; local mode has no cloud or MCP connection.
-
-Enable **Inline completions** for ghost text in any editor language: **Tab** accepts, **Escape** or typing
-cancels. Context includes the current file and unsaved open neighbors. Completion pauses when the device is
-hot or below 16% battery while unplugged. The model manager shows download size, estimated RAM and speed
-measured on this device, and offers cancel, unload and delete.
-
-Qwen2.5-Coder 1.5B/3B Q4 and Qwen2.5 0.5B chat are offered at pinned revisions with SHA-256 verification.
-Models are optional downloads; their individual licenses apply (the 3B model uses the Qwen Research License).
-Local AI requires a 64-bit build with the native runtime. See [runtime measurements and
-reproduction](docs/local-ai/spike.md).
+- **Local mode.** Choose a GGUF model in **Agent settings**, accept its licence and download it. Chat, explanations,
+  fixes and test generation then run on the tablet with the same Keep and Undo proposals, and nothing leaves the
+  device.
+- **Inline completions.** Ghost text in any language: **Tab** accepts, **Escape** dismisses. Completions pause when
+  the tablet is hot or low on battery.
+- **Models.** Qwen2.5-Coder 1.5B and 3B and Qwen2.5 0.5B, pinned and verified by SHA-256, with their size, memory
+  and speed on this device shown before you download. Each model's own licence applies. Requires a 64-bit build.
+- [Runtime measurements](docs/features/local-ai.md).
 
 ### Built for the device in your hands
 
@@ -421,8 +420,9 @@ src/
   TabStudio.Desktop/         Desktop host for development
   TabStudio.Android/         The Android app
 tests/                       Tests for every library, and shared test helpers
+native/                      Native code built into the APK, such as the llama.cpp bridge for offline AI
 samples/                     The sample solution bundled with the app
-docs/                        Architecture, roadmap, design and release notes
+docs/                        Feature guides, architecture, roadmap, design and release notes (start at docs/README.md)
 build/                       CI and build scripts
 ```
 
@@ -431,14 +431,6 @@ build/                       CI and build scripts
 TabStudio is built in the open, and one contributor can still shape a whole feature. Start with the
 [roadmap](docs/ROADMAP.md), and read [CONTRIBUTING.md](CONTRIBUTING.md) for how the code is organized, how CI works
 and what a good pull request looks like.
-
-## Microchip PIC on the tablet
-
-Install **Microchip XC8** (PIC10/12/16/18) or **Microchip XC32** (PIC32) in the Toolchain Store after reading Microchip's licence. The official x86-64 Linux compilers run through Box64 in the tablet's Alpine/PRoot environment, with verified glibc runtimes and device packs. **The compilers are installed by the user under Microchip's licence and are never redistributed.** No PC or licence-manager activation is needed for local builds.
-
-Create **PIC18 Blink (XC8)** or **PIC32 Blink (XC32)**, or open an MPLAB X project with `nbproject/configurations.xml` and its generated makefiles. Builds retain MPLAB's options, populate the Error List, show memory usage and prepare clangd's device headers/builtins. PIC18 Blink uses a real gpsim-supported PIC18F14K22 model for local F5 debugging.
-
-Configure a compatible USB-OTG bootloader/programmer for **Flash**; other devices say **Use the Windows Bridge**. The serial monitor supports CDC-ACM, CH340, CP210x and FTDI. PICkit 4/5 and Snap PIC programming/debugging use the paired PC's MPLAB tools: pymcuprog's documented PIC support is PKOB nano, not those programmers. [Setup, exact device lists, measured ARM64 compiler results and hardware limitations](docs/PIC.md).
 
 ## License and trademarks
 

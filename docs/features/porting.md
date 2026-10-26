@@ -42,8 +42,8 @@ root and cycles reported. External package themes retain their own compiled reso
 
 ## Screenshots
 
-![Port summary and linked note](porting/images/summary.png)
+![Port summary and linked note](../images/porting/summary.png)
 
-![Converted Windows Forms customer entry after adding a row](porting/images/customers-running.png)
+![Converted Windows Forms customer entry after adding a row](../images/porting/customers-running.png)
 
-![Converted WPF contacts app in the native preview](porting/images/contacts-running.png)
+![Converted WPF contacts app in the native preview](../images/porting/contacts-running.png)

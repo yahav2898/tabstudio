@@ -309,7 +309,7 @@ the original project is never rewritten.
 dialog. It adds the converted project through `SolutionFileEditor`, reloads the workspace, starts package restore
 and selects the result for F5. The summary links notes to their source lines and sends them as one agent task of
 proposed changes. Undo removes the solution entry and moves the converted folder, including subsequent edits,
-to app trash before restoring the previous startup project. See [PORTING.md](PORTING.md) for conversion limits.
+to app trash before restoring the previous startup project. See [PORTING.md](features/porting.md) for conversion limits.
 
 ## Debugging
 
@@ -448,7 +448,7 @@ historical. F5 resumes the actual live pause. A new run clears the previous hist
 
 `RecordingFormatTests`, `RecordingTests`, App command tests, a dark/light `debug-06-recording-timeline` screenshot,
 and `SelfTest.RecordSampleAsync` cover the wire format, wrapping/eviction, write semantics, navigation, crash cause,
-and history on the Android emulator. See [time-travel debugging](debugging/time-travel.md) for usage, limits and the
+and history on the Android emulator. See [time-travel debugging](features/time-travel.md) for usage, limits and the
 reproducible overhead measurement.
 
 ## Tests
@@ -590,7 +590,7 @@ to the workspace. `RemoteExplorerViewModel` exposes hosts, config import, profil
 Publishing invokes the local SDK (offering Alpine dotnet10-sdk installation on tablets), stages successful publish
 output with SFTP into a new release directory, switches `current` atomically, restarts the configured systemd unit
 and restores the old link on activation failure. The unit and scoped sudo policy are server-admin prerequisites.
-See [REMOTE_SSH.md](REMOTE_SSH.md) for protocol/import limits and operational setup. CI's SSH integration job runs
+See [REMOTE_SSH.md](features/remote-ssh.md) for protocol/import limits and operational setup. CI's SSH integration job runs
 library and App tests against an OpenSSH container; Android self-test exercises the native signing provider.
 
 ## Toolchains
@@ -749,7 +749,7 @@ Native Python workers implement AN1388 HID/UART and MCC/UBHA UART framing, bound
 
 The gpsim DAP adapter runs a native headless simulator, reads XC8 ELF/DWARF separately, synchronizes CLI commands with unique markers, and exposes source/instruction breakpoints, stepping, CPU registers and SFRs. It refuses unsupported MCU models; no similar-device substitution is made. On-chip debugging opens the synchronized project in the PC's installed MPLAB X through the Windows Bridge. Bridge builds use `prjMakefilesGenerator` and vendor make; programming/verification uses `ipecmd` with an explicit tool/optional serial.
 
-The mandatory compiler CI matrix runs real ARM64 and x86-64 Ubuntu hosts inside Alpine/PRoot, emits linked HEX images, compares timing and hashes, and also invokes the production MPLAB driver. Native helper CI builds aarch64-musl tools and tests gpsim DAP with supported-model XC8 firmware. A disposable debuggable emulator APK tests the app-UID PRoot/Box64 path when available. Protocol fixtures identify independent reference-encoder recordings versus physical captures; no physical programmer is attached to CI. See [PIC.md](PIC.md) for measurements, model/device lists and limits.
+The mandatory compiler CI matrix runs real ARM64 and x86-64 Ubuntu hosts inside Alpine/PRoot, emits linked HEX images, compares timing and hashes, and also invokes the production MPLAB driver. Native helper CI builds aarch64-musl tools and tests gpsim DAP with supported-model XC8 firmware. A disposable debuggable emulator APK tests the app-UID PRoot/Box64 path when available. Protocol fixtures identify independent reference-encoder recordings versus physical captures; no physical programmer is attached to CI. See [PIC.md](features/pic.md) for measurements, model/device lists and limits.
 
 ## Swarm
 
@@ -959,7 +959,7 @@ Library tests cover SQLite schema details, quoting, multi-result queries, cancel
 
 `FimPromptBuilder` uses Qwen's FIM vocabulary and a UTF-8 byte budget for the current prefix/suffix plus three unsaved open neighbors. `InlineCompletionController` waits 450 ms after editing, cancels pending work and rejects stale responses even if the generator ignores cancellation. Every `CodeEditorView` can render the proposal through a zero-document-length `GhostTextGenerator`; Tab inserts it as a single undo group. Typing, movement, selection, loss of focus and Escape clear it. No language service is required. Background completions do not queue behind an occupied chat engine. Android's existing thermal state and sticky battery broadcasts pause completions when hot or at 15% charge or lower without external power.
 
-`local-ai.yml` compares native/server inference on x64 and ARM64 Linux and the Android emulator, then runs the managed real-model tests. Fake-server tests cover the completion protocol; other tests cover FIM, model integrity, licenses, proposal confinement and ghost-text input. The main emulator APK bundles the verified 260K diagnostic model only with `TabStudioIncludeLocalAITestModel=true`; its in-app self-test loads the model through P/Invoke and must generate tokens. Regular APKs carry no model. See [the spike](local-ai/spike.md) for measured results and limitations.
+`local-ai.yml` compares native/server inference on x64 and ARM64 Linux and the Android emulator, then runs the managed real-model tests. Fake-server tests cover the completion protocol; other tests cover FIM, model integrity, licenses, proposal confinement and ghost-text input. The main emulator APK bundles the verified 260K diagnostic model only with `TabStudioIncludeLocalAITestModel=true`; its in-app self-test loads the model through P/Invoke and must generate tokens. Regular APKs carry no model. See [the spike](features/local-ai.md) for measured results and limitations.
 
 ## Native backing services
 
@@ -994,7 +994,7 @@ F5. Reload stops services and reparses configuration, preserving their data.
 CI runs real PostgreSQL and Redis in the same Alpine/PRoot runtime on x64 and ARM64, plus an App test that builds an
 ASP.NET Core template using Npgsql and queries PostgreSQL through its HTTP endpoint. The emulator self-test installs
 PostgreSQL via the signed package manager, initializes it, runs a SQL script and SELECT, and stops it. See
-[Services](SERVICES.md) for package/Compose coverage and local reproduction.
+[Services](features/services.md) for package/Compose coverage and local reproduction.
 
 ## Flutter and Dart
 
@@ -1004,4 +1004,4 @@ PostgreSQL via the signed package manager, initializes it, runs a SQL script and
 
 `FlutterProject` distinguishes Flutter SDK dependencies from plain Dart packages. The ordinary dependency notice offers pub get. The analysis server runs as `dart language-server --protocol=lsp`; Flutter DAP runs as `flutter debug-adapter`, Dart DAP as `dart debug_adapter`. Flutter's forwarded web-launch event opens only a loopback HTTP(S) URL in the existing preview. Saves serialize/coalesce adapter hot-restart requests for web, or hot-reload requests for native VM targets. Explicit launch configurations can choose a native device once the mobile toolchain is available. Swarm web targets tunnel the same loopback server to phones.
 
-See [Flutter verification](flutter.md) for the experiment's measured results, pending SDK/PRoot/device checks and the dedicated emulator test entry point. Web preview is a no-debug DAP launch: a generic WebView does not implement Dart's browser-debug extension.
+See [Flutter verification](features/flutter.md) for the experiment's measured results, pending SDK/PRoot/device checks and the dedicated emulator test entry point. Web preview is a no-debug DAP launch: a generic WebView does not implement Dart's browser-debug extension.
