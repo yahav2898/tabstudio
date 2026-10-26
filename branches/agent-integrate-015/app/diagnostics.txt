@@ -1,0 +1,82 @@
+== Processes left running
+    PID    PPID    PGID   RSS     ELAPSED COMMAND
+   9681       1    1843 468060      22:55 /usr/share/dotnet/sdk/10.0.403/Roslyn/bincore/VBCSCompiler -pipename:WAcWTViZvzcVAI0ZQWygl6OMzaUe49Dabl4RIF3MlGs
+   1915    1896    1843 162012   01:01:12 /home/runner/actions-runner/cached/2.338.0/bin/Runner.Worker spawnclient 142 145
+   1862    1860    1843 160284   01:01:15 /tmp/provjobd661288483
+   1896    1843    1843 122748   01:01:14 /home/runner/actions-runner/cached/2.338.0/bin/Runner.Listener run
+   1073       1    1073 71236    01:01:28 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+    810       1     810 51276    01:01:29 php-fpm: master process (/etc/php/8.3/fpm/php-fpm.conf)
+    877       1     877 45492    01:01:28 /usr/bin/containerd
+    221       1     221 43684    01:01:37 /sbin/multipathd -d -s
+   1184     845     845 37380    01:01:28 /usr/bin/python3 -u bin/WALinuxAgent-2.16.0.2-py3.12.egg -run-exthandlers
+    845       1     845 30616    01:01:28 /usr/bin/python3 -u /usr/sbin/waagent -daemon
+   1187     810     810 21416    01:01:28 php-fpm: pool www
+   1186     810     810 21412    01:01:28 php-fpm: pool www
+    807       1     807 20556    01:01:29 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
+   1843       1    1843 20308    01:01:15 /opt/hca/hosted-compute-agent
+    156       1     156 18552    01:01:38 /usr/lib/systemd/systemd-journald
+      1       0       1 14448    01:01:39 /sbin/init
+    844       1     844 13804    01:01:28 /usr/libexec/udisks2/udisksd
+    437       1     437 13412    01:01:36 /usr/lib/systemd/systemd-resolved
+    986       1     986 12856    01:01:28 /usr/sbin/ModemManager
+   1029       1    1029 11504    01:01:28 /usr/lib/systemd/systemd --user
+    814       1     814 10164    01:01:29 /usr/lib/polkit-1/polkitd --no-debug
+    647       1     647  9852    01:01:33 /usr/lib/systemd/systemd-networkd
+    842       1     842  9832    01:01:28 /usr/lib/systemd/systemd-logind
+    226       1     226  8032    01:01:37 /usr/lib/systemd/systemd-udevd
+   1860    1843    1843  7036    01:01:15 sudo -n PROVJOBD_E2E=1 /tmp/provjobd661288483
+    873       1     873  6112    01:01:28 /usr/sbin/rsyslogd -n -iNONE
+    802       1     802  5312    01:01:29 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+    506       1     506  5088    01:01:36 /usr/sbin/haveged --Foreground --verbose=1
+  31026   14115    1843  4288       00:00 ps -eo pid,ppid,pgid,rss,etime,args --sort=-rss
+    935       1     934  3848    01:01:28 /usr/sbin/chronyd -F 1
+  14115    1915    1843  3620       18:05 /usr/bin/bash -e /home/runner/work/_temp/f49a9ef1-b31b-416b-bc93-4ebecc76f12b.sh
+   1081    1029    1029  3588    01:01:28 (sd-pam)
+    331       1     331  2968    01:01:36 /usr/lib/linux-tools/6.17.0-1022-azure/hv_kvp_daemon -n
+    869       1     869  2880    01:01:28 /usr/sbin/cron -f -P
+    880       1     880  2212    01:01:28 /sbin/agetty -o -p -- \u --keep-baud 115200,57600,38400,9600 - vt220
+    945       1     945  2096    01:01:28 /sbin/agetty -o -p -- \u --noclear - linux
+  31027   14115    1843  2048       00:00 head -n 40
+    942     935     934  1284    01:01:28 /usr/sbin/chronyd -F 1
+      2       0       0     0    01:01:39 [kthreadd]
+== Kernel messages
+[    3.630190] audit: type=1400 audit(1792996050.458:5): apparmor="STATUS" operation="profile_load" profile="unconfined" name="1password" pid=387 comm="apparmor_parser"
+[    3.631258] audit: type=1400 audit(1792996050.460:6): apparmor="STATUS" operation="profile_load" profile="unconfined" name="brave" pid=393 comm="apparmor_parser"
+[    3.632008] audit: type=1400 audit(1792996050.460:7): apparmor="STATUS" operation="profile_load" profile="unconfined" name="balena-etcher" pid=392 comm="apparmor_parser"
+[    3.632065] audit: type=1400 audit(1792996050.460:8): apparmor="STATUS" operation="profile_load" profile="unconfined" name="cam" pid=396 comm="apparmor_parser"
+[    3.632280] audit: type=1400 audit(1792996050.461:9): apparmor="STATUS" operation="profile_load" profile="unconfined" name="buildah" pid=394 comm="apparmor_parser"
+[    3.633189] audit: type=1400 audit(1792996050.462:10): apparmor="STATUS" operation="profile_load" profile="unconfined" name="ch-checkns" pid=397 comm="apparmor_parser"
+[    4.264124] /dev/sr0: Can't lookup blockdev
+[    4.364509] mlx5_core 1b4c:00:02.0 enP6988s1: Link up
+[    4.391824] hv_netvsc 70a8a519-8022-70a8-a519-802270a8a519 eth0: Data path switched to VF: enP6988s1
+[    4.392611] mlx5_core 1b4c:00:02.0 mlx5_0: Port: 1 Link ACTIVE
+[    4.406559] 8021q: 802.1Q VLAN Support v1.8
+[    5.718325] hv_netvsc 70a8a519-8022-70a8-a519-802270a8a519 eth0: Data path switched from VF: enP6988s1
+[    5.743115] mlx5_core 1b4c:00:02.0 mlx5_0: Port: 1 Link DOWN
+[    6.303275] mlx5_core 1b4c:00:02.0 enP6988s1: Link up
+[    6.318754] hv_netvsc 70a8a519-8022-70a8-a519-802270a8a519 eth0: Data path switched to VF: enP6988s1
+[    6.318909] mlx5_core 1b4c:00:02.0 mlx5_0: Port: 1 Link ACTIVE
+[    9.142368] EXT4-fs (nvme0n1p1): resizing filesystem from 19398395 to 39059195 blocks
+[   10.123337] EXT4-fs (nvme0n1p1): resized filesystem to 39059195
+[   10.185644] ephemeral0: Can't lookup blockdev
+[   10.229256] systemd-fstab-generator[771]: Checking was requested for "ephemeral0", but it is not a device.
+[   10.229267] systemd-fstab-generator[771]: x-systemd.device-timeout ignored for ephemeral0
+[   10.870616] block nvme0n1: No UUID available providing old NGUID
+[   11.009679] ephemeral0: Can't lookup blockdev
+[   11.018730] kauditd_printk_skb: 113 callbacks suppressed
+[   11.018732] audit: type=1400 audit(1792996057.847:124): apparmor="STATUS" operation="profile_replace" info="same as current profile, skipping" profile="unconfined" name="rsyslogd" pid=856 comm="apparmor_parser"
+[   11.435110] evm: overlay not supported
+[   11.632432] loop0: detected capacity change from 0 to 8
+[   11.774531] systemd-journald[156]: /var/log/journal/2d791d5cce6240faa3c626058b1ffc7d/user-1001.journal: Journal file uses a different sequence number ID, rotating.
+[   11.865629] audit: type=1400 audit(1792996058.695:125): apparmor="STATUS" operation="profile_replace" info="same as current profile, skipping" profile="unconfined" name="/usr/lib/snapd/snap-confine" pid=1174 comm="apparmor_parser"
+[   11.980953] audit: type=1400 audit(1792996058.810:126): apparmor="STATUS" operation="profile_load" profile="unconfined" name="docker-default" pid=1276 comm="apparmor_parser"
+[   12.085802] Adding 3145724k swap on /swapfile.  Priority:-2 extents:37 across:26501116k SS
+[   12.496012] Initializing XFRM netlink socket
+[   12.632124] bridge: filtering via arp/ip/ip6tables is no longer available by default. Update your scripts to load br_netfilter if you need this.
+[   12.646261] systemd-fstab-generator[1488]: Checking was requested for "ephemeral0", but it is not a device.
+[   12.646274] systemd-fstab-generator[1488]: x-systemd.device-timeout ignored for ephemeral0
+[   23.678098] systemd-fstab-generator[1767]: Checking was requested for "ephemeral0", but it is not a device.
+[   23.678110] systemd-fstab-generator[1767]: x-systemd.device-timeout ignored for ephemeral0
+[   23.895649] systemd-fstab-generator[1821]: Checking was requested for "ephemeral0", but it is not a device.
+[   23.895660] systemd-fstab-generator[1821]: x-systemd.device-timeout ignored for ephemeral0
+[   49.003495] hv_balloon: Max. dynamic memory size: 16384 MB
