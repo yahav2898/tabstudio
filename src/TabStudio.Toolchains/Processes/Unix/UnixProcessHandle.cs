@@ -11,6 +11,7 @@ internal sealed class UnixProcessHandle : IProcessHandle
 
     public UnixProcessHandle(int pid, int terminalFd, Stream input, Stream output, Stream? error)
     {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(pid);
         Id = pid;
         _terminalFd = terminalFd;
         Input = input;
@@ -70,10 +71,11 @@ internal sealed class UnixProcessHandle : IProcessHandle
 
     private (int ExitCode, int? Signal) Wait()
     {
+        var pid = Id;
         while (true)
         {
-            var result = UnixNative.waitpid(Id, out var status, 0);
-            if (result == Id)
+            var result = UnixNative.waitpid(pid, out var status, 0);
+            if (result == pid)
             {
                 // WIFEXITED: the low 7 bits are 0, and the exit code is in the next byte; otherwise they are the signal.
                 var signal = status & 0x7f;
@@ -87,7 +89,7 @@ internal sealed class UnixProcessHandle : IProcessHandle
             }
 
             // ECHILD: something else reaped it (it no longer exists either way).
-            Console.Error.WriteLine(FormattableString.Invariant($"TabStudio process wait: waitpid({Id}) returned {result}, errno {error}; exit status unavailable."));
+            Console.Error.WriteLine(FormattableString.Invariant($"TabStudio process wait: waitpid({pid}) returned {result}, errno {error}; stored PID {Id}; exit status unavailable."));
             return (-1, null);
         }
     }
