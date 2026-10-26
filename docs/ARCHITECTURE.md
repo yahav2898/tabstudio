@@ -395,8 +395,8 @@ to the workspace. `RemoteExplorerViewModel` exposes hosts, config import, profil
 Publishing invokes the local SDK (offering Alpine dotnet10-sdk installation on tablets), stages successful publish
 output with SFTP into a new release directory, switches `current` atomically, restarts the configured systemd unit
 and restores the old link on activation failure. The unit and scoped sudo policy are server-admin prerequisites.
-See [REMOTE_SSH.md](REMOTE_SSH.md) for protocol/import limits and operational setup. CI's library and App jobs run
-against an OpenSSH container; Android self-test exercises the native signing provider.
+See [REMOTE_SSH.md](REMOTE_SSH.md) for protocol/import limits and operational setup. CI's SSH integration job runs
+library and App tests against an OpenSSH container; Android self-test exercises the native signing provider.
 
 ## Toolchains
 

@@ -53,9 +53,6 @@ jobs:
           mkdir -p ci-out
           { npm ls -g --depth=0; ls -l "$(command -v typescript-language-server)"; python -m pip show debugpy; } > ci-out/language-servers.txt 2>&1 || true
 
-      - name: Start OpenSSH integration container
-        run: bash build/ci/start-ssh-server.sh
-
       - name: Build and test
         run: |
           mkdir -p ci-out
@@ -99,9 +96,6 @@ jobs:
           path: .nuget/packages
           key: nuget-app-${{ hashFiles('Directory.Packages.props', '**/*.csproj') }}
           restore-keys: nuget-app-
-
-      - name: Start OpenSSH integration container
-        run: bash build/ci/start-ssh-server.sh
 
       # The editor and debugger tests for Python files use real Pyright and debugpy.
       - uses: actions/setup-node@v4
@@ -196,6 +190,42 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: bash build/ci/publish-logs.sh app ${{ job.status }}
+
+  ssh:
+    name: SSH and SFTP integration
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - uses: actions/cache@v4
+        with:
+          path: .nuget/packages
+          key: nuget-ssh-${{ hashFiles('Directory.Packages.props', '**/*.csproj') }}
+          restore-keys: |
+            nuget-ssh-
+            nuget-app-
+      - name: Start OpenSSH integration container
+        run: bash build/ci/start-ssh-server.sh
+      - name: Test real SSH, SFTP, remote workspace and publishing
+        env:
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+        run: |
+          set -euo pipefail
+          mkdir -p ci-out/screenshots
+          dotnet test tests/TabStudio.Remote.Tests -c Release --blame-hang-timeout 2m --blame-hang-dump-type none --logger "console;verbosity=normal" 2>&1 | tee ci-out/ssh-library.log
+          dotnet test tests/TabStudio.App.Tests -c Release --filter FullyQualifiedName~RemoteSsh --blame-hang-timeout 2m --blame-hang-dump-type none --logger "console;verbosity=normal" 2>&1 | tee ci-out/ssh-app.log
+      - name: Capture OpenSSH logs
+        if: always()
+        run: docker logs tabstudio-openssh > ci-out/sshd.log 2>&1 || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ssh-integration
+          path: ci-out
+          retention-days: 7
 
   android:
     name: Build Android APK

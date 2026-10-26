@@ -110,8 +110,8 @@ the running app. Avoid cancelling during activation; if the connection fails whi
 - Remote notebooks open as source so a notebook kernel cannot accidentally run on the tablet. Remote language
   servers, remote debugging and remote Git are not part of this integration.
 - `TabStudio.Remote.Tests` covers config, pins, key signing and profiles, plus real OpenSSH authentication, SFTP
-  saves/conflicts, commands, terminal input/resize and loopback HTTP forwarding. Both library and App CI jobs start
-  the isolated OpenSSH container in `build/ci/ssh`; its password login is disabled and its published SSH port binds
+  saves/conflicts, commands, terminal input/resize and loopback HTTP forwarding. The SSH integration CI job runs
+  both suites against the isolated OpenSSH container in `build/ci/ssh`; its password login is disabled and its SSH port binds
   only to runner loopback. Test private keys stay in runner temporary storage, outside published logs.
 - App tests exercise opening/editing/saving remote files, build output/error navigation, remote terminals,
   offline protection and the Remote Explorer screenshot. The Android emulator self-test exercises the platform's
