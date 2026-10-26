@@ -52,5 +52,8 @@ public sealed class ConnectionsTests
         Assert.Empty(SqlCompletions.Get(schema, "-- no hints", 11));
         var hint = SqlCompletions.Get(schema, "SELECT c. FROM customers c", 9).Single(c => c.Text == "email");
         Assert.Equal("\"email\"", hint.InsertionText);
+        var quoted = schema with { Tables = [table with { Name = "customer data" }] };
+        Assert.Contains(SqlCompletions.Get(quoted, "SELECT c. FROM \"public\".\"customer data\" AS c", 9), c => c.Text == "email");
+        Assert.Equal("[email]", SqlCompletions.Get(quoted, "SELECT c. FROM [public].[customer data] c", 9, DatabaseProvider.SqlServer).Single(c => c.Text == "email").InsertionText);
     }
 }

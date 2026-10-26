@@ -19,7 +19,8 @@ public static partial class SqlCompletions
         if (schema is not null && dot >= 0 && before[dot] == '.')
         {
             var owner = Prefix().Match(before[..dot]).Value;
-            var aliases = Aliases().Matches(sql).GroupBy(m => m.Groups[2].Value, StringComparer.OrdinalIgnoreCase).ToDictionary(g => g.Key, g => g.Last().Groups[1].Value, StringComparer.OrdinalIgnoreCase);
+            var aliases = Aliases().Matches(sql).GroupBy(m => m.Groups["alias"].Value, StringComparer.OrdinalIgnoreCase)
+                .ToDictionary(g => g.Key, g => Unquote(g.Last().Groups["table"].Value), StringComparer.OrdinalIgnoreCase);
             if (aliases.TryGetValue(owner, out var tableName)) owner = tableName;
             foreach (var table in schema.Tables.Where(t => t.Name.Equals(owner, StringComparison.OrdinalIgnoreCase)))
                 items.AddRange(table.Columns.Select(c => Identifier(c.Name, c.Type)));
@@ -63,8 +64,15 @@ public static partial class SqlCompletions
     }
 
     public static int PrefixLength(string sql, int offset) => Prefix().Match(sql[..Math.Clamp(offset, 0, sql.Length)]).Length;
+    private static string Unquote(string name) => name[0] switch
+    {
+        '"' => name[1..^1].Replace("\"\"", "\"", StringComparison.Ordinal),
+        '[' => name[1..^1].Replace("]]", "]", StringComparison.Ordinal),
+        '`' => name[1..^1].Replace("``", "`", StringComparison.Ordinal),
+        _ => name,
+    };
     [GeneratedRegex(@"[\p{L}\p{N}_]+$")]
     private static partial Regex Prefix();
-    [GeneratedRegex(@"\b(?:FROM|JOIN)\s+(?:\w+\.)?(\w+)\s+(?:AS\s+)?(\w+)", RegexOptions.IgnoreCase)]
+    [GeneratedRegex("""\b(?:FROM|JOIN)\s+(?:(?:"(?:[^"]|"")+"|\[(?:[^\]]|\]\])+\]|`(?:[^`]|``)+`|\w+)\s*\.\s*)?(?<table>"(?:[^"]|"")+"|\[(?:[^\]]|\]\])+\]|`(?:[^`]|``)+`|\w+)\s+(?:AS\s+)?(?<alias>\w+)""", RegexOptions.IgnoreCase)]
     private static partial Regex Aliases();
 }

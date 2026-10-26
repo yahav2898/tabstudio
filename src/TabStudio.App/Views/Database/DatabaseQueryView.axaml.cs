@@ -44,6 +44,7 @@ public sealed partial class DatabaseQueryView : UserControl
     }
     private void OnTextEntered(object? sender, TextInputEventArgs e)
     {
+        if (e.Text == ".") { _completion?.Close(); ShowCompletion(); return; }
         if (_completion is null && e.Text is { Length: > 0 } text && (text == "." || char.IsLetter(text[^1]))) ShowCompletion();
     }
     private void ShowCompletion()
