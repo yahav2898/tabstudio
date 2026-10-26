@@ -80,6 +80,30 @@ public sealed class OpenSshTests
     }
 
     [SshFact]
+    public async Task Commands_accept_stdin_EOF_and_closing_input_after_exit_is_idempotent()
+    {
+        using var temp = new TempDirectory();
+        using var connection = await SshTestServer.ConnectAsync();
+        using var workspace = new RemoteWorkspace(connection, SshTestServer.Root, temp.Path);
+        var runtime = new SshRuntime(workspace);
+        using (var exited = runtime.Start(new ProcessStartSpec { Program = "printf", Arguments = ["finished\\n"], WorkingDirectory = temp.Path }))
+        {
+            Assert.Equal(0, (await exited.Completion.WaitAsync(TimeSpan.FromSeconds(10))).ExitCode);
+            exited.CloseInput();
+            exited.CloseInput();
+            Assert.Equal("finished\n", await new StreamReader(exited.Output).ReadToEndAsync());
+        }
+        using var cat = runtime.Start(new ProcessStartSpec { Program = "cat", WorkingDirectory = temp.Path });
+        const string input = "tablet stdin: שלום\n";
+        await cat.Input.WriteAsync(Encoding.UTF8.GetBytes(input));
+        await cat.Input.FlushAsync();
+        cat.CloseInput();
+        cat.CloseInput();
+        Assert.Equal(0, (await cat.Completion.WaitAsync(TimeSpan.FromSeconds(10))).ExitCode);
+        Assert.Equal(input, await new StreamReader(cat.Output).ReadToEndAsync());
+    }
+
+    [SshFact]
     public async Task Interactive_shell_supports_input_resizing_and_interrupts()
     {
         using var temp = new TempDirectory();

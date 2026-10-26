@@ -143,7 +143,19 @@ public sealed class SshRuntime(RemoteWorkspace workspace) : IToolchainRuntime
             catch (Renci.SshNet.Common.SshException) { return (255, null); }
         }
         public void Resize(TerminalSize size) { }
-        public void CloseInput() { (_input ??= _command.CreateInputStream()).Dispose(); }
+        public void CloseInput()
+        {
+            if (_input is null)
+            {
+                if (_completion.IsCompleted) { return; }
+                try { _input = _command.CreateInputStream(); }
+                // SSH.NET 2026.0.0 closes its channel before completing ExecuteAsync. A command can
+                // exit between the task check and stream creation; its closed channel already has EOF.
+                // Match only that state: an existing stream or other invalid operation must still fail.
+                catch (InvalidOperationException ex) when (ex.Message == "The input stream can be used only during execution.") { return; }
+            }
+            _input.Dispose();
+        }
         public void KillTree() => _stop.Cancel();
         public void Dispose() { _stop.Cancel(); _input?.Dispose(); _command.Dispose(); _stop.Dispose(); }
     }
