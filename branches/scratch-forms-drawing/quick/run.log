@@ -3,11 +3,7 @@
 + sed 's|/home/runner/work/tabstudio/tabstudio/||'
 + sort -u
 + head -150
-src/TabStudio.Forms/Rendering/DisplayListRenderer.cs(258,57): error CS0103: The name 'BitmapBlendingMode' does not exist in the current context [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
-src/TabStudio.Forms/Rendering/DisplayListRenderer.cs(258,85): error CS0103: The name 'BitmapBlendingMode' does not exist in the current context [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
-src/TabStudio.Forms/Rendering/DisplayListRenderer.cs(96,103): error CS0103: The name 'BitmapInterpolationMode' does not exist in the current context [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
-src/TabStudio.Forms/Rendering/DisplayListRenderer.cs(96,141): error CS0103: The name 'BitmapInterpolationMode' does not exist in the current context [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
-src/TabStudio.Forms/Rendering/ImageBuffer.cs(277,19): error CA2201: Exception type System.OutOfMemoryException is reserved by the runtime (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2201) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
+src/TabStudio.Forms/Rendering/PixelConversion.cs(12,94): error CS1734: XML comment on 'PixelConversion.FromPremultiplied(ReadOnlySpan<byte>, bool, Span<int>, bool)' has a paramref tag for 'width', but there is no parameter by that name [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Forms/TabStudio.Forms.csproj]
 + dotnet test tests/TabStudio.Forms.Tests -c Release --no-build --logger 'console;verbosity=minimal'
 + tail -40
 Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Forms.Tests/bin/Release/net10.0/TabStudio.Forms.Tests.dll (.NETCoreApp,Version=v10.0)
