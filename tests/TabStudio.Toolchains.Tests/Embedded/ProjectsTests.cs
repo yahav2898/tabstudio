@@ -1,0 +1,223 @@
+using System.Text.Json;
+using TabStudio.Testing;
+using TabStudio.Toolchains.Catalog;
+using TabStudio.Toolchains.Embedded.Projects;
+using TabStudio.Toolchains.Projects;
+
+namespace TabStudio.Toolchains.Tests.Embedded;
+
+public sealed class ProjectsTests
+{
+    [Fact]
+    public void PlatformIO_shared_environment_and_default_selection_are_preserved()
+    {
+        using var temp = new TempDirectory();
+        temp.Write("platformio.ini", "[platformio]\ndefault_envs = debug\n[env]\nboard = esp32dev\nframework = arduino\n[env:debug]\nbuild_type = debug\n[env:release]\nboard = esp32-s3-devkitc-1\n");
+        var project = Assert.Single(EmbeddedProjectDetector.Detect(temp.Path));
+        Assert.Equal(EmbeddedProjectKind.PlatformIO, project.Kind);
+        Assert.Equal("debug", project.DefaultEnvironment);
+        Assert.Equal("esp32dev", project.Environments[0].Board);
+        Assert.Equal("arduino", project.Environments[1].Framework);
+        var plan = EmbeddedBuildPlanner.Plan(project, new EmbeddedBuildOptions { Port = "/dev/ttyUSB0" });
+        Assert.Equal("pio", Assert.Single(plan.Build).Program);
+        Assert.Equal(["run", "--environment", "debug", "--target", "upload", "--upload-port", "/dev/ttyUSB0"], Assert.Single(plan.Upload).Arguments);
+        Assert.Equal(temp.Path, plan.Build[0].WorkingDirectory);
+    }
+
+    [Fact]
+    public void Multiple_default_environments_are_buildable_but_cannot_silently_upload_multiple_boards()
+    {
+        using var temp = new TempDirectory();
+        temp.Write("platformio.ini", "[platformio]\ndefault_envs =\n  uno,\n  esp\n[env:uno]\nboard = uno\n[env:esp]\nboard = esp32dev\n");
+        var project = EmbeddedProjectDetector.Read(temp.Path)!;
+        Assert.Null(project.DefaultEnvironment);
+        var plan = EmbeddedBuildPlanner.Plan(project, new EmbeddedBuildOptions { Port = "/dev/ttyUSB0" });
+        Assert.Single(plan.Build);
+        Assert.Empty(plan.Upload);
+        Assert.Contains(plan.Notes, n => n.Contains("multiple default", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Unknown_environment_is_rejected_before_native_tools_start()
+    {
+        using var temp = new TempDirectory();
+        temp.Write("platformio.ini", "[env:uno]\nboard=uno");
+        Assert.Throws<ArgumentException>(() => EmbeddedBuildPlanner.Plan(EmbeddedProjectDetector.Read(temp.Path)!,
+            new EmbeddedBuildOptions { Environment = "wrong" }));
+    }
+
+    [Theory]
+    [InlineData("main.c", "int main(){}", null)]
+    [InlineData("main.py", "print('desktop Python')", null)]
+    [InlineData("Cargo.toml", "[package]\nname='desktop'", null)]
+    [InlineData("app.uvprojx", "<Project/>", EmbeddedProjectKind.VendorImport)]
+    [InlineData("app.ewp", "<project/>", EmbeddedProjectKind.VendorImport)]
+    [InlineData("app.cproj", "<Project/>", EmbeddedProjectKind.VendorImport)]
+    public void Detection_does_not_assume_ordinary_sources_are_firmware(string file, string content, EmbeddedProjectKind? kind)
+    {
+        using var temp = new TempDirectory();
+        temp.Write(file, content);
+        Assert.Equal(kind, EmbeddedProjectDetector.Read(temp.Path)?.Kind);
+    }
+
+    [Fact]
+    public void Embedded_roots_own_their_sources_in_the_existing_detector()
+    {
+        using var temp = new TempDirectory();
+        temp.Write("platformio.ini", "[env:uno]\nboard=uno");
+        temp.Write("src/main.cpp", "void setup(){} void loop(){}");
+        temp.Write("scripts/build.py", "print('helper')");
+        var catalog = ToolchainCatalog.Default with
+        {
+            Toolchains = [.. ToolchainCatalog.Default.Toolchains.Where(t => t.Id != "platformio"), new ToolchainDefinition
+            {
+                Id = "platformio", Name = "PlatformIO", Description = "test", Listed = true,
+                FileExtensions = [".c", ".cpp", ".h"], ProjectFiles = ["platformio.ini"],
+            }],
+        };
+        var project = Assert.Single(ToolchainProjectDetector.Detect(temp.Path, catalog));
+        Assert.Equal("platformio", project.Toolchain.Id);
+        Assert.Equal(temp.Path, project.Directory);
+        var safeRun = RunPlanner.PlanProject(project)!;
+        Assert.Null(safeRun.Build);
+        Assert.Equal("pio", safeRun.Run.Program);
+        Assert.DoesNotContain("upload", safeRun.Run.Arguments);
+    }
+
+    [Fact]
+    public void Arduino_requires_an_explicit_fqbn_and_emits_compile_database_commands()
+    {
+        using var temp = new TempDirectory();
+        temp.Write(Path.GetFileName(temp.Path) + ".ino", "void setup(){} void loop(){}");
+        var project = EmbeddedProjectDetector.Read(temp.Path)!;
+        Assert.Empty(EmbeddedBuildPlanner.Plan(project).Build);
+        var options = new EmbeddedBuildOptions { Board = "arduino:avr:uno", Port = "/dev/ttyUSB0" };
+        var plan = EmbeddedBuildPlanner.Plan(project, options);
+        Assert.Equal("arduino-cli", Assert.Single(plan.Build).Program);
+        Assert.Contains("--only-compilation-database", Assert.Single(plan.Preparation).Arguments);
+        Assert.Contains("--input-dir", Assert.Single(plan.Upload).Arguments);
+        Assert.EndsWith("compile_commands.json", plan.CompilationDatabase, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("include($ENV{IDF_PATH}/tools/cmake/project.cmake)\ninclude(idf.cmake)", EmbeddedProjectKind.EspIdf)]
+    [InlineData("find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})", EmbeddedProjectKind.Zephyr)]
+    [InlineData("include(pico_sdk_import.cmake)\npico_sdk_init()", EmbeddedProjectKind.PicoSdk)]
+    public void Native_CMake_frameworks_are_classified_before_generic_cpp(string cmake, EmbeddedProjectKind kind)
+    {
+        using var temp = new TempDirectory();
+        temp.Write("CMakeLists.txt", cmake);
+        Assert.Equal(kind, EmbeddedProjectDetector.Read(temp.Path)!.Kind);
+    }
+
+    [Fact]
+    public void EspIdf_reads_target_without_running_reconfiguration_or_generating_efuse_commands()
+    {
+        using var temp = new TempDirectory();
+        temp.Write("CMakeLists.txt", "include(idf.cmake)");
+        temp.Write("sdkconfig", "CONFIG_IDF_TARGET=\"esp32c3\"\n");
+        var project = EmbeddedProjectDetector.Read(temp.Path)!;
+        Assert.Equal("esp32c3", project.Target);
+        var plan = EmbeddedBuildPlanner.Plan(project, new EmbeddedBuildOptions { Port = "/dev/ttyACM0" });
+        Assert.Contains("-DIDF_TARGET=esp32c3", Assert.Single(plan.Build).Arguments);
+        Assert.Equal("flash", Assert.Single(plan.Upload).Arguments[^1]);
+        Assert.Empty(plan.Preparation);
+    }
+
+    [Fact]
+    public void Cube_ioc_is_not_mistaken_for_a_compilable_build_script()
+    {
+        using var temp = new TempDirectory();
+        temp.Write("sensor.ioc", "Mcu.CPN=STM32F411CEU6\n");
+        var project = EmbeddedProjectDetector.Read(temp.Path)!;
+        Assert.Equal("STM32F411CEU6", project.Target);
+        Assert.Empty(EmbeddedBuildPlanner.Plan(project).Build);
+        temp.Write("Makefile", "all:\n\tarm-none-eabi-gcc main.c\n");
+        var plan = EmbeddedBuildPlanner.Plan(EmbeddedProjectDetector.Read(temp.Path)!);
+        Assert.Equal("make", Assert.Single(plan.Build).Program);
+        Assert.Empty(plan.Upload);
+    }
+
+    [Fact]
+    public void Zephyr_keeps_qualified_board_names_as_one_argument()
+    {
+        using var temp = new TempDirectory();
+        temp.Write("CMakeLists.txt", "find_package(Zephyr REQUIRED)");
+        var project = EmbeddedProjectDetector.Read(temp.Path)!;
+        Assert.Empty(EmbeddedBuildPlanner.Plan(project).Build);
+        var plan = EmbeddedBuildPlanner.Plan(project, new EmbeddedBuildOptions
+        {
+            Board = "nrf5340dk/nrf5340/cpuapp", Runner = "openocd", Port = "granted-probe:1",
+        });
+        Assert.Contains("nrf5340dk/nrf5340/cpuapp", Assert.Single(plan.Build).Arguments);
+        Assert.Equal(["flash", "--build-dir", Path.Combine(temp.Path, ".tabstudio", "embedded", "build"), "--runner", "openocd"], Assert.Single(plan.Upload).Arguments);
+    }
+
+    [Fact]
+    public void Pico_respects_declared_board_and_never_guesses_the_firmware_filename()
+    {
+        using var temp = new TempDirectory();
+        temp.Write("CMakeLists.txt", "include(pico_sdk_import.cmake)\nset(PICO_BOARD pico2_w)\n");
+        var project = EmbeddedProjectDetector.Read(temp.Path)!;
+        Assert.Equal("pico2_w", project.Target);
+        var plan = EmbeddedBuildPlanner.Plan(project);
+        Assert.Contains("-DPICO_BOARD=pico2_w", Assert.Single(plan.Preparation).Arguments);
+        Assert.Single(plan.Build);
+        Assert.Empty(plan.Upload);
+    }
+
+    [Fact]
+    public void Rust_embedded_target_preserves_cargo_runner_and_does_not_run_host_binary()
+    {
+        using var temp = new TempDirectory();
+        temp.Write("Cargo.toml", "[package]\nname='firmware'");
+        temp.Write(".cargo/config.toml", "[build]\ntarget = 'thumbv7em-none-eabihf'\n[target.thumbv7em-none-eabihf]\nrunner='probe-rs run --chip nRF52840_xxAA'\n");
+        var project = EmbeddedProjectDetector.Read(temp.Path)!;
+        Assert.Equal(EmbeddedProjectKind.Rust, project.Kind);
+        Assert.Equal("thumbv7em-none-eabihf", project.Target);
+        var plan = EmbeddedBuildPlanner.Plan(project);
+        Assert.Contains("thumbv7em-none-eabihf", Assert.Single(plan.Build).Arguments);
+        Assert.Empty(plan.Upload);
+        Assert.DoesNotContain("run", plan.Build[0].Arguments);
+    }
+
+    [Fact]
+    public void MicroPython_sync_excludes_credentials_and_build_folders()
+    {
+        using var temp = new TempDirectory();
+        temp.Write(".micropython", "");
+        temp.Write("main.py", "print('board')");
+        temp.Write("secrets.json", "{}");
+        temp.Write(".venv/leak.py", "secret='hidden'");
+        var plan = EmbeddedBuildPlanner.Plan(EmbeddedProjectDetector.Read(temp.Path)!, new EmbeddedBuildOptions { Port = "/dev/ttyACM0" });
+        var command = Assert.Single(plan.Upload);
+        Assert.Equal("mpremote", command.Program);
+        Assert.Equal(":main.py", command.Arguments[^1]);
+        Assert.DoesNotContain(command.Arguments, a => a.Contains("secrets", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Build_and_dependency_folders_and_symbolic_links_are_not_recursed()
+    {
+        using var temp = new TempDirectory();
+        temp.Write("app/platformio.ini", "[env:uno]");
+        temp.Write("app/.pio/libdeps/library/platformio.ini", "[env:wrong]");
+        temp.Write("build/generated/platformio.ini", "[env:wrong]");
+        temp.Write("vendor/dependency/platformio.ini", "[env:wrong]");
+        Assert.Single(EmbeddedProjectDetector.Detect(temp.Path, 8));
+    }
+
+    [Fact]
+    public void Config_is_case_insensitive_but_invalid_json_and_option_injection_fail_visibly()
+    {
+        using var temp = new TempDirectory();
+        temp.Write("platformio.ini", "[env:uno]");
+        temp.Write(".tabstudio/embedded.json", "{\"environment\":\"uno\",\"port\":\"/dev/ttyUSB0\",\"jobs\":3}");
+        Assert.Equal(3, EmbeddedBuildPlanner.LoadOptions(temp.Path).Jobs);
+        Assert.Single(EmbeddedBuildPlanner.Plan(EmbeddedProjectDetector.Read(temp.Path)!).Upload);
+        temp.Write(".tabstudio/embedded.json", "{broken");
+        Assert.Throws<JsonException>(() => EmbeddedBuildPlanner.LoadOptions(temp.Path));
+        Assert.Throws<ArgumentException>(() => EmbeddedBuildPlanner.Plan(EmbeddedProjectDetector.Read(temp.Path)!,
+            new EmbeddedBuildOptions { Environment = "--target=erase" }));
+    }
+}

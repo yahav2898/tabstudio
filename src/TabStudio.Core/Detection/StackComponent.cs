@@ -86,6 +86,33 @@ public enum StackKind
 
     /// <summary>A static web site: HTML, CSS and JavaScript served as they are, from an <c>index.html</c>.</summary>
     StaticSite,
+
+    /// <summary>PlatformIO projects and environments.</summary>
+    PlatformIO,
+
+    /// <summary>Arduino sketches and libraries.</summary>
+    Arduino,
+
+    /// <summary>STM32CubeMX or CubeIDE configuration.</summary>
+    Stm32Cube,
+
+    /// <summary>Espressif ESP-IDF.</summary>
+    EspIdf,
+
+    /// <summary>Zephyr applications built with west.</summary>
+    Zephyr,
+
+    /// <summary>Raspberry Pi Pico SDK applications.</summary>
+    PicoSdk,
+
+    /// <summary>MicroPython or CircuitPython board files.</summary>
+    MicroPython,
+
+    /// <summary>Embedded Rust with an explicit linker memory map.</summary>
+    EmbeddedRust,
+
+    /// <summary>Keil, IAR or Atmel vendor project requiring a reviewed GCC import.</summary>
+    EmbeddedVendor,
 }
 
 /// <summary>

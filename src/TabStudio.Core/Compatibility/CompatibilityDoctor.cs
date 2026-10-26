@@ -91,6 +91,10 @@ public static class CompatibilityDoctor
     {
         return project.Kind switch
         {
+            ProjectKind.EmbeddedFirmware => Report(
+                project, RunHost.Toolchain, CompatibilityStatus.NeedsToolchain, "Embedded project tools",
+                "Builds firmware with the project's native toolchain. Upload requires a selected board and a granted device; firmware never runs as a tablet executable. Hardware support and verification depend on the chosen probe or bootloader."),
+
             ProjectKind.AspireAppHost => Report(
                 project, RunHost.None, CompatibilityStatus.Unsupported, "Not on a tablet",
                 "An Aspire AppHost starts the app's projects and containers through Aspire's developer control plane, which runs on a computer, "

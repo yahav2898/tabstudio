@@ -118,12 +118,29 @@ public static class StackDetector
                 yield break;
             case "CARGO.TOML":
                 yield return new StackComponent(StackKind.Rust, "Rust", relativePath);
+                if (File.Exists(Path.Combine(Path.GetDirectoryName(fullPath)!, "memory.x")))
+                {
+                    yield return new StackComponent(StackKind.EmbeddedRust, "Embedded Rust", relativePath);
+                }
                 yield break;
             case "GO.MOD":
                 yield return new StackComponent(StackKind.Go, "Go", relativePath, ReadGoVersion(fullPath));
                 yield break;
             case "CMAKELISTS.TXT":
                 yield return new StackComponent(StackKind.Cpp, "C++", relativePath);
+                if (EmbeddedCMakeKind(fullPath) is { } framework)
+                {
+                    yield return new StackComponent(framework.Kind, framework.Name, relativePath);
+                }
+                yield break;
+            case "PLATFORMIO.INI":
+                yield return new StackComponent(StackKind.PlatformIO, "PlatformIO", relativePath);
+                yield break;
+            case "LIBRARY.PROPERTIES":
+                yield return new StackComponent(StackKind.Arduino, "Arduino", relativePath);
+                yield break;
+            case ".MICROPYTHON":
+                yield return new StackComponent(StackKind.MicroPython, "MicroPython / CircuitPython", relativePath);
                 yield break;
             case "PYPROJECT.TOML" or "REQUIREMENTS.TXT" or "SETUP.PY" or "PIPFILE":
                 yield return new StackComponent(StackKind.Python, "Python", relativePath);
@@ -150,6 +167,15 @@ public static class StackDetector
 
         switch (extension)
         {
+            case ".INO":
+                yield return new StackComponent(StackKind.Arduino, "Arduino", relativePath);
+                break;
+            case ".IOC":
+                yield return new StackComponent(StackKind.Stm32Cube, "STM32Cube", relativePath);
+                break;
+            case ".UVPROJX" or ".EWP" or ".CPROJ":
+                yield return new StackComponent(StackKind.EmbeddedVendor, "Embedded vendor project", relativePath);
+                break;
             case ".SLN" or ".SLNX" or ".CSPROJ" or ".FSPROJ" or ".VBPROJ":
                 yield return new StackComponent(StackKind.DotNet, ".NET", relativePath);
                 break;
@@ -163,6 +189,37 @@ public static class StackDetector
                 yield return new StackComponent(StackKind.Python, "Python", relativePath);
                 break;
         }
+    }
+
+    private static (StackKind Kind, string Name)? EmbeddedCMakeKind(string path)
+    {
+        try
+        {
+            var info = new FileInfo(path);
+            if (info.Length > 2 * 1024 * 1024 || (info.Attributes & FileAttributes.ReparsePoint) != 0)
+            {
+                return null;
+            }
+            var text = string.Join('\n', File.ReadLines(path).Where(line => !line.TrimStart().StartsWith('#')));
+            if (text.Contains("$ENV{IDF_PATH}", StringComparison.Ordinal) || text.Contains("idf.cmake", StringComparison.Ordinal))
+            {
+                return (StackKind.EspIdf, "ESP-IDF");
+            }
+            if (text.Contains("find_package(Zephyr", StringComparison.Ordinal)
+                || text.Contains("find_package (Zephyr", StringComparison.Ordinal))
+            {
+                return (StackKind.Zephyr, "Zephyr");
+            }
+            if (text.Contains("pico_sdk_import.cmake", StringComparison.Ordinal) || text.Contains("pico_sdk_init(", StringComparison.Ordinal))
+            {
+                return (StackKind.PicoSdk, "Pico SDK");
+            }
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // Detection stays available when a manifest vanishes while the workspace opens.
+        }
+        return null;
     }
 
     private static List<StackComponent> InspectPackageJson(string fullPath, string relativePath)
@@ -296,7 +353,8 @@ public static class StackDetector
 
             foreach (var subdirectory in subdirectories)
             {
-                if (!PathUtilities.IsIgnoredDirectory(Path.GetFileName(subdirectory)))
+                if (!PathUtilities.IsIgnoredDirectory(Path.GetFileName(subdirectory))
+                    && (File.GetAttributes(subdirectory) & FileAttributes.ReparsePoint) == 0)
                 {
                     queue.Enqueue((subdirectory, depth + 1));
                 }

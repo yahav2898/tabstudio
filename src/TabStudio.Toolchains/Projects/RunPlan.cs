@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using TabStudio.Toolchains.Catalog;
+using TabStudio.Toolchains.Embedded.Projects;
 using TabStudio.Toolchains.Processes;
 
 namespace TabStudio.Toolchains.Projects;
@@ -30,6 +31,11 @@ public static partial class RunPlanner
     public static RunPlan? PlanProject(ToolchainProject project)
     {
         ArgumentNullException.ThrowIfNull(project);
+        if (EmbeddedProjectDetector.Read(project.Directory) is { } embedded
+            && EmbeddedBuildPlanner.ToolchainId(embedded.Kind) == project.Toolchain.Id)
+        {
+            return EmbeddedBuildPlanner.RunPlan(embedded);
+        }
         if (project.Toolchain.Id == "go")
         {
             return PlanGoProject(project);

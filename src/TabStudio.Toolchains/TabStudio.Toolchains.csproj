@@ -23,6 +23,8 @@
     <EmbeddedResource Include="Catalog\toolchains.json" LogicalName="TabStudio.Toolchains.Catalog.toolchains.json" />
     <EmbeddedResource Include="Microchip\*.py" LogicalName="TabStudio.Toolchains.Microchip.%(Filename)%(Extension)" />
     <EmbeddedResource Include="Microchip\*.c" LogicalName="TabStudio.Toolchains.Microchip.%(Filename)%(Extension)" />
+    <EmbeddedResource Include="..\..\native\embedded\serial_bridge.py" LogicalName="TabStudio.Toolchains.Embedded.serial_bridge.py" />
+    <EmbeddedResource Include="..\..\native\embedded\serial_posix.c" LogicalName="TabStudio.Toolchains.Embedded.serial_posix.c" />
     <EmbeddedResource Include="Microchip\pymcuprog.devices.json" LogicalName="TabStudio.Toolchains.Microchip.pymcuprog.devices.json" />
     <EmbeddedResource Include="Microchip\gpsim.devices.json" LogicalName="TabStudio.Toolchains.Microchip.gpsim.devices.json" />
     <EmbeddedResource Include="Microchip\packs.lock.json" LogicalName="TabStudio.Toolchains.Microchip.packs.lock.json" />

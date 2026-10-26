@@ -1579,6 +1579,896 @@
         }
       ],
       "errorPattern": "^(?<message>PIC build: error: .+)$"
+    },
+    {
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "listed": true,
+      "homepage": "https://gcc.gnu.org/",
+      "license": "GPL-3.0-or-later WITH GCC-exception-3.1",
+      "estimatedDownloadSize": 60000000,
+      "estimatedInstalledSize": 300000000,
+      "fileExtensions": [
+        ".c",
+        ".cpp",
+        ".h",
+        ".hpp",
+        ".s",
+        ".S"
+      ],
+      "projectFiles": [
+        ".ioc"
+      ],
+      "languageServer": {
+        "id": "clangd",
+        "command": [
+          "clangd",
+          "--background-index"
+        ],
+        "languages": [
+          "c",
+          "cpp"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+):\\s*(?<severity>error|warning|note):\\s*(?<message>.*)$"
+        }
+      ],
+      "id": "embedded-arm",
+      "name": "ARM bare-metal GCC",
+      "description": "ARM bare-metal GCC, newlib, CMake, clangd and Make for firmware builds; debug probes use the permissioned USB bridge.",
+      "packages": [
+        "gcc-arm-none-eabi",
+        "g++-arm-none-eabi",
+        "newlib-arm-none-eabi",
+        "binutils-arm-none-eabi",
+        "cmake",
+        "make",
+        "ninja",
+        "clang-extra-tools"
+      ],
+      "versionPackage": "gcc-arm-none-eabi",
+      "host": {
+        "commands": [
+          "arm-none-eabi-gcc"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "run": {
+        "file": [
+          "arm-none-eabi-gcc",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": ".ioc",
+            "command": [
+              "arm-none-eabi-gcc",
+              "--version"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "listed": true,
+      "homepage": "https://gcc.gnu.org/",
+      "license": "GPL-3.0-or-later WITH GCC-exception-3.1",
+      "estimatedDownloadSize": 60000000,
+      "estimatedInstalledSize": 300000000,
+      "fileExtensions": [
+        ".c",
+        ".cpp",
+        ".h",
+        ".hpp",
+        ".s",
+        ".S"
+      ],
+      "projectFiles": [
+        ".tabstudio-riscv"
+      ],
+      "languageServer": {
+        "id": "clangd",
+        "command": [
+          "clangd",
+          "--background-index"
+        ],
+        "languages": [
+          "c",
+          "cpp"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+):\\s*(?<severity>error|warning|note):\\s*(?<message>.*)$"
+        }
+      ],
+      "id": "embedded-riscv",
+      "name": "RISC-V bare-metal GCC",
+      "description": "RISC-V bare-metal GCC and newlib with CMake and Make; choose the exact ABI and linker script for the target.",
+      "packages": [
+        "gcc-riscv-none-elf",
+        "g++-riscv-none-elf",
+        "newlib-riscv-none-elf",
+        "binutils-riscv-none-elf",
+        "cmake",
+        "make",
+        "ninja",
+        "clang-extra-tools"
+      ],
+      "versionPackage": "gcc-riscv-none-elf",
+      "host": {
+        "commands": [
+          "riscv-none-elf-gcc"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "run": {
+        "file": [
+          "riscv-none-elf-gcc",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": ".tabstudio-riscv",
+            "command": [
+              "riscv-none-elf-gcc",
+              "--version"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "listed": true,
+      "homepage": "https://gcc.gnu.org/",
+      "license": "GPL-3.0-or-later WITH GCC-exception-3.1",
+      "estimatedDownloadSize": 60000000,
+      "estimatedInstalledSize": 300000000,
+      "fileExtensions": [
+        ".c",
+        ".cpp",
+        ".h",
+        ".hpp",
+        ".s",
+        ".S"
+      ],
+      "projectFiles": [
+        ".tabstudio-avr"
+      ],
+      "languageServer": {
+        "id": "clangd",
+        "command": [
+          "clangd",
+          "--background-index"
+        ],
+        "languages": [
+          "c",
+          "cpp"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+):\\s*(?<severity>error|warning|note):\\s*(?<message>.*)$"
+        }
+      ],
+      "id": "embedded-avr",
+      "name": "AVR GCC",
+      "description": "AVR GCC, avr-libc, binutils and avrdude for application firmware; fuse writes are separate protected operations.",
+      "packages": [
+        "gcc-avr",
+        "avr-libc",
+        "binutils-avr",
+        "avrdude",
+        "make",
+        "clang-extra-tools"
+      ],
+      "versionPackage": "gcc-avr",
+      "host": {
+        "commands": [
+          "avr-gcc"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "run": {
+        "file": [
+          "avr-gcc",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": ".tabstudio-avr",
+            "command": [
+              "avr-gcc",
+              "--version"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "listed": true,
+      "homepage": "https://gcc.gnu.org/",
+      "license": "GPL-3.0-or-later WITH GCC-exception-3.1",
+      "estimatedDownloadSize": 60000000,
+      "estimatedInstalledSize": 300000000,
+      "fileExtensions": [
+        ".c",
+        ".cpp",
+        ".h",
+        ".hpp",
+        ".s",
+        ".S"
+      ],
+      "projectFiles": [
+        ".tabstudio-usb-tools"
+      ],
+      "languageServer": {
+        "id": "clangd",
+        "command": [
+          "clangd",
+          "--background-index"
+        ],
+        "languages": [
+          "c",
+          "cpp"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+):\\s*(?<severity>error|warning|note):\\s*(?<message>.*)$"
+        }
+      ],
+      "id": "embedded-support",
+      "name": "Embedded USB tools",
+      "description": "OpenOCD, avrdude and dfu-util with permissioned libusb and USB-serial bridge dependencies; nusb and static executables need separate integration.",
+      "packages": [
+        "openocd",
+        "avrdude",
+        "dfu-util",
+        "libusb",
+        "libusb-dev",
+        "build-base",
+        "python3"
+      ],
+      "versionPackage": "openocd",
+      "host": {
+        "commands": [
+          "openocd"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "run": {
+        "file": [
+          "openocd",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": ".tabstudio-usb-tools",
+            "command": [
+              "openocd",
+              "--version"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "listed": true,
+      "homepage": "https://gcc.gnu.org/",
+      "license": "GPL-3.0-or-later WITH GCC-exception-3.1",
+      "estimatedDownloadSize": 60000000,
+      "estimatedInstalledSize": 300000000,
+      "fileExtensions": [
+        ".c",
+        ".cpp",
+        ".h",
+        ".hpp",
+        ".s",
+        ".S"
+      ],
+      "projectFiles": [
+        "platformio.ini"
+      ],
+      "languageServer": {
+        "id": "clangd",
+        "command": [
+          "clangd",
+          "--background-index"
+        ],
+        "languages": [
+          "c",
+          "cpp"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+):\\s*(?<severity>error|warning|note):\\s*(?<message>.*)$"
+        }
+      ],
+      "id": "platformio",
+      "name": "PlatformIO Core",
+      "description": "PlatformIO Core 6.1.18 in an isolated Python environment with every dependency SHA-256 pinned; platform package architecture support is checked by PlatformIO.",
+      "packages": [
+        "python3",
+        "py3-pip",
+        "git",
+        "make",
+        "cmake",
+        "ninja",
+        "clang-extra-tools"
+      ],
+      "versionPackage": "python3",
+      "host": {
+        "commands": [
+          "pio"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "run": {
+        "file": [
+          "pio",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": "platformio.ini",
+            "command": [
+              "pio",
+              "--version"
+            ]
+          }
+        ]
+      },
+      "pinnedVersion": "6.1.18",
+      "setup": [
+        {
+          "name": "PlatformIO isolated Python environment",
+          "command": [
+            "python3",
+            "-m",
+            "venv",
+            "/opt/tabstudio/platformio"
+          ]
+        },
+        {
+          "name": "PlatformIO verified dependency lock",
+          "file": {
+            "path": "/opt/tabstudio/platformio.requirements.txt",
+            "content": "ajsonrpc==1.2.0 --hash=sha256:0fa2c1cf8e619d18ffee96043822032d6520eda65d3b712f9540a3a63e9cac25\nanyio==4.15.1 --hash=sha256:6152fdbbf9a77fdec97731721bebf7c4c44f7c29b424b0065826173efc7ed101\nbottle==0.13.4 --hash=sha256:045684fbd2764eac9cdeb824861d1551d113e8b683d8d26e296898d3dd99a12e\ncertifi==2026.10.23 --hash=sha256:e9b54de76e530bb6cf0ccd036787103acb58fd42ba930ea8bf948ddbaa2f61d1\ncharset-normalizer==3.5.2 --hash=sha256:b6b751274acb69d77b3323d6b7dbaa3c7fdfc1eb829b7eb61d262f32e1af9685\nclick==8.1.7 --hash=sha256:ae74fb96c20a0277a1d615f1e4d73c8414f5a98db8b799a7931d1582f3390c28\ncolorama==0.4.6 --hash=sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6\nh11==0.16.0 --hash=sha256:63cf8bbe7522de3bf65932fda1d9c2772064ffb3dae62d55932da54b31cb6c86\nidna==3.20 --hash=sha256:ab7ae7122974553370f0bdb919e1a960b2cd1bc1ef0276416d896db81c14582c\nmarshmallow==3.26.2 --hash=sha256:013fa8a3c4c276c24d26d84ce934dc964e2aa794345a0f8c7e5a7191482c8a73\npackaging==26.3 --hash=sha256:d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c\nplatformio==6.1.18 --hash=sha256:94ef70a242ddcb93e020b0250c4f61e65b347411e8dfe36f79efb759c09324fa\npyelftools==0.33 --hash=sha256:f215ad5f47d3f1373a21496a6c9e0707c622840d0622f23ff7ce08678b020036\npyserial==3.5 --hash=sha256:c4451db6ba391ca6ca299fb3ec7bae67a5c55dde170964c7a14ceefec02f2cf0\nrequests==2.34.2 --hash=sha256:2a0d60c172f83ac6ab31e4554906c0f3b3588d37b5cb939b1c061f4907e278e0\nsemantic-version==2.10.0 --hash=sha256:de78a3b8e0feda74cabc54aab2da702113e33ac9d9eb9d2389bcf1f58b7d9177\nstarlette==0.46.2 --hash=sha256:595633ce89f8ffa71a015caed34a5b2dc1c0cdb3f0f1fbd1e69339cf2abeec35\ntabulate==0.10.0 --hash=sha256:f0b0622e567335c8fabaaa659f1b33bcb6ddfe2e496071b743aa113f8774f2d3\ntyping_extensions==4.16.0 --hash=sha256:481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8\nurllib3==2.8.0 --hash=sha256:0cf3cae568d36aa9576b28dfb35f11328f1cb974ca7647d9475ebb86c75ac6e3\nuvicorn==0.34.3 --hash=sha256:16246631db62bdfbf069b0645177d6e8a77ba950cfedbfd093acef9444e4d885\nwsproto==1.3.2 --hash=sha256:61eea322cdf56e8cc904bd3ad7573359a242ba65688716b0710a5eb12beab584\n"
+          }
+        },
+        {
+          "name": "PlatformIO pinned wheels",
+          "command": [
+            "/opt/tabstudio/platformio/bin/python",
+            "-m",
+            "pip",
+            "install",
+            "--only-binary=:all:",
+            "--require-hashes",
+            "-r",
+            "/opt/tabstudio/platformio.requirements.txt"
+          ]
+        },
+        {
+          "name": "PlatformIO launcher",
+          "file": {
+            "path": "/usr/local/bin/pio",
+            "executable": true,
+            "content": "#!/bin/sh\nexec /opt/tabstudio/platformio/bin/python -m platformio \"$@\"\n"
+          }
+        }
+      ]
+    },
+    {
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "listed": true,
+      "homepage": "https://arduino.github.io/arduino-cli/",
+      "license": "GPL-3.0-only",
+      "estimatedDownloadSize": 60000000,
+      "estimatedInstalledSize": 300000000,
+      "fileExtensions": [
+        ".ino"
+      ],
+      "projectFiles": [
+        "sketch.yaml"
+      ],
+      "languageServer": {
+        "id": "clangd",
+        "command": [
+          "clangd",
+          "--background-index"
+        ],
+        "languages": [
+          "c",
+          "cpp"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+):\\s*(?<severity>error|warning|note):\\s*(?<message>.*)$"
+        }
+      ],
+      "id": "arduino",
+      "name": "Arduino CLI",
+      "description": "Arduino CLI 1.5.1 from SHA-256 pinned official ARM64, ARMv7 and x64 archives; board cores are installed separately under their own licences.",
+      "packages": [
+        "python3",
+        "ca-certificates",
+        "clang-extra-tools"
+      ],
+      "versionPackage": "python3",
+      "host": {
+        "commands": [
+          "arduino-cli"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "run": {
+        "file": [
+          "arduino-cli",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": "sketch.yaml",
+            "command": [
+              "arduino-cli",
+              "--version"
+            ]
+          }
+        ]
+      },
+      "pinnedVersion": "1.5.1",
+      "setup": [
+        {
+          "name": "Arduino CLI 1.5.1 aarch64",
+          "architectures": [
+            "aarch64"
+          ],
+          "archive": {
+            "url": "https://github.com/arduino/arduino-cli/releases/download/v1.5.1/arduino-cli_1.5.1_Linux_ARM64.tar.gz",
+            "sha256": "1e69e077479f300614d4551334e0a33f08ee40b04315d83b8e7e0e94f0d0ee62",
+            "destination": "/opt/tabstudio/arduino-cli",
+            "size": 16155457
+          }
+        },
+        {
+          "name": "Arduino CLI 1.5.1 x86_64",
+          "architectures": [
+            "x86_64"
+          ],
+          "archive": {
+            "url": "https://github.com/arduino/arduino-cli/releases/download/v1.5.1/arduino-cli_1.5.1_Linux_64bit.tar.gz",
+            "sha256": "28a8e119c498a25607821c36cb2dc49e8463941b261a0d99091baa7bc692dd2b",
+            "destination": "/opt/tabstudio/arduino-cli",
+            "size": 17630765
+          }
+        },
+        {
+          "name": "Arduino CLI 1.5.1 armv7",
+          "architectures": [
+            "armv7"
+          ],
+          "archive": {
+            "url": "https://github.com/arduino/arduino-cli/releases/download/v1.5.1/arduino-cli_1.5.1_Linux_ARMv7.tar.gz",
+            "sha256": "890af36e9873606e4dfa743534846186621b9f3a339175ea3ec481adecf07143",
+            "destination": "/opt/tabstudio/arduino-cli",
+            "size": 16434757
+          }
+        },
+        {
+          "name": "Arduino CLI launcher",
+          "file": {
+            "path": "/usr/local/bin/arduino-cli",
+            "executable": true,
+            "content": "#!/bin/sh\nexec /opt/tabstudio/arduino-cli/arduino-cli \"$@\"\n"
+          }
+        }
+      ]
+    },
+    {
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "listed": false,
+      "homepage": "https://gcc.gnu.org/",
+      "license": "GPL-3.0-or-later WITH GCC-exception-3.1",
+      "estimatedDownloadSize": 60000000,
+      "estimatedInstalledSize": 300000000,
+      "fileExtensions": [
+        ".c",
+        ".cpp",
+        ".h",
+        ".hpp",
+        ".s",
+        ".S"
+      ],
+      "projectFiles": [
+        "sdkconfig"
+      ],
+      "languageServer": {
+        "id": "clangd",
+        "command": [
+          "clangd",
+          "--background-index"
+        ],
+        "languages": [
+          "c",
+          "cpp"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+):\\s*(?<severity>error|warning|note):\\s*(?<message>.*)$"
+        }
+      ],
+      "id": "esp-idf",
+      "name": "ESP-IDF",
+      "description": "ESP-IDF project detection and native build plans; SDK installation and architecture validation are required before this entry can be offered in the Store.",
+      "packages": [
+        "python3",
+        "git",
+        "cmake",
+        "make",
+        "ninja",
+        "clang-extra-tools"
+      ],
+      "versionPackage": "python3",
+      "host": {
+        "commands": [
+          "idf.py"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "run": {
+        "file": [
+          "idf.py",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": "sdkconfig",
+            "command": [
+              "idf.py",
+              "--version"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "listed": false,
+      "homepage": "https://gcc.gnu.org/",
+      "license": "GPL-3.0-or-later WITH GCC-exception-3.1",
+      "estimatedDownloadSize": 60000000,
+      "estimatedInstalledSize": 300000000,
+      "fileExtensions": [
+        ".c",
+        ".cpp",
+        ".h",
+        ".hpp",
+        ".s",
+        ".S"
+      ],
+      "projectFiles": [
+        "west.yml"
+      ],
+      "languageServer": {
+        "id": "clangd",
+        "command": [
+          "clangd",
+          "--background-index"
+        ],
+        "languages": [
+          "c",
+          "cpp"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+):\\s*(?<severity>error|warning|note):\\s*(?<message>.*)$"
+        }
+      ],
+      "id": "zephyr",
+      "name": "Zephyr SDK",
+      "description": "Zephyr SDK project detection and native build plans; SDK installation and architecture validation are required before this entry can be offered in the Store.",
+      "packages": [
+        "python3",
+        "git",
+        "cmake",
+        "make",
+        "ninja",
+        "clang-extra-tools"
+      ],
+      "versionPackage": "python3",
+      "host": {
+        "commands": [
+          "west"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "run": {
+        "file": [
+          "west",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": "west.yml",
+            "command": [
+              "west",
+              "--version"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "listed": false,
+      "homepage": "https://gcc.gnu.org/",
+      "license": "GPL-3.0-or-later WITH GCC-exception-3.1",
+      "estimatedDownloadSize": 60000000,
+      "estimatedInstalledSize": 300000000,
+      "fileExtensions": [
+        ".c",
+        ".cpp",
+        ".h",
+        ".hpp",
+        ".s",
+        ".S"
+      ],
+      "projectFiles": [
+        "pico_sdk_import.cmake"
+      ],
+      "languageServer": {
+        "id": "clangd",
+        "command": [
+          "clangd",
+          "--background-index"
+        ],
+        "languages": [
+          "c",
+          "cpp"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+):\\s*(?<severity>error|warning|note):\\s*(?<message>.*)$"
+        }
+      ],
+      "id": "pico-sdk",
+      "name": "Raspberry Pi Pico SDK",
+      "description": "Raspberry Pi Pico SDK project detection and native build plans; SDK installation and architecture validation are required before this entry can be offered in the Store.",
+      "packages": [
+        "python3",
+        "git",
+        "cmake",
+        "make",
+        "ninja",
+        "clang-extra-tools"
+      ],
+      "versionPackage": "python3",
+      "host": {
+        "commands": [
+          "cmake"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "run": {
+        "file": [
+          "cmake",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": "pico_sdk_import.cmake",
+            "command": [
+              "cmake",
+              "--version"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "listed": false,
+      "homepage": "https://gcc.gnu.org/",
+      "license": "GPL-3.0-or-later WITH GCC-exception-3.1",
+      "estimatedDownloadSize": 60000000,
+      "estimatedInstalledSize": 300000000,
+      "fileExtensions": [
+        ".c",
+        ".cpp",
+        ".h",
+        ".hpp",
+        ".s",
+        ".S"
+      ],
+      "projectFiles": [
+        ".micropython"
+      ],
+      "languageServer": {
+        "id": "clangd",
+        "command": [
+          "clangd",
+          "--background-index"
+        ],
+        "languages": [
+          "c",
+          "cpp"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+):\\s*(?<severity>error|warning|note):\\s*(?<message>.*)$"
+        }
+      ],
+      "id": "micropython",
+      "name": "MicroPython / CircuitPython",
+      "description": "MicroPython / CircuitPython project detection and native build plans; SDK installation and architecture validation are required before this entry can be offered in the Store.",
+      "packages": [
+        "python3",
+        "git",
+        "cmake",
+        "make",
+        "ninja",
+        "clang-extra-tools"
+      ],
+      "versionPackage": "python3",
+      "host": {
+        "commands": [
+          "mpremote"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "run": {
+        "file": [
+          "mpremote",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": ".micropython",
+            "command": [
+              "mpremote",
+              "--version"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "listed": false,
+      "homepage": "https://gcc.gnu.org/",
+      "license": "GPL-3.0-or-later WITH GCC-exception-3.1",
+      "estimatedDownloadSize": 60000000,
+      "estimatedInstalledSize": 300000000,
+      "fileExtensions": [
+        ".c",
+        ".cpp",
+        ".h",
+        ".hpp",
+        ".s",
+        ".S"
+      ],
+      "projectFiles": [
+        ".uvprojx",
+        ".ewp",
+        ".cproj"
+      ],
+      "languageServer": {
+        "id": "clangd",
+        "command": [
+          "clangd",
+          "--background-index"
+        ],
+        "languages": [
+          "c",
+          "cpp"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+):\\s*(?<severity>error|warning|note):\\s*(?<message>.*)$"
+        }
+      ],
+      "id": "embedded-import",
+      "name": "Vendor embedded import",
+      "description": "Vendor embedded import project detection and native build plans; SDK installation and architecture validation are required before this entry can be offered in the Store.",
+      "packages": [
+        "python3",
+        "git",
+        "cmake",
+        "make",
+        "ninja",
+        "clang-extra-tools"
+      ],
+      "versionPackage": "python3",
+      "host": {
+        "commands": [
+          "cmake"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "run": {
+        "file": [
+          "cmake",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": ".uvprojx",
+            "command": [
+              "cmake",
+              "--version"
+            ]
+          }
+        ]
+      }
     }
   ]
 }
