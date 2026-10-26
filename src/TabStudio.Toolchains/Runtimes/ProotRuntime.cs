@@ -198,13 +198,24 @@ public sealed partial class ProotRuntime : IToolchainRuntime
             ShareFolder(folder);
         }
 
+        List<string> shared;
         lock (_gate)
         {
-            foreach (var shared in _sharedFolders.Where(Directory.Exists))
+            shared = [.. _sharedFolders];
+        }
+
+        foreach (var path in shared)
+        {
+            if (!Directory.Exists(path))
             {
-                arguments.Add("-b");
-                arguments.Add(shared);
+                // A session's folder that is gone, such as a debug adapter's socket folder.
+                RemoveMountPoint(path);
+                continue;
             }
+
+            EnsureMountPoint(path);
+            arguments.Add("-b");
+            arguments.Add(path);
         }
 
         arguments.Add("-w");
@@ -256,6 +267,53 @@ public sealed partial class ProotRuntime : IToolchainRuntime
 
         Directory.CreateDirectory(_options.TemporaryDirectory);
         return [.. environment.Select(e => $"{e.Key}={e.Value}")];
+    }
+
+    /// <summary>
+    /// Creates a shared folder's own path inside the root file system, so that PRoot binds over a directory that
+    /// already exists.
+    /// </summary>
+    /// <remarks>
+    /// When a binding's guest path is missing, PRoot creates each missing component in the root file system as a
+    /// placeholder and removes the empty placeholders when that PRoot process exits. Every program shares one root
+    /// file system, so the first PRoot to bind <c>/data/…/Projects</c> owned <c>rootfs/data</c> and its children,
+    /// and its exit (a language server or debugger stopping with a closed workspace) deleted them under programs
+    /// still running: their working directory vanished, and <c>rustc</c> started by a running <c>cargo build</c>
+    /// failed with "Current directory is invalid". A path that exists before PRoot starts is never a placeholder,
+    /// so no PRoot removes it.
+    /// </remarks>
+    private void EnsureMountPoint(string shared)
+    {
+        if (!Directory.Exists(_options.Rootfs))
+        {
+            return;
+        }
+
+        try
+        {
+            Directory.CreateDirectory(ToRootfs(shared));
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // PRoot then glues the path itself, as it did before.
+        }
+    }
+
+    /// <summary>Removes the empty mount point of a shared folder that no longer exists on the device.</summary>
+    private void RemoveMountPoint(string shared)
+    {
+        var mountPoint = ToRootfs(shared);
+        try
+        {
+            if (Directory.Exists(mountPoint) && !Directory.EnumerateFileSystemEntries(mountPoint).Any())
+            {
+                Directory.Delete(mountPoint);
+            }
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // Not empty, or already removed: an empty folder is all that is left either way.
+        }
     }
 
     private string GuestWorkingDirectory(string? folder) =>
