@@ -147,6 +147,11 @@ public static partial class SelfTest
                 return Finish(managed);
             }
 
+            if (managed && !await CheckAsync(() => CheckRemoteSshAsync(main.Workspace!, cancellationToken)))
+            {
+                return Finish(false);
+            }
+
             if (managed && !await CheckAsync(() => CheckDatabaseAsync(main.Workspace!, cancellationToken)))
             {
                 return Finish(false);

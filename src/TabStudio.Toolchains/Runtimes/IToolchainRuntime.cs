@@ -10,6 +10,9 @@ public enum RuntimeKind
 
     /// <summary>TabStudio's own Linux environment, Alpine Linux through PRoot: Android.</summary>
     Linux,
+
+    /// <summary>A host reached over SSH, with an SFTP source cache on the device.</summary>
+    Remote,
 }
 
 /// <summary>

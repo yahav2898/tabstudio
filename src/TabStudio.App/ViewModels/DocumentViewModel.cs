@@ -196,6 +196,8 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
 
     /// <summary>Writes the text to disk in the file's original encoding.</summary>
     /// <param name="cancellationToken">Cancels the save.</param>
+    public Func<CancellationToken, Task>? SaveExternalAsync { get; set; }
+
     public async Task SaveAsync(CancellationToken cancellationToken = default)
     {
         if (IsExtensionsPage)
@@ -211,6 +213,8 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
 
         var text = Document.Text;
         await TextFile.WriteAsync(FilePath, text, _file.Encoding, cancellationToken);
+        if (SaveExternalAsync is { } saveExternal) { await saveExternal(cancellationToken); }
+        if (SaveExternalAsync is not null && Document.Text != text) { return; }
         Document.UndoStack.MarkAsOriginalFile();
         IsDirty = false;
     }

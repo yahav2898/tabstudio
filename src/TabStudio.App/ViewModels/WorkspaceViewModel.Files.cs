@@ -19,6 +19,7 @@ public sealed partial class WorkspaceViewModel
     /// <inheritdoc />
     async Task IExplorerActions.NewFileAsync(WorkspaceNode node)
     {
+        if (IsRemoteWorkspace) { StatusText = "Create remote files in the SSH Terminal, then Refresh in Remote Explorer."; return; }
         if (DirectoryOf(node) is not { } folder || Workspace is not { } workspace)
         {
             return;
@@ -50,6 +51,7 @@ public sealed partial class WorkspaceViewModel
     /// <inheritdoc />
     async Task IExplorerActions.NewFolderAsync(WorkspaceNode node)
     {
+        if (IsRemoteWorkspace) { StatusText = "Create remote folders in the SSH Terminal, then Refresh in Remote Explorer."; return; }
         if (DirectoryOf(node) is not { } folder)
         {
             return;
@@ -77,6 +79,7 @@ public sealed partial class WorkspaceViewModel
     /// <inheritdoc />
     async Task IExplorerActions.RenameAsync(WorkspaceNode node)
     {
+        if (IsRemoteWorkspace) { StatusText = "Rename remote files in the SSH Terminal, then Refresh in Remote Explorer."; return; }
         if (node.FullPath is not { } path)
         {
             return;
@@ -124,6 +127,7 @@ public sealed partial class WorkspaceViewModel
     /// <inheritdoc />
     async Task IExplorerActions.DeleteAsync(WorkspaceNode node)
     {
+        if (IsRemoteWorkspace) { StatusText = "Delete remote files in the SSH Terminal, then Refresh in Remote Explorer."; return; }
         if (node.FullPath is not { } path)
         {
             return;

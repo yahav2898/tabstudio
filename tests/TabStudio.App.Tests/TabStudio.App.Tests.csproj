@@ -42,6 +42,7 @@
   <!-- The toolchain library's fakes: a tablet with a fake Alpine mirror, for the Toolchain Store's tests. -->
   <ItemGroup>
     <Compile Include="..\TabStudio.Toolchains.Tests\Fakes\*.cs" LinkBase="Toolchains\Fakes" />
+    <Compile Include="..\TabStudio.Remote.Tests\SshTestServer.cs" LinkBase="RemoteSsh" />
   </ItemGroup>
 
   <ItemGroup>
