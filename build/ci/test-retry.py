@@ -71,6 +71,7 @@ FEATURE_CLASSES = frozenset({
     "InitializationOptionsTests",
     "RealLanguageServerTests",
     "ProjectSetupPlanTests",
+    "ProjectTemplatesTests",
     "RunPlannerTests",
     "StaticSiteServerTests",
     # Porting, database and remote workspaces.
