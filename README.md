@@ -58,6 +58,12 @@ The missing piece is the IDE that puts it together. That is TabStudio.
 - **Tests.** Test Explorer for xUnit, NUnit and MSTest, and Live Unit Testing: a green check, red cross or blue dash beside every line of the code under test, and the tests an edit affects run again by themselves a moment after you stop typing.
 - **NuGet on the device.** Packages restore on the tablet, so real projects build as they are.
 
+### Database Explorer
+
+**View > Database Explorer** (also in Ctrl+Q and the activity bar) connects to SQLite files, PostgreSQL through Npgsql and SQL Server through Microsoft.Data.SqlClient. Browse databases, schemas, tables, views, columns, keys and indexes. Discover connection strings from the solution's `appsettings*.json` and user secrets, then choose which to save. Android encrypts saved credentials with an Android Keystore key; desktop credentials last for the session.
+
+Open **New query** for SQL completion from the connected schema. **Ctrl+Enter** runs the selection or the whole tab; Cancel interrupts the command. Results have sortable columns, CSV/JSON copying, multiple result sets, row counts and timings. **Edit data** pages through tables and applies individual cell changes with a primary-key and original-row concurrency check. The **EF Core** tab builds projects in memory to list DbContexts and migrations, update the configured database, or add a migration. See [Database Explorer](docs/DATABASE.md) for setup and limits.
+
 ### Python, Node.js and a terminal
 
 - **The Toolchain Store.** **Tools > Toolchain Store** installs Python and Node.js on the tablet, in a Linux environment that lives inside the app: Alpine Linux, run with PRoot, with no root and no special permissions. Every package comes from Alpine's own mirror and is checked against Alpine's signatures before anything is installed.

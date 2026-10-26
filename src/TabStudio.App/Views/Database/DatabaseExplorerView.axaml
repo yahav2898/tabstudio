@@ -1,0 +1,85 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:db="using:TabStudio.App.ViewModels.Database"
+             x:Class="TabStudio.App.Views.Database.DatabaseExplorerView"
+             x:DataType="db:DatabaseExplorerViewModel"
+             Background="{DynamicResource Brush.Panel}">
+  <UserControl.Styles>
+    <Style Selector="Button"><Setter Property="MinHeight" Value="36" /><Setter Property="Padding" Value="10,4" /></Style>
+    <Style Selector="ComboBox"><Setter Property="HorizontalAlignment" Value="Stretch" /><Setter Property="MinHeight" Value="36" /></Style>
+    <Style Selector="TreeViewItem" x:DataType="db:DatabaseNode"><Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" /></Style>
+  </UserControl.Styles>
+  <DockPanel>
+    <Border DockPanel.Dock="Top" Padding="12,8" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+      <TextBlock Classes="header" Text="Database Explorer" />
+    </Border>
+    <Border DockPanel.Dock="Bottom" Padding="12,8" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0">
+      <TextBlock Classes="small muted" Text="{Binding Status}" TextWrapping="Wrap" />
+    </Border>
+    <TabControl>
+      <TabItem Header="Connections">
+        <Grid RowDefinitions="Auto,Auto,*,Auto" Margin="8">
+          <StackPanel Spacing="6" IsEnabled="{Binding !IsBusy}">
+            <ComboBox ItemsSource="{Binding Connections}" SelectedItem="{Binding SelectedConnection}" PlaceholderText="Saved connections" />
+            <WrapPanel>
+              <Button Content="Connect / Refresh" Command="{Binding ConnectCommand}" />
+              <Button Content="Add" Command="{Binding AddConnectionCommand}" />
+              <Button Content="Remove" Command="{Binding RemoveConnectionCommand}" />
+            </WrapPanel>
+          </StackPanel>
+          <ScrollViewer Grid.Row="1" MaxHeight="360" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Spacing="6" Margin="0,8" IsEnabled="{Binding !IsBusy}">
+              <Expander Header="Connections in this solution">
+                <StackPanel Spacing="6">
+                  <ComboBox ItemsSource="{Binding Suggestions}" SelectedItem="{Binding SelectedSuggestion}" PlaceholderText="appsettings / user secrets" />
+                  <WrapPanel><Button Content="Discover" Command="{Binding DiscoverCommand}" /><Button Content="Use selected" Command="{Binding UseSuggestionCommand}" /></WrapPanel>
+                </StackPanel>
+              </Expander>
+              <Border IsVisible="{Binding IsAddingConnection}" Padding="10" Background="{DynamicResource Brush.Control}" CornerRadius="6">
+                <StackPanel Spacing="6">
+                  <TextBlock Text="Add connection" FontWeight="SemiBold" />
+                  <TextBox Watermark="Display name" Text="{Binding ConnectionName}" />
+                  <ComboBox ItemsSource="{Binding Providers}" SelectedItem="{Binding Provider}" />
+                  <TextBox Watermark="Connection string" PasswordChar="●" Text="{Binding ConnectionString}" />
+                  <Button Content="Choose SQLite file…" Click="OnPickSqlite" HorizontalAlignment="Left" />
+                  <TextBlock Classes="muted small" Text="Android saves credentials with the device's Keystore. Desktop credentials last for this session." TextWrapping="Wrap" />
+                  <WrapPanel><Button Content="Save connection" Command="{Binding SaveConnectionCommand}" /><Button Content="Cancel" Command="{Binding DismissConnectionCommand}" /></WrapPanel>
+                </StackPanel>
+              </Border>
+            </StackPanel>
+          </ScrollViewer>
+          <TreeView Grid.Row="2" ItemsSource="{Binding Nodes}" SelectedItem="{Binding SelectedNode}">
+            <TreeView.ItemTemplate>
+              <TreeDataTemplate DataType="db:DatabaseNode" ItemsSource="{Binding Children}">
+                <TextBlock Text="{Binding Text}" ToolTip.Tip="{Binding Kind}" VerticalAlignment="Center" />
+              </TreeDataTemplate>
+            </TreeView.ItemTemplate>
+          </TreeView>
+          <WrapPanel Grid.Row="3" Margin="0,6,0,0">
+            <Button Content="New query" Command="{Binding NewQueryCommand}" IsEnabled="{Binding !IsBusy}" />
+            <Button Content="Edit data" Command="{Binding EditDataCommand}" IsEnabled="{Binding !IsBusy}" />
+            <Button Content="Cancel operation" Command="{Binding CancelCommand}" IsVisible="{Binding IsBusy}" />
+          </WrapPanel>
+        </Grid>
+      </TabItem>
+      <TabItem Header="EF Core">
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+          <StackPanel Margin="12" Spacing="8" DataContext="{Binding EfCore}" x:DataType="db:EfCoreViewModel" IsEnabled="{Binding !IsBusy}">
+            <TextBlock Text="Migrations project" Classes="small muted" />
+            <ComboBox ItemsSource="{Binding Projects}" SelectedItem="{Binding SelectedProject}" />
+            <TextBlock Text="Startup project" Classes="small muted" />
+            <ComboBox ItemsSource="{Binding Projects}" SelectedItem="{Binding StartupProject}" />
+            <Button Content="Build and list DbContexts" Command="{Binding ListContextsCommand}" />
+            <ComboBox ItemsSource="{Binding Contexts}" SelectedItem="{Binding SelectedContext}" PlaceholderText="DbContext" />
+            <Button Content="List migrations" Command="{Binding ListMigrationsCommand}" />
+            <ItemsControl ItemsSource="{Binding Migrations}" />
+            <Button Content="Update database" Command="{Binding UpdateDatabaseCommand}" />
+            <TextBox Watermark="Migration name" Text="{Binding MigrationName}" />
+            <Button Content="Add migration" Command="{Binding AddMigrationCommand}" />
+            <TextBlock Text="{Binding Status}" Classes="small muted" TextWrapping="Wrap" />
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+    </TabControl>
+  </DockPanel>
+</UserControl>

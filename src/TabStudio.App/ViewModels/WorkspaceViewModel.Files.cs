@@ -188,6 +188,7 @@ public sealed partial class WorkspaceViewModel
             Compatibility.Add(new CompatibilityRowViewModel(report));
         }
 
+        DatabaseExplorer.EfCore.LoadProjects(preview.Workspace.Projects);
         var startup = StartupProject?.FilePath;
         LoadStartupProjects(preview.Workspace, startup);
         await LoadToolchainProjectsAsync(preview.Workspace, startup);

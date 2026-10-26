@@ -35,6 +35,9 @@ public enum SideBarPanel
 
     /// <summary>The Windows Bridge: the programs running on the paired Windows PC, streamed live.</summary>
     WindowsBridge,
+
+    /// <summary>Database connections and EF Core design tools.</summary>
+    Database,
 }
 
 /// <summary>The side bar's tool windows, docked together as Visual Studio docks Solution Explorer, Git Changes and Test Explorer, with the agent beside them.</summary>
@@ -46,7 +49,7 @@ public sealed partial class WorkspaceViewModel
     [NotifyPropertyChangedFor(nameof(IsActionsSelected))]
     [NotifyPropertyChangedFor(nameof(IsPullRequestsSelected))]
     [NotifyPropertyChangedFor(nameof(IsSwarmSelected), nameof(ShowsSwarmTab))]
-    [NotifyPropertyChangedFor(nameof(IsWindowsBridgeSelected))]
+    [NotifyPropertyChangedFor(nameof(IsWindowsBridgeSelected), nameof(IsDatabaseSelected))]
     public partial SideBarPanel SelectedSideBarPanel { get; set; } = SideBarPanel.SolutionExplorer;
 
     /// <summary>Whether the side bar shows the Solution Explorer and Properties.</summary>

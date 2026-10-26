@@ -25,6 +25,7 @@ public sealed partial class WorkspaceView : UserControl
             DocumentViewModel { PullRequest: { } pullRequest } => new PullRequests.PullRequestView { DataContext = pullRequest },
             DocumentViewModel { IsComparison: true } comparison => new DiffView(comparison),
             DocumentViewModel { IsNotebook: true } notebook => new Notebooks.NotebookView(notebook),
+            DocumentViewModel { DatabaseQuery: not null } query => new Database.DatabaseQueryView(query),
             DocumentViewModel { IsCiLog: true } log => new Actions.CiLogView(log),
             DocumentViewModel { DeviceMatrix: { } matrix } => new Swarm.DeviceMatrixView { DataContext = matrix },
             DocumentViewModel { Designer: { } designer } xaml => new XamlDesignerView(xaml, designer),

@@ -4,6 +4,7 @@
              xmlns:conv="using:TabStudio.App.Converters"
              xmlns:input="using:TabStudio.App.Input"
              xmlns:views="using:TabStudio.App.Views"
+             xmlns:databaseViews="using:TabStudio.App.Views.Database"
              xmlns:actionViews="using:TabStudio.App.Views.Actions"
              xmlns:prv="using:TabStudio.App.Views.PullRequests"
              xmlns:swarmViews="using:TabStudio.App.Views.Swarm"
@@ -158,6 +159,7 @@
           <MenuItem Header="_View">
             <MenuItem Header="_Solution Explorer" InputGesture="Ctrl+Alt+L" Command="{Binding ToggleSideBarCommand}" />
             <MenuItem Header="_Git Changes" Command="{Binding ShowGitChangesCommand}" />
+            <MenuItem Header="_Database Explorer" Command="{Binding ShowDatabaseCommand}" />
             <MenuItem Header="GitHub Actio_ns" Command="{Binding ShowActionsCommand}" />
             <MenuItem Header="Pull Re_quests" Command="{Binding ShowPullRequestsCommand}" />
             <MenuItem Header="_Test Explorer (Ctrl+E, T)" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}" />
@@ -756,6 +758,10 @@
           <!-- The Swarm window: the phones and tablets that run the app, its toggles and the UI test recorder. -->
           <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsSwarmSelected}">
             <swarmViews:SwarmView DataContext="{Binding Swarm}" />
+          </Panel>
+
+          <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsDatabaseSelected}">
+            <databaseViews:DatabaseExplorerView DataContext="{Binding DatabaseExplorer}" />
           </Panel>
 
           <!-- GitHub Actions: the commit's checks, runs, workflows and watched repositories. -->

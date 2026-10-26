@@ -32,6 +32,7 @@ public sealed partial class WorkspaceViewModel
         AddActivity(SideBarPanel.AppPreview, "App Preview", "Icon.Window");
         AddActivity(SideBarPanel.WebPreview, "Web Preview", "Icon.Globe");
         AddActivity(SideBarPanel.Swarm, "Swarm", "Icon.Swarm");
+        AddActivity(SideBarPanel.Database, "Database Explorer", "Icon.Database");
         AddActivity(SideBarPanel.WindowsBridge, "Windows Bridge", "Icon.Computer");
         Activity.Add(new ActivityItem("Extensions", "Extensions", Icon("Icon.Extensions"), "Ctrl+Shift+X")
         {

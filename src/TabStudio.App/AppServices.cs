@@ -24,6 +24,7 @@ public static class AppServices
         var services = new ServiceCollection();
 
         // Platform: defaults first; the platform head replaces what it implements.
+        services.AddSingleton<TabStudio.Database.IDatabaseSecretStore, TabStudio.Database.MemoryDatabaseSecretStore>();
         services.AddSingleton<IUiDispatcher, AvaloniaUiDispatcher>();
         services.AddSingleton<IDeviceStatus, DefaultDeviceStatus>();
         services.AddSingleton<IStoragePicker, TopLevelStoragePicker>();

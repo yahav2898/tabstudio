@@ -119,6 +119,7 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
             .AfterSetup(b => ((TabStudioApplication)b.Instance!).UseDataDirectory(dataDirectory))
             .UseTabStudioPlatform(services =>
             {
+                services.AddSingleton<TabStudio.Database.IDatabaseSecretStore>(_ => new AndroidDatabaseSecretStore(context));
                 services.AddSingleton<IDeviceStatus>(_ => new AndroidDeviceStatus(context));
                 services.AddSingleton<IWebViewFactory>(_ => new AndroidWebViewFactory(() => this));
                 services.AddSingleton<INotifications>(notifications);

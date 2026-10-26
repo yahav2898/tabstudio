@@ -23,6 +23,19 @@ jobs:
   libraries:
     name: Build and test libraries
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: tabstudio
+          POSTGRES_PASSWORD: tabstudio_ci
+          POSTGRES_DB: tabstudio
+        ports: [5432:5432]
+        options: >-
+          --health-cmd "pg_isready -U tabstudio -d tabstudio"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      TABSTUDIO_POSTGRES: Host=127.0.0.1;Port=5432;Database=tabstudio;Username=tabstudio;Password=tabstudio_ci
     steps:
       - uses: actions/checkout@v4
 
