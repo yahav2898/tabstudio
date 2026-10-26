@@ -26,6 +26,11 @@
     <AndroidPackageFormat>apk</AndroidPackageFormat>
   </PropertyGroup>
 
+  <ItemGroup>
+    <!-- Set at build time as well: SqlClient has linker substitutions for this feature switch. -->
+    <RuntimeHostConfigurationOption Include="Switch.Microsoft.Data.SqlClient.UseManagedNetworkingOnWindows" Value="true" />
+  </ItemGroup>
+
   <PropertyGroup Label="Identity">
     <ApplicationId>com.tabstudio.ide</ApplicationId>
     <ApplicationTitle>TabStudio</ApplicationTitle>

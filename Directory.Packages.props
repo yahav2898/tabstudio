@@ -63,6 +63,16 @@
     <PackageVersion Include="YamlDotNet" Version="16.3.0" />
   </ItemGroup>
 
+  <ItemGroup Label="Databases">
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.Data.Sqlite" Version="10.0.14" />
+    <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="10.0.14" />
+    <PackageVersion Include="Npgsql" Version="10.0.3" />
+    <!-- The 7.0 Unix build contains only managed SNI. 7.1's unified build initializes Windows SNI on Mono. -->
+    <PackageVersion Include="Microsoft.Data.SqlClient" Version="7.0.3" />
+  </ItemGroup>
+
   <ItemGroup Label="Tests">
     <!-- Native Skia for libraries using Avalonia alone; the IDE and Uno tests override it to match SkiaSharp 3. -->
     <PackageVersion Include="SkiaSharp.NativeAssets.Linux" Version="2.88.9" />
