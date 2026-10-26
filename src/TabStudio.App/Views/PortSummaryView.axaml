@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TabStudio.App.ViewModels"
+             xmlns:port="using:TabStudio.Porting"
+             x:Class="TabStudio.App.Views.PortSummaryView" x:DataType="vm:PortSummaryViewModel">
+  <ScrollViewer>
+    <StackPanel Margin="24" Spacing="16">
+      <TextBlock Text="Port to Avalonia" Classes="muted" />
+      <TextBlock Text="{Binding Title}" FontSize="23" FontWeight="SemiBold" TextWrapping="Wrap" />
+      <TextBlock Text="{Binding Summary}" />
+      <TextBlock Text="The converted project is now the startup project. Press F5 to run it beside your code." TextWrapping="Wrap" />
+      <StackPanel Orientation="Horizontal" Spacing="12" IsEnabled="{Binding !IsUndone}">
+        <Button Content="Send notes to Agent" Command="{Binding SendNotesCommand}" />
+        <Button Content="Undo port" Command="{Binding UndoCommand}" />
+      </StackPanel>
+      <TextBlock Text="Port notes" FontSize="17" FontWeight="SemiBold" />
+      <TextBlock Text="Each note names what could not be mapped exactly and why. Select a note to open its line. Agent changes are proposals for your review." Classes="muted" TextWrapping="Wrap" />
+      <ItemsControl ItemsSource="{Binding Notes}" IsEnabled="{Binding !IsUndone}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate DataType="port:PortNote">
+            <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="0,0,0,8" Padding="12"
+                    Command="{Binding $parent[UserControl].((vm:PortSummaryViewModel)DataContext).OpenNoteCommand}" CommandParameter="{Binding}">
+              <StackPanel Spacing="4">
+                <TextBlock Text="{Binding File}" FontWeight="SemiBold" />
+                <TextBlock Text="{Binding Line, StringFormat='Line {0}'}" Classes="muted" />
+                <TextBlock Text="{Binding What}" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding Why}" TextWrapping="Wrap" Classes="muted" />
+              </StackPanel>
+            </Button>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

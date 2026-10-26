@@ -36,6 +36,7 @@
     <!-- Uno and Avalonia share one compatible SkiaSharp runtime, as on Android. -->
     <PackageReference Include="SkiaSharp" />
     <PackageReference Include="HarfBuzzSharp" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" />
     <PackageReference Include="Avalonia.Themes.Fluent" />
     <PackageReference Include="Avalonia.Fonts.Inter" />
     <PackageReference Include="Avalonia.AvaloniaEdit" />
@@ -49,6 +50,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TabStudio.Core\TabStudio.Core.csproj" />
+    <ProjectReference Include="..\TabStudio.Porting\TabStudio.Porting.csproj" />
     <ProjectReference Include="..\TabStudio.Compilation\TabStudio.Compilation.csproj" />
     <ProjectReference Include="..\TabStudio.Packages\TabStudio.Packages.csproj" />
     <ProjectReference Include="..\TabStudio.Agent\TabStudio.Agent.csproj" />

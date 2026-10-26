@@ -173,6 +173,22 @@ public sealed class AvaloniaXamlGeneratorTests : IDisposable
         Assert.Contains(build.Diagnostics, d => d.Id == "CS1029" && d.Message.Contains("MainView.axaml is not valid XAML", StringComparison.Ordinal));
     }
 
+    [Fact]
+    public async Task Classless_style_text_is_available_from_the_current_build_for_runtime_includes()
+    {
+        const string styles = "<Styles xmlns=\"https://github.com/avaloniaui\"><Style Selector=\"Button\" /></Styles>";
+        _temp.Write("Tablet/Themes/Local.axaml", styles);
+        _host.Load(WorkspaceLoader.Load(_projectPath), FileSystemTextProvider.Instance);
+        _host.SetPackageReferences(_projectPath, [_avalonia]);
+        _host.UpdateText(_temp.Resolve("Tablet/Program.cs"), "Console.WriteLine(TabStudio.Generated.TabStudioXamlResources.Get(\"/Themes/Local.axaml\"));");
+        var build = await new ProjectBuilder(_host).BuildAsync(Project);
+        Assert.True(build.Success, string.Join('\n', build.Diagnostics));
+        var console = new CapturingConsole();
+        var run = await new ProgramRunner().RunAsync(build.EntryAssembly!, build.Dependencies, [_avalonia], [], console);
+        Assert.True(run.Outcome == RunOutcome.Completed, console.Error);
+        Assert.Equal(styles + "\n", console.Output);
+    }
+
     public void Dispose()
     {
         _host.Dispose();

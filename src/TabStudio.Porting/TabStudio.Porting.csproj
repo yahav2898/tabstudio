@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>TabStudio.Porting</RootNamespace>
+    <Description>Port to cross-platform: converts WPF and Windows Forms projects into Avalonia projects. Everything that maps exactly is rewritten, deterministically; everything else becomes a port note for a person or Claude to finish.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TabStudio.Core\TabStudio.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="TabStudio.Porting.Tests" />
+  </ItemGroup>
+
+  <!--
+    The files a ported project gets to run on Avalonia (windows that become screens on phones, message boxes, ...):
+    compiled into the ported projects, not into this one.
+  -->
+  <ItemGroup>
+    <Compile Remove="Support\Content\**" />
+    <None Remove="Support\Content\**" />
+    <EmbeddedResource Include="Support\Content\**\*" LogicalName="Support/%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+</Project>

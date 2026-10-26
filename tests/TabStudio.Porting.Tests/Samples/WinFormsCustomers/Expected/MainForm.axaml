@@ -1,0 +1,47 @@
+<app:AppForm xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:app="using:CustomerEntry.Porting" x:Class="CustomerEntry.MainForm" Title="Customer Entry" Width="784" Height="455" MinWidth="700" MinHeight="400" WindowStartupLocation="CenterScreen">
+    <DockPanel>
+        <Menu x:Name="menuStrip1" DockPanel.Dock="Top">
+            <MenuItem x:Name="fileToolStripMenuItem" Header="_File">
+                <MenuItem x:Name="newToolStripMenuItem" Header="_New" InputGesture="Ctrl+N" HotKey="Ctrl+N" />
+                <Separator />
+                <MenuItem x:Name="exitToolStripMenuItem" Header="E_xit" />
+            </MenuItem>
+            <MenuItem x:Name="helpToolStripMenuItem" Header="_Help">
+                <MenuItem x:Name="aboutToolStripMenuItem" Header="_About" />
+            </MenuItem>
+        </Menu>
+        <Border Classes="statusBar" x:Name="statusStrip1" DockPanel.Dock="Bottom">
+            <DockPanel LastChildFill="False">
+                <TextBlock Text="Ready" VerticalAlignment="Center" x:Name="statusLabel" DockPanel.Dock="Left" Margin="0,0,12,0" />
+            </DockPanel>
+        </Border>
+        <Grid>
+            <Button Content="_Remove selected" x:Name="removeButton" IsEnabled="False" Margin="0,0,12,9" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="120" />
+            <!-- TODO(port): customersGrid.AllowUserToAddRows = false. The converter does not port DataGridView.AllowUserToAddRows; set the Avalonia DataGrid's equivalent, if it has one. -->
+            <DataGrid AutoGenerateColumns="False" IsReadOnly="True" x:Name="customersGrid" Margin="330,16,12,49" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Cells[0].Value}" Width="120" />
+                    <DataGridTextColumn Header="Email" Binding="{Binding Cells[1].Value}" Width="*" />
+                    <DataGridTextColumn Header="Country" Binding="{Binding Cells[2].Value}" Width="100" />
+                    <DataGridTextColumn Header="Age" Binding="{Binding Cells[3].Value}" Width="50" />
+                    <DataGridTextColumn Header="Newsletter" Binding="{Binding Cells[4].Value}" Width="80" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <HeaderedContentControl Classes="groupBox" Header="New customer" Padding="0" Width="300" Height="260" x:Name="customerGroupBox" IsTabStop="False" Margin="12,11,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <Canvas>
+                    <Button Content="_Add" IsDefault="True" x:Name="addButton" ToolTip.Tip="Add the customer to the list" Canvas.Left="90" Canvas.Top="187" Width="90" />
+                    <Button Content="_Clear" x:Name="clearButton" Canvas.Left="190" Canvas.Top="187" Width="90" />
+                    <CheckBox Content="Send the newsletter" x:Name="newsletterCheckBox" Canvas.Left="90" Canvas.Top="144" />
+                    <NumericUpDown Minimum="18" Maximum="120" Increment="1" Value="30" FormatString="0" x:Name="ageUpDown" Canvas.Left="90" Canvas.Top="109" Width="80" />
+                    <TextBlock Text="Age:" x:Name="ageLabel" Canvas.Left="15" Canvas.Top="111" />
+                    <ComboBox x:Name="countryComboBox" Canvas.Left="90" Canvas.Top="75" Width="190" />
+                    <TextBlock Text="Country:" x:Name="countryLabel" Canvas.Left="15" Canvas.Top="78" />
+                    <TextBox x:Name="emailTextBox" Canvas.Left="90" Canvas.Top="42" Width="190" />
+                    <TextBlock Text="Email:" x:Name="emailLabel" Canvas.Left="15" Canvas.Top="45" />
+                    <TextBox Watermark="Full name" x:Name="nameTextBox" Canvas.Left="90" Canvas.Top="9" Width="190" />
+                    <TextBlock Text="Name:" x:Name="nameLabel" Canvas.Left="15" Canvas.Top="12" />
+                </Canvas>
+            </HeaderedContentControl>
+        </Grid>
+    </DockPanel>
+</app:AppForm>

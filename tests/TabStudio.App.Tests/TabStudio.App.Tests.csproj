@@ -42,4 +42,8 @@
     <Compile Include="..\TabStudio.Toolchains.Tests\Fakes\*.cs" LinkBase="Toolchains\Fakes" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\TabStudio.Porting.Tests\Samples\**\Input\**\*" LinkBase="PortingSamples" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>

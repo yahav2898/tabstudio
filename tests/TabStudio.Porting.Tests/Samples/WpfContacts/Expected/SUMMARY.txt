@@ -1,0 +1,96 @@
+App.axaml ← App.xaml (Xaml)
+  WPF xmlns → Avalonia xmlns · 1
+  clr-namespace → using: · 1
+  StartupUri → App.axaml.cs opens the window · 1
+  WPF's look → Fluent theme in light · 1
+  Merged dictionary with styles → StyleInclude · 1
+  BooleanToVisibilityConverter removed: IsVisible takes the boolean · 1
+App.axaml.cs ← App.xaml.cs (Code)
+  Application → Avalonia's Initialize and OnFrameworkInitializationCompleted · 1
+  WPF usings → Avalonia usings · 1
+AppInfo.cs (Code)
+ContactBook.Avalonia.csproj (Project)
+  DataGrid → the Avalonia.Controls.DataGrid package · 1
+  UseWPF project → Avalonia project · 1
+  net8.0-windows → net10.0 · 1
+ContactDialog.axaml ← ContactDialog.xaml (Xaml)
+  WPF xmlns → Avalonia xmlns · 1
+  Window → AppWindow, a window on the desktop and the screen on phones · 1
+  ResizeMode → CanResize · 1
+  Label Target binding → element name · 2
+  UpdateSourceTrigger=PropertyChanged removed: it is Avalonia's default · 1
+  Label of text → TextBlock · 2
+  Style="{StaticResource}" → Classes · 1
+ContactDialog.axaml.cs ← ContactDialog.xaml.cs (Code)
+  Window → AppWindow · 1
+  MessageBox.Show → await MessageBox.ShowAsync · 1
+  WPF usings → Avalonia usings · 1
+Controls/RatingBar.axaml ← Controls/RatingBar.xaml (Xaml)
+  WPF xmlns → Avalonia xmlns · 1
+Controls/RatingBar.axaml.cs ← Controls/RatingBar.xaml.cs (Code)
+  DependencyProperty → StyledProperty · 1
+  Routed event → RoutedEvent.Register · 1
+  Property metadata → static constructor · 1
+  RoutingStrategy → RoutingStrategies · 1
+  RoutedEventHandler → EventHandler<RoutedEventArgs> · 1
+  DependencyObject → AvaloniaObject · 1
+  DependencyPropertyChangedEventArgs → AvaloniaPropertyChangedEventArgs · 1
+  Cursors → new Cursor(StandardCursorType) · 1
+  MouseLeftButtonUp → PointerReleased · 1
+  FrameworkElement → Control · 1
+  WPF usings → Avalonia usings · 1
+Converters/InitialsConverter.cs (Code)
+  WPF-only attribute removed · 1
+  WPF usings → Avalonia usings · 1
+MainWindow.axaml ← MainWindow.xaml (Xaml)
+  WPF xmlns → Avalonia xmlns · 1
+  clr-namespace → using: · 5
+  Window → AppWindow, a window on the desktop and the screen on phones · 1
+  InputBindings → KeyBindings · 1
+  KeyBinding Key/Modifiers → Gesture · 1
+  DataTemplate DataType {x:Type} → type name · 1
+  Label of text → TextBlock · 2
+  Implicit DataTemplate in Resources → DataTemplates · 1
+  StatusBar → Border and DockPanel (Avalonia has no status bar) · 1
+  StatusBarItem → ContentControl · 2
+  Style="{StaticResource}" → Classes · 3
+  UpdateSourceTrigger=PropertyChanged removed: it is Avalonia's default · 1
+  ToolTip → ToolTip.Tip · 1
+  CanUserAddRows removed: Avalonia's DataGrid never shows a new-item row · 1
+  MouseDoubleClick → DoubleTapped · 1
+  Style TargetType → selector · 1
+  Item container style → style of the containers · 1
+  Size of Auto removed: it is the default · 1
+  RelativeSource AncestorType → Avalonia type · 1
+  BooleanToVisibilityConverter removed: IsVisible takes the boolean · 1
+  Visibility → IsVisible · 1
+MainWindow.axaml.cs ← MainWindow.xaml.cs (Code)
+  Window → AppWindow · 1
+  MouseButtonEventArgs → PointerPressedEventArgs · 1
+  Event handler → Avalonia's event arguments · 1
+  ShowDialog() → await ShowDialogAsync() · 1
+  MessageBox.Show → await MessageBox.ShowAsync · 1
+  WPF usings → Avalonia usings · 1
+Models/Contact.cs (Code)
+Models/SampleData.cs (Code)
+Porting/AppWindow.cs (Support)
+Porting/CommandManager.cs (Support)
+Porting/MessageBox.cs (Support)
+Porting/MessageDialog.cs (Support)
+Porting/PortingStyles.axaml (Support)
+Porting/ScreenHost.cs (Support)
+Porting/WindowView.cs (Support)
+Program.cs (Code)
+  Avalonia's entry point, as TabStudio's Avalonia template has it · 1
+Themes/Theme.axaml ← Themes/Theme.xaml (Xaml)
+  WPF xmlns → Avalonia xmlns · 1
+  ResourceDictionary with styles → Styles file · 1
+  Style TargetType → selector · 1
+  BasedOn → the base style's class on the element · 1
+  Keyed style → style class · 3
+  Property trigger → style with a pseudo-class or property selector · 2
+  Data trigger → style class bound to the data · 1
+ViewModels/MainViewModel.cs (Code)
+ViewModels/RelayCommand.cs (Code)
+  WPF usings → Avalonia usings · 1
+ViewModels/ViewModelBase.cs (Code)

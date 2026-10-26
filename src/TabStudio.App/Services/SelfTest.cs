@@ -179,6 +179,7 @@ public static partial class SelfTest
                 avaloniaApp = last.Workspace is { } loaded ? loaded.Solution?.FilePath ?? loaded.RootDirectory : null;
                 if (!await CheckAsync(() => InstallGrammarExtensionAsync(last, FindEditor, cancellationToken))
                     || !await CheckAsync(() => ShowWindowsFormsAppAsync(main, templates, cancellationToken))
+                    || !await CheckAsync(() => PortFormsAppAsync(main, templates, screenshots, cancellationToken))
                     || !await CheckAsync(() => CheckDesignAsync(main, screenshots, cancellationToken))
                     || !await CheckAsync(() => ShowWpfAppAsync(main, templates, cancellationToken))
                     || !await CheckAsync(() => ShowUnoAppAsync(main, templates, cancellationToken))
