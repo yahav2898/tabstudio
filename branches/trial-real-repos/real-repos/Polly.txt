@@ -16,13 +16,7 @@ Compatibility Doctor:
   Polly.Specs: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
   Polly.Testing.Tests: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
   Polly.TestUtils: Library via Built with its users - A library is compiled together with the projects that reference it.
-Built in 10.3 s: 21 errors, 5 warnings
-  12 x CS0234
-      [Polly.Core] Polly.Core.GlobalUsings.g.cs(13,28): error CS0234: The type or namespace name 'Bulkhead' does not exist in the namespace 'Polly' (are you missing an assembly reference?)
-      [Polly.Core] Polly.Core.GlobalUsings.g.cs(14,28): error CS0234: The type or namespace name 'Caching' does not exist in the namespace 'Polly' (are you missing an assembly reference?)
-      [Polly.Core] Polly.Core.GlobalUsings.g.cs(17,28): error CS0234: The type or namespace name 'NoOp' does not exist in the namespace 'Polly' (are you missing an assembly reference?)
-      [Polly.Core] Polly.Core.GlobalUsings.g.cs(18,28): error CS0234: The type or namespace name 'RateLimit' does not exist in the namespace 'Polly' (are you missing an assembly reference?)
-      [Polly.Core] Polly.Core.GlobalUsings.g.cs(22,28): error CS0234: The type or namespace name 'Utilities' does not exist in the namespace 'Polly' (are you missing an assembly reference?)
+Built in 8.6 s: 9 errors, 5 warnings
   5 x CS0122
       [Polly.TestUtils] OutcomeExtensions.cs(14,21): error CS0122: 'Outcome<object>.TryGetResult(out object?)' is inaccessible due to its protection level
       [Polly.TestUtils] TestUtilities.cs(41,12): error CS0122: 'ResilienceStrategyTelemetry.ResilienceStrategyTelemetry(ResilienceTelemetrySource, TelemetryListener?)' is inaccessible due to its protection level
@@ -36,15 +30,9 @@ Built in 10.3 s: 21 errors, 5 warnings
   1 x CS0507
       [Polly.TestUtils] TestResilienceStrategy.cs(11,67): error CS0507: 'TestResilienceStrategy.ExecuteCore<TResult, TState>(Func<ResilienceContext, TState, ValueTask<Outcome<TResult>>>, ResilienceContext, TState)': cannot change access modifiers when overriding 'protected internal' inherited member 'ResilienceStrategy.ExecuteCore<TResult, TState>(Func<ResilienceContext, TState, ValueTask<Outcome<TResult>>>, ResilienceContext, TState)'
 Output:
-Build started at 13:39:28...
+Build started at 13:46:53...
 1>------ Build started: Project: Polly.Core, Configuration: Debug ------
 1>Polly.Core.AssemblyInfo.g.cs(2,12): error CS1726: Friend assembly reference 'DynamicProxyGenAssembly2' is invalid. Strong-name signed assemblies must specify a public key in their InternalsVisibleTo declarations.
-1>Polly.Core.GlobalUsings.g.cs(13,28): error CS0234: The type or namespace name 'Bulkhead' does not exist in the namespace 'Polly' (are you missing an assembly reference?)
-1>Polly.Core.GlobalUsings.g.cs(14,28): error CS0234: The type or namespace name 'Caching' does not exist in the namespace 'Polly' (are you missing an assembly reference?)
-1>Polly.Core.GlobalUsings.g.cs(17,28): error CS0234: The type or namespace name 'NoOp' does not exist in the namespace 'Polly' (are you missing an assembly reference?)
-1>Polly.Core.GlobalUsings.g.cs(18,28): error CS0234: The type or namespace name 'RateLimit' does not exist in the namespace 'Polly' (are you missing an assembly reference?)
-1>Polly.Core.GlobalUsings.g.cs(22,28): error CS0234: The type or namespace name 'Utilities' does not exist in the namespace 'Polly' (are you missing an assembly reference?)
-1>Polly.Core.GlobalUsings.g.cs(23,28): error CS0234: The type or namespace name 'Wrap' does not exist in the namespace 'Polly' (are you missing an assembly reference?)
 2>------ Build started: Project: Polly, Configuration: Debug ------
 3>------ Build started: Project: Polly.Benchmarks, Configuration: Debug ------
 4>------ Build started: Project: Polly.Extensions, Configuration: Debug ------
