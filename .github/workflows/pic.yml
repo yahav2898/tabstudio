@@ -18,7 +18,7 @@ permissions:
 
 concurrency:
   group: pic-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   spike:
@@ -33,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install PRoot build dependencies
-        run: sudo apt-get update -qq && sudo apt-get install -y libtalloc-dev gawk build-essential cmake
+        run: sudo apt-get update -qq && sudo apt-get install -y libtalloc-dev gawk build-essential cmake gcc-x86-64-linux-gnu
       - name: Test the harness without proprietary downloads
         run: python3 -m unittest discover -s build/pic -p 'test_*.py' -v
       - name: Run the official installer and compile the template three times

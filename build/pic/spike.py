@@ -69,18 +69,37 @@ def unpack_deb(package, root):
             raise RuntimeError(f"Cannot extract {package}")
 
 
-def build_current_box64(work, root, out, cache):
+def build_current_box64(work, root, out, cache, *, fix_clone_stack=False):
     """Use upstream's recommended PRoot/Android signal handling, without changing XC."""
     archive = fetch(LOCK["box64-source"], cache, "box64-source.tar.gz")
     source_parent = work / "box64-source"
     source_parent.mkdir(exist_ok=True)
     run(["tar", "--no-same-owner", "-xzf", str(archive), "-C", str(source_parent)], out / "box64-extract.log")
     source = next(source_parent.iterdir())
+    if fix_clone_stack:
+        # A raw clone(CLONE_VM|CLONE_VFORK|SIGCHLD, child_stack, ...) is
+        # posix_spawn, not the stack-less vfork syscall. Use the existing clone
+        # implementation, which sets up the child's emulated SP and entry point.
+        syscall = source / "src/emu/x64syscall.c"
+        text = syscall.read_text()
+        old = "if((R_EDI&~0xff)==0x4100) {"
+        if text.count(old) != 1:
+            raise RuntimeError("Pinned box64 clone implementation changed")
+        syscall.write_text(text.replace(old, "if((R_EDI&~0xff)==0x4100 && !R_RSI) {"))
     build = work / "box64-build"
     run(["cmake", "-S", str(source), "-B", str(build), "-DARM_DYNAREC=ON", "-DBAD_SIGNAL=ON",
          "-DCMAKE_BUILD_TYPE=Release", "-DNOGIT=1"], out / "box64-configure.log")
     run(["cmake", "--build", str(build), "--parallel", "4"], out / "box64-build.log", timeout=900)
     shutil.copy2(build / "box64", root / "usr/bin/box64")
+
+
+def verify_clone_fix(work, root, out, cache, prefix, env):
+    """Experimental translator change; require a static posix_spawn regression."""
+    build_current_box64(work, root, out, cache, fix_clone_stack=True)
+    source = REPO / "build/pic/static-spawn.c"
+    binary = root / "work/static-spawn"
+    run(["x86_64-linux-gnu-gcc", "-static", "-O2", str(source), "-o", str(binary)], out / "spawn-build.log")
+    run([*prefix, "/usr/bin/box64", "/work/static-spawn"], out / "spawn-fixed-box64.log", env=env, timeout=30)
 
 
 def prepare(work, out, compiler):
@@ -211,6 +230,11 @@ def spike(args):
                 result["box64Version"] = LOCK["box64-source"]["version"] + " (upstream source, BAD_SIGNAL=ON)"
                 code, _, version = run([*prefix, *translate, program, "--version"], out / "version-current-box64.log", env=env, check=False, timeout=30)
                 result["currentBox64VersionExitCode"] = code
+                if code:
+                    verify_clone_fix(work, root, out, cache, prefix, env)
+                    result["box64CloneStackFix"] = True
+                    code, _, version = run([*prefix, *translate, program, "--version"], out / "version-clone-fixed-box64.log", env=env, check=False, timeout=30)
+                    result["cloneFixedVersionExitCode"] = code
             if code:
                 # A diagnostic control, not a substitute for success in Alpine/PRoot.
                 native_lib = root / "usr/lib/aarch64-linux-gnu"
@@ -256,6 +280,10 @@ def spike(args):
                     translate = ["/usr/bin/box64"]
                     result["executionMode"] = "dynarec"
                     code, elapsed, _ = run([*prefix, *translate, program, *options], out / "compile-current-box64.log", env=env, timeout=180, check=False)
+                    if code and not result.get("box64CloneStackFix"):
+                        verify_clone_fix(work, root, out, cache, prefix, env)
+                        result["box64CloneStackFix"] = True
+                        code, elapsed, _ = run([*prefix, *translate, program, *options], out / "compile-clone-fixed-box64.log", env=env, timeout=180, check=False)
             if code:
                 raise RuntimeError(f"{compiler} compile failed (exit {code}); see compile diagnostics")
             result["compileSeconds"].append(elapsed)
