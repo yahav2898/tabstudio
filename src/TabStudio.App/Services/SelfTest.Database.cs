@@ -6,12 +6,16 @@ namespace TabStudio.App.Services;
 
 public static partial class SelfTest
 {
-    private static async Task<SelfTestResult> CheckDatabaseAsync(WorkspaceViewModel workspace, CancellationToken token)
+    internal static async Task<SelfTestResult> CheckDatabaseAsync(WorkspaceViewModel workspace, CancellationToken token)
     {
         var clock = Stopwatch.StartNew();
+        var previousDocument = workspace.ActiveDocument;
+        var previousPanel = workspace.SelectedSideBarPanel;
+        var previousVisibility = workspace.IsSideBarVisible;
         var file = Path.Combine(workspace.Workspace!.RootDirectory, ".tabstudio-selftest.db");
         var explorer = workspace.DatabaseExplorer;
         var id = Guid.Empty;
+        DocumentViewModel? queryDocument = null;
         try
         {
             var connection = new DatabaseConnection(Guid.NewGuid(), "Database self-test", DatabaseProvider.SQLite, new Microsoft.Data.Sqlite.SqliteConnectionStringBuilder { DataSource = file, Pooling = false }.ConnectionString);
@@ -36,6 +40,7 @@ public static partial class SelfTest
                 catch (System.Data.Common.DbException) { /* A connection refusal proves the provider initialized. */ }
             }
             explorer.NewQueryCommand.Execute(null);
+            queryDocument = workspace.ActiveDocument;
             var query = workspace.ActiveDocument?.DatabaseQuery ?? throw new InvalidOperationException("SQL tab did not open.");
             await query.ExecuteAsync("SELECT name FROM people; SELECT 2 AS second_result;");
             if (query.Results.Count != 2 || !Equals(query.Results[0].Data.Rows[0][0], "Tablet")) throw new InvalidOperationException("SQL results were incorrect.");
@@ -44,6 +49,10 @@ public static partial class SelfTest
         finally
         {
             if (id != Guid.Empty) { explorer.SelectedConnection = explorer.Connections.FirstOrDefault(c => c.Id == id); await explorer.RemoveConnectionCommand.ExecuteAsync(null); }
+            if (queryDocument is not null) await workspace.CloseDocumentCommand.ExecuteAsync(queryDocument);
+            if (previousDocument is not null && workspace.Documents.Contains(previousDocument)) workspace.ActiveDocument = previousDocument;
+            workspace.SelectedSideBarPanel = previousPanel;
+            workspace.IsSideBarVisible = previousVisibility;
             File.Delete(file);
         }
     }

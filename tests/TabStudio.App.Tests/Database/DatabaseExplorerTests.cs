@@ -16,6 +16,21 @@ namespace TabStudio.App.Tests.Database;
 
 public sealed class DatabaseExplorerTests
 {
+    [AvaloniaFact] public async Task Database_emulator_step_restores_the_editor_and_tool_window_for_the_next_step()
+    {
+        using var fixture = new WorkspaceFixture(); await fixture.OpenSampleAsync();
+        var workspace = fixture.Workspace;
+        var document = workspace.ActiveDocument;
+        var panel = workspace.SelectedSideBarPanel;
+        var result = await global::TabStudio.App.Services.SelfTest.CheckDatabaseAsync(workspace, CancellationToken.None);
+        Assert.True(result.Success, result.Message);
+        Assert.Same(document, workspace.ActiveDocument);
+        Assert.Equal(panel, workspace.SelectedSideBarPanel);
+        Assert.DoesNotContain(workspace.Documents, d => d.DatabaseQuery is not null);
+        Assert.Empty(workspace.DatabaseExplorer.Connections);
+        Assert.False(File.Exists(Path.Combine(workspace.Workspace!.RootDirectory, ".tabstudio-selftest.db")));
+    }
+
     [AvaloniaFact] public async Task Explorer_query_selection_results_and_table_editing_in_the_real_shell()
     {
         using var fixture = new WorkspaceFixture(); await fixture.OpenSampleAsync();
