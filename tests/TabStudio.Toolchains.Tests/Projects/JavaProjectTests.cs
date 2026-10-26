@@ -80,6 +80,9 @@ public sealed class JavaProjectTests : IDisposable
     [Theory]
     [InlineData("App.java:5: error: cannot find symbol", "App.java", 5, null)]
     [InlineData("[ERROR] /work/my app/App.java:[5,13] cannot find symbol", "/work/my app/App.java", 5, 13)]
+    [InlineData(@"[ERROR] C:\my app\App.java:[5,13] cannot find symbol", @"C:\my app\App.java", 5, 13)]
+    [InlineData("[ERROR] C:/my app/App.java:[5,13] cannot find symbol", "C:/my app/App.java", 5, 13)]
+    [InlineData("[ERROR] src/main/java/App.java:[5,13] cannot find symbol", "src/main/java/App.java", 5, 13)]
     public void Javac_and_Maven_errors_keep_their_file_and_line(string output, string file, int line, int? column)
     {
         var error = Assert.Single(new ProblemMatcher(Java).FindErrors([output], _ => true));
@@ -91,6 +94,7 @@ public sealed class JavaProjectTests : IDisposable
     [InlineData("[INFO] BUILD SUCCESS")]
     [InlineData("App.java:5: warning: unchecked conversion")]
     [InlineData("[WARNING] /app/App.java:[5,3] unchecked conversion")]
+    [InlineData(@"[WARNING] C:\app\App.java:[5,3] unchecked conversion")]
     public void Warnings_and_progress_are_not_compiler_errors(string output) =>
         Assert.Empty(new ProblemMatcher(Java).FindErrors([output], _ => true));
 

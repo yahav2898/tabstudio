@@ -311,7 +311,7 @@
       "debugAdapter": { "id": "java-debug", "command": [ "jdtls" ], "type": "java", "languages": [ "java" ] },
       "problemPatterns": [
         { "pattern": "^(?<file>.+?\\.java):(?<line>\\d+): (?<severity>error|warning): (?<message>.*)$" },
-        { "pattern": "^\\[(?<severity>ERROR|WARNING)\\] (?<file>/.+?\\.java):\\[(?<line>\\d+),(?<column>\\d+)\\] (?<message>.*)$" }
+        { "pattern": "^\\[(?<severity>ERROR|WARNING)\\] (?<file>.+?\\.java):\\[(?<line>\\d+),(?<column>\\d+)\\] (?<message>.*)$" }
       ]
     },
     {
