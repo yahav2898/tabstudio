@@ -69,6 +69,20 @@ def unpack_deb(package, root):
             raise RuntimeError(f"Cannot extract {package}")
 
 
+def build_current_box64(work, root, out, cache):
+    """Use upstream's recommended PRoot/Android signal handling, without changing XC."""
+    archive = fetch(LOCK["box64-source"], cache, "box64-source.tar.gz")
+    source_parent = work / "box64-source"
+    source_parent.mkdir(exist_ok=True)
+    run(["tar", "--no-same-owner", "-xzf", str(archive), "-C", str(source_parent)], out / "box64-extract.log")
+    source = next(source_parent.iterdir())
+    build = work / "box64-build"
+    run(["cmake", "-S", str(source), "-B", str(build), "-DARM_DYNAREC=ON", "-DBAD_SIGNAL=ON",
+         "-DCMAKE_BUILD_TYPE=Release", "-DNOGIT=1"], out / "box64-configure.log")
+    run(["cmake", "--build", str(build), "--parallel", "4"], out / "box64-build.log", timeout=900)
+    shutil.copy2(build / "box64", root / "usr/bin/box64")
+
+
 def prepare(work, out, compiler):
     cache = work / "downloads"
     cache.mkdir(parents=True, exist_ok=True)
@@ -162,7 +176,7 @@ def spike(args):
         # Old releases use FreeMode; new releases are license free and omit this option.
         if "--LicenseType" in help_text:
             command += ["--LicenseType", "FreeMode"]
-        code, elapsed, _ = run(command, out / "installer.log", env=env, timeout=300, check=False)
+        code, elapsed, _ = run(command, out / "installer.log", env=env, timeout=60 if args.compiler == "xc32" else 300, check=False)
         result.update(installSeconds=elapsed, installerExitCode=code, installMethod="installer")
         compiler = "xc8-cc" if args.compiler == "xc8" else "xc32-gcc"
         if code:
@@ -193,6 +207,11 @@ def spike(args):
                 translate = interpreted
                 result["executionMode"] = "interpreter"
             else:
+                build_current_box64(work, root, out, cache)
+                result["box64Version"] = LOCK["box64-source"]["version"] + " (upstream source, BAD_SIGNAL=ON)"
+                code, _, version = run([*prefix, *translate, program, "--version"], out / "version-current-box64.log", env=env, check=False, timeout=30)
+                result["currentBox64VersionExitCode"] = code
+            if code:
                 # A diagnostic control, not a substitute for success in Alpine/PRoot.
                 native_lib = root / "usr/lib/aarch64-linux-gnu"
                 diagnostic_env = {**os.environ, "BOX64_LD_LIBRARY_PATH": str(root / "usr/lib/x86_64-linux-gnu"),
@@ -213,11 +232,31 @@ def spike(args):
         shutil.copy2(source, root / "work/main.c")
         pack = f"/opt/tabstudio/packs/{family}/xc8" if family == "pic18" else f"/opt/tabstudio/packs/{family}/xc32"
         device = "18F45K22" if family == "pic18" else "32MX250F128B"
-        options = [f"-mcpu={device}", f"-mdfp={pack}", "-O0", "-o", "/results/blink.elf", "main.c"]
+        processor = f"-mcpu={device}" if family == "pic18" else f"-mprocessor={device}"
+        options = [processor, f"-mdfp={pack}", "-O0", "-o", "/results/blink.elf", "main.c"]
         if family == "pic32":
             options += ["-g", "-Wl,--defsym=_min_heap_size=0,--report-mem"]
         for i in range(3):
-            _, elapsed, _ = run([*prefix, *translate, program, *options], out / f"compile-{i}.log", env=env, timeout=180)
+            code, elapsed, _ = run([*prefix, *translate, program, *options], out / f"compile-{i}.log", env=env, timeout=180, check=False)
+            if code and translate and i == 0:
+                result["initialCompileExitCode"] = code
+                run([*prefix, "/usr/bin/env", "BOX64_LOG=2", "BOX64_NOBANNER=0", *translate, program, "-v", *options],
+                    out / "compile-diagnostic.log", env=env, timeout=180, check=False)
+                interpreted = ["/usr/bin/env", "BOX64_DYNAREC=0", "/usr/bin/box64"]
+                code, elapsed, _ = run([*prefix, *interpreted, program, *options], out / "compile-interpreter.log", env=env, timeout=300, check=False)
+                result["interpreterCompileExitCode"] = code
+                if not code:
+                    translate = interpreted
+                    result["executionMode"] = "interpreter"
+                else:
+                    if not result["box64Version"].startswith(LOCK["box64-source"]["version"]):
+                        build_current_box64(work, root, out, cache)
+                        result["box64Version"] = LOCK["box64-source"]["version"] + " (upstream source, BAD_SIGNAL=ON)"
+                    translate = ["/usr/bin/box64"]
+                    result["executionMode"] = "dynarec"
+                    code, elapsed, _ = run([*prefix, *translate, program, *options], out / "compile-current-box64.log", env=env, timeout=180, check=False)
+            if code:
+                raise RuntimeError(f"{compiler} compile failed (exit {code}); see compile diagnostics")
             result["compileSeconds"].append(elapsed)
         if family == "pic32":
             run([*prefix, *translate, f"{dest}/bin/xc32-bin2hex", "/results/blink.elf"], out / "bin2hex.log", env=env)
