@@ -1,110 +1,52 @@
 # Roadmap
 
-TabStudio is built in eleven milestones. Each one ships as a release on the
-[releases page](https://github.com/yahav2898/tabstudio/releases) with an installable APK, and
-each one leaves the app better for real work than the one before.
+TabStudio ships in releases. Each one is published on the
+[releases page](https://github.com/yahav2898/tabstudio/releases) with an installable APK, only after CI has built it
+and run it on an Android tablet emulator, and each one installs as an update over the one before.
 
-## 1. The IDE
+## Shipped
 
-The Visual Studio layout, sized for touch, with C# that builds and runs on the tablet.
+| Release | What it brought |
+| --- | --- |
+| [0.1](releases/0.1.0.md) | The Visual Studio layout, sized for touch. C# compiled by Roslyn in the app and run in-process with F5, live errors, a start screen with templates and GitHub downloads, and the Compatibility Doctor. |
+| [0.2](releases/0.2.0.md) | IntelliSense, the C# debugger, Test Explorer, Git, notebooks, ASP.NET Core apps served on the tablet, and Claude as a coding agent inside the IDE. |
+| [0.3](releases/0.3.0.md) | Avalonia apps rendered natively beside the code, a live XAML previewer, and sketch to XAML. |
+| [0.4](releases/0.4.0.md) | GitHub in the IDE: pull request review and merge, GitHub Actions runs and logs, CI status in the status bar, Fix with Agent for CI errors. Live Unit Testing in the editor. |
+| [0.5](releases/0.5.0.md) | TabStudio Link: a phone or PC compiles for the tablet over local Wi-Fi, end-to-end encrypted, with no cloud and no account. |
+| [0.6](releases/0.6.0.md) | Desktop mode: the IDE on a connected monitor, with the tablet as its touch companion. |
+| [0.7](releases/0.7.0.md) | Blazor and Razor on the tablet, and VS Code extensions from Open VSX. |
+| [0.8](releases/0.8.0.md) | The Toolchain Store: Python and Node.js on Alpine Linux under PRoot, with IntelliSense, a debugger and a terminal. |
+| [0.9](releases/0.9.0.md) | Windows Forms apps on the tablet, and a touch designer that writes `Form1.Designer.cs` as Visual Studio does. |
+| [0.10](releases/0.10.0.md) | Swarm: one F5 runs the app on every joined phone and tablet, with the Device Matrix, layout checks and recorded UI tests. |
+| [0.11](releases/0.11.0.md) | The light theme, and a steadier app on Android. 0.11.1 builds more real-world solutions as Visual Studio does. |
+| [0.12](releases/0.12.0.md) | A shell rebuilt for landscape, portrait and phones: the activity bar, one search for everything, and native scrolling. |
+| [0.13](releases/0.13.0.md) | The Windows Bridge: Windows-only projects built and run on a PC you own and streamed to the tablet. |
+| [0.14](releases/0.14.0.md) | Go, Rust, C/C++ and Java with IntelliSense and debuggers, WPF on OpenSilver, and WinUI and Uno Platform on Skia. |
 
-- Menu bar, toolbar, document tabs, Solution Explorer, Properties, Error List, Output and a status bar.
-- A code editor with Roslyn semantic highlighting, squiggles for errors and warnings, find and replace,
-  toggle comment and Format Document, and highlighting for every common file type.
-- Live errors as you type, in the editor and in the Error List.
-- **F5**: build the startup project and its project references in memory and run it in-process, with
-  console output and input in the Output panel. **Shift+F5** stops it.
-- A start screen with recent solutions, the bundled sample, new projects from templates, folders imported
-  from the tablet's storage, and repositories downloaded from GitHub.
-- Stack detection and the Compatibility Doctor, which shows where each project runs and why.
-- Thermal-aware builds and the device status in the status bar.
-- Device profiles: TabStudio measures memory and cores at startup and picks how much to keep warm.
-  Framework metadata is memory-mapped from storage, and memory is released when Android reports pressure.
-- Session restore: open documents, unsaved edits and layout come back after Android closes the app.
-- 32-bit ARM and Android 9 support, so entry-level and school tablets can run it.
+## Next
 
-## 2. Real projects
+The next release, 0.15, is being integrated now. It brings:
 
-- NuGet restore on the device, so projects with package references build as they are.
-- Skeleton references: projects without open files are kept as compact metadata images instead of full
-  compilations, so large solutions fit in the memory of a small tablet.
-- Add, rename and delete files and folders; add projects and project references.
-- Git: clone, branch, commit, pull and push, with GitHub sign-in and pull requests.
+- **Repositories that set themselves up.** Opening a repository installs its toolchains and packages, and static
+  web sites run with live reload.
+- **Backing services.** The databases and services a repository needs run natively on the tablet, and a Database
+  Explorer browses SQLite, PostgreSQL and SQL Server.
+- **Hot Reload and Edit and Continue** for C# apps under the debugger.
+- **Time-travel debugging.** Record a C# run and step backward through its timeline.
+- **On-device AI.** Offline models with llama.cpp, model management and inline completions, with no connection.
+- **Remote development** over SSH, and publishing ASP.NET Core apps to your server.
+- **Android apps built on the tablet,** local server previews, and iOS through cloud builds.
+- **Flutter and Dart** with a web preview.
+- **Port to Avalonia** completed for WPF and Windows Forms projects.
+- **Microcontrollers.** Microchip PIC projects built on the tablet, flashed over USB and debugged in a simulator.
 
-## 3. IntelliSense
+After 0.15:
 
-Completion, signature help, Quick Info, Go to Definition, Find All References, Rename, code fixes and
-refactorings (Ctrl+.), all from Roslyn.
+- **STM32 and other ARM Cortex-M boards,** built, flashed and debugged from the tablet.
+- **Windows Compatibility:** Windows-only apps run on the tablet itself through Wine, for when no PC is at hand.
 
-## 4. Debugger
+## How the roadmap changes
 
-Breakpoints, Step Into, Step Over, Step Out, Locals, Watch, Call Stack, DataTips and break on exceptions,
-for programs that run in-process.
-
-## 5. Test Explorer
-
-Discover and run xUnit, NUnit and MSTest tests, with results in Test Explorer and Live Unit Testing markers
-in the editor margin.
-
-## 6. Web
-
-ASP.NET Core and Blazor apps served on the device and previewed live in a WebView beside the editor, with
-Hot Reload.
-
-## 7. Desktop frameworks
-
-- Avalonia apps rendered natively in a pane beside the editor, and a live XAML designer for their views.
-- Windows Forms on a cross-platform Forms layer, with a touch drag-and-drop designer.
-- WPF through OpenSilver, and WinUI through the Uno Platform.
-
-## 8. Notebooks
-
-C# notebooks (`.dib` and `.ipynb`) whose cells run as you write them, with charts and tables in the output.
-
-## 9. Toolchain Store
-
-Native toolchains for C, C++, Rust, Go, Python, Node and Java, language servers and debug adapters for
-their languages, and VS Code extensions from Open VSX. Opening a repository installs what it needs.
-
-## 10. TabStudio Link and the Windows Bridge
-
-- **TabStudio Link.** Pair a phone, another tablet or a PC running TabStudio with a QR code, and it becomes a
-  build and language server for your tablet over local Wi-Fi, end-to-end encrypted. A 2 GB tablet shows the
-  IDE while the stronger device compiles.
-- **Windows Bridge.** Pair a Windows PC you own; Windows-only projects build and run there, streamed to the
-  tablet, while you edit on the tablet.
-- **Windows Compatibility.** Windows-only apps that TabStudio's own layers cannot run build on the tablet and run
-  there in Wine, inside the Toolchain Store's Linux environment, with the real .NET Windows Desktop runtime.
-- **Port to Avalonia.** One tap converts a WPF or Windows Forms project into an Avalonia project; a converter does
-  what maps exactly and Claude finishes the rest as proposals.
-
-## 11. Agent
-
-Claude inside the IDE: an agent that builds, tests and fixes your solution through diffs you approve,
-**Fix with Agent** for every Compatibility Doctor finding, sketch to XAML, and MCP server support.
-
-## GitHub, inside the IDE
-
-Alongside the milestones, the GitHub work a developer would otherwise do in a browser:
-
-- The commit's CI in the status bar, live, and a GitHub Actions window with the branch's runs, their jobs
-  and steps, re-run, re-run failed jobs, cancel, and Run workflow with a form built from its inputs.
-- Job logs in an editor tab, folded by step, opened at the first error.
-- Pull request review: the description, conversation, files and commits; comments on diff lines, reviews that
-  approve or request changes, merge, check out, conversations in the editor, and Review with Claude.
-- CI's errors in the Error List with **Fix with Agent**, watched repositories, and a notification when a
-  run finishes.
-
-## Swarm
-
-Every screen at once, built on TabStudio Link: run the app on every paired phone and tablet together and update them
-on every save; breakpoints from any device stop on the tablet; input mirrored across devices; virtual devices of
-every size, theme, direction and font scale on the tablet itself; layout checks for clipped text, off-screen and
-overlapping controls, small touch targets and low contrast; and end-to-end tests recorded from taps that replay on
-every device and in CI.
-
-## Desktop mode
-
-Across every milestone: when a monitor is connected, the full layout moves to the big screen, where the tablet's
-keyboard, mouse and touchpad work as on a PC, and the tablet becomes a touch companion with Run and debugger
-buttons, a Toolbox and a Properties panel for the XAML at the caret.
+The roadmap follows what people build with TabStudio. Open an
+[issue](https://github.com/yahav2898/tabstudio/issues) to ask for a language, a workload or a tool, or read
+[CONTRIBUTING.md](../CONTRIBUTING.md) to build it yourself.
