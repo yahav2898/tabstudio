@@ -236,6 +236,9 @@ public sealed partial class ProotRuntime : IToolchainRuntime
             ["TERM"] = spec.Terminal is null ? "dumb" : "xterm-256color",
             ["PROOT_TMP_DIR"] = _options.TemporaryDirectory,
             ["PROOT_LOADER"] = _options.LoaderPath,
+            // Each command/server owns its bind-path placeholders. Removing a shared-rootfs placeholder on
+            // exit can otherwise make another running process's getcwd fail even while its project exists.
+            ["PROOT_DONT_POLLUTE_ROOTFS"] = "1",
         };
         if (spec.Terminal is not null)
         {

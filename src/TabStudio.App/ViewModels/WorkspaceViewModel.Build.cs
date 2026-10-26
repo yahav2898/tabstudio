@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Reflection;
 using CommunityToolkit.Mvvm.Input;
 using TabStudio.App.Platform;
 using TabStudio.App.Services;
@@ -65,7 +66,13 @@ public sealed partial class WorkspaceViewModel
         StatusText = $"Running {project.Name}";
         _run = new CancellationTokenSource();
         var input = Output.BeginInput();
+        var runLifetime = _run;
         RunResult result;
+        void Loaded(Assembly assembly) => _ui.Post(() =>
+        {
+            if (ReferenceEquals(_run, runLifetime) && !runLifetime.IsCancellationRequested) BeginHotReload(project, build, assembly);
+        });
+        _runner.Loaded += Loaded;
         try
         {
             var packages = _language.GetPackageRuntimeAssemblies(project.FilePath);
@@ -73,12 +80,19 @@ public sealed partial class WorkspaceViewModel
         }
         finally
         {
+            _runner.Loaded -= Loaded;
+            EndHotReload();
             Output.EndInput();
             _run.Dispose();
             _run = null;
         }
 
         ReportRunResult(project, result);
+        if (_restartConsoleForHotReload && !_disposed)
+        {
+            _restartConsoleForHotReload = false;
+            await RunAsync();
+        }
     }
 
     /// <summary>Ends a run: the exit line in the Output panel, as Visual Studio writes it, and the status bar.</summary>

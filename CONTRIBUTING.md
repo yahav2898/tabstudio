@@ -87,8 +87,9 @@ GitHub Actions ([`ci.yml`](.github/workflows/ci.yml)) runs these jobs on every p
 
 **The emulator self test** starts the app and drives it the way a person would: it runs and debugs the sample, serves
 web apps, shows Avalonia, Windows Forms and WPF apps, installs toolchains from Alpine Linux's real mirror and runs
-and debugs a program in each language, and checks desktop mode on a second display. It has a 15-minute budget, so a
-new self-test step should be quick and must not wait on the network longer than it needs.
+and debugs a program in each language, and checks desktop mode on a second display. It has a 30-minute budget with
+the Hot Reload interpreter compatibility mode, so a new self-test step should be quick and must not wait on the
+network longer than it needs.
 
 **Retries.** A test run that fails is retried once. If the retry passes, the job passes with a warning, and the
 test is named in `FLAKY.txt` in the job's logs. A test that shows up there is a bug to fix, not noise to ignore.

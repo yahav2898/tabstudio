@@ -218,6 +218,7 @@ internal static class UnixSpawner
                     throw Failure($"Could not start {path}", result);
                 }
 
+                UnixNative.TraceProcess("spawn", pid);
                 return pid;
             }
             finally

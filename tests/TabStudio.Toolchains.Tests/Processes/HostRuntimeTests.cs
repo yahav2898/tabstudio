@@ -29,6 +29,61 @@ public sealed class HostRuntimeTests : IDisposable
         Assert.Equal("exited with code 3", exit.Description);
     }
 
+    [Theory]
+    [InlineData(0)]
+    [InlineData(128)]
+    public async Task Native_spawn_reports_the_actual_child_pid_and_its_nonzero_exit_status(int extraEntries)
+    {
+        // Checking output alone misses a corrupt out PID: the child still runs, but waitpid has no such child.
+        // Exercise repeated native calls and collections, including a nonzero exit rather than assuming success.
+        for (var i = 0; i < 30; i++)
+        {
+            using var process = _runtime.Start(new ProcessStartSpec
+            {
+                Program = "/bin/sh",
+                Arguments = ["-c", "printf '%s\\n' $$ \"$#\" \"$TABSTUDIO_PID_PROBE\"; exit 23", "pid-probe",
+                    .. Enumerable.Range(0, extraEntries).Select(n => $"argument '{n}' $(literal)")],
+                Environment = Enumerable.Range(0, extraEntries)
+                    .ToDictionary(n => $"TABSTUDIO_EXTRA_{n}", n => (string?)$"value '{n}' $(literal)")
+                    .Append(new KeyValuePair<string, string?>("TABSTUDIO_PID_PROBE", "kept unchanged"))
+                    .ToDictionary(p => p.Key, p => p.Value),
+            });
+            var output = new ProcessOutput(process);
+            GC.Collect();
+            var exit = await process.Completion.WaitAsync(TimeSpan.FromSeconds(20));
+            await output.CompletedAsync();
+
+            Assert.Equal(string.Create(System.Globalization.CultureInfo.InvariantCulture, $"{process.Id}\n{extraEntries}\nkept unchanged\n"), output.Output);
+            Assert.Equal(23, exit.ExitCode);
+            Assert.Null(exit.Signal);
+        }
+    }
+
+    [Fact]
+    public void Native_descriptor_flags_are_preserved_when_a_descriptor_is_duplicated()
+    {
+        UnixNative.EnsureLoaded();
+        Span<int> descriptors = stackalloc int[2];
+        Assert.Equal(0, UnixNative.pipe(descriptors));
+        var duplicate = -1;
+        try
+        {
+            Assert.Equal(0, UnixNative.fcntl_int(descriptors[0], UnixConstants.SetDescriptorFlags, UnixConstants.CloseOnExecFlag));
+            const int getDescriptorFlags = 1; // F_GETFD on Linux, Android and macOS.
+            Assert.Equal(UnixConstants.CloseOnExecFlag, UnixNative.fcntl_int(descriptors[0], getDescriptorFlags, 0) & UnixConstants.CloseOnExecFlag);
+
+            duplicate = UnixNative.fcntl_int(descriptors[0], OperatingSystem.IsMacOS() ? 67 : 1030, 3);
+            Assert.True(duplicate >= 3);
+            Assert.Equal(UnixConstants.CloseOnExecFlag, UnixNative.fcntl_int(duplicate, getDescriptorFlags, 0) & UnixConstants.CloseOnExecFlag);
+        }
+        finally
+        {
+            if (duplicate >= 0) _ = UnixNative.close(duplicate);
+            _ = UnixNative.close(descriptors[0]);
+            _ = UnixNative.close(descriptors[1]);
+        }
+    }
+
     [Fact]
     public async Task Reads_standard_input_until_it_is_closed()
     {

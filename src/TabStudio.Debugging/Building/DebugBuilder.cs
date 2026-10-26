@@ -154,7 +154,10 @@ public sealed class DebugBuilder
             return null;
         }
 
-        return new CompiledAssembly(compilation.AssemblyName ?? projectName, image.ToArray(), symbols.ToArray());
+        return new CompiledAssembly(compilation.AssemblyName ?? projectName, image.ToArray(), symbols.ToArray())
+        {
+            HotReloadCompilation = instrumented,
+        };
     }
 
     private static DebugBuild Finish(

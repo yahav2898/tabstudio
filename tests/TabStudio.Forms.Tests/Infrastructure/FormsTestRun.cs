@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using TabStudio.Forms.Runtime;
@@ -87,7 +88,16 @@ internal sealed class FormsTestRun : IDisposable
     public void Post(Action action) => Runtime.Post(action);
 
     /// <summary>Waits until the Forms thread has handled everything queued so far.</summary>
-    public void Settle() => Assert.True(Runtime.Send(() => { }, Timeout) || Runtime.IsStopping || Exit.IsCompleted, "The Forms thread is busy.");
+    public void Settle()
+    {
+        var clock = Stopwatch.StartNew();
+        if (Runtime.Send(() => { }, Timeout) || Runtime.IsStopping || Exit.IsCompleted) return;
+
+        // Closing the main form can close the work queue just before the exit notification is published.
+        // Wait for that notification within the original deadline; a genuinely busy thread still fails.
+        var remaining = Timeout - clock.Elapsed;
+        Assert.True(remaining > TimeSpan.Zero && Exit.Wait(remaining), "The Forms thread is busy.");
+    }
 
     /// <summary>
     /// Delivers input on the Forms thread as the presenter does: an exception a handler throws goes to the app, which

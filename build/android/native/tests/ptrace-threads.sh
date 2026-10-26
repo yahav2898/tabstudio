@@ -18,3 +18,4 @@ timeout -k 5 25 src/proot -r / "$work/ptrace-threads"
 cc -std=c11 -Wall -Wextra -Werror -pthread "$native/tests/ptrace-clones.c" -o "$work/ptrace-clones"
 timeout -k 5 30 "$work/ptrace-clones"
 timeout -k 5 30 src/proot -r / "$work/ptrace-clones"
+python3 "$native/tests/parallel-cwd.py" src/proot

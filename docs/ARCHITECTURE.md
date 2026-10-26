@@ -285,7 +285,7 @@ and design checks and before Swarm, retaining every existing self-test step.
 The combined device self test installs Python, Node.js, Go, Rust, C/C++ and Java serially through the shared
 Toolchain Manager while the independent .NET and UI checks run. Package downloads use at most four streams,
 every package is still verified before the serial apk operation, and the batch measures shared disk usage once. It awaits all package operations before the
-native run/debug checks, observes cancellation on every exit, and retains every check under the 15-minute
+native run/debug checks, observes cancellation on every exit, and retains every check under the 30-minute
 launch-to-verdict limit. CI permits one retry only for named failures outside the merged feature tests and
 keeps first-attempt logs and `FLAKY.txt` as artifacts for both pushes and pull requests.
 
@@ -309,6 +309,104 @@ itself. TabStudio's debugger works inside the program instead:
   they follow edits, move to the statement they bind to, and are saved with the session. Locals, Watch and
   Call Stack fill the bottom dock while paused, and DataTips evaluate the expression under the pointer or a
   long press. Package code is not instrumented, so stepping stays in your own code.
+
+## Hot Reload
+
+`TabStudio.Compilation/HotReload` uses Roslyn's public Edit and Continue emission APIs, not a rebuild-and-restart
+approximation. `CompiledAssembly.HotReloadCompilation` retains the exact Debug compilation that emitted its PE
+and portable PDB (including source generators or debugger instrumentation). It is excluded from JSON, so Link and
+Swarm's wire format is unchanged. `HotReloadBaseline` owns `ModuleMetadata`, the PE and PDB readers and the chained
+`EmitBaseline`. Its debug-information provider reads the EnC local-slot, lambda/closure and state-machine blobs;
+its local-signature provider reads the original method bodies. `EmitDifference` produces metadata, IL and PDB
+deltas. A prepared baseline advances only after `MetadataUpdater.ApplyUpdate` accepts its delta.
+
+`ProgramRunner.Loaded`, `DebugSession.Loaded` and `AvaloniaAppHost.EntryAssembly` identify the exact assembly of
+this run. A `HotReloadSession` checks its MVID and resolves referenced project assemblies in that same load
+context. Every changed project is validated before any deltas are applied. A runtime failure invalidates the
+session: cross-assembly ApplyUpdate is not transactional, so the user must restart rather than retry a potentially
+partial update. Disposing the run releases its retained compilations, PE/PDB readers and baselines. CoreCLR debug
+runs use a non-collectible context when metadata updates are enabled; Mono cannot unload assemblies in any case.
+
+**Commands and refresh.** The toolbar, **Debug > Apply C# Hot Reload** and **Alt+F10** build the current editor
+buffers, including unsaved edits, without changing the running/paused IDE state. **Debug > Hot Reload C# on Save**
+is opt-in. When it is off, live apps retain their existing restart-on-save behavior. F5/Continue while paused
+prepares the same instrumented build and only resumes after the edits succeed. A rude edit or compile error keeps
+the app/paused frame alive. The status bar and Output explain the problem; rude edits expose **Restart to apply
+edits**. Stop, restart and workspace disposal invalidate outstanding update work.
+
+After ApplyUpdate, the host discovers assemblies' `MetadataUpdateHandlerAttribute`s, calls every `ClearCache`
+before any `UpdateApplication` (including ASP.NET Core routing/reflection caches and Blazor's renderer handler),
+then refreshes the preview. Avalonia creates fresh main content from the **same** loaded assembly; application
+static state survives, while the recreated view and its view model start fresh. A web preview reloads its current
+page; the server, its port and its application state remain alive.
+
+**Runtime activation.** Capability is always checked with `MetadataUpdater.IsSupported`. `Directory.Build.props`
+explicitly sets `MetadataUpdaterSupport=true`: .NET 10 otherwise writes the feature switch as false in Release
+hosts, including the APK and test executables, even if the user's emitted assembly is Debug. It must also be enabled
+before the runtime starts: the desktop `launchSettings.json` and CI set `DOTNET_MODIFIABLE_ASSEMBLIES=debug`;
+Android packages `build/android/hot-reload.env` and enables `AndroidUseInterpreter`, which also selects Mono's
+hot-reload runtime component. This is enabled in Release-packaged IDEs too: the assemblies being edited are the
+user's **Debug** assemblies, not the optimized IDE. Setting an environment variable in managed startup would be
+too late. A manually launched desktop host needs the same environment variable.
+
+Android also sets `MONO_INTERPRETER_OPTIONS=-all`, disabling interpreter optimizations as Mono's debugger does.
+The optimized Mono 10 interpreter let two different native PIDs become the same invalid integer between spawn
+and managed handle construction during GC, even with precise root maps disabled. The interpreter and metadata
+updates remain enabled; execution can be slower and conservative scanning can retain more memory. The mandatory
+post-update process stress verifies the native handoff under repeated collections. The verdict records this
+startup setting as well as the update capability. See dotnet/runtime's `interp.c` option parser and debugger setup.
+
+Native `fcntl` arguments use `nint`: Android's bionic reads the variadic slot as a pointer-sized value. An `int`
+P/Invoke declaration can leave stale upper bits in Mono and abort `F_SETFD` in bionic's FORTIFY check. Process
+tests verify close-on-exec flags and descriptor duplication; the emulator exercises this boundary after updates.
+
+Toolchains also set `PROOT_DONT_POLLUTE_ROOTFS=1`, so bind-path placeholders live in each process's private
+glue filesystem. PRoot otherwise creates them in the shared rootfs and removes them on exit, which can make
+another language server or command's `getcwd` fail while its host project still exists. A native regression
+keeps two processes in the same bound directory, exits its creator, and verifies the surviving process's cwd.
+
+Mono 10's native `hot_reload_update_enabled` caches the configured mode but returns a local false on subsequent
+checks, which can make the public `MetadataUpdater.IsSupported` flag false after interpreter initialization.
+`HotReloadRuntime` still checks that flag first. On Android Mono only, if the startup environment and feature
+switch are enabled and the native component-only capability check succeeds, it performs one cached proof on an
+isolated throwaway Debug assembly: emit a real Roslyn delta, call `MetadataUpdater.ApplyUpdate`, and verify an
+existing method now returns 2 instead of 1. Only that verified result enables the fallback; it never enables a
+disabled runtime or patches the IDE/user assembly to test support. The emulator verdict records both the raw
+flag and the probe outcome before its independent two-generation state-preservation test.
+
+**Supported scope and rude edits.** Method, constructor, operator and accessor bodies, expression-bodied getters
+and top-level statements can be updated. For lambdas, local functions, async methods and iterators, only changes
+that preserve syntax topology, lambda/local-function signatures and variable/capture names and types are accepted,
+with a new-to-old syntax map preserving their identity. Roslyn's IDE rude-edit service is internal;
+`EmitDifference` assumes its caller has validated
+the edits. Our conservative analyzer therefore rejects changes to declarations, signatures, fields/initializers,
+attributes/imports, file/project sets and embedded resources, and forwards Roslyn's further EnC diagnostics.
+Instrumented debugging also requires stable method/statement ids and local slots; successful updates refresh
+the source map and rebind breakpoints. Structural changes offer a restart instead of risking a bad delta.
+
+ApplyUpdate does **not** move an active frame's instruction pointer or re-execute Main. Existing invocations
+finish their original IL and locals; later invocations use the new code. At a breakpoint before a helper call,
+editing that helper changes the output on Continue without a restart. A change to an already executing method
+itself appears on its next invocation. Startup/DI registration changes require a restart to execute again.
+Local console, Avalonia, ASP.NET Core and server-rendered/interactive-server Blazor are supported. Standalone
+Blazor WebAssembly and WebAssembly/Auto client components run in a different browser Mono instance whose boot
+configuration currently disables metadata updates; these, remote Link/Swarm/Bridge runs and Release user builds
+still require a restart. An unsupported target/runtime reports this explicitly.
+
+**Verification.** Compilation tests exercise metadata/IL/PDB emission, async and lambda edits, rude edits, failed
+and abandoned generations and real ApplyUpdate across multiple generations with an existing delegate and static
+state. App tests drive unsaved console edits, save updates, Edit and Continue, the shortcut and an Avalonia view
+refresh in the same loaded assembly. The emulator self test calls ApplyUpdate twice and checks `2 -> 12 -> 103`
+with a preserved static counter; capability being unavailable on Android fails the step.
+Immediately after these updates, the emulator runs the existing 200-process GC stress case before the app and
+toolchain checks, with opt-in PID handoff diagnostics for the interpreter's native process boundary.
+
+Run the feature's tests on CoreCLR with:
+
+```sh
+DOTNET_MODIFIABLE_ASSEMBLIES=debug dotnet test tests/TabStudio.Compilation.Tests --filter FullyQualifiedName~HotReload
+DOTNET_MODIFIABLE_ASSEMBLIES=debug dotnet test tests/TabStudio.App.Tests --filter FullyQualifiedName~HotReload
+```
 
 ## Tests
 

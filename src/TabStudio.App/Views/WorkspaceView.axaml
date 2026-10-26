@@ -32,6 +32,7 @@
     <KeyBinding Gesture="F9" Command="{Binding ToggleBreakpointCommand}" />
     <KeyBinding Gesture="Ctrl+Shift+F9" Command="{Binding DeleteAllBreakpointsCommand}" />
     <KeyBinding Gesture="F10" Command="{Binding StepOverCommand}" />
+    <KeyBinding Gesture="Alt+F10" Command="{Binding ApplyHotReloadCommand}" />
     <KeyBinding Gesture="Ctrl+F10" Command="{Binding RunToCursorCommand}" />
     <KeyBinding Gesture="F11" Command="{Binding StepIntoCommand}" />
     <KeyBinding Gesture="Shift+F11" Command="{Binding StepOutCommand}" />
@@ -229,6 +230,8 @@
             <MenuItem Header="Brea_k All (Ctrl+Alt+Break)" Command="{Binding BreakAllCommand}" />
             <MenuItem Header="Stop D_ebugging" InputGesture="Shift+F5" Command="{Binding StopDebuggingCommand}" />
             <MenuItem Header="_Restart" InputGesture="Ctrl+Shift+F5" Command="{Binding RestartCommand}" />
+            <MenuItem Header="Apply C# Hot Reload" InputGesture="Alt+F10" Command="{Binding ApplyHotReloadCommand}" />
+            <MenuItem Header="Hot Reload C# on Save" ToggleType="CheckBox" IsChecked="{Binding HotReloadOnSave, Mode=TwoWay}" />
             <Separator />
             <MenuItem Header="Show _Next Statement (Alt+Num *)" Command="{Binding ShowNextStatementCommand}" />
             <MenuItem Header="Step _Into" InputGesture="F11" Command="{Binding StepIntoCommand}" />
@@ -396,6 +399,10 @@
                                     IsPinned="True" IconBrush="{DynamicResource Brush.Error}" Command="{Binding StopCommand}" IsVisible="{Binding IsRunning}" />
 
           <!-- Debugging, as Visual Studio's Debug toolbar: Start Without Debugging, or while debugging Break All, Stop, Restart and the steps. -->
+          <controls:AdaptiveBarItem Icon="{StaticResource Icon.Restart}" IconSize="16" Label="Hot Reload" Gesture="Alt+F10"
+                                    Priority="95" Command="{Binding ApplyHotReloadCommand}" />
+          <controls:AdaptiveBarItem Icon="{StaticResource Icon.Restart}" IconSize="16" Label="Restart to apply edits"
+                                    IsPinned="True" IsVisible="{Binding HotReloadNeedsRestart}" Command="{Binding RestartForHotReloadCommand}" />
           <controls:AdaptiveBarItem Icon="{StaticResource Icon.PlayOutline}" IconSize="15" Label="Start Without Debugging" Gesture="Ctrl+F5" ShowsLabel="False"
                                     Priority="45" IconBrush="{DynamicResource Brush.Success}" Command="{Binding RunCommand}" IsVisible="{Binding !IsDebugging}" />
           <controls:AdaptiveBarItem Icon="{StaticResource Icon.Pause}" IconSize="16" Label="Break All" Gesture="Ctrl+Alt+Break" ShowsLabel="False"

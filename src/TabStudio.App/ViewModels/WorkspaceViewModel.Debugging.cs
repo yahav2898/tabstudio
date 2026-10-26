@@ -175,25 +175,28 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
 
     /// <summary>F5: builds the startup project for debugging and runs it under the debugger, or continues the paused program.</summary>
     [RelayCommand(CanExecute = nameof(CanStartDebugging))]
-    private Task StartDebuggingAsync()
+    private async Task StartDebuggingAsync()
     {
         if (_swarmDebug is not null)
         {
-            return IsPaused ? ContinueSwarmAsync() : Task.CompletedTask;
+            if (IsPaused) await ContinueSwarmAsync();
+            return;
         }
 
         if (_adapter is not null)
         {
-            return ContinueAdapterAsync();
+            await ContinueAdapterAsync();
+            return;
         }
 
         if (IsPaused)
         {
+            if (_hotReload is not null && TabStudio.Compilation.HotReload.HotReloadSession.IsSupported && !await ApplyCurrentEditsAsync()) return;
             Resume(session => session.Continue());
-            return Task.CompletedTask;
+            return;
         }
 
-        return LaunchAsync(DebugStart.Run);
+        await LaunchAsync(DebugStart.Run);
     }
 
     private bool CanStartDebugging() => IsPaused || CanRun();
@@ -463,6 +466,10 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
         session.Paused += OnSessionPaused;
         session.Resumed += OnSessionResumed;
         _session = session;
+        session.Loaded += assembly => _ui.Post(() =>
+        {
+            if (ReferenceEquals(_session, session)) BeginHotReload(project, build.Result, assembly, build);
+        });
         _debuggedProject = project;
         Breakpoints.Bind(session);
         switch (start)
@@ -513,6 +520,7 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
             return;
         }
 
+        EndHotReload();
         _session = null;
         _debuggedProject = null;
         _pause = null;
@@ -712,6 +720,7 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
 
     private void NotifyDebugCommands()
     {
+        ApplyHotReloadCommand.NotifyCanExecuteChanged();
         StartDebuggingCommand.NotifyCanExecuteChanged();
         StepIntoCommand.NotifyCanExecuteChanged();
         StepOverCommand.NotifyCanExecuteChanged();

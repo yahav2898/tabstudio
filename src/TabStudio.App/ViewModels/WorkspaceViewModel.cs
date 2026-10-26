@@ -376,6 +376,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         // A session save still waiting would reach for the UI thread after the workspace is gone.
         _sessionSave?.Cancel();
         DisposeDebugging();
+        EndHotReload();
         DisposeTests();
         DisposeSwarm();
         DisposeLiveTesting();

@@ -43,6 +43,8 @@ public static partial class SelfTest
         ArgumentNullException.ThrowIfNull(main);
         ArgumentNullException.ThrowIfNull(samples);
         var clock = Stopwatch.StartNew();
+        var previousProcessTrace = Environment.GetEnvironmentVariable("TABSTUDIO_TRACE_PROCESSES");
+        if (OperatingSystem.IsAndroid()) Environment.SetEnvironmentVariable("TABSTUDIO_TRACE_PROCESSES", "1");
         using var preparationStop = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         Task? preparation = null;
         try
@@ -88,6 +90,18 @@ public static partial class SelfTest
             }
 
             var debugged = await DebugSampleAsync(workspace, cancellationToken);
+            if (debugged.Success)
+            {
+                var reload = CheckHotReload(cancellationToken);
+                debugged = debugged with { Success = reload.Success, Message = $"{debugged.Message} | {reload.Message}" };
+            }
+            if (debugged.Success && templates is not null)
+            {
+                // Verify the interpreter's native process boundary immediately after real ApplyUpdates, before
+                // downloading packages or exercising the remaining apps; every stress case remains mandatory.
+                var processes = await StartProgramsWhileCollectingAsync(cancellationToken);
+                debugged = debugged with { Success = processes.Success, Message = $"{debugged.Message} | {processes.Message}" };
+            }
             if (debugged.Success)
             {
                 var linked = await LinkSampleAsync(main, workspace, cancellationToken);
@@ -144,8 +158,7 @@ public static partial class SelfTest
             }
 
             var toolchains = swarm.Success ? await RunToolchainsAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Toolchains: not run", TimeSpan.Zero);
-            var processes = toolchains.Success ? await StartProgramsWhileCollectingAsync(cancellationToken) : new SelfTestResult(false, "Processes: not run", TimeSpan.Zero);
-            var pythonTools = processes.Success ? await CheckPythonToolsAsync(main, cancellationToken) : new SelfTestResult(false, "Python tools: not run", TimeSpan.Zero);
+            var pythonTools = toolchains.Success ? await CheckPythonToolsAsync(main, cancellationToken) : new SelfTestResult(false, "Python tools: not run", TimeSpan.Zero);
             var goTools = pythonTools.Success ? await CheckGoToolchainAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Go: not run", TimeSpan.Zero);
             var rustTools = goTools.Success ? await CheckRustToolchainAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Rust: not run", TimeSpan.Zero);
             var cppTools = rustTools.Success ? await CheckCppToolchainAsync(main, templates, cancellationToken) : new SelfTestResult(false, "C/C++: not run", TimeSpan.Zero);
@@ -157,8 +170,8 @@ public static partial class SelfTest
             }
 
             return new SelfTestResult(
-                extensions.Success && toolchains.Success && processes.Success && pythonTools.Success && goTools.Success && rustTools.Success && cppTools.Success && javaTools.Success && forms.Success && design.Success && wpf.Success && uno.Success && screens.Success && swarm.Success,
-                $"{summary} | {debugged.Message} | {web.Message} | {blazor.Message} | {avalonia.Message} | {extensions.Message} | {forms.Message} | {design.Message} | {wpf.Message} | {uno.Message} | {screens.Message} | {swarm.Message} | {toolchains.Message} | {processes.Message} | {pythonTools.Message} | {goTools.Message} | {rustTools.Message} | {cppTools.Message} | {javaTools.Message}",
+                extensions.Success && toolchains.Success && pythonTools.Success && goTools.Success && rustTools.Success && cppTools.Success && javaTools.Success && forms.Success && design.Success && wpf.Success && uno.Success && screens.Success && swarm.Success,
+                $"{summary} | {debugged.Message} | {web.Message} | {blazor.Message} | {avalonia.Message} | {extensions.Message} | {forms.Message} | {design.Message} | {wpf.Message} | {uno.Message} | {screens.Message} | {swarm.Message} | {toolchains.Message} | {pythonTools.Message} | {goTools.Message} | {rustTools.Message} | {cppTools.Message} | {javaTools.Message}",
                 clock.Elapsed);
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)
@@ -167,7 +180,14 @@ public static partial class SelfTest
         }
         finally
         {
-            await FinishSelfTestPreparationAsync(preparation, preparationStop);
+            try
+            {
+                await FinishSelfTestPreparationAsync(preparation, preparationStop);
+            }
+            finally
+            {
+                if (OperatingSystem.IsAndroid()) Environment.SetEnvironmentVariable("TABSTUDIO_TRACE_PROCESSES", previousProcessTrace);
+            }
         }
     }
 }

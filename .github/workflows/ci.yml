@@ -18,6 +18,8 @@ env:
   DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+  # Required at process startup, before CoreCLR loads the test host or any dynamically emitted Debug assemblies.
+  DOTNET_MODIFIABLE_ASSEMBLIES: debug
 
 jobs:
   libraries:
@@ -332,7 +334,7 @@ jobs:
           # The UI test the swarm's test recorded on a phone runs as its users' CI runs it: dotnet test, headless.
           recorded=$(find "$TABSTUDIO_RECORDED_UI_TESTS" -name '*.UITests.csproj' 2>/dev/null | head -n 1)
           if [ -n "$recorded" ]; then
-            dotnet test "$recorded" --logger "console;verbosity=normal" > ci-out/recorded-ui-tests.log 2>&1 || status=1
+            dotnet test "$recorded" --blame --blame-hang-timeout 12m --blame-hang-dump-type none --logger "console;verbosity=normal" > ci-out/recorded-ui-tests.log 2>&1 || status=1
             tail -n 30 ci-out/recorded-ui-tests.log
           else
             echo "No recorded UI test project was written." | tee ci-out/recorded-ui-tests.log
@@ -479,7 +481,9 @@ jobs:
           disk-size: 4096M
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
-          script: bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 900
+          # Mono runs with debugger-compatible interpreter optimizations for safe metadata updates. Keep every
+          # self-test case, including process GC stress, and allow the slower interpreter time to finish them.
+          script: bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 1800
 
       # A crash's native backtrace has only offsets into the runtime's stripped libraries; this names the functions.
       - name: Name the functions in a crash's backtrace

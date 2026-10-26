@@ -30,6 +30,13 @@ internal static partial class UnixNative
         // The static constructor does the work.
     }
 
+    /// <summary>Opt-in native PID diagnostics, enabled only by the Android emulator self test.</summary>
+    internal static void TraceProcess(string stage, int pid, int? stored = null)
+    {
+        if (Environment.GetEnvironmentVariable("TABSTUDIO_TRACE_PROCESSES") == "1")
+            Console.Error.WriteLine(FormattableString.Invariant($"TabStudio process trace: {stage}: PID {pid}; stored {stored}."));
+    }
+
     [LibraryImport(LibC, SetLastError = true)]
     internal static partial int posix_openpt(int flags);
 
@@ -54,8 +61,10 @@ internal static partial class UnixNative
     [LibraryImport(LibC, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
     internal static partial int mkfifo(string path, uint mode);
 
+    // Bionic reads the variadic argument as void*. Initialize the whole native-width slot: Mono's interpreter
+    // can leave stale upper bits with an int declaration, which makes F_SETFD abort in libc's FORTIFY check.
     [LibraryImport(LibC, EntryPoint = "fcntl", SetLastError = true)]
-    internal static partial int fcntl_int(int fd, int command, int argument);
+    internal static partial int fcntl_int(int fd, int command, nint argument);
 
     [LibraryImport(LibC, SetLastError = true)]
     internal static partial int close(int fd);
