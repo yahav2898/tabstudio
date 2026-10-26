@@ -79,6 +79,55 @@ public sealed class SdkProjectItemsTests
     }
 
     [Fact]
+    public void Imports_of_the_Directory_files_and_the_project_bring_their_properties_and_items()
+    {
+        // Polly: Directory.Build.props imports eng/Common.props, and Directory.Build.targets imports
+        // eng/$(ProjectType).targets with a package and usings. Humanizer: a project imports its own props file.
+        using var temp = new TempDirectory();
+        temp.Write("Directory.Build.props", """
+            <Project><Import Project="$(MsBuildThisFileDirectory)eng/Common.props" /></Project>
+            """);
+        temp.Write("eng/Common.props", """
+            <Project>
+              <PropertyGroup><ImplicitUsings>enable</ImplicitUsings><SignAssembly>true</SignAssembly></PropertyGroup>
+              <ItemGroup><Using Include="System.Collections.Concurrent" /></ItemGroup>
+            </Project>
+            """);
+        temp.Write("Directory.Build.targets", """
+            <Project>
+              <Import Project="$(MsBuildThisFileDirectory)eng/$(ProjectType).targets" Condition="$(ProjectType) != ''" />
+              <ItemGroup><Using Remove="System.Net.Http" /></ItemGroup>
+            </Project>
+            """);
+        temp.Write("eng/Benchmark.targets", """
+            <Project><ItemGroup><PackageReference Include="BenchmarkDotNet" /><Using Include="BenchmarkDotNet.Attributes" /></ItemGroup></Project>
+            """);
+        temp.Write("Directory.Packages.props", """
+            <Project><PropertyGroup><TargetFramework>net8.0</TargetFramework></PropertyGroup></Project>
+            """);
+        temp.Write("src/Bench/Analyzers.props", """
+            <Project><ItemGroup><PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="$(RoslynVersion).0" /></ItemGroup></Project>
+            """);
+        var path = temp.Write("src/Bench/Bench.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><ProjectType>Benchmark</ProjectType><RoslynVersion>3.8</RoslynVersion></PropertyGroup>
+              <Import Project="Analyzers.props" />
+            </Project>
+            """);
+
+        var project = ProjectParser.Load(path);
+
+        Assert.True(project.ImplicitUsings);
+        Assert.Equal("true", project.GetProperty("SignAssembly"));
+        Assert.Equal(new[] { "net8.0" }, project.TargetFrameworks);
+        Assert.Contains(project.PackageReferences, p => p.Name == "BenchmarkDotNet");
+        Assert.Contains(project.PackageReferences, p => p.Name == "Microsoft.CodeAnalysis.CSharp" && p.Version == "$(RoslynVersion).0");
+        Assert.Contains(project.Usings, u => u.Name == "System.Collections.Concurrent");
+        Assert.Contains(project.Usings, u => u.Name == "BenchmarkDotNet.Attributes");
+        Assert.Contains("System.Net.Http", project.RemovedUsings);
+    }
+
+    [Fact]
     public void Project_references_keep_their_metadata_and_packages_their_PrivateAssets()
     {
         var project = ProjectParser.Parse(ProjectPath, """

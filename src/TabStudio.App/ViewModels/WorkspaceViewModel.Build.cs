@@ -260,6 +260,10 @@ public sealed partial class WorkspaceViewModel
             results?.Add(last);
             var fresh = last.Diagnostics.Where(seen.Add).ToList();
             reported.AddRange(fresh);
+
+            // The build replaces what live analysis last said about the project's files, which may be from before its
+            // generators were loaded.
+            ErrorList.SetProjectDiagnostics(project.DirectoryPath, [.. last.Diagnostics.Where(d => d.ProjectName == project.Name)]);
             ErrorList.SetBuildResult(last with { Diagnostics = reported.OrderByDescending(d => d.Severity).ToList() });
             foreach (var diagnostic in fresh.Where(d => d.Severity >= DiagnosticSeverityLevel.Warning))
             {

@@ -54,17 +54,147 @@ public static partial class ProjectParser
         }
 
         var directory = Path.GetDirectoryName(fullPath);
-        var directoryBuildProps = FindDirectoryBuildProps(directory);
-        var inherited = directoryBuildProps is null
-            ? null
-            : ReadPropertiesSafely(directoryBuildProps);
-        var directoryBuildTargets = FindDirectoryBuildTargets(directory);
-        var overriding = directoryBuildTargets is null
-            ? null
-            : ReadPropertiesSafely(directoryBuildTargets);
+        var projectXml = File.ReadAllText(fullPath);
 
-        var imported = new[] { directoryBuildProps, directoryBuildTargets }.OfType<string>().ToList();
-        return WithRazorComponents(Parse(fullPath, File.ReadAllText(fullPath), inherited, overriding, imported));
+        // MSBuild's evaluation order: Directory.Build.props and what it imports, Directory.Packages.props, the
+        // project with what it imports, then Directory.Build.targets and what it imports. Later files win.
+        var known = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        var before = new List<string>();
+        if (FindDirectoryBuildProps(directory) is { } directoryBuildProps)
+        {
+            CollectImports(directoryBuildProps, known, before, []);
+        }
+
+        if (FindNearest(directory, "Directory.Packages.props") is { } packagesProps)
+        {
+            CollectImports(packagesProps, known, before, []);
+        }
+
+        var inherited = Merge(before);
+        var after = new List<string>();
+        Dictionary<string, string> projectProperties;
+        XElement? projectRoot = null;
+        try
+        {
+            projectRoot = LoadXml(fullPath, projectXml);
+            projectProperties = WithThisFile(ReadProperties(projectRoot), fullPath);
+        }
+        catch (ProjectLoadException)
+        {
+            // Parse reports the broken project itself.
+            projectProperties = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        }
+
+        foreach (var (key, value) in projectProperties)
+        {
+            known[key] = value;
+        }
+
+        known.TryAdd("MSBuildProjectName", Path.GetFileNameWithoutExtension(fullPath));
+        known.TryAdd("MSBuildProjectDirectory", directory ?? string.Empty);
+        var visited = new HashSet<string>(before, StringComparer.Ordinal) { fullPath };
+        if (projectRoot is not null)
+        {
+            foreach (var import in ImportsOf(projectRoot, fullPath, known))
+            {
+                CollectImports(import, known, after, visited);
+            }
+        }
+
+        if (FindDirectoryBuildTargets(directory) is { } directoryBuildTargets)
+        {
+            CollectImports(directoryBuildTargets, known, after, visited);
+        }
+
+        var overriding = Merge(after);
+        return WithRazorComponents(Parse(fullPath, projectXml, inherited, overriding, [.. before, .. after]));
+    }
+
+    /// <summary>
+    /// Adds a props or targets file and the files it imports, imported files first, to a list. An import is followed
+    /// when its path, after <c>$(MSBuildThisFileDirectory)</c> and the properties known so far, names a file that
+    /// exists, as in <c>&lt;Import Project="$(MSBuildThisFileDirectory)eng/$(ProjectType).targets" /&gt;</c>; SDK
+    /// imports, property functions and wildcards are not.
+    /// </summary>
+    private static void CollectImports(string file, Dictionary<string, string> known, List<string> files, HashSet<string> visited, int depth = 0)
+    {
+        if (depth > 8 || !visited.Add(file) || !File.Exists(file))
+        {
+            return;
+        }
+
+        XElement root;
+        try
+        {
+            root = LoadXml(file, File.ReadAllText(file));
+        }
+        catch (Exception ex) when (ex is ProjectLoadException or IOException or UnauthorizedAccessException)
+        {
+            // A broken import should not stop the project from opening.
+            return;
+        }
+
+        foreach (var (key, value) in WithThisFile(ReadProperties(root), file))
+        {
+            known[key] = value;
+        }
+
+        foreach (var import in ImportsOf(root, file, known))
+        {
+            CollectImports(import, known, files, visited, depth + 1);
+        }
+
+        files.Add(file);
+    }
+
+    /// <summary>The files a project or props file imports whose paths can be worked out without evaluating MSBuild.</summary>
+    private static IEnumerable<string> ImportsOf(XElement root, string file, IReadOnlyDictionary<string, string> known)
+    {
+        var folder = Path.GetDirectoryName(file) ?? string.Empty;
+        var imports = root.Elements()
+            .SelectMany(e => e.Name.LocalName == "ImportGroup" ? e.Elements() : [e])
+            .Where(e => e.Name.LocalName == "Import" && e.Attribute("Sdk") is null);
+        foreach (var import in imports)
+        {
+            if (import.Attribute("Project")?.Value is not { Length: > 0 } project)
+            {
+                continue;
+            }
+
+            var thisFile = WithThisFile(new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) { ["path"] = project }, file)["path"];
+            var expanded = PropertyReference().Replace(thisFile, match =>
+                known.TryGetValue(match.Groups["name"].Value, out var value) ? value : match.Value);
+            if (expanded.Contains("$(", StringComparison.Ordinal) || expanded.Contains('*', StringComparison.Ordinal) || expanded.Contains("$([", StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            var path = Path.GetFullPath(Path.Combine(folder, expanded.Replace('\\', Path.DirectorySeparatorChar)));
+            if (File.Exists(path))
+            {
+                yield return path;
+            }
+        }
+    }
+
+    /// <summary>The properties of files in evaluation order, later ones winning; <see langword="null"/> when there are none.</summary>
+    private static Dictionary<string, string>? Merge(List<string> files)
+    {
+        if (files.Count == 0)
+        {
+            return null;
+        }
+
+        var merged = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var file in files)
+        {
+            foreach (var (key, value) in ReadPropertiesSafely(file) ?? new Dictionary<string, string>())
+            {
+                merged[key] = value;
+            }
+        }
+
+        return merged;
     }
 
     /// <summary>Parses project XML that has already been read.</summary>
@@ -123,7 +253,8 @@ public static partial class ProjectParser
         ExpandPropertyReferences(properties);
 
         var sdk = ReadSdk(root);
-        var packages = ReadPackageReferences(root);
+        List<XElement> allRoots = [root, .. ImportedRoots(importedFiles)];
+        var packages = ReadPackageReferences(allRoots);
         var projectReferenceItems = ReadProjectReferenceItems(root, directory);
         var projectReferences = projectReferenceItems.Select(r => r.Path).ToList();
         var targetFrameworks = ReadTargetFrameworks(properties);
@@ -143,7 +274,7 @@ public static partial class ProjectParser
             ProjectReferenceItems = projectReferenceItems,
             Sdks = ReadSdks(root),
             AssemblyAttributes = AssemblyAttributeItems.Read(
-                [root, .. ImportedRoots(importedFiles)],
+                allRoots,
                 properties,
                 Path.GetFileNameWithoutExtension(filePath)),
             FrameworkReferences = ReadFrameworkReferences(root, sdk, properties),
@@ -153,8 +284,8 @@ public static partial class ProjectParser
             EmbeddedResourceRemoves = ReadItemPatterns(root, "EmbeddedResource", "Remove"),
             AvaloniaResourceIncludes = ReadItemPatterns(root, "AvaloniaResource", "Include"),
             AvaloniaResourceRemoves = ReadItemPatterns(root, "AvaloniaResource", "Remove"),
-            Usings = ReadUsings(root),
-            RemovedUsings = ReadItemPatterns(root, "Using", "Remove"),
+            Usings = [.. allRoots.SelectMany(r => ReadUsings(r)).Distinct()],
+            RemovedUsings = [.. allRoots.SelectMany(r => ReadItemPatterns(r, "Using", "Remove")).Distinct(StringComparer.Ordinal)],
         };
 
         var (kind, isTest) = ProjectClassifier.Classify(info);
@@ -349,8 +480,9 @@ public static partial class ProjectParser
         return slash >= 0 ? first[..slash] : first;
     }
 
-    private static List<PackageReferenceInfo> ReadPackageReferences(XElement root) =>
-        root.Descendants()
+    /// <summary>The package references of a project, then of the files it imports: the first reference to a package wins.</summary>
+    private static List<PackageReferenceInfo> ReadPackageReferences(IEnumerable<XElement> roots) =>
+        roots.SelectMany((root, index) => index == 0 ? root.Descendants() : root.Descendants().Where(e => !e.Ancestors().Any(a => a.Name.LocalName == "Target")))
             .Where(e => e.Name.LocalName == "PackageReference")
             .Select(e => (Name: e.Attribute("Include")?.Value, Element: e))
             .Where(p => !string.IsNullOrWhiteSpace(p.Name))
