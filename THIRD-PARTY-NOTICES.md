@@ -52,3 +52,10 @@ Rust, Cargo and rust-analyzer (MIT OR Apache-2.0), rust-src, and LLVM/LLDB (Apac
 are installed as signed Alpine Linux packages on Android. No additional binary archives are downloaded.
 Sources and licenses: https://github.com/rust-lang/rust, https://github.com/rust-lang/rust-analyzer,
 https://github.com/llvm/llvm-project.
+
+## C and C++ language tools
+
+Clang, clangd and LLDB (Apache-2.0 WITH LLVM-exception), CMake (BSD-3-Clause), GNU make (GPL-3.0-or-later)
+and GCC/build-base (GPL-3.0-or-later with runtime exceptions) come from signed Alpine Linux packages.
+No extra executable archives are downloaded. Sources: https://github.com/llvm/llvm-project,
+https://gitlab.kitware.com/cmake/cmake, https://www.gnu.org/software/make/ and https://gcc.gnu.org/.

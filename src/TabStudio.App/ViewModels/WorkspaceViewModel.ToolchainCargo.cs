@@ -10,7 +10,7 @@ public sealed partial class WorkspaceViewModel
     {
         if (project.Toolchain.Id != "rust")
         {
-            return (plan, await OutputProcess.RunAsync(_toolchains.Runtime, plan.Build!, Output, null, cancellationToken));
+            return await BuildNativeToolchainAsync(project, plan, cancellationToken);
         }
 
         try

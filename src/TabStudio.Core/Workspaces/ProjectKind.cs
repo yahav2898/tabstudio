@@ -65,6 +65,9 @@ public enum ProjectKind
 
     /// <summary>A Rust Cargo package or workspace.</summary>
     Rust,
+
+    /// <summary>A portable C or C++ project built with CMake, make or a compiler from the Toolchain Store.</summary>
+    Cpp,
 }
 
 /// <summary>

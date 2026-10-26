@@ -8,9 +8,11 @@ public sealed partial class ToolchainLanguageToolsTests
     private static async Task<LspCompletionList> AwaitCompletionsAsync(LanguageServerDocument server, int offset, Func<LspCompletionItem, bool> contains, CancellationToken cancellationToken)
     {
         var end = DateTime.UtcNow + TimeSpan.FromSeconds(120);
+        LspCompletionList? last = null;
         while (DateTime.UtcNow < end)
         {
             var result = await server.GetCompletionsAsync(offset, LspCompletionTriggerKind.Invoked, null, cancellationToken);
+            last = result;
             if (result is not null && result.Items.Any(contains))
             {
                 return result;
@@ -19,6 +21,6 @@ public sealed partial class ToolchainLanguageToolsTests
             await Task.Delay(100, cancellationToken);
         }
 
-        throw new Xunit.Sdk.XunitException("The language server did not finish indexing the template for completion.");
+        throw new Xunit.Sdk.XunitException("Completion did not contain the requested symbol: " + string.Join(", ", last?.Items.Select(i => i.Label + "|" + i.FilterText) ?? []));
     }
 }

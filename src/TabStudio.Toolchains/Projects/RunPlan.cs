@@ -7,8 +7,9 @@ namespace TabStudio.Toolchains.Projects;
 /// <summary>How F5 runs a toolchain project or file: an optional build, then the program.</summary>
 /// <param name="Build">A command to run first, such as <c>cargo build</c>, or <see langword="null"/>.</param>
 /// <param name="Run">The program.</param>
+/// <param name="Preparation">Commands that configure a build before it starts, such as CMake.</param>
 /// <param name="EntryPoint">What runs, for the Output panel, such as <c>main.py</c> or <c>npm start</c>.</param>
-public sealed record RunPlan(ProcessStartSpec? Build, ProcessStartSpec Run, string EntryPoint);
+public sealed record RunPlan(ProcessStartSpec? Build, ProcessStartSpec Run, string EntryPoint, IReadOnlyList<ProcessStartSpec>? Preparation = null);
 
 /// <summary>
 /// Works out how to run a project or a file from its toolchain's catalog entry: the entry rules in order, the
@@ -24,6 +25,11 @@ public static partial class RunPlanner
         if (project.Toolchain.Id == "go")
         {
             return PlanGoProject(project);
+        }
+
+        if (project.Toolchain.Id == "cpp")
+        {
+            return PlanCppProject(project);
         }
 
         var run = project.Toolchain.Run;
@@ -73,6 +79,11 @@ public static partial class RunPlanner
         if (project.Toolchain.Id == "go")
         {
             return PlanGoFile(project, file);
+        }
+
+        if (project.Toolchain.Id == "cpp")
+        {
+            return PlanCppFile(project, file);
         }
 
         var relative = Path.GetRelativePath(project.Directory, file).Replace('\\', '/');

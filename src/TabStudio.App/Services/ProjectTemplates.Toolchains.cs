@@ -15,6 +15,9 @@ public sealed partial class ProjectTemplates
     /// <summary>A Rust console program.</summary>
     public const string RustId = "rust";
 
+    /// <summary>A CMake C++ console program.</summary>
+    public const string CppId = "cpp";
+
     /// <summary>The Python and Node.js templates, for the start screen.</summary>
     private static ProjectTemplate[] ToolchainTemplates =>
     [
@@ -23,6 +26,8 @@ public sealed partial class ProjectTemplates
         new(GoId, "Go Console App", "A Go module with console input and output, gopls IntelliSense and Delve debugging.", ["Go", "Console"]),
 
         new(RustId, "Rust Console App", "A Cargo console app with rust-analyzer IntelliSense and LLDB debugging.", ["Rust", "Console"]),
+
+        new(CppId, "C++ Console App (CMake)", "A C++ console app with CMake, clangd IntelliSense and LLDB debugging.", ["C++", "CMake", "Console"]),
     ];
 
     /// <summary>Writes a toolchain project into a new folder, which is the workspace: there is no solution file.</summary>
@@ -95,6 +100,9 @@ public sealed partial class ProjectTemplates
 
             case RustId:
                 return CreateRustProject(root, name);
+
+            case CppId:
+                return CreateCppProject(root);
 
             default:
                 return null;

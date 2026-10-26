@@ -69,7 +69,7 @@ jobs:
             name=$(basename "$project")
             [ "$name" = "TabStudio.App.Tests" ] && continue
             if ! dotnet test "$project" -c Release -p:TreatWarningsAsErrors=true --logger "console;verbosity=normal" > "ci-out/$name.log" 2>&1; then
-              if grep -Eq '(GoProjectTests|RustProjectTests|DebugAdapterUnixSocketTests).*\[FAIL\]' "ci-out/$name.log"; then status=1; fi
+              if grep -Eq '(GoProjectTests|RustProjectTests|CppProjectTests|DebugAdapterUnixSocketTests).*\[FAIL\]' "ci-out/$name.log"; then status=1; fi
               # WinUI must pass on its first attempt; never mask a failure with a retry.
               if [ "$name" = "TabStudio.Uno.Tests" ]; then
                 tail -n 80 "ci-out/$name.log"
@@ -129,13 +129,14 @@ jobs:
         with:
           components: rust-analyzer, rust-src
 
-      - name: Install LLDB for Rust
+      - name: Install LLVM, C and C++ tools
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y lldb-19
-          mkdir -p "$RUNNER_TEMP/lldb-bin"
-          ln -s /usr/bin/lldb-dap-19 "$RUNNER_TEMP/lldb-bin/lldb-dap"
-          echo "$RUNNER_TEMP/lldb-bin" >> "$GITHUB_PATH"
+          sudo apt-get install -y clang-19 clangd-19 lldb-19 cmake make
+          mkdir -p "$RUNNER_TEMP/cpp-bin"
+          ln -s /usr/bin/clangd-19 "$RUNNER_TEMP/cpp-bin/clangd"
+          ln -s /usr/bin/lldb-dap-19 "$RUNNER_TEMP/cpp-bin/lldb-dap"
+          echo "$RUNNER_TEMP/cpp-bin" >> "$GITHUB_PATH"
 
       - name: Install language servers and debug adapters
         run: |
@@ -176,6 +177,46 @@ jobs:
           tail -n 80 ci-out/rust-tools.log
           exit "$status"
 
+      - name: Test C and C++ tools
+        env:
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+        run: |
+          mkdir -p ci-out/screenshots
+          status=0
+          dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 5m --blame-hang-dump-type none \
+            --filter "FullyQualifiedName~ToolchainLanguageToolsTests.A_Cpp_template" --logger "console;verbosity=normal" \
+            > ci-out/cpp-tools.log 2>&1 || status=$?
+          tail -n 80 ci-out/cpp-tools.log
+          exit "$status"
+
+      # This test deliberately collects the entire process heap during every PNG encode. Run it in its own
+      # test host so previous IDE workspaces cannot make that heap several gigabytes; all 100 captures remain.
+      - name: Test screenshot lifetime under GC
+        run: |
+          mkdir -p ci-out
+          status=0
+          for theme in Dark Light; do
+            log="ci-out/ScreenshotLifetime.$theme.log"
+            run_screenshot_test() {
+              TABSTUDIO_THEME="$theme" dotnet test tests/TabStudio.App.Tests -c Release --no-build \
+                --blame --blame-hang-timeout 5m --blame-hang-dump-type none \
+                --filter "FullyQualifiedName~ScreenshotLifetimeTests" --logger "console;verbosity=normal" > "$1" 2>&1
+            }
+            if ! run_screenshot_test "$log"; then
+              tail -n 80 "$log"
+              echo "::warning::The baseline screenshot GC test failed once in $theme; retrying in a fresh host."
+              if run_screenshot_test "ci-out/ScreenshotLifetime.$theme.retry.log"; then
+                echo "ScreenshotLifetime ($theme): the first attempt failed and the retry passed (see ScreenshotLifetime.$theme.log)" >> ci-out/FLAKY.txt
+              else
+                status=1
+              fi
+              tail -n 40 "ci-out/ScreenshotLifetime.$theme.retry.log"
+            else
+              tail -n 20 "$log"
+            fi
+          done
+          exit "$status"
+
       - name: Build the desktop host and test the IDE
         env:
           TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
@@ -189,12 +230,12 @@ jobs:
           mkdir -p "$RUNNER_TEMP/crash"
           run_ide_tests() {
             DOTNET_DbgEnableMiniDump=1 DOTNET_DbgMiniDumpType=1 DOTNET_EnableCrashReport=1 DOTNET_DbgMiniDumpName="$RUNNER_TEMP/crash/%e.%p.dmp" \
-              dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --blame --blame-hang-timeout 12m --blame-hang-dump-type none --logger "console;verbosity=normal" > "$1" 2>&1
+              dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --blame --blame-hang-timeout 12m --blame-hang-dump-type none --filter "FullyQualifiedName!~ScreenshotLifetimeTests" --logger "console;verbosity=normal" > "$1" 2>&1
           }
           first=0
           run_ide_tests ci-out/TabStudio.App.Tests.log || first=1
           tail -n 80 ci-out/TabStudio.App.Tests.log
-          if grep -Eq '(A_Go_template|A_Rust_template|Delve_|A_private_Delve_socket).*\[FAIL\]' ci-out/TabStudio.App.Tests.log; then status=1; fi
+          if grep -Eq '(A_Go_template|A_Rust_template|A_Cpp_template|Delve_|A_private_Delve_socket).*\[FAIL\]' ci-out/TabStudio.App.Tests.log; then status=1; fi
           if [ $first -ne 0 ]; then
             # Known intermittent failures (a native crash in the test host, slow servers) are tracked on the board;
             # one retry keeps them from blocking a release, and FLAKY.txt and a warning keep them visible.
@@ -212,13 +253,13 @@ jobs:
           mkdir -p ci-out/screenshots/light
           run_light_tests() {
             TABSTUDIO_THEME=Light TABSTUDIO_SCREENSHOTS="$TABSTUDIO_SCREENSHOTS/light" \
-              dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --no-build --filter "FullyQualifiedName!~TabStudio.App.Tests.Theming&FullyQualifiedName!~TabStudio.App.Tests.Design" \
+              dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --no-build --blame --blame-hang-timeout 12m --blame-hang-dump-type none --filter "FullyQualifiedName!~TabStudio.App.Tests.Theming&FullyQualifiedName!~TabStudio.App.Tests.Design&FullyQualifiedName!~ScreenshotLifetimeTests" \
               --logger "console;verbosity=normal" > "$1" 2>&1
           }
           light=0
           run_light_tests ci-out/TabStudio.App.Tests.Light.log || light=1
           tail -n 20 ci-out/TabStudio.App.Tests.Light.log
-          if grep -Eq '(A_Go_template|A_Rust_template|Delve_|A_private_Delve_socket).*\[FAIL\]' ci-out/TabStudio.App.Tests.Light.log; then status=1; fi
+          if grep -Eq '(A_Go_template|A_Rust_template|A_Cpp_template|Delve_|A_private_Delve_socket).*\[FAIL\]' ci-out/TabStudio.App.Tests.Light.log; then status=1; fi
           if [ $light -ne 0 ]; then
             echo "::warning::The IDE tests in the light theme failed once; running them again. The first attempt is in ci-out/TabStudio.App.Tests.Light.log."
             if grep -Eq 'UnoAppTests.*\[FAIL\]' ci-out/TabStudio.App.Tests.Light.log; then

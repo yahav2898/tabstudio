@@ -183,6 +183,8 @@ public sealed partial class WorkspaceViewModel
             "go" => ProjectKind.Go,
 
             "rust" => ProjectKind.Rust,
+
+            "cpp" => ProjectKind.Cpp,
             _ => ProjectKind.Unknown,
         },
         OutputType = "Exe",

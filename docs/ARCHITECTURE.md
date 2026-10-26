@@ -481,6 +481,21 @@ so emulated ptrace can see the debuggee. A private FIFO created through Android'
 input, while DAP events carry program output. Real-tool IDE and emulator tests cover the template, a breakpoint
 and Locals, with Watch and Call Stack checked in the IDE.
 
+### C and C++
+
+CMake projects, Makefiles and standalone `.c`/`.cpp` programs are startup projects; headers and build output are
+excluded. Alpine installs Clang, build-base (including make), CMake, clangd and LLDB with lldb-dap; desktops use
+PATH. CMake configures a Debug build, exports `compile_commands.json` for clangd and reports executable artifacts
+through its codemodel file API. An active source selects among several targets. Makefile projects need no special
+run target: the unique executable at the root or in `bin`, `build` or `out` runs. Ambiguous outputs need a launch
+configuration. Standalone files use their language's compiler with debug information. Compiler locations become
+Error List links.
+
+F5 uses LLDB DAP. Desktop programs use `runInTerminal`; on Android, LLDB launches within the same PRoot trace tree
+as its debuggee and reads Output-panel input from a private FIFO created through Android's C library. Program
+output arrives as DAP events. Real-tool IDE and emulator tests cover the CMake template, a breakpoint and Locals;
+the IDE test also checks clangd, Watch and Call Stack.
+
 ## Swarm
 
 `TabStudio.Swarm` runs the app being built on every device that joins the tablet's swarm. Devices join through
