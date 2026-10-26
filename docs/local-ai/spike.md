@@ -11,19 +11,25 @@ speedup estimates, and must not be used to advertise coding-model performance.
 
 ## Measurements
 
-The [first successful host comparison](https://github.com/yahav2898/tabstudio/actions/runs/40254363978)
-produced these median decode rates:
+The [verified comparison](https://github.com/yahav2898/tabstudio/actions/runs/40256682901)
+on `8be3787c0a11218cb20c818023436c81b2129a00` produced these median decode rates:
 
 | Environment | Native library, tokens/s | llama-server, tokens/s |
 | --- | ---: | ---: |
-| GitHub Ubuntu 24.04 x64 | 4,870.583 | 4,710.038 |
-| GitHub Ubuntu 24.04 ARM64 | 4,172.030 | 3,667.622 |
-| Android x64 emulator | Measurement in progress | Measurement in progress |
+| GitHub Ubuntu 24.04 x64 | 4,729.272 | 4,214.408 |
+| GitHub Ubuntu 24.04 ARM64 | 3,874.751 | 3,480.720 |
+| Android x64 emulator | 69.774 | 46.620 |
 
-The native candidate is implemented behind the same managed completion interface. Final
-runtime selection follows the Android measurement. No user-model speed is inferred from
-the tiny model: the model manager initially says "not yet measured" and stores actual
-inference throughput separately for each model on the device.
+The native library is the selected runtime, behind the managed completion interface.
+Both candidates generated the requested 64 tokens in all three environments. Android timings
+varied substantially between repetitions; these tiny diagnostic model results establish neither
+coding-model speed nor physical-tablet throughput. The model manager initially says "not yet
+measured" and stores actual inference throughput separately for each model on the device.
+
+The [APK self-test](https://github.com/yahav2898/tabstudio/actions/runs/40256679446), on the same
+source revision, also loaded the native library from inside TabStudio's Android app UID and generated
+16 tokens at **91.4 tokens/s**. That is a separate diagnostic request on the x64 emulator, rather than
+a 64-token benchmark or a measurement of the downloadable Qwen models.
 
 ## Reproduction
 
