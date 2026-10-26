@@ -12,6 +12,7 @@ internal sealed class FakeHttpHandler : HttpMessageHandler
     private readonly Dictionary<string, byte[]> _files = new(StringComparer.Ordinal);
     private readonly Dictionary<string, int> _breakAfter = new(StringComparer.Ordinal);
     private readonly Lock _gate = new();
+    private readonly Dictionary<string, TaskCompletionSource<bool>> _held = new(StringComparer.Ordinal);
 
     private int _activeRequests;
 
@@ -53,6 +54,26 @@ internal sealed class FakeHttpHandler : HttpMessageHandler
         }
     }
 
+    /// <summary>Holds one response until the returned scope is disposed; cancellation still stops the request.</summary>
+    public IDisposable Hold(Uri address)
+    {
+        var released = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        lock (_gate)
+        {
+            _held.Add(address.AbsoluteUri, released);
+        }
+
+        return new ResponseHold(() =>
+        {
+            lock (_gate)
+            {
+                _held.Remove(address.AbsoluteUri);
+            }
+
+            released.TrySetResult(true);
+        });
+    }
+
     /// <summary>An <see cref="HttpClient"/> over this handler.</summary>
     public HttpClient CreateClient() => new(this, disposeHandler: false) { Timeout = Timeout.InfiniteTimeSpan };
 
@@ -76,6 +97,7 @@ internal sealed class FakeHttpHandler : HttpMessageHandler
             var range = request.Headers.Range?.Ranges.FirstOrDefault();
             byte[]? content;
             int? breakAfter;
+            Task? held;
             lock (_gate)
             {
                 Requests.Add($"GET {url}{(range is null ? string.Empty : $" ({range.From}-)")}");
@@ -86,6 +108,12 @@ internal sealed class FakeHttpHandler : HttpMessageHandler
 
                 _files.TryGetValue(url, out content);
                 breakAfter = _breakAfter.Remove(url, out var after) ? after : null;
+                held = _held.GetValueOrDefault(url)?.Task;
+            }
+
+            if (held is not null)
+            {
+                await held.WaitAsync(cancellationToken);
             }
 
             if (content is null)
@@ -121,6 +149,13 @@ internal sealed class FakeHttpHandler : HttpMessageHandler
                 _activeRequests--;
             }
         }
+    }
+
+    private sealed class ResponseHold(Action release) : IDisposable
+    {
+        private Action? _release = release;
+
+        public void Dispose() => Interlocked.Exchange(ref _release, null)?.Invoke();
     }
 
     /// <summary>A body that throws an <see cref="IOException"/> after some bytes, as a dropped connection does.</summary>

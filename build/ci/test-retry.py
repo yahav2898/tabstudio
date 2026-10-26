@@ -24,6 +24,7 @@ FEATURE_CLASSES = frozenset({
     "PackageDownloadTests",
     "ToolchainBatchTests",
     "ToolchainManagerTests",
+    "ToolchainStoreTests",
     "RustProjectTests",
     "ToolchainCatalogTests",
     "ToolchainLanguageToolsTests",

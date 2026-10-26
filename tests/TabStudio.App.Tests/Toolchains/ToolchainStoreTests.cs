@@ -56,8 +56,8 @@ public sealed class ToolchainStoreTests : IDisposable
         await UiTestHelpers.WaitUntilAsync(() => true);
         UiTestHelpers.SaveScreenshot(window, "30-toolchain-store");
 
-        // Installing, slowly enough to watch.
-        _device.Mirror.Server.Latency = TimeSpan.FromMilliseconds(500);
+        // Hold one package after the others finish: downloading remains visible even when requests overlap.
+        using var download = _device.Mirror.Server.Hold(new Uri(_device.Mirror.Package("py3-pip").Address));
         var install = python.InstallCommand.ExecuteAsync(null);
         await UiTestHelpers.WaitUntilAsync(() => python.Status.Progress?.Stage == InstallStage.Downloading && python.Progress > 12, because: "the download");
         Assert.True(python.IsBusy);
@@ -65,7 +65,7 @@ public sealed class ToolchainStoreTests : IDisposable
         Assert.False(python.ShowsInstall);
         UiTestHelpers.SaveScreenshot(window, "31-toolchain-installing");
 
-        _device.Mirror.Server.Latency = TimeSpan.Zero;
+        download.Dispose();
         await install;
         await UiTestHelpers.WaitUntilAsync(() => python.IsInstalled, because: "the install");
         Assert.Equal("3.14.8", python.VersionText);
