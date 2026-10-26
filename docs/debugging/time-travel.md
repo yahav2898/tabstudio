@@ -73,3 +73,7 @@ The benchmark measures host CoreCLR. Android Mono/device measurements must be re
 self-test verifies behavior rather than claiming a device overhead number. CI runs the benchmark as a test; use
 the detailed logger command above to see its timing output. The App job renders the timeline in dark and light themes; the Android
 emulator self-test records a loop and verifies an earlier value after exit.
+
+## Editing during a recording
+
+A recording keeps the source map from the build that started it. Applying C# edits, including line-only edits, requires restarting and starting a new recording; Hot Reload and Continue report this before updating any assembly. The live program stays paused and its existing history remains available. Reverting the edits allows Continue without restarting. Ordinary Continue with no edits works normally.

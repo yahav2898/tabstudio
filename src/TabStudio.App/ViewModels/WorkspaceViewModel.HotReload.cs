@@ -112,13 +112,24 @@ public sealed partial class WorkspaceViewModel
                 return false;
             }
 
+            var images = build.Dependencies.Append(build.EntryAssembly!).ToArray();
+            if (_session?.Recording is not null)
+            {
+                // A recording resolves all retained events through its original immutable source map. Even a
+                // line-only edit needs a new recording; ordinary Continue with unchanged code must still work.
+                var changed = session.HasSourceOrResourceChanges(images);
+                ShowHotReloadResult(changed
+                    ? new(HotReloadStatus.RestartRequired, "C# edits require a restart while recording. Start a new recording to use the edits; the current history keeps its original source locations.", [])
+                    : new(HotReloadStatus.NoChanges, "No C# edits to apply to the current recording.", []));
+                return !changed;
+            }
+
             if (debugBuild is not null && !SameDebugLayout(_hotReloadDebugBuild!, debugBuild))
             {
                 ShowHotReloadResult(new(HotReloadStatus.RestartRequired, "Changing the number of instrumented statements, methods or local slots requires a restart to keep breakpoints and active frames correct.", []));
                 return false;
             }
 
-            var images = build.Dependencies.Append(build.EntryAssembly!).ToArray();
             var result = await Task.Run(() => session.Apply(images, token), token);
             if (!ReferenceEquals(session, _hotReload) || token.IsCancellationRequested) return false;
             ShowHotReloadResult(result);

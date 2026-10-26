@@ -41,6 +41,45 @@ public sealed class HotReloadSession : IDisposable
         }
     }
 
+    /// <summary>Whether a rebuilt app changes sources, compiler options, references or embedded resources.</summary>
+    /// <param name="updated">The current build of every project in the running app.</param>
+    /// <remarks>Unlike delta emission, this includes line-only edits, so a recording can keep its original source map.</remarks>
+    public bool HasSourceOrResourceChanges(IReadOnlyList<CompiledAssembly> updated)
+    {
+        ArgumentNullException.ThrowIfNull(updated);
+        lock (_gate)
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
+            if (!_images.Keys.ToHashSet(StringComparer.Ordinal).SetEquals(updated.Select(a => a.Name))) return true;
+            foreach (var image in updated)
+            {
+                var original = _images[image.Name];
+                if (original.HotReloadCompilation is not { } before || image.HotReloadCompilation is not { } after
+                    || !before.Options.Equals(after.Options) || !SameResources(original.Image, image.Image))
+                {
+                    return true;
+                }
+                if (!before.References.Select(r => (r.Display, r.Properties))
+                    .SequenceEqual(after.References.Select(r => (r.Display, r.Properties))))
+                {
+                    return true;
+                }
+                var oldTrees = before.SyntaxTrees.ToArray();
+                var newTrees = after.SyntaxTrees.ToArray();
+                if (oldTrees.Length != newTrees.Length) return true;
+                for (var i = 0; i < oldTrees.Length; i++)
+                {
+                    if (oldTrees[i].FilePath != newTrees[i].FilePath || !oldTrees[i].Options.Equals(newTrees[i].Options)
+                        || !oldTrees[i].GetText().ContentEquals(newTrees[i].GetText()))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+    }
+
     /// <summary>Validates every project first, then applies its deltas and dispatches MetadataUpdateHandlers.</summary>
     /// <param name="updated">The current Debug build of every project, with retained compilations.</param>
     /// <param name="cancellationToken">Cancels preparation; application itself is not cancellable.</param>

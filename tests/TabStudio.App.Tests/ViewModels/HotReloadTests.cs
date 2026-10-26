@@ -196,4 +196,63 @@ public sealed class HotReloadTests
         workspace.Output.InputText = text;
         workspace.Output.SubmitInputCommand.Execute(null);
     }
+
+    [AvaloniaTheory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Recording_requires_restart_for_edits_but_unchanged_Continue_preserves_live_execution_and_history(bool lineOnly)
+    {
+        Assert.True(HotReloadSession.IsSupported, "Launch tests with DOTNET_MODIFIABLE_ASSEMBLIES=debug.");
+        using var fixture = new WorkspaceFixture();
+        await fixture.OpenSampleAsync();
+        var workspace = fixture.Workspace;
+        var document = workspace.ActiveDocument!;
+        const string source = """
+            public static class Program
+            {
+                public static void Main()
+                {
+                    int value = 1;
+                    Console.WriteLine(Probe.Message(value));
+                }
+            }
+            public static class Probe
+            {
+                public static string Message(int value) => "before";
+            }
+            """;
+        document.Document.Text = source;
+        workspace.Breakpoints.Toggle(document.FilePath, 6);
+        await workspace.StartWithRecordingCommand.ExecuteAsync(null);
+        try
+        {
+            await DebuggingTests.WaitForPauseAsync(workspace, 6);
+            document.Document.Text = lineOnly ? "\n" + source : source.Replace("before", "after", StringComparison.Ordinal);
+            await workspace.ApplyHotReloadCommand.ExecuteAsync(null);
+            Assert.True(workspace.HotReloadNeedsRestart);
+            Assert.Contains("while recording", workspace.StatusText, StringComparison.Ordinal);
+            Assert.True(workspace.IsPaused);
+            Assert.Equal(0, workspace.HotReloadGeneration);
+
+            await workspace.StartDebuggingCommand.ExecuteAsync(null);
+            Assert.True(workspace.IsPaused);
+            await workspace.StepBackCommand.ExecuteAsync(null);
+            Assert.True(workspace.IsHistorical);
+            await workspace.ReturnToLiveCommand.ExecuteAsync(null);
+            Assert.Equal(6, workspace.CallStack.Frames[0].Location!.Line);
+
+            document.Document.Text = source;
+            await workspace.StartDebuggingCommand.ExecuteAsync(null);
+            await DebuggingTests.WaitForExitAsync(workspace);
+            Assert.Contains("before", workspace.Output.Text, StringComparison.Ordinal);
+            Assert.DoesNotContain("after", workspace.Output.Text, StringComparison.Ordinal);
+            Assert.True(workspace.HasRecording);
+            await workspace.StepBackCommand.ExecuteAsync(null);
+            Assert.True(workspace.IsHistorical);
+        }
+        finally
+        {
+            workspace.StopDebuggingCommand.Execute(null);
+        }
+    }
 }
