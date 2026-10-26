@@ -10,5 +10,5 @@ work=${3:?PIC working directory is required}
 adb install -r "$apk"
 status=0
 python3 build/pic/android_spike.py run --work "$work" --output "$output/pic-android" || status=1
-bash build/ci/android-smoke-test.sh "$apk" "$output" 960 || status=1
+bash build/ci/android-smoke-test.sh "$apk" "$output" 900 || status=1
 exit "$status"

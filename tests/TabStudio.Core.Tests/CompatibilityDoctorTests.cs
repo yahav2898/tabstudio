@@ -30,7 +30,9 @@ public sealed class CompatibilityDoctorTests
     [InlineData(ProjectKind.BlazorWebApp)]
     [InlineData(ProjectKind.BlazorWebAssembly)]
     [InlineData(ProjectKind.WinForms)]
-    public void Tests_and_web_apps_in_another_language_are_planned_not_ready(ProjectKind kind)
+    [InlineData(ProjectKind.Uno)]
+    [InlineData(ProjectKind.WinUI)]
+    public void Tests_and_apps_in_another_language_are_planned_not_ready(ProjectKind kind)
     {
         var report = CompatibilityDoctor.Diagnose(Project(kind, ProjectLanguage.VisualBasic));
 
@@ -45,9 +47,10 @@ public sealed class CompatibilityDoctorTests
     [InlineData(ProjectKind.Avalonia, RunHost.AndroidView, CompatibilityStatus.Ready)]
     [InlineData(ProjectKind.BlazorWebAssembly, RunHost.WebView, CompatibilityStatus.Ready)]
     [InlineData(ProjectKind.BlazorWebApp, RunHost.WebView, CompatibilityStatus.Ready)]
+    [InlineData(ProjectKind.Wpf, RunHost.WebView, CompatibilityStatus.Ready)]
     [InlineData(ProjectKind.WinForms, RunHost.AndroidView, CompatibilityStatus.Ready)]
-    [InlineData(ProjectKind.Wpf, RunHost.WebView, CompatibilityStatus.NeedsChanges)]
-    [InlineData(ProjectKind.WinUI, RunHost.AndroidView, CompatibilityStatus.NeedsChanges)]
+    [InlineData(ProjectKind.Uno, RunHost.AndroidView, CompatibilityStatus.Ready)]
+    [InlineData(ProjectKind.WinUI, RunHost.AndroidView, CompatibilityStatus.Ready)]
     [InlineData(ProjectKind.NativeCpp, RunHost.WindowsBridge, CompatibilityStatus.NeedsWindows)]
     [InlineData(ProjectKind.Unknown, RunHost.None, CompatibilityStatus.Unsupported)]
     public void Each_project_kind_gets_an_honest_verdict(ProjectKind kind, RunHost host, CompatibilityStatus status)
@@ -66,7 +69,7 @@ public sealed class CompatibilityDoctorTests
 
         Assert.All(reports, r => Assert.Equal(r.Status == CompatibilityStatus.Ready, r.CanRunToday));
         Assert.Equal(
-            new[] { ProjectKind.ConsoleApp, ProjectKind.Test, ProjectKind.AspNetCore, ProjectKind.BlazorWebAssembly, ProjectKind.WinForms, ProjectKind.Avalonia, ProjectKind.BlazorWebApp },
+            new[] { ProjectKind.ConsoleApp, ProjectKind.Test, ProjectKind.AspNetCore, ProjectKind.BlazorWebAssembly, ProjectKind.WinForms, ProjectKind.Wpf, ProjectKind.WinUI, ProjectKind.Avalonia, ProjectKind.Uno, ProjectKind.BlazorWebApp },
             reports.Where(r => r.CanRunToday).Select(r => r.Kind));
     }
 
@@ -81,6 +84,18 @@ public sealed class CompatibilityDoctorTests
         Assert.Contains("without the debugger", webApp.Explanation, StringComparison.Ordinal);
         Assert.Equal("WebAssembly in the WebView", standalone.RunsVia);
         Assert.Contains("cannot be debugged", standalone.Explanation, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void WPF_runs_on_OpenSilver_in_the_web_preview_and_names_what_goes_to_the_Windows_Bridge()
+    {
+        var csharp = CompatibilityDoctor.Diagnose(Project(ProjectKind.Wpf));
+        var visualBasic = CompatibilityDoctor.Diagnose(Project(ProjectKind.Wpf, ProjectLanguage.VisualBasic));
+
+        Assert.Equal("OpenSilver in the web preview", csharp.RunsVia);
+        Assert.Contains("Windows Bridge", csharp.Explanation, StringComparison.Ordinal);
+        Assert.Equal(RunHost.WindowsBridge, visualBasic.Host);
+        Assert.Equal(CompatibilityStatus.NeedsWindows, visualBasic.Status);
     }
 
     [Fact]

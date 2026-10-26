@@ -29,12 +29,21 @@ public sealed class WebAssemblyAppHost : IAsyncDisposable
     private WebAssemblyAppHost(WebAssemblyBundle bundle, int? preferredPort)
     {
         _bundle = bundle;
-        _server = LocalWebServer.Start(Resolve, preferredPort);
+        _server = LocalWebServer.Start(Resolve, Receive, preferredPort);
         _server.RequestServed += OnRequestServed;
     }
 
     /// <summary>Raised on a thread-pool thread after each request is answered.</summary>
     public event EventHandler<ServedRequest>? RequestServed;
+
+    /// <summary>
+    /// Raised on a thread-pool thread when the app's page posts a message to a route under <see cref="MessageRoute"/>,
+    /// such as what the app writes to its console, for the IDE.
+    /// </summary>
+    public event EventHandler<PostedMessage>? MessageReceived;
+
+    /// <summary>The routes the app's page posts its messages to, such as <c>_tabstudio/console</c>.</summary>
+    public const string MessageRoute = "_tabstudio/";
 
     /// <summary>Where the app is served, such as <c>http://127.0.0.1:52713/</c>.</summary>
     public Uri Address => _server.Address;
@@ -100,6 +109,18 @@ public sealed class WebAssemblyAppHost : IAsyncDisposable
         // A route of the app, such as /counter: the start page, whose router shows it in the browser.
         var name = path[(path.LastIndexOf('/') + 1)..];
         return bundle.StartPage is { } page && !name.Contains('.', StringComparison.Ordinal) ? bundle.Find(page) : null;
+    }
+
+    private bool Receive(string path, string body)
+    {
+        // A message nobody listens to is still taken, so the page's console does not fill with failed requests.
+        if (!path.StartsWith(MessageRoute, StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        MessageReceived?.Invoke(this, new PostedMessage(path, body));
+        return true;
     }
 
     private void OnRequestServed(object? sender, ServedRequest request)

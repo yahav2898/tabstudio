@@ -148,6 +148,11 @@ def prepare(work, out, compiler, *, build_runtime=True):
                     (work / entry.filename).chmod(mode & 0o777)
     proot = source / "src/proot"
     if not proot.exists():
+        # Keep Linux CI on the same patched Termux PRoot sources as the APK.
+        patch = REPO / "build/android/native/proot-thread-waits.patch"
+        if patch.is_file() and not (source / ".tabstudio-thread-waits").exists():
+            run(["patch", "-d", str(source), "-p1", "-i", str(patch)], out / "proot-patch.log")
+            (source / ".tabstudio-thread-waits").touch()
         env = {**os.environ, "PROOT_UNBUNDLE_LOADER": ".", "CFLAGS": "-O2",
                "CPPFLAGS": '-DVERSION=\\\"5.1.107.101\\\"'}
         # This spike runs only 64-bit tools. PRoot also tries an optional -m32 loader,

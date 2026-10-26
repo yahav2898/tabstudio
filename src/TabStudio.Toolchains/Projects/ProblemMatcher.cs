@@ -11,7 +11,8 @@ namespace TabStudio.Toolchains.Projects;
 /// <param name="Start">Where the location's text starts in the output line.</param>
 /// <param name="Length">How long the location's text is.</param>
 /// <param name="Message">A message printed with it, such as a compiler error's, when the pattern has one.</param>
-public sealed record OutputLocation(string File, int Line, int? Column, int Start, int Length, string? Message = null);
+/// <param name="Severity">The compiler's severity, when printed.</param>
+public sealed record OutputLocation(string File, int Line, int? Column, int Start, int Length, string? Message = null, string? Severity = null);
 
 /// <summary>The error that ended a program, for the Error List: its message and where it happened.</summary>
 /// <param name="Message">The message, such as <c>NameError: name 'x' is not defined</c>.</param>
@@ -59,7 +60,7 @@ public sealed class ProblemMatcher
                     var message = match.Groups["message"] is { Success: true } m ? m.Value : null;
                     if (!result.Any(r => r.Start < match.Index + match.Length && match.Index < r.Start + r.Length))
                     {
-                        result.Add(new OutputLocation(file.Value, number, column, match.Index, match.Length, message));
+                        result.Add(new OutputLocation(file.Value, number, column, match.Index, match.Length, message, match.Groups["severity"].Success ? match.Groups["severity"].Value : null));
                     }
                 }
             }
@@ -71,6 +72,24 @@ public sealed class ProblemMatcher
 
         result.Sort((a, b) => a.Start.CompareTo(b.Start));
         return result;
+    }
+
+    /// <summary>Compiler errors with a message on their location line, followed by any runtime error.</summary>
+    /// <param name="lines">Output from one build or run.</param>
+    /// <param name="isUserFile">Whether a printed path belongs to the workspace.</param>
+    public IReadOnlyList<RunError> FindErrors(IReadOnlyList<string> lines, Func<string, bool> isUserFile)
+    {
+        ArgumentNullException.ThrowIfNull(lines);
+        ArgumentNullException.ThrowIfNull(isUserFile);
+        var errors = lines.SelectMany(Match)
+            .Where(l => l.Message is { Length: > 0 } && l.Severity?.ToLowerInvariant() is null or "error" or "fatal error" && isUserFile(l.File))
+            .Select(l => new RunError(l.Message!, l)).Distinct().ToList();
+        if (errors.Count == 0 && FindError(lines, isUserFile) is { } runtime)
+        {
+            errors.Add(runtime);
+        }
+
+        return errors;
     }
 
     /// <summary>

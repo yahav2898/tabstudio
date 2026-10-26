@@ -48,6 +48,7 @@ Dependencies point down only. Each layer has one job:
 | `TabStudio.LiveTesting` | Live Unit Testing: coverage instrumentation, per-test attribution, coverage builds, impact analysis and the live test engine. | Compilation, Debugging, TestRunner |
 | `TabStudio.Link` | TabStudio Link: pairing, the TLS transport, QR codes, discovery, and the language protocol a host answers for a tablet. | Compilation, Debugging, LiveTesting |
 | `TabStudio.Web` | What a web app serves beyond its code: static web assets, scoped CSS, Blazor's scripts, and a host for .NET apps on WebAssembly. | Compilation, Packages |
+| `TabStudio.Wpf` | OpenSilver's in-process XAML compiler, WPF template and browser startup, on the WebAssembly host. | Compilation, Packages, Web |
 | `TabStudio.Toolchains` | The Toolchain Store: the catalog, Alpine Linux on PRoot, verified Alpine packages, processes and pseudo terminals, toolchain projects and the terminal emulator. | `TabStudio.Core` |
 | `TabStudio.Forms` | Windows Forms on Avalonia: `System.Windows.Forms` and `System.Drawing`, run in the app preview. | Avalonia |
 | `TabStudio.Forms.Design` | The Windows Forms designer's model: reads and writes `InitializeComponent`, the Toolbox and properties. | `TabStudio.Forms`, Roslyn |
@@ -55,6 +56,7 @@ Dependencies point down only. Each layer has one job:
 | `TabStudio.LanguageServers` | Language Server Protocol and Debug Adapter Protocol clients, server and adapter registry, launch configurations. | Nothing but the .NET base library |
 | `TabStudio.Extensions` | VS Code extensions from Open VSX: install and verify, and their grammars, language configurations, snippets and themes. | Nothing but the .NET base library |
 | `TabStudio.Agent` | Claude as a coding agent: the Messages API with streaming and prompt caching, tools over the workspace, Model Context Protocol servers, and sketch to XAML. | Core |
+| `TabStudio.Uno` | Uno and WinUI XAML templates and in-process Skia preview host. | Core, Compilation |
 | `TabStudio.App` | The IDE: Avalonia views, view models, editor integration and app services. Platform-neutral. | Core and every engine, Avalonia |
 | `TabStudio.Android` | The Android entry point: activity, manifest, icons, platform services such as thermal status. | App |
 | `TabStudio.Desktop` | A desktop window around the same app, so contributors can work from any computer. | App |
@@ -219,6 +221,26 @@ image (`SketchToXaml` in the agent engine, with the user's own API key), and `Xa
 as the root element's content, keeping its property elements and every other character of the file, as one edit
 that Undo takes back.
 
+## WinUI and Uno apps
+
+`TabStudio.Uno` hosts Uno Platform's native Skia renderer in-process. Uno.Sdk projects restore their implicit
+packages; WinUI 3 projects restore against Uno instead of the Windows App SDK (TS7001). Uno's XAML generator
+runs in the Roslyn workspace with its additional files and SDK properties. Generator errors and C# errors in
+its output map back to the originating XAML element in the Error List.
+
+F5 and Ctrl+F5 show the app beside the editor without the debugger. Saving XAML or C# rebuilds and restarts it.
+Uno runs once per session on its own dispatcher and renderer threads; each app build has its own load context.
+The generated host is compiled against the restored runtime as `Uno.UI.Runtime.Skia.Headless`, Uno's declared
+friend assembly. Frames cross into Avalonia as premultiplied BGRA pixels, and input travels back to Uno.
+Android and the desktop IDE share SkiaSharp 3.119 with Avalonia 11, including matching native assets; they do
+not load competing Skia ABIs. The emulator self test creates the WinUI template and reads its Uno window title.
+
+Windows-only APIs still need Windows Bridge, and Uno reports unsupported WinUI APIs in the Error List. A
+session supports one Uno version and one running Uno preview. Swarm screens, layout inspection and recorded UI
+tests are not implemented for Uno: the existing inspectors require an Avalonia visual tree, while this preview
+is a bitmap of Uno's tree. Changing Uno versions requires restarting TabStudio. App assemblies remain loaded
+on Android, whose runtime cannot unload them.
+
 ## Windows Forms apps
 
 `TabStudio.Forms` is the `System.Windows.Forms` and `System.Drawing` API implemented on Avalonia, with the names,
@@ -233,6 +255,39 @@ member that cannot work on a tablet throws `NotSupportedException` naming the me
 code, edits a model of the controls, and writes changes back in the file's own style the way Visual Studio does,
 keeping statements it does not understand. The IDE draws the model with the Forms layer on a canvas with handles, a
 grid and a Toolbox, and the Properties panel edits it, Events included.
+
+## WPF apps
+
+C# projects with `<UseWPF>true</UseWPF>` compile against OpenSilver 3.3.3 instead of the Windows Desktop pack.
+`TabStudio.Compilation/Wpf` supplies typed `x:Name` fields and the first-pass `InitializeComponent` while editing;
+`TabStudio.Wpf` runs OpenSilver's own second-pass XAML compiler before emitting the application. F5 prepares and
+serves a .NET WebAssembly browser host in the web preview. The window attaches before its first forced layout;
+saving rebuilds and reloads the page, and the host forwards console output, uncaught exceptions and window closure.
+An unhandled input exception releases stranded mouse capture so later clicks still reach the app.
+Android installs a `WebChromeClient`, so OpenSilver's `MessageBox` alert/confirm calls show the native browser dialogs.
+The .NET 10 preview needs an up-to-date Android System WebView. CI uses Android 15 (API 35) to exercise the
+rendered WPF page; the API 29 image's Chrome 74 cannot run this browser runtime.
+The device self test starts through `SelfTestInstrumentation`, so its existing desktop mouse checks retain
+Android's input injection permission through their adb instrumentation source.
+
+`Wpf/Editing` in Compilation reads the project's actual types and current additional-document text for completion,
+Quick Info, definitions, live XAML errors and missing-handler fixes. `DocumentViewModel.Xaml.cs` attaches it through
+the editor's language-feature interface, synchronizes unsaved XAML and code-behind, and rejects stale analysis.
+The existing workspace edit path applies handler fixes, preserving open documents' unsaved changes and Undo.
+These XAML queries use the local Roslyn host; they are unavailable while a TabStudio Link host owns compilation.
+The shipped catalog compares WPF 10 with OpenSilver: TS7004 names missing APIs and points to the Windows Bridge,
+TS7005 warns about APIs marked not implemented, and TS7006 explains window settings ignored by the web preview.
+The preview has no C# debugger, WPF 3D or native modal windows; XAML rename and Find All References are not provided.
+Library tests cover the editing engine, headless IDE tests capture completion and the handler light bulb, and
+`SelfTest.Wpf.cs` creates the template, presses F5 and reads rendered page text on Android after the Windows Forms
+and design checks and before Swarm, retaining every existing self-test step.
+
+The combined device self test installs Python, Node.js, Go, Rust, C/C++ and Java serially through the shared
+Toolchain Manager while the independent .NET and UI checks run. Package downloads use at most four streams,
+every package is still verified before the serial apk operation, and the batch measures shared disk usage once. It awaits all package operations before the
+native run/debug checks, observes cancellation on every exit, and retains every check under the 15-minute
+launch-to-verdict limit. CI permits one retry only for named failures outside the merged feature tests and
+keeps first-attempt logs and `FLAKY.txt` as artifacts for both pushes and pull requests.
 
 ## Debugging
 
@@ -391,7 +446,7 @@ adapter it brings.
   package against the index entry that lists it, before anything is unpacked.
 - **Processes.** Programs are children of TabStudio's process, started with pipes or a pseudo terminal, and are
   killed with their whole process tree when stopped, as Android 12 and later expect.
-- **Projects.** `ToolchainProjectDetector` finds Python and Node.js projects in a workspace from their project files.
+- **Projects.** `ToolchainProjectDetector` finds projects from the catalog's manifests and source-file rules.
   F5 and Ctrl+F5 run them with their console in the Output panel; problem matchers turn tracebacks and compiler
   output into Error List entries and links.
 - **The terminal.** `TerminalEmulator` turns what programs write to a pseudo terminal into styled character cells,
@@ -400,7 +455,72 @@ adapter it brings.
   toolchain runtime, so Pyright, typescript-language-server, debugpy and vscode-js-debug start inside the Linux
   environment and paths are translated between the device and the environment. A missing server or adapter offers
   to install the toolchain that brings it. For F5, a project's run plan becomes a DAP launch configuration, and the
-  program starts through the adapter's `runInTerminal` request, so its input and output stay in the Output panel.
+  program's input and output stay in the Output panel through its adapter's terminal or runtime streams.
+
+### Go
+
+Every `go.mod`, including nested modules, is a startup project; vendor and cache folders are ignored. A root
+`package main` or a single `cmd/name` command builds with `go build -gcflags=all=-N -l` into `.tabstudio/bin/app`.
+With several commands, the active source selects the package. F5 and Ctrl+F5 build the whole package, including
+sibling files, and Go compiler locations become Error List links.
+
+Alpine installs Go, gopls and Delve from its verified package index; desktops use PATH. gopls supplies completion,
+diagnostics and navigation. Delve serves DAP over loopback TCP on a computer and a Unix socket in a private app-cache directory on Android.
+The socket directory is shared into PRoot and removed with the debug session. Launches use `mode: exec`, remote
+output and stdin inherited from the runtime process; user input never enters the DAP stream. Real-tool IDE and emulator tests cover the
+console template, compiler errors, a breakpoint and Locals.
+
+The APK's PRoot includes a thread-wait patch: Linux permits one thread to collect debugger events for a sibling
+thread's ptracees, which Delve needs. `__WNOTHREAD` still limits waits to the calling thread, and ptrace control
+requests remain restricted to the original tracing thread. A native CI fixture checks blocking and nonblocking
+waits, exit status and those ownership boundaries before the emulator exercises Delve itself.
+
+### Rust
+
+Cargo packages, virtual workspaces and their members are startup projects. Alpine installs Rust, Cargo,
+rust-analyzer, Rust sources and LLDB with lldb-dap; desktops use PATH. Cargo builds with
+`--message-format=json-render-diagnostics`: structured primary spans populate the Error List, and reported
+executable artifacts determine the run path, including custom target directories. With several binaries, choose
+a member startup project or open the binary's main source. rust-analyzer supplies IntelliSense and navigation.
+
+F5 uses LLDB DAP. Desktop programs use `runInTerminal`; on Android, LLDB launches within its own PRoot trace tree
+so emulated ptrace can see the debuggee. A private FIFO created through Android's C library carries Output-panel
+input, while DAP events carry program output. Real-tool IDE and emulator tests cover the template, a breakpoint
+and Locals, with Watch and Call Stack checked in the IDE.
+
+### C and C++
+
+CMake projects, Makefiles and standalone `.c`/`.cpp` programs are startup projects; headers and build output are
+excluded. Alpine installs Clang, build-base (including make), CMake, clangd and LLDB with lldb-dap; desktops use
+PATH. CMake configures a Debug build, exports `compile_commands.json` for clangd and reports executable artifacts
+through its codemodel file API. An active source selects among several targets. Makefile projects need no special
+run target: the unique executable at the root or in `bin`, `build` or `out` runs. Ambiguous outputs need a launch
+configuration. Standalone files use their language's compiler with debug information. Compiler locations become
+Error List links.
+
+F5 uses LLDB DAP. Desktop programs use `runInTerminal`; on Android, LLDB launches within the same PRoot trace tree
+as its debuggee and reads Output-panel input from a private FIFO created through Android's C library. Program
+output arrives as DAP events. Real-tool IDE and emulator tests cover the CMake template, a breakpoint and Locals;
+the IDE test also checks clangd, Watch and Call Stack.
+
+### Java
+
+Maven (`pom.xml`), both Gradle DSLs and standalone Java sources are startup projects. Alpine installs OpenJDK 21
+and JDT LS, adding Maven or Gradle only when the selected project needs that command; desktops use PATH. Maven
+copies runtime dependencies, Gradle records `sourceSets.main.runtimeClasspath` through an init script, and
+standalone sources compile with `javac -g`. The main class runs directly in Java with Output-panel input.
+javac and Maven locations populate the Error List. Choose a member manifest for a multi-module build; several
+main classes need explicit selection.
+
+On Android, JVM launchers preload the APK's small musl-compatible mapping shim. It separates an anonymous
+allocation from an adjacent thread-stack VMA before retrying an `EACCES` executable-memory request, leaving
+SELinux to authorize the actual protection change. It never retries a range containing the current stack pointer.
+
+JDT LS uses a per-project cache outside the imported source tree, shared into PRoot. Initialization loads the
+SHA-256-pinned java-debug extension bundle. F5 calls `vscode.java.startDebugSession` through LSP, connects DAP to
+its returned port and uses the run plan's main class and classpath. `runInTerminal` supplies console I/O. Real-tool
+IDE and emulator tests cover the Maven template, a breakpoint and Locals; additional IDE tests cover both Gradle
+DSLs and standalone sources.
 
 ## Embedded: Microchip PIC
 

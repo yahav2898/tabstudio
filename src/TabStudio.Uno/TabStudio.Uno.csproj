@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>TabStudio.Uno</RootNamespace>
+    <Description>Uno Platform and WinUI 3 apps on the device: Uno's Skia renderer runs inside TabStudio, each build of an app runs as an Uno secondary app in a load context of its own, and its frames and input go to and from the app preview. Also the Uno Platform and WinUI 3 project templates.</Description>
+    <!-- Reading the metadata of an assembly that is already loaded, to compile the host against TabStudio's own SkiaSharp. -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TabStudio.Core\TabStudio.Core.csproj" />
+    <ProjectReference Include="..\TabStudio.Compilation\TabStudio.Compilation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="TabStudio.Uno.Tests" />
+  </ItemGroup>
+
+  <!--
+    The host that runs Uno inside TabStudio is compiled on the device against the Uno assemblies the project restores
+    (see Hosting/UnoHostCompiler.cs), so it is carried as source, not compiled into this assembly.
+  -->
+  <ItemGroup>
+    <Compile Remove="Host\**" />
+    <None Remove="Host\**" />
+    <EmbeddedResource Include="Host\*.cs" LogicalName="UnoHost/%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <!-- The project templates' files, as Visual Studio and `dotnet new` write them. -->
+  <ItemGroup>
+    <Compile Remove="Templates\Content\**" />
+    <None Remove="Templates\Content\**" />
+    <EmbeddedResource Include="Templates\Content\**\*" LogicalName="Templates/%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+</Project>

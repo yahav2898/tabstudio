@@ -200,6 +200,10 @@
         "java"
       ],
       "command": "jdtls",
+      "args": [ "-data", "${serverStorage}" ],
+      "initializationOptions": {
+        "bundles": [ "${env:TABSTUDIO_JAVA_DEBUG_BUNDLE:/opt/tabstudio/java/java-debug/extension/server/com.microsoft.java.debug.plugin-0.53.2.jar}" ]
+      },
       "package": "jdtls",
       "rootMarkers": [
         "pom.xml",
@@ -211,6 +215,13 @@
     }
   },
   "debugAdapters": {
+    "java": {
+      "name": "Java (java-debug)",
+      "languages": [ "java" ],
+      "command": "jdtls",
+      "package": "java-debug",
+      "terminalDefaults": { "console": "integratedTerminal" }
+    },
     "debugpy": {
       "name": "Python (debugpy)",
       "aliases": [
@@ -271,7 +282,9 @@
         "127.0.0.1:${port}"
       ],
       "transport": "tcp",
-      "package": "delve"
+      "package": "delve",
+      "usesProcessInput": true,
+      "defaults": { "outputMode": "remote" }
     },
     "pwa-node": {
       "name": "Node.js (js-debug)",

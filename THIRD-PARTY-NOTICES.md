@@ -63,3 +63,46 @@ These optional tools are separate processes. Pinned source/distribution hashes a
 
 The web templates include Bootstrap, jQuery, jQuery Validation and jQuery Validation Unobtrusive, each with its licence
 file beside it under [src/TabStudio.Web/Templates/Content/lib](src/TabStudio.Web/Templates/Content/lib).
+
+## Go language tools
+
+The packaged PRoot includes TabStudio's `proot-thread-waits.patch` to implement Linux's cross-thread wait
+semantics for Delve. The patch is distributed under PRoot's GPL-2.0-or-later license; its source is in
+`build/android/native/`. The upstream source archive retains its pinned SHA-256.
+
+Go and gopls (BSD-3-Clause) and Delve (MIT) are installed as signed Alpine Linux packages on Android, rather
+than downloaded executables. CI builds gopls v0.21.1 and Delve v1.26.2 from their Go modules for the host tests.
+Sources and licenses: https://go.dev/LICENSE, https://github.com/golang/tools and https://github.com/go-delve/delve.
+
+## Rust language tools
+
+Rust, Cargo and rust-analyzer (MIT OR Apache-2.0), rust-src, and LLVM/LLDB (Apache-2.0 WITH LLVM-exception)
+are installed as signed Alpine Linux packages on Android. No additional binary archives are downloaded.
+Sources and licenses: https://github.com/rust-lang/rust, https://github.com/rust-lang/rust-analyzer,
+https://github.com/llvm/llvm-project.
+
+## C and C++ language tools
+
+Clang, clangd and LLDB (Apache-2.0 WITH LLVM-exception), CMake (BSD-3-Clause), GNU make (GPL-3.0-or-later)
+and GCC/build-base (GPL-3.0-or-later with runtime exceptions) come from signed Alpine Linux packages.
+No extra executable archives are downloaded. Sources: https://github.com/llvm/llvm-project,
+https://gitlab.kitware.com/cmake/cmake, https://www.gnu.org/software/make/ and https://gcc.gnu.org/.
+
+## Java language tools
+
+OpenJDK 21 (GPL-2.0-only WITH Classpath-exception-2.0), Maven (Apache-2.0), Gradle (Apache-2.0) and Eclipse
+JDT LS (EPL-2.0) come from signed Alpine Linux packages on Android. Maven and Gradle are installed on demand.
+
+Microsoft's Java Debugger extension v0.60.0, containing java-debug plugin v0.53.2 (MIT), is downloaded from
+https://open-vsx.org/api/vscjava/vscode-java-debug/0.60.0/file/vscjava.vscode-java-debug-0.60.0.vsix and verified
+against SHA-256 f09ebe358a7b08b3c17b21b8d8207b0649acad120eb6f1604dc4f15379f59d66. Its license and bundled
+notices remain in the extracted extension. Source: https://github.com/microsoft/java-debug.
+
+The CI host uses Eclipse JDT LS 1.58.0 from
+https://download.eclipse.org/jdtls/milestones/1.58.0/jdt-language-server-1.58.0-202604151538.tar.gz,
+verified against SHA-256 2a5bbe55ec91b4325392050dc422cead3220a2459b3766be35e1fff45b4a50d9.
+Source and licenses: https://github.com/eclipse-jdtls/eclipse.jdt.ls.
+
+The CI host downloads Gradle 8.14.4 (Apache-2.0) from
+https://services.gradle.org/distributions/gradle-8.14.4-bin.zip, pinned to SHA-256
+f1771298a70f6db5a29daf62378c4e18a17fc33c9ba6b14362e0cdf40610380d.

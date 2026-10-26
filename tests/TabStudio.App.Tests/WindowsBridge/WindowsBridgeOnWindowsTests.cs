@@ -31,6 +31,7 @@ public sealed class WindowsBridgeOnWindowsTests
         var project = await CreateWpfAsync(devices, xamlError: false);
         await devices.PairAsync();
         var workspace = await devices.OpenAsync(devices.SolutionFolder);
+        workspace.RunTargets.Single(t => t.Name == "HelloWpf" && t.Detail == Via).Select.Execute(null);
         Assert.Equal(Via, workspace.RunHostText);
         await workspace.OpenDocumentAsync(Path.Combine(Path.GetDirectoryName(project)!, "MainWindow.xaml.cs"));
 
@@ -73,6 +74,7 @@ public sealed class WindowsBridgeOnWindowsTests
         var project = await CreateWpfAsync(devices, xamlError: true);
         await devices.PairAsync();
         var workspace = await devices.OpenAsync(devices.SolutionFolder);
+        workspace.RunTargets.Single(t => t.Name == "HelloWpf" && t.Detail == Via).Select.Execute(null);
 
         await workspace.RunCommand.ExecuteAsync(null);
         await UiTestHelpers.WaitUntilAsync(() => workspace.ErrorList.Items.Any(i => i.IsFromBridge && i.Code.StartsWith("MC", StringComparison.Ordinal)), TimeSpan.FromMinutes(4), "MSBuild's XAML error");

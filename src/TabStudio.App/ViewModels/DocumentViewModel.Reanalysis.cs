@@ -12,7 +12,7 @@ public sealed partial class DocumentViewModel
     /// </summary>
     public Task AnalyzeAgainAsync()
     {
-        if (_disposed || _language is null)
+        if (_disposed || (_language is null && !HasXamlFeatures))
         {
             return Task.CompletedTask;
         }

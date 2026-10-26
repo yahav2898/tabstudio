@@ -24,8 +24,41 @@ public sealed partial class WorkspaceViewModel
     private AdapterProgram? _adapterProgramRun;
     private Task? _adapterProgramFinish;
 
+    /// <summary>Records adapter messages during the emulator's real-tool debugging check.</summary>
+    internal bool TraceDebugAdapterMessages { get; set; }
+
     /// <summary>Whether the debugged program runs in the Output panel's console, started for its debug adapter.</summary>
     private bool IsProgramInConsole => _adapterProgramRun is not null;
+
+    /// <summary>Feeds a socket adapter's inherited console input, without ever writing text to DAP's protocol stream.</summary>
+    private void StartAdapterInput(DebugAdapterSession session)
+    {
+        if (StartNativeDebugInput())
+        {
+            return;
+        }
+
+        if (!session.AcceptsProgramInput)
+        {
+            return;
+        }
+
+        var input = Output.BeginProcessInput();
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                while (input.ReadLine() is { } line)
+                {
+                    await session.WriteProgramInputAsync(line);
+                }
+            }
+            catch (Exception ex) when (ex is IOException or ObjectDisposedException or InvalidOperationException)
+            {
+                // The debuggee or adapter ended while the user was typing.
+            }
+        });
+    }
 
     /// <summary>F5, F10, F11 and Ctrl+F10 on a toolchain project: debugs what Ctrl+F5 runs, with the toolchain's adapter.</summary>
     /// <param name="info">The project.</param>
@@ -56,7 +89,8 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
-        if (PlanToolchainProject(project, ActiveDocument?.FilePath) is not { Build: null } plan || ToolchainLaunch.Create(type, plan) is not { } configuration)
+        await SaveAllCoreAsync();
+        if (PlanToolchainProject(project, ActiveDocument?.FilePath) is not { } plan)
         {
             // Nothing to run, which the run explains, or a command the adapter cannot launch, which runs as it is.
             await RunToolchainProjectAsync(info);
@@ -65,9 +99,65 @@ public sealed partial class WorkspaceViewModel
 
         ErrorList.SetRunError(project.Directory, null);
         _runDirectory = plan.Run.WorkingDirectory ?? project.Directory;
+        if (plan.Build is { } build)
+        {
+            Output.Clear();
+            SelectedPanel = BottomPanel.Output;
+            IsBottomPanelVisible = true;
+            State = IdeState.Running;
+            StatusText = $"Building {project.Name}";
+            _run = new CancellationTokenSource();
+            try
+            {
+                Output.WriteLine("> " + build.CommandLine, OutputKind.Info);
+                var compiled = await BuildCargoOrToolchainAsync(project, plan, _run.Token);
+                plan = compiled.Plan;
+                var result = compiled.Result;
+                if (!result.Succeeded)
+                {
+                    ReportToolchainRun(project, plan.EntryPoint, result);
+                    return;
+                }
+            }
+            finally
+            {
+                _run.Dispose();
+                _run = null;
+            }
+        }
+
+        if (ToolchainLaunch.Create(type, plan) is not { } configuration)
+        {
+            State = IdeState.Failed;
+            StatusText = "No executable to debug";
+            return;
+        }
+
+        var withInput = PrepareNativeDebugInput(configuration);
+        if (withInput is null)
+        {
+            return;
+        }
+
+        configuration = withInput;
+        if (type == "java")
+        {
+            var prepared = await PrepareJavaDebugAsync(project, configuration);
+            if (prepared is null)
+            {
+                return;
+            }
+
+            configuration = prepared;
+        }
+
         var target = new LaunchTarget(configuration.Name, configuration, IsCurrentFile: false);
         _programEnvironments.AddOrUpdate(target, plan.Run.Environment);
         await LaunchAdapterAsync(target, start, noDebug: false);
+        if (!IsDebuggingWithAdapter)
+        {
+            StopNativeDebugInput();
+        }
     }
 
     /// <summary>
@@ -195,6 +285,7 @@ public sealed partial class WorkspaceViewModel
     /// <summary>Stops the program an adapter started, when the workspace closes. Called when the toolchains are disposed.</summary>
     private void StopAdapterProgram()
     {
+        StopNativeDebugInput();
         if (Interlocked.Exchange(ref _adapterProgramRun, null) is { } run)
         {
             run.Stop.Cancel();

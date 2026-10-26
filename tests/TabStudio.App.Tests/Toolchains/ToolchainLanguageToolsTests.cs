@@ -17,7 +17,7 @@ namespace TabStudio.App.Tests.Toolchains;
 /// own toolchains (the CI job installs Pyright, debugpy and js-debug): IntelliSense from Pyright through the
 /// toolchain runtime, and F5 debugging to a breakpoint, with the program's input answered in the Output panel.
 /// </summary>
-public sealed class ToolchainLanguageToolsTests : IDisposable
+public sealed partial class ToolchainLanguageToolsTests : IDisposable
 {
     private const string NodeProgram = """
         const { createInterface } = require('node:readline/promises');
@@ -184,7 +184,9 @@ public sealed class ToolchainLanguageToolsTests : IDisposable
             if (!Passed && Environment.GetEnvironmentVariable("TABSTUDIO_SCREENSHOTS") is { Length: > 0 } folder)
             {
                 Directory.CreateDirectory(folder);
-                File.WriteAllText(Path.Combine(folder, name + ".txt"), $"== Output\n{workspace.Output.Text}\n== Debug Adapters\n{workspace.DebugAdapterOutput.Text}\n== Processes\n{Processes()}");
+                var locals = string.Join("\n", workspace.Locals.Tree.Rows.Select(r => r.Name + " = " + r.Value));
+                var stack = string.Join("\n", workspace.CallStack.Frames.Select(f => f.MethodName));
+                File.WriteAllText(Path.Combine(folder, name + ".txt"), $"== Output\n{workspace.Output.Text}\n== State\n{workspace.State}: {workspace.StatusText}\n== Diagnostics\n{string.Join("\n", workspace.ActiveDocument?.Diagnostics.Select(d => d.Message) ?? [])}\n== Locals\n{locals}\n== Call Stack\n{stack}\n== Language Servers\n{workspace.LanguageServerOutput.Text}\n== Debug Adapters\n{workspace.DebugAdapterOutput.Text}\n== Processes\n{Processes()}");
             }
         }
     }

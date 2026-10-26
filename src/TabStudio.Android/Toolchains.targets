@@ -1,11 +1,11 @@
 <Project>
 
   <!--
-    The toolchain runtime's native programs: PRoot and its loader, built for each ABI by
+    The toolchain runtime's native programs and helpers: PRoot, its loader and the JVM mapping shim, built for each ABI by
     build/android/native/build.sh into artifacts/native/<abi>/. They are packaged as native libraries because
     Android lets an app execute files only from its native library folder, and the package installer puts them
     there (android:extractNativeLibs in AndroidManifest.xml). Only the ABIs this APK is built for are included,
-    so a device never picks an ABI that has nothing but these two files.
+    so a device never picks an ABI that has only the toolchain runtime's files.
 
     A build without them still works; the Toolchain Store then explains that this build has no toolchain runtime.
   -->

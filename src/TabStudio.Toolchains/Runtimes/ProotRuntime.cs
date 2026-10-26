@@ -52,7 +52,7 @@ public sealed record ProotRuntimeOptions
 /// expect of apps' child processes.
 /// </para>
 /// </remarks>
-public sealed class ProotRuntime : IToolchainRuntime
+public sealed partial class ProotRuntime : IToolchainRuntime
 {
     /// <summary>The environment's search path for programs.</summary>
     public const string SearchPath = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
@@ -160,6 +160,12 @@ public sealed class ProotRuntime : IToolchainRuntime
     /// <summary>The argument vector that starts a program through PRoot, PRoot's own path first.</summary>
     internal List<string> BuildArguments(ProcessStartSpec spec)
     {
+        var javaShim = JavaMappingShim(spec);
+        if (javaShim is not null)
+        {
+            ShareFolder(Path.GetDirectoryName(javaShim)!);
+        }
+
         var arguments = new List<string>
         {
             _options.ProotPath,
@@ -203,6 +209,13 @@ public sealed class ProotRuntime : IToolchainRuntime
 
         arguments.Add("-w");
         arguments.Add(GuestWorkingDirectory(spec.WorkingDirectory));
+        if (javaShim is not null)
+        {
+            // Set this after entering Alpine: Android's bionic linker cannot load a musl preload into PRoot.
+            arguments.Add("/usr/bin/env");
+            arguments.Add("LD_PRELOAD=" + javaShim);
+        }
+
         arguments.Add(spec.Program);
         arguments.AddRange(spec.Arguments);
         return arguments;

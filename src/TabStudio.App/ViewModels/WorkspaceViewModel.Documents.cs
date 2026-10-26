@@ -267,6 +267,7 @@ public sealed partial class WorkspaceViewModel
         document.PropertyChanged += OnDocumentPropertyChanged;
         AttachDebugging(document);
         AttachXamlDesigner(document);
+        AttachWpfXaml(document);
         AttachLanguageServer(document);
         AttachFormsDesigner(document);
     }
@@ -286,6 +287,7 @@ public sealed partial class WorkspaceViewModel
         {
             ErrorList.SetFileDiagnostics(document.FilePath, document.Diagnostics);
             ScheduleProjectAnalysis(document);
+            RefreshWpfXaml(document);
         }
     }
 

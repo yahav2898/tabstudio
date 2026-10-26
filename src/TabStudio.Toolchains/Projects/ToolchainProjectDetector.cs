@@ -18,7 +18,7 @@ public static class ToolchainProjectDetector
 
     private static readonly HashSet<string> IgnoredFolders = new(StringComparer.OrdinalIgnoreCase)
     {
-        "node_modules", "bin", "obj", "dist", "build", "out", "target", "__pycache__", "venv", "env", "site-packages",
+        "node_modules", "bin", "obj", "dist", "build", "out", "target", "__pycache__", "venv", "env", "site-packages", "vendor",
     };
 
     /// <summary>Finds the projects under a folder, nearest the root first.</summary>
@@ -56,7 +56,8 @@ public static class ToolchainProjectDetector
 
             foreach (var toolchain in toolchains)
             {
-                if (result.Any(p => p.Toolchain.Id == toolchain.Id && IsInside(folder, p.Directory)))
+                var insideProject = result.Any(p => p.Toolchain.Id == toolchain.Id && IsInside(folder, p.Directory));
+                if (insideProject && !toolchain.AllowNestedProjects)
                 {
                     continue;
                 }
@@ -83,7 +84,7 @@ public static class ToolchainProjectDetector
                         continue;
                     }
                 }
-                var isSourceFolder = marker is null && toolchain.SourceFolderIsProject && files.Any(toolchain.RunsFile);
+                var isSourceFolder = !insideProject && marker is null && toolchain.SourceFolderIsProject && files.Any(toolchain.RunsFile);
                 if (marker is not null || isSourceFolder)
                 {
                     result.Add(new ToolchainProject(toolchain, folder, marker));

@@ -13,6 +13,10 @@ internal sealed class FakeHttpHandler : HttpMessageHandler
     private readonly Dictionary<string, int> _breakAfter = new(StringComparer.Ordinal);
     private readonly Lock _gate = new();
 
+    private int _activeRequests;
+
+    public int PeakConcurrentRequests { get; private set; }
+
     /// <summary>Every request, in order: <c>GET url (range)</c>.</summary>
     public List<string> Requests { get; } = [];
 
@@ -55,52 +59,68 @@ internal sealed class FakeHttpHandler : HttpMessageHandler
     /// <inheritdoc />
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        if (Latency > TimeSpan.Zero)
-        {
-            await Task.Delay(Latency, cancellationToken);
-        }
-
-        var url = request.RequestUri!.AbsoluteUri;
-        var range = request.Headers.Range?.Ranges.FirstOrDefault();
-        byte[]? content;
-        int? breakAfter;
         lock (_gate)
         {
-            Requests.Add($"GET {url}{(range is null ? string.Empty : $" ({range.From}-)")}");
-            if (Offline)
+            _activeRequests++;
+            PeakConcurrentRequests = Math.Max(PeakConcurrentRequests, _activeRequests);
+        }
+
+        try
+        {
+            if (Latency > TimeSpan.Zero)
             {
-                throw new HttpRequestException(HttpRequestError.NameResolutionError, "No such host is known.");
+                await Task.Delay(Latency, cancellationToken);
             }
 
-            _files.TryGetValue(url, out content);
-            breakAfter = _breakAfter.Remove(url, out var after) ? after : null;
-        }
+            var url = request.RequestUri!.AbsoluteUri;
+            var range = request.Headers.Range?.Ranges.FirstOrDefault();
+            byte[]? content;
+            int? breakAfter;
+            lock (_gate)
+            {
+                Requests.Add($"GET {url}{(range is null ? string.Empty : $" ({range.From}-)")}");
+                if (Offline)
+                {
+                    throw new HttpRequestException(HttpRequestError.NameResolutionError, "No such host is known.");
+                }
 
-        if (content is null)
-        {
-            return new HttpResponseMessage(HttpStatusCode.NotFound) { RequestMessage = request };
-        }
+                _files.TryGetValue(url, out content);
+                breakAfter = _breakAfter.Remove(url, out var after) ? after : null;
+            }
 
-        var start = (int)(range?.From ?? 0);
-        if (start > content.Length)
-        {
-            return new HttpResponseMessage(HttpStatusCode.RequestedRangeNotSatisfiable) { RequestMessage = request };
-        }
+            if (content is null)
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotFound) { RequestMessage = request };
+            }
 
-        var body = content.AsMemory(start).ToArray();
-        var response = new HttpResponseMessage(range is null ? HttpStatusCode.OK : HttpStatusCode.PartialContent)
-        {
-            RequestMessage = request,
-            Content = new StreamContent(new BreakingStream(body, breakAfter)),
-        };
-        response.Content.Headers.ContentLength = body.Length;
-        response.Headers.ETag = new EntityTagHeaderValue($"\"{content.Length}\"");
-        if (range is not null)
-        {
-            response.Content.Headers.ContentRange = new ContentRangeHeaderValue(start, content.Length - 1, content.Length);
-        }
+            var start = (int)(range?.From ?? 0);
+            if (start > content.Length)
+            {
+                return new HttpResponseMessage(HttpStatusCode.RequestedRangeNotSatisfiable) { RequestMessage = request };
+            }
 
-        return response;
+            var body = content.AsMemory(start).ToArray();
+            var response = new HttpResponseMessage(range is null ? HttpStatusCode.OK : HttpStatusCode.PartialContent)
+            {
+                RequestMessage = request,
+                Content = new StreamContent(new BreakingStream(body, breakAfter)),
+            };
+            response.Content.Headers.ContentLength = body.Length;
+            response.Headers.ETag = new EntityTagHeaderValue($"\"{content.Length}\"");
+            if (range is not null)
+            {
+                response.Content.Headers.ContentRange = new ContentRangeHeaderValue(start, content.Length - 1, content.Length);
+            }
+
+            return response;
+        }
+        finally
+        {
+            lock (_gate)
+            {
+                _activeRequests--;
+            }
+        }
     }
 
     /// <summary>A body that throws an <see cref="IOException"/> after some bytes, as a dropped connection does.</summary>

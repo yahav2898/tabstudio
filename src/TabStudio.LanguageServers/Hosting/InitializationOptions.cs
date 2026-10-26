@@ -63,30 +63,62 @@ internal static class InitializationOptions
     {
         foreach (var name in node.Select(p => p.Key).ToList())
         {
-            switch (node[name])
+            if (node[name] is JsonObject child)
             {
-                case JsonObject child:
-                    Fill(child, rootDirectory, executable, log, toLocalPath);
-                    break;
-                case JsonValue value when value.GetValueKind() == System.Text.Json.JsonValueKind.String
-                    && value.GetValue<string>() is { } text
-                    && text.StartsWith(PackageFilePrefix, StringComparison.Ordinal) && text.EndsWith('}'):
-                    var relative = text[PackageFilePrefix.Length..^1];
-                    var file = FindPackageFile(relative, rootDirectory, executable, toLocalPath);
-                    if (file is null)
+                Fill(child, rootDirectory, executable, log, toLocalPath);
+            }
+            else if (node[name] is JsonArray array)
+            {
+                for (var i = array.Count - 1; i >= 0; i--)
+                {
+                    if (array[i] is JsonObject entry)
                     {
-                        node.Remove(name);
-                        log?.Invoke($"{relative} was not found in the workspace or beside {executable}.", true);
+                        Fill(entry, rootDirectory, executable, log, toLocalPath);
                     }
-                    else
+                    else if (array[i] is JsonValue value && value.TryGetValue<string>(out var text) && IsVariable(text))
                     {
-                        node[name] = file;
-                        log?.Invoke($"Using {file}.", false);
+                        var resolved = ResolveVariable(text, rootDirectory, executable, log, toLocalPath);
+                        if (resolved is null)
+                        {
+                            array.RemoveAt(i);
+                        }
+                        else
+                        {
+                            array[i] = resolved;
+                        }
                     }
-
-                    break;
+                }
+            }
+            else if (node[name] is JsonValue value && value.TryGetValue<string>(out var text) && IsVariable(text))
+            {
+                var resolved = ResolveVariable(text, rootDirectory, executable, log, toLocalPath);
+                if (resolved is null)
+                {
+                    node.Remove(name);
+                }
+                else
+                {
+                    node[name] = resolved;
+                }
             }
         }
+    }
+
+    private static bool IsVariable(string text) => text.EndsWith('}')
+        && (text.StartsWith(PackageFilePrefix, StringComparison.Ordinal) || text.StartsWith("${env:", StringComparison.Ordinal));
+
+    private static string? ResolveVariable(string text, string rootDirectory, string executable, Action<string, bool>? log, Func<string, string?> toLocalPath)
+    {
+        if (text.StartsWith("${env:", StringComparison.Ordinal))
+        {
+            var parts = text[6..^1].Split(':', 2);
+            return Environment.GetEnvironmentVariable(parts[0]) is { Length: > 0 } value ? value : parts.Length == 2 ? parts[1] : null;
+        }
+
+        var relative = text[PackageFilePrefix.Length..^1];
+        var file = FindPackageFile(relative, rootDirectory, executable, toLocalPath);
+        log?.Invoke(file is null ? $"{relative} was not found in the workspace or beside {executable}." : $"Using {file}.", file is null);
+        return file;
     }
 
     /// <summary>The <c>node_modules</c> folders to look in: the workspace's, then those around the server's program.</summary>
