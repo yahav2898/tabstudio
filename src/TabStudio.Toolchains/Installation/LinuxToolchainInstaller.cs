@@ -124,7 +124,11 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
     }
 
     /// <inheritdoc />
-    public async Task InstallAsync(ToolchainDefinition toolchain, IProgress<InstallProgress>? progress, CancellationToken cancellationToken)
+    public Task InstallAsync(ToolchainDefinition toolchain, IProgress<InstallProgress>? progress, CancellationToken cancellationToken) =>
+        InstallAsync(toolchain, progress, refreshMetadata: true, cancellationToken);
+
+    /// <inheritdoc />
+    public async Task InstallAsync(ToolchainDefinition toolchain, IProgress<InstallProgress>? progress, bool refreshMetadata, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(toolchain);
         if (Microchip.MicrochipInstallation.IsCompiler(toolchain.Id))
@@ -135,7 +139,7 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
         await PrepareRuntimeAsync(new InlineProgress<InstallProgress>(p => progress?.Report(p with { Fraction = p.Fraction * 0.1 })), cancellationToken).ConfigureAwait(false);
 
         progress?.Report(new InstallProgress(InstallStage.Resolving, $"Reading the {_environment.Distribution.Name} package index", 0.1));
-        var plan = await PlanAsync(() => _packages.PlanInstallAsync(toolchain.Packages, cancellationToken), toolchain).ConfigureAwait(false);
+        var plan = await PlanAsync(() => _packages.PlanInstallAsync(toolchain.Packages, refreshMetadata, cancellationToken), toolchain).ConfigureAwait(false);
         var archives = toolchain.Setup.Where(s => s.Archive is not null).ToList();
         var archiveBytes = archives.Sum(s => s.Archive!.Size);
         _environment.EnsureSpace(plan.DownloadSize + plan.InstalledSize + (archiveBytes * 3), toolchain.Name);

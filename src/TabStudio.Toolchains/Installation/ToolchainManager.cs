@@ -156,13 +156,17 @@ public sealed class ToolchainManager : IDisposable
             return;
         }
 
+        var refreshMetadata = true;
         try
         {
             foreach (var id in pending)
             {
                 await RunAsync(id, ToolchainState.Installing,
-                    (toolchain, progress) => _installer.InstallAsync(toolchain, progress, cancellationToken),
+                    (toolchain, progress) => _installer.InstallAsync(toolchain, progress, refreshMetadata, cancellationToken),
                     cancellationToken, measureDiskUsage: false).ConfigureAwait(false);
+                // A batch shares its first verified repository snapshot. A new
+                // batch or an independent install refreshes metadata again.
+                refreshMetadata = false;
             }
         }
         finally
