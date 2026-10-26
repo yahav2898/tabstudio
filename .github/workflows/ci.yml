@@ -152,7 +152,7 @@ jobs:
           mkdir -p ci-out/screenshots
           status=0
           dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 5m --blame-hang-dump-type none \
-            --filter "FullyQualifiedName~ToolchainLanguageToolsTests.A_Java_template" --logger "console;verbosity=normal" \
+            --filter "FullyQualifiedName~ToolchainLanguageToolsTests.A_Java_template|FullyQualifiedName~ToolchainLanguageToolsTests.Java_" --logger "console;verbosity=normal" \
             > ci-out/java-tools.log 2>&1 || status=$?
           tail -n 80 ci-out/java-tools.log
           exit "$status"
