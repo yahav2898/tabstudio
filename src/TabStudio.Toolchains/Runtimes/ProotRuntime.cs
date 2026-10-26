@@ -241,6 +241,12 @@ public sealed partial class ProotRuntime : IToolchainRuntime
                 throw new ArgumentException("Process mounts need absolute paths without ':' or '..'.", nameof(spec));
             }
 
+            // A service's data folder gets a lasting mount point too, so no other PRoot's exit removes it.
+            if (Directory.Exists(mount.Source))
+            {
+                EnsureMountPoint(mount.Target);
+            }
+
             arguments.AddRange(["-b", $"{mount.Source}:{mount.Target}"]);
         }
 
