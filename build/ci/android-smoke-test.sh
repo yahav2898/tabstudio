@@ -108,6 +108,10 @@ echo "Seconds from launch to verdict: $elapsed" | tee -a "$out/verdict.txt"
 
 case "$verdict" in
   TABSTUDIO_SELFTEST_OK*)
+    if [ "$elapsed" -ge "$timeout" ]; then
+      echo "Self test exceeded its ${timeout}-second launch-to-verdict limit." | tee -a "$out/verdict.txt"
+      exit 1
+    fi
     # The filtered log is enough when everything worked; keep the full one only to debug a failure.
     rm -f "$out/logcat-full.txt"
     ;;
