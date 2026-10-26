@@ -70,15 +70,17 @@ class NativeGpsimTests(unittest.TestCase):
             self.adapter.handle({"seq": 4, "command": "evaluate", "arguments": {"expression": "quit\n"}})
 
     def test_queries_while_running_leave_the_pause_request_responsive(self):
-        self.adapter.continue_run()
-        with self.assertRaisesRegex(ValueError, "Pause gpsim"):
-            self.adapter.handle({"seq": 1, "command": "setBreakpoints", "arguments": {"source": {"path": str(self.elf.with_suffix('.c'))}, "breakpoints": [{"line": 8}]}})
-        with self.assertRaisesRegex(ValueError, "Pause gpsim"):
-            self.adapter.handle({"seq": 2, "command": "variables", "arguments": {"variablesReference": 1}})
-        self.adapter.handle({"seq": 3, "command": "pause"})
-        self.adapter.worker.join(timeout=10)
-        self.assertFalse(self.adapter.worker.is_alive())
-        self.assertFalse(self.adapter.running)
+        for cycle in range(5):
+            with self.subTest(cycle=cycle):
+                self.adapter.continue_run()
+                with self.assertRaisesRegex(ValueError, "Pause gpsim"):
+                    self.adapter.handle({"seq": 1, "command": "setBreakpoints", "arguments": {"source": {"path": str(self.elf.with_suffix('.c'))}, "breakpoints": [{"line": 8}]}})
+                with self.assertRaisesRegex(ValueError, "Pause gpsim"):
+                    self.adapter.handle({"seq": 2, "command": "variables", "arguments": {"variablesReference": 1}})
+                self.adapter.handle({"seq": 3, "command": "pause"})
+                self.adapter.worker.join(timeout=10)
+                self.assertFalse(self.adapter.worker.is_alive())
+                self.assertFalse(self.adapter.running)
 
     def test_step_out_uses_the_actual_pic18_hardware_return_stack(self):
         # PIC18 CALL 0x8; BRA .; NOP; MOVLW 1; RETURN. Byte addresses,

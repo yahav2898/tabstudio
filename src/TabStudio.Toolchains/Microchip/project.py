@@ -170,8 +170,6 @@ def write_intellisense(path, conf, manifest, compiler, device, dfp):
 void __builtin_software_breakpoint(void);
 unsigned int __builtin_disable_interrupts(void);
 unsigned int __builtin_enable_interrupts(void);
-unsigned int __builtin_mfc0(int, int);
-void __builtin_mtc0(int, int, unsigned int);
 """)
     compiler_root = Path(manifest["compilerRoot"])
     includes = ([dfp / "pic/include", dfp / "pic/include/proc", compiler_root / "pic/include/c99", compiler_root / "pic/include"]

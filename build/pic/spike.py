@@ -165,7 +165,7 @@ def prepare(work, out, compiler, *, build_runtime=True):
                  # Compiler/installer subprocesses parse each other's stdout. A box64
                  # banner is not compiler output and breaks those integrity checks.
                  "BOX64_LOG=0", "BOX64_NOBANNER=1", "BOX64_DYNAREC=" + ("0" if compiler == "xc32" else "1"),
-                 "BOX64_AVX=" + ("0" if compiler == "xc32" else "2"), "BOX64_DYNACACHE=0"]
+                 "BOX64_AVX=2", "BOX64_DYNACACHE=0"]
     prefix = [str(proot), "--kill-on-exit", "--link2symlink", "--sysvipc", "-L", "-0",
               "-r", str(root), "-b", "/dev", "-b", "/proc", "-b", "/sys",
               "-b", f"{root / 'tmp'}:/dev/shm", "-b", f"{cache}:/downloads",
@@ -339,7 +339,8 @@ def spike(args):
         run([*native, "python3", "-c", setup], out / "project-wrappers.log", env=env)
         wrapper_path = root / "usr/local/bin" / ("xc8-cc" if args.compiler == "xc8" else "xc32-gcc")
         (out / "compiler-wrapper.txt").write_text(wrapper_path.read_text())
-        project_code, _, _ = run([*native, "python3", "/opt/tabstudio/microchip/project.py", "build", "/work/project"], out / "project-build.log", env=env, timeout=300, check=False)
+        project_code, project_seconds, _ = run([*native, "python3", "/opt/tabstudio/microchip/project.py", "build", "/work/project"], out / "project-build.log", env=env, timeout=300, check=False)
+        result["mplabProjectBuildSeconds"] = project_seconds
         if project_code and args.compiler == "xc32" and translate:
             # Keep failures actionable: distinguish compiler arguments, shell
             # wrappers and spawning from native musl Python. None replaces the
@@ -360,6 +361,29 @@ def spike(args):
                 run([*native, "python3", "-c", script], out / ("project-" + label + "-control.log"), env=env, timeout=180, check=False)
             run([*native, "BOX64_STRACE=1", "BOX64_LOG=2", "python3", "/opt/tabstudio/microchip/project.py", "build", "/work/project"],
                 out / "project-syscalls.log", env=env, timeout=180, check=False)
+            # Evaluate complete production builds, not only a version/object
+            # probe, before changing the product's pinned compatibility mode.
+            # These diagnostics never turn a failed product default green.
+            baseline = "glibc.cpu.hwcaps=-AVX2,-AVX,-SSE4_2,-SSE4_1,-SSSE3,-ERMS,-FSRM"
+            profiles = {
+                "interpreter-avx2-sse2": {"BOX64_DYNAREC": "0", "BOX64_AVX": "2", "BOX64_SSE42": "0", "GLIBC_TUNABLES": ""},
+                "interpreter-no-avx": {"BOX64_DYNAREC": "0", "BOX64_AVX": "0", "BOX64_SSE42": "0", "GLIBC_TUNABLES": ""},
+                "interpreter-glibc-baseline": {"BOX64_DYNAREC": "0", "BOX64_AVX": "2", "BOX64_SSE42": "1", "GLIBC_TUNABLES": baseline},
+                "interpreter-baseline-no-avx": {"BOX64_DYNAREC": "0", "BOX64_AVX": "0", "BOX64_SSE42": "0", "GLIBC_TUNABLES": baseline},
+                "dynarec-conservative": {"BOX64_DYNAREC": "1", "BOX64_AVX": "0", "BOX64_SSE42": "0", "BOX64_DYNAREC_SAFEFLAGS": "2", "BOX64_DYNAREC_BIGBLOCK": "0", "BOX64_DYNAREC_STRONGMEM": "1", "GLIBC_TUNABLES": baseline},
+                "dynarec-avx2-conservative": {"BOX64_DYNAREC": "1", "BOX64_AVX": "2", "BOX64_SSE42": "1", "BOX64_DYNAREC_SAFEFLAGS": "2", "BOX64_DYNAREC_BIGBLOCK": "0", "BOX64_DYNAREC_STRONGMEM": "1", "GLIBC_TUNABLES": ""},
+                "interpreter-amd": {"BOX64_DYNAREC": "0", "BOX64_AVX": "2", "BOX64_SSE42": "0", "BOX64_CPUTYPE": "1", "GLIBC_TUNABLES": ""},
+            }
+            result["compatibilityProfileTrials"] = {}
+            for name, settings in profiles.items():
+                shutil.rmtree(project_path / "dist", ignore_errors=True)
+                shutil.rmtree(project_path / ".tabstudio/pic", ignore_errors=True)
+                script = setup[:-1] + "," + repr(settings) + ")"
+                run([*native, "python3", "-c", script], out / (name + "-wrapper.log"), env=env)
+                code, seconds, _ = run([*native, "python3", "/opt/tabstudio/microchip/project.py", "build", "/work/project"],
+                    out / (name + ".log"), env=env, timeout=120, check=False)
+                result["compatibilityProfileTrials"][name] = {"settings": settings, "exitCode": code, "seconds": seconds,
+                    "builtins": (project_path / ".tabstudio/pic/xc-predefined-macros.txt").is_file()}
         if project_code:
             raise RuntimeError("The shipped MPLAB project driver failed; see project-build.log and controls")
         project_hex = project_path / "dist/default/production/firmware.hex"

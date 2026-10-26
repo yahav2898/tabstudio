@@ -46,7 +46,8 @@ class InstallationTests(unittest.TestCase):
 
     def test_xc32_uses_the_interpreter_mode_that_passed_the_arm_spike(self):
         self.assertEqual("0", self.install.runtime_environment("xc32")["BOX64_DYNAREC"])
-        self.assertEqual("0", self.install.runtime_environment("xc32")["BOX64_AVX"])
+        with patch.object(self.install.platform, "machine", return_value="aarch64"):
+            self.assertEqual("0", self.install.runtime_environment("xc32")["BOX64_SSE42"])
         self.assertEqual("1", self.install.runtime_environment("xc8")["BOX64_DYNAREC"])
 
     def test_modified_cached_asset_is_rejected_and_removed(self):

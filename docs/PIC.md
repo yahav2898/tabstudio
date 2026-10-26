@@ -6,7 +6,7 @@ TabStudio builds PIC firmware on 64-bit Android without a PC. Install **Microchi
 
 ## Build and edit
 
-The APK includes a source-built, pinned Box64 0.4.4 with a small child-stack fix. It runs the unchanged x86-64 XC binaries in TabStudio's Alpine 3.24.3 / Termux PRoot environment. Verified Debian amd64 glibc, libstdc++, libgcc and zlib supply the x86 runtime; ARM64 versions supply Box64's native runtime. These do not replace Alpine's musl loader. XC8 uses the dynamic translator; XC32 uses the interpreter with AVX exposure disabled. They are separate Linux processes, not libraries loaded into Android's Bionic process.
+The APK includes a source-built, pinned Box64 0.4.4 with a small child-stack fix. It runs the unchanged x86-64 XC binaries in TabStudio's Alpine 3.24.3 / Termux PRoot environment. Verified Debian amd64 glibc, libstdc++, libgcc and zlib supply the x86 runtime; ARM64 versions supply Box64's native runtime. These do not replace Alpine's musl loader. XC8 uses the dynamic translator; XC32 uses the interpreter with conservative glibc string-function dispatch. They are separate Linux processes, not libraries loaded into Android's Bionic process.
 
 Create one of these projects, then build with **Ctrl+F5** or **Build Solution**:
 

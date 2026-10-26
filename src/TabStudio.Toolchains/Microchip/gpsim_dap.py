@@ -130,7 +130,7 @@ class Gpsim:
         del self.pending[:index + len(prompt)]
         return output
 
-    def command(self, command, timeout=10):
+    def command(self, command, timeout=10, interrupt=None):
         with self.lock:
             # gpsim can emit a second prompt after run/reset/CTRL-C. A unique
             # echo response synchronizes the command stream instead of treating
@@ -140,6 +140,7 @@ class Gpsim:
             self.process.stdin.flush()
             ending = b'\n"' + marker.encode() + b'"\n'
             deadline = time.monotonic() + timeout if timeout is not None else None
+            next_interrupt = time.monotonic() + 0.2
             while True:
                 position = self.pending.find(ending)
                 prompt = self.pending.find(b"**gpsim> ", position + len(ending)) if position >= 0 else -1
@@ -147,6 +148,15 @@ class Gpsim:
                     output = bytes(self.pending[:position]).decode(errors="replace")
                     del self.pending[:prompt + len(b"**gpsim> ")]
                     return re.sub(r'(?m)^.*echo "' + marker + r'"\s*$', '', output)
+                # gpsim's readline signal handler can discard a newline if
+                # SIGINT arrives while it is reading "run". Wait for its full
+                # command echo, and stop signalling as soon as a CLI prompt
+                # appears. A Pause request stays pending across this handshake.
+                run_echo = self.pending.find(b"run\n")
+                at_prompt = self.pending.find(b"**gpsim> ", run_echo + 4) if run_echo >= 0 else -1
+                if interrupt is not None and interrupt.is_set() and run_echo >= 0 and at_prompt < 0 and time.monotonic() >= next_interrupt:
+                    self.pause()
+                    next_interrupt = time.monotonic() + 0.2
                 if deadline is not None and time.monotonic() >= deadline: raise TimeoutError("gpsim command timed out")
                 if select.select([self.process.stdout], [], [], 0.2)[0]:
                     data = os.read(self.process.stdout.fileno(), 8192)
@@ -186,6 +196,7 @@ class Adapter:
         self.running = False
         self.worker = None
         self.pause_reason = None
+        self.pause_requested = threading.Event()
         self.registers = []
         self.stop_on_entry = True
 
@@ -218,9 +229,10 @@ class Adapter:
         if self.running: raise ValueError("gpsim is already running")
         self.running = True
         self.pause_reason = None
+        self.pause_requested.clear()
         def run():
             try:
-                output = self.sim.command("run", timeout=None)
+                output = self.sim.command("run", timeout=None, interrupt=self.pause_requested)
                 for identity in temporary_ids: self.sim.command("clear " + str(identity))
                 if "WDT" in output or "INVALID" in output:
                     self.event("output", {"category": "stderr", "output": output})
@@ -311,7 +323,7 @@ class Adapter:
             self.continue_run()
         elif command == "pause":
             self.pause_reason = "pause"
-            if self.running: self.sim.pause()
+            self.pause_requested.set()
             self.response(request)
         elif command in ("next", "stepIn", "stepOut"):
             if self.running: raise ValueError("Pause before stepping")
@@ -366,7 +378,7 @@ class Adapter:
     def close(self):
         if self.sim:
             if self.running:
-                self.pause_reason = "pause"; self.sim.pause()
+                self.pause_reason = "pause"; self.pause_requested.set()
                 if self.worker: self.worker.join(timeout=2)
             self.sim.close()
             self.sim = None

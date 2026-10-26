@@ -101,7 +101,9 @@ def runtime_environment(compiler=None):
     native = "aarch64-linux-gnu" if platform.machine() == "aarch64" else "x86_64-linux-gnu"
     env.update(LD_LIBRARY_PATH="/usr/lib/" + native, BOX64_LD_LIBRARY_PATH="/usr/lib/x86_64-linux-gnu",
                BOX64_NOBANNER="1", BOX64_LOG="0", BOX64_DYNAREC="0" if compiler == "xc32" else "1",
-               BOX64_AVX="0" if compiler == "xc32" else "2", BOX64_DYNACACHE="0")
+               BOX64_AVX="2", BOX64_DYNACACHE="0")
+    if compiler == "xc32" and platform.machine() == "aarch64":
+        env.update(BOX64_SSE42="0", GLIBC_TUNABLES="glibc.cpu.hwcaps=-AVX2,-AVX,-SSE4_2,-SSE4_1,-SSSE3,-ERMS,-FSRM")
     return env
 
 
@@ -157,7 +159,7 @@ def ensure_pack(device, requested=None):
     return pack, destination
 
 
-def write_wrappers(compiler, destination):
+def write_wrappers(compiler, destination, overrides=None):
     wrappers = Path("/usr/local/bin")
     wrappers.mkdir(parents=True, exist_ok=True)
     binaries = [*(destination / "bin").glob(compiler + "-*")]
@@ -177,12 +179,11 @@ def write_wrappers(compiler, destination):
         # driver those must be the original x86 binaries, not another host shell
         # wrapper that recursively starts Box64 with the helper's argv layout.
         lines.append("environment['PATH'] = " + repr(str(destination / "bin") + ":") + " + environment.get('PATH', '/usr/bin:/bin')")
-        for key, value in runtime_environment(compiler).items():
-            if key.startswith("BOX64_") or key == "LD_LIBRARY_PATH":
+        for key, value in {**runtime_environment(compiler), **(overrides or {})}.items():
+            if key.startswith("BOX64_") or key in ("LD_LIBRARY_PATH", "GLIBC_TUNABLES"):
                 lines.append("environment[" + repr(key) + "] = " + repr(value))
         # Preserve every recipe argument, including source/output paths and
-        # dependency-generation targets. Interpreter mode must not advertise
-        # AVX2: the upstream ARM default assumes its dynamic translator.
+        # dependency-generation targets.
         lines += ["arguments = sys.argv[1:]"]
         lines.append("result = subprocess.call(" + repr(translated([str(binary)])) + " + arguments, env=environment)")
         lines.append("raise SystemExit(result if result >= 0 else 128 - result)")
