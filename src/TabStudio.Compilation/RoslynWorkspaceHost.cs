@@ -590,7 +590,9 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             .Select(reference => new ProjectReference(_projectIds[reference]));
 
         // An Uno or WinUI 3 app has no Main of its own here: TabStudio's host starts it, as each platform's head does.
-        var kind = project.IsExecutable && !Uno.UnoBuild.UsesUno(project) ? AssemblyKind.ConsoleApplication : AssemblyKind.Library;
+        // Nor has a test project, even an executable one such as xUnit v3's, whose Main its package's targets generate:
+        // TabStudio's test runner loads it as a library.
+        var kind = project.IsExecutable && !project.IsTestProject && !Uno.UnoBuild.UsesUno(project) ? AssemblyKind.ConsoleApplication : AssemblyKind.Library;
         var allowUnsafe = string.Equals(project.GetProperty("AllowUnsafeBlocks"), "true", StringComparison.OrdinalIgnoreCase);
 
         return RoslynProjectInfo.Create(

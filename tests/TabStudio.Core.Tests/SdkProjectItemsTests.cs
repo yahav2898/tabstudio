@@ -26,7 +26,11 @@ public sealed class SdkProjectItemsTests
                 <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute" _Parameter1="Built" _Parameter2="today" />
                 <AssemblyAttribute Include="System.CLSCompliantAttribute" _Parameter1="false" _Parameter1_IsLiteral="true" />
               </ItemGroup>
+              <ItemGroup><FriendProject Include="Lib.Benchmarks" /></ItemGroup>
               <Target Name="Stamp"><ItemGroup><AssemblyAttribute Include="Never.Generated" /></ItemGroup></Target>
+              <Target Name="AddFriends" BeforeTargets="BeforeCompile" Condition=" '@(FriendProject)' != '' ">
+                <ItemGroup><InternalsVisibleTo Include="%(FriendProject.Identity)" PublicKey="$(PublicKey)" /></ItemGroup>
+              </Target>
             </Project>
             """);
 
@@ -38,6 +42,7 @@ public sealed class SdkProjectItemsTests
                 (AssemblyAttributeItems.InternalsVisibleTo, "Lib.Tests, PublicKey=0024abcd"),
                 (AssemblyAttributeItems.InternalsVisibleTo, "DynamicProxyGenAssembly2, PublicKey=00240000"),
                 (AssemblyAttributeItems.InternalsVisibleTo, "Lib.Specs, PublicKey=0024beef"),
+                (AssemblyAttributeItems.InternalsVisibleTo, "Lib.Benchmarks, PublicKey=0024abcd"),
                 ("System.Runtime.CompilerServices.InternalsVisibleToAttribute", "Lib.Benchmarks, PublicKey=0024ffff"),
                 ("System.Reflection.AssemblyMetadataAttribute", "Built|today"),
                 ("System.CLSCompliantAttribute", "=false"),

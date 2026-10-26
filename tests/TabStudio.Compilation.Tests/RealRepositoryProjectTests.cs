@@ -158,6 +158,23 @@ public sealed class RealRepositoryProjectTests : IDisposable
         Assert.NotEqual(appHost, workspace.DefaultStartupProject);
     }
 
+    [Fact]
+    public async Task An_executable_test_project_builds_without_a_Main_and_the_assembly_version_follows_Version()
+    {
+        // Polly's xUnit v3 test projects are executables whose Main the package's targets generate.
+        _temp.Write("Core/Core.csproj", Project(properties: "<Version>8.7.1-beta.2</Version>"));
+        _temp.Write("Core/Core.cs", "namespace Core; public static class Answer { public const int Value = 42; }");
+        _temp.Write("Tests/Tests.csproj", Project(exe: true, references: ["..\\Core\\Core.csproj"], properties: "<IsTestProject>true</IsTestProject>"));
+        _temp.Write("Tests/AnswerTests.cs", "namespace Tests; public sealed class AnswerTests { public int Value() => Core.Answer.Value; }");
+        Load("Tests/Tests.csproj", "Core/Core.csproj");
+
+        var build = await BuildAsync("Tests/Tests.csproj");
+
+        Assert.True(build.Success, string.Join('\n', build.Diagnostics));
+        var core = _host.FindProject(_temp.Resolve("Core/Core.csproj"))!;
+        Assert.Contains("AssemblyVersionAttribute(\"8.7.1\")", RoslynWorkspaceHost.CreateAssemblyAttributesSource(core)!, StringComparison.Ordinal);
+    }
+
     public void Dispose()
     {
         _host.Dispose();

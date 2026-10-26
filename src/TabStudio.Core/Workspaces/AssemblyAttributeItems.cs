@@ -27,6 +27,12 @@ public static partial class AssemblyAttributeItems
     /// <summary>The attribute an <c>InternalsVisibleTo</c> item becomes.</summary>
     public const string InternalsVisibleTo = "System.Runtime.CompilerServices.InternalsVisibleToAttribute";
 
+    /// <summary>Targets that run before the compiler, so the items their dependents add are compiled.</summary>
+    private static readonly HashSet<string> BeforeCompileTargets = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "BeforeBuild", "PrepareForBuild", "BeforeCompile", "CoreCompile", "Compile", "GenerateAssemblyInfo", "CoreGenerateAssemblyInfo", "GetAssemblyAttributes",
+    };
+
     private static readonly HashSet<string> NotArguments = new(StringComparer.OrdinalIgnoreCase) { "Include", "Condition", "Remove", "Update", "Exclude" };
 
     /// <summary>Whether a list of NuGet assets, such as a <c>PrivateAssets</c> value, includes <c>all</c>.</summary>
@@ -49,7 +55,7 @@ public static partial class AssemblyAttributeItems
         }
 
         string? Expand(string? value) => value is null ? null : ExpandProperties(value.Trim(), properties, projectName);
-        // Items in a target are added when it runs, which TabStudio does not do.
+        // Items in a target are added when it runs, which TabStudio does not do, except the friends below.
         var items = roots.SelectMany(root => root.Descendants())
             .Where(e => !e.Ancestors().Any(a => a.Name.LocalName == "Target"))
             .ToList();
@@ -57,9 +63,12 @@ public static partial class AssemblyAttributeItems
         if (!IsFalse(properties.GetValueOrDefault("GenerateInternalsVisibleToAttributes")))
         {
             var defaultKey = Expand(properties.GetValueOrDefault("PublicKey"));
-            foreach (var item in items.Where(e => e.Name.LocalName == "InternalsVisibleTo"))
+            var friends = items.Where(e => e.Name.LocalName == "InternalsVisibleTo")
+                .Select(item => (Item: item, Include: Expand(item.Attribute("Include")?.Value)))
+                .Concat(BeforeCompileFriends(roots, items, Expand));
+            foreach (var (item, include) in friends)
             {
-                foreach (var friend in (Expand(item.Attribute("Include")?.Value) ?? string.Empty).Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+                foreach (var friend in (include ?? string.Empty).Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
                 {
                     var key = Expand(Metadata(item, "Key")) is { Length: > 0 } own ? own
                         : Expand(Metadata(item, "PublicKey")) is { Length: > 0 } named ? named : defaultKey;
@@ -80,6 +89,32 @@ public static partial class AssemblyAttributeItems
         }
 
         return [.. attributes.Distinct(AttributeComparer.Instance)];
+    }
+
+    /// <summary>
+    /// The <c>InternalsVisibleTo</c> items a target adds just before compiling, from items of another type, as in
+    /// Polly's <c>&lt;Target BeforeTargets="BeforeCompile"&gt;&lt;InternalsVisibleTo Include="%(InternalsVisibleToProject.Identity)" PublicKey="..." /&gt;</c>.
+    /// Only an <c>Include</c> of <c>%(Type.Identity)</c> or <c>@(Type)</c> is expanded, from the items outside targets.
+    /// </summary>
+    private static IEnumerable<(XElement Item, string? Include)> BeforeCompileFriends(IReadOnlyList<XElement> roots, List<XElement> items, Func<string?, string?> expand)
+    {
+        var targets = roots.SelectMany(root => root.Descendants().Where(e => e.Name.LocalName == "Target"))
+            .Where(t => (t.Attribute("BeforeTargets")?.Value ?? string.Empty)
+                .Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Any(BeforeCompileTargets.Contains));
+        foreach (var item in targets.SelectMany(t => t.Descendants().Where(e => e.Name.LocalName == "InternalsVisibleTo")))
+        {
+            if (ItemTransform().Match(item.Attribute("Include")?.Value.Trim() ?? string.Empty) is not { Success: true } match)
+            {
+                continue;
+            }
+
+            var type = match.Groups["type"].Value;
+            foreach (var source in items.Where(e => e.Name.LocalName.Equals(type, StringComparison.OrdinalIgnoreCase)))
+            {
+                yield return (item, expand(source.Attribute("Include")?.Value));
+            }
+        }
     }
 
     /// <summary>The arguments of an <c>AssemblyAttribute</c> item, or <see langword="null"/> when one cannot be expanded.</summary>
@@ -155,6 +190,9 @@ public static partial class AssemblyAttributeItems
 
     [GeneratedRegex(@"\$\((?<name>[A-Za-z_][A-Za-z0-9_.-]*)\)", RegexOptions.CultureInvariant, 100)]
     private static partial Regex PropertyReference();
+
+    [GeneratedRegex(@"^(?:%\((?<type>[A-Za-z_][A-Za-z0-9_.-]*)\.Identity\)|@\((?<type>[A-Za-z_][A-Za-z0-9_.-]*)\))$", RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture, 100)]
+    private static partial Regex ItemTransform();
 
     [GeneratedRegex(@"^_Parameter(?<index>[0-9]+)$", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase, 100)]
     private static partial Regex ParameterIndex();
