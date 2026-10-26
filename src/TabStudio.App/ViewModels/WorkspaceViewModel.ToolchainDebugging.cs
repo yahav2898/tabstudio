@@ -135,6 +135,17 @@ public sealed partial class WorkspaceViewModel
         }
 
         configuration = withInput;
+        if (type == "java")
+        {
+            var prepared = await PrepareJavaDebugAsync(project, configuration);
+            if (prepared is null)
+            {
+                return;
+            }
+
+            configuration = prepared;
+        }
+
         var target = new LaunchTarget(configuration.Name, configuration, IsCurrentFile: false);
         _programEnvironments.AddOrUpdate(target, plan.Run.Environment);
         await LaunchAdapterAsync(target, start, noDebug: false);

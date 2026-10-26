@@ -185,6 +185,8 @@ public sealed partial class WorkspaceViewModel
             "rust" => ProjectKind.Rust,
 
             "cpp" => ProjectKind.Cpp,
+
+            "java" => ProjectKind.Java,
             _ => ProjectKind.Unknown,
         },
         OutputType = "Exe",
@@ -395,6 +397,11 @@ public sealed partial class WorkspaceViewModel
         if (toolchain.Id == "rust" && File.Exists(Path.Combine(project.Directory, "src", "main.rs")))
         {
             return Path.Combine(project.Directory, "src", "main.rs");
+        }
+
+        if (toolchain.Id == "java" && JavaProject.MainSource(project.Directory) is { } java)
+        {
+            return java;
         }
 
         return Directory.EnumerateFiles(project.Directory).Where(toolchain.RunsFile).Order(StringComparer.Ordinal).FirstOrDefault() ?? project.MarkerPath;

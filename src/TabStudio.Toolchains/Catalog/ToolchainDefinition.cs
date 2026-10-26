@@ -75,6 +75,9 @@ public sealed record ToolchainDefinition
     /// <summary>How to install the packages a project's manifest lists, such as <c>npm install</c>.</summary>
     public IReadOnlyList<DependencyInstallDefinition> Dependencies { get; init; } = [];
 
+    /// <summary>Additional build tools installed only when a project uses their manifest.</summary>
+    public IReadOnlyList<ProjectToolDefinition> ProjectTools { get; init; } = [];
+
     /// <summary>What to install after the packages, such as tools from the language's own package registry.</summary>
     public IReadOnlyList<SetupStepDefinition> Setup { get; init; } = [];
 
@@ -323,4 +326,17 @@ public sealed record ProblemPatternDefinition
     /// and <c>message</c>.
     /// </summary>
     public required string Pattern { get; init; }
+}
+
+/// <summary>An optional tool needed by a particular project layout.</summary>
+public sealed record ProjectToolDefinition
+{
+    /// <summary>The manifest that requires the tool.</summary>
+    public required string Manifest { get; init; }
+
+    /// <summary>The command to find on PATH.</summary>
+    public required string Command { get; init; }
+
+    /// <summary>The Alpine packages that provide it.</summary>
+    public IReadOnlyList<string> Packages { get; init; } = [];
 }

@@ -32,6 +32,11 @@ public static partial class RunPlanner
             return PlanCppProject(project);
         }
 
+        if (project.Toolchain.Id == "java")
+        {
+            return PlanJavaProject(project);
+        }
+
         var run = project.Toolchain.Run;
         if (run is null)
         {
@@ -84,6 +89,11 @@ public static partial class RunPlanner
         if (project.Toolchain.Id == "cpp")
         {
             return PlanCppFile(project, file);
+        }
+
+        if (project.Toolchain.Id == "java")
+        {
+            return PlanJavaFile(project, file);
         }
 
         var relative = Path.GetRelativePath(project.Directory, file).Replace('\\', '/');

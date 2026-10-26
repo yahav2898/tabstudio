@@ -129,7 +129,8 @@ public static partial class SelfTest
             var goTools = pythonTools.Success ? await CheckGoToolchainAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Go: not run", TimeSpan.Zero);
             var rustTools = goTools.Success ? await CheckRustToolchainAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Rust: not run", TimeSpan.Zero);
             var cppTools = rustTools.Success ? await CheckCppToolchainAsync(main, templates, cancellationToken) : new SelfTestResult(false, "C/C++: not run", TimeSpan.Zero);
-            var forms = cppTools.Success ? await ShowWindowsFormsAppAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Windows Forms: not run", TimeSpan.Zero);
+            var javaTools = cppTools.Success ? await CheckJavaToolchainAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Java: not run", TimeSpan.Zero);
+            var forms = javaTools.Success ? await ShowWindowsFormsAppAsync(main, templates, cancellationToken) : new SelfTestResult(false, "Windows Forms: not run", TimeSpan.Zero);
 
             var design = forms.Success ? await CheckDesignAsync(main, screenshots, cancellationToken) : new SelfTestResult(false, "Design: not run", TimeSpan.Zero);
             var wpf = design.Success ? await ShowWpfAppAsync(main, templates, cancellationToken) : new SelfTestResult(false, "WPF: not run", TimeSpan.Zero);
@@ -146,8 +147,8 @@ public static partial class SelfTest
             }
 
             return new SelfTestResult(
-                extensions.Success && toolchains.Success && processes.Success && pythonTools.Success && goTools.Success && rustTools.Success && cppTools.Success && forms.Success && design.Success && wpf.Success && uno.Success && screens.Success && swarm.Success,
-                $"{summary} | {debugged.Message} | {web.Message} | {blazor.Message} | {avalonia.Message} | {extensions.Message} | {toolchains.Message} | {processes.Message} | {pythonTools.Message} | {goTools.Message} | {rustTools.Message} | {cppTools.Message} | {forms.Message} | {design.Message} | {wpf.Message} | {uno.Message} | {screens.Message} | {swarm.Message}",
+                extensions.Success && toolchains.Success && processes.Success && pythonTools.Success && goTools.Success && rustTools.Success && cppTools.Success && javaTools.Success && forms.Success && design.Success && wpf.Success && uno.Success && screens.Success && swarm.Success,
+                $"{summary} | {debugged.Message} | {web.Message} | {blazor.Message} | {avalonia.Message} | {extensions.Message} | {toolchains.Message} | {processes.Message} | {pythonTools.Message} | {goTools.Message} | {rustTools.Message} | {cppTools.Message} | {javaTools.Message} | {forms.Message} | {design.Message} | {wpf.Message} | {uno.Message} | {screens.Message} | {swarm.Message}",
                 clock.Elapsed);
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)

@@ -18,7 +18,9 @@ public sealed partial class WorkspaceViewModel
             }
         }
 
-        var built = await OutputProcess.RunAsync(_toolchains.Runtime, plan.Build!, Output, null, cancellationToken);
+        var compiled = await BuildJavaOrToolchainAsync(project, plan, cancellationToken);
+        plan = compiled.Plan;
+        var built = compiled.Result;
         if (!built.Succeeded || project.Toolchain.Id != "cpp")
         {
             return (plan, built);

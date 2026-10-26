@@ -18,6 +18,9 @@ public sealed partial class ProjectTemplates
     /// <summary>A CMake C++ console program.</summary>
     public const string CppId = "cpp";
 
+    /// <summary>A Java Maven console program.</summary>
+    public const string JavaId = "java";
+
     /// <summary>The Python and Node.js templates, for the start screen.</summary>
     private static ProjectTemplate[] ToolchainTemplates =>
     [
@@ -28,6 +31,8 @@ public sealed partial class ProjectTemplates
         new(RustId, "Rust Console App", "A Cargo console app with rust-analyzer IntelliSense and LLDB debugging.", ["Rust", "Console"]),
 
         new(CppId, "C++ Console App (CMake)", "A C++ console app with CMake, clangd IntelliSense and LLDB debugging.", ["C++", "CMake", "Console"]),
+
+        new(JavaId, "Java Console App (Maven)", "A Java 21 Maven app with JDT IntelliSense and java-debug debugging.", ["Java", "Maven", "Console"]),
     ];
 
     /// <summary>Writes a toolchain project into a new folder, which is the workspace: there is no solution file.</summary>
@@ -103,6 +108,9 @@ public sealed partial class ProjectTemplates
 
             case CppId:
                 return CreateCppProject(root);
+
+            case JavaId:
+                return CreateJavaProject(root, name);
 
             default:
                 return null;

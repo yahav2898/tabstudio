@@ -20,7 +20,7 @@ public sealed class ToolchainCatalogTests
     [Fact]
     public void The_store_lists_the_finished_toolchains()
     {
-        Assert.Equal(["python", "node", "cpp", "rust", "go"], Catalog.Listed.Select(t => t.Id));
+        Assert.Equal(["python", "node", "cpp", "rust", "go", "java"], Catalog.Listed.Select(t => t.Id));
     }
 
     [Fact]

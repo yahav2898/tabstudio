@@ -496,6 +496,25 @@ as its debuggee and reads Output-panel input from a private FIFO created through
 output arrives as DAP events. Real-tool IDE and emulator tests cover the CMake template, a breakpoint and Locals;
 the IDE test also checks clangd, Watch and Call Stack.
 
+### Java
+
+Maven (`pom.xml`), both Gradle DSLs and standalone Java sources are startup projects. Alpine installs OpenJDK 21
+and JDT LS, adding Maven or Gradle only when the selected project needs that command; desktops use PATH. Maven
+copies runtime dependencies, Gradle records `sourceSets.main.runtimeClasspath` through an init script, and
+standalone sources compile with `javac -g`. The main class runs directly in Java with Output-panel input.
+javac and Maven locations populate the Error List. Choose a member manifest for a multi-module build; several
+main classes need explicit selection.
+
+On Android, JVM launchers preload the APK's small musl-compatible mapping shim. It separates an anonymous
+allocation from an adjacent thread-stack VMA before retrying an `EACCES` executable-memory request, leaving
+SELinux to authorize the actual protection change. It never retries a range containing the current stack pointer.
+
+JDT LS uses a per-project cache outside the imported source tree, shared into PRoot. Initialization loads the
+SHA-256-pinned java-debug extension bundle. F5 calls `vscode.java.startDebugSession` through LSP, connects DAP to
+its returned port and uses the run plan's main class and classpath. `runInTerminal` supplies console I/O. Real-tool
+IDE and emulator tests cover the Maven template, a breakpoint and Locals; additional IDE tests cover both Gradle
+DSLs and standalone sources.
+
 ## Swarm
 
 `TabStudio.Swarm` runs the app being built on every device that joins the tablet's swarm. Devices join through

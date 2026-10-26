@@ -69,7 +69,7 @@ jobs:
             name=$(basename "$project")
             [ "$name" = "TabStudio.App.Tests" ] && continue
             if ! dotnet test "$project" -c Release -p:TreatWarningsAsErrors=true --logger "console;verbosity=normal" > "ci-out/$name.log" 2>&1; then
-              if grep -Eq '(GoProjectTests|RustProjectTests|CppProjectTests|DebugAdapterUnixSocketTests).*\[FAIL\]' "ci-out/$name.log"; then status=1; fi
+              if grep -Eq '(GoProjectTests|RustProjectTests|CppProjectTests|JavaProjectTests|JavaProotTests|DebugAdapterUnixSocketTests).*\[FAIL\]' "ci-out/$name.log"; then status=1; fi
               # WinUI must pass on its first attempt; never mask a failure with a retry.
               if [ "$name" = "TabStudio.Uno.Tests" ]; then
                 tail -n 80 "ci-out/$name.log"
@@ -138,6 +138,31 @@ jobs:
           ln -s /usr/bin/lldb-dap-19 "$RUNNER_TEMP/cpp-bin/lldb-dap"
           echo "$RUNNER_TEMP/cpp-bin" >> "$GITHUB_PATH"
 
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Install Java tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y maven
+          cc -shared -nostdlib -fPIC -O2 -Wall -Wextra -Werror build/android/native/jvm-mapping.c -o "$RUNNER_TEMP/libtabstudio-jvm.so"
+          LD_PRELOAD="$RUNNER_TEMP/libtabstudio-jvm.so" java -version
+          curl -fsSL https://services.gradle.org/distributions/gradle-8.14.4-bin.zip -o "$RUNNER_TEMP/gradle.zip"
+          echo "f1771298a70f6db5a29daf62378c4e18a17fc33c9ba6b14362e0cdf40610380d  $RUNNER_TEMP/gradle.zip" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/gradle.zip" -d "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/gradle-8.14.4/bin" >> "$GITHUB_PATH"
+          mkdir -p "$RUNNER_TEMP/jdtls" "$RUNNER_TEMP/java-debug"
+          curl -fsSL https://download.eclipse.org/jdtls/milestones/1.58.0/jdt-language-server-1.58.0-202604151538.tar.gz -o "$RUNNER_TEMP/jdtls.tar.gz"
+          echo "2a5bbe55ec91b4325392050dc422cead3220a2459b3766be35e1fff45b4a50d9  $RUNNER_TEMP/jdtls.tar.gz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/jdtls.tar.gz" -C "$RUNNER_TEMP/jdtls"
+          curl -fsSL https://open-vsx.org/api/vscjava/vscode-java-debug/0.60.0/file/vscjava.vscode-java-debug-0.60.0.vsix -o "$RUNNER_TEMP/java-debug.vsix"
+          echo "f09ebe358a7b08b3c17b21b8d8207b0649acad120eb6f1604dc4f15379f59d66  $RUNNER_TEMP/java-debug.vsix" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/java-debug.vsix" -d "$RUNNER_TEMP/java-debug"
+          echo "$RUNNER_TEMP/jdtls/bin" >> "$GITHUB_PATH"
+          echo "TABSTUDIO_JAVA_DEBUG_BUNDLE=$RUNNER_TEMP/java-debug/extension/server/com.microsoft.java.debug.plugin-0.53.2.jar" >> "$GITHUB_ENV"
+
       - name: Install language servers and debug adapters
         run: |
           npm install -g pyright typescript-language-server typescript@5
@@ -189,6 +214,18 @@ jobs:
           tail -n 80 ci-out/cpp-tools.log
           exit "$status"
 
+      - name: Test Java tools
+        env:
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+        run: |
+          mkdir -p ci-out/screenshots
+          status=0
+          dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 5m --blame-hang-dump-type none \
+            --filter "FullyQualifiedName~ToolchainLanguageToolsTests.A_Java_template|FullyQualifiedName~ToolchainLanguageToolsTests.Java_" --logger "console;verbosity=normal" \
+            > ci-out/java-tools.log 2>&1 || status=$?
+          tail -n 80 ci-out/java-tools.log
+          exit "$status"
+
       # This test deliberately collects the entire process heap during every PNG encode. Run it in its own
       # test host so previous IDE workspaces cannot make that heap several gigabytes; all 100 captures remain.
       - name: Test screenshot lifetime under GC
@@ -235,7 +272,7 @@ jobs:
           first=0
           run_ide_tests ci-out/TabStudio.App.Tests.log || first=1
           tail -n 80 ci-out/TabStudio.App.Tests.log
-          if grep -Eq '(A_Go_template|A_Rust_template|A_Cpp_template|Delve_|A_private_Delve_socket).*\[FAIL\]' ci-out/TabStudio.App.Tests.log; then status=1; fi
+          if grep -Eq '(A_Go_template|A_Rust_template|A_Cpp_template|A_Java_template|Java_|Delve_|A_private_Delve_socket).*\[FAIL\]' ci-out/TabStudio.App.Tests.log; then status=1; fi
           if [ $first -ne 0 ]; then
             # Known intermittent failures (a native crash in the test host, slow servers) are tracked on the board;
             # one retry keeps them from blocking a release, and FLAKY.txt and a warning keep them visible.
@@ -259,7 +296,7 @@ jobs:
           light=0
           run_light_tests ci-out/TabStudio.App.Tests.Light.log || light=1
           tail -n 20 ci-out/TabStudio.App.Tests.Light.log
-          if grep -Eq '(A_Go_template|A_Rust_template|A_Cpp_template|Delve_|A_private_Delve_socket).*\[FAIL\]' ci-out/TabStudio.App.Tests.Light.log; then status=1; fi
+          if grep -Eq '(A_Go_template|A_Rust_template|A_Cpp_template|A_Java_template|Java_|Delve_|A_private_Delve_socket).*\[FAIL\]' ci-out/TabStudio.App.Tests.Light.log; then status=1; fi
           if [ $light -ne 0 ]; then
             echo "::warning::The IDE tests in the light theme failed once; running them again. The first attempt is in ci-out/TabStudio.App.Tests.Light.log."
             if grep -Eq 'UnoAppTests.*\[FAIL\]' ci-out/TabStudio.App.Tests.Light.log; then
@@ -309,7 +346,7 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: artifacts/native
-          key: android-native-${{ hashFiles('build/android/native/build.sh', 'build/android/native/sources.sh', 'build/android/native/*.patch') }}-arm
+          key: android-native-${{ hashFiles('build/android/native/build.sh', 'build/android/native/sources.sh', 'build/android/native/*.patch', 'build/android/native/*.c') }}-arm
 
       - name: Build the toolchain runtime
         run: |
@@ -375,7 +412,7 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: artifacts/native
-          key: android-native-${{ hashFiles('build/android/native/build.sh', 'build/android/native/sources.sh', 'build/android/native/*.patch') }}-x64
+          key: android-native-${{ hashFiles('build/android/native/build.sh', 'build/android/native/sources.sh', 'build/android/native/*.patch', 'build/android/native/*.c') }}-x64
 
       - name: Build the toolchain runtime
         run: |

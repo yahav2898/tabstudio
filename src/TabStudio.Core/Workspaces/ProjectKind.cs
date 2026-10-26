@@ -68,6 +68,9 @@ public enum ProjectKind
 
     /// <summary>A portable C or C++ project built with CMake, make or a compiler from the Toolchain Store.</summary>
     Cpp,
+
+    /// <summary>A Java Maven, Gradle or source project.</summary>
+    Java,
 }
 
 /// <summary>

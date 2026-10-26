@@ -82,7 +82,7 @@ public sealed class ProblemMatcher
         ArgumentNullException.ThrowIfNull(lines);
         ArgumentNullException.ThrowIfNull(isUserFile);
         var errors = lines.SelectMany(Match)
-            .Where(l => l.Message is { Length: > 0 } && l.Severity is null or "error" or "fatal error" && isUserFile(l.File))
+            .Where(l => l.Message is { Length: > 0 } && l.Severity?.ToLowerInvariant() is null or "error" or "fatal error" && isUserFile(l.File))
             .Select(l => new RunError(l.Message!, l)).Distinct().ToList();
         if (errors.Count == 0 && FindError(lines, isUserFile) is { } runtime)
         {

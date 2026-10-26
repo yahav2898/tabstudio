@@ -165,6 +165,10 @@ public static class CompatibilityDoctor
                 project, RunHost.Toolchain, CompatibilityStatus.NeedsToolchain, "Rust toolchain",
                 "Runs with Rust from the Toolchain Store, with console input and output in the Output panel. Install Rust to run it."),
 
+            ProjectKind.Java => Report(
+                project, RunHost.Toolchain, CompatibilityStatus.NeedsToolchain, "Java toolchain",
+                "Runs with Java from the Toolchain Store, with console input and output in the Output panel. Install Java to run it."),
+
             ProjectKind.Node => Report(
                 project, RunHost.Toolchain, CompatibilityStatus.NeedsToolchain, "Node.js toolchain",
                 "Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it."),
