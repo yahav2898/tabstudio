@@ -176,6 +176,23 @@ void __builtin_mtc0(int, int, unsigned int);
     compiler_root = Path(manifest["compilerRoot"])
     includes = ([dfp / "pic/include", dfp / "pic/include/proc", compiler_root / "pic/include/c99", compiler_root / "pic/include"]
                 if compiler == "xc8" else [dfp / "include", dfp / "include/proc", *[compiler_root / f / "include" for f in ("pic32m", "pic32c", "pic32a")]])
+    # GCC's internal target include directories also contain device-family
+    # headers (for example proc/ppic32mx.h). Ask the selected driver instead of
+    # guessing those versioned lib/gcc and sys-include paths.
+    search = subprocess.run([cc, processor, "-mdfp=" + str(dfp), "-E", "-v", "-x", "c", str(empty_source)],
+                            text=True, capture_output=True, timeout=60)
+    (support / "xc-include-search.txt").write_text(search.stderr)
+    active, discovered = False, []
+    for line in search.stderr.splitlines():
+        if "#include <...> search starts here:" in line:
+            active = True
+        elif "End of search list" in line:
+            active = False
+        elif active:
+            folder = Path(line.strip().removesuffix(" (framework directory)"))
+            if folder.is_dir(): discovered.append(folder)
+    if search.returncode == 0 and discovered:
+        includes = list(dict.fromkeys(discovered))
     flags = ["-xc", "-std=gnu99", "-fsyntax-only", "-Wno-unknown-pragmas", "-Wno-ignored-attributes", "-include", str(compatibility)]
     for folder in includes:
         flags += ["-isystem", str(folder)]

@@ -46,6 +46,7 @@ class InstallationTests(unittest.TestCase):
 
     def test_xc32_uses_the_interpreter_mode_that_passed_the_arm_spike(self):
         self.assertEqual("0", self.install.runtime_environment("xc32")["BOX64_DYNAREC"])
+        self.assertEqual("0", self.install.runtime_environment("xc32")["BOX64_AVX"])
         self.assertEqual("1", self.install.runtime_environment("xc8")["BOX64_DYNAREC"])
 
     def test_modified_cached_asset_is_rejected_and_removed(self):
@@ -90,23 +91,29 @@ class InstallationTests(unittest.TestCase):
         (root / "compile_commands.json").write_text("user-owned database")
         (self.folder / "xc8.json").write_text(json.dumps({"version": "4.00", "compilerRoot": "/opt/microchip/xc8/v4.00"}))
         from types import SimpleNamespace
-        with patch.object(self.project, "ensure_pack", return_value=({"name": "PIC18F-K_DFP", "version": "1.17.312"}, Path("/packs/device"))), patch.object(self.project.subprocess, "call", return_value=0) as call, patch.object(self.project.subprocess, "run", return_value=SimpleNamespace(returncode=0, stdout="#define __XC8 1\n#define _PIC18 1\n#define __XC8_VERSION 4000\n", stderr="")) as query:
+        driver_include = root / "compiler-internal-include"
+        driver_include.mkdir()
+        def compiler_query(arguments, **kwargs):
+            return SimpleNamespace(returncode=0, stdout="#define __XC8 1\n#define _PIC18 1\n#define __XC8_VERSION 4000\n" if "-dM" in arguments else "",
+                                   stderr="" if "-dM" in arguments else f"#include <...> search starts here:\n {driver_include}\nEnd of search list.\n")
+        with patch.object(self.project, "ensure_pack", return_value=({"name": "PIC18F-K_DFP", "version": "1.17.312"}, Path("/packs/device"))), patch.object(self.project.subprocess, "call", return_value=0) as call, patch.object(self.project.subprocess, "run", side_effect=compiler_query) as query:
             self.assertEqual(0, self.project.build(root))
-        self.assertIn("-dM", query.call_args.args[0])
-        self.assertIn("-mcpu=18F45K22", query.call_args.args[0])
-        self.assertEqual(root / ".tabstudio/pic/predefines.c", Path(query.call_args.args[0][-1]))
+        builtin_arguments = next(c.args[0] for c in query.call_args_list if "-dM" in c.args[0])
+        self.assertIn("-mcpu=18F45K22", builtin_arguments)
+        self.assertEqual(root / ".tabstudio/pic/predefines.c", Path(builtin_arguments[-1]))
         self.assertEqual("", (root / ".tabstudio/pic/predefines.c").read_text())
         command = call.call_args.args[0]
         self.assertEqual(["make", "-f", "nbproject/Makefile-production.mk"], command[:3])
         self.assertIn(".build-conf", command)
         self.assertIn("DFP_DIR=/packs/device", command)
         self.assertIn("MP_AS=/usr/local/bin/xc8-cc", command)
-        self.assertIn("-mdfp=/packs/device/xc8", query.call_args.args[0])
+        self.assertIn("-mdfp=/packs/device/xc8", builtin_arguments)
         self.assertIn("SPECIAL=-O2 -msmart-io=1", makefile.read_text())
         self.assertEqual("user-owned database", (root / "compile_commands.json").read_text())
         database = json.loads((root / ".tabstudio/pic/compile_commands.json").read_text())
         self.assertIn("-DBOARD=1", database[0]["arguments"])
         self.assertIn("-std=gnu99", database[0]["arguments"])
+        self.assertIn(str(driver_include), database[0]["arguments"])
         self.assertEqual(str(root / "source/extra.c"), database[1]["file"])
 
     def test_relocates_generated_tool_paths_while_preserving_mplabs_driver_choices(self):

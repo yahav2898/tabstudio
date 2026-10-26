@@ -271,6 +271,10 @@ class Adapter:
 
     def handle(self, request):
         command, args = request["command"], request.get("arguments") or {}
+        if self.running and command in ("setBreakpoints", "setInstructionBreakpoints", "stackTrace", "variables", "evaluate"):
+            # The running CLI owns its command lock. Reject synchronous queries
+            # rather than block the DAP reader that must still accept Pause.
+            raise ValueError("Pause gpsim before changing breakpoints or inspecting state")
         if command == "initialize":
             self.response(request, {"supportsConfigurationDoneRequest": True, "supportsInstructionBreakpoints": True,
                                     "supportsEvaluateForHovers": True, "supportsSteppingGranularity": True})

@@ -6,7 +6,7 @@ TabStudio builds PIC firmware on 64-bit Android without a PC. Install **Microchi
 
 ## Build and edit
 
-The APK includes a source-built, pinned Box64 0.4.4 with a small child-stack fix. It runs the unchanged x86-64 XC binaries in TabStudio's Alpine 3.24.3 / Termux PRoot environment. Verified Debian amd64 glibc, libstdc++, libgcc and zlib supply the x86 runtime; ARM64 versions supply Box64's native runtime. These do not replace Alpine's musl loader. XC8 uses the dynamic translator; XC32 uses the interpreter, the mode that passed the ARM spike. They are separate Linux processes, not libraries loaded into Android's Bionic process.
+The APK includes a source-built, pinned Box64 0.4.4 with a small child-stack fix. It runs the unchanged x86-64 XC binaries in TabStudio's Alpine 3.24.3 / Termux PRoot environment. Verified Debian amd64 glibc, libstdc++, libgcc and zlib supply the x86 runtime; ARM64 versions supply Box64's native runtime. These do not replace Alpine's musl loader. XC8 uses the dynamic translator; XC32 uses the interpreter with AVX exposure disabled. They are separate Linux processes, not libraries loaded into Android's Bionic process.
 
 Create one of these projects, then build with **Ctrl+F5** or **Build Solution**:
 
@@ -62,6 +62,8 @@ Upstream also contains PIC24FJ128GA705 and PIC24FJ64GU205 modules; PIC24/XC16 is
 
 **F5** uses a small stdio DAP adapter for gpsim 0.32.1. gpsim loads the HEX image; pyelftools maps XC8 ELF/DWARF source lines independently. Supported models have source/instruction breakpoints, bounded source/instruction stepping, step-out through the PIC18 hardware return stack, a current-frame location, CPU registers, SFRs and register evaluation (`reg(0xADDR)` is also accepted). A full reconstructed C call stack and local-variable expressions are not implemented. Hardware peripheral timing is only as accurate as gpsim's model.
 
+Pause the simulation before changing breakpoints or inspecting registers, SFRs or the current frame. The adapter rejects those requests while running so its Pause/Stop controls remain responsive.
+
 The exact PIC18 model list is in [`gpsim.devices.json`](../src/TabStudio.Toolchains/Microchip/gpsim.devices.json). Unsupported PIC18 models and PIC32 on-chip debugging use **Debug > On-chip Debugging in MPLAB X**. The paired PC opens its installed MPLAB X project in the Bridge pane; select the PICkit 4/5 and use MPLAB's Debug Project controls there. This is vendor debugging on the PC, not a local open PICkit DAP implementation.
 
 On the Windows Bridge, install MPLAB X, IPE, the selected XC version and DFPs yourself. TabStudio finds the vendor makefile generator, GNU make, IPE and bundled Java, builds the synchronized project, streams diagnostics back, and programs/verifies the resulting HEX with `ipecmd`. Select the IPE tool and optional serial via `bridgeTool`/`bridgeSerial`. Target-power defaults are left to IPE; TabStudio supplies no voltage override.
@@ -81,7 +83,9 @@ Warm means use the last two trials; sample size is small, and the x86 XC32 timin
 
 Native XC32 GCC and SDCC/gputils were explored while Box64 was failing. SDCC/gputils emitted a PIC18 object on aarch64-musl; that alone was not treated as linked firmware or as an XC8 replacement. Rebuilding XC32 reached its prerequisite libraries/binutils but was not established as a complete supported compiler. Once both official compilers worked, the selected product path remained the unchanged official XC distributions through Box64. Native fallback jobs run if that compiler proof fails.
 
-CI also builds both shipped MPLAB templates through the production driver, queries real predefined macros, builds native programmer/gpsim sources for ARM64 musl, and checks gpsim DAP against supported-model XC8 firmware. The Android emulator check uses the APK's PRoot as the app UID; it attempts the PIC18 template if the Box64 probe runs. Only that disposable emulator APK enables `run-as`. Unsupported emulator translation is reported as a conditional skip, not as compiled firmware. Logs and result JSON distinguish it from the mandatory ARM64-host proof.
+CI also builds both shipped MPLAB templates through the production driver, queries real predefined macros and include search paths, checks clangd against the device headers, builds native programmer/gpsim sources for ARM64 musl, and checks gpsim DAP against supported-model XC8 firmware. The Android emulator check uses the APK's PRoot as the app UID. It must execute native Alpine first; infrastructure failures are hard errors. It then tests Box64 with a static guest that spawns a child and preserves exit status 42, and builds PIC18 Blink if that probe passes. Only the disposable emulator APK enables `run-as`. Unsupported emulator translation is reported as a conditional skip, not as compiled firmware.
+
+In [run 40272233498](https://github.com/yahav2898/tabstudio/actions/runs/40272233498), the Android 10/API 29 x86-64 emulator passed both probes and compiled/linked PIC18F14K22 Blink in **54.708 seconds** using Box64's portable interpreter. The complete IDE self-test passed afterward. This is an emulator measurement; the real ARM64 runner results above remain a separate proof, and neither measures a physical tablet.
 
 Protocol fixtures record output from an independent upstream AN1388 encoder and the MCC reference frame format; they are explicitly **not physical USB captures**. No physical PIC board or programmer is attached to CI. USB electrical behavior, vendor firmware transitions and on-chip debugging therefore still need testing with the user's actual hardware.
 

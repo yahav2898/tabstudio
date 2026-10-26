@@ -164,7 +164,8 @@ def prepare(work, out, compiler, *, build_runtime=True):
                  "BOX64_LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu",
                  # Compiler/installer subprocesses parse each other's stdout. A box64
                  # banner is not compiler output and breaks those integrity checks.
-                 "BOX64_LOG=0", "BOX64_NOBANNER=1", "BOX64_DYNAREC=" + ("0" if compiler == "xc32" else "1"), "BOX64_DYNACACHE=0"]
+                 "BOX64_LOG=0", "BOX64_NOBANNER=1", "BOX64_DYNAREC=" + ("0" if compiler == "xc32" else "1"),
+                 "BOX64_AVX=" + ("0" if compiler == "xc32" else "2"), "BOX64_DYNACACHE=0"]
     prefix = [str(proot), "--kill-on-exit", "--link2symlink", "--sysvipc", "-L", "-0",
               "-r", str(root), "-b", "/dev", "-b", "/proc", "-b", "/sys",
               "-b", f"{root / 'tmp'}:/dev/shm", "-b", f"{cache}:/downloads",
@@ -281,7 +282,7 @@ def spike(args):
                 result["initialCompileExitCode"] = code
                 run([*prefix, "/usr/bin/env", "BOX64_LOG=2", "BOX64_NOBANNER=0", *translate, program, "-v", *options],
                     out / "compile-diagnostic.log", env=env, timeout=180, check=False)
-                interpreted = ["/usr/bin/env", "BOX64_DYNAREC=0", "/usr/bin/box64"]
+                interpreted = ["/usr/bin/env", "BOX64_DYNAREC=0", "BOX64_AVX=0", "/usr/bin/box64"]
                 code, elapsed, _ = run([*prefix, *interpreted, program, *options], out / "compile-interpreter.log", env=env, timeout=300, check=False)
                 result["interpreterCompileExitCode"] = code
                 if not code:

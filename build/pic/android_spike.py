@@ -103,7 +103,7 @@ def run(args):
                   "-b", "/dev", "-b", "/proc", "-b", "/sys", "-b", root + "/tmp:/dev/shm", "-b", base + "/results:/results", "-w", "/work",
                   "/usr/bin/env", "-i", "HOME=/root", "TMPDIR=/tmp", "PATH=/usr/bin:/bin", "LANG=C",
                   "LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu", "BOX64_LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu",
-                  "BOX64_DYNAREC=0", "BOX64_LOG=0", "BOX64_NOBANNER=1", "BOX64_DYNACACHE=0", "/usr/bin/box64"]
+                  "BOX64_DYNAREC=0", "BOX64_AVX=0", "BOX64_LOG=0", "BOX64_NOBANNER=1", "BOX64_DYNACACHE=0", "/usr/bin/box64"]
         def command(arguments, boxed=True):
             inner = guest_command(native, base, [*(prefix if boxed else prefix[:-1]), *arguments])
             return ["adb", "shell", shlex.join(["run-as", PACKAGE, "sh", "-c", inner])]

@@ -100,7 +100,8 @@ def runtime_environment(compiler=None):
     env = dict(os.environ)
     native = "aarch64-linux-gnu" if platform.machine() == "aarch64" else "x86_64-linux-gnu"
     env.update(LD_LIBRARY_PATH="/usr/lib/" + native, BOX64_LD_LIBRARY_PATH="/usr/lib/x86_64-linux-gnu",
-               BOX64_NOBANNER="1", BOX64_LOG="0", BOX64_DYNAREC="0" if compiler == "xc32" else "1", BOX64_DYNACACHE="0")
+               BOX64_NOBANNER="1", BOX64_LOG="0", BOX64_DYNAREC="0" if compiler == "xc32" else "1",
+               BOX64_AVX="0" if compiler == "xc32" else "2", BOX64_DYNACACHE="0")
     return env
 
 
@@ -176,19 +177,13 @@ def write_wrappers(compiler, destination):
         # driver those must be the original x86 binaries, not another host shell
         # wrapper that recursively starts Box64 with the helper's argv layout.
         lines.append("environment['PATH'] = " + repr(str(destination / "bin") + ":") + " + environment.get('PATH', '/usr/bin:/bin')")
-        # The driver receives its complete arguments from MPLAB's recipe.
-        # Keep make's own control/jobserver variables out of translated tools.
-        for key in ("MAKEFLAGS", "MFLAGS", "MAKELEVEL"):
-            lines.append("environment.pop(" + repr(key) + ", None)")
         for key, value in runtime_environment(compiler).items():
             if key.startswith("BOX64_") or key == "LD_LIBRARY_PATH":
                 lines.append("environment[" + repr(key) + "] = " + repr(value))
-        # Keep the recipe's source paths (and therefore __FILE__) untouched.
-        # An absolute -o names the same artifact while avoiding the translated
-        # driver's relative-output path handling for nested MPLAB directories.
-        lines += ["arguments = sys.argv[1:]", "for index, value in enumerate(arguments[:-1]):",
-                  "    if value == '-o' and arguments[index + 1] != '-':",
-                  "        arguments[index + 1] = os.path.abspath(arguments[index + 1])"]
+        # Preserve every recipe argument, including source/output paths and
+        # dependency-generation targets. Interpreter mode must not advertise
+        # AVX2: the upstream ARM default assumes its dynamic translator.
+        lines += ["arguments = sys.argv[1:]"]
         lines.append("result = subprocess.call(" + repr(translated([str(binary)])) + " + arguments, env=environment)")
         lines.append("raise SystemExit(result if result >= 0 else 128 - result)")
         wrapper = wrappers / binary.name
