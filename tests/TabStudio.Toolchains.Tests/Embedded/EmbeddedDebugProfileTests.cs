@@ -60,8 +60,18 @@ public sealed class EmbeddedDebugProfileTests
         byte[] elf = new byte[52];
         new byte[] { 0x7f, (byte)'E', (byte)'L', (byte)'F', 1, 1, 1 }.CopyTo(elf, 0);
         elf[16] = 2;
+        elf[18] = 40;
         File.WriteAllBytes(path, elf);
         Assert.Equal(path, profile.ResolveFirmware(folder.Path));
+        Assert.Equal((ushort)40, profile.ElfMachine(folder.Path));
+        elf[5] = 2;
+        elf[16] = 0;
+        elf[17] = 2;
+        elf[18] = 0;
+        elf[19] = 243;
+        File.WriteAllBytes(path, elf);
+        Assert.Equal((ushort)243, profile.ElfMachine(folder.Path));
+        elf[5] = 1;
         elf[16] = 1;
         File.WriteAllBytes(path, elf);
         Assert.Throws<InvalidDataException>(() => profile.ResolveFirmware(folder.Path));

@@ -246,6 +246,7 @@
             <MenuItem Header="PIC _Target…" Command="{Binding ConfigurePicTargetCommand}" IsVisible="{Binding IsPicProject}" />
             <MenuItem Header="_Embedded">
               <MenuItem Header="_Devices and probes" Command="{Binding ShowEmbeddedDevicesCommand}" />
+              <MenuItem Header="Read target _identity" Command="{Binding IdentifyEmbeddedTargetCommand}" />
               <MenuItem Header="_Board and build configuration…" Command="{Binding ConfigureEmbeddedCommand}" />
               <MenuItem Header="_Build firmware" Command="{Binding BuildEmbeddedCommand}" />
               <MenuItem Header="_Upload and verify" Command="{Binding UploadEmbeddedCommand}" />
@@ -258,6 +259,7 @@
               <MenuItem Header="_Memory report" Command="{Binding AnalyzeEmbeddedMemoryCommand}" />
               <MenuItem Header="_Stack analysis" Command="{Binding AnalyzeEmbeddedStackCommand}" />
               <MenuItem Header="Decode _crash" Command="{Binding DecodeEmbeddedCrashCommand}" />
+              <MenuItem Header="Capture halted Cortex-M _fault" Command="{Binding CaptureEmbeddedFaultCommand}" />
               <Separator />
               <MenuItem Header="Load CMSIS-_SVD…" Command="{Binding LoadEmbeddedSvdCommand}" />
               <MenuItem Header="Load register _header…" Command="{Binding LoadEmbeddedRegisterHeaderCommand}" />

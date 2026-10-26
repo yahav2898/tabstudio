@@ -25,6 +25,14 @@ public enum EmbeddedFlashProtocol
     ProbeRs,
     /// <summary>Teensy HalfKay through teensy_loader_cli; no readback verification.</summary>
     Teensy,
+    /// <summary>WCH ROM ISP through the USB or UART transport in wchisp.</summary>
+    WchIsp,
+    /// <summary>MSP430 through a supported non-BSL mspdebug driver.</summary>
+    MspDebug,
+    /// <summary>Nordic SDK Secure DFU application ZIP through legacy pc-nrfutil 6.x.</summary>
+    NrfDfu,
+    /// <summary>AVR UPDI through pymcuprog's UART tool, with readback verification.</summary>
+    PymcuprogUpdi,
 }
 
 /// <summary>Inputs to a safe upload. Addresses are bytes; the ranges must come from parsing the actual image and target map.</summary>
@@ -62,6 +70,12 @@ public sealed record EmbeddedFlashRequest
     public string? UsbSelector { get; init; }
     /// <summary>Whether a 1200-baud touch/re-enumeration is required before opening the programming port.</summary>
     public bool Touch1200Baud { get; init; }
+    /// <summary>Use UART for wchisp or a serial-capable mspdebug driver; other serial protocols always use the serial bridge.</summary>
+    public bool UseSerialTransport { get; init; }
+    /// <summary>Nordic DFU uses UART ping framing rather than the native CDC USB-serial variant.</summary>
+    public bool NrfDfuUart { get; init; }
+    /// <summary>Enable RTS/CTS flow control for Nordic UART DFU only when the bootloader and wiring require it.</summary>
+    public bool HardwareFlowControl { get; init; }
 }
 
 /// <summary>A complete upload sequence. Readback comparison is performed only after all steps succeed.</summary>
@@ -71,13 +85,23 @@ public sealed record EmbeddedFlashRequest
 /// <param name="ReadbackPath">A raw flash dump to compare byte-for-byte to the input, if needed.</param>
 /// <param name="FirmwarePath">Input file for readback comparison.</param>
 /// <param name="FirmwareSha256">Digest bound to the validated firmware ranges.</param>
+/// <param name="Verified">The route performs target verification, rather than reporting transport completion only.</param>
 public sealed record EmbeddedFlashPlan(IReadOnlyList<ProcessStartSpec> Steps, bool Touch1200Baud, string Verification,
-    string? ReadbackPath = null, string? FirmwarePath = null, string? FirmwareSha256 = null);
+    string? ReadbackPath = null, string? FirmwarePath = null, string? FirmwareSha256 = null, bool Verified = true);
 
 /// <summary>Creates argument-safe upload commands. It never accepts arbitrary extra flags or configuration-write operations.</summary>
 public static class EmbeddedFlashPlanner
 {
-    /// <summary>Plans an application upload; unsupported verification or incomplete identity is rejected before erase.</summary>
+    /// <summary>Whether an upload needs the USB-serial bridge rather than permissioned libusb.</summary>
+    public static bool RequiresSerial(EmbeddedFlashRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        return request.Protocol is EmbeddedFlashProtocol.Avrdude or EmbeddedFlashProtocol.Esptool or EmbeddedFlashProtocol.Stm32Flash or EmbeddedFlashProtocol.Bossac
+            or EmbeddedFlashProtocol.NrfDfu or EmbeddedFlashProtocol.PymcuprogUpdi ||
+            request.UseSerialTransport && request.Protocol is EmbeddedFlashProtocol.WchIsp or EmbeddedFlashProtocol.MspDebug;
+    }
+
+    /// <summary>Plans an application upload; incomplete identity is rejected before erase and verification limits are explicit.</summary>
     public static EmbeddedFlashPlan Plan(EmbeddedFlashRequest request)
     {
         ArgumentNullException.ThrowIfNull(request);
@@ -86,7 +110,9 @@ public static class EmbeddedFlashPlanner
             throw new InvalidDataException("Firmware must contain 1 byte..128 MiB.");
         }
         var imageBytes = File.ReadAllBytes(request.FirmwarePath);
-        var actualRanges = FirmwareImageInspector.Inspect(imageBytes, Path.GetExtension(request.FirmwarePath), request.BinaryAddress);
+        var actualRanges = request.Protocol == EmbeddedFlashProtocol.NrfDfu
+            ? new[] { NrfDfuPackage.Inspect(imageBytes, request.BinaryAddress ?? throw new ArgumentException("Select the actual Nordic application-partition address.", nameof(request))).ApplicationRange }
+            : FirmwareImageInspector.Inspect(imageBytes, Path.GetExtension(request.FirmwarePath), request.BinaryAddress);
         FlashSafety.ValidateFirmware(actualRanges, request.ApplicationFlash);
         request = request with { FirmwareRegions = actualRanges };
         Token(request.Target, nameof(request.Target));
@@ -97,12 +123,14 @@ public static class EmbeddedFlashPlanner
         var firmware = Path.GetFullPath(request.FirmwarePath);
         var directory = Path.GetFullPath(request.WorkingDirectory);
         var extension = Path.GetExtension(firmware).ToLowerInvariant();
-        if (extension is not (".hex" or ".bin" or ".elf" or ".uf2"))
+        if (extension is not (".hex" or ".bin" or ".elf" or ".uf2") && !(extension == ".zip" && request.Protocol == EmbeddedFlashProtocol.NrfDfu))
         {
             throw new ArgumentException("Firmware must be HEX, BIN, ELF or UF2.", nameof(request));
         }
         var steps = new List<ProcessStartSpec>();
         string? readback = null;
+        var verified = true;
+        string? verification = null;
         void Add(string program, params string[] arguments) => steps.Add(new()
         {
             Program = program,
@@ -210,11 +238,108 @@ public static class EmbeddedFlashPlanner
                 Add("probe-rs", "download", "--chip", request.Target, "--probe", request.ProbeSelector, "--verify", firmware);
                 break;
             case EmbeddedFlashProtocol.Teensy:
-                throw new NotSupportedException("teensy_loader_cli cannot read back application flash. A verified production upload is unavailable through this route.");
+                if (extension != ".hex" || request.Target.ToUpperInvariant() is not ("TEENSY2" or "TEENSY2PP" or "TEENSYLC" or "TEENSY30" or "TEENSY31" or "TEENSY32" or "TEENSY35" or "TEENSY36" or "TEENSY40" or "TEENSY41" or "TEENSY_MICROMOD"))
+                {
+                    throw new ArgumentException("Select the exact Teensy board ID (for example TEENSY40 or TEENSY41) and its HEX image.", nameof(request));
+                }
+                // No -s: it soft-reboots the first serial Teensy it finds, potentially a different board.
+                Add("teensy_loader_cli", "--mcu=" + request.Target.ToUpperInvariant(), "-v", firmware);
+                verified = false;
+                verification = "HalfKay transport completed; this upstream loader does not offer flash readback. Production verification is unavailable.";
+                break;
+            case EmbeddedFlashProtocol.WchIsp:
+                if (extension != ".bin" || request.BinaryAddress != 0 || !request.Target.StartsWith("CH", StringComparison.OrdinalIgnoreCase))
+                {
+                    throw new ArgumentException("WCH ISP requires a raw BIN explicitly based at code-flash address zero. Addressed images must be converted without rebasing their application.", nameof(request));
+                }
+                var transport = new List<string>();
+                if (request.UseSerialTransport)
+                {
+                    Serial(request.SerialPort);
+                    if (request.BaudRate is not (115200 or 1_000_000 or 2_000_000))
+                    {
+                        throw new ArgumentException("wchisp UART supports 115200, 1000000 or 2000000 baud.", nameof(request));
+                    }
+                    transport.AddRange(["--serial", "--port", request.SerialPort!, "--baudrate", request.BaudRate.ToString(CultureInfo.InvariantCulture)]);
+                }
+                else
+                {
+                    if (request.ProbeSelector is { } index && (!int.TryParse(index, NumberStyles.None, CultureInfo.InvariantCulture, out var number) || number < 0))
+                    {
+                        throw new ArgumentException("wchisp's USB selector is a non-negative device index; a permissioned worker exposes index zero only.", nameof(request));
+                    }
+                    transport.AddRange(["--usb", "--device", request.ProbeSelector ?? "0"]);
+                }
+                // info --chip checks the actual ISP-reported chip prefix; flash does not call config/unprotect.
+                Add("wchisp", [.. transport, "info", "--chip", request.Target.ToUpperInvariant()]);
+                Add("wchisp", [.. transport, "flash", firmware]);
+                verification = "wchisp verifies programmed code flash through the ISP protocol; configuration reset/unprotect commands are never requested.";
+                break;
+            case EmbeddedFlashProtocol.MspDebug:
+                if (extension is not (".hex" or ".elf") || request.Programmer is not ("rf2500" or "olimex" or "olimex-v1" or "olimex-iso" or "olimex-iso-mk2" or "uif" or "goodfet" or "mehfet"))
+                {
+                    throw new ArgumentException("Select an addressed MSP430 HEX/ELF and a non-BSL mspdebug driver. BSL drivers that auto-unlock/mass-erase are refused.", nameof(request));
+                }
+                var mspArguments = new List<string> { "-n" }; // Never run project/home .mspdebug startup commands.
+                if (request.UseSerialTransport)
+                {
+                    Serial(request.SerialPort);
+                    mspArguments.AddRange(["-d", request.SerialPort!]);
+                }
+                else if (request.ProbeSelector is { } serial)
+                {
+                    if (serial.Any(char.IsControl))
+                    {
+                        throw new ArgumentException("A probe serial cannot contain control characters.", nameof(request));
+                    }
+                    mspArguments.AddRange(["-s", serial]);
+                }
+                if (request.Programmer == "mehfet")
+                {
+                    if (!UsbId(request.UsbSelector))
+                    {
+                        throw new ArgumentException("The mehfet driver requires its explicit VID:PID.", nameof(request));
+                    }
+                    mspArguments.AddRange(["-V", request.UsbSelector!]);
+                }
+                if (firmware.Any(c => c is '\'' or '"' or '\\' or ';' || char.IsControl(c)))
+                {
+                    throw new ArgumentException("mspdebug firmware paths cannot contain command quoting/control characters; move the image to a simple path.", nameof(request));
+                }
+                mspArguments.AddRange([request.Programmer, "prog \"" + firmware + "\"", "verify \"" + firmware + "\""]);
+                Add("mspdebug", [.. mspArguments]);
+                verification = "mspdebug compares the addressed firmware with target memory; BSL/protection/fuse operations and startup scripts are disabled.";
+                break;
+            case EmbeddedFlashProtocol.NrfDfu:
+                if (extension != ".zip" || !(request.Target.StartsWith("nrf51", StringComparison.OrdinalIgnoreCase) || request.Target.StartsWith("nrf52", StringComparison.OrdinalIgnoreCase)))
+                {
+                    throw new ArgumentException("Legacy Nordic Secure DFU requires an nRF51/nRF52 target and an application-only package ZIP.", nameof(request));
+                }
+                Serial(request.SerialPort);
+                Add("nrfutil", "dfu", request.NrfDfuUart ? "serial" : "usb-serial", "--package", firmware, "--port", request.SerialPort!,
+                    "--baud-rate", request.BaudRate.ToString(CultureInfo.InvariantCulture), "--flow-control", request.HardwareFlowControl ? "1" : "0");
+                verification = "Nordic Secure DFU validates object CRCs and the bootloader validates application compatibility/signature; this route does not provide raw flash readback.";
+                break;
+            case EmbeddedFlashProtocol.PymcuprogUpdi:
+                if (extension != ".hex" || !(request.Target.StartsWith("ATtiny", StringComparison.OrdinalIgnoreCase) || request.Target.StartsWith("ATmega", StringComparison.OrdinalIgnoreCase) || request.Target.StartsWith("AVR", StringComparison.OrdinalIgnoreCase)))
+                {
+                    throw new ArgumentException("Serial UPDI requires an exact supported AVR device and an application-only Intel HEX image.", nameof(request));
+                }
+                Serial(request.SerialPort);
+                steps.Add(new()
+                {
+                    Program = "python3",
+                    Arguments = ["-m", "pymcuprog.pymcuprog", "write", "-t", "uart", "-u", request.SerialPort!, "-d", request.Target.ToLowerInvariant(),
+                        "-c", request.BaudRate.ToString(CultureInfo.InvariantCulture), "-f", firmware, "--verify"],
+                    WorkingDirectory = directory,
+                    Environment = new Dictionary<string, string?> { ["PYTHONPATH"] = TabStudio.Toolchains.Microchip.MicrochipInstallation.ToolsDirectory + "/python" },
+                });
+                verification = "pymcuprog reads back and verifies application memory over UART UPDI; no high-voltage activation, chip unlock, user-row or fuse operations are requested.";
+                break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(request));
         }
-        return new(steps, request.Touch1200Baud, readback is null ? "Upstream tool verifies programmed application flash." : "Independent raw-flash readback compared byte-for-byte.", readback, firmware, Convert.ToHexStringLower(System.Security.Cryptography.SHA256.HashData(imageBytes)));
+        return new(steps, request.Touch1200Baud, verification ?? (readback is null ? "Upstream tool verifies programmed application flash." : "Independent raw-flash readback compared byte-for-byte."), readback, firmware, Convert.ToHexStringLower(System.Security.Cryptography.SHA256.HashData(imageBytes)), verified);
     }
 
     private static void Token(string? value, string name)

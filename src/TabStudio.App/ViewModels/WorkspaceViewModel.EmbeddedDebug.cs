@@ -19,6 +19,7 @@ public sealed partial class WorkspaceViewModel
 {
     private ToolchainProcess? _embeddedDebugServer;
     private IUsbConnection? _embeddedDebugUsb;
+    private UsbfsInventory? _embeddedDebugInventory;
     private CancellationTokenSource? _embeddedDebugCancellation;
     private Task _embeddedDebugCleanup = Task.CompletedTask;
 
@@ -48,8 +49,15 @@ public sealed partial class WorkspaceViewModel
             }
             if (new FileInfo(profilePath).Length > 65536) throw new InvalidDataException("The embedded debug profile exceeds 64 KiB.");
             var profile = EmbeddedDebugProfile.Parse(await File.ReadAllTextAsync(profilePath));
+            var memoryRegions = profile.RttAddress is null ? null : ReadEmbeddedAnalysisOptions(project.Directory).MemoryRegions;
+            profile.ValidateRttMemory(memoryRegions);
             if (!await BuildEmbeddedCoreAsync(project)) return;
             var firmware = profile.ResolveFirmware(project.Directory);
+            if (profile.Backend == EmbeddedDebugBackend.ProbeRs)
+            {
+                await DebugEmbeddedProbeRsAsync(project, profile, firmware);
+                return;
+            }
             if (_toolchains.Catalog.Find("embedded-debug") is not { } toolchain
                 || !await EnsureToolchainReadyAsync(toolchain, "On-chip debugging uses OpenOCD and multi-target GDB with its Python DAP adapter."))
             {
@@ -67,7 +75,17 @@ public sealed partial class WorkspaceViewModel
                 await CheckEmbeddedGdbAsync(profile.ElfMachine(project.Directory), token);
                 var scripts = FindOpenOcdScripts(profile);
                 var port = EmbeddedGdbPort();
-                var spec = profile.CreateServer(project.Directory, scripts, port);
+                int? rttPort = null;
+                if (profile.RttAddress is not null)
+                {
+                    for (var attempt = 0; attempt < 32; attempt++)
+                    {
+                        var candidate = EmbeddedGdbPort();
+                        if (Math.Abs(candidate - port) >= 16) { rttPort = candidate; break; }
+                    }
+                    if (rttPort is null) throw new IOException("Could not allocate a separate local RTT port.");
+                }
+                var spec = profile.CreateServer(project.Directory, scripts, port, rttPort, memoryRegions);
                 if (_toolchains.Environment is not null)
                 {
                     await SerialMonitor.ReleaseAsync();
@@ -81,6 +99,7 @@ public sealed partial class WorkspaceViewModel
                 }
                 token.ThrowIfCancellationRequested();
                 var ready = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+                var rttReady = new TaskCompletionSource<string?>(TaskCreationOptions.RunContinuationsAsynchronously);
                 var tail = new StringBuilder();
                 var gate = new Lock();
                 void Line(string text)
@@ -91,7 +110,10 @@ public sealed partial class WorkspaceViewModel
                         if (tail.Length > 16384) tail.Remove(0, tail.Length - 8192);
                     }
                     if (text.Contains("Listening on port " + port.ToString(CultureInfo.InvariantCulture) + " for gdb connections", StringComparison.OrdinalIgnoreCase)) ready.TrySetResult();
-                    _ui.Post(() => DebugAdapterOutput.WriteLine("[OpenOCD] " + text, OutputKind.Info));
+                    if (rttPort is { } loggingPort && text.Contains("Listening on port " + loggingPort.ToString(CultureInfo.InvariantCulture) + " for rtt connections", StringComparison.OrdinalIgnoreCase)) rttReady.TrySetResult(null);
+                    const string rttFailure = "TABSTUDIO_RTT_ERROR:";
+                    if (text.IndexOf(rttFailure, StringComparison.Ordinal) is var failureIndex && failureIndex >= 0) rttReady.TrySetResult(text[(failureIndex + rttFailure.Length)..].Trim());
+                    _ui.Post(() => { if (!_disposed) DebugAdapterOutput.WriteLine("[OpenOCD] " + text, OutputKind.Info); });
                 }
                 var server = _toolchains.Runtime.Start(spec);
                 _embeddedDebugServer = server;
@@ -116,7 +138,9 @@ public sealed partial class WorkspaceViewModel
                 };
                 await LaunchAdapterAsync(new LaunchTarget(configuration.Name, configuration, false), DebugStart.Run, noDebug: false);
                 if (_adapter is null || _adapter.HasEnded) throw new IOException("GDB DAP did not attach. See Debug Adapters output; the selected GDB must support this chip architecture and DAP.");
+                await BindEmbeddedFaultSessionAsync(project, profile, firmware, _adapter, token);
                 _ = ObserveEmbeddedServerAsync(server);
+                if (rttPort is { } streamPort) _ = StreamEmbeddedRttAsync(streamPort, rttReady.Task, token);
                 Output.WriteLine("Attached to the chip through OpenOCD. Source locations use " + Path.GetFileName(firmware) + "; the programmed firmware must match.", OutputKind.Info);
             }
             finally
@@ -174,16 +198,40 @@ public sealed partial class WorkspaceViewModel
         catch (Exception error) when (error is IOException or ObjectDisposedException) { /* Process cleanup closes its log pipes. */ }
     }
 
-    private async Task ObserveEmbeddedServerAsync(ToolchainProcess server)
+    private async Task ObserveEmbeddedServerAsync(ToolchainProcess server, string backend = "OpenOCD")
     {
         var exit = await server.Completion.ConfigureAwait(false);
         _ui.Post(async () =>
         {
             if (!ReferenceEquals(server, _embeddedDebugServer)) return;
-            Output.WriteLine("OpenOCD " + exit.Description + "; the on-chip debug session is ending.", OutputKind.Failure);
+            Output.WriteLine(backend + " " + exit.Description + "; the on-chip debug session is ending.", OutputKind.Failure);
             await StopAdapterAsync();
             DisposeEmbeddedDebug();
         });
+    }
+
+    private async Task StreamEmbeddedRttAsync(int port, Task<string?> ready, CancellationToken token)
+    {
+        try
+        {
+            if (await ready.WaitAsync(TimeSpan.FromSeconds(5), token) is { } startupError)
+                throw new IOException("OpenOCD could not start RTT: " + startupError);
+            using var client = new TcpClient(AddressFamily.InterNetwork);
+            await client.ConnectAsync(IPAddress.Loopback, port, token).AsTask().WaitAsync(TimeSpan.FromSeconds(5), token);
+            // Output trims retained text. Awaiting the UI also bounds queued chunks.
+            await EmbeddedRttTextReader.CopyAsync(client.GetStream(), text =>
+                _ui.InvokeAsync(() => { if (!_disposed) Output.Write(text, OutputKind.Program); }), token);
+            if (!token.IsCancellationRequested) await _ui.InvokeAsync(() => Output.WriteLine("RTT channel closed.", OutputKind.Info));
+        }
+        catch (OperationCanceledException) { /* The debug session owns this stream's lifetime. */ }
+        catch (DecoderFallbackException)
+        {
+            await _ui.InvokeAsync(() => Output.WriteLine("RTT contains binary/non-UTF-8 data. This channel is a text logger; defmt frames require a matching ELF and defmt-print decoder.", OutputKind.Failure));
+        }
+        catch (Exception error) when (error is IOException or SocketException or TimeoutException)
+        {
+            if (!token.IsCancellationRequested) await _ui.InvokeAsync(() => Output.WriteLine("RTT logging failed: " + error.Message, OutputKind.Failure));
+        }
     }
 
     private async Task RestartEmbeddedDebugAsync()
@@ -198,21 +246,32 @@ public sealed partial class WorkspaceViewModel
     /// <summary>Stops the server and releases USB only after its process exits. Safe during workspace disposal.</summary>
     private void DisposeEmbeddedDebug()
     {
+        _embeddedFaultSession = null;
         var server = _embeddedDebugServer;
         var usb = _embeddedDebugUsb;
+        var inventory = _embeddedDebugInventory;
         var cancellation = _embeddedDebugCancellation;
         _embeddedDebugServer = null;
         _embeddedDebugUsb = null;
+        _embeddedDebugInventory = null;
         _embeddedDebugCancellation = null;
         cancellation?.Cancel();
-        if (server is null && usb is null && cancellation is null) return;
+        if (server is null && usb is null && inventory is null && cancellation is null) return;
         server?.Stop();
-        _embeddedDebugCleanup = DisposeEmbeddedBackendAsync(server, usb, cancellation);
+        _embeddedDebugCleanup = DisposeEmbeddedBackendAsync(server, usb, inventory, cancellation);
     }
 
-    private static async Task DisposeEmbeddedBackendAsync(ToolchainProcess? server, IUsbConnection? usb, CancellationTokenSource? cancellation)
+    private static async Task DisposeEmbeddedBackendAsync(ToolchainProcess? server, IUsbConnection? usb, UsbfsInventory? inventory, CancellationTokenSource? cancellation)
     {
         try { if (server is not null) await server.Completion.ConfigureAwait(false); }
-        finally { server?.Dispose(); usb?.Dispose(); cancellation?.Dispose(); }
+        finally
+        {
+            try { server?.Dispose(); }
+            finally
+            {
+                try { inventory?.Dispose(); }
+                finally { usb?.Dispose(); cancellation?.Dispose(); }
+            }
+        }
     }
 }

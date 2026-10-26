@@ -12,7 +12,7 @@ public sealed class ToolchainCatalogTests
     [Fact]
     public void Describes_languages_flutter_and_the_separately_licensed_pic_compilers()
     {
-        Assert.Equal(["flutter", "python", "node", "cpp", "rust", "go", "java", "kotlin", "android", "xc8", "xc32", "embedded-arm", "embedded-riscv", "embedded-avr", "embedded-support", "platformio", "arduino", "esp-idf", "zephyr", "pico-sdk", "micropython", "embedded-import", "embedded-debug"], Catalog.Toolchains.Select(t => t.Id));
+        Assert.Equal(["flutter", "python", "node", "cpp", "rust", "go", "java", "kotlin", "android", "xc8", "xc32", "embedded-arm", "embedded-riscv", "embedded-avr", "embedded-support", "platformio", "arduino", "esp-idf", "zephyr", "pico-sdk", "micropython", "embedded-import", "embedded-debug", "probe-rs"], Catalog.Toolchains.Select(t => t.Id));
         var languages = Catalog.Toolchains.SelectMany(t => t.Languages).ToHashSet();
         Assert.Superset(new HashSet<string> { "Python", "JavaScript", "TypeScript", "C", "C++", "Rust", "Go", "Java", "Kotlin", "Dart" }, languages);
     }
@@ -20,7 +20,7 @@ public sealed class ToolchainCatalogTests
     [Fact]
     public void The_store_lists_the_finished_toolchains()
     {
-        Assert.Equal(["flutter", "python", "node", "cpp", "rust", "go", "java", "android", "xc8", "xc32", "embedded-arm", "embedded-riscv", "embedded-avr", "embedded-support", "platformio", "arduino", "micropython", "embedded-debug"], Catalog.Listed.Select(t => t.Id));
+        Assert.Equal(["flutter", "python", "node", "cpp", "rust", "go", "java", "android", "xc8", "xc32", "embedded-arm", "embedded-riscv", "embedded-avr", "embedded-support", "platformio", "arduino", "micropython", "embedded-debug", "probe-rs"], Catalog.Listed.Select(t => t.Id));
         Assert.Equal("jdtls", Catalog.Find("android")!.LanguageServer!.Id);
         Assert.Contains("kotlin-language-server", Catalog.Find("android")!.AdditionalToolIds);
     }
@@ -32,6 +32,15 @@ public sealed class ToolchainCatalogTests
         {
             Assert.False(string.IsNullOrWhiteSpace(toolchain.Name), toolchain.Id);
             Assert.EndsWith(".", toolchain.Description, StringComparison.Ordinal);
+            if (toolchain.Auxiliary)
+            {
+                Assert.NotEmpty(toolchain.Packages);
+                Assert.NotEmpty(toolchain.Host!.Commands);
+                Assert.Empty(toolchain.FileExtensions);
+                Assert.Empty(toolchain.ProjectFiles);
+                Assert.Null(toolchain.Run);
+                continue;
+            }
             if (toolchain.Id != "flutter")
             {
                 // Flutter installs into its own Ubuntu environment instead of from Alpine packages.

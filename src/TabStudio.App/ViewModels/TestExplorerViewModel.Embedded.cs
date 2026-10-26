@@ -9,8 +9,9 @@ public sealed partial class TestExplorerViewModel
     /// <summary>Shows native host/board test outcomes in the ordinary Test Explorer with per-board identities.</summary>
     /// <param name="project">The embedded project the native harness belongs to.</param>
     /// <param name="results">Final parsed results, including transport and incomplete-harness failures.</param>
+    /// <param name="elapsed">The measured native command duration, when this is a live run.</param>
     /// <remarks>Called on the UI thread, after the native command or device transport ends.</remarks>
-    public void ReportEmbeddedResults(ProjectInfo project, IReadOnlyList<EmbeddedTestResult> results)
+    public void ReportEmbeddedResults(ProjectInfo project, IReadOnlyList<EmbeddedTestResult> results, TimeSpan? elapsed = null)
     {
         ArgumentNullException.ThrowIfNull(project);
         ArgumentNullException.ThrowIfNull(results);
@@ -28,9 +29,21 @@ public sealed partial class TestExplorerViewModel
             .. converted.Select(r => TestEntry.FromBuild(project.FilePath, project.Name, r.Test))];
         HasTestProjects = _projects.Count > 0;
         MergeEntries();
+        if (IsRunning)
+        {
+            ReportQueued(project.FilePath, converted.Select(r => r.Test).ToArray());
+        }
         foreach (var result in converted)
         {
             ReportFinished(project.FilePath, result);
+        }
+        if (IsRunning)
+        {
+            _runSummaries.Add(new TestRunSummary
+            {
+                Total = converted.Length, Results = converted,
+                Duration = elapsed ?? TimeSpan.FromTicks(converted.Sum(r => r.Duration.Ticks)),
+            });
         }
         RefreshCommands();
     }

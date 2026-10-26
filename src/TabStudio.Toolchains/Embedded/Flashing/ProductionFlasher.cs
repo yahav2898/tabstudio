@@ -7,7 +7,8 @@ namespace TabStudio.Toolchains.Embedded.Flashing;
 /// <summary>A single selected physical board and its verified-upload operation.</summary>
 /// <param name="DeviceIdentity">Attachment-specific identity. It must be distinct within a batch.</param>
 /// <param name="Upload">Opens and owns only this board's permissioned connection, runs a validated plan and verifies it.</param>
-public sealed record ProductionFlashJob(string DeviceIdentity, Func<CancellationToken, Task<EmbeddedFlashResult>> Upload);
+/// <param name="ProvidesVerification">False for transfer-only loaders; such jobs are refused before a batch starts.</param>
+public sealed record ProductionFlashJob(string DeviceIdentity, Func<CancellationToken, Task<EmbeddedFlashResult>> Upload, bool ProvidesVerification = true);
 
 /// <summary>A per-board production result, suitable for a JSON-lines audit log.</summary>
 /// <param name="DeviceIdentity">The selected board.</param>
@@ -33,6 +34,10 @@ public static class ProductionFlasher
         {
             throw new ArgumentException("Every job needs a distinct physical device identity and upload operation.", nameof(jobs));
         }
+        if (jobs.Any(job => !job.ProvidesVerification))
+        {
+            throw new NotSupportedException("Production flashing requires target verification; transfer-only loaders are unavailable in batches.");
+        }
         var path = Path.GetFullPath(logPath);
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);
         await using var stream = new FileStream(path, FileMode.Append, FileAccess.Write, FileShare.Read);
@@ -50,7 +55,8 @@ public static class ProductionFlasher
                 acquired = true;
                 cancellationToken.ThrowIfCancellationRequested();
                 var upload = await job.Upload(cancellationToken).ConfigureAwait(false);
-                result = new(job.DeviceIdentity, DateTimeOffset.UtcNow, true, upload.FirmwareSha256, null);
+                result = new(job.DeviceIdentity, DateTimeOffset.UtcNow, upload.Verified, upload.FirmwareSha256,
+                    upload.Verified ? null : "Transport completed, but target verification/readback is unavailable.");
             }
             catch (OperationCanceledException)
             {

@@ -13,7 +13,6 @@ on:
       - 'native/embedded/**'
       - 'build/android/native/**'
       - 'build/embedded/**'
-      - 'build/android/native/**'
       - 'build/pic/spike.py'
       - 'build/ci/real-repos.json'
       - '.github/workflows/embedded.yml'
@@ -28,7 +27,6 @@ on:
       - 'native/embedded/**'
       - 'build/android/native/**'
       - 'build/embedded/**'
-      - 'build/android/native/**'
       - 'build/pic/spike.py'
       - 'build/ci/real-repos.json'
       - '.github/workflows/embedded.yml'
@@ -155,4 +153,28 @@ jobs:
         with:
           name: embedded-emulators-${{ github.event_name }}
           path: ci-out/embedded-emulators/
+          if-no-files-found: error
+
+  glibc-frontends:
+    name: Production glibc SDK installer / ${{ matrix.runner }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-24.04, ubuntu-24.04-arm]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Install signed host prerequisites for the APK's pinned PRoot build
+        run: sudo apt-get update -qq && sudo apt-get install -y build-essential libtalloc-dev gawk unzip
+      - name: Install real SDK frontends, exercise glibc USB shims and compile Arduino firmware
+        run: bash build/embedded/glibc-frontends.sh "$RUNNER_TEMP/embedded-glibc" ci-out/embedded-glibc
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: embedded-glibc-${{ matrix.runner }}-${{ github.event_name }}
+          path: ci-out/embedded-glibc/
           if-no-files-found: error

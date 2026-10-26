@@ -1,6 +1,7 @@
 using System.Text.Json;
 using TabStudio.Toolchains.Microchip;
 using TabStudio.Toolchains.Processes;
+using TabStudio.Toolchains.Runtimes;
 
 namespace TabStudio.Toolchains.Embedded;
 
@@ -51,7 +52,9 @@ public static class UsbBridgeProcess
         List<string> arguments = [UsbBridgeInstallation.ToolsDirectory + "/serial_bridge.py", "--shim", UsbBridgeInstallation.ToolsDirectory + "/serial-posix.so", "--port", portAlias, "--baud", baud.ToString(System.Globalization.CultureInfo.InvariantCulture)];
         if (interfaceNumber is { } number) arguments.AddRange(["--interface", number.ToString(System.Globalization.CultureInfo.InvariantCulture)]);
         arguments.AddRange(["--", command.Program, .. command.Arguments]);
-        return spec with { Program = "python3", Arguments = arguments };
+        var environment = new Dictionary<string, string?>(spec.Environment);
+        if (EmbeddedGlibcRuntime.IsEmbeddedCommand(command.Program)) environment[EmbeddedGlibcRuntime.RoutingMarker] = "1";
+        return spec with { Program = "python3", Arguments = arguments, Environment = environment };
     }
 
     /// <summary>Performs the Arduino 1200-baud DTR touch and closes before the caller waits for re-enumeration.</summary>

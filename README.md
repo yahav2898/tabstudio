@@ -294,6 +294,10 @@ Native Android deployment of Flutter apps through the Android SDK toolchain is n
 - **Use Android's granted USB device.** Reused PIC USB drivers, a libusb descriptor bridge and a serial PTY/control
   bridge let compatible upstream tools upload and verify application firmware. OpenOCD with GDB's DAP adapter
   provides the on-chip debug route. Stock nusb/hidraw programs need further integration.
+- **Choose the bootloader you use.** Typed routes cover WCH ROM ISP, MSP430, Nordic SDK Secure DFU application
+  packages and AVR UART UPDI. UPDI reuses pinned pymcuprog support; other routes need their compatible upstream
+  tool installed. Teensy HalfKay reports transfer completion with readback unavailable and is excluded from
+  verified production batches. Physical hardware remains unverified.
 - **Keep evidence from real work.** Read application flash twice before saving a backup, compare dumps, program
   an explicitly selected batch with per-board verification/logs, or upload to an ArduinoOTA-capable Wi-Fi board.
 - **Understand the firmware.** Linked-ELF memory treemaps and build-size changes, crash decoding with matching

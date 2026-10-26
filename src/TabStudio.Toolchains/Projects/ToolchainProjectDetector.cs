@@ -91,6 +91,7 @@ public static class ToolchainProjectDetector
             var insideEmbedded = embeddedRoots.Any(r => r == folder || IsInside(folder, r));
             foreach (var toolchain in toolchains)
             {
+                if (toolchain.Auxiliary) continue;
                 // An embedded build system owns its C/C++/Rust/Python source tree. Never run its cross-target
                 // firmware as a host executable or rediscover each source directory as a desktop project.
                 if (toolchain.Id == embeddedId || insideEmbedded && toolchain.Id is "cpp" or "python" or "rust")

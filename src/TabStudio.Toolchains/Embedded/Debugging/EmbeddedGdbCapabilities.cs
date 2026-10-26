@@ -22,6 +22,7 @@ public static class EmbeddedGdbCapabilities
         if (line is null) throw new NotSupportedException("The installed GDB cannot report Python/DAP capabilities. Install multi-target GDB 14+ with its gdb.dap module.");
         using var document = JsonDocument.Parse(line[Marker.Length..], new JsonDocumentOptions { MaxDepth = 8 });
         var root = document.RootElement;
+        if (root.ValueKind != JsonValueKind.Object) throw new InvalidDataException("GDB did not return a capability object.");
         if (!root.TryGetProperty("dap", out var dap) || dap.ValueKind != JsonValueKind.True)
             throw new NotSupportedException("The installed GDB has no Python DAP module. Install a GDB 14+ build with gdb.dap.");
         if (!root.TryGetProperty("architectures", out var architectures) || architectures.ValueKind != JsonValueKind.Array)

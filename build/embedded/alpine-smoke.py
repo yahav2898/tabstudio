@@ -19,6 +19,8 @@ def run(*args):
 
 
 def main():
+    os.environ['PLATFORMIO_SETTING_ENABLE_TELEMETRY'] = 'no'
+    os.environ['PYTHONSAFEPATH'] = '1'
     root = pathlib.Path(__file__).resolve().parents[2]
     with tempfile.TemporaryDirectory(prefix='tabstudio-embedded-') as temporary:
         work = pathlib.Path(temporary)

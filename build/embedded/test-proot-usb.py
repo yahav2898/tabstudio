@@ -28,7 +28,7 @@ def main():
                 env = dict(base)
                 if mode == "disabled":
                     env.pop("TABSTUDIO_USB_FD")
-                result = subprocess.run([str(args.proot.resolve()), "-r", "/", str(binary), mode], env=env,
+                result = subprocess.run([str(args.proot.resolve()), "--kill-on-exit", "--link2symlink", "--sysvipc", "-L", "-0", "-r", "/", str(binary), mode], env=env,
                                         pass_fds=(descriptor,), preexec_fn=inherit, capture_output=True, text=True, timeout=15)
                 print(result.stdout, end="")
                 if result.returncode:

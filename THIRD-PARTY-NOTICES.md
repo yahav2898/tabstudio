@@ -242,11 +242,17 @@ and dependency notices remain authoritative.
 | Raspberry Pi Pico SDK / picotool | BSD-3-Clause, with included dependency notices | [Pico SDK](https://github.com/raspberrypi/pico-sdk), [picotool](https://github.com/raspberrypi/picotool); SDK CI source pinned. picotool has an external command route, not a complete automatic installer here. |
 | Zephyr / west | Apache-2.0, with Zephyr's per-component notices | [Zephyr](https://github.com/zephyrproject-rtos/zephyr), [west](https://github.com/zephyrproject-rtos/west); pinned Zephyr source; CI west 1.3.0. |
 | probe-rs / nusb | MIT OR Apache-2.0 | [probe-rs](https://github.com/probe-rs/probe-rs), [nusb](https://github.com/kevinmehall/nusb); stock Android transport is not enabled by the libusb shim. |
-| stm32flash | GPL-2.0-or-later | [stm32flash](https://sourceforge.net/projects/stm32flash/); external command route requiring an installed compatible tool. |
+| libusb-compat | LGPL-2.1-or-later | [libusb compatibility library](https://github.com/libusb/libusb-compat-0.1); signed Alpine package exposing legacy libusb 0.1 clients through libusb 1.0. |
+| teensy_loader_cli | GPL-3.0-only | [PJRC Teensy Loader](https://github.com/PaulStoffregen/teensy_loader_cli); user-installed compatible tool. Normal HalfKay transfer has no readback and is excluded from verified production batches. |
+| wchisp | GPL-2.0 | [WCH ISP](https://github.com/ch32-rs/wchisp); user-installed 0.3-compatible CLI, dynamically linked libusb for the Android libusb bridge. |
+| mspdebug | GPL-2.0 | [MSPDebug](https://github.com/dlbeer/mspdebug); user-installed tool, signed libusb-compat dependency supplied. Startup scripts, BSL auto-unlock and protection operations are not requested. |
+| pc-nrfutil 6.x | Nordic Semiconductor 5-clause license | [Nordic license](https://github.com/NordicSemiconductor/pc-nrfutil/blob/master/LICENSE); user-installed legacy Secure DFU CLI for Nordic processors only, not redistributed. Target bootloader validates package trust. |
+| stm32flash | GPL-2.0-or-later | [stm32flash](https://sourceforge.net/projects/stm32flash/); installed through signed Alpine 3.24 community packages. |
 | BOSSA / bossac | BSD-3-Clause | [BOSSA](https://github.com/shumatech/BOSSA); external command route requiring an installed compatible tool. |
 | QEMU | GPL-2.0 and included component-specific licenses | [QEMU](https://www.qemu.org/); host CI package, not physical MCU proof. |
 | simavr | GPL-3.0-or-later and included component notices | [simavr](https://github.com/buserror/simavr); host CI package. |
 | Embassy | MIT OR Apache-2.0, with individual crate/dependency notices | [Embassy](https://github.com/embassy-rs/embassy); pinned example source; generated Cargo lock retained where upstream omits one. |
 
-Requested nrfutil, WCH, MSP430 and Teensy programming integration remains incomplete. Mentioning those tools in
-the guide does not represent them as installed and hardware-verified.
+Typed nrfutil, WCH, MSP430 and Teensy command routes require the compatible upstream tools to be installed.
+Their complete Android installers and physical-board validation remain incomplete. pymcuprog UART UPDI reuses the
+existing pinned Microchip support wheels without downloading an XC compiler.

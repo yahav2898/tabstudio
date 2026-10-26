@@ -1813,28 +1813,8 @@
       "license": "GPL-3.0-or-later WITH GCC-exception-3.1",
       "estimatedDownloadSize": 60000000,
       "estimatedInstalledSize": 300000000,
-      "fileExtensions": [
-        ".c",
-        ".cpp",
-        ".h",
-        ".hpp",
-        ".s",
-        ".S"
-      ],
-      "projectFiles": [
-        ".tabstudio-usb-tools"
-      ],
-      "languageServer": {
-        "id": "clangd",
-        "command": [
-          "clangd",
-          "--background-index"
-        ],
-        "languages": [
-          "c",
-          "cpp"
-        ]
-      },
+      "fileExtensions": [],
+      "projectFiles": [],
       "problemPatterns": [
         {
           "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+):\\s*(?<severity>error|warning|note):\\s*(?<message>.*)$"
@@ -1842,12 +1822,14 @@
       ],
       "id": "embedded-support",
       "name": "Embedded USB tools",
-      "description": "OpenOCD, avrdude and dfu-util with permissioned libusb and USB-serial bridge dependencies; nusb and static executables need separate integration.",
+      "description": "OpenOCD, avrdude, dfu-util and stm32flash with permissioned USB bridges and libusb compatibility dependencies; physical probe and bootloader validation remains separate.",
       "packages": [
         "openocd",
         "avrdude",
         "dfu-util",
+        "stm32flash",
         "libusb",
+        "libusb-compat",
         "libusb-dev",
         "build-base",
         "python3"
@@ -1861,21 +1843,7 @@
           "--version"
         ]
       },
-      "run": {
-        "file": [
-          "openocd",
-          "{file}"
-        ],
-        "entries": [
-          {
-            "file": ".tabstudio-usb-tools",
-            "command": [
-              "openocd",
-              "--version"
-            ]
-          }
-        ]
-      }
+      "auxiliary": true
     },
     {
       "languages": [
@@ -1986,7 +1954,7 @@
           "file": {
             "path": "/usr/local/bin/pio",
             "executable": true,
-            "content": "#!/bin/sh\nexec /opt/tabstudio/platformio/bin/python -m platformio \"$@\"\n"
+            "content": "#!/bin/sh\nexport PLATFORMIO_SETTING_ENABLE_TELEMETRY=no\nexport PYTHONSAFEPATH=1\nexec /opt/tabstudio/platformio/bin/python -P -m platformio \"$@\"\n"
           }
         }
       ]
@@ -2510,28 +2478,8 @@
       "license": "GPL-3.0-or-later AND GPL-2.0-or-later",
       "estimatedDownloadSize": 60000000,
       "estimatedInstalledSize": 300000000,
-      "fileExtensions": [
-        ".c",
-        ".cpp",
-        ".h",
-        ".hpp",
-        ".s",
-        ".S"
-      ],
-      "projectFiles": [
-        ".tabstudio-embedded-debug"
-      ],
-      "languageServer": {
-        "id": "clangd",
-        "command": [
-          "clangd",
-          "--background-index"
-        ],
-        "languages": [
-          "c",
-          "cpp"
-        ]
-      },
+      "fileExtensions": [],
+      "projectFiles": [],
       "problemPatterns": [
         {
           "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+):\\s*(?<severity>error|warning|note):\\s*(?<message>.*)$"
@@ -2554,20 +2502,67 @@
           "--version"
         ]
       },
-      "run": {
-        "file": [
-          "gdb-multiarch",
-          "{file}"
+      "auxiliary": true
+    },
+    {
+      "id": "probe-rs",
+      "name": "probe-rs",
+      "description": "Official probe-rs 0.32.0 tools in the embedded glibc environment with an exact permissioned USBFS inventory; USB transfer and individual probes require hardware verification.",
+      "auxiliary": true,
+      "listed": true,
+      "homepage": "https://probe.rs/",
+      "license": "MIT OR Apache-2.0",
+      "packages": [
+        "python3"
+      ],
+      "versionPackage": "python3",
+      "pinnedVersion": "0.32.0",
+      "estimatedDownloadSize": 22506272,
+      "estimatedInstalledSize": 160000000,
+      "host": {
+        "commands": [
+          "probe-rs"
         ],
-        "entries": [
-          {
-            "file": ".tabstudio-embedded-debug",
-            "command": [
-              "gdb-multiarch",
-              "--version"
-            ]
-          }
+        "versionArguments": [
+          "--version"
         ]
+      },
+      "fileExtensions": [],
+      "projectFiles": [],
+      "setup": [
+        {
+          "name": "probe-rs v0.32.0 aarch64",
+          "architectures": [
+            "aarch64"
+          ],
+          "archive": {
+            "url": "https://github.com/probe-rs/probe-rs/releases/download/v0.32.0/probe-rs-tools-aarch64-unknown-linux-gnu.tar.xz",
+            "sha256": "7c818cfd77808e806bf8f4d108c9137910b4fb28e0fe5c464d39782dbbc8af31",
+            "size": 21444944,
+            "destination": "/opt/tabstudio/probe-rs"
+          }
+        },
+        {
+          "name": "probe-rs v0.32.0 x86_64",
+          "architectures": [
+            "x86_64"
+          ],
+          "archive": {
+            "url": "https://github.com/probe-rs/probe-rs/releases/download/v0.32.0/probe-rs-tools-x86_64-unknown-linux-gnu.tar.xz",
+            "sha256": "c2ccc46049e52a5d403ef212078cd637ecda55b662708327960558f83e851ff5",
+            "size": 22506272,
+            "destination": "/opt/tabstudio/probe-rs"
+          }
+        }
+      ],
+      "debugAdapter": {
+        "id": "probe-rs-dap",
+        "command": [
+          "probe-rs",
+          "dap-server"
+        ],
+        "type": "probe-rs",
+        "languages": []
       }
     }
   ]

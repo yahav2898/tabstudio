@@ -83,6 +83,42 @@ class RealRepositoryManifestTests(unittest.TestCase):
             argv = command.call_args.args[0]
             self.assertEqual([RUNNER.sys.executable, "-P", "-m", "platformio"], argv[:4])
             self.assertEqual(project, command.call_args.args[1])
+            self.assertEqual("no", command.call_args.args[2]["PLATFORMIO_SETTING_ENABLE_TELEMETRY"])
+            self.assertEqual("1", command.call_args.args[2]["PYTHONSAFEPATH"])
+
+    def test_cloned_repositories_register_authoritative_origin_before_submodules(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            entry = RUNNER.entries()[0]
+            runner = RUNNER.Runner(entry, root / "work", root / "out")
+            with patch.object(runner, "run") as command, patch.object(RUNNER.subprocess, "check_output", return_value=entry["sha"] + "\n"):
+                runner.clone(entry, "source", submodules=True)
+            args = [call.args[0] for call in command.call_args_list]
+            self.assertEqual(["git", "remote", "add", "origin", entry["url"]], args[1])
+            self.assertEqual("origin", args[2][-2])
+            self.assertEqual("submodule", args[-1][3])
+
+    def test_zephyr_cross_prefix_is_absolute_even_when_compiler_was_found_on_path(self):
+        with patch.object(RUNNER.shutil, "which", return_value="/private SDK/bin/arm-none-eabi-gcc"):
+            self.assertEqual("/private SDK/bin/arm-none-eabi-", RUNNER.arm_cross_prefix({"PATH": "/private SDK/bin"}))
+        with patch.object(RUNNER.shutil, "which", return_value=None):
+            with self.assertRaisesRegex(RuntimeError, "Arm GNU"):
+                RUNNER.arm_cross_prefix({})
+
+    def test_stm32_preserves_the_vendor_preset_but_never_uses_a_checked_in_build_cache(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            entry = next(e for e in RUNNER.entries() if e["kind"] == "stm32")
+            runner = RUNNER.Runner(entry, root / "work", root / "out")
+            repository = root / "source"
+            repository.mkdir()
+            with patch.object(runner, "clone", return_value=repository), patch.object(runner, "run") as command, patch.object(runner, "require"):
+                runner.build()
+            configure = command.call_args_list[0].args[0]
+            build = command.call_args_list[1].args[0]
+            private_build = str(runner.work / "build")
+            self.assertEqual(["cmake", "--preset", "Debug", "-B", private_build], configure[:5])
+            self.assertEqual(["cmake", "--build", private_build], build[:3])
 
 
 if __name__ == "__main__":

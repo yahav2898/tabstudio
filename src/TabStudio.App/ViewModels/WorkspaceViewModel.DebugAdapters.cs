@@ -931,7 +931,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
 
     private void RestartAdapter()
     {
-        if (_adapter?.Adapter.Id == "embedded-gdb")
+        if (_adapter?.Adapter.Id is "embedded-gdb" or "embedded-probe-rs")
         {
             _ = RestartEmbeddedDebugAsync();
             return;
@@ -994,7 +994,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         }
         _adapterRoot = null;
         _adapter = null;
-        if (session.Adapter.Id == "embedded-gdb") DisposeEmbeddedDebug();
+        if (session.Adapter.Id is "embedded-gdb" or "embedded-probe-rs") DisposeEmbeddedDebug();
         _adapterPauses++;
         _adapterCurrent = null;
         _adapterFrames = [];

@@ -9,7 +9,8 @@ namespace TabStudio.Toolchains.Embedded.Flashing;
 /// <param name="FirmwareSha256">Digest of the file used by every upload step.</param>
 /// <param name="Elapsed">Total elapsed time.</param>
 /// <param name="StepsCompleted">Number of successful upstream tool invocations.</param>
-public sealed record EmbeddedFlashResult(string FirmwareSha256, TimeSpan Elapsed, int StepsCompleted);
+/// <param name="Verified">Target verification completed; false means transport completion only.</param>
+public sealed record EmbeddedFlashResult(string FirmwareSha256, TimeSpan Elapsed, int StepsCompleted, bool Verified = true);
 
 /// <summary>Executes validated application upload plans with cancellation, streaming logs and content-stability checks.</summary>
 public static class EmbeddedFlashExecutor
@@ -92,7 +93,7 @@ public static class EmbeddedFlashExecutor
             {
                 throw new InvalidDataException("Firmware changed while an upload tool was running; success cannot be attributed to the validated input.");
             }
-            return new(digest, elapsed.Elapsed, completed);
+            return new(digest, elapsed.Elapsed, completed, plan.Verified);
         }
         finally
         {

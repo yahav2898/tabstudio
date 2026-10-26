@@ -38,6 +38,12 @@ public sealed class EmbeddedTestWorkflowTests
         Assert.Equal(0, workspace.Tests.FailedCount);
         Assert.Equal(IdeState.Ready, workspace.State);
         Assert.True(workspace.IsTestExplorerSelected);
+        Assert.True(workspace.Tests.RunAllCommand.CanExecute(null));
+        var previousResult = workspace.Tests.Entries[0].Result;
+        await workspace.Tests.RunAllCommand.ExecuteAsync(null).WaitAsync(TimeSpan.FromSeconds(30));
+        Assert.Equal(600, workspace.Tests.PassedCount);
+        Assert.NotSame(previousResult, workspace.Tests.Entries[0].Result);
+        Assert.Contains("600 tests run", workspace.Tests.RunStatusText, StringComparison.OrdinalIgnoreCase);
         var window = new Window { Width = 1280, Height = 800, Content = new WorkspaceView { DataContext = workspace } };
         window.Show();
         try
@@ -75,5 +81,8 @@ public sealed class EmbeddedTestWorkflowTests
         Assert.True(workspace.IsTestExplorerSelected);
         Assert.Contains(workspace.Tests.Entries, e => e.DisplayName.Contains("USB-serial-ABC123", StringComparison.Ordinal));
         Assert.Equal(TestState.Failed, workspace.Tests.Entries.Single(e => e.MethodName == "test_fault").State);
+        await workspace.Tests.RunFailedCommand.ExecuteAsync(null);
+        Assert.Contains("imported on-target log", workspace.Output.Text, StringComparison.Ordinal);
+        Assert.Contains("No tests ran", workspace.Tests.RunStatusText, StringComparison.Ordinal);
     }
 }

@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using System.Diagnostics;
 using CommunityToolkit.Mvvm.Input;
 using TabStudio.Core.Workspaces;
 using TabStudio.Toolchains.Embedded.Projects;
@@ -12,11 +13,13 @@ public sealed partial class WorkspaceViewModel
 {
     /// <summary>Runs configured host-side Unity, TAP, GoogleTest or Cargo tests and shows every result in Test Explorer.</summary>
     [RelayCommand(CanExecute = nameof(CanRun))]
-    private async Task RunEmbeddedTestsAsync()
+    private Task RunEmbeddedTestsAsync() => RunEmbeddedTestsForProjectAsync(null);
+
+    private async Task RunEmbeddedTestsForProjectAsync(EmbeddedProject? selectedProject)
     {
         try
         {
-            if (await SelectEmbeddedProjectAsync() is not { } project || !await SaveAllCoreAsync())
+            if ((selectedProject ?? await SelectEmbeddedProjectAsync()) is not { } project || !await SaveAllCoreAsync())
             {
                 return;
             }
@@ -77,8 +80,9 @@ public sealed partial class WorkspaceViewModel
                 var reportPath = Path.Combine(reportDirectory, Guid.NewGuid().ToString("N") + ".xml");
                 var spec = EmbeddedHostTestPlanner.Plan(project.Directory, options, hostTarget, reportPath);
                 Output.WriteLine("> " + spec.CommandLine, OutputKind.Info);
+                var started = Stopwatch.GetTimestamp();
                 var parsed = await CaptureEmbeddedTestsAsync(spec, options, reportPath, cancellation.Token);
-                ShowEmbeddedTestResults(project, parsed);
+                ShowEmbeddedTestResults(project, parsed, Stopwatch.GetElapsedTime(started));
                 State = parsed.Any(r => r.Outcome is EmbeddedTestOutcome.Failed or EmbeddedTestOutcome.Errored) ? IdeState.Failed : IdeState.Ready;
                 StatusText = $"Embedded tests: {parsed.Count(r => r.Outcome == EmbeddedTestOutcome.Passed)} passed, {parsed.Count(r => r.Outcome is EmbeddedTestOutcome.Failed or EmbeddedTestOutcome.Errored)} failed";
             }
@@ -96,9 +100,17 @@ public sealed partial class WorkspaceViewModel
         {
             State = IdeState.Ready;
             StatusText = "Embedded tests stopped";
+            if (Tests.IsRunning)
+            {
+                throw;
+            }
         }
         catch (Exception error) when (IsEmbeddedError(error))
         {
+            if (Tests.IsRunning)
+            {
+                Tests.ReportBuildFailed();
+            }
             EmbeddedFailure(error);
         }
     }
@@ -161,13 +173,54 @@ public sealed partial class WorkspaceViewModel
         }
     }
 
-    private void ShowEmbeddedTestResults(EmbeddedProject project, IReadOnlyList<EmbeddedTestResult> results)
+    private void ShowEmbeddedTestResults(EmbeddedProject project, IReadOnlyList<EmbeddedTestResult> results, TimeSpan? elapsed = null)
     {
         Tests.ReportEmbeddedResults(new ProjectInfo
         {
             Name = project.Name, FilePath = project.MarkerPath, Kind = ProjectKind.EmbeddedFirmware,
-        }, results);
+        }, results, elapsed);
         SelectSideBarPanel(SideBarPanel.TestExplorer);
+    }
+
+    private async Task<TestRunRequest> RunEmbeddedTestSelectionsAsync(TestRunRequest request)
+    {
+        var remaining = new List<TestProjectSelection>();
+        foreach (var selection in request.Projects)
+        {
+            var directory = Path.GetDirectoryName(selection.ProjectFilePath);
+            var project = directory is null ? null : EmbeddedProjectDetector.Read(directory);
+            if (project is null || project.MarkerPath != selection.ProjectFilePath)
+            {
+                remaining.Add(selection);
+                continue;
+            }
+            try
+            {
+                var path = Path.Combine(project.Directory, EmbeddedHostTestPlanner.OptionsFile);
+                var options = File.Exists(path) && new FileInfo(path).Length <= 65536
+                    ? JsonSerializer.Deserialize<EmbeddedHostTestOptions>(await File.ReadAllTextAsync(path), EmbeddedJson) : null;
+                var hostId = options?.HostId ?? (project.Kind == EmbeddedProjectKind.Rust ? "host" : null);
+                var selected = Tests.Entries.Where(e => e.ProjectFilePath == selection.ProjectFilePath
+                    && (selection.Names is null || selection.Names.Any(name => name == e.Id || name == e.MethodFullName
+                        || name == e.TypeFullName || name == e.NamespaceName))).ToArray();
+                if (selection.Names is not null && selected.Length > 0
+                    && selected.All(e => !e.Traits.Any(t => t.Name == "Board" && t.Value == hostId)))
+                {
+                    Output.WriteLine("The selected results belong to an imported on-target log. Capture a new actual target run and import it; host tests cannot reproduce a board's result.", OutputKind.Failure);
+                    SelectedPanel = BottomPanel.Output;
+                    IsBottomPanelVisible = true;
+                    continue;
+                }
+                Tests.MarkStale([selection.ProjectFilePath]);
+                Output.WriteLine("Rerunning the entire native host test suite. This harness has no configured per-test filter; imported board results remain historical.", OutputKind.Info);
+                await RunEmbeddedTestsForProjectAsync(project);
+            }
+            catch (Exception error) when (IsEmbeddedError(error))
+            {
+                EmbeddedFailure(error);
+            }
+        }
+        return request with { Projects = remaining };
     }
 
     private async Task<IReadOnlyList<EmbeddedTestResult>> CaptureEmbeddedTestsAsync(ProcessStartSpec spec,

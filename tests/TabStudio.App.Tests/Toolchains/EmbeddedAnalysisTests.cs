@@ -106,4 +106,41 @@ public sealed class EmbeddedAnalysisTests
         await workspace.ReportEmbeddedMemoryAsync(project.Path, CancellationToken.None);
         Assert.Contains("Δ flash 0 B, RAM 0 B", workspace.Output.Text, StringComparison.Ordinal);
     }
+
+    [AvaloniaFact]
+    public async Task Live_fault_command_refuses_an_unpaused_session_without_creating_capture_evidence()
+    {
+        using var fixture = new WorkspaceFixture();
+        using var project = new TempDirectory();
+        project.Write("platformio.ini", "[env:demo]\nplatform = ststm32\nboard = nucleo_f401re\n");
+        var workspace = fixture.Workspace;
+        workspace.SetUpProjectsWhenTheyOpen = false;
+        await workspace.LoadAsync(project.Path);
+        await workspace.CaptureEmbeddedFaultCommand.ExecuteAsync(null);
+        Assert.Contains("Pause the matching on-chip GDB session", workspace.Output.Text, StringComparison.Ordinal);
+        Assert.False(Directory.Exists(Path.Combine(project.Path, ".tabstudio", "faults")));
+        Assert.False(workspace.Prompt.IsOpen);
+    }
+
+    [AvaloniaFact]
+    public async Task Missing_addr2line_keeps_captured_crash_evidence_in_error_list()
+    {
+        using var fixture = new WorkspaceFixture();
+        using var project = new TempDirectory();
+        project.Write("platformio.ini", "[env:demo]\nplatform = ststm32\nboard = nucleo_f401re\n");
+        project.Write(".tabstudio/embedded-analysis.json", JsonSerializer.Serialize(new
+        {
+            Firmware = Environment.ProcessPath, Addr2Line = "tabstudio-no-such-addr2line",
+        }));
+        var fault = project.Write("fault.json", JsonSerializer.Serialize(new CortexFaultSnapshot(1u << 24, 0, 0, 0,
+            [0, 0, 0, 0, 0, 0x08001001, 0x08000011, 1u << 24])));
+        var workspace = fixture.Workspace;
+        workspace.SetUpProjectsWhenTheyOpen = false;
+        await workspace.LoadAsync(project.Path);
+        await workspace.OpenDocumentAsync(fault);
+        await workspace.DecodeEmbeddedCrashCommand.ExecuteAsync(null);
+        Assert.Contains(workspace.ErrorList.Items, item => item.Code == "EMBFAULT017");
+        Assert.Contains("Captured crash findings remain available", workspace.Output.Text, StringComparison.Ordinal);
+        Assert.All(workspace.ErrorList.Items.Where(item => item.Code.StartsWith("EMBFAULT", StringComparison.Ordinal)), item => Assert.False(item.HasLocation));
+    }
 }

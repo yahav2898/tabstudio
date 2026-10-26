@@ -121,38 +121,52 @@ public sealed partial class WorkspaceViewModel
                 ? CrashDecoder.DecodeCortexM(JsonSerializer.Deserialize<CortexFaultSnapshot>(text, EmbeddedAnalysisJson)
                     ?? throw new InvalidDataException("Expected a CortexFaultSnapshot JSON object with numeric register values."))
                 : CrashDecoder.DecodeEspPanic(text);
-            var options = ReadEmbeddedAnalysisOptions(project.Directory);
-            var elf = FindEmbeddedElf(project.Directory, options);
-            IReadOnlyList<FirmwareSourceFrame> frames = [];
-            if (options.Addr2Line is { Length: > 0 } addr2line && elf is not null && report.ProgramCounters.Count > 0)
-            {
-                using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(15));
-                var arguments = new[] { "-a", "-f", "-C", "-e", elf }
-                    .Concat(report.ProgramCounters.Take(64).Select(pc => "0x" + pc.ToString("x", CultureInfo.InvariantCulture))).ToArray();
-                var result = await CommandRunner.RunAsync(_toolchains.Runtime,
-                    new ProcessStartSpec { Program = addr2line, Arguments = arguments, WorkingDirectory = project.Directory }, null, timeout.Token);
-                if (result.Succeeded) frames = Addr2LineParser.Parse(result.Output);
-                else Output.WriteLine("addr2line did not resolve this firmware: " + result.Tail(), OutputKind.Failure);
-            }
-            var primary = frames.Count > 0 ? frames[0] : null;
-            DiagnosticLocation? location = null;
-            if (primary is not null && _toolchains.Runtime.ToDevicePath(primary.File, project.Directory) is { } source && File.Exists(source))
-                location = new(source, 0, 0, primary.Line, 1);
-            var diagnostics = report.Findings.Select(finding => new BuildDiagnostic(finding.Code, DiagnosticSeverityLevel.Error,
-                finding.Message + (finding.Address is ulong address ? $" [0x{address:X}]" : ""), location, project.Name)).ToArray();
-            ErrorList.SetRestoreDiagnostics(project.MarkerPath + "#embedded-crash", diagnostics);
-            foreach (var finding in diagnostics) Output.WriteLine(finding.ToString(), OutputKind.Error);
-            foreach (var frame in frames) Output.WriteLine($"  {frame.Function} at {frame.File}:{frame.Line} [0x{frame.Address:X}]", OutputKind.Info);
-            if (frames.Count == 0 && report.ProgramCounters.Count > 0)
-                Output.WriteLine("Captured PCs: " + string.Join(", ", report.ProgramCounters.Select(pc => $"0x{pc:X}")) + ". Configure Addr2Line and the matching Firmware ELF in .tabstudio/embedded-analysis.json for source locations.", OutputKind.Info);
-            SelectedPanel = BottomPanel.ErrorList;
-            IsBottomPanelVisible = true;
-            StatusText = $"Decoded {report.Findings.Count} crash findings; {frames.Count} source frames";
+            await ReportEmbeddedCrashAsync(project, report);
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException or ArgumentException or OperationCanceledException or ToolchainRuntimeException)
         {
             Output.WriteLine("Crash decoder: " + ex.Message, OutputKind.Failure);
         }
+    }
+
+    private async Task ReportEmbeddedCrashAsync(EmbeddedProject project, CrashReport report,
+        string? exactFirmware = null, CancellationToken cancellationToken = default)
+    {
+        var options = ReadEmbeddedAnalysisOptions(project.Directory);
+        var elf = exactFirmware ?? FindEmbeddedElf(project.Directory, options);
+        IReadOnlyList<FirmwareSourceFrame> frames = [];
+        if (options.Addr2Line is { Length: > 0 } addr2line && elf is not null && report.ProgramCounters.Count > 0)
+        {
+            using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            timeout.CancelAfter(TimeSpan.FromSeconds(15));
+            var arguments = new[] { "-a", "-f", "-C", "-e", elf }
+                .Concat(report.ProgramCounters.Take(64).Select(pc => "0x" + pc.ToString("x", CultureInfo.InvariantCulture))).ToArray();
+            try
+            {
+                var result = await CommandRunner.RunAsync(_toolchains.Runtime,
+                    new ProcessStartSpec { Program = addr2line, Arguments = arguments, WorkingDirectory = project.Directory }, null, timeout.Token);
+                if (result.Succeeded) frames = Addr2LineParser.Parse(result.Output);
+                else Output.WriteLine("addr2line did not resolve this firmware: " + result.Tail(), OutputKind.Failure);
+            }
+            catch (Exception error) when (error is ToolchainRuntimeException or OperationCanceledException)
+            {
+                Output.WriteLine("Source resolution unavailable: " + error.Message + ". Captured crash findings remain available.", OutputKind.Info);
+            }
+        }
+        var primary = frames.Count > 0 ? frames[0] : null;
+        DiagnosticLocation? location = null;
+        if (primary is not null && _toolchains.Runtime.ToDevicePath(primary.File, project.Directory) is { } source && File.Exists(source))
+            location = new(source, 0, 0, primary.Line, 1);
+        var diagnostics = report.Findings.Select(finding => new BuildDiagnostic(finding.Code, DiagnosticSeverityLevel.Error,
+            finding.Message + (finding.Address is ulong address ? $" [0x{address:X}]" : ""), location, project.Name)).ToArray();
+        ErrorList.SetRestoreDiagnostics(project.MarkerPath + "#embedded-crash", diagnostics);
+        foreach (var finding in diagnostics) Output.WriteLine(finding.ToString(), OutputKind.Error);
+        foreach (var frame in frames) Output.WriteLine($"  {frame.Function} at {frame.File}:{frame.Line} [0x{frame.Address:X}]", OutputKind.Info);
+        if (frames.Count == 0 && report.ProgramCounters.Count > 0)
+            Output.WriteLine("Captured PCs: " + string.Join(", ", report.ProgramCounters.Select(pc => $"0x{pc:X}")) + ". Configure Addr2Line and the matching Firmware ELF in .tabstudio/embedded-analysis.json for source locations.", OutputKind.Info);
+        SelectedPanel = BottomPanel.ErrorList;
+        IsBottomPanelVisible = true;
+        StatusText = $"Decoded {report.Findings.Count} crash findings; {frames.Count} source frames";
     }
 
     [RelayCommand]

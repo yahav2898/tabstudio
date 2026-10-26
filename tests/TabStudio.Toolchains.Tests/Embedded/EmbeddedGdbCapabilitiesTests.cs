@@ -31,4 +31,12 @@ public sealed class EmbeddedGdbCapabilitiesTests
         var output = EmbeddedGdbCapabilities.Marker + "{\"dap\":true,\"architectures\":[\"aarch64\",\"arm-impostor\"]}";
         Assert.Throws<NotSupportedException>(() => EmbeddedGdbCapabilities.RequireSupport(output, 40));
     }
+
+    [Fact]
+    public void Rejects_malformed_and_oversized_capability_payloads()
+    {
+        Assert.Throws<InvalidDataException>(() => EmbeddedGdbCapabilities.RequireSupport(EmbeddedGdbCapabilities.Marker + "[]", 40));
+        Assert.Throws<InvalidDataException>(() => EmbeddedGdbCapabilities.RequireSupport(EmbeddedGdbCapabilities.Marker + "{\"dap\":true}", 40));
+        Assert.Throws<InvalidDataException>(() => EmbeddedGdbCapabilities.RequireSupport(new string(' ', 65537), 40));
+    }
 }

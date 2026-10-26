@@ -149,14 +149,18 @@ public sealed partial class WorkspaceViewModel
                 SerialPort = _toolchains.Environment is null ? request.SerialPort
                     : Path.Combine(project.Directory, ".tabstudio", "dev", "ttyUSB0"),
             };
-            if (_toolchains.Environment is not null && request.Protocol == EmbeddedFlashProtocol.ProbeRs)
-                throw new NotSupportedException("Stock probe-rs uses nusb rather than libusb. Its Android permission transport has not been integrated. Select a supported OpenOCD route or the Windows Bridge.");
+            if (request.Protocol == EmbeddedFlashProtocol.ProbeRs && _toolchains.Catalog.Find("probe-rs") is { } probeTools
+                && !await EnsureToolchainReadyAsync(probeTools, "probe-rs uses the embedded glibc environment and the selected device's permissioned USBFS inventory."))
+            {
+                return;
+            }
             var plan = await Task.Run(() => EmbeddedFlashPlanner.Plan(request));
             using var cancellation = new CancellationTokenSource();
             _run = cancellation;
             State = IdeState.Running;
             StatusText = "Uploading firmware";
             IUsbConnection? connection = null;
+            UsbfsInventory? inventory = null;
             try
             {
                 Func<ProcessStartSpec, ProcessStartSpec>? bridge = null;
@@ -165,14 +169,22 @@ public sealed partial class WorkspaceViewModel
                 {
                     await SerialMonitor.ReleaseAsync();
                     await _toolchains.PrepareEmbeddedSupportAsync(line => Output.WriteLine(line, OutputKind.Info), cancellation.Token);
+                    await PrepareEmbeddedProtocolAsync(request, cancellation.Token);
                     var devices = _toolchains.Usb.Devices;
                     if (devices.Count == 0) throw new IOException("Connect the board or debug probe using USB-OTG.");
                     var choice = devices.Count == 1 ? 0 : await Prompt.ChooseAsync("Upload device", "Choose the board or probe to program.", "Select", devices.Select(d => d.ToString()).ToArray());
                     if (choice is null) return;
                     connection = await _toolchains.Usb.OpenAsync(devices[choice.Value], cancellation.Token);
-                    bridge = step => request.Protocol is EmbeddedFlashProtocol.Avrdude or EmbeddedFlashProtocol.Esptool or EmbeddedFlashProtocol.Stm32Flash or EmbeddedFlashProtocol.Bossac
+                    if (request.Protocol == EmbeddedFlashProtocol.ProbeRs)
+                    {
+                        var granted = connection;
+                        inventory = await Task.Run(() => UsbfsDeviceInventory.Create(granted, Path.Combine(_paths.Root, "embedded-usb")), cancellation.Token);
+                    }
+                    bridge = step => EmbeddedFlashPlanner.RequiresSerial(request)
                         ? UsbBridgeProcess.CreateSerial(connection ?? throw new IOException("USB device disconnected."), step, request.SerialPort!, request.BaudRate)
-                        : UsbBridgeProcess.CreateLibUsb(connection ?? throw new IOException("USB device disconnected."), step);
+                        : inventory is not null
+                            ? UsbBridgeProcess.CreateUsbfs(connection ?? throw new IOException("USB device disconnected."), inventory, step)
+                            : UsbBridgeProcess.CreateLibUsb(connection ?? throw new IOException("USB device disconnected."), step);
                     prepareBootloader = async token =>
                     {
                         var before = _toolchains.Usb.Devices.Select(device => device.Id).ToHashSet(StringComparer.Ordinal);
@@ -198,14 +210,15 @@ public sealed partial class WorkspaceViewModel
                 }
                 var result = await EmbeddedFlashExecutor.ExecuteAsync(_toolchains.Runtime, plan, bridge,
                     new Progress<string>(line => Output.WriteLine(line.TrimEnd(), OutputKind.Info)), prepareBootloader, cancellation.Token);
-                Output.WriteLine("Verified firmware SHA-256: " + result.FirmwareSha256, OutputKind.Info);
+                Output.WriteLine((result.Verified ? "Verified firmware SHA-256: " : "Transferred firmware SHA-256: ") + result.FirmwareSha256, OutputKind.Info);
+                Output.WriteLine(plan.Verification, OutputKind.Info);
                 if (connection is not null) await RememberEmbeddedDeviceAsync(connection.Device, project.Name, request);
-                _lastEmbeddedSerialDevice = request.Protocol is EmbeddedFlashProtocol.Avrdude or EmbeddedFlashProtocol.Esptool or EmbeddedFlashProtocol.Stm32Flash or EmbeddedFlashProtocol.Bossac
+                _lastEmbeddedSerialDevice = EmbeddedFlashPlanner.RequiresSerial(request)
                     ? connection?.Device.Id : null;
                 State = IdeState.Ready;
-                StatusText = "Firmware upload verified";
+                StatusText = result.Verified ? "Firmware upload verified" : "Firmware transferred; readback unavailable";
             }
-            finally { connection?.Dispose(); _run = null; if (State == IdeState.Running) State = IdeState.Ready; }
+            finally { inventory?.Dispose(); connection?.Dispose(); _run = null; if (State == IdeState.Running) State = IdeState.Ready; }
         }
         catch (OperationCanceledException) { State = IdeState.Ready; StatusText = "Firmware upload stopped"; }
         catch (Exception error) when (IsEmbeddedError(error)) { EmbeddedFailure(error); }
@@ -247,7 +260,7 @@ public sealed partial class WorkspaceViewModel
         catch (Exception error) when (IsEmbeddedError(error)) { EmbeddedFailure(error); }
     }
 
-    private static bool IsEmbeddedError(Exception error) => error is IOException or UnauthorizedAccessException or JsonException
+    private static bool IsEmbeddedError(Exception error) => error is IOException or InvalidDataException or UnauthorizedAccessException or JsonException
         or ArgumentException or InvalidOperationException or NotSupportedException or System.Xml.XmlException or OverflowException or FormatException
         or ToolchainRuntimeException or TabStudio.Toolchains.Installation.ToolchainInstallException;
 

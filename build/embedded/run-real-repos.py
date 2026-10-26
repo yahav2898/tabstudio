@@ -13,6 +13,7 @@ import json
 import os
 from pathlib import Path
 import re
+import shutil
 import signal
 import subprocess
 import sys
@@ -27,6 +28,14 @@ URL = re.compile(r"https://github\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+(?:\.git)?
 ERROR = re.compile(r"(?:^|\s)(?:fatal\s+)?error(?:\[[A-Z0-9]+\])?:\s", re.I)
 ARDUINO_URL = "https://github.com/arduino/arduino-cli/releases/download/v1.3.1/arduino-cli_1.3.1_Linux_64bit.tar.gz"
 ARDUINO_SHA256 = "376428d7d45be640c00812a71612e1742edc2f5f9ee3742a2d6da7870e079588"
+
+
+def arm_cross_prefix(environment: dict) -> str:
+    """Zephyr's NO_DEFAULT_PATH compiler search requires a complete cross-compiler prefix."""
+    compiler = shutil.which("arm-none-eabi-gcc", path=environment.get("PATH"))
+    if compiler is None:
+        raise RuntimeError("Install the Arm GNU cross compiler before building this Zephyr sample")
+    return str(Path(compiler).absolute()).removesuffix("gcc")
 
 
 def entries(manifest: Path | None = None) -> list[dict]:
@@ -96,7 +105,10 @@ class Runner:
             raise ValueError(f"Refusing to overwrite a previous checkout: {destination}")
         destination.mkdir(exist_ok=True)
         self.run(["git", "init", "-q"], destination)
-        self.run(["git", "fetch", "--depth", "1", "--no-tags", source["url"], source["sha"]], destination)
+        # Relative .gitmodules URLs are resolved against the authoritative origin. Fetching a URL
+        # without registering it makes Git resolve ESP-IDF's ../../owner/repo paths against /tmp.
+        self.run(["git", "remote", "add", "origin", source["url"]], destination)
+        self.run(["git", "fetch", "--depth", "1", "--no-tags", "origin", source["sha"]], destination)
         self.run(["git", "checkout", "--detach", "FETCH_HEAD"], destination)
         actual = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=destination, text=True).strip()
         if actual != source["sha"]:
@@ -130,6 +142,9 @@ class Runner:
         project = repo / e["project"]
         build = self.work / "build"
         env = dict(os.environ)
+        # Builds must not send PlatformIO analytics, including a first run before settings exist.
+        env["PLATFORMIO_SETTING_ENABLE_TELEMETRY"] = "no"
+        env["PYTHONSAFEPATH"] = "1"
         if kind == "platformio":
             # The upstream example names an unversioned registry platform. Use this exact checked-out
             # platform implementation instead; archive the explicit override and leave its sources intact.
@@ -140,7 +155,7 @@ class Runner:
             (self.output / "platformio-effective.ini").write_text(pinned, encoding="utf-8")
             # platform-atmelavr has a top-level platform.py; starting Python there would shadow its
             # standard-library platform module before PlatformIO can import it.
-            self.run([sys.executable, "-P", "-m", "platformio", "run", "--project-dir", str(project), "--project-conf", str(configuration), "--environment", e["environment"]], project, count_errors=True)
+            self.run([sys.executable, "-P", "-m", "platformio", "run", "--project-dir", str(project), "--project-conf", str(configuration), "--environment", e["environment"]], project, env, count_errors=True)
             self.require(project / ".pio/build" / e["environment"] / "firmware.elf")
         elif kind == "arduino":
             cli = self.arduino_cli()
@@ -151,9 +166,11 @@ class Runner:
             self.run([cli, "compile", "--fqbn", e["fqbn"], "--library", str(repo), "--build-path", str(build), str(project)], repo, env, count_errors=True)
             self.require(build / "HelloWorld.ino.elf")
         elif kind == "stm32":
-            self.run(["cmake", "--preset", e["preset"], "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"], project, count_errors=True)
-            self.run(["cmake", "--build", "--preset", e["preset"], "--parallel", "2"], project, count_errors=True)
-            self.require(project / "build" / e["preset"] / "blink.elf")
+            # This real project committed a Windows CMakeCache inside its preset's binaryDir.
+            # Retain the vendor preset/toolchain while overriding only the disposable build folder.
+            self.run(["cmake", "--preset", e["preset"], "-B", str(build), "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"], project, count_errors=True)
+            self.run(["cmake", "--build", str(build), "--parallel", "2"], project, count_errors=True)
+            self.require(build / "blink.elf")
         elif kind == "pico":
             sdk = self.clone(e["sdk"], "pico-sdk", submodules=True)
             self.run(["cmake", "-S", str(project), "-B", str(build), "-G", "Ninja", "-DPICO_SDK_PATH=" + str(sdk), "-DPICO_BOARD=pico", "-DPICO_NO_PICOTOOL=1", "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"], repo, count_errors=True)
@@ -170,7 +187,7 @@ class Runner:
             self.run([sys.executable, "-m", "pip", "install", "-r", str(repo / "scripts/requirements-base.txt")], repo)
             self.run(["west", "init", "-l", str(repo)], self.work)
             self.run(["west", "update", "--narrow", "-o=--depth=1", "cmsis"], self.work)
-            env.update(ZEPHYR_BASE=str(repo), ZEPHYR_TOOLCHAIN_VARIANT="cross-compile", CROSS_COMPILE="arm-none-eabi-")
+            env.update(ZEPHYR_BASE=str(repo), ZEPHYR_TOOLCHAIN_VARIANT="cross-compile", CROSS_COMPILE=arm_cross_prefix(env))
             self.run(["west", "build", "-b", e["board"], "-d", str(build), str(project), "--", "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"], self.work, env, count_errors=True)
             self.require(build / "zephyr/zephyr.elf")
         elif kind == "rust":

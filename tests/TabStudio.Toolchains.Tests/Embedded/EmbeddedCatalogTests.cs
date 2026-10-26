@@ -27,7 +27,8 @@ public sealed class EmbeddedCatalogTests
         Assert.Contains("libusb-dev", toolchain.Packages);
         Assert.Contains(toolchain.Setup, step => step.File?.Path == UsbBridgeInstallation.ToolsDirectory + "/serial_posix.c");
         Assert.Contains(toolchain.Setup, step => step.Command.Contains("-fPIC", StringComparer.Ordinal));
-        Assert.Contains("nusb", toolchain.Description, StringComparison.Ordinal);
+        Assert.True(toolchain.Auxiliary);
+        Assert.False(toolchain.RunsFile("firmware.elf"));
     }
 
     [Fact]

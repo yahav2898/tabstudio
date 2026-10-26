@@ -8,7 +8,7 @@ namespace TabStudio.Toolchains.Embedded.Analysis;
 /// <param name="Hfsr">Hard fault status register at 0xE000ED2C.</param>
 /// <param name="Mmfar">Memory management fault address, meaningful only with MMARVALID.</param>
 /// <param name="Bfar">Bus fault address, meaningful only with BFARVALID.</param>
-/// <param name="StackedWords">Basic exception frame: r0-r3, r12, lr, pc, xPSR. An extended FPU frame must first be skipped using EXC_RETURN.</param>
+/// <param name="StackedWords">Core exception words: r0-r3, r12, lr, pc, xPSR. In a supported extended frame these precede the floating-point state.</param>
 /// <param name="StackPointer">Address from which the basic frame was read.</param>
 /// <param name="StackStart">Optional lowest valid stack address from the linker or RTOS.</param>
 /// <param name="StackEnd">Optional exclusive upper stack address.</param>

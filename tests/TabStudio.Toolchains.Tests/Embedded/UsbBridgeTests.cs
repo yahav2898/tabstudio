@@ -1,11 +1,24 @@
 using TabStudio.Toolchains.Embedded;
 using TabStudio.Toolchains.Microchip;
 using TabStudio.Toolchains.Processes;
+using TabStudio.Toolchains.Runtimes;
 
 namespace TabStudio.Toolchains.Tests.Embedded;
 
 public sealed class UsbBridgeTests
 {
+    [Fact]
+    public async Task Glibc_side_root_receives_sources_and_never_copies_an_Alpine_native_binary()
+    {
+        using var root = new TabStudio.Testing.TempDirectory();
+        await UsbBridgeInstallation.WriteSourcesAsync(root.Path, CancellationToken.None);
+        var directory = Path.Combine(root.Path, UsbBridgeInstallation.ToolsDirectory.TrimStart('/'));
+        Assert.Equal(UsbBridgeInstallation.SupportFiles["usb_fd.c"], await File.ReadAllTextAsync(Path.Combine(directory, "usb_fd.c")));
+        Assert.Equal(UsbBridgeInstallation.SupportFiles["serial_posix.c"], await File.ReadAllTextAsync(Path.Combine(directory, "serial_posix.c")));
+        Assert.False(File.Exists(Path.Combine(directory, "libusb-fd.so")));
+        Assert.False(File.Exists(Path.Combine(directory, "serial-posix.so")));
+    }
+
     [Fact]
     public void Libusb_bridge_inherits_only_explicit_device_and_preserves_command_context()
     {
@@ -54,6 +67,18 @@ public sealed class UsbBridgeTests
         Assert.Throws<ArgumentOutOfRangeException>(() => UsbBridgeProcess.CreateSerial(device, command, alias, 0));
         Assert.Throws<ArgumentOutOfRangeException>(() => UsbBridgeProcess.CreateSerial(device, command, alias, interfaceNumber: 256));
         Assert.Throws<ArgumentException>(() => UsbBridgeProcess.CreateSerial(device, command, "relative/ttyUSB0"));
+    }
+
+    [Fact]
+    public void Wrapped_glibc_SDKs_keep_explicit_ABI_routing_while_Alpine_flashers_do_not_change_ABI()
+    {
+        using var device = new Connection(42);
+        var port = Path.Combine(Path.GetTempPath(), "tabstudio-serial-test", "ttyUSB0");
+        var sdk = UsbBridgeProcess.CreateSerial(device, new ProcessStartSpec { Program = "arduino-cli", Arguments = ["upload", "--port", "{port}"] }, port);
+        Assert.Equal("1", sdk.Environment[EmbeddedGlibcRuntime.RoutingMarker]);
+        Assert.True(EmbeddedGlibcRuntime.UsesGlibc(sdk));
+        var alpine = UsbBridgeProcess.CreateSerial(device, new ProcessStartSpec { Program = "avrdude", Arguments = ["-P", "{port}"] }, port);
+        Assert.False(alpine.Environment.ContainsKey(EmbeddedGlibcRuntime.RoutingMarker));
     }
 
     [Fact]

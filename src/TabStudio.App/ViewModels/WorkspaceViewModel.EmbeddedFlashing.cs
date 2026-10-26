@@ -197,6 +197,10 @@ public sealed partial class WorkspaceViewModel
                 throw new NotSupportedException("Production batches require a stable, supported USB device. Touch/re-enumerating bootloaders and Android stock nusb are not supported in batches.");
             }
             var plan = await Task.Run(() => EmbeddedFlashPlanner.Plan(request));
+            if (!plan.Verified)
+            {
+                throw new NotSupportedException("This loader reports transfer completion only. Production batches require target verification/readback.");
+            }
             var devices = _toolchains.Usb.Devices;
             if (devices.Count == 0)
             {
@@ -222,6 +226,7 @@ public sealed partial class WorkspaceViewModel
             {
                 await SerialMonitor.ReleaseAsync();
                 await _toolchains.PrepareEmbeddedSupportAsync(line => Output.WriteLine(line, OutputKind.Info), cancellation.Token);
+                await PrepareEmbeddedProtocolAsync(request, cancellation.Token);
                 // Serialize permission requests; Android presents one permission dialog at a time.
                 foreach (var device in batch)
                 {
@@ -244,7 +249,7 @@ public sealed partial class WorkspaceViewModel
                     }
                     return new ProductionFlashJob(connection.Device.Id, token =>
                         EmbeddedFlashExecutor.ExecuteAsync(_toolchains.Runtime, boardPlan,
-                            step => WrapEmbeddedFlashCommand(request, connection, step), cancellationToken: token));
+                            step => WrapEmbeddedFlashCommand(request, connection, step), cancellationToken: token), ProvidesVerification: boardPlan.Verified);
                 }).ToArray();
                 var log = Path.Combine(project.Directory, ".tabstudio", "production", DateTime.UtcNow.ToString("yyyyMMdd-HHmmss", System.Globalization.CultureInfo.InvariantCulture) + ".jsonl");
                 var results = await ProductionFlasher.RunAsync(jobs, log, parallelism: 2,
@@ -317,7 +322,7 @@ public sealed partial class WorkspaceViewModel
         {
             return command;
         }
-        if (request.Protocol is not (EmbeddedFlashProtocol.Avrdude or EmbeddedFlashProtocol.Esptool or EmbeddedFlashProtocol.Stm32Flash or EmbeddedFlashProtocol.Bossac))
+        if (!EmbeddedFlashPlanner.RequiresSerial(request))
         {
             return UsbBridgeProcess.CreateLibUsb(connection, command);
         }
@@ -329,6 +334,28 @@ public sealed partial class WorkspaceViewModel
                 argument == "--port=" + originalPort ? "--port=" + privatePort : argument).ToArray(),
         };
         return UsbBridgeProcess.CreateSerial(connection, privateCommand, privatePort, request.BaudRate);
+    }
+
+    private async Task PrepareEmbeddedProtocolAsync(EmbeddedFlashRequest request, CancellationToken cancellationToken)
+    {
+        if (request.Protocol != EmbeddedFlashProtocol.PymcuprogUpdi || _toolchains.Environment is null)
+        {
+            return;
+        }
+        // Reuse PIC's existing SHA-256-pinned MIT Python wheels, without installing or licensing XC compilers.
+        await _toolchains.PreparePicSupportAsync(false, line => Output.WriteLine(line, OutputKind.Info), cancellationToken);
+        var install = new ProcessStartSpec
+        {
+            Program = "python3",
+            Arguments = [MicrochipInstallation.ToolsDirectory + "/programmers.py", "pymcuprog"],
+            WorkingDirectory = request.WorkingDirectory,
+        };
+        var result = await OutputProcess.RunAsync(_toolchains.Runtime, install, Output, null, cancellationToken);
+        cancellationToken.ThrowIfCancellationRequested();
+        if (!result.Succeeded)
+        {
+            throw new IOException("The existing verified pymcuprog support packages could not be prepared; no programming was attempted.");
+        }
     }
 
     private void ShowEmbeddedFlashOutput()

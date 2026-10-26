@@ -11,7 +11,7 @@ public static class UsbBridgeInstallation
     public const string ToolsDirectory = "/opt/tabstudio/embedded";
 
     /// <summary>Packages from signed Alpine indexes needed to compile and run the bridges.</summary>
-    public static IReadOnlyList<string> Packages { get; } = ["python3", "libusb", "libusb-dev", "build-base"];
+    public static IReadOnlyList<string> Packages { get; } = ["python3", "libusb", "libusb-compat", "libusb-dev", "build-base"];
 
     /// <summary>Sources copied from the APK, reusing the existing permissioned PIC drivers.</summary>
     public static IReadOnlyDictionary<string, string> SupportFiles => new Dictionary<string, string>
@@ -38,6 +38,25 @@ public static class UsbBridgeInstallation
         .. SupportFiles.Select(file => new SetupStepDefinition { Name = "USB bridge " + file.Key, File = new FileDefinition { Path = ToolsDirectory + "/" + file.Key, Content = file.Value } }),
         .. BuildCommands.Select(command => new SetupStepDefinition { Name = "Build " + Path.GetFileName(command.Arguments[7]), Command = [command.Program, .. command.Arguments], RunAfterSetupChanges = true }),
     ];
+
+    /// <summary>Copies the same source assets into an Alpine or glibc side root; compile BuildCommands in that ABI.</summary>
+    /// <param name="rootfs">Absolute device path of the destination Linux root file system.</param>
+    /// <param name="cancellationToken">Stops source preparation.</param>
+    public static async Task WriteSourcesAsync(string rootfs, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(rootfs);
+        if (!Path.IsPathFullyQualified(rootfs)) throw new ArgumentException("The bridge root file system must be absolute.", nameof(rootfs));
+        var directory = Path.Combine(rootfs, ToolsDirectory.TrimStart('/'));
+        Directory.CreateDirectory(directory);
+        foreach (var source in SupportFiles)
+        {
+            var destination = Path.Combine(directory, source.Key);
+            if (!File.Exists(destination) || await File.ReadAllTextAsync(destination, cancellationToken).ConfigureAwait(false) != source.Value)
+            {
+                await File.WriteAllTextAsync(destination, source.Value, cancellationToken).ConfigureAwait(false);
+            }
+        }
+    }
 
     private static string Resource(string name)
     {

@@ -237,14 +237,24 @@ public sealed partial class WorkspaceViewModel
         {
             using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
             var reader = new PeripheralRtosReader(this, adapter);
-            var threads = kind == 0 ? await RtosThreadReader.ReadFreeRtosAsync(reader, cancellationToken: timeout.Token)
-                : await RtosThreadReader.ReadZephyrAsync(reader, cancellationToken: timeout.Token);
+            var options = new RtosReadOptions();
+            var optionsFile = Workspace is { } workspace ? Path.Combine(workspace.RootDirectory, ".tabstudio", "rtos.json") : null;
+            if (optionsFile is not null && File.Exists(optionsFile))
+            {
+                if (new FileInfo(optionsFile).Length > 16 * 1024) throw new InvalidDataException("RTOS read configuration exceeds 16 KiB.");
+                using var configuration = JsonDocument.Parse(await File.ReadAllTextAsync(optionsFile, timeout.Token));
+                var root = configuration.RootElement;
+                if (root.TryGetProperty("verifiedStackFillByte", out var fill))
+                    options = options with { StackFillByte = fill.GetByte(), StackGrowsDown = root.GetProperty("stackGrowsDown").GetBoolean() };
+            }
+            var threads = kind == 0 ? await RtosThreadReader.ReadFreeRtosAsync(reader, options, timeout.Token)
+                : await RtosThreadReader.ReadZephyrAsync(reader, options, timeout.Token);
             ShowOutputSource(Output);
             foreach (var thread in threads)
-                Output.WriteLine($"{thread.Name} @ 0x{thread.Address:X}: {thread.State}, priority {thread.Priority}; stack {(thread.StackBytes is { } size ? size + " B" : "unavailable")}; minimum free stack unreported without verified initialization settings.", OutputKind.Info);
+                Output.WriteLine($"{thread.Name} @ 0x{thread.Address:X}: {thread.State}, priority {thread.Priority}; stack {(thread.StackBytes is { } size ? size + " B" : "unavailable")}; minimum unused stack {(thread.MinimumFreeStackBytes is { } unused ? unused + " B (verified fill-pattern scan)" : "unreported without verified initialization settings")}.", OutputKind.Info);
             StatusText = $"{threads.Count} RTOS tasks read";
         }
-        catch (Exception error) when (error is DebugAdapterException or InvalidDataException or InvalidOperationException or NotSupportedException or OperationCanceledException or OverflowException)
+        catch (Exception error) when (error is DebugAdapterException or IOException or UnauthorizedAccessException or InvalidOperationException or NotSupportedException or OperationCanceledException or OverflowException or JsonException or KeyNotFoundException or FormatException)
         {
             StatusText = "RTOS task inspection: " + error.Message;
         }

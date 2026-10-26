@@ -30,6 +30,9 @@ public sealed record ToolchainDefinition
     /// </summary>
     public bool Listed { get; init; }
 
+    /// <summary>Installs supporting tools without claiming source files or standalone runnable projects.</summary>
+    public bool Auxiliary { get; init; }
+
     /// <summary>The project's home page.</summary>
     public Uri? Homepage { get; init; }
 
@@ -114,7 +117,7 @@ public sealed record ToolchainDefinition
     /// <summary>Whether a file has one of <see cref="FileExtensions"/>.</summary>
     /// <param name="path">The file.</param>
     public bool RunsFile(string path) =>
-        FileExtensions.Contains(Path.GetExtension(path), StringComparer.OrdinalIgnoreCase);
+        !Auxiliary && FileExtensions.Contains(Path.GetExtension(path), StringComparer.OrdinalIgnoreCase);
 }
 
 /// <summary>How to find a toolchain installed on a desktop computer.</summary>
