@@ -103,6 +103,9 @@ public sealed partial class WorkspaceViewModel
     private async Task ShowHistoricalAsync(DebugPausedEventArgs? pause)
     {
         if (pause is null) return;
+        // A loop can revisit exactly the same source span with different values. Clear the old point first so
+        // open DataTips close even when the new historical point has the same location.
+        foreach (var document in Documents) document.ShowExecutionPoints(null, null, null);
         _pause = pause;
         _exceptionHelper = null;
         StatusText = $"Historical · step {pause.RecordedStep} · {Path.GetFileName(pause.Location?.FilePath)}, line {pause.Location?.Line}";

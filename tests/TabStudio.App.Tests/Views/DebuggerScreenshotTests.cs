@@ -46,6 +46,20 @@ public sealed class DebuggerScreenshotTests : IDisposable
         UiTestHelpers.SaveScreenshot(window, "debug-06-recording-timeline");
         Assert.Equal("3", workspace.Locals.Tree.Rows.Single(r => r.Name == "total").Value);
         Assert.True(workspace.IsHistorical);
+
+        var program = workspace.ActiveDocument!;
+        await program.AnalyzeNowAsync();
+        var editor = VisibleEditor(window);
+        var textArea = editor.Editor.TextArea;
+        var textView = textArea.TextView;
+        var location = program.Document.GetLocation(program.Document.Text.IndexOf("total +=", StringComparison.Ordinal) + 2);
+        var position = textView.GetVisualPosition(new TextViewPosition(location), VisualYPosition.LineMiddle) - textView.ScrollOffset;
+        var press = textView.TranslatePoint(position, textArea) ?? throw new InvalidOperationException("The variable is not in view.");
+        textArea.RaiseEvent(new HoldingRoutedEventArgs(HoldingState.Started, press, PointerType.Touch));
+        await UiTestHelpers.WaitUntilAsync(() => editor.IsDataTipOpen, because: "the historical DataTip");
+        await workspace.JumpToLastWriteCommand.ExecuteAsync("total");
+        Assert.Equal("1", workspace.Locals.Tree.Rows.Single(r => r.Name == "total").Value);
+        Assert.False(editor.IsDataTipOpen);
     }
 
     [AvaloniaFact]
