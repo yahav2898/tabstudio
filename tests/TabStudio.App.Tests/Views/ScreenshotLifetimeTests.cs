@@ -39,14 +39,19 @@ public sealed class ScreenshotLifetimeTests
         window.Show();
 
         using var stop = new CancellationTokenSource();
-        var collector = Task.Run(() =>
+        var collections = 0;
+        var collector = Task.Factory.StartNew(() =>
         {
             while (!stop.IsCancellationRequested)
             {
                 GC.Collect();
-                GC.WaitForPendingFinalizers();
+                Interlocked.Increment(ref collections);
+                // Finalizers run concurrently without waiting here. Waiting for the entire process's finalizer
+                // queue is not cancelable and can stall this test and every UI test queued behind it.
+                // A short, cancelable interval also avoids monopolizing the pool or continuously suspending it.
+                if (stop.Token.WaitHandle.WaitOne(TimeSpan.FromMilliseconds(5))) break;
             }
-        });
+        }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Default);
 
         try
         {
@@ -58,12 +63,20 @@ public sealed class ScreenshotLifetimeTests
                 UiTestHelpers.SaveFrame(window, path);
                 Assert.True(new FileInfo(path).Length > 0);
             }
+
+            Assert.True(Volatile.Read(ref collections) > 0, "The screenshots must overlap forced garbage collections.");
         }
         finally
         {
-            await stop.CancelAsync();
-            await collector;
-            window.Close();
+            try
+            {
+                await stop.CancelAsync();
+                await collector.WaitAsync(TimeSpan.FromSeconds(15));
+            }
+            finally
+            {
+                window.Close();
+            }
         }
     }
 }
