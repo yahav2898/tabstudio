@@ -159,22 +159,25 @@ def ensure_pack(device, requested=None):
 def write_wrappers(compiler, destination):
     wrappers = Path("/usr/local/bin")
     wrappers.mkdir(parents=True, exist_ok=True)
-    import shlex
     binaries = [*(destination / "bin").glob(compiler + "-*")]
     if compiler == "xc8":
         binaries += [destination / "bin/pic-as", destination / "bin/pic-ar"]
     for binary in binaries:
         if not binary.is_file() or not os.access(binary, os.X_OK):
             continue
-        lines = ["#!/bin/sh"]
+        # The native Python subprocess path is exercised by the ARM spike.
+        # Avoid an additional BusyBox script/exec chain before the glibc Box64
+        # process; the same compiler arguments abort through that shell chain.
+        lines = ["#!/usr/bin/python3", "import os, subprocess, sys", "environment = dict(os.environ)"]
         # GCC locates assembler/linker helpers through PATH. Inside the emulated
         # driver those must be the original x86 binaries, not another host shell
         # wrapper that recursively starts Box64 with the helper's argv layout.
-        lines.append("export PATH=" + shlex.quote(str(destination / "bin")) + ':"$PATH"')
+        lines.append("environment['PATH'] = " + repr(str(destination / "bin") + ":") + " + environment.get('PATH', '/usr/bin:/bin')")
         for key, value in runtime_environment(compiler).items():
             if key.startswith("BOX64_") or key == "LD_LIBRARY_PATH":
-                lines.append("export " + key + "=" + shlex.quote(value))
-        lines.append("exec " + shlex.join(translated([str(binary)])) + ' "$@"')
+                lines.append("environment[" + repr(key) + "] = " + repr(value))
+        lines.append("result = subprocess.call(" + repr(translated([str(binary)])) + " + sys.argv[1:], env=environment)")
+        lines.append("raise SystemExit(result if result >= 0 else 128 - result)")
         wrapper = wrappers / binary.name
         wrapper.write_text("\n".join(lines) + "\n")
         wrapper.chmod(0o755)

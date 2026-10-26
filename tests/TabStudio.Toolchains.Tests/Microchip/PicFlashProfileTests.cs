@@ -15,6 +15,7 @@ public sealed class PicFlashProfileTests
             """{"protocol":"mcc-uart","device":"PIC16F877A","firmware":"dist/blink.hex"}""",
             """{"protocol":"mcc-uart","device":"PIC18F45K22","firmware":"../other.hex"}""",
             """{"protocol":"pymcuprog","device":"PIC18F45K22","firmware":"dist/blink.hex","tool":"pickit5"}""",
+            """{"protocol":"pic32prog","device":"PIC18F45K22","firmware":"dist/blink.hex"}""",
         })
         {
             folder.Write(PicFlashProfile.FileName, json);

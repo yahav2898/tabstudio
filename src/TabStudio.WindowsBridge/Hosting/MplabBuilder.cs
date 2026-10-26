@@ -47,7 +47,7 @@ internal static class MplabBuilder
             if (code != 0) throw new BridgeBuildException($"MPLAB's makefile generator exited {code}. See the Output panel.");
             var file = "nbproject/Makefile-" + configuration.Name + ".mk";
             if (!File.Exists(Path.Combine(project.Directory, file))) throw new BridgeBuildException("MPLAB did not generate the selected configuration's makefile.");
-            code = await BridgeBuilder.RunAsync(tools.Make, ["-f", file, "SUBPROJECTS=", ".build-conf", "TYPE_IMAGE=PRODUCTION"], project.Directory, Line, token, environment).ConfigureAwait(false);
+            code = await BridgeBuilder.RunAsync(tools.Make, ["-f", file, "SUBPROJECTS=", ".build-conf", "CND_CONF=" + configuration.Name, "TYPE_IMAGE=PRODUCTION"], project.Directory, Line, token, environment).ConfigureAwait(false);
             if (code != 0) throw new BridgeBuildException($"MPLAB build exited {code}. See the Output panel.");
             var directory = Path.Combine(project.Directory, "dist", configuration.Name, "production");
             var files = Directory.Exists(directory) ? Directory.GetFiles(directory, "*.hex") : [];

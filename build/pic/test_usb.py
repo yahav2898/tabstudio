@@ -90,6 +90,19 @@ class UsbProtocolTests(unittest.TestCase):
             def transfer(self, *args, **kwargs): return b"\x01\x60abcdef\x01\x60XYZ"
         self.assertEqual(b"abcdefXYZ", UsbSerial(FakeUsb()).read())
 
+    def test_second_cdc_port_controls_its_own_communication_interface(self):
+        class CompositeUsb:
+            device = {"vendorId": 0x1234, "productId": 0x5678, "interfaces": [
+                {"number": 0, "class": 2, "subclass": 2}, {"number": 2, "class": 2, "subclass": 2}]}
+            def __init__(self): self.claimed = []; self.control_interfaces = []
+            def endpoints(self, kind, interface): return {"number": 3, "class": 10}, {}, {}
+            def claim(self, number): self.claimed.append(number)
+            def control(self, kind, request, value=0, index=0, **kwargs): self.control_interfaces.append(index)
+        usb = CompositeUsb()
+        UsbSerial(usb, interface=3)
+        self.assertEqual([2], usb.claimed)
+        self.assertEqual([2, 2], usb.control_interfaces)
+
     def test_emulator_finds_native_libraries_across_android_package_dump_formats(self):
         spec = importlib.util.spec_from_file_location("android_pic_test", ROOT / "build/pic/android_spike.py")
         module = importlib.util.module_from_spec(spec)

@@ -80,7 +80,7 @@ class UsbSerial:
             control(0x40, 2, 0, self.port + 1)
             control(0x40, 1, 0x0300 | int(dtr) | (int(rts) << 1), self.port + 1)
         else:
-            communication = next((i for i in usb.device["interfaces"] if i["class"] == 2 and i["subclass"] == 2 and i["number"] <= self.port), None)
+            communication = max((i for i in usb.device["interfaces"] if i["class"] == 2 and i["subclass"] == 2 and i["number"] <= self.port), key=lambda i: i["number"], default=None)
             if communication is None or self.item["class"] not in (2, 10):
                 raise UsbError("Unsupported USB serial adapter; use CDC-ACM, CH340/341, CP210x or FTDI")
             usb.claim(communication["number"])

@@ -50,6 +50,26 @@ def descriptor(path, configuration=None):
     return selected, device, compiler, version, conf
 
 
+def make_tools(path, selected, compiler):
+    """Relocate MPLAB's tool names without replacing its selected drivers."""
+    names = {"MP_CC": compiler + ("-cc" if compiler == "xc8" else "-gcc"),
+             "MP_AS": "xc8-cc" if compiler == "xc8" else "xc32-as",
+             "MP_LD": "xc8-cc" if compiler == "xc8" else "xc32-ld", "MP_AR": compiler + "-ar"}
+    if compiler == "xc32": names["MP_CPPC"] = "xc32-g++"
+    local = path / "nbproject" / ("Makefile-local-" + selected + ".mk")
+    if local.is_file():
+        if local.stat().st_size > 1_000_000: raise ValueError("Oversized MPLAB local makefile")
+        for line in local.read_text().splitlines():
+            match = re.match(r"\s*(MP_(?:CC|CPPC|AS|LD|AR))\s*[:?]?=\s*(.*?)\s*$", line)
+            if not match: continue
+            name = match[2].strip('"\'').replace("\\", "/").rsplit("/", 1)[-1].removesuffix(".exe")
+            if not re.fullmatch(r"[A-Za-z0-9_+.-]+", name) or not (name.startswith(compiler + "-") or compiler == "xc8" and name == "pic-as"):
+                raise ValueError("Unsupported MPLAB tool assignment: " + line + "; use the Windows Bridge")
+            names[match[1]] = name
+    return [argument for key, name in names.items() for argument in
+            (key + "=/usr/local/bin/" + name, key + "_DIR=/usr/local/bin")]
+
+
 def build(path, configuration=None):
     path = path.resolve()
     if path.is_file():
@@ -79,11 +99,8 @@ def build(path, configuration=None):
     makefile = path / "nbproject" / ("Makefile-" + selected + ".mk")
     if not makefile.is_file():
         raise ValueError("MPLAB's generated makefile is missing: " + str(makefile) + ". Generate it with MPLAB X's prjMakefilesGenerator, or use the Windows Bridge; options have not been guessed.")
-    cc = "/usr/local/bin/xc8-cc" if compiler == "xc8" else "/usr/local/bin/xc32-gcc"
     command = ["make", "-f", str(makefile.relative_to(path)), "SUBPROJECTS=", ".build-conf", "CND_CONF=" + selected,
-               "TYPE_IMAGE=PRODUCTION", "MP_CC=" + cc, "MP_LD=" + cc, "MP_CC_DIR=/usr/local/bin",
-               "MP_AS=" + ("/usr/local/bin/pic-as" if compiler == "xc8" else "/usr/local/bin/xc32-as"),
-               "MP_AR=/usr/local/bin/" + compiler + "-ar", "DFP_DIR=" + str(dfp)]
+               "TYPE_IMAGE=PRODUCTION", *make_tools(path, selected, compiler), "DFP_DIR=" + str(pack_path)]
     print(f"MPLAB configuration: {selected}; {device}; {compiler.upper()} {manifest['version']}; {pack['name']} {pack['version']}", flush=True)
     print(" ".join(command), flush=True)
     try:

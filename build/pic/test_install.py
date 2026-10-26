@@ -97,11 +97,23 @@ class InstallationTests(unittest.TestCase):
         command = call.call_args.args[0]
         self.assertEqual(["make", "-f", "nbproject/Makefile-production.mk"], command[:3])
         self.assertIn(".build-conf", command)
-        self.assertIn("DFP_DIR=/packs/device/xc8", command)
+        self.assertIn("DFP_DIR=/packs/device", command)
+        self.assertIn("MP_AS=/usr/local/bin/xc8-cc", command)
+        self.assertIn("-mdfp=/packs/device/xc8", query.call_args.args[0])
         self.assertIn("SPECIAL=-O2 -msmart-io=1", makefile.read_text())
         self.assertEqual("user-owned database", (root / "compile_commands.json").read_text())
         database = json.loads((root / ".tabstudio/pic/compile_commands.json").read_text())
         self.assertIn("-DBOARD=1", database[0]["arguments"])
+
+    def test_relocates_generated_tool_paths_while_preserving_mplabs_driver_choices(self):
+        root = self.folder / "Imported.X"
+        (root / "nbproject").mkdir(parents=True)
+        (root / "nbproject/Makefile-local-production.mk").write_text('MP_AS="C:\\Program Files\\Microchip\\xc32\\v6.00\\bin\\xc32-gcc.exe"\nMP_LD="/opt/microchip/xc32/v6.00/bin/xc32-ld"\n')
+        arguments = self.project.make_tools(root, "production", "xc32")
+        self.assertIn("MP_AS=/usr/local/bin/xc32-gcc", arguments)
+        self.assertIn("MP_LD=/usr/local/bin/xc32-ld", arguments)
+        self.assertIn("MP_CPPC=/usr/local/bin/xc32-g++", arguments)
+        self.assertIn("MP_AS_DIR=/usr/local/bin", arguments)
 
     def test_mplab_descriptor_refuses_external_entities(self):
         root = self.folder / "bad"

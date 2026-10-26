@@ -336,6 +336,8 @@ def spike(args):
         (support / (args.compiler + ".json")).write_text(json.dumps(manifest))
         setup = "import sys;sys.path.insert(0,'/opt/tabstudio/microchip');from install import write_wrappers;write_wrappers(" + repr(args.compiler) + ",__import__('pathlib').Path(" + repr(dest) + "))"
         run([*native, "python3", "-c", setup], out / "project-wrappers.log", env=env)
+        wrapper_path = root / "usr/local/bin" / ("xc8-cc" if args.compiler == "xc8" else "xc32-gcc")
+        (out / "compiler-wrapper.txt").write_text(wrapper_path.read_text())
         project_code, _, _ = run([*native, "python3", "/opt/tabstudio/microchip/project.py", "build", "/work/project"], out / "project-build.log", env=env, timeout=300, check=False)
         if project_code and args.compiler == "xc32" and translate:
             # Keep failures actionable: distinguish compiler arguments, shell
@@ -355,8 +357,8 @@ def spike(args):
         shutil.copy2(project_hex, out / "template.hex")
         result["mplabProjectBuild"] = True
         if args.compiler == "xc8":
-            # A supported gpsim model is compiled separately; the blink template
-            # remains PIC18F45K22, which gpsim correctly refuses to substitute.
+            # Compile a small source-line/stepping fixture independently from
+            # the blink template, using its actual supported PIC18F14K22 model.
             shutil.copy2(REPO / "build/pic/simulation-smoke.c", root / "work/simulation.c")
             shutil.copy2(REPO / "build/pic/simulation-smoke.c", out / "simulation.c")
             run([*prefix, *translate, program, "-mcpu=18F14K22", f"-mdfp={pack}", "-O0", "-o", "/results/simulation.elf", "simulation.c"], out / "simulation-compile.log", env=env, timeout=180)

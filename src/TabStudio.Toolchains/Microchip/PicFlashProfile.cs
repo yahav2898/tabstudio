@@ -34,6 +34,7 @@ public sealed record PicFlashProfile(string Protocol, string Device, string Firm
             throw new InvalidDataException("Select a project-relative .hex firmware path.");
         if (protocol.StartsWith("an1388-", StringComparison.Ordinal) && !device.StartsWith("PIC32", StringComparison.OrdinalIgnoreCase)) throw new InvalidDataException("AN1388 is a PIC32 bootloader.");
         if (protocol == "mcc-uart" && !device.StartsWith("PIC16", StringComparison.OrdinalIgnoreCase) && !device.StartsWith("PIC18", StringComparison.OrdinalIgnoreCase)) throw new InvalidDataException("MCC UART requires a compatible PIC16/18 bootloader.");
+        if (protocol == "pic32prog" && !device.StartsWith("PIC32", StringComparison.OrdinalIgnoreCase)) throw new InvalidDataException("pic32prog supports PIC32 devices; use pk2cmd or the Windows Bridge for 8-bit PIC.");
         if (protocol == "pymcuprog" && (!root.TryGetProperty("tool", out var tool) || tool.GetString() != "nedbg")) throw new InvalidDataException("pymcuprog PIC uses PKOB nano (nedbg). For PICkit 4/5 or Snap use the Windows Bridge.");
         if (protocol == "pymcuprog")
         {
