@@ -118,6 +118,25 @@ jobs:
           echo "$RUNNER_TEMP/js-debug/bin" >> "$GITHUB_PATH"
           echo "TABSTUDIO_REAL_SERVERS=1" >> "$GITHUB_ENV"
 
+      # Full-suite workspaces enlarge the heap collected during every PNG encode.
+      # Keep all 100 captures unchanged, in a fresh test host for each theme.
+      - name: Test screenshot lifetime under GC
+        run: |
+          mkdir -p ci-out
+          status=0
+          screenshot_build_args=()
+          for theme in Dark Light; do
+            log="ci-out/ScreenshotLifetime.$theme.log"
+            if ! TABSTUDIO_THEME="$theme" dotnet test tests/TabStudio.App.Tests -c Release "${screenshot_build_args[@]}" \
+              --blame --blame-hang-timeout 12m --blame-hang-dump-type none \
+              --filter "FullyQualifiedName~ScreenshotLifetimeTests" --logger "console;verbosity=normal" > "$log" 2>&1; then
+              status=1
+            fi
+            tail -n 40 "$log"
+            screenshot_build_args=(--no-build)
+          done
+          exit "$status"
+
       - name: Build the desktop host and test the IDE
         env:
           TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
@@ -131,7 +150,7 @@ jobs:
           mkdir -p "$RUNNER_TEMP/crash"
           run_ide_tests() {
             DOTNET_DbgEnableMiniDump=1 DOTNET_DbgMiniDumpType=1 DOTNET_EnableCrashReport=1 DOTNET_DbgMiniDumpName="$RUNNER_TEMP/crash/%e.%p.dmp" \
-              dotnet test tests/TabStudio.App.Tests -c Release --blame --blame-hang-timeout 12m --blame-hang-dump-type none --logger "console;verbosity=normal" > "$1" 2>&1
+              dotnet test tests/TabStudio.App.Tests -c Release --blame --blame-hang-timeout 12m --blame-hang-dump-type none --filter "FullyQualifiedName!~ScreenshotLifetimeTests" --logger "console;verbosity=normal" > "$1" 2>&1
           }
           first=0
           run_ide_tests ci-out/TabStudio.App.Tests.log || first=1
@@ -151,7 +170,7 @@ jobs:
           mkdir -p ci-out/screenshots/light
           run_light_tests() {
             TABSTUDIO_THEME=Light TABSTUDIO_SCREENSHOTS="$TABSTUDIO_SCREENSHOTS/light" \
-              dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter "FullyQualifiedName!~TabStudio.App.Tests.Theming&FullyQualifiedName!~TabStudio.App.Tests.Design" \
+              dotnet test tests/TabStudio.App.Tests -c Release --no-build --blame --blame-hang-timeout 12m --blame-hang-dump-type none --filter "FullyQualifiedName!~TabStudio.App.Tests.Theming&FullyQualifiedName!~TabStudio.App.Tests.Design&FullyQualifiedName!~ScreenshotLifetimeTests" \
               --logger "console;verbosity=normal" > "$1" 2>&1
           }
           light=0
