@@ -40,6 +40,24 @@ public sealed class SelfTestTests : IDisposable
     public void Rejects_invalid_device_test_shards(string value) =>
         Assert.False(SelfTest.TryParseShard(value, out _));
 
+    [Fact]
+    public void Shard_installation_plans_cover_the_full_run_without_installing_other_shards_tools()
+    {
+        var managed = SelfTest.SelfTestToolchainIdsForShard(SelfTestShard.Managed);
+        var native = SelfTest.SelfTestToolchainIdsForShard(SelfTestShard.Native);
+        var all = SelfTest.SelfTestToolchainIdsForShard(SelfTestShard.All);
+
+        Assert.Equal(["go", "rust"], managed);
+        Assert.Equal(["python", "node", "cpp", "java"], native);
+        Assert.Empty(SelfTest.SelfTestToolchainIdsForShard(SelfTestShard.Ui));
+        Assert.Empty(managed.Intersect(native, StringComparer.Ordinal));
+        Assert.Equal(all.Order(StringComparer.Ordinal), managed.Concat(native).Order(StringComparer.Ordinal));
+    }
+
+    [Fact]
+    public void An_unknown_shard_cannot_silently_skip_toolchain_preparation() =>
+        Assert.Throws<ArgumentOutOfRangeException>(() => SelfTest.SelfTestToolchainIdsForShard((SelfTestShard)(-1)));
+
     [AvaloniaFact]
     public async Task Opens_the_sample_runs_it_and_answers_its_question()
     {

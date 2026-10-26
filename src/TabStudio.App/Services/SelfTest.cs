@@ -14,11 +14,11 @@ public enum SelfTestShard
 {
     /// <summary>The original, complete self test, for manual device runs.</summary>
     All,
-    /// <summary>In-process console, debugger, Link, language servers and web apps.</summary>
+    /// <summary>Console, debugger, Link, web apps, and Go/Rust builds and debuggers.</summary>
     Managed,
     /// <summary>Native app previews, design, extensions, Swarm, scrolling and external-display input.</summary>
     Ui,
-    /// <summary>Installed Linux toolchains, native processes and native debuggers.</summary>
+    /// <summary>Python/Node, C/C++/Java and native process integrity.</summary>
     Native,
 }
 
@@ -147,6 +147,10 @@ public static partial class SelfTest
                 return Finish(managed);
             }
 
+            async Task<bool> CheckGoAndRustAsync() =>
+                await CheckAsync(() => CheckGoToolchainAsync(main, templates, cancellationToken))
+                && await CheckAsync(() => CheckRustToolchainAsync(main, templates, cancellationToken));
+
             if (managed && !await CheckAsync(() => CheckRemoteSshAsync(main.Workspace!, cancellationToken)))
             {
                 return Finish(false);
@@ -163,10 +167,11 @@ public static partial class SelfTest
             }
 
             // In a full run the browser's trusted-input assertions finish before downloads/decompression start.
-            // Native-only shards can prepare immediately and never rely on another shard's installed packages.
-            if (native)
+            // Each independent shard installs only its own tools. Full runs retain the original complete plan.
+            // Native Hot Reload/process-integrity checks belong immediately before this preparation starts.
+            if (native || shard == SelfTestShard.Managed)
             {
-                preparation = PrepareSelfTestToolchainsAsync(main.Workspace!.Toolchains, preparationStop.Token);
+                preparation = PrepareSelfTestToolchainsAsync(main.Workspace!.Toolchains, shard, preparationStop.Token);
             }
 
             if (managed && !await CheckAsync(() => ShowStaticSiteAsync(main, templates, cancellationToken)))
@@ -177,6 +182,17 @@ public static partial class SelfTest
             if (managed && !await CheckAsync(() => ServeBlazorAppsAsync(main, templates, cancellationToken)))
             {
                 return Finish(false);
+            }
+
+            if (shard == SelfTestShard.Managed)
+            {
+                // Go/Rust balance the shorter managed shard. A full manual run keeps their original position
+                // after Python tools below, so every assertion still executes once in its original order.
+                await preparation!;
+                if (!await CheckGoAndRustAsync())
+                {
+                    return Finish(false);
+                }
             }
 
             if (ui)
@@ -207,8 +223,7 @@ public static partial class SelfTest
                 if (!await CheckAsync(() => RunToolchainsAsync(main, templates, cancellationToken))
                     || !await CheckAsync(() => StartProgramsWhileCollectingAsync(cancellationToken))
                     || !await CheckAsync(() => CheckPythonToolsAsync(main, cancellationToken))
-                    || !await CheckAsync(() => CheckGoToolchainAsync(main, templates, cancellationToken))
-                    || !await CheckAsync(() => CheckRustToolchainAsync(main, templates, cancellationToken))
+                    || (shard == SelfTestShard.All && !await CheckGoAndRustAsync())
                     || !await CheckAsync(() => CheckCppToolchainAsync(main, templates, cancellationToken))
                     || !await CheckAsync(() => CheckJavaToolchainAsync(main, templates, cancellationToken)))
                 {
