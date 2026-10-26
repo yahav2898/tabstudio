@@ -88,16 +88,23 @@ public sealed class OpenSshTests
         var runtime = new SshRuntime(workspace);
         using var process = runtime.Start(runtime.Shell(temp.Path, new TerminalSize(24, 80)));
         process.Resize(new TerminalSize(32, 100));
-        await process.Input.WriteAsync(Encoding.UTF8.GetBytes("printf 'shell-%s\\n' $((6*7))\n"));
         var text = new StringBuilder();
         var bytes = new byte[4096];
         using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(15));
-        while (!text.ToString().Contains("shell-42", StringComparison.Ordinal))
+        async Task ReadUntilResultAsync()
         {
-            var count = await process.Output.ReadAsync(bytes, timeout.Token);
-            if (count == 0) { break; }
-            text.Append(Encoding.UTF8.GetString(bytes, 0, count));
+            while (!text.ToString().Contains("shell-42", StringComparison.Ordinal))
+            {
+                var count = await process.Output.ReadAsync(bytes, timeout.Token);
+                if (count == 0) { break; }
+                text.Append(Encoding.UTF8.GetString(bytes, 0, count));
+            }
         }
+        // Read first, as the Terminal panel does. A pending read must not serialize and block input writes.
+        var received = ReadUntilResultAsync();
+        await process.Input.WriteAsync(Encoding.UTF8.GetBytes("printf 'shell-%s\\n' $((6*7))\n")).AsTask().WaitAsync(TimeSpan.FromSeconds(10));
+        await process.Input.FlushAsync();
+        await received.WaitAsync(TimeSpan.FromSeconds(15));
         Assert.Contains("shell-42", text.ToString(), StringComparison.Ordinal);
         process.Stop();
         Assert.True((await process.Completion.WaitAsync(TimeSpan.FromSeconds(10))).WasStopped);

@@ -144,7 +144,7 @@ public sealed class RemoteSshTests
         await publish.WaitAsync(TimeSpan.FromMinutes(3));
         Assert.Equal(IdeState.Failed, workspace.State);
         Assert.Contains("previous current link was restored", workspace.StatusText, StringComparison.Ordinal);
-        var release = Assert.Single(server.Sftp.ListDirectory(destination + "/releases").Where(f => f.IsDirectory && f.Name is not "." and not ".."));
+        var release = Assert.Single(server.Sftp.ListDirectory(destination + "/releases"), f => f.IsDirectory && f.Name is not "." and not "..");
         Assert.True(server.Sftp.Exists(release.FullName + "/PublishWeb.dll"));
         using var current = server.Ssh.RunCommand("readlink " + SshRuntime.Quote(destination + "/current"));
         Assert.Equal(destination + "/previous", current.Result.Trim());

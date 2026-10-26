@@ -36,8 +36,9 @@ public sealed class AndroidSshKeyStore : ISshKeyStore
             using var keyStore = KeyStore.GetInstance("AndroidKeyStore")!;
             keyStore.Load(null);
             using var key = keyStore.GetKey(alias, null)!;
+            using var privateKey = key.JavaCast<IPrivateKey>();
             using var signature = Signature.GetInstance(hash == System.Security.Cryptography.HashAlgorithmName.SHA512 ? "SHA512withRSA" : "SHA256withRSA")!;
-            signature.InitSign((IPrivateKey)key);
+            signature.InitSign(privateKey);
             signature.Update(data);
             return signature.Sign()!;
         });
