@@ -193,7 +193,11 @@ and is 480 wide, as dialogs are.
 
 | Before | After |
 |---|---|
-| ![Logcat before an app runs, before](../images/design/audit-logcat-empty-landscape-dark-before.png) | ![Logcat before an app runs, after](../images/design/audit-logcat-empty-landscape-dark-after.png) |
+| ![Logcat, before](../images/design/audit-logcat-portrait-light-before.png) | ![Logcat, after](../images/design/audit-logcat-portrait-light-after.png) |
+
+Before an app runs, Logcat says how its log gets there:
+
+![Logcat before an app runs](../images/design/audit-logcat-empty-landscape-dark-after.png)
 
 | Before | After |
 |---|---|

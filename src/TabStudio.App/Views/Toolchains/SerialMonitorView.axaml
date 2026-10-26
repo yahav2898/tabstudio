@@ -27,8 +27,15 @@
   <DockPanel>
     <Border DockPanel.Dock="Top" Padding="12,4" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
       <!-- One row on every screen: the device takes the room left; the speed and interface are under the speed's button. -->
-      <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="8">
-        <ComboBox ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}" MinWidth="110" MaxWidth="360" HorizontalAlignment="Stretch"
+      <Grid ColumnSpacing="8">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" MaxWidth="360" />
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="0.001*" />
+        </Grid.ColumnDefinitions>
+        <ComboBox ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}" MinWidth="110" HorizontalAlignment="Stretch"
                   IsEnabled="{Binding !IsConnected}" PlaceholderText="No device" AutomationProperties.Name="USB device"
                   ToolTip.Tip="The board's USB serial adapter" />
         <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Classes="tool" Padding="10,0" IsEnabled="{Binding !IsConnected}"
