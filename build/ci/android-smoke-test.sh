@@ -9,12 +9,17 @@
 # and asks this script in its log (TABSTUDIO_DESKTOP_STEP lines) to type on the keyboard and take screenshots,
 # which it does with adb. (The app clicks the display itself: adb's taps have no mouse button events.)
 #
-# Usage: build/ci/android-smoke-test.sh <apk> <output-folder> [timeout-seconds]
+# Usage: build/ci/android-smoke-test.sh <apk> <output-folder> [timeout-seconds] [all|managed|ui|native]
 set -euo pipefail
 
 apk="${1:?apk}"
 out="${2:?output folder}"
 timeout="${3:-900}"
+shard="${4:-all}"
+case "$shard" in
+  all|managed|ui|native) ;;
+  *) echo "Unknown self-test shard: $shard" >&2; exit 2 ;;
+esac
 package="com.tabstudio.ide"
 
 mkdir -p "$out"
@@ -70,7 +75,7 @@ adb logcat -c
 started=$(date +%s)
 # The shell's instrumentation source permits the existing desktop checks to inject real Android input events.
 # Keep instrumentation active until the emulator is stopped, so the IDE is still present in the screenshots.
-adb shell am instrument "$package/com.tabstudio.ide.SelfTestInstrumentation"
+adb shell am instrument -e tabstudio.selftest.shard "$shard" "$package/com.tabstudio.ide.SelfTestInstrumentation"
 
 verdict=""
 handled=0
@@ -104,6 +109,7 @@ grep -E 'TabStudio|mono|monodroid|AndroidRuntime|DOTNET|FATAL' "$out/logcat-full
 
 verdict="${verdict:-TABSTUDIO_SELFTEST_TIMEOUT no verdict after ${timeout} s}"
 echo "$verdict" | tee "$out/verdict.txt"
+echo "Shard: $shard" | tee -a "$out/verdict.txt"
 echo "Seconds from launch to verdict: $elapsed" | tee -a "$out/verdict.txt"
 
 case "$verdict" in
