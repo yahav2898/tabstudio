@@ -285,7 +285,7 @@ and design checks and before Swarm, retaining every existing self-test step.
 The combined device self test installs Python, Node.js, Go, Rust, C/C++ and Java serially through the shared
 Toolchain Manager while the independent .NET and UI checks run. Package downloads use at most four streams,
 every package is still verified before the serial apk operation, and the batch measures shared disk usage once. It awaits all package operations before the
-native run/debug checks, observes cancellation on every exit, and retains every check under the 15-minute
+native run/debug checks, observes cancellation on every exit, and retains every check under the 30-minute
 launch-to-verdict limit. CI permits one retry only for named failures outside the merged feature tests and
 keeps first-attempt logs and `FLAKY.txt` as artifacts for both pushes and pull requests.
 
