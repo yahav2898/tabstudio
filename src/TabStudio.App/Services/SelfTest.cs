@@ -138,6 +138,7 @@ public static partial class SelfTest
                     || !output.Contains($", {Name}!", StringComparison.Ordinal)
                     || !await CheckAsync(() => DebugSampleAsync(workspace, cancellationToken))
                     || !await CheckAsync(() => RecordSampleAsync(workspace, cancellationToken))
+                    || !await CheckAsync(() => CheckLocalAIAsync(cancellationToken))
                     || !await CheckAsync(() => LinkSampleAsync(main, workspace, cancellationToken))
                     || !await CheckAsync(() => CheckLanguageServersAsync(main, cancellationToken)))
                 {

@@ -475,6 +475,9 @@ jobs:
           bash build/android/native/build.sh artifacts/native arm64-v8a armeabi-v7a 2>&1 | tee ci-out/native-build.log
           exit "${PIPESTATUS[0]}"
 
+      - name: Build the local AI runtime
+        run: bash build/local-ai/android.sh arm64-v8a
+
       - name: Build the APK
         run: |
           mkdir -p ci-out
@@ -546,12 +549,17 @@ jobs:
           bash build/android/native/build.sh artifacts/native x86_64 2>&1 | tee ci-out/native-build.log
           exit "${PIPESTATUS[0]}"
 
+      - name: Build local AI and bundle its verified diagnostic model
+        run: |
+          bash build/local-ai/android.sh x86_64
+          bash build/local-ai/download-tiny.sh artifacts/local-ai/tiny.gguf
+
       # GitHub's runners are x86_64, so the emulator needs an x86_64 build of the same app.
       - name: Build an x86_64 APK
         run: |
           mkdir -p ci-out
           status=0
-          dotnet publish src/TabStudio.Android -c Release -p:TreatWarningsAsErrors=true -f net10.0-android -p:TabStudioRuntimeIdentifiers=android-x64 \
+          dotnet publish src/TabStudio.Android -c Release -p:TreatWarningsAsErrors=true -f net10.0-android -p:TabStudioRuntimeIdentifiers=android-x64 -p:TabStudioIncludeLocalAITestModel=true \
             -p:TabStudioBuildNumber=$(( ($(date +%s) - 1767225600) / 60 )) \
             -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME" \
             > ci-out/android-x64-build.log 2>&1 || status=$?

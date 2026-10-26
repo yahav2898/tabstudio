@@ -270,6 +270,8 @@ public sealed partial class WorkspaceViewModel
 
     private void Attach(DocumentViewModel document)
     {
+        document.LocalAI = LocalAI;
+        document.LocalAINeighbors = () => Documents.Where(d => !ReferenceEquals(d, document) && !d.IsExtensionsPage).Select(d => new TabStudio.Agent.Local.OpenFileContext(d.FilePath, d.Document.Text)).ToList();
         document.DiagnosticsChanged += OnDocumentDiagnosticsChanged;
         document.PropertyChanged += OnDocumentPropertyChanged;
         AttachDebugging(document);
@@ -281,6 +283,7 @@ public sealed partial class WorkspaceViewModel
 
     private void Detach(DocumentViewModel document)
     {
+        document.LocalAINeighbors = null;
         document.DiagnosticsChanged -= OnDocumentDiagnosticsChanged;
         document.PropertyChanged -= OnDocumentPropertyChanged;
         DetachDebugging(document);

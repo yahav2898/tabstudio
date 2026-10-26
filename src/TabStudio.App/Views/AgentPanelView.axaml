@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="using:TabStudio.App.Controls"
              xmlns:agent="using:TabStudio.App.ViewModels.Agent"
+             xmlns:local="using:TabStudio.Agent.Local"
              x:Class="TabStudio.App.Views.AgentPanelView"
              x:DataType="agent:AgentPanelViewModel">
 
@@ -24,7 +25,8 @@
     <Grid DockPanel.Dock="Top" MinHeight="44" Margin="12,4,6,4" ColumnDefinitions="Auto,*,Auto,Auto">
       <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="16" Foreground="{DynamicResource Brush.Accent}" VerticalAlignment="Center" />
       <StackPanel Grid.Column="1" Margin="8,0" VerticalAlignment="Center">
-        <TextBlock Classes="header" Text="Claude" />
+        <TextBlock Classes="header" Text="Agent" />
+        <TextBlock Classes="muted small" Text="{Binding PrivacyBadge}" TextWrapping="Wrap" />
         <TextBlock Classes="muted small" TextTrimming="CharacterEllipsis">
           <Run Text="{Binding ModelLabel}" />
           <Run Text="{Binding UsageSuffix}" />
@@ -42,21 +44,47 @@
     <ScrollViewer IsVisible="{Binding IsSettingsOpen}">
       <StackPanel Margin="14,6,14,14" Spacing="10">
         <TextBlock Classes="h2" Text="Agent settings" />
+        <CheckBox Content="Local mode · on-device AI" IsChecked="{Binding UseLocalMode}" />
+        <TextBlock Classes="muted small" TextWrapping="Wrap" Text="Local mode uses a downloaded model with file reading and change proposals. It has no cloud, MCP, shell or network tools. Downloads below contact Hugging Face; inference stays offline." />
+        <StackPanel DataContext="{Binding LocalAI}" x:DataType="agent:LocalAIViewModel" Spacing="8" IsEnabled="{Binding !IsBusy}">
+          <TextBlock Classes="label" Text="Local AI models" />
+          <ComboBox ItemsSource="{Binding Models}" SelectedItem="{Binding SelectedModel}" HorizontalAlignment="Stretch">
+            <ComboBox.ItemTemplate><DataTemplate x:DataType="local:LocalModel"><TextBlock Text="{Binding Name}" /></DataTemplate></ComboBox.ItemTemplate>
+          </ComboBox>
+          <TextBlock Text="{Binding Details}" TextWrapping="Wrap" Classes="muted small" />
+          <TextBlock Text="{Binding Status}" TextWrapping="Wrap" Classes="muted small" />
+          <CheckBox Content="Inline completions · Tab to accept" IsChecked="{Binding InlineEnabled}" />
+          <Expander Header="Read the model license" HorizontalAlignment="Stretch">
+            <ScrollViewer MaxHeight="260"><TextBlock Text="{Binding LicenseText}" TextWrapping="Wrap" FontSize="11" Foreground="{DynamicResource Brush.Text}" /></ScrollViewer>
+          </Expander>
+          <CheckBox Content="I accept this model's license" IsChecked="{Binding LicenseAccepted}" />
+          <WrapPanel>
+            <Button Content="Download" Command="{Binding DownloadCommand}" Margin="0,0,6,6" />
+            <Button Content="Delete" Command="{Binding DeleteCommand}" Margin="0,0,6,6" />
+            <Button Content="Unload from RAM" Command="{Binding UnloadCommand}" Margin="0,0,6,6" />
+          </WrapPanel>
+          <TextBlock Text="{Binding ProgressText}" TextWrapping="Wrap" Classes="muted small" />
+        </StackPanel>
+        <Button Content="Cancel model download" Command="{Binding LocalAI.CancelDownloadCommand}" IsVisible="{Binding LocalAI.IsBusy}" />
+        <StackPanel Spacing="8" IsVisible="{Binding !UseLocalMode}">
         <TextBlock Classes="muted small" TextWrapping="Wrap"
                    Text="The agent uses your own Claude API key, from console.anthropic.com. It is kept in TabStudio's private storage on this device and sent only to Claude's API." />
         <TextBlock Classes="label" Text="API key" />
         <TextBox Classes="mono" PasswordChar="•" Watermark="sk-ant-..." Text="{Binding ApiKeyText}" />
         <TextBlock Classes="label" Text="Model" />
         <ComboBox ItemsSource="{Binding Models}" SelectedItem="{Binding SelectedModel}" HorizontalAlignment="Stretch" />
+        </StackPanel>
         <TextBlock Classes="label" Text="Instructions for every conversation" />
         <TextBox AcceptsReturn="True" TextWrapping="Wrap" MinHeight="70" Watermark="For example: Use file-scoped namespaces. Write xUnit tests." Text="{Binding InstructionsText}" />
+        <StackPanel Spacing="8" IsVisible="{Binding !UseLocalMode}">
         <TextBlock Classes="label" Text="MCP servers" />
         <TextBlock Classes="muted small" TextWrapping="Wrap" Text="One per line: a name, the server's https address, and a token if it needs one. Their tools become the agent's tools." />
         <TextBox Classes="mono" AcceptsReturn="True" MinHeight="60" Watermark="issues https://mcp.example.com/mcp" Text="{Binding McpServersText}" />
+        </StackPanel>
         <TextBlock Foreground="{DynamicResource Brush.Error}" TextWrapping="Wrap" Text="{Binding ErrorText}"
                    IsVisible="{Binding ErrorText, Converter={x:Static ObjectConverters.IsNotNull}}" />
         <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
-          <Button Theme="{StaticResource SecondaryButton}" Content="Cancel" Command="{Binding CancelSettingsCommand}" IsVisible="{Binding HasApiKey}" />
+          <Button Theme="{StaticResource SecondaryButton}" Content="Cancel" Command="{Binding CancelSettingsCommand}" IsVisible="{Binding HasConfiguredProvider}" />
           <Button Theme="{StaticResource AccentButton}" Content="Save" Command="{Binding SaveSettingsCommand}" />
         </StackPanel>
       </StackPanel>
@@ -88,7 +116,7 @@
           </Border>
           <Grid ColumnDefinitions="*,Auto">
             <TextBox x:Name="Input" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="44" MaxHeight="160"
-                     Watermark="Ask Claude to change, explain or fix your code"
+                     Watermark="Ask the agent to change, explain or fix your code"
                      Text="{Binding InputText}" />
             <Panel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Bottom">
               <Button Theme="{StaticResource AccentButton}" MinWidth="44" Height="44" ToolTip.Tip="Send (Ctrl+Enter)"

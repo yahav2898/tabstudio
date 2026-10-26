@@ -15,7 +15,7 @@ public sealed record McpServerSetting(string Name, string Url, string? Token);
 /// <param name="Model">The model.</param>
 /// <param name="Instructions">Instructions added to every conversation, such as house style.</param>
 /// <param name="McpServers">Connected MCP servers.</param>
-public sealed record AgentSettings(string? ApiKey, string Model, string? Instructions, IReadOnlyList<McpServerSetting> McpServers)
+public sealed record AgentSettings(string? ApiKey, string Model, string? Instructions, IReadOnlyList<McpServerSetting> McpServers, bool LocalMode = false)
 {
     /// <summary>The models offered in the settings, most capable first.</summary>
     public static IReadOnlyList<string> Models { get; } = [AnthropicClient.DefaultModel, "claude-sonnet-5-5", "claude-haiku-5-5"];

@@ -11,6 +11,13 @@
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TabStudioIncludeLocalAITestModel)' == 'true'">
+    <DefineConstants>$(DefineConstants);TABSTUDIO_LOCAL_AI_SELF_TEST</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(TabStudioIncludeLocalAITestModel)' == 'true'">
+    <EmbeddedResource Include="../../artifacts/local-ai/tiny.gguf" LogicalName="LocalAI/tiny.gguf" />
+  </ItemGroup>
+
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
