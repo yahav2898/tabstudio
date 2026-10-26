@@ -9,41 +9,17 @@ Compatibility Doctor:
   AutoMapper.UnitTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
   docs: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
   docs: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
-Built in 6.1 s: 1 errors, 1 warnings
+Built in 4.3 s: 1 errors, 1 warnings
   1 x CS0729
       [AutoMapper] System.Runtime.CompilerServices.IsExternalInit.g.cs(4,12): error CS0729: Type 'IsExternalInit' is defined in this assembly, but a type forwarder is specified for it
 Output:
-Build started at 19:45:25...
+Build started at 19:52:56...
 1>------ Build started: Project: AutoMapper, Configuration: Debug ------
-Collecting sphinx==7.1.2 (from -r requirements.txt (line 1))
-  Downloading sphinx-7.1.2-py3-none-any.whl.metadata (5.8 kB)
-Collecting sphinx-rtd-theme==1.3.0rc1 (from -r requirements.txt (line 2))
-  Downloading sphinx_rtd_theme-1.3.0rc1-py2.py3-none-any.whl.metadata (4.5 kB)
 1>System.Runtime.CompilerServices.IsExternalInit.g.cs(4,12): error CS0729: Type 'IsExternalInit' is defined in this assembly, but a type forwarder is specified for it
 2>------ Build started: Project: AutoMapper.DI.Tests, Configuration: Debug ------
-Collecting myst_parser==2.0.0 (from -r requirements.txt (line 3))
-  Downloading myst_parser-2.0.0-py3-none-any.whl.metadata (5.4 kB)
-Collecting sphinxcontrib-applehelp (from sphinx==7.1.2->-r requirements.txt (line 1))
-  Downloading sphinxcontrib_applehelp-2.0.0-py3-none-any.whl.metadata (2.3 kB)
 3>------ Build started: Project: Benchmark, Configuration: Debug ------
-Collecting sphinxcontrib-devhelp (from sphinx==7.1.2->-r requirements.txt (line 1))
-  Downloading sphinxcontrib_devhelp-2.0.0-py3-none-any.whl.metadata (2.3 kB)
-Collecting sphinxcontrib-jsmath (from sphinx==7.1.2->-r requirements.txt (line 1))
-  Downloading sphinxcontrib_jsmath-2.0.0-py3-none-any.whl.metadata (2.6 kB)
 4>------ Build started: Project: AutoMapper.IntegrationTests, Configuration: Debug ------
-Collecting sphinxcontrib-htmlhelp>=2.0.0 (from sphinx==7.1.2->-r requirements.txt (line 1))
-  Downloading sphinxcontrib_htmlhelp-2.1.0-py3-none-any.whl.metadata (2.3 kB)
 5>------ Build started: Project: TestApp, Configuration: Debug ------
-Collecting sphinxcontrib-serializinghtml>=1.1.5 (from sphinx==7.1.2->-r requirements.txt (line 1))
-  Downloading sphinxcontrib_serializinghtml-2.0.0-py3-none-any.whl.metadata (2.4 kB)
-Collecting sphinxcontrib-qthelp (from sphinx==7.1.2->-r requirements.txt (line 1))
-  Downloading sphinxcontrib_qthelp-2.0.0-py3-none-any.whl.metadata (2.3 kB)
 6>------ Build started: Project: AutoMapper.UnitTests, Configuration: Debug ------
-Collecting Jinja2>=3.0 (from sphinx==7.1.2->-r requirements.txt (line 1))
-  Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
-Collecting Pygments>=2.13 (from sphinx==7.1.2->-r requirements.txt (line 1))
 ========== Build: 0 succeeded, 6 failed ==========
-  Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
-Collecting docutils<0.21,>=0.18.1 (from sphinx==7.1.2->-r requirements.txt (line 1))
-  Downloading docutils-0.20.1-py3-none-any.whl.metadata (2.8 kB)
 
