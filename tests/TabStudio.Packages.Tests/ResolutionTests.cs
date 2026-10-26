@@ -332,6 +332,33 @@ public sealed class ResolutionTests : IDisposable
 
     public void Dispose() => _fixture.Dispose();
 
+    [Fact]
+    public async Task Analyzers_stay_with_the_project_that_references_their_package_and_PrivateAssets_all_packages_do_not_flow()
+    {
+        // ardalis/CleanArchitecture: Web references Mediator.SourceGenerator with PrivateAssets="all", and the tests
+        // that reference Web must not run its generator a second time.
+        _fixture.Add(
+            Package("Generator", "1.0.0").WithFile("analyzers/dotnet/cs/Generator.dll"),
+            Package("Library", "1.0.0").DependsOn("Helper", "1.0.0"),
+            Package("Helper", "1.0.0").WithFile("analyzers/dotnet/cs/Helper.Generator.dll"),
+            Package("Private", "1.0.0"));
+        WriteProject("Web", references:
+        [
+            "<PackageReference Include=\"Generator\" Version=\"1.0.0\" />",
+            "<PackageReference Include=\"Library\" Version=\"1.0.0\" />",
+            "<PackageReference Include=\"Private\" Version=\"1.0.0\" PrivateAssets=\"all\" />",
+        ]);
+        var tests = WriteProject("Tests", references: ["<ProjectReference Include=\"..\\Web\\Web.csproj\" />"]);
+
+        var web = await _fixture.CreateRestorer().RestoreAsync(ProjectParser.Load(_fixture.Resolve("Web/Web.csproj")));
+        var result = await _fixture.CreateRestorer().RestoreAsync(ProjectParser.Load(tests));
+
+        Assert.True(result.Success, Describe(result));
+        Assert.Equal(new[] { "Generator.dll", "Helper.Generator.dll" }, web.Analyzers.Select(a => Path.GetFileName(a)).Order(StringComparer.Ordinal));
+        Assert.Empty(result.Analyzers);
+        Assert.Equal(new[] { "Generator", "Helper", "Library" }, result.Packages.Select(p => p.Id).Order(StringComparer.Ordinal));
+    }
+
     private string WriteProject(string name, string[] references) =>
         _fixture.Write($"{name}/{name}.csproj", $"""
             <Project Sdk="Microsoft.NET.Sdk">
