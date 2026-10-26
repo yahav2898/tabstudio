@@ -27,7 +27,7 @@ public sealed partial class DatabaseQueryViewModel : ObservableObject, IDisposab
     public DatabaseTable? Table { get; }
     public bool IsTable => Table is not null;
     public bool CanEdit => Table is { IsView: false } table && table.Columns.Any(c => c.KeyOrder > 0);
-    public string Heading => Table is { } t ? $"{Connection.Name} / {t}" : Connection.Name;
+    public string Heading => string.Join(" / ", new[] { Connection.Name, Schema?.Database, Table?.ToString() }.Where(s => !string.IsNullOrEmpty(s)));
     public string EditHint => CanEdit ? "Select a row and column to edit. Primary keys and generated values are read-only." : "Views and tables without a primary key are read-only.";
     public IReadOnlyList<DatabaseColumn> EditableColumns => Table?.Columns.Where(c => !c.Generated && c.KeyOrder == 0).ToArray() ?? [];
     public ObservableCollection<ResultOption> Results { get; } = [];

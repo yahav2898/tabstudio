@@ -54,6 +54,8 @@ public sealed class DatabaseExplorerTests
             Assert.Equal("Maya Bar", query.Rows[0].Values[1]);
             var grid = view.GetVisualDescendants().OfType<DataGrid>().Single();
             Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+            Assert.True(grid.Columns[3].CanUserSort);
             var header = grid.GetVisualDescendants().OfType<Avalonia.Controls.DataGridColumnHeader>().Single(h => Equals(h.Content, "orders"));
             var point = header.TranslatePoint(new Avalonia.Point(header.Bounds.Width / 2, header.Bounds.Height / 2), window)!.Value;
             window.MouseDown(point, MouseButton.Left); window.MouseUp(point, MouseButton.Left);
@@ -74,8 +76,11 @@ public sealed class DatabaseExplorerTests
             Assert.Equal("Ashdod", data.Rows[0].Values[2]);
             UiTestHelpers.SaveScreenshot(window, "database-02-table-editor");
             Assert.Contains(workspace.Activity.Items, i => i.Title == "Database Explorer");
-            workspace.DatabaseExplorer.AddConnectionCommand.Execute(null);
             window.Width = 800; window.Height = 1100;
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+            await workspace.ShowDatabaseCommand.ExecuteAsync(null);
+            workspace.DatabaseExplorer.AddConnectionCommand.Execute(null);
             UiTestHelpers.SaveScreenshot(window, "database-03-connection-tablet");
         }
         finally { window.Close(); }

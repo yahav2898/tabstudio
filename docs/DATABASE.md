@@ -38,6 +38,14 @@ In the **EF Core** tab choose the migrations project and startup project, then *
 
 These operations use TabStudio's existing in-process compiler and the project's matching EF Core design tools, restored from NuGet if missing. They require a C# project that builds successfully and a provider compatible with the tablet. Configure the connection in the DbContext, an `IDesignTimeDbContextFactory<T>`, or the startup project's configuration. The Explorer's selected connection does not override the context's configuration. For configuration that depends on the process working directory, use a design-time factory and the supplied `--contentRoot` argument; TabStudio does not change the IDE's global working directory. EF design operations are synchronous: once an update or scaffold has started, let it finish.
 
+## Screenshots
+
+![SQL editor and Database Explorer](screenshots/database-01-explorer-sql-results.png)
+
+![Paged table editor](screenshots/database-02-table-editor.png)
+
+![Connection form on a tablet](screenshots/database-03-connection-tablet.png)
+
 ## Verification
 
 ```sh

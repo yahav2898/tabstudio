@@ -64,7 +64,8 @@ public sealed partial class DatabaseQueryView : UserControl
         _sortDescending = false;
         if (_model.SelectedResult is not { } result) return;
         for (var i = 0; i < result.Data.Columns.Count; i++)
-            ResultsGrid.Columns.Add(new DataGridTextColumn { Header = result.Data.Columns[i].Name, Binding = new Binding($"[{i}]"), SortMemberPath = i.ToString(System.Globalization.CultureInfo.InvariantCulture), MinWidth = 100, Width = new DataGridLength(180) });
+            // The grid cannot infer comparability from an indexer. Our handler compares the typed values.
+            ResultsGrid.Columns.Add(new DataGridTextColumn { Header = result.Data.Columns[i].Name, Binding = new Binding($"[{i}]"), SortMemberPath = i.ToString(System.Globalization.CultureInfo.InvariantCulture), CanUserSort = true, MinWidth = 100, Width = new DataGridLength(180) });
     }
     private void OnSorting(object? sender, DataGridColumnEventArgs e)
     {
