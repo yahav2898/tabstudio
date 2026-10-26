@@ -26,6 +26,9 @@ internal sealed class FakeHttpHandler : HttpMessageHandler
     /// <summary>A delay before each answer, for tests that cancel in the middle.</summary>
     public TimeSpan Latency { get; set; }
 
+    /// <summary>A delay between body chunks, for observing a transfer while requests run in parallel.</summary>
+    public TimeSpan ReadLatency { get; set; }
+
     /// <summary>Serves a file.</summary>
     public void Add(Uri address, byte[] content)
     {
@@ -103,7 +106,7 @@ internal sealed class FakeHttpHandler : HttpMessageHandler
             var response = new HttpResponseMessage(range is null ? HttpStatusCode.OK : HttpStatusCode.PartialContent)
             {
                 RequestMessage = request,
-                Content = new StreamContent(new BreakingStream(body, breakAfter)),
+                Content = new StreamContent(new BreakingStream(body, breakAfter, ReadLatency)),
             };
             response.Content.Headers.ContentLength = body.Length;
             response.Headers.ETag = new EntityTagHeaderValue($"\"{content.Length}\"");
@@ -124,7 +127,7 @@ internal sealed class FakeHttpHandler : HttpMessageHandler
     }
 
     /// <summary>A body that throws an <see cref="IOException"/> after some bytes, as a dropped connection does.</summary>
-    private sealed class BreakingStream(byte[] content, int? breakAfter) : Stream
+    private sealed class BreakingStream(byte[] content, int? breakAfter, TimeSpan readLatency) : Stream
     {
         private int _position;
 
@@ -152,6 +155,10 @@ internal sealed class FakeHttpHandler : HttpMessageHandler
             }
 
             var count = Math.Min(buffer.Length, content.Length - _position);
+            if (readLatency > TimeSpan.Zero)
+            {
+                count = Math.Min(count, Math.Max(1, content.Length / 4));
+            }
             if (breakAfter is { } stop)
             {
                 count = Math.Min(count, stop - _position);
@@ -163,10 +170,17 @@ internal sealed class FakeHttpHandler : HttpMessageHandler
         }
 
         public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken) =>
-            Task.FromResult(Read(buffer.AsSpan(offset, count)));
+            ReadAsync(buffer.AsMemory(offset, count), cancellationToken).AsTask();
 
-        public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default) =>
-            ValueTask.FromResult(Read(buffer.Span));
+        public override async ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)
+        {
+            if (readLatency > TimeSpan.Zero)
+            {
+                await Task.Delay(readLatency, cancellationToken).ConfigureAwait(false);
+            }
+
+            return Read(buffer.Span);
+        }
 
         public override void Flush()
         {

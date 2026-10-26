@@ -134,7 +134,7 @@ def run(args):
         print(json.dumps(result, indent=2), flush=True)
         if "base" in locals():
             # This is only the disposable compiler check's private directory.
-            # Release space before the IDE's larger, independent self test.
+            # Do not retain the disposable compiler's downloaded environment.
             adb_shell(shlex.join(["run-as", PACKAGE, "rm", "-r", base]))
 
 

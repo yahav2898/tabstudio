@@ -451,10 +451,22 @@ jobs:
       - name: Build an x86_64 APK
         run: |
           mkdir -p ci-out
-          # Only this disposable CI APK permits run-as, for the app-UID PIC
-          # compiler check. Normal release APKs keep their original manifest.
+          status=0
+          dotnet publish src/TabStudio.Android -c Release -p:TreatWarningsAsErrors=true -f net10.0-android -p:TabStudioRuntimeIdentifiers=android-x64 \
+            -p:TabStudioBuildNumber=$(( ($(date +%s) - 1767225600) / 60 )) \
+            -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME" \
+            > ci-out/android-x64-build.log 2>&1 || status=$?
+          tail -n 40 ci-out/android-x64-build.log
+          [ "$status" -eq 0 ] || exit $status
+          cp "$(find src/TabStudio.Android/bin/Release/net10.0-android/publish -name '*-Signed.apk' | head -n 1)" ci-out/TabStudio-x64.apk
+
+      - name: Build the disposable app-UID PIC probe APK
+        run: |
+          # Keep the existing IDE performance check on its normal Release APK.
+          # Only the subsequent compiler probe needs a debuggable manifest for
+          # run-as; both packages contain exactly the same application code.
           python3 - <<'PY'
-          import os, xml.etree.ElementTree as ET
+          import xml.etree.ElementTree as ET
           tree = ET.parse('src/TabStudio.Android/Properties/AndroidManifest.xml')
           tree.getroot().find('application').set('{http://schemas.android.com/apk/res/android}debuggable', 'true')
           tree.write('src/TabStudio.Android/Properties/PicEmulatorManifest.xml', encoding='utf-8', xml_declaration=True)
@@ -464,10 +476,10 @@ jobs:
             -p:AndroidManifest=Properties/PicEmulatorManifest.xml \
             -p:TabStudioBuildNumber=$(( ($(date +%s) - 1767225600) / 60 )) \
             -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME" \
-            > ci-out/android-x64-build.log 2>&1 || status=$?
-          tail -n 40 ci-out/android-x64-build.log
+            > ci-out/android-pic-probe-build.log 2>&1 || status=$?
+          tail -n 40 ci-out/android-pic-probe-build.log
           [ "$status" -eq 0 ] || exit $status
-          cp "$(find src/TabStudio.Android/bin/Release/net10.0-android/publish -name '*-Signed.apk' | head -n 1)" ci-out/TabStudio-x64.apk
+          cp "$(find src/TabStudio.Android/bin/Release/net10.0-android/publish -name '*-Signed.apk' | head -n 1)" ci-out/TabStudio-pic-probe.apk
 
       - name: Prepare the verified PIC18 compiler and box64 interpreter for Android
         run: |
@@ -493,7 +505,7 @@ jobs:
           disk-size: 8192M
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
-          script: bash build/pic/android-emulator-test.sh ci-out/TabStudio-x64.apk ci-out "$RUNNER_TEMP/pic-android"
+          script: bash build/pic/android-emulator-test.sh ci-out/TabStudio-x64.apk ci-out "$RUNNER_TEMP/pic-android" ci-out/TabStudio-pic-probe.apk
 
       # A crash's native backtrace has only offsets into the runtime's stripped libraries; this names the functions.
       - name: Name the functions in a crash's backtrace

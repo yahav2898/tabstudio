@@ -58,6 +58,7 @@ public sealed class ToolchainStoreTests : IDisposable
 
         // Installing, slowly enough to watch.
         _device.Mirror.Server.Latency = TimeSpan.FromMilliseconds(500);
+        _device.Mirror.Server.ReadLatency = TimeSpan.FromMilliseconds(250);
         var install = python.InstallCommand.ExecuteAsync(null);
         await UiTestHelpers.WaitUntilAsync(() => python.Status.Progress?.Stage == InstallStage.Downloading && python.Progress > 12, because: "the download");
         Assert.True(python.IsBusy);
@@ -66,6 +67,7 @@ public sealed class ToolchainStoreTests : IDisposable
         UiTestHelpers.SaveScreenshot(window, "31-toolchain-installing");
 
         _device.Mirror.Server.Latency = TimeSpan.Zero;
+        _device.Mirror.Server.ReadLatency = TimeSpan.Zero;
         await install;
         await UiTestHelpers.WaitUntilAsync(() => python.IsInstalled, because: "the install");
         Assert.Equal("3.14.8", python.VersionText);
