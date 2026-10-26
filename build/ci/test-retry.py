@@ -14,7 +14,6 @@ FEATURE_PROJECTS = frozenset({
     "TabStudio.Porting.Tests",
     "TabStudio.Database.Tests",
     "TabStudio.Remote.Tests",
-    "TabStudio.Services.Tests",
 })
 
 # Shared test projects contain both feature and unrelated tests. Keep their
@@ -81,8 +80,7 @@ FEATURE_CLASSES = frozenset({
     "DatabaseExplorerTests",
     "EfCoreTests",
     "RemoteSshTests",
-    # Native backing services and mobile workflows.
-    "ServicesTests",
+    # Local runs and mobile workflows.
     "ProgramRunnerTests",
     "MobileWorkflowTests",
     "IosWorkflowGeneratorTests",

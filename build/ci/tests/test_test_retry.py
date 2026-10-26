@@ -37,7 +37,7 @@ class RetryPolicyTests(unittest.TestCase):
             "TabStudio.App.Tests": [
                 "Toolchains.ProjectSetupTests.Setup_is_cancelable", "ViewModels.StaticSiteTests.Saving_reloads",
                 "ViewModels.PortingTests.Convert_and_run", "Database.DatabaseExplorerTests.Query",
-                "RemoteSsh.RemoteSshTests.Save_conflict", "BackingServices.ServicesTests.F5_starts_dependencies",
+                "RemoteSsh.RemoteSshTests.Save_conflict",
                 "Toolchains.MobileWorkflowTests.Listening_notice", "ViewModels.HotReloadTests.Apply_current_edits",
                 "ViewModels.RecordingTests.Rewind", "Views.LocalAIEditorTests.Ghost_text",
             ],
