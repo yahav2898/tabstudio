@@ -38,6 +38,12 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
+        if (IsStaticSite(project))
+        {
+            await ServeStaticSiteAsync(project);
+            return;
+        }
+
         if (await TryRunOnWindowsBridgeAsync(project))
         {
             return;

@@ -159,6 +159,11 @@ public static partial class SelfTest
                 preparation = PrepareSelfTestToolchainsAsync(main.Workspace!.Toolchains, preparationStop.Token);
             }
 
+            if (managed && !await CheckAsync(() => ShowStaticSiteAsync(main, templates, cancellationToken)))
+            {
+                return Finish(false);
+            }
+
             if (managed && !await CheckAsync(() => ServeBlazorAppsAsync(main, templates, cancellationToken)))
             {
                 return Finish(false);

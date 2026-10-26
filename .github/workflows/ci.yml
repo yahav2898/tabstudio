@@ -47,7 +47,7 @@ jobs:
 
       - name: Install language servers and debug adapters
         run: |
-          npm install -g pyright typescript-language-server typescript@5
+          npm install -g pyright typescript-language-server typescript@5 vscode-langservers-extracted@4.10.0
           python -m pip install debugpy
           echo "TABSTUDIO_REAL_SERVERS=1" >> "$GITHUB_ENV"
           mkdir -p ci-out
@@ -180,7 +180,7 @@ jobs:
 
       - name: Install language servers and debug adapters
         run: |
-          npm install -g pyright typescript-language-server typescript@5
+          npm install -g pyright typescript-language-server typescript@5 vscode-langservers-extracted@4.10.0
           python -m pip install debugpy
           go install golang.org/x/tools/gopls@v0.21.1
           go install github.com/go-delve/delve/cmd/dlv@v1.26.2

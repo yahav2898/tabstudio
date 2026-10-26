@@ -438,6 +438,13 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
             return;
         }
 
+        // A static web site is served as Ctrl+F5 serves it: its scripts run in the web preview.
+        if (IsStaticSite(project))
+        {
+            await ServeStaticSiteAsync(project);
+            return;
+        }
+
         // Python and Node.js debug with their toolchain's debug adapter.
         if (IsToolchainProject(project))
         {

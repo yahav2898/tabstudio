@@ -285,6 +285,7 @@
           <MenuItem Header="T_ools">
             <MenuItem Header="Toolchain _Store" Command="{Binding ShowToolchainStoreCommand}" />
             <MenuItem Header="Install Project _Packages" Command="{Binding InstallProjectPackagesCommand}" />
+            <MenuItem Header="Set Projects Up When They _Open" ToggleType="CheckBox" IsChecked="{Binding SetUpProjectsWhenTheyOpen, Mode=TwoWay}" />
             <Separator />
             <!-- TabStudio's own colors in a theme of the IDE; Extensions > Color Theme also lists the extensions' themes. -->
             <MenuItem Header="_Theme">
@@ -298,6 +299,7 @@
                         IsChecked="{Binding CurrentTheme, Mode=OneWay, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static appearance:IdeTheme.System}}"
                         Command="{Binding UseTabStudioThemeCommand}" CommandParameter="{x:Static appearance:IdeTheme.System}" />
             </MenuItem>
+
           </MenuItem>
           <MenuItem Header="_Window">
             <MenuItem Header="_Next Document" InputGesture="Ctrl+Tab" Command="{Binding NextDocumentCommand}" />
@@ -787,6 +789,13 @@
                      VerticalAlignment="Center" MaxWidth="460" TextTrimming="CharacterEllipsis" />
         </StackPanel>
 
+        <StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding IsSettingUpProjects}"
+                    controls:AdaptiveBar.Priority="100" controls:AdaptiveBar.MenuHeader="{Binding ProjectSetupText}"
+                    controls:AdaptiveBar.MenuCommand="{Binding CancelProjectSetupCommand}">
+          <TextBlock Text="{Binding ProjectSetupText}" VerticalAlignment="Center" MaxWidth="300" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding ProjectSetupText}" />
+          <Button Theme="{StaticResource StatusBarButton}" Content="Cancel" Height="24" Command="{Binding CancelProjectSetupCommand}" ToolTip.Tip="Cancel project setup" />
+        </StackPanel>
+
         <controls:AdaptiveBarItem Classes="status" Icon="{StaticResource Icon.Branch}" IconSize="13" Priority="80"
                                   Command="{Binding ShowGitChangesCommand}" IsVisible="{Binding GitChanges.IsLinked}">
           <controls:AdaptiveBarItem.Label>
@@ -807,6 +816,7 @@
         <Panel controls:AdaptiveBar.Priority="75" controls:AdaptiveBar.IsPinned="False" IsVisible="{Binding Actions.IsCiVisible}"
                controls:AdaptiveBar.MenuHeader="{Binding Actions.CiText, StringFormat='CI: {0}'}"
                controls:AdaptiveBar.MenuCommand="{Binding Actions.ShowCommitChecksCommand}" controls:AdaptiveBar.MenuIcon="{StaticResource Icon.Actions}">
+
           <actionViews:CiStatusBarItem DataContext="{Binding Actions}" />
         </Panel>
 

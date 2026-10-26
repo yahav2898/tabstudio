@@ -21,7 +21,10 @@ public sealed partial class ProjectTemplates
     /// <summary>A Java Maven console program.</summary>
     public const string JavaId = "java";
 
-    /// <summary>The Python and Node.js templates, for the start screen.</summary>
+    /// <summary>A static web site: an HTML page with a style sheet and a script, served on the tablet.</summary>
+    public const string StaticSiteId = "static-site";
+
+    /// <summary>The Python, Node.js and static web site templates, for the start screen.</summary>
     private static ProjectTemplate[] ToolchainTemplates =>
     [
         new(PythonId, "Python Application", "A Python program that reads input and prints in the Output panel, run with Python from the Toolchain Store.", ["Python", "Console"]),
@@ -33,6 +36,7 @@ public sealed partial class ProjectTemplates
         new(CppId, "C++ Console App (CMake)", "A C++ console app with CMake, clangd IntelliSense and LLDB debugging.", ["C++", "CMake", "Console"]),
 
         new(JavaId, "Java Console App (Maven)", "A Java 21 Maven app with JDT IntelliSense and java-debug debugging.", ["Java", "Maven", "Console"]),
+        new(StaticSiteId, "Static Web Site", "An HTML page with a style sheet and a script, served on the tablet and previewed beside the code, reloading as you save.", ["HTML", "CSS", "JavaScript", "Web"]),
     ];
 
     /// <summary>Writes a toolchain project into a new folder, which is the workspace: there is no solution file.</summary>
@@ -111,6 +115,9 @@ public sealed partial class ProjectTemplates
 
             case JavaId:
                 return CreateJavaProject(root, name);
+            case StaticSiteId:
+                WriteStaticSite(root, name);
+                return root;
 
             default:
                 return null;

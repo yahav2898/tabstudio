@@ -9,7 +9,12 @@
     "cpp": { "name": "C++", "extensions": [ ".cpp", ".cc", ".cxx", ".c++", ".hpp", ".hh", ".hxx", ".h++", ".ipp", ".inl" ] },
     "rust": { "name": "Rust", "extensions": [ ".rs" ] },
     "go": { "name": "Go", "extensions": [ ".go" ] },
-    "java": { "name": "Java", "extensions": [ ".java" ] }
+    "java": { "name": "Java", "extensions": [ ".java" ] },
+    "html": { "name": "HTML", "extensions": [ ".html", ".htm" ] },
+    "css": { "name": "CSS", "extensions": [ ".css" ] },
+    "scss": { "name": "SCSS", "extensions": [ ".scss" ] },
+    "less": { "name": "Less", "extensions": [ ".less" ] },
+    "jsonc": { "name": "JSON", "extensions": [ ".json", ".jsonc" ] }
   },
   "languageServers": {
     "pyright": {
@@ -93,6 +98,43 @@
       },
       "package": "jdtls",
       "rootMarkers": [ "pom.xml", "build.gradle", "build.gradle.kts", "settings.gradle", ".project" ]
+    },
+    "vscode-html-language-server": {
+      "name": "HTML Language Server",
+      "languages": [ "html" ],
+      "command": "vscode-html-language-server",
+      "args": [ "--stdio" ],
+      "package": "vscode-html-language-server",
+      "initializationOptions": {
+        "provideFormatter": true,
+        "embeddedLanguages": { "css": true, "javascript": true }
+      },
+      "settings": {
+        "html": { "validate": { "styles": true, "scripts": true } },
+        "css": { "validate": true }
+      }
+    },
+    "vscode-css-language-server": {
+      "name": "CSS Language Server",
+      "languages": [ "css", "scss", "less" ],
+      "command": "vscode-css-language-server",
+      "args": [ "--stdio" ],
+      "package": "vscode-css-language-server",
+      "initializationOptions": { "provideFormatter": true },
+      "settings": {
+        "css": { "validate": true },
+        "scss": { "validate": true },
+        "less": { "validate": true }
+      }
+    },
+    "vscode-json-language-server": {
+      "name": "JSON Language Server",
+      "languages": [ "jsonc" ],
+      "command": "vscode-json-language-server",
+      "args": [ "--stdio" ],
+      "package": "vscode-json-language-server",
+      "initializationOptions": { "provideFormatter": true },
+      "settings": { "json": { "validate": { "enable": true } } }
     }
   },
   "debugAdapters": {

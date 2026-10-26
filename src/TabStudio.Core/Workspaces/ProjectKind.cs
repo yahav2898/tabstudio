@@ -71,6 +71,11 @@ public enum ProjectKind
 
     /// <summary>A Java Maven, Gradle or source project.</summary>
     Java,
+    /// <summary>
+    /// A static web site: a folder of HTML, CSS and JavaScript with an <c>index.html</c>, served as it is, without
+    /// a .NET or Node.js project to build it.
+    /// </summary>
+    StaticWebSite,
 }
 
 /// <summary>

@@ -19,7 +19,8 @@ namespace TabStudio.App.Services.Toolchains;
 /// TabStudio uses the toolchains installed on the computer, so tests and the desktop build run the same flows.
 /// </para>
 /// <para>
-/// Nothing is installed or downloaded until the user asks for it in the Toolchain Store or answers a prompt.
+/// Opening a project installs its toolchain when "Set projects up when they open" is enabled (the default).
+/// With it off, the Toolchain Store and install prompts start downloads.
 /// </para>
 /// </remarks>
 public sealed class ToolchainServices : IDisposable

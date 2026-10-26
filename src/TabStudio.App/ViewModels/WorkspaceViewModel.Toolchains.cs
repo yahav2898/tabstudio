@@ -39,7 +39,8 @@ public sealed record ToolchainNoticeViewModel(string Key, string Title, string M
 /// <remarks>
 /// F5 runs the project's entry point (<c>main.py</c>, <c>__main__.py</c>, <c>package.json</c>'s <c>start</c>
 /// script or <c>main</c>), or, for a folder of scripts without one, the file being edited; Debug &gt; Run Current
-/// File runs the file being edited. A toolchain that is not installed is installed only after the user agrees.
+/// File runs the file being edited. Opening sets projects up by default; when setup is disabled or cancelled,
+/// a missing toolchain is offered before running.
 /// F5 debugs the same program with the toolchain's debug adapter (<c>WorkspaceViewModel.ToolchainDebugging.cs</c>);
 /// Ctrl+F5 runs it without the debugger, here.
 /// </remarks>
@@ -104,6 +105,8 @@ public sealed partial class WorkspaceViewModel
 
     private void DisposeToolchains()
     {
+        DisposeProjectSetup();
+        DisposeStaticSite();
         DisposeToolchainServers();
         PropertyChanged -= OnToolchainPropertyChanged;
         ToolchainStore.PropertyChanged -= OnToolchainStorePropertyChanged;
@@ -160,6 +163,14 @@ public sealed partial class WorkspaceViewModel
         else
         {
             ToolchainNotice = null;
+        }
+
+        LoadStaticSite(workspace, preferred);
+        if (opening)
+        {
+            // A static web site shows its index.html once the workspace is open.
+            _openToolchainEntry |= StaticSite is not null;
+            StartProjectSetup();
         }
     }
 
@@ -280,7 +291,9 @@ public sealed partial class WorkspaceViewModel
                 if (e.PropertyName == nameof(State) && _openToolchainEntry && State == IdeState.Ready)
                 {
                     _openToolchainEntry = false;
-                    if (!HasDocuments && CurrentToolchainProject() is { } item && EntryFileOf(item.Project) is { } entry)
+                    var entry = StartupProject is { } startup && IsStaticSite(startup) ? startup.FilePath
+                        : CurrentToolchainProject() is { } item ? EntryFileOf(item.Project) : null;
+                    if (!HasDocuments && entry is not null)
                     {
                         _ = OpenDocumentAsync(entry);
                     }
@@ -377,8 +390,7 @@ public sealed partial class WorkspaceViewModel
         var toolchain = project.Toolchain;
         foreach (var rule in toolchain.Run?.Entries ?? [])
         {
-            var file = Path.Combine(project.Directory, rule.File);
-            if (!File.Exists(file))
+            if (RunPlanner.FindEntry(project.Directory, rule.File) is not { FullPath: var file })
             {
                 continue;
             }
@@ -416,13 +428,17 @@ public sealed partial class WorkspaceViewModel
 
     private async Task RunToolchainPlanAsync(ToolchainProject project, Func<RunPlan?> planner)
     {
+        if (!await SaveAllCoreAsync())
+        {
+            return;
+        }
+
         var toolchain = project.Toolchain;
         if (!await EnsureToolchainReadyAsync(toolchain, $"{project.Name} runs with {toolchain.Name}, which is not installed yet."))
         {
             return;
         }
 
-        await SaveAllCoreAsync();
         Output.Clear();
         SelectedPanel = BottomPanel.Output;
         IsBottomPanelVisible = true;
@@ -524,6 +540,7 @@ public sealed partial class WorkspaceViewModel
     /// <returns>Whether it is ready.</returns>
     private async Task<bool> EnsureToolchainReadyAsync(ToolchainDefinition toolchain, string reason)
     {
+        await WaitForProjectSetupAsync();
         await _toolchains.EnsureStatusAsync();
         var manager = _toolchains.Manager;
         var status = manager.Status(toolchain.Id);
@@ -573,6 +590,8 @@ public sealed partial class WorkspaceViewModel
     /// <summary>Installs a project's packages, such as <c>npm install</c>, with the output in the Output panel.</summary>
     private async Task InstallDependenciesAsync(ToolchainProject project, DependencyInstallDefinition dependency)
     {
+        project = NodeWorkspaces.DependencyOwner(project, _toolchainProjects.Select(p => p.Project));
+        dependency = RunPlanner.DependenciesOf(project) ?? dependency;
         if (!await EnsureToolchainReadyAsync(project.Toolchain, $"Installing {project.Name}'s packages needs {project.Toolchain.Name}, which is not installed yet."))
         {
             return;
@@ -609,6 +628,7 @@ public sealed partial class WorkspaceViewModel
 
         if (failed is null)
         {
+            RememberSetUp(Path.Combine(project.Directory, dependency.Manifest), RunPlanner.FingerprintOf(project, dependency, _toolchainProjects.Select(p => p.Project)));
             Output.WriteLine($"========== {dependency.Name}: succeeded ==========", OutputKind.Success);
             State = IdeState.Ready;
             StatusText = "Packages installed";
@@ -639,12 +659,13 @@ public sealed partial class WorkspaceViewModel
 
     private ToolchainNoticeViewModel? NextNotice()
     {
-        if (CurrentToolchainProject() is not { } item)
+        // While the projects are set up by themselves, there is nothing to offer.
+        if (CurrentToolchainProject() is not { } item || !_setupTask.IsCompleted)
         {
             return null;
         }
 
-        var project = item.Project;
+        var project = NodeWorkspaces.DependencyOwner(item.Project, _toolchainProjects.Select(p => p.Project));
         var toolchain = item.Toolchain;
         var manager = _toolchains.Manager;
         var status = manager.Status(toolchain.Id);

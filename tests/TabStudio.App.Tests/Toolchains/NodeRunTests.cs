@@ -60,6 +60,9 @@ public sealed class NodeRunTests
         folder.Write("greeting/index.js", "module.exports = (name) => `Hi, ${name}!`;\n");
         folder.Write("index.js", "console.log(require('greeting')('npm'));\n");
         var workspace = fixture.Workspace;
+
+        // With "Set up projects when they open" off, opening offers the install instead of running it.
+        workspace.SetUpProjectsWhenTheyOpen = false;
         await workspace.LoadAsync(folder.Path);
         await UiTestHelpers.WaitUntilAsync(() => workspace.ToolchainNotice is not null, because: "the offer");
 

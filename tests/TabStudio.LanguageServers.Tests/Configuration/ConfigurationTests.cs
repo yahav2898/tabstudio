@@ -16,6 +16,10 @@ public sealed class RegistryTests
     [InlineData("lib.rs", "rust", "rust-analyzer")]
     [InlineData("main.go", "go", "gopls")]
     [InlineData("App.java", "java", "jdtls")]
+    [InlineData("index.html", "html", "vscode-html-language-server")]
+    [InlineData("site.css", "css", "vscode-css-language-server")]
+    [InlineData("theme.scss", "scss", "vscode-css-language-server")]
+    [InlineData("tsconfig.json", "jsonc", "vscode-json-language-server")]
     public void The_built_in_registry_knows_each_language_and_its_server(string file, string language, string server)
     {
         var registry = LanguageServerRegistry.BuiltIn;
@@ -25,6 +29,29 @@ public sealed class RegistryTests
         Assert.Equal(language, found?.Id);
         Assert.Equal(server, registry.FindServers(language).First().Id);
         Assert.Empty(registry.Problems);
+    }
+
+    [Fact]
+    public void JSON_validation_is_enabled_by_default_and_can_be_disabled_by_the_workspace()
+    {
+        var registry = LanguageServerRegistry.BuiltIn;
+        var server = registry.FindServers("jsonc").First();
+        Assert.True((bool?)JsonSettings.Select(registry.SettingsFor(server), "json.validate.enable"));
+        var custom = registry.WithWorkspaceSettings(JsonSettings.ParseObject("""{ "json.validate.enable": false }"""));
+        Assert.False((bool?)JsonSettings.Select(custom.SettingsFor(custom.FindServers("jsonc").First()), "json.validate.enable"));
+    }
+
+    [Theory]
+    [InlineData("html", "css.validate")]
+    [InlineData("html", "html.validate.styles")]
+    [InlineData("css", "css.validate")]
+    [InlineData("scss", "scss.validate")]
+    [InlineData("less", "less.validate")]
+    public void Web_servers_have_scoped_validation_settings(string language, string setting)
+    {
+        var registry = LanguageServerRegistry.BuiltIn;
+        var server = registry.FindServers(language).First();
+        Assert.True((bool?)JsonSettings.Select(registry.SettingsFor(server), setting));
     }
 
     [Fact]
