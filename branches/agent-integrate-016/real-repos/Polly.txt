@@ -16,26 +16,95 @@ Compatibility Doctor:
   Polly.Specs: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
   Polly.Testing.Tests: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
   Polly.TestUtils: Library via Built with its users - A library is compiled together with the projects that reference it.
-Built in 10.0 s: 1 errors, 5 warnings
-  1 x CS1726
-      [Polly.Core] Polly.Core.AssemblyInfo.g.cs(2,12): error CS1726: Friend assembly reference 'DynamicProxyGenAssembly2' is invalid. Strong-name signed assemblies must specify a public key in their InternalsVisibleTo declarations.
+Built in 12.6 s: 48 errors, 5 warnings
+  39 x CS0122
+      [Polly.Core.Benchmarks] CompositeComponentBenchmark.cs(9,13): error CS0122: 'PipelineComponent' is inaccessible due to its protection level
+      [Polly.Core.Benchmarks] CompositeComponentBenchmark.cs(14,21): error CS0122: 'PipelineComponent' is inaccessible due to its protection level
+      [Polly.Core.Benchmarks] CompositeComponentBenchmark.cs(15,22): error CS0122: 'PipelineComponent' is inaccessible due to its protection level
+      [Polly.Core.Benchmarks] CompositeComponentBenchmark.cs(17,29): error CS0122: 'ResilienceStrategyTelemetry.ResilienceStrategyTelemetry(ResilienceTelemetrySource, TelemetryListener?)' is inaccessible due to its protection level
+      [Polly.Core.Benchmarks] CompositeComponentBenchmark.cs(20,22): error CS0122: 'CompositeComponent' is inaccessible due to its protection level
+  4 x CS1061
+      [Polly.Core.Benchmarks] CompositeComponentBenchmark.cs(26,24): error CS1061: 'PipelineComponent?' does not contain a definition for 'ExecuteCore' and no accessible extension method 'ExecuteCore' accepting a first argument of type 'PipelineComponent?' could be found (are you missing a using directive or an assembly reference?)
+      [Polly.Core.Benchmarks] DelegatingComponentBenchmark.cs(24,30): error CS1061: 'DelegatingComponent?' does not contain a definition for 'DisposeAsync' and no accessible extension method 'DisposeAsync' accepting a first argument of type 'DelegatingComponent?' could be found (are you missing a using directive or an assembly reference?)
+      [Polly.Core.Benchmarks] DelegatingComponentBenchmark.cs(33,24): error CS1061: 'DelegatingComponent?' does not contain a definition for 'ExecuteComponent' and no accessible extension method 'ExecuteComponent' accepting a first argument of type 'DelegatingComponent?' could be found (are you missing a using directive or an assembly reference?)
+      [Polly.Core.Benchmarks] DelegatingComponentBenchmark.cs(37,24): error CS1061: 'DelegatingComponent?' does not contain a definition for 'ExecuteComponentAot' and no accessible extension method 'ExecuteComponentAot' accepting a first argument of type 'DelegatingComponent?' could be found (are you missing a using directive or an assembly reference?)
+  4 x CS0507
+      [Polly.Core.Benchmarks] TelemetryBenchmark.cs(80,65): error CS0507: 'TelemetryBenchmark.TelemetryEventStrategy.ExecuteCore<TResult, TState>(Func<ResilienceContext, TState, ValueTask<Outcome<TResult>>>, ResilienceContext, TState)': cannot change access modifiers when overriding 'protected internal' inherited member 'ResilienceStrategy.ExecuteCore<TResult, TState>(Func<ResilienceContext, TState, ValueTask<Outcome<TResult>>>, ResilienceContext, TState)'
+      [Polly.Core.Benchmarks] EmptyResilienceStrategy.cs(5,61): error CS0507: 'EmptyResilienceStrategy.ExecuteCore<TResult, TState>(Func<ResilienceContext, TState, ValueTask<Outcome<TResult>>>, ResilienceContext, TState)': cannot change access modifiers when overriding 'protected internal' inherited member 'ResilienceStrategy.ExecuteCore<TResult, TState>(Func<ResilienceContext, TState, ValueTask<Outcome<TResult>>>, ResilienceContext, TState)'
+      [Polly.Core.Benchmarks] Helper.CircuitBreaker.cs(69,71): error CS0507: 'Helper.OutcomeHandlingStrategy.ExecuteCore<TResult, TState>(Func<ResilienceContext, TState, ValueTask<Outcome<TResult>>>, ResilienceContext, TState)': cannot change access modifiers when overriding 'protected internal' inherited member 'ResilienceStrategy.ExecuteCore<TResult, TState>(Func<ResilienceContext, TState, ValueTask<Outcome<TResult>>>, ResilienceContext, TState)'
+      [Polly.TestUtils] TestResilienceStrategy.cs(11,67): error CS0507: 'TestResilienceStrategy.ExecuteCore<TResult, TState>(Func<ResilienceContext, TState, ValueTask<Outcome<TResult>>>, ResilienceContext, TState)': cannot change access modifiers when overriding 'protected internal' inherited member 'ResilienceStrategy.ExecuteCore<TResult, TState>(Func<ResilienceContext, TState, ValueTask<Outcome<TResult>>>, ResilienceContext, TState)'
+  1 x CS1929
+      [Polly.Testing] ResiliencePipelineExtensions.cs(70,17): error CS1929: 'object' does not contain a definition for 'ExpandComponents' and the best extension method overload 'ResiliencePipelineExtensions.ExpandComponents(PipelineComponent, List<PipelineComponent>)' requires a receiver of type 'Polly.Utils.Pipeline.PipelineComponent'
 Output:
-Build started at 14:13:58...
+Build started at 14:33:20...
 1>------ Build started: Project: Polly.Core, Configuration: Debug ------
-1>Polly.Core.AssemblyInfo.g.cs(2,12): error CS1726: Friend assembly reference 'DynamicProxyGenAssembly2' is invalid. Strong-name signed assemblies must specify a public key in their InternalsVisibleTo declarations.
+1>Polly.Core -> compiled in memory (227 KB, 260 ms)
 2>------ Build started: Project: Polly, Configuration: Debug ------
+2>Polly -> compiled in memory (283.5 KB, 767 ms)
 3>------ Build started: Project: Polly.Benchmarks, Configuration: Debug ------
+3>Polly.Benchmarks -> compiled in memory (25 KB, 691 ms)
 4>------ Build started: Project: Polly.Extensions, Configuration: Debug ------
+4>Polly.Extensions -> compiled in memory (43.5 KB, 330 ms)
 5>------ Build started: Project: Polly.RateLimiting, Configuration: Debug ------
+5>Polly.RateLimiting -> compiled in memory (14 KB, 247 ms)
 6>------ Build started: Project: Polly.Core.Benchmarks, Configuration: Debug ------
+6>CompositeComponentBenchmark.cs(9,13): error CS0122: 'PipelineComponent' is inaccessible due to its protection level
+6>CompositeComponentBenchmark.cs(14,21): error CS0122: 'PipelineComponent' is inaccessible due to its protection level
+6>CompositeComponentBenchmark.cs(15,22): error CS0122: 'PipelineComponent' is inaccessible due to its protection level
+6>CompositeComponentBenchmark.cs(17,29): error CS0122: 'ResilienceStrategyTelemetry.ResilienceStrategyTelemetry(ResilienceTelemetrySource, TelemetryListener?)' is inaccessible due to its protection level
+6>CompositeComponentBenchmark.cs(20,22): error CS0122: 'CompositeComponent' is inaccessible due to its protection level
+6>CompositeComponentBenchmark.cs(26,24): error CS1061: 'PipelineComponent?' does not contain a definition for 'ExecuteCore' and no accessible extension method 'ExecuteCore' accepting a first argument of type 'PipelineComponent?' could be found (are you missing a using directive or an assembly reference?)
+6>DelegatingComponentBenchmark.cs(8,13): error CS0122: 'DelegatingComponent' is inaccessible due to its protection level
+6>DelegatingComponentBenchmark.cs(13,21): error CS0122: 'PipelineComponent' is inaccessible due to its protection level
+6>DelegatingComponentBenchmark.cs(14,22): error CS0122: 'PipelineComponent' is inaccessible due to its protection level
+6>DelegatingComponentBenchmark.cs(16,26): error CS0122: 'DelegatingComponent' is inaccessible due to its protection level
+6>DelegatingComponentBenchmark.cs(24,30): error CS1061: 'DelegatingComponent?' does not contain a definition for 'DisposeAsync' and no accessible extension method 'DisposeAsync' accepting a first argument of type 'DelegatingComponent?' could be found (are you missing a using directive or an assembly reference?)
+6>DelegatingComponentBenchmark.cs(33,24): error CS1061: 'DelegatingComponent?' does not contain a definition for 'ExecuteComponent' and no accessible extension method 'ExecuteComponent' accepting a first argument of type 'DelegatingComponent?' could be found (are you missing a using directive or an assembly reference?)
+6>DelegatingComponentBenchmark.cs(37,24): error CS1061: 'DelegatingComponent?' does not contain a definition for 'ExecuteComponentAot' and no accessible extension method 'ExecuteComponentAot' accepting a first argument of type 'DelegatingComponent?' could be found (are you missing a using directive or an assembly reference?)
+6>TelemetryBenchmark.cs(80,65): error CS0507: 'TelemetryBenchmark.TelemetryEventStrategy.ExecuteCore<TResult, TState>(Func<ResilienceContext, TState, ValueTask<Outcome<TResult>>>, ResilienceContext, TState)': cannot change access modifiers when overriding 'protected internal' inherited member 'ResilienceStrategy.ExecuteCore<TResult, TState>(Func<ResilienceContext, TState, ValueTask<Outcome<TResult>>>, ResilienceContext, TState)'
+6>EmptyResilienceStrategy.cs(5,61): error CS0507: 'EmptyResilienceStrategy.ExecuteCore<TResult, TState>(Func<ResilienceContext, TState, ValueTask<Outcome<TResult>>>, ResilienceContext, TState)': cannot change access modifiers when overriding 'protected internal' inherited member 'ResilienceStrategy.ExecuteCore<TResult, TState>(Func<ResilienceContext, TState, ValueTask<Outcome<TResult>>>, ResilienceContext, TState)'
+6>Helper.CircuitBreaker.cs(69,71): error CS0507: 'Helper.OutcomeHandlingStrategy.ExecuteCore<TResult, TState>(Func<ResilienceContext, TState, ValueTask<Outcome<TResult>>>, ResilienceContext, TState)': cannot change access modifiers when overriding 'protected internal' inherited member 'ResilienceStrategy.ExecuteCore<TResult, TState>(Func<ResilienceContext, TState, ValueTask<Outcome<TResult>>>, ResilienceContext, TState)'
 7>------ Build started: Project: Polly.Testing, Configuration: Debug ------
+7>ResiliencePipelineExtensions.cs(20,9): error CS0122: 'Guard' is inaccessible due to its protection level
+7>ResiliencePipelineExtensions.cs(22,60): error CS0122: 'ResiliencePipeline<TResult>.Component' is inaccessible due to its protection level
+7>ResiliencePipelineExtensions.cs(33,9): error CS0122: 'Guard' is inaccessible due to its protection level
+7>ResiliencePipelineExtensions.cs(35,59): error CS0122: 'ResiliencePipeline.Component' is inaccessible due to its protection level
+7>ResiliencePipelineExtensions.cs(38,78): error CS0122: 'PipelineComponent' is inaccessible due to its protection level
+7>ResiliencePipelineExtensions.cs(40,35): error CS0122: 'PipelineComponent' is inaccessible due to its protection level
+7>ResiliencePipelineExtensions.cs(44,21): error CS0122: 'BridgeComponentBase' is inaccessible due to its protection level
+7>ResiliencePipelineExtensions.cs(45,61): error CS0122: 'PipelineComponent.Options' is inaccessible due to its protection level
+7>ResiliencePipelineExtensions.cs(51,62): error CS0122: 'ReloadableComponent' is inaccessible due to its protection level
+7>ResiliencePipelineExtensions.cs(54,50): error CS0122: 'PipelineComponent' is inaccessible due to its protection level
+7>ResiliencePipelineExtensions.cs(56,26): error CS0122: 'BridgeComponent<T>' is inaccessible due to its protection level
+7>ResiliencePipelineExtensions.cs(58,35): error CS0122: 'BridgeComponent<T>.Strategy' is inaccessible due to its protection level
+7>ResiliencePipelineExtensions.cs(61,18): error CS0122: 'BridgeComponent' is inaccessible due to its protection level
+7>ResiliencePipelineExtensions.cs(64,47): error CS0122: 'PipelineComponent' is inaccessible due to its protection level
+7>ResiliencePipelineExtensions.cs(64,81): error CS0122: 'PipelineComponent' is inaccessible due to its protection level
+7>ResiliencePipelineExtensions.cs(66,26): error CS0122: 'CompositeComponent' is inaccessible due to its protection level
+7>ResiliencePipelineExtensions.cs(68,44): error CS0122: 'CompositeComponent.Components' is inaccessible due to its protection level
+7>ResiliencePipelineExtensions.cs(70,17): error CS1929: 'object' does not contain a definition for 'ExpandComponents' and the best extension method overload 'ResiliencePipelineExtensions.ExpandComponents(PipelineComponent, List<PipelineComponent>)' requires a receiver of type 'Polly.Utils.Pipeline.PipelineComponent'
+7>ResiliencePipelineExtensions.cs(73,31): error CS0122: 'ReloadableComponent' is inaccessible due to its protection level
+7>ResiliencePipelineExtensions.cs(76,41): error CS0122: 'ReloadableComponent.Component' is inaccessible due to its protection level
+7>ResiliencePipelineExtensions.cs(78,31): error CS0122: 'ExecutionTrackingComponent' is inaccessible due to its protection level
+7>ResiliencePipelineExtensions.cs(80,39): error CS0122: 'ExecutionTrackingComponent.Component' is inaccessible due to its protection level
+7>ResiliencePipelineExtensions.cs(82,31): error CS0122: 'ComponentWithDisposeCallbacks' is inaccessible due to its protection level
+7>ResiliencePipelineExtensions.cs(84,40): error CS0122: 'ComponentWithDisposeCallbacks.Component' is inaccessible due to its protection level
+7>ResiliencePipelineExtensions.cs(86,31): error CS0122: 'ExternalComponent' is inaccessible due to its protection level
+7>ResiliencePipelineExtensions.cs(88,44): error CS0122: 'ExternalComponent.Component' is inaccessible due to its protection level
 8>------ Build started: Project: Snippets, Configuration: Debug ------
 9>------ Build started: Project: Polly.AotTest, Configuration: Debug ------
+9>Polly.AotTest -> compiled in memory (3 KB, 468 ms)
 10>------ Build started: Project: Polly.TestUtils, Configuration: Debug ------
+10>OutcomeExtensions.cs(14,21): error CS0122: 'Outcome<object>.TryGetResult(out object?)' is inaccessible due to its protection level
+10>TestResilienceStrategy.cs(11,67): error CS0507: 'TestResilienceStrategy.ExecuteCore<TResult, TState>(Func<ResilienceContext, TState, ValueTask<Outcome<TResult>>>, ResilienceContext, TState)': cannot change access modifiers when overriding 'protected internal' inherited member 'ResilienceStrategy.ExecuteCore<TResult, TState>(Func<ResilienceContext, TState, ValueTask<Outcome<TResult>>>, ResilienceContext, TState)'
+10>TestUtilities.cs(41,12): error CS0122: 'ResilienceStrategyTelemetry.ResilienceStrategyTelemetry(ResilienceTelemetrySource, TelemetryListener?)' is inaccessible due to its protection level
+10>TestUtilities.cs(105,17): error CS0122: 'ResilienceContext.Initialize<TResult>(bool)' is inaccessible due to its protection level
+10>TestUtilities.cs(111,17): error CS0122: 'ResilienceContext.Initialize<TResult>(bool)' is inaccessible due to its protection level
+10>TestUtilities.cs(111,28): error CS0122: 'VoidResult' is inaccessible due to its protection level
 11>------ Build started: Project: Polly.Core.Tests, Configuration: Debug ------
 12>------ Build started: Project: Polly.Extensions.Tests, Configuration: Debug ------
 13>------ Build started: Project: Polly.RateLimiting.Tests, Configuration: Debug ------
 14>------ Build started: Project: Polly.Specs, Configuration: Debug ------
 15>------ Build started: Project: Polly.Testing.Tests, Configuration: Debug ------
-========== Build: 0 succeeded, 15 failed ==========
+========== Build: 6 succeeded, 9 failed ==========
 
