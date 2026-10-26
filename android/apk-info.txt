@@ -1,14 +1,15 @@
 == file
-size: 107181842 bytes (103M)
-sha256: 23bccfdc269063a1d5ebfac187301a38c37bec791ba71bd4a4a776dbb84d252f
+size: 132786239 bytes (127M)
+sha256: 72c76c8274ad8bc906ade0a45a1f032e68ea423d379a9b3b24ddb2a1570ddded
 
 == manifest
-package: name='com.tabstudio.ide' versionCode='429541' versionName='0.14.0' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'
+package: name='com.tabstudio.ide' versionCode='429903' versionName='0.15.0' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'
 minSdkVersion:'28'
 targetSdkVersion:'36'
 uses-permission: name='android.permission.INTERNET'
 uses-permission: name='android.permission.ACCESS_NETWORK_STATE'
 uses-permission: name='android.permission.POST_NOTIFICATIONS'
+uses-permission: name='android.permission.REQUEST_INSTALL_PACKAGES'
 uses-permission: name='android.permission.CAMERA'
 uses-permission: name='com.tabstudio.ide.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
 application-label:'TabStudio'
@@ -16,27 +17,27 @@ launchable-activity: name='com.tabstudio.ide.MainActivity'  label='' icon=''
 native-code: 'arm64-v8a' 'armeabi-v7a'
 
 == native libraries per ABI
-     16 arm64-v8a
-     15 armeabi-v7a
+     19 arm64-v8a
+     16 armeabi-v7a
 
 == largest entries
 sort: write failed: 'standard output': Broken pipe
 sort: write error
-  44928734 compressed   54997968 uncompressed  lib/arm64-v8a/libassembly-store.so
-  44920272 compressed   54947364 uncompressed  lib/armeabi-v7a/libassembly-store.so
+  50343273 compressed   61290168 uncompressed  lib/arm64-v8a/libassembly-store.so
+  50334905 compressed   61239328 uncompressed  lib/armeabi-v7a/libassembly-store.so
+   7510058 compressed   29936120 uncompressed  lib/arm64-v8a/libtabstudio-ai.so
+   5572381 compressed   26061328 uncompressed  lib/arm64-v8a/libbox64.so
    3915516 compressed    9027560 uncompressed  lib/arm64-v8a/libSkiaSharp.so
    3282842 compressed    5957980 uncompressed  lib/armeabi-v7a/libSkiaSharp.so
-   2143967 compressed    6131424 uncompressed  classes.dex
+   2145518 compressed    6134776 uncompressed  classes.dex
    1351800 compressed    3123640 uncompressed  lib/arm64-v8a/libmonosgen-2.0.so
    1222042 compressed    2222252 uncompressed  lib/armeabi-v7a/libmonosgen-2.0.so
     933508 compressed    2778464 uncompressed  lib/arm64-v8a/libHarfBuzzSharp.so
+    890712 compressed    1771632 uncompressed  lib/arm64-v8a/libe_sqlite3.so
     831674 compressed    1994452 uncompressed  lib/armeabi-v7a/libHarfBuzzSharp.so
+    795911 compressed    1246020 uncompressed  lib/armeabi-v7a/libe_sqlite3.so
     460244 compressed    1408384 uncompressed  lib/arm64-v8a/libmonodroid.so
     454458 compressed    1074976 uncompressed  lib/armeabi-v7a/libmonodroid.so
-    384754 compressed    1325400 uncompressed  lib/arm64-v8a/libxamarin-app.so
-    367135 compressed     759160 uncompressed  lib/arm64-v8a/libSystem.IO.Compression.Native.so
-    353765 compressed     692128 uncompressed  lib/armeabi-v7a/libSystem.IO.Compression.Native.so
-    336327 compressed    1056016 uncompressed  lib/armeabi-v7a/libxamarin-app.so
 
 == signature
 Verifies
