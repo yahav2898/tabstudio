@@ -22,6 +22,7 @@ set -euo pipefail
 
 native="$(cd "$(dirname "$0")" && pwd)"
 source "$native/sources.sh"
+source "$native/fetch.sh"
 # TabStudio's minimum Android version (API 28, Android 9).
 API=28
 patch_sha="$(sha256sum "$native/proot-thread-waits.patch" | cut -d ' ' -f1)"
@@ -49,15 +50,6 @@ find_ndk() {
   fi
   echo "build.sh: no Android NDK found; set ANDROID_NDK_HOME." >&2
   exit 1
-}
-
-fetch() {
-  local url="$1" sha="$2" file="$3"
-  if [ ! -f "$file" ]; then
-    curl -fsSL --retry 3 --retry-delay 5 -o "$file.part" "$url"
-    mv "$file.part" "$file"
-  fi
-  echo "$sha  $file" | sha256sum -c --quiet - || { echo "build.sh: $url does not match its pinned SHA-256." >&2; exit 1; }
 }
 
 ndk="$(find_ndk)"
@@ -96,8 +88,10 @@ build_abi() {
   fi
 
   echo "== $abi: building $STAMP"
-  fetch "$PROOT_URL" "$PROOT_SHA256" "$downloads/proot.zip"
-  fetch "$TALLOC_URL" "$TALLOC_SHA256" "$downloads/talloc.tar.gz"
+  fetch "$PROOT_URL" "$PROOT_SHA256" "$downloads/proot.zip" \
+    "https://codeload.github.com/termux/proot/zip/refs/tags/v${PROOT_VERSION}"
+  fetch "$TALLOC_URL" "$TALLOC_SHA256" "$downloads/talloc.tar.gz" \
+    "https://download.samba.org/pub/talloc/talloc-${TALLOC_VERSION}.tar.gz"
 
   local dir="$work/$abi"
   local static="$dir/static"
