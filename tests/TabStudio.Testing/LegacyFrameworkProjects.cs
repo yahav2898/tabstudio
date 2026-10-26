@@ -58,7 +58,7 @@ public static class LegacyFrameworkProjects
                     <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
                         <TextBox x:Name="numA" Width="80" Text="6" />
                         <TextBlock Text=" x " VerticalAlignment="Center" />
-                        <TextBox x:Name="numB" Width="80" Text="7" />
+                        <TextBox x:Name="numB" Width="80">7</TextBox>
                     </StackPanel>
                     <Button x:Name="multiply" Content="Multiply" Click="Multiply_Click" Margin="0,12,0,0" />
                     <TextBlock x:Name="result" Text="Result" FontSize="18" Margin="0,12,0,0" />
