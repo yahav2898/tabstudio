@@ -33,6 +33,11 @@ public sealed partial class WorkspaceViewModel
     /// <summary>Feeds a socket adapter's inherited console input, without ever writing text to DAP's protocol stream.</summary>
     private void StartAdapterInput(DebugAdapterSession session)
     {
+        if (StartNativeDebugInput())
+        {
+            return;
+        }
+
         if (!session.AcceptsProgramInput)
         {
             return;
@@ -80,7 +85,7 @@ public sealed partial class WorkspaceViewModel
         }
 
         await SaveAllCoreAsync();
-        if (PlanToolchainProject(project, ActiveDocument?.FilePath) is not { } plan || ToolchainLaunch.Create(type, plan) is not { } configuration)
+        if (PlanToolchainProject(project, ActiveDocument?.FilePath) is not { } plan)
         {
             // Nothing to run, which the run explains, or a command the adapter cannot launch, which runs as it is.
             await RunToolchainProjectAsync(info);
@@ -100,7 +105,9 @@ public sealed partial class WorkspaceViewModel
             try
             {
                 Output.WriteLine("> " + build.CommandLine, OutputKind.Info);
-                var result = await OutputProcess.RunAsync(_toolchains.Runtime, build, Output, null, _run.Token);
+                var compiled = await BuildCargoOrToolchainAsync(project, plan, _run.Token);
+                plan = compiled.Plan;
+                var result = compiled.Result;
                 if (!result.Succeeded)
                 {
                     ReportToolchainRun(project, plan.EntryPoint, result);
@@ -114,9 +121,27 @@ public sealed partial class WorkspaceViewModel
             }
         }
 
+        if (ToolchainLaunch.Create(type, plan) is not { } configuration)
+        {
+            State = IdeState.Failed;
+            StatusText = "No executable to debug";
+            return;
+        }
+
+        var withInput = PrepareNativeDebugInput(configuration);
+        if (withInput is null)
+        {
+            return;
+        }
+
+        configuration = withInput;
         var target = new LaunchTarget(configuration.Name, configuration, IsCurrentFile: false);
         _programEnvironments.AddOrUpdate(target, plan.Run.Environment);
         await LaunchAdapterAsync(target, start, noDebug: false);
+        if (!IsDebuggingWithAdapter)
+        {
+            StopNativeDebugInput();
+        }
     }
 
     /// <summary>
@@ -244,6 +269,7 @@ public sealed partial class WorkspaceViewModel
     /// <summary>Stops the program an adapter started, when the workspace closes. Called when the toolchains are disposed.</summary>
     private void StopAdapterProgram()
     {
+        StopNativeDebugInput();
         if (Interlocked.Exchange(ref _adapterProgramRun, null) is { } run)
         {
             run.Stop.Cancel();

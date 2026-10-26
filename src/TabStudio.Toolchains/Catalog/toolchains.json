@@ -211,7 +211,7 @@
       "name": "Rust",
       "description": "The Rust compiler and Cargo, rust-analyzer, and LLDB for debugging.",
       "languages": [ "Rust" ],
-      "listed": false,
+      "listed": true,
       "homepage": "https://www.rust-lang.org",
       "license": "MIT OR Apache-2.0",
       "packages": [ "rust", "cargo", "rust-analyzer", "rust-src", "rustfmt", "rust-clippy", "lldb" ],
@@ -221,19 +221,22 @@
       "host": { "commands": [ "rustc" ], "versionArguments": [ "--version" ], "versionPattern": "rustc (?<version>\\S+)" },
       "fileExtensions": [ ".rs" ],
       "projectFiles": [ "Cargo.toml" ],
+      "allowNestedProjects": true,
       "run": {
         "file": [ "sh", "-c", "rustc -g -o /tmp/tabstudio-run \"$0\" && exec /tmp/tabstudio-run", "{file}" ],
         "entries": [
-          { "file": "Cargo.toml", "build": [ "cargo", "build" ], "command": [ "cargo", "run", "--quiet" ] }
+          { "file": "Cargo.toml", "build": [ "cargo", "build", "--message-format=json-render-diagnostics" ], "command": [ "cargo", "run", "--quiet" ] }
         ],
         "environment": { "CARGO_TERM_COLOR": "never" }
       },
       "languageServer": { "id": "rust-analyzer", "command": [ "rust-analyzer" ], "languages": [ "rust" ] },
       "debugAdapter": { "id": "lldb-dap", "command": [ "lldb-dap" ], "type": "lldb-dap", "languages": [ "rust" ] },
       "problemPatterns": [
+        { "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+): (?<severity>error|warning|note): (?<message>.*)$" },
         { "pattern": "-->\\s+(?<file>[^:\\s]+):(?<line>\\d+):(?<column>\\d+)" },
         { "pattern": "panicked at (?<file>[^:\\s]+):(?<line>\\d+):(?<column>\\d+)" }
-      ]
+      ],
+      "errorPattern": "^error(?:\\[[^\\]]+\\])?: (?<message>.*)$"
     },
     {
       "id": "go",

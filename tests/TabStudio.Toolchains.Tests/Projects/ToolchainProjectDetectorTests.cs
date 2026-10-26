@@ -59,8 +59,8 @@ public sealed class ToolchainProjectDetectorTests : IDisposable
     [Fact]
     public void Lists_only_toolchains_the_store_offers()
     {
-        _workspace.Write("Cargo.toml", "[package]\nname = \"demo\"\n");
-        _workspace.Write("src/main.rs", "fn main() {}\n");
+        _workspace.Write("pom.xml", "[package]\nname = \"demo\"\n");
+        _workspace.Write("src/Main.java", "class Main {}\n");
 
         Assert.Empty(ToolchainProjectDetector.Detect(_workspace.Path, Catalog));
     }

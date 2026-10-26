@@ -447,6 +447,19 @@ thread's ptracees, which Delve needs. `__WNOTHREAD` still limits waits to the ca
 requests remain restricted to the original tracing thread. A native CI fixture checks blocking and nonblocking
 waits, exit status and those ownership boundaries before the emulator exercises Delve itself.
 
+### Rust
+
+Cargo packages, virtual workspaces and their members are startup projects. Alpine installs Rust, Cargo,
+rust-analyzer, Rust sources and LLDB with lldb-dap; desktops use PATH. Cargo builds with
+`--message-format=json-render-diagnostics`: structured primary spans populate the Error List, and reported
+executable artifacts determine the run path, including custom target directories. With several binaries, choose
+a member startup project or open the binary's main source. rust-analyzer supplies IntelliSense and navigation.
+
+F5 uses LLDB DAP. Desktop programs use `runInTerminal`; on Android, LLDB launches within its own PRoot trace tree
+so emulated ptrace can see the debuggee. A private FIFO created through Android's C library carries Output-panel
+input, while DAP events carry program output. Real-tool IDE and emulator tests cover the template, a breakpoint
+and Locals, with Watch and Call Stack checked in the IDE.
+
 ## Swarm
 
 `TabStudio.Swarm` runs the app being built on every device that joins the tablet's swarm. Devices join through

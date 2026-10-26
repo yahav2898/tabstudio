@@ -45,3 +45,10 @@ semantics for Delve. The patch is distributed under PRoot's GPL-2.0-or-later lic
 Go and gopls (BSD-3-Clause) and Delve (MIT) are installed as signed Alpine Linux packages on Android, rather
 than downloaded executables. CI builds gopls v0.21.1 and Delve v1.26.2 from their Go modules for the host tests.
 Sources and licenses: https://go.dev/LICENSE, https://github.com/golang/tools and https://github.com/go-delve/delve.
+
+## Rust language tools
+
+Rust, Cargo and rust-analyzer (MIT OR Apache-2.0), rust-src, and LLVM/LLDB (Apache-2.0 WITH LLVM-exception)
+are installed as signed Alpine Linux packages on Android. No additional binary archives are downloaded.
+Sources and licenses: https://github.com/rust-lang/rust, https://github.com/rust-lang/rust-analyzer,
+https://github.com/llvm/llvm-project.

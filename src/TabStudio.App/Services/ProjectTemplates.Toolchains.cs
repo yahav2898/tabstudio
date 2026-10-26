@@ -12,12 +12,17 @@ public sealed partial class ProjectTemplates
     /// <summary>A Go console program.</summary>
     public const string GoId = "go";
 
+    /// <summary>A Rust console program.</summary>
+    public const string RustId = "rust";
+
     /// <summary>The Python and Node.js templates, for the start screen.</summary>
     private static ProjectTemplate[] ToolchainTemplates =>
     [
         new(PythonId, "Python Application", "A Python program that reads input and prints in the Output panel, run with Python from the Toolchain Store.", ["Python", "Console"]),
         new(NodeId, "Node.js Console App", "A JavaScript program for Node.js that reads input and prints in the Output panel, run with Node.js from the Toolchain Store.", ["JavaScript", "Node.js", "Console"]),
         new(GoId, "Go Console App", "A Go module with console input and output, gopls IntelliSense and Delve debugging.", ["Go", "Console"]),
+
+        new(RustId, "Rust Console App", "A Cargo console app with rust-analyzer IntelliSense and LLDB debugging.", ["Rust", "Console"]),
     ];
 
     /// <summary>Writes a toolchain project into a new folder, which is the workspace: there is no solution file.</summary>
@@ -87,6 +92,9 @@ public sealed partial class ProjectTemplates
 
             case GoId:
                 return CreateGoProject(root, name);
+
+            case RustId:
+                return CreateRustProject(root, name);
 
             default:
                 return null;

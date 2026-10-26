@@ -62,6 +62,9 @@ public enum ProjectKind
 
     /// <summary>A Go module.</summary>
     Go,
+
+    /// <summary>A Rust Cargo package or workspace.</summary>
+    Rust,
 }
 
 /// <summary>

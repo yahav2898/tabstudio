@@ -181,6 +181,8 @@ public sealed partial class WorkspaceViewModel
             "python" => ProjectKind.Python,
             "node" => ProjectKind.Node,
             "go" => ProjectKind.Go,
+
+            "rust" => ProjectKind.Rust,
             _ => ProjectKind.Unknown,
         },
         OutputType = "Exe",
@@ -388,6 +390,11 @@ public sealed partial class WorkspaceViewModel
             }
         }
 
+        if (toolchain.Id == "rust" && File.Exists(Path.Combine(project.Directory, "src", "main.rs")))
+        {
+            return Path.Combine(project.Directory, "src", "main.rs");
+        }
+
         return Directory.EnumerateFiles(project.Directory).Where(toolchain.RunsFile).Order(StringComparer.Ordinal).FirstOrDefault() ?? project.MarkerPath;
     }
 
@@ -432,7 +439,9 @@ public sealed partial class WorkspaceViewModel
             if (plan.Build is { } build)
             {
                 Output.WriteLine("> " + build.CommandLine, OutputKind.Info);
-                var built = await OutputProcess.RunAsync(_toolchains.Runtime, build, Output, null, _run.Token);
+                var compiled = await BuildCargoOrToolchainAsync(project, plan, _run.Token);
+                plan = compiled.Plan;
+                var built = compiled.Result;
                 if (!built.Succeeded)
                 {
                     result = built;
