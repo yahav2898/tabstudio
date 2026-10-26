@@ -581,7 +581,31 @@
 
         <!-- Editors -->
         <Panel x:Name="EditorPanel" Grid.Row="2">
-          <controls:DocumentHost x:Name="Editors" Documents="{Binding Documents}" ActiveDocument="{Binding ActiveDocument}" />
+          <!--
+            Over the files of a .NET Framework program that needs Windows: why it is not compiled here, and the two ways
+            on: run it on the paired PC, or upgrade it to an SDK-style project (WorkspaceViewModel.NetFramework.cs).
+          -->
+          <DockPanel>
+            <Border x:Name="NetFrameworkBanner" DockPanel.Dock="Top" IsVisible="{Binding HasNetFrameworkBanner}"
+                    Background="{DynamicResource Brush.Toolbar}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="12,8">
+              <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                <controls:StrokeIcon Data="{StaticResource Icon.Info}" Size="15" Foreground="{DynamicResource Brush.Info}" VerticalAlignment="Center" Margin="0,0,10,0" />
+                <TextBlock Grid.Column="1" Text="{Binding NetFrameworkBannerText}" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="12.5"
+                           Foreground="{DynamicResource Brush.Text}" />
+                <Button x:Name="RunOnWindowsBridgeBannerButton" Grid.Column="2" Theme="{StaticResource SecondaryButton}" Margin="12,0,0,0" Padding="10,0"
+                        Height="32" MinHeight="32" Command="{Binding RunNetFrameworkProjectOnWindowsBridgeCommand}"
+                        ToolTip.Tip="Build and run it on your Windows PC">
+                  <TextBlock Text="Run on Windows Bridge" FontSize="12.5" VerticalAlignment="Center" />
+                </Button>
+                <Button x:Name="UpgradeProjectBannerButton" Grid.Column="3" Theme="{StaticResource SecondaryButton}" Margin="8,0,0,0" Padding="10,0"
+                        Height="32" MinHeight="32" Command="{Binding UpgradeProjectCommand}" CommandParameter="{x:Null}"
+                        ToolTip.Tip="Convert it to an SDK-style .NET project, and review the change">
+                  <TextBlock Text="Upgrade project" FontSize="12.5" VerticalAlignment="Center" />
+                </Button>
+              </Grid>
+            </Border>
+            <controls:DocumentHost x:Name="Editors" Documents="{Binding Documents}" ActiveDocument="{Binding ActiveDocument}" />
+          </DockPanel>
 
           <controls:EmptyState IsVisible="{Binding !HasDocuments}" Icon="{StaticResource Icon.File}" Title="No document is open"
                                Message="Open a file from the Solution Explorer, or find one with Search (Ctrl+Q)."
