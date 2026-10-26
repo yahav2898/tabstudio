@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TabStudio.App.Editing;
 using TabStudio.App.Services.LanguageServers;
+using TabStudio.App.Services.Toolchains;
 using TabStudio.Debugging;
 using TabStudio.Debugging.Symbols;
 using TabStudio.LanguageServers.Configuration;
@@ -207,6 +208,8 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
             return;
         }
 
+        adapter = ToolchainLaunch.ForRuntime(adapter, _toolchains.Runtime.Kind);
+
         // A configuration with "debugServer" connects to an adapter that already runs.
         var executable = target.Configuration.DebugServerPort is not null
             ? string.Empty
@@ -250,7 +253,11 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         DebugAdapterSession session;
         try
         {
-            var options = new DebugAdapterSessionOptions { TraceMessages = _languageServerServices.TraceMessages, SupportsChildSessions = true, SupportsRunInTerminal = true };
+            var options = new DebugAdapterSessionOptions
+            {
+                TraceMessages = _languageServerServices.TraceMessages || TraceDebugAdapterMessages, SupportsChildSessions = true, SupportsRunInTerminal = true,
+                StartupLog = line => DebugAdapterOutput.WriteLine($"[{adapter.Name}] {line}", OutputKind.Info),
+            };
             session = configuration.DebugServerPort is { } port
                 ? await DebugAdapterSession.ConnectAsync(adapter, port, options)
                 : await DebugAdapterSession.StartAsync(adapter, executable, workspace.RootDirectory, _languageServerServices.Launcher, options);
@@ -268,6 +275,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         _adapterLaunched = false;
         _sentBreakpoints.Clear();
         WireAdapterEvents(session);
+        StartAdapterInput(session);
         AcceptChildSessions(session, executable, workspace.RootDirectory, noDebug);
         if (session.HasEnded)
         {
@@ -419,6 +427,10 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
                 "console" or "important" => OutputKind.Info,
                 _ => OutputKind.Program,
             });
+            if (session.AcceptsProgramInput && e.Category == "stdout" && !e.Output.EndsWith('\n'))
+            {
+                Output.ShowWaitingForInput();
+            }
         };
         session.BreakpointChanged += (_, e) => _ui.Post(() => OnAdapterBreakpointChanged(e));
         session.AdapterLog += (_, line) => DebugAdapterOutput.WriteLine($"[{session.Adapter.Name}] {line}", OutputKind.Info);
@@ -936,6 +948,10 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         }
 
         _adapterChildren.Clear();
+        if (session.AcceptsProgramInput)
+        {
+            Output.EndInput();
+        }
         _adapterRoot = null;
         _adapter = null;
         _adapterPauses++;

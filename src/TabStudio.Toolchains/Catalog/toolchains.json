@@ -240,7 +240,7 @@
       "name": "Go",
       "description": "The Go toolchain, the gopls language server and the Delve debugger.",
       "languages": [ "Go" ],
-      "listed": false,
+      "listed": true,
       "homepage": "https://go.dev",
       "license": "BSD-3-Clause",
       "packages": [ "go", "gopls", "delve" ],
@@ -250,19 +250,21 @@
       "host": { "commands": [ "go" ], "versionArguments": [ "version" ], "versionPattern": "go(?<version>\\d+\\.\\d+(?:\\.\\d+)?)" },
       "fileExtensions": [ ".go" ],
       "projectFiles": [ "go.mod" ],
+      "allowNestedProjects": true,
       "run": {
         "file": [ "go", "run", "{file}" ],
         "entries": [
-          { "file": "go.mod", "build": [ "go", "build", "./..." ], "command": [ "go", "run", "." ] }
+          { "file": "go.mod", "build": [ "go", "build", "-gcflags=all=-N -l", "-o", ".tabstudio/bin/app", "." ], "command": [ ".tabstudio/bin/app" ] }
         ],
         "environment": { "GOFLAGS": "-buildvcs=false", "GOTOOLCHAIN": "local" }
       },
       "languageServer": { "id": "gopls", "command": [ "gopls" ], "languages": [ "go" ] },
       "debugAdapter": { "id": "delve", "command": [ "dlv", "dap", "--listen", "127.0.0.1:{port}" ], "transport": "tcp", "type": "go", "languages": [ "go" ] },
       "problemPatterns": [
-        { "pattern": "^(?<file>[^:\\s]+\\.go):(?<line>\\d+):(?<column>\\d+): (?<message>.*)$" },
-        { "pattern": "^\\s+(?<file>/[^:\\s]+\\.go):(?<line>\\d+)" }
-      ]
+        { "pattern": "^(?<file>.+?\\.go):(?<line>\\d+):(?:(?<column>\\d+):)? (?<message>.*)$" },
+        { "pattern": "^\\s+(?<file>/.+?\\.go):(?<line>\\d+)" }
+      ],
+      "errorPattern": "^(?<message>panic:.*|fatal error:.*)$"
     },
     {
       "id": "java",

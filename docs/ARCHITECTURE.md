@@ -418,7 +418,7 @@ adapter it brings.
   package against the index entry that lists it, before anything is unpacked.
 - **Processes.** Programs are children of TabStudio's process, started with pipes or a pseudo terminal, and are
   killed with their whole process tree when stopped, as Android 12 and later expect.
-- **Projects.** `ToolchainProjectDetector` finds Python and Node.js projects in a workspace from their project files.
+- **Projects.** `ToolchainProjectDetector` finds projects from the catalog's manifests and source-file rules.
   F5 and Ctrl+F5 run them with their console in the Output panel; problem matchers turn tracebacks and compiler
   output into Error List entries and links.
 - **The terminal.** `TerminalEmulator` turns what programs write to a pseudo terminal into styled character cells,
@@ -427,7 +427,25 @@ adapter it brings.
   toolchain runtime, so Pyright, typescript-language-server, debugpy and vscode-js-debug start inside the Linux
   environment and paths are translated between the device and the environment. A missing server or adapter offers
   to install the toolchain that brings it. For F5, a project's run plan becomes a DAP launch configuration, and the
-  program starts through the adapter's `runInTerminal` request, so its input and output stay in the Output panel.
+  program's input and output stay in the Output panel through its adapter's terminal or runtime streams.
+
+### Go
+
+Every `go.mod`, including nested modules, is a startup project; vendor and cache folders are ignored. A root
+`package main` or a single `cmd/name` command builds with `go build -gcflags=all=-N -l` into `.tabstudio/bin/app`.
+With several commands, the active source selects the package. F5 and Ctrl+F5 build the whole package, including
+sibling files, and Go compiler locations become Error List links.
+
+Alpine installs Go, gopls and Delve from its verified package index; desktops use PATH. gopls supplies completion,
+diagnostics and navigation. Delve serves DAP over loopback TCP on a computer and a Unix socket in a private app-cache directory on Android.
+The socket directory is shared into PRoot and removed with the debug session. Launches use `mode: exec`, remote
+output and stdin inherited from the runtime process; user input never enters the DAP stream. Real-tool IDE and emulator tests cover the
+console template, compiler errors, a breakpoint and Locals.
+
+The APK's PRoot includes a thread-wait patch: Linux permits one thread to collect debugger events for a sibling
+thread's ptracees, which Delve needs. `__WNOTHREAD` still limits waits to the calling thread, and ptrace control
+requests remain restricted to the original tracing thread. A native CI fixture checks blocking and nonblocking
+waits, exit status and those ownership boundaries before the emulator exercises Delve itself.
 
 ## Swarm
 

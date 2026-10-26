@@ -21,6 +21,9 @@ public sealed record DebugAdapterSessionOptions
     /// <summary>Whether every message is written to the log.</summary>
     public bool TraceMessages { get; init; }
 
+    /// <summary>Receives adapter stderr while it starts, before a session is available for event handlers.</summary>
+    public Action<string>? StartupLog { get; init; }
+
     /// <summary>
     /// Whether the adapter may ask for child sessions with <c>startDebugging</c>, as js-debug does for every Node
     /// process; <see cref="DebugAdapterSession.ChildSessionHandler"/> starts them.
@@ -120,6 +123,24 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
     /// <summary>Whether the program runs in TabStudio's console, started through <see cref="RunInTerminalHandler"/>.</summary>
     public bool RunsInTerminal => _runsInTerminal && RunInTerminalHandler is not null;
 
+    /// <summary>Whether input can be sent to the debuggee through this socket adapter's own standard input.</summary>
+    public bool AcceptsProgramInput => Adapter.UsesProcessInput && Adapter.Transport != DebugAdapterTransport.Stdio && _process is not null;
+
+    /// <summary>Sends a line typed in the Output panel to a socket adapter whose child inherits standard input.</summary>
+    /// <param name="line">The line, without its newline.</param>
+    /// <param name="cancellationToken">Stops writing.</param>
+    /// <exception cref="InvalidOperationException">This adapter's standard input carries protocol messages.</exception>
+    public async Task WriteProgramInputAsync(string line, CancellationToken cancellationToken = default)
+    {
+        if (!AcceptsProgramInput)
+        {
+            throw new InvalidOperationException("This adapter does not accept program input on its standard input.");
+        }
+
+        await _process!.StandardInput.WriteAsync(System.Text.Encoding.UTF8.GetBytes(line + "\n"), cancellationToken).ConfigureAwait(false);
+        await _process.StandardInput.FlushAsync(cancellationToken).ConfigureAwait(false);
+    }
+
     /// <summary>Starts an adapter and initializes it.</summary>
     /// <param name="adapter">The adapter.</param>
     /// <param name="executable">The full path of its program, as the launcher resolved it.</param>
@@ -142,9 +163,24 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
         ArgumentNullException.ThrowIfNull(launcher);
         options ??= new DebugAdapterSessionOptions();
         var port = adapter.Transport == DebugAdapterTransport.Tcp ? FreePort() : 0;
-        var arguments = adapter.Arguments.Select(a => a.Replace("${port}", port.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal)).ToList();
-        var process = launcher.Start(new ServerStartInfo(executable, arguments, workingDirectory, adapter.Environment));
+        var socketDirectory = adapter.Transport == DebugAdapterTransport.UnixSocket ? CreateUnixSocketDirectory() : null;
+        var socketPath = socketDirectory is null ? string.Empty : Path.Combine(socketDirectory, "d");
+        var arguments = adapter.Arguments.Select(a => a.Replace("${port}", port.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal).Replace("${socket}", socketPath, StringComparison.Ordinal)).ToList();
+        var process = StartAdapterProcess(launcher, new ServerStartInfo(executable, arguments, workingDirectory, adapter.Environment), socketDirectory);
         DebugAdapterSession? session = null;
+        var initializing = 1;
+        var started = false;
+        PumpStandardError(process, line =>
+        {
+            if (Volatile.Read(ref initializing) != 0)
+            {
+                options.StartupLog?.Invoke(line);
+            }
+            else
+            {
+                session?.AdapterLog?.Invoke(session, line);
+            }
+        });
         try
         {
             if (adapter.Transport == DebugAdapterTransport.Tcp)
@@ -152,13 +188,20 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
                 var socket = await ConnectWithRetriesAsync(IPAddress.Loopback.ToString(), port, options.StartTimeout, process, cancellationToken).ConfigureAwait(false);
                 session = new DebugAdapterSession(adapter, new DebugAdapterConnection(socket.GetStream(), socket.GetStream()), process, socket, port);
             }
+            else if (adapter.Transport == DebugAdapterTransport.UnixSocket)
+            {
+                var socket = await ConnectToUnixSocketAsync(socketPath, options.StartTimeout, process, cancellationToken).ConfigureAwait(false);
+                var stream = new NetworkStream(socket, ownsSocket: true);
+                session = new DebugAdapterSession(adapter, new DebugAdapterConnection(stream, stream), process, null) { _unixSocketDirectory = socketDirectory };
+            }
             else
             {
                 session = new DebugAdapterSession(adapter, new DebugAdapterConnection(process.StandardOutput, process.StandardInput), process, null);
             }
 
-            session.PumpStandardError(process);
             await session.InitializeAsync(options, cancellationToken).ConfigureAwait(false);
+            Interlocked.Exchange(ref initializing, 0);
+            started = true;
             return session;
         }
         catch (DebugAdapterException)
@@ -175,6 +218,13 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
         {
             await AbandonAsync(session, process).ConfigureAwait(false);
             throw new DebugAdapterException($"{adapter.Name} did not start: {ex.Message}", ex);
+        }
+        finally
+        {
+            if (!started)
+            {
+                RemoveUnixSocketDirectory(socketDirectory);
+            }
         }
     }
 
@@ -298,6 +348,7 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
             _process.Dispose();
         }
 
+        RemoveUnixSocketDirectory(_unixSocketDirectory);
         End();
     }
 
@@ -489,7 +540,7 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
             arguments.TryGetProperty("kind", out var kind) && kind.ValueKind == JsonValueKind.String && kind.GetString() == "external");
     }
 
-    private void PumpStandardError(IServerProcess process) => _ = Task.Run(async () =>
+    private static void PumpStandardError(IServerProcess process, Action<string> log) => _ = Task.Run(async () =>
     {
         try
         {
@@ -498,7 +549,7 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
             {
                 if (line.Length > 0)
                 {
-                    AdapterLog?.Invoke(this, line);
+                    log(line);
                 }
             }
         }

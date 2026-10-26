@@ -126,7 +126,9 @@
       "command": "dlv",
       "args": [ "dap", "--listen", "127.0.0.1:${port}" ],
       "transport": "tcp",
-      "package": "delve"
+      "package": "delve",
+      "usesProcessInput": true,
+      "defaults": { "outputMode": "remote" }
     },
     "pwa-node": {
       "name": "Node.js (js-debug)",

@@ -53,6 +53,13 @@ jobs:
           mkdir -p ci-out
           { npm ls -g --depth=0; ls -l "$(command -v typescript-language-server)"; python -m pip show debugpy; } > ci-out/language-servers.txt 2>&1 || true
 
+      - name: Test PRoot debugger thread waits
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libtalloc-dev gawk
+          bash build/android/native/tests/ptrace-threads.sh > ci-out/proot-thread-waits.log 2>&1 || { cat ci-out/proot-thread-waits.log; exit 1; }
+          cat ci-out/proot-thread-waits.log
+
       - name: Build and test
         run: |
           mkdir -p ci-out
@@ -62,6 +69,8 @@ jobs:
             name=$(basename "$project")
             [ "$name" = "TabStudio.App.Tests" ] && continue
             if ! dotnet test "$project" -c Release --logger "console;verbosity=normal" > "ci-out/$name.log" 2>&1; then
+              # A retry may not hide a flaky test for this language.
+              if grep -Eq '(GoProjectTests|DebugAdapterUnixSocketTests).*\[FAIL\]' "ci-out/$name.log"; then status=1; fi
               # Known intermittent failures are tracked on the board; one retry keeps them from blocking a release,
               # and FLAKY.txt and a warning keep them visible. A second failure fails the job.
               echo "::warning::$name failed once; running it again. The first attempt is in ci-out/$name.log."
@@ -106,10 +115,18 @@ jobs:
         with:
           python-version: '3.12'
 
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.10'
+          cache: false
+
       - name: Install language servers and debug adapters
         run: |
           npm install -g pyright typescript-language-server typescript@5
           python -m pip install debugpy
+          go install golang.org/x/tools/gopls@v0.21.1
+          go install github.com/go-delve/delve/cmd/dlv@v1.26.2
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
           # vscode-js-debug's adapter, under the command name the Toolchain Store gives it on a tablet.
           mkdir -p "$RUNNER_TEMP/js-debug/bin"
           curl -fsSL https://github.com/microsoft/vscode-js-debug/releases/download/v1.140.0/js-debug-dap-v1.140.0.tar.gz | tar -xz -C "$RUNNER_TEMP/js-debug"
@@ -117,6 +134,18 @@ jobs:
           chmod +x "$RUNNER_TEMP/js-debug/bin/js-debug-adapter"
           echo "$RUNNER_TEMP/js-debug/bin" >> "$GITHUB_PATH"
           echo "TABSTUDIO_REAL_SERVERS=1" >> "$GITHUB_ENV"
+
+      - name: Test Go tools
+        env:
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+        run: |
+          mkdir -p ci-out/screenshots
+          status=0
+          dotnet test tests/TabStudio.App.Tests -c Release --blame-hang-timeout 5m --blame-hang-dump-type none \
+            --filter "FullyQualifiedName~ToolchainLanguageToolsTests.A_Go_template" --logger "console;verbosity=normal" \
+            > ci-out/go-tools.log 2>&1 || status=$?
+          tail -n 80 ci-out/go-tools.log
+          exit "$status"
 
       - name: Build the desktop host and test the IDE
         env:
@@ -136,6 +165,7 @@ jobs:
           first=0
           run_ide_tests ci-out/TabStudio.App.Tests.log || first=1
           tail -n 80 ci-out/TabStudio.App.Tests.log
+          if grep -Eq '(A_Go_template|Delve_|A_private_Delve_socket).*\[FAIL\]' ci-out/TabStudio.App.Tests.log; then status=1; fi
           if [ $first -ne 0 ]; then
             # Known intermittent failures (a native crash in the test host, slow servers) are tracked on the board;
             # one retry keeps them from blocking a release, and FLAKY.txt and a warning keep them visible.
@@ -157,6 +187,7 @@ jobs:
           light=0
           run_light_tests ci-out/TabStudio.App.Tests.Light.log || light=1
           tail -n 20 ci-out/TabStudio.App.Tests.Light.log
+          if grep -Eq '(A_Go_template|Delve_|A_private_Delve_socket).*\[FAIL\]' ci-out/TabStudio.App.Tests.Light.log; then status=1; fi
           if [ $light -ne 0 ]; then
             echo "::warning::The IDE tests in the light theme failed once; running them again. The first attempt is in ci-out/TabStudio.App.Tests.Light.log."
             if run_light_tests ci-out/TabStudio.App.Tests.Light.retry.log; then
@@ -204,7 +235,7 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: artifacts/native
-          key: android-native-${{ hashFiles('build/android/native/build.sh') }}-arm
+          key: android-native-${{ hashFiles('build/android/native/build.sh', 'build/android/native/sources.sh', 'build/android/native/*.patch') }}-arm
 
       - name: Build the toolchain runtime
         run: |
@@ -270,7 +301,7 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: artifacts/native
-          key: android-native-${{ hashFiles('build/android/native/build.sh') }}-x64
+          key: android-native-${{ hashFiles('build/android/native/build.sh', 'build/android/native/sources.sh', 'build/android/native/*.patch') }}-x64
 
       - name: Build the toolchain runtime
         run: |
@@ -310,7 +341,7 @@ jobs:
           disk-size: 4096M
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
-          script: bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 960
+          script: bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 1200
 
       # A crash's native backtrace has only offsets into the runtime's stripped libraries; this names the functions.
       - name: Name the functions in a crash's backtrace

@@ -33,6 +33,14 @@ public sealed class ToolchainServerLauncher(IToolchainRuntime runtime) : IServer
             _runtime.ShareFolder(startInfo.WorkingDirectory);
         }
 
+        foreach (var address in startInfo.Arguments.Where(a => a.StartsWith("unix:", StringComparison.Ordinal)))
+        {
+            if (Path.GetDirectoryName(address[5..]) is { } folder && Directory.Exists(folder))
+            {
+                _runtime.ShareFolder(folder);
+            }
+        }
+
         try
         {
             var process = _runtime.Start(new ProcessStartSpec

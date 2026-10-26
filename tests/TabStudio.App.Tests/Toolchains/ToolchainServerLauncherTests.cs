@@ -11,7 +11,7 @@ namespace TabStudio.App.Tests.Toolchains;
 /// the runtime, a server starts in its shared folder with its arguments and environment, and its streams, exit code,
 /// killing and start failures pass through as they are.
 /// </summary>
-public sealed class ToolchainServerLauncherTests
+public sealed partial class ToolchainServerLauncherTests
 {
     [Fact]
     public void Finds_programs_and_their_files_through_the_runtime()

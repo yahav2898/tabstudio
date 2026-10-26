@@ -35,3 +35,13 @@ The following are not part of the APK. The Toolchain Store downloads them only w
 
 The web templates include Bootstrap, jQuery, jQuery Validation and jQuery Validation Unobtrusive, each with its licence
 file beside it under [src/TabStudio.Web/Templates/Content/lib](src/TabStudio.Web/Templates/Content/lib).
+
+## Go language tools
+
+The packaged PRoot includes TabStudio's `proot-thread-waits.patch` to implement Linux's cross-thread wait
+semantics for Delve. The patch is distributed under PRoot's GPL-2.0-or-later license; its source is in
+`build/android/native/`. The upstream source archive retains its pinned SHA-256.
+
+Go and gopls (BSD-3-Clause) and Delve (MIT) are installed as signed Alpine Linux packages on Android, rather
+than downloaded executables. CI builds gopls v0.21.1 and Delve v1.26.2 from their Go modules for the host tests.
+Sources and licenses: https://go.dev/LICENSE, https://github.com/golang/tools and https://github.com/go-delve/delve.
