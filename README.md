@@ -15,6 +15,12 @@
 
 ---
 
+## Flutter and Dart (experimental)
+
+The Flutter Toolchain Store entry installs Flutter and its bundled Dart SDK in a separate Ubuntu glibc PRoot environment on ARM64/x64 tablets. Open `pubspec.yaml` projects, accept **flutter pub get**, and run the counter templates in the web preview. Dart IntelliSense uses the analysis server; Dart console debugging uses DAP. Saving Dart code hot-restarts Flutter web; Debug offers Flutter Hot Reload and Hot Restart for native VM-service targets.
+
+The Android SDK/mobile branch is not on this base: native Android deployment is not verified. Embedded `web-server` previews do not provide VM breakpoints without a browser debugging bridge. See [the SDK spike and verification status](docs/flutter.md) before enabling this experimental feature in a release.
+
 ## At a glance
 
 TabStudio turns an Android tablet into a development machine you would actually choose to use.

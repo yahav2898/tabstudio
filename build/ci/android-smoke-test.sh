@@ -9,12 +9,13 @@
 # and asks this script in its log (TABSTUDIO_DESKTOP_STEP lines) to type on the keyboard and take screenshots,
 # which it does with adb. (The app clicks the display itself: adb's taps have no mouse button events.)
 #
-# Usage: build/ci/android-smoke-test.sh <apk> <output-folder> [timeout-seconds]
+# Usage: build/ci/android-smoke-test.sh <apk> <output-folder> [timeout-seconds] [flutter]
 set -euo pipefail
 
 apk="${1:?apk}"
 out="${2:?output folder}"
 timeout="${3:-300}"
+mode="${4:-}"
 package="com.tabstudio.ide"
 activity="com.tabstudio.ide.MainActivity"
 
@@ -69,7 +70,11 @@ desktop_step() {
 adb install -r "$apk"
 adb logcat -c
 started=$(date +%s)
-adb shell am start -W -n "$package/$activity" --ez tabstudio.selftest true --ez tabstudio.selftest.desktop true
+if [ "$mode" = flutter ]; then
+  adb shell am start -W -n "$package/$activity" --ez tabstudio.selftest true --ez tabstudio.selftest.flutter true
+else
+  adb shell am start -W -n "$package/$activity" --ez tabstudio.selftest true --ez tabstudio.selftest.desktop true
+fi
 
 verdict=""
 handled=0

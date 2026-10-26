@@ -89,6 +89,12 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
     /// <summary>Raised with a line of the adapter's own log: its standard error and, when traced, every message.</summary>
     public event EventHandler<string>? AdapterLog;
 
+    /// <summary>Flutter's web target has supplied the URL to open in the preview.</summary>
+    public event EventHandler<Uri>? FlutterWebLaunch;
+
+    /// <summary>The Flutter application has started, including launches without a VM service.</summary>
+    public event EventHandler? FlutterAppStarted;
+
     /// <summary>The adapter.</summary>
     public DebugAdapterDefinition Adapter { get; }
 
@@ -387,11 +393,30 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
 
     private void RegisterEvents()
     {
+        _connection.AddEventHandler("flutter.appStarted", _ => FlutterAppStarted?.Invoke(this, EventArgs.Empty));
+        _connection.AddEventHandler("flutter.forwardedEvent", body =>
+        {
+            if (body.TryGetProperty("event", out var name) && name.GetString() == "app.webLaunchUrl"
+                && body.TryGetProperty("params", out var parameters) && parameters.TryGetProperty("url", out var url)
+                && Uri.TryCreate(url.GetString(), UriKind.Absolute, out var address)
+                && address.Scheme is "http" or "https" && address.IsLoopback)
+            {
+                FlutterWebLaunch?.Invoke(this, address);
+            }
+        });
         _connection.AddEventHandler("initialized", _ => _initialized.TrySetResult());
         _connection.AddEventHandler("stopped", body =>
         {
             if (Read(body, DapJsonContext.Default.StoppedEventDto) is { } stopped)
             {
+                // Dart pauses isolates briefly on exit to resolve stack traces. These are protocol bookkeeping,
+                // including isolates used by evaluation, not user breakpoints. Grant the resume permission so
+                // DDS can finish them without exposing a stale frame in the IDE.
+                if (Adapter.Id is "dart" or "flutter" && stopped.Reason == "exit" && stopped.ThreadId is { } exitingThread)
+                {
+                    _ = ResumeDartExitAsync(exitingThread);
+                    return;
+                }
                 Stopped?.Invoke(this, new DapStoppedEventArgs(stopped.Reason ?? "pause", stopped.ThreadId, stopped.AllThreadsStopped == true, stopped.Description, stopped.Text, stopped.HitBreakpointIds ?? []));
             }
         });
@@ -454,6 +479,19 @@ public sealed partial class DebugAdapterSession : IAsyncDisposable
             await handler(new DapChildSessionRequest(properties, request), cancellationToken).ConfigureAwait(false);
             return null;
         });
+    }
+
+    private async Task ResumeDartExitAsync(int thread)
+    {
+        try
+        {
+            using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            await ContinueAsync(thread, timeout.Token).ConfigureAwait(false);
+        }
+        catch (Exception ex) when (ex is DebugAdapterException or OperationCanceledException)
+        {
+            // The adapter may have resumed the isolate itself, or closed as its last isolate exited.
+        }
     }
 
     /// <summary>The program a <c>runInTerminal</c> request asks for, or <see langword="null"/> when it names none.</summary>

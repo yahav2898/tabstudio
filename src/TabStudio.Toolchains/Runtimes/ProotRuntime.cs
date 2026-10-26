@@ -21,6 +21,12 @@ public sealed record ProotRuntimeOptions
     /// <summary>The environment's name for the UI, such as <c>Alpine Linux 3.24</c>.</summary>
     public string DisplayName { get; init; } = "Alpine Linux";
 
+    /// <summary>The interactive shell of this distribution.</summary>
+    public string Shell { get; init; } = "/bin/ash";
+
+    /// <summary>The distribution's command search path.</summary>
+    public string SearchPath { get; init; } = ProotRuntime.SearchPath;
+
     /// <summary>Folders of the device visible to programs at the same path, such as TabStudio's projects folder.</summary>
     public IReadOnlyList<string> SharedFolders { get; init; } = [];
 }
@@ -118,7 +124,7 @@ public sealed class ProotRuntime : IToolchainRuntime
             return Exists(ToRootfs(command)) || (IsShared(command) && Exists(command)) ? command : null;
         }
 
-        return SearchPath.Split(':')
+        return _options.SearchPath.Split(':')
             .Where(folder => Exists(Path.Combine(_options.Rootfs, folder.TrimStart('/'), command)))
             .Select(folder => folder + "/" + command)
             .FirstOrDefault();
@@ -127,7 +133,7 @@ public sealed class ProotRuntime : IToolchainRuntime
     /// <inheritdoc />
     public ProcessStartSpec Shell(string workingDirectory, TerminalSize size) => new()
     {
-        Program = "/bin/ash",
+        Program = _options.Shell,
         Arguments = ["-l"],
         WorkingDirectory = workingDirectory,
         Terminal = size,
@@ -213,11 +219,11 @@ public sealed class ProotRuntime : IToolchainRuntime
     {
         var environment = new Dictionary<string, string>(StringComparer.Ordinal)
         {
-            ["PATH"] = SearchPath,
+            ["PATH"] = _options.SearchPath,
             ["HOME"] = "/root",
             ["USER"] = "root",
             ["LOGNAME"] = "root",
-            ["SHELL"] = "/bin/ash",
+            ["SHELL"] = _options.Shell,
             ["LANG"] = "C.UTF-8",
             ["TMPDIR"] = "/tmp",
             ["TERM"] = spec.Terminal is null ? "dumb" : "xterm-256color",
@@ -237,7 +243,7 @@ public sealed class ProotRuntime : IToolchainRuntime
             }
             else
             {
-                environment[name] = name == "PATH" ? value.Replace("$PATH", SearchPath, StringComparison.Ordinal) : value;
+                environment[name] = name == "PATH" ? value.Replace("$PATH", _options.SearchPath, StringComparison.Ordinal) : value;
             }
         }
 

@@ -160,6 +160,11 @@ public sealed partial class WorkspaceViewModel
     /// <param name="pauseAtStart">Whether F10 or F11 started it, to pause at its first statement.</param>
     private void StartOnSwarm(ProjectInfo project, bool debug, bool pauseAtStart)
     {
+        if (FindToolchainProject(project) is { Toolchain.Id: "flutter" } flutter && TabStudio.Toolchains.Projects.FlutterProject.UsesFlutter(flutter.Project.Directory))
+        {
+            if (SwarmRun.IsCompleted) SwarmRun = RunFlutterOnSwarmAsync(flutter);
+            return;
+        }
         if (!CanRunOnSwarm(project))
         {
             Output.WriteLine($"{project.Name} runs on this tablet only: the devices of a swarm run Avalonia, ASP.NET Core and console apps. Choose {project.Name} in the Run button's menu to run it here.", OutputKind.Failure);
@@ -382,6 +387,7 @@ public sealed partial class WorkspaceViewModel
     /// run on the tablet only.
     /// </summary>
     private bool CanRunOnSwarm(ProjectInfo project) =>
+        (FindToolchainProject(project) is { Toolchain.Id: "flutter" } flutter && TabStudio.Toolchains.Projects.FlutterProject.UsesFlutter(flutter.Project.Directory)) ||
         project.Language == ProjectLanguage.CSharp && !IsToolchainProject(project) && !IsWindowsFormsApp(project)
         && !IsWebAssemblyApp(project) && !ProjectClassifier.IsBlazorWebAppClient(project);
 

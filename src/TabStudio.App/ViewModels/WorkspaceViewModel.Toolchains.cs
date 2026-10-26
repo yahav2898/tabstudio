@@ -348,6 +348,12 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
+        if (item.Toolchain.Id == "flutter")
+        {
+            await StartDartOrFlutterAsync(item, noDebug: true);
+            return;
+        }
+
         var project = item.Project;
         var file = ActiveDocument?.FilePath;
         await RunToolchainPlanAsync(project, () => PlanToolchainProject(project, file));
@@ -368,6 +374,8 @@ public sealed partial class WorkspaceViewModel
     private static string? EntryFileOf(ToolchainProject project)
     {
         var toolchain = project.Toolchain;
+        if (toolchain.Id == "flutter" && File.Exists(Path.Combine(project.Directory, "lib/main.dart")))
+            return Path.Combine(project.Directory, "lib/main.dart");
         foreach (var rule in toolchain.Run?.Entries ?? [])
         {
             var file = Path.Combine(project.Directory, rule.File);

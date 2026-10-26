@@ -21,6 +21,7 @@ public static class RunPlanner
     public static RunPlan? PlanProject(ToolchainProject project)
     {
         ArgumentNullException.ThrowIfNull(project);
+        if (project.Toolchain.Id == "flutter") return FlutterProject.Plan(project.Directory);
         var run = project.Toolchain.Run;
         if (run is null)
         {

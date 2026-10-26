@@ -15,6 +15,110 @@
   },
   "toolchains": [
     {
+      "id": "flutter",
+      "name": "Flutter",
+      "description": "Flutter and its bundled Dart SDK in a separate Ubuntu glibc PRoot environment, with Dart IntelliSense, debugging and Flutter web preview.",
+      "languages": [
+        "Dart",
+        "Flutter"
+      ],
+      "listed": true,
+      "homepage": "https://flutter.dev",
+      "license": "BSD-3-Clause",
+      "estimatedDownloadSize": 900000000,
+      "estimatedInstalledSize": 2400000000,
+      "host": {
+        "commands": [
+          "flutter"
+        ],
+        "versionArguments": [
+          "--version"
+        ],
+        "versionPattern": "Flutter (?<version>\\S+)"
+      },
+      "fileExtensions": [
+        ".dart"
+      ],
+      "projectFiles": [
+        "pubspec.yaml"
+      ],
+      "sourceFolderIsProject": true,
+      "run": {
+        "file": [
+          "dart",
+          "run",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": "lib/main.dart",
+            "command": [
+              "flutter",
+              "run",
+              "-d",
+              "web-server",
+              "--web-hostname",
+              "127.0.0.1",
+              "--web-port",
+              "0"
+            ]
+          },
+          {
+            "file": "bin/main.dart",
+            "command": [
+              "dart",
+              "run",
+              "bin/main.dart"
+            ]
+          }
+        ],
+        "environment": {
+          "FLUTTER_SUPPRESS_ANALYTICS": "true",
+          "DART_SUPPRESS_ANALYTICS": "true"
+        }
+      },
+      "dependencies": [
+        {
+          "manifest": "pubspec.yaml",
+          "name": "flutter pub get",
+          "description": "Fetch the packages in pubspec.yaml with the bundled Dart SDK.",
+          "command": [
+            "flutter",
+            "pub",
+            "get"
+          ],
+          "installed": ".dart_tool/package_config.json"
+        }
+      ],
+      "languageServer": {
+        "id": "dart-analysis-server",
+        "command": [
+          "dart",
+          "language-server",
+          "--protocol=lsp"
+        ],
+        "languages": [
+          "dart"
+        ]
+      },
+      "debugAdapter": {
+        "id": "flutter-dap",
+        "command": [
+          "flutter",
+          "debug-adapter"
+        ],
+        "type": "flutter",
+        "languages": [
+          "dart"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>[^:]+\\.dart):(?<line>\\d+):(?<column>\\d+): (?<message>.*)$"
+        }
+      ]
+    },
+    {
       "id": "python",
       "name": "Python",
       "description": "Python 3 with pip and virtual environments, the Pyright language server (which runs on Node.js) and the debugpy debugger.",

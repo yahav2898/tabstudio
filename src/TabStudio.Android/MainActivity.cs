@@ -74,8 +74,9 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
         if (Intent?.GetBooleanExtra(SelfTestExtra, false) == true)
         {
             var desktop = Intent.GetBooleanExtra(DesktopSelfTestExtra, false);
+            var flutter = Intent.GetBooleanExtra("tabstudio.selftest.flutter", false);
             var screenshots = GetExternalFilesDir(null) is { } files ? Path.Combine(files.AbsolutePath, "selftest") : null;
-            Dispatcher.UIThread.Post(() => _ = RunSelfTestAsync(desktop, screenshots));
+            Dispatcher.UIThread.Post(() => _ = RunSelfTestAsync(desktop, screenshots, flutter));
         }
 
         // Started from a tapped notification: open the run it is about.
@@ -131,7 +132,7 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
             });
     }
 
-    private static async Task RunSelfTestAsync(bool desktop, string? screenshots)
+    private static async Task RunSelfTestAsync(bool desktop, string? screenshots, bool flutter)
     {
         AndroidLog.Info(LogTag, "TABSTUDIO_SELFTEST_START");
         var app = Avalonia.Application.Current as TabStudioApplication;
@@ -142,8 +143,10 @@ public sealed partial class MainActivity : AvaloniaMainActivity<TabStudioApplica
         }
 
         using var timeout = new CancellationTokenSource(SelfTestTimeout);
-        var result = await SelfTest.RunAsync(main, services.GetRequiredService<SampleLibrary>(), services.GetRequiredService<ProjectTemplates>(), screenshots, timeout.Token);
-        if (result.Success)
+        var result = flutter
+            ? await SelfTest.RunFlutterWebAsync(main, services.GetRequiredService<ProjectTemplates>(), timeout.Token)
+            : await SelfTest.RunAsync(main, services.GetRequiredService<SampleLibrary>(), services.GetRequiredService<ProjectTemplates>(), screenshots, timeout.Token);
+        if (result.Success && !flutter)
         {
             var scrolling = await SelfTest.ScrollEditorAsync(main, services.GetRequiredService<SampleLibrary>(), new AndroidTouchSelfTestDevice(() => _current), line => AndroidLog.Info(LogTag, line), timeout.Token);
             result = new SelfTestResult(scrolling.Success, $"{result.Message} | {scrolling.Message}", result.Duration + scrolling.Duration);

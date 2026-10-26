@@ -268,6 +268,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         _adapterLaunched = false;
         _sentBreakpoints.Clear();
         WireAdapterEvents(session);
+        if (session.Adapter.Id == "flutter") ConfigureFlutterTarget(configuration);
         AcceptChildSessions(session, executable, workspace.RootDirectory, noDebug);
         if (session.HasEnded)
         {
@@ -392,6 +393,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
     private void WireAdapterEvents(DebugAdapterSession session)
     {
         session.RunInTerminalHandler = RunAdapterProgramAsync;
+        WireFlutterEvents(session);
         session.Stopped += (_, e) => _ui.Post(() =>
         {
             // The session that stopped is the one the debugger shows, as when a child of js-debug hits a breakpoint.
@@ -890,6 +892,11 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
 
     private void RestartAdapter()
     {
+        if (_adapter?.Adapter.Id == "flutter")
+        {
+            _ = ReloadFlutterAsync(fullRestart: true);
+            return;
+        }
         if (_adapter is not null)
         {
             _adapterRestart = true;
@@ -1168,6 +1175,10 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         }
 
         var configuration = LaunchConfiguration.ForCurrentFile(adapter, language.Name);
+        if (language.Id == "dart" && registry.FindAdapter("dart") is { } dart)
+        {
+            configuration = LaunchConfiguration.ForCurrentFile(dart, language.Name);
+        }
         return new LaunchTarget(configuration.Name, configuration, IsCurrentFile: true);
     }
 

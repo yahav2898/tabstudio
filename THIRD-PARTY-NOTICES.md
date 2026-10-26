@@ -35,3 +35,11 @@ The following are not part of the APK. The Toolchain Store downloads them only w
 
 The web templates include Bootstrap, jQuery, jQuery Validation and jQuery Validation Unobtrusive, each with its licence
 file beside it under [src/TabStudio.Web/Templates/Content/lib](src/TabStudio.Web/Templates/Content/lib).
+
+## Flutter and Dart (optional Toolchain Store downloads)
+
+- Flutter, Copyright The Flutter Authors, BSD-3-Clause: https://github.com/flutter/flutter/blob/3.38.0/LICENSE
+- Dart SDK and its analysis/debug tools, Copyright the Dart project authors, BSD-3-Clause: https://github.com/dart-lang/sdk/blob/main/LICENSE
+- Ubuntu Base 24.04.3 is an optional glibc side environment, not embedded in the APK. It contains separately licensed packages, including GNU libc (LGPL-2.1-or-later), Bash (GPL-3.0-or-later), Git (GPL-2.0-only), OpenSSL (Apache-2.0) and curl (curl license). Package-specific copyright and license texts remain in `/usr/share/doc/*/copyright` in that environment. Ubuntu source packages: https://archive.ubuntu.com/ubuntu/pool/ and https://ports.ubuntu.com/ubuntu-ports/pool/ . Ubuntu distributions and licensing: https://ubuntu.com/legal/intellectual-property-policy .
+
+Flutter and Dart retain their upstream LICENSE and third-party notices in `/opt/flutter` and `/opt/flutter/bin/cache/dart-sdk`. These optional downloads do not change the licensing of TabStudio.

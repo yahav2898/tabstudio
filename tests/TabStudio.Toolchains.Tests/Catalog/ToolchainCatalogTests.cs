@@ -10,17 +10,17 @@ public sealed class ToolchainCatalogTests
     private static readonly ToolchainCatalog Catalog = ToolchainCatalog.Default;
 
     [Fact]
-    public void Describes_all_seven_languages()
+    public void Describes_all_toolchains()
     {
-        Assert.Equal(["python", "node", "cpp", "rust", "go", "java", "kotlin"], Catalog.Toolchains.Select(t => t.Id));
+        Assert.Equal(["flutter", "python", "node", "cpp", "rust", "go", "java", "kotlin"], Catalog.Toolchains.Select(t => t.Id));
         var languages = Catalog.Toolchains.SelectMany(t => t.Languages).ToHashSet();
         Assert.Superset(new HashSet<string> { "Python", "JavaScript", "TypeScript", "C", "C++", "Rust", "Go", "Java", "Kotlin" }, languages);
     }
 
     [Fact]
-    public void The_store_lists_python_and_node()
+    public void The_store_lists_flutter_python_and_node()
     {
-        Assert.Equal(["python", "node"], Catalog.Listed.Select(t => t.Id));
+        Assert.Equal(["flutter", "python", "node"], Catalog.Listed.Select(t => t.Id));
     }
 
     [Fact]
@@ -30,8 +30,11 @@ public sealed class ToolchainCatalogTests
         {
             Assert.False(string.IsNullOrWhiteSpace(toolchain.Name), toolchain.Id);
             Assert.EndsWith(".", toolchain.Description, StringComparison.Ordinal);
-            Assert.NotEmpty(toolchain.Packages);
-            Assert.Contains(toolchain.VersionPackage, toolchain.Packages);
+            if (toolchain.Id != "flutter")
+            {
+                Assert.NotEmpty(toolchain.Packages);
+                Assert.Contains(toolchain.VersionPackage, toolchain.Packages);
+            }
             Assert.NotEmpty(toolchain.FileExtensions);
             Assert.All(toolchain.FileExtensions, e => Assert.StartsWith(".", e, StringComparison.Ordinal));
             Assert.NotEmpty(toolchain.ProjectFiles);
@@ -59,7 +62,7 @@ public sealed class ToolchainCatalogTests
             Assert.NotEmpty(toolchain.DebugAdapter.Command);
             Assert.NotNull(toolchain.DebugAdapter.Type);
             Assert.NotEmpty(toolchain.Dependencies);
-            Assert.NotEmpty(toolchain.Setup);
+            if (toolchain.Id != "flutter") Assert.NotEmpty(toolchain.Setup);
         }
     }
 

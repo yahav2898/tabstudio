@@ -229,6 +229,8 @@
             <MenuItem Header="Brea_k All (Ctrl+Alt+Break)" Command="{Binding BreakAllCommand}" />
             <MenuItem Header="Stop D_ebugging" InputGesture="Shift+F5" Command="{Binding StopDebuggingCommand}" />
             <MenuItem Header="_Restart" InputGesture="Ctrl+Shift+F5" Command="{Binding RestartCommand}" />
+            <MenuItem Header="Flutter Hot Reload" Command="{Binding FlutterHotReloadCommand}" />
+            <MenuItem Header="Flutter Hot Restart" Command="{Binding FlutterHotRestartCommand}" />
             <Separator />
             <MenuItem Header="Show _Next Statement (Alt+Num *)" Command="{Binding ShowNextStatementCommand}" />
             <MenuItem Header="Step _Into" InputGesture="F11" Command="{Binding StepIntoCommand}" />

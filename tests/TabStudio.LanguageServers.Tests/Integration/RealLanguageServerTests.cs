@@ -12,6 +12,21 @@ namespace TabStudio.LanguageServers.Tests.Integration;
 /// </summary>
 public sealed class RealLanguageServerTests(ITestOutputHelper output)
 {
+    [DartServerFact]
+    public async Task Dart_reports_diagnostics_and_completes_String_members()
+    {
+        await using var workspace = new RealWorkspace(output);
+        workspace.Write("pubspec.yaml", "name: analysis_test\nenvironment:\n  sdk: '>=3.10.0 <4.0.0'\n");
+        const string source = "void main() {\n  print(missingName);\n  'hello'.toU\n}\n";
+        var document = await workspace.OpenAsync("bin/main.dart", source);
+        var error = await RealWorkspace.WaitForDiagnosticAsync(document, d => d.Message.Contains("missingName", StringComparison.Ordinal));
+        Assert.Equal(LspDiagnosticSeverity.Error, error.Severity);
+        var offset = source.IndexOf("toU", StringComparison.Ordinal) + 3;
+        var list = await document.GetCompletionsAsync(offset, LspCompletionTriggerKind.Invoked, null, CancellationToken.None).WaitAsync(TestTimeouts.RealServer);
+        Assert.NotNull(list);
+        Assert.Contains(list.Items, item => item.Label.StartsWith("toUpperCase", StringComparison.Ordinal));
+    }
+
     private const string PythonProgram = """
         import os
 

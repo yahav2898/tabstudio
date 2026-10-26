@@ -9,11 +9,18 @@ public sealed partial class ProjectTemplates
     /// <summary>A Node.js console program.</summary>
     public const string NodeId = "node";
 
+    /// <summary>A Flutter counter app.</summary>
+    public const string FlutterId = "flutter";
+    /// <summary>A Flutter web app.</summary>
+    public const string FlutterWebId = "flutter-web";
+
     /// <summary>The Python and Node.js templates, for the start screen.</summary>
     private static ProjectTemplate[] ToolchainTemplates =>
     [
         new(PythonId, "Python Application", "A Python program that reads input and prints in the Output panel, run with Python from the Toolchain Store.", ["Python", "Console"]),
         new(NodeId, "Node.js Console App", "A JavaScript program for Node.js that reads input and prints in the Output panel, run with Node.js from the Toolchain Store.", ["JavaScript", "Node.js", "Console"]),
+        new(FlutterId, "Flutter App", "A Material counter app. Run in the web preview; native targets require Android SDK support.", ["Dart", "Flutter"]),
+        new(FlutterWebId, "Flutter Web App", "A Flutter counter app in the web preview, with Hot Restart on save.", ["Dart", "Flutter", "Web"]),
     ];
 
     /// <summary>Writes a toolchain project into a new folder, which is the workspace: there is no solution file.</summary>
@@ -22,6 +29,8 @@ public sealed partial class ProjectTemplates
     {
         switch (templateId)
         {
+            case FlutterId or FlutterWebId:
+                return CreateFlutterProject(root, name);
             case PythonId:
                 File.WriteAllText(Path.Combine(root, "main.py"), """"
                     """Press F5 to run this program with Python on your tablet.
