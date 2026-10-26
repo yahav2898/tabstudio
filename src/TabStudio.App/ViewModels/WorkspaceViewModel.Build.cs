@@ -155,6 +155,16 @@ public sealed partial class WorkspaceViewModel
             document.SyncText();
         }
 
+        // Background analyses may still describe the text from before Save All. The build below is now the
+        // authoritative result; an older analysis must not clear its Error List while F5 reports a failure.
+        _solutionAnalysis?.Cancel();
+        foreach (var analysis in _projectAnalysis.Values)
+        {
+            analysis.Cancel();
+            analysis.Dispose();
+        }
+        _projectAnalysis.Clear();
+
         if (showOutput)
         {
             Output.Clear();
