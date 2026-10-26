@@ -29,5 +29,34 @@ class RetryPolicyTests(unittest.TestCase):
             self.assertFalse(policy.retry_allowed(log, "TabStudio.App.Tests")[0])
 
     def test_feature_libraries_never_retry(self):
-        for project in ("TabStudio.Wpf.Tests", "TabStudio.Uno.Tests"):
+        for project in policy.FEATURE_PROJECTS:
             self.assertFalse(policy.retry_allowed("  Failed Other.Test [1 ms]", project)[0])
+
+    def test_015_feature_regressions_cannot_retry_in_shared_projects(self):
+        cases = {
+            "TabStudio.App.Tests": [
+                "ProjectSetupTests.Setup_is_cancelable", "StaticSiteTests.Saving_reloads",
+                "PortingTests.Convert_and_run", "DatabaseExplorerTests.Query",
+                "RemoteSshTests.Save_conflict", "ServicesTests.F5_starts_dependencies",
+                "MobileWorkflowTests.Listening_notice", "HotReloadTests.Apply_current_edits",
+                "RecordingTests.Rewind", "LocalAIEditorTests.Ghost_text",
+            ],
+            "TabStudio.Compilation.Tests": ["HotReloadTests.Second_generation", "ProgramRunnerTests.Environment"],
+            "TabStudio.Debugging.Tests": ["RecordingFormatTests.Evict_complete_records"],
+            "TabStudio.Toolchains.Tests": ["PicFlashProfileTests.Verify_before_reset", "ListeningPortsTests.Owned_socket"],
+            "TabStudio.Agent.Tests": ["LocalAITests.Model_checksum", "LocalNativeTests.Inference"],
+        }
+        for project, names in cases.items():
+            for name in names:
+                with self.subTest(project=project, name=name):
+                    log = f"[xUnit.net 00:01:00]     {project}.{name} [FAIL]"
+                    self.assertFalse(policy.retry_allowed(log, project)[0])
+
+    def test_build_error_cannot_hide_behind_an_unrelated_test_failure(self):
+        for error in ("error CS1002: ; expected", "error MSB1009: Project file does not exist", "error NU1101: package missing"):
+            with self.subTest(error=error):
+                log = f"  Failed Baseline.Test [1 ms]\n{error}"
+                self.assertFalse(policy.retry_allowed(log, "TabStudio.App.Tests")[0])
+
+    def test_similarly_named_unrelated_class_can_retry(self):
+        self.check("NotHotReloadTests.Baseline", True)
