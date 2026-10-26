@@ -660,21 +660,30 @@
         <!-- Bottom dock -->
         <Border Grid.Row="4" x:Name="BottomDock" Background="{DynamicResource Brush.Toolbar}">
           <DockPanel>
+            <!--
+              The time-travel timeline, while a recording is kept: stepping backwards as the debug toolbar steps forwards,
+              folding to icons on a narrow screen; the recorded steps to drag through; and where in the recording the
+              debugger is.
+            -->
             <Border x:Name="RecordingTimeline" DockPanel.Dock="Top" IsVisible="{Binding HasRecording}"
-                    BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="12,6">
-              <StackPanel Spacing="4">
-                <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto">
-                  <Button Theme="{StaticResource ToolButton}" Content="Step Back" Command="{Binding StepBackCommand}"
-                          ToolTip.Tip="Step Back (Shift+F10)" />
-                  <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Content="Back Into" Command="{Binding StepBackIntoCommand}" />
-                  <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Content="Reverse Continue" Command="{Binding ReverseContinueCommand}" />
-                  <TextBlock Grid.Column="3" Text="{Binding RecordingLabel}" Classes="muted small" VerticalAlignment="Center"
-                             Margin="12,0" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding RecordingLabel}" />
-                  <Button Grid.Column="4" Theme="{StaticResource ToolButton}" Content="Return to Live" Command="{Binding ReturnToLiveCommand}" />
-                </Grid>
+                    BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="8,4,12,6">
+              <StackPanel Spacing="2">
+                <controls:AdaptiveBar x:Name="RecordingBar" Spacing="2">
+                  <controls:AdaptiveBarItem Icon="{StaticResource Icon.StepBack}" IconSize="16" Label="Step Back" Gesture="Shift+F10"
+                                            IsPinned="True" Command="{Binding StepBackCommand}" />
+                  <controls:AdaptiveBarItem Icon="{StaticResource Icon.StepBackInto}" IconSize="16" Label="Step Back Into"
+                                            Priority="60" Command="{Binding StepBackIntoCommand}" />
+                  <controls:AdaptiveBarItem Icon="{StaticResource Icon.ReverseContinue}" IsIconFilled="True" IconSize="14" Label="Reverse Continue"
+                                            Priority="70" Command="{Binding ReverseContinueCommand}" />
+                  <controls:AdaptiveBarSeparator />
+                  <controls:AdaptiveBarItem Icon="{StaticResource Icon.NextStatement}" IsIconFilled="True" IconSize="16" Label="Return to Live"
+                                            Priority="80" IconBrush="{DynamicResource Brush.CurrentStatement}" Command="{Binding ReturnToLiveCommand}" />
+                </controls:AdaptiveBar>
                 <Slider x:Name="RecordingSlider" Minimum="0" Maximum="{Binding RecordingMaximum}" Value="{Binding RecordingPosition, Mode=TwoWay}"
-                        IsSnapToTickEnabled="True" TickFrequency="1" IsEnabled="{Binding CanNavigateRecording}"
-                        AutomationProperties.Name="Recorded steps" ToolTip.Tip="Drag to inspect any retained recorded step" />
+                        IsSnapToTickEnabled="True" TickFrequency="1" IsEnabled="{Binding CanNavigateRecording}" MinHeight="36" Margin="4,0,0,0"
+                        AutomationProperties.Name="Recorded steps" ToolTip.Tip="Drag to any recorded step" />
+                <TextBlock Text="{Binding RecordingLabel}" Classes="small muted" Margin="4,0,0,0"
+                           TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding RecordingLabel}" />
               </StackPanel>
             </Border>
             <Grid DockPanel.Dock="Top" Height="34" ColumnDefinitions="*,Auto" Margin="6,0">
@@ -699,9 +708,10 @@
                 <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsTerminalSelected}"
                         Command="{Binding ShowTerminalCommand}" Content="Terminal" />
                 <Button Theme="{StaticResource PanelTabButton}" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Logcat}" Content="Logcat"
-                        Classes.selected="{Binding SelectedPanel, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static vm:BottomPanel.Logcat}}" />
+                        Classes.selected="{Binding SelectedPanel, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static vm:BottomPanel.Logcat}}"
+                        IsVisible="{Binding ShowsLogcatTab}" />
                 <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsSerialMonitorSelected}"
-                        Command="{Binding ShowSerialMonitorCommand}" Content="Serial Monitor" />
+                        Command="{Binding ShowSerialMonitorCommand}" Content="Serial Monitor" IsVisible="{Binding ShowsSerialMonitorTab}" />
               </StackPanel>
               </ScrollViewer>
               <StackPanel Grid.Column="1" Orientation="Horizontal">
@@ -742,7 +752,14 @@
               <views:LocalsView DataContext="{Binding Locals}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsLocalsSelected}" />
               <views:WatchView DataContext="{Binding Watch}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsWatchSelected}" />
               <views:CallStackView DataContext="{Binding CallStack}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsCallStackSelected}" />
-              <Panel IsVisible="{Binding SelectedPanel, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static vm:BottomPanel.Logcat}}"><views:OutputView DataContext="{Binding Logcat}" /></Panel>
+              <Panel x:Name="LogcatPanel" IsVisible="{Binding SelectedPanel, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static vm:BottomPanel.Logcat}}">
+                <views:OutputView DataContext="{Binding Logcat}" />
+                <ScrollViewer IsVisible="{Binding Logcat.IsEmpty}" HorizontalScrollBarVisibility="Disabled">
+                  <controls:EmptyState Icon="{StaticResource Icon.Log}" Title="No log yet" IsCompact="True"
+                                       Message="Run Android App installs the app and follows its log here: its own process, from the debug build."
+                                       ActionText="Run Android App" ActionCommand="{Binding RunAndroidCommand}" />
+                </ScrollViewer>
+              </Panel>
               <toolchainViews:TerminalPanelView DataContext="{Binding Terminal}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsTerminalSelected}" />
               <toolchainViews:SerialMonitorView DataContext="{Binding SerialMonitor}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsSerialMonitorSelected}" />
             </Panel>
@@ -978,14 +995,32 @@
 
     <!-- The in-app dialog that asks for names and confirmations. -->
     <Panel Grid.Row="0" Grid.RowSpan="4" Background="{DynamicResource Brush.Scrim}" IsVisible="{Binding Prompt.IsOpen}">
-      <Border MaxWidth="440" Margin="16" VerticalAlignment="Center" Padding="22" CornerRadius="{StaticResource Radius.Dialog}"
+      <Border x:Name="PromptDialog" MaxWidth="480" Margin="16" VerticalAlignment="Center" Padding="22" CornerRadius="{StaticResource Radius.Dialog}"
               Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
               BoxShadow="{DynamicResource Shadow.Dialog}">
         <StackPanel Spacing="14">
-          <TextBlock Classes="h2" FontSize="15" Text="{Binding Prompt.Title}" />
+          <TextBlock Classes="h2" FontSize="15" Text="{Binding Prompt.Title}" TextWrapping="Wrap" />
           <ScrollViewer MaxHeight="360" HorizontalScrollBarVisibility="Disabled">
             <TextBlock Classes="muted" TextWrapping="Wrap" Text="{Binding Prompt.Message}" />
           </ScrollViewer>
+          <!-- A choice, such as which APK to install: rows to tap rather than a number to type. -->
+          <Border CornerRadius="{StaticResource Radius.Control}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1"
+                  Background="{DynamicResource Brush.Control}" ClipToBounds="True" IsVisible="{Binding Prompt.HasChoices}">
+            <ListBox x:Name="PromptChoices" ItemsSource="{Binding Prompt.Choices}" SelectedIndex="{Binding Prompt.SelectedIndex}" MaxHeight="264"
+                     ItemContainerTheme="{StaticResource ListRow}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+              <ListBox.Styles>
+                <Style Selector="ListBoxItem">
+                  <Setter Property="MinHeight" Value="40" />
+                  <Setter Property="Padding" Value="12,0" />
+                </Style>
+              </ListBox.Styles>
+              <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="sys:String">
+                  <TextBlock Text="{Binding}" TextWrapping="Wrap" Margin="0,8" VerticalAlignment="Center" />
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+          </Border>
           <TextBox x:Name="PromptBox" Classes="large mono" Text="{Binding Prompt.Text}" IsVisible="{Binding Prompt.HasInput}" />
           <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
             <Button Theme="{StaticResource SecondaryButton}" Height="40" Padding="18,0" Content="Cancel" Command="{Binding Prompt.CancelCommand}" />

@@ -288,6 +288,8 @@ public sealed partial class WorkspaceViewModel
             case nameof(SelectedPanel):
                 OnPropertyChanged(nameof(IsTerminalSelected));
                 OnPropertyChanged(nameof(IsSerialMonitorSelected));
+                OnPropertyChanged(nameof(ShowsSerialMonitorTab));
+                OnPropertyChanged(nameof(ShowsLogcatTab));
                 if (IsTerminalSelected)
                 {
                     Terminal.EnsureStarted();

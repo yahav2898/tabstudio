@@ -122,8 +122,11 @@ public sealed partial class AgentPanelViewModel : ObservableObject, IDisposable
     /// <summary>True only for a session with no cloud or MCP transport.</summary>
     public bool IsLocalMode => _settings.LocalMode;
 
-    /// <summary>The explicit on-device privacy indicator.</summary>
-    public string PrivacyBadge => _settings.LocalMode ? "LOCAL · Code and prompts stay on device" : "Claude · Cloud";
+    /// <summary>The explicit on-device privacy indicator, in full: the header's pill's tooltip.</summary>
+    public string PrivacyBadge => _settings.LocalMode ? "Local mode: code and prompts stay on device" : "Cloud mode: prompts go to Claude's API";
+
+    /// <summary>Where the agent runs, in the header's pill: "On device" or "Cloud".</summary>
+    public string PrivacyPill => _settings.LocalMode ? "On device" : "Cloud";
 
     /// <summary>The local model manager.</summary>
     public LocalAIViewModel? LocalAI { get; }
@@ -360,6 +363,7 @@ public sealed partial class AgentPanelViewModel : ObservableObject, IDisposable
         OnPropertyChanged(nameof(HasConfiguredProvider));
         OnPropertyChanged(nameof(IsLocalMode));
         OnPropertyChanged(nameof(PrivacyBadge));
+        OnPropertyChanged(nameof(PrivacyPill));
     }
 
     private void LoadSettingsFields()

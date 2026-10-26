@@ -21,6 +21,14 @@ public sealed partial class SerialMonitorViewModel(ToolchainServices tools, IUiD
     /// <summary>Attached USB devices.</summary>
     public ObservableCollection<UsbDeviceInfo> Devices { get; } = [];
 
+    /// <summary>Whether a USB device is attached.</summary>
+    public bool HasDevices => Devices.Count > 0;
+
+    /// <summary>No device and no session: the monitor says how to attach a board.</summary>
+    public bool ShowsEmptyState => !HasDevices && !IsConnected && Output.IsEmpty;
+
+    partial void OnIsConnectedChanged(bool value) => OnPropertyChanged(nameof(ShowsEmptyState));
+
     /// <summary>Selected USB adapter.</summary>
     [ObservableProperty]
     public partial UsbDeviceInfo? SelectedDevice { get; set; }
@@ -50,6 +58,8 @@ public sealed partial class SerialMonitorViewModel(ToolchainServices tools, IUiD
         Devices.Clear();
         foreach (var device in tools.Usb.Devices) Devices.Add(device);
         SelectedDevice = Devices.FirstOrDefault(d => d.Id == selected) ?? Devices.FirstOrDefault();
+        OnPropertyChanged(nameof(HasDevices));
+        OnPropertyChanged(nameof(ShowsEmptyState));
     }
 
     /// <summary>Connects after the user selects a USB adapter; Android asks for permission.</summary>

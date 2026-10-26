@@ -9,6 +9,7 @@ built, touch targets per form factor, portrait, and the shared components that p
 | [README.md](README.md) | This spec |
 | [tokens.md](tokens.md) | Every color token in both themes, and their contrast |
 | [audit.md](audit.md) | What the IDE looked like at 0.8.0, problem by problem, with the screenshots that show each |
+| [audit-0.16.md](audit-0.16.md) | The panels 0.15 and 0.16 added, checked against this spec in every screen size and theme, before and after |
 | [stage-2.md](stage-2.md) | The next step: the shell rebuilt from the new components, as a precise list of edits, with mockups |
 | [images/](images) | Screenshots of the components and the mockups, both themes, rendered by the tests |
 

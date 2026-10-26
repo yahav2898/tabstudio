@@ -14,10 +14,19 @@ public sealed partial class RemoteExplorerViewModel : ObservableObject, IDisposa
     public RemoteExplorerViewModel(RemoteSshServices services)
     {
         _services = services;
+        Hosts.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasHosts));
         try { foreach (var host in services.Hosts.Load()) { Hosts.Add(host); } }
         catch (Exception ex) when (ex is IOException or System.Text.Json.JsonException) { Status = ex.Message; }
     }
     public ObservableCollection<SshHost> Hosts { get; } = [];
+
+    /// <summary>Whether a host is saved; until one is, the form that adds one is open.</summary>
+    public bool HasHosts => Hosts.Count > 0;
+
+    /// <summary>Whether a public key was made, to copy to the server.</summary>
+    public bool HasPublicKey => PublicKey.Length > 0;
+
+    partial void OnPublicKeyChanged(string value) => OnPropertyChanged(nameof(HasPublicKey));
     public Func<SshHost, string, CancellationToken, Task>? OpenFolder { get; set; }
     public Func<Task>? RefreshFolder { get; set; }
     public Func<CancellationToken, Task>? ReloadFile { get; set; }

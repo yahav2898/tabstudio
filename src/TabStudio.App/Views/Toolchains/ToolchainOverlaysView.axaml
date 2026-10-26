@@ -17,58 +17,51 @@
       <Setter Property="BorderBrush" Value="{DynamicResource Brush.Accent}" />
       <Setter Property="Background" Value="{DynamicResource Brush.Toolchains.Ready}" />
     </Style>
-    <Style Selector="Border.state">
-      <Setter Property="CornerRadius" Value="9" />
-      <Setter Property="Padding" Value="8,1" />
-      <Setter Property="Background" Value="{DynamicResource Brush.Pill}" />
+    <!-- A toolchain's actions: beside its text, or on a narrow screen under it, so the text keeps its width. -->
+    <Style Selector="StackPanel.storeActions">
+      <Setter Property="DockPanel.Dock" Value="Right" />
+      <Setter Property="Margin" Value="14,0,0,0" />
       <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
-    <Style Selector="Border.state > TextBlock">
-      <Setter Property="FontSize" Value="11.5" />
-      <Setter Property="FontWeight" Value="Medium" />
-      <Setter Property="Foreground" Value="{DynamicResource Brush.TextMuted}" />
-    </Style>
-    <Style Selector="Border.state.installed">
-      <Setter Property="Background" Value="{DynamicResource Brush.SuccessSoft}" />
-    </Style>
-    <Style Selector="Border.state.installed > TextBlock">
-      <Setter Property="Foreground" Value="{DynamicResource Brush.Success}" />
-    </Style>
-    <Style Selector="Border.state.update">
-      <Setter Property="Background" Value="{DynamicResource Brush.Toolchains.Attention}" />
-    </Style>
-    <Style Selector="Border.state.update > TextBlock">
-      <Setter Property="Foreground" Value="{DynamicResource Brush.Warning}" />
-    </Style>
-    <Style Selector="Border.state.busy">
-      <Setter Property="Background" Value="{DynamicResource Brush.AccentSoft}" />
-    </Style>
-    <Style Selector="Border.state.busy > TextBlock">
-      <Setter Property="Foreground" Value="{DynamicResource Brush.AccentText}" />
+    <Style Selector="Border.store.narrow StackPanel.storeActions">
+      <Setter Property="DockPanel.Dock" Value="Bottom" />
+      <Setter Property="HorizontalAlignment" Value="Left" />
+      <Setter Property="Margin" Value="0,10,0,0" />
     </Style>
     <Style Selector="ProgressBar.install">
       <Setter Property="Foreground" Value="{DynamicResource Brush.Accent}" />
       <Setter Property="Background" Value="{DynamicResource Brush.Control}" />
       <Setter Property="MinHeight" Value="5" />
       <Setter Property="Height" Value="5" />
-      <Setter Property="CornerRadius" Value="3" />
+      <Setter Property="CornerRadius" Value="2.5" />
     </Style>
   </UserControl.Styles>
 
   <Panel>
-    <Border IsVisible="{Binding ServerNotice, Converter={x:Static ObjectConverters.IsNotNull}}" MaxWidth="430" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="12,45,20,0"
-            Padding="16,14" CornerRadius="10" Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1" ZIndex="2">
-      <StackPanel Spacing="10" DataContext="{Binding ServerNotice}" x:DataType="vm:ServerNoticeViewModel">
-        <TextBlock Text="{Binding Title}" FontWeight="SemiBold" />
-        <StackPanel Orientation="Horizontal" Spacing="8">
-          <Button Content="Open in preview" Command="{Binding OpenPreview}" Theme="{StaticResource AccentButton}" />
-          <Button Content="Open in browser" Command="{Binding OpenBrowser}" Theme="{StaticResource SecondaryButton}" />
-          <Button Content="×" Command="{Binding Dismiss}" ToolTip.Tip="Dismiss" Theme="{StaticResource ToolButton}" />
-        </StackPanel>
-      </StackPanel>
+    <!-- The notices, one under the other below the toolbar at the top right, so they never cover each other or Run. -->
+    <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Margin="16,98,20,0" Spacing="10" ZIndex="2">
+    <!-- A program listens on a port: open it in the web preview or the browser. -->
+    <Border x:Name="ServerNotice" IsVisible="{Binding ServerNotice, Converter={x:Static ObjectConverters.IsNotNull}}" MaxWidth="390"
+            Padding="16,12,8,14" CornerRadius="{StaticResource Radius.Card}" Background="{DynamicResource Brush.Popup}"
+            BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1" BoxShadow="{DynamicResource Shadow.Popup}">
+      <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,*,Auto" DataContext="{Binding ServerNotice}" x:DataType="vm:ServerNoticeViewModel">
+        <Border Width="30" Height="30" CornerRadius="{StaticResource Radius.Button}" Background="{DynamicResource Brush.AccentSoft}" Margin="0,2,12,0" VerticalAlignment="Top">
+          <controls:StrokeIcon Data="{StaticResource Icon.Globe}" Size="16" Foreground="{DynamicResource Brush.AccentText}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Border>
+        <TextBlock Grid.Column="1" Text="{Binding Title}" FontWeight="SemiBold" FontSize="14" Foreground="{DynamicResource Brush.TextBright}"
+                   TextWrapping="Wrap" VerticalAlignment="Center" />
+        <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Width="36" Height="36" MinWidth="36" MinHeight="36" Padding="0" Margin="6,-2,0,0"
+                VerticalAlignment="Top" ToolTip.Tip="Dismiss" Command="{Binding Dismiss}">
+          <controls:StrokeIcon Data="{StaticResource Icon.Close}" Size="14" />
+        </Button>
+        <WrapPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,10,0,0">
+          <Button Theme="{StaticResource AccentButton}" Height="36" MinHeight="36" Padding="14,0" Margin="0,0,8,0" Content="Open in Preview" Command="{Binding OpenPreview}" />
+          <Button Theme="{StaticResource SecondaryButton}" Height="36" MinHeight="36" Padding="14,0" Content="Open in Browser" Command="{Binding OpenBrowser}" />
+        </WrapPanel>
+      </Grid>
     </Border>
     <!-- An offer about the startup project: install its toolchain, or its packages. -->
-    <Border IsVisible="{Binding HasToolchainNotice}" Width="390" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,98,20,0"
+    <Border IsVisible="{Binding HasToolchainNotice}" Width="390"
             Padding="16,14" CornerRadius="10" Background="{DynamicResource Brush.Popup}"
             BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1" BoxShadow="{DynamicResource Shadow.Popup}">
       <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,*,Auto" DataContext="{Binding ToolchainNotice}" x:DataType="vm:ToolchainNoticeViewModel">
@@ -88,10 +81,12 @@
         </StackPanel>
       </Grid>
     </Border>
+    </StackPanel>
 
     <!-- The Toolchain Store. -->
     <Panel Background="{DynamicResource Brush.Scrim}" IsVisible="{Binding ToolchainStore.IsOpen}">
-      <Border MaxWidth="860" MaxHeight="680" Margin="28" HorizontalAlignment="Stretch" VerticalAlignment="Center" CornerRadius="14"
+      <Border x:Name="Store" Classes="store" MaxWidth="860" MaxHeight="680" Margin="28" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+              CornerRadius="{StaticResource Radius.Dialog}"
               Background="{DynamicResource Brush.Popup}" BorderBrush="{DynamicResource Brush.BorderPopup}" BorderThickness="1"
               BoxShadow="{DynamicResource Shadow.Dialog}">
         <Grid RowDefinitions="Auto,Auto,*,Auto" DataContext="{Binding ToolchainStore}" x:DataType="vm:ToolchainStoreViewModel">
@@ -102,7 +97,7 @@
             </Border>
             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
               <TextBlock Classes="h2" FontSize="18" Text="Toolchain Store" />
-              <TextBlock Classes="muted" FontSize="12.5" Text="{Binding Subtitle}" TextTrimming="CharacterEllipsis" />
+              <TextBlock Classes="muted" FontSize="12.5" Text="{Binding Subtitle}" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Subtitle}" />
             </StackPanel>
             <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Width="36" Height="36" MinWidth="36" MinHeight="36" Padding="0"
                     VerticalAlignment="Top" ToolTip.Tip="Close" Command="{Binding CloseCommand}">
@@ -133,10 +128,16 @@
                       <Border DockPanel.Dock="Left" Width="46" Height="46" CornerRadius="11" Background="{Binding BadgeBrush}" VerticalAlignment="Top" Margin="0,2,14,0">
                         <TextBlock Text="{Binding Badge}" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource Brush.OnAccent}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                       </Border>
-                      <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="8" Margin="14,0,0,0" VerticalAlignment="Center">
-                        <Button Theme="{StaticResource AccentButton}" Height="36" MinHeight="36" Padding="16,0" IsVisible="{Binding ShowsInstall}" Command="{Binding InstallCommand}">
+                      <StackPanel Classes="storeActions" Orientation="Horizontal" Spacing="8">
+                        <Button Theme="{StaticResource AccentButton}" Height="36" MinHeight="36" Padding="16,0" IsVisible="{Binding ShowsPrimaryInstall}" Command="{Binding InstallCommand}">
                           <StackPanel Orientation="Horizontal" Spacing="7">
                             <controls:StrokeIcon Data="{StaticResource Icon.Download}" Size="14" Foreground="{DynamicResource Brush.OnAccent}" />
+                            <TextBlock Text="Install" VerticalAlignment="Center" />
+                          </StackPanel>
+                        </Button>
+                        <Button Theme="{StaticResource SecondaryButton}" Height="36" MinHeight="36" Padding="16,0" IsVisible="{Binding ShowsSecondaryInstall}" Command="{Binding InstallCommand}">
+                          <StackPanel Orientation="Horizontal" Spacing="7">
+                            <controls:StrokeIcon Data="{StaticResource Icon.Download}" Size="14" />
                             <TextBlock Text="Install" VerticalAlignment="Center" />
                           </StackPanel>
                         </Button>
@@ -148,11 +149,12 @@
                         <StackPanel Orientation="Horizontal" Spacing="10">
                           <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="15" Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" />
                           <TextBlock Text="{Binding VersionText}" Classes="mono muted" FontSize="12.5" VerticalAlignment="Center" />
-                          <Border Classes="state" Classes.installed="{Binding IsInstalled}" Classes.update="{Binding HasUpdate}" Classes.busy="{Binding IsBusy}">
+                          <Border Classes="pill" Classes.success="{Binding IsInstalled}" Classes.warning="{Binding HasUpdate}" Classes.ready="{Binding IsBusy}">
                             <TextBlock Text="{Binding StateText}" />
                           </Border>
                         </StackPanel>
-                        <TextBlock Text="{Binding Description}" Classes="muted" FontSize="12.5" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Text="{Binding Description}" Classes="muted" FontSize="12.5" TextWrapping="Wrap" MaxLines="3" TextTrimming="CharacterEllipsis"
+                                   ToolTip.Tip="{Binding Description}" />
                         <TextBlock FontSize="12" Foreground="{DynamicResource Brush.TextLabel}" TextWrapping="Wrap">
                           <Run Text="{Binding Languages}" />
                           <Run Text="  ·  " Foreground="{DynamicResource Brush.TextDisabled}" />
@@ -160,7 +162,7 @@
                         </TextBlock>
                         <StackPanel Spacing="5" Margin="0,6,0,0" IsVisible="{Binding HasProgress}">
                           <ProgressBar Classes="install" Minimum="0" Maximum="100" Value="{Binding Progress}" IsIndeterminate="{Binding IsProgressIndeterminate}" />
-                          <TextBlock Classes="muted small" Text="{Binding ProgressText}" TextTrimming="CharacterEllipsis" />
+                          <TextBlock Classes="muted small" Text="{Binding ProgressText}" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding ProgressText}" />
                         </StackPanel>
                         <Grid ColumnDefinitions="Auto,*" Margin="0,4,0,0" IsVisible="{Binding HasError}">
                           <controls:StrokeIcon Data="{StaticResource Icon.Error}" Size="13" Margin="0,1,6,0" Foreground="{DynamicResource Brush.Error}" VerticalAlignment="Top" />
@@ -179,7 +181,7 @@
           <Border Grid.Row="3" Margin="0,14,0,0" Padding="22,12" BorderBrush="{DynamicResource Brush.Divider}" BorderThickness="0,1,0,0">
             <Grid ColumnDefinitions="Auto,*,Auto">
               <controls:StrokeIcon Data="{StaticResource Icon.Solution}" Size="14" Margin="0,0,10,0" Foreground="{DynamicResource Brush.TextMuted}" VerticalAlignment="Center" />
-              <TextBlock Grid.Column="1" VerticalAlignment="Center" FontSize="12.5" TextTrimming="CharacterEllipsis">
+              <TextBlock Grid.Column="1" VerticalAlignment="Center" FontSize="12.5" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding DiskUsageText}">
                 <Run Text="{Binding DiskUsageText}" Foreground="{DynamicResource Brush.TextSecondary}" />
                 <Run Text="   " />
                 <Run Text="{Binding FreeSpaceText}" Foreground="{DynamicResource Brush.TextMuted}" />

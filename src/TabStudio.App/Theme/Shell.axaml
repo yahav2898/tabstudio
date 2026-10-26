@@ -49,7 +49,7 @@
             <TextBlock DockPanel.Dock="Left" Text="{TemplateBinding Title}" FontSize="12.5" FontWeight="SemiBold"
                        Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center" />
             <TextBlock Text="{TemplateBinding Subtitle}" FontSize="12" Margin="8,0,0,0" Foreground="{DynamicResource Brush.TextMuted}"
-                       VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                       VerticalAlignment="Center" TextTrimming="CharacterEllipsis" ToolTip.Tip="{TemplateBinding Subtitle}" />
           </DockPanel>
         </Border>
       </ControlTemplate>

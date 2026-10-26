@@ -216,7 +216,8 @@ public sealed class RemoteSshTests
         await main.OpenWorkspaceAsync(project);
         var workspace = main.Workspace!;
         var publish = workspace.PublishToServerCommand.ExecuteAsync(null);
-        foreach (var title in new[] { "Publish to server", "Publish destination", "systemd service", "Server runtime", "Publish to " + SshTestServer.Host.Name + "?" })
+        // The host, the folder, the service and the runtime, each with the saved profile's answer, then the confirmation.
+        foreach (var title in new[] { "Publish to server", "Publish to server", "Publish to server", "Publish to server", "Publish to " + SshTestServer.Host.Name + "?" })
         {
             await UiTestHelpers.WaitUntilAsync(() => workspace.Prompt.IsOpen && workspace.Prompt.Title == title, TimeSpan.FromSeconds(30), title);
             workspace.Prompt.ConfirmCommand.Execute(null);

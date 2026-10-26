@@ -103,7 +103,7 @@ public sealed partial class LocalAIViewModel : ObservableObject, IDisposable
     }
 
     [RelayCommand]
-    private async Task UnloadAsync() { await _service.UnloadAsync(); ProgressText = "Model unloaded; RAM released."; }
+    private async Task UnloadAsync() { await _service.UnloadAsync(); ProgressText = "The model is unloaded, and its memory is free."; }
 
     /// <inheritdoc />
     public void Dispose()

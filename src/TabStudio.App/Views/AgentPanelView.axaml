@@ -21,71 +21,129 @@
   </UserControl.Styles>
 
   <DockPanel>
-    <!-- Header: the model and the tokens used so far, under the title -->
-    <Grid DockPanel.Dock="Top" MinHeight="44" Margin="12,4,6,4" ColumnDefinitions="Auto,*,Auto,Auto">
-      <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="16" Foreground="{DynamicResource Brush.Accent}" VerticalAlignment="Center" />
-      <StackPanel Grid.Column="1" Margin="8,0" VerticalAlignment="Center">
-        <TextBlock Classes="header" Text="Agent" />
-        <TextBlock Classes="muted small" Text="{Binding PrivacyBadge}" TextWrapping="Wrap" />
-        <TextBlock Classes="muted small" TextTrimming="CharacterEllipsis">
-          <Run Text="{Binding ModelLabel}" />
-          <Run Text="{Binding UsageSuffix}" />
-        </TextBlock>
-      </StackPanel>
-      <Button Grid.Column="2" Theme="{StaticResource ToolButton}" ToolTip.Tip="New conversation" Command="{Binding NewConversationCommand}">
-        <controls:StrokeIcon Data="{StaticResource Icon.NewFile}" Size="15" />
-      </Button>
-      <Button Grid.Column="3" Theme="{StaticResource ToolButton}" ToolTip.Tip="Agent settings" Command="{Binding OpenSettingsCommand}">
-        <controls:StrokeIcon Data="{StaticResource Icon.Gear}" Size="15" />
-      </Button>
-    </Grid>
+    <!-- Header: where the agent runs, and the model and the tokens used so far, under the title -->
+    <Border DockPanel.Dock="Top" MinHeight="44" Padding="12,4,4,4" BorderBrush="{DynamicResource Brush.Divider}" BorderThickness="0,0,0,1">
+      <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+        <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="16" Foreground="{DynamicResource Brush.AccentText}" VerticalAlignment="Center" />
+        <StackPanel Grid.Column="1" Margin="8,0" VerticalAlignment="Center" Spacing="2">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <TextBlock Classes="header" Text="Agent" />
+            <Border Classes="pill" Classes.ready="{Binding IsLocalMode}" ToolTip.Tip="{Binding PrivacyBadge}">
+              <TextBlock Text="{Binding PrivacyPill}" />
+            </Border>
+          </StackPanel>
+          <TextBlock Classes="muted small" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding ModelLabel}">
+            <Run Text="{Binding ModelLabel}" />
+            <Run Text="{Binding UsageSuffix}" />
+          </TextBlock>
+        </StackPanel>
+        <Button Grid.Column="2" Theme="{StaticResource ToolButton}" ToolTip.Tip="New Conversation" Command="{Binding NewConversationCommand}">
+          <controls:StrokeIcon Data="{StaticResource Icon.NewFile}" Size="16" />
+        </Button>
+        <Button Grid.Column="3" Theme="{StaticResource ToolButton}" ToolTip.Tip="Agent Settings" Command="{Binding OpenSettingsCommand}"
+                Classes.selected="{Binding IsSettingsOpen}">
+          <controls:StrokeIcon Data="{StaticResource Icon.Gear}" Size="16" />
+        </Button>
+      </Grid>
+    </Border>
 
-    <!-- Settings -->
-    <ScrollViewer IsVisible="{Binding IsSettingsOpen}">
-      <StackPanel Margin="14,6,14,14" Spacing="10">
+    <!--
+      Settings: where the agent runs (Claude with an API key, or a model on this device), the on-device model that also
+      writes inline completions, the instructions for every conversation and the MCP servers, then Save.
+    -->
+    <ScrollViewer x:Name="Settings" IsVisible="{Binding IsSettingsOpen}" HorizontalScrollBarVisibility="Disabled">
+      <ScrollViewer.Styles>
+        <Style Selector="TextBox, ComboBox">
+          <Setter Property="MinHeight" Value="36" />
+        </Style>
+        <Style Selector="CheckBox">
+          <Setter Property="MinHeight" Value="36" />
+        </Style>
+        <Style Selector="Button.action">
+          <Setter Property="MinHeight" Value="36" />
+          <Setter Property="Padding" Value="14,0" />
+        </Style>
+      </ScrollViewer.Styles>
+      <StackPanel Margin="12,12,12,16" Spacing="8">
         <TextBlock Classes="h2" Text="Agent settings" />
-        <CheckBox Content="Local mode · on-device AI" IsChecked="{Binding UseLocalMode}" />
-        <TextBlock Classes="muted small" TextWrapping="Wrap" Text="Local mode uses a downloaded model with file reading and change proposals. It has no cloud, MCP, shell or network tools. Downloads below contact Hugging Face; inference stays offline." />
-        <StackPanel DataContext="{Binding LocalAI}" x:DataType="agent:LocalAIViewModel" Spacing="8" IsEnabled="{Binding !IsBusy}">
-          <TextBlock Classes="label" Text="Local AI models" />
-          <ComboBox ItemsSource="{Binding Models}" SelectedItem="{Binding SelectedModel}" HorizontalAlignment="Stretch">
-            <ComboBox.ItemTemplate><DataTemplate x:DataType="local:LocalModel"><TextBlock Text="{Binding Name}" /></DataTemplate></ComboBox.ItemTemplate>
-          </ComboBox>
-          <TextBlock Text="{Binding Details}" TextWrapping="Wrap" Classes="muted small" />
-          <TextBlock Text="{Binding Status}" TextWrapping="Wrap" Classes="muted small" />
-          <CheckBox Content="Inline completions · Tab to accept" IsChecked="{Binding InlineEnabled}" />
-          <Expander Header="Read the model license" HorizontalAlignment="Stretch">
-            <ScrollViewer MaxHeight="260"><TextBlock Text="{Binding LicenseText}" TextWrapping="Wrap" FontSize="11" Foreground="{DynamicResource Brush.Text}" /></ScrollViewer>
-          </Expander>
-          <CheckBox Content="I accept this model's license" IsChecked="{Binding LicenseAccepted}" />
-          <WrapPanel>
-            <Button Content="Download" Command="{Binding DownloadCommand}" Margin="0,0,6,6" />
-            <Button Content="Delete" Command="{Binding DeleteCommand}" Margin="0,0,6,6" />
-            <Button Content="Unload from RAM" Command="{Binding UnloadCommand}" Margin="0,0,6,6" />
-          </WrapPanel>
-          <TextBlock Text="{Binding ProgressText}" TextWrapping="Wrap" Classes="muted small" />
-        </StackPanel>
-        <Button Content="Cancel model download" Command="{Binding LocalAI.CancelDownloadCommand}" IsVisible="{Binding LocalAI.IsBusy}" />
+        <CheckBox Content="Local mode: a model on this device" IsChecked="{Binding UseLocalMode}" />
+        <TextBlock Classes="muted small" TextWrapping="Wrap" IsVisible="{Binding UseLocalMode}"
+                   Text="The local agent reads files and proposes changes, offline. It has no cloud, MCP, shell or network tools." />
         <StackPanel Spacing="8" IsVisible="{Binding !UseLocalMode}">
-        <TextBlock Classes="muted small" TextWrapping="Wrap"
-                   Text="The agent uses your own Claude API key, from console.anthropic.com. It is kept in TabStudio's private storage on this device and sent only to Claude's API." />
-        <TextBlock Classes="label" Text="API key" />
-        <TextBox Classes="mono" PasswordChar="•" Watermark="sk-ant-..." Text="{Binding ApiKeyText}" />
-        <TextBlock Classes="label" Text="Model" />
-        <ComboBox ItemsSource="{Binding Models}" SelectedItem="{Binding SelectedModel}" HorizontalAlignment="Stretch" />
+          <TextBlock Classes="muted small" TextWrapping="Wrap"
+                     Text="The agent uses your own Claude API key, from console.anthropic.com. It is kept in TabStudio's private storage on this device and sent only to Claude's API." />
+          <TextBlock Classes="label" Text="API key" />
+          <TextBox Classes="mono" PasswordChar="•" Watermark="sk-ant-..." Text="{Binding ApiKeyText}" AutomationProperties.Name="API key" />
+          <TextBlock Classes="label" Text="Model" />
+          <ComboBox ItemsSource="{Binding Models}" SelectedItem="{Binding SelectedModel}" HorizontalAlignment="Stretch" AutomationProperties.Name="Model" />
         </StackPanel>
-        <TextBlock Classes="label" Text="Instructions for every conversation" />
-        <TextBox AcceptsReturn="True" TextWrapping="Wrap" MinHeight="70" Watermark="For example: Use file-scoped namespaces. Write xUnit tests." Text="{Binding InstructionsText}" />
+
+        <!-- The on-device model: the local agent's, and inline completions' in any mode. -->
+        <StackPanel Spacing="8" IsVisible="{Binding LocalAI, Converter={x:Static ObjectConverters.IsNotNull}}">
+        <TextBlock Classes="h2" Text="On-device model" Margin="0,8,0,0" />
+        <StackPanel DataContext="{Binding LocalAI}" x:DataType="agent:LocalAIViewModel" Spacing="8">
+          <TextBlock Classes="muted small" TextWrapping="Wrap"
+                     Text="Downloads come from Hugging Face; the model then runs offline. It writes inline completions, and the agent's answers in local mode." />
+          <StackPanel Spacing="8" IsEnabled="{Binding !IsBusy}">
+            <ComboBox ItemsSource="{Binding Models}" SelectedItem="{Binding SelectedModel}" HorizontalAlignment="Stretch" AutomationProperties.Name="On-device model">
+              <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="local:LocalModel">
+                  <TextBlock Text="{Binding Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Name}" />
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+            <TextBlock Text="{Binding Details}" TextWrapping="Wrap" Classes="muted small" />
+            <TextBlock Text="{Binding Status}" TextWrapping="Wrap" Classes="small"
+                       IsVisible="{Binding Status, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+            <CheckBox Content="Inline completions: Tab accepts" IsChecked="{Binding InlineEnabled}" />
+            <Expander Header="The model's license" HorizontalAlignment="Stretch">
+              <ScrollViewer MaxHeight="260">
+                <TextBlock Text="{Binding LicenseText}" TextWrapping="Wrap" Classes="small" />
+              </ScrollViewer>
+            </Expander>
+            <CheckBox Content="I accept the model's license" IsChecked="{Binding LicenseAccepted}" />
+            <WrapPanel>
+              <Button Theme="{StaticResource SecondaryButton}" Classes="action" Margin="0,0,8,8" Command="{Binding DownloadCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <controls:StrokeIcon Data="{StaticResource Icon.Download}" Size="14" VerticalAlignment="Center" />
+                  <TextBlock Text="Download" VerticalAlignment="Center" />
+                </StackPanel>
+              </Button>
+              <Button Theme="{StaticResource SecondaryButton}" Classes="action" Margin="0,0,8,8" Content="Unload from Memory" Command="{Binding UnloadCommand}" />
+              <Button Theme="{StaticResource SecondaryButton}" Classes="action" Margin="0,0,8,8" Command="{Binding DeleteCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <controls:StrokeIcon Data="{StaticResource Icon.Trash}" Size="14" VerticalAlignment="Center" />
+                  <TextBlock Text="Delete" VerticalAlignment="Center" />
+                </StackPanel>
+              </Button>
+            </WrapPanel>
+          </StackPanel>
+          <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8" IsVisible="{Binding IsBusy}">
+            <controls:LoadingState IsInline="True" Message="{Binding ProgressText}" HorizontalAlignment="Left" />
+            <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Classes="action" Content="Cancel" Command="{Binding CancelDownloadCommand}" />
+          </Grid>
+          <Panel IsVisible="{Binding !IsBusy}">
+            <TextBlock Text="{Binding ProgressText}" TextWrapping="Wrap" Classes="muted small"
+                       IsVisible="{Binding ProgressText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+          </Panel>
+        </StackPanel>
+        </StackPanel>
+
+        <TextBlock Classes="h2" Text="Every conversation" Margin="0,8,0,0" />
+        <TextBlock Classes="label" Text="Instructions" />
+        <TextBox AcceptsReturn="True" TextWrapping="Wrap" MinHeight="72" Watermark="For example: Use file-scoped namespaces. Write xUnit tests."
+                 Text="{Binding InstructionsText}" AutomationProperties.Name="Instructions" />
         <StackPanel Spacing="8" IsVisible="{Binding !UseLocalMode}">
-        <TextBlock Classes="label" Text="MCP servers" />
-        <TextBlock Classes="muted small" TextWrapping="Wrap" Text="One per line: a name, the server's https address, and a token if it needs one. Their tools become the agent's tools." />
-        <TextBox Classes="mono" AcceptsReturn="True" MinHeight="60" Watermark="issues https://mcp.example.com/mcp" Text="{Binding McpServersText}" />
+          <TextBlock Classes="label" Text="MCP servers" />
+          <TextBlock Classes="muted small" TextWrapping="Wrap" Text="One per line: a name, the server's https address, and a token if it needs one. Their tools become the agent's tools." />
+          <TextBox Classes="mono" AcceptsReturn="True" MinHeight="64" Watermark="issues https://mcp.example.com/mcp" Text="{Binding McpServersText}"
+                   AutomationProperties.Name="MCP servers" />
         </StackPanel>
         <TextBlock Foreground="{DynamicResource Brush.Error}" TextWrapping="Wrap" Text="{Binding ErrorText}"
                    IsVisible="{Binding ErrorText, Converter={x:Static ObjectConverters.IsNotNull}}" />
-        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
-          <Button Theme="{StaticResource SecondaryButton}" Content="Cancel" Command="{Binding CancelSettingsCommand}" IsVisible="{Binding HasConfiguredProvider}" />
-          <Button Theme="{StaticResource AccentButton}" Content="Save" Command="{Binding SaveSettingsCommand}" />
+        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right" Margin="0,4,0,0">
+          <Button Theme="{StaticResource SecondaryButton}" Classes="action" Content="Cancel" Command="{Binding CancelSettingsCommand}" IsVisible="{Binding HasConfiguredProvider}" />
+          <Button Theme="{StaticResource AccentButton}" Classes="action" Content="Save" Command="{Binding SaveSettingsCommand}" />
         </StackPanel>
       </StackPanel>
     </ScrollViewer>

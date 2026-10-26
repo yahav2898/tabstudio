@@ -1,35 +1,83 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
              xmlns:vm="using:TabStudio.App.ViewModels"
              xmlns:port="using:TabStudio.Porting"
-             x:Class="TabStudio.App.Views.PortSummaryView" x:DataType="vm:PortSummaryViewModel">
-  <ScrollViewer>
-    <StackPanel Margin="24" Spacing="16">
-      <TextBlock Text="Port to Avalonia" Classes="muted" />
-      <TextBlock Text="{Binding Title}" FontSize="23" FontWeight="SemiBold" TextWrapping="Wrap" />
-      <TextBlock Text="{Binding Summary}" />
-      <TextBlock Text="The converted project is now the startup project. Press F5 to run it beside your code." TextWrapping="Wrap" />
-      <StackPanel Orientation="Horizontal" Spacing="12" IsEnabled="{Binding !IsUndone}">
-        <Button Content="Send notes to Agent" Command="{Binding SendNotesCommand}" />
-        <Button Content="Undo port" Command="{Binding UndoCommand}" />
+             x:Class="TabStudio.App.Views.PortSummaryView" x:DataType="vm:PortSummaryViewModel"
+             Background="{DynamicResource Brush.Window}">
+  <!--
+    The summary a port to Avalonia opens: what was converted, the converted project's next step (F5), the port's notes
+    as cards that open their line, and the port's actions, on the type scale and grid of docs/design/README.md.
+  -->
+  <UserControl.Styles>
+    <Style Selector="Button.action">
+      <Setter Property="MinHeight" Value="36" />
+      <Setter Property="Padding" Value="14,0" />
+    </Style>
+  </UserControl.Styles>
+
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+    <StackPanel Margin="24,20" Spacing="12" MaxWidth="880" HorizontalAlignment="Left">
+      <StackPanel Orientation="Horizontal" Spacing="6">
+        <controls:StrokeIcon Data="{StaticResource Icon.Window}" Size="14" Foreground="{DynamicResource Brush.TextMuted}" VerticalAlignment="Center" />
+        <TextBlock Classes="label" Text="Port to Avalonia" VerticalAlignment="Center" />
       </StackPanel>
-      <TextBlock Text="Port notes" FontSize="17" FontWeight="SemiBold" />
-      <TextBlock Text="Each note names what could not be mapped exactly and why. Select a note to open its line. Agent changes are proposals for your review." Classes="muted" TextWrapping="Wrap" />
+      <TextBlock Classes="h1" Text="{Binding Title}" TextWrapping="Wrap" />
+      <WrapPanel>
+        <Border Classes="pill" Margin="0,0,6,6">
+          <TextBlock Text="{Binding FilesText}" />
+        </Border>
+        <Border Classes="pill" Margin="0,0,6,6">
+          <TextBlock Text="{Binding ConversionsText}" />
+        </Border>
+        <Border Classes="pill" Classes.ready="{Binding HasNotes}" Margin="0,0,6,6">
+          <TextBlock Text="{Binding NotesText}" />
+        </Border>
+      </WrapPanel>
+      <TextBlock Text="The converted project is now the startup project. Press F5 to run it in the app preview, beside your code."
+                 TextWrapping="Wrap" />
+      <WrapPanel IsEnabled="{Binding !IsUndone}">
+        <Button Theme="{StaticResource SecondaryButton}" Classes="action" Margin="0,0,8,8" Command="{Binding SendNotesCommand}" IsVisible="{Binding HasNotes}">
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <controls:StrokeIcon Data="{StaticResource Icon.Agent}" Size="14" VerticalAlignment="Center" />
+            <TextBlock Text="Send Notes to Agent" VerticalAlignment="Center" />
+          </StackPanel>
+        </Button>
+        <Button Theme="{StaticResource SecondaryButton}" Classes="action" Margin="0,0,8,8" Command="{Binding UndoCommand}">
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <controls:StrokeIcon Data="{StaticResource Icon.Undo}" Size="14" VerticalAlignment="Center" />
+            <TextBlock Text="Undo Port" VerticalAlignment="Center" />
+          </StackPanel>
+        </Button>
+      </WrapPanel>
+      <Border Padding="12,10" CornerRadius="{StaticResource Radius.Card}" Background="{DynamicResource Brush.Notice.Info}"
+              BorderBrush="{DynamicResource Brush.Notice.InfoBorder}" BorderThickness="1" IsVisible="{Binding IsUndone}">
+        <TextBlock Text="The port was undone: the converted project is no longer in the solution. The original project is unchanged." TextWrapping="Wrap" />
+      </Border>
+
+      <TextBlock Classes="h2" Text="Port notes" Margin="0,12,0,0" IsVisible="{Binding HasNotes}" />
+      <TextBlock Classes="muted" TextWrapping="Wrap" IsVisible="{Binding HasNotes}"
+                 Text="Each note says what could not be mapped exactly, and why. Tap one to open its line. The agent's changes are proposals for you to review." />
       <ItemsControl ItemsSource="{Binding Notes}" IsEnabled="{Binding !IsUndone}">
         <ItemsControl.ItemTemplate>
           <DataTemplate DataType="port:PortNote">
-            <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="0,0,0,8" Padding="12"
+            <Button Theme="{StaticResource CardButton}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Margin="0,0,0,8" Padding="14,10"
                     Command="{Binding $parent[UserControl].((vm:PortSummaryViewModel)DataContext).OpenNoteCommand}" CommandParameter="{Binding}">
               <StackPanel Spacing="4">
-                <TextBlock Text="{Binding File}" FontWeight="SemiBold" />
-                <TextBlock Text="{Binding Line, StringFormat='Line {0}'}" Classes="muted" />
-                <TextBlock Text="{Binding What}" TextWrapping="Wrap" />
-                <TextBlock Text="{Binding Why}" TextWrapping="Wrap" Classes="muted" />
+                <Grid ColumnDefinitions="*,Auto">
+                  <TextBlock Text="{Binding File}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis"
+                             ToolTip.Tip="{Binding File}" VerticalAlignment="Center" />
+                  <TextBlock Grid.Column="1" Text="{Binding Line, StringFormat='Line {0}'}" Classes="small muted" Margin="8,0,0,0" VerticalAlignment="Center" />
+                </Grid>
+                <TextBlock Text="{Binding What}" TextWrapping="Wrap" FontFamily="{DynamicResource CodeFont}" FontSize="12" />
+                <TextBlock Text="{Binding Why}" TextWrapping="Wrap" Classes="small muted" />
               </StackPanel>
             </Button>
           </DataTemplate>
         </ItemsControl.ItemTemplate>
       </ItemsControl>
+      <controls:EmptyState Icon="{StaticResource Icon.Check}" Title="Nothing to review" IsCompact="True" HorizontalAlignment="Left"
+                           Message="Every part of the project mapped to Avalonia exactly." IsVisible="{Binding !HasNotes}" />
     </StackPanel>
   </ScrollViewer>
 </UserControl>

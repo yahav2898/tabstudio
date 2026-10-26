@@ -1,20 +1,82 @@
 <UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
              xmlns:vm="using:TabStudio.App.ViewModels" xmlns:views="using:TabStudio.App.Views"
              x:Class="TabStudio.App.Views.Toolchains.SerialMonitorView" x:DataType="vm:SerialMonitorViewModel">
+  <!--
+    View > Serial Monitor, in the bottom dock beside the Output: a toolbar with the USB device, its speed (and under it
+    the interface), Refresh and Connect, the board's output, and the line to send. With no device attached it says how to attach one.
+  -->
+  <UserControl.Styles>
+    <Style Selector="TextBox, ComboBox">
+      <Setter Property="MinHeight" Value="36" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Button.tool">
+      <Setter Property="MinHeight" Value="36" />
+      <Setter Property="Height" Value="36" />
+      <Setter Property="Padding" Value="12,0" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Button.icon">
+      <Setter Property="Width" Value="36" />
+      <Setter Property="MinWidth" Value="36" />
+      <Setter Property="Padding" Value="0" />
+    </Style>
+  </UserControl.Styles>
+
   <DockPanel>
-    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="8,4">
-      <ComboBox ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}" MinWidth="210" MaxWidth="360" IsEnabled="{Binding !IsConnected}" />
-      <TextBox Text="{Binding Baud}" Watermark="Baud" Width="90" IsEnabled="{Binding !IsConnected}" />
-      <TextBox Text="{Binding Interface}" Watermark="Port" Width="65" IsEnabled="{Binding !IsConnected}" />
-      <Button Content="Refresh" Command="{Binding RefreshCommand}" IsEnabled="{Binding !IsConnected}" />
-      <Button Content="Connect" Command="{Binding ConnectCommand}" IsVisible="{Binding !IsConnected}" />
-      <Button Content="Disconnect" Command="{Binding DisconnectCommand}" IsVisible="{Binding IsConnected}" />
-      <TextBlock Text="8-N-1" VerticalAlignment="Center" Classes="muted" />
-    </StackPanel>
-    <Grid DockPanel.Dock="Bottom" ColumnDefinitions="*,Auto" Margin="8,4">
-      <TextBox Text="{Binding Input}" Watermark="Send a UTF-8 line (LF)" IsEnabled="{Binding IsConnected}" />
-      <Button Grid.Column="1" Content="Send" Command="{Binding SendCommand}" IsEnabled="{Binding IsConnected}" Margin="8,0,0,0" />
-    </Grid>
-    <views:OutputView DataContext="{Binding Output}" />
+    <Border DockPanel.Dock="Top" Padding="12,4" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+      <!-- One row on every screen: the device takes the room left; the speed and interface are under the speed's button. -->
+      <Grid ColumnSpacing="8">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" MaxWidth="360" />
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="0.001*" />
+        </Grid.ColumnDefinitions>
+        <ComboBox ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}" MinWidth="110" HorizontalAlignment="Stretch"
+                  IsEnabled="{Binding !IsConnected}" PlaceholderText="No device" AutomationProperties.Name="USB device"
+                  ToolTip.Tip="The board's USB serial adapter" />
+        <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Classes="tool" Padding="10,0" IsEnabled="{Binding !IsConnected}"
+                ToolTip.Tip="Speed and interface; 8 data bits, no parity, 1 stop bit (8-N-1)">
+          <TextBlock Text="{Binding Baud}" VerticalAlignment="Center" />
+          <Button.Flyout>
+            <Flyout Placement="BottomEdgeAlignedLeft">
+              <StackPanel Width="220" Spacing="8" Margin="4">
+                <TextBlock Classes="label" Text="Speed (baud)" />
+                <TextBox Text="{Binding Baud}" AutomationProperties.Name="Baud" />
+                <TextBlock Classes="label" Text="Interface" />
+                <TextBox Text="{Binding Interface}" Watermark="The first serial interface" AutomationProperties.Name="Interface" />
+                <TextBlock Classes="small muted" TextWrapping="Wrap" Text="For adapters with more than one port. 8 data bits, no parity, 1 stop bit." />
+              </StackPanel>
+            </Flyout>
+          </Button.Flyout>
+        </Button>
+        <Button Grid.Column="2" Theme="{StaticResource ToolButton}" Classes="tool icon" ToolTip.Tip="Refresh the USB devices" Command="{Binding RefreshCommand}"
+                IsEnabled="{Binding !IsConnected}">
+          <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="16" />
+        </Button>
+        <Panel Grid.Column="3">
+          <Button Theme="{StaticResource AccentButton}" Classes="tool" Content="Connect" Command="{Binding ConnectCommand}" IsVisible="{Binding !IsConnected}" />
+          <Button Theme="{StaticResource SecondaryButton}" Classes="tool" Content="Disconnect" Command="{Binding DisconnectCommand}" IsVisible="{Binding IsConnected}" />
+        </Panel>
+      </Grid>
+    </Border>
+    <Border DockPanel.Dock="Bottom" Padding="12,6" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0" IsVisible="{Binding IsConnected}">
+      <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+        <TextBox Text="{Binding Input}" Classes="mono" Watermark="A line to send, in UTF-8, ending in LF"
+                 AutomationProperties.Name="Line to send" />
+        <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Classes="tool" Content="Send" Command="{Binding SendCommand}" />
+      </Grid>
+    </Border>
+    <Panel>
+      <views:OutputView DataContext="{Binding Output}" />
+      <ScrollViewer IsVisible="{Binding ShowsEmptyState}" HorizontalScrollBarVisibility="Disabled">
+        <controls:EmptyState Icon="{StaticResource Icon.Link}" Title="No serial device" IsCompact="True"
+                             Message="Attach the board's USB serial adapter with a USB-OTG cable, then refresh. Android asks to allow TabStudio to use it."
+                             ActionText="Refresh" ActionCommand="{Binding RefreshCommand}" />
+      </ScrollViewer>
+    </Panel>
   </DockPanel>
 </UserControl>

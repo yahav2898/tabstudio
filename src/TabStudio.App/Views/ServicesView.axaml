@@ -1,47 +1,131 @@
 <UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
              xmlns:vm="using:TabStudio.App.ViewModels.BackingServices" xmlns:model="using:TabStudio.Services.Compose"
-             x:Class="TabStudio.App.Views.ServicesView" x:DataType="vm:ServicesViewModel">
-  <Grid RowDefinitions="Auto,Auto,Auto,2*,Auto,*" Margin="12" RowSpacing="8">
-    <TextBlock Text="Services" FontSize="16" FontWeight="SemiBold" />
-    <WrapPanel Grid.Row="1">
-      <Button Content="Start all" Command="{Binding StartAllCommand}" Margin="0,0,4,4" />
-      <Button Content="Stop all" Command="{Binding StopAllCommand}" Margin="0,0,4,4" />
-      <Button Content="Restart" Command="{Binding RestartAllCommand}" Margin="0,0,4,4" />
-      <Button Content="Reload" Command="{Binding ReloadCommand}" Margin="0,0,4,4" />
-      <Button Content="Cancel" Command="{Binding CancelCommand}" IsVisible="{Binding IsBusy}" Margin="0,0,4,4" />
-    </WrapPanel>
-    <StackPanel Grid.Row="2" Spacing="4">
-      <TextBlock Text="{Binding Summary}" TextWrapping="Wrap" Opacity="0.75" />
-      <TextBlock Text="{Binding Error}" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Error}" />
-    </StackPanel>
-    <ListBox Grid.Row="3" ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}">
-      <ListBox.ItemTemplate>
-        <DataTemplate x:DataType="vm:ServiceItemViewModel">
-          <StackPanel Spacing="5" Margin="2,6">
-            <Grid ColumnDefinitions="*,Auto"><TextBlock Text="{Binding Name}" FontWeight="SemiBold" /><TextBlock Grid.Column="1" Text="{Binding State}" Margin="8,0,0,0" /></Grid>
-            <TextBlock Text="{Binding Image}" Opacity="0.65" FontSize="11" TextWrapping="Wrap" />
-            <TextBlock Text="{Binding Detail}" FontSize="11" TextWrapping="Wrap" />
-            <WrapPanel>
-              <Button Content="Start" Command="{Binding StartCommand}" IsVisible="{Binding CanStart}" Margin="0,0,4,0" />
-              <Button Content="Stop" Command="{Binding StopCommand}" IsVisible="{Binding CanStop}" Margin="0,0,4,0" />
-              <Button Content="Restart" Command="{Binding RestartCommand}" IsVisible="{Binding CanStop}" Margin="0,0,4,0" />
-              <Button Content="Use a remote host" Command="{Binding RemoteCommand}" IsVisible="{Binding IsUnsupported}" />
-              <Button Content="Open in Database Explorer" Command="{Binding DatabaseCommand}" IsVisible="{Binding CanOpenDatabase}" />
-            </WrapPanel>
-            <ItemsControl ItemsSource="{Binding Ports}">
-              <ItemsControl.ItemTemplate>
-                <DataTemplate x:DataType="model:ServicePort">
-                  <Button Content="{Binding Published, StringFormat='Open localhost:{0}'}"
-                          Command="{Binding $parent[ListBoxItem].((vm:ServiceItemViewModel)DataContext).OpenPortCommand}" CommandParameter="{Binding}" Margin="0,2,0,0" />
-                </DataTemplate>
-              </ItemsControl.ItemTemplate>
-            </ItemsControl>
-          </StackPanel>
-        </DataTemplate>
-      </ListBox.ItemTemplate>
-    </ListBox>
-    <TextBlock Grid.Row="4" Text="Logs" FontWeight="SemiBold" />
-    <TextBox Grid.Row="5" Text="{Binding Logs, Mode=OneWay}" IsReadOnly="True" AcceptsReturn="True" TextWrapping="NoWrap" FontFamily="monospace"
-             ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" />
-  </Grid>
+             x:Class="TabStudio.App.Views.ServicesView" x:DataType="vm:ServicesViewModel"
+             Background="{DynamicResource Brush.Panel}">
+  <!--
+    View > Services, a tool window as docs/design/README.md builds one: its header with Start All, Stop All and More; the
+    services, each with its state, image, ports and actions; and the selected service's logs. Without a Compose file it
+    says where services come from, and when the file cannot be read, why.
+  -->
+  <UserControl.Styles>
+    <Style Selector="Button.icon">
+      <Setter Property="Width" Value="36" />
+      <Setter Property="MinWidth" Value="36" />
+      <Setter Property="Height" Value="36" />
+      <Setter Property="MinHeight" Value="36" />
+      <Setter Property="Padding" Value="0" />
+    </Style>
+    <Style Selector="Button.row">
+      <Setter Property="MinHeight" Value="34" />
+      <Setter Property="Height" Value="34" />
+      <Setter Property="Padding" Value="10,0" />
+      <Setter Property="Margin" Value="0,0,6,6" />
+    </Style>
+  </UserControl.Styles>
+
+  <DockPanel>
+    <controls:PanelHeader DockPanel.Dock="Top" Title="Services" Subtitle="{Binding Subtitle}">
+      <controls:PanelHeader.Actions>
+        <StackPanel Orientation="Horizontal" Spacing="2" IsVisible="{Binding HasServices}">
+          <Button Theme="{StaticResource ToolButton}" Classes="icon" ToolTip.Tip="Start All" Command="{Binding StartAllCommand}">
+            <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="14" Foreground="{DynamicResource Brush.Success}" />
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Classes="icon" ToolTip.Tip="Stop All" Command="{Binding StopAllCommand}">
+            <controls:StrokeIcon Data="{StaticResource Icon.Stop}" IsFilled="True" Size="12" Foreground="{DynamicResource Brush.Error}" />
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Classes="icon" ToolTip.Tip="More">
+            <controls:StrokeIcon Data="{StaticResource Icon.Overflow}" Size="16" />
+            <Button.Flyout>
+              <MenuFlyout Placement="BottomEdgeAlignedRight">
+                <MenuItem Header="Restart All" Command="{Binding RestartAllCommand}" />
+                <MenuItem Header="Reload the Compose File" Command="{Binding ReloadCommand}" />
+              </MenuFlyout>
+            </Button.Flyout>
+          </Button>
+        </StackPanel>
+      </controls:PanelHeader.Actions>
+    </controls:PanelHeader>
+
+    <!-- What the services are doing, while an operation takes time. -->
+    <Border DockPanel.Dock="Bottom" MinHeight="34" Padding="12,0,6,0" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0"
+            IsVisible="{Binding IsBusy}">
+      <Grid ColumnDefinitions="*,Auto">
+        <controls:LoadingState IsInline="True" Message="Working…" HorizontalAlignment="Left" />
+        <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Classes="row" Margin="0" Content="Cancel" Command="{Binding CancelCommand}" />
+      </Grid>
+    </Border>
+
+    <Panel>
+      <controls:EmptyState Icon="{StaticResource Icon.Server}" Title="No services"
+                           Message="{Binding Summary}" IsVisible="{Binding ShowsEmptyState}" />
+
+      <controls:ErrorState Title="The Compose file could not be read" Message="Fix the file, then reload it." Details="{Binding Error}"
+                           RetryText="Reload" RetryCommand="{Binding ReloadCommand}" IsVisible="{Binding HasError}" />
+
+      <Grid RowDefinitions="2*,Auto,*" IsVisible="{Binding HasServices}">
+        <ListBox ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}" ItemContainerTheme="{StaticResource ListRow}"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="vm:ServiceItemViewModel">
+              <StackPanel Margin="12,8,12,2" Spacing="2">
+                <Grid ColumnDefinitions="*,Auto">
+                  <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" VerticalAlignment="Center"
+                             TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Name}" />
+                  <Border Grid.Column="1" Classes="pill" Classes.success="{Binding IsGood}" Classes.error="{Binding IsBad}"
+                          Classes.ready="{Binding IsChanging}" Classes.warning="{Binding IsWarning}" Margin="8,0,0,0">
+                    <TextBlock Text="{Binding StateText}" />
+                  </Border>
+                </Grid>
+                <TextBlock Text="{Binding Image}" Classes="small muted mono" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Image}" />
+                <TextBlock Text="{Binding Detail}" Classes="small muted" TextWrapping="Wrap" IsVisible="{Binding HasDetail}" Margin="0,2,0,0" />
+                <WrapPanel Margin="0,6,0,0">
+                  <Button Theme="{StaticResource SecondaryButton}" Classes="row" Command="{Binding StartCommand}" IsVisible="{Binding CanStart}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                      <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="11" Foreground="{DynamicResource Brush.Success}" VerticalAlignment="Center" />
+                      <TextBlock Text="Start" VerticalAlignment="Center" />
+                    </StackPanel>
+                  </Button>
+                  <Button Theme="{StaticResource SecondaryButton}" Classes="row" Command="{Binding StopCommand}" IsVisible="{Binding CanStop}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                      <controls:StrokeIcon Data="{StaticResource Icon.Stop}" IsFilled="True" Size="10" Foreground="{DynamicResource Brush.Error}" VerticalAlignment="Center" />
+                      <TextBlock Text="Stop" VerticalAlignment="Center" />
+                    </StackPanel>
+                  </Button>
+                  <Button Theme="{StaticResource SecondaryButton}" Classes="row" Content="Restart" Command="{Binding RestartCommand}" IsVisible="{Binding CanStop}" />
+                  <Button Theme="{StaticResource SecondaryButton}" Classes="row" Content="Use a Remote Host" Command="{Binding RemoteCommand}" IsVisible="{Binding IsUnsupported}" />
+                  <Button Theme="{StaticResource SecondaryButton}" Classes="row" Content="Open in Database Explorer" Command="{Binding DatabaseCommand}" IsVisible="{Binding CanOpenDatabase}" />
+                  <ItemsControl ItemsSource="{Binding Ports}">
+                    <ItemsControl.ItemsPanel>
+                      <ItemsPanelTemplate>
+                        <WrapPanel />
+                      </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate x:DataType="model:ServicePort">
+                        <Button Theme="{StaticResource SecondaryButton}" Classes="row" ToolTip.Tip="Open in the web preview"
+                                Command="{Binding $parent[ListBoxItem].((vm:ServiceItemViewModel)DataContext).OpenPortCommand}" CommandParameter="{Binding}">
+                          <StackPanel Orientation="Horizontal" Spacing="6">
+                            <controls:StrokeIcon Data="{StaticResource Icon.Globe}" Size="14" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding Published, StringFormat='localhost:{0}'}" VerticalAlignment="Center" />
+                          </StackPanel>
+                        </Button>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </WrapPanel>
+              </StackPanel>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+
+        <Border Grid.Row="1" Height="36" Padding="12,0" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1">
+          <TextBlock Classes="h2" Text="Logs" VerticalAlignment="Center" />
+        </Border>
+        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" Background="{DynamicResource Brush.Terminal.Background}">
+          <SelectableTextBlock Text="{Binding Logs}" FontFamily="{DynamicResource CodeFont}" FontSize="12" Margin="12,8" Foreground="{DynamicResource Brush.Terminal.Foreground}" />
+        </ScrollViewer>
+      </Grid>
+    </Panel>
+  </DockPanel>
 </UserControl>

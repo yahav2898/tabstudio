@@ -24,7 +24,6 @@ public sealed partial class WorkspaceViewModel
     private void InitializeActivity()
     {
         AddActivity(SideBarPanel.SolutionExplorer, "Solution Explorer", "Icon.Solution", "Ctrl+Alt+L");
-        AddActivity(SideBarPanel.Services, "Services", "Icon.Computer");
         AddActivity(SideBarPanel.GitChanges, "Git Changes", "Icon.Branch");
         AddActivity(SideBarPanel.Actions, "GitHub Actions", "Icon.Actions");
         AddActivity(SideBarPanel.PullRequests, "Pull Requests", "Icon.PullRequest");
@@ -33,9 +32,10 @@ public sealed partial class WorkspaceViewModel
         AddActivity(SideBarPanel.AppPreview, "App Preview", "Icon.Window");
         AddActivity(SideBarPanel.WebPreview, "Web Preview", "Icon.Globe");
         AddActivity(SideBarPanel.Swarm, "Swarm", "Icon.Swarm");
+        AddActivity(SideBarPanel.Services, "Services", "Icon.Server");
         AddActivity(SideBarPanel.Database, "Database Explorer", "Icon.Database");
         AddActivity(SideBarPanel.WindowsBridge, "Windows Bridge", "Icon.Computer");
-        AddActivity(SideBarPanel.RemoteExplorer, "Remote Explorer (SSH)", "Icon.Computer");
+        AddActivity(SideBarPanel.RemoteExplorer, "Remote Explorer (SSH)", "Icon.Remote");
         Activity.Add(new ActivityItem("Extensions", "Extensions", Icon("Icon.Extensions"), "Ctrl+Shift+X")
         {
             IsAtBottom = true,
