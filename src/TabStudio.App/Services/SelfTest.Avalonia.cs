@@ -82,6 +82,16 @@ public static partial class SelfTest
                     {
                         return new SelfTestResult(false, $"Avalonia Hot Reload failed: {LastLines(workspace)}", clock.Elapsed);
                     }
+
+                    // Updating the editor alone leaves its debounced language buffer and the loaded assembly
+                    // on the edited greeting. Restore through the command before the designer uses either one.
+                    document.Document.Text = original;
+                    await workspace.ApplyHotReloadCommand.ExecuteAsync(null).WaitAsync(cancellationToken);
+                    if (workspace.HotReloadGeneration != 2 || workspace.AppPreview.View is not { } restored
+                        || !Texts(restored).Contains("Hello from Avalonia!") || run.IsCompleted)
+                    {
+                        return new SelfTestResult(false, $"Avalonia Hot Reload restore failed: {LastLines(workspace)}", clock.Elapsed);
+                    }
                 }
                 finally
                 {

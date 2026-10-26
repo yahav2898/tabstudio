@@ -159,6 +159,12 @@ public sealed class HotReloadTests
         Assert.NotSame(before, app.MainView);
         Assert.Equal("after", Assert.IsType<TextBlock>(app.MainView).Text);
         Assert.Equal(2, assembly.GetType("App")!.GetField("Views")!.GetValue(null));
+
+        Assert.Equal(HotReloadStatus.Applied, session.Apply([Compile(source)]).Status);
+        app.RefreshContent();
+        Assert.Same(assembly, app.EntryAssembly);
+        Assert.Equal("before", Assert.IsType<TextBlock>(app.MainView).Text);
+        Assert.Equal(3, assembly.GetType("App")!.GetField("Views")!.GetValue(null));
     }
 
     [AvaloniaFact]
