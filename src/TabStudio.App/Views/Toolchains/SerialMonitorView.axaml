@@ -50,11 +50,11 @@
         <Button Theme="{StaticResource SecondaryButton}" Classes="tool" Content="Disconnect" Command="{Binding DisconnectCommand}" IsVisible="{Binding IsConnected}" />
       </WrapPanel>
     </Border>
-    <Border DockPanel.Dock="Bottom" Padding="12,6" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0">
+    <Border DockPanel.Dock="Bottom" Padding="12,6" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0" IsVisible="{Binding IsConnected}">
       <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-        <TextBox Text="{Binding Input}" Classes="mono" Watermark="A line to send, in UTF-8, ending in LF" IsEnabled="{Binding IsConnected}"
+        <TextBox Text="{Binding Input}" Classes="mono" Watermark="A line to send, in UTF-8, ending in LF"
                  AutomationProperties.Name="Line to send" />
-        <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Classes="tool" Content="Send" Command="{Binding SendCommand}" IsEnabled="{Binding IsConnected}" />
+        <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Classes="tool" Content="Send" Command="{Binding SendCommand}" />
       </Grid>
     </Border>
     <Panel>

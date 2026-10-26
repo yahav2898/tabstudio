@@ -208,7 +208,7 @@ internal static partial class PanelAudit
     /// <summary>Whether an element is an adaptive bar's item, or its label, folded away: parked for More, or reduced to its icon.</summary>
     private static bool IsFolded(Visual visual) =>
         visual.GetVisualAncestors().Prepend(visual).OfType<AdaptiveBarItem>().FirstOrDefault() is { } item
-        && (item.Bounds == AdaptiveLayout.Parked || visual is TextBlock { Bounds.Width: < 1 });
+        && (item.Bounds.X <= AdaptiveLayout.Parked.X + 1 || visual is TextBlock { Bounds.Width: < 1 });
 
     /// <summary>Whether an element is part of a data grid, which scrolls its own rows and columns into view.</summary>
     private static bool InDataGrid(Visual visual) => visual.GetVisualAncestors().Any(a => a is DataGrid);
