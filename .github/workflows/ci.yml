@@ -131,6 +131,34 @@ jobs:
           echo "$RUNNER_TEMP/js-debug/bin" >> "$GITHUB_PATH"
           echo "TABSTUDIO_REAL_SERVERS=1" >> "$GITHUB_ENV"
 
+      # This baseline test collects the entire process heap during every PNG encode. Keep all 100
+      # captures in fresh hosts so previous IDE workspaces cannot make each full collection enormous.
+      - name: Test screenshot lifetime under GC
+        run: |
+          mkdir -p ci-out
+          status=0
+          for theme in Dark Light; do
+            log="ci-out/ScreenshotLifetime.$theme.log"
+            run_screenshot_test() {
+              TABSTUDIO_THEME="$theme" dotnet test tests/TabStudio.App.Tests -c Release \
+                --blame --blame-hang-timeout 5m --blame-hang-dump-type none \
+                --filter "FullyQualifiedName~ScreenshotLifetimeTests" --logger "console;verbosity=normal" > "$1" 2>&1
+            }
+            if ! run_screenshot_test "$log"; then
+              tail -n 80 "$log"
+              echo "::warning::The baseline screenshot GC test failed once in $theme; retrying in a fresh host."
+              if run_screenshot_test "ci-out/ScreenshotLifetime.$theme.retry.log"; then
+                echo "ScreenshotLifetime ($theme): the first attempt failed and the retry passed (see ScreenshotLifetime.$theme.log)" >> ci-out/FLAKY.txt
+              else
+                status=1
+              fi
+              tail -n 40 "ci-out/ScreenshotLifetime.$theme.retry.log"
+            else
+              tail -n 20 "$log"
+            fi
+          done
+          exit "$status"
+
       - name: Build the desktop host and test the IDE
         env:
           TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
@@ -144,7 +172,7 @@ jobs:
           mkdir -p "$RUNNER_TEMP/crash"
           run_ide_tests() {
             DOTNET_DbgEnableMiniDump=1 DOTNET_DbgMiniDumpType=1 DOTNET_EnableCrashReport=1 DOTNET_DbgMiniDumpName="$RUNNER_TEMP/crash/%e.%p.dmp" \
-              dotnet test tests/TabStudio.App.Tests -c Release --blame --blame-hang-timeout 12m --blame-hang-dump-type none --logger "console;verbosity=normal" > "$1" 2>&1
+              dotnet test tests/TabStudio.App.Tests -c Release --blame --blame-hang-timeout 12m --blame-hang-dump-type none --filter "FullyQualifiedName!~ScreenshotLifetimeTests" --logger "console;verbosity=normal" > "$1" 2>&1
           }
           first=0
           run_ide_tests ci-out/TabStudio.App.Tests.log || first=1
@@ -164,7 +192,7 @@ jobs:
           mkdir -p ci-out/screenshots/light
           run_light_tests() {
             TABSTUDIO_THEME=Light TABSTUDIO_SCREENSHOTS="$TABSTUDIO_SCREENSHOTS/light" \
-              dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter "FullyQualifiedName!~TabStudio.App.Tests.Theming&FullyQualifiedName!~TabStudio.App.Tests.Design" \
+              dotnet test tests/TabStudio.App.Tests -c Release --no-build --blame --blame-hang-timeout 12m --blame-hang-dump-type none --filter "FullyQualifiedName!~TabStudio.App.Tests.Theming&FullyQualifiedName!~TabStudio.App.Tests.Design&FullyQualifiedName!~ScreenshotLifetimeTests" \
               --logger "console;verbosity=normal" > "$1" 2>&1
           }
           light=0
