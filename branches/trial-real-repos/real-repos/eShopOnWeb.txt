@@ -1,0 +1,296 @@
+eShopOnWeb at 4da8212117e87d808d4bbc7da6286fd2147ce606
+Opened /home/runner/work/_temp/real-repos/eShopOnWeb/eShopOnWeb.sln in 0.2 s
+Compatibility Doctor:
+  Web: Ready via Local server + WebView - Served on this device and shown in the web preview beside the code. Saving a file restarts it.
+  Infrastructure: Library via Built with its users - A library is compiled together with the projects that reference it.
+  ApplicationCore: Library via Built with its users - A library is compiled together with the projects that reference it.
+  UnitTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  IntegrationTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  FunctionalTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  PublicApi: Ready via Local server + WebView - Served on this device and shown in the web preview beside the code. Saving a file restarts it.
+  BlazorAdmin: Ready via WebAssembly in the WebView - Compiled for the browser and run on .NET for WebAssembly in the web preview, served from this device. It starts without the debugger: code running in the browser cannot be debugged here. Saving a file reloads it.
+  BlazorShared: Library via Built with its users - A library is compiled together with the projects that reference it.
+  PublicApiIntegrationTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+Built in 6.9 s: 2138 errors, 91 warnings
+  799 x CS0246
+      [BlazorAdmin] CustomAuthStateProvider.cs(13,40): error CS0246: The type or namespace name 'AuthenticationStateProvider' could not be found (are you missing a using directive or an assembly reference?)
+      [BlazorAdmin] CustomAuthStateProvider.cs(19,22): error CS0246: The type or namespace name 'ILogger<>' could not be found (are you missing a using directive or an assembly reference?)
+      [BlazorAdmin] CustomAuthStateProvider.cs(25,9): error CS0246: The type or namespace name 'ILogger<>' could not be found (are you missing a using directive or an assembly reference?)
+      [BlazorAdmin] CustomAuthStateProvider.cs(31,32): error CS0246: The type or namespace name 'AuthenticationState' could not be found (are you missing a using directive or an assembly reference?)
+      [BlazorAdmin] CustomAuthStateProvider.cs(33,20): error CS0246: The type or namespace name 'AuthenticationState' could not be found (are you missing a using directive or an assembly reference?)
+  604 x CS0103
+      [BlazorAdmin] App.razor(4,45): error CS0103: The name 'routeData' does not exist in the current context
+      [BlazorAdmin] App.razor(7,27): error CS0103: The name 'context' does not exist in the current context
+      [BlazorAdmin] BlazorComponent.cs(22,9): error CS0103: The name 'StateHasChanged' does not exist in the current context
+      [BlazorAdmin] BlazorLayoutComponent.cs(22,9): error CS0103: The name 'StateHasChanged' does not exist in the current context
+      [BlazorAdmin] ToastComponent.cs(49,9): error CS0103: The name 'StateHasChanged' does not exist in the current context
+  568 x CS0234
+      [BlazorAdmin] App.razor(1,1): error CS0234: The type or namespace name 'AspNetCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+      [BlazorAdmin] CustomAuthStateProvider.cs(8,17): error CS0234: The type or namespace name 'AspNetCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+      [BlazorAdmin] CustomAuthStateProvider.cs(9,28): error CS0234: The type or namespace name 'Logging' does not exist in the namespace 'Microsoft.Extensions' (are you missing an assembly reference?)
+      [BlazorAdmin] BlazorComponent.cs(1,17): error CS0234: The type or namespace name 'AspNetCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+      [BlazorAdmin] BlazorLayoutComponent.cs(1,17): error CS0234: The type or namespace name 'AspNetCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+  72 x CS0012
+      [Infrastructure] EfRepository.cs(6,14): error CS0012: The type 'IReadRepositoryBase<>' is defined in an assembly that is not referenced. You must add a reference to assembly 'Ardalis.Specification, Version=7.0.0.0, Culture=neutral, PublicKeyToken=null'.
+      [Infrastructure] EfRepository.cs(6,14): error CS0012: The type 'IRepositoryBase<>' is defined in an assembly that is not referenced. You must add a reference to assembly 'Ardalis.Specification, Version=7.0.0.0, Culture=neutral, PublicKeyToken=null'.
+      [PublicApi] CatalogBrandListEndpoint.cs(40,50): error CS0012: The type 'IRepositoryBase<>' is defined in an assembly that is not referenced. You must add a reference to assembly 'Ardalis.Specification, Version=7.0.0.0, Culture=neutral, PublicKeyToken=null'.
+      [PublicApi] CatalogItemGetByIdEndpoint.cs(38,41): error CS0012: The type 'IRepositoryBase<>' is defined in an assembly that is not referenced. You must add a reference to assembly 'Ardalis.Specification, Version=7.0.0.0, Culture=neutral, PublicKeyToken=null'.
+      [PublicApi] CatalogItemListPagedEndpoint.cs(46,32): error CS0012: The type 'IRepositoryBase<>' is defined in an assembly that is not referenced. You must add a reference to assembly 'Ardalis.Specification, Version=7.0.0.0, Culture=neutral, PublicKeyToken=null'.
+  62 x CS1061
+      [Infrastructure] CatalogContextSeed.cs(19,32): error CS1061: 'CatalogContext' does not contain a definition for 'Database' and no accessible extension method 'Database' accepting a first argument of type 'CatalogContext' could be found (are you missing a using directive or an assembly reference?)
+      [Infrastructure] CatalogContextSeed.cs(21,32): error CS1061: 'CatalogContext' does not contain a definition for 'Database' and no accessible extension method 'Database' accepting a first argument of type 'CatalogContext' could be found (are you missing a using directive or an assembly reference?)
+      [Infrastructure] CatalogContextSeed.cs(29,38): error CS1061: 'CatalogContext' does not contain a definition for 'SaveChangesAsync' and no accessible extension method 'SaveChangesAsync' accepting a first argument of type 'CatalogContext' could be found (are you missing a using directive or an assembly reference?)
+      [Infrastructure] CatalogContextSeed.cs(37,38): error CS1061: 'CatalogContext' does not contain a definition for 'SaveChangesAsync' and no accessible extension method 'SaveChangesAsync' accepting a first argument of type 'CatalogContext' could be found (are you missing a using directive or an assembly reference?)
+      [Infrastructure] CatalogContextSeed.cs(45,38): error CS1061: 'CatalogContext' does not contain a definition for 'SaveChangesAsync' and no accessible extension method 'SaveChangesAsync' accepting a first argument of type 'CatalogContext' could be found (are you missing a using directive or an assembly reference?)
+  17 x TS3003
+      [Web] error TS3003: '$(AspNetVersion)' is not a valid NuGet version or version range, so Microsoft.AspNetCore.Components.WebAssembly.Server was not restored.
+      [Web] error TS3003: '$(EntityFramworkCoreVersion)' is not a valid NuGet version or version range, so Microsoft.EntityFrameworkCore.InMemory was not restored.
+      [Web] error TS3003: '$(VSCodeGeneratorVersion)' is not a valid NuGet version or version range, so Microsoft.VisualStudio.Web.CodeGeneration.Design was not restored.
+      [Web] error TS3003: '$(AspNetVersion)' is not a valid NuGet version or version range, so Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore was not restored.
+      [Web] error TS3003: '$(AspNetVersion)' is not a valid NuGet version or version range, so Microsoft.AspNetCore.Identity.EntityFrameworkCore was not restored.
+  8 x CS0117
+      [BlazorAdmin] List.razor.cs(40,20): error CS0117: 'BlazorComponent' does not contain a definition for 'OnAfterRenderAsync'
+      [BlazorAdmin] MainLayout.razor(39,24): error CS0117: 'BlazorLayoutComponent' does not contain a definition for 'OnAfterRenderAsync'
+      [Infrastructure] AppIdentityDbContextSeed.cs(20,49): error CS0117: 'ApplicationUser' does not contain a definition for 'UserName'
+      [Infrastructure] AppIdentityDbContextSeed.cs(20,86): error CS0117: 'ApplicationUser' does not contain a definition for 'Email'
+      [Infrastructure] AppIdentityDbContextSeed.cs(24,47): error CS0117: 'ApplicationUser' does not contain a definition for 'UserName'
+  3 x CS0115
+      [BlazorAdmin] List.razor.cs(29,35): error CS0115: 'List.OnAfterRenderAsync(bool)': no suitable method found to override
+      [BlazorAdmin] Logout.razor(8,35): error CS0115: 'Logout.OnInitializedAsync()': no suitable method found to override
+      [BlazorAdmin] MainLayout.razor(26,39): error CS0115: 'MainLayout.OnAfterRenderAsync(bool)': no suitable method found to override
+  3 x CS1729
+      [Infrastructure] CatalogContext.cs(12,71): error CS1729: 'DbContext' does not contain a constructor that takes 1 arguments
+      [Infrastructure] EfRepository.cs(8,53): error CS1729: 'RepositoryBase<T>' does not contain a constructor that takes 1 arguments
+      [Infrastructure] AppIdentityDbContext.cs(10,11): error CS1729: 'IdentityDbContext<ApplicationUser>' does not contain a constructor that takes 1 arguments
+  1 x CS1503
+      [Infrastructure] IdentityTokenClaimService.cs(34,34): error CS1503: Argument 1: cannot convert from 'string' to 'System.IO.BinaryReader'
+  1 x CS1955
+      [PublicApi] ExceptionMiddleware.cs(23,19): error CS1955: Non-invocable member 'ExceptionMiddleware._next' cannot be used like a method.
+Output:
+ 'LayoutView'. If this is intended to be a component, add a @using directive for its namespace.
+3>Create.razor(12,13): warning RZ10012: Found markup element with unexpected name 'EditForm'. If this is intended to be a component, add a @using directive for its namespace.
+3>Create.razor(13,17): warning RZ10012: Found markup element with unexpected name 'DataAnnotationsValidator'. If this is intended to be a component, add a @using directive for its namespace.
+3>Create.razor(23,25): warning RZ10012: Found markup element with unexpected name 'Spinner'. If this is intended to be a component, add a @using directive for its namespace.
+3>Create.razor(37,45): warning RZ10012: Found markup element with unexpected name 'InputText'. If this is intended to be a component, add a @using directive for its namespace.
+3>Create.razor(38,45): warning RZ10012: Found markup element with unexpected name 'ValidationMessage'. If this is intended to be a component, add a @using directive for its namespace.
+3>Create.razor(45,45): warning RZ10012: Found markup element with unexpected name 'InputText'. If this is intended to be a component, add a @using directive for its namespace.
+3>Create.razor(46,45): warning RZ10012: Found markup element with unexpected name 'ValidationMessage'. If this is intended to be a component, add a @using directive for its namespace.
+3>Create.razor(54,45): warning RZ10012: Found markup element with unexpected name 'InputSelect'. If this is intended to be a component, add a @using directive for its namespace.
+3>Create.razor(60,45): warning RZ10012: Found markup element with unexpected name 'ValidationMessage'. If this is intended to be a component, add a @using directive for its namespace.
+3>Create.razor(67,45): warning RZ10012: Found markup element with unexpected name 'InputSelect'. If this is intended to be a component, add a @using directive for its namespace.
+3>Create.razor(73,45): warning RZ10012: Found markup element with unexpected name 'ValidationMessage'. If this is intended to be a component, add a @using directive for its namespace.
+3>Create.razor(80,45): warning RZ10012: Found markup element with unexpected name 'InputNumber'. If this is intended to be a component, add a @using directive for its namespace.
+3>Create.razor(81,45): warning RZ10012: Found markup element with unexpected name 'ValidationMessage'. If this is intended to be a component, add a @using directive for its namespace.
+3>Delete.razor(21,21): warning RZ10012: Found markup element with unexpected name 'Spinner'. If this is intended to be a component, add a @using directive for its namespace.
+3>Details.razor(22,21): warning RZ10012: Found markup element with unexpected name 'Spinner'. If this is intended to be a component, add a @using directive for its namespace.
+3>Edit.razor(12,13): warning RZ10012: Found markup element with unexpected name 'EditForm'. If this is intended to be a component, add a @using directive for its namespace.
+3>Edit.razor(13,17): warning RZ10012: Found markup element with unexpected name 'DataAnnotationsValidator'. If this is intended to be a component, add a @using directive for its namespace.
+3>Edit.razor(24,25): warning RZ10012: Found markup element with unexpected name 'Spinner'. If this is intended to be a component, add a @using directive for its namespace.
+3>Edit.razor(39,45): warning RZ10012: Found markup element with unexpected name 'InputText'. If this is intended to be a component, add a @using directive for its namespace.
+3>Edit.razor(40,45): warning RZ10012: Found markup element with unexpected name 'ValidationMessage'. If this is intended to be a component, add a @using directive for its namespace.
+3>Edit.razor(47,45): warning RZ10012: Found markup element with unexpected name 'InputText'. If this is intended to be a component, add a @using directive for its namespace.
+3>Edit.razor(48,45): warning RZ10012: Found markup element with unexpected name 'ValidationMessage'. If this is intended to be a component, add a @using directive for its namespace.
+3>Edit.razor(57,45): warning RZ10012: Found markup element with unexpected name 'CustomInputSelect'. If this is intended to be a component, add a @using directive for its namespace.
+3>Edit.razor(63,45): warning RZ10012: Found markup element with unexpected name 'ValidationMessage'. If this is intended to be a component, add a @using directive for its namespace.
+3>Edit.razor(70,45): warning RZ10012: Found markup element with unexpected name 'CustomInputSelect'. If this is intended to be a component, add a @using directive for its namespace.
+3>Edit.razor(76,45): warning RZ10012: Found markup element with unexpected name 'ValidationMessage'. If this is intended to be a component, add a @using directive for its namespace.
+3>Edit.razor(83,45): warning RZ10012: Found markup element with unexpected name 'InputNumber'. If this is intended to be a component, add a @using directive for its namespace.
+3>Edit.razor(84,45): warning RZ10012: Found markup element with unexpected name 'ValidationMessage'. If this is intended to be a component, add a @using directive for its namespace.
+3>List.razor(6,1): warning RZ10012: Found markup element with unexpected name 'PageTitle'. If this is intended to be a component, add a @using directive for its namespace.
+3>List.razor(12,5): warning RZ10012: Found markup element with unexpected name 'Spinner'. If this is intended to be a component, add a @using directive for its namespace.
+3>List.razor(63,5): warning RZ10012: Found markup element with unexpected name 'Details'. If this is intended to be a component, add a @using directive for its namespace.
+3>List.razor(64,5): warning RZ10012: Found markup element with unexpected name 'Edit'. If this is intended to be a component, add a @using directive for its namespace.
+3>List.razor(65,5): warning RZ10012: Found markup element with unexpected name 'Create'. If this is intended to be a component, add a @using directive for its namespace.
+3>List.razor(66,5): warning RZ10012: Found markup element with unexpected name 'Delete'. If this is intended to be a component, add a @using directive for its namespace.
+3>MainLayout.razor(7,1): warning RZ10012: Found markup element with unexpected name 'AuthorizeView'. If this is intended to be a component, add a @using directive for its namespace.
+3>MainLayout.razor(9,9): warning RZ10012: Found markup element with unexpected name 'NavMenu'. If this is intended to be a component, add a @using directive for its namespace.
+3>MainLayout.razor(20,9): warning RZ10012: Found markup element with unexpected name 'Toast'. If this is intended to be a component, add a @using directive for its namespace.
+3>NavMenu.razor(12,13): warning RZ10012: Found markup element with unexpected name 'NavLink'. If this is intended to be a component, add a @using directive for its namespace.
+3>NavMenu.razor(16,9): warning RZ10012: Found markup element with unexpected name 'AuthorizeView'. If this is intended to be a component, add a @using directive for its namespace.
+3>NavMenu.razor(17,13): warning RZ10012: Found markup element with unexpected name 'Authorized'. If this is intended to be a component, add a @using directive for its namespace.
+3>NavMenu.razor(19,21): warning RZ10012: Found markup element with unexpected name 'NavLink'. If this is intended to be a component, add a @using directive for its namespace.
+3>NavMenu.razor(25,25): warning RZ10012: Found markup element with unexpected name 'NavLink'. If this is intended to be a component, add a @using directive for its namespace.
+4>------ Build started: Project: Infrastructure, Configuration: Debug ------
+4>CatalogContext.cs(2,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>CatalogContext.cs(9,31): error CS0246: The type or namespace name 'DbContext' could not be found (are you missing a using directive or an assembly reference?)
+4>CatalogContext.cs(12,27): error CS0246: The type or namespace name 'DbContextOptions<>' could not be found (are you missing a using directive or an assembly reference?)
+4>CatalogContext.cs(12,71): error CS1729: 'DbContext' does not contain a constructor that takes 1 arguments
+4>CatalogContext.cs(14,12): error CS0246: The type or namespace name 'DbSet<>' could not be found (are you missing a using directive or an assembly reference?)
+4>CatalogContext.cs(15,12): error CS0246: The type or namespace name 'DbSet<>' could not be found (are you missing a using directive or an assembly reference?)
+4>CatalogContext.cs(16,12): error CS0246: The type or namespace name 'DbSet<>' could not be found (are you missing a using directive or an assembly reference?)
+4>CatalogContext.cs(17,12): error CS0246: The type or namespace name 'DbSet<>' could not be found (are you missing a using directive or an assembly reference?)
+4>CatalogContext.cs(18,12): error CS0246: The type or namespace name 'DbSet<>' could not be found (are you missing a using directive or an assembly reference?)
+4>CatalogContext.cs(19,12): error CS0246: The type or namespace name 'DbSet<>' could not be found (are you missing a using directive or an assembly reference?)
+4>CatalogContext.cs(20,12): error CS0246: The type or namespace name 'DbSet<>' could not be found (are you missing a using directive or an assembly reference?)
+4>CatalogContext.cs(22,45): error CS0246: The type or namespace name 'ModelBuilder' could not be found (are you missing a using directive or an assembly reference?)
+4>CatalogContextSeed.cs(4,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>CatalogContextSeed.cs(6,17): error CS0234: The type or namespace name 'Extensions' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>CatalogContextSeed.cs(13,9): error CS0246: The type or namespace name 'ILogger' could not be found (are you missing a using directive or an assembly reference?)
+4>CatalogContextSeed.cs(19,32): error CS1061: 'CatalogContext' does not contain a definition for 'Database' and no accessible extension method 'Database' accepting a first argument of type 'CatalogContext' could be found (are you missing a using directive or an assembly reference?)
+4>CatalogContextSeed.cs(21,32): error CS1061: 'CatalogContext' does not contain a definition for 'Database' and no accessible extension method 'Database' accepting a first argument of type 'CatalogContext' could be found (are you missing a using directive or an assembly reference?)
+4>CatalogContextSeed.cs(29,38): error CS1061: 'CatalogContext' does not contain a definition for 'SaveChangesAsync' and no accessible extension method 'SaveChangesAsync' accepting a first argument of type 'CatalogContext' could be found (are you missing a using directive or an assembly reference?)
+4>CatalogContextSeed.cs(37,38): error CS1061: 'CatalogContext' does not contain a definition for 'SaveChangesAsync' and no accessible extension method 'SaveChangesAsync' accepting a first argument of type 'CatalogContext' could be found (are you missing a using directive or an assembly reference?)
+4>CatalogContextSeed.cs(45,38): error CS1061: 'CatalogContext' does not contain a definition for 'SaveChangesAsync' and no accessible extension method 'SaveChangesAsync' accepting a first argument of type 'CatalogContext' could be found (are you missing a using directive or an assembly reference?)
+4>BasketConfiguration.cs(1,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>BasketConfiguration.cs(2,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>BasketConfiguration.cs(7,36): error CS0246: The type or namespace name 'IEntityTypeConfiguration<>' could not be found (are you missing a using directive or an assembly reference?)
+4>BasketConfiguration.cs(9,27): error CS0246: The type or namespace name 'EntityTypeBuilder<>' could not be found (are you missing a using directive or an assembly reference?)
+4>BasketConfiguration.cs(12,43): error CS0103: The name 'PropertyAccessMode' does not exist in the current context
+4>BasketItemConfiguration.cs(1,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>BasketItemConfiguration.cs(2,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>BasketItemConfiguration.cs(7,40): error CS0246: The type or namespace name 'IEntityTypeConfiguration<>' could not be found (are you missing a using directive or an assembly reference?)
+4>BasketItemConfiguration.cs(9,27): error CS0246: The type or namespace name 'EntityTypeBuilder<>' could not be found (are you missing a using directive or an assembly reference?)
+4>CatalogBrandConfiguration.cs(1,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>CatalogBrandConfiguration.cs(2,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>CatalogBrandConfiguration.cs(7,42): error CS0246: The type or namespace name 'IEntityTypeConfiguration<>' could not be found (are you missing a using directive or an assembly reference?)
+4>CatalogBrandConfiguration.cs(9,27): error CS0246: The type or namespace name 'EntityTypeBuilder<>' could not be found (are you missing a using directive or an assembly reference?)
+4>CatalogItemConfiguration.cs(1,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>CatalogItemConfiguration.cs(2,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>CatalogItemConfiguration.cs(7,41): error CS0246: The type or namespace name 'IEntityTypeConfiguration<>' could not be found (are you missing a using directive or an assembly reference?)
+4>CatalogItemConfiguration.cs(9,27): error CS0246: The type or namespace name 'EntityTypeBuilder<>' could not be found (are you missing a using directive or an assembly reference?)
+4>CatalogTypeConfiguration.cs(1,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>CatalogTypeConfiguration.cs(2,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>CatalogTypeConfiguration.cs(7,41): error CS0246: The type or namespace name 'IEntityTypeConfiguration<>' could not be found (are you missing a using directive or an assembly reference?)
+4>CatalogTypeConfiguration.cs(9,27): error CS0246: The type or namespace name 'EntityTypeBuilder<>' could not be found (are you missing a using directive or an assembly reference?)
+4>OrderConfiguration.cs(1,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>OrderConfiguration.cs(2,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>OrderConfiguration.cs(7,35): error CS0246: The type or namespace name 'IEntityTypeConfiguration<>' could not be found (are you missing a using directive or an assembly reference?)
+4>OrderConfiguration.cs(9,27): error CS0246: The type or namespace name 'EntityTypeBuilder<>' could not be found (are you missing a using directive or an assembly reference?)
+4>OrderConfiguration.cs(13,43): error CS0103: The name 'PropertyAccessMode' does not exist in the current context
+4>OrderItemConfiguration.cs(1,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>OrderItemConfiguration.cs(2,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>OrderItemConfiguration.cs(7,39): error CS0246: The type or namespace name 'IEntityTypeConfiguration<>' could not be found (are you missing a using directive or an assembly reference?)
+4>OrderItemConfiguration.cs(9,27): error CS0246: The type or namespace name 'EntityTypeBuilder<>' could not be found (are you missing a using directive or an assembly reference?)
+4>EfRepository.cs(1,15): error CS0234: The type or namespace name 'Specification' does not exist in the namespace 'Ardalis' (are you missing an assembly reference?)
+4>EfRepository.cs(6,14): error CS0012: The type 'IReadRepositoryBase<>' is defined in an assembly that is not referenced. You must add a reference to assembly 'Ardalis.Specification, Version=7.0.0.0, Culture=neutral, PublicKeyToken=null'.
+4>EfRepository.cs(6,14): error CS0012: The type 'IRepositoryBase<>' is defined in an assembly that is not referenced. You must add a reference to assembly 'Ardalis.Specification, Version=7.0.0.0, Culture=neutral, PublicKeyToken=null'.
+4>EfRepository.cs(6,32): error CS0246: The type or namespace name 'RepositoryBase<>' could not be found (are you missing a using directive or an assembly reference?)
+4>EfRepository.cs(8,53): error CS1729: 'RepositoryBase<T>' does not contain a constructor that takes 1 arguments
+4>20201202111507_InitialModel.Designer.cs(3,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>20201202111507_InitialModel.Designer.cs(4,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>20201202111507_InitialModel.Designer.cs(5,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>20201202111507_InitialModel.Designer.cs(6,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>20201202111507_InitialModel.Designer.cs(7,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>20201202111507_InitialModel.Designer.cs(12,6): error CS0246: The type or namespace name 'DbContextAttribute' could not be found (are you missing a using directive or an assembly reference?)
+4>20201202111507_InitialModel.Designer.cs(12,6): error CS0246: The type or namespace name 'DbContext' could not be found (are you missing a using directive or an assembly reference?)
+4>20201202111507_InitialModel.Designer.cs(13,6): error CS0246: The type or namespace name 'MigrationAttribute' could not be found (are you missing a using directive or an assembly reference?)
+4>20201202111507_InitialModel.Designer.cs(13,6): error CS0246: The type or namespace name 'Migration' could not be found (are you missing a using directive or an assembly reference?)
+4>20201202111507_InitialModel.Designer.cs(16,50): error CS0246: The type or namespace name 'ModelBuilder' could not be found (are you missing a using directive or an assembly reference?)
+4>20201202111507_InitialModel.cs(2,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>20201202111507_InitialModel.cs(6,37): error CS0246: The type or namespace name 'Migration' could not be found (are you missing a using directive or an assembly reference?)
+4>20201202111507_InitialModel.cs(8,32): error CS0246: The type or namespace name 'MigrationBuilder' could not be found (are you missing a using directive or an assembly reference?)
+4>20201202111507_InitialModel.cs(174,34): error CS0246: The type or namespace name 'MigrationBuilder' could not be found (are you missing a using directive or an assembly reference?)
+4>20211026175614_FixBuyerId.Designer.cs(3,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>20211026175614_FixBuyerId.Designer.cs(4,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>20211026175614_FixBuyerId.Designer.cs(5,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>20211026175614_FixBuyerId.Designer.cs(6,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>20211026175614_FixBuyerId.Designer.cs(7,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>20211026175614_FixBuyerId.Designer.cs(12,6): error CS0246: The type or namespace name 'DbContextAttribute' could not be found (are you missing a using directive or an assembly reference?)
+4>20211026175614_FixBuyerId.Designer.cs(12,6): error CS0246: The type or namespace name 'DbContext' could not be found (are you missing a using directive or an assembly reference?)
+4>20211026175614_FixBuyerId.Designer.cs(13,6): error CS0246: The type or namespace name 'MigrationAttribute' could not be found (are you missing a using directive or an assembly reference?)
+4>20211026175614_FixBuyerId.Designer.cs(13,6): error CS0246: The type or namespace name 'Migration' could not be found (are you missing a using directive or an assembly reference?)
+4>20211026175614_FixBuyerId.Designer.cs(16,50): error CS0246: The type or namespace name 'ModelBuilder' could not be found (are you missing a using directive or an assembly reference?)
+4>20211026175614_FixBuyerId.Designer.cs(22,69): error CS0103: The name 'SqlServerValueGenerationStrategy' does not exist in the current context
+4>20211026175614_FixBuyerId.cs(1,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>20211026175614_FixBuyerId.cs(5,35): error CS0246: The type or namespace name 'Migration' could not be found (are you missing a using directive or an assembly reference?)
+4>20211026175614_FixBuyerId.cs(7,32): error CS0246: The type or namespace name 'MigrationBuilder' could not be found (are you missing a using directive or an assembly reference?)
+4>20211026175614_FixBuyerId.cs(31,34): error CS0246: The type or namespace name 'MigrationBuilder' could not be found (are you missing a using directive or an assembly reference?)
+4>20211231093753_FixShipToAddress.Designer.cs(3,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>20211231093753_FixShipToAddress.Designer.cs(4,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>20211231093753_FixShipToAddress.Designer.cs(5,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>20211231093753_FixShipToAddress.Designer.cs(6,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>20211231093753_FixShipToAddress.Designer.cs(7,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>20211231093753_FixShipToAddress.Designer.cs(14,6): error CS0246: The type or namespace name 'DbContextAttribute' could not be found (are you missing a using directive or an assembly reference?)
+4>20211231093753_FixShipToAddress.Designer.cs(14,6): error CS0246: The type or namespace name 'DbContext' could not be found (are you missing a using directive or an assembly reference?)
+4>20211231093753_FixShipToAddress.Designer.cs(15,6): error CS0246: The type or namespace name 'MigrationAttribute' could not be found (are you missing a using directive or an assembly reference?)
+4>20211231093753_FixShipToAddress.Designer.cs(15,6): error CS0246: The type or namespace name 'Migration' could not be found (are you missing a using directive or an assembly reference?)
+4>20211231093753_FixShipToAddress.Designer.cs(18,50): error CS0246: The type or namespace name 'ModelBuilder' could not be found (are you missing a using directive or an assembly reference?)
+4>20211231093753_FixShipToAddress.Designer.cs(25,13): error CS0103: The name 'SqlServerModelBuilderExtensions' does not exist in the current context
+4>20211231093753_FixShipToAddress.cs(1,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>20211231093753_FixShipToAddress.cs(7,45): error CS0246: The type or namespace name 'Migration' could not be found (are you missing a using directive or an assembly reference?)
+4>20211231093753_FixShipToAddress.cs(9,36): error CS0246: The type or namespace name 'MigrationBuilder' could not be found (are you missing a using directive or an assembly reference?)
+4>20211231093753_FixShipToAddress.cs(60,38): error CS0246: The type or namespace name 'MigrationBuilder' could not be found (are you missing a using directive or an assembly reference?)
+4>CatalogContextModelSnapshot.cs(3,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>CatalogContextModelSnapshot.cs(4,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>CatalogContextModelSnapshot.cs(5,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>CatalogContextModelSnapshot.cs(6,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>CatalogContextModelSnapshot.cs(13,6): error CS0246: The type or namespace name 'DbContextAttribute' could not be found (are you missing a using directive or an assembly reference?)
+4>CatalogContextModelSnapshot.cs(13,6): error CS0246: The type or namespace name 'DbContext' could not be found (are you missing a using directive or an assembly reference?)
+4>CatalogContextModelSnapshot.cs(14,49): error CS0246: The type or namespace name 'ModelSnapshot' could not be found (are you missing a using directive or an assembly reference?)
+4>CatalogContextModelSnapshot.cs(16,44): error CS0246: The type or namespace name 'ModelBuilder' could not be found (are you missing a using directive or an assembly reference?)
+4>CatalogContextModelSnapshot.cs(23,13): error CS0103: The name 'SqlServerModelBuilderExtensions' does not exist in the current context
+4>BasketQueryService.cs(3,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>Dependencies.cs(1,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>Dependencies.cs(4,17): error CS0234: The type or namespace name 'Extensions' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>Dependencies.cs(5,17): error CS0234: The type or namespace name 'Extensions' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>Dependencies.cs(11,42): error CS0246: The type or namespace name 'IConfiguration' could not be found (are you missing a using directive or an assembly reference?)
+4>Dependencies.cs(11,72): error CS0246: The type or namespace name 'IServiceCollection' could not be found (are you missing a using directive or an assembly reference?)
+4>AppIdentityDbContext.cs(1,17): error CS0234: The type or namespace name 'AspNetCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>AppIdentityDbContext.cs(2,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>AppIdentityDbContext.cs(7,37): error CS0246: The type or namespace name 'IdentityDbContext<>' could not be found (are you missing a using directive or an assembly reference?)
+4>AppIdentityDbContext.cs(9,33): error CS0246: The type or namespace name 'DbContextOptions<>' could not be found (are you missing a using directive or an assembly reference?)
+4>AppIdentityDbContext.cs(10,11): error CS1729: 'IdentityDbContext<ApplicationUser>' does not contain a constructor that takes 1 arguments
+4>AppIdentityDbContext.cs(14,45): error CS0246: The type or namespace name 'ModelBuilder' could not be found (are you missing a using directive or an assembly reference?)
+4>AppIdentityDbContextSeed.cs(2,17): error CS0234: The type or namespace name 'AspNetCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>AppIdentityDbContextSeed.cs(3,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>AppIdentityDbContextSeed.cs(10,80): error CS0246: The type or namespace name 'UserManager<>' could not be found (are you missing a using directive or an assembly reference?)
+4>AppIdentityDbContextSeed.cs(10,122): error CS0246: The type or namespace name 'RoleManager<>' could not be found (are you missing a using directive or an assembly reference?)
+4>AppIdentityDbContextSeed.cs(10,134): error CS0246: The type or namespace name 'IdentityRole' could not be found (are you missing a using directive or an assembly reference?)
+4>AppIdentityDbContextSeed.cs(13,31): error CS1061: 'AppIdentityDbContext' does not contain a definition for 'Database' and no accessible extension method 'Database' accepting a first argument of type 'AppIdentityDbContext' could be found (are you missing a using directive or an assembly reference?)
+4>AppIdentityDbContextSeed.cs(15,31): error CS1061: 'AppIdentityDbContext' does not contain a definition for 'Database' and no accessible extension method 'Database' accepting a first argument of type 'AppIdentityDbContext' could be found (are you missing a using directive or an assembly reference?)
+4>AppIdentityDbContextSeed.cs(18,43): error CS0246: The type or namespace name 'IdentityRole' could not be found (are you missing a using directive or an assembly reference?)
+4>AppIdentityDbContextSeed.cs(20,49): error CS0117: 'ApplicationUser' does not contain a definition for 'UserName'
+4>AppIdentityDbContextSeed.cs(20,86): error CS0117: 'ApplicationUser' does not contain a definition for 'Email'
+4>AppIdentityDbContextSeed.cs(24,47): error CS0117: 'ApplicationUser' does not contain a definition for 'UserName'
+4>AppIdentityDbContextSeed.cs(24,73): error CS0117: 'ApplicationUser' does not contain a definition for 'Email'
+4>ApplicationUser.cs(1,17): error CS0234: The type or namespace name 'AspNetCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>ApplicationUser.cs(5,32): error CS0246: The type or namespace name 'IdentityUser' could not be found (are you missing a using directive or an assembly reference?)
+4>IdentityTokenClaimService.cs(3,14): error CS0234: The type or namespace name 'IdentityModel' does not exist in the namespace 'System' (are you missing an assembly reference?)
+4>IdentityTokenClaimService.cs(7,17): error CS0234: The type or namespace name 'AspNetCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>IdentityTokenClaimService.cs(10,17): error CS0234: The type or namespace name 'IdentityModel' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>IdentityTokenClaimService.cs(16,22): error CS0246: The type or namespace name 'UserManager<>' could not be found (are you missing a using directive or an assembly reference?)
+4>IdentityTokenClaimService.cs(18,38): error CS0246: The type or namespace name 'UserManager<>' could not be found (are you missing a using directive or an assembly reference?)
+4>IdentityTokenClaimService.cs(25,32): error CS0246: The type or namespace name 'JwtSecurityTokenHandler' could not be found (are you missing a using directive or an assembly reference?)
+4>IdentityTokenClaimService.cs(34,34): error CS1503: Argument 1: cannot convert from 'string' to 'System.IO.BinaryReader'
+4>IdentityTokenClaimService.cs(37,35): error CS0246: The type or namespace name 'SecurityTokenDescriptor' could not be found (are you missing a using directive or an assembly reference?)
+4>IdentityTokenClaimService.cs(41,38): error CS0246: The type or namespace name 'SigningCredentials' could not be found (are you missing a using directive or an assembly reference?)
+4>IdentityTokenClaimService.cs(41,61): error CS0246: The type or namespace name 'SymmetricSecurityKey' could not be found (are you missing a using directive or an assembly reference?)
+4>IdentityTokenClaimService.cs(41,88): error CS0103: The name 'SecurityAlgorithms' does not exist in the current context
+4>20201202111612_InitialIdentityModel.Designer.cs(3,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>20201202111612_InitialIdentityModel.Designer.cs(4,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>20201202111612_InitialIdentityModel.Designer.cs(5,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>20201202111612_InitialIdentityModel.Designer.cs(6,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>20201202111612_InitialIdentityModel.Designer.cs(7,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>20201202111612_InitialIdentityModel.Designer.cs(12,6): error CS0246: The type or namespace name 'DbContextAttribute' could not be found (are you missing a using directive or an assembly reference?)
+4>20201202111612_InitialIdentityModel.Designer.cs(12,6): error CS0246: The type or namespace name 'DbContext' could not be found (are you missing a using directive or an assembly reference?)
+4>20201202111612_InitialIdentityModel.Designer.cs(13,6): error CS0246: The type or namespace name 'MigrationAttribute' could not be found (are you missing a using directive or an assembly reference?)
+4>20201202111612_InitialIdentityModel.Designer.cs(13,6): error CS0246: The type or namespace name 'Migration' could not be found (are you missing a using directive or an assembly reference?)
+4>20201202111612_InitialIdentityModel.Designer.cs(16,50): error CS0246: The type or namespace name 'ModelBuilder' could not be found (are you missing a using directive or an assembly reference?)
+4>20201202111612_InitialIdentityModel.cs(2,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>20201202111612_InitialIdentityModel.cs(6,45): error CS0246: The type or namespace name 'Migration' could not be found (are you missing a using directive or an assembly reference?)
+4>20201202111612_InitialIdentityModel.cs(8,32): error CS0246: The type or namespace name 'MigrationBuilder' could not be found (are you missing a using directive or an assembly reference?)
+4>20201202111612_InitialIdentityModel.cs(195,34): error CS0246: The type or namespace name 'MigrationBuilder' could not be found (are you missing a using directive or an assembly reference?)
+4>AppIdentityDbContextModelSnapshot.cs(3,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>AppIdentityDbContextModelSnapshot.cs(4,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>AppIdentityDbContextModelSnapshot.cs(5,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>AppIdentityDbContextModelSnapshot.cs(6,17): error CS0234: The type or namespace name 'EntityFrameworkCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>AppIdentityDbContextModelSnapshot.cs(11,6): error CS0246: The type or namespace name 'DbContextAttribute' could not be found (are you missing a using directive or an assembly reference?)
+4>AppIdentityDbContextModelSnapshot.cs(11,6): error CS0246: The type or namespace name 'DbContext' could not be found (are you missing a using directive or an assembly reference?)
+4>AppIdentityDbContextModelSnapshot.cs(12,55): error CS0246: The type or namespace name 'ModelSnapshot' could not be found (are you missing a using directive or an assembly reference?)
+4>AppIdentityDbContextModelSnapshot.cs(14,44): error CS0246: The type or namespace name 'ModelBuilder' could not be found (are you missing a using directive or an assembly reference?)
+4>LoggerAdapter.cs(2,17): error CS0234: The type or namespace name 'Extensions' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
+4>LoggerAdapter.cs(8,22): error CS0246: The type or namespace name 'ILogger<>' could not be found (are you missing a using directive or an assembly reference?)
+4>LoggerAdapter.cs(9,26): error CS0246: The type or namespace name 'ILoggerFactory' could not be found (are you missing a using directive or an assembly reference?)
+4>warning TS2003: NuGet package 'Ardalis.Specification.EntityFrameworkCore' is not restored on this device, so code that uses it will not compile.
+4>warning TS2003: NuGet package 'Microsoft.AspNetCore.Identity.EntityFrameworkCore' is not restored on this device, so code that uses it will not compile.
+4>warning TS2003: NuGet package 'Microsoft.EntityFrameworkCore.InMemory' is not restored on this device, so code that uses it will not compile.
+4>warning TS2003: NuGet package 'Microsoft.EntityFrameworkCore.SqlServer' is not restored on this device, so code that uses it will not compile.
+4>warning TS2003: NuGet package 'System.IdentityModel.Tokens.Jwt' is not restored on this device, so code that uses it will not compile.
+5>------ Build started: Project: Web, Configuration: Debug ------
+6>------ Build started: Project: UnitTests, Configuration: Debug ------
+7>------ Build started: Project: IntegrationTests, Configuration: Debug ------
+8>------ Build started: Project: PublicApi, Configuration: Debug ------
+9>------ Build started: Project: FunctionalTests, Configuration: Debug ------
+10>------ Build started: Project: PublicApiIntegrationTests, Configuration: Debug ------
+========== Build: 2 succeeded, 8 failed ==========
+

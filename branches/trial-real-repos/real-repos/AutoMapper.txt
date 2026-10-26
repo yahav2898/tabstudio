@@ -1,0 +1,354 @@
+AutoMapper at f0ecba7a97d1403973825fb3cbe2733e6216ff9a
+Opened /home/runner/work/_temp/real-repos/AutoMapper/AutoMapper.slnx in 0.3 s
+Compatibility Doctor:
+  AutoMapper.DI.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  AutoMapper: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Benchmark: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  AutoMapper.IntegrationTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  TestApp: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  AutoMapper.UnitTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  docs: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+  docs: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
+Built in 7.7 s: 3999 errors, 50 warnings
+  2938 x CS0246
+      [AutoMapper.DI.Tests] Profiles.cs(37,29): error CS0246: The type or namespace name 'IProfileExpressionInternal' could not be found (are you missing a using directive or an assembly reference?)
+      [AutoMapper.DI.Tests] Profiles.cs(41,13): error CS0246: The type or namespace name 'IProfileExpressionInternal' could not be found (are you missing a using directive or an assembly reference?)
+      [AutoMapper.DI.Tests] Profiles.cs(41,23): error CS0246: The type or namespace name 'IProfileExpressionInternal' could not be found (are you missing a using directive or an assembly reference?)
+      [AutoMapper.DI.Tests] Profiles.cs(41,31): error CS0246: The type or namespace name 'IProfileExpressionInternal' could not be found (are you missing a using directive or an assembly reference?)
+      [AutoMapper.DI.Tests] Profiles.cs(45,45): error CS0246: The type or namespace name 'IProfileExpressionInternal' could not be found (are you missing a using directive or an assembly reference?)
+  469 x CS1660
+      [AutoMapper.DI.Tests] Profiles.cs(182,33): error CS1660: Cannot convert lambda expression to type 'IValueResolver<ConditionSource, ConditionDest, object>' because it is not a delegate type
+      [AutoMapper.DI.Tests] Profiles.cs(214,33): error CS1660: Cannot convert lambda expression to type 'string' because it is not a delegate type
+      [AutoMapper] MappingExpression.cs(14,71): error CS1660: Cannot convert lambda expression to type 'Type' because it is not a delegate type
+      [AutoMapper.IntegrationTests] ConvertUsing.cs(127,56): error CS1660: Cannot convert lambda expression to type 'Type' because it is not a delegate type
+      [AutoMapper.IntegrationTests] ConvertUsing.cs(128,91): error CS1660: Cannot convert lambda expression to type 'IValueResolver<StringTypeConverter.Planning, StringTypeConverter.Appointment, object>' because it is not a delegate type
+  185 x CS1061
+      [AutoMapper] Conventions.cs(104,45): error CS1061: 'TOutput' does not contain a definition for 'Deconstruct' and no accessible extension method 'Deconstruct' accepting a first argument of type 'TOutput' could be found (are you missing a using directive or an assembly reference?)
+      [AutoMapper] MapperConfiguration.cs(177,45): error CS1061: 'MapperConfiguration' does not contain a definition for 'Internal' and no accessible extension method 'Internal' accepting a first argument of type 'MapperConfiguration' could be found (are you missing a using directive or an assembly reference?)
+      [AutoMapper] MapperConfiguration.cs(209,95): error CS1061: 'MapperConfiguration' does not contain a definition for 'Internal' and no accessible extension method 'Internal' accepting a first argument of type 'MapperConfiguration' could be found (are you missing a using directive or an assembly reference?)
+      [AutoMapper] MapperConfiguration.cs(525,78): error CS1061: 'MapperConfiguration' does not contain a definition for 'Internal' and no accessible extension method 'Internal' accepting a first argument of type 'MapperConfiguration' could be found (are you missing a using directive or an assembly reference?)
+      [AutoMapper] MapperConfigurationExpression.cs(171,86): error CS1061: 'Type' does not contain a definition for 'GetTypeInfo' and no accessible extension method 'GetTypeInfo' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
+  161 x CS0103
+      [AutoMapper] ConfigurationValidator.cs(4,18): error CS0103: The name 'EditorBrowsableState' does not exist in the current context
+      [AutoMapper] Conventions.cs(8,18): error CS0103: The name 'EditorBrowsableState' does not exist in the current context
+      [AutoMapper] Conventions.cs(75,44): error CS0103: The name 'TypeDetails' does not exist in the current context
+      [AutoMapper] Conventions.cs(118,18): error CS0103: The name 'EditorBrowsableState' does not exist in the current context
+      [AutoMapper] Conventions.cs(120,18): error CS0103: The name 'EditorBrowsableState' does not exist in the current context
+  94 x CS1503
+      [AutoMapper] MapperConfiguration.cs(97,48): error CS1503: Argument 1: cannot convert from 'AutoMapper.MapperConfiguration' to 'IGlobalConfiguration'
+      [AutoMapper] MapperConfiguration.cs(151,34): error CS1503: Argument 1: cannot convert from 'AutoMapper.MapperConfiguration' to 'IGlobalConfiguration'
+      [AutoMapper] MapperConfiguration.cs(155,35): error CS1503: Argument 1: cannot convert from 'AutoMapper.MapperConfiguration' to 'IGlobalConfiguration'
+      [AutoMapper] MapperConfiguration.cs(171,30): error CS1503: Argument 1: cannot convert from 'AutoMapper.MapperConfiguration' to 'IGlobalConfiguration'
+      [AutoMapper] MapperConfiguration.cs(173,28): error CS1503: Argument 2: cannot convert from 'AutoMapper.MapperConfiguration' to 'IGlobalConfiguration'
+  54 x CS0538
+      [AutoMapper] MapperConfiguration.cs(210,22): error CS0538: 'IGlobalConfiguration' in explicit interface declaration is not an interface
+      [AutoMapper] MapperConfiguration.cs(264,24): error CS0538: 'IGlobalConfiguration' in explicit interface declaration is not an interface
+      [AutoMapper] MapperConfiguration.cs(265,24): error CS0538: 'IGlobalConfiguration' in explicit interface declaration is not an interface
+      [AutoMapper] MapperConfiguration.cs(266,10): error CS0538: 'IGlobalConfiguration' in explicit interface declaration is not an interface
+      [AutoMapper] MapperConfiguration.cs(267,10): error CS0538: 'IGlobalConfiguration' in explicit interface declaration is not an interface
+  30 x CS7036
+      [AutoMapper] Conventions.cs(87,29): error CS7036: There is no argument given that corresponds to the required parameter 'value' of 'CollectionExtensions.TryAdd<TKey, TValue>(IDictionary<TKey, TValue>, TKey, TValue)'
+      [AutoMapper] Conventions.cs(88,30): error CS7036: There is no argument given that corresponds to the required parameter 'value' of 'CollectionExtensions.TryAdd<TKey, TValue>(IDictionary<TKey, TValue>, TKey, TValue)'
+      [AutoMapper] Conventions.cs(114,84): error CS7036: There is no argument given that corresponds to the required parameter 'value' of 'CollectionExtensions.TryAdd<TKey, TValue>(IDictionary<TKey, TValue>, TKey, TValue)'
+      [AutoMapper] Profile.cs(88,35): error CS7036: There is no argument given that corresponds to the required parameter 'configuration' of 'ExpressionBuilder.NullCheck(Expression, IGlobalConfiguration, MemberMap, Expression, IncludedMember)'
+      [AutoMapper] Profile.cs(89,124): error CS7036: There is no argument given that corresponds to the required parameter 'configuration' of 'ExpressionBuilder.NullCheck(Expression, IGlobalConfiguration, MemberMap, Expression, IncludedMember)'
+  22 x CS0311
+      [AutoMapper.DI.Tests] Profiles.cs(52,61): error CS0311: The type 'AutoMapper.Extensions.Microsoft.DependencyInjection.Tests.DependencyResolver' cannot be used as type parameter 'TValueResolver' in the generic type or method 'IMemberConfigurationExpression<Source2, Dest2, object>.MapFrom<TValueResolver>()'. There is no implicit reference conversion from 'AutoMapper.Extensions.Microsoft.DependencyInjection.Tests.DependencyResolver' to 'AutoMapper.IValueResolver<AutoMapper.Extensions.Microsoft.DependencyInjection.Tests.Source2, AutoMapper.Extensions.Microsoft.DependencyInjection.Tests.Dest2, object>'.
+      [AutoMapper.DI.Tests] Profiles.cs(53,62): error CS0311: The type 'AutoMapper.Extensions.Microsoft.DependencyInjection.Tests.DependencyValueConverter' cannot be used as type parameter 'TValueConverter' in the generic type or method 'IMemberConfigurationExpression<Source2, Dest2, object>.ConvertUsing<TValueConverter, TSourceMember>()'. There is no implicit reference conversion from 'AutoMapper.Extensions.Microsoft.DependencyInjection.Tests.DependencyValueConverter' to 'AutoMapper.IValueConverter<int, object>'.
+      [AutoMapper.DI.Tests] Profiles.cs(181,23): error CS0311: The type 'AutoMapper.Extensions.Microsoft.DependencyInjection.Tests.DependencyCondition' cannot be used as type parameter 'TCondition' in the generic type or method 'IMemberConfigurationExpression<ConditionSource, ConditionDest, object>.Condition<TCondition>()'. There is no implicit reference conversion from 'AutoMapper.Extensions.Microsoft.DependencyInjection.Tests.DependencyCondition' to 'AutoMapper.ICondition<AutoMapper.Extensions.Microsoft.DependencyInjection.Tests.ConditionSource, AutoMapper.Extensions.Microsoft.DependencyInjection.Tests.ConditionDest, object>'.
+      [TestApp] Program.cs(58,57): error CS0311: The type 'DependencyResolver' cannot be used as type parameter 'TValueResolver' in the generic type or method 'IMemberConfigurationExpression<Source2, Dest2, object>.MapFrom<TValueResolver>()'. There is no implicit reference conversion from 'DependencyResolver' to 'AutoMapper.IValueResolver<Source2, Dest2, object>'.
+      [AutoMapper.UnitTests] InitializeNRE.cs(29,77): error CS0311: The type 'AutoMapper.UnitTests.Bug.InitializeNRE2.IRes' cannot be used as type parameter 'TValueResolver' in the generic type or method 'IMemberConfigurationExpression<InitializeNRE2.Source, InitializeNRE2.Destination, object>.MapFrom<TValueResolver>()'. There is no implicit reference conversion from 'AutoMapper.UnitTests.Bug.InitializeNRE2.IRes' to 'AutoMapper.IValueResolver<AutoMapper.UnitTests.Bug.InitializeNRE2.Source, AutoMapper.UnitTests.Bug.InitializeNRE2.Destination, object>'.
+  11 x CS1593
+      [AutoMapper.UnitTests] ArraysAndLists.cs(131,119): error CS1593: Delegate 'Func<int, ResolutionContext, int>' does not take 1 arguments
+      [AutoMapper.UnitTests] ConstructUsingReturnsNull.cs(16,77): error CS1593: Delegate 'Func<ConstructUsingReturnsNull.Source, ResolutionContext, ConstructUsingReturnsNull.Destination>' does not take 1 arguments
+      [AutoMapper.UnitTests] InterfaceMultipleInheritance.cs(82,41): error CS1593: Delegate 'Func<InterfaceMultipleInheritanceBug1036.IMapFromElementDerived1, ResolutionContext, InterfaceMultipleInheritanceBug1036.IMapToElementWritableDerived>' does not take 1 arguments
+      [AutoMapper.UnitTests] InterfaceMultipleInheritance.cs(196,41): error CS1593: Delegate 'Func<InterfaceMultipleInheritanceBug1016.iclass4, ResolutionContext, InterfaceMultipleInheritanceBug1016.iclass4DTO>' does not take 1 arguments
+      [AutoMapper.UnitTests] Constructors.cs(581,131): error CS1593: Delegate 'Func<When_constructor_matches_but_is_overriden_by_ConstructUsing.Person, ResolutionContext, When_constructor_matches_but_is_overriden_by_ConstructUsing.PersonDto>' does not take 1 arguments
+  7 x CS1929
+      [AutoMapper] CollectionMapper.cs(36,42): error CS1929: 'IGlobalConfiguration' does not contain a definition for 'Default' and the best extension method overload 'ExpressionBuilder.Default(IGlobalConfiguration, Type)' requires a receiver of type 'IGlobalConfiguration'
+      [AutoMapper] CollectionMapper.cs(58,28): error CS1929: 'IGlobalConfiguration' does not contain a definition for 'MapExpression' and the best extension method overload 'ExpressionBuilder.MapExpression(IGlobalConfiguration, ProfileMap, TypePair, Expression, MemberMap, Expression)' requires a receiver of type 'IGlobalConfiguration'
+      [AutoMapper] CollectionMapper.cs(61,43): error CS1929: 'IGlobalConfiguration' does not contain a definition for 'Scratchpad' and the best extension method overload 'ExpressionBuilder.Scratchpad(IGlobalConfiguration)' requires a receiver of type 'IGlobalConfiguration'
+      [AutoMapper] CollectionMapper.cs(183,43): error CS1929: 'IGlobalConfiguration' does not contain a definition for 'Scratchpad' and the best extension method overload 'ExpressionBuilder.Scratchpad(IGlobalConfiguration)' requires a receiver of type 'IGlobalConfiguration'
+      [AutoMapper] CollectionMapper.cs(204,28): error CS1929: 'IGlobalConfiguration' does not contain a definition for 'MapExpression' and the best extension method overload 'ExpressionBuilder.MapExpression(IGlobalConfiguration, ProfileMap, TypePair, Expression, MemberMap, Expression)' requires a receiver of type 'IGlobalConfiguration'
+  4 x CS8130
+      [AutoMapper] Conventions.cs(104,27): error CS8130: Cannot infer the type of implicitly-typed deconstruction variable 'mi'.
+      [AutoMapper] Conventions.cs(104,31): error CS8130: Cannot infer the type of implicitly-typed deconstruction variable 'possibles'.
+      [AutoMapper] StringToEnumMapper.cs(31,18): error CS8130: Cannot infer the type of implicitly-typed deconstruction variable 'body'.
+      [AutoMapper] StringToEnumMapper.cs(31,24): error CS8130: Cannot infer the type of implicitly-typed deconstruction variable 'testValue'.
+  4 x CS0411
+      [AutoMapper] MemberConfigurationExpression.cs(52,9): error CS0411: The type arguments for method 'MemberConfigurationExpression<TSource, TDestination, TMember>.MapFromFunc<TResult>(Expression<Func<TSource, TDestination, TMember, ResolutionContext, TResult>>)' cannot be inferred from the usage. Try specifying the type arguments explicitly.
+      [AutoMapper] MemberConfigurationExpression.cs(54,9): error CS0411: The type arguments for method 'MemberConfigurationExpression<TSource, TDestination, TMember>.MapFromFunc<TResult>(Expression<Func<TSource, TDestination, TMember, ResolutionContext, TResult>>)' cannot be inferred from the usage. Try specifying the type arguments explicitly.
+      [AutoMapper] MemberConfigurationExpression.cs(56,9): error CS0411: The type arguments for method 'MemberConfigurationExpression<TSource, TDestination, TMember>.MapFromFunc<TResult>(Expression<Func<TSource, TDestination, TMember, ResolutionContext, TResult>>)' cannot be inferred from the usage. Try specifying the type arguments explicitly.
+      [AutoMapper] Extensions.cs(24,80): error CS0411: The type arguments for method 'Enumerable.Select<TSource, TResult>(IEnumerable<TSource>, Func<TSource, int, TResult>)' cannot be inferred from the usage. Try specifying the type arguments explicitly.
+  3 x CS1955
+      [AutoMapper] ObjectFactory.cs(38,14): error CS1955: Non-invocable member 'Type.IsGenericType' cannot be used like a method.
+      [AutoMapper] ObjectFactory.cs(39,14): error CS1955: Non-invocable member 'Type.IsGenericType' cannot be used like a method.
+      [AutoMapper] ObjectFactory.cs(40,14): error CS1955: Non-invocable member 'Type.IsGenericType' cannot be used like a method.
+  3 x CS0539
+      [AutoMapper.UnitTests] ConfigurationFeatureTest.cs(133,30): error CS0539: 'ConfigurationFeatureTest.ConfigurationFeatureBase.Seal(IGlobalConfiguration)' in explicit interface declaration is not found among members of the interface that can be implemented
+      [AutoMapper.UnitTests] MappingExpressionFeatureWithReverseTest.cs(237,30): error CS0539: 'MappingExpressionFeatureWithReverseTest.TypeMapFeatureBase.Seal(IGlobalConfiguration)' in explicit interface declaration is not found among members of the interface that can be implemented
+      [AutoMapper.UnitTests] MappingExpressionFeatureWithoutReverseTest.cs(289,30): error CS0539: 'MappingExpressionFeatureWithoutReverseTest.TypeMapFeatureBase.Seal(IGlobalConfiguration)' in explicit interface declaration is not found among members of the interface that can be implemented
+  2 x CS8422
+      [AutoMapper] MapperConfiguration.cs(229,42): error CS8422: A static local function cannot contain a reference to 'this' or 'base'.
+      [AutoMapper] ExpressionBuilder.cs(403,17): error CS8422: A static local function cannot contain a reference to 'this' or 'base'.
+  2 x CS0117
+      [AutoMapper] ExpressionBuilder.cs(433,93): error CS0117: 'ReplaceVisitorBase' does not contain a definition for 'Visit'
+      [AutoMapper] ExpressionBuilder.cs(437,114): error CS0117: 'ReplaceVisitorBase' does not contain a definition for 'VisitParameter'
+  2 x CS0535
+      [AutoMapper.UnitTests] ArraysAndLists.cs(153,36): error CS0535: 'When_mapping_a_primitive_array_with_custom_object_mapper.IntToIntMapper' does not implement interface member 'IObjectMapper.IsMatch(TypePair)'
+      [AutoMapper.UnitTests] CustomMapperTests.cs(50,37): error CS0535: 'When_adding_a_custom_mapper.TestObjectMapper' does not implement interface member 'IObjectMapper.IsMatch(TypePair)'
+  2 x CS0407
+      [AutoMapper.UnitTests] AssemblyScanning.cs(51,60): error CS0407: 'Assembly When_scanning_by_name.OnAssemblyResolve(object, ResolveEventArgs)' has the wrong return type
+      [AutoMapper.UnitTests] AssemblyScanning.cs(53,60): error CS0407: 'Assembly When_scanning_by_name.OnAssemblyResolve(object, ResolveEventArgs)' has the wrong return type
+  1 x CS8129
+      [AutoMapper] Conventions.cs(104,45): error CS8129: No suitable 'Deconstruct' instance or extension method was found for type 'TOutput', with 2 out parameters and a void return type.
+  1 x CS0120
+      [AutoMapper] Profile.cs(75,23): error CS0120: An object reference is required for the non-static field, method, or property 'object.GetType()'
+  1 x CS0029
+      [AutoMapper] ServiceCollectionExtensions.cs(84,20): error CS0029: Cannot implicitly convert type 'AutoMapper.MapperConfiguration' to 'AutoMapper.IConfigurationProvider'
+  1 x CS1662
+      [AutoMapper] ServiceCollectionExtensions.cs(84,20): error CS1662: Cannot convert lambda expression to intended delegate type because some of the return types in the block are not implicitly convertible to the delegate return type
+  1 x CS0019
+      [AutoMapper.UnitTests] ConditionalMapping.cs(365,126): error CS0019: Operator '>' cannot be applied to operands of type 'object' and 'int'
+  1 x CS0729
+      [AutoMapper] System.Runtime.CompilerServices.IsExternalInit.g.cs(4,12): error CS0729: Type 'IsExternalInit' is defined in this assembly, but a type forwarder is specified for it
+Output:
+ould not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(32,101): error CS0246: The type or namespace name 'MemberPath' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(45,96): error CS0103: The name 'MemberPath' does not exist in the current context
+1>ProjectionBuilder.cs(45,165): error CS0103: The name 'MemberPath' does not exist in the current context
+1>ProjectionBuilder.cs(69,95): error CS1503: Argument 5: cannot convert from 'System.Linq.Expressions.ParameterExpression' to 'Expression'
+1>ProjectionBuilder.cs(70,155): error CS1503: Argument 2: cannot convert from 'System.Linq.Expressions.ParameterExpression' to 'LambdaExpression'
+1>ProjectionBuilder.cs(72,5): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(72,140): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(84,9): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(84,118): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(91,18): error CS0246: The type or namespace name 'MemberBinding' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(135,13): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(135,62): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(143,17): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(153,21): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(158,51): error CS0103: The name 'ParameterExpression' does not exist in the current context
+1>ProjectionBuilder.cs(170,21): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(175,52): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(184,25): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(184,54): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(186,134): error CS0246: The type or namespace name 'ParameterExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(199,104): error CS0246: The type or namespace name 'MemberExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(200,25): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(223,13): error CS0246: The type or namespace name 'NewExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(225,41): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(225,79): error CS0246: The type or namespace name 'NewExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(245,6): error CS0246: The type or namespace name 'EditorBrowsableAttribute' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(245,6): error CS0246: The type or namespace name 'EditorBrowsable' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(245,22): error CS0103: The name 'EditorBrowsableState' does not exist in the current context
+1>ProjectionBuilder.cs(246,43): error CS0246: The type or namespace name 'IGlobalConfiguration' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(246,79): error CS0246: The type or namespace name 'MemberPath' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(249,25): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(249,54): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(263,91): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(263,161): error CS0246: The type or namespace name 'ParameterExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(286,80): error CS1503: Argument 1: cannot convert from 'System.Reflection.PropertyInfo' to 'MemberInfo'
+1>ProjectionBuilder.cs(290,82): error CS1503: Argument 2: cannot convert from 'System.Linq.Expressions.ParameterExpression' to 'Expression'
+1>ProjectionBuilder.cs(293,73): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(293,105): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(295,61): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(296,20): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(296,51): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(298,17): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(302,56): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(310,42): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(310,63): error CS0246: The type or namespace name 'ExpressionVisitor' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(312,22): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(313,25): error CS0246: The type or namespace name 'MemberInfo' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(314,32): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(314,55): error CS0246: The type or namespace name 'MemberExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(322,69): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(322,92): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(325,25): error CS1061: 'ProjectionBuilder.FirstPassLetPropertyMaps.GePropertiesVisitor' does not contain a definition for 'Visit' and no accessible extension method 'Visit' accepting a first argument of type 'ProjectionBuilder.FirstPassLetPropertyMaps.GePropertiesVisitor' could be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(329,51): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(329,73): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(329,97): error CS0246: The type or namespace name 'ExpressionVisitor' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(331,22): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(332,32): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(332,55): error CS0246: The type or namespace name 'MemberExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(343,2): error CS0246: The type or namespace name 'EditorBrowsableAttribute' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(343,2): error CS0246: The type or namespace name 'EditorBrowsable' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(343,18): error CS0103: The name 'EditorBrowsableState' does not exist in the current context
+1>ProjectionBuilder.cs(347,14): error CS0246: The type or namespace name 'MemberPath' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(348,40): error CS0246: The type or namespace name 'IGlobalConfiguration' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(348,76): error CS0246: The type or namespace name 'MemberPath' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(364,20): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(364,49): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(366,12): error CS0246: The type or namespace name 'MemberPath' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(370,12): error CS0246: The type or namespace name 'IGlobalConfiguration' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(372,86): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(372,156): error CS0246: The type or namespace name 'ParameterExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(376,2): error CS0246: The type or namespace name 'EditorBrowsableAttribute' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(376,2): error CS0246: The type or namespace name 'EditorBrowsable' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(376,18): error CS0103: The name 'EditorBrowsableState' does not exist in the current context
+1>ProjectionBuilder.cs(377,48): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(377,77): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(379,29): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(379,52): error CS0246: The type or namespace name 'ParameterExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(381,41): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(385,9): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(385,34): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(388,21): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(394,12): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(396,35): error CS0246: The type or namespace name 'ExpressionVisitor' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(398,19): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(398,63): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(401,24): error CS1061: 'ParameterVisitor' does not contain a definition for 'Visit' and no accessible extension method 'Visit' accepting a first argument of type 'ParameterVisitor' could be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(403,24): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(404,24): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(404,47): error CS0246: The type or namespace name 'MemberExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(426,28): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(435,28): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(438,2): error CS0246: The type or namespace name 'EditorBrowsableAttribute' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(438,2): error CS0246: The type or namespace name 'EditorBrowsable' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(438,18): error CS0103: The name 'EditorBrowsableState' does not exist in the current context
+1>ProjectionBuilder.cs(439,2): error CS0246: The type or namespace name 'DebuggerDisplayAttribute' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(439,2): error CS0246: The type or namespace name 'DebuggerDisplay' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(440,88): error CS0246: The type or namespace name 'MemberPath' could not be found (are you missing a using directive or an assembly reference?)
+1>ProjectionBuilder.cs(445,26): error CS7036: There is no argument given that corresponds to the required parameter 'value' of 'CollectionExtensions.TryAdd<TKey, TValue>(IDictionary<TKey, TValue>, TKey, TValue)'
+1>ProjectionBuilder.cs(462,30): error CS0246: The type or namespace name 'MemberPath' could not be found (are you missing a using directive or an assembly reference?)
+1>AssignableProjectionMapper.cs(3,2): error CS0246: The type or namespace name 'EditorBrowsableAttribute' could not be found (are you missing a using directive or an assembly reference?)
+1>AssignableProjectionMapper.cs(3,2): error CS0246: The type or namespace name 'EditorBrowsable' could not be found (are you missing a using directive or an assembly reference?)
+1>AssignableProjectionMapper.cs(3,18): error CS0103: The name 'EditorBrowsableState' does not exist in the current context
+1>AssignableProjectionMapper.cs(6,25): error CS0246: The type or namespace name 'TypePair' could not be found (are you missing a using directive or an assembly reference?)
+1>AssignableProjectionMapper.cs(7,12): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>AssignableProjectionMapper.cs(7,31): error CS0246: The type or namespace name 'IGlobalConfiguration' could not be found (are you missing a using directive or an assembly reference?)
+1>AssignableProjectionMapper.cs(7,97): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>EnumProjectionMapper.cs(3,2): error CS0246: The type or namespace name 'EditorBrowsableAttribute' could not be found (are you missing a using directive or an assembly reference?)
+1>EnumProjectionMapper.cs(3,2): error CS0246: The type or namespace name 'EditorBrowsable' could not be found (are you missing a using directive or an assembly reference?)
+1>EnumProjectionMapper.cs(3,18): error CS0103: The name 'EditorBrowsableState' does not exist in the current context
+1>EnumProjectionMapper.cs(6,12): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>EnumProjectionMapper.cs(6,31): error CS0246: The type or namespace name 'IGlobalConfiguration' could not be found (are you missing a using directive or an assembly reference?)
+1>EnumProjectionMapper.cs(6,97): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>EnumProjectionMapper.cs(8,25): error CS0246: The type or namespace name 'TypePair' could not be found (are you missing a using directive or an assembly reference?)
+1>EnumerableProjectionMapper.cs(3,14): error CS0246: The type or namespace name 'ReflectionHelper' could not be found (are you missing a using directive or an assembly reference?)
+1>EnumerableProjectionMapper.cs(4,2): error CS0246: The type or namespace name 'EditorBrowsableAttribute' could not be found (are you missing a using directive or an assembly reference?)
+1>EnumerableProjectionMapper.cs(4,2): error CS0246: The type or namespace name 'EditorBrowsable' could not be found (are you missing a using directive or an assembly reference?)
+1>EnumerableProjectionMapper.cs(4,18): error CS0103: The name 'EditorBrowsableState' does not exist in the current context
+1>EnumerableProjectionMapper.cs(7,29): error CS0246: The type or namespace name 'MethodInfo' could not be found (are you missing a using directive or an assembly reference?)
+1>EnumerableProjectionMapper.cs(7,74): error CS1061: 'Type' does not contain a definition for 'StaticGenericMethod' and no accessible extension method 'StaticGenericMethod' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
+1>EnumerableProjectionMapper.cs(8,29): error CS0246: The type or namespace name 'MethodInfo' could not be found (are you missing a using directive or an assembly reference?)
+1>EnumerableProjectionMapper.cs(8,75): error CS1061: 'Type' does not contain a definition for 'GetStaticMethod' and no accessible extension method 'GetStaticMethod' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
+1>EnumerableProjectionMapper.cs(9,29): error CS0246: The type or namespace name 'MethodInfo' could not be found (are you missing a using directive or an assembly reference?)
+1>EnumerableProjectionMapper.cs(9,74): error CS1061: 'Type' does not contain a definition for 'GetStaticMethod' and no accessible extension method 'GetStaticMethod' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
+1>EnumerableProjectionMapper.cs(10,25): error CS0246: The type or namespace name 'TypePair' could not be found (are you missing a using directive or an assembly reference?)
+1>EnumerableProjectionMapper.cs(11,12): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>EnumerableProjectionMapper.cs(11,31): error CS0246: The type or namespace name 'IGlobalConfiguration' could not be found (are you missing a using directive or an assembly reference?)
+1>EnumerableProjectionMapper.cs(11,97): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>EnumerableProjectionMapper.cs(14,35): error CS0103: The name 'GetElementType' does not exist in the current context
+1>EnumerableProjectionMapper.cs(15,30): error CS0103: The name 'GetElementType' does not exist in the current context
+1>EnumerableProjectionMapper.cs(46,20): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>EnumerableProjectionMapper.cs(46,38): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>EnumerableProjectionMapper.cs(46,57): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>NullableSourceProjectionMapper.cs(5,12): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>NullableSourceProjectionMapper.cs(5,31): error CS0246: The type or namespace name 'IGlobalConfiguration' could not be found (are you missing a using directive or an assembly reference?)
+1>NullableSourceProjectionMapper.cs(5,97): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>NullableSourceProjectionMapper.cs(7,25): error CS0246: The type or namespace name 'TypePair' could not be found (are you missing a using directive or an assembly reference?)
+1>StringProjectionMapper.cs(3,2): error CS0246: The type or namespace name 'EditorBrowsableAttribute' could not be found (are you missing a using directive or an assembly reference?)
+1>StringProjectionMapper.cs(3,2): error CS0246: The type or namespace name 'EditorBrowsable' could not be found (are you missing a using directive or an assembly reference?)
+1>StringProjectionMapper.cs(3,18): error CS0103: The name 'EditorBrowsableState' does not exist in the current context
+1>StringProjectionMapper.cs(6,25): error CS0246: The type or namespace name 'TypePair' could not be found (are you missing a using directive or an assembly reference?)
+1>StringProjectionMapper.cs(7,12): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>StringProjectionMapper.cs(7,31): error CS0246: The type or namespace name 'IGlobalConfiguration' could not be found (are you missing a using directive or an assembly reference?)
+1>StringProjectionMapper.cs(7,97): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>ResolutionContext.cs(9,24): error CS0246: The type or namespace name 'TypePair' could not be found (are you missing a using directive or an assembly reference?)
+1>ResolutionContext.cs(60,24): error CS0246: The type or namespace name 'TypePair' could not be found (are you missing a using directive or an assembly reference?)
+1>ServiceCollectionExtensions.cs(62,128): error CS1503: Argument 2: cannot convert from 'AutoMapper.MapperConfigurationExpression' to 'AutoMapper.IMapperConfigurationExpression'
+1>ServiceCollectionExtensions.cs(67,90): error CS1503: Argument 1: cannot convert from 'System.Collections.Generic.IEnumerable<System.Reflection.Assembly>' to 'System.Collections.Generic.IEnumerable<Assembly>'
+1>ServiceCollectionExtensions.cs(84,20): error CS0029: Cannot implicitly convert type 'AutoMapper.MapperConfiguration' to 'AutoMapper.IConfigurationProvider'
+1>ServiceCollectionExtensions.cs(84,20): error CS1662: Cannot convert lambda expression to intended delegate type because some of the return types in the block are not implicitly convertible to the delegate return type
+1>TypeMap.cs(5,14): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(11,2): error CS0246: The type or namespace name 'DebuggerDisplayAttribute' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(11,2): error CS0246: The type or namespace name 'DebuggerDisplay' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(12,2): error CS0246: The type or namespace name 'EditorBrowsableAttribute' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(12,2): error CS0246: The type or namespace name 'EditorBrowsable' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(12,18): error CS0103: The name 'EditorBrowsableState' does not exist in the current context
+1>TypeMap.cs(15,21): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(16,21): error CS0246: The type or namespace name 'MethodInfo' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(16,74): error CS1061: 'Type' does not contain a definition for 'GetStaticMethod' and no accessible extension method 'GetStaticMethod' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(20,127): error CS0246: The type or namespace name 'MemberInfo' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(48,60): error CS0246: The type or namespace name 'ConstructorInfo' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(60,49): error CS0246: The type or namespace name 'TypePair' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(64,12): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(65,12): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(65,30): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(65,49): error CS0246: The type or namespace name 'Expression' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(66,9): error CS0103: The name 'Expression' does not exist in the current context
+1>TypeMap.cs(69,12): error CS0246: The type or namespace name 'TypePair' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(71,12): error CS0246: The type or namespace name 'TypeDetails' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(72,12): error CS0246: The type or namespace name 'TypeDetails' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(76,12): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(77,12): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(78,12): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(92,32): error CS0246: The type or namespace name 'TypePair' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(92,99): error CS7036: There is no argument given that corresponds to the required parameter 'configuration' of 'ExpressionBuilder.NullCheck(Expression, IGlobalConfiguration, MemberMap, Expression, IncludedMember)'
+1>TypeMap.cs(93,32): error CS0246: The type or namespace name 'TypePair' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(93,93): error CS7036: There is no argument given that corresponds to the required parameter 'configuration' of 'ExpressionBuilder.NullCheck(Expression, IGlobalConfiguration, MemberMap, Expression, IncludedMember)'
+1>TypeMap.cs(94,32): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(94,99): error CS7036: There is no argument given that corresponds to the required parameter 'configuration' of 'ExpressionBuilder.NullCheck(Expression, IGlobalConfiguration, MemberMap, Expression, IncludedMember)'
+1>TypeMap.cs(95,32): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(95,97): error CS7036: There is no argument given that corresponds to the required parameter 'configuration' of 'ExpressionBuilder.NullCheck(Expression, IGlobalConfiguration, MemberMap, Expression, IncludedMember)'
+1>TypeMap.cs(96,120): error CS7036: There is no argument given that corresponds to the required parameter 'configuration' of 'ExpressionBuilder.NullCheck(Expression, IGlobalConfiguration, MemberMap, Expression, IncludedMember)'
+1>TypeMap.cs(100,75): error CS7036: There is no argument given that corresponds to the required parameter 'configuration' of 'ExpressionBuilder.NullCheck(Expression, IGlobalConfiguration, MemberMap, Expression, IncludedMember)'
+1>TypeMap.cs(101,74): error CS7036: There is no argument given that corresponds to the required parameter 'configuration' of 'ExpressionBuilder.NullCheck(Expression, IGlobalConfiguration, MemberMap, Expression, IncludedMember)'
+1>TypeMap.cs(120,12): error CS0103: The name 'TypeDetails' does not exist in the current context
+1>TypeMap.cs(121,12): error CS0246: The type or namespace name 'MemberInfo' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(122,12): error CS0246: The type or namespace name 'ConstructorParameters' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(128,12): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(130,111): error CS7036: There is no argument given that corresponds to the required parameter 'configuration' of 'ExpressionBuilder.NullCheck(Expression, IGlobalConfiguration, MemberMap, Expression, IncludedMember)'
+1>TypeMap.cs(132,117): error CS1061: 'Type' does not contain a definition for 'GenericParametersCount' and no accessible extension method 'GenericParametersCount' accepting a first argument of type 'Type' could be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(135,24): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(138,33): error CS0246: The type or namespace name 'MemberInfo' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(138,93): error CS0246: The type or namespace name 'MemberInfo' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(175,51): error CS0246: The type or namespace name 'MemberInfo' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(185,33): error CS0246: The type or namespace name 'TypePair' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(192,31): error CS0246: The type or namespace name 'MemberInfo' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(203,22): error CS0246: The type or namespace name 'IGlobalConfiguration' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(245,37): error CS0246: The type or namespace name 'TypePair' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(250,34): error CS0246: The type or namespace name 'TypePair' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(255,36): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(256,35): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(281,14): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(281,50): error CS0246: The type or namespace name 'IGlobalConfiguration' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(308,67): error CS0246: The type or namespace name 'TypePair' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(310,43): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(310,83): error CS0246: The type or namespace name 'MemberPath' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(313,65): error CS0246: The type or namespace name 'MemberInfo' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(318,16): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(323,16): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(325,21): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(326,21): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(327,21): error CS0246: The type or namespace name 'TypePair' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(328,21): error CS0246: The type or namespace name 'TypePair' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(335,26): error CS0246: The type or namespace name 'IGlobalConfiguration' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(346,49): error CS7036: There is no argument given that corresponds to the required parameter 'value' of 'CollectionExtensions.TryAdd<TKey, TValue>(IDictionary<TKey, TValue>, TKey, TValue)'
+1>TypeMap.cs(367,41): error CS0246: The type or namespace name 'TypePair' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(372,40): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(377,39): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(387,47): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(387,87): error CS0246: The type or namespace name 'MemberPath' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(398,36): error CS0246: The type or namespace name 'MemberPath' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(414,38): error CS0246: The type or namespace name 'TypePair' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(422,48): error CS7036: There is no argument given that corresponds to the required parameter 'value' of 'CollectionExtensions.TryAdd<TKey, TValue>(IDictionary<TKey, TValue>, TKey, TValue)'
+1>TypeMap.cs(427,44): error CS7036: There is no argument given that corresponds to the required parameter 'value' of 'CollectionExtensions.TryAdd<TKey, TValue>(IDictionary<TKey, TValue>, TKey, TValue)'
+1>TypeMap.cs(429,69): error CS0246: The type or namespace name 'MemberInfo' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(440,58): error CS0246: The type or namespace name 'MemberInfo' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(454,31): error CS7036: There is no argument given that corresponds to the required parameter 'value' of 'CollectionExtensions.TryAdd<TKey, TValue>(IDictionary<TKey, TValue>, TKey, TValue)'
+1>TypeMap.cs(546,51): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(546,92): error CS0246: The type or namespace name 'LambdaExpression' could not be found (are you missing a using directive or an assembly reference?)
+1>TypeMap.cs(551,34): error CS7036: There is no argument given that corresponds to the required parameter 'value' of 'CollectionExtensions.TryAdd<TKey, TValue>(IDictionary<TKey, TValue>, TKey, TValue)'
+1>TypeMap.cs(556,33): error CS7036: There is no argument given that corresponds to the required parameter 'value' of 'CollectionExtensions.TryAdd<TKey, TValue>(IDictionary<TKey, TValue>, TKey, TValue)'
+1>System.Runtime.CompilerServices.IsExternalInit.g.cs(4,12): error CS0729: Type 'IsExternalInit' is defined in this assembly, but a type forwarder is specified for it
+2>------ Build started: Project: AutoMapper.DI.Tests, Configuration: Debug ------
+3>------ Build started: Project: Benchmark, Configuration: Debug ------
+4>------ Build started: Project: AutoMapper.IntegrationTests, Configuration: Debug ------
+5>------ Build started: Project: TestApp, Configuration: Debug ------
+6>------ Build started: Project: AutoMapper.UnitTests, Configuration: Debug ------
+========== Build: 0 succeeded, 6 failed ==========
+
