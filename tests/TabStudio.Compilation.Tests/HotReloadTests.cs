@@ -33,6 +33,8 @@ public sealed class HotReloadTests
     [InlineData("public static int Value() => 1;", "public static int Value() => 1; public int Field;")]
     [InlineData("public int Field = 1; public int Value() => Field;", "public int Field = 2; public int Value() => Field;")]
     [InlineData("public static Func<int> Value() => () => 1;", "public static Func<int> Value() => () => 1 + 2;")]
+    [InlineData("public static Func<long> Value() { var x = 1; return () => x; }", "public static Func<long> Value() { var x = 1L; return () => x; }")]
+    [InlineData("public static long Value() { int Local() => 1; return Local(); }", "public static long Value() { long Local() => 1; return Local(); }")]
     public void Rude_edits_produce_no_delta(string before, string after)
     {
         using var baseline = new HotReloadBaseline(Compile(before));
@@ -99,6 +101,43 @@ public sealed class HotReloadTests
         Assert.Equal(1, method.Invoke(null, null));
         Assert.Equal(HotReloadStatus.Applied, session.Apply([Compile("public static int Value() => 3;")]).Status);
         Assert.Equal(3, method.Invoke(null, null));
+    }
+
+    [Fact]
+    public async Task A_top_level_lambda_updates_while_Main_is_waiting_without_restarting_Main()
+    {
+        const string source = "Func<int> read = () => 1; Console.ReadLine(); Console.WriteLine(read());";
+        CompiledAssembly Build(string text) => new CSharpCompiler().Compile(new CompilationRequest
+        {
+            AssemblyName = "ReloadTopLevel",
+            Documents = [new SourceDocument("Program.cs", text)],
+        }).Assembly!;
+        var original = Build(source);
+        var runner = new ProgramRunner();
+        HotReloadSession? session = null;
+        runner.Loaded += assembly => session = new HotReloadSession(original, [], assembly);
+        using var input = new ConsoleInput();
+        using var stop = new CancellationTokenSource(TimeSpan.FromSeconds(20));
+        var waiting = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        input.WaitingForInput += (_, _) => waiting.TrySetResult();
+        var console = new CapturingConsole();
+        var run = runner.RunAsync(original, [], [], console, input, stop.Token);
+        try
+        {
+            await waiting.Task.WaitAsync(stop.Token);
+            Assert.NotNull(session);
+            Assert.Equal(HotReloadStatus.Applied, session.Apply([Build(source.Replace("=> 1", "=> 2", StringComparison.Ordinal))]).Status);
+            input.SubmitLine("continue");
+            Assert.Equal(RunOutcome.Completed, (await run.WaitAsync(stop.Token)).Outcome);
+            Assert.Equal("2\n", console.Output);
+        }
+        finally
+        {
+            input.Complete();
+            await stop.CancelAsync();
+            await run;
+            session?.Dispose();
+        }
     }
 
     private static CompilationRequest Request(string members) => new()

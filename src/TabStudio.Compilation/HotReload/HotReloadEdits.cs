@@ -53,20 +53,27 @@ internal static class HotReloadEdits
             foreach (var (key, oldMethod) in oldMethods)
             {
                 var newMethod = newMethods[key];
-                if (oldMethod.Body.IsEquivalentTo(newMethod.Body))
+                var oldNodes = BodyNodes(oldMethod.Body, key).ToArray();
+                var newNodes = BodyNodes(newMethod.Body, key).ToArray();
+                if (key == "<top-level>"
+                    ? ((CompilationUnitSyntax)oldMethod.Body).Members.OfType<GlobalStatementSyntax>()
+                        .Select(n => n.WithoutTrivia().NormalizeWhitespace().ToFullString())
+                        .SequenceEqual(((CompilationUnitSyntax)newMethod.Body).Members.OfType<GlobalStatementSyntax>()
+                            .Select(n => n.WithoutTrivia().NormalizeWhitespace().ToFullString()), StringComparer.Ordinal)
+                    : oldMethod.Body.IsEquivalentTo(newMethod.Body))
                 {
                     continue;
                 }
 
                 // With closures/state machines, preserve the compiler's identity of each syntax node. If the tree
                 // shape changes we cannot prove the captures/suspension points still match, so require a restart.
-                var oldNodes = oldMethod.Body.DescendantNodesAndSelf().ToArray();
-                var newNodes = newMethod.Body.DescendantNodesAndSelf().ToArray();
                 Func<SyntaxNode, SyntaxNode?>? map = null;
                 if (oldNodes.Any(IsStateful) || newNodes.Any(IsStateful) || oldMethod.Symbol.IsAsync || newMethod.Symbol.IsAsync)
                 {
                     if (!oldNodes.Select(n => n.RawKind).SequenceEqual(newNodes.Select(n => n.RawKind))
-                        || !StateDeclarations(oldNodes).SequenceEqual(StateDeclarations(newNodes), StringComparer.Ordinal))
+                        || !StateDeclarations(oldNodes).SequenceEqual(StateDeclarations(newNodes), StringComparer.Ordinal)
+                        || !StateSymbols(before.GetSemanticModel(oldTree), oldNodes, token)
+                            .SequenceEqual(StateSymbols(after.GetSemanticModel(newTree), newNodes, token), StringComparer.Ordinal))
                     {
                         return ([], $"{Path.GetFileName(path)}: changing the shape of a lambda, local function, iterator or async method requires a restart.");
                     }
@@ -85,12 +92,34 @@ internal static class HotReloadEdits
 
     private static bool IsStateful(SyntaxNode node) => node is AnonymousFunctionExpressionSyntax or LocalFunctionStatementSyntax or YieldStatementSyntax;
 
+    private static IEnumerable<SyntaxNode> BodyNodes(SyntaxNode body, string key) => key == "<top-level>"
+        ? ((CompilationUnitSyntax)body).Members.OfType<GlobalStatementSyntax>().SelectMany(n => n.DescendantNodesAndSelf())
+        : body.DescendantNodesAndSelf();
+
+    private static IEnumerable<string> StateSymbols(SemanticModel model, IEnumerable<SyntaxNode> nodes, CancellationToken token)
+    {
+        foreach (var node in nodes.Where(n => n is VariableDeclaratorSyntax or ParameterSyntax or LocalFunctionStatementSyntax
+            or ForEachStatementSyntax or CatchDeclarationSyntax or SingleVariableDesignationSyntax))
+        {
+            // Syntax alone misses inferred changes (var x = 1 -> 1L), which would change a hoisted field's type.
+            var symbol = model.GetDeclaredSymbol(node, token);
+            yield return symbol switch
+            {
+                ILocalSymbol local => $"local:{local.Name}:{local.RefKind}:{local.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)}",
+                IParameterSymbol parameter => $"parameter:{parameter.Name}:{parameter.RefKind}:{parameter.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)}",
+                IMethodSymbol method => $"method:{method.ToDisplayString()}:{method.RefKind}:{method.ReturnType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)}",
+                _ => symbol?.ToDisplayString() ?? string.Empty,
+            };
+        }
+    }
+
     private static IEnumerable<string> StateDeclarations(IEnumerable<SyntaxNode> nodes) => nodes
-        .Where(n => n is VariableDeclaratorSyntax or ParameterSyntax || n is IdentifierNameSyntax)
+        .Where(n => n is VariableDeclaratorSyntax or ParameterSyntax or LocalFunctionStatementSyntax or IdentifierNameSyntax)
         .Select(n => n switch
         {
             VariableDeclaratorSyntax v => "var:" + v.Identifier.ValueText,
             ParameterSyntax p => p.WithDefault(null).WithoutTrivia().NormalizeWhitespace().ToFullString(),
+            LocalFunctionStatementSyntax f => f.WithBody(null).WithExpressionBody(null).WithoutTrivia().NormalizeWhitespace().ToFullString(),
             _ => n.ToString(), // Capturing a different variable is a rude edit even if the tree shape is identical.
         });
 
@@ -126,7 +155,7 @@ internal static class HotReloadEdits
         if (root is CompilationUnitSyntax unit && unit.Members.OfType<GlobalStatementSyntax>().Any()
             && compilation.GetEntryPoint(token) is { } entry)
         {
-            result.Add("<top-level>", (entry, unit.WithMembers(SyntaxFactory.List<MemberDeclarationSyntax>(unit.Members.OfType<GlobalStatementSyntax>()))));
+            result.Add("<top-level>", (entry, unit));
         }
 
         return result;
