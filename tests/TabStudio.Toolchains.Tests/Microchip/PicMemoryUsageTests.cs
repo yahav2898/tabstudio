@@ -54,4 +54,19 @@ public sealed class PicMemoryUsageTests
         Assert.Equal(new PicMemoryRegion(264, null), usage.Program);
         Assert.Equal(new PicMemoryRegion(16, null), usage.Data);
     }
+
+    [Fact]
+    public void Reads_xc32_6_columns_from_the_linked_pic32mx_spike_including_zero_data()
+    {
+        var usage = PicMemoryUsage.Parse("""
+                  Total kseg0_program_mem used  :       0x3a0         928  0.7% of 0x1f000
+                     Total Program Memory used  :       0x66c        1644  1.2% of 0x20490
+                Total kseg0/kseg1 data_mem used  :           0           0  <1% of 0x8000
+                        Total Data Memory used  :           0           0  <1% of 0x8000
+                stack                   0xa0000020         0x7fd8       32728  Reserved for stack
+                """);
+
+        Assert.Equal(new PicMemoryRegion(1644, 0x20490), usage.Program);
+        Assert.Equal(new PicMemoryRegion(0, 0x8000), usage.Data);
+    }
 }

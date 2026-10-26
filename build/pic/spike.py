@@ -210,7 +210,7 @@ def spike(args):
             if len(binaries) != 1:
                 raise RuntimeError(f"Expected one {compiler} in the official archive, found {len(binaries)}")
             dest = "/" + binaries[0].parent.parent.relative_to(root).as_posix()
-            result["installMethod"] = "official archive (installer self-check failed)"
+            result["installMethod"] = f"official archive (installer exit {code})"
         program = f"{dest}/bin/{compiler}"
         result["compilerFile"] = subprocess.check_output(["file", str(root / program.lstrip("/"))], text=True).strip()
         code, _, version = run([*prefix, *translate, program, "--version"], out / "version.log", env=env, check=False, timeout=30)

@@ -47,6 +47,24 @@ public sealed partial record PicMemoryUsage(PicMemoryRegion? Program, PicMemoryR
             }
         }
 
+        // XC32 6's linker uses aligned columns, without the older "(bytes)"
+        // and decimal parentheses. Read its totals, not individual sections or
+        // the module report (which can count linker-generated data differently).
+        foreach (Match match in Xc32Columns().Matches(output))
+        {
+            var region = new PicMemoryRegion(
+                long.Parse(match.Groups["used"].Value, CultureInfo.InvariantCulture),
+                long.Parse(match.Groups["capacity"].Value, NumberStyles.HexNumber, CultureInfo.InvariantCulture));
+            if (match.Groups["kind"].Value.Equals("program", StringComparison.OrdinalIgnoreCase))
+            {
+                program = region;
+            }
+            else
+            {
+                data = region;
+            }
+        }
+
         return new PicMemoryUsage(program, data);
     }
 
@@ -55,4 +73,7 @@ public sealed partial record PicMemoryUsage(PicMemoryRegion? Program, PicMemoryR
 
     [GeneratedRegex(@"^\s*Total\s+(?<kind>program|data)\s+memory\s+used\s*\(bytes\)\s*:\s*0x[0-9a-f]+\s*\(\s*(?<used>\d+)\)", RegexOptions.IgnoreCase | RegexOptions.Multiline)]
     private static partial Regex Xc32();
+
+    [GeneratedRegex(@"^\s*Total\s+(?<kind>Program|Data)\s+Memory\s+used\s*:\s*(?:0x)?[0-9a-f]+\s+(?<used>\d+)\s+<?[\d.]+%\s+of\s+0x(?<capacity>[0-9a-f]+)", RegexOptions.IgnoreCase | RegexOptions.Multiline)]
+    private static partial Regex Xc32Columns();
 }

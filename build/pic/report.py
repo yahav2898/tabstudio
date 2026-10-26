@@ -16,8 +16,9 @@ def report(folder):
         results[key] = result
     lines = ["# PIC compiler spike", "",
              "Wall time includes PRoot startup, compilation, assembly and linking. The first build is followed by two warm builds.",
+             "XC32 HEX conversion is verified separately and excluded from the compile/link wall time. Installer timing excludes the separate archive fallback when needed.",
              "The ARM64 and x86-64 runners use different CPUs; the ratio is an end-to-end runner comparison, not an isolated translation overhead measurement.",
-             "", "| Compiler | Host | First (s) | Warm mean (s) | Install (s) | Result |",
+             "", "| Compiler | Host | First (s) | Warm mean (s) | Installer attempt (s) | Result |",
              "| --- | --- | ---: | ---: | ---: | --- |"]
     success = True
     comparisons = []
@@ -37,8 +38,8 @@ def report(folder):
                           f'Firmware HEX hashes match: **{native["hexSha256"] == arm["hexSha256"]}**.', ""])
     lines.extend(comparisons)
     lines.extend(["", "## Native fallback evaluation", "",
-                  "These checks currently evaluate target-object generation. They do not establish that a complete firmware image links or that existing XC projects are compatible.",
-                  "", "| Compiler | Native host | Source build (s) | Object compile mean (s) | Linked firmware | Result |",
+                  "These checks distinguish target-object generation from firmware linking. A linked fallback blink does not establish compatibility with arbitrary XC projects.",
+                  "", "| Compiler | Native host | Source build (s) | Compile mean (s) | Linked firmware | Result |",
                   "| --- | --- | ---: | ---: | --- | --- |"])
     for compiler in ["xc32-native", "sdcc-native"]:
         result = results.get((compiler, "aarch64"))
@@ -48,12 +49,14 @@ def report(folder):
         build = sum(result.get("componentSeconds", {}).values())
         times = result.get("compileSeconds", [])
         mean = f"{statistics.mean(times):.3f}" if times else "—"
-        status = "Object emitted" if result["success"] else "Failed"
+        status = ("Firmware linked" if result.get("linkedFirmware") else "Object emitted") if result["success"] else "Failed"
         lines.append(f'| {compiler} | {result.get("nativeHost", "unknown")} | {build:.1f} | {mean} | {result.get("linkedFirmware", False)} | {status} |')
     for (compiler, arch), result in sorted(results.items()):
         lines.extend(["", f"## {compiler} / {arch}", "", "```text", result["cpu"].strip(), "```"])
         if result.get("error"):
             lines.extend(["", result["error"]])
+        if result.get("scope"):
+            lines.extend(["", result["scope"]])
     return "\n".join(lines) + "\n", success
 
 
