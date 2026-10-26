@@ -14,7 +14,7 @@ public static partial class SelfTest
         if (!HotReloadSession.IsSupported)
         {
             // A desktop may be deliberately started without Hot Reload. The Android emulator must prove it works.
-            return new SelfTestResult(!OperatingSystem.IsAndroid(), "Hot Reload: " + HotReloadSession.UnsupportedReason, clock.Elapsed);
+            return new SelfTestResult(!OperatingSystem.IsAndroid(), "Hot Reload: " + HotReloadSession.UnsupportedReason + " " + HotReloadSession.RuntimeDetails, clock.Elapsed);
         }
 
         var compiler = new CSharpCompiler();
@@ -40,7 +40,7 @@ public static partial class SelfTest
         var last = (int)method.Invoke(null, null)!;
         var success = before == 2 && after == 12 && last == 103 && applied.Success && again.Success;
         return new SelfTestResult(success,
-            success ? "Hot Reload: ApplyUpdate changed 2 -> 12 -> 103 in the same assembly; static state preserved"
+            success ? "Hot Reload: ApplyUpdate changed 2 -> 12 -> 103 in the same assembly; static state preserved (" + HotReloadSession.RuntimeDetails + ")"
                 : $"Hot Reload failed: {before}, {after}, {last}: {applied.Message} {again.Message}", clock.Elapsed);
     }
 }

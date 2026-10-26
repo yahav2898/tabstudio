@@ -294,6 +294,15 @@ hot-reload runtime component. This is enabled in Release-packaged IDEs too: the 
 user's **Debug** assemblies, not the optimized IDE. Setting an environment variable in managed startup would be
 too late. A manually launched desktop host needs the same environment variable.
 
+Mono 10's native `hot_reload_update_enabled` caches the configured mode but returns a local false on subsequent
+checks, which can make the public `MetadataUpdater.IsSupported` flag false after interpreter initialization.
+`HotReloadRuntime` still checks that flag first. On Android Mono only, if the startup environment and feature
+switch are enabled and the native component-only capability check succeeds, it performs one cached proof on an
+isolated throwaway Debug assembly: emit a real Roslyn delta, call `MetadataUpdater.ApplyUpdate`, and verify an
+existing method now returns 2 instead of 1. Only that verified result enables the fallback; it never enables a
+disabled runtime or patches the IDE/user assembly to test support. The emulator verdict records both the raw
+flag and the probe outcome before its independent two-generation state-preservation test.
+
 **Supported scope and rude edits.** Method, constructor, operator and accessor bodies, expression-bodied getters
 and top-level statements can be updated. For lambdas, local functions, async methods and iterators, only changes
 that preserve syntax topology and variable/capture names are accepted, with a new-to-old syntax map preserving

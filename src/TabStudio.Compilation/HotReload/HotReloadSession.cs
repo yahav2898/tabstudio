@@ -16,7 +16,10 @@ public sealed class HotReloadSession : IDisposable
     private bool _disposed;
 
     /// <summary>Whether CoreCLR or Android Mono enabled metadata updates at process startup.</summary>
-    public static bool IsSupported => MetadataUpdater.IsSupported;
+    public static bool IsSupported => HotReloadRuntime.IsSupported;
+
+    /// <summary>The native flag, startup settings and any verified Mono fallback, for self-test diagnostics.</summary>
+    public static string RuntimeDetails => HotReloadRuntime.Details;
 
     /// <summary>The reason updates are unavailable, suitable for the IDE.</summary>
     public static string UnsupportedReason => "C# Hot Reload is unavailable in this runtime. Start TabStudio with DOTNET_MODIFIABLE_ASSEMBLIES=debug (Android Mono also needs the interpreter), then run a Debug build.";

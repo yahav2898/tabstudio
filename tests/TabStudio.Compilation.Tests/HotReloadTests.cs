@@ -6,6 +6,12 @@ namespace TabStudio.Compilation.Tests;
 
 public sealed class HotReloadTests
 {
+    [Fact]
+    public void Runtime_capability_probe_proves_an_existing_method_uses_the_new_IL()
+    {
+        Assert.True(HotReloadRuntime.VerifyApplyUpdate());
+    }
+
     [Theory]
     [InlineData("public static int Value() => 1;", "public static int Value() => 42;")]
     [InlineData("public int Value { get { return 1; } }", "public int Value { get { return 42; } }")]
