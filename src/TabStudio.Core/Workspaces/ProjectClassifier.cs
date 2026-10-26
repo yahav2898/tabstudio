@@ -41,8 +41,27 @@ public static class ProjectClassifier
         return (kind, false);
     }
 
+    /// <summary>The SDK of .NET Aspire's AppHost projects.</summary>
+    public const string AspireAppHostSdk = "Aspire.AppHost.Sdk";
+
+    /// <summary>
+    /// Whether a project is a .NET Aspire AppHost: it uses <c>Aspire.AppHost.Sdk</c>, sets <c>IsAspireHost</c>, or
+    /// references <c>Aspire.Hosting.AppHost</c>, as AppHosts made before Aspire 9 do.
+    /// </summary>
+    /// <param name="project">The project.</param>
+    public static bool IsAspireAppHost(ProjectInfo project)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+        return project.UsesSdk(AspireAppHostSdk) || IsTrue(project.GetProperty("IsAspireHost")) || project.HasPackage("Aspire.Hosting.AppHost");
+    }
+
     private static ProjectKind ClassifyApplication(ProjectInfo project, string sdk)
     {
+        if (IsAspireAppHost(project))
+        {
+            return ProjectKind.AspireAppHost;
+        }
+
         if (sdk.Equals("Uno.Sdk", StringComparison.OrdinalIgnoreCase) || sdk.StartsWith("Uno.Sdk.", StringComparison.OrdinalIgnoreCase))
         {
             return ProjectKind.Uno;

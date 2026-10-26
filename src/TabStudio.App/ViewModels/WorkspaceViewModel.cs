@@ -428,7 +428,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     private void LoadStartupProjects(Workspace workspace, string? preferred)
     {
         StartupProjects.Clear();
-        foreach (var project in workspace.Projects.Where(p => (p.IsExecutable || IsWindowsBridgeStartupProject(p)) && !p.IsTestProject))
+        foreach (var project in workspace.Projects.Where(p => (p.IsExecutable || IsWindowsBridgeStartupProject(p)) && !p.IsTestProject && p.Kind != ProjectKind.AspireAppHost))
         {
             StartupProjects.Add(new StartupProjectOption(project, new RelayCommand(() => SetStartupProject(project))));
         }

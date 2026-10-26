@@ -332,6 +332,58 @@ public sealed class ResolutionTests : IDisposable
 
     public void Dispose() => _fixture.Dispose();
 
+    [Fact]
+    public async Task Analyzers_stay_with_the_project_that_references_their_package_and_PrivateAssets_all_packages_do_not_flow()
+    {
+        // ardalis/CleanArchitecture: Web references Mediator.SourceGenerator with PrivateAssets="all", and the tests
+        // that reference Web must not run its generator a second time.
+        _fixture.Add(
+            Package("Generator", "1.0.0").WithFile("analyzers/dotnet/cs/Generator.dll"),
+            Package("Library", "1.0.0").DependsOn("Helper", "1.0.0"),
+            Package("Helper", "1.0.0").WithFile("analyzers/dotnet/cs/Helper.Generator.dll"),
+            Package("Private", "1.0.0"));
+        WriteProject("Web", references:
+        [
+            "<PackageReference Include=\"Generator\" Version=\"1.0.0\" />",
+            "<PackageReference Include=\"Library\" Version=\"1.0.0\" />",
+            "<PackageReference Include=\"Private\" Version=\"1.0.0\" PrivateAssets=\"all\" />",
+        ]);
+        var tests = WriteProject("Tests", references: ["<ProjectReference Include=\"..\\Web\\Web.csproj\" />"]);
+
+        var web = await _fixture.CreateRestorer().RestoreAsync(ProjectParser.Load(_fixture.Resolve("Web/Web.csproj")));
+        var result = await _fixture.CreateRestorer().RestoreAsync(ProjectParser.Load(tests));
+
+        Assert.True(result.Success, Describe(result));
+        Assert.Equal(new[] { "Generator.dll", "Helper.Generator.dll" }, web.Analyzers.Select(a => Path.GetFileName(a)).Order(StringComparer.Ordinal));
+        Assert.Empty(result.Analyzers);
+        Assert.Equal(new[] { "Generator", "Helper", "Library" }, result.Packages.Select(p => p.Id).Order(StringComparer.Ordinal));
+    }
+
+    [Fact]
+    public async Task Versions_given_as_properties_of_the_project_or_of_Directory_Packages_props_are_expanded()
+    {
+        // Humanizer and eShopOnWeb: Version="$(BaselinePackageVersion)" and <PackageVersion Version="$(AspNetVersion)" />.
+        _fixture.Add(Package("A", "1.0.0"), Package("A", "2.0.0"), Package("B", "3.0.0"), Package("B", "4.0.0"));
+        _fixture.Write("Directory.Packages.props", """
+            <Project>
+              <PropertyGroup><ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally><BVersion>3.0.0</BVersion></PropertyGroup>
+              <ItemGroup><PackageVersion Include="B" Version="$(BVersion)" /></ItemGroup>
+            </Project>
+            """);
+        var app = _fixture.Write("Main/Main.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework><AVersion Condition="'$(AVersion)' == ''">2.0.0</AVersion></PropertyGroup>
+              <ItemGroup><PackageReference Include="A" Version="$(AVersion)" /><PackageReference Include="B" /></ItemGroup>
+            </Project>
+            """);
+
+        var result = await _fixture.CreateRestorer().RestoreAsync(ProjectParser.Load(app));
+
+        Assert.True(result.Success, Describe(result));
+        Assert.Equal("2.0.0", Version(result, "A"));
+        Assert.Equal("3.0.0", Version(result, "B"));
+    }
+
     private string WriteProject(string name, string[] references) =>
         _fixture.Write($"{name}/{name}.csproj", $"""
             <Project Sdk="Microsoft.NET.Sdk">

@@ -418,6 +418,55 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: bash build/ci/publish-logs.sh app ${{ job.status }}
 
+  # Public .NET repositories, pinned to commits in build/ci/real-repos.json, opened and built in the real IDE as a
+  # person would on the tablet. Each has an error baseline that may only go down; reports and screenshots are published.
+  real-repos:
+    name: Real repositories
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - uses: actions/cache@v4
+        with:
+          path: .nuget/packages
+          key: nuget-real-repos-${{ hashFiles('Directory.Packages.props', '**/*.csproj', 'build/ci/real-repos.json') }}
+          restore-keys: nuget-real-repos-
+
+      - name: Clone the pinned repositories
+        run: python3 build/ci/real-repos.py "$RUNNER_TEMP/real-repos"
+
+      - name: Open and build them in TabStudio
+        env:
+          TABSTUDIO_REAL_REPOS: ${{ runner.temp }}/real-repos
+          TABSTUDIO_REAL_REPOS_OUT: ${{ github.workspace }}/ci-out
+          TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+        run: |
+          mkdir -p ci-out/screenshots
+          status=0
+          dotnet test tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true --blame-hang-timeout 30m --blame-hang-dump-type none \
+            --filter "FullyQualifiedName~RealRepositoryTests" --logger "console;verbosity=normal" > ci-out/test.log 2>&1 || status=$?
+          tail -n 60 ci-out/test.log
+          if [ -f ci-out/summary.md ]; then cat ci-out/summary.md >> "$GITHUB_STEP_SUMMARY"; cat ci-out/summary.md; fi
+          exit "$status"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: real-repos
+          path: ci-out/
+          if-no-files-found: ignore
+
+      - name: Publish logs and screenshots
+        if: always() && github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs.sh real-repos ${{ job.status }}
+
   ssh:
     name: SSH and SFTP integration
     runs-on: ubuntu-latest

@@ -150,7 +150,9 @@ public sealed partial class WorkspaceViewModel
 
         if (Workspace is { } workspace)
         {
-            await BuildProjectsAsync(workspace.Projects.Where(p => p.Language == ProjectLanguage.CSharp).ToList(), showOutput: true);
+            var csharp = workspace.Projects.Where(p => p.Language == ProjectLanguage.CSharp).ToList();
+            var skipped = csharp.Where(p => p.Kind == ProjectKind.AspireAppHost).ToList();
+            await BuildProjectsAsync(InDependencyOrder(csharp.Except(skipped).ToList()), showOutput: true, skipped: skipped);
             foreach (var item in _toolchainProjects.Where(t => TabStudio.Toolchains.Microchip.MicrochipInstallation.IsCompiler(t.Toolchain.Id)))
             {
                 await RunToolchainProjectAsync(item.Info);
@@ -158,6 +160,46 @@ public sealed partial class WorkspaceViewModel
             }
         }
     }
+
+    /// <summary>
+    /// The projects of a solution build in dependency order, as Visual Studio builds them: every project after the
+    /// projects it references, otherwise in solution order.
+    /// </summary>
+    private static List<ProjectInfo> InDependencyOrder(List<ProjectInfo> projects)
+    {
+        var byPath = projects.ToDictionary(p => p.FilePath, StringComparer.Ordinal);
+        var ordered = new List<ProjectInfo>();
+        var visited = new HashSet<string>(StringComparer.Ordinal);
+        void Visit(ProjectInfo project)
+        {
+            if (!visited.Add(project.FilePath))
+            {
+                return;
+            }
+
+            foreach (var reference in project.ProjectReferences)
+            {
+                if (byPath.TryGetValue(reference, out var dependency))
+                {
+                    Visit(dependency);
+                }
+            }
+
+            ordered.Add(project);
+        }
+
+        foreach (var project in projects)
+        {
+            Visit(project);
+        }
+
+        return ordered;
+    }
+
+    /// <summary>Why a project of the solution is not built on this device, for the Output panel.</summary>
+    private static string SkipReason(ProjectInfo project) => project.Kind == ProjectKind.AspireAppHost
+        ? "an Aspire AppHost runs on a computer, where Aspire's developer control plane starts the app's projects and containers"
+        : "it is not built on this device";
 
     private bool CanRun() => (IsRemoteWorkspace ? _remoteWorkspace?.Connection.IsConnected == true : StartupProject is not null || UsesLaunchTarget) && State is IdeState.Ready or IdeState.Failed && !IsNotebookRunning;
 
@@ -168,14 +210,21 @@ public sealed partial class WorkspaceViewModel
     /// <param name="showOutput">Whether to clear the Output panel and bring it forward.</param>
     /// <param name="build">Builds one project, such as a debug build; the language service's normal build by default.</param>
     /// <param name="results">Receives the result of every project, in order, when given.</param>
+    /// <param name="skipped">Projects of the solution that are not built on this device, each named with the reason.</param>
     /// <returns>The result for the last project, or <see langword="null"/> when nothing was built.</returns>
+    /// <remarks>
+    /// A project's build compiles the projects it references too, so their diagnostics come back with every project
+    /// that references them. Each one is reported once, under the project it belongs to, as Visual Studio does.
+    /// </remarks>
     private async Task<BuildResult?> BuildProjectsAsync(
         List<ProjectInfo> projects,
         bool showOutput,
         Func<ProjectInfo, CancellationToken, Task<BuildResult>>? build = null,
-        List<BuildResult>? results = null)
+        List<BuildResult>? results = null,
+        List<ProjectInfo>? skipped = null)
     {
-        if (_language is not { } language || projects.Count == 0)
+        skipped ??= [];
+        if (_language is not { } language || projects.Count + skipped.Count == 0)
         {
             return null;
         }
@@ -198,6 +247,8 @@ public sealed partial class WorkspaceViewModel
 
         BuildResult? last = null;
         int succeeded = 0, failed = 0;
+        var reported = new List<BuildDiagnostic>();
+        var seen = new HashSet<BuildDiagnostic>();
         for (var i = 0; i < projects.Count; i++)
         {
             var project = projects[i];
@@ -207,8 +258,14 @@ public sealed partial class WorkspaceViewModel
 
             last = await (build ?? language.BuildAsync)(project, CancellationToken.None);
             results?.Add(last);
-            ErrorList.SetBuildResult(last);
-            foreach (var diagnostic in last.Diagnostics.Where(d => d.Severity >= DiagnosticSeverityLevel.Warning))
+            var fresh = last.Diagnostics.Where(seen.Add).ToList();
+            reported.AddRange(fresh);
+
+            // The build replaces what live analysis last said about the project's files, which may be from before its
+            // generators were loaded.
+            ErrorList.SetProjectDiagnostics(project.DirectoryPath, [.. last.Diagnostics.Where(d => d.ProjectName == project.Name)]);
+            ErrorList.SetBuildResult(last with { Diagnostics = reported.OrderByDescending(d => d.Severity).ToList() });
+            foreach (var diagnostic in fresh.Where(d => d.Severity >= DiagnosticSeverityLevel.Warning))
             {
                 Output.WriteLine(prefix + diagnostic, diagnostic.Severity == DiagnosticSeverityLevel.Error ? OutputKind.Failure : OutputKind.Program);
             }
@@ -226,7 +283,14 @@ public sealed partial class WorkspaceViewModel
             }
         }
 
-        var summary = $"========== Build: {succeeded.ToString(CultureInfo.InvariantCulture)} succeeded, {failed.ToString(CultureInfo.InvariantCulture)} failed ==========";
+        for (var i = 0; i < skipped.Count; i++)
+        {
+            var prefix = $"{(projects.Count + i + 1).ToString(CultureInfo.InvariantCulture)}>";
+            Output.WriteLine($"{prefix}------ Skipped: Project: {skipped[i].Name}: {SkipReason(skipped[i])} ------", OutputKind.Info);
+        }
+
+        var skippedText = skipped.Count == 0 ? string.Empty : $", {skipped.Count.ToString(CultureInfo.InvariantCulture)} skipped";
+        var summary = $"========== Build: {succeeded.ToString(CultureInfo.InvariantCulture)} succeeded, {failed.ToString(CultureInfo.InvariantCulture)} failed{skippedText} ==========";
         Output.WriteLine(summary, failed == 0 ? OutputKind.Success : OutputKind.Failure);
 
         if (failed > 0)

@@ -29,8 +29,31 @@ internal static class SdkGenerators
     /// <param name="analyzerPath">The analyzer assembly's path.</param>
     public static bool IsEnabled(TsProject project, string? analyzerPath) =>
         analyzerPath is null
-        || !OffByDefault.TryGetValue(Path.GetFileName(analyzerPath), out var property)
-        || IsOn(project, property);
+        || ((!NewIn.TryGetValue(Path.GetFileName(analyzerPath), out var since) || TargetVersion(project) >= since)
+            && (!OffByDefault.TryGetValue(Path.GetFileName(analyzerPath), out var property) || IsOn(project, property)));
+
+    /// <summary>
+    /// Generators of TabStudio's .NET 10 targeting packs that earlier .NET versions do not have, by file name, with the
+    /// version that brought them. The SDK takes a project's generators from the targeting pack of its own framework, so
+    /// a <c>net8.0</c> web app keeps an internal top-level <c>Program</c>, which ASP.NET Core 10's generator makes public.
+    /// </summary>
+    private static readonly Dictionary<string, int> NewIn = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Microsoft.AspNetCore.App.SourceGenerators.dll"] = 10,
+    };
+
+    /// <summary>The major .NET version a project targets, such as 8 for <c>net8.0</c>; 10, TabStudio's own, when it says none.</summary>
+    private static int TargetVersion(TsProject project)
+    {
+        var framework = project.TargetFrameworks.Count > 0 ? project.TargetFrameworks[^1] : null;
+        if (framework is null || !framework.StartsWith("net", StringComparison.OrdinalIgnoreCase))
+        {
+            return 10;
+        }
+
+        var digits = new string([.. framework[3..].TakeWhile(char.IsAsciiDigit)]);
+        return framework.Contains('.', StringComparison.Ordinal) && int.TryParse(digits, System.Globalization.CultureInfo.InvariantCulture, out var major) ? major : 10;
+    }
 
     /// <summary>
     /// The namespaces a project's generators may put interceptors in: TabStudio's XAML loader's, those the SDK adds
