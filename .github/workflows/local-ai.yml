@@ -41,12 +41,11 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-      - uses: android-actions/setup-android@v3
       - run: sdkmanager 'ndk;27.2.12479018'
       - name: Build Android candidates
-        env:
-          ANDROID_NDK_HOME: ${{ env.ANDROID_HOME }}/ndk/27.2.12479018
-        run: bash build/local-ai/build.sh artifacts/local-ai x86_64
+        run: |
+          export ANDROID_NDK_HOME="$ANDROID_HOME/ndk/27.2.12479018"
+          bash build/local-ai/build.sh artifacts/local-ai x86_64
       - run: bash build/local-ai/download-tiny.sh artifacts/tiny.gguf
       - name: Enable KVM
         run: |
