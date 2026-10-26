@@ -374,6 +374,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         }
 
         var diagnostics = await Razor.RazorCompilations.MapAsync(project, info, compilation.GetDiagnostics(cancellationToken), cancellationToken).ConfigureAwait(false);
+        diagnostics.AddRange(AnalyzerFailuresFor(info, project.AnalyzerReferences.Select(r => r.FullPath)));
         if (WpfProject.UsesWpf(info))
         {
             return WpfDiagnostics.Explain(WpfDiagnostics.Map(compilation.GetDiagnostics(cancellationToken), info), compilation, info, cancellationToken);
@@ -503,7 +504,10 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             return wpf;
         }
 
-        return await Razor.RazorCompilations.EmitAsync(project, info, compilation, checkInProcessSafety, stopwatch, cancellationToken).ConfigureAwait(false);
+        var result = await Razor.RazorCompilations.EmitAsync(project, info, compilation, checkInProcessSafety, stopwatch, cancellationToken).ConfigureAwait(false);
+        return AnalyzerFailuresFor(info, project.AnalyzerReferences.Select(r => r.FullPath)) is { Count: > 0 } failures
+            ? result with { Diagnostics = [.. result.Diagnostics, .. failures] }
+            : result;
     }
 
     /// <inheritdoc />

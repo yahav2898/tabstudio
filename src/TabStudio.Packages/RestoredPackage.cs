@@ -23,4 +23,10 @@ public sealed record RestoredPackage(
 {
     /// <summary>Full paths of the package's C# analyzers and source generators.</summary>
     public IReadOnlyList<string> Analyzers { get; init; } = [];
+
+    /// <summary>
+    /// Whether the project uses the package's analyzers: it reaches the package through packages only. A package that
+    /// comes from a referenced project keeps its analyzers to that project, as NuGet's default <c>PrivateAssets</c> does.
+    /// </summary>
+    public bool FlowsAnalyzers { get; init; } = true;
 }

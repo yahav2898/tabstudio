@@ -37,7 +37,8 @@ internal static class ProjectPackageReferences
 
         List<PackageDependency> Collect(ProjectInfo current)
         {
-            var dependencies = Read(current, diagnostics);
+            // PrivateAssets="all" keeps a referenced project's package to that project, as NuGet does.
+            var dependencies = Read(current, diagnostics, includePrivate: ReferenceEquals(current, project));
             foreach (var path in current.ProjectReferences)
             {
                 if (names.TryGetValue(path, out var known))
@@ -124,15 +125,16 @@ internal static class ProjectPackageReferences
     /// <summary>Reads the package references of one project.</summary>
     /// <param name="project">The project.</param>
     /// <param name="diagnostics">Receives problems with the references, such as a version that does not parse.</param>
+    /// <param name="includePrivate">Whether to include references with <c>PrivateAssets="all"</c>: only for the project being restored.</param>
     /// <returns>One dependency per valid reference, in project order.</returns>
-    public static List<PackageDependency> Read(ProjectInfo project, List<BuildDiagnostic> diagnostics)
+    public static List<PackageDependency> Read(ProjectInfo project, List<BuildDiagnostic> diagnostics, bool includePrivate = true)
     {
         var central = project.PackageReferences.Any(p => p.Version is null)
             ? CentralPackageVersions.Load(project)
             : new Dictionary<string, string>();
 
         var dependencies = new List<PackageDependency>();
-        foreach (var reference in project.PackageReferences)
+        foreach (var reference in project.PackageReferences.Where(r => includePrivate || !r.IsPrivate))
         {
             var text = reference.Version ?? central.GetValueOrDefault(reference.Name);
             if (string.IsNullOrWhiteSpace(text))

@@ -66,6 +66,17 @@ public sealed class ProjectBuilder
         ArgumentNullException.ThrowIfNull(project);
 
         var stopwatch = Stopwatch.StartNew();
+        if (project.Kind == ProjectKind.AspireAppHost)
+        {
+            var appHost = new BuildDiagnostic(
+                UnsupportedLanguageId,
+                DiagnosticSeverityLevel.Error,
+                $"'{project.Name}' is an Aspire AppHost, which runs on a computer: Aspire's developer control plane starts the app's projects and containers there. Run the projects it starts on their own.",
+                null,
+                project.Name);
+            return new BuildResult(project.Name, [appHost], null, [], stopwatch.Elapsed);
+        }
+
         if (project.Language != ProjectLanguage.CSharp || _host.FindProject(project.FilePath) is null)
         {
             var diagnostic = new BuildDiagnostic(
