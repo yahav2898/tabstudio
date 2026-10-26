@@ -51,8 +51,8 @@ public sealed class SelfTestTests : IDisposable
         var all = SelfTest.SelfTestToolchainIdsForShard(SelfTestShard.All);
 
         Assert.Equal(["go", "rust"], managed);
-        Assert.Equal(["java"], ui);
-        Assert.Equal(["python", "node", "cpp"], native);
+        Assert.Empty(ui);
+        Assert.Equal(["python", "node", "cpp", "java"], native);
         Assert.Empty(managed.Intersect(ui, StringComparer.Ordinal));
         Assert.Empty(ui.Intersect(native, StringComparer.Ordinal));
         Assert.Empty(managed.Intersect(native, StringComparer.Ordinal));

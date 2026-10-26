@@ -73,7 +73,8 @@ public sealed partial class WorkspaceViewModel
         }
         catch (Exception ex) when (ex is JsonRpcException or InvalidOperationException or OperationCanceledException)
         {
-            Output.WriteLine($"Java debugging could not start: {ex.Message}. Install or update Java from the Toolchain Store to load java-debug into JDT.", OutputKind.Failure);
+            var detail = server.ServerMessage is { Length: > 0 } message ? $" {server.ServerName}: {message}" : string.Empty;
+            Output.WriteLine($"Java debugging could not start: {ex.Message}.{detail} Server state: {server.ServerState}. See Language Servers output for details.", OutputKind.Failure);
             State = IdeState.Failed;
             StatusText = "Java debugger did not start";
             return null;

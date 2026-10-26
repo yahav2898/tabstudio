@@ -286,9 +286,9 @@ Library tests cover the editing engine, headless IDE tests capture completion an
 and design checks and before Swarm, retaining every existing self-test step.
 
 The manual combined device self test installs Python, Node.js, Go, Rust, C/C++ and Java serially through the
-shared Toolchain Manager. CI runs three independent shards: managed owns Go/Rust, UI owns Java, and native owns
-Python/Node/C/C++. Each installs only its own tools. UI waits until its preview/input checks finish before
-preparing Java, then restores the Avalonia workspace for scrolling and desktop input. Native checks the Android
+shared Toolchain Manager. CI runs three independent shards: managed owns Go/Rust, UI owns the app previews and
+input checks, and native owns Python/Node/C/C++/Java. Each installs only its own tools. UI restores its Avalonia
+workspace for scrolling and desktop input. Native checks the Android
 JIT capability boundary and runs all 200 process/GC checks before any package preparation. Package downloads use at most four
 streams; every package is verified before the serial apk operation, and each batch measures shared disk usage
 once. Each shard awaits its package operations before using the tools, observes cancellation on every exit,

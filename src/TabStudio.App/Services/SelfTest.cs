@@ -16,9 +16,9 @@ public enum SelfTestShard
     All,
     /// <summary>Console, debugger, Link, web apps, and Go/Rust builds and debuggers.</summary>
     Managed,
-    /// <summary>Native app previews, design, extensions, Swarm, Java, scrolling and external-display input.</summary>
+    /// <summary>Native app previews, design, extensions, Swarm, scrolling and external-display input.</summary>
     Ui,
-    /// <summary>Python/Node, C/C++ and native process integrity.</summary>
+    /// <summary>Python/Node, C/C++/Java and native process integrity.</summary>
     Native,
     /// <summary>Opt-in paired-runtime latency measurements; not a functional CI shard.</summary>
     Performance,
@@ -86,7 +86,18 @@ public static partial class SelfTest
         }
         var clock = Stopwatch.StartNew();
         var messages = new List<string> { $"Shard: {shard.ToString().ToLowerInvariant()}" };
-        SelfTestResult Finish(bool success) => new(success, string.Join(" | ", messages), clock.Elapsed);
+        SelfTestResult Finish(bool success)
+        {
+            if (!success && screenshots is not null && main.Workspace is { } failed)
+            {
+                Directory.CreateDirectory(screenshots);
+                File.WriteAllText(Path.Combine(screenshots, "output.txt"), failed.Output.Text);
+                File.WriteAllText(Path.Combine(screenshots, "language-servers.txt"), failed.LanguageServerOutput.Text);
+                File.WriteAllText(Path.Combine(screenshots, "debug-adapter.txt"), failed.DebugAdapterOutput.Text);
+            }
+
+            return new(success, string.Join(" | ", messages), clock.Elapsed);
+        }
         async Task<bool> CheckAsync(Func<Task<SelfTestResult>> run)
         {
             var result = await run();
@@ -233,17 +244,6 @@ public static partial class SelfTest
                     return Finish(false);
                 }
 
-                if (shard == SelfTestShard.Ui)
-                {
-                    // The device timings leave room here for Java. Keep package preparation after the UI's
-                    // trusted-input checks, and restore its Avalonia workspace for scrolling/desktop below.
-                    preparation = PrepareSelfTestToolchainsAsync(main.Workspace!.Toolchains, shard, preparationStop.Token);
-                    await preparation;
-                    if (!await CheckAsync(() => CheckJavaToolchainAsync(main, templates, cancellationToken)))
-                    {
-                        return Finish(false);
-                    }
-                }
             }
 
             if (native)
@@ -255,7 +255,7 @@ public static partial class SelfTest
                     || !await CheckAsync(() => CheckListeningPortAsync(main, templates, cancellationToken))
                     || (shard == SelfTestShard.All && !await CheckGoAndRustAsync())
                     || !await CheckAsync(() => CheckCppToolchainAsync(main, templates, cancellationToken))
-                    || (shard == SelfTestShard.All && !await CheckAsync(() => CheckJavaToolchainAsync(main, templates, cancellationToken))))
+                    || !await CheckAsync(() => CheckJavaToolchainAsync(main, templates, cancellationToken)))
                 {
                     return Finish(false);
                 }
