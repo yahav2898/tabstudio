@@ -167,7 +167,11 @@ public sealed class LinkPathMap
     public DebugMethod ToClient(DebugMethod method)
     {
         ArgumentNullException.ThrowIfNull(method);
-        return method with { Location = method.Location with { FilePath = ToClient(method.Location.FilePath) } };
+        return method with
+        {
+            Location = method.Location with { FilePath = ToClient(method.Location.FilePath) },
+            WriteSites = method.WriteSites.ToDictionary(s => s.Key, s => s.Value with { FilePath = ToClient(s.Value.FilePath) }),
+        };
     }
 
     /// <summary>A path with a separator at its end.</summary>

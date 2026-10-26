@@ -57,7 +57,29 @@ internal static class LocalsCollector
             }
         }
 
+        // Static fields have no receiver to snapshot. Read them only for recording and never invoke properties.
+        var frameType = model.GetEnclosingSymbol(position, cancellationToken)?.ContainingType;
+        foreach (var field in FrameFields(frameType))
+        {
+            if (!field.IsStatic || field.IsConst || field.IsImplicitlyDeclared || !SyntaxFacts.IsValidIdentifier(field.Name) ||
+                !model.Compilation.IsSymbolAccessibleWithin(field, frameType!) || !IsBoxable(field.Type))
+            {
+                continue;
+            }
+            var expression = field.ContainingType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) + ".@" + field.Name;
+            var name = result.Any(r => r.Slot.Name == field.Name)
+                ? field.ContainingType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat) + "." + field.Name
+                : field.Name;
+            result.Add(new CollectedLocal("(global::__TabStudioDebug.IsRecording ? (object)" + expression + " : null)",
+                new DebugLocalSlot(name, field.Type.ToDisplayString(TypeFormat)) { RecordingOnly = true }));
+        }
         return result;
+    }
+
+    private static IEnumerable<IFieldSymbol> FrameFields(INamedTypeSymbol? frameType)
+    {
+        for (var type = frameType; type is not null; type = type.BaseType)
+            foreach (var field in type.GetMembers().OfType<IFieldSymbol>()) yield return field;
     }
 
     /// <summary>The expressions a function's fault filter passes: <c>this</c> and every readable parameter.</summary>

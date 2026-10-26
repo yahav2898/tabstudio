@@ -38,6 +38,9 @@ public sealed record SessionState(
     /// <summary>The expressions in the Watch panel.</summary>
     public IReadOnlyList<string>? WatchExpressions { get; init; }
 
+    /// <summary>Size of an opt-in C# recording ring, in MiB. Recording itself is never enabled on restore.</summary>
+    public int RecordingBufferMegabytes { get; init; } = 64;
+
     /// <summary>Whether the Properties panel was open rather than folded into its header; <see langword="null"/> in older sessions.</summary>
     public bool? IsPropertiesExpanded { get; init; }
 }

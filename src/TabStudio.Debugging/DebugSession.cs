@@ -36,7 +36,7 @@ namespace TabStudio.Debugging;
 /// should hand the event to the UI thread. <see cref="DebugValue"/>s of a pause should be read while it lasts.
 /// </para>
 /// </remarks>
-public sealed class DebugSession : IDisposable
+public sealed partial class DebugSession : IDisposable
 {
     /// <summary>How long a property getter or <c>ToString</c> of the program may run while it is inspected.</summary>
     public static TimeSpan DefaultEvaluationTimeout { get; } = TimeSpan.FromSeconds(1);
@@ -70,8 +70,9 @@ public sealed class DebugSession : IDisposable
     /// <summary>Creates a session for a successful debug build.</summary>
     /// <param name="build">The instrumented program.</param>
     /// <param name="evaluationTimeout">How long one property getter or <c>ToString</c> may run during inspection.</param>
+    /// <param name="recording">Opt-in ring settings, or null to leave recording off.</param>
     /// <exception cref="ArgumentException">The build failed.</exception>
-    public DebugSession(DebugBuild build, TimeSpan evaluationTimeout)
+    public DebugSession(DebugBuild build, TimeSpan evaluationTimeout, Recording.RecordingOptions? recording = null)
     {
         ArgumentNullException.ThrowIfNull(build);
         if (!build.Success)
@@ -82,6 +83,7 @@ public sealed class DebugSession : IDisposable
         _build = build;
         _debugInfo = build.DebugInfo;
         _engine = new DebugEngine(build.DebugInfo, new ValueInspector(new Evaluator(evaluationTimeout)), OnPaused, OnResumed);
+        if (recording is not null) _engine.Recording = new Recording.DebugRecording(build.DebugInfo, recording);
     }
 
     /// <summary>Raised when the program pauses. The event data has the location, call stack and locals.</summary>
