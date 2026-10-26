@@ -81,7 +81,9 @@ The app also receives `ConnectionStrings__<compose-service>` for PostgreSQL/Mari
 keys normally; external toolchain processes get the same environment. In-process runs share process environment:
 variables are set only while the app owns the existing console lease and are restored afterward. Backing services
 remain running when an app stops, until stopped in Services or the workspace closes. Database Explorer is optional:
-a host can supply `IServiceDatabaseExplorer`; its button appears only for supported, running database services.
+combining `agent/database` automatically enables its PostgreSQL bridge. The action selects a transient connection
+with the current localhost port and connects to browse its schema, without saving service credentials. Other hosts
+can supply `IServiceDatabaseExplorer`; the button appears only for supported, running database services.
 
 ## Verification
 

@@ -68,6 +68,13 @@
 
   <Import Project="TabStudio.App.WindowsForms.targets" />
 
+  <!-- Automatically bridge to the optional agent/database feature when combined. -->
+  <ItemGroup>
+    <Compile Remove="ViewModels/WorkspaceViewModel.Services.Database.cs" />
+    <Compile Include="ViewModels/WorkspaceViewModel.Services.Database.cs"
+             Condition="Exists('$(MSBuildProjectDirectory)/ViewModels/WorkspaceViewModel.Database.cs')" />
+  </ItemGroup>
+
   <ItemGroup>
     <InternalsVisibleTo Include="TabStudio.App.Tests" />
   </ItemGroup>

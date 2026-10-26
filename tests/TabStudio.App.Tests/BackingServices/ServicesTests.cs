@@ -5,7 +5,9 @@ using TabStudio.App.Platform;
 using TabStudio.App.Services;
 using TabStudio.App.Services.Toolchains;
 using TabStudio.App.ViewModels;
+using TabStudio.App.ViewModels.BackingServices;
 using TabStudio.App.Views;
+using TabStudio.Services.Native;
 using TabStudio.Services.Tests;
 using TabStudio.Testing;
 using TabStudio.Toolchains.Catalog;
@@ -125,7 +127,8 @@ public sealed class ServicesTests
         using var toolchains = new ToolchainServices(new ToolchainManager(ToolchainCatalog.Default, new HostToolchainInstaller(alpine.Runtime)), ToolchainPlatform.Desktop);
         var compiler = new CompilerServices(paths);
         var device = new DefaultDeviceStatus(new DeviceInfo(8L * 1024 * 1024 * 1024, 8, false));
-        using var workspace = new WorkspaceViewModel(compiler, device, DeviceProfile.For(device.Device), new AvaloniaUiDispatcher(), new SessionStore(paths), paths, toolchains: toolchains);
+        var databases = new RecordingDatabaseExplorer();
+        using var workspace = new WorkspaceViewModel(compiler, device, DeviceProfile.For(device.Device), new AvaloniaUiDispatcher(), new SessionStore(paths), paths, toolchains: toolchains, serviceDatabases: databases);
         await workspace.LoadAsync(solution);
         using var timeout = new CancellationTokenSource(TimeSpan.FromMinutes(4));
         var run = workspace.RunCommand.ExecuteAsync(null);
@@ -138,6 +141,14 @@ public sealed class ServicesTests
             Assert.Equal("tablet-postgres", proof);
             workspace.SelectSideBarPanelCommand.Execute(SideBarPanel.Services);
             workspace.Services.SelectedItem = workspace.Services.Items.Single(i => i.Name == "db");
+            Assert.True(workspace.Services.SelectedItem.CanOpenDatabase);
+            await workspace.Services.SelectedItem.DatabaseCommand.ExecuteAsync(null);
+            Assert.Equal("db", databases.Name);
+            Assert.Equal(NativeServiceKind.Postgres, databases.Kind);
+            var connection = new Npgsql.NpgsqlConnectionStringBuilder(databases.ConnectionString);
+            Assert.Equal("127.0.0.1", connection.Host);
+            Assert.Equal(workspace.Services.Manager!.Endpoints["db"][0].Published, connection.Port);
+            Assert.Equal("app", connection.Database);
             var window = new Window { Width = 1280, Height = 800, Content = new WorkspaceView { DataContext = workspace } };
             window.Show();
             try { UiTestHelpers.SaveScreenshot(window, "61-services-postgres-running"); }
@@ -150,5 +161,18 @@ public sealed class ServicesTests
             if (workspace.Services.Manager is { } manager) await manager.StopAsync();
         }
         Assert.Null(Environment.GetEnvironmentVariable("ConnectionStrings__App"));
+    }
+
+    private sealed class RecordingDatabaseExplorer : IServiceDatabaseExplorer
+    {
+        public string? Name { get; private set; }
+        public NativeServiceKind Kind { get; private set; }
+        public string? ConnectionString { get; private set; }
+        public bool CanOpen(NativeServiceKind kind) => kind == NativeServiceKind.Postgres;
+        public Task OpenAsync(string serviceName, NativeServiceKind kind, string connectionString)
+        {
+            Name = serviceName; Kind = kind; ConnectionString = connectionString;
+            return Task.CompletedTask;
+        }
     }
 }

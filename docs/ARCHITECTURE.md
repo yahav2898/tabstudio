@@ -601,9 +601,11 @@ to external processes and in-process .NET runs. `RunEnvironment` sets/restores v
 `ProcessConsole` lease, including debug runs and ASP.NET Core hosts. It never edits appsettings files.
 
 `ServicesViewModel` feeds the Services tool window and its per-service logs, controls and preview links. The optional
-`IServiceDatabaseExplorer` adapter exposes “Open in Database Explorer” only when an implementation is supplied; no
-Database Explorer project is present on this base branch. Unknown images stay visible with reasons and a remote-host
-action. Closing a workspace disposes its services; stopping an app leaves its backing services available for the next
+`IServiceDatabaseExplorer` adapter exposes “Open in Database Explorer” only for an available provider. When
+`agent/database` is combined, MSBuild includes its typed PostgreSQL bridge automatically; it reuses transient
+connection IDs while refreshing ports and does not persist service credentials. Hosts can also inject an adapter.
+Unknown images stay visible with reasons and a remote-host action. Closing a workspace disposes its services;
+stopping an app leaves its backing services available for the next
 F5. Reload stops services and reparses configuration, preserving their data.
 
 CI runs real PostgreSQL and Redis in the same Alpine/PRoot runtime on x64 and ARM64, plus an App test that builds an

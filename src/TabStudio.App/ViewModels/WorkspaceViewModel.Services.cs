@@ -16,6 +16,7 @@ public sealed partial class WorkspaceViewModel
 
     private void InitializeServices(IServiceDatabaseExplorer? databases)
     {
+        ConfigureServiceDatabaseExplorer(ref databases);
         Services = new ServicesViewModel(_toolchains, _paths, _ui, address =>
         {
             WebPreview.Show("Service", address, null);
@@ -26,6 +27,8 @@ public sealed partial class WorkspaceViewModel
             SelectSideBarPanel(SideBarPanel.WindowsBridge);
         }, databases);
     }
+
+    partial void ConfigureServiceDatabaseExplorer(ref IServiceDatabaseExplorer? databases);
 
     private Task<bool> PrepareServicesAsync(ProjectInfo project) => PrepareServicesAsync(project.DirectoryPath);
 
