@@ -21,4 +21,4 @@ fi
 cmake -S "$root/native/local-ai" -B "$out/build" "${args[@]}"
 cmake --build "$out/build" --target tabstudio-ai tabstudio-ai-bench llama-server --parallel "${CMAKE_BUILD_PARALLEL_LEVEL:-2}"
 mkdir -p "$out/bin"
-cp "$out/build/libtabstudio-ai.so" "$out/build/tabstudio-ai-bench" "$out/build/llama/bin/llama-server" "$out/bin/"
+cp "$out/build/libtabstudio-ai.so" "$out/build/tabstudio-ai-bench" "$out/build/bin/llama-server" "$out/bin/"
