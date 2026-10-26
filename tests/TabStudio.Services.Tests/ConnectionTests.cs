@@ -12,6 +12,7 @@ public sealed class ConnectionTests
     [InlineData("postgres://owner:db@db:5432/app", "postgres://owner:db@127.0.0.1:15432/app")]
     [InlineData("cache:6379,password=db", "127.0.0.1:16379,password=db")]
     [InlineData("db.example.com", "db.example.com")]
+    [InlineData("Password=\";Host=db;Port=5432;\";Host=elsewhere;Port=5432", "Password=\";Host=db;Port=5432;\";Host=elsewhere;Port=5432")]
     [InlineData("Password=db;Host=elsewhere;Port=5432", "Password=db;Host=elsewhere;Port=5432")]
     public void Only_rewrites_host_fields_and_their_ports(string input, string expected) => Assert.Equal(expected, ConnectionEnvironment.Rewrite(input, Endpoints));
 

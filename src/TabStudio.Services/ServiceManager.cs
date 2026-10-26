@@ -182,6 +182,7 @@ public sealed class ServiceManager : IAsyncDisposable
         var health = Get(name).Definition.Healthcheck;
         var timeout = health is { Disabled: false } ? health.StartPeriod + TimeSpan.FromTicks(Math.Max(health.Interval.Ticks, TimeSpan.FromSeconds(1).Ticks) * Math.Max(health.Retries, 1)) + TimeSpan.FromSeconds(60) : TimeSpan.FromSeconds(90);
         var clock = Stopwatch.StartNew();
+        var failedChecks = 0;
         while (clock.Elapsed < timeout)
         {
             token.ThrowIfCancellationRequested();
@@ -191,7 +192,11 @@ public sealed class ServiceManager : IAsyncDisposable
                 throw new ComposeException($"{name} exited during startup. See its Services logs.");
             }
             if (await ProbeAsync(instance, health, token).ConfigureAwait(false)) return;
-            await Task.Delay(TimeSpan.FromMilliseconds(500), token).ConfigureAwait(false);
+            if (health is { Disabled: false } && clock.Elapsed >= health.StartPeriod && ++failedChecks >= health.Retries)
+                throw new ComposeException($"{name} failed {health.Retries} health checks. See its Services logs.");
+            var interval = health is { Disabled: false } ? clock.Elapsed < health.StartPeriod ? health.StartInterval : health.Interval : TimeSpan.FromMilliseconds(500);
+            if (interval <= TimeSpan.Zero) interval = TimeSpan.FromMilliseconds(500);
+            await Task.Delay(interval, token).ConfigureAwait(false);
         }
         throw new ComposeException($"{name} did not become healthy within {timeout.TotalSeconds:0} seconds. See its Services logs.");
     }

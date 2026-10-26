@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.RegularExpressions;
 using TabStudio.Services.Compose;
 using TabStudio.Toolchains.Processes;
 
@@ -22,10 +23,10 @@ public sealed record NativeServicePlan(ProcessStartSpec Start, ProcessStartSpec 
         var data = DataPath(service, mapping.Kind);
         string At(int target) => ports.First(p => p.Target == target).Published.ToString(CultureInfo.InvariantCulture);
         string E(string key, string fallback) => environment.GetValueOrDefault(key) is { Length: > 0 } value ? value : fallback;
-        IReadOnlyList<string> args;
+        string[] args;
         string initialize = "";
         string stop = "if [ -s \"$TS_SERVICE/pid\" ]; then kill -TERM \"$(cat \"$TS_SERVICE/pid\")\" 2>/dev/null || true; fi";
-        IReadOnlyList<string> probe;
+        string[] probe;
         int? uid = null;
         switch (mapping.Kind)
         {
@@ -128,14 +129,35 @@ public sealed record NativeServicePlan(ProcessStartSpec Start, ProcessStartSpec 
         var basis = new ProcessStartSpec { Program = "/bin/sh", WorkingDirectory = directory, Environment = environment, Mounts = mounts, UserId = uid };
         var start = basis with { Arguments = [GuestDirectory + "/run.sh", .. args] };
         var health = service.Healthcheck;
+        string RewriteHealth(string text)
+        {
+            text = rewrite(text);
+            foreach (var port in ports)
+            {
+                text = Regex.Replace(text, @"(?<=localhost:|127\.0\.0\.1:)" + port.Target + @"(?=\D|$)", port.Published.ToString(CultureInfo.InvariantCulture), RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
+                text = Regex.Replace(text, @"(?<option>(?:^|\s)(?:-p|--port)[= ]+)" + port.Target + @"(?=\s|$)", m => m.Groups["option"].Value + port.Published, RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
+            }
+            if (mapping.Kind is NativeServiceKind.Redis or NativeServiceKind.Valkey)
+                text = Regex.Replace(text, @"\b(redis-cli|valkey-cli)\b", "$1 -h 127.0.0.1 -p " + At(6379), RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
+            return text;
+        }
+
         if (health is { Disabled: false, Test.Count: > 0 })
         {
             probe = health.Test[0] switch
             {
                 "CMD" => health.Test.Skip(1).Select(rewrite).ToArray(),
-                "CMD-SHELL" => ["/bin/sh", "-c", rewrite(string.Join(' ', health.Test.Skip(1)))],
+                "CMD-SHELL" => ["/bin/sh", "-c", RewriteHealth(string.Join(' ', health.Test.Skip(1)))],
                 _ => throw new ComposeException($"{service.Name}: healthcheck must use CMD or CMD-SHELL."),
             };
+        }
+        if (health is { Disabled: false, Test.Count: > 1 } && health.Test[0] == "CMD")
+        {
+            var probeArgs = probe.ToList();
+            for (var i = 1; i + 1 < probeArgs.Count; i++)
+                if (probeArgs[i] is "-p" or "--port" && int.TryParse(probeArgs[i + 1], out var target) && ports.FirstOrDefault(p => p.Target == target) is { } port) probeArgs[i + 1] = port.Published.ToString(CultureInfo.InvariantCulture);
+            if (Path.GetFileName(probeArgs[0]) is "redis-cli" or "valkey-cli") probeArgs.InsertRange(1, ["-h", "127.0.0.1", "-p", At(6379)]);
+            probe = probeArgs.ToArray();
         }
         return new(start, basis with { Arguments = ["-c", stop] }, basis with { Program = probe[0], Arguments = probe.Skip(1).ToArray() }, ports, data);
     }

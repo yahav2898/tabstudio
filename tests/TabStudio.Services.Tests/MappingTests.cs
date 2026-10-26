@@ -79,6 +79,17 @@ public sealed class MappingTests
         Assert.True(File.Exists(Path.Combine(mount.Source, "01.sql")));
         Assert.Contains("--auth-host=scram-sha-256", File.ReadAllText(Path.Combine(storage.ServiceDirectory("db"), "run.sh")), StringComparison.Ordinal);
     }
+    [Theory]
+    [InlineData("CMD")]
+    [InlineData("CMD-SHELL")]
+    public void Redis_healthchecks_use_the_published_port(string mode)
+    {
+        using var temp = new TempDirectory();
+        var service = new ComposeService("cache", "redis") { Healthcheck = new(mode == "CMD" ? [mode, "redis-cli", "ping"] : [mode, "redis-cli ping"]) };
+        var plan = NativeServicePlan.Create(service, ServiceCatalog.Map(service).Mapping!, new ServiceStorage(temp.Path, temp.Path), [new(6379, 16379)]);
+        Assert.Contains("16379", string.Join(' ', plan.Probe.Arguments), StringComparison.Ordinal);
+    }
+
     [Fact]
     public void Volumes_persist_and_are_scoped_to_the_workspace_and_seed_never_changes()
     {

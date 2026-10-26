@@ -46,9 +46,11 @@ public static partial class ComposeReader
     {
         if (files.Count == 0) throw new ComposeException("No Compose files were specified.");
         var directory = Path.GetDirectoryName(Path.GetFullPath(files[0]))!;
-        var variables = ReadEnvironmentFile(Path.Combine(directory, ".env"), new Dictionary<string, string?>(), required: false);
-        foreach (System.Collections.DictionaryEntry variable in System.Environment.GetEnvironmentVariables()) variables[(string)variable.Key] = (string?)variable.Value;
-        foreach (var (name, value) in environment ?? new Dictionary<string, string?>()) variables[name] = value;
+        var supplied = new Dictionary<string, string?>(StringComparer.Ordinal);
+        foreach (System.Collections.DictionaryEntry variable in System.Environment.GetEnvironmentVariables()) supplied[(string)variable.Key] = (string?)variable.Value;
+        foreach (var (name, value) in environment ?? new Dictionary<string, string?>()) supplied[name] = value;
+        var variables = ReadEnvironmentFile(Path.Combine(directory, ".env"), supplied, required: false);
+        foreach (var (name, value) in supplied) variables[name] = value;
         var merged = new Dictionary<string, YamlMappingNode>(StringComparer.Ordinal);
         foreach (var file in files)
         {

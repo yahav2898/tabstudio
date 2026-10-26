@@ -20,7 +20,7 @@ public sealed class ServicesTests
     {
         using var temp = new TempDirectory();
         var paths = new AppPaths(temp.Path);
-        var solution = new ProjectTemplates(paths).Create(ProjectTemplates.WebId, "ServiceApp");
+        var solution = new ProjectTemplates(paths).Create(ProjectTemplates.ConsoleId, "ServiceApp");
         var root = Path.GetDirectoryName(solution)!;
         File.WriteAllText(Path.Combine(root, "compose.yaml"), """
             services:
@@ -105,6 +105,12 @@ public sealed class ServicesTests
             using var http = new HttpClient();
             var proof = await http.GetStringAsync(new Uri(workspace.WebPreview.AppAddress!, "/proof"), timeout.Token);
             Assert.Equal("tablet-postgres", proof);
+            workspace.SelectSideBarPanelCommand.Execute(SideBarPanel.Services);
+            workspace.Services.SelectedItem = workspace.Services.Items.Single(i => i.Name == "db");
+            var window = new Window { Width = 1280, Height = 800, Content = new WorkspaceView { DataContext = workspace } };
+            window.Show();
+            try { UiTestHelpers.SaveScreenshot(window, "61-services-postgres-running"); }
+            finally { window.Close(); }
         }
         finally
         {

@@ -14,43 +14,42 @@ public static partial class ConnectionEnvironment
         {
             var port = ports.FirstOrDefault();
             if (port is null) continue;
-            var original = value;
             var namePattern = Regex.Escape(name);
+            var fields = SplitConnectionFields(value);
             var changedHost = false;
-            value = Regex.Replace(value, @"(^|;)(\s*(?:Host|Server|Data Source)\s*=\s*)([^;]+)", match =>
+            for (var i = 0; i < fields.Count; i++)
             {
-                var host = match.Groups[3].Value.Trim();
+                var equals = fields[i].IndexOf('=');
+                if (equals < 0) continue;
+                var key = fields[i][..equals].Trim();
+                if (!new[] { "Host", "Server", "Data Source" }.Contains(key, StringComparer.OrdinalIgnoreCase)) continue;
+                var host = fields[i][(equals + 1)..].Trim().Trim('\'', '"');
                 if (host.Equals(name, StringComparison.OrdinalIgnoreCase))
-                {
-                    changedHost = true;
-                    return match.Groups[1].Value + match.Groups[2].Value + "127.0.0.1";
-                }
-                if (host.StartsWith(name + ",", StringComparison.OrdinalIgnoreCase) || host.StartsWith(name + ":", StringComparison.OrdinalIgnoreCase))
-                {
-                    changedHost = true;
-                    return match.Groups[1].Value + match.Groups[2].Value + "127.0.0.1" + host[name.Length] + port.Published.ToString(CultureInfo.InvariantCulture);
-                }
-                return match.Value;
-            }, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
+                { fields[i] = fields[i][..(equals + 1)] + "127.0.0.1"; changedHost = true; }
+                else if (host.StartsWith(name + ",", StringComparison.OrdinalIgnoreCase) || host.StartsWith(name + ":", StringComparison.OrdinalIgnoreCase))
+                { fields[i] = fields[i][..(equals + 1)] + "127.0.0.1" + host[name.Length] + port.Published.ToString(CultureInfo.InvariantCulture); changedHost = true; }
+            }
             if (changedHost)
             {
-                if (Regex.IsMatch(value, @"(^|;)\s*Port\s*=", RegexOptions.IgnoreCase, TimeSpan.FromSeconds(1)))
-                    value = Regex.Replace(value, @"(^|;)(\s*Port\s*=\s*)[0-9]+", m => m.Groups[1].Value + m.Groups[2].Value + port.Published.ToString(CultureInfo.InvariantCulture), RegexOptions.IgnoreCase, TimeSpan.FromSeconds(1));
-                else value += ";Port=" + port.Published.ToString(CultureInfo.InvariantCulture);
+                var index = fields.FindIndex(f => f.IndexOf('=') is var e && e > 0 && f[..e].Trim().Equals("Port", StringComparison.OrdinalIgnoreCase));
+                if (index >= 0) fields[index] = fields[index][..(fields[index].IndexOf('=') + 1)] + port.Published.ToString(CultureInfo.InvariantCulture);
+                else fields.Add("Port=" + port.Published.ToString(CultureInfo.InvariantCulture));
+                value = string.Join(';', fields);
             }
+            // A URI-looking password in a database connection string is still a password.
+            if (fields.Any(f => f.IndexOf('=') is var e && e > 0 && new[] { "Host", "Server", "Data Source" }.Contains(f[..e].Trim(), StringComparer.OrdinalIgnoreCase))) continue;
             value = Regex.Replace(value, @"(://(?:[^/@\s]*@)?)" + namePattern + @"(?::([0-9]+))?(?=[/\s?;#]|$)", m =>
             {
                 var target = m.Groups[2].Success ? int.Parse(m.Groups[2].Value, CultureInfo.InvariantCulture) : port.Target;
                 var mapped = ports.FirstOrDefault(p => p.Target == target) ?? port;
                 return m.Groups[1].Value + "127.0.0.1:" + mapped.Published.ToString(CultureInfo.InvariantCulture);
             }, RegexOptions.IgnoreCase, TimeSpan.FromSeconds(1));
-            value = Regex.Replace(value, "(^|[,\\s])" + namePattern + @"(?::([0-9]+))?(?=[,\s]|$)", m =>
+            value = Regex.Replace(value, "(^|[,\\s])" + namePattern + @"(?::([0-9]+))?(?=[,;\s]|$)", m =>
             {
                 var target = m.Groups[2].Success ? int.Parse(m.Groups[2].Value, CultureInfo.InvariantCulture) : port.Target;
                 var mapped = ports.FirstOrDefault(p => p.Target == target) ?? port;
                 return m.Groups[1].Value + "127.0.0.1" + (m.Groups[2].Success ? ":" + mapped.Published.ToString(CultureInfo.InvariantCulture) : "");
             }, RegexOptions.IgnoreCase, TimeSpan.FromSeconds(1));
-            _ = original;
         }
         return value;
     }
@@ -98,6 +97,26 @@ public static partial class ConnectionEnvironment
         projectDirectory = Path.GetFullPath(projectDirectory);
         return project.Services.Values.Where(s => s.BuildContext is { } context && (projectDirectory == context || projectDirectory.StartsWith(context.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar, StringComparison.Ordinal)))
             .OrderByDescending(s => s.BuildContext!.Length).FirstOrDefault();
+    }
+
+    private static List<string> SplitConnectionFields(string value)
+    {
+        var fields = new List<string>(); char quote = '\0'; var start = 0;
+        for (var i = 0; i < value.Length; i++)
+        {
+            if (quote != '\0')
+            {
+                if (value[i] == quote)
+                {
+                    if (i + 1 < value.Length && value[i + 1] == quote) i++;
+                    else quote = '\0';
+                }
+            }
+            else if (value[i] is '\'' or '"') quote = value[i];
+            else if (value[i] == ';') { fields.Add(value[start..i]); start = i + 1; }
+        }
+        fields.Add(value[start..]);
+        return fields;
     }
 
     private static string Quote(string value) => "\"" + value.Replace("\"", "\"\"", StringComparison.Ordinal) + "\"";

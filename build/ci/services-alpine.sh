@@ -12,9 +12,9 @@ echo "a66743f50c7b0bac1913b83bf55e139d679c80a0ca2808eec76432a65640017f  $out/pro
 unzip -qo "$out/proot.zip" -d "$out"
 # Same includes as the Android build; the upstream sources need these with recent libc/compiler headers.
 printf '#if !defined(__ASSEMBLER__) && __STDC_HOSTED__\n#include <string.h>\n#include <sys/ioctl.h>\n#endif\n' > "$out/includes.h"
-make -C "$out/proot-$version/src" -j2 PROOT_UNBUNDLE_LOADER=. \
-  CPPFLAGS="-DARG_MAX=131072 -DVERSION=\\\"$version\\\"" \
-  CFLAGS="-O2 -include $out/includes.h" proot loader/loader > "$out/proot-build.log" 2>&1 || { tail -80 "$out/proot-build.log"; exit 1; }
+CPPFLAGS="-DARG_MAX=131072 -DVERSION=\\\"$version\\\"" \
+  CFLAGS="-O2 -include $out/includes.h" PROOT_UNBUNDLE_LOADER=. \
+  make -C "$out/proot-$version/src" -j2 proot loader/loader > "$out/proot-build.log" 2>&1 || { tail -80 "$out/proot-build.log"; exit 1; }
 export TABSTUDIO_SERVICE_PROOT="$out/proot-$version/src/proot"
 export TABSTUDIO_SERVICE_LOADER="$out/proot-$version/src/loader/loader"
 export TABSTUDIO_SERVICE_ROOTFS="$out/rootfs"
