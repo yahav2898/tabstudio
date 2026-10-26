@@ -42,6 +42,9 @@ public sealed record ToolchainDefinition
     /// <summary>The package whose version is the toolchain's version, such as <c>python3</c>.</summary>
     public string? VersionPackage { get; init; }
 
+    /// <summary>A version pinned by a separately licensed compiler distribution rather than an Alpine package.</summary>
+    public string? PinnedVersion { get; init; }
+
     /// <summary>The download size before the package index has been read, in bytes.</summary>
     public long EstimatedDownloadSize { get; init; }
 

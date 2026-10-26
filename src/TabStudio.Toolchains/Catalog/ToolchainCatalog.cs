@@ -107,6 +107,7 @@ public sealed record ToolchainCatalog
     {
         using var stream = typeof(ToolchainCatalog).Assembly.GetManifestResourceStream("TabStudio.Toolchains.Catalog.toolchains.json")
             ?? throw new InvalidOperationException("The built-in toolchain catalog is missing from the assembly.");
-        return Load(stream);
+        var catalog = Load(stream);
+        return catalog with { Toolchains = [.. catalog.Toolchains.Select(t => Microchip.MicrochipInstallation.IsCompiler(t.Id) ? Microchip.MicrochipInstallation.WithSetup(t) : t)] };
     }
 }

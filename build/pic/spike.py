@@ -69,7 +69,7 @@ def unpack_deb(package, root):
             raise RuntimeError(f"Cannot extract {package}")
 
 
-def build_current_box64(work, root, out, cache, *, fix_clone_stack=False):
+def build_current_box64(work, root, out, cache, *, fix_clone_stack=False, target_arch=None, compiler=None):
     """Use upstream's recommended PRoot/Android signal handling, without changing XC."""
     archive = fetch(LOCK["box64-source"], cache, "box64-source.tar.gz")
     source_parent = work / "box64-source"
@@ -87,10 +87,12 @@ def build_current_box64(work, root, out, cache, *, fix_clone_stack=False):
             raise RuntimeError("Pinned box64 clone implementation changed")
         syscall.write_text(text.replace(old, "if((R_EDI&~0xff)==0x4100 && !R_RSI) {"))
     build = work / "box64-build"
-    native_arm = platform.machine() == "aarch64"
+    native_arm = (target_arch or platform.machine()) == "aarch64"
+    cross = (["-DCMAKE_SYSTEM_NAME=Linux", "-DCMAKE_SYSTEM_PROCESSOR=" + target_arch,
+              "-DCMAKE_C_COMPILER=" + compiler, "-DCMAKE_ASM_COMPILER=" + compiler] if compiler else [])
     run(["cmake", "-S", str(source), "-B", str(build), "-DARM_DYNAREC=" + ("ON" if native_arm else "OFF"),
          "-DLD80BITS=" + ("OFF" if native_arm else "ON"), "-DNOALIGN=" + ("OFF" if native_arm else "ON"), "-DBAD_SIGNAL=ON",
-         "-DCMAKE_BUILD_TYPE=Release", "-DNOGIT=1"], out / "box64-configure.log")
+         "-DCMAKE_BUILD_TYPE=Release", "-DNOGIT=1", "-DCMAKE_EXE_LINKER_FLAGS=-Wl,-z,max-page-size=16384", *cross], out / "box64-configure.log")
     run(["cmake", "--build", str(build), "--parallel", "4"], out / "box64-build.log", timeout=900)
     shutil.copy2(build / "box64", root / "usr/bin/box64")
 

@@ -66,10 +66,11 @@ def run(args):
         if not native:
             raise RuntimeError("Cannot locate the installed APK's native library directory")
         base = home + "/files/pic-phase0"
-        device_archive = "/data/local/tmp/tabstudio-pic-phase0.tar.gz"
-        subprocess.run(["adb", "push", str(work / "android-rootfs.tar.gz"), device_archive], check=True)
-        setup = f"mkdir -p {shlex.quote(base)}/rootfs {shlex.quote(base)}/results {shlex.quote(base)}/tmp && cd {shlex.quote(base)}/rootfs && tar -xzf {device_archive}"
-        adb_shell(shlex.join(["run-as", PACKAGE, "sh", "-c", setup]))
+        setup = f"mkdir -p {shlex.quote(base)}/rootfs {shlex.quote(base)}/results {shlex.quote(base)}/tmp && cd {shlex.quote(base)}/rootfs && tar -xzf -"
+        # Stream into the app UID. SELinux need not permit the app to read a
+        # shell-owned file from /data/local/tmp, even when its Unix mode is 0644.
+        with (work / "android-rootfs.tar.gz").open("rb") as archive:
+            subprocess.run(["adb", "shell", "-T", shlex.join(["run-as", PACKAGE, "sh", "-c", setup])], stdin=archive, check=True)
         root = base + "/rootfs"
         prefix = [native[1] + "/libproot.so", "--kill-on-exit", "--link2symlink", "--sysvipc", "-L", "-0", "-r", root,
                   "-b", "/dev", "-b", "/proc", "-b", "/sys", "-b", root + "/tmp:/dev/shm", "-b", base + "/results:/results", "-w", "/work",
@@ -96,6 +97,10 @@ def run(args):
     finally:
         (out / "android-result.json").write_text(json.dumps(result, indent=2) + "\n")
         print(json.dumps(result, indent=2), flush=True)
+        if "base" in locals():
+            # This is only the disposable compiler check's private directory.
+            # Release space before the IDE's larger, independent self test.
+            adb_shell(shlex.join(["run-as", PACKAGE, "rm", "-r", base]))
 
 
 if __name__ == "__main__":

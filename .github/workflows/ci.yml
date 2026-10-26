@@ -204,7 +204,7 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: artifacts/native
-          key: android-native-${{ hashFiles('build/android/native/build.sh') }}-arm
+          key: android-native-${{ hashFiles('build/android/native/build.sh', 'build/pic/build_box64.py', 'build/pic/spike.py', 'build/pic/assets.lock.json') }}-arm
 
       - name: Build the toolchain runtime
         run: |
@@ -270,7 +270,7 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: artifacts/native
-          key: android-native-${{ hashFiles('build/android/native/build.sh') }}-x64
+          key: android-native-${{ hashFiles('build/android/native/build.sh', 'build/pic/build_box64.py', 'build/pic/spike.py', 'build/pic/assets.lock.json') }}-x64
 
       - name: Build the toolchain runtime
         run: |
@@ -325,8 +325,11 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
           script: |
             set -e
-            bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 960
-            python3 build/pic/android_spike.py run --work "$RUNNER_TEMP/pic-android" --output ci-out/pic-android
+            adb install -r ci-out/TabStudio-x64.apk
+            status=0
+            python3 build/pic/android_spike.py run --work "$RUNNER_TEMP/pic-android" --output ci-out/pic-android || status=1
+            bash build/ci/android-smoke-test.sh ci-out/TabStudio-x64.apk ci-out 960 || status=1
+            exit "$status"
 
       # A crash's native backtrace has only offsets into the runtime's stripped libraries; this names the functions.
       - name: Name the functions in a crash's backtrace

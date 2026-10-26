@@ -69,6 +69,9 @@ public sealed class AlpineEnvironment
     /// <summary>Alpine's name for this device's architecture.</summary>
     public string? Architecture => _platform.Architecture;
 
+    /// <summary>The APK's extracted native programs, including PRoot and box64.</summary>
+    public string? NativeLibraryDirectory => _platform.NativeLibraryDirectory;
+
     /// <summary>Whether the environment is set up.</summary>
     public bool IsSetUp => File.Exists(Path.Combine(Rootfs, ReadyMarker));
 

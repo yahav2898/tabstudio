@@ -4,6 +4,9 @@ using TabStudio.Toolchains.Downloads;
 using TabStudio.Toolchains.Installation;
 using TabStudio.Toolchains.Linux;
 using TabStudio.Toolchains.Runtimes;
+using TabStudio.Toolchains.Microchip;
+using System.Net;
+using System.Text.RegularExpressions;
 
 namespace TabStudio.App.Services.Toolchains;
 
@@ -79,6 +82,37 @@ public sealed class ToolchainServices : IDisposable
 
     /// <summary>The Linux environment on Android, or <see langword="null"/> on a desktop computer.</summary>
     public AlpineEnvironment? Environment { get; }
+
+    /// <summary>Retrieves Microchip's terms for the Store's explicit acceptance dialog.</summary>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    public async Task<string> ReadMicrochipLicenseAsync(CancellationToken cancellationToken)
+    {
+        var http = _http ?? throw new InvalidOperationException("Compiler installation needs the tablet's Linux environment.");
+        var html = await http.GetStringAsync(MicrochipInstallation.LicenseAddress, cancellationToken).ConfigureAwait(false);
+        if (html.Length > 3_000_000)
+        {
+            throw new InvalidDataException("Microchip's license response is unexpectedly large.");
+        }
+
+        var text = Regex.Replace(html, @"<(script|style)\b[^>]*>[\s\S]*?</\1>", string.Empty, RegexOptions.IgnoreCase);
+        text = Regex.Replace(text, @"</(?:p|div|li|h[1-6])\s*>", "\n\n", RegexOptions.IgnoreCase);
+        text = WebUtility.HtmlDecode(Regex.Replace(text, "<[^>]+>", string.Empty));
+        var start = text.IndexOf("SOFTWARE LICENSE AGREEMENT", StringComparison.Ordinal);
+        var end = text.IndexOf("Questions about this Agreement", start >= 0 ? start : 0, StringComparison.Ordinal);
+        if (start < 0 || end <= start || end - start < 5000)
+        {
+            throw new InvalidDataException("Could not read Microchip's complete software license. Open its license page and try again; no compiler was downloaded.");
+        }
+
+        var last = text.IndexOf("\n\n", end, StringComparison.Ordinal);
+        return MicrochipInstallation.LicenseAddress + "\n\n" + text[start..(last > end ? last : end)].Trim();
+    }
+
+    /// <summary>Records the terms the user accepted for a specific pinned compiler download.</summary>
+    /// <param name="id">Compiler id.</param>
+    /// <param name="terms">The displayed terms.</param>
+    public void AcceptMicrochipLicense(string id, string terms) =>
+        MicrochipInstallation.AcceptLicense(Environment ?? throw new InvalidOperationException("No Linux environment."), id, terms);
 
     /// <summary>
     /// Reads the toolchains' states the first time it is called, and returns that same reading afterwards. Never

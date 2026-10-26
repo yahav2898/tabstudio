@@ -10,6 +10,7 @@ using TabStudio.Toolchains.Catalog;
 using TabStudio.Toolchains.Installation;
 using TabStudio.Toolchains.Linux;
 using TabStudio.Toolchains.Projects;
+using TabStudio.Toolchains.Microchip;
 
 namespace TabStudio.App.ViewModels;
 
@@ -455,6 +456,10 @@ public sealed partial class WorkspaceViewModel
     /// <summary>Ends a run: the exit line, as Visual Studio writes it, the Error List and the status bar.</summary>
     private void ReportToolchainRun(ToolchainProject project, string entryPoint, OutputProcessResult result)
     {
+        if (MicrochipInstallation.IsCompiler(project.Toolchain.Id))
+        {
+            ReportPicBuild(project, result.Lines, result.Exit?.Succeeded == true);
+        }
         Output.WriteLine();
         if (result.Exit is not { } exit)
         {
@@ -486,7 +491,10 @@ public sealed partial class WorkspaceViewModel
         if (exit.Succeeded)
         {
             State = IdeState.Ready;
-            StatusText = "Ready";
+            if (!MicrochipInstallation.IsCompiler(project.Toolchain.Id))
+            {
+                StatusText = "Ready";
+            }
             return;
         }
 

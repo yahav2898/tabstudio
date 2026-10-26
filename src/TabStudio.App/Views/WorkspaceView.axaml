@@ -901,7 +901,9 @@
               BoxShadow="{DynamicResource Shadow.Dialog}">
         <StackPanel Spacing="14">
           <TextBlock Classes="h2" FontSize="15" Text="{Binding Prompt.Title}" />
-          <TextBlock Classes="muted" TextWrapping="Wrap" Text="{Binding Prompt.Message}" />
+          <ScrollViewer MaxHeight="360" HorizontalScrollBarVisibility="Disabled">
+            <TextBlock Classes="muted" TextWrapping="Wrap" Text="{Binding Prompt.Message}" />
+          </ScrollViewer>
           <TextBox x:Name="PromptBox" Classes="large mono" Text="{Binding Prompt.Text}" IsVisible="{Binding Prompt.HasInput}" />
           <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
             <Button Theme="{StaticResource SecondaryButton}" Height="40" Padding="18,0" Content="Cancel" Command="{Binding Prompt.CancelCommand}" />

@@ -88,7 +88,9 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
         if (!_environment.IsSetUp)
         {
             var setup = _environment.Distribution.Rootfs.GetValueOrDefault(_environment.Architecture ?? string.Empty)?.Size ?? 0;
-            return [.. toolchains.Select(t => Estimate(t, ToolchainState.NotInstalled) with
+            return [.. toolchains.Select(t => CompilerProblem(t) is { } compilerProblem
+                ? Estimate(t, ToolchainState.Unavailable) with { Note = compilerProblem }
+                : Estimate(t, ToolchainState.NotInstalled) with
             {
                 DownloadSize = t.EstimatedDownloadSize + setup,
                 Note = $"Sets up {_environment.Distribution.DisplayName} the first time.",
@@ -113,7 +115,9 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
         var result = new List<ToolchainStatus>();
         foreach (var toolchain in toolchains)
         {
-            result.Add(ReadStatus(toolchain, records, installed, index));
+            result.Add(CompilerProblem(toolchain) is { } compilerProblem
+                ? Estimate(toolchain, ToolchainState.Unavailable) with { Note = compilerProblem }
+                : ReadStatus(toolchain, records, installed, index));
         }
 
         return result;
@@ -123,6 +127,10 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
     public async Task InstallAsync(ToolchainDefinition toolchain, IProgress<InstallProgress>? progress, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(toolchain);
+        if (Microchip.MicrochipInstallation.IsCompiler(toolchain.Id))
+        {
+            Microchip.MicrochipInstallation.CheckConsent(_environment, toolchain.Id);
+        }
         progress?.Report(new InstallProgress(InstallStage.Preparing, $"Preparing to install {toolchain.Name}", 0));
         await PrepareRuntimeAsync(new InlineProgress<InstallProgress>(p => progress?.Report(p with { Fraction = p.Fraction * 0.1 })), cancellationToken).ConfigureAwait(false);
 
@@ -131,6 +139,10 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
         var archives = toolchain.Setup.Where(s => s.Archive is not null).ToList();
         var archiveBytes = archives.Sum(s => s.Archive!.Size);
         _environment.EnsureSpace(plan.DownloadSize + plan.InstalledSize + (archiveBytes * 3), toolchain.Name);
+        if (Microchip.MicrochipInstallation.IsCompiler(toolchain.Id))
+        {
+            _environment.EnsureSpace(toolchain.EstimatedDownloadSize + toolchain.EstimatedInstalledSize + plan.DownloadSize + plan.InstalledSize, toolchain.Name);
+        }
 
         await DownloadAsync(toolchain, plan, archives, progress, cancellationToken).ConfigureAwait(false);
         await InstallPackagesAsync(toolchain, upgrade: false, progress, cancellationToken).ConfigureAwait(false);
@@ -251,7 +263,7 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
             var staleSetup = toolchain.Setup.Where(s => record.Setup.GetValueOrDefault(s.Name) != s.Fingerprint).ToList();
             if (upgrade is { Packages.Count: > 0 } || staleSetup.Count > 0)
             {
-                var newest = toolchain.VersionPackage is { } name ? index?.Find(name)?.Version : null;
+                var newest = toolchain.PinnedVersion ?? (toolchain.VersionPackage is { } name ? index?.Find(name)?.Version : null);
                 status = status with
                 {
                     State = ToolchainState.UpdateAvailable,
@@ -275,10 +287,10 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
         {
             Toolchain = toolchain,
             State = ToolchainState.NotInstalled,
-            AvailableVersion = toolchain.VersionPackage is { } package && index.Find(package) is { } found ? ApkVersion.Display(found.Version) : null,
-            DownloadSize = plan.DownloadSize + archives,
-            InstallSize = plan.InstalledSize + (archives * 3),
-            SizesAreExact = true,
+            AvailableVersion = toolchain.PinnedVersion ?? (toolchain.VersionPackage is { } package && index.Find(package) is { } found ? ApkVersion.Display(found.Version) : null),
+            DownloadSize = plan.DownloadSize + archives + (Microchip.MicrochipInstallation.IsCompiler(toolchain.Id) ? toolchain.EstimatedDownloadSize : 0),
+            InstallSize = plan.InstalledSize + (archives * 3) + (Microchip.MicrochipInstallation.IsCompiler(toolchain.Id) ? toolchain.EstimatedInstalledSize : 0),
+            SizesAreExact = !Microchip.MicrochipInstallation.IsCompiler(toolchain.Id),
             Note = plan.Missing.Count > 0 ? $"{_environment.Distribution.DisplayName} has no {string.Join(", ", plan.Missing)}." : null,
         };
     }
@@ -362,6 +374,11 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
 
     private async Task<Dictionary<string, string>> RunSetupAsync(ToolchainDefinition toolchain, IReadOnlyList<SetupStepDefinition> steps, IProgress<InstallProgress>? progress, CancellationToken cancellationToken)
     {
+        if (Microchip.MicrochipInstallation.IsCompiler(toolchain.Id))
+        {
+            Microchip.MicrochipInstallation.CheckConsent(_environment, toolchain.Id);
+            Microchip.MicrochipInstallation.PrepareTranslator(_environment);
+        }
         var done = new Dictionary<string, string>(StringComparer.Ordinal);
         for (var i = 0; i < steps.Count; i++)
         {
@@ -478,7 +495,12 @@ public sealed partial class LinuxToolchainInstaller : IToolchainInstaller
     }
 
     private static string? VersionOf(ToolchainDefinition toolchain, ApkInstalledDatabase installed) =>
-        toolchain.VersionPackage is { } name ? installed.Find(name)?.Version : null;
+        toolchain.PinnedVersion ?? (toolchain.VersionPackage is { } name ? installed.Find(name)?.Version : null);
+
+    private string? CompilerProblem(ToolchainDefinition toolchain) => !Microchip.MicrochipInstallation.IsCompiler(toolchain.Id) ? null
+        : _environment.Architecture is not ("aarch64" or "x86_64") ? "XC compilers need 64-bit Android. Use the Windows Bridge on this device."
+        : _environment.Architecture == "aarch64" && !File.Exists(Path.Combine(_environment.NativeLibraryDirectory ?? string.Empty, "libbox64.so"))
+            ? "This APK has no box64 translator. Install an ARM64 APK with PIC support, or use the Windows Bridge." : null;
 
     private static double Ratio(long done, long total) => total <= 0 ? 1 : Math.Clamp((double)done / total, 0, 1);
 
