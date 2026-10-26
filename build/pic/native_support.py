@@ -29,17 +29,22 @@ def main(args):
             if source.suffix in (".py", ".json", ".c"):
                 shutil.copy2(source, tools / source.name)
         shutil.copy2(spike.REPO / "build/pic/assets.lock.json", tools / "assets.lock.json")
+        errors = []
         for tool in ("pic32prog", "pk2cmd", "gpsim"):
             arguments = [tool] + (["--accept-pk2cmd-license"] if tool == "pk2cmd" else [])
-            _, seconds, _ = spike.run([*native, "python3", "/opt/tabstudio/microchip/programmers.py", *arguments], output / (tool + ".log"), env=env, timeout=1200)
-            result["tools"][tool] = {"sourceBuildSeconds": seconds}
-        for suffix in ("c", "hex", "elf"):
-            shutil.copy2(args.firmware / ("simulation." + suffix), root / "work" / ("simulation." + suffix))
-        shutil.copy2(spike.REPO / "build/pic/test_gpsim_integration.py", root / "work/test_gpsim_integration.py")
-        spike.run([*native, "PYTHONPATH=/opt/tabstudio/microchip:/opt/tabstudio/microchip/python",
-                   "PIC_TEST_GPSIM=/opt/tabstudio/microchip/native/gpsim/bin/gpsim", "PIC_TEST_ELF=/work/simulation.elf",
-                   "python3", "/work/test_gpsim_integration.py"], output / "gpsim-dap.log", env=env, timeout=180)
-        result["dapIntegration"] = True
+            code, seconds, _ = spike.run([*native, "python3", "/opt/tabstudio/microchip/programmers.py", *arguments], output / (tool + ".log"), env=env, timeout=1200, check=False)
+            result["tools"][tool] = {"sourceBuildSeconds": seconds, "exitCode": code}
+            if code: errors.append(tool + " build exited " + str(code))
+        if result["tools"]["gpsim"]["exitCode"] == 0:
+            for suffix in ("c", "hex", "elf"):
+                shutil.copy2(args.firmware / ("simulation." + suffix), root / "work" / ("simulation." + suffix))
+            shutil.copy2(spike.REPO / "build/pic/test_gpsim_integration.py", root / "work/test_gpsim_integration.py")
+            code, _, _ = spike.run([*native, "PYTHONPATH=/opt/tabstudio/microchip:/opt/tabstudio/microchip/python",
+                       "PIC_TEST_GPSIM=/opt/tabstudio/microchip/native/gpsim/bin/gpsim", "PIC_TEST_ELF=/work/simulation.elf",
+                       "python3", "/work/test_gpsim_integration.py"], output / "gpsim-dap.log", env=env, timeout=180, check=False)
+            result["dapIntegration"] = code == 0
+            if code: errors.append("gpsim DAP tests exited " + str(code))
+        if errors: raise RuntimeError("; ".join(errors))
         result["success"] = True
     except Exception as error:
         result["error"] = str(error)

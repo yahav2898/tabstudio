@@ -91,7 +91,7 @@ def install_support(tool, accepted_pk2cmd=False):
         include.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile("/usr/include/hidapi/hidapi.h", include)
         run(["make", "-j2", "GITCOUNT=0", "HIDLIB=/usr/lib/libhidapi-libusb.so",
-             "LIBS=-lusb-1.0 -lpthread", 'CFLAGS=-O2 -std=gnu17 -fcommon -Ihidapi/hidapi -DUSE_MPSSE -DGITCOUNT=\\"0\\"'], source)
+             "LIBS=-lusb-1.0 -lpthread", 'CFLAGS=-O2 -std=gnu17 -fcommon -include sys/select.h -include sys/time.h -Ihidapi/hidapi -DUSE_MPSSE -DGITCOUNT=\\"0\\"'], source)
         binary.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source / "pic32prog", binary)
     else:

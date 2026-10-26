@@ -168,7 +168,10 @@ def write_wrappers(compiler, destination):
         # The native Python subprocess path is exercised by the ARM spike.
         # Avoid an additional BusyBox script/exec chain before the glibc Box64
         # process; the same compiler arguments abort through that shell chain.
-        lines = ["#!/usr/bin/python3", "import os, subprocess, sys", "environment = dict(os.environ)"]
+        lines = ["#!/usr/bin/python3", "import os, subprocess, sys",
+                 # Keep the translator's glibc startup stack separate from the
+                 # musl Python parent's stack under PRoot's execve loader.
+                 "subprocess._USE_VFORK = False", "subprocess._USE_POSIX_SPAWN = False", "environment = dict(os.environ)"]
         # GCC locates assembler/linker helpers through PATH. Inside the emulated
         # driver those must be the original x86 binaries, not another host shell
         # wrapper that recursively starts Box64 with the helper's argv layout.

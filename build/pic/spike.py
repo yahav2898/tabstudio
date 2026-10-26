@@ -317,7 +317,7 @@ def spike(args):
         shutil.copyfile("/etc/resolv.conf", root / "etc/resolv.conf")
         (root / "etc/ssl/certs").mkdir(parents=True, exist_ok=True)
         shutil.copyfile("/etc/ssl/certs/ca-certificates.crt", root / "etc/ssl/certs/ca-certificates.crt")
-        run([*native, "/sbin/apk", "add", "--no-cache", "make", "python3", "lscpu"], out / "project-dependencies.log", env=env)
+        run([*native, "/sbin/apk", "add", "--no-cache", "make", "python3", "lscpu", "clang22-extra-tools"], out / "project-dependencies.log", env=env)
         support = root / "opt/tabstudio/microchip"
         support.mkdir(parents=True, exist_ok=True)
         for name in ("install.py", "project.py", "packs.lock.json"):
@@ -349,6 +349,16 @@ def spike(args):
             script = "import subprocess;raise SystemExit(subprocess.call(" + repr(invocation) + "))"
             run([*native, "python3", "-c", script], out / "project-native-python-control.log", env=env, timeout=180, check=False)
             run([*native, "/usr/local/bin/xc32-gcc", *exact], out / "project-wrapper-control.log", env=env, timeout=180, check=False)
+            for label, arguments, capture in [
+                ("cwd-absolute", exact, False),
+                ("cwd-relative", [processor, "-mdfp=" + str(installed_pack).removeprefix(str(root)), "-O0", "-g", "-Wl,--defsym=_min_heap_size=0,--report-mem", "-o", "dist/default/production/control.elf", "main.c"], False),
+                ("pipe", exact, True),
+            ]:
+                invocation = ["/usr/local/bin/xc32-gcc", *arguments]
+                script = "import subprocess;subprocess._USE_VFORK=False;subprocess._USE_POSIX_SPAWN=False;r=subprocess.run(" + repr(invocation) + ",cwd='/work/project'" + (",input='',text=True,capture_output=True);print(r.stdout);print(r.stderr)" if capture else ")") + ";raise SystemExit(r.returncode)"
+                run([*native, "python3", "-c", script], out / ("project-" + label + "-control.log"), env=env, timeout=180, check=False)
+            run([*native, "BOX64_STRACE=1", "BOX64_LOG=2", "python3", "/opt/tabstudio/microchip/project.py", "build", "/work/project"],
+                out / "project-syscalls.log", env=env, timeout=180, check=False)
         if project_code:
             raise RuntimeError("The shipped MPLAB project driver failed; see project-build.log and controls")
         project_hex = project_path / "dist/default/production/firmware.hex"
@@ -356,6 +366,11 @@ def spike(args):
             raise RuntimeError("The shipped project driver did not produce firmware and compiler builtin metadata")
         shutil.copy2(project_hex, out / "template.hex")
         result["mplabProjectBuild"] = True
+        # The editor must parse the real device/compiler headers, not merely
+        # produce a compilation-database JSON file with plausible arguments.
+        run([*native, "clangd", "--check=/work/project/main.c", "--compile-commands-dir=/work/project/.tabstudio/pic"],
+            out / "clangd-device-headers.log", env=env, timeout=180)
+        result["intelliSenseCheck"] = True
         if args.compiler == "xc8":
             # Compile a small source-line/stepping fixture independently from
             # the blink template, using its actual supported PIC18F14K22 model.

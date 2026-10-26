@@ -16,6 +16,11 @@ import xml.etree.ElementTree as ET
 
 from install import ASSETS, TOOLS, ensure_pack
 
+# Do not share a musl parent's stack with the glibc translator across PRoot's
+# execve loader. The firmware compiler still controls its own child processes.
+subprocess._USE_VFORK = False
+subprocess._USE_POSIX_SPAWN = False
+
 
 def descriptor(path, configuration=None):
     if configuration is None and (path / ".tabstudio/pic-build.json").is_file():
@@ -145,6 +150,8 @@ def write_intellisense(path, conf, manifest, compiler, device, dfp):
 #define __eeprom
 #define __rom
 #define __ram
+#define __far
+#define __near
 #define __bit unsigned char
 #define __pack
 #define __interrupt(...)
@@ -161,7 +168,7 @@ void __builtin_mtc0(int, int, unsigned int);
     compiler_root = Path(manifest["compilerRoot"])
     includes = ([dfp / "pic/include", dfp / "pic/include/proc", compiler_root / "pic/include/c99", compiler_root / "pic/include"]
                 if compiler == "xc8" else [dfp / "include", dfp / "include/proc", *[compiler_root / f / "include" for f in ("pic32m", "pic32c", "pic32a")]])
-    flags = ["-xc", "-std=c99", "-fsyntax-only", "-Wno-unknown-pragmas", "-Wno-ignored-attributes", "-include", str(compatibility)]
+    flags = ["-xc", "-std=gnu99", "-fsyntax-only", "-Wno-unknown-pragmas", "-Wno-ignored-attributes", "-include", str(compatibility)]
     for folder in includes:
         flags += ["-isystem", str(folder)]
     if compiler == "xc32":
@@ -176,12 +183,12 @@ void __builtin_mtc0(int, int, unsigned int);
     files = root.findall(".//itemPath")
     commands = []
     for item in files:
-        source = item.text or ""
+        source = (item.text or "").replace("\\", "/")
         if Path(source).suffix.lower() not in (".c", ".cpp", ".cc", ".cxx"):
             continue
         local = list(flags)
         if Path(source).suffix.lower() in (".cpp", ".cc", ".cxx"):
-            local = ["-xc++" if f == "-xc" else "-std=c++17" if f == "-std=c99" else f for f in local]
+            local = ["-xc++" if f == "-xc" else "-std=gnu++17" if f == "-std=gnu99" else f for f in local]
         groups = [g for g in conf if g.tag != "item"]
         override = next((e for e in conf.findall("item") if e.get("path", "").replace("\\", "/") == source.replace("\\", "/")), None)
         if override is not None and override.get("ex") in ("true", "1"):

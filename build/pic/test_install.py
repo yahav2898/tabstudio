@@ -81,7 +81,7 @@ class InstallationTests(unittest.TestCase):
         root = self.folder / "Blink.X"
         (root / "nbproject").mkdir(parents=True)
         (root / "nbproject/configurations.xml").write_text('''<configurationDescriptor>
-<logicalFolder><itemPath>main.c</itemPath></logicalFolder><confs><conf name="production">
+<logicalFolder><itemPath>main.c</itemPath><itemPath>source\\extra.c</itemPath></logicalFolder><confs><conf name="production">
 <toolsSet><targetDevice>PIC18F45K22</targetDevice><languageToolchain>XC8</languageToolchain><languageToolchainVersion>4.00</languageToolchainVersion></toolsSet>
 <HI-TECH-COMP><property key="define-macros" value="BOARD=1;LED=0"/></HI-TECH-COMP>
 </conf></confs></configurationDescriptor>''')
@@ -104,6 +104,8 @@ class InstallationTests(unittest.TestCase):
         self.assertEqual("user-owned database", (root / "compile_commands.json").read_text())
         database = json.loads((root / ".tabstudio/pic/compile_commands.json").read_text())
         self.assertIn("-DBOARD=1", database[0]["arguments"])
+        self.assertIn("-std=gnu99", database[0]["arguments"])
+        self.assertEqual(str(root / "source/extra.c"), database[1]["file"])
 
     def test_relocates_generated_tool_paths_while_preserving_mplabs_driver_choices(self):
         root = self.folder / "Imported.X"
