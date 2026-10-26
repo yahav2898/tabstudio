@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using TabStudio.App.Platform;
 using TabStudio.Compilation.Running;
 using TabStudio.Toolchains.Networking;
+using TabStudio.Toolchains.Projects;
 
 namespace TabStudio.App.ViewModels;
 
@@ -40,6 +41,13 @@ public sealed partial class WorkspaceViewModel
             }),
             new AsyncRelayCommand(() => _serverBrowser.OpenUriAsync(address)),
             new RelayCommand(() => ServerNotice = null));
+
+        // A Capacitor project's F5 target is its web app; other local servers keep the explicit choice.
+        if (CurrentToolchainProject()?.Project.Directory is { } folder && GradleAndroidProject.IsCapacitor(folder))
+        {
+            WebPreview.Show(StartupProject?.Name ?? "Capacitor app", address, null);
+            SelectSideBarPanel(SideBarPanel.WebPreview);
+        }
     });
 
     private Action<int> BeginServerRun()

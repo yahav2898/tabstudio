@@ -58,8 +58,8 @@ public sealed class MobileWorkflowTests
         var run = workspace.RunCommand.ExecuteAsync(null);
         try
         {
-            await UiTestHelpers.WaitUntilAsync(() => workspace.ServerNotice is not null, because: "Vite's local URL");
-            workspace.ServerNotice!.OpenPreview.Execute(null);
+            await UiTestHelpers.WaitUntilAsync(() => workspace.WebPreview.IsRunning, because: "F5 opens the Capacitor web part in the preview");
+            Assert.True(workspace.IsWebPreviewSelected);
             using var http = new HttpClient();
             var html = await http.GetStringAsync(workspace.WebPreview.AppAddress);
             Assert.Contains("Built on my tablet", html, StringComparison.Ordinal);

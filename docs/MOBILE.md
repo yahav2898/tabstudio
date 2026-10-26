@@ -31,7 +31,7 @@ still come from the project's Gradle build, including Android resources and buil
 ## Capacitor
 
 Create **Capacitor App** (Vite + TypeScript). Install its npm dependencies from the offered notice. F5 starts
-Vite and the port notice opens the web preview. **Run Android App** runs `npm run build`, adds Android if needed,
+Vite and opens the web preview automatically. **Run Android App** runs `npm run build`, adds Android if needed,
 runs `cap sync android`, then uses the same Gradle build/install path. This template uses Capacitor 6 for its
 Java 17 build baseline; existing newer Capacitor apps may require a newer JDK and additional SDK platforms.
 
