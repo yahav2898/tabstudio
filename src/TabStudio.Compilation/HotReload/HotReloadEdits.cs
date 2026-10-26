@@ -53,6 +53,14 @@ internal static class HotReloadEdits
             foreach (var (key, oldMethod) in oldMethods)
             {
                 var newMethod = newMethods[key];
+                // Top-level Main's signature is inferred from its statements, so the declaration comparison
+                // above cannot catch void/int/Task changes. EmitDifference assumes signatures already match.
+                if (key == "<top-level>" && oldMethod.Symbol.ReturnType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
+                    != newMethod.Symbol.ReturnType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat))
+                {
+                    return ([], $"{Path.GetFileName(path)}: changing the top-level entry point's return type requires a restart.");
+                }
+
                 var oldNodes = BodyNodes(oldMethod.Body, key).ToArray();
                 var newNodes = BodyNodes(newMethod.Body, key).ToArray();
                 if (key == "<top-level>"

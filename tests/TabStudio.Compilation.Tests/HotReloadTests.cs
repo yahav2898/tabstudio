@@ -110,6 +110,25 @@ public sealed class HotReloadTests
         Assert.Equal(3, method.Invoke(null, null));
     }
 
+    [Theory]
+    [InlineData("Console.WriteLine(1);", "Console.WriteLine(1); return 0;")]
+    [InlineData("Console.WriteLine(1); return 0;", "Console.WriteLine(1);")]
+    public void Changing_a_top_level_entry_points_return_type_requires_a_restart(string before, string after)
+    {
+        CompiledAssembly Build(string text) => new CSharpCompiler().Compile(new CompilationRequest
+        {
+            AssemblyName = "ReloadTopLevelSignature",
+            Documents = [new SourceDocument("Program.cs", text)],
+        }).Assembly!;
+        using var baseline = new HotReloadBaseline(Build(before));
+
+        var result = baseline.EmitDifference(Build(after).HotReloadCompilation!, out var delta);
+
+        Assert.Equal(HotReloadStatus.RestartRequired, result.Status);
+        Assert.Contains("restart", result.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Null(delta);
+    }
+
     [Fact]
     public async Task A_top_level_lambda_updates_while_Main_is_waiting_without_restarting_Main()
     {
