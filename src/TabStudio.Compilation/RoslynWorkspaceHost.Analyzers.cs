@@ -126,7 +126,7 @@ public sealed partial class RoslynWorkspaceHost
     /// <c>.editorconfig</c>: every property the project file sets, plus the ones the SDK always provides, and for a
     /// Razor project a section per Razor file with the metadata the Razor compiler reads.
     /// </summary>
-    private static DocumentInfo CreateAnalyzerConfig(ProjectId id, TsProject project, IReadOnlyList<string> razorFiles)
+    private static DocumentInfo CreateAnalyzerConfig(ProjectId id, TsProject project, IReadOnlyList<string> razorFiles, IReadOnlyList<string> unoInputs)
     {
         var properties = new SortedDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         foreach (var (key, value) in project.Properties)
@@ -143,6 +143,8 @@ public sealed partial class RoslynWorkspaceHost
         var razorSections = new StringBuilder();
         AppendRazorAnalyzerConfig(project, razorFiles, properties, razorSections);
         AppendWpfAnalyzerConfig(project, razorSections);
+
+        AppendUnoAnalyzerConfig(project, unoInputs, properties, razorSections);
 
         var text = new StringBuilder("is_global = true\n");
         foreach (var (key, value) in properties)

@@ -24,6 +24,11 @@ internal static class RazorCompilations
     /// <param name="cancellationToken">Cancels the work.</param>
     public static async Task<List<BuildDiagnostic>> MapAsync(Project project, TsProject info, IEnumerable<Diagnostic> compilerDiagnostics, CancellationToken cancellationToken)
     {
+        if (Uno.UnoBuild.UsesUno(info) && await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false) is { } unoCompilation)
+        {
+            return await Uno.UnoCompilations.MapAsync(project, info, unoCompilation, compilerDiagnostics, cancellationToken).ConfigureAwait(false);
+        }
+
         if (!RazorProjects.UsesRazor(info))
         {
             return [.. DiagnosticMapper.Map(compilerDiagnostics, info.Name)];
@@ -49,6 +54,11 @@ internal static class RazorCompilations
         Stopwatch stopwatch,
         CancellationToken cancellationToken)
     {
+        if (Uno.UnoBuild.UsesUno(info))
+        {
+            return await Uno.UnoCompilations.EmitAsync(project, info, compilation, checkInProcessSafety, stopwatch, cancellationToken).ConfigureAwait(false);
+        }
+
         if (!RazorProjects.UsesRazor(info))
         {
             return CSharpCompiler.Emit(compilation, checkInProcessSafety, stopwatch, info.Name, ManifestResources.For(info), cancellationToken);

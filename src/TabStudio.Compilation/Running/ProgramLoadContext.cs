@@ -18,8 +18,10 @@ internal sealed class ProgramLoadContext : AssemblyLoadContext
     private readonly Dictionary<string, Assembly> _images = new(StringComparer.OrdinalIgnoreCase);
     private readonly Func<string, bool>? _sharedWithHost;
 
+    // Uno navigation descriptors include the context name. Every build must have its own name,
+    // including on Android where old contexts remain loaded after a restart.
     public ProgramLoadContext(string name, IReadOnlyList<CompiledAssembly> dependencies, IReadOnlyList<string> packageAssemblies, Func<string, bool>? sharedWithHost, bool unloadable = true)
-        : base($"TabStudio program: {name}", isCollectible: unloadable && SupportsUnloading)
+        : base($"TabStudio program: {name} ({Guid.NewGuid():N})", isCollectible: unloadable && SupportsUnloading)
     {
         _dependencies = dependencies.ToDictionary(d => d.Name, StringComparer.OrdinalIgnoreCase);
         _sharedWithHost = sharedWithHost;

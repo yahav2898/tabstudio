@@ -34,7 +34,7 @@
 
   <!-- Libraries document their public surface; a missing XML comment is a warning there. -->
   <PropertyGroup>
-    <TabStudioDocumentedLibraries>TabStudio.Core;TabStudio.Compilation;TabStudio.Packages;TabStudio.TestRunner;TabStudio.Debugging;TabStudio.LiveTesting;TabStudio.Notebooks;TabStudio.SourceControl;TabStudio.Agent;TabStudio.Link;TabStudio.LanguageServers;TabStudio.Web;TabStudio.Wpf;TabStudio.Swarm;TabStudio.WindowsBridge;TabStudio.WindowsBridge.Windows</TabStudioDocumentedLibraries>
+    <TabStudioDocumentedLibraries>TabStudio.Core;TabStudio.Compilation;TabStudio.Packages;TabStudio.TestRunner;TabStudio.Debugging;TabStudio.LiveTesting;TabStudio.Notebooks;TabStudio.SourceControl;TabStudio.Agent;TabStudio.Link;TabStudio.LanguageServers;TabStudio.Web;TabStudio.Wpf;TabStudio.Swarm;TabStudio.WindowsBridge;TabStudio.WindowsBridge.Windows;TabStudio.Uno</TabStudioDocumentedLibraries>
   </PropertyGroup>
   <PropertyGroup Condition="'$(IsTestProject)' != 'true' AND $([System.String]::Copy(';$(TabStudioDocumentedLibraries);').Contains(';$(MSBuildProjectName);'))">
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

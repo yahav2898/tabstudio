@@ -125,6 +125,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         _additionalDocuments.Clear();
         _razorDocuments.Clear();
         _razorFiles.Clear();
+        _unoGeneratorInputs.Clear();
         _projectIds.Clear();
         _projects.Clear();
         _skeletons.Clear();
@@ -175,7 +176,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
     {
         lock (_gate)
         {
-            return _documents.ContainsKey(filePath) || _razorDocuments.Contains(filePath);
+            return _documents.ContainsKey(filePath) || _razorDocuments.Contains(filePath) || IsUnoXamlDocumentUnderGate(filePath);
         }
     }
 
@@ -288,6 +289,11 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             return await GetRazorDocumentDiagnosticsAsync(filePath, cancellationToken).ConfigureAwait(false);
         }
 
+        if (IsUnoXamlDocument(filePath))
+        {
+            return await GetUnoXamlDiagnosticsAsync(filePath, cancellationToken).ConfigureAwait(false);
+        }
+
         var (document, project) = Snapshot(filePath);
         if (document is null || project is null)
         {
@@ -300,7 +306,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             return [];
         }
 
-        var diagnostics = DiagnosticMapper.Map(model.GetDiagnostics(cancellationToken: cancellationToken), project.Name).ToList();
+        var diagnostics = DiagnosticMapper.Map(ExplainForUno(project, model.GetDiagnostics(cancellationToken: cancellationToken)), project.Name).ToList();
         if (WpfProject.UsesWpf(project))
         {
             return WpfDiagnostics.Explain(diagnostics, model, project, cancellationToken);
@@ -311,6 +317,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             diagnostics.AddRange(InProcessSafetyAnalyzer.AnalyzeTree(model.Compilation, model.SyntaxTree, project.Name, cancellationToken));
         }
 
+        diagnostics.AddRange(Uno.UnoCompatibility.AnalyzeTree(model, project, cancellationToken));
         return diagnostics;
     }
 
@@ -435,7 +442,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             {
                 if (project.CompilationOptions is { } options)
                 {
-                    var parseOptions = Razor.RazorCompiler.ParseOptionsFor(_projects.GetValueOrDefault(project.Id), optimize);
+                    var parseOptions = ParseOptionsFor(_projects.GetValueOrDefault(project.Id), optimize);
                     solution = solution
                         .WithProjectCompilationOptions(project.Id, options.WithOptimizationLevel(level))
                         .WithProjectParseOptions(project.Id, parseOptions);
@@ -533,7 +540,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         var id = _projectIds[project.FilePath];
         var documents = new List<DocumentInfo>();
 
-        foreach (var path in ProjectSourceFiles.Enumerate(project, allProjectDirectories))
+        foreach (var path in ProjectSourceFiles.Enumerate(project, allProjectDirectories).Where(path => IsCompiledSource(project, path)))
         {
             var documentId = DocumentId.CreateNewId(id, path);
             documents.Add(CreateDocumentInfo(documentId, path, ReadSource(sources, path), isGenerated: false));
@@ -554,6 +561,8 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         AddRazorDocuments(project, id, allProjectDirectories, sources, documents, additionalDocuments);
         AddWpfDocuments(project, id, sources, additionalDocuments);
 
+        AddUnoDocuments(project, id, allProjectDirectories, sources, documents, additionalDocuments);
+
         if (CSharpCompiler.CreateGlobalUsingsSource(project) is { } globalUsings)
         {
             var path = Path.Combine(project.DirectoryPath, "obj", $"{project.Name}.GlobalUsings.g.cs");
@@ -566,7 +575,8 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             .Where(reference => _projectIds.ContainsKey(reference) && !_skeletons.ContainsKey(reference))
             .Select(reference => new ProjectReference(_projectIds[reference]));
 
-        var kind = project.IsExecutable ? AssemblyKind.ConsoleApplication : AssemblyKind.Library;
+        // An Uno or WinUI 3 app has no Main of its own here: TabStudio's host starts it, as each platform's head does.
+        var kind = project.IsExecutable && !Uno.UnoBuild.UsesUno(project) ? AssemblyKind.ConsoleApplication : AssemblyKind.Library;
         var allowUnsafe = string.Equals(project.GetProperty("AllowUnsafeBlocks"), "true", StringComparison.OrdinalIgnoreCase);
 
         return RoslynProjectInfo.Create(
@@ -577,13 +587,13 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             LanguageNames.CSharp,
             filePath: project.FilePath,
             compilationOptions: WithPathMap(CSharpCompiler.CreateCompilationOptions(kind, project.NullableEnabled, _optimize, allowUnsafe, _concurrentBuild), project),
-            parseOptions: Razor.RazorCompiler.ParseOptionsFor(project, _optimize),
+            parseOptions: ParseOptionsFor(project, _optimize),
             documents: documents,
             projectReferences: projectReferences,
             metadataReferences: GetMetadataReferences(project),
             analyzerReferences: GetAnalyzerReferences(project),
             additionalDocuments: additionalDocuments)
-            .WithAnalyzerConfigDocuments([CreateAnalyzerConfig(id, project, _razorFiles.GetValueOrDefault(id) ?? [])]);
+            .WithAnalyzerConfigDocuments([CreateAnalyzerConfig(id, project, _razorFiles.GetValueOrDefault(id) ?? [], _unoGeneratorInputs.GetValueOrDefault(id) ?? [])]);
     }
 
     /// <summary>The current text of every source and additional file, to load the solution again with. The caller holds the gate.</summary>

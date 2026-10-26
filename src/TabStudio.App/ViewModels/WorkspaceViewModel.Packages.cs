@@ -60,7 +60,7 @@ public sealed partial class WorkspaceViewModel
                 continue;
             }
 
-            if (next.PackageReferences.Count > 0 || next.FrameworkReferences.Count > 0 || WpfProject.UsesWpf(next))
+            if (next.PackageReferences.Count > 0 || next.FrameworkReferences.Count > 0 || WpfProject.UsesWpf(next) || UnoProjects.UsesUno(next))
             {
                 return true;
             }
