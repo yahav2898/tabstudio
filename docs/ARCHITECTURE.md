@@ -50,6 +50,7 @@ Dependencies point down only. Each layer has one job:
 | `TabStudio.Link` | TabStudio Link: pairing, the TLS transport, QR codes, discovery, and the language protocol a host answers for a tablet. | Compilation, Debugging, LiveTesting |
 | `TabStudio.Web` | What a web app serves beyond its code: static web assets, scoped CSS, Blazor's scripts, and a host for .NET apps on WebAssembly. | Compilation, Packages |
 | `TabStudio.Wpf` | OpenSilver's in-process XAML compiler, WPF template and browser startup, on the WebAssembly host. | Compilation, Packages, Web |
+| `TabStudio.Porting` | Converts saved C# WPF and Windows Forms projects into sibling Avalonia projects, with generated support files and structured port notes. | Core, Roslyn |
 | `TabStudio.Remote` | SSH.NET connections, platform signing, SFTP source caches, remote processes, forwarding and publishing. | `TabStudio.Toolchains` |
 | `TabStudio.Toolchains` | The Toolchain Store: the catalog, Alpine Linux on PRoot, verified Alpine packages, processes and pseudo terminals, toolchain projects and the terminal emulator. | `TabStudio.Core` |
 | `TabStudio.Forms` | Windows Forms on Avalonia: `System.Windows.Forms` and `System.Drawing`, run in the app preview. | Avalonia |
@@ -290,6 +291,20 @@ every package is still verified before the serial apk operation, and the batch m
 native run/debug checks, observes cancellation on every exit, and retains every check under the 15-minute
 launch-to-verdict limit. CI permits one retry only for named failures outside the merged feature tests and
 keeps first-attempt logs and `FLAKY.txt` as artifacts for both pushes and pull requests.
+
+## Port to Avalonia
+
+`TabStudio.Porting` reads a project's saved files into `PortSource`. `AvaloniaPorter` dispatches to the WPF or
+Windows Forms converter: XAML/designer mappings and Roslyn code rewriting produce a `PortResult` in memory,
+including the Avalonia project and runtime support files. Unsupported or approximate mappings produce `PortNote`
+records with the original file, line, what changed and why. Writing the result uses a separate target directory;
+the original project is never rewritten.
+
+`WorkspaceViewModel.Porting` connects the Compatibility Doctor, Project menu and Solution Explorer action to the
+dialog. It adds the converted project through `SolutionFileEditor`, reloads the workspace, starts package restore
+and selects the result for F5. The summary links notes to their source lines and sends them as one agent task of
+proposed changes. Undo removes the solution entry and moves the converted folder, including subsequent edits,
+to app trash before restoring the previous startup project. See [PORTING.md](PORTING.md) for conversion limits.
 
 ## Debugging
 
@@ -607,6 +622,27 @@ adapter it brings.
   environment and paths are translated between the device and the environment. A missing server or adapter offers
   to install the toolchain that brings it. For F5, a project's run plan becomes a DAP launch configuration, and the
   program's input and output stay in the Output panel through its adapter's terminal or runtime streams.
+
+### Repository setup and static web sites
+
+After project detection, `WorkspaceViewModel.ProjectSetup` queues the detected toolchains and their package
+installs when **Set projects up when they open** is enabled, the default. `ProjectSetupStore` atomically keeps
+the setting and successful manifest/lock-file fingerprints in `State/project-setup.json`. Python uses a project
+`.venv`; a fresh npm install uses `npm ci` when a lock file is available, while a changed manifest can update its
+install and lock. `NodeWorkspaces.DependencyOwner` shares installation at a declared workspace root without
+removing member run targets. F5 awaits setup; saves during installation queue another pass, and status-bar/Output
+progress is cancellable. Remote workspaces and unrelated .NET-only workspaces do not start this setup path.
+
+`StaticSiteDetector` recognizes an `index.html` folder without a .NET project or a Node package that runs the site.
+The app adds a `StaticWebSite` startup project. F5 starts `StaticSiteServer` from `TabStudio.Web` on loopback and
+opens the existing web preview. Its injected script receives server-sent events from save notifications: linked
+stylesheets are replaced after the new sheet loads, preserving page state; other changes and unmatched stylesheets
+reload the page. Stop closes the listener and event streams.
+
+The Node.js catalog setup installs `vscode-langservers-extracted@4.10.0`. Its HTML, CSS and JSON stdio servers are
+registered as additional Node tools and launched through `ToolchainServerLauncher`, using the built-in LSP
+configuration for completion, formatting and scoped validation settings. Static sites request Node.js for these
+servers even though serving the site itself does not need Node.
 
 ### Go
 

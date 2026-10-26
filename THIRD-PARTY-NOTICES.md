@@ -28,6 +28,7 @@ The following are not part of the APK. The Toolchain Store downloads them only w
 | Alpine Linux's minimal root file system and packages, including Python and Node.js | Each package's own licence, listed in its package metadata | Alpine Linux's mirrors |
 | [Pyright](https://github.com/microsoft/pyright) | MIT | npm |
 | [typescript-language-server](https://github.com/typescript-language-server/typescript-language-server) | Apache-2.0 | npm |
+| [vscode-langservers-extracted](https://github.com/hrsh7th/vscode-langservers-extracted) 4.10.0, supplying HTML, CSS and JSON language servers | MIT | npm, installed by the Node.js Toolchain Store setup |
 | [TypeScript](https://github.com/microsoft/TypeScript) | Apache-2.0 | npm |
 | [debugpy](https://github.com/microsoft/debugpy) | MIT | PyPI |
 | [vscode-js-debug](https://github.com/microsoft/vscode-js-debug) | MIT | GitHub releases |
