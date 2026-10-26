@@ -1,5 +1,5 @@
 Polly at 87a2e4a0074f01b4b9a430d2f67b28f39f01274d
-Opened /home/runner/work/_temp/real-repos/Polly/Polly.slnx in 0.1 s
+Opened /home/runner/work/_temp/real-repos/Polly/Polly.slnx in 0.2 s
 Compatibility Doctor:
   Polly.Benchmarks: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
   Polly.Core.Benchmarks: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
@@ -16,36 +16,42 @@ Compatibility Doctor:
   Polly.Specs: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
   Polly.Testing.Tests: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
   Polly.TestUtils: Library via Built with its users - A library is compiled together with the projects that reference it.
-Built in 8.6 s: 9 errors, 5 warnings
-  5 x CS0122
-      [Polly.TestUtils] OutcomeExtensions.cs(14,21): error CS0122: 'Outcome<object>.TryGetResult(out object?)' is inaccessible due to its protection level
-      [Polly.TestUtils] TestUtilities.cs(41,12): error CS0122: 'ResilienceStrategyTelemetry.ResilienceStrategyTelemetry(ResilienceTelemetrySource, TelemetryListener?)' is inaccessible due to its protection level
-      [Polly.TestUtils] TestUtilities.cs(105,17): error CS0122: 'ResilienceContext.Initialize<TResult>(bool)' is inaccessible due to its protection level
-      [Polly.TestUtils] TestUtilities.cs(111,17): error CS0122: 'ResilienceContext.Initialize<TResult>(bool)' is inaccessible due to its protection level
-      [Polly.TestUtils] TestUtilities.cs(111,28): error CS0122: 'VoidResult' is inaccessible due to its protection level
-  3 x CS1726
-      [Polly.Core] Polly.Core.AssemblyInfo.g.cs(2,12): error CS1726: Friend assembly reference 'DynamicProxyGenAssembly2' is invalid. Strong-name signed assemblies must specify a public key in their InternalsVisibleTo declarations.
-      [Polly] Polly.AssemblyInfo.g.cs(2,12): error CS1726: Friend assembly reference 'DynamicProxyGenAssembly2' is invalid. Strong-name signed assemblies must specify a public key in their InternalsVisibleTo declarations.
-      [Polly.TestUtils] Polly.TestUtils.AssemblyInfo.g.cs(2,12): error CS1726: Friend assembly reference 'DynamicProxyGenAssembly2' is invalid. Strong-name signed assemblies must specify a public key in their InternalsVisibleTo declarations.
-  1 x CS0507
-      [Polly.TestUtils] TestResilienceStrategy.cs(11,67): error CS0507: 'TestResilienceStrategy.ExecuteCore<TResult, TState>(Func<ResilienceContext, TState, ValueTask<Outcome<TResult>>>, ResilienceContext, TState)': cannot change access modifiers when overriding 'protected internal' inherited member 'ResilienceStrategy.ExecuteCore<TResult, TState>(Func<ResilienceContext, TState, ValueTask<Outcome<TResult>>>, ResilienceContext, TState)'
+Built in 18.0 s: 2 errors, 5 warnings
+  1 x CS1705
+      [Snippets] error CS1705: Assembly 'Microsoft.Extensions.Http.Resilience' with identity 'Microsoft.Extensions.Http.Resilience, Version=10.11.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' uses 'Polly.Core, Version=8.0.0.0, Culture=neutral, PublicKeyToken=c8a3ffc3f8f825cc' which has a higher version than referenced assembly 'Polly.Core' with identity 'Polly.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=c8a3ffc3f8f825cc'
+  1 x CS5001
+      [Polly.Core.Tests] error CS5001: Program does not contain a static 'Main' method suitable for an entry point
 Output:
-Build started at 13:46:53...
+Build started at 14:40:46...
 1>------ Build started: Project: Polly.Core, Configuration: Debug ------
-1>Polly.Core.AssemblyInfo.g.cs(2,12): error CS1726: Friend assembly reference 'DynamicProxyGenAssembly2' is invalid. Strong-name signed assemblies must specify a public key in their InternalsVisibleTo declarations.
+1>Polly.Core -> compiled in memory (228.5 KB, 259 ms)
 2>------ Build started: Project: Polly, Configuration: Debug ------
+2>Polly -> compiled in memory (284 KB, 810 ms)
 3>------ Build started: Project: Polly.Benchmarks, Configuration: Debug ------
+3>Polly.Benchmarks -> compiled in memory (25 KB, 682 ms)
 4>------ Build started: Project: Polly.Extensions, Configuration: Debug ------
+4>Polly.Extensions -> compiled in memory (43.5 KB, 355 ms)
 5>------ Build started: Project: Polly.RateLimiting, Configuration: Debug ------
+5>Polly.RateLimiting -> compiled in memory (14 KB, 241 ms)
 6>------ Build started: Project: Polly.Core.Benchmarks, Configuration: Debug ------
+6>Polly.Core.Benchmarks -> compiled in memory (53 KB, 736 ms)
 7>------ Build started: Project: Polly.Testing, Configuration: Debug ------
+7>Polly.Testing -> compiled in memory (7 KB, 267 ms)
 8>------ Build started: Project: Snippets, Configuration: Debug ------
+8>error CS1705: Assembly 'Microsoft.Extensions.Http.Resilience' with identity 'Microsoft.Extensions.Http.Resilience, Version=10.11.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' uses 'Polly.Core, Version=8.0.0.0, Culture=neutral, PublicKeyToken=c8a3ffc3f8f825cc' which has a higher version than referenced assembly 'Polly.Core' with identity 'Polly.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=c8a3ffc3f8f825cc'
 9>------ Build started: Project: Polly.AotTest, Configuration: Debug ------
+9>Polly.AotTest -> compiled in memory (3 KB, 305 ms)
 10>------ Build started: Project: Polly.TestUtils, Configuration: Debug ------
+10>Polly.TestUtils -> compiled in memory (23.5 KB, 237 ms)
 11>------ Build started: Project: Polly.Core.Tests, Configuration: Debug ------
+11>error CS5001: Program does not contain a static 'Main' method suitable for an entry point
 12>------ Build started: Project: Polly.Extensions.Tests, Configuration: Debug ------
+12>error CS5001: Program does not contain a static 'Main' method suitable for an entry point
 13>------ Build started: Project: Polly.RateLimiting.Tests, Configuration: Debug ------
+13>error CS5001: Program does not contain a static 'Main' method suitable for an entry point
 14>------ Build started: Project: Polly.Specs, Configuration: Debug ------
+14>error CS5001: Program does not contain a static 'Main' method suitable for an entry point
 15>------ Build started: Project: Polly.Testing.Tests, Configuration: Debug ------
-========== Build: 0 succeeded, 15 failed ==========
+15>error CS5001: Program does not contain a static 'Main' method suitable for an entry point
+========== Build: 9 succeeded, 6 failed ==========
 
