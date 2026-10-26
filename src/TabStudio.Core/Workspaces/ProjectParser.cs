@@ -63,7 +63,8 @@ public static partial class ProjectParser
             ? null
             : ReadPropertiesSafely(directoryBuildTargets);
 
-        return WithRazorComponents(Parse(fullPath, File.ReadAllText(fullPath), inherited, overriding));
+        var imported = new[] { directoryBuildProps, directoryBuildTargets }.OfType<string>().ToList();
+        return WithRazorComponents(Parse(fullPath, File.ReadAllText(fullPath), inherited, overriding, imported));
     }
 
     /// <summary>Parses project XML that has already been read.</summary>
@@ -73,12 +74,17 @@ public static partial class ProjectParser
     /// <param name="overridingProperties">
     /// Properties from <c>Directory.Build.targets</c>, which MSBuild imports after the project, so they override its own.
     /// </param>
+    /// <param name="importedFiles">
+    /// <c>Directory.Build.props</c> and <c>.targets</c>, whose <c>InternalsVisibleTo</c> and <c>AssemblyAttribute</c>
+    /// items the project gets too.
+    /// </param>
     /// <exception cref="ProjectLoadException">The text is not valid XML.</exception>
     public static ProjectInfo Parse(
         string filePath,
         string projectXml,
         IReadOnlyDictionary<string, string>? inheritedProperties = null,
-        IReadOnlyDictionary<string, string>? overridingProperties = null)
+        IReadOnlyDictionary<string, string>? overridingProperties = null,
+        IReadOnlyList<string>? importedFiles = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(filePath);
         ArgumentNullException.ThrowIfNull(projectXml);
@@ -112,7 +118,8 @@ public static partial class ProjectParser
 
         var sdk = ReadSdk(root);
         var packages = ReadPackageReferences(root);
-        var projectReferences = ReadProjectReferences(root, directory);
+        var projectReferenceItems = ReadProjectReferenceItems(root, directory);
+        var projectReferences = projectReferenceItems.Select(r => r.Path).ToList();
         var targetFrameworks = ReadTargetFrameworks(properties);
         var language = LanguageFromExtension(Path.GetExtension(filePath));
 
@@ -127,6 +134,12 @@ public static partial class ProjectParser
             Properties = properties,
             PackageReferences = packages,
             ProjectReferences = projectReferences,
+            ProjectReferenceItems = projectReferenceItems,
+            Sdks = ReadSdks(root),
+            AssemblyAttributes = AssemblyAttributeItems.Read(
+                [root, .. ImportedRoots(importedFiles)],
+                properties,
+                Path.GetFileNameWithoutExtension(filePath)),
             FrameworkReferences = ReadFrameworkReferences(root, sdk, properties),
             CompileIncludes = ReadItemPatterns(root, "Compile", "Include"),
             CompileRemoves = ReadItemPatterns(root, "Compile", "Remove"),
@@ -319,7 +332,8 @@ public static partial class ProjectParser
             .Select(p => new PackageReferenceInfo(
                 p.Name!.Trim(),
                 p.Element.Attribute("Version")?.Value ??
-                p.Element.Elements().FirstOrDefault(c => c.Name.LocalName == "Version")?.Value))
+                p.Element.Elements().FirstOrDefault(c => c.Name.LocalName == "Version")?.Value,
+                Metadata(p.Element, "PrivateAssets")?.Trim()))
             .DistinctBy(p => p.Name, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
@@ -359,14 +373,69 @@ public static partial class ProjectParser
             ? "Exe"
             : null;
 
-    private static List<string> ReadProjectReferences(XElement root, string projectDirectory) =>
+    private static List<ProjectReferenceInfo> ReadProjectReferenceItems(XElement root, string projectDirectory) =>
         root.Descendants()
             .Where(e => e.Name.LocalName == "ProjectReference")
-            .Select(e => e.Attribute("Include")?.Value)
-            .Where(include => !string.IsNullOrWhiteSpace(include))
-            .Select(include => PathUtilities.ResolveRelative(projectDirectory, include!))
-            .Distinct(StringComparer.Ordinal)
+            .Select(e => (Include: e.Attribute("Include")?.Value, Item: e))
+            .Where(r => !string.IsNullOrWhiteSpace(r.Include))
+            .Select(r => new ProjectReferenceInfo(
+                PathUtilities.ResolveRelative(projectDirectory, r.Include!),
+                ReferenceOutputAssembly: !string.Equals(Metadata(r.Item, "ReferenceOutputAssembly")?.Trim(), "false", StringComparison.OrdinalIgnoreCase),
+                IsPrivate: AssemblyAttributeItems.IncludesAll(Metadata(r.Item, "PrivateAssets")),
+                OutputItemType: Metadata(r.Item, "OutputItemType")?.Trim() is { Length: > 0 } type ? type : null))
+            .DistinctBy(r => r.Path, StringComparer.Ordinal)
             .ToList();
+
+    /// <summary>The roots of <c>Directory.Build.props</c> and <c>.targets</c>; files that cannot be read are skipped.</summary>
+    private static IEnumerable<XElement> ImportedRoots(IReadOnlyList<string>? files)
+    {
+        foreach (var file in files ?? [])
+        {
+            XElement? root = null;
+            try
+            {
+                root = LoadXml(file, File.ReadAllText(file));
+            }
+            catch (Exception ex) when (ex is ProjectLoadException or IOException or UnauthorizedAccessException)
+            {
+                // A broken Directory.Build.props or .targets should not stop the project from opening.
+            }
+
+            if (root is not null)
+            {
+                yield return root;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Every SDK a project names: in the <c>Sdk</c> attribute (which may list several), in <c>&lt;Sdk Name="..."&gt;</c>
+    /// elements and in SDK imports, without versions.
+    /// </summary>
+    private static List<string> ReadSdks(XElement root)
+    {
+        var names = new List<string>();
+        void Add(string? value)
+        {
+            foreach (var sdk in (value ?? string.Empty).Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+            {
+                names.Add(NormalizeSdkName(sdk));
+            }
+        }
+
+        Add(root.Attribute("Sdk")?.Value);
+        foreach (var element in root.Elements().Where(e => e.Name.LocalName == "Sdk"))
+        {
+            Add(element.Attribute("Name")?.Value);
+        }
+
+        foreach (var import in root.Elements().Where(e => e.Name.LocalName == "Import"))
+        {
+            Add(import.Attribute("Sdk")?.Value);
+        }
+
+        return [.. names.Distinct(StringComparer.OrdinalIgnoreCase)];
+    }
 
     /// <summary>Reads the <c>Using</c> items that add global usings, with their <c>Alias</c> and <c>Static</c> metadata.</summary>
     private static List<UsingInfo> ReadUsings(XElement root) =>

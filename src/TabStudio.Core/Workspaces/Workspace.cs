@@ -29,7 +29,7 @@ public sealed class Workspace
     /// </summary>
     public ProjectInfo? DefaultStartupProject =>
         Projects.FirstOrDefault(p => p.Kind == ProjectKind.ConsoleApp) ??
-        Projects.FirstOrDefault(p => p.IsExecutable && !p.IsTestProject && !ProjectClassifier.IsBlazorWebAppClient(p));
+        Projects.FirstOrDefault(p => p.IsExecutable && !p.IsTestProject && p.Kind != ProjectKind.AspireAppHost && !ProjectClassifier.IsBlazorWebAppClient(p));
 
     /// <summary>Finds the project that owns a file: the project whose directory most closely contains it.</summary>
     /// <param name="filePath">Full path of a file in the workspace.</param>

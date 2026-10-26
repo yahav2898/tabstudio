@@ -130,8 +130,10 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         _projects.Clear();
         _skeletons.Clear();
 
+        // An Aspire AppHost compiles against code only its SDK generates, and runs only on a computer (see the
+        // Compatibility Doctor), so it is not compiled here.
         var csharpProjects = workspace.Projects
-            .Where(p => p.Language == ProjectLanguage.CSharp && p.Kind != ProjectKind.Unknown)
+            .Where(p => p.Language == ProjectLanguage.CSharp && p.Kind is not (ProjectKind.Unknown or ProjectKind.AspireAppHost))
             .ToList();
 
         foreach (var project in csharpProjects)
@@ -140,6 +142,8 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             _projectIds[project.FilePath] = id;
             _projects[id] = project;
         }
+
+        IndexProjects();
 
         var allProjectDirectories = workspace.Projects.Select(p => p.DirectoryPath).ToList();
         AddSolution(workspace, csharpProjects, allProjectDirectories, sources);
@@ -569,9 +573,15 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             documents.Add(CreateDocumentInfo(DocumentId.CreateNewId(id, path), path, globalUsings, isGenerated: true));
         }
 
+        if (CreateAssemblyAttributesSource(project) is { } assemblyInfo)
+        {
+            var path = Path.Combine(project.DirectoryPath, "obj", $"{project.Name}.AssemblyInfo.g.cs");
+            documents.Add(CreateDocumentInfo(DocumentId.CreateNewId(id, path), path, assemblyInfo, isGenerated: true));
+        }
+
         documents.AddRange(WindowsFormsDocuments(id, project));
 
-        var projectReferences = project.ProjectReferences
+        var projectReferences = CompileReferencesOf(project)
             .Where(reference => _projectIds.ContainsKey(reference) && !_skeletons.ContainsKey(reference))
             .Select(reference => new ProjectReference(_projectIds[reference]));
 
@@ -586,7 +596,7 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
             project.GetProperty("AssemblyName") ?? project.Name,
             LanguageNames.CSharp,
             filePath: project.FilePath,
-            compilationOptions: WithPathMap(CSharpCompiler.CreateCompilationOptions(kind, project.NullableEnabled, _optimize, allowUnsafe, _concurrentBuild), project),
+            compilationOptions: WithStrongName(WithPathMap(CSharpCompiler.CreateCompilationOptions(kind, project.NullableEnabled, _optimize, allowUnsafe, _concurrentBuild), project), project),
             parseOptions: ParseOptionsFor(project, _optimize),
             documents: documents,
             projectReferences: projectReferences,
