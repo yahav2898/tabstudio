@@ -203,7 +203,7 @@ public sealed partial class WorkspaceViewModel
                 Output.WriteLine($"[{remote.Connection.Host.Name}] > {script}", OutputKind.Info);
                 var result = await OutputProcess.RunAsync(runtime, new ProcessStartSpec { Program = "sh", Arguments = ["-lc", script], WorkingDirectory = remote.LocalRoot }, Output, null, _run.Token);
                 var diagnostics = result.Lines.SelectMany(RemoteErrorLocations).Select(location => new BuildDiagnostic("SSH", DiagnosticSeverityLevel.Error, location.Message ?? "Remote build error", new DiagnosticLocation(location.FilePath, 0, 0, location.Line, location.Column), remote.Connection.Host.Name)).ToArray();
-                ErrorList.SetFileDiagnostics(remote.LocalRoot, diagnostics);
+                ErrorList.SetProjectDiagnostics(remote.LocalRoot, diagnostics);
                 Output.WriteLine($"Remote command exited with code {result.Exit?.ExitCode}.", result.Succeeded ? OutputKind.Success : OutputKind.Failure);
                 return result.Succeeded;
             }
