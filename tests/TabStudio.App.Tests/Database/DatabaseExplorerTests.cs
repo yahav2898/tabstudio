@@ -46,7 +46,7 @@ public sealed class DatabaseExplorerTests
             var editor = view.GetVisualDescendants().OfType<TextEditor>().Single();
             // Ctrl+Enter runs only the selected statement; a second run exercises multiple result sets.
             editor.Select(0, document.Document.Text.IndexOf(';', StringComparison.Ordinal) + 1); editor.TextArea.Focus();
-            window.KeyPressQwerty(Key.Enter, RawInputModifiers.Control);
+            window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.Control);
             await UiTestHelpers.WaitUntilAsync(() => query.Results.Count == 1 && !query.IsBusy, because: "selection execution");
             Assert.Equal(4, query.Rows.Count);
             await query.ExecuteAsync(document.Document.Text); Assert.Equal(2, query.Results.Count);
