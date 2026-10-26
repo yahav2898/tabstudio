@@ -156,7 +156,10 @@ jobs:
   app:
     name: Build and test the IDE
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    # A healthy run takes about 27 minutes: setup (apt alone may take its full 10), the tool tests, and about 20
+    # minutes of IDE tests in both themes. The one retry below repeats the whole dark-theme run, and a hung first
+    # attempt only ends at its 12-minute hang timeout, so the budget holds both attempts and the log publishing.
+    timeout-minutes: 80
     steps:
       - uses: actions/checkout@v4
 
