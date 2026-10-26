@@ -1,4 +1,4 @@
-/* TabStudio's MIT-licensed compatibility shim for musl JVMs on Android.
+/* TabStudio's Apache-2.0-licensed compatibility shim for musl JVMs on Android.
  *
  * musl can merge a new anonymous RW mapping with an adjacent pthread stack. Android's SELinux then classifies
  * mprotect of that separate allocation as execstack rather than execmem. HotSpot's startup probe encounters this.
