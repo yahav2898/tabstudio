@@ -5,7 +5,8 @@
              x:DataType="db:DatabaseExplorerViewModel"
              Background="{DynamicResource Brush.Panel}">
   <UserControl.Styles>
-    <Style Selector="Button"><Setter Property="MinHeight" Value="36" /><Setter Property="Padding" Value="10,4" /></Style>
+    <Style Selector="Button"><Setter Property="MinHeight" Value="36" /><Setter Property="Padding" Value="10,4" /><Setter Property="VerticalContentAlignment" Value="Center" /></Style>
+    <Style Selector="TabItem"><Setter Property="FontSize" Value="13" /></Style>
     <Style Selector="ComboBox"><Setter Property="HorizontalAlignment" Value="Stretch" /><Setter Property="MinHeight" Value="36" /></Style>
     <Style Selector="TreeViewItem" x:DataType="db:DatabaseNode"><Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" /></Style>
   </UserControl.Styles>

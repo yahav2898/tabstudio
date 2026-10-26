@@ -24,6 +24,17 @@ public static partial class SelfTest
             if (explorer.SelectedConnection?.Id != id) throw new InvalidOperationException("Secure connection could not be decrypted.");
             await explorer.ConnectCommand.ExecuteAsync(null);
             if (explorer.Nodes.Count == 0) throw new InvalidOperationException(explorer.Status);
+            // A refused loopback port exercises the packaged managed drivers without a remote service.
+            foreach (var probe in new[]
+            {
+                new DatabaseConnection(Guid.NewGuid(), "PostgreSQL driver", DatabaseProvider.PostgreSql, "Host=127.0.0.1;Port=1;Database=test;Username=test;Password=test;Timeout=1;Pooling=False"),
+                new DatabaseConnection(Guid.NewGuid(), "SQL Server driver", DatabaseProvider.SqlServer, "Server=127.0.0.1,1;Database=test;User ID=test;Password=test;Connect Timeout=1;Encrypt=False;Pooling=False"),
+            })
+            {
+                await using var driver = DatabaseConnections.Create(probe);
+                try { await driver.OpenAsync(token); }
+                catch (System.Data.Common.DbException) { /* A connection refusal proves the provider initialized. */ }
+            }
             explorer.NewQueryCommand.Execute(null);
             var query = workspace.ActiveDocument?.DatabaseQuery ?? throw new InvalidOperationException("SQL tab did not open.");
             await query.ExecuteAsync("SELECT name FROM people; SELECT 2 AS second_result;");

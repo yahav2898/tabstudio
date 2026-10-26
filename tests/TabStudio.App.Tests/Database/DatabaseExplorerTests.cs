@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
@@ -51,6 +52,14 @@ public sealed class DatabaseExplorerTests
             Assert.Equal(4, query.Rows.Count);
             await query.ExecuteAsync(document.Document.Text); Assert.Equal(2, query.Results.Count);
             Assert.Equal("Maya Bar", query.Rows[0].Values[1]);
+            var grid = view.GetVisualDescendants().OfType<DataGrid>().Single();
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            var header = grid.GetVisualDescendants().OfType<Avalonia.Controls.DataGridColumnHeader>().Single(h => Equals(h.Content, "orders"));
+            var point = header.TranslatePoint(new Avalonia.Point(header.Bounds.Width / 2, header.Bounds.Height / 2), window)!.Value;
+            window.MouseDown(point, MouseButton.Left); window.MouseUp(point, MouseButton.Left);
+            await UiTestHelpers.WaitUntilAsync(() => Equals(query.Rows[0].Values[3], 5L), because: "numeric ascending sort");
+            window.MouseDown(point, MouseButton.Left); window.MouseUp(point, MouseButton.Left);
+            await UiTestHelpers.WaitUntilAsync(() => Equals(query.Rows[0].Values[3], 23L), because: "numeric descending sort");
             Assert.Contains("customers", SqlCompletions.Get(query.Schema, "SELECT * FROM cust", 18).Select(c => c.Text));
             Assert.Equal(5L, Assert.Single(query.Export()!.Rows, r => Equals(r[0], 4L))[3]);
             UiTestHelpers.SaveScreenshot(window, "database-01-explorer-sql-results");

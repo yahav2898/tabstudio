@@ -6,6 +6,9 @@
              x:Class="TabStudio.App.Views.Database.DatabaseQueryView"
              x:DataType="db:DatabaseQueryViewModel"
              Background="{DynamicResource Brush.Panel}">
+  <UserControl.Styles>
+    <Style Selector="Button"><Setter Property="MinHeight" Value="36" /><Setter Property="VerticalContentAlignment" Value="Center" /></Style>
+  </UserControl.Styles>
   <Grid RowDefinitions="Auto,Auto,Auto,*,Auto,Auto">
     <Border Padding="12,6" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
       <Grid ColumnDefinitions="*,Auto">

@@ -22,7 +22,7 @@ internal sealed class AndroidDatabaseSecretStore(Context context) : IDatabaseSec
         try
         {
             using var cipher = Cipher.GetInstance("AES/GCM/NoPadding")!;
-            cipher.Init(CipherMode.EncryptMode, GetKey());
+            cipher.Init(Javax.Crypto.CipherMode.EncryptMode, GetKey());
             cipher.UpdateAAD(Encoding.UTF8.GetBytes(key));
             var encrypted = cipher.DoFinal(Encoding.UTF8.GetBytes(value))!;
             var iv = cipher.GetIV()!;
@@ -45,7 +45,7 @@ internal sealed class AndroidDatabaseSecretStore(Context context) : IDatabaseSec
             if (bytes.Length < 30 || bytes[0] != 12) throw new CryptographicException("Invalid encrypted connection.");
             using var cipher = Cipher.GetInstance("AES/GCM/NoPadding")!;
             using var parameters = new GCMParameterSpec(128, bytes[1..13]);
-            cipher.Init(CipherMode.DecryptMode, GetKey(), parameters);
+            cipher.Init(Javax.Crypto.CipherMode.DecryptMode, GetKey(), parameters);
             cipher.UpdateAAD(Encoding.UTF8.GetBytes(key));
             return Encoding.UTF8.GetString(cipher.DoFinal(bytes[13..])!);
         }
