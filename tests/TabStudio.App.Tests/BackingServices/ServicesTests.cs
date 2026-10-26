@@ -13,7 +13,8 @@ using TabStudio.Toolchains.Linux;
 
 namespace TabStudio.App.Tests.BackingServices;
 
-public sealed class AlpineAvaloniaFactAttribute : AvaloniaFactAttribute
+[Xunit.Sdk.XunitTestCaseDiscoverer("Avalonia.Headless.XUnit.AvaloniaUIFactDiscoverer", "Avalonia.Headless.XUnit")]
+public sealed class AlpineAvaloniaFactAttribute : FactAttribute
 {
     public AlpineAvaloniaFactAttribute()
     {

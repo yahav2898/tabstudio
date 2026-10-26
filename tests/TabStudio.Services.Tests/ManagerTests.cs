@@ -92,15 +92,30 @@ public sealed class ManagerTests
         Assert.Empty(runtime.Started);
     }
 
+    [Fact]
+    public async Task An_existing_unhealthy_dependency_blocks_new_dependents()
+    {
+        using var temp = new TempDirectory(); var runtime = new FakeRuntime(); var network = new Network();
+        var dependency = new ComposeService("one", "redis") { Healthcheck = new(["CMD", "redis-cli", "ping"]) { Interval = TimeSpan.FromMilliseconds(10), Retries = 1 } };
+        await using var manager = Make(temp, runtime, [dependency, new ComposeService("two", "redis") { Dependencies = [new("one", "service_healthy")] }], network: network);
+        await manager.StartAsync(["one"]);
+        network.Ready = false;
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+        while (manager.Statuses.Single(s => s.Name == "one").State != ServiceState.Unhealthy) await Task.Delay(10, timeout.Token);
+        await Assert.ThrowsAsync<ComposeException>(() => manager.StartAsync(["two"], timeout.Token));
+        Assert.Equal(["one"], runtime.Started);
+    }
+
     private static ServiceManager Make(TempDirectory temp, FakeRuntime runtime, IEnumerable<ComposeService> services, Packages? packages = null, Network? network = null) =>
         new(new(temp.Path, [], services.ToDictionary(x => x.Name)), runtime, packages ?? new(), new ServiceStorage(temp.Path, temp.Path), network ?? new());
 
     private sealed class Network : IServiceNetwork
     {
         private int _next = 20000;
+        public bool Ready { get; set; } = true;
         public bool IsFree(int port) => true;
         public int FreePort() => ++_next;
-        public Task<bool> IsListeningAsync(int port, CancellationToken cancellationToken) => Task.FromResult(true);
+        public Task<bool> IsListeningAsync(int port, CancellationToken cancellationToken) => Task.FromResult(Ready);
     }
     private sealed class Packages : IServicePackages
     {

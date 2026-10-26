@@ -83,8 +83,21 @@ public sealed class ServiceManager : IAsyncDisposable
             foreach (var name in order)
             {
                 token.ThrowIfCancellationRequested();
-                if (Get(name).IsRunning) continue;
-                if (_running.ContainsKey(name)) await StopOneAsync(name).ConfigureAwait(false);
+                var current = Get(name);
+                if (current.IsRunning && _running.TryGetValue(name, out var existing) && existing.Process is { HasExited: false })
+                {
+                    if (current.State is ServiceState.Unhealthy or ServiceState.Starting)
+                    {
+                        await WaitUntilReadyAsync(name, existing, token).ConfigureAwait(false);
+                        Update(name, current.Definition.Healthcheck?.Disabled == true ? ServiceState.Running : ServiceState.Healthy, current.Mapping?.Note);
+                    }
+                    continue;
+                }
+                if (_running.ContainsKey(name))
+                {
+                    await StopOneAsync(name).ConfigureAwait(false);
+                    AllocatePorts(name, ServiceCatalog.Map(current.Definition).Mapping!);
+                }
                 added.Add(name);
                 await StartOneAsync(name, token).ConfigureAwait(false);
             }
