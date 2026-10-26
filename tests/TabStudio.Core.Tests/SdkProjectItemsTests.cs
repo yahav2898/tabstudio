@@ -18,6 +18,7 @@ public sealed class SdkProjectItemsTests
               <ItemGroup>
                 <InternalsVisibleTo Include="$(AssemblyName).Tests" />
                 <InternalsVisibleTo Include="DynamicProxyGenAssembly2" Key="00240000" />
+                <InternalsVisibleTo Include="Lib.Specs" PublicKey="0024beef" />
                 <InternalsVisibleTo Include="$(Unknown).Skipped" />
                 <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
                   <_Parameter1>Lib.Benchmarks, PublicKey=0024ffff</_Parameter1>
@@ -36,6 +37,7 @@ public sealed class SdkProjectItemsTests
             {
                 (AssemblyAttributeItems.InternalsVisibleTo, "Lib.Tests, PublicKey=0024abcd"),
                 (AssemblyAttributeItems.InternalsVisibleTo, "DynamicProxyGenAssembly2, PublicKey=00240000"),
+                (AssemblyAttributeItems.InternalsVisibleTo, "Lib.Specs, PublicKey=0024beef"),
                 ("System.Runtime.CompilerServices.InternalsVisibleToAttribute", "Lib.Benchmarks, PublicKey=0024ffff"),
                 ("System.Reflection.AssemblyMetadataAttribute", "Built|today"),
                 ("System.CLSCompliantAttribute", "=false"),

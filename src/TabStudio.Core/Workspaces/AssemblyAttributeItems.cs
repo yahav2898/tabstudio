@@ -13,7 +13,7 @@ namespace TabStudio.Core.Workspaces;
 /// <list type="bullet">
 ///   <item>Nothing is generated when <c>GenerateAssemblyInfo</c> is <c>false</c>; <c>InternalsVisibleTo</c> items are
 ///   also skipped when <c>GenerateInternalsVisibleToAttributes</c> is <c>false</c>.</item>
-///   <item>An <c>InternalsVisibleTo</c> item's <c>Key</c> metadata, or else the project's <c>PublicKey</c> property,
+///   <item>An <c>InternalsVisibleTo</c> item's <c>Key</c> or <c>PublicKey</c> metadata, or else the project's <c>PublicKey</c> property,
 ///   becomes the friend's <c>PublicKey=</c>, which a strong-named assembly needs.</item>
 ///   <item>An <c>AssemblyAttribute</c> item's <c>_Parameter1</c>, <c>_Parameter2</c>... are its positional arguments,
 ///   strings unless <c>_ParameterN_IsLiteral</c> is <c>true</c>; any other metadata is a named argument.</item>
@@ -61,7 +61,8 @@ public static partial class AssemblyAttributeItems
             {
                 foreach (var friend in (Expand(item.Attribute("Include")?.Value) ?? string.Empty).Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
                 {
-                    var key = Expand(Metadata(item, "Key")) is { Length: > 0 } own ? own : defaultKey;
+                    var key = Expand(Metadata(item, "Key")) is { Length: > 0 } own ? own
+                        : Expand(Metadata(item, "PublicKey")) is { Length: > 0 } named ? named : defaultKey;
                     var value = string.IsNullOrEmpty(key) ? friend : $"{friend}, PublicKey={key}";
                     attributes.Add(new AssemblyAttributeInfo(InternalsVisibleTo, [new AssemblyAttributeArgument(value)]));
                 }
