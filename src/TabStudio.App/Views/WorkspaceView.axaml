@@ -1016,7 +1016,7 @@
               </ListBox.Styles>
               <ListBox.ItemTemplate>
                 <DataTemplate x:DataType="sys:String">
-                  <TextBlock Text="{Binding}" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding}" VerticalAlignment="Center" />
+                  <TextBlock Text="{Binding}" TextWrapping="Wrap" Margin="0,8" VerticalAlignment="Center" />
                 </DataTemplate>
               </ListBox.ItemTemplate>
             </ListBox>

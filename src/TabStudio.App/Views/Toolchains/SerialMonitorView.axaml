@@ -59,9 +59,11 @@
     </Border>
     <Panel>
       <views:OutputView DataContext="{Binding Output}" />
-      <controls:EmptyState Icon="{StaticResource Icon.Link}" Title="No serial device" IsCompact="True"
-                           Message="Attach the board's USB serial adapter with a USB-OTG cable, then refresh. Android asks to allow TabStudio to use it."
-                           ActionText="Refresh" ActionCommand="{Binding RefreshCommand}" IsVisible="{Binding ShowsEmptyState}" />
+      <ScrollViewer IsVisible="{Binding ShowsEmptyState}" HorizontalScrollBarVisibility="Disabled">
+        <controls:EmptyState Icon="{StaticResource Icon.Link}" Title="No serial device" IsCompact="True"
+                             Message="Attach the board's USB serial adapter with a USB-OTG cable, then refresh. Android asks to allow TabStudio to use it."
+                             ActionText="Refresh" ActionCommand="{Binding RefreshCommand}" />
+      </ScrollViewer>
     </Panel>
   </DockPanel>
 </UserControl>

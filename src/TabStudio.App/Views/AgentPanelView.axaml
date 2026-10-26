@@ -93,7 +93,8 @@
               </ComboBox.ItemTemplate>
             </ComboBox>
             <TextBlock Text="{Binding Details}" TextWrapping="Wrap" Classes="muted small" />
-            <TextBlock Text="{Binding Status}" TextWrapping="Wrap" Classes="small" />
+            <TextBlock Text="{Binding Status}" TextWrapping="Wrap" Classes="small"
+                       IsVisible="{Binding Status, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
             <CheckBox Content="Inline completions: Tab accepts" IsChecked="{Binding InlineEnabled}" />
             <Expander Header="The model's license" HorizontalAlignment="Stretch">
               <ScrollViewer MaxHeight="260">
@@ -121,7 +122,10 @@
             <controls:LoadingState IsInline="True" Message="{Binding ProgressText}" HorizontalAlignment="Left" />
             <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Classes="action" Content="Cancel" Command="{Binding CancelDownloadCommand}" />
           </Grid>
-          <TextBlock Text="{Binding ProgressText}" TextWrapping="Wrap" Classes="muted small" IsVisible="{Binding !IsBusy}" />
+          <Panel IsVisible="{Binding !IsBusy}">
+            <TextBlock Text="{Binding ProgressText}" TextWrapping="Wrap" Classes="muted small"
+                       IsVisible="{Binding ProgressText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+          </Panel>
         </StackPanel>
         </StackPanel>
 

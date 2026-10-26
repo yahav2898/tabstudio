@@ -4,6 +4,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Headless;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using TabStudio.App.Controls;
 using TabStudio.App.Swarm;
 using TabStudio.App.Swarm.LayoutChecks;
 using TabStudio.App.Tests.Theming;
@@ -30,7 +31,7 @@ internal sealed record AuditScreen(string Name, double Width, double Height, For
 /// </list>
 /// Every problem goes to <c>screenshots/audit/panel-audit.txt</c>, beside the pictures that show it, and fails the test.
 /// </summary>
-internal static class PanelAudit
+internal static partial class PanelAudit
 {
     /// <summary>The smallest touch target, in dips: the IDE's compact tool buttons and secondary buttons.</summary>
     public const double MinimumTarget = 34;
@@ -125,6 +126,20 @@ internal static class PanelAudit
         var targets = scan.Elements.Where(e => e.IsInteractive).ToList();
         foreach (var (element, severity, message, code) in found.Where(f => InPanel(f.Element.Visual) && !InDataGrid(f.Element.Visual)))
         {
+            // An adaptive bar folds an item to its icon by giving its label no room, and parks what goes into More off
+            // screen: that is how it never clips (docs/design/README.md, "Adaptive bars").
+            if (IsFolded(element.Visual))
+            {
+                continue;
+            }
+
+            // A dip or so cut by rounding is not text anyone misses.
+            if (code == "SWRM001" && RoundingOnly().IsMatch(message))
+            {
+                yield return (false, $"{code} {message}");
+                continue;
+            }
+
             // The overlap rule lets content that scrolls reach as far as it scrolls; what counts here is what shows now.
             if (code == "SWRM003" && !targets.Any(t => !ReferenceEquals(t.Visual, element.Visual) && !t.Visual.IsVisualAncestorOf(element.Visual)
                     && !element.Visual.IsVisualAncestorOf(t.Visual) && Shown(t.Visual, window).Intersect(Shown(element.Visual, window)) is { Width: > 1, Height: > 1 }))
@@ -190,6 +205,11 @@ internal static class PanelAudit
         Dispatcher.UIThread.RunJobs();
     }
 
+    /// <summary>Whether an element is an adaptive bar's item, or its label, folded away: parked for More, or reduced to its icon.</summary>
+    private static bool IsFolded(Visual visual) =>
+        visual.GetVisualAncestors().Prepend(visual).OfType<AdaptiveBarItem>().FirstOrDefault() is { } item
+        && (item.Bounds == AdaptiveLayout.Parked || visual is TextBlock { Bounds.Width: < 1 });
+
     /// <summary>Whether an element is part of a data grid, which scrolls its own rows and columns into view.</summary>
     private static bool InDataGrid(Visual visual) => visual.GetVisualAncestors().Any(a => a is DataGrid);
 
@@ -240,4 +260,7 @@ internal static class PanelAudit
             .Select(c => string.IsNullOrEmpty(c.Name) ? c.GetType().Name : c.GetType().Name + "#" + c.Name);
         return string.Join(" > ", chain.Append(LayoutText.Label(visual)));
     }
+
+    [System.Text.RegularExpressions.GeneratedRegex(@"cut off by (its container|the edge of the screen): [01] × [01] of")]
+    private static partial System.Text.RegularExpressions.Regex RoundingOnly();
 }
