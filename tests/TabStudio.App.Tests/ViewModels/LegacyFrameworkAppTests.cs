@@ -55,20 +55,21 @@ public sealed class LegacyFrameworkAppTests : IClassFixture<SharedToolchain>, ID
         if (webViews?.WebView is { } webView)
         {
             var chrome = webView.Chrome;
-            await chrome.WaitUntilAsync("document.body.innerText.includes('WPF calculator from .NET Framework')", TimeSpan.FromSeconds(120));
-            await chrome.ClickTextAsync("Multiply");
-            await chrome.WaitUntilAsync("document.body.innerText.includes('Result: 42')", TimeSpan.FromSeconds(20));
+            await WaitForAsync(webView.Rendering, "the preview's browser");
+            await WaitForAsync(chrome.WaitUntilAsync("document.body.innerText.includes('WPF calculator from .NET Framework')", TimeSpan.FromSeconds(110)), "the calculator's window");
+            await WaitForAsync(chrome.ClickTextAsync("Multiply"), "the click");
+            await WaitForAsync(chrome.WaitUntilAsync("document.body.innerText.includes('Result: 42')", TimeSpan.FromSeconds(20)), "the product");
             await UiTestHelpers.WaitUntilAsync(
                 () => workspace.Output.Text.Contains("Multiplied to 42, from its settings", StringComparison.Ordinal),
                 TimeSpan.FromSeconds(30),
                 "the click's Console output, with the setting's default value");
-            await webView.RefreshAsync().WaitAsync(TimeSpan.FromSeconds(30));
+            await WaitForAsync(webView.RefreshAsync(), "the preview's browser");
         }
 
         UiTestHelpers.SaveScreenshot(window, "legacy-01-wpf-calculator");
         await AssertNoErrorsAsync(workspace);
         workspace.StopCommand.Execute(null);
-        await run.WaitAsync(TimeSpan.FromSeconds(60));
+        await WaitForAsync(run, "the run to stop");
         window.Close();
     }
 
@@ -112,7 +113,7 @@ public sealed class LegacyFrameworkAppTests : IClassFixture<SharedToolchain>, ID
         UiTestHelpers.SaveScreenshot(window, "legacy-02-windows-forms-app");
         await AssertNoErrorsAsync(workspace);
         workspace.StopCommand.Execute(null);
-        await run.WaitAsync(TimeSpan.FromSeconds(60));
+        await WaitForAsync(run, "the run to stop");
         window.Close();
     }
 
@@ -186,23 +187,40 @@ public sealed class LegacyFrameworkAppTests : IClassFixture<SharedToolchain>, ID
             workspace.Dispose();
         }
 
+        // Off the UI thread, which this blocks: the browser's shutdown continues on the thread pool.
         foreach (var browser in _browsers)
         {
-            browser.DisposeAsync().AsTask().GetAwaiter().GetResult();
+            Task.Run(() => browser.DisposeAsync().AsTask()).GetAwaiter().GetResult();
         }
 
         _temp.Dispose();
     }
 
+    /// <summary>
+    /// Asserts that the Error List settles at no errors: what analysis found before the packages were restored is
+    /// replaced by what it finds after. The UI keeps running while it waits, as a test on the UI thread must.
+    /// </summary>
     private static async Task AssertNoErrorsAsync(WorkspaceViewModel workspace)
     {
-        foreach (var document in workspace.Documents)
+        var deadline = DateTime.UtcNow + TimeSpan.FromSeconds(30);
+        while (workspace.ErrorList.ErrorCount > 0 && DateTime.UtcNow < deadline)
         {
-            await document.AnalyzeAgainAsync();
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            await Task.Delay(100);
         }
 
-        var errors = workspace.ErrorList.Items.Where(i => i.Diagnostic.Severity == DiagnosticSeverityLevel.Error).Select(i => i.Diagnostic.ToString()).ToList();
-        Assert.True(errors.Count == 0, string.Join('\n', errors));
+        Assert.True(
+            workspace.ErrorList.ErrorCount == 0,
+            string.Join('\n', workspace.ErrorList.AllDiagnostics
+                .Where(d => d.Severity == DiagnosticSeverityLevel.Error)
+                .Select(d => $"{d.Id} {d.Location?.FilePath}({d.Location?.Line}): {d.Message}")));
+    }
+
+    /// <summary>Waits for a task while the UI keeps running, as a test on the UI thread must.</summary>
+    private static async Task WaitForAsync(Task task, string because)
+    {
+        await UiTestHelpers.WaitUntilAsync(() => task.IsCompleted, TimeSpan.FromMinutes(2), because);
+        await task;
     }
 
     private static Window Show(WorkspaceViewModel workspace)
