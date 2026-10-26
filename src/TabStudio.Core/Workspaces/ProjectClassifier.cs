@@ -12,7 +12,8 @@ public static class ProjectClassifier
 {
     private static readonly string[] TestPackages =
     [
-        "Microsoft.NET.Test.Sdk", "xunit", "xunit.v3", "NUnit", "MSTest.TestFramework", "MSTest",
+        "Microsoft.NET.Test.Sdk", "xunit", "xunit.v3", "xunit.v3.mtp-v1", "xunit.v3.mtp-v2", "xunit.v3.mtp-off", "xunit.v3.core",
+        "NUnit", "MSTest.TestFramework", "MSTest",
     ];
 
     /// <summary>Classifies a project.</summary>
