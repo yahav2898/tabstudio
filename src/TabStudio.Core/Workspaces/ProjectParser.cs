@@ -107,7 +107,7 @@ public static partial class ProjectParser
         }
 
         var overriding = Merge(after);
-        return WithRazorComponents(Parse(fullPath, projectXml, inherited, overriding, [.. before, .. after]));
+        return WithPlatformInvokeFiles(WithRazorComponents(Parse(fullPath, projectXml, inherited, overriding, [.. before, .. after])));
     }
 
     /// <summary>
@@ -253,6 +253,16 @@ public static partial class ProjectParser
         ExpandPropertyReferences(properties);
 
         var sdk = ReadSdk(root);
+        var assemblyReferences = ReadAssemblyReferences(root);
+        var isLegacy = sdk is null
+            && ReadSdks(root).Count == 0
+            && LanguageFromExtension(Path.GetExtension(filePath)) is ProjectLanguage.CSharp or ProjectLanguage.VisualBasic or ProjectLanguage.FSharp
+            && IsFrameworkVersion(properties.GetValueOrDefault("TargetFrameworkVersion"));
+        if (isLegacy)
+        {
+            AddLegacyProperties(properties, root, assemblyReferences);
+        }
+
         // Items in imported files keep only the groups their conditions allow, evaluated for the first target framework.
         var evaluation = new Dictionary<string, string>(properties, StringComparer.OrdinalIgnoreCase);
         if (!evaluation.ContainsKey("TargetFramework") && ReadTargetFrameworks(properties) is [var first, ..])
@@ -262,6 +272,11 @@ public static partial class ProjectParser
 
         List<XElement> allRoots = [root, .. ImportedRoots(importedFiles, evaluation)];
         var packages = ReadPackageReferences(allRoots);
+        if (isLegacy)
+        {
+            packages.AddRange(ReadPackagesConfig(directory).Where(p => !packages.Any(existing => string.Equals(existing.Name, p.Name, StringComparison.OrdinalIgnoreCase))));
+        }
+
         var projectReferenceItems = ReadProjectReferenceItems(root, directory);
         var projectReferences = projectReferenceItems.Select(r => r.Path).ToList();
         var targetFrameworks = ReadTargetFrameworks(properties);
@@ -291,6 +306,8 @@ public static partial class ProjectParser
             EmbeddedResourceRemoves = ReadItemPatterns(root, "EmbeddedResource", "Remove"),
             AvaloniaResourceIncludes = ReadItemPatterns(root, "AvaloniaResource", "Include"),
             AvaloniaResourceRemoves = ReadItemPatterns(root, "AvaloniaResource", "Remove"),
+            AssemblyReferences = assemblyReferences,
+            ComReferences = ReadComReferences(root),
             Usings = [.. allRoots.SelectMany(r => ReadUsings(r)).Distinct()],
             RemovedUsings = [.. allRoots.SelectMany(r => ReadItemPatterns(r, "Using", "Remove")).Distinct(StringComparer.Ordinal)],
         };

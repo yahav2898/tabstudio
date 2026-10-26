@@ -195,6 +195,7 @@ public sealed partial class WorkspaceViewModel
         }
 
         DatabaseExplorer.EfCore.LoadProjects(preview.Workspace.Projects);
+        ShowNetFrameworkDiagnostics(preview.Workspace);
         var startup = StartupProject?.FilePath;
         LoadStartupProjects(preview.Workspace, startup);
         await LoadToolchainProjectsAsync(preview.Workspace, startup);

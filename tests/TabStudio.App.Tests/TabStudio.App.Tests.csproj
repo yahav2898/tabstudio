@@ -13,6 +13,12 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
+    <!--
+      EF Core's design package brings Microsoft.Build.Framework 18.0.2. Utilities.Core, which OpenSilver's XAML compiler
+      loads, must be at the same version, or its TaskItem does not implement the Framework's interfaces and WPF projects
+      do not build in the tests.
+    -->
+    <PackageReference Include="Microsoft.Build.Utilities.Core" VersionOverride="18.0.2" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
     <PackageReference Include="Avalonia.Headless.XUnit" />

@@ -173,7 +173,8 @@ public static class WpfProject
                 var path = Path.GetFullPath(Path.Combine(directory, pattern.Replace('/', Path.DirectorySeparatorChar)));
                 if (path.EndsWith(".xaml", StringComparison.OrdinalIgnoreCase))
                 {
-                    yield return path;
+                    // A project written on Windows may name a file in another letter case than the file system has.
+                    yield return TabStudio.Core.Workspaces.PathUtilities.FindFile(path) ?? path;
                 }
 
                 continue;

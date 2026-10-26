@@ -33,6 +33,61 @@ public static class PathUtilities
         return Path.GetFullPath(Path.Combine(baseDirectory, NormalizeSeparators(relativePath.Trim())));
     }
 
+    /// <summary>
+    /// The file a path names, found as Windows finds it: the path itself when it exists, otherwise the one existing
+    /// file whose path differs only in letter case, as when a project written on Windows lists <c>mainwindow.xaml.cs</c>
+    /// for <c>MainWindow.xaml.cs</c>. On Android and Linux file names are case-sensitive; MSBuild on Windows is not.
+    /// </summary>
+    /// <param name="fullPath">A full path.</param>
+    /// <returns>The path of the existing file, or <see langword="null"/> when there is none.</returns>
+    public static string? FindFile(string fullPath)
+    {
+        ArgumentNullException.ThrowIfNull(fullPath);
+        if (File.Exists(fullPath))
+        {
+            return fullPath;
+        }
+
+        var root = Path.GetPathRoot(fullPath);
+        if (string.IsNullOrEmpty(root))
+        {
+            return null;
+        }
+
+        var current = root;
+        var parts = fullPath[root.Length..].Split(Path.DirectorySeparatorChar, StringSplitOptions.RemoveEmptyEntries);
+        for (var i = 0; i < parts.Length; i++)
+        {
+            var isLast = i == parts.Length - 1;
+            var exact = Path.Combine(current, parts[i]);
+            if (isLast ? File.Exists(exact) : Directory.Exists(exact))
+            {
+                current = exact;
+                continue;
+            }
+
+            string[] candidates;
+            try
+            {
+                candidates = isLast ? Directory.GetFiles(current) : Directory.GetDirectories(current);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                return null;
+            }
+
+            var matches = candidates.Where(c => string.Equals(Path.GetFileName(c), parts[i], StringComparison.OrdinalIgnoreCase)).ToList();
+            if (matches.Count != 1)
+            {
+                return null;
+            }
+
+            current = matches[0];
+        }
+
+        return current;
+    }
+
     /// <summary>Whether a directory should be skipped when walking a workspace.</summary>
     /// <param name="directoryName">The directory name, without its parent path.</param>
     public static bool IsIgnoredDirectory(string directoryName) =>
