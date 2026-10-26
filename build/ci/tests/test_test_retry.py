@@ -40,11 +40,13 @@ class RetryPolicyTests(unittest.TestCase):
                 "RemoteSsh.RemoteSshTests.Save_conflict",
                 "Toolchains.MobileWorkflowTests.Listening_notice", "ViewModels.HotReloadTests.Apply_current_edits",
                 "ViewModels.RecordingTests.Rewind", "Views.LocalAIEditorTests.Ghost_text",
+                "Views.LanguageServerScreenshotTests.Quick_info_of_a_name",
             ],
             "TabStudio.Compilation.Tests": ["HotReloadTests.Second_generation", "ProgramRunnerTests.Environment"],
             "TabStudio.Debugging.Tests": ["RecordingFormatTests.Evict_complete_records"],
             "TabStudio.Toolchains.Tests": ["Projects.ProjectSetupPlanTests.Manifest_change", "Networking.ListeningPortsTests.Owned_socket"],
             "TabStudio.Agent.Tests": ["LocalAITests.Model_checksum", "LocalNativeTests.Inference"],
+            "TabStudio.LanguageServers.Tests": ["Hosting.LanguageServerHostTests.Startup_EOF_recovers"],
         }
         for project, names in cases.items():
             for name in names:

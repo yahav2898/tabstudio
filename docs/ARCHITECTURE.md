@@ -772,6 +772,16 @@ breakpoints, Locals, Watch, Call Stack and DataTips. `.tabstudio/settings.json` 
 `.tabstudio/launch.json` holds launch configurations in VS Code's format. Servers and adapters start through
 `IServerProcessLauncher`, which the Toolchain Store implements on the tablet.
 
+An orderly connection EOF during `initialize` uses the same bounded restart budget and backoff as a later server
+crash. Readiness and queued commands stay pending across those attempts, and the restarted server receives the
+latest document text. Initialization rejection, protocol/read errors, timeouts and missing launchers still fail;
+closing the workspace cancels recovery. Startup failures retain available exit codes and completed stderr.
+
+On disposable GitHub emulators, the smoke script uses Android's `hide_error_dialogs` setting, as Chromium's
+emulator setup does, so another system app's ANR dialog cannot steal the self test's injected input. Manual
+device runs keep their normal dialog policy. Every functional assertion, app-liveness check and shard deadline
+remains required; the setting does not turn an app crash or missing verdict into a pass.
+
 ## Extensions
 
 `TabStudio.Extensions` installs VS Code extensions from Open VSX (or a company's own registry) and from `.vsix` files,

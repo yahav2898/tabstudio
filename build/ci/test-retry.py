@@ -69,6 +69,8 @@ FEATURE_CLASSES = frozenset({
     "LaunchConfigurationTests",
     "InitializationOptionsTests",
     "RealLanguageServerTests",
+    "LanguageServerHostTests",
+    "LanguageServerScreenshotTests",
     "ProjectSetupPlanTests",
     "ProjectTemplatesTests",
     "RunPlannerTests",

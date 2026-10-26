@@ -4,6 +4,7 @@ using System.Text.Json.Nodes;
 using TabStudio.LanguageServers.Documents;
 using TabStudio.LanguageServers.Features;
 using TabStudio.LanguageServers.Hosting;
+using TabStudio.LanguageServers.JsonRpc;
 using TabStudio.LanguageServers.Tests.Fakes;
 
 namespace TabStudio.LanguageServers.Tests.Hosting;
@@ -127,6 +128,132 @@ public sealed class LanguageServerHostTests
         Assert.Equal(LanguageServerState.Failed, document.ServerState);
         Assert.Contains("permission denied", document.ServerMessage, StringComparison.Ordinal);
         Assert.Null(await document.GetHoverAsync(0, CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task A_server_that_exits_during_initialization_restarts_without_failing_waiting_documents_or_requests()
+    {
+        var attempts = 0;
+        var initialize = new TaskCompletionSource<JsonNode?>(TaskCreationOptions.RunContinuationsAsynchronously);
+        await using var workspace = new FakeWorkspace(server =>
+        {
+            if (Interlocked.Increment(ref attempts) == 1)
+            {
+                server.On("initialize", _ => { server.Crash(23); return null; });
+            }
+            else
+            {
+                server.OnAsync("initialize", _ => initialize.Task);
+                server.On("workspace/executeCommand", _ => JsonValue.Create(4321));
+            }
+        });
+        var logs = new ConcurrentQueue<string>();
+        workspace.Host.LogReceived += (_, e) => logs.Enqueue(e.Message);
+        using var document = workspace.Host.OpenDocument(workspace.Write("main.py", "x = 1\n"), "x = 1\n")!;
+        var ready = document.WaitUntilReadyAsync(CancellationToken.None);
+        var command = document.ExecuteServerCommandAsync("startDebugSession", [], CancellationToken.None);
+
+        await WaitUntilAsync(() => document.ServerState == LanguageServerState.Restarting);
+        document.ApplyChange(0, 0, "# edited before initialization\n");
+        var second = await workspace.Launcher.WaitForServerAsync(2);
+        await second.WaitForRequestAsync("initialize");
+        Assert.False(ready.IsCompleted);
+        Assert.False(command.IsCompleted);
+
+        initialize.SetResult(new JsonObject { ["capabilities"] = second.Capabilities.DeepClone() });
+
+        Assert.True(await ready.WaitAsync(TestTimeouts.Default));
+        Assert.Equal(4321, (await command.WaitAsync(TestTimeouts.Default)).GetInt32());
+        var opened = await second.WaitForNotificationAsync("textDocument/didOpen");
+        Assert.Equal("# edited before initialization\nx = 1\n", opened.GetProperty("textDocument").GetProperty("text").GetString());
+        Assert.Equal(LanguageServerState.Running, document.ServerState);
+        Assert.Equal(2, workspace.Launcher.Started.Count);
+        Assert.Contains(logs, l => l.Contains("could not be initialized: The connection closed.", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task Repeated_exits_during_initialization_exhaust_the_existing_restart_budget()
+    {
+        await using var workspace = new FakeWorkspace(server => server.On("initialize", _ => { server.Crash(23); return null; }),
+            new LanguageServerHostOptions { MaxRestarts = 1, RestartWindow = TimeSpan.FromMinutes(5) });
+        using var document = workspace.Host.OpenDocument(workspace.Write("main.py", "pass\n"), "pass\n")!;
+        var command = document.ExecuteServerCommandAsync("startDebugSession", [], CancellationToken.None);
+
+        Assert.False(await document.WaitUntilReadyAsync(CancellationToken.None).WaitAsync(TestTimeouts.Default));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => command.WaitAsync(TestTimeouts.Default));
+        Assert.Equal(LanguageServerState.Failed, document.ServerState);
+        Assert.Contains("not started again", document.ServerMessage, StringComparison.Ordinal);
+        Assert.Equal(2, workspace.Launcher.Started.Count);
+    }
+
+    [Fact]
+    public async Task An_initialize_error_is_terminal_and_is_not_restarted()
+    {
+        await using var workspace = new FakeWorkspace(server => server.On("initialize", _ => throw new JsonRpcException(JsonRpcErrorCodes.InvalidParams, "Unsupported client configuration")));
+        using var document = workspace.Host.OpenDocument(workspace.Write("main.py", "pass\n"), "pass\n")!;
+
+        Assert.False(await document.WaitUntilReadyAsync(CancellationToken.None).WaitAsync(TestTimeouts.Default));
+        Assert.Equal(LanguageServerState.Failed, document.ServerState);
+        Assert.Contains("Unsupported client configuration", document.ServerMessage, StringComparison.Ordinal);
+        Assert.Single(workspace.Launcher.Started);
+    }
+
+    [Fact]
+    public async Task An_initialize_timeout_is_terminal_and_is_not_restarted()
+    {
+        var initialize = new TaskCompletionSource<JsonNode?>(TaskCreationOptions.RunContinuationsAsynchronously);
+        await using var workspace = new FakeWorkspace(server => server.OnAsync("initialize", _ => initialize.Task),
+            new LanguageServerHostOptions { InitializeTimeout = TimeSpan.FromMilliseconds(250) });
+        using var document = workspace.Host.OpenDocument(workspace.Write("main.py", "pass\n"), "pass\n")!;
+        try
+        {
+            Assert.False(await document.WaitUntilReadyAsync(CancellationToken.None).WaitAsync(TestTimeouts.Default));
+            Assert.Equal(LanguageServerState.Failed, document.ServerState);
+            Assert.Contains("did not answer within", document.ServerMessage, StringComparison.Ordinal);
+            Assert.Single(workspace.Launcher.Started);
+        }
+        finally
+        {
+            initialize.TrySetResult(null);
+        }
+    }
+
+    [Fact]
+    public async Task Closing_the_workspace_during_initialization_does_not_restart_the_server()
+    {
+        var initialize = new TaskCompletionSource<JsonNode?>(TaskCreationOptions.RunContinuationsAsynchronously);
+        await using var workspace = new FakeWorkspace(server => server.OnAsync("initialize", _ => initialize.Task));
+        using var document = workspace.Host.OpenDocument(workspace.Write("main.py", "pass\n"), "pass\n")!;
+        var ready = document.WaitUntilReadyAsync(CancellationToken.None);
+        var server = await workspace.Launcher.WaitForServerAsync();
+        await server.WaitForRequestAsync("initialize");
+        try
+        {
+            await workspace.Host.DisposeAsync();
+
+            Assert.False(await ready.WaitAsync(TestTimeouts.Default));
+            Assert.Equal(LanguageServerState.Stopped, document.ServerState);
+            Assert.Single(workspace.Launcher.Started);
+        }
+        finally
+        {
+            initialize.TrySetResult(null);
+        }
+    }
+
+    [Fact]
+    public async Task Closing_the_workspace_during_startup_backoff_cancels_the_restart()
+    {
+        await using var workspace = new FakeWorkspace(server => server.On("initialize", _ => { server.Crash(); return null; }));
+        using var document = workspace.Host.OpenDocument(workspace.Write("main.py", "pass\n"), "pass\n")!;
+        var ready = document.WaitUntilReadyAsync(CancellationToken.None);
+        await WaitUntilAsync(() => document.ServerState == LanguageServerState.Restarting);
+
+        await workspace.Host.DisposeAsync();
+
+        Assert.False(await ready.WaitAsync(TestTimeouts.Default));
+        Assert.Equal(LanguageServerState.Stopped, document.ServerState);
+        Assert.Single(workspace.Launcher.Started);
     }
 
     [Fact]

@@ -24,6 +24,12 @@ package="com.tabstudio.ide"
 
 mkdir -p "$out"
 adb wait-for-device
+# Headless CI uses Android's standard error-dialog policy so a background system app's ANR cannot
+# consume the injected input. A successful app verdict, process liveness and the time limit stay required.
+# Chromium's emulator setup uses the same setting; manual device runs leave the device policy alone.
+if [ "${GITHUB_ACTIONS:-false}" = true ]; then
+  adb shell settings put global hide_error_dialogs 1
+fi
 echo "Device: Android $(adb shell getprop ro.build.version.release | tr -d '\r')" \
   "(API $(adb shell getprop ro.build.version.sdk | tr -d '\r')), $(adb shell getprop ro.product.cpu.abi | tr -d '\r')," \
   "screen $(adb shell wm size | tr -d '\r' | sed 's/.*: //')"
