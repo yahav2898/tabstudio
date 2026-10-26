@@ -189,7 +189,10 @@ public static class IosWorkflowGenerator
         private key into a password-protected PKCS#12 (.p12). Create the matching App Store provisioning profile
         in that portal. Base64-encode the .p12 and profile without line breaks. Never commit any signing assets.
 
-        Commit and push the workflow and guide using Git Changes. GitHub must have the workflow on the default
+        Commit and push the workflow and guide using Git Changes. A classic GitHub token needs both repo and workflow scopes to push
+        this file; a fine-grained token needs Contents and Workflows write permission and Actions write to run it.
+        If your existing token only has repo, update its scopes on GitHub before pushing.
+        GitHub must have the workflow on the default
         branch before it can be dispatched; merge your workflow PR if necessary. Choose Build > Run iOS Workflow
         to open the existing Actions run form on this repository's branch. Select upload_to_testflight only when
         you want an upload. The Actions window shows progress, job logs and the iOS-IPA download artifact.

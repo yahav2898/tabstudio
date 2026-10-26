@@ -39,7 +39,9 @@ Java 17 build baseline; existing newer Capacitor apps may require a newer JDK an
 
 Choose **Build for iOS…** in a Capacitor or Xcode workspace. Review the generated YAML and `docs/IOS-BUILD.md`.
 It explains every App Store Connect and distribution signing secret. Commit and push the files through Git
-Changes; GitHub requires a dispatchable workflow on the default branch. **Run iOS Workflow…** opens the existing
+Changes; pushing a new workflow requires a classic token with both `repo` and `workflow`, or a fine-grained token
+with Contents/Workflows write permission (and Actions write to run it). GitHub requires a dispatchable workflow
+on the default branch. **Run iOS Workflow…** opens the existing
 Actions dispatch form, where TestFlight upload is optional. Follow progress, job logs and the **iOS-IPA** artifact
 there. Native projects require a shared Xcode scheme; review the generated project path and scheme.
 
