@@ -21,7 +21,8 @@ public sealed class ToolchainCatalogTests
     public void The_store_lists_the_finished_toolchains()
     {
         Assert.Equal(["python", "node", "cpp", "rust", "go", "java", "android"], Catalog.Listed.Select(t => t.Id));
-        Assert.Contains("jdtls", Catalog.Find("android")!.AdditionalToolIds);
+        Assert.Equal("jdtls", Catalog.Find("android")!.LanguageServer!.Id);
+        Assert.Contains("kotlin-language-server", Catalog.Find("android")!.AdditionalToolIds);
     }
 
     [Fact]
