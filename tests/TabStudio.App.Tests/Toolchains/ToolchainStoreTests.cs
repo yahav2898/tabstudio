@@ -56,18 +56,30 @@ public sealed class ToolchainStoreTests : IDisposable
         await UiTestHelpers.WaitUntilAsync(() => true);
         UiTestHelpers.SaveScreenshot(window, "30-toolchain-store");
 
-        // Installing, slowly enough to watch.
+        // Installing, slowly enough to watch. The packages download in parallel and finish together, and one
+        // dispatcher pass can apply the download's report and the next stage's at once, so the download is
+        // recorded the moment the item shows it rather than sampled between passes.
         _device.Mirror.Server.Latency = TimeSpan.FromMilliseconds(500);
-        _device.Mirror.Server.ReadLatency = TimeSpan.FromMilliseconds(250);
+        (bool Busy, bool Cancel, bool Install)? downloading = null;
+        void OnChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (downloading is null && python.Status.Progress?.Stage == InstallStage.Downloading && python.Progress > 12)
+            {
+                downloading = (python.IsBusy, python.ShowsCancel, python.ShowsInstall);
+            }
+        }
+
+        python.PropertyChanged += OnChanged;
         var install = python.InstallCommand.ExecuteAsync(null);
-        await UiTestHelpers.WaitUntilAsync(() => python.Status.Progress?.Stage == InstallStage.Downloading && python.Progress > 12, because: "the download");
-        Assert.True(python.IsBusy);
-        Assert.True(python.ShowsCancel);
-        Assert.False(python.ShowsInstall);
+        await UiTestHelpers.WaitUntilAsync(() => downloading is not null, because: "the download");
+        python.PropertyChanged -= OnChanged;
+        var shown = downloading!.Value;
+        Assert.True(shown.Busy);
+        Assert.True(shown.Cancel);
+        Assert.False(shown.Install);
         UiTestHelpers.SaveScreenshot(window, "31-toolchain-installing");
 
         _device.Mirror.Server.Latency = TimeSpan.Zero;
-        _device.Mirror.Server.ReadLatency = TimeSpan.Zero;
         await install;
         await UiTestHelpers.WaitUntilAsync(() => python.IsInstalled, because: "the install");
         Assert.Equal("3.14.8", python.VersionText);
