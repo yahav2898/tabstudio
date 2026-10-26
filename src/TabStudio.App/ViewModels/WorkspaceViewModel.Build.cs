@@ -221,7 +221,7 @@ public sealed partial class WorkspaceViewModel
         bool showOutput,
         Func<ProjectInfo, CancellationToken, Task<BuildResult>>? build = null,
         List<BuildResult>? results = null,
-        IReadOnlyList<ProjectInfo>? skipped = null)
+        List<ProjectInfo>? skipped = null)
     {
         skipped ??= [];
         if (_language is not { } language || projects.Count + skipped.Count == 0)
