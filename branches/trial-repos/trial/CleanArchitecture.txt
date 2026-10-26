@@ -1,0 +1,64 @@
+Opened in 0.2 s
+Workspace: Clean.Architecture, solution: /home/runner/work/_temp/repos/CleanArchitecture/Clean.Architecture.slnx
+  project Clean.Architecture.Core [CSharp] /home/runner/work/_temp/repos/CleanArchitecture/src/Clean.Architecture.Core/Clean.Architecture.Core.csproj
+  project Clean.Architecture.Infrastructure [CSharp] /home/runner/work/_temp/repos/CleanArchitecture/src/Clean.Architecture.Infrastructure/Clean.Architecture.Infrastructure.csproj
+  project Clean.Architecture.UseCases [CSharp] /home/runner/work/_temp/repos/CleanArchitecture/src/Clean.Architecture.UseCases/Clean.Architecture.UseCases.csproj
+  project Clean.Architecture.Web [CSharp] /home/runner/work/_temp/repos/CleanArchitecture/src/Clean.Architecture.Web/Clean.Architecture.Web.csproj
+  project Clean.Architecture.AspireHost [CSharp] /home/runner/work/_temp/repos/CleanArchitecture/src/Clean.Architecture.AspireHost/Clean.Architecture.AspireHost.csproj
+  project Clean.Architecture.ServiceDefaults [CSharp] /home/runner/work/_temp/repos/CleanArchitecture/src/Clean.Architecture.ServiceDefaults/Clean.Architecture.ServiceDefaults.csproj
+  project Clean.Architecture.FunctionalTests [CSharp] /home/runner/work/_temp/repos/CleanArchitecture/tests/Clean.Architecture.FunctionalTests/Clean.Architecture.FunctionalTests.csproj
+  project Clean.Architecture.IntegrationTests [CSharp] /home/runner/work/_temp/repos/CleanArchitecture/tests/Clean.Architecture.IntegrationTests/Clean.Architecture.IntegrationTests.csproj
+  project Clean.Architecture.UnitTests [CSharp] /home/runner/work/_temp/repos/CleanArchitecture/tests/Clean.Architecture.UnitTests/Clean.Architecture.UnitTests.csproj
+Compatibility Doctor:
+  Clean.Architecture.Core: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Clean.Architecture.Infrastructure: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Clean.Architecture.UseCases: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Clean.Architecture.Web: Ready via Local server + WebView - Served on this device and shown in the web preview beside the code. Saving a file restarts it.
+  Clean.Architecture.AspireHost: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  Clean.Architecture.ServiceDefaults: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Clean.Architecture.FunctionalTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Clean.Architecture.IntegrationTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Clean.Architecture.UnitTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+Built in 24.8 s
+Errors: 219, warnings: 15
+  92 x CS0246: AppHost.cs(29,20): error CS0246: The type or namespace name 'Projects' could not be found (are you missing a using directive or an assembly reference?)
+  33 x CS0103: AppHost.cs(7,17): error CS0103: The name 'ContainerLifetime' does not exist in the current context
+  25 x CS1061: ContributorConfiguration.cs(11,8): error CS1061: 'PropertyBuilder<ContributorId>' does not contain a definition for 'HasVogenConversion' and no accessible extension method 'HasVogenConversion' accepting a first argument of type 'PropertyBuilder<ContributorId>' could be found (are you missing a using directive or an assembly reference?)
+  24 x CS0234: MediatorConfig.cs(2,26): error CS0234: The type or namespace name 'Core' does not exist in the namespace 'Clean.Architecture' (are you missing an assembly reference?)
+  19 x CS0012: Create.cs(54,24): error CS0012: The type 'ContributorId' is defined in an assembly that is not referenced. You must add a reference to assembly 'Clean.Architecture.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null'.
+  11 x CS0117: FakeListContributorsQueryService.cs(15,50): error CS0117: 'ContributorId' does not contain a definition for 'From'
+  8 x CS0311: ServiceConfigs.cs(18,16): error CS0311: The type 'Clean.Architecture.Infrastructure.Email.MimeKitEmailSender' cannot be used as type parameter 'TImplementation' in the generic type or method 'ServiceCollectionServiceExtensions.AddScoped<TService, TImplementation>(IServiceCollection)'. There is no implicit reference conversion from 'Clean.Architecture.Infrastructure.Email.MimeKitEmailSender' to 'IEmailSender'.
+  3 x CS0118: EfRepositoryAdd.cs(14,27): error CS0118: 'Contributor' is a variable but is used like a type
+  2 x CS0019: Contributor.cs(19,9): error CS0019: Operator '==' cannot be applied to operands of type 'ContributorName' and 'ContributorName'
+  1 x MSG0007: MediatorConfig.cs(26,16): error MSG0007: MediatorGenerator could not parse MediatorOptions-based configuration. Only compile-time constant values can be used in MediatorOptions configuration. The assembly 'Clean.Architecture.Web' is already configured
+  1 x CS0538: NoOpMediator.cs(56,31): error CS0538: 'ISender' in explicit interface declaration is not an interface
+Output:
+Build started at 08:50:32...
+1>------ Build started: Project: Clean.Architecture.Core, Configuration: Debug ------
+1>Contributor.cs(19,9): error CS0019: Operator '==' cannot be applied to operands of type 'ContributorName' and 'ContributorName'
+1>ContributorByIdSpec.cs(7,31): error CS0019: Operator '==' cannot be applied to operands of type 'ContributorId' and 'ContributorId'
+2>------ Build started: Project: Clean.Architecture.Infrastructure, Configuration: Debug ------
+2>Contributor.cs(19,9): error CS0019: Operator '==' cannot be applied to operands of type 'ContributorName' and 'ContributorName'
+2>ContributorByIdSpec.cs(7,31): error CS0019: Operator '==' cannot be applied to operands of type 'ContributorId' and 'ContributorId'
+3>------ Build started: Project: Clean.Architecture.UseCases, Configuration: Debug ------
+3>Contributor.cs(19,9): error CS0019: Operator '==' cannot be applied to operands of type 'ContributorName' and 'ContributorName'
+3>ContributorByIdSpec.cs(7,31): error CS0019: Operator '==' cannot be applied to operands of type 'ContributorId' and 'ContributorId'
+4>------ Build started: Project: Clean.Architecture.Web, Configuration: Debug ------
+4>Contributor.cs(19,9): error CS0019: Operator '==' cannot be applied to operands of type 'ContributorName' and 'ContributorName'
+4>ContributorByIdSpec.cs(7,31): error CS0019: Operator '==' cannot be applied to operands of type 'ContributorId' and 'ContributorId'
+5>------ Build started: Project: Clean.Architecture.AspireHost, Configuration: Debug ------
+5>Contributor.cs(19,9): error CS0019: Operator '==' cannot be applied to operands of type 'ContributorName' and 'ContributorName'
+5>ContributorByIdSpec.cs(7,31): error CS0019: Operator '==' cannot be applied to operands of type 'ContributorId' and 'ContributorId'
+6>------ Build started: Project: Clean.Architecture.ServiceDefaults, Configuration: Debug ------
+6>Clean.Architecture.ServiceDefaults -> compiled in memory (14.5 KB, 85 ms)
+7>------ Build started: Project: Clean.Architecture.FunctionalTests, Configuration: Debug ------
+7>Contributor.cs(19,9): error CS0019: Operator '==' cannot be applied to operands of type 'ContributorName' and 'ContributorName'
+7>ContributorByIdSpec.cs(7,31): error CS0019: Operator '==' cannot be applied to operands of type 'ContributorId' and 'ContributorId'
+8>------ Build started: Project: Clean.Architecture.IntegrationTests, Configuration: Debug ------
+8>Contributor.cs(19,9): error CS0019: Operator '==' cannot be applied to operands of type 'ContributorName' and 'ContributorName'
+8>ContributorByIdSpec.cs(7,31): error CS0019: Operator '==' cannot be applied to operands of type 'ContributorId' and 'ContributorId'
+9>------ Build started: Project: Clean.Architecture.UnitTests, Configuration: Debug ------
+9>Contributor.cs(19,9): error CS0019: Operator '==' cannot be applied to operands of type 'ContributorName' and 'ContributorName'
+9>ContributorByIdSpec.cs(7,31): error CS0019: Operator '==' cannot be applied to operands of type 'ContributorId' and 'ContributorId'
+========== Build: 1 succeeded, 8 failed ==========
+
