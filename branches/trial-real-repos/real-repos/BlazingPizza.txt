@@ -5,61 +5,20 @@ Compatibility Doctor:
   BlazingPizza.Client: Library via WebAssembly, in its web app - The WebAssembly part of a Blazor Web App: it is compiled for the browser and runs in the web preview when the app that references it runs.
   BlazingPizza.Shared: Library via Built with its users - A library is compiled together with the projects that reference it.
   BlazingPizza.ComponentsLibrary: Library via Built with its users - A library is compiled together with the projects that reference it.
-Built in 5.9 s: 564 errors, 211 warnings
-  339 x CS0246
-      [BlazingPizza.Client] BootstrapFieldClassProvider.cs(5,44): error CS0246: The type or namespace name 'FieldCssClassProvider' could not be found (are you missing a using directive or an assembly reference?)
-      [BlazingPizza.Client] BootstrapFieldClassProvider.cs(7,42): error CS0246: The type or namespace name 'EditContext' could not be found (are you missing a using directive or an assembly reference?)
-      [BlazingPizza.Client] BootstrapFieldClassProvider.cs(8,7): error CS0246: The type or namespace name 'FieldIdentifier' could not be found (are you missing a using directive or an assembly reference?)
-      [BlazingPizza.Client] AddressEditor.razor(50,3): error CS0246: The type or namespace name 'ParameterAttribute' could not be found (are you missing a using directive or an assembly reference?)
-      [BlazingPizza.Client] AddressEditor.razor(50,3): error CS0246: The type or namespace name 'Parameter' could not be found (are you missing a using directive or an assembly reference?)
-  147 x CS0234
-      [BlazingPizza.Client] BootstrapFieldClassProvider.cs(1,17): error CS0234: The type or namespace name 'AspNetCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-      [BlazingPizza.Client] AddressEditor.razor(1,1): error CS0234: The type or namespace name 'AspNetCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-      [BlazingPizza.Client] ConfigurePizzaDialog.razor(1,1): error CS0234: The type or namespace name 'AspNetCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-      [BlazingPizza.Client] ConfiguredPizzaItem.razor(1,1): error CS0234: The type or namespace name 'AspNetCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-      [BlazingPizza.Client] OrderReview.razor(1,1): error CS0234: The type or namespace name 'AspNetCore' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)
-  35 x CS1061
-      [BlazingPizza.Client] Checkout.razor(60,16): error CS1061: 'EditContext' does not contain a definition for 'SetFieldCssClassProvider' and no accessible extension method 'SetFieldCssClassProvider' accepting a first argument of type 'EditContext' could be found (are you missing a using directive or an assembly reference?)
-      [BlazingPizza.Client] Checkout.razor(71,21): error CS1061: 'NavigationManager' does not contain a definition for 'NavigateTo' and no accessible extension method 'NavigateTo' accepting a first argument of type 'NavigationManager' could be found (are you missing a using directive or an assembly reference?)
-      [BlazingPizza] IdentityRevalidatingAuthenticationStateProvider.cs(41,44): error CS1061: 'ClaimsPrincipal' does not contain a definition for 'FindFirstValue' and no accessible extension method 'FindFirstValue' accepting a first argument of type 'ClaimsPrincipal' could be found (are you missing a using directive or an assembly reference?)
-      [BlazingPizza] ConfirmEmail.razor(37,25): error CS1061: 'HttpContext' does not contain a definition for 'Response' and no accessible extension method 'Response' accepting a first argument of type 'HttpContext' could be found (are you missing a using directive or an assembly reference?)
-      [BlazingPizza] ExternalLogin.razor(84,43): error CS1061: 'HttpContext' does not contain a definition for 'Request' and no accessible extension method 'Request' accepting a first argument of type 'HttpContext' could be found (are you missing a using directive or an assembly reference?)
-  31 x CS0103
-      [BlazingPizza.Client] Checkout.razor(1,1): error CS0103: The name 'InteractiveWebAssembly' does not exist in the current context
-      [BlazingPizza.Client] Checkout.razor(62,4): error CS0103: The name 'StateHasChanged' does not exist in the current context
-      [BlazingPizza.Client] Home.razor(1,1): error CS0103: The name 'InteractiveWebAssembly' does not exist in the current context
-      [BlazingPizza.Client] Program.cs(10,15): error CS0103: The name 'WebAssemblyHostBuilder' does not exist in the current context
-      [BlazingPizza] IdentityRedirectManager.cs(12,20): error CS0103: The name 'SameSiteMode' does not exist in the current context
-  4 x CS0534
-      [BlazingPizza.Shared] Order.cs(35,22): error CS0534: 'OrderContext' does not implement inherited abstract member 'JsonSerializerContext.GeneratedSerializerOptions.get'
-      [BlazingPizza.Shared] Order.cs(35,22): error CS0534: 'OrderContext' does not implement inherited abstract member 'JsonSerializerContext.GetTypeInfo(Type)'
-      [BlazingPizza.Shared] Pizza.cs(46,22): error CS0534: 'PizzaContext' does not implement inherited abstract member 'JsonSerializerContext.GeneratedSerializerOptions.get'
-      [BlazingPizza.Shared] Pizza.cs(46,22): error CS0534: 'PizzaContext' does not implement inherited abstract member 'JsonSerializerContext.GetTypeInfo(Type)'
-  3 x CS1503
-      [BlazingPizza.Client] PersistentAuthenticationStateProvider.cs(30,23): error CS1503: Argument 1: cannot convert from 'string' to 'System.IO.BinaryReader'
-      [BlazingPizza.Client] PersistentAuthenticationStateProvider.cs(31,23): error CS1503: Argument 1: cannot convert from 'string' to 'System.IO.BinaryReader'
-      [BlazingPizza.Client] PersistentAuthenticationStateProvider.cs(32,23): error CS1503: Argument 1: cannot convert from 'string' to 'System.IO.BinaryReader'
-  2 x CS0616
-      [BlazingPizza.Client] Checkout.razor(1,1): error CS0616: 'Checkout.__PrivateComponentRenderModeAttribute' is not an attribute class
-      [BlazingPizza.Client] Home.razor(1,1): error CS0616: 'Home.__PrivateComponentRenderModeAttribute' is not an attribute class
-  2 x CS7036
-      [BlazingPizza.Shared] Order.cs(35,22): error CS7036: There is no argument given that corresponds to the required parameter 'options' of 'JsonSerializerContext.JsonSerializerContext(JsonSerializerOptions?)'
-      [BlazingPizza.Shared] Pizza.cs(46,22): error CS7036: There is no argument given that corresponds to the required parameter 'options' of 'JsonSerializerContext.JsonSerializerContext(JsonSerializerOptions?)'
-  1 x CS1729
-      [BlazingPizza] IdentityRevalidatingAuthenticationStateProvider.cs(15,52): error CS1729: 'RevalidatingServerAuthenticationStateProvider' does not contain a constructor that takes 1 arguments
+Built in 5.4 s: 0 errors, 14 warnings
 Output:
-Build started at 13:22:01...
+Build started at 13:30:18...
 1>------ Build started: Project: BlazingPizza.ComponentsLibrary, Configuration: Debug ------
 1>TemplatedList.razor(17,6): warning CS8602: Dereference of a possibly null reference.
-1>BlazingPizza.ComponentsLibrary -> compiled in memory (10.5 KB, 170 ms)
+1>BlazingPizza.ComponentsLibrary -> compiled in memory (10.5 KB, 208 ms)
 2>------ Build started: Project: BlazingPizza.Shared, Configuration: Debug ------
-2>BlazingPizza.Shared -> compiled in memory (71.5 KB, 212 ms)
+2>BlazingPizza.Shared -> compiled in memory (71.5 KB, 215 ms)
 3>------ Build started: Project: BlazingPizza.Client, Configuration: Debug ------
 3>OrderState.cs(17,20): warning CS8618: Non-nullable property 'JSRuntime' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 3>OrderState.cs(48,3): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
 3>OrderState.cs(55,3): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
 3>OrderState.cs(70,11): warning CS8602: Dereference of a possibly null reference.
-3>BlazingPizza.Client -> compiled in memory (42 KB, 145 ms)
+3>BlazingPizza.Client -> compiled in memory (42 KB, 280 ms)
 4>------ Build started: Project: BlazingPizza, Configuration: Debug ------
 4>LoginDisplay.razor(12,60): warning CS8602: Dereference of a possibly null reference.
 4>MyOrders.razor(36,32): warning CS0169: The field 'MyOrders.ordersWithStatus' is never used
@@ -70,6 +29,6 @@ Build started at 13:22:01...
 4>PizzaStoreContext.cs(9,12): warning CS8618: Non-nullable property 'Specials' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 4>PizzaStoreContext.cs(9,12): warning CS8618: Non-nullable property 'Toppings' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
 4>PizzaStoreContext.cs(9,12): warning CS8618: Non-nullable property 'NotificationSubscriptions' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
-4>BlazingPizza -> compiled in memory (238.5 KB, 786 ms)
+4>BlazingPizza -> compiled in memory (238.5 KB, 630 ms)
 ========== Build: 4 succeeded, 0 failed ==========
 
