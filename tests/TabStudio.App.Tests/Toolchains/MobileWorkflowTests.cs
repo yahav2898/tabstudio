@@ -98,6 +98,8 @@ public sealed class MobileWorkflowTests
         using var fixture = new WorkspaceFixture();
         var folder = new ProjectTemplates(fixture.Paths).Create(ProjectTemplates.CapacitorId, "PocketApp");
         var workspace = fixture.Workspace;
+        // Exercise the explicit install offer; automatic setup is covered by ProjectSetupTests.
+        workspace.SetUpProjectsWhenTheyOpen = false;
         await workspace.LoadAsync(folder);
         await UiTestHelpers.WaitUntilAsync(() => workspace.ToolchainNotice is not null, because: "npm install offer");
         await workspace.ToolchainNotice!.Action.ExecuteAsync(null);
