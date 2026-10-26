@@ -154,6 +154,9 @@ public sealed partial class OutputViewModel : ObservableObject, IConsoleSink
         IsWaitingForInput = false;
     }
 
+    /// <summary>Whether there is no text yet, or none since <see cref="Clear"/>: the panel's empty state shows.</summary>
+    public bool IsEmpty => Document.TextLength == 0 && _pending.IsEmpty;
+
     /// <summary>Removes all text.</summary>
     [RelayCommand]
     public void Clear()
@@ -162,6 +165,7 @@ public sealed partial class OutputViewModel : ObservableObject, IConsoleSink
         Document.Text = string.Empty;
         Document.UndoStack.ClearAll();
         _segments.Clear();
+        OnPropertyChanged(nameof(IsEmpty));
     }
 
     /// <summary>Sends the input box's text to the program, as if typed in a console and followed by Enter.</summary>
@@ -197,6 +201,7 @@ public sealed partial class OutputViewModel : ObservableObject, IConsoleSink
             return;
         }
 
+        var wasEmpty = Document.TextLength == 0;
         while (_pending.TryDequeue(out var item))
         {
             var start = Document.TextLength;
@@ -209,6 +214,10 @@ public sealed partial class OutputViewModel : ObservableObject, IConsoleSink
 
         TrimToLimit();
         TextAppended?.Invoke(this, EventArgs.Empty);
+        if (wasEmpty && Document.TextLength > 0)
+        {
+            OnPropertyChanged(nameof(IsEmpty));
+        }
     }
 
     private void AddSegment(TrackedRange<IBrush> segment)

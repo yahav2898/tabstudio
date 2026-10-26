@@ -1,51 +1,131 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:edit="using:AvaloniaEdit"
+             xmlns:controls="using:TabStudio.App.Controls"
              xmlns:model="using:TabStudio.Database"
              xmlns:db="using:TabStudio.App.ViewModels.Database"
              x:Class="TabStudio.App.Views.Database.DatabaseQueryView"
              x:ClassModifier="internal"
              x:DataType="db:DatabaseQueryViewModel"
-             Background="{DynamicResource Brush.Panel}">
+             Background="{DynamicResource Brush.Window}">
+  <!--
+    A SQL tab, or a table's data: a toolbar (Run, the one primary action, then Cancel and Schema, and the connection),
+    the SQL, the result set and Copy, the grid or its empty state, the editing row of a table, and the status.
+  -->
   <UserControl.Styles>
-    <Style Selector="Button"><Setter Property="MinHeight" Value="36" /><Setter Property="VerticalContentAlignment" Value="Center" /></Style>
+    <Style Selector="Button.tool">
+      <Setter Property="MinHeight" Value="36" />
+      <Setter Property="Height" Value="36" />
+      <Setter Property="Padding" Value="10,0" />
+    </Style>
+    <Style Selector="TextBox, ComboBox">
+      <Setter Property="MinHeight" Value="36" />
+    </Style>
+    <Style Selector="CheckBox">
+      <Setter Property="MinHeight" Value="36" />
+    </Style>
   </UserControl.Styles>
-  <Grid RowDefinitions="Auto,Auto,Auto,*,Auto,Auto">
-    <Border Padding="12,6" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
-      <Grid ColumnDefinitions="*,Auto">
-        <TextBlock Text="{Binding Heading}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
-        <WrapPanel Grid.Column="1">
-          <Button Content="Run · Ctrl+Enter" Command="{Binding RunCommand}" IsVisible="{Binding !IsTable}" IsEnabled="{Binding !IsBusy}" />
-          <Button Content="Schema" Command="{Binding RefreshSchemaCommand}" IsVisible="{Binding !IsTable}" IsEnabled="{Binding !IsBusy}" />
-          <Button Content="Cancel" Command="{Binding CancelCommand}" IsEnabled="{Binding IsBusy}" />
-        </WrapPanel>
+
+  <DockPanel>
+    <Border DockPanel.Dock="Top" Height="44" Padding="8,0" Background="{DynamicResource Brush.Toolbar}"
+            BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+      <Grid ColumnDefinitions="Auto,*">
+        <StackPanel Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
+          <Button Theme="{StaticResource AccentButton}" Classes="tool" ToolTip.Tip="Run (Ctrl+Enter): the selection, or the whole query"
+                  Command="{Binding RunCommand}" IsVisible="{Binding !IsTable}" IsEnabled="{Binding !IsBusy}">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <controls:StrokeIcon Data="{StaticResource Icon.Play}" IsFilled="True" Size="12" VerticalAlignment="Center" />
+              <TextBlock Text="Run" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Classes="tool" ToolTip.Tip="Cancel" Command="{Binding CancelCommand}" IsEnabled="{Binding IsBusy}">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <controls:StrokeIcon Data="{StaticResource Icon.Stop}" IsFilled="True" Size="12" VerticalAlignment="Center" />
+              <TextBlock Text="Cancel" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Classes="tool" ToolTip.Tip="Read the schema again, for completion"
+                  Command="{Binding RefreshSchemaCommand}" IsVisible="{Binding !IsTable}" IsEnabled="{Binding !IsBusy}">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="14" VerticalAlignment="Center" />
+              <TextBlock Text="Schema" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+        </StackPanel>
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="12,0,4,0">
+          <controls:StrokeIcon Data="{StaticResource Icon.Database}" Size="14" Foreground="{DynamicResource Brush.TextMuted}" VerticalAlignment="Center" />
+          <TextBlock Classes="small muted" Text="{Binding Heading}" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Heading}" VerticalAlignment="Center" />
+        </StackPanel>
       </Grid>
     </Border>
-    <edit:TextEditor Grid.Row="1" x:Name="SqlEditor" Height="220" ShowLineNumbers="True" FontFamily="monospace" FontSize="14"
-                     IsVisible="{Binding !IsTable}" Background="{DynamicResource Brush.Control}" Foreground="{DynamicResource Brush.Text}" />
-    <Border Grid.Row="2" Padding="10,4" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1">
-      <Grid ColumnDefinitions="*,Auto">
-        <ComboBox ItemsSource="{Binding Results}" SelectedItem="{Binding SelectedResult}" MinWidth="180" HorizontalAlignment="Left" />
-        <WrapPanel Grid.Column="1"><Button Content="Copy CSV" Click="OnCopyCsv" /><Button Content="Copy JSON" Click="OnCopyJson" /></WrapPanel>
-      </Grid>
+
+    <Border DockPanel.Dock="Bottom" MinHeight="34" Padding="12,6" Background="{DynamicResource Brush.Toolbar}"
+            BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0">
+      <TextBlock Text="{Binding Status}" Classes="small muted" TextWrapping="Wrap" VerticalAlignment="Center" />
     </Border>
-    <DataGrid Grid.Row="3" x:Name="ResultsGrid" ItemsSource="{Binding Rows}" SelectedItem="{Binding SelectedRow}"
-              IsReadOnly="True" AutoGenerateColumns="False" CanUserSortColumns="True" CanUserResizeColumns="True"
-              GridLinesVisibility="Horizontal" HeadersVisibility="Column" RowHeight="34" FontSize="13" />
-    <StackPanel Grid.Row="4" Margin="10,6" Spacing="6" IsVisible="{Binding IsTable}" IsEnabled="{Binding !IsBusy}">
-      <WrapPanel><Button Content="Previous" Command="{Binding PreviousPageCommand}" IsEnabled="{Binding HasPrevious}" /><Button Content="Next" Command="{Binding NextPageCommand}" IsEnabled="{Binding HasNext}" /><Button Content="Refresh" Command="{Binding RefreshPageCommand}" /></WrapPanel>
-      <TextBlock Text="{Binding EditHint}" Classes="small muted" TextWrapping="Wrap" />
-      <Grid ColumnDefinitions="160,*,Auto,Auto" IsVisible="{Binding CanEdit}">
-        <ComboBox ItemsSource="{Binding EditableColumns}" SelectedItem="{Binding EditColumn}" HorizontalAlignment="Stretch">
-          <ComboBox.ItemTemplate><DataTemplate DataType="model:DatabaseColumn"><TextBlock Text="{Binding Name}" /></DataTemplate></ComboBox.ItemTemplate>
-        </ComboBox>
-        <TextBox Grid.Column="1" Text="{Binding EditValue}" Watermark="Value" Margin="6,0" IsEnabled="{Binding !SetNull}" />
-        <CheckBox Grid.Column="2" Content="NULL" IsChecked="{Binding SetNull}" VerticalAlignment="Center" />
-        <Button Grid.Column="3" Content="Apply cell" Command="{Binding ApplyEditCommand}" Margin="6,0,0,0" />
-      </Grid>
-    </StackPanel>
-    <Border Grid.Row="5" Padding="12,8" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0">
-      <TextBlock Text="{Binding Status}" Classes="small muted" TextWrapping="Wrap" />
+
+    <!-- A table's data: its pages, and the cell to change in the selected row. -->
+    <Border DockPanel.Dock="Bottom" Padding="12,8" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0"
+            IsVisible="{Binding IsTable}">
+      <StackPanel Spacing="8" IsEnabled="{Binding !IsBusy}">
+        <StackPanel Orientation="Horizontal" Spacing="2">
+          <Button Theme="{StaticResource ToolButton}" Classes="tool" ToolTip.Tip="Previous page" Command="{Binding PreviousPageCommand}" IsEnabled="{Binding HasPrevious}">
+            <controls:StrokeIcon Data="{StaticResource Icon.ChevronLeft}" Size="16" />
+          </Button>
+          <TextBlock Classes="small" Text="{Binding PageText}" VerticalAlignment="Center" Margin="4,0" />
+          <Button Theme="{StaticResource ToolButton}" Classes="tool" ToolTip.Tip="Next page" Command="{Binding NextPageCommand}" IsEnabled="{Binding HasNext}">
+            <controls:StrokeIcon Data="{StaticResource Icon.ChevronRight}" Size="16" />
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Classes="tool" ToolTip.Tip="Refresh" Command="{Binding RefreshPageCommand}">
+            <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="16" />
+          </Button>
+        </StackPanel>
+        <TextBlock Text="{Binding EditHint}" Classes="small muted" TextWrapping="Wrap" />
+        <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="8" IsVisible="{Binding CanEdit}">
+          <ComboBox ItemsSource="{Binding EditableColumns}" SelectedItem="{Binding EditColumn}" MinWidth="140" PlaceholderText="Column"
+                    AutomationProperties.Name="Column">
+            <ComboBox.ItemTemplate>
+              <DataTemplate DataType="model:DatabaseColumn">
+                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
+              </DataTemplate>
+            </ComboBox.ItemTemplate>
+          </ComboBox>
+          <TextBox Grid.Column="1" Text="{Binding EditValue}" Watermark="Value" IsEnabled="{Binding !SetNull}" AutomationProperties.Name="Value" />
+          <CheckBox Grid.Column="2" Content="NULL" IsChecked="{Binding SetNull}" VerticalAlignment="Center" />
+          <Button Grid.Column="3" Theme="{StaticResource SecondaryButton}" Classes="tool" Content="Apply" Command="{Binding ApplyEditCommand}" />
+        </Grid>
+      </StackPanel>
     </Border>
-  </Grid>
+
+    <Grid RowDefinitions="Auto,Auto,*">
+      <edit:TextEditor x:Name="SqlEditor" Height="200" IsVisible="{Binding !IsTable}" />
+      <Border Grid.Row="1" Height="44" Padding="8,0" Background="{DynamicResource Brush.Toolbar}"
+              BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1" IsVisible="{Binding HasResults}">
+        <Grid ColumnDefinitions="*,Auto">
+          <ComboBox ItemsSource="{Binding Results}" SelectedItem="{Binding SelectedResult}" MinWidth="180" HorizontalAlignment="Left"
+                    VerticalAlignment="Center" AutomationProperties.Name="Result set" />
+          <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Classes="tool" ToolTip.Tip="Copy the results">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <controls:StrokeIcon Data="{StaticResource Icon.Copy}" Size="14" VerticalAlignment="Center" />
+              <TextBlock Text="Copy" VerticalAlignment="Center" />
+            </StackPanel>
+            <Button.Flyout>
+              <MenuFlyout Placement="BottomEdgeAlignedRight">
+                <MenuItem Header="Copy as CSV" Click="OnCopyCsv" />
+                <MenuItem Header="Copy as JSON" Click="OnCopyJson" />
+              </MenuFlyout>
+            </Button.Flyout>
+          </Button>
+        </Grid>
+      </Border>
+      <Panel Grid.Row="2">
+        <DataGrid x:Name="ResultsGrid" ItemsSource="{Binding Rows}" SelectedItem="{Binding SelectedRow}"
+                  IsReadOnly="True" AutoGenerateColumns="False" CanUserSortColumns="True" CanUserResizeColumns="True"
+                  GridLinesVisibility="Horizontal" HeadersVisibility="Column" RowHeight="34" FontSize="12.5" />
+        <controls:EmptyState Icon="{StaticResource Icon.Database}" Title="No results yet" IsCompact="True"
+                             Message="Write a query, then run it with Run or Ctrl+Enter. Ctrl+Space completes table and column names."
+                             IsVisible="{Binding ShowsNoResults}" />
+      </Panel>
+    </Grid>
+  </DockPanel>
 </UserControl>

@@ -124,6 +124,7 @@ public sealed class PanelAuditTests
 
             var publish = workspace.PublishToServerCommand.ExecuteAsync(null);
             await UiTestHelpers.WaitUntilAsync(() => workspace.Prompt.IsOpen, because: "Publish to server's first question");
+            Assert.Equal(["Development server · deploy@dev.example.com:22"], workspace.Prompt.Choices);
             await PanelAudit.RunAsync(window, "audit-publish-to-server", () => PromptDialog(window));
             workspace.Prompt.CancelCommand.Execute(null);
             await publish;
@@ -144,12 +145,14 @@ public sealed class PanelAuditTests
         var window = Show(workspace);
         try
         {
+            Assert.True(workspace.IsPicProject, "The Blink template is an MPLAB X project.");
+            Assert.True(workspace.ShowsSerialMonitorTab, "A PIC project shows the Serial Monitor tab.");
             workspace.ShowSerialMonitorCommand.Execute(null);
             await PanelAudit.RunAsync(window, "audit-serial-monitor", () => Find<SerialMonitorView>(window));
 
-            Assert.True(workspace.IsPicProject, "The Blink template is an MPLAB X project.");
             var choose = workspace.SelectPicConfigurationCommand.ExecuteAsync(null);
             await UiTestHelpers.WaitUntilAsync(() => workspace.Prompt.IsOpen, because: "the MPLAB configuration question");
+            Assert.True(workspace.Prompt.HasChoices, "The configurations are a list to choose from, not a name to type.");
             await PanelAudit.RunAsync(window, "audit-pic-configuration", () => PromptDialog(window));
             workspace.Prompt.CancelCommand.Execute(null);
             await choose;
@@ -244,12 +247,16 @@ public sealed class PanelAuditTests
         var window = Show(workspace);
         try
         {
+            workspace.SelectPanelCommand.Execute(BottomPanel.Logcat);
+            Assert.True(workspace.ShowsLogcatTab, "An Android app shows the Logcat tab.");
+            await PanelAudit.RunAsync(window, "audit-logcat-empty", () => Shell(window).FindControl<Panel>("LogcatPanel")!);
+
             workspace.Logcat.WriteLine("Logcat for com.example.pocketapp (debug app process)", OutputKind.Info);
             workspace.Logcat.WriteLine("10-26 14:02:11.482  4120  4120 I Capacitor: Starting BridgeActivity");
             workspace.Logcat.WriteLine("10-26 14:02:11.913  4120  4141 D Capacitor: Loading app at https://localhost");
             workspace.Logcat.WriteLine("10-26 14:02:12.204  4120  4120 W Capacitor/Console: File: https://localhost/ - Line 1 - Msg: Service worker is not available", OutputKind.Failure);
-            workspace.SelectPanelCommand.Execute(BottomPanel.Logcat);
-            await PanelAudit.RunAsync(window, "audit-logcat", () => window.GetVisualDescendants().OfType<OutputView>().Single(v => ReferenceEquals(v.DataContext, workspace.Logcat)));
+            Assert.False(workspace.Logcat.IsEmpty);
+            await PanelAudit.RunAsync(window, "audit-logcat", () => Shell(window).FindControl<Panel>("LogcatPanel")!);
 
             await workspace.BuildForIosCommand.ExecuteAsync(null);
             var again = workspace.BuildForIosCommand.ExecuteAsync(null);
@@ -306,8 +313,7 @@ public sealed class PanelAuditTests
         window.GetVisualDescendants().OfType<T>().First(control => control.IsEffectivelyVisible);
 
     /// <summary>The in-app dialog that asks a question: the box around its title, message and buttons.</summary>
-    private static Control PromptDialog(Window window) =>
-        Shell(window).FindControl<TextBox>("PromptBox")!.GetVisualAncestors().OfType<Border>().First();
+    private static Border PromptDialog(Window window) => Shell(window).FindControl<Border>("PromptDialog")!;
 
     private static void CopyTree(string source, string destination)
     {

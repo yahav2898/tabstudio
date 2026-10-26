@@ -1,86 +1,190 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:TabStudio.App.Controls"
              xmlns:db="using:TabStudio.App.ViewModels.Database"
+             xmlns:sys="using:System"
              x:Class="TabStudio.App.Views.Database.DatabaseExplorerView"
              x:DataType="db:DatabaseExplorerViewModel"
              Background="{DynamicResource Brush.Panel}">
+  <!--
+    Database Explorer, a tool window as docs/design/README.md builds one: its header with Add Connection, New Query and
+    More; the Connections and EF Core tabs; a toolbar with the connection and Connect; then the schema, the form that adds
+    a connection, or the empty state; and a footer with what the explorer is doing.
+  -->
   <UserControl.Styles>
-    <Style Selector="Button"><Setter Property="MinHeight" Value="36" /><Setter Property="Padding" Value="10,4" /><Setter Property="VerticalContentAlignment" Value="Center" /></Style>
-    <Style Selector="TabItem"><Setter Property="FontSize" Value="13" /></Style>
-    <Style Selector="ComboBox"><Setter Property="HorizontalAlignment" Value="Stretch" /><Setter Property="MinHeight" Value="36" /></Style>
-    <Style Selector="TreeViewItem" x:DataType="db:DatabaseNode"><Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" /></Style>
+    <Style Selector="TextBox, ComboBox">
+      <Setter Property="MinHeight" Value="36" />
+    </Style>
+    <Style Selector="ComboBox">
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+    </Style>
+    <Style Selector="Button.icon">
+      <Setter Property="Width" Value="36" />
+      <Setter Property="MinWidth" Value="36" />
+      <Setter Property="Height" Value="36" />
+      <Setter Property="MinHeight" Value="36" />
+      <Setter Property="Padding" Value="0" />
+    </Style>
+    <Style Selector="Button.action">
+      <Setter Property="MinHeight" Value="36" />
+      <Setter Property="Padding" Value="14,0" />
+    </Style>
+    <Style Selector="TreeViewItem" x:DataType="db:DatabaseNode">
+      <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+      <Setter Property="MinHeight" Value="32" />
+    </Style>
   </UserControl.Styles>
+
   <DockPanel>
-    <Border DockPanel.Dock="Top" Padding="12,8" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
-      <TextBlock Classes="header" Text="Database Explorer" />
+    <controls:PanelHeader DockPanel.Dock="Top" Title="Database Explorer"
+                          Subtitle="{Binding SelectedConnection.Name, FallbackValue={x:Null}}">
+      <controls:PanelHeader.Actions>
+        <StackPanel Orientation="Horizontal" Spacing="2">
+          <Button Theme="{StaticResource ToolButton}" Classes="icon" ToolTip.Tip="Add Connection" Command="{Binding AddConnectionCommand}">
+            <controls:StrokeIcon Data="{StaticResource Icon.Plus}" Size="16" />
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Classes="icon" ToolTip.Tip="New Query" Command="{Binding NewQueryCommand}"
+                  IsEnabled="{Binding !IsBusy}">
+            <controls:StrokeIcon Data="{StaticResource Icon.NewFile}" Size="16" />
+          </Button>
+          <Button Theme="{StaticResource ToolButton}" Classes="icon" ToolTip.Tip="More">
+            <controls:StrokeIcon Data="{StaticResource Icon.Overflow}" Size="16" />
+            <Button.Flyout>
+              <MenuFlyout Placement="BottomEdgeAlignedRight">
+                <MenuItem Header="Edit Data" Command="{Binding EditDataCommand}" IsEnabled="{Binding !IsBusy}" />
+                <MenuItem Header="Find Connections in the Solution" Command="{Binding DiscoverCommand}" IsEnabled="{Binding !IsBusy}" />
+                <MenuItem Header="Remove Connection" Command="{Binding RemoveConnectionCommand}" IsEnabled="{Binding HasConnections}" />
+              </MenuFlyout>
+            </Button.Flyout>
+          </Button>
+        </StackPanel>
+      </controls:PanelHeader.Actions>
+    </controls:PanelHeader>
+
+    <!-- Connections and EF Core, as the bottom dock's tabs. -->
+    <Border DockPanel.Dock="Top" Height="40" Padding="4,0" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+      <StackPanel Orientation="Horizontal">
+        <Button x:Name="ConnectionsTab" Theme="{StaticResource PanelTabButton}" MinHeight="40" Content="Connections"
+                Classes.selected="{Binding !IsEfCoreSelected}" Command="{Binding ShowConnectionsCommand}" />
+        <Button x:Name="EfCoreTab" Theme="{StaticResource PanelTabButton}" MinHeight="40" Content="EF Core"
+                Classes.selected="{Binding IsEfCoreSelected}" Command="{Binding ShowEfCoreCommand}" />
+      </StackPanel>
     </Border>
-    <Border DockPanel.Dock="Bottom" Padding="12,8" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0">
-      <TextBlock Classes="small muted" Text="{Binding Status}" TextWrapping="Wrap" />
+
+    <!-- What the explorer is doing: a spinner and Cancel while it works, its last message otherwise. -->
+    <Border DockPanel.Dock="Bottom" MinHeight="34" Padding="12,6,6,6" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1,0,0">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Classes="small muted" Text="{Binding Status}" TextWrapping="Wrap" VerticalAlignment="Center" IsVisible="{Binding !IsBusy}" />
+        <controls:LoadingState IsInline="True" Message="Working…" IsVisible="{Binding IsBusy}" HorizontalAlignment="Left" />
+        <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Classes="action" Content="Cancel" Command="{Binding CancelCommand}"
+                IsVisible="{Binding IsBusy}" />
+      </Grid>
     </Border>
-    <TabControl>
-      <TabItem Header="Connections">
-        <Grid RowDefinitions="Auto,Auto,*,Auto" Margin="8">
-          <StackPanel Spacing="6" IsEnabled="{Binding !IsBusy}">
-            <ComboBox ItemsSource="{Binding Connections}" SelectedItem="{Binding SelectedConnection}" PlaceholderText="Saved connections" />
-            <WrapPanel>
-              <Button Content="Connect / Refresh" Command="{Binding ConnectCommand}" />
-              <Button Content="Add" Command="{Binding AddConnectionCommand}" />
-              <Button Content="Remove" Command="{Binding RemoveConnectionCommand}" />
-            </WrapPanel>
-          </StackPanel>
-          <ScrollViewer Grid.Row="1" MaxHeight="360" HorizontalScrollBarVisibility="Disabled">
-            <StackPanel Spacing="6" Margin="0,8" IsEnabled="{Binding !IsBusy}">
-              <Expander Header="Connections in this solution">
-                <StackPanel Spacing="6">
-                  <ComboBox ItemsSource="{Binding Suggestions}" SelectedItem="{Binding SelectedSuggestion}" PlaceholderText="appsettings / user secrets" />
-                  <WrapPanel><Button Content="Discover" Command="{Binding DiscoverCommand}" /><Button Content="Use selected" Command="{Binding UseSuggestionCommand}" /></WrapPanel>
-                </StackPanel>
-              </Expander>
-              <Border IsVisible="{Binding IsAddingConnection}" Padding="10" Background="{DynamicResource Brush.Control}" CornerRadius="6">
-                <StackPanel Spacing="6">
-                  <TextBlock Text="Add connection" FontWeight="SemiBold" />
-                  <TextBox Watermark="Display name" Text="{Binding ConnectionName}" />
-                  <ComboBox ItemsSource="{Binding Providers}" SelectedItem="{Binding Provider}" />
-                  <TextBox Watermark="Connection string" PasswordChar="●" Text="{Binding ConnectionString}" />
-                  <Button Content="Choose SQLite file…" Click="OnPickSqlite" HorizontalAlignment="Left" />
-                  <TextBlock Classes="muted small" Text="Android saves credentials with the device's Keystore. Desktop credentials last for this session." TextWrapping="Wrap" />
-                  <WrapPanel><Button Content="Save connection" Command="{Binding SaveConnectionCommand}" /><Button Content="Cancel" Command="{Binding DismissConnectionCommand}" /></WrapPanel>
-                </StackPanel>
-              </Border>
-            </StackPanel>
-          </ScrollViewer>
-          <TreeView Grid.Row="2" ItemsSource="{Binding Nodes}" SelectedItem="{Binding SelectedNode}">
+
+    <Panel>
+      <!-- Connections -->
+      <DockPanel IsVisible="{Binding !IsEfCoreSelected}">
+        <Border DockPanel.Dock="Top" Padding="12,8" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1"
+                IsVisible="{Binding HasConnections}">
+          <Grid ColumnDefinitions="*,Auto" IsEnabled="{Binding !IsBusy}">
+            <ComboBox ItemsSource="{Binding Connections}" SelectedItem="{Binding SelectedConnection}" PlaceholderText="Choose a connection"
+                      AutomationProperties.Name="Connection" />
+            <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Classes="action" Margin="8,0,0,0" Content="Connect"
+                    ToolTip.Tip="Connect, or read the schema again" Command="{Binding ConnectCommand}" />
+          </Grid>
+        </Border>
+
+        <Panel>
+          <controls:EmptyState Icon="{StaticResource Icon.Database}" Title="No connections yet"
+                               Message="Add a SQLite, PostgreSQL or SQL Server database, or find one in the solution's settings and user secrets."
+                               ActionText="Add Connection" ActionCommand="{Binding AddConnectionCommand}" IsVisible="{Binding ShowsEmptyState}" />
+
+          <controls:EmptyState Icon="{StaticResource Icon.Database}" Title="Not connected" IsCompact="True"
+                               Message="Connect to browse the database's tables, views, columns, keys and indexes."
+                               ActionText="Connect" ActionCommand="{Binding ConnectCommand}" IsVisible="{Binding ShowsConnectOffer}" />
+
+          <TreeView ItemsSource="{Binding Nodes}" SelectedItem="{Binding SelectedNode}" IsVisible="{Binding ShowsTree}" Margin="0,4">
             <TreeView.ItemTemplate>
               <TreeDataTemplate DataType="db:DatabaseNode" ItemsSource="{Binding Children}">
-                <TextBlock Text="{Binding Text}" ToolTip.Tip="{Binding Kind}" VerticalAlignment="Center" />
+                <StackPanel Orientation="Horizontal" Spacing="8" Background="Transparent" ToolTip.Tip="{Binding Detail}">
+                  <Panel Width="16" Height="16" VerticalAlignment="Center">
+                    <controls:StrokeIcon Data="{Binding Icon}" Size="16" Foreground="{DynamicResource Brush.TextMuted}" IsVisible="{Binding HasIcon}" />
+                  </Panel>
+                  <TextBlock Text="{Binding Text}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                </StackPanel>
               </TreeDataTemplate>
             </TreeView.ItemTemplate>
           </TreeView>
-          <WrapPanel Grid.Row="3" Margin="0,6,0,0">
-            <Button Content="New query" Command="{Binding NewQueryCommand}" IsEnabled="{Binding !IsBusy}" />
-            <Button Content="Edit data" Command="{Binding EditDataCommand}" IsEnabled="{Binding !IsBusy}" />
-            <Button Content="Cancel operation" Command="{Binding CancelCommand}" IsVisible="{Binding IsBusy}" />
-          </WrapPanel>
-        </Grid>
-      </TabItem>
-      <TabItem Header="EF Core">
-        <ScrollViewer HorizontalScrollBarVisibility="Disabled">
-          <StackPanel Margin="12" Spacing="8" DataContext="{Binding EfCore}" x:DataType="db:EfCoreViewModel" IsEnabled="{Binding !IsBusy}">
-            <TextBlock Text="Migrations project" Classes="small muted" />
-            <ComboBox ItemsSource="{Binding Projects}" SelectedItem="{Binding SelectedProject}" />
-            <TextBlock Text="Startup project" Classes="small muted" />
-            <ComboBox ItemsSource="{Binding Projects}" SelectedItem="{Binding StartupProject}" />
-            <Button Content="Build and list DbContexts" Command="{Binding ListContextsCommand}" />
-            <ComboBox ItemsSource="{Binding Contexts}" SelectedItem="{Binding SelectedContext}" PlaceholderText="DbContext" />
-            <Button Content="List migrations" Command="{Binding ListMigrationsCommand}" />
-            <ItemsControl ItemsSource="{Binding Migrations}" />
-            <Button Content="Update database" Command="{Binding UpdateDatabaseCommand}" />
-            <TextBox Watermark="Migration name" Text="{Binding MigrationName}" />
-            <Button Content="Add migration" Command="{Binding AddMigrationCommand}" />
-            <TextBlock Text="{Binding Status}" Classes="small muted" TextWrapping="Wrap" />
-          </StackPanel>
-        </ScrollViewer>
-      </TabItem>
-    </TabControl>
+
+          <!-- A new connection. -->
+          <ScrollViewer IsVisible="{Binding IsAddingConnection}" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Margin="12" Spacing="8" IsEnabled="{Binding !IsBusy}">
+              <TextBlock Classes="h2" Text="Add a connection" />
+              <StackPanel Spacing="8" IsVisible="{Binding HasSuggestions}">
+                <TextBlock Classes="label" Text="Found in this solution" />
+                <Grid ColumnDefinitions="*,Auto">
+                  <ComboBox ItemsSource="{Binding Suggestions}" SelectedItem="{Binding SelectedSuggestion}" PlaceholderText="appsettings and user secrets"
+                            AutomationProperties.Name="Found in this solution" />
+                  <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Classes="action" Margin="8,0,0,0" Content="Use"
+                          Command="{Binding UseSuggestionCommand}" />
+                </Grid>
+              </StackPanel>
+              <TextBlock Classes="label" Text="Name" />
+              <TextBox Text="{Binding ConnectionName}" AutomationProperties.Name="Name" />
+              <TextBlock Classes="label" Text="Provider" />
+              <ComboBox ItemsSource="{Binding Providers}" SelectedItem="{Binding Provider}" AutomationProperties.Name="Provider" />
+              <TextBlock Classes="label" Text="Connection string" />
+              <TextBox Classes="mono" PasswordChar="●" Text="{Binding ConnectionString}" Watermark="Data Source=app.db"
+                       AutomationProperties.Name="Connection string" />
+              <Button Theme="{StaticResource SecondaryButton}" Classes="action" HorizontalAlignment="Left" Content="Choose a SQLite File…"
+                      Click="OnPickSqlite" />
+              <TextBlock Classes="small muted" TextWrapping="Wrap"
+                         Text="Android keeps saved credentials with the device's Keystore. On a desktop they last for this session." />
+              <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right" Margin="0,4,0,0">
+                <Button Theme="{StaticResource SecondaryButton}" Classes="action" Content="Cancel" Command="{Binding DismissConnectionCommand}" />
+                <Button Theme="{StaticResource AccentButton}" Classes="action" Content="Save" Command="{Binding SaveConnectionCommand}" />
+              </StackPanel>
+            </StackPanel>
+          </ScrollViewer>
+        </Panel>
+      </DockPanel>
+
+      <!-- EF Core: the project's DbContexts and migrations. -->
+      <ScrollViewer IsVisible="{Binding IsEfCoreSelected}" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="12" Spacing="8" DataContext="{Binding EfCore}" x:DataType="db:EfCoreViewModel" IsEnabled="{Binding !IsBusy}">
+          <TextBlock Classes="label" Text="Migrations project" />
+          <ComboBox ItemsSource="{Binding Projects}" SelectedItem="{Binding SelectedProject}" AutomationProperties.Name="Migrations project" />
+          <TextBlock Classes="label" Text="Startup project" />
+          <ComboBox ItemsSource="{Binding Projects}" SelectedItem="{Binding StartupProject}" AutomationProperties.Name="Startup project" />
+          <Button Theme="{StaticResource SecondaryButton}" Classes="action" HorizontalAlignment="Left" Content="Build and Find DbContexts"
+                  Command="{Binding ListContextsCommand}" />
+          <TextBlock Classes="label" Text="DbContext" Margin="0,4,0,0" />
+          <ComboBox ItemsSource="{Binding Contexts}" SelectedItem="{Binding SelectedContext}" PlaceholderText="Build to find DbContexts"
+                    AutomationProperties.Name="DbContext" />
+          <Grid ColumnDefinitions="*,Auto" Margin="0,8,0,0">
+            <TextBlock Classes="h2" Text="Migrations" VerticalAlignment="Center" />
+            <Button Grid.Column="1" Theme="{StaticResource ToolButton}" Classes="icon" ToolTip.Tip="List Migrations" Command="{Binding ListMigrationsCommand}">
+              <controls:StrokeIcon Data="{StaticResource Icon.Refresh}" Size="16" />
+            </Button>
+          </Grid>
+          <ItemsControl ItemsSource="{Binding Migrations}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="sys:String">
+                <TextBlock Text="{Binding}" Classes="mono" Padding="0,6" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding}" />
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+          <Button Theme="{StaticResource SecondaryButton}" Classes="action" HorizontalAlignment="Left" Content="Update Database"
+                  Command="{Binding UpdateDatabaseCommand}" />
+          <TextBlock Classes="label" Text="New migration" Margin="0,4,0,0" />
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBox Text="{Binding MigrationName}" Watermark="AddCustomerEmail" AutomationProperties.Name="New migration" />
+            <Button Grid.Column="1" Theme="{StaticResource SecondaryButton}" Classes="action" Margin="8,0,0,0" Content="Add"
+                    Command="{Binding AddMigrationCommand}" />
+          </Grid>
+          <TextBlock Text="{Binding Status}" Classes="small muted" TextWrapping="Wrap" Margin="0,4,0,0" />
+        </StackPanel>
+      </ScrollViewer>
+    </Panel>
   </DockPanel>
 </UserControl>

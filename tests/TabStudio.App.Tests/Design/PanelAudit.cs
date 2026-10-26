@@ -122,8 +122,16 @@ internal static class PanelAudit
         found.AddRange(ClippedTextRule.Find(scan, offScreen).Select(r => (r.Element, r.Severity, r.Message, "SWRM001")));
         found.AddRange(OverlapRule.Find(scan, offScreen).Select(r => (r.Element, r.Severity, r.Message, "SWRM003")));
         found.AddRange(ContrastRule.Find(scan).Select(r => (r.Element, r.Severity, r.Message, "SWRM005")));
-        foreach (var (element, severity, message, code) in found.Where(f => InPanel(f.Element.Visual)))
+        var targets = scan.Elements.Where(e => e.IsInteractive).ToList();
+        foreach (var (element, severity, message, code) in found.Where(f => InPanel(f.Element.Visual) && !InDataGrid(f.Element.Visual)))
         {
+            // The overlap rule lets content that scrolls reach as far as it scrolls; what counts here is what shows now.
+            if (code == "SWRM003" && !targets.Any(t => !ReferenceEquals(t.Visual, element.Visual) && !t.Visual.IsVisualAncestorOf(element.Visual)
+                    && !element.Visual.IsVisualAncestorOf(t.Visual) && Shown(t.Visual, window).Intersect(Shown(element.Visual, window)) is { Width: > 1, Height: > 1 }))
+            {
+                continue;
+            }
+
             var trimmed = code == "SWRM001" && severity == LayoutIssueSeverity.Warning;
             if (trimmed)
             {
@@ -180,6 +188,29 @@ internal static class PanelAudit
         }
 
         Dispatcher.UIThread.RunJobs();
+    }
+
+    /// <summary>Whether an element is part of a data grid, which scrolls its own rows and columns into view.</summary>
+    private static bool InDataGrid(Visual visual) => visual.GetVisualAncestors().Any(a => a is DataGrid);
+
+    /// <summary>The part of an element on screen now, in the window's coordinates: its bounds, cut by every container that clips.</summary>
+    private static Rect Shown(Visual visual, Visual root)
+    {
+        if (visual.TransformToVisual(root) is not { } toRoot)
+        {
+            return default;
+        }
+
+        var shown = new Rect(visual.Bounds.Size).TransformToAABB(toRoot);
+        foreach (var ancestor in visual.GetVisualAncestors())
+        {
+            if (ancestor.ClipToBounds && ancestor.TransformToVisual(root) is { } transform)
+            {
+                shown = shown.Intersect(new Rect(ancestor.Bounds.Size).TransformToAABB(transform));
+            }
+        }
+
+        return shown;
     }
 
     /// <summary>Parts that are not touch targets of their own: scroll bars, splitters and the data grid's cells, whose rows have their own height.</summary>

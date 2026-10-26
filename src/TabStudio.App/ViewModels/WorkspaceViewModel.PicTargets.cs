@@ -27,10 +27,15 @@ public sealed partial class WorkspaceViewModel
         }
     }
 
+    /// <summary>Whether the bottom dock shows the Serial Monitor tab: for a PIC project, while connected, or while it is the panel shown.</summary>
+    public bool ShowsSerialMonitorTab => IsSerialMonitorSelected || IsPicProject || SerialMonitor.IsConnected;
+
     private void RefreshPicCommands()
     {
         OnPropertyChanged(nameof(IsPicProject));
         OnPropertyChanged(nameof(PicFlashMenuText));
+        OnPropertyChanged(nameof(ShowsSerialMonitorTab));
+        OnPropertyChanged(nameof(ShowsLogcatTab));
     }
 
     /// <summary>Opens the board's explicit protocol, application bounds and programmer settings.</summary>
@@ -74,9 +79,12 @@ public sealed partial class WorkspaceViewModel
         try
         {
             var project = MplabProject.Load(marker);
-            var selected = await Prompt.AskAsync("MPLAB configuration", string.Join("\n", project.Configurations.Select(c => $"{c.Name}: {c.Device}, {c.Compiler} {c.CompilerVersion}")), "Select", project.SelectedConfiguration().Name);
-            if (selected is null) return;
-            if (!project.Configurations.Any(c => c.Name == selected)) throw new IOException("Select an existing MPLAB configuration name.");
+            var configurations = project.Configurations.ToList();
+            var current = configurations.FindIndex(c => c.Name == project.SelectedConfiguration().Name);
+            var index = await Prompt.ChooseAsync("MPLAB configuration", "Choose the configuration TabStudio builds, flashes and debugs: its device and compiler.", "Select",
+                [.. configurations.Select(c => $"{c.Name} · {c.Device} · {c.Compiler} {c.CompilerVersion}")], Math.Max(current, 0));
+            if (index is not { } chosen) return;
+            var selected = configurations[chosen].Name;
             var path = Path.Combine(project.Directory, ".tabstudio/pic-build.json");
             Directory.CreateDirectory(Path.GetDirectoryName(path)!);
             await File.WriteAllTextAsync(path, JsonSerializer.Serialize(new Dictionary<string, string> { ["configuration"] = selected }));
@@ -106,10 +114,10 @@ public sealed partial class WorkspaceViewModel
             var device = devices[0];
             if (devices.Count > 1)
             {
-                var choice = await Prompt.AskAsync("PIC USB device", string.Join("\n", devices.Select((d, i) => $"{i + 1}. {d}")), "Select", "1");
-                if (choice is null) return;
-                if (!int.TryParse(choice, out var index) || index < 1 || index > devices.Count) throw new IOException("Select a USB device number from the list.");
-                device = devices[index - 1];
+                var index = await Prompt.ChooseAsync("Choose a USB device", "More than one USB device is connected. Choose the bootloader or programmer to flash with.", "Flash",
+                    [.. devices.Select(d => d.ToString())]);
+                if (index is not { } chosen) return;
+                device = devices[chosen];
             }
             State = IdeState.Running;
             using var cancel = new CancellationTokenSource();

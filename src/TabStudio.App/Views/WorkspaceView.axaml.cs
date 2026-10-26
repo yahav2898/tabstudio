@@ -34,6 +34,8 @@ public sealed partial class WorkspaceView : UserControl
             _ => (Control)new CodeEditorView((DocumentViewModel)document),
         };
         PromptBox.KeyDown += OnPromptKeyDown;
+        PromptChoices.KeyDown += OnPromptKeyDown;
+        PromptChoices.DoubleTapped += OnPromptChoiceDoubleTapped;
         InitializeKeyChords();
         InitializeTestExplorer();
         InitializeExtensions();
@@ -163,6 +165,20 @@ public sealed partial class WorkspaceView : UserControl
                 PromptBox.Focus();
                 PromptBox.SelectAll();
             }, Avalonia.Threading.DispatcherPriority.Background);
+        }
+        else if (e.PropertyName == nameof(PromptViewModel.IsOpen) && _viewModel?.Prompt is { IsOpen: true, HasChoices: true })
+        {
+            Avalonia.Threading.Dispatcher.UIThread.Post(() => PromptChoices.Focus(), Avalonia.Threading.DispatcherPriority.Background);
+        }
+    }
+
+    /// <summary>A double tap on a choice chooses it, as Enter does.</summary>
+    private void OnPromptChoiceDoubleTapped(object? sender, TappedEventArgs e)
+    {
+        if (_viewModel?.Prompt is { HasChoices: true } prompt && prompt.ConfirmCommand.CanExecute(null))
+        {
+            prompt.ConfirmCommand.Execute(null);
+            e.Handled = true;
         }
     }
 

@@ -32,6 +32,7 @@ public sealed partial class ServicesViewModel : ObservableObject, IAsyncDisposab
     private string? _configuration;
     private bool _disposed;
 
+    private string? _files;
     public ServicesViewModel(ToolchainServices toolchains, AppPaths paths, IUiDispatcher ui, Action<Uri> preview, Action remoteHost, IServiceDatabaseExplorer? databases = null)
     {
         _toolchains = toolchains; _paths = paths; _ui = ui; _preview = preview; _remoteHost = remoteHost; _databases = databases;
@@ -40,6 +41,17 @@ public sealed partial class ServicesViewModel : ObservableObject, IAsyncDisposab
     public ServiceManager? Manager => _manager;
     public bool HasServices => Items.Count > 0;
     public bool IsEmpty => !HasServices;
+
+    /// <summary>The Compose files the services come from, for the panel's header.</summary>
+    public string? Subtitle => _files;
+
+    /// <summary>Whether reading the Compose files failed.</summary>
+    public bool HasError => Error is not null;
+
+    /// <summary>No services and nothing wrong: the empty state, which says where services come from.</summary>
+    public bool ShowsEmptyState => IsEmpty && !HasError;
+
+    partial void OnErrorChanged(string? value) { OnPropertyChanged(nameof(HasError)); OnPropertyChanged(nameof(ShowsEmptyState)); }
     public bool CanUseDatabaseExplorer => _databases is not null;
     [ObservableProperty] public partial bool IsBusy { get; private set; }
     [ObservableProperty] public partial string Summary { get; private set; } = "Open a repository with compose.yaml or docker-compose.yml.";
@@ -63,20 +75,27 @@ public sealed partial class ServicesViewModel : ObservableObject, IAsyncDisposab
             previous.Changed -= OnChanged; previous.Logged -= OnLogged;
             await previous.DisposeAsync(); _manager = null;
         }
-        Items.Clear(); SelectedItem = null;
+        Items.Clear(); SelectedItem = null; _files = null;
         try
         {
             var project = await Task.Run(() => ComposeReader.Discover(_root));
             _configuration = JsonSerializer.Serialize(project);
-            if (project is null) { Summary = "No Compose file found. Add compose.yaml to run backing services on this device."; return; }
+            if (project is null) { Summary = "Add compose.yaml to the repository, and its databases, caches and queues run here, without Docker."; return; }
             _manager = new ServiceManager(project, _toolchains.Runtime, new ServicePackages(_toolchains), new ServiceStorage(_paths.Root, _root));
             _manager.Changed += OnChanged; _manager.Logged += OnLogged;
             foreach (var status in _manager.Statuses) Items.Add(new ServiceItemViewModel(this, status));
             SelectedItem = Items.FirstOrDefault();
-            Summary = $"{Items.Count} services · {string.Join(", ", project.Files.Select(Path.GetFileName))}";
+            _files = string.Join(", ", project.Files.Select(Path.GetFileName));
+            Summary = Items.Count == 1 ? "1 service" : $"{Items.Count} services";
         }
         catch (Exception ex) when (ex is not OutOfMemoryException) { Error = ex.Message; Summary = "Could not read Services configuration."; }
-        finally { OnPropertyChanged(nameof(HasServices)); OnPropertyChanged(nameof(IsEmpty)); }
+        finally
+        {
+            foreach (var name in new[] { nameof(HasServices), nameof(IsEmpty), nameof(ShowsEmptyState), nameof(Subtitle) })
+            {
+                OnPropertyChanged(name);
+            }
+        }
     }
 
     [RelayCommand] private async Task StartAllAsync() => await PerformAsync(token => _manager?.StartAllAsync(token) ?? Task.CompletedTask);
@@ -164,6 +183,29 @@ public sealed partial class ServiceItemViewModel : ObservableObject
     public string Name => Status.Name;
     public string Image => Status.Definition.Image ?? "Build from repository";
     public string State => Status.State.ToString();
+
+    /// <summary>The state in words, such as "Running" or "Not supported here".</summary>
+    public string StateText => Status.State switch
+    {
+        ServiceState.Unsupported => "Not supported here",
+        ServiceState.Unhealthy => "Not healthy",
+        var state => state.ToString(),
+    };
+
+    /// <summary>Whether the service runs as it should.</summary>
+    public bool IsGood => Status.State is ServiceState.Healthy or ServiceState.Running or ServiceState.Completed;
+
+    /// <summary>Whether the service failed, or runs but is not healthy.</summary>
+    public bool IsBad => Status.State is ServiceState.Failed or ServiceState.Unhealthy;
+
+    /// <summary>Whether the service is on its way to a state: installing, starting or stopping.</summary>
+    public bool IsChanging => Status.State is ServiceState.Installing or ServiceState.Starting or ServiceState.Stopping;
+
+    /// <summary>Whether the service cannot run here.</summary>
+    public bool IsWarning => Status.State is ServiceState.Unsupported;
+
+    /// <summary>Whether there is a detail line: the error, or the packages it runs from.</summary>
+    public bool HasDetail => !string.IsNullOrEmpty(Detail);
     public string Detail => Status.Detail ?? (Status.Mapping is { } mapping ? string.Join(", ", mapping.Packages) : "");
     public bool IsUnsupported => Status.State == ServiceState.Unsupported;
     public bool CanStart => !Status.IsRunning && !IsUnsupported;
@@ -179,6 +221,6 @@ public sealed partial class ServiceItemViewModel : ObservableObject
     public void Update(ServiceStatus status)
     {
         Status = status;
-        foreach (var property in new[] { nameof(State), nameof(Detail), nameof(IsUnsupported), nameof(CanStart), nameof(CanStop), nameof(CanOpenDatabase), nameof(Ports) }) OnPropertyChanged(property);
+        foreach (var property in new[] { nameof(State), nameof(StateText), nameof(IsGood), nameof(IsBad), nameof(IsChanging), nameof(IsWarning), nameof(Detail), nameof(HasDetail), nameof(IsUnsupported), nameof(CanStart), nameof(CanStop), nameof(CanOpenDatabase), nameof(Ports) }) OnPropertyChanged(property);
     }
 }

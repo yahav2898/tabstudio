@@ -67,6 +67,14 @@
     <Setter Property="Background" Value="{DynamicResource Brush.SuccessSoft}" />
     <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.Success}" />
   </Style>
+  <Style Selector="Border.pill.error">
+    <Setter Property="Background" Value="{DynamicResource Brush.Notice.Error}" />
+    <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.Error}" />
+  </Style>
+  <Style Selector="Border.pill.warning">
+    <Setter Property="Background" Value="{DynamicResource Brush.Notice.Warning}" />
+    <Setter Property="TextElement.Foreground" Value="{DynamicResource Brush.Warning}" />
+  </Style>
   <Style Selector="Border.chip">
     <Setter Property="Height" Value="28" />
     <Setter Property="Padding" Value="10,0" />

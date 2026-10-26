@@ -9,6 +9,9 @@ public sealed record SshHost(string Name, string HostName, string User, int Port
     public string KeyId => Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes($"{User}@{HostName}:{Port}")))[..24];
     public string DisplayName => $"{Name} ({User}@{HostName}:{Port})";
 
+    /// <summary>Where the host is, such as <c>deploy@dev.example.com:22</c>.</summary>
+    public string Address => $"{User}@{HostName}:{Port}";
+
     public void Validate()
     {
         if (string.IsNullOrWhiteSpace(Name) || string.IsNullOrWhiteSpace(HostName) || string.IsNullOrWhiteSpace(User)

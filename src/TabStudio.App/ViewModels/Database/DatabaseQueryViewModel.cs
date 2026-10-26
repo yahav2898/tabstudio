@@ -21,7 +21,10 @@ public sealed partial class DatabaseQueryViewModel : ObservableObject, IDisposab
     private CancellationTokenSource? _operation;
     private readonly CancellationTokenSource _lifetime = new();
     public DatabaseQueryViewModel(DatabaseConnection connection, DatabaseSchema? schema, DatabaseTable? table = null)
-    { Connection = connection; Schema = schema; Table = table; }
+    {
+        Connection = connection; Schema = schema; Table = table;
+        Results.CollectionChanged += (_, _) => { OnPropertyChanged(nameof(HasResults)); OnPropertyChanged(nameof(ShowsNoResults)); };
+    }
     public DatabaseConnection Connection { get; }
     public DatabaseSchema? Schema { get; private set; }
     public DatabaseTable? Table { get; }
@@ -42,6 +45,17 @@ public sealed partial class DatabaseQueryViewModel : ObservableObject, IDisposab
     [ObservableProperty] public partial int Page { get; private set; }
     [ObservableProperty] public partial bool HasNext { get; private set; }
     public bool HasPrevious => Page > 0;
+
+    /// <summary>Whether a run has returned results to show.</summary>
+    public bool HasResults => Results.Count > 0;
+
+    /// <summary>A query that has not run yet: the empty state in place of the grid.</summary>
+    public bool ShowsNoResults => !IsTable && Results.Count == 0;
+
+    /// <summary>The page of a table's data, such as "Page 2".</summary>
+    public string PageText => $"Page {Page + 1}";
+
+    partial void OnPageChanged(int value) => OnPropertyChanged(nameof(PageText));
     public event EventHandler? ResultChanged;
     public event EventHandler? RunRequested;
     [RelayCommand] private void Run() => RunRequested?.Invoke(this, EventArgs.Empty);
@@ -54,7 +68,7 @@ public sealed partial class DatabaseQueryViewModel : ObservableObject, IDisposab
         var result = await new SqlExecutor().ExecuteAsync(Connection, sql, token);
         SetResults(result.Results);
         var count = result.Results.Sum(s => s.Rows.Count);
-        Status = $"{count:N0} rows returned · {result.Results.Count} result set(s) · {result.Duration.TotalMilliseconds:N0} ms" +
+        Status = $"{count:N0} {(count == 1 ? "row" : "rows")} · {result.Results.Count} {(result.Results.Count == 1 ? "result set" : "result sets")} · {result.Duration.TotalMilliseconds:N0} ms" +
             (result.RecordsAffected >= 0 ? $" · {result.RecordsAffected:N0} affected" : "") +
             (result.Results.Any(s => s.Truncated) ? $" · display limited to {SqlExecutor.DefaultRowLimit:N0} rows per result" : "");
     });

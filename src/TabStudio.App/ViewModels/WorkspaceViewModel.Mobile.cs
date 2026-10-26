@@ -15,6 +15,12 @@ public sealed partial class WorkspaceViewModel
     /// <summary>The built app's logcat, limited to its process through a debug relay.</summary>
     public OutputViewModel Logcat { get; private set; } = null!;
 
+    /// <summary>
+    /// Whether the bottom dock shows the Logcat tab: for an Android or Capacitor app, while it has lines, or while it is
+    /// the panel shown, as the debugger's tabs show only while debugging.
+    /// </summary>
+    public bool ShowsLogcatTab => SelectedPanel == BottomPanel.Logcat || !Logcat.IsEmpty || MobileRoot() is not null;
+
     private string? MobileRoot()
     {
         if (IsRemoteWorkspace) return null;
@@ -143,15 +149,15 @@ public sealed partial class WorkspaceViewModel
                 var selected = apks[0];
                 if (apks.Count > 1)
                 {
-                    var choices = string.Join('\n', apks.Select((p, i) => $"{i + 1}. {Path.GetRelativePath(nativeRoot, p)}"));
-                    var answer = await Prompt.AskAsync("Choose Android APK", choices + "\nEnter the number of the APK to install.", "Install", "1");
-                    if (!int.TryParse(answer, System.Globalization.CultureInfo.InvariantCulture, out var index) || index < 1 || index > apks.Count)
+                    var index = await Prompt.ChooseAsync("Choose an APK", "Gradle built more than one debug APK. Choose the one to install and run.", "Install",
+                        [.. apks.Select(p => Path.GetRelativePath(nativeRoot, p))]);
+                    if (index is not { } chosen)
                     {
                         StatusText = "APK installation cancelled";
                         return;
                     }
 
-                    selected = apks[index - 1];
+                    selected = apks[chosen];
                 }
 
                 var package = await _androidInstaller.InstallAndLaunchAsync(selected, _run.Token);

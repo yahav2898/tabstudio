@@ -31,12 +31,20 @@ public sealed partial class ToolchainItemViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(Progress), nameof(ProgressText), nameof(HasProgress), nameof(IsProgressIndeterminate))]
     [NotifyPropertyChangedFor(nameof(Error), nameof(HasError), nameof(Note), nameof(HasNote))]
     [NotifyPropertyChangedFor(nameof(ShowsInstall), nameof(ShowsUpdate), nameof(ShowsRemove), nameof(ShowsCancel))]
+    [NotifyPropertyChangedFor(nameof(ShowsPrimaryInstall), nameof(ShowsSecondaryInstall))]
     [NotifyCanExecuteChangedFor(nameof(InstallCommand), nameof(UpdateCommand), nameof(RemoveCommand), nameof(CancelCommand))]
     public partial ToolchainStatus Status { get; set; }
 
     /// <summary>Whether the row is the one the Store was opened for, such as from the Compatibility Doctor.</summary>
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowsPrimaryInstall), nameof(ShowsSecondaryInstall))]
     public partial bool IsHighlighted { get; set; }
+
+    /// <summary>Install is the Store's one primary action for the toolchain it was opened for (docs/design/README.md, "Accent").</summary>
+    public bool ShowsPrimaryInstall => ShowsInstall && IsHighlighted;
+
+    /// <summary>Install, for every other toolchain: a secondary button, so the Store has one primary action at most.</summary>
+    public bool ShowsSecondaryInstall => ShowsInstall && !IsHighlighted;
 
     /// <summary>The toolchain.</summary>
     public ToolchainDefinition Toolchain => Status.Toolchain;
@@ -63,6 +71,10 @@ public sealed partial class ToolchainItemViewModel : ObservableObject
         "go" => "Go",
         "java" => "Jv",
         "kotlin" => "Kt",
+        "android" => "An",
+        "flutter" => "Fl",
+        "xc8" => "X8",
+        "xc32" => "X32",
         _ => Toolchain.Name[..Math.Min(2, Toolchain.Name.Length)],
     };
 
@@ -77,6 +89,9 @@ public sealed partial class ToolchainItemViewModel : ObservableObject
         "java" => "Brush.Toolchain.Java",
         "kotlin" => "Brush.Toolchain.Kotlin",
         "windows" => "Brush.Toolchain.Windows",
+        "android" => "Brush.Toolchain.Android",
+        "flutter" => "Brush.Toolchain.Flutter",
+        "xc8" or "xc32" => "Brush.Toolchain.Microchip",
         _ => "Brush.Toolchain.Other",
     });
 

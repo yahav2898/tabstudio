@@ -255,15 +255,23 @@ public sealed partial class WorkspaceViewModel
         {
             var saved = ServerPublishProfile.Load(project.DirectoryPath);
             ShowRemoteExplorer();
-            var hostName = await Prompt.AskAsync("Publish to server", "SSH host alias (configure it in Remote Explorer first)", "Next", saved?.HostName ?? RemoteExplorer.SelectedHost?.Name ?? string.Empty);
-            if (hostName is null) { return; }
-            var host = _remoteServices.Hosts.Load().FirstOrDefault(h => h.Name == hostName) ?? throw new IOException("Save this host in Remote Explorer before publishing.");
-            var destination = await Prompt.AskAsync("Publish destination", "Server application directory. Its current symlink will point at the new release.", "Next", saved?.RemoteDirectory ?? "/srv/my-app");
+            var hosts = _remoteServices.Hosts.Load().ToList();
+            if (hosts.Count == 0) { StatusText = "Add the server in Remote Explorer, then publish to it."; return; }
+            var preferred = saved?.HostName ?? RemoteExplorer.SelectedHost?.Name;
+            var chosenHost = await Prompt.ChooseAsync("Publish to server", $"Publish {project.Name} to one of the servers in Remote Explorer.", "Next",
+                [.. hosts.Select(h => h.Name + " · " + h.Address)], Math.Max(hosts.FindIndex(h => h.Name == preferred), 0));
+            if (chosenHost is not { } hostIndex) { return; }
+            var host = hosts[hostIndex];
+            var destination = await Prompt.AskAsync("Publish to server", "The folder on the server the app runs from. Its current link moves to the new release.", "Next", saved?.RemoteDirectory ?? "/srv/my-app");
             if (destination is null) { return; }
-            var service = await Prompt.AskAsync("systemd service", "Existing service name. It must run the app from the destination's current directory.", "Next", saved?.ServiceName ?? "my-app.service");
+            var service = await Prompt.AskAsync("Publish to server", "The systemd service that runs the app from that folder. TabStudio restarts it after the upload.", "Next", saved?.ServiceName ?? "my-app.service");
             if (service is null) { return; }
-            var rid = await Prompt.AskAsync("Server runtime", "Server .NET runtime identifier, for example linux-x64 or linux-arm64 (linux-musl-x64 for Alpine).", "Next", saved?.RuntimeIdentifier ?? "linux-x64");
-            if (rid is null) { return; }
+            var runtimes = new List<string> { "linux-x64", "linux-arm64", "linux-musl-x64", "linux-musl-arm64" };
+            if (saved?.RuntimeIdentifier is { Length: > 0 } savedRuntime && !runtimes.Contains(savedRuntime)) { runtimes.Add(savedRuntime); }
+            var chosenRuntime = await Prompt.ChooseAsync("Publish to server", "The server's system and processor. Alpine Linux uses the musl ones.", "Next",
+                runtimes, Math.Max(runtimes.IndexOf(saved?.RuntimeIdentifier ?? "linux-x64"), 0));
+            if (chosenRuntime is not { } runtimeIndex) { return; }
+            var rid = runtimes[runtimeIndex];
             var profile = new ServerPublishProfile(host.Name, destination, service, rid);
             profile.Validate();
             profile.Save(project.DirectoryPath);

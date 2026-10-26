@@ -8,6 +8,13 @@ namespace TabStudio.App.Views.Toolchains;
 /// </summary>
 public sealed partial class ToolchainOverlaysView : UserControl
 {
+    /// <summary>Below this width the Store puts a toolchain's actions under its text.</summary>
+    private const double NarrowStoreWidth = 560;
+
     /// <summary>Creates the view.</summary>
-    public ToolchainOverlaysView() => InitializeComponent();
+    public ToolchainOverlaysView()
+    {
+        InitializeComponent();
+        Store.SizeChanged += (_, e) => Store.Classes.Set("narrow", e.NewSize.Width < NarrowStoreWidth);
+    }
 }

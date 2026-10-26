@@ -139,7 +139,7 @@ public sealed partial class DesignRuleTests
         }
 
         if (kind is "TextBlock" or "Expander" or "TabItem" or "CheckBox" && ((string?)element.Attribute("Text") ?? (string?)element.Attribute("Header")) is { Length: > 3 } text
-            && text.Any(char.IsLetter) && text == text.ToUpperInvariant())
+            && text.Any(char.IsLetter) && !text.Any(char.IsLower))
         {
             yield return (line, $"\"{text}\" is in capitals; headers are in sentence case");
         }

@@ -20,6 +20,18 @@ public sealed partial class PortSummaryViewModel : ObservableObject
     public string Summary => $"{Result.Files.Count} files · {Result.ConversionCount} conversions · {Result.Notes.Count} port notes";
     public IReadOnlyList<PortNote> Notes => Result.Notes;
 
+    /// <summary>The port's size, as pills: its files, its conversions and its notes.</summary>
+    public string FilesText => Result.Files.Count == 1 ? "1 file" : $"{Result.Files.Count} files";
+
+    /// <inheritdoc cref="FilesText"/>
+    public string ConversionsText => Result.ConversionCount == 1 ? "1 conversion" : $"{Result.ConversionCount} conversions";
+
+    /// <inheritdoc cref="FilesText"/>
+    public string NotesText => Result.Notes.Count == 1 ? "1 port note" : $"{Result.Notes.Count} port notes";
+
+    /// <summary>Whether anything could not be mapped exactly.</summary>
+    public bool HasNotes => Result.Notes.Count > 0;
+
     [ObservableProperty]
     public partial bool IsUndone { get; set; }
 
