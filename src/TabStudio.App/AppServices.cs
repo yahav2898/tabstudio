@@ -33,6 +33,7 @@ public static class AppServices
         services.AddSingleton<IQrScanner, NoQrScanner>();
         services.AddSingleton<IDeviceIdentity, DefaultDeviceIdentity>();
         services.AddSingleton<IExternalDisplayService, NoExternalDisplayService>();
+        services.AddSingleton<TabStudio.Toolchains.Microchip.IUsbHost, TabStudio.Toolchains.Microchip.NoUsbHost>();
         configurePlatform?.Invoke(services);
         services.AddSingleton(provider => DeviceProfile.For(provider.GetRequiredService<IDeviceStatus>().Device));
 
@@ -72,7 +73,7 @@ public static class AppServices
 
         // Installed VS Code extensions and the Open VSX registry.
         services.TryAddSingleton<TabStudio.App.Services.Extensions.ExtensionsService>();
-        services.TryAddSingleton(provider => new Services.Toolchains.ToolchainServices(provider.GetRequiredService<AppPaths>(), provider.GetService<TabStudio.Toolchains.Linux.ToolchainPlatform>()));
+        services.TryAddSingleton(provider => new Services.Toolchains.ToolchainServices(provider.GetRequiredService<AppPaths>(), provider.GetService<TabStudio.Toolchains.Linux.ToolchainPlatform>(), provider.GetRequiredService<TabStudio.Toolchains.Microchip.IUsbHost>()));
 
         // Language servers and debug adapters run where the toolchains do: the Store's Linux environment on Android, the PATH on a computer.
         services.TryAddSingleton<TabStudio.LanguageServers.Hosting.IServerProcessLauncher>(provider => new Services.Toolchains.ToolchainServerLauncher(provider.GetRequiredService<Services.Toolchains.ToolchainServices>().Runtime));

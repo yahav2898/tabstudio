@@ -8,6 +8,8 @@ namespace TabStudio.Toolchains.Microchip;
 /// <summary>User-owned XC installations. No Microchip compiler binaries are part of the APK.</summary>
 public static class MicrochipInstallation
 {
+    /// <summary>The scripts shared by XC installations and permissioned USB support.</summary>
+    public static IReadOnlyList<string> SupportFiles { get; } = ["assets.lock.json", "packs.lock.json", "install.py", "project.py", "usb_device.py", "usb_serial.py", "usb_worker.py", "bootloaders.py", "programmers.py", "hid.py", "usb_fd.c", "pymcuprog.devices.json"];
     /// <summary>Guest directory for the installer, pack catalog and project tools.</summary>
     public const string ToolsDirectory = "/opt/tabstudio/microchip";
 
@@ -78,7 +80,7 @@ public static class MicrochipInstallation
 
     internal static ToolchainDefinition WithSetup(ToolchainDefinition definition)
     {
-        var files = new[] { "assets.lock.json", "packs.lock.json", "install.py", "project.py" };
+        var files = SupportFiles;
         var setup = files.Select(name => new SetupStepDefinition
         {
             Name = "PIC " + name,

@@ -173,6 +173,7 @@
             <MenuItem Header="_Error List" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" />
             <MenuItem Header="_Output" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Output}" />
             <MenuItem Header="Ter_minal (Ctrl+`)" Command="{Binding ShowTerminalCommand}" />
+            <MenuItem Header="_Serial Monitor" Command="{Binding ShowSerialMonitorCommand}" />
             <MenuItem Header="_Compatibility Doctor" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Compatibility}" />
             <MenuItem Header="Re_ferences" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.References}" />
             <MenuItem Header="_Bottom Panel" Command="{Binding ToggleBottomPanelCommand}" />
@@ -642,6 +643,8 @@
                         Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.CallStack}" Content="Call Stack" />
                 <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsTerminalSelected}"
                         Command="{Binding ShowTerminalCommand}" Content="Terminal" />
+                <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsSerialMonitorSelected}"
+                        Command="{Binding ShowSerialMonitorCommand}" Content="Serial Monitor" />
               </StackPanel>
               </ScrollViewer>
               <StackPanel Grid.Column="1" Orientation="Horizontal">
@@ -683,6 +686,7 @@
               <views:WatchView DataContext="{Binding Watch}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsWatchSelected}" />
               <views:CallStackView DataContext="{Binding CallStack}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsCallStackSelected}" />
               <toolchainViews:TerminalPanelView DataContext="{Binding Terminal}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsTerminalSelected}" />
+              <toolchainViews:SerialMonitorView DataContext="{Binding SerialMonitor}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsSerialMonitorSelected}" />
             </Panel>
           </DockPanel>
         </Border>

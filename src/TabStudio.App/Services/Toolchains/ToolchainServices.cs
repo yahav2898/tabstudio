@@ -35,10 +35,11 @@ public sealed class ToolchainServices : IDisposable
     /// <summary>Creates the toolchains for the app.</summary>
     /// <param name="paths">Where the app keeps its data.</param>
     /// <param name="platform">What the device offers, from the platform head; a desktop computer when <see langword="null"/>.</param>
-    public ToolchainServices(AppPaths paths, ToolchainPlatform? platform = null)
+    public ToolchainServices(AppPaths paths, ToolchainPlatform? platform = null, IUsbHost? usb = null)
     {
         ArgumentNullException.ThrowIfNull(paths);
         Platform = platform ?? ToolchainPlatform.Desktop;
+        Usb = usb ?? new NoUsbHost();
         var catalog = ToolchainCatalog.Default;
         if (!Platform.UsesLinuxEnvironment)
         {
@@ -79,6 +80,35 @@ public sealed class ToolchainServices : IDisposable
 
     /// <summary>What the device offers.</summary>
     public ToolchainPlatform Platform { get; }
+
+    /// <summary>Android USB permissions and open connection lifetime.</summary>
+    public IUsbHost Usb { get; } = new NoUsbHost();
+
+    /// <summary>Installs USB support without requiring an XC license or compiler download.</summary>
+    /// <param name="developmentTools">Also prepares native builds of optional programmer/simulator tools.</param>
+    /// <param name="line">Setup output.</param>
+    /// <param name="cancellationToken">Stops setup.</param>
+    public Task PreparePicSupportAsync(bool developmentTools, Action<string> line, CancellationToken cancellationToken) =>
+        Manager.ConfigureRuntimeAsync(async token =>
+        {
+            if (Environment is not { } environment || _packages is null)
+            {
+                throw new NotSupportedException("USB-OTG requires the Android Linux environment. Use the Windows Bridge.");
+            }
+
+            string[] packages = developmentTools
+                ? ["python3", "libusb", "build-base", "libusb-dev", "hidapi-dev", "readline-dev", "popt-dev", "glib-dev", "bison", "flex", "pkgconf"]
+                : ["python3", "libusb"];
+            var plan = await _packages.PlanInstallAsync(packages, token).ConfigureAwait(false);
+            await _packages.DownloadAsync(plan, (_, package) => line("Downloading " + package.Name), token).ConfigureAwait(false);
+            await _packages.InstallAsync(packages, upgrade: false, line, token).ConfigureAwait(false);
+            foreach (var name in MicrochipInstallation.SupportFiles)
+            {
+                var destination = Path.Combine(environment.Rootfs, MicrochipInstallation.ToolsDirectory.TrimStart('/'), name);
+                Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
+                await File.WriteAllTextAsync(destination, MicrochipInstallation.Resource(name), token).ConfigureAwait(false);
+            }
+        }, cancellationToken);
 
     /// <summary>The Linux environment on Android, or <see langword="null"/> on a desktop computer.</summary>
     public AlpineEnvironment? Environment { get; }

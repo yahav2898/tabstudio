@@ -124,6 +124,7 @@ public sealed partial class WorkspaceViewModel
             foreach (var item in _toolchainProjects.Where(t => TabStudio.Toolchains.Microchip.MicrochipInstallation.IsCompiler(t.Toolchain.Id)))
             {
                 await RunToolchainProjectAsync(item.Info);
+                if (State == IdeState.Failed) break;
             }
         }
     }

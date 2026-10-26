@@ -103,7 +103,7 @@ public sealed class ProotRuntime : IToolchainRuntime
 
         var arguments = BuildArguments(spec);
         var environment = BuildEnvironment(spec);
-        return new ToolchainProcess(UnixSpawner.Start(_options.ProotPath, arguments, environment, workingDirectory: null, spec.Terminal), spec);
+        return new ToolchainProcess(UnixSpawner.Start(_options.ProotPath, arguments, environment, workingDirectory: null, spec.Terminal, spec.InheritedDescriptors), spec);
     }
 
     /// <inheritdoc />

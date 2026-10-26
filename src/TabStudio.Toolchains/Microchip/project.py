@@ -81,7 +81,10 @@ def build(path, configuration=None):
                "MP_AR=/usr/local/bin/" + compiler + "-ar", "DFP_DIR=" + str(dfp)]
     print(f"MPLAB configuration: {selected}; {device}; {compiler.upper()} {manifest['version']}; {pack['name']} {pack['version']}", flush=True)
     print(" ".join(command), flush=True)
-    write_intellisense(path, conf, manifest, compiler, device, dfp)
+    try:
+        write_intellisense(path, conf, manifest, compiler, device, dfp)
+    except (OSError, ValueError, subprocess.SubprocessError) as error:
+        print("PIC IntelliSense: warning: " + str(error), file=sys.stderr, flush=True)
     return subprocess.call(command, cwd=path)
 
 
@@ -90,7 +93,22 @@ def write_intellisense(path, conf, manifest, compiler, device, dfp):
     support = path / ".tabstudio/pic"
     support.mkdir(parents=True, exist_ok=True)
     compatibility = support / "xc-builtins.h"
-    compatibility.write_text("""/* Editor-only declarations; never passed to the XC firmware build. */
+    cc = "/usr/local/bin/xc8-cc" if compiler == "xc8" else "/usr/local/bin/xc32-gcc"
+    processor = "-mcpu=" + device.removeprefix("PIC") if compiler == "xc8" else "-mprocessor=" + device.removeprefix("PIC")
+    builtins = subprocess.run([cc, processor, "-mdfp=" + str(dfp), "-E", "-dM", "-x", "c", "-"],
+                              input="", text=True, capture_output=True, timeout=60)
+    if builtins.returncode or not any("__XC" in line for line in builtins.stdout.splitlines()):
+        raise ValueError("Could not query the selected XC compiler's predefined macros: " + builtins.stderr[-2000:])
+    # Preserve the real compiler/device macros. clangd's own type and ABI macros
+    # stay tied to its target; it is an editor, never the firmware compiler.
+    macros = []
+    for line in builtins.stdout.splitlines():
+        match = re.match(r"#define\s+([A-Za-z_][A-Za-z_0-9]*)", line)
+        if match and ("XC" in match[1] or device.removeprefix("PIC").upper() in match[1].upper()
+                      or match[1].startswith(("_PIC", "__PIC", "__18", "__16", "__12", "__10", "__32", "_18", "_16", "_12", "_10", "_32"))):
+            macros.append(line)
+    (support / "xc-predefined-macros.txt").write_text(builtins.stdout)
+    compatibility.write_text("/* Editor-only XC/device macros and declarations; never used for firmware. */\n" + "\n".join(macros) + "\n" + """
 #define __at(address)
 #define __section(name)
 #define __persistent
@@ -109,20 +127,28 @@ void __builtin_software_breakpoint(void);
 """)
     compiler_root = Path(manifest["compilerRoot"])
     includes = ([dfp / "pic/include", dfp / "pic/include/proc", compiler_root / "pic/include/c99", compiler_root / "pic/include"]
-                if compiler == "xc8" else [dfp / "include", dfp / "include/proc", compiler_root / "pic32m/include"])
+                if compiler == "xc8" else [dfp / "include", dfp / "include/proc", *[compiler_root / f / "include" for f in ("pic32m", "pic32c", "pic32a")]])
     flags = ["-xc", "-std=c99", "-fsyntax-only", "-Wno-unknown-pragmas", "-Wno-ignored-attributes", "-include", str(compatibility)]
     for folder in includes:
         flags += ["-isystem", str(folder)]
-    flags += (["-D__XC8", "-D__XC8__", "-D__XC8_VERSION=40000", "-D__" + device.removeprefix("PIC"), "-D_" + device.removeprefix("PIC"), "-D_PIC18"]
-              if compiler == "xc8" else ["--target=mipsel-unknown-none", "-D__XC32", "-D__XC32__", "-D__" + device.removeprefix("PIC") + "__"])
+    if compiler == "xc32":
+        if "#define __mips__" in builtins.stdout or "#define __mips " in builtins.stdout:
+            flags += ["--target=mipsel-unknown-none"]
+        elif "#define __arm__" in builtins.stdout:
+            flags += ["--target=arm-none-eabi"]
     # Include/define settings are kept per translation unit, including overrides.
-    files = ET.parse(path / "nbproject/configurations.xml").findall(".//itemPath")
+    root = ET.parse(path / "nbproject/configurations.xml").getroot()
+    for element in root.iter():
+        element.tag = element.tag.rsplit("}", 1)[-1]
+    files = root.findall(".//itemPath")
     commands = []
     for item in files:
         source = item.text or ""
         if Path(source).suffix.lower() not in (".c", ".cpp", ".cc", ".cxx"):
             continue
         local = list(flags)
+        if Path(source).suffix.lower() in (".cpp", ".cc", ".cxx"):
+            local = ["-xc++" if f == "-xc" else "-std=c++17" if f == "-std=c99" else f for f in local]
         groups = [g for g in conf if g.tag != "item"]
         override = next((e for e in conf.findall("item") if e.get("path", "").replace("\\", "/") == source.replace("\\", "/")), None)
         if override is not None and override.get("ex") in ("true", "1"):

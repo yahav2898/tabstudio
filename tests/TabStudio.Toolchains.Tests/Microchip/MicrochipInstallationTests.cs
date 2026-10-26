@@ -55,7 +55,7 @@ public sealed class MicrochipInstallationTests
         {
             var definition = ToolchainCatalog.Default.Find(id)!;
             Assert.NotNull(definition.PinnedVersion);
-            Assert.Equal(4, definition.Setup.Count(s => s.File is not null));
+            Assert.Equal(MicrochipInstallation.SupportFiles.Count, definition.Setup.Count(s => s.File is not null));
             Assert.All(definition.Setup.Where(s => s.File is not null), s => Assert.StartsWith(MicrochipInstallation.ToolsDirectory + "/", s.File!.Path, StringComparison.Ordinal));
             Assert.Contains("--accept-microchip-license", definition.Setup[^1].Command);
             Assert.DoesNotContain(definition.Setup, s => s.Archive is not null);

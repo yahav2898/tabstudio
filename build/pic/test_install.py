@@ -85,8 +85,11 @@ class InstallationTests(unittest.TestCase):
         makefile.write_text("# Custom options and per-file steps belong to MPLAB's generated makefile\nSPECIAL=-O2 -msmart-io=1\n")
         (root / "compile_commands.json").write_text("user-owned database")
         (self.folder / "xc8.json").write_text(json.dumps({"version": "4.00", "compilerRoot": "/opt/microchip/xc8/v4.00"}))
-        with patch.object(self.project, "ensure_pack", return_value=({"name": "PIC18F-K_DFP", "version": "1.17.312"}, Path("/packs/device"))), patch.object(self.project.subprocess, "call", return_value=0) as call:
+        from types import SimpleNamespace
+        with patch.object(self.project, "ensure_pack", return_value=({"name": "PIC18F-K_DFP", "version": "1.17.312"}, Path("/packs/device"))), patch.object(self.project.subprocess, "call", return_value=0) as call, patch.object(self.project.subprocess, "run", return_value=SimpleNamespace(returncode=0, stdout="#define __XC8 1\n#define _PIC18 1\n#define __XC8_VERSION 4000\n", stderr="")) as query:
             self.assertEqual(0, self.project.build(root))
+        self.assertIn("-dM", query.call_args.args[0])
+        self.assertIn("-mcpu=18F45K22", query.call_args.args[0])
         command = call.call_args.args[0]
         self.assertEqual(["make", "-f", "nbproject/Makefile-production.mk"], command[:3])
         self.assertIn(".build-conf", command)

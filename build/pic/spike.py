@@ -306,6 +306,41 @@ def spike(args):
         if not hex_files:
             raise RuntimeError("The compiler did not produce a HEX file")
         result["hexSha256"] = hashlib.sha256(hex_files[0].read_bytes()).hexdigest()
+        # Exercise the shipped Store wrappers and MPLAB driver, not just a direct
+        # compiler command. The already verified DFP is copied into its real
+        # per-version install layout; no compiler is uploaded as an artifact.
+        native = [*prefix, "/usr/bin/env", "-u", "LD_LIBRARY_PATH"]
+        repositories = root / "etc/apk/repositories"
+        catalog = json.loads((REPO / "src/TabStudio.Toolchains/Catalog/toolchains.json").read_text())["linux"]
+        repositories.write_text(f'{catalog["mirror"]}/{catalog["branch"]}/main\n{catalog["mirror"]}/{catalog["branch"]}/community\n')
+        shutil.copyfile("/etc/resolv.conf", root / "etc/resolv.conf")
+        (root / "etc/ssl/certs").mkdir(parents=True, exist_ok=True)
+        shutil.copyfile("/etc/ssl/certs/ca-certificates.crt", root / "etc/ssl/certs/ca-certificates.crt")
+        run([*native, "/sbin/apk", "add", "--no-cache", "make", "python3"], out / "project-dependencies.log", env=env)
+        support = root / "opt/tabstudio/microchip"
+        support.mkdir(parents=True, exist_ok=True)
+        for name in ("install.py", "project.py", "packs.lock.json"):
+            shutil.copy2(REPO / "src/TabStudio.Toolchains/Microchip" / name, support / name)
+        shutil.copy2(REPO / "build/pic/assets.lock.json", support / "assets.lock.json")
+        if translate:
+            shutil.copy2(root / "usr/bin/box64", support / "box64")
+        packs = json.loads((support / "packs.lock.json").read_text())["packs"]
+        selected = next(p for p in packs if p["sha256"] == LOCK[family + "-dfp"]["sha256"])
+        installed_pack = support / "packs" / selected["vendor"] / selected["name"] / selected["version"]
+        shutil.copytree(pack_dir, installed_pack, dirs_exist_ok=True)
+        (installed_pack / ".tabstudio-sha256").write_text(selected["sha256"])
+        project_path = root / "work/project"
+        shutil.copytree(source.parent, project_path, ignore=shutil.ignore_patterns("dist", "build", ".tabstudio"), dirs_exist_ok=True)
+        manifest = {"compilerRoot": dest, "version": LOCK[args.compiler]["version"]}
+        (support / (args.compiler + ".json")).write_text(json.dumps(manifest))
+        setup = "import sys;sys.path.insert(0,'/opt/tabstudio/microchip');from install import write_wrappers;write_wrappers(" + repr(args.compiler) + ",__import__('pathlib').Path(" + repr(dest) + "))"
+        run([*native, "python3", "-c", setup], out / "project-wrappers.log", env=env)
+        run([*native, "python3", "/opt/tabstudio/microchip/project.py", "build", "/work/project"], out / "project-build.log", env=env, timeout=300)
+        project_hex = project_path / "dist/default/production/firmware.hex"
+        if not project_hex.is_file() or not (project_path / ".tabstudio/pic/xc-predefined-macros.txt").is_file():
+            raise RuntimeError("The shipped project driver did not produce firmware and compiler builtin metadata")
+        shutil.copy2(project_hex, out / "template.hex")
+        result["mplabProjectBuild"] = True
         result["success"] = True
     except Exception as error:
         result["error"] = str(error)

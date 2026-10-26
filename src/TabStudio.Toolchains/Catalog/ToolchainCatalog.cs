@@ -88,8 +88,31 @@ public sealed record ToolchainCatalog
 
     /// <summary>Finds the toolchain that runs a file, by its extension; listed toolchains first.</summary>
     /// <param name="path">The file.</param>
-    public ToolchainDefinition? ForFile(string path) =>
-        Toolchains.Where(t => t.RunsFile(path)).OrderByDescending(t => t.Listed).FirstOrDefault();
+    public ToolchainDefinition? ForFile(string path)
+    {
+        // A .c extension alone never selects a PIC compiler for a desktop C/C++
+        // source. The enclosing MPLAB configuration identifies XC8 versus XC32.
+        if (Path.GetExtension(path) is ".c" or ".h" or ".cpp" or ".cc" or ".cxx" or ".S")
+        {
+            for (var folder = Path.GetDirectoryName(Path.GetFullPath(path)); folder is not null; folder = Path.GetDirectoryName(folder))
+            {
+                var marker = Path.Combine(folder, Microchip.MplabProject.Marker);
+                if (!File.Exists(marker)) continue;
+                try
+                {
+                    var project = Microchip.MplabProject.Load(marker);
+                    var conf = project.Configurations.FirstOrDefault(c => c.Name == "default") ?? project.Configurations[0];
+                    return Find(conf.Compiler.ToLowerInvariant());
+                }
+                catch (Exception error) when (error is IOException or InvalidDataException or System.Xml.XmlException)
+                {
+                    break;
+                }
+            }
+        }
+
+        return Toolchains.Where(t => !Microchip.MicrochipInstallation.IsCompiler(t.Id) && t.RunsFile(path)).OrderByDescending(t => t.Listed).FirstOrDefault();
+    }
 
     /// <summary>
     /// Finds the toolchain that installs a language server or debug adapter, by the id its clients know it by, such
@@ -100,7 +123,8 @@ public sealed record ToolchainCatalog
     public ToolchainDefinition? ForTool(string toolId) =>
         Toolchains
             .Where(t => string.Equals(t.LanguageServer?.Id, toolId, StringComparison.Ordinal) || string.Equals(t.DebugAdapter?.Id, toolId, StringComparison.Ordinal))
-            .OrderByDescending(t => t.Listed)
+            .OrderBy(t => Microchip.MicrochipInstallation.IsCompiler(t.Id))
+            .ThenByDescending(t => t.Listed)
             .FirstOrDefault();
 
     private static ToolchainCatalog LoadBuiltIn()

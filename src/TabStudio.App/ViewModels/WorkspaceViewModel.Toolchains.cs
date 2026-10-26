@@ -64,6 +64,12 @@ public sealed partial class WorkspaceViewModel
     /// <summary>The Terminal panel.</summary>
     public TerminalViewModel Terminal { get; private set; } = null!;
 
+    /// <summary>The permissioned USB serial monitor.</summary>
+    public SerialMonitorViewModel SerialMonitor { get; private set; } = null!;
+
+    /// <summary>Whether serial output is visible.</summary>
+    public bool IsSerialMonitorSelected => SelectedPanel == BottomPanel.SerialMonitor;
+
     /// <summary>The workspace's Python and Node.js projects.</summary>
     public IReadOnlyList<ToolchainStartupItem> ToolchainProjects => _toolchainProjects;
 
@@ -87,6 +93,7 @@ public sealed partial class WorkspaceViewModel
         _toolchains = toolchains ?? new ToolchainServices(_paths);
         ToolchainStore = new ToolchainStoreViewModel(_toolchains, _ui, (title, message, confirm, destructive) => Prompt.ConfirmAsync(title, message, confirm, destructive));
         Terminal = new TerminalViewModel(_toolchains, _ui, () => Workspace?.RootDirectory ?? _paths.Projects, ToolchainStore.Open);
+        SerialMonitor = new SerialMonitorViewModel(_toolchains, _ui);
         _toolchains.Manager.StatusChanged += OnToolchainStatusChanged;
         Output.LinkFinder = FindOutputLinks;
         Output.LinkActivated += OnOutputLinkActivated;
@@ -111,6 +118,7 @@ public sealed partial class WorkspaceViewModel
         Output.LinkActivated -= OnOutputLinkActivated;
         _toolchains.Manager.StatusChanged -= OnToolchainStatusChanged;
         Terminal.Dispose();
+        SerialMonitor.Dispose();
         ToolchainStore.Dispose();
         if (_ownsToolchains)
         {
@@ -260,6 +268,7 @@ public sealed partial class WorkspaceViewModel
         {
             case nameof(SelectedPanel):
                 OnPropertyChanged(nameof(IsTerminalSelected));
+                OnPropertyChanged(nameof(IsSerialMonitorSelected));
                 if (IsTerminalSelected)
                 {
                     Terminal.EnsureStarted();
@@ -295,6 +304,15 @@ public sealed partial class WorkspaceViewModel
         IsBottomPanelVisible = true;
         Terminal.EnsureStarted();
         Terminal.RequestFocus();
+    }
+
+    /// <summary>View &gt; Serial Monitor.</summary>
+    [RelayCommand]
+    private void ShowSerialMonitor()
+    {
+        SelectedPanel = BottomPanel.SerialMonitor;
+        IsBottomPanelVisible = true;
+        SerialMonitor.Refresh();
     }
 
     /// <summary>Tools &gt; Toolchain Store.</summary>

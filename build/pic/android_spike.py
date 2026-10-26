@@ -48,6 +48,19 @@ def adb_shell(command):
     return subprocess.check_output(["adb", "shell", command], text=True).strip().replace("\r", "")
 
 
+def native_library_directory(dump, package_paths, abi):
+    # Android versions print nativeLibraryDir or legacyNativeLibraryDir. APKs
+    # with extractNativeLibs also have a stable lib/<instruction-set> sibling.
+    native = re.search(r"(?:legacy)?nativeLibraryDir=([^\s]+)", dump, re.IGNORECASE)
+    if native:
+        return native[1]
+    apk = next((line.removeprefix("package:") for line in package_paths.splitlines() if line.endswith("/base.apk")), None)
+    instruction = {"x86_64": "x86_64", "arm64-v8a": "arm64", "armeabi-v7a": "arm", "x86": "x86"}.get(abi)
+    if not apk or not instruction:
+        raise RuntimeError("Cannot locate the installed APK's native library directory")
+    return apk.rsplit("/", 1)[0] + "/lib/" + instruction
+
+
 def run(args):
     work, out = args.work.resolve(), args.output.resolve()
     out.mkdir(parents=True, exist_ok=True)
@@ -62,9 +75,11 @@ def run(args):
         if not home.startswith("/data/") or "uid=0(" in result["uid"]:
             raise RuntimeError("The Android check must run as TabStudio's app UID")
         dump = adb_shell("dumpsys package " + PACKAGE)
-        native = re.search(r"nativeLibraryDir=([^\s]+)", dump)
-        if not native:
-            raise RuntimeError("Cannot locate the installed APK's native library directory")
+        (out / "android-package.txt").write_text(dump)
+        native = native_library_directory(dump, adb_shell("pm path " + PACKAGE), result["emulatorAbi"])
+        result["nativeLibraryDirectory"] = native
+        for library in ("libproot.so", "libproot-loader.so"):
+            adb_shell(shlex.join(["run-as", PACKAGE, "test", "-r", native + "/" + library]))
         base = home + "/files/pic-phase0"
         setup = f"mkdir -p {shlex.quote(base)}/rootfs {shlex.quote(base)}/results {shlex.quote(base)}/tmp && cd {shlex.quote(base)}/rootfs && tar -xzf -"
         # Stream into the app UID. SELinux need not permit the app to read a
@@ -72,13 +87,13 @@ def run(args):
         with (work / "android-rootfs.tar.gz").open("rb") as archive:
             subprocess.run(["adb", "shell", "-T", shlex.join(["run-as", PACKAGE, "sh", "-c", setup])], stdin=archive, check=True)
         root = base + "/rootfs"
-        prefix = [native[1] + "/libproot.so", "--kill-on-exit", "--link2symlink", "--sysvipc", "-L", "-0", "-r", root,
+        prefix = [native + "/libproot.so", "--kill-on-exit", "--link2symlink", "--sysvipc", "-L", "-0", "-r", root,
                   "-b", "/dev", "-b", "/proc", "-b", "/sys", "-b", root + "/tmp:/dev/shm", "-b", base + "/results:/results", "-w", "/work",
                   "/usr/bin/env", "-i", "HOME=/root", "TMPDIR=/tmp", "PATH=/usr/bin:/bin", "LANG=C",
                   "LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu", "BOX64_LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu",
                   "BOX64_DYNAREC=0", "BOX64_LOG=0", "BOX64_NOBANNER=1", "BOX64_DYNACACHE=0", "/usr/bin/box64"]
         def command(arguments):
-            inner = shlex.join(["env", "PROOT_LOADER=" + native[1] + "/libproot-loader.so", "PROOT_TMP_DIR=" + base + "/tmp", "PROOT_NO_SECCOMP=1", *prefix, *arguments])
+            inner = shlex.join(["env", "PROOT_LOADER=" + native + "/libproot-loader.so", "PROOT_TMP_DIR=" + base + "/tmp", "PROOT_NO_SECCOMP=1", *prefix, *arguments])
             return ["adb", "shell", shlex.join(["run-as", PACKAGE, "sh", "-c", inner])]
         code, _, _ = spike.run(command(["-v"]), out / "android-box64-probe.log", timeout=30, check=False)
         result["box64Available"] = code == 0

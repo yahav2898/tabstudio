@@ -5,11 +5,13 @@ on:
     branches: [main]
     paths:
       - 'build/pic/**'
+      - 'src/TabStudio.Toolchains/Microchip/**'
       - 'samples/PIC/**'
       - '.github/workflows/pic.yml'
   pull_request:
     paths:
       - 'build/pic/**'
+      - 'src/TabStudio.Toolchains/Microchip/**'
       - 'samples/PIC/**'
       - '.github/workflows/pic.yml'
 

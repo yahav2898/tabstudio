@@ -39,6 +39,9 @@ public enum BottomPanel
 
     /// <summary>The Terminal: a shell in the workspace folder.</summary>
     Terminal,
+
+    /// <summary>The USB serial monitor, independent of the firmware build.</summary>
+    SerialMonitor,
 }
 
 /// <summary>What the IDE is doing, for the status bar.</summary>

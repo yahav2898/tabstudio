@@ -18,9 +18,9 @@ public sealed class ToolchainCatalogTests
     }
 
     [Fact]
-    public void The_store_lists_python_and_node()
+    public void The_store_lists_python_node_and_user_licensed_xc_compilers()
     {
-        Assert.Equal(["python", "node"], Catalog.Listed.Select(t => t.Id));
+        Assert.Equal(["python", "node", "xc8", "xc32"], Catalog.Listed.Select(t => t.Id));
     }
 
     [Fact]
@@ -53,7 +53,7 @@ public sealed class ToolchainCatalogTests
     [Fact]
     public void Listed_toolchains_have_a_debug_adapter_and_dependency_installs()
     {
-        foreach (var toolchain in Catalog.Listed)
+        foreach (var toolchain in Catalog.Listed.Where(t => t.Id is "python" or "node"))
         {
             Assert.NotNull(toolchain.DebugAdapter);
             Assert.NotEmpty(toolchain.DebugAdapter.Command);
@@ -215,7 +215,7 @@ public sealed class ToolchainCatalogTests
         };
         foreach (var toolchain in Catalog.Listed)
         {
-            foreach (var tool in new[] { toolchain.LanguageServer!, toolchain.DebugAdapter! })
+            foreach (var tool in new[] { toolchain.LanguageServer, toolchain.DebugAdapter }.OfType<ToolCommandDefinition>())
             {
                 Assert.NotNull(tool.Id);
                 var paths = toolchain.Setup.SelectMany(s => s.Removes.Concat(s.File is { } file ? [file.Path] : []));
