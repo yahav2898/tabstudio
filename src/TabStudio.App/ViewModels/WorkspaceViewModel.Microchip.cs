@@ -6,8 +6,11 @@ namespace TabStudio.App.ViewModels;
 
 public sealed partial class WorkspaceViewModel
 {
+    private bool _lastPicBuildSucceeded;
+
     private void ReportPicBuild(ToolchainProject project, IReadOnlyList<string> lines, bool succeeded)
     {
+        _lastPicBuildSucceeded = succeeded;
         var text = string.Join('\n', lines);
         var diagnostics = PicCompilerDiagnostic.Parse(text).Select(d =>
         {

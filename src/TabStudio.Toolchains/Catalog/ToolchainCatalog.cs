@@ -101,10 +101,10 @@ public sealed record ToolchainCatalog
                 try
                 {
                     var project = Microchip.MplabProject.Load(marker);
-                    var conf = project.Configurations.FirstOrDefault(c => c.Name == "default") ?? project.Configurations[0];
+                    var conf = project.SelectedConfiguration();
                     return Find(conf.Compiler.ToLowerInvariant());
                 }
-                catch (Exception error) when (error is IOException or InvalidDataException or System.Xml.XmlException)
+                catch (Exception error) when (error is IOException or InvalidDataException or System.Xml.XmlException or JsonException or KeyNotFoundException)
                 {
                     break;
                 }

@@ -145,6 +145,10 @@ internal sealed class BridgeTablet : ILinkMessageHandler, IDisposable
                 }, cancellationToken).ConfigureAwait(false);
             case BridgeMethods.Build:
                 return await BuildAsync(BridgeJson.Read<BuildRequest>(payload), cancellationToken).ConfigureAwait(false);
+            case BridgeMethods.ProgramPic:
+                return await ProgramPicAsync(BridgeJson.Read<PicProgramRequest>(payload), cancellationToken).ConfigureAwait(false);
+            case BridgeMethods.OpenMplab:
+                return LinkReply.Of(OpenMplab(BridgeJson.Read<OpenMplabRequest>(payload)), BridgeJson.Info<AppStarted>());
             case BridgeMethods.Run:
                 return LinkReply.Of(Run(BridgeJson.Read<RunRequest>(payload)), BridgeJson.Info<AppStarted>());
             case BridgeMethods.Stop:
@@ -346,6 +350,41 @@ internal sealed class BridgeTablet : ILinkMessageHandler, IDisposable
             _workspace.Release();
             SetActivity(null);
         }
+    }
+
+    private async Task<LinkReply> ProgramPicAsync(PicProgramRequest request, CancellationToken token)
+    {
+        var paths = Paths();
+        await _workspace.WaitAsync(token).ConfigureAwait(false);
+        try
+        {
+            SetActivity("Programming " + request.Device);
+            var outcome = await MplabBuilder.ProgramAsync(request, paths, _server.Toolchains.Tools.Mplab,
+                line => Post(BridgeMethods.BuildOutput, BridgeJson.ToJson(new BuildOutputLine(request.BuildId, line))), token).ConfigureAwait(false);
+            if (CurrentNotifier() is { } notifier) await notifier.FlushAsync().ConfigureAwait(false);
+            return LinkReply.Of(outcome, BridgeJson.Info<BuildOutcome>());
+        }
+        finally
+        {
+            _workspace.Release();
+            SetActivity(null);
+        }
+    }
+
+    private AppStarted OpenMplab(OpenMplabRequest request)
+    {
+        var paths = Paths();
+        var descriptor = paths.ToHost(request.ProjectPath) ?? throw new LinkRemoteException(LinkErrorCodes.InvalidRequest, "The MPLAB project is outside this workspace.");
+        var project = TabStudio.Toolchains.Microchip.MplabProject.Load(descriptor);
+        var ide = _server.Toolchains.Tools.Mplab?.Ide ?? throw new LinkRemoteException(LinkErrorCodes.Failed, "Install MPLAB X IDE on the paired PC for on-chip debugging.");
+        var userDirectory = Path.Combine(paths.HostRoot, ".tabstudio", "mplab-userdir");
+        Directory.CreateDirectory(userDirectory);
+        var process = BridgeProcess.Start(new BridgeProcessStart(ide, ["--nosplash", "--userdir", userDirectory, "--open", project.Directory], project.Directory));
+        var app = AddApp("MPLAB X — " + Path.GetFileName(project.Directory), request.ProjectPath, process.Id, process, isDebugging: false);
+        process.OutputLine += (_, line) => Post(BridgeMethods.AppOutput, BridgeJson.ToJson(new AppOutput(app.Id, paths.ToClientText(line), false)));
+        process.ErrorLine += (_, line) => Post(BridgeMethods.AppOutput, BridgeJson.ToJson(new AppOutput(app.Id, paths.ToClientText(line), true)));
+        process.BeginReading();
+        return new AppStarted(app.Id, app.Name, app.ProcessId, app.ProjectPath, false);
     }
 
     private OrderedNotifier? CurrentNotifier()

@@ -276,10 +276,12 @@ public sealed partial class WorkspaceViewModel
 
                 break;
             case nameof(StartupProject):
+                RefreshPicCommands();
                 UpdateToolchainNotice();
                 ShowProperties(Explorer.SelectedItem?.Node);
                 break;
             case nameof(ActiveDocument) or nameof(State):
+                RefreshPicCommands();
                 if (e.PropertyName == nameof(State) && _openToolchainEntry && State == IdeState.Ready)
                 {
                     _openToolchainEntry = false;
@@ -368,6 +370,21 @@ public sealed partial class WorkspaceViewModel
         }
 
         var project = item.Project;
+        if (MicrochipInstallation.IsCompiler(project.Toolchain.Id) && project.MarkerPath is { } marker)
+        {
+            _lastPicBuildSucceeded = false;
+            try
+            {
+                var selected = MplabProject.Load(marker).SelectedConfiguration();
+                if (_toolchains.Catalog.Find(selected.Compiler.ToLowerInvariant()) is { } compiler) project = project with { Toolchain = compiler };
+            }
+            catch (Exception error) when (error is IOException or InvalidDataException or System.Text.Json.JsonException or System.Xml.XmlException)
+            {
+                Output.WriteLine(error.Message, OutputKind.Failure);
+                State = IdeState.Failed;
+                return;
+            }
+        }
         var file = ActiveDocument?.FilePath;
         await RunToolchainPlanAsync(project, () => PlanToolchainProject(project, file));
     }

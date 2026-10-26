@@ -956,7 +956,8 @@
         "python3",
         "make",
         "clang22-extra-tools",
-        "libusb"
+        "libusb",
+        "lscpu"
       ],
       "pinnedVersion": "4.00",
       "estimatedDownloadSize": 180000000,
@@ -1014,7 +1015,18 @@
           "pattern": "^(?<file>.+?):(?<line>\\d+)(?::(?<column>\\d+))?:\\s*(?<severity>fatal error|error|warning|note):\\s*(?<message>.+)$"
         }
       ],
-      "errorPattern": "^(?<message>PIC build: error: .+)$"
+      "errorPattern": "^(?<message>PIC build: error: .+)$",
+      "debugAdapter": {
+        "id": "gpsim",
+        "type": "gpsim",
+        "command": [
+          "python3",
+          "/opt/tabstudio/microchip/gpsim_dap.py"
+        ],
+        "languages": [
+          "c"
+        ]
+      }
     },
     {
       "id": "xc32",
@@ -1031,7 +1043,8 @@
         "python3",
         "make",
         "clang22-extra-tools",
-        "libusb"
+        "libusb",
+        "lscpu"
       ],
       "pinnedVersion": "6.00",
       "estimatedDownloadSize": 2900000000,

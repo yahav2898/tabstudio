@@ -40,6 +40,19 @@ public sealed record BridgeAppInfo(int AppId, string Name, int ProcessId, string
 /// <param name="SkipReferences">Whether only this project changed, so the projects it references need no build.</param>
 public sealed record BuildRequest(int BuildId, string ProjectPath, string Configuration, bool SkipReferences);
 
+/// <summary>Programs and verifies a built PIC image with the PC's explicitly selected IPE tool.</summary>
+/// <param name="BuildId">Output subscription id.</param>
+/// <param name="ProjectPath">MPLAB configurations.xml path on the tablet.</param>
+/// <param name="FirmwarePath">Built HEX path returned by the Bridge.</param>
+/// <param name="Device">Project device.</param>
+/// <param name="Tool">IPE tool id, such as PK4 or PK5.</param>
+/// <param name="Serial">Optional tool serial number.</param>
+public sealed record PicProgramRequest(int BuildId, string ProjectPath, string FirmwarePath, string Device, string Tool, string? Serial);
+
+/// <summary>Opens a synchronized MPLAB project in the PC's vendor IDE for on-chip debugging.</summary>
+/// <param name="ProjectPath">MPLAB descriptor path.</param>
+public sealed record OpenMplabRequest(string ProjectPath);
+
 /// <summary>A line of a build's output.</summary>
 /// <param name="BuildId">The build.</param>
 /// <param name="Text">The line, with its paths on the tablet's.</param>

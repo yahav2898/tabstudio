@@ -240,6 +240,14 @@ build/                     CI scripts
 
 TabStudio is built in the open, and it is early enough that one contributor can shape a whole feature. Good places to start are in the [roadmap](docs/ROADMAP.md). Read [CONTRIBUTING.md](CONTRIBUTING.md) for how the code is organized and what a good pull request looks like.
 
+## Microchip PIC on the tablet
+
+Install **Microchip XC8** (PIC10/12/16/18) or **Microchip XC32** (PIC32) in the Toolchain Store after reading Microchip's licence. The official x86-64 Linux compilers run through Box64 in the tablet's Alpine/PRoot environment, with verified glibc runtimes and device packs. **The compilers are installed by the user under Microchip's licence and are never redistributed.** No PC or licence-manager activation is needed for local builds.
+
+Create **PIC18 Blink (XC8)** or **PIC32 Blink (XC32)**, or open an MPLAB X project with `nbproject/configurations.xml` and its generated makefiles. Builds retain MPLAB's options, populate the Error List, show memory usage and prepare clangd's device headers/builtins. PIC18 Blink uses a real gpsim-supported PIC18F14K22 model for local F5 debugging.
+
+Configure a compatible USB-OTG bootloader/programmer for **Flash**; other devices say **Use the Windows Bridge**. The serial monitor supports CDC-ACM, CH340, CP210x and FTDI. PICkit 4/5 and Snap PIC programming/debugging use the paired PC's MPLAB tools: pymcuprog's documented PIC support is PKOB nano, not those programmers. [Setup, exact device lists, measured ARM64 compiler results and hardware limitations](docs/PIC.md).
+
 ## License and trademarks
 
 TabStudio is licensed under the [Apache License 2.0](LICENSE). The third-party software it ships with or downloads, each under its own licence, is listed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).

@@ -34,7 +34,19 @@ def download(asset):
         partial = target.with_name(target.name + ".part")
         offset = partial.stat().st_size if partial.exists() else 0
         request = urllib.request.Request(asset["url"], headers={"User-Agent": "TabStudio-PIC/1", **({"Range": f"bytes={offset}-"} if offset else {})})
-        with urllib.request.urlopen(request, timeout=120) as response:
+        try:
+            response = urllib.request.urlopen(request, timeout=120)
+        except urllib.error.HTTPError as error:
+            if error.code != 416 or not offset:
+                raise
+            with partial.open("rb") as source:
+                complete = hashlib.file_digest(source, "sha256").hexdigest() == asset["sha256"]
+            if complete:
+                partial.rename(target)
+                return target
+            partial.unlink()
+            return download(asset)
+        with response:
             resumed = offset > 0 and response.status == 206
             if not resumed:
                 offset = 0
@@ -84,11 +96,11 @@ def link(path, target):
         path.symlink_to(target)
 
 
-def runtime_environment():
+def runtime_environment(compiler=None):
     env = dict(os.environ)
     native = "aarch64-linux-gnu" if platform.machine() == "aarch64" else "x86_64-linux-gnu"
     env.update(LD_LIBRARY_PATH="/usr/lib/" + native, BOX64_LD_LIBRARY_PATH="/usr/lib/x86_64-linux-gnu",
-               BOX64_NOBANNER="1", BOX64_LOG="0", BOX64_DYNAREC="1", BOX64_DYNACACHE="0")
+               BOX64_NOBANNER="1", BOX64_LOG="0", BOX64_DYNAREC="0" if compiler == "xc32" else "1", BOX64_DYNACACHE="0")
     return env
 
 
@@ -96,9 +108,9 @@ def translated(command):
     return [str(TOOLS / "box64"), *command] if platform.machine() == "aarch64" else command
 
 
-def execute(command, timeout):
+def execute(command, timeout, compiler=None):
     print("Running", " ".join(command), flush=True)
-    with subprocess.Popen(command, env=runtime_environment(), start_new_session=True,
+    with subprocess.Popen(command, env=runtime_environment(compiler), start_new_session=True,
                           stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True) as process:
         try:
             output, _ = process.communicate(timeout=timeout)
@@ -148,11 +160,14 @@ def write_wrappers(compiler, destination):
     wrappers = Path("/usr/local/bin")
     wrappers.mkdir(parents=True, exist_ok=True)
     import shlex
-    for binary in (destination / "bin").glob(compiler + "-*"):
+    binaries = [*(destination / "bin").glob(compiler + "-*")]
+    if compiler == "xc8":
+        binaries += [destination / "bin/pic-as", destination / "bin/pic-ar"]
+    for binary in binaries:
         if not binary.is_file() or not os.access(binary, os.X_OK):
             continue
         lines = ["#!/bin/sh"]
-        for key, value in runtime_environment().items():
+        for key, value in runtime_environment(compiler).items():
             if key.startswith("BOX64_") or key == "LD_LIBRARY_PATH":
                 lines.append("export " + key + "=" + shlex.quote(value))
         lines.append("exec " + shlex.join(translated([str(binary)])) + ' "$@"')
@@ -167,6 +182,21 @@ def install(compiler, accepted):
     arch = platform.machine()
     if arch not in ("aarch64", "x86_64"):
         raise ValueError("The official XC compilers require 64-bit Android")
+    asset = ASSETS[compiler]
+    previous = TOOLS / (compiler + ".json")
+    if previous.is_file():
+        try:
+            manifest = json.loads(previous.read_text())
+            destination = Path(manifest["compilerRoot"])
+            binary = destination / "bin" / ("xc8-cc" if compiler == "xc8" else "xc32-gcc")
+            if manifest.get("installerSha256") == asset["sha256"] and binary.is_file():
+                code, _ = execute(translated([str(binary), "--version"]), 60, compiler)
+                if code == 0:
+                    write_wrappers(compiler, destination)
+                    print(compiler.upper() + " already matches the verified distribution; support scripts were refreshed.", flush=True)
+                    return
+        except (OSError, ValueError, KeyError):
+            pass
     print("Installing under Microchip's license; no license manager activation. Compiler binaries are never redistributed.", flush=True)
     for deb_arch in (["amd64", "arm64"] if arch == "aarch64" else ["amd64"]):
         for package in ["libc6", "libstdc++6", "libgcc-s1", "zlib1g"]:
@@ -179,10 +209,9 @@ def install(compiler, accepted):
         link("/lib/ld-linux-aarch64.so.1", "../usr/lib/aarch64-linux-gnu/ld-linux-aarch64.so.1")
         if not (TOOLS / "box64").exists():
             raise ValueError("This APK has no box64 translator")
-    asset = ASSETS[compiler]
     installer = download(asset)
     installer.chmod(0o755)
-    code, help_text = execute(translated([str(installer), "--help"]), 60)
+    code, help_text = execute(translated([str(installer), "--help"]), 60, compiler)
     if code:
         raise RuntimeError("The verified official installer could not start")
     destination = Path("/opt/microchip") / compiler / ("v" + asset["version"])
@@ -190,12 +219,13 @@ def install(compiler, accepted):
                "--prefix" if "--prefix" in help_text else "--installdir", str(destination)]
     if "--LicenseType" in help_text:
         command += ["--LicenseType", "FreeMode"]
-    code, _ = execute(translated(command), 300 if compiler == "xc8" else 180)
+    code, _ = execute(translated(command), 300 if compiler == "xc8" else 180, compiler)
     method = "official installer"
     if code:
         print(f"Installer exited {code}; extracting Microchip's independently verified official distribution", flush=True)
         archive = download(ASSETS[compiler + "-archive"])
-        pending = Path("/opt/microchip") / compiler / "archive.partial"
+        final = Path("/opt/microchip") / compiler / ("v" + asset["version"] + "-archive-" + asset["sha256"][:12])
+        pending = final.with_name(final.name + ".partial")
         if pending.exists():
             shutil.rmtree(pending)
         pending.mkdir(parents=True)
@@ -205,17 +235,24 @@ def install(compiler, accepted):
         matches = list(pending.rglob("bin/" + command_name))
         if len(matches) != 1:
             raise ValueError("The official distribution has an unexpected compiler layout")
-        destination = matches[0].parent.parent
+        relative = matches[0].parent.parent.relative_to(pending)
+        if final.exists():
+            raise ValueError("A previous installation directory already exists; keep it intact and remove the broken installation through the Store before retrying")
+        pending.rename(final)
+        destination = final / relative
         method = "verified official archive"
         archive.unlink()
     binary = destination / "bin" / ("xc8-cc" if compiler == "xc8" else "xc32-gcc")
-    code, version = execute(translated([str(binary), "--version"]), 60)
+    code, version = execute(translated([str(binary), "--version"]), 60, compiler)
     if code:
         raise RuntimeError("Installed compiler failed its version check")
     write_wrappers(compiler, destination)
     manifest = {"version": asset["version"], "compilerRoot": str(destination), "installerSha256": asset["sha256"],
-                "installMethod": method, "versionOutput": version, "installedAt": time.time()}
-    (TOOLS / (compiler + ".json")).write_text(json.dumps(manifest, indent=2) + "\n")
+                "installMethod": method, "versionOutput": version, "installedAt": time.time(),
+                "box64ExecutionMode": "interpreter" if compiler == "xc32" else "dynarec"}
+    pending_manifest = TOOLS / (compiler + ".json.partial")
+    pending_manifest.write_text(json.dumps(manifest, indent=2) + "\n")
+    pending_manifest.replace(TOOLS / (compiler + ".json"))
     installer.unlink()
     print(f"{compiler.upper()} {asset['version']} is installed; device packs are verified and installed per selected device.", flush=True)
 

@@ -101,6 +101,13 @@ public sealed partial class SerialMonitorViewModel(ToolchainServices tools, IUiD
     [RelayCommand]
     private void Disconnect() => _session?.Cancel();
 
+    /// <summary>Waits until the permissioned descriptor has been released for flashing.</summary>
+    public async Task ReleaseAsync()
+    {
+        _session?.Cancel();
+        if (ConnectCommand.ExecutionTask is { } execution) await execution;
+    }
+
     /// <summary>Sends a UTF-8 line; raw output remains visible even without newline characters.</summary>
     [RelayCommand]
     private async Task SendAsync()

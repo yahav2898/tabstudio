@@ -144,6 +144,16 @@ public sealed class ToolchainServices : IDisposable
     public void AcceptMicrochipLicense(string id, string terms) =>
         MicrochipInstallation.AcceptLicense(Environment ?? throw new InvalidOperationException("No Linux environment."), id, terms);
 
+    /// <summary>Reads pk2cmd's separate, restrictive license before downloading its source.</summary>
+    /// <param name="token">Stops loading.</param>
+    public async Task<string> ReadPicKitLicenseAsync(CancellationToken token)
+    {
+        const string address = "https://raw.githubusercontent.com/jaka-fi/pk2cmd/38ad052d453db7d5a7f4a115427cc640e1522ed3/license.txt";
+        var text = await (_http ?? throw new NotSupportedException("Install PIC tools on Android.")).GetStringAsync(address, token).ConfigureAwait(false);
+        if (text.Length is < 5000 or > 100000 || !text.Contains("Microchip", StringComparison.Ordinal)) throw new InvalidDataException("Could not read the complete PICkit license; its source was not downloaded.");
+        return address + "\n\n" + text;
+    }
+
     /// <summary>
     /// Reads the toolchains' states the first time it is called, and returns that same reading afterwards. Never
     /// throws: a toolchain whose state cannot be read stays as the catalog describes it.

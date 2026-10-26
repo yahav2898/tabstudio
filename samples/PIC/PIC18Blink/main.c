@@ -1,17 +1,18 @@
-// PIC18F45K22, internal oscillator at 16 MHz. LED + resistor on RD0.
+// PIC18F14K22, internal oscillator at 16 MHz. LED + resistor on RC0.
+// This device has a real gpsim model for F5 simulation on the tablet.
 #include <xc.h>
 #define _XTAL_FREQ 16000000UL
-#pragma config FOSC = INTIO67, WDTEN = OFF, LVP = OFF
-#pragma config PWRTEN = OFF, BOREN = SBORDIS, BORV = 190
+#pragma config FOSC = IRC, WDTEN = OFF, LVP = OFF
 
 void main(void)
 {
     OSCCONbits.IRCF = 7;
-    ANSELD = 0;
-    LATDbits.LATD0 = 0;
-    TRISDbits.TRISD0 = 0;
+    ANSEL = 0;
+    ANSELH = 0;
+    LATCbits.LATC0 = 0;
+    TRISCbits.TRISC0 = 0;
     for (;;) {
-        LATDbits.LATD0 ^= 1;
+        LATCbits.LATC0 ^= 1;
         __delay_ms(500);
     }
 }

@@ -51,11 +51,11 @@ def adb_shell(command):
 def native_library_directory(dump, package_paths, abi):
     # Android versions print nativeLibraryDir or legacyNativeLibraryDir. APKs
     # with extractNativeLibs also have a stable lib/<instruction-set> sibling.
+    instruction = {"x86_64": "x86_64", "arm64-v8a": "arm64", "armeabi-v7a": "arm", "x86": "x86"}.get(abi)
     native = re.search(r"(?:legacy)?nativeLibraryDir=([^\s]+)", dump, re.IGNORECASE)
     if native:
-        return native[1]
+        return native[1] + "/" + instruction if native[1].endswith("/lib") and instruction else native[1]
     apk = next((line.removeprefix("package:") for line in package_paths.splitlines() if line.endswith("/base.apk")), None)
-    instruction = {"x86_64": "x86_64", "arm64-v8a": "arm64", "armeabi-v7a": "arm", "x86": "x86"}.get(abi)
     if not apk or not instruction:
         raise RuntimeError("Cannot locate the installed APK's native library directory")
     return apk.rsplit("/", 1)[0] + "/lib/" + instruction
@@ -102,7 +102,7 @@ def run(args):
             return
         compiler = (work / "compiler-path.txt").read_text()
         spike.run(command([compiler, "--version"]), out / "android-xc8-version.log", timeout=60)
-        _, seconds, _ = spike.run(command([compiler, "-mcpu=18F45K22", "-mdfp=/opt/tabstudio/packs/pic18/xc8", "-O0", "-o", "/results/blink.elf", "main.c"]), out / "android-xc8-build.log", timeout=300)
+        _, seconds, _ = spike.run(command([compiler, "-mcpu=18F14K22", "-mdfp=/opt/tabstudio/packs/pic18/xc8", "-O0", "-o", "/results/blink.elf", "main.c"]), out / "android-xc8-build.log", timeout=300)
         firmware = subprocess.check_output(["adb", "exec-out", shlex.join(["run-as", PACKAGE, "cat", base + "/results/blink.hex"])])
         (out / "android-blink.hex").write_bytes(firmware)
         result.update(success=True, linkedFirmware=True, compileSeconds=seconds, hexSha256=hashlib.sha256(firmware).hexdigest())

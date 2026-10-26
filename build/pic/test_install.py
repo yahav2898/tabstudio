@@ -44,6 +44,10 @@ class InstallationTests(unittest.TestCase):
             download.assert_not_called()
             execute.assert_not_called()
 
+    def test_xc32_uses_the_interpreter_mode_that_passed_the_arm_spike(self):
+        self.assertEqual("0", self.install.runtime_environment("xc32")["BOX64_DYNAREC"])
+        self.assertEqual("1", self.install.runtime_environment("xc8")["BOX64_DYNAREC"])
+
     def test_modified_cached_asset_is_rejected_and_removed(self):
         self.install.CACHE.mkdir()
         file = self.install.CACHE / "compiler.run"

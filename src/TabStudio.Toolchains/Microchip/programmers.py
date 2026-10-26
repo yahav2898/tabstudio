@@ -149,7 +149,7 @@ def program(profile, firmware):
         digest = hashlib.sha256(database.read_bytes()).hexdigest()
         if digest != profile.get("deviceFileSha256"):
             raise ValueError("PK2DeviceFile.dat does not match the SHA-256 recorded in the flash profile")
-        command = [str(binary), "-B" + str(database.parent), "-P" + device.removeprefix("PIC"), "-F" + str(firmware), "-M", "-Y"]
+        command = [str(binary), "-B" + str(database.parent), "-P" + device.removeprefix("PIC"), "-F" + str(firmware), "-M", "-Y", "-W"]
     else:
         if not device.startswith("PIC32"):
             raise ValueError("pic32prog supports PIC32 devices; use pk2cmd or the Windows Bridge for 8-bit PIC")

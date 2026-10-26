@@ -84,6 +84,7 @@ class UsbProtocolTests(unittest.TestCase):
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         self.assertEqual("/data/app/pkg/lib/x86_64", module.native_library_directory("legacyNativeLibraryDir=/data/app/pkg/lib/x86_64", "", "x86_64"))
+        self.assertEqual("/data/app/pkg/lib/x86_64", module.native_library_directory("legacyNativeLibraryDir=/data/app/pkg/lib", "", "x86_64"))
         self.assertEqual("/data/app/pkg/lib/x86_64", module.native_library_directory("", "package:/data/app/pkg/base.apk", "x86_64"))
         with self.assertRaises(RuntimeError): module.native_library_directory("", "", "unknown")
 

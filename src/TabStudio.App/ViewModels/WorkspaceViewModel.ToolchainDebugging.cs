@@ -39,6 +39,11 @@ public sealed partial class WorkspaceViewModel
 
         var project = item.Project;
         var toolchain = item.Toolchain;
+        if (TabStudio.Toolchains.Microchip.MicrochipInstallation.IsCompiler(toolchain.Id))
+        {
+            await DebugPicProjectAsync(info, start);
+            return;
+        }
         if (toolchain.DebugAdapter?.Type is not { } type || !ToolchainLaunch.Supports(type) || _languageServers?.Configuration.Registry.FindAdapter(type) is null)
         {
             // A toolchain without a debug adapter TabStudio drives runs as with Ctrl+F5.

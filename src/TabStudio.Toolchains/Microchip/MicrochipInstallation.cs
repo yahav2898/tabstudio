@@ -9,7 +9,7 @@ namespace TabStudio.Toolchains.Microchip;
 public static class MicrochipInstallation
 {
     /// <summary>The scripts shared by XC installations and permissioned USB support.</summary>
-    public static IReadOnlyList<string> SupportFiles { get; } = ["assets.lock.json", "packs.lock.json", "install.py", "project.py", "usb_device.py", "usb_serial.py", "usb_worker.py", "bootloaders.py", "programmers.py", "hid.py", "usb_fd.c", "pymcuprog.devices.json"];
+    public static IReadOnlyList<string> SupportFiles { get; } = ["assets.lock.json", "packs.lock.json", "install.py", "project.py", "usb_device.py", "usb_serial.py", "usb_worker.py", "bootloaders.py", "programmers.py", "hid.py", "usb_fd.c", "pymcuprog.devices.json", "gpsim_dap.py", "gpsim.devices.json"];
     /// <summary>Guest directory for the installer, pack catalog and project tools.</summary>
     public const string ToolsDirectory = "/opt/tabstudio/microchip";
 

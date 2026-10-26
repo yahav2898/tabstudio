@@ -164,7 +164,7 @@ def prepare(work, out, compiler, *, build_runtime=True):
                  "BOX64_LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu",
                  # Compiler/installer subprocesses parse each other's stdout. A box64
                  # banner is not compiler output and breaks those integrity checks.
-                 "BOX64_LOG=0", "BOX64_NOBANNER=1", "BOX64_DYNAREC=1", "BOX64_DYNACACHE=0"]
+                 "BOX64_LOG=0", "BOX64_NOBANNER=1", "BOX64_DYNAREC=" + ("0" if compiler == "xc32" else "1"), "BOX64_DYNACACHE=0"]
     prefix = [str(proot), "--kill-on-exit", "--link2symlink", "--sysvipc", "-L", "-0",
               "-r", str(root), "-b", "/dev", "-b", "/proc", "-b", "/sys",
               "-b", f"{root / 'tmp'}:/dev/shm", "-b", f"{cache}:/downloads",
@@ -228,7 +228,7 @@ def spike(args):
         result["compilerFile"] = subprocess.check_output(["file", str(root / program.lstrip("/"))], text=True).strip()
         code, _, version = run([*prefix, *translate, program, "--version"], out / "version.log", env=env, check=False, timeout=30)
         result["versionExitCode"] = code
-        result["executionMode"] = "dynarec" if translate else "native"
+        result["executionMode"] = ("interpreter" if args.compiler == "xc32" else "dynarec") if translate else "native"
         if code and translate:
             run([*prefix, "/usr/bin/env", "BOX64_LOG=2", "BOX64_NOBANNER=0", *translate, program, "--version"],
                 out / "version-diagnostic.log", env=env, check=False, timeout=30)
@@ -265,7 +265,8 @@ def spike(args):
         pack_dir.mkdir(parents=True, exist_ok=True)
         with zipfile.ZipFile(fetch(LOCK[family + "-dfp"], cache, family + ".atpack")) as archive:
             archive.extractall(pack_dir)
-        source = REPO / "samples/PIC" / ("PIC18Blink" if family == "pic18" else "PIC32Blink") / "main.c"
+        template = REPO / "samples/PIC" / ("PIC18Blink" if family == "pic18" else "PIC32Blink")
+        source = REPO / "build/pic/pic18-spike.c" if family == "pic18" else template / "main.c"
         shutil.copy2(source, root / "work/main.c")
         # XC32 6 uses the pack root; older XC32 versions used its xc32 subfolder.
         pack = f"/opt/tabstudio/packs/{family}/xc8" if family == "pic18" else f"/opt/tabstudio/packs/{family}"
@@ -316,7 +317,7 @@ def spike(args):
         shutil.copyfile("/etc/resolv.conf", root / "etc/resolv.conf")
         (root / "etc/ssl/certs").mkdir(parents=True, exist_ok=True)
         shutil.copyfile("/etc/ssl/certs/ca-certificates.crt", root / "etc/ssl/certs/ca-certificates.crt")
-        run([*native, "/sbin/apk", "add", "--no-cache", "make", "python3"], out / "project-dependencies.log", env=env)
+        run([*native, "/sbin/apk", "add", "--no-cache", "make", "python3", "lscpu"], out / "project-dependencies.log", env=env)
         support = root / "opt/tabstudio/microchip"
         support.mkdir(parents=True, exist_ok=True)
         for name in ("install.py", "project.py", "packs.lock.json"):
@@ -330,7 +331,7 @@ def spike(args):
         shutil.copytree(pack_dir, installed_pack, dirs_exist_ok=True)
         (installed_pack / ".tabstudio-sha256").write_text(selected["sha256"])
         project_path = root / "work/project"
-        shutil.copytree(source.parent, project_path, ignore=shutil.ignore_patterns("dist", "build", ".tabstudio"), dirs_exist_ok=True)
+        shutil.copytree(template, project_path, ignore=shutil.ignore_patterns("dist", "build", ".tabstudio"), dirs_exist_ok=True)
         manifest = {"compilerRoot": dest, "version": LOCK[args.compiler]["version"]}
         (support / (args.compiler + ".json")).write_text(json.dumps(manifest))
         setup = "import sys;sys.path.insert(0,'/opt/tabstudio/microchip');from install import write_wrappers;write_wrappers(" + repr(args.compiler) + ",__import__('pathlib').Path(" + repr(dest) + "))"
@@ -341,6 +342,12 @@ def spike(args):
             raise RuntimeError("The shipped project driver did not produce firmware and compiler builtin metadata")
         shutil.copy2(project_hex, out / "template.hex")
         result["mplabProjectBuild"] = True
+        if args.compiler == "xc8":
+            # A supported gpsim model is compiled separately; the blink template
+            # remains PIC18F45K22, which gpsim correctly refuses to substitute.
+            shutil.copy2(REPO / "build/pic/simulation-smoke.c", root / "work/simulation.c")
+            shutil.copy2(REPO / "build/pic/simulation-smoke.c", out / "simulation.c")
+            run([*prefix, *translate, program, "-mcpu=18F14K22", f"-mdfp={pack}", "-O0", "-o", "/results/simulation.elf", "simulation.c"], out / "simulation-compile.log", env=env, timeout=180)
         result["success"] = True
     except Exception as error:
         result["error"] = str(error)

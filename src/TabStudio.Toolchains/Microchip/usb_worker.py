@@ -57,6 +57,9 @@ def main():
     if args.profile is None or args.profile.stat().st_size > 65536:
         raise ValueError("Select a project PIC flash profile")
     profile = json.loads(args.profile.read_text())
+    from project import descriptor
+    if descriptor(args.profile.parent.parent)[1].upper() != profile["device"].upper():
+        raise ValueError("Flash device does not match the selected MPLAB configuration")
     protocol = profile["protocol"]
     firmware = (args.profile.parent.parent / profile["firmware"]).resolve()
     if protocol in ("an1388-hid", "an1388-uart", "mcc-uart"):

@@ -18,6 +18,11 @@ from install import ASSETS, TOOLS, ensure_pack
 
 
 def descriptor(path, configuration=None):
+    if configuration is None and (path / ".tabstudio/pic-build.json").is_file():
+        selection = path / ".tabstudio/pic-build.json"
+        if selection.stat().st_size > 65536:
+            raise ValueError("PIC configuration selection is too large")
+        configuration = json.loads(selection.read_text())["configuration"]
     file = path / "nbproject/configurations.xml"
     data = file.read_bytes()
     if len(data) > 16_000_000 or b"<!DOCTYPE" in data.upper():
@@ -77,7 +82,7 @@ def build(path, configuration=None):
     cc = "/usr/local/bin/xc8-cc" if compiler == "xc8" else "/usr/local/bin/xc32-gcc"
     command = ["make", "-f", str(makefile.relative_to(path)), "SUBPROJECTS=", ".build-conf", "CND_CONF=" + selected,
                "TYPE_IMAGE=PRODUCTION", "MP_CC=" + cc, "MP_LD=" + cc, "MP_CC_DIR=/usr/local/bin",
-               "MP_AS=" + ("/usr/local/bin/xc8-cc" if compiler == "xc8" else "/usr/local/bin/xc32-as"),
+               "MP_AS=" + ("/usr/local/bin/pic-as" if compiler == "xc8" else "/usr/local/bin/xc32-as"),
                "MP_AR=/usr/local/bin/" + compiler + "-ar", "DFP_DIR=" + str(dfp)]
     print(f"MPLAB configuration: {selected}; {device}; {compiler.upper()} {manifest['version']}; {pack['name']} {pack['version']}", flush=True)
     print(" ".join(command), flush=True)
@@ -85,7 +90,14 @@ def build(path, configuration=None):
         write_intellisense(path, conf, manifest, compiler, device, dfp)
     except (OSError, ValueError, subprocess.SubprocessError) as error:
         print("PIC IntelliSense: warning: " + str(error), file=sys.stderr, flush=True)
-    return subprocess.call(command, cwd=path)
+    code = subprocess.call(command, cwd=path)
+    if code == 0:
+        output = path / "dist" / selected / "production"
+        images = {suffix: list(output.glob("*." + suffix)) for suffix in ("elf", "hex")}
+        receipt = {"configuration": selected, "device": device, "compiler": compiler,
+                   **{suffix: str(files[0]) for suffix, files in images.items() if len(files) == 1}}
+        (path / ".tabstudio/pic/build.json").write_text(json.dumps(receipt, indent=2) + "\n")
+    return code
 
 
 def write_intellisense(path, conf, manifest, compiler, device, dfp):
@@ -124,6 +136,10 @@ def write_intellisense(path, conf, manifest, compiler, device, dfp):
 #define __delay_ms(ms) ((void)(ms))
 #define __delay_us(us) ((void)(us))
 void __builtin_software_breakpoint(void);
+unsigned int __builtin_disable_interrupts(void);
+unsigned int __builtin_enable_interrupts(void);
+unsigned int __builtin_mfc0(int, int);
+void __builtin_mtc0(int, int, unsigned int);
 """)
     compiler_root = Path(manifest["compilerRoot"])
     includes = ([dfp / "pic/include", dfp / "pic/include/proc", compiler_root / "pic/include/c99", compiler_root / "pic/include"]

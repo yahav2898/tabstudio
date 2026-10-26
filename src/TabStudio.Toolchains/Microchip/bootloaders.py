@@ -199,8 +199,8 @@ class MccUart:
         print(f"MCC bootloader {version[1]}.{version[0]}; {len(image)} application bytes", flush=True)
         # One page write avoids erasing earlier rows while updating another row.
         for address in range(start, end, page_size):
-            if not any(a in image for a in range(address, address + page_size)):
-                continue
+            # Program and verify erased pages too: a shorter new application
+            # must not leave executable bytes from the previous image behind.
             data = bytes(image.get(a, 0xff if unit == 1 or a % 2 == 0 else 0x3f) for a in range(address, address + page_size))
             result = self.exchange(mcc_request(2, address // unit, len(data), data))
             if result != b"\x01":

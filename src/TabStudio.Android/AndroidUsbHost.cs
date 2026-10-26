@@ -27,7 +27,7 @@ internal sealed class AndroidUsbHost(Context context) : IUsbHost
             using var intent = new Intent(action).SetPackage(context.PackageName);
             using var pending = PendingIntent.GetBroadcast(context, 0, intent, PendingIntentFlags.Immutable | PendingIntentFlags.UpdateCurrent)
                 ?? throw new IOException("Could not create the USB permission request.");
-            if (Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu)
+            if (OperatingSystem.IsAndroidVersionAtLeast(33))
             {
                 context.RegisterReceiver(receiver, new IntentFilter(action), ReceiverFlags.NotExported);
             }
@@ -80,10 +80,10 @@ internal sealed class AndroidUsbHost(Context context) : IUsbHost
             for (var e = 0; e < item.EndpointCount; e++)
             {
                 var endpoint = item.GetEndpoint(e)!;
-                endpoints.Add(new UsbEndpointInfo(endpoint.Address, (int)endpoint.Type, endpoint.MaxPacketSize));
+                endpoints.Add(new UsbEndpointInfo((int)endpoint.Address, (int)endpoint.Type, endpoint.MaxPacketSize));
             }
 
-            interfaces.Add(new UsbInterfaceInfo(item.Id, (int)item.InterfaceClass, item.InterfaceSubclass, item.InterfaceProtocol, endpoints));
+            interfaces.Add(new UsbInterfaceInfo(item.Id, (int)item.InterfaceClass, (int)item.InterfaceSubclass, item.InterfaceProtocol, endpoints));
         }
 
         return new UsbDeviceInfo(device.DeviceName, device.VendorId, device.ProductId,

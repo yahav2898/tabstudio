@@ -60,7 +60,7 @@ public sealed class ProjectTemplatesTests : IDisposable
     }
 
     [Theory]
-    [InlineData(ProjectTemplates.Pic18Id, "XC8", "PIC18F45K22")]
+    [InlineData(ProjectTemplates.Pic18Id, "XC8", "PIC18F14K22")]
     [InlineData(ProjectTemplates.Pic32Id, "XC32", "PIC32MX250F128B")]
     public void Pic_templates_include_mplab_metadata_and_the_portable_makefile(string template, string compiler, string device)
     {

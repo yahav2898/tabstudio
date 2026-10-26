@@ -7,6 +7,11 @@ namespace TabStudio.WindowsBridge.Protocol;
 /// </summary>
 public static class BridgeMethods
 {
+    /// <summary>Programs and verifies PIC firmware using the PC's MPLAB IPE.</summary>
+    public const string ProgramPic = "bridge/pic/program";
+
+    /// <summary>Opens MPLAB X on the PC; its own tools perform PICkit 4/5 on-chip debugging.</summary>
+    public const string OpenMplab = "bridge/pic/open-mplab";
     /// <summary>What the PC is and what it can build; answered with <see cref="BridgeInfo"/>.</summary>
     public const string Info = "bridge/info";
 

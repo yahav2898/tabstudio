@@ -227,6 +227,10 @@
             <MenuItem Header="{Binding StartDebuggingMenuHeader}" InputGesture="F5" Command="{Binding StartDebuggingCommand}" />
             <MenuItem Header="Start Wit_hout Debugging" InputGesture="Ctrl+F5" Command="{Binding RunCommand}" />
             <MenuItem Header="Run C_urrent File" Command="{Binding RunCurrentFileCommand}" />
+            <MenuItem Header="{Binding PicFlashMenuText}" Command="{Binding FlashPicCommand}" IsVisible="{Binding IsPicProject}" />
+            <MenuItem Header="PIC _Target…" Command="{Binding ConfigurePicTargetCommand}" IsVisible="{Binding IsPicProject}" />
+            <MenuItem Header="MPLAB _Configuration…" Command="{Binding SelectPicConfigurationCommand}" IsVisible="{Binding IsPicProject}" />
+            <MenuItem Header="On-chip Debugging in _MPLAB X…" Command="{Binding DebugPicOnBridgeCommand}" IsVisible="{Binding IsPicProject}" />
             <MenuItem Header="Brea_k All (Ctrl+Alt+Break)" Command="{Binding BreakAllCommand}" />
             <MenuItem Header="Stop D_ebugging" InputGesture="Shift+F5" Command="{Binding StopDebuggingCommand}" />
             <MenuItem Header="_Restart" InputGesture="Ctrl+Shift+F5" Command="{Binding RestartCommand}" />

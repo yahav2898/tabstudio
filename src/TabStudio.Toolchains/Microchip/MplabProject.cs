@@ -1,5 +1,6 @@
 using System.Xml;
 using System.Xml.Linq;
+using System.Text.Json;
 
 namespace TabStudio.Toolchains.Microchip;
 
@@ -36,6 +37,23 @@ public sealed record MplabProject(string Directory, string Makefile, IReadOnlyLi
 {
     /// <summary>The marker used to recognize an MPLAB X project.</summary>
     public const string Marker = "nbproject/configurations.xml";
+
+    /// <summary>The explicitly selected configuration, or MPLAB's default/first configuration.</summary>
+    public MplabConfiguration SelectedConfiguration()
+    {
+        var path = Path.Combine(Directory, ".tabstudio", "pic-build.json");
+        if (File.Exists(path))
+        {
+            if (new FileInfo(path).Length > 65536) throw new InvalidDataException("The PIC build selection is too large.");
+            using var json = JsonDocument.Parse(File.ReadAllText(path));
+            if (json.RootElement.ValueKind != JsonValueKind.Object || !json.RootElement.TryGetProperty("configuration", out var property) || property.ValueKind != JsonValueKind.String)
+                throw new InvalidDataException("Select a named MPLAB configuration in pic-build.json.");
+            var name = property.GetString();
+            return Configurations.FirstOrDefault(c => c.Name == name) ?? throw new InvalidDataException("Unknown MPLAB configuration: " + name);
+        }
+
+        return Configurations.FirstOrDefault(c => c.Name == "default") ?? Configurations[0];
+    }
 
     /// <summary>Loads the project's configuration descriptor.</summary>
     /// <param name="configurationFile">The path of nbproject/configurations.xml.</param>

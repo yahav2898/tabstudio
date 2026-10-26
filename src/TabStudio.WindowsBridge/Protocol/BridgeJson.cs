@@ -71,6 +71,8 @@ public static class BridgeJson
 [JsonSerializable(typeof(BridgeInfo))]
 [JsonSerializable(typeof(BridgeStatus))]
 [JsonSerializable(typeof(BuildRequest))]
+[JsonSerializable(typeof(PicProgramRequest))]
+[JsonSerializable(typeof(OpenMplabRequest))]
 [JsonSerializable(typeof(BuildOutputLine))]
 [JsonSerializable(typeof(BuildOutcome))]
 [JsonSerializable(typeof(RunRequest))]

@@ -10,6 +10,6 @@ OUT := dist/$(CND_CONF)/production
 	$(RM) $(OUT)/firmware.elf $(OUT)/firmware.hex
 $(OUT)/firmware.elf: main.c
 	mkdir -p "$(OUT)"
-	$(MP_CC) -mcpu=18F45K22 -mdfp="$(DFP_DIR)" -O0 -o "$@" "$<"
+	$(MP_CC) -mcpu=18F14K22 -mdfp="$(DFP_DIR)" -O0 -o "$@" "$<"
 $(OUT)/firmware.hex: $(OUT)/firmware.elf
 	@test -s "$@"

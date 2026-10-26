@@ -111,7 +111,9 @@ public static class BridgeToolchainDetector
             toolchains.Add(new BridgeToolchain(BridgeToolchainKind.Debugger, $"netcoredbg {BridgeProtocol.NetcoredbgVersion}", BridgeProtocol.NetcoredbgVersion, Path.GetDirectoryName(netcoredbg)));
         }
 
-        var tools = new BridgeToolset(dotnet, msbuild, msbuildVersion, hasMsvc && msbuild is not null, windowsSdk.Count > 0, appRuntime.Count > 0, frameworks.Count > 0, netcoredbg);
+        var mplab = MplabTools.Find([locations.ProgramFiles, locations.ProgramFilesX86]);
+        if (mplab is not null) toolchains.Add(new BridgeToolchain(BridgeToolchainKind.MplabX, "MPLAB X / IPE", Path.GetFileName(mplab.Root), mplab.Root));
+        var tools = new BridgeToolset(dotnet, msbuild, msbuildVersion, hasMsvc && msbuild is not null, windowsSdk.Count > 0, appRuntime.Count > 0, frameworks.Count > 0, netcoredbg) { Mplab = mplab };
         return new BridgeToolchainReport(toolchains, tools, CapabilitiesOf(tools));
     }
 
@@ -121,6 +123,8 @@ public static class BridgeToolchainDetector
     {
         ArgumentNullException.ThrowIfNull(tools);
         var capabilities = BridgeCapabilities.None;
+        if (tools.Mplab?.Make is not null) capabilities |= BridgeCapabilities.MplabX;
+        if (tools.Mplab?.Ipe is not null) capabilities |= BridgeCapabilities.PicProgramming;
         if (tools.DotNet is not null)
         {
             capabilities |= BridgeCapabilities.DotNet;

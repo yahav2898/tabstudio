@@ -1,24 +1,101 @@
 {
   "languages": {
-    "python": { "name": "Python", "extensions": [ ".py", ".pyi", ".pyw" ] },
-    "typescript": { "name": "TypeScript", "extensions": [ ".ts", ".mts", ".cts" ] },
-    "typescriptreact": { "name": "TypeScript React", "extensions": [ ".tsx" ] },
-    "javascript": { "name": "JavaScript", "extensions": [ ".js", ".mjs", ".cjs" ] },
-    "javascriptreact": { "name": "JavaScript React", "extensions": [ ".jsx" ] },
-    "c": { "name": "C", "extensions": [ ".c", ".h" ] },
-    "cpp": { "name": "C++", "extensions": [ ".cpp", ".cc", ".cxx", ".c++", ".hpp", ".hh", ".hxx", ".h++", ".ipp", ".inl" ] },
-    "rust": { "name": "Rust", "extensions": [ ".rs" ] },
-    "go": { "name": "Go", "extensions": [ ".go" ] },
-    "java": { "name": "Java", "extensions": [ ".java" ] }
+    "python": {
+      "name": "Python",
+      "extensions": [
+        ".py",
+        ".pyi",
+        ".pyw"
+      ]
+    },
+    "typescript": {
+      "name": "TypeScript",
+      "extensions": [
+        ".ts",
+        ".mts",
+        ".cts"
+      ]
+    },
+    "typescriptreact": {
+      "name": "TypeScript React",
+      "extensions": [
+        ".tsx"
+      ]
+    },
+    "javascript": {
+      "name": "JavaScript",
+      "extensions": [
+        ".js",
+        ".mjs",
+        ".cjs"
+      ]
+    },
+    "javascriptreact": {
+      "name": "JavaScript React",
+      "extensions": [
+        ".jsx"
+      ]
+    },
+    "c": {
+      "name": "C",
+      "extensions": [
+        ".c",
+        ".h"
+      ]
+    },
+    "cpp": {
+      "name": "C++",
+      "extensions": [
+        ".cpp",
+        ".cc",
+        ".cxx",
+        ".c++",
+        ".hpp",
+        ".hh",
+        ".hxx",
+        ".h++",
+        ".ipp",
+        ".inl"
+      ]
+    },
+    "rust": {
+      "name": "Rust",
+      "extensions": [
+        ".rs"
+      ]
+    },
+    "go": {
+      "name": "Go",
+      "extensions": [
+        ".go"
+      ]
+    },
+    "java": {
+      "name": "Java",
+      "extensions": [
+        ".java"
+      ]
+    }
   },
   "languageServers": {
     "pyright": {
       "name": "Pyright",
-      "languages": [ "python" ],
+      "languages": [
+        "python"
+      ],
       "command": "pyright-langserver",
-      "args": [ "--stdio" ],
+      "args": [
+        "--stdio"
+      ],
       "package": "pyright",
-      "rootMarkers": [ "pyproject.toml", "pyrightconfig.json", "setup.py", "setup.cfg", "requirements.txt", "Pipfile" ],
+      "rootMarkers": [
+        "pyproject.toml",
+        "pyrightconfig.json",
+        "setup.py",
+        "setup.cfg",
+        "requirements.txt",
+        "Pipfile"
+      ],
       "settings": {
         "python": {
           "analysis": {
@@ -31,13 +108,26 @@
     },
     "typescript-language-server": {
       "name": "TypeScript",
-      "languages": [ "typescript", "typescriptreact", "javascript", "javascriptreact" ],
+      "languages": [
+        "typescript",
+        "typescriptreact",
+        "javascript",
+        "javascriptreact"
+      ],
       "command": "typescript-language-server",
-      "args": [ "--stdio" ],
+      "args": [
+        "--stdio"
+      ],
       "package": "typescript-language-server",
-      "rootMarkers": [ "tsconfig.json", "jsconfig.json", "package.json" ],
+      "rootMarkers": [
+        "tsconfig.json",
+        "jsconfig.json",
+        "package.json"
+      ],
       "initializationOptions": {
-        "tsserver": { "path": "${packageFile:typescript/lib/tsserver.js}" },
+        "tsserver": {
+          "path": "${packageFile:typescript/lib/tsserver.js}"
+        },
         "preferences": {
           "includeInlayParameterNameHints": "literals",
           "includeInlayFunctionLikeReturnTypeHints": true,
@@ -63,42 +153,80 @@
     },
     "clangd": {
       "name": "clangd",
-      "languages": [ "c", "cpp" ],
+      "languages": [
+        "c",
+        "cpp"
+      ],
       "command": "clangd",
-      "args": [ "--background-index", "--header-insertion=never" ],
+      "args": [
+        "--background-index",
+        "--header-insertion=never"
+      ],
       "package": "clangd",
-      "rootMarkers": [ "compile_commands.json", "compile_flags.txt", ".clangd", "CMakeLists.txt", "Makefile" ]
+      "rootMarkers": [
+        "compile_commands.json",
+        "compile_flags.txt",
+        ".clangd",
+        "CMakeLists.txt",
+        "Makefile"
+      ]
     },
     "rust-analyzer": {
       "name": "rust-analyzer",
-      "languages": [ "rust" ],
+      "languages": [
+        "rust"
+      ],
       "command": "rust-analyzer",
       "package": "rust-analyzer",
-      "rootMarkers": [ "Cargo.toml" ]
+      "rootMarkers": [
+        "Cargo.toml"
+      ]
     },
     "gopls": {
       "name": "gopls",
-      "languages": [ "go" ],
+      "languages": [
+        "go"
+      ],
       "command": "gopls",
       "package": "gopls",
-      "rootMarkers": [ "go.work", "go.mod" ]
+      "rootMarkers": [
+        "go.work",
+        "go.mod"
+      ]
     },
     "jdtls": {
       "name": "Eclipse JDT",
-      "languages": [ "java" ],
+      "languages": [
+        "java"
+      ],
       "command": "jdtls",
       "package": "jdtls",
-      "rootMarkers": [ "pom.xml", "build.gradle", "build.gradle.kts", "settings.gradle", ".project" ]
+      "rootMarkers": [
+        "pom.xml",
+        "build.gradle",
+        "build.gradle.kts",
+        "settings.gradle",
+        ".project"
+      ]
     }
   },
   "debugAdapters": {
     "debugpy": {
       "name": "Python (debugpy)",
-      "aliases": [ "python" ],
-      "languages": [ "python" ],
+      "aliases": [
+        "python"
+      ],
+      "languages": [
+        "python"
+      ],
       "command": "python3",
-      "alternativeCommands": [ "python" ],
-      "args": [ "-m", "debugpy.adapter" ],
+      "alternativeCommands": [
+        "python"
+      ],
+      "args": [
+        "-m",
+        "debugpy.adapter"
+      ],
       "package": "debugpy",
       "defaults": {
         "console": "internalConsole",
@@ -113,27 +241,52 @@
     },
     "lldb-dap": {
       "name": "LLDB",
-      "aliases": [ "lldb", "lldb-vscode" ],
-      "languages": [ "c", "cpp", "rust" ],
+      "aliases": [
+        "lldb",
+        "lldb-vscode"
+      ],
+      "languages": [
+        "c",
+        "cpp",
+        "rust"
+      ],
       "command": "lldb-dap",
-      "alternativeCommands": [ "lldb-vscode" ],
+      "alternativeCommands": [
+        "lldb-vscode"
+      ],
       "package": "lldb-dap"
     },
     "go": {
       "name": "Delve",
-      "aliases": [ "dlv" ],
-      "languages": [ "go" ],
+      "aliases": [
+        "dlv"
+      ],
+      "languages": [
+        "go"
+      ],
       "command": "dlv",
-      "args": [ "dap", "--listen", "127.0.0.1:${port}" ],
+      "args": [
+        "dap",
+        "--listen",
+        "127.0.0.1:${port}"
+      ],
       "transport": "tcp",
       "package": "delve"
     },
     "pwa-node": {
       "name": "Node.js (js-debug)",
-      "aliases": [ "node" ],
-      "languages": [ "javascript", "typescript" ],
+      "aliases": [
+        "node"
+      ],
+      "languages": [
+        "javascript",
+        "typescript"
+      ],
       "command": "js-debug-adapter",
-      "args": [ "${port}", "127.0.0.1" ],
+      "args": [
+        "${port}",
+        "127.0.0.1"
+      ],
       "transport": "tcp",
       "package": "js-debug",
       "defaults": {
@@ -142,6 +295,20 @@
       },
       "terminalDefaults": {
         "console": "integratedTerminal"
+      }
+    },
+    "gpsim": {
+      "name": "PIC18 simulator (gpsim)",
+      "languages": [
+        "c"
+      ],
+      "command": "python3",
+      "args": [
+        "/opt/tabstudio/microchip/gpsim_dap.py"
+      ],
+      "package": "gpsim",
+      "defaults": {
+        "stopOnEntry": true
       }
     }
   }

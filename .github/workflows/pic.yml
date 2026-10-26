@@ -50,6 +50,30 @@ jobs:
           path: ci-out/pic/
           if-no-files-found: error
 
+  native-tools:
+    name: PIC programmers and gpsim DAP (aarch64-musl)
+    needs: spike
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install PRoot build dependencies
+        run: sudo apt-get update -qq && sudo apt-get install -y libtalloc-dev gawk build-essential
+      - uses: actions/download-artifact@v4
+        with:
+          name: pic-xc8-ubuntu-24.04-arm
+          path: ci-out/firmware
+      - name: Build native programmer tools and test gpsim DAP with XC8 firmware
+        run: |
+          python3 build/pic/native_support.py --work "$RUNNER_TEMP/pic-tools" \
+            --output ci-out/pic-native-tools --firmware ci-out/firmware
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pic-native-tools
+          path: ci-out/pic-native-tools/
+          if-no-files-found: error
+
   native-fallback:
     name: Native ${{ matrix.tool }} feasibility (aarch64-musl)
     needs: spike

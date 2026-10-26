@@ -234,6 +234,14 @@ build/                     CI scripts
 
 ‏TabStudio נבנה בגלוי, ועכשיו זה עדיין מספיק מוקדם כדי שתורם אחד יעצב פיצ'ר שלם. מקומות טובים להתחיל בהם נמצאים ב[מפת הדרכים](docs/ROADMAP.md). קראו את [CONTRIBUTING.md](CONTRIBUTING.md) כדי לראות איך הקוד מאורגן ואיך נראה pull request טוב.
 
+## פיתוח Microchip PIC על הטאבלט
+
+ב־Toolchain Store אפשר להתקין **Microchip XC8** עבור PIC10/12/16/18 או **Microchip XC32** עבור PIC32, לאחר קריאת הרישיון ואישורו. המהדרים הרשמיים ללינוקס x86-64 פועלים דרך Box64 בתוך סביבת Alpine/PRoot, עם סביבת glibc וחבילות התקנים שנבדקות לפי SHA-256. **המשתמש מתקין את המהדרים תחת הרישיון של Microchip; ‏TabStudio אינו מפיץ אותם.** הבנייה המקומית אינה דורשת מחשב או הפעלת מנהל רישיונות.
+
+התבניות **PIC18 Blink (XC8)** ו־**PIC32 Blink (XC32)** ופרויקטי MPLAB X עם `nbproject/configurations.xml` וקובצי make שנוצרו על ידי MPLAB נבנים על הטאבלט. שגיאות מגיעות ל־Error List, מוצג שימוש בזיכרון, ו־clangd מקבל את כותרות ההתקן וההגדרות של XC. תבנית PIC18 משתמשת ב־PIC18F14K22, שלו יש מודל אמיתי ב־gpsim עבור דיבוג מקומי עם F5.
+
+יעד USB-OTG תואם שהוגדר מציג **Flash**; יעד אחר מפנה ל־Windows Bridge. צג סריאלי תומך ב־CDC-ACM, ‏CH340, ‏CP210x ו־FTDI. תכנות ודיבוג PIC עם PICkit 4/5 או Snap נעשים בכלי MPLAB במחשב המצומד: תמיכת PIC המתועדת של pymcuprog היא ב־PKOB nano. [הוראות, רשימות התקנים מדויקות, מדידות ARM64 ומגבלות הבדיקה בחומרה](docs/PIC.md).
+
 ## רישיון וסימנים מסחריים
 
 ‏TabStudio מופץ תחת [רישיון Apache 2.0](LICENSE). התוכנות של צד שלישי שהוא כולל או מוריד, כל אחת תחת הרישיון שלה, מפורטות ב-[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
