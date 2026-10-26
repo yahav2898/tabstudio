@@ -10,7 +10,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-static atomic_int child_pid, resume_child;
+static atomic_int child_pid, resume_child, reaped_child;
 
 static void require(int condition, const char *message)
 {
@@ -38,6 +38,9 @@ static void *trace(void *unused)
     while (!atomic_load(&resume_child))
         usleep(1000);
     require(ptrace(PTRACE_CONT, child, NULL, NULL) == 0, "owner resumes its ptracee");
+    /* Delve keeps its ptrace thread alive until the waiter has collected exit. */
+    while (!atomic_load(&reaped_child))
+        usleep(1000);
     return NULL;
 }
 
@@ -46,6 +49,9 @@ static void check(int nonblocking)
     pthread_t tracer;
     atomic_store(&child_pid, 0);
     atomic_store(&resume_child, 0);
+    atomic_store(&reaped_child, 0);
+    printf("Checking %s waits from a sibling thread.\n", nonblocking ? "polling" : "blocking");
+    fflush(stdout);
     require(pthread_create(&tracer, NULL, trace, NULL) == 0, "pthread_create");
     pid_t child;
     while ((child = atomic_load(&child_pid)) == 0)
@@ -71,6 +77,7 @@ static void check(int nonblocking)
     atomic_store(&resume_child, 1);
     require(waitpid(child, &status, __WALL) == child && WIFEXITED(status) && WEXITSTATUS(status) == 37,
         "sibling receives the exit status");
+    atomic_store(&reaped_child, 1);
     require(pthread_join(tracer, NULL) == 0, "pthread_join");
 }
 
