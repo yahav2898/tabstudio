@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using TabStudio.Services.Compose;
@@ -118,8 +118,15 @@ public static partial class ConnectionEnvironment
                     }
                 }
             }
-            else if (value[i] is '\'' or '"') quote = value[i];
-            else if (value[i] == ';') { fields.Add(value[start..i]); start = i + 1; }
+            else if (value[i] is '\'' or '"')
+            {
+                quote = value[i];
+            }
+            else if (value[i] == ';')
+            {
+                fields.Add(value[start..i]);
+                start = i + 1;
+            }
         }
         fields.Add(value[start..]);
         return fields;
