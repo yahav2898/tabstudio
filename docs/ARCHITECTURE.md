@@ -360,6 +360,11 @@ Native `fcntl` arguments use `nint`: Android's bionic reads the variadic slot as
 P/Invoke declaration can leave stale upper bits in Mono and abort `F_SETFD` in bionic's FORTIFY check. Process
 tests verify close-on-exec flags and descriptor duplication; the emulator exercises this boundary after updates.
 
+Toolchains also set `PROOT_DONT_POLLUTE_ROOTFS=1`, so bind-path placeholders live in each process's private
+glue filesystem. PRoot otherwise creates them in the shared rootfs and removes them on exit, which can make
+another language server or command's `getcwd` fail while its host project still exists. A native regression
+keeps two processes in the same bound directory, exits its creator, and verifies the surviving process's cwd.
+
 Mono 10's native `hot_reload_update_enabled` caches the configured mode but returns a local false on subsequent
 checks, which can make the public `MetadataUpdater.IsSupported` flag false after interpreter initialization.
 `HotReloadRuntime` still checks that flag first. On Android Mono only, if the startup environment and feature
