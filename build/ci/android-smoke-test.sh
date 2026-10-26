@@ -75,7 +75,9 @@ adb shell am instrument "$package/com.tabstudio.ide.SelfTestInstrumentation"
 verdict=""
 handled=0
 while [ -z "$verdict" ] && [ $(($(date +%s) - started)) -lt "$timeout" ]; do
-  sleep 3
+  # Desktop input/screenshot requests are handshakes with the app. Respond
+  # promptly so polling latency does not consume its launch-to-verdict budget.
+  sleep 1
   log="$(adb logcat -d -s TabStudio | tr -d '\r')"
   steps="$(printf '%s\n' "$log" | grep -oE 'TABSTUDIO_DESKTOP_STEP .*' || true)"
   count="$(printf '%s' "$steps" | grep -c . || true)"

@@ -510,7 +510,9 @@ jobs:
           target: google_apis
           arch: x86_64
           profile: pixel_c
-          cores: 3
+          # Use the public Linux runner's four cores for the cold six-SDK
+          # self-test; keep the existing memory and 900-second timing limits.
+          cores: 4
           ram-size: 4096M
           disk-size: 8192M
           disable-animations: true
