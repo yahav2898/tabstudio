@@ -15,14 +15,16 @@ public sealed class HotReloadSession : IDisposable
     private bool _faulted;
     private bool _disposed;
 
-    /// <summary>Whether CoreCLR or Android Mono enabled metadata updates at process startup.</summary>
+    /// <summary>Whether this supported desktop runtime enabled metadata updates at process startup.</summary>
     public static bool IsSupported => HotReloadRuntime.IsSupported;
 
-    /// <summary>The native flag, startup settings and any verified Mono fallback, for self-test diagnostics.</summary>
+    /// <summary>The native flag, startup settings and platform policy, for self-test diagnostics.</summary>
     public static string RuntimeDetails => HotReloadRuntime.Details;
 
     /// <summary>The reason updates are unavailable, suitable for the IDE.</summary>
-    public static string UnsupportedReason => "C# Hot Reload is unavailable in this runtime. Start TabStudio with DOTNET_MODIFIABLE_ASSEMBLIES=debug (Android Mono also needs the interpreter), then run a Debug build.";
+    public static string UnsupportedReason => OperatingSystem.IsAndroid()
+        ? "Local C# Hot Reload is unavailable on Android in 0.15. Restart the app to apply edits; Hot Reload is available in the desktop host."
+        : "C# Hot Reload is unavailable in this runtime. Start TabStudio with DOTNET_MODIFIABLE_ASSEMBLIES=debug, then run a Debug build.";
 
     /// <summary>Creates a session for a loaded local build.</summary>
     /// <param name="entry">The build's entry image.</param>

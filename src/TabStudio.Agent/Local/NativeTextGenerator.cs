@@ -6,7 +6,6 @@ namespace TabStudio.Agent.Local;
 /// <summary>Owns a llama.cpp model and context through TabStudio's small, pinned native C ABI.</summary>
 public sealed class NativeTextGenerator : ILocalTextGenerator, IDisposable
 {
-    private static readonly Piece PieceCallback = ReceivePiece;
     private readonly SemaphoreSlim _gate = new(1, 1);
     private nint _engine;
     private bool _disposed;
@@ -46,58 +45,35 @@ public sealed class NativeTextGenerator : ILocalTextGenerator, IDisposable
             {
                 ResetCancel(_engine);
                 using var registration = cancellationToken.Register(() => Cancel(_engine));
-                var state = new GenerationState(onText, cancellationToken);
-                // A static reverse P/Invoke target and explicit state handle also work when Android's Mono
-                // interpreter is enabled for Hot Reload. No capturing delegate crosses the native boundary.
-                var handle = GCHandle.Alloc(state);
-                try
+                var text = new StringBuilder();
+                var decoder = Encoding.UTF8.GetDecoder();
+                var bytes = new byte[64 * 1024];
+                var chars = new char[64 * 1024];
+                Exception? callbackError = null;
+                Piece callback = (data, length, _) =>
                 {
-                    var count = Generate(_engine, prompt, maxTokens, 0, PieceCallback, GCHandle.ToIntPtr(handle), out var speed);
-                    cancellationToken.ThrowIfCancellationRequested();
-                    if (state.Error is not null) throw new InvalidOperationException("Local inference callback failed.", state.Error);
-                    if (count < 0) throw new InvalidOperationException(Marshal.PtrToStringUTF8(Error()) ?? "Local inference failed.");
-                    if (count > 0 && state.Text.Length == 0)
-                        throw new InvalidOperationException(FormattableString.Invariant($"Local inference generated {count} tokens but delivered no text ({state.CallbackCount} callbacks, {state.ByteCount} UTF-8 bytes, {state.Text.Length} characters)."));
-                    return new LocalCompletion(state.Text.ToString(), count, speed);
-                }
-                finally { handle.Free(); }
+                    try
+                    {
+                        if (cancellationToken.IsCancellationRequested) return 1;
+                        if (length > bytes.Length) throw new InvalidDataException("The model produced an oversized token.");
+                        Marshal.Copy(data, bytes, 0, length);
+                        var count = decoder.GetChars(bytes.AsSpan(0, length), chars, flush: false);
+                        var piece = new string(chars, 0, count);
+                        text.Append(piece);
+                        onText?.Invoke(piece);
+                        return 0;
+                    }
+                    catch (Exception ex) { callbackError = ex; return 1; }
+                };
+                var count = Generate(_engine, prompt, maxTokens, 0, callback, 0, out var speed);
+                GC.KeepAlive(callback);
+                cancellationToken.ThrowIfCancellationRequested();
+                if (callbackError is not null) throw new InvalidOperationException("Local inference callback failed.", callbackError);
+                if (count < 0) throw new InvalidOperationException(Marshal.PtrToStringUTF8(Error()) ?? "Local inference failed.");
+                return new LocalCompletion(text.ToString(), count, speed);
             }, cancellationToken).ConfigureAwait(false);
         }
         finally { _gate.Release(); }
-    }
-
-    private static int ReceivePiece(nint data, int length, nint user) =>
-        ((GenerationState)GCHandle.FromIntPtr(user).Target!).Receive(data, length);
-
-    private sealed class GenerationState(Action<string>? onText, CancellationToken cancellationToken)
-    {
-        private readonly Decoder _decoder = Encoding.UTF8.GetDecoder();
-        private readonly byte[] _bytes = new byte[64 * 1024];
-        private readonly char[] _chars = new char[64 * 1024];
-        public StringBuilder Text { get; } = new();
-        public Exception? Error { get; private set; }
-        public int CallbackCount { get; private set; }
-        public int ByteCount { get; private set; }
-
-        public int Receive(nint data, int length)
-        {
-            try
-            {
-                if (cancellationToken.IsCancellationRequested) return 1;
-                CallbackCount++;
-                if (length < 0 || length > _bytes.Length) throw new InvalidDataException("The model produced an oversized token.");
-                ByteCount += length;
-                Marshal.Copy(data, _bytes, 0, length);
-                // Tokens may split a UTF-8 character. Keep the decoder across pieces and use its array overload
-                // inside the reverse P/Invoke callback, including when Mono runs the interpreter.
-                var count = _decoder.GetChars(_bytes, 0, length, _chars, 0, flush: false);
-                var piece = new string(_chars, 0, count);
-                Text.Append(piece);
-                onText?.Invoke(piece);
-                return 0;
-            }
-            catch (Exception ex) { Error = ex; return 1; }
-        }
     }
 
     /// <inheritdoc />

@@ -36,10 +36,11 @@ public sealed partial class WorkspaceViewModel
     [RelayCommand(CanExecute = nameof(CanHotReload))]
     private async Task ApplyHotReloadAsync() => await ApplyCurrentEditsAsync();
 
-    private bool CanHotReload() => IsRunning || (_session is not null && IsDebugging);
+    private bool CanHotReload() => HotReloadSession.IsSupported && (IsRunning || (_session is not null && IsDebugging));
 
     private void BeginHotReload(ProjectInfo project, BuildResult build, Assembly assembly, DebugBuild? debugBuild = null, AvaloniaAppHost? avalonia = null)
     {
+        // Keep the source-image snapshot for recording guards even when this runtime cannot apply deltas.
         if (_disposed || build.EntryAssembly?.HotReloadCompilation is null) return;
         EndHotReload();
         _hotReloadProject = project;
@@ -66,7 +67,7 @@ public sealed partial class WorkspaceViewModel
 
     private async Task<bool> ApplyCurrentEditsAsync()
     {
-        if (!HotReloadSession.IsSupported)
+        if (!HotReloadSession.IsSupported && _session?.Recording is null)
         {
             ShowHotReloadResult(new(HotReloadStatus.Unsupported, HotReloadSession.UnsupportedReason, []));
             return false;
@@ -190,7 +191,7 @@ public sealed partial class WorkspaceViewModel
 
     private async Task<bool> TryHotReloadOnSaveAsync(DocumentViewModel document)
     {
-        if (!HotReloadOnSave || _hotReload is null || !string.Equals(Path.GetExtension(document.FilePath), ".cs", StringComparison.OrdinalIgnoreCase)) return false;
+        if (!HotReloadSession.IsSupported || !HotReloadOnSave || _hotReload is null || !string.Equals(Path.GetExtension(document.FilePath), ".cs", StringComparison.OrdinalIgnoreCase)) return false;
         await ApplyCurrentEditsAsync();
         return true; // Compilation errors/rude edits keep the current app alive and offer an explicit restart.
     }

@@ -7,14 +7,23 @@ namespace TabStudio.App.Services;
 
 public static partial class SelfTest
 {
-    /// <summary>Proves the actual runtime accepts Roslyn metadata/IL/PDB deltas, including on Android Mono.</summary>
+    /// <summary>Proves desktop updates, or the explicit Android JIT capability boundary.</summary>
     internal static SelfTestResult CheckHotReload(CancellationToken cancellationToken)
     {
         var clock = Stopwatch.StartNew();
+        if (OperatingSystem.IsAndroid())
+        {
+            var jitPolicy = !HotReloadSession.IsSupported
+                && Environment.GetEnvironmentVariable("MONO_INTERPRETER_OPTIONS") is null
+                && Environment.GetEnvironmentVariable("DOTNET_MODIFIABLE_ASSEMBLIES") is null;
+            return new SelfTestResult(jitPolicy,
+                "Hot Reload: local Android updates deferred in 0.15; JIT runtime, restart to apply edits. " + HotReloadSession.RuntimeDetails,
+                clock.Elapsed);
+        }
+
         if (!HotReloadSession.IsSupported)
         {
-            // A desktop may be deliberately started without Hot Reload. The Android emulator must prove it works.
-            return new SelfTestResult(!OperatingSystem.IsAndroid(), "Hot Reload: " + HotReloadSession.UnsupportedReason + " " + HotReloadSession.RuntimeDetails, clock.Elapsed);
+            return new SelfTestResult(true, "Hot Reload: " + HotReloadSession.UnsupportedReason + " " + HotReloadSession.RuntimeDetails, clock.Elapsed);
         }
 
         var compiler = new CSharpCompiler();

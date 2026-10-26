@@ -3,6 +3,7 @@
              xmlns:controls="using:TabStudio.App.Controls"
              xmlns:conv="using:TabStudio.App.Converters"
              xmlns:input="using:TabStudio.App.Input"
+             xmlns:hotReload="using:TabStudio.Compilation.HotReload"
              xmlns:views="using:TabStudio.App.Views"
              xmlns:databaseViews="using:TabStudio.App.Views.Database"
              xmlns:actionViews="using:TabStudio.App.Views.Actions"
@@ -241,8 +242,11 @@
             <MenuItem Header="Brea_k All (Ctrl+Alt+Break)" Command="{Binding BreakAllCommand}" />
             <MenuItem Header="Stop D_ebugging" InputGesture="Shift+F5" Command="{Binding StopDebuggingCommand}" />
             <MenuItem Header="_Restart" InputGesture="Ctrl+Shift+F5" Command="{Binding RestartCommand}" />
-            <MenuItem Header="Apply C# Hot Reload" InputGesture="Alt+F10" Command="{Binding ApplyHotReloadCommand}" />
-            <MenuItem Header="Hot Reload C# on Save" ToggleType="CheckBox" IsChecked="{Binding HotReloadOnSave, Mode=TwoWay}" />
+            <MenuItem Header="Apply C# Hot Reload" InputGesture="Alt+F10" Command="{Binding ApplyHotReloadCommand}"
+                      ToolTip.Tip="Available in the desktop host. On Android 0.15, restart to apply C# edits." />
+            <MenuItem Header="Hot Reload C# on Save" ToggleType="CheckBox" IsChecked="{Binding HotReloadOnSave, Mode=TwoWay}"
+                      IsEnabled="{x:Static hotReload:HotReloadSession.IsSupported}"
+                      ToolTip.Tip="Available in the desktop host. On Android 0.15, saving a preview app restarts it." />
             <Separator />
             <MenuItem Header="Show _Next Statement (Alt+Num *)" Command="{Binding ShowNextStatementCommand}" />
             <MenuItem Header="Step _Into" InputGesture="F11" Command="{Binding StepIntoCommand}" />
@@ -419,7 +423,8 @@
 
           <!-- Debugging, as Visual Studio's Debug toolbar: Start Without Debugging, or while debugging Break All, Stop, Restart and the steps. -->
           <controls:AdaptiveBarItem Icon="{StaticResource Icon.Restart}" IconSize="16" Label="Hot Reload" Gesture="Alt+F10"
-                                    Priority="95" Command="{Binding ApplyHotReloadCommand}" />
+                                    Priority="95" Command="{Binding ApplyHotReloadCommand}"
+                                    ToolTip.Tip="Available in the desktop host. On Android 0.15, restart to apply C# edits." />
           <controls:AdaptiveBarItem Icon="{StaticResource Icon.Restart}" IconSize="16" Label="Restart to apply edits"
                                     IsPinned="True" IsVisible="{Binding HotReloadNeedsRestart}" Command="{Binding RestartForHotReloadCommand}" />
           <controls:AdaptiveBarItem Icon="{StaticResource Icon.PlayOutline}" IconSize="15" Label="Start Without Debugging" Gesture="Ctrl+F5" ShowsLabel="False"

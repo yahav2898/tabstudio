@@ -46,9 +46,10 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Runtime">
-    <!-- The IDE also ships Release APKs, but user projects run as Debug assemblies. Mono's metadata updates
-         require the interpreter and the startup environment below; setting it in OnCreate is too late. -->
-    <AndroidUseInterpreter>true</AndroidUseInterpreter>
+    <!-- Keep the IDE, Roslyn and editor on Mono's JIT. The Android SDK's interpreter switch replaces the
+         JIT globally; there is no supported per-user-assembly interpreter setting in this SDK. -->
+    <AndroidUseInterpreter>false</AndroidUseInterpreter>
+    <AndroidUseInterpreter Condition="'$(TabStudioInterpreterBenchmark)' == 'true'">true</AndroidUseInterpreter>
     <!--
       Roslyn composes its services with MEF and the programs TabStudio runs bind to the framework by reflection,
       so nothing may be trimmed away. Mono AOT is off for now: it multiplies build time and APK size, and
@@ -77,7 +78,8 @@
     <AndroidEnableSGenConcurrent>false</AndroidEnableSGenConcurrent>
   </PropertyGroup>
 
-  <ItemGroup>
+  <!-- The old global interpreter configuration is retained only for the controlled CI comparison. -->
+  <ItemGroup Condition="'$(TabStudioInterpreterBenchmark)' == 'true'">
     <AndroidEnvironment Include="..\..\build\android\hot-reload.env" />
   </ItemGroup>
 

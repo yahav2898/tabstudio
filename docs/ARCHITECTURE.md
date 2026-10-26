@@ -285,11 +285,15 @@ Library tests cover the editing engine, headless IDE tests capture completion an
 `SelfTest.Wpf.cs` creates the template, presses F5 and reads rendered page text on Android after the Windows Forms
 and design checks and before Swarm, retaining every existing self-test step.
 
-The combined device self test installs Python, Node.js, Go, Rust, C/C++ and Java serially through the shared
-Toolchain Manager while the independent .NET and UI checks run. Package downloads use at most four streams,
-every package is still verified before the serial apk operation, and the batch measures shared disk usage once. It awaits all package operations before the
-native run/debug checks, observes cancellation on every exit, and retains every check under the 15-minute
-launch-to-verdict limit. CI permits one retry only for named failures outside the merged feature tests and
+The manual combined device self test installs Python, Node.js, Go, Rust, C/C++ and Java serially through the
+shared Toolchain Manager. CI runs three independent shards: managed owns Go/Rust, UI owns Java, and native owns
+Python/Node/C/C++. Each installs only its own tools. UI waits until its preview/input checks finish before
+preparing Java, then restores the Avalonia workspace for scrolling and desktop input. Native checks the Android
+JIT capability boundary and runs all 200 process/GC checks before any package preparation. Package downloads use at most four
+streams; every package is verified before the serial apk operation, and each batch measures shared disk usage
+once. Each shard awaits its package operations before using the tools, observes cancellation on every exit,
+and retains every assertion under its own 15-minute launch-to-verdict limit. A required aggregate passes only
+when all three shards pass. CI permits one retry only for named failures outside the merged feature tests and
 keeps first-attempt logs and `FLAKY.txt` as artifacts for both pushes and pull requests.
 
 ## Port to Avalonia
@@ -357,30 +361,26 @@ then refreshes the preview. Avalonia creates fresh main content from the **same*
 static state survives, while the recreated view and its view model start fresh. A web preview reloads its current
 page; the server, its port and its application state remain alive.
 
-**Runtime activation.** Capability is always checked with `MetadataUpdater.IsSupported`. `Directory.Build.props`
-explicitly sets `MetadataUpdaterSupport=true`: .NET 10 otherwise writes the feature switch as false in Release
-hosts, including the APK and test executables, even if the user's emitted assembly is Debug. It must also be enabled
-before the runtime starts: the desktop `launchSettings.json` and CI set `DOTNET_MODIFIABLE_ASSEMBLIES=debug`;
-Android packages `build/android/hot-reload.env` and enables `AndroidUseInterpreter`, which also selects Mono's
-hot-reload runtime component. This is enabled in Release-packaged IDEs too: the assemblies being edited are the
-user's **Debug** assemblies, not the optimized IDE. Setting an environment variable in managed startup would be
-too late. A manually launched desktop host needs the same environment variable.
+**Runtime activation.** Desktop capability is checked with `MetadataUpdater.IsSupported`.
+`Directory.Build.props` sets `MetadataUpdaterSupport=true`, and the desktop launch profile and CI set
+`DOTNET_MODIFIABLE_ASSEMBLIES=debug` before startup. A manually launched desktop host needs the same environment.
 
-Android also sets `MONO_INTERPRETER_OPTIONS=-all`, disabling interpreter optimizations as Mono's debugger does.
-The optimized Mono 10 interpreter let two different native PIDs become the same invalid integer between spawn
-and managed handle construction during GC, even with precise root maps disabled. The interpreter and metadata
-updates remain enabled; execution can be slower and conservative scanning can retain more memory. The mandatory
-post-update process stress verifies the native handoff under repeated collections. The verdict records this
-startup setting as well as the update capability. See dotnet/runtime's `interp.c` option parser and debugger setup.
+Android explicitly sets `AndroidUseInterpreter=false`. In the .NET 10 Android SDK this is a global packaging
+choice: the interpreter APK does not contain the normal JIT. The supported per-assembly `MtouchInterpreter`
+configuration belongs to Apple targets, not Android. We do not ship a custom Mono runtime to change that boundary.
+See Microsoft's [Android build properties](https://learn.microsoft.com/en-us/dotnet/android/building-apps/build-properties#androiduseinterpreter).
+The upstream [mixed-runtime discussion](https://github.com/dotnet/runtime/issues/106491) describes this limitation.
+The IDE, Roslyn, IntelliSense and editor therefore retain JIT execution. Local Android C# Hot Reload and Edit and
+Continue are deferred in 0.15; ordinary debugging, recording, Continue and restart-on-save remain available.
+The command is disabled, no Android update probe runs, and unsupported-runtime messages direct the user to restart.
+TabStudio Link provides compilation services and does not add a remote Hot Reload execution protocol.
 
-Mono 10's native `hot_reload_update_enabled` caches the configured mode but returns a local false on subsequent
-checks, which can make the public `MetadataUpdater.IsSupported` flag false after interpreter initialization.
-`HotReloadRuntime` still checks that flag first. On Android Mono only, if the startup environment and feature
-switch are enabled and the native component-only capability check succeeds, it performs one cached proof on an
-isolated throwaway Debug assembly: emit a real Roslyn delta, call `MetadataUpdater.ApplyUpdate`, and verify an
-existing method now returns 2 instead of 1. Only that verified result enables the fallback; it never enables a
-disabled runtime or patches the IDE/user assembly to test support. The emulator verdict records both the raw
-flag and the probe outcome before its independent two-generation state-preservation test.
+The previous interpreter startup settings in `build/android/hot-reload.env` are packaged only when
+`TabStudioInterpreterBenchmark=true`. The runtime comparison builds both modes from the same source, clears
+app data, and measures real F5-to-input and C# completion-popup latency on the same emulator. It records the
+first request and warm samples separately, including baseline failures; the production JIT measurement must pass.
+This opt-in diagnostic setting is absent from production APK builds. Inference uses the original native backend,
+without reverse-callback workarounds for the removed global interpreter.
 
 **Supported scope and rude edits.** Method, constructor, operator and accessor bodies, expression-bodied getters
 and top-level statements can be updated. For lambdas, local functions, async methods and iterators, only changes
@@ -396,7 +396,7 @@ ApplyUpdate does **not** move an active frame's instruction pointer or re-execut
 finish their original IL and locals; later invocations use the new code. At a breakpoint before a helper call,
 editing that helper changes the output on Continue without a restart. A change to an already executing method
 itself appears on its next invocation. Startup/DI registration changes require a restart to execute again.
-Local console, Avalonia, ASP.NET Core and server-rendered/interactive-server Blazor are supported. Standalone
+The desktop host supports local console, Avalonia, ASP.NET Core and server-rendered/interactive-server Blazor. Standalone
 Blazor WebAssembly and WebAssembly/Auto client components run in a different browser Mono instance whose boot
 configuration currently disables metadata updates; these, remote Link/Swarm/Bridge runs and Release user builds
 still require a restart. An unsupported target/runtime reports this explicitly.
@@ -404,10 +404,10 @@ still require a restart. An unsupported target/runtime reports this explicitly.
 **Verification.** Compilation tests exercise metadata/IL/PDB emission, async and lambda edits, rude edits, failed
 and abandoned generations and real ApplyUpdate across multiple generations with an existing delegate and static
 state. App tests drive unsaved console edits, save updates, Edit and Continue, the shortcut and an Avalonia view
-refresh in the same loaded assembly. The emulator self test calls ApplyUpdate twice and checks `2 -> 12 -> 103`
-with a preserved static counter; capability being unavailable on Android fails the step.
-Immediately after these updates, the emulator runs the existing 200-process GC stress case before the app and
-toolchain checks, with opt-in PID handoff diagnostics for the interpreter's native process boundary.
+refresh in the same loaded assembly. Desktop tests call ApplyUpdate across multiple generations with static state
+preserved. The Android self test verifies that local Hot Reload is unavailable and the interpreter startup
+environment is absent, then runs all 200 process/GC assertions before the toolchain checks. Separate managed,
+UI and native emulator shards retain the other feature assertions, including nonempty real local-inference text.
 
 Run the feature's tests on CoreCLR with:
 

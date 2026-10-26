@@ -198,7 +198,12 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
 
         if (IsPaused)
         {
-            if (_hotReload is not null && TabStudio.Compilation.HotReload.HotReloadSession.IsSupported && !await ApplyCurrentEditsAsync()) return;
+            if (_hotReload is not null
+                && (TabStudio.Compilation.HotReload.HotReloadSession.IsSupported || _session?.Recording is not null)
+                && !await ApplyCurrentEditsAsync())
+            {
+                return;
+            }
             Resume(session => session.Continue());
             return;
         }

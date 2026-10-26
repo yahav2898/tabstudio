@@ -117,12 +117,12 @@ From there, try **New project** for a template in any language, **Open from GitH
 - **C# on the tablet.** NuGet packages restore on the device, so real projects build as they are. Test Explorer runs
   xUnit, NUnit and MSTest, and **Live Unit Testing** marks every covered line with a pass, fail or not-covered glyph
   and reruns the affected tests as you type. C# notebooks run cells as you write them.
-- **C# Hot Reload and Edit and Continue.** Run a local Debug console, Avalonia, ASP.NET Core or server-side
+- **C# Hot Reload and Edit and Continue on desktop.** In the desktop host, run a local Debug console, Avalonia, ASP.NET Core or server-side
   Blazor app, then tap **Hot Reload** or press **Alt+F10** to apply current edits without restarting. **Debug
   > Hot Reload C# on Save** applies them on save; while paused at a breakpoint, **Continue** applies them
   first. Avalonia recreates its content and web frameworks clear their metadata caches. Unsupported edits
   offer **Restart to apply edits**. Existing calls finish their old code; later calls use the changes. Android
-  ships the Mono interpreter with metadata updates enabled; on desktop, `dotnet run --project
+  keeps the IDE and Roslyn on the JIT and requires a restart to apply C# edits in 0.15. On desktop, `dotnet run --project
   src/TabStudio.Desktop` uses the included launch profile, or start with `DOTNET_MODIFIABLE_ASSEMBLIES=debug`.
   Browser WebAssembly, remote runs and Release user projects need a restart. See [Hot
   Reload](docs/ARCHITECTURE.md#hot-reload).
