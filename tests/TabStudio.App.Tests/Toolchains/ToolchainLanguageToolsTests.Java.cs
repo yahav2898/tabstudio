@@ -1,5 +1,6 @@
 using TabStudio.App.Services;
 using TabStudio.App.ViewModels;
+using TabStudio.Core.Diagnostics;
 using TabStudio.LanguageServers.Features;
 using TabStudio.LanguageServers.Hosting;
 using TabStudio.Toolchains.Projects;
@@ -25,7 +26,11 @@ public sealed partial class ToolchainLanguageToolsTests
         var offset = typed.IndexOf("System.out.pr\n", StringComparison.Ordinal) + "System.out.pr".Length;
         var completion = await AwaitCompletionsAsync(server, offset, i => i.Label.StartsWith("println", StringComparison.Ordinal), deadline.Token);
         Assert.Contains(completion.Items, i => i.Label.StartsWith("println", StringComparison.Ordinal));
+        // JDT reconciles diagnostics asynchronously. Observe the incomplete statement before restoring it,
+        // then wait for the corrected compilation unit before requesting a refactoring of that unit.
+        await UiTestHelpers.WaitUntilAsync(() => document.Diagnostics.Any(d => d.Severity == DiagnosticSeverityLevel.Error), TimeSpan.FromSeconds(90), because: "JDT to diagnose the incomplete completion probe");
         document.Document.Text = original;
+        await UiTestHelpers.WaitUntilAsync(() => document.Diagnostics.All(d => d.Severity != DiagnosticSeverityLevel.Error), TimeSpan.FromSeconds(90), because: "JDT to reconcile the restored Java source before refactoring");
         var call = original.LastIndexOf("greet(name.isEmpty", StringComparison.Ordinal) + 1;
         Assert.NotEmpty(await server.GetDefinitionsAsync(call, deadline.Token));
         Assert.True((await server.FindReferencesAsync(call, true, deadline.Token)).Count >= 2);
