@@ -29,17 +29,14 @@ Open a solution, press F5, and it builds, runs and debugs on the tablet itself.
 - [Features](#features)
   - [The IDE](#the-ide)
   - [Languages](#languages)
-  - [Backing services without Docker](#backing-services-without-docker)
-  - [Flutter and Dart (experimental)](#flutter-and-dart-experimental)
   - [App platforms](#app-platforms)
-  - [Every screen at once](#every-screen-at-once)
-  - [Code together with TabStudio Live](#code-together-with-tabstudio-live)
-  - [Projects and repositories](#projects-and-repositories)
-  - [Database Explorer](#database-explorer)
-  - [Remote development over SSH](#remote-development-over-ssh)
   - [Web servers and mobile apps](#web-servers-and-mobile-apps)
-  - [Microchip PIC](#microchip-pic)
-  - [Embedded firmware (experimental)](#embedded-firmware-experimental)
+  - [Embedded and microcontrollers](#embedded-and-microcontrollers)
+  - [Projects and repositories](#projects-and-repositories)
+  - [Services and databases](#services-and-databases)
+  - [Code together with TabStudio Live](#code-together-with-tabstudio-live)
+  - [Every screen at once](#every-screen-at-once)
+  - [Remote development over SSH](#remote-development-over-ssh)
   - [GitHub](#github)
   - [AI pair programmer](#ai-pair-programmer)
   - [Offline AI](#offline-ai)
@@ -59,8 +56,8 @@ root, no companion installs and no cloud account. Your code builds and runs on t
 | | |
 | --- | --- |
 | **Familiar** | The Visual Studio layout and shortcuts, rebuilt for touch: Solution Explorer, Properties, Error List, Output, a big Run button. |
-| **Real tools** | The real C# compiler (Roslyn) in the app, and the official toolchains for Python, Node.js, Go, Rust, C/C++ and Java. |
-| **Every workload** | Console, ASP.NET Core and Blazor, Avalonia, Windows Forms, WPF and WinUI, all running on the tablet. |
+| **Real tools** | The real C# compiler (Roslyn) in the app, and the official toolchains for Python, Node.js, Go, Rust, C/C++, Java and Dart. |
+| **Every workload** | Console, ASP.NET Core and Blazor, Avalonia, Windows Forms, WPF and WinUI, and firmware for most microcontrollers, all from the tablet. |
 | **Yours** | Works offline, keeps your code on the device, and is open source under Apache-2.0. |
 
 **Why it exists.** Billions of people own an Android device; far fewer own a computer. For many students a tablet or
@@ -123,23 +120,12 @@ From there, try **New project** for a template in any language, **Open from GitH
 - **C# on the tablet.** NuGet packages restore on the device, so real projects build as they are. Test Explorer runs
   xUnit, NUnit and MSTest, and **Live Unit Testing** marks every covered line with a pass, fail or not-covered glyph
   and reruns the affected tests as you type. C# notebooks run cells as you write them.
-- **C# Hot Reload and Edit and Continue on desktop.** In the desktop host, run a local Debug console, Avalonia, ASP.NET Core or server-side
-  Blazor app, then tap **Hot Reload** or press **Alt+F10** to apply current edits without restarting. **Debug
-  > Hot Reload C# on Save** applies them on save; while paused at a breakpoint, **Continue** applies them
-  first. Avalonia recreates its content and web frameworks clear their metadata caches. Unsupported edits
-  offer **Restart to apply edits**. Existing calls finish their old code; later calls use the changes. Android
-  keeps the IDE and Roslyn on the JIT and requires a restart to apply C# edits in 0.15. On desktop, `dotnet run --project
-  src/TabStudio.Desktop` uses the included launch profile, or start with `DOTNET_MODIFIABLE_ASSEMBLIES=debug`.
-  Browser WebAssembly, remote runs and Release user projects need a restart. See [Hot
-  Reload](docs/ARCHITECTURE.md#hot-reload).
-- **C# history.** **Debug > Start with Recording** captures shallow state into a configurable ring (64 MiB by
-  default). Step Back (**Shift+F10**), Step Back Into, Reverse Continue and the timeline inspect earlier
-  Locals, Watch, Call Stack and DataTips, marked **historical**, even after exit or a crash. A variable's
-  **When did this change?** action finds its last recorded write. Simple divide-by-zero and null-reference
-  causes link to the faulty write. Recording is off by default; history inspection never re-executes code.
-  During a recording, applying C# edits requires **Restart to apply edits**, which starts a new recording.
-  Continue without edits, or after reverting the edits, resumes the existing recording. See [recording details
-  and overhead](docs/features/time-travel.md).
+- **C# Hot Reload and Edit and Continue (desktop build).** Tap **Hot Reload** or press **Alt+F10** to apply edits to
+  a running console, Avalonia, ASP.NET Core or Blazor Server app without restarting, or let saving apply them. On
+  Android, C# edits apply with a quick restart. See [Hot Reload](docs/ARCHITECTURE.md#hot-reload).
+- **Time-travel debugging.** **Debug > Start with Recording**, then Step Back (**Shift+F10**), Reverse Continue and a
+  timeline show earlier Locals, Watch and Call Stack, even after the program crashed. **When did this change?** finds
+  a variable's last write. See [recording details and overhead](docs/features/time-travel.md).
 - **The Toolchain Store.** Languages and SDKs install into a Linux environment inside the app: Alpine Linux run
   with PRoot, with no root and no special permissions. Alpine packages are verified against Alpine's signatures;
   SDK components can also use official upstream archives with pinned SHA-256 checks.
@@ -148,27 +134,9 @@ From there, try **New project** for a template in any language, **Open from GitH
   server or debug adapter is missing, the status bar, the editor and F5 offer to install it.
 - **More languages through extensions.** VS Code extensions from Open VSX bring grammars, snippets, themes and
   language settings for anything else.
-
-### Backing services without Docker
-
-**View > Services** (also in Ctrl+Q) reads `compose.yaml`, `compose.yml`, `docker-compose.yml` or
-`docker-compose.yaml`, plus `.devcontainer/devcontainer.json` Compose references and overrides. PostgreSQL,
-Redis/Valkey, MySQL via MariaDB, RabbitMQ, nginx, Mailpit, MinIO, and MongoDB when Alpine packages it, run as native
-PRoot processes. Start all, stop, restart, health, per-service logs and localhost preview links are in one pane.
-F5 starts the startup project's dependencies first and rewrites Compose/appsettings connection hosts to localhost;
-`ConnectionStrings__<service>`, `<SERVICE>_HOST` and `<SERVICE>_PORT` are also supplied to the launched app.
-
-Each workspace keeps its own data in private app storage. PostgreSQL initializes the configured user, password and
-database and runs `/docker-entrypoint-initdb.d` SQL and shell scripts once. Image versions are matched against the
-signed Alpine index: PostgreSQL majors never silently change, and other version substitutions are shown in logs.
-Unsupported images explain why and offer a remote host. This is a native development runner, not Docker emulation:
-see [Services](docs/features/services.md) for mappings, volumes, networking, supported Compose fields and the CI harness.
-
-### Flutter and Dart (experimental)
-
-The Flutter Toolchain Store entry installs Flutter and its bundled Dart SDK in a separate Ubuntu glibc PRoot environment on ARM64/x64 tablets. Open `pubspec.yaml` projects, accept **flutter pub get**, and run the counter templates in the web preview. Dart IntelliSense uses the analysis server; Dart console debugging uses DAP. Saving Dart code hot-restarts Flutter web; Debug offers Flutter Hot Reload and Hot Restart for native VM-service targets.
-
-Native Android deployment of Flutter apps through the Android SDK toolchain is not verified yet. Embedded `web-server` previews do not provide VM breakpoints without a browser debugging bridge. See [the SDK spike and verification status](docs/features/flutter.md) before enabling this experimental feature in a release.
+- **Flutter and Dart (experimental).** The Flutter toolchain runs in its own Linux environment. `pubspec.yaml`
+  projects get `flutter pub get`, Dart IntelliSense and debugging, and the templates run in the web preview with hot
+  restart. Deploying Flutter apps to Android is not verified yet. See [status and limits](docs/features/flutter.md).
 
 ### App platforms
 
@@ -202,19 +170,81 @@ Native Android deployment of Flutter apps through the Android SDK toolchain is n
   a pane beside your code, with touch, keyboard and clipboard going back, errors mapped onto your files, and .NET
   debugging through the same debugger.
 
-### Every screen at once
+### Web servers and mobile apps
 
-- **Run on Swarm.** Phones and tablets running TabStudio join your swarm with one scan (**File > Join a Swarm**).
-  Choose Swarm in the Run menu and F5 starts the app on all of them; every save updates them all.
-- **Debug on any device.** A breakpoint hit on a phone stops in the tablet's debugger with that phone's Locals and
-  Call Stack. Pause one device or all of them.
-- **Device Matrix.** Every screen side by side: your phones, the App Preview, and virtual devices from a small phone
-  to a tablet, in light and dark, left to right and right to left, and with large fonts. A tap on one screen happens
-  on all of them.
-- **Layout checks.** Each screen is checked after every change for clipped text, off-screen and overlapping controls,
-  small touch targets and low contrast. Findings land in the Error List with a picture, one tap from **Fix with Agent**.
-- **Recorded UI tests.** Record a few taps on any screen and get a UI test that replays on every device, in Test
-  Explorer and in CI.
+- **Any server, previewed.** A program in any toolchain that listens on a port opens in the web preview beside the
+  code, or in the device's browser.
+- **Android apps.** The **Android SDK** toolchain brings OpenJDK, Gradle and the SDK tools. In an **Android App
+  (Kotlin)**, F5 builds the APK, installs and launches it, with Kotlin and Java IntelliSense, compiler errors in the
+  Error List, and Logcat.
+- **Capacitor apps.** F5 runs the web part, and **Run Android App** builds and installs the native app.
+- **iOS without a Mac.** **Build for iOS…** writes a GitHub Actions workflow for you to review, and **Run iOS
+  Workflow…** builds the IPA in the cloud. An Apple Developer account and signing secrets are required.
+- [Setup and limits](docs/features/mobile.md).
+
+### Embedded and microcontrollers
+
+- **Firmware projects as they are.** PlatformIO, Arduino, STM32Cube, ESP-IDF, Zephyr, Raspberry Pi Pico SDK and
+  embedded Rust projects build with their own tools on the tablet. ARM, RISC-V and AVR GCC, PlatformIO Core and the
+  Arduino CLI come from the Toolchain Store, pinned and verified.
+- **Microchip PIC.** Install **Microchip XC8** (PIC10/12/16/18) or **XC32** (PIC32) under Microchip's licence; the
+  official compilers run on the tablet with no PC and no licence activation. MPLAB X projects open as they are, F5
+  debugs PIC18 code in the gpsim simulator, and **Flash** programs a supported USB-OTG bootloader or programmer.
+- **Upload over USB.** The USB device Android grants is carried into the standard upload tools, so esptool, picotool,
+  BOSSA, OpenOCD, probe-rs and the others run unmodified: ESP32, Raspberry Pi Pico (UF2 copied to BOOTSEL without
+  mounting a disk), Arduino, STM32, nRF, CH32, MSP430, Teensy and AVR UPDI. Uploads are checked against the image and
+  read back where the route allows.
+- **Debug on the chip.** probe-rs and OpenOCD drive TabStudio's debugger: breakpoints, stepping, the call stack, a
+  register browser built from SVD files, and RTT and defmt logs in the Output panel.
+- **Understand the firmware.** A memory treemap and the size change of every build, crashes decoded to their source
+  line, stack budgets, pin checks and register-aware quick fixes.
+- **Production work.** Back up and compare flash, program a batch of boards with per-board verification, and upload
+  over Wi-Fi to ArduinoOTA boards. The serial monitor speaks CDC-ACM, CH340, CP210x and FTDI.
+- **Honest coverage.** CI verifies builds, debugging on emulated Cortex-M, RISC-V and AVR, and every USB route against
+  recorded transcripts. The [embedded guide](docs/features/embedded.md) lists each board, probe and bootloader with
+  its evidence, including which were checked on physical hardware; see also the [PIC guide](docs/features/pic.md).
+
+### Projects and repositories
+
+- **Open from GitHub.** Paste a repository's address; TabStudio downloads it, detects what it is built with, opens its
+  main solution and selects its build, run and debug plans.
+- **Automatic setup.** Opening a Python or Node.js repository installs its toolchain and packages once per manifest
+  change, with progress and cancel: the Python version the project asks for in a virtual environment, the system
+  libraries that packages need to compile, and `npm ci` when there is a lockfile. A failure is one clear message, with
+  the full log a tap away. **Set projects up when they open** in Tools turns it off.
+- **Static web sites.** A folder with `index.html` opens as a site. F5 serves it in the web preview, saved HTML
+  reloads and saved CSS applies without losing the page's state, with HTML, CSS and JSON IntelliSense.
+- **Compatibility Doctor.** For every project it shows where it runs on the tablet and why, and fixes what stands in
+  the way.
+- **Real-world project files.** SDK-style projects, `Directory.Build.props`, `.targets` and the files they import,
+  `Directory.Packages.props`, project references, central package management and multi-targeting are read as MSBuild
+  reads them. Projects compile against the projects their references reference, get the `InternalsVisibleTo` and
+  other assembly attributes the SDK generates, and are strong-name signed with their key files. Source generators
+  load with dependencies from anywhere in their package, and a generator that fails shows in the Error List. Build
+  Solution builds in dependency order and reports each error once.
+- **Honest about what cannot run here.** An Aspire AppHost is explained in the Compatibility Doctor and skipped by
+  Build with the reason: it starts the app's projects and containers on a computer.
+- **Tested on real repositories.** CI opens 21 public repositories pinned to commits, builds and runs them in the
+  IDE, and holds each to an error baseline that only goes down: .NET solutions such as MediatR, CleanArchitecture,
+  Polly, eShopOnWeb and SimplCommerce, classic Windows Forms and WPF tutorials, and Python, Java and Rust projects.
+  The embedded workflow does the same for PlatformIO, Arduino, STM32Cube, Pico SDK and embedded Rust projects.
+
+### Services and databases
+
+- **Backing services without Docker.** **View > Services** reads Compose files and devcontainer references and runs
+  PostgreSQL, Redis and Valkey, MySQL (through MariaDB), RabbitMQ, nginx, Mailpit, MinIO and MongoDB as native processes
+  on the tablet, with health, logs and preview links. A service starts when you start it or when the run configuration
+  points at it, and the app receives its connection settings. Each workspace keeps its own data. See
+  [the services guide](docs/features/services.md).
+- **Connect.** SQLite files, PostgreSQL and SQL Server. Connection strings are discovered in the solution's
+  `appsettings*.json` and user secrets, and saved ones are encrypted with an Android Keystore key.
+- **Browse and query.** Databases, schemas, tables, views, columns, keys and indexes. SQL tabs complete from the
+  connected schema, and **Ctrl+Enter** runs the selection, with sortable results, CSV and JSON copying, multiple
+  result sets and timings.
+- **Edit data.** Page through a table and change cells; each update is checked against the row as it was read.
+- **EF Core.** List DbContexts and migrations, add a migration and update the database, built in memory on the
+  tablet.
+- [Setup and limits](docs/features/database.md).
 
 ### Code together with TabStudio Live
 
@@ -230,40 +260,19 @@ Native Android deployment of Flutter apps through the Android SDK toolchain is n
 - **Classroom.** One presenter and up to 32 devices that follow by default, with raised hands and control handed to a
   student. The host chooses who edits and who only watches, and can remove anyone. See [the guide](docs/features/live.md).
 
-### Projects and repositories
+### Every screen at once
 
-- **Open from GitHub.** Paste a repository's address; TabStudio downloads it, detects what it is built with, opens its
-  main solution and selects its build, run and debug plans.
-- **Automatic setup.** Opening a Python or Node.js repository installs its toolchain and packages once per manifest
-  change, with progress and cancel: a virtual environment for pip, and `npm ci` when there is a lockfile. **Set
-  projects up when they open** in Tools turns it off.
-- **Static web sites.** A folder with `index.html` opens as a site. F5 serves it in the web preview, saved HTML
-  reloads and saved CSS applies without losing the page's state, with HTML, CSS and JSON IntelliSense.
-- **Compatibility Doctor.** For every project it shows where it runs on the tablet and why, and fixes what stands in
-  the way.
-- **Real-world project files.** SDK-style projects, `Directory.Build.props`, `.targets` and the files they import,
-  `Directory.Packages.props`, project references, central package management and multi-targeting are read as MSBuild
-  reads them. Projects compile against the projects their references reference, get the `InternalsVisibleTo` and
-  other assembly attributes the SDK generates, and are strong-name signed with their key files. Source generators
-  load with dependencies from anywhere in their package, and a generator that fails shows in the Error List. Build
-  Solution builds in dependency order and reports each error once.
-- **Honest about what cannot run here.** An Aspire AppHost is explained in the Compatibility Doctor and skipped by
-  Build with the reason: it starts the app's projects and containers on a computer.
-- **Tested on real repositories.** CI opens ten public repositories pinned to commits, such as MediatR,
-  CleanArchitecture, Polly and eShopOnWeb, builds them in the IDE and holds each to an error baseline that only goes
-  down.
-
-### Database Explorer
-
-- **Connect.** SQLite files, PostgreSQL and SQL Server. Connection strings are discovered in the solution's
-  `appsettings*.json` and user secrets, and saved ones are encrypted with an Android Keystore key.
-- **Browse and query.** Databases, schemas, tables, views, columns, keys and indexes. SQL tabs complete from the
-  connected schema, and **Ctrl+Enter** runs the selection, with sortable results, CSV and JSON copying, multiple
-  result sets and timings.
-- **Edit data.** Page through a table and change cells; each update is checked against the row as it was read.
-- **EF Core.** List DbContexts and migrations, add a migration and update the database, built in memory on the
-  tablet.
-- [Setup and limits](docs/features/database.md).
+- **Run on Swarm.** Phones and tablets running TabStudio join your swarm with one scan (**File > Join a Swarm**).
+  Choose Swarm in the Run menu and F5 starts the app on all of them; every save updates them all.
+- **Debug on any device.** A breakpoint hit on a phone stops in the tablet's debugger with that phone's Locals and
+  Call Stack. Pause one device or all of them.
+- **Device Matrix.** Every screen side by side: your phones, the App Preview, and virtual devices from a small phone
+  to a tablet, in light and dark, left to right and right to left, and with large fonts. A tap on one screen happens
+  on all of them.
+- **Layout checks.** Each screen is checked after every change for clipped text, off-screen and overlapping controls,
+  small touch targets and low contrast. Findings land in the Error List with a picture, one tap from **Fix with Agent**.
+- **Recorded UI tests.** Record a few taps on any screen and get a UI test that replays on every device, in Test
+  Explorer and in CI.
 
 ### Remote development over SSH
 
@@ -275,59 +284,6 @@ Native Android deployment of Flutter apps through the Android SDK toolchain is n
 - **Publish to server.** An ASP.NET Core project is published, uploaded as a new release and its systemd service
   restarted.
 - [Setup, publishing and limits](docs/features/remote-ssh.md).
-
-### Web servers and mobile apps
-
-- **Any server, previewed.** A program in any toolchain that listens on a port opens in the web preview beside the
-  code, or in the device's browser.
-- **Android apps.** The **Android SDK** toolchain brings OpenJDK, Gradle and the SDK tools. In an **Android App
-  (Kotlin)**, F5 builds the APK, installs and launches it, with Kotlin and Java IntelliSense, compiler errors in the
-  Error List, and Logcat.
-- **Capacitor apps.** F5 runs the web part, and **Run Android App** builds and installs the native app.
-- **iOS without a Mac.** **Build for iOS…** writes a GitHub Actions workflow for you to review, and **Run iOS
-  Workflow…** builds the IPA in the cloud. An Apple Developer account and signing secrets are required.
-- [Setup and limits](docs/features/mobile.md).
-
-### Microchip PIC
-
-- **Compilers on the tablet.** Install **Microchip XC8** (PIC10/12/16/18) or **XC32** (PIC32) from the Toolchain
-  Store under Microchip's licence. The official compilers run in the tablet's Linux environment, with no PC and no
-  licence activation for local builds. You install them; TabStudio never redistributes them.
-- **MPLAB X projects.** Open a project with `nbproject/configurations.xml`, or create **PIC18 Blink (XC8)** or
-  **PIC32 Blink (XC32)**. Builds keep MPLAB's options, fill the Error List, show memory usage and give clangd the
-  device's headers.
-- **Debug and flash.** F5 debugs PIC18 Blink in the gpsim simulator. **Flash** programs a supported USB-OTG
-  bootloader or programmer, and the serial monitor speaks CDC-ACM, CH340, CP210x and FTDI. PICkit 4/5 and Snap use
-  MPLAB on a PC paired as a Windows Bridge.
-- [Setup, device lists and limits](docs/features/pic.md).
-
-### Embedded firmware (experimental)
-
-- **Open native firmware projects.** PlatformIO, Arduino sketches and library examples, generated STM32Cube
-  builds, ESP-IDF, Zephyr, Pico SDK and embedded Rust use their own build systems. The Toolchain Store adds
-  ARM/RISC-V/AVR GCC, pinned PlatformIO Core and Arduino CLI, with native glibc recipes for ESP-IDF, Zephyr,
-  Pico SDK and embedded Rust. Third-party board cores retain their own dependencies.
-- **Use Android's granted USB device.** Reused PIC USB drivers, a libusb descriptor bridge and a serial PTY/control
-  bridge let compatible upstream tools upload and verify application firmware. A separate permissioned usbfs
-  bridge supports stock nusb clients. Official probe-rs DAP and the OpenOCD/GDB fallback use the existing debugger;
-  OpenOCD selects a libusb HIDAPI backend for compatible HID probes.
-- **Choose the bootloader you use.** Typed routes cover WCH ROM ISP, MSP430, Nordic SDK Secure DFU application
-  packages and AVR UART UPDI. Profiles automatically install pinned native esptool/picotool distributions or
-  source-built BOSSA, Teensy, WCH and MSPDebug clients. UPDI reuses pinned pymcuprog support; the optional legacy Nordic DFU recipe retains its original vendor bundle
-  and licenses, using explicit Box64 where needed. Teensy HalfKay reports transfer completion with readback unavailable and is excluded from
-  verified production batches. Physical hardware remains unverified.
-- **Copy BOOTSEL firmware without mounting a disk.** A permissioned USB storage worker and user-space FAT
-  driver submit family-checked RP2040/RP2350 UF2 files. USB/file acceptance is kept distinct from flash verification.
-- **Keep evidence from real work.** Read application flash twice before saving a backup, compare dumps, program
-  an explicitly selected batch with per-board verification/logs, or upload to an ArduinoOTA-capable Wi-Fi board.
-- **Understand the firmware.** Linked-ELF memory treemaps and build-size changes, crash decoding with matching
-  symbols, conservative stack budgets, pin checks, a docked SVD register browser and verified mask quick fixes. Native
-  RTT/defmt logs stream into Output; static memory and disassembly snapshots use the paused debugger. Host
-  tests, probe-rs board-test runs with flash verification and imported board results appear in Test Explorer; mpremote opens the
-  board REPL and verifies file sync. Board-test flash/RTT acquisition remains hardware-unverified.
-- **Review the actual coverage.** Templates and synthetic/emulator tests do not verify physical boards. SDK
-  package compatibility, unsupported programmer routes, RTT/defmt acquisition and hardware checks still have gaps. The
-  [embedded guide](docs/features/embedded.md) lists every route, its verification evidence and its limits.
 
 ### GitHub
 
@@ -462,6 +418,7 @@ src/
   TabStudio.Remote/          SSH.NET, device keys, SFTP source caches, remote shells and server publishing
   TabStudio.Agent/           Cloud and offline coding agents, MCP, sketch to XAML
   TabStudio.Link/            TabStudio Link: pairing, encrypted transport, the remote language service
+  TabStudio.Live/            TabStudio Live: shared documents (a text CRDT), sessions, follow and shared debugging
   TabStudio.Swarm/           Swarm: running, debugging and recording an app on every joined device
   TabStudio.WindowsBridge/   The Windows Bridge protocol, shared by the tablet and the PC
   TabStudio.WindowsBridge.Windows/  The Windows Bridge host that runs on the PC
