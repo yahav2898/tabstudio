@@ -4,7 +4,7 @@
 + head -60
 /usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To build this project, the following workloads must be installed: android [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Android/TabStudio.Android.csproj]
 /usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To install these workloads, run the following command: dotnet workload restore [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Android/TabStudio.Android.csproj]
-Time Elapsed 00:00:02.40
+Time Elapsed 00:00:02.56
 + for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
 + dotnet test tests/TabStudio.Packages.Tests -c Release --no-build
 + grep -E '^(Passed|Failed)!|  Failed |error'
@@ -15,8 +15,8 @@ Time Elapsed 00:00:02.40
 + head -20
 + for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
 + dotnet test tests/TabStudio.Core.Tests -c Release --no-build
-+ grep -E '^(Passed|Failed)!|  Failed |error'
 + head -20
++ grep -E '^(Passed|Failed)!|  Failed |error'
 + for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
 + dotnet test tests/TabStudio.TestRunner.Tests -c Release --no-build
 + grep -E '^(Passed|Failed)!|  Failed |error'
