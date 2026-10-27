@@ -1,0 +1,91 @@
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
+[xUnit.net 00:00:00.14]   Discovering: TabStudio.App.Tests
+[xUnit.net 00:00:00.52]   Discovered:  TabStudio.App.Tests
+[xUnit.net 00:00:00.56]   Starting:    TabStudio.App.Tests
+  Passed TabStudio.App.Tests.Design.DesignRuleTests.A_new_panel_follows_the_design_rules(part: "Views/Live/LivePanelView.axaml") [30 ms]
+  Passed TabStudio.App.Tests.Design.DesignRuleTests.A_new_panel_follows_the_design_rules(part: "Views/Live/LiveShareView.axaml") [1 ms]
+  Passed TabStudio.App.Tests.Design.DesignRuleTests.A_new_panel_follows_the_design_rules(part: "Views/Database/DatabaseExplorerView.axaml") [2 ms]
+  Passed TabStudio.App.Tests.Design.DesignRuleTests.A_new_panel_follows_the_design_rules(part: "Views/WorkspaceView.axaml#RecordingTimeline") [3 ms]
+  Passed TabStudio.App.Tests.Design.DesignRuleTests.A_new_panel_follows_the_design_rules(part: "Views/Toolchains/ToolchainOverlaysView.axaml#Serve"···) [< 1 ms]
+  Passed TabStudio.App.Tests.Design.DesignRuleTests.A_new_panel_follows_the_design_rules(part: "Views/WorkspaceView.axaml#PromptDialog") [3 ms]
+  Passed TabStudio.App.Tests.Design.DesignRuleTests.A_new_panel_follows_the_design_rules(part: "Views/Live/LiveJoinView.axaml") [< 1 ms]
+  Passed TabStudio.App.Tests.Design.DesignRuleTests.A_new_panel_follows_the_design_rules(part: "Views/AgentPanelView.axaml#Settings") [1 ms]
+  Passed TabStudio.App.Tests.Design.DesignRuleTests.A_new_panel_follows_the_design_rules(part: "Views/Toolchains/SerialMonitorView.axaml") [< 1 ms]
+  Passed TabStudio.App.Tests.Design.DesignRuleTests.A_new_panel_follows_the_design_rules(part: "Views/RemoteExplorerView.axaml") [1 ms]
+  Passed TabStudio.App.Tests.Design.DesignRuleTests.A_new_panel_follows_the_design_rules(part: "Views/Database/DatabaseQueryView.axaml") [< 1 ms]
+  Passed TabStudio.App.Tests.Design.DesignRuleTests.A_new_panel_follows_the_design_rules(part: "Views/PortSummaryView.axaml") [< 1 ms]
+  Passed TabStudio.App.Tests.Design.DesignRuleTests.A_new_panel_follows_the_design_rules(part: "Views/ServicesView.axaml") [< 1 ms]
+  Passed TabStudio.App.Tests.Live.LiveSessionTests.A_guests_breakpoint_pauses_the_hosts_program_and_both_show_the_pause [5 s]
+[xUnit.net 00:00:07.33]     TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_type_at_once_and_end_with_the_same_text [FAIL]
+[xUnit.net 00:00:07.33]       Assert.Equal() Failure: Values differ
+[xUnit.net 00:00:07.33]       Expected: Tuple (10, 14)
+[xUnit.net 00:00:07.33]       Actual:   Tuple (0, 0)
+[xUnit.net 00:00:07.33]       Stack Trace:
+[xUnit.net 00:00:07.33]         /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs(79,0): at TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_type_at_once_and_end_with_the_same_text()
+[xUnit.net 00:00:07.33]         /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs(88,0): at TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_type_at_once_and_end_with_the_same_text()
+[xUnit.net 00:00:07.33]         /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs(88,0): at TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_type_at_once_and_end_with_the_same_text()
+[xUnit.net 00:00:07.33]         --- End of stack trace from previous location ---
+  Failed TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_type_at_once_and_end_with_the_same_text [754 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: Tuple (10, 14)
+Actual:   Tuple (0, 0)
+  Stack Trace:
+     at TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_type_at_once_and_end_with_the_same_text() in /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs:line 79
+   at TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_type_at_once_and_end_with_the_same_text() in /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs:line 88
+   at TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_type_at_once_and_end_with_the_same_text() in /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs:line 88
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:11.23]     TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_editing_together_in_the_real_shell [FAIL]
+[xUnit.net 00:00:11.23]       Text stretched instead of centered:
+[xUnit.net 00:00:11.23]       Border.participant > Grid > StackPanel > StackPanel > TextBlock "Dana's tablet (you)" is 3 px taller than its text
+[xUnit.net 00:00:11.23]       Border.participant > Grid > StackPanel > StackPanel > TextBlock "Noam's phone" is 3 px taller than its text
+[xUnit.net 00:00:11.23]       Stack Trace:
+[xUnit.net 00:00:11.23]         /_/tests/TabStudio.App.Tests/Design/StretchedText.cs(65,0): at TabStudio.App.Tests.Design.StretchedText.AssertNone(IEnumerable`1 found)
+[xUnit.net 00:00:11.23]         /_/tests/TabStudio.App.Tests/Design/StretchedText.cs(53,0): at TabStudio.App.Tests.Design.StretchedText.Check(Visual root, String folder, String screenshot)
+[xUnit.net 00:00:11.23]         /_/tests/TabStudio.App.Tests/UiTestHelpers.cs(40,0): at TabStudio.App.Tests.UiTestHelpers.SaveScreenshot(Window window, String name)
+[xUnit.net 00:00:11.23]         /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs(306,0): at TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_editing_together_in_the_real_shell()
+[xUnit.net 00:00:11.23]         /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs(316,0): at TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_editing_together_in_the_real_shell()
+[xUnit.net 00:00:11.23]         /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs(316,0): at TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_editing_together_in_the_real_shell()
+[xUnit.net 00:00:11.23]         --- End of stack trace from previous location ---
+  Failed TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_editing_together_in_the_real_shell [3 s]
+  Error Message:
+   Text stretched instead of centered:
+Border.participant > Grid > StackPanel > StackPanel > TextBlock "Dana's tablet (you)" is 3 px taller than its text
+Border.participant > Grid > StackPanel > StackPanel > TextBlock "Noam's phone" is 3 px taller than its text
+  Stack Trace:
+     at TabStudio.App.Tests.Design.StretchedText.AssertNone(IEnumerable`1 found) in /_/tests/TabStudio.App.Tests/Design/StretchedText.cs:line 65
+   at TabStudio.App.Tests.Design.StretchedText.Check(Visual root, String folder, String screenshot) in /_/tests/TabStudio.App.Tests/Design/StretchedText.cs:line 53
+   at TabStudio.App.Tests.UiTestHelpers.SaveScreenshot(Window window, String name) in /_/tests/TabStudio.App.Tests/UiTestHelpers.cs:line 40
+   at TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_editing_together_in_the_real_shell() in /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs:line 306
+   at TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_editing_together_in_the_real_shell() in /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs:line 316
+   at TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_editing_together_in_the_real_shell() in /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs:line 316
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:11.64]     TabStudio.App.Tests.Live.LiveSessionTests.Follow_shows_the_followed_document_and_place_until_the_follower_types [FAIL]
+[xUnit.net 00:00:11.64]       System.InvalidOperationException : /tmp/tabstudio-tests/51436fd9c6f54fee8c3726ffc4b2a60f/Projects/HelloTablet/src/HelloTablet/Greeter.cs did not open.
+[xUnit.net 00:00:11.64]       Stack Trace:
+[xUnit.net 00:00:11.64]         /_/tests/TabStudio.App.Tests/Live/LiveParticipant.cs(100,0): at TabStudio.App.Tests.Live.LiveParticipant.OpenSharedAsync(String path)
+[xUnit.net 00:00:11.64]         /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs(162,0): at TabStudio.App.Tests.Live.LiveSessionTests.Follow_shows_the_followed_document_and_place_until_the_follower_types()
+[xUnit.net 00:00:11.64]         /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs(181,0): at TabStudio.App.Tests.Live.LiveSessionTests.Follow_shows_the_followed_document_and_place_until_the_follower_types()
+[xUnit.net 00:00:11.64]         /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs(181,0): at TabStudio.App.Tests.Live.LiveSessionTests.Follow_shows_the_followed_document_and_place_until_the_follower_types()
+[xUnit.net 00:00:11.64]         --- End of stack trace from previous location ---
+  Failed TabStudio.App.Tests.Live.LiveSessionTests.Follow_shows_the_followed_document_and_place_until_the_follower_types [396 ms]
+  Error Message:
+   System.InvalidOperationException : /tmp/tabstudio-tests/51436fd9c6f54fee8c3726ffc4b2a60f/Projects/HelloTablet/src/HelloTablet/Greeter.cs did not open.
+  Stack Trace:
+     at TabStudio.App.Tests.Live.LiveParticipant.OpenSharedAsync(String path) in /_/tests/TabStudio.App.Tests/Live/LiveParticipant.cs:line 100
+   at TabStudio.App.Tests.Live.LiveSessionTests.Follow_shows_the_followed_document_and_place_until_the_follower_types() in /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs:line 162
+   at TabStudio.App.Tests.Live.LiveSessionTests.Follow_shows_the_followed_document_and_place_until_the_follower_types() in /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs:line 181
+   at TabStudio.App.Tests.Live.LiveSessionTests.Follow_shows_the_followed_document_and_place_until_the_follower_types() in /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs:line 181
+--- End of stack trace from previous location ---
+  Passed TabStudio.App.Tests.Live.LiveSessionTests.Five_devices_type_at_once_and_end_with_the_same_text [1 s]
+[xUnit.net 00:00:13.58]   Finished:    TabStudio.App.Tests
+Data collector 'Blame' message: All tests finished running, Sequence file will not be generated.
+  Passed TabStudio.App.Tests.Live.LiveSessionTests.A_guest_who_only_watches_cannot_change_the_text_and_a_removed_guest_leaves [820 ms]
+
+Test Run Failed.
+Total tests: 19
+     Passed: 16
+     Failed: 3
+ Total time: 14.3888 Seconds

@@ -1,5 +1,44 @@
 == build src/TabStudio.App
-src/TabStudio.App/ViewModels/WorkspaceViewModel.Live.cs(168,44): error CS0165: Use of unassigned local variable 'session'
 == build tests/TabStudio.App.Tests
-src/TabStudio.App/ViewModels/WorkspaceViewModel.Live.cs(168,44): error CS0165: Use of unassigned local variable 'session'
-BUILD FAILED
+== test tests/TabStudio.App.Tests FullyQualifiedName~TabStudio.App.Tests.Live|FullyQualifiedName~DesignRuleTests
+[xUnit.net 00:00:07.33]       Assert.Equal() Failure: Values differ
+[xUnit.net 00:00:07.33]       Expected: Tuple (10, 14)
+[xUnit.net 00:00:07.33]       Actual:   Tuple (0, 0)
+[xUnit.net 00:00:07.33]         /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs(79,0): at TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_type_at_once_and_end_with_the_same_text()
+[xUnit.net 00:00:07.33]         /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs(88,0): at TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_type_at_once_and_end_with_the_same_text()
+[xUnit.net 00:00:07.33]         /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs(88,0): at TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_type_at_once_and_end_with_the_same_text()
+  Failed TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_type_at_once_and_end_with_the_same_text [754 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: Tuple (10, 14)
+Actual:   Tuple (0, 0)
+     at TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_type_at_once_and_end_with_the_same_text() in /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs:line 79
+   at TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_type_at_once_and_end_with_the_same_text() in /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs:line 88
+   at TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_type_at_once_and_end_with_the_same_text() in /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs:line 88
+[xUnit.net 00:00:11.23]         /_/tests/TabStudio.App.Tests/Design/StretchedText.cs(65,0): at TabStudio.App.Tests.Design.StretchedText.AssertNone(IEnumerable`1 found)
+[xUnit.net 00:00:11.23]         /_/tests/TabStudio.App.Tests/Design/StretchedText.cs(53,0): at TabStudio.App.Tests.Design.StretchedText.Check(Visual root, String folder, String screenshot)
+[xUnit.net 00:00:11.23]         /_/tests/TabStudio.App.Tests/UiTestHelpers.cs(40,0): at TabStudio.App.Tests.UiTestHelpers.SaveScreenshot(Window window, String name)
+[xUnit.net 00:00:11.23]         /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs(306,0): at TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_editing_together_in_the_real_shell()
+[xUnit.net 00:00:11.23]         /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs(316,0): at TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_editing_together_in_the_real_shell()
+[xUnit.net 00:00:11.23]         /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs(316,0): at TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_editing_together_in_the_real_shell()
+  Failed TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_editing_together_in_the_real_shell [3 s]
+  Error Message:
+     at TabStudio.App.Tests.Design.StretchedText.AssertNone(IEnumerable`1 found) in /_/tests/TabStudio.App.Tests/Design/StretchedText.cs:line 65
+   at TabStudio.App.Tests.Design.StretchedText.Check(Visual root, String folder, String screenshot) in /_/tests/TabStudio.App.Tests/Design/StretchedText.cs:line 53
+   at TabStudio.App.Tests.UiTestHelpers.SaveScreenshot(Window window, String name) in /_/tests/TabStudio.App.Tests/UiTestHelpers.cs:line 40
+   at TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_editing_together_in_the_real_shell() in /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs:line 306
+   at TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_editing_together_in_the_real_shell() in /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs:line 316
+   at TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_editing_together_in_the_real_shell() in /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs:line 316
+[xUnit.net 00:00:11.64]       System.InvalidOperationException : /tmp/tabstudio-tests/51436fd9c6f54fee8c3726ffc4b2a60f/Projects/HelloTablet/src/HelloTablet/Greeter.cs did not open.
+[xUnit.net 00:00:11.64]         /_/tests/TabStudio.App.Tests/Live/LiveParticipant.cs(100,0): at TabStudio.App.Tests.Live.LiveParticipant.OpenSharedAsync(String path)
+[xUnit.net 00:00:11.64]         /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs(162,0): at TabStudio.App.Tests.Live.LiveSessionTests.Follow_shows_the_followed_document_and_place_until_the_follower_types()
+[xUnit.net 00:00:11.64]         /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs(181,0): at TabStudio.App.Tests.Live.LiveSessionTests.Follow_shows_the_followed_document_and_place_until_the_follower_types()
+[xUnit.net 00:00:11.64]         /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs(181,0): at TabStudio.App.Tests.Live.LiveSessionTests.Follow_shows_the_followed_document_and_place_until_the_follower_types()
+  Failed TabStudio.App.Tests.Live.LiveSessionTests.Follow_shows_the_followed_document_and_place_until_the_follower_types [396 ms]
+  Error Message:
+   System.InvalidOperationException : /tmp/tabstudio-tests/51436fd9c6f54fee8c3726ffc4b2a60f/Projects/HelloTablet/src/HelloTablet/Greeter.cs did not open.
+     at TabStudio.App.Tests.Live.LiveParticipant.OpenSharedAsync(String path) in /_/tests/TabStudio.App.Tests/Live/LiveParticipant.cs:line 100
+   at TabStudio.App.Tests.Live.LiveSessionTests.Follow_shows_the_followed_document_and_place_until_the_follower_types() in /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs:line 162
+   at TabStudio.App.Tests.Live.LiveSessionTests.Follow_shows_the_followed_document_and_place_until_the_follower_types() in /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs:line 181
+   at TabStudio.App.Tests.Live.LiveSessionTests.Follow_shows_the_followed_document_and_place_until_the_follower_types() in /_/tests/TabStudio.App.Tests/Live/LiveSessionTests.cs:line 181
+Total tests: 19
