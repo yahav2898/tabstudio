@@ -1,5 +1,5 @@
 {
-  "comment": "Public .NET repositories the 'Real repositories' CI job opens and builds in TabStudio, pinned to commits. maxErrors is each repository's error baseline: a build may only lower it, and the job asks to lower the number here when it does. null records the count without a limit.",
+  "comment": "Public .NET repositories the 'Real repositories' CI job opens and builds in TabStudio, pinned to commits. maxErrors is each repository's error baseline: a build may only lower it, and the job asks to lower the number here when it does. null records the count without a limit. An optional serve entry presses F5 on its web project after the build and GETs path, which must answer status with contains in the body; connections name the environment variable that holds each connection string, saved as the Database Explorer connection the run uses, and migrate names the project whose EF Core migrations real-repos.py --migrate applies to that database first, with the .NET SDK.",
   "repositories": [
     { "name": "GuardClauses", "url": "https://github.com/ardalis/GuardClauses", "sha": "f96b823e4228252b2927cce3effa550c16b558a5", "solution": "GuardClauses.sln", "maxErrors": 0 },
     { "name": "MediatR", "url": "https://github.com/jbogard/MediatR", "sha": "e839be360f118a84c2cba2a5901189f7c058d0a2", "solution": "MediatR.slnx", "maxErrors": 0 },
@@ -13,6 +13,8 @@
     { "name": "BlazingPizza", "url": "https://github.com/dotnet-presentations/blazor-workshop", "sha": "e0f5968e7c4699209dc7b5b0b2edc86162287792", "solution": "src/BlazingPizza.sln", "maxErrors": 0 },
     { "name": "WpfCalculatorTutorial", "url": "https://github.com/mooict/WPF-Calculator-App", "sha": "d8e456c1907fc9970b9b2de9c61e67ec6ef9518d", "solution": "Calculator App MOO ICT.sln", "maxErrors": 0 },
     { "name": "WpfTicTacToe", "url": "https://github.com/TheDJ42/TTTcs", "sha": "837fba85c5ed33ef8829bf58bfd3600f56aadb03", "solution": "TTTcs.sln", "maxErrors": 0 },
-    { "name": "WinFormsToDoList", "url": "https://github.com/leighDEV/simple-todolist-winforms", "sha": "97fb69d9cd0b31521f121f440d954ba00d612990", "solution": "simple-toDoList-winforms/simple-toDoList-winforms.sln", "maxErrors": 0 }
+    { "name": "WinFormsToDoList", "url": "https://github.com/leighDEV/simple-todolist-winforms", "sha": "97fb69d9cd0b31521f121f440d954ba00d612990", "solution": "simple-toDoList-winforms/simple-toDoList-winforms.sln", "maxErrors": 0 },
+    { "name": "SimplCommerce", "url": "https://github.com/simplcommerce/SimplCommerce", "sha": "3472ba02a6f2d9b6bdca7f7fb84957176aa799dc", "solution": "SimplCommerce.sln", "maxErrors": 0,
+      "serve": { "project": "SimplCommerce.WebHost", "path": "/", "status": 200, "contains": " - SimplCommerce</title>", "connections": { "DefaultConnection": "TABSTUDIO_SQLSERVER" }, "migrate": "src/SimplCommerce.WebHost" } }
   ]
 }

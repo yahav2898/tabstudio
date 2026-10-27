@@ -68,7 +68,7 @@ public sealed partial class WorkspaceViewModel
     /// <see langword="true"/> when every one is replaced (by a saved connection or the run's environment) or reachable.
     /// </summary>
     private static async Task<(SqlServerConnection? Unreachable, bool Answered)> FindUnreachableAsync(
-        SqlServerUsage usage, IReadOnlySet<string> savedConnections, IReadOnlyDictionary<string, string?>? environment)
+        SqlServerUsage usage, IReadOnlySet<string> savedConnections, Dictionary<string, string?>? environment)
     {
         if (usage.Connections.Count == 0)
         {
@@ -161,7 +161,7 @@ public sealed partial class WorkspaceViewModel
 
         var usage = SqlServerDetector.Detect(project, Workspace?.Projects ?? [])
             ?? new SqlServerUsage(project.Name, ["SqlClient in the crash"], [], SupportsPostgreSql: false, SupportsSqlite: false);
-        var connection = usage.Connections.FirstOrDefault(c => !_serviceEnvironment.ContainsKey(c.EnvironmentVariable)) ?? usage.Connections.FirstOrDefault();
+        var connection = usage.Connections.FirstOrDefault(c => !_serviceEnvironment.ContainsKey(c.EnvironmentVariable)) ?? (usage.Connections.Count > 0 ? usage.Connections[0] : null);
         Output.WriteLine(SqlServerDetector.Explain(usage, connection) + " " + ChoicesHint(usage), OutputKind.Failure);
     }
 
@@ -181,7 +181,7 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
-        var connection = advice.Connection ?? advice.Usage.Connections.FirstOrDefault();
+        var connection = advice.Connection ?? (advice.Usage.Connections.Count > 0 ? advice.Usage.Connections[0] : null);
         var name = RunConnectionName(advice.Usage.ProjectName, connection?.Name ?? "DefaultConnection");
         SelectSideBarPanel(SideBarPanel.Database);
         await DatabaseExplorer.ActivateAsync();
@@ -206,7 +206,7 @@ public sealed partial class WorkspaceViewModel
             return;
         }
 
-        var connection = advice.Connection ?? advice.Usage.Connections.FirstOrDefault();
+        var connection = advice.Connection ?? (advice.Usage.Connections.Count > 0 ? advice.Usage.Connections[0] : null);
         var name = connection?.Name ?? "DefaultConnection";
         var variable = connection?.EnvironmentVariable ?? "ConnectionStrings__DefaultConnection";
         var database = SafeName(connection?.Server.Database ?? project.Name);
