@@ -281,6 +281,7 @@ public static partial class ProjectParser
         var projectReferences = projectReferenceItems.Select(r => r.Path).ToList();
         var targetFrameworks = ReadTargetFrameworks(properties);
         var language = LanguageFromExtension(Path.GetExtension(filePath));
+        var generatorInputs = ReadGeneratorInputs(allRoots, properties, directory);
 
         var info = new ProjectInfo
         {
@@ -310,6 +311,9 @@ public static partial class ProjectParser
             ComReferences = ReadComReferences(root),
             Usings = [.. allRoots.SelectMany(r => ReadUsings(r)).Distinct()],
             RemovedUsings = [.. allRoots.SelectMany(r => ReadItemPatterns(r, "Using", "Remove")).Distinct(StringComparer.Ordinal)],
+            CompilerVisibleProperties = [.. generatorInputs.Properties.Distinct(StringComparer.OrdinalIgnoreCase)],
+            CompilerVisibleItemMetadata = [.. generatorInputs.Metadata.Distinct()],
+            AdditionalFiles = generatorInputs.Files,
         };
 
         var (kind, isTest) = ProjectClassifier.Classify(info);
@@ -514,7 +518,11 @@ public static partial class ProjectParser
                 p.Name!.Trim(),
                 p.Element.Attribute("Version")?.Value ??
                 p.Element.Elements().FirstOrDefault(c => c.Name.LocalName == "Version")?.Value,
-                Metadata(p.Element, "PrivateAssets")?.Trim()))
+                Metadata(p.Element, "PrivateAssets")?.Trim())
+            {
+                IncludeAssets = Metadata(p.Element, "IncludeAssets")?.Trim(),
+                ExcludeAssets = Metadata(p.Element, "ExcludeAssets")?.Trim(),
+            })
             .DistinctBy(p => p.Name, StringComparer.OrdinalIgnoreCase)
             .ToList();
 

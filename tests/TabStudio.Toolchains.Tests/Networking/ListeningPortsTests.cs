@@ -59,4 +59,19 @@ public sealed class ListeningPortsTests
         watcher.Feed("Listening on port 3000\n", standardError: true);
         Assert.Equal([3000], offered);
     }
+
+    /// <summary>
+    /// Nx's <c>serve</c> runs gothinkster/node-express-realworld-example-app with <c>--inspect</c>: the inspector's
+    /// WebSocket on 9229 opens before the app's port 3000, and is never the app to preview.
+    /// </summary>
+    [Theory]
+    [InlineData(new[] { "/usr/bin/node", "--inspect", "dist/api/main.js" }, null, 9229)]
+    [InlineData(new[] { "node", "--inspect-brk=0.0.0.0:9230", "main.js" }, null, 9230)]
+    [InlineData(new[] { "node", "--require", "ts-node/register", "--inspect=9231", "main.ts" }, null, 9231)]
+    [InlineData(new[] { "node", "main.js" }, "--max-old-space-size=4096 --inspect-wait", 9229)]
+    [InlineData(new[] { "node", "main.js" }, null, null)]
+    [InlineData(new[] { "python3", "--inspect" }, null, null)]
+    [InlineData(new[] { "node", "--inspection-report" }, null, null)]
+    public void The_Node_inspector_s_port_is_known(string[] arguments, string? nodeOptions, int? port) =>
+        Assert.Equal(port, ListeningPorts.InspectorPort(arguments, nodeOptions));
 }

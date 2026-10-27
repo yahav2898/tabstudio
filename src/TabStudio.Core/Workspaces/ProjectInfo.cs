@@ -13,6 +13,12 @@ public sealed record PackageReferenceInfo(string Name, string? Version, string? 
 {
     /// <summary>Whether <c>PrivateAssets</c> is <c>all</c>: the package stays with this project.</summary>
     public bool IsPrivate => AssemblyAttributeItems.IncludesAll(PrivateAssets);
+
+    /// <summary>The reference's <c>IncludeAssets</c> metadata, such as <c>runtime; build; analyzers</c>; <see langword="null"/> when it is not set.</summary>
+    public string? IncludeAssets { get; init; }
+
+    /// <summary>The reference's <c>ExcludeAssets</c> metadata, such as <c>analyzers</c>; <see langword="null"/> when it is not set.</summary>
+    public string? ExcludeAssets { get; init; }
 }
 
 /// <summary>A <c>&lt;ProjectReference&gt;</c> item with the metadata that decides how it is used.</summary>
@@ -63,6 +69,23 @@ public sealed record UsingInfo(string Name, string? Alias = null, bool IsStatic 
 /// <param name="Name">The assembly's simple name, without the version and culture an <c>Include</c> may carry.</param>
 /// <param name="HintPath">The <c>HintPath</c> metadata, as written in the project file, or <see langword="null"/>.</param>
 public sealed record AssemblyReferenceInfo(string Name, string? HintPath = null);
+
+/// <summary>
+/// An item source generators see: an <c>&lt;AdditionalFiles&gt;</c> item, with its metadata, from the project, its
+/// <c>Directory.Build</c> files or its packages' props and targets.
+/// </summary>
+/// <param name="Include">The file, or a pattern of files, relative to <paramref name="BaseDirectory"/>.</param>
+/// <param name="BaseDirectory">The folder the pattern is relative to: the project's, as MSBuild evaluates items.</param>
+/// <param name="Metadata">The item's metadata, such as Avalonia's <c>SourceItemGroup</c>. Keys are case-insensitive.</param>
+public sealed record AdditionalFileItem(string Include, string BaseDirectory, IReadOnlyDictionary<string, string> Metadata);
+
+/// <summary>
+/// A <c>&lt;CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="..." /&gt;</c> item: metadata of an item
+/// type that the SDK hands generators as <c>build_metadata.{ItemType}.{MetadataName}</c>.
+/// </summary>
+/// <param name="ItemType">The item type, such as <c>AdditionalFiles</c>.</param>
+/// <param name="MetadataName">The metadata, such as <c>SourceItemGroup</c>.</param>
+public sealed record CompilerVisibleItemMetadataInfo(string ItemType, string MetadataName);
 
 /// <summary>
 /// Everything TabStudio knows about one project file, read straight from the file without running MSBuild.
@@ -168,6 +191,24 @@ public sealed record ProjectInfo
     /// reads the files of legacy projects only; empty for others.
     /// </summary>
     public IReadOnlyList<string> PlatformInvokeFiles { get; init; } = [];
+
+    /// <summary>
+    /// The properties generators read, from <c>&lt;CompilerVisibleProperty&gt;</c> items of the project and of its
+    /// packages' props and targets: the SDK writes each one, even when it is empty, as <c>build_property.{Name}</c>.
+    /// </summary>
+    public IReadOnlyList<string> CompilerVisibleProperties { get; init; } = [];
+
+    /// <summary>The item metadata generators read, from <c>&lt;CompilerVisibleItemMetadata&gt;</c> items.</summary>
+    public IReadOnlyList<CompilerVisibleItemMetadataInfo> CompilerVisibleItemMetadata { get; init; } = [];
+
+    /// <summary>The <c>&lt;AdditionalFiles&gt;</c> items generators read, such as a generator's settings file.</summary>
+    public IReadOnlyList<AdditionalFileItem> AdditionalFiles { get; init; } = [];
+
+    /// <summary>
+    /// The props and targets of the project's packages that have been read into it (see
+    /// <see cref="ProjectParser.WithPackageBuildFiles"/>), in MSBuild's order; empty before its packages are restored.
+    /// </summary>
+    public IReadOnlyList<string> PackageBuildFiles { get; init; } = [];
 
     /// <summary>What the project produces.</summary>
     public ProjectKind Kind { get; init; }

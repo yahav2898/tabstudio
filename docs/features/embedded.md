@@ -38,9 +38,9 @@ The existing PIC F5 simulator and ordinary language F5 behavior remain documente
 | PlatformIO | `platformio.ini`; `pio run`, preserving environments, inheritance, platform versions and native scripts | The first successful build generates Core's actual compilation database when none exists; existing user databases and native scripts are preserved. Core is installed; each platform's ARM64 package compatibility is qualified separately. |
 | Arduino sketches and libraries | `.ino`, `sketch.yaml`, `library.properties`; `arduino-cli compile` with an explicit FQBN; a library requires an explicit `Sketch` example directory | The build first requests Arduino's compilation database. Install the selected board core/libraries separately. A library itself is not an executable sketch. |
 | STM32CubeMX/CubeIDE | `.ioc` plus generated CMake or Make files; preserve their startup, CPU flags and linker script | CMake exports compilation commands. An Eclipse `.cproject` is not independently translated into a complete Cube build; generate/retain a portable build first. CubeMX's generator is not bundled. |
-| ESP-IDF | IDF CMake markers, `sdkconfig`; `idf.py` with the selected target | The native glibc recipe pins ESP-IDF 5.4.1 and its submodules, vendor tool hashes and Python distributions. The selected target remains native project configuration; third-party components can have their own prerequisites. |
-| Zephyr | west/Zephyr markers; `west build` with the exact board | The native glibc recipe pins Zephyr 4.1.0, west/Python wheels and its manifest modules, using signed ARM/RISC-V compilers. Out-of-tree west workspaces retain their own dependencies and board definitions. |
-| Raspberry Pi Pico SDK | `pico_sdk_import.cmake` or Pico CMake usage; CMake with the selected `PICO_BOARD` | The native glibc recipe pins Pico SDK 2.1.1 and its submodules and exports its SDK path only for Pico projects. Pico/Pico W/Pico 2/Pico 2 W are distinct choices. |
+| ESP-IDF | IDF CMake markers, `sdkconfig`; `idf.py` with the selected target | The native glibc recipe pins ESP-IDF 6.1 and its submodules, vendor tool hashes and Python distributions. The selected target remains native project configuration; third-party components can have their own prerequisites. |
+| Zephyr | west/Zephyr markers; `west build` with the exact board | The native glibc recipe pins Zephyr 4.4.2, west/Python wheels and its manifest modules, using signed ARM/RISC-V compilers. Out-of-tree west workspaces retain their own dependencies and board definitions. |
+| Raspberry Pi Pico SDK | `pico_sdk_import.cmake` or Pico CMake usage; CMake with the selected `PICO_BOARD` | The native glibc recipe pins Pico SDK 2.3.1 and its submodules and exports its SDK path only for Pico projects. A project's `PICO_SDK_VERSION_STRING VERSION_LESS` check is read before CMake runs; an older installed SDK is named with the release to install (see [SDK versions](#sdk-versions)). Pico/Pico W/Pico 2/Pico 2 W are distinct choices. |
 | Rust embedded | Cargo with embedded target/linker markers, including `memory.x`; Cargo preserves its configuration and uses `--locked` when a lockfile exists | A separate embedded Rust SDK installs SHA-256-pinned official Rust 1.97.0 components, rust-analyzer, rust-src and ten ARM/RV32 target libraries in the glibc environment. Native project context selects its server/compiler; ordinary host Rust retains its existing toolchain. Official probe-rs uses the separate permissioned usbfs bridge. |
 | MicroPython/CircuitPython | Board-Python markers and explicit `.py` file operations through mpremote | **MicroPython REPL** opens the existing Terminal; **Sync active Python file** copies that file and compares an independent readback. This does not install firmware, provide CircuitPython-specific REPL guarantees, or delete other board files. |
 | Keil, IAR, Atmel/Microchip Studio | `.uvprojx`, `.ewp`, `.cproj`; explicit import creates a separate GCC/CMake project | Original files are untouched. Import notes describe unresolved linker/startup/ABI/language differences. Import success is not a linked or flashed firmware result. |
@@ -68,6 +68,26 @@ An example build configuration is:
 
 `Sketch`, `Target`, `Port`, `Chip`, `Firmware` and `Runner` are additional explicit choices used by the relevant
 project system. They do not replace native project configuration or install missing SDKs automatically.
+
+## SDK versions
+
+Before a build, TabStudio reads the SDK version the project asks for from its own files
+(`EmbeddedSdkRequirements`):
+
+| Project | Where the version is read |
+| --- | --- |
+| Pico SDK | `if (PICO_SDK_VERSION_STRING VERSION_LESS "2.3.0")` in CMakeLists.txt, as raspberrypi/pico-examples writes it |
+| ESP-IDF | `dependencies: idf:` in `main/idf_component.yml`, or the locked `idf` version in `dependencies.lock` |
+| Zephyr | The `zephyr` project's `revision` in the application's west manifest |
+| PlatformIO | `platform = espressif32 @ 6.4.0` in `platformio.ini`; PlatformIO installs that platform itself |
+
+The installed SDK's version comes from its own version file (`pico_sdk_version.cmake`, `tools/cmake/version.cmake`,
+Zephyr's `VERSION`). When it is older than the project needs, the Output and the Error List say so in one line with
+where the requirement is and what to install, such as "This project needs Pico SDK ≥ 2.3.0 (CMakeLists.txt:12); 2.1.1
+is installed — Install 2.3.1.", and the install is offered. A pinned release is installed only at its verified commit;
+a requirement newer than any release TabStudio has verified is reported as such (TS4201) rather than guessed. When CMake
+itself stops on a version check, its message is turned into the same line. The program a build produces is named after
+its target or CMake `project()`, never after `CMakeLists.txt`.
 
 ## USB bridges and their boundaries
 
@@ -199,9 +219,9 @@ Installers validate the native executable/capabilities before creating PATH alia
 are retained. CI runs the same helpers on x64 and ARM64 and checks that native USB clients link the expected dynamic
 USB backend. A successful host install does not prove execution on a physical Android tablet or target board.
 
-The ESP-IDF 5.4.1 SDK recipe also fixes all 58 core/build Python distributions to exact releases and actual
-PyPI SHA-256 hashes for native Ubuntu CPython 3.12 ARM64/x64. Its only source archive, esptool 4.12.0, builds
-with locked setuptools/wheel and no isolated dependency downloads. The app installs a frozen vendor v5.4
+The ESP-IDF 6.1 SDK recipe also fixes all 63 core/build Python distributions to exact releases and actual
+PyPI SHA-256 hashes for native Ubuntu CPython 3.12 ARM64/x64. Its only source archive, esptool 5.6.0, builds
+with locked setuptools/wheel and no isolated dependency downloads. The app installs a frozen vendor v6.1
 constraints file and runs the unmodified upstream checker offline; it does not fetch rolling Python constraints
 or run `install-python-env`. The production ESP-IDF SDK CI job installs it on x64 and ARM64, including `pip check` and the upstream
 dependency checker. Actual SDK firmware builds use the separate production installer CI matrix;
@@ -657,7 +677,7 @@ redistribution permission and expected result; none have been fabricated for thi
 ## Native-first PlatformIO packages
 
 On Android, `"hostPackageMode": "auto"` is the default in `.tabstudio/embedded.json`. Pinned PlatformIO
-Core 6.1.18 prefers any compatible native version satisfying the project's requirements. If no compatible
+Core 6.2.0 prefers any compatible native version satisfying the project's requirements. If no compatible
 ARM64 artifact exists, unchanged x86-64 host tools can run through the APK's pinned Box64. The app prepares
 that translator before an auto-policy ARM64 build; native x64 builds need no translator downloads.
 `"hostPackageMode": "native"` disables translation while retaining executable-architecture checks.

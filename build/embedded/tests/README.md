@@ -74,7 +74,7 @@ application profile lists the entire XIP window. No physical ROM revision is inf
 
 ## PlatformIO package architecture proof
 
-`platformio-policy-check.py` runs the pinned, unchanged Core 6.1.18 package manager,
+`platformio-policy-check.py` runs the pinned, unchanged Core 6.2.0 package manager,
 HTTP mirror handling, archive extractor and SHA-256 downloader against a synthetic
 loopback registry. An ARM64-labeled archive contains a deliberately generated ELF32
 ARM executable. The policy must download it first, refuse its postinstall script,
@@ -92,7 +92,7 @@ as evidence of the executable architecture. These are package/runtime tests, not
 physical USB or board qualification.
 
 
-`platformio-child-policy-check.py` additionally exercises real Core 6.1.18 launching
+`platformio-child-policy-check.py` additionally exercises real Core 6.2.0 launching
 fresh, unchanged SCons processes. Its generated test interpreter reports ARM64 to
 Core/SCons; on x64, unchanged x64 GCC runs natively, while native ARM64 CI retains
 the separate real Box64 execution proof. A negative control removes only the child

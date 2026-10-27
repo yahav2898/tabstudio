@@ -15,6 +15,7 @@ internal sealed class TestPackage
     private readonly List<(string? Framework, (string Id, string Range)[] Dependencies)> _groups = [];
     private readonly List<(string Id, string Range)> _ungrouped = [];
     private readonly Dictionary<string, byte[]> _files = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, (string? Include, string? Exclude)> _assetFilters = new(StringComparer.OrdinalIgnoreCase);
 
     public TestPackage(string id, string version)
     {
@@ -31,6 +32,13 @@ internal sealed class TestPackage
     {
         _ungrouped.Add((id, range));
         return this;
+    }
+
+    /// <summary>A dependency outside any group with the nuspec's <c>include</c> and <c>exclude</c> attributes, such as <c>exclude="Build,Analyzers"</c>.</summary>
+    public TestPackage DependsOn(string id, string range, string? include, string? exclude)
+    {
+        _assetFilters[id] = (include, exclude);
+        return DependsOn(id, range);
     }
 
     /// <summary>A dependency group; <paramref name="framework"/> is a nuspec framework such as <c>net8.0</c> or <c>.NETStandard2.0</c>.</summary>
@@ -90,7 +98,7 @@ internal sealed class TestPackage
             var dependencies = new XElement(Nuspec + "dependencies");
             foreach (var (framework, groupDependencies) in _groups)
             {
-                var group = new XElement(Nuspec + "group", groupDependencies.Select(Dependency));
+                var group = new XElement(Nuspec + "group", groupDependencies.Select(DependencyElement));
                 if (framework is not null)
                 {
                     group.SetAttributeValue("targetFramework", framework);
@@ -99,7 +107,7 @@ internal sealed class TestPackage
                 dependencies.Add(group);
             }
 
-            dependencies.Add(_ungrouped.Select(Dependency));
+            dependencies.Add(_ungrouped.Select(DependencyElement));
             metadata.Add(dependencies);
         }
 
@@ -131,8 +139,24 @@ internal sealed class TestPackage
         return path;
     }
 
-    private static XElement Dependency((string Id, string Range) dependency) =>
-        new(Nuspec + "dependency", new XAttribute("id", dependency.Id), new XAttribute("version", dependency.Range));
+    private XElement DependencyElement((string Id, string Range) dependency)
+    {
+        var element = new XElement(Nuspec + "dependency", new XAttribute("id", dependency.Id), new XAttribute("version", dependency.Range));
+        if (_assetFilters.TryGetValue(dependency.Id, out var filter))
+        {
+            if (filter.Include is not null)
+            {
+                element.SetAttributeValue("include", filter.Include);
+            }
+
+            if (filter.Exclude is not null)
+            {
+                element.SetAttributeValue("exclude", filter.Exclude);
+            }
+        }
+
+        return element;
+    }
 
     private static void AddEntry(ZipArchive zip, string name, byte[] content)
     {

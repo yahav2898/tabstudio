@@ -22,8 +22,9 @@ namespace TabStudio.Packages.Assets;
 ///   Compile assets never come from <c>runtimes/</c>, as in the SDK.</item>
 ///   <item>Native libraries come from the <c>runtimes/{rid}/native/</c> folder of the nearest RID that has one.</item>
 /// </list>
-/// Analyzers and source generators come from <c>analyzers/dotnet/cs/</c> and <c>analyzers/dotnet/</c>, and from the
-/// highest <c>analyzers/dotnet/roslyn{version}/cs/</c> folder the in-app compiler supports, as the .NET SDK picks them.
+/// Analyzers and source generators come from <c>analyzers/</c> as the .NET SDK picks them: C# and language-neutral
+/// assemblies, and of those in <c>roslyn{version}</c> folders (<c>analyzers/dotnet/roslyn4.12/cs/</c> or
+/// <c>analyzers/roslyn5.0/dotnet/cs/</c>), the highest version the in-app compiler supports.
 /// MSBuild files and <c>runtimes/{rid}/nativeassets/{tfm}/</c> folders (UWP and WebAssembly only) are not used.
 /// </remarks>
 internal static class AssetSelector
@@ -69,10 +70,12 @@ internal static class AssetSelector
 
         var supported = lib.Keys.Concat(reference.Keys).Distinct().ToList();
         var compatible = supported.Count == 0 || compile is not null || runtime is not null;
-        var analyzers = compilerVersion is null ? [] : SelectAnalyzers(paths, compilerVersion);
+        Version? needsCompiler = null;
+        var analyzers = compilerVersion is null ? [] : SelectAnalyzers(paths, compilerVersion, out needsCompiler);
         return new PackageAssets(Assemblies(compile), Assemblies(runtime), compatible, usedFallback, supported)
         {
             Analyzers = analyzers,
+            AnalyzersNeedCompiler = needsCompiler,
             NativeLibraries = rids.Count == 0 ? [] : SelectNativeLibraries(paths, rids),
         };
     }
@@ -119,49 +122,51 @@ internal static class AssetSelector
     }
 
     /// <summary>
-    /// Selects the C# analyzer assemblies of a package: those for any Roslyn version, plus the folder of the highest
-    /// Roslyn version that is not newer than the compiler.
+    /// Selects the C# analyzer assemblies of a package as the .NET SDK does (<c>ResolvePackageAssets</c>): every
+    /// <c>.dll</c> under <c>analyzers/</c> except satellite resources and Visual Basic ones (a <c>/vb/</c> folder without
+    /// a <c>/cs/</c> one). A folder named <c>roslyn{version}</c> anywhere in the path ties a file to a compiler version:
+    /// of those, only the files of the highest version that is not newer than the compiler are kept, across the whole
+    /// package, so <c>analyzers/dotnet/roslyn4.12/cs/</c> (CommunityToolkit.Mvvm) and
+    /// <c>analyzers/roslyn5.0/dotnet/cs/</c> (Riok.Mapperly) are both understood.
     /// </summary>
     /// <param name="relativePaths">Every file in the package, relative to its root, with forward slashes.</param>
     /// <param name="compilerVersion">The version of Roslyn that runs the analyzers.</param>
-    public static IReadOnlyList<string> SelectAnalyzers(IEnumerable<string> relativePaths, Version compilerVersion)
+    public static IReadOnlyList<string> SelectAnalyzers(IEnumerable<string> relativePaths, Version compilerVersion) =>
+        SelectAnalyzers(relativePaths, compilerVersion, out _);
+
+    /// <summary>
+    /// Selects the C# analyzer assemblies of a package (see <see cref="SelectAnalyzers(IEnumerable{string}, Version)"/>),
+    /// and says when a package has analyzers only for compilers newer than this one, whose generated code is then
+    /// missing.
+    /// </summary>
+    /// <param name="relativePaths">Every file in the package, relative to its root, with forward slashes.</param>
+    /// <param name="compilerVersion">The version of Roslyn that runs the analyzers.</param>
+    /// <param name="onlyNewer">
+    /// The lowest Roslyn version the package's versioned analyzers need, when every one of them needs a newer compiler
+    /// than <paramref name="compilerVersion"/>; otherwise <see langword="null"/>.
+    /// </param>
+    public static IReadOnlyList<string> SelectAnalyzers(IEnumerable<string> relativePaths, Version compilerVersion, out Version? onlyNewer)
     {
         ArgumentNullException.ThrowIfNull(relativePaths);
         ArgumentNullException.ThrowIfNull(compilerVersion);
         var unversioned = new List<string>();
         var versioned = new Dictionary<Version, List<string>>();
+        Version? lowestNewer = null;
         foreach (var path in relativePaths)
         {
-            var parts = path.Split('/');
-            if (parts.Length < 3 || !parts[0].Equals("analyzers", StringComparison.OrdinalIgnoreCase)
-                || !parts[1].Equals("dotnet", StringComparison.OrdinalIgnoreCase)
-                || !Path.GetExtension(path).Equals(".dll", StringComparison.OrdinalIgnoreCase))
+            if (!IsCSharpAnalyzer(path))
             {
                 continue;
             }
 
-            // analyzers/dotnet/X.dll, analyzers/dotnet/cs/X.dll, analyzers/dotnet/roslyn4.4/cs/X.dll
-            var rest = parts[2..];
-            Version? roslyn = null;
-            if (rest.Length > 1 && rest[0].StartsWith("roslyn", StringComparison.OrdinalIgnoreCase))
-            {
-                if (!Version.TryParse(rest[0]["roslyn".Length..], out roslyn) || roslyn > compilerVersion)
-                {
-                    continue;
-                }
-
-                rest = rest[1..];
-            }
-
-            var isCSharp = rest.Length == 1 || (rest.Length == 2 && rest[0].Equals("cs", StringComparison.OrdinalIgnoreCase));
-            if (!isCSharp)
-            {
-                continue;
-            }
-
+            var roslyn = RoslynFolderVersion(path);
             if (roslyn is null)
             {
                 unversioned.Add(path);
+            }
+            else if (roslyn > compilerVersion)
+            {
+                lowestNewer = lowestNewer is null || roslyn < lowestNewer ? roslyn : lowestNewer;
             }
             else
             {
@@ -175,8 +180,146 @@ internal static class AssetSelector
             }
         }
 
+        onlyNewer = versioned.Count == 0 ? lowestNewer : null;
         List<string> best = versioned.Count == 0 ? [] : versioned[versioned.Keys.Max()!];
         return [.. unversioned.Concat(best).Order(StringComparer.Ordinal)];
+    }
+
+    /// <summary>
+    /// Selects the MSBuild files a project imports from a package, as NuGet writes them into <c>nuget.g.props</c> and
+    /// <c>nuget.g.targets</c> (measured with SDK 10.0.113): the package's <c>{id}.props</c> and <c>{id}.targets</c> in
+    /// <c>build/</c> when the project gets its <c>build</c> assets, and in <c>buildTransitive/</c> when it gets its
+    /// <c>buildTransitive</c> ones, each from the nearest framework folder or the folder itself; a file of the same name
+    /// in <c>buildTransitive/</c> replaces the one in <c>build/</c>. Props come before targets.
+    /// </summary>
+    /// <param name="relativePaths">Every file in the package, relative to its root, with forward slashes.</param>
+    /// <param name="packageId">The package id, which the files are named after.</param>
+    /// <param name="target">The project's framework.</param>
+    /// <param name="fallback">The <c>AssetTargetFallback</c> frameworks.</param>
+    /// <param name="assets">The assets the project gets from the package.</param>
+    public static IReadOnlyList<string> SelectBuildFiles(
+        IEnumerable<string> relativePaths,
+        string packageId,
+        NuGetFramework target,
+        IReadOnlyList<NuGetFramework> fallback,
+        AssetFlags assets)
+    {
+        ArgumentNullException.ThrowIfNull(relativePaths);
+        ArgumentException.ThrowIfNullOrEmpty(packageId);
+        var paths = relativePaths.ToList();
+        var chosen = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        if (assets.HasFlag(AssetFlags.Build))
+        {
+            foreach (var file in BuildFolder(paths, "build", packageId, target, fallback))
+            {
+                chosen[file[(file.LastIndexOf('/') + 1)..]] = file;
+            }
+        }
+
+        if (assets.HasFlag(AssetFlags.BuildTransitive))
+        {
+            foreach (var file in BuildFolder(paths, "buildTransitive", packageId, target, fallback))
+            {
+                chosen[file[(file.LastIndexOf('/') + 1)..]] = file;
+            }
+        }
+
+        return [.. chosen.Values
+            .OrderBy(file => file.EndsWith(".targets", StringComparison.OrdinalIgnoreCase) ? 1 : 0)
+            .ThenBy(file => file, StringComparer.Ordinal)];
+    }
+
+    /// <summary>The <c>{id}.props</c> and <c>{id}.targets</c> of one build folder, for the nearest framework.</summary>
+    private static List<string> BuildFolder(List<string> paths, string folder, string packageId, NuGetFramework target, IReadOnlyList<NuGetFramework> fallback)
+    {
+        var any = new List<string>();
+        var anyExists = false;
+        var byFramework = new Dictionary<NuGetFramework, List<string>>();
+        foreach (var path in paths)
+        {
+            var parts = path.Split('/');
+            if (parts.Length is < 2 or > 3 || !parts[0].Equals(folder, StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            var name = parts[^1];
+            var isPlaceholder = name == "_._";
+            var isImported = name.Equals(packageId + ".props", StringComparison.OrdinalIgnoreCase)
+                || name.Equals(packageId + ".targets", StringComparison.OrdinalIgnoreCase);
+            if (!isImported && !isPlaceholder)
+            {
+                continue;
+            }
+
+            if (parts.Length == 2)
+            {
+                anyExists = true;
+                if (isImported)
+                {
+                    any.Add(path);
+                }
+
+                continue;
+            }
+
+            if (FrameworkSelection.ParseFolder(parts[1]) is not { } framework)
+            {
+                continue;
+            }
+
+            if (!byFramework.TryGetValue(framework, out var files))
+            {
+                files = [];
+                byFramework[framework] = files;
+            }
+
+            if (isImported)
+            {
+                files.Add(path);
+            }
+        }
+
+        if (byFramework.Count > 0 && FrameworkSelection.GetNearest(target, fallback, byFramework.Keys, out _) is { } nearest)
+        {
+            return byFramework[nearest];
+        }
+
+        return anyExists ? any : [];
+    }
+
+    /// <summary>
+    /// Whether a package file is an analyzer a C# project loads, by the SDK's rule: a <c>.dll</c> under
+    /// <c>analyzers/</c>, not a <c>.resources.dll</c>, and in a <c>/cs/</c> folder or in none for another language.
+    /// </summary>
+    private static bool IsCSharpAnalyzer(string path)
+    {
+        if (!path.StartsWith("analyzers/", StringComparison.OrdinalIgnoreCase)
+            || !path.EndsWith(".dll", StringComparison.OrdinalIgnoreCase)
+            || path.EndsWith(".resources.dll", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        var folders = path.Split('/')[..^1];
+        return folders.Any(f => f.Equals("cs", StringComparison.OrdinalIgnoreCase))
+            || !folders.Any(f => f.Equals("vb", StringComparison.OrdinalIgnoreCase));
+    }
+
+    /// <summary>The version in a <c>roslyn{version}</c> folder of a path, such as 4.12 for <c>analyzers/dotnet/roslyn4.12/cs/X.dll</c>.</summary>
+    private static Version? RoslynFolderVersion(string path)
+    {
+        foreach (var folder in path.Split('/')[..^1])
+        {
+            if (folder.Length > "roslyn".Length
+                && folder.StartsWith("roslyn", StringComparison.OrdinalIgnoreCase)
+                && Version.TryParse(folder["roslyn".Length..], out var version))
+            {
+                return version;
+            }
+        }
+
+        return null;
     }
 
     private static (List<string>? Compile, List<string>? Runtime) Choose(

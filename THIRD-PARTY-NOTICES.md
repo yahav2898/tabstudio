@@ -191,7 +191,7 @@ resolve from that signed repository; they are not separate binary archives with 
 | dfu-util | GPL-2.0-or-later | [dfu-util](https://dfu-util.sourceforge.net/); signed Alpine package. |
 | GNU GDB / gdb-multiarch and Python DAP adapter | GPL-3.0-or-later and included component notices | [GDB](https://www.gnu.org/software/gdb/); signed Alpine package. CI's AVR-capable GDB is built from signed Ubuntu `gdb-source`, retaining source and COPYING in its build tree. |
 | Arduino CLI 1.5.1 | GPL-3.0-only | [arduino-cli](https://github.com/arduino/arduino-cli/tree/v1.5.1); official Linux ARM64, ARMv7 and x64 archives pinned by URL/size/SHA-256 in the catalog. Board cores and tools are separate downloads under their included licenses. |
-| PlatformIO Core 6.1.18 | Apache-2.0 | [PlatformIO Core](https://github.com/platformio/platformio-core/tree/v6.1.18); isolated Python environment with the full hashed dependency lock below. Third-party platforms/cores/tools have separate licenses and architecture constraints. |
+| PlatformIO Core 6.2.0 | Apache-2.0 | [PlatformIO Core](https://github.com/platformio/platformio-core/tree/v6.2.0); isolated Python environment with the full hashed dependency lock below. Third-party platforms/cores/tools have separate licenses and architecture constraints. |
 | Rust Embedded SDK 1.97.0 | MIT OR Apache-2.0; LLVM and bundled dependencies retain their included notices | [Official Rust distribution manifest](https://static.rust-lang.org/dist/channel-rust-1.97.0.toml), SHA-256 `3804d2666f7c12ce64205baa69b6be52f910b45b158091013264beb7aa1de7f5`. Native ARM64/x64 compiler/Cargo/host libraries/analyzer/formatters and ten bare-metal target libraries are independently pinned in `rust-components.lock.json`; rust-src and original installer/license files are retained. No Rust binary is bundled in the APK. Crates retain their own Cargo.lock checksums and licenses. |
 | mpremote 1.26.1 | MIT | [MicroPython mpremote](https://github.com/micropython/micropython/tree/v1.26.1/tools/mpremote); isolated Python environment with hashed mpremote/platformdirs/pyserial wheels. |
 | Ninja | Apache-2.0 | [Ninja](https://github.com/ninja-build/ninja); signed Alpine package. CMake, Make, Python, Git and clangd retain their notices above. |
@@ -209,22 +209,22 @@ their own dependency notices.
 | bottle | 0.13.4 | MIT |
 | certifi | 2026.10.23 | MPL-2.0 |
 | charset-normalizer | 3.5.2 | MIT |
-| click | 8.1.7 | BSD-3-Clause |
+| click | 8.5.0 | BSD-3-Clause |
 | colorama | 0.4.6 | BSD-3-Clause |
 | h11 | 0.16.0 | MIT |
 | idna | 3.20 | BSD-3-Clause |
-| marshmallow | 3.26.2 | MIT |
-| packaging | 26.3 | Apache-2.0 OR BSD-2-Clause |
-| platformio | 6.1.18 | Apache-2.0 |
+| marshmallow | 4.3.1 | MIT |
+| pip | 26.2.2 | MIT |
+| platformio | 6.2.0 | Apache-2.0 |
 | pyelftools | 0.33 | Public domain, with the distribution's included terms |
 | pyserial | 3.5 | BSD-3-Clause |
 | requests | 2.34.2 | Apache-2.0 |
 | semantic-version | 2.10.0 | BSD-2-Clause |
-| starlette | 0.46.2 | BSD-3-Clause |
+| starlette | 1.10.0 | BSD-3-Clause |
 | tabulate | 0.10.0 | MIT |
 | typing_extensions | 4.16.0 | PSF-2.0 |
 | urllib3 | 2.8.0 | MIT |
-| uvicorn | 0.34.3 | BSD-3-Clause |
+| uvicorn | 0.54.0 | BSD-3-Clause |
 | wsproto | 1.3.2 | MIT |
 | mpremote | 1.26.1 | MIT |
 | platformdirs | 4.13.5 | MIT |
@@ -239,10 +239,10 @@ and dependency notices remain authoritative.
 
 | Component | License | Source / current handling |
 | --- | --- | --- |
-| Espressif ESP-IDF | Apache-2.0, with separately licensed bundled components | [ESP-IDF](https://github.com/espressif/esp-idf); Source and recursive submodules pinned to 5.4.1 commit `4c2820d377d1375e787bcef612f0c32c1427d183` by the optional Ubuntu SDK recipe. Native compiler/tools archives are SHA-256 checked against that source's `tools.json`. Python packages and a frozen v5.4 vendor constraint snapshot are app-owned and SHA-256 locked below; the installer does not fetch rolling Python constraints. Compiler distributions retain GCC/runtime notices. |
+| Espressif ESP-IDF | Apache-2.0, with separately licensed bundled components | [ESP-IDF](https://github.com/espressif/esp-idf); Source and recursive submodules pinned to 6.1 commit `fff9895c82d744c7237be8847347bdd1b07c6643` by the optional Ubuntu SDK recipe. Native compiler/tools archives are SHA-256 checked against that source's `tools.json`. Python packages and a frozen v6.1 vendor constraint snapshot are app-owned and SHA-256 locked below; the installer does not fetch rolling Python constraints. Compiler distributions retain GCC/runtime notices. |
 | esptool | GPL-2.0-or-later | [esptool](https://github.com/espressif/esptool); optional official 5.6.0 standalone ARM64/x64 distributions with pinned SHA-256, installed into glibc. Bundled dependency licenses remain in the extracted distribution; no tool binary is in the APK. |
-| Raspberry Pi Pico SDK / picotool | BSD-3-Clause, with included dependency notices | [Pico SDK](https://github.com/raspberrypi/pico-sdk), [picotool](https://github.com/raspberrypi/picotool); SDK 2.1.1 and submodules pinned to `bddd20f928ce76142793bef434d4f75f4af6e433` by the optional Ubuntu SDK recipe. Optional official picotool 2.3.1 ARM64/x64 binaries are SHA-256 pinned and installed from pico-sdk-tools; the [upstream BSD notice](native/embedded/picotool.LICENSE) is installed beside the binary. |
-| Zephyr / west | Apache-2.0, with Zephyr's per-component notices | [Zephyr](https://github.com/zephyrproject-rtos/zephyr), [west](https://github.com/zephyrproject-rtos/west); Zephyr 4.1.0 source pinned to `7823374e872145b5bd018bfe447839eb36042611`; west manifest modules retain their component notices. The optional Ubuntu SDK recipe installs the exact Python lock below, including west 1.3.0. |
+| Raspberry Pi Pico SDK / picotool | BSD-3-Clause, with included dependency notices | [Pico SDK](https://github.com/raspberrypi/pico-sdk), [picotool](https://github.com/raspberrypi/picotool); SDK 2.3.1 and submodules pinned to `079c6f39023649b154152db30f1d781e884879bc` by the optional Ubuntu SDK recipe. Optional official picotool 2.3.1 ARM64/x64 binaries are SHA-256 pinned and installed from pico-sdk-tools; the [upstream BSD notice](native/embedded/picotool.LICENSE) is installed beside the binary. |
+| Zephyr / west | Apache-2.0, with Zephyr's per-component notices | [Zephyr](https://github.com/zephyrproject-rtos/zephyr), [west](https://github.com/zephyrproject-rtos/west); Zephyr 4.4.2 source pinned to `dccb09599635bdff17633fa7e9dab014b91dce90`; west manifest modules retain their component notices. The optional Ubuntu SDK recipe installs the exact Python lock below, including west 1.5.0. |
 | probe-rs / nusb | MIT OR Apache-2.0 | [probe-rs](https://github.com/probe-rs/probe-rs), [nusb](https://github.com/kevinmehall/nusb); the official native GNU probe-rs executable uses the separate permissioned usbfs/nusb bridge; native hidraw CMSIS-DAP v1 is a separate transport. |
 | libusb-compat | LGPL-2.1-or-later | [libusb compatibility library](https://github.com/libusb/libusb-compat-0.1); signed Alpine package exposing legacy libusb 0.1 clients through libusb 1.0. |
 | teensy_loader_cli | GPL-3.0-only | [PJRC Teensy Loader](https://github.com/PaulStoffregen/teensy_loader_cli); optional native build from SHA-256-pinned 2.3 source, with source/license retained. Normal HalfKay transfer has no readback and is excluded from verified production batches. |
@@ -266,8 +266,9 @@ validation remains incomplete. pymcuprog UART UPDI reuses pinned Microchip suppo
 
 ### Zephyr base Python dependency lock
 
-`src/TabStudio.Toolchains/Embedded/Installation/zephyr.requirements.txt` contains all 31 distributions resolved
-from the pinned Zephyr 4.1.0 base requirements for native Linux x64/ARM64 Python 3.12. Each selected wheel or
+`src/TabStudio.Toolchains/Embedded/Installation/zephyr.requirements.txt` contains all 35 distributions resolved
+from the pinned Zephyr 4.4.2 base requirements for native Linux x64/ARM64 Python 3.12, except `reuse`, whose SPDX
+checks a build does not need and whose source distribution needs Poetry and gettext to build. Each selected wheel or
 source distribution is checked with `pip --require-hashes`. The bootstrap lock installs pinned setuptools and
 wheel before any source build; `--no-build-isolation` prevents unpinned build dependencies. Original license
 files and package metadata remain in the isolated environment. This list covers the base SDK, not optional
@@ -276,6 +277,7 @@ Zephyr documentation/test tooling or downloaded board modules.
 | Python distribution | Locked version | License |
 | --- | --- | --- |
 | anytree | 2.13.0 | Apache-2.0 |
+| attrs | 26.1.0 | MIT |
 | canopen | 2.4.1 | MIT |
 | certifi | 2026.10.23 | MPL-2.0 |
 | charset-normalizer | 3.5.2 | MIT |
@@ -283,9 +285,10 @@ Zephyr documentation/test tooling or downloaded board modules.
 | docopt | 0.6.2 | MIT |
 | idna | 3.20 | BSD-3-Clause |
 | intelhex | 2.3.0 | BSD-3-Clause |
+| jsonschema | 4.26.0 | MIT |
+| jsonschema-specifications | 2025.9.1 | MIT |
 | packaging | 26.3 | Apache-2.0 OR BSD-2-Clause |
 | patool | 4.1.0 | GPL-3.0, per included license |
-| progress | 1.6.1 | ISC |
 | psutil | 7.2.2 | BSD-3-Clause |
 | pyelftools | 0.33 | Public domain, per included terms |
 | pykwalify | 1.8.0 | MIT |
@@ -294,72 +297,77 @@ Zephyr documentation/test tooling or downloaded board modules.
 | python-can | 4.6.1 | LGPL-3.0-only |
 | python-dateutil | 3.0.0 | Apache-2.0 OR BSD-3-Clause |
 | PyYAML | 6.0.3 | MIT |
+| referencing | 0.37.0 | MIT |
 | requests | 2.34.2 | Apache-2.0 |
+| rpds-py | 2026.9.1 | MIT |
 | ruamel.yaml | 0.19.1 | MIT |
 | semver | 3.1.0 | BSD-3-Clause |
 | setuptools | 80.9.0 | MIT |
 | six | 1.17.0 | MIT |
 | tqdm | 4.70.1 | MPL-2.0 AND MIT |
-| typing_extensions | 4.16.0 | PSF-2.0 |
+| typing-extensions | 4.16.0 | PSF-2.0 |
 | tzdata | 2026.5 | Apache-2.0 |
 | urllib3 | 2.8.0 | MIT |
-| west | 1.3.0 | Apache-2.0 |
+| west | 1.5.0 | Apache-2.0 |
 | wheel | 0.45.1 | MIT |
 | wrapt | 1.17.3 | BSD-2-Clause |
 
 ### ESP-IDF core Python dependency lock
 
-`src/TabStudio.Toolchains/Embedded/Installation/esp-idf.requirements.txt` fixes all 58 selected distributions
-for the pinned ESP-IDF 5.4.1 SDK on native Linux ARM64/x64 CPython 3.12. Archive hashes are verified with
+`src/TabStudio.Toolchains/Embedded/Installation/esp-idf.requirements.txt` fixes all 63 selected distributions
+for the pinned ESP-IDF 6.1 SDK on native Linux ARM64/x64 CPython 3.12. Archive hashes are verified with
 `--require-hashes`; a separate lock fixes the bootstrap build tools. The esptool source release uses those
-installed tools with build isolation disabled. The app carries a frozen vendor v5.4 constraint snapshot
+installed tools with build isolation disabled. The app carries a frozen vendor v6.1 constraint snapshot
 and uses the offline vendor dependency checker. Installed package metadata and original license files
 remain in the SDK environment, including cryptography's bundled component notices. The compatible CPython
 3.12/abi3 manylinux wheels cover ARM64/x64; only esptool requires a source build. The frozen constraints
-snapshot has SHA-256 `5eb288ae09027642441fbfcd5e2404ec34d525b0d7b2ed54d0c677e7d3381652`.
+snapshot has SHA-256 `8fd2a7299a476370a1322e87a21ce0e24a9e5b8b6df4b34f0b8acb4a4b03d135`.
 User-selected project components retain their own manifests and notices.
 
 | Python distribution | Locked version | License |
 | --- | --- | --- |
 | annotated-types | 0.8.0 | MIT |
-| argcomplete | 3.7.2 | Apache-2.0 |
-| bitarray | 3.12.3 | PSF-2.0 |
-| bitstring | 4.4.0 | MIT |
+| boolean.py | 5.0 | BSD-2-Clause |
 | certifi | 2026.10.23 | MPL-2.0 |
 | cffi | 2.1.1 | MIT-0 |
 | charset-normalizer | 3.5.2 | MIT |
-| click | 8.1.8 | BSD-3-Clause |
-| colorama | 0.4.6 | BSD-3-Clause |
+| click | 8.4.2 | BSD-3-Clause |
 | construct | 2.10.70 | MIT |
-| cryptography | 44.0.3 | Apache-2.0 OR BSD-3-Clause |
-| ecdsa | 0.19.2 | MIT |
+| cryptography | 48.0.1 | Apache-2.0 OR BSD-3-Clause |
+| esptool | 5.6.0 | GPL-2.0-or-later |
 | esp-coredump | 1.17.2 | Apache-2.0 |
-| esp-idf-kconfig | 2.5.4 | Apache-2.0 |
+| esp-idf-diag | 0.2.0 | Apache-2.0 |
+| esp-idf-kconfig | 3.14.0 | Apache-2.0 |
 | esp-idf-monitor | 1.10.0 | Apache-2.0 |
-| esp-idf-size | 1.7.1 | Apache-2.0 |
+| esp-idf-nvs-partition-gen | 0.1.9 | Apache-2.0 |
+| esp-idf-panic-decoder | 1.5.0 | Apache-2.0 |
+| esp-idf-sbom | 1.5.0 | Apache-2.0 |
+| esp-idf-size | 2.3.2 | Apache-2.0 |
 | esp-pylib | 1.2.0 | Apache-2.0 |
-| esp_idf_nvs_partition_gen | 0.1.9 | Apache-2.0 |
-| esp_idf_panic_decoder | 1.5.0 | Apache-2.0 |
-| esptool | 4.12.0 | GPL-2.0-or-later |
 | freertos-gdb | 1.0.4 | Apache-2.0 |
-| idf-component-manager | 2.5.2 | Apache-2.0 |
+| idf-component-manager | 3.1.2 | Apache-2.0 |
+| idf-drivers-gdb | 0.1.1 | Apache-2.0 |
 | idna | 3.20 | BSD-3-Clause |
 | intelhex | 2.3.0 | BSD-3-Clause |
 | jsonref | 1.1.0 | MIT |
+| license-expression | 30.4.4 | Apache-2.0 |
+| linkify-it-py | 2.2.0 | MIT |
 | markdown-it-py | 4.2.0 | MIT |
+| mdit-py-plugins | 0.6.1 | MIT |
 | mdurl | 0.1.2 | MIT |
 | packaging | 26.3 | Apache-2.0 OR BSD-2-Clause |
 | pathvalidate | 3.3.1 | MIT |
+| platformdirs | 4.13.6 | MIT |
 | psutil | 7.2.2 | BSD-3-Clause |
 | pyclang | 0.7.0 | MIT |
 | pycparser | 3.12 | BSD-3-Clause |
 | pydantic | 2.14.1 | MIT |
-| pydantic-settings | 2.16.1 | MIT |
 | pydantic_core | 2.50.1 | MIT |
+| pydantic-settings | 2.16.1 | MIT |
 | pyelftools | 0.33 | Public domain, per included terms |
 | pygdbmi | 0.11.0.0 | MIT |
 | Pygments | 2.21.0 | BSD-2-Clause |
-| pyparsing | 3.2.5 | MIT |
+| pyparsing | 3.3.3 | MIT |
 | pyserial | 3.5 | BSD-3-Clause |
 | python-dotenv | 1.2.4 | BSD-3-Clause |
 | PyYAML | 6.0.3 | MIT |
@@ -370,12 +378,14 @@ User-selected project components retain their own manifests and notices.
 | rich | 15.0.0 | MIT |
 | rich-click | 1.9.9 | MIT |
 | ruamel.yaml | 0.19.1 | MIT |
+| schema | 0.7.8 | MIT |
 | setuptools | 80.9.0 | MIT |
-| six | 1.17.0 | MIT |
-| tibs | 0.5.7 | MIT |
-| tqdm | 4.70.1 | MPL-2.0 AND MIT |
+| textual | 8.2.8 | MIT |
+| tree-sitter | 0.26.0 | MIT |
+| tree-sitter-c | 0.24.2 | MIT |
 | truststore | 0.10.5 | MIT |
+| typing-extensions | 4.16.0 | PSF-2.0 |
 | typing-inspection | 0.4.4 | MIT |
-| typing_extensions | 4.16.0 | PSF-2.0 |
-| urllib3 | 1.26.20 | MIT |
+| urllib3 | 2.8.0 | MIT |
+| websockets | 17.3 | BSD-3-Clause |
 | wheel | 0.45.1 | MIT |

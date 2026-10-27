@@ -16,6 +16,105 @@ public static class ProjectClassifier
         "NUnit", "MSTest.TestFramework", "MSTest",
     ];
 
+    /// <summary>The packages build scripts are written with; a program that uses one is a build script.</summary>
+    private static readonly string[] BuildScriptPackages =
+    [
+        "Bullseye", "SimpleExec", "Nuke.Common", "Nuke.Components", "Cake.Frosting", "Cake.Core", "FlubuCore", "Fake.Core.Target",
+    ];
+
+    /// <summary>The SDKs build scripts are written with.</summary>
+    private static readonly string[] BuildScriptSdks = ["Cake.Sdk", "Cake.Frosting.Sdk", "Nuke.Sdk"];
+
+    /// <summary>The names repositories give a build script project, in a folder of the same purpose.</summary>
+    private static readonly string[] BuildScriptNames = ["build", "_build"];
+
+    /// <summary>The folders a build script project lives in.</summary>
+    private static readonly string[] BuildScriptFolders = ["build", "_build", ".build", "eng"];
+
+    /// <summary>
+    /// Whether a project is a repository's build script rather than an app: it uses a build-script library or SDK
+    /// (Bullseye, SimpleExec, NUKE, Cake, FAKE), or it is named <c>build</c> or <c>_build</c> in a <c>build</c> folder,
+    /// as NUKE and most build scripts are. Such a program starts <c>dotnet</c> and other tools as processes, so it never
+    /// runs on a tablet and F5 never picks it.
+    /// </summary>
+    /// <param name="project">The project.</param>
+    public static bool IsBuildScript(ProjectInfo project)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+        if (BuildScriptLibrary(project) is not null)
+        {
+            return true;
+        }
+
+        var folder = Path.GetFileName(Path.GetDirectoryName(project.FilePath) ?? string.Empty);
+        return BuildScriptNames.Contains(project.Name, StringComparer.OrdinalIgnoreCase)
+            && BuildScriptFolders.Contains(folder, StringComparer.OrdinalIgnoreCase);
+    }
+
+    /// <summary>The platforms of .NET's mobile workloads, which only build with those workloads installed.</summary>
+    private static readonly string[] MobilePlatforms = ["-android", "-ios", "-maccatalyst", "-tvos", "-macos"];
+
+    /// <summary>
+    /// Whether a project uses Avalonia: it references Avalonia or one of its packages, such as <c>Avalonia.Desktop</c>
+    /// or <c>Avalonia.Themes.Fluent</c>, which bring Avalonia with them, or ReactiveUI's Avalonia package.
+    /// </summary>
+    /// <param name="project">The project.</param>
+    public static bool UsesAvalonia(ProjectInfo project)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+        return project.HasPackage("Avalonia")
+            || project.HasPackage("ReactiveUI.Avalonia")
+            || project.PackageReferences.Any(p => p.Name.StartsWith("Avalonia.", StringComparison.OrdinalIgnoreCase));
+    }
+
+    /// <summary>
+    /// Whether a project is the Android, iOS or Mac head of a cross-platform app, such as an Avalonia app's
+    /// <c>AdvancedToDoList.Android</c>: every framework it targets is a mobile platform (<c>net10.0-android</c>,
+    /// <c>net10.0-ios</c>), which only .NET's workload for that platform builds, on a computer. A .NET MAUI project, which
+    /// TabStudio treats as an app of its own, is not counted.
+    /// </summary>
+    /// <param name="project">The project.</param>
+    public static bool IsMobilePlatformHead(ProjectInfo project)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+        return project.Kind != ProjectKind.Maui
+            && project.TargetFrameworks.Count > 0
+            && project.TargetFrameworks.All(tf => MobilePlatforms.Any(p => tf.Contains(p, StringComparison.OrdinalIgnoreCase)));
+    }
+
+    /// <summary>The build-script library or SDK a project uses, such as <c>Bullseye</c>; <see langword="null"/> when it uses none.</summary>
+    /// <param name="project">The project.</param>
+    public static string? BuildScriptLibrary(ProjectInfo project)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+        return BuildScriptPackages.FirstOrDefault(project.HasPackage) ?? BuildScriptSdks.FirstOrDefault(project.UsesSdk);
+    }
+
+    /// <summary>
+    /// How good a project is as the one F5 starts when nobody has picked one, lower first: web apps, then apps with a
+    /// UI, then console apps, then other programs such as worker services; <see langword="null"/> for a project that
+    /// is never a startup project (a library, tests, a build script, an Aspire AppHost, the WebAssembly client of a
+    /// Blazor Web App).
+    /// </summary>
+    /// <param name="project">The project.</param>
+    public static int? StartupRank(ProjectInfo project)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+        if (!project.IsExecutable || project.IsTestProject || IsBlazorWebAppClient(project) || IsMobilePlatformHead(project))
+        {
+            return null;
+        }
+
+        return project.Kind switch
+        {
+            ProjectKind.BuildScript or ProjectKind.AspireAppHost or ProjectKind.Test or ProjectKind.ClassLibrary => null,
+            ProjectKind.AspNetCore or ProjectKind.BlazorWebApp or ProjectKind.BlazorWebAssembly => 0,
+            ProjectKind.Avalonia or ProjectKind.WinForms or ProjectKind.Wpf or ProjectKind.Uno or ProjectKind.WinUI or ProjectKind.Maui => 1,
+            ProjectKind.ConsoleApp => 2,
+            _ => 3,
+        };
+    }
+
     /// <summary>Classifies a project.</summary>
     /// <param name="project">The parsed project. Its <see cref="ProjectInfo.Kind"/> is ignored.</param>
     /// <returns>The project kind, and whether it contains tests.</returns>
@@ -105,7 +204,13 @@ public static class ProjectClassifier
             return ProjectKind.Worker;
         }
 
-        if (project.IsExecutable && project.HasPackage("Avalonia"))
+        // Before the UI frameworks and console apps: a build script is a console program, but never an app.
+        if (project.IsExecutable && IsBuildScript(project))
+        {
+            return ProjectKind.BuildScript;
+        }
+
+        if (project.IsExecutable && UsesAvalonia(project))
         {
             return ProjectKind.Avalonia;
         }

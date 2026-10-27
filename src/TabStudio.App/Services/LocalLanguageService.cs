@@ -111,6 +111,7 @@ public sealed class LocalLanguageService : ILanguageService
         {
             _host.SetPackageReferences(project.FilePath, result.CompileAssemblies);
             _host.SetAnalyzers(project.FilePath, result.Analyzers);
+            _host.SetPackageBuildFiles(project.FilePath, result.BuildFiles);
             _runtimeAssemblies[project.FilePath] = result.RuntimeFiles;
         }
 

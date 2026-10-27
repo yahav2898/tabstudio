@@ -1,5 +1,6 @@
 using NuGet.Frameworks;
 using NuGet.Versioning;
+using TabStudio.Packages.Assets;
 
 namespace TabStudio.Packages.Manifests;
 
@@ -7,7 +8,14 @@ namespace TabStudio.Packages.Manifests;
 /// <param name="Id">The id of the package depended on, or the name of the referenced project.</param>
 /// <param name="Range">The versions that satisfy the dependency; any version for a project.</param>
 /// <param name="IsProject">Whether this is a <c>ProjectReference</c>, whose own package references flow to the referencing project.</param>
-internal sealed record PackageDependency(string Id, VersionRange Range, bool IsProject = false);
+internal sealed record PackageDependency(string Id, VersionRange Range, bool IsProject = false)
+{
+    /// <summary>
+    /// The assets of the dependency that do not reach the dependent, from a <c>.nuspec</c>'s <c>include</c> and
+    /// <c>exclude</c> or a reference's <c>IncludeAssets</c>, <c>ExcludeAssets</c> and <c>PrivateAssets</c>.
+    /// </summary>
+    public AssetFlags Excluded { get; init; }
+}
 
 /// <summary>The dependencies a package has when it is used from one target framework.</summary>
 /// <param name="TargetFramework">The framework of the group, or <see cref="NuGetFramework.AnyFramework"/> for every framework.</param>

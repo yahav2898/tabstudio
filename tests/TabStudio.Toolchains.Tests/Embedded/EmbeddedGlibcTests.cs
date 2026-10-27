@@ -442,7 +442,7 @@ public sealed class EmbeddedGlibcTests
                 File.WriteAllText(file, "test ABI shared library");
             }
             var text = CommandOutput?.Invoke(spec) ?? (spec.Arguments.Contains("--virtual") ? "EMBEDDED_BRIDGE_PASSED"
-                : spec.Program == "picotool" ? "picotool v2.3.1" : "PlatformIO Core, version 6.1.18");
+                : spec.Program == "picotool" ? "picotool v2.3.1" : "PlatformIO Core, version 6.2.0");
             return new ToolchainProcess(new FakeHandle(spec.Program == FailProgram ? 1 : 0, text), spec);
         }
         public bool HasCommand(string command) => true;

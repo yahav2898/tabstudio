@@ -117,7 +117,7 @@ public sealed class AvaloniaXamlGenerator : IIncrementalGenerator
         }
 
         var types = new XamlTypeResolver(compilation);
-        foreach (var document in classes)
+        foreach (var document in classes.Where(d => CanExtend(compilation, d.ClassName!)))
         {
             output.AddSource($"{document.ClassName}.g.cs", GenerateClass(document, types, DeclaresInitializeComponent(compilation, document.ClassName!)));
         }
@@ -144,6 +144,22 @@ public sealed class AvaloniaXamlGenerator : IIncrementalGenerator
             ? path[projectDirectory.Length..]
             : Path.GetFileName(path);
         return "/" + relative.Replace('\\', '/').TrimStart('/');
+    }
+
+    /// <summary>
+    /// Whether the generated part can be added to the class: its code declares it <c>partial</c>, or there is no code for
+    /// it. Avalonia's own generator leaves a class that is not partial alone, such as an <c>App</c> whose XAML only
+    /// <c>AvaloniaXamlLoader.Load(this)</c> loads; adding to it would be CS0260. Its XAML still loads.
+    /// </summary>
+    private static bool CanExtend(RoslynCompilation compilation, string className)
+    {
+        if (compilation.GetTypeByMetadataName(className) is not { } type)
+        {
+            return true;
+        }
+
+        var declarations = type.DeclaringSyntaxReferences.Select(r => r.GetSyntax()).OfType<TypeDeclarationSyntax>().ToList();
+        return declarations.Count > 0 && declarations.Any(d => d.Modifiers.Any(SyntaxKind.PartialKeyword));
     }
 
     /// <summary>Whether the class's own code declares <c>InitializeComponent</c>, as code written for Avalonia 0.10 does.</summary>

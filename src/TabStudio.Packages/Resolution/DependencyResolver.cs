@@ -1,5 +1,6 @@
 using NuGet.Versioning;
 using TabStudio.Core.Diagnostics;
+using TabStudio.Packages.Assets;
 using TabStudio.Packages.Manifests;
 
 namespace TabStudio.Packages.Resolution;
@@ -82,7 +83,12 @@ internal sealed class DependencyResolver
         var packages = acceptedNodes
             .Where(n => n.ResolvedMatch is { IsUnresolved: false, IsProject: false })
             .GroupBy(n => n.ResolvedMatch.Id, StringComparer.OrdinalIgnoreCase)
-            .Select(g => new ResolvedPackage(g.First().ResolvedMatch, g.Any(n => n.Parent is { IsRoot: true }), g.Any(ReachedThroughPackagesOnly)))
+            .Select(g => new ResolvedPackage(g.First().ResolvedMatch, g.Any(n => n.Parent is { IsRoot: true }), g.Any(ReachedThroughPackagesOnly))
+            {
+                // NuGet unites what every path to a package lets through.
+                Assets = g.Aggregate(AssetFlags.None, (assets, node) => assets | node.PathAssets),
+                Depth = g.Min(Depth),
+            })
             .OrderBy(p => p.Match.Id, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
@@ -104,7 +110,7 @@ internal sealed class DependencyResolver
                 continue;
             }
 
-            var child = new GraphNode(dependency.Id, dependency.Range, node);
+            var child = new GraphNode(dependency.Id, dependency.Range, node) { Excluded = dependency.Excluded };
             node.Children.Add(child);
             switch (kind)
             {
@@ -229,6 +235,18 @@ internal sealed class DependencyResolver
                 }
             }
         }
+    }
+
+    /// <summary>How many dependencies lie between the project and a node: 1 for a package the project references.</summary>
+    private static int Depth(GraphNode node)
+    {
+        var depth = 0;
+        for (var parent = node.Parent; parent is not null; parent = parent.Parent)
+        {
+            depth++;
+        }
+
+        return depth;
     }
 
     /// <summary>Whether no project lies between the project being restored and a node.</summary>

@@ -143,9 +143,21 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
     }
 
     /// <inheritdoc />
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        CloseCaretPopups();
+    }
+
+    /// <inheritdoc />
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
+        if (change.Property == IsVisibleProperty && !IsVisible)
+        {
+            CloseCaretPopups();
+        }
+
         if (change.Property == IsVisibleProperty && IsVisible)
         {
             // Restore the caret once the editor has a size, then honor any navigation that arrived while hidden.

@@ -87,6 +87,17 @@ public sealed partial class ErrorListViewModel : ObservableObject
     [ObservableProperty]
     public partial int MessageCount { get; private set; }
 
+    /// <summary>
+    /// "Analyzing…", or "Analyzing… 12/40 projects", while packages restore or the solution is analyzed: the counts are
+    /// about to change, so the Problems button says this in their place.
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsPending))]
+    public partial string? PendingText { get; set; }
+
+    /// <summary>Whether the counts are about to change (<see cref="PendingText"/>).</summary>
+    public bool IsPending => PendingText is not null;
+
     /// <summary>Whether any row passes the filters.</summary>
     [ObservableProperty]
     public partial bool HasItems { get; private set; }

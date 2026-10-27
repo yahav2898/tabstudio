@@ -59,6 +59,7 @@ public static partial class ConnectionEnvironment
         var result = new Dictionary<string, string?>(StringComparer.Ordinal);
         var application = FindApplication(project, projectDirectory);
         foreach (var pair in application?.Environment ?? new Dictionary<string, string?>()) result[pair.Key] = pair.Value is { } value ? Rewrite(value, endpoints) : null;
+        foreach (var pair in project.RunEnvironment) result.TryAdd(pair.Key, pair.Value is { } value ? Rewrite(value, endpoints) : null);
         foreach (var file in new[] { "appsettings.json", $"appsettings.{environmentName}.json" })
         {
             var path = Path.Combine(projectDirectory, file);

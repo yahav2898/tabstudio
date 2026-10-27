@@ -1,6 +1,7 @@
 using NuGet.Versioning;
 using TabStudio.Core.Diagnostics;
 using TabStudio.Core.Workspaces;
+using TabStudio.Packages.Assets;
 using TabStudio.Packages.Manifests;
 using TabStudio.Packages.Resolution;
 
@@ -145,7 +146,7 @@ internal static class ProjectPackageReferences
                     PackageDiagnosticIds.MissingVersion,
                     $"The reference to {reference.Name} has no version, so the lowest available version is used. Add Version=\"...\" to the PackageReference.",
                     project.Name));
-                dependencies.Add(new PackageDependency(reference.Name, VersionRange.All));
+                dependencies.Add(new PackageDependency(reference.Name, VersionRange.All) { Excluded = Excluded(reference, includePrivate) });
                 continue;
             }
 
@@ -158,9 +159,22 @@ internal static class ProjectPackageReferences
                 continue;
             }
 
-            dependencies.Add(new PackageDependency(reference.Name, range));
+            dependencies.Add(new PackageDependency(reference.Name, range) { Excluded = Excluded(reference, includePrivate) });
         }
 
         return dependencies;
+    }
+
+    /// <summary>
+    /// The assets of a referenced package that do not reach the project being restored: those its
+    /// <c>IncludeAssets</c> and <c>ExcludeAssets</c> leave out, and for a package of a referenced project, also its
+    /// <c>PrivateAssets</c> (by default content files, analyzers and <c>build/</c>, so only <c>buildTransitive/</c> flows).
+    /// </summary>
+    /// <param name="reference">The package reference.</param>
+    /// <param name="ownReference">Whether the project being restored makes the reference itself.</param>
+    private static AssetFlags Excluded(PackageReferenceInfo reference, bool ownReference)
+    {
+        var excluded = AssetFlagNames.Excluded(reference.IncludeAssets, reference.ExcludeAssets);
+        return ownReference ? excluded : excluded | (AssetFlagNames.Parse(reference.PrivateAssets) ?? AssetFlagNames.DefaultSuppressParent);
     }
 }

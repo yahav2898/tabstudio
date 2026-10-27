@@ -129,21 +129,27 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
         _unoGeneratorInputs.Clear();
         _projectIds.Clear();
         _projects.Clear();
+        _projectsAsRead.Clear();
         _skeletons.Clear();
 
         // An Aspire AppHost compiles against code only its SDK generates, and runs only on a computer (see the
         // Compatibility Doctor), so it is not compiled here. Nor is a .NET Framework program that needs Windows:
-        // compiled against .NET, its errors would only say that it is the wrong framework.
+        // compiled against .NET, its errors would only say that it is the wrong framework. Nor is the Android or iOS
+        // head of a cross-platform app, which only that platform's workload builds.
         var csharpProjects = workspace.Projects
             .Where(p => p.Language == ProjectLanguage.CSharp && p.Kind is not (ProjectKind.Unknown or ProjectKind.AspireAppHost))
-            .Where(p => !NetFrameworkCompatibility.NeedsWindows(p))
+            .Where(p => !NetFrameworkCompatibility.NeedsWindows(p) && !ProjectClassifier.IsMobilePlatformHead(p))
             .ToList();
 
+        // Projects whose packages were restored before get what their packages' props and targets add.
+        var asRead = csharpProjects.ToDictionary(p => p.FilePath, StringComparer.Ordinal);
+        csharpProjects = [.. csharpProjects.Select(WithPackageBuild)];
         foreach (var project in csharpProjects)
         {
             var id = ProjectId.CreateNewId(project.Name);
             _projectIds[project.FilePath] = id;
             _projects[id] = project;
+            _projectsAsRead[id] = asRead[project.FilePath];
         }
 
         IndexProjects();
@@ -567,6 +573,14 @@ public sealed partial class RoslynWorkspaceHost : IBuildSource, IDisposable
                 additionalDocuments.Add(CreateDocumentInfo(documentId, path, ReadSource(sources, path), isGenerated: false));
                 _additionalDocuments[path] = documentId;
             }
+        }
+
+        // The project's and its packages' AdditionalFiles items, which generators read through AdditionalTextsProvider.
+        foreach (var path in AdditionalFilePaths(project).Where(path => !_additionalDocuments.ContainsKey(path)))
+        {
+            var documentId = DocumentId.CreateNewId(id, path);
+            additionalDocuments.Add(CreateDocumentInfo(documentId, path, ReadSource(sources, path), isGenerated: false));
+            _additionalDocuments[path] = documentId;
         }
 
         AddRazorDocuments(project, id, allProjectDirectories, sources, documents, additionalDocuments);

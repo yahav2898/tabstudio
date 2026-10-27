@@ -2,6 +2,7 @@ using System.Xml;
 using System.Xml.Linq;
 using NuGet.Frameworks;
 using NuGet.Versioning;
+using TabStudio.Packages.Assets;
 using TabStudio.Packages.Installation;
 
 namespace TabStudio.Packages.Manifests;
@@ -90,9 +91,9 @@ internal static class NuspecReader
     private static List<PackageDependency> ReadDependencies(XElement parent) =>
         parent.Elements()
             .Where(e => e.Name.LocalName == "dependency")
-            .Select(e => (Id: e.Attribute("id")?.Value.Trim(), Version: e.Attribute("version")?.Value))
+            .Select(e => (Id: e.Attribute("id")?.Value.Trim(), Version: e.Attribute("version")?.Value, Include: e.Attribute("include")?.Value, Exclude: e.Attribute("exclude")?.Value))
             .Where(d => !string.IsNullOrEmpty(d.Id))
-            .Select(d => new PackageDependency(d.Id!, ParseRange(d.Version)))
+            .Select(d => new PackageDependency(d.Id!, ParseRange(d.Version)) { Excluded = AssetFlagNames.Excluded(d.Include, d.Exclude) })
             .DistinctBy(d => d.Id, StringComparer.OrdinalIgnoreCase)
             .ToList();
 

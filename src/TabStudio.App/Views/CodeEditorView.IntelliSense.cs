@@ -165,7 +165,7 @@ public sealed partial class CodeEditorView
                 _ = ShowQuickActionsAsync();
                 return true;
             case Key.Escape when e.KeyModifiers == KeyModifiers.None:
-                return ClosePeek() | CloseQuickInfo();
+                return ClosePeek() | CloseQuickInfo() | CloseQuickActions();
             default:
                 return false;
         }
@@ -179,18 +179,36 @@ public sealed partial class CodeEditorView
         _completion?.Refilter();
         OnSignatureHelpCaretMoved();
         CloseQuickInfo();
-        HideLightBulb();
+        CloseQuickActions();
         ScheduleCaretWork();
     }
 
-    private void OnIntelliSenseTextChanged(object? sender, DocumentChangeEventArgs e) => _highlights?.OnDocumentChanged(e);
+    private void OnIntelliSenseTextChanged(object? sender, DocumentChangeEventArgs e)
+    {
+        _highlights?.OnDocumentChanged(e);
+
+        // Typing: the actions listed for the old text no longer apply.
+        CloseQuickActions();
+    }
 
     private void OnIntelliSenseScrolled(object? sender, EventArgs e)
     {
         PlaceCompletionPopup();
         PlaceSignatureHelpPopup();
         CloseQuickInfo();
-        HideLightBulb();
+        CloseQuickActions();
+    }
+
+    /// <summary>
+    /// Closes the popups at this editor's caret when it is hidden, such as when another document's tab is chosen: they
+    /// live in the window's overlay layer and would otherwise stay over the editor that replaced it.
+    /// </summary>
+    private void CloseCaretPopups()
+    {
+        _completion?.Close();
+        CloseSignatureHelp();
+        CloseQuickInfo();
+        CloseQuickActions();
     }
 
     private void OnIntelliSenseLostFocus(object? sender, RoutedEventArgs e)
@@ -200,6 +218,12 @@ public sealed partial class CodeEditorView
         {
             _completion?.Close();
             CloseSignatureHelp();
+
+            // A tap elsewhere; the Quick Actions menu taking focus keeps the bulb it opened from.
+            if (_quickActionsMenu is null)
+            {
+                HideLightBulb();
+            }
         }
     }
 

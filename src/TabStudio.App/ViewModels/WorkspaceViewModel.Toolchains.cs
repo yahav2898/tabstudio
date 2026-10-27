@@ -560,7 +560,17 @@ public sealed partial class WorkspaceViewModel
             if (plan.Build is { } build)
             {
                 Output.WriteLine("> " + build.CommandLine, OutputKind.Info);
-                var compiled = await BuildCargoOrToolchainAsync(project, plan, _run.Token);
+                var run = _run;
+                var stage = global::TabStudio.Core.Progress.OutputProgressParser.StageOf(build.Program, build.Arguments, plan.ProgramName);
+                (RunPlan Plan, OutputProcessResult Result) compiled;
+                using (var building = new CompletingOperation(Operations.Begin("build:" + project.Directory, "Building " + plan.ProgramName, new global::TabStudio.Core.Progress.OperationProgress(stage), run.Cancel)))
+                using (FollowOutput(building.Operation))
+                {
+                    compiled = await BuildCargoOrToolchainAsync(project, plan, run.Token);
+                    building.Outcome = compiled.Result.Succeeded ? global::TabStudio.Core.Progress.OperationOutcome.Succeeded
+                        : run.IsCancellationRequested ? global::TabStudio.Core.Progress.OperationOutcome.Cancelled : global::TabStudio.Core.Progress.OperationOutcome.Failed;
+                }
+
                 plan = compiled.Plan;
                 var built = compiled.Result;
                 if (!built.Succeeded)
@@ -571,6 +581,14 @@ public sealed partial class WorkspaceViewModel
                 }
             }
 
+            if (await PreparePrismaDatabaseAsync(project, _run.Token) is { } migration)
+            {
+                result = migration;
+                ReportToolchainRun(project, plan.ProgramName, result);
+                return;
+            }
+
+            StatusText = $"Running {plan.ProgramName}";
             result = await OutputProcess.RunAsync(_toolchains.Runtime, WithServiceEnvironment(plan.Run), Output, input, _run.Token, listening: listening, toolchain: toolchain.Id);
         }
         finally

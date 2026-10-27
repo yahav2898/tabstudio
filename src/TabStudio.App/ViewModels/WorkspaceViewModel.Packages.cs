@@ -2,6 +2,7 @@ using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using TabStudio.Compilation.Wpf;
 using TabStudio.Core.Diagnostics;
+using TabStudio.Core.Progress;
 using TabStudio.Core.Workspaces;
 using TabStudio.Packages;
 
@@ -46,7 +47,8 @@ public sealed partial class WorkspaceViewModel
     /// </summary>
     private static bool NeedsRestore(Workspace workspace, ProjectInfo project)
     {
-        if (project.Language != ProjectLanguage.CSharp)
+        // A mobile platform head restores for its platform, which only that platform's workload provides.
+        if (project.Language != ProjectLanguage.CSharp || ProjectClassifier.IsMobilePlatformHead(project))
         {
             return false;
         }
@@ -91,22 +93,39 @@ public sealed partial class WorkspaceViewModel
         }
 
         var restoredAny = false;
+        var operation = Operations.Begin(RestoreOperation, "Restoring NuGet packages");
+        var outcome = OperationOutcome.Succeeded;
         try
         {
-            foreach (var project in projects)
+            for (var index = 0; index < projects.Count; index++)
             {
+                var project = projects[index];
                 PackagesText = $"Restoring {project.Name}";
+                operation.Report(projects.Count > 1
+                    ? new OperationProgress("Restoring NuGet packages", index, projects.Count, ProgressUnit.Projects)
+                    : new OperationProgress($"Restoring {project.Name}"));
+                operation.Log($"Restoring {project.FilePath}");
                 var progress = new Progress<RestoreProgress>(p =>
                 {
                     if (p.Stage == RestoreStage.Downloading && p.Total > 0)
                     {
                         PackagesText = $"Downloading packages {p.Completed.ToString(CultureInfo.InvariantCulture)}/{p.Total.ToString(CultureInfo.InvariantCulture)}";
+                        operation.Report(new OperationProgress("Downloading NuGet packages", p.Completed, p.Total));
+                    }
+
+                    if (p.Message is { Length: > 0 } message)
+                    {
+                        operation.Log(message);
                     }
                 });
 
                 var result = await language.RestorePackagesAsync(project, progress, cancellationToken);
                 ErrorList.SetRestoreDiagnostics(project.FilePath, result.Diagnostics);
                 restoredAny |= result.Success;
+                if (!result.Success)
+                {
+                    outcome = OperationOutcome.Failed;
+                }
                 if (!result.FromCache)
                 {
                     var seconds = result.Duration.TotalSeconds.ToString("0.00", CultureInfo.InvariantCulture);
@@ -124,16 +143,19 @@ public sealed partial class WorkspaceViewModel
         catch (OperationCanceledException)
         {
             // The workspace closed.
+            outcome = OperationOutcome.Cancelled;
             return;
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)
         {
             // The restorer reports problems as diagnostics; anything else is a bug, which must not stop builds.
             Output.WriteLine($"Package restore stopped: {ex.Message}", OutputKind.Failure);
+            outcome = OperationOutcome.Failed;
         }
         finally
         {
             PackagesText = null;
+            operation.Complete(outcome);
         }
 
         // Code that uses the packages was analyzed without them: analyze it again now they are referenced.

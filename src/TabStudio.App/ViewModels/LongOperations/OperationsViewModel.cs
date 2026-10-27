@@ -1,0 +1,293 @@
+using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using TabStudio.App.Platform;
+using TabStudio.App.Services;
+using TabStudio.Core.Progress;
+
+namespace TabStudio.App.ViewModels.LongOperations;
+
+/// <summary>
+/// The long operations running now, for the status bar and the small panel over it: downloading an SDK, installing
+/// packages, restoring NuGet packages, configuring CMake, building, analyzing. The status bar shows the newest with its
+/// stage, numbers and time left; the panel lists them all, each with Cancel where cancelling is safe and its raw log
+/// behind "Show details". One that runs for 30 seconds while TabStudio is in the background gets a system notification
+/// with its progress, which says how it ended.
+/// </summary>
+public sealed partial class OperationsViewModel : ObservableObject, IDisposable
+{
+    /// <summary>How often the time left and the background check are refreshed while operations run.</summary>
+    private static readonly TimeSpan RefreshInterval = TimeSpan.FromSeconds(2);
+
+    private readonly IUiDispatcher _ui;
+    private readonly INotifications _notifications;
+    private readonly IAppActivity? _activity;
+    private readonly ITimer _timer;
+    private bool _disposed;
+
+    /// <summary>Creates the operations.</summary>
+    /// <param name="ui">The UI thread, where operations are begun and reported.</param>
+    /// <param name="notifications">The system's notifications; none when <see langword="null"/>.</param>
+    /// <param name="activity">Whether the app is in the background; always in the foreground when <see langword="null"/>.</param>
+    /// <param name="time">The clock; the system's when <see langword="null"/>.</param>
+    public OperationsViewModel(IUiDispatcher ui, INotifications? notifications = null, IAppActivity? activity = null, TimeProvider? time = null)
+    {
+        ArgumentNullException.ThrowIfNull(ui);
+        _ui = ui;
+        _notifications = notifications ?? new NoSystemNotifications();
+        _activity = activity;
+        time ??= TimeProvider.System;
+        Tracker = new OperationTracker(time) { IsInBackground = activity?.IsInBackground == true };
+        Tracker.Changed += OnChanged;
+        Tracker.Logged += OnLogged;
+        Tracker.NotificationDue += OnNotificationDue;
+        Tracker.NotificationEnded += OnNotificationEnded;
+        if (_activity is not null)
+        {
+            _activity.Changed += OnActivityChanged;
+        }
+
+        _notifications.Opened += OnNotificationOpened;
+        _timer = time.CreateTimer(_ => _ui.Post(Refresh), null, RefreshInterval, RefreshInterval);
+    }
+
+    /// <summary>The operations and their state, which tests and the integrations use.</summary>
+    public OperationTracker Tracker { get; }
+
+    /// <summary>The operations running now, oldest first.</summary>
+    public ObservableCollection<OperationItemViewModel> Items { get; } = [];
+
+    /// <summary>The newest operation, which the status bar shows.</summary>
+    public OperationItemViewModel? Current => Items.Count > 0 ? Items[^1] : null;
+
+    /// <summary>Whether any operation runs.</summary>
+    public bool HasOperations => Items.Count > 0;
+
+    /// <summary>
+    /// The status bar's text: "Downloading Pico SDK 120/340 MB · about 2 min left", and "+1 more" when others run too.
+    /// </summary>
+    public string? StatusText => Current is not { } current ? null
+        : Items.Count > 1 ? $"{current.Text} (+{Items.Count - 1} more)" : current.Text;
+
+    /// <summary>Whether the panel with every operation is open over the status bar.</summary>
+    [ObservableProperty]
+    public partial bool IsPanelOpen { get; set; }
+
+    /// <summary>Starts an operation, or returns the running one with the same key. Call on the UI thread.</summary>
+    /// <param name="key">Identifies it, such as <c>restore</c>.</param>
+    /// <param name="title">What it is.</param>
+    /// <param name="progress">Its first stage.</param>
+    /// <param name="cancel">What Cancel does, where cancelling is safe.</param>
+    public TrackedOperation Begin(string key, string title, OperationProgress? progress = null, Action? cancel = null) =>
+        Tracker.Begin(key, title, progress, cancel);
+
+    /// <summary>The running operation with a key, if any.</summary>
+    /// <param name="key">Its key.</param>
+    public TrackedOperation? Find(string key) => Tracker.Find(key);
+
+    /// <summary>Opens or closes the panel.</summary>
+    [RelayCommand]
+    private void TogglePanel() => IsPanelOpen = HasOperations && !IsPanelOpen;
+
+    /// <summary>Closes the panel.</summary>
+    [RelayCommand]
+    private void ClosePanel() => IsPanelOpen = false;
+
+    private void OnChanged(object? sender, TrackedOperation operation)
+    {
+        var item = Items.FirstOrDefault(i => ReferenceEquals(i.Operation, operation));
+        if (operation.IsCompleted)
+        {
+            if (item is not null)
+            {
+                Items.Remove(item);
+            }
+        }
+        else if (item is null)
+        {
+            Items.Add(new OperationItemViewModel(operation));
+        }
+        else
+        {
+            item.Refresh();
+        }
+
+        if (!HasOperations)
+        {
+            IsPanelOpen = false;
+        }
+
+        OnPropertyChanged(nameof(Current));
+        OnPropertyChanged(nameof(HasOperations));
+        OnPropertyChanged(nameof(StatusText));
+    }
+
+    private void OnLogged(object? sender, TrackedOperation operation) =>
+        Items.FirstOrDefault(i => ReferenceEquals(i.Operation, operation))?.RefreshDetails();
+
+    private void Refresh()
+    {
+        if (_disposed || Items.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var item in Items)
+        {
+            item.Refresh();
+        }
+
+        OnPropertyChanged(nameof(StatusText));
+        Tracker.Poll();
+    }
+
+    private void OnActivityChanged(object? sender, EventArgs e) => Tracker.IsInBackground = _activity?.IsInBackground == true;
+
+    private void OnNotificationDue(object? sender, TrackedOperation operation)
+    {
+        var percent = operation.Progress.Fraction is { } fraction ? (int)Math.Round(fraction * 100) : (int?)null;
+        _notifications.Show(new SystemNotification(Tag(operation), operation.Title, operation.Text, IsFailure: false)
+        {
+            IsProgress = true,
+            ProgressPercent = percent,
+        });
+    }
+
+    private void OnNotificationEnded(object? sender, TrackedOperation operation)
+    {
+        var (title, text) = operation.Outcome switch
+        {
+            OperationOutcome.Failed => ($"{operation.Title} failed", "Open TabStudio for the details."),
+            OperationOutcome.Cancelled => ($"{operation.Title} cancelled", "Stopped before it finished."),
+            _ => ($"{operation.Title} finished", "Done in " + Duration(operation.Elapsed) + "."),
+        };
+        _notifications.Show(new SystemNotification(Tag(operation), title, text, operation.Outcome == OperationOutcome.Failed));
+    }
+
+    private static string Tag(TrackedOperation operation) => TagPrefix + operation.Key;
+
+    /// <summary>The tag prefix of operations' notifications; tapping one opens the panel.</summary>
+    private const string TagPrefix = "operation:";
+
+    private void OnNotificationOpened(object? sender, string tag)
+    {
+        if (tag.StartsWith(TagPrefix, StringComparison.Ordinal) && HasOperations)
+        {
+            IsPanelOpen = true;
+        }
+    }
+
+    private static string Duration(TimeSpan elapsed) => elapsed < TimeSpan.FromMinutes(1)
+        ? $"{(int)elapsed.TotalSeconds} s"
+        : elapsed < TimeSpan.FromHours(1) ? $"{(int)elapsed.TotalMinutes} min {elapsed.Seconds} s" : $"{(int)elapsed.TotalHours} h {elapsed.Minutes} min";
+
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        _disposed = true;
+        _timer.Dispose();
+        Tracker.Changed -= OnChanged;
+        Tracker.Logged -= OnLogged;
+        Tracker.NotificationDue -= OnNotificationDue;
+        Tracker.NotificationEnded -= OnNotificationEnded;
+        _notifications.Opened -= OnNotificationOpened;
+        if (_activity is not null)
+        {
+            _activity.Changed -= OnActivityChanged;
+        }
+    }
+}
+
+/// <summary>One operation in the status bar and the operations panel.</summary>
+public sealed partial class OperationItemViewModel : ObservableObject
+{
+    /// <summary>Shows an operation.</summary>
+    /// <param name="operation">The operation.</param>
+    public OperationItemViewModel(TrackedOperation operation)
+    {
+        Operation = operation;
+    }
+
+    /// <summary>The operation.</summary>
+    public TrackedOperation Operation { get; }
+
+    /// <summary>What it is, such as "Installing Pico SDK".</summary>
+    public string Title => Operation.Title;
+
+    /// <summary>"Downloading Pico SDK 120/340 MB · about 2 min left".</summary>
+    public string Text => Operation.Text;
+
+    /// <summary>The stage and its numbers, without the estimate.</summary>
+    public string Stage => Operation.Progress.Text;
+
+    /// <summary>"about 2 min left", once it can be estimated.</summary>
+    public string? RemainingText => Operation.RemainingText;
+
+    /// <summary>How much is done, from 0 to 100, for the progress bar.</summary>
+    public double Percent => (Operation.Progress.Fraction ?? 0) * 100;
+
+    /// <summary>Whether the progress bar moves without numbers.</summary>
+    public bool IsIndeterminate => Operation.Progress.Fraction is null;
+
+    /// <summary>Whether Cancel is offered.</summary>
+    public bool CanCancel => Operation.CanCancel && !Operation.IsCancelling;
+
+    /// <summary>Whether the raw log is shown.</summary>
+    [ObservableProperty]
+    public partial bool ShowDetails { get; set; }
+
+    /// <summary>"Show details" or "Hide details", for the button that toggles the raw log.</summary>
+    public string DetailsLabel => ShowDetails ? "Hide details" : "Show details";
+
+    /// <summary>Whether there is a raw log to show.</summary>
+    public bool HasDetails => Operation.Details.Count > 0;
+
+    /// <summary>The last lines of the raw log, while it is shown.</summary>
+    public string Details => ShowDetails ? string.Join('\n', Operation.Details.TakeLast(400)) : string.Empty;
+
+    /// <summary>Asks the operation to stop.</summary>
+    [RelayCommand]
+    private void Cancel()
+    {
+        Operation.Cancel();
+        Refresh();
+    }
+
+    /// <summary>Shows or hides the raw log.</summary>
+    [RelayCommand]
+    private void ToggleDetails() => ShowDetails = !ShowDetails;
+
+    partial void OnShowDetailsChanged(bool value)
+    {
+        OnPropertyChanged(nameof(Details));
+        OnPropertyChanged(nameof(DetailsLabel));
+    }
+
+    /// <summary>Raises the changes of everything the operation says.</summary>
+    public void Refresh()
+    {
+        OnPropertyChanged(nameof(Title));
+        OnPropertyChanged(nameof(Text));
+        OnPropertyChanged(nameof(Stage));
+        OnPropertyChanged(nameof(RemainingText));
+        OnPropertyChanged(nameof(Percent));
+        OnPropertyChanged(nameof(IsIndeterminate));
+        OnPropertyChanged(nameof(CanCancel));
+        RefreshDetails();
+    }
+
+    /// <summary>Raises the change of the raw log, while it is shown.</summary>
+    public void RefreshDetails()
+    {
+        OnPropertyChanged(nameof(HasDetails));
+        if (ShowDetails)
+        {
+            OnPropertyChanged(nameof(Details));
+        }
+    }
+}

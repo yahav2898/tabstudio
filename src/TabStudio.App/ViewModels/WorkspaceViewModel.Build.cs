@@ -7,6 +7,7 @@ using TabStudio.Compilation.Building;
 using TabStudio.Compilation.Running;
 using TabStudio.Core.Compatibility;
 using TabStudio.Core.Diagnostics;
+using TabStudio.Core.Progress;
 using TabStudio.Core.Workspaces;
 
 namespace TabStudio.App.ViewModels;
@@ -162,7 +163,7 @@ public sealed partial class WorkspaceViewModel
         if (Workspace is { } workspace)
         {
             var csharp = workspace.Projects.Where(p => p.Language == ProjectLanguage.CSharp).ToList();
-            var skipped = csharp.Where(p => p.Kind == ProjectKind.AspireAppHost || NetFrameworkCompatibility.NeedsWindows(p)).ToList();
+            var skipped = csharp.Where(p => p.Kind == ProjectKind.AspireAppHost || NetFrameworkCompatibility.NeedsWindows(p) || ProjectClassifier.IsMobilePlatformHead(p)).ToList();
             await BuildProjectsAsync(InDependencyOrder(csharp.Except(skipped).ToList()), showOutput: true, skipped: skipped);
             foreach (var item in _toolchainProjects.Where(t => TabStudio.Toolchains.Microchip.MicrochipInstallation.IsCompiler(t.Toolchain.Id)))
             {
@@ -213,7 +214,9 @@ public sealed partial class WorkspaceViewModel
             ? "an Aspire AppHost runs on a computer, where Aspire's developer control plane starts the app's projects and containers"
             : NetFrameworkCompatibility.NeedsWindows(project)
                 ? $"a .NET Framework project that needs Windows: it {NetFrameworkCompatibility.WhyWindows(project)}"
-                : "it is not built on this device";
+                : ProjectClassifier.IsMobilePlatformHead(project)
+                    ? $"it targets {string.Join(", ", project.TargetFrameworks)}, which only .NET's mobile workloads build, on a computer"
+                    : "it is not built on this device";
 
     private bool CanRun() => !_preparingServices && (IsRemoteWorkspace ? _remoteWorkspace?.Connection.IsConnected == true : StartupProject is not null || UsesLaunchTarget) && State is IdeState.Ready or IdeState.Failed && !IsNotebookRunning && !IsLiveGuest;
 
@@ -254,6 +257,7 @@ public sealed partial class WorkspaceViewModel
         // Background analyses may still describe the text from before Save All. The build below is now the
         // authoritative result; an older analysis must not clear its Error List while F5 reports a failure.
         _solutionAnalysis?.Cancel();
+        Operations.Find(AnalysisOperation)?.Complete(OperationOutcome.Cancelled);
         foreach (var analysis in _projectAnalysis.Values)
         {
             analysis.Cancel();
@@ -274,11 +278,16 @@ public sealed partial class WorkspaceViewModel
         int succeeded = 0, failed = 0;
         var reported = new List<BuildDiagnostic>();
         var seen = new HashSet<BuildDiagnostic>();
+        using var operation = new CompletingOperation(Operations.Begin("build", "Building"));
         for (var i = 0; i < projects.Count; i++)
         {
             var project = projects[i];
             var prefix = $"{(i + 1).ToString(CultureInfo.InvariantCulture)}>";
             StatusText = $"Building {project.Name}";
+            operation.Operation.Report(projects.Count > 1
+                ? new OperationProgress("Building", i, projects.Count, ProgressUnit.Projects)
+                : new OperationProgress($"Building {project.Name}"));
+            operation.Operation.Log($"Building {project.Name}");
             Output.WriteLine($"{prefix}------ Build started: Project: {project.Name}, Configuration: {Configuration} ------", OutputKind.Info);
 
             last = await (build ?? language.BuildAsync)(project, CancellationToken.None);
@@ -314,6 +323,7 @@ public sealed partial class WorkspaceViewModel
             Output.WriteLine($"{prefix}------ Skipped: Project: {skipped[i].Name}: {SkipReason(skipped[i])} ------", OutputKind.Info);
         }
 
+        operation.Outcome = failed == 0 ? OperationOutcome.Succeeded : OperationOutcome.Failed;
         var skippedText = skipped.Count == 0 ? string.Empty : $", {skipped.Count.ToString(CultureInfo.InvariantCulture)} skipped";
         var summary = $"========== Build: {succeeded.ToString(CultureInfo.InvariantCulture)} succeeded, {failed.ToString(CultureInfo.InvariantCulture)} failed{skippedText} ==========";
         Output.WriteLine(summary, failed == 0 ? OutputKind.Success : OutputKind.Failure);

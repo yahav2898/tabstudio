@@ -45,6 +45,16 @@ public sealed record RestoreResult
     /// </summary>
     public IReadOnlyList<string> Analyzers { get; init; } = [];
 
+    /// <summary>
+    /// Full paths of the props and targets files the project imports from its packages, in MSBuild's order: every
+    /// package's props, then every package's targets, a package's dependencies before the package.
+    /// </summary>
+    public IReadOnlyList<string> BuildFiles =>
+    [
+        .. ImportOrder().SelectMany(p => p.BuildFiles).Where(f => f.EndsWith(".props", StringComparison.OrdinalIgnoreCase)),
+        .. ImportOrder().SelectMany(p => p.BuildFiles).Where(f => !f.EndsWith(".props", StringComparison.OrdinalIgnoreCase)),
+    ];
+
     /// <summary>Errors and warnings, with NuGet's ids where NuGet has one (such as NU1101), most severe first.</summary>
     public IReadOnlyList<BuildDiagnostic> Diagnostics { get; init; } = [];
 
@@ -53,6 +63,10 @@ public sealed record RestoreResult
 
     /// <summary>How long the restore took.</summary>
     public TimeSpan Duration { get; init; }
+
+    /// <summary>The packages farthest from the project first, as NuGet imports a package's dependencies before it.</summary>
+    private IEnumerable<RestoredPackage> ImportOrder() =>
+        Packages.OrderByDescending(p => p.Depth).ThenBy(p => p.Id, StringComparer.OrdinalIgnoreCase);
 
     /// <summary>Whether every package was restored: there are no errors.</summary>
     public bool Success => Diagnostics.All(d => d.Severity != DiagnosticSeverityLevel.Error);

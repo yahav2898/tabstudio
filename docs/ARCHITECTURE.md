@@ -157,21 +157,32 @@ sequenceDiagram
 Roslyn runs source generators as part of every compilation in `RoslynWorkspaceHost`, so IntelliSense, live
 errors, builds and the debugger all see the code they generate.
 
-- **Where they come from.** A package's `analyzers/dotnet/cs` folder, with the folder for the highest Roslyn
-  version that is not newer than the compiler's, as the SDK picks them. .NET's own generators (behind
+- **Where they come from.** Every assembly under a package's `analyzers` folder, as the SDK picks them
+  (`AssetSelector.SelectAnalyzers`): C# or language-neutral ones, never `vb`, and when the package has `roslynX.Y`
+  folders anywhere in the path, only those of the highest version the compiler supports across the whole package
+  (Riok.Mapperly ships `analyzers/roslyn5.0/dotnet/cs`). A package whose generators all need a newer compiler is a
+  TS3006 warning. .NET's own generators (behind
   `[GeneratedRegex]`, `[JsonSerializable]`, `[LibraryImport]`) come from `Microsoft.NETCore.App.Ref`, which is
   downloaded the first time code uses one of those attributes; ASP.NET Core's come with its targeting pack.
 - **Loading.** `AnalyzerLoader` gives each folder its own `AssemblyLoadContext`, with Roslyn and its
   dependencies shared from the app.
-- **Build properties.** A generated global `.editorconfig` hands generators the project's MSBuild properties,
-  as the SDK does. `SdkGenerators` applies the SDK's other rules: ASP.NET Core's request delegate generator and
+- **Packages' props and targets.** The restore records each package's `build` and `buildTransitive` files as
+  NuGet imports them (`buildTransitive` in place of `build` for a package referenced through another, the nearest
+  target framework's folder, props before the project and targets after it). `ProjectParser.WithPackageBuildFiles`
+  evaluates what generators need from them: `CompilerVisibleProperty`, `CompilerVisibleItemMetadata`, `Using` items
+  (ReactiveUI's global usings), `AdditionalFiles` and the interceptor namespaces their targets add.
+- **Build properties.** A generated global `.editorconfig` hands generators the project's MSBuild properties as
+  `build_property.*` (empty when unset, as the SDK writes them) and each additional file's metadata as
+  `build_metadata.*`; Avalonia's `.axaml` files are additional files with `SourceItemGroup=AvaloniaXaml`. `SdkGenerators` applies the SDK's other rules: ASP.NET Core's request delegate generator and
   the configuration binding generator stay off unless the project turns them on, and generators may put
   interceptors only in the namespaces the SDK and the project allow.
 - **Avalonia XAML.** Avalonia compiles XAML after the C# compiler, a step TabStudio does not have, so its own
   generator, `AvaloniaXamlGenerator`, takes the place of Avalonia's: it puts each `.axaml` file into the assembly
   as text, generates `InitializeComponent` and the fields of `x:Name` elements, and intercepts
   `AvaloniaXamlLoader.Load(this)` so that the XAML is loaded at run time. XAML that is not well-formed is an
-  error naming the file.
+  error naming the file; a class that is not `partial` gets no generated part, as with Avalonia's own generator.
+- **Failures.** A generator that throws is a warning that names it (CS8785), never a reason for the build to
+  stop; the code it would have generated is then missing, and the errors that follow say where.
 
 ## Web apps
 

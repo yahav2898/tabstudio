@@ -52,7 +52,7 @@ public sealed class RealRepositoryTests
             Outcome outcome;
             try
             {
-                outcome = await OpenAndBuildAsync(solution, name, repository["serve"], report);
+                outcome = await OpenAndBuildAsync(solution, name, repository["startup"]?.GetValue<string>(), repository["serve"], report);
             }
             catch (Exception ex) when (ex is not OutOfMemoryException)
             {
@@ -64,6 +64,11 @@ public sealed class RealRepositoryTests
             results[name] = new JsonObject { ["errors"] = outcome.Errors, ["warnings"] = outcome.Warnings, ["seconds"] = Math.Round(outcome.Duration.TotalSeconds, 1), ["served"] = outcome.Served };
             var served = outcome.Served switch { true => ", served", false => ", NOT served", null => string.Empty };
             summary.Append(CultureInfo.InvariantCulture, $"| {name} | {outcome.Errors} | {baseline?.ToString(CultureInfo.InvariantCulture) ?? "none"} | {outcome.Warnings} | {outcome.Duration.TotalSeconds:F0} s{served} |\n");
+            if (outcome.Startup is { } wrongStartup)
+            {
+                problems.Add($"{name}: {wrongStartup}; see {name}.txt.");
+            }
+
             if (outcome.Served == false)
             {
                 problems.Add($"{name} built, but its first page was not served as expected; see {name}.txt.");
@@ -89,13 +94,13 @@ public sealed class RealRepositoryTests
     }
 
     /// <summary>
-    /// Opens the pinned Python, Java and Rust repositories as a person would: the project setup installs their
+    /// Opens the pinned Python, Java, Rust and Node.js repositories as a person would: the project setup installs their
     /// toolchains' packages, and Ctrl+F5 builds and runs the startup project. A web app must answer its first page
     /// in the web preview; a command-line program must exit with code 0. Each repository's report has the setup
     /// log, the Output panel and screenshots.
     /// </summary>
     [AvaloniaFact]
-    public async Task Pinned_Python_Java_and_Rust_repositories_set_up_build_and_start_their_programs()
+    public async Task Pinned_Python_Java_Rust_and_Node_repositories_set_up_build_and_start_their_programs()
     {
         var clones = Environment.GetEnvironmentVariable("TABSTUDIO_REAL_REPOS");
         if (string.IsNullOrEmpty(clones))
@@ -122,6 +127,14 @@ public sealed class RealRepositoryTests
                 repository["web"]?.GetValue<string>(),
                 repository["expect"]?.GetValue<string>());
             var report = new StringBuilder().AppendLine(CultureInfo.InvariantCulture, $"{name} at {repository["sha"]!.GetValue<string>()}");
+            if (repository["dotenv"] is JsonObject dotenv)
+            {
+                // The variables the repository's README asks a person to put in .env.
+                var lines = dotenv.Select(pair => $"{pair.Key}={pair.Value!.GetValue<string>()}");
+                await File.WriteAllLinesAsync(Path.Combine(clones, name, ".env"), lines);
+                report.AppendLine(CultureInfo.InvariantCulture, $".env: {string.Join(", ", dotenv.Select(pair => pair.Key))}");
+            }
+
             RunOutcome outcome;
             try
             {
@@ -275,9 +288,10 @@ public sealed class RealRepositoryTests
     }
 
     /// <param name="Served">Whether the first page was served as the repository's <c>serve</c> entry expects; <see langword="null"/> without one.</param>
-    private sealed record Outcome(int Errors, int Warnings, TimeSpan Duration, bool? Served = null);
+    /// <param name="Startup">What is wrong with the startup project TabStudio chose, when the entry names the one it expects.</param>
+    private sealed record Outcome(int Errors, int Warnings, TimeSpan Duration, bool? Served = null, string? Startup = null);
 
-    private static async Task<Outcome> OpenAndBuildAsync(string solution, string name, JsonNode? serve, StringBuilder report)
+    private static async Task<Outcome> OpenAndBuildAsync(string solution, string name, string? expectedStartup, JsonNode? serve, StringBuilder report)
     {
         using var fixture = new WorkspaceFixture();
         var workspace = fixture.Workspace;
@@ -300,6 +314,11 @@ public sealed class RealRepositoryTests
                 report.AppendLine(CultureInfo.InvariantCulture, $"  {row.Project}: {row.Status} via {row.RunsVia} - {row.Explanation}");
             }
 
+            // The startup project TabStudio chose by itself, before the serve check picks one.
+            report.AppendLine(CultureInfo.InvariantCulture, $"Startup project: {workspace.StartupProject?.Name ?? "none"}");
+            var startupProblem = expectedStartup is null || workspace.StartupProject?.Name == expectedStartup
+                ? null
+                : $"the startup project is {workspace.StartupProject?.Name ?? "none"}, not {expectedStartup}";
             UiTestHelpers.SaveScreenshot(window, $"real-{name}-1-opened");
             clock.Restart();
             await workspace.BuildCommand.ExecuteAsync(null);
@@ -312,23 +331,25 @@ public sealed class RealRepositoryTests
             foreach (var group in errors.GroupBy(e => e.Code).OrderByDescending(g => g.Count()))
             {
                 report.AppendLine(CultureInfo.InvariantCulture, $"  {group.Count()} x {group.Key}");
-                foreach (var error in group.Take(5))
+                foreach (var error in group.Take(25))
                 {
                     report.AppendLine(CultureInfo.InvariantCulture, $"      [{error.Diagnostic.ProjectName}] {error.Diagnostic}");
                 }
             }
 
-            foreach (var warning in items.Where(i => i.Diagnostic.Id is "CS8032" or "CS8034" or "CS8784" or "CS8785" or "CS9057"))
+            foreach (var warning in items.Where(i => IsGeneratorWarning(i.Diagnostic.Id)))
             {
                 report.AppendLine(CultureInfo.InvariantCulture, $"  generator: [{warning.Diagnostic.ProjectName}] {warning.Diagnostic}");
             }
+
+            AppendGeneratorPackages(report, fixture.Paths.Packages);
 
             UiTestHelpers.SaveScreenshot(window, $"real-{name}-2-built");
             bool? served = serve is null ? null : await ServeFirstPageAsync(workspace, window, name, serve, report);
             report.AppendLine("Output:");
             var text = workspace.Output.Text;
             report.AppendLine(text.Length > 40000 ? text[^40000..] : text);
-            return new Outcome(errors.Count, warnings, duration, served);
+            return new Outcome(errors.Count, warnings, duration, served, startupProblem);
         }
         finally
         {
@@ -340,7 +361,9 @@ public sealed class RealRepositoryTests
     /// <summary>
     /// The <c>serve</c> check: F5 on the named web project, with each connection string in <c>connections</c> taken
     /// from the environment variable it names and saved as the Database Explorer connection the run uses (as Connect to
-    /// SQL Server does), then a GET of <c>path</c>, which must answer <c>status</c> with <c>contains</c> in its body.
+    /// SQL Server does), and each variable in <c>environment</c> set for the run, as a person sets one the app's
+    /// README asks for (<c>$(RandomBase64Key)</c> is a new random 32-byte key, <c>$(TempDirectory)</c> a new folder),
+    /// then a GET of <c>path</c>, which must answer <c>status</c> with <c>contains</c> in its body.
     /// </summary>
     private static async Task<bool> ServeFirstPageAsync(WorkspaceViewModel workspace, Window window, string name, JsonNode serve, StringBuilder report)
     {
@@ -365,6 +388,19 @@ public sealed class RealRepositoryTests
 
             await workspace.DatabaseExplorer.SaveRunConnectionAsync(new TabStudio.Database.DatabaseConnection(
                 Guid.NewGuid(), WorkspaceViewModel.RunConnectionName(projectName, connectionName), TabStudio.Database.DatabaseProvider.SqlServer, value));
+        }
+
+        var previous = new List<(string Name, string? Value)>();
+        var temporary = Path.Combine(Path.GetTempPath(), "tabstudio-serve-" + Guid.NewGuid().ToString("N")[..8]);
+        foreach (var (variable, template) in serve["environment"]?.AsObject() ?? new JsonObject())
+        {
+            var value = template!.GetValue<string>()
+                .Replace("$(RandomBase64Key)", Convert.ToBase64String(System.Security.Cryptography.RandomNumberGenerator.GetBytes(32)), StringComparison.Ordinal)
+                .Replace("$(TempDirectory)", temporary, StringComparison.Ordinal);
+            Directory.CreateDirectory(temporary);
+            previous.Add((variable, Environment.GetEnvironmentVariable(variable)));
+            Environment.SetEnvironmentVariable(variable, value);
+            report.AppendLine(CultureInfo.InvariantCulture, $"Serve: {variable} set for the run.");
         }
 
         workspace.SetStartupProject(project);
@@ -400,6 +436,55 @@ public sealed class RealRepositoryTests
             }
 
             await run.WaitAsync(TimeSpan.FromMinutes(1));
+            foreach (var (variable, value) in previous)
+            {
+                Environment.SetEnvironmentVariable(variable, value);
+            }
+        }
+    }
+
+    /// <summary>The warnings that say a generator's code is missing: it did not load, threw, or needs a newer compiler.</summary>
+    private static bool IsGeneratorWarning(string id) => id is "CS8032" or "CS8034" or "CS8784" or "CS8785" or "CS9057";
+
+    /// <summary>
+    /// Lists the restored packages that bring analyzers or MSBuild files, with those files, so a missing generator's
+    /// package layout is in the report. With <c>TABSTUDIO_REAL_REPOS_DUMP_BUILD_FILES=1</c>, their props and targets
+    /// files are copied into the report too.
+    /// </summary>
+    private static void AppendGeneratorPackages(StringBuilder report, string packagesFolder)
+    {
+        if (!Directory.Exists(packagesFolder))
+        {
+            return;
+        }
+
+        var dump = Environment.GetEnvironmentVariable("TABSTUDIO_REAL_REPOS_DUMP_BUILD_FILES") == "1";
+        report.AppendLine("Packages with analyzers or MSBuild files:");
+        foreach (var versionFolder in Directory.EnumerateDirectories(packagesFolder).SelectMany(Directory.EnumerateDirectories).Order(StringComparer.Ordinal))
+        {
+            var files = new[] { "analyzers", "build", "buildTransitive", "buildMultiTargeting" }
+                .Select(folder => Path.Combine(versionFolder, folder))
+                .Where(Directory.Exists)
+                .SelectMany(folder => Directory.EnumerateFiles(folder, "*", SearchOption.AllDirectories))
+                .Select(file => Path.GetRelativePath(versionFolder, file).Replace('\\', '/'))
+                .Where(file => !file.EndsWith(".resources.dll", StringComparison.OrdinalIgnoreCase))
+                .Order(StringComparer.Ordinal)
+                .ToList();
+            if (files.Count == 0)
+            {
+                continue;
+            }
+
+            report.AppendLine(CultureInfo.InvariantCulture, $"  {Path.GetFileName(Path.GetDirectoryName(versionFolder))} {Path.GetFileName(versionFolder)}");
+            foreach (var file in files)
+            {
+                report.AppendLine(CultureInfo.InvariantCulture, $"      {file}");
+                if (dump && (file.EndsWith(".props", StringComparison.OrdinalIgnoreCase) || file.EndsWith(".targets", StringComparison.OrdinalIgnoreCase))
+                    && new FileInfo(Path.Combine(versionFolder, file)) is { Length: < 24_000 } info)
+                {
+                    report.AppendLine(File.ReadAllText(info.FullName));
+                }
+            }
         }
     }
 

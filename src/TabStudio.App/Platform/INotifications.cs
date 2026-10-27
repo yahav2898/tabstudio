@@ -5,7 +5,17 @@ namespace TabStudio.App.Platform;
 /// <param name="Title">The first line, such as "CI #57 failed".</param>
 /// <param name="Text">The second line, such as "Fix the build · main · 3m 12s".</param>
 /// <param name="IsFailure">Whether it reports a failure, which the system may show more prominently.</param>
-public sealed record SystemNotification(string Tag, string Title, string Text, bool IsFailure);
+public sealed record SystemNotification(string Tag, string Title, string Text, bool IsFailure)
+{
+    /// <summary>
+    /// Whether it shows an operation still running, such as an SDK download TabStudio continues in the background: an
+    /// ongoing notification with a progress bar, which a later one with the same tag replaces when it ends.
+    /// </summary>
+    public bool IsProgress { get; init; }
+
+    /// <summary>How much of the operation is done, from 0 to 100, or <see langword="null"/> for a bar without numbers.</summary>
+    public int? ProgressPercent { get; init; }
+}
 
 /// <summary>
 /// The system's notifications. Android implements this with a notification channel; elsewhere TabStudio has

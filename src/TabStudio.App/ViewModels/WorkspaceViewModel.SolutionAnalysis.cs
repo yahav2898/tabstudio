@@ -20,6 +20,7 @@ public sealed partial class WorkspaceViewModel
 
         _solutionAnalysis?.Cancel();
         _solutionAnalysis?.Dispose();
+        Operations.Find(AnalysisOperation)?.Complete(global::TabStudio.Core.Progress.OperationOutcome.Cancelled);
         _solutionAnalysis = CancellationTokenSource.CreateLinkedTokenSource(background.Token);
         _ = AnalyzeSolutionAsync(_solutionAnalysis.Token);
     }

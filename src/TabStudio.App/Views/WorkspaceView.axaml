@@ -17,6 +17,7 @@
              xmlns:appearance="using:TabStudio.App.Services.Appearance"
              xmlns:vm="using:TabStudio.App.ViewModels"
              xmlns:bridgeViews="using:TabStudio.App.Views.WindowsBridge"
+             xmlns:opsViews="using:TabStudio.App.Views.LongOperations"
              xmlns:sys="using:System"
              x:Class="TabStudio.App.Views.WorkspaceView"
              x:DataType="vm:WorkspaceViewModel">
@@ -513,16 +514,24 @@
         <!-- Problems at a glance, pinned beside the toolbar. -->
         <Button x:Name="ProblemsButton" Grid.Column="1" Margin="8,0,0,0" Theme="{StaticResource ToolButton}" VerticalAlignment="Center"
                 Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" ToolTip.Tip="Error List">
-          <StackPanel Orientation="Horizontal" Spacing="12">
-            <StackPanel Orientation="Horizontal" Spacing="5">
-              <controls:StrokeIcon Data="{StaticResource Icon.Error}" Size="15" Foreground="{DynamicResource Brush.Error}" />
-              <TextBlock Text="{Binding ErrorList.ErrorCount}" VerticalAlignment="Center" />
+          <!-- A spinner animates only while it is shown: an animation on a hidden control would keep the IDE rendering. -->
+          <Panel>
+            <StackPanel Orientation="Horizontal" Spacing="12" IsVisible="{Binding !ErrorList.IsPending}">
+              <StackPanel Orientation="Horizontal" Spacing="5">
+                <controls:StrokeIcon Data="{StaticResource Icon.Error}" Size="15" Foreground="{DynamicResource Brush.Error}" />
+                <TextBlock Text="{Binding ErrorList.ErrorCount}" VerticalAlignment="Center" />
+              </StackPanel>
+              <StackPanel Orientation="Horizontal" Spacing="5">
+                <controls:StrokeIcon Data="{StaticResource Icon.Warning}" Size="15" Foreground="{DynamicResource Brush.Warning}" />
+                <TextBlock Text="{Binding ErrorList.WarningCount}" VerticalAlignment="Center" />
+              </StackPanel>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Spacing="5">
-              <controls:StrokeIcon Data="{StaticResource Icon.Warning}" Size="15" Foreground="{DynamicResource Brush.Warning}" />
-              <TextBlock Text="{Binding ErrorList.WarningCount}" VerticalAlignment="Center" />
+            <!-- While packages restore or the solution is analyzed, the counts are about to change: say so instead. -->
+            <StackPanel x:Name="ProblemsPending" Orientation="Horizontal" Spacing="6" IsVisible="{Binding ErrorList.IsPending}">
+              <controls:StrokeIcon Classes.spinning="{Binding ErrorList.IsPending}" Data="{StaticResource Icon.Spinner}" Size="14" StrokeThickness="2.2" Foreground="{DynamicResource Brush.TextMuted}" />
+              <TextBlock Text="{Binding ErrorList.PendingText}" VerticalAlignment="Center" Foreground="{DynamicResource Brush.TextMuted}" />
             </StackPanel>
-          </StackPanel>
+          </Panel>
         </Button>
       </Grid>
     </Border>
@@ -955,6 +964,12 @@
       </Border>
     </Grid>
 
+    <!-- The long operations' panel, over the editor's bottom-left corner above the status bar item that opens it. -->
+    <Panel x:Name="OperationsOverlay" Grid.Row="2" IsVisible="{Binding Operations.IsPanelOpen}" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+           Margin="8,0,8,6" MaxWidth="460" MinWidth="300" ZIndex="20">
+      <opsViews:OperationsPanel x:Name="OperationsPanelView" DataContext="{Binding Operations}" />
+    </Panel>
+
     <!--
       Status bar: one adaptive bar, the IDE's state on the left and the editor's on the right, both folding into one More
       menu at the right end (docs/design/stage-2.md, 2.5). It stays quiet about what is fine: a language service that is
@@ -970,12 +985,22 @@
                      VerticalAlignment="Center" MaxWidth="460" TextTrimming="CharacterEllipsis" />
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding IsSettingUpProjects}"
-                    controls:AdaptiveBar.Priority="100" controls:AdaptiveBar.MenuHeader="{Binding ProjectSetupText}"
-                    controls:AdaptiveBar.MenuCommand="{Binding CancelProjectSetupCommand}">
-          <TextBlock Text="{Binding ProjectSetupText}" VerticalAlignment="Center" MaxWidth="300" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding ProjectSetupText}" />
-          <Button Theme="{StaticResource StatusBarButton}" Content="Cancel" Height="24" Command="{Binding CancelProjectSetupCommand}" ToolTip.Tip="Cancel project setup" />
-        </StackPanel>
+        <!--
+          Long operations: the newest with its stage, numbers and time left ("Downloading Pico SDK 120/340 MB · about 2 min
+          left"); tap for all of them, with Cancel where it is safe and each one's raw log.
+        -->
+        <Panel controls:AdaptiveBar.Priority="100" IsVisible="{Binding Operations.HasOperations}"
+               controls:AdaptiveBar.MenuHeader="{Binding Operations.StatusText}" controls:AdaptiveBar.MenuCommand="{Binding Operations.TogglePanelCommand}">
+          <Button x:Name="OperationsButton" Theme="{StaticResource StatusBarButton}" Height="24" Command="{Binding Operations.TogglePanelCommand}"
+                  ToolTip.Tip="{Binding Operations.StatusText}">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <controls:StrokeIcon Classes.spinning="{Binding Operations.HasOperations}" Data="{StaticResource Icon.Spinner}" Size="13" Foreground="{DynamicResource Brush.OnAccent}" />
+              <TextBlock x:Name="OperationsText" Text="{Binding Operations.StatusText}" FontSize="12" VerticalAlignment="Center" MaxWidth="380" TextTrimming="CharacterEllipsis" />
+              <ProgressBar Width="56" Height="4" MinHeight="4" Minimum="0" Maximum="100" VerticalAlignment="Center"
+                           Value="{Binding Operations.Current.Percent, FallbackValue=0}" IsIndeterminate="{Binding Operations.Current.IsIndeterminate, FallbackValue=True}" />
+            </StackPanel>
+          </Button>
+        </Panel>
 
         <controls:AdaptiveBarItem Classes="status" Icon="{StaticResource Icon.Branch}" IconSize="13" Priority="80"
                                   Command="{Binding ShowGitChangesCommand}" IsVisible="{Binding GitChanges.IsLinked}">
@@ -1039,19 +1064,12 @@
                                   Priority="40" Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}"
                                   IsVisible="{Binding ActiveDocument.CaretMessage, Converter={x:Static ObjectConverters.IsNotNull}, FallbackValue=False}" />
 
-        <!-- The language service and the language servers, only while they are not ready. -->
-        <controls:AdaptiveBarItem Classes="status" Icon="{StaticResource Icon.Spinner}" IconSize="13" Label="{Binding LanguageServiceText}" Priority="30"
-                                  IsVisible="{Binding LanguageServiceText, Converter={x:Static ObjectConverters.IsNotNull}}" />
+        <!-- The language servers, only while they are not ready; loading C# is a long operation, with the others. -->
         <controls:AdaptiveBarItem Classes="status" Icon="{StaticResource Icon.Terminal}" IconSize="13" Label="{Binding LanguageServerText}" Priority="30"
                                   Command="{Binding ShowLanguageServerLogCommand}" IsVisible="{Binding ShowsLanguageServerStatus}" />
         <controls:AdaptiveBarItem Classes="status" Icon="{StaticResource Icon.Download}" IconSize="13" Priority="32"
                                   Label="{Binding ServerInstallOffer.StatusBarText, FallbackValue={x:Null}}" Command="{Binding InstallServerToolchainCommand}"
                                   IsVisible="{Binding ServerInstallOffer, Converter={x:Static ObjectConverters.IsNotNull}}" />
-
-        <!-- Packages being restored; tap for the Output. -->
-        <controls:AdaptiveBarItem Classes="status" Icon="{StaticResource Icon.Package}" IconSize="13" Label="{Binding PackagesText}" Priority="25"
-                                  Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.Output}"
-                                  IsVisible="{Binding PackagesText, Converter={x:Static ObjectConverters.IsNotNull}}" />
 
         <!-- The device, only when it matters: warm enough to slow TabStudio down, or small enough for Lite mode. -->
         <controls:AdaptiveBarItem Classes="status" Icon="{StaticResource Icon.Thermometer}" IconSize="13" Label="{Binding ThermalText}" Priority="22"

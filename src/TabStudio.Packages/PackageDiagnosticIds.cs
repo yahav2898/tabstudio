@@ -59,4 +59,10 @@ public static class PackageDiagnosticIds
 
     /// <summary>TabStudio: the project uses a shared framework that cannot be restored or does not run on the device.</summary>
     public const string UnsupportedFramework = "TS3005";
+
+    /// <summary>
+    /// A package's source generators and analyzers are all built for a newer Roslyn than TabStudio's, so they do not
+    /// run and the code they generate is missing (the compiler's CS9057, raised at restore).
+    /// </summary>
+    public const string AnalyzersNeedNewerCompiler = "TS3006";
 }

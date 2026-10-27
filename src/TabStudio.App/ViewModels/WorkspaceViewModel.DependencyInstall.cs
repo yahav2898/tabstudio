@@ -37,8 +37,21 @@ public sealed partial class WorkspaceViewModel
     /// <returns>The failed step's result, or <see langword="null"/> when the install succeeded.</returns>
     private async Task<OutputProcessResult?> RunDependencyInstallAsync(ToolchainProject project, DependencyInstallDefinition dependency, CancellationToken cancellationToken)
     {
+        // The status bar shows the install with the numbers its tool prints, such as apk's (12/40); the panel has its log.
+        using var operation = new CompletingOperation(Operations.Begin(
+            "packages:" + project.Directory, $"Installing {project.Name}'s packages", new global::TabStudio.Core.Progress.OperationProgress($"Installing packages: {dependency.Name}")));
+        using var output = new OutputFollower(Output, operation.Operation);
+        using var setupOutput = new OutputFollower(ProjectSetupOutput, operation.Operation);
+        var result = await RunDependencyInstallCoreAsync(project, dependency, cancellationToken);
+        operation.Outcome = result is null ? global::TabStudio.Core.Progress.OperationOutcome.Succeeded
+            : cancellationToken.IsCancellationRequested ? global::TabStudio.Core.Progress.OperationOutcome.Cancelled : global::TabStudio.Core.Progress.OperationOutcome.Failed;
+        return result;
+    }
+
+    private async Task<OutputProcessResult?> RunDependencyInstallCoreAsync(ToolchainProject project, DependencyInstallDefinition dependency, CancellationToken cancellationToken)
+    {
         var python = IsPipInstall(project, dependency);
-        var steps = RunPlanner.PlanDependencies(project, dependency).ToList();
+        var steps = RunPlanner.PlanDependencies(project, dependency, _toolchains.Platform).ToList();
         string? version = null;
         if (python)
         {

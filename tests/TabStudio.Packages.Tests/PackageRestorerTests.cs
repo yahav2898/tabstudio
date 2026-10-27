@@ -46,6 +46,92 @@ public sealed class PackageRestorerTests : IDisposable
         Assert.Equal(expected, cached.Analyzers);
     }
 
+    /// <summary>
+    /// The props and targets a project imports from its packages, as NuGet 7 and SDK 10.0.113 wrote them into
+    /// nuget.g.props and nuget.g.targets for the same packages: buildTransitive replaces build by file name, a
+    /// dependency excluded with exclude="Build,Analyzers" (as packed projects write it) gives only its buildTransitive
+    /// files, a dependency without exclude gives build files too, and the nearest framework folder is chosen.
+    /// </summary>
+    [Fact]
+    public async Task Build_files_are_imported_as_NuGet_imports_them()
+    {
+        static TestPackage Leaf(string id, params string[] files)
+        {
+            var package = new TestPackage(id, "1.0.0").WithAssembly("lib/net8.0");
+            foreach (var file in files)
+            {
+                package.WithFile(file, "<Project />");
+            }
+
+            return package;
+        }
+
+        _fixture.Add(
+            Leaf("Both", "build/Both.props", "buildTransitive/Both.props"),
+            Leaf("OnlyBuild", "build/OnlyBuild.props"),
+            Leaf("OnlyTransitive", "buildTransitive/OnlyTransitive.props"),
+            Leaf("TfmBuild", "build/net8.0/TfmBuild.props", "build/net462/TfmBuild.props", "buildTransitive/net8.0/TfmBuild.targets"),
+            Leaf("Plain", "build/Plain.props", "build/Other.props"),
+            new TestPackage("ParentDefault", "1.0.0").WithAssembly("lib/net8.0")
+                .DependsOn("Both", "1.0.0", include: null, exclude: "Build,Analyzers")
+                .DependsOn("OnlyBuild", "1.0.0", include: null, exclude: "Build,Analyzers")
+                .DependsOn("OnlyTransitive", "1.0.0", include: null, exclude: "Build,Analyzers"),
+            new TestPackage("ParentNone", "1.0.0").WithAssembly("lib/net8.0").DependsOn("Plain", "1.0.0").DependsOn("TfmBuild", "1.0.0"));
+        var project = _fixture.Project(("ParentDefault", "1.0.0"), ("ParentNone", "1.0.0"));
+        var restorer = _fixture.CreateRestorer();
+
+        var result = await restorer.RestoreAsync(project);
+        var cached = await restorer.RestoreAsync(project);
+
+        Assert.True(result.Success, Describe(result));
+        string Imported(string id, string path) => Path.Combine(_fixture.PackagesDirectory, id.ToLowerInvariant(), "1.0.0", path.Replace('/', Path.DirectorySeparatorChar));
+        Assert.Equal(
+            new[]
+            {
+                Imported("Both", "buildTransitive/Both.props"),
+                Imported("OnlyTransitive", "buildTransitive/OnlyTransitive.props"),
+                Imported("Plain", "build/Plain.props"),
+                Imported("TfmBuild", "build/net8.0/TfmBuild.props"),
+                Imported("TfmBuild", "buildTransitive/net8.0/TfmBuild.targets"),
+            },
+            result.BuildFiles);
+        Assert.Empty(result.Packages.Single(p => p.Id == "OnlyBuild").BuildFiles);
+        Assert.True(cached.FromCache);
+        Assert.Equal(result.BuildFiles, cached.BuildFiles);
+    }
+
+    [Fact]
+    public async Task A_reference_s_ExcludeAssets_build_keeps_only_its_buildTransitive_files()
+    {
+        _fixture.Add(new TestPackage("Tool", "1.0.0").WithAssembly("lib/net8.0")
+            .WithFile("build/Tool.props", "<Project />")
+            .WithFile("buildTransitive/Tool.targets", "<Project />"));
+        var path = _fixture.Write("Excluding/Excluding.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+              <ItemGroup><PackageReference Include="Tool" Version="1.0.0" ExcludeAssets="build" /></ItemGroup>
+            </Project>
+            """);
+
+        var result = await _fixture.CreateRestorer().RestoreAsync(Core.Workspaces.ProjectParser.Load(path));
+
+        Assert.True(result.Success, Describe(result));
+        Assert.Equal(new[] { Path.Combine(_fixture.PackagesDirectory, "tool", "1.0.0", "buildTransitive", "Tool.targets") }, result.BuildFiles);
+    }
+
+    [Fact]
+    public async Task A_package_whose_generators_all_need_a_newer_compiler_says_so_at_restore()
+    {
+        _fixture.Add(new TestPackage("Future", "1.0.0").WithAssembly("lib/net8.0")
+            .WithFile("analyzers/dotnet/roslyn9.0/cs/Future.Generators.dll", TestPackage.CompileLibrary("Future.Generators", "public static class F {}")));
+
+        var result = await _fixture.RestoreAsync(("Future", "1.0.0"));
+
+        var warning = Assert.Single(result.Diagnostics, d => d.Id == PackageDiagnosticIds.AnalyzersNeedNewerCompiler);
+        Assert.Contains("Roslyn 9.0", warning.Message, StringComparison.Ordinal);
+        Assert.Empty(result.Analyzers);
+    }
+
     [Fact]
     public async Task A_package_folder_without_a_completion_marker_is_installed_again()
     {

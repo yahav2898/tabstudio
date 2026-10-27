@@ -193,7 +193,7 @@ class Runner:
             self.run([sys.executable, "-m", "pip", "install", "--require-hashes", "-r", str(locks / "zephyr-bootstrap.requirements.txt")], repo, env)
             self.run([sys.executable, "-m", "pip", "install", "--require-hashes", "--no-build-isolation", "-r", str(locks / "zephyr.requirements.txt")], repo, env)
             self.run(["west", "init", "-l", str(repo)], self.work)
-            self.run(["west", "update", "--narrow", "-o=--depth=1", "cmsis"], self.work)
+            self.run(["west", "update", "--narrow", "-o=--depth=1", "cmsis", "cmsis_6"], self.work)
             env.update(ZEPHYR_BASE=str(repo), ZEPHYR_TOOLCHAIN_VARIANT="cross-compile", CROSS_COMPILE=arm_cross_prefix(env))
             self.run(["west", "build", "--build-opt=-j2", "-b", e["board"], "-d", str(build), str(project), "--", "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"], self.work, env, count_errors=True)
             self.require(build / "zephyr/zephyr.elf")

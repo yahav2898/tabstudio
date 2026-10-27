@@ -62,6 +62,23 @@ timeouts, retry counts and a start grace period. Startup failure/cancellation ro
 that operation. Long dependency conditions include `service_completed_successfully` for explicit one-shot commands.
 Stopping a dependency first stops its running dependents. Health is monitored while services are running.
 
+## Prisma apps without a Compose file
+
+A Node.js project that depends on `prisma` or `@prisma/client` and has a schema (`package.json`'s `prisma.schema`,
+`prisma/schema.prisma` or `schema.prisma`) whose datasource reads its URL from a variable gets that database in
+Services when the repository has no Compose file: PostgreSQL (`postgres:16`) for `postgresql` and `cockroachdb`, MySQL
+(`mysql:8`) for `mysql`, named `db`, with TabStudio's own user and password. SQLite needs none. F5 starts it and gives
+the run the variable, such as `DATABASE_URL=postgresql://tabstudio:tabstudio@127.0.0.1:5432/<project>?schema=public`;
+when the project's `.env` has no value for it, the URL is written there too, for Prisma's own commands, and a later F5
+updates a URL TabStudio wrote if the port changed. With a `migrations` folder beside the schema, F5 runs `prisma
+migrate deploy` before the app starts. A project whose `.env` already names a database, on this device or the network,
+is left alone; the migrations of one on this device are still applied, as the project's README asks.
+
+After `npm install`, which runs packages' lifecycle scripts (`postinstall`, `prepare`) as on a computer, TabStudio runs
+`prisma generate` with the project's own Prisma (`npx --no-install`) and, on a tablet, the engine for its Linux
+environment (`PRISMA_CLI_BINARY_TARGETS=linux-musl-arm64-openssl-3.0.x`). Packages whose client was never generated
+count as not installed, so the setup runs again.
+
 ## Data and PostgreSQL initialization
 
 The stable absolute workspace path selects a private `Services/<hash>` folder in app storage. Each service gets its

@@ -72,8 +72,14 @@ public static partial class ListeningPorts
         try
         {
             var inodes = new HashSet<string>(StringComparer.Ordinal);
+            var debuggers = new HashSet<int>();
             foreach (var process in ProcessTree.Descendants(pid).Prepend(pid))
             {
+                if (DebuggerPortOf(process) is { } debugger)
+                {
+                    debuggers.Add(debugger);
+                }
+
                 try
                 {
                     foreach (var fd in Directory.EnumerateFiles($"/proc/{process}/fd"))
@@ -104,11 +110,72 @@ public static partial class ListeningPorts
                 }
             }
 
-            return [.. listeners.Where(p => inodes.Contains(p.Inode)).Select(p => p.Port).Distinct().Order()];
+            return [.. listeners.Where(p => inodes.Contains(p.Inode) && !debuggers.Contains(p.Port)).Select(p => p.Port).Distinct().Order()];
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
             return [];
+        }
+    }
+
+    /// <summary>
+    /// The port of the Node.js inspector a program opens, which is a debugger's WebSocket and never the app: an
+    /// <c>--inspect</c>, <c>--inspect-brk</c> or <c>--inspect-wait</c> option on its command line or in
+    /// <c>NODE_OPTIONS</c>, with 9229 when it names no port. Nx's <c>serve</c> runs the app this way.
+    /// </summary>
+    /// <param name="arguments">The program's command line.</param>
+    /// <param name="nodeOptions">Its <c>NODE_OPTIONS</c>, if any.</param>
+    /// <returns>The port, or <see langword="null"/> when the program opens no inspector.</returns>
+    public static int? InspectorPort(IReadOnlyList<string> arguments, string? nodeOptions = null)
+    {
+        ArgumentNullException.ThrowIfNull(arguments);
+        if (arguments.Count == 0 || Path.GetFileName(arguments[0]) is not ("node" or "nodejs" or "node.exe"))
+        {
+            return null;
+        }
+
+        var options = arguments.Skip(1)
+            .Concat((nodeOptions ?? string.Empty).Split(' ', StringSplitOptions.RemoveEmptyEntries));
+        int? port = null;
+        foreach (var option in options)
+        {
+            if (Inspect().Match(option) is not { Success: true } match)
+            {
+                continue;
+            }
+
+            port = 9229;
+            if (match.Groups["port"].Success && int.TryParse(match.Groups["port"].Value, CultureInfo.InvariantCulture, out var given) && given is > 0 and <= 65535)
+            {
+                port = given;
+            }
+        }
+
+        return port;
+    }
+
+    /// <summary>The inspector port of a running process, from <c>/proc</c>.</summary>
+    private static int? DebuggerPortOf(int pid)
+    {
+        try
+        {
+            var arguments = File.ReadAllText($"/proc/{pid}/cmdline").Split('\0', StringSplitOptions.RemoveEmptyEntries);
+            string? nodeOptions = null;
+            try
+            {
+                nodeOptions = File.ReadAllText($"/proc/{pid}/environ").Split('\0')
+                    .FirstOrDefault(v => v.StartsWith("NODE_OPTIONS=", StringComparison.Ordinal))?["NODE_OPTIONS=".Length..];
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                // Another user's process, or Android hides it.
+            }
+
+            return InspectorPort(arguments, nodeOptions);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return null;
         }
     }
 
@@ -117,6 +184,9 @@ public static partial class ListeningPorts
         "00000000" or "00000000000000000000000000000000" or "00000000000000000000000001000000" => true,
         _ => address.Length == 8 && address.EndsWith("7F", StringComparison.OrdinalIgnoreCase),
     };
+
+    [GeneratedRegex(@"^--inspect(?:-brk|-wait)?(?:=(?:(?:[^:=\s]+|\[[^\]]+\]):)?(?<port>\d{1,5}))?$", RegexOptions.CultureInvariant, 100)]
+    private static partial Regex Inspect();
 
     [GeneratedRegex(@"\bhttp://(?:localhost|127(?:\.\d{1,3}){3}|0\.0\.0\.0|\[::1\]|\[::\]):(?<port>\d{1,5})(?!\d)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, 100)]
     private static partial Regex LocalUrl();

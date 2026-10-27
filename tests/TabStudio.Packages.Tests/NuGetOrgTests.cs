@@ -160,6 +160,135 @@ public sealed class NuGetOrgTests : IDisposable
         Assert.Equal("Count changed\n3\n", console.Output);
     }
 
+    /// <summary>
+    /// Riok.Mapperly packs its generator in analyzers/roslyn5.0/dotnet/cs/, not analyzers/dotnet/roslyn5.0/cs/; in
+    /// 0.19 it never ran, so gothinkster/aspnetcore-realworld-example-app's mapper had no implementation (CS8795).
+    /// </summary>
+    [Fact]
+    public async Task Riok_Mapperly_generates_the_mapper_as_in_the_Conduit_repository()
+    {
+        var projectPath = _temp.Write("Mapping/Mapping.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup>
+                <OutputType>Exe</OutputType>
+                <TargetFramework>net10.0</TargetFramework>
+                <ImplicitUsings>enable</ImplicitUsings>
+                <Nullable>enable</Nullable>
+              </PropertyGroup>
+              <ItemGroup>
+                <PackageReference Include="Riok.Mapperly" Version="4.3.1" />
+              </ItemGroup>
+            </Project>
+            """);
+        _temp.Write("Mapping/Program.cs", """
+            using Riok.Mapperly.Abstractions;
+
+            var user = new ConduitMapper().PersonToUser(new Person { Username = "tablet", Bio = "runs here" });
+            Console.WriteLine($"{user.Username}: {user.Bio}");
+
+            public sealed class Person { public string Username { get; set; } = ""; public string? Bio { get; set; } }
+            public sealed class User { public string Username { get; set; } = ""; public string? Bio { get; set; } }
+
+            [Mapper]
+            public partial class ConduitMapper
+            {
+                public partial User PersonToUser(Person person);
+            }
+            """);
+
+        var workspace = WorkspaceLoader.Load(projectPath);
+        var project = Assert.Single(workspace.Projects);
+        var restore = await CreateRestorer().RestoreAsync(project);
+        AssertNuGetOrgReachable(restore);
+        Assert.True(restore.Success, string.Join('\n', restore.Diagnostics));
+        Assert.Contains(restore.Analyzers, path => path.Replace('\\', '/').EndsWith("analyzers/roslyn5.0/dotnet/cs/Riok.Mapperly.dll", StringComparison.Ordinal));
+        Assert.Contains(restore.BuildFiles, path => Path.GetFileName(path) == "Riok.Mapperly.targets");
+
+        using var host = new RoslynWorkspaceHost();
+        host.Load(workspace, FileSystemTextProvider.Instance);
+        host.SetPackageReferences(project.FilePath, restore.CompileAssemblies);
+        host.SetAnalyzers(project.FilePath, restore.Analyzers);
+        host.SetPackageBuildFiles(project.FilePath, restore.BuildFiles);
+        var build = await new ProjectBuilder(host).BuildAsync(project);
+        Assert.True(build.Success, string.Join('\n', build.Diagnostics));
+        Assert.DoesNotContain(build.Diagnostics, d => d.Id == "CS8795");
+
+        var console = new CapturingConsole();
+        var run = await new ProgramRunner().RunAsync(build.EntryAssembly!, build.Dependencies, restore.RuntimeAssemblies, [], console);
+        Assert.Equal(RunOutcome.Completed, run.Outcome);
+        Assert.Equal("tablet: runs here\n", console.Output);
+    }
+
+    /// <summary>
+    /// CommunityToolkit.Mvvm 8.4.2's generators on partial properties, as Avalonia.Samples' TestableApp uses them, with
+    /// the properties its build files make visible (MvvmToolkitEnableINotifyPropertyChangingSupport) read from them.
+    /// </summary>
+    [Fact]
+    public async Task CommunityToolkit_Mvvm_generates_partial_properties_and_commands_with_its_build_properties()
+    {
+        var projectPath = _temp.Write("Calculator/Calculator.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup>
+                <OutputType>Exe</OutputType>
+                <TargetFramework>net10.0</TargetFramework>
+                <Nullable>enable</Nullable>
+              </PropertyGroup>
+              <ItemGroup>
+                <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+              </ItemGroup>
+            </Project>
+            """);
+        _temp.Write("Calculator/Program.cs", """
+            using System;
+            using CommunityToolkit.Mvvm.ComponentModel;
+            using CommunityToolkit.Mvvm.Input;
+
+            var model = new MainWindowViewModel { FirstOperand = 2, SecondOperand = 3 };
+            model.PropertyChanging += (_, e) => Console.Write($"<{e.PropertyName}>");
+            model.AddCommand.Execute(null);
+            Console.WriteLine(model.Result);
+
+            public partial class MainWindowViewModel : ObservableObject
+            {
+                [ObservableProperty]
+                public partial double? FirstOperand { get; set; }
+
+                [ObservableProperty]
+                public partial double? SecondOperand { get; set; }
+
+                [ObservableProperty]
+                public partial string? Result { get; set; }
+
+                [RelayCommand]
+                private void Add() => Result = (FirstOperand + SecondOperand)?.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            }
+            """);
+
+        var workspace = WorkspaceLoader.Load(projectPath);
+        var project = Assert.Single(workspace.Projects);
+        var restore = await CreateRestorer().RestoreAsync(project);
+        AssertNuGetOrgReachable(restore);
+        Assert.True(restore.Success, string.Join('\n', restore.Diagnostics));
+
+        using var host = new RoslynWorkspaceHost();
+        host.Load(workspace, FileSystemTextProvider.Instance);
+        host.SetPackageReferences(project.FilePath, restore.CompileAssemblies);
+        host.SetAnalyzers(project.FilePath, restore.Analyzers);
+        host.SetPackageBuildFiles(project.FilePath, restore.BuildFiles);
+        var visible = host.FindProject(project.FilePath)!;
+        Assert.Contains("MvvmToolkitEnableINotifyPropertyChangingSupport", visible.CompilerVisibleProperties);
+        Assert.Equal("true", visible.GetProperty("MvvmToolkitEnableINotifyPropertyChangingSupport"));
+        Assert.Equal("false", visible.GetProperty("_MvvmToolkitIsUsingWindowsRuntimePack"));
+
+        var build = await new ProjectBuilder(host).BuildAsync(project);
+        Assert.True(build.Success, string.Join('\n', build.Diagnostics));
+
+        var console = new CapturingConsole();
+        var run = await new ProgramRunner().RunAsync(build.EntryAssembly!, build.Dependencies, restore.RuntimeAssemblies, [], console);
+        Assert.Equal(RunOutcome.Completed, run.Outcome);
+        Assert.Equal("<Result>5\n", console.Output);
+    }
+
     [Fact]
     public async Task Runs_the_regular_expression_generator_of_dotnet_itself()
     {

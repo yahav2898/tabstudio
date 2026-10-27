@@ -6,6 +6,16 @@ public sealed record ComposeProject(string Directory, IReadOnlyList<string> File
     public string? DevelopmentService { get; init; }
     public IReadOnlyList<string> RunServices { get; init; } = [];
     public IReadOnlyList<string> Warnings { get; init; } = [];
+
+    /// <summary>
+    /// Variables every run gets, rewritten to the services' local endpoints like a Compose application's own
+    /// environment: for services TabStudio offers without a Compose file, such as the database a Prisma schema names,
+    /// its <c>DATABASE_URL</c>.
+    /// </summary>
+    public IReadOnlyDictionary<string, string?> RunEnvironment { get; init; } = new Dictionary<string, string?>();
+
+    /// <summary>Where the services come from when it is not a Compose file, such as "src/prisma/schema.prisma".</summary>
+    public string? Origin { get; init; }
 }
 
 public sealed record ComposeService(string Name, string? Image)

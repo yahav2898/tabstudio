@@ -62,6 +62,12 @@
           <TextBlock Text="{Binding CiLabel}" VerticalAlignment="Center" />
         </StackPanel>
       </Button>
+      <!-- While packages restore or the solution is analyzed, the list is about to change. -->
+      <StackPanel Grid.Column="4" x:Name="PendingStatus" Orientation="Horizontal" Spacing="6" HorizontalAlignment="Right" VerticalAlignment="Center"
+                  Margin="8,0" IsVisible="{Binding IsPending}">
+        <controls:StrokeIcon Classes.spinning="{Binding IsPending}" Data="{StaticResource Icon.Spinner}" Size="13" StrokeThickness="2.2" Foreground="{DynamicResource Brush.TextMuted}" />
+        <TextBlock Text="{Binding PendingText}" FontSize="12.5" VerticalAlignment="Center" Foreground="{DynamicResource Brush.TextMuted}" />
+      </StackPanel>
       <TextBox Grid.Column="5" Watermark="Search Error List" Text="{Binding SearchText}" VerticalAlignment="Center">
         <TextBox.InnerLeftContent>
           <controls:StrokeIcon Data="{StaticResource Icon.Search}" Size="13" Margin="8,0,0,0" Foreground="{DynamicResource Brush.TextMuted}" />

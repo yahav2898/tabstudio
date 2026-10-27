@@ -6,9 +6,9 @@ namespace TabStudio.Toolchains.Tests.Embedded;
 public sealed class EmbeddedSdkRecipesTests
 {
     [Theory]
-    [InlineData("pico-sdk", "2.1.1", "bddd20f928ce76142793bef434d4f75f4af6e433", "PICO_SDK_PATH")]
-    [InlineData("zephyr", "4.1.0", "7823374e872145b5bd018bfe447839eb36042611", "ZEPHYR_BASE")]
-    [InlineData("esp-idf", "5.4.1", "4c2820d377d1375e787bcef612f0c32c1427d183", "IDF_PATH")]
+    [InlineData("pico-sdk", "2.3.1", "079c6f39023649b154152db30f1d781e884879bc", "PICO_SDK_PATH")]
+    [InlineData("zephyr", "4.4.2", "dccb09599635bdff17633fa7e9dab014b91dce90", "ZEPHYR_BASE")]
+    [InlineData("esp-idf", "6.1", "fff9895c82d744c7237be8847347bdd1b07c6643", "IDF_PATH")]
     public void Source_pins_and_environment_are_available_to_the_production_installer(string id, string version, string revision, string sourceVariable)
     {
         var recipe = Assert.IsType<EmbeddedSdkRecipe>(EmbeddedSdkBootstrap.Recipes.Get(id));
@@ -29,9 +29,9 @@ public sealed class EmbeddedSdkRecipesTests
         var requirements = Assert.Single(recipe.Files, file => file.Path.EndsWith("/requirements.txt", StringComparison.Ordinal));
         var logicalLines = requirements.Content.Replace("\\\n", "", StringComparison.Ordinal).Split('\n')
             .Select(line => line.Trim()).Where(line => line.Length != 0 && !line.StartsWith('#')).ToArray();
-        Assert.Equal(31, logicalLines.Length);
+        Assert.Equal(35, logicalLines.Length);
         Assert.All(logicalLines, line => Assert.Matches(@"^[A-Za-z0-9_.-]+==[A-Za-z0-9_.+-]+\s+(--hash=sha256:[0-9a-f]{64}\s*)+$", line));
-        Assert.Contains(logicalLines, line => line.StartsWith("west==1.3.0 ", StringComparison.Ordinal));
+        Assert.Contains(logicalLines, line => line.StartsWith("west==1.5.0 ", StringComparison.Ordinal));
         var pipCommands = recipe.Commands.Where(command => command.Arguments.Contains("pip", StringComparer.Ordinal)).ToArray();
         Assert.Equal(2, pipCommands.Length);
         Assert.All(pipCommands, command => Assert.Contains("--require-hashes", command.Arguments));
@@ -66,7 +66,7 @@ public sealed class EmbeddedSdkRecipesTests
         var requirements = Assert.Single(recipe.Files, file => file.Path.EndsWith("/requirements.txt", StringComparison.Ordinal));
         var logicalLines = requirements.Content.Replace("\\\n", "", StringComparison.Ordinal).Split('\n')
             .Select(line => line.Trim()).Where(line => line.Length != 0 && !line.StartsWith('#')).ToArray();
-        Assert.Equal(58, logicalLines.Length);
+        Assert.Equal(63, logicalLines.Length);
         Assert.All(logicalLines, line => Assert.Matches(@"^[A-Za-z0-9_.-]+==[A-Za-z0-9_.+-]+\s+(--hash=sha256:[0-9a-f]{64}\s*)+$", line));
         Assert.DoesNotContain(recipe.Commands, command => command.Arguments.Contains("install-python-env", StringComparer.Ordinal));
         var pipInstalls = recipe.Commands.Where(command => command.Arguments.Contains("pip", StringComparer.Ordinal) && command.Arguments.Contains("install", StringComparer.Ordinal)).ToArray();
@@ -76,9 +76,9 @@ public sealed class EmbeddedSdkRecipesTests
         Assert.Contains("--no-binary=esptool", pipInstalls[1].Arguments);
         Assert.Contains("--no-build-isolation", pipInstalls[1].Arguments);
         Assert.Contains(recipe.Commands, command => command.Arguments.Contains("check-python-dependencies", StringComparer.Ordinal));
-        Assert.Contains(recipe.Files, file => file.Path.EndsWith("/idf_version.txt", StringComparison.Ordinal) && file.Content == "5.4\n");
-        Assert.Contains(recipe.Files, file => file.Path.EndsWith("/espidf.constraints.v5.4.txt", StringComparison.Ordinal) && file.Content.Contains("cryptography>=2.1.4,<45", StringComparison.Ordinal));
-        Assert.Equal("/opt/tabstudio/esp-idf-tools/python_env/idf5.4_py3.12_env", recipe.Environment["IDF_PYTHON_ENV_PATH"]);
+        Assert.Contains(recipe.Files, file => file.Path.EndsWith("/idf_version.txt", StringComparison.Ordinal) && file.Content == "6.1\n");
+        Assert.Contains(recipe.Files, file => file.Path.EndsWith("/espidf.constraints.v6.1.txt", StringComparison.Ordinal) && file.Content.Contains("cryptography>=2.1.4,<49", StringComparison.Ordinal));
+        Assert.Equal("/opt/tabstudio/esp-idf-tools/python_env/idf6.1_py3.12_env", recipe.Environment["IDF_PYTHON_ENV_PATH"]);
     }
 
     [Fact]

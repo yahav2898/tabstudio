@@ -14,7 +14,7 @@ public static partial class EmbeddedSdkBootstrap
         private const string ZephyrPython = "/opt/tabstudio/zephyr-python";
         private const string EspSource = "/opt/tabstudio/esp-idf";
         private const string EspTools = "/opt/tabstudio/esp-idf-tools";
-        private const string EspPython = EspTools + "/python_env/idf5.4_py3.12_env";
+        private const string EspPython = EspTools + "/python_env/idf6.1_py3.12_env";
 
         /// <summary>Returns a supported SDK recipe, or null when another installer owns the identifier.</summary>
         /// <param name="id">The Toolchain Store identifier.</param>
@@ -38,7 +38,8 @@ public static partial class EmbeddedSdkBootstrap
             return reader.ReadToEnd();
         }
 
-        private static readonly EmbeddedSdkRecipe Pico = new("pico-sdk", "bddd20f928ce76142793bef434d4f75f4af6e433",
+        // The newest Pico SDK release TabStudio pins (2.3.1); EmbeddedSdkRequirements lists every pinned release.
+        private static readonly EmbeddedSdkRecipe Pico = new("pico-sdk", Projects.EmbeddedSdkRequirements.PicoSdkReleases[0].Commit,
             new Uri("https://github.com/raspberrypi/pico-sdk.git"), PicoSource,
             ["gcc-arm-none-eabi", "libnewlib-arm-none-eabi", "libstdc++-arm-none-eabi-newlib"],
             [
@@ -82,7 +83,7 @@ public static partial class EmbeddedSdkBootstrap
                 ],
             };
 
-        private static readonly EmbeddedSdkRecipe Zephyr = new("zephyr", "7823374e872145b5bd018bfe447839eb36042611",
+        private static readonly EmbeddedSdkRecipe Zephyr = new("zephyr", "dccb09599635bdff17633fa7e9dab014b91dce90",
             new Uri("https://github.com/zephyrproject-rtos/zephyr.git"), ZephyrSource,
             ["gcc-arm-none-eabi", "libnewlib-arm-none-eabi", "device-tree-compiler"],
             [
@@ -115,7 +116,7 @@ public static partial class EmbeddedSdkBootstrap
                         if manifest != source or config.get('manifest', 'file', fallback='west.yml') != 'west.yml':
                             raise RuntimeError('The existing west workspace points at a different manifest; it was preserved.')
                     """ + "\n" },
-                new() { Path = ZephyrWorkspace + "/TABSTUDIO-SDK.txt", Content = "Zephyr 4.1.0 is checked out at its immutable source commit. CMSIS and Nordic/ST/Raspberry Pi HAL modules use west.yml's immutable revisions. Run west update in this workspace for additional boards' modules. The default GNU Arm toolchain uses signed Ubuntu packages; other architectures need their matching toolchain selection.\nWest 1.3.0 and all base Python dependencies are release- and SHA-256-locked for native Linux ARM64/x64 CPython 3.12. Source distributions use pinned setuptools/wheel without downloading isolated build dependencies.\n" },
+                new() { Path = ZephyrWorkspace + "/TABSTUDIO-SDK.txt", Content = "Zephyr 4.4.2 is checked out at its immutable source commit. CMSIS and Nordic/ST/Raspberry Pi HAL modules use west.yml's immutable revisions. Run west update in this workspace for additional boards' modules. The default GNU Arm toolchain uses signed Ubuntu packages; other architectures need their matching toolchain selection.\nWest 1.5.0 and all base Python dependencies are release- and SHA-256-locked for native Linux ARM64/x64 CPython 3.12. Source distributions use pinned setuptools/wheel without downloading isolated build dependencies.\n" },
             ],
             new Dictionary<string, string?>
             {
@@ -132,7 +133,7 @@ public static partial class EmbeddedSdkBootstrap
                 RequiredArtifacts = [ZephyrWorkspace + "/build-check/zephyr/zephyr.elf"],
             };
 
-        private static readonly EmbeddedSdkRecipe Esp = new("esp-idf", "4c2820d377d1375e787bcef612f0c32c1427d183",
+        private static readonly EmbeddedSdkRecipe Esp = new("esp-idf", "fff9895c82d744c7237be8847347bdd1b07c6643",
             new Uri("https://github.com/espressif/esp-idf.git"), EspSource,
             ["flex", "bison", "gperf", "ccache", "libffi-dev", "libssl-dev", "dfu-util", "libusb-1.0-0"],
             [
@@ -148,9 +149,9 @@ public static partial class EmbeddedSdkBootstrap
                 new() { Path = "/usr/local/bin/idf.py", Executable = true, Content = "#!/bin/bash\nset -e\nexport IDF_PATH=" + EspSource + "\nexport IDF_TOOLS_PATH=" + EspTools + "\nexport IDF_PYTHON_ENV_PATH=" + EspPython + "\n. \"$IDF_PATH/export.sh\" >&2\nexport PATH=/opt/tabstudio/embedded/build-bin:$PATH\nexec python \"$IDF_PATH/tools/idf.py\" \"$@\"\n" },
                 new() { Path = EspTools + "/bootstrap.requirements.txt", Content = Requirements("esp-idf-bootstrap.requirements.txt") },
                 new() { Path = EspTools + "/requirements.txt", Content = Requirements("esp-idf.requirements.txt") },
-                new() { Path = EspTools + "/espidf.constraints.v5.4.txt", Content = Requirements("esp-idf-constraints.requirements.txt") },
-                new() { Path = EspPython + "/idf_version.txt", Content = "5.4\n" },
-                new() { Path = EspTools + "/TABSTUDIO-SDK.txt", Content = "ESP-IDF 5.4.1 source and Git submodules are immutable. Espressif's pinned tools.json verifies each native host-tool archive's SHA-256 and selects native Linux ARM64/x64 packages. All 58 Python core/build distributions are exact-release and SHA-256 locked for Ubuntu CPython 3.12. The only source distribution is esptool, built with pinned setuptools/wheel and no isolated dependency downloads. The vendor v5.4 constraint snapshot is app-owned and checked offline; install-python-env does not download rolling constraints or upgrade packages. User-selected project components retain their own manifests/locks.\n" },
+                new() { Path = EspTools + "/espidf.constraints.v6.1.txt", Content = Requirements("esp-idf-constraints.requirements.txt") },
+                new() { Path = EspPython + "/idf_version.txt", Content = "6.1\n" },
+                new() { Path = EspTools + "/TABSTUDIO-SDK.txt", Content = "ESP-IDF 6.1 source and Git submodules are immutable. Espressif's pinned tools.json verifies each native host-tool archive's SHA-256 and selects native Linux ARM64/x64 packages. All 63 Python core/build distributions are exact-release and SHA-256 locked for Ubuntu CPython 3.12. The only source distribution is esptool, built with pinned setuptools/wheel and no isolated dependency downloads. The vendor v6.1 constraint snapshot is app-owned and checked offline; install-python-env does not download rolling constraints or upgrade packages. User-selected project components retain their own manifests/locks.\n" },
             ],
             new Dictionary<string, string?> { ["IDF_PATH"] = EspSource, ["IDF_TOOLS_PATH"] = EspTools, ["IDF_PYTHON_ENV_PATH"] = EspPython }) { Removes = [EspTools] };
     }

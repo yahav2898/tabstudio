@@ -162,6 +162,27 @@ public sealed class ToolchainServices : IDisposable
     /// <summary>Android USB permissions and open connection lifetime.</summary>
     public IUsbHost Usb { get; } = new NoUsbHost();
 
+    /// <summary>
+    /// The version of an embedded SDK on this device, read from the SDK's own version file: in the embedded glibc
+    /// environment on a tablet, or where <c>PICO_SDK_PATH</c>, <c>IDF_PATH</c> or <c>ZEPHYR_BASE</c> points on a computer.
+    /// <see langword="null"/> when it is not installed or does not say.
+    /// </summary>
+    /// <param name="toolchainId">The SDK's Toolchain Store entry, such as <c>pico-sdk</c>.</param>
+    public string? EmbeddedSdkVersion(string toolchainId)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(toolchainId);
+        if (TabStudio.Toolchains.Embedded.Installation.EmbeddedSdkBootstrap.Recipes.Get(toolchainId) is not { } recipe)
+        {
+            return null;
+        }
+
+        var variable = toolchainId switch { "pico-sdk" => "PICO_SDK_PATH", "esp-idf" => "IDF_PATH", "zephyr" => "ZEPHYR_BASE", _ => null };
+        var directory = _embeddedInstaller is not null
+            ? Path.Combine(_embeddedInstaller.Rootfs, recipe.SourceDirectory.TrimStart('/'))
+            : variable is null ? null : System.Environment.GetEnvironmentVariable(variable);
+        return string.IsNullOrEmpty(directory) ? null : TabStudio.Toolchains.Embedded.Projects.EmbeddedSdkRequirements.InstalledVersion(toolchainId, directory);
+    }
+
     /// <summary>Prepares PlatformIO's native-first x86 fallback without changing compatible native package selection.</summary>
     /// <param name="line">Verified runtime preparation output.</param>
     /// <param name="cancellationToken">Stops preparation.</param>

@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
 using TabStudio.Core.Diagnostics;
+using TabStudio.Core.Workspaces;
 using TsProject = TabStudio.Core.Workspaces.ProjectInfo;
 
 namespace TabStudio.Compilation;
@@ -98,8 +99,11 @@ public sealed partial class RoslynWorkspaceHost
         return [.. analyzers, Xaml.GeneratorReference.AvaloniaXaml];
     }
 
-    /// <summary>Whether a project uses Avalonia, whose <c>.axaml</c> files TabStudio's XAML generator compiles.</summary>
-    private static bool UsesAvaloniaXaml(TsProject project) => project.HasPackage("Avalonia");
+    /// <summary>
+    /// Whether a project uses Avalonia, whose <c>.axaml</c> files TabStudio's XAML generator compiles: it references
+    /// Avalonia or a package that brings it, such as <c>Avalonia.Desktop</c> (see <see cref="ProjectClassifier.UsesAvalonia"/>).
+    /// </summary>
+    private static bool UsesAvaloniaXaml(TsProject project) => ProjectClassifier.UsesAvalonia(project);
 
     /// <summary>Pushes a project's analyzers into the loaded solution. The caller holds the gate.</summary>
     private void ApplyAnalyzerReferences(string projectFilePath)
@@ -172,15 +176,38 @@ public sealed partial class RoslynWorkspaceHost
 
     /// <summary>
     /// The build properties generators read, as MSBuild hands them over in a generated global
-    /// <c>.editorconfig</c>: every property the project file sets, plus the ones the SDK always provides, and for a
-    /// Razor project a section per Razor file with the metadata the Razor compiler reads.
+    /// <c>.editorconfig</c>: every property the project file and its packages' props and targets set, every property
+    /// they make visible to generators (empty when nothing sets it), the ones the SDK always provides, a section per
+    /// additional file with the item metadata made visible, and for a Razor project a section per Razor file with the
+    /// metadata the Razor compiler reads.
     /// </summary>
     private static DocumentInfo CreateAnalyzerConfig(ProjectId id, TsProject project, IReadOnlyList<string> razorFiles, IReadOnlyList<string> unoInputs)
+    {
+        var path = AnalyzerConfigPath(project);
+        return DocumentInfo.Create(
+            DocumentId.CreateNewId(id, path),
+            Path.GetFileName(path),
+            loader: TextLoader.From(TextAndVersion.Create(SourceText.From(AnalyzerConfigText(project, razorFiles, unoInputs), Encoding.UTF8), VersionStamp.Create(), path)),
+            filePath: path);
+    }
+
+    /// <summary>Where the SDK writes a project's generated analyzer configuration.</summary>
+    private static string AnalyzerConfigPath(TsProject project) =>
+        Path.Combine(project.DirectoryPath, "obj", $"{project.Name}.GeneratedMSBuildEditorConfig.editorconfig");
+
+    /// <summary>The text of a project's generated analyzer configuration (see <see cref="CreateAnalyzerConfig"/>).</summary>
+    private static string AnalyzerConfigText(TsProject project, IReadOnlyList<string> razorFiles, IReadOnlyList<string> unoInputs)
     {
         var properties = new SortedDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         foreach (var (key, value) in project.Properties)
         {
             properties[key] = value;
+        }
+
+        // The SDK writes every compiler-visible property, empty when nothing sets it.
+        foreach (var name in project.CompilerVisibleProperties)
+        {
+            properties.TryAdd(name, string.Empty);
         }
 
         properties["TargetFramework"] = project.TargetFrameworks.Count > 0 ? project.TargetFrameworks[0] : ReferenceAssemblies.TargetFramework;
@@ -202,12 +229,7 @@ public sealed partial class RoslynWorkspaceHost
         }
 
         text.Append(razorSections);
-
-        var path = Path.Combine(project.DirectoryPath, "obj", $"{project.Name}.GeneratedMSBuildEditorConfig.editorconfig");
-        return DocumentInfo.Create(
-            DocumentId.CreateNewId(id, path),
-            Path.GetFileName(path),
-            loader: TextLoader.From(TextAndVersion.Create(SourceText.From(text.ToString(), Encoding.UTF8), VersionStamp.Create(), path)),
-            filePath: path);
+        text.Append(AdditionalFileSections(project, [.. razorFiles, .. unoInputs]));
+        return text.ToString();
     }
 }

@@ -1,6 +1,9 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using CommunityToolkit.Mvvm.Input;
+using TabStudio.Toolchains.Catalog;
+using TabStudio.Core.Diagnostics;
+using TabStudio.Core.Progress;
 using TabStudio.Toolchains.Embedded.Devices;
 using TabStudio.Toolchains.Embedded.Flashing;
 using TabStudio.Toolchains.Embedded.Projects;
@@ -89,11 +92,34 @@ public sealed partial class WorkspaceViewModel
         }
         if (_toolchains.Catalog.Find(plan.ToolchainId) is not { } toolchain)
             throw new InvalidOperationException("Install the project's native SDK in the Terminal; no compatible Toolchain Store package is configured.");
-        if (!await EnsureToolchainReadyAsync(toolchain, project.Name + " builds with " + toolchain.Name + ".")) return false;
+        // The SDK version the project asks for: one clear line, and the pinned release that satisfies it, before CMake.
+        var reason = project.Name + " builds with " + toolchain.Name + ".";
+        if (EmbeddedSdkRequirements.Read(project) is { } requirement && requirement.ToolchainId == toolchain.Id)
+        {
+            var verdict = EmbeddedSdkRequirements.Check(requirement, _toolchains.EmbeddedSdkVersion(toolchain.Id), toolchain.PinnedVersion);
+            if (!verdict.Satisfied && verdict.Message is { } message)
+            {
+                Output.WriteLine(message, OutputKind.Failure);
+                if (verdict.InstallVersion is null)
+                {
+                    ErrorList.SetRunError(project.Directory, new BuildDiagnostic(EmbeddedSdkVersionId, DiagnosticSeverityLevel.Error, message, null, project.Name));
+                    State = IdeState.Failed;
+                    StatusText = $"{project.Name} needs {requirement.SdkName} {requirement.Display}";
+                    return false;
+                }
+
+                reason = message;
+            }
+        }
+
+        if (!await EnsureToolchainReadyAsync(toolchain, reason)) return false;
         using var cancellation = new CancellationTokenSource();
         _run = cancellation;
         State = IdeState.Running;
         StatusText = "Building " + project.Name;
+        var programName = EmbeddedSdkRequirements.ProgramName(project);
+        using var operation = new CompletingOperation(Operations.Begin("build:" + project.Directory, "Building " + programName, cancel: cancellation.Cancel));
+        using var follower = FollowOutput(operation.Operation);
         try
         {
             if (_toolchains.Platform.UsesLinuxEnvironment
@@ -104,6 +130,7 @@ public sealed partial class WorkspaceViewModel
             ErrorList.SetRunError(project.Directory, null);
             foreach (var step in plan.Preparation.Concat(plan.Build))
             {
+                operation.Operation.Report(OutputProgressParser.StageOf(step.Program, step.Arguments, programName));
                 Output.WriteLine("> " + step.CommandLine, OutputKind.Info);
                 var result = project.Kind == EmbeddedProjectKind.Rust
                     ? await BuildEmbeddedCargoAsync(step, cancellation.Token)
@@ -112,18 +139,46 @@ public sealed partial class WorkspaceViewModel
                 {
                     State = IdeState.Failed;
                     StatusText = "Firmware build failed";
-                    ReportToolchainRun(new ToolchainProject(toolchain, project.Directory, project.Marker), project.Marker, result);
+                    ReportToolchainRun(new ToolchainProject(toolchain, project.Directory, project.Marker), EmbeddedSdkRequirements.ProgramName(project), result);
+                    ReportEmbeddedSdkVersionError(project, toolchain, result);
                     return false;
                 }
             }
+            operation.Outcome = OperationOutcome.Succeeded;
             State = IdeState.Ready;
             StatusText = "Firmware built";
             await ReportEmbeddedMemoryAsync(project.Directory, cancellation.Token);
             await ReportEmbeddedStackAsync(project, afterBuild: true);
             return true;
         }
-        catch (OperationCanceledException) { State = IdeState.Ready; StatusText = "Firmware build stopped"; return false; }
+        catch (OperationCanceledException) { operation.Outcome = OperationOutcome.Cancelled; State = IdeState.Ready; StatusText = "Firmware build stopped"; return false; }
         finally { _run = null; }
+    }
+
+    /// <summary>The Error List id of a firmware project whose SDK is too old.</summary>
+    private const string EmbeddedSdkVersionId = "TS4201";
+
+    /// <summary>
+    /// When CMake stopped because the SDK is older than the project needs, says so in one line, with the release to
+    /// install, in place of CMake's fatal error.
+    /// </summary>
+    private void ReportEmbeddedSdkVersionError(EmbeddedProject project, ToolchainDefinition toolchain, OutputProcessResult result)
+    {
+        if (EmbeddedSdkRequirements.FromCMakeOutput(string.Join('\n', result.Lines)) is not { } stated)
+        {
+            return;
+        }
+
+        var requirement = new EmbeddedSdkRequirement(toolchain.Id, "Pico SDK", stated.Required, null, "CMakeLists.txt");
+        var message = EmbeddedSdkRequirements.Check(requirement, stated.Installed, toolchain.PinnedVersion).Message;
+        if (message is null)
+        {
+            return;
+        }
+
+        Output.WriteLine(message, OutputKind.Failure);
+        ErrorList.SetRunError(project.Directory, new BuildDiagnostic(EmbeddedSdkVersionId, DiagnosticSeverityLevel.Error, message, null, project.Name));
+        StatusText = $"{project.Name} needs Pico SDK ≥ {stated.Required}";
     }
 
     private async Task<OutputProcessResult> BuildEmbeddedCargoAsync(ProcessStartSpec command, CancellationToken cancellationToken)
