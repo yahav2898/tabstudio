@@ -1,0 +1,34 @@
+{
+  "architecture": "aarch64",
+  "group": "arm-legacy",
+  "hostPackageMode": "auto",
+  "platformioCoreVersion": "6.1.18",
+  "hardwareVerified": false,
+  "androidVerified": false,
+  "runtime": "Production EmbeddedGlibcToolchainInstaller / PRoot",
+  "elapsedSeconds": 230.9632416,
+  "passed": true,
+  "templates": [
+    {
+      "id": "xiao-samd21",
+      "platformPackage": "atmelsam@9.0.0",
+      "passed": true,
+      "seconds": 167.5684193,
+      "firmwareBytes": 84032,
+      "firmwareSha256": "5031fa24b9813b1e6254527565a8a8216ca730023ab9201848f4b2a797e5d0d5",
+      "ranges": [
+        {
+          "start": 0,
+          "length": 19064
+        }
+      ],
+      "uploadPlanReady": true,
+      "uploadVerification": "Upstream tool verifies programmed application flash.",
+      "stackFiles": 41,
+      "stackRows": 450,
+      "compilationDatabaseEntries": 42,
+      "platformioIni": "; Firmware: Seeed XIAO SAMD21\n[env:xiao-samd21]\nplatform = atmelsam@9.0.0\nboard = seeed_xiao\nframework = arduino\nmonitor_speed = 115200\nbuild_flags = -fstack-usage\n"
+    }
+  ],
+  "errors": []
+}
