@@ -55,17 +55,30 @@ public sealed class ImageList : Component
     /// <summary>A color drawn transparent.</summary>
     public Color TransparentColor { get; set; } = Color.Transparent;
 
-    /// <summary>The images serialized in a resource file, which Windows Forms designers write.</summary>
-    /// <exception cref="NotSupportedException">Always: images from .resx files are not supported here.</exception>
+    /// <summary>
+    /// The images as a whole, as the designer stores them in the form's .resx file: setting it replaces the list's
+    /// images and size; getting it copies them, for another list.
+    /// </summary>
     public ImageListStreamer? ImageStream
     {
-        get => null;
+        get => Images.Count == 0 ? null : new ImageListStreamer(_imageSize, [.. Images.Cast<Image>().Select(image => (Image)image.Clone())]);
         set
         {
-            if (value is not null)
+            if (value is null)
             {
-                throw new NotSupportedException("ImageList.ImageStream is not supported by TabStudio's Forms layer: images in .resx files are not loaded. Add the images in code with ImageList.Images.Add.");
+                Images.Clear();
+                return;
             }
+
+            // The images a .resx file holds for the designer, or another list's: they replace this list's.
+            Images.Clear();
+            _imageSize = value.ImageSize;
+            foreach (var image in value.Images)
+            {
+                Images.Add((Image)image.Clone());
+            }
+
+            RecreateHandle?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -308,19 +321,6 @@ public sealed class ImageList : Component
                 Remove(image);
             }
         }
-    }
-}
-
-/// <summary>The images of an image list as serialized in a resource file. Not supported here.</summary>
-public sealed class ImageListStreamer : IDisposable
-{
-    private ImageListStreamer()
-    {
-    }
-
-    /// <inheritdoc />
-    public void Dispose()
-    {
     }
 }
 

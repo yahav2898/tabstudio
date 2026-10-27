@@ -30,6 +30,11 @@ internal sealed partial class FormWindow
     /// <param name="touch">Whether it is a finger.</param>
     public void PointerPressed(Point point, MouseButtons button, int clicks, bool touch)
     {
+        if (FilterPointer(point, button switch { MouseButtons.Right => clicks > 1 ? 0x0206 : 0x0204, MouseButtons.Middle => clicks > 1 ? 0x0209 : 0x0207, _ => clicks > 1 ? 0x0203 : 0x0201 }, 0))
+        {
+            return;
+        }
+
         Runtime.MouseButtons |= button;
         _lastPoint = point;
         UpdateCursorPosition(point);
@@ -94,6 +99,11 @@ internal sealed partial class FormWindow
     /// <param name="touch">Whether it is a finger.</param>
     public void PointerMoved(Point point, bool touch)
     {
+        if (FilterPointer(point, 0x0200, 0))
+        {
+            return;
+        }
+
         var previous = _lastPoint;
         _lastPoint = point;
         UpdateCursorPosition(point);
@@ -175,6 +185,12 @@ internal sealed partial class FormWindow
     /// <param name="touch">Whether it is a finger.</param>
     public void PointerReleased(Point point, MouseButtons button, bool touch)
     {
+        if (FilterPointer(point, button switch { MouseButtons.Right => 0x0205, MouseButtons.Middle => 0x0208, _ => 0x0202 }, 0))
+        {
+            Runtime.MouseButtons &= ~button;
+            return;
+        }
+
         Runtime.MouseButtons &= ~button;
         _lastPoint = point;
         if (_pressedPopup is { } popup)
@@ -234,6 +250,11 @@ internal sealed partial class FormWindow
     /// <param name="delta">How far, in multiples of 120 per notch; positive away from the user.</param>
     public void PointerWheel(Point point, int delta)
     {
+        if (FilterPointer(point, 0x020A, delta << 16))
+        {
+            return;
+        }
+
         for (var i = _popups.Count - 1; i >= 0; i--)
         {
             if (_popups[i].Bounds.Contains(point))
@@ -295,6 +316,11 @@ internal sealed partial class FormWindow
     /// <returns>Whether the app handled it, which keeps it from a native text box.</returns>
     public bool KeyDown(Keys keyData)
     {
+        if (FilterKey((keyData & Keys.Alt) != 0 ? 0x0104 : 0x0100, (int)(keyData & Keys.KeyCode)))
+        {
+            return true;
+        }
+
         Runtime.ModifierKeys = keyData & Keys.Modifiers;
         var code = keyData & Keys.KeyCode;
         if (code is Keys.Tab or Keys.Left or Keys.Right or Keys.Up or Keys.Down)
@@ -362,6 +388,11 @@ internal sealed partial class FormWindow
     /// <param name="keyData">The key with modifiers.</param>
     public void KeyUp(Keys keyData)
     {
+        if (FilterKey((keyData & Keys.Alt) != 0 ? 0x0105 : 0x0101, (int)(keyData & Keys.KeyCode)))
+        {
+            return;
+        }
+
         Runtime.ModifierKeys = keyData & Keys.Modifiers;
         var e = new KeyEventArgs(keyData);
         if (FocusedControl is { } focused && focused != Form && Form.KeyPreview)
@@ -390,6 +421,11 @@ internal sealed partial class FormWindow
         var accepted = new StringBuilder(text.Length);
         foreach (var character in text)
         {
+            if (FilterKey(0x0102, character))
+            {
+                continue;
+            }
+
             // A character the focused control does not take is a mnemonic first, as Windows' dialog manager has it.
             if (!target.DispatchIsInputChar(character) && target.DispatchProcessDialogChar(character))
             {
@@ -591,4 +627,42 @@ internal sealed partial class FormWindow
 
     /// <summary>A finger's press held back until it is clear whether it taps or scrolls.</summary>
     private sealed record PendingPress(Control Target, Point Point, MouseButtons Button, int Clicks);
+
+    /// <summary>
+    /// Shows a mouse message to the app's message filters, as Windows' message loop does before dispatching it.
+    /// </summary>
+    /// <returns>Whether a filter stopped it.</returns>
+    private bool FilterPointer(Point point, int message, int wParam)
+    {
+        if (Runtime.MessageFilters.Count == 0)
+        {
+            return false;
+        }
+
+        var target = HitTest(point, out _) ?? Form;
+        var origin = target.ClientOriginInWindow();
+        var (x, y) = (point.X - origin.X, point.Y - origin.Y);
+        var buttons = Runtime.MouseButtons;
+        var flags = ((buttons & MouseButtons.Left) != 0 ? 0x1 : 0) | ((buttons & MouseButtons.Right) != 0 ? 0x2 : 0) | ((buttons & MouseButtons.Middle) != 0 ? 0x10 : 0);
+        return Filter(target, message, wParam | flags, (y << 16) | (x & 0xFFFF));
+    }
+
+    /// <summary>Shows a keyboard message to the app's message filters.</summary>
+    /// <returns>Whether a filter stopped it.</returns>
+    private bool FilterKey(int message, int wParam) =>
+        Runtime.MessageFilters.Count > 0 && Filter(FocusedControl ?? Form, message, wParam, 1);
+
+    private bool Filter(Control target, int message, int wParam, int lParam)
+    {
+        var m = Message.Create(target.Handle, message, wParam, lParam);
+        foreach (var filter in Runtime.MessageFilters.ToArray())
+        {
+            if (filter.PreFilterMessage(ref m))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

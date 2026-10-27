@@ -44,7 +44,8 @@ internal sealed class DisplayListBuilder
     /// <param name="command">The command.</param>
     /// <param name="clipPaths">Shapes the drawing is further clipped to, in the window's client area.</param>
     /// <param name="sourceCopy">Whether shapes and images replace the pixels under them.</param>
-    public void Add(Matrix3x2 transform, RectangleF clip, bool antialias, DrawCommand command, IReadOnlyList<PathData>? clipPaths = null, bool sourceCopy = false)
+    /// <param name="pixelCenters">Whether whole coordinates are pixel centers, as GDI+ puts them by default.</param>
+    public void Add(Matrix3x2 transform, RectangleF clip, bool antialias, DrawCommand command, IReadOnlyList<PathData>? clipPaths = null, bool sourceCopy = false, bool pixelCenters = true)
     {
         if (clip.Width <= 0 || clip.Height <= 0)
         {
@@ -53,9 +54,9 @@ internal sealed class DisplayListBuilder
         }
 
         if (_state is null || _state.Transform != transform || _state.Clip != clip || _state.Antialias != antialias
-            || !ReferenceEquals(_state.ClipPaths, clipPaths) || _state.SourceCopy != sourceCopy)
+            || !ReferenceEquals(_state.ClipPaths, clipPaths) || _state.SourceCopy != sourceCopy || _state.PixelCenters != pixelCenters)
         {
-            _state = new StateCommand(transform, clip, antialias) { ClipPaths = clipPaths, SourceCopy = sourceCopy };
+            _state = new StateCommand(transform, clip, antialias) { ClipPaths = clipPaths, SourceCopy = sourceCopy, PixelCenters = pixelCenters };
             _commands.Add(_state);
         }
 

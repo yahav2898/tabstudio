@@ -69,7 +69,11 @@ public sealed partial class Graphics : MarshalByRefObject, IDeviceContext
     /// <summary>How images are scaled: <see cref="InterpolationMode.NearestNeighbor"/> keeps hard pixel edges.</summary>
     public InterpolationMode InterpolationMode { get; set; } = InterpolationMode.Bilinear;
 
-    /// <summary>How pixels are offset. Kept for compatibility.</summary>
+    /// <summary>
+    /// Where pixels are: by default, as in GDI+, a pixel's center is at whole coordinates, so a one-pixel line at
+    /// y = 10 covers row 10 exactly; <see cref="PixelOffsetMode.Half"/> and <see cref="PixelOffsetMode.HighQuality"/>
+    /// put a pixel's corner there instead.
+    /// </summary>
     public PixelOffsetMode PixelOffsetMode { get; set; }
 
     /// <summary>The compositing quality. Kept for compatibility.</summary>
@@ -144,6 +148,8 @@ public sealed partial class Graphics : MarshalByRefObject, IDeviceContext
     private bool Antialias => SmoothingMode is SmoothingMode.AntiAlias or SmoothingMode.HighQuality;
 
     private bool SourceCopy => CompositingMode == CompositingMode.SourceCopy;
+
+    private bool PixelCenters => PixelOffsetMode is not (PixelOffsetMode.Half or PixelOffsetMode.HighQuality);
 
     /// <summary>Whether drawing covers the whole surface, with nothing clipped away.</summary>
     private bool ClipIsWholeSurface => _clipPaths is null && (_clip is null || RectangleF.Intersect(_bounds, _clip.Value) == _bounds);
@@ -563,7 +569,7 @@ public sealed partial class Graphics : MarshalByRefObject, IDeviceContext
     private void Record(DrawCommand command)
     {
         ObjectDisposedException.ThrowIf(_disposed && _onDispose is not null, this);
-        _builder.Add(Absolute, EffectiveClip, Antialias, command, _clipPaths, SourceCopy);
+        _builder.Add(Absolute, EffectiveClip, Antialias, command, _clipPaths, SourceCopy, PixelCenters);
         _onRecord?.Invoke();
     }
 
@@ -598,15 +604,6 @@ public sealed partial class Graphics : MarshalByRefObject, IDeviceContext
 
     private void Apply(Matrix3x2 operation, MatrixOrder order) =>
         _transform = order == MatrixOrder.Prepend ? operation * _transform : _transform * operation;
-
-    /// <summary>The offset that puts an odd-width stroke on pixel centers, so a one-pixel line is one pixel wide.</summary>
-    private float StrokeOffset(Pen pen)
-    {
-        var width = Math.Max(1, (int)MathF.Round(pen.Width));
-        var absolute = Absolute;
-        var axisAligned = absolute.M12 == 0 && absolute.M21 == 0 && absolute.M11 == 1 && absolute.M22 == 1;
-        return axisAligned && width % 2 == 1 ? 0.5f : 0f;
-    }
 
     private RectangleF ToDevice(RectangleF rect) => Bounds(rect, Absolute);
 

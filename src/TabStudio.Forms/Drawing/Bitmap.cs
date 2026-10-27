@@ -126,6 +126,13 @@ public sealed class Bitmap : Image
     {
     }
 
+    /// <summary>A bitmap of pixels handed over: unpremultiplied 0xAARRGGBB values, row by row, owned by the bitmap.</summary>
+    /// <param name="width">The width.</param>
+    /// <param name="height">The height.</param>
+    /// <param name="pixels">The pixels.</param>
+    internal static Bitmap FromPixels(int width, int height, int[] pixels) =>
+        new(ImageBuffer.FromPixels(width, height, pixels, opaque: false), ImageFormat.MemoryBmp, PixelFormat.Format32bppArgb);
+
     /// <summary>The color of a pixel, with everything drawn on the bitmap so far.</summary>
     /// <param name="x">The column.</param>
     /// <param name="y">The row.</param>

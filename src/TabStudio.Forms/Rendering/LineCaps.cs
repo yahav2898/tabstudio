@@ -92,7 +92,8 @@ internal static class LineCaps
     /// <summary>Adds the shapes of one cap, returning how much the line is shortened under it.</summary>
     private static float AddCap(List<CapShape> caps, LineCap cap, CustomLineCap? custom, PointF end, Vector2 outward, float width)
     {
-        var anchor = Math.Max(2 * width, 4);
+        // Anchor sizes as GDI+ draws them, in multiples of the width.
+        var unit = Math.Max(width, 2);
         switch (cap)
         {
             case LineCap.Square:
@@ -102,20 +103,23 @@ internal static class LineCaps
                 caps.Add(new(Polygon(end, outward, Arc(width / 2, 0, MathF.PI)), true));
                 return 0;
             case LineCap.Triangle:
-                caps.Add(new(Polygon(end, outward, [new(-width / 2, 0), new(0, width / 2), new(width / 2, 0)]), true));
+                caps.Add(new(Polygon(end, outward, [new(-width / 2, 0), new(0, width / 3), new(width / 2, 0)]), true));
                 return 0;
             case LineCap.SquareAnchor:
-                caps.Add(new(Polygon(end, outward, [new(-anchor / 2, -anchor / 2), new(anchor / 2, -anchor / 2), new(anchor / 2, anchor / 2), new(-anchor / 2, anchor / 2)]), true));
+                var side = 0.75f * unit;
+                caps.Add(new(Polygon(end, outward, [new(-side, -side), new(side, -side), new(side, side), new(-side, side)]), true));
                 return 0;
             case LineCap.RoundAnchor:
-                caps.Add(new(Polygon(end, outward, Arc(anchor / 2, 0, 2 * MathF.PI)), true));
+                caps.Add(new(Polygon(end, outward, Arc(0.875f * unit, 0, 2 * MathF.PI)), true));
                 return 0;
             case LineCap.DiamondAnchor:
-                caps.Add(new(Polygon(end, outward, [new(0, -anchor / 2), new(anchor / 2, 0), new(0, anchor / 2), new(-anchor / 2, 0)]), true));
+                var reach = 0.85f * unit;
+                caps.Add(new(Polygon(end, outward, [new(0, -reach), new(reach, 0), new(0, reach), new(-reach, 0)]), true));
                 return 0;
             case LineCap.ArrowAnchor:
-                caps.Add(new(Polygon(end, outward, [new(0, 0), new(-anchor / 2, -anchor), new(anchor / 2, -anchor)]), true));
-                return anchor;
+                var length = 1.75f * unit;
+                caps.Add(new(Polygon(end, outward, [new(0, 0), new(-0.85f * unit, -length), new(0.85f * unit, -length)]), true));
+                return length;
             case LineCap.Custom when custom is not null:
                 var scale = width * custom.WidthScale;
                 if (custom.FillPath is { } fill)
