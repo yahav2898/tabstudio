@@ -1,0 +1,33 @@
++ for p in tests/TabStudio.Forms.Design.Tests tests/TabStudio.Compilation.Tests tests/TabStudio.App.Tests
++ dotnet build tests/TabStudio.Forms.Design.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E 'error|warning|Build succeeded'
++ sed 's|/home/runner/work/tabstudio/tabstudio/||'
++ sort -u
++ head -60
+Build succeeded.
++ for p in tests/TabStudio.Forms.Design.Tests tests/TabStudio.Compilation.Tests tests/TabStudio.App.Tests
++ dotnet build tests/TabStudio.Compilation.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E 'error|warning|Build succeeded'
++ sed 's|/home/runner/work/tabstudio/tabstudio/||'
++ head -60
++ sort -u
+Build succeeded.
++ for p in tests/TabStudio.Forms.Design.Tests tests/TabStudio.Compilation.Tests tests/TabStudio.App.Tests
++ dotnet build tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E 'error|warning|Build succeeded'
++ sort -u
++ sed 's|/home/runner/work/tabstudio/tabstudio/||'
++ head -60
+Build succeeded.
++ dotnet test tests/TabStudio.Forms.Design.Tests -c Release --no-build
++ grep -E 'Failed|Error Message|Assert|Total|Passed!|Failed!|Expected|Actual'
++ head -60
+Passed!  - Failed:     0, Passed:    17, Skipped:     0, Total:    17, Duration: 1 s - TabStudio.Forms.Design.Tests.dll (net10.0)
++ dotnet test tests/TabStudio.Compilation.Tests -c Release --no-build --filter 'FullyQualifiedName~Resource|FullyQualifiedName~WindowsForms|FullyQualifiedName~Forms'
++ grep -E 'Failed|Error Message|Assert|Total|Passed!|Failed!|Expected|Actual'
++ head -60
+Passed!  - Failed:     0, Passed:     7, Skipped:     0, Total:     7, Duration: 1 s - TabStudio.Compilation.Tests.dll (net10.0)
++ dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter 'FullyQualifiedName~FormsDesigner|FullyQualifiedName~LegacyFramework|FullyQualifiedName~Porting'
++ grep -E 'Failed|Error Message|Assert|Total|Passed!|Failed!|Expected|Actual'
++ head -60
+Passed!  - Failed:     0, Passed:    12, Skipped:     0, Total:    12, Duration: 21 s - TabStudio.App.Tests.dll (net10.0)
