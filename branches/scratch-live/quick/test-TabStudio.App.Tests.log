@@ -1,258 +1,35 @@
 Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll (.NETCoreApp,Version=v10.0)
 A total of 1 test files matched the specified pattern.
 [xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
-[xUnit.net 00:00:00.15]   Discovering: TabStudio.App.Tests
-[xUnit.net 00:00:00.54]   Discovered:  TabStudio.App.Tests
-[xUnit.net 00:00:00.57]   Starting:    TabStudio.App.Tests
-[xUnit.net 00:00:00.88]     TabStudio.App.Tests.Services.SelfTestTests.Rejects_invalid_device_test_shards(value: "managed,ui") [FAIL]
-[xUnit.net 00:00:00.89]       System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-[xUnit.net 00:00:00.89]       Stack Trace:
-[xUnit.net 00:00:00.89]            at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-[xUnit.net 00:00:00.89]            at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-[xUnit.net 00:00:00.89]         /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs(83,0): at TabStudio.App.Tests.Services.SelfTestTests.Dispose()
-[xUnit.net 00:00:00.89]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(79,0): at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)
-[xUnit.net 00:00:00.93]     TabStudio.App.Tests.Services.SelfTestTests.Rejects_invalid_device_test_shards(value: "3") [FAIL]
-[xUnit.net 00:00:00.93]       System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-[xUnit.net 00:00:00.93]       Stack Trace:
-[xUnit.net 00:00:00.93]            at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-[xUnit.net 00:00:00.93]            at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-[xUnit.net 00:00:00.93]         /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs(83,0): at TabStudio.App.Tests.Services.SelfTestTests.Dispose()
-[xUnit.net 00:00:00.93]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(79,0): at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)
-[xUnit.net 00:00:00.95]     TabStudio.App.Tests.Services.SelfTestTests.Rejects_invalid_device_test_shards(value: "4") [FAIL]
-[xUnit.net 00:00:00.95]       System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-[xUnit.net 00:00:00.95]       Stack Trace:
-[xUnit.net 00:00:00.95]            at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-[xUnit.net 00:00:00.95]            at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-[xUnit.net 00:00:00.95]         /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs(83,0): at TabStudio.App.Tests.Services.SelfTestTests.Dispose()
-[xUnit.net 00:00:00.95]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(79,0): at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)
-[xUnit.net 00:00:00.98]     TabStudio.App.Tests.Services.SelfTestTests.Rejects_invalid_device_test_shards(value: "unknown") [FAIL]
-[xUnit.net 00:00:00.98]       System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-[xUnit.net 00:00:00.98]       Stack Trace:
-[xUnit.net 00:00:00.98]            at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-[xUnit.net 00:00:00.98]            at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-[xUnit.net 00:00:00.98]         /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs(83,0): at TabStudio.App.Tests.Services.SelfTestTests.Dispose()
-[xUnit.net 00:00:00.98]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(79,0): at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)
-[xUnit.net 00:00:01.01]     TabStudio.App.Tests.Services.SelfTestTests.Rejects_invalid_device_test_shards(value: "0") [FAIL]
-[xUnit.net 00:00:01.01]       System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-[xUnit.net 00:00:01.01]       Stack Trace:
-[xUnit.net 00:00:01.01]            at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-[xUnit.net 00:00:01.01]            at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-[xUnit.net 00:00:01.01]         /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs(83,0): at TabStudio.App.Tests.Services.SelfTestTests.Dispose()
-[xUnit.net 00:00:01.01]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(79,0): at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)
-[xUnit.net 00:00:01.04]     TabStudio.App.Tests.Services.SelfTestTests.Recognizes_only_named_device_test_shards(value: "all", expected: All) [FAIL]
-[xUnit.net 00:00:01.04]       System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-[xUnit.net 00:00:01.04]       Stack Trace:
-[xUnit.net 00:00:01.04]            at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-[xUnit.net 00:00:01.04]            at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-[xUnit.net 00:00:01.04]         /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs(83,0): at TabStudio.App.Tests.Services.SelfTestTests.Dispose()
-[xUnit.net 00:00:01.04]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(79,0): at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)
-[xUnit.net 00:00:01.07]     TabStudio.App.Tests.Services.SelfTestTests.Recognizes_only_named_device_test_shards(value: null, expected: All) [FAIL]
-[xUnit.net 00:00:01.07]       System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-[xUnit.net 00:00:01.07]       Stack Trace:
-[xUnit.net 00:00:01.07]            at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-[xUnit.net 00:00:01.07]            at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-[xUnit.net 00:00:01.07]         /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs(83,0): at TabStudio.App.Tests.Services.SelfTestTests.Dispose()
-[xUnit.net 00:00:01.07]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(79,0): at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)
-[xUnit.net 00:00:01.09]     TabStudio.App.Tests.Services.SelfTestTests.Recognizes_only_named_device_test_shards(value: "performance", expected: Performance) [FAIL]
-[xUnit.net 00:00:01.09]       System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-[xUnit.net 00:00:01.09]       Stack Trace:
-[xUnit.net 00:00:01.09]            at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-[xUnit.net 00:00:01.09]            at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-[xUnit.net 00:00:01.09]         /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs(83,0): at TabStudio.App.Tests.Services.SelfTestTests.Dispose()
-[xUnit.net 00:00:01.09]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(79,0): at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)
-[xUnit.net 00:00:01.14]     TabStudio.App.Tests.Services.SelfTestTests.Recognizes_only_named_device_test_shards(value: "managed", expected: Managed) [FAIL]
-[xUnit.net 00:00:01.14]       System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-[xUnit.net 00:00:01.14]       Stack Trace:
-[xUnit.net 00:00:01.14]            at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-[xUnit.net 00:00:01.14]            at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-[xUnit.net 00:00:01.14]         /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs(83,0): at TabStudio.App.Tests.Services.SelfTestTests.Dispose()
-[xUnit.net 00:00:01.14]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(79,0): at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)
-  Failed TabStudio.App.Tests.Services.SelfTestTests.Rejects_invalid_device_test_shards(value: "managed,ui") [251 ms]
-  Error Message:
-   System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-  Stack Trace:
-     at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-   at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-   at TabStudio.App.Tests.Services.SelfTestTests.Dispose() in /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs:line 83
-   at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 79
-  Failed TabStudio.App.Tests.Services.SelfTestTests.Rejects_invalid_device_test_shards(value: "3") [47 ms]
-  Error Message:
-   System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-  Stack Trace:
-     at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-   at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-   at TabStudio.App.Tests.Services.SelfTestTests.Dispose() in /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs:line 83
-   at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 79
-  Failed TabStudio.App.Tests.Services.SelfTestTests.Rejects_invalid_device_test_shards(value: "4") [27 ms]
-  Error Message:
-   System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-  Stack Trace:
-     at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-   at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-   at TabStudio.App.Tests.Services.SelfTestTests.Dispose() in /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs:line 83
-   at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 79
-  Failed TabStudio.App.Tests.Services.SelfTestTests.Rejects_invalid_device_test_shards(value: "unknown") [26 ms]
-  Error Message:
-   System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-  Stack Trace:
-     at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-   at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-   at TabStudio.App.Tests.Services.SelfTestTests.Dispose() in /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs:line 83
-   at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 79
-  Failed TabStudio.App.Tests.Services.SelfTestTests.Rejects_invalid_device_test_shards(value: "0") [26 ms]
-  Error Message:
-   System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-  Stack Trace:
-     at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-   at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-   at TabStudio.App.Tests.Services.SelfTestTests.Dispose() in /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs:line 83
-   at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 79
-  Failed TabStudio.App.Tests.Services.SelfTestTests.Recognizes_only_named_device_test_shards(value: "all", expected: All) [30 ms]
-  Error Message:
-   System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-  Stack Trace:
-     at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-   at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-   at TabStudio.App.Tests.Services.SelfTestTests.Dispose() in /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs:line 83
-   at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 79
-  Failed TabStudio.App.Tests.Services.SelfTestTests.Recognizes_only_named_device_test_shards(value: null, expected: All) [26 ms]
-  Error Message:
-   System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-  Stack Trace:
-     at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-   at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-   at TabStudio.App.Tests.Services.SelfTestTests.Dispose() in /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs:line 83
-   at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 79
-  Failed TabStudio.App.Tests.Services.SelfTestTests.Recognizes_only_named_device_test_shards(value: "performance", expected: Performance) [26 ms]
-  Error Message:
-   System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-  Stack Trace:
-     at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-   at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-   at TabStudio.App.Tests.Services.SelfTestTests.Dispose() in /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs:line 83
-   at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 79
-  Failed TabStudio.App.Tests.Services.SelfTestTests.Recognizes_only_named_device_test_shards(value: "managed", expected: Managed) [50 ms]
-  Error Message:
-   System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-  Stack Trace:
-     at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-   at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-   at TabStudio.App.Tests.Services.SelfTestTests.Dispose() in /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs:line 83
-   at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 79
-[xUnit.net 00:00:01.23]     TabStudio.App.Tests.Services.SelfTestTests.Recognizes_only_named_device_test_shards(value: "UI", expected: Ui) [FAIL]
-[xUnit.net 00:00:01.23]       System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-[xUnit.net 00:00:01.23]       Stack Trace:
-[xUnit.net 00:00:01.23]            at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-[xUnit.net 00:00:01.23]            at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-[xUnit.net 00:00:01.23]         /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs(83,0): at TabStudio.App.Tests.Services.SelfTestTests.Dispose()
-[xUnit.net 00:00:01.23]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(79,0): at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)
-[xUnit.net 00:00:01.27]     TabStudio.App.Tests.Services.SelfTestTests.Recognizes_only_named_device_test_shards(value: "native", expected: Native) [FAIL]
-[xUnit.net 00:00:01.27]       System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-[xUnit.net 00:00:01.27]       Stack Trace:
-[xUnit.net 00:00:01.27]            at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-[xUnit.net 00:00:01.27]            at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-[xUnit.net 00:00:01.27]         /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs(83,0): at TabStudio.App.Tests.Services.SelfTestTests.Dispose()
-[xUnit.net 00:00:01.27]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(79,0): at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)
-[xUnit.net 00:00:01.29]     TabStudio.App.Tests.Services.SelfTestTests.Recognizes_only_named_device_test_shards(value: "", expected: All) [FAIL]
-[xUnit.net 00:00:01.29]       System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-[xUnit.net 00:00:01.29]       Stack Trace:
-[xUnit.net 00:00:01.29]            at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-[xUnit.net 00:00:01.29]            at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-[xUnit.net 00:00:01.29]         /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs(83,0): at TabStudio.App.Tests.Services.SelfTestTests.Dispose()
-[xUnit.net 00:00:01.29]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(79,0): at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)
-[xUnit.net 00:00:01.32]     TabStudio.App.Tests.Services.SelfTestTests.An_unknown_shard_cannot_silently_skip_toolchain_preparation [FAIL]
-[xUnit.net 00:00:01.32]       System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-[xUnit.net 00:00:01.32]       Stack Trace:
-[xUnit.net 00:00:01.32]            at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-[xUnit.net 00:00:01.32]            at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-[xUnit.net 00:00:01.32]         /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs(83,0): at TabStudio.App.Tests.Services.SelfTestTests.Dispose()
-[xUnit.net 00:00:01.32]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(79,0): at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)
-[xUnit.net 00:00:01.36]     TabStudio.App.Tests.Services.SelfTestTests.Shard_installation_plans_cover_the_full_run_without_installing_other_shards_tools [FAIL]
-[xUnit.net 00:00:01.36]       System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-[xUnit.net 00:00:01.36]       Stack Trace:
-[xUnit.net 00:00:01.36]            at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-[xUnit.net 00:00:01.36]            at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-[xUnit.net 00:00:01.36]         /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs(83,0): at TabStudio.App.Tests.Services.SelfTestTests.Dispose()
-[xUnit.net 00:00:01.36]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(79,0): at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)
-[xUnit.net 00:00:01.84]     TabStudio.App.Tests.Live.LiveSessionTests.A_guests_breakpoint_pauses_the_hosts_program_and_both_show_the_pause [FAIL]
-[xUnit.net 00:00:01.84]       System.PlatformNotSupportedException : Operation is not supported on this platform.
-[xUnit.net 00:00:01.84]       Stack Trace:
-[xUnit.net 00:00:01.84]            at Avalonia.Threading.Dispatcher.PushFrame(DispatcherFrame frame)
-[xUnit.net 00:00:01.84]            at Avalonia.Headless.HeadlessUnitTestSession.<>c__DisplayClass12_0`1.<DispatchCore>b__0()
-[xUnit.net 00:00:01.84]         --- End of stack trace from previous location ---
-  Failed TabStudio.App.Tests.Services.SelfTestTests.Recognizes_only_named_device_test_shards(value: "UI", expected: Ui) [87 ms]
-  Error Message:
-   System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-  Stack Trace:
-     at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-   at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-   at TabStudio.App.Tests.Services.SelfTestTests.Dispose() in /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs:line 83
-   at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 79
-  Failed TabStudio.App.Tests.Services.SelfTestTests.Recognizes_only_named_device_test_shards(value: "native", expected: Native) [33 ms]
-  Error Message:
-   System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-  Stack Trace:
-     at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-   at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-   at TabStudio.App.Tests.Services.SelfTestTests.Dispose() in /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs:line 83
-   at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 79
-  Failed TabStudio.App.Tests.Services.SelfTestTests.Recognizes_only_named_device_test_shards(value: "", expected: All) [26 ms]
-  Error Message:
-   System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-  Stack Trace:
-     at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-   at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-   at TabStudio.App.Tests.Services.SelfTestTests.Dispose() in /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs:line 83
-   at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 79
-  Failed TabStudio.App.Tests.Services.SelfTestTests.An_unknown_shard_cannot_silently_skip_toolchain_preparation [28 ms]
-  Error Message:
-   System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-  Stack Trace:
-     at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-   at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-   at TabStudio.App.Tests.Services.SelfTestTests.Dispose() in /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs:line 83
-   at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 79
-  Failed TabStudio.App.Tests.Services.SelfTestTests.Shard_installation_plans_cover_the_full_run_without_installing_other_shards_tools [37 ms]
-  Error Message:
-   System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-  Stack Trace:
-     at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-   at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-   at TabStudio.App.Tests.Services.SelfTestTests.Dispose() in /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs:line 83
-   at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 79
-  Failed TabStudio.App.Tests.Live.LiveSessionTests.A_guests_breakpoint_pauses_the_hosts_program_and_both_show_the_pause [1 ms]
-  Error Message:
-   System.PlatformNotSupportedException : Operation is not supported on this platform.
-  Stack Trace:
-     at Avalonia.Threading.Dispatcher.PushFrame(DispatcherFrame frame)
-   at Avalonia.Headless.HeadlessUnitTestSession.<>c__DisplayClass12_0`1.<DispatchCore>b__0()
---- End of stack trace from previous location ---
-[xUnit.net 00:00:08.45]     TabStudio.App.Tests.Services.SelfTestTests.Opens_the_sample_runs_it_and_answers_its_question [FAIL]
-[xUnit.net 00:00:08.45]       System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-[xUnit.net 00:00:08.45]       Stack Trace:
-[xUnit.net 00:00:08.45]            at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-[xUnit.net 00:00:08.45]            at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-[xUnit.net 00:00:08.45]         /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs(83,0): at TabStudio.App.Tests.Services.SelfTestTests.Dispose()
-[xUnit.net 00:00:08.45]         /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs(79,0): at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource)
-  Failed TabStudio.App.Tests.Services.SelfTestTests.Opens_the_sample_runs_it_and_answers_its_question [6 s]
-  Error Message:
-   System.InvalidOperationException : 'TabStudio.App.Services.Live.LiveService' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.
-  Stack Trace:
-     at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
-   at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
-   at TabStudio.App.Tests.Services.SelfTestTests.Dispose() in /_/tests/TabStudio.App.Tests/Services/SelfTestTests.cs:line 83
-   at ReflectionAbstractionExtensions.DisposeTestClass(ITest test, Object testClass, IMessageBus messageBus, ExecutionTimer timer, CancellationTokenSource cancellationTokenSource) in /_/src/xunit.execution/Extensions/ReflectionAbstractionExtensions.cs:line 79
-  Passed TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_type_at_once_and_end_with_the_same_text [629 ms]
-  Passed TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_editing_together_in_the_real_shell [3 s]
-  Passed TabStudio.App.Tests.Live.LiveSessionTests.Follow_shows_the_followed_document_and_place_until_the_follower_types [895 ms]
-  Passed TabStudio.App.Tests.Live.LiveSessionTests.Five_devices_type_at_once_and_end_with_the_same_text [919 ms]
-  Passed TabStudio.App.Tests.Live.LiveSessionTests.A_guest_who_only_watches_cannot_change_the_text_and_a_removed_guest_leaves [876 ms]
-[xUnit.net 00:00:16.96]   Finished:    TabStudio.App.Tests
+[xUnit.net 00:00:00.09]   Discovering: TabStudio.App.Tests
+[xUnit.net 00:00:00.31]   Discovered:  TabStudio.App.Tests
+[xUnit.net 00:00:00.33]   Starting:    TabStudio.App.Tests
+  Passed TabStudio.App.Tests.Services.SelfTestTests.Rejects_invalid_device_test_shards(value: "managed,ui") [161 ms]
+  Passed TabStudio.App.Tests.Services.SelfTestTests.Rejects_invalid_device_test_shards(value: "3") [22 ms]
+  Passed TabStudio.App.Tests.Services.SelfTestTests.Rejects_invalid_device_test_shards(value: "4") [15 ms]
+  Passed TabStudio.App.Tests.Services.SelfTestTests.Rejects_invalid_device_test_shards(value: "unknown") [15 ms]
+  Passed TabStudio.App.Tests.Services.SelfTestTests.Rejects_invalid_device_test_shards(value: "0") [15 ms]
+  Passed TabStudio.App.Tests.Services.SelfTestTests.Recognizes_only_named_device_test_shards(value: "all", expected: All) [19 ms]
+  Passed TabStudio.App.Tests.Services.SelfTestTests.Recognizes_only_named_device_test_shards(value: null, expected: All) [16 ms]
+  Passed TabStudio.App.Tests.Services.SelfTestTests.Recognizes_only_named_device_test_shards(value: "performance", expected: Performance) [15 ms]
+  Passed TabStudio.App.Tests.Services.SelfTestTests.Recognizes_only_named_device_test_shards(value: "managed", expected: Managed) [15 ms]
+  Passed TabStudio.App.Tests.Services.SelfTestTests.Recognizes_only_named_device_test_shards(value: "UI", expected: Ui) [28 ms]
+  Passed TabStudio.App.Tests.Services.SelfTestTests.Recognizes_only_named_device_test_shards(value: "native", expected: Native) [26 ms]
+  Passed TabStudio.App.Tests.Services.SelfTestTests.Recognizes_only_named_device_test_shards(value: "", expected: All) [25 ms]
+  Passed TabStudio.App.Tests.Services.SelfTestTests.An_unknown_shard_cannot_silently_skip_toolchain_preparation [26 ms]
+  Passed TabStudio.App.Tests.Services.SelfTestTests.Shard_installation_plans_cover_the_full_run_without_installing_other_shards_tools [34 ms]
+  Passed TabStudio.App.Tests.Live.LiveSessionTests.A_guests_breakpoint_pauses_the_hosts_program_and_both_show_the_pause [3 s]
+  Passed TabStudio.App.Tests.Services.SelfTestTests.Opens_the_sample_runs_it_and_answers_its_question [1 s]
+  Passed TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_type_at_once_and_end_with_the_same_text [444 ms]
+  Passed TabStudio.App.Tests.Live.LiveSessionTests.Two_devices_editing_together_in_the_real_shell [2 s]
+  Passed TabStudio.App.Tests.Live.LiveSessionTests.Follow_shows_the_followed_document_and_place_until_the_follower_types [781 ms]
+  Passed TabStudio.App.Tests.Live.LiveSessionTests.Five_devices_type_at_once_and_end_with_the_same_text [657 ms]
+[xUnit.net 00:00:11.64]   Finished:    TabStudio.App.Tests
 Data collector 'Blame' message: All tests finished running, Sequence file will not be generated.
-  Passed TabStudio.App.Tests.Extensions.ExtensionSelfTestTests.The_self_test_installs_the_Perl_grammar_and_sees_a_Perl_file_colored [1 s]
+  Passed TabStudio.App.Tests.Live.LiveSessionTests.A_guest_who_only_watches_cannot_change_the_text_and_a_removed_guest_leaves [665 ms]
+  Passed TabStudio.App.Tests.Extensions.ExtensionSelfTestTests.The_self_test_installs_the_Perl_grammar_and_sees_a_Perl_file_colored [676 ms]
 
-Test Run Failed.
+Test Run Successful.
 Total tests: 22
-     Passed: 6
-     Failed: 16
- Total time: 17.7512 Seconds
+     Passed: 22
+ Total time: 12.2160 Seconds
