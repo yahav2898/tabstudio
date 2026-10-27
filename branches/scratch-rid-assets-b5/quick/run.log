@@ -1,0 +1,41 @@
++ docker run -d --name mssql -e ACCEPT_EULA=Y -e MSSQL_SA_PASSWORD=TabStudio-ci-1433 -p 1433:1433 mcr.microsoft.com/mssql/server:2022-latest
++ dotnet build tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E 'error|warn|Build succeeded|Time Elapsed'
++ sort -u
++ head -60
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/Services/SelfTest.Database.cs(50,13): error IDE0011: Add braces to 'if' statement. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0011) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
+Time Elapsed 00:01:19.54
++ dotnet test tests/TabStudio.App.Tests -c Release --no-build --logger 'console;verbosity=normal' --filter 'FullyQualifiedName~SqlServerAdvice|FullyQualifiedName~NativePackageTests|FullyQualifiedName~WebAppTests|FullyQualifiedName~WorkspaceViewModelTests.F5'
++ grep -vE '^\s*$'
++ grep -v '^\s*Passed '
++ tail -60
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll (.NETCoreApp,Version=v10.0)
+The argument /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll is invalid. Please use the /help option to check the list of valid arguments.
++ export 'TABSTUDIO_SQLSERVER=Server=tcp:127.0.0.1,1433;Database=SimplCommerce;User ID=sa;Password=TabStudio-ci-1433;TrustServerCertificate=True;MultipleActiveResultSets=true'
++ TABSTUDIO_SQLSERVER='Server=tcp:127.0.0.1,1433;Database=SimplCommerce;User ID=sa;Password=TabStudio-ci-1433;TrustServerCertificate=True;MultipleActiveResultSets=true'
++ export TABSTUDIO_REAL_REPOS_ONLY=SimplCommerce
++ TABSTUDIO_REAL_REPOS_ONLY=SimplCommerce
++ python3 build/ci/real-repos.py /home/runner/work/_temp/real-repos
+++ seq 1 30
++ for i in $(seq 1 30)
++ docker exec mssql /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P TabStudio-ci-1433 -Q 'SELECT 1' -b
++ break
++ python3 build/ci/real-repos.py --migrate /home/runner/work/_temp/real-repos
++ tail -n 3
+Applying migration '20240311113057_AddedProductBackInStockSubscription'.
+Done.
+SimplCommerce: migrated src/SimplCommerce.WebHost
++ mkdir -p ci-out/screenshots
++ export TABSTUDIO_REAL_REPOS=/home/runner/work/_temp/real-repos TABSTUDIO_REAL_REPOS_OUT=/home/runner/work/tabstudio/tabstudio/ci-out TABSTUDIO_SCREENSHOTS=/home/runner/work/tabstudio/tabstudio/ci-out/screenshots
++ TABSTUDIO_REAL_REPOS=/home/runner/work/_temp/real-repos
++ TABSTUDIO_REAL_REPOS_OUT=/home/runner/work/tabstudio/tabstudio/ci-out
++ TABSTUDIO_SCREENSHOTS=/home/runner/work/tabstudio/tabstudio/ci-out/screenshots
++ timeout 40m dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter FullyQualifiedName~RealRepositoryTests --logger 'console;verbosity=normal'
++ tail -n 8 ci-out/test.log
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll (.NETCoreApp,Version=v10.0)
+The argument /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll is invalid. Please use the /help option to check the list of valid arguments.
++ cat ci-out/summary.md
+cat: ci-out/summary.md: No such file or directory
++ grep -n 'Serve\|comes from the Database Explorer\|no engine' ci-out/SimplCommerce.txt
++ head -20
+grep: ci-out/SimplCommerce.txt: No such file or directory
