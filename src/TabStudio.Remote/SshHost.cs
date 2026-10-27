@@ -79,7 +79,7 @@ public static partial class SshConfig
     private static bool Matches(string[] patterns, string alias) =>
         patterns.Any(p => !p.StartsWith('!') && Glob(p, alias)) && !patterns.Any(p => p.StartsWith('!') && Glob(p[1..], alias));
 
-    private static bool Glob(string pattern, string value) => Regex.IsMatch(value, "^" + Regex.Escape(pattern).Replace("\\*", ".*", StringComparison.Ordinal).Replace("\\?", ".", StringComparison.Ordinal) + "$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100));
+    private static bool Glob(string pattern, string value) => Regex.IsMatch(value, "^" + Regex.Escape(pattern).Replace("\\*", ".*", StringComparison.Ordinal).Replace("\\?", ".", StringComparison.Ordinal) + "$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
 
     private static List<string> Words(string line)
     {
