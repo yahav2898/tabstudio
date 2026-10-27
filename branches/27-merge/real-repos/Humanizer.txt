@@ -1,0 +1,157 @@
+Humanizer at 4574b93883bf48e3f0f3bca73297054537317ab2
+Opened /home/runner/work/_temp/real-repos/Humanizer/Humanizer.slnx in 0.7 s
+Compatibility Doctor:
+  Benchmarks: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  Humanizer.Analyzers.Roslyn38: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Humanizer.Analyzers.Roslyn48: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Humanizer.Analyzers.Roslyn414: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Humanizer.SourceGenerators: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Humanizer: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Humanizer.Analyzers.Tests.Roslyn38: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Humanizer.Analyzers.Tests.Roslyn48: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Humanizer.Analyzers.Tests.Roslyn414: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Humanizer.SourceGenerators.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Humanizer.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Humanizer.UnicodeDataGenerator: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  Humanizer.Docs.LanguageCoverage: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  website: Needs a toolchain via Node.js toolchain - Runs with Node.js from the Toolchain Store, with its output in the Output panel. Install Node.js to run it.
+Built in 17.0 s: 58 errors, 9 warnings
+  38 x CS0103
+      [Humanizer] ByteSize.cs(493,24): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+      [Humanizer] ByteSize.cs(530,24): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+      [Humanizer] ByteSize.cs(709,30): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+      [Humanizer] ByteSize.cs(1335,16): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+      [Humanizer] ByteSize.cs(1337,30): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+  6 x CS8795
+      [Humanizer] HeadingTable.cs(49,43): error CS8795: Partial method 'HeadingTableCatalog.ResolveCore(string)' must have an implementation part because it has accessibility modifiers.
+      [Humanizer] LocalizedInflectionCatalog.cs(107,33): error CS8795: Partial method 'LocalizedInflectionCatalog.TryResolveRuleCore(string, out CardinalPluralRuleKind)' must have an implementation part because it has accessibility modifiers.
+      [Humanizer] LocalizedInflectionCatalog.cs(111,33): error CS8795: Partial method 'LocalizedInflectionCatalog.TryResolveBundleCore(string, out InflectionBundle?)' must have an implementation part because it has accessibility modifiers.
+      [Humanizer] LocaleDurationCaseTable.cs(77,54): error CS8795: Partial method 'LocaleDurationCaseTableCatalog.ResolveCore(string)' must have an implementation part because it has accessibility modifiers.
+      [Humanizer] LocalePhraseTable.cs(172,48): error CS8795: Partial method 'LocalePhraseTableCatalog.ResolveCore(string)' must have an implementation part because it has accessibility modifiers.
+  6 x CS0234
+      [Humanizer.Analyzers.Tests.Roslyn38] Verifiers.cs(23,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+      [Humanizer.Analyzers.Tests.Roslyn38] Verifiers.cs(47,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+      [Humanizer.Analyzers.Tests.Roslyn38] Verifiers.cs(48,67): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+      [Humanizer.Analyzers.Tests.Roslyn38] WordsToNumberMigrationCodeFixTests.cs(215,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+      [Humanizer.Analyzers.Tests.Roslyn38] WordsToNumberMigrationCodeFixTests.cs(216,67): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+  3 x CS0165
+      [Humanizer] ByteSize.cs(1337,84): error CS0165: Use of unassigned local variable 'parseCulture'
+      [Humanizer] LocaliserRegistry.cs(129,23): error CS0165: Use of unassigned local variable 'generatedLocaliser'
+      [Humanizer] LocalizedMetricScaleWordCatalog.cs(19,25): error CS0165: Use of unassigned local variable 'resolved'
+  2 x CS1705
+      [Humanizer.Analyzers.Tests.Roslyn38] error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis, Version=3.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis' with identity 'Microsoft.CodeAnalysis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+      [Humanizer.Analyzers.Tests.Roslyn38] error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis.Workspaces, Version=3.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis.Workspaces' with identity 'Microsoft.CodeAnalysis.Workspaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+  2 x CS1061
+      [Humanizer.Analyzers.Tests.Roslyn38] WordsToNumberMigrationCodeFixTests.cs(286,21): error CS1061: 'AnalysisContext' does not contain a definition for 'EnableConcurrentExecution' and no accessible extension method 'EnableConcurrentExecution' accepting a first argument of type 'AnalysisContext' could be found (are you missing a using directive or an assembly reference?)
+      [Humanizer.Analyzers.Tests.Roslyn38] WordsToNumberMigrationCodeFixTests.cs(287,21): error CS1061: 'AnalysisContext' does not contain a definition for 'ConfigureGeneratedCodeAnalysis' and no accessible extension method 'ConfigureGeneratedCodeAnalysis' accepting a first argument of type 'AnalysisContext' could be found (are you missing a using directive or an assembly reference?)
+  1 x CS1029
+      [Humanizer.Analyzers.Tests.Roslyn38] AnalyzerAssemblyCompatibilityTests.cs(40,8): error CS1029: #error: 'Expected a System.Collections.Immutable compatibility cap for this analyzer test project.'
+Output:
+Build started at 02:55:58...
+1>------ Build started: Project: Humanizer.Analyzers.Roslyn38, Configuration: Debug ------
+1>Humanizer.Analyzers.Roslyn38 -> compiled in memory (20 KB, 206 ms)
+2>------ Build started: Project: Humanizer.Analyzers.Roslyn48, Configuration: Debug ------
+2>Humanizer.Analyzers.Roslyn48 -> compiled in memory (20 KB, 20 ms)
+3>------ Build started: Project: Humanizer.Analyzers.Roslyn414, Configuration: Debug ------
+3>Humanizer.Analyzers.Roslyn414 -> compiled in memory (20 KB, 17 ms)
+4>------ Build started: Project: Humanizer.SourceGenerators, Configuration: Debug ------
+4>Humanizer.SourceGenerators -> compiled in memory (519 KB, 377 ms)
+5>------ Build started: Project: Humanizer, Configuration: Debug ------
+5>ByteSize.cs(493,24): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>ByteSize.cs(530,24): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>ByteSize.cs(709,30): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>ByteSize.cs(1335,16): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>ByteSize.cs(1337,30): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>ByteSize.cs(1337,84): error CS0165: Use of unassigned local variable 'parseCulture'
+5>ByteSize.cs(1649,30): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>ByteSizeExtensions.cs(523,30): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>ByteSizeExtensions.cs(615,30): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>CollectionFormatterRegistry.cs(7,12): error CS0103: The name 'CollectionFormatterRegistryRegistrations' does not exist in the current context
+5>DateOnlyToOrdinalWordsConverterRegistry.cs(7,9): error CS0103: The name 'DateOnlyToOrdinalWordsConverterRegistryRegistrations' does not exist in the current context
+5>DateToOrdinalWordsConverterRegistry.cs(7,12): error CS0103: The name 'DateToOrdinalWordsConverterRegistryRegistrations' does not exist in the current context
+5>FormatterRegistry.cs(7,12): error CS0103: The name 'FormatterRegistryRegistrations' does not exist in the current context
+5>LocaliserRegistry.cs(127,20): error CS0103: The name 'GeneratedCultureResolver' does not exist in the current context
+5>LocaliserRegistry.cs(129,23): error CS0165: Use of unassigned local variable 'generatedLocaliser'
+5>NumberToWordsConverterRegistry.cs(6,21): error CS0103: The name 'NumberToWordsProfileCatalog' does not exist in the current context
+5>NumberToWordsConverterRegistry.cs(7,12): error CS0103: The name 'NumberToWordsConverterRegistryRegistrations' does not exist in the current context
+5>OrdinalizerRegistry.cs(7,12): error CS0103: The name 'OrdinalizerRegistryRegistrations' does not exist in the current context
+5>TimeOnlyToClockNotationConvertersRegistry.cs(7,68): error CS0103: The name 'TimeOnlyToClockNotationProfileCatalog' does not exist in the current context
+5>TimeOnlyToClockNotationConvertersRegistry.cs(8,9): error CS0103: The name 'TimeOnlyToClockNotationConvertersRegistryRegistrations' does not exist in the current context
+5>WordsToDecimalNumberConverterRegistry.cs(7,9): error CS0103: The name 'WordsToDecimalNumberConverterRegistryRegistrations' does not exist in the current context
+5>WordsToNumberConverterRegistry.cs(6,16): error CS0103: The name 'TokenMapWordsToNumberConverters' does not exist in the current context
+5>WordsToNumberConverterRegistry.cs(7,12): error CS0103: The name 'WordsToNumberConverterRegistryRegistrations' does not exist in the current context
+5>FractionalizeExtensions.cs(61,35): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>HeadingTable.cs(49,43): error CS8795: Partial method 'HeadingTableCatalog.ResolveCore(string)' must have an implementation part because it has accessibility modifiers.
+5>LocalizedInflectionCatalog.cs(66,14): error CS0103: The name 'GeneratedCultureResolver' does not exist in the current context
+5>LocalizedInflectionCatalog.cs(96,13): error CS0103: The name 'GeneratedCultureResolver' does not exist in the current context
+5>LocalizedInflectionCatalog.cs(107,33): error CS8795: Partial method 'LocalizedInflectionCatalog.TryResolveRuleCore(string, out CardinalPluralRuleKind)' must have an implementation part because it has accessibility modifiers.
+5>LocalizedInflectionCatalog.cs(111,33): error CS8795: Partial method 'LocalizedInflectionCatalog.TryResolveBundleCore(string, out InflectionBundle?)' must have an implementation part because it has accessibility modifiers.
+5>DefaultFormatter.cs(86,13): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>LocaleDurationCaseTable.cs(77,54): error CS8795: Partial method 'LocaleDurationCaseTableCatalog.ResolveCore(string)' must have an implementation part because it has accessibility modifiers.
+5>LocalePhraseTable.cs(172,48): error CS8795: Partial method 'LocalePhraseTableCatalog.ResolveCore(string)' must have an implementation part because it has accessibility modifiers.
+5>TokenMapWordsToNumberOrdinalMapBuilder.cs(39,13): error CS0103: The name 'NumberToWordsProfileCatalog' does not exist in the current context
+5>LocalizedMetricScaleWordCatalog.cs(19,25): error CS0165: Use of unassigned local variable 'resolved'
+5>LocalizedMetricScaleWordCatalog.cs(28,33): error CS8795: Partial method 'LocalizedMetricScaleWordCatalog.TryResolveCore(string, char, CardinalPluralCategory, out string)' must have an implementation part because it has accessibility modifiers.
+5>MetricNumeralExtensions.cs(184,19): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>MetricNumeralExtensions.cs(229,27): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>MetricNumeralExtensions.cs(265,27): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>MetricNumeralExtensions.cs(368,19): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>MetricNumeralExtensions.cs(463,19): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>MetricNumeralExtensions.cs(535,19): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>MetricNumeralExtensions.cs(565,19): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+5>NumberToWordsExtension.cs(245,67): error CS0103: The name 'NumberToWordsProfileCatalog' does not exist in the current context
+5>OrdinalizeExtensions.cs(447,28): error CS0103: The name 'LocaleNumberFormattingOverrides' does not exist in the current context
+6>------ Build started: Project: Benchmarks, Configuration: Debug ------
+7>------ Build started: Project: Humanizer.Analyzers.Tests.Roslyn38, Configuration: Debug ------
+7>error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis, Version=3.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis' with identity 'Microsoft.CodeAnalysis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+7>error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis.Workspaces, Version=3.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis.Workspaces' with identity 'Microsoft.CodeAnalysis.Workspaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+7>AnalyzerAssemblyCompatibilityTests.cs(27,106): error CS0103: The name 'MaxSupportedSystemCollectionsImmutableMajorVersion' does not exist in the current context
+7>AnalyzerAssemblyCompatibilityTests.cs(29,107): error CS0103: The name 'MaxSupportedSystemCollectionsImmutableMajorVersion' does not exist in the current context
+7>AnalyzerAssemblyCompatibilityTests.cs(40,8): error CS1029: #error: 'Expected a System.Collections.Immutable compatibility cap for this analyzer test project.'
+7>Verifiers.cs(23,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+7>Verifiers.cs(47,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+7>Verifiers.cs(48,67): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+7>WordsToNumberMigrationCodeFixTests.cs(215,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+7>WordsToNumberMigrationCodeFixTests.cs(216,67): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+7>WordsToNumberMigrationCodeFixTests.cs(229,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+7>WordsToNumberMigrationCodeFixTests.cs(286,21): error CS1061: 'AnalysisContext' does not contain a definition for 'EnableConcurrentExecution' and no accessible extension method 'EnableConcurrentExecution' accepting a first argument of type 'AnalysisContext' could be found (are you missing a using directive or an assembly reference?)
+7>WordsToNumberMigrationCodeFixTests.cs(287,21): error CS1061: 'AnalysisContext' does not contain a definition for 'ConfigureGeneratedCodeAnalysis' and no accessible extension method 'ConfigureGeneratedCodeAnalysis' accepting a first argument of type 'AnalysisContext' could be found (are you missing a using directive or an assembly reference?)
+7>WordsToNumberMigrationCodeFixTests.cs(287,52): error CS0103: The name 'GeneratedCodeAnalysisFlags' does not exist in the current context
+8>------ Build started: Project: Humanizer.Analyzers.Tests.Roslyn48, Configuration: Debug ------
+8>error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis, Version=3.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis' with identity 'Microsoft.CodeAnalysis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+8>error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis.Workspaces, Version=3.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis.Workspaces' with identity 'Microsoft.CodeAnalysis.Workspaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+8>AnalyzerAssemblyCompatibilityTests.cs(27,106): error CS0103: The name 'MaxSupportedSystemCollectionsImmutableMajorVersion' does not exist in the current context
+8>AnalyzerAssemblyCompatibilityTests.cs(29,107): error CS0103: The name 'MaxSupportedSystemCollectionsImmutableMajorVersion' does not exist in the current context
+8>AnalyzerAssemblyCompatibilityTests.cs(40,8): error CS1029: #error: 'Expected a System.Collections.Immutable compatibility cap for this analyzer test project.'
+8>Verifiers.cs(23,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+8>Verifiers.cs(47,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+8>Verifiers.cs(48,67): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+8>WordsToNumberMigrationCodeFixTests.cs(215,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+8>WordsToNumberMigrationCodeFixTests.cs(216,67): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+8>WordsToNumberMigrationCodeFixTests.cs(229,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+8>WordsToNumberMigrationCodeFixTests.cs(286,21): error CS1061: 'AnalysisContext' does not contain a definition for 'EnableConcurrentExecution' and no accessible extension method 'EnableConcurrentExecution' accepting a first argument of type 'AnalysisContext' could be found (are you missing a using directive or an assembly reference?)
+8>WordsToNumberMigrationCodeFixTests.cs(287,21): error CS1061: 'AnalysisContext' does not contain a definition for 'ConfigureGeneratedCodeAnalysis' and no accessible extension method 'ConfigureGeneratedCodeAnalysis' accepting a first argument of type 'AnalysisContext' could be found (are you missing a using directive or an assembly reference?)
+8>WordsToNumberMigrationCodeFixTests.cs(287,52): error CS0103: The name 'GeneratedCodeAnalysisFlags' does not exist in the current context
+9>------ Build started: Project: Humanizer.Analyzers.Tests.Roslyn414, Configuration: Debug ------
+9>error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis, Version=3.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis' with identity 'Microsoft.CodeAnalysis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+9>error CS1705: Assembly 'Humanizer.Analyzers' with identity 'Humanizer.Analyzers, Version=0.0.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e' uses 'Microsoft.CodeAnalysis.Workspaces, Version=3.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' which has a higher version than referenced assembly 'Microsoft.CodeAnalysis.Workspaces' with identity 'Microsoft.CodeAnalysis.Workspaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+9>AnalyzerAssemblyCompatibilityTests.cs(27,106): error CS0103: The name 'MaxSupportedSystemCollectionsImmutableMajorVersion' does not exist in the current context
+9>AnalyzerAssemblyCompatibilityTests.cs(29,107): error CS0103: The name 'MaxSupportedSystemCollectionsImmutableMajorVersion' does not exist in the current context
+9>AnalyzerAssemblyCompatibilityTests.cs(40,8): error CS1029: #error: 'Expected a System.Collections.Immutable compatibility cap for this analyzer test project.'
+9>Verifiers.cs(23,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+9>Verifiers.cs(47,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+9>Verifiers.cs(48,67): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+9>WordsToNumberMigrationCodeFixTests.cs(215,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+9>WordsToNumberMigrationCodeFixTests.cs(216,67): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+9>WordsToNumberMigrationCodeFixTests.cs(229,66): error CS0234: The type or namespace name 'ByteSize' does not exist in the namespace 'Humanizer' (are you missing an assembly reference?)
+9>WordsToNumberMigrationCodeFixTests.cs(286,21): error CS1061: 'AnalysisContext' does not contain a definition for 'EnableConcurrentExecution' and no accessible extension method 'EnableConcurrentExecution' accepting a first argument of type 'AnalysisContext' could be found (are you missing a using directive or an assembly reference?)
+9>WordsToNumberMigrationCodeFixTests.cs(287,21): error CS1061: 'AnalysisContext' does not contain a definition for 'ConfigureGeneratedCodeAnalysis' and no accessible extension method 'ConfigureGeneratedCodeAnalysis' accepting a first argument of type 'AnalysisContext' could be found (are you missing a using directive or an assembly reference?)
+9>WordsToNumberMigrationCodeFixTests.cs(287,52): error CS0103: The name 'GeneratedCodeAnalysisFlags' does not exist in the current context
+10>------ Build started: Project: Humanizer.SourceGenerators.Tests, Configuration: Debug ------
+11>------ Build started: Project: Humanizer.Tests, Configuration: Debug ------
+12>------ Build started: Project: Humanizer.UnicodeDataGenerator, Configuration: Debug ------
+12>Humanizer.UnicodeDataGenerator -> compiled in memory (35.5 KB, 73 ms)
+13>------ Build started: Project: Humanizer.Docs.LanguageCoverage, Configuration: Debug ------
+13>Humanizer.Docs.LanguageCoverage -> compiled in memory (14.5 KB, 456 ms)
+========== Build: 6 succeeded, 7 failed ==========
+
