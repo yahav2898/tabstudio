@@ -40,6 +40,11 @@ def install(root, tool, version, bin_directory="/usr/local/bin", run=subprocess.
         raise ValueError("Verified source layout does not match the pinned " + tool + " recipe")
     environment = {key: value for key, value in os.environ.items()
                    if key not in ("LD_PRELOAD", "LD_LIBRARY_PATH", "TABSTUDIO_USB_FD", "TABSTUDIO_USB_DEVICE", "TABSTUDIO_USB_DEVPATH")}
+    if tool == "bossac":
+        # Upstream relies on glibc's transitive includes for select()/timeval.
+        # Its COMMON_CXXFLAGS appends CXXFLAGS, retaining the upstream standard,
+        # version, warnings and optimization options while making musl explicit.
+        environment["CXXFLAGS"] = (environment.get("CXXFLAGS", "") + " -include sys/select.h -include sys/time.h").strip()
     print("Building " + tool + " " + version + " from verified upstream source", flush=True)
     run(list(recipe["command"]), cwd=str(source), env=environment, check=True, timeout=1800)
     executable = source / recipe["binary"]

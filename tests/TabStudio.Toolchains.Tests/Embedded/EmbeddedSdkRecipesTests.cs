@@ -94,5 +94,8 @@ public sealed class EmbeddedSdkRecipesTests
         }
         Assert.Contains(recipe.Files, file => file.Path == "/usr/local/bin/rust-analyzer" && file.Executable);
         Assert.Contains(recipe.RequiredArtifacts, path => path.EndsWith("/library/core/Cargo.toml", StringComparison.Ordinal));
+        Assert.Equal("true", EmbeddedSdkBootstrap.Environment("embedded-rust")["CARGO_NET_GIT_FETCH_WITH_CLI"]);
+        Assert.All(recipe.Files.Where(file => file.Executable), file =>
+            Assert.Contains("CARGO_NET_GIT_FETCH_WITH_CLI", file.Content, StringComparison.Ordinal));
     }
 }

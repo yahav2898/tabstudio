@@ -21,7 +21,8 @@ public static partial class EmbeddedSdkBootstrap
             Executable = true,
             Content = "#!/bin/sh\nset -eu\njobs=${" + JobsVariable + ":-2}\n"
                 + "case \"$jobs\" in [1-9]|1[0-6]) ;; *) jobs=2 ;; esac\n"
-                + "exec /usr/bin/" + program + " \"$@\" \"-j$jobs\"\n",
+                + (program == "ninja" ? "exec /usr/bin/ninja \"-j$jobs\" \"$@\"\n"
+                    : "exec /usr/bin/make \"$@\" \"-j$jobs\"\n"),
         }).ToArray());
     /// <summary>Packages installed through the distribution's signed apt indexes before catalog setup steps.</summary>
     public static IReadOnlyList<string> BasePackages { get; } = Array.AsReadOnly(new[]

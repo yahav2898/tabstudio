@@ -99,12 +99,14 @@ class SourceInstallerTests(unittest.TestCase):
                     return subprocess.CompletedProcess(command, 0)
                 return subprocess.CompletedProcess(command, 1, "Basic Open Source SAM-BA Application (BOSSA) Version 1.9.1")
 
-            module.install(root, "bossac", "1.9.1", root / "aliases", run)
+            with patch.dict(os.environ, {"CXXFLAGS": "-DPACKAGING_FLAGS"}):
+                module.install(root, "bossac", "1.9.1", root / "aliases", run)
             self.assertTrue((source / "src/bossac.cpp").exists())
             self.assertTrue((root / "bin/bossac").exists())
             self.assertTrue((root / "aliases/bossac").exists())
             self.assertEqual("make", calls[0][0][0])
             self.assertNotIn("LD_PRELOAD", calls[0][1]["env"])
+            self.assertEqual("-DPACKAGING_FLAGS -include sys/select.h -include sys/time.h", calls[0][1]["env"]["CXXFLAGS"])
 
 
 if __name__ == "__main__":

@@ -183,6 +183,8 @@ public sealed class EmbeddedGlibcTests
         Assert.Equal(4, primary.Started.Count);
         Assert.All(guest.Started, command => Assert.Equal("1", command.Environment[EmbeddedGlibcRuntime.RoutingMarker]));
         Assert.All(guest.Started, command => Assert.StartsWith("/opt/tabstudio/embedded-rust/bin/", command.Program, StringComparison.Ordinal));
+        Assert.All(guest.Started, command => Assert.Equal("true", command.Environment["CARGO_NET_GIT_FETCH_WITH_CLI"]));
+        Assert.All(primary.Started, command => Assert.DoesNotContain("CARGO_NET_GIT_FETCH_WITH_CLI", command.Environment.Keys));
         Assert.Equal("/opt/tabstudio/embedded-rust/bin/rust-analyzer", runtime.ResolveForDirectory("rust-analyzer", project.Resolve("firmware/src")));
         Assert.Equal("rust-analyzer", runtime.ResolveForDirectory("rust-analyzer", project.Resolve("desktop")));
         var unready = new EmbeddedGlibcRuntime(primary, guest, _ => false, () => true);

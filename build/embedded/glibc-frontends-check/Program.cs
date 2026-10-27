@@ -98,6 +98,8 @@ try
     }
 
     evidence["frontends"] = statuses.Select(s => new { id = s.Toolchain.Id, version = s.Version, state = s.State.ToString() }).ToArray();
+    await BuildToolCheck.VerifyAsync(installer.Runtime, project, output, cancellation);
+    evidence["nativeBuildToolsVerified"] = true;
     if (sdkId is not null)
     {
         evidence["sdk"] = sdkId;

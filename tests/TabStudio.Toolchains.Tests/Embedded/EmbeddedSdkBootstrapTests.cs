@@ -42,7 +42,8 @@ public sealed class EmbeddedSdkBootstrapTests
         Assert.All(EmbeddedSdkBootstrap.BuildLimiters, file =>
         {
             Assert.True(file.Executable);
-            Assert.Contains("\"$@\" \"-j$jobs\"", file.Content, StringComparison.Ordinal);
+            Assert.Contains(file.Path.EndsWith("/ninja", StringComparison.Ordinal)
+                ? "\"-j$jobs\" \"$@\"" : "\"$@\" \"-j$jobs\"", file.Content, StringComparison.Ordinal);
             Assert.DoesNotContain("eval", file.Content, StringComparison.Ordinal);
         });
     }

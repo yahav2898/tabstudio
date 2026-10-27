@@ -49,7 +49,7 @@ public static partial class EmbeddedSdkBootstrap
                 {
                     Path = "/usr/local/bin/" + command,
                     Executable = true,
-                    Content = "#!/bin/sh\nexport CARGO_HOME=\"${CARGO_HOME:-/root/.cargo}\"\nexport CARGO_BUILD_JOBS=\"${CARGO_BUILD_JOBS:-2}\"\nexport PATH=/opt/tabstudio/embedded/build-bin:" + RustPrefix + "/bin:$PATH\nexec " + RustPrefix + "/bin/" + command + " \"$@\"\n",
+                    Content = "#!/bin/sh\nexport CARGO_HOME=\"${CARGO_HOME:-/root/.cargo}\"\nexport CARGO_BUILD_JOBS=\"${CARGO_BUILD_JOBS:-2}\"\nexport CARGO_NET_GIT_FETCH_WITH_CLI=\"${CARGO_NET_GIT_FETCH_WITH_CLI:-true}\"\nexport PATH=/opt/tabstudio/embedded/build-bin:" + RustPrefix + "/bin:$PATH\nexec " + RustPrefix + "/bin/" + command + " \"$@\"\n",
                 });
             }
             files.Add(new FileDefinition
@@ -72,6 +72,8 @@ public static partial class EmbeddedSdkBootstrap
                 {
                     ["CARGO_HOME"] = "/root/.cargo",
                     ["CARGO_BUILD_JOBS"] = "2",
+                    // libgit2 rejects PRoot's transient link2symlink reference names; signed Git handles them.
+                    ["CARGO_NET_GIT_FETCH_WITH_CLI"] = "true",
                     ["PATH"] = RustPrefix + "/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
                 })
             {
