@@ -118,6 +118,7 @@ public sealed partial class WorkspaceViewModel
                 break;
             case RunOutcome.Crashed:
                 Output.WriteLine($"The program '{project.Name}' stopped because of an unhandled exception.", OutputKind.Failure);
+                ExplainSqlServerCrash(project, result);
                 break;
             case RunOutcome.Stopped:
                 Output.WriteLine($"The program '{project.Name}' was stopped.", OutputKind.Info);
@@ -259,6 +260,7 @@ public sealed partial class WorkspaceViewModel
             SelectedPanel = BottomPanel.Output;
             IsBottomPanelVisible = true;
             Output.WriteLine($"Build started at {DateTime.Now.ToString("T", CultureInfo.CurrentCulture)}...", OutputKind.Info);
+            WriteRunNotes();
         }
 
         BuildResult? last = null;
