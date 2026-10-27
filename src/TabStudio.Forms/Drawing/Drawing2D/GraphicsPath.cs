@@ -468,6 +468,113 @@ public sealed class GraphicsPath : MarshalByRefObject, ICloneable, IDisposable
     /// <param name="y">The point's y.</param>
     public bool IsVisible(int x, int y) => IsVisible(new PointF(x, y));
 
+    /// <summary>Whether a point is inside the path; the graphics is not needed to tell.</summary>
+    /// <param name="x">The point's x.</param>
+    /// <param name="y">The point's y.</param>
+    /// <param name="graphics">The graphics the path is drawn on, or <see langword="null"/>.</param>
+    public bool IsVisible(float x, float y, Graphics? graphics) => IsVisible(new PointF(x, y));
+
+    /// <summary>Whether a point is inside the path.</summary>
+    /// <param name="point">The point.</param>
+    /// <param name="graphics">The graphics the path is drawn on, or <see langword="null"/>.</param>
+    public bool IsVisible(PointF point, Graphics? graphics) => IsVisible(point);
+
+    /// <summary>Whether a point is inside the path.</summary>
+    /// <param name="x">The point's x.</param>
+    /// <param name="y">The point's y.</param>
+    /// <param name="graphics">The graphics the path is drawn on, or <see langword="null"/>.</param>
+    public bool IsVisible(int x, int y, Graphics? graphics) => IsVisible(new PointF(x, y));
+
+    /// <summary>Whether a point is inside the path.</summary>
+    /// <param name="point">The point.</param>
+    /// <param name="graphics">The graphics the path is drawn on, or <see langword="null"/>.</param>
+    public bool IsVisible(Point point, Graphics? graphics) => IsVisible((PointF)point);
+
+    /// <summary>Whether a point is on the path's outline as a pen draws it: within half the pen's width of it.</summary>
+    /// <param name="point">The point.</param>
+    /// <param name="pen">The pen.</param>
+    public bool IsOutlineVisible(PointF point, Pen pen)
+    {
+        ArgumentNullException.ThrowIfNull(pen);
+
+        // As GDI+ does, a thin pen still catches points within half a pixel.
+        var reach = Math.Max(pen.Width, 1f) / 2;
+        foreach (var figure in _figures)
+        {
+            var data = figure.ToData();
+            var points = GeometryMath.Flatten(data);
+            var count = data.Closed ? points.Count + 1 : points.Count;
+            if (points.Count == 1 && Distance(point, points[0], points[0]) <= reach)
+            {
+                return true;
+            }
+
+            for (var i = 1; i < count; i++)
+            {
+                if (Distance(point, points[i - 1], points[i % points.Count]) <= reach)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>Whether a point is on the path's outline as a pen draws it.</summary>
+    /// <param name="x">The point's x.</param>
+    /// <param name="y">The point's y.</param>
+    /// <param name="pen">The pen.</param>
+    public bool IsOutlineVisible(float x, float y, Pen pen) => IsOutlineVisible(new PointF(x, y), pen);
+
+    /// <summary>Whether a point is on the path's outline as a pen draws it.</summary>
+    /// <param name="x">The point's x.</param>
+    /// <param name="y">The point's y.</param>
+    /// <param name="pen">The pen.</param>
+    public bool IsOutlineVisible(int x, int y, Pen pen) => IsOutlineVisible(new PointF(x, y), pen);
+
+    /// <summary>Whether a point is on the path's outline as a pen draws it.</summary>
+    /// <param name="point">The point.</param>
+    /// <param name="pen">The pen.</param>
+    public bool IsOutlineVisible(Point point, Pen pen) => IsOutlineVisible((PointF)point, pen);
+
+    /// <summary>Whether a point is on the path's outline as a pen draws it.</summary>
+    /// <param name="point">The point.</param>
+    /// <param name="pen">The pen.</param>
+    /// <param name="graphics">The graphics the path is drawn on, or <see langword="null"/>.</param>
+    public bool IsOutlineVisible(PointF point, Pen pen, Graphics? graphics) => IsOutlineVisible(point, pen);
+
+    /// <summary>Whether a point is on the path's outline as a pen draws it.</summary>
+    /// <param name="x">The point's x.</param>
+    /// <param name="y">The point's y.</param>
+    /// <param name="pen">The pen.</param>
+    /// <param name="graphics">The graphics the path is drawn on, or <see langword="null"/>.</param>
+    public bool IsOutlineVisible(float x, float y, Pen pen, Graphics? graphics) => IsOutlineVisible(new PointF(x, y), pen);
+
+    /// <summary>Whether a point is on the path's outline as a pen draws it.</summary>
+    /// <param name="x">The point's x.</param>
+    /// <param name="y">The point's y.</param>
+    /// <param name="pen">The pen.</param>
+    /// <param name="graphics">The graphics the path is drawn on, or <see langword="null"/>.</param>
+    public bool IsOutlineVisible(int x, int y, Pen pen, Graphics? graphics) => IsOutlineVisible(new PointF(x, y), pen);
+
+    /// <summary>Whether a point is on the path's outline as a pen draws it.</summary>
+    /// <param name="point">The point.</param>
+    /// <param name="pen">The pen.</param>
+    /// <param name="graphics">The graphics the path is drawn on, or <see langword="null"/>.</param>
+    public bool IsOutlineVisible(Point point, Pen pen, Graphics? graphics) => IsOutlineVisible((PointF)point, pen);
+
+    private static float Distance(PointF point, PointF a, PointF b)
+    {
+        var dx = b.X - a.X;
+        var dy = b.Y - a.Y;
+        var lengthSquared = (dx * dx) + (dy * dy);
+        var t = lengthSquared == 0 ? 0 : Math.Clamp((((point.X - a.X) * dx) + ((point.Y - a.Y) * dy)) / lengthSquared, 0, 1);
+        var x = a.X + (t * dx) - point.X;
+        var y = a.Y + (t * dy) - point.Y;
+        return MathF.Sqrt((x * x) + (y * y));
+    }
+
     /// <inheritdoc />
     public object Clone()
     {

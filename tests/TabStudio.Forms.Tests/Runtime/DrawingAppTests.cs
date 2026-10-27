@@ -411,3 +411,48 @@ public sealed class DrawToBitmapTests
         Assert.Equal(0, outside.A);
     }
 }
+
+/// <summary>Hit testing paths and copying the app's windows from the screen, as SimplePaint does.</summary>
+public sealed class PathAndScreenTests
+{
+    [AvaloniaFact]
+    public void IsOutlineVisible_is_true_near_the_outline_and_false_inside_or_away()
+    {
+        using var path = new GraphicsPath();
+        path.AddRectangle(new Rectangle(10, 10, 100, 50));
+        using var pen = new Pen(Color.Black, 6);
+
+        Assert.True(path.IsOutlineVisible(new Point(10, 30), pen));
+        Assert.True(path.IsOutlineVisible(new PointF(60, 62), pen));
+        Assert.False(path.IsOutlineVisible(new Point(60, 35), pen));
+        Assert.False(path.IsOutlineVisible(new Point(60, 70), pen));
+        Assert.True(path.IsVisible(60, 35, null));
+    }
+
+    [AvaloniaFact]
+    public void CopyFromScreen_copies_the_apps_window_from_the_desktop()
+    {
+        Form form = null!;
+        using var run = FormsTestRun.Start(() =>
+        {
+            form = new Form { ClientSize = new Size(200, 100), BackColor = Color.Teal, StartPosition = FormStartPosition.Manual, Location = new Point(40, 30) };
+            form.Paint += (_, e) => e.Graphics.FillRectangle(Brushes.Yellow, 20, 20, 30, 30);
+            return form;
+        });
+
+        var (teal, yellow) = run.Invoke(() =>
+        {
+            var origin = form.PointToScreen(Point.Empty);
+            using var shot = new Bitmap(form.ClientSize.Width, form.ClientSize.Height);
+            using (var g = Graphics.FromImage(shot))
+            {
+                g.CopyFromScreen(origin, Point.Empty, shot.Size);
+            }
+
+            return (shot.GetPixel(150, 70), shot.GetPixel(30, 30));
+        });
+
+        Assert.Equal(Color.Teal.ToArgb(), teal.ToArgb());
+        Assert.Equal(Color.Yellow.ToArgb(), yellow.ToArgb());
+    }
+}
