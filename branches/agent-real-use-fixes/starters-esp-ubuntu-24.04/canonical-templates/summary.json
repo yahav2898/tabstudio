@@ -1,0 +1,122 @@
+{
+  "architecture": "x86_64",
+  "group": "esp",
+  "hostPackageMode": "auto",
+  "platformioCoreVersion": "6.2.0",
+  "hardwareVerified": false,
+  "androidVerified": false,
+  "runtime": "Production EmbeddedGlibcToolchainInstaller / PRoot",
+  "elapsedSeconds": 1223.2596451,
+  "passed": true,
+  "templates": [
+    {
+      "id": "esp32",
+      "platformPackage": "espressif32@8.0.0",
+      "passed": true,
+      "seconds": 369.0653608,
+      "firmwareBytes": 5631220,
+      "firmwareSha256": "8f522b36b5ceba9bb28095b3e5eba1860ba33dfb2b496082fe30f56168f3b843",
+      "ranges": [
+        {
+          "start": 1061158944,
+          "length": 57448
+        },
+        {
+          "start": 1073470304,
+          "length": 16849
+        },
+        {
+          "start": 1074266112,
+          "length": 63031
+        },
+        {
+          "start": 1074593824,
+          "length": 154116
+        },
+        {
+          "start": 1342177792,
+          "length": 32
+        }
+      ],
+      "uploadPlanReady": true,
+      "uploadVerification": "Each metadata-declared image is verified using the same flash-header settings. Separate image offsets preserve unmentioned erase sectors, including NVS; no merged FF padding or whole-chip erase is used.",
+      "stackFiles": 61,
+      "stackRows": 951,
+      "compilationDatabaseEntries": 61,
+      "platformioIni": "; Firmware: ESP32 DevKit\n[env:esp32]\nplatform = espressif32@8.0.0\nboard = esp32dev\nframework = arduino\nmonitor_speed = 115200\nbuild_flags = -fstack-usage\nextra_scripts = post:tabstudio_esp_flash.py\n"
+    },
+    {
+      "id": "esp32s3",
+      "platformPackage": "espressif32@8.0.0",
+      "passed": true,
+      "seconds": 415.51247,
+      "firmwareBytes": 6309524,
+      "firmwareSha256": "6558ff070f542c4b1ab4e2180f065be384426e28c8c317bbcc85486494783059",
+      "ranges": [
+        {
+          "start": 1006829600,
+          "length": 57000
+        },
+        {
+          "start": 1070104576,
+          "length": 60118
+        },
+        {
+          "start": 1077362688,
+          "length": 61831
+        },
+        {
+          "start": 1107296288,
+          "length": 160584
+        },
+        {
+          "start": 1342177792,
+          "length": 32
+        }
+      ],
+      "uploadPlanReady": true,
+      "uploadVerification": "Each metadata-declared image is verified using the same flash-header settings. Separate image offsets preserve unmentioned erase sectors, including NVS; no merged FF padding or whole-chip erase is used.",
+      "stackFiles": 61,
+      "stackRows": 1227,
+      "compilationDatabaseEntries": 61,
+      "platformioIni": "; Firmware: ESP32-S3 DevKitC-1\n[env:esp32s3]\nplatform = espressif32@8.0.0\nboard = esp32-s3-devkitc-1\nframework = arduino\nmonitor_speed = 115200\nbuild_flags = -fstack-usage\nextra_scripts = post:tabstudio_esp_flash.py\n"
+    },
+    {
+      "id": "esp32c3",
+      "platformPackage": "espressif32@8.0.0",
+      "passed": true,
+      "seconds": 348.0341724,
+      "firmwareBytes": 6133924,
+      "firmwareSha256": "457b61e50d3f0f1ebc44d5d0faf96f2ccdc857f9fa3538b9dc214a234e73e2fd",
+      "ranges": [
+        {
+          "start": 1006632992,
+          "length": 261968
+        },
+        {
+          "start": 1070071808,
+          "length": 58774
+        },
+        {
+          "start": 1077411840,
+          "length": 51358
+        },
+        {
+          "start": 1107296288,
+          "length": 170284
+        },
+        {
+          "start": 1342177280,
+          "length": 32
+        }
+      ],
+      "uploadPlanReady": true,
+      "uploadVerification": "Each metadata-declared image is verified using the same flash-header settings. Separate image offsets preserve unmentioned erase sectors, including NVS; no merged FF padding or whole-chip erase is used.",
+      "stackFiles": 61,
+      "stackRows": 981,
+      "compilationDatabaseEntries": 61,
+      "platformioIni": "; Firmware: ESP32-C3 DevKitM-1\n[env:esp32c3]\nplatform = espressif32@8.0.0\nboard = esp32-c3-devkitm-1\nframework = arduino\nmonitor_speed = 115200\nbuild_flags = -fstack-usage\nextra_scripts = post:tabstudio_esp_flash.py\n"
+    }
+  ],
+  "errors": []
+}
