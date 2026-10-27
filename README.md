@@ -224,9 +224,10 @@ From there, try **New project** for a template in any language, **Open from GitH
   Solution builds in dependency order and reports each error once.
 - **Honest about what cannot run here.** An Aspire AppHost is explained in the Compatibility Doctor and skipped by
   Build with the reason: it starts the app's projects and containers on a computer.
-- **Tested on real repositories.** CI opens 21 public repositories pinned to commits, builds and runs them in the
+- **Tested on real repositories.** CI opens 25 public repositories pinned to commits, builds and runs them in the
   IDE, and holds each to an error baseline that only goes down: .NET solutions such as MediatR, CleanArchitecture,
-  Polly, eShopOnWeb and SimplCommerce, classic Windows Forms and WPF tutorials, and Python, Java and Rust projects.
+  Polly, eShopOnWeb, SimplCommerce, Conduit and Avalonia.Samples, classic Windows Forms and WPF tutorials, and Node,
+  Python, Java and Rust projects.
   The embedded workflow does the same for PlatformIO, Arduino, STM32Cube, Pico SDK and embedded Rust projects.
 
 ### Services and databases

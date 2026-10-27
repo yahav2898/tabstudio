@@ -26,7 +26,7 @@ and run it on an Android tablet emulator, and each one installs as an update ove
 | [0.16](releases/0.16.0.md) | Real-world .NET repositories built as the SDK builds them, backing services from Compose files without Docker, and experimental Flutter and Dart. |
 | [0.17](releases/0.17.0.md) | Classic .NET Framework WPF and Windows Forms projects run on the tablet, with Upgrade project, and every panel of 0.15 and 0.16 redesigned to the design system. |
 | [0.18](releases/0.18.0.md) | TabStudio Live: several devices code together in real time with no cloud. Windows Forms apps draw on images, WPF windows fit the preview, packages with native libraries run, and real Python, Java and Rust repositories set up and run with one F5. |
-| [0.19](releases/0.19.0.md) | Every microcontroller, from the tablet: PlatformIO, Arduino, STM32Cube, ESP-IDF, Zephyr, Pico SDK and embedded Rust projects built, uploaded and debugged over USB, with crash, memory and stack analysis. |
+| [0.19](releases/0.19.0.md) | Every microcontroller, from the tablet: PlatformIO, Arduino, STM32Cube, ESP-IDF, Zephyr, Pico SDK and embedded Rust projects built, uploaded and debugged over USB, with crash, memory and stack analysis. [0.19.1](releases/0.19.1.md) runs source generators from NuGet as the SDK does and shows long operations with their progress. |
 
 ## Next
 
