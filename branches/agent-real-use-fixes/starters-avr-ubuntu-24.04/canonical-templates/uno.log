@@ -1,0 +1,96 @@
+> pio run --environment uno --jobs 2
+********************************************************************************
+If you like PlatformIO, please:
+- star it on GitHub > https://github.com/platformio/platformio-core
+- follow us on LinkedIn to stay up-to-date on the latest project news > https://www.linkedin.com/company/platformio/
+- try PlatformIO IDE for embedded development > https://platformio.org/platformio-ide
+********************************************************************************
+
+Processing uno (platform: atmelavr@5.3.0; board: uno; framework: arduino)
+--------------------------------------------------------------------------------
+Platform Manager: Installing atmelavr @ 5.3.0
+Downloading 0% 10% 20% 30% 40% 50% 60%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Platform Manager: atmelavr@5.3.0 has been installed!
+Tool Manager: Installing platformio/toolchain-atmelavr @ ~1.70300.0
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: toolchain-atmelavr@1.70300.191015 has been installed!
+Tool Manager: Installing platformio/framework-arduino-avr @ ~5.4.0
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: framework-arduino-avr@5.4.0 has been installed!
+Tool Manager: Installing platformio/tool-scons @ ~4.40801.0
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: tool-scons@4.40801.0 has been installed!
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/atmelavr/uno.html
+PLATFORM: Atmel AVR (5.3.0) > Arduino Uno
+HARDWARE: ATMEGA328P 16MHz, 2KB RAM, 31.50KB Flash
+DEBUG: Current (avr-stub) External (avr-stub, simavr)
+PACKAGES: 
+ - framework-arduino-avr @ 5.4.0 
+ - toolchain-atmelavr @ 1.70300.191015 (7.3.0)
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 5 compatible libraries
+Scanning dependencies...
+No dependencies
+Building in release mode
+Compiling .pio/build/uno/src/main.cpp.o
+Archiving .pio/build/uno/libFrameworkArduinoVariant.a
+Indexing .pio/build/uno/libFrameworkArduinoVariant.a
+Compiling .pio/build/uno/FrameworkArduino/CDC.cpp.o
+Compiling .pio/build/uno/FrameworkArduino/HardwareSerial.cpp.o
+Compiling .pio/build/uno/FrameworkArduino/HardwareSerial0.cpp.o
+Compiling .pio/build/uno/FrameworkArduino/HardwareSerial1.cpp.o
+Compiling .pio/build/uno/FrameworkArduino/HardwareSerial2.cpp.o
+Compiling .pio/build/uno/FrameworkArduino/HardwareSerial3.cpp.o
+Compiling .pio/build/uno/FrameworkArduino/IPAddress.cpp.o
+Compiling .pio/build/uno/FrameworkArduino/PluggableUSB.cpp.o
+Compiling .pio/build/uno/FrameworkArduino/Print.cpp.o
+Compiling .pio/build/uno/FrameworkArduino/Stream.cpp.o
+Compiling .pio/build/uno/FrameworkArduino/Tone.cpp.o
+Compiling .pio/build/uno/FrameworkArduino/USBCore.cpp.o
+Compiling .pio/build/uno/FrameworkArduino/WInterrupts.c.o
+Compiling .pio/build/uno/FrameworkArduino/WMath.cpp.o
+Compiling .pio/build/uno/FrameworkArduino/WString.cpp.o
+Compiling .pio/build/uno/FrameworkArduino/abi.cpp.o
+Compiling .pio/build/uno/FrameworkArduino/hooks.c.o
+Compiling .pio/build/uno/FrameworkArduino/main.cpp.o
+Compiling .pio/build/uno/FrameworkArduino/new.cpp.o
+Compiling .pio/build/uno/FrameworkArduino/wiring.c.o
+Compiling .pio/build/uno/FrameworkArduino/wiring_analog.c.o
+Compiling .pio/build/uno/FrameworkArduino/wiring_digital.c.o
+Compiling .pio/build/uno/FrameworkArduino/wiring_pulse.S.o
+Compiling .pio/build/uno/FrameworkArduino/wiring_pulse.c.o
+Compiling .pio/build/uno/FrameworkArduino/wiring_shift.c.o
+Archiving .pio/build/uno/libFrameworkArduino.a
+Indexing .pio/build/uno/libFrameworkArduino.a
+Linking .pio/build/uno/firmware.elf
+Checking size .pio/build/uno/firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [=         ]  10.2% (used 208 bytes from 2048 bytes)
+Flash: [=         ]   6.0% (used 1938 bytes from 32256 bytes)
+Building .pio/build/uno/firmware.hex
+========================= [SUCCESS] Took 27.76 seconds =========================
+> pio run --environment uno --target compiledb --jobs 2
+Processing uno (platform: atmelavr@5.3.0; board: uno; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/atmelavr/uno.html
+PLATFORM: Atmel AVR (5.3.0) > Arduino Uno
+HARDWARE: ATMEGA328P 16MHz, 2KB RAM, 31.50KB Flash
+DEBUG: Current (avr-stub) External (avr-stub, simavr)
+PACKAGES: 
+ - framework-arduino-avr @ 5.4.0 
+ - toolchain-atmelavr @ 1.70300.191015 (7.3.0)
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 5 compatible libraries
+Scanning dependencies...
+No dependencies
+Building in release mode
+Building compilation database compile_commands.json
+========================= [SUCCESS] Took 1.45 seconds =========================
