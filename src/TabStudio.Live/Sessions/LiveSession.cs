@@ -21,8 +21,11 @@ public abstract class LiveSession
     private readonly Dictionary<string, LiveDocument> _documents = new(StringComparer.Ordinal);
     private readonly Dictionary<int, LivePresence> _presence = [];
     private IReadOnlyList<LiveParticipant> _participants = [];
+    private readonly List<LiveOutput> _output = [];
+    private readonly List<byte> _terminal = [];
     private LivePresence? _ownPresence;
     private bool _presenceScheduled;
+    private int _outputLength;
 
     /// <summary>Creates the session's state on its thread.</summary>
     /// <param name="dispatcher">The session's thread.</param>
@@ -285,14 +288,48 @@ public abstract class LiveSession
         BreakpointsChanged?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <summary>
+    /// The last of the host's Output since it was last cleared, up to <see cref="LiveProtocol.OutputTailLength"/>
+    /// characters, for a window that starts showing the session after it joined.
+    /// </summary>
+    public IReadOnlyList<LiveOutput> OutputSoFar => _output;
+
+    /// <summary>The last of the host's Terminal, up to <see cref="LiveProtocol.TerminalTailLength"/> bytes.</summary>
+    public ReadOnlyMemory<byte> TerminalSoFar => _terminal.ToArray();
+
     /// <summary>Raises <see cref="OutputWritten"/>.</summary>
-    private protected void RaiseOutput(LiveOutput output) => OutputWritten?.Invoke(this, output);
+    private protected void RaiseOutput(LiveOutput output)
+    {
+        _output.Add(output);
+        _outputLength += output.Text.Length;
+        while (_outputLength > LiveProtocol.OutputTailLength && _output.Count > 1)
+        {
+            _outputLength -= _output[0].Text.Length;
+            _output.RemoveAt(0);
+        }
+
+        OutputWritten?.Invoke(this, output);
+    }
 
     /// <summary>Raises <see cref="OutputCleared"/>.</summary>
-    private protected void RaiseOutputCleared() => OutputCleared?.Invoke(this, EventArgs.Empty);
+    private protected void RaiseOutputCleared()
+    {
+        _output.Clear();
+        _outputLength = 0;
+        OutputCleared?.Invoke(this, EventArgs.Empty);
+    }
 
     /// <summary>Raises <see cref="TerminalWritten"/>.</summary>
-    private protected void RaiseTerminal(ReadOnlyMemory<byte> data) => TerminalWritten?.Invoke(this, data);
+    private protected void RaiseTerminal(ReadOnlyMemory<byte> data)
+    {
+        _terminal.AddRange(data.Span);
+        if (_terminal.Count > LiveProtocol.TerminalTailLength)
+        {
+            _terminal.RemoveRange(0, _terminal.Count - LiveProtocol.TerminalTailLength);
+        }
+
+        TerminalWritten?.Invoke(this, data);
+    }
 
     /// <summary>Raises <see cref="DocumentSaved"/>.</summary>
     private protected void RaiseSaved(string path) => DocumentSaved?.Invoke(this, path);
