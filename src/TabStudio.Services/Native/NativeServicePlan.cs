@@ -63,7 +63,9 @@ public sealed record NativeServicePlan(ProcessStartSpec Start, ProcessStartSpec 
                 environment["MYSQL_USER"] = E("MARIADB_USER", E("MYSQL_USER", "app"));
                 environment["MYSQL_PASSWORD"] = E("MARIADB_PASSWORD", E("MYSQL_PASSWORD", ""));
                 environment["MYSQL_ROOT_PASSWORD"] = E("MARIADB_ROOT_PASSWORD", E("MYSQL_ROOT_PASSWORD", ""));
-                if (string.IsNullOrEmpty(environment["MYSQL_ROOT_PASSWORD"])) throw new ComposeException($"{service.Name}: MYSQL_ROOT_PASSWORD or MARIADB_ROOT_PASSWORD is required.");
+                // As the images do, an empty root password is allowed only when the Compose file says so explicitly.
+                var allowEmpty = E("MARIADB_ALLOW_EMPTY_ROOT_PASSWORD", E("MYSQL_ALLOW_EMPTY_PASSWORD", "")) is { Length: > 0 } allow && allow is not ("0" or "false" or "no");
+                if (string.IsNullOrEmpty(environment["MYSQL_ROOT_PASSWORD"]) && !allowEmpty) throw new ComposeException($"{service.Name}: MYSQL_ROOT_PASSWORD or MARIADB_ROOT_PASSWORD is required, or MYSQL_ALLOW_EMPTY_PASSWORD for an empty one.");
                 environment["TS_DATA"] = data;
                 initialize = MariaDbInitialization;
                 args = [mapping.Program, "--user=root", "--datadir=" + data, "--bind-address=127.0.0.1", "--port=" + At(3306), "--socket=" + GuestDirectory + "/mysql.sock", "--pid-file=" + GuestDirectory + "/mysql.pid", "--log-error=/dev/stderr"];

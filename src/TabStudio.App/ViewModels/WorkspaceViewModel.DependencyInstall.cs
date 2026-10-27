@@ -340,7 +340,7 @@ public sealed partial class WorkspaceViewModel
         var did = retried
             ? $" TabStudio installed {string.Join(", ", _lastBuildPackages)} and tried again, and the build still failed."
             : failure.NeedsBuildTools && !_toolchains.CanInstallAlpinePackages
-                ? $" Install a C compiler and Python's headers{(failure.Package is { } pkg && PythonBuildPackages.Default.For(pkg) is { Needs: { } needs } ? ", and " + needs : string.Empty)}, then use Tools > Install Project Packages."
+                ? $" Install what its build needs on this computer (a C compiler and Python's headers{(failure.Package is { } pkg && PythonBuildPackages.Default.For(pkg) is { Needs: { } needs } ? ", and " + needs : string.Empty)}), then use Tools > Install Project Packages."
                 : string.Empty;
         var next = failure.Kind switch
         {

@@ -163,6 +163,72 @@ public sealed class ServicesTests
         Assert.Null(Environment.GetEnvironmentVariable("ConnectionStrings__App"));
     }
 
+    [AlpineAvaloniaFact]
+    public async Task F5_starts_only_the_service_the_run_points_at_and_a_missing_bind_source_is_created_when_its_service_starts()
+    {
+        using var alpine = new AlpineServiceFixture();
+        using var temp = new TempDirectory();
+        var paths = new AppPaths(temp.Path);
+        var solution = new ProjectTemplates(paths).Create(ProjectTemplates.ConsoleId, "PetClinicLike");
+        var root = Path.GetDirectoryName(solution)!;
+        var projectDirectory = Path.GetDirectoryName(System.IO.Directory.EnumerateFiles(root, "*.csproj", SearchOption.AllDirectories).Single())!;
+        File.WriteAllText(Path.Combine(root, "docker-compose.yml"), """
+            services:
+              mysql:
+                image: mysql:9.7
+                ports: ['0:3306']
+                environment: [MYSQL_ROOT_PASSWORD=, MYSQL_ALLOW_EMPTY_PASSWORD=true, MYSQL_DATABASE=petclinic]
+                volumes: ['./conf.d:/etc/mysql/conf.d:ro']
+              postgres:
+                image: postgres:18
+                ports: ['0:5432']
+                environment: {POSTGRES_USER: app, POSTGRES_PASSWORD: test-password, POSTGRES_DB: app}
+              cache:
+                image: redis:7
+                profiles: [cache]
+            """);
+        File.WriteAllText(Path.Combine(projectDirectory, ".env"), "DATABASE_URL=postgresql://app:test-password@postgres/app\n");
+        using var toolchains = new ToolchainServices(new ToolchainManager(ToolchainCatalog.Default, new HostToolchainInstaller(alpine.Runtime)), ToolchainPlatform.Desktop);
+        var compiler = new CompilerServices(paths);
+        var device = new DefaultDeviceStatus(new DeviceInfo(8L * 1024 * 1024 * 1024, 8, false));
+        using var workspace = new WorkspaceViewModel(compiler, device, DeviceProfile.For(device.Device), new AvaloniaUiDispatcher(), new SessionStore(paths), paths, toolchains: toolchains);
+        await workspace.LoadAsync(solution);
+        Assert.All(workspace.Services.Items, i => Assert.False(i.Status.IsRunning));
+        Assert.False(System.IO.Directory.Exists(Path.Combine(root, "conf.d")));
+        try
+        {
+            using var timeout = new CancellationTokenSource(TimeSpan.FromMinutes(3));
+            await workspace.RunCommand.ExecuteAsync(null).WaitAsync(timeout.Token);
+            Assert.Equal(["postgres"], workspace.Services.LastNeeded);
+            await UiTestHelpers.WaitUntilAsync(() => workspace.Services.Items.Single(i => i.Name == "postgres").IsGood, because: "PostgreSQL, which the run points at");
+            Assert.Equal(TabStudio.Services.ServiceState.Stopped, workspace.Services.Items.Single(i => i.Name == "mysql").Status.State);
+            Assert.Equal(TabStudio.Services.ServiceState.Stopped, workspace.Services.Items.Single(i => i.Name == "cache").Status.State);
+            Assert.False(System.IO.Directory.Exists(Path.Combine(root, "conf.d")));
+
+            // Starting MySQL creates its missing bind folder, as Docker does. Alpine's MariaDB is not installed in
+            // this harness, so it fails, on its own row; PostgreSQL keeps running and the file is still read.
+            var mysql = workspace.Services.Items.Single(i => i.Name == "mysql");
+            await mysql.StartCommand.ExecuteAsync(null).WaitAsync(timeout.Token);
+            await UiTestHelpers.WaitUntilAsync(() => mysql.IsBad, because: "MariaDB's start to fail without its package");
+            Assert.True(System.IO.Directory.Exists(Path.Combine(root, "conf.d")));
+            Assert.False(workspace.Services.HasError);
+            Assert.True(workspace.Services.HasOperationError);
+            Assert.True(workspace.Services.Items.Single(i => i.Name == "postgres").IsGood);
+            var window = new Window { Width = 1280, Height = 800, Content = new WorkspaceView { DataContext = workspace } };
+            window.Show();
+            try
+            {
+                workspace.SelectSideBarPanelCommand.Execute(SideBarPanel.Services);
+                UiTestHelpers.SaveScreenshot(window, "62-services-one-failed-one-running");
+            }
+            finally { window.Close(); }
+        }
+        finally
+        {
+            if (workspace.Services.Manager is { } manager) await manager.StopAsync();
+        }
+    }
+
     private sealed class RecordingDatabaseExplorer : IServiceDatabaseExplorer
     {
         public string? Name { get; private set; }
