@@ -10,6 +10,9 @@ on:
       - 'src/TabStudio.Android/**'
       - 'tests/TabStudio.Toolchains.Tests/**'
       - 'tests/TabStudio.LanguageServers.Tests/**'
+      - 'tests/TabStudio.App.Tests/**/*Embedded*'
+      - 'docs/features/embedded.md'
+      - 'docs/releases/0.18.0.md'
       - 'native/embedded/**'
       - 'build/android/native/**'
       - 'build/embedded/**'
@@ -24,6 +27,9 @@ on:
       - 'src/TabStudio.Android/**'
       - 'tests/TabStudio.Toolchains.Tests/**'
       - 'tests/TabStudio.LanguageServers.Tests/**'
+      - 'tests/TabStudio.App.Tests/**/*Embedded*'
+      - 'docs/features/embedded.md'
+      - 'docs/releases/0.18.0.md'
       - 'native/embedded/**'
       - 'build/android/native/**'
       - 'build/embedded/**'
@@ -170,8 +176,13 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           global-json-file: global.json
-      - name: Install signed host prerequisites for the APK's pinned PRoot build
-        run: sudo apt-get update -qq && sudo apt-get install -y build-essential libtalloc-dev gawk unzip
+      - name: Install signed host prerequisites for the APK's pinned PRoot and Box64 builds
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y build-essential libtalloc-dev gawk unzip cmake
+          if [ "$(uname -m)" = aarch64 ]; then
+            sudo apt-get install -y gcc-aarch64-linux-gnu gcc-x86-64-linux-gnu libc6-dev-amd64-cross
+          fi
       - name: Install real SDK frontends, exercise glibc USB shims and compile Arduino firmware
         run: bash build/embedded/glibc-frontends.sh "$RUNNER_TEMP/embedded-glibc" ci-out/embedded-glibc
       - uses: actions/upload-artifact@v4
@@ -180,6 +191,31 @@ jobs:
           name: embedded-glibc-${{ matrix.runner }}-${{ github.event_name }}
           path: ci-out/embedded-glibc/
           if-no-files-found: error
+
+  box64-equivalence:
+    name: Identical firmware from native x64 and ARM64 Box64 GCC
+    needs: glibc-frontends
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: embedded-glibc-*-${{ github.event_name }}
+          path: box64-evidence
+      - name: Compare unchanged compiler identity and complete AVR ELF bytes
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          roots = sorted(Path('box64-evidence').glob('*/box64-summary.json'))
+          assert len(roots) == 2, roots
+          records = [json.loads(p.read_text()) for p in roots]
+          assert {r['architecture'] for r in records} == {'aarch64', 'x86_64'}, records
+          assert all(r['childCount'] == 32 and r['inheritedFd'] == 3 and not r['hardwareVerified'] for r in records)
+          assert records[0]['compilerSha256'] == records[1]['compilerSha256'], records
+          assert roots[0].with_name('boxed-avr-firmware.elf').read_bytes() == roots[1].with_name('boxed-avr-firmware.elf').read_bytes()
+          print('BOX64_NATIVE_FIRMWARE_BYTE_IDENTICAL child32 fd3 hardware=false')
+          PY
 
   flash-clients:
     name: Native flashing clients (${{ matrix.runner }})

@@ -109,6 +109,7 @@ def overlay(package, interpreter=sys.executable):
 def configure_policy():
     import platformio
     from platformio.package.manager.tool import ToolPackageManager
+    from platformio.package.meta import PackageSpec
     if platformio.__version__ != "6.1.18":
         raise ValueError("The Box64 package policy is verified only with pinned PlatformIO Core 6.1.18")
     original_compatible = ToolPackageManager.is_system_compatible
@@ -136,6 +137,20 @@ def configure_policy():
             print("Explicit Box64 fallback: no ARM64 artifact; SHA-256 verification remains owned by PlatformIO:", selected.get("name", selected.get("download_url")), flush=True)
         return selected
 
+    def registry_match(self, packages, spec):
+        # Upstream's owner-less search checks only each latest version first.
+        # Fetch complete candidate histories before permitting an x86 fallback;
+        # otherwise a newer x86 release could hide a compatible older ARM build.
+        histories = [(package, self.fetch_registry_package(PackageSpec(
+            id=package["id"], owner=package["owner"]["username"], name=package["name"])).get("versions", []))
+                     for package in packages]
+        for system in ("linux_aarch64", "linux_x86_64"):
+            for package, history in histories:
+                version = self.pick_best_registry_version(history, spec, custom_system=system)
+                if version:
+                    return package, version
+        return None, None
+
     def scripts(self, pkg, event):
         manifest = self.load_manifest(pkg)
         systems = manifest.get("system")
@@ -147,6 +162,7 @@ def configure_policy():
     ToolPackageManager.is_system_compatible = staticmethod(compatible)
     ToolPackageManager.get_compatible_registry_versions = versions
     ToolPackageManager.pick_compatible_pkg_file = artifact
+    ToolPackageManager.find_best_registry_version = registry_match
     ToolPackageManager.call_pkg_script = scripts
     # Existing private packages must be refreshed before SCons sees their tools.
     manager = ToolPackageManager()
@@ -165,6 +181,7 @@ def main():
     # choices in another project. Native availability is evaluated per requirement.
     private = Path.cwd() / ".tabstudio/platformio-boxed"
     os.environ["PLATFORMIO_CORE_DIR"] = str(private)
+    os.environ.pop("PLATFORMIO_SYSTEM_TYPE", None)
     if platform.machine() == "aarch64":
         configure_policy()
     from platformio.__main__ import main as pio_main

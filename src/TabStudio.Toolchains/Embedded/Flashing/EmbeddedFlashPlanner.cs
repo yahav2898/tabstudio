@@ -95,6 +95,9 @@ public sealed record EmbeddedFlashPlan(IReadOnlyList<ProcessStartSpec> Steps, bo
 {
     /// <summary>Additional immutable inputs used by a multi-image plan, including its build/security metadata.</summary>
     public IReadOnlyList<EmbeddedFirmwareInput> FirmwareInputs { get; init; } = [];
+
+    /// <summary>The exact build-selected chip resolved from native metadata; this does not claim physical chip identification.</summary>
+    public string? TargetChip { get; init; }
 }
 
 /// <summary>A concrete validated input whose digest must remain unchanged before, between and after programming operations.</summary>

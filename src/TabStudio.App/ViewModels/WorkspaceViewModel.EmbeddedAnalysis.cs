@@ -30,6 +30,7 @@ public sealed partial class WorkspaceViewModel
         public string? MapFile { get; init; }
         public IReadOnlyList<FirmwareMemoryRegion>? MemoryRegions { get; init; }
         public IReadOnlyList<string> StackUsageFiles { get; init; } = [];
+        public IReadOnlyList<string> StackCallGraphFiles { get; init; } = [];
         public IReadOnlyList<StackCall> StackCalls { get; init; } = [];
         public IReadOnlyList<TaskStackBudget> TaskBudgets { get; init; } = [];
         public bool CallGraphComplete { get; init; }
@@ -181,14 +182,33 @@ public sealed partial class WorkspaceViewModel
                 : FindEmbeddedBuildFiles(project.Directory, ".su").ToArray();
             if (files.Length == 0)
             {
-                Output.WriteLine("No GCC .su files were found. Build with -fstack-usage, then configure StackUsageFiles, StackCalls and TaskBudgets in .tabstudio/embedded-analysis.json. CallGraphComplete defaults false; missing call evidence never passes a stack budget.", OutputKind.Info);
+                Output.WriteLine("No GCC .su files were found. Build with -fstack-usage -fcallgraph-info=su for automatic .su/.ci evidence, then configure StackUsageFiles, StackCallGraphFiles and TaskBudgets in .tabstudio/embedded-analysis.json. Automatic imports never assert complete whole-program stack bounds.", OutputKind.Info);
                 return;
             }
+            var graphFiles = options.StackCallGraphFiles.Count > 0
+                ? options.StackCallGraphFiles.Select(file => Path.GetFullPath(file, project.Directory)).ToArray()
+                : FindEmbeddedBuildFiles(project.Directory, ".ci").ToArray();
+            if (files.Length + graphFiles.Length > 4096) throw new InvalidDataException("Stack evidence exceeds 4096 files; configure only the current build's evidence.");
+            long totalBytes = 0;
+            string ReadStackEvidence(string file)
+            {
+                var size = new FileInfo(file).Length;
+                totalBytes = checked(totalBytes + size);
+                if (size > 16 * 1024 * 1024 || totalBytes > 64 * 1024 * 1024)
+                    throw new InvalidDataException("Stack evidence exceeds 16 MiB per file/64 MiB combined.");
+                return File.ReadAllText(file);
+            }
+            var warnings = new List<string>();
             var analysis = await Task.Run(() =>
             {
-                var entries = files.SelectMany(file => StackAnalyzer.ParseGccStackUsage(File.ReadAllText(file))).ToArray();
-                return StackAnalyzer.Analyze(entries, options.StackCalls, options.CallGraphComplete);
+                var entries = files.SelectMany(file => StackAnalyzer.ParseGccStackUsage(ReadStackEvidence(file))).ToArray();
+                var imported = GccStackCallGraphReader.Bind(entries, graphFiles.Select(file => GccStackCallGraphReader.Parse(ReadStackEvidence(file))).ToArray());
+                if (graphFiles.Length > 0) warnings.AddRange(imported.Warnings);
+                return StackAnalyzer.Analyze(entries, options.StackCalls.Concat(imported.Calls).Distinct().ToArray(),
+                    graphFiles.Length == 0 && options.CallGraphComplete);
             });
+            foreach (var warning in warnings) Output.WriteLine(warning, OutputKind.Info);
+            if (graphFiles.Length == 0) Output.WriteLine("No GCC .ci callgraphs found. Add -fcallgraph-info=su to the same build as -fstack-usage; manual StackCalls remain available.", OutputKind.Info);
             foreach (var function in analysis.OrderByDescending(f => f.KnownBytes))
             {
                 Output.WriteLine(function.WorstCaseBytes is ulong bound
@@ -217,8 +237,9 @@ public sealed partial class WorkspaceViewModel
         if (new FileInfo(path).Length > 1024 * 1024) throw new InvalidDataException("Embedded analysis configuration exceeds 1 MB.");
         var options = JsonSerializer.Deserialize<EmbeddedAnalysisOptions>(File.ReadAllText(path), EmbeddedAnalysisJson)
             ?? throw new InvalidDataException("Embedded analysis configuration must be a JSON object.");
-        if (options.StackUsageFiles is null || options.StackCalls is null || options.TaskBudgets is null
+        if (options.StackUsageFiles is null || options.StackCallGraphFiles is null || options.StackCalls is null || options.TaskBudgets is null
             || options.StackUsageFiles.Any(string.IsNullOrWhiteSpace) || options.StackCalls.Any(call => call is null)
+            || options.StackCallGraphFiles.Any(string.IsNullOrWhiteSpace)
             || options.TaskBudgets.Any(task => task is null) || options.MemoryRegions?.Any(region => region is null) == true)
         {
             throw new InvalidDataException("Analysis collections and their entries cannot be null or blank.");

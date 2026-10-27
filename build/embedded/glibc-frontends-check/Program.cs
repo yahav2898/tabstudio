@@ -4,6 +4,7 @@ using System.Text.Json;
 using TabStudio.Toolchains.Catalog;
 using TabStudio.Toolchains.Downloads;
 using TabStudio.Toolchains.Embedded;
+using TabStudio.Toolchains.Embedded.Flashing;
 using TabStudio.Toolchains.Embedded.Installation;
 using TabStudio.Toolchains.Installation;
 using TabStudio.Toolchains.Linux;
@@ -120,6 +121,8 @@ try
     // self-test. Both must load the glibc versions of the exact same native shim sources.
     await ProbeRsDapCheck.VerifyAsync(installer.Runtime, project, Path.Combine(output, "probe-rs-dap-initialize.json"), cancellation);
     evidence["probeRsDapInitialized"] = true;
+    await Box64Check.VerifyAsync(installer, project, output, cancellation);
+    evidence["box64CompilerAndChildDescriptors"] = true;
     var bridgeSpec = UsbBridgeProcess.CreateVirtualSelfTest();
     var bridge = await RunAsync(installer.Runtime, bridgeSpec with
     {
@@ -243,6 +246,18 @@ async Task BuildSdkAsync(IToolchainRuntime runtime, ToolchainDefinition definiti
             _ = await RunAsync(runtime, new() { Program = "idf.py", Arguments = ["set-target", "esp32c3"], WorkingDirectory = project }, "sdk-configure.log");
             build = await RunAsync(runtime, new() { Program = "idf.py", Arguments = ["build"], WorkingDirectory = project }, "sdk-build.log");
             artifact = Path.Combine(project, "build/tabstudio_sdk_check.elf");
+            var flashSet = EspFlashManifestReader.Read(Path.Combine(project, "build/flasher_args.json"), "esp32c3");
+            if (flashSet.Images.Count < 3 || flashSet.Inputs.Count <= flashSet.Images.Count)
+            {
+                throw new InvalidOperationException("The real ESP-IDF build did not produce a validated bootloader, partition table, application and bound metadata.");
+            }
+            evidence["flashManifest"] = new
+            {
+                chip = flashSet.Chip,
+                inputs = flashSet.Inputs.Count,
+                images = flashSet.Images.Select(image => new { address = image.Address, bytes = image.Length, sha256 = image.Sha256 }).ToArray(),
+            };
+            Console.WriteLine("ESP_BUILD_FLASH_MANIFEST_PASSED " + flashSet.Chip + " " + flashSet.Images.Count);
             break;
         case "embedded-rust":
             const string embassyRevision = "87b634a63df1ad49ad9f0b45173f1667f6a51c28";

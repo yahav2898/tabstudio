@@ -243,7 +243,7 @@ public static class EspFlashManifestReader
                 "0x" + image.Address.ToString("X", CultureInfo.InvariantCulture), image.Path]));
         }
         return new(steps, false, "Each metadata-declared image is verified using the same flash-header settings. Separate image offsets preserve unmentioned erase sectors, including NVS; no merged FF padding or whole-chip erase is used.",
-            FirmwarePath: manifest.Path, FirmwareSha256: manifest.Inputs[0].Sha256) { FirmwareInputs = manifest.Inputs };
+            FirmwarePath: manifest.Path, FirmwareSha256: manifest.Inputs[0].Sha256) { FirmwareInputs = manifest.Inputs, TargetChip = manifest.Chip };
     }
 
     private static byte[] ReadBoundFile(string path, long maximum)

@@ -23,6 +23,7 @@ public sealed class EspFlashManifestTests : IDisposable
         Assert.Equal(chip, manifest.Chip);
         Assert.Equal(3, manifest.Images.Count);
         var plan = EmbeddedFlashPlanner.Plan(Request(path));
+        Assert.Equal(chip, plan.TargetChip);
         Assert.Equal(4, plan.Steps.Count);
         Assert.Equal(5, plan.FirmwareInputs.Count); // Manifest, security configuration and all three binaries.
         var write = plan.Steps[0].Arguments;

@@ -152,7 +152,7 @@ automatic interrogation on plug-in and a complete device-association editing UI 
 | Arduino Mega STK500v2 | avrdude `wiring` application upload/verify | Explicit ATmega2560 profile; hardware-unverified. |
 | Leonardo/Micro AVR109 | 1200-baud touch, re-permission, avrdude write/verify | Known template profiles and bridge contracts; physical bootloader transitions unverified. |
 | SAMD SAM-BA | 1200-baud flow plus bossac `-o OFFSET -w -v -R`, without boot-configuration flags | The Store builds pinned BOSSA 1.9.1 source natively. BIN address becomes an explicit flash-relative offset, preserving the selected bootloader boundary. Exact bootloader/layout required; hardware-unverified. |
-| ESP32/S2/S3/C3/C6/H2 ROM loader | Exact esptool chip, addressed BIN write then verify | The Store installs official esptool 5.6.0 ARM64/x64 binaries with pinned SHA-256 in its glibc environment. One-image safe plan; core-provided multi-image flash arguments are not automatically imported. Reset sequencing is hardware-unverified. |
+| ESP32/S2/S3/C3/C6/H2 ROM loader | Exact esptool chip, addressed BIN write then verify | The Store installs official esptool 5.6.0 ARM64/x64 binaries with pinned SHA-256 in its glibc environment. Single-image or checked build-metadata bundles; ESP32/S3/C3 starters export resolved SCons arguments, and ESP-IDF uses its actual flasher_args.json. Secure/encrypted images and data partitions are refused. Reset sequencing is hardware-unverified. |
 | STM32 ROM UART | stm32flash explicit BIN range with verify | stm32flash is installed through the embedded USB Store entry from signed Alpine packages. BOOT pins/reset and exact target map are external prerequisites. Hardware-unverified. |
 | STM32 USB DFU | dfu-util write, independent upload/readback and byte comparison | dfu-util is in the Store. Exact VID/PID, alternate and application range required. Read-protected/non-readback DFU cannot pass this route. Hardware-unverified. |
 | RP2040/RP2350 BOOTSEL | picotool addressed ELF/UF2/BIN load with verify, or **Upload UF2 via BOOTSEL storage** through USB Host BOT/SCSI and user-space FAT | The Store installs official picotool 2.3.1 ARM64/x64 binaries pinned by SHA-256 in its glibc environment. Storage accepts standard RP ROM identities, actual INFO_UF2, a matching family and explicit XIP application ranges. USB/file acceptance is distinct from flash readback; ROM reset before final status is explicitly unconfirmed. FAT/BOT image tests and independent GNU mtools readback passed locally. Hardware-unverified. |
@@ -191,6 +191,23 @@ constraints file and runs the unmodified upstream checker offline; it does not f
 or run `install-python-env`. Clean x64 installation, `pip check`, upstream version checks and ARM64 archive/hash
 selection passed locally. Actual SDK firmware builds use the separate production installer CI matrix;
 project-selected components keep their own dependency manifests/locks and licenses.
+
+### ESP build metadata and first upload
+
+ESP32/S3/C3 PlatformIO starters include a post-build exporter that reads the actual resolved SCons uploader
+arguments and image offsets. Existing ESP-IDF projects use their generated `flasher_args.json` and actual
+`config/sdkconfig.json`. After a successful build, F5 can create a profile from validated IDF metadata; it does
+not infer bootloader, partition or application offsets from the USB adapter or chip name.
+
+Set `EspFlasherArguments` in a profile to select this route explicitly. Every image path must stay within the
+build output; offsets and erase sectors must be disjoint, actual partition-table records must agree, and the
+application must fit its real application partition. The allowed mode/frequency/size settings accompany one
+`write-flash` operation and separate `verify-flash` operations for each image. Unmentioned sectors are preserved:
+there is no merged image padded with `FF` across NVS or filesystem gaps. NVS, keys, data partitions, secure boot
+and flash-encryption configurations are refused, including configurations that could burn eFuses on first boot.
+All image and metadata files are SHA-256 bound and rechecked between operations. A saved bundle digest identifies
+the ordered inputs, and the remembered target comes from the checked metadata. Actual reset/USB programming is
+hardware-unverified.
 
 ### Additional route configuration
 
@@ -421,6 +438,7 @@ allocation, and unknown symbol source ownership is not invented.
     { "Name": "RAM", "Origin": 536870912, "Length": 131072, "IsRam": true }
   ],
   "StackUsageFiles": ["build/main.su"],
+  "StackCallGraphFiles": ["build/main.ci"],
   "StackCalls": [{ "Caller": "sensor_task", "Callee": "read_sensor" }],
   "CallGraphComplete": false,
   "TaskBudgets": [
@@ -460,12 +478,17 @@ resume the CPU. This is not an automatic full crash-unwinder or physical hardwar
 
 Frame layout reference: Arm's [Exception Model User Guide, Figure 4-3](https://community.arm.com/cfs-file/__key/communityserver-discussions-components-files/471/armv8_2D00_m_5F00_exception_5F00_model_5F00_user_5F00_guide_5F00_107706_5F00_0100_5F00_01_5F00_en.pdf).
 
-**Stack analysis** reads GCC `-fstack-usage` `.su` rows and supplied call edges, computing the deepest bounded call
-chain. The default does not assert graph completeness. Missing library frames, indirect calls (`Callee: null`),
+**Stack analysis** reads GCC `-fstack-usage` `.su` rows and imports final compiler call graphs emitted by
+`-fcallgraph-info=su` in `.ci` files, computing the deepest bounded known call chain. Conventional build roots are
+searched automatically; `StackUsageFiles` and `StackCallGraphFiles` can select exact artifacts. Compiler nodes bind
+only when their source/name/line/column/frame size/boundedness match the current `.su` evidence. Direct edges,
+indirect placeholders and compiler-inserted library calls are retained; stale or ambiguous nodes stay unknown.
+Manual `StackCalls` can supply additional reviewed edges. Imported graphs always retain unknown whole-program
+completeness, even if `CallGraphComplete` was set; a proven partial chain can still warn that a task is too small. The default does not assert graph completeness. Missing library frames, indirect calls (`Callee: null`),
 recursive cycles, ambiguous static names and unbounded dynamic allocations remain unknown. Task checks add the
 explicit byte allowance before comparing to the allocation. Interrupt nesting, assembly, RTOS context frames and
-other ABI overhead need reviewed allowances; a source parser cannot prove these from a function name. Automatic
-whole-program call-graph extraction is not provided yet.
+other ABI overhead need reviewed allowances; a source parser cannot prove these from a function name. Link-time optimization may emit several `.ci` files; include every relevant output. The compiler dump does not
+prove that separately built libraries, assembly, interrupt nesting or all dynamic dispatch are covered.
 
 **Check pin conflicts** reads explicit CubeMX `.ioc`, selected devicetree/overlay forms and simple Arduino pin
 uses, placing conflicts in the Error List. `.tabstudio/pin-map.json` can provide the actual chip's valid pins;
@@ -542,6 +565,28 @@ hardware disk. The emulator command requires the cross compilers, QEMU, simavr a
 lists those packages. Synthetic fixtures are described in [USB bridge verification](../../build/embedded/tests/README.md).
 Real hardware captures still need the exact device/probe firmware, target part, tool version, firmware digest,
 redistribution permission and expected result; none have been fabricated for this change.
+
+## Explicit x86-only PlatformIO packages
+
+Native host packages remain the default. If a required registry package has no compatible ARM64 artifact,
+set `"hostPackageMode": "boxed-x86_64"` in `.tabstudio/embedded.json`. This opt-in policy still prefers any
+compatible native version satisfying the project's requirements. It selects x86-64 only when that native
+selection is empty; it never changes the tablet's global PlatformIO system type.
+
+The boxed project gets a separate `.tabstudio/platformio-boxed` Core cache. The app reuses the APK's pinned,
+patched Box64 and PIC's SHA-256-pinned Debian runtime archives without downloading XC or asking for an XC
+licence. Its private ARM64 loader and libraries leave Ubuntu's loader/libc intact. The interpreter is selected
+conservatively. Original package files remain unchanged in a retained sibling directory; a symlink overlay
+adds native Python launchers only for x86 executables. GCC starts at its original path and finds its original
+`cc1`, assembler and linker rather than recursively invoking wrappers. Boxed builds can be slower, and the
+four runtime libraries cannot satisfy every arbitrary third-party dependency.
+
+Native tests cover ELF/PIE versus shared-library classification, original-byte preservation and explicit
+process/configuration routing. The production glibc CI harness additionally requires the real x86 AVR GCC
+to compile/link on both x64 and ARM64, runs the existing patched-Box64 32-child/static-spawn regression with
+inherited FD 3, and compares the complete resulting AVR ELF bytes across runners. A separate fixture uses
+real pinned PlatformIO methods to check native-first and fallback selection. These are CI requirements;
+they are not physical tablet/USB qualification or a claim that every x86-only platform is compatible.
 
 ## Engineering decisions and remaining work
 

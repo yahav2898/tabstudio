@@ -186,6 +186,7 @@ public sealed partial class WorkspaceViewModel
                 return;
             }
             var plan = await Task.Run(() => EmbeddedFlashPlanner.Plan(request));
+            if (plan.TargetChip is { } resolvedChip) request = request with { Target = resolvedChip };
             using var cancellation = new CancellationTokenSource();
             _run = cancellation;
             State = IdeState.Running;
