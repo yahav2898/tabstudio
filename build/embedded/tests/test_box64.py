@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import struct
 import sys
 import tempfile
 import unittest
@@ -44,10 +45,28 @@ class BoxedPackageTests(unittest.TestCase):
 
     def test_private_arm_loader_matches_runtime_and_never_replaces_system_loader(self):
         arguments, environment = box64_runtime.command("/original/bin/gcc", ["-v"], "aarch64", Path("/private"))
-        self.assertEqual("/private/runtime/arm64/usr/lib/aarch64-linux-gnu/ld-linux-aarch64.so.1", arguments[0])
-        self.assertEqual(["/private/box64", "/original/bin/gcc", "-v"], arguments[-3:])
+        self.assertEqual(["/private/box64", "/original/bin/gcc", "-v"], arguments)
         self.assertEqual("/private/runtime/amd64/usr/lib/x86_64-linux-gnu", environment["BOX64_LD_LIBRARY_PATH"])
         self.assertEqual("0", environment["BOX64_DYNAREC"])
+
+    def test_only_translator_interpreter_bytes_change_and_long_replacements_are_refused(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            binary = Path(temporary) / "box64"
+            header = bytearray(64)
+            header[:7] = b"\x7fELF\x02\x01\x01"
+            struct.pack_into("<H", header, 18, 183)
+            struct.pack_into("<Q", header, 32, 64)
+            struct.pack_into("<HH", header, 54, 56, 1)
+            entry = struct.pack("<IIQQQQQQ", 3, 4, 120, 0, 0, 27, 27, 1)
+            original = bytes(header) + entry + b"/lib/ld-linux-aarch64.so.1\0" + b"UNCHANGED_CODE"
+            binary.write_bytes(original)
+            box64_runtime.set_translator_loader(binary, Path("/opt/tabstudio/box64/ld.so"))
+            changed = binary.read_bytes()
+            self.assertEqual(original[:120], changed[:120])
+            self.assertEqual(original[147:], changed[147:])
+            self.assertEqual(b"/opt/tabstudio/box64/ld.so\0", changed[120:147])
+            with self.assertRaises(ValueError):
+                box64_runtime.set_translator_loader(binary, Path("/a/" + "x" * 100))
 
     def test_native_x64_command_has_no_translation(self):
         arguments, _ = box64_runtime.command("/original/gcc", ["-c", "a file.c"], "x86_64")

@@ -575,7 +575,9 @@ selection is empty; it never changes the tablet's global PlatformIO system type.
 
 The boxed project gets a separate `.tabstudio/platformio-boxed` Core cache. The app reuses the APK's pinned,
 patched Box64 and PIC's SHA-256-pinned Debian runtime archives without downloading XC or asking for an XC
-licence. Its private ARM64 loader and libraries leave Ubuntu's loader/libc intact. The interpreter is selected
+licence. Its private ARM64 loader and libraries leave Ubuntu's loader/libc intact. Only the app's translator
+copy has its existing ELF interpreter field retargeted to that private loader, so Box64-spawned children
+use the matching loader too; package/compiler binary bytes are unchanged. The interpreter is selected
 conservatively. Original package files remain unchanged in a retained sibling directory; a symlink overlay
 adds native Python launchers only for x86 executables. GCC starts at its original path and finds its original
 `cc1`, assembler and linker rather than recursively invoking wrappers. Boxed builds can be slower, and the
