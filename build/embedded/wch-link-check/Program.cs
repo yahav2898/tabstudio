@@ -87,7 +87,7 @@ catch (Exception error)
 }
 finally
 {
-    await File.WriteAllTextAsync(Path.Combine(work, "summary.json"), JsonSerializer.Serialize(summary, new JsonSerializerOptions { WriteIndented = true }));
+    await File.WriteAllTextAsync(Path.Combine(work, "summary.json"), JsonSerializer.Serialize(summary, SummaryJson.Indented));
 }
 
 async Task<(CommandResult Result, string Wire)> Run(string name, string scenario, string program, IReadOnlyList<string> command, string flashPath,
@@ -160,4 +160,8 @@ internal static partial class NativeSocket
 {
     [LibraryImport("libc", EntryPoint = "socketpair", SetLastError = true)]
     internal static unsafe partial int Pair(int domain, int type, int protocol, int* descriptors);
+}
+internal static class SummaryJson
+{
+    internal static readonly JsonSerializerOptions Indented = new() { WriteIndented = true };
 }

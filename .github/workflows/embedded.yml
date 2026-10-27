@@ -12,7 +12,7 @@ on:
       - 'tests/TabStudio.LanguageServers.Tests/**'
       - 'tests/TabStudio.App.Tests/**/*Embedded*'
       - 'docs/features/embedded.md'
-      - 'docs/releases/0.18.0.md'
+      - 'docs/releases/0.19.0.md'
       - 'native/embedded/**'
       - 'build/android/native/**'
       - 'build/embedded/**'
@@ -29,7 +29,7 @@ on:
       - 'tests/TabStudio.LanguageServers.Tests/**'
       - 'tests/TabStudio.App.Tests/**/*Embedded*'
       - 'docs/features/embedded.md'
-      - 'docs/releases/0.18.0.md'
+      - 'docs/releases/0.19.0.md'
       - 'native/embedded/**'
       - 'build/android/native/**'
       - 'build/embedded/**'
@@ -71,6 +71,8 @@ jobs:
     name: Embedded parsers and USB bridge contracts
     runs-on: ubuntu-24.04
     timeout-minutes: 25
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
@@ -78,6 +80,7 @@ jobs:
           global-json-file: global.json
       - name: Native bridge and manifest tests (virtual devices only)
         run: |
+          set -o pipefail
           mkdir -p ci-out/embedded-unit
           python3 -m unittest discover -s build/embedded/tests -p 'test_*.py' -v 2>&1 | tee ci-out/embedded-unit/native-tests.log
       - name: Install signed native PRoot build dependencies
@@ -91,7 +94,9 @@ jobs:
       - name: Enumerate the actual permissioned inventory through stock nusb and patched PRoot
         run: dotnet run --project build/embedded/nusb-inventory-check -- "$TABSTUDIO_TEST_PROOT" "$RUNNER_TEMP/nusb-check/debug/tabstudio-nusb-check" "$RUNNER_TEMP/nusb-inventory"
       - name: Unchanged official wlink through the native WCH USB guard (synthetic kernel USB only)
-        run: python3 build/embedded/wch-link-check/run.py --proot "$TABSTUDIO_TEST_PROOT" --work "$RUNNER_TEMP/wch-link-check" --output ci-out/embedded-unit/wch-link-check
+        run: |
+          set -o pipefail
+          python3 build/embedded/wch-link-check/run.py --proot "$TABSTUDIO_TEST_PROOT" --work "$RUNNER_TEMP/wch-link-check" --output ci-out/embedded-unit/wch-link-check 2>&1 | tee ci-out/embedded-unit/wch-link-check.log
       - name: Embedded library and DAP unit tests
         run: |
           TABSTUDIO_FAT_PROOF="$RUNNER_TEMP/fat-proof" dotnet test tests/TabStudio.Toolchains.Tests --filter 'FullyQualifiedName~Embedded|FullyQualifiedName~ScopedPreloadProotTests|FullyQualifiedName~JavaProotTests' --logger 'trx;LogFileName=embedded-toolchains.trx' --results-directory ci-out/embedded-unit
@@ -103,6 +108,11 @@ jobs:
           name: embedded-unit-${{ github.event_name }}
           path: ci-out/embedded-unit/
           if-no-files-found: error
+      - name: Publish logs
+        if: always() && github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash build/ci/publish-logs.sh embedded-contracts ${{ job.status }}
 
   real-repositories:
     name: Real embedded repositories / ${{ matrix.project }}

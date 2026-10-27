@@ -130,10 +130,16 @@
 +		ptracer = waiter;
 --- a/src/tracee/event.c
 +++ b/src/tracee/event.c
-@@ -955,0 +956,6 @@
+@@ -157,0 +158 @@
++		tracee->tgid = pid;
+@@ -955,0 +957,6 @@
 +	if (tracee->restart_how == 0)
 +		note(tracee, WARNING, INTERNAL,
 +			"restart state: pid=%d running=%d traced=%d pending=%d last=%d wait=%d",
 +			tracee->pid, tracee->running, tracee->as_ptracee.tracing_started,
 +			tracee->as_ptracee.event4.proot.pending, tracee->last_restart_how,
 +			tracee->as_ptracer.wait_pid);
+--- a/src/cli/cli.c
++++ b/src/cli/cli.c
+@@ -465,0 +466 @@
++	tracee->tgid = tracee->pid;
