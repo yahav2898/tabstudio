@@ -514,6 +514,7 @@
         <!-- Problems at a glance, pinned beside the toolbar. -->
         <Button x:Name="ProblemsButton" Grid.Column="1" Margin="8,0,0,0" Theme="{StaticResource ToolButton}" VerticalAlignment="Center"
                 Command="{Binding SelectPanelCommand}" CommandParameter="{x:Static vm:BottomPanel.ErrorList}" ToolTip.Tip="Error List">
+          <!-- A spinner animates only while it is shown: an animation on a hidden control would keep the IDE rendering. -->
           <Panel>
             <StackPanel Orientation="Horizontal" Spacing="12" IsVisible="{Binding !ErrorList.IsPending}">
               <StackPanel Orientation="Horizontal" Spacing="5">
@@ -527,7 +528,7 @@
             </StackPanel>
             <!-- While packages restore or the solution is analyzed, the counts are about to change: say so instead. -->
             <StackPanel x:Name="ProblemsPending" Orientation="Horizontal" Spacing="6" IsVisible="{Binding ErrorList.IsPending}">
-              <controls:StrokeIcon Classes="spinning" Data="{StaticResource Icon.Spinner}" Size="14" StrokeThickness="2.2" Foreground="{DynamicResource Brush.TextMuted}" />
+              <controls:StrokeIcon Classes.spinning="{Binding ErrorList.IsPending}" Data="{StaticResource Icon.Spinner}" Size="14" StrokeThickness="2.2" Foreground="{DynamicResource Brush.TextMuted}" />
               <TextBlock Text="{Binding ErrorList.PendingText}" VerticalAlignment="Center" Foreground="{DynamicResource Brush.TextMuted}" />
             </StackPanel>
           </Panel>
@@ -993,7 +994,7 @@
           <Button x:Name="OperationsButton" Theme="{StaticResource StatusBarButton}" Height="24" Command="{Binding Operations.TogglePanelCommand}"
                   ToolTip.Tip="{Binding Operations.StatusText}">
             <StackPanel Orientation="Horizontal" Spacing="6">
-              <controls:StrokeIcon Classes="spinning" Data="{StaticResource Icon.Spinner}" Size="13" Foreground="{DynamicResource Brush.OnAccent}" />
+              <controls:StrokeIcon Classes.spinning="{Binding Operations.HasOperations}" Data="{StaticResource Icon.Spinner}" Size="13" Foreground="{DynamicResource Brush.OnAccent}" />
               <TextBlock x:Name="OperationsText" Text="{Binding Operations.StatusText}" FontSize="12" VerticalAlignment="Center" MaxWidth="380" TextTrimming="CharacterEllipsis" />
               <ProgressBar Width="56" Height="4" MinHeight="4" Minimum="0" Maximum="100" VerticalAlignment="Center"
                            Value="{Binding Operations.Current.Percent, FallbackValue=0}" IsIndeterminate="{Binding Operations.Current.IsIndeterminate, FallbackValue=True}" />
