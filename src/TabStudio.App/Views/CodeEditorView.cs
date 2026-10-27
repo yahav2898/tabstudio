@@ -111,6 +111,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
         InitializeLanguageServer();
         InitializeExtensions();
         InitializeTouchScrolling();
+        InitializeLive();
     }
 
     /// <summary>The editor control, for tests and keyboard focus.</summary>
@@ -138,6 +139,7 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
         DisposeLanguageServer();
         DisposeExtensions();
         DisposeTouchScrolling();
+        DisposeLive();
     }
 
     /// <inheritdoc />
@@ -271,10 +273,10 @@ public sealed partial class CodeEditorView : UserControl, IDisposable
                 ToggleComment();
                 break;
             case EditorAction.Undo:
-                _editor.Undo();
+                UndoEdit();
                 break;
             case EditorAction.Redo:
-                _editor.Redo();
+                RedoEdit();
                 break;
             case EditorAction.SelectAll:
                 _editor.SelectAll();

@@ -8,4 +8,10 @@ public enum LinkRole
 
     /// <summary>A tablet coordinating a swarm: the phones and tablets that join it run the app it is building.</summary>
     Swarm,
+
+    /// <summary>
+    /// A device sharing a TabStudio Live session: the devices that join it edit, run and debug its workspace together
+    /// with it.
+    /// </summary>
+    Live,
 }

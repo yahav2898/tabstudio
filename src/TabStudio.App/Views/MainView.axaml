@@ -4,6 +4,7 @@
              xmlns:views="using:TabStudio.App.Views"
              xmlns:desktop="using:TabStudio.App.Views.DesktopMode"
              xmlns:swarmViews="using:TabStudio.App.Views.Swarm"
+             xmlns:liveViews="using:TabStudio.App.Views.Live"
              xmlns:vm="using:TabStudio.App.ViewModels"
              x:Class="TabStudio.App.Views.MainView"
              x:DataType="vm:MainViewModel"
@@ -32,6 +33,9 @@
 
       <!-- TabStudio Link, from the start screen, the File menu or the status bar. -->
       <views:LinkView DataContext="{Binding Link}" />
+
+      <!-- TabStudio Live's Join dialog, from the start screen or the File menu. -->
+      <liveViews:LiveJoinView DataContext="{Binding LiveJoin}" />
     </Panel>
 
     <!-- Desktop mode: the tablet's touch companion while the IDE is on a display, and the offer to use a display. -->

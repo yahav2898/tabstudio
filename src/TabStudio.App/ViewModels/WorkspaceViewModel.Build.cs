@@ -208,9 +208,9 @@ public sealed partial class WorkspaceViewModel
                 ? $"a .NET Framework project that needs Windows: it {NetFrameworkCompatibility.WhyWindows(project)}"
                 : "it is not built on this device";
 
-    private bool CanRun() => !_preparingServices && (IsRemoteWorkspace ? _remoteWorkspace?.Connection.IsConnected == true : StartupProject is not null || UsesLaunchTarget) && State is IdeState.Ready or IdeState.Failed && !IsNotebookRunning;
+    private bool CanRun() => !_preparingServices && (IsRemoteWorkspace ? _remoteWorkspace?.Connection.IsConnected == true : StartupProject is not null || UsesLaunchTarget) && State is IdeState.Ready or IdeState.Failed && !IsNotebookRunning && !IsLiveGuest;
 
-    private bool CanBuild() => !_preparingServices && (!IsRemoteWorkspace || _remoteWorkspace?.Connection.IsConnected == true) && State is IdeState.Ready or IdeState.Failed;
+    private bool CanBuild() => !_preparingServices && (!IsRemoteWorkspace || _remoteWorkspace?.Connection.IsConnected == true) && State is IdeState.Ready or IdeState.Failed && !IsLiveGuest;
 
     /// <summary>Builds projects one after another, reporting in the Output panel and the Error List.</summary>
     /// <param name="projects">The projects.</param>
