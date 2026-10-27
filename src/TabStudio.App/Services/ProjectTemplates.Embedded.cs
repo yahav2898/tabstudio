@@ -45,7 +45,12 @@ public sealed partial class ProjectTemplates
             return null;
         }
         Directory.CreateDirectory(Path.Combine(root, "src"));
-        File.WriteAllText(Path.Combine(root, "platformio.ini"), $"; {name}: {board.Name}\n[env:{board.Id}]\nplatform = {platform}\nboard = {board.PlatformIoBoard}\nframework = arduino\nmonitor_speed = 115200\nbuild_flags = -fstack-usage\n");
+        // PlatformIO's Arduino AVR builder compiles with -flto, and GCC then writes empty .su files: the code is
+        // generated at link time. AVR starters build without LTO so stack analysis describes the actual firmware.
+        var unflags = platform.StartsWith("atmelavr@", StringComparison.Ordinal)
+            ? "; Without LTO, -fstack-usage reports the code that is actually linked.\nbuild_unflags = -flto\n"
+            : "";
+        File.WriteAllText(Path.Combine(root, "platformio.ini"), $"; {name}: {board.Name}\n[env:{board.Id}]\nplatform = {platform}\nboard = {board.PlatformIoBoard}\nframework = arduino\nmonitor_speed = 115200\nbuild_flags = -fstack-usage\n{unflags}");
         File.WriteAllText(Path.Combine(root, "src", "main.cpp"), """
             #include <Arduino.h>
 
