@@ -268,6 +268,18 @@ C# projects with `<UseWPF>true</UseWPF>` compile against OpenSilver 3.3.3 instea
 serves a .NET WebAssembly browser host in the web preview. The window attaches before its first forced layout;
 saving rebuilds and reloads the page, and the host forwards console output, uncaught exceptions and window closure.
 An unhandled input exception releases stranded mouse capture so later clicks still reach the app.
+
+**Fit, 100% and Fill.** The window keeps its declared `Width` and `Height`, and the web preview's toolbar chooses how
+it shows: Fit (the default) scales it down until all of it is in view and never up, 100% shows it at its size with the
+page scrolling, and Fill gives it the pane's size, as before. The choice is remembered per project
+(`PreviewZoomStore`) and reaches the page in its address (`?tabstudio-view=fit`); where the browser runs script, it
+switches in place. `wpf.js` applies it with the browser's own page zoom, the viewport meta tag's width and scale, so
+OpenSilver's layout, text measuring and pointer positions never see a scale and the browser maps every touch to the
+right control at every zoom; a CSS transform on the window would break OpenSilver's pointer math and text measuring.
+Two fingers pinch to zoom and pan (`touch-action: pinch-zoom` on the window), and a finger the browser takes for a
+pinch is released in the app without a click. The math is `PreviewLayoutCalculator` in Core, which the page mirrors
+and the IDE test compares with it. On Android the WebView honors the viewport tag only while the preview shows a WPF
+app (`IZoomableWebView`).
 Android installs a `WebChromeClient`, so OpenSilver's `MessageBox` alert/confirm calls show the native browser dialogs.
 The .NET 10 preview needs an up-to-date Android System WebView. CI uses Android 15 (API 35) to exercise the
 rendered WPF page; the API 29 image's Chrome 74 cannot run this browser runtime.

@@ -4,6 +4,8 @@ html, body {
     margin: 0;
     height: 100%;
     overflow: hidden;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
     background: #ffffff;
     font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
 }
@@ -12,6 +14,27 @@ html, body {
     display: flex;
     flex-direction: column;
     height: 100%;
+}
+
+/*
+ * A window shown at its declared size (Fit and 100%, see wpf.js): placed by wpf.js on a desktop backdrop, with a
+ * Windows 11 window's border and shadow. The page scrolls where the window is larger than it.
+ */
+html.tabstudio-wpf-sized,
+html.tabstudio-wpf-sized body {
+    overflow: visible;
+}
+
+html.tabstudio-wpf-sized body {
+    background: #dfe3e8;
+}
+
+html.tabstudio-wpf-sized .tabstudio-wpf-window {
+    position: absolute;
+    box-sizing: border-box;
+    border: 1px solid #a0a6ae;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    background: #ffffff;
 }
 
 .tabstudio-wpf-titlebar {
@@ -67,6 +90,11 @@ html, body {
     position: relative;
     min-height: 0;
     background: #ffffff;
+}
+
+/* OpenSilver keeps the browser's own gestures off its root; two fingers still pinch to zoom and pan the page. */
+#tabstudio-wpf-client.opensilver-root-element {
+    touch-action: pinch-zoom;
 }
 
 .tabstudio-wpf-starting {

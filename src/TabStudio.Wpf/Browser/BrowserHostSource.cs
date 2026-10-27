@@ -194,10 +194,15 @@ internal static class BrowserHostSource
                         return null;
                     }
 
-                    /// <summary>Puts a window in the page, filling it below TabStudio's title bar, as the app's main window.</summary>
+                    /// <summary>
+                    /// Puts a window in the page below TabStudio's title bar, as the app's main window. The page shows the
+                    /// window at the Width and Height it declares (Fit and 100%) or at the page's size (Fill); the window
+                    /// itself then fills the part under the title bar.
+                    /// </summary>
                     private static void Show(global::System.Windows.Window window)
                     {
                         _shown = window;
+                        global::OpenSilver.Interop.ExecuteJavaScriptVoid("window.tabStudioWpf.setWindowSize(" + Number(window.Width) + "," + Number(window.Height) + ")");
                         window.ClearValue(global::System.Windows.FrameworkElement.WidthProperty);
                         window.ClearValue(global::System.Windows.FrameworkElement.HeightProperty);
                         if (Backgrounds.TryGetValue(window.GetType().FullName ?? string.Empty, out var background))
@@ -249,6 +254,10 @@ internal static class BrowserHostSource
                             Call("setTitle", title);
                         }
                     }
+
+                    /// <summary>A length as JavaScript writes it; NaN for one that is not set.</summary>
+                    private static string Number(double value) =>
+                        double.IsFinite(value) ? value.ToString("R", global::System.Globalization.CultureInfo.InvariantCulture) : "NaN";
 
                     private static void Call(string function, string argument) =>
                         global::OpenSilver.Interop.ExecuteJavaScriptVoid("window.tabStudioWpf." + function + "(" + global::System.Text.Json.JsonSerializer.Serialize(argument) + ")");

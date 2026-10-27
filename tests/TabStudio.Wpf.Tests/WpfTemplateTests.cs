@@ -119,7 +119,7 @@ public sealed class WpfTemplateTests(NuGetFixture nuget) : IDisposable
         var notes = build.Diagnostics.Where(d => d.Id == WpfDiagnosticIds.WindowSettingIgnored).ToList();
         Assert.Equal(["Background", "ResizeMode", "WindowStartupLocation"], notes.Select(n => File.ReadAllText(xamlPath).Substring(n.Location!.Start, n.Location.Length)).Order(StringComparer.Ordinal));
         Assert.All(notes, n => Assert.Equal(DiagnosticSeverityLevel.Info, n.Severity));
-        Assert.Contains(notes, n => n.Message == "WindowStartupLocation has no effect in the web preview: the window fills the web preview, so it has no place to start at.");
+        Assert.Contains(notes, n => n.Message == "WindowStartupLocation has no effect in the web preview: the web preview centers the window, or makes it fill the pane in Fill.");
     }
 
     [Fact]

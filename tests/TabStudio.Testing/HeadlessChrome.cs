@@ -87,14 +87,42 @@ public sealed partial class HeadlessChrome : IAsyncDisposable
     /// <summary>Sizes the page, as a browser window of that size would.</summary>
     /// <param name="width">The width in CSS pixels.</param>
     /// <param name="height">The height in CSS pixels.</param>
-    public Task ResizeAsync(int width, int height) =>
-        SendAsync("Emulation.setDeviceMetricsOverride", new JsonObject
+    public Task ResizeAsync(int width, int height) => ResizeAsync(width, height, mobile: false);
+
+    /// <summary>
+    /// Sizes the page as a browser window, or as a phone's or tablet's screen with touch input: a mobile browser
+    /// honors the page's viewport meta tag, its width and its zoom, as Android's WebView does.
+    /// </summary>
+    /// <param name="width">The width in the screen's pixels.</param>
+    /// <param name="height">The height in the screen's pixels.</param>
+    /// <param name="mobile">Whether it is a mobile browser.</param>
+    public async Task ResizeAsync(int width, int height, bool mobile)
+    {
+        await SendAsync("Emulation.setDeviceMetricsOverride", new JsonObject
         {
             ["width"] = width,
             ["height"] = height,
             ["deviceScaleFactor"] = 1,
-            ["mobile"] = false,
+            ["mobile"] = mobile,
         });
+        await SendAsync("Emulation.setTouchEmulationEnabled", new JsonObject { ["enabled"] = mobile, ["maxTouchPoints"] = mobile ? 5 : 1 });
+    }
+
+    /// <summary>
+    /// Taps the page with a finger: a touch that goes down and up, through the browser's touch input, which hit-tests
+    /// it as a finger on the screen.
+    /// </summary>
+    /// <param name="x">The distance from the left of the page's visible area, in CSS pixels.</param>
+    /// <param name="y">The distance from its top, in CSS pixels.</param>
+    public async Task TapAsync(double x, double y)
+    {
+        await SendAsync("Input.dispatchTouchEvent", new JsonObject
+        {
+            ["type"] = "touchStart",
+            ["touchPoints"] = new JsonArray(new JsonObject { ["x"] = x, ["y"] = y }),
+        });
+        await SendAsync("Input.dispatchTouchEvent", new JsonObject { ["type"] = "touchEnd", ["touchPoints"] = new JsonArray() });
+    }
 
     /// <summary>Opens a page and waits until it has loaded.</summary>
     /// <param name="address">The page.</param>

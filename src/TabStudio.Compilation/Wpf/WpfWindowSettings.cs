@@ -5,8 +5,9 @@ namespace TabStudio.Compilation.Wpf;
 
 /// <summary>
 /// What a WPF window's XAML sets that OpenSilver's <c>Window</c> may not have, and what TabStudio does with it in the
-/// web preview, where the app's window fills the page: the background is painted behind the window's content, and
-/// the settings that place or size a desktop window have nothing to act on.
+/// web preview, where the page shows the app's window whole (Fit), at its size (100%) or filling the pane (Fill): the
+/// background is painted behind the window's content, and the settings that place or size a desktop window have
+/// nothing to act on.
 /// </summary>
 public static class WpfWindowSettings
 {
@@ -16,18 +17,18 @@ public static class WpfWindowSettings
     /// <summary>The settings of a desktop window that mean nothing in a page, each with why.</summary>
     public static IReadOnlyDictionary<string, string> WithoutEffect { get; } = new Dictionary<string, string>(StringComparer.Ordinal)
     {
-        ["WindowStartupLocation"] = "the window fills the web preview, so it has no place to start at",
-        ["ResizeMode"] = "the window fills the web preview and is sized with it",
-        ["SizeToContent"] = "the window fills the web preview and is sized with it",
-        ["WindowState"] = "the window fills the web preview, as if maximized",
+        ["WindowStartupLocation"] = "the web preview centers the window, or makes it fill the pane in Fill",
+        ["ResizeMode"] = "the web preview sizes the window: its Width and Height in Fit and 100%, the pane's size in Fill",
+        ["SizeToContent"] = "the web preview sizes the window: its Width and Height in Fit and 100%, the pane's size in Fill",
+        ["WindowState"] = "the web preview shows the window whole (Fit), at its size (100%) or as if maximized (Fill)",
         ["WindowStyle"] = "TabStudio draws the window's title bar itself",
         ["AllowsTransparency"] = "the window is drawn in the page",
         ["Topmost"] = "the window is the only one in the web preview",
         ["ShowInTaskbar"] = "the web preview has no taskbar",
         ["ShowActivated"] = "the window is always active in the web preview",
         ["Icon"] = "TabStudio draws the window's title bar itself",
-        ["Left"] = "the window fills the web preview",
-        ["Top"] = "the window fills the web preview",
+        ["Left"] = "the web preview places the window",
+        ["Top"] = "the web preview places the window",
     };
 
     /// <summary>The settings OpenSilver's <c>Window</c> lacks that its content shows in WPF, which go on the controls instead.</summary>

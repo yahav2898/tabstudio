@@ -70,6 +70,7 @@ internal sealed partial class AndroidWebView(Func<Context> context) : NativeCont
         _view.SetWebViewClient(new Client(this));
         // OpenSilver's MessageBox uses alert/confirm; WebView suppresses those without a chrome client.
         _view.SetWebChromeClient(new WebChromeClient());
+        ApplyPageZoom(_view);
         if (_page is { } page)
         {
             _view.LoadUrl(page.AbsoluteUri);
