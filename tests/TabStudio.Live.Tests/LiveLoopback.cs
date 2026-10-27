@@ -195,8 +195,8 @@ internal sealed class FakeHostWorkspace : ILiveHostWorkspace
         return Task.FromResult(true);
     }
 
-    public void SetBreakpoint(string fullPath, int line, string? condition, bool remove, LiveParticipant participant) =>
-        BreakpointRequests.Add((fullPath, line, remove, participant.Name));
+    public void SetBreakpoint(string fullPath, int line, string? condition, bool removes, LiveParticipant participant) =>
+        BreakpointRequests.Add((fullPath, line, removes, participant.Name));
 
     public Task<IReadOnlyList<SwarmVariable>> GetVariablesAsync(long pauseId, string path, CancellationToken cancellationToken) =>
         Task.FromResult<IReadOnlyList<SwarmVariable>>([new SwarmVariable("Count", "3", "int", 0, $"{path}.Count")]);

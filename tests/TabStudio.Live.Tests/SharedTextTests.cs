@@ -207,12 +207,12 @@ public sealed class SharedTextTests
         var b = new SharedText(2);
         foreach (var c in "hello")
         {
-            b.Apply(a.Insert(a.Length, c.ToString())!);
+            b.Apply(a.Insert(a.Length, new string(c, 1))!);
         }
 
         foreach (var c in " world")
         {
-            a.Apply(b.Insert(b.Length, c.ToString())!);
+            a.Apply(b.Insert(b.Length, new string(c, 1))!);
         }
 
         Assert.Equal("hello world", a.ToString());

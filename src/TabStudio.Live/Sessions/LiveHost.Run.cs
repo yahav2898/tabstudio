@@ -174,7 +174,7 @@ public sealed partial class LiveHost
             _outputPending.Clear();
             if (_terminalPending.Count > 0)
             {
-                Broadcast(LiveMethods.Terminal, null, attachment: _terminalPending.ToArray());
+                Broadcast(LiveMethods.Terminal, null, attachment: new ReadOnlyMemory<byte>(_terminalPending.ToArray()));
                 _terminalPending.Clear();
             }
         });

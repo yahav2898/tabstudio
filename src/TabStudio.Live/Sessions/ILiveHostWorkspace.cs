@@ -26,9 +26,9 @@ public interface ILiveHostWorkspace
     /// <param name="fullPath">The file.</param>
     /// <param name="line">The one-based line.</param>
     /// <param name="condition">When it stops, or <see langword="null"/> for every time.</param>
-    /// <param name="remove">Whether to remove the breakpoint on that line instead.</param>
+    /// <param name="removes">Whether to remove the breakpoint on that line instead.</param>
     /// <param name="participant">Who asked.</param>
-    void SetBreakpoint(string fullPath, int line, string? condition, bool remove, LiveParticipant participant);
+    void SetBreakpoint(string fullPath, int line, string? condition, bool removes, LiveParticipant participant);
 
     /// <summary>Reads the members or items of a value of the paused program.</summary>
     /// <param name="pauseId">The pause, as <see cref="LiveDebugState.PauseId"/> numbers it.</param>

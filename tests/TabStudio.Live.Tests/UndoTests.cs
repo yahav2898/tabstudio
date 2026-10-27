@@ -17,7 +17,7 @@ public sealed class UndoTests
         time.Advance(TimeSpan.FromSeconds(5));
         foreach (var c in " world")
         {
-            a.Apply(b.Insert(b.Length, c.ToString())!);
+            a.Apply(b.Insert(b.Length, new string(c, 1))!);
         }
 
         Assert.Equal("hello world", a.ToString());
@@ -131,7 +131,7 @@ public sealed class UndoTests
     {
         foreach (var c in typed)
         {
-            var operation = text.Insert(offset, c.ToString())!;
+            var operation = text.Insert(offset, new string(c, 1))!;
             undo.Record(operation, null, offset);
             other?.Apply(operation);
             offset++;
