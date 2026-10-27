@@ -62,29 +62,21 @@ public sealed partial class CodeEditorView
             return;
         }
 
-        var textView = _editor.TextArea.TextView;
         if (_liveBinder is { } old)
         {
             old.CaretsChanged -= OnLiveCaretsChanged;
             old.FollowMoved -= OnLiveFollowMoved;
-            if (_livePresence is { } presence)
-            {
-                textView.BackgroundRenderers.Remove(presence.Selections);
-                textView.BackgroundRenderers.Remove(presence.Carets);
-                presence.Show([]);
-            }
+            _livePresence?.Detach();
         }
 
         _liveBinder = binder;
         if (binder is null)
         {
-            textView.InvalidateLayer(AvaloniaEdit.Rendering.KnownLayer.Caret);
             return;
         }
 
         _livePresence ??= new LivePresenceRenderer();
-        textView.BackgroundRenderers.Add(_livePresence.Selections);
-        textView.BackgroundRenderers.Add(_livePresence.Carets);
+        _livePresence.Attach(_editor.TextArea.TextView);
         binder.CaretsChanged += OnLiveCaretsChanged;
         binder.FollowMoved += OnLiveFollowMoved;
         OnLiveCaretsChanged(binder, EventArgs.Empty);
@@ -107,9 +99,6 @@ public sealed partial class CodeEditorView
         }
 
         presence.Show(binder.Carets);
-        var textView = _editor.TextArea.TextView;
-        textView.InvalidateLayer(AvaloniaEdit.Rendering.KnownLayer.Selection);
-        textView.InvalidateLayer(AvaloniaEdit.Rendering.KnownLayer.Caret);
     }
 
     private void OnLivePlaceChanged(object? sender, EventArgs e)
