@@ -1,0 +1,201 @@
+> pio run --environment esp32s3 --jobs 2
+********************************************************************************
+If you like PlatformIO, please:
+- star it on GitHub > https://github.com/platformio/platformio-core
+- follow us on LinkedIn to stay up-to-date on the latest project news > https://www.linkedin.com/company/platformio/
+- try PlatformIO IDE for embedded development > https://platformio.org/platformio-ide
+********************************************************************************
+
+Processing esp32s3 (platform: espressif32@8.0.0; board: esp32-s3-devkitc-1; framework: arduino)
+--------------------------------------------------------------------------------
+Platform Manager: Installing espressif32 @ 8.0.0
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Platform Manager: espressif32@8.0.0 has been installed!
+Tool Manager: Installing platformio/toolchain-riscv32-esp @ 14.2.0+20260121
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-nrxv194u/bin/.l2s.riscv32-esp-elf-objdump-xespv2p10001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-nrxv194u/bin/.l2s.riscv32-esp-elf-objdump-xespv2p10001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-nrxv194u/bin/.l2s.riscv32-esp-elf-ar0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-nrxv194u/bin/.l2s.riscv32-esp-elf-ar0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-nrxv194u/bin/.l2s.riscv32-esp-elf-readelf0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-nrxv194u/bin/.l2s.riscv32-esp-elf-readelf0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-nrxv194u/bin/.l2s.riscv32-esp-elf-strip0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-nrxv194u/bin/.l2s.riscv32-esp-elf-strip0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-nrxv194u/bin/.l2s.riscv32-esp-elf-gcc0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-nrxv194u/bin/.l2s.riscv32-esp-elf-gcc0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-nrxv194u/bin/.l2s.riscv32-esp-elf-ld0001.0004' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-nrxv194u/bin/.l2s.riscv32-esp-elf-ld0001.0004`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-nrxv194u/bin/.l2s.riscv32-esp-elf-objcopy0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-nrxv194u/bin/.l2s.riscv32-esp-elf-objcopy0001.0002`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-nrxv194u/bin' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-nrxv194u/bin`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-nrxv194u' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-nrxv194u`
+Tool Manager: toolchain-riscv32-esp@14.2.0+20260121 has been installed!
+Tool Manager: Installing platformio/toolchain-xtensa-esp-elf @ 14.2.0+20260121
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-cyvvnx2l/bin/.l2s.xtensa-esp-elf-as0001.0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-cyvvnx2l/bin/.l2s.xtensa-esp-elf-as0001.0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-cyvvnx2l/bin/.l2s.xtensa-esp-elf-strip0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-cyvvnx2l/bin/.l2s.xtensa-esp-elf-strip0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-cyvvnx2l/bin/.l2s.xtensa-esp-elf-ld0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-cyvvnx2l/bin/.l2s.xtensa-esp-elf-ld0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-cyvvnx2l/bin/.l2s.xtensa-esp-elf-strip0001.0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-cyvvnx2l/bin/.l2s.xtensa-esp-elf-strip0001.0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-cyvvnx2l/bin/.l2s.xtensa-esp-elf-ranlib0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-cyvvnx2l/bin/.l2s.xtensa-esp-elf-ranlib0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-cyvvnx2l/bin/.l2s.xtensa-esp-elf-objcopy0001.0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-cyvvnx2l/bin/.l2s.xtensa-esp-elf-objcopy0001.0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-cyvvnx2l/bin/.l2s.xtensa-esp-elf-as0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-cyvvnx2l/bin/.l2s.xtensa-esp-elf-as0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-cyvvnx2l/bin/.l2s.xtensa-esp-elf-ld0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-cyvvnx2l/bin/.l2s.xtensa-esp-elf-ld0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-cyvvnx2l/bin/.l2s.xtensa-esp-elf-objcopy0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-cyvvnx2l/bin/.l2s.xtensa-esp-elf-objcopy0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-cyvvnx2l/bin/.l2s.xtensa-esp-elf-readelf0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-cyvvnx2l/bin/.l2s.xtensa-esp-elf-readelf0001`
+Tool Manager: toolchain-xtensa-esp-elf@14.2.0+20260121 has been installed!
+Tool Manager: Installing espressif/tool-xtensa-esp-elf-gdb @ ~12.1.0
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: tool-xtensa-esp-elf-gdb@12.1.0+20221002 has been installed!
+Tool Manager: Installing espressif/tool-riscv32-esp-elf-gdb @ ~12.1.0
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: tool-riscv32-esp-elf-gdb@12.1.0+20221002 has been installed!
+Tool Manager: Installing platformio/framework-arduinoespressif32 @ ~4.30312.0
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: framework-arduinoespressif32@4.30312.261024 has been installed!
+Tool Manager: Installing platformio/framework-arduinoespressif32-esp32s3-libs @ ~3.3.12
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: framework-arduinoespressif32-esp32s3-libs@3.3.12 has been installed!
+Tool Manager: Installing platformio/tool-esptool @ ~2.50400.0
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70%
+Tool Manager: tool-esptool@2.50400.0 has been installed!
+Tool Manager: Installing platformio/tool-scons @ ~4.40801.0
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: tool-scons@4.40801.0 has been installed!
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/esp32-s3-devkitc-1.html
+PLATFORM: Espressif 32 (8.0.0) > Espressif ESP32-S3-DevKitC-1-N8 (8 MB QD, No PSRAM)
+HARDWARE: ESP32S3 240MHz, 320KB RAM, 8MB Flash
+DEBUG: Current (esp-builtin) On-board (esp-builtin) External (cmsis-dap, esp-bridge, esp-prog, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa)
+PACKAGES: 
+ - framework-arduinoespressif32 @ 4.30312.261024 (3.3.12) 
+ - framework-arduinoespressif32-esp32s3-libs @ 3.3.12 
+ - tool-esptool @ 2.50400.0 (5.4.0) 
+ - tool-riscv32-esp-elf-gdb @ 12.1.0+20221002 
+ - tool-xtensa-esp-elf-gdb @ 12.1.0+20221002 
+ - toolchain-riscv32-esp @ 14.2.0+20260121 
+ - toolchain-xtensa-esp-elf @ 14.2.0+20260121
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 44 compatible libraries
+Scanning dependencies...
+No dependencies
+Building in release mode
+Compiling .pio/build/esp32s3/src/main.cpp.o
+Building .pio/build/esp32s3/bootloader.bin
+esptool v5.4.0
+Creating ESP32-S3 image...
+Merged 2 ELF sections.
+Successfully created ESP32-S3 image.
+Generating partitions .pio/build/esp32s3/partitions.bin
+Compiling .pio/build/esp32s3/FrameworkArduino/ColorFormat.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/Esp.cpp.o
+Compiling .pio/build/esp32s3/FrameworkArduino/FirmwareMSC.cpp.o
+Compiling .pio/build/esp32s3/FrameworkArduino/FunctionalInterrupt.cpp.o
+Compiling .pio/build/esp32s3/FrameworkArduino/HEXBuilder.cpp.o
+Compiling .pio/build/esp32s3/FrameworkArduino/HWCDC.cpp.o
+Compiling .pio/build/esp32s3/FrameworkArduino/HardwareSerial.cpp.o
+Compiling .pio/build/esp32s3/FrameworkArduino/HashBuilder.cpp.o
+Compiling .pio/build/esp32s3/FrameworkArduino/IPAddress.cpp.o
+Compiling .pio/build/esp32s3/FrameworkArduino/MD5Builder.cpp.o
+Compiling .pio/build/esp32s3/FrameworkArduino/MacAddress.cpp.o
+Compiling .pio/build/esp32s3/FrameworkArduino/Print.cpp.o
+Compiling .pio/build/esp32s3/FrameworkArduino/Stream.cpp.o
+Compiling .pio/build/esp32s3/FrameworkArduino/StreamString.cpp.o
+Compiling .pio/build/esp32s3/FrameworkArduino/StringUtils.cpp.o
+Compiling .pio/build/esp32s3/FrameworkArduino/Tone.cpp.o
+Compiling .pio/build/esp32s3/FrameworkArduino/USB.cpp.o
+Compiling .pio/build/esp32s3/FrameworkArduino/USBCDC.cpp.o
+Compiling .pio/build/esp32s3/FrameworkArduino/USBHost.cpp.o
+Compiling .pio/build/esp32s3/FrameworkArduino/USBMSC.cpp.o
+Compiling .pio/build/esp32s3/FrameworkArduino/WMath.cpp.o
+Compiling .pio/build/esp32s3/FrameworkArduino/WString.cpp.o
+Compiling .pio/build/esp32s3/FrameworkArduino/base64.cpp.o
+Compiling .pio/build/esp32s3/FrameworkArduino/cbuf.cpp.o
+Compiling .pio/build/esp32s3/FrameworkArduino/chip-debug-report.cpp.o
+Compiling .pio/build/esp32s3/FrameworkArduino/esp32-hal-adc.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/esp32-hal-bt.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/esp32-hal-cpu.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/esp32-hal-dac.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/esp32-hal-gpio.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/esp32-hal-hosted.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/esp32-hal-i2c-ng.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/esp32-hal-i2c-slave.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/esp32-hal-i2c.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/esp32-hal-ldo.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/esp32-hal-ledc.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/esp32-hal-log-wrapper.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/esp32-hal-matrix.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/esp32-hal-misc.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/esp32-hal-periman.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/esp32-hal-psram.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/esp32-hal-rgb-led.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/esp32-hal-rmt.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/esp32-hal-sigmadelta.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/esp32-hal-spi.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/esp32-hal-time.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/esp32-hal-timer.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/esp32-hal-tinyusb.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/esp32-hal-touch-ng.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/esp32-hal-touch.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/esp32-hal-uart.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/firmware_msc_fat.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/freertos_stats.cpp.o
+Compiling .pio/build/esp32s3/FrameworkArduino/idf_openthread_mpool_wrapper.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/libb64/cdecode.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/libb64/cencode.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/main.cpp.o
+Compiling .pio/build/esp32s3/FrameworkArduino/stdlib_noniso.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/wiring_pulse.c.o
+Compiling .pio/build/esp32s3/FrameworkArduino/wiring_shift.c.o
+Archiving .pio/build/esp32s3/libFrameworkArduino.a
+Indexing .pio/build/esp32s3/libFrameworkArduino.a
+Linking .pio/build/esp32s3/firmware.elf
+Retrieving maximum program size .pio/build/esp32s3/firmware.elf
+Checking size .pio/build/esp32s3/firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [=         ]   6.6% (used 21592 bytes from 327680 bytes)
+Flash: [=         ]   8.7% (used 289517 bytes from 3342336 bytes)
+Building .pio/build/esp32s3/firmware.bin
+esptool v5.4.0
+Creating ESP32-S3 image...
+Merged 3 ELF sections.
+Successfully created ESP32-S3 image.
+export_manifest([".pio/build/esp32s3/firmware.bin"], [".pio/build/esp32s3/firmware.elf"])
+*** [.pio/build/esp32s3/firmware.bin] ValueError : Resolved upload did not identify bootloader, partition table and application; no offsets were guessed
+Traceback (most recent call last):
+  File "/home/runner/work/_temp/canonical-templates/projects/esp32s3/.tabstudio/platformio-boxed/packages/tool-scons/scons-local-4.8.1/SCons/Action.py", line 1441, in execute
+    result = self.execfunction(target=target, source=rsources, env=env)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/_temp/canonical-templates/projects/esp32s3/tabstudio_esp_flash.py", line 87, in export_manifest
+    raise ValueError("Resolved upload did not identify bootloader, partition table and application; no offsets were guessed")
+ValueError: Resolved upload did not identify bootloader, partition table and application; no offsets were guessed
+========================= [FAILED] Took 196.82 seconds =========================
+System.InvalidOperationException: pio failed: Building .pio/build/esp32s3/firmware.bin
+esptool v5.4.0
+Creating ESP32-S3 image...
+Merged 3 ELF sections.
+Successfully created ESP32-S3 image.
+export_manifest([".pio/build/esp32s3/firmware.bin"], [".pio/build/esp32s3/firmware.elf"])
+*** [.pio/build/esp32s3/firmware.bin] ValueError : Resolved upload did not identify bootloader, partition table and application; no offsets were guessed
+Traceback (most recent call last):
+  File "/home/runner/work/_temp/canonical-templates/projects/esp32s3/.tabstudio/platformio-boxed/packages/tool-scons/scons-local-4.8.1/SCons/Action.py", line 1441, in execute
+    result = self.execfunction(target=target, source=rsources, env=env)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/_temp/canonical-templates/projects/esp32s3/tabstudio_esp_flash.py", line 87, in export_manifest
+    raise ValueError("Resolved upload did not identify bootloader, partition table and application; no offsets were guessed")
+ValueError: Resolved upload did not identify bootloader, partition table and application; no offsets were guessed
+========================= [FAILED] Took 196.82 seconds =========================
+   at Program.<Main>$(String[] args) in /_/build/embedded/template-build-check/Program.cs:line 129
