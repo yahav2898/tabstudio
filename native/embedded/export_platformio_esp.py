@@ -62,7 +62,7 @@ def export_manifest(source, target, env):
             magic = image.read(2)
         if original == application:
             role = "app"
-        elif magic == b"\x50\xaa":
+        elif magic == b"\xaa\x50":  # ESP-IDF partition records start with bytes AA 50 (0x50AA little-endian)
             role = "partition-table"
         elif magic[:1] == b"\xe9":
             role = "bootloader"

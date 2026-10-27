@@ -19,7 +19,9 @@ class Environment(dict):
         self.values = {"$UPLOAD_PROTOCOL": "esptool", "$ESP32_APP_OFFSET": "0x10000",
                        "$BUILD_DIR": str(directory), "$BUILD_DIR/${PROGNAME}.bin": str(directory / "firmware.bin")}
         (directory / "bootloader.bin").write_bytes(b"\xe9\x00bootloader")
-        (directory / "partitions.bin").write_bytes(b"\x50\xaa" + bytes(30))
+        # A real ESP-IDF partition record: bytes AA 50, type app, subtype factory, offset 0x10000, size 1 MiB, label.
+        record = b"\xaa\x50\x00\x00" + (0x10000).to_bytes(4, "little") + (0x100000).to_bytes(4, "little") + b"factory".ljust(16, b"\0") + bytes(4)
+        (directory / "partitions.bin").write_bytes(record + b"\xff" * (0xC00 - len(record)))
         (directory / "firmware.bin").write_bytes(b"\xe9\x00application")
         self.flags = ["--chip", chip, "--port", "", "--baud", "115200", "--before", "default_reset", "--after", "hard_reset", "write_flash", "-z",
                       "--flash_mode", "dio", "--flash_freq", "40m", "--flash_size", "4MB",
