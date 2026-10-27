@@ -1,0 +1,23 @@
++ tar --no-same-owner -xzf /tmp/tabstudio-box64-c62u3bvb/downloads/box64-source.tar.gz -C /tmp/tabstudio-box64-c62u3bvb/box64-source
+
++ patch -d /tmp/tabstudio-box64-c62u3bvb/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a -p1 -i /home/runner/work/tabstudio/tabstudio/build/pic/box64-static-clone.patch
+patching file src/core.c
+patching file src/emu/x64syscall.c
+
++ cmake -S /tmp/tabstudio-box64-c62u3bvb/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a -B /tmp/tabstudio-box64-c62u3bvb/box64-build -DARM_DYNAREC=ON -DLD80BITS=OFF -DNOALIGN=OFF -DBAD_SIGNAL=ON -DCMAKE_BUILD_TYPE=Release -DNOGIT=1 -DCMAKE_EXE_LINKER_FLAGS=-Wl,-z,max-page-size=16384 -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_ASM_COMPILER=aarch64-linux-gnu-gcc
+-- Found Python3: /usr/bin/python3.12 (found suitable version "3.12.3", minimum required is "3.7") found components: Interpreter
+-- The C compiler identification is GNU 13.3.0
+-- The ASM compiler identification is GNU
+-- Found assembler: /usr/bin/aarch64-linux-gnu-gcc
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/aarch64-linux-gnu-gcc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Performing Test HAS_FUSE_LD_GOLD
+-- Performing Test HAS_FUSE_LD_GOLD - Success
+-- Configuring done (1.1s)
+-- Generating done (0.1s)
+-- Build files have been written to: /tmp/tabstudio-box64-c62u3bvb/box64-build
+
++ cmake --build /tmp/tabstudio-box64-c62u3bvb/box64-build --parallel 4
