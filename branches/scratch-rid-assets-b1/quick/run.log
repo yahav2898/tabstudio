@@ -1,0 +1,85 @@
++ for p in tests/TabStudio.Packages.Tests tests/TabStudio.App.Tests tests/TabStudio.TestRunner.Tests tests/TabStudio.Notebooks.Tests
++ dotnet build tests/TabStudio.Packages.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E 'error|warn|Build succeeded|Time Elapsed'
++ sort -u
++ head -60
+Build succeeded.
+Time Elapsed 00:00:15.88
++ for p in tests/TabStudio.Packages.Tests tests/TabStudio.App.Tests tests/TabStudio.TestRunner.Tests tests/TabStudio.Notebooks.Tests
++ dotnet build tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E 'error|warn|Build succeeded|Time Elapsed'
++ sort -u
++ head -60
+Build succeeded.
+Time Elapsed 00:01:44.00
++ for p in tests/TabStudio.Packages.Tests tests/TabStudio.App.Tests tests/TabStudio.TestRunner.Tests tests/TabStudio.Notebooks.Tests
++ dotnet build tests/TabStudio.TestRunner.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E 'error|warn|Build succeeded|Time Elapsed'
++ head -60
++ sort -u
+Build succeeded.
+Time Elapsed 00:00:02.85
++ for p in tests/TabStudio.Packages.Tests tests/TabStudio.App.Tests tests/TabStudio.TestRunner.Tests tests/TabStudio.Notebooks.Tests
++ dotnet build tests/TabStudio.Notebooks.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E 'error|warn|Build succeeded|Time Elapsed'
++ head -60
++ sort -u
+Build succeeded.
+Time Elapsed 00:00:02.24
++ dotnet test tests/TabStudio.Packages.Tests -c Release --no-build --logger 'console;verbosity=normal' --filter 'FullyQualifiedName~RuntimeAsset|FullyQualifiedName~AssetSelector'
++ grep -E 'Passed|Failed|Error|Assert|Expected|Actual|Total'
++ head -80
+  Passed TabStudio.Packages.Tests.AssetSelectorTests.A_package_with_only_incompatible_assemblies_is_incompatible [38 ms]
+  Passed TabStudio.Packages.Tests.RuntimeAssetTests.SkiaSharp_native_assets_follow_the_device [47 ms]
+  Passed TabStudio.Packages.Tests.RuntimeAssetTests.Microsoft_Data_SqlClient_runs_with_its_unix_assembly_and_compiles_against_ref(rid: "linux-arm64") [1 ms]
+  Passed TabStudio.Packages.Tests.RuntimeAssetTests.Microsoft_Data_SqlClient_runs_with_its_unix_assembly_and_compiles_against_ref(rid: "linux-arm") [< 1 ms]
+  Passed TabStudio.Packages.Tests.RuntimeAssetTests.Microsoft_Data_SqlClient_runs_with_its_unix_assembly_and_compiles_against_ref(rid: "linux-x64") [< 1 ms]
+  Passed TabStudio.Packages.Tests.RuntimeAssetTests.Microsoft_Data_SqlClient_runs_with_its_unix_assembly_and_compiles_against_ref(rid: "android-arm64") [< 1 ms]
+  Passed TabStudio.Packages.Tests.RuntimeAssetTests.Microsoft_Data_SqlClient_runs_with_its_unix_assembly_and_compiles_against_ref(rid: "osx-arm64") [< 1 ms]
+  Passed TabStudio.Packages.Tests.RuntimeAssetTests.A_rid_the_package_has_no_native_folder_for_gets_none [< 1 ms]
+  Passed TabStudio.Packages.Tests.RuntimeAssetTests.Without_runtime_identifiers_the_lib_stub_is_used_as_before [< 1 ms]
+  Passed TabStudio.Packages.Tests.AssetSelectorTests.Falls_back_to_net_framework_assets_when_nothing_else_fits [9 ms]
+  Passed TabStudio.Packages.Tests.RuntimeAssetTests.SQLite_native_library_comes_from_the_nearest_rid(rid: "osx-arm64", expected: "runtimes/osx-arm64/native/libe_sqlite3.dylib") [< 1 ms]
+  Passed TabStudio.Packages.Tests.RuntimeAssetTests.SQLite_native_library_comes_from_the_nearest_rid(rid: "win-x64", expected: "runtimes/win-x64/native/e_sqlite3.dll") [< 1 ms]
+  Passed TabStudio.Packages.Tests.RuntimeAssetTests.SQLite_native_library_comes_from_the_nearest_rid(rid: "linux-musl-x64", expected: "runtimes/linux-musl-x64/native/libe_sqlite3.so") [< 1 ms]
+  Passed TabStudio.Packages.Tests.RuntimeAssetTests.SQLite_native_library_comes_from_the_nearest_rid(rid: "linux-arm64", expected: "runtimes/linux-arm64/native/libe_sqlite3.so") [< 1 ms]
+  Passed TabStudio.Packages.Tests.RuntimeAssetTests.SQLite_native_library_comes_from_the_nearest_rid(rid: "linux-arm", expected: "runtimes/linux-arm/native/libe_sqlite3.so") [< 1 ms]
+  Passed TabStudio.Packages.Tests.RuntimeAssetTests.SQLite_native_library_comes_from_the_nearest_rid(rid: "android-arm64", expected: "runtimes/linux-arm64/native/libe_sqlite3.so") [< 1 ms]
+  Passed TabStudio.Packages.Tests.AssetSelectorTests.Packages_without_a_compiler_version_bring_no_analyzers [1 ms]
+  Passed TabStudio.Packages.Tests.RuntimeAssetTests.SQLite_native_library_comes_from_the_nearest_rid(rid: "linux-x64", expected: "runtimes/linux-x64/native/libe_sqlite3.so") [< 1 ms]
+  Passed TabStudio.Packages.Tests.AssetSelectorTests.Ignores_satellite_assemblies_and_other_files [< 1 ms]
+  Passed TabStudio.Packages.Tests.AssetSelectorTests.Analyzers_come_from_the_highest_roslyn_folder_the_compiler_supports_plus_unversioned_ones [< 1 ms]
+  Passed TabStudio.Packages.Tests.AssetSelectorTests.A_placeholder_folder_is_compatible_but_contributes_nothing [< 1 ms]
+  Passed TabStudio.Packages.Tests.AssetSelectorTests.A_package_without_lib_or_ref_folders_is_compatible [< 1 ms]
+  Passed TabStudio.Packages.Tests.AssetSelectorTests.Compiles_against_reference_assemblies_and_runs_with_lib [< 1 ms]
+  Passed TabStudio.Packages.Tests.AssetSelectorTests.Picks_the_nearest_compatible_framework_folder [1 ms]
+  Passed TabStudio.Packages.Tests.RuntimeAssetTests.A_packages_runtime_json_extends_the_graph [7 ms]
+  Passed TabStudio.Packages.Tests.RuntimeAssetTests.System_Data_SqlClient_runs_with_its_unix_assembly [< 1 ms]
+  Passed TabStudio.Packages.Tests.RuntimeAssetTests.Packages_without_runtime_folders_are_unchanged [< 1 ms]
+  Passed TabStudio.Packages.Tests.RuntimeAssetTests.The_device_rid_is_a_portable_rid [2 ms]
+  Passed TabStudio.Packages.Tests.RuntimeAssetTests.Microsoft_Data_SqlClient_5_uses_the_nearest_framework_before_the_nearest_rid [< 1 ms]
+  Passed TabStudio.Packages.Tests.RuntimeAssetTests.The_device_graph_walks_android_through_linux_and_unix_to_any [< 1 ms]
+  Passed TabStudio.Packages.Tests.RuntimeAssetTests.A_placeholder_in_the_nearest_rid_folder_means_nothing_for_that_rid [< 1 ms]
+Total tests: 31
+     Passed: 31
+ Total time: 0.7575 Seconds
++ dotnet test tests/TabStudio.Packages.Tests -c Release --no-build
++ tail -5
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Packages.Tests/bin/Release/net10.0/TabStudio.Packages.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:    95, Skipped:     0, Total:    95, Duration: 6 s - TabStudio.Packages.Tests.dll (net10.0)
++ find /home/runner/work/tabstudio/tabstudio/.nuget/packages -maxdepth 1 -iname 'microsoft.data.sql*' -o -maxdepth 1 -iname 'sqlitepcl*'
++ head
+/home/runner/work/tabstudio/tabstudio/.nuget/packages/sqlitepclraw.provider.e_sqlite3
+/home/runner/work/tabstudio/tabstudio/.nuget/packages/microsoft.data.sqlclient
+/home/runner/work/tabstudio/tabstudio/.nuget/packages/microsoft.data.sqlite.core
+/home/runner/work/tabstudio/tabstudio/.nuget/packages/sqlitepclraw.core
+/home/runner/work/tabstudio/tabstudio/.nuget/packages/sqlitepclraw.lib.e_sqlite3
+/home/runner/work/tabstudio/tabstudio/.nuget/packages/sqlitepclraw.bundle_e_sqlite3
+/home/runner/work/tabstudio/tabstudio/.nuget/packages/microsoft.data.sqlclient.extensions.abstractions
+/home/runner/work/tabstudio/tabstudio/.nuget/packages/microsoft.data.sqlclient.sni.runtime
+/home/runner/work/tabstudio/tabstudio/.nuget/packages/microsoft.data.sqlite
+/home/runner/work/tabstudio/tabstudio/.nuget/packages/microsoft.data.sqlclient.internal.logging
++ grep -rn 'SqlConnection\|SqliteConnection\|UseSqlServer' tests/TabStudio.App.Tests '--include=*.cs' -l
++ head
