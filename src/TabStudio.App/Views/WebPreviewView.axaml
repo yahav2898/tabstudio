@@ -13,7 +13,7 @@
   <DockPanel>
     <!-- Address bar -->
     <Border DockPanel.Dock="Top" Padding="6,4" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
-      <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto">
+      <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto,Auto">
         <Button Theme="{StaticResource ToolButton}" ToolTip.Tip="Back" Command="{Binding GoBackCommand}">
           <controls:StrokeIcon Data="{StaticResource Icon.Back}" Size="15" />
         </Button>
@@ -29,7 +29,11 @@
             <controls:StrokeIcon Data="{StaticResource Icon.Globe}" Size="13" Margin="8,0,0,0" Foreground="{DynamicResource Brush.TextMuted}" />
           </TextBox.InnerLeftContent>
         </TextBox>
-        <Button Grid.Column="4" Theme="{StaticResource ToolButton}" ToolTip.Tip="Open in browser" Command="{Binding OpenInBrowserCommand}">
+        <!-- A WPF app's window: whole (Fit), at its size (100%) or the pane's (Fill); pinch zooms further. -->
+        <ComboBox x:Name="Zoom" Grid.Column="4" Margin="0,0,4,0" MinWidth="76" VerticalAlignment="Center"
+                  ItemsSource="{Binding ZoomChoices}" SelectedItem="{Binding SelectedZoom}" IsVisible="{Binding IsWpfApp}"
+                  ToolTip.Tip="Zoom: Fit shows the whole window, 100% its real size, Fill gives it the pane. Pinch to zoom further." />
+        <Button Grid.Column="5" Theme="{StaticResource ToolButton}" ToolTip.Tip="Open in browser" Command="{Binding OpenInBrowserCommand}">
           <StackPanel Orientation="Horizontal" Spacing="5">
             <controls:StrokeIcon Data="{StaticResource Icon.External}" Size="15" />
             <TextBlock Text="Open in browser" VerticalAlignment="Center" />

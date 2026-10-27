@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TabStudio.App.Platform;
+using TabStudio.App.Services;
 
 namespace TabStudio.App.ViewModels;
 
@@ -15,12 +16,14 @@ public sealed partial class WebPreviewViewModel : ObservableObject
     /// <summary>Creates the preview.</summary>
     /// <param name="webViews">Creates the platform's embedded browser, if it has one.</param>
     /// <param name="browser">Opens pages in the system browser.</param>
-    public WebPreviewViewModel(IWebViewFactory webViews, IStoragePicker browser)
+    /// <param name="zoomStore">Remembers each WPF project's zoom mode; without it, every WPF app starts in Fit.</param>
+    public WebPreviewViewModel(IWebViewFactory webViews, IStoragePicker browser, PreviewZoomStore? zoomStore = null)
     {
         ArgumentNullException.ThrowIfNull(webViews);
         ArgumentNullException.ThrowIfNull(browser);
         WebViews = webViews;
         _browser = browser;
+        _zoomStore = zoomStore;
     }
 
     /// <summary>Raised when the embedded browser should open a page.</summary>
@@ -66,11 +69,20 @@ public sealed partial class WebPreviewViewModel : ObservableObject
     /// <summary>The page currently shown.</summary>
     public Uri? CurrentPage { get; private set; }
 
+    /// <summary>Whether the page is TabStudio's page around a WPF app, which shows the zoom choice.</summary>
+    [ObservableProperty]
+    public partial bool IsWpfApp { get; private set; }
+
     /// <summary>Shows a web app that started, at its first page.</summary>
     /// <param name="appName">The project's name.</param>
     /// <param name="address">Where it listens.</param>
     /// <param name="launchUrl">The first page, relative to the address, from the launch profile.</param>
-    public void Show(string appName, Uri address, string? launchUrl)
+    public void Show(string appName, Uri address, string? launchUrl) => Show(appName, address, launchUrl, wpfApp: false);
+
+    /// <summary>Marks the app as stopped; its last page stays in the address bar.</summary>
+    public void ShowStopped() => IsRunning = false;
+
+    private void Show(string appName, Uri address, string? launchUrl, bool wpfApp)
     {
         ArgumentNullException.ThrowIfNull(appName);
         ArgumentNullException.ThrowIfNull(address);
@@ -81,12 +93,10 @@ public sealed partial class WebPreviewViewModel : ObservableObject
             : new Uri(address, launchUrl ?? string.Empty);
         AppName = appName;
         AppAddress = address;
+        IsWpfApp = wpfApp;
         IsRunning = true;
         GoTo(page);
     }
-
-    /// <summary>Marks the app as stopped; its last page stays in the address bar.</summary>
-    public void ShowStopped() => IsRunning = false;
 
     /// <summary>The embedded browser reports the page it shows.</summary>
     /// <param name="page">The page.</param>
