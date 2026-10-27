@@ -1,0 +1,151 @@
+> pio run --environment pico --jobs 2
+********************************************************************************
+If you like PlatformIO, please:
+- star it on GitHub > https://github.com/platformio/platformio-core
+- follow us on LinkedIn to stay up-to-date on the latest project news > https://www.linkedin.com/company/platformio/
+- try PlatformIO IDE for embedded development > https://platformio.org/platformio-ide
+********************************************************************************
+
+Processing pico (platform: raspberrypi@1.20.0; board: pico; framework: arduino)
+--------------------------------------------------------------------------------
+Platform Manager: Installing raspberrypi @ 1.20.0
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Platform Manager: raspberrypi@1.20.0 has been installed!
+Tool Manager: Installing platformio/toolchain-gccarmnoneeabi @ ~1.90201.0
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: toolchain-gccarmnoneeabi@1.90201.191206 has been installed!
+Tool Manager: Installing platformio/framework-arduino-mbed @ ~4.6.0
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: framework-arduino-mbed@4.6.0 has been installed!
+Tool Manager: Installing platformio/tool-rp2040tools @ ~1.0.2
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40%
+Tool Manager: tool-rp2040tools@1.0.2 has been installed!
+Tool Manager: Installing platformio/tool-scons @ ~4.40801.0
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: tool-scons@4.40801.0 has been installed!
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/raspberrypi/pico.html
+PLATFORM: Raspberry Pi RP2040 (1.20.0) > Raspberry Pi Pico
+HARDWARE: RP2040 133MHz, 264KB RAM, 2MB Flash
+DEBUG: Current (cmsis-dap) External (cmsis-dap, jlink, raspberrypi-swd)
+PACKAGES: 
+ - framework-arduino-mbed @ 4.6.0 
+ - tool-rp2040tools @ 1.0.2 
+ - toolchain-gccarmnoneeabi @ 1.90201.191206 (9.2.1)
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 41 compatible libraries
+Scanning dependencies...
+No dependencies
+Building in release mode
+Compiling .pio/build/pico/src/main.cpp.o
+Generating LD script .pio/build/pico/cpp.linker_script.ld
+Compiling .pio/build/pico/FrameworkArduinoVariant/double_tap_usb_boot.cpp.o
+In file included from /home/runner/work/_temp/canonical-templates/projects/pico/.tabstudio/platformio-boxed/packages/framework-arduino-mbed/cores/arduino/mbed/targets/TARGET_RASPBERRYPI/TARGET_RP2040/pico-sdk/rp2_common/pico_platform/include/pico/platform.h:19,
+                 from /home/runner/work/_temp/canonical-templates/projects/pico/.tabstudio/platformio-boxed/packages/framework-arduino-mbed/cores/arduino/mbed/targets/TARGET_RASPBERRYPI/TARGET_RP2040/pico-sdk/common/pico_base/include/pico.h:22,
+                 from .tabstudio/platformio-boxed/packages/framework-arduino-mbed/variants/RASPBERRY_PI_PICO/double_tap_usb_boot.cpp:2:
+/home/runner/work/_temp/canonical-templates/projects/pico/.tabstudio/platformio-boxed/packages/framework-arduino-mbed/cores/arduino/mbed/targets/TARGET_RASPBERRYPI/TARGET_RP2040/pico-sdk/rp2_common/hardware_timer/include/hardware/timer.h: In function 'uint32_t time_us_32()':
+/home/runner/work/_temp/canonical-templates/projects/pico/.tabstudio/platformio-boxed/packages/framework-arduino-mbed/cores/arduino/mbed/targets/TARGET_RASPBERRYPI/TARGET_RP2040/pico-sdk/rp2040/hardware_regs/include/hardware/regs/addressmap.h:58:23: warning: type qualifiers ignored on cast result type [-Wignored-qualifiers]
+   58 | #define TIMER_BASE _u(0x40054000)
+      |                       ^~~~~~~~~~
+/home/runner/work/_temp/canonical-templates/projects/pico/.tabstudio/platformio-boxed/packages/framework-arduino-mbed/cores/arduino/mbed/targets/TARGET_RASPBERRYPI/TARGET_RP2040/pico-sdk/rp2040/hardware_regs/include/hardware/platform_defs.h:16:15: note: in definition of macro '_u'
+   16 | #define _u(x) x ## u
+      |               ^
+/home/runner/work/_temp/canonical-templates/projects/pico/.tabstudio/platformio-boxed/packages/framework-arduino-mbed/cores/arduino/mbed/targets/TARGET_RASPBERRYPI/TARGET_RP2040/pico-sdk/rp2040/hardware_structs/include/hardware/structs/timer.h:103:38: note: in expansion of macro 'TIMER_BASE'
+  103 | #define timer_hw ((timer_hw_t *const)TIMER_BASE)
+      |                                      ^~~~~~~~~~
+/home/runner/work/_temp/canonical-templates/projects/pico/.tabstudio/platformio-boxed/packages/framework-arduino-mbed/cores/arduino/mbed/targets/TARGET_RASPBERRYPI/TARGET_RP2040/pico-sdk/rp2_common/hardware_timer/include/hardware/timer.h:66:12: note: in expansion of macro 'timer_hw'
+   66 |     return timer_hw->timerawl;
+      |            ^~~~~~~~
+/home/runner/work/_temp/canonical-templates/projects/pico/.tabstudio/platformio-boxed/packages/framework-arduino-mbed/cores/arduino/mbed/targets/TARGET_RASPBERRYPI/TARGET_RP2040/pico-sdk/rp2_common/hardware_timer/include/hardware/timer.h: In function 'bool time_reached(absolute_time_t)':
+/home/runner/work/_temp/canonical-templates/projects/pico/.tabstudio/platformio-boxed/packages/framework-arduino-mbed/cores/arduino/mbed/targets/TARGET_RASPBERRYPI/TARGET_RP2040/pico-sdk/rp2040/hardware_regs/include/hardware/regs/addressmap.h:58:23: warning: type qualifiers ignored on cast result type [-Wignored-qualifiers]
+   58 | #define TIMER_BASE _u(0x40054000)
+      |                       ^~~~~~~~~~
+/home/runner/work/_temp/canonical-templates/projects/pico/.tabstudio/platformio-boxed/packages/framework-arduino-mbed/cores/arduino/mbed/targets/TARGET_RASPBERRYPI/TARGET_RP2040/pico-sdk/rp2040/hardware_regs/include/hardware/platform_defs.h:16:15: note: in definition of macro '_u'
+   16 | #define _u(x) x ## u
+      |               ^
+/home/runner/work/_temp/canonical-templates/projects/pico/.tabstudio/platformio-boxed/packages/framework-arduino-mbed/cores/arduino/mbed/targets/TARGET_RASPBERRYPI/TARGET_RP2040/pico-sdk/rp2040/hardware_structs/include/hardware/structs/timer.h:103:38: note: in expansion of macro 'TIMER_BASE'
+  103 | #define timer_hw ((timer_hw_t *const)TIMER_BASE)
+      |                                      ^~~~~~~~~~
+/home/runner/work/_temp/canonical-templates/projects/pico/.tabstudio/platformio-boxed/packages/framework-arduino-mbed/cores/arduino/mbed/targets/TARGET_RASPBERRYPI/TARGET_RP2040/pico-sdk/rp2_common/hardware_timer/include/hardware/timer.h:117:19: note: in expansion of macro 'timer_hw'
+  117 |     uint32_t hi = timer_hw->timerawh;
+      |                   ^~~~~~~~
+/home/runner/work/_temp/canonical-templates/projects/pico/.tabstudio/platformio-boxed/packages/framework-arduino-mbed/cores/arduino/mbed/targets/TARGET_RASPBERRYPI/TARGET_RP2040/pico-sdk/rp2040/hardware_regs/include/hardware/regs/addressmap.h:58:23: warning: type qualifiers ignored on cast result type [-Wignored-qualifiers]
+   58 | #define TIMER_BASE _u(0x40054000)
+      |                       ^~~~~~~~~~
+/home/runner/work/_temp/canonical-templates/projects/pico/.tabstudio/platformio-boxed/packages/framework-arduino-mbed/cores/arduino/mbed/targets/TARGET_RASPBERRYPI/TARGET_RP2040/pico-sdk/rp2040/hardware_regs/include/hardware/platform_defs.h:16:15: note: in definition of macro '_u'
+   16 | #define _u(x) x ## u
+      |               ^
+/home/runner/work/_temp/canonical-templates/projects/pico/.tabstudio/platformio-boxed/packages/framework-arduino-mbed/cores/arduino/mbed/targets/TARGET_RASPBERRYPI/TARGET_RP2040/pico-sdk/rp2040/hardware_structs/include/hardware/structs/timer.h:103:38: note: in expansion of macro 'TIMER_BASE'
+  103 | #define timer_hw ((timer_hw_t *const)TIMER_BASE)
+      |                                      ^~~~~~~~~~
+/home/runner/work/_temp/canonical-templates/projects/pico/.tabstudio/platformio-boxed/packages/framework-arduino-mbed/cores/arduino/mbed/targets/TARGET_RASPBERRYPI/TARGET_RP2040/pico-sdk/rp2_common/hardware_timer/include/hardware/timer.h:118:33: note: in expansion of macro 'timer_hw'
+  118 |     return (hi >= hi_target && (timer_hw->timerawl >= (uint32_t) target || hi != hi_target));
+      |                                 ^~~~~~~~
+Compiling .pio/build/pico/FrameworkArduinoVariant/variant.cpp.o
+Compiling .pio/build/pico/FrameworkArduino/Interrupts.cpp.o
+Compiling .pio/build/pico/FrameworkArduino/Serial.cpp.o
+Archiving .pio/build/pico/libFrameworkArduinoVariant.a
+Indexing .pio/build/pico/libFrameworkArduinoVariant.a
+Compiling .pio/build/pico/FrameworkArduino/Tone.cpp.o
+Compiling .pio/build/pico/FrameworkArduino/USB/PluggableUSBDevice.cpp.o
+Compiling .pio/build/pico/FrameworkArduino/USB/USBCDC.cpp.o
+Compiling .pio/build/pico/FrameworkArduino/USB/USBSerial.cpp.o
+Compiling .pio/build/pico/FrameworkArduino/WMath.cpp.o
+Compiling .pio/build/pico/FrameworkArduino/abi.cpp.o
+Compiling .pio/build/pico/FrameworkArduino/api/CanMsg.cpp.o
+Compiling .pio/build/pico/FrameworkArduino/api/CanMsgRingbuffer.cpp.o
+Compiling .pio/build/pico/FrameworkArduino/api/Common.cpp.o
+Compiling .pio/build/pico/FrameworkArduino/api/IPAddress.cpp.o
+Compiling .pio/build/pico/FrameworkArduino/api/PluggableUSB.cpp.o
+Compiling .pio/build/pico/FrameworkArduino/api/Print.cpp.o
+Compiling .pio/build/pico/FrameworkArduino/api/Stream.cpp.o
+Compiling .pio/build/pico/FrameworkArduino/api/String.cpp.o
+Compiling .pio/build/pico/FrameworkArduino/arm_hal_random.c.o
+Compiling .pio/build/pico/FrameworkArduino/as_mbed_library/variant.cpp.o
+Compiling .pio/build/pico/FrameworkArduino/itoa.c.o
+Compiling .pio/build/pico/FrameworkArduino/main.cpp.o
+Compiling .pio/build/pico/FrameworkArduino/mbed/platform/cxxsupport/mstd_mutex.cpp.o
+Compiling .pio/build/pico/FrameworkArduino/pinToIndex.cpp.o
+Compiling .pio/build/pico/FrameworkArduino/random_seed.cpp.o
+Compiling .pio/build/pico/FrameworkArduino/timer.cpp.o
+Compiling .pio/build/pico/FrameworkArduino/wiring.cpp.o
+Compiling .pio/build/pico/FrameworkArduino/wiring_analog.cpp.o
+Compiling .pio/build/pico/FrameworkArduino/wiring_digital.cpp.o
+Compiling .pio/build/pico/FrameworkArduino/wiring_pulse.cpp.o
+Compiling .pio/build/pico/FrameworkArduino/wiring_shift.cpp.o
+Archiving .pio/build/pico/libFrameworkArduino.a
+Indexing .pio/build/pico/libFrameworkArduino.a
+Linking .pio/build/pico/firmware.elf
+Generating UF2 image
+elf2uf2 ".pio/build/pico/firmware.elf" ".pio/build/pico/firmware.uf2"
+Checking size .pio/build/pico/firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [==        ]  15.1% (used 40744 bytes from 270336 bytes)
+Flash: [          ]   0.2% (used 4034 bytes from 2097152 bytes)
+Building .pio/build/pico/firmware.bin
+======================== [SUCCESS] Took 321.45 seconds ========================
+> pio run --environment pico --target compiledb --jobs 2
+Processing pico (platform: raspberrypi@1.20.0; board: pico; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/raspberrypi/pico.html
+PLATFORM: Raspberry Pi RP2040 (1.20.0) > Raspberry Pi Pico
+HARDWARE: RP2040 133MHz, 264KB RAM, 2MB Flash
+DEBUG: Current (cmsis-dap) External (cmsis-dap, jlink, raspberrypi-swd)
+PACKAGES: 
+ - framework-arduino-mbed @ 4.6.0 
+ - tool-rp2040tools @ 1.0.2 
+ - toolchain-gccarmnoneeabi @ 1.90201.191206 (9.2.1)
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 41 compatible libraries
+Scanning dependencies...
+No dependencies
+Building in release mode
+Building compilation database compile_commands.json
+========================= [SUCCESS] Took 5.26 seconds =========================
