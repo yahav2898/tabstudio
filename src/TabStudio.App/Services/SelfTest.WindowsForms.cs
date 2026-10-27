@@ -47,6 +47,11 @@ public static partial class SelfTest
             {
                 return new SelfTestResult(false, $"Windows Forms: the form is not the template's: '{form.Title}'", clock.Elapsed);
             }
+
+            if (await CopyAndPasteImageAsync((FormsDesktop)workspace.AppPreview.View, cancellationToken) is { } problem)
+            {
+                return new SelfTestResult(false, $"Windows Forms: a picture copied to the clipboard did not come back: {problem}", clock.Elapsed);
+            }
         }
         finally
         {
@@ -57,6 +62,54 @@ public static partial class SelfTest
         var ran = string.Create(CultureInfo.InvariantCulture, $"Windows Forms: Form1 shown in {shown.TotalSeconds:0.0} s");
         var designed = await DesignWindowsFormAsync(workspace);
         return new SelfTestResult(designed.Success, $"{ran} | {designed.Message}", clock.Elapsed);
+    }
+
+    /// <summary>
+    /// Draws a picture with <c>Graphics.FromImage</c> in the running app, copies it with <c>Clipboard.SetImage</c> and
+    /// pastes it with <c>Clipboard.GetImage</c>, through the device's clipboard.
+    /// </summary>
+    /// <returns>What went wrong, or <see langword="null"/> when the pasted picture has the drawn pixels.</returns>
+    private static async Task<string?> CopyAndPasteImageAsync(FormsDesktop desktop, CancellationToken cancellationToken)
+    {
+        if (desktop.Runtime is not { } runtime)
+        {
+            return "the app ended";
+        }
+
+        var done = new TaskCompletionSource<string?>(TaskCreationOptions.RunContinuationsAsynchronously);
+        runtime.Post(() =>
+        {
+            try
+            {
+                using var picture = new System.Drawing.Bitmap(24, 16);
+                using (var g = System.Drawing.Graphics.FromImage(picture))
+                {
+                    g.Clear(System.Drawing.Color.White);
+                    g.FillRectangle(System.Drawing.Brushes.Red, 4, 4, 12, 8);
+                }
+
+                System.Windows.Forms.Clipboard.SetImage(picture);
+                using var pasted = System.Windows.Forms.Clipboard.GetImage() as System.Drawing.Bitmap;
+                done.TrySetResult(
+                    pasted is null ? "Clipboard.GetImage returned nothing"
+                    : pasted.Size != picture.Size ? $"it is {pasted.Width} by {pasted.Height}"
+                    : pasted.GetPixel(8, 8).ToArgb() != System.Drawing.Color.Red.ToArgb() ? $"its red pixel is {pasted.GetPixel(8, 8)}"
+                    : null);
+            }
+            catch (Exception ex) when (ex is not OutOfMemoryException)
+            {
+                done.TrySetResult($"{ex.GetType().Name}: {ex.Message}");
+            }
+        });
+
+        try
+        {
+            return await done.Task.WaitAsync(TimeSpan.FromSeconds(30), cancellationToken);
+        }
+        catch (TimeoutException)
+        {
+            return "the clipboard did not answer in 30 s";
+        }
     }
 
     /// <summary>Opens Form1.cs in the Forms designer and adds a button, as the Toolbox does.</summary>

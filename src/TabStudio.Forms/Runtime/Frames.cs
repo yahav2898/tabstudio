@@ -156,4 +156,24 @@ internal interface IFormsPresenter
 
     /// <summary>Reads text from the clipboard.</summary>
     Task<string?> GetClipboardTextAsync();
+
+    /// <summary>Copies an image to the clipboard.</summary>
+    /// <param name="png">The image as a PNG file.</param>
+    Task SetClipboardImageAsync(byte[] png);
+
+    /// <summary>Reads an image from the clipboard.</summary>
+    /// <returns>The image file's bytes (PNG, JPEG or another format), or <see langword="null"/> when there is none.</returns>
+    Task<byte[]?> GetClipboardImageAsync();
+}
+
+/// <summary>The device's own clipboard for images, which the IDE provides where Avalonia's clipboard has none, as on Android.</summary>
+internal interface IClipboardImages
+{
+    /// <summary>Copies an image to the device's clipboard.</summary>
+    /// <param name="png">The image as a PNG file.</param>
+    Task SetImageAsync(byte[] png);
+
+    /// <summary>Reads the image on the device's clipboard.</summary>
+    /// <returns>The image file's bytes, or <see langword="null"/> when the clipboard holds no image.</returns>
+    Task<byte[]?> GetImageAsync();
 }

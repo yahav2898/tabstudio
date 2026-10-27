@@ -207,23 +207,36 @@ public sealed class Application
     /// <summary>Handles every message waiting now, and draws the windows that changed.</summary>
     public static void DoEvents() => RequireRuntime().DoEvents();
 
-    /// <summary>Restarting is not supported in the app preview; press F5 to run the app again.</summary>
-    /// <exception cref="NotSupportedException">Always.</exception>
-    public static void Restart() =>
-        throw new NotSupportedException("Application.Restart is not supported by TabStudio's Forms layer: close the app and press F5 to run it again.");
+    /// <summary>
+    /// Closes the app and starts it again, as Windows does: the forms get FormClosing, and one that cancels keeps the
+    /// app running. In the app preview the app is built and loaded again, so its static fields start fresh too.
+    /// </summary>
+    public static void Restart()
+    {
+        var runtime = RequireRuntime();
+        runtime.RestartRequested = true;
+        var cancel = new CancelEventArgs();
+        Exit(cancel);
+        if (cancel.Cancel)
+        {
+            runtime.RestartRequested = false;
+        }
+    }
 
-    /// <summary>Message filters are not supported: there are no Windows messages.</summary>
-    /// <param name="value">The filter.</param>
-    /// <exception cref="NotSupportedException">Always.</exception>
-    public static void AddMessageFilter(IMessageFilter value) =>
-        throw new NotSupportedException("Application.AddMessageFilter is not supported by TabStudio's Forms layer: there are no Windows messages; handle KeyDown with KeyPreview on the form instead.");
+    /// <summary>
+    /// Adds a filter that sees the app's keyboard and mouse messages before they reach their controls, as Windows
+    /// delivers them: <c>WM_KEYDOWN</c>, <c>WM_KEYUP</c>, <c>WM_CHAR</c>, mouse buttons, moves and the wheel.
+    /// </summary>
+    /// <param name="value">The filter; returning <see langword="true"/> from PreFilterMessage stops the message.</param>
+    public static void AddMessageFilter(IMessageFilter value)
+    {
+        ArgumentNullException.ThrowIfNull(value);
+        RequireRuntime().MessageFilters.Add(value);
+    }
 
     /// <summary>Removes a message filter.</summary>
     /// <param name="value">The filter.</param>
-    public static void RemoveMessageFilter(IMessageFilter value)
-    {
-        // No filter can be added.
-    }
+    public static void RemoveMessageFilter(IMessageFilter value) => FormsRuntime.Current?.MessageFilters.Remove(value);
 
     /// <summary>Raises the Idle event.</summary>
     /// <param name="e">The event data.</param>

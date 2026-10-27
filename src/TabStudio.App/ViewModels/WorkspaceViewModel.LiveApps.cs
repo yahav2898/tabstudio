@@ -20,6 +20,9 @@ public sealed partial class WorkspaceViewModel
     private ProjectInfo? _liveProject;
     private bool _restartLiveApp;
 
+    /// <summary>Whether the live app restarts because it asked to, with Application.Restart, rather than after a save.</summary>
+    private bool _restartRequestedByApp;
+
     /// <summary>Whether F5 shows a project beside the code rather than running it as a program.</summary>
     private static bool IsLiveApp(ProjectInfo project) =>
         IsWebApp(project) || IsAvaloniaApp(project) || IsWindowsFormsApp(project) || IsUnoApp(project) || IsWebAssemblyApp(project) || ProjectClassifier.IsBlazorWebAppClient(project) || IsWpfApp(project);
@@ -81,7 +84,10 @@ public sealed partial class WorkspaceViewModel
         if (_restartLiveApp && result.Outcome != RunOutcome.Crashed)
         {
             Output.WriteLine();
-            Output.WriteLine($"Restarting '{project.Name}' with the saved changes.", OutputKind.Info);
+            Output.WriteLine(
+                _restartRequestedByApp ? $"Restarting '{project.Name}': it called Application.Restart." : $"Restarting '{project.Name}' with the saved changes.",
+                OutputKind.Info);
+            _restartRequestedByApp = false;
             return;
         }
 

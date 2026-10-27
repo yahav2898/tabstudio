@@ -73,8 +73,23 @@ public class DataObject : IDataObject
     public virtual void SetData(object? data)
     {
         ArgumentNullException.ThrowIfNull(data);
-        SetData(data is string ? DataFormats.Text : data.GetType().FullName ?? data.GetType().Name, data);
+        SetData(data switch
+        {
+            string => DataFormats.Text,
+            System.Drawing.Image => DataFormats.Bitmap,
+            _ => data.GetType().FullName ?? data.GetType().Name,
+        }, data);
     }
+
+    /// <summary>Whether the data holds an image.</summary>
+    public virtual bool ContainsImage() => GetDataPresent(DataFormats.Bitmap);
+
+    /// <summary>The image the data holds, or <see langword="null"/>.</summary>
+    public virtual System.Drawing.Image? GetImage() => GetData(DataFormats.Bitmap) as System.Drawing.Image;
+
+    /// <summary>Stores an image.</summary>
+    /// <param name="image">The image.</param>
+    public virtual void SetImage(System.Drawing.Image image) => SetData(DataFormats.Bitmap, image ?? throw new ArgumentNullException(nameof(image)));
 
     /// <summary>Whether the data holds text.</summary>
     public virtual bool ContainsText() => GetDataPresent(DataFormats.Text);
@@ -87,7 +102,12 @@ public class DataObject : IDataObject
     public virtual void SetText(string textData) => SetData(DataFormats.Text, textData);
 
     private static string Normalize(string format) =>
-        format is "UnicodeText" or "System.String" or "OEMText" or "CommaSeparatedValue" ? DataFormats.Text : format;
+        format switch
+        {
+            "UnicodeText" or "System.String" or "OEMText" or "CommaSeparatedValue" => DataFormats.Text,
+            "System.Drawing.Bitmap" or "System.Drawing.Image" or "PNG" or "DeviceIndependentBitmap" => DataFormats.Bitmap,
+            _ => format,
+        };
 }
 
 /// <summary>The names of the clipboard's formats.</summary>

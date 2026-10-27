@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using TabStudio.Forms.Rendering;
+using TabStudio.Forms.Runtime;
 
 namespace System.Windows.Forms;
 
@@ -14,6 +15,8 @@ public class PictureBox : Control, ISupportInitialize
     private Image? _image;
     private PictureBoxSizeMode _sizeMode = PictureBoxSizeMode.Normal;
     private BorderStyle _borderStyle = BorderStyle.None;
+    private static readonly HttpClient Http = new() { Timeout = TimeSpan.FromSeconds(30) };
+
     private string? _imageLocation;
 
     /// <summary>Creates a picture box.</summary>
@@ -120,23 +123,18 @@ public class PictureBox : Control, ISupportInitialize
         Load(_imageLocation);
     }
 
-    /// <summary>Loads the image from a file.</summary>
-    /// <param name="url">The path of the file.</param>
+    /// <summary>Loads the image at a path or a web address, waiting for it, and raises LoadCompleted.</summary>
+    /// <param name="url">A file's path, or an http or https address.</param>
     public void Load(string url)
     {
         ArgumentException.ThrowIfNullOrEmpty(url);
-        if (Uri.TryCreate(url, UriKind.Absolute, out var uri) && !uri.IsFile)
-        {
-            throw new NotSupportedException("PictureBox.Load from a web address is not supported in TabStudio's Windows Forms; load the image from a file or a stream.");
-        }
-
         _imageLocation = url;
         Exception? error = null;
         try
         {
-            Image = Image.FromFile(uri?.IsFile == true ? uri.LocalPath : url);
+            Image = Uri.TryCreate(url, UriKind.Absolute, out var uri) && !uri.IsFile ? Download(uri) : Image.FromFile(uri?.IsFile == true ? uri.LocalPath : url);
         }
-        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException)
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException or HttpRequestException or TaskCanceledException or NotSupportedException)
         {
             error = exception;
             Image = ErrorImage;
@@ -149,11 +147,29 @@ public class PictureBox : Control, ISupportInitialize
         }
     }
 
-    /// <summary>Loads the image from a file in the background. It loads at once here.</summary>
+    /// <summary>Downloads an image, keeping the app's windows responsive while it waits.</summary>
+    private static Image Download(Uri uri)
+    {
+        if (uri.Scheme is not ("http" or "https"))
+        {
+            throw new NotSupportedException($"PictureBox.Load reads files and http or https addresses, not {uri.Scheme} addresses.");
+        }
+
+        var download = Http.GetByteArrayAsync(uri);
+        if (FormsRuntime.Current is { IsOnThread: true } runtime)
+        {
+            runtime.RunLoop(() => download.IsCompleted);
+        }
+
+        using var stream = new MemoryStream(download.GetAwaiter().GetResult());
+        return Image.FromStream(stream);
+    }
+
+    /// <summary>Loads the image at <see cref="ImageLocation"/>; the app's windows stay responsive while it downloads.</summary>
     public void LoadAsync() => Load();
 
-    /// <summary>Loads the image from a file in the background. It loads at once here.</summary>
-    /// <param name="url">The path of the file.</param>
+    /// <summary>Loads the image at a path or a web address; the app's windows stay responsive while it downloads.</summary>
+    /// <param name="url">A file's path, or an http or https address.</param>
     public void LoadAsync(string url) => Load(url);
 
     /// <inheritdoc />

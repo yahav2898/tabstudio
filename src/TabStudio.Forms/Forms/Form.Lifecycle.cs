@@ -72,6 +72,32 @@ public partial class Form
         {
             CloseFromWindow(CloseReason.UserClosing);
         }
+        else if (IsMdiChild && !IsDisposed)
+        {
+            CloseMdiChild(CloseReason.UserClosing);
+        }
+        else if (!_topLevel && Parent is not null && !IsDisposed && !_closing)
+        {
+            // A form shown inside a panel closes as a window does: FormClosing, FormClosed, then it is disposed.
+            _closing = true;
+            try
+            {
+                var closing = new FormClosingEventArgs(CloseReason.UserClosing, cancel: false);
+                OnFormClosing(closing);
+                if (closing.Cancel)
+                {
+                    return;
+                }
+
+                OnFormClosed(new FormClosedEventArgs(CloseReason.UserClosing));
+            }
+            finally
+            {
+                _closing = false;
+            }
+
+            Dispose();
+        }
     }
 
     /// <summary>Brings the form to the front and makes it the active window.</summary>
@@ -80,6 +106,11 @@ public partial class Form
         if (WindowInternal is { } window)
         {
             window.Runtime.Activate(window);
+        }
+        else if (_mdiParent is { } parent)
+        {
+            parent.Activate();
+            parent.MdiClient?.Activate(this);
         }
     }
 
@@ -114,12 +145,6 @@ public partial class Form
             ownedForm.Owner = null;
         }
     }
-
-    /// <summary>Lays out MDI children. MDI is not supported in the app preview.</summary>
-    /// <param name="value">The layout.</param>
-    /// <exception cref="NotSupportedException">Always.</exception>
-    public void LayoutMdi(MdiLayout value) =>
-        throw new NotSupportedException("Form.LayoutMdi is not supported by TabStudio's Forms layer: MDI forms are not supported.");
 
     /// <summary>Centers the form on the desktop.</summary>
     protected void CenterToScreen()
@@ -179,7 +204,7 @@ public partial class Form
     {
         if (!_topLevel)
         {
-            base.SetVisibleCore(value);
+            SetChildVisibleCore(value);
             return;
         }
 
@@ -297,7 +322,17 @@ public partial class Form
                 owned.CloseFromWindow(CloseReason.FormOwnerClosing);
             }
 
-            var closing = new FormClosingEventArgs(reason, cancel: false);
+            // MDI children are asked first; one that cancels cancels the parent's closing, which the parent sees.
+            var children = MdiChildren.Where(child => child.VisibleSelf).ToList();
+            var childCancelled = false;
+            foreach (var child in children)
+            {
+                var childClosing = new FormClosingEventArgs(CloseReason.MdiFormClosing, cancel: false);
+                child.OnFormClosing(childClosing);
+                childCancelled |= childClosing.Cancel;
+            }
+
+            var closing = new FormClosingEventArgs(reason, childCancelled);
             OnFormClosing(closing);
             if (closing.Cancel)
             {
@@ -312,6 +347,11 @@ public partial class Form
             if (_modal && _dialogResult == DialogResult.None)
             {
                 _dialogResult = DialogResult.Cancel;
+            }
+
+            foreach (var child in children)
+            {
+                child.OnFormClosed(new FormClosedEventArgs(CloseReason.MdiFormClosing));
             }
 
             CloseWindowCore();

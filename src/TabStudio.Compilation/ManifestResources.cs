@@ -41,7 +41,9 @@ public static class ManifestResources
             }
             else if (!IsCultureSpecific(path))
             {
-                resources.Add(new ResourceDescription(ResxResourceName(project, path), () => CompileResx(file), isPublic: true));
+                // A Windows Forms .resx file holding images, icons or image lists compiles for the Forms layer's reader.
+                var forms = WindowsForms.WindowsFormsProject.UsesWindowsForms(project);
+                resources.Add(new ResourceDescription(ResxResourceName(project, path), () => (forms ? WindowsForms.WindowsFormsResources.TryCompile(file) : null) ?? CompileResx(file), isPublic: true));
             }
         }
 
