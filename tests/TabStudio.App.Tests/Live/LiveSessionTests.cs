@@ -289,14 +289,17 @@ public sealed class LiveSessionTests
             guestProgram.Document.Insert(guestLine.Offset, "    // Noam: then it greets\n");
             await UiTestHelpers.WaitUntilAsync(() => hostProgram.Document.Text == guestProgram.Document.Text && hostProgram.Document.Text.Contains("Noam:", StringComparison.Ordinal), Timeout, "both edits on both devices");
 
+            // Each selects in its own editor, which says where it is as a person's selection does.
             var noam = hostProgram.Document.Text.IndexOf("then it greets", StringComparison.Ordinal);
             var dana = guestProgram.Document.Text.IndexOf("the greeter comes", StringComparison.Ordinal);
-            guestProgram.CaretOffset = noam;
-            guestProgram.Live!.ReportPlace(noam, noam + "then it greets".Length, 1);
-            hostProgram.CaretOffset = dana;
-            hostProgram.Live!.ReportPlace(dana, dana, 1);
+            host.Workspace.IsTouchBarCollapsed = true;
+            guest.Workspace.IsTouchBarCollapsed = true;
+            await UiTestHelpers.WaitUntilAsync(() => FindEditor(hostWindow) is not null && FindEditor(guestWindow) is not null, Timeout, "both editors");
+            FindEditor(guestWindow)!.Editor.Select(noam, "then it greets".Length);
+            FindEditor(hostWindow)!.Editor.CaretOffset = dana;
             await UiTestHelpers.WaitUntilAsync(
-                () => hostProgram.Live.Carets is [{ Anchor: var anchor }] && anchor == noam && guestProgram.Live.Carets is [{ Head: var head }] && head == dana
+                () => hostProgram.Live!.Carets is [{ Anchor: var anchor, Head: var end }] && anchor == noam && end == noam + "then it greets".Length
+                    && guestProgram.Live!.Carets is [{ Head: var head }] && head == dana
                     && hostProgram.HasLiveAvatars && guestProgram.HasLiveAvatars,
                 Timeout,
                 "each device to show the other's caret");

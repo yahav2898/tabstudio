@@ -150,15 +150,17 @@
                     <Border Classes="avatar" Background="{Binding Avatar.Background}" Margin="0,0,10,0" VerticalAlignment="Center">
                       <TextBlock Text="{Binding Avatar.Initials}" />
                     </Border>
-                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                      <StackPanel Orientation="Horizontal" Spacing="6">
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="4">
+                      <Grid ColumnDefinitions="*,Auto">
                         <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextBright}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                        <controls:StrokeIcon Grid.Column="1" Data="{StaticResource Icon.Hand}" Size="14" Margin="6,0,0,0" Foreground="{DynamicResource Brush.Warning}" IsVisible="{Binding HandRaised}" VerticalAlignment="Center" />
+                      </Grid>
+                      <Grid ColumnDefinitions="Auto,*">
                         <Border Classes="pill" VerticalAlignment="Center">
                           <TextBlock Text="{Binding RoleText}" />
                         </Border>
-                        <controls:StrokeIcon Data="{StaticResource Icon.Hand}" Size="14" Foreground="{DynamicResource Brush.Warning}" IsVisible="{Binding HandRaised}" VerticalAlignment="Center" />
-                      </StackPanel>
-                      <TextBlock Classes="muted small" Text="{Binding Detail}" TextTrimming="CharacterEllipsis" IsVisible="{Binding HasDetail}" />
+                        <TextBlock Grid.Column="1" Classes="muted small" Margin="6,0,0,0" Text="{Binding Detail}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" IsVisible="{Binding HasDetail}" />
+                      </Grid>
                     </StackPanel>
                     <Button Grid.Column="2" Theme="{StaticResource SecondaryButton}" Height="36" MinHeight="36" Padding="12,0" Margin="8,0,0,0"
                             VerticalAlignment="Center" Command="{Binding FollowCommand}" IsVisible="{Binding CanFollow}"
