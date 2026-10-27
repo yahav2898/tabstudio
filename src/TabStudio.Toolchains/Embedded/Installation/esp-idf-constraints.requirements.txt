@@ -4,7 +4,8 @@
 setuptools>=64
 
 # click: Min. version was set to support the API used in idf.py and auto-completion
-click>=7.0,<8.2
+click>=7.0,<8.5
+rich-click~=1.9.0
 
 # pyserial: Min. version was set to support the used API
 pyserial>=3.3,<4
@@ -13,67 +14,45 @@ pyserial>=3.3,<4
 # Only binary for cryptography is here to make it work on ARMv7 architecture
 # We do have cryptography binary on https://dl.espressif.com/pypi for ARM
 # On https://pypi.org/ are no ARM binaries as standard now
-# Note: since 44.0.1 the arm binaries are also available for ARM
-#       https://cryptography.io/en/latest/changelog/#v44-0-1
-cryptography>=2.1.4,<45
+cryptography>=2.1.4,<49
 --only-binary cryptography
 
 # pyparsing: Min version was set based on https://github.com/pyparsing/pyparsing/issues/482
-pyparsing>=3.1.0,<3.3
+pyparsing>=3.1.0,<3.4
 
 # pyelftools
 
 # We will bump component manager dependencies after testing the newly released versions with the ESP-IDF pipeline
-idf-component-manager>=2.2,<=2.5.2
-urllib3<2
+idf-component-manager>=3.0,<=3.1.2
 
-esptool~=4.8
+# Keep always dev0 for esptool here in order to not reject development releases on local as well pipeline
+# installations. dev0 doesn't have to exist for this to work.
+esptool>=5.3.0.dev0,<6
 
 # bitstring (esptool dependency): 5.0 introduces breaking changes
 bitstring<5
 
 # IDFCI-13852
-esp-coredump~=1.10,!=1.17.0
+esp-coredump~=1.14,!=1.17.0
 
-# esp-idf-kconfig: Config name was extended from 40 to 50 chars since 2.0.2 version
-esp-idf-kconfig>=2.0.2,<3.0.0
+esp-idf-kconfig>=3.11.1,<4.0.0
 
 freertos_gdb~=1.0
 
-esp-idf-monitor>=1.5,<2
+esp-idf-monitor>=1.10.0,<2
 
-# 1.4.0 contains support for empty output sections in linker's map file
-esp-idf-size>=1.4.0,<2.0.0
+esp-idf-size>=2.0.0,<3.0.0
 
 esp-idf-nvs-partition-gen~=0.1.9
 
-# The --only-binary flag is used to prevent local building of tree-sitter-c,
-# which avoids build failures on armv7l architecture.
-# Only versions 0.21.4 (for Python 3.9 and below) and 0.24.1 (for Python 3.10 and above) are available.
-tree-sitter-c>=0.21.4
---only-binary tree-sitter-c
+tree-sitter~=0.25
+tree-sitter-c~=0.24
+
+mcp<2
 
 # --------- CORE ends ----------
 
-# --------- GDBGUI -------------
-
-gdbgui==0.13.2.0; python_version < "3.11" and sys_platform == 'win32'
-# Windows is not supported since 0.14.0.0. See https://github.com/cs01/gdbgui/issues/348
-# pygdmi dependency is shared between gdbgui, coredump and py_debug_backend
-# pygdbmi 0.10 have breaking changes
-# The pygdbmi required max version 0.9.0.2 since 0.9.0.3 is not compatible with latest gdbgui (>=0.13.2.0)
-pygdbmi<=0.9.0.2; python_version < "3.11" and sys_platform == 'win32'
-# A compatible Socket.IO should be used. See https://github.com/miguelgrinberg/python-socketio/issues/578
-python-socketio<5; python_version < "3.11" and sys_platform == 'win32'
-jinja2<3.1; python_version < "3.11" and sys_platform == 'win32'
-itsdangerous<2.1; python_version < "3.11" and sys_platform == 'win32'
-
-gdbgui>=0.15.2.0; python_version >= "3.11"
-
-# --------- GDBGUI ends ---------
-
-# --------- CI ---------
-
+# --------- CI ----------
 idf-ci>=1.0.0,<2.0
 
 # idf-build-apps 3.1, 2.17 adds new field, which may change the behavior of clang build
@@ -83,7 +62,7 @@ idf-build-apps < 2.17; python_version < '3.10'
 # https://github.com/kislyuk/argcomplete/issues/559
 argcomplete<3.7.1; python_version < "3.10"
 
-# --------- CI ends ---------
+# -------- CI ends ----------
 
 # --------- TEST SPECIFIC ---------
 

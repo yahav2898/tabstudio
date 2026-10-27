@@ -239,7 +239,7 @@ and dependency notices remain authoritative.
 
 | Component | License | Source / current handling |
 | --- | --- | --- |
-| Espressif ESP-IDF | Apache-2.0, with separately licensed bundled components | [ESP-IDF](https://github.com/espressif/esp-idf); Source and recursive submodules pinned to 5.4.1 commit `4c2820d377d1375e787bcef612f0c32c1427d183` by the optional Ubuntu SDK recipe. Native compiler/tools archives are SHA-256 checked against that source's `tools.json`. Python packages and a frozen v5.4 vendor constraint snapshot are app-owned and SHA-256 locked below; the installer does not fetch rolling Python constraints. Compiler distributions retain GCC/runtime notices. |
+| Espressif ESP-IDF | Apache-2.0, with separately licensed bundled components | [ESP-IDF](https://github.com/espressif/esp-idf); Source and recursive submodules pinned to 6.1 commit `fff9895c82d744c7237be8847347bdd1b07c6643` by the optional Ubuntu SDK recipe. Native compiler/tools archives are SHA-256 checked against that source's `tools.json`. Python packages and a frozen v6.1 vendor constraint snapshot are app-owned and SHA-256 locked below; the installer does not fetch rolling Python constraints. Compiler distributions retain GCC/runtime notices. |
 | esptool | GPL-2.0-or-later | [esptool](https://github.com/espressif/esptool); optional official 5.6.0 standalone ARM64/x64 distributions with pinned SHA-256, installed into glibc. Bundled dependency licenses remain in the extracted distribution; no tool binary is in the APK. |
 | Raspberry Pi Pico SDK / picotool | BSD-3-Clause, with included dependency notices | [Pico SDK](https://github.com/raspberrypi/pico-sdk), [picotool](https://github.com/raspberrypi/picotool); SDK 2.3.1 and submodules pinned to `079c6f39023649b154152db30f1d781e884879bc` by the optional Ubuntu SDK recipe. Optional official picotool 2.3.1 ARM64/x64 binaries are SHA-256 pinned and installed from pico-sdk-tools; the [upstream BSD notice](native/embedded/picotool.LICENSE) is installed beside the binary. |
 | Zephyr / west | Apache-2.0, with Zephyr's per-component notices | [Zephyr](https://github.com/zephyrproject-rtos/zephyr), [west](https://github.com/zephyrproject-rtos/west); Zephyr 4.4.2 source pinned to `dccb09599635bdff17633fa7e9dab014b91dce90`; west manifest modules retain their component notices. The optional Ubuntu SDK recipe installs the exact Python lock below, including west 1.5.0. |
@@ -314,57 +314,60 @@ Zephyr documentation/test tooling or downloaded board modules.
 
 ### ESP-IDF core Python dependency lock
 
-`src/TabStudio.Toolchains/Embedded/Installation/esp-idf.requirements.txt` fixes all 58 selected distributions
-for the pinned ESP-IDF 5.4.1 SDK on native Linux ARM64/x64 CPython 3.12. Archive hashes are verified with
+`src/TabStudio.Toolchains/Embedded/Installation/esp-idf.requirements.txt` fixes all 63 selected distributions
+for the pinned ESP-IDF 6.1 SDK on native Linux ARM64/x64 CPython 3.12. Archive hashes are verified with
 `--require-hashes`; a separate lock fixes the bootstrap build tools. The esptool source release uses those
-installed tools with build isolation disabled. The app carries a frozen vendor v5.4 constraint snapshot
+installed tools with build isolation disabled. The app carries a frozen vendor v6.1 constraint snapshot
 and uses the offline vendor dependency checker. Installed package metadata and original license files
 remain in the SDK environment, including cryptography's bundled component notices. The compatible CPython
 3.12/abi3 manylinux wheels cover ARM64/x64; only esptool requires a source build. The frozen constraints
-snapshot has SHA-256 `5eb288ae09027642441fbfcd5e2404ec34d525b0d7b2ed54d0c677e7d3381652`.
+snapshot has SHA-256 `8fd2a7299a476370a1322e87a21ce0e24a9e5b8b6df4b34f0b8acb4a4b03d135`.
 User-selected project components retain their own manifests and notices.
 
 | Python distribution | Locked version | License |
 | --- | --- | --- |
 | annotated-types | 0.8.0 | MIT |
-| argcomplete | 3.7.2 | Apache-2.0 |
-| bitarray | 3.12.3 | PSF-2.0 |
-| bitstring | 4.4.0 | MIT |
+| boolean.py | 5.0 | BSD-2-Clause |
 | certifi | 2026.10.23 | MPL-2.0 |
 | cffi | 2.1.1 | MIT-0 |
 | charset-normalizer | 3.5.2 | MIT |
-| click | 8.1.8 | BSD-3-Clause |
-| colorama | 0.4.6 | BSD-3-Clause |
+| click | 8.4.2 | BSD-3-Clause |
 | construct | 2.10.70 | MIT |
-| cryptography | 44.0.3 | Apache-2.0 OR BSD-3-Clause |
-| ecdsa | 0.19.2 | MIT |
+| cryptography | 48.0.1 | Apache-2.0 OR BSD-3-Clause |
+| esptool | 5.6.0 | GPL-2.0-or-later |
 | esp-coredump | 1.17.2 | Apache-2.0 |
-| esp-idf-kconfig | 2.5.4 | Apache-2.0 |
+| esp-idf-diag | 0.2.0 | Apache-2.0 |
+| esp-idf-kconfig | 3.14.0 | Apache-2.0 |
 | esp-idf-monitor | 1.10.0 | Apache-2.0 |
-| esp-idf-size | 1.7.1 | Apache-2.0 |
+| esp-idf-nvs-partition-gen | 0.1.9 | Apache-2.0 |
+| esp-idf-panic-decoder | 1.5.0 | Apache-2.0 |
+| esp-idf-sbom | 1.5.0 | Apache-2.0 |
+| esp-idf-size | 2.3.2 | Apache-2.0 |
 | esp-pylib | 1.2.0 | Apache-2.0 |
-| esp_idf_nvs_partition_gen | 0.1.9 | Apache-2.0 |
-| esp_idf_panic_decoder | 1.5.0 | Apache-2.0 |
-| esptool | 4.12.0 | GPL-2.0-or-later |
 | freertos-gdb | 1.0.4 | Apache-2.0 |
-| idf-component-manager | 2.5.2 | Apache-2.0 |
+| idf-component-manager | 3.1.2 | Apache-2.0 |
+| idf-drivers-gdb | 0.1.1 | Apache-2.0 |
 | idna | 3.20 | BSD-3-Clause |
 | intelhex | 2.3.0 | BSD-3-Clause |
 | jsonref | 1.1.0 | MIT |
+| license-expression | 30.4.4 | Apache-2.0 |
+| linkify-it-py | 2.2.0 | MIT |
 | markdown-it-py | 4.2.0 | MIT |
+| mdit-py-plugins | 0.6.1 | MIT |
 | mdurl | 0.1.2 | MIT |
 | packaging | 26.3 | Apache-2.0 OR BSD-2-Clause |
 | pathvalidate | 3.3.1 | MIT |
+| platformdirs | 4.13.6 | MIT |
 | psutil | 7.2.2 | BSD-3-Clause |
 | pyclang | 0.7.0 | MIT |
 | pycparser | 3.12 | BSD-3-Clause |
 | pydantic | 2.14.1 | MIT |
-| pydantic-settings | 2.16.1 | MIT |
 | pydantic_core | 2.50.1 | MIT |
+| pydantic-settings | 2.16.1 | MIT |
 | pyelftools | 0.33 | Public domain, per included terms |
 | pygdbmi | 0.11.0.0 | MIT |
 | Pygments | 2.21.0 | BSD-2-Clause |
-| pyparsing | 3.2.5 | MIT |
+| pyparsing | 3.3.3 | MIT |
 | pyserial | 3.5 | BSD-3-Clause |
 | python-dotenv | 1.2.4 | BSD-3-Clause |
 | PyYAML | 6.0.3 | MIT |
@@ -375,12 +378,14 @@ User-selected project components retain their own manifests and notices.
 | rich | 15.0.0 | MIT |
 | rich-click | 1.9.9 | MIT |
 | ruamel.yaml | 0.19.1 | MIT |
+| schema | 0.7.8 | MIT |
 | setuptools | 80.9.0 | MIT |
-| six | 1.17.0 | MIT |
-| tibs | 0.5.7 | MIT |
-| tqdm | 4.70.1 | MPL-2.0 AND MIT |
+| textual | 8.2.8 | MIT |
+| tree-sitter | 0.26.0 | MIT |
+| tree-sitter-c | 0.24.2 | MIT |
 | truststore | 0.10.5 | MIT |
+| typing-extensions | 4.16.0 | PSF-2.0 |
 | typing-inspection | 0.4.4 | MIT |
-| typing_extensions | 4.16.0 | PSF-2.0 |
-| urllib3 | 1.26.20 | MIT |
+| urllib3 | 2.8.0 | MIT |
+| websockets | 17.3 | BSD-3-Clause |
 | wheel | 0.45.1 | MIT |
