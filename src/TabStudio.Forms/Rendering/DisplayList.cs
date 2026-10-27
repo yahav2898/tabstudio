@@ -42,7 +42,9 @@ internal sealed class DisplayListBuilder
     /// <param name="clip">The clip, in the window's client area.</param>
     /// <param name="antialias">Whether shapes are antialiased.</param>
     /// <param name="command">The command.</param>
-    public void Add(Matrix3x2 transform, RectangleF clip, bool antialias, DrawCommand command)
+    /// <param name="clipPaths">Shapes the drawing is further clipped to, in the window's client area.</param>
+    /// <param name="sourceCopy">Whether shapes and images replace the pixels under them.</param>
+    public void Add(Matrix3x2 transform, RectangleF clip, bool antialias, DrawCommand command, IReadOnlyList<PathData>? clipPaths = null, bool sourceCopy = false)
     {
         if (clip.Width <= 0 || clip.Height <= 0)
         {
@@ -50,9 +52,10 @@ internal sealed class DisplayListBuilder
             return;
         }
 
-        if (_state is null || _state.Transform != transform || _state.Clip != clip || _state.Antialias != antialias)
+        if (_state is null || _state.Transform != transform || _state.Clip != clip || _state.Antialias != antialias
+            || !ReferenceEquals(_state.ClipPaths, clipPaths) || _state.SourceCopy != sourceCopy)
         {
-            _state = new StateCommand(transform, clip, antialias);
+            _state = new StateCommand(transform, clip, antialias) { ClipPaths = clipPaths, SourceCopy = sourceCopy };
             _commands.Add(_state);
         }
 
@@ -77,6 +80,14 @@ internal sealed class DisplayListBuilder
 
     /// <summary>A display list of the commands recorded so far; the builder can go on recording.</summary>
     public DisplayList Snapshot() => DisplayList.From([.. _commands]);
+
+    /// <summary>Takes the commands recorded so far, leaving the builder empty and ready to record again.</summary>
+    public DisplayList Drain()
+    {
+        var list = DisplayList.From([.. _commands]);
+        Clear();
+        return list;
+    }
 
     /// <summary>Forgets every command.</summary>
     public void Clear()

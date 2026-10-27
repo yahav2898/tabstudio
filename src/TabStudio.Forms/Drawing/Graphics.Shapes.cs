@@ -69,6 +69,14 @@ public sealed partial class Graphics
     public void DrawRectangle(Pen pen, RectangleF rect)
     {
         ArgumentNullException.ThrowIfNull(pen);
+        if (pen.Alignment == PenAlignment.Inset && pen.Width > 1)
+        {
+            // An inset pen draws inside the rectangle: its outer edge is the rectangle's edge.
+            var half = pen.Width / 2;
+            Record(new RectangleCommand(new RectangleF(rect.X + half, rect.Y + half, Math.Max(0, rect.Width - pen.Width), Math.Max(0, rect.Height - pen.Width)), null, pen.ToSpec()));
+            return;
+        }
+
         var offset = StrokeOffset(pen);
         Record(new RectangleCommand(new RectangleF(rect.X + offset, rect.Y + offset, rect.Width, rect.Height), null, pen.ToSpec()));
     }
@@ -126,7 +134,16 @@ public sealed partial class Graphics
     {
         ArgumentNullException.ThrowIfNull(pen);
         var offset = StrokeOffset(pen);
-        Record(new LineCommand(new PointF(pt1.X + offset, pt1.Y + offset), new PointF(pt2.X + offset, pt2.Y + offset), pen.ToSpec()));
+        var from = new PointF(pt1.X + offset, pt1.Y + offset);
+        var to = new PointF(pt2.X + offset, pt2.Y + offset);
+        if (pen.HasShapedCaps)
+        {
+            Stroke(Polyline([from, to], closed: false), pen);
+        }
+        else
+        {
+            Record(new LineCommand(from, to, pen.ToSpec()));
+        }
     }
 
     /// <summary>Draws a line.</summary>
@@ -160,7 +177,7 @@ public sealed partial class Graphics
         ArgumentNullException.ThrowIfNull(points);
         if (points.Length >= 2)
         {
-            Record(new PathCommand(Polyline(Offset(points, StrokeOffset(pen)), closed: false), null, pen.ToSpec()));
+            Stroke(Polyline(Offset(points, StrokeOffset(pen)), closed: false), pen);
         }
     }
 
@@ -290,7 +307,7 @@ public sealed partial class Graphics
         using var path = new GraphicsPath();
         var offset = StrokeOffset(pen);
         path.AddArc(new RectangleF(rect.X + offset, rect.Y + offset, rect.Width, rect.Height), startAngle, sweepAngle);
-        Record(new PathCommand(path.ToData(), null, pen.ToSpec()));
+        Stroke(path.ToData(), pen);
     }
 
     /// <summary>Draws an elliptical arc.</summary>
@@ -410,7 +427,7 @@ public sealed partial class Graphics
     public void DrawBezier(Pen pen, PointF pt1, PointF pt2, PointF pt3, PointF pt4)
     {
         ArgumentNullException.ThrowIfNull(pen);
-        Record(new PathCommand(new PathData([new PathFigureData(pt1, [new BezierSegmentData(pt2, pt3, pt4)], false)], FillMode.Alternate), null, pen.ToSpec()));
+        Stroke(new PathData([new PathFigureData(pt1, [new BezierSegmentData(pt2, pt3, pt4)], false)], FillMode.Alternate), pen);
     }
 
     /// <summary>Draws a cubic Bézier curve.</summary>
@@ -442,7 +459,7 @@ public sealed partial class Graphics
         ArgumentNullException.ThrowIfNull(pen);
         using var path = new GraphicsPath();
         path.AddBeziers(points);
-        Record(new PathCommand(path.ToData(), null, pen.ToSpec()));
+        Stroke(path.ToData(), pen);
     }
 
     /// <summary>Draws connected cubic Bézier curves.</summary>
@@ -464,7 +481,7 @@ public sealed partial class Graphics
         ArgumentNullException.ThrowIfNull(pen);
         using var path = new GraphicsPath();
         path.AddCurve(points, tension);
-        Record(new PathCommand(path.ToData(), null, pen.ToSpec()));
+        Stroke(path.ToData(), pen);
     }
 
     /// <summary>Draws a cardinal spline through points.</summary>
@@ -517,7 +534,7 @@ public sealed partial class Graphics
     {
         ArgumentNullException.ThrowIfNull(pen);
         ArgumentNullException.ThrowIfNull(path);
-        Record(new PathCommand(path.ToData(), null, pen.ToSpec()));
+        Stroke(path.ToData(), pen);
     }
 
     /// <summary>Fills the interior of a path.</summary>
@@ -536,7 +553,30 @@ public sealed partial class Graphics
     public void FillRegion(Brush brush, Region region)
     {
         ArgumentNullException.ThrowIfNull(region);
+        if (region.Path is null && region.Exclusions.Count == 0)
+        {
+            FillRectangle(brush, region.Bounds);
+            return;
+        }
+
+        var state = Save();
+        SetClip(region, CombineMode.Intersect);
         FillRectangle(brush, region.Bounds);
+        Restore(state);
+    }
+
+    /// <summary>Strokes a path with a pen, with the shapes of its caps.</summary>
+    private void Stroke(PathData data, Pen pen)
+    {
+        var (stroke, caps) = LineCaps.Apply(data, pen);
+        var spec = pen.ToSpec();
+        Record(new PathCommand(stroke, null, spec));
+        foreach (var cap in caps)
+        {
+            Record(cap.Filled
+                ? new PathCommand(cap.Shape, spec.Brush, null)
+                : new PathCommand(cap.Shape, null, spec with { Dash = DashStyle.Solid, Cap = LineCap.Flat }));
+        }
     }
 
     private static PointF[] ToFloat(Point[] points)

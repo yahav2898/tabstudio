@@ -25,6 +25,7 @@ namespace System.Windows.Forms;
 [DefaultProperty(nameof(Text))]
 public partial class Control : Component, ISynchronizeInvoke, IWin32Window
 {
+    private static readonly Dictionary<IntPtr, WeakReference<Control>> Handles = [];
     private static int _nextHandle = 0x10000;
 
     private readonly ControlCollection _controls;
@@ -417,12 +418,31 @@ public partial class Control : Component, ISynchronizeInvoke, IWin32Window
             if (_handle == IntPtr.Zero)
             {
                 _handle = Interlocked.Increment(ref _nextHandle);
+                lock (Handles)
+                {
+                    Handles[_handle] = new WeakReference<Control>(this);
+                }
+
                 OnHandleCreated(EventArgs.Empty);
             }
 
             return _handle;
         }
     }
+
+    /// <summary>The control with a handle, or <see langword="null"/>.</summary>
+    /// <param name="handle">The handle, from <see cref="Handle"/>.</param>
+    public static Control? FromHandle(IntPtr handle)
+    {
+        lock (Handles)
+        {
+            return Handles.TryGetValue(handle, out var reference) && reference.TryGetTarget(out var control) ? control : null;
+        }
+    }
+
+    /// <summary>The control with a handle, or the control containing it, or <see langword="null"/>.</summary>
+    /// <param name="handle">The handle.</param>
+    public static Control? FromChildHandle(IntPtr handle) => FromHandle(handle);
 
     /// <summary>Whether the control has a handle.</summary>
     public bool IsHandleCreated => _handle != IntPtr.Zero;
@@ -691,6 +711,11 @@ public partial class Control : Component, ISynchronizeInvoke, IWin32Window
                 _parent?.Controls.Remove(this);
                 if (_handle != IntPtr.Zero)
                 {
+                    lock (Handles)
+                    {
+                        Handles.Remove(_handle);
+                    }
+
                     OnHandleDestroyed(EventArgs.Empty);
                 }
             }

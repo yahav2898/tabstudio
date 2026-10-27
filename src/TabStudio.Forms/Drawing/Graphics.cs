@@ -10,8 +10,9 @@ namespace System.Drawing;
 /// the surface <see cref="System.Windows.Forms.Control.CreateGraphics"/> returns.
 /// </summary>
 /// <remarks>
-/// Drawing is recorded and shown when the window is next drawn, which follows each event the app handles. Shapes
-/// are drawn without antialiasing unless <see cref="SmoothingMode"/> asks for it, as in GDI+.
+/// Drawing is recorded and shown when the window is next drawn, which follows each event the app handles. On an
+/// image (<see cref="FromImage"/>) drawing goes into the image's pixels, as soon as anything reads them. Shapes are
+/// drawn without antialiasing unless <see cref="SmoothingMode"/> asks for it, as in GDI+.
 /// </remarks>
 public sealed partial class Graphics : MarshalByRefObject, IDeviceContext
 {
@@ -20,8 +21,11 @@ public sealed partial class Graphics : MarshalByRefObject, IDeviceContext
     private readonly RectangleF _bounds;
     private readonly Action<Graphics>? _onDispose;
     private readonly Action? _onRecord;
+    private readonly ImageBuffer? _image;
+    private readonly bool _replaceable;
     private Matrix3x2 _transform = Matrix3x2.Identity;
     private RectangleF? _clip;
+    private IReadOnlyList<PathData>? _clipPaths;
     private bool _disposed;
 
     /// <summary>Creates a surface that records into a display list.</summary>
@@ -39,6 +43,23 @@ public sealed partial class Graphics : MarshalByRefObject, IDeviceContext
         _onRecord = onRecord;
     }
 
+    /// <summary>Creates a surface that draws into an image's pixels.</summary>
+    /// <param name="image">The image's pixels.</param>
+    private Graphics(ImageBuffer image)
+        : this(image.Recorder, PointF.Empty, new RectangleF(0, 0, image.Width, image.Height), onDispose: _ => image.Flush(), onRecord: image.Recorded) =>
+        _image = image;
+
+    /// <summary>Creates a surface whose earlier drawing a later drawing covering all of it may replace.</summary>
+    /// <param name="builder">Where drawing is recorded.</param>
+    /// <param name="origin">Where the surface's origin is in the window's client area.</param>
+    /// <param name="bounds">What the surface may draw on, in the window's client area.</param>
+    /// <param name="onDispose">Called when the surface is disposed.</param>
+    /// <param name="onRecord">Called after each drawing operation.</param>
+    /// <param name="replaceable">Whether a clear or a copy of the whole surface forgets what was drawn before.</param>
+    internal Graphics(DisplayListBuilder builder, PointF origin, RectangleF bounds, Action<Graphics>? onDispose, Action? onRecord, bool replaceable)
+        : this(builder, origin, bounds, onDispose, onRecord) =>
+        _replaceable = replaceable;
+
     /// <summary>Whether shapes are antialiased.</summary>
     public SmoothingMode SmoothingMode { get; set; } = SmoothingMode.None;
 
@@ -54,7 +75,7 @@ public sealed partial class Graphics : MarshalByRefObject, IDeviceContext
     /// <summary>The compositing quality. Kept for compatibility.</summary>
     public CompositingQuality CompositingQuality { get; set; }
 
-    /// <summary>The compositing mode. Kept for compatibility.</summary>
+    /// <summary>Whether shapes and images blend with what is under them, or replace it (<see cref="CompositingMode.SourceCopy"/>).</summary>
     public CompositingMode CompositingMode { get; set; }
 
     /// <summary>The gamma correction of text. Kept for compatibility.</summary>
@@ -100,7 +121,7 @@ public sealed partial class Graphics : MarshalByRefObject, IDeviceContext
         set
         {
             ArgumentNullException.ThrowIfNull(value);
-            SetClip(value.Bounds, CombineMode.Replace);
+            SetClip(value, CombineMode.Replace);
         }
     }
 
@@ -122,24 +143,61 @@ public sealed partial class Graphics : MarshalByRefObject, IDeviceContext
 
     private bool Antialias => SmoothingMode is SmoothingMode.AntiAlias or SmoothingMode.HighQuality;
 
-    /// <summary>Drawing on an image is not supported on this device.</summary>
-    /// <param name="image">The image.</param>
-    /// <exception cref="NotSupportedException">Always.</exception>
-    public static Graphics FromImage(Image image) =>
-        throw new NotSupportedException("Graphics.FromImage is not supported by TabStudio's Forms layer: draw in a control's Paint event, or set pixels with Bitmap.SetPixel.");
+    private bool SourceCopy => CompositingMode == CompositingMode.SourceCopy;
 
-    /// <summary>Drawing on a window handle is not supported on this device.</summary>
-    /// <param name="hwnd">The handle.</param>
-    /// <exception cref="NotSupportedException">Always.</exception>
+    /// <summary>Whether drawing covers the whole surface, with nothing clipped away.</summary>
+    private bool ClipIsWholeSurface => _clipPaths is null && (_clip is null || RectangleF.Intersect(_bounds, _clip.Value) == _bounds);
+
+    /// <summary>Creates a surface that draws on an image, as GDI+ does: the image's pixels change.</summary>
+    /// <param name="image">The image, a <see cref="Bitmap"/>.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="image"/> is <see langword="null"/>.</exception>
+    /// <exception cref="Exception">The image has an indexed pixel format, which GDI+ cannot draw on.</exception>
+    public static Graphics FromImage(Image image)
+    {
+        ArgumentNullException.ThrowIfNull(image);
+        if ((image.PixelFormat & Imaging.PixelFormat.Indexed) != 0)
+        {
+#pragma warning disable CA2201 // GDI+ throws this exact type, and apps catch it.
+            throw new Exception("A Graphics object cannot be created from an image that has an indexed pixel format.");
+#pragma warning restore CA2201
+        }
+
+        return new Graphics(image.Buffer);
+    }
+
+    /// <summary>Creates a surface for a window handle: the control's surface, as <see cref="System.Windows.Forms.Control.CreateGraphics"/> returns.</summary>
+    /// <param name="hwnd">The handle of a control, from <see cref="System.Windows.Forms.Control.Handle"/>.</param>
+    /// <exception cref="ArgumentException">No control has the handle.</exception>
     public static Graphics FromHwnd(IntPtr hwnd) =>
-        throw new NotSupportedException("Graphics.FromHwnd is not supported by TabStudio's Forms layer: use Control.CreateGraphics, or draw in the Paint event.");
+        System.Windows.Forms.Control.FromHandle(hwnd)?.CreateGraphics()
+            ?? throw new ArgumentException("Parameter is not valid: no window has this handle.", nameof(hwnd));
 
-    /// <summary>Fills the clipping region with a color.</summary>
+    /// <summary>Creates a surface for a window handle.</summary>
+    /// <param name="hwnd">The handle of a control.</param>
+    /// <exception cref="ArgumentException">No control has the handle.</exception>
+    public static Graphics FromHwndInternal(IntPtr hwnd) => FromHwnd(hwnd);
+
+    /// <summary>Fills the clipping region with a color. On an image, the pixels become that color, transparency included.</summary>
     /// <param name="color">The color.</param>
     public void Clear(Color color)
     {
         var clip = EffectiveClip;
-        _builder.Add(Matrix3x2.Identity, clip, antialias: false, new RectangleCommand(clip, new SolidBrushSpec(SystemColorValues.Argb(color)), null));
+        var argb = SystemColorValues.Argb(color);
+        if (_image is not null)
+        {
+            _builder.Add(Matrix3x2.Identity, clip, antialias: false, new ClearCommand(argb), _clipPaths, sourceCopy: true);
+        }
+        else
+        {
+            if (_replaceable && ClipIsWholeSurface && (argb >> 24) == 255)
+            {
+                // What was drawn before is hidden from now on.
+                _builder.Clear();
+            }
+
+            _builder.Add(Matrix3x2.Identity, clip, antialias: false, new RectangleCommand(clip, new SolidBrushSpec(argb), null), _clipPaths);
+        }
+
         _onRecord?.Invoke();
     }
 
@@ -208,32 +266,74 @@ public sealed partial class Graphics : MarshalByRefObject, IDeviceContext
     /// <param name="combineMode">How they combine; union, xor and exclusion keep the bounding rectangle.</param>
     public void SetClip(RectangleF rect, CombineMode combineMode)
     {
-        var device = ToDevice(rect);
-        _clip = combineMode switch
+        var axisAligned = _transform.M12 == 0 && _transform.M21 == 0;
+        if (!axisAligned && combineMode is CombineMode.Replace or CombineMode.Intersect or CombineMode.Exclude)
         {
-            CombineMode.Replace => device,
-            CombineMode.Intersect => _clip is { } clip ? RectangleF.Intersect(clip, device) : device,
-            CombineMode.Union => _clip is { } clip ? RectangleF.Union(clip, device) : null,
-            _ => _clip,
-        };
+            // A rotated rectangle clips as the shape it is.
+            using var path = new GraphicsPath();
+            path.AddRectangle(rect);
+            SetClip(path, combineMode);
+            return;
+        }
+
+        var device = ToDevice(rect);
+        switch (combineMode)
+        {
+            case CombineMode.Replace:
+                _clip = device;
+                _clipPaths = null;
+                break;
+            case CombineMode.Intersect:
+                _clip = _clip is { } clip ? RectangleF.Intersect(clip, device) : device;
+                break;
+            case CombineMode.Union:
+                _clip = _clip is { } current && _clipPaths is null ? RectangleF.Union(current, device) : null;
+                _clipPaths = null;
+                break;
+            case CombineMode.Exclude:
+                _clipPaths = [.. _clipPaths ?? [], Excluding(RectanglePath(device))];
+                break;
+            case CombineMode.Xor:
+            case CombineMode.Complement:
+                // Kept as the bounding rectangle.
+                break;
+        }
     }
 
-    /// <summary>Sets the clipping region to the bounds of a path.</summary>
+    /// <summary>Sets the clipping region to a path's shape.</summary>
     /// <param name="path">The path.</param>
-    public void SetClip(GraphicsPath path)
-    {
-        ArgumentNullException.ThrowIfNull(path);
-        SetClip(path.GetBounds(), CombineMode.Replace);
-    }
+    public void SetClip(GraphicsPath path) => SetClip(path, CombineMode.Replace);
 
-    /// <summary>Combines the clipping region with the bounds of a path.</summary>
+    /// <summary>Combines the clipping region with a path's shape.</summary>
     /// <param name="path">The path.</param>
-    /// <param name="combineMode">How they combine.</param>
+    /// <param name="combineMode">How they combine; union, xor and complement keep the bounding rectangle.</param>
     public void SetClip(GraphicsPath path, CombineMode combineMode)
     {
         ArgumentNullException.ThrowIfNull(path);
-        SetClip(path.GetBounds(), combineMode);
+        var device = GeometryMath.Transform(path.ToData(), Absolute);
+        var bounds = GeometryMath.Bounds(device);
+        switch (combineMode)
+        {
+            case CombineMode.Replace:
+                _clip = bounds;
+                _clipPaths = [device];
+                break;
+            case CombineMode.Intersect:
+                _clip = _clip is { } clip ? RectangleF.Intersect(clip, bounds) : bounds;
+                _clipPaths = [.. _clipPaths ?? [], device];
+                break;
+            case CombineMode.Exclude:
+                _clipPaths = [.. _clipPaths ?? [], Excluding(device)];
+                break;
+            default:
+                SetClip(path.GetBounds(), combineMode);
+                break;
+        }
     }
+
+    /// <summary>Sets the clipping region to a region.</summary>
+    /// <param name="region">The region.</param>
+    public void SetClip(Region region) => SetClip(region, CombineMode.Replace);
 
     /// <summary>Combines the clipping region with a region.</summary>
     /// <param name="region">The region.</param>
@@ -241,7 +341,37 @@ public sealed partial class Graphics : MarshalByRefObject, IDeviceContext
     public void SetClip(Region region, CombineMode combineMode)
     {
         ArgumentNullException.ThrowIfNull(region);
+        if (region.IsInfiniteRegion)
+        {
+            if (combineMode == CombineMode.Replace)
+            {
+                ResetClip();
+            }
+
+            return;
+        }
+
+        if (region.Path is { } path)
+        {
+            SetClip(path, combineMode);
+            if (combineMode is CombineMode.Replace or CombineMode.Intersect && !region.Bounds.Contains(path.GetBounds()))
+            {
+                SetClip(region.Bounds, CombineMode.Intersect);
+            }
+
+            foreach (var excluded in region.Exclusions)
+            {
+                SetClip(excluded, CombineMode.Exclude);
+            }
+
+            return;
+        }
+
         SetClip(region.Bounds, combineMode);
+        foreach (var excluded in region.Exclusions)
+        {
+            SetClip(excluded, CombineMode.Exclude);
+        }
     }
 
     /// <summary>Sets the clipping region to that of another surface.</summary>
@@ -250,6 +380,30 @@ public sealed partial class Graphics : MarshalByRefObject, IDeviceContext
     {
         ArgumentNullException.ThrowIfNull(g);
         _clip = g.EffectiveClip;
+        _clipPaths = g._clipPaths;
+    }
+
+    /// <summary>Sets the clipping region to that of another surface, combined with the current one.</summary>
+    /// <param name="g">The other surface.</param>
+    /// <param name="combineMode">How they combine.</param>
+    public void SetClip(Graphics g, CombineMode combineMode)
+    {
+        ArgumentNullException.ThrowIfNull(g);
+        if (combineMode == CombineMode.Replace)
+        {
+            SetClip(g);
+            return;
+        }
+
+        var bounds = g.EffectiveClip;
+        if (combineMode == CombineMode.Intersect)
+        {
+            _clip = _clip is { } clip ? RectangleF.Intersect(clip, bounds) : bounds;
+            _clipPaths = g._clipPaths is { } paths ? [.. _clipPaths ?? [], .. paths] : _clipPaths;
+            return;
+        }
+
+        SetClip(ToWorld(bounds), combineMode);
     }
 
     /// <summary>Limits the clipping region to a rectangle.</summary>
@@ -262,18 +416,15 @@ public sealed partial class Graphics : MarshalByRefObject, IDeviceContext
 
     /// <summary>Limits the clipping region to a region.</summary>
     /// <param name="region">The region.</param>
-    public void IntersectClip(Region region)
-    {
-        ArgumentNullException.ThrowIfNull(region);
-        SetClip(region.Bounds, CombineMode.Intersect);
-    }
+    public void IntersectClip(Region region) => SetClip(region, CombineMode.Intersect);
 
-    /// <summary>Excludes a rectangle from the clipping region. Rectangular clipping keeps the region as it is.</summary>
-    /// <param name="rect">The rectangle.</param>
-    public void ExcludeClip(Rectangle rect)
-    {
-        // Clipping is rectangular here; excluding a part keeps the bounding rectangle.
-    }
+    /// <summary>Excludes a rectangle from the clipping region.</summary>
+    /// <param name="rect">The rectangle, in world coordinates.</param>
+    public void ExcludeClip(Rectangle rect) => SetClip((RectangleF)rect, CombineMode.Exclude);
+
+    /// <summary>Excludes a region from the clipping region.</summary>
+    /// <param name="region">The region.</param>
+    public void ExcludeClip(Region region) => SetClip(region, CombineMode.Exclude);
 
     /// <summary>Moves the clipping region.</summary>
     /// <param name="dx">The horizontal offset.</param>
@@ -284,14 +435,43 @@ public sealed partial class Graphics : MarshalByRefObject, IDeviceContext
         {
             _clip = new RectangleF(clip.X + dx, clip.Y + dy, clip.Width, clip.Height);
         }
+
+        if (_clipPaths is { } paths)
+        {
+            var offset = Matrix3x2.CreateTranslation(dx, dy);
+            _clipPaths = [.. paths.Select(path => GeometryMath.Transform(path, offset))];
+        }
     }
 
+    /// <summary>Moves the clipping region.</summary>
+    /// <param name="dx">The horizontal offset.</param>
+    /// <param name="dy">The vertical offset.</param>
+    public void TranslateClip(int dx, int dy) => TranslateClip((float)dx, dy);
+
     /// <summary>Resets the clipping region to the whole surface.</summary>
-    public void ResetClip() => _clip = null;
+    public void ResetClip()
+    {
+        _clip = null;
+        _clipPaths = null;
+    }
 
     /// <summary>Whether a point is in the clipping region.</summary>
     /// <param name="point">The point, in world coordinates.</param>
-    public bool IsVisible(PointF point) => ClipBounds.Contains(point);
+    public bool IsVisible(PointF point)
+    {
+        if (!ClipBounds.Contains(point))
+        {
+            return false;
+        }
+
+        if (_clipPaths is not { } paths)
+        {
+            return true;
+        }
+
+        var device = Vector2.Transform(new Vector2(point.X, point.Y), Absolute);
+        return paths.All(path => GeometryMath.Contains(path, new PointF(device.X, device.Y)));
+    }
 
     /// <summary>Whether a point is in the clipping region.</summary>
     /// <param name="point">The point, in world coordinates.</param>
@@ -337,18 +517,15 @@ public sealed partial class Graphics : MarshalByRefObject, IDeviceContext
         Restore((SavedState)container.State);
     }
 
-    /// <summary>Sends pending drawing on. Drawing is shown when the window is next drawn.</summary>
-    public void Flush()
-    {
-        // Recorded drawing is shown with the window's next frame.
-    }
+    /// <summary>
+    /// Sends pending drawing on: on an image, it goes into the pixels now; on a window, it is shown when the window
+    /// is next drawn.
+    /// </summary>
+    public void Flush() => _image?.Flush();
 
-    /// <summary>Sends pending drawing on. Drawing is shown when the window is next drawn.</summary>
-    /// <param name="intention">Whether to wait.</param>
-    public void Flush(FlushIntention intention)
-    {
-        // Recorded drawing is shown with the window's next frame.
-    }
+    /// <summary>Sends pending drawing on, as <see cref="Flush()"/> does.</summary>
+    /// <param name="intention">Whether to wait; drawing always completes before this returns.</param>
+    public void Flush(FlushIntention intention) => Flush();
 
     /// <summary>The nearest color the surface can show: every color.</summary>
     /// <param name="color">The color.</param>
@@ -386,9 +563,38 @@ public sealed partial class Graphics : MarshalByRefObject, IDeviceContext
     private void Record(DrawCommand command)
     {
         ObjectDisposedException.ThrowIf(_disposed && _onDispose is not null, this);
-        _builder.Add(Absolute, EffectiveClip, Antialias, command);
+        _builder.Add(Absolute, EffectiveClip, Antialias, command, _clipPaths, SourceCopy);
         _onRecord?.Invoke();
     }
+
+    /// <summary>
+    /// Draws an image that replaces what is under it, as <see cref="BufferedGraphics.Render()"/> copies its buffer:
+    /// when it covers the whole surface, what was drawn before is forgotten.
+    /// </summary>
+    /// <param name="image">The pixels.</param>
+    /// <param name="destination">Where they go, in world coordinates.</param>
+    internal void CopyImage(ImageSnapshot image, RectangleF destination)
+    {
+        if (_replaceable && ClipIsWholeSurface && _transform.IsIdentity && destination.Contains(new RectangleF(0, 0, _bounds.Width, _bounds.Height)))
+        {
+            _builder.Clear();
+        }
+
+        ObjectDisposedException.ThrowIf(_disposed && _onDispose is not null, this);
+        _builder.Add(Absolute, EffectiveClip, antialias: false, new ImageCommand(image, destination, null, Smooth: false), _clipPaths, sourceCopy: true);
+        _onRecord?.Invoke();
+    }
+
+    /// <summary>A path that covers everything but a shape, for excluding it from the clip.</summary>
+    private static PathData Excluding(PathData shape)
+    {
+        const float Far = 4194304;
+        var outside = new PathFigureData(new PointF(-Far, -Far), [new LineSegmentData(new PointF(Far, -Far)), new LineSegmentData(new PointF(Far, Far)), new LineSegmentData(new PointF(-Far, Far))], Closed: true);
+        return new PathData([outside, .. shape.Figures], FillMode.Alternate);
+    }
+
+    private static PathData RectanglePath(RectangleF rect) =>
+        new([new PathFigureData(new PointF(rect.Left, rect.Top), [new LineSegmentData(new PointF(rect.Right, rect.Top)), new LineSegmentData(new PointF(rect.Right, rect.Bottom)), new LineSegmentData(new PointF(rect.Left, rect.Bottom))], Closed: true)], FillMode.Alternate);
 
     private void Apply(Matrix3x2 operation, MatrixOrder order) =>
         _transform = order == MatrixOrder.Prepend ? operation * _transform : _transform * operation;
@@ -433,16 +639,29 @@ public sealed partial class Graphics : MarshalByRefObject, IDeviceContext
         return RectangleF.FromLTRB(left, top, right, bottom);
     }
 
-    private SavedState Capture() => new(_transform, _clip, SmoothingMode, InterpolationMode, TextRenderingHint);
+    private SavedState Capture() => new(_transform, _clip, _clipPaths, SmoothingMode, InterpolationMode, TextRenderingHint, CompositingMode, PixelOffsetMode, CompositingQuality);
 
     private void Restore(SavedState state)
     {
         _transform = state.Transform;
         _clip = state.Clip;
+        _clipPaths = state.ClipPaths;
         SmoothingMode = state.Smoothing;
         InterpolationMode = state.Interpolation;
         TextRenderingHint = state.TextHint;
+        CompositingMode = state.Compositing;
+        PixelOffsetMode = state.PixelOffset;
+        CompositingQuality = state.Quality;
     }
 
-    private sealed record SavedState(Matrix3x2 Transform, RectangleF? Clip, SmoothingMode Smoothing, InterpolationMode Interpolation, TextRenderingHint TextHint);
+    private sealed record SavedState(
+        Matrix3x2 Transform,
+        RectangleF? Clip,
+        IReadOnlyList<PathData>? ClipPaths,
+        SmoothingMode Smoothing,
+        InterpolationMode Interpolation,
+        TextRenderingHint TextHint,
+        CompositingMode Compositing,
+        PixelOffsetMode PixelOffset,
+        CompositingQuality Quality);
 }

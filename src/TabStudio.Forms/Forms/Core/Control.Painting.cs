@@ -72,7 +72,7 @@ public partial class Control
         _immediate ??= new DisplayListBuilder();
         var origin = ClientOriginInWindow();
         var client = new Rectangle(origin, ClientSize);
-        return new Graphics(_immediate, origin, client, onDispose: _ => InvalidateWindow(), onRecord: InvalidateWindow);
+        return new Graphics(_immediate, origin, client, onDispose: _ => InvalidateWindow(), onRecord: InvalidateWindow, replaceable: true);
     }
 
     /// <summary>Raises the Invalidated event.</summary>
