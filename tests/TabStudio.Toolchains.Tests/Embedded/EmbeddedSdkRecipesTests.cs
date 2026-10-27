@@ -6,7 +6,7 @@ namespace TabStudio.Toolchains.Tests.Embedded;
 public sealed class EmbeddedSdkRecipesTests
 {
     [Theory]
-    [InlineData("pico-sdk", "2.1.1", "bddd20f928ce76142793bef434d4f75f4af6e433", "PICO_SDK_PATH")]
+    [InlineData("pico-sdk", "2.3.1", "079c6f39023649b154152db30f1d781e884879bc", "PICO_SDK_PATH")]
     [InlineData("zephyr", "4.1.0", "7823374e872145b5bd018bfe447839eb36042611", "ZEPHYR_BASE")]
     [InlineData("esp-idf", "5.4.1", "4c2820d377d1375e787bcef612f0c32c1427d183", "IDF_PATH")]
     public void Source_pins_and_environment_are_available_to_the_production_installer(string id, string version, string revision, string sourceVariable)

@@ -38,7 +38,8 @@ public static partial class EmbeddedSdkBootstrap
             return reader.ReadToEnd();
         }
 
-        private static readonly EmbeddedSdkRecipe Pico = new("pico-sdk", "bddd20f928ce76142793bef434d4f75f4af6e433",
+        // The newest Pico SDK release TabStudio pins (2.3.1); EmbeddedSdkRequirements lists every pinned release.
+        private static readonly EmbeddedSdkRecipe Pico = new("pico-sdk", Projects.EmbeddedSdkRequirements.PicoSdkReleases[0].Commit,
             new Uri("https://github.com/raspberrypi/pico-sdk.git"), PicoSource,
             ["gcc-arm-none-eabi", "libnewlib-arm-none-eabi", "libstdc++-arm-none-eabi-newlib"],
             [
