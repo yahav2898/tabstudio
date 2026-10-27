@@ -18,6 +18,9 @@
 
   <ItemGroup>
     <PackageReference Include="Avalonia" />
+    <!-- Shapes are drawn with Skia, through Avalonia's Skia renderer, on windows and on bitmaps alike. -->
+    <PackageReference Include="Avalonia.Skia" />
+    <PackageReference Include="SkiaSharp" />
   </ItemGroup>
 
   <!-- The IDE hosts the runtime, and the designer draws forms, through the layer's internals, which apps never see. -->

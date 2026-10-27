@@ -343,16 +343,89 @@ public sealed class GraphicsPath : MarshalByRefObject, ICloneable, IDisposable
         _open = _figures.Count > 0 && !_figures[^1].Closed ? _figures[^1] : null;
     }
 
-    /// <summary>Text cannot be added to a path on this device.</summary>
+    /// <summary>Adds the outlines of text, one closed figure per contour of each glyph.</summary>
     /// <param name="s">The text.</param>
     /// <param name="family">The font family.</param>
-    /// <param name="style">The font style.</param>
-    /// <param name="emSize">The size.</param>
-    /// <param name="origin">Where the text starts.</param>
-    /// <param name="format">The layout.</param>
-    /// <exception cref="NotSupportedException">Always.</exception>
+    /// <param name="style">The <see cref="System.Drawing.FontStyle"/>, as a number.</param>
+    /// <param name="emSize">The height of the em, in world units (not points).</param>
+    /// <param name="origin">Where the text's top left is.</param>
+    /// <param name="format">The alignment relative to <paramref name="origin"/>, or <see langword="null"/>.</param>
     public void AddString(string s, FontFamily family, int style, float emSize, PointF origin, StringFormat? format) =>
-        throw new NotSupportedException("GraphicsPath.AddString is not supported by TabStudio's Forms layer: draw text with Graphics.DrawString.");
+        AddString(s, family, style, emSize, new RectangleF(origin.X, origin.Y, float.PositiveInfinity, float.PositiveInfinity), format, atPoint: true);
+
+    /// <summary>Adds the outlines of text.</summary>
+    /// <param name="s">The text.</param>
+    /// <param name="family">The font family.</param>
+    /// <param name="style">The <see cref="System.Drawing.FontStyle"/>, as a number.</param>
+    /// <param name="emSize">The height of the em, in world units.</param>
+    /// <param name="origin">Where the text's top left is.</param>
+    /// <param name="format">The alignment, or <see langword="null"/>.</param>
+    public void AddString(string s, FontFamily family, int style, float emSize, Point origin, StringFormat? format) =>
+        AddString(s, family, style, emSize, (PointF)origin, format);
+
+    /// <summary>Adds the outlines of text laid out in a rectangle, wrapped at its width.</summary>
+    /// <param name="s">The text.</param>
+    /// <param name="family">The font family.</param>
+    /// <param name="style">The <see cref="System.Drawing.FontStyle"/>, as a number.</param>
+    /// <param name="emSize">The height of the em, in world units.</param>
+    /// <param name="layoutRect">The rectangle.</param>
+    /// <param name="format">The alignment and wrapping, or <see langword="null"/>.</param>
+    public void AddString(string s, FontFamily family, int style, float emSize, RectangleF layoutRect, StringFormat? format) =>
+        AddString(s, family, style, emSize, layoutRect, format, atPoint: false);
+
+    /// <summary>Adds the outlines of text laid out in a rectangle.</summary>
+    /// <param name="s">The text.</param>
+    /// <param name="family">The font family.</param>
+    /// <param name="style">The <see cref="System.Drawing.FontStyle"/>, as a number.</param>
+    /// <param name="emSize">The height of the em, in world units.</param>
+    /// <param name="layoutRect">The rectangle.</param>
+    /// <param name="format">The alignment and wrapping, or <see langword="null"/>.</param>
+    public void AddString(string s, FontFamily family, int style, float emSize, Rectangle layoutRect, StringFormat? format) =>
+        AddString(s, family, style, emSize, (RectangleF)layoutRect, format);
+
+    private void AddString(string s, FontFamily family, int style, float emSize, RectangleF layout, StringFormat? format, bool atPoint)
+    {
+        ArgumentNullException.ThrowIfNull(s);
+        ArgumentNullException.ThrowIfNull(family);
+        var fontStyle = (System.Drawing.FontStyle)style;
+        var spec = new FontSpec(
+            family.DrawingFamily,
+            emSize,
+            (fontStyle & System.Drawing.FontStyle.Bold) != 0,
+            (fontStyle & System.Drawing.FontStyle.Italic) != 0,
+            Underline: false,
+            Strikeout: false);
+        var text = Graphics.Prefixed(s, format?.HotkeyPrefix ?? System.Drawing.Text.HotkeyPrefix.None);
+        if (atPoint && format is { } pointFormat && (pointFormat.Alignment != StringAlignment.Near || pointFormat.LineAlignment != StringAlignment.Near))
+        {
+            // At a point, the alignment places the text's box around the point, as DrawString does.
+            var size = TextMetrics.Measure(text, spec);
+            var x = layout.X - (pointFormat.Alignment switch { StringAlignment.Center => (float)size.Width / 2, StringAlignment.Far => (float)size.Width, _ => 0 });
+            var y = layout.Y - (pointFormat.LineAlignment switch { StringAlignment.Center => (float)size.Height / 2, StringAlignment.Far => (float)size.Height, _ => 0 });
+            layout = new RectangleF(x, y, float.PositiveInfinity, float.PositiveInfinity);
+        }
+
+        var options = atPoint
+            ? TextOptions.AtPoint
+            : new TextOptions(
+                format?.Alignment ?? StringAlignment.Near,
+                format?.LineAlignment ?? StringAlignment.Near,
+                Wrap: ((format?.FormatFlags ?? 0) & StringFormatFlags.NoWrap) == 0 && layout.Width > 0,
+                Ellipsis: false,
+                Clip: false);
+        if (!atPoint && (layout.Width <= 0 || layout.Height <= 0))
+        {
+            layout = new RectangleF(layout.X, layout.Y, layout.Width > 0 ? layout.Width : float.PositiveInfinity, layout.Height > 0 ? layout.Height : float.PositiveInfinity);
+        }
+
+        StartFigure();
+        foreach (var figure in TextOutlines.Outline(text, spec, layout, options))
+        {
+            _figures.Add(Figure.From(figure));
+        }
+
+        _open = null;
+    }
 
     /// <summary>Applies a transformation to every point of the path.</summary>
     /// <param name="matrix">The transformation.</param>
@@ -394,6 +467,113 @@ public sealed class GraphicsPath : MarshalByRefObject, ICloneable, IDisposable
     /// <param name="x">The point's x.</param>
     /// <param name="y">The point's y.</param>
     public bool IsVisible(int x, int y) => IsVisible(new PointF(x, y));
+
+    /// <summary>Whether a point is inside the path; the graphics is not needed to tell.</summary>
+    /// <param name="x">The point's x.</param>
+    /// <param name="y">The point's y.</param>
+    /// <param name="graphics">The graphics the path is drawn on, or <see langword="null"/>.</param>
+    public bool IsVisible(float x, float y, Graphics? graphics) => IsVisible(new PointF(x, y));
+
+    /// <summary>Whether a point is inside the path.</summary>
+    /// <param name="point">The point.</param>
+    /// <param name="graphics">The graphics the path is drawn on, or <see langword="null"/>.</param>
+    public bool IsVisible(PointF point, Graphics? graphics) => IsVisible(point);
+
+    /// <summary>Whether a point is inside the path.</summary>
+    /// <param name="x">The point's x.</param>
+    /// <param name="y">The point's y.</param>
+    /// <param name="graphics">The graphics the path is drawn on, or <see langword="null"/>.</param>
+    public bool IsVisible(int x, int y, Graphics? graphics) => IsVisible(new PointF(x, y));
+
+    /// <summary>Whether a point is inside the path.</summary>
+    /// <param name="point">The point.</param>
+    /// <param name="graphics">The graphics the path is drawn on, or <see langword="null"/>.</param>
+    public bool IsVisible(Point point, Graphics? graphics) => IsVisible((PointF)point);
+
+    /// <summary>Whether a point is on the path's outline as a pen draws it: within half the pen's width of it.</summary>
+    /// <param name="point">The point.</param>
+    /// <param name="pen">The pen.</param>
+    public bool IsOutlineVisible(PointF point, Pen pen)
+    {
+        ArgumentNullException.ThrowIfNull(pen);
+
+        // As GDI+ does, a thin pen still catches points within half a pixel.
+        var reach = Math.Max(pen.Width, 1f) / 2;
+        foreach (var figure in _figures)
+        {
+            var data = figure.ToData();
+            var points = GeometryMath.Flatten(data);
+            var count = data.Closed ? points.Count + 1 : points.Count;
+            if (points.Count == 1 && Distance(point, points[0], points[0]) <= reach)
+            {
+                return true;
+            }
+
+            for (var i = 1; i < count; i++)
+            {
+                if (Distance(point, points[i - 1], points[i % points.Count]) <= reach)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>Whether a point is on the path's outline as a pen draws it.</summary>
+    /// <param name="x">The point's x.</param>
+    /// <param name="y">The point's y.</param>
+    /// <param name="pen">The pen.</param>
+    public bool IsOutlineVisible(float x, float y, Pen pen) => IsOutlineVisible(new PointF(x, y), pen);
+
+    /// <summary>Whether a point is on the path's outline as a pen draws it.</summary>
+    /// <param name="x">The point's x.</param>
+    /// <param name="y">The point's y.</param>
+    /// <param name="pen">The pen.</param>
+    public bool IsOutlineVisible(int x, int y, Pen pen) => IsOutlineVisible(new PointF(x, y), pen);
+
+    /// <summary>Whether a point is on the path's outline as a pen draws it.</summary>
+    /// <param name="point">The point.</param>
+    /// <param name="pen">The pen.</param>
+    public bool IsOutlineVisible(Point point, Pen pen) => IsOutlineVisible((PointF)point, pen);
+
+    /// <summary>Whether a point is on the path's outline as a pen draws it.</summary>
+    /// <param name="point">The point.</param>
+    /// <param name="pen">The pen.</param>
+    /// <param name="graphics">The graphics the path is drawn on, or <see langword="null"/>.</param>
+    public bool IsOutlineVisible(PointF point, Pen pen, Graphics? graphics) => IsOutlineVisible(point, pen);
+
+    /// <summary>Whether a point is on the path's outline as a pen draws it.</summary>
+    /// <param name="x">The point's x.</param>
+    /// <param name="y">The point's y.</param>
+    /// <param name="pen">The pen.</param>
+    /// <param name="graphics">The graphics the path is drawn on, or <see langword="null"/>.</param>
+    public bool IsOutlineVisible(float x, float y, Pen pen, Graphics? graphics) => IsOutlineVisible(new PointF(x, y), pen);
+
+    /// <summary>Whether a point is on the path's outline as a pen draws it.</summary>
+    /// <param name="x">The point's x.</param>
+    /// <param name="y">The point's y.</param>
+    /// <param name="pen">The pen.</param>
+    /// <param name="graphics">The graphics the path is drawn on, or <see langword="null"/>.</param>
+    public bool IsOutlineVisible(int x, int y, Pen pen, Graphics? graphics) => IsOutlineVisible(new PointF(x, y), pen);
+
+    /// <summary>Whether a point is on the path's outline as a pen draws it.</summary>
+    /// <param name="point">The point.</param>
+    /// <param name="pen">The pen.</param>
+    /// <param name="graphics">The graphics the path is drawn on, or <see langword="null"/>.</param>
+    public bool IsOutlineVisible(Point point, Pen pen, Graphics? graphics) => IsOutlineVisible((PointF)point, pen);
+
+    private static float Distance(PointF point, PointF a, PointF b)
+    {
+        var dx = b.X - a.X;
+        var dy = b.Y - a.Y;
+        var lengthSquared = (dx * dx) + (dy * dy);
+        var t = lengthSquared == 0 ? 0 : Math.Clamp((((point.X - a.X) * dx) + ((point.Y - a.Y) * dy)) / lengthSquared, 0, 1);
+        var x = a.X + (t * dx) - point.X;
+        var y = a.Y + (t * dy) - point.Y;
+        return MathF.Sqrt((x * x) + (y * y));
+    }
 
     /// <inheritdoc />
     public object Clone()
@@ -466,6 +646,8 @@ public sealed class GraphicsPath : MarshalByRefObject, ICloneable, IDisposable
                 BezierSegmentData bezier => bezier.To,
                 _ => Start,
             };
+
+        public static Figure From(PathFigureData data) => new(data.Start) { Segments = [.. data.Segments], Closed = data.Closed };
 
         public Figure Copy() => new(Start) { Segments = [.. Segments], Closed = Closed };
 
