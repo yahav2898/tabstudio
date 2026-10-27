@@ -1,0 +1,242 @@
+[
+  {
+    "path": "packages/.tabstudio-box64-originals/toolchain-gccarmnoneeabi-f75845e735c43f18/.piopm",
+    "sha256": "6a8ccbbee8916521bf383433dc40c882b212c24f9b9940c71e7557f955257e1e",
+    "manifest": {
+      "type": "tool",
+      "name": "toolchain-gccarmnoneeabi",
+      "version": "1.90201.191206",
+      "spec": {
+        "owner": "platformio",
+        "id": 8207,
+        "name": "toolchain-gccarmnoneeabi",
+        "requirements": null,
+        "uri": null
+      }
+    }
+  },
+  {
+    "path": "packages/.tabstudio-box64-originals/toolchain-gccarmnoneeabi-f75845e735c43f18/package.json",
+    "sha256": "8d8192e721d574d721d14a771772fcafcad860b7b56362aa2bf32754ab6517ec",
+    "manifest": {
+      "name": "toolchain-gccarmnoneeabi",
+      "version": "1.90201.191206",
+      "description": "GNU toolchain for Arm Cortex-M and Cortex-R processors",
+      "keywords": [
+        "toolchain",
+        "build tools",
+        "compiler",
+        "assembler",
+        "linker",
+        "preprocessor",
+        "arm"
+      ],
+      "homepage": "https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm",
+      "license": "GPL-2.0-or-later",
+      "system": [
+        "linux_x86_64"
+      ],
+      "repository": {
+        "type": "git",
+        "url": "https://gcc.gnu.org/git/gcc.git"
+      }
+    }
+  },
+  {
+    "path": "packages/framework-arduino-mbed/.piopm",
+    "sha256": "c6774d2f524671a17437f56f2ad5c6f00d1fdd4b421b49226b622909524d22d8",
+    "manifest": {
+      "type": "tool",
+      "name": "framework-arduino-mbed",
+      "version": "4.6.0",
+      "spec": {
+        "owner": "platformio",
+        "id": 11972,
+        "name": "framework-arduino-mbed",
+        "requirements": null,
+        "uri": null
+      }
+    }
+  },
+  {
+    "path": "packages/framework-arduino-mbed/package.json",
+    "sha256": "c1930026ad448462fd4f3abefe7f06eab526166815a9b853869bb2ebdc053785",
+    "manifest": {
+      "name": "framework-arduino-mbed",
+      "version": "4.6.0",
+      "description": "Arduino framework supporting mbed-enabled boards",
+      "keywords": [
+        "framework",
+        "arduino",
+        "mbed"
+      ],
+      "homepage": "https://www.arduino.cc/reference/en",
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/arduino/ArduinoCore-mbed"
+      }
+    }
+  },
+  {
+    "path": "packages/tool-rp2040tools/.piopm",
+    "sha256": "79bade669e6488275a39246ee20476a1937cc984e8d8e36539387549c41135e2",
+    "manifest": {
+      "type": "tool",
+      "name": "tool-rp2040tools",
+      "version": "1.0.2",
+      "spec": {
+        "owner": "platformio",
+        "id": 12086,
+        "name": "tool-rp2040tools",
+        "requirements": null,
+        "uri": null
+      }
+    }
+  },
+  {
+    "path": "packages/tool-rp2040tools/package.json",
+    "sha256": "d334a1f67fddba60227d55e7d8c17c636501c9478880ac05823f06824ac9753f",
+    "manifest": {
+      "description": "Tools for interacting with a RP2040 device in BOOTSEL mode or with a RP2040 binary",
+      "name": "tool-rp2040tools",
+      "url": "https://github.com/arduino/ArduinoCore-mbed",
+      "version": "1.0.2",
+      "system": [
+        "linux_aarch64"
+      ]
+    }
+  },
+  {
+    "path": "packages/tool-scons/.piopm",
+    "sha256": "bac2a7e09eee987cd8fe7a705751e1b85367f4ea6afcb7540a7b366914f952f7",
+    "manifest": {
+      "type": "tool",
+      "name": "tool-scons",
+      "version": "4.40801.0",
+      "spec": {
+        "owner": "platformio",
+        "id": 8192,
+        "name": "tool-scons",
+        "requirements": null,
+        "uri": null
+      }
+    }
+  },
+  {
+    "path": "packages/tool-scons/package.json",
+    "sha256": "a9543d5b24b39d0203bc2c4c4e8ae62db6eb8842bd15d09f11d2b7a4628fe4db",
+    "manifest": {
+      "name": "tool-scons",
+      "version": "4.40801.0",
+      "description": "SCons software construction tool",
+      "keywords": [
+        "build tools",
+        "build system",
+        "make",
+        "cmake",
+        "ninja",
+        "bazel",
+        "mason"
+      ],
+      "homepage": "http://www.scons.org",
+      "license": "MIT",
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/SCons/scons.git"
+      },
+      "export": {
+        "include": [
+          "**/*.py",
+          "CHANGES.txt",
+          "LICENSE",
+          "README.rst"
+        ],
+        "exclude": [
+          ".piopm",
+          "**/__pycache__",
+          "**/SCons/Tool/docbook",
+          "**/SCons/Tool/MSCommon",
+          "**/SCons/Tool/ninja"
+        ]
+      }
+    }
+  },
+  {
+    "path": "platforms/raspberrypi/.piopm",
+    "sha256": "c8eb137a31d83f6988c8208e080cab29354c77fc9ca760ee1d1f52a67dfcac9b",
+    "manifest": {
+      "type": "platform",
+      "name": "raspberrypi",
+      "version": "1.20.0",
+      "spec": {
+        "owner": "platformio",
+        "id": 12119,
+        "name": "raspberrypi",
+        "requirements": null,
+        "uri": null
+      }
+    }
+  },
+  {
+    "path": "platforms/raspberrypi/platform.json",
+    "sha256": "4701d5630a0a3c100a388bd18535cc02574df739131f9f210b4b2f9934343042",
+    "manifest": {
+      "name": "raspberrypi",
+      "title": "Raspberry Pi RP2040",
+      "description": "RP2040 is a low-cost, high-performance microcontroller device with a large on-chip memory, symmetric dual-core processor complex, and rich peripheral.",
+      "homepage": "https://www.raspberrypi.org/documentation/rp2040/getting-started/",
+      "license": "Apache-2.0",
+      "keywords": [
+        "dev-platform",
+        "ARM",
+        "Cortex-M",
+        "Raspberry Pi",
+        "RP2040"
+      ],
+      "engines": {
+        "platformio": "^6"
+      },
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/platformio/platform-raspberrypi.git"
+      },
+      "version": "1.20.0",
+      "frameworks": {
+        "arduino": {
+          "package": "framework-arduino-mbed",
+          "script": "builder/frameworks/arduino/mbed-core/arduino-core-mbed.py"
+        }
+      },
+      "packages": {
+        "toolchain-gccarmnoneeabi": {
+          "type": "toolchain",
+          "owner": "platformio",
+          "version": "~1.90201.0"
+        },
+        "framework-arduino-mbed": {
+          "type": "framework",
+          "optional": true,
+          "owner": "platformio",
+          "version": "~4.6.0"
+        },
+        "tool-rp2040tools": {
+          "type": "uploader",
+          "owner": "platformio",
+          "version": "~1.0.2"
+        },
+        "tool-openocd-raspberrypi": {
+          "type": "uploader",
+          "optional": true,
+          "owner": "platformio",
+          "version": "~2.1100.0"
+        },
+        "tool-jlink": {
+          "type": "uploader",
+          "optional": true,
+          "owner": "platformio",
+          "version": "^1.72000.0"
+        }
+      }
+    }
+  }
+]

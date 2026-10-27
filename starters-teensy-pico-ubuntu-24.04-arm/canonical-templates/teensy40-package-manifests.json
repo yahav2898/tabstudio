@@ -1,0 +1,289 @@
+[
+  {
+    "path": "packages/framework-arduinoteensy/.piopm",
+    "sha256": "6108e969f165385869171ee9de0005259ba03e1ca0b702cb5fa352167a6bcba3",
+    "manifest": {
+      "type": "tool",
+      "name": "framework-arduinoteensy",
+      "version": "1.162.0",
+      "spec": {
+        "owner": "platformio",
+        "id": 8084,
+        "name": "framework-arduinoteensy",
+        "requirements": null,
+        "uri": null
+      }
+    }
+  },
+  {
+    "path": "packages/framework-arduinoteensy/package.json",
+    "sha256": "cffa8d247dffc9a056ca63b1fb02deb3882edffcfd6a6185f84665c5fd608ab1",
+    "manifest": {
+      "name": "framework-arduinoteensy",
+      "version": "1.162.0",
+      "description": "Arduino Wiring-based Framework for Teensy boards",
+      "keywords": [
+        "framework",
+        "arduino",
+        "teensy"
+      ],
+      "homepage": "https://www.arduino.cc/reference/en",
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/PaulStoffregen/cores"
+      }
+    }
+  },
+  {
+    "path": "packages/tool-scons/.piopm",
+    "sha256": "bac2a7e09eee987cd8fe7a705751e1b85367f4ea6afcb7540a7b366914f952f7",
+    "manifest": {
+      "type": "tool",
+      "name": "tool-scons",
+      "version": "4.40801.0",
+      "spec": {
+        "owner": "platformio",
+        "id": 8192,
+        "name": "tool-scons",
+        "requirements": null,
+        "uri": null
+      }
+    }
+  },
+  {
+    "path": "packages/tool-scons/package.json",
+    "sha256": "a9543d5b24b39d0203bc2c4c4e8ae62db6eb8842bd15d09f11d2b7a4628fe4db",
+    "manifest": {
+      "name": "tool-scons",
+      "version": "4.40801.0",
+      "description": "SCons software construction tool",
+      "keywords": [
+        "build tools",
+        "build system",
+        "make",
+        "cmake",
+        "ninja",
+        "bazel",
+        "mason"
+      ],
+      "homepage": "http://www.scons.org",
+      "license": "MIT",
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/SCons/scons.git"
+      },
+      "export": {
+        "include": [
+          "**/*.py",
+          "CHANGES.txt",
+          "LICENSE",
+          "README.rst"
+        ],
+        "exclude": [
+          ".piopm",
+          "**/__pycache__",
+          "**/SCons/Tool/docbook",
+          "**/SCons/Tool/MSCommon",
+          "**/SCons/Tool/ninja"
+        ]
+      }
+    }
+  },
+  {
+    "path": "packages/tool-teensy/.piopm",
+    "sha256": "617e3ddc558c89ce98207ead9eb9ddd1c61c41d6be7b26ef6228efd45bdbc15a",
+    "manifest": {
+      "type": "tool",
+      "name": "tool-teensy",
+      "version": "1.162.0",
+      "spec": {
+        "owner": "platformio",
+        "id": 8200,
+        "name": "tool-teensy",
+        "requirements": null,
+        "uri": null
+      }
+    }
+  },
+  {
+    "path": "packages/tool-teensy/package.json",
+    "sha256": "0c036a780da872b87eaccfb4a51be1033050905d955081d03a0627e279cc4723",
+    "manifest": {
+      "name": "tool-teensy",
+      "version": "1.162.0",
+      "description": "Upload tools for Teensy boards",
+      "keywords": [
+        "tools",
+        "uploader",
+        "teensy"
+      ],
+      "homepage": "https://www.pjrc.com/teensy/loader.html",
+      "system": [
+        "linux_aarch64"
+      ]
+    }
+  },
+  {
+    "path": "packages/toolchain-gccarmnoneeabi-teensy/.piopm",
+    "sha256": "d138d1e9bf64dfbc9c77965aec9c8b40262479568918880c1cda8b3a6629e97a",
+    "manifest": {
+      "type": "tool",
+      "name": "toolchain-gccarmnoneeabi-teensy",
+      "version": "1.150201.0",
+      "spec": {
+        "owner": "platformio",
+        "id": 15316,
+        "name": "toolchain-gccarmnoneeabi-teensy",
+        "requirements": null,
+        "uri": null
+      }
+    }
+  },
+  {
+    "path": "packages/toolchain-gccarmnoneeabi-teensy/package.json",
+    "sha256": "3e98b43e3b6e874dd1ff6d966999f6df60e696774c69b7201de171228c60c84e",
+    "manifest": {
+      "name": "toolchain-gccarmnoneeabi-teensy",
+      "version": "1.150201.0",
+      "description": "GNU toolchain for Teensy boards based on Arm Cortex-M",
+      "keywords": [
+        "toolchain",
+        "build tools",
+        "compiler",
+        "assembler",
+        "linker",
+        "preprocessor",
+        "arm"
+      ],
+      "homepage": "https://www.pjrc.com/teensy/teensyduino.html",
+      "license": "GPL-2.0-or-later",
+      "repository": {
+        "type": "git",
+        "url": "https://gcc.gnu.org/git/gcc.git"
+      },
+      "system": [
+        "linux_aarch64"
+      ]
+    }
+  },
+  {
+    "path": "platforms/teensy/.piopm",
+    "sha256": "f1b366d35bd38445d4a161bf441dc5c6f2b60c3abf62c3dcb4c640976586aa11",
+    "manifest": {
+      "type": "platform",
+      "name": "teensy",
+      "version": "6.0.0",
+      "spec": {
+        "owner": "platformio",
+        "id": 8021,
+        "name": "teensy",
+        "requirements": null,
+        "uri": null
+      }
+    }
+  },
+  {
+    "path": "platforms/teensy/platform.json",
+    "sha256": "1d5ade0e96103127671226544ccad1e431634e9849bcc96d8d75cbe1cb27bcbb",
+    "manifest": {
+      "name": "teensy",
+      "title": "Teensy",
+      "description": "Teensy is a complete USB-based microcontroller development system, in a very small footprint, capable of implementing many types of projects. All programming is done via the USB port. No special programmer is needed, only a standard USB cable and a PC or Macintosh with a USB port.",
+      "homepage": "https://www.pjrc.com/teensy",
+      "license": "Apache-2.0",
+      "keywords": [
+        "dev-platform",
+        "ARM",
+        "AVR",
+        "Cortex-M",
+        "NXP Semiconductors",
+        "Microchip"
+      ],
+      "engines": {
+        "platformio": "^6"
+      },
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/platformio/platform-teensy.git"
+      },
+      "version": "6.0.0",
+      "frameworks": {
+        "arduino": {
+          "package": "framework-arduinoteensy",
+          "script": "builder/frameworks/arduino.py"
+        },
+        "zephyr": {
+          "package": "framework-zephyr",
+          "script": "builder/frameworks/zephyr.py"
+        }
+      },
+      "packages": {
+        "toolchain-atmelavr": {
+          "type": "toolchain",
+          "optional": false,
+          "owner": "platformio",
+          "version": "~1.50400.0",
+          "optionalVersions": [
+            "\u003E=1.60301.0,\u003C1.80000.0"
+          ]
+        },
+        "toolchain-gccarmnoneeabi": {
+          "type": "toolchain",
+          "optional": true,
+          "owner": "platformio",
+          "version": "~1.80201.0"
+        },
+        "toolchain-gccarmnoneeabi-teensy": {
+          "type": "toolchain",
+          "optional": false,
+          "owner": "platformio",
+          "version": "~1.150201.0"
+        },
+        "framework-arduinoteensy": {
+          "type": "framework",
+          "optional": true,
+          "owner": "platformio",
+          "version": "~1.162.0"
+        },
+        "framework-zephyr": {
+          "type": "framework",
+          "optional": true,
+          "owner": "platformio",
+          "version": "~3.40402.0"
+        },
+        "tool-teensy": {
+          "type": "uploader",
+          "optional": true,
+          "owner": "platformio",
+          "version": "\u003C2"
+        },
+        "tool-jlink": {
+          "type": "uploader",
+          "optional": true,
+          "owner": "platformio",
+          "version": "^1.63208.0"
+        },
+        "tool-cmake": {
+          "optional": true,
+          "owner": "platformio",
+          "version": "~3.21.0"
+        },
+        "tool-dtc": {
+          "optional": true,
+          "owner": "platformio",
+          "version": "~1.4.7"
+        },
+        "tool-ninja": {
+          "optional": true,
+          "owner": "platformio",
+          "version": "^1.7.0"
+        },
+        "tool-gperf": {
+          "optional": true,
+          "owner": "platformio",
+          "version": "^3.0.0"
+        }
+      }
+    }
+  }
+]
