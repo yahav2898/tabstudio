@@ -63,6 +63,108 @@ public sealed class SourceGeneratorTests : IDisposable
         Assert.True(build.Success, string.Join('\n', build.Diagnostics));
     }
 
+    /// <summary>
+    /// What a package's props and targets give its generator, as the SDK hands it over: a property it sets by default
+    /// and makes visible, a visible property nothing sets (present and empty), an additional file with visible
+    /// metadata, a global using, and the interceptor namespace a target adds before the compiler runs.
+    /// </summary>
+    [Fact]
+    public async Task A_package_s_props_and_targets_reach_its_generator_as_with_the_SDK()
+    {
+        var package = _temp.Resolve("packages/probe.generator/1.0.0");
+        _temp.Write("packages/probe.generator/1.0.0/build/Probe.Generator.props", """
+            <Project>
+              <PropertyGroup>
+                <ProbeMode Condition="'$(ProbeMode)' == ''">default</ProbeMode>
+                <ProbeWindows>false</ProbeWindows>
+                <ProbeWindows Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0-windows'))">true</ProbeWindows>
+              </PropertyGroup>
+              <ItemGroup>
+                <CompilerVisibleProperty Include="ProbeMode;ProbeWindows;ProbeUnset" />
+                <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="ProbeKind" />
+                <AdditionalFiles Include="$(MSBuildThisFileDirectory)probe.txt" ProbeKind="settings" />
+                <Using Include="Probe.Runtime" />
+              </ItemGroup>
+            </Project>
+            """);
+        _temp.Write("packages/probe.generator/1.0.0/build/probe.txt", "from the package");
+        _temp.Write("packages/probe.generator/1.0.0/buildTransitive/Probe.Generator.targets", """
+            <Project>
+              <PropertyGroup><_ProbeNamespace>Probe.Generated.Interceptors</_ProbeNamespace></PropertyGroup>
+              <Target Name="ProbeInterceptors" BeforeTargets="CoreCompile" Condition="'$(Language)' == 'C#'">
+                <PropertyGroup>
+                  <InterceptorsNamespaces>$(InterceptorsNamespaces);$(_ProbeNamespace)</InterceptorsNamespaces>
+                </PropertyGroup>
+              </Target>
+            </Project>
+            """);
+        _host.UpdateText(_programPath, "Console.WriteLine(Probe.Runtime.Seen.Text);");
+        _host.SetAnalyzers(_projectPath, [CompileGenerator("packages/probe.generator/1.0.0/analyzers/dotnet/cs/Probe.Generator.dll", ProbeGenerator)]);
+
+        _host.SetPackageBuildFiles(_projectPath, [Path.Combine(package, "build", "Probe.Generator.props"), Path.Combine(package, "buildTransitive", "Probe.Generator.targets")]);
+        var build = await new ProjectBuilder(_host).BuildAsync(Project);
+
+        Assert.True(build.Success, string.Join('\n', build.Diagnostics));
+        var console = new CapturingConsole();
+        var run = await new ProgramRunner().RunAsync(build.EntryAssembly!, build.Dependencies, [], console);
+        Assert.Equal(RunOutcome.Completed, run.Outcome);
+        Assert.Equal("mode=default windows=false unset=present files=probe.txt:settings:from the package\n", console.Output);
+        Assert.Contains("Probe.Generated.Interceptors", Project.GetProperty("InterceptorsNamespaces"), StringComparison.Ordinal);
+        Assert.Equal(2, _host.GetPackageBuildFiles(_projectPath).Count);
+
+        // The project's own value wins over a package's props, and survives a reload of the workspace.
+        _temp.Write("App/App.csproj", """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup>
+                <OutputType>Exe</OutputType>
+                <TargetFramework>net10.0</TargetFramework>
+                <ImplicitUsings>enable</ImplicitUsings>
+                <RootNamespace>Tablet.App</RootNamespace>
+                <ProbeMode>mine</ProbeMode>
+              </PropertyGroup>
+            </Project>
+            """);
+        _host.Load(WorkspaceLoader.Load(_temp.Resolve("App")), FileSystemTextProvider.Instance);
+        _host.UpdateText(_programPath, "Console.WriteLine(Probe.Runtime.Seen.Text);");
+        var rebuilt = await new ProjectBuilder(_host).BuildAsync(Project);
+        Assert.True(rebuilt.Success, string.Join('\n', rebuilt.Diagnostics));
+        var again = new CapturingConsole();
+        await new ProgramRunner().RunAsync(rebuilt.EntryAssembly!, rebuilt.Dependencies, [], again);
+        Assert.StartsWith("mode=mine ", again.Output, StringComparison.Ordinal);
+    }
+
+    /// <summary>A generator that reports what the analyzer configuration and additional files gave it.</summary>
+    private const string ProbeGenerator = """
+        using System.Linq;
+        using Microsoft.CodeAnalysis;
+
+        [Generator]
+        public sealed class ProbeGenerator : IIncrementalGenerator
+        {
+            public void Initialize(IncrementalGeneratorInitializationContext context)
+            {
+                var files = context.AdditionalTextsProvider
+                    .Combine(context.AnalyzerConfigOptionsProvider)
+                    .Select(static (pair, cancellationToken) =>
+                    {
+                        pair.Right.GetOptions(pair.Left).TryGetValue("build_metadata.AdditionalFiles.ProbeKind", out var kind);
+                        return System.IO.Path.GetFileName(pair.Left.Path) + ":" + kind + ":" + pair.Left.GetText(cancellationToken);
+                    })
+                    .Collect();
+                context.RegisterSourceOutput(context.AnalyzerConfigOptionsProvider.Combine(files), static (output, input) =>
+                {
+                    var options = input.Left.GlobalOptions;
+                    options.TryGetValue("build_property.ProbeMode", out var mode);
+                    options.TryGetValue("build_property.ProbeWindows", out var windows);
+                    var unset = options.TryGetValue("build_property.ProbeUnset", out var value) && value.Length == 0 ? "present" : "missing";
+                    var text = "mode=" + mode + " windows=" + windows + " unset=" + unset + " files=" + string.Join(",", input.Right.Where(f => f.StartsWith("probe.txt")));
+                    var literal = "\"" + text.Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
+                    output.AddSource("Seen.g.cs", "// <auto-generated/>\nnamespace Probe.Runtime { public static class Seen { public const string Text = " + literal + "; } }\n");
+                });
+            }
+        }
+        """;
+
     public void Dispose()
     {
         _host.Dispose();
@@ -70,7 +172,7 @@ public sealed class SourceGeneratorTests : IDisposable
     }
 
     /// <summary>Compiles a small incremental generator, as a package would ship it, and returns its path.</summary>
-    private string CompileGenerator(string relativePath)
+    private string CompileGenerator(string relativePath, string? generator = null)
     {
         const string source = """
             using Microsoft.CodeAnalysis;
@@ -89,7 +191,7 @@ public sealed class SourceGeneratorTests : IDisposable
             """;
         var compilation = CSharpCompilation.Create(
             "Greeting.Generator",
-            [CSharpSyntaxTree.ParseText(source)],
+            [CSharpSyntaxTree.ParseText(generator ?? source)],
             [.. Basic.Reference.Assemblies.Net100.References.All, MetadataReference.CreateFromFile(typeof(IIncrementalGenerator).Assembly.Location)],
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
         var path = _temp.Resolve(relativePath);

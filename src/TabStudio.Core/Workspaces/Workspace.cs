@@ -24,12 +24,17 @@ public sealed class Workspace
     public IReadOnlyList<string> LoadErrors { get; init; } = [];
 
     /// <summary>
-    /// The project F5 should run when the user has not picked one: the first executable project, other than the
-    /// WebAssembly client of a Blazor Web App, which runs in its app.
+    /// The project F5 should run when the user has not picked one: the first web app, else the first app with a UI,
+    /// else the first console app, else any other program (see <see cref="ProjectClassifier.StartupRank"/>). Libraries,
+    /// tests, build scripts, Aspire AppHosts and the WebAssembly client of a Blazor Web App are never chosen.
     /// </summary>
     public ProjectInfo? DefaultStartupProject =>
-        Projects.FirstOrDefault(p => p.Kind == ProjectKind.ConsoleApp) ??
-        Projects.FirstOrDefault(p => p.IsExecutable && !p.IsTestProject && p.Kind != ProjectKind.AspireAppHost && !ProjectClassifier.IsBlazorWebAppClient(p));
+        Projects.Select((project, index) => (Project: project, Index: index, Rank: ProjectClassifier.StartupRank(project)))
+            .Where(p => p.Rank is not null)
+            .OrderBy(p => p.Rank)
+            .ThenBy(p => p.Index)
+            .Select(p => p.Project)
+            .FirstOrDefault();
 
     /// <summary>Finds the project that owns a file: the project whose directory most closely contains it.</summary>
     /// <param name="filePath">Full path of a file in the workspace.</param>

@@ -38,4 +38,14 @@ public sealed record RestoredPackage(
     /// comes from a referenced project keeps its analyzers to that project, as NuGet's default <c>PrivateAssets</c> does.
     /// </summary>
     public bool FlowsAnalyzers { get; init; } = true;
+
+    /// <summary>
+    /// Full paths of the package's props and targets files the project imports, as NuGet chooses them from
+    /// <c>build/</c> and <c>buildTransitive/</c>: props first. They hold properties and items, such as
+    /// <c>CompilerVisibleProperty</c>, that the package's source generators read.
+    /// </summary>
+    public IReadOnlyList<string> BuildFiles { get; init; } = [];
+
+    /// <summary>How far the package is from the project along its shortest path: 1 for a direct reference.</summary>
+    public int Depth { get; init; } = 1;
 }

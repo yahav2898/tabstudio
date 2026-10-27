@@ -163,6 +163,32 @@ public sealed class AvaloniaXamlGeneratorTests : IDisposable
         Assert.Contains(build.Diagnostics, d => d.Id == "CS1061" && d.Message.Contains("NameBox", StringComparison.Ordinal));
     }
 
+    /// <summary>
+    /// Avalonia.Samples' App.axaml.cs declares <c>public class App : Application</c>, not partial: Avalonia's own
+    /// generator leaves it alone, and so must TabStudio's, or the class is declared twice (CS0260). Its XAML still loads.
+    /// </summary>
+    [Fact]
+    public async Task A_class_that_is_not_partial_gets_no_generated_part_and_its_XAML_still_loads()
+    {
+        Assert.True(_host.UpdateText(_temp.Resolve("Tablet/App.axaml.cs"), """
+            namespace Tablet;
+
+            public class App : Avalonia.Application
+            {
+                public override void Initialize() => Avalonia.Markup.Xaml.AvaloniaXamlLoader.Load(this);
+            }
+            """));
+
+        var build = await new ProjectBuilder(_host).BuildAsync(Project);
+        Assert.True(build.Success, string.Join('\n', build.Diagnostics));
+        Assert.DoesNotContain(build.Diagnostics, d => d.Id == "CS0260");
+
+        var console = new CapturingConsole();
+        var run = await new ProgramRunner().RunAsync(build.EntryAssembly!, build.Dependencies, [_avalonia], [], console);
+        Assert.True(run.Outcome == RunOutcome.Completed, console.Error);
+        Assert.StartsWith("App True /App.axaml, MainView True /Views/MainView.axaml\n", console.Output, StringComparison.Ordinal);
+    }
+
     [Fact]
     public async Task XAML_that_is_not_well_formed_is_an_error_naming_the_file()
     {

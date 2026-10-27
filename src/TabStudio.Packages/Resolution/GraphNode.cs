@@ -1,4 +1,5 @@
 using NuGet.Versioning;
+using TabStudio.Packages.Assets;
 
 namespace TabStudio.Packages.Resolution;
 
@@ -35,6 +36,27 @@ internal sealed class GraphNode(string id, VersionRange range, GraphNode? parent
 
     /// <summary>The versions the parent accepts.</summary>
     public VersionRange Range { get; } = range;
+
+    /// <summary>The assets of the package that do not pass from it to the parent, as the dependency declares them.</summary>
+    public AssetFlags Excluded { get; init; }
+
+    /// <summary>
+    /// The assets of the package that reach the project along this path: those that pass every dependency on it, as
+    /// NuGet intersects them.
+    /// </summary>
+    public AssetFlags PathAssets
+    {
+        get
+        {
+            var assets = AssetFlags.All;
+            for (var node = this; node is { IsRoot: false }; node = node.Parent)
+            {
+                assets &= ~node.Excluded;
+            }
+
+            return assets;
+        }
+    }
 
     /// <summary>The node that declares this dependency, or <see langword="null"/> for the project.</summary>
     public GraphNode? Parent { get; } = parent;

@@ -87,6 +87,13 @@ public enum ProjectKind
 
     /// <summary>Firmware built by its native project system and uploaded to an explicitly selected external device.</summary>
     EmbeddedFirmware,
+
+    /// <summary>
+    /// A repository's build script written as a .NET program, such as one on Bullseye, SimpleExec, NUKE or
+    /// Cake Frosting: it builds, tests and publishes the other projects by starting tools like <c>dotnet</c> as
+    /// processes, so it is never an app to run.
+    /// </summary>
+    BuildScript,
 }
 
 /// <summary>

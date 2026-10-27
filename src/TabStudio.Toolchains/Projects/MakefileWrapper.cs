@@ -14,6 +14,8 @@ public static partial class MakefileWrapper
     [
         "cargo", "rustup", "npm", "npx", "yarn", "pnpm", "bun", "node", "go", "dotnet", "mvn", "mvnw", "gradle", "gradlew",
         "python", "python3", "pip", "pip3", "uv", "poetry", "flutter", "dart", "deno",
+        // Containers and API test runners, as gothinkster/aspnetcore-realworld-example-app's Makefile drives them.
+        "docker", "docker-compose", "podman", "hurl",
     ];
 
     /// <summary>What a recipe or variable uses to compile or link C and C++.</summary>
@@ -117,8 +119,8 @@ public static partial class MakefileWrapper
         {
             var words = part.Trim().TrimStart('@', '-', '+').Trim().Split((char[])[' ', '\t'], StringSplitOptions.RemoveEmptyEntries);
             var index = 0;
-            // Environment assignments and wrappers before the command: VAR=x env time cargo build.
-            while (index < words.Length && (words[index].Contains('=', StringComparison.Ordinal) || words[index] is "env" or "time" or "exec" or "command" or "sudo"))
+            // Environment assignments, wrappers and make macros before the command: VAR=x env time $(SETUP) cargo build.
+            while (index < words.Length && (words[index].Contains('=', StringComparison.Ordinal) || words[index] is "env" or "time" or "exec" or "command" or "sudo" || IsMacro(words[index])))
             {
                 index++;
             }
@@ -129,6 +131,10 @@ public static partial class MakefileWrapper
             }
         }
     }
+
+    /// <summary>A whole word that expands a make variable, such as <c>$(WITH_LOCAL_JWT)</c>, which runs before the command.</summary>
+    private static bool IsMacro(string word) =>
+        (word.StartsWith("$(", StringComparison.Ordinal) && word.EndsWith(')')) || (word.StartsWith("${", StringComparison.Ordinal) && word.EndsWith('}'));
 
     [GeneratedRegex(@"&&|\|\||;|\||\$\(shell\s", RegexOptions.CultureInvariant)]
     private static partial Regex Separators();

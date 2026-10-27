@@ -445,12 +445,13 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     private void LoadStartupProjects(Workspace workspace, string? preferred)
     {
         StartupProjects.Clear();
-        foreach (var project in workspace.Projects.Where(p => (p.IsExecutable || IsWindowsBridgeStartupProject(p)) && !p.IsTestProject && p.Kind != ProjectKind.AspireAppHost))
+        foreach (var project in workspace.Projects.Where(p => (p.IsExecutable || IsWindowsBridgeStartupProject(p)) && !p.IsTestProject && p.Kind is not (ProjectKind.AspireAppHost or ProjectKind.BuildScript) && !ProjectClassifier.IsMobilePlatformHead(p)))
         {
             StartupProjects.Add(new StartupProjectOption(project, new RelayCommand(() => SetStartupProject(project))));
         }
 
-        StartupProject = workspace.Projects.FirstOrDefault(p => p.FilePath == preferred)
+        // A build script remembered from an earlier version, which picked them, is not kept.
+        StartupProject = workspace.Projects.FirstOrDefault(p => p.FilePath == preferred && p.Kind != ProjectKind.BuildScript)
             ?? workspace.DefaultStartupProject;
     }
 

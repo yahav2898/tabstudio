@@ -311,8 +311,10 @@ public sealed partial class PackageRestorer
         var match = package.Match;
         var name = $"{match.Id} {match.Version.ToNormalizedString()}";
         var files = Directory.EnumerateFiles(directory, "*", SearchOption.AllDirectories)
-            .Select(file => Path.GetRelativePath(directory, file).Replace(Path.DirectorySeparatorChar, '/'));
+            .Select(file => Path.GetRelativePath(directory, file).Replace(Path.DirectorySeparatorChar, '/'))
+            .ToList();
         var assets = AssetSelector.Select(files, _framework, _fallback, Options.CompilerVersion, runtimeIdentifiers);
+        var buildFiles = AssetSelector.SelectBuildFiles(files, match.Id, _framework, _fallback, package.Assets);
 
         if (!assets.IsCompatible)
         {
@@ -330,6 +332,14 @@ public sealed partial class PackageRestorer
                 projectName));
         }
 
+        if (assets.AnalyzersNeedCompiler is { } needed)
+        {
+            problems.Enqueue(PackageDiagnostics.Warning(
+                PackageDiagnosticIds.AnalyzersNeedNewerCompiler,
+                $"The source generators and analyzers of {name} need Roslyn {needed} or later, and TabStudio has Roslyn {Options.CompilerVersion}, so they do not run and the code they generate is missing. A version of {match.Id} built for an earlier compiler works.",
+                projectName));
+        }
+
         var compile = ToFullPaths(directory, assets.CompileAssemblies);
         var runtime = ToFullPaths(directory, assets.RuntimeAssemblies);
         var providedByFramework = assets.CompileAssemblies.Count + assets.RuntimeAssemblies.Count > 0 && compile.Count + runtime.Count == 0;
@@ -340,6 +350,8 @@ public sealed partial class PackageRestorer
             Analyzers = analyzers,
             FlowsAnalyzers = package.FlowsAnalyzers,
             NativeLibraries = native,
+            BuildFiles = [.. buildFiles.Select(path => Path.Combine(directory, path.Replace('/', Path.DirectorySeparatorChar)))],
+            Depth = package.Depth,
         };
     }
 

@@ -26,6 +26,12 @@ internal sealed record PackageAssets(
     /// <summary>The C# analyzers and source generators the compiler loads: <c>analyzers/dotnet/...</c>.</summary>
     public IReadOnlyList<string> Analyzers { get; init; } = [];
 
+    /// <summary>
+    /// The lowest Roslyn version the package's analyzers need, when every one of them needs a newer compiler than
+    /// TabStudio's and none was chosen; otherwise <see langword="null"/>.
+    /// </summary>
+    public Version? AnalyzersNeedCompiler { get; init; }
+
     /// <summary>The native libraries a program may load: <c>runtimes/{rid}/native/</c> of the device's nearest RID.</summary>
     public IReadOnlyList<string> NativeLibraries { get; init; } = [];
 }

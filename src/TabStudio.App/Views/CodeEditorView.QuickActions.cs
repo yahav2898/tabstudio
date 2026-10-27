@@ -14,10 +14,22 @@ namespace TabStudio.App.Views;
 /// Quick Actions in the editor: a light bulb appears after the caret line when fixes or refactorings are available;
 /// tapping it or pressing Ctrl+. opens the menu, and picking an action applies its edits to every affected file.
 /// </summary>
+/// <remarks>
+/// There is one light bulb and one Quick Actions menu in the whole app, at the caret line of the editor in use. Every
+/// open document keeps its editor alive while hidden, and the bulb and menu live in the window's overlay layer, so an
+/// editor that shows them takes them from any other, and an editor that is hidden, or whose caret moves, scrolls or
+/// changes text, closes its own. Escape and a tap elsewhere close them too.
+/// </remarks>
 public sealed partial class CodeEditorView
 {
+    /// <summary>The editor whose light bulb or Quick Actions menu is showing, if any: there is never more than one.</summary>
+    private static CodeEditorView? _quickActionsOwner;
+
+    private static int _openQuickActionsMenus;
+
     private LightBulbView? _lightBulb;
     private Popup? _lightBulbPopup;
+    private MenuFlyout? _quickActionsMenu;
     private IReadOnlyList<CodeActionItem> _codeActions = [];
     private (int Start, int Length, int Edits) _codeActionsFor = (-1, -1, -1);
     private int _codeActionsRegisterRevision;
@@ -27,6 +39,12 @@ public sealed partial class CodeEditorView
 
     /// <summary>Whether the light bulb is shown.</summary>
     public bool IsLightBulbVisible => _lightBulbPopup?.IsOpen == true;
+
+    /// <summary>Whether this editor's Quick Actions menu is open.</summary>
+    public bool IsQuickActionsMenuOpen => _quickActionsMenu?.IsOpen == true;
+
+    /// <summary>How many Quick Actions menus are open in the app, which is never more than one. For tests.</summary>
+    internal static int OpenQuickActionsMenus => _openQuickActionsMenus;
 
     private void InitializeQuickActions()
     {
@@ -38,8 +56,41 @@ public sealed partial class CodeEditorView
     private void DisposeQuickActions()
     {
         _lightBulb?.RemoveHandler(TappedEvent, OnLightBulbTapped);
-        HideLightBulb();
+        CloseQuickActions();
+        if (_quickActionsOwner == this)
+        {
+            _quickActionsOwner = null;
+        }
     }
+
+    /// <summary>
+    /// Closes the light bulb and the Quick Actions menu: the caret moved, the text changed or scrolled, Escape was
+    /// pressed, or the editor is hidden.
+    /// </summary>
+    /// <returns>Whether either was showing.</returns>
+    private bool CloseQuickActions()
+    {
+        var wasOpen = IsLightBulbVisible || IsQuickActionsMenuOpen;
+        var menu = _quickActionsMenu;
+        _quickActionsMenu = null;
+        menu?.Hide();
+        HideLightBulb();
+        return wasOpen;
+    }
+
+    /// <summary>Makes this editor the one showing Quick Actions, closing any other editor's light bulb and menu.</summary>
+    private void TakeQuickActions()
+    {
+        if (_quickActionsOwner is { } other && other != this)
+        {
+            other.CloseQuickActions();
+        }
+
+        _quickActionsOwner = this;
+    }
+
+    /// <summary>Whether this editor is on screen, so a popup at its caret belongs there.</summary>
+    private bool IsShownOnScreen => IsEffectivelyVisible && TopLevel.GetTopLevel(this) is not null && TextView.Bounds.Width > 0;
 
     private void OnLightBulbTapped(object? sender, TappedEventArgs e)
     {
@@ -124,9 +175,22 @@ public sealed partial class CodeEditorView
             return;
         }
 
+        // One menu at a time: Ctrl+. again replaces the menu rather than opening a second one.
+        var previous = _quickActionsMenu;
+        _quickActionsMenu = null;
+        previous?.Hide();
         var menu = CreateQuickActionsMenu(actions);
+        menu.Opened += (_, _) => _openQuickActionsMenus++;
         menu.Closed += (_, _) =>
         {
+            _openQuickActionsMenus = Math.Max(0, _openQuickActionsMenus - 1);
+            if (_quickActionsMenu != menu)
+            {
+                // Closed because the caret moved, the editor was hidden or another menu replaced it.
+                return;
+            }
+
+            _quickActionsMenu = null;
             if (_codeActions.Count == 0)
             {
                 HideLightBulb();
@@ -134,6 +198,7 @@ public sealed partial class CodeEditorView
 
             _editor.TextArea.Focus();
         };
+        _quickActionsMenu = menu;
         menu.ShowAt(_lightBulb.Anchor);
 
         // With a keyboard, the arrows and Enter work in the menu at once, as after Ctrl+. in Visual Studio.
@@ -242,8 +307,8 @@ public sealed partial class CodeEditorView
         _editor.TextArea.Focus();
     }
 
-    /// <summary>Shows the light bulb after the text of the caret line.</summary>
-    /// <returns>Whether the line is in view, so the bulb is shown.</returns>
+    /// <summary>Shows the light bulb after the text of the caret line, the only one in the app.</summary>
+    /// <returns>Whether the editor and the line are in view, so the bulb is shown.</returns>
     private bool ShowLightBulb()
     {
         if (_lightBulb is null || _lightBulbPopup is null)
@@ -251,6 +316,13 @@ public sealed partial class CodeEditorView
             return false;
         }
 
+        if (!IsShownOnScreen)
+        {
+            CloseQuickActions();
+            return false;
+        }
+
+        TakeQuickActions();
         var line = _editor.Document.GetLineByOffset(_editor.CaretOffset);
         if (LineRect(line.EndOffset) is not { } end)
         {
@@ -270,6 +342,11 @@ public sealed partial class CodeEditorView
         if (_lightBulbPopup is not null)
         {
             _lightBulbPopup.IsOpen = false;
+        }
+
+        if (_quickActionsOwner == this && _quickActionsMenu is null)
+        {
+            _quickActionsOwner = null;
         }
     }
 }

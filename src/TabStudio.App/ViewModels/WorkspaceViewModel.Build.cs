@@ -162,7 +162,7 @@ public sealed partial class WorkspaceViewModel
         if (Workspace is { } workspace)
         {
             var csharp = workspace.Projects.Where(p => p.Language == ProjectLanguage.CSharp).ToList();
-            var skipped = csharp.Where(p => p.Kind == ProjectKind.AspireAppHost || NetFrameworkCompatibility.NeedsWindows(p)).ToList();
+            var skipped = csharp.Where(p => p.Kind == ProjectKind.AspireAppHost || NetFrameworkCompatibility.NeedsWindows(p) || ProjectClassifier.IsMobilePlatformHead(p)).ToList();
             await BuildProjectsAsync(InDependencyOrder(csharp.Except(skipped).ToList()), showOutput: true, skipped: skipped);
             foreach (var item in _toolchainProjects.Where(t => TabStudio.Toolchains.Microchip.MicrochipInstallation.IsCompiler(t.Toolchain.Id)))
             {
@@ -213,7 +213,9 @@ public sealed partial class WorkspaceViewModel
             ? "an Aspire AppHost runs on a computer, where Aspire's developer control plane starts the app's projects and containers"
             : NetFrameworkCompatibility.NeedsWindows(project)
                 ? $"a .NET Framework project that needs Windows: it {NetFrameworkCompatibility.WhyWindows(project)}"
-                : "it is not built on this device";
+                : ProjectClassifier.IsMobilePlatformHead(project)
+                    ? $"it targets {string.Join(", ", project.TargetFrameworks)}, which only .NET's mobile workloads build, on a computer"
+                    : "it is not built on this device";
 
     private bool CanRun() => !_preparingServices && (IsRemoteWorkspace ? _remoteWorkspace?.Connection.IsConnected == true : StartupProject is not null || UsesLaunchTarget) && State is IdeState.Ready or IdeState.Failed && !IsNotebookRunning && !IsLiveGuest;
 

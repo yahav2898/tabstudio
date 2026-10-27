@@ -110,12 +110,26 @@ public sealed class CSharpCompiler
     /// </summary>
     /// <param name="optimize">Whether this is a release build, which defines <c>RELEASE</c> instead of <c>DEBUG</c>.</param>
     /// <param name="interceptorsNamespaces">The namespaces interceptors are allowed in, as the SDK's <c>InterceptorsNamespaces</c> property lists them.</param>
-    public static CSharpParseOptions CreateParseOptions(bool optimize = false, IEnumerable<string>? interceptorsNamespaces = null) => new CSharpParseOptions(
-        languageVersion: LanguageVersion.Latest,
+    /// <param name="languageVersion">The C# version, such as a project's <c>LangVersion</c>; the latest by default.</param>
+    public static CSharpParseOptions CreateParseOptions(bool optimize = false, IEnumerable<string>? interceptorsNamespaces = null, LanguageVersion languageVersion = LanguageVersion.Latest) => new CSharpParseOptions(
+        languageVersion: languageVersion,
         documentationMode: DocumentationMode.Parse,
         kind: SourceCodeKind.Regular,
         preprocessorSymbols: [.. CommonSymbols, optimize ? "RELEASE" : "DEBUG"])
         .WithFeatures([new("InterceptorsNamespaces", string.Join(';', interceptorsNamespaces ?? DefaultInterceptorsNamespaces))]);
+
+    /// <summary>
+    /// The C# version a project compiles with: <c>preview</c> when its <c>LangVersion</c> asks for it, otherwise the
+    /// latest. Source generators check it, and some only generate for preview features. A lower version than the latest
+    /// is not applied, because the code TabStudio generates for a project (XAML loaders, interceptors) uses current C#.
+    /// </summary>
+    /// <param name="project">The project, or <see langword="null"/> for the latest.</param>
+    public static LanguageVersion LanguageVersionOf(TsProject? project) =>
+        project?.GetProperty("LangVersion") is { Length: > 0 } text
+        && LanguageVersionFacts.TryParse(text.Trim(), out var version)
+        && version == LanguageVersion.Preview
+            ? LanguageVersion.Preview
+            : LanguageVersion.Latest;
 
     /// <summary>Compilation options for a project.</summary>
     /// <param name="kind">Whether to produce a program or a library.</param>

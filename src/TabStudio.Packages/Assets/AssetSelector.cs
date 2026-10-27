@@ -70,10 +70,12 @@ internal static class AssetSelector
 
         var supported = lib.Keys.Concat(reference.Keys).Distinct().ToList();
         var compatible = supported.Count == 0 || compile is not null || runtime is not null;
-        var analyzers = compilerVersion is null ? [] : SelectAnalyzers(paths, compilerVersion);
+        Version? needsCompiler = null;
+        var analyzers = compilerVersion is null ? [] : SelectAnalyzers(paths, compilerVersion, out needsCompiler);
         return new PackageAssets(Assemblies(compile), Assemblies(runtime), compatible, usedFallback, supported)
         {
             Analyzers = analyzers,
+            AnalyzersNeedCompiler = needsCompiler,
             NativeLibraries = rids.Count == 0 ? [] : SelectNativeLibraries(paths, rids),
         };
     }
@@ -181,6 +183,109 @@ internal static class AssetSelector
         onlyNewer = versioned.Count == 0 ? lowestNewer : null;
         List<string> best = versioned.Count == 0 ? [] : versioned[versioned.Keys.Max()!];
         return [.. unversioned.Concat(best).Order(StringComparer.Ordinal)];
+    }
+
+    /// <summary>
+    /// Selects the MSBuild files a project imports from a package, as NuGet writes them into <c>nuget.g.props</c> and
+    /// <c>nuget.g.targets</c> (measured with SDK 10.0.113): the package's <c>{id}.props</c> and <c>{id}.targets</c> in
+    /// <c>build/</c> when the project gets its <c>build</c> assets, and in <c>buildTransitive/</c> when it gets its
+    /// <c>buildTransitive</c> ones, each from the nearest framework folder or the folder itself; a file of the same name
+    /// in <c>buildTransitive/</c> replaces the one in <c>build/</c>. Props come before targets.
+    /// </summary>
+    /// <param name="relativePaths">Every file in the package, relative to its root, with forward slashes.</param>
+    /// <param name="packageId">The package id, which the files are named after.</param>
+    /// <param name="target">The project's framework.</param>
+    /// <param name="fallback">The <c>AssetTargetFallback</c> frameworks.</param>
+    /// <param name="assets">The assets the project gets from the package.</param>
+    public static IReadOnlyList<string> SelectBuildFiles(
+        IEnumerable<string> relativePaths,
+        string packageId,
+        NuGetFramework target,
+        IReadOnlyList<NuGetFramework> fallback,
+        AssetFlags assets)
+    {
+        ArgumentNullException.ThrowIfNull(relativePaths);
+        ArgumentException.ThrowIfNullOrEmpty(packageId);
+        var paths = relativePaths.ToList();
+        var chosen = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        if (assets.HasFlag(AssetFlags.Build))
+        {
+            foreach (var file in BuildFolder(paths, "build", packageId, target, fallback))
+            {
+                chosen[file[(file.LastIndexOf('/') + 1)..]] = file;
+            }
+        }
+
+        if (assets.HasFlag(AssetFlags.BuildTransitive))
+        {
+            foreach (var file in BuildFolder(paths, "buildTransitive", packageId, target, fallback))
+            {
+                chosen[file[(file.LastIndexOf('/') + 1)..]] = file;
+            }
+        }
+
+        return [.. chosen.Values
+            .OrderBy(file => file.EndsWith(".targets", StringComparison.OrdinalIgnoreCase) ? 1 : 0)
+            .ThenBy(file => file, StringComparer.Ordinal)];
+    }
+
+    /// <summary>The <c>{id}.props</c> and <c>{id}.targets</c> of one build folder, for the nearest framework.</summary>
+    private static List<string> BuildFolder(List<string> paths, string folder, string packageId, NuGetFramework target, IReadOnlyList<NuGetFramework> fallback)
+    {
+        var any = new List<string>();
+        var anyExists = false;
+        var byFramework = new Dictionary<NuGetFramework, List<string>>();
+        foreach (var path in paths)
+        {
+            var parts = path.Split('/');
+            if (parts.Length is < 2 or > 3 || !parts[0].Equals(folder, StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            var name = parts[^1];
+            var isPlaceholder = name == "_._";
+            var isImported = name.Equals(packageId + ".props", StringComparison.OrdinalIgnoreCase)
+                || name.Equals(packageId + ".targets", StringComparison.OrdinalIgnoreCase);
+            if (!isImported && !isPlaceholder)
+            {
+                continue;
+            }
+
+            if (parts.Length == 2)
+            {
+                anyExists = true;
+                if (isImported)
+                {
+                    any.Add(path);
+                }
+
+                continue;
+            }
+
+            if (FrameworkSelection.ParseFolder(parts[1]) is not { } framework)
+            {
+                continue;
+            }
+
+            if (!byFramework.TryGetValue(framework, out var files))
+            {
+                files = [];
+                byFramework[framework] = files;
+            }
+
+            if (isImported)
+            {
+                files.Add(path);
+            }
+        }
+
+        if (byFramework.Count > 0 && FrameworkSelection.GetNearest(target, fallback, byFramework.Keys, out _) is { } nearest)
+        {
+            return byFramework[nearest];
+        }
+
+        return anyExists ? any : [];
     }
 
     /// <summary>

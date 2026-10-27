@@ -353,7 +353,9 @@ public sealed class RealRepositoryTests
     /// <summary>
     /// The <c>serve</c> check: F5 on the named web project, with each connection string in <c>connections</c> taken
     /// from the environment variable it names and saved as the Database Explorer connection the run uses (as Connect to
-    /// SQL Server does), then a GET of <c>path</c>, which must answer <c>status</c> with <c>contains</c> in its body.
+    /// SQL Server does), and each variable in <c>environment</c> set for the run, as a person sets one the app's
+    /// README asks for (<c>$(RandomBase64Key)</c> is a new random 32-byte key, <c>$(TempDirectory)</c> a new folder),
+    /// then a GET of <c>path</c>, which must answer <c>status</c> with <c>contains</c> in its body.
     /// </summary>
     private static async Task<bool> ServeFirstPageAsync(WorkspaceViewModel workspace, Window window, string name, JsonNode serve, StringBuilder report)
     {
@@ -378,6 +380,19 @@ public sealed class RealRepositoryTests
 
             await workspace.DatabaseExplorer.SaveRunConnectionAsync(new TabStudio.Database.DatabaseConnection(
                 Guid.NewGuid(), WorkspaceViewModel.RunConnectionName(projectName, connectionName), TabStudio.Database.DatabaseProvider.SqlServer, value));
+        }
+
+        var previous = new List<(string Name, string? Value)>();
+        var temporary = Path.Combine(Path.GetTempPath(), "tabstudio-serve-" + Guid.NewGuid().ToString("N")[..8]);
+        foreach (var (variable, template) in serve["environment"]?.AsObject() ?? new JsonObject())
+        {
+            var value = template!.GetValue<string>()
+                .Replace("$(RandomBase64Key)", Convert.ToBase64String(System.Security.Cryptography.RandomNumberGenerator.GetBytes(32)), StringComparison.Ordinal)
+                .Replace("$(TempDirectory)", temporary, StringComparison.Ordinal);
+            Directory.CreateDirectory(temporary);
+            previous.Add((variable, Environment.GetEnvironmentVariable(variable)));
+            Environment.SetEnvironmentVariable(variable, value);
+            report.AppendLine(CultureInfo.InvariantCulture, $"Serve: {variable} set for the run.");
         }
 
         workspace.SetStartupProject(project);
@@ -413,6 +428,10 @@ public sealed class RealRepositoryTests
             }
 
             await run.WaitAsync(TimeSpan.FromMinutes(1));
+            foreach (var (variable, value) in previous)
+            {
+                Environment.SetEnvironmentVariable(variable, value);
+            }
         }
     }
 

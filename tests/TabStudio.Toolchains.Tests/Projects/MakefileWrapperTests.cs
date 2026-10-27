@@ -50,6 +50,7 @@ public sealed class MakefileWrapperTests : IDisposable
     [InlineData("run:\n\t@dotnet run --project src/App\n", "dotnet")]
     [InlineData("all:\n\tcd web && yarn build && cd .. && ./gradlew assemble\n", "yarn")]
     [InlineData("release:\n\tCARGO_TARGET_DIR=out \\\n\t  cargo build --release\n", "cargo")]
+    [InlineData("build:\n\t$(WITH_LOCAL_JWT) docker compose build\nrun-local:\n\t$(WITH_LOCAL_JWT) ASPNETCORE_URLS=$(API_URL) dotnet run --project src/App\n", "docker")]
     public void A_Makefile_that_runs_another_build_tool_wraps_it(string makefile, string tool) =>
         Assert.Equal(tool, MakefileWrapper.WrappedToolOf(makefile));
 

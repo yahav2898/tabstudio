@@ -83,8 +83,25 @@ public static class CompatibilityDoctor
                 ".NET Framework apps run on Windows only. They build and run on your PC through the Windows Bridge.");
         }
 
+        if (ProjectClassifier.IsMobilePlatformHead(project))
+        {
+            var platform = string.Join(" and ", project.TargetFrameworks.Select(PlatformName).Distinct(StringComparer.Ordinal));
+            return Report(
+                project, RunHost.None, CompatibilityStatus.Unsupported, $"{platform} head, on a computer",
+                $"The {platform} head of a cross-platform app: it builds only with .NET's {platform} workload, on a computer. TabStudio leaves it out of builds; "
+                + "the app's shared project and its desktop head run here.");
+        }
+
         return DiagnoseKind(project);
     }
+
+    /// <summary>The platform of a mobile target framework, such as Android for <c>net10.0-android</c>.</summary>
+    private static string PlatformName(string targetFramework) =>
+        targetFramework.Contains("-android", StringComparison.OrdinalIgnoreCase) ? "Android"
+        : targetFramework.Contains("-maccatalyst", StringComparison.OrdinalIgnoreCase) ? "Mac Catalyst"
+        : targetFramework.Contains("-tvos", StringComparison.OrdinalIgnoreCase) ? "tvOS"
+        : targetFramework.Contains("-macos", StringComparison.OrdinalIgnoreCase) ? "macOS"
+        : "iOS";
 
     /// <summary>The verdict for what a project produces.</summary>
     private static CompatibilityReport DiagnoseKind(ProjectInfo project)
@@ -99,6 +116,12 @@ public static class CompatibilityDoctor
                 project, RunHost.None, CompatibilityStatus.Unsupported, "Not on a tablet",
                 "An Aspire AppHost starts the app's projects and containers through Aspire's developer control plane, which runs on a computer, "
                 + "and it compiles against code its SDK generates for the projects it references. TabStudio leaves it out of builds; run the projects it starts on their own."),
+
+            ProjectKind.BuildScript => Report(
+                project, RunHost.None, CompatibilityStatus.Unsupported, "Build script, on a computer",
+                $"The repository's build script{BuildScriptLibrary(project)}: it builds, tests and publishes the other projects by starting "
+                + "dotnet and other tools as processes, which a program cannot do on a tablet. TabStudio builds it with the solution but never starts it; "
+                + "build and run the other projects here, or run the script on a computer with the .NET SDK."),
 
             ProjectKind.ConsoleApp when project.Language == ProjectLanguage.CSharp => Report(
                 project, RunHost.InProcess, CompatibilityStatus.Ready, "In-process",
@@ -233,6 +256,10 @@ public static class CompatibilityDoctor
     private static CompatibilityReport Report(
         ProjectInfo project, RunHost host, CompatibilityStatus status, string runsVia, string explanation) =>
         new(project.Name, project.Kind, host, status, runsVia, explanation);
+
+    /// <summary>The build-script library a project uses, as " (on Bullseye)", or nothing when it is known by its name only.</summary>
+    private static string BuildScriptLibrary(ProjectInfo project) =>
+        ProjectClassifier.BuildScriptLibrary(project) is { } library ? $" (on {library})" : string.Empty;
 
     private static string LanguageName(ProjectLanguage language) => language switch
     {

@@ -27,6 +27,7 @@ public static class ProjectKindNames
         ProjectKind.Python => "Python",
         ProjectKind.Node => "Node.js",
         ProjectKind.StaticWebSite => "Static web site",
+        ProjectKind.BuildScript => "Build script",
         _ => "Project",
     };
 }
