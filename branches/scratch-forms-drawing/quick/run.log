@@ -1,33 +1,54 @@
 + dotnet build tests/TabStudio.Forms.Tests -c Release -p:TreatWarningsAsErrors=true
-+ grep -E 'error|Build succeeded'
++ grep -E 'error|warning|Build succeeded'
++ sed 's|/home/runner/work/tabstudio/tabstudio/||'
 + sort -u
-+ head -50
++ head -150
 Build succeeded.
-+ dotnet test tests/TabStudio.Forms.Tests -c Release --no-build --filter 'FullyQualifiedName~RichTextBox|FullyQualifiedName~into_itself'
-+ tail -40
-Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Forms.Tests/bin/Release/net10.0/TabStudio.Forms.Tests.dll (.NETCoreApp,Version=v10.0)
-A total of 1 test files matched the specified pattern.
-[xUnit.net 00:00:00.40]     TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_bitmap_drawn_into_another_and_into_itself_keeps_its_pixels [FAIL]
-[xUnit.net 00:00:00.43]     TabStudio.Forms.Tests.Runtime.DrawingAppTests.A_RichTextBox_reads_and_writes_RTF [FAIL]
-  Failed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_bitmap_drawn_into_another_and_into_itself_keeps_its_pixels [40 ms]
-  Error Message:
-   Assert.Equal() Failure: Values differ
-Expected: -256
-Actual:   -16777216
-  Stack Trace:
-     at TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_bitmap_drawn_into_another_and_into_itself_keeps_its_pixels() in /_/tests/TabStudio.Forms.Tests/Drawing/DrawingSceneTests.cs:line 121
-   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
-   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
-  Failed TabStudio.Forms.Tests.Runtime.DrawingAppTests.A_RichTextBox_reads_and_writes_RTF [39 ms]
++ dotnet test tests/TabStudio.Forms.Tests -c Release --no-build --logger 'console;verbosity=normal'
++ grep -vE '^\s*$'
++ grep -E 'Failed|Error Message|Assert|differs|reference|at TabStudio|Exception|Total|Passed!|Failed!'
++ head -150
+[xUnit.net 00:00:00.50]       Assert.Equal() Failure: Strings differ
+[xUnit.net 00:00:00.50]         /_/tests/TabStudio.Forms.Tests/Runtime/DrawingAppTests.cs(176,0): at TabStudio.Forms.Tests.Runtime.DrawingAppTests.A_RichTextBox_reads_and_writes_RTF()
+[xUnit.net 00:00:00.59]       Assert.Equal() Failure: Collections differ
+[xUnit.net 00:00:00.59]         /_/tests/TabStudio.Forms.Tests/Runtime/DrawingAppTests.cs(312,0): at TabStudio.Forms.Tests.Runtime.MdiTests.MDI_children_open_inside_the_parent_activate_tile_and_close()
+  Failed TabStudio.Forms.Tests.Runtime.DrawingAppTests.A_RichTextBox_reads_and_writes_RTF [35 ms]
   Error Message:
    Assert.Equal() Failure: Strings differ
-                            ↓ (pos 16)
-Expected: "Hello bold\nCafé €"
-Actual:   "Hello bold\nCafé 荤?"
-                            ↑ (pos 16)
-  Stack Trace:
      at TabStudio.Forms.Tests.Runtime.DrawingAppTests.A_RichTextBox_reads_and_writes_RTF() in /_/tests/TabStudio.Forms.Tests/Runtime/DrawingAppTests.cs:line 176
-   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
-   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
-
-Failed!  - Failed:     2, Passed:     0, Skipped:     0, Total:     2, Duration: 216 ms - TabStudio.Forms.Tests.dll (net10.0)
+  Failed TabStudio.Forms.Tests.Runtime.MdiTests.MDI_children_open_inside_the_parent_activate_tile_and_close [107 ms]
+  Error Message:
+   Assert.Equal() Failure: Collections differ
+     at TabStudio.Forms.Tests.Runtime.MdiTests.MDI_children_open_inside_the_parent_activate_tile_and_close() in /_/tests/TabStudio.Forms.Tests/Runtime/DrawingAppTests.cs:line 312
+  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "rectangles") [11 ms]
+  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "hatch-brushes") [15 ms]
+  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "curves") [5 ms]
+  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "text") [16 ms]
+  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "clipping") [6 ms]
+  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "dashes") [6 ms]
+  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "path-gradient") [13 ms]
+  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "polygons") [3 ms]
+  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "compositing") [2 ms]
+  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "alpha-blending") [3 ms]
+  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "lines-antialiased") [2 ms]
+  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "arcs-and-pies") [4 ms]
+  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "images") [5 ms]
+  Passed TabStudio.Forms.Tests.Runtime.EventTests.Application_ThreadException_handles_exceptions_and_the_app_keeps_running [1 ms]
+  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "pen-caps") [11 ms]
+  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "transforms") [4 ms]
+  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "texture-brushes") [3 ms]
+  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "text-transformed") [6 ms]
+  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "ellipses") [2 ms]
+  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "linear-gradients") [7 ms]
+  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "lines") [2 ms]
+  Passed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_scene_drawn_on_a_bitmap_matches_its_reference(name: "pen-joins") [2 ms]
+[xUnit.net 00:00:03.05]       Assert.Equal() Failure: Values differ
+[xUnit.net 00:00:03.06]         /_/tests/TabStudio.Forms.Tests/Drawing/DrawingSceneTests.cs(121,0): at TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_bitmap_drawn_into_another_and_into_itself_keeps_its_pixels()
+  Failed TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_bitmap_drawn_into_another_and_into_itself_keeps_its_pixels [1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+     at TabStudio.Forms.Tests.Drawing.DrawingSceneTests.A_bitmap_drawn_into_another_and_into_itself_keeps_its_pixels() in /_/tests/TabStudio.Forms.Tests/Drawing/DrawingSceneTests.cs:line 121
+Test Run Failed.
+Total tests: 92
+     Failed: 3
+ Total time: 3.5695 Seconds
