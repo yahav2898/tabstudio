@@ -6,35 +6,117 @@
   "hardwareVerified": false,
   "androidVerified": false,
   "runtime": "Production EmbeddedGlibcToolchainInstaller / PRoot",
-  "elapsedSeconds": 643.3580822,
-  "passed": false,
+  "elapsedSeconds": 640.1815772,
+  "passed": true,
   "templates": [
     {
       "id": "esp32",
       "platformPackage": "espressif32@8.0.0",
-      "passed": false,
-      "error": "pio failed: Building .pio/build/esp32/firmware.bin\nesptool v5.4.0\nCreating ESP32 image...\nMerged 3 ELF sections.\nSuccessfully created ESP32 image.\nexport_manifest([\u0022.pio/build/esp32/firmware.bin\u0022], [\u0022.pio/build/esp32/firmware.elf\u0022])\n*** [.pio/build/esp32/firmware.bin] ValueError : Resolved upload did not identify bootloader, partition table and application; no offsets were guessed\nTraceback (most recent call last):\n  File \u0022/home/runner/work/_temp/canonical-templates/projects/esp32/.tabstudio/platformio-boxed/packages/tool-scons/scons-local-4.8.1/SCons/Action.py\u0022, line 1441, in execute\n    result = self.execfunction(target=target, source=rsources, env=env)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \u0022/home/runner/work/_temp/canonical-templates/projects/esp32/tabstudio_esp_flash.py\u0022, line 87, in export_manifest\n    raise ValueError(\u0022Resolved upload did not identify bootloader, partition table and application; no offsets were guessed\u0022)\nValueError: Resolved upload did not identify bootloader, partition table and application; no offsets were guessed\n========================= [FAILED] Took 216.03 seconds =========================",
-      "seconds": 216.4967201
+      "passed": true,
+      "seconds": 200.1792079,
+      "firmwareBytes": 5631136,
+      "firmwareSha256": "d98cb73ef35285e85e67c177440e9fb9e487f6d33122078d02272f77dfe5c942",
+      "ranges": [
+        {
+          "start": 1061158944,
+          "length": 57448
+        },
+        {
+          "start": 1073470304,
+          "length": 16849
+        },
+        {
+          "start": 1074266112,
+          "length": 63031
+        },
+        {
+          "start": 1074593824,
+          "length": 154116
+        },
+        {
+          "start": 1342177792,
+          "length": 32
+        }
+      ],
+      "uploadPlanReady": true,
+      "uploadVerification": "Each metadata-declared image is verified using the same flash-header settings. Separate image offsets preserve unmentioned erase sectors, including NVS; no merged FF padding or whole-chip erase is used.",
+      "stackFiles": 61,
+      "stackRows": 951,
+      "compilationDatabaseEntries": 61,
+      "platformioIni": "; Firmware: ESP32 DevKit\n[env:esp32]\nplatform = espressif32@8.0.0\nboard = esp32dev\nframework = arduino\nmonitor_speed = 115200\nbuild_flags = -fstack-usage\nextra_scripts = post:tabstudio_esp_flash.py\n"
     },
     {
       "id": "esp32s3",
       "platformPackage": "espressif32@8.0.0",
-      "passed": false,
-      "error": "pio failed: Building .pio/build/esp32s3/firmware.bin\nesptool v5.4.0\nCreating ESP32-S3 image...\nMerged 3 ELF sections.\nSuccessfully created ESP32-S3 image.\nexport_manifest([\u0022.pio/build/esp32s3/firmware.bin\u0022], [\u0022.pio/build/esp32s3/firmware.elf\u0022])\n*** [.pio/build/esp32s3/firmware.bin] ValueError : Resolved upload did not identify bootloader, partition table and application; no offsets were guessed\nTraceback (most recent call last):\n  File \u0022/home/runner/work/_temp/canonical-templates/projects/esp32s3/.tabstudio/platformio-boxed/packages/tool-scons/scons-local-4.8.1/SCons/Action.py\u0022, line 1441, in execute\n    result = self.execfunction(target=target, source=rsources, env=env)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \u0022/home/runner/work/_temp/canonical-templates/projects/esp32s3/tabstudio_esp_flash.py\u0022, line 87, in export_manifest\n    raise ValueError(\u0022Resolved upload did not identify bootloader, partition table and application; no offsets were guessed\u0022)\nValueError: Resolved upload did not identify bootloader, partition table and application; no offsets were guessed\n========================= [FAILED] Took 196.82 seconds =========================",
-      "seconds": 197.2882893
+      "passed": true,
+      "seconds": 205.5977675,
+      "firmwareBytes": 6309440,
+      "firmwareSha256": "0115cf0b9a2b37d247dc8dcd2be1d80f394af749f6770e420bb4e76efd7d1c74",
+      "ranges": [
+        {
+          "start": 1006829600,
+          "length": 57000
+        },
+        {
+          "start": 1070104576,
+          "length": 60118
+        },
+        {
+          "start": 1077362688,
+          "length": 61831
+        },
+        {
+          "start": 1107296288,
+          "length": 160584
+        },
+        {
+          "start": 1342177792,
+          "length": 32
+        }
+      ],
+      "uploadPlanReady": true,
+      "uploadVerification": "Each metadata-declared image is verified using the same flash-header settings. Separate image offsets preserve unmentioned erase sectors, including NVS; no merged FF padding or whole-chip erase is used.",
+      "stackFiles": 61,
+      "stackRows": 1227,
+      "compilationDatabaseEntries": 61,
+      "platformioIni": "; Firmware: ESP32-S3 DevKitC-1\n[env:esp32s3]\nplatform = espressif32@8.0.0\nboard = esp32-s3-devkitc-1\nframework = arduino\nmonitor_speed = 115200\nbuild_flags = -fstack-usage\nextra_scripts = post:tabstudio_esp_flash.py\n"
     },
     {
       "id": "esp32c3",
       "platformPackage": "espressif32@8.0.0",
-      "passed": false,
-      "error": "pio failed: Building .pio/build/esp32c3/firmware.bin\nesptool v5.4.0\nCreating ESP32-C3 image...\nMerged 3 ELF sections.\nSuccessfully created ESP32-C3 image.\nexport_manifest([\u0022.pio/build/esp32c3/firmware.bin\u0022], [\u0022.pio/build/esp32c3/firmware.elf\u0022])\n*** [.pio/build/esp32c3/firmware.bin] ValueError : Resolved upload did not identify bootloader, partition table and application; no offsets were guessed\nTraceback (most recent call last):\n  File \u0022/home/runner/work/_temp/canonical-templates/projects/esp32c3/.tabstudio/platformio-boxed/packages/tool-scons/scons-local-4.8.1/SCons/Action.py\u0022, line 1441, in execute\n    result = self.execfunction(target=target, source=rsources, env=env)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \u0022/home/runner/work/_temp/canonical-templates/projects/esp32c3/tabstudio_esp_flash.py\u0022, line 87, in export_manifest\n    raise ValueError(\u0022Resolved upload did not identify bootloader, partition table and application; no offsets were guessed\u0022)\nValueError: Resolved upload did not identify bootloader, partition table and application; no offsets were guessed\n========================= [FAILED] Took 168.62 seconds =========================",
-      "seconds": 169.0725187
+      "passed": true,
+      "seconds": 177.1257933,
+      "firmwareBytes": 6133840,
+      "firmwareSha256": "f600ded43ca55beb7d1f3b05e4815cfd909659f902dfca1d84329756f25b724a",
+      "ranges": [
+        {
+          "start": 1006632992,
+          "length": 261968
+        },
+        {
+          "start": 1070071808,
+          "length": 58774
+        },
+        {
+          "start": 1077411840,
+          "length": 51358
+        },
+        {
+          "start": 1107296288,
+          "length": 170284
+        },
+        {
+          "start": 1342177280,
+          "length": 32
+        }
+      ],
+      "uploadPlanReady": true,
+      "uploadVerification": "Each metadata-declared image is verified using the same flash-header settings. Separate image offsets preserve unmentioned erase sectors, including NVS; no merged FF padding or whole-chip erase is used.",
+      "stackFiles": 61,
+      "stackRows": 981,
+      "compilationDatabaseEntries": 61,
+      "platformioIni": "; Firmware: ESP32-C3 DevKitM-1\n[env:esp32c3]\nplatform = espressif32@8.0.0\nboard = esp32-c3-devkitm-1\nframework = arduino\nmonitor_speed = 115200\nbuild_flags = -fstack-usage\nextra_scripts = post:tabstudio_esp_flash.py\n"
     }
   ],
-  "errors": [
-    "esp32: pio failed: Building .pio/build/esp32/firmware.bin\nesptool v5.4.0\nCreating ESP32 image...\nMerged 3 ELF sections.\nSuccessfully created ESP32 image.\nexport_manifest([\u0022.pio/build/esp32/firmware.bin\u0022], [\u0022.pio/build/esp32/firmware.elf\u0022])\n*** [.pio/build/esp32/firmware.bin] ValueError : Resolved upload did not identify bootloader, partition table and application; no offsets were guessed\nTraceback (most recent call last):\n  File \u0022/home/runner/work/_temp/canonical-templates/projects/esp32/.tabstudio/platformio-boxed/packages/tool-scons/scons-local-4.8.1/SCons/Action.py\u0022, line 1441, in execute\n    result = self.execfunction(target=target, source=rsources, env=env)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \u0022/home/runner/work/_temp/canonical-templates/projects/esp32/tabstudio_esp_flash.py\u0022, line 87, in export_manifest\n    raise ValueError(\u0022Resolved upload did not identify bootloader, partition table and application; no offsets were guessed\u0022)\nValueError: Resolved upload did not identify bootloader, partition table and application; no offsets were guessed\n========================= [FAILED] Took 216.03 seconds =========================",
-    "esp32s3: pio failed: Building .pio/build/esp32s3/firmware.bin\nesptool v5.4.0\nCreating ESP32-S3 image...\nMerged 3 ELF sections.\nSuccessfully created ESP32-S3 image.\nexport_manifest([\u0022.pio/build/esp32s3/firmware.bin\u0022], [\u0022.pio/build/esp32s3/firmware.elf\u0022])\n*** [.pio/build/esp32s3/firmware.bin] ValueError : Resolved upload did not identify bootloader, partition table and application; no offsets were guessed\nTraceback (most recent call last):\n  File \u0022/home/runner/work/_temp/canonical-templates/projects/esp32s3/.tabstudio/platformio-boxed/packages/tool-scons/scons-local-4.8.1/SCons/Action.py\u0022, line 1441, in execute\n    result = self.execfunction(target=target, source=rsources, env=env)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \u0022/home/runner/work/_temp/canonical-templates/projects/esp32s3/tabstudio_esp_flash.py\u0022, line 87, in export_manifest\n    raise ValueError(\u0022Resolved upload did not identify bootloader, partition table and application; no offsets were guessed\u0022)\nValueError: Resolved upload did not identify bootloader, partition table and application; no offsets were guessed\n========================= [FAILED] Took 196.82 seconds =========================",
-    "esp32c3: pio failed: Building .pio/build/esp32c3/firmware.bin\nesptool v5.4.0\nCreating ESP32-C3 image...\nMerged 3 ELF sections.\nSuccessfully created ESP32-C3 image.\nexport_manifest([\u0022.pio/build/esp32c3/firmware.bin\u0022], [\u0022.pio/build/esp32c3/firmware.elf\u0022])\n*** [.pio/build/esp32c3/firmware.bin] ValueError : Resolved upload did not identify bootloader, partition table and application; no offsets were guessed\nTraceback (most recent call last):\n  File \u0022/home/runner/work/_temp/canonical-templates/projects/esp32c3/.tabstudio/platformio-boxed/packages/tool-scons/scons-local-4.8.1/SCons/Action.py\u0022, line 1441, in execute\n    result = self.execfunction(target=target, source=rsources, env=env)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \u0022/home/runner/work/_temp/canonical-templates/projects/esp32c3/tabstudio_esp_flash.py\u0022, line 87, in export_manifest\n    raise ValueError(\u0022Resolved upload did not identify bootloader, partition table and application; no offsets were guessed\u0022)\nValueError: Resolved upload did not identify bootloader, partition table and application; no offsets were guessed\n========================= [FAILED] Took 168.62 seconds =========================",
-    "esp32: pio failed: Building .pio/build/esp32/firmware.bin\nesptool v5.4.0\nCreating ESP32 image...\nMerged 3 ELF sections.\nSuccessfully created ESP32 image.\nexport_manifest([\u0022.pio/build/esp32/firmware.bin\u0022], [\u0022.pio/build/esp32/firmware.elf\u0022])\n*** [.pio/build/esp32/firmware.bin] ValueError : Resolved upload did not identify bootloader, partition table and application; no offsets were guessed\nTraceback (most recent call last):\n  File \u0022/home/runner/work/_temp/canonical-templates/projects/esp32/.tabstudio/platformio-boxed/packages/tool-scons/scons-local-4.8.1/SCons/Action.py\u0022, line 1441, in execute\n    result = self.execfunction(target=target, source=rsources, env=env)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \u0022/home/runner/work/_temp/canonical-templates/projects/esp32/tabstudio_esp_flash.py\u0022, line 87, in export_manifest\n    raise ValueError(\u0022Resolved upload did not identify bootloader, partition table and application; no offsets were guessed\u0022)\nValueError: Resolved upload did not identify bootloader, partition table and application; no offsets were guessed\n========================= [FAILED] Took 216.03 seconds =========================\nesp32s3: pio failed: Building .pio/build/esp32s3/firmware.bin\nesptool v5.4.0\nCreating ESP32-S3 image...\nMerged 3 ELF sections.\nSuccessfully created ESP32-S3 image.\nexport_manifest([\u0022.pio/build/esp32s3/firmware.bin\u0022], [\u0022.pio/build/esp32s3/firmware.elf\u0022])\n*** [.pio/build/esp32s3/firmware.bin] ValueError : Resolved upload did not identify bootloader, partition table and application; no offsets were guessed\nTraceback (most recent call last):\n  File \u0022/home/runner/work/_temp/canonical-templates/projects/esp32s3/.tabstudio/platformio-boxed/packages/tool-scons/scons-local-4.8.1/SCons/Action.py\u0022, line 1441, in execute\n    result = self.execfunction(target=target, source=rsources, env=env)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \u0022/home/runner/work/_temp/canonical-templates/projects/esp32s3/tabstudio_esp_flash.py\u0022, line 87, in export_manifest\n    raise ValueError(\u0022Resolved upload did not identify bootloader, partition table and application; no offsets were guessed\u0022)\nValueError: Resolved upload did not identify bootloader, partition table and application; no offsets were guessed\n========================= [FAILED] Took 196.82 seconds =========================\nesp32c3: pio failed: Building .pio/build/esp32c3/firmware.bin\nesptool v5.4.0\nCreating ESP32-C3 image...\nMerged 3 ELF sections.\nSuccessfully created ESP32-C3 image.\nexport_manifest([\u0022.pio/build/esp32c3/firmware.bin\u0022], [\u0022.pio/build/esp32c3/firmware.elf\u0022])\n*** [.pio/build/esp32c3/firmware.bin] ValueError : Resolved upload did not identify bootloader, partition table and application; no offsets were guessed\nTraceback (most recent call last):\n  File \u0022/home/runner/work/_temp/canonical-templates/projects/esp32c3/.tabstudio/platformio-boxed/packages/tool-scons/scons-local-4.8.1/SCons/Action.py\u0022, line 1441, in execute\n    result = self.execfunction(target=target, source=rsources, env=env)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \u0022/home/runner/work/_temp/canonical-templates/projects/esp32c3/tabstudio_esp_flash.py\u0022, line 87, in export_manifest\n    raise ValueError(\u0022Resolved upload did not identify bootloader, partition table and application; no offsets were guessed\u0022)\nValueError: Resolved upload did not identify bootloader, partition table and application; no offsets were guessed\n========================= [FAILED] Took 168.62 seconds ========================="
-  ]
+  "errors": []
 }
