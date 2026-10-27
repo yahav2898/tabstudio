@@ -1,0 +1,1524 @@
+GuardClauses at f96b823e4228252b2927cce3effa550c16b558a5
+Opened /home/runner/work/_temp/real-repos/GuardClauses/GuardClauses.sln in 0.6 s
+Compatibility Doctor:
+  GuardClauses: Library via Built with its users - A library is compiled together with the projects that reference it.
+  GuardClauses.UnitTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+Startup project: none
+Built in 5.7 s: 0 errors, 0 warnings
+Packages with analyzers or MSBuild files:
+  altcover 9.0.102
+      build/AltCover.proj
+      build/AltCover.props
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <AltCover Condition="'$(AltCover)' == ''">false</AltCover>
+    <AltCoverReportFormat Condition="'$(AltCoverReportFormat)' == ''">OpenCover</AltCoverReportFormat>
+  </PropertyGroup>
+</Project>
+      build/AltCover.targets
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <AltCoverNetCoreEngine>$(MSBuildThisFileDirectory)../tools/net8.0/AltCover.Engine.dll</AltCoverNetCoreEngine>
+    <AltCoverNetStdEngine>$(MSBuildThisFileDirectory)../lib/netstandard2.0/AltCover.Engine.dll</AltCoverNetStdEngine>
+    <AltCoverEngine Condition="Exists($(AltCoverNetStdEngine))">$(AltCoverNetStdEngine)</AltCoverEngine>
+    <AltCoverEngine Condition="Exists($(AltCoverNetCoreEngine))">$(AltCoverNetCoreEngine)</AltCoverEngine>
+    <AltCoverOutputRoot Condition="'$(AltCoverOutputRoot)' == ''">$(TargetDir)</AltCoverOutputRoot>
+    <AltCoverInstrumentedDirectory>$([System.IO.Path]::Combine($(AltCoverOutputRoot), '__Instrumented'))</AltCoverInstrumentedDirectory>
+    <AltCoverSavedDirectory>$([System.IO.Path]::Combine($(AltCoverOutputRoot), '__Saved'))</AltCoverSavedDirectory>
+    <AltCoverFileExtension Condition="'$(AltCoverReportFormat).Substring(0,1).ToUpperInvariant()' != 'J'">.xml</AltCoverFileExtension>
+    <AltCoverFileExtension Condition="'$(AltCoverReportFormat).Substring(0,1).ToUpperInvariant()' == 'J'">.json</AltCoverFileExtension>
+  </PropertyGroup>
+
+  <UsingTask TaskName="AltCover.Prepare"
+        Condition="'$(AltCoverEngine)' != ''"
+        AssemblyFile="$(AltCoverEngine)" />
+  <UsingTask TaskName="AltCover.Collect"
+        Condition="'$(AltCoverEngine)' != ''"
+        AssemblyFile="$(AltCoverEngine)" />
+  <UsingTask TaskName="AltCover.PowerShell"
+        Condition="'$(AltCoverEngine)' != ''"
+        AssemblyFile="$(AltCoverEngine)" />
+  <UsingTask TaskName="AltCover.GetVersion"
+        Condition="'$(AltCoverEngine)' != ''"
+        AssemblyFile="$(AltCoverEngine)" />
+  <UsingTask TaskName="AltCover.Echo"
+        Condition="'$(AltCoverEngine)' != ''"
+        AssemblyFile="$(AltCoverEngine)" />
+  <UsingTask TaskName="AltCover.RunSettings"
+        Condition="'$(AltCoverEngine)' != ''"
+        AssemblyFile="$(AltCoverEngine)" />
+  <UsingTask TaskName="AltCover.ContingentCopy"
+        Condition="'$(AltCoverEngine)' != ''"
+        AssemblyFile="$(AltCoverEngine)" />
+  <UsingTask TaskName="AltCover.RetryDelete"
+        Condition="'$(AltCoverEngine)' != ''"
+        AssemblyFile="$(AltCoverEngine)" />
+
+  <Import Project="$(MSBuildThisFileDirectory)\$(MSBuildThisFileName).proj" Condition="'$(AltCover)' == 'true' AND '$(IsTestProject)' == 'true' and '$(AltCoverEngine)' != ''" />
+</Project>
+  coverlet.collector 10.0.1
+      build/net10.0/Microsoft.Bcl.AsyncInterfaces.dll
+      build/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+      build/net10.0/Microsoft.Extensions.DependencyInjection.dll
+      build/net10.0/Microsoft.Extensions.DependencyModel.dll
+      build/net10.0/Microsoft.Extensions.FileSystemGlobbing.dll
+      build/net10.0/Microsoft.TestPlatform.CoreUtilities.dll
+      build/net10.0/Microsoft.TestPlatform.PlatformAbstractions.dll
+      build/net10.0/Microsoft.VisualStudio.TestPlatform.ObjectModel.dll
+      build/net10.0/Mono.Cecil.Mdb.dll
+      build/net10.0/Mono.Cecil.Pdb.dll
+      build/net10.0/Mono.Cecil.Rocks.dll
+      build/net10.0/Mono.Cecil.dll
+      build/net10.0/NuGet.Frameworks.dll
+      build/net10.0/NuGet.Versioning.dll
+      build/net10.0/System.Security.Cryptography.Pkcs.dll
+      build/net10.0/coverlet.collector.deps.json
+      build/net10.0/coverlet.collector.dll
+      build/net10.0/coverlet.collector.pdb
+      build/net10.0/coverlet.collector.targets
+<!--
+***********************************************************************************************
+coverlet.collector.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="CopyCoverletDataCollectorFiles" AfterTargets="ComputeFilesToPublish">
+    <ItemGroup>
+      <CoverletDataCollectorFiles Include="$(MSBuildThisFileDirectory)\**\*.*" />
+      <CoverletDataCollectorFiles Remove="@(ResolvedFileToPublish->'$(MSBuildThisFileDirectory)%(Filename)%(Extension)')" />
+    </ItemGroup>
+    <Copy SourceFiles="@(CoverletDataCollectorFiles)" DestinationFolder="$(PublishDir)%(RecursiveDir)" />
+  </Target>
+
+  <Target Name="SetXPlatDataCollectorPath" BeforeTargets="VSTest">
+    <PropertyGroup>
+      <VSTestTestAdapterPath>$(VSTestTestAdapterPath);$(MSBuildThisFileDirectory)</VSTestTestAdapterPath>
+    </PropertyGroup>
+  </Target>
+
+  <PropertyGroup>
+    <_CoverletSdkNETCoreSdkVersion>$(NETCoreSdkVersion)</_CoverletSdkNETCoreSdkVersion>
+    <_CoverletSdkNETCoreSdkVersion Condition="$(_CoverletSdkNETCoreSdkVersion.Contains('-'))">$(_CoverletSdkNETCoreSdkVersion.Split('-')[0])</_CoverletSdkNETCoreSdkVersion>
+    <_CoverletSdkMinVersionWithDependencyTarget>8.0.100</_CoverletSdkMinVersionWithDependencyTarget>
+    <_CoverletSourceRootTargetName>CoverletGetPathMap</_CoverletSourceRootTargetName>
+    <_CoverletSourceRootTargetName Condition="'$([System.Version]::Parse($(_CoverletSdkNETCoreSdkVersion)).CompareTo($([System.Version]::Parse($(_CoverletSdkMinVersionWithDependencyTarget)))))' &gt;= '0' ">InitializeSourceRootMappedPaths</_CoverletSourceRootTargetName>
+  </PropertyGroup>
+
+  <Target Name="ReferencedPathMaps" BeforeTargets="CoreCompile" DependsOnTargets="ResolveProjectReferences" >
+    <MSBuild Projects="@(AnnotatedProjects->'%(FullPath)')"
+             Targets="$(_CoverletSourceRootTargetName)"
+             Properties="TargetFramework=%(AnnotatedProjects.NearestTargetFramework)"
+             SkipNonexistentTargets="true">
+      <Output TaskParameter="TargetOutputs"
+              ItemName="_LocalTopLevelSourceRoot" />
+    </MSBuild>
+    <ItemGroup>
+      <_byProject Include="@(_LocalTopLevelSourceRoot->'%(MSBuildSourceProjectFile)')" OriginalPath="%(Identity)" />
+      <_mapping Include="@(_byProject->'%(Identity)|%(OriginalPath)=%(MappedPath)')" />
+    </ItemGroup>
+    <PropertyGroup>
+      <_sourceRootMappingFilePath>$([MSBuild]::EnsureTrailingSlash('$(OutputPath)'))CoverletSourceRootsMapping_$(AssemblyName)</_sourceRootMappingFilePath>
+    </PropertyGroup>
+    <WriteLinesToFile File="$(_sourceRootMappingFilePath)" Lines="@(_mapping)"
+                      Overwrite="true" Encoding="Unicode"
+                      Condition="'@(_mapping)'!=''"
+                      WriteOnlyWhenDifferent="true" />
+    <ItemGroup>
+      <FileWrites Include="$(_sourceRootMappingFilePath)" Condition="'@(_mapping)'!=''" />
+    </ItemGroup>
+  </Target>
+</Project>
+
+      build/net10.0/coverlet.core.dll
+      build/net10.0/coverlet.core.pdb
+      build/net10.0/coverlet.core.xml
+      build/net10.0/runtimes/win/lib/net10.0/System.Security.Cryptography.Pkcs.dll
+      build/net8.0/Microsoft.Bcl.AsyncInterfaces.dll
+      build/net8.0/Microsoft.Bcl.Cryptography.dll
+      build/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+      build/net8.0/Microsoft.Extensions.DependencyInjection.dll
+      build/net8.0/Microsoft.Extensions.DependencyModel.dll
+      build/net8.0/Microsoft.Extensions.FileSystemGlobbing.dll
+      build/net8.0/Microsoft.TestPlatform.CoreUtilities.dll
+      build/net8.0/Microsoft.TestPlatform.PlatformAbstractions.dll
+      build/net8.0/Microsoft.VisualStudio.TestPlatform.ObjectModel.dll
+      build/net8.0/Mono.Cecil.Mdb.dll
+      build/net8.0/Mono.Cecil.Pdb.dll
+      build/net8.0/Mono.Cecil.Rocks.dll
+      build/net8.0/Mono.Cecil.dll
+      build/net8.0/NuGet.Frameworks.dll
+      build/net8.0/NuGet.Versioning.dll
+      build/net8.0/System.Formats.Asn1.dll
+      build/net8.0/System.Security.Cryptography.Pkcs.dll
+      build/net8.0/coverlet.collector.deps.json
+      build/net8.0/coverlet.collector.dll
+      build/net8.0/coverlet.collector.pdb
+      build/net8.0/coverlet.collector.targets
+<!--
+***********************************************************************************************
+coverlet.collector.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="CopyCoverletDataCollectorFiles" AfterTargets="ComputeFilesToPublish">
+    <ItemGroup>
+      <CoverletDataCollectorFiles Include="$(MSBuildThisFileDirectory)\**\*.*" />
+      <CoverletDataCollectorFiles Remove="@(ResolvedFileToPublish->'$(MSBuildThisFileDirectory)%(Filename)%(Extension)')" />
+    </ItemGroup>
+    <Copy SourceFiles="@(CoverletDataCollectorFiles)" DestinationFolder="$(PublishDir)%(RecursiveDir)" />
+  </Target>
+
+  <Target Name="SetXPlatDataCollectorPath" BeforeTargets="VSTest">
+    <PropertyGroup>
+      <VSTestTestAdapterPath>$(VSTestTestAdapterPath);$(MSBuildThisFileDirectory)</VSTestTestAdapterPath>
+    </PropertyGroup>
+  </Target>
+
+  <PropertyGroup>
+    <_CoverletSdkNETCoreSdkVersion>$(NETCoreSdkVersion)</_CoverletSdkNETCoreSdkVersion>
+    <_CoverletSdkNETCoreSdkVersion Condition="$(_CoverletSdkNETCoreSdkVersion.Contains('-'))">$(_CoverletSdkNETCoreSdkVersion.Split('-')[0])</_CoverletSdkNETCoreSdkVersion>
+    <_CoverletSdkMinVersionWithDependencyTarget>8.0.100</_CoverletSdkMinVersionWithDependencyTarget>
+    <_CoverletSourceRootTargetName>CoverletGetPathMap</_CoverletSourceRootTargetName>
+    <_CoverletSourceRootTargetName Condition="'$([System.Version]::Parse($(_CoverletSdkNETCoreSdkVersion)).CompareTo($([System.Version]::Parse($(_CoverletSdkMinVersionWithDependencyTarget)))))' &gt;= '0' ">InitializeSourceRootMappedPaths</_CoverletSourceRootTargetName>
+  </PropertyGroup>
+
+  <Target Name="ReferencedPathMaps" BeforeTargets="CoreCompile" DependsOnTargets="ResolveProjectReferences" >
+    <MSBuild Projects="@(AnnotatedProjects->'%(FullPath)')"
+             Targets="$(_CoverletSourceRootTargetName)"
+             Properties="TargetFramework=%(AnnotatedProjects.NearestTargetFramework)"
+             SkipNonexistentTargets="true">
+      <Output TaskParameter="TargetOutputs"
+              ItemName="_LocalTopLevelSourceRoot" />
+    </MSBuild>
+    <ItemGroup>
+      <_byProject Include="@(_LocalTopLevelSourceRoot->'%(MSBuildSourceProjectFile)')" OriginalPath="%(Identity)" />
+      <_mapping Include="@(_byProject->'%(Identity)|%(OriginalPath)=%(MappedPath)')" />
+    </ItemGroup>
+    <PropertyGroup>
+      <_sourceRootMappingFilePath>$([MSBuild]::EnsureTrailingSlash('$(OutputPath)'))CoverletSourceRootsMapping_$(AssemblyName)</_sourceRootMappingFilePath>
+    </PropertyGroup>
+    <WriteLinesToFile File="$(_sourceRootMappingFilePath)" Lines="@(_mapping)"
+                      Overwrite="true" Encoding="Unicode"
+                      Condition="'@(_mapping)'!=''"
+                      WriteOnlyWhenDifferent="true" />
+    <ItemGroup>
+      <FileWrites Include="$(_sourceRootMappingFilePath)" Condition="'@(_mapping)'!=''" />
+    </ItemGroup>
+  </Target>
+</Project>
+
+      build/net8.0/coverlet.core.dll
+      build/net8.0/coverlet.core.pdb
+      build/net8.0/coverlet.core.xml
+      build/net8.0/runtimes/win/lib/net8.0/System.Security.Cryptography.Pkcs.dll
+      build/net9.0/Microsoft.Bcl.AsyncInterfaces.dll
+      build/net9.0/Microsoft.Bcl.Cryptography.dll
+      build/net9.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+      build/net9.0/Microsoft.Extensions.DependencyInjection.dll
+      build/net9.0/Microsoft.Extensions.DependencyModel.dll
+      build/net9.0/Microsoft.Extensions.FileSystemGlobbing.dll
+      build/net9.0/Microsoft.TestPlatform.CoreUtilities.dll
+      build/net9.0/Microsoft.TestPlatform.PlatformAbstractions.dll
+      build/net9.0/Microsoft.VisualStudio.TestPlatform.ObjectModel.dll
+      build/net9.0/Mono.Cecil.Mdb.dll
+      build/net9.0/Mono.Cecil.Pdb.dll
+      build/net9.0/Mono.Cecil.Rocks.dll
+      build/net9.0/Mono.Cecil.dll
+      build/net9.0/NuGet.Frameworks.dll
+      build/net9.0/NuGet.Versioning.dll
+      build/net9.0/System.Formats.Asn1.dll
+      build/net9.0/System.Security.Cryptography.Pkcs.dll
+      build/net9.0/coverlet.collector.deps.json
+      build/net9.0/coverlet.collector.dll
+      build/net9.0/coverlet.collector.pdb
+      build/net9.0/coverlet.collector.targets
+<!--
+***********************************************************************************************
+coverlet.collector.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="CopyCoverletDataCollectorFiles" AfterTargets="ComputeFilesToPublish">
+    <ItemGroup>
+      <CoverletDataCollectorFiles Include="$(MSBuildThisFileDirectory)\**\*.*" />
+      <CoverletDataCollectorFiles Remove="@(ResolvedFileToPublish->'$(MSBuildThisFileDirectory)%(Filename)%(Extension)')" />
+    </ItemGroup>
+    <Copy SourceFiles="@(CoverletDataCollectorFiles)" DestinationFolder="$(PublishDir)%(RecursiveDir)" />
+  </Target>
+
+  <Target Name="SetXPlatDataCollectorPath" BeforeTargets="VSTest">
+    <PropertyGroup>
+      <VSTestTestAdapterPath>$(VSTestTestAdapterPath);$(MSBuildThisFileDirectory)</VSTestTestAdapterPath>
+    </PropertyGroup>
+  </Target>
+
+  <PropertyGroup>
+    <_CoverletSdkNETCoreSdkVersion>$(NETCoreSdkVersion)</_CoverletSdkNETCoreSdkVersion>
+    <_CoverletSdkNETCoreSdkVersion Condition="$(_CoverletSdkNETCoreSdkVersion.Contains('-'))">$(_CoverletSdkNETCoreSdkVersion.Split('-')[0])</_CoverletSdkNETCoreSdkVersion>
+    <_CoverletSdkMinVersionWithDependencyTarget>8.0.100</_CoverletSdkMinVersionWithDependencyTarget>
+    <_CoverletSourceRootTargetName>CoverletGetPathMap</_CoverletSourceRootTargetName>
+    <_CoverletSourceRootTargetName Condition="'$([System.Version]::Parse($(_CoverletSdkNETCoreSdkVersion)).CompareTo($([System.Version]::Parse($(_CoverletSdkMinVersionWithDependencyTarget)))))' &gt;= '0' ">InitializeSourceRootMappedPaths</_CoverletSourceRootTargetName>
+  </PropertyGroup>
+
+  <Target Name="ReferencedPathMaps" BeforeTargets="CoreCompile" DependsOnTargets="ResolveProjectReferences" >
+    <MSBuild Projects="@(AnnotatedProjects->'%(FullPath)')"
+             Targets="$(_CoverletSourceRootTargetName)"
+             Properties="TargetFramework=%(AnnotatedProjects.NearestTargetFramework)"
+             SkipNonexistentTargets="true">
+      <Output TaskParameter="TargetOutputs"
+              ItemName="_LocalTopLevelSourceRoot" />
+    </MSBuild>
+    <ItemGroup>
+      <_byProject Include="@(_LocalTopLevelSourceRoot->'%(MSBuildSourceProjectFile)')" OriginalPath="%(Identity)" />
+      <_mapping Include="@(_byProject->'%(Identity)|%(OriginalPath)=%(MappedPath)')" />
+    </ItemGroup>
+    <PropertyGroup>
+      <_sourceRootMappingFilePath>$([MSBuild]::EnsureTrailingSlash('$(OutputPath)'))CoverletSourceRootsMapping_$(AssemblyName)</_sourceRootMappingFilePath>
+    </PropertyGroup>
+    <WriteLinesToFile File="$(_sourceRootMappingFilePath)" Lines="@(_mapping)"
+                      Overwrite="true" Encoding="Unicode"
+                      Condition="'@(_mapping)'!=''"
+                      WriteOnlyWhenDifferent="true" />
+    <ItemGroup>
+      <FileWrites Include="$(_sourceRootMappingFilePath)" Condition="'@(_mapping)'!=''" />
+    </ItemGroup>
+  </Target>
+</Project>
+
+      build/net9.0/coverlet.core.dll
+      build/net9.0/coverlet.core.pdb
+      build/net9.0/coverlet.core.xml
+      build/net9.0/runtimes/win/lib/net9.0/System.Security.Cryptography.Pkcs.dll
+  coverlet.msbuild 10.0.1
+      build/net10.0/coverlet.msbuild.props
+<Project>
+  <Import Project="$(MSBuildThisFileDirectory)..\..\buildMultiTargeting\coverlet.msbuild.props" />
+</Project>
+
+      build/net10.0/coverlet.msbuild.targets
+<Project>
+  <Import Project="$(MSBuildThisFileDirectory)..\..\buildMultiTargeting\coverlet.msbuild.targets" />
+</Project>
+
+      build/net8.0/coverlet.msbuild.props
+<Project>
+  <Import Project="$(MSBuildThisFileDirectory)..\..\buildMultiTargeting\coverlet.msbuild.props" />
+</Project>
+
+      build/net8.0/coverlet.msbuild.targets
+<Project>
+  <Import Project="$(MSBuildThisFileDirectory)..\..\buildMultiTargeting\coverlet.msbuild.targets" />
+</Project>
+
+      build/net9.0/coverlet.msbuild.props
+<Project>
+  <Import Project="$(MSBuildThisFileDirectory)..\..\buildMultiTargeting\coverlet.msbuild.props" />
+</Project>
+
+      build/net9.0/coverlet.msbuild.targets
+<Project>
+  <Import Project="$(MSBuildThisFileDirectory)..\..\buildMultiTargeting\coverlet.msbuild.targets" />
+</Project>
+
+      build/netstandard2.0/coverlet.msbuild.props
+<Project>
+  <Import Project="$(MSBuildThisFileDirectory)..\..\buildMultiTargeting\coverlet.msbuild.props" />
+</Project>
+
+      build/netstandard2.0/coverlet.msbuild.targets
+<Project>
+  <Import Project="$(MSBuildThisFileDirectory)..\..\buildMultiTargeting\coverlet.msbuild.targets" />
+</Project>
+
+      buildMultiTargeting/coverlet.msbuild.props
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <CollectCoverage Condition="$(CollectCoverage) == ''">false</CollectCoverage>
+    <Include Condition="$(Include) == ''"></Include>
+    <IncludeDirectory Condition="$(IncludeDirectory) == ''"></IncludeDirectory>
+    <Exclude Condition="$(Exclude) == ''"></Exclude>
+    <ExcludeByFile Condition="$(ExcludeByFile) == ''"></ExcludeByFile>
+    <ExcludeByAttribute Condition="$(ExcludeByAttribute) == ''"></ExcludeByAttribute>
+    <IncludeTestAssembly Condition="'$(IncludeTestAssembly)' == ''">false</IncludeTestAssembly>
+    <SingleHit Condition="'$(SingleHit)' == ''">false</SingleHit>
+    <MergeWith Condition="$(MergeWith) == ''"></MergeWith>
+    <UseSourceLink Condition="$(UseSourceLink) == ''">false</UseSourceLink>
+    <DeterministicReport Condition="$(DeterministicReport) == ''">false</DeterministicReport>
+    <CoverletOutputFormat Condition="$(CoverletOutputFormat) == ''">json</CoverletOutputFormat>
+    <CoverletOutput Condition="$(CoverletOutput) == ''">$([MSBuild]::EnsureTrailingSlash('$(MSBuildProjectDirectory)'))</CoverletOutput>
+    <Threshold Condition="$(Threshold) == ''">0</Threshold>
+    <ThresholdType Condition="$(ThresholdType) == ''">line,branch,method</ThresholdType>
+    <ThresholdStat Condition="$(ThresholdStat) == ''">minimum</ThresholdStat>
+    <ExcludeAssembliesWithoutSources Condition="$(ExcludeAssembliesWithoutSources) == ''"></ExcludeAssembliesWithoutSources>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(OS)' == 'Windows_NT'">
+    <!-- Windows -->
+    <CoverletToolsPath>$(MSBuildThisFileDirectory)..\tasks\netstandard2.0\</CoverletToolsPath>
+    <CoverletToolsPath Condition="'$(MSBuildRuntimeType)'=='Core' and '$(NETCoreSdkVersion)' != '' and $([MSBuild]::VersionGreaterThanOrEquals('$(NETCoreSdkVersion)', '8.0'))">$(MSBuildThisFileDirectory)..\tasks\net8.0\</CoverletToolsPath>
+    <CoverletToolsPath Condition="'$(MSBuildRuntimeType)'=='Core' and '$(NETCoreSdkVersion)' != '' and $([MSBuild]::VersionGreaterThanOrEquals('$(NETCoreSdkVersion)', '9.0'))">$(MSBuildThisFileDirectory)..\tasks\net9.0\</CoverletToolsPath>
+    <CoverletToolsPath Condition="'$(MSBuildRuntimeType)'=='Core' and '$(NETCoreSdkVersion)' != '' and $([MSBuild]::VersionGreaterThanOrEquals('$(NETCoreSdkVersion)', '10.0'))">$(MSBuildThisFileDirectory)..\tasks\net10.0\</CoverletToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(OS)' != 'Windows_NT'">
+    <!-- always Core -->
+    <CoverletToolsPath>$(MSBuildThisFileDirectory)../tasks/net8.0/</CoverletToolsPath>
+    <CoverletToolsPath Condition="'$(NETCoreSdkVersion)' != '' and $([MSBuild]::VersionGreaterThanOrEquals('$(NETCoreSdkVersion)', '10.0'))">$(MSBuildThisFileDirectory)../tasks/net10.0/</CoverletToolsPath>
+  </PropertyGroup>
+</Project>
+
+      buildMultiTargeting/coverlet.msbuild.targets
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <UsingTask TaskName="Coverlet.MSbuild.Tasks.InstrumentationTask" AssemblyFile="$(CoverletToolsPath)coverlet.msbuild.tasks.dll"/>
+  <UsingTask TaskName="Coverlet.MSbuild.Tasks.CoverageResultTask" AssemblyFile="$(CoverletToolsPath)coverlet.msbuild.tasks.dll"/>
+
+  <PropertyGroup>
+    <_CoverletSdkNETCoreSdkVersion>$(NETCoreSdkVersion)</_CoverletSdkNETCoreSdkVersion>
+    <_CoverletSdkNETCoreSdkVersion Condition="$(_CoverletSdkNETCoreSdkVersion.Contains('-'))">$(_CoverletSdkNETCoreSdkVersion.Split('-')[0])</_CoverletSdkNETCoreSdkVersion>
+    <_CoverletSdkMinVersionWithDependencyTarget>8.0.100</_CoverletSdkMinVersionWithDependencyTarget>
+    <_CoverletSourceRootTargetName>CoverletGetPathMap</_CoverletSourceRootTargetName>
+    <_CoverletSourceRootTargetName Condition="'$([System.Version]::Parse($(_CoverletSdkNETCoreSdkVersion)).CompareTo($([System.Version]::Parse($(_CoverletSdkMinVersionWithDependencyTarget)))))' &gt;= '0' ">InitializeSourceRootMappedPaths</_CoverletSourceRootTargetName>
+  </PropertyGroup>
+
+  <Target Name="ReferencedPathMaps" BeforeTargets="CoreCompile" DependsOnTargets="ResolveProjectReferences" >
+    <MSBuild Projects="@(AnnotatedProjects->'%(FullPath)')"
+             Targets="$(_CoverletSourceRootTargetName)"
+             Properties="TargetFramework=%(AnnotatedProjects.NearestTargetFramework)"
+             SkipNonexistentTargets="true">
+      <Output TaskParameter="TargetOutputs"
+              ItemName="_LocalTopLevelSourceRoot" />
+    </MSBuild>
+    <ItemGroup>
+      <_byProject Include="@(_LocalTopLevelSourceRoot->'%(MSBuildSourceProjectFile)')" OriginalPath="%(Identity)" />
+      <_mapping Include="@(_byProject->'%(Identity)|%(OriginalPath)=%(MappedPath)')" />
+    </ItemGroup>
+    <PropertyGroup>
+      <_sourceRootMappingFilePath>$([MSBuild]::EnsureTrailingSlash('$(OutputPath)'))CoverletSourceRootsMapping_$(AssemblyName)</_sourceRootMappingFilePath>
+    </PropertyGroup>
+    <WriteLinesToFile File="$(_sourceRootMappingFilePath)" Lines="@(_mapping)"
+                      Overwrite="true" Encoding="Unicode"
+                      Condition="'@(_mapping)'!=''"
+                      WriteOnlyWhenDifferent="true" />
+    <ItemGroup>
+      <FileWrites Include="$(_sourceRootMappingFilePath)" Condition="'@(_mapping)'!=''" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="InstrumentModules" Condition="'$(TargetPath)' != ''">
+    <Coverlet.MSbuild.Tasks.InstrumentationTask
+      Path="$(TargetPath)"
+      Include="$(Include)"
+      IncludeDirectory="$(IncludeDirectory)"
+      Exclude="$(Exclude)"
+      ExcludeByFile="$(ExcludeByFile)"
+      ExcludeByAttribute="$(ExcludeByAttribute)"
+      IncludeTestAssembly="$(IncludeTestAssembly)"
+      SingleHit="$(SingleHit)"
+      MergeWith="$(MergeWith)"
+      UseSourceLink="$(UseSourceLink)"
+      SkipAutoProps="$(SkipAutoProps)"
+      DeterministicReport="$(DeterministicReport)"
+      DoesNotReturnAttribute="$(DoesNotReturnAttribute)"
+      ExcludeAssembliesWithoutSources="$(ExcludeAssembliesWithoutSources)"
+      DisableManagedInstrumentationRestore="$(DisableManagedInstrumentationRestore)">
+      <Output TaskParameter="InstrumenterState" PropertyName="InstrumenterState"/>
+    </Coverlet.MSbuild.Tasks.InstrumentationTask>
+  </Target>
+
+  <Target Name="InstrumentModulesNoBuild"
+          BeforeTargets="VSTest"
+          DependsOnTargets="InstrumentModules"
+          Condition="'$(VSTestNoBuild)' == 'true' and '$(CollectCoverage)' == 'true'" />
+
+  <Target Name="InstrumentModulesAfterBuild"
+          AfterTargets="BuildProject"
+          DependsOnTargets="InstrumentModules"
+          Condition="'$(VSTestNoBuild)' != 'true' and '$(CollectCoverage)' == 'true'" />
+
+  <Target Name="GenerateCoverageResult" Condition="'$(InstrumenterState)' != ''">
+    <PropertyGroup>
+      <_coverletMultiTargetFrameworksCurrentTFM Condition="'$(TargetFrameworks)' != ''" >$(TargetFramework)</_coverletMultiTargetFrameworksCurrentTFM>
+    </PropertyGroup>
+    <Coverlet.MSbuild.Tasks.CoverageResultTask
+      Output="$(CoverletOutput)"
+      OutputFormat="$(CoverletOutputFormat)"
+      Threshold="$(Threshold)"
+      ThresholdType="$(ThresholdType)"
+      ThresholdStat="$(ThresholdStat)"
+      InstrumenterState="$(InstrumenterState)"
+      CoverletMultiTargetFrameworksCurrentTFM="$(_coverletMultiTargetFrameworksCurrentTFM)">
+      <Output TaskParameter="ReportItems" ItemName="CoverletReport" />
+    </Coverlet.MSbuild.Tasks.CoverageResultTask>
+  </Target>
+
+  <Target Name="GenerateCoverageResultAfterTest"
+          AfterTargets="VSTest"
+          DependsOnTargets="GenerateCoverageResult"
+          Condition="'$(CollectCoverage)' == 'true'" />
+</Project>
+
+  microsoft.build.tasks.git 10.0.400
+      build/Microsoft.Build.Tasks.Git.props
+<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the License.txt file in the project root for more information. -->
+<Project>
+  <PropertyGroup>
+    <MicrosoftBuildTasksGitAssemblyFile Condition="'$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)..\tools\netframework\Microsoft.Build.Tasks.Git.dll</MicrosoftBuildTasksGitAssemblyFile>
+    <MicrosoftBuildTasksGitAssemblyFile Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\net\Microsoft.Build.Tasks.Git.dll</MicrosoftBuildTasksGitAssemblyFile>
+  </PropertyGroup>
+</Project>
+
+      build/Microsoft.Build.Tasks.Git.targets
+<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the License.txt file in the project root for more information. -->
+<Project>
+  <UsingTask TaskName="Microsoft.Build.Tasks.Git.LocateRepository" AssemblyFile="$(MicrosoftBuildTasksGitAssemblyFile)"/>
+  <UsingTask TaskName="Microsoft.Build.Tasks.Git.GetUntrackedFiles" AssemblyFile="$(MicrosoftBuildTasksGitAssemblyFile)"/>
+
+  <PropertyGroup>
+    <!--
+      Sets the scope of git repository configuration. By default (no scope specified) configuration is read from environment variables
+      and system and global user git/ssh configuration files. 
+      
+      If "local" is specified the configuration is only read from the configuration files local to the repository (or work tree).
+      In addition, any use of home relative paths in these configuration files (paths that start with '~/') is disallowed.
+      
+      By default, the scope is restricted to "local" when building in CI (ContinuousIntegrationBuild is true) to avoid introducing 
+      dependencies on CI machine state into the build.
+    -->
+    <GitRepositoryConfigurationScope Condition="'$(GitRepositoryConfigurationScope)' == '' and '$(ContinuousIntegrationBuild)' == 'true'">local</GitRepositoryConfigurationScope>
+  </PropertyGroup>
+
+  <Target Name="InitializeSourceControlInformationFromSourceControlManager">
+    <!--
+      Reports a warning if the given project doesn't belong to a repository under source control,
+      unless the targets were implicily imported from an SDK without a package reference.
+    -->
+    <Microsoft.Build.Tasks.Git.LocateRepository
+      Path="$(MSBuildProjectDirectory)"
+      RemoteName="$(GitRepositoryRemoteName)"
+      ConfigurationScope="$(GitRepositoryConfigurationScope)"
+      NoWarnOnMissingInfo="$(PkgMicrosoft_Build_Tasks_Git.Equals(''))">
+
+      <Output TaskParameter="RepositoryId" PropertyName="_GitRepositoryId" />
+      <Output TaskParameter="Url" PropertyName="ScmRepositoryUrl" />
+      <Output TaskParameter="Roots" ItemName="SourceRoot" />
+      <Output TaskParameter="RevisionId" PropertyName="SourceRevisionId" Condition="'$(SourceRevisionId)' == ''" />
+      <Output TaskParameter="BranchName" PropertyName="SourceBranchName" />
+    </Microsoft.Build.Tasks.Git.LocateRepository>
+
+    <PropertyGroup>
+      <RepositoryType Condition="'$(RepositoryType)' == ''">git</RepositoryType>
+    </PropertyGroup>
+  </Target>
+
+  <!--
+    Embed files to the PDB that either do not belong to any of the SourceRoot directories
+    or belong to the source repository, but are explicitly ignored (excluded) from source control.
+  -->
+  <Target Name="SetEmbeddedFilesFromSourceControlManagerUntrackedFiles"
+          DependsOnTargets="InitializeSourceControlInformationFromSourceControlManager">
+
+    <Microsoft.Build.Tasks.Git.GetUntrackedFiles
+      RepositoryId="$(_GitRepositoryId)"
+      ConfigurationScope="$(GitRepositoryConfigurationScope)"
+      ProjectDirectory="$(MSBuildProjectDirectory)"
+      Files="@(Compile)"
+      Condition="'$(_GitRepositoryId)' != ''">
+
+      <Output TaskParameter="UntrackedFiles" ItemName="EmbeddedFiles" />
+    </Microsoft.Build.Tasks.Git.GetUntrackedFiles>
+  </Target>
+
+</Project>
+
+      buildMultiTargeting/Microsoft.Build.Tasks.Git.props
+<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the License.txt file in the project root for more information. -->
+<Project>
+  <Import Project="..\build\$(MSBuildThisFileName).props"/>
+</Project>
+
+      buildMultiTargeting/Microsoft.Build.Tasks.Git.targets
+<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the License.txt file in the project root for more information. -->
+<Project>
+  <Import Project="..\build\$(MSBuildThisFileName).targets"/>
+</Project>
+
+      buildTransitive/Microsoft.Build.Tasks.Git.props
+<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the License.txt file in the project root for more information. -->
+<Project>
+  <Import Project="..\build\$(MSBuildThisFileName).props"/>
+</Project>
+
+      buildTransitive/Microsoft.Build.Tasks.Git.targets
+<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the License.txt file in the project root for more information. -->
+<Project>
+  <Import Project="..\build\$(MSBuildThisFileName).targets"/>
+</Project>
+
+  microsoft.codecoverage 18.9.0
+      build/netstandard2.0/CodeCoverage/CodeCoverage.config
+      build/netstandard2.0/CodeCoverage/CodeCoverage.exe
+      build/netstandard2.0/CodeCoverage/CodeCoverageMessages.dll
+      build/netstandard2.0/CodeCoverage/Cov_x86.config
+      build/netstandard2.0/CodeCoverage/amd64/CodeCoverage.exe
+      build/netstandard2.0/CodeCoverage/amd64/Cov_x64.config
+      build/netstandard2.0/CodeCoverage/amd64/covrun64.dll
+      build/netstandard2.0/CodeCoverage/amd64/msdia140.dll
+      build/netstandard2.0/CodeCoverage/arm64/Cov_arm64.config
+      build/netstandard2.0/CodeCoverage/arm64/covrunarm64.dll
+      build/netstandard2.0/CodeCoverage/arm64/msdia140.dll
+      build/netstandard2.0/CodeCoverage/coreclr/Microsoft.VisualStudio.CodeCoverage.Shim.dll
+      build/netstandard2.0/CodeCoverage/covrun32.dll
+      build/netstandard2.0/CodeCoverage/msdia140.dll
+      build/netstandard2.0/Microsoft.Bcl.AsyncInterfaces.dll
+      build/netstandard2.0/Microsoft.CodeCoverage.Core.dll
+      build/netstandard2.0/Microsoft.CodeCoverage.Instrumentation.Core.dll
+      build/netstandard2.0/Microsoft.CodeCoverage.Instrumentation.dll
+      build/netstandard2.0/Microsoft.CodeCoverage.Interprocess.dll
+      build/netstandard2.0/Microsoft.CodeCoverage.props
+<!--
+***********************************************************************************************
+Microsoft.CodeCoverage.props
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+
+Copyright (c) .NET Foundation. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TraceDataCollectorDirectoryPath>$(MSBuildThisFileDirectory)</TraceDataCollectorDirectoryPath>
+  </PropertyGroup>
+</Project>
+
+      build/netstandard2.0/Microsoft.CodeCoverage.targets
+<!--
+ ***********************************************************************************************
+ Microsoft.CodeCoverage.targets
+
+ WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+           created a backup copy.  Incorrect changes to this file will make it
+           impossible to load or build your test projects from the command-line or the IDE.
+
+ Copyright (c) Microsoft. All rights reserved.
+ ***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- This target required to enable /collect:"Code Coverage" in "dotnet publish" scenario with "dotnet vstest".
+       E.g: Release pipelines where user/project nuget cache not available on current machine. -->
+  <Target Name="CopyTraceDataCollectorArtifacts" AfterTargets="ComputeFilesToPublish">
+
+    <ItemGroup>
+      <TraceDataCollectorArtifacts Include="$(MSBuildThisFileDirectory)\**\*.*" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(TraceDataCollectorArtifacts)" DestinationFolder="$(PublishDir)%(RecursiveDir)" />
+
+  </Target>
+
+  <PropertyGroup Condition="'$(NETCoreSdkVersion)' != '' and '$(DisableMsCoverageReferencedPathMaps)' != 'true'">
+    <_msCoverageSdkNETCoreSdkVersion>$(NETCoreSdkVersion)</_msCoverageSdkNETCoreSdkVersion>
+    <_msCoverageSdkNETCoreSdkVersion Condition="$(_msCoverageSdkNETCoreSdkVersion.Contains('-'))">$(_msCoverageSdkNETCoreSdkVersion.Split('-')[0])</_msCoverageSdkNETCoreSdkVersion>
+    <_msCoverageSdkMinVersionWithDependencyTarget>6.0.100</_msCoverageSdkMinVersionWithDependencyTarget>
+    <_msCoverageSourceRootTargetName>MsCoverageGetPathMap</_msCoverageSourceRootTargetName>
+    <_msCoverageSourceRootTargetName Condition="'$([System.Version]::Parse($(_msCoverageSdkNETCoreSdkVersion)).CompareTo($([System.Version]::Parse($(_msCoverageSdkMinVersionWithDependencyTarget)))))' &gt;= '0' ">InitializeSourceRootMappedPaths</_msCoverageSourceRootTargetName>
+  </PropertyGroup>
+
+  <!-- This target required to store deterministic sources mapping.
+       It is modified version of https://github.com/coverlet-coverage/coverlet/blob/d1ca364b7dbff38abce0457d94c4ce1b7e3a4cd9/src/coverlet.collector/build/coverlet.collector.targets#L35 -->
+  <Target Condition="'$(NETCoreSdkVersion)' != '' and '$(DisableMsCoverageReferencedPathMaps)' != 'true'" Name="MsCoverageReferencedPathMaps" BeforeTargets="CoreCompile" DependsOnTargets="ResolveProjectReferences" >
+    <MSBuild Projects="@(AnnotatedProjects->'%(FullPath)')"
+             Targets="$(_msCoverageSourceRootTargetName)"
+             Properties="TargetFramework=%(AnnotatedProjects.NearestTargetFramework)"
+             SkipNonexistentTargets="true">
+      <Output TaskParameter="TargetOutputs"
+              ItemName="_msCoverageLocalTopLevelSourceRoot" />
+    </MSBuild>
+    <ItemGroup>
+      <_msCoverageByProject Include="@(_msCoverageLocalTopLevelSourceRoot->'%(MSBuildSourceProjectFile)')" OriginalPath="%(Identity)" />
+      <_msCoverageMapping Include="@(_msCoverageByProject->'%(Identity)|%(OriginalPath)=%(MappedPath)')" />
+    </ItemGroup>
+    <PropertyGroup>
+      <_msCoverageSourceRootMappingFilePath>$([MSBuild]::EnsureTrailingSlash('$(OutputPath)')).msCoverageSourceRootsMapping_$(AssemblyName)</_msCoverageSourceRootMappingFilePath>
+    </PropertyGroup>
+    <WriteLinesToFile File="$(_msCoverageSourceRootMappingFilePath)" Lines="@(_msCoverageMapping)"
+                      Overwrite="true" Encoding="Unicode"
+                      Condition="'@(_msCoverageMapping)'!=''"
+                      WriteOnlyWhenDifferent="true" />
+    <ItemGroup>
+      <FileWrites Include="$(_msCoverageSourceRootMappingFilePath)" Condition="'@(_msCoverageMapping)'!=''" />
+    </ItemGroup>
+  </Target>
+</Project>
+
+      build/netstandard2.0/Microsoft.DiaSymReader.dll
+      build/netstandard2.0/Microsoft.VisualStudio.TraceDataCollector.dll
+      build/netstandard2.0/Mono.Cecil.Pdb.dll
+      build/netstandard2.0/Mono.Cecil.Rocks.dll
+      build/netstandard2.0/Mono.Cecil.dll
+      build/netstandard2.0/System.Buffers.dll
+      build/netstandard2.0/System.Memory.dll
+      build/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll
+      build/netstandard2.0/System.Text.Encodings.Web.dll
+      build/netstandard2.0/System.Text.Json.dll
+      build/netstandard2.0/System.Threading.Tasks.Extensions.dll
+      build/netstandard2.0/ThirdPartyNotices.txt
+      build/netstandard2.0/alpine/x64/Cov_x64.config
+      build/netstandard2.0/alpine/x64/libCoverageInstrumentationMethod.so
+      build/netstandard2.0/alpine/x64/libInstrumentationEngine.so
+      build/netstandard2.0/arm64/MicrosoftInstrumentationEngine_arm64.dll
+      build/netstandard2.0/macos/x64/Cov_x64.config
+      build/netstandard2.0/macos/x64/libCoverageInstrumentationMethod.dylib
+      build/netstandard2.0/macos/x64/libInstrumentationEngine.dylib
+      build/netstandard2.0/ubuntu/x64/Cov_x64.config
+      build/netstandard2.0/ubuntu/x64/libCoverageInstrumentationMethod.so
+      build/netstandard2.0/ubuntu/x64/libInstrumentationEngine.so
+      build/netstandard2.0/x64/MicrosoftInstrumentationEngine_x64.dll
+      build/netstandard2.0/x86/MicrosoftInstrumentationEngine_x86.dll
+  microsoft.net.test.sdk 18.9.0
+      build/net462/Microsoft.NET.Test.Sdk.props
+<!--
+ ***********************************************************************************************
+ Microsoft.NET.Test.Sdk.props
+ 
+ WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+           created a backup copy.  Incorrect changes to this file will make it
+           impossible to load or build your projects from the command-line or the IDE.
+ 
+ Copyright (c) .NET Foundation. All rights reserved. 
+ ***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <TestProject>true</TestProject>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>  
+ 
+</Project>
+
+      build/net462/Microsoft.NET.Test.Sdk.targets
+<!--
+ ***********************************************************************************************
+ Microsoft.NET.Test.Sdk.targets
+
+ WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+           created a backup copy.  Incorrect changes to this file will make it
+           impossible to load or build your projects from the command-line or the IDE.
+
+ Copyright (c) .NET Foundation. All rights reserved. 
+ ***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+     Generate config file for test project targeting .NET Framework. This config file has binding redirect which is needed at time of running tests.
+     Added below two lines because msbuild has following check:
+     https://github.com/Microsoft/msbuild/blob/dd5e8bc3f86ac98bd77d8971b00a6ad14f122f1a/src/XMakeTasks/Microsoft.Common.CurrentVersion.targets#L2027 
+   -->
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects Condition="'$(AutoGenerateBindingRedirects)' == ''">true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType Condition="'$(GenerateBindingRedirectsOutputType)' == ''">true</GenerateBindingRedirectsOutputType>
+  </PropertyGroup>
+
+</Project>
+
+      build/net8.0/Microsoft.NET.Test.Sdk.Program.cs
+      build/net8.0/Microsoft.NET.Test.Sdk.Program.fs
+      build/net8.0/Microsoft.NET.Test.Sdk.Program.vb
+      build/net8.0/Microsoft.NET.Test.Sdk.props
+<!--
+ ***********************************************************************************************
+ Microsoft.NET.Test.Sdk.props
+ 
+ WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+           created a backup copy.  Incorrect changes to this file will make it
+           impossible to load or build your projects from the command-line or the IDE.
+ 
+ Copyright (c) .NET Foundation. All rights reserved. 
+ ***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <TestProject>true</TestProject>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>  
+ 
+</Project>
+
+      build/net8.0/Microsoft.NET.Test.Sdk.targets
+<!--
+ ***********************************************************************************************
+ Microsoft.NET.Test.Sdk.targets
+
+ WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+           created a backup copy.  Incorrect changes to this file will make it
+           impossible to load or build your projects from the command-line or the IDE.
+
+ Copyright (c) .NET Foundation. All rights reserved. 
+ ***********************************************************************************************
+-->
+
+<Project InitialTargets="GenerateProgramFile" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    Output type for .NET Core test projects should be exe.
+    https://devdiv.visualstudio.com/DevDiv/_workitems?id=375688&_a=edit
+    Note: we skip this for WinUI and UWP apps, as they must use 'WinExe'.
+  -->
+  <PropertyGroup>
+    <OutputType Condition="'$(UseWinUI)' != 'true' AND '$(UseUwpTools)' != 'true'">Exe</OutputType>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GeneratedProgramFile Condition="'$(GeneratedProgramFile)' == ''">$(MSBuildThisFileDirectory)Microsoft.NET.Test.Sdk.Program$(DefaultLanguageSourceExtension)</GeneratedProgramFile>
+
+    <!--
+      We always skip the generated entry point for UWP apps on .NET 9, as those need a separate entry point
+      to initialize the 'CoreApplication' app, which is handled separately. That is, it will either be in
+      the project template, or generated by the XAML compiler (for UWP XAML apps). We also do the same
+      for WinUI apps, since those also have a special entry point produced by the XAML compiler.
+  -->
+    <GenerateProgramFile Condition="'$(GenerateProgramFile)' == '' AND ('$(UseWinUI)' == 'true' OR '$(UseUwpTools)' == 'true')">false</GenerateProgramFile>
+    <GenerateProgramFile Condition="'$(GenerateProgramFile)' == ''">true</GenerateProgramFile>
+  </PropertyGroup>
+
+  <!--
+    ============================================================
+    GenerateProgramFile
+    Generates Program file which contains the Main entry point
+    ============================================================
+  -->
+  <Target Name="GenerateProgramFile"
+          Condition="'$(GenerateProgramFile)' == 'true' AND '$(UseWinUI)' != 'true' AND '$(UseUwpTools)' != 'true'">
+
+    <ItemGroup Condition="'$(Language)' == 'VB' or '$(Language)' == 'C#'">
+      <RemoveExistingMicrosoftNETTestSdkProgram Include="@(Compile)" Condition="'%(FileName)' == 'Microsoft.NET.Test.Sdk.Program'" />
+      <Compile Remove="@(RemoveExistingMicrosoftNETTestSdkProgram)" />
+      <Compile Include="$(GeneratedProgramFile)"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Language)' == 'F#'">
+      <ProgramCompiles Include="@(Compile)" Condition="'%(Identity)' == 'Program.fs'" />
+      <CompileAfter Include="$(GeneratedProgramFile)" Condition="@(ProgramCompiles-&gt;Count()) == 0" />
+    </ItemGroup>
+
+    <Warning Condition="@(ProgramCompiles-&gt;Count()) != 0" Text="A 'Program.fs' file can be automatically generated for F# .NET Core test projects. To fix this warning, either delete the file from the project, or set the &lt;GenerateProgramFile&gt; property to 'false'." />
+
+  </Target>
+
+</Project>
+
+      build/netcoreapp2.0/Microsoft.NET.Test.Sdk.props
+<!--
+ ***********************************************************************************************
+ Microsoft.NET.Test.Sdk.props
+ 
+ WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+           created a backup copy.  Incorrect changes to this file will make it
+           impossible to load or build your projects from the command-line or the IDE.
+ 
+ Copyright (c) .NET Foundation. All rights reserved. 
+ ***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <TestProject>true</TestProject>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>  
+ 
+</Project>
+
+      build/netcoreapp2.0/Microsoft.NET.Test.Sdk.targets
+<Project InitialTargets="NonCompatibleTargetFrameworkError_Microsoft_NET_Test_Sdk_net8_0">
+  <Target Name="NonCompatibleTargetFrameworkError_Microsoft_NET_Test_Sdk_net8_0"
+          Condition="'$(SuppressTfmSupportBuildErrors)' == ''">
+    <Error Text="Microsoft.NET.Test.Sdk doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net8.0 or later. You may also set &lt;SuppressTfmSupportBuildErrors&gt;true&lt;/SuppressTfmSupportBuildErrors&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      build/netstandard2.0/Microsoft.NET.Test.Sdk.props
+<!--
+ ***********************************************************************************************
+ Microsoft.NET.Test.Sdk.props
+ 
+ WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+           created a backup copy.  Incorrect changes to this file will make it
+           impossible to load or build your projects from the command-line or the IDE.
+ 
+ Copyright (c) .NET Foundation. All rights reserved. 
+ ***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <TestProject>true</TestProject>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>  
+ 
+</Project>
+
+      build/netstandard2.0/Microsoft.NET.Test.Sdk.targets
+<Project InitialTargets="NonCompatibleTargetFrameworkError_Microsoft_NET_Test_Sdk_net8_0">
+  <Target Name="NonCompatibleTargetFrameworkError_Microsoft_NET_Test_Sdk_net8_0"
+          Condition="'$(SuppressTfmSupportBuildErrors)' == ''">
+    <Error Text="Microsoft.NET.Test.Sdk doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net8.0 or later. You may also set &lt;SuppressTfmSupportBuildErrors&gt;true&lt;/SuppressTfmSupportBuildErrors&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildMultiTargeting/net462/Microsoft.NET.Test.Sdk.props
+<!--
+ ***********************************************************************************************
+ Microsoft.NET.Test.Sdk.props
+ 
+ WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+           created a backup copy.  Incorrect changes to this file will make it
+           impossible to load or build your projects from the command-line or the IDE.
+ 
+ Copyright (c) .NET Foundation. All rights reserved. 
+ ***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <TestProject>true</TestProject>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>  
+ 
+</Project>
+
+      buildMultiTargeting/net8.0/Microsoft.NET.Test.Sdk.props
+<!--
+ ***********************************************************************************************
+ Microsoft.NET.Test.Sdk.props
+ 
+ WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+           created a backup copy.  Incorrect changes to this file will make it
+           impossible to load or build your projects from the command-line or the IDE.
+ 
+ Copyright (c) .NET Foundation. All rights reserved. 
+ ***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <TestProject>true</TestProject>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>  
+ 
+</Project>
+
+      buildMultiTargeting/netcoreapp2.0/Microsoft.NET.Test.Sdk.props
+<!--
+ ***********************************************************************************************
+ Microsoft.NET.Test.Sdk.props
+ 
+ WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+           created a backup copy.  Incorrect changes to this file will make it
+           impossible to load or build your projects from the command-line or the IDE.
+ 
+ Copyright (c) .NET Foundation. All rights reserved. 
+ ***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <TestProject>true</TestProject>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>  
+ 
+</Project>
+
+      buildMultiTargeting/netcoreapp2.0/Microsoft.NET.Test.Sdk.targets
+<Project InitialTargets="NonCompatibleTargetFrameworkError_Microsoft_NET_Test_Sdk_net8_0">
+  <Target Name="NonCompatibleTargetFrameworkError_Microsoft_NET_Test_Sdk_net8_0"
+          Condition="'$(SuppressTfmSupportBuildErrors)' == ''">
+    <Error Text="Microsoft.NET.Test.Sdk doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net8.0 or later. You may also set &lt;SuppressTfmSupportBuildErrors&gt;true&lt;/SuppressTfmSupportBuildErrors&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildMultiTargeting/netstandard2.0/Microsoft.NET.Test.Sdk.props
+<!--
+ ***********************************************************************************************
+ Microsoft.NET.Test.Sdk.props
+ 
+ WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+           created a backup copy.  Incorrect changes to this file will make it
+           impossible to load or build your projects from the command-line or the IDE.
+ 
+ Copyright (c) .NET Foundation. All rights reserved. 
+ ***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <TestProject>true</TestProject>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>  
+ 
+</Project>
+
+      buildMultiTargeting/netstandard2.0/Microsoft.NET.Test.Sdk.targets
+<Project InitialTargets="NonCompatibleTargetFrameworkError_Microsoft_NET_Test_Sdk_net8_0">
+  <Target Name="NonCompatibleTargetFrameworkError_Microsoft_NET_Test_Sdk_net8_0"
+          Condition="'$(SuppressTfmSupportBuildErrors)' == ''">
+    <Error Text="Microsoft.NET.Test.Sdk doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net8.0 or later. You may also set &lt;SuppressTfmSupportBuildErrors&gt;true&lt;/SuppressTfmSupportBuildErrors&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+  microsoft.sourcelink.common 10.0.400
+      build/InitializeSourceControlInformation.targets
+<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the License.txt file in the project root for more information. -->
+<Project>
+  <UsingTask TaskName="Microsoft.SourceLink.Common.SourceLinkHasSingleProvider" AssemblyFile="$(_MicrosoftSourceLinkCommonAssemblyFile)"/>
+
+  <Target Name="_SourceLinkHasSingleProvider">
+    <!--
+      If there is a single SourceLink provider we can use Repository URL to infer repository host.
+      If the project references multiple SourceLink providers the user needs to specify hosts explicitly (ImplicitHost will be empty)
+      as we do not know which providers should be used to produce SourceLink URL for the repository.
+      
+      Reports an error if there is no SourceLinkUrlInitializerTargets is empty (no SourceLink provider is referenced).
+    -->
+    <Microsoft.SourceLink.Common.SourceLinkHasSingleProvider ProviderTargets="$(SourceLinkUrlInitializerTargets)" >
+      <Output TaskParameter="HasSingleProvider" PropertyName="SourceLinkHasSingleProvider"/>
+    </Microsoft.SourceLink.Common.SourceLinkHasSingleProvider>
+  </Target>
+
+  <!--
+    Triggers InitializeSourceControlInformationFromSourceControlManager target defined by a source control package Microsoft.Build.Tasks.{Git|Tfvc|...}.
+    
+    Notes: No error is reported if InitializeSourceControlInformation is not defined.
+  -->
+  <Target Name="_InitializeSourceControlInformationFromSourceControlManager"
+          DependsOnTargets="InitializeSourceControlInformationFromSourceControlManager;_SourceLinkHasSingleProvider;$(SourceControlManagerUrlTranslationTargets);SourceControlManagerPublishTranslatedUrls"
+          BeforeTargets="InitializeSourceControlInformation"
+          Condition="'$(EnableSourceControlManagerQueries)' == 'true'" />
+
+  <Target Name="SourceControlManagerPublishTranslatedUrls">
+    <PropertyGroup>
+      <!--
+        If the project already sets RepositoryUrl use it. Such URL is considered final and translations are not applied.
+      -->
+      <PrivateRepositoryUrl Condition="'$(PrivateRepositoryUrl)' == ''">$(RepositoryUrl)</PrivateRepositoryUrl>
+      <PrivateRepositoryUrl Condition="'$(PrivateRepositoryUrl)' == ''">$(ScmRepositoryUrl)</PrivateRepositoryUrl>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <SourceRoot Update="@(SourceRoot)">
+        <RepositoryUrl Condition="'%(SourceRoot.RepositoryUrl)' == ''">%(SourceRoot.ScmRepositoryUrl)</RepositoryUrl>
+      </SourceRoot>
+    </ItemGroup>
+  </Target>
+</Project>
+
+      build/Microsoft.SourceLink.Common.props
+<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the License.txt file in the project root for more information. -->
+<Project>
+  <PropertyGroup>
+    <_MicrosoftSourceLinkCommonAssemblyFile Condition="'$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)..\tools\netframework\Microsoft.SourceLink.Common.dll</_MicrosoftSourceLinkCommonAssemblyFile>
+    <_MicrosoftSourceLinkCommonAssemblyFile Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\net\Microsoft.SourceLink.Common.dll</_MicrosoftSourceLinkCommonAssemblyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!--
+      Used to suppress querying source control and features that use the information (e.g. git commit SHA).
+    -->
+    <EnableSourceControlManagerQueries Condition="'$(EnableSourceControlManagerQueries)' == ''">true</EnableSourceControlManagerQueries>
+
+    <!--
+      Do not generate SourceLink when building in the IDE or for Live Unit Testing.
+    -->
+    <EnableSourceLink Condition="'$(EnableSourceLink)' == '' and '$(DesignTimeBuild)' != 'true' and '$(BuildingForLiveUnitTesting)' != 'true'">true</EnableSourceLink>
+  </PropertyGroup>
+</Project>
+
+      build/Microsoft.SourceLink.Common.targets
+<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the License.txt file in the project root for more information. -->
+<Project>
+  <Import Project="InitializeSourceControlInformation.targets"/>
+  
+  <UsingTask TaskName="Microsoft.SourceLink.Common.GenerateSourceLinkFile" AssemblyFile="$(_MicrosoftSourceLinkCommonAssemblyFile)"/>
+
+  <Target Name="_SetSourceLinkFilePath">
+    <PropertyGroup>
+      <_SourceLinkFilePath>$(IntermediateOutputPath)$(MSBuildProjectName).sourcelink.json</_SourceLinkFilePath>
+    </PropertyGroup>
+  </Target>
+
+  <!--
+    Triggers SetEmbeddedFilesFromSourceControlManagerUntrackedFiles target defined by a source control package Microsoft.Build.Tasks.{Git|Tfvc|...}.
+    Assumes that all targets that generate source files and add them to Compile items run before BeforeCompile target.
+    This is a convention established by common targets.
+    
+    Disabled for design-time build since calculating untracked files is non-trivial operation
+    and embedding them only affects the content of the generated PDB, which has no impact on design-time build.
+  -->
+  <Target Name="_SetEmbeddedFilesFromSourceControlManagerUntrackedFiles"
+          DependsOnTargets="BeforeCompile;SetEmbeddedFilesFromSourceControlManagerUntrackedFiles"
+          BeforeTargets="CoreCompile"
+          Condition="'$(EmbedUntrackedSources)' == 'true' and '$(EmbedAllSources)' != 'true' and '$(DebugType)' != 'none' and '$(EnableSourceControlManagerQueries)' == 'true' and '$(DesignTimeBuild)' != 'true'" />
+
+  <!--
+    If defined populates MappedPath metadata of SourceRoot items.
+  -->
+  <Target Name="_InitializeSourceRootMappedPathsOpt"
+          DependsOnTargets="InitializeSourceRootMappedPaths"
+          Condition="'$(SourceRootMappedPathsFeatureSupported)' == 'true'"/>
+
+  <!-- 
+    Add compiler targets: C++ generates PDB with SourceLink in Link phase.
+  -->
+  <PropertyGroup Condition="'$(Language)' == 'C++'">
+    <_GenerateSourceLinkFileBeforeTargets>Link</_GenerateSourceLinkFileBeforeTargets>
+    <_GenerateSourceLinkFileDependsOnTargets>ComputeLinkSwitches</_GenerateSourceLinkFileDependsOnTargets>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Language)' != 'C++'">
+    <_GenerateSourceLinkFileBeforeTargets>CoreCompile</_GenerateSourceLinkFileBeforeTargets>
+    <_GenerateSourceLinkFileDependsOnTargets/>
+  </PropertyGroup>
+
+  <!--
+    Each source control provider package adds its SourceLinkUrl initialization target to SourceLinkUrlInitializerTargets.
+    This target shall initialize SourceLinkUrl of all items that don't have it initialized yet and belong to the source control provider.
+  -->
+  <Target Name="_GenerateSourceLinkFile"
+          DependsOnTargets="_SetSourceLinkFilePath;$(_GenerateSourceLinkFileDependsOnTargets);_InitializeSourceRootMappedPathsOpt;$(SourceLinkUrlInitializerTargets)"
+          Condition="'$(EnableSourceLink)' == 'true' and '$(DebugType)' != 'none'"
+          Outputs="$(_SourceLinkFilePath)">
+
+    <!--- Suppress warning if targets are imported from an SDK without a package reference. -->
+    <Microsoft.SourceLink.Common.GenerateSourceLinkFile
+      SourceRoots="@(SourceRoot)"
+      NoWarnOnMissingSourceControlInformation="$(PkgMicrosoft_SourceLink_Common.Equals(''))"
+      OutputFile="$(_SourceLinkFilePath)">
+
+      <!-- Set SourceLink property passed to compilers -->
+      <Output TaskParameter="SourceLink" PropertyName="SourceLink" />
+    </Microsoft.SourceLink.Common.GenerateSourceLinkFile>
+
+    <!--
+      Include the output file whenever it exists, even if it hasn't been written to (it was up-to-date).
+      This is needed so that incremental clean doesn't delete the file.
+    -->
+    <ItemGroup Condition="'$(SourceLink)' != ''">
+      <FileWrites Include="$(SourceLink)" />
+    </ItemGroup>
+
+    <!-- C++ Link task currently doesn't recognize SourceLink property -->
+    <ItemGroup Condition="'$(Language)' == 'C++' and '$(SourceLink)' != ''">
+      <Link Update="@(Link)">
+        <AdditionalOptions>%(Link.AdditionalOptions) /sourcelink:"$(SourceLink)"</AdditionalOptions>
+      </Link>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="GenerateSourceLinkFile"
+          DependsOnTargets="InitializeSourceControlInformation;_GenerateSourceLinkFile"
+          Condition="'$(SourceControlInformationFeatureSupported)' == 'true'"
+          BeforeTargets="$(_GenerateSourceLinkFileBeforeTargets)"/>
+  
+</Project>
+
+      buildMultiTargeting/Microsoft.SourceLink.Common.props
+<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the License.txt file in the project root for more information. -->
+<Project>
+  <Import Project="..\build\$(MSBuildThisFileName).props"/>
+</Project>
+
+      buildMultiTargeting/Microsoft.SourceLink.Common.targets
+<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the License.txt file in the project root for more information. -->
+<Project>
+  <Import Project="..\build\InitializeSourceControlInformation.targets"/>
+  
+  <!--
+    Workaround for https://github.com/Microsoft/msbuild/issues/3294.
+    Microsoft.Common.CrossTargeting.targets is missing InitializeSourceControlInformation definition.
+  -->
+  <Target Name="InitializeSourceControlInformation" />
+
+  <PropertyGroup>
+    <SourceControlInformationFeatureSupported>true</SourceControlInformationFeatureSupported>
+  </PropertyGroup>
+</Project>
+
+      buildTransitive/Microsoft.SourceLink.Common.props
+<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the License.txt file in the project root for more information. -->
+<Project>
+  <Import Project="..\build\$(MSBuildThisFileName).props"/>
+</Project>
+
+      buildTransitive/Microsoft.SourceLink.Common.targets
+<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the License.txt file in the project root for more information. -->
+<Project>
+  <Import Project="..\build\$(MSBuildThisFileName).targets"/>
+</Project>
+
+  microsoft.sourcelink.github 10.0.400
+      build/Microsoft.SourceLink.GitHub.props
+<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the License.txt file in the project root for more information. -->
+<Project>
+  <ItemGroup>
+    <SourceLinkGitHubHost Include="github.com" ContentUrl="https://raw.githubusercontent.com"/>
+  </ItemGroup>
+</Project>
+
+      build/Microsoft.SourceLink.GitHub.targets
+<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the License.txt file in the project root for more information. -->
+<Project>
+  <PropertyGroup>
+    <_SourceLinkGitHubAssemblyFile Condition="'$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)..\tools\netframework\Microsoft.SourceLink.GitHub.dll</_SourceLinkGitHubAssemblyFile>
+    <_SourceLinkGitHubAssemblyFile Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\net\Microsoft.SourceLink.GitHub.dll</_SourceLinkGitHubAssemblyFile>
+  </PropertyGroup>
+
+  <UsingTask TaskName="Microsoft.SourceLink.GitHub.GetSourceLinkUrl" AssemblyFile="$(_SourceLinkGitHubAssemblyFile)"/>
+  <UsingTask TaskName="Microsoft.SourceLink.GitHub.TranslateRepositoryUrls" AssemblyFile="$(_SourceLinkGitHubAssemblyFile)"/>
+
+  <PropertyGroup>
+    <SourceLinkUrlInitializerTargets>$(SourceLinkUrlInitializerTargets);_InitializeGitHubSourceLinkUrl</SourceLinkUrlInitializerTargets>
+    <SourceControlManagerUrlTranslationTargets>$(SourceControlManagerUrlTranslationTargets);TranslateGitHubUrlsInSourceControlInformation</SourceControlManagerUrlTranslationTargets>
+  </PropertyGroup>
+
+  <Target Name="_InitializeGitHubSourceLinkUrl" Outputs="%(SourceRoot.Identity)">
+    <!--
+      The task calculates SourceLink URL for a given SourceRoot.
+
+      If the SourceRoot is associated with a git repository with a recognized domain the <see cref="SourceLinkUrl"/>
+      output property is set to the content URL corresponding to the domain, otherwise it is set to string "N/A".
+
+      Recognized domains are specified via Hosts (initialized from SourceLinkGitHubHost item group).
+      In addition, if SourceLinkHasSingleProvider is true an implicit host is parsed from RepositoryUrl.
+
+      Example of SourceLinkGitHubHost items:
+
+      <ItemGroup>
+        <SourceLinkGitHubHost Include="github.com" ContentUrl="https://raw.githubusercontent.com"/>
+        <SourceLinkGitHubHost Include="mygithub1.com" />           ContentUrl defaults to https://mygithub1.com/raw
+        <SourceLinkGitHubHost Include="mygithub2.com:8080" />      ContentUrl defaults to https://mygithub2.com:8080/raw
+      </ItemGroup>
+
+      ContentUrl is optional. If not specified it defaults to "https://{domain}/raw".
+    -->
+    <Microsoft.SourceLink.GitHub.GetSourceLinkUrl RepositoryUrl="$(PrivateRepositoryUrl)" SourceRoot="@(SourceRoot)" Hosts="@(SourceLinkGitHubHost)" IsSingleProvider="$(SourceLinkHasSingleProvider)">
+      <Output TaskParameter="SourceLinkUrl" PropertyName="_SourceLinkUrlToUpdate"/>
+    </Microsoft.SourceLink.GitHub.GetSourceLinkUrl>
+
+    <ItemGroup>
+      <!-- Only update the SourceLinkUrl metadata if the SourceRoot belongs to this source control -->
+      <SourceRoot Update="%(Identity)" SourceLinkUrl="$(_SourceLinkUrlToUpdate)" Condition="'$(_SourceLinkUrlToUpdate)' != 'N/A'"/>
+    </ItemGroup>
+  </Target>
+
+  <!-- 
+    We need to translate ssh URLs to https.
+  -->
+  <Target Name="TranslateGitHubUrlsInSourceControlInformation">
+
+    <ItemGroup>
+      <_TranslatedSourceRoot Remove="@(_TranslatedSourceRoot)"/>
+    </ItemGroup>
+
+    <Microsoft.SourceLink.GitHub.TranslateRepositoryUrls RepositoryUrl="$(ScmRepositoryUrl)" SourceRoots="@(SourceRoot)" Hosts="@(SourceLinkGitHubHost)" IsSingleProvider="$(SourceLinkHasSingleProvider)">
+      <Output TaskParameter="TranslatedRepositoryUrl" PropertyName="ScmRepositoryUrl"/>
+      <Output TaskParameter="TranslatedSourceRoots" ItemName="_TranslatedSourceRoot"/>
+    </Microsoft.SourceLink.GitHub.TranslateRepositoryUrls>
+
+    <ItemGroup>
+      <SourceRoot Remove="@(SourceRoot)"/>
+      <SourceRoot Include="@(_TranslatedSourceRoot)"/>
+    </ItemGroup>
+  
+</Target>
+
+</Project>
+
+      buildMultiTargeting/Microsoft.SourceLink.GitHub.props
+<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the License.txt file in the project root for more information. -->
+<Project>
+  <Import Project="..\build\$(MSBuildThisFileName).props"/>
+</Project>
+
+      buildMultiTargeting/Microsoft.SourceLink.GitHub.targets
+<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the License.txt file in the project root for more information. -->
+<Project>
+  <Import Project="..\build\$(MSBuildThisFileName).targets"/>
+</Project>
+
+  microsoft.testplatform.testhost 18.9.0
+      build/net8.0/Microsoft.TestPlatform.TestHost.props
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Condition=" ('$(Platform)' == 'x86' OR '$(PlatformTarget)' == 'x86') AND '$(OS)' == 'Windows_NT'">
+    <Content Include="$(MSBuildThisFileDirectory)x86\testhost.x86.exe">
+      <Link>testhost.x86.exe</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)x86\testhost.x86.dll">
+      <Link>testhost.x86.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </Content>
+  </ItemGroup>
+  <ItemGroup Condition=" ('$(Platform)'!= 'x86' AND '$(PlatformTarget)' != 'x86') AND '$(OS)' == 'Windows_NT'" >
+    <Content Include="$(MSBuildThisFileDirectory)x64\testhost.exe">
+      <Link>testhost.exe</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)x64\testhost.dll">
+      <Link>testhost.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </Content>
+  </ItemGroup>
+</Project>
+      build/net8.0/Microsoft.TestPlatform.TestHost.targets
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_MSTestEnableParentProcessQuery Condition="'$(UseUwpTools)'=='true'">false</_MSTestEnableParentProcessQuery>
+    <_MSTestEnableParentProcessQuery Condition="'$(_MSTestEnableParentProcessQuery)'==''">true</_MSTestEnableParentProcessQuery>
+  </PropertyGroup>
+  <ItemGroup>
+    <RuntimeHostConfigurationOption
+      Include="MSTest.EnableParentProcessQuery"
+      Value="$(_MSTestEnableParentProcessQuery)"
+      Trim="true" />
+  </ItemGroup>
+</Project>
+
+      build/net8.0/x64/testhost.dll
+      build/net8.0/x64/testhost.exe
+      build/net8.0/x86/testhost.x86.dll
+      build/net8.0/x86/testhost.x86.exe
+  reportgenerator 5.5.11
+      build/netstandard2.0/ReportGenerator.props
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <ReportGeneratorAssembly Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\..\tools\net8.0\ReportGenerator.MSBuild.dll</ReportGeneratorAssembly>
+    <ReportGeneratorAssembly Condition="'$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)..\..\tools\net47\ReportGenerator.MSBuild.dll</ReportGeneratorAssembly>
+  </PropertyGroup>
+  <UsingTask TaskName="ReportGenerator" AssemblyFile="$(ReportGeneratorAssembly)" />
+</Project>
+  system.io.hashing 10.0.11
+      buildTransitive/net461/System.IO.Hashing.targets
+<Project InitialTargets="NETStandardCompatError_System_IO_Hashing_net462">
+  <Target Name="NETStandardCompatError_System_IO_Hashing_net462"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="System.IO.Hashing 10.0.11 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net462 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/System.IO.Hashing.targets
+<Project InitialTargets="NETStandardCompatError_System_IO_Hashing_net8_0">
+  <Target Name="NETStandardCompatError_System_IO_Hashing_net8_0"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="System.IO.Hashing 10.0.11 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net8.0 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+  xunit.analyzers 1.18.0
+      analyzers/dotnet/cs/xunit.analyzers.dll
+      analyzers/dotnet/cs/xunit.analyzers.fixes.dll
+  xunit.core 2.9.3
+      build/xunit.core.props
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <ItemGroup>
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <DebugSymbols>true</DebugSymbols>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <!-- Support for importing props via the runner -->
+  <Import Condition=" '$(_Xunit_ImportPropsFile)' != '' " Project="$(_Xunit_ImportPropsFile)" />
+
+</Project>
+
+      build/xunit.core.targets
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Desktop CLR needs auto-generated binding redirects (and full PDBs for TPv1) -->
+  <PropertyGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <DebugType Condition=" '$(DebugType)' == '' ">full</DebugType>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+  </PropertyGroup>
+
+  <!-- .NET Core need .deps.json and .runtimeconfig.json files (and portable PDBs for TPv2) -->
+  <PropertyGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETCoreApp' ">
+    <DebugType Condition=" '$(DebugType)' == '' ">portable</DebugType>
+    <GenerateDependencyFile>true</GenerateDependencyFile>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+  </PropertyGroup>
+
+  <!-- Support for importing targets via the runner -->
+  <Import Condition=" '$(_Xunit_ImportTargetsFile)' != '' " Project="$(_Xunit_ImportTargetsFile)" />
+
+</Project>
+
+      buildMultiTargeting/xunit.core.props
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <ItemGroup>
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <DebugSymbols>true</DebugSymbols>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <!-- Support for importing props via the runner -->
+  <Import Condition=" '$(_Xunit_ImportPropsFile)' != '' " Project="$(_Xunit_ImportPropsFile)" />
+
+</Project>
+
+      buildMultiTargeting/xunit.core.targets
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Desktop CLR needs auto-generated binding redirects (and full PDBs for TPv1) -->
+  <PropertyGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <DebugType Condition=" '$(DebugType)' == '' ">full</DebugType>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+  </PropertyGroup>
+
+  <!-- .NET Core need .deps.json and .runtimeconfig.json files (and portable PDBs for TPv2) -->
+  <PropertyGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETCoreApp' ">
+    <DebugType Condition=" '$(DebugType)' == '' ">portable</DebugType>
+    <GenerateDependencyFile>true</GenerateDependencyFile>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+  </PropertyGroup>
+
+  <!-- Support for importing targets via the runner -->
+  <Import Condition=" '$(_Xunit_ImportTargetsFile)' != '' " Project="$(_Xunit_ImportTargetsFile)" />
+
+</Project>
+
+  xunit.runner.visualstudio 3.1.5
+      build/net472/xunit.abstractions.dll
+      build/net472/xunit.runner.visualstudio.props
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)xunit.abstractions.dll">
+      <Link>xunit.abstractions.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)xunit.runner.visualstudio.testadapter.dll">
+      <Link>xunit.runner.visualstudio.testadapter.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>
+</Project>
+
+      build/net472/xunit.runner.visualstudio.testadapter.dll
+      build/net8.0/xunit.abstractions.dll
+      build/net8.0/xunit.runner.visualstudio.props
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)xunit.abstractions.dll">
+      <Link>xunit.abstractions.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)xunit.runner.visualstudio.testadapter.dll">
+      <Link>xunit.runner.visualstudio.testadapter.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>
+</Project>
+
+      build/net8.0/xunit.runner.visualstudio.testadapter.dll
+Output:
+Build started at 18:40:52...
+1>------ Build started: Project: GuardClauses, Configuration: Debug ------
+1>GuardClauses -> compiled in memory (38 KB, 761 ms)
+2>------ Build started: Project: GuardClauses.UnitTests, Configuration: Debug ------
+2>GuardClauses.UnitTests -> compiled in memory (192 KB, 1993 ms)
+========== Build: 2 succeeded, 0 failed ==========
+

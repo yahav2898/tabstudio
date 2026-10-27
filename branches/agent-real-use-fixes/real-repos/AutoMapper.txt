@@ -1,0 +1,1681 @@
+AutoMapper at f0ecba7a97d1403973825fb3cbe2733e6216ff9a
+Opened /home/runner/work/_temp/real-repos/AutoMapper/AutoMapper.slnx in 0.2 s
+Compatibility Doctor:
+  AutoMapper.DI.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  AutoMapper: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Benchmark: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  AutoMapper.IntegrationTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  TestApp: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+  AutoMapper.UnitTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  docs: Needs a toolchain via Python toolchain - Runs with Python from the Toolchain Store, with its output in the Output panel. Install Python to run it.
+  docs: Needs a toolchain via C and C++ toolchain - Builds with CMake, make or a C/C++ compiler from the Toolchain Store and runs with its console in the Output panel.
+Startup project: Benchmark
+Built in 6.8 s: 1 errors, 1 warnings
+  1 x CS0729
+      [AutoMapper] System.Runtime.CompilerServices.IsExternalInit.g.cs(4,12): error CS0729: Type 'IsExternalInit' is defined in this assembly, but a type forwarder is specified for it
+Packages with analyzers or MSBuild files:
+  emptyfiles 4.4.0
+      build/EmptyFiles.targets
+<?xml version="1.0" encoding="utf-8"?>
+<Project Condition="$(DesignTimeBuild) != true">
+  <ItemGroup>
+    <ContentWithTargetPath
+       Include="$(MSBuildThisFileDirectory)..\EmptyFiles\**\*.*"
+       CopyToOutputDirectory="PreserveNewest"
+       TargetPath="EmptyFiles\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>
+      buildTransitive/EmptyFiles.targets
+<?xml version="1.0" encoding="utf-8"?>
+<Project Condition="$(DesignTimeBuild) != true">
+  <ItemGroup>
+    <ContentWithTargetPath
+       Include="$(MSBuildThisFileDirectory)..\EmptyFiles\**\*.*"
+       CopyToOutputDirectory="PreserveNewest"
+       TargetPath="EmptyFiles\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>
+  microsoft.bcl.asyncinterfaces 8.0.0
+      buildTransitive/net461/Microsoft.Bcl.AsyncInterfaces.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Bcl_AsyncInterfaces_net462">
+  <Target Name="NETStandardCompatError_Microsoft_Bcl_AsyncInterfaces_net462"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Bcl.AsyncInterfaces 8.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net462 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/net462/_._
+  microsoft.bcl.cryptography 9.0.4
+      buildTransitive/net461/Microsoft.Bcl.Cryptography.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Bcl_Cryptography_net462">
+  <Target Name="NETStandardCompatError_Microsoft_Bcl_Cryptography_net462"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Bcl.Cryptography 9.0.4 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net462 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Bcl.Cryptography.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Bcl_Cryptography_net8_0">
+  <Target Name="NETStandardCompatError_Microsoft_Bcl_Cryptography_net8_0"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Bcl.Cryptography 9.0.4 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net8.0 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+  microsoft.bcl.hashcode 6.0.0
+      buildTransitive/net461/Microsoft.Bcl.HashCode.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Bcl_HashCode_net462">
+  <Target Name="NETStandardCompatError_Microsoft_Bcl_HashCode_net462"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Bcl.HashCode 6.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net462 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/net462/_._
+      buildTransitive/net6.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Bcl.HashCode.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Bcl_HashCode_net6_0">
+  <Target Name="NETStandardCompatError_Microsoft_Bcl_HashCode_net6_0"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Bcl.HashCode 6.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net6.0 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+  microsoft.codecoverage 17.11.1
+      build/netstandard2.0/CodeCoverage/CodeCoverage.config
+      build/netstandard2.0/CodeCoverage/CodeCoverage.exe
+      build/netstandard2.0/CodeCoverage/VanguardInstrumentationProfiler_x86.config
+      build/netstandard2.0/CodeCoverage/amd64/CodeCoverage.exe
+      build/netstandard2.0/CodeCoverage/amd64/VanguardInstrumentationProfiler_x64.config
+      build/netstandard2.0/CodeCoverage/amd64/covrun64.dll
+      build/netstandard2.0/CodeCoverage/amd64/msdia140.dll
+      build/netstandard2.0/CodeCoverage/arm64/VanguardInstrumentationProfiler_arm64.config
+      build/netstandard2.0/CodeCoverage/arm64/covrunarm64.dll
+      build/netstandard2.0/CodeCoverage/arm64/msdia140.dll
+      build/netstandard2.0/CodeCoverage/codecoveragemessages.dll
+      build/netstandard2.0/CodeCoverage/coreclr/Microsoft.VisualStudio.CodeCoverage.Shim.dll
+      build/netstandard2.0/CodeCoverage/covrun32.dll
+      build/netstandard2.0/CodeCoverage/msdia140.dll
+      build/netstandard2.0/InstrumentationEngine/alpine/x64/VanguardInstrumentationProfiler_x64.config
+      build/netstandard2.0/InstrumentationEngine/alpine/x64/libCoverageInstrumentationMethod.so
+      build/netstandard2.0/InstrumentationEngine/alpine/x64/libInstrumentationEngine.so
+      build/netstandard2.0/InstrumentationEngine/arm64/MicrosoftInstrumentationEngine_arm64.dll
+      build/netstandard2.0/InstrumentationEngine/macos/x64/VanguardInstrumentationProfiler_x64.config
+      build/netstandard2.0/InstrumentationEngine/macos/x64/libCoverageInstrumentationMethod.dylib
+      build/netstandard2.0/InstrumentationEngine/macos/x64/libInstrumentationEngine.dylib
+      build/netstandard2.0/InstrumentationEngine/ubuntu/x64/VanguardInstrumentationProfiler_x64.config
+      build/netstandard2.0/InstrumentationEngine/ubuntu/x64/libCoverageInstrumentationMethod.so
+      build/netstandard2.0/InstrumentationEngine/ubuntu/x64/libInstrumentationEngine.so
+      build/netstandard2.0/InstrumentationEngine/x64/MicrosoftInstrumentationEngine_x64.dll
+      build/netstandard2.0/InstrumentationEngine/x86/MicrosoftInstrumentationEngine_x86.dll
+      build/netstandard2.0/Microsoft.CodeCoverage.Core.dll
+      build/netstandard2.0/Microsoft.CodeCoverage.Instrumentation.Core.dll
+      build/netstandard2.0/Microsoft.CodeCoverage.Instrumentation.dll
+      build/netstandard2.0/Microsoft.CodeCoverage.Interprocess.dll
+      build/netstandard2.0/Microsoft.CodeCoverage.props
+<!--
+***********************************************************************************************
+Microsoft.CodeCoverage.props
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+
+Copyright (c) .NET Foundation. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TraceDataCollectorDirectoryPath>$(MSBuildThisFileDirectory)</TraceDataCollectorDirectoryPath>
+  </PropertyGroup>
+</Project>
+
+      build/netstandard2.0/Microsoft.CodeCoverage.targets
+<!--
+ ***********************************************************************************************
+ Microsoft.CodeCoverage.targets
+
+ WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+           created a backup copy.  Incorrect changes to this file will make it
+           impossible to load or build your test projects from the command-line or the IDE.
+
+ Copyright (c) Microsoft. All rights reserved.
+ ***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- This target required to enable /collect:"Code Coverage" in "dotnet publish" scenario with "dotnet vstest".
+       E.g: Release pipelines where user/project nuget cache not available on current machine. -->
+  <Target Name="CopyTraceDataCollectorArtifacts" AfterTargets="ComputeFilesToPublish">
+
+    <ItemGroup>
+      <TraceDataCollectorArtifacts Include="$(MSBuildThisFileDirectory)\**\*.*" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(TraceDataCollectorArtifacts)" DestinationFolder="$(PublishDir)%(RecursiveDir)" />
+
+  </Target>
+
+  <PropertyGroup Condition="'$(NETCoreSdkVersion)' != ''">
+    <_msCoverageSdkNETCoreSdkVersion>$(NETCoreSdkVersion)</_msCoverageSdkNETCoreSdkVersion>
+    <_msCoverageSdkNETCoreSdkVersion Condition="$(_msCoverageSdkNETCoreSdkVersion.Contains('-'))">$(_msCoverageSdkNETCoreSdkVersion.Split('-')[0])</_msCoverageSdkNETCoreSdkVersion>
+    <_msCoverageSdkMinVersionWithDependencyTarget>6.0.100</_msCoverageSdkMinVersionWithDependencyTarget>
+    <_msCoverageSourceRootTargetName>MsCoverageGetPathMap</_msCoverageSourceRootTargetName>
+    <_msCoverageSourceRootTargetName Condition="'$([System.Version]::Parse($(_msCoverageSdkNETCoreSdkVersion)).CompareTo($([System.Version]::Parse($(_msCoverageSdkMinVersionWithDependencyTarget)))))' &gt;= '0' ">InitializeSourceRootMappedPaths</_msCoverageSourceRootTargetName>
+  </PropertyGroup>
+
+  <!-- This target required to store deterministic sources mapping.
+       It is modified version of https://github.com/coverlet-coverage/coverlet/blob/d1ca364b7dbff38abce0457d94c4ce1b7e3a4cd9/src/coverlet.collector/build/coverlet.collector.targets#L35 -->
+  <Target Condition="'$(NETCoreSdkVersion)' != ''" Name="MsCoverageReferencedPathMaps" BeforeTargets="CoreCompile" DependsOnTargets="ResolveProjectReferences" >
+    <MSBuild Projects="@(AnnotatedProjects->'%(FullPath)')"
+             Targets="$(_msCoverageSourceRootTargetName)"
+             Properties="TargetFramework=%(AnnotatedProjects.NearestTargetFramework)"
+             SkipNonexistentTargets="true">
+      <Output TaskParameter="TargetOutputs"
+              ItemName="_msCoverageLocalTopLevelSourceRoot" />
+    </MSBuild>
+    <ItemGroup>
+      <_msCoverageByProject Include="@(_msCoverageLocalTopLevelSourceRoot->'%(MSBuildSourceProjectFile)')" OriginalPath="%(Identity)" />
+      <_msCoverageMapping Include="@(_msCoverageByProject->'%(Identity)|%(OriginalPath)=%(MappedPath)')" />
+    </ItemGroup>
+    <PropertyGroup>
+      <_msCoverageSourceRootMappingFilePath>$([MSBuild]::EnsureTrailingSlash('$(OutputPath)')).msCoverageSourceRootsMapping_$(AssemblyName)</_msCoverageSourceRootMappingFilePath>
+    </PropertyGroup>
+    <WriteLinesToFile File="$(_msCoverageSourceRootMappingFilePath)" Lines="@(_msCoverageMapping)"
+                      Overwrite="true" Encoding="Unicode"
+                      Condition="'@(_msCoverageMapping)'!=''"
+                      WriteOnlyWhenDifferent="true" />
+    <ItemGroup>
+      <FileWrites Include="$(_msCoverageSourceRootMappingFilePath)" Condition="'@(_msCoverageMapping)'!=''" />
+    </ItemGroup>
+  </Target>
+</Project>
+
+      build/netstandard2.0/Microsoft.DiaSymReader.dll
+      build/netstandard2.0/Microsoft.VisualStudio.TraceDataCollector.dll
+      build/netstandard2.0/Mono.Cecil.Pdb.dll
+      build/netstandard2.0/Mono.Cecil.Rocks.dll
+      build/netstandard2.0/Mono.Cecil.dll
+      build/netstandard2.0/ThirdPartyNotices.txt
+  microsoft.entityframeworkcore.analyzers 10.0.0
+      analyzers/dotnet/cs/Microsoft.EntityFrameworkCore.Analyzers.dll
+  microsoft.entityframeworkcore 10.0.0
+      buildTransitive/net10.0/Microsoft.EntityFrameworkCore.props
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <!--
+         MAUI (and other size-conscient profiles) trim the nullability attributes, causing the EF Core NRT support to break.
+         This prevents the attributes from being trimmed.
+    -->
+    <NullabilityInfoContextSupport>true</NullabilityInfoContextSupport>
+  </PropertyGroup>
+</Project>
+  microsoft.extensions.caching.abstractions 10.0.0
+      buildTransitive/net461/Microsoft.Extensions.Caching.Abstractions.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_Caching_Abstractions_net462">
+  <Target Name="NETStandardCompatError_Microsoft_Extensions_Caching_Abstractions_net462"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Extensions.Caching.Abstractions 10.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net462 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.Caching.Abstractions.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_Caching_Abstractions_net8_0">
+  <Target Name="NETStandardCompatError_Microsoft_Extensions_Caching_Abstractions_net8_0"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Extensions.Caching.Abstractions 10.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net8.0 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+  microsoft.extensions.caching.memory 10.0.0
+      buildTransitive/net461/Microsoft.Extensions.Caching.Memory.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_Caching_Memory_net462">
+  <Target Name="NETStandardCompatError_Microsoft_Extensions_Caching_Memory_net462"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Extensions.Caching.Memory 10.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net462 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.Caching.Memory.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_Caching_Memory_net8_0">
+  <Target Name="NETStandardCompatError_Microsoft_Extensions_Caching_Memory_net8_0"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Extensions.Caching.Memory 10.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net8.0 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+  microsoft.extensions.configuration.abstractions 10.0.0
+      buildTransitive/net461/Microsoft.Extensions.Configuration.Abstractions.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_Configuration_Abstractions_net462">
+  <Target Name="NETStandardCompatError_Microsoft_Extensions_Configuration_Abstractions_net462"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Extensions.Configuration.Abstractions 10.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net462 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.Configuration.Abstractions.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_Configuration_Abstractions_net8_0">
+  <Target Name="NETStandardCompatError_Microsoft_Extensions_Configuration_Abstractions_net8_0"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Extensions.Configuration.Abstractions 10.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net8.0 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+  microsoft.extensions.configuration.binder 10.0.0
+      analyzers/dotnet/cs/Microsoft.Extensions.Configuration.Binder.SourceGeneration.dll
+      buildTransitive/netstandard2.0/Microsoft.Extensions.Configuration.Binder.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_Configuration_Binder">
+    <PropertyGroup Condition="'$(EnableConfigurationBindingGenerator)' == 'true'">
+        <!-- The configuration binding source generator uses a preview version of the compiler interceptors feature. Enable it implicitly when the generator is enabled. -->
+        <InterceptorsPreviewNamespaces>$(InterceptorsPreviewNamespaces);Microsoft.Extensions.Configuration.Binder.SourceGeneration</InterceptorsPreviewNamespaces>
+    </PropertyGroup>
+
+    <Target Name="_Microsoft_Extensions_Configuration_Binder_RemoveAnalyzer"
+            Condition="'$(EnableConfigurationBindingGenerator)' != 'true'"
+            AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets">
+
+        <ItemGroup>
+            <Analyzer Remove="@(Analyzer->WithMetadataValue('NuGetPackageId', 'Microsoft.Extensions.Configuration.Binder'))" />
+        </ItemGroup>
+    </Target>
+
+    <Target Name="NETStandardCompatError_Microsoft_Extensions_Configuration_Binder"
+            Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+        <PropertyGroup>
+            <_Microsoft_Extensions_Configuration_Binder_Compatible_TargetFramework
+                Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'netcoreapp2.0')) AND
+                           !$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))"
+                >net8.0</_Microsoft_Extensions_Configuration_Binder_Compatible_TargetFramework>
+            <_Microsoft_Extensions_Configuration_Binder_Compatible_TargetFramework
+                Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net461')) AND
+                           !$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net462'))"
+                >net462</_Microsoft_Extensions_Configuration_Binder_Compatible_TargetFramework>
+        </PropertyGroup>
+        <Warning Condition="'$(_Microsoft_Extensions_Configuration_Binder_Compatible_TargetFramework)' != ''"
+                Text="Microsoft.Extensions.Configuration.Binder doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to $(_Microsoft_Extensions_Configuration_Binder_Compatible_TargetFramework) or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+    </Target>
+</Project>
+
+  microsoft.extensions.configuration 10.0.0
+      buildTransitive/net461/Microsoft.Extensions.Configuration.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_Configuration_net462">
+  <Target Name="NETStandardCompatError_Microsoft_Extensions_Configuration_net462"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Extensions.Configuration 10.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net462 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.Configuration.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_Configuration_net8_0">
+  <Target Name="NETStandardCompatError_Microsoft_Extensions_Configuration_net8_0"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Extensions.Configuration 10.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net8.0 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+  microsoft.extensions.dependencyinjection.abstractions 10.0.0
+      buildTransitive/net461/Microsoft.Extensions.DependencyInjection.Abstractions.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_DependencyInjection_Abstractions_net462">
+  <Target Name="NETStandardCompatError_Microsoft_Extensions_DependencyInjection_Abstractions_net462"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Extensions.DependencyInjection.Abstractions 10.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net462 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.DependencyInjection.Abstractions.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_DependencyInjection_Abstractions_net8_0">
+  <Target Name="NETStandardCompatError_Microsoft_Extensions_DependencyInjection_Abstractions_net8_0"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Extensions.DependencyInjection.Abstractions 10.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net8.0 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+  microsoft.extensions.dependencyinjection 10.0.0
+      buildTransitive/net461/Microsoft.Extensions.DependencyInjection.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_DependencyInjection_net462">
+  <Target Name="NETStandardCompatError_Microsoft_Extensions_DependencyInjection_net462"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Extensions.DependencyInjection 10.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net462 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.DependencyInjection.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_DependencyInjection_net8_0">
+  <Target Name="NETStandardCompatError_Microsoft_Extensions_DependencyInjection_net8_0"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Extensions.DependencyInjection 10.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net8.0 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+  microsoft.extensions.diagnostics.testing 10.0.0
+      buildTransitive/net462/Microsoft.Extensions.Diagnostics.Testing.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_Diagnostics_Testing_net8_0">
+  
+  <Target Name="NETStandardCompatError_Microsoft_Extensions_Diagnostics_Testing_net8_0"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Extensions.Diagnostics.Testing 10.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net8.0 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/net8.0/_._
+  microsoft.extensions.logging.abstractions 10.0.0
+      analyzers/dotnet/roslyn3.11/cs/Microsoft.Extensions.Logging.Generators.dll
+      analyzers/dotnet/roslyn4.0/cs/Microsoft.Extensions.Logging.Generators.dll
+      analyzers/dotnet/roslyn4.4/cs/Microsoft.Extensions.Logging.Generators.dll
+      buildTransitive/net461/Microsoft.Extensions.Logging.Abstractions.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_Logging_Abstractions_net462">
+  <Target Name="NETStandardCompatError_Microsoft_Extensions_Logging_Abstractions_net462"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Extensions.Logging.Abstractions 10.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net462 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/net462/Microsoft.Extensions.Logging.Abstractions.targets
+<Project>
+  <Target Name="_Microsoft_Extensions_Logging_AbstractionsGatherAnalyzers">
+
+    <ItemGroup>
+      <_Microsoft_Extensions_Logging_AbstractionsAnalyzer Include="@(Analyzer)" Condition="'%(Analyzer.NuGetPackageId)' == 'Microsoft.Extensions.Logging.Abstractions'" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_Microsoft_Extensions_Logging_AbstractionsAnalyzerMultiTargeting" 
+          Condition="'$(SupportsRoslynComponentVersioning)' != 'true'" 
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_Microsoft_Extensions_Logging_AbstractionsGatherAnalyzers">
+
+    <ItemGroup>
+      <!-- Remove our analyzers targeting roslyn4.x -->
+      <Analyzer Remove="@(_Microsoft_Extensions_Logging_AbstractionsAnalyzer)"
+                Condition="$([System.String]::Copy('%(_Microsoft_Extensions_Logging_AbstractionsAnalyzer.Identity)').IndexOf('roslyn4')) &gt;= 0"/>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_Microsoft_Extensions_Logging_AbstractionsRemoveAnalyzers" 
+          Condition="'$(DisableMicrosoftExtensionsLoggingSourceGenerator)' == 'true'"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_Microsoft_Extensions_Logging_AbstractionsGatherAnalyzers">
+
+    <!-- Remove all our analyzers -->
+    <ItemGroup>
+      <Analyzer Remove="@(_Microsoft_Extensions_Logging_AbstractionsAnalyzer)" />
+    </ItemGroup>
+  </Target>
+</Project>
+
+      buildTransitive/net8.0/Microsoft.Extensions.Logging.Abstractions.targets
+<Project>
+  <Target Name="_Microsoft_Extensions_Logging_AbstractionsGatherAnalyzers">
+
+    <ItemGroup>
+      <_Microsoft_Extensions_Logging_AbstractionsAnalyzer Include="@(Analyzer)" Condition="'%(Analyzer.NuGetPackageId)' == 'Microsoft.Extensions.Logging.Abstractions'" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_Microsoft_Extensions_Logging_AbstractionsAnalyzerMultiTargeting" 
+          Condition="'$(SupportsRoslynComponentVersioning)' != 'true'" 
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_Microsoft_Extensions_Logging_AbstractionsGatherAnalyzers">
+
+    <ItemGroup>
+      <!-- Remove our analyzers targeting roslyn4.x -->
+      <Analyzer Remove="@(_Microsoft_Extensions_Logging_AbstractionsAnalyzer)"
+                Condition="$([System.String]::Copy('%(_Microsoft_Extensions_Logging_AbstractionsAnalyzer.Identity)').IndexOf('roslyn4')) &gt;= 0"/>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_Microsoft_Extensions_Logging_AbstractionsRemoveAnalyzers" 
+          Condition="'$(DisableMicrosoftExtensionsLoggingSourceGenerator)' == 'true'"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_Microsoft_Extensions_Logging_AbstractionsGatherAnalyzers">
+
+    <!-- Remove all our analyzers -->
+    <ItemGroup>
+      <Analyzer Remove="@(_Microsoft_Extensions_Logging_AbstractionsAnalyzer)" />
+    </ItemGroup>
+  </Target>
+</Project>
+
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.Logging.Abstractions.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_Logging_Abstractions_net8_0">
+  <Target Name="NETStandardCompatError_Microsoft_Extensions_Logging_Abstractions_net8_0"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Extensions.Logging.Abstractions 10.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net8.0 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.targets
+<Project>
+  <Target Name="_Microsoft_Extensions_Logging_AbstractionsGatherAnalyzers">
+
+    <ItemGroup>
+      <_Microsoft_Extensions_Logging_AbstractionsAnalyzer Include="@(Analyzer)" Condition="'%(Analyzer.NuGetPackageId)' == 'Microsoft.Extensions.Logging.Abstractions'" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_Microsoft_Extensions_Logging_AbstractionsAnalyzerMultiTargeting" 
+          Condition="'$(SupportsRoslynComponentVersioning)' != 'true'" 
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_Microsoft_Extensions_Logging_AbstractionsGatherAnalyzers">
+
+    <ItemGroup>
+      <!-- Remove our analyzers targeting roslyn4.x -->
+      <Analyzer Remove="@(_Microsoft_Extensions_Logging_AbstractionsAnalyzer)"
+                Condition="$([System.String]::Copy('%(_Microsoft_Extensions_Logging_AbstractionsAnalyzer.Identity)').IndexOf('roslyn4')) &gt;= 0"/>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_Microsoft_Extensions_Logging_AbstractionsRemoveAnalyzers" 
+          Condition="'$(DisableMicrosoftExtensionsLoggingSourceGenerator)' == 'true'"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_Microsoft_Extensions_Logging_AbstractionsGatherAnalyzers">
+
+    <!-- Remove all our analyzers -->
+    <ItemGroup>
+      <Analyzer Remove="@(_Microsoft_Extensions_Logging_AbstractionsAnalyzer)" />
+    </ItemGroup>
+  </Target>
+</Project>
+
+  microsoft.extensions.logging 10.0.0
+      buildTransitive/net461/Microsoft.Extensions.Logging.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_Logging_net462">
+  <Target Name="NETStandardCompatError_Microsoft_Extensions_Logging_net462"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Extensions.Logging 10.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net462 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.Logging.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_Logging_net8_0">
+  <Target Name="NETStandardCompatError_Microsoft_Extensions_Logging_net8_0"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Extensions.Logging 10.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net8.0 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+  microsoft.extensions.options.configurationextensions 10.0.0
+      buildTransitive/net461/Microsoft.Extensions.Options.ConfigurationExtensions.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_Options_ConfigurationExtensions_net462">
+  <Target Name="NETStandardCompatError_Microsoft_Extensions_Options_ConfigurationExtensions_net462"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Extensions.Options.ConfigurationExtensions 10.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net462 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.Options.ConfigurationExtensions.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_Options_ConfigurationExtensions_net8_0">
+  <Target Name="NETStandardCompatError_Microsoft_Extensions_Options_ConfigurationExtensions_net8_0"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Extensions.Options.ConfigurationExtensions 10.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net8.0 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+  microsoft.extensions.options 10.0.0
+      analyzers/dotnet/roslyn4.4/cs/Microsoft.Extensions.Options.SourceGeneration.dll
+      buildTransitive/net461/Microsoft.Extensions.Options.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_Options_net462">
+  <Target Name="NETStandardCompatError_Microsoft_Extensions_Options_net462"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Extensions.Options 10.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net462 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/net462/Microsoft.Extensions.Options.targets
+<Project>
+  <Target Name="_Microsoft_Extensions_OptionsGatherAnalyzers">
+
+    <ItemGroup>
+      <_Microsoft_Extensions_OptionsAnalyzer Include="@(Analyzer)" Condition="'%(Analyzer.NuGetPackageId)' == 'Microsoft.Extensions.Options'" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_Microsoft_Extensions_OptionsAnalyzerMultiTargeting" 
+          Condition="'$(SupportsRoslynComponentVersioning)' != 'true'" 
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_Microsoft_Extensions_OptionsGatherAnalyzers">
+
+    <ItemGroup>
+      <!-- Remove our analyzers targeting roslyn4.x -->
+      <Analyzer Remove="@(_Microsoft_Extensions_OptionsAnalyzer)"
+                Condition="$([System.String]::Copy('%(_Microsoft_Extensions_OptionsAnalyzer.Identity)').IndexOf('roslyn4')) &gt;= 0"/>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_Microsoft_Extensions_OptionsRemoveAnalyzers" 
+          Condition="'$(DisableMicrosoftExtensionsOptionsSourceGenerator)' == 'true'"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_Microsoft_Extensions_OptionsGatherAnalyzers">
+
+    <!-- Remove all our analyzers -->
+    <ItemGroup>
+      <Analyzer Remove="@(_Microsoft_Extensions_OptionsAnalyzer)" />
+    </ItemGroup>
+  </Target>
+</Project>
+
+      buildTransitive/net8.0/Microsoft.Extensions.Options.targets
+<Project>
+  <Target Name="_Microsoft_Extensions_OptionsGatherAnalyzers">
+
+    <ItemGroup>
+      <_Microsoft_Extensions_OptionsAnalyzer Include="@(Analyzer)" Condition="'%(Analyzer.NuGetPackageId)' == 'Microsoft.Extensions.Options'" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_Microsoft_Extensions_OptionsAnalyzerMultiTargeting" 
+          Condition="'$(SupportsRoslynComponentVersioning)' != 'true'" 
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_Microsoft_Extensions_OptionsGatherAnalyzers">
+
+    <ItemGroup>
+      <!-- Remove our analyzers targeting roslyn4.x -->
+      <Analyzer Remove="@(_Microsoft_Extensions_OptionsAnalyzer)"
+                Condition="$([System.String]::Copy('%(_Microsoft_Extensions_OptionsAnalyzer.Identity)').IndexOf('roslyn4')) &gt;= 0"/>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_Microsoft_Extensions_OptionsRemoveAnalyzers" 
+          Condition="'$(DisableMicrosoftExtensionsOptionsSourceGenerator)' == 'true'"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_Microsoft_Extensions_OptionsGatherAnalyzers">
+
+    <!-- Remove all our analyzers -->
+    <ItemGroup>
+      <Analyzer Remove="@(_Microsoft_Extensions_OptionsAnalyzer)" />
+    </ItemGroup>
+  </Target>
+</Project>
+
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.Options.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_Options_net8_0">
+  <Target Name="NETStandardCompatError_Microsoft_Extensions_Options_net8_0"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Extensions.Options 10.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net8.0 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/netstandard2.0/Microsoft.Extensions.Options.targets
+<Project>
+  <Target Name="_Microsoft_Extensions_OptionsGatherAnalyzers">
+
+    <ItemGroup>
+      <_Microsoft_Extensions_OptionsAnalyzer Include="@(Analyzer)" Condition="'%(Analyzer.NuGetPackageId)' == 'Microsoft.Extensions.Options'" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_Microsoft_Extensions_OptionsAnalyzerMultiTargeting" 
+          Condition="'$(SupportsRoslynComponentVersioning)' != 'true'" 
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_Microsoft_Extensions_OptionsGatherAnalyzers">
+
+    <ItemGroup>
+      <!-- Remove our analyzers targeting roslyn4.x -->
+      <Analyzer Remove="@(_Microsoft_Extensions_OptionsAnalyzer)"
+                Condition="$([System.String]::Copy('%(_Microsoft_Extensions_OptionsAnalyzer.Identity)').IndexOf('roslyn4')) &gt;= 0"/>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_Microsoft_Extensions_OptionsRemoveAnalyzers" 
+          Condition="'$(DisableMicrosoftExtensionsOptionsSourceGenerator)' == 'true'"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_Microsoft_Extensions_OptionsGatherAnalyzers">
+
+    <!-- Remove all our analyzers -->
+    <ItemGroup>
+      <Analyzer Remove="@(_Microsoft_Extensions_OptionsAnalyzer)" />
+    </ItemGroup>
+  </Target>
+</Project>
+
+  microsoft.extensions.primitives 10.0.0
+      buildTransitive/net461/Microsoft.Extensions.Primitives.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_Primitives_net462">
+  <Target Name="NETStandardCompatError_Microsoft_Extensions_Primitives_net462"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Extensions.Primitives 10.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net462 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.Primitives.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_Primitives_net8_0">
+  <Target Name="NETStandardCompatError_Microsoft_Extensions_Primitives_net8_0"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Extensions.Primitives 10.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net8.0 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+  microsoft.extensions.telemetry.abstractions 10.0.0
+      analyzers/dotnet/cs/Microsoft.Gen.Logging.dll
+      analyzers/dotnet/cs/Microsoft.Gen.Metrics.dll
+      buildTransitive/net462/Microsoft.Extensions.Telemetry.Abstractions.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_Telemetry_Abstractions_net8_0">
+  
+  <!-- This package should replace the Microsoft.Extensions.Logging.Abstractions source generator, so we set the property to remove the source generator from the project. -->
+  <PropertyGroup>
+    <DisableMicrosoftExtensionsLoggingSourceGenerator>true</DisableMicrosoftExtensionsLoggingSourceGenerator>
+  </PropertyGroup>
+
+  <Target Name="NETStandardCompatError_Microsoft_Extensions_Telemetry_Abstractions_net8_0"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="Microsoft.Extensions.Telemetry.Abstractions 10.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net8.0 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/net6.0/Microsoft.Extensions.Telemetry.Abstractions.props
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- This package should replace the Microsoft.Extensions.Logging.Abstractions source generator, so we set the property to remove the source generator from the project. -->
+  <PropertyGroup>
+    <DisableMicrosoftExtensionsLoggingSourceGenerator>true</DisableMicrosoftExtensionsLoggingSourceGenerator>
+  </PropertyGroup>
+</Project>
+
+      buildTransitive/net6.0/Microsoft.Extensions.Telemetry.Abstractions.targets
+<Project>
+  <!-- This package should replace the "Microsoft.Extensions.Logging.Abstractions" source generator. -->
+  <Target Name="_Microsoft_Extensions_Logging_AbstractionsRemoveAnalyzers"
+          Condition="'$(DisableMicrosoftExtensionsLoggingSourceGenerator)' == 'true'"
+          AfterTargets="ResolveReferences">
+    <ItemGroup>
+      <_Microsoft_Extensions_Logging_AbstractionsAnalyzer
+        Include="@(Analyzer)"
+        Condition="'%(Analyzer.AssemblyName)' == 'Microsoft.Extensions.Logging.Generators' Or
+                   '%(Analyzer.NuGetPackageId)' == 'Microsoft.Extensions.Logging.Abstractions'" />
+    </ItemGroup>
+
+    <!-- Remove Microsoft.Extensions.Logging.Abstractions Analyzer -->
+    <ItemGroup>
+      <Analyzer Remove="@(_Microsoft_Extensions_Logging_AbstractionsAnalyzer)" />
+    </ItemGroup>
+  </Target>
+
+  <!-- We have a WPF-specific target because WPF projects generate and compile a temporary project (via "GenerateTemporaryTargetAssembly" target),
+       and that temp project doesn't have "ResolveReferences" target we expect.
+       This leads to the runtime's generator not being removed and to a compile-time error CS0757. This additional target resolves the problem. -->
+  <Target Name="_Microsoft_Extensions_Logging_AbstractionsRemoveAnalyzersWPF"
+          Condition="'$(DisableMicrosoftExtensionsLoggingSourceGenerator)' == 'true'"
+          AfterTargets="RemoveDuplicateAnalyzers">
+    <ItemGroup>
+      <_Microsoft_Extensions_Logging_AbstractionsAnalyzerWPF
+        Include="@(Analyzer)"
+        Condition="'%(Analyzer.AssemblyName)' == 'Microsoft.Extensions.Logging.Generators' Or
+                   '%(Analyzer.NuGetPackageId)' == 'Microsoft.Extensions.Logging.Abstractions'" />
+    </ItemGroup>
+    <!-- Remove Microsoft.Extensions.Logging.Abstractions Analyzer for WPF projects -->
+    <ItemGroup>
+      <Analyzer Remove="@(_Microsoft_Extensions_Logging_AbstractionsAnalyzerWPF)" />
+    </ItemGroup>
+  </Target>
+</Project>
+
+      buildTransitive/net8.0/Microsoft.Extensions.Telemetry.Abstractions.props
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- This package should replace the Microsoft.Extensions.Logging.Abstractions source generator, so we set the property to remove the source generator from the project. -->
+  <PropertyGroup>
+    <DisableMicrosoftExtensionsLoggingSourceGenerator>true</DisableMicrosoftExtensionsLoggingSourceGenerator>
+  </PropertyGroup>
+</Project>
+
+      buildTransitive/net8.0/Microsoft.Extensions.Telemetry.Abstractions.targets
+<Project>
+  <!-- This package should replace the "Microsoft.Extensions.Logging.Abstractions" source generator. -->
+  <Target Name="_Microsoft_Extensions_Logging_AbstractionsRemoveAnalyzers"
+          Condition="'$(DisableMicrosoftExtensionsLoggingSourceGenerator)' == 'true'"
+          AfterTargets="ResolveReferences">
+    <ItemGroup>
+      <_Microsoft_Extensions_Logging_AbstractionsAnalyzer
+        Include="@(Analyzer)"
+        Condition="'%(Analyzer.AssemblyName)' == 'Microsoft.Extensions.Logging.Generators' Or
+                   '%(Analyzer.NuGetPackageId)' == 'Microsoft.Extensions.Logging.Abstractions'" />
+    </ItemGroup>
+
+    <!-- Remove Microsoft.Extensions.Logging.Abstractions Analyzer -->
+    <ItemGroup>
+      <Analyzer Remove="@(_Microsoft_Extensions_Logging_AbstractionsAnalyzer)" />
+    </ItemGroup>
+  </Target>
+
+  <!-- We have a WPF-specific target because WPF projects generate and compile a temporary project (via "GenerateTemporaryTargetAssembly" target),
+       and that temp project doesn't have "ResolveReferences" target we expect.
+       This leads to the runtime's generator not being removed and to a compile-time error CS0757. This additional target resolves the problem. -->
+  <Target Name="_Microsoft_Extensions_Logging_AbstractionsRemoveAnalyzersWPF"
+          Condition="'$(DisableMicrosoftExtensionsLoggingSourceGenerator)' == 'true'"
+          AfterTargets="RemoveDuplicateAnalyzers">
+    <ItemGroup>
+      <_Microsoft_Extensions_Logging_AbstractionsAnalyzerWPF
+        Include="@(Analyzer)"
+        Condition="'%(Analyzer.AssemblyName)' == 'Microsoft.Extensions.Logging.Generators' Or
+                   '%(Analyzer.NuGetPackageId)' == 'Microsoft.Extensions.Logging.Abstractions'" />
+    </ItemGroup>
+    <!-- Remove Microsoft.Extensions.Logging.Abstractions Analyzer for WPF projects -->
+    <ItemGroup>
+      <Analyzer Remove="@(_Microsoft_Extensions_Logging_AbstractionsAnalyzerWPF)" />
+    </ItemGroup>
+  </Target>
+</Project>
+
+  microsoft.net.test.sdk 17.11.1
+      build/net462/Microsoft.NET.Test.Sdk.props
+<!--
+ ***********************************************************************************************
+ Microsoft.NET.Test.Sdk.props
+ 
+ WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+           created a backup copy.  Incorrect changes to this file will make it
+           impossible to load or build your projects from the command-line or the IDE.
+ 
+ Copyright (c) .NET Foundation. All rights reserved. 
+ ***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <TestProject>true</TestProject>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>  
+ 
+</Project>
+
+      build/net462/Microsoft.NET.Test.Sdk.targets
+<!--
+ ***********************************************************************************************
+ Microsoft.NET.Test.Sdk.targets
+
+ WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+           created a backup copy.  Incorrect changes to this file will make it
+           impossible to load or build your projects from the command-line or the IDE.
+
+ Copyright (c) .NET Foundation. All rights reserved. 
+ ***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+     Generate config file for test project targeting .NET Framework. This config file has binding redirect which is needed at time of running tests.
+     Added below two lines because msbuild has following check:
+     https://github.com/Microsoft/msbuild/blob/dd5e8bc3f86ac98bd77d8971b00a6ad14f122f1a/src/XMakeTasks/Microsoft.Common.CurrentVersion.targets#L2027 
+   -->
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects Condition="'$(AutoGenerateBindingRedirects)' == ''">true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType Condition="'$(GenerateBindingRedirectsOutputType)' == ''">true</GenerateBindingRedirectsOutputType>
+  </PropertyGroup>
+
+</Project>
+
+      build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.cs
+      build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.fs
+      build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.vb
+      build/netcoreapp3.1/Microsoft.NET.Test.Sdk.props
+<!--
+ ***********************************************************************************************
+ Microsoft.NET.Test.Sdk.props
+ 
+ WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+           created a backup copy.  Incorrect changes to this file will make it
+           impossible to load or build your projects from the command-line or the IDE.
+ 
+ Copyright (c) .NET Foundation. All rights reserved. 
+ ***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <TestProject>true</TestProject>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>  
+ 
+</Project>
+
+      build/netcoreapp3.1/Microsoft.NET.Test.Sdk.targets
+<!--
+ ***********************************************************************************************
+ Microsoft.NET.Test.Sdk.targets
+
+ WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+           created a backup copy.  Incorrect changes to this file will make it
+           impossible to load or build your projects from the command-line or the IDE.
+
+ Copyright (c) .NET Foundation. All rights reserved. 
+ ***********************************************************************************************
+-->
+
+<Project InitialTargets="GenerateProgramFile" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    Output type for .NET Core test projects should be exe.
+    https://devdiv.visualstudio.com/DevDiv/_workitems?id=375688&_a=edit
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GeneratedProgramFile Condition="'$(GeneratedProgramFile)' == ''">$(MSBuildThisFileDirectory)Microsoft.NET.Test.Sdk.Program$(DefaultLanguageSourceExtension)</GeneratedProgramFile>
+    <GenerateProgramFile Condition="'$(GenerateProgramFile)' == ''">true</GenerateProgramFile>
+  </PropertyGroup>
+
+  <!--
+    ============================================================
+    GenerateProgramFile
+    Generates Program file which contains the Main entry point
+    ============================================================
+  -->
+  <Target Name="GenerateProgramFile"
+          Condition="'$(GenerateProgramFile)' == 'true'">
+
+    <ItemGroup Condition="'$(Language)' == 'VB' or '$(Language)' == 'C#'">
+      <RemoveExistingMicrosoftNETTestSdkProgram Include="@(Compile)" Condition="'%(FileName)' == 'Microsoft.NET.Test.Sdk.Program'" />
+      <Compile Remove="@(RemoveExistingMicrosoftNETTestSdkProgram)" />
+      <Compile Include="$(GeneratedProgramFile)"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Language)' == 'F#'">
+      <ProgramCompiles Include="@(Compile)" Condition="'%(Identity)' == 'Program.fs'" />
+      <CompileAfter Include="$(GeneratedProgramFile)" Condition="@(ProgramCompiles-&gt;Count()) == 0" />
+    </ItemGroup>
+
+    <Warning Condition="@(ProgramCompiles-&gt;Count()) != 0" Text="A 'Program.fs' file can be automatically generated for F# .NET Core test projects. To fix this warning, either delete the file from the project, or set the &lt;GenerateProgramFile&gt; property to 'false'." />
+
+  </Target>
+
+</Project>
+
+      buildMultiTargeting/Microsoft.NET.Test.Sdk.props
+<!--
+ ***********************************************************************************************
+ Microsoft.NET.Test.Sdk.props
+ 
+ WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+           created a backup copy.  Incorrect changes to this file will make it
+           impossible to load or build your projects from the command-line or the IDE.
+ 
+ Copyright (c) .NET Foundation. All rights reserved. 
+ ***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <TestProject>true</TestProject>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>  
+ 
+</Project>
+
+  microsoft.testplatform.testhost 17.11.1
+      build/netcoreapp3.1/Microsoft.TestPlatform.TestHost.props
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Condition=" ('$(Platform)' == 'x86' OR '$(PlatformTarget)' == 'x86') AND '$(OS)' == 'Windows_NT'">
+    <Content Include="$(MSBuildThisFileDirectory)x86\testhost.x86.exe">
+      <Link>testhost.x86.exe</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)x86\testhost.x86.dll">
+      <Link>testhost.x86.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </Content>
+  </ItemGroup>
+  <ItemGroup Condition=" ('$(Platform)'!= 'x86' AND '$(PlatformTarget)' != 'x86') AND '$(OS)' == 'Windows_NT'" >
+    <Content Include="$(MSBuildThisFileDirectory)x64\testhost.exe">
+      <Link>testhost.exe</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)x64\testhost.dll">
+      <Link>testhost.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </Content>
+  </ItemGroup>
+</Project>
+      build/netcoreapp3.1/x64/testhost.dll
+      build/netcoreapp3.1/x64/testhost.exe
+      build/netcoreapp3.1/x86/testhost.x86.dll
+      build/netcoreapp3.1/x86/testhost.x86.exe
+  minver 6.0.0
+      build/MinVer.targets
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildAssemblyVersion)' == '' Or '$(MSBuildAssemblyVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <GenerateNuspecDependsOn>$(GenerateNuspecDependsOn);MinVer</GenerateNuspecDependsOn>
+    <GetPackageVersionDependsOn>$(GetPackageVersionDependsOn);MinVer</GetPackageVersionDependsOn>
+    <MinVerMSBuildCachingPath Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)bin\net6.0\MSBuild.Caching.dll</MinVerMSBuildCachingPath>
+    <MinVerMSBuildCachingPath Condition="'$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)bin\net472\MSBuild.Caching.dll</MinVerMSBuildCachingPath>
+  </PropertyGroup>
+
+  <UsingTask TaskName="MSBuild.Caching.CacheGet" AssemblyFile="$(MinVerMSBuildCachingPath)" />
+  <UsingTask TaskName="MSBuild.Caching.CacheSet" AssemblyFile="$(MinVerMSBuildCachingPath)" />
+
+  <PropertyGroup>
+    <MinVerDetailed>low</MinVerDetailed>
+    <MinVerDetailed Condition="'$(MinVerVerbosity)' == 'detailed' Or '$(MinVerVerbosity)' == 'd' Or '$(MinVerVerbosity)' == 'diagnostic' Or '$(MinVerVerbosity)' == 'diag'">high</MinVerDetailed>
+    <MinVerTargetFramework>net6.0</MinVerTargetFramework>
+    <MinVerTargetFramework Condition="'$(MSBuildAssemblyVersion)' &gt;= '17.8'">net8.0</MinVerTargetFramework>
+    <NoWarn>$(NoWarn);NU5105</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DotNetPath>$(DOTNET_HOST_PATH)</DotNetPath>
+    <DotNetPath Condition=" '$(DotNetPath)' == '' ">dotnet</DotNetPath>
+  </PropertyGroup>
+
+  <Target Name="_MinVerClean" BeforeTargets="Clean" DependsOnTargets="MinVer" Condition="'$(GeneratePackageOnBuild)' == 'true'" />
+
+  <Target Name="MinVer" BeforeTargets="BeforeCompile;GetAssemblyVersion;CoreCompile" Condition="'$(DesignTimeBuild)' != 'true' AND '$(MinVerSkip)' != 'true'">
+    <Error Condition="'$(UsingMicrosoftNETSdk)' != 'true'" Code="MINVER0001" Text="MinVer only works in SDK-style projects." />
+    <Message Importance="$(MinVerDetailed)" Text="MinVer: [input] MSBuildProjectDirectory=$(MSBuildProjectDirectory)" />
+    <Message Importance="$(MinVerDetailed)" Text="MinVer: [input] MinVerAutoIncrement=$(MinVerAutoIncrement)" />
+    <Message Importance="$(MinVerDetailed)" Text="MinVer: [input] MinVerBuildMetadata=$(MinVerBuildMetadata)" />
+    <Message Importance="$(MinVerDetailed)" Text="MinVer: [input] MinVerDefaultPreReleaseIdentifiers=$(MinVerDefaultPreReleaseIdentifiers)" />
+    <Message Importance="$(MinVerDetailed)" Text="MinVer: [input] MinVerDefaultPreReleasePhase=$(MinVerDefaultPreReleasePhase)" />
+    <Message Importance="$(MinVerDetailed)" Text="MinVer: [input] MinVerIgnoreHeight=$(MinVerIgnoreHeight)" />
+    <Message Importance="$(MinVerDetailed)" Text="MinVer: [input] MinVerMinimumMajorMinor=$(MinVerMinimumMajorMinor)" />
+    <Message Importance="$(MinVerDetailed)" Text="MinVer: [input] MinVerTagPrefix=$(MinVerTagPrefix)" />
+    <Message Importance="$(MinVerDetailed)" Text="MinVer: [input] MinVerVerbosity=$(MinVerVerbosity)" />
+    <Message Importance="$(MinVerDetailed)" Text="MinVer: [input] MinVerVersionOverride=$(MinVerVersionOverride)" />
+    <ItemGroup>
+      <MinVerInputs Remove="@(MinVerInputs)" />
+      <MinVerConsoleOutput Remove="@(MinVerConsoleOutput)" />
+      <MinVerOutputVersion Remove="@(MinVerOutputVersion)" />
+    </ItemGroup>
+    <ItemGroup>
+      <MinVerInputs Include="--auto-increment &quot;$(MinVerAutoIncrement)&quot;" />
+      <MinVerInputs Include="--build-metadata &quot;$(MinVerBuildMetadata)&quot;" />
+      <MinVerInputs Include="--default-pre-release-identifiers &quot;$(MinVerDefaultPreReleaseIdentifiers)&quot;" />
+      <MinVerInputs Include="--default-pre-release-phase &quot;$(MinVerDefaultPreReleasePhase)&quot;" />
+      <MinVerInputs Include="--ignore-height" Condition="'$(MinVerIgnoreHeight)' == 'true'" />
+      <MinVerInputs Include="--minimum-major-minor &quot;$(MinVerMinimumMajorMinor)&quot;" />
+      <MinVerInputs Include="--tag-prefix &quot;$(MinVerTagPrefix)&quot;" />
+      <MinVerInputs Include="--verbosity &quot;$(MinVerVerbosity)&quot;" />
+      <MinVerInputs Include="--version-override &quot;$(MinVerVersionOverride)&quot;" />
+    </ItemGroup>
+    <CacheGet Key="@(MinVerInputs->'%(Identity)', ' ')"><Output TaskParameter="Value" PropertyName="MinVerVersion" /></CacheGet>
+    <Message Condition="'$(MinVerVersion)' != ''" Importance="$(MinVerDetailed)" Text="MinVer: Using cached MinVerVersion $(MinVerVersion)" />
+    <Exec Condition="'$(MinVerVersion)' == ''" Command="&quot;$(DotNetPath)&quot; &quot;$(MSBuildThisFileDirectory)bin/$(MinVerTargetFramework)/MinVer.dll&quot; &quot;$(MSBuildProjectDirectory)&quot; @(MinVerInputs->'%(Identity)', ' ')" ConsoleToMSBuild="true" StandardOutputImportance="Low" >
+      <Output TaskParameter="ConsoleOutput" ItemName="MinVerConsoleOutput" />
+    </Exec>
+    <ItemGroup Condition="'$(MinVerVersion)' == ''" >
+      <MinVerOutputVersion Include="@(MinVerConsoleOutput)" Condition="'$([System.String]::new(`%(Identity)`).StartsWith(`MinVer:`))' != 'true'" />
+    </ItemGroup>
+    <PropertyGroup Condition="'$(MinVerVersion)' == ''" >
+      <MinVerVersion>@(MinVerOutputVersion)</MinVerVersion>
+    </PropertyGroup>
+    <CacheSet Key="@(MinVerInputs->'%(Identity)', ' ')" Value="$(MinVerVersion)" />
+    <PropertyGroup>
+      <MinVerMajor>$(MinVerVersion.Split(`.`)[0])</MinVerMajor>
+      <MinVerMinor>$(MinVerVersion.Split(`.`)[1])</MinVerMinor>
+      <MinVerPatch>$(MinVerVersion.Split(`.`)[2].Split(`-`)[0].Split(`+`)[0])</MinVerPatch>
+      <MinVerPreRelease></MinVerPreRelease>
+      <MinVerPreRelease Condition="$(MinVerVersion.Split(`+`)[0].Contains(`-`))">$(MinVerVersion.Split(`+`)[0].Split(`-`, 2)[1])</MinVerPreRelease>
+      <MinVerBuildMetadata></MinVerBuildMetadata>
+      <MinVerBuildMetadata Condition="$(MinVerVersion.Contains(`+`))">$(MinVerVersion.Split(`+`, 2)[1])</MinVerBuildMetadata>
+      <AssemblyVersion>$(MinVerMajor).0.0.0</AssemblyVersion>
+      <FileVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch).0</FileVersion>
+      <InformationalVersion>$(MinVerVersion)</InformationalVersion>
+      <PackageVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</PackageVersion>
+      <PackageVersion Condition="'$(MinVerPreRelease)' != ''">$(PackageVersion)-$(MinVerPreRelease)</PackageVersion>
+      <Version>$(PackageVersion)</Version>
+    </PropertyGroup>
+    <Message Importance="$(MinVerDetailed)" Text="MinVer: [output] MinVerVersion=$(MinVerVersion)" />
+    <Message Importance="$(MinVerDetailed)" Text="MinVer: [output] MinVerMajor=$(MinVerMajor)" />
+    <Message Importance="$(MinVerDetailed)" Text="MinVer: [output] MinVerMinor=$(MinVerMinor)" />
+    <Message Importance="$(MinVerDetailed)" Text="MinVer: [output] MinVerPatch=$(MinVerPatch)" />
+    <Message Importance="$(MinVerDetailed)" Text="MinVer: [output] MinVerPreRelease=$(MinVerPreRelease)" />
+    <Message Importance="$(MinVerDetailed)" Text="MinVer: [output] MinVerBuildMetadata=$(MinVerBuildMetadata)" />
+    <Message Importance="$(MinVerDetailed)" Text="MinVer: [output] AssemblyVersion=$(AssemblyVersion)" />
+    <Message Importance="$(MinVerDetailed)" Text="MinVer: [output] FileVersion=$(FileVersion)" />
+    <Message Importance="$(MinVerDetailed)" Text="MinVer: [output] InformationalVersion=$(InformationalVersion)" />
+    <Message Importance="$(MinVerDetailed)" Text="MinVer: [output] PackageVersion=$(PackageVersion)" />
+    <Message Importance="$(MinVerDetailed)" Text="MinVer: [output] Version=$(Version)" />
+  </Target>
+
+</Project>
+
+      build/bin/net472/MSBuild.Caching.dll
+      build/bin/net6.0/MSBuild.Caching.dll
+      build/bin/net6.0/McMaster.Extensions.CommandLineUtils.dll
+      build/bin/net6.0/MinVer
+      build/bin/net6.0/MinVer.Lib.dll
+      build/bin/net6.0/MinVer.deps.json
+      build/bin/net6.0/MinVer.dll
+      build/bin/net6.0/MinVer.runtimeconfig.json
+      build/bin/net6.0/NuGet.Versioning.dll
+      build/bin/net8.0/McMaster.Extensions.CommandLineUtils.dll
+      build/bin/net8.0/MinVer
+      build/bin/net8.0/MinVer.Lib.dll
+      build/bin/net8.0/MinVer.deps.json
+      build/bin/net8.0/MinVer.dll
+      build/bin/net8.0/MinVer.runtimeconfig.json
+      build/bin/net8.0/NuGet.Versioning.dll
+      buildMultiTargeting/MinVer.targets
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildAssemblyVersion)' == '' Or '$(MSBuildAssemblyVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+  </PropertyGroup>
+  <Import Project="../build/MinVer.targets" />
+</Project>
+
+  polysharp 1.15.0
+      analyzers/dotnet/cs/PolySharp.SourceGenerators.dll
+      build/PolySharp.targets
+<Project>
+
+  <!-- Get the analyzer from the PolySharp NuGet package -->
+  <Target Name="_PolySharpGatherAnalyzers">
+    <ItemGroup>
+      <_PolySharpAnalyzer Include="@(Analyzer)" Condition="'%(Analyzer.NuGetPackageId)' == 'PolySharp'" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Remove the analyzer if using Roslyn < 4.3 (PolySharp's generators require Roslyn 4.3) -->
+  <Target Name="_PolySharpRemoveAnalyzersForRoslyn3"
+          Condition="'$(CSharpCoreTargetsPath)' != ''"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_PolySharpGatherAnalyzers">
+
+    <!--
+      Use the CSharpCoreTargetsPath property to find the version of the compiler we are using. This is the same mechanism
+      MSBuild uses to find the compiler. We could check the assembly version for any compiler assembly (since they all have
+      the same version) but Microsoft.Build.Tasks.CodeAnalysis.dll is where MSBuild loads the compiler tasks from so if
+      someone is getting creative with msbuild tasks/targets this is the "most correct" assembly to check.
+    -->
+    <GetAssemblyIdentity AssemblyFiles="$([System.IO.Path]::Combine(`$([System.IO.Path]::GetDirectoryName($(CSharpCoreTargetsPath)))`,`Microsoft.Build.Tasks.CodeAnalysis.dll`))">
+      <Output TaskParameter="Assemblies" ItemName="PolySharpCurrentCompilerAssemblyIdentity"/>
+    </GetAssemblyIdentity>
+
+    <PropertyGroup>
+
+      <!-- Transform the resulting item from GetAssemblyIdentity into a property representing its assembly version -->
+      <PolySharpCurrentCompilerVersion>@(PolySharpCurrentCompilerAssemblyIdentity->'%(Version)')</PolySharpCurrentCompilerVersion>
+
+      <!-- The CurrentCompilerVersionIsNotNewEnough property can now be defined based on the Roslyn assembly version -->
+      <PolySharpCurrentCompilerVersionIsNotNewEnough Condition="$([MSBuild]::VersionLessThan($(PolySharpCurrentCompilerVersion), 4.3))">true</PolySharpCurrentCompilerVersionIsNotNewEnough>
+    </PropertyGroup>
+
+    <!-- If the Roslyn version is < 4.3, disable the source generators -->
+    <ItemGroup Condition ="'$(PolySharpCurrentCompilerVersionIsNotNewEnough)' == 'true'">
+      <Analyzer Remove="@(_PolySharpAnalyzer)"/>
+    </ItemGroup>
+
+    <!--
+      If the source generators are disabled, also emit an error. This would've been produced by MSBuild itself as well, but
+      emitting this manually lets us customize the message to inform developers as to why exactly the generators have been
+      disabled, and that PolySharp will not work at all unless a more up to date IDE or compiler version are used.
+    -->
+    <Error Condition ="'$(PolySharpCurrentCompilerVersionIsNotNewEnough)' == 'true'"
+           Code="POLYSPCFG0001"
+           Text="The PolySharp source generators have been disabled on the current configuration, as they need Roslyn 4.3 in order to work. PolySharp requires the source generators to run in order to generate polyfills, so the library cannot be used without a more up to date IDE (eg. VS 2022 17.3 or greater) or .NET SDK version (.NET 6.0.400 SDK or greater)."/>  
+  </Target>
+  
+  <!-- Remove the analyzer if Roslyn is missing -->
+  <Target Name="_PolySharpRemoveAnalyzersForRosynNotFound"
+          Condition="'$(CSharpCoreTargetsPath)' == ''"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_PolySharpGatherAnalyzers">
+
+    <!-- If no Roslyn assembly could be found, just remove the analyzer without emitting a warning -->
+    <ItemGroup>
+      <Analyzer Remove="@(_PolySharpAnalyzer)"/>
+    </ItemGroup>
+  </Target>
+
+  <!--
+    Inform the user if packages.config is used (as the analyzers and the source generators
+    won't work at all). Since packages.config can only be used with legacy-style projects,
+    the entire package can be skipped if an SDK-style project is used.
+  -->
+  <Target Name="_PolySharpWarnForPackagesConfigUse"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          Condition="'$(UsingMicrosoftNetSDK)' != 'true'">
+
+    <!--
+      Check whether packages are being restored via packages.config, by reading the associated MSBuild property.
+      This happens when either the project style is using packages.config, or when explicitly requested.
+      See https://learn.microsoft.com/nuget/reference/msbuild-targets#restoring-packagereference-and-packagesconfig-projects-with-msbuild.
+    -->
+    <PropertyGroup>
+      <PolySharpIsTargetProjectUsingPackagesConfig Condition ="'$(RestorePackagesConfig)' == 'true' OR '$(RestoreProjectStyle)' == 'PackagesConfig'">true</PolySharpIsTargetProjectUsingPackagesConfig>
+    </PropertyGroup>
+
+    <!--
+      If no packages.config properties are set, also try to manually find the packages.config file.
+      This will be in the @(None) elements, if present. Doing so makes sure this works in builds as
+      well, since the implicit targets populating the properties above only run when restoring.
+      Since the packages.config file will always be in the root of the project, if present, we will
+      match with the full item spec (see https://learn.microsoft.com/nuget/reference/packages-config).
+    -->
+    <FindInList ItemSpecToFind="packages.config"
+                List="@(None)"
+                MatchFileNameOnly="false"
+                Condition="'$(PolySharpIsTargetProjectUsingPackagesConfig)' != 'true'">
+      <Output TaskParameter="ItemFound" PropertyName="PolySharpPackagesConfigFile"/>
+    </FindInList>
+
+    <!-- Make sure to update the MSBuild property if the above task did find something -->
+    <PropertyGroup>
+      <PolySharpIsTargetProjectUsingPackagesConfig Condition ="'$(PolySharpPackagesConfigFile)' == 'packages.config'">true</PolySharpIsTargetProjectUsingPackagesConfig>
+    </PropertyGroup>
+
+    <!-- Emit a warning in case packages.config is used -->
+    <Warning Condition ="'$(PolySharpIsTargetProjectUsingPackagesConfig)' == 'true'"
+             Code="POLYSPCFG0002"
+             Text="The PolySharp source generators might not be loaded correctly, as the current project is using the packages.config setup to restore NuGet packages. Source generators require PackageReference to be used (either in a legacy-style or SDK-style .csproj project, both are supported as long as PackageReference is used)."/>
+  </Target>
+
+  <!-- Configure the MSBuild properties used to control PolySharp's generator -->
+  <Target Name="ConfigurePolySharpMSBuildProperties"
+          BeforeTargets="PrepareForBuild">
+
+    <!-- Mark the MSBuild properties to configure the generator visible for the compiler, so the analyzer can see them -->
+    <ItemGroup>
+      <CompilerVisibleProperty Include="PolySharpUsePublicAccessibilityForGeneratedTypes"/>
+      <CompilerVisibleProperty Include="PolySharpIncludeRuntimeSupportedAttributes"/>
+      <CompilerVisibleProperty Include="PolySharpUseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute"/>
+      <CompilerVisibleProperty Include="PolySharpExcludeGeneratedTypes"/>
+      <CompilerVisibleProperty Include="PolySharpIncludeGeneratedTypes"/>
+      <CompilerVisibleProperty Include="PolySharpExcludeTypeForwardedToDeclarations"/>
+    </ItemGroup>
+
+    <!-- Adds necessary fixups for multiline properties (replaces ';' characters with ',' and strip new lines) -->
+    <PropertyGroup>
+      <PolySharpExcludeGeneratedTypes>$([System.Text.RegularExpressions.Regex]::Replace($(PolySharpExcludeGeneratedTypes.Replace(';', ',')), '[\r\n]', ''))</PolySharpExcludeGeneratedTypes>
+      <PolySharpIncludeGeneratedTypes>$([System.Text.RegularExpressions.Regex]::Replace($(PolySharpIncludeGeneratedTypes.Replace(';', ',')), '[\r\n]', ''))</PolySharpIncludeGeneratedTypes>
+    </PropertyGroup>
+  </Target>
+
+</Project>
+
+      buildTransitive/PolySharp.targets
+<Project>
+
+  <!-- Get the analyzer from the PolySharp NuGet package -->
+  <Target Name="_PolySharpGatherAnalyzers">
+    <ItemGroup>
+      <_PolySharpAnalyzer Include="@(Analyzer)" Condition="'%(Analyzer.NuGetPackageId)' == 'PolySharp'" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Remove the analyzer if using Roslyn < 4.3 (PolySharp's generators require Roslyn 4.3) -->
+  <Target Name="_PolySharpRemoveAnalyzersForRoslyn3"
+          Condition="'$(CSharpCoreTargetsPath)' != ''"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_PolySharpGatherAnalyzers">
+
+    <!--
+      Use the CSharpCoreTargetsPath property to find the version of the compiler we are using. This is the same mechanism
+      MSBuild uses to find the compiler. We could check the assembly version for any compiler assembly (since they all have
+      the same version) but Microsoft.Build.Tasks.CodeAnalysis.dll is where MSBuild loads the compiler tasks from so if
+      someone is getting creative with msbuild tasks/targets this is the "most correct" assembly to check.
+    -->
+    <GetAssemblyIdentity AssemblyFiles="$([System.IO.Path]::Combine(`$([System.IO.Path]::GetDirectoryName($(CSharpCoreTargetsPath)))`,`Microsoft.Build.Tasks.CodeAnalysis.dll`))">
+      <Output TaskParameter="Assemblies" ItemName="PolySharpCurrentCompilerAssemblyIdentity"/>
+    </GetAssemblyIdentity>
+
+    <PropertyGroup>
+
+      <!-- Transform the resulting item from GetAssemblyIdentity into a property representing its assembly version -->
+      <PolySharpCurrentCompilerVersion>@(PolySharpCurrentCompilerAssemblyIdentity->'%(Version)')</PolySharpCurrentCompilerVersion>
+
+      <!-- The CurrentCompilerVersionIsNotNewEnough property can now be defined based on the Roslyn assembly version -->
+      <PolySharpCurrentCompilerVersionIsNotNewEnough Condition="$([MSBuild]::VersionLessThan($(PolySharpCurrentCompilerVersion), 4.3))">true</PolySharpCurrentCompilerVersionIsNotNewEnough>
+    </PropertyGroup>
+
+    <!-- If the Roslyn version is < 4.3, disable the source generators -->
+    <ItemGroup Condition ="'$(PolySharpCurrentCompilerVersionIsNotNewEnough)' == 'true'">
+      <Analyzer Remove="@(_PolySharpAnalyzer)"/>
+    </ItemGroup>
+
+    <!--
+      If the source generators are disabled, also emit an error. This would've been produced by MSBuild itself as well, but
+      emitting this manually lets us customize the message to inform developers as to why exactly the generators have been
+      disabled, and that PolySharp will not work at all unless a more up to date IDE or compiler version are used.
+    -->
+    <Error Condition ="'$(PolySharpCurrentCompilerVersionIsNotNewEnough)' == 'true'"
+           Code="POLYSPCFG0001"
+           Text="The PolySharp source generators have been disabled on the current configuration, as they need Roslyn 4.3 in order to work. PolySharp requires the source generators to run in order to generate polyfills, so the library cannot be used without a more up to date IDE (eg. VS 2022 17.3 or greater) or .NET SDK version (.NET 6.0.400 SDK or greater)."/>  
+  </Target>
+  
+  <!-- Remove the analyzer if Roslyn is missing -->
+  <Target Name="_PolySharpRemoveAnalyzersForRosynNotFound"
+          Condition="'$(CSharpCoreTargetsPath)' == ''"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_PolySharpGatherAnalyzers">
+
+    <!-- If no Roslyn assembly could be found, just remove the analyzer without emitting a warning -->
+    <ItemGroup>
+      <Analyzer Remove="@(_PolySharpAnalyzer)"/>
+    </ItemGroup>
+  </Target>
+
+  <!--
+    Inform the user if packages.config is used (as the analyzers and the source generators
+    won't work at all). Since packages.config can only be used with legacy-style projects,
+    the entire package can be skipped if an SDK-style project is used.
+  -->
+  <Target Name="_PolySharpWarnForPackagesConfigUse"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          Condition="'$(UsingMicrosoftNetSDK)' != 'true'">
+
+    <!--
+      Check whether packages are being restored via packages.config, by reading the associated MSBuild property.
+      This happens when either the project style is using packages.config, or when explicitly requested.
+      See https://learn.microsoft.com/nuget/reference/msbuild-targets#restoring-packagereference-and-packagesconfig-projects-with-msbuild.
+    -->
+    <PropertyGroup>
+      <PolySharpIsTargetProjectUsingPackagesConfig Condition ="'$(RestorePackagesConfig)' == 'true' OR '$(RestoreProjectStyle)' == 'PackagesConfig'">true</PolySharpIsTargetProjectUsingPackagesConfig>
+    </PropertyGroup>
+
+    <!--
+      If no packages.config properties are set, also try to manually find the packages.config file.
+      This will be in the @(None) elements, if present. Doing so makes sure this works in builds as
+      well, since the implicit targets populating the properties above only run when restoring.
+      Since the packages.config file will always be in the root of the project, if present, we will
+      match with the full item spec (see https://learn.microsoft.com/nuget/reference/packages-config).
+    -->
+    <FindInList ItemSpecToFind="packages.config"
+                List="@(None)"
+                MatchFileNameOnly="false"
+                Condition="'$(PolySharpIsTargetProjectUsingPackagesConfig)' != 'true'">
+      <Output TaskParameter="ItemFound" PropertyName="PolySharpPackagesConfigFile"/>
+    </FindInList>
+
+    <!-- Make sure to update the MSBuild property if the above task did find something -->
+    <PropertyGroup>
+      <PolySharpIsTargetProjectUsingPackagesConfig Condition ="'$(PolySharpPackagesConfigFile)' == 'packages.config'">true</PolySharpIsTargetProjectUsingPackagesConfig>
+    </PropertyGroup>
+
+    <!-- Emit a warning in case packages.config is used -->
+    <Warning Condition ="'$(PolySharpIsTargetProjectUsingPackagesConfig)' == 'true'"
+             Code="POLYSPCFG0002"
+             Text="The PolySharp source generators might not be loaded correctly, as the current project is using the packages.config setup to restore NuGet packages. Source generators require PackageReference to be used (either in a legacy-style or SDK-style .csproj project, both are supported as long as PackageReference is used)."/>
+  </Target>
+
+  <!-- Configure the MSBuild properties used to control PolySharp's generator -->
+  <Target Name="ConfigurePolySharpMSBuildProperties"
+          BeforeTargets="PrepareForBuild">
+
+    <!-- Mark the MSBuild properties to configure the generator visible for the compiler, so the analyzer can see them -->
+    <ItemGroup>
+      <CompilerVisibleProperty Include="PolySharpUsePublicAccessibilityForGeneratedTypes"/>
+      <CompilerVisibleProperty Include="PolySharpIncludeRuntimeSupportedAttributes"/>
+      <CompilerVisibleProperty Include="PolySharpUseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute"/>
+      <CompilerVisibleProperty Include="PolySharpExcludeGeneratedTypes"/>
+      <CompilerVisibleProperty Include="PolySharpIncludeGeneratedTypes"/>
+      <CompilerVisibleProperty Include="PolySharpExcludeTypeForwardedToDeclarations"/>
+    </ItemGroup>
+
+    <!-- Adds necessary fixups for multiline properties (replaces ';' characters with ',' and strip new lines) -->
+    <PropertyGroup>
+      <PolySharpExcludeGeneratedTypes>$([System.Text.RegularExpressions.Regex]::Replace($(PolySharpExcludeGeneratedTypes.Replace(';', ',')), '[\r\n]', ''))</PolySharpExcludeGeneratedTypes>
+      <PolySharpIncludeGeneratedTypes>$([System.Text.RegularExpressions.Regex]::Replace($(PolySharpIncludeGeneratedTypes.Replace(';', ',')), '[\r\n]', ''))</PolySharpIncludeGeneratedTypes>
+    </PropertyGroup>
+  </Target>
+
+</Project>
+
+  shouldly 4.2.1
+      buildTransitive/Shouldly.targets
+<Project>
+    <UsingTask TaskName="SetEnvVar" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)/Microsoft.Build.Tasks.Core.dll" >
+        <ParameterGroup>
+            <EnvName ParameterType="System.String" Required="true" />
+            <EnvValue ParameterType="System.String" Required="true" />
+        </ParameterGroup>
+        <Task>
+            <Using Namespace="System" />
+            <Code Type="Fragment" Language="cs"><![CDATA[
+                System.Environment.SetEnvironmentVariable(EnvName, EnvValue);
+            ]]></Code>
+        </Task>
+    </UsingTask>
+    
+    <!--
+        This target is used to capture the PathMap value when building the project. The PathMap is used by Shouldly to map paths
+        in stack traces to the source files. The PathMap is written to a file and read by the SetShouldlyPathMaps target.
+        When VSTestNoBuild is not true, then VSTest has inititiated the build so the SetShouldlyPathMaps target has already started,
+        so we need to set the SHOULDLY_SOURCE_PATH_MAP environment variable here.
+    -->
+    <Target Name="CapturePathMapsForShouldly" BeforeTargets="CoreCompile" DependsOnTargets="_SetPathMapFromSourceRoots" Condition=" '$(DisableShouldlyPathMaps)' != 'true' AND '$(DeterministicSourcePaths)' == 'true' " >
+        <PropertyGroup>
+            <_ShouldlyPathMapsFilePath>$([MSBuild]::EnsureTrailingSlash('$(OutputPath)'))ShouldlyPathMaps_$(AssemblyName)</_ShouldlyPathMapsFilePath>
+        </PropertyGroup>
+        <WriteLinesToFile File="$(_ShouldlyPathMapsFilePath)" Lines="$(PathMap)" Overwrite="true" Encoding="Unicode" Condition=" '$(PathMap)' != '' " WriteOnlyWhenDifferent="true" />
+        <ItemGroup>
+            <FileWrites Include="$(_ShouldlyPathMapsFilePath)" Condition=" '$(PathMap)' != '' " />
+        </ItemGroup>
+        <SetEnvVar EnvName="SHOULDLY_SOURCE_PATH_MAP" EnvValue="$(PathMap)" Condition=" '$(VSTestNoBuild)' != 'true' " />
+    </Target>
+    
+    <!--
+        This target is used to set the SHOULDLY_SOURCE_PATH_MAP environment variable when running tests with VSTestNoBuild=true.
+        This is necessary because the VSTest task does not run the CoreCompile target, so the PathMap is not set.    
+    -->
+    <Target Name="SetShouldlyPathMaps" BeforeTargets="VSTest" Condition=" '$(DisableShouldlyPathMaps)' != 'true' AND '$(VSTestNoBuild)' == 'true' ">
+        <PropertyGroup>
+            <_ShouldlyPathMapsFilePath>$([MSBuild]::EnsureTrailingSlash('$(OutputPath)'))ShouldlyPathMaps_$(AssemblyName)</_ShouldlyPathMapsFilePath>
+        </PropertyGroup>
+        <ReadLinesFromFile File="$(_ShouldlyPathMapsFilePath)">
+            <Output TaskParameter="Lines" ItemName="_ShouldlyPathMaps" />
+        </ReadLinesFromFile>
+        <PropertyGroup>
+            <ShouldlyPathMaps>%(_ShouldlyPathMaps.Identity)</ShouldlyPathMaps>
+        </PropertyGroup>
+        <SetEnvVar EnvName="SHOULDLY_SOURCE_PATH_MAP" EnvValue="$(ShouldlyPathMaps)" Condition=" '$(ShouldlyPathMaps)' != '' " />
+    </Target>
+</Project>
+
+  system.clientmodel 1.5.1
+      analyzers/dotnet/cs/System.ClientModel.SourceGeneration.dll
+  system.codedom 6.0.0
+      buildTransitive/netcoreapp2.0/System.CodeDom.targets
+<Project InitialTargets="NETStandardCompatError_System_CodeDom_netcoreapp3_1">
+  <Target Name="NETStandardCompatError_System_CodeDom_netcoreapp3_1"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Error Text="System.CodeDom doesn't support $(TargetFramework). Consider updating your TargetFramework to netcoreapp3.1 or later." />
+  </Target>
+</Project>
+
+      buildTransitive/netcoreapp3.1/_._
+  system.configuration.configurationmanager 9.0.4
+      buildTransitive/net461/System.Configuration.ConfigurationManager.targets
+<Project InitialTargets="NETStandardCompatError_System_Configuration_ConfigurationManager_net462">
+  <Target Name="NETStandardCompatError_System_Configuration_ConfigurationManager_net462"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="System.Configuration.ConfigurationManager 9.0.4 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net462 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/System.Configuration.ConfigurationManager.targets
+<Project InitialTargets="NETStandardCompatError_System_Configuration_ConfigurationManager_net8_0">
+  <Target Name="NETStandardCompatError_System_Configuration_ConfigurationManager_net8_0"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="System.Configuration.ConfigurationManager 9.0.4 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net8.0 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+  system.diagnostics.eventlog 9.0.4
+      buildTransitive/net461/System.Diagnostics.EventLog.targets
+<Project InitialTargets="NETStandardCompatError_System_Diagnostics_EventLog_net462">
+  <Target Name="NETStandardCompatError_System_Diagnostics_EventLog_net462"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="System.Diagnostics.EventLog 9.0.4 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net462 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/System.Diagnostics.EventLog.targets
+<Project InitialTargets="NETStandardCompatError_System_Diagnostics_EventLog_net8_0">
+  <Target Name="NETStandardCompatError_System_Diagnostics_EventLog_net8_0"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="System.Diagnostics.EventLog 9.0.4 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net8.0 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+  system.management 6.0.1
+      buildTransitive/netcoreapp2.0/System.Management.targets
+<Project InitialTargets="NETStandardCompatError_System_Management_netcoreapp3_1">
+  <Target Name="NETStandardCompatError_System_Management_netcoreapp3_1"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Error Text="System.Management doesn't support $(TargetFramework). Consider updating your TargetFramework to netcoreapp3.1 or later." />
+  </Target>
+</Project>
+
+      buildTransitive/netcoreapp3.1/_._
+  system.memory.data 8.0.1
+      buildTransitive/net461/System.Memory.Data.targets
+<Project InitialTargets="NETStandardCompatError_System_Memory_Data_net462">
+  <Target Name="NETStandardCompatError_System_Memory_Data_net462"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="System.Memory.Data 8.0.1 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net462 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/net462/_._
+      buildTransitive/net6.0/_._
+      buildTransitive/netcoreapp2.0/System.Memory.Data.targets
+<Project InitialTargets="NETStandardCompatError_System_Memory_Data_net6_0">
+  <Target Name="NETStandardCompatError_System_Memory_Data_net6_0"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="System.Memory.Data 8.0.1 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net6.0 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+  system.security.cryptography.pkcs 10.0.13
+      buildTransitive/net461/System.Security.Cryptography.Pkcs.targets
+<Project InitialTargets="NETStandardCompatError_System_Security_Cryptography_Pkcs_net462">
+  <Target Name="NETStandardCompatError_System_Security_Cryptography_Pkcs_net462"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="System.Security.Cryptography.Pkcs 10.0.13 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net462 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/System.Security.Cryptography.Pkcs.targets
+<Project InitialTargets="NETStandardCompatError_System_Security_Cryptography_Pkcs_net8_0">
+  <Target Name="NETStandardCompatError_System_Security_Cryptography_Pkcs_net8_0"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="System.Security.Cryptography.Pkcs 10.0.13 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net8.0 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+  system.security.cryptography.protecteddata 9.0.4
+      buildTransitive/net461/System.Security.Cryptography.ProtectedData.targets
+<Project InitialTargets="NETStandardCompatError_System_Security_Cryptography_ProtectedData_net462">
+  <Target Name="NETStandardCompatError_System_Security_Cryptography_ProtectedData_net462"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="System.Security.Cryptography.ProtectedData 9.0.4 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net462 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/System.Security.Cryptography.ProtectedData.targets
+<Project InitialTargets="NETStandardCompatError_System_Security_Cryptography_ProtectedData_net8_0">
+  <Target Name="NETStandardCompatError_System_Security_Cryptography_ProtectedData_net8_0"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="System.Security.Cryptography.ProtectedData 9.0.4 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net8.0 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+  xunit.analyzers 1.16.0
+      analyzers/dotnet/cs/xunit.analyzers.dll
+      analyzers/dotnet/cs/xunit.analyzers.fixes.dll
+  xunit.core 2.9.2
+      build/xunit.core.props
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <ItemGroup>
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <DebugSymbols>true</DebugSymbols>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <!-- Support for importing props via the runner -->
+  <Import Condition=" '$(_Xunit_ImportPropsFile)' != '' " Project="$(_Xunit_ImportPropsFile)" />
+
+</Project>
+
+      build/xunit.core.targets
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Desktop CLR needs auto-generated binding redirects (and full PDBs for TPv1) -->
+  <PropertyGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <DebugType Condition=" '$(DebugType)' == '' ">full</DebugType>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+  </PropertyGroup>
+
+  <!-- .NET Core need .deps.json and .runtimeconfig.json files (and portable PDBs for TPv2) -->
+  <PropertyGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETCoreApp' ">
+    <DebugType Condition=" '$(DebugType)' == '' ">portable</DebugType>
+    <GenerateDependencyFile>true</GenerateDependencyFile>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+  </PropertyGroup>
+
+  <!-- Support for importing targets via the runner -->
+  <Import Condition=" '$(_Xunit_ImportTargetsFile)' != '' " Project="$(_Xunit_ImportTargetsFile)" />
+
+</Project>
+
+      buildMultiTargeting/xunit.core.props
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <ItemGroup>
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <DebugSymbols>true</DebugSymbols>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <!-- Support for importing props via the runner -->
+  <Import Condition=" '$(_Xunit_ImportPropsFile)' != '' " Project="$(_Xunit_ImportPropsFile)" />
+
+</Project>
+
+      buildMultiTargeting/xunit.core.targets
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Desktop CLR needs auto-generated binding redirects (and full PDBs for TPv1) -->
+  <PropertyGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <DebugType Condition=" '$(DebugType)' == '' ">full</DebugType>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+  </PropertyGroup>
+
+  <!-- .NET Core need .deps.json and .runtimeconfig.json files (and portable PDBs for TPv2) -->
+  <PropertyGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETCoreApp' ">
+    <DebugType Condition=" '$(DebugType)' == '' ">portable</DebugType>
+    <GenerateDependencyFile>true</GenerateDependencyFile>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+  </PropertyGroup>
+
+  <!-- Support for importing targets via the runner -->
+  <Import Condition=" '$(_Xunit_ImportTargetsFile)' != '' " Project="$(_Xunit_ImportTargetsFile)" />
+
+</Project>
+
+  xunit.runner.visualstudio 2.8.2
+      build/net462/xunit.abstractions.dll
+      build/net462/xunit.runner.reporters.net452.dll
+      build/net462/xunit.runner.utility.net452.dll
+      build/net462/xunit.runner.visualstudio.props
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)xunit.runner.visualstudio.testadapter.dll">
+      <Link>xunit.runner.visualstudio.testadapter.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)xunit.abstractions.dll">
+      <Link>xunit.abstractions.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)xunit.runner.reporters.net452.dll">
+      <Link>xunit.runner.reporters.net452.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)xunit.runner.utility.net452.dll">
+      <Link>xunit.runner.utility.net452.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>
+</Project>
+
+      build/net462/xunit.runner.visualstudio.testadapter.dll
+      build/net6.0/xunit.abstractions.dll
+      build/net6.0/xunit.runner.reporters.netcoreapp10.dll
+      build/net6.0/xunit.runner.utility.netcoreapp10.dll
+      build/net6.0/xunit.runner.visualstudio.props
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)xunit.runner.visualstudio.testadapter.dll">
+      <Link>xunit.runner.visualstudio.testadapter.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)xunit.runner.reporters.netcoreapp10.dll">
+      <Link>xunit.runner.reporters.netcoreapp10.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)xunit.runner.utility.netcoreapp10.dll">
+      <Link>xunit.runner.utility.netcoreapp10.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>
+</Project>
+
+      build/net6.0/xunit.runner.visualstudio.testadapter.dll
+Output:
+Build started at 18:41:39...
+1>------ Build started: Project: AutoMapper, Configuration: Debug ------
+1>System.Runtime.CompilerServices.IsExternalInit.g.cs(4,12): error CS0729: Type 'IsExternalInit' is defined in this assembly, but a type forwarder is specified for it
+2>------ Build started: Project: AutoMapper.DI.Tests, Configuration: Debug ------
+3>------ Build started: Project: Benchmark, Configuration: Debug ------
+4>------ Build started: Project: AutoMapper.IntegrationTests, Configuration: Debug ------
+5>------ Build started: Project: TestApp, Configuration: Debug ------
+6>------ Build started: Project: AutoMapper.UnitTests, Configuration: Debug ------
+========== Build: 0 succeeded, 6 failed ==========
+
