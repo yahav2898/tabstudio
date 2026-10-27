@@ -141,7 +141,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         _compiler.Warmed += OnCompilerWarmed;
         UpdateThermal();
         GitChanges = CreateGitChanges(gitHubAccount, browser);
-        WebPreview = new WebPreviewViewModel(webViews ?? new NoWebViewFactory(), browser ?? new TopLevelStoragePicker());
+        WebPreview = new WebPreviewViewModel(webViews ?? new NoWebViewFactory(), browser ?? new TopLevelStoragePicker(), new PreviewZoomStore(paths));
         _serverBrowser = browser ?? new TopLevelStoragePicker();
         InitializeDebugging();
         InitializeTests();
