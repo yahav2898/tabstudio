@@ -39,6 +39,12 @@ public sealed class RealRepositoryTests
         var only = Environment.GetEnvironmentVariable("TABSTUDIO_REAL_REPOS_ONLY")?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         foreach (var repository in manifest["repositories"]!.AsArray().Where(r => only is null || only.Contains(r!["name"]!.GetValue<string>(), StringComparer.OrdinalIgnoreCase)))
         {
+            // Python, Java and Rust repositories run in the test below.
+            if (repository!["toolchain"] is not null)
+            {
+                continue;
+            }
+
             var name = repository!["name"]!.GetValue<string>();
             var baseline = repository["maxErrors"]?.GetValue<int>();
             var solution = Path.Combine(clones, name, repository["solution"]!.GetValue<string>().Replace('/', Path.DirectorySeparatorChar));
@@ -80,6 +86,192 @@ public sealed class RealRepositoryTests
         await File.WriteAllTextAsync(Path.Combine(output, "summary.md"), summary.ToString());
         await File.WriteAllTextAsync(Path.Combine(output, "results.json"), results.ToJsonString(new JsonSerializerOptions { WriteIndented = true }));
         Assert.True(problems.Count == 0, string.Join('\n', problems) + "\n\n" + summary);
+    }
+
+    /// <summary>
+    /// Opens the pinned Python, Java and Rust repositories as a person would: the project setup installs their
+    /// toolchains' packages, and Ctrl+F5 builds and runs the startup project. A web app must answer its first page
+    /// in the web preview; a command-line program must exit with code 0. Each repository's report has the setup
+    /// log, the Output panel and screenshots.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task Pinned_Python_Java_and_Rust_repositories_set_up_build_and_start_their_programs()
+    {
+        var clones = Environment.GetEnvironmentVariable("TABSTUDIO_REAL_REPOS");
+        if (string.IsNullOrEmpty(clones))
+        {
+            return;
+        }
+
+        var output = Environment.GetEnvironmentVariable("TABSTUDIO_REAL_REPOS_OUT") ?? Path.Combine(clones, "reports");
+        Directory.CreateDirectory(output);
+        var manifest = JsonNode.Parse(await File.ReadAllTextAsync(Path.Combine(RepositoryRoot(), "build", "ci", "real-repos.json")))!;
+        var problems = new List<string>();
+        var summary = new StringBuilder("| Repository | Toolchain | Startup project | Program | Result | Time |\n| --- | --- | --- | --- | --- | --- |\n");
+        foreach (var repository in manifest["repositories"]!.AsArray())
+        {
+            if (repository!["toolchain"]?.GetValue<string>() is not { } toolchain)
+            {
+                continue;
+            }
+
+            var name = repository["name"]!.GetValue<string>();
+            var expected = new ProgramExpectation(
+                toolchain,
+                repository["program"]!.GetValue<string>(),
+                repository["web"]?.GetValue<string>(),
+                repository["expect"]?.GetValue<string>());
+            var report = new StringBuilder().AppendLine(CultureInfo.InvariantCulture, $"{name} at {repository["sha"]!.GetValue<string>()}");
+            RunOutcome outcome;
+            try
+            {
+                outcome = await OpenAndRunAsync(Path.Combine(clones, name), name, expected, report);
+            }
+            catch (Exception ex) when (ex is not OutOfMemoryException)
+            {
+                report.AppendLine(CultureInfo.InvariantCulture, $"EXCEPTION: {ex}");
+                outcome = new RunOutcome(null, null, ex.GetType().Name + ": " + ex.Message, TimeSpan.Zero);
+            }
+
+            await File.WriteAllTextAsync(Path.Combine(output, name + ".txt"), report.ToString());
+            summary.Append(CultureInfo.InvariantCulture, $"| {name} | {toolchain} | {outcome.Startup ?? "none"} | {outcome.Program ?? "none"} | {outcome.Problem ?? "started"} | {outcome.Duration.TotalSeconds:F0} s |\n");
+            if (outcome.Problem is { } problem)
+            {
+                problems.Add($"{name}: {problem}; see {name}.txt.");
+            }
+        }
+
+        await File.WriteAllTextAsync(Path.Combine(output, "summary-polyglot.md"), summary.ToString());
+        Assert.True(problems.Count == 0, string.Join('\n', problems) + "\n\n" + summary);
+    }
+
+    private sealed record ProgramExpectation(string Toolchain, string Program, string? Web, string? Text);
+
+    private sealed record RunOutcome(string? Startup, string? Program, string? Problem, TimeSpan Duration);
+
+    private static async Task<RunOutcome> OpenAndRunAsync(string folder, string name, ProgramExpectation expected, StringBuilder report)
+    {
+        using var fixture = new WorkspaceFixture();
+        var workspace = fixture.Workspace;
+        var window = new Window { Width = 1280, Height = 800, Content = new WorkspaceView { DataContext = workspace } };
+        window.Show();
+        var clock = System.Diagnostics.Stopwatch.StartNew();
+        Task? run = null;
+        try
+        {
+            await workspace.LoadAsync(folder);
+            await UiTestHelpers.WaitUntilAsync(() => workspace.State != IdeState.Busy, TimeSpan.FromMinutes(5), "the load");
+            report.AppendLine("Toolchain projects:");
+            foreach (var project in workspace.ToolchainProjects)
+            {
+                report.AppendLine(CultureInfo.InvariantCulture, $"  {project.Toolchain.Id}: {project.Project.MarkerPath ?? project.Project.Directory}");
+            }
+
+            var startup = workspace.ToolchainProjects.FirstOrDefault(p => p.Info.FilePath == workspace.StartupProject?.FilePath);
+            report.AppendLine(CultureInfo.InvariantCulture, $"Startup project: {startup?.Toolchain.Id} {workspace.StartupProject?.FilePath}");
+            if (startup?.Toolchain.Id != expected.Toolchain)
+            {
+                return new RunOutcome(startup?.Toolchain.Id, null, $"the startup project is {startup?.Toolchain.Id ?? "none"}, not {expected.Toolchain}", clock.Elapsed);
+            }
+
+            await UiTestHelpers.WaitUntilAsync(() => workspace.ProjectSetupTask.IsCompleted && !workspace.IsSettingUpProjects, TimeSpan.FromMinutes(20), "the project setup");
+            report.AppendLine(CultureInfo.InvariantCulture, $"Set up in {clock.Elapsed.TotalSeconds:F1} s");
+            UiTestHelpers.SaveScreenshot(window, $"real-{name}-1-set-up");
+            if (workspace.ToolchainNotice is { } notice)
+            {
+                report.AppendLine(CultureInfo.InvariantCulture, $"Notice: {notice.Title}: {notice.Message}");
+            }
+
+            clock.Restart();
+            run = workspace.RunCommand.ExecuteAsync(null);
+            string? problem = null;
+            if (expected.Web is { } path)
+            {
+                await UiTestHelpers.WaitUntilAsync(() => workspace.ServerNotice is not null || run.IsCompleted, TimeSpan.FromMinutes(25), "the program to listen");
+                if (workspace.ServerNotice is not { } server)
+                {
+                    problem = "the program did not start listening";
+                }
+                else
+                {
+                    server.OpenPreview.Execute(null);
+                    Assert.True(workspace.WebPreview.IsRunning);
+                    report.AppendLine(CultureInfo.InvariantCulture, $"Web preview: {workspace.WebPreview.AppAddress}");
+                    problem = await CheckPageAsync(new Uri(workspace.WebPreview.AppAddress!, path), expected.Text, report);
+                    UiTestHelpers.SaveScreenshot(window, $"real-{name}-2-running");
+                }
+
+                if (workspace.StopCommand.CanExecute(null))
+                {
+                    workspace.StopCommand.Execute(null);
+                }
+            }
+
+            await run.WaitAsync(TimeSpan.FromMinutes(25));
+            var text = workspace.Output.Text;
+            if (expected.Web is null)
+            {
+                UiTestHelpers.SaveScreenshot(window, $"real-{name}-2-ran");
+                problem = text.Contains($"The program '{expected.Program}' has exited with code 0", StringComparison.Ordinal) ? null
+                    : $"the program '{expected.Program}' did not exit with code 0";
+                if (problem is null && expected.Text is { } output && !text.Contains(output, StringComparison.Ordinal))
+                {
+                    problem = $"the program did not print \"{output}\"";
+                }
+            }
+            else if (!text.Contains($"Running {expected.Program} with", StringComparison.Ordinal))
+            {
+                problem ??= $"the program was not called {expected.Program}";
+            }
+
+            report.AppendLine(CultureInfo.InvariantCulture, $"Ran in {clock.Elapsed.TotalSeconds:F1} s");
+            AppendTail(report, "Project setup", workspace.ProjectSetupOutput.Text);
+            AppendTail(report, "Output", text);
+            return new RunOutcome(startup!.Toolchain.Id, expected.Program, problem, clock.Elapsed);
+        }
+        finally
+        {
+            if (run is { IsCompleted: false } && workspace.StopCommand.CanExecute(null))
+            {
+                workspace.StopCommand.Execute(null);
+            }
+
+            window.Close();
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    /// <summary>Requests a page of the running app, as the web preview shows it; <see langword="null"/> when it answers as expected.</summary>
+    private static async Task<string?> CheckPageAsync(Uri address, string? expected, StringBuilder report)
+    {
+        using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(60) };
+        for (var attempt = 0; ; attempt++)
+        {
+            try
+            {
+                using var response = await http.GetAsync(address);
+                var body = await response.Content.ReadAsStringAsync();
+                report.AppendLine(CultureInfo.InvariantCulture, $"GET {address}: {(int)response.StatusCode} {response.ReasonPhrase}, {body.Length} characters");
+                if ((int)response.StatusCode >= 500)
+                {
+                    return $"{address} answered {(int)response.StatusCode}";
+                }
+
+                return expected is null || body.Contains(expected, StringComparison.Ordinal) ? null : $"{address} did not show \"{expected}\"";
+            }
+            catch (HttpRequestException ex) when (attempt < 10)
+            {
+                // The port can open a moment before the app answers.
+                report.AppendLine(CultureInfo.InvariantCulture, $"GET {address}: {ex.Message}; retrying");
+                await Task.Delay(TimeSpan.FromSeconds(3));
+            }
+        }
+    }
+
+    private static void AppendTail(StringBuilder report, string title, string text)
+    {
+        report.AppendLine(title + ":");
+        report.AppendLine(text.Length > 40000 ? text[^40000..] : text);
     }
 
     /// <param name="Served">Whether the first page was served as the repository's <c>serve</c> entry expects; <see langword="null"/> without one.</param>

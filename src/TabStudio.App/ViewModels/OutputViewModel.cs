@@ -30,6 +30,9 @@ public enum OutputKind
 
     /// <summary>A failed outcome.</summary>
     Failure,
+
+    /// <summary>A warning a program or build printed, such as <c>warning: unused variable</c>.</summary>
+    Warning,
 }
 
 /// <summary>
@@ -43,6 +46,8 @@ public enum OutputKind
 public sealed partial class OutputViewModel : ObservableObject, IConsoleSink
 {
     private static IBrush ErrorBrush => ThemeBrushes.Get("Brush.Output.Error");
+
+    private static IBrush WarningBrush => ThemeBrushes.Get("Brush.Output.Warning");
 
     private static IBrush InputBrush => ThemeBrushes.Get("Brush.Output.Input");
 
@@ -257,6 +262,7 @@ public sealed partial class OutputViewModel : ObservableObject, IConsoleSink
     private static IBrush? BrushFor(OutputKind kind) => kind switch
     {
         OutputKind.Error or OutputKind.Failure => ErrorBrush,
+        OutputKind.Warning => WarningBrush,
         OutputKind.Input => InputBrush,
         OutputKind.Info => InfoBrush,
         OutputKind.Success => SuccessBrush,

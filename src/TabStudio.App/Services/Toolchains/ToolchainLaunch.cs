@@ -47,7 +47,7 @@ internal static partial class ToolchainLaunch
         var folder = run.WorkingDirectory ?? Directory.GetCurrentDirectory();
         var properties = new JsonObject
         {
-            ["name"] = plan.EntryPoint,
+            ["name"] = plan.ProgramName,
             ["type"] = type,
             ["request"] = "launch",
             ["cwd"] = folder,
@@ -68,7 +68,7 @@ internal static partial class ToolchainLaunch
             _ => false,
         };
         return filled
-            ? new LaunchConfiguration { Name = plan.EntryPoint, Type = properties["type"]!.GetValue<string>(), Request = "launch", Properties = properties }
+            ? new LaunchConfiguration { Name = plan.ProgramName, Type = properties["type"]!.GetValue<string>(), Request = "launch", Properties = properties }
             : null;
     }
 

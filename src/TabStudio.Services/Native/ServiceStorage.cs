@@ -10,8 +10,11 @@ public sealed class ServiceStorage
 {
     private static readonly string[] SystemDirectories = ["/proc", "/dev", "/sys", "/bin", "/sbin", "/lib", "/usr/bin", "/usr/sbin", "/usr/lib"];
 
+    private readonly string _workspace;
+
     public ServiceStorage(string appStorage, string workspaceDirectory)
     {
+        _workspace = Path.GetFullPath(workspaceDirectory);
         var hash = Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(Path.GetFullPath(workspaceDirectory))))[..20];
         Root = Path.Combine(appStorage, "Services", hash);
         Directory.CreateDirectory(Root);
@@ -34,7 +37,7 @@ public sealed class ServiceStorage
                 : Path.Combine(Root, "volumes", volume.Source is { Length: > 0 } source ? Safe(source) : Safe(service.Name) + "-" + Hash(volume.Target));
             if (volume.IsBind && volume.Source is { } seed)
             {
-                if (!File.Exists(seed) && !Directory.Exists(seed)) throw new ComposeException($"Bind source does not exist: {seed}");
+                if (!File.Exists(seed) && !Directory.Exists(seed)) CreateBindSource(service, volume, seed);
                 // Bind sources are seeds, never write destinations. Read-only configuration refreshes on start.
                 if (volume.ReadOnly || (!File.Exists(storage) && !Directory.Exists(storage))) CopySeed(seed, storage);
             }
@@ -46,6 +49,21 @@ public sealed class ServiceStorage
             mounts.Add(new ProcessMount(storage, volume.Target));
         }
         return mounts;
+    }
+
+    /// <summary>
+    /// Creates a missing bind source as an empty folder, as Docker does, unless the long syntax sets
+    /// <c>create_host_path: false</c>. Only folders inside the workspace are created.
+    /// </summary>
+    private void CreateBindSource(ComposeService service, ServiceVolume volume, string source)
+    {
+        var inside = source.StartsWith(_workspace.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar, StringComparison.Ordinal);
+        var shown = inside ? Path.GetRelativePath(_workspace, source) : source;
+        if (!volume.CreateHostPath)
+            throw new ComposeException($"{service.Name}: the bind source {shown} does not exist, and the Compose file sets create_host_path: false. Create it, or remove the volume.");
+        if (!inside)
+            throw new ComposeException($"{service.Name}: the bind source {shown} does not exist. TabStudio creates missing bind folders only inside the workspace; create it, or bind a folder in the repository.");
+        Directory.CreateDirectory(source);
     }
 
     private static void CopySeed(string source, string destination)

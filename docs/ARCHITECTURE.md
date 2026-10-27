@@ -681,6 +681,30 @@ install and lock. `NodeWorkspaces.DependencyOwner` shares installation at a decl
 removing member run targets. F5 awaits setup; saves during installation queue another pass, and status-bar/Output
 progress is cancellable. Remote workspaces and unrelated .NET-only workspaces do not start this setup path.
 
+**Python versions and native packages.** Before creating a project's `.venv`, `PythonVersionRequest` reads the
+version the project asks for, from the first of `.python-version`, `runtime.txt`, `pyproject.toml`'s
+`requires-python` (or Poetry's `python`), `Pipfile`'s `[requires]` and a `Dockerfile`'s `FROM python:X`, as a
+`PythonVersionRange`. Within it, `PythonWheels` reads the pinned releases of `requirements.txt` from PyPI's JSON API
+and finds the newest Python on which each installs from a wheel for this platform (musl on the tablet), since a
+package with platform wheels only up to some version is compiled on newer ones: microblog's pins resolve to 3.11.
+`PythonVersionChoice` takes the toolchain's own Python when it fits and otherwise creates the environment with
+`uv venv --seed --python 3.X`, installing Alpine's `uv` on first use; uv installs that CPython (its musl builds on the
+tablet). An environment left with another version by an install that never succeeded is created again; one that
+installed is never replaced. When pip has to compile a package and the build fails, `PipFailure` reads which package
+failed and what was missing (a compiler, Python's headers, `pg_config`, a named header), and the setup installs
+`build-base`, `python3-dev` and the packages `Python/python-build-packages.json` lists for that package or header
+(psycopg2: `libpq-dev`; mysqlclient: `mariadb-dev`; lxml: `libxml2-dev`, `libxslt-dev`; Pillow: `libjpeg-turbo-dev`,
+`zlib-dev`; cffi: `libffi-dev`; cryptography: `openssl-dev`), then runs pip once more. pip's own output goes to the
+**Project Setup** log of the Output panel; Build and Run shows the commands and one message that names the package,
+the cause, what TabStudio did and what helps, and the notice over the editor opens the full log.
+
+**Output colors.** `OutputClassifier` colors each line of a program's or build's output by what it says, per
+toolchain, not by the stream it came on: Cargo, pip and Gradle write progress to standard error. Compiler
+diagnostics (`error:`, `warning:`, `error[E0308]:` and their excerpt lines), build tools' levels (`[ERROR]`,
+`npm ERR!`, `FAILURE:`), log levels, Python tracebacks, Rust and Go panics and JVM and Node.js exceptions are errors or
+warnings; everything else is ordinary output. `StreamClassifier` splits arbitrary pieces of a stream into lines, so a
+prompt without a line break still appears at once.
+
 `StaticSiteDetector` recognizes an `index.html` folder without a .NET project or a Node package that runs the site.
 The app adds a `StaticWebSite` startup project. F5 starts `StaticSiteServer` from `TabStudio.Web` on loopback and
 opens the existing web preview. Its injected script receives server-sent events from save notifications: linked
@@ -717,6 +741,8 @@ rust-analyzer, Rust sources and LLDB with lldb-dap; desktops use PATH. Cargo bui
 `--message-format=json-render-diagnostics`: structured primary spans populate the Error List, and reported
 executable artifacts determine the run path, including custom target directories. With several binaries, choose
 a member startup project or open the binary's main source. rust-analyzer supplies IntelliSense and navigation.
+A Makefile beside `Cargo.toml` that only wraps Cargo (fd's `cargo build --release` target, say) is not a C/C++
+project, and a run is named after the binary Cargo built (`fd`), not the package or a build file.
 
 F5 uses LLDB DAP. Desktop programs use `runInTerminal`; on Android, LLDB launches within its own PRoot trace tree
 so emulated ptrace can see the debuggee. A private FIFO created through Android's C library carries Output-panel
@@ -726,7 +752,10 @@ and Locals, with Watch and Call Stack checked in the IDE.
 ### C and C++
 
 CMake projects, Makefiles and standalone `.c`/`.cpp` programs are startup projects; headers and build output are
-excluded. Alpine installs Clang, build-base (including make), CMake, clangd and LLDB with lldb-dap; desktops use
+excluded. `MakefileWrapper` reads a Makefile's recipes and variables: one that only runs `cargo`, `npm`, `go`,
+`dotnet` and similar tools, and never a C compiler, object rules or C sources, wraps that tool and is not a C/C++
+project. In a folder with both, a language's own manifest comes before a Makefile, so it is the default startup
+project. Programs are named after their target or binary (`RunPlan.ProgramName`), never `Makefile` or `pom.xml`. Alpine installs Clang, build-base (including make), CMake, clangd and LLDB with lldb-dap; desktops use
 PATH. CMake configures a Debug build, exports `compile_commands.json` for clangd and reports executable artifacts
 through its codemodel file API. An active source selects among several targets. Makefile projects need no special
 run target: the unique executable at the root or in `bin`, `build` or `out` runs. Ambiguous outputs need a launch
@@ -1041,7 +1070,13 @@ The processes share the device network, so daemon listen options use published l
 fail before startup; implicit collisions/privileged ports use a free unprivileged port. Final endpoints rewrite host
 fields, URIs and Redis endpoints without replacing credentials. F5 starts dependencies of the Compose application
 whose build context contains the startup project (or the devcontainer service), then supplies environment overrides
-to external processes and in-process .NET runs. `RunEnvironment` sets/restores variables under the existing
+to external processes and in-process .NET runs. Without such an application or a devcontainer's `runServices`, F5
+starts only the services `ServiceTargets` finds the run pointing at, by name or by a published localhost port, in its
+environment, `.env` files, `appsettings` and the active Spring profiles' settings; nothing is downloaded or started
+when a repository opens. Each requested service starts on its own: one that fails is marked failed with its own error
+and rolls back only the processes it started, and a service that depends on it says which. A setting one service
+cannot use (a `tmpfs` volume, an invalid port) makes only that service unsupported. A missing bind source inside the
+workspace is created as an empty folder, unless the long syntax sets `create_host_path: false`. `RunEnvironment` sets/restores variables under the existing
 `ProcessConsole` lease, including debug runs and ASP.NET Core hosts. It never edits appsettings files.
 
 `ServicesViewModel` feeds the Services tool window and its per-service logs, controls and preview links. The optional

@@ -56,6 +56,7 @@ public static partial class ComposeReader
         foreach (var (name, value) in supplied) variables[name] = value;
         var merged = new Dictionary<string, YamlMappingNode>(StringComparer.Ordinal);
         var unsupportedVolumes = new Dictionary<string, bool>(StringComparer.Ordinal);
+        var broken = new Dictionary<string, string>(StringComparer.Ordinal);
         foreach (var file in files)
         {
             if (!File.Exists(file)) throw new ComposeException($"Compose file not found: {file}");
@@ -78,8 +79,17 @@ public static partial class ComposeReader
                     var name = Text(pair.Key);
                     if (!NamePattern().IsMatch(name)) throw new ComposeException("A Compose service name is invalid.");
                     var node = Mapping(pair.Value);
-                    // Interpolate each file before merging, as Compose does.
-                    ExpandNode(node, variables, expanded);
+                    try
+                    {
+                        // Interpolate each file before merging, as Compose does.
+                        ExpandNode(node, variables, expanded);
+                    }
+                    catch (ComposeException ex)
+                    {
+                        // A service's own error stays on its row; the other services still run.
+                        broken[name] = ex.Message;
+                    }
+
                     merged[name] = merged.TryGetValue(name, out var existing) ? Merge(existing, node) : node;
                 }
             }
@@ -87,7 +97,18 @@ public static partial class ComposeReader
         }
         var services = merged.ToDictionary(p => p.Key, p =>
         {
-            var service = ReadService(p.Key, p.Value, directory, variables);
+            ComposeService service;
+            try
+            {
+                if (broken.TryGetValue(p.Key, out var error)) throw new ComposeException(error);
+                service = ReadService(p.Key, p.Value, directory, variables);
+            }
+            catch (ComposeException ex)
+            {
+                // One service's invalid or unsupported setting makes that service unavailable, not the whole file.
+                return new ComposeService(p.Key, Get(p.Value, "image") is YamlScalarNode image ? image.Value : null) { Unsupported = [ex.Message] };
+            }
+
             return service with { Unsupported = [.. service.Unsupported, .. service.Volumes.Where(v => !v.IsBind && v.Source is { } name && unsupportedVolumes.GetValueOrDefault(name)).Select(_ => "External or driver-backed volumes require a remote host.")] };
         }, StringComparer.Ordinal);
         return new ComposeProject(directory, files, services);
@@ -190,7 +211,7 @@ public static partial class ComposeReader
 
     private static ServiceVolume ReadVolume(YamlNode node, string directory)
     {
-        string? source; string target; bool readOnly; bool bind;
+        string? source; string target; bool readOnly; bool bind; var create = true;
         if (node is YamlMappingNode map)
         {
             var type = Text(Get(map, "type"));
@@ -199,6 +220,7 @@ public static partial class ComposeReader
             target = Text(Get(map, "target"));
             readOnly = Text(Get(map, "read_only")) == "true";
             bind = type == "bind";
+            create = Text(Get(Mapping(Get(map, "bind")), "create_host_path")) != "false";
         }
         else
         {
@@ -211,7 +233,7 @@ public static partial class ComposeReader
         }
         if (!target.StartsWith('/') || target.Split('/').Contains("..") || target.Contains(':')) throw new ComposeException("A volume target must be an absolute guest path without '..' or ':'.");
         if (bind && source is not null) source = Path.GetFullPath(Path.Combine(directory, source));
-        return new ServiceVolume(source, target, readOnly, bind);
+        return new ServiceVolume(source, target, readOnly, bind, create);
     }
 
     internal static Dictionary<string, string?> ReadEnvironmentFile(string path, IReadOnlyDictionary<string, string?> variables, bool required)
