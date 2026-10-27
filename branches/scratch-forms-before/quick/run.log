@@ -1,0 +1,9 @@
++ dotnet build tests/TabStudio.App.Tests -c Release
++ grep -E ' error |Build succeeded'
++ sort -u
++ head -30
+Build succeeded.
++ dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter FullyQualifiedName~SimplePaint
++ grep -E 'Failed|Error Message|Assert|Total|Passed|Expected|Actual'
++ head -30
+Passed!  - Failed:     0, Passed:     1, Skipped:     0, Total:     1, Duration: 3 s - TabStudio.App.Tests.dll (net10.0)
