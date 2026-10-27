@@ -27,8 +27,9 @@ source "$native/fetch.sh"
 API=28
 patch_sha="$(sha256sum "$native/proot-thread-waits.patch" | cut -d ' ' -f1)"
 usb_patch_sha="$(sha256sum "$native/proot-usb-fd.patch" | cut -d ' ' -f1)"
+wch_guard_sha="$(cat "$native/proot-wch-guard.patch" "$native/apply-wch-guard.sh" "$native/../../../native/embedded/wch_guard.c" "$native/../../../native/embedded/wch_guard.h" "$native/../../../native/embedded/wch_loader.h" "$native/../../../native/embedded/wch_usbfs.c" "$native/../../../native/embedded/wch_usbfs.h" | sha256sum | cut -d ' ' -f1)"
 shim_hash="$(sha256sum "$native/jvm-mapping.c" | cut -d ' ' -f1)"
-STAMP="proot ${PROOT_VERSION}, talloc ${TALLOC_VERSION}, API ${API}, 16 KB pages, waits ${patch_sha}, USB FD ${usb_patch_sha}, JVM mapping ${shim_hash}"
+STAMP="proot ${PROOT_VERSION}, talloc ${TALLOC_VERSION}, API ${API}, 16 KB pages, waits ${patch_sha}, USB FD ${usb_patch_sha}, WCH guard ${wch_guard_sha}, JVM mapping ${shim_hash}"
 
 out="$(realpath -m "${1:?usage: build.sh <output-folder> <abi>...}")"
 shift
@@ -153,6 +154,7 @@ EOF
   unzip -q "$downloads/proot.zip" -d "$dir"
   (cd "$dir/proot-$PROOT_VERSION" && patch -p1 < "$native/proot-thread-waits.patch")
   (cd "$dir/proot-$PROOT_VERSION" && patch -p1 < "$native/proot-usb-fd.patch")
+  bash "$native/apply-wch-guard.sh" "$dir/proot-$PROOT_VERSION"
   (
     cd "$dir/proot-$PROOT_VERSION/src"
     local pages=""

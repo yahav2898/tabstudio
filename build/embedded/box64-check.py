@@ -36,7 +36,7 @@ def main():
     manager = ToolPackageManager(str(root / "packages"))
     package = manager.install("platformio/toolchain-atmelavr@1.70300.191015", skip_dependencies=True)
     del os.environ["PLATFORMIO_SYSTEM_TYPE"]
-    boxed.configure_policy()
+    boxed.configure_policy("aarch64")
     entries = [{"name": "1.0.0", "files": [{"system": ["linux_aarch64"]}]},
                {"name": "2.0.0", "files": [{"system": ["linux_x86_64"]}]}]
     if manager.pick_best_registry_version(entries)["name"] != "1.0.0" or manager.pick_best_registry_version(entries[1:])["name"] != "2.0.0":
@@ -48,6 +48,7 @@ def main():
             [{"id": 1, "owner": {"username": "synthetic"}, "name": "compiler"}], PackageSpec(name="compiler"))
         if selected["name"] != "1.0.0":
             raise ValueError("Owner-less registry lookup hid an older compatible ARM64 artifact")
+    run([sys.executable, "-P", str(Path(__file__).with_name("platformio-policy-check.py")), "--x64-client", args.spawn])
     boxed.overlay(package.path)
     compiler = Path(package.path) / "bin/avr-gcc"
     record = json.loads((Path(package.path) / ".tabstudio-box64-overlay.json").read_text())

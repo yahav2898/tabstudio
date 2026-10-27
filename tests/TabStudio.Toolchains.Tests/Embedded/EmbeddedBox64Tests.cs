@@ -17,11 +17,14 @@ public sealed class EmbeddedBox64Tests
     }
 
     [Fact]
-    public void NativeBuildRemainsUnmarkedAndExplicitModeUsesLiteralWrapper()
+    public void DefaultNativeFirstPolicyAndNativeOnlyAuditUseLiteralWrapper()
     {
         var project = new EmbeddedProject(EmbeddedProjectKind.PlatformIO, "/project", "platformio.ini", [], null, null, []);
-        var native = EmbeddedBuildPlanner.Plan(project, new EmbeddedBuildOptions());
-        Assert.False(native.Build[0].Environment.ContainsKey(EmbeddedBox64Installation.Marker));
+        var automatic = EmbeddedBuildPlanner.Plan(project, new EmbeddedBuildOptions());
+        Assert.Equal("1", automatic.Build[0].Environment[EmbeddedBox64Installation.Marker]);
+        var native = EmbeddedBuildPlanner.Plan(project, new EmbeddedBuildOptions { HostPackageMode = "native" });
+        Assert.Equal("native", native.Build[0].Environment[EmbeddedBox64Installation.Marker]);
+        Assert.Equal("/opt/tabstudio/platformio/bin/python", EmbeddedBox64Installation.Wrap(native.Build[0]).Program);
         var boxed = EmbeddedBuildPlanner.Plan(project, new EmbeddedBuildOptions { HostPackageMode = "boxed-x86_64" });
         var command = EmbeddedBox64Installation.Wrap(boxed.Build[0]);
         Assert.Equal("/opt/tabstudio/platformio/bin/python", command.Program);

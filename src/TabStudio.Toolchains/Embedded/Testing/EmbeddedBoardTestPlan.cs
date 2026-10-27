@@ -122,7 +122,7 @@ public sealed class EmbeddedBoardTestPlan : IDisposable
             var arguments = new List<string>
             {
                 "run", "--chip", debug.Chip!, "--probe", selector, "--non-interactive",
-                "--preverify", "--verify", "--restore-unwritten", "--disable-progressbars",
+                "--binary-format", "elf", "--preverify", "--verify", "--restore-unwritten", "--disable-progressbars",
                 "--no-catch-reset", "--no-catch-hardfault", "--no-catch-svc", "--no-catch-hlt",
                 "--no-location", "--no-timestamps", "--log-format", "{m}",
                 "--rtt-channel-mode", "block-if-full", "--rtt-up-channels", options.RttChannel.ToString(CultureInfo.InvariantCulture),

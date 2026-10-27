@@ -12,6 +12,7 @@ unzip -q "$work/proot.zip" -d "$work"
 source_dir="$work/proot-$PROOT_VERSION"
 patch -d "$source_dir" -p1 < "$native/proot-thread-waits.patch"
 patch -d "$source_dir" -p1 < "$native/proot-usb-fd.patch"
+bash "$native/apply-wch-guard.sh" "$source_dir"
 PROOT_UNBUNDLE_LOADER=. make -C "$source_dir/src" -j2 HAS_LOADER_32BIT= proot loader/loader
 export PROOT_LOADER="$source_dir/src/loader/loader"
 python3 "$root/build/embedded/test-proot-usb.py" --proot "$source_dir/src/proot"

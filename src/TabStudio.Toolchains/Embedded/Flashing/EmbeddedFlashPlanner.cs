@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text;
+using TabStudio.Toolchains.Embedded.Devices;
 using TabStudio.Toolchains.Processes;
 
 namespace TabStudio.Toolchains.Embedded.Flashing;
@@ -21,12 +22,14 @@ public enum EmbeddedFlashProtocol
     Bossac,
     /// <summary>A probe and target explicitly configured in OpenOCD.</summary>
     OpenOcd,
-    /// <summary>Native host probe-rs. Android nusb transport requires separate integration.</summary>
+    /// <summary>Official probe-rs through the permissioned usbfs/nusb worker.</summary>
     ProbeRs,
     /// <summary>Teensy HalfKay through teensy_loader_cli; no readback verification.</summary>
     Teensy,
     /// <summary>WCH ROM ISP through the USB or UART transport in wchisp.</summary>
     WchIsp,
+    /// <summary>CH32V003 through unchanged wlink and the mandatory native WCH USB protocol guard.</summary>
+    WchLink,
     /// <summary>MSP430 through a supported non-BSL mspdebug driver.</summary>
     MspDebug,
     /// <summary>Nordic SDK Secure DFU application ZIP through legacy pc-nrfutil 6.x.</summary>
@@ -119,6 +122,8 @@ public static class EmbeddedFlashPlanner
     public static EmbeddedFlashPlan Plan(EmbeddedFlashRequest request)
     {
         ArgumentNullException.ThrowIfNull(request);
+        if (request.Protocol == EmbeddedFlashProtocol.WchLink)
+            throw new NotSupportedException("WCH-Link programming requires WchLinkSession's guarded identification, fresh connections and independent readback; generic upload plans cannot run it.");
         if (request.EspFlasherArguments is not null)
         {
             if (request.Protocol != EmbeddedFlashProtocol.Esptool) throw new ArgumentException("ESP multi-image metadata requires the esptool protocol.", nameof(request));
@@ -156,6 +161,7 @@ public static class EmbeddedFlashPlanner
             Program = program,
             Arguments = arguments,
             WorkingDirectory = directory,
+            Environment = program == "probe-rs" ? ProbeTargetInfoReader.SafeAttachEnvironment() : new Dictionary<string, string?>(),
         });
         var address = request.BinaryAddress?.ToString("X", CultureInfo.InvariantCulture);
         switch (request.Protocol)
@@ -211,11 +217,11 @@ public static class EmbeddedFlashPlanner
                     {
                         throw new ArgumentException("A raw binary needs its target address.", nameof(request));
                     }
-                    Add("picotool", "load", "-v", "-t", "bin", "-o", "0x" + address, firmware);
+                    Add("picotool", "load", "-v", "-x", "-t", "bin", "-o", "0x" + address, firmware);
                 }
                 else
                 {
-                    Add("picotool", "load", "-v", firmware);
+                    Add("picotool", "load", "-v", "-x", firmware);
                 }
                 break;
             case EmbeddedFlashProtocol.Bossac:
@@ -256,7 +262,8 @@ public static class EmbeddedFlashPlanner
                 {
                     throw new ArgumentException("This probe-rs route requires an addressed ELF.", nameof(request));
                 }
-                Add("probe-rs", "download", "--chip", request.Target, "--probe", request.ProbeSelector, "--verify", firmware);
+                Add("probe-rs", "download", "--chip", request.Target, "--probe", request.ProbeSelector,
+                    "--binary-format", "elf", "--preverify", "--restore-unwritten", "--verify", "--reset", "--non-interactive", firmware);
                 break;
             case EmbeddedFlashProtocol.Teensy:
                 if (extension != ".hex" || request.Target.ToUpperInvariant() is not ("TEENSY2" or "TEENSY2PP" or "TEENSYLC" or "TEENSY30" or "TEENSY31" or "TEENSY32" or "TEENSY35" or "TEENSY36" or "TEENSY40" or "TEENSY41" or "TEENSY_MICROMOD"))

@@ -13,6 +13,7 @@ internal static class Box64Check
         var source = Path.GetFullPath("build/embedded/box64-check.py");
         var script = Path.Combine(project, "box64-check.py");
         File.Copy(source, script, overwrite: true);
+        File.Copy(Path.GetFullPath("build/embedded/platformio-policy-check.py"), Path.Combine(project, "platformio-policy-check.py"), overwrite: true);
         var inherited = Path.Combine(project, "box64-inherited-fd");
         using var handle = File.OpenHandle(inherited, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
         var result = await CommandRunner.RunAsync(installer.Runtime, new ProcessStartSpec

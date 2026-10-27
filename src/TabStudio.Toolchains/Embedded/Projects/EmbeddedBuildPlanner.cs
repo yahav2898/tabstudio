@@ -62,8 +62,8 @@ public static class EmbeddedBuildPlanner
     {
         ArgumentNullException.ThrowIfNull(project);
         options ??= LoadOptions(project.Directory);
-        if (options.HostPackageMode is not ("native" or "boxed-x86_64"))
-            throw new ArgumentException("HostPackageMode must be native or boxed-x86_64.", nameof(options));
+        if (options.HostPackageMode is not ("auto" or "native" or "boxed-x86_64"))
+            throw new ArgumentException("HostPackageMode must be auto, native or boxed-x86_64.", nameof(options));
         if (options.HostPackageMode == "boxed-x86_64" && project.Kind != EmbeddedProjectKind.PlatformIO)
             throw new ArgumentException("Box64 host-package mode currently applies only to PlatformIO.", nameof(options));
         ValidateToken(options.Board, nameof(options.Board));
@@ -111,10 +111,10 @@ public static class EmbeddedBuildPlanner
                 ProcessStartSpec PlatformIo(params string[] arguments)
                 {
                     var command = Command("pio", arguments);
-                    return options.HostPackageMode == "boxed-x86_64" ? command with
+                    return command with
                     {
-                        Environment = new Dictionary<string, string?> { [EmbeddedBox64Installation.Marker] = "1" },
-                    } : command;
+                        Environment = new Dictionary<string, string?> { [EmbeddedBox64Installation.Marker] = options.HostPackageMode == "native" ? "native" : "1" },
+                    };
                 }
                 build.Add(PlatformIo(["run", .. selection, "--jobs", jobs]));
                 if (environment is not null && options.Port is not null)
@@ -133,9 +133,9 @@ public static class EmbeddedBuildPlanner
                 {
                     notes.Add("Generate PlatformIO's compilation database with pio run -t compiledb to enable exact clangd flags; existing databases are preserved.");
                 }
-                notes.Add("PlatformIO owns its packages and platform versions. ARM64 package availability must be checked before installation; x86-only packages need an explicit compatible runtime.");
-                if (options.HostPackageMode == "boxed-x86_64")
-                    notes.Add("Explicit Box64 fallback uses a private project package cache. Compatible ARM64 artifacts remain preferred; x86 binaries stay unchanged in a retained original tree. Translation is slower and requires the APK's pinned translator.");
+                notes.Add("PlatformIO owns its package versions and SHA-256 verification. Host executables are checked against their actual ELF architecture before package scripts or builds run.");
+                if (options.HostPackageMode != "native")
+                    notes.Add("Native ARM64 packages are preferred automatically. Missing or mislabeled native artifacts may use unchanged x64 binaries through the APK's pinned Box64 translator in a private project package cache. Translation is slower; hostPackageMode=native disables it.");
                 break;
             }
             case EmbeddedProjectKind.Arduino:

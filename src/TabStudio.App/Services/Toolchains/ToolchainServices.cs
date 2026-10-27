@@ -94,7 +94,7 @@ public sealed class ToolchainServices : IDisposable
     /// <summary>Android USB permissions and open connection lifetime.</summary>
     public IUsbHost Usb { get; } = new NoUsbHost();
 
-    /// <summary>Prepares explicitly requested x86-only PlatformIO host packages without changing native package selection.</summary>
+    /// <summary>Prepares PlatformIO's native-first x86 fallback without changing compatible native package selection.</summary>
     /// <param name="line">Verified runtime preparation output.</param>
     /// <param name="cancellationToken">Stops preparation.</param>
     public Task PrepareEmbeddedBox64Async(Action<string> line, CancellationToken cancellationToken)

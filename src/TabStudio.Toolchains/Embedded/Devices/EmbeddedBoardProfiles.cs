@@ -30,7 +30,7 @@ public static class EmbeddedBoardProfiles
         new("nucleo-f401re", "STM32 Nucleo-F401RE", "nucleo_f401re", "STMicroelectronics:stm32:Nucleo_64:pnum=NUCLEO_F401RE", "STM32F401RE", "The Nucleo family is not one target; this profile is specifically F401RE."),
         new("bluepill", "STM32 Blue Pill", "bluepill_f103c8", null, "STM32F103C8", "Confirm genuine part and 64 KiB flash; clone capacities must not be guessed."),
         new("blackpill", "STM32 Black Pill F411CE", "blackpill_f411ce", null, "STM32F411CE", "F401 and F411 Black Pill boards need distinct chip selections."),
-        new("nrf52840dk", "Nordic nRF52840 DK", "nrf52840_dk", null, "nRF52840", "Zephyr board: nrf52840dk/nrf52840; preserve a separately installed SoftDevice."),
+        new("nrf52840dk", "Nordic nRF52840 DK", "nrf52840_dk", null, "nRF52840", "Exact Zephyr board: nrf52840dk/nrf52840. Standalone firmware; use a matching partitioned project to preserve a required SoftDevice."),
         new("xiao-samd21", "Seeed XIAO SAMD21", "seeed_xiao", "Seeeduino:samd:seeed_XIAO_m0", "SAMD21G18A", "XIAO ESP32/nRF/RP variants are distinct boards."),
         new("teensy40", "Teensy 4.0", "teensy40", null, "IMXRT1062", "HalfKay; retain Teensy's bootloader and use the selected board's linker script."),
         new("teensy41", "Teensy 4.1", "teensy41", null, "IMXRT1062", "Select Teensy 4.1 rather than assuming 4.0 flash geometry."),

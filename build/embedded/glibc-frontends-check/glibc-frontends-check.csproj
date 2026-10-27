@@ -6,5 +6,7 @@
   <ItemGroup>
     <ProjectReference Include="../../../src/TabStudio.Toolchains/TabStudio.Toolchains.csproj" />
     <ProjectReference Include="../../../src/TabStudio.LanguageServers/TabStudio.LanguageServers.csproj" />
+    <Compile Include="../../../src/TabStudio.App/Services/ProjectTemplates.Embedded.cs" Link="Canonical/ProjectTemplates.Embedded.cs" />
+    <Compile Include="../template-build-check/CanonicalTemplateFactory.cs" Link="Canonical/CanonicalTemplateFactory.cs" />
   </ItemGroup>
 </Project>

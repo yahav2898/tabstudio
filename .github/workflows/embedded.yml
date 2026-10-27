@@ -70,7 +70,7 @@ jobs:
   contracts:
     name: Embedded parsers and USB bridge contracts
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
@@ -90,6 +90,8 @@ jobs:
           CARGO_TARGET_DIR="$RUNNER_TEMP/nusb-check" cargo +1.85.1 build --locked --manifest-path build/embedded/nusb-check/Cargo.toml
       - name: Enumerate the actual permissioned inventory through stock nusb and patched PRoot
         run: dotnet run --project build/embedded/nusb-inventory-check -- "$TABSTUDIO_TEST_PROOT" "$RUNNER_TEMP/nusb-check/debug/tabstudio-nusb-check" "$RUNNER_TEMP/nusb-inventory"
+      - name: Unchanged official wlink through the native WCH USB guard (synthetic kernel USB only)
+        run: python3 build/embedded/wch-link-check/run.py --proot "$TABSTUDIO_TEST_PROOT" --work "$RUNNER_TEMP/wch-link-check" --output ci-out/embedded-unit/wch-link-check
       - name: Embedded library and DAP unit tests
         run: |
           TABSTUDIO_FAT_PROOF="$RUNNER_TEMP/fat-proof" dotnet test tests/TabStudio.Toolchains.Tests --filter 'FullyQualifiedName~Embedded|FullyQualifiedName~ScopedPreloadProotTests|FullyQualifiedName~JavaProotTests' --logger 'trx;LogFileName=embedded-toolchains.trx' --results-directory ci-out/embedded-unit
@@ -237,12 +239,13 @@ jobs:
         shell: bash
         run: |
           docker run --rm -v "$PWD:/work" -w /work alpine:3.24 sh -ec '
-            apk add --no-cache python3 ca-certificates build-base libusb-dev libusb-compat-dev linux-headers pkgconf rust cargo gcc-riscv-none-elf newlib-riscv-none-elf binutils-riscv-none-elf &&
+            apk add --no-cache python3 ca-certificates build-base libusb-dev libusb-compat-dev eudev-dev linux-headers pkgconf rust cargo gcc-riscv-none-elf newlib-riscv-none-elf binutils-riscv-none-elf &&
             failed=0
             for tool in embedded-bossac embedded-teensy embedded-wchisp embedded-mspdebug; do
               python3 build/embedded/flash-clients-smoke.py --mode source --tool "$tool" || failed=1
             done
             python3 build/embedded/ch32fun-smoke.py || failed=1
+            python3 build/embedded/wlink-source-smoke.py || failed=1
             exit "$failed"
           ' 2>&1 | tee flash-clients-source.log
       - uses: actions/upload-artifact@v4

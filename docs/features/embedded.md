@@ -25,9 +25,10 @@ missing integration. The PR's final commit and check results are the authority f
    connection before another embedded operation takes that adapter.
 
 `F5` uses an existing embedded debug profile to attach the on-chip debugger. With an explicit flash profile it
-builds/uploads and opens the Serial Monitor only for the same USB serial identity; without either profile it
-builds firmware. Known Uno/Nano(new)/Mega/Leonardo/Micro starters include safe bootloader profiles. Other boards
-still need explicit configuration, and physical reset/re-enumeration/monitor behavior is hardware-unverified.
+builds/uploads and opens the Serial Monitor; automatic connection is restricted to the same serial-capable USB
+attachment. Without either profile it builds firmware. Starters include exact-board application bounds and
+bootloader/probe profiles; target, clone and module variants still require review. Physical reset, re-enumeration
+and monitor behavior are hardware-unverified.
 The existing PIC F5 simulator and ordinary language F5 behavior remain documented separately.
 
 ### Project systems
@@ -130,7 +131,7 @@ automatic interrogation on plug-in and a complete device-association editing UI 
 | Raspberry Pi Debug Probe/picoprobe | probe-rs/CMSIS-DAP or OpenOCD where that probe firmware and target are supported | Descriptor hint and command contracts only; hardware-unverified. |
 | J-Link | probe-rs or OpenOCD's applicable open backend | USB hint only is not SEGGER software installation or proof of target support. No hardware verification. |
 | ESP USB-Serial-JTAG | Installed native esptool download; probe-rs for supported USB-JTAG targets or a matching Espressif OpenOCD build | The stock Alpine OpenOCD package does not establish vendor-fork coverage. No hardware verification. |
-| WCH-Link | Requires the matching WCH SWIO/JTAG implementation and target support | VID/PID hint exists. The matching vendor OpenOCD/wlink package and complete route are not supplied/verified. |
+| WCH-Link | Pinned native wlink 0.1.3 plus an opt-in PRoot USB protocol guard, CH32V003 only | Four known 16 KiB parts; read-only chip identification, bounded code-flash loader, independent full readback, then separate reset. Option/protection/erase-all commands are denied. Actual stock-client replay and native installation are CI gates; the Store entry remains unlisted until they pass. Hardware-unverified; this does not establish other CH32 parts or debugging. |
 | probe-rs probes | Pinned official 0.32 native ARM64/x64 glibc binaries; permissioned nusb download, DAP, identity and logging routes | Verified on CI: actual installer, official DAP initialization, stock nusb enumeration and raw FD routing. Physical probe/target I/O remains hardware-unverified; native hidraw CMSIS-DAP v1 uses the OpenOCD fallback. |
 
 | Requested target families | Present foundation | Remaining qualification |
@@ -190,7 +191,9 @@ with locked setuptools/wheel and no isolated dependency downloads. The app insta
 constraints file and runs the unmodified upstream checker offline; it does not fetch rolling Python constraints
 or run `install-python-env`. Clean x64 installation, `pip check`, upstream version checks and ARM64 archive/hash
 selection passed locally. Actual SDK firmware builds use the separate production installer CI matrix;
-project-selected components keep their own dependency manifests/locks and licenses.
+project-selected components keep their own dependency manifests/locks and licenses. Pico SDK, Zephyr and
+embedded Rust are offered in the Store after their production installer and actual firmware builds passed
+on native ARM64 and x64 CI runners; these host CPU checks do not qualify physical Android USB operation.
 
 ### ESP build metadata and first upload
 
@@ -269,7 +272,7 @@ published application limits; other boards require a reviewed flash profile rath
 | STM32 Nucleo | PlatformIO `nucleo_f401re` only | Template contracts tested; other Nucleo chips need their own selection; hardware-unverified. |
 | STM32 Blue Pill | PlatformIO `bluepill_f103c8` | Starter emitted; chip authenticity/capacity cannot be inferred from the board name; hardware-unverified. |
 | STM32 Black Pill | PlatformIO `blackpill_f411ce` | Starter emitted; F401/F411 are different selections; hardware-unverified. |
-| nRF52840 DK | PlatformIO `nrf52840_dk` | Template contracts tested; preserve any separate SoftDevice; hardware-unverified. |
+| nRF52840 DK | Zephyr `nrf52840dk/nrf52840` | Exact standalone nRF52840, 1 MiB flash/256 KiB RAM. The PlatformIO Arduino board currently selects an nRF52832 linker/core layout, so this starter uses Zephyr. A project requiring a SoftDevice needs its own partitioned layout. Hardware-unverified. |
 | Seeed XIAO | PlatformIO `seeed_xiao`, SAMD21 only | Template contracts tested; ESP/nRF/RP XIAO variants need distinct definitions; hardware-unverified. |
 | Teensy 4.0/4.1 | PlatformIO `teensy40`/`teensy41` | Starters plus explicit HalfKay HEX transfer. No readback/production verification. Hardware-unverified. |
 | CH32V003 | Pinned upstream ch32fun startup/linker/headers, native RV32EC GCC, UART greeting and bounded WCH ISP profile | Actual native build proof: 732 B flash, 16 KiB code flash/2 KiB RAM map. UART TX PD5 at 115200. ROM UART ISP must already be active; V003 has no BOOT pin and this does not provide initial WCH-Link SWIO programming. Hardware-unverified. |
@@ -306,8 +309,8 @@ The policies follow NXP [UM10360 §32.6/Table 568](https://www.keil.com/dd/docs/
 [AN4507 Tables 1/4](https://www.nxp.com/docs/en/application-note/AN4507.pdf), and the exact ordering table in
 the [K64 datasheet](https://www.nxp.com/docs/en/data-sheet/K64P144M120SF5.pdf).
 
-**Backup firmware** reads one explicitly mapped application interval twice using OpenOCD, stm32flash or
-readback-capable STM32 DFU. It only saves a new backup when both reads agree and match the expected byte count.
+**Backup firmware** reads one explicitly mapped application interval twice using probe-rs, OpenOCD, stm32flash or
+readback-capable STM32 DFU. Guarded WCH-Link uses two fresh read-only CH32V003 sessions. It only saves a new backup when both reads agree and match the expected byte count.
 Read protection is never removed. **Compare firmware dumps** reports whole-file SHA-256 hashes, the exact number
 of differing bytes and bounded contiguous difference ranges, including unequal file lengths.
 
@@ -315,7 +318,12 @@ of differing bytes and bounded contiguous difference ranges, including unequal f
 and layout, opens separate Android permissions/connections, and programs at most two concurrently. Each result
 must verify independently; failures remain per-board failures. `.tabstudio/production/*.jsonl` records device IDs,
 firmware digests, outcomes and errors. Identical VID/PID is an operator selection, not proof of identical silicon.
-Touch/re-enumerating bootloaders, stock nusb and transfer-only loaders such as Teensy HalfKay are refused in batches before programming. No real USB hub has been verified yet.
+Probe-rs workers each receive a private single-device usbfs inventory and a selector rebound to their actual
+granted VID/PID, preserving any explicit FTDI channel. The immutable reviewed firmware digest must match every
+worker. Probe-rs uses explicit ELF format, preverification, preservation of unwritten sector bytes, verification
+and reset; inherited erase/power/reset/preset overrides are cleared. Touch/re-enumerating bootloaders, HID-only
+probe-rs devices, guarded multi-session WCH-Link and transfer-only loaders such as Teensy HalfKay are refused in
+batches before programming. No real USB hub has been verified yet.
 
 **Upload over Wi-Fi** implements ArduinoOTA-compatible transfer and old MD5/new PBKDF2 challenge formats, requires
 the target's final acceptance, and keeps the entered password in memory for that upload. The board must already
@@ -555,6 +563,29 @@ disconnect, lost summary and oversized/truncated output become errors, never inf
 same granted bulk-USB/nusb bridge; active debugging must be stopped first. Managed tests exercise real-form
 harness streams through a fake process runtime. Physical flash, RTT acquisition and tests remain hardware-unverified.
 
+**Run Unity tests over serial** captures one run from already-programmed firmware over the permissioned USB
+serial bridge. Its separate `.tabstudio/embedded-serial-tests.json` requires the firmware's actual baud rate:
+
+```json
+{
+  "BaudRate": 115200,
+  "TimeoutSeconds": 60,
+  "InterfaceNumber": 0,
+  "BoardLabel": "Sensor prototype"
+}
+```
+
+Omit `InterfaceNumber` only when the adapter's data interface is unambiguous. Start the firmware's harness after
+Output says **Serial Unity capture ready**. Capture does not build, upload, send serial input or intentionally
+change DTR/RTS, send break, reset the adapter or pulse modem outputs during cleanup. Required adapter and
+baud/line-coding initialization still occurs; retention of an unknown adapter's electrical state is not guaranteed.
+The full bounded strict-UTF-8 stream must include individual Unity results, matching summary counts and a final
+newline-terminated `OK`, `FAIL` or `FAILED`. Stop, timeout, disconnect and incomplete runs are errors. Results retain
+the actual selected USB VID/PID, attachment path and configured interface separately from the optional label;
+these identify that attachment, not its MCU or installed firmware, and are not persistent identities after replug.
+Synthetic streams exercise the actual PTY, native control shim and production receive-only client; physical board
+capture remains hardware-unverified.
+
 **Import test results** also reads an actual Unity, TAP, defmt-test, Rust text log or GoogleTest XML report and
 retains the supplied board identity in Test Explorer. A host result is never labeled as a physical-board result.
 
@@ -601,12 +632,22 @@ lists those packages. Synthetic fixtures are described in [USB bridge verificati
 Real hardware captures still need the exact device/probe firmware, target part, tool version, firmware digest,
 redistribution permission and expected result; none have been fabricated for this change.
 
-## Explicit x86-only PlatformIO packages
+## Native-first PlatformIO packages
 
-Native host packages remain the default. If a required registry package has no compatible ARM64 artifact,
-set `"hostPackageMode": "boxed-x86_64"` in `.tabstudio/embedded.json`. This opt-in policy still prefers any
-compatible native version satisfying the project's requirements. It selects x86-64 only when that native
-selection is empty; it never changes the tablet's global PlatformIO system type.
+On Android, `"hostPackageMode": "auto"` is the default in `.tabstudio/embedded.json`. Pinned PlatformIO
+Core 6.1.18 prefers any compatible native version satisfying the project's requirements. If no compatible
+ARM64 artifact exists, unchanged x86-64 host tools can run through the APK's pinned Box64. The app prepares
+that translator before an auto-policy ARM64 build; native x64 builds need no translator downloads.
+`"hostPackageMode": "native"` disables translation while retaining executable-architecture checks.
+`"boxed-x86_64"` remains an alias for the earlier native-first fallback policy. The policy never changes the
+tablet's global PlatformIO system type or substitutes an unrelated tool version.
+
+Registry architecture labels are checked against executable ELF headers before package postinstall scripts
+and before cached packages are used. An ARM64-labeled distribution containing an incompatible host ELF
+(such as a 32-bit ARM executable) can retry only that exact package version's x64 registry artifact through
+PlatformIO's normal SHA-256 downloader. The rejected native distribution is retained unchanged. Missing or
+incompatible replacements fail visibly; foreign executables created by postinstall are also refused before
+build. Shared libraries and cross-compiler object files do not receive executable launchers.
 
 The boxed project gets a separate `.tabstudio/platformio-boxed` Core cache. The app reuses the APK's pinned,
 patched Box64 and PIC's SHA-256-pinned Debian runtime archives without downloading XC or asking for an XC
@@ -618,11 +659,13 @@ adds native Python launchers only for x86 executables. GCC starts at its origina
 `cc1`, assembler and linker rather than recursively invoking wrappers. Boxed builds can be slower, and the
 four runtime libraries cannot satisfy every arbitrary third-party dependency.
 
-Native tests cover ELF/PIE versus shared-library classification, original-byte preservation and explicit
-process/configuration routing. The production glibc CI harness additionally requires the real x86 AVR GCC
+Native tests cover ELF32/ELF64 and PIE versus shared-library classification, corrupt-header refusal,
+original-byte preservation and automatic/native-only process/configuration routing. The production glibc CI harness additionally requires the real x86 AVR GCC
 to compile/link on both x64 and ARM64, runs the existing patched-Box64 32-child/static-spawn regression with
-inherited FD 3, and compares the complete resulting AVR ELF bytes across runners. A separate fixture uses
-real pinned PlatformIO methods to check native-first and fallback selection. These are CI requirements;
+inherited FD 3, and compares the complete resulting AVR ELF bytes across runners. A separate loopback-registry fixture uses the
+real pinned PlatformIO manager, HTTP mirror, archive and checksum path to require native download before
+an exact-version x64 retry, refusal of the incompatible native postinstall, unchanged retained binaries and
+independent native-only/postinstall-generated-executable refusal. These are CI requirements;
 they are not physical tablet/USB qualification or a claim that every x86-only platform is compatible.
 
 Frozen x64 serial clients additionally require the control shim compiled for x64. Their Box64 child clears

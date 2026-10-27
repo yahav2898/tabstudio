@@ -123,7 +123,7 @@ public sealed class EmbeddedGlibcRuntime(IToolchainRuntime primary, IToolchainRu
         var program = id == "embedded-rust" && IsRustTool(spec.Program)
             ? "/opt/tabstudio/embedded-rust/bin/" + Path.GetFileName(spec.Program) : spec.Program;
         var routed = spec with { Program = program, Environment = environment };
-        if (id == "platformio" && environment.GetValueOrDefault(EmbeddedBox64Installation.Marker) == "1")
+        if (id == "platformio" && environment.GetValueOrDefault(EmbeddedBox64Installation.Marker) is "1" or "native")
         {
             routed = EmbeddedBox64Installation.Wrap(routed);
         }

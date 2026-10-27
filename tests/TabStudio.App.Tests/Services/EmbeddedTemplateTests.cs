@@ -14,6 +14,19 @@ public sealed class EmbeddedTemplateTests : IDisposable
     private readonly TempDirectory _temp = new();
     private static readonly JsonSerializerOptions ProfileJson = new(JsonSerializerDefaults.Web) { Converters = { new JsonStringEnumConverter() } };
 
+    [Theory]
+    [InlineData("uno", "atmelavr@5.3.0")]
+    [InlineData("esp32", "espressif32@8.0.0")]
+    [InlineData("pico", "raspberrypi@1.20.0")]
+    [InlineData("nucleo-f401re", "ststm32@20.0.0")]
+    [InlineData("xiao-samd21", "atmelsam@9.0.0")]
+    [InlineData("teensy41", "teensy@6.0.0")]
+    public void Platformio_starters_pin_the_audited_upstream_platform_release(string id, string platform)
+    {
+        var root = new ProjectTemplates(new AppPaths(_temp.Path)).Create("embedded-" + id, "Firmware");
+        Assert.Contains("platform = " + platform + "\n", File.ReadAllText(Path.Combine(root, "platformio.ini")), StringComparison.Ordinal);
+    }
+
     [Fact]
     public void Ch32v003_starter_uses_pinned_upstream_startup_and_a_bounded_uart_isp_profile()
     {
@@ -61,7 +74,6 @@ public sealed class EmbeddedTemplateTests : IDisposable
     [InlineData("esp32s3", "esp32-s3-devkitc-1")]
     [InlineData("esp32c3", "esp32-c3-devkitm-1")]
     [InlineData("nucleo-f401re", "nucleo_f401re")]
-    [InlineData("nrf52840dk", "nrf52840_dk")]
     [InlineData("xiao-samd21", "seeed_xiao")]
     [InlineData("teensy41", "teensy41")]
     public void Platformio_starters_preserve_real_board_id_and_are_detected(string id, string board)
@@ -90,7 +102,85 @@ public sealed class EmbeddedTemplateTests : IDisposable
         Assert.Equal(EmbeddedProjectKind.PicoSdk, project.Kind);
         Assert.Equal(board, project.Target);
         Assert.Single(EmbeddedBuildPlanner.Plan(project).Build);
+        var profile = ReadProfile(root);
+        Assert.Equal(EmbeddedFlashProtocol.Picotool, profile.Protocol);
+        Assert.Equal(".tabstudio/embedded/build/Firmware.uf2", profile.FirmwarePath);
+        Assert.Equal(new FlashAddressRange(0x10000000, id == "picow" ? 2UL * 1024 * 1024 : 4UL * 1024 * 1024), Assert.Single(profile.ApplicationFlash));
     }
+
+    [Fact]
+    public void Nordic_dk_uses_the_actual_52840_Zephyr_board_instead_of_the_incompatible_Arduino_52832_linker()
+    {
+        var root = new ProjectTemplates(new AppPaths(_temp.Path)).Create("embedded-nrf52840dk", "Firmware");
+        Assert.False(File.Exists(Path.Combine(root, "platformio.ini")));
+        var project = Assert.Single(EmbeddedProjectDetector.Detect(root));
+        Assert.Equal(EmbeddedProjectKind.Zephyr, project.Kind);
+        var plan = EmbeddedBuildPlanner.Plan(project);
+        Assert.Equal("zephyr", plan.ToolchainId);
+        Assert.Contains("nrf52840dk/nrf52840", Assert.Single(plan.Build).Arguments);
+        Assert.Contains("k_sleep(K_SECONDS(1))", File.ReadAllText(Path.Combine(root, "src", "main.c")), StringComparison.Ordinal);
+        var profile = ReadProfile(root);
+        Assert.Equal("nRF52840_xxAA", profile.Target);
+        Assert.Equal(EmbeddedFlashProtocol.ProbeRs, profile.Protocol);
+        Assert.Null(profile.ProbeSelector); // The actual attachment is selected at upload, never an invented J-Link serial.
+        Assert.Equal(new FlashAddressRange(0, 1024 * 1024), Assert.Single(profile.ApplicationFlash));
+        Assert.Contains("without a SoftDevice", File.ReadAllText(Path.Combine(root, "README.md")), StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("nucleo-f401re", "STM32F401RE", 512 * 1024UL)]
+    [InlineData("bluepill", "STM32F103C8", 64 * 1024UL)]
+    [InlineData("blackpill", "STM32F411CE", 512 * 1024UL)]
+    public void Stm32_starters_select_exact_silicon_and_safe_main_flash_without_guessing_probe_identity(string id, string chip, ulong size)
+    {
+        var root = new ProjectTemplates(new AppPaths(_temp.Path)).Create("embedded-" + id, "Firmware");
+        var profile = ReadProfile(root);
+        Assert.Equal(EmbeddedFlashProtocol.ProbeRs, profile.Protocol);
+        Assert.Equal(chip, profile.Target);
+        Assert.Null(profile.ProbeSelector);
+        Assert.Equal(new FlashAddressRange(0x08000000, size), Assert.Single(profile.ApplicationFlash));
+        Assert.Equal(".pio/build/" + id + "/firmware.elf", profile.FirmwarePath);
+    }
+
+    [Fact]
+    public void Xiao_samd21_profile_excludes_its_eight_KiB_bootloader_and_requires_reenumeration()
+    {
+        var root = new ProjectTemplates(new AppPaths(_temp.Path)).Create("embedded-xiao-samd21", "Firmware");
+        var profile = ReadProfile(root);
+        Assert.Equal(EmbeddedFlashProtocol.Bossac, profile.Protocol);
+        Assert.Equal("SAMD21G18A", profile.Target);
+        Assert.True(profile.Touch1200Baud);
+        Assert.Equal(0x2000UL, profile.BinaryAddress);
+        Assert.Equal(new FlashAddressRange(0x2000, 256 * 1024 - 0x2000), Assert.Single(profile.ApplicationFlash));
+
+        // The exact generated profile must reach the ordinary checked planner without writing the bootloader.
+        var image = Path.GetFullPath(profile.FirmwarePath, root);
+        Directory.CreateDirectory(Path.GetDirectoryName(image)!);
+        File.WriteAllBytes(image, [1, 2, 3, 4]);
+        var plan = EmbeddedFlashPlanner.Plan(profile with { FirmwarePath = image, WorkingDirectory = root });
+        Assert.True(plan.Touch1200Baud);
+        Assert.Contains("8192", Assert.Single(plan.Steps).Arguments);
+        Assert.Throws<InvalidOperationException>(() => EmbeddedFlashPlanner.Plan(profile with
+        {
+            FirmwarePath = image, WorkingDirectory = root, BinaryAddress = 0,
+        }));
+    }
+
+    [Theory]
+    [InlineData("teensy40", 2031616UL)]
+    [InlineData("teensy41", 8126464UL)]
+    public void Teensy_starters_bound_the_exact_board_external_flash_and_retain_transfer_only_protocol(string id, ulong size)
+    {
+        var root = new ProjectTemplates(new AppPaths(_temp.Path)).Create("embedded-" + id, "Firmware");
+        var profile = ReadProfile(root);
+        Assert.Equal(EmbeddedFlashProtocol.Teensy, profile.Protocol);
+        Assert.Equal(id.ToUpperInvariant(), profile.Target);
+        Assert.Equal(new FlashAddressRange(0x60000000, size), Assert.Single(profile.ApplicationFlash));
+        Assert.False(profile.Touch1200Baud);
+        Assert.Equal(".pio/build/" + id + "/firmware.hex", profile.FirmwarePath);
+    }
+
+    private static EmbeddedFlashRequest ReadProfile(string root) => JsonSerializer.Deserialize<EmbeddedFlashRequest>(File.ReadAllText(Path.Combine(root, ".tabstudio", "embedded-flash.json")), ProfileJson)!;
 
     [Theory]
     [InlineData("uno", "m328p", "arduino", 32256UL, 115200, false)]

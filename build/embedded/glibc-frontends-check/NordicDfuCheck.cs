@@ -15,12 +15,15 @@ internal static class NordicDfuCheck
         }
         var evidence = Path.Combine(output, "nordic-dfu");
         Directory.CreateDirectory(evidence);
-        runtime.ShareFolder(Path.GetDirectoryName(script)!);
+        // Keep this executable fixture in the same already shared workspace used by every frontend proof.
+        // An extra deep bind under the checkout is not reliably visible with PRoot's link2symlink mapping.
+        var guestScript = Path.Combine(project, "nordic-serial-check.py");
+        File.Copy(script, guestScript, overwrite: true);
         runtime.ShareFolder(evidence);
         var result = await CommandRunner.RunAsync(runtime, new ProcessStartSpec
         {
             Program = "python3",
-            Arguments = [script,
+            Arguments = [guestScript,
                 "--binary", EmbeddedNordicInstallation.Prefix + "/lib/nrfutil-nrf5sdk-tools/pc_nrfutil_legacy_v6.1.7",
                 "--shim", EmbeddedNordicInstallation.X64SerialShim,
                 "--native-shim", UsbBridgeInstallation.ToolsDirectory + "/serial-posix.so",

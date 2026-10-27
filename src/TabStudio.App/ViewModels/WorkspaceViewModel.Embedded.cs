@@ -96,7 +96,8 @@ public sealed partial class WorkspaceViewModel
         StatusText = "Building " + project.Name;
         try
         {
-            if (plan.Build.Any(command => command.Environment.GetValueOrDefault("TABSTUDIO_PLATFORMIO_BOX64") == "1"))
+            if (_toolchains.Platform.UsesLinuxEnvironment
+                && plan.Build.Any(command => command.Environment.GetValueOrDefault("TABSTUDIO_PLATFORMIO_BOX64") == "1"))
             {
                 await _toolchains.PrepareEmbeddedBox64Async(line => Output.WriteLine(line, OutputKind.Info), cancellation.Token);
             }
@@ -154,6 +155,9 @@ public sealed partial class WorkspaceViewModel
     {
         try
         {
+            if (_adapter is not null || IsDebugging || _embeddedDebugUsb is not null)
+                throw new InvalidOperationException("Stop the active debugger before uploading; one process owns each USB probe.");
+            await _embeddedDebugCleanup;
             if (await SelectEmbeddedProjectAsync() is not { } project || !await BuildEmbeddedCoreAsync(project)) return;
             var profilePath = Path.Combine(project.Directory, ".tabstudio", "embedded-flash.json");
             if (!File.Exists(profilePath)) await TryCreateEspMetadataProfileAsync(project, profilePath);
@@ -186,6 +190,23 @@ public sealed partial class WorkspaceViewModel
             {
                 return;
             }
+            UsbDeviceInfo? selectedDevice = null;
+            if (_toolchains.Environment is not null)
+            {
+                var devices = _toolchains.Usb.Devices;
+                if (devices.Count == 0) throw new IOException("Connect the board or debug probe using USB-OTG.");
+                var choice = devices.Count == 1 ? 0 : await Prompt.ChooseAsync("Upload device", "Choose the board or probe to program.", "Select", devices.Select(d => d.ToString()).ToArray());
+                if (choice is null) return;
+                selectedDevice = devices[choice.Value];
+                if (request.Protocol == EmbeddedFlashProtocol.ProbeRs)
+                    request = request with { ProbeSelector = ProbeRsProductionLease.Selector(selectedDevice, request.ProbeSelector) };
+            }
+            if (request.Protocol == EmbeddedFlashProtocol.WchLink)
+            {
+                if (selectedDevice is null) throw new NotSupportedException("The guarded WCH-Link route requires Android's permissioned USB connection.");
+                await UploadGuardedWchLinkAsync(request, selectedDevice);
+                return;
+            }
             var plan = await Task.Run(() => EmbeddedFlashPlanner.Plan(request));
             if (plan.TargetChip is { } resolvedChip) request = request with { Target = resolvedChip };
             using var cancellation = new CancellationTokenSource();
@@ -203,11 +224,7 @@ public sealed partial class WorkspaceViewModel
                     await SerialMonitor.ReleaseAsync();
                     await _toolchains.PrepareEmbeddedSupportAsync(line => Output.WriteLine(line, OutputKind.Info), cancellation.Token);
                     await PrepareEmbeddedProtocolAsync(request, cancellation.Token);
-                    var devices = _toolchains.Usb.Devices;
-                    if (devices.Count == 0) throw new IOException("Connect the board or debug probe using USB-OTG.");
-                    var choice = devices.Count == 1 ? 0 : await Prompt.ChooseAsync("Upload device", "Choose the board or probe to program.", "Select", devices.Select(d => d.ToString()).ToArray());
-                    if (choice is null) return;
-                    connection = await _toolchains.Usb.OpenAsync(devices[choice.Value], cancellation.Token);
+                    connection = await _toolchains.Usb.OpenAsync(selectedDevice!, cancellation.Token);
                     if (request.Protocol == EmbeddedFlashProtocol.ProbeRs)
                     {
                         var granted = connection;
@@ -247,6 +264,7 @@ public sealed partial class WorkspaceViewModel
                 Output.WriteLine(plan.Verification, OutputKind.Info);
                 if (connection is not null) await RememberEmbeddedDeviceAsync(connection.Device, project.Name, request);
                 _lastEmbeddedSerialDevice = EmbeddedFlashPlanner.RequiresSerial(request)
+                    || connection?.Device.Interfaces.Any(item => item.Class == 2 && item.Subclass == 2) == true
                     ? connection?.Device.Id : null;
                 State = IdeState.Ready;
                 StatusText = result.Verified ? "Firmware upload verified" : "Firmware transferred; readback unavailable";

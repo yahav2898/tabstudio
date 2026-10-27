@@ -40,7 +40,10 @@ def ch340_baud(baud):
 
 
 class UsbSerial:
-    def __init__(self, usb, baud=115200, interface=None, dtr=False, rts=False):
+    def __init__(self, usb, baud=115200, interface=None, dtr=False, rts=False, preserve_lines=False):
+        # Capture mode skips explicit modem-output/handshake writes and FTDI reset.
+        # Baud/line-coding and required adapter initialization still occur; this is
+        # not evidence that an unknown adapter's previous electrical state is retained.
         if not 1 <= baud <= 3_500_000:
             raise ValueError("Invalid serial baud rate")
         self.usb = usb
@@ -64,27 +67,31 @@ class UsbSerial:
             control(0xc0, 0x95, 0x0706, length=2)
             control(0x40, 0xa1, 0x501f, 0xd90a)
             self._ch_baud(baud)
-            control(0x40, 0xa4, ~((0x20 if dtr else 0) | (0x40 if rts else 0)))
+            if not preserve_lines:
+                control(0x40, 0xa4, ~((0x20 if dtr else 0) | (0x40 if rts else 0)))
         elif vid == 0x10c4 and pid in (0xea60, 0xea70, 0xea71):
             self.kind = "cp210x"
             control(0x41, 0, 1, self.port)
             control(0x41, 0x1e, index=self.port, data=struct.pack("<I", baud))
             control(0x41, 3, 0x0800, self.port)
-            control(0x41, 7, 0x0300 | int(dtr) | (int(rts) << 1), self.port)
-            # No hardware handshake: DTR/RTS stay under explicit user control.
-            control(0x41, 0x13, index=self.port, data=struct.pack("<IIII", 1 if dtr else 0, 0x40 if rts else 0, 0, 0))
+            if not preserve_lines:
+                control(0x41, 7, 0x0300 | int(dtr) | (int(rts) << 1), self.port)
+                # No hardware handshake: DTR/RTS stay under explicit user control.
+                control(0x41, 0x13, index=self.port, data=struct.pack("<IIII", 1 if dtr else 0, 0x40 if rts else 0, 0, 0))
         elif vid == 0x0403 and pid in (0x6001, 0x6010, 0x6011, 0x6014, 0x6015):
             self.kind = "ftdi"
             self.ftdi = True
-            control(0x40, 0, index=self.port + 1)
+            if not preserve_lines:
+                control(0x40, 0, index=self.port + 1)
             value, index = ftdi_baud(baud)
             # Multi-interface and FT232H/X encode channel in the low index byte.
             if pid != 0x6001:
                 index = (index << 8) | (self.port + 1)
             control(0x40, 3, value, index)
             control(0x40, 4, 8, self.port + 1)
-            control(0x40, 2, 0, self.port + 1)
-            control(0x40, 1, 0x0300 | int(dtr) | (int(rts) << 1), self.port + 1)
+            if not preserve_lines:
+                control(0x40, 2, 0, self.port + 1)
+                control(0x40, 1, 0x0300 | int(dtr) | (int(rts) << 1), self.port + 1)
         else:
             communication = max((i for i in usb.device["interfaces"] if i["class"] == 2 and i["subclass"] == 2 and i["number"] <= self.port), key=lambda i: i["number"], default=None)
             if communication is None or self.item["class"] not in (2, 10):
@@ -92,7 +99,8 @@ class UsbSerial:
             usb.claim(communication["number"])
             self.control_port = communication["number"]
             control(0x21, 0x20, index=communication["number"], data=struct.pack("<IBBB", baud, 0, 0, 8))
-            control(0x21, 0x22, int(dtr) | (int(rts) << 1), communication["number"])
+            if not preserve_lines:
+                control(0x21, 0x22, int(dtr) | (int(rts) << 1), communication["number"])
 
     def configure(self, baud, data_bits=8, stop_bits=1, parity=0):
         """Change line coding without reopening the permissioned USB connection.

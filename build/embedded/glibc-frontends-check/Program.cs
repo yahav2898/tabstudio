@@ -1,11 +1,15 @@
 using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using TabStudio.App.Services;
 using TabStudio.Toolchains.Catalog;
 using TabStudio.Toolchains.Downloads;
 using TabStudio.Toolchains.Embedded;
+using TabStudio.Toolchains.Embedded.Analysis;
 using TabStudio.Toolchains.Embedded.Flashing;
 using TabStudio.Toolchains.Embedded.Installation;
+using TabStudio.Toolchains.Embedded.Projects;
 using TabStudio.Toolchains.Installation;
 using TabStudio.Toolchains.Linux;
 using TabStudio.Toolchains.Processes;
@@ -324,6 +328,47 @@ async Task BuildSdkAsync(IToolchainRuntime runtime, ToolchainDefinition definiti
     evidence["firmwareBytes"] = bytes.Length;
     evidence["firmwareSha256"] = Convert.ToHexStringLower(SHA256.HashData(bytes));
     evidence["compilerErrors"] = errors.Count;
+    if (definition.Id == "zephyr") await BuildNordicStarterAsync(runtime, definition, project);
+}
+
+async Task BuildNordicStarterAsync(IToolchainRuntime runtime, ToolchainDefinition definition, string parent)
+{
+    var directory = Path.Combine(parent, "canonical-nrf52840-dk");
+    ProjectTemplates.CreateForVerification("embedded-nrf52840dk", directory, "Firmware");
+    var detected = EmbeddedProjectDetector.Read(directory) ?? throw new InvalidDataException("The generated Nordic starter was not detected.");
+    var plan = EmbeddedBuildPlanner.Plan(detected);
+    if (detected.Kind != EmbeddedProjectKind.Zephyr || plan.ToolchainId != "zephyr" || plan.Upload.Count != 0)
+        throw new InvalidDataException("The actual Nordic starter must build its exact Zephyr board without uploading.");
+    foreach (var command in plan.Preparation.Concat(plan.Build))
+    {
+        var result = await RunAsync(runtime, command, "canonical-nrf52840dk-build.log");
+        if (new ProblemMatcher(definition).FindErrors(result.Output.Split('\n'), _ => true).Count != 0)
+            throw new InvalidOperationException("The generated Nordic starter produced Error List compiler errors.");
+    }
+    var json = new JsonSerializerOptions(JsonSerializerDefaults.Web) { Converters = { new JsonStringEnumConverter() } };
+    var request = JsonSerializer.Deserialize<EmbeddedFlashRequest>(await File.ReadAllTextAsync(Path.Combine(directory, ".tabstudio/embedded-flash.json"), cancellation), json)!;
+    request = request with
+    {
+        WorkingDirectory = directory, FirmwarePath = Path.GetFullPath(request.FirmwarePath, directory),
+        ProbeSelector = "1366:0105:CI_DRY_PLAN_ONLY",
+    };
+    var bytes = await File.ReadAllBytesAsync(request.FirmwarePath, cancellation);
+    var flash = EmbeddedFlashPlanner.Plan(request);
+    var stackFiles = Directory.EnumerateFiles(Path.Combine(directory, ".tabstudio/embedded/build"), "*.su", SearchOption.AllDirectories).ToArray();
+    var stack = stackFiles.SelectMany(file => StackAnalyzer.ParseGccStackUsage(File.ReadAllText(file))).ToArray();
+    var rows = stack.Length;
+    if (!flash.Verified || stackFiles.Length == 0 || rows == 0)
+        throw new InvalidOperationException("The actual Nordic starter must have a verified dry upload plan and nonempty stack usage.");
+    File.Copy(request.FirmwarePath, Path.Combine(output, "canonical-nrf52840dk.elf"), overwrite: true);
+    await File.WriteAllTextAsync(Path.Combine(output, "canonical-nrf52840dk-stack-usage.json"), JsonSerializer.Serialize(stack, json), cancellation);
+    evidence["canonicalNordicStarter"] = new
+    {
+        board = "nrf52840dk/nrf52840", firmwareBytes = bytes.Length,
+        firmwareSha256 = Convert.ToHexStringLower(SHA256.HashData(bytes)),
+        flashRanges = FirmwareImageInspector.Elf(bytes), uploadDryPlanVerified = flash.Verified,
+        stackFiles = stackFiles.Length, stackRows = rows,
+    };
+    Console.WriteLine("CANONICAL_NRF52840DK_STARTER_PASSED " + ToolchainPlatform.CurrentArchitecture);
 }
 
 static IReadOnlyList<string> ReadDns() => File.ReadLines("/etc/resolv.conf")

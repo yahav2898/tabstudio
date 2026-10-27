@@ -116,6 +116,9 @@ public sealed partial class WorkspaceViewModel
     {
         try
         {
+            if (_adapter is not null || IsDebugging || _embeddedDebugUsb is not null)
+                throw new InvalidOperationException("Stop the active debugger before backing up flash; one process owns each USB probe.");
+            await _embeddedDebugCleanup;
             if (await SelectEmbeddedProjectAsync() is not { } project)
             {
                 return;
@@ -130,17 +133,34 @@ public sealed partial class WorkspaceViewModel
             path = Path.GetFullPath(path, project.Directory);
             var capture = Path.Combine(project.Directory, ".tabstudio", "embedded", Guid.NewGuid().ToString("N") + ".dump.bin");
             Directory.CreateDirectory(Path.GetDirectoryName(capture)!);
-            var read = EmbeddedReadbackPlanner.Plan(request, capture);
             using var cancellation = new CancellationTokenSource();
             _run = cancellation;
             State = IdeState.Running;
             StatusText = "Reading and verifying flash backup";
             ShowEmbeddedFlashOutput();
             IUsbConnection? connection = null;
+            UsbfsInventory? inventory = null;
             try
             {
+                await PrepareEmbeddedProtocolAsync(request, cancellation.Token);
+                if (request.Protocol == EmbeddedFlashProtocol.WchLink)
+                {
+                    var wchDigest = await BackupGuardedWchLinkAsync(request, path, cancellation.Token);
+                    Output.WriteLine("Verified backup saved: " + path + "\nSHA-256: " + wchDigest, OutputKind.Info);
+                    StatusText = "Flash backup verified";
+                    State = IdeState.Ready;
+                    return;
+                }
                 connection = await OpenEmbeddedFlashConnectionAsync(cancellation.Token);
-                var step = WrapEmbeddedFlashCommand(request, connection, read);
+                if (request.Protocol == EmbeddedFlashProtocol.ProbeRs && connection is not null)
+                {
+                    request = request with { ProbeSelector = ProbeRsProductionLease.Selector(connection.Device, request.ProbeSelector) };
+                    inventory = UsbfsDeviceInventory.Create(connection, Path.Combine(_paths.Root, "embedded-usb"));
+                }
+                var read = EmbeddedReadbackPlanner.Plan(request, capture);
+                var step = inventory is not null
+                    ? UsbBridgeProcess.CreateUsbfs(connection!, inventory, read)
+                    : WrapEmbeddedFlashCommand(request, connection, read);
                 var digest = await FirmwareBackup.CreateAsync(path, async (destination, token) =>
                 {
                     var result = await OutputProcess.RunAsync(_toolchains.Runtime, step, Output, null, token);
@@ -165,6 +185,7 @@ public sealed partial class WorkspaceViewModel
             }
             finally
             {
+                inventory?.Dispose();
                 connection?.Dispose();
                 File.Delete(capture);
                 _run = null;
@@ -183,8 +204,12 @@ public sealed partial class WorkspaceViewModel
     private async Task ProductionFlashEmbeddedAsync()
     {
         var connections = new List<IUsbConnection>();
+        var probeLeases = new Dictionary<string, ProbeRsProductionLease>(StringComparer.Ordinal);
         try
         {
+            if (_adapter is not null || IsDebugging || _embeddedDebugUsb is not null)
+                throw new InvalidOperationException("Stop the active debugger before production flashing; one process owns each USB probe.");
+            await _embeddedDebugCleanup;
             if (await SelectEmbeddedProjectAsync() is not { } project || !await BuildEmbeddedCoreAsync(project))
             {
                 return;
@@ -194,14 +219,9 @@ public sealed partial class WorkspaceViewModel
                 throw new NotSupportedException("USB-hub production flashing uses Android's permissioned USB Host API.");
             }
             var request = await LoadEmbeddedFlashRequestAsync(project);
-            if (request.Touch1200Baud || request.Protocol == EmbeddedFlashProtocol.ProbeRs)
+            if (request.Touch1200Baud)
             {
-                throw new NotSupportedException("Production batches require a stable, supported USB device. Touch/re-enumerating bootloaders and Android stock nusb are not supported in batches.");
-            }
-            var plan = await Task.Run(() => EmbeddedFlashPlanner.Plan(request));
-            if (!plan.Verified)
-            {
-                throw new NotSupportedException("This loader reports transfer completion only. Production batches require target verification/readback.");
+                throw new NotSupportedException("Production batches require a stable USB identity. Touch/re-enumerating bootloaders need individual uploads.");
             }
             var devices = _toolchains.Usb.Devices;
             if (devices.Count == 0)
@@ -214,8 +234,13 @@ public sealed partial class WorkspaceViewModel
                 return;
             }
             var reference = devices[selected];
+            if (request.Protocol == EmbeddedFlashProtocol.ProbeRs)
+                request = request with { ProbeSelector = ProbeRsProductionLease.Selector(reference, request.ProbeSelector) };
+            var plan = await Task.Run(() => EmbeddedFlashPlanner.Plan(request));
+            if (!plan.Verified)
+                throw new NotSupportedException("This loader reports transfer completion only. Production batches require target verification/readback.");
             var batch = devices.Where(x => x.VendorId == reference.VendorId && x.ProductId == reference.ProductId).ToArray();
-            if (!await Prompt.ConfirmAsync("Flash " + batch.Length + " boards", "All listed boards must match target " + request.Target + ". Each gets the same validated application image and independent verification.\n" + string.Join("\n", batch.Select(x => x.Id)), "Flash batch"))
+            if (!await Prompt.ConfirmAsync("Flash " + batch.Length + " boards", "All listed boards must match target " + (plan.TargetChip ?? request.Target) + ". Each gets the same validated application image and independent verification.\n" + string.Join("\n", batch.Select(x => x.Id)), "Flash batch"))
             {
                 return;
             }
@@ -234,9 +259,19 @@ public sealed partial class WorkspaceViewModel
                 {
                     connections.Add(await _toolchains.Usb.OpenAsync(device, cancellation.Token));
                 }
+                if (request.Protocol == EmbeddedFlashProtocol.ProbeRs)
+                {
+                    foreach (var connection in connections)
+                    {
+                        cancellation.Token.ThrowIfCancellationRequested();
+                        probeLeases.Add(connection.Device.Id, ProbeRsProductionLease.Create(request, plan, connection,
+                            Path.Combine(_paths.Root, "embedded-usb")));
+                    }
+                }
                 var jobs = connections.Select(connection =>
                 {
-                    var boardPlan = plan;
+                    var probeLease = probeLeases.GetValueOrDefault(connection.Device.Id);
+                    var boardPlan = probeLease?.Plan ?? plan;
                     if (plan.ReadbackPath is { } sharedReadback)
                     {
                         var privateReadback = Path.Combine(Path.GetDirectoryName(sharedReadback)!, Guid.NewGuid().ToString("N") + ".readback.bin");
@@ -251,7 +286,7 @@ public sealed partial class WorkspaceViewModel
                     }
                     return new ProductionFlashJob(connection.Device.Id, token =>
                         EmbeddedFlashExecutor.ExecuteAsync(_toolchains.Runtime, boardPlan,
-                            step => WrapEmbeddedFlashCommand(request, connection, step), cancellationToken: token), ProvidesVerification: boardPlan.Verified);
+                            step => probeLease is not null ? probeLease.Wrap(step) : WrapEmbeddedFlashCommand(request, connection, step), cancellationToken: token), ProvidesVerification: boardPlan.Verified);
                 }).ToArray();
                 var log = Path.Combine(project.Directory, ".tabstudio", "production", DateTime.UtcNow.ToString("yyyyMMdd-HHmmss", System.Globalization.CultureInfo.InvariantCulture) + ".jsonl");
                 var results = await ProductionFlasher.RunAsync(jobs, log, parallelism: 2,
@@ -274,6 +309,7 @@ public sealed partial class WorkspaceViewModel
         catch (Exception error) when (IsEmbeddedError(error)) { EmbeddedFailure(error); }
         finally
         {
+            foreach (var lease in probeLeases.Values) lease.Dispose();
             foreach (var connection in connections)
             {
                 connection.Dispose();

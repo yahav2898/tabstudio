@@ -60,7 +60,7 @@ public static class ProbeTargetInfoReader
     [
         "PROBE_RS_CHIP", "PROBE_RS_CHIP_DESCRIPTION_PATH", "PROBE_RS_PROTOCOL", "PROBE_RS_CYCLE_POWER",
         "PROBE_RS_NON_INTERACTIVE", "PROBE_RS_PROBE", "PROBE_RS_SPEED", "PROBE_RS_CONNECT_UNDER_RESET",
-        "PROBE_RS_DRY_RUN", "PROBE_RS_ALLOW_ERASE_ALL", "PROBE_RS_PREFER_FLASH_ALGO"
+        "PROBE_RS_DRY_RUN", "PROBE_RS_ALLOW_ERASE_ALL", "PROBE_RS_PREFER_FLASH_ALGO", "PROBE_RS_CONFIG_PRESET"
     ];
 
     /// <summary>Clears inherited target/erase/reset/power overrides before a typed info/logging operation selects its explicit arguments.</summary>

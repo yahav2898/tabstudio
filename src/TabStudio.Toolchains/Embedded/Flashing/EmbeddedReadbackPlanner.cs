@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text;
+using TabStudio.Toolchains.Embedded.Devices;
 using TabStudio.Toolchains.Processes;
 
 namespace TabStudio.Toolchains.Embedded.Flashing;
@@ -32,6 +33,16 @@ public static class EmbeddedReadbackPlanner
         string program;
         switch (request.Protocol)
         {
+            case EmbeddedFlashProtocol.ProbeRs:
+                if (string.IsNullOrWhiteSpace(request.Target) || !request.Target.All(c => char.IsAsciiLetterOrDigit(c) || c is '_' or '-' or '.')
+                    || string.IsNullOrWhiteSpace(request.ProbeSelector) || request.ProbeSelector.Any(char.IsControl))
+                {
+                    throw new ArgumentException("Select an exact target and one permissioned probe before backing up flash.", nameof(request));
+                }
+                program = "probe-rs";
+                args.AddRange(["read", "b8", start, length, "--output", output, "--format", "binary",
+                    "--chip", request.Target, "--probe", request.ProbeSelector, "--non-interactive"]);
+                break;
             case EmbeddedFlashProtocol.OpenOcd:
                 ValidateConfig(request.InterfaceConfig);
                 ValidateConfig(request.TargetConfig);
@@ -57,9 +68,13 @@ public static class EmbeddedReadbackPlanner
                 args.AddRange(["-d", id, "-a", request.DfuAlternate.ToString(CultureInfo.InvariantCulture), "-s", start + ":" + length, "-U", output]);
                 break;
             default:
-                throw new NotSupportedException("Raw application backup is implemented for OpenOCD, stm32flash and readback-capable STM32 DFU. Protection is never disabled.");
+                throw new NotSupportedException("Raw application backup is implemented for probe-rs, OpenOCD, stm32flash and readback-capable STM32 DFU. Protection is never disabled.");
         }
-        return new() { Program = program, Arguments = args, WorkingDirectory = Path.GetFullPath(request.WorkingDirectory) };
+        return new()
+        {
+            Program = program, Arguments = args, WorkingDirectory = Path.GetFullPath(request.WorkingDirectory),
+            Environment = program == "probe-rs" ? ProbeTargetInfoReader.SafeAttachEnvironment() : new Dictionary<string, string?>(),
+        };
     }
 
     private static void ValidateConfig(string? path)

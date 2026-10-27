@@ -89,8 +89,8 @@ public sealed record EmbeddedBuildOptions
     /// <summary>Limit parallel build workers on a tablet.</summary>
     public int Jobs { get; init; } = 2;
 
-    /// <summary>Explicit PlatformIO package policy: native (default), or boxed-x86_64 only when no compatible ARM64 artifact exists.</summary>
-    public string HostPackageMode { get; init; } = "native";
+    /// <summary>PlatformIO package policy: auto (default) prefers native packages and translates unavailable or mislabeled ARM64 host tools; native refuses translation. boxed-x86_64 retains the earlier auto-policy spelling.</summary>
+    public string HostPackageMode { get; init; } = "auto";
 }
 
 /// <summary>Native project commands that the existing process runtime can run without shell interpolation.</summary>

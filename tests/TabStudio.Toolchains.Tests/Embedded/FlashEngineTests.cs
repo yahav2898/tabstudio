@@ -312,6 +312,16 @@ public sealed class FlashEngineTests : IDisposable
         Assert.Contains("dump_image", plan.Arguments[^1], StringComparison.Ordinal);
         Assert.DoesNotContain("unlock", plan.CommandLine, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("erase", plan.CommandLine, StringComparison.OrdinalIgnoreCase);
+        var probe = EmbeddedReadbackPlanner.Plan(request with
+        {
+            Protocol = EmbeddedFlashProtocol.ProbeRs, Target = "STM32F401RETx", ProbeSelector = "0483:3748",
+        }, _temp.Resolve("probe-backup.bin"));
+        Assert.Equal("probe-rs", probe.Program);
+        Assert.Equal(new[] { "read", "b8" }, probe.Arguments.Take(2));
+        Assert.Contains("binary", probe.Arguments);
+        Assert.Null(probe.Environment["PROBE_RS_ALLOW_ERASE_ALL"]);
+        Assert.Null(probe.Environment["PROBE_RS_CONFIG_PRESET"]);
+        Assert.DoesNotContain("--allow-erase-all", probe.Arguments);
         Assert.Throws<InvalidOperationException>(() => EmbeddedReadbackPlanner.Plan(request with { ApplicationFlash = [] }, _temp.Resolve("backup.bin")));
         Assert.Throws<NotSupportedException>(() => EmbeddedReadbackPlanner.Plan(request with { Protocol = EmbeddedFlashProtocol.Esptool }, _temp.Resolve("backup.bin")));
     }

@@ -20,6 +20,7 @@ public static class UsbBridgeInstallation
         ["usb_device.py"] = MicrochipInstallation.Resource("usb_device.py"),
         ["usb_serial.py"] = MicrochipInstallation.Resource("usb_serial.py"),
         ["serial_bridge.py"] = Resource("serial_bridge.py"),
+        ["serial_unity_reader.py"] = Resource("serial_unity_reader.py"),
         ["box64_runtime.py"] = Resource("box64_runtime.py"),
         ["platformio_box64.py"] = Resource("platformio_box64.py"),
         ["nordic_runtime.py"] = Resource("nordic_runtime.py"),

@@ -85,7 +85,7 @@ public sealed class EmbeddedGlibcToolchainInstaller : IToolchainInstaller, IDisp
     public Task PrepareRuntimeAsync(IProgress<InstallProgress>? progress, CancellationToken cancellationToken) =>
         _primary.PrepareRuntimeAsync(progress, cancellationToken);
 
-    /// <summary>Prepares the explicitly selected PlatformIO x86 package translator in the same glibc environment.</summary>
+    /// <summary>Prepares the native-first PlatformIO fallback translator in the same glibc environment.</summary>
     /// <param name="line">Preparation output.</param>
     /// <param name="cancellationToken">Stops preparation before a build starts.</param>
     public async Task PrepareBox64Async(Action<string> line, CancellationToken cancellationToken)
@@ -98,7 +98,8 @@ public sealed class EmbeddedGlibcToolchainInstaller : IToolchainInstaller, IDisp
             {
                 throw new ToolchainInstallException(InstallFailure.RuntimeUnavailable, "Install PlatformIO in the Toolchain Store before preparing its optional x86 package translator.");
             }
-            await EmbeddedBox64Installation.PrepareAsync(Rootfs, _platform, _downloader, _guest, line, cancellationToken).ConfigureAwait(false);
+            if (_platform.Architecture != "x86_64") // Native x64 packages need no translator or private runtime.
+                await EmbeddedBox64Installation.PrepareAsync(Rootfs, _platform, _downloader, _guest, line, cancellationToken).ConfigureAwait(false);
         }
         finally
         {
@@ -126,8 +127,8 @@ public sealed class EmbeddedGlibcToolchainInstaller : IToolchainInstaller, IDisp
                 Version = IsToolchainReady(toolchain.Id) ? toolchain.PinnedVersion : null,
                 DownloadSize = toolchain.EstimatedDownloadSize,
                 InstallSize = toolchain.EstimatedInstalledSize,
-                Note = !supported ? "The embedded glibc environment requires ARM64 or x64. No x86 translation is selected implicitly."
-                    : Problem ?? "Native tools run in the shared Ubuntu glibc environment. USB shims are built for the same ABI. PlatformIO telemetry is disabled.",
+                Note = !supported ? "The embedded glibc environment requires ARM64 or x64. PlatformIO prefers native host packages and can translate unavailable ARM64 tools through the pinned Box64 runtime."
+                    : Problem ?? "Native tools run in the shared Ubuntu glibc environment. USB shims match its ABI. PlatformIO prefers native packages, checks executable ELF architecture and disables telemetry.",
             })];
     }
 

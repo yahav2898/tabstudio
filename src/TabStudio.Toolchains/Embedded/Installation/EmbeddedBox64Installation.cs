@@ -7,10 +7,10 @@ using TabStudio.Toolchains.Runtimes;
 
 namespace TabStudio.Toolchains.Embedded.Installation;
 
-/// <summary>Explicit, project-scoped translation of unavailable ARM64 PlatformIO host packages.</summary>
+/// <summary>Native-first, project-scoped translation of unavailable ARM64 PlatformIO host packages.</summary>
 public static class EmbeddedBox64Installation
 {
-    /// <summary>Opt-in process marker; ordinary native PlatformIO commands never use this path.</summary>
+    /// <summary>Process policy marker: 1 enables native-first fallback; native audits host executables and refuses translation.</summary>
     public const string Marker = "TABSTUDIO_PLATFORMIO_BOX64";
     /// <summary>The private translator and open-source runtime, separate from every compiler licence.</summary>
     public const string Directory = "/opt/tabstudio/box64";
@@ -57,7 +57,7 @@ public static class EmbeddedBox64Installation
     public static ProcessStartSpec Wrap(ProcessStartSpec command)
     {
         ArgumentNullException.ThrowIfNull(command);
-        if (!command.Environment.TryGetValue(Marker, out var marker) || marker != "1") return command;
+        if (!command.Environment.TryGetValue(Marker, out var marker) || marker is not ("1" or "native")) return command;
         if (Path.GetFileName(command.Program) is "python3" or "python"
             && command.Arguments.Count > 0 && command.Arguments[0] == UsbBridgeInstallation.ToolsDirectory + "/serial_bridge.py")
         {

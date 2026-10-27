@@ -420,7 +420,7 @@ public sealed partial class WorkspaceViewModel
                          embedded.Kind == TabStudio.Toolchains.Embedded.Projects.EmbeddedProjectKind.EspIdf)
                 {
                     await UploadEmbeddedAsync();
-                    if (State == IdeState.Ready && StatusText == "Firmware upload verified")
+                    if (State == IdeState.Ready && StatusText is "Firmware upload verified" or "Firmware transferred; readback unavailable")
                     {
                         ShowSerialMonitor();
                         if (_lastEmbeddedSerialDevice is { } id && SerialMonitor.Devices.FirstOrDefault(d => d.Id == id) is { } serial)

@@ -80,8 +80,9 @@ class VirtualSerial:
 
 
 class SerialBridge:
-    def __init__(self, serial, audit=None):
+    def __init__(self, serial, audit=None, preserve_lines=False):
         self.serial, self.audit = serial, audit
+        self.preserve_lines = preserve_lines
         self.master, self.slave = pty.openpty()
         tty.setraw(self.slave)
         self.slave_name = os.ttyname(self.slave)
@@ -92,10 +93,16 @@ class SerialBridge:
         self.tx_deadline = 0.0
         self.error = None
         self.directory = tempfile.TemporaryDirectory(prefix="ts-serial-")
-        # FIFOs work in Android app storage and need no socket permission. The
-        # native caller uses a separate flock per request to serialize processes.
-        for name in ("request", "response"):
-            os.mkfifo(str(Path(self.directory.name) / name), 0o600)
+        # An explicit directory FD forces Python's mkfifoat/mknodat path. Alpine's
+        # legacy mkfifo/mknod syscall is blocked by Android's x86_64 app seccomp
+        # policy even though mknodat can create these private FIFOs. The native
+        # caller uses a separate flock per request to serialize processes.
+        directory_fd = os.open(self.directory.name, os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC)
+        try:
+            for name in ("request", "response"):
+                os.mkfifo(name, 0o600, dir_fd=directory_fd)
+        finally:
+            os.close(directory_fd)
         Path(self.directory.name, "lock").touch(mode=0o600)
         self.request = os.open(str(Path(self.directory.name) / "request"), os.O_RDWR | os.O_NONBLOCK)
         self.response = os.open(str(Path(self.directory.name) / "response"), os.O_RDWR | os.O_NONBLOCK)
@@ -229,11 +236,12 @@ class SerialBridge:
         self.stop.set()
         for thread in self.threads:
             thread.join(timeout=4)
-        # Reset outputs even on cancellation or a failed child. Never reset the MCU
-        # after a failed verify; these are serial host outputs, not a jump command.
-        with contextlib.suppress(OSError):
-            self.serial.set_break(False)
-            self.serial.set_lines(False, False)
+        # Normal programmer clients release outputs even after failure. A receive-only
+        # capture explicitly skips these writes so closing cannot pulse its reset lines.
+        if not self.preserve_lines:
+            with contextlib.suppress(OSError):
+                self.serial.set_break(False)
+                self.serial.set_lines(False, False)
         os.close(self.request)
         os.close(self.response)
         os.close(self.master)
@@ -248,6 +256,7 @@ def main():
     parser.add_argument("--baud", type=int, default=115200)
     parser.add_argument("--interface", type=int)
     parser.add_argument("--virtual", action="store_true", help="Explicit synthetic loopback device for CI")
+    parser.add_argument("--preserve-lines", action="store_true", help="Capture only: skip intentional modem-output/reset initialization and cleanup")
     parser.add_argument("--audit", help="Control-event JSONL for tests; contains no firmware or serial bytes")
     parser.add_argument("command", nargs=argparse.REMAINDER)
     args = parser.parse_args()
@@ -272,8 +281,8 @@ def main():
             from usb_device import WrappedUsb
             from usb_serial import UsbSerial
             usb = WrappedUsb()
-            serial = UsbSerial(usb, args.baud, args.interface)
-        bridge = SerialBridge(serial, args.audit)
+            serial = UsbSerial(usb, args.baud, args.interface, preserve_lines=args.preserve_lines)
+        bridge = SerialBridge(serial, args.audit, preserve_lines=args.preserve_lines)
         os.symlink(bridge.slave_name, alias)
         bridge.start()
         environment = dict(os.environ)

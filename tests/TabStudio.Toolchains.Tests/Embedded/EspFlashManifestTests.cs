@@ -12,19 +12,42 @@ public sealed class EspFlashManifestTests : IDisposable
 {
     private readonly TempDirectory _temporary = new();
 
+    [Theory]
+    [InlineData("valid")]
+    [InlineData("swapped-magic")]
+    [InlineData("checksum")]
+    [InlineData("checksum-header")]
+    [InlineData("hidden-after-end")]
+    public void Actual_Idf_generator_output_uses_AA_50_bytes_and_validated_checksum(string variant)
+    {
+        var path = Metadata("esp32c3", "0x0");
+        using var fixture = typeof(EspFlashManifestTests).Assembly.GetManifestResourceStream("Embedded.Idf541Partitions.json")!;
+        using var document = JsonDocument.Parse(fixture);
+        var bytes = Convert.FromBase64String(document.RootElement.GetProperty("binaryBase64").GetString()!);
+        Assert.Equal("aa50", Convert.ToHexStringLower(bytes.AsSpan(0, 2)));
+        Assert.Equal(document.RootElement.GetProperty("binarySha256").GetString(),
+            Convert.ToHexStringLower(System.Security.Cryptography.SHA256.HashData(bytes)));
+        switch (variant)
+        {
+            case "swapped-magic": bytes[0] = 0x50; bytes[1] = 0xAA; break;
+            case "checksum": bytes[112] ^= 1; break;
+            case "checksum-header": bytes[98] = 0; break;
+            case "hidden-after-end": bytes[0] = bytes[1] = 0xFF; break;
+        }
+        File.WriteAllBytes(_temporary.Resolve("partitions.bin"), bytes);
+        if (variant == "valid") Assert.Equal("esp32c3", EspFlashManifestReader.Read(path).Chip);
+        else Assert.Throws<InvalidDataException>(() => EspFlashManifestReader.Read(path));
+    }
+
     [Fact]
     public void Idf54_default_security_capabilities_are_not_security_enable_switches()
     {
         var path = Metadata("esp32c3", "0x0");
-        // Reduced default configuration from pinned v5.4 bootloader/Kconfig.projbuild:
-        // RSA support, default version preference and ROM-download capability are not enablement.
-        File.WriteAllText(_temporary.Resolve("config/sdkconfig.json"), """
-            {"SECURE_BOOT_V2_RSA_SUPPORTED":true,"SECURE_BOOT_V2_ECC_SUPPORTED":false,
-             "SECURE_BOOT_V1_SUPPORTED":false,"SECURE_BOOT_V2_PREFERRED":true,
-             "SECURE_ROM_DL_MODE_ENABLED":true,"SOC_FLASH_ENCRYPTED_XTS_AES_BLOCK_MAX":64,
-             "SECURE_BOOT":false,"SECURE_BOOT_V2_ENABLED":false,"SECURE_FLASH_ENC_ENABLED":false,
-             "ESP_CRYPTO_DPA_PROTECTION_AT_STARTUP":true}
-            """);
+        // Actual kconfgen 2.5.4 output from the pinned SDK's root/SOC/bootloader/security Kconfig modules.
+        // See Fixtures/idf-5.4.1-security-provenance.json; unrelated components were excluded from generation.
+        using var fixture = typeof(EspFlashManifestTests).Assembly.GetManifestResourceStream("Embedded.Idf541DefaultSecurity.json")!;
+        using var reader = new StreamReader(fixture);
+        File.WriteAllText(_temporary.Resolve("config/sdkconfig.json"), reader.ReadToEnd());
         Assert.Equal("esp32c3", EspFlashManifestReader.Read(path).Chip);
     }
 
@@ -39,6 +62,15 @@ public sealed class EspFlashManifestTests : IDisposable
     [InlineData("SECURE_FLASH_ENCRYPTION_MODE_DEVELOPMENT")]
     [InlineData("SECURE_FLASH_ENCRYPTION_MODE_RELEASE")]
     [InlineData("SECURE_FLASH_REQUIRE_ALREADY_ENABLED")]
+    [InlineData("SECURE_FLASH_PSEUDO_ROUND_FUNC")]
+    [InlineData("SECURE_BOOT_BUILD_SIGNED_BINARIES")]
+    [InlineData("SECURE_BOOTLOADER_ONE_TIME_FLASH")]
+    [InlineData("SECURE_BOOTLOADER_REFLASHABLE")]
+    [InlineData("SECURE_SIGNED_APPS")]
+    [InlineData("SECURE_SIGNED_ON_BOOT")]
+    [InlineData("SECURE_SIGNED_ON_UPDATE")]
+    [InlineData("SECURE_SIGNED_ON_BOOT_NO_SECURE_BOOT")]
+    [InlineData("SECURE_SIGNED_ON_UPDATE_NO_SECURE_BOOT")]
     [InlineData("SECURE_SIGNED_APPS_NO_SECURE_BOOT")]
     [InlineData("SECURE_DISABLE_ROM_DL_MODE")]
     [InlineData("SECURE_ENABLE_SECURE_ROM_DL_MODE")]
@@ -172,7 +204,7 @@ public sealed class EspFlashManifestTests : IDisposable
         File.WriteAllText(_temporary.Resolve("config/sdkconfig.json"), "{\"SECURE_BOOT\":false,\"SECURE_FLASH_ENC_ENABLED\":false}");
         foreach (var file in new[] { "bootloader.bin", "partitions.bin", "application.bin" }) File.WriteAllBytes(_temporary.Resolve(file), [1, 2, 3, 4]);
         var partitionTable = Enumerable.Repeat((byte)0xFF, 64).ToArray();
-        BinaryPrimitives.WriteUInt16LittleEndian(partitionTable, 0xAA50);
+        BinaryPrimitives.WriteUInt16LittleEndian(partitionTable, 0x50AA);
         partitionTable[2] = 0; partitionTable[3] = 0;
         BinaryPrimitives.WriteUInt32LittleEndian(partitionTable.AsSpan(4), 0x10000);
         BinaryPrimitives.WriteUInt32LittleEndian(partitionTable.AsSpan(8), 0x100000);

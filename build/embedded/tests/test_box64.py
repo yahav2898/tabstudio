@@ -45,6 +45,26 @@ class BoxedPackageTests(unittest.TestCase):
             boxed.overlay(package)
             self.assertEqual(digest, hashlib.sha256((original / "bin/tool").read_bytes()).hexdigest())
 
+    def test_executable_header_wins_over_package_system_metadata(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            arm32 = root / "srec_cat"
+            header = bytearray(52)
+            header[:7] = b"\x7fELF\x01\x01\x01"
+            struct.pack_into("<HH", header, 16, 2, 40)
+            arm32.write_bytes(header)
+            arm32.chmod(0o755)
+            self.assertEqual("ELF32 machine 40", boxed.executable_architecture(arm32))
+            self.assertFalse(boxed.x86_executable(arm32))
+            # The same mode bit on a cross-compiler object is not a host command.
+            struct.pack_into("<H", header, 16, 1)
+            arm32.write_bytes(header)
+            self.assertIsNone(boxed.executable_architecture(arm32))
+            # Corrupt ELF is refused before executing a package script.
+            arm32.write_bytes(b"\x7fELF\x02\x01\x01")
+            with self.assertRaisesRegex(ValueError, "Invalid executable ELF"):
+                boxed.package_architectures(root)
+
     def test_private_arm_loader_matches_runtime_and_never_replaces_system_loader(self):
         arguments, environment = box64_runtime.command("/original/bin/gcc", ["-v"], "aarch64", Path("/private"))
         self.assertEqual(["/private/box64", "/original/bin/gcc", "-v"], arguments)

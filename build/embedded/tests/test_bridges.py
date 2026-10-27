@@ -141,6 +141,18 @@ class NativeSerial(unittest.TestCase):
         subprocess.run(["cc", "-std=gnu17", "-O2", "-Wall", "-Wextra", "-Werror", "-shared", "-fPIC", str(NATIVE / "serial_posix.c"), "-ldl", "-o", str(cls.shim)], check=True)
         (cls.folder / "client.c").write_text(CLIENT)
         subprocess.run(["cc", "-Wall", "-Wextra", "-Werror", str(cls.folder / "client.c"), "-o", str(cls.folder / "client")], check=True)
+        # Reproduce Android x86_64's blocked legacy entry point on every host,
+        # including glibc hosts whose own mkfifo implementation uses mknodat.
+        (cls.folder / "deny_legacy_mkfifo.c").write_text("""
+#include <errno.h>
+#include <sys/stat.h>
+int mkfifo(const char *path, mode_t mode) {
+    (void)path; (void)mode; errno = ENOSYS; return -1;
+}
+""")
+        cls.deny_mkfifo = cls.folder / "deny-legacy-mkfifo.so"
+        subprocess.run(["cc", "-Wall", "-Wextra", "-Werror", "-shared", "-fPIC",
+                        str(cls.folder / "deny_legacy_mkfifo.c"), "-o", str(cls.deny_mkfifo)], check=True)
 
     @classmethod
     def tearDownClass(cls):
@@ -164,6 +176,29 @@ class NativeSerial(unittest.TestCase):
         result = subprocess.run([sys.executable, str(NATIVE / "serial_bridge.py"), "--virtual", "--shim", str(self.shim), "--port", str(alias), "--", "true"], capture_output=True, text=True, timeout=5)
         self.assertNotEqual(result.returncode, 0)
         self.assertEqual(alias.read_text(), "keep")
+
+    def test_android_blocked_legacy_mkfifo_uses_directory_relative_mknodat_in_the_actual_worker(self):
+        environment = {**os.environ, "LD_PRELOAD": str(self.deny_mkfifo)}
+        check = """import errno,os,tempfile
+with tempfile.TemporaryDirectory() as folder:
+    try:
+        os.mkfifo(folder + '/must-not-use-legacy')
+    except OSError as error:
+        assert error.errno == errno.ENOSYS, error
+        print('LEGACY_MKFIFO_BLOCKED')
+    else:
+        raise AssertionError('The legacy mkfifo rejection was not exercised')
+"""
+        blocked = subprocess.run([sys.executable, "-c", check], env=environment, capture_output=True, text=True, timeout=5)
+        self.assertEqual(0, blocked.returncode, blocked.stdout + blocked.stderr)
+        self.assertIn("LEGACY_MKFIFO_BLOCKED", blocked.stdout)
+        alias = self.folder / "android-compatible-port"
+        result = subprocess.run([sys.executable, str(NATIVE / "serial_bridge.py"), "--virtual", "--shim", str(self.shim),
+                                 "--port", str(alias), "--", str(self.folder / "client"), "{port}"],
+                                env=environment, capture_output=True, text=True, timeout=15)
+        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+        self.assertIn("SERIAL_POSIX_PASSED", result.stdout)
+        self.assertFalse(os.path.lexists(alias))
 
     def test_unrelated_posix_descriptors_are_untouched(self):
         code = "import os,pty,termios; a,b=pty.openpty(); termios.tcgetattr(b); os.close(a); os.close(b); print('OK')"

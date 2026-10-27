@@ -233,7 +233,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     [NotifyCanExecuteChangedFor(nameof(BuildEmbeddedCommand), nameof(UploadEmbeddedCommand), nameof(DebugEmbeddedChipCommand),
         nameof(UploadEmbeddedOtaCommand), nameof(BackupEmbeddedFirmwareCommand), nameof(ProductionFlashEmbeddedCommand),
         nameof(OpenMicroPythonReplCommand), nameof(SyncMicroPythonFileCommand), nameof(RunEmbeddedTestsCommand), nameof(UploadUf2StorageCommand),
-        nameof(StartEmbeddedLogsCommand), nameof(IdentifyEmbeddedTargetCommand), nameof(RunEmbeddedBoardTestsCommand))]
+        nameof(StartEmbeddedLogsCommand), nameof(IdentifyEmbeddedTargetCommand), nameof(RunEmbeddedBoardTestsCommand), nameof(RunSerialEmbeddedTestsCommand))]
     public partial IdeState State { get; private set; } = IdeState.Busy;
 
     /// <summary>Whether a load or build is in progress.</summary>

@@ -24,7 +24,7 @@ public static class EspFlashManifestReader
     {
         "esp32", "esp32s2", "esp32s3", "esp32c3", "esp32c6", "esp32h2",
     };
-    // ESP-IDF v5.4 components/bootloader/Kconfig.projbuild and esp_security/Kconfig.
+    // ESP-IDF v5.4.1 components/bootloader/Kconfig.projbuild and esp_security/Kconfig.
     // *_SUPPORTED, *_PREFERRED and SECURE_ROM_DL_MODE_ENABLED describe capability/default choices;
     // they are true in ordinary unencrypted builds and never authorize irreversible configuration.
     private static readonly HashSet<string> SecurityEnableSwitches = new(StringComparer.Ordinal)
@@ -35,7 +35,7 @@ public static class EspFlashManifestReader
         "SECURE_SIGNED_APPS", "SECURE_SIGNED_ON_BOOT", "SECURE_SIGNED_ON_UPDATE",
         "SECURE_SIGNED_APPS_NO_SECURE_BOOT", "SECURE_SIGNED_ON_BOOT_NO_SECURE_BOOT", "SECURE_SIGNED_ON_UPDATE_NO_SECURE_BOOT",
         "SECURE_FLASH_ENC_ENABLED", "FLASH_ENCRYPTION_ENABLED", "SECURE_FLASH_ENCRYPTION_MODE_DEVELOPMENT",
-        "SECURE_FLASH_ENCRYPTION_MODE_RELEASE", "SECURE_FLASH_REQUIRE_ALREADY_ENABLED",
+        "SECURE_FLASH_ENCRYPTION_MODE_RELEASE", "SECURE_FLASH_REQUIRE_ALREADY_ENABLED", "SECURE_FLASH_PSEUDO_ROUND_FUNC",
         "SECURE_DISABLE_ROM_DL_MODE", "SECURE_ENABLE_SECURE_ROM_DL_MODE", "BOOTLOADER_APP_ANTI_ROLLBACK",
         "ESP_CRYPTO_FORCE_ECC_CONSTANT_TIME_POINT_MUL",
     };
@@ -199,19 +199,27 @@ public static class EspFlashManifestReader
         {
             var entry = bytes.AsSpan(at, 32);
             var magic = BinaryPrimitives.ReadUInt16LittleEndian(entry);
-            if (magic == 0xFFFF) break;
+            if (magic == 0xFFFF)
+            {
+                if (bytes.AsSpan(at).ContainsAnyExcept((byte)0xFF))
+                    throw new InvalidDataException("ESP partition table contains data after its end marker.");
+                break;
+            }
             if (magic == 0xEBEB)
             {
                 // ESP-IDF's partition-table checksum is MD5 by format, not used as a trust/signature decision.
 #pragma warning disable CA5351
-                if (!MD5.HashData(bytes.AsSpan(0, at)).AsSpan().SequenceEqual(entry[16..]))
+                if (entry[2..16].ContainsAnyExcept((byte)0xFF)
+                    || !MD5.HashData(bytes.AsSpan(0, at)).AsSpan().SequenceEqual(entry[16..])
+                    || bytes.AsSpan(at + 32).ContainsAnyExcept((byte)0xFF))
 #pragma warning restore CA5351
                 {
                     throw new InvalidDataException("ESP partition table checksum differs from its entries.");
                 }
                 break;
             }
-            if (magic != 0xAA50) throw new InvalidDataException("ESP partition table has an unknown/corrupt entry.");
+            // ESP-IDF emits bytes AA 50: its little-endian integer representation is 0x50AA.
+            if (magic != 0x50AA) throw new InvalidDataException("ESP partition table has an unknown/corrupt entry.");
             if ((BinaryPrimitives.ReadUInt32LittleEndian(entry[28..]) & 1) != 0)
             {
                 throw new NotSupportedException("Encrypted ESP partitions require a separately reviewed security workflow; ordinary upload refuses this build.");

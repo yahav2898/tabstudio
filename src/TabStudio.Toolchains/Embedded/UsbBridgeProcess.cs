@@ -48,7 +48,8 @@ public static class UsbBridgeProcess
     /// <param name="portAlias">Absolute, unused alias path, usually under the project's .tabstudio/dev folder.</param>
     /// <param name="baud">Initial baud rate; the client can change it with termios.</param>
     /// <param name="interfaceNumber">USB serial interface, or automatic selection.</param>
-    public static ProcessStartSpec CreateSerial(IUsbConnection connection, ProcessStartSpec command, string portAlias, int baud = 115200, int? interfaceNumber = null)
+    /// <param name="preserveLines">Receive-only capture: skip intentional modem-output initialization, reset requests and output cleanup.</param>
+    public static ProcessStartSpec CreateSerial(IUsbConnection connection, ProcessStartSpec command, string portAlias, int baud = 115200, int? interfaceNumber = null, bool preserveLines = false)
     {
         ArgumentException.ThrowIfNullOrEmpty(portAlias);
         if (!Path.IsPathFullyQualified(portAlias)) throw new ArgumentException("The serial port alias must be absolute.", nameof(portAlias));
@@ -57,6 +58,7 @@ public static class UsbBridgeProcess
         var spec = WithConnection(connection, command);
         List<string> arguments = [UsbBridgeInstallation.ToolsDirectory + "/serial_bridge.py", "--shim", UsbBridgeInstallation.ToolsDirectory + "/serial-posix.so", "--port", portAlias, "--baud", baud.ToString(System.Globalization.CultureInfo.InvariantCulture)];
         if (interfaceNumber is { } number) arguments.AddRange(["--interface", number.ToString(System.Globalization.CultureInfo.InvariantCulture)]);
+        if (preserveLines) arguments.Add("--preserve-lines");
         arguments.AddRange(["--", command.Program, .. command.Arguments]);
         var environment = new Dictionary<string, string?>(spec.Environment);
         if (EmbeddedGlibcRuntime.IsEmbeddedCommand(command.Program)) environment[EmbeddedGlibcRuntime.RoutingMarker] = "1";
