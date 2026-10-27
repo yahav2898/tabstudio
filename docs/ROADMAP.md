@@ -24,7 +24,7 @@ and run it on an Android tablet emulator, and each one installs as an update ove
 | [0.14](releases/0.14.0.md) | Go, Rust, C/C++ and Java with IntelliSense and debuggers, WPF on OpenSilver, and WinUI and Uno Platform on Skia. |
 | [0.15](releases/0.15.0.md) | Repositories that set themselves up, static web sites, the Database Explorer, remote development over SSH, Android apps built on the tablet and iOS through cloud builds, Microchip PIC, C# Hot Reload on the desktop and time-travel debugging, offline AI, and Port to Avalonia completed. |
 | [0.16](releases/0.16.0.md) | Real-world .NET repositories built as the SDK builds them, backing services from Compose files without Docker, and experimental Flutter and Dart. |
-| [0.17](releases/0.17.0.md) | Classic .NET Framework WPF and Windows Forms projects run on the tablet, with Upgrade project, and every panel of 0.15 and 0.16 redesigned to the design system. |
+| [0.17](releases/0.17.0.md) | Classic .NET Framework WPF and Windows Forms projects run on the tablet, with Upgrade project, and every panel of 0.15 and 0.16 redesigned to the design system. [0.17.1](releases/0.17.1.md) draws on images in Windows Forms apps, fits WPF windows in the preview, and runs packages with native libraries. |
 
 ## Next
 

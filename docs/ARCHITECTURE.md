@@ -54,7 +54,7 @@ Dependencies point down only. Each layer has one job:
 | `TabStudio.Remote` | SSH.NET connections, platform signing, SFTP source caches, remote processes, forwarding and publishing. | `TabStudio.Toolchains` |
 | `TabStudio.Services` | Compose/devcontainer parsing, native service mappings, persistent data, dependency scheduling, health, per-service logs and connection rewriting. | `TabStudio.Toolchains` |
 | `TabStudio.Toolchains` | The Toolchain Store: the catalog, Alpine Linux on PRoot, verified Alpine packages, processes and pseudo terminals, toolchain projects and the terminal emulator. | `TabStudio.Core` |
-| `TabStudio.Forms` | Windows Forms on Avalonia: `System.Windows.Forms` and `System.Drawing`, run in the app preview. | Avalonia |
+| `TabStudio.Forms` | Windows Forms on Avalonia: `System.Windows.Forms` and `System.Drawing`, run in the app preview; drawing on bitmaps is rasterized with Skia. | Avalonia, SkiaSharp |
 | `TabStudio.Forms.Design` | The Windows Forms designer's model: reads and writes `InitializeComponent`, the Toolbox and properties. | `TabStudio.Forms`, Roslyn |
 | `TabStudio.Swarm` | Swarm: the coordinator and members, deployment with cached attachments, the web gateway, the debug agent. | `TabStudio.Link`, `TabStudio.Debugging`, `TabStudio.Compilation` |
 | `TabStudio.LanguageServers` | Language Server Protocol and Debug Adapter Protocol clients, server and adapter registry, launch configurations. | Nothing but the .NET base library |
@@ -253,7 +253,25 @@ project with `<UseWindowsForms>true</UseWindowsForms>` or a `-windows` target co
 Desktop SDK, with the SDK's global usings and a generated `ApplicationConfiguration`. F5 runs the app in the app
 preview inside a Windows 10 window: `Application.Run` runs its message loop on its own UI thread, `Show` and
 `ShowDialog` open more windows, closing the main form ends the run, and an unhandled exception ends only the app. A
-member that cannot work on a tablet throws `NotSupportedException` naming the member and what to use instead.
+member that cannot work on a tablet throws `NotSupportedException` naming the member and what to use instead; the
+few that remain are listed, with the reason, in `src/TabStudio.Forms/README.md`.
+
+Drawing is recorded, not executed: every `Graphics` operation adds a command (shapes as path data with a `PenSpec` or
+`BrushSpec`, text, images, clears) to a display list, with the transform, clip and edge mode in force. On a control the
+list is the window's frame, which the app preview draws with Avalonia; shapes in it are drawn by `SkiaPainter` through
+a custom draw operation, so a window and a bitmap paint shapes with the same code. On a bitmap
+(`Graphics.FromImage`), the list belongs to the image's `ImageBuffer` and is rasterized into its pixels when anything
+reads them (`GetPixel`, `LockBits`, `Save`, drawing the image, `Flush`, disposing the `Graphics`): `BitmapRasterizer`
+renders it into a CPU `RenderTargetBitmap` that keeps the earlier pixels. GDI+'s conventions are reproduced there:
+pixel centers at whole coordinates (shapes move by half a pixel, 0.49 when aliased so Skia rounds as GDI+ does), pen
+caps and anchors drawn as shapes, path gradients as triangle meshes, hatch brushes from Windows' own 8 by 8 patterns.
+`tests/TabStudio.Forms.Tests/Drawing` compares 21 scenes with pictures GDI+ drew on a Windows runner
+(`build/gdiplus-references`), within a tolerance for antialiasing. A `.resx` that holds more than strings is compiled by
+`WindowsFormsResources` into a `.resources` file whose header names `FormsResourceReader`, which `ResourceManager`
+uses to turn values back into a `Bitmap`, an `Icon` or an `ImageListStreamer`; the image list's data is taken out of
+the .NET Framework's serialized form at build time, so nothing runs the binary formatter. `Clipboard` images go
+through `IFormsPresenter`: the IDE hands them to Avalonia's clipboard on the desktop and to `AndroidImageClipboard` (a
+content provider serving the PNG) on the tablet.
 
 `TabStudio.Forms.Design` is the designer's model. It reads `InitializeComponent` with Roslyn, never running the app's
 code, edits a model of the controls, and writes changes back in the file's own style the way Visual Studio does,
