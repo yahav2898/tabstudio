@@ -43,6 +43,12 @@ public sealed partial class TabStudioApplication : Application
         var paths = _dataDirectory is null ? AppPaths.CreateDefault() : new AppPaths(_dataDirectory);
         Services = AppServices.Create(paths, _configurePlatform);
 
+        // Windows Forms apps copy images through the device's own clipboard where Avalonia's holds only text.
+        if (Services.GetService<Platform.IImageClipboard>() is { } images)
+        {
+            TabStudio.Forms.Hosting.FormsDesktop.ClipboardImages = new Platform.FormsClipboardImages(images);
+        }
+
         // The saved theme first, so the first frame is drawn in it; tests (no lifetime) start dark and choose their own.
         ThemeSync.Start(this);
         if (ApplicationLifetime is not null)

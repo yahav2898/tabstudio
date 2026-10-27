@@ -1,0 +1,122 @@
+{
+  "$comment": "What compiling a Python package on the tablet needs from Alpine Linux, for the branch in Catalog/toolchains.json. When pip has to build a package from source (it has no wheel for this Python on musl), TabStudio installs 'buildTools' and the package's own 'packages' below, then runs pip again. 'headers' maps a missing C header, as the compiler reports it, to the package that has it, for packages not listed here. Names are Alpine's: libjpeg-turbo-dev is what Alpine calls jpeg-dev, and libpq-dev (pg_config and libpq's headers) is the part of postgresql-dev that psycopg2 builds against, without the PostgreSQL server's LLVM and Clang. A 'note' says what else helps, such as a version of the package that ships wheels.",
+  "buildTools": [
+    "build-base",
+    "python3-dev"
+  ],
+  "packages": {
+    "psycopg2": {
+      "packages": [ "libpq-dev" ],
+      "needs": "PostgreSQL's pg_config and client headers",
+      "note": "psycopg2-binary, or psycopg2 2.9.10 and later, install from a prebuilt wheel."
+    },
+    "psycopg2-binary": {
+      "packages": [ "libpq-dev" ],
+      "needs": "PostgreSQL's pg_config and client headers"
+    },
+    "psycopg-c": {
+      "packages": [ "libpq-dev" ],
+      "needs": "PostgreSQL's pg_config and client headers"
+    },
+    "mysqlclient": {
+      "packages": [ "mariadb-dev", "pkgconf" ],
+      "needs": "the MySQL/MariaDB client headers"
+    },
+    "lxml": {
+      "packages": [ "libxml2-dev", "libxslt-dev" ],
+      "needs": "libxml2 and libxslt headers"
+    },
+    "pillow": {
+      "packages": [ "libjpeg-turbo-dev", "zlib-dev" ],
+      "needs": "the JPEG and zlib headers"
+    },
+    "cffi": {
+      "packages": [ "libffi-dev" ],
+      "needs": "libffi's headers"
+    },
+    "cryptography": {
+      "packages": [ "openssl-dev", "libffi-dev" ],
+      "needs": "OpenSSL's headers and a Rust compiler",
+      "note": "cryptography 3.4 and later build with Rust; a release with a prebuilt wheel for this Python avoids the build."
+    },
+    "bcrypt": {
+      "packages": [ "libffi-dev" ],
+      "needs": "a Rust compiler",
+      "note": "A bcrypt release with a prebuilt wheel for this Python avoids the build."
+    },
+    "pynacl": {
+      "packages": [ "libsodium-dev", "libffi-dev" ],
+      "needs": "libsodium's headers"
+    },
+    "pyyaml": {
+      "packages": [ "yaml-dev" ],
+      "needs": "libyaml's headers"
+    },
+    "psutil": {
+      "packages": [ "linux-headers" ],
+      "needs": "the Linux kernel headers"
+    },
+    "netifaces": {
+      "packages": [ "linux-headers" ],
+      "needs": "the Linux kernel headers"
+    },
+    "uwsgi": {
+      "packages": [ "linux-headers" ],
+      "needs": "the Linux kernel headers"
+    },
+    "gevent": {
+      "packages": [ "libffi-dev", "linux-headers" ],
+      "needs": "libffi's headers"
+    },
+    "pyzmq": {
+      "packages": [ "zeromq-dev" ],
+      "needs": "ZeroMQ's headers"
+    },
+    "pycairo": {
+      "packages": [ "cairo-dev", "pkgconf" ],
+      "needs": "Cairo's headers"
+    },
+    "python-ldap": {
+      "packages": [ "openldap-dev" ],
+      "needs": "OpenLDAP's headers"
+    },
+    "pyodbc": {
+      "packages": [ "unixodbc-dev" ],
+      "needs": "unixODBC's headers"
+    },
+    "pygobject": {
+      "packages": [ "gobject-introspection-dev", "cairo-dev", "pkgconf" ],
+      "needs": "GObject's headers"
+    }
+  },
+  "headers": {
+    "Python.h": "python3-dev",
+    "libpq-fe.h": "libpq-dev",
+    "pg_config.h": "libpq-dev",
+    "mysql.h": "mariadb-dev",
+    "mysql/mysql.h": "mariadb-dev",
+    "ffi.h": "libffi-dev",
+    "openssl/ssl.h": "openssl-dev",
+    "openssl/opensslv.h": "openssl-dev",
+    "zlib.h": "zlib-dev",
+    "jpeglib.h": "libjpeg-turbo-dev",
+    "png.h": "libpng-dev",
+    "libxml/xmlversion.h": "libxml2-dev",
+    "libxml/parser.h": "libxml2-dev",
+    "libxslt/xsltconfig.h": "libxslt-dev",
+    "yaml.h": "yaml-dev",
+    "sodium.h": "libsodium-dev",
+    "zmq.h": "zeromq-dev",
+    "sql.h": "unixodbc-dev",
+    "lber.h": "openldap-dev",
+    "ldap.h": "openldap-dev",
+    "bzlib.h": "bzip2-dev",
+    "lzma.h": "xz-dev",
+    "sqlite3.h": "sqlite-dev",
+    "readline/readline.h": "readline-dev",
+    "ncurses.h": "ncurses-dev",
+    "linux/limits.h": "linux-headers",
+    "linux/version.h": "linux-headers",
+    "linux/sockios.h": "linux-headers"
+  }
+}

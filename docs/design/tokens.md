@@ -229,6 +229,7 @@ TabStudio's syntax colors, for C# (Roslyn) and every TextMate grammar; the light
 | Token | Dark | Light |
 |---|---|---|
 | `Brush.Output.Error` | `#F47067` | `#C42B2B` |
+| `Brush.Output.Warning` | `#E3B341` | `#8F6200` |
 | `Brush.Output.Input` | `#6FD6C4` | `#0A6A61` |
 | `Brush.Output.Info` | `#9AA1AE` | `#5A6170` |
 | `Brush.Output.Success` | `#6FD6A0` | `#177A39` |

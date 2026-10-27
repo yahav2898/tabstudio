@@ -338,6 +338,12 @@ public sealed partial class DocumentViewModel : ObservableObject, IDisposable
 
     private void OnUndoStackChanged(object? sender, PropertyChangedEventArgs e)
     {
+        // A shared document's undo is this participant's own, in its binder; the editor's stack is off.
+        if (Live is not null)
+        {
+            return;
+        }
+
         IsDirty = !Document.UndoStack.IsOriginalFile;
         CanUndo = Document.UndoStack.CanUndo;
         CanRedo = Document.UndoStack.CanRedo;

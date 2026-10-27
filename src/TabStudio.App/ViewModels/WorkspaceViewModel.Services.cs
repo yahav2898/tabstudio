@@ -30,22 +30,36 @@ public sealed partial class WorkspaceViewModel
 
     partial void ConfigureServiceDatabaseExplorer(ref IServiceDatabaseExplorer? databases);
 
-    private Task<bool> PrepareServicesAsync(ProjectInfo project) => PrepareServicesAsync(project.DirectoryPath);
+    private async Task<bool> PrepareServicesAsync(ProjectInfo project)
+    {
+        if (!await PrepareServicesAsync(project.DirectoryPath))
+        {
+            return false;
+        }
+
+        // Saved Database Explorer connections that replace the project's SQL Server, and the message when none answers.
+        _serviceEnvironment = await AddDatabaseEnvironmentAsync(project, _serviceEnvironment);
+        return true;
+    }
 
     private async Task<bool> PrepareServicesAsync(string projectDirectory)
     {
         _run = new CancellationTokenSource();
         _preparingServices = true;
-        if (Services.HasServices) State = IdeState.Running;
+        if (Services.HasServices)
+        {
+            State = IdeState.Running;
+            StatusText = "Checking backing services";
+        }
+
         NotifyServicePreparationCommands();
-        StatusText = "Starting backing services";
         try
         {
             var profile = LaunchSettings.Read(projectDirectory);
             var environment = await Services.PrepareAsync(projectDirectory, profile.Environment ?? "Development", _run.Token);
             if (environment is null)
             {
-                State = IdeState.Failed; StatusText = Services.Error ?? "Services did not start";
+                State = IdeState.Failed; StatusText = Services.OperationError ?? Services.Error ?? "Services did not start";
                 SelectSideBarPanel(SideBarPanel.Services);
                 return false;
             }

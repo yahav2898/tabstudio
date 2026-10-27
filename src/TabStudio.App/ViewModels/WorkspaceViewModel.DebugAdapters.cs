@@ -12,6 +12,7 @@ using TabStudio.Debugging.Symbols;
 using TabStudio.LanguageServers.Configuration;
 using TabStudio.LanguageServers.DebugAdapters;
 using TabStudio.LanguageServers.Hosting;
+using TabStudio.Toolchains.Projects;
 
 namespace TabStudio.App.ViewModels;
 
@@ -429,6 +430,8 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         });
         session.Exited += (_, e) => _ui.Post(() => _adapterExitCode ??= e.ExitCode);
         session.Continued += (_, _) => _ui.Post(() => ShowAdapterRunning(session));
+        // Programs and adapters write ordinary text to stderr too: each stream is colored by what its lines say.
+        var classifiers = new System.Collections.Concurrent.ConcurrentDictionary<string, StreamClassifier>(StringComparer.Ordinal);
         session.OutputReceived += (_, e) =>
         {
             // A program in the Output panel's console writes there itself; the adapter's copies go to its own log.
@@ -438,12 +441,14 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
                 return;
             }
 
-            Output.Write(e.Output, e.Category switch
+            if (e.Category is "console" or "important")
             {
-                "stderr" => OutputKind.Error,
-                "console" or "important" => OutputKind.Info,
-                _ => OutputKind.Program,
-            });
+                Output.Write(e.Output, OutputKind.Info);
+            }
+            else
+            {
+                OutputProcess.WriteClassified(Output, classifiers.GetOrAdd(e.Category ?? "stdout", _ => new StreamClassifier(AdapterToolchain(session))), e.Output);
+            }
             if ((session.AcceptsProgramInput || _nativeDebugInput is not null) && e.Category == "stdout" && !e.Output.EndsWith('\n'))
             {
                 Output.ShowWaitingForInput();
@@ -452,6 +457,19 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         session.BreakpointChanged += (_, e) => _ui.Post(() => OnAdapterBreakpointChanged(e));
         session.AdapterLog += (_, line) => DebugAdapterOutput.WriteLine($"[{session.Adapter.Name}] {line}", OutputKind.Info);
         session.Ended += (_, _) => _ui.Post(() => _ = EndAdapterSessionAfterProgramAsync(session));
+    }
+
+    /// <summary>The toolchain whose programs an adapter debugs, for the patterns of output only it prints.</summary>
+    private static string? AdapterToolchain(DebugAdapterSession session)
+    {
+        var languages = session.Adapter.Languages;
+        return languages.Contains("python", StringComparer.Ordinal) ? "python"
+            : languages.Contains("go", StringComparer.Ordinal) ? "go"
+            : languages.Contains("rust", StringComparer.Ordinal) ? "rust"
+            : languages.Contains("java", StringComparer.Ordinal) ? "java"
+            : languages.Contains("javascript", StringComparer.Ordinal) || languages.Contains("typescript", StringComparer.Ordinal) ? "node"
+            : languages.Contains("c", StringComparer.Ordinal) || languages.Contains("cpp", StringComparer.Ordinal) ? "cpp"
+            : null;
     }
 
     /// <summary>The breakpoints to set at launch, by file: those of files in the adapter's languages, and Run to Cursor's.</summary>

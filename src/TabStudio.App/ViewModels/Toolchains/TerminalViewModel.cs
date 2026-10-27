@@ -78,6 +78,19 @@ public sealed partial class TerminalViewModel : ObservableObject, IDisposable
     /// <summary>Raised when the Terminal should take the keyboard focus, such as when View &gt; Terminal opens it.</summary>
     public event EventHandler? FocusRequested;
 
+    /// <summary>Raised on the UI thread with what the shell wrote, as a TabStudio Live host shares it.</summary>
+    public event EventHandler<ReadOnlyMemory<byte>>? ShellOutput;
+
+    /// <summary>
+    /// Whether the Terminal shows another device's shell, the host's in a TabStudio Live session, instead of starting
+    /// one here: what the host's shell writes is fed to <see cref="ShowMirrored"/>, and typing goes to
+    /// <see cref="MirrorInput"/>, which the host takes only when it allows this guest to type.
+    /// </summary>
+    public bool IsMirror => MirrorInput is not null;
+
+    /// <summary>Where typing goes while the Terminal shows the host's shell; <see langword="null"/> for a shell of its own.</summary>
+    public Action<byte[]>? MirrorInput { get; private set; }
+
     /// <summary>The screen.</summary>
     public TerminalEmulator Emulator { get; } = new(TerminalSize.Default.Rows, TerminalSize.Default.Columns, scrollbackLines: 3000);
 
@@ -143,6 +156,8 @@ public sealed partial class TerminalViewModel : ObservableObject, IDisposable
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
         ArgumentNullException.ThrowIfNull(spec);
+        // Keys must reach this program, not a host's shell this Terminal is mirroring.
+        Mirror(null);
         StopShell();
         var process = _toolchains.Runtime.Start(spec with { Terminal = _size });
         _process = process;
@@ -154,6 +169,64 @@ public sealed partial class TerminalViewModel : ObservableObject, IDisposable
         _ = WatchAsync(process);
         RequestFocus();
         return await process.WaitAsync(cancellationToken);
+    }
+
+    /// <summary>Shows the host's shell instead of one of this device's, or a shell of its own again.</summary>
+    /// <param name="input">Where typing goes, or <see langword="null"/> to stop showing the host's shell.</param>
+    public void Mirror(Action<byte[]>? input)
+    {
+        if (input is not null)
+        {
+            StopShell();
+            MirrorInput = input;
+            Message = null;
+            NeedsSetup = false;
+            IsRunning = true;
+            Title = "Host's Terminal";
+            Emulator.Feed("\u001bc");
+        }
+        else if (MirrorInput is not null)
+        {
+            MirrorInput = null;
+            IsRunning = false;
+            Title = "Terminal";
+            Emulator.Feed("\u001bc");
+        }
+
+        Changed?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>Names the host's shell in the Terminal's tab, such as whether this guest may type in it.</summary>
+    /// <param name="title">The title.</param>
+    public void ShowMirrorTitle(string title)
+    {
+        if (MirrorInput is not null)
+        {
+            Title = title;
+        }
+    }
+
+    /// <summary>Shows what the host's shell wrote. Call on the UI thread.</summary>
+    /// <param name="data">The bytes, as the host's shell wrote them.</param>
+    public void ShowMirrored(ReadOnlyMemory<byte> data)
+    {
+        if (MirrorInput is null || data.IsEmpty)
+        {
+            return;
+        }
+
+        Emulator.Feed(data.Span);
+        Changed?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>Types into this device's shell what a guest typed in the host's Terminal, once the host allowed it.</summary>
+    /// <param name="input">The bytes, as the guest's keys encoded them.</param>
+    public void TypeFromGuest(ReadOnlyMemory<byte> input)
+    {
+        if (IsRunning && MirrorInput is null && !input.IsEmpty)
+        {
+            Write(input.ToArray());
+        }
     }
 
     /// <summary>Sends a key, with the latched on-screen modifiers.</summary>
@@ -348,6 +421,11 @@ public sealed partial class TerminalViewModel : ObservableObject, IDisposable
 
     private void Start()
     {
+        if (MirrorInput is not null)
+        {
+            return;
+        }
+
         if (RemoteShellFactory is { } remote)
         {
             if (!_startingRemote) { _ = StartRemoteAsync(remote); }
@@ -454,6 +532,7 @@ public sealed partial class TerminalViewModel : ObservableObject, IDisposable
         while (_output.TryDequeue(out var chunk))
         {
             Emulator.Feed(chunk);
+            ShellOutput?.Invoke(this, chunk);
             any = true;
         }
 
@@ -476,9 +555,26 @@ public sealed partial class TerminalViewModel : ObservableObject, IDisposable
         return modifiers;
     }
 
-    private void Send(string text) => Write(Encoding.UTF8.GetBytes(text));
+    private void Send(string text)
+    {
+        var bytes = Encoding.UTF8.GetBytes(text);
+        if (MirrorInput is { } mirror)
+        {
+            mirror(bytes);
+            return;
+        }
 
-    private void Write(byte[] bytes) => _input.Writer.TryWrite(bytes);
+        Write(bytes);
+    }
+
+    private void Write(byte[] bytes)
+    {
+        // The emulator's own answers belong to a shell of this device's, not to the host's.
+        if (MirrorInput is null)
+        {
+            _input.Writer.TryWrite(bytes);
+        }
+    }
 
     /// <summary>Writes keys and pastes to the shell in order, off the UI thread, since a busy shell may not read them at once.</summary>
     private async Task WriteInputAsync()

@@ -49,4 +49,10 @@ public enum CompatibilityStatus
 
     /// <summary>Runs on the tablet once its toolchain is installed from the Toolchain Store.</summary>
     NeedsToolchain,
+
+    /// <summary>
+    /// Builds and runs on the tablet, but its database cannot run here and none it can reach answers, such as a SQL
+    /// Server (see <see cref="SqlServerDetector"/>).
+    /// </summary>
+    NeedsDatabase,
 }

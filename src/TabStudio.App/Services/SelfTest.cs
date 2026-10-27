@@ -158,6 +158,7 @@ public static partial class SelfTest
                     || !await CheckAsync(() => RecordSampleAsync(workspace, cancellationToken))
                     || !await CheckAsync(() => CheckLocalAIAsync(cancellationToken))
                     || !await CheckAsync(() => LinkSampleAsync(main, workspace, cancellationToken))
+                    || !await CheckAsync(() => LiveSampleAsync(main, workspace, cancellationToken))
                     || !await CheckAsync(() => CheckLanguageServersAsync(main, cancellationToken)))
                 {
                     return Finish(false);

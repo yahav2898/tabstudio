@@ -48,14 +48,39 @@ public sealed partial class ServicesViewModel : ObservableObject, IAsyncDisposab
     /// <summary>Whether reading the Compose files failed.</summary>
     public bool HasError => Error is not null;
 
+    /// <summary>Whether the last start or stop failed for some services, whose rows say why.</summary>
+    public bool HasOperationError => OperationError is not null;
+
+    /// <summary>The services the last F5 needed and started.</summary>
+    public IReadOnlyList<string> LastNeeded { get; private set; } = [];
+
+    /// <summary>
+    /// While no service runs, how they start: nothing is downloaded or started when a repository opens; F5 starts
+    /// those the run points at, and Start the others.
+    /// </summary>
+    public string Offer => Items.Count == 1
+        ? $"{Items[0].Name} starts when the app's configuration points at it, or with Start. Nothing is downloaded until then."
+        : "Each service starts when the app's configuration points at it, or with Start. Nothing is downloaded until then.";
+
+    /// <summary>Whether to show <see cref="Offer"/>: there are services, and none runs.</summary>
+    public bool HasOffer => Items.Count > 0 && Items.All(i => !i.Status.IsRunning && i.Status.State is not (ServiceState.Installing or ServiceState.Completed));
+
     /// <summary>No services and nothing wrong: the empty state, which says where services come from.</summary>
     public bool ShowsEmptyState => IsEmpty && !HasError;
 
     partial void OnErrorChanged(string? value) { OnPropertyChanged(nameof(HasError)); OnPropertyChanged(nameof(ShowsEmptyState)); }
+    partial void OnOperationErrorChanged(string? value) => OnPropertyChanged(nameof(HasOperationError));
     public bool CanUseDatabaseExplorer => _databases is not null;
     [ObservableProperty] public partial bool IsBusy { get; private set; }
     [ObservableProperty] public partial string Summary { get; private set; } = "Open a repository with compose.yaml or docker-compose.yml.";
+    /// <summary>Why the Compose files could not be read; the services are not listed then.</summary>
     [ObservableProperty] public partial string? Error { get; private set; }
+
+    /// <summary>
+    /// Why the last start, stop or restart failed. Each failed service shows its own error on its row, and the
+    /// others keep running: this is the summary over the list, never a reason to hide it.
+    /// </summary>
+    [ObservableProperty] public partial string? OperationError { get; private set; }
     [ObservableProperty] public partial ServiceItemViewModel? SelectedItem { get; set; }
     [ObservableProperty] public partial string Logs { get; private set; } = "Select a service to see its logs.";
 
@@ -70,6 +95,7 @@ public sealed partial class ServicesViewModel : ObservableObject, IAsyncDisposab
     {
         if (_root is null || IsBusy) return;
         Error = null;
+        OperationError = null;
         if (_manager is { } previous)
         {
             previous.Changed -= OnChanged; previous.Logged -= OnLogged;
@@ -91,7 +117,7 @@ public sealed partial class ServicesViewModel : ObservableObject, IAsyncDisposab
         catch (Exception ex) when (ex is not OutOfMemoryException) { Error = ex.Message; Summary = "Could not read Services configuration."; }
         finally
         {
-            foreach (var name in new[] { nameof(HasServices), nameof(IsEmpty), nameof(ShowsEmptyState), nameof(Subtitle) })
+            foreach (var name in new[] { nameof(HasServices), nameof(IsEmpty), nameof(ShowsEmptyState), nameof(Subtitle), nameof(Offer), nameof(HasOffer) })
             {
                 OnPropertyChanged(name);
             }
@@ -104,7 +130,7 @@ public sealed partial class ServicesViewModel : ObservableObject, IAsyncDisposab
         _operation?.Cancel();
         if (_manager is not { } manager) return;
         try { await manager.StopAsync(); }
-        catch (Exception ex) when (ex is not OutOfMemoryException) { Error = ex.Message; }
+        catch (Exception ex) when (ex is not OutOfMemoryException) { OperationError = ex.Message; }
     }
     [RelayCommand] private async Task RestartAllAsync() => await PerformAsync(token => _manager?.RestartAsync(cancellationToken: token) ?? Task.CompletedTask);
     [RelayCommand] private void Cancel() => _operation?.Cancel();
@@ -114,8 +140,16 @@ public sealed partial class ServicesViewModel : ObservableObject, IAsyncDisposab
     internal Task RestartAsync(string name) => PerformAsync(token => _manager?.RestartAsync(name, token) ?? Task.CompletedTask);
     internal void OpenPort(ServicePort port) => _preview(new Uri($"http://127.0.0.1:{port.Published}/"));
 
+    /// <summary>
+    /// Before F5: rereads the Compose files, and starts only the services the run needs, those its Compose service
+    /// depends on or its configuration points at (<see cref="ServiceManager.NeededBy"/>). Nothing is downloaded or
+    /// started for the others; the Services window offers them.
+    /// </summary>
+    /// <returns>The run's connection variables, or <see langword="null"/> when a needed service did not start.</returns>
     public async Task<IReadOnlyDictionary<string, string?>?> PrepareAsync(string projectDirectory, string environmentName, CancellationToken cancellationToken)
     {
+        IReadOnlyDictionary<string, string?>? runEnvironment = null;
+        LastNeeded = [];
         // Reparse before F5 so saved Compose and .env edits take effect, while unchanged data/processes persist.
         if (_root is not null)
         {
@@ -128,20 +162,23 @@ public sealed partial class ServicesViewModel : ObservableObject, IAsyncDisposab
         }
         if (_manager is null && _root is not null && _configuration is null) await ReloadAsync();
         if (_manager is null) return Error is null ? new Dictionary<string, string?>() : null;
+        var manager = _manager;
+        LastNeeded = manager.NeededBy(projectDirectory, runEnvironment, environmentName);
+        if (LastNeeded.Count == 0) return ConnectionEnvironment.ForProject(manager.Project, projectDirectory, manager.Endpoints, environmentName);
         IReadOnlyDictionary<string, string?>? environment = null;
-        var success = await PerformAsync(async token => environment = await _manager.StartForProjectAsync(projectDirectory, environmentName, token), cancellationToken);
+        var success = await PerformAsync(async token => environment = await manager.StartForProjectAsync(projectDirectory, environmentName, runEnvironment, token), cancellationToken);
         return success ? environment : null;
     }
 
     private async Task<bool> PerformAsync(Func<CancellationToken, Task> action, CancellationToken cancellationToken = default)
     {
         if (IsBusy) return false;
-        IsBusy = true; Error = null;
+        IsBusy = true; OperationError = null;
         using var operation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         _operation = operation;
         try { await action(operation.Token); return true; }
-        catch (OperationCanceledException) { Error = "Service operation cancelled."; return false; }
-        catch (Exception ex) when (ex is not OutOfMemoryException) { Error = ex.Message; return false; }
+        catch (OperationCanceledException) { OperationError = "Service operation cancelled."; return false; }
+        catch (Exception ex) when (ex is not OutOfMemoryException) { OperationError = ex.Message; return false; }
         finally { _operation = null; IsBusy = false; }
     }
     internal async Task OpenDatabaseAsync(ServiceItemViewModel item)
@@ -157,6 +194,7 @@ public sealed partial class ServicesViewModel : ObservableObject, IAsyncDisposab
     {
         if (_disposed || !ReferenceEquals(sender, _manager)) return;
         Items.FirstOrDefault(i => i.Name == status.Name)?.Update(status);
+        OnPropertyChanged(nameof(HasOffer));
     });
     private void OnLogged(object? sender, ServiceLogLine line) => _ui.Post(() => { if (!_disposed && ReferenceEquals(sender, _manager) && SelectedItem?.Name == line.Service) RefreshLogs(); });
     public async ValueTask DisposeAsync()

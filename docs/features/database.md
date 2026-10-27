@@ -18,6 +18,13 @@ Android saves the entire connection string using AES-GCM with a key in **Android
 
 Choose a saved connection, then **Connect / Refresh**. Expand databases and schemas to browse tables and views, including their columns, keys and indexes. Only databases visible to your login are listed; connecting still needs that database's permissions. Remote databases must be reachable from the tablet's network and accept your authentication/TLS settings. SQL Server uses Microsoft.Data.SqlClient's managed networking implementation; SQL authentication avoids desktop-only integrated-authentication dependencies.
 
+## Apps that use SQL Server
+
+SQL Server has no engine for ARM64 Linux, so it cannot run on the tablet, in Services or anywhere else on it. When a project uses SQL Server (EF Core's SQL Server provider or SqlClient) and nothing answers at the server its `appsettings*.json` names, the **Compatibility Doctor** marks it **Needs a database** and F5's Output says so once, before the app starts; `(localdb)` and named pipes never answer on a tablet. A crash from SqlClient is explained the same way, not only with a stack trace.
+
+- **Connect to SQL Server…** opens the connection form filled in from appsettings, with Windows sign-in (`Trusted_Connection`) replaced by an empty SQL login. Enter a server on your network or in the cloud and save: the connection, named `<Project>: <ConnectionName>`, is kept encrypted like any other, and every run of the project uses it as `ConnectionStrings__<ConnectionName>`. Remove it to go back to appsettings.
+- **Use PostgreSQL** appears when the project also references Npgsql's EF Core provider. It writes a `compose.yaml` with a PostgreSQL service and the app's connection string (only when the repository has no Compose files), so F5 starts PostgreSQL in [Services](services.md). **Use SQLite** appears for projects with EF Core's SQLite provider and saves a connection to a `.db` file beside the project. The app itself must select that provider for the connection; appsettings files are never changed.
+
 ## SQL and results
 
 Select a database or object and choose **New query**. Typing or **Ctrl+Space** offers tables, columns and SQL keywords from the connected schema. **Schema** refreshes completion after DDL or external changes.

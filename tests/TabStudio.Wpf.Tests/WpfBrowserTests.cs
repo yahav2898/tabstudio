@@ -84,6 +84,48 @@ public sealed class WpfBrowserTests(NuGetFixture nuget) : IDisposable
     }
 
     [ChromeFact]
+    public async Task In_Fit_a_phone_browser_zooms_the_whole_window_into_view_and_taps_still_reach_its_buttons()
+    {
+        WriteApp();
+        using var workspace = await WpfAppWorkspace.LoadAsync(nuget, _temp.Path);
+        await using var host = await workspace.StartAsync("WpfApp1");
+        await using var chrome = await HeadlessChrome.StartAsync(420, 700);
+        await chrome.ResizeAsync(420, 700, mobile: true);
+
+        await chrome.NavigateAsync(new Uri(host.Address, "?tabstudio-view=fit"));
+        await chrome.WaitUntilAsync("document.body.innerText.includes('Hello from WPF')", TimeSpan.FromSeconds(120));
+
+        // The 800 by 450 window is wider than the 420 pixels: the page zooms out to 0.525, the browser's own zoom, and all
+        // of the window is in view while OpenSilver lays it out at its declared size.
+        await chrome.WaitUntilAsync(
+            "window.tabStudioWpf.layout && window.tabStudioWpf.layout.mode === 'fit' && !window.tabStudioWpf.layout.fills && Math.abs(visualViewport.scale - 0.525) < 0.002",
+            TimeSpan.FromSeconds(10));
+        var box = await chrome.EvaluateAsync("""
+            (() => {
+                const frame = document.getElementById('tabstudio-wpf-window').getBoundingClientRect();
+                const client = document.getElementById('tabstudio-wpf-client').getBoundingClientRect();
+                return [frame.left * visualViewport.scale, frame.right * visualViewport.scale, frame.bottom * visualViewport.scale, Math.round(frame.width), Math.round(client.width)];
+            })()
+            """);
+        Assert.True(box![0]!.GetValue<double>() >= -0.5, box.ToJsonString());
+        Assert.True(box[1]!.GetValue<double>() <= 420.5, box.ToJsonString());
+        Assert.True(box[2]!.GetValue<double>() <= 700.5, box.ToJsonString());
+        Assert.Equal(800, box[3]!.GetValue<int>());
+
+        // A finger on the button, where the zoomed page shows it: OpenSilver sees the press and release on the button.
+        var center = await chrome.EvaluateAsync("""
+            (() => {
+                const element = [...document.querySelectorAll('body *')].filter(e => e.textContent.trim() === 'Click me' && e.getClientRects().length > 0).pop();
+                const box = element.getBoundingClientRect();
+                return [box.left + (box.width / 2) - visualViewport.offsetLeft, box.top + (box.height / 2) - visualViewport.offsetTop];
+            })()
+            """);
+        await chrome.TapAsync(center![0]!.GetValue<double>(), center[1]!.GetValue<double>());
+        await chrome.WaitUntilAsync("document.body.innerText.includes('Clicked 1 time')", TimeSpan.FromSeconds(10));
+        await SaveScreenshotAsync(chrome, "wpf-app-fit-on-a-phone.png");
+    }
+
+    [ChromeFact]
     public async Task Reports_an_exception_in_a_handler_with_its_stack()
     {
         WriteApp();

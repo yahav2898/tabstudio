@@ -17,6 +17,7 @@ Start with the [README](../README.md) for what TabStudio is and how to install i
 | --- | --- |
 | [Database Explorer](features/database.md) | Connecting to SQLite, PostgreSQL and SQL Server, running SQL, editing data, EF Core migrations |
 | [Remote development over SSH](features/remote-ssh.md) | Opening a folder on your server, and publishing ASP.NET Core apps to it |
+| [TabStudio Live](features/live.md) | Coding together in real time on the same Wi-Fi: sharing, following, shared debugging, classrooms and the security model |
 | [Mobile and web servers](features/mobile.md) | Server previews, Android builds on the tablet, iOS builds in the cloud |
 | [Microchip PIC](features/pic.md) | XC8 and XC32 builds on the tablet, flashing over USB, debugging in gpsim |
 | [Embedded firmware](features/embedded.md) | Native firmware projects, permissioned USB bridges, upload/debug, backups, memory/register analysis and explicit verification limits |

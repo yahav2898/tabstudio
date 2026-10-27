@@ -1,4 +1,5 @@
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using TabStudio.Forms.Rendering;
 
 namespace System.Drawing;
@@ -135,6 +136,103 @@ public sealed partial class Graphics
         DrawImage(image, [.. destPoints.Select(p => (PointF)p)]);
     }
 
+    /// <summary>Draws part of an image into a rectangle, with its colors changed by attributes, such as a grayscale color matrix.</summary>
+    /// <param name="image">The image.</param>
+    /// <param name="destRect">Where it is drawn.</param>
+    /// <param name="srcX">The part's left, in pixels.</param>
+    /// <param name="srcY">The part's top, in pixels.</param>
+    /// <param name="srcWidth">The part's width, in pixels.</param>
+    /// <param name="srcHeight">The part's height, in pixels.</param>
+    /// <param name="srcUnit">The unit of the part: pixels.</param>
+    /// <param name="imageAttr">The color changes, or <see langword="null"/>.</param>
+    public void DrawImage(Image image, Rectangle destRect, int srcX, int srcY, int srcWidth, int srcHeight, GraphicsUnit srcUnit, ImageAttributes? imageAttr) =>
+        DrawImage(image, destRect, (float)srcX, srcY, srcWidth, srcHeight, srcUnit, imageAttr);
+
+    /// <summary>Draws part of an image into a rectangle, with its colors changed by attributes.</summary>
+    /// <param name="image">The image.</param>
+    /// <param name="destRect">Where it is drawn.</param>
+    /// <param name="srcX">The part's left, in pixels.</param>
+    /// <param name="srcY">The part's top, in pixels.</param>
+    /// <param name="srcWidth">The part's width, in pixels.</param>
+    /// <param name="srcHeight">The part's height, in pixels.</param>
+    /// <param name="srcUnit">The unit of the part: pixels.</param>
+    /// <param name="imageAttrs">The color changes, or <see langword="null"/>.</param>
+    public void DrawImage(Image image, Rectangle destRect, float srcX, float srcY, float srcWidth, float srcHeight, GraphicsUnit srcUnit, ImageAttributes? imageAttrs)
+    {
+        ArgumentNullException.ThrowIfNull(image);
+        Record(new ImageCommand(Attributed(image, imageAttrs), destRect, new RectangleF(srcX, srcY, srcWidth, srcHeight), Smooth));
+    }
+
+    /// <summary>Draws part of an image into a rectangle, with its colors changed by attributes.</summary>
+    /// <param name="image">The image.</param>
+    /// <param name="destRect">Where it is drawn.</param>
+    /// <param name="srcX">The part's left, in pixels.</param>
+    /// <param name="srcY">The part's top, in pixels.</param>
+    /// <param name="srcWidth">The part's width, in pixels.</param>
+    /// <param name="srcHeight">The part's height, in pixels.</param>
+    /// <param name="srcUnit">The unit of the part: pixels.</param>
+    /// <param name="imageAttr">The color changes, or <see langword="null"/>.</param>
+    /// <param name="callback">Ignored: drawing is never cancelled.</param>
+    public void DrawImage(Image image, Rectangle destRect, int srcX, int srcY, int srcWidth, int srcHeight, GraphicsUnit srcUnit, ImageAttributes? imageAttr, DrawImageAbort? callback) =>
+        DrawImage(image, destRect, srcX, srcY, srcWidth, srcHeight, srcUnit, imageAttr);
+
+    /// <summary>Draws part of an image into a rectangle, with its colors changed by attributes.</summary>
+    /// <param name="image">The image.</param>
+    /// <param name="destRect">Where it is drawn.</param>
+    /// <param name="srcX">The part's left, in pixels.</param>
+    /// <param name="srcY">The part's top, in pixels.</param>
+    /// <param name="srcWidth">The part's width, in pixels.</param>
+    /// <param name="srcHeight">The part's height, in pixels.</param>
+    /// <param name="srcUnit">The unit of the part: pixels.</param>
+    /// <param name="imageAttrs">The color changes, or <see langword="null"/>.</param>
+    /// <param name="callback">Ignored: drawing is never cancelled.</param>
+    public void DrawImage(Image image, Rectangle destRect, float srcX, float srcY, float srcWidth, float srcHeight, GraphicsUnit srcUnit, ImageAttributes? imageAttrs, DrawImageAbort? callback) =>
+        DrawImage(image, destRect, srcX, srcY, srcWidth, srcHeight, srcUnit, imageAttrs);
+
+    /// <summary>Draws part of an image into a parallelogram given by its upper-left, upper-right and lower-left corners.</summary>
+    /// <param name="image">The image.</param>
+    /// <param name="destPoints">The three corners.</param>
+    /// <param name="srcRect">The part of the image, in pixels.</param>
+    /// <param name="srcUnit">The unit of the part: pixels.</param>
+    public void DrawImage(Image image, PointF[] destPoints, RectangleF srcRect, GraphicsUnit srcUnit) => DrawImage(image, destPoints, srcRect, srcUnit, null);
+
+    /// <summary>Draws part of an image into a parallelogram, with its colors changed by attributes.</summary>
+    /// <param name="image">The image.</param>
+    /// <param name="destPoints">The three corners.</param>
+    /// <param name="srcRect">The part of the image, in pixels.</param>
+    /// <param name="srcUnit">The unit of the part: pixels.</param>
+    /// <param name="imageAttr">The color changes, or <see langword="null"/>.</param>
+    public void DrawImage(Image image, PointF[] destPoints, RectangleF srcRect, GraphicsUnit srcUnit, ImageAttributes? imageAttr)
+    {
+        ArgumentNullException.ThrowIfNull(image);
+        ArgumentNullException.ThrowIfNull(destPoints);
+        var bounds = new RectangleF(0, 0, srcRect.Width, srcRect.Height);
+        using var matrix = new Matrix(bounds, destPoints);
+        var saved = _transform;
+        _transform = matrix.Value * _transform;
+        Record(new ImageCommand(Attributed(image, imageAttr), bounds, srcRect, Smooth));
+        _transform = saved;
+    }
+
+    /// <summary>Draws part of an image into a parallelogram.</summary>
+    /// <param name="image">The image.</param>
+    /// <param name="destPoints">The three corners.</param>
+    /// <param name="srcRect">The part of the image, in pixels.</param>
+    /// <param name="srcUnit">The unit of the part: pixels.</param>
+    public void DrawImage(Image image, Point[] destPoints, Rectangle srcRect, GraphicsUnit srcUnit) => DrawImage(image, destPoints, srcRect, srcUnit, null);
+
+    /// <summary>Draws part of an image into a parallelogram, with its colors changed by attributes.</summary>
+    /// <param name="image">The image.</param>
+    /// <param name="destPoints">The three corners.</param>
+    /// <param name="srcRect">The part of the image, in pixels.</param>
+    /// <param name="srcUnit">The unit of the part: pixels.</param>
+    /// <param name="imageAttr">The color changes, or <see langword="null"/>.</param>
+    public void DrawImage(Image image, Point[] destPoints, Rectangle srcRect, GraphicsUnit srcUnit, ImageAttributes? imageAttr)
+    {
+        ArgumentNullException.ThrowIfNull(destPoints);
+        DrawImage(image, [.. destPoints.Select(p => (PointF)p)], srcRect, srcUnit, imageAttr);
+    }
+
     /// <summary>Draws an image at its size.</summary>
     /// <param name="image">The image.</param>
     /// <param name="x">The left.</param>
@@ -190,5 +288,22 @@ public sealed partial class Graphics
         DrawIcon(icon, new Rectangle(targetRect.X, targetRect.Y, Math.Min(icon.Width, targetRect.Width), Math.Min(icon.Height, targetRect.Height)));
     }
 
+    /// <summary>A callback GDI+ calls while drawing an image, to cancel it. Never called on this device.</summary>
+    /// <param name="callbackdata">The data given with it.</param>
+    public delegate bool DrawImageAbort(IntPtr callbackdata);
+
     private bool Smooth => InterpolationMode != InterpolationMode.NearestNeighbor;
+
+    /// <summary>The pixels of an image with attributes' color changes applied.</summary>
+    private static ImageSnapshot Attributed(Image image, ImageAttributes? attributes)
+    {
+        if (attributes is not { ChangesColors: true })
+        {
+            return image.Snapshot();
+        }
+
+        var pixels = (int[])image.Buffer.Pixels().Clone();
+        attributes.Apply(pixels);
+        return ImageBuffer.FromPixels(image.Width, image.Height, pixels, opaque: false).Snapshot();
+    }
 }

@@ -53,6 +53,7 @@ public sealed class ThemePaletteTests
         ("Brush.Log.Error", "Brush.Window", 4.5),
         ("Brush.Log.Warning", "Brush.Window", 4.5),
         ("Brush.Output.Error", "Brush.Window", 4.5),
+        ("Brush.Output.Warning", "Brush.Window", 4.5),
         ("Brush.Output.Success", "Brush.Window", 4.5),
         ("Editor.InlayHint", "Brush.Window", 4.5),
         ("Editor.DiffAddedText", "Editor.DiffAddedLine", 4.5),

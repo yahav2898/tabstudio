@@ -33,6 +33,7 @@ Open a solution, press F5, and it builds, runs and debugs on the tablet itself.
   - [Flutter and Dart (experimental)](#flutter-and-dart-experimental)
   - [App platforms](#app-platforms)
   - [Every screen at once](#every-screen-at-once)
+  - [Code together with TabStudio Live](#code-together-with-tabstudio-live)
   - [Projects and repositories](#projects-and-repositories)
   - [Database Explorer](#database-explorer)
   - [Remote development over SSH](#remote-development-over-ssh)
@@ -214,6 +215,20 @@ Native Android deployment of Flutter apps through the Android SDK toolchain is n
   small touch targets and low contrast. Findings land in the Error List with a picture, one tap from **Fix with Agent**.
 - **Recorded UI tests.** Record a few taps on any screen and get a UI test that replays on every device, in Test
   Explorer and in CI.
+
+### Code together with TabStudio Live
+
+- **Share with a scan.** **File > Share Session** shows a QR code; another tablet or phone with TabStudio scans it
+  (**File > Join Live Session**) and joins over the same Wi-Fi. No account, no cloud and no internet; the connection
+  is end-to-end encrypted, and guests see only the shared workspace.
+- **Type at the same time.** Every open document is shared as it is typed, and edits made at once merge. Each
+  participant's caret and selection show in their color with their name, avatars on the tabs show who has a file
+  open, and Undo takes back only your own edits. A dropped connection reconnects and merges what was typed offline.
+- **Follow.** Tap a participant to see their file, selection and scrolling, until you type or tap.
+- **Run and debug together.** The host's Output, Terminal, Error List and breakpoints are everyone's; when the
+  program pauses, every device shows the same statement, call stack and locals, and the host decides who may step.
+- **Classroom.** One presenter and up to 32 devices that follow by default, with raised hands and control handed to a
+  student. The host chooses who edits and who only watches, and can remove anyone. See [the guide](docs/features/live.md).
 
 ### Projects and repositories
 

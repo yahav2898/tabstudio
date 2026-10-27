@@ -30,6 +30,9 @@ public enum OutputKind
 
     /// <summary>A failed outcome.</summary>
     Failure,
+
+    /// <summary>A warning a program or build printed, such as <c>warning: unused variable</c>.</summary>
+    Warning,
 }
 
 /// <summary>
@@ -43,6 +46,8 @@ public enum OutputKind
 public sealed partial class OutputViewModel : ObservableObject, IConsoleSink
 {
     private static IBrush ErrorBrush => ThemeBrushes.Get("Brush.Output.Error");
+
+    private static IBrush WarningBrush => ThemeBrushes.Get("Brush.Output.Warning");
 
     private static IBrush InputBrush => ThemeBrushes.Get("Brush.Output.Input");
 
@@ -76,6 +81,12 @@ public sealed partial class OutputViewModel : ObservableObject, IConsoleSink
 
     /// <summary>Raised on the UI thread after text was appended, so the view can scroll to the end.</summary>
     public event EventHandler? TextAppended;
+
+    /// <summary>Raised on the UI thread for each piece of text as it is appended, with what it is, as a TabStudio Live host shares it.</summary>
+    public event EventHandler<OutputWrittenEventArgs>? Written;
+
+    /// <summary>Raised on the UI thread after the text was cleared.</summary>
+    public event EventHandler? Cleared;
 
     /// <summary>Whether a running program is connected to the input box.</summary>
     [ObservableProperty]
@@ -166,6 +177,7 @@ public sealed partial class OutputViewModel : ObservableObject, IConsoleSink
         Document.UndoStack.ClearAll();
         _segments.Clear();
         OnPropertyChanged(nameof(IsEmpty));
+        Cleared?.Invoke(this, EventArgs.Empty);
     }
 
     /// <summary>Sends the input box's text to the program, as if typed in a console and followed by Enter.</summary>
@@ -210,6 +222,8 @@ public sealed partial class OutputViewModel : ObservableObject, IConsoleSink
             {
                 AddSegment(new TrackedRange<IBrush>(start, item.Text.Length, brush));
             }
+
+            Written?.Invoke(this, new OutputWrittenEventArgs(item.Text, item.Kind));
         }
 
         TrimToLimit();
@@ -257,9 +271,22 @@ public sealed partial class OutputViewModel : ObservableObject, IConsoleSink
     private static IBrush? BrushFor(OutputKind kind) => kind switch
     {
         OutputKind.Error or OutputKind.Failure => ErrorBrush,
+        OutputKind.Warning => WarningBrush,
         OutputKind.Input => InputBrush,
         OutputKind.Info => InfoBrush,
         OutputKind.Success => SuccessBrush,
         _ => null,
     };
+}
+
+/// <summary>A piece of text the Output panel appended.</summary>
+/// <param name="text">The text.</param>
+/// <param name="kind">What it is.</param>
+public sealed class OutputWrittenEventArgs(string text, OutputKind kind) : EventArgs
+{
+    /// <summary>The text.</summary>
+    public string Text { get; } = text;
+
+    /// <summary>What it is.</summary>
+    public OutputKind Kind { get; } = kind;
 }

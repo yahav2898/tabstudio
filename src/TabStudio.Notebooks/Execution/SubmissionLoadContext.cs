@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Runtime.Loader;
+using TabStudio.Compilation.Running;
 
 namespace TabStudio.Notebooks.Execution;
 
@@ -18,6 +19,8 @@ internal sealed class SubmissionLoadContext : AssemblyLoadContext
     private readonly Lock _gate = new();
     private readonly Dictionary<string, Assembly> _assemblies = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, string> _runtimeAssemblyPaths = new(StringComparer.OrdinalIgnoreCase);
+    private readonly List<string> _nativeLibraryPaths = [];
+    private PackageNativeLibraries _nativeLibraries = new([]);
 
     public SubmissionLoadContext(string name)
         : base(name, isCollectible: SupportsUnloading)
@@ -50,6 +53,28 @@ internal sealed class SubmissionLoadContext : AssemblyLoadContext
         {
             _runtimeAssemblyPaths[name] = path;
         }
+    }
+
+    /// <summary>Registers a package's native library, such as SQLite's, for the <c>[DllImport]</c>s of later cells and packages.</summary>
+    public void AddNativeLibrary(string path)
+    {
+        lock (_gate)
+        {
+            _nativeLibraryPaths.Add(path);
+            _nativeLibraries = new PackageNativeLibraries(_nativeLibraryPaths);
+        }
+    }
+
+    /// <inheritdoc />
+    protected override nint LoadUnmanagedDll(string unmanagedDllName)
+    {
+        PackageNativeLibraries libraries;
+        lock (_gate)
+        {
+            libraries = _nativeLibraries;
+        }
+
+        return libraries.Load(unmanagedDllName);
     }
 
     /// <summary>Unloads the session's assemblies where the runtime supports it, once nothing uses them any more.</summary>

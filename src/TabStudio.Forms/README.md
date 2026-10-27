@@ -31,13 +31,17 @@ device context on this device.`
 `SetUnhandledExceptionMode`, `EnableVisualStyles`, `SetHighDpiMode`, `SetDefaultFont`), `ApplicationContext`, `Form`
 (`Show`, `ShowDialog`, `Close`, `DialogResult`, `AcceptButton`, `CancelButton`, `KeyPreview`, `StartPosition`,
 `WindowState`, `FormBorderStyle`, `ControlBox`, `MinimizeBox`, `MaximizeBox`, `Owner`, `MainMenuStrip`,
-`AutoScaleMode`, the `Load`, `Shown`, `Activated`, `FormClosing` and `FormClosed` events), `UserControl`,
+`AutoScaleMode`, the `Load`, `Shown`, `Activated`, `FormClosing` and `FormClosed` events), MDI (`IsMdiContainer`,
+`MdiParent`, `MdiChildren`, `ActiveMdiChild`, `LayoutMdi`, `MdiChildActivate`, the menu's `MdiWindowListItem`: children
+are windows inside the parent's workspace, each with a title bar to move, minimize, maximize and close it), forms
+with `TopLevel = false` inside panels, `Application.Restart` (TabStudio runs the app again),
+`Application.AddMessageFilter` (mouse and keyboard messages, `WM_LBUTTONDOWN`, `WM_KEYDOWN` and the rest), `UserControl`,
 `ContainerControl`, `ScrollableControl` (`AutoScroll`), `Control` (layout, painting, input, focus, validation,
 `Invoke`/`BeginInvoke`, `CreateGraphics`), `WindowsFormsSynchronizationContext` (so `async` handlers and
 `BackgroundWorker` come back to the UI thread), `Screen`, `SystemInformation`, `Cursor`/`Cursors`.
 
 **Controls**: `Button`, `CheckBox`, `RadioButton`, `Label`, `LinkLabel`, `TextBox` (multiline, password, read-only,
-`AutoComplete`), `RichTextBox` (plain text), `ComboBox`, `ListBox`, `CheckedListBox`, `NumericUpDown`, `DomainUpDown`,
+`AutoComplete`), `RichTextBox` (one font and color; `Rtf`, `SelectedRtf`, `LoadFile` and `SaveFile` read and write RTF documents' text), `ComboBox`, `ListBox`, `CheckedListBox`, `NumericUpDown`, `DomainUpDown`,
 `DateTimePicker`, `MonthCalendar`, `TrackBar`, `ProgressBar`, `PictureBox`, `GroupBox`, `Panel`, `FlowLayoutPanel`,
 `TableLayoutPanel`, `SplitContainer`, `TabControl`/`TabPage`, `DataGridView` (text, check box, combo box, button,
 link and image columns, editing, sorting, selection, data binding, cell formatting and validation events).
@@ -47,37 +51,65 @@ keys, checked items, nested menus), `ToolStripButton`, `ToolStripLabel`, `ToolSt
 `ToolStripSeparator`, `ToolStripDropDownButton`, `ToolStripSplitButton`, `ToolStripTextBox`, `ToolStripComboBox`,
 `ToolStripProgressBar`, `ToolStripControlHost`.
 
-**Components and dialogs**: `Timer`, `ToolTip`, `ImageList` (images added in code), `BindingSource`, `Binding` and
-`BindingContext` (simple and list binding, `INotifyPropertyChanged`, `IBindingList`), `Clipboard` (text),
+**Components and dialogs**: `Timer`, `ToolTip`, `ImageList` (images added in code, or from the `.resx` file as
+`ImageStream`), `BindingSource`, `Binding` and
+`BindingContext` (simple and list binding, `INotifyPropertyChanged`, `IBindingList`), `Clipboard` (text, images
+through the device's clipboard, and data objects within the app),
 `MessageBox` (every button set and icon), `OpenFileDialog`, `SaveFileDialog` and `FolderBrowserDialog` (the device's
 storage picker), `ColorDialog`, `FontDialog`, `TextRenderer`.
 
 **Layout**: `Anchor`, `Dock`, `Padding`, `Margin`, `AutoSize`, `MinimumSize`/`MaximumSize`, `SuspendLayout`/
 `ResumeLayout`, flow and table layout, `AutoScaleMode.Font` and `AutoScaleDimensions` as the designer writes them.
 
-**System.Drawing**: `Graphics` (lines, rectangles, ellipses, arcs, pies, polygons, curves, paths, images, strings,
-`MeasureString`, transforms, clipping, `SmoothingMode`, `TextRenderingHint`), `Pen`, `SolidBrush`,
-`LinearGradientBrush`, `Brushes`, `Pens`, `SystemBrushes`, `SystemPens`, `SystemFonts`, `Font`, `FontFamily`,
-`StringFormat`, `Bitmap` and `Image` (PNG, JPEG, BMP and GIF from files and streams, `GetPixel`/`SetPixel`, `Save`,
-which writes PNG whatever the format asked for),
-`Icon`, `Region`, `GraphicsPath`, `Matrix`. `Color`, `Point`, `Size`, `Rectangle` and their `F` forms are .NET's own.
+**System.Drawing**: `Graphics` on a control (`Paint`, `CreateGraphics`, `FromHwnd`) and on a bitmap
+(`Graphics.FromImage`): lines, rectangles, ellipses, arcs, pies, polygons, curves, paths, images (also with
+`ImageAttributes` color matrices and from one bitmap into another or itself), strings, `MeasureString`, transforms,
+clipping by rectangles, paths and regions, `SmoothingMode`, `PixelOffsetMode`, `CompositingMode`, `Clear`, `Flush`.
+Pens have widths, dash styles and patterns, dash caps and offsets, start, end and custom caps (arrows included),
+joins and miter limits, and alignment; brushes are `SolidBrush`, `LinearGradientBrush` (blends, interpolation colors,
+transforms), `TextureBrush`, `HatchBrush` (every `HatchStyle`, with Windows' patterns) and `PathGradientBrush`.
+Drawing on a bitmap is rasterized into its pixels as GDI+ does, close enough that the tests compare it with pictures
+GDI+ drew on Windows. `Bitmap` and `Image`: PNG, JPEG, BMP, GIF and ICO from files and streams, `GetPixel`/`SetPixel`,
+`LockBits`/`UnlockBits` (`Format32bppArgb`, `Format32bppPArgb`, `Format32bppRgb`, `Format24bppRgb`), `Clone`,
+`RotateFlip`, `MakeTransparent`, `Save` as PNG, JPEG (with a quality encoder parameter), BMP, GIF and ICO.
+`BufferedGraphicsContext`, `BufferedGraphicsManager`, `BufferedGraphics` and `DoubleBuffered` for drawing without
+flicker. `GraphicsPath` (with `AddString`), `Region`, `Matrix`, `Font`, `FontFamily`, `StringFormat`, `Icon`, `Brushes`,
+`Pens`, `SystemBrushes`, `SystemPens`, `SystemFonts`. `Color`, `Point`, `Size`, `Rectangle` and their `F` forms are
+.NET's own.
+
+**Resources**: `.resx` files are compiled as Visual Studio compiles them: strings, images, icons, files the `.resx`
+refers to, values with a type such as a `Point`, and `ImageList.ImageStream` (read from the .NET Framework's
+serialized form), so `Properties.Resources` and the images the designer stores in `Form1.resx` load with
+`resources.GetObject` as on Windows. Other values saved with the .NET Framework's binary formatter are left out with a
+warning, as .NET itself can no longer read them.
 
 ## Not supported
 
 - Controls: `TreeView`, `ListView`, `MaskedTextBox`, `PropertyGrid`, `WebBrowser`, `HScrollBar`/`VScrollBar`,
   `ErrorProvider`, `NotifyIcon`, `HelpProvider`, `PrintDocument` and the print dialogs; the old `MainMenu`,
   `ContextMenu`, `StatusBar` and `ToolBar`.
-- MDI (`IsMdiContainer`, `MdiParent`, `LayoutMdi`): show child forms as separate windows with `Show(owner)`.
-- Resources: `.resx` files are not compiled, so `ImageList.ImageStream`, `Properties.Resources` and images the
-  designer stores in `Form1.resx` are not available; load images with `Image.FromFile` or add them in code.
-- Windows itself: P/Invoke, COM, the registry, window messages (there is no `WndProc` to override, and
-  `Application.AddMessageFilter` throws), `Handle`-based APIs and GDI device contexts (`Graphics.GetHdc`,
-  `Graphics.FromHwnd`), `Application.Restart`.
-- Drawing: `Graphics.FromImage` (draw in a `Paint` handler, or set pixels with `Bitmap.SetPixel`),
-  `GraphicsPath.AddString`, metafiles, `TextureBrush`, `PathGradientBrush`, hatch brushes.
-- Rich text (`RichTextBox.Rtf`, RTF streams): `RichTextBox` holds plain text.
-- Tool strip overflow menus, custom `ToolStripRenderer`s, owner-drawn menu items; the clipboard holds text only.
+- Windows itself: P/Invoke, COM, the registry, `WndProc` (there are no window messages other than the mouse and
+  keyboard messages message filters see), and GDI handles: device contexts (`Graphics.GetHdc`), `Bitmap.GetHbitmap`,
+  `Bitmap.GetHicon`.
+- Drawing: metafiles; rich text formatting (a `RichTextBox` shows an RTF document's text in one font and color).
+- Tool strip overflow menus, custom `ToolStripRenderer`s, owner-drawn menu items.
 - A folder picked in `FolderBrowserDialog` must be on the device; a cloud folder has no path an app can use.
+
+## What throws `NotSupportedException`, and why
+
+Every `NotSupportedException` in this assembly was reviewed for 0.18. What tutorial and student apps reach for
+(drawing on bitmaps, double buffering, MDI, RTF, `ImageStream`, clipboard images, `Application.Restart`, message
+filters, `Graphics.FromHwnd`, `PathGradientBrush`, `GraphicsPath.AddString`) is implemented. What remains cannot exist
+on Android, or is what .NET itself throws:
+
+| Member | Why |
+| --- | --- |
+| `Graphics.GetHdc`, `Graphics.ReleaseHdc`, `BufferedGraphics.Render(IntPtr)`, `BufferedGraphicsContext.Allocate(IntPtr, Rectangle)` | They hand out or take a GDI device context, which only Windows has. Draw with the `Graphics` itself. |
+| `Bitmap.GetHbitmap`, `Bitmap.GetHicon` | They create GDI bitmap and icon handles. Draw the bitmap with `DrawImage`, or save it with `ImageFormat.Icon`. |
+| `TextRenderer.DrawText` on an `IDeviceContext` that is not a `Graphics` | Such a device context is a GDI handle; every `Graphics` is accepted. |
+| `PictureBox.Load` of an address that is not a file, `http` or `https` | There is nothing else to load from. |
+| Adding to read-only collections (`ListBox.SelectedItems`, `CheckedListBox.CheckedItems`, a row's `Cells`, `ControlCollection` set by index, `ImageList.Images.Insert`) | Windows Forms throws the same exception there. |
+| `BindingSource` sorting of a list that cannot sort, `CurrencyManager.AddNew` on a list that cannot add, property-to-property `Binding` list operations | The list itself does not support it; Windows Forms throws the same exception. |
 
 ## The designer
 

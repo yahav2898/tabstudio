@@ -43,6 +43,7 @@ public sealed class LinkHost : IAsyncDisposable
     private Task _acceptLoop = Task.CompletedTask;
     private LinkPairingCode _code = LinkPairingCode.Create();
     private DateTimeOffset _codeExpires = DateTimeOffset.MaxValue;
+    private int _wrongCodes;
     private readonly List<ServedClient> _clients = [];
     private int _disposed;
 
@@ -173,6 +174,7 @@ public sealed class LinkHost : IAsyncDisposable
             }
 
             _code = LinkPairingCode.Create();
+            _wrongCodes = 0;
             _codeExpires = DateTimeOffset.UtcNow + _options.PairingCodeLifetime;
             _codeExpiry.Change(_options.PairingCodeLifetime, Timeout.InfiniteTimeSpan);
         }
@@ -304,9 +306,9 @@ public sealed class LinkHost : IAsyncDisposable
         bool admitted;
         try
         {
-            admitted = await _handshakes.WaitAsync(0).ConfigureAwait(false);
+            admitted = await _handshakes.WaitAsync(_options.HandshakeQueueTimeout, _stopping.Token).ConfigureAwait(false);
         }
-        catch (ObjectDisposedException)
+        catch (Exception ex) when (ex is ObjectDisposedException or OperationCanceledException)
         {
             admitted = false;
         }
@@ -416,10 +418,15 @@ public sealed class LinkHost : IAsyncDisposable
             var transcript = LinkProofs.Transcript(_options.Identity.Fingerprint, client, hostNonce, clientNonce);
             if (DateTimeOffset.UtcNow > PairingCodeExpires || !LinkProofs.Matches(LinkProofs.ClientProof(key, transcript), proof))
             {
-                RenewPairingCode();
-                throw new LinkRemoteException(
-                    LinkErrorCodes.WrongCode,
-                    $"That is not the code {host} shows. For safety {host} now shows a new code: type that one.");
+                if (CountWrongCode())
+                {
+                    RenewPairingCode();
+                    throw new LinkRemoteException(
+                        LinkErrorCodes.WrongCode,
+                        $"That is not the code {host} shows. For safety {host} now shows a new code: type that one.");
+                }
+
+                throw new LinkRemoteException(LinkErrorCodes.WrongCode, $"That is not the code {host} shows. Check it and type it again.");
             }
 
             hostProof = Base64Url.Encode(LinkProofs.HostProof(key, transcript));
@@ -471,13 +478,27 @@ public sealed class LinkHost : IAsyncDisposable
         connection.ChangeHandler(_createSession(peer, connection));
         if (hostProof is not null)
         {
-            // The code is single-use.
-            RenewPairingCode();
+            // The code is single-use, unless the host keeps it for many devices.
+            if (!_options.KeepsPairingCode)
+            {
+                RenewPairingCode();
+            }
+
             DevicePaired?.Invoke(this, peer);
         }
 
         ClientChanged?.Invoke(this, EventArgs.Empty);
         return LinkReply.Of(new LinkAccepted(hostProof), LinkHandshakeJsonContext.Default.LinkAccepted);
+    }
+
+    /// <summary>Counts a wrong code. Returns whether the code must be drawn again.</summary>
+    private bool CountWrongCode()
+    {
+        lock (_gate)
+        {
+            _wrongCodes++;
+            return _wrongCodes >= Math.Max(1, _options.WrongCodesBeforeRenewal);
+        }
     }
 
     private void OnClientClosed(LinkConnection connection)

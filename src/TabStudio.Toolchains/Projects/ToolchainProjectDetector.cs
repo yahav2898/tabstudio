@@ -123,6 +123,13 @@ public static class ToolchainProjectDetector
                 {
                     marker = files.First(f => string.Equals(f, marker, StringComparison.OrdinalIgnoreCase));
                 }
+
+                // A Makefile that only runs cargo, npm, go or dotnet is a shortcut for the folder's real project,
+                // which that toolchain detects from its own manifest; it is not a C or C++ program.
+                if (toolchain.Id == "cpp" && marker is not null && IsMakefile(marker) && MakefileWrapper.WrappedTool(Path.Combine(folder, marker)) is not null)
+                {
+                    continue;
+                }
                 if (marker is not null && MicrochipInstallation.IsCompiler(toolchain.Id))
                 {
                     try
@@ -153,6 +160,8 @@ public static class ToolchainProjectDetector
                 }
             }
 
+            PreferLanguageManifests(result, folder);
+
             if (depth >= maxDepth)
             {
                 continue;
@@ -169,6 +178,33 @@ public static class ToolchainProjectDetector
         }
 
         return result;
+    }
+
+    /// <summary>Whether a project file is a Makefile, rather than a language's own manifest or CMakeLists.txt.</summary>
+    /// <param name="marker">The project file's name.</param>
+    public static bool IsMakefile(string marker) => marker is "Makefile" or "makefile" or "GNUmakefile";
+
+    /// <summary>
+    /// In one folder, a language's own manifest (<c>Cargo.toml</c>, <c>go.mod</c>, <c>package.json</c>,
+    /// <c>pom.xml</c>) comes before a Makefile, so that the folder's first project, the default startup project,
+    /// is the one the Makefile usually drives.
+    /// </summary>
+    private static void PreferLanguageManifests(List<ToolchainProject> result, string folder)
+    {
+        var first = result.FindIndex(p => p.Directory == folder);
+        if (first < 0)
+        {
+            return;
+        }
+
+        var inFolder = result.Skip(first).ToList();
+        if (inFolder.Count < 2 || !inFolder.Any(p => p.Toolchain.Id == "cpp" && p.Marker is { } m && IsMakefile(m)))
+        {
+            return;
+        }
+
+        result.RemoveRange(first, inFolder.Count);
+        result.AddRange(inFolder.OrderBy(p => p.Toolchain.Id == "cpp" && p.Marker is { } marker && IsMakefile(marker) ? 1 : 0));
     }
 
     private static bool IsInside(string folder, string ancestor) =>

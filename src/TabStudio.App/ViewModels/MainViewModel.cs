@@ -25,7 +25,7 @@ public sealed partial class MainViewModel : ObservableObject
     /// <param name="link">The TabStudio Link dialog, shown over every page.</param>
     /// <param name="desktopMode">Desktop mode, which shows the IDE on an external display; none when <see langword="null"/>.</param>
     /// <param name="swarmDevice">The page this device shows in a swarm; none when <see langword="null"/>.</param>
-    public MainViewModel(StartViewModel start, Func<WorkspaceViewModel> createWorkspace, RecentWorkspaces recent, SessionStore sessions, CompilerServices compiler, GitHubAccountViewModel gitHubAccount, LinkViewModel link, DesktopModeViewModel? desktopMode = null, Swarm.SwarmDevicePageViewModel? swarmDevice = null)
+    public MainViewModel(StartViewModel start, Func<WorkspaceViewModel> createWorkspace, RecentWorkspaces recent, SessionStore sessions, CompilerServices compiler, GitHubAccountViewModel gitHubAccount, LinkViewModel link, DesktopModeViewModel? desktopMode = null, Swarm.SwarmDevicePageViewModel? swarmDevice = null, Live.LiveJoinViewModel? liveJoin = null)
     {
         ArgumentNullException.ThrowIfNull(start);
         ArgumentNullException.ThrowIfNull(createWorkspace);
@@ -41,7 +41,16 @@ public sealed partial class MainViewModel : ObservableObject
         _compiler = compiler;
         CurrentPage = start;
         Start.OpenRequested += async (_, path) => await OpenWorkspaceAsync(path);
+        LiveJoin = liveJoin;
+        if (liveJoin is not null)
+        {
+            liveJoin.Live.GuestJoined += OnLiveGuestJoined;
+            liveJoin.Live.GuestEnded += OnLiveGuestEnded;
+        }
     }
+
+    /// <summary>TabStudio Live's Join dialog, shown over every page; none in some tests.</summary>
+    public Live.LiveJoinViewModel? LiveJoin { get; }
 
     /// <summary>The start screen.</summary>
     public StartViewModel Start { get; }
@@ -66,7 +75,10 @@ public sealed partial class MainViewModel : ObservableObject
     public async Task StartAsync()
     {
         _ = _compiler.WarmUpAsync();
-        if (_sessions.Load() is { } session)
+
+        // Copies of other devices' workspaces from sessions the app did not end, as when it was closed in one.
+        LiveJoin?.Live.DeleteCopies();
+        if (_sessions.Load() is { } session && LiveJoin?.Live.IsCopy(session.WorkspacePath) != true)
         {
             await OpenWorkspaceAsync(session.WorkspacePath, session);
         }
@@ -88,7 +100,7 @@ public sealed partial class MainViewModel : ObservableObject
         try
         {
             await workspace.LoadAsync(path, session);
-            if (workspace.Workspace is { } loaded)
+            if (workspace.Workspace is { } loaded && LiveJoin?.Live.IsCopy(path) != true)
             {
                 var description = loaded.Projects.Count switch
                 {
@@ -107,6 +119,33 @@ public sealed partial class MainViewModel : ObservableObject
             CurrentPage = Start;
             OnPropertyChanged(nameof(Workspace));
         }
+    }
+
+    /// <summary>This device joined a Live session: the IDE opens the copy of the shared workspace.</summary>
+    private async void OnLiveGuestJoined(object? sender, global::TabStudio.Live.Sessions.LiveGuest guest)
+    {
+        if (guest.WorkspaceRoot is not { } root)
+        {
+            return;
+        }
+
+        var entry = guest.EntryPath is { } relative && guest.FullPathOf(relative) is { } full && File.Exists(full) ? full : root;
+        await OpenWorkspaceAsync(entry);
+    }
+
+    /// <summary>The session this device joined ended: its copy of the workspace closes and is deleted.</summary>
+    private void OnLiveGuestEnded(object? sender, string reason)
+    {
+        if (Workspace is { IsLiveGuest: true } || (Workspace?.Workspace is { } open && LiveJoin?.Live.IsCopy(open.RootDirectory) == true))
+        {
+            CloseCurrentWorkspace();
+            Start.RefreshRecent();
+            CurrentPage = Start;
+            OnPropertyChanged(nameof(Workspace));
+        }
+
+        Start.ShowError(reason);
+        LiveJoin?.Live.DeleteCopies();
     }
 
     /// <summary>Saves the session, for example when the app goes to the background.</summary>

@@ -41,6 +41,24 @@ public sealed record LinkHostOptions
     /// </summary>
     public int MaxClients { get; init; } = 1;
 
+    /// <summary>
+    /// Whether the pairing code stays the same after a device pairs with it, so many devices can join with one scan of
+    /// the same QR code until it expires, as a class does from a projected screen. Off by default: a code works once.
+    /// </summary>
+    public bool KeepsPairingCode { get; init; }
+
+    /// <summary>
+    /// How many wrong codes make the host draw a new one. One by default, so a guess gets one try per code; a host that
+    /// keeps its code for many devices allows a few typing mistakes before every device has to scan again.
+    /// </summary>
+    public int WrongCodesBeforeRenewal { get; init; } = 1;
+
+    /// <summary>
+    /// How long a device that connects while the most handshakes run waits for its turn, as when a class joins at once;
+    /// zero refuses it at once, and it tries again.
+    /// </summary>
+    public TimeSpan HandshakeQueueTimeout { get; init; } = TimeSpan.Zero;
+
     /// <summary>The TabStudio version the host announces and requires; tests change it.</summary>
     public string AppVersion { get; init; } = LinkProtocol.AppVersion;
 }

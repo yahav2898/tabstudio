@@ -8,6 +8,7 @@ using TabStudio.Core.Workspaces;
 using TabStudio.Debugging;
 using TabStudio.Debugging.Building;
 using TabStudio.Debugging.Symbols;
+using TabStudio.Live;
 
 namespace TabStudio.App.ViewModels;
 
@@ -157,6 +158,11 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
             return await EvaluateAdapterDataTipAsync(expression);
         }
 
+        if (_liveGuestDebug is not null)
+        {
+            return await EvaluateLiveDataTipAsync(expression);
+        }
+
         if (_swarmDebug is not null)
         {
             return await EvaluateSwarmDataTipAsync(expression);
@@ -183,6 +189,12 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
     [RelayCommand(CanExecute = nameof(CanStartDebugging))]
     private async Task StartDebuggingAsync()
     {
+        if (IsLiveGuest)
+        {
+            await ControlHostDebuggerAsync(LiveDebugCommand.Continue);
+            return;
+        }
+
         if (IsRemoteWorkspace) { await RunRemoteAsync(buildOnly: false); return; }
         if (_swarmDebug is not null)
         {
@@ -215,18 +227,24 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
 
     /// <summary>F11: runs the current statement, stepping into the calls it makes; before debugging, starts at the first statement.</summary>
     [RelayCommand(CanExecute = nameof(CanStep))]
-    private Task StepIntoAsync() => _swarmDebug is not null ? StepSwarmAsync(TabStudio.Swarm.SwarmResumeMode.StepInto)
+    private Task StepIntoAsync() => IsLiveGuest ? ControlHostDebuggerAsync(LiveDebugCommand.StepInto) : _swarmDebug is not null ? StepSwarmAsync(TabStudio.Swarm.SwarmResumeMode.StepInto)
         : _adapter is not null ? StepAdapterAsync(AdapterStep.Into) : StepOrStartAsync(session => session.StepInto());
 
     /// <summary>F10: runs the current statement and the calls it makes; before debugging, starts at the first statement.</summary>
     [RelayCommand(CanExecute = nameof(CanStep))]
-    private Task StepOverAsync() => _swarmDebug is not null ? StepSwarmAsync(TabStudio.Swarm.SwarmResumeMode.StepOver)
+    private Task StepOverAsync() => IsLiveGuest ? ControlHostDebuggerAsync(LiveDebugCommand.StepOver) : _swarmDebug is not null ? StepSwarmAsync(TabStudio.Swarm.SwarmResumeMode.StepOver)
         : _adapter is not null ? StepAdapterAsync(AdapterStep.Over) : StepOrStartAsync(session => session.StepOver());
 
     /// <summary>Shift+F11: runs to the end of the current function and pauses in its caller.</summary>
     [RelayCommand(CanExecute = nameof(IsPaused))]
     private void StepOut()
     {
+        if (IsLiveGuest)
+        {
+            _ = ControlHostDebuggerAsync(LiveDebugCommand.StepOut);
+            return;
+        }
+
         if (_swarmDebug is not null)
         {
             _ = StepSwarmAsync(TabStudio.Swarm.SwarmResumeMode.StepOut);
@@ -246,6 +264,12 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
     [RelayCommand(CanExecute = nameof(IsDebuggeeRunning))]
     private void BreakAll()
     {
+        if (IsLiveGuest)
+        {
+            _ = ControlHostDebuggerAsync(LiveDebugCommand.BreakAll);
+            return;
+        }
+
         _session?.Pause();
         _ = PauseAdapterAsync();
         _ = PauseSwarmAsync();
@@ -256,6 +280,12 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
     [RelayCommand(CanExecute = nameof(CanStopDebugging))]
     private void StopDebugging()
     {
+        if (IsLiveGuest)
+        {
+            ExplainHostRuns();
+            return;
+        }
+
         if (IsRunning)
         {
             _run?.Cancel();
@@ -274,6 +304,12 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
     [RelayCommand(CanExecute = nameof(IsDebugging))]
     private void Restart()
     {
+        if (IsLiveGuest)
+        {
+            ExplainHostRuns();
+            return;
+        }
+
         if (RestartSwarmDebugging())
         {
             return;
@@ -290,6 +326,12 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
     {
         if (ActiveDocument is not { } document)
         {
+            return Task.CompletedTask;
+        }
+
+        if (IsLiveGuest)
+        {
+            ExplainHostRuns();
             return Task.CompletedTask;
         }
 
@@ -684,6 +726,12 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
             return;
         }
 
+        if (_liveGuestDebug is not null)
+        {
+            await ShowLiveFrameAsync(frame);
+            return;
+        }
+
         ShowExecutionPoints();
         if (_pause is not { CallStack.Count: > 0 } pause || frame is null)
         {
@@ -714,7 +762,7 @@ public sealed partial class WorkspaceViewModel : IEditorDebugger
 
     private void ApplyExecutionPoints(DocumentViewModel document)
     {
-        var current = _pause is { CallStack.Count: > 0 } pause ? pause.CallStack[0].Location : _adapterCurrent ?? _swarmCurrent;
+        var current = _pause is { CallStack.Count: > 0 } pause ? pause.CallStack[0].Location : _adapterCurrent ?? _swarmCurrent ?? _liveCurrent;
         var caller = CallStack.ActiveFrame is { IsTop: false } frame ? frame.Location : null;
         document.ShowExecutionPoints(PointIn(document, current), PointIn(document, caller), _exceptionHelper);
     }

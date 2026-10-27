@@ -104,7 +104,10 @@ public interface ILanguageService : IDisposable
     /// <returns>Problems, such as no network before the generators were ever downloaded.</returns>
     Task<IReadOnlyList<BuildDiagnostic>> AddFrameworkGeneratorsAsync(CancellationToken cancellationToken);
 
-    /// <summary>The package assemblies a program needs when it runs, from the project's last restore.</summary>
+    /// <summary>
+    /// The package files a program needs when it runs, from the project's last restore: its RID-specific or <c>lib/</c>
+    /// assemblies and its native libraries (<c>RestoreResult.RuntimeFiles</c>).
+    /// </summary>
     /// <param name="projectFilePath">The project.</param>
     /// <returns>Full paths, or an empty list when the project has no restored packages.</returns>
     IReadOnlyList<string> GetPackageRuntimeAssemblies(string projectFilePath);

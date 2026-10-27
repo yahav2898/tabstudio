@@ -32,6 +32,7 @@ public sealed partial class WorkspaceViewModel
         AddActivity(SideBarPanel.AppPreview, "App Preview", "Icon.Window");
         AddActivity(SideBarPanel.WebPreview, "Web Preview", "Icon.Globe");
         AddActivity(SideBarPanel.Swarm, "Swarm", "Icon.Swarm");
+        AddActivity(SideBarPanel.Live, "Live Share", "Icon.Live");
         AddActivity(SideBarPanel.Services, "Services", "Icon.Server");
         AddActivity(SideBarPanel.Database, "Database Explorer", "Icon.Database");
         AddActivity(SideBarPanel.WindowsBridge, "Windows Bridge", "Icon.Computer");
@@ -63,6 +64,7 @@ public sealed partial class WorkspaceViewModel
         }
 
         UpdateActivityBadges();
+        UpdateLiveActivity();
     }
 
     /// <summary>Puts the agent's proposed changes and its work on its item. Called once, when the agent is created.</summary>

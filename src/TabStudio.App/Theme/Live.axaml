@@ -1,0 +1,17 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!--
+    TabStudio Live's icons, in the style of Icons.axaml (stroke paths on a 24×24 grid, drawn by controls:StrokeIcon).
+    Participants' colors are the fixed avatar tokens of Colors.axaml (Brush.Avatar.1 to 8), with white initials.
+  -->
+
+  <!-- Live Share: two people. -->
+  <StreamGeometry x:Key="Icon.Live">M9 11 A3.5 3.5 0 1 0 9 4 A3.5 3.5 0 1 0 9 11 Z M2.5 20 A6.5 6.5 0 0 1 15.5 20 M15.5 4.2 A3.5 3.5 0 0 1 15.5 10.8 M18 13.8 A6.5 6.5 0 0 1 21.5 20</StreamGeometry>
+  <!-- Raise hand: an open hand. -->
+  <StreamGeometry x:Key="Icon.Hand">M8 12 L8 5.5 A1.5 1.5 0 0 1 11 5.5 L11 11 M11 10 L11 4 A1.5 1.5 0 0 1 14 4 L14 11 M14 10 L14 5.5 A1.5 1.5 0 0 1 17 5.5 L17 13 A7 7 0 0 1 10 20 A6 6 0 0 1 5 16.5 L3.6 13.2 A1.4 1.4 0 0 1 6 12 L8 14.5</StreamGeometry>
+  <!-- Follow: an eye. -->
+  <StreamGeometry x:Key="Icon.Follow">M2 12 C5 6.5 19 6.5 22 12 C19 17.5 5 17.5 2 12 Z M12 9 A3 3 0 1 0 12 15 A3 3 0 1 0 12 9 Z</StreamGeometry>
+  <!-- Present to a class: a board on an easel. -->
+  <StreamGeometry x:Key="Icon.Present">M3 4 L21 4 M4 4 L4 15 L20 15 L20 4 M12 15 L12 18 M8 21 L12 18 L16 21 M8 11 L11 8 L13 10 L16 7</StreamGeometry>
+</ResourceDictionary>

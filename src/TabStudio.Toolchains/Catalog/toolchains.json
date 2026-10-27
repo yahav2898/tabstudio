@@ -181,6 +181,28 @@
         ],
         "entries": [
           {
+            "file": ".flaskenv",
+            "name": "flask run",
+            "command": [
+              "{python}",
+              "-u",
+              "-m",
+              "flask",
+              "run"
+            ]
+          },
+          {
+            "file": "manage.py",
+            "name": "manage.py runserver",
+            "command": [
+              "{python}",
+              "-u",
+              "manage.py",
+              "runserver",
+              "--noreload"
+            ]
+          },
+          {
             "file": "__main__.py",
             "command": [
               "{python}",

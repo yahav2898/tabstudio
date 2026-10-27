@@ -34,10 +34,17 @@ public sealed partial class WorkspaceViewModel
     /// <summary>The debug adapters' own log, apart from the debugged program's output.</summary>
     public OutputViewModel DebugAdapterOutput => field ??= new OutputViewModel(_ui, _profile.OutputCharacterLimit);
 
+    /// <summary>
+    /// The full log of setting projects up, such as everything <c>pip install</c> printed. Build and Run shows what
+    /// a person acts on, one message when an install fails; the log is one tap away, here.
+    /// </summary>
+    public OutputViewModel ProjectSetupOutput => field ??= new OutputViewModel(_ui, _profile.OutputCharacterLimit);
+
     /// <summary>The sources of the Output panel's "Show output from" box.</summary>
     public IReadOnlyList<OutputSourceOption> OutputSources => field ??=
     [
         new OutputSourceOption("Build and Run", Output),
+        new OutputSourceOption("Project Setup", ProjectSetupOutput),
         new OutputSourceOption("Language Servers", LanguageServerOutput),
         new OutputSourceOption("Debug Adapters", DebugAdapterOutput),
         new OutputSourceOption("Swarm", SwarmOutput),
@@ -61,6 +68,10 @@ public sealed partial class WorkspaceViewModel
     /// <summary>Shows the language servers' log in the Output panel, as tapping the status bar item does.</summary>
     [RelayCommand]
     private void ShowLanguageServerLog() => ShowOutputSource(LanguageServerOutput);
+
+    /// <summary>Shows the project setup's full log, such as pip's output, in the Output panel.</summary>
+    [RelayCommand]
+    private void ShowProjectSetupLog() => ShowOutputSource(ProjectSetupOutput);
 
     /// <summary>Go to Declaration: where the symbol at the caret is declared, as its language server tells.</summary>
     [RelayCommand]

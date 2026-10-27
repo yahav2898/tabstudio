@@ -253,7 +253,8 @@ public sealed partial class WorkspaceViewModel
         bool restarted)
     {
         var coordinator = swarm.Coordinator!;
-        var packages = _language!.GetPackageRuntimeAssemblies(project.FilePath);
+        // Swarm devices may have another processor than this one, so they get the managed assemblies only.
+        var packages = PackageNativeLibraries.Assemblies(_language!.GetPackageRuntimeAssemblies(project.FilePath));
         State = debugBuild is null ? IdeState.Running : IdeState.Debugging;
 
         // After the state, which shows the build's own output: the devices' output is what matters now.

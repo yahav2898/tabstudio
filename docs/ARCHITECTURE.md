@@ -54,9 +54,10 @@ Dependencies point down only. Each layer has one job:
 | `TabStudio.Remote` | SSH.NET connections, platform signing, SFTP source caches, remote processes, forwarding and publishing. | `TabStudio.Toolchains` |
 | `TabStudio.Services` | Compose/devcontainer parsing, native service mappings, persistent data, dependency scheduling, health, per-service logs and connection rewriting. | `TabStudio.Toolchains` |
 | `TabStudio.Toolchains` | The Toolchain Store: the catalog, Alpine Linux on PRoot, verified Alpine packages, processes and pseudo terminals, toolchain projects and the terminal emulator. | `TabStudio.Core` |
-| `TabStudio.Forms` | Windows Forms on Avalonia: `System.Windows.Forms` and `System.Drawing`, run in the app preview. | Avalonia |
+| `TabStudio.Forms` | Windows Forms on Avalonia: `System.Windows.Forms` and `System.Drawing`, run in the app preview; drawing on bitmaps is rasterized with Skia. | Avalonia, SkiaSharp |
 | `TabStudio.Forms.Design` | The Windows Forms designer's model: reads and writes `InitializeComponent`, the Toolbox and properties. | `TabStudio.Forms`, Roslyn |
 | `TabStudio.Swarm` | Swarm: the coordinator and members, deployment with cached attachments, the web gateway, the debug agent. | `TabStudio.Link`, `TabStudio.Debugging`, `TabStudio.Compilation` |
+| `TabStudio.Live` | TabStudio Live: the text CRDT, per-participant undo, the session protocol, the host and guest sessions, shared files and permissions. | `TabStudio.Link`, `TabStudio.Swarm` (debug records), `TabStudio.Core` |
 | `TabStudio.LanguageServers` | Language Server Protocol and Debug Adapter Protocol clients, server and adapter registry, launch configurations. | Nothing but the .NET base library |
 | `TabStudio.Extensions` | VS Code extensions from Open VSX: install and verify, and their grammars, language configurations, snippets and themes. | Nothing but the .NET base library |
 | `TabStudio.Agent` | Claude as a coding agent: the Messages API with streaming and prompt caching, tools over the workspace, Model Context Protocol servers, and sketch to XAML. | Core |
@@ -127,6 +128,23 @@ sequenceDiagram
   global packages folder in NuGet's layout, verified and extracted safely, and shared by every project.
 - **Assets** come from `ref/` or `lib/` for `net10.0` with NuGet's fallback rules. Packages that the framework
   already provides are pruned, so their assemblies always come from .NET itself.
+- **RID-specific assets.** Programs run with what the .NET host would pick for the device's runtime identifier:
+  `android-arm64` on a tablet (`RuntimeGraph.DeviceRuntimeIdentifier`), the host's portable RID such as `linux-x64`
+  elsewhere. `RuntimeGraph` walks the RID graph breadth-first as NuGet does (`android-arm64`, `linux-bionic-arm64`,
+  `linux-arm64`, `linux`, `unix-arm64`, `unix`, `any`), from a shipped subset of the SDK's portable graph merged with
+  the packages' `runtime.json` files. A `runtimes/{rid}/lib/{tfm}/` folder (nearest framework first, then nearest
+  RID) replaces the package's `lib/` group, so Microsoft.Data.SqlClient and System.Data.SqlClient run with their
+  `runtimes/unix/` implementations rather than their "not supported on this platform" stubs; a `_._` there means
+  nothing for that RID. Code still compiles against `ref/` or `lib/`, as with the SDK. The nearest
+  `runtimes/{rid}/native/` folder gives the native libraries (`RestoreResult.NativeLibraries`); programs get both
+  lists as `RestoreResult.RuntimeFiles`.
+- **Native libraries.** The program's load context (`ProgramLoadContext`, and the test runner's and notebooks'
+  contexts) resolves `[DllImport]` and `NativeLibrary.Load` through `PackageNativeLibraries`, probing the name with
+  `lib` and `.so`/`.dylib`/`.dll`. A library TabStudio already has mapped, such as its own `libSkiaSharp.so` or
+  `libe_sqlite3.so`, is reused rather than loaded a second time; on Android the APK's own copy (built for Bionic)
+  comes next, because packages' `linux-arm64` builds need glibc. Package libraries load from the global packages
+  folder in private app storage: Android's W^X rule forbids `exec()` there, not `dlopen`, so nothing is copied.
+  Swarm devices get the managed assemblies only, and WebAssembly apps never get native files.
 - **No-op restores** are instant: the inputs are hashed, and an unchanged project reuses its last result.
   Offline, versions already on the device are used.
 - **Shared frameworks.** A project on the Web SDK, or with a `FrameworkReference` to `Microsoft.AspNetCore.App`,
@@ -253,7 +271,25 @@ project with `<UseWindowsForms>true</UseWindowsForms>` or a `-windows` target co
 Desktop SDK, with the SDK's global usings and a generated `ApplicationConfiguration`. F5 runs the app in the app
 preview inside a Windows 10 window: `Application.Run` runs its message loop on its own UI thread, `Show` and
 `ShowDialog` open more windows, closing the main form ends the run, and an unhandled exception ends only the app. A
-member that cannot work on a tablet throws `NotSupportedException` naming the member and what to use instead.
+member that cannot work on a tablet throws `NotSupportedException` naming the member and what to use instead; the
+few that remain are listed, with the reason, in `src/TabStudio.Forms/README.md`.
+
+Drawing is recorded, not executed: every `Graphics` operation adds a command (shapes as path data with a `PenSpec` or
+`BrushSpec`, text, images, clears) to a display list, with the transform, clip and edge mode in force. On a control the
+list is the window's frame, which the app preview draws with Avalonia; shapes in it are drawn by `SkiaPainter` through
+a custom draw operation, so a window and a bitmap paint shapes with the same code. On a bitmap
+(`Graphics.FromImage`), the list belongs to the image's `ImageBuffer` and is rasterized into its pixels when anything
+reads them (`GetPixel`, `LockBits`, `Save`, drawing the image, `Flush`, disposing the `Graphics`): `BitmapRasterizer`
+renders it into a CPU `RenderTargetBitmap` that keeps the earlier pixels. GDI+'s conventions are reproduced there:
+pixel centers at whole coordinates (shapes move by half a pixel, 0.49 when aliased so Skia rounds as GDI+ does), pen
+caps and anchors drawn as shapes, path gradients as triangle meshes, hatch brushes from Windows' own 8 by 8 patterns.
+`tests/TabStudio.Forms.Tests/Drawing` compares 21 scenes with pictures GDI+ drew on a Windows runner
+(`build/gdiplus-references`), within a tolerance for antialiasing. A `.resx` that holds more than strings is compiled by
+`WindowsFormsResources` into a `.resources` file whose header names `FormsResourceReader`, which `ResourceManager`
+uses to turn values back into a `Bitmap`, an `Icon` or an `ImageListStreamer`; the image list's data is taken out of
+the .NET Framework's serialized form at build time, so nothing runs the binary formatter. `Clipboard` images go
+through `IFormsPresenter`: the IDE hands them to Avalonia's clipboard on the desktop and to `AndroidImageClipboard` (a
+content provider serving the PNG) on the tablet.
 
 `TabStudio.Forms.Design` is the designer's model. It reads `InitializeComponent` with Roslyn, never running the app's
 code, edits a model of the controls, and writes changes back in the file's own style the way Visual Studio does,
@@ -268,6 +304,18 @@ C# projects with `<UseWPF>true</UseWPF>` compile against OpenSilver 3.3.3 instea
 serves a .NET WebAssembly browser host in the web preview. The window attaches before its first forced layout;
 saving rebuilds and reloads the page, and the host forwards console output, uncaught exceptions and window closure.
 An unhandled input exception releases stranded mouse capture so later clicks still reach the app.
+
+**Fit, 100% and Fill.** The window keeps its declared `Width` and `Height`, and the web preview's toolbar chooses how
+it shows: Fit (the default) scales it down until all of it is in view and never up, 100% shows it at its size with the
+page scrolling, and Fill gives it the pane's size, as before. The choice is remembered per project
+(`PreviewZoomStore`) and reaches the page in its address (`?tabstudio-view=fit`); where the browser runs script, it
+switches in place. `wpf.js` applies it with the browser's own page zoom, the viewport meta tag's width and scale, so
+OpenSilver's layout, text measuring and pointer positions never see a scale and the browser maps every touch to the
+right control at every zoom; a CSS transform on the window would break OpenSilver's pointer math and text measuring.
+Two fingers pinch to zoom and pan (`touch-action: pinch-zoom` on the window), and a finger the browser takes for a
+pinch is released in the app without a click. The math is `PreviewLayoutCalculator` in Core, which the page mirrors
+and the IDE test compares with it. On Android the WebView honors the viewport tag only while the preview shows a WPF
+app (`IZoomableWebView`).
 Android installs a `WebChromeClient`, so OpenSilver's `MessageBox` alert/confirm calls show the native browser dialogs.
 The .NET 10 preview needs an up-to-date Android System WebView. CI uses Android 15 (API 35) to exercise the
 rendered WPF page; the API 29 image's Chrome 74 cannot run this browser runtime.
@@ -634,6 +682,30 @@ install and lock. `NodeWorkspaces.DependencyOwner` shares installation at a decl
 removing member run targets. F5 awaits setup; saves during installation queue another pass, and status-bar/Output
 progress is cancellable. Remote workspaces and unrelated .NET-only workspaces do not start this setup path.
 
+**Python versions and native packages.** Before creating a project's `.venv`, `PythonVersionRequest` reads the
+version the project asks for, from the first of `.python-version`, `runtime.txt`, `pyproject.toml`'s
+`requires-python` (or Poetry's `python`), `Pipfile`'s `[requires]` and a `Dockerfile`'s `FROM python:X`, as a
+`PythonVersionRange`. Within it, `PythonWheels` reads the pinned releases of `requirements.txt` from PyPI's JSON API
+and finds the newest Python on which each installs from a wheel for this platform (musl on the tablet), since a
+package with platform wheels only up to some version is compiled on newer ones: microblog's pins resolve to 3.11.
+`PythonVersionChoice` takes the toolchain's own Python when it fits and otherwise creates the environment with
+`uv venv --seed --python 3.X`, installing Alpine's `uv` on first use; uv installs that CPython (its musl builds on the
+tablet). An environment left with another version by an install that never succeeded is created again; one that
+installed is never replaced. When pip has to compile a package and the build fails, `PipFailure` reads which package
+failed and what was missing (a compiler, Python's headers, `pg_config`, a named header), and the setup installs
+`build-base`, `python3-dev` and the packages `Python/python-build-packages.json` lists for that package or header
+(psycopg2: `libpq-dev`; mysqlclient: `mariadb-dev`; lxml: `libxml2-dev`, `libxslt-dev`; Pillow: `libjpeg-turbo-dev`,
+`zlib-dev`; cffi: `libffi-dev`; cryptography: `openssl-dev`), then runs pip once more. pip's own output goes to the
+**Project Setup** log of the Output panel; Build and Run shows the commands and one message that names the package,
+the cause, what TabStudio did and what helps, and the notice over the editor opens the full log.
+
+**Output colors.** `OutputClassifier` colors each line of a program's or build's output by what it says, per
+toolchain, not by the stream it came on: Cargo, pip and Gradle write progress to standard error. Compiler
+diagnostics (`error:`, `warning:`, `error[E0308]:` and their excerpt lines), build tools' levels (`[ERROR]`,
+`npm ERR!`, `FAILURE:`), log levels, Python tracebacks, Rust and Go panics and JVM and Node.js exceptions are errors or
+warnings; everything else is ordinary output. `StreamClassifier` splits arbitrary pieces of a stream into lines, so a
+prompt without a line break still appears at once.
+
 `StaticSiteDetector` recognizes an `index.html` folder without a .NET project or a Node package that runs the site.
 The app adds a `StaticWebSite` startup project. F5 starts `StaticSiteServer` from `TabStudio.Web` on loopback and
 opens the existing web preview. Its injected script receives server-sent events from save notifications: linked
@@ -670,6 +742,8 @@ rust-analyzer, Rust sources and LLDB with lldb-dap; desktops use PATH. Cargo bui
 `--message-format=json-render-diagnostics`: structured primary spans populate the Error List, and reported
 executable artifacts determine the run path, including custom target directories. With several binaries, choose
 a member startup project or open the binary's main source. rust-analyzer supplies IntelliSense and navigation.
+A Makefile beside `Cargo.toml` that only wraps Cargo (fd's `cargo build --release` target, say) is not a C/C++
+project, and a run is named after the binary Cargo built (`fd`), not the package or a build file.
 
 F5 uses LLDB DAP. Desktop programs use `runInTerminal`; on Android, LLDB launches within its own PRoot trace tree
 so emulated ptrace can see the debuggee. A private FIFO created through Android's C library carries Output-panel
@@ -679,7 +753,10 @@ and Locals, with Watch and Call Stack checked in the IDE.
 ### C and C++
 
 CMake projects, Makefiles and standalone `.c`/`.cpp` programs are startup projects; headers and build output are
-excluded. Alpine installs Clang, build-base (including make), CMake, clangd and LLDB with lldb-dap; desktops use
+excluded. `MakefileWrapper` reads a Makefile's recipes and variables: one that only runs `cargo`, `npm`, `go`,
+`dotnet` and similar tools, and never a C compiler, object rules or C sources, wraps that tool and is not a C/C++
+project. In a folder with both, a language's own manifest comes before a Makefile, so it is the default startup
+project. Programs are named after their target or binary (`RunPlan.ProgramName`), never `Makefile` or `pom.xml`. Alpine installs Clang, build-base (including make), CMake, clangd and LLDB with lldb-dap; desktops use
 PATH. CMake configures a Debug build, exports `compile_commands.json` for clangd and reports executable artifacts
 through its codemodel file API. An active source selects among several targets. Makefile projects need no special
 run target: the unique executable at the root or in `bin`, `build` or `out` runs. Ambiguous outputs need a launch
@@ -775,6 +852,33 @@ host that accepts several clients. The tablet is the coordinator:
 - **Recorded UI tests.** A recording becomes an xUnit test in an Avalonia.Headless project with a generated driver,
   which replays per screen in Test Explorer and with `dotnet test`.
 
+## TabStudio Live
+
+`TabStudio.Live` is real-time collaborative editing between devices on the same network, on TabStudio Link's
+transport: a `tabstudio-link://live?` invitation, TLS with pinned certificates, and a session code that admits a whole
+class. The host is a hub that every guest connects to, and the authority on who may do what.
+
+- **Text.** Each shared document is a `SharedText`, a replicated growable array (RGA) of characters stored in runs.
+  Every character has an id (participant, Lamport clock); an insert names the character it follows, a delete marks
+  characters as tombstones, and concurrent inserts after the same character are ordered by clock, then participant,
+  so every device applies the same operations into the same text in any order. Per-participant sequence numbers form
+  a version vector: operations that arrive twice are ignored, those that arrive before what they depend on wait, and
+  a guest that reconnects exchanges only what the other side lacks. Positions (carets, selections) are character ids,
+  so they move with the text. Undo is per participant: it reverts that participant's own operations with new
+  operations, skipping text someone else already deleted.
+- **Messages.** JSON notifications and requests over the Link connection (`LiveMethods`): edits, presence, the
+  participants list, files and their contents as attachments, saves, the host's run state, output, Terminal, Error
+  List, breakpoints and pauses. Each connection has one ordered sender queue; a session's state lives on one
+  dispatcher thread, the UI thread in the app.
+- **Files.** The host lists the shared folder (`LiveWorkspaceFiles`), without hidden and build folders, links or large
+  files. A guest keeps a hash-checked copy (`LiveMirror`) under the app's cache, which the IDE opens as an ordinary
+  workspace, so IntelliSense and every language service run on the guest.
+- **The IDE.** `LiveDocumentBinder` keeps an editor's `TextDocument` and a `LiveDocument` in step and replaces the
+  editor's undo stack; `LivePresenceRenderer` draws the others' carets and selections. On the host,
+  `WorkspaceViewModel.LiveHost.cs` publishes the Output, Terminal, Error List, breakpoints and pauses and serves
+  guests' debugger requests; on a guest, `WorkspaceViewModel.LiveGuest.cs` shows them and routes F5, the steps and
+  breakpoints to the host.
+
 ## Language servers and debug adapters
 
 `TabStudio.LanguageServers` speaks the Language Server Protocol (3.17) and the Debug Adapter Protocol, so every
@@ -869,7 +973,8 @@ When an external display connects, the IDE moves to it and the tablet becomes it
 
 ## Run hosts
 
-The Compatibility Doctor gives every project a run host, and F5 uses it:
+The Compatibility Doctor gives every project a run host, and F5 uses it. A project whose SQL Server cannot be reached
+from here is marked "Needs a database" (see [Database Explorer](#database-explorer)).
 
 | Run host | Used for |
 | --- | --- |
@@ -939,6 +1044,19 @@ See [CONTRIBUTING.md](../CONTRIBUTING.md) for code style, tests and how CI repor
 
 `TabStudio.Database` owns provider-neutral connection and schema records. `SchemaReader` uses SQLite's catalog and table/index/foreign-key pragmas, PostgreSQL's information schema and `pg_catalog`, and SQL Server's information schema and `sys` catalog. A fresh connection targets each selected database, so schemas and IntelliSense stay scoped to that database. The Explorer loads other databases when expanded; Refresh rereads the catalog. SqlClient is pinned to 7.0.3: its Unix assembly contains only managed SNI, whereas the 7.1 unified assembly initializes Windows native SNI on Mono. Android also enables managed networking at startup and in runtime configuration using the historically named `Switch.Microsoft.Data.SqlClient.UseManagedNetworkingOnWindows` switch. The device self-test opens a refused loopback port with both network providers so this dependency regression cannot silently return.
 
+**SQL Server apps.** SQL Server has no ARM64 Linux engine, so neither the tablet nor Services can run one.
+`SqlServerDetector` (Core) finds projects that use it (EF Core's SQL Server provider, Microsoft.Data.SqlClient or
+System.Data.SqlClient in the project or a project it references, and SQL Server connection strings in
+`appsettings*.json`) and probes each `host:port` over TCP for two seconds, off the UI thread; LocalDB and named pipes
+never answer on a tablet. When nothing answers, the Compatibility Doctor row becomes "Needs a database" and F5's
+Output says the same once, and a run that crashes with a `SqlException` or SqlClient's `PlatformNotSupportedException`
+gets that explanation after its stack trace. The row offers **Connect to SQL Server…** (the Explorer's connection form,
+filled in from appsettings with Windows sign-in replaced by a SQL login; saved encrypted as
+`<Project>: <ConnectionName>`, which F5 then supplies as `ConnectionStrings__<ConnectionName>`), and, when the
+project also references Npgsql's or SQLite's EF Core provider, **Use PostgreSQL** (a `compose.yaml` with a PostgreSQL
+service and the app's connection string, which Services runs on F5; never written over existing Compose files) or
+**Use SQLite** (a saved connection to a file beside the project). appsettings files are never changed.
+
 `SqlExecutor` opens and disposes an ADO.NET connection/command/reader per execution on a worker thread, including SQLite's synchronous implementation of its async API. Cancellation registers `DbCommand.Cancel`; SQLite uses `sqlite3_interrupt` because its command cancellation method does nothing. Readers consume every result set, storing at most 5,000 rows per set and 32 displayed sets. Each tab owns its cancellation lifetime. JSON exports preserve duplicate column names and SQL NULL as separate columns and row arrays; CSV uses invariant formatting and quotes/escapes every field.
 
 `TableEditor` issues ordered, dialect-specific pages with one extra row to determine whether Next exists. Primary keys order editable tables; views and keyless tables are read-only. Cell updates quote identifiers, parameterize values, and check the primary key plus the original comparable row values in a transaction. Zero or multiple affected rows roll back. SQL Server's text/ntext/image/xml columns cannot be compared and are excluded from the concurrency predicate. Paging is not a snapshot across concurrent inserts/deletes.
@@ -980,7 +1098,13 @@ The processes share the device network, so daemon listen options use published l
 fail before startup; implicit collisions/privileged ports use a free unprivileged port. Final endpoints rewrite host
 fields, URIs and Redis endpoints without replacing credentials. F5 starts dependencies of the Compose application
 whose build context contains the startup project (or the devcontainer service), then supplies environment overrides
-to external processes and in-process .NET runs. `RunEnvironment` sets/restores variables under the existing
+to external processes and in-process .NET runs. Without such an application or a devcontainer's `runServices`, F5
+starts only the services `ServiceTargets` finds the run pointing at, by name or by a published localhost port, in its
+environment, `.env` files, `appsettings` and the active Spring profiles' settings; nothing is downloaded or started
+when a repository opens. Each requested service starts on its own: one that fails is marked failed with its own error
+and rolls back only the processes it started, and a service that depends on it says which. A setting one service
+cannot use (a `tmpfs` volume, an invalid port) makes only that service unsupported. A missing bind source inside the
+workspace is created as an empty folder, unless the long syntax sets `create_host_path: false`. `RunEnvironment` sets/restores variables under the existing
 `ProcessConsole` lease, including debug runs and ASP.NET Core hosts. It never edits appsettings files.
 
 `ServicesViewModel` feeds the Services tool window and its per-service logs, controls and preview links. The optional
