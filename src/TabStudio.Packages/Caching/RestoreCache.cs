@@ -15,7 +15,7 @@ namespace TabStudio.Packages.Caching;
 /// <remarks>
 /// The inputs are everything that can change the outcome: the package references and their versions (including
 /// those of referenced projects), the target
-/// framework and its fallbacks, the sources, the global packages folder and the framework's assemblies. The cache
+/// framework, its fallbacks and the runtime identifier, the sources, the global packages folder and the framework's assemblies. The cache
 /// is used only when their hash matches and every package folder and assembly it lists is still on disk. Only
 /// successful restores are cached. Writing the cache is best effort: a read-only project folder only costs speed.
 /// </remarks>
