@@ -1,0 +1,82 @@
+{
+  "architecture": "x86_64",
+  "group": "teensy-pico",
+  "hostPackageMode": "auto",
+  "platformioCoreVersion": "6.2.0",
+  "hardwareVerified": false,
+  "androidVerified": false,
+  "runtime": "Production EmbeddedGlibcToolchainInstaller / PRoot",
+  "elapsedSeconds": 397.7032289,
+  "passed": true,
+  "templates": [
+    {
+      "id": "teensy40",
+      "platformPackage": "teensy@6.0.0",
+      "passed": true,
+      "seconds": 67.2560774,
+      "firmwareBytes": 39112,
+      "firmwareSha256": "cbed9ba81f6c00631e162cee6c6abb2575d861b4c0fbb9faf628eee20c6e0afc",
+      "ranges": [
+        {
+          "start": 536870912,
+          "length": 244
+        },
+        {
+          "start": 1610612736,
+          "length": 19456
+        }
+      ],
+      "uploadPlanReady": true,
+      "uploadVerification": "HalfKay transport completed; this upstream loader does not offer flash readback. Production verification is unavailable.",
+      "stackFiles": 83,
+      "stackRows": 399,
+      "compilationDatabaseEntries": 85,
+      "platformioIni": "; Firmware: Teensy 4.0\n[env:teensy40]\nplatform = teensy@6.0.0\nboard = teensy40\nframework = arduino\nmonitor_speed = 115200\nbuild_flags = -fstack-usage\n"
+    },
+    {
+      "id": "teensy41",
+      "platformPackage": "teensy@6.0.0",
+      "passed": true,
+      "seconds": 56.3519812,
+      "firmwareBytes": 42348,
+      "firmwareSha256": "3e4589ab123baa615589dfc284e86dd44a8149afab565ce8866ab1dae07d1071",
+      "ranges": [
+        {
+          "start": 536870912,
+          "length": 244
+        },
+        {
+          "start": 1610612736,
+          "length": 21504
+        }
+      ],
+      "uploadPlanReady": true,
+      "uploadVerification": "HalfKay transport completed; this upstream loader does not offer flash readback. Production verification is unavailable.",
+      "stackFiles": 83,
+      "stackRows": 402,
+      "compilationDatabaseEntries": 85,
+      "platformioIni": "; Firmware: Teensy 4.1\n[env:teensy41]\nplatform = teensy@6.0.0\nboard = teensy41\nframework = arduino\nmonitor_speed = 115200\nbuild_flags = -fstack-usage\n"
+    },
+    {
+      "id": "pico",
+      "platformPackage": "raspberrypi@1.20.0",
+      "passed": true,
+      "seconds": 212.7990457,
+      "firmwareBytes": 473800,
+      "firmwareSha256": "1ed0663b685739d9cbe5ca11e1851435f3de5f44d755898c22bcd7170e303cdc",
+      "ranges": [
+        {
+          "start": 268435456,
+          "length": 74316
+        }
+      ],
+      "uploadPlanReady": true,
+      "uploadVerification": "Upstream tool verifies programmed application flash.",
+      "stackFiles": 32,
+      "stackRows": 455,
+      "compilationDatabaseEntries": 32,
+      "platformioIni": "; Firmware: Raspberry Pi Pico\n[env:pico]\nplatform = raspberrypi@1.20.0\nboard = pico\nframework = arduino\nmonitor_speed = 115200\nbuild_flags = -fstack-usage\n"
+    }
+  ],
+  "errors": []
+}
