@@ -1,0 +1,382 @@
+> pio run --environment esp32 --jobs 2
+********************************************************************************
+If you like PlatformIO, please:
+- star it on GitHub > https://github.com/platformio/platformio-core
+- follow us on LinkedIn to stay up-to-date on the latest project news > https://www.linkedin.com/company/platformio/
+- try PlatformIO IDE for embedded development > https://platformio.org/platformio-ide
+********************************************************************************
+
+Processing esp32 (platform: espressif32@8.0.0; board: esp32dev; framework: arduino)
+--------------------------------------------------------------------------------
+Platform Manager: Installing espressif32 @ 8.0.0
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Platform Manager: espressif32@8.0.0 has been installed!
+Tool Manager: Installing platformio/toolchain-riscv32-esp @ 14.2.0+20260121
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/bin/.l2s.riscv32-esp-elf-c++0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/bin/.l2s.riscv32-esp-elf-c++0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/bin/.l2s.riscv32-esp-elf-gcc0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/bin/.l2s.riscv32-esp-elf-gcc0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/bin/.l2s.riscv32-esp-elf-ranlib0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/bin/.l2s.riscv32-esp-elf-ranlib0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/bin/.l2s.riscv32-esp-elf-objdump-xespv2p20001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/bin/.l2s.riscv32-esp-elf-objdump-xespv2p20001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/bin/.l2s.riscv32-esp-elf-strip0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/bin/.l2s.riscv32-esp-elf-strip0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/bin/.l2s.riscv32-esp-elf-c++0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/bin/.l2s.riscv32-esp-elf-c++0001`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/bin' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/bin`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imac_zicsr_zifencei/ilp32/.l2s.libc.a0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imac_zicsr_zifencei/ilp32/.l2s.libc.a0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imac_zicsr_zifencei/ilp32/.l2s.libc_nano.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imac_zicsr_zifencei/ilp32/.l2s.libc_nano.a0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imac_zicsr_zifencei/ilp32/no-rtti/.l2s.libc.a0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imac_zicsr_zifencei/ilp32/no-rtti/.l2s.libc.a0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imac_zicsr_zifencei/ilp32/no-rtti/.l2s.libc_nano.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imac_zicsr_zifencei/ilp32/no-rtti/.l2s.libc_nano.a0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imac_zicsr_zifencei/ilp32/no-rtti/.l2s.libc.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imac_zicsr_zifencei/ilp32/no-rtti/.l2s.libc.a0001.0002`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imac_zicsr_zifencei/ilp32/no-rtti' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imac_zicsr_zifencei/ilp32/no-rtti`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imac_zicsr_zifencei/ilp32/.l2s.libc.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imac_zicsr_zifencei/ilp32/.l2s.libc.a0001.0002`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imac_zicsr_zifencei/ilp32' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imac_zicsr_zifencei/ilp32`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imac_zicsr_zifencei' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imac_zicsr_zifencei`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imc_zicsr_zifencei/ilp32/.l2s.libc.a0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imc_zicsr_zifencei/ilp32/.l2s.libc.a0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imc_zicsr_zifencei/ilp32/.l2s.libc_nano.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imc_zicsr_zifencei/ilp32/.l2s.libc_nano.a0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imc_zicsr_zifencei/ilp32/no-rtti/.l2s.libc.a0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imc_zicsr_zifencei/ilp32/no-rtti/.l2s.libc.a0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imc_zicsr_zifencei/ilp32/no-rtti/.l2s.libc_nano.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imc_zicsr_zifencei/ilp32/no-rtti/.l2s.libc_nano.a0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imc_zicsr_zifencei/ilp32/no-rtti/.l2s.libc.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imc_zicsr_zifencei/ilp32/no-rtti/.l2s.libc.a0001.0002`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imc_zicsr_zifencei/ilp32/no-rtti' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imc_zicsr_zifencei/ilp32/no-rtti`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imc_zicsr_zifencei/ilp32/.l2s.libc.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imc_zicsr_zifencei/ilp32/.l2s.libc.a0001.0002`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imc_zicsr_zifencei/ilp32' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imc_zicsr_zifencei/ilp32`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imc_zicsr_zifencei' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imc_zicsr_zifencei`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32i_zicsr_zifencei/ilp32/.l2s.libc.a0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32i_zicsr_zifencei/ilp32/.l2s.libc.a0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32i_zicsr_zifencei/ilp32/.l2s.libc_nano.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32i_zicsr_zifencei/ilp32/.l2s.libc_nano.a0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32i_zicsr_zifencei/ilp32/no-rtti/.l2s.libc.a0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32i_zicsr_zifencei/ilp32/no-rtti/.l2s.libc.a0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32i_zicsr_zifencei/ilp32/no-rtti/.l2s.libc_nano.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32i_zicsr_zifencei/ilp32/no-rtti/.l2s.libc_nano.a0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32i_zicsr_zifencei/ilp32/no-rtti/.l2s.libc.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32i_zicsr_zifencei/ilp32/no-rtti/.l2s.libc.a0001.0002`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32i_zicsr_zifencei/ilp32/no-rtti' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32i_zicsr_zifencei/ilp32/no-rtti`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32i_zicsr_zifencei/ilp32/.l2s.libc.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32i_zicsr_zifencei/ilp32/.l2s.libc.a0001.0002`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32i_zicsr_zifencei/ilp32' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32i_zicsr_zifencei/ilp32`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32i_zicsr_zifencei' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32i_zicsr_zifencei`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei/ilp32f/.l2s.libc.a0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei/ilp32f/.l2s.libc.a0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei/ilp32f/.l2s.libc_nano.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei/ilp32f/.l2s.libc_nano.a0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei/ilp32f/no-rtti/.l2s.libc.a0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei/ilp32f/no-rtti/.l2s.libc.a0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei/ilp32f/no-rtti/.l2s.libc_nano.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei/ilp32f/no-rtti/.l2s.libc_nano.a0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei/ilp32f/no-rtti/.l2s.libc.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei/ilp32f/no-rtti/.l2s.libc.a0001.0002`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei/ilp32f/no-rtti' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei/ilp32f/no-rtti`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei/ilp32f/.l2s.libc.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei/ilp32f/.l2s.libc.a0001.0002`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei/ilp32f' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei/ilp32f`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei_zba_zbb_zbc_zbs/ilp32f/.l2s.libc.a0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei_zba_zbb_zbc_zbs/ilp32f/.l2s.libc.a0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei_zba_zbb_zbc_zbs/ilp32f/.l2s.libc_nano.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei_zba_zbb_zbc_zbs/ilp32f/.l2s.libc_nano.a0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei_zba_zbb_zbc_zbs/ilp32f/no-rtti/.l2s.libc.a0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei_zba_zbb_zbc_zbs/ilp32f/no-rtti/.l2s.libc.a0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei_zba_zbb_zbc_zbs/ilp32f/no-rtti/.l2s.libc_nano.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei_zba_zbb_zbc_zbs/ilp32f/no-rtti/.l2s.libc_nano.a0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei_zba_zbb_zbc_zbs/ilp32f/no-rtti/.l2s.libc.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei_zba_zbb_zbc_zbs/ilp32f/no-rtti/.l2s.libc.a0001.0002`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei_zba_zbb_zbc_zbs/ilp32f/no-rtti' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei_zba_zbb_zbc_zbs/ilp32f/no-rtti`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei_zba_zbb_zbc_zbs/ilp32f/.l2s.libc.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei_zba_zbb_zbc_zbs/ilp32f/.l2s.libc.a0001.0002`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei_zba_zbb_zbc_zbs/ilp32f' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei_zba_zbb_zbc_zbs/ilp32f`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei_zba_zbb_zbc_zbs' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/rv32imafc_zicsr_zifencei_zba_zbb_zbc_zbs`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/.l2s.libc.a0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/.l2s.libc.a0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/.l2s.libc_nano.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/.l2s.libc_nano.a0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/no-rtti/.l2s.libc.a0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/no-rtti/.l2s.libc.a0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/no-rtti/.l2s.libc_nano.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/no-rtti/.l2s.libc_nano.a0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/no-rtti/.l2s.libc.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/no-rtti/.l2s.libc.a0001.0002`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/no-rtti' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/no-rtti`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/.l2s.libc.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib/.l2s.libc.a0001.0002`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf/lib`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb/riscv32-esp-elf`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-hh0wl9wb`
+Tool Manager: toolchain-riscv32-esp@14.2.0+20260121 has been installed!
+Tool Manager: Installing platformio/toolchain-xtensa-esp-elf @ 14.2.0+20260121
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/bin/.l2s.xtensa-esp-elf-nm0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/bin/.l2s.xtensa-esp-elf-nm0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/bin/.l2s.xtensa-esp-elf-as0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/bin/.l2s.xtensa-esp-elf-as0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/bin/.l2s.xtensa-esp-elf-ranlib0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/bin/.l2s.xtensa-esp-elf-ranlib0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/bin/.l2s.xtensa-esp-elf-strip0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/bin/.l2s.xtensa-esp-elf-strip0001.0002`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/bin' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/bin`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s3/.l2s.libc.a0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s3/.l2s.libc.a0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s3/.l2s.libc_nano.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s3/.l2s.libc_nano.a0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s3/no-rtti/.l2s.libc.a0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s3/no-rtti/.l2s.libc.a0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s3/no-rtti/.l2s.libc_nano.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s3/no-rtti/.l2s.libc_nano.a0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s3/no-rtti/.l2s.libc.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s3/no-rtti/.l2s.libc.a0001.0002`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s3/no-rtti' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s3/no-rtti`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s3/.l2s.libc.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s3/.l2s.libc.a0001.0002`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s3' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s3`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/psram/.l2s.libc.a0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/psram/.l2s.libc.a0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/psram/.l2s.libc_nano.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/psram/.l2s.libc_nano.a0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/psram/no-rtti/.l2s.libc.a0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/psram/no-rtti/.l2s.libc.a0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/psram/no-rtti/.l2s.libc_nano.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/psram/no-rtti/.l2s.libc_nano.a0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/psram/no-rtti/.l2s.libc.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/psram/no-rtti/.l2s.libc.a0001.0002`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/psram/no-rtti' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/psram/no-rtti`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/psram/.l2s.libc.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/psram/.l2s.libc.a0001.0002`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/psram' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/psram`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/.l2s.libc.a0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/.l2s.libc.a0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/.l2s.libc_nano.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/.l2s.libc_nano.a0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/no-rtti/.l2s.libc.a0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/no-rtti/.l2s.libc.a0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/no-rtti/.l2s.libc_nano.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/no-rtti/.l2s.libc_nano.a0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/no-rtti/.l2s.libc.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/no-rtti/.l2s.libc.a0001.0002`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/no-rtti' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/no-rtti`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/.l2s.libc.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32/.l2s.libc.a0001.0002`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s2/.l2s.libc.a0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s2/.l2s.libc.a0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s2/.l2s.libc_nano.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s2/.l2s.libc_nano.a0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s2/no-rtti/.l2s.libc.a0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s2/no-rtti/.l2s.libc.a0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s2/no-rtti/.l2s.libc_nano.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s2/no-rtti/.l2s.libc_nano.a0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s2/no-rtti/.l2s.libc.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s2/no-rtti/.l2s.libc.a0001.0002`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s2/no-rtti' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s2/no-rtti`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s2/.l2s.libc.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s2/.l2s.libc.a0001.0002`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s2' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/esp32s2`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/.l2s.libc.a0001' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/.l2s.libc.a0001`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/.l2s.libc_nano.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/.l2s.libc_nano.a0001.0002`
+[Errno 2] No such file or directory: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/.l2s.libc.a0001.0002' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib/.l2s.libc.a0001.0002`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf/lib`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277/xtensa-esp-elf`
+[Errno 39] Directory not empty: '/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277' 
+Please manually remove the file `/home/runner/work/_temp/canonical-templates/download-cache/tmp/pkg-installing-5yyce277`
+Tool Manager: toolchain-xtensa-esp-elf@14.2.0+20260121 has been installed!
+Tool Manager: Installing espressif/tool-xtensa-esp-elf-gdb @ ~12.1.0
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: tool-xtensa-esp-elf-gdb@12.1.0+20221002 has been installed!
+Tool Manager: Installing espressif/tool-riscv32-esp-elf-gdb @ ~12.1.0
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: tool-riscv32-esp-elf-gdb@12.1.0+20221002 has been installed!
+Tool Manager: Installing platformio/framework-arduinoespressif32 @ ~4.30312.0
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: framework-arduinoespressif32@4.30312.261024 has been installed!
+Tool Manager: Installing platformio/framework-arduinoespressif32-esp32-libs @ ~3.3.12
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: framework-arduinoespressif32-esp32-libs@3.3.12 has been installed!
+Tool Manager: Installing platformio/tool-esptool @ ~2.50400.0
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70%
+Tool Manager: tool-esptool@2.50400.0 has been installed!
+Tool Manager: Installing platformio/tool-scons @ ~4.40801.0
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: tool-scons@4.40801.0 has been installed!
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/esp32dev.html
+PLATFORM: Espressif 32 (8.0.0) > Espressif ESP32 Dev Module
+HARDWARE: ESP32 240MHz, 320KB RAM, 4MB Flash
+DEBUG: Current (cmsis-dap) External (cmsis-dap, esp-bridge, esp-prog, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa)
+PACKAGES: 
+ - framework-arduinoespressif32 @ 4.30312.261024 (3.3.12) 
+ - framework-arduinoespressif32-esp32-libs @ 3.3.12 
+ - tool-esptool @ 2.50400.0 (5.4.0) 
+ - tool-riscv32-esp-elf-gdb @ 12.1.0+20221002 
+ - tool-xtensa-esp-elf-gdb @ 12.1.0+20221002 
+ - toolchain-riscv32-esp @ 14.2.0+20260121 
+ - toolchain-xtensa-esp-elf @ 14.2.0+20260121
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 44 compatible libraries
+Scanning dependencies...
+No dependencies
+Building in release mode
+Compiling .pio/build/esp32/src/main.cpp.o
+Building .pio/build/esp32/bootloader.bin
+esptool v5.4.0
+Creating ESP32 image...
+Merged 2 ELF sections.
+Successfully created ESP32 image.
+Generating partitions .pio/build/esp32/partitions.bin
+Compiling .pio/build/esp32/FrameworkArduino/ColorFormat.c.o
+Compiling .pio/build/esp32/FrameworkArduino/Esp.cpp.o
+Compiling .pio/build/esp32/FrameworkArduino/FirmwareMSC.cpp.o
+Compiling .pio/build/esp32/FrameworkArduino/FunctionalInterrupt.cpp.o
+Compiling .pio/build/esp32/FrameworkArduino/HEXBuilder.cpp.o
+Compiling .pio/build/esp32/FrameworkArduino/HWCDC.cpp.o
+Compiling .pio/build/esp32/FrameworkArduino/HardwareSerial.cpp.o
+Compiling .pio/build/esp32/FrameworkArduino/HashBuilder.cpp.o
+Compiling .pio/build/esp32/FrameworkArduino/IPAddress.cpp.o
+Compiling .pio/build/esp32/FrameworkArduino/MD5Builder.cpp.o
+Compiling .pio/build/esp32/FrameworkArduino/MacAddress.cpp.o
+Compiling .pio/build/esp32/FrameworkArduino/Print.cpp.o
+Compiling .pio/build/esp32/FrameworkArduino/Stream.cpp.o
+Compiling .pio/build/esp32/FrameworkArduino/StreamString.cpp.o
+Compiling .pio/build/esp32/FrameworkArduino/StringUtils.cpp.o
+Compiling .pio/build/esp32/FrameworkArduino/Tone.cpp.o
+Compiling .pio/build/esp32/FrameworkArduino/USB.cpp.o
+Compiling .pio/build/esp32/FrameworkArduino/USBCDC.cpp.o
+Compiling .pio/build/esp32/FrameworkArduino/USBHost.cpp.o
+Compiling .pio/build/esp32/FrameworkArduino/USBMSC.cpp.o
+Compiling .pio/build/esp32/FrameworkArduino/WMath.cpp.o
+Compiling .pio/build/esp32/FrameworkArduino/WString.cpp.o
+Compiling .pio/build/esp32/FrameworkArduino/base64.cpp.o
+Compiling .pio/build/esp32/FrameworkArduino/cbuf.cpp.o
+Compiling .pio/build/esp32/FrameworkArduino/chip-debug-report.cpp.o
+Compiling .pio/build/esp32/FrameworkArduino/esp32-hal-adc.c.o
+Compiling .pio/build/esp32/FrameworkArduino/esp32-hal-bt.c.o
+Compiling .pio/build/esp32/FrameworkArduino/esp32-hal-cpu.c.o
+Compiling .pio/build/esp32/FrameworkArduino/esp32-hal-dac.c.o
+Compiling .pio/build/esp32/FrameworkArduino/esp32-hal-gpio.c.o
+Compiling .pio/build/esp32/FrameworkArduino/esp32-hal-hosted.c.o
+Compiling .pio/build/esp32/FrameworkArduino/esp32-hal-i2c-ng.c.o
+Compiling .pio/build/esp32/FrameworkArduino/esp32-hal-i2c-slave.c.o
+Compiling .pio/build/esp32/FrameworkArduino/esp32-hal-i2c.c.o
+Compiling .pio/build/esp32/FrameworkArduino/esp32-hal-ldo.c.o
+Compiling .pio/build/esp32/FrameworkArduino/esp32-hal-ledc.c.o
+Compiling .pio/build/esp32/FrameworkArduino/esp32-hal-log-wrapper.c.o
+Compiling .pio/build/esp32/FrameworkArduino/esp32-hal-matrix.c.o
+Compiling .pio/build/esp32/FrameworkArduino/esp32-hal-misc.c.o
+Compiling .pio/build/esp32/FrameworkArduino/esp32-hal-periman.c.o
+Compiling .pio/build/esp32/FrameworkArduino/esp32-hal-psram.c.o
+Compiling .pio/build/esp32/FrameworkArduino/esp32-hal-rgb-led.c.o
+Compiling .pio/build/esp32/FrameworkArduino/esp32-hal-rmt.c.o
+Compiling .pio/build/esp32/FrameworkArduino/esp32-hal-sigmadelta.c.o
+Compiling .pio/build/esp32/FrameworkArduino/esp32-hal-spi.c.o
+Compiling .pio/build/esp32/FrameworkArduino/esp32-hal-time.c.o
+Compiling .pio/build/esp32/FrameworkArduino/esp32-hal-timer.c.o
+Compiling .pio/build/esp32/FrameworkArduino/esp32-hal-tinyusb.c.o
+Compiling .pio/build/esp32/FrameworkArduino/esp32-hal-touch-ng.c.o
+Compiling .pio/build/esp32/FrameworkArduino/esp32-hal-touch.c.o
+Compiling .pio/build/esp32/FrameworkArduino/esp32-hal-uart.c.o
+Compiling .pio/build/esp32/FrameworkArduino/firmware_msc_fat.c.o
+Compiling .pio/build/esp32/FrameworkArduino/freertos_stats.cpp.o
+Compiling .pio/build/esp32/FrameworkArduino/idf_openthread_mpool_wrapper.c.o
+Compiling .pio/build/esp32/FrameworkArduino/libb64/cdecode.c.o
+Compiling .pio/build/esp32/FrameworkArduino/libb64/cencode.c.o
+Compiling .pio/build/esp32/FrameworkArduino/main.cpp.o
+Compiling .pio/build/esp32/FrameworkArduino/stdlib_noniso.c.o
+Compiling .pio/build/esp32/FrameworkArduino/wiring_pulse.c.o
+Compiling .pio/build/esp32/FrameworkArduino/wiring_shift.c.o
+Archiving .pio/build/esp32/libFrameworkArduino.a
+Indexing .pio/build/esp32/libFrameworkArduino.a
+Linking .pio/build/esp32/firmware.elf
+Retrieving maximum program size .pio/build/esp32/firmware.elf
+Checking size .pio/build/esp32/firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [=         ]   6.7% (used 22116 bytes from 327680 bytes)
+Flash: [==        ]  21.9% (used 287092 bytes from 1310720 bytes)
+Building .pio/build/esp32/firmware.bin
+esptool v5.4.0
+Creating ESP32 image...
+Merged 3 ELF sections.
+Successfully created ESP32 image.
+export_manifest([".pio/build/esp32/firmware.bin"], [".pio/build/esp32/firmware.elf"])
+TabStudio: exported 4 distinct ESP flash images; no gaps merged or padded
+======================== [SUCCESS] Took 286.96 seconds ========================
+> pio run --environment esp32 --target compiledb --jobs 2
+Processing esp32 (platform: espressif32@8.0.0; board: esp32dev; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/esp32dev.html
+PLATFORM: Espressif 32 (8.0.0) > Espressif ESP32 Dev Module
+HARDWARE: ESP32 240MHz, 320KB RAM, 4MB Flash
+DEBUG: Current (cmsis-dap) External (cmsis-dap, esp-bridge, esp-prog, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa)
+PACKAGES: 
+ - framework-arduinoespressif32 @ 4.30312.261024 (3.3.12) 
+ - framework-arduinoespressif32-esp32-libs @ 3.3.12 
+ - tool-esptool @ 2.50400.0 (5.4.0) 
+ - tool-riscv32-esp-elf-gdb @ 12.1.0+20221002 
+ - tool-xtensa-esp-elf-gdb @ 12.1.0+20221002 
+ - toolchain-riscv32-esp @ 14.2.0+20260121 
+ - toolchain-xtensa-esp-elf @ 14.2.0+20260121
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 44 compatible libraries
+Scanning dependencies...
+No dependencies
+Building in release mode
+Building compilation database compile_commands.json
+========================= [SUCCESS] Took 7.06 seconds =========================
