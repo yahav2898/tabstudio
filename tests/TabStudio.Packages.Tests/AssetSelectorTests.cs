@@ -120,6 +120,75 @@ public sealed class AssetSelectorTests
             analyzers);
     }
 
+    /// <summary>
+    /// What the .NET 10 SDK's ResolvePackageAssets picked from a package with these files (measured with SDK 10.0.113
+    /// and a local feed): a roslyn folder may come before or after <c>dotnet</c>, and the highest version wins across
+    /// the whole package.
+    /// </summary>
+    [Fact]
+    public void Analyzers_are_chosen_as_the_SDK_chooses_them_whatever_the_folder_layout()
+    {
+        var analyzers = AssetSelector.SelectAnalyzers(
+            [
+                "analyzers/roslyn4.0/dotnet/cs/A.dll",
+                "analyzers/roslyn5.0/dotnet/cs/A.dll",
+                "analyzers/roslyn9.0/dotnet/cs/A.dll",
+                "analyzers/dotnet/roslyn4.4/cs/B.dll",
+                "analyzers/dotnet/cs/C.dll",
+                "analyzers/dotnet/vb/D.dll",
+                "analyzers/cs/E.dll",
+                "analyzers/F.dll",
+                "analyzers/dotnet/cs/G.resources.dll",
+                "analyzers/dotnet/cs/de/G.resources.dll",
+            ],
+            new Version(5, 0));
+
+        Assert.Equal(
+            new[]
+            {
+                "analyzers/F.dll",
+                "analyzers/cs/E.dll",
+                "analyzers/dotnet/cs/C.dll",
+                "analyzers/roslyn5.0/dotnet/cs/A.dll",
+            },
+            analyzers);
+    }
+
+    [Fact]
+    public void Riok_Mapperly_s_layout_gives_its_generator_and_abstractions()
+    {
+        var analyzers = AssetSelector.SelectAnalyzers(
+            [
+                "analyzers/roslyn4.0/dotnet/cs/Riok.Mapperly.dll",
+                "analyzers/roslyn4.0/dotnet/cs/Riok.Mapperly.Abstractions.dll",
+                "analyzers/roslyn4.11/dotnet/cs/Riok.Mapperly.dll",
+                "analyzers/roslyn4.11/dotnet/cs/Riok.Mapperly.Abstractions.dll",
+                "analyzers/roslyn5.0/dotnet/cs/Riok.Mapperly.dll",
+                "analyzers/roslyn5.0/dotnet/cs/Riok.Mapperly.Abstractions.dll",
+                "build/Riok.Mapperly.targets",
+                "lib/netstandard2.0/Riok.Mapperly.Abstractions.dll",
+            ],
+            new Version(5, 0));
+
+        Assert.Equal(
+            new[] { "analyzers/roslyn5.0/dotnet/cs/Riok.Mapperly.Abstractions.dll", "analyzers/roslyn5.0/dotnet/cs/Riok.Mapperly.dll" },
+            analyzers);
+    }
+
+    [Fact]
+    public void A_package_whose_analyzers_all_need_a_newer_compiler_says_which_version()
+    {
+        var analyzers = AssetSelector.SelectAnalyzers(
+            ["analyzers/dotnet/roslyn5.3/cs/Generator.dll", "analyzers/dotnet/roslyn6.0/cs/Generator.dll"],
+            new Version(5, 0),
+            out var onlyNewer);
+
+        Assert.Empty(analyzers);
+        Assert.Equal(new Version(5, 3), onlyNewer);
+        AssetSelector.SelectAnalyzers(["analyzers/dotnet/roslyn4.0/cs/G.dll", "analyzers/dotnet/roslyn6.0/cs/G.dll"], new Version(5, 0), out var fits);
+        Assert.Null(fits);
+    }
+
     [Fact]
     public void Packages_without_a_compiler_version_bring_no_analyzers()
     {

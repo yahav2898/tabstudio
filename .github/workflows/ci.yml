@@ -502,6 +502,8 @@ jobs:
           TABSTUDIO_REAL_REPOS: ${{ runner.temp }}/real-repos
           TABSTUDIO_REAL_REPOS_OUT: ${{ github.workspace }}/ci-out
           TABSTUDIO_SCREENSHOTS: ${{ github.workspace }}/ci-out/screenshots
+          # TEMPORARY (agent/real-use-fixes): copies the packages' props and targets into the reports.
+          TABSTUDIO_REAL_REPOS_DUMP_BUILD_FILES: '1'
         run: |
           mkdir -p ci-out/screenshots
           status=0
