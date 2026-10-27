@@ -1,62 +1,158 @@
-+ dotnet build TabStudio.slnx -c Release -p:TreatWarningsAsErrors=true
-+ grep -E ' error | warning |Build succeeded|Time Elapsed'
++ for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services App
++ dotnet build tests/TabStudio.Packages.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E ' error | warning |Build succeeded'
 + sort -u
-+ head -60
-/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To build this project, the following workloads must be installed: android [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Android/TabStudio.Android.csproj]
-/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To install these workloads, run the following command: dotnet workload restore [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Android/TabStudio.Android.csproj]
-Time Elapsed 00:00:02.56
++ head -20
+Build succeeded.
++ for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services App
++ dotnet build tests/TabStudio.Compilation.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E ' error | warning |Build succeeded'
++ sort -u
++ head -20
+Build succeeded.
++ for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services App
++ dotnet build tests/TabStudio.Core.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E ' error | warning |Build succeeded'
++ sort -u
++ head -20
+Build succeeded.
++ for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services App
++ dotnet build tests/TabStudio.TestRunner.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E ' error | warning |Build succeeded'
++ sort -u
++ head -20
+Build succeeded.
++ for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services App
++ dotnet build tests/TabStudio.Notebooks.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E ' error | warning |Build succeeded'
++ sort -u
++ head -20
+Build succeeded.
++ for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services App
++ dotnet build tests/TabStudio.Debugging.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E ' error | warning |Build succeeded'
++ sort -u
++ head -20
+Build succeeded.
++ for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services App
++ dotnet build tests/TabStudio.LiveTesting.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E ' error | warning |Build succeeded'
++ sort -u
++ head -20
+Build succeeded.
++ for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services App
++ dotnet build tests/TabStudio.Web.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E ' error | warning |Build succeeded'
++ sort -u
++ head -20
+Build succeeded.
++ for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services App
++ dotnet build tests/TabStudio.Wpf.Tests -c Release -p:TreatWarningsAsErrors=true
++ sort -u
++ head -20
++ grep -E ' error | warning |Build succeeded'
+Build succeeded.
++ for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services App
++ dotnet build tests/TabStudio.Uno.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E ' error | warning |Build succeeded'
++ sort -u
++ head -20
+Build succeeded.
++ for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services App
++ dotnet build tests/TabStudio.Swarm.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E ' error | warning |Build succeeded'
++ sort -u
++ head -20
+Build succeeded.
++ for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services App
++ dotnet build tests/TabStudio.Database.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E ' error | warning |Build succeeded'
++ sort -u
++ head -20
+Build succeeded.
++ for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services App
++ dotnet build tests/TabStudio.Services.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E ' error | warning |Build succeeded'
++ sort -u
++ head -20
+Build succeeded.
++ for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services App
++ dotnet build tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E ' error | warning |Build succeeded'
++ sort -u
++ head -20
+Build succeeded.
++ dotnet build src/TabStudio.Desktop -c Release -p:TreatWarningsAsErrors=true
++ grep -E ' error | warning |Build succeeded'
++ sort -u
++ head -20
+Build succeeded.
 + for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
 + dotnet test tests/TabStudio.Packages.Tests -c Release --no-build
 + grep -E '^(Passed|Failed)!|  Failed |error'
 + head -20
+Passed!  - Failed:     0, Passed:    95, Skipped:     0, Total:    95, Duration: 3 s - TabStudio.Packages.Tests.dll (net10.0)
 + for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
 + dotnet test tests/TabStudio.Compilation.Tests -c Release --no-build
 + grep -E '^(Passed|Failed)!|  Failed |error'
 + head -20
+Passed!  - Failed:     0, Passed:   157, Skipped:     0, Total:   157, Duration: 3 s - TabStudio.Compilation.Tests.dll (net10.0)
 + for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
 + dotnet test tests/TabStudio.Core.Tests -c Release --no-build
-+ head -20
 + grep -E '^(Passed|Failed)!|  Failed |error'
++ head -20
+Passed!  - Failed:     0, Passed:   167, Skipped:     0, Total:   167, Duration: 154 ms - TabStudio.Core.Tests.dll (net10.0)
 + for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
 + dotnet test tests/TabStudio.TestRunner.Tests -c Release --no-build
 + grep -E '^(Passed|Failed)!|  Failed |error'
 + head -20
+Passed!  - Failed:     0, Passed:    26, Skipped:     0, Total:    26, Duration: 2 s - TabStudio.TestRunner.Tests.dll (net10.0)
 + for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
 + dotnet test tests/TabStudio.Notebooks.Tests -c Release --no-build
 + grep -E '^(Passed|Failed)!|  Failed |error'
 + head -20
+Passed!  - Failed:     0, Passed:    85, Skipped:     0, Total:    85, Duration: 1 s - TabStudio.Notebooks.Tests.dll (net10.0)
 + for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
 + dotnet test tests/TabStudio.Debugging.Tests -c Release --no-build
 + grep -E '^(Passed|Failed)!|  Failed |error'
 + head -20
+Passed!  - Failed:     0, Passed:    76, Skipped:     0, Total:    76, Duration: 4 s - TabStudio.Debugging.Tests.dll (net10.0)
 + for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
 + dotnet test tests/TabStudio.LiveTesting.Tests -c Release --no-build
 + grep -E '^(Passed|Failed)!|  Failed |error'
 + head -20
+Passed!  - Failed:     0, Passed:    29, Skipped:     0, Total:    29, Duration: 2 s - TabStudio.LiveTesting.Tests.dll (net10.0)
 + for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
 + dotnet test tests/TabStudio.Web.Tests -c Release --no-build
 + grep -E '^(Passed|Failed)!|  Failed |error'
 + head -20
+Passed!  - Failed:     0, Passed:    98, Skipped:     0, Total:    98, Duration: 1 m 34 s - TabStudio.Web.Tests.dll (net10.0)
 + for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
 + dotnet test tests/TabStudio.Wpf.Tests -c Release --no-build
 + grep -E '^(Passed|Failed)!|  Failed |error'
 + head -20
+Passed!  - Failed:     0, Passed:    32, Skipped:     0, Total:    32, Duration: 13 s - TabStudio.Wpf.Tests.dll (net10.0)
 + for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
 + dotnet test tests/TabStudio.Uno.Tests -c Release --no-build
 + grep -E '^(Passed|Failed)!|  Failed |error'
 + head -20
+Passed!  - Failed:     0, Passed:    18, Skipped:     0, Total:    18, Duration: 28 s - TabStudio.Uno.Tests.dll (net10.0)
 + for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
 + dotnet test tests/TabStudio.Swarm.Tests -c Release --no-build
 + grep -E '^(Passed|Failed)!|  Failed |error'
 + head -20
+Passed!  - Failed:     0, Passed:    28, Skipped:     0, Total:    28, Duration: 8 s - TabStudio.Swarm.Tests.dll (net10.0)
 + for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
 + dotnet test tests/TabStudio.Database.Tests -c Release --no-build
 + grep -E '^(Passed|Failed)!|  Failed |error'
 + head -20
+Passed!  - Failed:     0, Passed:    11, Skipped:     1, Total:    12, Duration: 263 ms - TabStudio.Database.Tests.dll (net10.0)
 + for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
 + dotnet test tests/TabStudio.Services.Tests -c Release --no-build
 + grep -E '^(Passed|Failed)!|  Failed |error'
 + head -20
-+ timeout 50m dotnet test tests/TabStudio.App.Tests -c Release --no-build --blame-hang-timeout 10m --blame-hang-dump-type none --logger 'console;verbosity=minimal'
-+ grep -E '^\s+Failed |^(Passed|Failed)!|Total tests|error message|Assert'
-+ head -80
+Passed!  - Failed:     0, Passed:    56, Skipped:     2, Total:    58, Duration: 127 ms - TabStudio.Services.Tests.dll (net10.0)
++ timeout 55m dotnet test tests/TabStudio.App.Tests -c Release --no-build --blame-hang-timeout 10m --blame-hang-dump-type none --logger 'console;verbosity=minimal'
++ grep -E '^\s+Failed |^(Passed|Failed)!|Total tests|Error Message' -A3
++ head -120
+Passed!  - Failed:     0, Passed:   807, Skipped:    20, Total:   827, Duration: 9 m 26 s - TabStudio.App.Tests.dll (net10.0)
