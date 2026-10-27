@@ -11,7 +11,7 @@ public sealed class UndoTests
         var time = new ManualTime();
         var a = new SharedText(1);
         var b = new SharedText(2);
-        var undo = new TextUndoStack(a, time);
+        var undo = new TextUndoHistory(a, time);
 
         Type(a, b, undo, 0, "hello", time);
         time.Advance(TimeSpan.FromSeconds(5));
@@ -48,7 +48,7 @@ public sealed class UndoTests
     {
         var time = new ManualTime();
         var a = new SharedText(1);
-        var undo = new TextUndoStack(a, time);
+        var undo = new TextUndoHistory(a, time);
 
         Type(a, null, undo, 0, "abc", time);
         time.Advance(TimeSpan.FromSeconds(3));
@@ -66,7 +66,7 @@ public sealed class UndoTests
     {
         var a = new SharedText(1);
         var b = new SharedText(2);
-        var undo = new TextUndoStack(a);
+        var undo = new TextUndoHistory(a);
         b.Apply(a.Insert(0, "one two three")!);
         undo.Clear();
 
@@ -91,7 +91,7 @@ public sealed class UndoTests
     {
         var a = new SharedText(1);
         var b = new SharedText(2);
-        var undo = new TextUndoStack(a);
+        var undo = new TextUndoHistory(a);
         var typed = a.Insert(0, "abcdef")!;
         undo.Record(typed, null, 0);
         b.Apply(typed);
@@ -112,7 +112,7 @@ public sealed class UndoTests
     public void A_group_is_one_step()
     {
         var a = new SharedText(1);
-        var undo = new TextUndoStack(a);
+        var undo = new TextUndoHistory(a);
         a.Insert(0, "x = 1;");
         undo.BeginGroup();
         var removed = a.Substring(4, 1);
@@ -127,7 +127,7 @@ public sealed class UndoTests
         Assert.Equal("x = 42;", a.ToString());
     }
 
-    private static void Type(SharedText text, SharedText? other, TextUndoStack undo, int offset, string typed, ManualTime time)
+    private static void Type(SharedText text, SharedText? other, TextUndoHistory undo, int offset, string typed, ManualTime time)
     {
         foreach (var c in typed)
         {

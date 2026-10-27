@@ -123,7 +123,7 @@ public sealed partial class LiveHost
         }
     }
 
-    private void Reject(Guest guest, string path) =>
+    private static void Reject(Guest guest, string path) =>
         guest.Sender?.Notify(LiveMethods.Rejected, LiveJson.Body(new LivePathRequest(path), LiveJsonContext.Default.LivePathRequest));
 
     /// <summary>Passes edits on to every guest that has the document open, but the one that made them.</summary>

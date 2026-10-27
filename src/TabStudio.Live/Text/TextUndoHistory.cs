@@ -13,7 +13,7 @@ namespace TabStudio.Live.Text;
 /// </para>
 /// <para>Not thread-safe: use it on the text's thread.</para>
 /// </remarks>
-public sealed class TextUndoStack
+public sealed class TextUndoHistory
 {
     /// <summary>How long a pause in typing may be for the typing to stay one step.</summary>
     public static readonly TimeSpan TypingPause = TimeSpan.FromSeconds(1.5);
@@ -32,7 +32,7 @@ public sealed class TextUndoStack
     /// <summary>Creates an empty stack for the participant that edits a text on this device.</summary>
     /// <param name="text">The text.</param>
     /// <param name="time">The clock that decides when typing is one step; the system's when <see langword="null"/>.</param>
-    public TextUndoStack(SharedText text, TimeProvider? time = null)
+    public TextUndoHistory(SharedText text, TimeProvider? time = null)
     {
         ArgumentNullException.ThrowIfNull(text);
         _text = text;

@@ -19,7 +19,7 @@ public sealed class LiveDocument
         Path = path;
         FullPath = fullPath;
         Text = text;
-        Undo = new TextUndoStack(text);
+        Undo = new TextUndoHistory(text);
     }
 
     /// <summary>Raised after the text changed for any reason: an edit here or on another device, an undo, a reload.</summary>
@@ -38,7 +38,7 @@ public sealed class LiveDocument
     public SharedText Text { get; private set; }
 
     /// <summary>This participant's undo and redo.</summary>
-    public TextUndoStack Undo { get; private set; }
+    public TextUndoHistory Undo { get; private set; }
 
     /// <summary>The session the document belongs to.</summary>
     public LiveSession Session => _session;
@@ -181,7 +181,7 @@ public sealed class LiveDocument
         }
 
         Text = text;
-        Undo = new TextUndoStack(text);
+        Undo = new TextUndoHistory(text);
         _view?.Reload(text.ToString());
         Changed?.Invoke(this, EventArgs.Empty);
     }
