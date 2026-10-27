@@ -2,14 +2,14 @@ spring-petclinic at 500158f732419217507c7656904b8e6aa1bcc0d6
 Toolchain projects:
   java: /home/runner/work/_temp/real-repos/spring-petclinic/pom.xml
 Startup project: java /home/runner/work/_temp/real-repos/spring-petclinic/pom.xml
-Set up in 3.1 s
+Set up in 3.0 s
 Web preview: http://127.0.0.1:8080/
 GET http://127.0.0.1:8080/: 200 , 2658 characters
-Ran in 22.3 s
+Ran in 21.6 s
 Project setup:
 
 Output:
-Running spring-petclinic with Java 21.0.13
+Running spring-petclinic with Java 21.0.12.1
 > mvn -B -Dstyle.color=never -DskipTests package org.apache.maven.plugins:maven-dependency-plugin:3.8.1:copy-dependencies -DincludeScope=runtime
 [INFO] Scanning for projects...
 [INFO] 
@@ -58,9 +58,9 @@ Signed-off-by: Pedro Arthur Hartmann <pedroaphartmann@gmail.com>
 [INFO] Collected git.local.branch.behind with value NO_REMOTE
 [INFO] Collected git.build.time with value 2024-11-28T14:37:52Z
 [INFO] Collected git.build.version with value 4.0.0-SNAPSHOT
-[INFO] Collected git.build.host with value runnervm48cm3
-[INFO] Collected git.build.number with value 871.1
-[INFO] Collected git.build.number.unique with value 40579710143.871.1
+[INFO] Collected git.build.host with value runnervmtai0g
+[INFO] Collected git.build.number with value 873.1
+[INFO] Collected git.build.number.unique with value 40590927448.873.1
 [INFO] including property 'git.tags' in results
 [INFO] including property 'git.build.version' in results
 [INFO] including property 'git.branch' in results
@@ -133,8 +133,8 @@ Signed-off-by: Pedro Arthur Hartmann <pedroaphartmann@gmail.com>
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  13.201 s
-[INFO] Finished at: 2026-10-27T20:46:49Z
+[INFO] Total time:  12.850 s
+[INFO] Finished at: 2026-10-27T22:05:08Z
 [INFO] ------------------------------------------------------------------------
 
 
@@ -152,43 +152,43 @@ Signed-off-by: Pedro Arthur Hartmann <pedroaphartmann@gmail.com>
 :: Built with Spring Boot :: 4.1.0
 
 
-2026-10-27T20:46:50.956Z  INFO 7920 --- [  restartedMain] o.s.s.petclinic.PetClinicApplication     : Starting PetClinicApplication using Java 21.0.13 with PID 7920 (/home/runner/work/_temp/real-repos/spring-petclinic/target/classes started by runner in /home/runner/work/_temp/real-repos/spring-petclinic)
-2026-10-27T20:46:50.960Z  INFO 7920 --- [  restartedMain] o.s.s.petclinic.PetClinicApplication     : No active profile set, falling back to 1 default profile: "default"
-2026-10-27T20:46:51.030Z  INFO 7920 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2026-10-27T20:46:51.030Z  INFO 7920 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2026-10-27T20:46:52.158Z  INFO 7920 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-10-27T20:46:52.229Z  INFO 7920 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 52 ms. Found 3 JPA repository interfaces.
-2026-10-27T20:46:53.134Z  INFO 7920 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
-2026-10-27T20:46:53.162Z  INFO 7920 --- [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-10-27T20:46:53.163Z  INFO 7920 --- [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
-2026-10-27T20:46:53.205Z  INFO 7920 --- [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 2173 ms
-2026-10-27T20:46:53.512Z  INFO 7920 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2026-10-27T20:46:53.707Z  INFO 7920 --- [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:8ffcd97d-b550-4765-a320-da0fe3b564a4 user=SA
-2026-10-27T20:46:53.709Z  INFO 7920 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2026-10-27T20:46:53.921Z  INFO 7920 --- [  restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
-2026-10-27T20:46:54.017Z  INFO 7920 --- [  restartedMain] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.1.Final
-2026-10-27T20:46:54.376Z  INFO 7920 --- [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-10-27T20:46:54.477Z  INFO 7920 --- [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
-	Database JDBC URL [jdbc:h2:mem:8ffcd97d-b550-4765-a320-da0fe3b564a4]
+2026-10-27T22:05:09.783Z  INFO 8290 --- [  restartedMain] o.s.s.petclinic.PetClinicApplication     : Starting PetClinicApplication using Java 21.0.12.1 with PID 8290 (/home/runner/work/_temp/real-repos/spring-petclinic/target/classes started by runner in /home/runner/work/_temp/real-repos/spring-petclinic)
+2026-10-27T22:05:09.790Z  INFO 8290 --- [  restartedMain] o.s.s.petclinic.PetClinicApplication     : No active profile set, falling back to 1 default profile: "default"
+2026-10-27T22:05:09.846Z  INFO 8290 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-10-27T22:05:09.846Z  INFO 8290 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-10-27T22:05:10.927Z  INFO 8290 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-27T22:05:11.000Z  INFO 8290 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 63 ms. Found 3 JPA repository interfaces.
+2026-10-27T22:05:11.788Z  INFO 8290 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-10-27T22:05:11.824Z  INFO 8290 --- [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-27T22:05:11.824Z  INFO 8290 --- [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-10-27T22:05:11.885Z  INFO 8290 --- [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 2036 ms
+2026-10-27T22:05:12.141Z  INFO 8290 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-10-27T22:05:12.289Z  INFO 8290 --- [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:4c4adcac-feeb-4921-8fd9-201684248475 user=SA
+2026-10-27T22:05:12.291Z  INFO 8290 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-10-27T22:05:12.499Z  INFO 8290 --- [  restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-10-27T22:05:12.572Z  INFO 8290 --- [  restartedMain] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.1.Final
+2026-10-27T22:05:12.961Z  INFO 8290 --- [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-27T22:05:13.045Z  INFO 8290 --- [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:4c4adcac-feeb-4921-8fd9-201684248475]
 	Database driver: H2 JDBC Driver
 	Database dialect: H2Dialect
 	Database version: 2.4.240
-	Default catalog/schema: 8FFCD97D-B550-4765-A320-DA0FE3B564A4/PUBLIC
+	Default catalog/schema: 4C4ADCAC-FEEB-4921-8FD9-201684248475/PUBLIC
 	Autocommit mode: undefined/unknown
 	Isolation level: READ_COMMITTED [default READ_COMMITTED]
 	JDBC fetch size: 100
 	Pool: DataSourceConnectionProvider
 	Minimum pool size: undefined/unknown
 	Maximum pool size: undefined/unknown
-2026-10-27T20:46:55.434Z  INFO 7920 --- [  restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-10-27T20:46:55.440Z  INFO 7920 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-10-27T20:46:55.538Z  INFO 7920 --- [  restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-10-27T20:46:56.788Z  INFO 7920 --- [  restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 13 endpoints beneath base path '/actuator'
-2026-10-27T20:46:56.946Z  INFO 7920 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
-2026-10-27T20:46:56.961Z  INFO 7920 --- [  restartedMain] o.s.s.petclinic.PetClinicApplication     : Started PetClinicApplication in 6.582 seconds (process running for 7.052)
-2026-10-27T20:46:57.277Z  INFO 7920 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-10-27T20:46:57.277Z  INFO 7920 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2026-10-27T20:46:57.279Z  INFO 7920 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-10-27T22:05:14.013Z  INFO 8290 --- [  restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-27T22:05:14.019Z  INFO 8290 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-27T22:05:14.100Z  INFO 8290 --- [  restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-27T22:05:15.223Z  INFO 8290 --- [  restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 13 endpoints beneath base path '/actuator'
+2026-10-27T22:05:15.329Z  INFO 8290 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-10-27T22:05:15.339Z  INFO 8290 --- [  restartedMain] o.s.s.petclinic.PetClinicApplication     : Started PetClinicApplication in 6.14 seconds (process running for 6.601)
+2026-10-27T22:05:15.841Z  INFO 8290 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-27T22:05:15.842Z  INFO 8290 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-27T22:05:15.844Z  INFO 8290 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
 
 The program 'spring-petclinic' was stopped.
 
