@@ -44,6 +44,7 @@ public static class CompatibilityStatusNames
         CompatibilityStatus.NeedsWindows => "Needs Windows",
         CompatibilityStatus.NotRunnable => "Library",
         CompatibilityStatus.NeedsToolchain => "Needs a toolchain",
+        CompatibilityStatus.NeedsDatabase => "Needs a database",
         _ => "Not supported",
     };
 }

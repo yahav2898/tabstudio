@@ -306,6 +306,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         }
 
         DatabaseExplorer.EfCore.LoadProjects(preview.Workspace.Projects);
+        StartDatabaseCheck(preview.Workspace);
         ShowNetFrameworkDiagnostics(preview.Workspace);
         LoadStartupProjects(preview.Workspace, session?.StartupProject);
         await LoadToolchainProjectsAsync(preview.Workspace, session?.StartupProject, opening: true);
