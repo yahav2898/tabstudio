@@ -1,0 +1,9 @@
++ dotnet build tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E ' error | warning |Build succeeded'
++ sort -u
++ head -20
+Build succeeded.
++ dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter 'FullyQualifiedName~SqlServerAdvice|FullyQualifiedName~NativePackageTests'
++ grep -E '^(Passed|Failed)!|  Failed '
++ head
+Passed!  - Failed:     0, Passed:     2, Skipped:     0, Total:     2, Duration: 7 s - TabStudio.App.Tests.dll (net10.0)
