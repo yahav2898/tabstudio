@@ -1,0 +1,186 @@
++ dotnet --info
++ head -30
+.NET SDK:
+ Version:           10.0.403
+ Commit:            5a2162bea6
+ Workload version:  10.0.400-manifests.a00bebb6
+ MSBuild version:   18.9.15+5a2162bea
+
+Runtime Environment:
+ OS Name:     ubuntu
+ OS Version:  24.04
+ OS Platform: Linux
+ RID:         linux-x64
+ Base Path:   /usr/share/dotnet/sdk/10.0.403/
+
+.NET workloads installed:
+There are no installed workloads to display.
+Configured to use workload sets when installing new manifests.
+No workload sets are installed. Run "dotnet workload restore" to install a workload set.
+
+Host:
+  Version:      10.0.14
+  Architecture: x64
+  Commit:       0427b9abbe
+
+.NET SDKs installed:
+  8.0.131 [/usr/share/dotnet/sdk]
+  8.0.206 [/usr/share/dotnet/sdk]
+  8.0.319 [/usr/share/dotnet/sdk]
+  8.0.425 [/usr/share/dotnet/sdk]
+  9.0.121 [/usr/share/dotnet/sdk]
+  9.0.205 [/usr/share/dotnet/sdk]
+++ find /usr/share/dotnet /usr/lib/dotnet /usr/share/dotnet -name PortableRuntimeIdentifierGraph.json
+++ head -1
++ G=/usr/share/dotnet/sdk/9.0.318/PortableRuntimeIdentifierGraph.json
++ echo GRAPH=/usr/share/dotnet/sdk/9.0.318/PortableRuntimeIdentifierGraph.json
+GRAPH=/usr/share/dotnet/sdk/9.0.318/PortableRuntimeIdentifierGraph.json
++ mkdir -p ci-out
++ cp /usr/share/dotnet/sdk/9.0.318/PortableRuntimeIdentifierGraph.json ci-out/PortableRuntimeIdentifierGraph.json
++ dl microsoft.data.sqlclient 5.1.6
++ curl -sSL https://api.nuget.org/v3-flatcontainer/microsoft.data.sqlclient/5.1.6/microsoft.data.sqlclient.5.1.6.nupkg -o /tmp/microsoft.data.sqlclient-5.1.6.nupkg
++ unzip -Z1 /tmp/microsoft.data.sqlclient-5.1.6.nupkg
++ dl microsoft.data.sqlclient 5.2.2
++ curl -sSL https://api.nuget.org/v3-flatcontainer/microsoft.data.sqlclient/5.2.2/microsoft.data.sqlclient.5.2.2.nupkg -o /tmp/microsoft.data.sqlclient-5.2.2.nupkg
++ unzip -Z1 /tmp/microsoft.data.sqlclient-5.2.2.nupkg
++ dl microsoft.data.sqlclient 6.0.2
++ curl -sSL https://api.nuget.org/v3-flatcontainer/microsoft.data.sqlclient/6.0.2/microsoft.data.sqlclient.6.0.2.nupkg -o /tmp/microsoft.data.sqlclient-6.0.2.nupkg
++ unzip -Z1 /tmp/microsoft.data.sqlclient-6.0.2.nupkg
++ dl microsoft.data.sqlclient 7.0.3
++ curl -sSL https://api.nuget.org/v3-flatcontainer/microsoft.data.sqlclient/7.0.3/microsoft.data.sqlclient.7.0.3.nupkg -o /tmp/microsoft.data.sqlclient-7.0.3.nupkg
++ unzip -Z1 /tmp/microsoft.data.sqlclient-7.0.3.nupkg
++ dl system.data.sqlclient 4.8.6
++ curl -sSL https://api.nuget.org/v3-flatcontainer/system.data.sqlclient/4.8.6/system.data.sqlclient.4.8.6.nupkg -o /tmp/system.data.sqlclient-4.8.6.nupkg
++ unzip -Z1 /tmp/system.data.sqlclient-4.8.6.nupkg
++ dl microsoft.data.sqlclient.sni.runtime 5.2.0
++ curl -sSL https://api.nuget.org/v3-flatcontainer/microsoft.data.sqlclient.sni.runtime/5.2.0/microsoft.data.sqlclient.sni.runtime.5.2.0.nupkg -o /tmp/microsoft.data.sqlclient.sni.runtime-5.2.0.nupkg
++ unzip -Z1 /tmp/microsoft.data.sqlclient.sni.runtime-5.2.0.nupkg
++ dl sqlitepclraw.lib.e_sqlite3 2.1.11
++ curl -sSL https://api.nuget.org/v3-flatcontainer/sqlitepclraw.lib.e_sqlite3/2.1.11/sqlitepclraw.lib.e_sqlite3.2.1.11.nupkg -o /tmp/sqlitepclraw.lib.e_sqlite3-2.1.11.nupkg
++ unzip -Z1 /tmp/sqlitepclraw.lib.e_sqlite3-2.1.11.nupkg
++ dl sqlitepclraw.bundle_e_sqlite3 2.1.11
++ curl -sSL https://api.nuget.org/v3-flatcontainer/sqlitepclraw.bundle_e_sqlite3/2.1.11/sqlitepclraw.bundle_e_sqlite3.2.1.11.nupkg -o /tmp/sqlitepclraw.bundle_e_sqlite3-2.1.11.nupkg
++ unzip -Z1 /tmp/sqlitepclraw.bundle_e_sqlite3-2.1.11.nupkg
++ dl skiasharp.nativeassets.linux 3.119.0
++ curl -sSL https://api.nuget.org/v3-flatcontainer/skiasharp.nativeassets.linux/3.119.0/skiasharp.nativeassets.linux.3.119.0.nupkg -o /tmp/skiasharp.nativeassets.linux-3.119.0.nupkg
++ unzip -Z1 /tmp/skiasharp.nativeassets.linux-3.119.0.nupkg
++ dl skiasharp.nativeassets.android 3.119.0
++ curl -sSL https://api.nuget.org/v3-flatcontainer/skiasharp.nativeassets.android/3.119.0/skiasharp.nativeassets.android.3.119.0.nupkg -o /tmp/skiasharp.nativeassets.android-3.119.0.nupkg
++ unzip -Z1 /tmp/skiasharp.nativeassets.android-3.119.0.nupkg
++ dl microsoft.netcore.platforms 5.0.0
++ curl -sSL https://api.nuget.org/v3-flatcontainer/microsoft.netcore.platforms/5.0.0/microsoft.netcore.platforms.5.0.0.nupkg -o /tmp/microsoft.netcore.platforms-5.0.0.nupkg
++ unzip -Z1 /tmp/microsoft.netcore.platforms-5.0.0.nupkg
++ dl microsoft.data.sqlite 10.0.0
++ curl -sSL https://api.nuget.org/v3-flatcontainer/microsoft.data.sqlite/10.0.0/microsoft.data.sqlite.10.0.0.nupkg -o /tmp/microsoft.data.sqlite-10.0.0.nupkg
++ unzip -Z1 /tmp/microsoft.data.sqlite-10.0.0.nupkg
++ dl microsoft.data.sqlite.core 10.0.0
++ curl -sSL https://api.nuget.org/v3-flatcontainer/microsoft.data.sqlite.core/10.0.0/microsoft.data.sqlite.core.10.0.0.nupkg -o /tmp/microsoft.data.sqlite.core-10.0.0.nupkg
++ unzip -Z1 /tmp/microsoft.data.sqlite.core-10.0.0.nupkg
++ curl -sSL https://api.nuget.org/v3-flatcontainer/microsoft.data.sqlite.core/10.0.0/microsoft.data.sqlite.core.nuspec
++ grep -i depend
++ head -20
+    <dependencies>
+        <dependency id="SQLitePCLRaw.core" version="2.1.11" exclude="Build,Analyzers" />
+        <dependency id="SQLitePCLRaw.core" version="2.1.11" exclude="Build,Analyzers" />
+    </dependencies>
++ grep -i depend
++ curl -sSL https://api.nuget.org/v3-flatcontainer/microsoft.data.sqlite/10.0.0/microsoft.data.sqlite.nuspec
++ head -20
+    <dependencies>
+        <dependency id="Microsoft.Data.Sqlite.Core" version="10.0.0" exclude="Build,Analyzers" />
+        <dependency id="SQLitePCLRaw.bundle_e_sqlite3" version="2.1.11" exclude="Build,Analyzers" />
+        <dependency id="SQLitePCLRaw.core" version="2.1.11" exclude="Build,Analyzers" />
+    </dependencies>
++ curl -sSL https://api.nuget.org/v3-flatcontainer/microsoft.data.sqlclient/7.0.3/microsoft.data.sqlclient.nuspec
++ grep -i 'group\|depend'
++ head -40
+    <dependencies>
+      <group targetFramework=".NETFramework4.6.2">
+        <dependency id="Microsoft.Bcl.Cryptography" version="8.0.0" />
+        <dependency id="Microsoft.Data.SqlClient.Extensions.Abstractions" version="[7.0.3, 8.0.0)" />
+        <dependency id="Microsoft.Data.SqlClient.Internal.Logging" version="[7.0.3, 8.0.0)" />
+        <dependency id="Microsoft.Data.SqlClient.SNI" version="[6.0.3, 7.0.0)" />
+        <dependency id="Microsoft.Extensions.Caching.Memory" version="8.0.1" exclude="Compile" />
+        <dependency id="Microsoft.IdentityModel.JsonWebTokens" version="8.16.0" />
+        <dependency id="Microsoft.IdentityModel.Protocols.OpenIdConnect" version="8.16.0" />
+        <dependency id="System.Buffers" version="4.6.1" />
+        <dependency id="System.Data.Common" version="4.3.0" />
+        <dependency id="System.Diagnostics.DiagnosticSource" version="10.0.3" />
+        <dependency id="System.Memory" version="4.6.3" />
+        <dependency id="System.Runtime.InteropServices.RuntimeInformation" version="4.3.0" />
+        <dependency id="System.Security.Cryptography.Pkcs" version="8.0.1" />
+        <dependency id="System.Text.Json" version="10.0.3" />
+        <dependency id="System.Threading.Channels" version="10.0.3" />
+        <dependency id="System.ValueTuple" version="4.6.2" />
+      </group>
+      <group targetFramework="net8.0">
+        <dependency id="Microsoft.Bcl.Cryptography" version="8.0.0" />
+        <dependency id="Microsoft.Data.SqlClient.Extensions.Abstractions" version="[7.0.3, 8.0.0)" />
+        <dependency id="Microsoft.Data.SqlClient.Internal.Logging" version="[7.0.3, 8.0.0)" />
+        <dependency id="Microsoft.Data.SqlClient.SNI.runtime" version="[6.0.3, 7.0.0)" exclude="Compile" />
+        <dependency id="Microsoft.Extensions.Caching.Memory" version="8.0.1" exclude="Compile" />
+        <dependency id="Microsoft.IdentityModel.JsonWebTokens" version="8.16.0" />
+        <dependency id="Microsoft.IdentityModel.Protocols.OpenIdConnect" version="8.16.0" />
+        <dependency id="Microsoft.SqlServer.Server" version="[1.0.0, 2.0.0)" />
+        <dependency id="System.Configuration.ConfigurationManager" version="8.0.1" exclude="Compile" />
+        <dependency id="System.Security.Cryptography.Pkcs" version="8.0.1" />
+      </group>
+      <group targetFramework="net9.0">
+        <dependency id="Microsoft.Bcl.Cryptography" version="9.0.13" />
+        <dependency id="Microsoft.Data.SqlClient.Extensions.Abstractions" version="[7.0.3, 8.0.0)" />
+        <dependency id="Microsoft.Data.SqlClient.Internal.Logging" version="[7.0.3, 8.0.0)" />
+        <dependency id="Microsoft.Data.SqlClient.SNI.runtime" version="[6.0.3, 7.0.0)" exclude="Compile" />
+        <dependency id="Microsoft.Extensions.Caching.Memory" version="9.0.13" exclude="Compile" />
+        <dependency id="Microsoft.IdentityModel.JsonWebTokens" version="8.16.0" />
+        <dependency id="Microsoft.IdentityModel.Protocols.OpenIdConnect" version="8.16.0" />
+        <dependency id="Microsoft.SqlServer.Server" version="[1.0.0, 2.0.0)" />
+grep: write error: Broken pipe
++ curl -sSL https://api.nuget.org/v3-flatcontainer/microsoft.entityframeworkcore.sqlserver/8.0.0/microsoft.entityframeworkcore.sqlserver.nuspec
++ grep -i depend
++ head
+    <dependencies>
+        <dependency id="Microsoft.EntityFrameworkCore.Relational" version="8.0.0" exclude="Build" />
+        <dependency id="Microsoft.Data.SqlClient" version="5.1.1" exclude="Build,Analyzers" />
+    </dependencies>
++ unzip -o -q /tmp/microsoft.netcore.platforms-5.0.0.nupkg runtime.json -d /tmp/plat
++ cp /tmp/plat/runtime.json ci-out/platforms-5.0.0-runtime.json
++ unzip -Z1 /tmp/microsoft.data.sqlclient-5.1.6.nupkg
++ grep -i runtime.json
++ ls ci-out
+PortableRuntimeIdentifierGraph.json
+layout-microsoft.data.sqlclient-5.1.6.txt
+layout-microsoft.data.sqlclient-5.2.2.txt
+layout-microsoft.data.sqlclient-6.0.2.txt
+layout-microsoft.data.sqlclient-7.0.3.txt
+layout-microsoft.data.sqlclient.sni.runtime-5.2.0.txt
+layout-microsoft.data.sqlite-10.0.0.txt
+layout-microsoft.data.sqlite.core-10.0.0.txt
+layout-microsoft.netcore.platforms-5.0.0.txt
+layout-skiasharp.nativeassets.android-3.119.0.txt
+layout-skiasharp.nativeassets.linux-3.119.0.txt
+layout-sqlitepclraw.bundle_e_sqlite3-2.1.11.txt
+layout-sqlitepclraw.lib.e_sqlite3-2.1.11.txt
+layout-system.data.sqlclient-4.8.6.txt
+platforms-5.0.0-runtime.json
+run.log
+screenshots
++ wc -l ci-out/PortableRuntimeIdentifierGraph.json ci-out/layout-microsoft.data.sqlclient-5.1.6.txt ci-out/layout-microsoft.data.sqlclient-5.2.2.txt ci-out/layout-microsoft.data.sqlclient-6.0.2.txt ci-out/layout-microsoft.data.sqlclient-7.0.3.txt ci-out/layout-microsoft.data.sqlclient.sni.runtime-5.2.0.txt ci-out/layout-microsoft.data.sqlite-10.0.0.txt ci-out/layout-microsoft.data.sqlite.core-10.0.0.txt ci-out/layout-microsoft.netcore.platforms-5.0.0.txt ci-out/layout-skiasharp.nativeassets.android-3.119.0.txt ci-out/layout-skiasharp.nativeassets.linux-3.119.0.txt ci-out/layout-sqlitepclraw.bundle_e_sqlite3-2.1.11.txt ci-out/layout-sqlitepclraw.lib.e_sqlite3-2.1.11.txt ci-out/layout-system.data.sqlclient-4.8.6.txt ci-out/platforms-5.0.0-runtime.json ci-out/run.log ci-out/screenshots
+    481 ci-out/PortableRuntimeIdentifierGraph.json
+     54 ci-out/layout-microsoft.data.sqlclient-5.1.6.txt
+     85 ci-out/layout-microsoft.data.sqlclient-5.2.2.txt
+     63 ci-out/layout-microsoft.data.sqlclient-6.0.2.txt
+     67 ci-out/layout-microsoft.data.sqlclient-7.0.3.txt
+     11 ci-out/layout-microsoft.data.sqlclient.sni.runtime-5.2.0.txt
+      8 ci-out/layout-microsoft.data.sqlite-10.0.0.txt
+     11 ci-out/layout-microsoft.data.sqlite.core-10.0.0.txt
+     12 ci-out/layout-microsoft.netcore.platforms-5.0.0.txt
+     15 ci-out/layout-skiasharp.nativeassets.android-3.119.0.txt
+     27 ci-out/layout-skiasharp.nativeassets.linux-3.119.0.txt
+     14 ci-out/layout-sqlitepclraw.bundle_e_sqlite3-2.1.11.txt
+     42 ci-out/layout-sqlitepclraw.lib.e_sqlite3-2.1.11.txt
+     80 ci-out/layout-system.data.sqlclient-4.8.6.txt
+   3083 ci-out/platforms-5.0.0-runtime.json
+    182 ci-out/run.log
+wc: ci-out/screenshots: Is a directory
+      0 ci-out/screenshots
+   4235 total
