@@ -1,0 +1,2019 @@
+Serilog at 43105b35095337d77f022561a8f2d3db2f9a7937
+Opened /home/runner/work/_temp/real-repos/Serilog/Serilog.sln in 0.1 s
+Compatibility Doctor:
+  Serilog: Library via Built with its users - A library is compiled together with the projects that reference it.
+  TestDummies: Library via Built with its users - A library is compiled together with the projects that reference it.
+  Serilog.Tests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Serilog.PerformanceTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  Serilog.ApprovalTests: Ready via Test Explorer - Its tests run in-process from the Test Explorer, with their results beside each test.
+  AotTestApp: Ready via In-process - Compiled in memory and run right here, with its output in the Output panel.
+Startup project: AotTestApp
+Built in 3.5 s: 0 errors, 3 warnings
+Packages with analyzers or MSBuild files:
+  emptyfiles 4.4.0
+      build/EmptyFiles.targets
+<?xml version="1.0" encoding="utf-8"?>
+<Project Condition="$(DesignTimeBuild) != true">
+  <ItemGroup>
+    <ContentWithTargetPath
+       Include="$(MSBuildThisFileDirectory)..\EmptyFiles\**\*.*"
+       CopyToOutputDirectory="PreserveNewest"
+       TargetPath="EmptyFiles\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>
+      buildTransitive/EmptyFiles.targets
+<?xml version="1.0" encoding="utf-8"?>
+<Project Condition="$(DesignTimeBuild) != true">
+  <ItemGroup>
+    <ContentWithTargetPath
+       Include="$(MSBuildThisFileDirectory)..\EmptyFiles\**\*.*"
+       CopyToOutputDirectory="PreserveNewest"
+       TargetPath="EmptyFiles\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>
+  microsoft.codeanalysis.analyzers 3.11.0
+      analyzers/dotnet/cs/Microsoft.CodeAnalysis.Analyzers.dll
+      analyzers/dotnet/cs/Microsoft.CodeAnalysis.CSharp.Analyzers.dll
+      analyzers/dotnet/vb/Microsoft.CodeAnalysis.Analyzers.dll
+      analyzers/dotnet/vb/Microsoft.CodeAnalysis.VisualBasic.Analyzers.dll
+      buildTransitive/Microsoft.CodeAnalysis.Analyzers.props
+<Project>
+  
+  <!-- 
+    This property group handles 'CodeAnalysisTreatWarningsAsErrors = false' for the CA rule ids implemented in this package.
+  -->
+  <PropertyGroup>
+    <CodeAnalysisRuleIds>RS1001;RS1002;RS1003;RS1004;RS1005;RS1006;RS1007;RS1008;RS1009;RS1010;RS1011;RS1012;RS1013;RS1014;RS1015;RS1016;RS1017;RS1018;RS1019;RS1020;RS1021;RS1022;RS1023;RS1024;RS1025;RS1026;RS1027;RS1028;RS1029;RS1030;RS1031;RS1032;RS1033;RS1034;RS1035;RS1036;RS1037;RS1038;RS1039;RS1040;RS1041;RS1042;RS2000;RS2001;RS2002;RS2003;RS2004;RS2005;RS2006;RS2007;RS2008</CodeAnalysisRuleIds>
+    <EffectiveCodeAnalysisTreatWarningsAsErrors Condition="'$(EffectiveCodeAnalysisTreatWarningsAsErrors)' == ''">$(CodeAnalysisTreatWarningsAsErrors)</EffectiveCodeAnalysisTreatWarningsAsErrors>
+    <WarningsNotAsErrors Condition="'$(EffectiveCodeAnalysisTreatWarningsAsErrors)' == 'false' and '$(TreatWarningsAsErrors)' == 'true'">$(WarningsNotAsErrors);$(CodeAnalysisRuleIds)</WarningsNotAsErrors>
+  </PropertyGroup>
+</Project>
+      buildTransitive/Microsoft.CodeAnalysis.Analyzers.targets
+      buildTransitive/config/analysislevel_2_9_8_all.globalconfig
+      buildTransitive/config/analysislevel_2_9_8_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_2_9_8_default.globalconfig
+      buildTransitive/config/analysislevel_2_9_8_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_2_9_8_minimum.globalconfig
+      buildTransitive/config/analysislevel_2_9_8_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_2_9_8_none.globalconfig
+      buildTransitive/config/analysislevel_2_9_8_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_2_9_8_recommended.globalconfig
+      buildTransitive/config/analysislevel_2_9_8_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_3_3_3_all.globalconfig
+      buildTransitive/config/analysislevel_3_3_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_3_3_3_default.globalconfig
+      buildTransitive/config/analysislevel_3_3_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_3_3_3_minimum.globalconfig
+      buildTransitive/config/analysislevel_3_3_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_3_3_3_none.globalconfig
+      buildTransitive/config/analysislevel_3_3_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_3_3_3_recommended.globalconfig
+      buildTransitive/config/analysislevel_3_3_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_3_3_4_all.globalconfig
+      buildTransitive/config/analysislevel_3_3_4_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_3_3_4_default.globalconfig
+      buildTransitive/config/analysislevel_3_3_4_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_3_3_4_minimum.globalconfig
+      buildTransitive/config/analysislevel_3_3_4_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_3_3_4_none.globalconfig
+      buildTransitive/config/analysislevel_3_3_4_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_3_3_4_recommended.globalconfig
+      buildTransitive/config/analysislevel_3_3_4_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_3_3_all.globalconfig
+      buildTransitive/config/analysislevel_3_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_3_3_default.globalconfig
+      buildTransitive/config/analysislevel_3_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_3_3_minimum.globalconfig
+      buildTransitive/config/analysislevel_3_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_3_3_none.globalconfig
+      buildTransitive/config/analysislevel_3_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_3_3_recommended.globalconfig
+      buildTransitive/config/analysislevel_3_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_3_all.globalconfig
+      buildTransitive/config/analysislevel_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_3_default.globalconfig
+      buildTransitive/config/analysislevel_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_3_minimum.globalconfig
+      buildTransitive/config/analysislevel_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_3_none.globalconfig
+      buildTransitive/config/analysislevel_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_3_recommended.globalconfig
+      buildTransitive/config/analysislevel_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_4_3_all.globalconfig
+      buildTransitive/config/analysislevel_4_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_4_3_default.globalconfig
+      buildTransitive/config/analysislevel_4_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_4_3_minimum.globalconfig
+      buildTransitive/config/analysislevel_4_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_4_3_none.globalconfig
+      buildTransitive/config/analysislevel_4_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevel_4_3_recommended.globalconfig
+      buildTransitive/config/analysislevel_4_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_2_9_8_all.globalconfig
+      buildTransitive/config/analysislevelcorrectness_2_9_8_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_2_9_8_default.globalconfig
+      buildTransitive/config/analysislevelcorrectness_2_9_8_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_2_9_8_minimum.globalconfig
+      buildTransitive/config/analysislevelcorrectness_2_9_8_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_2_9_8_none.globalconfig
+      buildTransitive/config/analysislevelcorrectness_2_9_8_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_2_9_8_recommended.globalconfig
+      buildTransitive/config/analysislevelcorrectness_2_9_8_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_3_all.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_3_default.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_3_minimum.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_3_none.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_3_recommended.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_4_all.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_4_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_4_default.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_4_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_4_minimum.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_4_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_4_none.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_4_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_4_recommended.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_4_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_all.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_default.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_minimum.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_none.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_recommended.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_all.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_default.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_minimum.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_none.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_recommended.globalconfig
+      buildTransitive/config/analysislevelcorrectness_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_4_3_all.globalconfig
+      buildTransitive/config/analysislevelcorrectness_4_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_4_3_default.globalconfig
+      buildTransitive/config/analysislevelcorrectness_4_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_4_3_minimum.globalconfig
+      buildTransitive/config/analysislevelcorrectness_4_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_4_3_none.globalconfig
+      buildTransitive/config/analysislevelcorrectness_4_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelcorrectness_4_3_recommended.globalconfig
+      buildTransitive/config/analysislevelcorrectness_4_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_2_9_8_all.globalconfig
+      buildTransitive/config/analysislevellibrary_2_9_8_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_2_9_8_default.globalconfig
+      buildTransitive/config/analysislevellibrary_2_9_8_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_2_9_8_minimum.globalconfig
+      buildTransitive/config/analysislevellibrary_2_9_8_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_2_9_8_none.globalconfig
+      buildTransitive/config/analysislevellibrary_2_9_8_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_2_9_8_recommended.globalconfig
+      buildTransitive/config/analysislevellibrary_2_9_8_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_3_all.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_3_default.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_3_minimum.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_3_none.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_3_recommended.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_4_all.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_4_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_4_default.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_4_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_4_minimum.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_4_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_4_none.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_4_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_4_recommended.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_4_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_all.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_default.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_minimum.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_none.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_recommended.globalconfig
+      buildTransitive/config/analysislevellibrary_3_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_3_all.globalconfig
+      buildTransitive/config/analysislevellibrary_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_3_default.globalconfig
+      buildTransitive/config/analysislevellibrary_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_3_minimum.globalconfig
+      buildTransitive/config/analysislevellibrary_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_3_none.globalconfig
+      buildTransitive/config/analysislevellibrary_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_3_recommended.globalconfig
+      buildTransitive/config/analysislevellibrary_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_4_3_all.globalconfig
+      buildTransitive/config/analysislevellibrary_4_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_4_3_default.globalconfig
+      buildTransitive/config/analysislevellibrary_4_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_4_3_minimum.globalconfig
+      buildTransitive/config/analysislevellibrary_4_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_4_3_none.globalconfig
+      buildTransitive/config/analysislevellibrary_4_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevellibrary_4_3_recommended.globalconfig
+      buildTransitive/config/analysislevellibrary_4_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_2_9_8_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_2_9_8_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_2_9_8_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_2_9_8_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_2_9_8_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_2_9_8_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_2_9_8_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_2_9_8_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_2_9_8_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_2_9_8_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_3_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_3_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_3_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_3_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_3_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_4_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_4_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_4_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_4_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_4_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_4_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_4_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_4_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_4_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_4_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_4_3_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_4_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_4_3_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_4_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_4_3_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_4_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_4_3_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_4_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_4_3_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscompatibility_4_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_2_9_8_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_2_9_8_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_2_9_8_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_2_9_8_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_2_9_8_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_2_9_8_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_2_9_8_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_2_9_8_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_2_9_8_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_2_9_8_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_3_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_3_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_3_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_3_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_3_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_4_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_4_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_4_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_4_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_4_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_4_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_4_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_4_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_4_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_4_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_4_3_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_4_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_4_3_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_4_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_4_3_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_4_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_4_3_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_4_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_4_3_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysiscorrectness_4_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_2_9_8_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_2_9_8_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_2_9_8_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_2_9_8_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_2_9_8_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_2_9_8_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_2_9_8_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_2_9_8_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_2_9_8_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_2_9_8_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_3_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_3_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_3_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_3_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_3_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_4_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_4_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_4_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_4_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_4_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_4_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_4_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_4_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_4_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_4_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_4_3_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_4_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_4_3_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_4_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_4_3_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_4_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_4_3_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_4_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_4_3_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdesign_4_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_2_9_8_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_2_9_8_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_2_9_8_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_2_9_8_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_2_9_8_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_2_9_8_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_2_9_8_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_2_9_8_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_2_9_8_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_2_9_8_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_3_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_3_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_3_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_3_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_3_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_4_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_4_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_4_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_4_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_4_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_4_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_4_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_4_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_4_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_4_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_4_3_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_4_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_4_3_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_4_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_4_3_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_4_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_4_3_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_4_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_4_3_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisdocumentation_4_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_2_9_8_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_2_9_8_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_2_9_8_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_2_9_8_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_2_9_8_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_2_9_8_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_2_9_8_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_2_9_8_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_2_9_8_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_2_9_8_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_3_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_3_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_3_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_3_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_3_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_4_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_4_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_4_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_4_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_4_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_4_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_4_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_4_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_4_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_4_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_4_3_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_4_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_4_3_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_4_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_4_3_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_4_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_4_3_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_4_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_4_3_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysislocalization_4_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_2_9_8_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_2_9_8_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_2_9_8_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_2_9_8_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_2_9_8_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_2_9_8_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_2_9_8_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_2_9_8_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_2_9_8_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_2_9_8_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_3_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_3_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_3_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_3_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_3_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_4_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_4_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_4_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_4_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_4_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_4_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_4_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_4_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_4_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_4_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_4_3_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_4_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_4_3_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_4_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_4_3_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_4_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_4_3_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_4_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_4_3_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisperformance_4_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_2_9_8_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_2_9_8_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_2_9_8_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_2_9_8_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_2_9_8_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_2_9_8_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_2_9_8_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_2_9_8_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_2_9_8_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_2_9_8_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_3_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_3_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_3_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_3_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_3_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_4_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_4_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_4_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_4_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_4_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_4_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_4_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_4_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_4_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_4_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_3_recommended_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_4_3_all.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_4_3_all_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_4_3_default.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_4_3_default_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_4_3_minimum.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_4_3_minimum_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_4_3_none.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_4_3_none_warnaserror.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_4_3_recommended.globalconfig
+      buildTransitive/config/analysislevelmicrosoftcodeanalysisreleasetracking_4_3_recommended_warnaserror.globalconfig
+  microsoft.codecoverage 17.11.1
+      build/netstandard2.0/CodeCoverage/CodeCoverage.config
+      build/netstandard2.0/CodeCoverage/CodeCoverage.exe
+      build/netstandard2.0/CodeCoverage/VanguardInstrumentationProfiler_x86.config
+      build/netstandard2.0/CodeCoverage/amd64/CodeCoverage.exe
+      build/netstandard2.0/CodeCoverage/amd64/VanguardInstrumentationProfiler_x64.config
+      build/netstandard2.0/CodeCoverage/amd64/covrun64.dll
+      build/netstandard2.0/CodeCoverage/amd64/msdia140.dll
+      build/netstandard2.0/CodeCoverage/arm64/VanguardInstrumentationProfiler_arm64.config
+      build/netstandard2.0/CodeCoverage/arm64/covrunarm64.dll
+      build/netstandard2.0/CodeCoverage/arm64/msdia140.dll
+      build/netstandard2.0/CodeCoverage/codecoveragemessages.dll
+      build/netstandard2.0/CodeCoverage/coreclr/Microsoft.VisualStudio.CodeCoverage.Shim.dll
+      build/netstandard2.0/CodeCoverage/covrun32.dll
+      build/netstandard2.0/CodeCoverage/msdia140.dll
+      build/netstandard2.0/InstrumentationEngine/alpine/x64/VanguardInstrumentationProfiler_x64.config
+      build/netstandard2.0/InstrumentationEngine/alpine/x64/libCoverageInstrumentationMethod.so
+      build/netstandard2.0/InstrumentationEngine/alpine/x64/libInstrumentationEngine.so
+      build/netstandard2.0/InstrumentationEngine/arm64/MicrosoftInstrumentationEngine_arm64.dll
+      build/netstandard2.0/InstrumentationEngine/macos/x64/VanguardInstrumentationProfiler_x64.config
+      build/netstandard2.0/InstrumentationEngine/macos/x64/libCoverageInstrumentationMethod.dylib
+      build/netstandard2.0/InstrumentationEngine/macos/x64/libInstrumentationEngine.dylib
+      build/netstandard2.0/InstrumentationEngine/ubuntu/x64/VanguardInstrumentationProfiler_x64.config
+      build/netstandard2.0/InstrumentationEngine/ubuntu/x64/libCoverageInstrumentationMethod.so
+      build/netstandard2.0/InstrumentationEngine/ubuntu/x64/libInstrumentationEngine.so
+      build/netstandard2.0/InstrumentationEngine/x64/MicrosoftInstrumentationEngine_x64.dll
+      build/netstandard2.0/InstrumentationEngine/x86/MicrosoftInstrumentationEngine_x86.dll
+      build/netstandard2.0/Microsoft.CodeCoverage.Core.dll
+      build/netstandard2.0/Microsoft.CodeCoverage.Instrumentation.Core.dll
+      build/netstandard2.0/Microsoft.CodeCoverage.Instrumentation.dll
+      build/netstandard2.0/Microsoft.CodeCoverage.Interprocess.dll
+      build/netstandard2.0/Microsoft.CodeCoverage.props
+<!--
+***********************************************************************************************
+Microsoft.CodeCoverage.props
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+
+Copyright (c) .NET Foundation. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TraceDataCollectorDirectoryPath>$(MSBuildThisFileDirectory)</TraceDataCollectorDirectoryPath>
+  </PropertyGroup>
+</Project>
+
+      build/netstandard2.0/Microsoft.CodeCoverage.targets
+<!--
+ ***********************************************************************************************
+ Microsoft.CodeCoverage.targets
+
+ WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+           created a backup copy.  Incorrect changes to this file will make it
+           impossible to load or build your test projects from the command-line or the IDE.
+
+ Copyright (c) Microsoft. All rights reserved.
+ ***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- This target required to enable /collect:"Code Coverage" in "dotnet publish" scenario with "dotnet vstest".
+       E.g: Release pipelines where user/project nuget cache not available on current machine. -->
+  <Target Name="CopyTraceDataCollectorArtifacts" AfterTargets="ComputeFilesToPublish">
+
+    <ItemGroup>
+      <TraceDataCollectorArtifacts Include="$(MSBuildThisFileDirectory)\**\*.*" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(TraceDataCollectorArtifacts)" DestinationFolder="$(PublishDir)%(RecursiveDir)" />
+
+  </Target>
+
+  <PropertyGroup Condition="'$(NETCoreSdkVersion)' != ''">
+    <_msCoverageSdkNETCoreSdkVersion>$(NETCoreSdkVersion)</_msCoverageSdkNETCoreSdkVersion>
+    <_msCoverageSdkNETCoreSdkVersion Condition="$(_msCoverageSdkNETCoreSdkVersion.Contains('-'))">$(_msCoverageSdkNETCoreSdkVersion.Split('-')[0])</_msCoverageSdkNETCoreSdkVersion>
+    <_msCoverageSdkMinVersionWithDependencyTarget>6.0.100</_msCoverageSdkMinVersionWithDependencyTarget>
+    <_msCoverageSourceRootTargetName>MsCoverageGetPathMap</_msCoverageSourceRootTargetName>
+    <_msCoverageSourceRootTargetName Condition="'$([System.Version]::Parse($(_msCoverageSdkNETCoreSdkVersion)).CompareTo($([System.Version]::Parse($(_msCoverageSdkMinVersionWithDependencyTarget)))))' &gt;= '0' ">InitializeSourceRootMappedPaths</_msCoverageSourceRootTargetName>
+  </PropertyGroup>
+
+  <!-- This target required to store deterministic sources mapping.
+       It is modified version of https://github.com/coverlet-coverage/coverlet/blob/d1ca364b7dbff38abce0457d94c4ce1b7e3a4cd9/src/coverlet.collector/build/coverlet.collector.targets#L35 -->
+  <Target Condition="'$(NETCoreSdkVersion)' != ''" Name="MsCoverageReferencedPathMaps" BeforeTargets="CoreCompile" DependsOnTargets="ResolveProjectReferences" >
+    <MSBuild Projects="@(AnnotatedProjects->'%(FullPath)')"
+             Targets="$(_msCoverageSourceRootTargetName)"
+             Properties="TargetFramework=%(AnnotatedProjects.NearestTargetFramework)"
+             SkipNonexistentTargets="true">
+      <Output TaskParameter="TargetOutputs"
+              ItemName="_msCoverageLocalTopLevelSourceRoot" />
+    </MSBuild>
+    <ItemGroup>
+      <_msCoverageByProject Include="@(_msCoverageLocalTopLevelSourceRoot->'%(MSBuildSourceProjectFile)')" OriginalPath="%(Identity)" />
+      <_msCoverageMapping Include="@(_msCoverageByProject->'%(Identity)|%(OriginalPath)=%(MappedPath)')" />
+    </ItemGroup>
+    <PropertyGroup>
+      <_msCoverageSourceRootMappingFilePath>$([MSBuild]::EnsureTrailingSlash('$(OutputPath)')).msCoverageSourceRootsMapping_$(AssemblyName)</_msCoverageSourceRootMappingFilePath>
+    </PropertyGroup>
+    <WriteLinesToFile File="$(_msCoverageSourceRootMappingFilePath)" Lines="@(_msCoverageMapping)"
+                      Overwrite="true" Encoding="Unicode"
+                      Condition="'@(_msCoverageMapping)'!=''"
+                      WriteOnlyWhenDifferent="true" />
+    <ItemGroup>
+      <FileWrites Include="$(_msCoverageSourceRootMappingFilePath)" Condition="'@(_msCoverageMapping)'!=''" />
+    </ItemGroup>
+  </Target>
+</Project>
+
+      build/netstandard2.0/Microsoft.DiaSymReader.dll
+      build/netstandard2.0/Microsoft.VisualStudio.TraceDataCollector.dll
+      build/netstandard2.0/Mono.Cecil.Pdb.dll
+      build/netstandard2.0/Mono.Cecil.Rocks.dll
+      build/netstandard2.0/Mono.Cecil.dll
+      build/netstandard2.0/ThirdPartyNotices.txt
+  microsoft.diagnostics.tracing.traceevent 3.1.21
+      build/Microsoft.Diagnostics.Tracing.TraceEvent.props
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Condition="Exists('$(MSBuildThisFileDirectory)..\build\native\x86\KernelTraceControl.dll') And ('$(ProcessorArchitecture)' == 'x86' Or '$(ProcessorArchitecture)' == 'msil')" Include="$(MSBuildThisFileDirectory)..\build\native\x86\KernelTraceControl.dll">
+      <Link>x86\KernelTraceControl.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <None Condition="Exists('$(MSBuildThisFileDirectory)..\build\native\x86\KernelTraceControl.Win61.dll') And ('$(ProcessorArchitecture)' == 'x86' Or '$(ProcessorArchitecture)' == 'msil')" Include="$(MSBuildThisFileDirectory)..\build\native\x86\KernelTraceControl.Win61.dll">
+      <Link>x86\KernelTraceControl.Win61.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <None Condition="Exists('$(MSBuildThisFileDirectory)..\build\native\x86\msdia140.dll') And ('$(ProcessorArchitecture)' == 'x86' Or '$(ProcessorArchitecture)' == 'msil')" Include="$(MSBuildThisFileDirectory)..\build\native\x86\msdia140.dll">
+      <Link>x86\msdia140.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <None Condition="Exists('$(MSBuildThisFileDirectory)..\build\native\amd64\KernelTraceControl.dll') And ('$(ProcessorArchitecture)' == 'amd64' Or '$(ProcessorArchitecture)' == 'msil')" Include="$(MSBuildThisFileDirectory)..\build\native\amd64\KernelTraceControl.dll">
+      <Link>amd64\KernelTraceControl.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <None Condition="Exists('$(MSBuildThisFileDirectory)..\build\native\amd64\msdia140.dll') And ('$(ProcessorArchitecture)' == 'amd64' Or '$(ProcessorArchitecture)' == 'msil')" Include="$(MSBuildThisFileDirectory)..\build\native\amd64\msdia140.dll">
+      <Link>amd64\msdia140.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <None Condition="Exists('$(MSBuildThisFileDirectory)..\build\native\arm64\KernelTraceControl.dll') And ('$(ProcessorArchitecture)' == 'arm64' Or '$(ProcessorArchitecture)' == 'msil')" Include="$(MSBuildThisFileDirectory)..\build\native\arm64\KernelTraceControl.dll">
+      <Link>arm64\KernelTraceControl.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <None Condition="Exists('$(MSBuildThisFileDirectory)..\build\native\arm64\msdia140.dll') And ('$(ProcessorArchitecture)' == 'arm64' Or '$(ProcessorArchitecture)' == 'msil')" Include="$(MSBuildThisFileDirectory)..\build\native\arm64\msdia140.dll">
+      <Link>arm64\msdia140.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+
+    <!-- There are no static references to these so they need to be copied explicitly.  They are COM interop assemblies so they are the same for all targets. -->
+    <None Condition="Exists('$(MSBuildThisFileDirectory)..\lib\netstandard2.0\TraceReloggerLib.dll')" Include="$(MSBuildThisFileDirectory)..\lib\netstandard2.0\TraceReloggerLib.dll">
+      <Link>TraceReloggerLib.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <None Condition="Exists('$(MSBuildThisFileDirectory)..\lib\netstandard2.0\Dia2Lib.dll')" Include="$(MSBuildThisFileDirectory)..\lib\netstandard2.0\Dia2Lib.dll">
+      <Link>Dia2Lib.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+  </ItemGroup>
+</Project>
+
+      build/native/amd64/KernelTraceControl.dll
+      build/native/amd64/msdia140.dll
+      build/native/arm64/KernelTraceControl.dll
+      build/native/arm64/msdia140.dll
+      build/native/x86/KernelTraceControl.Win61.dll
+      build/native/x86/KernelTraceControl.dll
+      build/native/x86/msdia140.dll
+      buildTransitive/Microsoft.Diagnostics.Tracing.TraceEvent.props
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Condition="Exists('$(MSBuildThisFileDirectory)..\build\native\x86\KernelTraceControl.dll') And ('$(ProcessorArchitecture)' == 'x86' Or '$(ProcessorArchitecture)' == 'msil')" Include="$(MSBuildThisFileDirectory)..\build\native\x86\KernelTraceControl.dll">
+      <Link>x86\KernelTraceControl.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <None Condition="Exists('$(MSBuildThisFileDirectory)..\build\native\x86\KernelTraceControl.Win61.dll') And ('$(ProcessorArchitecture)' == 'x86' Or '$(ProcessorArchitecture)' == 'msil')" Include="$(MSBuildThisFileDirectory)..\build\native\x86\KernelTraceControl.Win61.dll">
+      <Link>x86\KernelTraceControl.Win61.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <None Condition="Exists('$(MSBuildThisFileDirectory)..\build\native\x86\msdia140.dll') And ('$(ProcessorArchitecture)' == 'x86' Or '$(ProcessorArchitecture)' == 'msil')" Include="$(MSBuildThisFileDirectory)..\build\native\x86\msdia140.dll">
+      <Link>x86\msdia140.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <None Condition="Exists('$(MSBuildThisFileDirectory)..\build\native\amd64\KernelTraceControl.dll') And ('$(ProcessorArchitecture)' == 'amd64' Or '$(ProcessorArchitecture)' == 'msil')" Include="$(MSBuildThisFileDirectory)..\build\native\amd64\KernelTraceControl.dll">
+      <Link>amd64\KernelTraceControl.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <None Condition="Exists('$(MSBuildThisFileDirectory)..\build\native\amd64\msdia140.dll') And ('$(ProcessorArchitecture)' == 'amd64' Or '$(ProcessorArchitecture)' == 'msil')" Include="$(MSBuildThisFileDirectory)..\build\native\amd64\msdia140.dll">
+      <Link>amd64\msdia140.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <None Condition="Exists('$(MSBuildThisFileDirectory)..\build\native\arm64\KernelTraceControl.dll') And ('$(ProcessorArchitecture)' == 'arm64' Or '$(ProcessorArchitecture)' == 'msil')" Include="$(MSBuildThisFileDirectory)..\build\native\arm64\KernelTraceControl.dll">
+      <Link>arm64\KernelTraceControl.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <None Condition="Exists('$(MSBuildThisFileDirectory)..\build\native\arm64\msdia140.dll') And ('$(ProcessorArchitecture)' == 'arm64' Or '$(ProcessorArchitecture)' == 'msil')" Include="$(MSBuildThisFileDirectory)..\build\native\arm64\msdia140.dll">
+      <Link>arm64\msdia140.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+
+    <!-- There are no static references to these so they need to be copied explicitly.  They are COM interop assemblies so they are the same for all targets. -->
+    <None Condition="Exists('$(MSBuildThisFileDirectory)..\lib\netstandard2.0\TraceReloggerLib.dll')" Include="$(MSBuildThisFileDirectory)..\lib\netstandard2.0\TraceReloggerLib.dll">
+      <Link>TraceReloggerLib.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <None Condition="Exists('$(MSBuildThisFileDirectory)..\lib\netstandard2.0\Dia2Lib.dll')" Include="$(MSBuildThisFileDirectory)..\lib\netstandard2.0\Dia2Lib.dll">
+      <Link>Dia2Lib.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+  </ItemGroup>
+</Project>
+
+  microsoft.extensions.dependencyinjection.abstractions 6.0.0
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.DependencyInjection.Abstractions.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_DependencyInjection_Abstractions_netcoreapp3_1">
+  <Target Name="NETStandardCompatError_Microsoft_Extensions_DependencyInjection_Abstractions_netcoreapp3_1"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Error Text="Microsoft.Extensions.DependencyInjection.Abstractions doesn't support $(TargetFramework). Consider updating your TargetFramework to netcoreapp3.1 or later." />
+  </Target>
+</Project>
+
+      buildTransitive/netcoreapp3.1/_._
+  microsoft.extensions.dependencyinjection 6.0.0
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.DependencyInjection.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_DependencyInjection_netcoreapp3_1">
+  <Target Name="NETStandardCompatError_Microsoft_Extensions_DependencyInjection_netcoreapp3_1"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Error Text="Microsoft.Extensions.DependencyInjection doesn't support $(TargetFramework). Consider updating your TargetFramework to netcoreapp3.1 or later." />
+  </Target>
+</Project>
+
+      buildTransitive/netcoreapp3.1/_._
+  microsoft.extensions.logging.abstractions 6.0.0
+      analyzers/dotnet/roslyn3.11/cs/Microsoft.Extensions.Logging.Generators.dll
+      analyzers/dotnet/roslyn4.0/cs/Microsoft.Extensions.Logging.Generators.dll
+      build/Microsoft.Extensions.Logging.Abstractions.targets
+<Project>
+  <Target Name="_Microsoft_Extensions_Logging_AbstractionsGatherAnalyzers">
+
+    <ItemGroup>
+      <_Microsoft_Extensions_Logging_AbstractionsAnalyzer Include="@(Analyzer)" Condition="'%(Analyzer.NuGetPackageId)' == 'Microsoft.Extensions.Logging.Abstractions'" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_Microsoft_Extensions_Logging_AbstractionsAnalyzerMultiTargeting" 
+          Condition="'$(SupportsRoslynComponentVersioning)' != 'true'" 
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_Microsoft_Extensions_Logging_AbstractionsGatherAnalyzers">
+
+    <ItemGroup>
+      <!-- Remove our analyzers targeting roslyn4.x -->
+      <Analyzer Remove="@(_Microsoft_Extensions_Logging_AbstractionsAnalyzer)"
+                Condition="$([System.String]::Copy('%(_Microsoft_Extensions_Logging_AbstractionsAnalyzer.Identity)').IndexOf('roslyn4')) &gt;= 0"/>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_Microsoft_Extensions_Logging_AbstractionsRemoveAnalyzers" 
+          Condition="'$(DisableMicrosoftExtensionsLoggingSourceGenerator)' == 'true'"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_Microsoft_Extensions_Logging_AbstractionsGatherAnalyzers">
+
+    <!-- Remove all our analyzers -->
+    <ItemGroup>
+      <Analyzer Remove="@(_Microsoft_Extensions_Logging_AbstractionsAnalyzer)" />
+    </ItemGroup>
+  </Target>
+</Project>
+
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.Logging.Abstractions.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_Logging_Abstractions_netcoreapp3_1">
+  <Target Name="NETStandardCompatError_Microsoft_Extensions_Logging_Abstractions_netcoreapp3_1"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Error Text="Microsoft.Extensions.Logging.Abstractions doesn't support $(TargetFramework). Consider updating your TargetFramework to netcoreapp3.1 or later." />
+  </Target>
+</Project>
+
+      buildTransitive/netcoreapp3.1/_._
+  microsoft.extensions.primitives 6.0.0
+      buildTransitive/netcoreapp2.0/Microsoft.Extensions.Primitives.targets
+<Project InitialTargets="NETStandardCompatError_Microsoft_Extensions_Primitives_netcoreapp3_1">
+  <Target Name="NETStandardCompatError_Microsoft_Extensions_Primitives_netcoreapp3_1"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Error Text="Microsoft.Extensions.Primitives doesn't support $(TargetFramework). Consider updating your TargetFramework to netcoreapp3.1 or later." />
+  </Target>
+</Project>
+
+      buildTransitive/netcoreapp3.1/_._
+  microsoft.net.test.sdk 17.11.1
+      build/net462/Microsoft.NET.Test.Sdk.props
+<!--
+ ***********************************************************************************************
+ Microsoft.NET.Test.Sdk.props
+ 
+ WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+           created a backup copy.  Incorrect changes to this file will make it
+           impossible to load or build your projects from the command-line or the IDE.
+ 
+ Copyright (c) .NET Foundation. All rights reserved. 
+ ***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <TestProject>true</TestProject>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>  
+ 
+</Project>
+
+      build/net462/Microsoft.NET.Test.Sdk.targets
+<!--
+ ***********************************************************************************************
+ Microsoft.NET.Test.Sdk.targets
+
+ WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+           created a backup copy.  Incorrect changes to this file will make it
+           impossible to load or build your projects from the command-line or the IDE.
+
+ Copyright (c) .NET Foundation. All rights reserved. 
+ ***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+     Generate config file for test project targeting .NET Framework. This config file has binding redirect which is needed at time of running tests.
+     Added below two lines because msbuild has following check:
+     https://github.com/Microsoft/msbuild/blob/dd5e8bc3f86ac98bd77d8971b00a6ad14f122f1a/src/XMakeTasks/Microsoft.Common.CurrentVersion.targets#L2027 
+   -->
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects Condition="'$(AutoGenerateBindingRedirects)' == ''">true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType Condition="'$(GenerateBindingRedirectsOutputType)' == ''">true</GenerateBindingRedirectsOutputType>
+  </PropertyGroup>
+
+</Project>
+
+      build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.cs
+      build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.fs
+      build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.vb
+      build/netcoreapp3.1/Microsoft.NET.Test.Sdk.props
+<!--
+ ***********************************************************************************************
+ Microsoft.NET.Test.Sdk.props
+ 
+ WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+           created a backup copy.  Incorrect changes to this file will make it
+           impossible to load or build your projects from the command-line or the IDE.
+ 
+ Copyright (c) .NET Foundation. All rights reserved. 
+ ***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <TestProject>true</TestProject>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>  
+ 
+</Project>
+
+      build/netcoreapp3.1/Microsoft.NET.Test.Sdk.targets
+<!--
+ ***********************************************************************************************
+ Microsoft.NET.Test.Sdk.targets
+
+ WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+           created a backup copy.  Incorrect changes to this file will make it
+           impossible to load or build your projects from the command-line or the IDE.
+
+ Copyright (c) .NET Foundation. All rights reserved. 
+ ***********************************************************************************************
+-->
+
+<Project InitialTargets="GenerateProgramFile" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    Output type for .NET Core test projects should be exe.
+    https://devdiv.visualstudio.com/DevDiv/_workitems?id=375688&_a=edit
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GeneratedProgramFile Condition="'$(GeneratedProgramFile)' == ''">$(MSBuildThisFileDirectory)Microsoft.NET.Test.Sdk.Program$(DefaultLanguageSourceExtension)</GeneratedProgramFile>
+    <GenerateProgramFile Condition="'$(GenerateProgramFile)' == ''">true</GenerateProgramFile>
+  </PropertyGroup>
+
+  <!--
+    ============================================================
+    GenerateProgramFile
+    Generates Program file which contains the Main entry point
+    ============================================================
+  -->
+  <Target Name="GenerateProgramFile"
+          Condition="'$(GenerateProgramFile)' == 'true'">
+
+    <ItemGroup Condition="'$(Language)' == 'VB' or '$(Language)' == 'C#'">
+      <RemoveExistingMicrosoftNETTestSdkProgram Include="@(Compile)" Condition="'%(FileName)' == 'Microsoft.NET.Test.Sdk.Program'" />
+      <Compile Remove="@(RemoveExistingMicrosoftNETTestSdkProgram)" />
+      <Compile Include="$(GeneratedProgramFile)"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Language)' == 'F#'">
+      <ProgramCompiles Include="@(Compile)" Condition="'%(Identity)' == 'Program.fs'" />
+      <CompileAfter Include="$(GeneratedProgramFile)" Condition="@(ProgramCompiles-&gt;Count()) == 0" />
+    </ItemGroup>
+
+    <Warning Condition="@(ProgramCompiles-&gt;Count()) != 0" Text="A 'Program.fs' file can be automatically generated for F# .NET Core test projects. To fix this warning, either delete the file from the project, or set the &lt;GenerateProgramFile&gt; property to 'false'." />
+
+  </Target>
+
+</Project>
+
+      buildMultiTargeting/Microsoft.NET.Test.Sdk.props
+<!--
+ ***********************************************************************************************
+ Microsoft.NET.Test.Sdk.props
+ 
+ WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+           created a backup copy.  Incorrect changes to this file will make it
+           impossible to load or build your projects from the command-line or the IDE.
+ 
+ Copyright (c) .NET Foundation. All rights reserved. 
+ ***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <TestProject>true</TestProject>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>  
+ 
+</Project>
+
+  microsoft.testplatform.testhost 17.11.1
+      build/netcoreapp3.1/Microsoft.TestPlatform.TestHost.props
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Condition=" ('$(Platform)' == 'x86' OR '$(PlatformTarget)' == 'x86') AND '$(OS)' == 'Windows_NT'">
+    <Content Include="$(MSBuildThisFileDirectory)x86\testhost.x86.exe">
+      <Link>testhost.x86.exe</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)x86\testhost.x86.dll">
+      <Link>testhost.x86.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </Content>
+  </ItemGroup>
+  <ItemGroup Condition=" ('$(Platform)'!= 'x86' AND '$(PlatformTarget)' != 'x86') AND '$(OS)' == 'Windows_NT'" >
+    <Content Include="$(MSBuildThisFileDirectory)x64\testhost.exe">
+      <Link>testhost.exe</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)x64\testhost.dll">
+      <Link>testhost.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </Content>
+  </ItemGroup>
+</Project>
+      build/netcoreapp3.1/x64/testhost.dll
+      build/netcoreapp3.1/x64/testhost.exe
+      build/netcoreapp3.1/x86/testhost.x86.dll
+      build/netcoreapp3.1/x86/testhost.x86.exe
+  polysharp 1.14.1
+      analyzers/dotnet/cs/PolySharp.SourceGenerators.dll
+      build/PolySharp.targets
+<Project>
+
+  <!-- Get the analyzer from the PolySharp NuGet package -->
+  <Target Name="_PolySharpGatherAnalyzers">
+    <ItemGroup>
+      <_PolySharpAnalyzer Include="@(Analyzer)" Condition="'%(Analyzer.NuGetPackageId)' == 'PolySharp'" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Remove the analyzer if using Roslyn < 4.3 (PolySharp's generators require Roslyn 4.3) -->
+  <Target Name="_PolySharpRemoveAnalyzersForRoslyn3"
+          Condition="'$(CSharpCoreTargetsPath)' != ''"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_PolySharpGatherAnalyzers">
+
+    <!--
+      Use the CSharpCoreTargetsPath property to find the version of the compiler we are using. This is the same mechanism
+      MSBuild uses to find the compiler. We could check the assembly version for any compiler assembly (since they all have
+      the same version) but Microsoft.Build.Tasks.CodeAnalysis.dll is where MSBuild loads the compiler tasks from so if
+      someone is getting creative with msbuild tasks/targets this is the "most correct" assembly to check.
+    -->
+    <GetAssemblyIdentity AssemblyFiles="$([System.IO.Path]::Combine(`$([System.IO.Path]::GetDirectoryName($(CSharpCoreTargetsPath)))`,`Microsoft.Build.Tasks.CodeAnalysis.dll`))">
+      <Output TaskParameter="Assemblies" ItemName="PolySharpCurrentCompilerAssemblyIdentity"/>
+    </GetAssemblyIdentity>
+
+    <PropertyGroup>
+
+      <!-- Transform the resulting item from GetAssemblyIdentity into a property representing its assembly version -->
+      <PolySharpCurrentCompilerVersion>@(PolySharpCurrentCompilerAssemblyIdentity->'%(Version)')</PolySharpCurrentCompilerVersion>
+
+      <!-- The CurrentCompilerVersionIsNotNewEnough property can now be defined based on the Roslyn assembly version -->
+      <PolySharpCurrentCompilerVersionIsNotNewEnough Condition="$([MSBuild]::VersionLessThan($(PolySharpCurrentCompilerVersion), 4.3))">true</PolySharpCurrentCompilerVersionIsNotNewEnough>
+    </PropertyGroup>
+
+    <!-- If the Roslyn version is < 4.3, disable the source generators -->
+    <ItemGroup Condition ="'$(PolySharpCurrentCompilerVersionIsNotNewEnough)' == 'true'">
+      <Analyzer Remove="@(_PolySharpAnalyzer)"/>
+    </ItemGroup>
+
+    <!--
+      If the source generators are disabled, also emit an error. This would've been produced by MSBuild itself as well, but
+      emitting this manually lets us customize the message to inform developers as to why exactly the generators have been
+      disabled, and that PolySharp will not work at all unless a more up to date IDE or compiler version are used.
+    -->
+    <Error Condition ="'$(PolySharpCurrentCompilerVersionIsNotNewEnough)' == 'true'"
+           Code="POLYSPCFG0001"
+           Text="The PolySharp source generators have been disabled on the current configuration, as they need Roslyn 4.3 in order to work. PolySharp requires the source generators to run in order to generate polyfills, so the library cannot be used without a more up to date IDE (eg. VS 2022 17.3 or greater) or .NET SDK version (.NET 6.0.400 SDK or greater)."/>  
+  </Target>
+  
+  <!-- Remove the analyzer if Roslyn is missing -->
+  <Target Name="_PolySharpRemoveAnalyzersForRosynNotFound"
+          Condition="'$(CSharpCoreTargetsPath)' == ''"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_PolySharpGatherAnalyzers">
+
+    <!-- If no Roslyn assembly could be found, just remove the analyzer without emitting a warning -->
+    <ItemGroup>
+      <Analyzer Remove="@(_PolySharpAnalyzer)"/>
+    </ItemGroup>
+  </Target>
+
+  <!--
+    Inform the user if packages.config is used (as the analyzers and the source generators
+    won't work at all). Since packages.config can only be used with legacy-style projects,
+    the entire package can be skipped if an SDK-style project is used.
+  -->
+  <Target Name="_PolySharpWarnForPackagesConfigUse"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          Condition="'$(UsingMicrosoftNetSDK)' != 'true'">
+
+    <!--
+      Check whether packages are being restored via packages.config, by reading the associated MSBuild property.
+      This happens when either the project style is using packages.config, or when explicitly requested.
+      See https://learn.microsoft.com/nuget/reference/msbuild-targets#restoring-packagereference-and-packagesconfig-projects-with-msbuild.
+    -->
+    <PropertyGroup>
+      <PolySharpIsTargetProjectUsingPackagesConfig Condition ="'$(RestorePackagesConfig)' == 'true' OR '$(RestoreProjectStyle)' == 'PackagesConfig'">true</PolySharpIsTargetProjectUsingPackagesConfig>
+    </PropertyGroup>
+
+    <!--
+      If no packages.config properties are set, also try to manually find the packages.config file.
+      This will be in the @(None) elements, if present. Doing so makes sure this works in builds as
+      well, since the implicit targets populating the properties above only run when restoring.
+      Since the packages.config file will always be in the root of the project, if present, we will
+      match with the full item spec (see https://learn.microsoft.com/nuget/reference/packages-config).
+    -->
+    <FindInList ItemSpecToFind="packages.config"
+                List="@(None)"
+                MatchFileNameOnly="false"
+                Condition="'$(PolySharpIsTargetProjectUsingPackagesConfig)' != 'true'">
+      <Output TaskParameter="ItemFound" PropertyName="PolySharpPackagesConfigFile"/>
+    </FindInList>
+
+    <!-- Make sure to update the MSBuild property if the above task did find something -->
+    <PropertyGroup>
+      <PolySharpIsTargetProjectUsingPackagesConfig Condition ="'$(PolySharpPackagesConfigFile)' == 'packages.config'">true</PolySharpIsTargetProjectUsingPackagesConfig>
+    </PropertyGroup>
+
+    <!-- Emit a warning in case packages.config is used -->
+    <Warning Condition ="'$(PolySharpIsTargetProjectUsingPackagesConfig)' == 'true'"
+             Code="POLYSPCFG0002"
+             Text="The PolySharp source generators might not be loaded correctly, as the current project is using the packages.config setup to restore NuGet packages. Source generators require PackageReference to be used (either in a legacy-style or SDK-style .csproj project, both are supported as long as PackageReference is used)."/>
+  </Target>
+
+  <!-- Configure the MSBuild properties used to control PolySharp's generator -->
+  <Target Name="ConfigurePolySharpMSBuildProperties"
+          BeforeTargets="PrepareForBuild">
+
+    <!-- Mark the MSBuild properties to configure the generator visible for the compiler, so the analyzer can see them -->
+    <ItemGroup>
+      <CompilerVisibleProperty Include="PolySharpUsePublicAccessibilityForGeneratedTypes"/>
+      <CompilerVisibleProperty Include="PolySharpIncludeRuntimeSupportedAttributes"/>
+      <CompilerVisibleProperty Include="PolySharpUseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute"/>
+      <CompilerVisibleProperty Include="PolySharpExcludeGeneratedTypes"/>
+      <CompilerVisibleProperty Include="PolySharpIncludeGeneratedTypes"/>
+      <CompilerVisibleProperty Include="PolySharpExcludeTypeForwardedToDeclarations"/>
+    </ItemGroup>
+
+    <!-- Adds necessary fixups for multiline properties (replaces ';' characters with ',' and strip new lines) -->
+    <PropertyGroup>
+      <PolySharpExcludeGeneratedTypes>$([System.Text.RegularExpressions.Regex]::Replace($(PolySharpExcludeGeneratedTypes.Replace(';', ',')), '[\r\n]', ''))</PolySharpExcludeGeneratedTypes>
+      <PolySharpIncludeGeneratedTypes>$([System.Text.RegularExpressions.Regex]::Replace($(PolySharpIncludeGeneratedTypes.Replace(';', ',')), '[\r\n]', ''))</PolySharpIncludeGeneratedTypes>
+    </PropertyGroup>
+  </Target>
+
+</Project>
+
+      buildTransitive/PolySharp.targets
+<Project>
+
+  <!-- Get the analyzer from the PolySharp NuGet package -->
+  <Target Name="_PolySharpGatherAnalyzers">
+    <ItemGroup>
+      <_PolySharpAnalyzer Include="@(Analyzer)" Condition="'%(Analyzer.NuGetPackageId)' == 'PolySharp'" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Remove the analyzer if using Roslyn < 4.3 (PolySharp's generators require Roslyn 4.3) -->
+  <Target Name="_PolySharpRemoveAnalyzersForRoslyn3"
+          Condition="'$(CSharpCoreTargetsPath)' != ''"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_PolySharpGatherAnalyzers">
+
+    <!--
+      Use the CSharpCoreTargetsPath property to find the version of the compiler we are using. This is the same mechanism
+      MSBuild uses to find the compiler. We could check the assembly version for any compiler assembly (since they all have
+      the same version) but Microsoft.Build.Tasks.CodeAnalysis.dll is where MSBuild loads the compiler tasks from so if
+      someone is getting creative with msbuild tasks/targets this is the "most correct" assembly to check.
+    -->
+    <GetAssemblyIdentity AssemblyFiles="$([System.IO.Path]::Combine(`$([System.IO.Path]::GetDirectoryName($(CSharpCoreTargetsPath)))`,`Microsoft.Build.Tasks.CodeAnalysis.dll`))">
+      <Output TaskParameter="Assemblies" ItemName="PolySharpCurrentCompilerAssemblyIdentity"/>
+    </GetAssemblyIdentity>
+
+    <PropertyGroup>
+
+      <!-- Transform the resulting item from GetAssemblyIdentity into a property representing its assembly version -->
+      <PolySharpCurrentCompilerVersion>@(PolySharpCurrentCompilerAssemblyIdentity->'%(Version)')</PolySharpCurrentCompilerVersion>
+
+      <!-- The CurrentCompilerVersionIsNotNewEnough property can now be defined based on the Roslyn assembly version -->
+      <PolySharpCurrentCompilerVersionIsNotNewEnough Condition="$([MSBuild]::VersionLessThan($(PolySharpCurrentCompilerVersion), 4.3))">true</PolySharpCurrentCompilerVersionIsNotNewEnough>
+    </PropertyGroup>
+
+    <!-- If the Roslyn version is < 4.3, disable the source generators -->
+    <ItemGroup Condition ="'$(PolySharpCurrentCompilerVersionIsNotNewEnough)' == 'true'">
+      <Analyzer Remove="@(_PolySharpAnalyzer)"/>
+    </ItemGroup>
+
+    <!--
+      If the source generators are disabled, also emit an error. This would've been produced by MSBuild itself as well, but
+      emitting this manually lets us customize the message to inform developers as to why exactly the generators have been
+      disabled, and that PolySharp will not work at all unless a more up to date IDE or compiler version are used.
+    -->
+    <Error Condition ="'$(PolySharpCurrentCompilerVersionIsNotNewEnough)' == 'true'"
+           Code="POLYSPCFG0001"
+           Text="The PolySharp source generators have been disabled on the current configuration, as they need Roslyn 4.3 in order to work. PolySharp requires the source generators to run in order to generate polyfills, so the library cannot be used without a more up to date IDE (eg. VS 2022 17.3 or greater) or .NET SDK version (.NET 6.0.400 SDK or greater)."/>  
+  </Target>
+  
+  <!-- Remove the analyzer if Roslyn is missing -->
+  <Target Name="_PolySharpRemoveAnalyzersForRosynNotFound"
+          Condition="'$(CSharpCoreTargetsPath)' == ''"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_PolySharpGatherAnalyzers">
+
+    <!-- If no Roslyn assembly could be found, just remove the analyzer without emitting a warning -->
+    <ItemGroup>
+      <Analyzer Remove="@(_PolySharpAnalyzer)"/>
+    </ItemGroup>
+  </Target>
+
+  <!--
+    Inform the user if packages.config is used (as the analyzers and the source generators
+    won't work at all). Since packages.config can only be used with legacy-style projects,
+    the entire package can be skipped if an SDK-style project is used.
+  -->
+  <Target Name="_PolySharpWarnForPackagesConfigUse"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          Condition="'$(UsingMicrosoftNetSDK)' != 'true'">
+
+    <!--
+      Check whether packages are being restored via packages.config, by reading the associated MSBuild property.
+      This happens when either the project style is using packages.config, or when explicitly requested.
+      See https://learn.microsoft.com/nuget/reference/msbuild-targets#restoring-packagereference-and-packagesconfig-projects-with-msbuild.
+    -->
+    <PropertyGroup>
+      <PolySharpIsTargetProjectUsingPackagesConfig Condition ="'$(RestorePackagesConfig)' == 'true' OR '$(RestoreProjectStyle)' == 'PackagesConfig'">true</PolySharpIsTargetProjectUsingPackagesConfig>
+    </PropertyGroup>
+
+    <!--
+      If no packages.config properties are set, also try to manually find the packages.config file.
+      This will be in the @(None) elements, if present. Doing so makes sure this works in builds as
+      well, since the implicit targets populating the properties above only run when restoring.
+      Since the packages.config file will always be in the root of the project, if present, we will
+      match with the full item spec (see https://learn.microsoft.com/nuget/reference/packages-config).
+    -->
+    <FindInList ItemSpecToFind="packages.config"
+                List="@(None)"
+                MatchFileNameOnly="false"
+                Condition="'$(PolySharpIsTargetProjectUsingPackagesConfig)' != 'true'">
+      <Output TaskParameter="ItemFound" PropertyName="PolySharpPackagesConfigFile"/>
+    </FindInList>
+
+    <!-- Make sure to update the MSBuild property if the above task did find something -->
+    <PropertyGroup>
+      <PolySharpIsTargetProjectUsingPackagesConfig Condition ="'$(PolySharpPackagesConfigFile)' == 'packages.config'">true</PolySharpIsTargetProjectUsingPackagesConfig>
+    </PropertyGroup>
+
+    <!-- Emit a warning in case packages.config is used -->
+    <Warning Condition ="'$(PolySharpIsTargetProjectUsingPackagesConfig)' == 'true'"
+             Code="POLYSPCFG0002"
+             Text="The PolySharp source generators might not be loaded correctly, as the current project is using the packages.config setup to restore NuGet packages. Source generators require PackageReference to be used (either in a legacy-style or SDK-style .csproj project, both are supported as long as PackageReference is used)."/>
+  </Target>
+
+  <!-- Configure the MSBuild properties used to control PolySharp's generator -->
+  <Target Name="ConfigurePolySharpMSBuildProperties"
+          BeforeTargets="PrepareForBuild">
+
+    <!-- Mark the MSBuild properties to configure the generator visible for the compiler, so the analyzer can see them -->
+    <ItemGroup>
+      <CompilerVisibleProperty Include="PolySharpUsePublicAccessibilityForGeneratedTypes"/>
+      <CompilerVisibleProperty Include="PolySharpIncludeRuntimeSupportedAttributes"/>
+      <CompilerVisibleProperty Include="PolySharpUseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute"/>
+      <CompilerVisibleProperty Include="PolySharpExcludeGeneratedTypes"/>
+      <CompilerVisibleProperty Include="PolySharpIncludeGeneratedTypes"/>
+      <CompilerVisibleProperty Include="PolySharpExcludeTypeForwardedToDeclarations"/>
+    </ItemGroup>
+
+    <!-- Adds necessary fixups for multiline properties (replaces ';' characters with ',' and strip new lines) -->
+    <PropertyGroup>
+      <PolySharpExcludeGeneratedTypes>$([System.Text.RegularExpressions.Regex]::Replace($(PolySharpExcludeGeneratedTypes.Replace(';', ',')), '[\r\n]', ''))</PolySharpExcludeGeneratedTypes>
+      <PolySharpIncludeGeneratedTypes>$([System.Text.RegularExpressions.Regex]::Replace($(PolySharpIncludeGeneratedTypes.Replace(';', ',')), '[\r\n]', ''))</PolySharpIncludeGeneratedTypes>
+    </PropertyGroup>
+  </Target>
+
+</Project>
+
+  polysharp 1.15.0
+      analyzers/dotnet/cs/PolySharp.SourceGenerators.dll
+      build/PolySharp.targets
+<Project>
+
+  <!-- Get the analyzer from the PolySharp NuGet package -->
+  <Target Name="_PolySharpGatherAnalyzers">
+    <ItemGroup>
+      <_PolySharpAnalyzer Include="@(Analyzer)" Condition="'%(Analyzer.NuGetPackageId)' == 'PolySharp'" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Remove the analyzer if using Roslyn < 4.3 (PolySharp's generators require Roslyn 4.3) -->
+  <Target Name="_PolySharpRemoveAnalyzersForRoslyn3"
+          Condition="'$(CSharpCoreTargetsPath)' != ''"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_PolySharpGatherAnalyzers">
+
+    <!--
+      Use the CSharpCoreTargetsPath property to find the version of the compiler we are using. This is the same mechanism
+      MSBuild uses to find the compiler. We could check the assembly version for any compiler assembly (since they all have
+      the same version) but Microsoft.Build.Tasks.CodeAnalysis.dll is where MSBuild loads the compiler tasks from so if
+      someone is getting creative with msbuild tasks/targets this is the "most correct" assembly to check.
+    -->
+    <GetAssemblyIdentity AssemblyFiles="$([System.IO.Path]::Combine(`$([System.IO.Path]::GetDirectoryName($(CSharpCoreTargetsPath)))`,`Microsoft.Build.Tasks.CodeAnalysis.dll`))">
+      <Output TaskParameter="Assemblies" ItemName="PolySharpCurrentCompilerAssemblyIdentity"/>
+    </GetAssemblyIdentity>
+
+    <PropertyGroup>
+
+      <!-- Transform the resulting item from GetAssemblyIdentity into a property representing its assembly version -->
+      <PolySharpCurrentCompilerVersion>@(PolySharpCurrentCompilerAssemblyIdentity->'%(Version)')</PolySharpCurrentCompilerVersion>
+
+      <!-- The CurrentCompilerVersionIsNotNewEnough property can now be defined based on the Roslyn assembly version -->
+      <PolySharpCurrentCompilerVersionIsNotNewEnough Condition="$([MSBuild]::VersionLessThan($(PolySharpCurrentCompilerVersion), 4.3))">true</PolySharpCurrentCompilerVersionIsNotNewEnough>
+    </PropertyGroup>
+
+    <!-- If the Roslyn version is < 4.3, disable the source generators -->
+    <ItemGroup Condition ="'$(PolySharpCurrentCompilerVersionIsNotNewEnough)' == 'true'">
+      <Analyzer Remove="@(_PolySharpAnalyzer)"/>
+    </ItemGroup>
+
+    <!--
+      If the source generators are disabled, also emit an error. This would've been produced by MSBuild itself as well, but
+      emitting this manually lets us customize the message to inform developers as to why exactly the generators have been
+      disabled, and that PolySharp will not work at all unless a more up to date IDE or compiler version are used.
+    -->
+    <Error Condition ="'$(PolySharpCurrentCompilerVersionIsNotNewEnough)' == 'true'"
+           Code="POLYSPCFG0001"
+           Text="The PolySharp source generators have been disabled on the current configuration, as they need Roslyn 4.3 in order to work. PolySharp requires the source generators to run in order to generate polyfills, so the library cannot be used without a more up to date IDE (eg. VS 2022 17.3 or greater) or .NET SDK version (.NET 6.0.400 SDK or greater)."/>  
+  </Target>
+  
+  <!-- Remove the analyzer if Roslyn is missing -->
+  <Target Name="_PolySharpRemoveAnalyzersForRosynNotFound"
+          Condition="'$(CSharpCoreTargetsPath)' == ''"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_PolySharpGatherAnalyzers">
+
+    <!-- If no Roslyn assembly could be found, just remove the analyzer without emitting a warning -->
+    <ItemGroup>
+      <Analyzer Remove="@(_PolySharpAnalyzer)"/>
+    </ItemGroup>
+  </Target>
+
+  <!--
+    Inform the user if packages.config is used (as the analyzers and the source generators
+    won't work at all). Since packages.config can only be used with legacy-style projects,
+    the entire package can be skipped if an SDK-style project is used.
+  -->
+  <Target Name="_PolySharpWarnForPackagesConfigUse"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          Condition="'$(UsingMicrosoftNetSDK)' != 'true'">
+
+    <!--
+      Check whether packages are being restored via packages.config, by reading the associated MSBuild property.
+      This happens when either the project style is using packages.config, or when explicitly requested.
+      See https://learn.microsoft.com/nuget/reference/msbuild-targets#restoring-packagereference-and-packagesconfig-projects-with-msbuild.
+    -->
+    <PropertyGroup>
+      <PolySharpIsTargetProjectUsingPackagesConfig Condition ="'$(RestorePackagesConfig)' == 'true' OR '$(RestoreProjectStyle)' == 'PackagesConfig'">true</PolySharpIsTargetProjectUsingPackagesConfig>
+    </PropertyGroup>
+
+    <!--
+      If no packages.config properties are set, also try to manually find the packages.config file.
+      This will be in the @(None) elements, if present. Doing so makes sure this works in builds as
+      well, since the implicit targets populating the properties above only run when restoring.
+      Since the packages.config file will always be in the root of the project, if present, we will
+      match with the full item spec (see https://learn.microsoft.com/nuget/reference/packages-config).
+    -->
+    <FindInList ItemSpecToFind="packages.config"
+                List="@(None)"
+                MatchFileNameOnly="false"
+                Condition="'$(PolySharpIsTargetProjectUsingPackagesConfig)' != 'true'">
+      <Output TaskParameter="ItemFound" PropertyName="PolySharpPackagesConfigFile"/>
+    </FindInList>
+
+    <!-- Make sure to update the MSBuild property if the above task did find something -->
+    <PropertyGroup>
+      <PolySharpIsTargetProjectUsingPackagesConfig Condition ="'$(PolySharpPackagesConfigFile)' == 'packages.config'">true</PolySharpIsTargetProjectUsingPackagesConfig>
+    </PropertyGroup>
+
+    <!-- Emit a warning in case packages.config is used -->
+    <Warning Condition ="'$(PolySharpIsTargetProjectUsingPackagesConfig)' == 'true'"
+             Code="POLYSPCFG0002"
+             Text="The PolySharp source generators might not be loaded correctly, as the current project is using the packages.config setup to restore NuGet packages. Source generators require PackageReference to be used (either in a legacy-style or SDK-style .csproj project, both are supported as long as PackageReference is used)."/>
+  </Target>
+
+  <!-- Configure the MSBuild properties used to control PolySharp's generator -->
+  <Target Name="ConfigurePolySharpMSBuildProperties"
+          BeforeTargets="PrepareForBuild">
+
+    <!-- Mark the MSBuild properties to configure the generator visible for the compiler, so the analyzer can see them -->
+    <ItemGroup>
+      <CompilerVisibleProperty Include="PolySharpUsePublicAccessibilityForGeneratedTypes"/>
+      <CompilerVisibleProperty Include="PolySharpIncludeRuntimeSupportedAttributes"/>
+      <CompilerVisibleProperty Include="PolySharpUseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute"/>
+      <CompilerVisibleProperty Include="PolySharpExcludeGeneratedTypes"/>
+      <CompilerVisibleProperty Include="PolySharpIncludeGeneratedTypes"/>
+      <CompilerVisibleProperty Include="PolySharpExcludeTypeForwardedToDeclarations"/>
+    </ItemGroup>
+
+    <!-- Adds necessary fixups for multiline properties (replaces ';' characters with ',' and strip new lines) -->
+    <PropertyGroup>
+      <PolySharpExcludeGeneratedTypes>$([System.Text.RegularExpressions.Regex]::Replace($(PolySharpExcludeGeneratedTypes.Replace(';', ',')), '[\r\n]', ''))</PolySharpExcludeGeneratedTypes>
+      <PolySharpIncludeGeneratedTypes>$([System.Text.RegularExpressions.Regex]::Replace($(PolySharpIncludeGeneratedTypes.Replace(';', ',')), '[\r\n]', ''))</PolySharpIncludeGeneratedTypes>
+    </PropertyGroup>
+  </Target>
+
+</Project>
+
+      buildTransitive/PolySharp.targets
+<Project>
+
+  <!-- Get the analyzer from the PolySharp NuGet package -->
+  <Target Name="_PolySharpGatherAnalyzers">
+    <ItemGroup>
+      <_PolySharpAnalyzer Include="@(Analyzer)" Condition="'%(Analyzer.NuGetPackageId)' == 'PolySharp'" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Remove the analyzer if using Roslyn < 4.3 (PolySharp's generators require Roslyn 4.3) -->
+  <Target Name="_PolySharpRemoveAnalyzersForRoslyn3"
+          Condition="'$(CSharpCoreTargetsPath)' != ''"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_PolySharpGatherAnalyzers">
+
+    <!--
+      Use the CSharpCoreTargetsPath property to find the version of the compiler we are using. This is the same mechanism
+      MSBuild uses to find the compiler. We could check the assembly version for any compiler assembly (since they all have
+      the same version) but Microsoft.Build.Tasks.CodeAnalysis.dll is where MSBuild loads the compiler tasks from so if
+      someone is getting creative with msbuild tasks/targets this is the "most correct" assembly to check.
+    -->
+    <GetAssemblyIdentity AssemblyFiles="$([System.IO.Path]::Combine(`$([System.IO.Path]::GetDirectoryName($(CSharpCoreTargetsPath)))`,`Microsoft.Build.Tasks.CodeAnalysis.dll`))">
+      <Output TaskParameter="Assemblies" ItemName="PolySharpCurrentCompilerAssemblyIdentity"/>
+    </GetAssemblyIdentity>
+
+    <PropertyGroup>
+
+      <!-- Transform the resulting item from GetAssemblyIdentity into a property representing its assembly version -->
+      <PolySharpCurrentCompilerVersion>@(PolySharpCurrentCompilerAssemblyIdentity->'%(Version)')</PolySharpCurrentCompilerVersion>
+
+      <!-- The CurrentCompilerVersionIsNotNewEnough property can now be defined based on the Roslyn assembly version -->
+      <PolySharpCurrentCompilerVersionIsNotNewEnough Condition="$([MSBuild]::VersionLessThan($(PolySharpCurrentCompilerVersion), 4.3))">true</PolySharpCurrentCompilerVersionIsNotNewEnough>
+    </PropertyGroup>
+
+    <!-- If the Roslyn version is < 4.3, disable the source generators -->
+    <ItemGroup Condition ="'$(PolySharpCurrentCompilerVersionIsNotNewEnough)' == 'true'">
+      <Analyzer Remove="@(_PolySharpAnalyzer)"/>
+    </ItemGroup>
+
+    <!--
+      If the source generators are disabled, also emit an error. This would've been produced by MSBuild itself as well, but
+      emitting this manually lets us customize the message to inform developers as to why exactly the generators have been
+      disabled, and that PolySharp will not work at all unless a more up to date IDE or compiler version are used.
+    -->
+    <Error Condition ="'$(PolySharpCurrentCompilerVersionIsNotNewEnough)' == 'true'"
+           Code="POLYSPCFG0001"
+           Text="The PolySharp source generators have been disabled on the current configuration, as they need Roslyn 4.3 in order to work. PolySharp requires the source generators to run in order to generate polyfills, so the library cannot be used without a more up to date IDE (eg. VS 2022 17.3 or greater) or .NET SDK version (.NET 6.0.400 SDK or greater)."/>  
+  </Target>
+  
+  <!-- Remove the analyzer if Roslyn is missing -->
+  <Target Name="_PolySharpRemoveAnalyzersForRosynNotFound"
+          Condition="'$(CSharpCoreTargetsPath)' == ''"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_PolySharpGatherAnalyzers">
+
+    <!-- If no Roslyn assembly could be found, just remove the analyzer without emitting a warning -->
+    <ItemGroup>
+      <Analyzer Remove="@(_PolySharpAnalyzer)"/>
+    </ItemGroup>
+  </Target>
+
+  <!--
+    Inform the user if packages.config is used (as the analyzers and the source generators
+    won't work at all). Since packages.config can only be used with legacy-style projects,
+    the entire package can be skipped if an SDK-style project is used.
+  -->
+  <Target Name="_PolySharpWarnForPackagesConfigUse"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          Condition="'$(UsingMicrosoftNetSDK)' != 'true'">
+
+    <!--
+      Check whether packages are being restored via packages.config, by reading the associated MSBuild property.
+      This happens when either the project style is using packages.config, or when explicitly requested.
+      See https://learn.microsoft.com/nuget/reference/msbuild-targets#restoring-packagereference-and-packagesconfig-projects-with-msbuild.
+    -->
+    <PropertyGroup>
+      <PolySharpIsTargetProjectUsingPackagesConfig Condition ="'$(RestorePackagesConfig)' == 'true' OR '$(RestoreProjectStyle)' == 'PackagesConfig'">true</PolySharpIsTargetProjectUsingPackagesConfig>
+    </PropertyGroup>
+
+    <!--
+      If no packages.config properties are set, also try to manually find the packages.config file.
+      This will be in the @(None) elements, if present. Doing so makes sure this works in builds as
+      well, since the implicit targets populating the properties above only run when restoring.
+      Since the packages.config file will always be in the root of the project, if present, we will
+      match with the full item spec (see https://learn.microsoft.com/nuget/reference/packages-config).
+    -->
+    <FindInList ItemSpecToFind="packages.config"
+                List="@(None)"
+                MatchFileNameOnly="false"
+                Condition="'$(PolySharpIsTargetProjectUsingPackagesConfig)' != 'true'">
+      <Output TaskParameter="ItemFound" PropertyName="PolySharpPackagesConfigFile"/>
+    </FindInList>
+
+    <!-- Make sure to update the MSBuild property if the above task did find something -->
+    <PropertyGroup>
+      <PolySharpIsTargetProjectUsingPackagesConfig Condition ="'$(PolySharpPackagesConfigFile)' == 'packages.config'">true</PolySharpIsTargetProjectUsingPackagesConfig>
+    </PropertyGroup>
+
+    <!-- Emit a warning in case packages.config is used -->
+    <Warning Condition ="'$(PolySharpIsTargetProjectUsingPackagesConfig)' == 'true'"
+             Code="POLYSPCFG0002"
+             Text="The PolySharp source generators might not be loaded correctly, as the current project is using the packages.config setup to restore NuGet packages. Source generators require PackageReference to be used (either in a legacy-style or SDK-style .csproj project, both are supported as long as PackageReference is used)."/>
+  </Target>
+
+  <!-- Configure the MSBuild properties used to control PolySharp's generator -->
+  <Target Name="ConfigurePolySharpMSBuildProperties"
+          BeforeTargets="PrepareForBuild">
+
+    <!-- Mark the MSBuild properties to configure the generator visible for the compiler, so the analyzer can see them -->
+    <ItemGroup>
+      <CompilerVisibleProperty Include="PolySharpUsePublicAccessibilityForGeneratedTypes"/>
+      <CompilerVisibleProperty Include="PolySharpIncludeRuntimeSupportedAttributes"/>
+      <CompilerVisibleProperty Include="PolySharpUseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute"/>
+      <CompilerVisibleProperty Include="PolySharpExcludeGeneratedTypes"/>
+      <CompilerVisibleProperty Include="PolySharpIncludeGeneratedTypes"/>
+      <CompilerVisibleProperty Include="PolySharpExcludeTypeForwardedToDeclarations"/>
+    </ItemGroup>
+
+    <!-- Adds necessary fixups for multiline properties (replaces ';' characters with ',' and strip new lines) -->
+    <PropertyGroup>
+      <PolySharpExcludeGeneratedTypes>$([System.Text.RegularExpressions.Regex]::Replace($(PolySharpExcludeGeneratedTypes.Replace(';', ',')), '[\r\n]', ''))</PolySharpExcludeGeneratedTypes>
+      <PolySharpIncludeGeneratedTypes>$([System.Text.RegularExpressions.Regex]::Replace($(PolySharpIncludeGeneratedTypes.Replace(';', ',')), '[\r\n]', ''))</PolySharpIncludeGeneratedTypes>
+    </PropertyGroup>
+  </Target>
+
+</Project>
+
+  shouldly 4.2.1
+      buildTransitive/Shouldly.targets
+<Project>
+    <UsingTask TaskName="SetEnvVar" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)/Microsoft.Build.Tasks.Core.dll" >
+        <ParameterGroup>
+            <EnvName ParameterType="System.String" Required="true" />
+            <EnvValue ParameterType="System.String" Required="true" />
+        </ParameterGroup>
+        <Task>
+            <Using Namespace="System" />
+            <Code Type="Fragment" Language="cs"><![CDATA[
+                System.Environment.SetEnvironmentVariable(EnvName, EnvValue);
+            ]]></Code>
+        </Task>
+    </UsingTask>
+    
+    <!--
+        This target is used to capture the PathMap value when building the project. The PathMap is used by Shouldly to map paths
+        in stack traces to the source files. The PathMap is written to a file and read by the SetShouldlyPathMaps target.
+        When VSTestNoBuild is not true, then VSTest has inititiated the build so the SetShouldlyPathMaps target has already started,
+        so we need to set the SHOULDLY_SOURCE_PATH_MAP environment variable here.
+    -->
+    <Target Name="CapturePathMapsForShouldly" BeforeTargets="CoreCompile" DependsOnTargets="_SetPathMapFromSourceRoots" Condition=" '$(DisableShouldlyPathMaps)' != 'true' AND '$(DeterministicSourcePaths)' == 'true' " >
+        <PropertyGroup>
+            <_ShouldlyPathMapsFilePath>$([MSBuild]::EnsureTrailingSlash('$(OutputPath)'))ShouldlyPathMaps_$(AssemblyName)</_ShouldlyPathMapsFilePath>
+        </PropertyGroup>
+        <WriteLinesToFile File="$(_ShouldlyPathMapsFilePath)" Lines="$(PathMap)" Overwrite="true" Encoding="Unicode" Condition=" '$(PathMap)' != '' " WriteOnlyWhenDifferent="true" />
+        <ItemGroup>
+            <FileWrites Include="$(_ShouldlyPathMapsFilePath)" Condition=" '$(PathMap)' != '' " />
+        </ItemGroup>
+        <SetEnvVar EnvName="SHOULDLY_SOURCE_PATH_MAP" EnvValue="$(PathMap)" Condition=" '$(VSTestNoBuild)' != 'true' " />
+    </Target>
+    
+    <!--
+        This target is used to set the SHOULDLY_SOURCE_PATH_MAP environment variable when running tests with VSTestNoBuild=true.
+        This is necessary because the VSTest task does not run the CoreCompile target, so the PathMap is not set.    
+    -->
+    <Target Name="SetShouldlyPathMaps" BeforeTargets="VSTest" Condition=" '$(DisableShouldlyPathMaps)' != 'true' AND '$(VSTestNoBuild)' == 'true' ">
+        <PropertyGroup>
+            <_ShouldlyPathMapsFilePath>$([MSBuild]::EnsureTrailingSlash('$(OutputPath)'))ShouldlyPathMaps_$(AssemblyName)</_ShouldlyPathMapsFilePath>
+        </PropertyGroup>
+        <ReadLinesFromFile File="$(_ShouldlyPathMapsFilePath)">
+            <Output TaskParameter="Lines" ItemName="_ShouldlyPathMaps" />
+        </ReadLinesFromFile>
+        <PropertyGroup>
+            <ShouldlyPathMaps>%(_ShouldlyPathMaps.Identity)</ShouldlyPathMaps>
+        </PropertyGroup>
+        <SetEnvVar EnvName="SHOULDLY_SOURCE_PATH_MAP" EnvValue="$(ShouldlyPathMaps)" Condition=" '$(ShouldlyPathMaps)' != '' " />
+    </Target>
+</Project>
+
+  system.codedom 8.0.0
+      buildTransitive/net461/System.CodeDom.targets
+<Project InitialTargets="NETStandardCompatError_System_CodeDom_net462">
+  <Target Name="NETStandardCompatError_System_CodeDom_net462"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="System.CodeDom 8.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net462 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/net462/_._
+      buildTransitive/net6.0/_._
+      buildTransitive/netcoreapp2.0/System.CodeDom.targets
+<Project InitialTargets="NETStandardCompatError_System_CodeDom_net6_0">
+  <Target Name="NETStandardCompatError_System_CodeDom_net6_0"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="System.CodeDom 8.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net6.0 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+  system.codedom 9.0.5
+      buildTransitive/net461/System.CodeDom.targets
+<Project InitialTargets="NETStandardCompatError_System_CodeDom_net462">
+  <Target Name="NETStandardCompatError_System_CodeDom_net462"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="System.CodeDom 9.0.5 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net462 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/net462/_._
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/System.CodeDom.targets
+<Project InitialTargets="NETStandardCompatError_System_CodeDom_net8_0">
+  <Target Name="NETStandardCompatError_System_CodeDom_net8_0"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="System.CodeDom 9.0.5 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net8.0 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+  system.diagnostics.diagnosticsource 8.0.1
+      buildTransitive/net461/System.Diagnostics.DiagnosticSource.targets
+<Project InitialTargets="NETStandardCompatError_System_Diagnostics_DiagnosticSource_net462">
+  <Target Name="NETStandardCompatError_System_Diagnostics_DiagnosticSource_net462"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="System.Diagnostics.DiagnosticSource 8.0.1 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net462 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/net462/_._
+      buildTransitive/net6.0/_._
+      buildTransitive/netcoreapp2.0/System.Diagnostics.DiagnosticSource.targets
+<Project InitialTargets="NETStandardCompatError_System_Diagnostics_DiagnosticSource_net6_0">
+  <Target Name="NETStandardCompatError_System_Diagnostics_DiagnosticSource_net6_0"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="System.Diagnostics.DiagnosticSource 8.0.1 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net6.0 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+  system.management 6.0.1
+      buildTransitive/netcoreapp2.0/System.Management.targets
+<Project InitialTargets="NETStandardCompatError_System_Management_netcoreapp3_1">
+  <Target Name="NETStandardCompatError_System_Management_netcoreapp3_1"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Error Text="System.Management doesn't support $(TargetFramework). Consider updating your TargetFramework to netcoreapp3.1 or later." />
+  </Target>
+</Project>
+
+      buildTransitive/netcoreapp3.1/_._
+  system.management 9.0.5
+      buildTransitive/net8.0/_._
+      buildTransitive/netcoreapp2.0/System.Management.targets
+<Project InitialTargets="NETStandardCompatError_System_Management_net8_0">
+  <Target Name="NETStandardCompatError_System_Management_net8_0"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="System.Management 9.0.5 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net8.0 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+  system.security.cryptography.pkcs 8.0.2
+      buildTransitive/net461/System.Security.Cryptography.Pkcs.targets
+<Project InitialTargets="NETStandardCompatError_System_Security_Cryptography_Pkcs_net462">
+  <Target Name="NETStandardCompatError_System_Security_Cryptography_Pkcs_net462"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="System.Security.Cryptography.Pkcs 8.0.2 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net462 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/net462/_._
+      buildTransitive/net6.0/_._
+      buildTransitive/netcoreapp2.0/System.Security.Cryptography.Pkcs.targets
+<Project InitialTargets="NETStandardCompatError_System_Security_Cryptography_Pkcs_net6_0">
+  <Target Name="NETStandardCompatError_System_Security_Cryptography_Pkcs_net6_0"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="System.Security.Cryptography.Pkcs 8.0.2 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net6.0 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+  system.security.cryptography.xml 8.0.5
+      buildTransitive/net461/System.Security.Cryptography.Xml.targets
+<Project InitialTargets="NETStandardCompatError_System_Security_Cryptography_Xml_net462">
+  <Target Name="NETStandardCompatError_System_Security_Cryptography_Xml_net462"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="System.Security.Cryptography.Xml 8.0.5 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net462 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/net462/_._
+      buildTransitive/net6.0/_._
+      buildTransitive/netcoreapp2.0/System.Security.Cryptography.Xml.targets
+<Project InitialTargets="NETStandardCompatError_System_Security_Cryptography_Xml_net6_0">
+  <Target Name="NETStandardCompatError_System_Security_Cryptography_Xml_net6_0"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="System.Security.Cryptography.Xml 8.0.5 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net6.0 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+  system.threading.channels 8.0.0
+      buildTransitive/net461/System.Threading.Channels.targets
+<Project InitialTargets="NETStandardCompatError_System_Threading_Channels_net462">
+  <Target Name="NETStandardCompatError_System_Threading_Channels_net462"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="System.Threading.Channels 8.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net462 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+      buildTransitive/net462/_._
+      buildTransitive/net6.0/_._
+      buildTransitive/netcoreapp2.0/System.Threading.Channels.targets
+<Project InitialTargets="NETStandardCompatError_System_Threading_Channels_net6_0">
+  <Target Name="NETStandardCompatError_System_Threading_Channels_net6_0"
+          Condition="'$(SuppressTfmSupportBuildWarnings)' == ''">
+    <Warning Text="System.Threading.Channels 8.0.0 doesn't support $(TargetFramework) and has not been tested with it. Consider upgrading your TargetFramework to net6.0 or later. You may also set &lt;SuppressTfmSupportBuildWarnings&gt;true&lt;/SuppressTfmSupportBuildWarnings&gt; in the project file to ignore this warning and attempt to run in this unsupported configuration at your own risk." />
+  </Target>
+</Project>
+
+  xunit.analyzers 1.16.0
+      analyzers/dotnet/cs/xunit.analyzers.dll
+      analyzers/dotnet/cs/xunit.analyzers.fixes.dll
+  xunit.core 2.9.2
+      build/xunit.core.props
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <ItemGroup>
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <DebugSymbols>true</DebugSymbols>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <!-- Support for importing props via the runner -->
+  <Import Condition=" '$(_Xunit_ImportPropsFile)' != '' " Project="$(_Xunit_ImportPropsFile)" />
+
+</Project>
+
+      build/xunit.core.targets
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Desktop CLR needs auto-generated binding redirects (and full PDBs for TPv1) -->
+  <PropertyGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <DebugType Condition=" '$(DebugType)' == '' ">full</DebugType>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+  </PropertyGroup>
+
+  <!-- .NET Core need .deps.json and .runtimeconfig.json files (and portable PDBs for TPv2) -->
+  <PropertyGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETCoreApp' ">
+    <DebugType Condition=" '$(DebugType)' == '' ">portable</DebugType>
+    <GenerateDependencyFile>true</GenerateDependencyFile>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+  </PropertyGroup>
+
+  <!-- Support for importing targets via the runner -->
+  <Import Condition=" '$(_Xunit_ImportTargetsFile)' != '' " Project="$(_Xunit_ImportTargetsFile)" />
+
+</Project>
+
+      buildMultiTargeting/xunit.core.props
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <ItemGroup>
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <DebugSymbols>true</DebugSymbols>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <!-- Support for importing props via the runner -->
+  <Import Condition=" '$(_Xunit_ImportPropsFile)' != '' " Project="$(_Xunit_ImportPropsFile)" />
+
+</Project>
+
+      buildMultiTargeting/xunit.core.targets
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Desktop CLR needs auto-generated binding redirects (and full PDBs for TPv1) -->
+  <PropertyGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <DebugType Condition=" '$(DebugType)' == '' ">full</DebugType>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+  </PropertyGroup>
+
+  <!-- .NET Core need .deps.json and .runtimeconfig.json files (and portable PDBs for TPv2) -->
+  <PropertyGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETCoreApp' ">
+    <DebugType Condition=" '$(DebugType)' == '' ">portable</DebugType>
+    <GenerateDependencyFile>true</GenerateDependencyFile>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+  </PropertyGroup>
+
+  <!-- Support for importing targets via the runner -->
+  <Import Condition=" '$(_Xunit_ImportTargetsFile)' != '' " Project="$(_Xunit_ImportTargetsFile)" />
+
+</Project>
+
+  xunit.runner.visualstudio 2.8.2
+      build/net462/xunit.abstractions.dll
+      build/net462/xunit.runner.reporters.net452.dll
+      build/net462/xunit.runner.utility.net452.dll
+      build/net462/xunit.runner.visualstudio.props
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)xunit.runner.visualstudio.testadapter.dll">
+      <Link>xunit.runner.visualstudio.testadapter.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)xunit.abstractions.dll">
+      <Link>xunit.abstractions.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)xunit.runner.reporters.net452.dll">
+      <Link>xunit.runner.reporters.net452.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)xunit.runner.utility.net452.dll">
+      <Link>xunit.runner.utility.net452.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>
+</Project>
+
+      build/net462/xunit.runner.visualstudio.testadapter.dll
+      build/net6.0/xunit.abstractions.dll
+      build/net6.0/xunit.runner.reporters.netcoreapp10.dll
+      build/net6.0/xunit.runner.utility.netcoreapp10.dll
+      build/net6.0/xunit.runner.visualstudio.props
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)xunit.runner.visualstudio.testadapter.dll">
+      <Link>xunit.runner.visualstudio.testadapter.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)xunit.runner.reporters.netcoreapp10.dll">
+      <Link>xunit.runner.reporters.netcoreapp10.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)xunit.runner.utility.netcoreapp10.dll">
+      <Link>xunit.runner.utility.netcoreapp10.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>
+</Project>
+
+      build/net6.0/xunit.runner.visualstudio.testadapter.dll
+Output:
+Build started at 19:46:24...
+1>------ Build started: Project: Serilog, Configuration: Debug ------
+1>Serilog -> compiled in memory (158 KB, 122 ms)
+2>------ Build started: Project: TestDummies, Configuration: Debug ------
+2>TestDummies -> compiled in memory (8 KB, 112 ms)
+3>------ Build started: Project: Serilog.Tests, Configuration: Debug ------
+3>Serilog.Tests -> compiled in memory (254.5 KB, 377 ms)
+4>------ Build started: Project: Serilog.PerformanceTests, Configuration: Debug ------
+4>Serilog.PerformanceTests -> compiled in memory (33 KB, 173 ms)
+5>------ Build started: Project: Serilog.ApprovalTests, Configuration: Debug ------
+5>Serilog.ApprovalTests -> compiled in memory (4.5 KB, 104 ms)
+6>------ Build started: Project: AotTestApp, Configuration: Debug ------
+6>AotTestApp -> compiled in memory (2.5 KB, 124 ms)
+========== Build: 6 succeeded, 0 failed ==========
+
