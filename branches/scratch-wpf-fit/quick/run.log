@@ -8,40 +8,37 @@ Build succeeded.
 + sort -u
 + head -60
 Build succeeded.
-+ dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter 'FullyQualifiedName~PreviewZoomStore|FullyQualifiedName~WebPreviewZoom|FullyQualifiedName~WpfPreviewFit' --logger 'console;verbosity=normal'
-+ grep -v '^\s*$'
-+ grep -v '  Passed '
-+ tail -80
-Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll (.NETCoreApp,Version=v10.0)
-A total of 1 test files matched the specified pattern.
-[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
-[xUnit.net 00:00:00.08]   Discovering: TabStudio.App.Tests
-[xUnit.net 00:00:00.26]   Discovered:  TabStudio.App.Tests
-[xUnit.net 00:00:00.28]   Starting:    TabStudio.App.Tests
-[xUnit.net 00:00:16.27]   Finished:    TabStudio.App.Tests
-Test Run Successful.
-Total tests: 12
-     Passed: 12
- Total time: 16.6687 Seconds
-+ dotnet test tests/TabStudio.Wpf.Tests -c Release --no-build --filter 'FullyQualifiedName~WpfBrowserTests|FullyQualifiedName~WpfTemplateTests' --logger 'console;verbosity=normal'
-+ grep -E 'Passed|Failed|Error|Assert|at '
++ dotnet build tests/TabStudio.Core.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E 'error|warn|Build succeeded'
 + head -60
-  Passed TabStudio.Wpf.Tests.WpfTemplateTests.An_event_handler_the_class_does_not_have_is_reported_at_its_attribute [1 s]
-  Passed TabStudio.Wpf.Tests.WpfTemplateTests.Code_that_uses_what_OpenSilver_does_not_implement_gets_a_warning [165 ms]
-  Passed TabStudio.Wpf.Tests.WpfTemplateTests.The_Visual_Studio_template_builds_on_OpenSilver [128 ms]
-  Passed TabStudio.Wpf.Tests.WpfTemplateTests.Window_settings_without_effect_in_the_web_preview_are_reported_and_left_out [88 ms]
-  Passed TabStudio.Wpf.Tests.WpfTemplateTests.Named_elements_are_fields_of_their_types_in_the_code_behind [130 ms]
-  Passed TabStudio.Wpf.Tests.WpfTemplateTests.A_xaml_error_is_reported_in_its_file [102 ms]
-  Passed TabStudio.Wpf.Tests.WpfBrowserTests.A_new_build_is_served_at_the_same_address [3 s]
-  Passed TabStudio.Wpf.Tests.WpfBrowserTests.In_Fit_a_phone_browser_zooms_the_whole_window_into_view_and_taps_still_reach_its_buttons [1 s]
-  Passed TabStudio.Wpf.Tests.WpfBrowserTests.Reports_an_exception_in_a_handler_with_its_stack [1 s]
-  Passed TabStudio.Wpf.Tests.WpfBrowserTests.Shows_the_window_full_size_under_its_title_and_handles_clicks [1 s]
-  Passed TabStudio.Wpf.Tests.WpfBrowserTests.Serves_the_app_with_OpenSilver_and_Blazor [243 ms]
-     Passed: 11
++ sort -u
+Build succeeded.
++ dotnet build tests/TabStudio.Compilation.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E 'error|warn|Build succeeded'
++ sort -u
++ head -60
+Build succeeded.
++ dotnet test tests/TabStudio.Core.Tests -c Release --no-build
++ tail -3
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:   158, Skipped:     0, Total:   158, Duration: 248 ms - TabStudio.Core.Tests.dll (net10.0)
++ dotnet test tests/TabStudio.Compilation.Tests -c Release --no-build --filter FullyQualifiedName~Wpf
++ tail -3
+A total of 1 test files matched the specified pattern.
+No test matches the given testcase filter `FullyQualifiedName~Wpf` in /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Compilation.Tests/bin/Release/net10.0/TabStudio.Compilation.Tests.dll
+
++ dotnet test tests/TabStudio.Wpf.Tests -c Release --no-build
++ grep -E 'Failed |Passed!|Failed!|Assert'
++ head -30
+Passed!  - Failed:     0, Passed:    33, Skipped:     0, Total:    33, Duration: 24 s - TabStudio.Wpf.Tests.dll (net10.0)
++ dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter 'FullyQualifiedName~PreviewZoom|FullyQualifiedName~WebPreview|FullyQualifiedName~WpfPreviewFit|FullyQualifiedName~WebAppTests|FullyQualifiedName~BlazorAppTests|FullyQualifiedName~StaticSiteTests|FullyQualifiedName~LegacyFrameworkAppTests|FullyQualifiedName~Swarm|FullyQualifiedName~SelfTest|FullyQualifiedName~WpfXamlEditorTests|FullyQualifiedName~PanelAudit|FullyQualifiedName~Design' --logger 'console;verbosity=normal'
++ grep -E '^\s+Failed |Error Message|Assert|Total tests|Passed:|Failed:|Skipped:'
++ head -80
+Total tests: 188
+     Passed: 186
+    Skipped: 2
 + ls ci-out/screenshots
 + grep -i -E wpf-fit
 wpf-fit-01-before-actual-size.png
 wpf-fit-02-after-fit.png
-+ ls ci-out/wpf-screenshots
-wpf-app-fit-on-a-phone.png
-wpf-app-in-browser.png
