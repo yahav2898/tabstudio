@@ -11,7 +11,47 @@ namespace TabStudio.Toolchains.Projects;
 /// <param name="Run">The program.</param>
 /// <param name="Preparation">Commands that configure a build before it starts, such as CMake.</param>
 /// <param name="EntryPoint">What runs, for the Output panel, such as <c>main.py</c> or <c>npm start</c>.</param>
-public sealed record RunPlan(ProcessStartSpec? Build, ProcessStartSpec Run, string EntryPoint, IReadOnlyList<ProcessStartSpec>? Preparation = null);
+public sealed record RunPlan(ProcessStartSpec? Build, ProcessStartSpec Run, string EntryPoint, IReadOnlyList<ProcessStartSpec>? Preparation = null)
+{
+    /// <summary>Build files, which are never a program's name.</summary>
+    private static readonly string[] BuildFiles =
+    [
+        "Makefile", "makefile", "GNUmakefile", "CMakeLists.txt", "pom.xml", "build.gradle", "build.gradle.kts",
+        "settings.gradle", "settings.gradle.kts", "Cargo.toml", "go.mod", "package.json", "pyproject.toml",
+    ];
+
+    /// <summary>
+    /// What the program is called in the Output panel (<c>The program 'fd' has exited with code 0</c>) and the
+    /// debugger: its target or binary, such as a CMake target, a Cargo binary or a Java main class, and never a
+    /// build file such as <c>Makefile</c> or <c>pom.xml</c>.
+    /// </summary>
+    public string ProgramName
+    {
+        get => field ?? DefaultName();
+        init;
+    }
+
+    /// <summary>The entry point, unless it is a build file: then the program's file, or the project's folder.</summary>
+    private string DefaultName()
+    {
+        if (!IsBuildFile(Path.GetFileName(EntryPoint)))
+        {
+            return EntryPoint;
+        }
+
+        var program = Path.GetFileNameWithoutExtension(Run.Program);
+        if (program.Length > 0 && program is not ("app" or "java" or "node" or "python" or "python3" or "npm" or "dotnet" or "make" or "mvn" or "gradle"))
+        {
+            return program;
+        }
+
+        return Run.WorkingDirectory is { Length: > 0 } folder && Path.GetFileName(folder.TrimEnd('/', '\\')) is { Length: > 0 } name ? name : "program";
+    }
+
+    /// <summary>Whether a file name is a build file, which names no program.</summary>
+    /// <param name="name">A file name, such as <c>Makefile</c>.</param>
+    public static bool IsBuildFile(string name) => BuildFiles.Contains(name, StringComparer.Ordinal);
+}
 
 /// <summary>A project's file that an entry rule names.</summary>
 /// <param name="FullPath">The file.</param>
@@ -76,7 +116,8 @@ public static partial class RunPlanner
                 variables["match"] = match;
             }
 
-            var entryPoint = rule.Json is not null ? string.Join(' ', rule.Command.Select(a => Expand(a, variables)))
+            var entryPoint = rule.Name is { } name ? name
+                : rule.Json is not null ? string.Join(' ', rule.Command.Select(a => Expand(a, variables)))
                 : project.Toolchain.Id == "rust" ? CargoEntryPoint(entry)
                 : entry.RelativePath;
             return new RunPlan(

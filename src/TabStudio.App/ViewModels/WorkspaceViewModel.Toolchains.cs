@@ -512,9 +512,9 @@ public sealed partial class WorkspaceViewModel
         ErrorList.SetRunError(project.Directory, null);
         _runDirectory = plan.Run.WorkingDirectory ?? project.Directory;
         State = IdeState.Running;
-        StatusText = $"Running {plan.EntryPoint}";
+        StatusText = $"Running {plan.ProgramName}";
         var status = _toolchains.Manager.Status(toolchain.Id);
-        Output.WriteLine($"Running {plan.EntryPoint} with {toolchain.Name}{(status.Version is { } version ? " " + version : string.Empty)}", OutputKind.Info);
+        Output.WriteLine($"Running {plan.ProgramName} with {toolchain.Name}{(status.Version is { } version ? " " + version : string.Empty)}", OutputKind.Info);
         _run = new CancellationTokenSource();
         var listening = BeginServerRun();
         OutputProcessResult result;
@@ -530,12 +530,12 @@ public sealed partial class WorkspaceViewModel
                 if (!built.Succeeded)
                 {
                     result = built;
-                    ReportToolchainRun(project, plan.EntryPoint, result);
+                    ReportToolchainRun(project, plan.ProgramName, result);
                     return;
                 }
             }
 
-            result = await OutputProcess.RunAsync(_toolchains.Runtime, WithServiceEnvironment(plan.Run), Output, input, _run.Token, listening: listening);
+            result = await OutputProcess.RunAsync(_toolchains.Runtime, WithServiceEnvironment(plan.Run), Output, input, _run.Token, listening: listening, toolchain: toolchain.Id);
         }
         finally
         {
@@ -545,10 +545,13 @@ public sealed partial class WorkspaceViewModel
             EndServerRun();
         }
 
-        ReportToolchainRun(project, plan.EntryPoint, result);
+        ReportToolchainRun(project, plan.ProgramName, result);
     }
 
     /// <summary>Ends a run: the exit line, as Visual Studio writes it, the Error List and the status bar.</summary>
+    /// <param name="project">The project that ran.</param>
+    /// <param name="entryPoint">The program's name (<see cref="RunPlan.ProgramName"/>): its target or binary, never a build file.</param>
+    /// <param name="result">How it ended.</param>
     private void ReportToolchainRun(ToolchainProject project, string entryPoint, OutputProcessResult result)
     {
         if (MicrochipInstallation.IsCompiler(project.Toolchain.Id))
@@ -682,17 +685,11 @@ public sealed partial class WorkspaceViewModel
         OutputProcessResult? failed = null;
         try
         {
-            foreach (var step in RunPlanner.PlanDependencies(project, dependency))
-            {
-                if (BlockLocalToolchainActionForRemote()) return;
-                Output.WriteLine("> " + step.CommandLine, OutputKind.Info);
-                var result = await OutputProcess.RunAsync(_toolchains.Runtime, step, Output, null, _run.Token);
-                if (!result.Succeeded)
-                {
-                    failed = result;
-                    break;
-                }
-            }
+            failed = await RunDependencyInstallAsync(project, dependency, _run.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            failed = new OutputProcessResult(new TabStudio.Toolchains.Processes.ProcessExit(-1, null, true), [], "The install was stopped.");
         }
         finally
         {
@@ -744,6 +741,13 @@ public sealed partial class WorkspaceViewModel
         var toolchain = item.Toolchain;
         var manager = _toolchains.Manager;
         var status = manager.Status(toolchain.Id);
+
+        // A failed install says why, with its full log one tap away, before offering to run it again.
+        if (InstallFailureNotice(project) is { } failure)
+        {
+            return failure;
+        }
+
         if (!status.IsReady)
         {
             if (!manager.CanInstall || status.IsBusy)

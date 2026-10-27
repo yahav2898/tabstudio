@@ -4,6 +4,7 @@ using TabStudio.Compilation.Running;
 using TabStudio.Toolchains.Processes;
 using TabStudio.Toolchains.Runtimes;
 using TabStudio.Toolchains.Networking;
+using TabStudio.Toolchains.Projects;
 
 namespace TabStudio.App.ViewModels;
 
@@ -39,7 +40,9 @@ internal static class OutputProcess
     /// <param name="input">Lines for its standard input, from <see cref="OutputViewModel.BeginProcessInput"/>, or <see langword="null"/> for none.</param>
     /// <param name="cancellationToken">Stops the program and everything it started.</param>
     /// <param name="started">Told the program once it started, before its output is read, such as for its process id.</param>
-    public static async Task<OutputProcessResult> RunAsync(IToolchainRuntime runtime, ProcessStartSpec spec, OutputViewModel output, ConsoleInput? input, CancellationToken cancellationToken, Action<ToolchainProcess>? started = null, Action<int>? listening = null)
+    /// <param name="listening">Told each port the program starts listening on, for the web preview.</param>
+    /// <param name="toolchain">The toolchain that runs it, such as <c>rust</c>, for the patterns only it prints; every toolchain's output is colored by what it says, not by its stream.</param>
+    public static async Task<OutputProcessResult> RunAsync(IToolchainRuntime runtime, ProcessStartSpec spec, OutputViewModel output, ConsoleInput? input, CancellationToken cancellationToken, Action<ToolchainProcess>? started = null, Action<int>? listening = null, string? toolchain = null)
     {
         ToolchainProcess process;
         try
@@ -60,8 +63,8 @@ internal static class OutputProcess
         {
             using var ports = listening is null ? null : new ProcessPortWatcher(process, listening);
             var lines = new LineCollector();
-            var stdout = PumpAsync(process.Output, OutputKind.Program, output, lines, prompt, ports);
-            var stderr = process.Error is { } error ? PumpAsync(error, OutputKind.Error, output, lines, prompt, ports) : Task.CompletedTask;
+            var stdout = PumpAsync(process.Output, OutputKind.Program, output, lines, prompt, ports, new StreamClassifier(toolchain));
+            var stderr = process.Error is { } error ? PumpAsync(error, OutputKind.Error, output, lines, prompt, ports, new StreamClassifier(toolchain)) : Task.CompletedTask;
             if (input is null)
             {
                 process.CloseInput();
@@ -80,7 +83,28 @@ internal static class OutputProcess
         }
     }
 
-    private static async Task PumpAsync(Stream stream, OutputKind kind, OutputViewModel output, LineCollector lines, PromptWatcher prompt, ProcessPortWatcher? ports)
+    /// <summary>The Output panel's kind for what a line says.</summary>
+    /// <param name="kind">What the line says.</param>
+    internal static OutputKind KindOf(OutputLineKind kind) => kind switch
+    {
+        OutputLineKind.Error => OutputKind.Error,
+        OutputLineKind.Warning => OutputKind.Warning,
+        _ => OutputKind.Program,
+    };
+
+    /// <summary>Writes a stream's text to the panel, each line colored by what it says.</summary>
+    /// <param name="output">The panel.</param>
+    /// <param name="classifier">The stream's classifier.</param>
+    /// <param name="text">The text.</param>
+    internal static void WriteClassified(OutputViewModel output, StreamClassifier classifier, string text)
+    {
+        foreach (var piece in classifier.Feed(text))
+        {
+            output.Write(piece.Text, KindOf(piece.Kind));
+        }
+    }
+
+    private static async Task PumpAsync(Stream stream, OutputKind kind, OutputViewModel output, LineCollector lines, PromptWatcher prompt, ProcessPortWatcher? ports, StreamClassifier classifier)
     {
         var decoder = Encoding.UTF8.GetDecoder();
         var bytes = new byte[8192];
@@ -100,7 +124,8 @@ internal static class OutputProcess
                 var text = Normalize(new string(chars, 0, count), ref carriageReturn);
                 if (text.Length > 0)
                 {
-                    output.Write(text, kind);
+                    // Compilers and package managers write progress to standard error: the color comes from the text.
+                    WriteClassified(output, classifier, text);
                     lines.Add(text, kind);
                     prompt.Wrote(text);
                     ports?.Feed(text, kind == OutputKind.Error);

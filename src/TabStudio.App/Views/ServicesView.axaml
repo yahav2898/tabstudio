@@ -56,6 +56,15 @@
       </Grid>
     </Border>
 
+    <!-- A start that failed for some services: each row says why, and the others keep running. -->
+    <Border DockPanel.Dock="Top" Margin="8,8,8,0" Padding="12,8" CornerRadius="{StaticResource Radius.Card}" Background="{DynamicResource Brush.Notice.Error}"
+            BorderBrush="{DynamicResource Brush.Notice.ErrorBorder}" BorderThickness="1" IsVisible="{Binding HasOperationError}">
+      <Grid ColumnDefinitions="Auto,*">
+        <controls:StrokeIcon Data="{StaticResource Icon.Warning}" Size="15" Margin="0,1,8,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush.Error}" />
+        <SelectableTextBlock Grid.Column="1" Classes="small" TextWrapping="Wrap" Text="{Binding OperationError}" />
+      </Grid>
+    </Border>
+
     <Panel>
       <controls:EmptyState Icon="{StaticResource Icon.Server}" Title="No services"
                            Message="{Binding Summary}" IsVisible="{Binding ShowsEmptyState}" />
@@ -63,8 +72,10 @@
       <controls:ErrorState Title="The Compose file could not be read" Message="Fix the file, then reload it." Details="{Binding Error}"
                            RetryText="Reload" RetryCommand="{Binding ReloadCommand}" IsVisible="{Binding HasError}" />
 
-      <Grid RowDefinitions="2*,Auto,*" IsVisible="{Binding HasServices}">
-        <ListBox ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}" ItemContainerTheme="{StaticResource ListRow}"
+      <Grid RowDefinitions="Auto,2*,Auto,*" IsVisible="{Binding HasServices}">
+        <!-- Nothing starts by itself: F5 starts what the run points at, and Start the rest. -->
+        <TextBlock Classes="small muted" TextWrapping="Wrap" Margin="12,8,12,0" Text="{Binding Offer}" IsVisible="{Binding HasOffer}" />
+        <ListBox Grid.Row="1" ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}" ItemContainerTheme="{StaticResource ListRow}"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
           <ListBox.ItemTemplate>
             <DataTemplate x:DataType="vm:ServiceItemViewModel">
@@ -119,10 +130,10 @@
           </ListBox.ItemTemplate>
         </ListBox>
 
-        <Border Grid.Row="1" Height="36" Padding="12,0" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1">
+        <Border Grid.Row="2" Height="36" Padding="12,0" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,1">
           <TextBlock Classes="h2" Text="Logs" VerticalAlignment="Center" />
         </Border>
-        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" Background="{DynamicResource Brush.Terminal.Background}">
+        <ScrollViewer Grid.Row="3" HorizontalScrollBarVisibility="Auto" Background="{DynamicResource Brush.Terminal.Background}">
           <SelectableTextBlock Text="{Binding Logs}" FontFamily="{DynamicResource CodeFont}" FontSize="12" Margin="12,8" Foreground="{DynamicResource Brush.Terminal.Foreground}" />
         </ScrollViewer>
       </Grid>

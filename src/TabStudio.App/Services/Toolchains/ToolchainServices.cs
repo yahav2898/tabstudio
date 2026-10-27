@@ -31,6 +31,7 @@ public sealed class ToolchainServices : IDisposable
     private readonly HttpClient? _http;
     private readonly AlpinePackageManager? _packages;
     private readonly Lock _gate = new();
+    private HttpClient? _hostHttp;
     private Task? _firstRefresh;
 
     /// <summary>Creates the toolchains for the app.</summary>
@@ -72,6 +73,73 @@ public sealed class ToolchainServices : IDisposable
     }
 
     internal AlpinePackageManager? ServicePackageManager => _packages;
+
+    /// <summary>
+    /// An HTTP client for package indexes, such as PyPI's JSON API: the Linux environment's on the tablet, its own
+    /// on a computer.
+    /// </summary>
+    internal HttpClient Http
+    {
+        get
+        {
+            if (_http is { } http)
+            {
+                return http;
+            }
+
+            lock (_gate)
+            {
+                if (_hostHttp is null)
+                {
+                    _hostHttp = new HttpClient { Timeout = TimeSpan.FromSeconds(60) };
+                    _hostHttp.DefaultRequestHeaders.UserAgent.ParseAdd("TabStudio/0.1 (+https://github.com/yahav2898/tabstudio)");
+                }
+
+                return _hostHttp;
+            }
+        }
+    }
+
+    /// <summary>Whether <see cref="InstallAlpinePackagesAsync"/> can install packages: on the tablet, in its Linux environment.</summary>
+    internal bool CanInstallAlpinePackages => _packages is not null && Environment is not null;
+
+    /// <summary>
+    /// Installs Alpine packages into the Linux environment, such as the compilers and headers a Python package
+    /// builds with, with the Toolchain Store's verified, resumable downloads. Packages already installed are kept.
+    /// </summary>
+    /// <param name="names">The packages, such as <c>build-base</c> and <c>libpq-dev</c>.</param>
+    /// <param name="line">Progress, for the log.</param>
+    /// <param name="cancellationToken">Stops the install.</param>
+    /// <returns>Whether they are installed; <see langword="false"/> on a computer, which uses its own tools.</returns>
+    internal async Task<bool> InstallAlpinePackagesAsync(IReadOnlyList<string> names, Action<string> line, CancellationToken cancellationToken)
+    {
+        if (_packages is not { } packages || Environment is not { } environment)
+        {
+            return false;
+        }
+
+        await Manager.PrepareRuntimeAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+        await WithPackageOperationAsync(async () =>
+        {
+            var installed = packages.Installed;
+            var missing = names.Where(n => installed.Find(n) is null).ToList();
+            if (missing.Count == 0)
+            {
+                return;
+            }
+
+            var plan = ApkResolver.PlanInstall(await packages.LoadIndexAsync(refresh: false, cancellationToken).ConfigureAwait(false), installed.Packages, missing);
+            if (plan.Missing.Count > 0)
+            {
+                throw new InvalidOperationException($"Alpine Linux has no package {string.Join(", ", plan.Missing)}.");
+            }
+
+            environment.EnsureSpace(plan.DownloadSize + plan.InstalledSize, string.Join(", ", missing));
+            await packages.DownloadAsync(plan, (bytes, package) => line($"Downloading {package.Name} ({bytes / 1024} KB)"), cancellationToken).ConfigureAwait(false);
+            await packages.InstallAsync(missing, upgrade: false, line, cancellationToken).ConfigureAwait(false);
+        }, cancellationToken).ConfigureAwait(false);
+        return true;
+    }
 
     internal Task WithPackageOperationAsync(Func<Task> action, CancellationToken cancellationToken) =>
         Manager.WithRuntimeOperationAsync(action, cancellationToken);
@@ -191,6 +259,7 @@ public sealed class ToolchainServices : IDisposable
         Manager.Dispose();
         _packages?.Dispose();
         _http?.Dispose();
+        _hostHttp?.Dispose();
     }
 
     private async Task RefreshQuietlyAsync()

@@ -169,6 +169,12 @@ public sealed record EntryRule
     public IReadOnlyList<string> Command { get; init; } = [];
 
     /// <summary>
+    /// What the program is called in the Output panel, such as <c>flask run</c>, when <see cref="File"/> is a
+    /// settings file rather than the program; <see langword="null"/> names it after the file.
+    /// </summary>
+    public string? Name { get; init; }
+
+    /// <summary>
     /// Environment variables for this entry's commands, on top of the toolchain's, such as <c>PYTHONPATH=src</c> for
     /// a package in a <c>src</c> folder, so that it runs before it is installed.
     /// </summary>

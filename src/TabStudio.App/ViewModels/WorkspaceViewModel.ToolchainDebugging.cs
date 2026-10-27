@@ -123,7 +123,7 @@ public sealed partial class WorkspaceViewModel
                 var result = compiled.Result;
                 if (!result.Succeeded)
                 {
-                    ReportToolchainRun(project, plan.EntryPoint, result);
+                    ReportToolchainRun(project, plan.ProgramName, result);
                     return;
                 }
             }

@@ -50,67 +50,132 @@ public sealed class ServiceManager : IAsyncDisposable
 
     public Task StartAllAsync(CancellationToken cancellationToken = default) => StartAsync(Project.Services.Values.Where(s => s.Profiles.Count == 0 && ServiceCatalog.Map(s).Supported).Select(s => s.Name), cancellationToken);
 
-    public async Task<IReadOnlyDictionary<string, string?>> StartForProjectAsync(string projectDirectory, string environmentName = "Development", CancellationToken cancellationToken = default)
+    /// <summary>
+    /// The services F5 starts for a project: the dependencies of the Compose service built from it (or of the
+    /// devcontainer's service), a devcontainer's <c>runServices</c>, and otherwise only the services its run
+    /// configuration points at (<see cref="ServiceTargets"/>). Nothing else starts by itself; the Services
+    /// window offers the rest.
+    /// </summary>
+    /// <param name="projectDirectory">The project that runs.</param>
+    /// <param name="environment">The run's environment variables, if any.</param>
+    /// <param name="environmentName">The .NET environment.</param>
+    public IReadOnlyList<string> NeededBy(string projectDirectory, IReadOnlyDictionary<string, string?>? environment = null, string environmentName = "Development")
     {
         var application = ConnectionEnvironment.FindApplication(Project, projectDirectory);
-        var needed = application?.Dependencies.Select(d => d.Name).ToArray()
-            ?? (Project.RunServices.Count > 0 ? Project.RunServices.Where(n => n != application?.Name).ToArray() : Project.Services.Values.Where(s => s.Profiles.Count == 0 && ServiceCatalog.Map(s).Supported).Select(s => s.Name).ToArray());
-        await StartAsync(needed, cancellationToken).ConfigureAwait(false);
+        return application?.Dependencies.Select(d => d.Name).ToArray()
+            ?? (Project.RunServices.Count > 0 ? Project.RunServices.Where(n => n != application?.Name).ToArray()
+                : ServiceTargets.Referenced(Project, projectDirectory, environment, environmentName));
+    }
+
+    public async Task<IReadOnlyDictionary<string, string?>> StartForProjectAsync(string projectDirectory, string environmentName = "Development", CancellationToken cancellationToken = default, IReadOnlyDictionary<string, string?>? environment = null)
+    {
+        var needed = NeededBy(projectDirectory, environment, environmentName);
+        if (needed.Count > 0) await StartAsync(needed, cancellationToken).ConfigureAwait(false);
         return ConnectionEnvironment.ForProject(Project, projectDirectory, Endpoints, environmentName);
     }
 
+    /// <summary>
+    /// Starts services and what they depend on. Each requested service starts on its own: one that fails, with its
+    /// own error on its row, never stops or rolls back another that does not depend on it, and a failure in the
+    /// middle of one service's group stops only the processes that group started.
+    /// </summary>
+    /// <exception cref="ComposeException">Some services did not start; the message names each with its error.</exception>
     public async Task StartAsync(IEnumerable<string> names, CancellationToken cancellationToken = default)
     {
         using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _lifetime.Token);
         var token = linked.Token;
         await _operations.WaitAsync(token).ConfigureAwait(false);
-        var added = new List<string>();
         try
         {
             ObjectDisposedException.ThrowIf(_disposed, this);
-            var order = DependencyOrder(names);
+            var failures = new List<string>();
+            var groups = new List<IReadOnlyList<string>>();
+            var planned = new HashSet<string>(StringComparer.Ordinal);
             // Allocate ports for the whole request before starting, so inter-service URLs use final ports.
-            foreach (var name in order)
+            foreach (var root in names.Distinct(StringComparer.Ordinal).ToList())
             {
-                var status = Get(name);
-                if (status.IsRunning) continue;
-                var mapping = ServiceCatalog.Map(status.Definition);
-                if (!mapping.Supported)
+                string? planning = null;
+                try
                 {
-                    Update(name, ServiceState.Unsupported, mapping.UnsupportedReason);
-                    throw new ComposeException($"{name}: {mapping.UnsupportedReason}");
-                }
-                AllocatePorts(name, mapping.Mapping!);
-            }
-            foreach (var name in order)
-            {
-                token.ThrowIfCancellationRequested();
-                var current = Get(name);
-                if (current.IsRunning && _running.TryGetValue(name, out var existing) && existing.Process is { HasExited: false })
-                {
-                    if (current.State is ServiceState.Unhealthy or ServiceState.Starting)
+                    var order = DependencyOrder([root]);
+                    foreach (var name in order)
                     {
-                        await WaitUntilReadyAsync(name, existing, token).ConfigureAwait(false);
-                        Update(name, current.Definition.Healthcheck?.Disabled == true ? ServiceState.Running : ServiceState.Healthy, current.Mapping?.Note);
+                        planning = name;
+                        var status = Get(name);
+                        if (status.IsRunning || planned.Contains(name)) continue;
+                        var mapping = ServiceCatalog.Map(status.Definition);
+                        if (!mapping.Supported)
+                        {
+                            Update(name, ServiceState.Unsupported, mapping.UnsupportedReason);
+                            throw new ComposeException($"{name}: {mapping.UnsupportedReason}");
+                        }
+                        AllocatePorts(name, mapping.Mapping!);
+                        planned.Add(name);
                     }
-                    continue;
+                    groups.Add(order);
                 }
-                if (_running.ContainsKey(name))
+                catch (ComposeException ex)
                 {
-                    await StopOneAsync(name).ConfigureAwait(false);
-                    AllocatePorts(name, ServiceCatalog.Map(current.Definition).Mapping!);
+                    if (planning is not null && planning != root && Get(planning).State != ServiceState.Unsupported) Update(planning, ServiceState.Failed, ex.Message.StartsWith(planning + ":", StringComparison.Ordinal) ? ex.Message[(planning.Length + 1)..].Trim() : ex.Message);
+                    failures.Add(Fail(root, ex.Message, planning));
                 }
-                added.Add(name);
-                await StartOneAsync(name, token).ConfigureAwait(false);
             }
-        }
-        catch
-        {
-            // A cancelled or failed group start never leaves its new processes behind.
-            foreach (var name in added.AsEnumerable().Reverse()) await StopOneAsync(name).ConfigureAwait(false);
-            throw;
+            foreach (var order in groups)
+            {
+                var added = new List<string>();
+                string? starting = null;
+                try
+                {
+                    foreach (var name in order)
+                    {
+                        starting = name;
+                        token.ThrowIfCancellationRequested();
+                        var current = Get(name);
+                        if (current.IsRunning && _running.TryGetValue(name, out var existing) && existing.Process is { HasExited: false })
+                        {
+                            if (current.State is ServiceState.Unhealthy or ServiceState.Starting)
+                            {
+                                await WaitUntilReadyAsync(name, existing, token).ConfigureAwait(false);
+                                Update(name, current.Definition.Healthcheck?.Disabled == true ? ServiceState.Running : ServiceState.Healthy, current.Mapping?.Note);
+                            }
+                            continue;
+                        }
+                        if (_running.ContainsKey(name))
+                        {
+                            await StopOneAsync(name).ConfigureAwait(false);
+                            AllocatePorts(name, ServiceCatalog.Map(current.Definition).Mapping!);
+                        }
+                        added.Add(name);
+                        await StartOneAsync(name, token).ConfigureAwait(false);
+                    }
+                }
+                catch (Exception ex) when (ex is not OutOfMemoryException)
+                {
+                    // A cancelled or failed start never leaves this service's new processes behind.
+                    foreach (var name in added.AsEnumerable().Reverse()) await StopOneAsync(name).ConfigureAwait(false);
+                    if (ex is OperationCanceledException) throw;
+                    failures.Add(Fail(order[^1], Redact(ex.Message), starting));
+                }
+            }
+            if (failures.Count > 0) throw new ComposeException(string.Join("\n", failures.Distinct(StringComparer.Ordinal)));
         }
         finally { _operations.Release(); }
+    }
+
+    /// <summary>Records why a requested service did not start, on its own row, and returns the message for it.</summary>
+    /// <param name="root">The requested service.</param>
+    /// <param name="message">The error.</param>
+    /// <param name="failed">The service whose start failed, when it is one the requested service depends on.</param>
+    private string Fail(string root, string message, string? failed = null)
+    {
+        ServiceStatus? status;
+        lock (_gate) status = _statuses.GetValueOrDefault(root);
+        if (status is null) return message;
+        var own = message.StartsWith(root + ":", StringComparison.Ordinal) ? message[(root.Length + 1)..].Trim() : message;
+        // A service already marked failed or unsupported keeps its own detail; a dependent says what stopped it.
+        if (status.State is not (ServiceState.Failed or ServiceState.Unsupported))
+            Update(root, ServiceState.Failed, failed is not null && failed != root ? $"Needs {failed}, which did not start." : own);
+        return message.StartsWith(root + ":", StringComparison.Ordinal) || (failed is not null && message.StartsWith(failed + ":", StringComparison.Ordinal)) ? message : $"{failed ?? root}: {message}";
     }
 
     public async Task StopAsync(string? name = null, CancellationToken cancellationToken = default)

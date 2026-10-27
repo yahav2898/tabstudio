@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Catalog\toolchains.json" LogicalName="TabStudio.Toolchains.Catalog.toolchains.json" />
+    <EmbeddedResource Include="Python\python-build-packages.json" LogicalName="TabStudio.Toolchains.Python.python-build-packages.json" />
     <EmbeddedResource Include="Microchip\*.py" LogicalName="TabStudio.Toolchains.Microchip.%(Filename)%(Extension)" />
     <EmbeddedResource Include="Microchip\*.c" LogicalName="TabStudio.Toolchains.Microchip.%(Filename)%(Extension)" />
     <EmbeddedResource Include="Microchip\pymcuprog.devices.json" LogicalName="TabStudio.Toolchains.Microchip.pymcuprog.devices.json" />

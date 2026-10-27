@@ -151,11 +151,45 @@ public sealed class ComposeTests : IDisposable
     }
 
     [Theory]
-    [InlineData("ports: ['99999:5432']")]
-    [InlineData("volumes: ['data:/../../outside']")]
-    [InlineData("healthcheck: {interval: forever}")]
-    public void Rejects_invalid_ports_volumes_and_health_settings(string setting) =>
-        Assert.Throws<ComposeException>(() => Read("services:\n  db:\n    image: postgres\n    " + setting));
+    [InlineData("ports: ['99999:5432']", "port")]
+    [InlineData("volumes: ['data:/../../outside']", "volume target")]
+    [InlineData("healthcheck: {interval: forever}", "duration")]
+    [InlineData("volumes: [{type: tmpfs, target: /cache}]", "tmpfs")]
+    public void An_invalid_service_setting_makes_only_that_service_unavailable(string setting, string reason)
+    {
+        var project = Read("services:\n  db:\n    image: postgres\n    " + setting + "\n  cache:\n    image: redis:7\n");
+
+        // The service's own error stays on its row; the file is read, and the other service runs.
+        var db = project.Services["db"];
+        Assert.Contains(reason, string.Join(" ", db.Unsupported), StringComparison.OrdinalIgnoreCase);
+        Assert.Equal("postgres", db.Image);
+        Assert.False(Native.ServiceCatalog.Map(db).Supported);
+        Assert.Empty(project.Services["cache"].Unsupported);
+        Assert.True(Native.ServiceCatalog.Map(project.Services["cache"]).Supported);
+    }
+
+    [Fact]
+    public void A_required_variable_missing_for_one_service_leaves_the_others_readable()
+    {
+        var project = Read("services:\n  api:\n    image: redis:7\n    environment: {TOKEN: '${MISSING_TOKEN:?set it}'}\n  db:\n    image: postgres:18\n");
+
+        Assert.NotEmpty(project.Services["api"].Unsupported);
+        Assert.Empty(project.Services["db"].Unsupported);
+    }
+
+    [Theory]
+    [InlineData("volumes: ['./conf.d:/etc/mysql/conf.d:ro']", true, true)]
+    [InlineData("volumes: [{type: bind, source: ./conf.d, target: /etc/mysql/conf.d}]", true, true)]
+    [InlineData("volumes: [{type: bind, source: ./conf.d, target: /etc/mysql/conf.d, bind: {create_host_path: false}}]", true, false)]
+    [InlineData("volumes: [{type: bind, source: ./conf.d, target: /etc/mysql/conf.d, bind: {create_host_path: true}}]", true, true)]
+    public void Bind_volumes_create_a_missing_source_unless_the_long_syntax_says_not_to(string setting, bool bind, bool create)
+    {
+        var volume = Read("services:\n  mysql:\n    image: mysql:9\n    " + setting + "\n").Services["mysql"].Volumes.Single();
+
+        Assert.Equal(bind, volume.IsBind);
+        Assert.Equal(create, volume.CreateHostPath);
+        Assert.Equal(Path.Combine(_temp.Path, "conf.d"), volume.Source);
+    }
 
     public void Dispose() => _temp.Dispose();
 }
