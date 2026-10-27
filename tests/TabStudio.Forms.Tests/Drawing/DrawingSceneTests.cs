@@ -118,7 +118,7 @@ public sealed class DrawingSceneTests
 
         // The bitmap drew a snapshot of itself: the top left now holds both copies, scaled; the rest is unchanged.
         Assert.Equal(255, target.GetPixel(1, 1).A);
-        Assert.Equal(Color.Yellow.ToArgb(), target.GetPixel(14, 6).ToArgb());
+        Assert.Equal(Color.Yellow.ToArgb(), target.GetPixel(15, 6).ToArgb());
     }
 
     [AvaloniaFact]

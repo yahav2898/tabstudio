@@ -75,6 +75,18 @@ public sealed class DrawingAppTests
             Assert.Equal(new Size(240, 180), saved.Size);
             AssertRed(saved.GetPixel(110, 30));
             Assert.Equal(Color.White.ToArgb(), saved.GetPixel(100, 100).ToArgb());
+
+            // And as a GIF and a JPEG, the other formats paint programs offer.
+            foreach (var format in new[] { ImageFormat.Gif, ImageFormat.Jpeg, ImageFormat.Bmp })
+            {
+                using var stream = new MemoryStream();
+                run.Invoke(() => bitmap.Save(stream, format));
+                stream.Position = 0;
+                using var read = new Bitmap(stream);
+                Assert.Equal(format.Guid, read.RawFormat.Guid);
+                AssertRed(read.GetPixel(110, 30));
+                Assert.True(read.GetPixel(100, 100).GetBrightness() > 0.95f, $"{format} lost the white background.");
+            }
         }
         finally
         {
@@ -164,7 +176,7 @@ public sealed class DrawingAppTests
             var (text, roundTrip, plain) = run.Invoke(() =>
             {
                 using var box = new RichTextBox();
-                box.Rtf = @"{\rtf1\ansi\deff0{\fonttbl{\f0 Arial;}}\f0\fs20 Hello \b bold\b0\par Caf\'e9 荤?\par}";
+                box.Rtf = @"{\rtf1\ansi\deff0{\fonttbl{\f0 Arial;}}\f0\fs20 Hello \b bold\b0\par Caf\'e9 " + "\\u8364?\\par}";
                 var read = box.Text;
                 box.SaveFile(path);
                 using var other = new RichTextBox();

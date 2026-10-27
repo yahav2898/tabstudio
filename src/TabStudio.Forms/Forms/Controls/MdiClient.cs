@@ -31,7 +31,7 @@ public sealed class MdiClient : Control
     /// <param name="value">The arrangement.</param>
     public void LayoutMdi(MdiLayout value)
     {
-        var children = Controls.OfType<Form>().Where(child => child.Visible && child.WindowState != FormWindowState.Minimized).Reverse().ToList();
+        var children = Controls.OfType<Form>().Where(child => child.VisibleSelf && child.WindowState != FormWindowState.Minimized).Reverse().ToList();
         var area = ClientRectangle;
         if (value == MdiLayout.ArrangeIcons)
         {
@@ -159,7 +159,7 @@ public sealed class MdiClient : Control
         if (wasActive)
         {
             _active = null;
-            Activate(Controls.OfType<Form>().FirstOrDefault(form => form.Visible));
+            Activate(Controls.OfType<Form>().FirstOrDefault(form => form.VisibleSelf));
         }
         else
         {
@@ -174,7 +174,7 @@ public sealed class MdiClient : Control
         if (ActiveChild == child)
         {
             _active = null;
-            Activate(Controls.OfType<Form>().FirstOrDefault(form => form != child && form.Visible));
+            Activate(Controls.OfType<Form>().FirstOrDefault(form => form != child && form.VisibleSelf));
         }
         else
         {
@@ -223,7 +223,7 @@ public sealed class MdiClient : Control
             item.DropDownItems.Remove(old);
         }
 
-        var children = Controls.OfType<Form>().Where(child => child.Visible).Reverse().ToList();
+        var children = Controls.OfType<Form>().Where(child => child.VisibleSelf).Reverse().ToList();
         if (children.Count == 0)
         {
             return;
@@ -235,7 +235,7 @@ public sealed class MdiClient : Control
         }
 
         // Windows lists children in the order they were opened, the active one checked.
-        var opened = Controls.OfType<Form>().Where(child => child.Visible).OrderBy(child => child.MdiOrder).ToList();
+        var opened = Controls.OfType<Form>().Where(child => child.VisibleSelf).OrderBy(child => child.MdiOrder).ToList();
         for (var i = 0; i < opened.Count && i < 9; i++)
         {
             var child = opened[i];

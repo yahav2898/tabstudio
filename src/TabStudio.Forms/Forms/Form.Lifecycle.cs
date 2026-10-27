@@ -323,7 +323,7 @@ public partial class Form
             }
 
             // MDI children are asked first; one that cancels cancels the parent's closing, which the parent sees.
-            var children = MdiChildren.Where(child => child.Visible).ToList();
+            var children = MdiChildren.Where(child => child.VisibleSelf).ToList();
             var childCancelled = false;
             foreach (var child in children)
             {

@@ -257,6 +257,11 @@ public abstract class Image : MarshalByRefObject, ICloneable, IDisposable
             return ImageFileFormat.Icon;
         }
 
+        if (format.Equals(ImageFormat.Gif))
+        {
+            return ImageFileFormat.Gif;
+        }
+
         return format.Equals(ImageFormat.Webp) ? ImageFileFormat.Webp : ImageFileFormat.Png;
     }
 }

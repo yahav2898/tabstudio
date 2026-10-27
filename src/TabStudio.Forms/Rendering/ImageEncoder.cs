@@ -21,9 +21,12 @@ internal enum ImageFileFormat
 
     /// <summary>A Windows icon holding one PNG image.</summary>
     Icon,
+
+    /// <summary>GIF: 256 colors at most, one of them transparent.</summary>
+    Gif,
 }
 
-/// <summary>Writes pixels as image files: PNG, JPEG and WebP with Skia's encoders, BMP and ICO directly.</summary>
+/// <summary>Writes pixels as image files: PNG, JPEG and WebP with Skia's encoders, BMP, ICO and GIF directly.</summary>
 internal static class ImageEncoder
 {
     /// <summary>Writes unpremultiplied 0xAARRGGBB pixels as a file.</summary>
@@ -41,6 +44,9 @@ internal static class ImageEncoder
         {
             case ImageFileFormat.Bmp:
                 WriteBmp(stream, pixels, width, height, opaque);
+                break;
+            case ImageFileFormat.Gif:
+                GifWriter.Write(stream, pixels, width, height);
                 break;
             case ImageFileFormat.Icon:
                 var png = EncodeWithSkia(pixels, width, height, SKEncodedImageFormat.Png, 100);
