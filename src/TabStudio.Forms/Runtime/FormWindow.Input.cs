@@ -66,6 +66,7 @@ internal sealed partial class FormWindow
         }
 
         var target = HitTest(point, out var nonClient);
+        ActivateMdiChildren(target);
         if (!target.Enabled)
         {
             return;
@@ -92,6 +93,18 @@ internal sealed partial class FormWindow
         }
 
         DeliverPress(target, point, button, clicks);
+    }
+
+    /// <summary>A press in an MDI child brings it, and any MDI child it is in, to the front.</summary>
+    private static void ActivateMdiChildren(Control target)
+    {
+        for (Control? control = target; control is not null; control = control.Parent)
+        {
+            if (control is Form { MdiParent.MdiClient: { } client } child)
+            {
+                client.Activate(child);
+            }
+        }
     }
 
     /// <summary>The pointer or a finger moved.</summary>

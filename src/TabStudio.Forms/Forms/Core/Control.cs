@@ -628,6 +628,9 @@ public partial class Control : Component, ISynchronizeInvoke, IWin32Window
     /// <summary>Whether the control itself is set visible, regardless of its parents.</summary>
     internal bool VisibleSelf => _visible;
 
+    /// <summary>Hides the control without events, as a form is before it is first shown.</summary>
+    internal void HideUntilShown() => _visible = false;
+
     /// <summary>
     /// Throws when another thread uses a control that is shown, as Windows Forms does when debugging: such code must
     /// use <see cref="Invoke(Delegate)"/>.

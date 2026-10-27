@@ -109,7 +109,7 @@ public sealed class DrawingSceneTests
 
         Assert.Equal(Color.Red.ToArgb(), target.GetPixel(1, 0).ToArgb());
         Assert.Equal(Color.Red.ToArgb(), target.GetPixel(9, 0).ToArgb());
-        Assert.Equal(Color.Yellow.ToArgb(), target.GetPixel(14, 6).ToArgb());
+        Assert.Equal(Color.Yellow.ToArgb(), target.GetPixel(15, 6).ToArgb());
 
         using (var g = Graphics.FromImage(target))
         {

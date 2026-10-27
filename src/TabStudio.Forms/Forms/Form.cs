@@ -26,6 +26,8 @@ public partial class Form : ContainerControl
     private static readonly object EventFormClosed = new();
     private static readonly object EventResizeBegin = new();
     private static readonly object EventResizeEnd = new();
+    private static readonly object EventMdiChildActivate = new();
+    private static long s_mdiOrder;
 
     private readonly List<Form> _ownedForms = [];
     private FormBorderStyle _formBorderStyle = FormBorderStyle.Sizable;
@@ -42,6 +44,9 @@ public partial class Form : ContainerControl
     private bool _loaded;
     private bool _closing;
     private bool _topLevel = true;
+    private MdiClient? _mdiClient;
+    private Form? _mdiParent;
+    private long _mdiOrder;
     private IButtonControl? _acceptButton;
     private IButtonControl? _cancelButton;
 
@@ -196,6 +201,12 @@ public partial class Form : ContainerControl
                 return;
             }
 
+            if (_mdiParent is not null)
+            {
+                SetMdiWindowState(value);
+                return;
+            }
+
             if (value == FormWindowState.Minimized)
             {
                 _stateBeforeMinimized = _windowState;
@@ -347,39 +358,122 @@ public partial class Form : ContainerControl
     /// <summary>The forms this form owns.</summary>
     public Form[] OwnedForms => [.. _ownedForms];
 
-    /// <summary>Whether the form contains MDI child forms. MDI is not supported in the app preview.</summary>
-    /// <exception cref="NotSupportedException">Set to <see langword="true"/>.</exception>
+    /// <summary>
+    /// Whether the form holds MDI child forms: setting it adds an <see cref="System.Windows.Forms.MdiClient"/> that
+    /// fills the form below its menus and tool bars.
+    /// </summary>
     public bool IsMdiContainer
     {
-        get => false;
+        get => _mdiClient is not null;
         set
         {
+            if (value == IsMdiContainer)
+            {
+                return;
+            }
+
             if (value)
             {
-                throw new NotSupportedException("Form.IsMdiContainer is not supported by TabStudio's Forms layer: show child forms as separate windows with Show(owner), or put a UserControl in a panel.");
+                if (IsMdiChild)
+                {
+                    throw new InvalidOperationException("Form cannot be both an MDI child and an MDI parent.");
+                }
+
+                _mdiClient = new MdiClient();
+                Controls.Add(_mdiClient);
+            }
+            else
+            {
+                var client = _mdiClient!;
+                _mdiClient = null;
+                Controls.Remove(client);
+                client.Dispose();
             }
         }
     }
 
-    /// <summary>The MDI parent. MDI is not supported in the app preview.</summary>
-    /// <exception cref="NotSupportedException">Set to a form.</exception>
+    /// <summary>
+    /// The MDI parent form this form is a child of: shown, it is a window inside the parent's workspace, with a title bar
+    /// to move, maximize and close it.
+    /// </summary>
+    /// <exception cref="ArgumentException">The form is not an MDI container.</exception>
     public Form? MdiParent
     {
-        get => null;
+        get => _mdiParent;
         set
         {
-            if (value is not null)
+            if (value == _mdiParent)
             {
-                throw new NotSupportedException("Form.MdiParent is not supported by TabStudio's Forms layer: show child forms as separate windows with Show(owner).");
+                return;
             }
+
+            if (value is not null && !value.IsMdiContainer)
+            {
+                throw new ArgumentException("Form that was specified to be the MdiParent for this form is not an MdiContainer.", nameof(value));
+            }
+
+            if (value == this || IsMdiContainer)
+            {
+                throw new ArgumentException("Form cannot be both an MDI child and an MDI parent.", nameof(value));
+            }
+
+            if (WindowInternal is not null)
+            {
+                throw new InvalidOperationException("A shown top-level form cannot become an MDI child; set MdiParent before showing it.");
+            }
+
+            var clientSize = ClientSize;
+            if (_mdiParent?._mdiClient is { } oldClient)
+            {
+                oldClient.RemoveChild(this);
+            }
+
+            _mdiParent = value;
+            if (value is null)
+            {
+                _topLevel = true;
+                ClientSize = clientSize;
+                return;
+            }
+
+            _topLevel = false;
+            _mdiOrder = ++s_mdiOrder;
+
+            // A child is hidden until it is shown, as a top-level form is.
+            HideUntilShown();
+            ClientSize = clientSize;
+            value._mdiClient!.AddChild(this);
         }
     }
 
-    /// <summary>The MDI children: none.</summary>
-    public Form[] MdiChildren => [];
+    /// <summary>Whether the form is an MDI child.</summary>
+    public bool IsMdiChild => _mdiParent is not null;
 
-    /// <summary>The active MDI child: none.</summary>
-    public Form? ActiveMdiChild => null;
+    /// <summary>The MDI children, front to back.</summary>
+    public Form[] MdiChildren => _mdiClient?.MdiChildren ?? [];
+
+    /// <summary>The active MDI child, the one in front.</summary>
+    public Form? ActiveMdiChild => _mdiClient?.ActiveChild;
+
+    /// <summary>The workspace of an MDI parent, or <see langword="null"/>.</summary>
+    internal MdiClient? MdiClient => _mdiClient;
+
+    /// <summary>When the child was made an MDI child, to list children in the order they were opened.</summary>
+    internal long MdiOrder => _mdiOrder;
+
+    /// <summary>Occurs when an MDI child is activated or the last one closes.</summary>
+    public event EventHandler? MdiChildActivate
+    {
+        add => Events.AddHandler(EventMdiChildActivate, value);
+        remove => Events.RemoveHandler(EventMdiChildActivate, value);
+    }
+
+    /// <summary>Raises the MdiChildActivate event.</summary>
+    /// <param name="e">The event data.</param>
+    protected virtual void OnMdiChildActivate(EventArgs e) => ((EventHandler?)Events[EventMdiChildActivate])?.Invoke(this, e);
+
+    /// <summary>Raises MdiChildActivate, for the workspace.</summary>
+    internal void DispatchMdiChildActivate() => OnMdiChildActivate(EventArgs.Empty);
 
     /// <summary>How the form sizes itself when AutoSize is on.</summary>
     public AutoSizeMode AutoSizeMode { get; set; } = AutoSizeMode.GrowOnly;
@@ -436,7 +530,9 @@ public partial class Form : ContainerControl
     }
 
     /// <summary>The window frame around the client area: the border and the title bar.</summary>
-    private Padding FrameInsets => !_topLevel || _formBorderStyle == FormBorderStyle.None
+    private Padding FrameInsets => _mdiParent is not null && _formBorderStyle != FormBorderStyle.None
+        ? new Padding(MdiBorder, MdiCaptionHeight + MdiBorder, MdiBorder, MdiBorder)
+        : !_topLevel || _formBorderStyle == FormBorderStyle.None
         ? Padding.Empty
         : new Padding(FrameBorder, _formBorderStyle is FormBorderStyle.FixedToolWindow or FormBorderStyle.SizableToolWindow ? FrameTitle - 6 : FrameTitle, FrameBorder, FrameBorder);
 }

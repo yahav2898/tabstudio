@@ -266,3 +266,105 @@ public sealed class DrawingAppTests
         }
     }
 }
+
+/// <summary>MDI parents and children, as notepad and school-records tutorials use them.</summary>
+public sealed class MdiTests
+{
+    [AvaloniaFact]
+    public void MDI_children_open_inside_the_parent_activate_tile_and_close()
+    {
+        Form parent = null!;
+        MenuStrip menu = null!;
+        ToolStripMenuItem windows = null!;
+        var activations = 0;
+        var closed = new List<string>();
+        using var run = FormsTestRun.Start(() =>
+        {
+            parent = new Form { ClientSize = new Size(640, 480), Text = "Editor" };
+            menu = new MenuStrip();
+            windows = new ToolStripMenuItem("&Window");
+            menu.Items.Add(windows);
+            menu.MdiWindowListItem = windows;
+            parent.Controls.Add(menu);
+            parent.MainMenuStrip = menu;
+            parent.IsMdiContainer = true;
+            parent.MdiChildActivate += (_, _) => activations++;
+            parent.Load += (_, _) =>
+            {
+                foreach (var name in new[] { "One", "Two" })
+                {
+                    var child = new Form { Text = name, ClientSize = new Size(200, 120), MdiParent = parent };
+                    child.Controls.Add(new TextBox { Dock = DockStyle.Fill, Multiline = true, Name = "text" + name });
+                    child.FormClosed += (_, _) => closed.Add(name);
+                    child.Show();
+                }
+            };
+            return parent;
+        });
+
+        var (count, active, clientBounds, menuBottom, childClient) = run.Invoke(() =>
+            (parent.MdiChildren.Length, parent.ActiveMdiChild?.Text, parent.MdiChildren[0].Parent!.Bounds, menu.Bottom, parent.MdiChildren[0].ClientSize));
+        Assert.Equal(2, count);
+        Assert.Equal("Two", active);
+        Assert.Equal(menuBottom, clientBounds.Top);
+        Assert.Equal(new Size(200, 120), childClient);
+        Assert.True(run.Invoke(() => activations) >= 2);
+        Assert.Equal(["&1 One", "&2 Two"], run.Invoke(() => windows.DropDownItems.OfType<ToolStripMenuItem>().Select(item => item.Text).ToList()));
+
+        // A press inside the first child brings it to the front.
+        var one = run.Invoke(() => parent.MdiChildren.Single(child => child.Text == "One"));
+        run.Tap(one.Controls[0], new Point(5, 5));
+        Assert.Equal("One", run.Invoke(() => parent.ActiveMdiChild?.Text));
+
+        run.Invoke(() => parent.LayoutMdi(MdiLayout.TileVertical));
+        var tiled = run.Invoke(() => parent.MdiChildren.Select(child => child.Bounds).OrderBy(bounds => bounds.X).ToList());
+        Assert.Equal(0, tiled[0].X);
+        Assert.Equal(tiled[0].Right, tiled[1].X);
+        Assert.Equal(clientBounds.Height, tiled[0].Height);
+
+        // The title bar's close button closes the child.
+        var close = run.Invoke(() => new Point(one.Width - 10, 10));
+        run.Deliver(() =>
+        {
+            var window = parent.WindowInternal!;
+            var point = FormsTestRun.ToWindow(one, Point.Empty);
+            var insets = new Point(point.X - Form.MdiBorder, point.Y - Form.MdiBorder - Form.MdiCaptionHeight);
+            var at = new Point(insets.X + close.X, insets.Y + close.Y);
+            window.PointerPressed(at, MouseButtons.Left, 1, touch: false);
+            window.PointerReleased(at, MouseButtons.Left, touch: false);
+        });
+
+        Assert.Equal(["One"], run.Invoke(() => closed.ToList()));
+        Assert.Equal("Two", run.Invoke(() => parent.ActiveMdiChild?.Text));
+        Screenshots.Save(run.FrameOf(parent), "mdi-children");
+
+        // Closing the parent closes the remaining child first.
+        run.Post(() => parent.Close());
+        Assert.True(run.Exit.Wait(TimeSpan.FromSeconds(10)));
+        Assert.Equal(["One", "Two"], closed);
+    }
+
+    [AvaloniaFact]
+    public void A_form_shown_in_a_panel_loads_when_it_is_shown()
+    {
+        var loaded = 0;
+        Form inner = null!;
+        using var run = FormsTestRun.Start(() =>
+        {
+            var form = new Form { ClientSize = new Size(300, 200) };
+            var panel = new Panel { Dock = DockStyle.Fill };
+            form.Controls.Add(panel);
+            form.Load += (_, _) =>
+            {
+                inner = new Form { TopLevel = false, FormBorderStyle = FormBorderStyle.None, Dock = DockStyle.Fill };
+                inner.Load += (_, _) => loaded++;
+                panel.Controls.Add(inner);
+                inner.Show();
+            };
+            return form;
+        });
+
+        Assert.Equal(1, run.Invoke(() => loaded));
+        Assert.True(run.Invoke(() => inner.Visible));
+    }
+}
