@@ -1,0 +1,114 @@
+{
+  "architecture": "x86_64",
+  "group": "avr",
+  "hostPackageMode": "auto",
+  "platformioCoreVersion": "6.1.18",
+  "hardwareVerified": false,
+  "androidVerified": false,
+  "runtime": "Production EmbeddedGlibcToolchainInstaller / PRoot",
+  "elapsedSeconds": 155.8972882,
+  "passed": true,
+  "templates": [
+    {
+      "id": "uno",
+      "platformPackage": "atmelavr@5.3.0",
+      "passed": true,
+      "seconds": 26.6392164,
+      "firmwareBytes": 12700,
+      "firmwareSha256": "9a2baa325bc79d87f1cd244280c56d50f06360e94b100559d8c19ed4fd3a046e",
+      "ranges": [
+        {
+          "start": 0,
+          "length": 1938
+        }
+      ],
+      "uploadPlanReady": true,
+      "uploadVerification": "Upstream tool verifies programmed application flash.",
+      "stackFiles": 25,
+      "stackRows": 207,
+      "compilationDatabaseEntries": 26,
+      "platformioIni": "; Firmware: Arduino Uno\n[env:uno]\nplatform = atmelavr@5.3.0\nboard = uno\nframework = arduino\nmonitor_speed = 115200\nbuild_flags = -fstack-usage\n; Without LTO, -fstack-usage reports the code that is actually linked.\nbuild_unflags = -flto\n"
+    },
+    {
+      "id": "nano",
+      "platformPackage": "atmelavr@5.3.0",
+      "passed": true,
+      "seconds": 17.5834722,
+      "firmwareBytes": 12700,
+      "firmwareSha256": "9a2baa325bc79d87f1cd244280c56d50f06360e94b100559d8c19ed4fd3a046e",
+      "ranges": [
+        {
+          "start": 0,
+          "length": 1938
+        }
+      ],
+      "uploadPlanReady": true,
+      "uploadVerification": "Upstream tool verifies programmed application flash.",
+      "stackFiles": 25,
+      "stackRows": 207,
+      "compilationDatabaseEntries": 26,
+      "platformioIni": "; Firmware: Arduino Nano\n[env:nano]\nplatform = atmelavr@5.3.0\nboard = nanoatmega328new\nframework = arduino\nmonitor_speed = 115200\nbuild_flags = -fstack-usage\n; Without LTO, -fstack-usage reports the code that is actually linked.\nbuild_unflags = -flto\n"
+    },
+    {
+      "id": "mega",
+      "platformPackage": "atmelavr@5.3.0",
+      "passed": true,
+      "seconds": 17.1834321,
+      "firmwareBytes": 17684,
+      "firmwareSha256": "784a63744576c999001a4737e696b7f0cfdd379de3e9e5fadac5144d67ae3d23",
+      "ranges": [
+        {
+          "start": 0,
+          "length": 2296
+        }
+      ],
+      "uploadPlanReady": true,
+      "uploadVerification": "Upstream tool verifies programmed application flash.",
+      "stackFiles": 25,
+      "stackRows": 225,
+      "compilationDatabaseEntries": 26,
+      "platformioIni": "; Firmware: Arduino Mega 2560\n[env:mega]\nplatform = atmelavr@5.3.0\nboard = megaatmega2560\nframework = arduino\nmonitor_speed = 115200\nbuild_flags = -fstack-usage\n; Without LTO, -fstack-usage reports the code that is actually linked.\nbuild_unflags = -flto\n"
+    },
+    {
+      "id": "leonardo",
+      "platformPackage": "atmelavr@5.3.0",
+      "passed": true,
+      "seconds": 17.1529705,
+      "firmwareBytes": 18568,
+      "firmwareSha256": "32a6585b7b5442fb58f42b1c3665213ea2cff6b8283b45fbf52bde5b8f59bf87",
+      "ranges": [
+        {
+          "start": 0,
+          "length": 4118
+        }
+      ],
+      "uploadPlanReady": true,
+      "uploadVerification": "Upstream tool verifies programmed application flash.",
+      "stackFiles": 25,
+      "stackRows": 265,
+      "compilationDatabaseEntries": 26,
+      "platformioIni": "; Firmware: Arduino Leonardo\n[env:leonardo]\nplatform = atmelavr@5.3.0\nboard = leonardo\nframework = arduino\nmonitor_speed = 115200\nbuild_flags = -fstack-usage\n; Without LTO, -fstack-usage reports the code that is actually linked.\nbuild_unflags = -flto\n"
+    },
+    {
+      "id": "micro",
+      "platformPackage": "atmelavr@5.3.0",
+      "passed": true,
+      "seconds": 17.3664096,
+      "firmwareBytes": 18568,
+      "firmwareSha256": "5f29e31ea7956bd9289e1b47f95eef501ef39a5e342abbf3af10d8d0cfe593f9",
+      "ranges": [
+        {
+          "start": 0,
+          "length": 4118
+        }
+      ],
+      "uploadPlanReady": true,
+      "uploadVerification": "Upstream tool verifies programmed application flash.",
+      "stackFiles": 25,
+      "stackRows": 265,
+      "compilationDatabaseEntries": 26,
+      "platformioIni": "; Firmware: Arduino Micro\n[env:micro]\nplatform = atmelavr@5.3.0\nboard = micro\nframework = arduino\nmonitor_speed = 115200\nbuild_flags = -fstack-usage\n; Without LTO, -fstack-usage reports the code that is actually linked.\nbuild_unflags = -flto\n"
+    }
+  ],
+  "errors": []
+}
