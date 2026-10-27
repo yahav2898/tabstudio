@@ -1,0 +1,166 @@
++ docker run -d --name mssql -e ACCEPT_EULA=Y -e MSSQL_SA_PASSWORD=TabStudio-ci-1433 -p 1433:1433 mcr.microsoft.com/mssql/server:2022-latest
+Unable to find image 'mcr.microsoft.com/mssql/server:2022-latest' locally
+2022-latest: Pulling from mssql/server
+cb5e374be662: Pulling fs layer
+cf76e47c237f: Pulling fs layer
+16e8436c0cba: Pulling fs layer
+cb5e374be662: Verifying Checksum
+cb5e374be662: Download complete
+16e8436c0cba: Verifying Checksum
+16e8436c0cba: Download complete
+cb5e374be662: Pull complete
+cf76e47c237f: Verifying Checksum
+cf76e47c237f: Download complete
+cf76e47c237f: Pull complete
+16e8436c0cba: Pull complete
+Digest: sha256:cf8f0ab2ebe61feec2eed2629061a07d247f791c2a8ddda74a4ac9f06a291718
+Status: Downloaded newer image for mcr.microsoft.com/mssql/server:2022-latest
++ dotnet build tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true
++ head -60
++ grep -E 'error|warn|Build succeeded|Time Elapsed'
++ sort -u
+Build succeeded.
+Time Elapsed 00:01:08.27
++ dotnet test tests/TabStudio.App.Tests -c Release --no-build --logger 'console;verbosity=normal' --filter 'FullyQualifiedName~SqlServerAdvice|FullyQualifiedName~NativePackageTests|FullyQualifiedName~WindowsBridgeIde|FullyQualifiedName~ServicesTests.Services_window'
++ grep -vE '^\s*$'
++ grep -v '^\s*Passed '
++ tail -60
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
+[xUnit.net 00:00:00.08]   Discovering: TabStudio.App.Tests
+[xUnit.net 00:00:00.25]   Discovered:  TabStudio.App.Tests
+[xUnit.net 00:00:00.27]   Starting:    TabStudio.App.Tests
+[xUnit.net 00:00:21.32]   Finished:    TabStudio.App.Tests
+Test Run Successful.
+Total tests: 10
+     Passed: 10
+ Total time: 21.6591 Seconds
++ export 'TABSTUDIO_SQLSERVER=Server=tcp:127.0.0.1,1433;Database=SimplCommerce;User ID=sa;Password=TabStudio-ci-1433;TrustServerCertificate=True;MultipleActiveResultSets=true'
++ TABSTUDIO_SQLSERVER='Server=tcp:127.0.0.1,1433;Database=SimplCommerce;User ID=sa;Password=TabStudio-ci-1433;TrustServerCertificate=True;MultipleActiveResultSets=true'
++ export TABSTUDIO_REAL_REPOS_ONLY=SimplCommerce
++ TABSTUDIO_REAL_REPOS_ONLY=SimplCommerce
++ python3 build/ci/real-repos.py /home/runner/work/_temp/real-repos
+SimplCommerce: 3472ba02a6f2d9b6bdca7f7fb84957176aa799dc
+++ seq 1 30
++ for i in $(seq 1 30)
++ docker exec mssql /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P TabStudio-ci-1433 -Q 'SELECT 1' -b
++ break
++ python3 build/ci/real-repos.py --migrate /home/runner/work/_temp/real-repos
++ tail -n 30
+No store type was specified for the decimal property 'OldPrice' on entity type 'ProductPriceHistory'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+No store type was specified for the decimal property 'Price' on entity type 'ProductPriceHistory'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+No store type was specified for the decimal property 'SpecialPrice' on entity type 'ProductPriceHistory'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+No store type was specified for the decimal property 'ShippingAmount' on entity type 'Checkout'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+No store type was specified for the decimal property 'TaxAmount' on entity type 'Checkout'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+No store type was specified for the decimal property 'DiscountAmount' on entity type 'Order'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+No store type was specified for the decimal property 'OrderTotal' on entity type 'Order'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+No store type was specified for the decimal property 'PaymentFeeAmount' on entity type 'Order'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+No store type was specified for the decimal property 'ShippingFeeAmount' on entity type 'Order'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+No store type was specified for the decimal property 'SubTotal' on entity type 'Order'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+No store type was specified for the decimal property 'SubTotalWithDiscount' on entity type 'Order'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+No store type was specified for the decimal property 'TaxAmount' on entity type 'Order'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+No store type was specified for the decimal property 'DiscountAmount' on entity type 'OrderItem'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+No store type was specified for the decimal property 'ProductPrice' on entity type 'OrderItem'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+No store type was specified for the decimal property 'TaxAmount' on entity type 'OrderItem'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+No store type was specified for the decimal property 'TaxPercent' on entity type 'OrderItem'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+No store type was specified for the decimal property 'Amount' on entity type 'Payment'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+No store type was specified for the decimal property 'PaymentFee' on entity type 'Payment'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+No store type was specified for the decimal property 'DiscountAmount' on entity type 'CartRule'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+No store type was specified for the decimal property 'MaxDiscountAmount' on entity type 'CartRule'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+No store type was specified for the decimal property 'DiscountAmount' on entity type 'CatalogRule'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+No store type was specified for the decimal property 'MaxDiscountAmount' on entity type 'CatalogRule'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+No store type was specified for the decimal property 'MinOrderSubtotal' on entity type 'PriceAndDestination'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+No store type was specified for the decimal property 'ShippingPrice' on entity type 'PriceAndDestination'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+No store type was specified for the decimal property 'Rate' on entity type 'TaxRate'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+Applying migration '20230930154048_InitDb'.
+Applying migration '20240217163906_AddedCatalogSetting'.
+Applying migration '20240311113057_AddedProductBackInStockSubscription'.
+Done.
+SimplCommerce: migrated src/SimplCommerce.WebHost
+
+real	0m46.691s
+user	0m22.899s
+sys	0m4.003s
++ mkdir -p ci-out/screenshots
++ export TABSTUDIO_REAL_REPOS=/home/runner/work/_temp/real-repos TABSTUDIO_REAL_REPOS_OUT=/home/runner/work/tabstudio/tabstudio/ci-out TABSTUDIO_SCREENSHOTS=/home/runner/work/tabstudio/tabstudio/ci-out/screenshots
++ TABSTUDIO_REAL_REPOS=/home/runner/work/_temp/real-repos
++ TABSTUDIO_REAL_REPOS_OUT=/home/runner/work/tabstudio/tabstudio/ci-out
++ TABSTUDIO_SCREENSHOTS=/home/runner/work/tabstudio/tabstudio/ci-out/screenshots
++ timeout 40m dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter FullyQualifiedName~RealRepositoryTests --logger 'console;verbosity=normal'
++ tail -n 30 ci-out/test.log
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
+[xUnit.net 00:00:00.08]   Discovering: TabStudio.App.Tests
+[xUnit.net 00:00:00.23]   Discovered:  TabStudio.App.Tests
+[xUnit.net 00:00:00.25]   Starting:    TabStudio.App.Tests
+[xUnit.net 00:01:02.95]   Finished:    TabStudio.App.Tests
+  Passed TabStudio.App.Tests.RealRepositories.RealRepositoryTests.Pinned_public_repositories_build_within_their_error_baselines [1 m 2 s]
+
+Test Run Successful.
+Total tests: 1
+     Passed: 1
+ Total time: 1.0556 Minutes
++ cat ci-out/summary.md
+| Repository | Errors | Baseline | Warnings | Build |
+| --- | --- | --- | --- | --- |
+| SimplCommerce | 0 | 0 | 0 | 56 s, served |
++ grep -E 'Serve|Compatibility Doctor|SimplCommerce.WebHost:' -A0 ci-out/SimplCommerce.txt
++ head -20
+Compatibility Doctor:
+  SimplCommerce.WebHost: Ready via Local server + WebView - Served on this device and shown in the web preview beside the code. Saving a file restarts it.
+--
+Serve: GET / answered 200 in 3.9 s after F5, 7287 characters; expected 200 with ' - SimplCommerce</title>': OK
+--
+info: IdentityServer4.Startup[0]
+      Starting IdentityServer4 version 4.1.2+997a6cdd643e46cd5762b710c4ddc43574cbec2e
+info: IdentityServer4.Startup[0]
+--
+info: IdentityServer4.Startup[0]
+      Using the default authentication scheme Identity.Application for IdentityServer
+dbug: IdentityServer4.Startup[0]
+--
+dbug: IdentityServer4.Startup[0]
+--
+dbug: IdentityServer4.Startup[0]
+--
+dbug: IdentityServer4.Startup[0]
+--
+dbug: IdentityServer4.Startup[0]
++ grep -n -i -E 'exception|SQL Server|listening|error' ci-out/SimplCommerce.txt
++ head -60
+53:Built in 55.9 s: 0 errors, 0 warnings
+77:      Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+79:      No store type was specified for the decimal property 'OldPrice' on entity type 'Product'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+81:      No store type was specified for the decimal property 'Price' on entity type 'Product'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+83:      No store type was specified for the decimal property 'SpecialPrice' on entity type 'Product'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+85:      No store type was specified for the decimal property 'OldPrice' on entity type 'ProductPriceHistory'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+87:      No store type was specified for the decimal property 'Price' on entity type 'ProductPriceHistory'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+89:      No store type was specified for the decimal property 'SpecialPrice' on entity type 'ProductPriceHistory'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+91:      No store type was specified for the decimal property 'ShippingAmount' on entity type 'Checkout'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+93:      No store type was specified for the decimal property 'TaxAmount' on entity type 'Checkout'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+95:      No store type was specified for the decimal property 'DiscountAmount' on entity type 'Order'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+97:      No store type was specified for the decimal property 'OrderTotal' on entity type 'Order'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+99:      No store type was specified for the decimal property 'PaymentFeeAmount' on entity type 'Order'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+101:      No store type was specified for the decimal property 'ShippingFeeAmount' on entity type 'Order'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+103:      No store type was specified for the decimal property 'SubTotal' on entity type 'Order'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+105:      No store type was specified for the decimal property 'SubTotalWithDiscount' on entity type 'Order'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+107:      No store type was specified for the decimal property 'TaxAmount' on entity type 'Order'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+109:      No store type was specified for the decimal property 'DiscountAmount' on entity type 'OrderItem'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+111:      No store type was specified for the decimal property 'ProductPrice' on entity type 'OrderItem'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+113:      No store type was specified for the decimal property 'TaxAmount' on entity type 'OrderItem'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+115:      No store type was specified for the decimal property 'TaxPercent' on entity type 'OrderItem'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+117:      No store type was specified for the decimal property 'Amount' on entity type 'Payment'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+119:      No store type was specified for the decimal property 'PaymentFee' on entity type 'Payment'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+121:      No store type was specified for the decimal property 'DiscountAmount' on entity type 'CartRule'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+123:      No store type was specified for the decimal property 'MaxDiscountAmount' on entity type 'CartRule'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+125:      No store type was specified for the decimal property 'DiscountAmount' on entity type 'CatalogRule'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+127:      No store type was specified for the decimal property 'MaxDiscountAmount' on entity type 'CatalogRule'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+129:      No store type was specified for the decimal property 'MinOrderSubtotal' on entity type 'PriceAndDestination'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+131:      No store type was specified for the decimal property 'ShippingPrice' on entity type 'PriceAndDestination'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+133:      No store type was specified for the decimal property 'Rate' on entity type 'TaxRate'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+151:      Now listening on: http://127.0.0.1:46779
+158:SimplCommerce.WebHost is listening on http://127.0.0.1:46779/
+180:      Error Url: /home/error
+182:      Error Id Parameter: errorId
