@@ -97,7 +97,7 @@ warning, as .NET itself can no longer read them.
 
 ## What throws `NotSupportedException`, and why
 
-Every `NotSupportedException` in this assembly was reviewed for 0.17.1. What tutorial and student apps reach for
+Every `NotSupportedException` in this assembly was reviewed for 0.18. What tutorial and student apps reach for
 (drawing on bitmaps, double buffering, MDI, RTF, `ImageStream`, clipboard images, `Application.Restart`, message
 filters, `Graphics.FromHwnd`, `PathGradientBrush`, `GraphicsPath.AddString`) is implemented. What remains cannot exist
 on Android, or is what .NET itself throws:
