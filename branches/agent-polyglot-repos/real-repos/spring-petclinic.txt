@@ -2,243 +2,320 @@ spring-petclinic at 500158f732419217507c7656904b8e6aa1bcc0d6
 Toolchain projects:
   java: /home/runner/work/_temp/real-repos/spring-petclinic/pom.xml
 Startup project: java /home/runner/work/_temp/real-repos/spring-petclinic/pom.xml
-Set up in 2.7 s
-Ran in 82.7 s
+Set up in 2.6 s
+Web preview: http://127.0.0.1:8080/
+GET http://127.0.0.1:8080/: 200 , 2658 characters
+Ran in 84.8 s
 Project setup:
 
 Output:
-         ]  16.71MB/47.25MB
-2026-10-27T01:33:12.325Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Downloading [===>                                               ]  12.13MB/158.9MB
-2026-10-27T01:33:12.361Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  97347cf073b1 Extracting [=====================>                             ]  20.64MB/47.25MB
-2026-10-27T01:33:12.427Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Downloading [============>                                      ]  39.34MB/158.9MB
-2026-10-27T01:33:12.462Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  97347cf073b1 Extracting [==========================>                        ]  25.07MB/47.25MB
-2026-10-27T01:33:12.529Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Downloading [======================>                            ]  70.23MB/158.9MB
-2026-10-27T01:33:12.577Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  97347cf073b1 Extracting [================================>                  ]  30.97MB/47.25MB
-2026-10-27T01:33:12.630Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Downloading [==============================>                    ]  97.98MB/158.9MB
-2026-10-27T01:33:12.691Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  97347cf073b1 Extracting [==================================>                ]  32.93MB/47.25MB
-2026-10-27T01:33:12.733Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Downloading [========================================>          ]    129MB/158.9MB
-2026-10-27T01:33:12.809Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  97347cf073b1 Extracting [===========================================>       ]  41.29MB/47.25MB
-2026-10-27T01:33:12.834Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Downloading [================================================>  ]  155.2MB/158.9MB
-2026-10-27T01:33:12.846Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Verifying Checksum 
-2026-10-27T01:33:12.847Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Download complete 
-2026-10-27T01:33:12.916Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  97347cf073b1 Extracting [=============================================>     ]  42.76MB/47.25MB
-2026-10-27T01:33:13.067Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  5db2b7edf527 Pull complete 
-2026-10-27T01:33:13.069Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  130549402290 Extracting [>                                                  ]  65.54kB/6.443MB
-2026-10-27T01:33:13.169Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  130549402290 Extracting [===============================================>   ]   6.16MB/6.443MB
-2026-10-27T01:33:13.198Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  130549402290 Extracting [==================================================>]  6.443MB/6.443MB
-2026-10-27T01:33:13.383Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  97347cf073b1 Extracting [==============================================>    ]  44.24MB/47.25MB
-2026-10-27T01:33:13.435Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  97347cf073b1 Extracting [==================================================>]  47.25MB/47.25MB
-2026-10-27T01:33:13.454Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  97347cf073b1 Pull complete 
-2026-10-27T01:33:13.457Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  a81feb8cef66 Extracting [==================================================>]     885B/885B
-2026-10-27T01:33:13.457Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  a81feb8cef66 Extracting [==================================================>]     885B/885B
-2026-10-27T01:33:13.458Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  130549402290 Pull complete 
-2026-10-27T01:33:13.460Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  8241f4a14319 Extracting [=>                                                 ]  32.77kB/1.257MB
-2026-10-27T01:33:13.480Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  a81feb8cef66 Pull complete 
-2026-10-27T01:33:13.481Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  402761f17fb5 Extracting [==>                                                ]  32.77kB/783.6kB
-2026-10-27T01:33:13.494Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  8241f4a14319 Extracting [==================================================>]  1.257MB/1.257MB
-2026-10-27T01:33:13.498Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  402761f17fb5 Extracting [==================================================>]  783.6kB/783.6kB
-2026-10-27T01:33:13.498Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  402761f17fb5 Extracting [==================================================>]  783.6kB/783.6kB
-2026-10-27T01:33:13.516Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  402761f17fb5 Pull complete 
-2026-10-27T01:33:13.518Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  04fdf047584d Extracting [>                                                  ]  65.54kB/6.192MB
-2026-10-27T01:33:13.523Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  8241f4a14319 Pull complete 
-2026-10-27T01:33:13.526Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  a4dcdc0137d7 Extracting [>                                                  ]   98.3kB/8.204MB
-2026-10-27T01:33:13.618Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  04fdf047584d Extracting [================>                                  ]  2.097MB/6.192MB
-2026-10-27T01:33:13.626Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  a4dcdc0137d7 Extracting [===================>                               ]  3.244MB/8.204MB
-2026-10-27T01:33:13.721Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  04fdf047584d Extracting [===============================>                   ]  3.932MB/6.192MB
-2026-10-27T01:33:13.727Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  a4dcdc0137d7 Extracting [=============================>                     ]  4.915MB/8.204MB
-2026-10-27T01:33:13.757Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  04fdf047584d Extracting [==================================================>]  6.192MB/6.192MB
-2026-10-27T01:33:13.793Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  04fdf047584d Pull complete 
-2026-10-27T01:33:13.795Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  e735e16fde53 Extracting [==================================================>]  2.605kB/2.605kB
-2026-10-27T01:33:13.796Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  e735e16fde53 Extracting [==================================================>]  2.605kB/2.605kB
-2026-10-27T01:33:13.805Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  e735e16fde53 Pull complete 
-2026-10-27T01:33:13.807Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  9183015a9417 Extracting [==================================================>]     332B/332B
-2026-10-27T01:33:13.807Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  9183015a9417 Extracting [==================================================>]     332B/332B
-2026-10-27T01:33:13.817Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  9183015a9417 Pull complete 
-2026-10-27T01:33:13.835Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  3f743c1851c9 Extracting [>                                                  ]  557.1kB/57.18MB
-2026-10-27T01:33:13.842Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  a4dcdc0137d7 Extracting [======================================>            ]  6.291MB/8.204MB
-2026-10-27T01:33:13.911Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  a4dcdc0137d7 Extracting [==================================================>]  8.204MB/8.204MB
-2026-10-27T01:33:13.938Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  3f743c1851c9 Extracting [====>                                              ]  5.571MB/57.18MB
-2026-10-27T01:33:13.952Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  a4dcdc0137d7 Pull complete 
-2026-10-27T01:33:13.953Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  d1052e262c2e Extracting [=>                                                 ]  32.77kB/1.312MB
-2026-10-27T01:33:14.015Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  d1052e262c2e Extracting [==================================================>]  1.312MB/1.312MB
-2026-10-27T01:33:14.051Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  d1052e262c2e Pull complete 
-2026-10-27T01:33:14.052Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  39762d0b4bb2 Extracting [==================================================>]     116B/116B
-2026-10-27T01:33:14.058Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  39762d0b4bb2 Extracting [==================================================>]     116B/116B
-2026-10-27T01:33:14.063Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  39762d0b4bb2 Pull complete 
-2026-10-27T01:33:14.065Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  38639b9be6a6 Extracting [==================================================>]  3.142kB/3.142kB
-2026-10-27T01:33:14.066Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  38639b9be6a6 Extracting [==================================================>]  3.142kB/3.142kB
-2026-10-27T01:33:14.078Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  38639b9be6a6 Pull complete 
-2026-10-27T01:33:14.100Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  3f743c1851c9 Extracting [========>                                          ]   9.47MB/57.18MB
-2026-10-27T01:33:14.163Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [>                                                  ]  557.1kB/115.3MB
-2026-10-27T01:33:14.202Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  3f743c1851c9 Extracting [============>                                      ]  14.48MB/57.18MB
-2026-10-27T01:33:14.266Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [=>                                                 ]  3.342MB/115.3MB
-2026-10-27T01:33:14.304Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  3f743c1851c9 Extracting [=================>                                 ]   19.5MB/57.18MB
-2026-10-27T01:33:14.389Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [===>                                               ]  8.913MB/115.3MB
-2026-10-27T01:33:14.405Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  3f743c1851c9 Extracting [====================>                              ]  23.95MB/57.18MB
-2026-10-27T01:33:14.502Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [====>                                              ]  11.14MB/115.3MB
-2026-10-27T01:33:14.510Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  3f743c1851c9 Extracting [===========================>                       ]   31.2MB/57.18MB
-2026-10-27T01:33:14.610Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [======>                                            ]  14.48MB/115.3MB
-2026-10-27T01:33:14.617Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  3f743c1851c9 Extracting [==================================>                ]  38.99MB/57.18MB
-2026-10-27T01:33:14.718Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  3f743c1851c9 Extracting [=======================================>           ]  45.12MB/57.18MB
-2026-10-27T01:33:14.719Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [=======>                                           ]  17.83MB/115.3MB
-2026-10-27T01:33:14.826Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [=========>                                         ]  21.73MB/115.3MB
-2026-10-27T01:33:14.828Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  3f743c1851c9 Extracting [==========================================>        ]  49.02MB/57.18MB
-2026-10-27T01:33:14.934Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [==========>                                        ]  25.07MB/115.3MB
-2026-10-27T01:33:14.948Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  3f743c1851c9 Extracting [===============================================>   ]  54.03MB/57.18MB
-2026-10-27T01:33:15.001Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  3f743c1851c9 Extracting [==================================================>]  57.18MB/57.18MB
-2026-10-27T01:33:15.024Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  3f743c1851c9 Pull complete 
-2026-10-27T01:33:15.034Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  e6cb22001f6c Extracting [==================================================>]     320B/320B
-2026-10-27T01:33:15.039Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  e6cb22001f6c Extracting [==================================================>]     320B/320B
-2026-10-27T01:33:15.044Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [============>                                      ]  28.97MB/115.3MB
-2026-10-27T01:33:15.147Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [===============>                                   ]  35.65MB/115.3MB
-2026-10-27T01:33:15.267Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [==================>                                ]  41.78MB/115.3MB
-2026-10-27T01:33:15.313Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  e6cb22001f6c Pull complete 
-2026-10-27T01:33:15.331Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [>                                                  ]  557.1kB/158.9MB
-2026-10-27T01:33:15.375Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [=====================>                             ]  48.46MB/115.3MB
-2026-10-27T01:33:15.437Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [=>                                                 ]  5.571MB/158.9MB
-2026-10-27T01:33:15.478Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [=======================>                           ]  54.03MB/115.3MB
-2026-10-27T01:33:15.544Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [===>                                               ]  11.14MB/158.9MB
-2026-10-27T01:33:15.591Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [========================>                          ]  57.38MB/115.3MB
-2026-10-27T01:33:15.696Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [===========================>                       ]  62.39MB/115.3MB
-2026-10-27T01:33:15.703Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [====>                                              ]  14.48MB/158.9MB
-2026-10-27T01:33:15.799Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [=============================>                     ]  68.52MB/115.3MB
-2026-10-27T01:33:15.817Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [======>                                            ]   19.5MB/158.9MB
-2026-10-27T01:33:15.912Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [================================>                  ]  74.65MB/115.3MB
-2026-10-27T01:33:16.012Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [===================================>               ]  81.89MB/115.3MB
-2026-10-27T01:33:16.023Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [=======>                                           ]  23.95MB/158.9MB
-2026-10-27T01:33:16.114Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [======================================>            ]  89.13MB/115.3MB
-2026-10-27T01:33:16.132Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [========>                                          ]  26.18MB/158.9MB
-2026-10-27T01:33:16.219Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [=========================================>         ]  96.37MB/115.3MB
-2026-10-27T01:33:16.257Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [========>                                          ]  28.41MB/158.9MB
-2026-10-27T01:33:16.343Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [==========================================>        ]   98.6MB/115.3MB
-2026-10-27T01:33:16.363Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [=========>                                         ]   31.2MB/158.9MB
-2026-10-27T01:33:16.473Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [============================================>      ]  101.9MB/115.3MB
-2026-10-27T01:33:16.481Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [==========>                                        ]  34.54MB/158.9MB
-2026-10-27T01:33:16.580Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [=============================================>     ]  104.2MB/115.3MB
-2026-10-27T01:33:16.586Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [===========>                                       ]  35.65MB/158.9MB
-2026-10-27T01:33:16.686Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [==============================================>    ]  107.5MB/115.3MB
-2026-10-27T01:33:16.705Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [===========>                                       ]  37.88MB/158.9MB
-2026-10-27T01:33:16.831Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [===============================================>   ]  109.7MB/115.3MB
-2026-10-27T01:33:16.911Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [============>                                      ]  38.99MB/158.9MB
-2026-10-27T01:33:16.979Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [================================================>  ]  111.4MB/115.3MB
-2026-10-27T01:33:17.081Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [================================================>  ]  112.5MB/115.3MB
-2026-10-27T01:33:17.171Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [============>                                      ]  39.55MB/158.9MB
-2026-10-27T01:33:17.277Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [=================================================> ]  113.6MB/115.3MB
-2026-10-27T01:33:17.378Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [=================================================> ]  114.2MB/115.3MB
-2026-10-27T01:33:17.382Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [============>                                      ]  40.11MB/158.9MB
-2026-10-27T01:33:17.501Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [=================================================> ]  115.3MB/115.3MB
-2026-10-27T01:33:17.507Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Extracting [==================================================>]  115.3MB/115.3MB
-2026-10-27T01:33:17.604Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [============>                                      ]  40.67MB/158.9MB
-2026-10-27T01:33:17.782Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [============>                                      ]  41.22MB/158.9MB
-2026-10-27T01:33:17.940Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [=============>                                     ]  41.78MB/158.9MB
-2026-10-27T01:33:18.144Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [=============>                                     ]  42.34MB/158.9MB
-2026-10-27T01:33:18.316Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  4e6c52c74256 Pull complete 
-2026-10-27T01:33:18.318Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  f51baa0c6c0d Extracting [==================================================>]  19.32kB/19.32kB
-2026-10-27T01:33:18.319Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  f51baa0c6c0d Extracting [==================================================>]  19.32kB/19.32kB
-2026-10-27T01:33:18.340Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [=============>                                     ]  42.89MB/158.9MB
-2026-10-27T01:33:18.375Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  f51baa0c6c0d Pull complete 
-2026-10-27T01:33:18.376Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  88bb22edda9b Extracting [==================================================>]     128B/128B
-2026-10-27T01:33:18.376Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  88bb22edda9b Extracting [==================================================>]     128B/128B
-2026-10-27T01:33:18.391Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  88bb22edda9b Pull complete 
-2026-10-27T01:33:18.392Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  f7d54729e84b Extracting [==================================================>]  6.109kB/6.109kB
-2026-10-27T01:33:18.393Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  f7d54729e84b Extracting [==================================================>]  6.109kB/6.109kB
-2026-10-27T01:33:18.402Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  f7d54729e84b Pull complete 
-2026-10-27T01:33:18.404Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  f90dd111f2e5 Extracting [==================================================>]     185B/185B
-2026-10-27T01:33:18.404Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  f90dd111f2e5 Extracting [==================================================>]     185B/185B
-2026-10-27T01:33:18.415Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  f90dd111f2e5 Pull complete 
-2026-10-27T01:33:18.422Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  postgres Pulled 
-2026-10-27T01:33:18.512Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [=============>                                     ]  43.45MB/158.9MB
-2026-10-27T01:33:18.633Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [=============>                                     ]  44.01MB/158.9MB
-2026-10-27T01:33:18.811Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [==============>                                    ]  44.56MB/158.9MB
-2026-10-27T01:33:19.028Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [==============>                                    ]  45.12MB/158.9MB
-2026-10-27T01:33:19.241Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [==============>                                    ]  45.68MB/158.9MB
-2026-10-27T01:33:19.416Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [==============>                                    ]  46.24MB/158.9MB
-2026-10-27T01:33:19.639Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [==============>                                    ]  46.79MB/158.9MB
-2026-10-27T01:33:19.821Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [==============>                                    ]  47.35MB/158.9MB
-2026-10-27T01:33:19.986Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [===============>                                   ]  47.91MB/158.9MB
-2026-10-27T01:33:20.105Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [===============>                                   ]  48.46MB/158.9MB
-2026-10-27T01:33:20.277Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [===============>                                   ]  49.02MB/158.9MB
-2026-10-27T01:33:20.468Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [===============>                                   ]  49.58MB/158.9MB
-2026-10-27T01:33:20.633Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [===============>                                   ]  50.14MB/158.9MB
-2026-10-27T01:33:20.780Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [===============>                                   ]  50.69MB/158.9MB
-2026-10-27T01:33:20.948Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [================>                                  ]  51.25MB/158.9MB
-2026-10-27T01:33:21.131Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [================>                                  ]  51.81MB/158.9MB
-2026-10-27T01:33:21.304Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [================>                                  ]  52.36MB/158.9MB
-2026-10-27T01:33:21.485Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [================>                                  ]  52.92MB/158.9MB
-2026-10-27T01:33:21.683Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [================>                                  ]  53.48MB/158.9MB
-2026-10-27T01:33:21.789Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [=================>                                 ]  55.15MB/158.9MB
-2026-10-27T01:33:22.050Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [=================>                                 ]  56.82MB/158.9MB
-2026-10-27T01:33:22.156Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [==================>                                ]  57.93MB/158.9MB
-2026-10-27T01:33:22.258Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [===================>                               ]  61.83MB/158.9MB
-2026-10-27T01:33:22.363Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [======================>                            ]  70.19MB/158.9MB
-2026-10-27T01:33:22.467Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [========================>                          ]  77.43MB/158.9MB
-2026-10-27T01:33:22.571Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [==========================>                        ]  85.23MB/158.9MB
-2026-10-27T01:33:22.679Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [=============================>                     ]  93.59MB/158.9MB
-2026-10-27T01:33:22.785Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [================================>                  ]  101.9MB/158.9MB
-2026-10-27T01:33:22.890Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [===================================>               ]  111.4MB/158.9MB
-2026-10-27T01:33:22.993Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [======================================>            ]  120.9MB/158.9MB
-2026-10-27T01:33:23.093Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [=========================================>         ]  130.9MB/158.9MB
-2026-10-27T01:33:23.197Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [==========================================>        ]  134.8MB/158.9MB
-2026-10-27T01:33:23.298Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [===========================================>       ]  137.6MB/158.9MB
-2026-10-27T01:33:23.426Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [============================================>      ]  140.9MB/158.9MB
-2026-10-27T01:33:23.542Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [=============================================>     ]  143.7MB/158.9MB
-2026-10-27T01:33:23.673Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [=============================================>     ]  145.9MB/158.9MB
-2026-10-27T01:33:23.811Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [==============================================>    ]  147.1MB/158.9MB
-2026-10-27T01:33:23.916Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [================================================>  ]  153.7MB/158.9MB
-2026-10-27T01:33:23.994Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Extracting [==================================================>]  158.9MB/158.9MB
-2026-10-27T01:33:25.009Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  29855632b6ea Pull complete 
-2026-10-27T01:33:25.010Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  ace2c02e8d23 Extracting [==================================================>]  5.231kB/5.231kB
-2026-10-27T01:33:25.011Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  ace2c02e8d23 Extracting [==================================================>]  5.231kB/5.231kB
-2026-10-27T01:33:25.020Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  ace2c02e8d23 Pull complete 
-2026-10-27T01:33:25.025Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  mysql Pulled 
-2026-10-27T01:33:25.027Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  Network spring-petclinic_default  Creating
-2026-10-27T01:33:25.066Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  Network spring-petclinic_default  Created
-2026-10-27T01:33:25.067Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  Container spring-petclinic-postgres-1  Creating
-2026-10-27T01:33:25.067Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  Container spring-petclinic-mysql-1  Creating
-2026-10-27T01:33:25.092Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  Container spring-petclinic-postgres-1  Created
-2026-10-27T01:33:25.093Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  Container spring-petclinic-mysql-1  Created
-2026-10-27T01:33:25.093Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  Container spring-petclinic-mysql-1  Starting
-2026-10-27T01:33:25.094Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  Container spring-petclinic-postgres-1  Starting
-2026-10-27T01:33:25.321Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  Container spring-petclinic-mysql-1  Started
-2026-10-27T01:33:25.332Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  Container spring-petclinic-postgres-1  Started
-2026-10-27T01:33:25.332Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  Container spring-petclinic-mysql-1  Waiting
-2026-10-27T01:33:25.332Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  Container spring-petclinic-postgres-1  Waiting
-2026-10-27T01:33:25.834Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  Container spring-petclinic-postgres-1  Healthy
-2026-10-27T01:33:25.834Z  INFO 4927 --- [utReader-stderr] o.s.boot.docker.compose.core.DockerCli   :  Container spring-petclinic-mysql-1  Healthy
-2026-10-27T01:33:35.309Z  INFO 4927 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-10-27T01:33:35.374Z  INFO 4927 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 54 ms. Found 3 JPA repository interfaces.
-2026-10-27T01:33:36.240Z  INFO 4927 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
-2026-10-27T01:33:36.266Z  INFO 4927 --- [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-10-27T01:33:36.266Z  INFO 4927 --- [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
-2026-10-27T01:33:36.315Z  INFO 4927 --- [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1868 ms
-2026-10-27T01:33:36.541Z  WARN 4927 --- [  restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/hibernate/autoconfigure/HibernateJpaConfiguration.class]: Failed to initialize dependency 'inMemoryDatabaseShutdownExecutor' of LoadTimeWeaverAware bean 'entityManagerFactory': Error creating bean with name 'inMemoryDatabaseShutdownExecutor' defined in class path resource [org/springframework/boot/devtools/autoconfigure/DevToolsDataSourceAutoConfiguration.class]: Unsatisfied dependency expressed through method 'inMemoryDatabaseShutdownExecutor' parameter 0: Error creating bean with name 'dataSource' defined in class path resource [org/springframework/boot/jdbc/autoconfigure/DataSourceConfiguration$Hikari.class]: Unsatisfied dependency expressed through method 'dataSource' parameter 1: No qualifying bean of type 'org.springframework.boot.jdbc.autoconfigure.JdbcConnectionDetails' available: expected single matching bean but found 2: jdbcConnectionDetailsForSpringPetclinicMysql1,jdbcConnectionDetailsForSpringPetclinicPostgres1
-2026-10-27T01:33:36.544Z  INFO 4927 --- [  restartedMain] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
-2026-10-27T01:33:36.579Z  INFO 4927 --- [  restartedMain] .s.b.a.l.ConditionEvaluationReportLogger : 
+central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-interpolation/1.29/plexus-interpolation-1.29.jar
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-utils/3.6.0/plexus-utils-3.6.0.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-filtering/3.5.0/maven-filtering-3.5.0.jar (61 kB at 864 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-interpolation/1.29/plexus-interpolation-1.29.jar (88 kB at 1.2 MB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/eclipse/sisu/org.eclipse.sisu.plexus/0.9.0.M4/org.eclipse.sisu.plexus-0.9.0.M4.jar (216 kB at 2.1 MB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-utils/3.6.0/plexus-utils-3.6.0.jar (272 kB at 2.5 MB/s)
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] Copying 47 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.15.0:compile (default-compile) @ spring-petclinic ---
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/ow2/asm/asm/9.9.1/asm-9.9.1.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/ow2/asm/asm/9.9.1/asm-9.9.1.pom (2.4 kB at 27 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-shared-incremental/1.1/maven-shared-incremental-1.1.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-shared-incremental/1.1/maven-shared-incremental-1.1.pom (4.7 kB at 57 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-shared-components/19/maven-shared-components-19.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-shared-components/19/maven-shared-components-19.pom (6.4 kB at 72 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/maven-parent/23/maven-parent-23.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/maven-parent/23/maven-parent-23.pom (33 kB at 379 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-java/1.5.2/plexus-java-1.5.2.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-java/1.5.2/plexus-java-1.5.2.pom (4.1 kB at 41 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-languages/1.5.2/plexus-languages-1.5.2.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-languages/1.5.2/plexus-languages-1.5.2.pom (3.9 kB at 39 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/com/thoughtworks/qdox/qdox/2.2.0/qdox-2.2.0.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/com/thoughtworks/qdox/qdox/2.2.0/qdox-2.2.0.pom (18 kB at 226 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compiler-api/2.16.2/plexus-compiler-api-2.16.2.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compiler-api/2.16.2/plexus-compiler-api-2.16.2.pom (1.4 kB at 13 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compiler/2.16.2/plexus-compiler-2.16.2.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compiler/2.16.2/plexus-compiler-2.16.2.pom (7.5 kB at 89 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compiler-manager/2.16.2/plexus-compiler-manager-2.16.2.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compiler-manager/2.16.2/plexus-compiler-manager-2.16.2.pom (1.3 kB at 16 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compiler-javac/2.16.2/plexus-compiler-javac-2.16.2.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compiler-javac/2.16.2/plexus-compiler-javac-2.16.2.pom (1.3 kB at 14 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compilers/2.16.2/plexus-compilers-2.16.2.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compilers/2.16.2/plexus-compilers-2.16.2.pom (1.6 kB at 20 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/ow2/asm/asm/9.9.1/asm-9.9.1.jar
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/commons-io/commons-io/2.11.0/commons-io-2.11.0.jar
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-shared-incremental/1.1/maven-shared-incremental-1.1.jar
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-java/1.5.2/plexus-java-1.5.2.jar
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/com/thoughtworks/qdox/qdox/2.2.0/qdox-2.2.0.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/ow2/asm/asm/9.9.1/asm-9.9.1.jar (126 kB at 2.2 MB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compiler-api/2.16.2/plexus-compiler-api-2.16.2.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/com/thoughtworks/qdox/qdox/2.2.0/qdox-2.2.0.jar (353 kB at 5.1 MB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compiler-manager/2.16.2/plexus-compiler-manager-2.16.2.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-java/1.5.2/plexus-java-1.5.2.jar (57 kB at 831 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compiler-javac/2.16.2/plexus-compiler-javac-2.16.2.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-shared-incremental/1.1/maven-shared-incremental-1.1.jar (14 kB at 169 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/commons-io/commons-io/2.11.0/commons-io-2.11.0.jar (327 kB at 4.0 MB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compiler-api/2.16.2/plexus-compiler-api-2.16.2.jar (29 kB at 222 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compiler-javac/2.16.2/plexus-compiler-javac-2.16.2.jar (30 kB at 227 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compiler-manager/2.16.2/plexus-compiler-manager-2.16.2.jar (5.2 kB at 38 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar (193 kB at 1.3 MB/s)
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 30 source files with javac [debug parameters release 17] to target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:3.5.0:testResources (default-testResources) @ spring-petclinic ---
+[INFO] skip non existing resourceDirectory /home/runner/work/_temp/real-repos/spring-petclinic/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.15.0:testCompile (default-testCompile) @ spring-petclinic ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 20 source files with javac [debug parameters release 17] to target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:3.5.6:test (default-test) @ spring-petclinic ---
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-api/3.5.6/surefire-api-3.5.6.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-api/3.5.6/surefire-api-3.5.6.pom (3.7 kB at 47 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-logger-api/3.5.6/surefire-logger-api-3.5.6.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-logger-api/3.5.6/surefire-logger-api-3.5.6.pom (3.5 kB at 49 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-shared-utils/3.5.6/surefire-shared-utils-3.5.6.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-shared-utils/3.5.6/surefire-shared-utils-3.5.6.pom (4.0 kB at 56 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-extensions-api/3.5.6/surefire-extensions-api-3.5.6.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-extensions-api/3.5.6/surefire-extensions-api-3.5.6.pom (3.6 kB at 50 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/maven-surefire-common/3.5.6/maven-surefire-common-3.5.6.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/maven-surefire-common/3.5.6/maven-surefire-common-3.5.6.pom (7.3 kB at 98 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-booter/3.5.6/surefire-booter-3.5.6.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-booter/3.5.6/surefire-booter-3.5.6.pom (5.1 kB at 66 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-extensions-spi/3.5.6/surefire-extensions-spi-3.5.6.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-extensions-spi/3.5.6/surefire-extensions-spi-3.5.6.pom (1.7 kB at 25 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-api/3.5.6/surefire-api-3.5.6.jar
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-logger-api/3.5.6/surefire-logger-api-3.5.6.jar
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-shared-utils/3.5.6/surefire-shared-utils-3.5.6.jar
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-extensions-api/3.5.6/surefire-extensions-api-3.5.6.jar
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/maven-surefire-common/3.5.6/maven-surefire-common-3.5.6.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-extensions-api/3.5.6/surefire-extensions-api-3.5.6.jar (26 kB at 460 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-booter/3.5.6/surefire-booter-3.5.6.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-api/3.5.6/surefire-api-3.5.6.jar (174 kB at 2.6 MB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-extensions-spi/3.5.6/surefire-extensions-spi-3.5.6.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-logger-api/3.5.6/surefire-logger-api-3.5.6.jar (14 kB at 176 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-shared-utils/3.5.6/surefire-shared-utils-3.5.6.jar (3.0 MB at 32 MB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/maven-surefire-common/3.5.6/maven-surefire-common-3.5.6.jar (317 kB at 3.4 MB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-booter/3.5.6/surefire-booter-3.5.6.jar (123 kB at 933 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-extensions-spi/3.5.6/surefire-extensions-spi-3.5.6.jar (8.2 kB at 62 kB/s)
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.8.15:report (report) @ spring-petclinic ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO] 
+[INFO] --- maven-jar-plugin:3.5.0:jar (default-jar) @ spring-petclinic ---
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/maven-archiver/3.6.5/maven-archiver-3.6.5.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/maven-archiver/3.6.5/maven-archiver-3.6.5.pom (4.7 kB at 67 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-shared-components/45/maven-shared-components-45.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-shared-components/45/maven-shared-components-45.pom (3.8 kB at 55 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-archiver/4.10.2/plexus-archiver-4.10.2.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-archiver/4.10.2/plexus-archiver-4.10.2.pom (7.0 kB at 94 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus/23/plexus-23.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus/23/plexus-23.pom (31 kB at 413 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-io/3.5.1/plexus-io-3.5.1.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-io/3.5.1/plexus-io-3.5.1.pom (4.3 kB at 63 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/commons-codec/commons-codec/1.19.0/commons-codec-1.19.0.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/commons-codec/commons-codec/1.19.0/commons-codec-1.19.0.pom (18 kB at 257 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/commons/commons-lang3/3.18.0/commons-lang3-3.18.0.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/commons/commons-lang3/3.18.0/commons-lang3-3.18.0.pom (32 kB at 445 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/io/airlift/aircompressor/0.27/aircompressor-0.27.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/io/airlift/aircompressor/0.27/aircompressor-0.27.pom (5.8 kB at 80 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/io/airlift/airbase/112/airbase-112.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/io/airlift/airbase/112/airbase-112.pom (69 kB at 930 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/junit/junit-bom/5.8.0-M1/junit-bom-5.8.0-M1.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/junit/junit-bom/5.8.0-M1/junit-bom-5.8.0-M1.pom (5.7 kB at 85 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/tukaani/xz/1.10/xz-1.10.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/tukaani/xz/1.10/xz-1.10.pom (1.9 kB at 28 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/com/github/luben/zstd-jni/1.5.7-4/zstd-jni-1.5.7-4.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/com/github/luben/zstd-jni/1.5.7-4/zstd-jni-1.5.7-4.pom (2.0 kB at 27 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-interpolation/1.28/plexus-interpolation-1.28.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-interpolation/1.28/plexus-interpolation-1.28.pom (3.4 kB at 47 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus/20/plexus-20.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus/20/plexus-20.pom (29 kB at 411 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-archiver/4.10.4/plexus-archiver-4.10.4.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-archiver/4.10.4/plexus-archiver-4.10.4.pom (5.6 kB at 76 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-io/3.6.0/plexus-io-3.6.0.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-io/3.6.0/plexus-io-3.6.0.pom (3.5 kB at 51 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/com/github/luben/zstd-jni/1.5.7-6/zstd-jni-1.5.7-6.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/com/github/luben/zstd-jni/1.5.7-6/zstd-jni-1.5.7-6.pom (2.0 kB at 29 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/commons-io/commons-io/2.21.0/commons-io-2.21.0.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/commons-io/commons-io/2.21.0/commons-io-2.21.0.pom (21 kB at 294 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/commons/commons-parent/91/commons-parent-91.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/commons/commons-parent/91/commons-parent-91.pom (79 kB at 1.1 MB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/maven-archiver/3.6.5/maven-archiver-3.6.5.jar
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-interpolation/1.28/plexus-interpolation-1.28.jar
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-archiver/4.10.4/plexus-archiver-4.10.4.jar
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-io/3.6.0/plexus-io-3.6.0.jar
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/commons-codec/commons-codec/1.19.0/commons-codec-1.19.0.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-io/3.6.0/plexus-io-3.6.0.jar (80 kB at 1.2 MB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/commons/commons-lang3/3.18.0/commons-lang3-3.18.0.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/commons-codec/commons-codec/1.19.0/commons-codec-1.19.0.jar (375 kB at 5.7 MB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/maven-archiver/3.6.5/maven-archiver-3.6.5.jar (28 kB at 423 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/io/airlift/aircompressor/0.27/aircompressor-0.27.jar
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/tukaani/xz/1.10/xz-1.10.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-archiver/4.10.4/plexus-archiver-4.10.4.jar (227 kB at 3.2 MB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/com/github/luben/zstd-jni/1.5.7-6/zstd-jni-1.5.7-6.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-interpolation/1.28/plexus-interpolation-1.28.jar (87 kB at 1.0 MB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/commons-io/commons-io/2.21.0/commons-io-2.21.0.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/commons/commons-lang3/3.18.0/commons-lang3-3.18.0.jar (703 kB at 5.4 MB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/io/airlift/aircompressor/0.27/aircompressor-0.27.jar (255 kB at 1.9 MB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/tukaani/xz/1.10/xz-1.10.jar (169 kB at 1.2 MB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/commons-io/commons-io/2.21.0/commons-io-2.21.0.jar (585 kB at 3.3 MB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/com/github/luben/zstd-jni/1.5.7-6/zstd-jni-1.5.7-6.jar (7.4 MB at 38 MB/s)
+[INFO] Building jar: /home/runner/work/_temp/real-repos/spring-petclinic/target/spring-petclinic-4.0.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot-maven-plugin:4.1.0:repackage (repackage) @ spring-petclinic ---
+[INFO] Replacing main artifact /home/runner/work/_temp/real-repos/spring-petclinic/target/spring-petclinic-4.0.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to /home/runner/work/_temp/real-repos/spring-petclinic/target/spring-petclinic-4.0.0-SNAPSHOT.jar.original
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.8.1:copy-dependencies (default-cli) @ spring-petclinic ---
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-archiver/4.10.0/plexus-archiver-4.10.0.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-archiver/4.10.0/plexus-archiver-4.10.0.pom (5.8 kB at 96 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-io/3.5.0/plexus-io-3.5.0.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-io/3.5.0/plexus-io-3.5.0.pom (4.3 kB at 66 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/com/github/luben/zstd-jni/1.5.6-3/zstd-jni-1.5.6-3.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/com/github/luben/zstd-jni/1.5.6-3/zstd-jni-1.5.6-3.pom (2.0 kB at 17 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-dependency-analyzer/1.15.0/maven-dependency-analyzer-1.15.0.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-dependency-analyzer/1.15.0/maven-dependency-analyzer-1.15.0.pom (32 kB at 479 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-artifact-transfer/0.13.1/maven-artifact-transfer-0.13.1.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-artifact-transfer/0.13.1/maven-artifact-transfer-0.13.1.pom (11 kB at 161 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-shared-components/34/maven-shared-components-34.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-shared-components/34/maven-shared-components-34.pom (5.1 kB at 77 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-component-annotations/2.0.0/plexus-component-annotations-2.0.0.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-component-annotations/2.0.0/plexus-component-annotations-2.0.0.pom (750 B at 13 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-containers/2.0.0/plexus-containers-2.0.0.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-containers/2.0.0/plexus-containers-2.0.0.pom (4.8 kB at 81 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-common-artifact-filters/3.1.0/maven-common-artifact-filters-3.1.0.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-common-artifact-filters/3.1.0/maven-common-artifact-filters-3.1.0.pom (5.3 kB at 88 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-shared-components/33/maven-shared-components-33.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-shared-components/33/maven-shared-components-33.pom (5.1 kB at 46 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/maven-model/3.0/maven-model-3.0.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/maven-model/3.0/maven-model-3.0.pom (3.9 kB at 35 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/maven/3.0/maven-3.0.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/maven/3.0/maven-3.0.pom (22 kB at 206 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/maven-parent/15/maven-parent-15.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/maven-parent/15/maven-parent-15.pom (24 kB at 218 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/maven-plugin-api/3.0/maven-plugin-api-3.0.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/maven-plugin-api/3.0/maven-plugin-api-3.0.pom (2.3 kB at 18 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/sonatype/sisu/sisu-inject-plexus/1.4.2/sisu-inject-plexus-1.4.2.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/sonatype/sisu/sisu-inject-plexus/1.4.2/sisu-inject-plexus-1.4.2.pom (5.4 kB at 60 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/sonatype/sisu/inject/guice-plexus/1.4.2/guice-plexus-1.4.2.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/sonatype/sisu/inject/guice-plexus/1.4.2/guice-plexus-1.4.2.pom (3.1 kB at 24 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/sonatype/sisu/inject/guice-bean/1.4.2/guice-bean-1.4.2.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/sonatype/sisu/inject/guice-bean/1.4.2/guice-bean-1.4.2.pom (2.6 kB at 31 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/sonatype/sisu/sisu-inject/1.4.2/sisu-inject-1.4.2.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/sonatype/sisu/sisu-inject/1.4.2/sisu-inject-1.4.2.pom (1.2 kB at 9.0 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/sonatype/sisu/sisu-parent/1.4.2/sisu-parent-1.4.2.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/sonatype/sisu/sisu-parent/1.4.2/sisu-parent-1.4.2.pom (7.8 kB at 85 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/sonatype/forge/forge-parent/6/forge-parent-6.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/sonatype/forge/forge-parent/6/forge-parent-6.pom (11 kB at 108 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-component-annotations/1.5.4/plexus-component-annotations-1.5.4.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-component-annotations/1.5.4/plexus-component-annotations-1.5.4.pom (815 B at 7.7 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-containers/1.5.4/plexus-containers-1.5.4.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-containers/1.5.4/plexus-containers-1.5.4.pom (4.2 kB at 40 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus/2.0.5/plexus-2.0.5.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus/2.0.5/plexus-2.0.5.pom (17 kB at 193 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-classworlds/2.2.3/plexus-classworlds-2.2.3.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-classworlds/2.2.3/plexus-classworlds-2.2.3.pom (4.0 kB at 56 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus/2.0.6/plexus-2.0.6.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus/2.0.6/plexus-2.0.6.pom (17 kB at 158 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/sonatype/sisu/sisu-inject-bean/1.4.2/sisu-inject-bean-1.4.2.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/sonatype/sisu/sisu-inject-bean/1.4.2/sisu-inject-bean-1.4.2.pom (5.5 kB at 48 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/sonatype/sisu/sisu-guice/2.1.7/sisu-guice-2.1.7.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/sonatype/sisu/sisu-guice/2.1.7/sisu-guice-2.1.7.pom (11 kB at 118 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-shared-utils/3.1.0/maven-shared-utils-3.1.0.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-shared-utils/3.1.0/maven-shared-utils-3.1.0.pom (5.0 kB at 75 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-shared-components/30/maven-shared-components-30.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-shared-components/30/maven-shared-components-30.pom (4.6 kB at 43 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/maven-parent/30/maven-parent-30.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/maven-parent/30/maven-parent-30.pom (41 kB at 475 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/commons-io/commons-io/2.5/commons-io-2.5.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/commons-io/commons-io/2.5/commons-io-2.5.pom (13 kB at 130 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.5/slf4j-api-1.7.5.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.5/slf4j-api-1.7.5.pom (2.7 kB at 22 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/slf4j/slf4j-parent/1.7.5/slf4j-parent-1.7.5.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/slf4j/slf4j-parent/1.7.5/slf4j-parent-1.7.5.pom (12 kB at 79 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/commons-beanutils/commons-beanutils/1.9.4/commons-beanutils-1.9.4.jar
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/commons-logging/commons-logging/1.2/commons-logging-1.2.jar
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/doxia/doxia-module-xdoc/2.0.0/doxia-module-xdoc-2.0.0.jar
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-archiver/4.10.0/plexus-archiver-4.10.0.jar
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/commons/commons-compress/1.26.2/commons-compress-1.26.2.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/doxia/doxia-module-xdoc/2.0.0/doxia-module-xdoc-2.0.0.jar (35 kB at 518 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/com/github/luben/zstd-jni/1.5.6-3/zstd-jni-1.5.6-3.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-archiver/4.10.0/plexus-archiver-4.10.0.jar (225 kB at 3.4 MB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-io/3.5.1/plexus-io-3.5.1.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/commons/commons-compress/1.26.2/commons-compress-1.26.2.jar (1.1 MB at 14 MB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-dependency-analyzer/1.15.0/maven-dependency-analyzer-1.15.0.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/commons-logging/commons-logging/1.2/commons-logging-1.2.jar (62 kB at 679 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-artifact-transfer/0.13.1/maven-artifact-transfer-0.13.1.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/commons-beanutils/commons-beanutils/1.9.4/commons-beanutils-1.9.4.jar (247 kB at 1.9 MB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-component-annotations/2.0.0/plexus-component-annotations-2.0.0.jar
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-io/3.5.1/plexus-io-3.5.1.jar (80 kB at 592 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-dependency-analyzer/1.15.0/maven-dependency-analyzer-1.15.0.jar (45 kB at 298 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/com/github/luben/zstd-jni/1.5.6-3/zstd-jni-1.5.6-3.jar (6.7 MB at 42 MB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-component-annotations/2.0.0/plexus-component-annotations-2.0.0.jar (4.2 kB at 22 kB/s)
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-artifact-transfer/0.13.1/maven-artifact-transfer-0.13.1.jar (159 kB at 466 kB/s)
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  01:16 min
+[INFO] Finished at: 2026-10-27T02:35:03Z
+[INFO] ------------------------------------------------------------------------
 
-Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
-2026-10-27T01:33:36.597Z ERROR 4927 --- [  restartedMain] o.s.b.d.LoggingFailureAnalysisReporter   : 
 
-***************************
-APPLICATION FAILED TO START
-***************************
+              |\      _,,,--,,_
+             /,`.-'`'   ._  \-;;,_
+  _______ __|,4-  ) )_   .;.(__`'-'__     ___ __    _ ___ _______
+ |       | '---''(_/._)-'(_\_)   |   |   |   |  |  | |   |       |
+ |    _  |    ___|_     _|       |   |   |   |   |_| |   |       | __ _ _
+ |   |_| |   |___  |   | |       |   |   |   |       |   |       | \ \ \ \
+ |    ___|    ___| |   | |      _|   |___|   |  _    |   |      _|  \ \ \ \
+ |   |   |   |___  |   | |     |_|       |   | | |   |   |     |_    ) ) ) )
+ |___|   |_______| |___| |_______|_______|___|_|  |__|___|_______|  / / / /
+ ==================================================================/_/_/_/
 
-Description:
-
-Parameter 1 of method dataSource in org.springframework.boot.jdbc.autoconfigure.DataSourceConfiguration$Hikari required a single bean, but 2 were found:
-	- jdbcConnectionDetailsForSpringPetclinicMysql1: defined in unknown location
-	- jdbcConnectionDetailsForSpringPetclinicPostgres1: defined in unknown location
-
-This may be due to missing parameter name information
-
-Action:
-
-Consider marking one of the beans as @Primary, updating the consumer to accept multiple beans, or using @Qualifier to identify the bean that should be consumed
-
-Ensure that your compiler is configured to use the '-parameters' flag.
-You may need to update both your build tool settings as well as your IDE.
-(See https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-6.1-Release-Notes#parameter-name-retention)
+:: Built with Spring Boot :: 4.1.0
 
 
+2026-10-27T02:35:04.057Z  INFO 4980 --- [  restartedMain] o.s.s.petclinic.PetClinicApplication     : Starting PetClinicApplication using Java 21.0.12.1 with PID 4980 (/home/runner/work/_temp/real-repos/spring-petclinic/target/classes started by runner in /home/runner/work/_temp/real-repos/spring-petclinic)
+2026-10-27T02:35:04.061Z  INFO 4980 --- [  restartedMain] o.s.s.petclinic.PetClinicApplication     : No active profile set, falling back to 1 default profile: "default"
+2026-10-27T02:35:04.123Z  INFO 4980 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-10-27T02:35:04.124Z  INFO 4980 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-10-27T02:35:05.142Z  INFO 4980 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-27T02:35:05.213Z  INFO 4980 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 62 ms. Found 3 JPA repository interfaces.
+2026-10-27T02:35:06.016Z  INFO 4980 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-10-27T02:35:06.034Z  INFO 4980 --- [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-27T02:35:06.035Z  INFO 4980 --- [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-10-27T02:35:06.080Z  INFO 4980 --- [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1955 ms
+2026-10-27T02:35:06.376Z  INFO 4980 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-10-27T02:35:06.545Z  INFO 4980 --- [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:7291869d-662c-4102-aa8e-2baae16b4803 user=SA
+2026-10-27T02:35:06.547Z  INFO 4980 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-10-27T02:35:06.703Z  INFO 4980 --- [  restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-10-27T02:35:06.749Z  INFO 4980 --- [  restartedMain] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.1.Final
+2026-10-27T02:35:07.087Z  INFO 4980 --- [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-27T02:35:07.150Z  INFO 4980 --- [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:7291869d-662c-4102-aa8e-2baae16b4803]
+	Database driver: H2 JDBC Driver
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: 7291869D-662C-4102-AA8E-2BAAE16B4803/PUBLIC
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 100
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-27T02:35:08.041Z  INFO 4980 --- [  restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-27T02:35:08.047Z  INFO 4980 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-27T02:35:08.130Z  INFO 4980 --- [  restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-27T02:35:09.255Z  INFO 4980 --- [  restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 13 endpoints beneath base path '/actuator'
+2026-10-27T02:35:09.361Z  INFO 4980 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-10-27T02:35:09.374Z  INFO 4980 --- [  restartedMain] o.s.s.petclinic.PetClinicApplication     : Started PetClinicApplication in 5.783 seconds (process running for 6.216)
+2026-10-27T02:35:09.551Z  INFO 4980 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-27T02:35:09.551Z  INFO 4980 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-27T02:35:09.557Z  INFO 4980 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 5 ms
 
-The program 'spring-petclinic' has exited with code 0 (0x0).
+The program 'spring-petclinic' was stopped.
 
