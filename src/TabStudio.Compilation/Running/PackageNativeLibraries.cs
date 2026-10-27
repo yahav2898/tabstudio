@@ -36,7 +36,7 @@ public sealed class PackageNativeLibraries
         ArgumentNullException.ThrowIfNull(packageFiles);
         foreach (var path in packageFiles.Where(IsNativeLibrary))
         {
-            _byFileName.TryAdd(Path.GetFileName(path), path);
+            _byFileName.TryAdd(path[(path.LastIndexOfAny(['/', '\\']) + 1)..], path);
         }
     }
 
