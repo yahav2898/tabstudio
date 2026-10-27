@@ -27,6 +27,9 @@ public sealed class EmbeddedGlibcTests
     [InlineData("west", "zephyr")]
     [InlineData("/opt/tabstudio/pico-sdk/tools/pioasm", "pico-sdk")]
     [InlineData("/opt/tabstudio/embedded-rust/bin/cargo", "embedded-rust")]
+    [InlineData("nrfutil", "embedded-nrfutil")]
+    [InlineData("/usr/local/bin/nrfutil", "embedded-nrfutil")]
+    [InlineData("/opt/tabstudio/nordic-dfu/lib/nrfutil-nrf5sdk-tools/pc_nrfutil_legacy_v6.1.7", "embedded-nrfutil")]
     [InlineData("/usr/local/bin/cargo-flash", "probe-rs")]
     [InlineData("/opt/tabstudio/platformio-evil/pio", null)]
     [InlineData("python3", null)]
@@ -240,6 +243,30 @@ public sealed class EmbeddedGlibcTests
     }
 
     [Fact]
+    public async Task Nordic_frozen_client_builds_its_matching_serial_control_ABI_before_install_validation()
+    {
+        using var fixture = new InstallerFixture();
+        var sdk = new ToolchainDefinition
+        {
+            Id = EmbeddedNordicInstallation.Id, Name = "Nordic serial DFU", Description = "Test installer command order.",
+            PinnedVersion = EmbeddedNordicInstallation.Version,
+            Setup = [new SetupStepDefinition
+            {
+                Name = "test launcher", File = new FileDefinition { Path = "/usr/local/bin/nrfutil", Content = "#!/bin/sh\n", Executable = true },
+            }],
+        };
+        fixture.Guest.CommandOutput = spec => spec.Program == "nrfutil" ? "nrfutil version 6.1.7" : null;
+        await fixture.Installer.InstallAsync(sdk, null, CancellationToken.None);
+        Assert.True(fixture.Installer.IsToolchainReady(sdk.Id));
+        var compiled = fixture.Guest.Started.FindIndex(command => command.Arguments.Contains(EmbeddedNordicInstallation.X64SerialShim));
+        var validated = fixture.Guest.Started.FindIndex(command => command.Program == "nrfutil");
+        Assert.True(compiled >= 0 && compiled < validated);
+        Assert.Equal("version", fixture.Guest.Started[validated].Arguments[0]);
+        File.Delete(Path.Combine(fixture.Installer.Rootfs, EmbeddedNordicInstallation.X64SerialShim.TrimStart('/')));
+        Assert.False(fixture.Installer.IsToolchainReady(sdk.Id));
+    }
+
+    [Fact]
     public async Task A_verified_image_gets_signed_prerequisites_ABI_native_bridges_and_only_then_an_atomic_SDK_marker()
     {
         using var fixture = new InstallerFixture();
@@ -368,7 +395,7 @@ public sealed class EmbeddedGlibcTests
         {
             BeforeStart?.Invoke(spec);
             Started.Add(spec);
-            if (Rootfs is not null && spec.Program == "cc")
+            if (Rootfs is not null && spec.Program is "cc" or "x86_64-linux-gnu-gcc")
             {
                 var output = spec.Arguments.ToList().IndexOf("-o");
                 var file = Path.Combine(Rootfs, spec.Arguments[output + 1].TrimStart('/'));

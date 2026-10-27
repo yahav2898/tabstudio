@@ -34,6 +34,6 @@ public static class EmbeddedBoardProfiles
         new("xiao-samd21", "Seeed XIAO SAMD21", "seeed_xiao", "Seeeduino:samd:seeed_XIAO_m0", "SAMD21G18A", "XIAO ESP32/nRF/RP variants are distinct boards."),
         new("teensy40", "Teensy 4.0", "teensy40", null, "IMXRT1062", "HalfKay; retain Teensy's bootloader and use the selected board's linker script."),
         new("teensy41", "Teensy 4.1", "teensy41", null, "IMXRT1062", "Select Teensy 4.1 rather than assuming 4.0 flash geometry."),
-        new("ch32v003", "WCH CH32V003", null, null, "CH32V003F4P6", "Requires matching WCH OpenOCD support and SWIO connection; not generic RISC-V JTAG."),
+        new("ch32v003", "WCH CH32V003", null, null, "CH32V003F4P6", "Pinned ch32fun startup/linker and RV32EC GCC. UART ISP requires existing ROM-bootloader entry; WCH-Link SWIO is a separate probe route."),
     ];
 }

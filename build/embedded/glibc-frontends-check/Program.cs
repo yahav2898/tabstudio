@@ -21,7 +21,8 @@ if (args.Length is not (4 or 5))
 }
 
 var sdkId = args.Length == 5 ? args[4] : null;
-if (sdkId is not null && EmbeddedSdkBootstrap.Recipes.Get(sdkId) is null)
+var nordic = sdkId == EmbeddedNordicInstallation.Id;
+if (sdkId is not null && !nordic && EmbeddedSdkBootstrap.Recipes.Get(sdkId) is null)
 {
     throw new ArgumentException("The requested SDK has no production installation recipe: " + sdkId);
 }
@@ -100,6 +101,14 @@ try
     evidence["frontends"] = statuses.Select(s => new { id = s.Toolchain.Id, version = s.Version, state = s.State.ToString() }).ToArray();
     await BuildToolCheck.VerifyAsync(installer.Runtime, project, output, cancellation);
     evidence["nativeBuildToolsVerified"] = true;
+    if (nordic)
+    {
+        await NordicDfuCheck.VerifyAsync(installer.Runtime, project, output, cancellation);
+        evidence["legacyNordicDfuVerified"] = true;
+        evidence["passed"] = true;
+        Console.WriteLine("EMBEDDED_GLIBC_NORDIC_PASSED " + ToolchainPlatform.CurrentArchitecture);
+        return 0;
+    }
     if (sdkId is not null)
     {
         evidence["sdk"] = sdkId;

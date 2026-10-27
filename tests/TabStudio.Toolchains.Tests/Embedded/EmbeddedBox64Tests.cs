@@ -7,6 +7,16 @@ namespace TabStudio.Toolchains.Tests.Embedded;
 public sealed class EmbeddedBox64Tests
 {
     [Fact]
+    public void SerialGuestLibraryIsCompiledForX64AndExplicitlyRoutedIntoGlibc()
+    {
+        var command = EmbeddedBox64Installation.SerialShimBuildCommand;
+        Assert.Equal("x86_64-linux-gnu-gcc", command.Program);
+        Assert.Contains("/opt/tabstudio/embedded/serial_posix.c", command.Arguments);
+        Assert.Contains("/opt/tabstudio/embedded/serial-posix-x86_64.so", command.Arguments);
+        Assert.Equal("1", command.Environment["TABSTUDIO_EMBEDDED_GLIBC"]);
+    }
+
+    [Fact]
     public void NativeBuildRemainsUnmarkedAndExplicitModeUsesLiteralWrapper()
     {
         var project = new EmbeddedProject(EmbeddedProjectKind.PlatformIO, "/project", "platformio.ini", [], null, null, []);

@@ -5,6 +5,7 @@ using TabStudio.App.Services;
 using TabStudio.App.Tests.ViewModels;
 using TabStudio.App.Views;
 using TabStudio.Toolchains.Embedded.Analysis;
+using TabStudio.Toolchains.Embedded.Projects;
 using TabStudio.Testing;
 
 namespace TabStudio.App.Tests.Toolchains;
@@ -12,6 +13,45 @@ namespace TabStudio.App.Tests.Toolchains;
 /// <summary>Embedded analysis is reachable through real IDE commands and never fabricates source locations.</summary>
 public sealed class EmbeddedAnalysisTests
 {
+    [AvaloniaFact]
+    public async Task Classic_avr_captured_reset_flags_use_the_error_list_without_inventing_a_source_line()
+    {
+        using var fixture = new WorkspaceFixture();
+        using var project = new TempDirectory();
+        project.Write("platformio.ini", "[env:uno]\nplatform=atmelavr\nboard=uno\n");
+        var reset = project.Write("reset.json", """{"format":"avr-mcusr","mcusr":12}""");
+        var workspace = fixture.Workspace;
+        workspace.SetUpProjectsWhenTheyOpen = false;
+        await workspace.LoadAsync(project.Path);
+        await workspace.OpenDocumentAsync(reset);
+        await workspace.DecodeEmbeddedCrashCommand.ExecuteAsync(null);
+        Assert.Contains(workspace.ErrorList.Items, item => item.Code == "EMBAVR003" && item.Description.Contains("Brown-out", StringComparison.Ordinal));
+        Assert.Contains(workspace.ErrorList.Items, item => item.Code == "EMBAVR004" && item.Description.Contains("Watchdog", StringComparison.Ordinal));
+        Assert.All(workspace.ErrorList.Items, item => Assert.False(item.HasLocation));
+        Assert.False(workspace.Prompt.IsOpen);
+    }
+
+    [AvaloniaFact]
+    public async Task Configured_stack_budgets_report_after_build_without_replacing_the_memory_status()
+    {
+        using var fixture = new WorkspaceFixture();
+        using var project = new TempDirectory();
+        project.Write("platformio.ini", "[env:demo]\nplatform=ststm32\nboard=nucleo_f401re\n");
+        project.Write("build/main.su", "main.c:1:1:task\t32\tstatic\n");
+        project.Write(".tabstudio/embedded-analysis.json", """
+            { "StackUsageFiles": ["build/main.su"], "CallGraphComplete": true,
+              "TaskBudgets": [{"Name":"Sensor", "EntryFunction":"task", "AllocatedBytes":16}] }
+            """);
+        var workspace = fixture.Workspace;
+        workspace.SetUpProjectsWhenTheyOpen = false;
+        await workspace.LoadAsync(project.Path);
+        var previousStatus = workspace.StatusText;
+        await workspace.ReportEmbeddedStackAsync(EmbeddedProjectDetector.Read(project.Path)!, afterBuild: true);
+        Assert.Contains(workspace.ErrorList.Items, item => item.Code == "EMBSTACK001" && item.Description.Contains("Sensor", StringComparison.Ordinal));
+        Assert.StartsWith(previousStatus, workspace.StatusText, StringComparison.Ordinal);
+        Assert.Contains("stack budgets: 1 warnings", workspace.StatusText, StringComparison.Ordinal);
+    }
+
     [Fact]
     public void Memory_report_has_proportional_treemaps_and_escapes_firmware_names()
     {

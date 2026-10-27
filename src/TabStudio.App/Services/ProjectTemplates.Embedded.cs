@@ -16,9 +16,9 @@ public sealed partial class ProjectTemplates
     };
 
     private static IEnumerable<ProjectTemplate> EmbeddedTemplates => EmbeddedBoardProfiles.All
-        .Where(board => board.PlatformIoBoard is not null && PlatformFor(board.Id) is not null || PicoBoard(board.Id) is not null)
-        .Select(board => new ProjectTemplate(EmbeddedPrefix + board.Id, board.Name + (PicoBoard(board.Id) is null ? " (PlatformIO)" : " (Pico SDK)"),
-            "Serial greeting application for " + board.Target + ". " + board.Notes + " Build package installation is required; physical board verification is separate.", ["C++", "Embedded", PicoBoard(board.Id) is null ? "PlatformIO" : "Pico SDK", board.Target]));
+        .Where(board => board.PlatformIoBoard is not null && PlatformFor(board.Id) is not null || PicoBoard(board.Id) is not null || board.Id == "ch32v003")
+        .Select(board => new ProjectTemplate(EmbeddedPrefix + board.Id, board.Name + (board.Id == "ch32v003" ? " (ch32fun)" : PicoBoard(board.Id) is null ? " (PlatformIO)" : " (Pico SDK)"),
+            "Serial greeting application for " + board.Target + ". " + board.Notes + " Build package installation is required; physical board verification is separate.", [board.Id == "ch32v003" ? "C" : "C++", "Embedded", board.Id == "ch32v003" ? "ch32fun" : PicoBoard(board.Id) is null ? "PlatformIO" : "Pico SDK", board.Target]));
 
     private static string? CreateEmbeddedProject(string templateId, string root, string name)
     {
@@ -27,6 +27,7 @@ public sealed partial class ProjectTemplates
             return null;
         }
         var board = EmbeddedBoardProfiles.All.FirstOrDefault(x => EmbeddedPrefix + x.Id == templateId);
+        if (board?.Id == "ch32v003") return CreateCh32FunProject(root);
         if (board is not null && PicoBoard(board.Id) is { } sdkBoard)
         {
             return CreatePicoSdkProject(root, name, sdkBoard);
@@ -53,6 +54,36 @@ public sealed partial class ProjectTemplates
         File.WriteAllText(Path.Combine(root, ".gitignore"), ".pio/\n.tabstudio/\n");
         WriteKnownAvrFlashProfile(root, board.Id);
         WriteEspMetadataFlashProfile(root, board.Id);
+        return root;
+    }
+
+    private static string CreateCh32FunProject(string root)
+    {
+        foreach (var (name, content) in TabStudio.Toolchains.Embedded.Installation.EmbeddedCh32FunInstallation.ProjectFiles)
+        {
+            File.WriteAllText(Path.Combine(root, name), content);
+        }
+        File.WriteAllText(Path.Combine(root, "README.md"), """
+            # CH32V003F4P6 UART greeting
+
+            Build uses the Toolchain Store's pinned ch32fun startup, linker script and headers,
+            with ordinary native RV32EC/ILP32E GCC. The firmware uses 16 KiB flash and 2 KiB RAM.
+            UART output is PD5 TX, 115200 baud. Connect a 3.3 V USB-UART adapter RX and common GND.
+
+            The generated UART ISP profile requires a device already running its ROM bootloader.
+            CH32V003 has no USB ISP or BOOT pin: entry is requested by existing application firmware.
+            First programming/recovery normally uses a compatible WCH-Link probe on PD1 SWIO.
+            Selecting this template does not switch option bytes, unlock protection or install a bootloader.
+            Use F5 after selecting the actual connected adapter and bootloader state.
+            """ + "\n");
+        var profile = new EmbeddedFlashRequest
+        {
+            Protocol = EmbeddedFlashProtocol.WchIsp, Target = "CH32V003F4P6", FirmwarePath = "firmware.bin",
+            WorkingDirectory = root, BinaryAddress = 0, ApplicationFlash = [new(0, 16 * 1024)],
+            SerialPort = "/dev/ttyUSB0", UseSerialTransport = true,
+        };
+        Directory.CreateDirectory(Path.Combine(root, ".tabstudio"));
+        File.WriteAllText(Path.Combine(root, ".tabstudio", "embedded-flash.json"), JsonSerializer.Serialize(profile, AvrFlashJson) + "\n");
         return root;
     }
 

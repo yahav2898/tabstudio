@@ -44,6 +44,9 @@ public enum BottomPanel
     Logcat,
     /// <summary>The USB serial monitor, independent of the firmware build.</summary>
     SerialMonitor,
+
+    /// <summary>CMSIS-SVD metadata and explicitly requested halted-target register snapshots.</summary>
+    Peripherals,
 }
 
 /// <summary>What the IDE is doing, for the status bar.</summary>
@@ -203,6 +206,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     /// <summary>The selected bottom panel.</summary>
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsErrorListSelected), nameof(IsOutputSelected), nameof(IsCompatibilitySelected))]
+    [NotifyPropertyChangedFor(nameof(IsEmbeddedPeripheralsSelected), nameof(ShowsEmbeddedPeripheralsTab))]
     public partial BottomPanel SelectedPanel { get; set; } = BottomPanel.ErrorList;
 
     /// <summary>Whether the Error List is the visible bottom panel.</summary>

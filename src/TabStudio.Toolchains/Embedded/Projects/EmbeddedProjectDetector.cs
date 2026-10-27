@@ -83,6 +83,11 @@ public static class EmbeddedProjectDetector
         {
             return ReadPlatformIO(directory);
         }
+        if (File.Exists(Path.Combine(directory, ".tabstudio-ch32fun")))
+        {
+            return Project(EmbeddedProjectKind.Ch32Fun, directory, ".tabstudio-ch32fun", target: "CH32V003F4P6",
+                notes: ["Uses pinned upstream CH32fun startup/linker code for 16 KiB flash and 2 KiB RAM. UART ISP requires the chip already in its ROM bootloader; no BOOT-pin or WCH-Link support is inferred."]);
+        }
 
         var cmake = string.Join('\n', Text(Path.Combine(directory, "CMakeLists.txt")).Split('\n')
             .Where(line => !line.TrimStart().StartsWith('#')));

@@ -156,7 +156,7 @@ automatic interrogation on plug-in and a complete device-association editing UI 
 | STM32 ROM UART | stm32flash explicit BIN range with verify | stm32flash is installed through the embedded USB Store entry from signed Alpine packages. BOOT pins/reset and exact target map are external prerequisites. Hardware-unverified. |
 | STM32 USB DFU | dfu-util write, independent upload/readback and byte comparison | dfu-util is in the Store. Exact VID/PID, alternate and application range required. Read-protected/non-readback DFU cannot pass this route. Hardware-unverified. |
 | RP2040/RP2350 BOOTSEL | picotool addressed ELF/UF2/BIN load with verify, or **Upload UF2 via BOOTSEL storage** through USB Host BOT/SCSI and user-space FAT | The Store installs official picotool 2.3.1 ARM64/x64 binaries pinned by SHA-256 in its glibc environment. Storage accepts standard RP ROM identities, actual INFO_UF2, a matching family and explicit XIP application ranges. USB/file acceptance is distinct from flash readback; ROM reset before final status is explicitly unconfirmed. FAT/BOT image tests and independent GNU mtools readback passed locally. Hardware-unverified. |
-| nRF51/52 Nordic SDK Secure DFU | Application-only ZIP through legacy pc-nrfutil 6.x `dfu usb-serial` or `dfu serial` | ZIP/manifest/protobuf size/type/SHA-256 checks are unit-tested. Target bootloader validates compatibility/signature and object CRCs. Requires separately installed compatible pc-nrfutil and an existing Secure DFU bootloader; not modern nRFutil, BLE DFU or SoftDevice/bootloader updates. Hardware-unverified. |
+| nRF51/52 Nordic SDK Secure DFU | Application-only ZIP through legacy pc-nrfutil 6.x `dfu usb-serial` or `dfu serial` | ZIP/manifest/protobuf size/type/SHA-256 checks are unit-tested. Target bootloader validates compatibility/signature and object CRCs. The optional Store recipe retains the official Nordic bundle and runs its byte-identical legacy CLI natively on x64 or with explicit Box64 and a guest x64 serial shim on ARM64. Requires an existing Secure DFU bootloader; not modern nRFutil, BLE DFU or SoftDevice/bootloader updates. Hardware-unverified. |
 | Teensy HalfKay | Exact-board `teensy_loader_cli --mcu=TEENSY40/TEENSY41 -v` HEX transfer | Transfer completion only: `-v` means verbose, not verify. UI says **Firmware transferred; readback unavailable** and production batches refuse this route. The Store builds pinned Teensy Loader 2.3 source with dynamic libusb-compat; press the board’s Program button before granting its HalfKay device. No first-device soft-reboot command is used. Hardware-unverified. |
 | WCH ROM ISP | wchisp 0.3-compatible `info --chip` preflight, then default `flash` with ISP verification | Raw BIN must explicitly start at code-flash address zero. USB or explicit UART transport is supported; UART baud is 115200/1000000/2000000. The Store builds pinned wchisp 0.3.0 source with its checked Cargo.lock and dynamic libusb. No config-reset/unprotect flags. CH32V003 has UART ISP, no USB ISP, and requires application-controlled bootloader entry. WCH-Link/wlink SWIO is a separate route. Hardware-unverified. |
 | MSP430 mspdebug | Addressed HEX/ELF `prog` then target-memory `verify`, with `-n` disabling startup scripts | Explicit rf2500, olimex variants, uif, goodfet or mehfet driver; serial/USB as supported by that driver. BSL drivers with automatic mass erase/unlock and vendor tilib are refused. The Store builds pinned MSPDebug 0.26 source; legacy libusb compatibility is a signed Alpine dependency. Hardware-unverified. |
@@ -178,7 +178,7 @@ hardware-unverified:
 | wchisp | Official 0.3.0 source archive, SHA-256 pinned from downloaded bytes | Native Alpine Rust build with `--locked --no-default-features --jobs 2`. Cargo.lock pins/checks dependencies; dynamic system libusb enables the descriptor bridge. Actual x64 source/version/PATH/dynamic-link smoke passed locally; ARM64/musl recipe is exercised in CI. |
 | mspdebug | Official v0.26 source archive, SHA-256 pinned from downloaded bytes | Native Alpine C build, readline omitted, libusb-compat dynamic backend. Actual x64 source/version/PATH smoke and the tool's simulator program/verify/mismatch checks passed locally. Source, license and upstream TI3410 transport firmware are retained. ARM64/musl recipe is exercised in CI. |
 | pymcuprog UART UPDI | Existing 3.19.4.61 MIT wheel and support wheels, SHA-256 pinned | Existing PIC support downloader; no XC compiler or XC license download. |
-| pc-nrfutil 6.1.7 | Typed legacy route; automatic ARM64 installation is unavailable | Its published source requires Python >=3.7,<3.11 and pc_ble_driver_py, incompatible with the current Ubuntu 24.04/Python 3.12 side environment. A missing CLI produces this explanation before permission/programming. An explicitly installed compatible CLI can still be used. |
+| pc-nrfutil 6.1.7 | Byte-identical self-contained legacy executable inside the SHA-256-pinned official Nordic nrf5sdk-tools 1.1.0 bundle | Downloaded directly from Nordic on demand; complete licenses/docs retained. Native x64 or explicit ARM64 Box64 with a separately compiled guest serial shim. Native x64 synthetic Secure DFU succeeds and bad CRC fails; actual ARM64 ABI qualification gates listing the Store entry. |
 
 Installers validate the native executable/capabilities before creating PATH aliases. Sources and upstream licenses
 are retained. CI runs the same helpers on x64 and ARM64 and checks that native USB clients link the expected dynamic
@@ -229,7 +229,9 @@ outcomes remain distinct from target-verified outcomes; a successfully launched 
 - **MSP430:** set `programmer` to the supported mspdebug driver and supply HEX/ELF. `useSerialTransport` selects
   UART access for a serial-capable driver; a USB probe can use `probeSelector` as its serial. `mehfet` also needs
   the exact `usbSelector` VID:PID. No startup scripts, forced target IDs or BSL unlock sequence are executed.
-- **Nordic Secure DFU:** install the legacy **pc-nrfutil 6.x** CLI under Nordic's license. Supply an application-only
+- **Nordic Secure DFU:** the optional Store route installs the original **pc-nrfutil 6.1.7** executable from
+  Nordic's official complete bundle under its license, retaining all original files. The legacy bundle has no native
+  ARM64 release; that route uses explicit Box64 and the matching x64 serial ABI, qualified separately on CI. Supply an application-only
   ZIP and the actual `binaryAddress`/`applicationFlash` partition selection. Only three flat files are accepted:
   `manifest.json`, application BIN and init DAT. The DAT must describe an application with the matching size and
   SHA-256, without debug bypass, SoftDevice or bootloader bytes. A signature envelope is parsed without asserting
@@ -270,7 +272,7 @@ published application limits; other boards require a reviewed flash profile rath
 | nRF52840 DK | PlatformIO `nrf52840_dk` | Template contracts tested; preserve any separate SoftDevice; hardware-unverified. |
 | Seeed XIAO | PlatformIO `seeed_xiao`, SAMD21 only | Template contracts tested; ESP/nRF/RP XIAO variants need distinct definitions; hardware-unverified. |
 | Teensy 4.0/4.1 | PlatformIO `teensy40`/`teensy41` | Starters plus explicit HalfKay HEX transfer. No readback/production verification. Hardware-unverified. |
-| CH32V003 | Explicit device metadata profile | No invented PlatformIO package or one-tap starter. Toolchain/SWIO programming integration incomplete; hardware-unverified. |
+| CH32V003 | Pinned upstream ch32fun startup/linker/headers, native RV32EC GCC, UART greeting and bounded WCH ISP profile | Actual native build proof: 732 B flash, 16 KiB code flash/2 KiB RAM map. UART TX PD5 at 115200. ROM UART ISP must already be active; V003 has no BOOT pin and this does not provide initial WCH-Link SWIO programming. Hardware-unverified. |
 
 ## Flash safety, backups and production work
 
@@ -373,6 +375,11 @@ strict length/address checks; the static memory and disassembly commands below u
 The QEMU/simavr tests exercise the real adapter/client path, not OpenOCD's physical probe transport. Availability
 of a particular peripheral, multicore target or architecture still depends on OpenOCD/GDB support and wiring.
 
+**View > Device Peripherals** opens the docked register browser. Peripheral/register selectors and named bit
+fields display actual vendor metadata; changing selection performs no target access and reset defaults are never
+presented as live values. **Read selected register** takes one halted snapshot, labeled with its epoch. **Edit
+field** uses the same guarded write policy as the command below. There is no background polling.
+
 **Load CMSIS-SVD** reads a local vendor file with DTD/entity resolution disabled and bounded expansion. Register
 inspection names bitfields and enumerations, uses the selected SVD's address/width and requires an explicitly
 little-endian halted target. Write-only registers and documented read side effects are not automatically read.
@@ -380,7 +387,8 @@ little-endian halted target. Write-only registers and documented read side effec
 **Edit register field** additionally requires `.tabstudio/peripheral-access.json`: a reviewed device/register/address
 allowlist. It refuses configuration/side-effect registers, previews the exact old/new value, requires that exact
 operation to be typed, checks the register has not changed, writes, and reads back. This is an explicit register
-picker workflow, not a continuously polled instrumentation panel.
+operation in the dock or command picker. A metadata reload, core/thread change, resume or subsequent stop
+invalidates pending inspection/confirmation; writes still require the current register value to match the preview.
 
 Editor hover on an identifiable `PERIPHERAL->REGISTER` access adds SVD descriptions. **Load register header** reads
 the actual chip header; **Ctrl+.** on an eligible literal mask offers an existing macro only when its resolved
@@ -396,9 +404,30 @@ pending, the mixed/stale result is discarded. These commands do not poll, resume
 
 **RTOS threads** reads halted FreeRTOS lists or Zephyr's monitored thread chain through the firmware's actual
 debug types and symbols. Names, states, priorities and available stack extents are bounded/cycle checked. All
-cores must be halted. Zephyr needs thread monitoring; missing types/configurations are reported. The reader can
-scan a verified stack-fill pattern when explicitly supplied by a caller; the current UI does not guess fill
-settings or claim a stack high-water mark when these are unknown.
+cores must be halted. Zephyr needs thread monitoring; missing types/configurations are reported. The UI can scan a verified stack-fill pattern from `.tabstudio/embedded-rtos.json`; it never guesses the
+initialization pattern or growth direction. Per-stack, total-byte, thread-count and timeout limits bound reads,
+and optional reviewed RAM intervals refuse scans outside known stack memory. Per-task free-stack thresholds
+produce Error List warnings; missing/ambiguous tasks, extents or evidence remain unverified. The actual DAP
+`allThreadsStopped` event claim is reported separately from the requirement to halt physical participating cores.
+
+An explicit profile can supply the actual facts below; these illustrative values must match the built kernel:
+
+```json
+{
+  "kind": "FreeRtos",
+  "stackFillByte": 165,
+  "stackGrowsDown": true,
+  "maximumThreads": 256,
+  "maximumStackScanBytes": 65536,
+  "maximumTotalStackScanBytes": 1048576,
+  "timeoutSeconds": 30,
+  "taskLimits": [{ "name": "Sensor", "minimumFreeBytes": 256, "expectedStackBytes": 2048 }]
+}
+```
+
+The validated legacy `.tabstudio/rtos.json` fill/growth profile remains supported with a migration note. New
+profiles take precedence. A verified fill scan estimates the minimum unused initialized extent; it does not
+measure future stack demand or prove whole-system interrupt overhead.
 
 **Start RTT/defmt logs** runs the official probe-rs 0.32 `attach` command and streams its native decoded output
 into Output. Select `Backend: "ProbeRs"`, the exact `Chip` and the ELF for the firmware already running in
@@ -456,8 +485,9 @@ specified. ELF analysis is bounded to 128 MB and 262,144 symbol entries; linker 
 Unaligned access, division by zero and valid fault addresses are evidence; a possible null access is labeled as
 possible. Its JSON input contains the eight core exception words. In a supported basic or extended hardware frame
 these words begin at SP; extended floating-point state follows them, so adding 72 bytes to SP would decode the
-wrong core frame. Captured PC/LR are not a reconstructed complete unwind. ESP PC:SP pairs preserve only PCs. The classic AVR MCUSR reset decoder is an engine
-API, not a dedicated UI capture workflow. Exact source locations require the matching firmware ELF and configured
+wrong core frame. Captured PC/LR are not a reconstructed complete unwind. ESP PC:SP pairs preserve only PCs. For captured classic AVR reset flags, **Decode crash** accepts `{"format":"avr-mcusr","mcusr":12}` and places the
+actual brown-out/watchdog flag meanings in the Error List. It does not read or clear MCUSR automatically; newer
+AVR families with different reset-status registers need their documented layout. Exact source locations require the matching firmware ELF and configured
 addr2line; unknown locations stay empty.
 
 **Capture live fault** is a manual, read-only command for a paused on-chip GDB session. `FaultModel` must explicitly
@@ -474,7 +504,11 @@ handler prologue may already have moved SP. Otherwise only fault status is repor
 decoded. EXC_RETURN selects MSP/PSP and basic/extended extent; the core words remain first in both layouts, and
 FP/reserved words are excluded. Stacking-fault flags, security transitions and additional-state layouts suppress
 frame recovery. Flags can be latched from an earlier fault: capture does not clear them, write target memory or
-resume the CPU. This is not an automatic full crash-unwinder or physical hardware verification.
+resume the CPU. After exact session/profile/ELF binding, an actual GDB DAP **exception** stop automatically checks the supported
+core's ICSR. Active exceptions 3–6 trigger the same read-only capture; thread mode, NMI, SVC, SysTick and IRQ
+stops do not publish old latched fault flags. Initial attach stops arriving before binding and ordinary breakpoint
+stops remain manual. The selected core's frame must still satisfy the entry/EXC_RETURN checks. This is not a full
+crash-unwinder or physical hardware verification.
 
 Frame layout reference: Arm's [Exception Model User Guide, Figure 4-3](https://community.arm.com/cfs-file/__key/communityserver-discussions-components-files/471/armv8_2D00_m_5F00_exception_5F00_model_5F00_user_5F00_guide_5F00_107706_5F00_0100_5F00_01_5F00_en.pdf).
 
@@ -486,7 +520,8 @@ indirect placeholders and compiler-inserted library calls are retained; stale or
 Manual `StackCalls` can supply additional reviewed edges. Imported graphs always retain unknown whole-program
 completeness, even if `CallGraphComplete` was set; a proven partial chain can still warn that a task is too small. The default does not assert graph completeness. Missing library frames, indirect calls (`Callee: null`),
 recursive cycles, ambiguous static names and unbounded dynamic allocations remain unknown. Task checks add the
-explicit byte allowance before comparing to the allocation. Interrupt nesting, assembly, RTOS context frames and
+explicit byte allowance before comparing to the allocation. Configured task budgets run after each successful
+firmware build and retain the memory report in the status bar; the full manual command remains available. Interrupt nesting, assembly, RTOS context frames and
 other ABI overhead need reviewed allowances; a source parser cannot prove these from a function name. Link-time optimization may emit several `.ci` files; include every relevant output. The compiler dump does not
 prove that separately built libraries, assembly, interrupt nesting or all dynamic dispatch are covered.
 
@@ -590,6 +625,12 @@ inherited FD 3, and compares the complete resulting AVR ELF bytes across runners
 real pinned PlatformIO methods to check native-first and fallback selection. These are CI requirements;
 they are not physical tablet/USB qualification or a claim that every x86-only platform is compatible.
 
+Frozen x64 serial clients additionally require the control shim compiled for x64. Their Box64 child clears
+the native ARM `LD_PRELOAD` and uses only `BOX64_LD_PRELOAD` for that guest shim; the native worker keeps
+ownership of USB and the PTY. CI compares every control RPC against an independent native C client,
+including custom baud, parity/stop bits, DTR/RTS, break, flush/drain and HUPCL. It retains the shim's actual
+glibc symbol-version requirements. A native ARM preload alone is not treated as proof of x64 serial support.
+
 ## Engineering decisions and remaining work
 
 The useful additions are repeatable verified backups, exact dump comparisons, per-board production logs,
@@ -604,8 +645,8 @@ it does not establish a physical probe-rs programming or debug session.
 
 Remaining work includes physical nusb/usbfs, HIDAPI and BOOTSEL storage I/O qualification, a native probe-rs hidraw
 backend, exhaustive third-party board/core package compatibility, automatic interrogation on plug-in and a complete
-device-association UI, WCH-Link SWIO/vendor debug support and legacy pc-nrfutil installation, automatic crash
-detection/full unwind beyond explicit supported capture, complete call-graph proof and hardware RTT/defmt qualification,
+device-association UI, WCH-Link SWIO/vendor debug support and exhaustive Nordic bootloader compatibility and complete crash
+unwinding beyond supported exception-stop capture, complete call-graph proof and hardware RTT/defmt qualification,
 parallel on-target test campaigns, F5 orchestration across every unsupported board/transport and physical-board
 verification. The existing [Windows Bridge](../ARCHITECTURE.md#windows-bridge) remains available for workflows
 that need vendor desktop software. See [third-party notices](../../THIRD-PARTY-NOTICES.md) for downloaded tools.

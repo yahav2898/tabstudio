@@ -6,7 +6,7 @@ namespace TabStudio.Toolchains.Embedded.Installation;
 public static class EmbeddedFlashToolInstallation
 {
     /// <summary>Catalog IDs whose native download is followed by the common validation/launcher step.</summary>
-    public static bool Handles(string id) => id is "embedded-esptool" or "embedded-picotool" or "embedded-bossac" or "embedded-teensy" or "embedded-wchisp" or "embedded-mspdebug";
+    public static bool Handles(string id) => id is "embedded-esptool" or "embedded-picotool" or "embedded-bossac" or "embedded-teensy" or "embedded-wchisp" or "embedded-mspdebug" or EmbeddedNordicInstallation.Id;
 
     /// <summary>The auxiliary Store entry needed for a built-in flashing route, where it can be installed automatically.</summary>
     public static string? ToolchainId(Flashing.EmbeddedFlashProtocol protocol) => protocol switch
@@ -17,6 +17,7 @@ public static class EmbeddedFlashToolInstallation
         Flashing.EmbeddedFlashProtocol.Teensy => "embedded-teensy",
         Flashing.EmbeddedFlashProtocol.WchIsp => "embedded-wchisp",
         Flashing.EmbeddedFlashProtocol.MspDebug => "embedded-mspdebug",
+        Flashing.EmbeddedFlashProtocol.NrfDfu => EmbeddedNordicInstallation.Id,
         Flashing.EmbeddedFlashProtocol.Avrdude or Flashing.EmbeddedFlashProtocol.Stm32Dfu or Flashing.EmbeddedFlashProtocol.Stm32Flash or Flashing.EmbeddedFlashProtocol.OpenOcd => "embedded-support",
         _ => null,
     };
@@ -28,6 +29,10 @@ public static class EmbeddedFlashToolInstallation
         if (!Handles(definition.Id))
         {
             return definition;
+        }
+        if (definition.Id == EmbeddedNordicInstallation.Id)
+        {
+            return definition with { Setup = [.. definition.Setup, .. EmbeddedNordicInstallation.Setup] };
         }
         var tool = definition.Id switch
         {

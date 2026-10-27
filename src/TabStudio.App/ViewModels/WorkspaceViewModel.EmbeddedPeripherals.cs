@@ -16,6 +16,7 @@ public sealed partial class WorkspaceViewModel
     private SvdMaskMacros? _embeddedMaskMacros;
     private readonly Dictionary<string, (string File, SvdMaskReplacement Replacement)> _embeddedMaskActions = new(StringComparer.Ordinal);
     private readonly SemaphoreSlim _peripheralOperation = new(1, 1);
+    private (DebugAdapterSession Adapter, int Epoch, bool AllThreadsStopped)? _embeddedRtosStoppedEvidence;
     internal int EmbeddedRegisterMetadataRevision { get; private set; }
 
     internal QuickInfoResult? GetEmbeddedRegisterQuickInfo(string source, int position)
@@ -126,6 +127,7 @@ public sealed partial class WorkspaceViewModel
             _embeddedMaskMacros = null;
             _embeddedMaskActions.Clear();
             EmbeddedRegisterMetadataRevision++;
+            RefreshEmbeddedPeripheralCatalog();
             ShowOutputSource(Output);
             Output.WriteLine($"{_embeddedSvd.Name}: {_embeddedSvd.Peripherals.Count} peripherals, {_embeddedSvd.Peripherals.Sum(p => p.Registers.Count)} registers. Choose Inspect device register to read a halted target.", OutputKind.Info);
             foreach (var peripheral in _embeddedSvd.Peripherals)
@@ -143,7 +145,14 @@ public sealed partial class WorkspaceViewModel
     {
         var selected = await ChooseEmbeddedRegisterAsync();
         if (selected is not { } entry) return;
-        ShowOutputSource(Output);
+        await InspectEmbeddedRegisterCoreAsync(entry.Peripheral, entry.Register);
+    }
+
+    private async Task InspectEmbeddedRegisterCoreAsync(SvdPeripheral peripheral, SvdRegister register, bool showOutput = true)
+    {
+        var entry = (Peripheral: peripheral, Register: register);
+        if (_embeddedSvd is not { } device) return;
+        if (showOutput) ShowOutputSource(Output);
         Output.WriteLine(RegisterAccess.Describe(entry.Peripheral, entry.Register), OutputKind.Info);
         if (_adapter is not { } adapter || !IsPaused)
         {
@@ -159,8 +168,9 @@ public sealed partial class WorkspaceViewModel
         {
             using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(10));
             var epoch = Volatile.Read(ref _adapterPauses);
-            var value = await ReadPeripheralRegisterAsync(adapter, entry.Register, epoch, timeout.Token);
+            var value = await ReadPeripheralRegisterAsync(adapter, device, entry.Register, epoch, timeout.Token);
             EnsureEmbeddedInspectionPaused(adapter, epoch);
+            UpdateEmbeddedPeripheralSnapshot(entry.Peripheral, entry.Register, value, epoch);
             Output.WriteLine($"{entry.Peripheral.Name}.{entry.Register.Name} = 0x{value:X}", OutputKind.Info);
             foreach (var field in entry.Register.Fields)
             {
@@ -179,7 +189,14 @@ public sealed partial class WorkspaceViewModel
     private async Task EditEmbeddedRegisterFieldAsync()
     {
         var selected = await ChooseEmbeddedRegisterAsync();
-        if (selected is not { } entry || _embeddedSvd is not { } device || Workspace is not { } workspace || _adapter is not { } adapter || !IsPaused)
+        if (selected is not { } entry) return;
+        await EditEmbeddedRegisterFieldCoreAsync(entry.Peripheral, entry.Register);
+    }
+
+    private async Task EditEmbeddedRegisterFieldCoreAsync(SvdPeripheral peripheral, SvdRegister register)
+    {
+        var entry = (Peripheral: peripheral, Register: register);
+        if (_embeddedSvd is not { } device || Workspace is not { } workspace || _adapter is not { } adapter || !IsPaused)
         {
             StatusText = "Load the selected device's SVD and pause its embedded debug adapter first.";
             return;
@@ -203,22 +220,24 @@ public sealed partial class WorkspaceViewModel
             if (input is null) return;
             var requested = ParsePeripheralUnsigned(input);
             using var timeout = new CancellationTokenSource(TimeSpan.FromMinutes(2));
-            var current = await ReadPeripheralRegisterAsync(adapter, entry.Register, epoch, timeout.Token);
+            var current = await ReadPeripheralRegisterAsync(adapter, device, entry.Register, epoch, timeout.Token);
             var write = RegisterAccess.CreateFieldWrite(entry.Register, field, requested, current);
             var confirmation = $"WRITE {device.Name} {entry.Peripheral.Name}.{entry.Register.Name}.{field.Name} @ 0x{write.Address:X}: 0x{current:X} -> 0x{write.Value:X}";
             var typed = await Prompt.AskAsync("Confirm ordinary peripheral write", confirmation + "\nType this exact operation to apply it to the halted target:", "Write", "");
             if (typed != confirmation) return;
             EnsureEmbeddedInspectionPaused(adapter, epoch);
-            if (await ReadPeripheralRegisterAsync(adapter, entry.Register, epoch, timeout.Token) != current)
+            if (await ReadPeripheralRegisterAsync(adapter, device, entry.Register, epoch, timeout.Token) != current)
                 throw new InvalidOperationException("The register changed while confirmation was open. Inspect and review it again.");
             var bytes = new byte[write.SizeBits / 8];
             for (var i = 0; i < bytes.Length; i++) bytes[i] = (byte)(write.Value >> (8 * i));
             EnsureEmbeddedInspectionPaused(adapter, epoch);
+            EnsureEmbeddedRegisterMetadata(device, entry.Register);
             writeRequested = true;
             await adapter.WriteMemoryAsync(write.Address, bytes, timeout.Token);
             EnsureEmbeddedInspectionPaused(adapter, epoch);
-            var verified = await ReadPeripheralRegisterAsync(adapter, entry.Register, epoch, timeout.Token);
+            var verified = await ReadPeripheralRegisterAsync(adapter, device, entry.Register, epoch, timeout.Token);
             if (verified != write.Value) throw new InvalidDataException($"Register readback 0x{verified:X} did not match 0x{write.Value:X}. The write was sent; inspect before retrying.");
+            UpdateEmbeddedPeripheralSnapshot(entry.Peripheral, entry.Register, verified, epoch);
             ShowOutputSource(Output);
             Output.WriteLine(confirmation + " — readback verified", OutputKind.Info);
             StatusText = "Register field updated and verified";
@@ -238,30 +257,59 @@ public sealed partial class WorkspaceViewModel
             StatusText = "Pause the embedded debug adapter to inspect RTOS tasks.";
             return;
         }
-        var kind = await Prompt.ChooseAsync("RTOS tasks", "Read the firmware's own debug symbols. All cores must be halted. No target functions are called.", "Read", ["FreeRTOS", "Zephyr (CONFIG_THREAD_MONITOR)"]);
-        if (kind is null) return;
         try
         {
-            using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
             var epoch = Volatile.Read(ref _adapterPauses);
             EnsureEmbeddedInspectionPaused(adapter, epoch);
-            var reader = new PeripheralRtosReader(this, adapter, epoch);
-            var options = new RtosReadOptions();
-            var optionsFile = Workspace is { } workspace ? Path.Combine(workspace.RootDirectory, ".tabstudio", "rtos.json") : null;
-            if (optionsFile is not null && File.Exists(optionsFile))
+            var profilePath = Workspace is { } workspace ? Path.Combine(workspace.RootDirectory, EmbeddedRtosProfile.FileName) : null;
+            var legacyPath = Workspace is { } legacyWorkspace ? Path.Combine(legacyWorkspace.RootDirectory, EmbeddedRtosProfile.LegacyFileName) : null;
+            EmbeddedRtosProfile profile;
+            var legacy = false;
+            if (profilePath is not null && File.Exists(profilePath))
             {
-                if (new FileInfo(optionsFile).Length > 16 * 1024) throw new InvalidDataException("RTOS read configuration exceeds 16 KiB.");
-                using var configuration = JsonDocument.Parse(await File.ReadAllTextAsync(optionsFile, timeout.Token));
-                var root = configuration.RootElement;
-                if (root.TryGetProperty("verifiedStackFillByte", out var fill))
-                    options = options with { StackFillByte = fill.GetByte(), StackGrowsDown = root.GetProperty("stackGrowsDown").GetBoolean() };
+                if (new FileInfo(profilePath).Length > 32 * 1024) throw new InvalidDataException("RTOS profile exceeds 32 KiB.");
+                profile = EmbeddedRtosProfile.Parse(await File.ReadAllTextAsync(profilePath));
             }
-            var threads = kind == 0 ? await RtosThreadReader.ReadFreeRtosAsync(reader, options, timeout.Token)
+            else
+            {
+                var kind = await Prompt.ChooseAsync("RTOS tasks", "Read the firmware's own debug symbols. Halt all participating cores externally for a consistent snapshot. No target functions are called.", "Read", ["FreeRTOS", "Zephyr (CONFIG_THREAD_MONITOR)"]);
+                if (kind is null) return;
+                var selectedKind = kind == 0 ? EmbeddedRtosKind.FreeRtos : EmbeddedRtosKind.Zephyr;
+                if (legacyPath is not null && File.Exists(legacyPath))
+                {
+                    if (new FileInfo(legacyPath).Length > 32 * 1024) throw new InvalidDataException("Legacy RTOS profile exceeds 32 KiB.");
+                    profile = EmbeddedRtosProfile.ParseLegacy(await File.ReadAllTextAsync(legacyPath), selectedKind);
+                    legacy = true;
+                }
+                else
+                {
+                    profile = new() { Kind = selectedKind };
+                }
+            }
+            using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(profile.TimeoutSeconds));
+            EnsureEmbeddedInspectionPaused(adapter, epoch);
+            var reader = new PeripheralRtosReader(this, adapter, epoch);
+            var options = profile.ToReadOptions();
+            var threads = profile.Kind == EmbeddedRtosKind.FreeRtos ? await RtosThreadReader.ReadFreeRtosAsync(reader, options, timeout.Token)
                 : await RtosThreadReader.ReadZephyrAsync(reader, options, timeout.Token);
             EnsureEmbeddedInspectionPaused(adapter, epoch);
             ShowOutputSource(Output);
+            var reportedAllStopped = _embeddedRtosStoppedEvidence is { } evidence && ReferenceEquals(evidence.Adapter, adapter)
+                && evidence.Epoch == epoch && evidence.AllThreadsStopped;
+            Output.WriteLine(reportedAllStopped
+                ? "The current DAP stopped event reports all exposed threads halted. This does not prove every physical core is halted; halt all participating cores externally for a consistent RTOS snapshot."
+                : "DAP has not reported all threads halted for this snapshot. RTOS lists/stack fill may be inconsistent unless all participating cores are halted externally.", OutputKind.Info);
+            if (legacy) Output.WriteLine("Using validated legacy .tabstudio/rtos.json. Move verifiedStackFillByte to stackFillByte in .tabstudio/embedded-rtos.json and add the actual kind to configure scan bounds and task thresholds.", OutputKind.Info);
+            if (profile.StackFillByte is null) Output.WriteLine("Minimum unused stack remains unknown. Configure paired, actual stackFillByte/stackGrowsDown facts in .tabstudio/embedded-rtos.json; no RTOS default is guessed.", OutputKind.Info);
+            Output.WriteLine($"Read-only {profile.Kind} snapshot; at most {profile.MaximumThreads} tasks, {profile.MaximumStackScanBytes} B per complete stack and {profile.MaximumTotalStackScanBytes} B total. Missing extents, out-of-map addresses or exhausted budgets leave fill-derived high-water marks unknown.", OutputKind.Info);
             foreach (var thread in threads)
                 Output.WriteLine($"{thread.Name} @ 0x{thread.Address:X}: {thread.State}, priority {thread.Priority}; stack {(thread.StackBytes is { } size ? size + " B" : "unavailable")}; minimum unused stack {(thread.MinimumFreeStackBytes is { } unused ? unused + " B (verified fill-pattern scan)" : "unreported without verified initialization settings")}.", OutputKind.Info);
+            var findings = profile.CheckTaskLimits(threads);
+            var diagnostics = findings.Where(finding => !finding.Verified || finding.BelowMinimum).Select(finding => new BuildDiagnostic(
+                finding.BelowMinimum ? "EMBRTOS001" : "EMBRTOS002", DiagnosticSeverityLevel.Warning,
+                finding.Name + ": " + finding.Message, null, "RTOS stack snapshot")).ToArray();
+            ErrorList.SetRestoreDiagnostics(profilePath ?? Path.Combine(_paths.Root, "#rtos-stack"), diagnostics);
+            foreach (var finding in findings) Output.WriteLine(finding.Name + ": " + finding.Message, finding.BelowMinimum ? OutputKind.Failure : OutputKind.Info);
             StatusText = $"{threads.Count} RTOS tasks read";
         }
         catch (Exception error) when (error is DebugAdapterException or IOException or UnauthorizedAccessException or InvalidOperationException or NotSupportedException or OperationCanceledException or OverflowException or JsonException or KeyNotFoundException or FormatException)
@@ -284,13 +332,21 @@ public sealed partial class WorkspaceViewModel
         return registerIndex is { } index && index >= 0 && index < peripheral.Registers.Count ? (peripheral, peripheral.Registers[index]) : null;
     }
 
-    private async Task<ulong> ReadPeripheralRegisterAsync(DebugAdapterSession adapter, SvdRegister register, int epoch, CancellationToken cancellationToken)
+    private void EnsureEmbeddedRegisterMetadata(SvdDevice device, SvdRegister register)
+    {
+        if (!ReferenceEquals(_embeddedSvd, device) || !device.Peripherals.Any(peripheral => peripheral.Registers.Any(item => ReferenceEquals(item, register))))
+            throw new InvalidOperationException("Device register metadata changed during inspection or confirmation. Select and review the register again.");
+    }
+
+    private async Task<ulong> ReadPeripheralRegisterAsync(DebugAdapterSession adapter, SvdDevice device, SvdRegister register, int epoch, CancellationToken cancellationToken)
     {
         EnsureEmbeddedInspectionPaused(adapter, epoch);
+        EnsureEmbeddedRegisterMetadata(device, register);
         if (register.SizeBits is not (8 or 16 or 32 or 64)) throw new InvalidDataException("Register debug access requires an 8/16/32/64-bit width.");
         if (_embeddedSvd?.ByteOrder != "little") throw new InvalidDataException("This register view requires an explicitly little-endian SVD CPU description. Big/selectable/unspecified byte order needs a target-specific adapter.");
         var bytes = await adapter.ReadMemoryAsync(register.Address, register.SizeBits / 8, cancellationToken);
         EnsureEmbeddedInspectionPaused(adapter, epoch);
+        EnsureEmbeddedRegisterMetadata(device, register);
         ulong value = 0;
         for (var i = 0; i < bytes.Length; i++) value |= (ulong)bytes[i] << (8 * i);
         return value;
@@ -313,11 +369,7 @@ public sealed partial class WorkspaceViewModel
             {
                 var result = await adapter.EvaluateAsync(expression, null, DapEvaluateContext.Watch, cancellationToken);
                 owner.EnsureEmbeddedInspectionPaused(adapter, epoch);
-                var hexadecimal = Regex.Match(result.Result, @"\b0x[0-9a-fA-F]+", RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
-                if (hexadecimal.Success) return ParsePeripheralUnsigned(hexadecimal.Value);
-                var number = Regex.Match(result.Result, @"^\s*(?:\([^)]*\)\s*)?(\d+)(?:\s|$)", RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
-                if (number.Success) return ParsePeripheralUnsigned(number.Groups[1].Value);
-                throw new InvalidDataException("The debugger did not return an unsigned scalar for " + expression);
+                return RtosDebugValue.ParseUnsigned(result.Result);
             }
             catch (DebugAdapterException error) { throw new NotSupportedException("Matching RTOS type/symbol information is unavailable: " + error.Message, error); }
         }

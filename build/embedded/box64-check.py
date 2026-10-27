@@ -41,6 +41,13 @@ def main():
                {"name": "2.0.0", "files": [{"system": ["linux_x86_64"]}]}]
     if manager.pick_best_registry_version(entries)["name"] != "1.0.0" or manager.pick_best_registry_version(entries[1:])["name"] != "2.0.0":
         raise ValueError("Real PlatformIO native-first/fallback policy failed")
+    from platformio.package.meta import PackageSpec
+    from unittest.mock import patch
+    with patch.object(manager, "fetch_registry_package", return_value={"versions": entries}):
+        _, selected = manager.find_best_registry_version(
+            [{"id": 1, "owner": {"username": "synthetic"}, "name": "compiler"}], PackageSpec(name="compiler"))
+        if selected["name"] != "1.0.0":
+            raise ValueError("Owner-less registry lookup hid an older compatible ARM64 artifact")
     boxed.overlay(package.path)
     compiler = Path(package.path) / "bin/avr-gcc"
     record = json.loads((Path(package.path) / ".tabstudio-box64-overlay.json").read_text())

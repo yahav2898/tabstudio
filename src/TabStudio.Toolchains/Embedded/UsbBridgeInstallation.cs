@@ -22,6 +22,8 @@ public static class UsbBridgeInstallation
         ["serial_bridge.py"] = Resource("serial_bridge.py"),
         ["box64_runtime.py"] = Resource("box64_runtime.py"),
         ["platformio_box64.py"] = Resource("platformio_box64.py"),
+        ["nordic_runtime.py"] = Resource("nordic_runtime.py"),
+        ["install_nordic_client.py"] = Resource("install_nordic_client.py"),
         ["serial_posix.c"] = Resource("serial_posix.c"),
         ["usbfs_fd.c"] = Resource("usbfs_fd.c"),
         ["msc_worker.py"] = Resource("msc_worker.py"),

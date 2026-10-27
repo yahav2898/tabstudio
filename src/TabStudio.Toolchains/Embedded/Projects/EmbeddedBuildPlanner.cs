@@ -32,6 +32,7 @@ public static class EmbeddedBuildPlanner
         EmbeddedProjectKind.MicroPython => "micropython",
         EmbeddedProjectKind.GccCMakeArm => "embedded-arm",
         EmbeddedProjectKind.GccCMakeAvr => "embedded-avr",
+        EmbeddedProjectKind.Ch32Fun => EmbeddedCh32FunInstallation.ToolchainId,
         _ => "embedded-import",
     };
 
@@ -89,6 +90,11 @@ public static class EmbeddedBuildPlanner
 
         switch (project.Kind)
         {
+            case EmbeddedProjectKind.Ch32Fun:
+                preparation.Add(Command("mkdir", "-p", buildDirectory));
+                build.Add(Command("make", "-j" + jobs, "build", "GENERATED_LD_FILE=" + Path.Combine(buildDirectory, "ch32v003.ld")));
+                notes.Add("UART output uses PD5 TX at 115200 baud. Read the starter's upload prerequisites; no option-byte or protection update is generated.");
+                break;
             case EmbeddedProjectKind.PlatformIO:
             {
                 var environment = options.Environment ?? project.DefaultEnvironment

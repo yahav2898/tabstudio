@@ -54,6 +54,10 @@ public sealed class EmbeddedGlibcRuntime(IToolchainRuntime primary, IToolchainRu
         {
             return "embedded-picotool";
         }
+        if (command == "nrfutil" || command.StartsWith(EmbeddedNordicInstallation.Prefix + "/", StringComparison.Ordinal))
+        {
+            return EmbeddedNordicInstallation.Id;
+        }
         if (command == "idf.py" || command.StartsWith("/opt/tabstudio/esp-idf/", StringComparison.Ordinal)
             || command.StartsWith("/opt/tabstudio/esp-idf-tools/", StringComparison.Ordinal))
         {

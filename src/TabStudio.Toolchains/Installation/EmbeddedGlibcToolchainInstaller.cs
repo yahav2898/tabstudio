@@ -78,7 +78,7 @@ public sealed class EmbeddedGlibcToolchainInstaller : IToolchainInstaller, IDisp
 
     /// <summary>SDKs whose downloaded native host tools require glibc rather than Alpine's musl.</summary>
     /// <param name="id">The catalog identifier.</param>
-    public static bool Handles(string id) => id is "platformio" or "arduino" or "probe-rs" or "embedded-esptool" or "embedded-picotool"
+    public static bool Handles(string id) => id is "platformio" or "arduino" or "probe-rs" or "embedded-esptool" or "embedded-picotool" or EmbeddedNordicInstallation.Id
         || EmbeddedSdkBootstrap.Recipes.Get(id) is not null;
 
     /// <inheritdoc />
@@ -211,6 +211,15 @@ public sealed class EmbeddedGlibcToolchainInstaller : IToolchainInstaller, IDisp
             }
             else
             {
+                if (toolchain.Id == EmbeddedNordicInstallation.Id)
+                {
+                    void Line(string line) => progress?.Report(new(InstallStage.Configuring, line.TrimEnd(), null));
+                    if (_platform.Architecture == "aarch64")
+                    {
+                        await EmbeddedBox64Installation.PrepareAsync(Rootfs, _platform, _downloader, _guest, Line, cancellationToken).ConfigureAwait(false);
+                    }
+                    await EmbeddedBox64Installation.PrepareSerialShimAsync(_platform.Architecture!, _guest, Line, cancellationToken).ConfigureAwait(false);
+                }
                 foreach (var step in toolchain.Setup.Where(s => s.Architectures.Count == 0
                     || s.Architectures.Contains(_platform.Architecture ?? "", StringComparer.Ordinal)))
                 {
@@ -311,6 +320,7 @@ public sealed class EmbeddedGlibcToolchainInstaller : IToolchainInstaller, IDisp
         var recipe = EmbeddedSdkBootstrap.Recipes.Get(id);
         var command = id == "pico-sdk" ? "/usr/bin/cmake" : "/usr/local/bin/" + EmbeddedSdkBootstrap.ValidationCommand(id).Program;
         return Matches(ToolchainMarker(id), ToolchainFingerprint(definition)) && File.Exists(GuestPath(command))
+            && (id != EmbeddedNordicInstallation.Id || HasArtifact(EmbeddedNordicInstallation.X64SerialShim))
             && (recipe is null || Matches(GuestPath(recipe.SourceDirectory + "/.tabstudio-sdk-source"), SourceFingerprint(recipe))
                 && recipe.RequiredArtifacts.All(HasArtifact));
     }

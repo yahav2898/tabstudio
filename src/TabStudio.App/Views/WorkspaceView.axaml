@@ -168,6 +168,7 @@
             <MenuItem Header="GitHub Actio_ns" Command="{Binding ShowActionsCommand}" />
             <MenuItem Header="Pull Re_quests" Command="{Binding ShowPullRequestsCommand}" />
             <MenuItem Header="_Test Explorer (Ctrl+E, T)" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.TestExplorer}" />
+            <MenuItem Header="Device _Peripherals" Command="{Binding ShowEmbeddedPeripheralsCommand}" />
             <MenuItem Header="Claude _Agent" Command="{Binding ShowAgentCommand}" />
             <MenuItem Header="S_warm" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.Swarm}"
                       IsVisible="{Binding IsSwarmAvailable}" />
@@ -771,6 +772,8 @@
                         IsVisible="{Binding ShowsLogcatTab}" />
                 <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsSerialMonitorSelected}"
                         Command="{Binding ShowSerialMonitorCommand}" Content="Serial Monitor" IsVisible="{Binding ShowsSerialMonitorTab}" />
+                <Button Theme="{StaticResource PanelTabButton}" Classes.selected="{Binding IsEmbeddedPeripheralsSelected}"
+                        Command="{Binding ShowEmbeddedPeripheralsCommand}" Content="Peripherals" IsVisible="{Binding ShowsEmbeddedPeripheralsTab}" />
               </StackPanel>
               </ScrollViewer>
               <StackPanel Grid.Column="1" Orientation="Horizontal">
@@ -810,6 +813,7 @@
               </Panel>
               <views:LocalsView DataContext="{Binding Locals}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsLocalsSelected}" />
               <views:WatchView DataContext="{Binding Watch}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsWatchSelected}" />
+              <views:EmbeddedPeripheralsView IsVisible="{Binding IsEmbeddedPeripheralsSelected}" />
               <views:CallStackView DataContext="{Binding CallStack}" IsVisible="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).IsCallStackSelected}" />
               <Panel x:Name="LogcatPanel" IsVisible="{Binding SelectedPanel, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static vm:BottomPanel.Logcat}}">
                 <views:OutputView DataContext="{Binding Logcat}" />

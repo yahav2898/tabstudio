@@ -9,6 +9,7 @@ public sealed class EmbeddedSdkBootstrapTests
     [InlineData("platformio", "pio", "--version")]
     [InlineData("arduino", "arduino-cli", "version")]
     [InlineData("probe-rs", "probe-rs", "--version")]
+    [InlineData("embedded-nrfutil", "nrfutil", "version")]
     public void Validation_uses_the_real_frontend_without_opening_a_device(string id, string program, string argument)
     {
         var command = EmbeddedSdkBootstrap.ValidationCommand(id);

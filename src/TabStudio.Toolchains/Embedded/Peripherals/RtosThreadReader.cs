@@ -27,8 +27,11 @@ public sealed record RtosThread(ulong Address, string Name, string State, long P
 /// <param name="StackGrowsDown">Verified growth direction; relevant only with a fill byte.</param>
 /// <param name="MaximumStackScanBytes">Bound on memory read for stack-fill inspection.</param>
 /// <param name="MaximumThreads">Corruption/cycle bound for linked lists.</param>
+/// <param name="MaximumTotalStackScanBytes">Combined stack-read budget for one snapshot.</param>
+/// <param name="StackMemory">Optional reviewed RAM intervals; out-of-map stack extents are not scanned.</param>
 public sealed record RtosReadOptions(byte? StackFillByte = null, bool StackGrowsDown = true,
-    int MaximumStackScanBytes = 64 * 1024, int MaximumThreads = 1024);
+    int MaximumStackScanBytes = 64 * 1024, int MaximumThreads = 1024,
+    int MaximumTotalStackScanBytes = 1024 * 1024, IReadOnlyList<RtosStackMemoryRange>? StackMemory = null);
 
 /// <summary>Reads FreeRTOS lists and Zephyr's monitored thread chain without compiling target-specific structure offsets into TabStudio.</summary>
 public static class RtosThreadReader
@@ -39,6 +42,7 @@ public static class RtosThreadReader
         ArgumentNullException.ThrowIfNull(reader);
         options ??= new();
         Validate(options);
+        var budget = new StackScanBudget();
         var result = new Dictionary<ulong, RtosThread>();
         var current = await Optional(reader, "(unsigned long long)pxCurrentTCB", cancellationToken).ConfigureAwait(false);
         var readyCount = await reader.EvaluateUnsignedAsync("sizeof(pxReadyTasksLists) / sizeof(pxReadyTasksLists[0])", cancellationToken).ConfigureAwait(false);
@@ -83,7 +87,7 @@ public static class RtosThreadReader
                 if (stack is { } start && end is { } finish && elementSize is > 0 and <= 16 && finish >= start)
                 {
                     stackSize = checked(finish - start + elementSize.Value);
-                    highWater = await ScanStack(reader, start, stackSize.Value, options, cancellationToken).ConfigureAwait(false);
+                    highWater = await ScanStack(reader, start, stackSize.Value, options, budget, cancellationToken).ConfigureAwait(false);
                 }
                 result[tcb] = new(tcb, name, current == tcb ? "Running" : state, checked((long)priority), stackSize, highWater);
                 item = await reader.EvaluateUnsignedAsync($"(unsigned long long){prefix}->pxNext", cancellationToken).ConfigureAwait(false);
@@ -97,6 +101,7 @@ public static class RtosThreadReader
         ArgumentNullException.ThrowIfNull(reader);
         options ??= new();
         Validate(options);
+        var budget = new StackScanBudget();
         var result = new List<RtosThread>();
         var seen = new HashSet<ulong>();
         var thread = await reader.EvaluateUnsignedAsync("(unsigned long long)_kernel.threads", cancellationToken).ConfigureAwait(false);
@@ -113,7 +118,7 @@ public static class RtosThreadReader
             var stack = await Optional(reader, $"(unsigned long long){prefix}->stack_info.start", cancellationToken).ConfigureAwait(false);
             var size = await Optional(reader, $"{prefix}->stack_info.size", cancellationToken).ConfigureAwait(false);
             var highWater = stack is { } start && size is { } length
-                ? await ScanStack(reader, start, length, options, cancellationToken).ConfigureAwait(false) : null;
+                ? await ScanStack(reader, start, length, options, budget, cancellationToken).ConfigureAwait(false) : null;
             result.Add(new(thread, name, $"Flags 0x{state:X}", checked((long)priority) - 128, size, highWater));
             thread = await reader.EvaluateUnsignedAsync($"(unsigned long long){prefix}->next_thread", cancellationToken).ConfigureAwait(false);
         }
@@ -134,10 +139,22 @@ public static class RtosThreadReader
         return Encoding.UTF8.GetString(bytes.ToArray()) + "…";
     }
 
-    private static async Task<ulong?> ScanStack(IRtosDebugReader reader, ulong start, ulong size, RtosReadOptions options, CancellationToken cancellationToken)
+    private sealed class StackScanBudget { public ulong Consumed { get; set; } }
+
+    private static async Task<ulong?> ScanStack(IRtosDebugReader reader, ulong start, ulong size, RtosReadOptions options, StackScanBudget budget, CancellationToken cancellationToken)
     {
         if (options.StackFillByte is not { } fill) return null;
-        if (size == 0 || size > (ulong)options.MaximumStackScanBytes) return null;
+        if (start == 0 || size == 0 || size > (ulong)options.MaximumStackScanBytes || start > ulong.MaxValue - size
+            || size > (ulong)options.MaximumTotalStackScanBytes - budget.Consumed)
+        {
+            return null;
+        }
+        if (options.StackMemory is { Count: > 0 } ranges && !ranges.Any(range => start >= range.Start
+            && start - range.Start <= range.Length && size <= range.Length - (start - range.Start)))
+        {
+            return null;
+        }
+        budget.Consumed += size;
         var bytes = await reader.ReadMemoryAsync(start, checked((int)size), cancellationToken).ConfigureAwait(false);
         if ((ulong)bytes.Length != size) throw new InvalidDataException("Short RTOS stack memory read.");
         ulong unused = 0;
@@ -160,7 +177,11 @@ public static class RtosThreadReader
 
     private static void Validate(RtosReadOptions options)
     {
-        if (options.MaximumThreads is < 1 or > 65536 || options.MaximumStackScanBytes is < 1 or > 1024 * 1024)
+        if (options.MaximumThreads is < 1 or > 65536 || options.MaximumStackScanBytes is < 1 or > 1024 * 1024
+            || options.MaximumTotalStackScanBytes is < 1 or > 16 * 1024 * 1024
+            || options.StackMemory?.Any(range => range is null || range.Start == 0 || range.Length == 0 || range.Start > ulong.MaxValue - range.Length) == true)
+        {
             throw new ArgumentOutOfRangeException(nameof(options), "RTOS read bounds are outside supported limits.");
+        }
     }
 }

@@ -118,6 +118,7 @@ public sealed partial class WorkspaceViewModel
             State = IdeState.Ready;
             StatusText = "Firmware built";
             await ReportEmbeddedMemoryAsync(project.Directory, cancellation.Token);
+            await ReportEmbeddedStackAsync(project, afterBuild: true);
             return true;
         }
         catch (OperationCanceledException) { State = IdeState.Ready; StatusText = "Firmware build stopped"; return false; }

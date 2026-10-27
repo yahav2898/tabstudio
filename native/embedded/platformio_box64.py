@@ -75,10 +75,17 @@ def overlay(package, interpreter=sys.executable):
         originals.mkdir(exist_ok=True)
         identity = hashlib.sha256(str(package).encode()).hexdigest()[:16]
         original = originals / (package.name + "-" + identity)
-        if original.exists():
-            raise ValueError("An original package is already retained; remove the incomplete private overlay before retrying")
+        previous = 1
+        while original.exists():
+            # PackageManager may replace/update the visible package. Retain its
+            # preceding original too; never execute it as the new distribution.
+            previous += 1
+            original = originals / (package.name + "-" + identity + "-" + str(previous))
         package.rename(original)
         package.mkdir()
+        # Publish recovery metadata before constructing the overlay. An interrupted
+        # refresh resumes from this pristine tree, rather than wrapping wrappers.
+        stamp.write_text(json.dumps({"original": str(original), "launchers": []}, indent=2))
     launchers = []
     for folder, directories, files in os.walk(original, followlinks=False):
         relative = Path(folder).relative_to(original)

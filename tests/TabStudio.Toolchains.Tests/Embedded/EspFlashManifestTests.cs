@@ -12,6 +12,47 @@ public sealed class EspFlashManifestTests : IDisposable
 {
     private readonly TempDirectory _temporary = new();
 
+    [Fact]
+    public void Idf54_default_security_capabilities_are_not_security_enable_switches()
+    {
+        var path = Metadata("esp32c3", "0x0");
+        // Reduced default configuration from pinned v5.4 bootloader/Kconfig.projbuild:
+        // RSA support, default version preference and ROM-download capability are not enablement.
+        File.WriteAllText(_temporary.Resolve("config/sdkconfig.json"), """
+            {"SECURE_BOOT_V2_RSA_SUPPORTED":true,"SECURE_BOOT_V2_ECC_SUPPORTED":false,
+             "SECURE_BOOT_V1_SUPPORTED":false,"SECURE_BOOT_V2_PREFERRED":true,
+             "SECURE_ROM_DL_MODE_ENABLED":true,"SOC_FLASH_ENCRYPTED_XTS_AES_BLOCK_MAX":64,
+             "SECURE_BOOT":false,"SECURE_BOOT_V2_ENABLED":false,"SECURE_FLASH_ENC_ENABLED":false,
+             "ESP_CRYPTO_DPA_PROTECTION_AT_STARTUP":true}
+            """);
+        Assert.Equal("esp32c3", EspFlashManifestReader.Read(path).Chip);
+    }
+
+    [Theory]
+    [InlineData("SECURE_BOOT")]
+    [InlineData("SECURE_BOOT_V1_ENABLED")]
+    [InlineData("SECURE_BOOT_V2_ENABLED")]
+    [InlineData("SECURE_BOOT_V2_RSA_ENABLED")]
+    [InlineData("SECURE_BOOT_V2_ECDSA_ENABLED")]
+    [InlineData("SECURE_BOOT_FLASH_ENC_KEYS_BURN_TOGETHER")]
+    [InlineData("SECURE_FLASH_ENC_ENABLED")]
+    [InlineData("SECURE_FLASH_ENCRYPTION_MODE_DEVELOPMENT")]
+    [InlineData("SECURE_FLASH_ENCRYPTION_MODE_RELEASE")]
+    [InlineData("SECURE_FLASH_REQUIRE_ALREADY_ENABLED")]
+    [InlineData("SECURE_SIGNED_APPS_NO_SECURE_BOOT")]
+    [InlineData("SECURE_DISABLE_ROM_DL_MODE")]
+    [InlineData("SECURE_ENABLE_SECURE_ROM_DL_MODE")]
+    [InlineData("BOOTLOADER_APP_ANTI_ROLLBACK")]
+    [InlineData("ESP_CRYPTO_FORCE_ECC_CONSTANT_TIME_POINT_MUL")]
+    [InlineData("CONFIG_SECURE_FLASH_ENC_ENABLED")]
+    public void Actual_security_enable_and_startup_efuse_switches_are_refused(string name)
+    {
+        var path = Metadata("esp32c3", "0x0");
+        File.WriteAllText(_temporary.Resolve("config/sdkconfig.json"), JsonSerializer.Serialize(new Dictionary<string, bool> { [name] = true }));
+        var error = Assert.Throws<NotSupportedException>(() => EspFlashManifestReader.Read(path));
+        Assert.Contains(name.StartsWith("CONFIG_", StringComparison.Ordinal) ? name[7..] : name, error.Message, StringComparison.Ordinal);
+    }
+
     [Theory]
     [InlineData("esp32", "0x1000")]
     [InlineData("esp32c3", "0x0")]
@@ -21,6 +62,7 @@ public sealed class EspFlashManifestTests : IDisposable
         var path = Metadata(chip, bootloader);
         var manifest = EspFlashManifestReader.Read(path, chip);
         Assert.Equal(chip, manifest.Chip);
+        Assert.Equal(_temporary.Resolve("application.bin"), manifest.ApplicationPath);
         Assert.Equal(3, manifest.Images.Count);
         var plan = EmbeddedFlashPlanner.Plan(Request(path));
         Assert.Equal(chip, plan.TargetChip);

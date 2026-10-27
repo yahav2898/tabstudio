@@ -11,7 +11,11 @@ public sealed record EspFlashImage(ulong Address, string Path, ulong Length, str
 
 /// <summary>A validated plain-text ESP flash set. Gaps are never expanded into a merged image.</summary>
 public sealed record EspFlashManifest(string Path, string Chip, IReadOnlyList<string> FlashArguments,
-    IReadOnlyList<EspFlashImage> Images, IReadOnlyList<EmbeddedFirmwareInput> Inputs, bool UseStub, string Before);
+    IReadOnlyList<EspFlashImage> Images, IReadOnlyList<EmbeddedFirmwareInput> Inputs, bool UseStub, string Before)
+{
+    /// <summary>The actual built application BIN, excluding bootloader/partition images; suitable for an existing compatible ArduinoOTA target.</summary>
+    public required string ApplicationPath { get; init; }
+}
 
 /// <summary>Reads ESP-IDF flasher_args.json or the template's resolved PlatformIO upload export, without executing its arguments.</summary>
 public static class EspFlashManifestReader
@@ -19,6 +23,21 @@ public static class EspFlashManifestReader
     private static readonly HashSet<string> Chips = new(StringComparer.Ordinal)
     {
         "esp32", "esp32s2", "esp32s3", "esp32c3", "esp32c6", "esp32h2",
+    };
+    // ESP-IDF v5.4 components/bootloader/Kconfig.projbuild and esp_security/Kconfig.
+    // *_SUPPORTED, *_PREFERRED and SECURE_ROM_DL_MODE_ENABLED describe capability/default choices;
+    // they are true in ordinary unencrypted builds and never authorize irreversible configuration.
+    private static readonly HashSet<string> SecurityEnableSwitches = new(StringComparer.Ordinal)
+    {
+        "SECURE_BOOT", "SECURE_BOOT_ENABLED", "SECURE_BOOT_V1_ENABLED", "SECURE_BOOT_V2_ENABLED",
+        "SECURE_BOOT_V2_ECDSA_ENABLED", "SECURE_BOOT_V2_RSA_ENABLED", "SECURE_BOOT_FLASH_ENC_KEYS_BURN_TOGETHER",
+        "SECURE_BOOT_BUILD_SIGNED_BINARIES", "SECURE_BOOTLOADER_ONE_TIME_FLASH", "SECURE_BOOTLOADER_REFLASHABLE",
+        "SECURE_SIGNED_APPS", "SECURE_SIGNED_ON_BOOT", "SECURE_SIGNED_ON_UPDATE",
+        "SECURE_SIGNED_APPS_NO_SECURE_BOOT", "SECURE_SIGNED_ON_BOOT_NO_SECURE_BOOT", "SECURE_SIGNED_ON_UPDATE_NO_SECURE_BOOT",
+        "SECURE_FLASH_ENC_ENABLED", "FLASH_ENCRYPTION_ENABLED", "SECURE_FLASH_ENCRYPTION_MODE_DEVELOPMENT",
+        "SECURE_FLASH_ENCRYPTION_MODE_RELEASE", "SECURE_FLASH_REQUIRE_ALREADY_ENABLED",
+        "SECURE_DISABLE_ROM_DL_MODE", "SECURE_ENABLE_SECURE_ROM_DL_MODE", "BOOTLOADER_APP_ANTI_ROLLBACK",
+        "ESP_CRYPTO_FORCE_ECC_CONSTANT_TIME_POINT_MUL",
     };
 
     /// <summary>Loads every image, validates nonoverlapping erase sectors and binds metadata/configuration/images by SHA-256.</summary>
@@ -100,10 +119,10 @@ public static class EspFlashManifestReader
             Unique(config.RootElement);
             foreach (var property in config.RootElement.EnumerateObject())
             {
-                if ((property.Name.Contains("SECURE_BOOT", StringComparison.Ordinal) || property.Name.Contains("FLASH_ENCRYPT", StringComparison.Ordinal) ||
-                    property.Name.Contains("SECURE_FLASH", StringComparison.Ordinal)) && IsTrue(property.Value))
+                var name = property.Name.StartsWith("CONFIG_", StringComparison.Ordinal) ? property.Name[7..] : property.Name;
+                if (SecurityEnableSwitches.Contains(name) && IsTrue(property.Value))
                 {
-                    throw new NotSupportedException("Secure boot/flash encryption may change irreversible device configuration on first boot. Ordinary upload refuses this build.");
+                    throw new NotSupportedException("ESP startup security switch " + name + " may require signed/encrypted firmware or change irreversible device configuration. Ordinary upload refuses this build.");
                 }
             }
             inputs.Add(Bound(configuration, configurationBytes));
@@ -165,7 +184,10 @@ public static class EspFlashManifestReader
             throw new InvalidDataException("ESP flash metadata repeats an input file.");
         }
         return new(path, chip, ["--flash-mode", mode, "--flash-freq", frequency, "--flash-size", size], images, inputs, useStub,
-            Normalize(extra.GetProperty("before").GetString()));
+            Normalize(extra.GetProperty("before").GetString()))
+        {
+            ApplicationPath = Resolve(root, manifest.GetProperty("app").GetProperty("file").GetString()),
+        };
     }
 
     private static void ValidatePartitions(JsonElement metadata, string root, List<EspFlashImage> images, ulong capacity)

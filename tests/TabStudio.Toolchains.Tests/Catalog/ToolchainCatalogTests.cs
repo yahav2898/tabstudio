@@ -14,7 +14,7 @@ public sealed class ToolchainCatalogTests
     [Fact]
     public void Describes_languages_flutter_and_the_separately_licensed_pic_compilers()
     {
-        Assert.Equal(["flutter", "python", "node", "cpp", "rust", "go", "java", "kotlin", "android", "xc8", "xc32", "embedded-arm", "embedded-riscv", "embedded-avr", "embedded-support", "platformio", "arduino", "esp-idf", "zephyr", "pico-sdk", "micropython", "embedded-import", "embedded-debug", "probe-rs", "embedded-esptool", "embedded-picotool", "embedded-bossac", "embedded-teensy", "embedded-wchisp", "embedded-mspdebug", "embedded-rust"], Catalog.Toolchains.Select(t => t.Id));
+        Assert.Equal(["flutter", "python", "node", "cpp", "rust", "go", "java", "kotlin", "android", "xc8", "xc32", "embedded-arm", "embedded-riscv", "embedded-avr", "embedded-support", "platformio", "arduino", "esp-idf", "zephyr", "pico-sdk", "micropython", "embedded-import", "embedded-debug", "probe-rs", "embedded-esptool", "embedded-picotool", "embedded-bossac", "embedded-teensy", "embedded-wchisp", "embedded-mspdebug", "embedded-rust", "embedded-ch32fun", "embedded-nrfutil"], Catalog.Toolchains.Select(t => t.Id));
         var languages = Catalog.Toolchains.SelectMany(t => t.Languages).ToHashSet();
         Assert.Superset(new HashSet<string> { "Python", "JavaScript", "TypeScript", "C", "C++", "Rust", "Go", "Java", "Kotlin", "Dart" }, languages);
     }
@@ -22,7 +22,7 @@ public sealed class ToolchainCatalogTests
     [Fact]
     public void The_store_lists_the_finished_toolchains()
     {
-        Assert.Equal(["flutter", "python", "node", "cpp", "rust", "go", "java", "android", "xc8", "xc32", "embedded-arm", "embedded-riscv", "embedded-avr", "embedded-support", "platformio", "arduino", "micropython", "embedded-debug", "probe-rs", "embedded-esptool", "embedded-picotool", "embedded-bossac", "embedded-teensy", "embedded-wchisp", "embedded-mspdebug"], Catalog.Listed.Select(t => t.Id));
+        Assert.Equal(["flutter", "python", "node", "cpp", "rust", "go", "java", "android", "xc8", "xc32", "embedded-arm", "embedded-riscv", "embedded-avr", "embedded-support", "platformio", "arduino", "micropython", "embedded-debug", "probe-rs", "embedded-esptool", "embedded-picotool", "embedded-bossac", "embedded-teensy", "embedded-wchisp", "embedded-mspdebug", "embedded-ch32fun"], Catalog.Listed.Select(t => t.Id));
         Assert.Equal("jdtls", Catalog.Find("android")!.LanguageServer!.Id);
         Assert.Contains("kotlin-language-server", Catalog.Find("android")!.AdditionalToolIds);
     }
@@ -100,7 +100,7 @@ public sealed class ToolchainCatalogTests
     [Fact]
     public void General_purpose_language_toolchains_have_a_debug_adapter()
     {
-        foreach (var toolchain in Catalog.Listed.Where(t => !t.Auxiliary && t.Id is not ("android" or "xc32" or "embedded-arm" or "embedded-riscv" or "embedded-avr" or "embedded-support" or "platformio" or "arduino" or "micropython" or "embedded-debug")))
+        foreach (var toolchain in Catalog.Listed.Where(t => !t.Auxiliary && t.Id is not ("android" or "xc32" or "embedded-arm" or "embedded-riscv" or "embedded-avr" or "embedded-support" or "platformio" or "arduino" or "micropython" or "embedded-debug" or "embedded-ch32fun")))
         {
             Assert.NotNull(toolchain.DebugAdapter);
             Assert.NotEmpty(toolchain.DebugAdapter.Command);

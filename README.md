@@ -298,15 +298,15 @@ Native Android deployment of Flutter apps through the Android SDK toolchain is n
   OpenOCD selects a libusb HIDAPI backend for compatible HID probes.
 - **Choose the bootloader you use.** Typed routes cover WCH ROM ISP, MSP430, Nordic SDK Secure DFU application
   packages and AVR UART UPDI. Profiles automatically install pinned native esptool/picotool distributions or
-  source-built BOSSA, Teensy, WCH and MSPDebug clients. UPDI reuses pinned pymcuprog support; legacy Nordic DFU
-  still requires a separately installed compatible CLI. Teensy HalfKay reports transfer completion with readback unavailable and is excluded from
+  source-built BOSSA, Teensy, WCH and MSPDebug clients. UPDI reuses pinned pymcuprog support; the optional legacy Nordic DFU recipe retains its original vendor bundle
+  and licenses, using explicit Box64 where needed. Teensy HalfKay reports transfer completion with readback unavailable and is excluded from
   verified production batches. Physical hardware remains unverified.
 - **Copy BOOTSEL firmware without mounting a disk.** A permissioned USB storage worker and user-space FAT
   driver submit family-checked RP2040/RP2350 UF2 files. USB/file acceptance is kept distinct from flash verification.
 - **Keep evidence from real work.** Read application flash twice before saving a backup, compare dumps, program
   an explicitly selected batch with per-board verification/logs, or upload to an ArduinoOTA-capable Wi-Fi board.
 - **Understand the firmware.** Linked-ELF memory treemaps and build-size changes, crash decoding with matching
-  symbols, conservative stack budgets, pin checks, SVD register inspection and verified mask quick fixes. Native
+  symbols, conservative stack budgets, pin checks, a docked SVD register browser and verified mask quick fixes. Native
   RTT/defmt logs stream into Output; static memory and disassembly snapshots use the paused debugger. Host
   tests, probe-rs board-test runs with flash verification and imported board results appear in Test Explorer; mpremote opens the
   board REPL and verifies file sync. Board-test flash/RTT acquisition remains hardware-unverified.

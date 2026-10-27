@@ -59,6 +59,7 @@ public sealed class FlashToolInstallationTests
         Assert.Contains("--no-default-features", EmbeddedFlashToolInstallation.SourceInstallerSource, StringComparison.Ordinal);
         Assert.Contains("VERSION=1.9.1", EmbeddedFlashToolInstallation.SourceInstallerSource, StringComparison.Ordinal);
         Assert.Contains("libusb-compat-dev", ToolchainCatalog.Default.Find("embedded-teensy")!.Packages);
+        Assert.Contains("linux-headers", ToolchainCatalog.Default.Find("embedded-teensy")!.Packages);
         Assert.Contains("libusb-compat-dev", ToolchainCatalog.Default.Find("embedded-mspdebug")!.Packages);
         Assert.Contains("rust", ToolchainCatalog.Default.Find("embedded-wchisp")!.Packages);
     }

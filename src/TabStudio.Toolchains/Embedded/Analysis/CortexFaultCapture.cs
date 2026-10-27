@@ -40,8 +40,10 @@ public sealed record CortexExceptionFramePlan(uint? BasicFrameAddress, int Frame
 /// <param name="ProcessStackPointer">Captured PSP, when available.</param>
 /// <param name="ProgramCounter">Captured live PC, when available.</param>
 /// <param name="Frame">Frame-selection evidence.</param>
+/// <param name="ActiveException">Actual ICSR.VECTACTIVE exception number at capture time.</param>
 public sealed record CortexFaultCaptureResult(CortexFaultSnapshot Snapshot, uint CpuId, uint? LinkRegister,
-    uint? MainStackPointer, uint? ProcessStackPointer, uint? ProgramCounter, CortexExceptionFramePlan Frame);
+    uint? MainStackPointer, uint? ProcessStackPointer, uint? ProgramCounter, CortexExceptionFramePlan Frame,
+    uint ActiveException = 0);
 
 /// <summary>Captures latched fault status without clearing it or changing target memory.</summary>
 public static class CortexFaultCapture
@@ -74,6 +76,16 @@ public static class CortexFaultCapture
     /// <summary>Reads CPUID/ICSR/VTOR, CFSR/HFSR/MMFAR/BFAR and live registers. A frame is read only when
     /// the halted PC equals the active fault vector entry and EXC_RETURN has a supported layout.</summary>
     public static async Task<CortexFaultCaptureResult> CaptureAsync(ICortexFaultReader reader, string model,
+        CancellationToken cancellationToken = default) =>
+        await CaptureCoreAsync(reader, model, automatic: false, cancellationToken).ConfigureAwait(false)
+            ?? throw new InvalidOperationException("Manual capture unexpectedly omitted fault status.");
+
+    /// <summary>Captures an actual active HardFault/MemManage/BusFault/UsageFault only. A nonfault ICSR returns
+    /// null before reading latched CFSR/HFSR, so old flags cannot produce an automatic crash report.</summary>
+    public static Task<CortexFaultCaptureResult?> CaptureAutomaticAsync(ICortexFaultReader reader, string model,
+        CancellationToken cancellationToken = default) => CaptureCoreAsync(reader, model, automatic: true, cancellationToken);
+
+    private static async Task<CortexFaultCaptureResult?> CaptureCoreAsync(ICortexFaultReader reader, string model, bool automatic,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(reader);
@@ -85,6 +97,8 @@ public static class CortexFaultCapture
         var supportedPart = model == "cortex-m-v7" ? part is 0xC23 or 0xC24 or 0xC27 : part is 0xD21 or 0xD31 or 0xD22 or 0xD23;
         if ((cpuId >> 24) != 0x41 || !supportedPart)
             throw new NotSupportedException($"CPUID 0x{cpuId:X8} does not match the explicitly supported {model} cores. No CFSR access was attempted.");
+        var active = Word(core, 4) & 0x1ff;
+        if (automatic && active is not (>= 3 and <= 6)) return null;
         var status = await reader.ReadMemoryAsync(0xE000ED28, 20, cancellationToken).ConfigureAwait(false);
         if (status.Length != 20) throw new InvalidDataException("Incomplete CFSR/HFSR/MMFAR/BFAR read.");
         var snapshot = new CortexFaultSnapshot(Word(status, 0), Word(status, 4), Word(status, 12), Word(status, 16));
@@ -96,7 +110,6 @@ public static class CortexFaultCapture
             msp = await reader.ReadRegisterAsync(CortexFaultRegister.MainStack, cancellationToken).ConfigureAwait(false);
             psp = await reader.ReadRegisterAsync(CortexFaultRegister.ProcessStack, cancellationToken).ConfigureAwait(false);
             pc = await reader.ReadRegisterAsync(CortexFaultRegister.ProgramCounter, cancellationToken).ConfigureAwait(false);
-            var active = Word(core, 4) & 0x1ff;
             var atEntry = false;
             if (active is >= 3 and <= 6)
             {
@@ -122,7 +135,7 @@ public static class CortexFaultCapture
         {
             plan = new(null, 0, false, "Core register evaluation unavailable: " + error.Message + " Only captured status is reported.");
         }
-        return new(snapshot, cpuId, lr, msp, psp, pc, plan);
+        return new(snapshot, cpuId, lr, msp, psp, pc, plan, active);
     }
 
     private static uint Word(byte[] bytes, int offset) => BinaryPrimitives.ReadUInt32LittleEndian(bytes.AsSpan(offset, 4));

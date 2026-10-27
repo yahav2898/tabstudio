@@ -98,6 +98,37 @@ public sealed class FaultCaptureTests
         Assert.Equal((0xE000ED00u, 12), Assert.Single(reader.Reads));
     }
 
+    [Theory]
+    [InlineData(0u)]
+    [InlineData(1u)]
+    [InlineData(2u)]
+    [InlineData(7u)]
+    [InlineData(11u)]
+    [InlineData(15u)]
+    [InlineData(16u)]
+    public async Task Automatic_capture_ignores_latched_flags_when_ICSR_is_not_an_active_fault(uint active)
+    {
+        var reader = new Reader { ActiveException = active, Cfsr = uint.MaxValue };
+        Assert.Null(await CortexFaultCapture.CaptureAutomaticAsync(reader, "cortex-m-v7"));
+        Assert.Equal((0xE000ED00u, 12), Assert.Single(reader.Reads));
+        Assert.Empty(reader.RegisterReads);
+    }
+
+    [Theory]
+    [InlineData(3u)]
+    [InlineData(4u)]
+    [InlineData(5u)]
+    [InlineData(6u)]
+    public async Task Automatic_capture_requires_the_actual_active_fault_and_preserves_its_number(uint active)
+    {
+        var reader = new Reader { ActiveException = active };
+        var captured = await CortexFaultCapture.CaptureAutomaticAsync(reader, "cortex-m-v7");
+        Assert.NotNull(captured);
+        Assert.Equal(active, captured.ActiveException);
+        Assert.Equal(1u << 24, captured.Snapshot.Cfsr);
+        Assert.NotNull(captured.Snapshot.StackedWords);
+    }
+
     [Fact]
     public void Debug_profile_requires_an_explicit_supported_fault_model()
     {
@@ -113,6 +144,7 @@ public sealed class FaultCaptureTests
         public uint CpuId { get; set; } = 0x410FC241;
         public uint Pc { get; set; } = 0x08000100;
         public uint Cfsr { get; set; } = 1u << 24;
+        public uint ActiveException { get; set; } = 3;
         public List<(uint Address, int Count)> Reads { get; } = [];
         public List<CortexFaultRegister> RegisterReads { get; } = [];
 
@@ -121,9 +153,9 @@ public sealed class FaultCaptureTests
             Reads.Add((address, count));
             uint[] words = address switch
             {
-                0xE000ED00 => [CpuId, 3, 0x08000000],
+                0xE000ED00 => [CpuId, ActiveException, 0x08000000],
                 0xE000ED28 => [Cfsr, 1u << 30, 0, 0x12345678, 0x87654321],
-                0x0800000c => [0x08000101],
+                0x0800000c or 0x08000010 or 0x08000014 or 0x08000018 => [0x08000101],
                 0x20002000 => [0, 1, 2, 3, 12, 0x08001241, 0x08001235, 1u << 24],
                 _ => throw new InvalidOperationException("Unexpected memory request."),
             };

@@ -4,6 +4,8 @@ using TabStudio.App.Services;
 using TabStudio.Toolchains.Embedded.Flashing;
 using TabStudio.Testing;
 using TabStudio.Toolchains.Embedded.Projects;
+using TabStudio.Toolchains.Catalog;
+using TabStudio.Toolchains.Projects;
 
 namespace TabStudio.App.Tests.Services;
 
@@ -11,6 +13,27 @@ public sealed class EmbeddedTemplateTests : IDisposable
 {
     private readonly TempDirectory _temp = new();
     private static readonly JsonSerializerOptions ProfileJson = new(JsonSerializerDefaults.Web) { Converters = { new JsonStringEnumConverter() } };
+
+    [Fact]
+    public void Ch32v003_starter_uses_pinned_upstream_startup_and_a_bounded_uart_isp_profile()
+    {
+        var root = new ProjectTemplates(new AppPaths(_temp.Path)).Create("embedded-ch32v003", "Firmware");
+        var project = Assert.Single(EmbeddedProjectDetector.Detect(root));
+        Assert.Equal(EmbeddedProjectKind.Ch32Fun, project.Kind);
+        Assert.Equal("embedded-ch32fun", Assert.Single(ToolchainProjectDetector.Detect(root, ToolchainCatalog.Default)).Toolchain.Id);
+        var plan = EmbeddedBuildPlanner.Plan(project);
+        Assert.Equal("embedded-ch32fun", plan.ToolchainId);
+        Assert.Equal("make", Assert.Single(plan.Build).Program);
+        Assert.Contains("build", plan.Build[0].Arguments);
+        Assert.DoesNotContain("flash", plan.Build[0].Arguments);
+        Assert.Contains("a800cbd1f1ca5e250c73da83c669f0965d2052e5", File.ReadAllText(Path.Combine(root, "Makefile")), StringComparison.Ordinal);
+        var request = JsonSerializer.Deserialize<EmbeddedFlashRequest>(File.ReadAllText(Path.Combine(root, ".tabstudio", "embedded-flash.json")), ProfileJson)!;
+        Assert.Equal(EmbeddedFlashProtocol.WchIsp, request.Protocol);
+        Assert.Equal("CH32V003F4P6", request.Target);
+        Assert.True(request.UseSerialTransport);
+        Assert.Equal(0ul, request.BinaryAddress);
+        Assert.Equal(new FlashAddressRange(0, 16 * 1024), Assert.Single(request.ApplicationFlash));
+    }
 
     [Theory]
     [InlineData("esp32")]

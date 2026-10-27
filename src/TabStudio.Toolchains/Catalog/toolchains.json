@@ -2723,7 +2723,8 @@
       "packages": [
         "python3",
         "build-base",
-        "libusb-compat-dev"
+        "libusb-compat-dev",
+        "linux-headers"
       ],
       "host": {
         "commands": [
@@ -2883,6 +2884,126 @@
       ],
       "errorPattern": "^error(?:\\[[^\\]]+\\])?: (?<message>.*)$",
       "sourceFolderIsProject": false
+    },
+    {
+      "id": "embedded-ch32fun",
+      "name": "CH32V003 ch32fun starter SDK",
+      "description": "Pinned upstream CH32fun startup, linker scripts and MCU declarations with native Alpine RV32EC GCC; installation compiles the original blink example without opening a probe.",
+      "homepage": "https://github.com/cnlohr/ch32fun",
+      "license": "MIT AND GPL-3.0-or-later WITH GCC-exception-3.1",
+      "listed": true,
+      "pinnedVersion": "a800cbd1f1ca5e250c73da83c669f0965d2052e5",
+      "estimatedDownloadSize": 62959765,
+      "estimatedInstalledSize": 300000000,
+      "packages": [
+        "gcc-riscv-none-elf",
+        "g++-riscv-none-elf",
+        "newlib-riscv-none-elf",
+        "binutils-riscv-none-elf",
+        "cmake",
+        "make",
+        "ninja",
+        "clang-extra-tools"
+      ],
+      "host": {
+        "commands": [
+          "riscv-none-elf-gcc"
+        ],
+        "versionArguments": [
+          "--version"
+        ]
+      },
+      "setup": [
+        {
+          "name": "Pinned ch32fun MCU support sources",
+          "archive": {
+            "url": "https://github.com/cnlohr/ch32fun/archive/a800cbd1f1ca5e250c73da83c669f0965d2052e5.tar.gz",
+            "sha256": "69da911012466b3e5e13053c677e4578061843a2d6947de2e919a0fdeb43b411",
+            "size": 2959765,
+            "destination": "/opt/tabstudio/ch32fun"
+          }
+        },
+        {
+          "name": "Compile upstream CH32V003 startup and linker without hardware",
+          "command": [
+            "make",
+            "-C",
+            "/opt/tabstudio/ch32fun/ch32fun-a800cbd1f1ca5e250c73da83c669f0965d2052e5/examples/blink",
+            "-j2",
+            "build",
+            "PREFIX=riscv-none-elf",
+            "GENERATED_LD_FILE=/opt/tabstudio/ch32fun/validation-ch32v003.ld"
+          ],
+          "runAfterSetupChanges": true
+        }
+      ],
+      "languages": [
+        "C"
+      ],
+      "fileExtensions": [
+        ".c",
+        ".h",
+        ".s",
+        ".S"
+      ],
+      "languageServer": {
+        "id": "clangd",
+        "command": [
+          "clangd",
+          "--background-index"
+        ],
+        "languages": [
+          "c",
+          "cpp"
+        ]
+      },
+      "problemPatterns": [
+        {
+          "pattern": "^(?<file>.+?):(?<line>\\d+):(?<column>\\d+):\\s*(?<severity>error|warning|note):\\s*(?<message>.*)$"
+        }
+      ],
+      "run": {
+        "file": [
+          "riscv-none-elf-gcc",
+          "{file}"
+        ],
+        "entries": [
+          {
+            "file": ".tabstudio-ch32fun",
+            "command": [
+              "make",
+              "build"
+            ]
+          }
+        ]
+      },
+      "projectFiles": [
+        ".tabstudio-ch32fun"
+      ]
+    },
+    {
+      "id": "embedded-nrfutil",
+      "name": "Nordic legacy Secure DFU client",
+      "description": "Verified unchanged pc-nrfutil 6.1.7 from Nordic nrf5sdk-tools 1.1.0 for serial application DFU; native x64 or explicit Box64 on ARM64, with retained vendor license and no Python package modification.",
+      "homepage": "https://www.nordicsemi.com/Products/Development-tools/nRF-Util",
+      "license": "LicenseRef-Nordic-1-Clause",
+      "auxiliary": true,
+      "listed": false,
+      "pinnedVersion": "6.1.7",
+      "estimatedDownloadSize": 32471565,
+      "estimatedInstalledSize": 100000000,
+      "packages": [
+        "python3",
+        "ca-certificates"
+      ],
+      "host": {
+        "commands": [
+          "nrfutil"
+        ],
+        "versionArguments": [
+          "version"
+        ]
+      }
     }
   ]
 }

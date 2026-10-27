@@ -562,6 +562,7 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         }
 
         var version = ++_adapterPauses;
+        _embeddedRtosStoppedEvidence = (session, version, stop.AllThreadsStopped);
         IReadOnlyList<DapThread> threads;
         try
         {
@@ -603,6 +604,9 @@ public sealed partial class WorkspaceViewModel : IEditorBreakpointOptions
         }
 
         await ShowAdapterFrameAsync(CallStack.ActiveFrame);
+        // Actual exception stops may capture only the bound embedded GDB session. The capture core checks
+        // ICSR.VECTACTIVE, exact profile/ELF and this halt epoch before publishing any automatic diagnosis.
+        await TryCaptureEmbeddedFaultAutomaticallyAsync(session, stop, version);
     }
 
     /// <summary>Reads a thread's call stack into the Call Stack panel.</summary>

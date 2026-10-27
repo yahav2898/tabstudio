@@ -88,6 +88,7 @@ public static partial class EmbeddedSdkBootstrap
             "probe-rs" => ["probe-rs", "--version"],
             "embedded-esptool" => ["esptool", "version"],
             "embedded-picotool" => ["picotool", "version"],
+            EmbeddedNordicInstallation.Id => ["nrfutil", "version"],
             "esp-idf" => ["idf.py", "--version"],
             "zephyr" => ["west", "--version"],
             "pico-sdk" => ["cmake", "--version"],

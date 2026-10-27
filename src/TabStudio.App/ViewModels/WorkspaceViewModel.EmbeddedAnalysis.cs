@@ -118,20 +118,35 @@ public sealed partial class WorkspaceViewModel
         if (await SelectEmbeddedProjectAsync() is not { } project) return;
         try
         {
-            var report = text.TrimStart().StartsWith('{')
-                ? CrashDecoder.DecodeCortexM(JsonSerializer.Deserialize<CortexFaultSnapshot>(text, EmbeddedAnalysisJson)
-                    ?? throw new InvalidDataException("Expected a CortexFaultSnapshot JSON object with numeric register values."))
-                : CrashDecoder.DecodeEspPanic(text);
+            CrashReport report;
+            if (text.TrimStart().StartsWith('{'))
+            {
+                using var json = JsonDocument.Parse(text);
+                if ((json.RootElement.TryGetProperty("format", out var format) || json.RootElement.TryGetProperty("Format", out format))
+                    && format.GetString() == "avr-mcusr")
+                {
+                    if (!(json.RootElement.TryGetProperty("mcusr", out var flags) || json.RootElement.TryGetProperty("Mcusr", out flags)) || !flags.TryGetByte(out var value))
+                        throw new InvalidDataException("Classic AVR reset evidence requires a numeric mcusr byte from 0 to 255.");
+                    report = CrashDecoder.DecodeAvrMcusr(value);
+                    Output.WriteLine("Decoding captured classic AVR MCUSR flags. This layout is not the reset-status register of every AVR family; firmware may already have cleared it.", OutputKind.Info);
+                }
+                else
+                {
+                    report = CrashDecoder.DecodeCortexM(JsonSerializer.Deserialize<CortexFaultSnapshot>(text, EmbeddedAnalysisJson)
+                        ?? throw new InvalidDataException("Expected a CortexFaultSnapshot JSON object with numeric register values."));
+                }
+            }
+            else { report = CrashDecoder.DecodeEspPanic(text); }
             await ReportEmbeddedCrashAsync(project, report);
         }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException or ArgumentException or OperationCanceledException or ToolchainRuntimeException)
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException or ArgumentException or InvalidOperationException or OperationCanceledException or ToolchainRuntimeException)
         {
             Output.WriteLine("Crash decoder: " + ex.Message, OutputKind.Failure);
         }
     }
 
     private async Task ReportEmbeddedCrashAsync(EmbeddedProject project, CrashReport report,
-        string? exactFirmware = null, CancellationToken cancellationToken = default)
+        string? exactFirmware = null, Action? validateSnapshot = null, CancellationToken cancellationToken = default)
     {
         var options = ReadEmbeddedAnalysisOptions(project.Directory);
         var elf = exactFirmware ?? FindEmbeddedElf(project.Directory, options);
@@ -154,6 +169,8 @@ public sealed partial class WorkspaceViewModel
                 Output.WriteLine("Source resolution unavailable: " + error.Message + ". Captured crash findings remain available.", OutputKind.Info);
             }
         }
+        cancellationToken.ThrowIfCancellationRequested();
+        validateSnapshot?.Invoke();
         var primary = frames.Count > 0 ? frames[0] : null;
         DiagnosticLocation? location = null;
         if (primary is not null && _toolchains.Runtime.ToDevicePath(primary.File, project.Directory) is { } source && File.Exists(source))
@@ -174,9 +191,15 @@ public sealed partial class WorkspaceViewModel
     private async Task AnalyzeEmbeddedStackAsync()
     {
         if (await SelectEmbeddedProjectAsync() is not { } project) return;
+        await ReportEmbeddedStackAsync(project);
+    }
+
+    internal async Task ReportEmbeddedStackAsync(EmbeddedProject project, bool afterBuild = false)
+    {
         try
         {
             var options = ReadEmbeddedAnalysisOptions(project.Directory);
+            if (afterBuild && options.TaskBudgets.Count == 0) return;
             var files = options.StackUsageFiles.Count > 0
                 ? options.StackUsageFiles.Select(file => Path.GetFullPath(file, project.Directory)).ToArray()
                 : FindEmbeddedBuildFiles(project.Directory, ".su").ToArray();
@@ -220,9 +243,17 @@ public sealed partial class WorkspaceViewModel
                 b.ExceedsBudget ? "EMBSTACK001" : "EMBSTACK002", b.ExceedsBudget || b.RequiredBytes is null ? DiagnosticSeverityLevel.Warning : DiagnosticSeverityLevel.Info,
                 b.Task + ": " + b.Message, null, project.Name)).ToArray());
             foreach (var budget in budgets) Output.WriteLine(budget.Task + ": " + budget.Message, budget.ExceedsBudget ? OutputKind.Failure : OutputKind.Info);
-            SelectedPanel = BottomPanel.Output;
-            IsBottomPanelVisible = true;
-            StatusText = $"Stack analysis: {analysis.Count} functions, {analysis.Count(f => f.WorstCaseBytes is null)} unknown bounds";
+            if (afterBuild)
+            {
+                var warningCount = budgets.Count(budget => budget.ExceedsBudget || budget.RequiredBytes is null);
+                StatusText += $" · stack budgets: {warningCount} warnings";
+            }
+            else
+            {
+                SelectedPanel = BottomPanel.Output;
+                IsBottomPanelVisible = true;
+                StatusText = $"Stack analysis: {analysis.Count} functions, {analysis.Count(f => f.WorstCaseBytes is null)} unknown bounds";
+            }
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException or OverflowException or ArgumentException)
         {

@@ -237,14 +237,48 @@ jobs:
         shell: bash
         run: |
           docker run --rm -v "$PWD:/work" -w /work alpine:3.24 sh -ec '
-            apk add --no-cache python3 ca-certificates build-base libusb-dev libusb-compat-dev linux-headers pkgconf rust cargo &&
-            python3 build/embedded/flash-clients-smoke.py --mode source
+            apk add --no-cache python3 ca-certificates build-base libusb-dev libusb-compat-dev linux-headers pkgconf rust cargo gcc-riscv-none-elf newlib-riscv-none-elf binutils-riscv-none-elf &&
+            failed=0
+            for tool in embedded-bossac embedded-teensy embedded-wchisp embedded-mspdebug; do
+              python3 build/embedded/flash-clients-smoke.py --mode source --tool "$tool" || failed=1
+            done
+            python3 build/embedded/ch32fun-smoke.py || failed=1
+            exit "$failed"
           ' 2>&1 | tee flash-clients-source.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: flash-clients-${{ matrix.runner }}-${{ github.event_name }}
           path: flash-clients-*.log
+
+  nordic-serial:
+    name: Production Nordic serial DFU / ${{ matrix.runner }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-24.04, ubuntu-24.04-arm]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Install signed host prerequisites for the APK's pinned native runtimes
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y build-essential libtalloc-dev gawk unzip cmake
+          if [ "$(uname -m)" = aarch64 ]; then
+            sudo apt-get install -y gcc-aarch64-linux-gnu
+          fi
+      - name: Install unchanged Nordic DFU and replay serial, USB serial and corrupt CRC through its public launcher
+        run: bash build/embedded/glibc-frontends.sh "$RUNNER_TEMP/embedded-nordic" ci-out/embedded-nordic embedded-nrfutil
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: embedded-nordic-${{ matrix.runner }}-${{ github.event_name }}
+          path: ci-out/embedded-nordic/
+          if-no-files-found: error
 
   glibc-sdks:
     name: Production ${{ matrix.sdk }} SDK / ${{ matrix.runner }}

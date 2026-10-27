@@ -23,6 +23,8 @@ public sealed partial class WorkspaceViewModel
                 return;
             }
             var request = await LoadEmbeddedFlashRequestAsync(project);
+            var firmware = request.EspFlasherArguments is { } metadata
+                ? (await Task.Run(() => EspFlashManifestReader.Read(metadata))).ApplicationPath : request.FirmwarePath;
             var address = await Prompt.AskAsync("Wi-Fi firmware upload", "Board IP address, optionally with :port (use [IPv6]:port). Default port: 3232. Its running firmware must support ArduinoOTA and OTA partitions.", "Next");
             if (address is null)
             {
@@ -52,7 +54,7 @@ public sealed partial class WorkspaceViewModel
             ShowEmbeddedFlashOutput();
             try
             {
-                var result = await ArduinoOtaUploader.UploadAsync(new(request.FirmwarePath, target, password),
+                var result = await ArduinoOtaUploader.UploadAsync(new(firmware, target, password),
                     new Progress<double>(value => StatusText = $"Wi-Fi firmware upload: {value:P0}"), cancellationToken: cancellation.Token);
                 Output.WriteLine("ArduinoOTA target accepted firmware SHA-256: " + result.FirmwareSha256 + ". Physical readback is not part of ArduinoOTA.", OutputKind.Info);
                 StatusText = "Wi-Fi firmware accepted by target";
@@ -352,7 +354,7 @@ public sealed partial class WorkspaceViewModel
         }
         if (request.Protocol == EmbeddedFlashProtocol.NrfDfu && !_toolchains.Runtime.HasCommand("nrfutil"))
         {
-            throw new NotSupportedException("Nordic legacy pc-nrfutil 6.1.7 requires Python 3.7..3.10 plus its native pc_ble_driver_py dependency. A verified ARM64 installer for the current Alpine/Ubuntu Python runtime is unavailable. Install a compatible legacy CLI explicitly or use a supported probe route; no USB programming was attempted.");
+            throw new NotSupportedException("The verified Nordic legacy DFU installation did not expose nrfutil. Finish installing its unchanged vendor bundle in the embedded glibc environment; ARM64 also needs Box64 and the matching x64 serial shim. No USB programming was attempted.");
         }
         if (request.Protocol != EmbeddedFlashProtocol.PymcuprogUpdi || _toolchains.Environment is null)
         {

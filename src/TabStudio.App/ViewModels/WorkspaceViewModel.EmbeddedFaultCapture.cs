@@ -12,10 +12,11 @@ namespace TabStudio.App.ViewModels;
 
 public sealed partial class WorkspaceViewModel
 {
-    private sealed record EmbeddedFaultSession(EmbeddedProject Project, EmbeddedDebugProfile Profile,
+    private sealed record EmbeddedFaultSession(DebugAdapterSession Adapter, EmbeddedProject Project, EmbeddedDebugProfile Profile,
         string Firmware, string FirmwareSha256);
 
     private EmbeddedFaultSession? _embeddedFaultSession;
+    private readonly SemaphoreSlim _embeddedFaultCaptureGate = new(1, 1);
 
     private async Task BindEmbeddedFaultSessionAsync(EmbeddedProject project, EmbeddedDebugProfile profile,
         string firmware, DebugAdapterSession adapter, CancellationToken cancellationToken)
@@ -23,29 +24,49 @@ public sealed partial class WorkspaceViewModel
         await using var file = File.OpenRead(firmware);
         var fingerprint = Convert.ToHexStringLower(await SHA256.HashDataAsync(file, cancellationToken));
         if (ReferenceEquals(_adapter, adapter) && !adapter.HasEnded)
-            _embeddedFaultSession = new(project, profile, firmware, fingerprint);
+            _embeddedFaultSession = new(adapter, project, profile, firmware, fingerprint);
     }
 
     /// <summary>Reads latched Cortex-M fault status from an explicitly configured, unchanged halted debug session.</summary>
     [RelayCommand]
-    private async Task CaptureEmbeddedFaultAsync()
+    private async Task CaptureEmbeddedFaultAsync() => await CaptureEmbeddedFaultCoreAsync(automatic: false);
+
+    private Task<bool> TryCaptureEmbeddedFaultAutomaticallyAsync(DebugAdapterSession adapter, DapStoppedEventArgs stop, int epoch)
     {
+        if (stop.Reason != "exception" || adapter.Adapter.Id != "embedded-gdb" || !IsPaused
+            || !ReferenceEquals(adapter, _adapter) || Volatile.Read(ref _adapterPauses) != epoch
+            || _embeddedFaultSession is not { } bound || !ReferenceEquals(bound.Adapter, adapter)
+            || !CortexFaultCapture.IsSupportedModel(bound.Profile.FaultModel))
+        {
+            return Task.FromResult(false);
+        }
+        return CaptureEmbeddedFaultCoreAsync(automatic: true, adapter, epoch);
+    }
+
+    private async Task<bool> CaptureEmbeddedFaultCoreAsync(bool automatic, DebugAdapterSession? expectedAdapter = null, int? expectedEpoch = null)
+    {
+        if (!await _embeddedFaultCaptureGate.WaitAsync(0))
+        {
+            if (!automatic) Output.WriteLine("Live fault capture is already in progress for this IDE session.", OutputKind.Info);
+            return false;
+        }
         try
         {
             if (_adapter is not { Adapter.Id: "embedded-gdb" } adapter || !IsPaused || _adapterThread is not int thread
-                || _embeddedFaultSession is not { } session)
+                || _embeddedFaultSession is not { } session || !ReferenceEquals(session.Adapter, adapter)
+                || expectedAdapter is not null && !ReferenceEquals(expectedAdapter, adapter))
             {
                 throw new InvalidOperationException("Pause the matching on-chip GDB session before capturing live fault status.");
             }
-            var epoch = _adapterPauses;
+            var epoch = expectedEpoch ?? Volatile.Read(ref _adapterPauses);
+            EnsureFaultCapturePaused(adapter, epoch);
             var profilePath = Path.Combine(session.Project.Directory, EmbeddedDebugProfile.FileName);
             if (new FileInfo(profilePath).Length > 65536) throw new InvalidDataException("Embedded debug profile exceeds 64 KiB.");
             var profile = EmbeddedDebugProfile.Parse(await File.ReadAllTextAsync(profilePath));
             if (!CortexFaultCapture.IsSupportedModel(profile.FaultModel))
                 throw new NotSupportedException("Explicitly set FaultModel to cortex-m-v7 or cortex-m-v8-mainline for the actual core. Cortex-M0/M0+, baseline cores and unknown layouts are refused.");
             var firmware = profile.ResolveFirmware(session.Project.Directory);
-            if (firmware != session.Firmware || profile.InterfaceConfig != session.Profile.InterfaceConfig
-                || profile.TargetConfig != session.Profile.TargetConfig || profile.ProbeSelector != session.Profile.ProbeSelector)
+            if (firmware != session.Firmware || profile != session.Profile)
             {
                 throw new InvalidOperationException("The debug profile no longer matches the attached session. Restart on-chip debugging before capturing fault evidence.");
             }
@@ -65,8 +86,10 @@ public sealed partial class WorkspaceViewModel
             EnsureFaultCapturePaused(adapter, epoch);
             if (frames.Count == 0) throw new InvalidOperationException("The halted adapter supplied no top frame for live core-register evaluation.");
             var reader = new EmbeddedCortexFaultReader(this, adapter, epoch, frames[0].Id);
-            var evidence = await CortexFaultCapture.CaptureAsync(reader, profile.FaultModel!, timeout.Token);
+            var evidence = automatic ? await CortexFaultCapture.CaptureAutomaticAsync(reader, profile.FaultModel!, timeout.Token)
+                : await CortexFaultCapture.CaptureAsync(reader, profile.FaultModel!, timeout.Token);
             EnsureFaultCapturePaused(adapter, epoch);
+            if (evidence is null) return false; // Actual ICSR is not an active fault; latched flags are not an automatic crash.
             var snapshot = evidence.Snapshot;
             var directory = Path.Combine(session.Project.Directory, ".tabstudio", "faults");
             Directory.CreateDirectory(directory);
@@ -85,25 +108,35 @@ public sealed partial class WorkspaceViewModel
                         {
                             Utc = DateTimeOffset.UtcNow, profile.FaultModel, evidence.CpuId, evidence.LinkRegister,
                             evidence.MainStackPointer, evidence.ProcessStackPointer, evidence.ProgramCounter,
+                            Automatic = automatic, evidence.ActiveException,
                             evidence.Frame, Firmware = session.Firmware, session.FirmwareSha256,
                         },
                     }, EmbeddedAnalysisJson, timeout.Token);
                     await output.FlushAsync(timeout.Token);
                 }
                 timeout.Token.ThrowIfCancellationRequested();
+                EnsureFaultCapturePaused(adapter, epoch);
                 File.Move(temporary, path);
             }
             finally { File.Delete(temporary); }
-            Output.WriteLine("Live fault evidence saved: " + path, OutputKind.Info);
+            Output.WriteLine((automatic ? "Automatic active-fault" : "Live fault") + " evidence saved: " + path, OutputKind.Info);
             Output.WriteLine(evidence.Frame.Reason + " Fault flags are latched since they were last cleared; capture does not clear flags, write target memory or resume the CPU.", OutputKind.Info);
-            await ReportEmbeddedCrashAsync(session.Project, CrashDecoder.DecodeCortexM(snapshot), session.Firmware, timeout.Token);
+            EnsureFaultCapturePaused(adapter, epoch);
+            await ReportEmbeddedCrashAsync(session.Project, CrashDecoder.DecodeCortexM(snapshot), session.Firmware,
+                () => EnsureFaultCapturePaused(adapter, epoch), timeout.Token);
+            return true;
         }
         catch (Exception error) when (IsEmbeddedError(error) || error is DebugAdapterException or OperationCanceledException)
         {
-            Output.WriteLine("Live fault capture: " + error.Message, OutputKind.Failure);
-            SelectedPanel = BottomPanel.Output;
-            IsBottomPanelVisible = true;
+            Output.WriteLine((automatic ? "Automatic fault capture skipped: " : "Live fault capture: ") + error.Message, automatic ? OutputKind.Info : OutputKind.Failure);
+            if (!automatic)
+            {
+                SelectedPanel = BottomPanel.Output;
+                IsBottomPanelVisible = true;
+            }
+            return false;
         }
+        finally { _embeddedFaultCaptureGate.Release(); }
     }
 
     private void EnsureFaultCapturePaused(DebugAdapterSession adapter, int epoch)

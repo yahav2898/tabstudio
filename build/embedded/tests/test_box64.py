@@ -6,9 +6,11 @@ import os
 from pathlib import Path
 import subprocess
 import struct
+import shutil
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "native/embedded"))
@@ -72,12 +74,51 @@ class BoxedPackageTests(unittest.TestCase):
         arguments, _ = box64_runtime.command("/original/gcc", ["-c", "a file.c"], "x86_64")
         self.assertEqual(["/original/gcc", "-c", "a file.c"], arguments)
 
+    def test_boxed_serial_child_has_only_guest_preload_and_parent_is_unchanged(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            shim = Path(temporary) / "serial-x64.so"
+            header = bytearray(64)
+            header[:7] = b"\x7fELF\x02\x01\x01"
+            header[16:20] = b"\x03\x00\x3e\x00"
+            shim.write_bytes(header)
+            with patch.dict(os.environ, {"LD_PRELOAD": "/native-arm.so", "BOX64_LD_PRELOAD": "/old-x64.so"}):
+                _, environment = box64_runtime.command("/original/client", [], "aarch64", Path("/private"), serial_shim=shim)
+                self.assertNotIn("LD_PRELOAD", environment)
+                self.assertEqual(str(shim), environment["BOX64_LD_PRELOAD"])
+                self.assertEqual("/native-arm.so", os.environ["LD_PRELOAD"])
+                _, environment = box64_runtime.command("/original/client", [], "x86_64", serial_shim=shim)
+                self.assertEqual(str(shim), environment["LD_PRELOAD"])
+                self.assertNotIn("BOX64_LD_PRELOAD", environment)
+            header[18:20] = b"\xb7\x00"
+            shim.write_bytes(header)
+            with self.assertRaises(ValueError):
+                box64_runtime.command("/client", serial_shim=shim)
+
     def test_launcher_preserves_usb_fd_and_original_helper_search_path(self):
         text = boxed.launcher(Path("/original/unchanged/bin/arm-none-eabi-gcc"))
         self.assertIn("pass_fds=fds", text)
         self.assertIn("os.fstat(3)", text)
         self.assertIn("'/original/unchanged/bin:'", text)
         self.assertIn("subprocess._USE_POSIX_SPAWN = False", text)
+
+    def test_package_update_keeps_previous_original_and_never_reuses_its_binary(self):
+        if os.uname().machine != "x86_64":
+            self.skipTest("Native x86 executable fixture")
+        with tempfile.TemporaryDirectory() as temporary:
+            package = Path(temporary) / "toolchain"
+            package.mkdir()
+            shutil.copy2("/bin/true", package / "tool")
+            boxed.overlay(package)
+            first = Path(json.loads((package / ".tabstudio-box64-overlay.json").read_text())["original"])
+            previous = (first / "tool").read_bytes()
+            shutil.rmtree(package)
+            package.mkdir()
+            shutil.copy2("/bin/echo", package / "tool")
+            boxed.overlay(package)
+            second = Path(json.loads((package / ".tabstudio-box64-overlay.json").read_text())["original"])
+            self.assertNotEqual(first, second)
+            self.assertEqual(previous, (first / "tool").read_bytes())
+            self.assertEqual(Path("/bin/echo").read_bytes(), (second / "tool").read_bytes())
 
 
 if __name__ == "__main__":

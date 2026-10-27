@@ -16,9 +16,22 @@ import sys
 ROOT = Path("/opt/tabstudio/box64")
 
 
-def command(binary, arguments=(), architecture=None, root=ROOT):
+def command(binary, arguments=(), architecture=None, root=ROOT, serial_shim=None):
     architecture = architecture or platform.machine()
     env = dict(os.environ)
+    if serial_shim is not None:
+        shim = Path(serial_shim)
+        with shim.open("rb") as source:
+            header = source.read(20)
+        if (len(header) != 20 or header[:7] != b"\x7fELF\x02\x01\x01"
+                or header[16:20] != b"\x03\x00\x3e\x00"):
+            raise ValueError("The boxed serial shim must be an x86-64 ELF shared library")
+        # The launcher itself may have loaded the worker's native ARM shim.
+        # Its child must have exactly one control interposer, in the guest ABI;
+        # otherwise an emulated ioctl could invoke two serial control RPCs.
+        env.pop("LD_PRELOAD", None)
+        env.pop("BOX64_LD_PRELOAD", None)
+        env["LD_PRELOAD" if architecture == "x86_64" else "BOX64_LD_PRELOAD"] = str(shim)
     if architecture == "x86_64":
         return [str(binary), *arguments], env
     if architecture != "aarch64":
