@@ -52,10 +52,11 @@ public sealed class ServiceTargetsTests : IDisposable
     [Theory]
     [InlineData("postgres", "postgres")]
     [InlineData("mysql", "mysql")]
-    [InlineData("mysql,postgres", "mysql,postgres")]
+    [InlineData("mysql,postgres", "postgres")]
     [InlineData("dev", "")]
     public void An_active_Spring_profile_points_at_the_database_its_settings_use(string profiles, string expected)
     {
+        // As in Spring, a later profile's setting replaces an earlier one's: mysql,postgres uses PostgreSQL.
         var targets = ServiceTargets.Referenced(Project, _repo.Path, new Dictionary<string, string?> { ["SPRING_PROFILES_ACTIVE"] = profiles });
 
         Assert.Equal(expected, string.Join(",", targets));
