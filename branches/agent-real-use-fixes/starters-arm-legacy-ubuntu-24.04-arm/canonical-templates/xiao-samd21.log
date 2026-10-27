@@ -1,0 +1,133 @@
+> pio run --environment xiao-samd21 --jobs 2
+********************************************************************************
+If you like PlatformIO, please:
+- star it on GitHub > https://github.com/platformio/platformio-core
+- follow us on LinkedIn to stay up-to-date on the latest project news > https://www.linkedin.com/company/platformio/
+- try PlatformIO IDE for embedded development > https://platformio.org/platformio-ide
+********************************************************************************
+
+Processing xiao-samd21 (platform: atmelsam@9.0.0; board: seeed_xiao; framework: arduino)
+--------------------------------------------------------------------------------
+Platform Manager: Installing atmelsam @ 9.0.0
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Platform Manager: atmelsam@9.0.0 has been installed!
+Tool Manager: Installing platformio/toolchain-gccarmnoneeabi @ ~1.70201.0
+Box64 fallback: no ARM64 artifact; SHA-256 verification remains owned by PlatformIO: toolchain-gccarmnoneeabi-linux_x86_64-1.70201.0.tar.gz
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Box64 package overlay: toolchain-gccarmnoneeabi original binaries unchanged: 46
+Tool Manager: toolchain-gccarmnoneeabi@1.70201.0 has been installed!
+Tool Manager: Installing platformio/framework-arduino-samd-seeed @ ~1.8.5
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: framework-arduino-samd-seeed@1.8.5 has been installed!
+Tool Manager: Installing platformio/framework-cmsis @ ~2.50400.0
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: framework-cmsis@2.50400.181126 has been installed!
+Tool Manager: Installing platformio/framework-cmsis-atmel @ ~1.2.2
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: framework-cmsis-atmel@1.2.2 has been installed!
+Tool Manager: Installing platformio/tool-scons @ ~4.41101.0
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: tool-scons@4.41101.0 has been installed!
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/atmelsam/seeed_xiao.html
+PLATFORM: Atmel SAM (9.0.0) > Seeeduino XIAO
+HARDWARE: SAMD21G18A 48MHz, 32KB RAM, 256KB Flash
+DEBUG: Current (atmel-ice) External (atmel-ice, blackmagic, jlink)
+PACKAGES: 
+ - framework-arduino-samd-seeed @ 1.8.5 
+ - framework-cmsis @ 2.50400.181126 (5.4.0) 
+ - framework-cmsis-atmel @ 1.2.2 
+ - toolchain-gccarmnoneeabi @ 1.70201.0 (7.2.1)
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 30 compatible libraries
+Scanning dependencies...
+No dependencies
+Building in release mode
+Compiling .pio/build/xiao-samd21/src/main.cpp.o
+Compiling .pio/build/xiao-samd21/FrameworkArduinoVariant/variant.cpp.o
+Archiving .pio/build/xiao-samd21/libFrameworkArduinoVariant.a
+Indexing .pio/build/xiao-samd21/libFrameworkArduinoVariant.a
+Compiling .pio/build/xiao-samd21/FrameworkArduino/IPAddress.cpp.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/IPv6Address.cpp.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/Print.cpp.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/Reset.cpp.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/Retarget.cpp.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/SERCOM.cpp.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/Stream.cpp.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/StreamString.cpp.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/Tone.cpp.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/USB/CDC.cpp.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/USB/PluggableUSB.cpp.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/USB/SAMD21_USBDevice.cpp.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/USB/USBCore.cpp.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/USB/samd21_host.c.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/Uart.cpp.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/WInterrupts.c.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/WMath.cpp.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/WString.cpp.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/abi.cpp.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/avr/dtostrf.c.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/base64.cpp.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/cbuf.cpp.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/cortex_handlers.c.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/delay.c.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/hooks.c.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/itoa.c.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/libb64/cdecode.c.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/libb64/cencode.c.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/main.cpp.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/math_helper.c.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/new.cpp.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/pulse.c.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/pulse_asm.S.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/startup.c.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/wiring.c.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/wiring_analog.c.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/wiring_digital.c.o
+.tabstudio/platformio-boxed/packages/framework-arduino-samd-seeed/cores/arduino/wiring_analog.c:35:12: warning: '_dacResolution' defined but not used [-Wunused-variable]
+ static int _dacResolution = 10;
+            ^~~~~~~~~~~~~~
+Compiling .pio/build/xiao-samd21/FrameworkArduino/wiring_private.c.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/wiring_pwm.cpp.o
+Compiling .pio/build/xiao-samd21/FrameworkArduino/wiring_shift.c.o
+.tabstudio/platformio-boxed/packages/framework-arduino-samd-seeed/cores/arduino/wiring_pwm.cpp: In function 'void noPwm(uint32_t)':
+.tabstudio/platformio-boxed/packages/framework-arduino-samd-seeed/cores/arduino/wiring_pwm.cpp:374:13: warning: unused variable 'tcChannel' [-Wunused-variable]
+     uint8_t tcChannel = GetTCChannelNumber(pinDesc.ulPWMChannel);
+             ^~~~~~~~~
+Archiving .pio/build/xiao-samd21/libFrameworkArduino.a
+Indexing .pio/build/xiao-samd21/libFrameworkArduino.a
+Linking .pio/build/xiao-samd21/firmware.elf
+Checking size .pio/build/xiao-samd21/firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [=         ]   7.3% (used 2408 bytes from 32768 bytes)
+Flash: [          ]   4.1% (used 10872 bytes from 262144 bytes)
+Building .pio/build/xiao-samd21/firmware.bin
+======================== [SUCCESS] Took 158.58 seconds ========================
+> pio run --environment xiao-samd21 --target compiledb --jobs 2
+Processing xiao-samd21 (platform: atmelsam@9.0.0; board: seeed_xiao; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/atmelsam/seeed_xiao.html
+PLATFORM: Atmel SAM (9.0.0) > Seeeduino XIAO
+HARDWARE: SAMD21G18A 48MHz, 32KB RAM, 256KB Flash
+DEBUG: Current (atmel-ice) External (atmel-ice, blackmagic, jlink)
+PACKAGES: 
+ - framework-arduino-samd-seeed @ 1.8.5 
+ - framework-cmsis @ 2.50400.181126 (5.4.0) 
+ - framework-cmsis-atmel @ 1.2.2 
+ - toolchain-gccarmnoneeabi @ 1.70201.0 (7.2.1)
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 30 compatible libraries
+Scanning dependencies...
+No dependencies
+Building in release mode
+Building compilation database compile_commands.json
+========================= [SUCCESS] Took 3.89 seconds =========================
