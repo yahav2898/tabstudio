@@ -1,38 +1,51 @@
-+ which google-chrome chromium
-/usr/bin/google-chrome
-/usr/bin/chromium
-+ dotnet build tests/TabStudio.Core.Tests -c Release -p:TreatWarningsAsErrors=true
-+ grep -E 'error|warn|Build succeeded'
-+ sort -u
-+ head -40
-Build succeeded.
-+ dotnet build tests/TabStudio.Wpf.Tests -c Release -p:TreatWarningsAsErrors=true
-+ grep -E 'error|warn|Build succeeded'
-+ sort -u
-+ head -40
-Build succeeded.
 + dotnet build tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true
 + grep -E 'error|warn|Build succeeded'
 + sort -u
 + head -60
-/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/ViewModels/WebPreviewViewModel.Zoom.cs(33,45): error CA1822: Member 'ZoomChoices' does not access instance data and can be marked as static (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1822) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
-+ dotnet test tests/TabStudio.Core.Tests -c Release --no-build --filter FullyQualifiedName~PreviewLayoutCalculator
-+ tail -30
-Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Core.Tests/bin/Release/net10.0/TabStudio.Core.Tests.dll (.NETCoreApp,Version=v10.0)
-A total of 1 test files matched the specified pattern.
-
-Passed!  - Failed:     0, Passed:    12, Skipped:     0, Total:    12, Duration: 45 ms - TabStudio.Core.Tests.dll (net10.0)
+Build succeeded.
 + dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter 'FullyQualifiedName~PreviewZoomStore|FullyQualifiedName~WebPreviewZoom|FullyQualifiedName~WpfPreviewFit' --logger 'console;verbosity=normal'
 + grep -v '^\s*$'
-+ tail -120
++ tail -150
 Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll (.NETCoreApp,Version=v10.0)
-The argument /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll is invalid. Please use the /help option to check the list of valid arguments.
-+ dotnet test tests/TabStudio.Wpf.Tests -c Release --no-build --filter 'FullyQualifiedName~WpfBrowserTests|FullyQualifiedName~WpfTemplateTests'
-+ tail -40
-Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Wpf.Tests/bin/Release/net10.0/TabStudio.Wpf.Tests.dll (.NETCoreApp,Version=v10.0)
 A total of 1 test files matched the specified pattern.
-
-Passed!  - Failed:     0, Passed:    10, Skipped:     0, Total:    10, Duration: 13 s - TabStudio.Wpf.Tests.dll (net10.0)
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.14)
+[xUnit.net 00:00:00.14]   Discovering: TabStudio.App.Tests
+[xUnit.net 00:00:00.46]   Discovered:  TabStudio.App.Tests
+[xUnit.net 00:00:00.50]   Starting:    TabStudio.App.Tests
+  Passed TabStudio.App.Tests.ViewModels.WebPreviewZoomTests.The_mode_replaces_its_own_parameter_and_keeps_the_others(page: "http://127.0.0.1:5000/?tabstudio-view=fit", mode: ActualSize, expected: "http://127.0.0.1:5000/?tabstudio-view=actual") [11 ms]
+  Passed TabStudio.App.Tests.Services.PreviewZoomStoreTests.A_project_without_a_choice_shows_Fit [11 ms]
+  Passed TabStudio.App.Tests.ViewModels.WebPreviewZoomTests.The_mode_replaces_its_own_parameter_and_keeps_the_others(page: "http://127.0.0.1:5000/index.html?a=1&tabstudio-vie"···, mode: Fit, expected: "http://127.0.0.1:5000/index.html?a=1&b=2&tabstudio"···) [< 1 ms]
+  Passed TabStudio.App.Tests.ViewModels.WebPreviewZoomTests.The_mode_replaces_its_own_parameter_and_keeps_the_others(page: "http://127.0.0.1:5000/", mode: Fit, expected: "http://127.0.0.1:5000/?tabstudio-view=fit") [< 1 ms]
+  Passed TabStudio.App.Tests.ViewModels.WebPreviewZoomTests.A_restart_keeps_the_page_and_its_mode [35 ms]
+  Passed TabStudio.App.Tests.Services.PreviewZoomStoreTests.The_modes_are_saved_by_name_and_a_damaged_file_starts_over [36 ms]
+  Passed TabStudio.App.Tests.Services.PreviewZoomStoreTests.Each_project_keeps_its_own_mode_across_sessions [1 ms]
+  Passed TabStudio.App.Tests.ViewModels.WebPreviewZoomTests.A_wpf_app_opens_in_Fit_with_the_mode_in_its_address_and_page_zoom_on [10 ms]
+  Passed TabStudio.App.Tests.ViewModels.WebPreviewZoomTests.A_browser_that_runs_script_switches_the_mode_in_place_without_reloading_the_app [1 ms]
+  Passed TabStudio.App.Tests.ViewModels.WebPreviewZoomTests.Other_web_apps_show_no_zoom_and_keep_the_browser_at_its_own_width [1 ms]
+  Passed TabStudio.App.Tests.ViewModels.WebPreviewZoomTests.Choosing_a_mode_saves_it_for_the_project_and_reloads_a_browser_that_runs_no_script [1 ms]
+[xUnit.net 00:00:20.98]     TabStudio.App.Tests.ViewModels.WpfPreviewFitTests.A_wpf_window_larger_than_the_pane_shows_whole_in_Fit_and_a_tap_on_its_right_most_button_reaches_the_app [FAIL]
+[xUnit.net 00:00:20.98]       Assert.InRange() Failure: Value not in range
+[xUnit.net 00:00:20.98]       Range:  (329 - 331)
+[xUnit.net 00:00:20.98]       Actual: 480
+[xUnit.net 00:00:20.98]       Stack Trace:
+[xUnit.net 00:00:20.98]         /_/tests/TabStudio.App.Tests/ViewModels/WpfPreviewFitTests.cs(84,0): at TabStudio.App.Tests.ViewModels.WpfPreviewFitTests.A_wpf_window_larger_than_the_pane_shows_whole_in_Fit_and_a_tap_on_its_right_most_button_reaches_the_app()
+[xUnit.net 00:00:20.98]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:21.09]   Finished:    TabStudio.App.Tests
+  Failed TabStudio.App.Tests.ViewModels.WpfPreviewFitTests.A_wpf_window_larger_than_the_pane_shows_whole_in_Fit_and_a_tap_on_its_right_most_button_reaches_the_app [19 s]
+  Error Message:
+   Assert.InRange() Failure: Value not in range
+Range:  (329 - 331)
+Actual: 480
+  Stack Trace:
+     at TabStudio.App.Tests.ViewModels.WpfPreviewFitTests.A_wpf_window_larger_than_the_pane_shows_whole_in_Fit_and_a_tap_on_its_right_most_button_reaches_the_app() in /_/tests/TabStudio.App.Tests/ViewModels/WpfPreviewFitTests.cs:line 84
+--- End of stack trace from previous location ---
+Test Run Failed.
+Total tests: 12
+     Passed: 11
+     Failed: 1
+ Total time: 21.6288 Seconds
++ ls ci-out/screenshots
++ grep -i wpf-fit
 + python3 -
 + python3 build/ci/real-repos.py /home/runner/work/_temp/rr
 + tail -5
@@ -43,10 +56,25 @@ WpfSimpleCalculator: 9146bf6b4365f3c22a371e2525ce65ce32cb16ee
 + dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter FullyQualifiedName~RealRepositoryTests
 + tail -30
 Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll (.NETCoreApp,Version=v10.0)
-The argument /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll is invalid. Please use the /help option to check the list of valid arguments.
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:     1, Skipped:     0, Total:     1, Duration: 7 s - TabStudio.App.Tests.dll (net10.0)
 + cat ci-out/real/summary.md
-cat: ci-out/real/summary.md: No such file or directory
-+ head -60 ci-out/real/WpfSimpleCalculator.txt
-head: cannot open 'ci-out/real/WpfSimpleCalculator.txt' for reading: No such file or directory
+| Repository | Errors | Baseline | Warnings | Build |
+| --- | --- | --- | --- | --- |
+| WpfSimpleCalculator | 0 | none | 1 | 3 s |
++ head -80 ci-out/real/WpfSimpleCalculator.txt
+WpfSimpleCalculator at 9146bf6b4365f3c22a371e2525ce65ce32cb16ee
+Opened /home/runner/work/_temp/rr/WpfSimpleCalculator/Simple Calculator.sln in 1.6 s
+Compatibility Doctor:
+  Simple Calculator: Ready via OpenSilver in the web preview - A .NET Framework project, run with .NET on this tablet. Built on OpenSilver, which implements WPF's API, and run in the web preview. What OpenSilver lacks, such as 3D, Window.ShowDialog and some members, is named in the Error List; that code runs on your PC through the Windows Bridge.
+Built in 3.3 s: 0 errors, 1 warnings
+Output:
+Build started at 01:26:30...
+1>------ Build started: Project: Simple Calculator, Configuration: Debug ------
+1>MainWindow.xaml(1,1): warning TS7009: In the code OpenSilver's XAML compiler made from MainWindow.xaml: 'MainWindow.Equals' hides inherited member 'object.Equals(object?)'. Use the new keyword if hiding was intended. (CS0108)
+1>Simple Calculator -> compiled in memory (43.5 KB, 953 ms)
+========== Build: 1 succeeded, 0 failed ==========
+
 + git checkout build/ci/real-repos.json
 Updated 1 path from the index
