@@ -90,8 +90,11 @@ public sealed class SessionTests
                 return host == await dana.On(() => danaDocument.Text.ToString()) && host == await noa.On(() => noaDocument.Text.ToString());
             },
             "the three copies to be the same");
-        var text = await live.On(() => hostDocument.Text.ToString());
-        Assert.Contains("class Program", text, StringComparison.Ordinal);
+        // Each device's own edits all arrived: every device has every participant's edits, and nothing waits.
+        var versions = await live.On(() => hostDocument.Text.Version);
+        Assert.Equal(await dana.On(() => danaDocument.Text.Version[dana.Session.SelfId]), versions[await dana.On(() => dana.Session.SelfId)]);
+        Assert.Equal(await noa.On(() => noaDocument.Text.Version[noa.Session.SelfId]), versions[await noa.On(() => noa.Session.SelfId)]);
+        Assert.Equal(0, await live.On(() => hostDocument.Text.PendingCount));
     }
 
     [Fact]
