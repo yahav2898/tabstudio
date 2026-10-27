@@ -217,7 +217,11 @@ public sealed partial class WorkspaceViewModel
             LiveRunPhase.Paused => IdeState.Paused,
             _ => IdeState.Ready,
         };
-        if (run.StatusText.Length > 0)
+        if (run.Phase == LiveRunPhase.Idle)
+        {
+            StatusText = $"In {guest.HostName}'s session";
+        }
+        else if (run.StatusText.Length > 0)
         {
             StatusText = $"{guest.HostName}: {run.StatusText}";
         }

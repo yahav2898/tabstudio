@@ -16,6 +16,8 @@ watches the host's run and debugging as if it were their own.
 3. Choose what guests may do before they join: **Guests can edit**, or only watch; and **Classroom**, where everyone
    follows you.
 
+![The Share Session dialog, with the QR code, the address and the code](../images/live/live-share-session.png)
+
 On the other device, choose **File > Join Live Session…**, or **Join Live** on the start screen, and **Scan the
 session's code**. Without a camera, type the address and the code. The guest gets a copy of the shared files, opens
 the same solution, and its tabs show the host's text.

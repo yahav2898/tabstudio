@@ -47,7 +47,7 @@
               <StackPanel x:Name="CodeText" Grid.Column="2" Spacing="10" VerticalAlignment="Center">
                 <TextBlock Classes="h2" Text="Scan this with TabStudio on the other device" TextWrapping="Wrap" />
                 <TextBlock Classes="muted" TextWrapping="Wrap"
-                           Text="On the other device: File > Join Live Session, or Join a Live Session on the start screen, then Scan the code. Without a camera, type these instead:" />
+                           Text="On the other device: File > Join Live Session, or Join Live on the start screen, then Scan the session's code. Without a camera, type these instead:" />
                 <Grid ColumnDefinitions="Auto,16,*" RowDefinitions="Auto,6,Auto" Margin="0,4,0,0">
                   <TextBlock Classes="label" Text="Address" VerticalAlignment="Center" />
                   <SelectableTextBlock Grid.Column="2" FontFamily="{DynamicResource CodeFont}" FontSize="18" Foreground="{DynamicResource Brush.TextBright}" Text="{Binding AddressText}" VerticalAlignment="Center" />
