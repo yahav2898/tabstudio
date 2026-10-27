@@ -1,0 +1,52 @@
++ which google-chrome chromium
+/usr/bin/google-chrome
+/usr/bin/chromium
++ dotnet build tests/TabStudio.Core.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E 'error|warn|Build succeeded'
++ sort -u
++ head -40
+Build succeeded.
++ dotnet build tests/TabStudio.Wpf.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E 'error|warn|Build succeeded'
++ sort -u
++ head -40
+Build succeeded.
++ dotnet build tests/TabStudio.App.Tests -c Release -p:TreatWarningsAsErrors=true
++ grep -E 'error|warn|Build succeeded'
++ sort -u
++ head -60
+/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/ViewModels/WebPreviewViewModel.Zoom.cs(33,45): error CA1822: Member 'ZoomChoices' does not access instance data and can be marked as static (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1822) [/home/runner/work/tabstudio/tabstudio/src/TabStudio.App/TabStudio.App.csproj]
++ dotnet test tests/TabStudio.Core.Tests -c Release --no-build --filter FullyQualifiedName~PreviewLayoutCalculator
++ tail -30
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Core.Tests/bin/Release/net10.0/TabStudio.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:    12, Skipped:     0, Total:    12, Duration: 45 ms - TabStudio.Core.Tests.dll (net10.0)
++ dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter 'FullyQualifiedName~PreviewZoomStore|FullyQualifiedName~WebPreviewZoom|FullyQualifiedName~WpfPreviewFit' --logger 'console;verbosity=normal'
++ grep -v '^\s*$'
++ tail -120
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll (.NETCoreApp,Version=v10.0)
+The argument /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll is invalid. Please use the /help option to check the list of valid arguments.
++ dotnet test tests/TabStudio.Wpf.Tests -c Release --no-build --filter 'FullyQualifiedName~WpfBrowserTests|FullyQualifiedName~WpfTemplateTests'
++ tail -40
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.Wpf.Tests/bin/Release/net10.0/TabStudio.Wpf.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:    10, Skipped:     0, Total:    10, Duration: 13 s - TabStudio.Wpf.Tests.dll (net10.0)
++ python3 -
++ python3 build/ci/real-repos.py /home/runner/work/_temp/rr
++ tail -5
+WpfSimpleCalculator: 9146bf6b4365f3c22a371e2525ce65ce32cb16ee
++ mkdir -p ci-out/real
++ TABSTUDIO_REAL_REPOS=/home/runner/work/_temp/rr
++ TABSTUDIO_REAL_REPOS_OUT=/home/runner/work/tabstudio/tabstudio/ci-out/real
++ dotnet test tests/TabStudio.App.Tests -c Release --no-build --filter FullyQualifiedName~RealRepositoryTests
++ tail -30
+Test run for /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll (.NETCoreApp,Version=v10.0)
+The argument /home/runner/work/tabstudio/tabstudio/tests/TabStudio.App.Tests/bin/Release/net10.0/TabStudio.App.Tests.dll is invalid. Please use the /help option to check the list of valid arguments.
++ cat ci-out/real/summary.md
+cat: ci-out/real/summary.md: No such file or directory
++ head -60 ci-out/real/WpfSimpleCalculator.txt
+head: cannot open 'ci-out/real/WpfSimpleCalculator.txt' for reading: No such file or directory
++ git checkout build/ci/real-repos.json
+Updated 1 path from the index
