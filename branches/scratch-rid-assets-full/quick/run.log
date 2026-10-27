@@ -1,0 +1,62 @@
++ dotnet build TabStudio.slnx -c Release -p:TreatWarningsAsErrors=true
++ grep -E ' error | warning |Build succeeded|Time Elapsed'
++ sort -u
++ head -60
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To build this project, the following workloads must be installed: android [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Android/TabStudio.Android.csproj]
+/usr/share/dotnet/sdk/10.0.403/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147: To install these workloads, run the following command: dotnet workload restore [/home/runner/work/tabstudio/tabstudio/src/TabStudio.Android/TabStudio.Android.csproj]
+Time Elapsed 00:00:02.40
++ for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
++ dotnet test tests/TabStudio.Packages.Tests -c Release --no-build
++ grep -E '^(Passed|Failed)!|  Failed |error'
++ head -20
++ for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
++ dotnet test tests/TabStudio.Compilation.Tests -c Release --no-build
++ grep -E '^(Passed|Failed)!|  Failed |error'
++ head -20
++ for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
++ dotnet test tests/TabStudio.Core.Tests -c Release --no-build
++ grep -E '^(Passed|Failed)!|  Failed |error'
++ head -20
++ for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
++ dotnet test tests/TabStudio.TestRunner.Tests -c Release --no-build
++ grep -E '^(Passed|Failed)!|  Failed |error'
++ head -20
++ for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
++ dotnet test tests/TabStudio.Notebooks.Tests -c Release --no-build
++ grep -E '^(Passed|Failed)!|  Failed |error'
++ head -20
++ for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
++ dotnet test tests/TabStudio.Debugging.Tests -c Release --no-build
++ grep -E '^(Passed|Failed)!|  Failed |error'
++ head -20
++ for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
++ dotnet test tests/TabStudio.LiveTesting.Tests -c Release --no-build
++ grep -E '^(Passed|Failed)!|  Failed |error'
++ head -20
++ for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
++ dotnet test tests/TabStudio.Web.Tests -c Release --no-build
++ grep -E '^(Passed|Failed)!|  Failed |error'
++ head -20
++ for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
++ dotnet test tests/TabStudio.Wpf.Tests -c Release --no-build
++ grep -E '^(Passed|Failed)!|  Failed |error'
++ head -20
++ for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
++ dotnet test tests/TabStudio.Uno.Tests -c Release --no-build
++ grep -E '^(Passed|Failed)!|  Failed |error'
++ head -20
++ for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
++ dotnet test tests/TabStudio.Swarm.Tests -c Release --no-build
++ grep -E '^(Passed|Failed)!|  Failed |error'
++ head -20
++ for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
++ dotnet test tests/TabStudio.Database.Tests -c Release --no-build
++ grep -E '^(Passed|Failed)!|  Failed |error'
++ head -20
++ for p in Packages Compilation Core TestRunner Notebooks Debugging LiveTesting Web Wpf Uno Swarm Database Services
++ dotnet test tests/TabStudio.Services.Tests -c Release --no-build
++ grep -E '^(Passed|Failed)!|  Failed |error'
++ head -20
++ timeout 50m dotnet test tests/TabStudio.App.Tests -c Release --no-build --blame-hang-timeout 10m --blame-hang-dump-type none --logger 'console;verbosity=minimal'
++ grep -E '^\s+Failed |^(Passed|Failed)!|Total tests|error message|Assert'
++ head -80
