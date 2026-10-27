@@ -38,7 +38,7 @@ public sealed partial class WorkspaceViewModel
     private async Task<OutputProcessResult?> RunDependencyInstallAsync(ToolchainProject project, DependencyInstallDefinition dependency, CancellationToken cancellationToken)
     {
         var python = IsPipInstall(project, dependency);
-        var steps = RunPlanner.PlanDependencies(project, dependency).ToList();
+        var steps = RunPlanner.PlanDependencies(project, dependency, _toolchains.Platform).ToList();
         string? version = null;
         if (python)
         {

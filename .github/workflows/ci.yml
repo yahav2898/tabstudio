@@ -423,7 +423,7 @@ jobs:
         run: bash build/ci/publish-logs.sh app ${{ job.status }}
 
   # Public repositories, pinned to commits in build/ci/real-repos.json, opened in the real IDE as a person would on
-  # the tablet. .NET repositories are built, each with an error baseline that may only go down. Python, Java and Rust
+  # the tablet. .NET repositories are built, each with an error baseline that may only go down. Python, Java, Rust and Node.js
   # repositories are set up by the IDE with the computer's toolchains, and Ctrl+F5 must start their programs: a web
   # app must answer in the web preview, a command-line program must exit with code 0. Reports and screenshots are
   # published.
@@ -443,6 +443,15 @@ jobs:
         options: >-
           --health-cmd "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P TabStudio-ci-1433 -Q 'SELECT 1' -b"
           --health-interval 10s --health-timeout 5s --health-retries 20
+      # node-express-realworld's PostgreSQL, which its .env names (build/ci/real-repos.json); F5 applies its migrations.
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: tabstudio-ci
+          POSTGRES_DB: realworld
+        ports: [5432:5432]
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 20
     env:
       TABSTUDIO_SQLSERVER: Server=tcp:127.0.0.1,1433;Database=SimplCommerce;User ID=sa;Password=TabStudio-ci-1433;TrustServerCertificate=True;MultipleActiveResultSets=true
     steps:
@@ -458,8 +467,9 @@ jobs:
           key: nuget-real-repos-${{ hashFiles('Directory.Packages.props', '**/*.csproj', 'build/ci/real-repos.json') }}
           restore-keys: nuget-real-repos-
 
-      # The toolchains the Python, Java and Rust repositories run with, as the Toolchain Store installs them on a tablet:
-      # Python with uv (which installs the CPython a project's pins need), OpenJDK 21 with Maven, and Rust with Cargo.
+      # The toolchains the Python, Java, Rust and Node.js repositories run with, as the Toolchain Store installs them on a
+      # tablet: Python with uv (which installs the CPython a project's pins need), OpenJDK 21 with Maven, Rust with Cargo,
+      # and Node.js 22 with npm.
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -475,11 +485,15 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@stable
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
       - name: Install Maven
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y maven
-          mvn -v; cargo --version; uv --version; python3 --version
+          mvn -v; cargo --version; uv --version; python3 --version; node --version
 
       - uses: actions/cache@v4
         with:
@@ -488,6 +502,7 @@ jobs:
             ~/.cargo/registry
             ~/.cache/uv
             ~/.cache/pip
+            ~/.npm
           key: real-repos-tools-${{ hashFiles('build/ci/real-repos.json') }}
           restore-keys: real-repos-tools-
 

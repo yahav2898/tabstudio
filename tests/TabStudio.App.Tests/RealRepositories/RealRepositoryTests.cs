@@ -94,13 +94,13 @@ public sealed class RealRepositoryTests
     }
 
     /// <summary>
-    /// Opens the pinned Python, Java and Rust repositories as a person would: the project setup installs their
+    /// Opens the pinned Python, Java, Rust and Node.js repositories as a person would: the project setup installs their
     /// toolchains' packages, and Ctrl+F5 builds and runs the startup project. A web app must answer its first page
     /// in the web preview; a command-line program must exit with code 0. Each repository's report has the setup
     /// log, the Output panel and screenshots.
     /// </summary>
     [AvaloniaFact]
-    public async Task Pinned_Python_Java_and_Rust_repositories_set_up_build_and_start_their_programs()
+    public async Task Pinned_Python_Java_Rust_and_Node_repositories_set_up_build_and_start_their_programs()
     {
         var clones = Environment.GetEnvironmentVariable("TABSTUDIO_REAL_REPOS");
         if (string.IsNullOrEmpty(clones))
@@ -127,6 +127,14 @@ public sealed class RealRepositoryTests
                 repository["web"]?.GetValue<string>(),
                 repository["expect"]?.GetValue<string>());
             var report = new StringBuilder().AppendLine(CultureInfo.InvariantCulture, $"{name} at {repository["sha"]!.GetValue<string>()}");
+            if (repository["dotenv"] is JsonObject dotenv)
+            {
+                // The variables the repository's README asks a person to put in .env.
+                var lines = dotenv.Select(pair => $"{pair.Key}={pair.Value!.GetValue<string>()}");
+                await File.WriteAllLinesAsync(Path.Combine(clones, name, ".env"), lines);
+                report.AppendLine(CultureInfo.InvariantCulture, $".env: {string.Join(", ", dotenv.Select(pair => pair.Key))}");
+            }
+
             RunOutcome outcome;
             try
             {

@@ -293,9 +293,22 @@ public static partial class RunPlanner
         ArgumentNullException.ThrowIfNull(project);
         ArgumentNullException.ThrowIfNull(dependency);
         return dependency.Installed is { } installed
-            && (!Path.Exists(Path.Combine(project.Directory, installed)) || NeedsEnvironment(project, dependency))
+            && (!Path.Exists(Path.Combine(project.Directory, installed)) || NeedsEnvironment(project, dependency) || NeedsPrismaClient(project, dependency))
             && RequiresPackages(project, dependency);
     }
+
+    /// <summary>
+    /// Whether a Prisma project's packages are there but its client was never generated, as when Prisma's install
+    /// script failed quietly: the app's first query would fail with "@prisma/client did not initialize yet".
+    /// </summary>
+    private static bool NeedsPrismaClient(ToolchainProject project, DependencyInstallDefinition dependency) =>
+        IsNodeManifest(dependency)
+        && Directory.Exists(Path.Combine(project.Directory, "node_modules", "@prisma", "client"))
+        && !File.Exists(Path.Combine(project.Directory, "node_modules", ".prisma", "client", "index.js"))
+        && PrismaProject.Detect(project.Directory) is not null;
+
+    private static bool IsNodeManifest(DependencyInstallDefinition dependency) =>
+        string.Equals(Path.GetFileName(dependency.Manifest), "package.json", StringComparison.Ordinal);
 
     /// <summary>Whether a manifest lists any package: a JSON one in its <see cref="DependencyInstallDefinition.Declares"/>, a text one on any line.</summary>
     private static bool ListsPackages(string manifest, DependencyInstallDefinition dependency)
@@ -334,7 +347,16 @@ public static partial class RunPlanner
     /// </summary>
     /// <param name="project">The project.</param>
     /// <param name="dependency">The install.</param>
-    public static IReadOnlyList<ProcessStartSpec> PlanDependencies(ToolchainProject project, DependencyInstallDefinition dependency)
+    /// <param name="platform">
+    /// The device the project runs on, for what depends on it, such as the Prisma engine; a desktop computer when
+    /// <see langword="null"/>.
+    /// </param>
+    /// <remarks>
+    /// npm runs packages' lifecycle scripts (<c>postinstall</c>, <c>prepare</c>), as on a computer. A Prisma project
+    /// then gets <c>prisma generate</c> with its own Prisma and the engine for the device, because Prisma's own
+    /// <c>postinstall</c> leaves the client ungenerated without saying so when it cannot find the schema or the engine.
+    /// </remarks>
+    public static IReadOnlyList<ProcessStartSpec> PlanDependencies(ToolchainProject project, DependencyInstallDefinition dependency, Linux.ToolchainPlatform? platform = null)
     {
         ArgumentNullException.ThrowIfNull(project);
         ArgumentNullException.ThrowIfNull(dependency);
@@ -346,7 +368,29 @@ public static partial class RunPlanner
         }
 
         steps.Add(Spec(project, dependency.Command, variables));
+        if (IsNodeManifest(dependency) && PrismaProject.Detect(project.Directory) is { } prisma)
+        {
+            var prismaEnvironment = PrismaProject.Environment(PrismaProject.EngineTarget(platform ?? Linux.ToolchainPlatform.Desktop));
+            steps.Add(Spec(project, prisma.GenerateCommand, variables, prismaEnvironment));
+        }
+
         return steps;
+    }
+
+    /// <summary>
+    /// A Prisma project's <c>prisma migrate deploy</c>, which creates the tables its migrations describe in the database
+    /// TabStudio runs for it, with the project's own Prisma and the engine for the device.
+    /// </summary>
+    /// <param name="project">The project.</param>
+    /// <param name="prisma">Its Prisma schema.</param>
+    /// <param name="platform">The device; a desktop computer when <see langword="null"/>.</param>
+    public static ProcessStartSpec PlanPrismaMigrate(ToolchainProject project, PrismaProject prisma, Linux.ToolchainPlatform? platform = null)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+        ArgumentNullException.ThrowIfNull(prisma);
+        var environment = PrismaProject.Environment(PrismaProject.EngineTarget(platform ?? Linux.ToolchainPlatform.Desktop));
+        var spec = Spec(project, prisma.MigrateCommand, Variables(project, file: null, json: null), environment);
+        return prisma.Directory == project.Directory ? spec : spec with { WorkingDirectory = prisma.Directory };
     }
 
     private static bool NeedsEnvironment(ToolchainProject project, DependencyInstallDefinition dependency) =>

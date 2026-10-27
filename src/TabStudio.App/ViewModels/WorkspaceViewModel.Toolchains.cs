@@ -571,6 +571,14 @@ public sealed partial class WorkspaceViewModel
                 }
             }
 
+            if (await PreparePrismaDatabaseAsync(project, _run.Token) is { } migration)
+            {
+                result = migration;
+                ReportToolchainRun(project, plan.ProgramName, result);
+                return;
+            }
+
+            StatusText = $"Running {plan.ProgramName}";
             result = await OutputProcess.RunAsync(_toolchains.Runtime, WithServiceEnvironment(plan.Run), Output, input, _run.Token, listening: listening, toolchain: toolchain.Id);
         }
         finally

@@ -66,6 +66,54 @@ public sealed class ServicesTests
         finally { window.Close(); }
     }
 
+    /// <summary>
+    /// gothinkster/node-express-realworld-example-app has no Compose file: its Prisma schema's PostgreSQL datasource
+    /// reads DATABASE_URL. Services offers that database, and F5 would start it and give the run the variable.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task A_Prisma_schema_s_database_is_offered_without_a_Compose_file()
+    {
+        using var temp = new TempDirectory();
+        var paths = new AppPaths(temp.Path);
+        temp.Write("realworld/package.json", """
+            {
+              "name": "@api/source",
+              "scripts": { "start": "node src/main.js" },
+              "prisma": { "schema": "src/prisma/schema.prisma" },
+              "dependencies": { "@prisma/client": "^4.16.1", "express": "~4.18.1" },
+              "devDependencies": { "prisma": "^4.16.1" }
+            }
+            """);
+        temp.Write("realworld/src/main.js", "console.log('server up on port 3000');\n");
+        temp.Write("realworld/src/prisma/schema.prisma", """
+            datasource db {
+              provider = "postgresql"
+              url      = env("DATABASE_URL")
+            }
+            """);
+        var compiler = new CompilerServices(paths);
+        var device = new DefaultDeviceStatus(new DeviceInfo(8L * 1024 * 1024 * 1024, 8, false));
+        using var workspace = new WorkspaceViewModel(compiler, device, DeviceProfile.For(device.Device), new AvaloniaUiDispatcher(), new SessionStore(paths), paths);
+        await workspace.LoadAsync(temp.Resolve("realworld"));
+        await UiTestHelpers.WaitUntilAsync(() => workspace.Services.Items.Count > 0, TimeSpan.FromSeconds(30), "the Prisma database to be offered");
+
+        var db = Assert.Single(workspace.Services.Items);
+        Assert.Equal("db", db.Name);
+        Assert.Equal("postgres:16", db.Image);
+        Assert.Equal("for src/prisma/schema.prisma", workspace.Services.Subtitle);
+        Assert.Contains("DATABASE_URL", workspace.Services.Offer, StringComparison.Ordinal);
+        Assert.False(db.Status.IsRunning);
+        workspace.SelectSideBarPanelCommand.Execute(SideBarPanel.Services);
+        var window = new Window { Width = 1280, Height = 800, Content = new WorkspaceView { DataContext = workspace } };
+        window.Show();
+        try
+        {
+            await UiTestHelpers.WaitUntilAsync(() => window.IsVisible);
+            UiTestHelpers.SaveScreenshot(window, "62-services-prisma");
+        }
+        finally { window.Close(); }
+    }
+
     [AvaloniaFact]
     public async Task Services_self_test_restores_the_workspace_needed_by_later_steps()
     {

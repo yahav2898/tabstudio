@@ -163,11 +163,13 @@ public sealed partial record PrismaProject(string Directory, string Schema, stri
 
     /// <summary>
     /// Writes the connection URL into the project's <c>.env</c> when it has no value there yet, as Prisma and the app
-    /// read it; a value the project already has is kept.
+    /// read it; a value the project already has is kept, unless <paramref name="replaceable"/> says it is an earlier
+    /// one TabStudio wrote.
     /// </summary>
     /// <param name="url">The connection URL.</param>
+    /// <param name="replaceable">Whether a value already there may be replaced.</param>
     /// <returns>Whether the file was changed.</returns>
-    public bool FillEnvironmentFile(string url)
+    public bool FillEnvironmentFile(string url, Func<string, bool>? replaceable = null)
     {
         ArgumentException.ThrowIfNullOrEmpty(url);
         if (UrlVariable is not { } variable)
@@ -178,7 +180,8 @@ public sealed partial record PrismaProject(string Directory, string Schema, stri
         var path = Path.Combine(Directory, ".env");
         var lines = File.Exists(path) ? File.ReadAllLines(path).ToList() : [];
         var index = lines.FindIndex(line => line.TrimStart().StartsWith(variable + "=", StringComparison.Ordinal));
-        if (index >= 0 && lines[index].Trim().Length > variable.Length + 1 && lines[index].Trim() is var assigned && assigned[(variable.Length + 1)..].Trim('"', '\'', ' ').Length > 0)
+        var current = index >= 0 ? lines[index].Trim()[(variable.Length + 1)..].Trim().Trim('"', '\'') : string.Empty;
+        if (current == url || (current.Length > 0 && replaceable?.Invoke(current) != true))
         {
             return false;
         }

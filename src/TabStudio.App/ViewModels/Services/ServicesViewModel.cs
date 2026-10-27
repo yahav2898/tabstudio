@@ -58,7 +58,9 @@ public sealed partial class ServicesViewModel : ObservableObject, IAsyncDisposab
     /// While no service runs, how they start: nothing is downloaded or started when a repository opens; F5 starts
     /// those the run points at, and Start the others.
     /// </summary>
-    public string Offer => Items.Count == 1
+    public string Offer => _manager?.Project is { Origin: { } origin, RunEnvironment: var variables } && Items.Count == 1
+        ? $"{Items[0].Name} is the database {origin} names. F5 starts it and gives the run {string.Join(", ", variables.Keys)}. Nothing is downloaded until then."
+        : Items.Count == 1
         ? $"{Items[0].Name} starts when the app's configuration points at it, or with Start. Nothing is downloaded until then."
         : "Each service starts when the app's configuration points at it, or with Start. Nothing is downloaded until then.";
 
@@ -104,14 +106,14 @@ public sealed partial class ServicesViewModel : ObservableObject, IAsyncDisposab
         Items.Clear(); SelectedItem = null; _files = null;
         try
         {
-            var project = await Task.Run(() => ComposeReader.Discover(_root));
+            var project = await Task.Run(() => Discover(_root));
             _configuration = JsonSerializer.Serialize(project);
             if (project is null) { Summary = "Add compose.yaml to the repository, and its databases, caches and queues run here, without Docker."; return; }
             _manager = new ServiceManager(project, _toolchains.Runtime, new ServicePackages(_toolchains), new ServiceStorage(_paths.Root, _root));
             _manager.Changed += OnChanged; _manager.Logged += OnLogged;
             foreach (var status in _manager.Statuses) Items.Add(new ServiceItemViewModel(this, status));
             SelectedItem = Items.FirstOrDefault();
-            _files = string.Join(", ", project.Files.Select(Path.GetFileName));
+            _files = project.Origin is { } origin ? $"for {origin}" : string.Join(", ", project.Files.Select(Path.GetFileName));
             Summary = Items.Count == 1 ? "1 service" : $"{Items.Count} services";
         }
         catch (Exception ex) when (ex is not OutOfMemoryException) { Error = ex.Message; Summary = "Could not read Services configuration."; }
@@ -155,7 +157,7 @@ public sealed partial class ServicesViewModel : ObservableObject, IAsyncDisposab
         {
             try
             {
-                var latest = await Task.Run(() => ComposeReader.Discover(_root), cancellationToken);
+                var latest = await Task.Run(() => Discover(_root), cancellationToken);
                 if (_configuration != JsonSerializer.Serialize(latest)) await ReloadAsync();
             }
             catch (Exception ex) when (ex is not OutOfMemoryException) { Error = ex.Message; return null; }
@@ -169,6 +171,12 @@ public sealed partial class ServicesViewModel : ObservableObject, IAsyncDisposab
         var success = await PerformAsync(async token => environment = await manager.StartForProjectAsync(projectDirectory, environmentName, runEnvironment, token), cancellationToken);
         return success ? environment : null;
     }
+
+    /// <summary>
+    /// A repository's services: its Compose files, or without them the database its Prisma schema names
+    /// (<see cref="PrismaServices"/>).
+    /// </summary>
+    internal static ComposeProject? Discover(string directory) => ComposeReader.Discover(directory) ?? PrismaServices.Discover(directory);
 
     private async Task<bool> PerformAsync(Func<CancellationToken, Task> action, CancellationToken cancellationToken = default)
     {
