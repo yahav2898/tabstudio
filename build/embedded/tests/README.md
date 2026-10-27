@@ -16,7 +16,7 @@ The separate production `UsbfsDeviceInventory` and patched PRoot implement that 
 `build-proot-test.sh` tests selected-device raw syscall opens with a static tracee, with the seccomp accelerator
 enabled and disabled. The locked `nusb-check` fixture compiles upstream nusb 0.2.9 unchanged with its normal
 rustix raw-syscall backend. `nusb-inventory-check` mounts the actual C# inventory builder's synthetic descriptors
-and runs that executable through patched PRoot. The [successful contracts run](https://github.com/yahav2898/tabstudio/actions/runs/40420024524/job/121911856957)
+and runs that executable through patched PRoot. The **Embedded parsers and USB bridge contracts** CI job
 requires `RAW_USB_PASSED` and `NUSB_PERMISSIONED_ENUMERATION_PASSED 0483:3748`. This is CI verification of
 enumeration and FD routing, not a hardware USB transfer, successful probe connection or target upload.
 
