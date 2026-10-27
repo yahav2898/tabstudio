@@ -27,6 +27,19 @@ public sealed record RestoreResult
     public IReadOnlyList<string> RuntimeAssemblies { get; init; } = [];
 
     /// <summary>
+    /// Full paths of the native libraries a running program may load, from every package: the
+    /// <c>runtimes/{rid}/native/</c> files for the device's nearest RID. A file name appears once; the first package wins.
+    /// </summary>
+    public IReadOnlyList<string> NativeLibraries { get; init; } = [];
+
+    /// <summary>
+    /// Everything a running program loads from packages: <see cref="RuntimeAssemblies"/>, then
+    /// <see cref="NativeLibraries"/>. This is what the program runner, test runner and debugger are given; they tell the
+    /// two apart by the <c>runtimes/{rid}/native/</c> folder a native library is in.
+    /// </summary>
+    public IReadOnlyList<string> RuntimeFiles => NativeLibraries.Count == 0 ? RuntimeAssemblies : [.. RuntimeAssemblies, .. NativeLibraries];
+
+    /// <summary>
     /// Full paths of the analyzers and source generators the compiler runs for the project, from every package and
     /// shared framework, such as CommunityToolkit.Mvvm's.
     /// </summary>

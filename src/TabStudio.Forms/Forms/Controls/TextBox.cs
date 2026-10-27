@@ -174,12 +174,24 @@ public class RichTextBox : TextBoxBase
     /// <summary>Whether the selection is a bulleted list. Kept for compatibility.</summary>
     public bool SelectionBullet { get; set; }
 
-    /// <summary>The text as RTF. Rich text format is not supported on this device.</summary>
-    /// <exception cref="NotSupportedException">Always.</exception>
+    /// <summary>
+    /// The text as a rich text format document. Setting it shows the document's text; its formatting is not kept, as
+    /// the box shows its text in one font and color. Getting it writes the text in the box's font and color.
+    /// </summary>
+    /// <remarks>Text set that is not RTF is shown as it is.</remarks>
+    [System.Diagnostics.CodeAnalysis.AllowNull]
     public string Rtf
     {
-        get => throw new NotSupportedException("RichTextBox.Rtf is not supported by TabStudio's Forms layer: use Text.");
-        set => throw new NotSupportedException("RichTextBox.Rtf is not supported by TabStudio's Forms layer: use Text.");
+        get => RtfText.FromText(Text, Font, ForeColor);
+        set => Text = value is null ? string.Empty : RtfText.IsRtf(value) ? RtfText.ToText(value) : value;
+    }
+
+    /// <summary>The selected text as a rich text format document; setting it replaces the selection with the document's text.</summary>
+    [System.Diagnostics.CodeAnalysis.AllowNull]
+    public string SelectedRtf
+    {
+        get => RtfText.FromText(SelectedText, SelectionFont ?? Font, ForeColor);
+        set => SelectedText = value is null ? string.Empty : RtfText.IsRtf(value) ? RtfText.ToText(value) : value;
     }
 
     /// <inheritdoc />
@@ -222,41 +234,54 @@ public class RichTextBox : TextBoxBase
         return index;
     }
 
-    /// <summary>Loads a plain text file.</summary>
+    /// <summary>Loads a rich text format file, as Windows Forms does by default.</summary>
     /// <param name="path">The file's path.</param>
-    public void LoadFile(string path) => LoadFile(path, RichTextBoxStreamType.PlainText);
+    /// <exception cref="ArgumentException">The file is not RTF.</exception>
+    public void LoadFile(string path) => LoadFile(path, RichTextBoxStreamType.RichText);
 
-    /// <summary>Loads a file.</summary>
+    /// <summary>Loads a file: its text, for rich text its document's text.</summary>
     /// <param name="path">The file's path.</param>
-    /// <param name="fileType">The file's format: plain text.</param>
-    /// <exception cref="NotSupportedException">The format is rich text.</exception>
+    /// <param name="fileType">The file's format.</param>
+    /// <exception cref="ArgumentException">Rich text was asked for and the file is not RTF.</exception>
     public void LoadFile(string path, RichTextBoxStreamType fileType)
     {
         ArgumentNullException.ThrowIfNull(path);
-        RequirePlainText(fileType, nameof(LoadFile));
-        Text = File.ReadAllText(path);
+        var content = fileType == RichTextBoxStreamType.UnicodePlainText ? File.ReadAllText(path, System.Text.Encoding.Unicode) : File.ReadAllText(path);
+        Text = fileType is RichTextBoxStreamType.RichText or RichTextBoxStreamType.RichNoOleObjs ? RtfText.ToText(content) : content;
     }
 
-    /// <summary>Saves the text to a plain text file.</summary>
-    /// <param name="path">The file's path.</param>
-    public void SaveFile(string path) => SaveFile(path, RichTextBoxStreamType.PlainText);
+    /// <summary>Loads a stream, as <see cref="LoadFile(string, RichTextBoxStreamType)"/> loads a file.</summary>
+    /// <param name="data">The stream.</param>
+    /// <param name="fileType">The format.</param>
+    public void LoadFile(Stream data, RichTextBoxStreamType fileType)
+    {
+        ArgumentNullException.ThrowIfNull(data);
+        using var reader = new StreamReader(data, fileType == RichTextBoxStreamType.UnicodePlainText ? System.Text.Encoding.Unicode : System.Text.Encoding.UTF8, leaveOpen: true);
+        var content = reader.ReadToEnd();
+        Text = fileType is RichTextBoxStreamType.RichText or RichTextBoxStreamType.RichNoOleObjs ? RtfText.ToText(content) : content;
+    }
 
-    /// <summary>Saves the text to a file.</summary>
+    /// <summary>Saves the text as a rich text format file, as Windows Forms does by default.</summary>
     /// <param name="path">The file's path.</param>
-    /// <param name="fileType">The file's format: plain text.</param>
-    /// <exception cref="NotSupportedException">The format is rich text.</exception>
+    public void SaveFile(string path) => SaveFile(path, RichTextBoxStreamType.RichText);
+
+    /// <summary>Saves the text to a file in a format; rich text is written in the box's font and color.</summary>
+    /// <param name="path">The file's path.</param>
+    /// <param name="fileType">The file's format.</param>
     public void SaveFile(string path, RichTextBoxStreamType fileType)
     {
         ArgumentNullException.ThrowIfNull(path);
-        RequirePlainText(fileType, nameof(SaveFile));
-        File.WriteAllText(path, Text);
-    }
-
-    private static void RequirePlainText(RichTextBoxStreamType fileType, string member)
-    {
-        if (fileType is not (RichTextBoxStreamType.PlainText or RichTextBoxStreamType.UnicodePlainText))
+        switch (fileType)
         {
-            throw new NotSupportedException($"RichTextBox.{member} with {fileType} is not supported by TabStudio's Forms layer: rich text format is not supported; use RichTextBoxStreamType.PlainText.");
+            case RichTextBoxStreamType.UnicodePlainText:
+                File.WriteAllText(path, Text, System.Text.Encoding.Unicode);
+                break;
+            case RichTextBoxStreamType.PlainText or RichTextBoxStreamType.TextTextOleObjs:
+                File.WriteAllText(path, Text);
+                break;
+            default:
+                File.WriteAllText(path, Rtf, System.Text.Encoding.ASCII);
+                break;
         }
     }
 }

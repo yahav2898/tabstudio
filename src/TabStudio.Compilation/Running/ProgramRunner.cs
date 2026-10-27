@@ -81,7 +81,7 @@ public sealed class ProgramRunner
     /// <param name="entryAssembly">The program's assembly.</param>
     /// <param name="dependencies">Assemblies of referenced projects, loaded on demand.</param>
     /// <param name="packageAssemblies">
-    /// Full paths of the package assemblies the program may load, such as <c>RestoreResult.RuntimeAssemblies</c>.
+    /// Full paths of the package assemblies and native libraries the program may load, such as <c>RestoreResult.RuntimeFiles</c>.
     /// They are found by simple name (the file name without <c>.dll</c>) and loaded from disk on demand.
     /// </param>
     /// <param name="arguments">Command-line arguments passed to <c>Main</c>.</param>

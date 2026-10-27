@@ -87,6 +87,29 @@ public sealed partial class DatabaseExplorerViewModel : ObservableObject, IDispo
         });
     }
 
+    /// <summary>Opens the connection form filled in, such as with a project's connection string from its appsettings.</summary>
+    /// <param name="name">The connection's name.</param>
+    /// <param name="provider">Its provider.</param>
+    /// <param name="connectionString">The connection string to start from.</param>
+    /// <param name="status">What the form is for, in the status line.</param>
+    public void BeginConnection(string name, DatabaseProvider provider, string connectionString, string status)
+    {
+        ConnectionName = name; Provider = provider; ConnectionString = connectionString; IsAddingConnection = true; Status = status;
+    }
+
+    /// <summary>The saved connections, with their connection strings from the encrypted store.</summary>
+    /// <param name="token">Cancels reading.</param>
+    public Task<IReadOnlyList<DatabaseConnection>> LoadSavedConnectionsAsync(CancellationToken token = default) => _store.LoadAsync(token);
+
+    /// <summary>Saves a connection that a project's runs use, such as a SQLite file in place of its SQL Server.</summary>
+    /// <param name="connection">The connection.</param>
+    public async Task SaveRunConnectionAsync(DatabaseConnection connection)
+    {
+        ArgumentNullException.ThrowIfNull(connection);
+        await _store.SaveAsync(connection, _lifetime.Token);
+        Connections.Add(connection);
+    }
+
     [RelayCommand] private void AddConnection() => IsAddingConnection = true;
     [RelayCommand] private void DismissConnection() { ConnectionString = string.Empty; IsAddingConnection = false; }
     [RelayCommand] private void UseSuggestion()

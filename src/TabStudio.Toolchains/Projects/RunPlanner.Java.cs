@@ -14,9 +14,11 @@ public static partial class RunPlanner
         var variables = Variables(project, null, null);
         if (File.Exists(Path.Combine(project.Directory, "pom.xml")))
         {
+            // The program's runtime classpath, as Gradle's runtimeClasspath: test-scoped dependencies, such as
+            // spring-boot-docker-compose in spring-petclinic, would change what the app does when it starts.
             var classpath = Path.Combine(project.Directory, "target", "classes") + Path.PathSeparator + Path.Combine(project.Directory, "target", "dependency", "*");
             return new(
-                Spec(project, ["mvn", "-B", "-Dstyle.color=never", "-DskipTests", "package", "org.apache.maven.plugins:maven-dependency-plugin:3.8.1:copy-dependencies"], variables),
+                Spec(project, ["mvn", "-B", "-Dstyle.color=never", "-DskipTests", "package", "org.apache.maven.plugins:maven-dependency-plugin:3.8.1:copy-dependencies", "-DincludeScope=runtime"], variables),
                 Spec(project, ["java", "-cp", classpath, JavaProject.ClassName(source)], variables), "pom.xml");
         }
 

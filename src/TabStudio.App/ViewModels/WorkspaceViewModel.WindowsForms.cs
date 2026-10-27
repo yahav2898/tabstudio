@@ -101,6 +101,13 @@ public sealed partial class WorkspaceViewModel
         }
 
         var exit = await host.Completion;
+        if (exit.Restart)
+        {
+            // Application.Restart: the app runs again, built and loaded afresh, as a new process would be.
+            _restartLiveApp = true;
+            _restartRequestedByApp = true;
+        }
+
         if (exit.Error is { } error)
         {
             Output.WriteLine($"Unhandled exception. {error}", OutputKind.Error);

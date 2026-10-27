@@ -111,7 +111,7 @@ public static class WpfBrowserApps
                 WebAssemblyAssembly.FromImage(hostName, host.Image, host.Symbols),
                 WebAssemblyAssembly.FromImage(request.App.Name, request.App.Image, request.App.Symbols),
                 .. request.Dependencies.Select(d => WebAssemblyAssembly.FromImage(d.Name, d.Image, d.Symbols)),
-                .. request.Host.RuntimeAssemblies.Where(p => p.EndsWith(".dll", StringComparison.OrdinalIgnoreCase)).Select(WebAssemblyAssembly.FromFile),
+                .. request.Host.RuntimeAssemblies.Where(p => p.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) && !TabStudio.Compilation.Running.PackageNativeLibraries.IsNativeLibrary(p)).Select(WebAssemblyAssembly.FromFile),
             ],
             Runtime = request.Runtime,
             Content = content,

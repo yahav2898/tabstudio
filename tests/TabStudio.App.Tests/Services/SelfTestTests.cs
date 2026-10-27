@@ -72,6 +72,7 @@ public sealed class SelfTestTests : IDisposable
         Assert.Contains($", {SelfTest.Name}!", result.Message, StringComparison.Ordinal);
         Assert.Contains("has exited with code 0", result.Message, StringComparison.Ordinal);
         Assert.Contains($"Link: debugged on {SelfTest.LinkHostName} over TLS 1.", result.Message, StringComparison.Ordinal);
+        Assert.Contains($"Live: shared the sample, {SelfTest.LiveGuestName} joined over TLS (2 participants)", result.Message, StringComparison.Ordinal);
         Assert.Contains("Language servers: Loopback Server ready", result.Message, StringComparison.Ordinal);
         Assert.Contains("Debug adapters: Paused at a breakpoint", result.Message, StringComparison.Ordinal);
     }

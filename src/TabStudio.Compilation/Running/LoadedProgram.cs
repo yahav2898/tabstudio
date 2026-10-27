@@ -23,7 +23,7 @@ public sealed class LoadedProgram : IDisposable
     /// <summary>Loads a program.</summary>
     /// <param name="entryAssembly">The program's assembly.</param>
     /// <param name="dependencies">Assemblies of referenced projects, loaded on demand.</param>
-    /// <param name="packageAssemblies">Full paths of the package assemblies the program may load.</param>
+    /// <param name="packageAssemblies">Full paths of the package assemblies and native libraries the program may load (<c>RestoreResult.RuntimeFiles</c>).</param>
     /// <param name="sharedWithHost">
     /// Names the assemblies that come from TabStudio itself even when a package brings them, so the program and the
     /// host use the same types, such as Avalonia's; <see langword="null"/> shares nothing beyond .NET.

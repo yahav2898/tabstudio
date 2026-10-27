@@ -15,14 +15,14 @@ namespace TabStudio.Packages.Caching;
 /// <remarks>
 /// The inputs are everything that can change the outcome: the package references and their versions (including
 /// those of referenced projects), the target
-/// framework and its fallbacks, the sources, the global packages folder and the framework's assemblies. The cache
+/// framework, its fallbacks and the runtime identifier, the sources, the global packages folder and the framework's assemblies. The cache
 /// is used only when their hash matches and every package folder and assembly it lists is still on disk. Only
 /// successful restores are cached. Writing the cache is best effort: a read-only project folder only costs speed.
 /// </remarks>
 internal static class RestoreCache
 {
     /// <summary>The current layout of the file.</summary>
-    public const int FormatVersion = 3;
+    public const int FormatVersion = 4;
 
     /// <summary>Hashes the inputs of a restore.</summary>
     /// <param name="graph">The project's references and those of the projects it references.</param>
@@ -44,6 +44,7 @@ internal static class RestoreCache
         Line("format", FormatVersion.ToString(CultureInfo.InvariantCulture));
         Line("framework", options.TargetFramework);
         Line("compiler", options.CompilerVersion?.ToString() ?? "none");
+        Line("runtime", options.RuntimeIdentifier ?? "none");
         Line("fallback", string.Join(';', options.AssetTargetFallback));
         Line("packages", Path.GetFullPath(options.GlobalPackagesFolder));
         foreach (var source in options.Sources)
@@ -95,7 +96,7 @@ internal static class RestoreCache
         }
 
         var stillInstalled = file.Packages.All(p => File.Exists(Path.Combine(p.DirectoryPath, GlobalPackagesFolder.CompletionMarkerName))) &&
-            file.CompileAssemblies.Concat(file.RuntimeAssemblies).Concat(file.Analyzers).All(File.Exists);
+            file.CompileAssemblies.Concat(file.RuntimeAssemblies).Concat(file.NativeLibraries).Concat(file.Analyzers).All(File.Exists);
         if (!stillInstalled)
         {
             return null;
@@ -105,10 +106,11 @@ internal static class RestoreCache
         {
             ProjectName = projectName,
             Packages = file.Packages
-                .Select(p => new RestoredPackage(p.Id, p.Version, p.DirectoryPath, p.IsDirect, p.CompileAssemblies, p.RuntimeAssemblies, p.ProvidedByFramework) { Analyzers = p.Analyzers, FlowsAnalyzers = p.FlowsAnalyzers })
+                .Select(p => new RestoredPackage(p.Id, p.Version, p.DirectoryPath, p.IsDirect, p.CompileAssemblies, p.RuntimeAssemblies, p.ProvidedByFramework) { Analyzers = p.Analyzers, FlowsAnalyzers = p.FlowsAnalyzers, NativeLibraries = p.NativeLibraries })
                 .ToList(),
             CompileAssemblies = file.CompileAssemblies,
             RuntimeAssemblies = file.RuntimeAssemblies,
+            NativeLibraries = file.NativeLibraries,
             Analyzers = file.Analyzers,
             Diagnostics = file.Diagnostics
                 .Select(d => new BuildDiagnostic(
@@ -141,11 +143,13 @@ internal static class RestoreCache
                 CompileAssemblies = [.. p.CompileAssemblies],
                 RuntimeAssemblies = [.. p.RuntimeAssemblies],
                 Analyzers = [.. p.Analyzers],
+                NativeLibraries = [.. p.NativeLibraries],
                 FlowsAnalyzers = p.FlowsAnalyzers,
                 ProvidedByFramework = p.ProvidedByFramework,
             }).ToList(),
             CompileAssemblies = [.. result.CompileAssemblies],
             RuntimeAssemblies = [.. result.RuntimeAssemblies],
+            NativeLibraries = [.. result.NativeLibraries],
             Analyzers = [.. result.Analyzers],
             Diagnostics = result.Diagnostics.Select(d => new CachedDiagnostic
             {

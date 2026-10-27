@@ -9,6 +9,8 @@
              xmlns:actionViews="using:TabStudio.App.Views.Actions"
              xmlns:prv="using:TabStudio.App.Views.PullRequests"
              xmlns:swarmViews="using:TabStudio.App.Views.Swarm"
+             xmlns:liveViews="using:TabStudio.App.Views.Live"
+             xmlns:liveVm="using:TabStudio.App.ViewModels.Live"
              xmlns:extensionViews="using:TabStudio.App.Views.Extensions"
              xmlns:toolchainViews="using:TabStudio.App.Views.Toolchains"
              xmlns:searchViews="using:TabStudio.App.Views.Search"
@@ -134,6 +136,8 @@
             <Separator />
             <MenuItem Header="TabStudio _Link..." Command="{Binding OpenLinkCommand}" IsVisible="{Binding IsLinkAvailable}" />
             <MenuItem Header="_Join a Swarm..." Command="{Binding JoinSwarmCommand}" IsVisible="{Binding CanJoinSwarm}" />
+            <MenuItem Header="Share Sess_ion..." Command="{Binding ShareSessionCommand}" IsVisible="{Binding IsLiveAvailable}" />
+            <MenuItem Header="Join Li_ve Session..." Command="{Binding JoinLiveSessionCommand}" IsVisible="{Binding IsLiveAvailable}" />
             <MenuItem Header="{Binding WindowsBridgeMenuHeader}" Command="{Binding OpenWindowsBridgeCommand}" IsVisible="{Binding HasWindowsBridge}" />
             <Separator />
             <MenuItem Header="_Close Document" InputGesture="Ctrl+F4" Command="{Binding CloseDocumentCommand}" />
@@ -171,6 +175,8 @@
             <MenuItem Header="Claude _Agent" Command="{Binding ShowAgentCommand}" />
             <MenuItem Header="S_warm" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.Swarm}"
                       IsVisible="{Binding IsSwarmAvailable}" />
+            <MenuItem Header="_Live Share" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.Live}"
+                      IsVisible="{Binding IsLiveAvailable}" />
             <MenuItem Header="_Web Preview" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.WebPreview}"
                       IsEnabled="{Binding WebPreview.HasApp}" />
             <MenuItem Header="_App Preview" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.AppPreview}"
@@ -509,6 +515,23 @@
                   </Border>
                   <Image Source="{Binding FileIcon}" Width="16" Height="16" VerticalAlignment="Center" IsVisible="{Binding HasFileIcon}" />
                   <TextBlock Text="{Binding Title}" VerticalAlignment="Center" />
+                  <!-- TabStudio Live: who else shows this document, as small avatars. -->
+                  <ItemsControl ItemsSource="{Binding LiveAvatars}" IsVisible="{Binding HasLiveAvatars}" VerticalAlignment="Center">
+                    <ItemsControl.ItemsPanel>
+                      <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" Spacing="-4" />
+                      </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate DataType="liveVm:LiveAvatarViewModel">
+                        <Border Width="18" Height="18" CornerRadius="9" Background="{Binding Background}" BorderBrush="{DynamicResource Brush.Toolbar}" BorderThickness="1"
+                                ToolTip.Tip="{Binding Name}">
+                          <TextBlock Text="{Binding Initials}" FontSize="9.5" FontWeight="SemiBold" Foreground="{DynamicResource Brush.OnAccent}"
+                                     HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
                   <Button Theme="{StaticResource ToolButton}" Width="26" Height="26" MinWidth="26" MinHeight="26" Padding="0" CornerRadius="5"
                           ToolTip.Tip="Close (Ctrl+F4)"
                           Command="{Binding $parent[UserControl].((vm:WorkspaceViewModel)DataContext).CloseDocumentCommand}"
@@ -864,6 +887,11 @@
             <views:WebPreviewView DataContext="{Binding WebPreview}" />
           </Panel>
 
+          <!-- Live Share: who is in the session, Follow, and what each participant may do. -->
+          <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsLiveSelected}">
+            <liveViews:LivePanelView DataContext="{Binding LivePanel}" />
+          </Panel>
+
           <!-- The Swarm window: the phones and tablets that run the app, its toggles and the UI test recorder. -->
           <Panel Grid.RowSpan="3" Background="{DynamicResource Brush.Panel}" IsVisible="{Binding IsSwarmSelected}">
             <swarmViews:SwarmView DataContext="{Binding Swarm}" />
@@ -952,6 +980,11 @@
                                   Priority="55" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.Swarm}"
                                   IsVisible="{Binding Swarm.IsOn, FallbackValue=False}" />
 
+        <!-- TabStudio Live, while in a session: how many are in it, or who this device follows; tap for Live Share. -->
+        <controls:AdaptiveBarItem Classes="status" Icon="{StaticResource Icon.Live}" IconSize="13" Label="{Binding LivePanel.StatusText, FallbackValue={x:Null}}"
+                                  Priority="56" Command="{Binding SelectSideBarPanelCommand}" CommandParameter="{x:Static vm:SideBarPanel.Live}"
+                                  IsVisible="{Binding LivePanel.IsInSession, FallbackValue=False}" />
+
         <!-- TabStudio Link, while this device is linked: the host and its latency; tap for the Link dialog. -->
         <controls:AdaptiveBarItem Classes="status" Icon="{StaticResource Icon.Link}" IconSize="13" Label="{Binding LinkStatusText}"
                                   Priority="50" Command="{Binding OpenLinkCommand}" IsVisible="{Binding ShowsLinkStatus}" />
@@ -1005,6 +1038,9 @@
 
     <!-- The swarm's Add a device dialog, with its QR code. -->
     <swarmViews:SwarmInviteView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding Swarm.Invite, FallbackValue={x:Null}}" />
+
+    <!-- TabStudio Live's Share Session dialog, with its QR code. -->
+    <liveViews:LiveShareView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding LivePanel, FallbackValue={x:Null}}" />
 
     <!-- GitHub Actions' dialog: Run workflow. -->
     <actionViews:ActionsDialogsView Grid.Row="0" Grid.RowSpan="4" DataContext="{Binding Actions}" />

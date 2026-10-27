@@ -19,7 +19,7 @@ namespace TabStudio.App.Tests.ViewModels;
 /// app preview in a Windows frame, a click reaches its button, its Console output goes to the Output panel, saving a
 /// file restarts it, closing the main form ends the run, and an exception in a handler ends the app, not the IDE.
 /// </summary>
-public sealed class WindowsFormsAppTests
+public sealed partial class WindowsFormsAppTests
 {
     private static readonly TimeSpan StartTimeout = TimeSpan.FromMinutes(2);
 
@@ -158,7 +158,7 @@ public sealed class WindowsFormsAppTests
     }
 
     /// <summary>A running Windows Forms app in the IDE's app preview, which tests press as a user does.</summary>
-    private sealed class FormsPreview(FormsDesktop desktop, Window window)
+    internal sealed class FormsPreview(FormsDesktop desktop, Window window)
     {
         public FormsDesktop Desktop { get; } = desktop;
 
@@ -225,6 +225,28 @@ public sealed class WindowsFormsAppTests
             window.MouseMove(at);
             window.MouseDown(at, MouseButton.Left);
             window.MouseUp(at, MouseButton.Left);
+        }
+
+        /// <summary>A mouse drag with the left button through points of the desktop, in small steps.</summary>
+        public void Drag(params DrawingPoint[] points)
+        {
+            AvaloniaPoint At(DrawingPoint point) =>
+                Desktop.TranslatePoint(new AvaloniaPoint((point.X + 0.5) * Desktop.Scale, (point.Y + 0.5) * Desktop.Scale), window)
+                ?? throw new InvalidOperationException("The desktop is not in the window.");
+
+            window.MouseMove(At(points[0]));
+            window.MouseDown(At(points[0]), MouseButton.Left);
+            for (var i = 1; i < points.Length; i++)
+            {
+                var (from, to) = (points[i - 1], points[i]);
+                var steps = Math.Max(1, Math.Max(Math.Abs(to.X - from.X), Math.Abs(to.Y - from.Y)) / 10);
+                for (var step = 1; step <= steps; step++)
+                {
+                    window.MouseMove(At(new DrawingPoint(from.X + ((to.X - from.X) * step / steps), from.Y + ((to.Y - from.Y) * step / steps))), RawInputModifiers.LeftMouseButton);
+                }
+            }
+
+            window.MouseUp(At(points[^1]), MouseButton.Left);
         }
 
         public void ClickCaption(WindowPart part)

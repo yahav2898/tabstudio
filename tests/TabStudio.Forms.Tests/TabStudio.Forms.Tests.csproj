@@ -17,16 +17,26 @@
     <PackageReference Include="Avalonia.Headless.XUnit" />
     <PackageReference Include="Avalonia.Skia" />
     <PackageReference Include="Avalonia.Fonts.Inter" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" VersionOverride="3.119.0" />
     <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\TabStudio.Forms\TabStudio.Forms.csproj" />
+    <!-- Compiles .resx files as TabStudio compiles them, for the resource tests. -->
+    <ProjectReference Include="..\..\src\TabStudio.Compilation\TabStudio.Compilation.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Using Include="Xunit" />
+  </ItemGroup>
+
+  <!-- The drawing tests' reference pictures: GDI+'s, from build/gdiplus-references, and TabStudio's own for text. -->
+  <ItemGroup>
+    <None Include="Drawing\References\*.png" CopyToOutputDirectory="PreserveNewest" />
+    <!-- .resx files the .NET Framework designer wrote on Windows (build/gdiplus-references/ImageListResx.ps1). -->
+    <EmbeddedResource Remove="Resources\Windows\*.resx" />
+    <None Include="Resources\Windows\*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

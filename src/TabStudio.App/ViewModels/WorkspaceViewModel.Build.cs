@@ -118,6 +118,7 @@ public sealed partial class WorkspaceViewModel
                 break;
             case RunOutcome.Crashed:
                 Output.WriteLine($"The program '{project.Name}' stopped because of an unhandled exception.", OutputKind.Failure);
+                ExplainSqlServerCrash(project, result);
                 break;
             case RunOutcome.Stopped:
                 Output.WriteLine($"The program '{project.Name}' was stopped.", OutputKind.Info);
@@ -207,9 +208,9 @@ public sealed partial class WorkspaceViewModel
                 ? $"a .NET Framework project that needs Windows: it {NetFrameworkCompatibility.WhyWindows(project)}"
                 : "it is not built on this device";
 
-    private bool CanRun() => !_preparingServices && (IsRemoteWorkspace ? _remoteWorkspace?.Connection.IsConnected == true : StartupProject is not null || UsesLaunchTarget) && State is IdeState.Ready or IdeState.Failed && !IsNotebookRunning;
+    private bool CanRun() => !_preparingServices && (IsRemoteWorkspace ? _remoteWorkspace?.Connection.IsConnected == true : StartupProject is not null || UsesLaunchTarget) && State is IdeState.Ready or IdeState.Failed && !IsNotebookRunning && !IsLiveGuest;
 
-    private bool CanBuild() => !_preparingServices && (!IsRemoteWorkspace || _remoteWorkspace?.Connection.IsConnected == true) && State is IdeState.Ready or IdeState.Failed;
+    private bool CanBuild() => !_preparingServices && (!IsRemoteWorkspace || _remoteWorkspace?.Connection.IsConnected == true) && State is IdeState.Ready or IdeState.Failed && !IsLiveGuest;
 
     /// <summary>Builds projects one after another, reporting in the Output panel and the Error List.</summary>
     /// <param name="projects">The projects.</param>
@@ -259,6 +260,7 @@ public sealed partial class WorkspaceViewModel
             SelectedPanel = BottomPanel.Output;
             IsBottomPanelVisible = true;
             Output.WriteLine($"Build started at {DateTime.Now.ToString("T", CultureInfo.CurrentCulture)}...", OutputKind.Info);
+            WriteRunNotes();
         }
 
         BuildResult? last = null;

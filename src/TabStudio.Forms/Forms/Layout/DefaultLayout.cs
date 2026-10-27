@@ -161,11 +161,19 @@ internal sealed class DefaultLayout : LayoutEngine
     {
         var remaining = parent.DisplayRectangle;
 
+        // An MDI parent's workspace takes what the other docked controls leave, wherever it is in the z-order.
+        MdiClient? workspace = null;
         for (var i = children.Count - 1; i >= 0; i--)
         {
             var child = children[i];
             if (child.Dock == DockStyle.None)
             {
+                continue;
+            }
+
+            if (child is MdiClient { Dock: DockStyle.Fill } client)
+            {
+                workspace = client;
                 continue;
             }
 
@@ -213,6 +221,8 @@ internal sealed class DefaultLayout : LayoutEngine
                     break;
             }
         }
+
+        workspace?.SetBoundsFromLayout(remaining);
     }
 
     private static void LayoutAnchored(Control parent, List<Control> children)

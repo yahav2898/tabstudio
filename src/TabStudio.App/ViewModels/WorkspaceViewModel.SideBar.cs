@@ -43,6 +43,9 @@ public enum SideBarPanel
 
     /// <summary>Native repository backing services.</summary>
     Services,
+
+    /// <summary>TabStudio Live: who is in the session, Follow, and what each participant may do.</summary>
+    Live,
 }
 
 /// <summary>The side bar's tool windows, docked together as Visual Studio docks Solution Explorer, Git Changes and Test Explorer, with the agent beside them.</summary>
@@ -55,7 +58,7 @@ public sealed partial class WorkspaceViewModel
     [NotifyPropertyChangedFor(nameof(IsPullRequestsSelected))]
     [NotifyPropertyChangedFor(nameof(IsSwarmSelected), nameof(ShowsSwarmTab))]
     [NotifyPropertyChangedFor(nameof(IsWindowsBridgeSelected), nameof(IsDatabaseSelected), nameof(IsRemoteExplorerSelected))]
-    [NotifyPropertyChangedFor(nameof(IsServicesSelected))]
+    [NotifyPropertyChangedFor(nameof(IsServicesSelected), nameof(IsLiveSelected))]
     public partial SideBarPanel SelectedSideBarPanel { get; set; } = SideBarPanel.SolutionExplorer;
 
     /// <summary>Whether the side bar shows the Solution Explorer and Properties.</summary>

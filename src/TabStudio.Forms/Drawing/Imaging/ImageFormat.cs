@@ -54,25 +54,3 @@ public sealed class ImageFormat
     /// <inheritdoc />
     public override string ToString() => Name ?? $"[ImageFormat: {Guid}]";
 }
-
-/// <summary>The format of the color data of each pixel of an image.</summary>
-public enum PixelFormat
-{
-    /// <summary>No format.</summary>
-    Undefined = 0,
-
-    /// <summary>The format is not important.</summary>
-    DontCare = 0,
-
-    /// <summary>24 bits per pixel: 8 bits each of red, green and blue.</summary>
-    Format24bppRgb = 137224,
-
-    /// <summary>32 bits per pixel: 8 bits each of red, green and blue; the rest is unused.</summary>
-    Format32bppRgb = 139273,
-
-    /// <summary>32 bits per pixel: 8 bits each of alpha, red, green and blue.</summary>
-    Format32bppArgb = 2498570,
-
-    /// <summary>32 bits per pixel, premultiplied by alpha.</summary>
-    Format32bppPArgb = 925707,
-}

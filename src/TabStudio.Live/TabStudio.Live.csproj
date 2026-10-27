@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    TabStudio Live: devices running TabStudio edit, run and debug one workspace together over the local network, with no
+    account and no cloud. This library is the protocol and both of its roles, without UI: the host that shares its
+    workspace and the guests that join it, the text CRDT that merges everyone's edits, presence (carets, selections,
+    follow mode), permissions, classroom mode, and the host's run and debug state that every participant sees. It runs
+    on TabStudio Link's pairing and end-to-end encrypted transport, and reuses Swarm's debugger records.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>TabStudio.Live</RootNamespace>
+    <Description>TabStudio Live: code together in real time on the local network, end-to-end encrypted, with no cloud.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TabStudio.Core\TabStudio.Core.csproj" />
+    <ProjectReference Include="..\TabStudio.Link\TabStudio.Link.csproj" />
+    <ProjectReference Include="..\TabStudio.Swarm\TabStudio.Swarm.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="TabStudio.Live.Tests" />
+  </ItemGroup>
+
+</Project>

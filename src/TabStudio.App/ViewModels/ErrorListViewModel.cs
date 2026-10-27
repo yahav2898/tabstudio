@@ -123,9 +123,12 @@ public sealed partial class ErrorListViewModel : ObservableObject
     /// <summary>Raised when the user asks the agent to fix a row's problem; the workspace hands it to the agent.</summary>
     public event EventHandler<BuildDiagnostic>? FixWithAgentRequested;
 
+    /// <summary>Raised after the diagnostics changed and the list was read again, as a TabStudio Live host shares it.</summary>
+    public event EventHandler? Refreshed;
+
     /// <summary>All diagnostics with a location in a file, before filtering.</summary>
     public IEnumerable<BuildDiagnostic> AllDiagnostics =>
-        WindowsBridgeDiagnostics.Concat(_byFile.Values.SelectMany(d => d)).Concat(_withoutLocation).Concat(_restore.Values.SelectMany(d => d)).Concat(LayoutDiagnostics);
+        WindowsBridgeDiagnostics.Concat(_byFile.Values.SelectMany(d => d)).Concat(_withoutLocation).Concat(_restore.Values.SelectMany(d => d)).Concat(LayoutDiagnostics).Concat(LiveHostDiagnostics);
 
     /// <summary>The current diagnostics of one file.</summary>
     /// <param name="filePath">Full path of the file.</param>
@@ -290,6 +293,7 @@ public sealed partial class ErrorListViewModel : ObservableObject
         }
 
         HasItems = Items.Count > 0;
+        Refreshed?.Invoke(this, EventArgs.Empty);
     }
 
     private bool Matches(BuildDiagnostic diagnostic)

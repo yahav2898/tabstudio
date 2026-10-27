@@ -6,6 +6,7 @@ namespace TabStudio.Compilation.Running;
 /// <summary>
 /// Loads a program and the projects it references from memory, and its NuGet packages from disk. Everything
 /// else, such as the .NET libraries, comes from the default context, which is the runtime TabStudio itself runs on.
+/// Native libraries of the packages are found by <see cref="PackageNativeLibraries"/>.
 /// </summary>
 /// <remarks>
 /// Assemblies a host shares with the program, such as Avalonia when the app preview shows an Avalonia app inside
@@ -17,6 +18,7 @@ internal sealed class ProgramLoadContext : AssemblyLoadContext
     private readonly Dictionary<string, string> _packageAssemblies = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, Assembly> _images = new(StringComparer.OrdinalIgnoreCase);
     private readonly Func<string, bool>? _sharedWithHost;
+    private readonly PackageNativeLibraries _nativeLibraries;
 
     // Uno navigation descriptors include the context name. Every build must have its own name,
     // including on Android where old contexts remain loaded after a restart.
@@ -28,7 +30,8 @@ internal sealed class ProgramLoadContext : AssemblyLoadContext
         _dependencies = dependencies.Select(d => d with { HotReloadCompilation = null })
             .ToDictionary(d => d.Name, StringComparer.OrdinalIgnoreCase);
         _sharedWithHost = sharedWithHost;
-        foreach (var path in packageAssemblies)
+        _nativeLibraries = new PackageNativeLibraries(packageAssemblies);
+        foreach (var path in PackageNativeLibraries.Assemblies(packageAssemblies))
         {
             // The first assembly of a name wins, as in the restore's list.
             _packageAssemblies.TryAdd(Path.GetFileNameWithoutExtension(path), path);
@@ -98,4 +101,7 @@ internal sealed class ProgramLoadContext : AssemblyLoadContext
 
         return _packageAssemblies.TryGetValue(name, out var path) ? LoadFromAssemblyPath(path) : null;
     }
+
+    /// <summary>Finds a native library the program's packages bring, for its <c>[DllImport]</c>s and <c>NativeLibrary.Load</c> calls.</summary>
+    protected override nint LoadUnmanagedDll(string unmanagedDllName) => _nativeLibraries.Load(unmanagedDllName);
 }

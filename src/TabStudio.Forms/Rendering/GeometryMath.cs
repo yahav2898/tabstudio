@@ -1,4 +1,6 @@
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Numerics;
 
 namespace TabStudio.Forms.Rendering;
 
@@ -140,6 +142,84 @@ internal static class GeometryMath
         }
 
         return inside;
+    }
+
+    /// <summary>A path with every point transformed.</summary>
+    /// <param name="path">The path.</param>
+    /// <param name="matrix">The transform.</param>
+    public static PathData Transform(PathData path, Matrix3x2 matrix)
+    {
+        if (matrix.IsIdentity)
+        {
+            return path;
+        }
+
+        return path with
+        {
+            Figures = [.. path.Figures.Select(figure => new PathFigureData(
+                Apply(figure.Start, matrix),
+                [.. figure.Segments.Select(segment => segment switch
+                {
+                    LineSegmentData line => (PathSegmentData)new LineSegmentData(Apply(line.To, matrix)),
+                    BezierSegmentData bezier => new BezierSegmentData(Apply(bezier.Control1, matrix), Apply(bezier.Control2, matrix), Apply(bezier.To, matrix)),
+                    _ => segment,
+                })],
+                figure.Closed))],
+        };
+    }
+
+    /// <summary>The bounds of a path's points, Bézier control points included.</summary>
+    /// <param name="path">The path.</param>
+    public static RectangleF Bounds(PathData path)
+    {
+        float left = float.MaxValue, top = float.MaxValue, right = float.MinValue, bottom = float.MinValue;
+        void Include(PointF p)
+        {
+            left = Math.Min(left, p.X);
+            top = Math.Min(top, p.Y);
+            right = Math.Max(right, p.X);
+            bottom = Math.Max(bottom, p.Y);
+        }
+
+        foreach (var figure in path.Figures)
+        {
+            foreach (var point in Flatten(figure))
+            {
+                Include(point);
+            }
+        }
+
+        return left > right ? RectangleF.Empty : RectangleF.FromLTRB(left, top, right, bottom);
+    }
+
+    /// <summary>Whether a point is inside a path, by its fill mode.</summary>
+    /// <param name="path">The path; open figures count as closed.</param>
+    /// <param name="point">The point.</param>
+    public static bool Contains(PathData path, PointF point)
+    {
+        var winding = 0;
+        var crossings = 0;
+        foreach (var figure in path.Figures)
+        {
+            var polygon = Flatten(figure);
+            for (int i = 0, j = polygon.Count - 1; i < polygon.Count; j = i++)
+            {
+                var (a, b) = (polygon[j], polygon[i]);
+                if ((a.Y > point.Y) != (b.Y > point.Y) && point.X < ((b.X - a.X) * (point.Y - a.Y) / (b.Y - a.Y)) + a.X)
+                {
+                    crossings++;
+                    winding += b.Y > a.Y ? 1 : -1;
+                }
+            }
+        }
+
+        return path.FillMode == FillMode.Winding ? winding != 0 : crossings % 2 == 1;
+    }
+
+    private static PointF Apply(PointF point, Matrix3x2 matrix)
+    {
+        var v = Vector2.Transform(new Vector2(point.X, point.Y), matrix);
+        return new PointF(v.X, v.Y);
     }
 
     /// <summary>The parameter of the ellipse point at a geometric angle.</summary>

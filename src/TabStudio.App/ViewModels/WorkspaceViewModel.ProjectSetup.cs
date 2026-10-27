@@ -326,17 +326,11 @@ public sealed partial class WorkspaceViewModel
         ShowSetupOutput();
         Output.WriteLine($"------ Setting up {project.Name}: {dependency.Name} ------", OutputKind.Info);
         ProjectSetupText = $"Setting up {project.Name}: {dependency.Name}";
-        foreach (var step in RunPlanner.PlanDependencies(project, dependency))
+        if (await RunDependencyInstallAsync(project, dependency, cancellationToken) is { } result)
         {
-            if (BlockLocalToolchainActionForRemote()) return false;
-            Output.WriteLine("> " + step.CommandLine, OutputKind.Info);
-            var result = await OutputProcess.RunAsync(_toolchains.Runtime, step, Output, null, cancellationToken);
-            if (!result.Succeeded)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                Output.WriteLine($"========== {dependency.Name}: failed ({result.Exit?.Description ?? result.StartError}) ==========", OutputKind.Failure);
-                return false;
-            }
+            cancellationToken.ThrowIfCancellationRequested();
+            Output.WriteLine($"========== {dependency.Name}: failed ({result.Exit?.Description ?? result.StartError}) ==========", OutputKind.Failure);
+            return false;
         }
 
         Output.WriteLine($"========== {dependency.Name}: succeeded ==========", OutputKind.Success);

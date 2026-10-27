@@ -84,12 +84,17 @@ public sealed class ManagerTests
     }
 
     [Fact]
-    public async Task Conflicting_explicit_ports_fail_before_installing()
+    public async Task A_conflicting_explicit_port_fails_its_service_before_installing_and_the_other_starts()
     {
         using var temp = new TempDirectory(); var runtime = new FakeRuntime();
         await using var manager = Make(temp, runtime, [new ComposeService("one", "redis") { Ports = [new(6379, 16379)] }, new ComposeService("two", "redis") { Ports = [new(6379, 16379)] }]);
-        await Assert.ThrowsAsync<ComposeException>(() => manager.StartAllAsync());
-        Assert.Empty(runtime.Started);
+        var error = await Assert.ThrowsAsync<ComposeException>(() => manager.StartAllAsync());
+        Assert.StartsWith("two:", error.Message, StringComparison.Ordinal);
+        Assert.Equal(["one"], runtime.Started);
+        Assert.Equal(ServiceState.Healthy, manager.Statuses.Single(s => s.Name == "one").State);
+        var two = manager.Statuses.Single(s => s.Name == "two");
+        Assert.Equal(ServiceState.Failed, two.State);
+        Assert.Contains("16379", two.Detail, StringComparison.Ordinal);
     }
 
     [Fact]

@@ -17,7 +17,8 @@ namespace TabStudio.App.ViewModels;
 /// <summary>
 /// WPF apps, which build on OpenSilver: F5 builds the app with OpenSilver's XAML compiler, gets its browser host
 /// ready (see <see cref="WpfAppPreparer"/>) and serves it to the web preview, where it runs on .NET for WebAssembly
-/// with its first window filling the page under its title. What the app writes to its console, and its exceptions,
+/// with its first window under its title, shown whole (Fit), at its size (100%) or filling the pane (Fill) as chosen for
+/// the project in the preview's toolbar. What the app writes to its console, and its exceptions,
 /// come to the Output panel. Saving one of its files builds it again and serves the new build at the same address;
 /// the window's close button stops it.
 /// </summary>
@@ -110,7 +111,7 @@ public sealed partial class WorkspaceViewModel
         {
             await running.UpdateAsync(app, token);
             Output.WriteLine($"{project.Name} is served again at {running.Address}, with the new build.", OutputKind.Info);
-            WebPreview.Show(project.Name, running.Address, launchUrl: null);
+            WebPreview.ShowWpfApp(project.Name, running.Address, project.FilePath);
             WebPreview.ReloadCommand.Execute(null);
         }
         else
@@ -123,7 +124,7 @@ public sealed partial class WorkspaceViewModel
             Output.WriteLine(
                 $"{project.Name} is served at {host.Address} and runs in the web preview on OpenSilver {OpenSilverVersion(app)} and .NET for WebAssembly {app.Runtime.Version}.",
                 OutputKind.Info);
-            WebPreview.Show(project.Name, host.Address, launchUrl: null);
+            WebPreview.ShowWpfApp(project.Name, host.Address, project.FilePath);
         }
 
         SelectSideBarPanel(SideBarPanel.WebPreview);

@@ -73,6 +73,19 @@ internal sealed class RecordingPresenter : IFormsPresenter
     /// <inheritdoc />
     public Task<string?> GetClipboardTextAsync() => Task.FromResult(_clipboard);
 
+    /// <summary>The image on the clipboard, as a file's bytes.</summary>
+    public byte[]? ClipboardImage { get; set; }
+
+    /// <inheritdoc />
+    public Task SetClipboardImageAsync(byte[] png)
+    {
+        ClipboardImage = png;
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc />
+    public Task<byte[]?> GetClipboardImageAsync() => Task.FromResult(ClipboardImage);
+
     /// <summary>Waits until a condition on the frames holds.</summary>
     public bool WaitFor(Func<IReadOnlyList<WindowFrame>, bool> condition, TimeSpan timeout)
     {

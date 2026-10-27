@@ -49,7 +49,8 @@ public sealed partial class Graphics
         var size = TextMetrics.Measure(text, font.Spec);
         var x = point.X - Align(format?.Alignment, (float)size.Width);
         var y = point.Y - Align(format?.LineAlignment, (float)size.Height);
-        Record(new TextCommand(text, font.Spec, brush.ToSpec().MainColor, new RectangleF(x, y, float.PositiveInfinity, float.PositiveInfinity), TextOptions.AtPoint));
+        var spec = brush.ToSpec();
+        Record(new TextCommand(text, font.Spec, spec.MainColor, new RectangleF(x, y, float.PositiveInfinity, float.PositiveInfinity), TextOptions.AtPoint) { Brush = spec is SolidBrushSpec ? null : spec });
     }
 
     /// <summary>Draws text in a rectangle, wrapping at its width and clipped to it.</summary>
@@ -86,7 +87,8 @@ public sealed partial class Graphics
             Wrap: (flags & StringFormatFlags.NoWrap) == 0 && !float.IsPositiveInfinity(bounds.Width),
             Ellipsis: format?.Trimming is StringTrimming.EllipsisCharacter or StringTrimming.EllipsisWord or StringTrimming.EllipsisPath,
             Clip: (flags & StringFormatFlags.NoClip) == 0);
-        Record(new TextCommand(Prefixed(s, format?.HotkeyPrefix ?? HotkeyPrefix.None), font.Spec, brush.ToSpec().MainColor, bounds, options));
+        var spec = brush.ToSpec();
+        Record(new TextCommand(Prefixed(s, format?.HotkeyPrefix ?? HotkeyPrefix.None), font.Spec, spec.MainColor, bounds, options) { Brush = spec is SolidBrushSpec ? null : spec });
     }
 
     /// <summary>Measures text on one line per line break.</summary>

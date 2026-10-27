@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using TabStudio.App.Editing;
 using TabStudio.App.Services;
 using TabStudio.Core.Workspaces;
+using TabStudio.Live.Sessions;
 
 namespace TabStudio.App.ViewModels;
 
@@ -123,7 +124,8 @@ public sealed partial class WorkspaceViewModel
     /// <summary>Saves the session now, for example when Android sends the app to the background.</summary>
     public void SaveSessionNow()
     {
-        if (Workspace is not { } workspace)
+        // A guest's copy of another device's workspace keeps no session: it is deleted when the session ends.
+        if (Workspace is not { } workspace || IsLiveGuest)
         {
             return;
         }
@@ -146,7 +148,7 @@ public sealed partial class WorkspaceViewModel
 
         // Unsaved changes are kept rather than lost: save them first, as an editor on a tablet has no
         // dialog the user might dismiss by accident.
-        if (document.IsDirty && !await SaveDocumentAsync(document))
+        if (document.IsDirty && !(IsLiveGuest && document.Live is not null) && !await SaveDocumentAsync(document))
         {
             return;
         }
@@ -244,6 +246,12 @@ public sealed partial class WorkspaceViewModel
             return true;
         }
 
+        // A guest's shared document is saved by the host, whose file it is.
+        if (LiveSession is LiveGuest guest && document.Live is { } binder)
+        {
+            return await SaveGuestDocumentAsync(guest, document, binder);
+        }
+
         try
         {
             await document.SaveAsync();
@@ -259,6 +267,7 @@ public sealed partial class WorkspaceViewModel
             OnDocumentSavedForProjectSetup(document);
             OnDocumentSavedForFlutter(document);
             OnDocumentSavedForWindowsBridge(document);
+            OnDocumentSavedForLive(document);
             RefreshPicCommands();
             await OnProjectFileSavedAsync(document);
             GitChanges.ScheduleRefresh();
@@ -282,6 +291,7 @@ public sealed partial class WorkspaceViewModel
         AttachWpfXaml(document);
         AttachLanguageServer(document);
         AttachFormsDesigner(document);
+        BindLiveDocument(document);
     }
 
     private void Detach(DocumentViewModel document)
@@ -292,6 +302,7 @@ public sealed partial class WorkspaceViewModel
         DetachDebugging(document);
         DetachXamlDesigner(document);
         DetachFormsDesigner(document);
+        UnbindLiveDocument(document);
     }
 
     private void OnDocumentDiagnosticsChanged(object? sender, EventArgs e)

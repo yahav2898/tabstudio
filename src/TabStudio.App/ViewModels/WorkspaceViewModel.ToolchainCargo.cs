@@ -15,11 +15,13 @@ public sealed partial class WorkspaceViewModel
 
         try
         {
+            // Cargo writes its progress to standard error: "Compiling …" is ordinary output, "error[E…]" is an error.
+            var classifier = new StreamClassifier("rust");
             var result = await CommandRunner.RunAsync(_toolchains.Runtime, plan.Build!, line =>
             {
                 if (CargoBuildOutput.Display(line) is { Length: > 0 } text)
                 {
-                    Output.WriteLine(text, OutputKind.Program);
+                    OutputProcess.WriteClassified(Output, classifier, text.EndsWith('\n') ? text : text + "\n");
                 }
             }, cancellationToken);
             var built = new OutputProcessResult(result.Exit, CargoBuildOutput.Diagnostics(result.Output));
@@ -39,7 +41,8 @@ public sealed partial class WorkspaceViewModel
                 return (plan, new OutputProcessResult(new ProcessExit(1, null, false), [message]));
             }
 
-            return (plan with { Run = plan.Run with { Program = selected.Path, Arguments = [] } }, built);
+            // The program is the binary Cargo built, such as fd, not its package (fd-find) or its manifest.
+            return (plan with { Run = plan.Run with { Program = selected.Path, Arguments = [] }, ProgramName = Path.GetFileNameWithoutExtension(selected.Path) }, built);
         }
         catch (ToolchainRuntimeException ex)
         {

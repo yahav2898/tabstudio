@@ -66,8 +66,10 @@ public sealed partial class StartViewModel : ObservableObject, IDisposable
         FolderImporter folders,
         IStoragePicker picker,
         GitHubAccountViewModel gitHubAccount,
-        LinkViewModel link)
+        LinkViewModel link,
+        Live.LiveJoinViewModel? liveJoin = null)
     {
+        LiveJoin = liveJoin;
         _recent = recent;
         _samples = samples;
         _templates = templates;
@@ -85,6 +87,16 @@ public sealed partial class StartViewModel : ObservableObject, IDisposable
 
     /// <summary>TabStudio Link, for linking this device to a host or hosting one from the start screen.</summary>
     public LinkViewModel Link { get; }
+
+    /// <summary>TabStudio Live's Join dialog, for joining another device's session from the start screen; none in some tests.</summary>
+    public Live.LiveJoinViewModel? LiveJoin { get; }
+
+    /// <summary>Whether the start screen offers to join a Live session.</summary>
+    public bool HasLive => LiveJoin is not null;
+
+    /// <summary>Join a Live session: scan or type another device's session code.</summary>
+    [RelayCommand]
+    private void JoinLiveSession() => LiveJoin?.Open();
 
     /// <summary>Raised when the user chooses a workspace to open, with its path.</summary>
     public event EventHandler<string>? OpenRequested;

@@ -9,7 +9,11 @@ namespace TabStudio.Forms.Runtime;
 /// <param name="ExitCode">The exit code Main returned.</param>
 /// <param name="Error">The exception that ended the app, or <see langword="null"/>.</param>
 /// <param name="Stopped">Whether the run was stopped from outside, as Shift+F5 does.</param>
-internal sealed record FormsExit(int ExitCode, Exception? Error, bool Stopped);
+internal sealed record FormsExit(int ExitCode, Exception? Error, bool Stopped)
+{
+    /// <summary>Whether the app asked to run again, with <see cref="System.Windows.Forms.Application.Restart"/>.</summary>
+    public bool Restart { get; init; }
+}
 
 /// <summary>
 /// The UI thread of one running Windows Forms app: its own thread with a message loop, as a Windows Forms process has.
@@ -36,6 +40,9 @@ internal sealed partial class FormsRuntime : IDisposable
     private readonly ConcurrentQueue<Action> _queue = new();
     private readonly object _gate = new();
     private readonly List<FormWindow> _windows = [];
+
+    /// <summary>The filters <see cref="Application.AddMessageFilter"/> added, which see input before its controls.</summary>
+    public List<IMessageFilter> MessageFilters { get; } = [];
     private readonly List<int> _closedWindows = [];
     private List<int> _presentedOrder = [];
     private Thread? _thread;
@@ -73,6 +80,9 @@ internal sealed partial class FormsRuntime : IDisposable
 
     /// <summary>Whether <see cref="Application.Exit()"/> was called.</summary>
     public bool ExitRequested { get; set; }
+
+    /// <summary>Whether the app asked to run again once it exits, with <see cref="Application.Restart"/>.</summary>
+    public bool RestartRequested { get; set; }
 
     /// <summary>The open windows, from the bottom of the z-order to the top.</summary>
     public IReadOnlyList<FormWindow> Windows => _windows;
@@ -398,7 +408,7 @@ internal sealed partial class FormsRuntime : IDisposable
         }
 
         _exitedSource.TrySetResult();
-        Exited?.Invoke(this, new FormsExit(exitCode, error ?? Crash, Stopped: _stopping && Crash is null && error is null));
+        Exited?.Invoke(this, new FormsExit(exitCode, error ?? Crash, Stopped: _stopping && Crash is null && error is null) { Restart = RestartRequested && error is null && Crash is null && !_stopping });
     }
 
     /// <summary>Closes every window without asking, as the end of a run does.</summary>

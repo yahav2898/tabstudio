@@ -112,7 +112,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
     /// <param name="recentWorkspaces">The solutions opened recently, which the search finds; none when <see langword="null"/>.</param>
     /// <param name="windowsBridge">The Windows Bridge, which builds and runs Windows-only projects on a paired PC; none when <see langword="null"/>.</param>
     /// <param name="serviceDatabases">Optional adapter to a Database Explorer installed in this head.</param>
-    public WorkspaceViewModel(CompilerServices compiler, IDeviceStatus device, DeviceProfile profile, IUiDispatcher ui, SessionStore sessions, AppPaths paths, GitHubAccountViewModel? gitHubAccount = null, IStoragePicker? browser = null, IWebViewFactory? webViews = null, INotifications? notifications = null, IAppActivity? appActivity = null, LinkService? link = null, LinkViewModel? linkDialog = null, Services.LanguageServers.LanguageServerServices? languageServers = null, ExtensionsService? extensions = null, Services.Toolchains.ToolchainServices? toolchains = null, global::TabStudio.App.Swarm.SwarmServices? swarm = null, RecentWorkspaces? recentWorkspaces = null, Services.WindowsBridge.WindowsBridgeService? windowsBridge = null, global::TabStudio.Database.IDatabaseSecretStore? databaseSecrets = null, RemoteSshServices? remoteSsh = null, IAndroidAppInstaller? androidInstaller = null, Services.LocalAI.LocalAIService? localAI = null, BackingServices.IServiceDatabaseExplorer? serviceDatabases = null)
+    public WorkspaceViewModel(CompilerServices compiler, IDeviceStatus device, DeviceProfile profile, IUiDispatcher ui, SessionStore sessions, AppPaths paths, GitHubAccountViewModel? gitHubAccount = null, IStoragePicker? browser = null, IWebViewFactory? webViews = null, INotifications? notifications = null, IAppActivity? appActivity = null, LinkService? link = null, LinkViewModel? linkDialog = null, Services.LanguageServers.LanguageServerServices? languageServers = null, ExtensionsService? extensions = null, Services.Toolchains.ToolchainServices? toolchains = null, global::TabStudio.App.Swarm.SwarmServices? swarm = null, RecentWorkspaces? recentWorkspaces = null, Services.WindowsBridge.WindowsBridgeService? windowsBridge = null, global::TabStudio.Database.IDatabaseSecretStore? databaseSecrets = null, RemoteSshServices? remoteSsh = null, IAndroidAppInstaller? androidInstaller = null, Services.LocalAI.LocalAIService? localAI = null, BackingServices.IServiceDatabaseExplorer? serviceDatabases = null, global::TabStudio.App.Services.Live.LiveService? live = null, global::TabStudio.App.ViewModels.Live.LiveJoinViewModel? liveJoin = null)
     {
         ArgumentNullException.ThrowIfNull(compiler);
         ArgumentNullException.ThrowIfNull(device);
@@ -141,7 +141,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         _compiler.Warmed += OnCompilerWarmed;
         UpdateThermal();
         GitChanges = CreateGitChanges(gitHubAccount, browser);
-        WebPreview = new WebPreviewViewModel(webViews ?? new NoWebViewFactory(), browser ?? new TopLevelStoragePicker());
+        WebPreview = new WebPreviewViewModel(webViews ?? new NoWebViewFactory(), browser ?? new TopLevelStoragePicker(), new PreviewZoomStore(paths));
         _serverBrowser = browser ?? new TopLevelStoragePicker();
         InitializeDebugging();
         InitializeTests();
@@ -164,6 +164,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         InitializeStatusBar();
         InitializeWindowsBridge(windowsBridge);
         InitializeDatabase(databaseSecrets);
+        InitializeLive(live, liveJoin);
         InitializeActivity();
         Search = CreateSearch(recentWorkspaces);
     }
@@ -306,6 +307,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         }
 
         DatabaseExplorer.EfCore.LoadProjects(preview.Workspace.Projects);
+        StartDatabaseCheck(preview.Workspace);
         ShowNetFrameworkDiagnostics(preview.Workspace);
         LoadStartupProjects(preview.Workspace, session?.StartupProject);
         await LoadToolchainProjectsAsync(preview.Workspace, session?.StartupProject, opening: true);
@@ -325,6 +327,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
 
         State = IdeState.Ready;
         StatusText = "Ready";
+        OnLoadedForLive();
         UpdateActiveProjects();
         StartPackageRestore(preview.Workspace);
         StartIntelliSenseWarmUp();
@@ -403,6 +406,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject, IExplorerActi
         DisposeLiveTesting();
         DisposeLink();
         DisposeWindowsBridge();
+        DisposeLive();
         _agent?.Dispose();
         _device.ThermalChanged -= OnThermalChanged;
         _device.MemoryPressureRaised -= OnMemoryPressure;

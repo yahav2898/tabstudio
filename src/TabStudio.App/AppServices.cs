@@ -83,6 +83,8 @@ public static class AppServices
 
         // View models.
         services.AddSingleton<LinkViewModel>();
+        services.AddSingleton<Services.Live.LiveService>();
+        services.AddSingleton<ViewModels.Live.LiveJoinViewModel>();
         services.AddSingleton<StartViewModel>();
         // Workspaces are created and disposed by MainViewModel. They are built with ActivatorUtilities rather
         // than registered as transient, because the container would keep every disposable transient alive.

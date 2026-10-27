@@ -1,8 +1,16 @@
 # Services
 
-Open **View > Services**, or search **Services** in Ctrl+Q. Opening a repository only reads its configuration. Start
-all or F5 installs the mapped packages and starts the servers. Every service has start, stop, restart, state, ports and
-its own bounded log. A port opens in the web preview. Reload stops the group and rereads Compose; data remains.
+Open **View > Services**, or search **Services** in Ctrl+Q. Opening a repository only reads its configuration: nothing
+is downloaded or started. The window offers each service with **Start**; Start all installs the mapped packages and
+starts the servers, and F5 starts only the services the run points at (see [F5 and connections](#f5-and-connections)).
+Every service has start, stop, restart, state, ports and its own bounded log. A port opens in the web preview. Reload
+stops the group and rereads Compose; data remains.
+
+Errors stay on their service. A setting one service uses that TabStudio cannot run, such as a `tmpfs` volume or an
+invalid port, marks that service **Not supported here** with the reason, and the others are listed and run as usual.
+A service that fails to start shows its error on its row, with a summary over the list; it never stops the services
+that do not depend on it, and a service that needs it says so. "The Compose file could not be read" means only that:
+invalid YAML, or a file that cannot be read.
 
 ## Images and packages
 
@@ -46,6 +54,8 @@ fails clearly. Different services can use the same target port because their act
 container privileges/devices/capabilities, container network modes, secrets/configs, custom entrypoints, `extends`,
 `include` and external container dependencies require a remote host. Docker build services run through the IDE as
 the startup project. Compose profiles are excluded from Start all unless a dependency explicitly requests them.
+MySQL's `MYSQL_ALLOW_EMPTY_PASSWORD` (MariaDB's `MARIADB_ALLOW_EMPTY_ROOT_PASSWORD`) allows an empty root password, as
+the images do; otherwise a root password is required.
 
 Health combines TCP readiness with the Compose check or the mapping's native query/ping. Checks have individual
 timeouts, retry counts and a start grace period. Startup failure/cancellation rolls back only processes started by
@@ -56,8 +66,10 @@ Stopping a dependency first stops its running dependents. Health is monitored wh
 
 The stable absolute workspace path selects a private `Services/<hash>` folder in app storage. Each service gets its
 own directory and mount list; named volumes share data only inside that workspace. A bind mount copies its source
-into app storage once. `:ro` seeds are refreshed before each start. The original repository path is never a server
-write destination. These are private copies, not live host bind mounts; PRoot cannot enforce Docker read-only mount
+into app storage once. `:ro` seeds are refreshed before each start. A bind source that does not exist is created as
+an empty folder when its service starts, as Docker does, for the short syntax and for the long syntax unless it sets
+`bind: {create_host_path: false}`, which fails that service with its reason instead. Only folders inside the
+workspace are created. The original repository path is never a server write destination. These are private copies, not live host bind mounts; PRoot cannot enforce Docker read-only mount
 semantics. Avoid using a data directory across PostgreSQL majors. No service operation deletes data.
 
 PostgreSQL uses PRoot identity 70, `initdb` with `POSTGRES_USER`, required `POSTGRES_PASSWORD`, and `POSTGRES_DB`
@@ -72,7 +84,14 @@ with its descendants. Logs keep at most 1,000 lines per service and redact secre
 
 The Compose application is selected by the devcontainer `service`, otherwise by the closest matching `build.context`
 containing the startup project. F5 starts its dependency closure. With no matching application it uses devcontainer
-`runServices`, or mapped, unprofiled backing services. Compose application environment and matching appsettings values
+`runServices`, and otherwise only the services the run's configuration points at: a connection string or URL in the
+run's environment, `.env`, `.flaskenv`, `appsettings.json` and `appsettings.{Environment}.json`, or the Spring Boot
+settings of the active profiles (`application.properties` or `.yml`, and `application-{profile}` for each profile in
+`SPRING_PROFILES_ACTIVE` or `spring.profiles.active`, with `${NAME:default}` resolved). A value points at a service by
+its name as the host (`Host=db`, `redis://cache:6379`) or by `localhost` and a port it publishes, the scheme's default
+port included (`jdbc:postgresql://localhost/petclinic` is PostgreSQL's 5432). spring-petclinic, whose Compose file lists
+MySQL and PostgreSQL, runs on in-memory H2 by default and starts neither; with the `postgres` profile, F5 starts
+PostgreSQL alone. Compose application environment and matching appsettings values
 are rewritten to `127.0.0.1` and the chosen published ports. Connection strings, URI hosts and Redis endpoints are
 handled without replacing matching passwords. The original configuration files are untouched.
 
