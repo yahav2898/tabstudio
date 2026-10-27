@@ -30,7 +30,7 @@ public sealed partial class WebPreviewViewModel
     private bool _loadingZoom;
 
     /// <summary>The choices of the zoom selector: Fit, 100% and Fill.</summary>
-    public IReadOnlyList<PreviewZoomChoice> ZoomChoices => Choices;
+    public IReadOnlyList<PreviewZoomChoice> ZoomChoices { get; } = Choices;
 
     /// <summary>The zoom chosen for the WPF app shown.</summary>
     [ObservableProperty]
