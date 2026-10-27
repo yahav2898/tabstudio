@@ -1,10 +1,10 @@
-+ tar --no-same-owner -xzf /tmp/tabstudio-box64-kotj7xeq/downloads/box64-source.tar.gz -C /tmp/tabstudio-box64-kotj7xeq/box64-source
++ tar --no-same-owner -xzf /tmp/tabstudio-box64-d_imja1x/downloads/box64-source.tar.gz -C /tmp/tabstudio-box64-d_imja1x/box64-source
 
-+ patch -d /tmp/tabstudio-box64-kotj7xeq/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a -p1 -i /home/runner/work/tabstudio/tabstudio/build/pic/box64-static-clone.patch
++ patch -d /tmp/tabstudio-box64-d_imja1x/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a -p1 -i /home/runner/work/tabstudio/tabstudio/build/pic/box64-static-clone.patch
 patching file src/core.c
 patching file src/emu/x64syscall.c
 
-+ cmake -S /tmp/tabstudio-box64-kotj7xeq/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a -B /tmp/tabstudio-box64-kotj7xeq/box64-build -DARM_DYNAREC=ON -DLD80BITS=OFF -DNOALIGN=OFF -DBAD_SIGNAL=ON -DCMAKE_BUILD_TYPE=Release -DNOGIT=1 -DCMAKE_EXE_LINKER_FLAGS=-Wl,-z,max-page-size=16384 -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_ASM_COMPILER=aarch64-linux-gnu-gcc
++ cmake -S /tmp/tabstudio-box64-d_imja1x/box64-source/box64-2f130fab1d6e1a4ee8a71dc60cfdfcc839ad192a -B /tmp/tabstudio-box64-d_imja1x/box64-build -DARM_DYNAREC=ON -DLD80BITS=OFF -DNOALIGN=OFF -DBAD_SIGNAL=ON -DCMAKE_BUILD_TYPE=Release -DNOGIT=1 -DCMAKE_EXE_LINKER_FLAGS=-Wl,-z,max-page-size=16384 -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_ASM_COMPILER=aarch64-linux-gnu-gcc
 -- Found Python3: /usr/bin/python3.12 (found suitable version "3.12.3", minimum required is "3.7") found components: Interpreter
 -- The C compiler identification is GNU 13.3.0
 -- The ASM compiler identification is GNU
@@ -16,11 +16,11 @@ patching file src/emu/x64syscall.c
 -- Detecting C compile features - done
 -- Performing Test HAS_FUSE_LD_GOLD
 -- Performing Test HAS_FUSE_LD_GOLD - Success
--- Configuring done (0.9s)
+-- Configuring done (1.4s)
 -- Generating done (0.1s)
--- Build files have been written to: /tmp/tabstudio-box64-kotj7xeq/box64-build
+-- Build files have been written to: /tmp/tabstudio-box64-d_imja1x/box64-build
 
-+ cmake --build /tmp/tabstudio-box64-kotj7xeq/box64-build --parallel 4
++ cmake --build /tmp/tabstudio-box64-d_imja1x/box64-build --parallel 4
 pped/wrappedsecret1.c.o
 [ 88%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedsoftokn3.c.o
 [ 88%] Building C object CMakeFiles/mainobj.dir/src/wrapped/wrappedsmpeg.c.o
@@ -133,21 +133,6 @@ In file included from ./path/glue.c:31:
   CC	path/f2fs-bug.o
   CC	path/proc.o
   CC	path/temp.o
-./path/temp.c: In function ‘get_temp_directory’:
-./path/temp.c:37:9: warning: ‘talloc_autofree_context’ is deprecated [-Wdeprecated-declarations]
-   37 |         temp_directory = talloc_strdup(talloc_autofree_context(), tmp);
-      |         ^~~~~~~~~~~~~~
-In file included from ./path/temp.c:9:
-/usr/include/talloc.h:1071:7: note: declared here
- 1071 | void *talloc_autofree_context(void) _DEPRECATED_;
-      |       ^~~~~~~~~~~~~~~~~~~~~~~
-./path/temp.c: In function ‘create_temp_name’:
-./path/temp.c:273:17: warning: ‘talloc_autofree_context’ is deprecated [-Wdeprecated-declarations]
-  273 |                 context = talloc_autofree_context();
-      |                 ^~~~~~~
-/usr/include/talloc.h:1071:7: note: declared here
- 1071 | void *talloc_autofree_context(void) _DEPRECATED_;
-      |       ^~~~~~~~~~~~~~~~~~~~~~~
 ./path/proc.c: In function ‘readlink_proc’:
 ./path/proc.c:124:25: warning: ‘__builtin_strncpy’ specified bound depends on the length of the source argument [-Wstringop-truncation]
   124 |                         strncpy(result, string, status + 1);    \
@@ -173,11 +158,25 @@ In file included from ./path/temp.c:9:
 ./path/proc.c:131:17: note: in expansion of macro ‘SUBSTITUTE’
   131 |                 SUBSTITUTE(cwd, known_tracee->fs->cwd);
       |                 ^~~~~~~~~~
+./path/temp.c: In function ‘get_temp_directory’:
+./path/temp.c:37:9: warning: ‘talloc_autofree_context’ is deprecated [-Wdeprecated-declarations]
+   37 |         temp_directory = talloc_strdup(talloc_autofree_context(), tmp);
+      |         ^~~~~~~~~~~~~~
+In file included from ./path/temp.c:9:
+/usr/include/talloc.h:1071:7: note: declared here
+ 1071 | void *talloc_autofree_context(void) _DEPRECATED_;
+      |       ^~~~~~~~~~~~~~~~~~~~~~~
+./path/temp.c: In function ‘create_temp_name’:
+./path/temp.c:273:17: warning: ‘talloc_autofree_context’ is deprecated [-Wdeprecated-declarations]
+  273 |                 context = talloc_autofree_context();
+      |                 ^~~~~~~
+/usr/include/talloc.h:1071:7: note: declared here
+ 1071 | void *talloc_autofree_context(void) _DEPRECATED_;
+      |       ^~~~~~~~~~~~~~~~~~~~~~~
   CC	syscall/syscall.o
   CC	syscall/chain.o
   CC	syscall/enter.o
   CC	syscall/wch_guard.o
-  CC	syscall/wch_usbfs.o
 ./syscall/enter.c: In function ‘emulate_pivot_root’:
 ./syscall/enter.c:376:24: warning: ‘get_binding’ reading 4096 bytes from a region of size 2 [-Wstringop-overread]
   376 |         root_binding = get_binding(tracee, GUEST, "/");
@@ -212,6 +211,7 @@ In file included from ./syscall/enter.c:67:
 ./syscall/syscall.h:53:12: note: in a call to function ‘set_sysarg_path’
    53 | extern int set_sysarg_path(Tracee *tracee, const char path[PATH_MAX], Reg reg);
       |            ^~~~~~~~~~~~~~~
+  CC	syscall/wch_usbfs.o
   CC	syscall/exit.o
 ./syscall/exit.c: In function ‘translate_syscall_exit’:
 ./syscall/exit.c:428:68: warning: comparison of unsigned expression in ‘< 0’ is always false [-Wtype-limits]
@@ -419,6 +419,13 @@ In file included from ./extension/fake_id0/exec.c:7:
       |                 ^
   CC	extension/fix_symlink_size/fix_symlink_size.o
   CC	loader/loader.o
+./extension/link2symlink/link2symlink.c: In function ‘move_and_symlink_path’:
+./extension/link2symlink/link2symlink.c:854:25: warning: ‘__builtin___strncpy_chk’ specified bound depends on the length of the source argument [-Wstringop-truncation]
+  854 |                         strncpy(intermediate, original, strlen(original) - strlen(name));
+      |                         ^
+./extension/link2symlink/link2symlink.c:851:46: note: length computed here
+  851 |                         if (strlen(PREFIX) + strlen(original) + 5 >= PATH_MAX)
+      |                                              ^~~~~~~~~~~~~~~~
 In file included from ./loader/loader.c:37:
 ./loader/loader.c: In function ‘_start’:
 ./loader/assembly-arm64.h:31:9: warning: listing the stack pointer register ‘sp’ in a clobber list is deprecated [-Wdeprecated]
@@ -433,13 +440,6 @@ In file included from ./loader/loader.c:37:
 ./loader/loader.c:253:33: note: in expansion of macro ‘BRANCH’
   253 |                                 BRANCH(stmt->start.stack_pointer, stmt->start.entry_point);
       |                                 ^~~~~~
-./extension/link2symlink/link2symlink.c: In function ‘move_and_symlink_path’:
-./extension/link2symlink/link2symlink.c:854:25: warning: ‘__builtin___strncpy_chk’ specified bound depends on the length of the source argument [-Wstringop-truncation]
-  854 |                         strncpy(intermediate, original, strlen(original) - strlen(name));
-      |                         ^
-./extension/link2symlink/link2symlink.c:851:46: note: length computed here
-  851 |                         if (strlen(PREFIX) + strlen(original) + 5 >= PATH_MAX)
-      |                                              ^~~~~~~~~~~~~~~~
   CC	loader/assembly.o
   LD	loader/loader
 readelf -s loader/loader | awk -f loader/loader-info.awk > loader/loader-info.c
@@ -2327,7 +2327,7 @@ Configuring: Get:31 http://ports.ubuntu.com/ubuntu-ports noble-security/restrict
 Configuring: Get:32 http://ports.ubuntu.com/ubuntu-ports noble-security/restricted Translation-en [392 kB]
 Configuring: Get:33 http://ports.ubuntu.com/ubuntu-ports noble-security/multiverse arm64 Packages [82.2 kB]
 Configuring: Get:34 http://ports.ubuntu.com/ubuntu-ports noble-security/multiverse Translation-en [12.1 kB]
-Configuring: Fetched 37.5 MB in 4s (9458 kB/s)
+Configuring: Fetched 37.5 MB in 3s (12.8 MB/s)
 Configuring: Reading package lists...
 Configuring: apt-get install -y --no-install-recommends ca-certificates curl git python3 python3-venv python3-pip build-essential cmake ninja-build xz-utils libusb-1.0-0-dev libhidapi-dev clangd
 Configuring: Reading package lists...
@@ -2541,7 +2541,7 @@ Configuring: Get:133 http://ports.ubuntu.com/ubuntu-ports noble/universe arm64 l
 Configuring: Get:134 http://ports.ubuntu.com/ubuntu-ports noble/universe arm64 libhidapi-hidraw0 arm64 0.14.0-1build1 [13.2 kB]
 Configuring: Get:135 http://ports.ubuntu.com/ubuntu-ports noble/universe arm64 libhidapi-dev arm64 0.14.0-1build1 [29.3 kB]
 Configuring: debconf: delaying package configuration, since apt-utils is not installed
-Configuring: Fetched 180 MB in 2s (89.4 MB/s)
+Configuring: Fetched 180 MB in 4s (43.1 MB/s)
 Configuring: (Reading database ...
 Configuring: (Reading database ... 5%
 Configuring: (Reading database ... 10%
@@ -3268,8 +3268,8 @@ Configuring: Setting up libsasl2-modules-db:arm64 (2.1.28+dfsg1-5ubuntu3.1) ...
 Configuring: Setting up tzdata (2026e-0ubuntu0.24.04.1) ...
 Configuring: 
 Configuring: Current default time zone: 'Etc/UTC'
-Configuring: Local time is now:      Tue Oct 27 12:12:25 UTC 2026.
-Configuring: Universal Time is now:  Tue Oct 27 12:12:25 UTC 2026.
+Configuring: Local time is now:      Tue Oct 27 13:35:37 UTC 2026.
+Configuring: Universal Time is now:  Tue Oct 27 13:35:37 UTC 2026.
 Configuring: Run 'dpkg-reconfigure tzdata' if you wish to change it.
 Configuring: 
 Configuring: Setting up rpcsvc-proto (1.4.2-0ubuntu7) ...
@@ -3394,7 +3394,7 @@ Configuring: Setting up Bounded native build /opt/tabstudio/embedded/build-bin/m
 Configuring: cc -std=gnu17 -O2 -Wall -Wextra -Werror -shared -fPIC /opt/tabstudio/embedded/usb_fd.c -o /opt/tabstudio/embedded/libusb-fd.so -lusb-1.0 -ldl -pthread
 Configuring: cc -std=gnu17 -O2 -Wall -Wextra -Werror -shared -fPIC /opt/tabstudio/embedded/serial_posix.c -o /opt/tabstudio/embedded/serial-posix.so -ldl -pthread
 Configuring: cc -std=gnu17 -O2 -Wall -Wextra -Werror -shared -fPIC /opt/tabstudio/embedded/usbfs_fd.c -o /opt/tabstudio/embedded/usbfs-fd.so -ldl -pthread
-Configuring: python3 /opt/tabstudio/embedded/serial_bridge.py --virtual --shim /opt/tabstudio/embedded/serial-posix.so --port /tmp/tabstudio-bridge-test-9e091cc0fc864511a4e54cbd1912c381 -- python3 -c 'import array,fcntl,os,select,sys,termios,time,tty
+Configuring: python3 /opt/tabstudio/embedded/serial_bridge.py --virtual --shim /opt/tabstudio/embedded/serial-posix.so --port /tmp/tabstudio-bridge-test-205c9463dff54dd5a03a39a40b5d6f0a -- python3 -c 'import array,fcntl,os,select,sys,termios,time,tty
 fd=os.open(sys.argv[1],os.O_RDWR|os.O_NOCTTY)
 tty.setraw(fd)
 config=termios.tcgetattr(fd)
@@ -3426,60 +3426,60 @@ Configuring: Collecting ajsonrpc==1.2.0 (from -r /opt/tabstudio/platformio.requi
 Configuring:   Downloading ajsonrpc-1.2.0-py3-none-any.whl (22 kB)
 Configuring: Collecting anyio==4.15.1 (from -r /opt/tabstudio/platformio.requirements.txt (line 2))
 Configuring:   Downloading anyio-4.15.1-py3-none-any.whl (132 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 132.1/132.1 kB 12.6 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 132.1/132.1 kB 15.2 MB/s eta 0:00:00
 Configuring: Collecting bottle==0.13.4 (from -r /opt/tabstudio/platformio.requirements.txt (line 3))
 Configuring:   Downloading bottle-0.13.4-py2.py3-none-any.whl (103 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 103.8/103.8 kB 24.4 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 103.8/103.8 kB 27.6 MB/s eta 0:00:00
 Configuring: Collecting certifi==2026.10.23 (from -r /opt/tabstudio/platformio.requirements.txt (line 4))
 Configuring:   Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.1/135.1 kB 32.1 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.1/135.1 kB 31.9 MB/s eta 0:00:00
 Configuring: Collecting charset-normalizer==3.5.2 (from -r /opt/tabstudio/platformio.requirements.txt (line 5))
 Configuring:   Downloading charset_normalizer-3.5.2-py3-none-any.whl (68 kB)
 Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 68.9/68.9 kB 16.3 MB/s eta 0:00:00
 Configuring: Collecting click==8.1.7 (from -r /opt/tabstudio/platformio.requirements.txt (line 6))
 Configuring:   Downloading click-8.1.7-py3-none-any.whl (97 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 97.9/97.9 kB 22.2 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 97.9/97.9 kB 24.6 MB/s eta 0:00:00
 Configuring: Collecting colorama==0.4.6 (from -r /opt/tabstudio/platformio.requirements.txt (line 7))
 Configuring:   Downloading colorama-0.4.6-py2.py3-none-any.whl (25 kB)
 Configuring: Collecting h11==0.16.0 (from -r /opt/tabstudio/platformio.requirements.txt (line 8))
 Configuring:   Downloading h11-0.16.0-py3-none-any.whl (37 kB)
 Configuring: Collecting idna==3.20 (from -r /opt/tabstudio/platformio.requirements.txt (line 9))
 Configuring:   Downloading idna-3.20-py3-none-any.whl (69 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 69.6/69.6 kB 18.1 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 69.6/69.6 kB 15.8 MB/s eta 0:00:00
 Configuring: Collecting marshmallow==3.26.2 (from -r /opt/tabstudio/platformio.requirements.txt (line 10))
 Configuring:   Downloading marshmallow-3.26.2-py3-none-any.whl (50 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 51.0/51.0 kB 11.1 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 51.0/51.0 kB 12.3 MB/s eta 0:00:00
 Configuring: Collecting packaging==26.3 (from -r /opt/tabstudio/platformio.requirements.txt (line 11))
 Configuring:   Downloading packaging-26.3-py3-none-any.whl (129 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 130.0/130.0 kB 32.6 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 130.0/130.0 kB 30.0 MB/s eta 0:00:00
 Configuring: Collecting platformio==6.1.18 (from -r /opt/tabstudio/platformio.requirements.txt (line 12))
 Configuring:   Downloading platformio-6.1.18-py3-none-any.whl (420 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 420.1/420.1 kB 47.5 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 420.1/420.1 kB 70.1 MB/s eta 0:00:00
 Configuring: Collecting pyelftools==0.33 (from -r /opt/tabstudio/platformio.requirements.txt (line 13))
 Configuring:   Downloading pyelftools-0.33-py3-none-any.whl (201 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 201.2/201.2 kB 37.8 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 201.2/201.2 kB 38.5 MB/s eta 0:00:00
 Configuring: Collecting pyserial==3.5 (from -r /opt/tabstudio/platformio.requirements.txt (line 14))
 Configuring:   Downloading pyserial-3.5-py2.py3-none-any.whl (90 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 90.6/90.6 kB 17.0 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 90.6/90.6 kB 16.6 MB/s eta 0:00:00
 Configuring: Collecting requests==2.34.2 (from -r /opt/tabstudio/platformio.requirements.txt (line 15))
 Configuring:   Downloading requests-2.34.2-py3-none-any.whl (73 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.1/73.1 kB 16.9 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.1/73.1 kB 18.5 MB/s eta 0:00:00
 Configuring: Collecting semantic-version==2.10.0 (from -r /opt/tabstudio/platformio.requirements.txt (line 16))
 Configuring:   Downloading semantic_version-2.10.0-py2.py3-none-any.whl (15 kB)
 Configuring: Collecting starlette==0.46.2 (from -r /opt/tabstudio/platformio.requirements.txt (line 17))
 Configuring:   Downloading starlette-0.46.2-py3-none-any.whl (72 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 72.0/72.0 kB 17.8 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 72.0/72.0 kB 15.3 MB/s eta 0:00:00
 Configuring: Collecting tabulate==0.10.0 (from -r /opt/tabstudio/platformio.requirements.txt (line 18))
 Configuring:   Downloading tabulate-0.10.0-py3-none-any.whl (39 kB)
 Configuring: Collecting typing_extensions==4.16.0 (from -r /opt/tabstudio/platformio.requirements.txt (line 19))
 Configuring:   Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.6/45.6 kB 10.4 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.6/45.6 kB 8.6 MB/s eta 0:00:00
 Configuring: Collecting urllib3==2.8.0 (from -r /opt/tabstudio/platformio.requirements.txt (line 20))
 Configuring:   Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.7/135.7 kB 28.2 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.7/135.7 kB 33.8 MB/s eta 0:00:00
 Configuring: Collecting uvicorn==0.34.3 (from -r /opt/tabstudio/platformio.requirements.txt (line 21))
 Configuring:   Downloading uvicorn-0.34.3-py3-none-any.whl (62 kB)
-Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.4/62.4 kB 16.6 MB/s eta 0:00:00
+Configuring:      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.4/62.4 kB 14.7 MB/s eta 0:00:00
 Configuring: Collecting wsproto==1.3.2 (from -r /opt/tabstudio/platformio.requirements.txt (line 22))
 Configuring:   Downloading wsproto-1.3.2-py3-none-any.whl (24 kB)
 Configuring: Installing collected packages: pyserial, bottle, urllib3, typing_extensions, tabulate, semantic-version, pyelftools, packaging, idna, h11, colorama, click, charset-normalizer, certifi, ajsonrpc, wsproto, uvicorn, requests, marshmallow, anyio, starlette, platformio
@@ -3497,7 +3497,7 @@ Verifying Box64 runtime libc6-arm64
 Verifying Box64 runtime libstdc++6-arm64
 Verifying Box64 runtime libgcc-s1-arm64
 Verifying Box64 runtime zlib1g-arm64
-Box64 arm64 v0.4.4 nogit with Dynarec built on Oct 27 2026 12:08:39
+Box64 arm64 v0.4.4 nogit with Dynarec built on Oct 27 2026 13:31:52
 BOX64_RUNTIME_PREPARED hardware=false
 [xiao-samd21] ********************************************************************************
 [xiao-samd21] If you like PlatformIO, please:
@@ -3609,7 +3609,7 @@ BOX64_RUNTIME_PREPARED hardware=false
 [xiao-samd21] RAM:   [=         ]   7.3% (used 2408 bytes from 32768 bytes)
 [xiao-samd21] Flash: [          ]   4.1% (used 10872 bytes from 262144 bytes)
 [xiao-samd21] Building .pio/build/xiao-samd21/firmware.bin
-[xiao-samd21] ======================== [SUCCESS] Took 156.68 seconds ========================
+[xiao-samd21] ======================== [SUCCESS] Took 155.61 seconds ========================
 [xiao-samd21] Processing xiao-samd21 (platform: atmelsam@9.0.0; board: seeed_xiao; framework: arduino)
 [xiao-samd21] --------------------------------------------------------------------------------
 [xiao-samd21] Verbose mode can be enabled via `-v, --verbose` option
@@ -3629,6 +3629,6 @@ BOX64_RUNTIME_PREPARED hardware=false
 [xiao-samd21] No dependencies
 [xiao-samd21] Building in release mode
 [xiao-samd21] Building compilation database compile_commands.json
-[xiao-samd21] ========================= [SUCCESS] Took 3.94 seconds =========================
+[xiao-samd21] ========================= [SUCCESS] Took 3.89 seconds =========================
 CANONICAL_TEMPLATE_BUILT xiao-samd21 aarch64
 CANONICAL_TEMPLATE_GROUP_PASSED arm-legacy aarch64
