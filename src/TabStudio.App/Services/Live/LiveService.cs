@@ -11,7 +11,7 @@ namespace TabStudio.App.Services.Live;
 /// ends; copies left by a session the app did not end are deleted when the app starts.
 /// </summary>
 /// <remarks>The session lives on the UI thread, and every event is raised there.</remarks>
-public sealed class LiveService : IAsyncDisposable
+public sealed class LiveService : IAsyncDisposable, IDisposable
 {
     private readonly AppPaths _paths;
     private readonly LinkService _link;
@@ -242,6 +242,12 @@ public sealed class LiveService : IAsyncDisposable
         var prefix = Path.TrimEndingDirectorySeparator(Path.GetFullPath(folder));
         return string.Equals(full, prefix, StringComparison.Ordinal) || full.StartsWith(prefix + Path.DirectorySeparatorChar, StringComparison.Ordinal);
     }
+
+    /// <summary>
+    /// Ends the session without waiting, as the app's container disposes its services on the UI thread, which the
+    /// session's last steps run on.
+    /// </summary>
+    public void Dispose() => _ = DisposeAsync().AsTask();
 
     /// <inheritdoc />
     public async ValueTask DisposeAsync()
