@@ -81,7 +81,7 @@
     var pane = null;
     var settleTimer = 0;
     var checkTimer = 0;
-    var zoomUnsupported = false;
+    var unzoomed = false;
 
     function readView(search) {
         var match = new RegExp('[?&]' + viewQuery + '=([a-z]+)').exec(search);
@@ -143,7 +143,7 @@
         }
 
         pane = paneSize();
-        var layout = compute(zoomUnsupported && view === 'fit' ? 'actual' : view, pane.width, pane.height,
+        var layout = compute(unzoomed && view === 'fit' ? 'actual' : view, pane.width, pane.height,
             declared && declared.width, declared && declared.height);
         window.tabStudioWpf.layout = layout;
         var root = document.documentElement;
@@ -169,14 +169,15 @@
         }, 100);
 
         // A browser that ignores the viewport meta tag, such as a desktop one, cannot scale the page: Fit shows the
-        // window at its size there.
-        if (layout.scale < 1 && window.visualViewport) {
+        // window at its size there, until the pane changes size and Fit is tried again.
+        if (layout.scale < 1 && !unzoomed && window.visualViewport) {
             checkTimer = setTimeout(function () {
-                if (window.visualViewport.scale > 0.999) {
-                    zoomUnsupported = true;
+                if (window.visualViewport.scale > 0.999 && paneSize().width > 50) {
+                    unzoomed = true;
                     apply();
+                    unzoomed = false;
                 }
-            }, 800);
+            }, 1500);
         }
     }
 
