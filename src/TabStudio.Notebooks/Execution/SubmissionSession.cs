@@ -95,7 +95,14 @@ internal sealed class SubmissionSession : IDisposable
         _references.AddRange(resolution.References);
         foreach (var path in resolution.RuntimeAssemblyPaths)
         {
-            _context.AddRuntimeAssembly(path);
+            if (TabStudio.Compilation.Running.PackageNativeLibraries.IsNativeLibrary(path))
+            {
+                _context.AddNativeLibrary(path);
+            }
+            else
+            {
+                _context.AddRuntimeAssembly(path);
+            }
         }
     }
 

@@ -77,7 +77,7 @@ public static class BlazorWebAssemblyApps
             [
                 FromCompiled(request.Entry),
                 .. request.Dependencies.Select(FromCompiled),
-                .. request.PackageAssemblies.Where(p => p.EndsWith(".dll", StringComparison.OrdinalIgnoreCase)).Select(WebAssemblyAssembly.FromFile),
+                .. request.PackageAssemblies.Where(p => p.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) && !TabStudio.Compilation.Running.PackageNativeLibraries.IsNativeLibrary(p)).Select(WebAssemblyAssembly.FromFile),
             ],
             Runtime = request.Runtime,
             Content = content,

@@ -150,6 +150,7 @@ public sealed partial class PackageRestorer
             Packages = packages,
             CompileAssemblies = Combine(packages, p => p.CompileAssemblies),
             RuntimeAssemblies = Combine(packages, p => p.RuntimeAssemblies),
+            NativeLibraries = packages.SelectMany(p => p.NativeLibraries).DistinctBy(Path.GetFileName, StringComparer.Ordinal).ToList(),
             Analyzers = Combine(packages.Where(p => p.FlowsAnalyzers).ToList(), p => p.Analyzers),
             Diagnostics = PackageDiagnostics.Sort(diagnostics),
             Duration = stopwatch.Elapsed,
@@ -234,7 +235,7 @@ public sealed partial class PackageRestorer
         IProgress<RestoreProgress>? progress,
         CancellationToken cancellationToken)
     {
-        var restored = new RestoredPackage?[resolved.Count];
+        var directories = new string?[resolved.Count];
         var problems = new ConcurrentQueue<BuildDiagnostic>();
         var completed = 0;
         var parallel = new ParallelOptions { MaxDegreeOfParallelism = Math.Max(1, Options.MaxParallelDownloads), CancellationToken = cancellationToken };
@@ -246,8 +247,7 @@ public sealed partial class PackageRestorer
             var name = $"{match.Id} {match.Version.ToNormalizedString()}";
             try
             {
-                var directory = await InstallAsync(match, token).ConfigureAwait(false);
-                restored[index] = SelectAssets(package, directory, projectName, problems);
+                directories[index] = await InstallAsync(match, token).ConfigureAwait(false);
             }
             catch (PackageSourceException ex)
             {
@@ -269,8 +269,23 @@ public sealed partial class PackageRestorer
             progress?.Report(new RestoreProgress(RestoreStage.Downloading, $"Restored {name}", done, resolved.Count));
         }).ConfigureAwait(false);
 
+        // The RID graph takes in the runtime.json files of the graph's packages, as NuGet's does, before any
+        // runtimes/{rid}/ folder is chosen.
+        var installed = directories.OfType<string>().ToList();
+        IReadOnlyList<string> runtimeIdentifiers = Options.RuntimeIdentifier is { Length: > 0 } rid
+            ? RuntimeGraph.Fallback.MergeFrom(installed).Expand(rid)
+            : [];
+        var restored = new List<RestoredPackage>(resolved.Count);
+        for (var index = 0; index < resolved.Count; index++)
+        {
+            if (directories[index] is { } directory)
+            {
+                restored.Add(SelectAssets(resolved[index], directory, projectName, runtimeIdentifiers, problems));
+            }
+        }
+
         diagnostics.AddRange(problems);
-        return restored.OfType<RestoredPackage>().ToList();
+        return restored;
     }
 
     private async Task<string> InstallAsync(PackageMatch match, CancellationToken cancellationToken)
@@ -286,13 +301,18 @@ public sealed partial class PackageRestorer
     }
 
     /// <summary>Selects the assemblies of an installed package, leaving out those the framework provides.</summary>
-    private RestoredPackage SelectAssets(ResolvedPackage package, string directory, string projectName, ConcurrentQueue<BuildDiagnostic> problems)
+    private RestoredPackage SelectAssets(
+        ResolvedPackage package,
+        string directory,
+        string projectName,
+        IReadOnlyList<string> runtimeIdentifiers,
+        ConcurrentQueue<BuildDiagnostic> problems)
     {
         var match = package.Match;
         var name = $"{match.Id} {match.Version.ToNormalizedString()}";
         var files = Directory.EnumerateFiles(directory, "*", SearchOption.AllDirectories)
             .Select(file => Path.GetRelativePath(directory, file).Replace(Path.DirectorySeparatorChar, '/'));
-        var assets = AssetSelector.Select(files, _framework, _fallback, Options.CompilerVersion);
+        var assets = AssetSelector.Select(files, _framework, _fallback, Options.CompilerVersion, runtimeIdentifiers);
 
         if (!assets.IsCompatible)
         {
@@ -314,10 +334,12 @@ public sealed partial class PackageRestorer
         var runtime = ToFullPaths(directory, assets.RuntimeAssemblies);
         var providedByFramework = assets.CompileAssemblies.Count + assets.RuntimeAssemblies.Count > 0 && compile.Count + runtime.Count == 0;
         var analyzers = assets.Analyzers.Select(path => Path.Combine(directory, path.Replace('/', Path.DirectorySeparatorChar))).ToList();
+        var native = assets.NativeLibraries.Select(path => Path.Combine(directory, path.Replace('/', Path.DirectorySeparatorChar))).ToList();
         return new RestoredPackage(match.Id, match.Version.ToNormalizedString(), directory, package.IsDirect, compile, runtime, providedByFramework)
         {
             Analyzers = analyzers,
             FlowsAnalyzers = package.FlowsAnalyzers,
+            NativeLibraries = native,
         };
     }
 

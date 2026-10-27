@@ -231,7 +231,7 @@ public sealed partial class DebugSession : IDisposable
     /// </remarks>
     /// <param name="arguments">Command-line arguments passed to <c>Main</c>.</param>
     /// <param name="packageAssemblies">
-    /// Full paths of the package assemblies the program may load, such as <c>RestoreResult.RuntimeAssemblies</c>. They
+    /// Full paths of the package assemblies and native libraries the program may load, such as <c>RestoreResult.RuntimeFiles</c>. They
     /// are found by simple name and loaded from disk on demand, as <see cref="ProgramRunner"/> does.
     /// </param>
     /// <param name="console">Receives the program's output.</param>
