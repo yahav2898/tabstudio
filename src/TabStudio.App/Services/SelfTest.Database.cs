@@ -48,7 +48,10 @@ public static partial class SelfTest
             // A program's package e_sqlite3 (a glibc build for linux-arm64) resolves to the app's own Bionic copy.
             var packageSqlite = Path.Combine(workspace.Workspace.RootDirectory, "packages", "sqlitepclraw.lib.e_sqlite3", "2.1.11", "runtimes", "linux-arm64", "native", "libe_sqlite3.so");
             if ((OperatingSystem.IsAndroid() || OperatingSystem.IsLinux())
-                && new TabStudio.Compilation.Running.PackageNativeLibraries([packageSqlite]).Load("e_sqlite3") == 0) throw new InvalidOperationException("A program's e_sqlite3 did not resolve to the app's SQLite.");
+                && new TabStudio.Compilation.Running.PackageNativeLibraries([packageSqlite]).Load("e_sqlite3") == 0)
+            {
+                throw new InvalidOperationException("A program's e_sqlite3 did not resolve to the app's SQLite.");
+            }
             return new SelfTestResult(true, "Database: Keystore connection, SQLite schema, multiple SQL results and package native SQLite passed", clock.Elapsed);
         }
         finally
