@@ -103,7 +103,7 @@ public static class FirmwareImageInspector
         return Normalize(ranges);
     }
 
-    /// <summary>Validates UF2 blocks and extracts only main-flash payloads. Extension/file-container blocks are refused.</summary>
+    /// <summary>Validates UF2 blocks and extracts only main-flash payloads. Extension/file-container blocks, including RP2350-E10's revision-dependent flash write, are refused.</summary>
     public static IReadOnlyList<FlashAddressRange> Uf2(ReadOnlySpan<byte> bytes)
     {
         if (bytes.Length == 0 || bytes.Length % 512 != 0)
@@ -124,6 +124,17 @@ public static class FirmwareImageInspector
             }
             var flags = U32(8);
             var size = U32(16);
+            // picotool 2.3.1 gen_abs_block/check_abs_block emits a separate
+            // logical UF2 before the application. It is NOT harmless metadata:
+            // RP2350 A2 writes it and erases the last flash block (erratum E10).
+            // Only A3+ honors IGNORE_BLOCK. Never remove it from address safety
+            // accounting on the assumption that the attached ROM will ignore it.
+            if (flags is 0x2000 or 0xA000 && size == 256 && U32(20) == 0 && U32(24) == 2 && U32(28) == 0xE48BFF57
+                && block.AsSpan(32, 256).IndexOfAnyExcept((byte)0xEF) < 0
+                && (flags == 0x2000 || U32(288) == 0x9957E304))
+            {
+                throw new InvalidDataException("RP2350-E10's absolute UF2 workaround can erase the last flash block on A2; only A3 or later honors its ignore tag. Use the build's ELF with picotool upload. Revision-aware BOOTSEL storage handling is required before this UF2 can be accepted.");
+            }
             if ((flags & ~0x2000U) != 0 || size is 0 or > 476 || U32(24) != expectedCount || !numbers.Add(U32(20)) || U32(20) >= expectedCount)
             {
                 throw new InvalidDataException("Unsupported UF2 flags or inconsistent block count/payload.");

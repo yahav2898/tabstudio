@@ -42,7 +42,7 @@ public static partial class EmbeddedSdkBootstrap
             new Uri("https://github.com/raspberrypi/pico-sdk.git"), PicoSource,
             ["gcc-arm-none-eabi", "libnewlib-arm-none-eabi", "libstdc++-arm-none-eabi-newlib"],
             [
-                Command("cmake", ["-S", "/opt/tabstudio/pico-sdk-check", "-B", "/opt/tabstudio/pico-sdk-check/build", "-G", "Ninja", "-DPICO_BOARD=pico", "-DPICO_NO_PICOTOOL=1", "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"], "/"),
+                Command("cmake", ["-S", "/opt/tabstudio/pico-sdk-check", "-B", "/opt/tabstudio/pico-sdk-check/build", "-G", "Ninja", "-DPICO_BOARD=pico", "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"], "/"),
                 Command("cmake", ["--build", "/opt/tabstudio/pico-sdk-check/build", "--parallel", "2"], "/"),
             ],
             [
@@ -64,10 +64,22 @@ public static partial class EmbeddedSdkBootstrap
                     }
                     """ + "\n" },
             ],
-            new Dictionary<string, string?> { ["PICO_SDK_PATH"] = PicoSource })
+            new Dictionary<string, string?>
+            {
+                ["PICO_SDK_PATH"] = PicoSource,
+                // The official archive includes upstream's CMake package/targets. The SDK must find
+                // this existing pinned native package instead of Findpicotool's rolling develop fetch.
+                ["picotool_DIR"] = EmbeddedFlashToolInstallation.PicotoolCMakeDirectory,
+            })
             {
                 Removes = ["/opt/tabstudio/pico-sdk-check"],
-                RequiredArtifacts = ["/opt/tabstudio/pico-sdk-check/build/tabstudio_pico_sdk_check.elf"],
+                RequiredToolchains = ["embedded-picotool"],
+                RequiredArtifacts =
+                [
+                    "/opt/tabstudio/pico-sdk-check/build/tabstudio_pico_sdk_check.elf",
+                    "/opt/tabstudio/pico-sdk-check/build/tabstudio_pico_sdk_check.uf2",
+                    .. EmbeddedFlashToolInstallation.PicotoolArtifacts,
+                ],
             };
 
         private static readonly EmbeddedSdkRecipe Zephyr = new("zephyr", "7823374e872145b5bd018bfe447839eb36042611",

@@ -64,6 +64,13 @@ Primary specifications and implementation references:
   and [RP2350 ROM virtual disk](https://github.com/raspberrypi/pico-bootrom-rp2350/blob/master/src/nsboot/usb_virtual_disk.c).
 - [UF2 family registry](https://github.com/microsoft/uf2/blob/master/utils/uf2families.json).
 
+The managed `Uf2E10Tests` fixture records the unchanged official picotool 2.3.1's output for a synthetic
+256-byte input and retains the command, archive digest, output digest and primary-source audit references.
+Its absolute prefix is a separate logical UF2, not ordinary application data. The RP2350 datasheet's E10
+workaround writes/erases the last flash block on A2; the ignore tag is effective only on A3 and later.
+Both inspection and BOOTSEL preparation therefore refuse it with ELF/picotool guidance, even when an
+application profile lists the entire XIP window. No physical ROM revision is inferred from this fixture.
+
 
 ## PlatformIO package architecture proof
 
@@ -83,3 +90,14 @@ Python unit suite additionally checks executable ELF32/ELF64 headers, corrupt-he
 refusal and shared-library versus PIE classification. No registry label is treated
 as evidence of the executable architecture. These are package/runtime tests, not
 physical USB or board qualification.
+
+
+`platformio-child-policy-check.py` additionally exercises real Core 6.1.18 launching
+fresh, unchanged SCons processes. Its generated test interpreter reports ARM64 to
+Core/SCons; on x64, unchanged x64 GCC runs natively, while native ARM64 CI retains
+the separate real Box64 execution proof. A negative control removes only the child
+policy and must reproduce the missing compiler. The complete bootstrap must link
+an AVR ELF and generate a real compilation database. A deliberate C `#error` must
+return failure all the way through the wrapper. The evidence records each process
+and architecture report, the unmodified compiler SHA-256 and actual exit codes.
+This is explicitly a process/package regression fixture, not USB or board testing.

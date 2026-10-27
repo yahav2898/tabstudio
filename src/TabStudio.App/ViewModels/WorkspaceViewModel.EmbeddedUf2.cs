@@ -19,6 +19,7 @@ public sealed partial class WorkspaceViewModel
             if (new FileInfo(request.FirmwarePath).Length > 64 * 1024 * 1024)
                 throw new InvalidDataException("This BOOTSEL route accepts UF2 containers up to 64 MiB for the supported XIP application range.");
             var bytes = await File.ReadAllBytesAsync(request.FirmwarePath);
+            using var deviceReservation = SerialMonitor.ReserveDeviceOperation();
             using var cancellation = new CancellationTokenSource();
             _run = cancellation;
             State = IdeState.Running;

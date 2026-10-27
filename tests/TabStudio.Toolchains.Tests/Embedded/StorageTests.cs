@@ -167,6 +167,18 @@ public sealed class StorageTests
     }
 
     [Fact]
+    public async Task Real_picotool_E10_prefix_is_refused_before_allocation_or_writes_even_with_a_broad_flash_map()
+    {
+        var disk = new Disk(16, boardId: "RP2350");
+        var volume = await FatVolume.OpenAsync(disk);
+        var error = await Assert.ThrowsAsync<InvalidDataException>(() => Uf2BootselUpload.PrepareAsync(volume, Device(15),
+            Uf2E10Tests.Image(), [new(0x10000000, 0x01000000)]));
+        Assert.Contains("RP2350-E10", error.Message, StringComparison.Ordinal);
+        Assert.Contains("ELF with picotool", error.Message, StringComparison.Ordinal);
+        Assert.Empty(disk.Writes);
+    }
+
+    [Fact]
     public async Task Missing_family_duplicate_addresses_or_non_rom_payload_size_are_not_transferred()
     {
         var disk = new Disk(12);

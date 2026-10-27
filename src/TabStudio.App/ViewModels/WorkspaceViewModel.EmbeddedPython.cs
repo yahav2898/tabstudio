@@ -26,6 +26,7 @@ public sealed partial class WorkspaceViewModel
             if (!await SaveAllCoreAsync()) return;
             if (_toolchains.Catalog.Find("micropython") is not { } toolchain || !await EnsureToolchainReadyAsync(toolchain, "mpremote supplies the board REPL and file synchronization.")) return;
             if (_toolchains.Environment is null) throw new NotSupportedException("Select your desktop serial port with mpremote in the Terminal. USB-OTG board selection is available on Android.");
+            using var deviceReservation = SerialMonitor.ReserveDeviceOperation();
             await SerialMonitor.ReleaseAsync();
             using var cancellation = new CancellationTokenSource();
             _run = cancellation;

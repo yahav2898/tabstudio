@@ -14,6 +14,7 @@ internal static class Box64Check
         var script = Path.Combine(project, "box64-check.py");
         File.Copy(source, script, overwrite: true);
         File.Copy(Path.GetFullPath("build/embedded/platformio-policy-check.py"), Path.Combine(project, "platformio-policy-check.py"), overwrite: true);
+        File.Copy(Path.GetFullPath("build/embedded/platformio-child-policy-check.py"), Path.Combine(project, "platformio-child-policy-check.py"), overwrite: true);
         var inherited = Path.Combine(project, "box64-inherited-fd");
         using var handle = File.OpenHandle(inherited, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
         var result = await CommandRunner.RunAsync(installer.Runtime, new ProcessStartSpec
@@ -24,12 +25,16 @@ internal static class Box64Check
             InheritedDescriptors = new Dictionary<int, int> { [checked((int)handle.DangerousGetHandle())] = 3 },
         }, Console.WriteLine, cancellationToken);
         await File.WriteAllTextAsync(Path.Combine(output, "box64.log"), result.Output, cancellationToken);
-        if (!result.Succeeded || !result.Output.Contains("BOX64_COMPILER_CHILD_FD_PASSED", StringComparison.Ordinal))
+        if (!result.Succeeded || !result.Output.Contains("BOX64_COMPILER_CHILD_FD_PASSED", StringComparison.Ordinal)
+            || !result.Output.Contains("PLATFORMIO_FRESH_SCONS_POLICY_PASSED", StringComparison.Ordinal))
         {
             throw new InvalidOperationException("The production Box64 compiler/child-descriptor proof failed: " + result.Tail(20));
         }
         File.Copy(Path.Combine(project, "box64-proof", "firmware.elf"), Path.Combine(output, "boxed-avr-firmware.elf"), overwrite: true);
         File.Copy(Path.Combine(project, "box64-proof", "summary.json"), Path.Combine(output, "box64-summary.json"), overwrite: true);
+        var childProof = Path.Combine(project, "box64-proof", "fresh-scons-policy");
+        foreach (var name in new[] { "evidence.json", "missing-child-policy.log", "complete-child-policy.log", "compilation-database.log", "compiler-failure.log" })
+            File.Copy(Path.Combine(childProof, name), Path.Combine(output, "scons-" + name), overwrite: true);
         await VerifySerialAsync(installer, project, output, cancellationToken);
     }
 

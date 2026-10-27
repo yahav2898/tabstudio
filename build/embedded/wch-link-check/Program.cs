@@ -122,6 +122,8 @@ async Task<(CommandResult Result, string Wire)> Run(string name, string scenario
     var wire = File.Exists(wirePath) ? await File.ReadAllTextAsync(wirePath) : string.Empty;
     outcomes.Add(new { name, exitCode = result.Exit.ExitCode, wireLog = Path.GetFileName(wirePath), nativeBackendObserved = wire.Contains("BACKEND", StringComparison.Ordinal) });
     Require(wire.Contains("BACKEND", StringComparison.Ordinal), "The tracer did not use the native synthetic backend; this is not a guard proof: " + name);
+    if (program == wlink)
+        Require(wire.Contains("SYNTHETIC_DESCRIPTOR_REWIND", StringComparison.Ordinal), "The stock nusb client did not perform its ordinary USBFS descriptor rewind: " + name);
     Require(!wire.Contains("VIOLATION", StringComparison.Ordinal) && !wire.Contains("UNSUPPORTED_IOCTL", StringComparison.Ordinal), "An unsafe/unknown operation reached the native backend: " + name);
     return (result, wire);
 }

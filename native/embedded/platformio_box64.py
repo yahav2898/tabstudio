@@ -11,6 +11,7 @@ import json
 import os
 from pathlib import Path
 import platform
+import runpy
 import struct
 import sys
 
@@ -141,6 +142,34 @@ def overlay(package, interpreter=sys.executable):
     print("Box64 package overlay:", package.name, "original binaries unchanged:", len(launchers), flush=True)
 
 
+def configure_scons_subprocess():
+    """Carry this policy into Core's separate, unchanged SCons Python process.
+
+    Patching only Core's CLI leaves SCons filtering the installed x64 package out
+    on ARM64. A narrow bootstrap preserves original argv and script bytes without
+    global PYTHONPATH/sitecustomize changes that can break vendor SDK imports.
+    """
+    import platformio
+    from platformio import proc
+    original = proc.exec_command
+    builder = Path(platformio.__file__).resolve().parent / "builder/main.py"
+
+    def execute(*values, **options):
+        if values and isinstance(values[0], (list, tuple)):
+            arguments = list(values[0])
+            if len(arguments) > 2 and Path(str(arguments[1])).name == "scons.py" and "--sconstruct" in arguments:
+                index = arguments.index("--sconstruct")
+                if index + 1 < len(arguments) and Path(arguments[index + 1]).resolve() == builder:
+                    arguments = [arguments[0], "-P", str(Path(__file__).resolve()), "--scons", *arguments[1:]]
+                    values = (arguments, *values[1:])
+                    if os.environ.get("TABSTUDIO_USB_FD") == "3":
+                        os.fstat(3)
+                        options = {**options, "pass_fds": tuple(sorted(set(options.get("pass_fds", ())) | {3}))}
+        return original(*values, **options)
+
+    proc.exec_command = execute
+
+
 def configure_policy(architecture=None, allow_fallback=True):
     import platformio
     from platformio.package.manager.tool import ToolPackageManager
@@ -265,6 +294,7 @@ def configure_policy(architecture=None, allow_fallback=True):
     manager = ToolPackageManager()
     for pkg in manager.get_installed():
         checked(manager, pkg)
+    configure_scons_subprocess()
 
 
 def main():
@@ -280,12 +310,19 @@ def main():
         os.environ["PLATFORMIO_CORE_DIR"] = str(private)
     os.environ.pop("PLATFORMIO_SYSTEM_TYPE", None)
     configure_policy(allow_fallback=mode == "1")
-    from platformio.__main__ import main as pio_main
     arguments = sys.argv[1:]
     if arguments[:1] == ["--"]:
         arguments = arguments[1:]
-    pio_main(["pio", *arguments])
+    if arguments[:1] == ["--scons"]:
+        if len(arguments) < 2 or Path(arguments[1]).name != "scons.py" or not Path(arguments[1]).is_file():
+            raise ValueError("The PlatformIO child is missing its original SCons entry point")
+        sys.argv = arguments[1:]
+        sys.path.insert(0, str(Path(arguments[1]).resolve().parent))
+        runpy.run_path(arguments[1], run_name="__main__")
+        return 0
+    from platformio.__main__ import main as pio_main
+    return pio_main(["pio", *arguments])
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

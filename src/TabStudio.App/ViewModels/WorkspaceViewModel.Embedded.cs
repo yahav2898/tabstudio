@@ -209,6 +209,7 @@ public sealed partial class WorkspaceViewModel
             }
             var plan = await Task.Run(() => EmbeddedFlashPlanner.Plan(request));
             if (plan.TargetChip is { } resolvedChip) request = request with { Target = resolvedChip };
+            using var deviceReservation = _toolchains.Environment is null ? null : SerialMonitor.ReserveDeviceOperation();
             using var cancellation = new CancellationTokenSource();
             _run = cancellation;
             State = IdeState.Running;

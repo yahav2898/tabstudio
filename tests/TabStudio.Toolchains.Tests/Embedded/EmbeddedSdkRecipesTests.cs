@@ -49,6 +49,17 @@ public sealed class EmbeddedSdkRecipesTests
     }
 
     [Fact]
+    public void Pico_SDK_uses_the_existing_pinned_native_picotool_CMake_package_and_requires_real_UF2()
+    {
+        var recipe = EmbeddedSdkBootstrap.Recipes.Get("pico-sdk")!;
+        Assert.Equal("embedded-picotool", Assert.Single(recipe.RequiredToolchains));
+        Assert.Equal("/opt/tabstudio/flash/picotool/picotool", recipe.Environment["picotool_DIR"]);
+        Assert.Contains(recipe.RequiredArtifacts, path => path.EndsWith("/tabstudio_pico_sdk_check.uf2", StringComparison.Ordinal));
+        Assert.Contains(recipe.RequiredArtifacts, path => path.EndsWith("/picotoolConfig.cmake", StringComparison.Ordinal));
+        Assert.DoesNotContain(recipe.Commands.SelectMany(command => command.Arguments), argument => argument.Contains("PICO_NO_PICOTOOL", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void Esp_python_install_has_no_rolling_constraints_or_unhashed_build_environment()
     {
         var recipe = EmbeddedSdkBootstrap.Recipes.Get("esp-idf")!;

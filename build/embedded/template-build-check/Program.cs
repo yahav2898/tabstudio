@@ -159,6 +159,24 @@ try
             var stackRows = stack.Length;
             if (stackRows == 0) throw new InvalidDataException("The actual app build emitted no parseable function stack usage.");
             await File.WriteAllTextAsync(Path.Combine(output, id + "-stack-usage.json"), JsonSerializer.Serialize(stack, json), cancellation);
+            var database = Path.Combine(path, "compile_commands.json");
+            using var compilation = JsonDocument.Parse(await File.ReadAllTextAsync(database, cancellation));
+            if (compilation.RootElement.ValueKind != JsonValueKind.Array || compilation.RootElement.GetArrayLength() == 0)
+                throw new InvalidDataException("The actual build produced no clangd compilation database entries.");
+            var main = Path.Combine(path, "src/main.cpp");
+            var mainEntry = compilation.RootElement.EnumerateArray().FirstOrDefault(entry =>
+            {
+                if (!entry.TryGetProperty("file", out var file) || file.ValueKind != JsonValueKind.String) return false;
+                var directory = entry.TryGetProperty("directory", out var folder) ? folder.GetString() : null;
+                return Path.GetFullPath(file.GetString()!, directory ?? path) == main;
+            });
+            var compilerCommand = mainEntry.ValueKind == JsonValueKind.Object && mainEntry.TryGetProperty("command", out var commandText)
+                ? commandText.GetString() : null;
+            if (compilerCommand is null && mainEntry.ValueKind == JsonValueKind.Object && mainEntry.TryGetProperty("arguments", out var commandArguments))
+                compilerCommand = string.Join(' ', commandArguments.EnumerateArray().Select(argument => argument.GetString()));
+            if (string.IsNullOrWhiteSpace(compilerCommand) || !compilerCommand.Contains("-fstack-usage", StringComparison.Ordinal))
+                throw new InvalidDataException("The clangd database omitted the actual app's main.cpp or its effective stack-usage compiler flag.");
+            File.Copy(database, Path.Combine(output, id + "-compile_commands.json"), overwrite: true);
             var manifests = PackageManifests(path);
             await File.WriteAllTextAsync(Path.Combine(output, id + "-package-manifests.json"), JsonSerializer.Serialize(manifests, json), cancellation);
             results.Add(new
@@ -166,6 +184,7 @@ try
                 id, platformPackage, passed = true, seconds = watch.Elapsed.TotalSeconds, firmwareBytes = bytes.Length,
                 firmwareSha256 = Convert.ToHexStringLower(SHA256.HashData(bytes)), ranges, uploadPlanReady = uploadReady,
                 uploadVerification, stackFiles = stackFiles.Length, stackRows,
+                compilationDatabaseEntries = compilation.RootElement.GetArrayLength(),
                 platformioIni = await File.ReadAllTextAsync(Path.Combine(path, "platformio.ini"), cancellation),
             });
             Console.WriteLine("CANONICAL_TEMPLATE_BUILT " + id + " " + platform.Architecture);

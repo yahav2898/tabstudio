@@ -44,6 +44,7 @@ public sealed partial class WorkspaceViewModel
             var flash = await LoadEmbeddedFlashRequestAsync(project);
             var toolchain = _toolchains.Catalog.Find("probe-rs") ?? throw new NotSupportedException("The pinned official probe-rs toolchain is missing from the catalog.");
             if (!await EnsureToolchainReadyAsync(toolchain, "Run the explicitly configured test firmware on the selected board, using native RTT/defmt decoding.")) return;
+            using var deviceReservation = _toolchains.Environment is null ? null : SerialMonitor.ReserveDeviceOperation();
             using var cancellation = new CancellationTokenSource();
             _run = cancellation;
             _testRun = cancellation;

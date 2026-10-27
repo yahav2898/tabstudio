@@ -9,6 +9,7 @@ public sealed partial class WorkspaceViewModel
     private async Task UploadGuardedWchLinkAsync(EmbeddedFlashRequest request, UsbDeviceInfo device)
     {
         var plan = WchLinkSession.Plan(request);
+        using var deviceReservation = SerialMonitor.ReserveDeviceOperation();
         using var cancellation = new CancellationTokenSource();
         _run = cancellation;
         State = IdeState.Running;
@@ -46,6 +47,7 @@ public sealed partial class WorkspaceViewModel
         var choice = devices.Count == 1 ? 0 : await Prompt.ChooseAsync("WCH-Link flash backup", "Choose the exact probe whose CH32V003 code flash should be read twice.", "Select", devices.Select(item => item.ToString()).ToArray());
         if (choice is null) throw new OperationCanceledException(token);
         var device = devices[choice.Value];
+        using var deviceReservation = SerialMonitor.ReserveDeviceOperation();
         await SerialMonitor.ReleaseAsync();
         await _toolchains.PrepareEmbeddedSupportAsync(line => Output.WriteLine(line, OutputKind.Info), token);
         return await WchLinkSession.BackupAsync(_toolchains.Runtime, cancellation => _toolchains.Usb.OpenAsync(device, cancellation),

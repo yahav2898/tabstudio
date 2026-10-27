@@ -19,7 +19,8 @@ public sealed class ProjectsTests
         Assert.Equal("esp32dev", project.Environments[0].Board);
         Assert.Equal("arduino", project.Environments[1].Framework);
         var plan = EmbeddedBuildPlanner.Plan(project, new EmbeddedBuildOptions { Port = "/dev/ttyUSB0" });
-        Assert.Equal("pio", Assert.Single(plan.Build).Program);
+        Assert.Equal(2, plan.Build.Count);
+        Assert.All(plan.Build, command => Assert.Equal("pio", command.Program));
         Assert.Equal(["run", "--environment", "debug", "--target", "upload", "--upload-port", "/dev/ttyUSB0"], Assert.Single(plan.Upload).Arguments);
         Assert.Equal(temp.Path, plan.Build[0].WorkingDirectory);
     }
@@ -32,7 +33,8 @@ public sealed class ProjectsTests
         var project = EmbeddedProjectDetector.Read(temp.Path)!;
         Assert.Null(project.DefaultEnvironment);
         var plan = EmbeddedBuildPlanner.Plan(project, new EmbeddedBuildOptions { Port = "/dev/ttyUSB0" });
-        Assert.Single(plan.Build);
+        Assert.Equal(2, plan.Build.Count);
+        Assert.All(plan.Build, command => Assert.DoesNotContain("--environment", command.Arguments));
         Assert.Empty(plan.Upload);
         Assert.Contains(plan.Notes, n => n.Contains("multiple default", StringComparison.Ordinal));
     }
@@ -44,8 +46,41 @@ public sealed class ProjectsTests
         temp.Write("platformio.ini", "[env:uno]\nboard=uno");
         var plan = EmbeddedBuildPlanner.Plan(EmbeddedProjectDetector.Read(temp.Path)!,
             new EmbeddedBuildOptions { Environment = "imported-debug" });
-        Assert.Contains("imported-debug", Assert.Single(plan.Build).Arguments);
+        Assert.Equal(2, plan.Build.Count);
+        Assert.All(plan.Build, command => Assert.Contains("imported-debug", command.Arguments));
         Assert.Contains(plan.Notes, n => n.Contains("extra_configs", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void PlatformIO_generates_native_compilation_database_after_build_with_the_same_policy_and_environment()
+    {
+        using var temp = new TempDirectory();
+        var configuration = "[env:uno]\nboard=uno\nextra_scripts=pre:prepare.py\n";
+        temp.Write("platformio.ini", configuration);
+        temp.Write("prepare.py", "Import('env')\nenv.Append(CPPDEFINES=['FROM_PROJECT_SCRIPT'])\n");
+        var plan = EmbeddedBuildPlanner.Plan(EmbeddedProjectDetector.Read(temp.Path)!,
+            new EmbeddedBuildOptions { Environment = "uno", Jobs = 3, HostPackageMode = "native" });
+        Assert.Equal(2, plan.Build.Count);
+        Assert.Equal(["run", "--environment", "uno", "--jobs", "3"], plan.Build[0].Arguments);
+        Assert.Equal(["run", "--environment", "uno", "--target", "compiledb", "--jobs", "3"], plan.Build[1].Arguments);
+        Assert.Equal(plan.Build[0].Environment, plan.Build[1].Environment);
+        Assert.Equal(Path.Combine(temp.Path, "compile_commands.json"), plan.CompilationDatabase);
+        Assert.Equal(configuration, File.ReadAllText(Path.Combine(temp.Path, "platformio.ini")));
+        Assert.DoesNotContain(plan.Build.SelectMany(command => command.Arguments), argument => argument.Contains("extra_scripts", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void PlatformIO_preserves_an_existing_user_compilation_database()
+    {
+        using var temp = new TempDirectory();
+        temp.Write("platformio.ini", "[env:uno]\nboard=uno\n");
+        const string database = "[{\"directory\":\"/reviewed\",\"command\":\"custom-gcc -DKEEP_USER_FLAGS\",\"file\":\"main.c\"}]\n";
+        var path = temp.Write("compile_commands.json", database);
+        var plan = EmbeddedBuildPlanner.Plan(EmbeddedProjectDetector.Read(temp.Path)!);
+        Assert.Single(plan.Build);
+        Assert.DoesNotContain("compiledb", plan.Build[0].Arguments);
+        Assert.Equal(path, plan.CompilationDatabase);
+        Assert.Equal(database, File.ReadAllText(path));
     }
 
     [Theory]
@@ -84,6 +119,10 @@ public sealed class ProjectsTests
         Assert.Null(safeRun.Build);
         Assert.Equal("pio", safeRun.Run.Program);
         Assert.DoesNotContain("upload", safeRun.Run.Arguments);
+        Assert.Contains("compiledb", safeRun.Run.Arguments);
+        var firmwareBuild = Assert.Single(safeRun.Preparation!);
+        Assert.DoesNotContain("compiledb", firmwareBuild.Arguments);
+        Assert.DoesNotContain("upload", firmwareBuild.Arguments);
     }
 
     [Fact]
@@ -274,7 +313,8 @@ public sealed class ProjectsTests
         Assert.True(project.HasNativeEnvironmentSelection);
         Assert.Null(project.DefaultEnvironment);
         var plan = EmbeddedBuildPlanner.Plan(project, new EmbeddedBuildOptions { Port = "/dev/ttyUSB0" });
-        Assert.DoesNotContain("--environment", Assert.Single(plan.Build).Arguments);
+        Assert.Equal(2, plan.Build.Count);
+        Assert.All(plan.Build, command => Assert.DoesNotContain("--environment", command.Arguments));
         Assert.Empty(plan.Upload);
     }
 

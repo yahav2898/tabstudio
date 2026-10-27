@@ -21,6 +21,7 @@ public sealed partial class WorkspaceViewModel
     private IUsbConnection? _embeddedDebugUsb;
     private UsbfsInventory? _embeddedDebugInventory;
     private CancellationTokenSource? _embeddedDebugCancellation;
+    private IDisposable? _embeddedDebugDeviceReservation;
     private Task _embeddedDebugCleanup = Task.CompletedTask;
 
     /// <summary>Builds matching symbols, opens the selected probe, and attaches the IDE's real GDB DAP debugger.</summary>
@@ -88,6 +89,7 @@ public sealed partial class WorkspaceViewModel
                 var spec = profile.CreateServer(project.Directory, scripts, port, rttPort, memoryRegions);
                 if (_toolchains.Environment is not null)
                 {
+                    _embeddedDebugDeviceReservation = SerialMonitor.ReserveDeviceOperation();
                     await SerialMonitor.ReleaseAsync();
                     await _toolchains.PrepareEmbeddedSupportAsync(line => Output.WriteLine(line, OutputKind.Info), token);
                     var devices = _toolchains.Usb.Devices;
@@ -95,6 +97,7 @@ public sealed partial class WorkspaceViewModel
                     var index = devices.Count == 1 ? 0 : await Prompt.ChooseAsync("Debug probe", "Choose the probe connected to the target chip.", "Select", devices.Select(device => device.ToString()).ToArray());
                     if (index is null) return;
                     _embeddedDebugUsb = await _toolchains.Usb.OpenAsync(devices[index.Value], token);
+                    BindEmbeddedDebugDeviceReservation(_embeddedDebugUsb.Device.Id);
                     spec = UsbBridgeProcess.CreateLibUsb(_embeddedDebugUsb, spec);
                 }
                 token.ThrowIfCancellationRequested();
@@ -243,6 +246,16 @@ public sealed partial class WorkspaceViewModel
         await DebugEmbeddedChipAsync();
     }
 
+    private void BindEmbeddedDebugDeviceReservation(string deviceId)
+    {
+        // Acquire the scoped lease before releasing startup's global lease:
+        // the debug probe is never available to the monitor in between.
+        var reservation = SerialMonitor.ReserveDeviceOperation(deviceId);
+        var previous = _embeddedDebugDeviceReservation;
+        _embeddedDebugDeviceReservation = reservation;
+        previous?.Dispose();
+    }
+
     /// <summary>Stops the server and releases USB only after its process exits. Safe during workspace disposal.</summary>
     private void DisposeEmbeddedDebug()
     {
@@ -251,17 +264,19 @@ public sealed partial class WorkspaceViewModel
         var usb = _embeddedDebugUsb;
         var inventory = _embeddedDebugInventory;
         var cancellation = _embeddedDebugCancellation;
+        var reservation = _embeddedDebugDeviceReservation;
         _embeddedDebugServer = null;
         _embeddedDebugUsb = null;
         _embeddedDebugInventory = null;
         _embeddedDebugCancellation = null;
+        _embeddedDebugDeviceReservation = null;
         cancellation?.Cancel();
-        if (server is null && usb is null && inventory is null && cancellation is null) return;
+        if (server is null && usb is null && inventory is null && cancellation is null && reservation is null) return;
         server?.Stop();
-        _embeddedDebugCleanup = DisposeEmbeddedBackendAsync(server, usb, inventory, cancellation);
+        _embeddedDebugCleanup = DisposeEmbeddedBackendAsync(server, usb, inventory, cancellation, reservation);
     }
 
-    private static async Task DisposeEmbeddedBackendAsync(ToolchainProcess? server, IUsbConnection? usb, UsbfsInventory? inventory, CancellationTokenSource? cancellation)
+    private static async Task DisposeEmbeddedBackendAsync(ToolchainProcess? server, IUsbConnection? usb, UsbfsInventory? inventory, CancellationTokenSource? cancellation, IDisposable? reservation)
     {
         try { if (server is not null) await server.Completion.ConfigureAwait(false); }
         finally
@@ -270,7 +285,11 @@ public sealed partial class WorkspaceViewModel
             finally
             {
                 try { inventory?.Dispose(); }
-                finally { usb?.Dispose(); cancellation?.Dispose(); }
+                finally
+                {
+                    try { usb?.Dispose(); cancellation?.Dispose(); }
+                    finally { reservation?.Dispose(); }
+                }
             }
         }
     }

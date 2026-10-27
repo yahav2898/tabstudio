@@ -217,11 +217,11 @@ public static class EmbeddedFlashPlanner
                     {
                         throw new ArgumentException("A raw binary needs its target address.", nameof(request));
                     }
-                    Add("picotool", "load", "-v", "-x", "-t", "bin", "-o", "0x" + address, firmware);
+                    Add("picotool", "load", "--ignore-partitions", "-v", "-x", "-t", "bin", "-o", "0x" + address, firmware);
                 }
                 else
                 {
-                    Add("picotool", "load", "-v", "-x", firmware);
+                    Add("picotool", "load", "--ignore-partitions", "-v", "-x", firmware);
                 }
                 break;
             case EmbeddedFlashProtocol.Bossac:

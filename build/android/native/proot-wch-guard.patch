@@ -33,3 +33,11 @@
  		word_t cmd = peek_reg(tracee, CURRENT, SYSARG_2);
  		word_t arg = peek_reg(tracee, CURRENT, SYSARG_3);
  
+--- a/src/syscall/seccomp.c
++++ b/src/syscall/seccomp.c
+@@ -373,3 +373,2 @@
+-#ifdef __ANDROID__
+-	{ PR_ioctl,		FILTER_SYSEXIT },
+-#endif
++	/* Keep the native permissioned USB broker in the seccomp trace set. */
++	{ PR_ioctl,		FILTER_SYSEXIT },

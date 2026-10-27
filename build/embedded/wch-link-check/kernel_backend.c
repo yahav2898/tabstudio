@@ -4,16 +4,26 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
+#include <sys/ptrace.h>
+#include <sys/stat.h>
+#include <sys/syscall.h>
+#include <sys/uio.h>
+#include <sys/user.h>
 #include <linux/usbdevice_fs.h>
 #include <linux/usb/ch9.h>
+#include <linux/audit.h>
+#include <linux/filter.h>
+#include <linux/seccomp.h>
 #include <pthread.h>
 #include <stdarg.h>
+#include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/prctl.h>
 
 #define MAX_LIVE 64
 #define MAX_PACKETS 512
@@ -36,10 +46,20 @@ static bool writing_loader, writing_program;
 static unsigned violations, wire_out;
 static const char *scenario;
 static int (*real_ioctl)(int, unsigned long, ...);
+static long (*real_ptrace)(enum __ptrace_request, ...);
+static int (*real_prctl)(int, ...);
 
 static bool active(int fd) {
     const char *pid = getenv("TABSTUDIO_TEST_TRACER_PID");
     return fd == 3 && pid && strtol(pid, NULL, 10) == (long)getpid();
+}
+static bool descriptor_socket(pid_t tracee, unsigned long fd) {
+    struct stat expected, actual;
+    char path[96];
+    if (fstat(3, &expected) != 0 || !S_ISSOCK(expected.st_mode)) return false;
+    int count = snprintf(path, sizeof path, "/proc/%ld/fd/%lu", (long)tracee, fd);
+    return count > 0 && count < (int)sizeof path && stat(path, &actual) == 0 &&
+        expected.st_dev == actual.st_dev && expected.st_ino == actual.st_ino && S_ISSOCK(actual.st_mode);
 }
 static void event(const char *kind, unsigned endpoint, const unsigned char *bytes, size_t length) {
     if (!log_file) return;
@@ -241,6 +261,80 @@ int ioctl(int fd, unsigned long request, ...) {
     if (!real_ioctl) *(void **)(&real_ioctl) = dlsym(RTLD_NEXT, "ioctl");
     if (!active(fd)) return real_ioctl(fd, request, arg);
     pthread_mutex_lock(&gate); int result = backend(request, arg); pthread_mutex_unlock(&gate); return result;
+}
+/* A real USBFS descriptor is seekable and epoll-able. A socketpair supplies
+ * epoll readiness and descriptor bytes without requiring a USB kernel device,
+ * but Linux rejects its lseek(0). Emulate only that one kernel behavior in the
+ * test-only tracer backend, after the actual syscall returned ESPIPE. The
+ * unchanged stock executable keeps its raw-syscall nusb backend; no shim is
+ * loaded into it and no production PRoot/guard syscall path is replaced.
+ * This hook never applies to an actual USB descriptor or another process/FD.
+ */
+long ptrace(enum __ptrace_request request, ...) {
+    va_list ap; va_start(ap, request);
+    pid_t pid = va_arg(ap, pid_t);
+    void *address = va_arg(ap, void *), *data = va_arg(ap, void *);
+    va_end(ap);
+    if (!real_ptrace) *(void **)(&real_ptrace) = dlsym(RTLD_NEXT, "ptrace");
+    long result = real_ptrace(request, pid, address, data);
+    if (result != 0 || !active(3)) return result;
+#if defined(__x86_64__)
+    struct user_regs_struct *registers = NULL;
+    if (request == PTRACE_GETREGS) registers = data;
+    else if (request == PTRACE_GETREGSET && (uintptr_t)address == 1 && data) {
+        struct iovec *iov = data;
+        if (iov->iov_len >= sizeof(struct user_regs_struct)) registers = iov->iov_base;
+    }
+    if (registers && registers->orig_rax == SYS_lseek && (long)registers->rax == -ESPIPE &&
+        registers->rsi == 0 && registers->rdx == SEEK_SET && descriptor_socket(pid, registers->rdi)) {
+        unsigned long previous = registers->rax;
+        registers->rax = 0;
+        long changed = request == PTRACE_GETREGS
+            ? real_ptrace(PTRACE_SETREGS, pid, NULL, registers)
+            : real_ptrace(PTRACE_SETREGSET, pid, address, data);
+        if (changed != 0) registers->rax = previous;
+        else {
+            pthread_mutex_lock(&gate); initialize();
+            if (log_file) { fprintf(log_file, "SYNTHETIC_DESCRIPTOR_REWIND tracee=%ld fd=%lu\n", (long)pid, (unsigned long)registers->rdi); fflush(log_file); }
+            pthread_mutex_unlock(&gate);
+        }
+    }
+#endif
+    return result;
+}
+int prctl(int option, ...) {
+    va_list ap; va_start(ap, option);
+    unsigned long argument2 = va_arg(ap, unsigned long);
+    void *argument3 = va_arg(ap, void *);
+    unsigned long argument4 = 0, argument5 = 0;
+    if (option != PR_SET_SECCOMP) { argument4 = va_arg(ap, unsigned long); argument5 = va_arg(ap, unsigned long); }
+    va_end(ap);
+    if (!real_prctl) *(void **)(&real_prctl) = dlsym(RTLD_NEXT, "prctl");
+    const char *tracer = getenv("TABSTUDIO_TEST_TRACER_PID");
+    struct stat socket_identity;
+    bool fixture_child = tracer && strtol(tracer, NULL, 10) == (long)getppid() &&
+        fstat(3, &socket_identity) == 0 && S_ISSOCK(socket_identity.st_mode);
+    if (option == PR_SET_SECCOMP && argument2 == SECCOMP_MODE_FILTER && argument3 && fixture_child) {
+        const struct sock_fprog *original = argument3;
+        struct sock_filter prefix[] = {
+            BPF_STMT(BPF_LD | BPF_W | BPF_ABS, offsetof(struct seccomp_data, arch)),
+            BPF_JUMP(BPF_JMP | BPF_JEQ | BPF_K, AUDIT_ARCH_X86_64, 0, 3),
+            BPF_STMT(BPF_LD | BPF_W | BPF_ABS, offsetof(struct seccomp_data, nr)),
+            BPF_JUMP(BPF_JMP | BPF_JEQ | BPF_K, SYS_lseek, 0, 1),
+            BPF_STMT(BPF_RET | BPF_K, SECCOMP_RET_TRACE | 1), /* PRoot FILTER_SYSEXIT */
+        };
+        size_t count = sizeof(prefix) / sizeof(prefix[0]);
+        if (!original->filter || original->len > 4096 - count) { errno = EINVAL; return -1; }
+        struct sock_filter *instructions = malloc((original->len + count) * sizeof(*instructions));
+        if (!instructions) { errno = ENOMEM; return -1; }
+        memcpy(instructions, prefix, sizeof(prefix));
+        memcpy(instructions + count, original->filter, original->len * sizeof(*instructions));
+        struct sock_fprog extended = {.len = (unsigned short)(original->len + count), .filter = instructions};
+        int result = real_prctl(option, argument2, &extended, 0, 0);
+        int saved = errno; free(instructions); errno = saved;
+        return result;
+    }
+    return real_prctl(option, argument2, argument3, argument4, argument5);
 }
 __attribute__((destructor)) static void finish(void) {
     if (initialized && log_file) { fprintf(log_file, "SUMMARY wireOut=%u violations=%u loaderBytes=%zu programBytes=%zu\n", wire_out, violations, loader_length, program_length); fclose(log_file); }

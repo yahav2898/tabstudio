@@ -35,7 +35,7 @@ The existing PIC F5 simulator and ordinary language F5 behavior remain documente
 
 | Project | Detection and native build | IntelliSense and limits |
 | --- | --- | --- |
-| PlatformIO | `platformio.ini`; `pio run`, preserving environments, inheritance, platform versions and native scripts | Existing `compile_commands.json` is preserved. Run `pio run -t compiledb` for exact clangd flags. Core is installed; every platform's ARM64/musl package availability is a separate question. |
+| PlatformIO | `platformio.ini`; `pio run`, preserving environments, inheritance, platform versions and native scripts | The first successful build generates Core's actual compilation database when none exists; existing user databases and native scripts are preserved. Core is installed; each platform's ARM64 package compatibility is qualified separately. |
 | Arduino sketches and libraries | `.ino`, `sketch.yaml`, `library.properties`; `arduino-cli compile` with an explicit FQBN; a library requires an explicit `Sketch` example directory | The build first requests Arduino's compilation database. Install the selected board core/libraries separately. A library itself is not an executable sketch. |
 | STM32CubeMX/CubeIDE | `.ioc` plus generated CMake or Make files; preserve their startup, CPU flags and linker script | CMake exports compilation commands. An Eclipse `.cproject` is not independently translated into a complete Cube build; generate/retain a portable build first. CubeMX's generator is not bundled. |
 | ESP-IDF | IDF CMake markers, `sdkconfig`; `idf.py` with the selected target | The native glibc recipe pins ESP-IDF 5.4.1 and its submodules, vendor tool hashes and Python distributions. The selected target remains native project configuration; third-party components can have their own prerequisites. |
@@ -49,6 +49,12 @@ Build commands use argument arrays, not shell interpolation. SDK launchers must 
 runtime. Exporting a variable in an unrelated Terminal session does not configure later IDE build processes.
 PlatformIO's native upload commands and SDK runners are represented in build plans, but the safe Upload command
 uses the reviewed flash profile; it does not execute arbitrary runner flags around the flash safety checks.
+
+Clangd receives the planned compilation-database directory for embedded SDK builds, including
+`.tabstudio/embedded/build`; explicit clangd arguments, user YAML database choices and existing root/ancestor databases
+remain authoritative, and opening a project never enables compiler-driver execution through `--query-driver`.
+Cross-compiler builtin headers can require explicit include/sysroot settings in the project database; a compiler
+path read from a repository does not automatically become an executable trusted by clangd.
 
 An example build configuration is:
 
@@ -179,7 +185,7 @@ hardware-unverified:
 | wchisp | Official 0.3.0 source archive, SHA-256 pinned from downloaded bytes | Native Alpine Rust build with `--locked --no-default-features --jobs 2`. Cargo.lock pins/checks dependencies; dynamic system libusb enables the descriptor bridge. Actual x64 source/version/PATH/dynamic-link smoke passed locally; ARM64/musl recipe is exercised in CI. |
 | mspdebug | Official v0.26 source archive, SHA-256 pinned from downloaded bytes | Native Alpine C build, readline omitted, libusb-compat dynamic backend. Actual x64 source/version/PATH smoke and the tool's simulator program/verify/mismatch checks passed locally. Source, license and upstream TI3410 transport firmware are retained. ARM64/musl recipe is exercised in CI. |
 | pymcuprog UART UPDI | Existing 3.19.4.61 MIT wheel and support wheels, SHA-256 pinned | Existing PIC support downloader; no XC compiler or XC license download. |
-| pc-nrfutil 6.1.7 | Byte-identical self-contained legacy executable inside the SHA-256-pinned official Nordic nrf5sdk-tools 1.1.0 bundle | Downloaded directly from Nordic on demand; complete licenses/docs retained. Native x64 or explicit ARM64 Box64 with a separately compiled guest serial shim. Native x64 synthetic Secure DFU succeeds and bad CRC fails; actual ARM64 ABI qualification gates listing the Store entry. |
+| pc-nrfutil 6.1.7 | Byte-identical self-contained legacy executable inside the SHA-256-pinned official Nordic nrf5sdk-tools 1.1.0 bundle | Downloaded directly from Nordic on demand; complete licenses/docs retained. Native x64 or explicit ARM64 Box64 with a separately compiled guest serial shim. Verified on CI: the production installer and unchanged CLI complete synthetic serial/USB-serial DFU on native x64 and ARM64 Box64, and reject bad CRC. These are virtual-peer traces, not physical captures. |
 
 Installers validate the native executable/capabilities before creating PATH aliases. Sources and upstream licenses
 are retained. CI runs the same helpers on x64 and ARM64 and checks that native USB clients link the expected dynamic
@@ -191,7 +197,7 @@ with locked setuptools/wheel and no isolated dependency downloads. The app insta
 constraints file and runs the unmodified upstream checker offline; it does not fetch rolling Python constraints
 or run `install-python-env`. Clean x64 installation, `pip check`, upstream version checks and ARM64 archive/hash
 selection passed locally. Actual SDK firmware builds use the separate production installer CI matrix;
-project-selected components keep their own dependency manifests/locks and licenses. Pico SDK, Zephyr and
+project-selected components keep their own dependency manifests/locks and licenses. ESP-IDF, Pico SDK, Zephyr and
 embedded Rust are offered in the Store after their production installer and actual firmware builds passed
 on native ARM64 and x64 CI runners; these host CPU checks do not qualify physical Android USB operation.
 
@@ -336,6 +342,14 @@ from the actual volume. The selected project's flash profile must name its `.uf2
 Every block must contain the correct RP2040/RP2350 family, a unique aligned 256-byte payload and an address
 inside both those ranges and the conservative first 16 MiB XIP window. RAM, OTP, non-main-flash, mixed-family,
 extension and custom white-labeled bootloader containers are refused by this route.
+
+The official Pico SDK can prepend an RP2350-E10 absolute block to a Pico 2 UF2. This is a separate logical UF2
+with its own block count and the `0x9957e304` ignore tag. It is refused explicitly: RP2350 A2 writes it and erases
+the last flash block, potentially including user data; only A3 and later ignore the tag. The BOOTSEL volume's
+board identity does not establish the ROM revision. Select the build's ELF and the `Picotool` upload route instead.
+The bytes are never discarded as harmless metadata. The [RP2350 datasheet, erratum E10](https://pip-assets.raspberrypi.com/categories/1214-rp2350/documents/RP-008373-DS-2-rp2350-datasheet.pdf)
+and the pinned [picotool generator](https://github.com/raspberrypi/picotool/blob/2041936441b48a3cc53ae3da9e805229fe8f4e18/elf2uf2/elf2uf2.cpp)
+establish this distinction; an actual official-tool output fixture exercises refusal before any FAT write.
 
 The block worker issues bounded SCSI INQUIRY, READ CAPACITY, READ(10) and WRITE(10) commands through the existing
 USB descriptor bridge. Its read-only phase checks the actual 512-byte BPB and FAT12/16/32 allocation, mirrors or
@@ -665,7 +679,8 @@ to compile/link on both x64 and ARM64, runs the existing patched-Box64 32-child/
 inherited FD 3, and compares the complete resulting AVR ELF bytes across runners. A separate loopback-registry fixture uses the
 real pinned PlatformIO manager, HTTP mirror, archive and checksum path to require native download before
 an exact-version x64 retry, refusal of the incompatible native postinstall, unchanged retained binaries and
-independent native-only/postinstall-generated-executable refusal. These are CI requirements;
+independent native-only/postinstall-generated-executable refusal. Core's separate SCons processes retain
+the same package policy, and a real compiler error propagates as a failed build. These are CI requirements;
 they are not physical tablet/USB qualification or a claim that every x86-only platform is compatible.
 
 Frozen x64 serial clients additionally require the control shim compiled for x64. Their Box64 child clears

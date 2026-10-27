@@ -25,6 +25,9 @@ public sealed record EmbeddedSdkRecipe(string Id, string Revision, Uri Repositor
     /// <summary>Architecture-filtered release archives and their setup commands, verified using the existing downloader.</summary>
     public IReadOnlyList<SetupStepDefinition> Setup { get; init; } = [];
 
+    /// <summary>Existing Store packages installed in the shared guest before this SDK's commands run.</summary>
+    public IReadOnlyList<string> RequiredToolchains { get; init; } = [];
+
     /// <summary>Additional app-owned installation directories removed when uninstalling this SDK.</summary>
     public IReadOnlyList<string> Removes { get; init; } = [];
 

@@ -55,6 +55,13 @@ def main():
     original = Path(record["original"]) / "bin/avr-gcc"
     if not boxed.x86_executable(original):
         raise ValueError("The compiler fixture must actually be x86-64")
+    from platformio.package.manager.platform import PlatformPackageManager
+    from platformio.package.manager.core import get_core_package_dir
+    platform_package = PlatformPackageManager().install("platformio/atmelavr@5.3.0", skip_dependencies=True)
+    run([sys.executable, "-P", str(Path(__file__).with_name("platformio-child-policy-check.py")),
+         "--compiler", original.parent.parent, "--platform", platform_package.path,
+         "--scons", get_core_package_dir("tool-scons"),
+         "--helper", Path(boxed.__file__).resolve(), "--work", root / "fresh-scons-policy"])
     source = root / "blink.c"
     source.write_text("#include <avr/io.h>\nint main(void){DDRB|=_BV(5);for(;;)PORTB^=_BV(5);}\n")
     firmware = root / "firmware.elf"
@@ -77,7 +84,7 @@ def main():
     evidence = {"hardwareVerified": False, "architecture": platform.machine(),
                 "translated": platform.machine() == "aarch64", "package": "platformio/toolchain-atmelavr@1.70300.191015",
                 "compilerSha256": hashlib.sha256(original.read_bytes()).hexdigest(),
-                "firmwareSha256": hashlib.sha256(data).hexdigest(), "childCount": 32, "inheritedFd": 3}
+                "firmwareSha256": hashlib.sha256(data).hexdigest(), "childCount": 32, "inheritedFd": 3, "freshSConsPolicyVerified": True}
     (root / "summary.json").write_text(json.dumps(evidence, indent=2))
     print("BOX64_COMPILER_CHILD_FD_PASSED", json.dumps(evidence), flush=True)
 

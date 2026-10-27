@@ -198,6 +198,7 @@ public sealed class EmbeddedGlibcTests
     public async Task Source_SDK_installation_verifies_its_commit_and_firmware_before_readiness_and_removes_owned_caches()
     {
         using var fixture = new InstallerFixture();
+        await fixture.RegisterSdkDependenciesAsync();
         var sdk = ToolchainCatalog.Default.Find("pico-sdk")!;
         var recipe = EmbeddedSdkBootstrap.Recipes.Get(sdk.Id)!;
         fixture.Guest.CommandOutput = spec => spec.Program == "git" && spec.Arguments.Contains("rev-parse") ? recipe.Revision : null;
@@ -223,23 +224,43 @@ public sealed class EmbeddedGlibcTests
         Assert.Contains(fixture.Guest.Started, spec => spec.Program == "git" && spec.Arguments.Contains("protocol.file.allow=never"));
         Assert.All(fixture.Guest.Started.Where(spec => spec.Program == "cmake"), spec =>
             Assert.StartsWith(EmbeddedSdkBootstrap.BuildToolsDirectory + ":", spec.Environment["PATH"], StringComparison.Ordinal));
+        var configPath = Path.Combine(fixture.Installer.Rootfs, EmbeddedFlashToolInstallation.PicotoolCMakeDirectory.TrimStart('/'), "picotoolConfig.cmake");
+        var config = File.ReadAllText(configPath);
+        File.Delete(configPath);
+        Assert.False(fixture.Installer.IsToolchainReady("embedded-picotool"));
+        Assert.False(fixture.Installer.IsToolchainReady(sdk.Id));
+        File.WriteAllText(configPath, config);
         await fixture.Installer.RemoveAsync(sdk, [], null, CancellationToken.None);
         Assert.False(fixture.Installer.IsToolchainReady(sdk.Id));
         Assert.False(Directory.Exists(Path.Combine(fixture.Installer.Rootfs, recipe.SourceDirectory.TrimStart('/'))));
         Assert.All(recipe.Removes, path => Assert.False(Directory.Exists(Path.Combine(fixture.Installer.Rootfs, path.TrimStart('/')))));
         Assert.True(File.Exists(Path.Combine(fixture.Installer.Rootfs, "opt/tabstudio/embedded/serial-posix.so")));
+        Assert.True(fixture.Installer.IsToolchainReady("embedded-picotool")); // The shared verified package has its own owner/marker.
     }
 
     [Fact]
     public async Task A_source_checkout_that_reports_the_wrong_commit_never_runs_SDK_setup()
     {
         using var fixture = new InstallerFixture();
+        await fixture.RegisterSdkDependenciesAsync();
         var sdk = ToolchainCatalog.Default.Find("pico-sdk")!;
         fixture.Guest.CommandOutput = spec => spec.Program == "git" && spec.Arguments.Contains("rev-parse") ? new string('0', 40) : null;
         var failure = await Assert.ThrowsAsync<ToolchainInstallException>(() => fixture.Installer.InstallAsync(sdk, null, CancellationToken.None));
         Assert.Equal(InstallFailure.IntegrityFailed, failure.Failure);
         Assert.DoesNotContain(fixture.Guest.Started, spec => spec.Program == "cmake");
         Assert.False(fixture.Installer.IsToolchainReady(sdk.Id));
+    }
+
+    [Fact]
+    public async Task A_failed_pinned_Pico_host_tool_stops_before_SDK_checkout_or_rolling_tool_fetch()
+    {
+        using var fixture = new InstallerFixture();
+        await fixture.RegisterSdkDependenciesAsync();
+        fixture.Guest.FailProgram = "picotool";
+        await Assert.ThrowsAsync<ToolchainInstallException>(() => fixture.Installer.InstallAsync(ToolchainCatalog.Default.Find("pico-sdk")!, null, CancellationToken.None));
+        Assert.False(fixture.Installer.IsToolchainReady("embedded-picotool"));
+        Assert.False(fixture.Installer.IsToolchainReady("pico-sdk"));
+        Assert.DoesNotContain(fixture.Guest.Started, command => command.Program is "git" or "cmake");
     }
 
     [Fact]
@@ -379,6 +400,24 @@ public sealed class EmbeddedGlibcTests
                 DnsServers = () => ["192.0.2.53"],
             }, new Downloader(_http) { RetryDelay = TimeSpan.Zero }, [], Guest);
         }
+
+        public Task<IReadOnlyList<ToolchainStatus>> RegisterSdkDependenciesAsync() => Installer.ReadStatusAsync(
+        [
+            ToolchainCatalog.Default.Find("embedded-picotool")! with
+            {
+                Setup =
+                [
+                    new SetupStepDefinition
+                    {
+                        Name = "test native picotool launcher", File = new FileDefinition { Path = "/usr/local/bin/picotool", Executable = true, Content = "#!/bin/sh\n" },
+                    },
+                    .. EmbeddedFlashToolInstallation.PicotoolArtifacts.Select(path => new SetupStepDefinition
+                    {
+                        Name = "test upstream picotool package file", File = new FileDefinition { Path = path, Content = "test package data\n" },
+                    }),
+                ],
+            },
+        ], false, CancellationToken.None);
         public void Dispose() { Installer.Dispose(); _http.Dispose(); _temp.Dispose(); }
     }
 
@@ -402,7 +441,8 @@ public sealed class EmbeddedGlibcTests
                 Directory.CreateDirectory(Path.GetDirectoryName(file)!);
                 File.WriteAllText(file, "test ABI shared library");
             }
-            var text = CommandOutput?.Invoke(spec) ?? (spec.Arguments.Contains("--virtual") ? "EMBEDDED_BRIDGE_PASSED" : "PlatformIO Core, version 6.1.18");
+            var text = CommandOutput?.Invoke(spec) ?? (spec.Arguments.Contains("--virtual") ? "EMBEDDED_BRIDGE_PASSED"
+                : spec.Program == "picotool" ? "picotool v2.3.1" : "PlatformIO Core, version 6.1.18");
             return new ToolchainProcess(new FakeHandle(spec.Program == FailProgram ? 1 : 0, text), spec);
         }
         public bool HasCommand(string command) => true;

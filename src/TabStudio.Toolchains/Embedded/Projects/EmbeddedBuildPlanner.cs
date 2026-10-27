@@ -125,13 +125,18 @@ public static class EmbeddedBuildPlanner
                 {
                     notes.Add("Select one PlatformIO environment and a granted upload port before uploading.");
                 }
-                if (File.Exists(Path.Combine(project.Directory, "compile_commands.json")))
+                compilationDatabase = Path.Combine(project.Directory, "compile_commands.json");
+                if (!File.Exists(compilationDatabase))
                 {
-                    compilationDatabase = Path.Combine(project.Directory, "compile_commands.json");
+                    // Run only after the native build succeeds, using Core's real
+                    // SCons graph and the same environment/default selection.
+                    // Existing user databases and extra_scripts remain untouched.
+                    build.Add(PlatformIo(["run", .. selection, "--target", "compiledb", "--jobs", jobs]));
+                    notes.Add("After the first successful build, PlatformIO generates its native compilation database for clangd. A custom COMPILATIONDB_PATH remains owned by the project's scripts.");
                 }
                 else
                 {
-                    notes.Add("Generate PlatformIO's compilation database with pio run -t compiledb to enable exact clangd flags; existing databases are preserved.");
+                    notes.Add("The existing compile_commands.json is preserved. Regenerate it with the project's own build configuration when compiler flags change.");
                 }
                 notes.Add("PlatformIO owns its package versions and SHA-256 verification. Host executables are checked against their actual ELF architecture before package scripts or builds run.");
                 if (options.HostPackageMode != "native")
@@ -311,12 +316,12 @@ public static class EmbeddedBuildPlanner
     public static RunPlan RunPlan(EmbeddedProject project)
     {
         var plan = Plan(project);
-        if (plan.Build.Count != 1)
+        if (plan.Build.Count == 0)
         {
             throw new InvalidOperationException("Configure the embedded build in " + OptionsFile + ". "
                 + string.Join(" ", plan.Notes));
         }
-        return new RunPlan(null, plan.Build[0], project.Marker, plan.Preparation);
+        return new RunPlan(null, plan.Build[^1], project.Marker, [.. plan.Preparation, .. plan.Build.SkipLast(1)]);
     }
 
     private static void ValidateToken(string? value, string name)

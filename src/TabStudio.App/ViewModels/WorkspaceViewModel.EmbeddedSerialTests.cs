@@ -43,6 +43,7 @@ public sealed partial class WorkspaceViewModel
             {
                 throw new NotSupportedException("Select a USB-OTG serial device on Android to capture board tests. Desktop test logs can be imported into Test Explorer.");
             }
+            using var deviceReservation = SerialMonitor.ReserveDeviceOperation();
             await SerialMonitor.ReleaseAsync();
             using var cancellation = new CancellationTokenSource();
             _run = cancellation;

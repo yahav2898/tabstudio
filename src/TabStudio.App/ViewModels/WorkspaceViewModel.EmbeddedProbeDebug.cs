@@ -35,6 +35,7 @@ public sealed partial class WorkspaceViewModel
             string? selectedProbe = null;
             if (_toolchains.Environment is not null)
             {
+                _embeddedDebugDeviceReservation = SerialMonitor.ReserveDeviceOperation();
                 await SerialMonitor.ReleaseAsync();
                 await _toolchains.PrepareEmbeddedSupportAsync(line => Output.WriteLine(line, OutputKind.Info), token);
                 var devices = _toolchains.Usb.Devices;
@@ -42,6 +43,7 @@ public sealed partial class WorkspaceViewModel
                 var index = devices.Count == 1 ? 0 : await Prompt.ChooseAsync("Debug probe", "Choose the probe connected to the selected chip.", "Select", devices.Select(device => device.ToString()).ToArray());
                 if (index is null) return;
                 _embeddedDebugUsb = await _toolchains.Usb.OpenAsync(devices[index.Value], token);
+                BindEmbeddedDebugDeviceReservation(_embeddedDebugUsb.Device.Id);
                 var connection = _embeddedDebugUsb;
                 _embeddedDebugInventory = await Task.Run(() => UsbfsDeviceInventory.Create(connection, Path.Combine(_paths.Root, "EmbeddedUsb")), token);
                 spec = UsbBridgeProcess.CreateUsbfs(connection, _embeddedDebugInventory, spec);

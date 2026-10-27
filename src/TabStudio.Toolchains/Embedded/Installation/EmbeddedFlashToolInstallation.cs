@@ -5,6 +5,17 @@ namespace TabStudio.Toolchains.Embedded.Installation;
 /// <summary>Builds or validates hash-pinned flashing tools and adds explicit PATH aliases in their Alpine or glibc environment.</summary>
 public static class EmbeddedFlashToolInstallation
 {
+    /// <summary>Upstream's CMake package directory retained from the official picotool archive.</summary>
+    public const string PicotoolCMakeDirectory = "/opt/tabstudio/flash/picotool/picotool";
+
+    /// <summary>Native picotool and the complete upstream import package required by Pico SDK builds.</summary>
+    public static IReadOnlyList<string> PicotoolArtifacts { get; } =
+    [
+        PicotoolCMakeDirectory + "/picotool", PicotoolCMakeDirectory + "/picotoolConfig.cmake",
+        PicotoolCMakeDirectory + "/picotoolConfigVersion.cmake", PicotoolCMakeDirectory + "/picotoolTargets.cmake",
+        PicotoolCMakeDirectory + "/picotoolTargets-release.cmake",
+    ];
+
     /// <summary>Catalog IDs whose native download is followed by the common validation/launcher step.</summary>
     public static bool Handles(string id) => id is "embedded-esptool" or "embedded-picotool" or "embedded-bossac" or "embedded-teensy" or "embedded-wchisp" or "embedded-mspdebug" or EmbeddedNordicInstallation.Id or EmbeddedWlinkInstallation.Id;
 

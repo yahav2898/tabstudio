@@ -10,6 +10,13 @@ FD3. It supplies native USBFS ioctl completions against a socketpair. It is neve
 loaded into the wlink process or selected by product code. The socket carries valid USB descriptors;
 no `/dev` device, USB kernel module or physical probe is required.
 
+Because nusb rewinds a real USBFS descriptor before reading its descriptors, this test backend also
+emulates that single successful `lseek(fd, 0, SEEK_SET)` on the socket. The hook runs in the tracer,
+requires the exact socket identity and actual `ESPIPE` return, and records every synthetic rewind.
+The unchanged client still executes its ordinary descriptor reads and raw USBFS syscalls.
+With PRoot's seccomp accelerator enabled, the fixture adds only an `lseek` trace rule to its filter
+so this same test-only kernel emulation runs; all original USB syscall rules remain in force.
+
 The fixture checks:
 
 - The real CLI's complete unprotected flash protocol, the exact 512-byte loader, 1,037 actual firmware

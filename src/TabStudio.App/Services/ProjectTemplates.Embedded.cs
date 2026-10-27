@@ -76,7 +76,15 @@ public sealed partial class ProjectTemplates
             target_sources(app PRIVATE src/main.c)
             target_compile_options(app PRIVATE -fstack-usage)
             """ + "\n");
-        File.WriteAllText(Path.Combine(root, "prj.conf"), "CONFIG_PRINTK=y\nCONFIG_CONSOLE=y\nCONFIG_UART_CONSOLE=y\n");
+        File.WriteAllText(Path.Combine(root, "prj.conf"), "CONFIG_PRINTK=y\nCONFIG_CONSOLE=y\nCONFIG_UART_CONSOLE=y\nCONFIG_NRF_APPROTECT_USE_UICR=y\n");
+        File.WriteAllText(Path.Combine(root, "app.overlay"), """
+            /* Preserve persistent UICR pin settings. The upstream DK enables gpio-as-nreset;
+             * that setting changes UICR during SystemInit, so the greeting deliberately omits it. */
+            &uicr {
+                /delete-property/ gpio-as-nreset;
+                /delete-property/ nfct-pins-as-gpios;
+            };
+            """ + "\n");
         File.WriteAllText(Path.Combine(root, "src", "main.c"), """
             #include <zephyr/kernel.h>
             #include <zephyr/sys/printk.h>
@@ -103,7 +111,8 @@ public sealed partial class ProjectTemplates
 
             This is a complete standalone Zephyr application without a SoftDevice. Upload replaces
             overlapping application flash; preserve a required SoftDevice by building a matching
-            partitioned project instead. No UICR, protection or option update is generated.
+            partitioned project instead. app.overlay preserves the existing UICR reset/NFC pin settings;
+            APPROTECT uses the existing UICR policy. No persistent protection or option update is generated.
             Physical probe, firmware and UART behavior still require hardware verification.
             """ + "\n");
         WriteFlashProfile(root, new()
@@ -274,10 +283,23 @@ public sealed partial class ProjectTemplates
             }
             """ + "\n");
         File.WriteAllText(Path.Combine(root, ".gitignore"), "build/\n.tabstudio/\n");
+        File.WriteAllText(Path.Combine(root, "README.md"), """
+            # Pico SDK serial greeting
+
+            Install the Pico SDK Toolchain Store package. Its existing SHA-256-pinned picotool
+            dependency supplies both native firmware packaging and uploads; no rolling source fetch
+            is needed. Hold BOOTSEL while connecting the board, then use F5 with its actual ROM USB device.
+
+            Pico 2 and Pico 2 W upload the addressed ELF through picotool. The SDK's UF2 output can
+            contain the RP2350 A2 E10 absolute workaround block, which may erase the final flash sector
+            on A2 silicon. TabStudio does not copy that image to BOOTSEL storage without a proven safe
+            ROM revision. The ELF route avoids the workaround block and preserves its checked flash bounds.
+            Hardware flashing, firmware execution and USB serial still require physical verification.
+            """ + "\n");
         WriteFlashProfile(root, new()
         {
             Protocol = EmbeddedFlashProtocol.Picotool, Target = board == "pico_w" ? "RP2040" : "RP2350",
-            FirmwarePath = ".tabstudio/embedded/build/" + name + ".uf2", WorkingDirectory = root,
+            FirmwarePath = ".tabstudio/embedded/build/" + name + (board == "pico_w" ? ".uf2" : ".elf"), WorkingDirectory = root,
             ApplicationFlash = [new(0x10000000, board == "pico_w" ? 2UL * 1024 * 1024 : 4UL * 1024 * 1024)],
         });
         return root;

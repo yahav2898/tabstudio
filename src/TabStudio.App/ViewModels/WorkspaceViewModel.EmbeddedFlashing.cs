@@ -133,6 +133,7 @@ public sealed partial class WorkspaceViewModel
             path = Path.GetFullPath(path, project.Directory);
             var capture = Path.Combine(project.Directory, ".tabstudio", "embedded", Guid.NewGuid().ToString("N") + ".dump.bin");
             Directory.CreateDirectory(Path.GetDirectoryName(capture)!);
+            using var deviceReservation = _toolchains.Environment is null ? null : SerialMonitor.ReserveDeviceOperation();
             using var cancellation = new CancellationTokenSource();
             _run = cancellation;
             State = IdeState.Running;
@@ -205,6 +206,7 @@ public sealed partial class WorkspaceViewModel
     {
         var connections = new List<IUsbConnection>();
         var probeLeases = new Dictionary<string, ProbeRsProductionLease>(StringComparer.Ordinal);
+        IDisposable? deviceReservation = null;
         try
         {
             if (_adapter is not null || IsDebugging || _embeddedDebugUsb is not null)
@@ -245,6 +247,7 @@ public sealed partial class WorkspaceViewModel
                 return;
             }
             using var cancellation = new CancellationTokenSource();
+            deviceReservation = SerialMonitor.ReserveDeviceOperation();
             _run = cancellation;
             State = IdeState.Running;
             StatusText = "Preparing production batch";
@@ -309,11 +312,12 @@ public sealed partial class WorkspaceViewModel
         catch (Exception error) when (IsEmbeddedError(error)) { EmbeddedFailure(error); }
         finally
         {
-            foreach (var lease in probeLeases.Values) lease.Dispose();
-            foreach (var connection in connections)
+            try
             {
-                connection.Dispose();
+                foreach (var lease in probeLeases.Values) lease.Dispose();
+                foreach (var connection in connections) connection.Dispose();
             }
+            finally { deviceReservation?.Dispose(); }
         }
     }
 

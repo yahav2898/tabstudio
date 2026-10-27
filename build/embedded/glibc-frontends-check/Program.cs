@@ -136,6 +136,8 @@ try
     // self-test. Both must load the glibc versions of the exact same native shim sources.
     await ProbeRsDapCheck.VerifyAsync(installer.Runtime, project, Path.Combine(output, "probe-rs-dap-initialize.json"), cancellation);
     evidence["probeRsDapInitialized"] = true;
+    await ProbeRsPresetCheck.VerifyAsync(installer.Runtime, project, Path.Combine(output, "probe-rs-preset-isolation.json"), cancellation);
+    evidence["probeRsManagedPresetIsolation"] = true;
     await Box64Check.VerifyAsync(installer, project, output, cancellation);
     evidence["box64CompilerAndChildDescriptors"] = true;
     var bridgeSpec = UsbBridgeProcess.CreateVirtualSelfTest();
@@ -210,6 +212,10 @@ async Task<CommandResult> RunAsync(IToolchainRuntime runtime, ProcessStartSpec c
     {
         throw new InvalidOperationException(command.Program + " failed: " + result.Tail(12));
     }
+    if (sdkId == "pico-sdk" && result.Output.Contains("Downloading Picotool", StringComparison.OrdinalIgnoreCase))
+    {
+        throw new InvalidOperationException("The Pico SDK attempted a source fetch instead of using its installed SHA-256-pinned picotool CMake package.");
+    }
     return result;
 }
 
@@ -233,7 +239,7 @@ async Task BuildSdkAsync(IToolchainRuntime runtime, ToolchainDefinition definiti
                 #include "pico/stdlib.h"
                 int main(void) { gpio_init(PICO_DEFAULT_LED_PIN); gpio_set_dir(PICO_DEFAULT_LED_PIN, GPIO_OUT); gpio_put(PICO_DEFAULT_LED_PIN, 1); return 0; }
                 """ + "\n", cancellation);
-            _ = await RunAsync(runtime, new() { Program = "cmake", Arguments = ["-S", ".", "-B", "build", "-G", "Ninja", "-DPICO_BOARD=pico", "-DPICO_NO_PICOTOOL=1", "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"], WorkingDirectory = project }, "sdk-configure.log");
+            _ = await RunAsync(runtime, new() { Program = "cmake", Arguments = ["-S", ".", "-B", "build", "-G", "Ninja", "-DPICO_BOARD=pico", "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"], WorkingDirectory = project }, "sdk-configure.log");
             build = await RunAsync(runtime, new() { Program = "cmake", Arguments = ["--build", "build", "--parallel", "2"], WorkingDirectory = project }, "sdk-build.log");
             artifact = Path.Combine(project, "build/tabstudio_sdk_check.elf");
             break;
@@ -329,6 +335,54 @@ async Task BuildSdkAsync(IToolchainRuntime runtime, ToolchainDefinition definiti
     evidence["firmwareSha256"] = Convert.ToHexStringLower(SHA256.HashData(bytes));
     evidence["compilerErrors"] = errors.Count;
     if (definition.Id == "zephyr") await BuildNordicStarterAsync(runtime, definition, project);
+    if (definition.Id == "pico-sdk") await BuildPicoStartersAsync(runtime, definition, project);
+}
+
+async Task BuildPicoStartersAsync(IToolchainRuntime runtime, ToolchainDefinition definition, string parent)
+{
+    var json = new JsonSerializerOptions(JsonSerializerDefaults.Web) { Converters = { new JsonStringEnumConverter() } };
+    var results = new List<object>();
+    foreach (var id in new[] { "picow", "pico2", "pico2w" })
+    {
+        var directory = Path.Combine(parent, "canonical-" + id);
+        ProjectTemplates.CreateForVerification("embedded-" + id, directory, "Firmware");
+        var project = EmbeddedProjectDetector.Read(directory) ?? throw new InvalidDataException("The generated Pico starter was not detected.");
+        var plan = EmbeddedBuildPlanner.Plan(project);
+        if (project.Kind != EmbeddedProjectKind.PicoSdk || plan.ToolchainId != "pico-sdk" || plan.Upload.Count != 0)
+            throw new InvalidDataException("The generated Pico SDK starter must build without uploading.");
+        var step = 0;
+        foreach (var command in plan.Preparation.Concat(plan.Build))
+        {
+            var result = await RunAsync(runtime, command, "canonical-" + id + "-build-" + step++ + ".log");
+            if (new ProblemMatcher(definition).FindErrors(result.Output.Split('\n'), _ => true).Count != 0)
+                throw new InvalidOperationException("The generated " + id + " starter produced Error List compiler errors.");
+        }
+        var request = JsonSerializer.Deserialize<EmbeddedFlashRequest>(await File.ReadAllTextAsync(Path.Combine(directory, ".tabstudio/embedded-flash.json"), cancellation), json)!;
+        request = request with { WorkingDirectory = directory, FirmwarePath = Path.GetFullPath(request.FirmwarePath, directory) };
+        var bytes = await File.ReadAllBytesAsync(request.FirmwarePath, cancellation);
+        var flash = EmbeddedFlashPlanner.Plan(request);
+        var uf2Path = Path.Combine(directory, ".tabstudio/embedded/build/Firmware.uf2");
+        var uf2 = await File.ReadAllBytesAsync(uf2Path, cancellation);
+        if (uf2.Length == 0 || uf2.Length % 512 != 0) throw new InvalidDataException("The actual Pico SDK build did not package a UF2 image.");
+        // Inspect with the same pinned official parser that produced it. RP2350 A2 E10 guard blocks
+        // are retained in the artifact but refused by TabStudio's storage route; F5 uses the ELF.
+        _ = await RunAsync(runtime, new() { Program = "picotool", Arguments = ["info", "-a", uf2Path], WorkingDirectory = directory }, "canonical-" + id + "-uf2-info.log");
+        var stackFiles = Directory.EnumerateFiles(Path.Combine(directory, ".tabstudio/embedded/build"), "*.su", SearchOption.AllDirectories).ToArray();
+        var stack = stackFiles.SelectMany(file => StackAnalyzer.ParseGccStackUsage(File.ReadAllText(file))).ToArray();
+        if (!flash.Verified || stack.Length == 0)
+            throw new InvalidOperationException("The generated " + id + " starter must produce valid UF2, a checked upload plan and parseable stack usage.");
+        File.Copy(uf2Path, Path.Combine(output, "canonical-" + id + ".uf2"), overwrite: true);
+        File.Copy(Path.Combine(directory, ".tabstudio/embedded/build/Firmware.elf"), Path.Combine(output, "canonical-" + id + ".elf"), overwrite: true);
+        await File.WriteAllTextAsync(Path.Combine(output, "canonical-" + id + "-stack-usage.json"), JsonSerializer.Serialize(stack, json), cancellation);
+        results.Add(new
+        {
+            id, board = project.Target, firmwareBytes = bytes.Length, firmwareSha256 = Convert.ToHexStringLower(SHA256.HashData(bytes)),
+            uf2Bytes = uf2.Length, uploadFormat = Path.GetExtension(request.FirmwarePath),
+            flashRanges = FirmwareImageInspector.Inspect(bytes, Path.GetExtension(request.FirmwarePath), null), uploadDryPlanVerified = flash.Verified, stackRows = stack.Length,
+        });
+        Console.WriteLine("CANONICAL_PICO_STARTER_PASSED " + id + " " + ToolchainPlatform.CurrentArchitecture);
+    }
+    evidence["canonicalPicoStarters"] = results;
 }
 
 async Task BuildNordicStarterAsync(IToolchainRuntime runtime, ToolchainDefinition definition, string parent)
@@ -354,6 +408,16 @@ async Task BuildNordicStarterAsync(IToolchainRuntime runtime, ToolchainDefinitio
     };
     var bytes = await File.ReadAllBytesAsync(request.FirmwarePath, cancellation);
     var flash = EmbeddedFlashPlanner.Plan(request);
+    var configuration = await File.ReadAllTextAsync(Path.Combine(directory, ".tabstudio/embedded/build/zephyr/.config"), cancellation);
+    if (!configuration.Split('\n').Any(line => line.Trim() == "CONFIG_NRF_APPROTECT_USE_UICR=y"))
+        throw new InvalidDataException("The actual Nordic starter did not preserve the existing UICR protection policy.");
+    var commands = await File.ReadAllTextAsync(Path.Combine(directory, ".tabstudio/embedded/build/compile_commands.json"), cancellation);
+    if (System.Text.RegularExpressions.Regex.IsMatch(commands,
+        @"-D(?:CONFIG_GPIO_AS_PINRESET|(?:NRF_)?CONFIG_NFCT_PINS_AS_GPIOS|ENABLE_APPROTECT)(?:[=\s""\\]|$)",
+        System.Text.RegularExpressions.RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1)))
+    {
+        throw new InvalidDataException("The actual Nordic startup enabled a persistent UICR pin/protection update.");
+    }
     var stackFiles = Directory.EnumerateFiles(Path.Combine(directory, ".tabstudio/embedded/build"), "*.su", SearchOption.AllDirectories).ToArray();
     var stack = stackFiles.SelectMany(file => StackAnalyzer.ParseGccStackUsage(File.ReadAllText(file))).ToArray();
     var rows = stack.Length;

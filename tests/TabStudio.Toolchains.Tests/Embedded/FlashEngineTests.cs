@@ -168,6 +168,33 @@ public sealed class FlashEngineTests : IDisposable
         Assert.DoesNotContain(plan.Steps.SelectMany(x => x.Arguments), x => x.Contains("leave", StringComparison.Ordinal));
     }
 
+    [Theory]
+    [InlineData(".bin")]
+    [InlineData(".elf")]
+    public void Picotool_keeps_reviewed_absolute_addresses_instead_of_rebasing_into_a_device_partition(string extension)
+    {
+        var path = _temp.Resolve("pico firmware" + extension);
+        var bytes = extension == ".bin" ? new byte[] { 1, 2, 3, 4 } : Elf();
+        if (extension == ".elf") BinaryPrimitives.WriteUInt32LittleEndian(bytes.AsSpan(64), 0x10002000);
+        File.WriteAllBytes(path, bytes);
+        var request = Request(EmbeddedFlashProtocol.Picotool, path) with
+        {
+            Target = "RP2350", BinaryAddress = extension == ".bin" ? 0x10002000UL : null,
+            ApplicationFlash = [new(0x10002000, 4096)],
+        };
+        var plan = EmbeddedFlashPlanner.Plan(request);
+        var command = Assert.Single(plan.Steps);
+        Assert.Contains("--ignore-partitions", command.Arguments);
+        Assert.Contains("-v", command.Arguments);
+        Assert.Contains("-x", command.Arguments);
+        Assert.Equal(path, command.Arguments[^1]);
+        Assert.Equal(new FlashAddressRange(0x10002000, 4), Assert.Single(FirmwareImageInspector.Inspect(bytes, extension, request.BinaryAddress)));
+        Assert.DoesNotContain(command.Arguments, argument => argument is "--partition" or "--force" or "-N");
+        if (extension == ".bin") Assert.Contains("0x10002000", command.Arguments);
+        else Assert.DoesNotContain("-o", command.Arguments);
+        Assert.Throws<InvalidOperationException>(() => EmbeddedFlashPlanner.Plan(request with { ApplicationFlash = [new(0x10003000, 4096)] }));
+    }
+
     [Fact]
     public void Openocd_quotes_tcl_substitutions_in_filenames()
     {
@@ -423,6 +450,7 @@ public sealed class FlashEngineTests : IDisposable
         BinaryPrimitives.WriteUInt32LittleEndian(bytes.AsSpan(60), 0x20000000); // RAM VMA
         BinaryPrimitives.WriteUInt32LittleEndian(bytes.AsSpan(64), 0x08000000); // flash LMA
         BinaryPrimitives.WriteUInt32LittleEndian(bytes.AsSpan(68), 4);
+        BinaryPrimitives.WriteUInt32LittleEndian(bytes.AsSpan(72), 4); // p_memsz must include all initialized bytes.
         return bytes;
     }
 

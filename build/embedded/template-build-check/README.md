@@ -26,6 +26,11 @@ A missing automatic upload profile is reported as such, not counted as a verifie
 The nRF52840 DK starter uses Zephyr's exact board definition and is qualified by the native SDK harness,
 not the PlatformIO Arduino core's incompatible nRF52832 linker/variant. There are fifteen canonical
 PlatformIO starters, three Pico SDK variants, one Zephyr starter and the separate CH32V003 ch32fun starter.
+The same SDK harness builds all three canonical Pico variants and retains their ELF/UF2 artifacts.
+Pico 2 and Pico 2 W dry-plan the addressed ELF because their SDK-generated UF2 can contain an RP2350 A2
+E10 workaround block that erases additional flash. The upstream parser inspects that UF2 artifact;
+successful packaging does not qualify the storage upload path. Native picotool is the ordinary existing
+Store package, with the archive's original CMake exports and SHA-256 verification, rather than a source fetch.
 
 Run without the guest to inspect exact generated files:
 

@@ -85,7 +85,12 @@ public sealed class EmbeddedTemplateTests : IDisposable
         Assert.Contains("Serial.begin(115200)", File.ReadAllText(Path.Combine(root, "src", "main.cpp")), StringComparison.Ordinal);
         var project = Assert.Single(EmbeddedProjectDetector.Detect(root));
         Assert.Equal(EmbeddedProjectKind.PlatformIO, project.Kind);
-        Assert.Single(EmbeddedBuildPlanner.Plan(project).Build);
+        var plan = EmbeddedBuildPlanner.Plan(project);
+        Assert.Equal(2, plan.Build.Count);
+        Assert.Equal("pio", plan.Build[0].Program);
+        Assert.DoesNotContain("--target", plan.Build[0].Arguments);
+        Assert.Contains("compiledb", plan.Build[1].Arguments);
+        Assert.Equal(Path.Combine(root, "compile_commands.json"), plan.CompilationDatabase);
     }
 
     [Theory]
@@ -104,7 +109,7 @@ public sealed class EmbeddedTemplateTests : IDisposable
         Assert.Single(EmbeddedBuildPlanner.Plan(project).Build);
         var profile = ReadProfile(root);
         Assert.Equal(EmbeddedFlashProtocol.Picotool, profile.Protocol);
-        Assert.Equal(".tabstudio/embedded/build/Firmware.uf2", profile.FirmwarePath);
+        Assert.Equal(".tabstudio/embedded/build/Firmware" + (id == "picow" ? ".uf2" : ".elf"), profile.FirmwarePath);
         Assert.Equal(new FlashAddressRange(0x10000000, id == "picow" ? 2UL * 1024 * 1024 : 4UL * 1024 * 1024), Assert.Single(profile.ApplicationFlash));
     }
 
@@ -125,6 +130,9 @@ public sealed class EmbeddedTemplateTests : IDisposable
         Assert.Null(profile.ProbeSelector); // The actual attachment is selected at upload, never an invented J-Link serial.
         Assert.Equal(new FlashAddressRange(0, 1024 * 1024), Assert.Single(profile.ApplicationFlash));
         Assert.Contains("without a SoftDevice", File.ReadAllText(Path.Combine(root, "README.md")), StringComparison.Ordinal);
+        Assert.Contains("/delete-property/ gpio-as-nreset", File.ReadAllText(Path.Combine(root, "app.overlay")), StringComparison.Ordinal);
+        Assert.Contains("/delete-property/ nfct-pins-as-gpios", File.ReadAllText(Path.Combine(root, "app.overlay")), StringComparison.Ordinal);
+        Assert.Contains("CONFIG_NRF_APPROTECT_USE_UICR=y", File.ReadAllText(Path.Combine(root, "prj.conf")), StringComparison.Ordinal);
     }
 
     [Theory]

@@ -29,6 +29,7 @@ public sealed partial class WorkspaceViewModel
             if (!await EnsureToolchainReadyAsync(toolchain, "Target identification uses the pinned official probe-rs executable in the embedded glibc environment.")) return;
             if (_adapter is not null || IsDebugging || _embeddedDebugUsb is not null || _run is not null)
                 throw new InvalidOperationException("Another target operation started while choosing the probe. Stop it before identifying the target.");
+            using var deviceReservation = SerialMonitor.ReserveDeviceOperation();
             await SerialMonitor.ReleaseAsync();
             using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(90));
             _run = cancellation;

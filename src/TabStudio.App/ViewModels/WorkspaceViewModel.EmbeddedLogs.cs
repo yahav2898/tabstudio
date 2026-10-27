@@ -44,6 +44,7 @@ public sealed partial class WorkspaceViewModel
             var address = await Task.Run(() => ProbeRsLogPlan.ControlBlockAddress(MemoryAnalyzer.AnalyzeElf(File.ReadAllBytes(firmware))));
             var toolchain = _toolchains.Catalog.Find("probe-rs") ?? throw new NotSupportedException("The pinned probe-rs toolchain is missing from this catalog.");
             if (!await EnsureToolchainReadyAsync(toolchain, "RTT/defmt output uses the pinned official probe-rs attach command and its native matching-ELF decoder.")) return;
+            using var deviceReservation = _toolchains.Environment is null ? null : SerialMonitor.ReserveDeviceOperation();
             using var cancellation = new CancellationTokenSource();
             _run = cancellation;
             State = IdeState.Running;

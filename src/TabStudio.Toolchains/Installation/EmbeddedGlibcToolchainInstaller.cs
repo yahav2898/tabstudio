@@ -166,6 +166,21 @@ public sealed class EmbeddedGlibcToolchainInstaller : IToolchainInstaller, IDisp
             throw new ToolchainInstallException(InstallFailure.NotEnoughSpace, "Installing " + toolchain.Name + " needs at least "
                 + DiskSpace.Format(requiredSpace) + " free for Ubuntu, native tools, source and board packages.");
         }
+        // Reuse each dependency's ordinary signed/hash-checked installation and readiness marker.
+        // Install before taking this SDK's semaphore: all packages share one guest and operation gate.
+        if (EmbeddedSdkBootstrap.Recipes.Get(toolchain.Id) is { } dependencyRecipe)
+        {
+            foreach (var dependencyId in dependencyRecipe.RequiredToolchains)
+            {
+                var dependency = _definitions.GetValueOrDefault(dependencyId) ?? ToolchainCatalog.Default.Find(dependencyId)
+                    ?? throw new InvalidOperationException("The SDK's required Store package is missing: " + dependencyId);
+                if (dependencyId == toolchain.Id || EmbeddedSdkBootstrap.Recipes.Get(dependencyId) is not null)
+                {
+                    throw new InvalidOperationException("SDK dependencies must be independent frontend packages, not recursive SDKs.");
+                }
+                await InstallAsync(dependency, progress, cancellationToken).ConfigureAwait(false);
+            }
+        }
         await _operation.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
@@ -322,8 +337,10 @@ public sealed class EmbeddedGlibcToolchainInstaller : IToolchainInstaller, IDisp
         var command = id == "pico-sdk" ? "/usr/bin/cmake" : "/usr/local/bin/" + EmbeddedSdkBootstrap.ValidationCommand(id).Program;
         return Matches(ToolchainMarker(id), ToolchainFingerprint(definition)) && File.Exists(GuestPath(command))
             && (id != EmbeddedNordicInstallation.Id || HasArtifact(EmbeddedNordicInstallation.X64SerialShim))
+            && (id != "embedded-picotool" || EmbeddedFlashToolInstallation.PicotoolArtifacts.All(HasArtifact))
+            && (id != "probe-rs" || HasArtifact(ProbeRsSafeLaunch.ScriptPath))
             && (recipe is null || Matches(GuestPath(recipe.SourceDirectory + "/.tabstudio-sdk-source"), SourceFingerprint(recipe))
-                && recipe.RequiredArtifacts.All(HasArtifact));
+                && recipe.RequiredArtifacts.All(HasArtifact) && recipe.RequiredToolchains.All(IsToolchainReady));
     }
 
     private bool IsBaseReady => Matches(BaseMarker, BaseFingerprint)
@@ -338,7 +355,8 @@ public sealed class EmbeddedGlibcToolchainInstaller : IToolchainInstaller, IDisp
         + "\n" + SupportFingerprint.Value + "\n" + string.Join('\n', UsbBridgeInstallation.BuildCommands.Select(command => command.CommandLine)));
 
     private string ToolchainFingerprint(ToolchainDefinition definition) => Hash(BaseFingerprint + "\n" + JsonSerializer.Serialize(definition)
-        + "\n" + JsonSerializer.Serialize(EmbeddedSdkBootstrap.Recipes.Get(definition.Id)));
+        + "\n" + JsonSerializer.Serialize(EmbeddedSdkBootstrap.Recipes.Get(definition.Id))
+        + (definition.Id == "probe-rs" ? "\n" + ProbeRsSafeLaunch.Source : string.Empty));
 
     private string ToolchainMarker(string id) => Path.Combine(Rootfs, "var/lib/tabstudio/embedded", id + ".ready");
 
@@ -580,6 +598,11 @@ public sealed class EmbeddedGlibcToolchainInstaller : IToolchainInstaller, IDisp
         {
             Program = "python3", Arguments = ["-c", ProbeExtractionScript, archive, archiveDefinition.Destination],
         }, progress, cancellationToken, "PROBE_RS_EXTRACTED").ConfigureAwait(false);
+        await SetupAsync(new SetupStepDefinition
+        {
+            Name = "Managed probe-rs preset isolation",
+            File = new FileDefinition { Path = ProbeRsSafeLaunch.ScriptPath, Content = ProbeRsSafeLaunch.Source },
+        }, progress, cancellationToken).ConfigureAwait(false);
         foreach (var name in new[] { "probe-rs", "cargo-embed", "cargo-flash" })
         {
             if (File.Exists(GuestPath(archiveDefinition.Destination + "/" + name)))
@@ -588,7 +611,8 @@ public sealed class EmbeddedGlibcToolchainInstaller : IToolchainInstaller, IDisp
                 {
                     Name = name + " launcher",
                     File = new FileDefinition { Path = "/usr/local/bin/" + name, Executable = true,
-                        Content = "#!/bin/sh\nexec " + archiveDefinition.Destination + "/" + name + " \"$@\"\n" },
+                        Content = name == "probe-rs" ? ProbeRsSafeLaunch.Launcher(archiveDefinition.Destination + "/" + name)
+                            : "#!/bin/sh\nexec " + archiveDefinition.Destination + "/" + name + " \"$@\"\n" },
                 }, progress, cancellationToken).ConfigureAwait(false);
             }
         }

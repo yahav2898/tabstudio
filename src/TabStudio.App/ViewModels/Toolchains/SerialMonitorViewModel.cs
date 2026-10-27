@@ -12,7 +12,11 @@ namespace TabStudio.App.ViewModels;
 /// <summary>USB serial independent of an IDE run, with bounded output and explicit connection lifetime.</summary>
 public sealed partial class SerialMonitorViewModel(ToolchainServices tools, IUiDispatcher ui) : ObservableObject, IDisposable
 {
+    private readonly Lock _deviceGate = new();
+    private int _deviceReservations;
+    private readonly Dictionary<string, int> _reservedDevices = new(StringComparer.Ordinal);
     private CancellationTokenSource? _session;
+    private TaskCompletionSource? _sessionReleased;
     private ToolchainProcess? _process;
 
     /// <summary>Serial output, kept separate from build output.</summary>
@@ -31,6 +35,7 @@ public sealed partial class SerialMonitorViewModel(ToolchainServices tools, IUiD
 
     /// <summary>Selected USB adapter.</summary>
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ConnectCommand))]
     public partial UsbDeviceInfo? SelectedDevice { get; set; }
 
     /// <summary>Serial speed, 8-N-1.</summary>
@@ -43,6 +48,7 @@ public sealed partial class SerialMonitorViewModel(ToolchainServices tools, IUiD
 
     /// <summary>Whether a session or permission request owns the device.</summary>
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ConnectCommand))]
     public partial bool IsConnected { get; private set; }
 
     /// <summary>The active physical attachment, independent of selection changes in the monitor's device list.</summary>
@@ -66,24 +72,34 @@ public sealed partial class SerialMonitorViewModel(ToolchainServices tools, IUiD
     }
 
     /// <summary>Connects after the user selects a USB adapter; Android asks for permission.</summary>
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanConnect))]
     private async Task ConnectAsync()
     {
-        if (IsConnected || SelectedDevice is not { } device) return;
+        if (!CanConnect() || SelectedDevice is not { } device) return;
         if (!int.TryParse(Baud, out var baud) || baud is < 1 or > 3_500_000)
         {
             Output.WriteLine("Enter a baud rate from 1 to 3500000.", OutputKind.Failure);
             return;
         }
 
-        ConnectedDeviceId = device.Id;
-        IsConnected = true;
         using var cancel = new CancellationTokenSource();
-        _session = cancel;
+        var released = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        lock (_deviceGate)
+        {
+            // AsyncRelayCommand.ExecuteAsync can be called directly even when
+            // CanExecute is false. Recheck atomically before any setup/open.
+            if (_deviceReservations > 0 || _reservedDevices.ContainsKey(device.Id) || _session is not null) return;
+            _session = cancel;
+            _sessionReleased = released;
+            ConnectedDeviceId = device.Id;
+            IsConnected = true;
+        }
         try
         {
             await tools.PreparePicSupportAsync(false, line => Output.WriteLine(line, OutputKind.Info), cancel.Token);
+            cancel.Token.ThrowIfCancellationRequested();
             using var connection = await tools.Usb.OpenAsync(device, cancel.Token);
+            cancel.Token.ThrowIfCancellationRequested();
             var arguments = new List<string> { "serial", "--baud", baud.ToString(System.Globalization.CultureInfo.InvariantCulture) };
             if (Interface.Length > 0)
             {
@@ -105,22 +121,87 @@ public sealed partial class SerialMonitorViewModel(ToolchainServices tools, IUiD
         }
         finally
         {
-            _process = null;
-            _session = null;
-            ConnectedDeviceId = null;
-            IsConnected = false;
+            lock (_deviceGate)
+            {
+                _process = null;
+                _session = null;
+                _sessionReleased = null;
+                ConnectedDeviceId = null;
+                IsConnected = false;
+            }
+            released.TrySetResult();
         }
+    }
+
+    private bool CanConnect()
+    {
+        lock (_deviceGate)
+        {
+            return _deviceReservations == 0
+                && (SelectedDevice is not { } selected || !_reservedDevices.ContainsKey(selected.Id))
+                && _session is null && !IsConnected;
+        }
+    }
+
+    /// <summary>Prevents new monitor connections for the complete lifetime of a device operation.</summary>
+    /// <remarks>Take this reservation before <see cref="ReleaseAsync"/>. Nested reservations keep the monitor disabled until all are disposed.</remarks>
+    /// <param name="deviceId">An actual USB attachment to reserve, or null to reserve all devices while selecting/operating on a board.</param>
+    public IDisposable ReserveDeviceOperation(string? deviceId = null)
+    {
+        if (deviceId is not null) ArgumentException.ThrowIfNullOrWhiteSpace(deviceId);
+        lock (_deviceGate)
+        {
+            if (deviceId is null) checked { _deviceReservations++; }
+            else _reservedDevices[deviceId] = checked(_reservedDevices.GetValueOrDefault(deviceId) + 1);
+        }
+        NotifyConnectionAvailability();
+        return new DeviceReservation(this, deviceId);
+    }
+
+    private void ReleaseDeviceReservation(string? deviceId)
+    {
+        lock (_deviceGate)
+        {
+            if (deviceId is null) _deviceReservations--;
+            else if (_reservedDevices[deviceId] == 1) _reservedDevices.Remove(deviceId);
+            else _reservedDevices[deviceId]--;
+        }
+        NotifyConnectionAvailability();
+    }
+
+    private void NotifyConnectionAvailability()
+    {
+        if (ui.CheckAccess()) ConnectCommand.NotifyCanExecuteChanged();
+        else ui.Post(ConnectCommand.NotifyCanExecuteChanged);
+    }
+
+    private sealed class DeviceReservation(SerialMonitorViewModel owner, string? deviceId) : IDisposable
+    {
+        private SerialMonitorViewModel? _owner = owner;
+        public void Dispose() => Interlocked.Exchange(ref _owner, null)?.ReleaseDeviceReservation(deviceId);
     }
 
     /// <summary>Releases the USB connection, including after a detach.</summary>
     [RelayCommand]
-    private void Disconnect() => _session?.Cancel();
+    private void Disconnect() => CancelSession();
+
+    private void CancelSession()
+    {
+        CancellationTokenSource? session;
+        lock (_deviceGate) session = _session;
+        try { session?.Cancel(); }
+        catch (ObjectDisposedException) { /* The session finished after the snapshot. */ }
+    }
 
     /// <summary>Waits until the permissioned descriptor has been released for flashing.</summary>
     public async Task ReleaseAsync()
     {
-        _session?.Cancel();
-        if (ConnectCommand.ExecutionTask is { } execution) await execution;
+        CancellationTokenSource? session;
+        Task? released;
+        lock (_deviceGate) { session = _session; released = _sessionReleased?.Task; }
+        try { session?.Cancel(); }
+        catch (ObjectDisposedException) { /* The session finished after the snapshot. */ }
+        if (released is not null) await released;
     }
 
     /// <summary>Sends a UTF-8 line; raw output remains visible even without newline characters.</summary>
@@ -145,5 +226,5 @@ public sealed partial class SerialMonitorViewModel(ToolchainServices tools, IUiD
     }
 
     /// <inheritdoc />
-    public void Dispose() => _session?.Cancel();
+    public void Dispose() => CancelSession();
 }

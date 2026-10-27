@@ -1,0 +1,40 @@
+{
+  "origin": "Actual output of the unchanged pinned official picotool using synthetic input; not a hardware capture.",
+  "tool": {
+    "version": "2.3.1",
+    "sourceCommit": "2041936441b48a3cc53ae3da9e805229fe8f4e18",
+    "archiveUrl": "https://github.com/raspberrypi/pico-sdk-tools/releases/download/v2.3.1-0/picotool-2.3.1-x86_64-lin.tar.gz",
+    "archiveSha256": "878a1a1e7d8336b8be60300c7218f366d9790c0d3a211b181d6d172e80b1248e"
+  },
+  "command": "picotool uf2 convert application.bin application-rp2350.uf2 --platform rp2350 --family rp2350-arm-s --abs-block",
+  "input": {
+    "generation": "bytes(range(256))",
+    "sha256": "40aff2e9d2d8922e47afd4648e6967497158785fbd1da870e7110266bf944880"
+  },
+  "uf2Sha256": "e1cd7edfc28e0d166a721ae1743e8f8d4b2173882323cb792b2169a0d894b76f",
+  "uf2Base64": "VUYyCldRXZ4AoAAAAP//EAABAAAAAAAAAgAAAFf/i+Tv7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/vBONXmQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADBvsQpVRjIKV1FdngAgAAAAAAAQAAEAAAAAAAABAAAAWf+L5AABAgMEBQYHCAkKCwwNDg8QERITFBUWFxgZGhscHR4fICEiIyQlJicoKSorLC0uLzAxMjM0NTY3ODk6Ozw9Pj9AQUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVpbXF1eX2BhYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ent8fX5/gIGCg4SFhoeIiYqLjI2Oj5CRkpOUlZaXmJmam5ydnp+goaKjpKWmp6ipqqusra6vsLGys7S1tre4ubq7vL2+v8DBwsPExcbHyMnKy8zNzs/Q0dLT1NXW19jZ2tvc3d7f4OHi4+Tl5ufo6err7O3u7/Dx8vP09fb3+Pn6+/z9/v8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMG+xCg==",
+  "auditSources": [
+    {
+      "url": "https://github.com/raspberrypi/picotool/blob/2041936441b48a3cc53ae3da9e805229fe8f4e18/elf2uf2/elf2uf2.cpp",
+      "sha256": "c0575fb988b2eb0f2b31b650964659aac08ea5967960392609899ece46a34704",
+      "functions": [
+        "gen_abs_block",
+        "check_abs_block",
+        "pages2uf2"
+      ]
+    },
+    {
+      "url": "https://github.com/raspberrypi/pico-bootrom-rp2350/blob/c6cdb1711f32c3e34faaebd58618a6d096dbd52e/src/nsboot/usb_virtual_disk.c",
+      "sha256": "26d6deeb41730aa4b5bc376a1d27deb17fdf639e4f9867e2a5a68427794b2c5e",
+      "behavior": "Current ROM ignores a matching IGNORE_BLOCK tag before updating or writing UF2; this does not establish attached device revision."
+    },
+    {
+      "url": "https://pip-assets.raspberrypi.com/categories/1214-rp2350/documents/RP-008373-DS-2-rp2350-datasheet.pdf",
+      "buildDate": "2025-07-29",
+      "buildVersion": "d126e9e-clean",
+      "section": "Appendix E, RP2350-E10",
+      "printedPage": 1358,
+      "behavior": "A2 applies the workaround write and erases the last flash block; A3 and later ignore its tag."
+    }
+  ]
+}
