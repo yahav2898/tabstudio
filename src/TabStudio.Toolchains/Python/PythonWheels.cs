@@ -130,9 +130,17 @@ public static class PythonWheels
     /// <param name="http">The HTTP client.</param>
     /// <param name="pins">The pinned packages.</param>
     /// <param name="cancellationToken">Stops reading.</param>
-    /// <param name="index">The JSON API's base address; PyPI's by default.</param>
-    public static async Task<IReadOnlyList<PythonRelease>> ReadAsync(HttpClient http, IEnumerable<PythonPin> pins, CancellationToken cancellationToken, Uri? index = null)
+    public static Task<IReadOnlyList<PythonRelease>> ReadAsync(HttpClient http, IEnumerable<PythonPin> pins, CancellationToken cancellationToken) =>
+        ReadAsync(http, pins, PyPi, cancellationToken);
+
+    /// <summary>Reads pinned releases from a JSON API like PyPI's, as <see cref="ReadAsync(HttpClient, IEnumerable{PythonPin}, CancellationToken)"/>.</summary>
+    /// <param name="http">The HTTP client.</param>
+    /// <param name="pins">The pinned packages.</param>
+    /// <param name="index">The JSON API's base address, such as <c>https://pypi.org/pypi/</c>.</param>
+    /// <param name="cancellationToken">Stops reading.</param>
+    public static async Task<IReadOnlyList<PythonRelease>> ReadAsync(HttpClient http, IEnumerable<PythonPin> pins, Uri index, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(index);
         ArgumentNullException.ThrowIfNull(http);
         ArgumentNullException.ThrowIfNull(pins);
         using var gate = new SemaphoreSlim(8);
@@ -141,7 +149,7 @@ public static class PythonWheels
             await gate.WaitAsync(cancellationToken).ConfigureAwait(false);
             try
             {
-                return await ReadOneAsync(http, pin, index ?? PyPi, cancellationToken).ConfigureAwait(false);
+                return await ReadOneAsync(http, pin, index, cancellationToken).ConfigureAwait(false);
             }
             finally
             {

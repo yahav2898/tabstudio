@@ -176,7 +176,7 @@ public sealed partial record PipFailure(PipFailureKind Kind, string? Package, st
     [GeneratedRegex(@"subprocess-exited-with-error|Getting requirements to build wheel did not run successfully|Preparing metadata \(pyproject\.toml\) did not run successfully|python setup\.py egg_info did not run successfully|Building wheel for \S+ .*error|Running setup\.py install for \S+ .*error", RegexOptions.CultureInvariant)]
     private static partial Regex BuildFailed();
 
-    [GeneratedRegex(@"^(ERROR: Failed building wheel for|Failed to build|ERROR: Could not build wheels for|ERROR: Failed to build installable wheels for some pyproject\.toml based projects \(|ERROR: Failed to build '?)(?<name>[A-Za-z0-9][A-Za-z0-9._, -]*)", RegexOptions.CultureInvariant)]
+    [GeneratedRegex(@"^(ERROR: Failed building wheel for|Failed to build|ERROR: Could not build wheels for|ERROR: Failed to build installable wheels for some pyproject\.toml based projects \(|ERROR: Failed to build '?)\s*'?(?<name>[A-Za-z0-9][A-Za-z0-9._, -]*)", RegexOptions.CultureInvariant)]
     private static partial Regex FailedPackage();
 
     [GeneratedRegex(@"fatal error: (?<header>[\w/.+-]+\.h): No such file or directory", RegexOptions.CultureInvariant)]
@@ -203,7 +203,7 @@ public sealed partial record PipFailure(PipFailureKind Kind, string? Package, st
     [GeneratedRegex(@"Failed to establish a new connection|Temporary failure in name resolution|Name or service not known|No route to host|Network is unreachable|Read timed out|Could not fetch URL|ConnectTimeoutError", RegexOptions.CultureInvariant)]
     private static partial Regex Network();
 
-    [GeneratedRegex(@"(^|:\s)(error|Error|ERROR)\b|fatal error", RegexOptions.CultureInvariant)]
+    [GeneratedRegex(@"(^|:\s)(error|Error|ERROR)\b|fatal error|^\w+(Error|Exception): ", RegexOptions.CultureInvariant)]
     private static partial Regex ErrorLine();
 
     /// <summary>pip's generic closing lines, which say nothing about the cause.</summary>

@@ -146,8 +146,9 @@ public sealed partial class ServicesViewModel : ObservableObject, IAsyncDisposab
     /// started for the others; the Services window offers them.
     /// </summary>
     /// <returns>The run's connection variables, or <see langword="null"/> when a needed service did not start.</returns>
-    public async Task<IReadOnlyDictionary<string, string?>?> PrepareAsync(string projectDirectory, string environmentName, CancellationToken cancellationToken, IReadOnlyDictionary<string, string?>? runEnvironment = null)
+    public async Task<IReadOnlyDictionary<string, string?>?> PrepareAsync(string projectDirectory, string environmentName, CancellationToken cancellationToken)
     {
+        IReadOnlyDictionary<string, string?>? runEnvironment = null;
         LastNeeded = [];
         // Reparse before F5 so saved Compose and .env edits take effect, while unchanged data/processes persist.
         if (_root is not null)
@@ -165,7 +166,7 @@ public sealed partial class ServicesViewModel : ObservableObject, IAsyncDisposab
         LastNeeded = manager.NeededBy(projectDirectory, runEnvironment, environmentName);
         if (LastNeeded.Count == 0) return ConnectionEnvironment.ForProject(manager.Project, projectDirectory, manager.Endpoints, environmentName);
         IReadOnlyDictionary<string, string?>? environment = null;
-        var success = await PerformAsync(async token => environment = await manager.StartForProjectAsync(projectDirectory, environmentName, token, runEnvironment), cancellationToken);
+        var success = await PerformAsync(async token => environment = await manager.StartForProjectAsync(projectDirectory, environmentName, runEnvironment, token), cancellationToken);
         return success ? environment : null;
     }
 

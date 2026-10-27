@@ -67,7 +67,7 @@ public sealed class ServiceManager : IAsyncDisposable
                 : ServiceTargets.Referenced(Project, projectDirectory, environment, environmentName));
     }
 
-    public async Task<IReadOnlyDictionary<string, string?>> StartForProjectAsync(string projectDirectory, string environmentName = "Development", CancellationToken cancellationToken = default, IReadOnlyDictionary<string, string?>? environment = null)
+    public async Task<IReadOnlyDictionary<string, string?>> StartForProjectAsync(string projectDirectory, string environmentName = "Development", IReadOnlyDictionary<string, string?>? environment = null, CancellationToken cancellationToken = default)
     {
         var needed = NeededBy(projectDirectory, environment, environmentName);
         if (needed.Count > 0) await StartAsync(needed, cancellationToken).ConfigureAwait(false);
