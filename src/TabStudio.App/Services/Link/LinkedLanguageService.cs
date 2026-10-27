@@ -296,7 +296,7 @@ public sealed class LinkedLanguageService : ILanguageService
 
         if (result.Success)
         {
-            _runtimeAssemblies[project.FilePath] = result.RuntimeAssemblies;
+            _runtimeAssemblies[project.FilePath] = result.RuntimeFiles;
         }
 
         if (remote is null)
@@ -581,7 +581,7 @@ public sealed class LinkedLanguageService : ILanguageService
             var result = await local.RestorePackagesAsync(project, null, CancellationToken.None).ConfigureAwait(false);
             if (result.Success)
             {
-                _runtimeAssemblies[project.FilePath] = result.RuntimeAssemblies;
+                _runtimeAssemblies[project.FilePath] = result.RuntimeFiles;
             }
         }
 

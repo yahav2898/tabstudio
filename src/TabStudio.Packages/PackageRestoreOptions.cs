@@ -58,4 +58,13 @@ public sealed record PackageRestoreOptions
     /// <c>analyzers/dotnet/roslyn{version}/</c> folders; <see langword="null"/> restores no analyzers.
     /// </summary>
     public Version? CompilerVersion { get; init; } = new(5, 0);
+
+    /// <summary>
+    /// The runtime identifier whose RID-specific package assets (<c>runtimes/{rid}/lib/</c> and
+    /// <c>runtimes/{rid}/native/</c>) programs run with, falling back along the RID graph to <c>any</c>. Defaults to this
+    /// device's: <c>android-arm64</c> on a tablet (which falls back through <c>linux-arm64</c>, <c>linux</c> and
+    /// <c>unix</c>), the host's portable RID such as <c>linux-x64</c> elsewhere. <see langword="null"/> uses
+    /// <c>lib/</c> only.
+    /// </summary>
+    public string? RuntimeIdentifier { get; init; } = Assets.RuntimeGraph.DeviceRuntimeIdentifier;
 }

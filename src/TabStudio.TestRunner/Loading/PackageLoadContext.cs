@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Runtime.Loader;
+using TabStudio.Compilation.Running;
 
 namespace TabStudio.TestRunner.Loading;
 
@@ -27,17 +28,20 @@ internal sealed class PackageLoadContext : AssemblyLoadContext
     private readonly List<string> _probingDirectories;
     private readonly Dictionary<string, Assembly> _loaded = new(StringComparer.OrdinalIgnoreCase);
     private readonly Lock _gate = new();
+    private readonly PackageNativeLibraries _nativeLibraries;
 
     private PackageLoadContext(IReadOnlyList<string> runtimeAssemblyPaths)
         : base("TabStudio test packages", isCollectible: false)
     {
+        _nativeLibraries = new PackageNativeLibraries(runtimeAssemblyPaths);
+        var assemblies = PackageNativeLibraries.Assemblies(runtimeAssemblyPaths);
         _paths = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        foreach (var path in runtimeAssemblyPaths)
+        foreach (var path in assemblies)
         {
             _ = _paths.TryAdd(Path.GetFileNameWithoutExtension(path), path);
         }
 
-        _probingDirectories = runtimeAssemblyPaths
+        _probingDirectories = assemblies
             .Select(path => Path.GetDirectoryName(path))
             .OfType<string>()
             .Distinct(StringComparer.Ordinal)
@@ -94,4 +98,7 @@ internal sealed class PackageLoadContext : AssemblyLoadContext
 
     /// <inheritdoc />
     protected override Assembly? Load(AssemblyName assemblyName) => Find(assemblyName);
+
+    /// <inheritdoc />
+    protected override nint LoadUnmanagedDll(string unmanagedDllName) => _nativeLibraries.Load(unmanagedDllName);
 }

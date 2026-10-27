@@ -8,7 +8,10 @@ namespace TabStudio.Packages;
 /// <param name="DirectoryPath">Where the package is extracted in the global packages folder.</param>
 /// <param name="IsDirect">Whether the project references the package itself, rather than through another package.</param>
 /// <param name="CompileAssemblies">Full paths of the assemblies code compiles against.</param>
-/// <param name="RuntimeAssemblies">Full paths of the assemblies a running program loads.</param>
+/// <param name="RuntimeAssemblies">
+/// Full paths of the assemblies a running program loads: the device's RID-specific ones
+/// (<c>runtimes/{rid}/lib/{tfm}/</c>) when the package has them, otherwise <c>lib/{tfm}/</c>.
+/// </param>
 /// <param name="ProvidedByFramework">
 /// Whether every assembly in the package is already part of the target framework, so the package contributes none.
 /// </param>
@@ -23,6 +26,12 @@ public sealed record RestoredPackage(
 {
     /// <summary>Full paths of the package's C# analyzers and source generators.</summary>
     public IReadOnlyList<string> Analyzers { get; init; } = [];
+
+    /// <summary>
+    /// Full paths of the package's native libraries for the device: its <c>runtimes/{rid}/native/</c> files for the
+    /// nearest RID, such as SQLite's <c>libe_sqlite3.so</c>.
+    /// </summary>
+    public IReadOnlyList<string> NativeLibraries { get; init; } = [];
 
     /// <summary>
     /// Whether the project uses the package's analyzers: it reaches the package through packages only. A package that
