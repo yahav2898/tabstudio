@@ -48,11 +48,12 @@ public sealed partial class WorkspaceViewModel
         var projects = workspace.Projects.Where(p => p.IsExecutable && p.Language == ProjectLanguage.CSharp && !p.IsTestProject).ToList();
         var advice = await Task.Run(async () =>
         {
+            var composed = ComposeConnectionVariables(workspace.RootDirectory);
             var found = new List<(string Project, SqlServerAdvice Advice)>();
             foreach (var project in projects)
             {
                 if (SqlServerDetector.Detect(project, workspace.Projects) is { } usage
-                    && await FindUnreachableAsync(usage, saved, environment: null) is var (unreachable, answered) && !answered)
+                    && await FindUnreachableAsync(usage, saved, composed) is var (unreachable, answered) && !answered)
                 {
                     found.Add((project.Name, new SqlServerAdvice(usage, unreachable, SqlServerDetector.Explain(usage, unreachable))));
                 }
@@ -276,6 +277,38 @@ public sealed partial class WorkspaceViewModel
             Compatibility[index] = row with { Report = CompatibilityDoctor.Diagnose(project), SqlServer = null };
         }
     }
+
+    /// <summary>
+    /// The <c>ConnectionStrings__*</c> variables the repository's Compose files give an app, such as the one Use
+    /// PostgreSQL writes: Services supplies them on F5, so they replace appsettings.
+    /// </summary>
+    private static Dictionary<string, string?> ComposeConnectionVariables(string root)
+    {
+        var variables = new Dictionary<string, string?>(StringComparer.Ordinal);
+        foreach (var name in (string[])["compose.yaml", "compose.yml", "docker-compose.yml", "docker-compose.yaml"])
+        {
+            var path = Path.Combine(root, name);
+            try
+            {
+                if (File.Exists(path))
+                {
+                    foreach (System.Text.RegularExpressions.Match match in ConnectionVariable().Matches(File.ReadAllText(path)))
+                    {
+                        variables[match.Value] = null;
+                    }
+                }
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                // Services reports Compose files it cannot read.
+            }
+        }
+
+        return variables;
+    }
+
+    [System.Text.RegularExpressions.GeneratedRegex(@"ConnectionStrings__[A-Za-z0-9_]+")]
+    private static partial System.Text.RegularExpressions.Regex ConnectionVariable();
 
     /// <summary>Whether the folder already has Compose files, which TabStudio never overwrites.</summary>
     private static bool HasComposeFiles(string root)
